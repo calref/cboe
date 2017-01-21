@@ -8450,4 +8450,584 @@
             <![CDATA[Broadswords are broad swords. More specifically, they're big, heavy swords, with a lot of momentum. Most people can't wield them one-handed, although if one were very strong it could work. This one is made of mithral, a very rare metal which is very light but strong.]]>
         </description>
     </item>
+    <item id="383">
+        <variety>weapon-2hand</variety>
+        <level>3</level>
+        <awkward>0</awkward>
+        <bonus>0</bonus>
+        <protection>1</protection>
+        <weapon-type>pole</weapon-type>
+        <pic>20</pic>
+        <name>Staff</name>
+        <full-name>Simple Staff</full-name>
+        <treasure>1</treasure>
+        <value>30</value>
+        <weight>18</weight>
+        <properties />
+        <description>
+            <![CDATA[This is a simple wooden staff, made from a long, straight stick. It may have some ornamentation but it's nothing special or magical.]]>
+        </description>
+    </item>
+    <item id="384">
+        <variety>weapon-2hand</variety>
+        <level>3</level>
+        <awkward>0</awkward>
+        <bonus>1</bonus>
+        <protection>3</protection>
+        <weapon-type>pole</weapon-type>
+        <pic>20</pic>
+        <name>Staff</name>
+        <full-name>Monk&apos;s Staff</full-name>
+        <treasure>2</treasure>
+        <value>700</value>
+        <weight>18</weight>
+        <properties />
+        <description>
+            <![CDATA[This is a simple wooden staff, made from a long, straight stick. It's a little tougher and more rugged than usual, but it's not magical.]]>
+        </description>
+    </item>
+    <item id="385">
+        <variety>weapon-2hand</variety>
+        <level>3</level>
+        <awkward>0</awkward>
+        <bonus>1</bonus>
+        <protection>1</protection>
+        <weapon-type>pole</weapon-type>
+        <pic>41</pic>
+        <name>Staff</name>
+        <full-name>Sparking Staff</full-name>
+        <treasure>4</treasure>
+        <value>700</value>
+        <weight>18</weight>
+        <properties>
+            <magic>true</magic>
+        </properties>
+        <ability>
+            <type>boost-stat</type>
+            <strength>3</strength>
+            <data>9</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[This staff spouts small sparks from its tip. The inscriptions along its length side refer to arcane matters. It will probably make your mage spells more effective.]]>
+        </description>
+    </item>
+    <item id="386">
+        <variety>weapon-2hand</variety>
+        <level>3</level>
+        <awkward>0</awkward>
+        <bonus>1</bonus>
+        <protection>1</protection>
+        <weapon-type>pole</weapon-type>
+        <pic>41</pic>
+        <name>Staff</name>
+        <full-name>Flashing Staff</full-name>
+        <treasure>4</treasure>
+        <value>3000</value>
+        <weight>18</weight>
+        <properties>
+            <magic>true</magic>
+        </properties>
+        <ability>
+            <type>boost-stat</type>
+            <strength>3</strength>
+            <data>9</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[This staff spouts small sparks from its tip. The inscriptions along its length side refer to arcane matters. It will probably make your mage spells more effective.]]>
+        </description>
+    </item>
+    <item id="387">
+        <variety>weapon-2hand</variety>
+        <level>3</level>
+        <awkward>0</awkward>
+        <bonus>1</bonus>
+        <protection>1</protection>
+        <weapon-type>pole</weapon-type>
+        <pic>42</pic>
+        <name>Staff</name>
+        <full-name>Druidic Staff</full-name>
+        <treasure>3</treasure>
+        <value>700</value>
+        <weight>18</weight>
+        <properties>
+            <magic>true</magic>
+        </properties>
+        <ability>
+            <type>boost-stat</type>
+            <strength>1</strength>
+            <data>10</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[This staff is a natural tree branch, with a vine winding around it, and holding fast a sparkling ruby at the tip. The druidic runes carved into the vine around the ruby indicate that wielding this staff will boost your priestly abilities.]]>
+        </description>
+    </item>
+    <item id="388">
+        <variety>weapon-2hand</variety>
+        <level>3</level>
+        <awkward>0</awkward>
+        <bonus>1</bonus>
+        <protection>1</protection>
+        <weapon-type>pole</weapon-type>
+        <pic>42</pic>
+        <name>Staff</name>
+        <full-name>Righteous Staff</full-name>
+        <treasure>4</treasure>
+        <value>3000</value>
+        <weight>18</weight>
+        <properties>
+            <magic>true</magic>
+        </properties>
+        <ability>
+            <type>boost-stat</type>
+            <strength>3</strength>
+            <data>10</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[This staff is a natural tree branch, with a vine winding around it, and holding fast a sparkling ruby at the tip. The druidic runes carved into the vine around the ruby indicate that wielding this staff will boost your priestly abilities.]]>
+        </description>
+    </item>
+    <item id="389">
+        <variety>weapon-2hand</variety>
+        <level>3</level>
+        <awkward>4</awkward>
+        <bonus>0</bonus>
+        <protection>-3</protection>
+        <weapon-type>pole</weapon-type>
+        <pic>20</pic>
+        <name>Staff</name>
+        <full-name>Beggar&apos;s Staff</full-name>
+        <treasure>1</treasure>
+        <value>0</value>
+        <weight>18</weight>
+        <properties>
+            <magic>true</magic>
+            <cursed>true</cursed>
+        </properties>
+        <description>
+            <![CDATA[This staff is gnarled, splintering, and dirty. What's more, when you pick it up, your legs feel weak, so you let go. Just being around it makes you feel wierd. It's cursed, and if you lean on it too hard, you won't be able to let it go...]]>
+        </description>
+    </item>
+    <item id="390">
+        <variety>tool</variety>
+        <level>0</level>
+        <awkward>0</awkward>
+        <bonus>0</bonus>
+        <protection>0</protection>
+        <pic>108</pic>
+        <name>Book</name>
+        <full-name>Book of Concoction</full-name>
+        <treasure>2</treasure>
+        <value>300</value>
+        <weight>8</weight>
+        <properties />
+        <ability>
+            <type>boost-stat</type>
+            <strength>3</strength>
+            <data>12</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[The contents of this unadorned book detail the methods by which one can concoct useful potions that will not explode in your face. This book will make good reference material, if you keep it handy.]]>
+        </description>
+    </item>
+    <item id="391">
+        <variety>tool</variety>
+        <level>0</level>
+        <awkward>0</awkward>
+        <bonus>0</bonus>
+        <protection>0</protection>
+        <pic>108</pic>
+        <name>Book</name>
+        <full-name>Picker&apos;s Field Guide</full-name>
+        <treasure>2</treasure>
+        <value>300</value>
+        <weight>8</weight>
+        <properties />
+        <ability>
+            <type>boost-stat</type>
+            <strength>3</strength>
+            <data>13</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[This book features illustrations and bits of history, and shows how to identify useful treasure, as well as useless or dangerous treasure. This book will make good reference material, if you keep it handy.]]>
+        </description>
+    </item>
+    <item id="392">
+        <variety>tool</variety>
+        <level>0</level>
+        <awkward>0</awkward>
+        <bonus>0</bonus>
+        <protection>0</protection>
+        <pic>120</pic>
+        <name>Book</name>
+        <full-name>Book of Magery</full-name>
+        <treasure>3</treasure>
+        <value>700</value>
+        <weight>11</weight>
+        <properties>
+            <magic>true</magic>
+        </properties>
+        <ability>
+            <type>boost-stat</type>
+            <strength>1</strength>
+            <data>9</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[This book details the process and methods of conjuring magical effects. It describes step-by-step how to focus the mind properly and what movements are effective, as well as which will be dangerous. This book will make good reference material, if you keep it handy.]]>
+        </description>
+    </item>
+    <item id="393">
+        <variety>tool</variety>
+        <level>0</level>
+        <awkward>0</awkward>
+        <bonus>0</bonus>
+        <protection>0</protection>
+        <pic>120</pic>
+        <name>Book</name>
+        <full-name>Tome of Sorcery</full-name>
+        <treasure>4</treasure>
+        <value>3000</value>
+        <weight>11</weight>
+        <properties>
+            <magic>true</magic>
+        </properties>
+        <ability>
+            <type>boost-stat</type>
+            <strength>3</strength>
+            <data>9</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[This book details the process and methods of conjuring magical effects. It describes step-by-step how to focus the mind properly and what movements are effective, as well as which will be dangerous. This book will make good reference material, if you keep it handy.]]>
+        </description>
+    </item>
+    <item id="394">
+        <variety>tool</variety>
+        <level>0</level>
+        <awkward>0</awkward>
+        <bonus>0</bonus>
+        <protection>0</protection>
+        <pic>109</pic>
+        <name>Book</name>
+        <full-name>Book of Holy Ritual</full-name>
+        <treasure>3</treasure>
+        <value>700</value>
+        <weight>11</weight>
+        <properties>
+            <magic>true</magic>
+        </properties>
+        <ability>
+            <type>boost-stat</type>
+            <strength>1</strength>
+            <data>10</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[This book features religious lore and moral guidance. It also describes holy chants, prayers, and how to cast priestly spells. This book will make good reference material, if you keep it handy.]]>
+        </description>
+    </item>
+    <item id="395">
+        <variety>tool</variety>
+        <level>0</level>
+        <awkward>0</awkward>
+        <bonus>0</bonus>
+        <protection>0</protection>
+        <pic>109</pic>
+        <name>Book</name>
+        <full-name>Tome of Divine Power</full-name>
+        <treasure>4</treasure>
+        <value>3000</value>
+        <weight>11</weight>
+        <properties>
+            <magic>true</magic>
+        </properties>
+        <ability>
+            <type>boost-stat</type>
+            <strength>3</strength>
+            <data>10</data>
+            <use-flag>harm-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[This book features religious lore and moral guidance. It also describes holy chants, prayers, and how to cast priestly spells. This book will make good reference material, if you keep it handy.]]>
+        </description>
+    </item>
+    <item id="396">
+        <variety>tool</variety>
+        <level>0</level>
+        <awkward>1</awkward>
+        <bonus>0</bonus>
+        <protection>0</protection>
+        <charges>1</charges>
+        <pic>108</pic>
+        <name>Book</name>
+        <full-name>Tome of Orange Cat</full-name>
+        <treasure>1</treasure>
+        <value>0</value>
+        <weight>7</weight>
+        <properties>
+            <magic>true</magic>
+            <cursed>true</cursed>
+        </properties>
+        <ability>
+            <type>boost-stat</type>
+            <strength>1</strength>
+            <data>2</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[This... this is a book of comic strips. They're horrible and the humor wore off within a couple pages of the same jokes over and over, but somehow you can't stop reading it. You feel stupid just looking at it. You... really do. This book must be cursed...]]>
+        </description>
+    </item>
+    <item id="397">
+        <variety>helm</variety>
+        <level>0</level>
+        <awkward>0</awkward>
+        <bonus>0</bonus>
+        <protection>0</protection>
+        <pic>137</pic>
+        <name>Hat</name>
+        <full-name>Magician&apos;s Hat</full-name>
+        <treasure>2</treasure>
+        <value>350</value>
+        <weight>1</weight>
+        <properties>
+            <magic>true</magic>
+        </properties>
+        <ability>
+            <type>boost-stat</type>
+            <strength>2</strength>
+            <data>11</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[This tall, pointed cap sparkles with magic. It's also rather fashionable.]]>
+        </description>
+    </item>
+    <item id="398">
+        <variety>weapon-1hand</variety>
+        <level>1</level>
+        <awkward>0</awkward>
+        <bonus>0</bonus>
+        <protection>0</protection>
+        <charges>10</charges>
+        <weapon-type>mage-lore</weapon-type>
+        <pic>95</pic>
+        <name>Horn</name>
+        <full-name>Horn of Jericho</full-name>
+        <treasure>2</treasure>
+        <value>50</value>
+        <weight>1</weight>
+        <properties>
+            <magic>true</magic>
+        </properties>
+        <ability>
+            <type>use-spell</type>
+            <strength>1</strength>
+            <data>144</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[This is the horn of a bull or ram, hollowed, with the tip cut off to blow into and make a loud sound. There is a strong magical vibration when you blow into this one. If you blew it hard enough, you might shatter fragile things around you.]]>
+        </description>
+    </item>
+    <item id="399">
+        <variety>weapon-1hand</variety>
+        <level>2</level>
+        <awkward>0</awkward>
+        <bonus>0</bonus>
+        <protection>0</protection>
+        <charges>3</charges>
+        <weapon-type>mage-lore</weapon-type>
+        <pic>134</pic>
+        <name>Pipes</name>
+        <full-name>Panpipes</full-name>
+        <treasure>3</treasure>
+        <value>200</value>
+        <weight>10</weight>
+        <properties>
+            <magic>true</magic>
+        </properties>
+        <ability>
+            <type>use-spell</type>
+            <strength>5</strength>
+            <data>117</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[These pipes are made from reeds and held together with a cloth band. Each reed is of a different length, and each will produce a different note when blown into. This particular set is clearly magical.]]>
+        </description>
+    </item>
+    <item id="400">
+        <variety>weapon-1hand</variety>
+        <level>2</level>
+        <awkward>0</awkward>
+        <bonus>0</bonus>
+        <protection>0</protection>
+        <charges>10</charges>
+        <weapon-type>mage-lore</weapon-type>
+        <pic>134</pic>
+        <name>Pipes</name>
+        <full-name>Pied Piper&apos;s Pipes</full-name>
+        <treasure>3</treasure>
+        <value>60</value>
+        <weight>2</weight>
+        <properties>
+            <magic>true</magic>
+        </properties>
+        <ability>
+            <type>use-summon-mass</type>
+            <strength>5</strength>
+            <data>78</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[These pipes are made from reeds and held together with a cloth band. Each reed is of a different length, and each will produce a different note when blown into. This particular set is clearly magical.]]>
+        </description>
+    </item>
+    <item id="401">
+        <variety>weapon-1hand</variety>
+        <level>4</level>
+        <awkward>0</awkward>
+        <bonus>0</bonus>
+        <protection>0</protection>
+        <weapon-type>mage-lore</weapon-type>
+        <pic>135</pic>
+        <name>Lyre</name>
+        <full-name>Lyre of Lullabyes</full-name>
+        <treasure>4</treasure>
+        <value>1200</value>
+        <weight>10</weight>
+        <properties>
+            <magic>true</magic>
+        </properties>
+        <ability>
+            <type>weap-status</type>
+            <strength>3</strength>
+            <data>11</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[A lyre is a small, portable harp. It features a series of strings of different lengths spanning a curved frame. It has a very pleasant, calming sound to it. This one is clearly magical.]]>
+        </description>
+    </item>
+    <item id="402">
+        <variety>weapon-2hand</variety>
+        <level>4</level>
+        <awkward>0</awkward>
+        <bonus>0</bonus>
+        <protection>2</protection>
+        <charges>5</charges>
+        <weapon-type>mage-lore</weapon-type>
+        <pic>47</pic>
+        <name>Lute</name>
+        <full-name>Lute of Lost Souls</full-name>
+        <treasure>4</treasure>
+        <value>404</value>
+        <weight>20</weight>
+        <properties>
+            <magic>true</magic>
+        </properties>
+        <ability>
+            <type>use-summon-mass</type>
+            <strength>3</strength>
+            <data>62</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[A lute is a hollow, gourd-shaped body with a long neck, strings running from the end of the neck to the base of the body. It is played by plucking the strings, causing vibrations which are amplified by the hollow body. This one is clearly magical.]]>
+        </description>
+    </item>
+    <item id="403">
+        <variety>weapon-2hand</variety>
+        <level>5</level>
+        <awkward>0</awkward>
+        <bonus>2</bonus>
+        <protection>0</protection>
+        <weapon-type>mage-lore</weapon-type>
+        <pic>45</pic>
+        <name>Coronet</name>
+        <full-name>Coronet of Chaos</full-name>
+        <treasure>4</treasure>
+        <value>3500</value>
+        <weight>30</weight>
+        <properties>
+            <magic>true</magic>
+        </properties>
+        <ability>
+            <type>weap-fear</type>
+            <strength>3</strength>
+            <data>0</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[A coronet is a long, flaired tube of metal, curved around to make it easy to carry. It is played by blowing into the narrow end, creating a bold sound. This one is clearly magical.]]>
+        </description>
+    </item>
+    <item id="404">
+        <variety>weapon-2hand</variety>
+        <level>1</level>
+        <awkward>4</awkward>
+        <bonus>0</bonus>
+        <protection>0</protection>
+        <weapon-type>mage-lore</weapon-type>
+        <pic>45</pic>
+        <name>Coronet</name>
+        <full-name>Courteous Coronet</full-name>
+        <treasure>2</treasure>
+        <value>0</value>
+        <weight>30</weight>
+        <properties>
+            <magic>true</magic>
+            <cursed>true</cursed>
+        </properties>
+        <ability>
+            <type>weap-status</type>
+            <strength>3</strength>
+            <data>1</data>
+            <use-flag>help-one</use-flag>
+        </ability>
+        <description>
+            <![CDATA[The sound of this coronet is lovely. Maybe too lovely... It looks like it boosts the morale your foes instead of your allies, and it appears to be cursed.]]>
+        </description>
+    </item>
+    <item id="405">
+        <variety>object</variety>
+        <level>0</level>
+        <awkward>0</awkward>
+        <bonus>0</bonus>
+        <protection>0</protection>
+        <pic>46</pic>
+        <name>Fur</name>
+        <full-name>Poor Fur</full-name>
+        <treasure>2</treasure>
+        <value>50</value>
+        <weight>15</weight>
+        <properties />
+        <description>
+            <![CDATA[This is the skin and fur of a dead animal. The fur is patchy and ugly, like the deceased was not quite healthy, and the skin has numerous holes and tears. It'll serve as a blanket and someone of limited means might want it, but it might not be very comfortable.]]>
+        </description>
+    </item>
+    <item id="406">
+        <variety>object</variety>
+        <level>0</level>
+        <awkward>0</awkward>
+        <bonus>0</bonus>
+        <protection>0</protection>
+        <pic>46</pic>
+        <name>Fur</name>
+        <full-name>Fine Fur</full-name>
+        <treasure>3</treasure>
+        <value>500</value>
+        <weight>15</weight>
+        <properties />
+        <description>
+            <![CDATA[This is the skin and fur of a dead animal. It's in very good condition and would make for a warm blanket or rustic rug. It could fetch a good price.]]>
+        </description>
+    </item>
 </items>
