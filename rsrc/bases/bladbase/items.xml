@@ -92,7 +92,7 @@
             <identified>true</identified>
         </properties>
         <description>
-            <![CDATA[They say that no matter how different we are from each other, we all put on pants the same way: one leg at a time. They don't account for people with tails but the sentiment is nice.]]>
+            <![CDATA[They say that no matter how different we are from each other, we all put on pants the same way: one leg at a time. They don't account for people with tails, but the sentiment is nice.]]>
         </description>
     </item>
     <item id="5">
@@ -111,7 +111,7 @@
             <identified>true</identified>
         </properties>
         <description>
-            <![CDATA[They say that no matter how different we are from each other, we all put on pants the same way: one leg at a time. They don't account for people with tails but the sentiment is nice.]]>
+            <![CDATA[They say that no matter how different we are from each other, we all put on pants the same way: one leg at a time. They don't account for people with tails, but the sentiment is nice.]]>
         </description>
     </item>
     <item id="6">
@@ -234,7 +234,7 @@
             <identified>true</identified>
         </properties>
         <description>
-            <![CDATA[A long, often twisted or branched piece of wood, fallen or forcibly removed from a tree. May contain bark, twigs, and leaves. May also contain rot and bugs.]]>
+            <![CDATA[A long, often twisted or branched piece of wood, fallen or forcibly removed from a tree. May contain bark, twigs, and leaves. May also contain rot and bugs. You could hit someone with it, should you find yourself without a better weapon.]]>
         </description>
     </item>
     <item id="12">
@@ -254,7 +254,7 @@
             <identified>true</identified>
         </properties>
         <description>
-            <![CDATA[A long, often twisted or branched piece of wood, fallen or forcibly removed from a tree. May contain bark, twigs, and leaves. May also contain rot and bugs.]]>
+            <![CDATA[A long, often twisted or branched piece of wood, fallen or forcibly removed from a tree. May contain bark, twigs, and leaves. May also contain rot and bugs. You could hit someone with it, should you find yourself without a better weapon.]]>
         </description>
     </item>
     <item id="13">
@@ -357,7 +357,7 @@
             <use-flag>help-all</use-flag>
         </ability>
         <description>
-            <![CDATA[Some parts of the lands you'll explore are very dark. Darkness makes it difficult to see where you walk, objects in your path, and who or what you are stabbing with your sword. Candles will do the job, but not well. They're more for lighting homes than lighting caves.]]>
+            <![CDATA[Some parts of the lands you'll explore are very dark. Darkness makes it difficult to see where you walk, objects in your path, and who or what you are stabbing with your sword. Candles will do the job, but not well. They're more for lighting homes than caves.]]>
         </description>
     </item>
     <item id="18">
@@ -1143,7 +1143,7 @@
         <weight>25</weight>
         <properties />
         <description>
-            <![CDATA[Broadswords are broad swords. More specifically, they're big, heavy swords, with a lot of momentum. Most people can't wield them one-handed, although if one were very strong it could work.]]>
+            <![CDATA[Broadswords are broad swords. More specifically, they're big, heavy swords, with a lot of momentum. Most people can't wield them one-handed, but adventurers aren't most people.]]>
         </description>
     </item>
     <item id="59">
@@ -1377,7 +1377,7 @@
         <weight>25</weight>
         <properties />
         <description>
-            <![CDATA[Broadswords are broad swords. More specifically, they're big, heavy swords, with a lot of momentum. Most people can't wield them one-handed, although if one were very strong it could work.]]>
+            <![CDATA[Broadswords are broad swords. More specifically, they're big, heavy swords, with a lot of momentum. Most people can't wield them one-handed, but adventurers aren't most people.]]>
         </description>
     </item>
     <item id="72">
@@ -1627,7 +1627,7 @@
             <magic>true</magic>
         </properties>
         <description>
-            <![CDATA[Broadswords are broad swords. More specifically, they're big, heavy swords, with a lot of momentum. Most people can't wield them one-handed, although if one were very strong it could work. It seems someone has enchanted this one. It may be even more effective than usual.]]>
+            <![CDATA[Broadswords are broad swords. More specifically, they're big, heavy swords, with a lot of momentum. Most people can't wield them one-handed, but adventurers aren't most people. It seems someone has enchanted this one. It may be even more effective than usual.]]>
         </description>
     </item>
     <item id="85">
@@ -2069,7 +2069,7 @@
         <weight>3</weight>
         <properties />
         <description>
-            <![CDATA[Javelins are long, pointy sticks designed for throwing. Some can be flung with launchers for greater distance and speed, if you have one. If you hit someone with it with enough force, it can be deadly, but it's not as deadly as walking up and stabbing them. It may be less deadly for you too, though.]]>
+            <![CDATA[Javelins are long, pointy sticks designed for throwing. Some can be flung with launchers for greater distance and speed, if you have one. If you hit someone with it with enough force, it can be deadly, but it's not as deadly as walking up and stabbing them. It may be less deadly for you, though.]]>
         </description>
     </item>
     <item id="107">
@@ -2090,7 +2090,7 @@
         <weight>3</weight>
         <properties />
         <description>
-            <![CDATA[Javelins are long, pointy sticks designed for throwing. Some can be flung with launchers for greater distance and speed, if you have one. If you hit someone with it with enough force, it can be deadly, but it's not as deadly as walking up and stabbing them. It may be less deadly for you too, though.]]>
+            <![CDATA[Javelins are long, pointy sticks designed for throwing. Some can be flung with launchers for greater distance and speed, if you have one. If you hit someone with it with enough force, it can be deadly, but it's not as deadly as walking up and stabbing them. It may be less deadly for you, though.]]>
         </description>
     </item>
     <item id="108">
@@ -2301,7 +2301,7 @@
         <weight>25</weight>
         <properties />
         <description>
-            <![CDATA[This is a strap of some material, probably leather, which you can use to fling any object which you can fit into it at somebody. There's always something lying around to throw, which makes this device quite flexible and useful.]]>
+            <![CDATA[This is a strap of leather which you can use to fling any object which you can fit into it at somebody. There's always something lying around to throw, which makes this device quite flexible and useful.]]>
         </description>
     </item>
     <item id="119">
@@ -2322,7 +2322,7 @@
             <magic>true</magic>
         </properties>
         <description>
-            <![CDATA[This is a strap of some material, probably leather, which you can use to fling any object which you can fit into it at somebody. There's always something lying around to throw, which makes this device quite flexible and useful. It seems someone has enchanted this one. It may be even more effective than usual.]]>
+            <![CDATA[This is a strap of leather which you can use to fling any object which you can fit into it at somebody. There's always something lying around to throw, which makes this device quite flexible and useful. It seems someone has enchanted this one. It may be even more effective than usual.]]>
         </description>
     </item>
     <item id="120">
@@ -2479,7 +2479,7 @@
         <weight>120</weight>
         <properties />
         <description>
-            <![CDATA[Breastplates are chain mail armor with large plates of metal covering the chest. They offer more protection for your vital organs than simple chain mail, but they're rather heavy. It is not the same as boobplate, which shows off the breasts and is more dangerous than no armor at all.]]>
+            <![CDATA[Breastplates are chain mail armor with large plates of metal covering the chest. They offer more protection for your vital organs than simple chain mail, but they're rather heavy.]]>
         </description>
     </item>
     <item id="129">
@@ -2547,7 +2547,7 @@
         <weight>120</weight>
         <properties />
         <description>
-            <![CDATA[Breastplates are chain mail armor with large plates of metal covering the chest. They offer more protection for your vital organs than simple chain mail, but they're rather heavy. It is not the same as boobplate, which shows off the breasts and is more dangerous than no armor at all.]]>
+            <![CDATA[Breastplates are chain mail armor with large plates of metal covering the chest. They offer more protection for your vital organs than simple chain mail, but they're rather heavy.]]>
         </description>
     </item>
     <item id="133">
@@ -3848,7 +3848,7 @@
             <use-flag>help-one</use-flag>
         </ability>
         <description>
-            <![CDATA[This is the horn of a cattle or ram, hollowed, with the tip cut off to blow into and make a loud sound. Armies throughout history have used horns to signal and rally the troops. This one, simple in form though it is, seems to be enchanted. Maybe this one will also bring an army to your aid?]]>
+            <![CDATA[This is the horn of a bull or ram, hollowed, with the tip cut off to blow into and make a loud sound. Armies throughout history have used horns to signal and rally the troops. This one, simple in form though it is, seems to be enchanted. Maybe this one will also bring an army to your aid?]]>
         </description>
     </item>
     <item id="196">
@@ -4709,7 +4709,7 @@
             <use-flag>help-one</use-flag>
         </ability>
         <description>
-            <![CDATA[Gloves are pieces of cloth or leather, stitched together in a shape that will cover the hands. They have many uses, but they will not usually provide protection from combat weapons. This one, however, bears the crest of the Kingdom of Exile, and the seal of its wise king, Micah. If this was his, it may be rather special.]]>
+            <![CDATA[Gloves are pieces of cloth or leather, stitched together in a shape that will cover the hands. They have many uses, but they will not usually provide protection from combat weapons. This pair, however, bears the crest of the Kingdom of Exile, and the seal of its wise king, Micah. If these were his, they may be rather special.]]>
         </description>
     </item>
     <item id="232">
@@ -7246,7 +7246,7 @@
             <use-flag>harm-all</use-flag>
         </ability>
         <description>
-            <![CDATA[This is an ingot of metal. Ingots are formed from molten metal poured into molds. It allows for easy storage and transport, compared to, say, carrying a sack of nuggets or coins. It's also easier to standardize the weight this way. The strange ingot has no marks of purity on it, but it does glow dimly green in the dark...]]>
+            <![CDATA[This is an ingot of metal. Ingots are formed from molten metal poured into molds. It allows for easy storage and transport, compared to, say, carrying a sack of nuggets or coins. It's also easier to standardize the weight this way. The strange ingot has no marks of purity on it, but it feels mysteriously warm to the touch...]]>
         </description>
     </item>
     <item id="334">
@@ -7694,6 +7694,9 @@
             <data>0</data>
             <use-flag>harm-all</use-flag>
         </ability>
+        <description>
+            <![CDATA[This is a small pouch of powder. Dirt is a powder, but a small pouch of dirt has few useful or harmful properties. This probably isn't dirt, so be careful with it.]]>
+        </description>
     </item>
     <item id="352">
         <variety>potion</variety>
@@ -8446,6 +8449,9 @@
         <properties>
             <magic>true</magic>
         </properties>
+        <description>
+            <![CDATA[Broadswords are broad swords. More specifically, they're big, heavy swords, with a lot of momentum. Most people can't wield them one-handed, although if one were very strong it could work. This one is made of mithral, a very rare metal which is very light but strong.]]>
+        </description>
     </item>
     <item id="383">
         <variety>none</variety>
