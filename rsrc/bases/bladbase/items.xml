@@ -4323,28 +4323,21 @@
         </description>
     </item>
     <item id="214">
-        <variety>potion</variety>
-        <level>0</level>
+        <variety>gold</variety>
+        <level>1</level>
         <awkward>0</awkward>
         <bonus>0</bonus>
         <protection>0</protection>
-        <charges>1</charges>
-        <pic>60</pic>
-        <name>Potion</name>
-        <full-name>Brew of Lethe (delete)</full-name>
-        <treasure>2</treasure>
-        <value>500</value>
-        <weight>1</weight>
-        <properties>
-            <magic>true</magic>
-            <concealed>true</concealed>
-        </properties>
-        <ability>
-            <type>use-xp</type>
-            <strength>8</strength>
-            <data>0</data>
-            <use-flag>harm-one</use-flag>
-        </ability>
+        <pic>17</pic>
+        <name>Gold</name>
+        <full-name>Pile of Money</full-name>
+        <treasure>3</treasure>
+        <value>0</value>
+        <weight>0</weight>
+        <properties />
+        <description>
+            <![CDATA[Gold, silver, copper, gems, trade goods. Sad though it is, it's hard to get what you need in life without money.]]>
+        </description>
     </item>
     <item id="215">
         <variety>object</variety>
