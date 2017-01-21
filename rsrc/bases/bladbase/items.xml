@@ -3527,6 +3527,7 @@
         <weight>1</weight>
         <properties>
             <magic>true</magic>
+            <concealed>true</concealed>
         </properties>
         <ability>
             <type>use-xp</type>
@@ -3553,6 +3554,7 @@
         <weight>1</weight>
         <properties>
             <magic>true</magic>
+            <concealed>true</concealed>
         </properties>
         <ability>
             <type>use-skillpt</type>
@@ -3579,6 +3581,7 @@
         <weight>1</weight>
         <properties>
             <magic>true</magic>
+            <concealed>true</concealed>
         </properties>
         <ability>
             <type>bliss-doom</type>
@@ -4751,8 +4754,8 @@
         </properties>
         <ability>
             <type>slow</type>
-            <strength>1</strength>
-            <data>5</data>
+            <strength>5</strength>
+            <data>0</data>
             <use-flag>help-one</use-flag>
         </ability>
         <description>
@@ -4802,8 +4805,8 @@
         </properties>
         <ability>
             <type>speed</type>
-            <strength>1</strength>
-            <data>3</data>
+            <strength>3</strength>
+            <data>0</data>
             <use-flag>help-one</use-flag>
         </ability>
         <description>
@@ -6848,8 +6851,8 @@
         </properties>
         <ability>
             <type>speed</type>
-            <strength>1</strength>
-            <data>3</data>
+            <strength>3</strength>
+            <data>0</data>
             <use-flag>help-one</use-flag>
         </ability>
         <description>
@@ -7532,7 +7535,7 @@
         <ability>
             <type>weap-dmg</type>
             <strength>5</strength>
-            <data>4</data>
+            <data>1</data>
             <use-flag>help-one</use-flag>
         </ability>
         <description>
