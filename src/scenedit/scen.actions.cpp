@@ -1058,7 +1058,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 							// Delete not only the last entry but any other empty entries at the end of the list
 							do {
 								specials.pop_back();
-							} while(specials.back().spec < 0);
+							} while(!specials.empty() && specials.back().spec < 0);
 						}
 						break;
 					}
@@ -1098,7 +1098,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 						town->creatures[x].number = 0;
 						break;
 					}
-				while(town->creatures.back().number == 0)
+				while(!town->creatures.empty() && town->creatures.back().number == 0)
 					town->creatures.pop_back();
 				overall_mode = MODE_DRAWING;
 				break;
@@ -1109,7 +1109,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 						town->preset_items[x].code = -1;
 						break;
 					}
-				while(town->preset_items.back().code == -1)
+				while(!town->preset_items.empty() && town->preset_items.back().code == -1)
 					town->preset_items.pop_back();
 				overall_mode = MODE_DRAWING;
 				break;
