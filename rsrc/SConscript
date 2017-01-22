@@ -1,7 +1,8 @@
 
 from __future__ import print_function
 import os.path as path
-import subprocess
+import subprocess, tarfile
+from os import walk as walk_dir, chdir
 
 Import("env platform data_dir install_dir")
 
@@ -18,13 +19,29 @@ env.Install(path.join(data_dir, "shaders"), Glob("#src/tools/mask.*"))
 
 # Scenarios
 
-if str(platform) == "darwin":
-	scen_gfx = Glob("Blades of Exile Scenarios/*.meg")
-elif str(platform) == "win32":
-	scen_gfx = Glob("Blades of Exile Scenarios/*.BMP")
+def pack_scenario(target, source, env):
+	prev_dir = path.abspath('.')
+	for i in range(min(len(target), len(source))):
+		abspath = path.dirname(source[i].abspath)
+		chdir(abspath)
+		with tarfile.open(target[i].abspath, 'w:gz') as tar:
+			for dir, subdirs, files in walk_dir('.'):
+				cur_dir = 'scenario' + dir[1:]
+				for fname in files:
+					cur_file = path.join(cur_dir, fname)
+					tar.add(path.join(dir, fname), arcname = cur_file)
+	chdir(prev_dir)
 
-env.Install(path.join(install_dir, "Blades of Exile Scenarios"), Glob("Blades of Exile Scenarios/*.exs") + scen_gfx)
-env.Install(path.join(install_dir, "Blades of Exile Base"), Glob("Blades of Exile Bases/*.exs"))
+env.Append(BUILDERS={"BuildScenario": Builder(action=pack_scenario, suffix=".boes", src_suffix="")})
+
+env.BuildScenario('#build/rsrc/bases/bladbase.boes', 'bases/bladbase/header.exs')
+env.BuildScenario('#build/rsrc/scenarios/busywork.boes', 'scenarios/busywork/header.exs')
+env.BuildScenario('#build/rsrc/scenarios/valleydy.boes', 'scenarios/valleydy/header.exs')
+env.BuildScenario('#build/rsrc/scenarios/stealth.boes', 'scenarios/stealth/header.exs')
+env.BuildScenario('#build/rsrc/scenarios/zakhazi.boes', 'scenarios/zakhazi/header.exs')
+
+env.Install(path.join(install_dir, "Blades of Exile Scenarios"), Glob("#build/rsrc/scenarios/*.boes"))
+env.Install(path.join(install_dir, "Blades of Exile Base"), Glob("#build/rsrc/bases/*.boes"))
 
 # Validate dialogs
 
