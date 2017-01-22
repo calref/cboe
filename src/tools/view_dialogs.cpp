@@ -121,7 +121,7 @@ void put_monst_info(cDialog& me, const cMonster& store_m, const cScenario& scen)
 	
 	cPict& pic = dynamic_cast<cPict&>(me["pic"]);
 	if(store_m.invisible)
-		pic.setPict(400,PIC_MONST);// TODO: should probably be PICT_BLANK?
+		pic.setPict(-1,PIC_MONST);
 	else if(store_m.picture_num < 1000)
 		pic.setPict(store_m.picture_num,PIC_MONST);
 	else {
