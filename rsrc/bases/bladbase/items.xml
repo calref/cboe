@@ -2069,7 +2069,7 @@
         <weight>3</weight>
         <properties />
         <description>
-            <![CDATA[Javelins are long, pointy sticks designed for throwing. Some can be flung with launchers for greater distance and speed, if you have one. If you hit someone with it with enough force, it can be deadly, but it's not as deadly as walking up and stabbing them. It may be less deadly for you, though.]]>
+            <![CDATA[Javelins are long, pointy sticks designed for throwing. Some can be flung with launchers for greater distance and speed, if you have one. If you hit someone with it with enough force, it can be deadly, but it's not as deadly as walking up and stabbing them. It may be less deadly for you too, though.]]>
         </description>
     </item>
     <item id="107">
@@ -2090,7 +2090,7 @@
         <weight>3</weight>
         <properties />
         <description>
-            <![CDATA[Javelins are long, pointy sticks designed for throwing. Some can be flung with launchers for greater distance and speed, if you have one. If you hit someone with it with enough force, it can be deadly, but it's not as deadly as walking up and stabbing them. It may be less deadly for you, though.]]>
+            <![CDATA[Javelins are long, pointy sticks designed for throwing. Some can be flung with launchers for greater distance and speed, if you have one. If you hit someone with it with enough force, it can be deadly, but it's not as deadly as walking up and stabbing them. It may be less deadly for you too, though.]]>
         </description>
     </item>
     <item id="108">
@@ -8447,7 +8447,7 @@
             <magic>true</magic>
         </properties>
         <description>
-            <![CDATA[Broadswords are broad swords. More specifically, they're big, heavy swords, with a lot of momentum. Most people can't wield them one-handed, although if one were very strong it could work. This one is made of mithral, a very rare metal which is very light but strong.]]>
+            <![CDATA[Broadswords are broad swords. More specifically, they're big, heavy swords, with a lot of momentum. Most people can't wield them one-handed, but adventurers aren't most people. This one is made of mithral, a very rare metal which is very light but strong.]]>
         </description>
     </item>
     <item id="383">
@@ -8860,7 +8860,7 @@
             <use-flag>help-one</use-flag>
         </ability>
         <description>
-            <![CDATA[These pipes are made from reeds and held together with a cloth band. Each reed is of a different length, and  will produce a different note when blown across. This particular set is clearly magical.]]>
+            <![CDATA[These pipes are made from reeds and held together with a cloth band. Each reed is of a different length, and will produce a different note when blown across. This particular set is clearly magical.]]>
         </description>
     </item>
     <item id="400">
@@ -8887,7 +8887,7 @@
             <use-flag>help-one</use-flag>
         </ability>
         <description>
-            <![CDATA[These pipes are made from reeds and held together with a cloth band. Each reed is of a different length, and each will produce a different note when blown into. This particular set is clearly magical.]]>
+            <![CDATA[These pipes are made from reeds and held together with a cloth band. Each reed is of a different length, and will produce a different note when blown across. This particular set is clearly magical.]]>
         </description>
     </item>
     <item id="401">
