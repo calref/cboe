@@ -79,4 +79,5 @@
 	<text top='150' left='283' width='50' height='14'>Attack 1:</text>
 	<text top='174' left='283' width='50' height='14'>Attack 2:</text>
 	<text top='198' left='283' width='50' height='14'>Attack 3:</text>
+	<button name='preview' type='regular' top='8' left='600'>Preview</button>
 </dialog>

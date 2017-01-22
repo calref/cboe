@@ -90,4 +90,5 @@
 	</text>
 	<button name="abils" type='large' top='357' left='155'>Abilities</button>
 	<button name="desc" type='large' top='357' left='263'>Description</button>
+	<button name="preview" type='regular' top='8' left='509'>Preview</button>
 </dialog>

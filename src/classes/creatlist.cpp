@@ -56,7 +56,7 @@ void cPopulation::assign(size_t n, const cTownperson& other, const cMonster& bas
 		dudes[n].max_mp = dudes[n].mp = 12 * dudes[n].level;
 	else dudes[n].max_mp = dudes[n].mp = 0;
 	dudes[n].m_morale = 10 * dudes[n].level;
-	if(dudes[n].level >= 20)
+	if(dudes[n].level > 20)
 		dudes[n].m_morale += 10 * (dudes[n].level - 20);
 	dudes[n].morale = dudes[n].m_morale;
 	dudes[n].direction = DIR_HERE;

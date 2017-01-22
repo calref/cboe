@@ -213,6 +213,8 @@
 		91ACCE941900346C00FAEF8B /* sfml-graphics.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
 		91ACCE961900346C00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; };
 		91ACCE971900346C00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E118F87F3700E3EA15 /* sfml-window.framework */; };
+		91B0D5D11E3442FE002BE4DA /* view_dialogs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B0D5D01E34428E002BE4DA /* view_dialogs.cpp */; };
+		91B0D5D21E344300002BE4DA /* view_dialogs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B0D5D01E34428E002BE4DA /* view_dialogs.cpp */; };
 		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
 		91B3EF470F969F1700BF5B67 /* BoEScenEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDB0F969BA700BF5B67 /* BoEScenEd.icns */; };
 		91B3EF480F969F2300BF5B67 /* pc.main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF050F969BD300BF5B67 /* pc.main.cpp */; };
@@ -669,6 +671,8 @@
 		91B0D5CD1E3408AB002BE4DA /* stealth */ = {isa = PBXFileReference; lastKnownFileType = folder; path = stealth; sourceTree = "<group>"; };
 		91B0D5CE1E3408AB002BE4DA /* valleydy */ = {isa = PBXFileReference; lastKnownFileType = folder; path = valleydy; sourceTree = "<group>"; };
 		91B0D5CF1E3408AB002BE4DA /* zakhazi */ = {isa = PBXFileReference; lastKnownFileType = folder; path = zakhazi; sourceTree = "<group>"; };
+		91B0D5D01E34428E002BE4DA /* view_dialogs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = view_dialogs.cpp; sourceTree = "<group>"; };
+		91B0D5D31E3446CF002BE4DA /* view_dialogs.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = view_dialogs.hpp; sourceTree = "<group>"; };
 		91B3E8A50F938FFE00BF5B67 /* boe.consts.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.consts.hpp; sourceTree = "<group>"; };
 		91B3EED90F969BA700BF5B67 /* BoEScenEd-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoEScenEd-Info.plist"; path = "scenedit/BoEScenEd-Info.plist"; sourceTree = SOURCE_ROOT; };
 		91B3EEDB0F969BA700BF5B67 /* BoEScenEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BoEScenEd.icns; path = icons/mac/BoEScenEd.icns; sourceTree = "<group>"; };
@@ -1092,6 +1096,7 @@
 				915325181A2E37EE000A9A1C /* specials_parse.cpp */,
 				91BFA3D81902AD78001686E4 /* tarball.cpp */,
 				912283C80FD0E16C00B21642 /* undo.cpp */,
+				91B0D5D01E34428E002BE4DA /* view_dialogs.cpp */,
 				919145FF18E63B70005CF3A4 /* winutil.mac.mm */,
 			);
 			name = src;
@@ -1113,6 +1118,7 @@
 				91BFA3D91902ADD5001686E4 /* tarball.hpp */,
 				917B573F100B956C0096C978 /* undo.hpp */,
 				9179A4621A47D4E200FEF872 /* vector2d.hpp */,
+				91B0D5D31E3446CF002BE4DA /* view_dialogs.hpp */,
 				919145FE18E63B41005CF3A4 /* winutil.hpp */,
 			);
 			name = headers;
@@ -1764,6 +1770,7 @@
 				912DFE8F18E2872400B00D75 /* boe.menus.mac.mm in Sources */,
 				919145FC18E3AB1B005CF3A4 /* boe.appleevents.mm in Sources */,
 				915325171A2E1DF0000A9A1C /* oldstructs.cpp in Sources */,
+				91B0D5D11E3442FE002BE4DA /* view_dialogs.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1866,6 +1873,7 @@
 				91B3F1850F97894A00BF5B67 /* scen.graphics.cpp in Sources */,
 				914CA45819074E0100B6ADD1 /* scen.menus.mac.mm in Sources */,
 				91034D211B225E4A008F01C1 /* scen.appleevents.mm in Sources */,
+				91B0D5D21E344300002BE4DA /* view_dialogs.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
