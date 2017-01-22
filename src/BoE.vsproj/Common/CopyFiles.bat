@@ -33,16 +33,17 @@ xcopy %ResourceDir%\strings\*.txt %TargetDir%\data\strings /s /y /i /d
 xcopy %ResourceDir%\..\src\tools\mask.* %TargetDir%\data\shaders /s /y /i /d
 
 @echo Copying base scenarios...
-cd %ResourceDir%\"Blades of Exile Bases"
+cd %ResourceDir%\bases
 call %ResourceDir%\..\pkg\win\build-scen.bat bladbase bladbase.boes
-xcopy %ResourceDir%\"Blades of Exile Bases"\*.boes %TargetDir%\"Blades of Exile Base" /s /y /i /d
+xcopy %ResourceDir%\bases\*.boes %TargetDir%\"Blades of Exile Base" /s /y /i /d
 
 @echo Copying scenario files...
+cd %ResourceDir%\scenarios
 call %ResourceDir%\..\pkg\win\build-scen.bat busywork busywork.boes
 call %ResourceDir%\..\pkg\win\build-scen.bat valleydy valleydy.boes
 call %ResourceDir%\..\pkg\win\build-scen.bat stealth stealth.boes
 call %ResourceDir%\..\pkg\win\build-scen.bat zakhazi zakhazi.boes
-xcopy %ResourceDir%\"Blades of Exile Scenarios"\*.boes %TargetDir%\"Blades of Exile Scenarios" /s /y /i /d
+xcopy %ResourceDir%\scenarios\*.boes %TargetDir%\"Blades of Exile Scenarios" /s /y /i /d
 
 @echo Copying required DLLs...
 if %Config% == "Debug" (

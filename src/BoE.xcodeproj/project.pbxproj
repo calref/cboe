@@ -664,7 +664,7 @@
 		91AC62090FA2853700EEAE67 /* creatlist.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = creatlist.hpp; sourceTree = "<group>"; };
 		91AC620A0FA2853700EEAE67 /* creatlist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = creatlist.cpp; sourceTree = "<group>"; };
 		91ACCE82190032E000FAEF8B /* fix_dylibs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = fix_dylibs.sh; sourceTree = "<group>"; };
-		91B0D5CB1E33E579002BE4DA /* bladbase */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bladbase; path = "../Blades of Exile Bases/bladbase"; sourceTree = "<group>"; };
+		91B0D5CB1E33E579002BE4DA /* bladbase */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bladbase; path = ../bases/bladbase; sourceTree = "<group>"; };
 		91B0D5CC1E3408AB002BE4DA /* busywork */ = {isa = PBXFileReference; lastKnownFileType = folder; path = busywork; sourceTree = "<group>"; };
 		91B0D5CD1E3408AB002BE4DA /* stealth */ = {isa = PBXFileReference; lastKnownFileType = folder; path = stealth; sourceTree = "<group>"; };
 		91B0D5CE1E3408AB002BE4DA /* valleydy */ = {isa = PBXFileReference; lastKnownFileType = folder; path = valleydy; sourceTree = "<group>"; };
@@ -1423,14 +1423,14 @@
 		91D635A90F90E7B500674AB3 /* Scenarios and Bases */ = {
 			isa = PBXGroup;
 			children = (
+				91B0D5CB1E33E579002BE4DA /* bladbase */,
 				91B0D5CC1E3408AB002BE4DA /* busywork */,
 				91B0D5CD1E3408AB002BE4DA /* stealth */,
 				91B0D5CE1E3408AB002BE4DA /* valleydy */,
 				91B0D5CF1E3408AB002BE4DA /* zakhazi */,
-				91B0D5CB1E33E579002BE4DA /* bladbase */,
 			);
 			name = "Scenarios and Bases";
-			path = "Blades of Exile Scenarios";
+			path = scenarios;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1703,11 +1703,11 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/../rsrc/Blades of Exile Bases/bladbase",
-				"$(SRCROOT)/../rsrc/Blades of Exile Scenarios/busywork",
-				"$(SRCROOT)/../rsrc/Blades of Exile Scenarios/valleydy",
-				"$(SRCROOT)/../rsrc/Blades of Exile Scenarios/stealth",
-				"$(SRCROOT)/../rsrc/Blades of Exile Scenarios/zakhazi",
+				"$(SRCROOT)/../rsrc/bases/bladbase",
+				"$(SRCROOT)/../rsrc/scenarios/busywork",
+				"$(SRCROOT)/../rsrc/scenarios/valleydy",
+				"$(SRCROOT)/../rsrc/scenarios/stealth",
+				"$(SRCROOT)/../rsrc/scenarios/zakhazi",
 			);
 			name = "Pack Scenarios";
 			outputPaths = (
