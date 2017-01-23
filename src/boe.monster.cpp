@@ -710,13 +710,14 @@ bool combat_move_monster(short which,location destination) {
 
 // Looks at all spaces within 2, looking for a spot which is clear of nastiness and beings
 // returns {0,0} if none found
+// TODO: NO WAIT IT DOESN'T LOOK AT ALL SPACES!!!
 // TODO: THIS MAKES NO ADJUSTMENTS FOR BIG MONSTERS!!!
 //mode; // 0 - normal  1 - prefer adjacent space
 location find_clear_spot(location from_where,short mode) {
 	location loc,store_loc;
 	short num_tries = 0,r1;
 	// Here 254 indicates the low byte of the town fields, minus explored spaces (which is lowest bit).
-	unsigned long blocking_fields = OBJECT_CRATE | OBJECT_BARREL | OBJECT_BLOCK | FIELD_QUICKFIRE | 254;
+	unsigned long blocking_fields = SPECIAL_SPOT | OBJECT_CRATE | OBJECT_BARREL | OBJECT_BLOCK | FIELD_QUICKFIRE | 254;
 	
 	while(num_tries < 75) {
 		num_tries++;
