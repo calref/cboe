@@ -265,27 +265,6 @@
         <type>88</type>
         <property>true</property>
     </item>
-    <item id="57">
-        <type>-1</type>
-    </item>
-    <item id="58">
-        <type>-1</type>
-    </item>
-    <item id="59">
-        <type>-1</type>
-    </item>
-    <item id="60">
-        <type>-1</type>
-    </item>
-    <item id="61">
-        <type>-1</type>
-    </item>
-    <item id="62">
-        <type>-1</type>
-    </item>
-    <item id="63">
-        <type>-1</type>
-    </item>
     <creature id="0">
         <type>104</type>
         <attitude>hostile-a</attitude>
