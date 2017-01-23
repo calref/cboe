@@ -421,33 +421,6 @@
         <personality>-1</personality>
         <face>52</face>
     </creature>
-    <creature id="37">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="38">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="39">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
     <area top="8" left="21" bottom="14" right="29">Greeting Hall</area>
     <area top="34" left="2" bottom="37" right="6">Trash Pit</area>
     <area top="20" left="4" bottom="32" right="11">Chief&apos;s Chambers</area>

@@ -585,33 +585,6 @@
         <personality>-1</personality>
         <face>-1</face>
     </creature>
-    <creature id="57">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="58">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="59">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
     <area top="18" left="17" bottom="28" right="30">Old Brigand&apos;s Lair</area>
     <area top="51" left="25" bottom="56" right="30">Control Room C2</area>
     <area top="1" left="1" bottom="7" right="6">Subterranean Dock</area>

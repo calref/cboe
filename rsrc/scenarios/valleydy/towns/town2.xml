@@ -456,33 +456,6 @@
         <personality>-1</personality>
         <face>-1</face>
     </creature>
-    <creature id="37">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="38">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="39">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
     <area top="36" left="40" bottom="43" right="46">Abandoned Quarters</area>
     <area top="30" left="26" bottom="39" right="31">Abandoned Store</area>
     <area top="30" left="19" bottom="39" right="24">City Hall</area>
