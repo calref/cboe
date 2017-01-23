@@ -284,60 +284,6 @@
         <personality>-1</personality>
         <face>-1</face>
     </creature>
-    <creature id="34">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="35">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="36">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="37">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="38">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="39">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
     <string id="0">
         <![CDATA[This far away from the portal that brought you here, these caverns are completely, absolutely dark. The darkness is like a living thing, converging and smothering event the slightest bit of illumination.]]>
     </string>

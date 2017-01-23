@@ -363,60 +363,6 @@
         <face>-1</face>
         <encounter>1</encounter>
     </creature>
-    <creature id="34">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="35">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="36">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="37">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="38">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="39">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
     <area top="34" left="40" bottom="42" right="46">Below Pit</area>
     <area top="16" left="22" bottom="28" right="29">Hydra Cave</area>
     <area top="30" left="28" bottom="46" right="38">Underground Lake</area>
