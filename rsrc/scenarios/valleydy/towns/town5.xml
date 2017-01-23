@@ -516,11 +516,11 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="8" left="9" bottom="19" right="19">Old Stables                  </area>
-    <area top="8" left="29" bottom="19" right="40">Defunct Storeroom            </area>
-    <area top="15" left="19" bottom="34" right="29">Entry Hall                   </area>
-    <area top="29" left="9" bottom="41" right="19">Temporary Quarters           </area>
-    <area top="29" left="29" bottom="41" right="40">Waste Disposal               </area>
+    <area top="8" left="9" bottom="19" right="19">Old Stables</area>
+    <area top="8" left="29" bottom="19" right="40">Defunct Storeroom</area>
+    <area top="15" left="19" bottom="34" right="29">Entry Hall</area>
+    <area top="29" left="9" bottom="41" right="19">Temporary Quarters</area>
+    <area top="29" left="29" bottom="41" right="40">Waste Disposal</area>
     <sign id="0">
         <![CDATA[Stables]]>
     </sign>

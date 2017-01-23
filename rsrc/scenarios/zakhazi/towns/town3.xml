@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>64</size>
-    <name>Blood Glee Clan              </name>
+    <name>Blood Glee Clan</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -682,15 +682,15 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="50" left="3" bottom="61" right="61">The Test of Giants           </area>
-    <area top="38" left="38" bottom="48" right="51">Common Room                  </area>
-    <area top="36" left="42" bottom="38" right="52">Common Room                  </area>
-    <area top="26" left="29" bottom="36" right="39">By Huge, Smelly Pit          </area>
-    <area top="9" left="18" bottom="12" right="22">Chieftain&apos;s Quarters         </area>
-    <area top="8" left="3" bottom="24" right="13">By Burial Mounds             </area>
-    <area top="41" left="28" bottom="49" right="36">Food Storage                 </area>
-    <area top="13" left="47" bottom="25" right="56">Gross Food Storage           </area>
-    <area top="20" left="24" bottom="24" right="32">Hall of Murals               </area>
+    <area top="50" left="3" bottom="61" right="61">The Test of Giants</area>
+    <area top="38" left="38" bottom="48" right="51">Common Room</area>
+    <area top="36" left="42" bottom="38" right="52">Common Room</area>
+    <area top="26" left="29" bottom="36" right="39">By Huge, Smelly Pit</area>
+    <area top="9" left="18" bottom="12" right="22">Chieftain&apos;s Quarters</area>
+    <area top="8" left="3" bottom="24" right="13">By Burial Mounds</area>
+    <area top="41" left="28" bottom="49" right="36">Food Storage</area>
+    <area top="13" left="47" bottom="25" right="56">Gross Food Storage</area>
+    <area top="20" left="24" bottom="24" right="32">Hall of Murals</area>
     <sign id="0">
         <![CDATA[(This obelisk is carved with some sort of giant art. The carvings are of gleeful giants, beating up a unicorn.)]]>
     </sign>

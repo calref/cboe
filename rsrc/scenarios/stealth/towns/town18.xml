@@ -721,9 +721,9 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="8" left="7" bottom="18" right="21">Throne Room                  </area>
-    <area top="27" left="7" bottom="37" right="13">Forge                        </area>
-    <area top="43" left="26" bottom="62" right="41">Fortress Storage             </area>
+    <area top="8" left="7" bottom="18" right="21">Throne Room</area>
+    <area top="27" left="7" bottom="37" right="13">Forge</area>
+    <area top="43" left="26" bottom="62" right="41">Fortress Storage</area>
     <sign id="0">
         <![CDATA[HOLDING AND INTERROGATION]]>
     </sign>

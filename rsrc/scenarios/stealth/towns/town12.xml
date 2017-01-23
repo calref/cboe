@@ -555,9 +555,9 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="8" left="8" bottom="13" right="12">Guard Quarters               </area>
-    <area top="33" left="27" bottom="39" right="32">Guardhouse                   </area>
-    <area top="10" left="31" bottom="22" right="37">BUZZARD INN                  </area>
+    <area top="8" left="8" bottom="13" right="12">Guard Quarters</area>
+    <area top="33" left="27" bottom="39" right="32">Guardhouse</area>
+    <area top="10" left="31" bottom="22" right="37">BUZZARD INN</area>
     <sign id="0">
         <![CDATA[Buzzard City Park|Treat it with respect.]]>
     </sign>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Fahl                         </name>
+    <name>Fahl</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -572,10 +572,10 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="28" left="27" bottom="38" right="38">Inn of the Fallen Trees      </area>
-    <area top="1" left="1" bottom="13" right="14">Explosion Site               </area>
-    <area top="3" left="34" bottom="14" right="45">Explosion Site               </area>
-    <area top="30" left="9" bottom="38" right="19">Abandoned Homes              </area>
+    <area top="28" left="27" bottom="38" right="38">Inn of the Fallen Trees</area>
+    <area top="1" left="1" bottom="13" right="14">Explosion Site</area>
+    <area top="3" left="34" bottom="14" right="45">Explosion Site</area>
+    <area top="30" left="9" bottom="38" right="19">Abandoned Homes</area>
     <sign id="0">
         <![CDATA[Calidric's Jewelry]]>
     </sign>

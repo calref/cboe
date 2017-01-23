@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Marralis                     </name>
+    <name>Marralis</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -583,13 +583,13 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="10" left="13" bottom="18" right="45">Around Failing Crops         </area>
-    <area top="23" left="7" bottom="29" right="13">Private Home                 </area>
-    <area top="23" left="18" bottom="29" right="21">Abandoned Shop               </area>
-    <area top="23" left="26" bottom="29" right="32">Communal Storeroom           </area>
-    <area top="25" left="37" bottom="29" right="41">Private Home                 </area>
-    <area top="36" left="39" bottom="41" right="41">Small Shop                   </area>
-    <area top="35" left="29" bottom="41" right="34">City Hall                    </area>
+    <area top="10" left="13" bottom="18" right="45">Around Failing Crops</area>
+    <area top="23" left="7" bottom="29" right="13">Private Home</area>
+    <area top="23" left="18" bottom="29" right="21">Abandoned Shop</area>
+    <area top="23" left="26" bottom="29" right="32">Communal Storeroom</area>
+    <area top="25" left="37" bottom="29" right="41">Private Home</area>
+    <area top="36" left="39" bottom="41" right="41">Small Shop</area>
+    <area top="35" left="29" bottom="41" right="34">City Hall</area>
     <area top="35" left="6" bottom="41" right="13">Temple of Divine Justice</area>
     <sign id="0">
         <![CDATA[TEMPLE OF DIVINE JUSTICE]]>

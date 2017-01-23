@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Empire Outpost               </name>
+    <name>Empire Outpost</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -532,10 +532,10 @@
         <personality>-1</personality>
         <face>10</face>
     </creature>
-    <area top="27" left="14" bottom="36" right="16">Guard Room                   </area>
-    <area top="31" left="6" bottom="36" right="12">Entry Chamber                </area>
-    <area top="22" left="23" bottom="30" right="38">Barracks                     </area>
-    <area top="1" left="32" bottom="7" right="39">Hot Laboratory               </area>
+    <area top="27" left="14" bottom="36" right="16">Guard Room</area>
+    <area top="31" left="6" bottom="36" right="12">Entry Chamber</area>
+    <area top="22" left="23" bottom="30" right="38">Barracks</area>
+    <area top="1" left="32" bottom="7" right="39">Hot Laboratory</area>
     <sign id="0">
         <![CDATA[EMPIRE LAB|CAUTION!|PROTECTIVE GEAR REQUIRED]]>
     </sign>

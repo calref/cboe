@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Experiment Halls             </name>
+    <name>Experiment Halls</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -508,15 +508,15 @@
         <personality>-1</personality>
         <face>-1</face>
     </creature>
-    <area top="20" left="29" bottom="42" right="46">Experimental Laboratories    </area>
-    <area top="32" left="3" bottom="40" right="14">Holding Cell Ruins           </area>
-    <area top="18" left="3" bottom="28" right="20">Storage and Records          </area>
-    <area top="10" left="36" bottom="14" right="41">Punishment Cells             </area>
-    <area top="32" left="18" bottom="40" right="21">Guard Room                   </area>
-    <area top="1" left="33" bottom="4" right="40">Guard Room                   </area>
-    <area top="1" left="4" bottom="5" right="13">Guard Room                   </area>
-    <area top="1" left="15" bottom="8" right="20">Mascot&apos;s Lair                </area>
-    <area top="1" left="26" bottom="8" right="31">Waste Repository             </area>
+    <area top="20" left="29" bottom="42" right="46">Experimental Laboratories</area>
+    <area top="32" left="3" bottom="40" right="14">Holding Cell Ruins</area>
+    <area top="18" left="3" bottom="28" right="20">Storage and Records</area>
+    <area top="10" left="36" bottom="14" right="41">Punishment Cells</area>
+    <area top="32" left="18" bottom="40" right="21">Guard Room</area>
+    <area top="1" left="33" bottom="4" right="40">Guard Room</area>
+    <area top="1" left="4" bottom="5" right="13">Guard Room</area>
+    <area top="1" left="15" bottom="8" right="20">Mascot&apos;s Lair</area>
+    <area top="1" left="26" bottom="8" right="31">Waste Repository</area>
     <sign id="0">
         <![CDATA[WASTE REPOSITORY|HIGH TO NORTH, WEAK TO SOUTH|DISPOSAL ON SUNDAYS]]>
     </sign>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>32</size>
-    <name>Pangle&apos;s Hut                 </name>
+    <name>Pangle&apos;s Hut</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -484,10 +484,10 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="21" left="5" bottom="25" right="11">Storage Shed                 </area>
-    <area top="6" left="7" bottom="10" right="13">Pangle&apos;s Common Room         </area>
-    <area top="12" left="7" bottom="14" right="13">Pangle&apos;s Bedroom             </area>
-    <area top="22" left="21" bottom="25" right="26">Small Stable                 </area>
+    <area top="21" left="5" bottom="25" right="11">Storage Shed</area>
+    <area top="6" left="7" bottom="10" right="13">Pangle&apos;s Common Room</area>
+    <area top="12" left="7" bottom="14" right="13">Pangle&apos;s Bedroom</area>
+    <area top="22" left="21" bottom="25" right="26">Small Stable</area>
     <sign id="0">
         <![CDATA[SHED]]>
     </sign>

@@ -563,11 +563,11 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="22" left="19" bottom="29" right="27">Shrine of Lasting Harmony    </area>
-    <area top="19" left="35" bottom="29" right="42">City Hall                    </area>
-    <area top="6" left="28" bottom="13" right="40">Stables                      </area>
-    <area top="34" left="8" bottom="38" right="13">Sage&apos;s Office                </area>
-    <area top="34" left="15" bottom="38" right="20">Canizares&apos; Alchemy            </area>
+    <area top="22" left="19" bottom="29" right="27">Shrine of Lasting Harmony</area>
+    <area top="19" left="35" bottom="29" right="42">City Hall</area>
+    <area top="6" left="28" bottom="13" right="40">Stables</area>
+    <area top="34" left="8" bottom="38" right="13">Sage&apos;s Office</area>
+    <area top="34" left="15" bottom="38" right="20">Canizares&apos; Alchemy</area>
     <sign id="0">
         <![CDATA[CANIZARES|Alchemy]]>
     </sign>

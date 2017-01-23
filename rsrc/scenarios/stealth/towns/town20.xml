@@ -717,16 +717,16 @@
         <personality>-1</personality>
         <face>19</face>
     </creature>
-    <area top="39" left="15" bottom="43" right="24">Jaen&apos;s Chambers              </area>
-    <area top="20" left="10" bottom="31" right="24">Jaen&apos;s Central Hall          </area>
-    <area top="20" left="26" bottom="31" right="40">Entry Hall                   </area>
-    <area top="33" left="35" bottom="43" right="39">Interrogation Chamber        </area>
-    <area top="33" left="26" bottom="43" right="33">Main Barracks                </area>
-    <area top="33" left="13" bottom="37" right="24">Library                      </area>
-    <area top="56" left="13" bottom="62" right="18">Trash Pit                    </area>
-    <area top="58" left="23" bottom="62" right="37">Holding Cells                </area>
-    <area top="8" left="26" bottom="18" right="32">Common Room                  </area>
-    <area top="20" left="41" bottom="31" right="44">Front Gates                  </area>
+    <area top="39" left="15" bottom="43" right="24">Jaen&apos;s Chambers</area>
+    <area top="20" left="10" bottom="31" right="24">Jaen&apos;s Central Hall</area>
+    <area top="20" left="26" bottom="31" right="40">Entry Hall</area>
+    <area top="33" left="35" bottom="43" right="39">Interrogation Chamber</area>
+    <area top="33" left="26" bottom="43" right="33">Main Barracks</area>
+    <area top="33" left="13" bottom="37" right="24">Library</area>
+    <area top="56" left="13" bottom="62" right="18">Trash Pit</area>
+    <area top="58" left="23" bottom="62" right="37">Holding Cells</area>
+    <area top="8" left="26" bottom="18" right="32">Common Room</area>
+    <area top="20" left="41" bottom="31" right="44">Front Gates</area>
     <sign id="19" />
     <string id="0">
         <![CDATA[When you get close to the door, a keyhole suddenly appears under the handle, surrounded by a circle of flames. On a hunch, you quickly insert Jaen's key into the hole and turn it. The flames disappear, and the door becomes unlocked.]]>

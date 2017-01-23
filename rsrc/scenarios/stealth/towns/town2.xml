@@ -480,8 +480,8 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="2" left="2" bottom="7" right="8">Dusty Old Storeroom          </area>
-    <area top="11" left="8" bottom="17" right="12">Questioning Chamber          </area>
+    <area top="2" left="2" bottom="7" right="8">Dusty Old Storeroom</area>
+    <area top="11" left="8" bottom="17" right="12">Questioning Chamber</area>
     <sign id="0">
         <![CDATA[Questioning Chamber|Sit in chair to be judged and commanded.]]>
     </sign>

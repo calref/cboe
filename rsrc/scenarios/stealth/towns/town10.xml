@@ -462,7 +462,7 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="10" left="14" bottom="16" right="20">Abandoned Barracks           </area>
+    <area top="10" left="14" bottom="16" right="20">Abandoned Barracks</area>
     <sign id="0">
         <![CDATA[To leave - Walk through here.|Remember - be fast! Be vigilant!]]>
     </sign>

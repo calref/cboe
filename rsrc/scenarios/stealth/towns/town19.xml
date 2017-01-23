@@ -497,8 +497,8 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="2" left="8" bottom="19" right="23">Path to Dock                 </area>
-    <area top="21" left="6" bottom="30" right="17">Small Shipyard               </area>
+    <area top="2" left="8" bottom="19" right="23">Path to Dock</area>
+    <area top="21" left="6" bottom="30" right="17">Small Shipyard</area>
     <sign id="19" />
     <string id="0">
         <![CDATA[The chest contains all sorts of paperwork. Most of it is simple letters and correspondence. One slender volume, however, contains alchemical recipes.]]>

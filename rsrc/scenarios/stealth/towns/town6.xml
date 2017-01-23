@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Zaskiva                      </name>
+    <name>Zaskiva</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -543,14 +543,14 @@
         <personality>-1</personality>
         <face>10</face>
     </creature>
-    <area top="11" left="1" bottom="16" right="4">Dock Warehouse               </area>
-    <area top="7" left="8" bottom="24" right="10">Private Quarters             </area>
-    <area top="29" left="1" bottom="42" right="7">Zaskiva Arms                 </area>
-    <area top="39" left="7" bottom="42" right="18">Zaskiva Arms                 </area>
-    <area top="29" left="12" bottom="34" right="18">Cartman&apos;s Armory             </area>
-    <area top="29" left="30" bottom="39" right="39">School of Magery             </area>
-    <area top="33" left="44" bottom="36" right="46">Small Shrine                 </area>
-    <area top="4" left="1" bottom="9" right="6">Zaskiva Docks                </area>
+    <area top="11" left="1" bottom="16" right="4">Dock Warehouse</area>
+    <area top="7" left="8" bottom="24" right="10">Private Quarters</area>
+    <area top="29" left="1" bottom="42" right="7">Zaskiva Arms</area>
+    <area top="39" left="7" bottom="42" right="18">Zaskiva Arms</area>
+    <area top="29" left="12" bottom="34" right="18">Cartman&apos;s Armory</area>
+    <area top="29" left="30" bottom="39" right="39">School of Magery</area>
+    <area top="33" left="44" bottom="36" right="46">Small Shrine</area>
+    <area top="4" left="1" bottom="9" right="6">Zaskiva Docks</area>
     <sign id="0">
         <![CDATA[Hall of Memorial Statues|Entry by Keeper Permission Only]]>
     </sign>

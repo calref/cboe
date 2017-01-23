@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Holding Cells                </name>
+    <name>Holding Cells</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -511,10 +511,10 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="17" left="39" bottom="25" right="42">Control Chamber              </area>
-    <area top="17" left="22" bottom="29" right="33">Viewing Arena                </area>
-    <area top="22" left="1" bottom="30" right="10">Arrival Chamber              </area>
-    <area top="39" left="1" bottom="40" right="15">Purification Hall            </area>
+    <area top="17" left="39" bottom="25" right="42">Control Chamber</area>
+    <area top="17" left="22" bottom="29" right="33">Viewing Arena</area>
+    <area top="22" left="1" bottom="30" right="10">Arrival Chamber</area>
+    <area top="39" left="1" bottom="40" right="15">Purification Hall</area>
     <sign id="0">
         <![CDATA[HOLDING BAYS A - High Longevity]]>
     </sign>

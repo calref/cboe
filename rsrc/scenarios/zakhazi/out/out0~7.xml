@@ -89,8 +89,8 @@
         <![CDATA[Calamity]]>
     </sign>
     <sign id="7" />
-    <area top="33" left="6" bottom="35" right="10">Misty Pools                  </area>
-    <area top="13" left="42" bottom="21" right="44">Rocky Climb                  </area>
+    <area top="33" left="6" bottom="35" right="10">Misty Pools</area>
+    <area top="13" left="42" bottom="21" right="44">Rocky Climb</area>
     <string id="0">
         <![CDATA[As you make your way down this winding path, you notice a glitter from the ground nearby. Looking closer, you find a small, round, iridescent gemstone. ]]>
     </string>

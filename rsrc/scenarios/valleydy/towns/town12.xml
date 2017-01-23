@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Lecture Halls                </name>
+    <name>Lecture Halls</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -499,9 +499,9 @@
         <personality>-1</personality>
         <face>-1</face>
     </creature>
-    <area top="36" left="1" bottom="46" right="9">Lecture Hall                 </area>
-    <area top="1" left="36" bottom="7" right="46">Faculty Offices              </area>
-    <area top="10" left="1" bottom="15" right="3">Faculty Offices              </area>
+    <area top="36" left="1" bottom="46" right="9">Lecture Hall</area>
+    <area top="1" left="36" bottom="7" right="46">Faculty Offices</area>
+    <area top="10" left="1" bottom="15" right="3">Faculty Offices</area>
     <sign id="0">
         <![CDATA[Faculty Offices]]>
     </sign>

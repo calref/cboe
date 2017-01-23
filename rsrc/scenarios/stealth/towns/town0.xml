@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Willow                       </name>
+    <name>Willow</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -562,9 +562,9 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="7" left="5" bottom="15" right="12">City Hall                    </area>
-    <area top="17" left="6" bottom="21" right="17">Discipline Cells             </area>
-    <area top="9" left="36" bottom="21" right="41">Serf Barracks                </area>
+    <area top="7" left="5" bottom="15" right="12">City Hall</area>
+    <area top="17" left="6" bottom="21" right="17">Discipline Cells</area>
+    <area top="9" left="36" bottom="21" right="41">Serf Barracks</area>
     <sign id="0">
         <![CDATA[DISCIPLINE CELLS|Enter with permission only!]]>
     </sign>

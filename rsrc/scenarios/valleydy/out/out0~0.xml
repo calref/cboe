@@ -108,8 +108,8 @@
         <![CDATA[WARNING! GOBLIN INFESTATION!|Official Empire Notification GoblBISCK129]]>
     </sign>
     <sign id="7" />
-    <area top="4" left="6" bottom="18" right="22">Goblin Valley                </area>
-    <area top="33" left="30" bottom="36" right="33">Near Marralis                </area>
+    <area top="4" left="6" bottom="18" right="22">Goblin Valley</area>
+    <area top="33" left="30" bottom="36" right="33">Near Marralis</area>
     <string id="0">
         <![CDATA[At the end of the peaceful forest path, you find that a druid has set herself up a small, pleasant grove. She is kneeling outside, busily planting a small row of comfrey root. Deer graze happily around her.]]>
     </string>

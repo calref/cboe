@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Citadel of Unicorns          </name>
+    <name>Citadel of Unicorns</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -560,11 +560,11 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="18" left="20" bottom="29" right="31">Central Chamber              </area>
-    <area top="9" left="11" bottom="15" right="17">Lair of Aetherius            </area>
-    <area top="32" left="11" bottom="38" right="17">Lair of Aeliopol             </area>
-    <area top="32" left="34" bottom="38" right="40">Lair of Aeriassa             </area>
-    <area top="9" left="34" bottom="15" right="40">Lair of Aessoforus           </area>
+    <area top="18" left="20" bottom="29" right="31">Central Chamber</area>
+    <area top="9" left="11" bottom="15" right="17">Lair of Aetherius</area>
+    <area top="32" left="11" bottom="38" right="17">Lair of Aeliopol</area>
+    <area top="32" left="34" bottom="38" right="40">Lair of Aeriassa</area>
+    <area top="9" left="34" bottom="15" right="40">Lair of Aessoforus</area>
     <sign id="19" />
     <string id="0">
         <![CDATA[As you start to walk into this wing of the unicorn's dome, the air starts to feel very cold. The farther in you walk, the more uncomfortable you feel. Your skin begins to itch, and you feel like something is watching you.]]>

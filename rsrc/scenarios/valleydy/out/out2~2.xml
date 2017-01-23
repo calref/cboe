@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <sector boes="2.0.0">
-    <name>Valley Entry                 </name>
+    <name>Valley Entry</name>
     <comment>Comment</comment>
     <encounter can-flee="false" force="true">
         <monster>0</monster>

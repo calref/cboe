@@ -675,11 +675,11 @@
         <personality>-1</personality>
         <face>12</face>
     </creature>
-    <area top="43" left="29" bottom="62" right="41">Fortress Storage             </area>
-    <area top="42" left="51" bottom="62" right="62">Prisons and Interrogation    </area>
-    <area top="22" left="41" bottom="34" right="50">Destroyed Laboratory         </area>
-    <area top="8" left="7" bottom="18" right="21">Stalker&apos;s Throne Room        </area>
-    <area top="1" left="26" bottom="18" right="34">Dining Hall and Common Room  </area>
+    <area top="43" left="29" bottom="62" right="41">Fortress Storage</area>
+    <area top="42" left="51" bottom="62" right="62">Prisons and Interrogation</area>
+    <area top="22" left="41" bottom="34" right="50">Destroyed Laboratory</area>
+    <area top="8" left="7" bottom="18" right="21">Stalker&apos;s Throne Room</area>
+    <area top="1" left="26" bottom="18" right="34">Dining Hall and Common Room</area>
     <sign id="0">
         <![CDATA[HOLDING AND INTERROGATION]]>
     </sign>

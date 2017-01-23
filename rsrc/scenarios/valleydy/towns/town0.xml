@@ -587,13 +587,13 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="31" left="14" bottom="38" right="18">Abandoned Barracks           </area>
-    <area top="34" left="6" bottom="38" right="10">Commander&apos;s Office           </area>
-    <area top="6" left="7" bottom="13" right="10">Guest Quarters               </area>
-    <area top="6" left="14" bottom="16" right="18">Storeroom                    </area>
-    <area top="28" left="23" bottom="34" right="33">Dining Hall                  </area>
-    <area top="28" left="35" bottom="34" right="41">Somewhat Used Barracks       </area>
-    <area top="5" left="2" bottom="18" right="5">Rat lair                     </area>
+    <area top="31" left="14" bottom="38" right="18">Abandoned Barracks</area>
+    <area top="34" left="6" bottom="38" right="10">Commander&apos;s Office</area>
+    <area top="6" left="7" bottom="13" right="10">Guest Quarters</area>
+    <area top="6" left="14" bottom="16" right="18">Storeroom</area>
+    <area top="28" left="23" bottom="34" right="33">Dining Hall</area>
+    <area top="28" left="35" bottom="34" right="41">Somewhat Used Barracks</area>
+    <area top="5" left="2" bottom="18" right="5">Rat lair</area>
     <sign id="0">
         <![CDATA[Commander's Office|Cmd. Terrance, Acting Officer]]>
     </sign>

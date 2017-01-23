@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Assikvas                     </name>
+    <name>Assikvas</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -529,12 +529,12 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="8" left="21" bottom="14" right="29">Greeting Hall                </area>
-    <area top="34" left="2" bottom="37" right="6">Trash Pit                    </area>
-    <area top="20" left="4" bottom="32" right="11">Chief&apos;s Chambers             </area>
-    <area top="7" left="8" bottom="12" right="12">Library                      </area>
-    <area top="6" left="36" bottom="8" right="39">Small Shrine                 </area>
-    <area top="19" left="32" bottom="26" right="41">Dining Hall                  </area>
+    <area top="8" left="21" bottom="14" right="29">Greeting Hall</area>
+    <area top="34" left="2" bottom="37" right="6">Trash Pit</area>
+    <area top="20" left="4" bottom="32" right="11">Chief&apos;s Chambers</area>
+    <area top="7" left="8" bottom="12" right="12">Library</area>
+    <area top="6" left="36" bottom="8" right="39">Small Shrine</area>
+    <area top="19" left="32" bottom="26" right="41">Dining Hall</area>
     <sign id="0">
         <![CDATA[Our Honored Mothers and Fathers]]>
     </sign>

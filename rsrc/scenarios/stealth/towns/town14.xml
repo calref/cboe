@@ -515,18 +515,18 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="38" left="24" bottom="42" right="30">Guard Post                   </area>
-    <area top="35" left="13" bottom="42" right="19">Throne Room                  </area>
-    <area top="17" left="35" bottom="25" right="43">Stables                      </area>
-    <area top="16" left="1" bottom="22" right="12">Quarters                     </area>
-    <area top="15" left="16" bottom="20" right="23">Barracks                     </area>
-    <area top="20" left="24" bottom="25" right="29">Dueling Platform             </area>
-    <area top="29" left="24" bottom="34" right="30">Storeroom                    </area>
-    <area top="26" left="9" bottom="30" right="19">Herb Brewing Chamber         </area>
-    <area top="25" left="1" bottom="33" right="6">Mutant Ogre Cave             </area>
-    <area top="36" left="4" bottom="43" right="8">Treasure Cave                </area>
-    <area top="41" left="35" bottom="43" right="43">Garbage Pit                  </area>
-    <area top="6" left="8" bottom="11" right="13">Guard Room                   </area>
+    <area top="38" left="24" bottom="42" right="30">Guard Post</area>
+    <area top="35" left="13" bottom="42" right="19">Throne Room</area>
+    <area top="17" left="35" bottom="25" right="43">Stables</area>
+    <area top="16" left="1" bottom="22" right="12">Quarters</area>
+    <area top="15" left="16" bottom="20" right="23">Barracks</area>
+    <area top="20" left="24" bottom="25" right="29">Dueling Platform</area>
+    <area top="29" left="24" bottom="34" right="30">Storeroom</area>
+    <area top="26" left="9" bottom="30" right="19">Herb Brewing Chamber</area>
+    <area top="25" left="1" bottom="33" right="6">Mutant Ogre Cave</area>
+    <area top="36" left="4" bottom="43" right="8">Treasure Cave</area>
+    <area top="41" left="35" bottom="43" right="43">Garbage Pit</area>
+    <area top="6" left="8" bottom="11" right="13">Guard Room</area>
     <sign id="19" />
     <string id="0">
         <![CDATA[The ogre's lair is a lot quieter now that the demon is gone and his slaves have fled. You still hear grunts and howls from deep inside, and they still sound dangerous. Just not as much.]]>
