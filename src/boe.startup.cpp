@@ -79,11 +79,10 @@ bool handle_startup_press(location the_point) {
 					}
 					
 					switch(pick_prefab_scen()) {
-						case 0: scen_name = "valleydy.exs"; break;
-							// if not reg, rub out
-						case 1: scen_name = "stealth.exs"; break;
-						case 2: scen_name = "zakhazi.exs"; break;
-							//case 3: sprintf(univ.party.scen_name,"busywork.exs"); break;
+						case 0: scen_name = "valleydy.boes"; break;
+						case 1: scen_name = "stealth.boes"; break;
+						case 2: scen_name = "zakhazi.boes"; break;
+						case 3: scen_name = "busywork.boes"; break;
 						default:
 							if(force_party) party_in_memory = false;
 							break;
