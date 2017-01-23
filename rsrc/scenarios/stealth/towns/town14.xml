@@ -216,15 +216,6 @@
     <item id="60">
         <type>201</type>
     </item>
-    <item id="61">
-        <type>-1</type>
-    </item>
-    <item id="62">
-        <type>-1</type>
-    </item>
-    <item id="63">
-        <type>-1</type>
-    </item>
     <creature id="0">
         <type>112</type>
         <attitude>docile</attitude>
