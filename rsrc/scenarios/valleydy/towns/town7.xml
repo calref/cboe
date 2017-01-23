@@ -430,15 +430,6 @@
         <personality>-1</personality>
         <face>-1</face>
     </creature>
-    <creature id="39">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
     <area top="17" left="39" bottom="25" right="42">Control Chamber</area>
     <area top="17" left="22" bottom="29" right="33">Viewing Arena</area>
     <area top="22" left="1" bottom="30" right="10">Arrival Chamber</area>

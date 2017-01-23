@@ -637,69 +637,6 @@
         <personality>-1</personality>
         <face>10</face>
     </creature>
-    <creature id="53">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="54">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="55">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="56">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="57">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="58">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="59">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
     <area top="8" left="7" bottom="18" right="21">Throne Room</area>
     <area top="27" left="7" bottom="37" right="13">Forge</area>
     <area top="43" left="26" bottom="62" right="41">Fortress Storage</area>

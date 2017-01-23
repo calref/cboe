@@ -341,69 +341,6 @@
         <personality>-1</personality>
         <face>-1</face>
     </creature>
-    <creature id="33">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="34">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="35">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="36">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="37">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="38">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
-    <creature id="39">
-        <type>0</type>
-        <attitude>docile</attitude>
-        <mobility>0</mobility>
-        <personality>0</personality>
-        <face>-1</face>
-        <sdf x="0" y="0" />
-        <onkill>0</onkill>
-    </creature>
     <area top="25" left="10" bottom="31" right="16">Breeding Pools</area>
     <area top="13" left="10" bottom="17" right="16">Religious Room (?)</area>
     <area top="29" left="43" bottom="38" right="47">Bunch of Dead Bodies</area>
