@@ -73,8 +73,8 @@
         <![CDATA[FORTRESS OF MOROG]]>
     </sign>
     <sign id="7" />
-    <area top="21" left="19" bottom="31" right="31">On Plateau                   </area>
-    <area top="16" left="15" bottom="35" right="35">Base of Plateau              </area>
+    <area top="21" left="19" bottom="31" right="31">On Plateau</area>
+    <area top="16" left="15" bottom="35" right="35">Base of Plateau</area>
     <string id="0">
         <![CDATA[The entrance to this narrow valley is marked by a long row of very grisly trophies. They're dead humans. Some wear the uniforms of the Exile armor. Some are dressed like travelers. All have been hanging here for some time.]]>
     </string>

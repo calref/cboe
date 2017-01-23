@@ -530,9 +530,9 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="2" left="19" bottom="17" right="28">Waste Arrival Chamber        </area>
-    <area top="22" left="21" bottom="24" right="26">Control Chamber              </area>
-    <area top="29" left="22" bottom="37" right="25">Entry Hall                   </area>
+    <area top="2" left="19" bottom="17" right="28">Waste Arrival Chamber</area>
+    <area top="22" left="21" bottom="24" right="26">Control Chamber</area>
+    <area top="29" left="22" bottom="37" right="25">Entry Hall</area>
     <sign id="0">
         <![CDATA[CONTROL CHAMBER]]>
     </sign>

@@ -528,12 +528,12 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="36" left="40" bottom="43" right="46">Abandoned Quarters           </area>
-    <area top="30" left="26" bottom="39" right="31">Abandoned Store              </area>
-    <area top="30" left="19" bottom="39" right="24">City Hall                    </area>
-    <area top="2" left="4" bottom="11" right="13">Blinlock Foundry             </area>
-    <area top="1" left="20" bottom="8" right="47">Blinlock Mines               </area>
-    <area top="0" left="40" bottom="25" right="46">Blinlock Mines               </area>
+    <area top="36" left="40" bottom="43" right="46">Abandoned Quarters</area>
+    <area top="30" left="26" bottom="39" right="31">Abandoned Store</area>
+    <area top="30" left="19" bottom="39" right="24">City Hall</area>
+    <area top="2" left="4" bottom="11" right="13">Blinlock Foundry</area>
+    <area top="1" left="20" bottom="8" right="47">Blinlock Mines</area>
+    <area top="0" left="40" bottom="25" right="46">Blinlock Mines</area>
     <sign id="0">
         <![CDATA[Blinlock Foundry]]>
     </sign>

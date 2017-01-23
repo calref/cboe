@@ -485,8 +485,8 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="5" left="10" bottom="10" right="17">Troglodyte Lair              </area>
-    <area top="9" left="4" bottom="12" right="7">Trash Pit                    </area>
+    <area top="5" left="10" bottom="10" right="17">Troglodyte Lair</area>
+    <area top="9" left="4" bottom="12" right="7">Trash Pit</area>
     <sign id="19" />
     <string id="0">
         <![CDATA[You doubtthat  the troglodytes would leave a treasure chest here without some sort of nice, nasty trap on it ...]]>

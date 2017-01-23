@@ -530,12 +530,12 @@
         <personality>-1</personality>
         <face>-1</face>
     </creature>
-    <area top="1" left="15" bottom="2" right="18">Bomb Chamber                 </area>
-    <area top="6" left="27" bottom="9" right="35">Mage&apos;s Common Room           </area>
-    <area top="1" left="26" bottom="4" right="29">Small Library                </area>
-    <area top="3" left="19" bottom="5" right="24">Storeroom                    </area>
-    <area top="7" left="19" bottom="9" right="26">Lever Room                   </area>
-    <area top="38" left="10" bottom="46" right="14">Cave Filled With Bodies      </area>
+    <area top="1" left="15" bottom="2" right="18">Bomb Chamber</area>
+    <area top="6" left="27" bottom="9" right="35">Mage&apos;s Common Room</area>
+    <area top="1" left="26" bottom="4" right="29">Small Library</area>
+    <area top="3" left="19" bottom="5" right="24">Storeroom</area>
+    <area top="7" left="19" bottom="9" right="26">Lever Room</area>
+    <area top="38" left="10" bottom="46" right="14">Cave Filled With Bodies</area>
     <sign id="0">
         <![CDATA[GOO PITS A|WEST EXIT]]>
     </sign>

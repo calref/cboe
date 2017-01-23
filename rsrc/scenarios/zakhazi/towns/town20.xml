@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>64</size>
-    <name>Palace of Khoth              </name>
+    <name>Palace of Khoth</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -733,8 +733,8 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="4" left="1" bottom="19" right="21">Chamber of Khoth             </area>
-    <area top="21" left="1" bottom="29" right="17">Pillar Hall                  </area>
+    <area top="4" left="1" bottom="19" right="21">Chamber of Khoth</area>
+    <area top="21" left="1" bottom="29" right="17">Pillar Hall</area>
     <sign id="19" />
     <string id="0">
         <![CDATA[When you walk around the corner, the massive iron gates blocking your exit from Khoth's fortress come into view. They're still closed. At first, you get the uncomfortable suspicion that Khoth won't meet his end of the bargain.]]>

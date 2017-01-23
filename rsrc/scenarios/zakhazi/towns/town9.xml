@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>64</size>
-    <name>Morog&apos;s Castle               </name>
+    <name>Morog&apos;s Castle</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -681,14 +681,14 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="36" left="5" bottom="58" right="20">Morog&apos;s Forge                </area>
-    <area top="31" left="26" bottom="58" right="39">Morog&apos;s Throne Room          </area>
-    <area top="4" left="4" bottom="25" right="16">Crypts                       </area>
-    <area top="24" left="9" bottom="29" right="16">Crypts                       </area>
-    <area top="5" left="18" bottom="29" right="29">Morogville                   </area>
-    <area top="5" left="36" bottom="29" right="45">Morog&apos;s Chamber              </area>
-    <area top="11" left="47" bottom="25" right="58">Treacherous Maze             </area>
-    <area top="36" left="45" bottom="58" right="58">Morog&apos;s Laboratories         </area>
+    <area top="36" left="5" bottom="58" right="20">Morog&apos;s Forge</area>
+    <area top="31" left="26" bottom="58" right="39">Morog&apos;s Throne Room</area>
+    <area top="4" left="4" bottom="25" right="16">Crypts</area>
+    <area top="24" left="9" bottom="29" right="16">Crypts</area>
+    <area top="5" left="18" bottom="29" right="29">Morogville</area>
+    <area top="5" left="36" bottom="29" right="45">Morog&apos;s Chamber</area>
+    <area top="11" left="47" bottom="25" right="58">Treacherous Maze</area>
+    <area top="36" left="45" bottom="58" right="58">Morog&apos;s Laboratories</area>
     <sign id="0">
         <![CDATA[Portal to Deep Caverns]]>
     </sign>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Storage Level                </name>
+    <name>Storage Level</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -503,16 +503,16 @@
         <face>-1</face>
         <encounter>1</encounter>
     </creature>
-    <area top="1" left="18" bottom="11" right="21">Larvae Chambers              </area>
-    <area top="6" left="11" bottom="11" right="17">Larvae Chambers              </area>
-    <area top="20" left="27" bottom="24" right="38">Meat Locker                  </area>
-    <area top="1" left="27" bottom="18" right="46">Artificial Outdoors          </area>
-    <area top="20" left="40" bottom="24" right="46">Slaughtering Room            </area>
-    <area top="34" left="6" bottom="41" right="15">Prison of Pythras            </area>
-    <area top="29" left="1" bottom="46" right="20">Huge Holding Cell            </area>
-    <area top="1" left="1" bottom="24" right="20">School Storage Rooms         </area>
-    <area top="26" left="27" bottom="46" right="46">Halls of Records             </area>
-    <area top="23" left="22" bottom="29" right="25">By Husks of Goblins          </area>
+    <area top="1" left="18" bottom="11" right="21">Larvae Chambers</area>
+    <area top="6" left="11" bottom="11" right="17">Larvae Chambers</area>
+    <area top="20" left="27" bottom="24" right="38">Meat Locker</area>
+    <area top="1" left="27" bottom="18" right="46">Artificial Outdoors</area>
+    <area top="20" left="40" bottom="24" right="46">Slaughtering Room</area>
+    <area top="34" left="6" bottom="41" right="15">Prison of Pythras</area>
+    <area top="29" left="1" bottom="46" right="20">Huge Holding Cell</area>
+    <area top="1" left="1" bottom="24" right="20">School Storage Rooms</area>
+    <area top="26" left="27" bottom="46" right="46">Halls of Records</area>
+    <area top="23" left="22" bottom="29" right="25">By Husks of Goblins</area>
     <sign id="0">
         <![CDATA[STOREROOMS]]>
     </sign>

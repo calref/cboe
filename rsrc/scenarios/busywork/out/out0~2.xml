@@ -54,8 +54,8 @@
         <![CDATA[WELCOME TO MRRNAH HOLLOW|Cavala - 20 miles north]]>
     </sign>
     <sign id="7" />
-    <area top="36" left="19" bottom="46" right="27">Near Valley Entrance         </area>
-    <area top="28" left="28" bottom="30" right="30">By Small Hut                 </area>
+    <area top="36" left="19" bottom="46" right="27">Near Valley Entrance</area>
+    <area top="28" left="28" bottom="30" right="30">By Small Hut</area>
     <string id="0">
         <![CDATA[The road to the south leads up and out of Mrrnah Hollow. If you've completed your investigation to your satisfaction, you can leave now. Are you done here?]]>
     </string>

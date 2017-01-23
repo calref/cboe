@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Wormy Hollow                 </name>
+    <name>Wormy Hollow</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -562,9 +562,9 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="39" left="16" bottom="45" right="21">Commander&apos;s Office           </area>
-    <area top="37" left="29" bottom="43" right="35">Crystal Soul Chamber         </area>
-    <area top="42" left="36" bottom="47" right="44">Chamber of Contemplation      </area>
+    <area top="39" left="16" bottom="45" right="21">Commander&apos;s Office</area>
+    <area top="37" left="29" bottom="43" right="35">Crystal Soul Chamber</area>
+    <area top="42" left="36" bottom="47" right="44">Chamber of Contemplation</area>
     <sign id="0">
         <![CDATA[(The carvings on this obelisk are in many languages, including yours.)|WORMY HOLLOW OUTPOST]]>
     </sign>

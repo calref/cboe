@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Bandit Hideout               </name>
+    <name>Bandit Hideout</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -547,15 +547,15 @@
         <personality>-1</personality>
         <face>-1</face>
     </creature>
-    <area top="40" left="22" bottom="42" right="28">Throg&apos;s Lair                 </area>
-    <area top="28" left="32" bottom="45" right="40">Totem Caverns                </area>
-    <area top="1" left="36" bottom="8" right="44">Worm Lair                    </area>
-    <area top="1" left="1" bottom="11" right="13">Bandit Cavern                </area>
-    <area top="30" left="1" bottom="32" right="17">Hall of Archers              </area>
-    <area top="40" left="22" bottom="42" right="29">Ogre Lair                    </area>
-    <area top="21" left="25" bottom="28" right="31">Cameron&apos;s Chambers           </area>
-    <area top="33" left="9" bottom="39" right="16">Training Room                </area>
-    <area top="34" left="1" bottom="46" right="7">Dining Hall                  </area>
+    <area top="40" left="22" bottom="42" right="28">Throg&apos;s Lair</area>
+    <area top="28" left="32" bottom="45" right="40">Totem Caverns</area>
+    <area top="1" left="36" bottom="8" right="44">Worm Lair</area>
+    <area top="1" left="1" bottom="11" right="13">Bandit Cavern</area>
+    <area top="30" left="1" bottom="32" right="17">Hall of Archers</area>
+    <area top="40" left="22" bottom="42" right="29">Ogre Lair</area>
+    <area top="21" left="25" bottom="28" right="31">Cameron&apos;s Chambers</area>
+    <area top="33" left="9" bottom="39" right="16">Training Room</area>
+    <area top="34" left="1" bottom="46" right="7">Dining Hall</area>
     <sign id="19" />
     <string id="0">
         <![CDATA[You finally make your way into the Bandit's Hideout. It was well concealed ... mounds of brush were heaped in front of the entrance, and dirt was piles onto the brush. You were only able to see it from right outside.]]>

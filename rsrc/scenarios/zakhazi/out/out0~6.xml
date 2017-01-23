@@ -67,7 +67,7 @@
         <sdf x="-1" y="-1" />
     </wandering>
     <sign id="7" />
-    <area top="33" left="24" bottom="35" right="26">By Wurm Pit                  </area>
+    <area top="33" left="24" bottom="35" right="26">By Wurm Pit</area>
     <string id="0">
         <![CDATA[This cavern has many bone chips littering the ground, but this is the first full-sized body you've found. It looks like it's been here for some time, but the specters have sucked it so dry that it didn't rot.]]>
     </string>

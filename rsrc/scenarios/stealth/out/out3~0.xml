@@ -19,7 +19,7 @@
         <sdf x="-1" y="-1" />
     </encounter>
     <sign id="7" />
-    <area top="9" left="25" bottom="18" right="35">Rebel Valley                 </area>
+    <area top="9" left="25" bottom="18" right="35">Rebel Valley</area>
     <string id="0">
         <![CDATA[Someone shouts from the hills "Keep going! You're almost to someone who can help you along!" You look up, but can't see who yelled it.]]>
     </string>

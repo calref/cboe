@@ -98,10 +98,10 @@
         <![CDATA[Don't be stupid! Watch out for rebels! Travel in groups!|Helpful Empire Message HEM104H]]>
     </sign>
     <sign id="7" />
-    <area top="10" left="18" bottom="13" right="24">Near Selathni                </area>
-    <area top="5" left="11" bottom="13" right="28">Farmlands Around Selathni    </area>
-    <area top="33" left="12" bottom="39" right="19">Gooey Fen                    </area>
-    <area top="20" left="40" bottom="37" right="46">Farmlands                    </area>
+    <area top="10" left="18" bottom="13" right="24">Near Selathni</area>
+    <area top="5" left="11" bottom="13" right="28">Farmlands Around Selathni</area>
+    <area top="33" left="12" bottom="39" right="19">Gooey Fen</area>
+    <area top="20" left="40" bottom="37" right="46">Farmlands</area>
     <string id="0">
         <![CDATA[As you enter the countryside of Morrow's Isle, you idly put your hand in your pocket. There's something unfamiliar there! You pull it out. It's a piece of paper. (A special item. To see it, click on the 'Spec' button on the items screen.)]]>
     </string>

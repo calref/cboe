@@ -86,8 +86,8 @@
         <![CDATA[MAIN CONTROL - 3 mi. south]]>
     </sign>
     <sign id="7" />
-    <area top="32" left="41" bottom="34" right="45">Near Control Chamber         </area>
-    <area top="3" left="15" bottom="5" right="17">By School Entry              </area>
+    <area top="32" left="41" bottom="34" right="45">Near Control Chamber</area>
+    <area top="3" left="15" bottom="5" right="17">By School Entry</area>
     <string id="0">
         <![CDATA[The alien beasts are dead, but you're afraid there's plenty more waiting for you. You have a long, hard march ahead of you.]]>
     </string>

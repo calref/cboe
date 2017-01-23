@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>32</size>
-    <name>Small Cave                   </name>
+    <name>Small Cave</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -465,8 +465,8 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="14" left="9" bottom="26" right="20">Lava Cavern                  </area>
-    <area top="19" left="1" bottom="25" right="2">Hall of Crystals             </area>
+    <area top="14" left="9" bottom="26" right="20">Lava Cavern</area>
+    <area top="19" left="1" bottom="25" right="2">Hall of Crystals</area>
     <sign id="19" />
     <string id="0">
         <![CDATA[You stand at the far end of a long path, leading back down to the lowest depths of the School of Magery.]]>

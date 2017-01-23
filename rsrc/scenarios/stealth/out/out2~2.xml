@@ -6,11 +6,11 @@
         <![CDATA[Morrow Marshes - east]]>
     </sign>
     <sign id="7" />
-    <area top="26" left="0" bottom="31" right="4">Near Willow                  </area>
-    <area top="23" left="34" bottom="28" right="38">Near Liam                    </area>
-    <area top="26" left="1" bottom="31" right="4">Near Willow                  </area>
-    <area top="19" left="1" bottom="37" right="16">Farmlands                    </area>
-    <area top="20" left="28" bottom="34" right="42">Farmlands                    </area>
+    <area top="26" left="0" bottom="31" right="4">Near Willow</area>
+    <area top="23" left="34" bottom="28" right="38">Near Liam</area>
+    <area top="26" left="1" bottom="31" right="4">Near Willow</area>
+    <area top="19" left="1" bottom="37" right="16">Farmlands</area>
+    <area top="20" left="28" bottom="34" right="42">Farmlands</area>
     <string id="0">
         <![CDATA[Although much of Morrow's Isle seems to be run feudally, these farmers, at least, own their own farms. They're arranged in a neat, tight clusters, and surrounded by a small number of moderately armed guards.]]>
     </string>
