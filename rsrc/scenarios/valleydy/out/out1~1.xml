@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <sector boes="2.0.0">
-    <name>Southern Vale                 </name>
+    <name>Southern Vale</name>
     <comment>Comment</comment>
     <encounter can-flee="false" force="true">
         <monster>0</monster>
@@ -66,8 +66,8 @@
         <onflee>-1</onflee>
         <sdf x="-1" y="-1" />
     </wandering>
-    <area top="10" left="16" bottom="16" right="23">Village Ruins                </area>
-    <area top="37" left="0" bottom="42" right="25">Remote Valley                </area>
+    <area top="10" left="16" bottom="16" right="23">Village Ruins</area>
+    <area top="37" left="0" bottom="42" right="25">Remote Valley</area>
     <string id="0">
         <![CDATA[You return to the spot where you met the drake. He still hasn't returned. Nothing is left to mark his presence but a few tracks and some carelessly shedded scales.]]>
     </string>

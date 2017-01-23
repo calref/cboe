@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>64</size>
-    <name>Selathni                     </name>
+    <name>Selathni</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -756,12 +756,12 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="45" left="8" bottom="50" right="12">Empty Storeroom              </area>
-    <area top="34" left="25" bottom="46" right="38">Sea Wurm Inn                 </area>
-    <area top="24" left="6" bottom="27" right="13">Stables                      </area>
-    <area top="5" left="5" bottom="22" right="14">Purdee&apos;s Resort              </area>
-    <area top="6" left="14" bottom="13" right="20">Purdee&apos;s Resort              </area>
-    <area top="21" left="37" bottom="27" right="44">Small Shrine                 </area>
+    <area top="45" left="8" bottom="50" right="12">Empty Storeroom</area>
+    <area top="34" left="25" bottom="46" right="38">Sea Wurm Inn</area>
+    <area top="24" left="6" bottom="27" right="13">Stables</area>
+    <area top="5" left="5" bottom="22" right="14">Purdee&apos;s Resort</area>
+    <area top="6" left="14" bottom="13" right="20">Purdee&apos;s Resort</area>
+    <area top="21" left="37" bottom="27" right="44">Small Shrine</area>
     <sign id="0">
         <![CDATA[SHRINE OF BLESSED HEALING|Donations accepted]]>
     </sign>

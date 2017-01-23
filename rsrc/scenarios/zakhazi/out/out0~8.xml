@@ -114,7 +114,7 @@
         <onflee>-1</onflee>
         <sdf x="-1" y="-1" />
     </wandering>
-    <area top="27" left="6" bottom="31" right="8">Outside Unicorn Gate         </area>
+    <area top="27" left="6" bottom="31" right="8">Outside Unicorn Gate</area>
     <string id="0">
         <![CDATA[You start to enter this large cavern and immediately back away. It's filled with snakes! And not just small snakes either, but huge ones, fifteen feet long, with massive fangs dripping poison.]]>
     </string>

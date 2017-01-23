@@ -502,8 +502,8 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="20" left="21" bottom="29" right="30">Slime Beast Cavern           </area>
-    <area top="7" left="6" bottom="11" right="12">Mushrooms Cavern             </area>
+    <area top="20" left="21" bottom="29" right="30">Slime Beast Cavern</area>
+    <area top="7" left="6" bottom="11" right="12">Mushrooms Cavern</area>
     <string id="0">
         <![CDATA[Morog eagerly grabs the mushrooms and places them securely in a pouch. "Excellent. Now, as I gave you my word, I will give you your reward."]]>
     </string>

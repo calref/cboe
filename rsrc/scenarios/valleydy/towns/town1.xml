@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>64</size>
-    <name>Sweetgrove                   </name>
+    <name>Sweetgrove</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -732,12 +732,12 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="54" left="53" bottom="57" right="57">Abandoned Silo               </area>
-    <area top="37" left="46" bottom="47" right="56">McKean&apos;s Inn                 </area>
-    <area top="17" left="49" bottom="23" right="57">Home of Axel the Sage        </area>
-    <area top="35" left="6" bottom="45" right="16">Sweetgrove Bazaar            </area>
-    <area top="19" left="33" bottom="26" right="40">Abandoned Shop               </area>
-    <area top="6" left="32" bottom="13" right="39">Armory                       </area>
+    <area top="54" left="53" bottom="57" right="57">Abandoned Silo</area>
+    <area top="37" left="46" bottom="47" right="56">McKean&apos;s Inn</area>
+    <area top="17" left="49" bottom="23" right="57">Home of Axel the Sage</area>
+    <area top="35" left="6" bottom="45" right="16">Sweetgrove Bazaar</area>
+    <area top="19" left="33" bottom="26" right="40">Abandoned Shop</area>
+    <area top="6" left="32" bottom="13" right="39">Armory</area>
     <sign id="0">
         <![CDATA[Sweetgrove Bazaar]]>
     </sign>

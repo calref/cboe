@@ -52,49 +52,49 @@
         <sector-start x="23" y="39" />
         <store-items top="0" left="0" bottom="47" right="47" town="0" />
         <special-item start-with="false" useable="false" special="-1">
-            <name>Runed Stone              </name>
+            <name>Runed Stone</name>
             <description>
                 <![CDATA[This is a black, polished stone sphere, about 4 inches in diameter. It is covered with small, finely etched runes and radiates energy constantly.]]>
             </description>
         </special-item>
         <special-item start-with="false" useable="false" special="-1">
-            <name>Crystal of Power         </name>
+            <name>Crystal of Power</name>
             <description>
                 <![CDATA[This six inch long quartz crystal would seem pretty ordinary were it not for one thing - it's searingly hot to the touch. Someone has somehow stored an amazing amount of power in it.]]>
             </description>
         </special-item>
         <special-item start-with="false" useable="true" special="9">
-            <name>Opening Stone            </name>
+            <name>Opening Stone</name>
             <description>
                 <![CDATA[This is a simple black stone, about three inches long, which has been polished smooth by the rubbing of countless hands.]]>
             </description>
         </special-item>
         <special-item start-with="false" useable="false" special="-1">
-            <name>Stone Tablets            </name>
+            <name>Stone Tablets</name>
             <description>
                 <![CDATA[These old stone tablets contain a variety of information on the subject of mining. You can't understand any of it.]]>
             </description>
         </special-item>
         <special-item start-with="false" useable="false" special="-1">
-            <name>Stone Tablets            </name>
+            <name>Stone Tablets</name>
             <description>
                 <![CDATA[These old stone tablets contain a variety of information on the subject of woodcarving. You can't understand any of it.]]>
             </description>
         </special-item>
         <special-item start-with="false" useable="true" special="8">
-            <name>Healing Scepter       </name>
+            <name>Healing Scepter</name>
             <description>
                 <![CDATA[This is a bronze scepter with fittings of gold, about two feet long. A large, somewhat flawed opal is set into it at one end.]]>
             </description>
         </special-item>
         <special-item start-with="false" useable="false" special="-1">
-            <name>Instructions Scrolls     </name>
+            <name>Instructions Scrolls</name>
             <description>
                 <![CDATA[This sheaf of scrolls explains in some detail how to operate the control panels at the lowest level of the School of Magery.]]>
             </description>
         </special-item>
         <special-item start-with="false" useable="false" special="-1">
-            <name>Drake Fang               </name>
+            <name>Drake Fang</name>
             <description>
                 <![CDATA[This tooth is bone white and about the length of your arm. Its owner was clearly a beast to be reckoned with.]]>
             </description>

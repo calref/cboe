@@ -24,8 +24,8 @@
     <sign id="1">
         <![CDATA[GUARDED PASS|NO PASS WITHOUT PAYMENT TO ASSIKVAS]]>
     </sign>
-    <area top="26" left="13" bottom="33" right="21">Near Assikvas                </area>
-    <area top="3" left="22" bottom="8" right="35">Unicorn Cave                 </area>
+    <area top="26" left="13" bottom="33" right="21">Near Assikvas</area>
+    <area top="3" left="22" bottom="8" right="35">Unicorn Cave</area>
     <string id="0">
         <![CDATA[You reach the massive jumble of sharp rocks. Looking just under the surface of the water, you can see them all there, threatening to rip the bottom out of your boat.]]>
     </string>

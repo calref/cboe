@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>64</size>
-    <name>Administration               </name>
+    <name>Administration</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -638,14 +638,14 @@
         <personality>91</personality>
         <face>45</face>
     </creature>
-    <area top="49" left="5" bottom="54" right="13">Barricaded Hall              </area>
-    <area top="1" left="25" bottom="7" right="33">Refuse Filled Cavern         </area>
-    <area top="10" left="40" bottom="18" right="48">Foul Fountain                </area>
-    <area top="33" left="32" bottom="35" right="51">Sealed Passages              </area>
-    <area top="37" left="12" bottom="48" right="23">Abandoned Offices            </area>
-    <area top="39" left="26" bottom="54" right="61">Spider Caves                 </area>
-    <area top="2" left="55" bottom="8" right="62">Gnat Hatchery                </area>
-    <area top="1" left="30" bottom="28" right="61">Gnat Caves                   </area>
+    <area top="49" left="5" bottom="54" right="13">Barricaded Hall</area>
+    <area top="1" left="25" bottom="7" right="33">Refuse Filled Cavern</area>
+    <area top="10" left="40" bottom="18" right="48">Foul Fountain</area>
+    <area top="33" left="32" bottom="35" right="51">Sealed Passages</area>
+    <area top="37" left="12" bottom="48" right="23">Abandoned Offices</area>
+    <area top="39" left="26" bottom="54" right="61">Spider Caves</area>
+    <area top="2" left="55" bottom="8" right="62">Gnat Hatchery</area>
+    <area top="1" left="30" bottom="28" right="61">Gnat Caves</area>
     <sign id="0">
         <![CDATA[ADMINISTRATION LEVEL]]>
     </sign>

@@ -568,12 +568,12 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="29" left="11" bottom="37" right="18">Barracks                     </area>
-    <area top="39" left="33" bottom="41" right="42">Punishment Cells             </area>
-    <area top="10" left="36" bottom="14" right="42">Small Shrine                 </area>
-    <area top="10" left="10" bottom="18" right="18">Herb Factory                 </area>
-    <area top="20" left="10" bottom="24" right="18">Herb Factory Office          </area>
-    <area top="10" left="25" bottom="15" right="30">Herb Processing              </area>
+    <area top="29" left="11" bottom="37" right="18">Barracks</area>
+    <area top="39" left="33" bottom="41" right="42">Punishment Cells</area>
+    <area top="10" left="36" bottom="14" right="42">Small Shrine</area>
+    <area top="10" left="10" bottom="18" right="18">Herb Factory</area>
+    <area top="20" left="10" bottom="24" right="18">Herb Factory Office</area>
+    <area top="10" left="25" bottom="15" right="30">Herb Processing</area>
     <sign id="0">
         <![CDATA[Dressing Chambers]]>
     </sign>

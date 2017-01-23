@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Vahnatai Caverns             </name>
+    <name>Vahnatai Caverns</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -544,8 +544,8 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="34" left="32" bottom="39" right="40">Vahnatai Cavern              </area>
-    <area top="18" left="40" bottom="27" right="45">Vahnatai Cavern              </area>
+    <area top="34" left="32" bottom="39" right="40">Vahnatai Cavern</area>
+    <area top="18" left="40" bottom="27" right="45">Vahnatai Cavern</area>
     <string id="0">
         <![CDATA[You see that someone has etched several glyphs in the cave floor just ahead. There's no dust or moss on them, and they're still pretty clean. If you didn't know better, you'd think they were etched here very recently.]]>
     </string>

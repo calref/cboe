@@ -126,10 +126,10 @@
     <sign id="3">
         <![CDATA[NOTE: Northwest Morrow's Isle is now SEALED territory (as per Empire decree DIP34A). Please be prepared to identify yourself upon departure.]]>
     </sign>
-    <area top="18" left="15" bottom="30" right="22">Ogre Hills                   </area>
-    <area top="29" left="10" bottom="33" right="13">Abandoned Valley             </area>
-    <area top="2" left="30" bottom="15" right="46">Fields of Rubble             </area>
-    <area top="2" left="21" bottom="5" right="23">Guarded Bridge               </area>
+    <area top="18" left="15" bottom="30" right="22">Ogre Hills</area>
+    <area top="29" left="10" bottom="33" right="13">Abandoned Valley</area>
+    <area top="2" left="30" bottom="15" right="46">Fields of Rubble</area>
+    <area top="2" left="21" bottom="5" right="23">Guarded Bridge</area>
     <string id="0">
         <![CDATA[As you start to climb down into a small valley, on your way through this rocky area, you suddenly get a strange feeling. Maybe things are a little too quiet, or a little too enclosed, but there's something about this place that makes you uncomfortable.]]>
     </string>

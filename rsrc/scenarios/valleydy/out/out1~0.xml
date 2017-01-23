@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <sector boes="2.0.0">
-    <name>Northern Vale                 </name>
+    <name>Northern Vale</name>
     <comment>Comment</comment>
     <encounter can-flee="false" force="true">
         <monster>0</monster>
@@ -101,8 +101,8 @@
     <sign id="0">
         <![CDATA[Blinlock - 5 mi. n.|SweetGrove - 30 mi. se.|Marralis - 25 mi. w.]]>
     </sign>
-    <area top="25" left="17" bottom="28" right="22">Near Blinlock                </area>
-    <area top="21" left="20" bottom="23" right="25">Lizard Valley                </area>
+    <area top="25" left="17" bottom="28" right="22">Near Blinlock</area>
+    <area top="21" left="20" bottom="23" right="25">Lizard Valley</area>
     <string id="0">
         <![CDATA[This small bridge spans a river flowing from the large hill to the northeast. Interestingly, you notice that the water from this river lacks the bitter reek of the water to the southwest.]]>
     </string>

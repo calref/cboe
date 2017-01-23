@@ -75,9 +75,9 @@
     <sign id="2">
         <![CDATA[EMPIRE SCUM STAY AWAY! THIS IS HILL RUNNER TERRITORY!]]>
     </sign>
-    <area top="28" left="23" bottom="34" right="28">Clearing Around Fahl         </area>
-    <area top="6" left="36" bottom="11" right="41">Near Buzzard                 </area>
-    <area top="1" left="26" bottom="18" right="46">Hill Runner Lands            </area>
+    <area top="28" left="23" bottom="34" right="28">Clearing Around Fahl</area>
+    <area top="6" left="36" bottom="11" right="41">Near Buzzard</area>
+    <area top="1" left="26" bottom="18" right="46">Hill Runner Lands</area>
     <string id="0">
         <![CDATA[If it wasn't for your sharp Woodsman's senses, you never would have noticed it. There's a large path heading north into the woods, surprisingly well concealed considering its size.]]>
     </string>

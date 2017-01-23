@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>32</size>
-    <name>Spiraling Crypt             </name>
+    <name>Spiraling Crypt</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -460,8 +460,8 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="11" left="13" bottom="22" right="18">Central Garden               </area>
-    <area top="4" left="13" bottom="9" right="18">Barge Docks                  </area>
+    <area top="11" left="13" bottom="22" right="18">Central Garden</area>
+    <area top="4" left="13" bottom="9" right="18">Barge Docks</area>
     <sign id="0">
         <![CDATA[(You can't understand the writing on this obelisk. You recognize the language, though. It's Vahnatai.)]]>
     </sign>

@@ -85,8 +85,8 @@
     <sign id="0">
         <![CDATA[LAND OF THE GIANTZ - KEEP WAY OR DIE!!!!]]>
     </sign>
-    <area top="16" left="35" bottom="29" right="42">Giants&apos; Lands                </area>
-    <area top="13" left="35" bottom="15" right="37">Giant Bridge                 </area>
+    <area top="16" left="35" bottom="29" right="42">Giants&apos; Lands</area>
+    <area top="13" left="35" bottom="15" right="37">Giant Bridge</area>
     <string id="0">
         <![CDATA[You find a natural steam vent. It's a steep depression in the cave floor, with cracks belching sulphurous steam at the base. The air is rank and thick with choking mists.]]>
     </string>

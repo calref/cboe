@@ -53,8 +53,8 @@
     <sign id="0">
         <![CDATA[(The obelisk is ancient and well worn. You are only able to make out one word.)|Za-Khazi]]>
     </sign>
-    <area top="37" left="17" bottom="40" right="21">Near Fort Goodling           </area>
-    <area top="11" left="24" bottom="18" right="28">Set of Falls                 </area>
+    <area top="37" left="17" bottom="40" right="21">Near Fort Goodling</area>
+    <area top="11" left="24" bottom="18" right="28">Set of Falls</area>
     <string id="0">
         <![CDATA[To the west, the river becomes too rough and fast to row against. It looks like you have no choice but to continue down the Za-Khazi Run, to the east.]]>
     </string>

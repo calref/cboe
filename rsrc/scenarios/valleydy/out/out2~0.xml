@@ -53,9 +53,9 @@
     <sign id="0">
         <![CDATA[Ford River Here|Watch your step!]]>
     </sign>
-    <area top="10" left="30" bottom="18" right="38">River Headwaters             </area>
-    <area top="27" left="10" bottom="40" right="22">Near Round Hill              </area>
-    <area top="4" left="24" bottom="10" right="33">Ghoulish Valley              </area>
+    <area top="10" left="30" bottom="18" right="38">River Headwaters</area>
+    <area top="27" left="10" bottom="40" right="22">Near Round Hill</area>
+    <area top="4" left="24" bottom="10" right="33">Ghoulish Valley</area>
     <string id="0">
         <![CDATA[As you walk along the river, you find a small, comfortable beach. The river flows to the south, and the water flowing by looks very tempting. Do you drink some?]]>
     </string>

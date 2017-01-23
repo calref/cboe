@@ -66,9 +66,9 @@
         <onflee>-1</onflee>
         <sdf x="-1" y="-1" />
     </wandering>
-    <area top="1" left="20" bottom="4" right="25">Below Khoth&apos;s Fortress       </area>
-    <area top="27" left="36" bottom="30" right="38">Near Broken Fang Clan        </area>
-    <area top="12" left="2" bottom="45" right="31">Slimy Tunnels                </area>
+    <area top="1" left="20" bottom="4" right="25">Below Khoth&apos;s Fortress</area>
+    <area top="27" left="36" bottom="30" right="38">Near Broken Fang Clan</area>
+    <area top="12" left="2" bottom="45" right="31">Slimy Tunnels</area>
     <string id="0">
         <![CDATA[You were starting to take free passage down this river a little bit for granted. Sure, there were rapids and falls, but no places where creatures were actually preventing you from passing. Until now.]]>
     </string>

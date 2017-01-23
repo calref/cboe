@@ -34,9 +34,9 @@
         <onflee>-1</onflee>
         <sdf x="-1" y="-1" />
     </wandering>
-    <area top="3" left="3" bottom="14" right="12">Unstable Caves               </area>
-    <area top="28" left="36" bottom="45" right="46">Unstable Caves               </area>
-    <area top="33" left="29" bottom="46" right="40">Unstable Caves               </area>
+    <area top="3" left="3" bottom="14" right="12">Unstable Caves</area>
+    <area top="28" left="36" bottom="45" right="46">Unstable Caves</area>
+    <area top="33" left="29" bottom="46" right="40">Unstable Caves</area>
     <string id="0">
         <![CDATA[At the end of this passage, you find the wall is covered with massive clumps of lichen. You almost give it up as a dead end and turn back, until you notice a peculiar design on one exposed section of wall.]]>
     </string>

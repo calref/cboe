@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Abandoned Fort               </name>
+    <name>Abandoned Fort</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -514,14 +514,14 @@
         <personality>-1</personality>
         <face>23</face>
     </creature>
-    <area top="25" left="43" bottom="31" right="46">Smelly, Gross Area           </area>
-    <area top="3" left="43" bottom="9" right="46">Meat Locker                  </area>
-    <area top="5" left="35" bottom="13" right="39">Locked Barracks              </area>
-    <area top="18" left="35" bottom="26" right="39">Abandoned Planning Room      </area>
-    <area top="18" left="26" bottom="26" right="30">Dining Hall                  </area>
-    <area top="2" left="1" bottom="9" right="12">Sacrifice Area               </area>
-    <area top="23" left="20" bottom="26" right="24">Commander&apos;s Office           </area>
-    <area top="28" left="32" bottom="37" right="39">Training Room                </area>
+    <area top="25" left="43" bottom="31" right="46">Smelly, Gross Area</area>
+    <area top="3" left="43" bottom="9" right="46">Meat Locker</area>
+    <area top="5" left="35" bottom="13" right="39">Locked Barracks</area>
+    <area top="18" left="35" bottom="26" right="39">Abandoned Planning Room</area>
+    <area top="18" left="26" bottom="26" right="30">Dining Hall</area>
+    <area top="2" left="1" bottom="9" right="12">Sacrifice Area</area>
+    <area top="23" left="20" bottom="26" right="24">Commander&apos;s Office</area>
+    <area top="28" left="32" bottom="37" right="39">Training Room</area>
     <sign id="0">
         <![CDATA[Empire Fort MI2]]>
     </sign>

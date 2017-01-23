@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Icy Tunnels                  </name>
+    <name>Icy Tunnels</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -507,11 +507,11 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="34" left="40" bottom="42" right="46">Below Pit                    </area>
-    <area top="16" left="22" bottom="28" right="29">Hydra Cave                   </area>
-    <area top="30" left="28" bottom="46" right="38">Underground Lake             </area>
-    <area top="4" left="5" bottom="13" right="17">Drake Lair                   </area>
-    <area top="11" left="1" bottom="15" right="7">Drake Treasure Chamber       </area>
+    <area top="34" left="40" bottom="42" right="46">Below Pit</area>
+    <area top="16" left="22" bottom="28" right="29">Hydra Cave</area>
+    <area top="30" left="28" bottom="46" right="38">Underground Lake</area>
+    <area top="4" left="5" bottom="13" right="17">Drake Lair</area>
+    <area top="11" left="1" bottom="15" right="7">Drake Treasure Chamber</area>
     <string id="0">
         <![CDATA[You enter a large chamber. In the ceiling, you see a shaft extending straight up about 30 or 40 feet to a brightly lit chamber. At the top, you see ogres peering down at you, laughing and pointing.]]>
     </string>

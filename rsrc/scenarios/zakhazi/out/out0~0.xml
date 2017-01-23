@@ -34,9 +34,9 @@
         <onflee>-1</onflee>
         <sdf x="-1" y="-1" />
     </encounter>
-    <area top="3" left="3" bottom="13" right="14">Poppy Shroom Cave            </area>
-    <area top="28" left="35" bottom="40" right="42">Fang Cavern                  </area>
-    <area top="6" left="22" bottom="11" right="27">Near Fort Cavalier           </area>
+    <area top="3" left="3" bottom="13" right="14">Poppy Shroom Cave</area>
+    <area top="28" left="35" bottom="40" right="42">Fang Cavern</area>
+    <area top="6" left="22" bottom="11" right="27">Near Fort Cavalier</area>
     <string id="0">
         <![CDATA[You pass through the illusionary wall north of Khoth's fortress, the wall he counted on to keep his fortress hidden. As you move through, however, something strange happens.]]>
     </string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>32</size>
-    <name>Kimzahn&apos;s Caldera            </name>
+    <name>Kimzahn&apos;s Caldera</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -476,7 +476,7 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="7" left="20" bottom="13" right="26">Kimzahn&apos;s Home               </area>
+    <area top="7" left="20" bottom="13" right="26">Kimzahn&apos;s Home</area>
     <string id="0">
         <![CDATA[With his dying breath, Kimzahn shouts out "Please, my brethren! Avenge me!" As he passes away, many other efreeti appear to get revenge.]]>
     </string>

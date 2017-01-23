@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Fungal Cavern                </name>
+    <name>Fungal Cavern</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -579,7 +579,7 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="25" left="31" bottom="31" right="39">Concealed Crypt              </area>
+    <area top="25" left="31" bottom="31" right="39">Concealed Crypt</area>
     <sign id="0">
         <![CDATA[Some message is etched into this wall. You can't understand what it says.]]>
     </sign>

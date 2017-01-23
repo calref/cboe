@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Cavala                       </name>
+    <name>Cavala</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -557,13 +557,13 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="8" left="10" bottom="26" right="17">Ilona&apos;s Offices &amp; Barracks   </area>
-    <area top="17" left="27" bottom="21" right="31">Cameron&apos;s Smithy             </area>
-    <area top="17" left="33" bottom="21" right="40">Cameron&apos;s Quarters           </area>
-    <area top="10" left="29" bottom="12" right="34">Dusty Temple                 </area>
-    <area top="31" left="9" bottom="37" right="17">Cavala Barracks              </area>
-    <area top="26" left="27" bottom="33" right="31">City Hall                    </area>
-    <area top="26" left="32" bottom="28" right="36">City Hall                    </area>
+    <area top="8" left="10" bottom="26" right="17">Ilona&apos;s Offices &amp; Barracks</area>
+    <area top="17" left="27" bottom="21" right="31">Cameron&apos;s Smithy</area>
+    <area top="17" left="33" bottom="21" right="40">Cameron&apos;s Quarters</area>
+    <area top="10" left="29" bottom="12" right="34">Dusty Temple</area>
+    <area top="31" left="9" bottom="37" right="17">Cavala Barracks</area>
+    <area top="26" left="27" bottom="33" right="31">City Hall</area>
+    <area top="26" left="32" bottom="28" right="36">City Hall</area>
     <sign id="0">
         <![CDATA[Caravan Quarters]]>
     </sign>

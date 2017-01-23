@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Marshy Pit                   </name>
+    <name>Marshy Pit</name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -515,9 +515,9 @@
         <sdf x="0" y="0" />
         <onkill>0</onkill>
     </creature>
-    <area top="25" left="10" bottom="31" right="16">Breeding Pools               </area>
-    <area top="13" left="10" bottom="17" right="16">Religious Room (?)           </area>
-    <area top="29" left="43" bottom="38" right="47">Bunch of Dead Bodies         </area>
+    <area top="25" left="10" bottom="31" right="16">Breeding Pools</area>
+    <area top="13" left="10" bottom="17" right="16">Religious Room (?)</area>
+    <area top="29" left="43" bottom="38" right="47">Bunch of Dead Bodies</area>
     <sign id="0">
         <![CDATA[(Crude etchings of swamp folk have been etched into the side of this obelisk in acid.)]]>
     </sign>
