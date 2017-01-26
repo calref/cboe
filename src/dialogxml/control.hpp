@@ -117,7 +117,7 @@ public:
 		if(getSupportedHandlers().count(t) == 0) throw xHandlerNotSupported(t);
 		auto old_handler = event_handlers[t];
 		if(handler) event_handlers[t] = handler;
-		else event_handlers[t].clear();
+		else event_handlers[t] = nullptr;
 		if(old_handler.empty()) return nullptr;
 		return boost::any_cast<typename event_fcn<t>::type>(old_handler);
 	}

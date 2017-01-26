@@ -41,7 +41,7 @@ void append_iarray_pref(std::string keypath, int value) {
 	if(prefs.find(keypath) == prefs.end() || prefs[keypath].type() != typeid(iarray))
 		prefs[keypath] = iarray{value};
 	else {
-		iarray& arr = boost::any_cast<iarray>(prefs[keypath]);
+		iarray& arr = boost::any_cast<iarray&>(prefs[keypath]);
 		arr.push_back(value);
 		prefs[keypath] = arr;
 	}
@@ -65,7 +65,7 @@ static bool save_prefs(fs::path fpath) {
 	std::ofstream fout(fpath.string().c_str());
 	for(auto& kv : prefs) {
 		if(kv.second.type() == typeid(iarray)) {
-			iarray& arr = boost::any_cast<iarray>(kv.second);
+			iarray& arr = boost::any_cast<iarray&>(kv.second);
 			fout << kv.first << " = [";
 			for(int i : arr) fout << i << ' ';
 			fout.seekp(-1,std::ios::cur); // To overwrite the final space written in the loop

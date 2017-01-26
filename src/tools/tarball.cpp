@@ -11,6 +11,7 @@
 #include <cstdio>
 #include <ctime>
 #include <cstring>
+#include <stdexcept>
 
 #ifdef _MSC_VER
 // For some bizarre reason, Visual Studio doesn't declare snprintf in <cstdio>
