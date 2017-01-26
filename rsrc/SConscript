@@ -23,14 +23,14 @@ def pack_scenario(target, source, env):
 	prev_dir = path.abspath('.')
 	for i in range(min(len(target), len(source))):
 		abspath = path.dirname(source[i].abspath)
-		chdir(abspath)
 		with tarfile.open(target[i].abspath, 'w:gz') as tar:
 			for dir, subdirs, files in walk_dir('.'):
 				cur_dir = 'scenario' + dir[1:]
 				for fname in files:
 					cur_file = path.join(cur_dir, fname)
+					chdir(abspath)
 					tar.add(path.join(dir, fname), arcname = cur_file)
-	chdir(prev_dir)
+					chdir(prev_dir)
 
 env.Append(BUILDERS={"BuildScenario": Builder(action=pack_scenario, suffix=".boes", src_suffix="")})
 
