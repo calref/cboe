@@ -57,6 +57,7 @@ void init_directories(const char* exec_path) {
 #endif // __APPLE__
 #endif // _Win32||_Win64
 	scenDir = tempDir/"Scenarios";
+	fs::create_directories(scenDir);
 	tempDir /= "Temporary Files";
 	
 	// Depending on the build environment, we may need to redirect stdout and stderr.

@@ -43,7 +43,7 @@ else:
 	""")
 
 if str(platform) == "posix":
-	env.Append(CXXFLAGS="-std=c++11")
+	env.Append(CXXFLAGS="-std=c++11 -stdlib=libstdc++")
 	env["CC"] = 'clang'
 	env["CXX"] = 'clang++'
 if str(platform) == "darwin":
