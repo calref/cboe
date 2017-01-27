@@ -1035,10 +1035,6 @@ bool handle_action(sf::Event event) {
 			// If we get here during these modes, something is probably not right, so bail out
 			add_string_to_buf("Unexpected game state!");
 			return are_done;
-		case MODE_ROOM_DESCR:
-			// TODO: This mode is not yet implemented.
-			// The idea is to put a long description in the transcript with something like "press any key to continue".
-			break;
 	}
 	
 	// MARK: Then, handle a button being hit.
@@ -1131,15 +1127,6 @@ bool handle_action(sf::Event event) {
 				}
 				break;
 		}
-	
-	// I think this was for a "click to continue" option in the transcript.
-	// Or it might be a relic of Exile II room descriptions displayed in the transcript.
-/*	if(overall_mode == 30) /// I don't know what this is for.
-		if(PtInRect(the_point, &text_panel_rect)) {
-			through_sending();
-			restore_mode();
-			print_buf();
-		} */
 	
 	// MARK: Begin: click in terrain
 	if(the_point.in(world_screen) && (is_out() || is_town() || is_combat())){
