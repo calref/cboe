@@ -2657,8 +2657,10 @@ void start_new_game(bool force) {
 		edit_party();
 	
 	// if no PCs left, forget it
-	if(!univ.party.is_alive())
+	if(!univ.party.is_alive()) {
+		party_in_memory = false;
 		return;
+	}
 	
 	// everyone gets a weapon
 	for(short i = 0; i < 6; i++) {
