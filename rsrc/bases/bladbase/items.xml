@@ -5910,7 +5910,7 @@
         <ability>
             <type>weap-dmg</type>
             <strength>7</strength>
-            <data>4</data>
+            <data>1</data>
             <use-flag>help-one</use-flag>
         </ability>
         <description>
