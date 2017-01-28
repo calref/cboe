@@ -22,6 +22,7 @@ game_sources = Split("""
 	boe.townspec.cpp
 	pcedit/pc.editors.cpp
 	tools/fileio_party.cpp
+	tools/view_dialogs.cpp
 """)
 
 if str(platform) == "darwin":
