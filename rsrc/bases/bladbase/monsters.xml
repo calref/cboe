@@ -2336,6 +2336,10 @@
             <attack type="bite">1d10</attack>
         </attacks>
         <immunity />
+        <loot>
+            <type>371</type>
+            <chance>60</chance>
+        </loot>
         <abilities>
             <general type="status2">
                 <type>touch</type>
