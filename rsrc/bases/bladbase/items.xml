@@ -4605,8 +4605,8 @@
         </properties>
         <ability>
             <type>giant</type>
-            <strength>3</strength>
-            <data>4</data>
+            <strength>4</strength>
+            <data>0</data>
             <use-flag>help-one</use-flag>
         </ability>
         <description>
@@ -4630,8 +4630,8 @@
         </properties>
         <ability>
             <type>giant</type>
-            <strength>3</strength>
-            <data>8</data>
+            <strength>8</strength>
+            <data>0</data>
             <use-flag>help-one</use-flag>
         </ability>
         <description>
