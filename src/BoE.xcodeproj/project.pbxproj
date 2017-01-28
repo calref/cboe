@@ -12,7 +12,6 @@
 			buildConfigurationList = 912CF36F0FE44A2A0063B614 /* Build configuration list for PBXAggregateTarget "Common Data Files" */;
 			buildPhases = (
 				91A0B15F1900FFDA00EF438F /* Copy Shaders */,
-				912CF3560FE4494C0063B614 /* Copy Scenarios */,
 				91B0D5CA1E331910002BE4DA /* Pack Scenarios */,
 				914B2BB718E8BF99007B6799 /* Validate Dialog Definitions */,
 				914B2B9518E8008A007B6799 /* Copy Data Files */,
@@ -393,16 +392,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		912CF3560FE4494C0063B614 /* Copy Scenarios */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "Blades of Exile Scenarios";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			name = "Copy Scenarios";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		914B2B9518E8008A007B6799 /* Copy Data Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
