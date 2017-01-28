@@ -627,7 +627,7 @@
             <identified>true</identified>
         </properties>
         <description>
-            <![CDATA[The Vahnatai are a peculiar race which lives far below the ground, below even the land of Exile. Their revered elders have their souls preserved in magical crystals, and they kind of look like space aliens. Their hammered-fungus ponchos are revealing, but sufficient for their slight frames.]]>
+            <![CDATA[This is a thin poncho of sheer fabric, translucent but surprisingly strong. The Vahnatai, a peculiar race which lives far below the ground, make these unusual garments from hammered fungus. Though designed for the Vahnatai's slight frames, these garments serve the stouter races quite well too.]]>
         </description>
     </item>
     <item id="31">
@@ -1745,7 +1745,7 @@
         <weight>40</weight>
         <properties />
         <description>
-            <![CDATA[The Slithzerikai are a race of lizardfolk, skilled with swimming, magic, and fighting with their peculiar multi-tined spears. They fish with the spears as well. If they ever fought a giant fish, it would serve both purposes.]]>
+            <![CDATA[This is a long, straight pole with a multi-tined blade affixed to the end. The Slithzerikai use these unusual spears in combat. These should not be confused with tridents, which are multi-tined harpoons designed for fishing. A slith spear is not for fishing.]]>
         </description>
     </item>
     <item id="91">
@@ -1763,7 +1763,7 @@
         <weight>40</weight>
         <properties />
         <description>
-            <![CDATA[The Slithzerikai are a race of lizardfolk, skilled with swimming, magic, and fighting with their peculiar multi-tined spears. They fish with the spears as well. If they ever fought a giant fish, it would serve both purposes.]]>
+            <![CDATA[This is a long, straight pole with a multi-tined blade affixed to the end. The Slithzerikai use these unusual spears in combat. These should not be confused with tridents, which are multi-tined harpoons designed for fishing. A slith spear is not for fishing.]]>
         </description>
     </item>
     <item id="92">
@@ -1781,7 +1781,7 @@
         <weight>20</weight>
         <properties />
         <description>
-            <![CDATA[The Vahnatai are a race which lives far, far below the ground. Their revered elders have their souls preserved in magical crystals, and their slender but powerful bodies fight fiercely with unusual weapons. They are fond of these oddly-shaped swords, hard to use but really painful.]]>
+            <![CDATA[This is an exceptionally well-crafted sword, the blade of which is forged into a distinctive wave pattern. The Vahnatai, a peculiar race that lives below the ground, are proud of these unusual swords – hard to use, but really painful.]]>
         </description>
     </item>
     <item id="93">
@@ -1799,7 +1799,7 @@
         <weight>20</weight>
         <properties />
         <description>
-            <![CDATA[The Vahnatai are a race which lives far, far below the ground. Their revered elders have their souls preserved in magical crystals, and their slender but powerful bodies fight fiercely with unusual weapons. They are fond of these oddly-shaped swords, hard to use but really painful.]]>
+            <![CDATA[This is an exceptionally well-crafted sword, the blade of which is forged into a distinctive wave pattern. The Vahnatai, a peculiar race that lives below the ground, are proud of these unusual swords – hard to use, but really painful.]]>
         </description>
     </item>
     <item id="94">
@@ -1817,7 +1817,7 @@
         <weight>20</weight>
         <properties />
         <description>
-            <![CDATA[The Vahnatai are a race which lives far, far below the ground. Their revered elders have their souls preserved in magical crystals, and their slender but powerful bodies fight fiercely with unusual weapons. They favor these oddly-shaped swords, hard to use but really painful.]]>
+            <![CDATA[This is an exceptionally well-crafted sword, the blade of which is forged into a distinctive wave pattern. The Vahnatai, a peculiar race that lives below the ground, are proud of these unusual swords – hard to use, but really painful.]]>
         </description>
     </item>
     <item id="95">
@@ -1837,7 +1837,7 @@
             <magic>true</magic>
         </properties>
         <description>
-            <![CDATA[The Vahnatai are a race which lives far, far below the ground. Their revered elders have their souls preserved in magical crystals, and their slender but powerful bodies fight fiercely with unusual weapons. They favor these oddly-shaped swords, hard to use but really painful. This one is enchanted, it seems.]]>
+            <![CDATA[This is an exceptionally well-crafted sword, the blade of which is forged into a distinctive wave pattern. The Vahnatai, a peculiar race that lives below the ground, are proud of these unusual swords – hard to use, but really painful. It seems that someone has enchanted this one. It may be more effective than usual.]]>
         </description>
     </item>
     <item id="96">
@@ -1858,7 +1858,7 @@
         <weight>1</weight>
         <properties />
         <description>
-            <![CDATA[The Vahnatai are a race which lives far, far below the ground. Their revered elders have their souls preserved in magical crystals, and their slender but powerful bodies fight fiercely with unusual weapons. These razordisks are well-balanced for long throws and well-sharpened for long-lasting wounds.]]>
+            <![CDATA[These are flat discs of metal, the edges honed into a ring of small, razor-sharp teeth. Their aerodynamic shape makes them deadly in combat, but a novice user must take care not to cut themselves when throwing them. The Vahnatai, a race which lives far, far below the ground, are quite fond of these unusual weapons.]]>
         </description>
     </item>
     <item id="97">
@@ -1879,7 +1879,7 @@
         <weight>1</weight>
         <properties />
         <description>
-            <![CDATA[The Vahnatai are a race which lives far, far below the ground. Their revered elders have their souls preserved in magical crystals, and their slender but powerful bodies fight fiercely with unusual weapons. These razordisks are well-balanced for long throws and well-sharpened for long-lasting wounds.]]>
+            <![CDATA[These are flat discs of metal, the edges honed into a ring of small, razor-sharp teeth. Their aerodynamic shape makes them deadly in combat, but a novice user must take care not to cut themselves when throwing them. The Vahnatai, a race which lives far, far below the ground, are quite fond of these unusual weapons.]]>
         </description>
     </item>
     <item id="98">
