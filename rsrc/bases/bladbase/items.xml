@@ -7235,7 +7235,9 @@
         <treasure>2</treasure>
         <value>200</value>
         <weight>20</weight>
-        <properties />
+        <properties>
+            <concealed>true</concealed>
+        </properties>
         <ability>
             <type>status</type>
             <strength>3</strength>
