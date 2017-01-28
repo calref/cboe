@@ -1769,7 +1769,7 @@
         </abilities>
     </monster>
     <monster id="78">
-        <name>Cave Rat</name>
+        <name>Giant Rat</name>
         <pic w="1" h="1">70</pic>
         <race>beast</race>
         <level>2</level>
