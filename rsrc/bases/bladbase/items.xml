@@ -8477,7 +8477,7 @@
         <weapon-type>pole</weapon-type>
         <pic>20</pic>
         <name>Staff</name>
-        <full-name>Monk&apos;s Staff</full-name>
+        <full-name>Fine Staff</full-name>
         <treasure>2</treasure>
         <value>700</value>
         <weight>18</weight>
@@ -8504,7 +8504,7 @@
         </properties>
         <ability>
             <type>boost-stat</type>
-            <strength>3</strength>
+            <strength>1</strength>
             <data>9</data>
             <use-flag>help-one</use-flag>
         </ability>
