@@ -201,7 +201,6 @@
     </node>
     <node for="2">
         <keyword>iden</keyword>
-        <keyword>xxxx</keyword>
         <type>id</type>
         <param>10</param>
         <param>0</param>
@@ -225,7 +224,6 @@
     </node>
     <node for="2">
         <keyword>purc</keyword>
-        <keyword>xxxx</keyword>
         <type>reg</type>
         <param>0</param>
         <param>0</param>
@@ -309,7 +307,6 @@
     </node>
     <node for="4">
         <keyword>weap</keyword>
-        <keyword>xxxx</keyword>
         <type>shop</type>
         <param>3</param>
         <param>8</param>
@@ -321,7 +318,6 @@
     </node>
     <node for="4">
         <keyword>armo</keyword>
-        <keyword>xxxx</keyword>
         <type>shop</type>
         <param>3</param>
         <param>9</param>
@@ -333,7 +329,6 @@
     </node>
     <node for="4">
         <keyword>shie</keyword>
-        <keyword>xxxx</keyword>
         <type>shop</type>
         <param>3</param>
         <param>10</param>
@@ -345,7 +340,6 @@
     </node>
     <node for="4">
         <keyword>purc</keyword>
-        <keyword>xxxx</keyword>
         <type>reg</type>
         <param>0</param>
         <param>0</param>
@@ -357,7 +351,6 @@
     </node>
     <node for="4">
         <keyword>sell</keyword>
-        <keyword>xxxx</keyword>
         <type>sell-any</type>
         <param>0</param>
         <param>0</param>
@@ -369,7 +362,6 @@
     </node>
     <node for="5">
         <keyword>purc</keyword>
-        <keyword>xxxx</keyword>
         <type>reg</type>
         <param>0</param>
         <param>0</param>
