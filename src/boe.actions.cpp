@@ -2543,6 +2543,8 @@ void handle_hunting() {
 		return;
 	if(flying())
 		return;
+	if(univ.out.is_road(univ.party.out_loc.x, univ.party.out_loc.y))
+		return;
 	ter_num_t ter = univ.out[univ.party.out_loc.x][univ.party.out_loc.y];
 	if(!wilderness_lore_present(ter))
 		return;
