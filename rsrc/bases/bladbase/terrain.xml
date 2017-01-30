@@ -5353,6 +5353,30 @@
             <shortcut>f</shortcut>
         </editor>
     </terrain>
+    <terrain id="218">
+        <name>Floor</name>
+        <pic>163</pic>
+        <map>163</map>
+        <blockage>monsters</blockage>
+        <transform>0</transform>
+        <fly>false</fly>
+        <boat>false</boat>
+        <ride>false</ride>
+        <archetype>false</archetype>
+        <light>0</light>
+        <step-sound>step</step-sound>
+        <trim>none</trim>
+        <ground>14</ground>
+        <trim-for>-1</trim-for>
+        <arena>1</arena>
+        <special>
+            <type>monst-block</type>
+            <flag>0</flag>
+            <flag>0</flag>
+            <flag>0</flag>
+        </special>
+        <editor />
+    </terrain>
     <terrain id="219">
         <name>Statue</name>
         <pic>164</pic>
@@ -5688,6 +5712,32 @@
             <flag>0</flag>
         </special>
         <editor />
+    </terrain>
+    <terrain id="233">
+        <name>Pillar</name>
+        <pic>209</pic>
+        <map>209</map>
+        <blockage>move-and-shoot</blockage>
+        <transform>0</transform>
+        <fly>false</fly>
+        <boat>false</boat>
+        <ride>true</ride>
+        <archetype>false</archetype>
+        <light>0</light>
+        <step-sound>step</step-sound>
+        <trim>none</trim>
+        <ground>15</ground>
+        <trim-for>-1</trim-for>
+        <arena>0</arena>
+        <special>
+            <type>none</type>
+            <flag>-1</flag>
+            <flag>0</flag>
+            <flag>0</flag>
+        </special>
+        <editor>
+            <shortcut>p</shortcut>
+        </editor>
     </terrain>
     <terrain id="234">
         <name>Town</name>
