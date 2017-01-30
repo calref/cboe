@@ -1899,30 +1899,6 @@
         </special>
         <editor />
     </terrain>
-    <terrain id="251">
-        <name>Portal</name>
-        <pic>966</pic>
-        <map>966</map>
-        <blockage>monsters</blockage>
-        <transform>0</transform>
-        <fly>false</fly>
-        <boat>false</boat>
-        <ride>true</ride>
-        <archetype>false</archetype>
-        <light>1</light>
-        <step-sound>step</step-sound>
-        <trim>city</trim>
-        <ground>0</ground>
-        <trim-for>-1</trim-for>
-        <arena>1</arena>
-        <special>
-            <type>none</type>
-            <flag>-1</flag>
-            <flag>0</flag>
-            <flag>0</flag>
-        </special>
-        <editor />
-    </terrain>
     <terrain id="82">
         <name>Walkway</name>
         <pic>216</pic>
@@ -5611,54 +5587,6 @@
         </special>
         <editor />
     </terrain>
-    <terrain id="247">
-        <name>Town</name>
-        <pic>187</pic>
-        <map>187</map>
-        <blockage>none</blockage>
-        <transform>0</transform>
-        <fly>false</fly>
-        <boat>false</boat>
-        <ride>true</ride>
-        <archetype>false</archetype>
-        <light>0</light>
-        <step-sound>step</step-sound>
-        <trim>city</trim>
-        <ground>0</ground>
-        <trim-for>-1</trim-for>
-        <arena>1</arena>
-        <special>
-            <type>town</type>
-            <flag>0</flag>
-            <flag>0</flag>
-            <flag>0</flag>
-        </special>
-        <editor />
-    </terrain>
-    <terrain id="248">
-        <name>Tower</name>
-        <pic>188</pic>
-        <map>188</map>
-        <blockage>none</blockage>
-        <transform>0</transform>
-        <fly>false</fly>
-        <boat>false</boat>
-        <ride>true</ride>
-        <archetype>false</archetype>
-        <light>0</light>
-        <step-sound>step</step-sound>
-        <trim>city</trim>
-        <ground>0</ground>
-        <trim-for>-1</trim-for>
-        <arena>1</arena>
-        <special>
-            <type>town</type>
-            <flag>0</flag>
-            <flag>0</flag>
-            <flag>0</flag>
-        </special>
-        <editor />
-    </terrain>
     <terrain id="234">
         <name>Town</name>
         <pic>189</pic>
@@ -5942,6 +5870,78 @@
         <special>
             <type>town</type>
             <flag>2</flag>
+            <flag>0</flag>
+            <flag>0</flag>
+        </special>
+        <editor />
+    </terrain>
+    <terrain id="247">
+        <name>Town</name>
+        <pic>187</pic>
+        <map>187</map>
+        <blockage>none</blockage>
+        <transform>0</transform>
+        <fly>false</fly>
+        <boat>false</boat>
+        <ride>true</ride>
+        <archetype>false</archetype>
+        <light>0</light>
+        <step-sound>step</step-sound>
+        <trim>city</trim>
+        <ground>0</ground>
+        <trim-for>-1</trim-for>
+        <arena>1</arena>
+        <special>
+            <type>town</type>
+            <flag>0</flag>
+            <flag>0</flag>
+            <flag>0</flag>
+        </special>
+        <editor />
+    </terrain>
+    <terrain id="248">
+        <name>Tower</name>
+        <pic>188</pic>
+        <map>188</map>
+        <blockage>none</blockage>
+        <transform>0</transform>
+        <fly>false</fly>
+        <boat>false</boat>
+        <ride>true</ride>
+        <archetype>false</archetype>
+        <light>0</light>
+        <step-sound>step</step-sound>
+        <trim>city</trim>
+        <ground>0</ground>
+        <trim-for>-1</trim-for>
+        <arena>1</arena>
+        <special>
+            <type>town</type>
+            <flag>0</flag>
+            <flag>0</flag>
+            <flag>0</flag>
+        </special>
+        <editor />
+    </terrain>
+    <terrain id="251">
+        <name>Portal</name>
+        <pic>966</pic>
+        <map>966</map>
+        <blockage>monsters</blockage>
+        <transform>0</transform>
+        <fly>false</fly>
+        <boat>false</boat>
+        <ride>true</ride>
+        <archetype>false</archetype>
+        <light>1</light>
+        <step-sound>step</step-sound>
+        <trim>city</trim>
+        <ground>0</ground>
+        <trim-for>-1</trim-for>
+        <arena>1</arena>
+        <special>
+            <type>none</type>
+            <flag>-1</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
