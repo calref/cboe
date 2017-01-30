@@ -44,11 +44,11 @@ enum cursor_type {
 	text_curs, // Keep this one last
 };
 
-class Cursor {
+class cCursor {
 	void* ptr;
 public:
-	Cursor(fs::path imgPath, float hotSpotX, float hotSpotY);
-	~Cursor();
+	cCursor(fs::path imgPath, float hotSpotX, float hotSpotY);
+	~cCursor();
 	void apply();
 };
 

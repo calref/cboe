@@ -23,7 +23,7 @@
 #include "location.hpp"
 
 using ImageRsrc = sf::Texture;
-using CursorRsrc = Cursor;
+using CursorRsrc = cCursor;
 using FontRsrc = sf::Font;
 using StringRsrc = std::vector<std::string>;
 using SoundRsrc = sf::SoundBuffer;
@@ -83,7 +83,7 @@ namespace ResMgr {
 		if(!found_hotspot)
 			std::cerr << "Cursor hotspot missing: " << fpath.string() << std::endl;
 		// TODO: Handle errors?
-		CursorRsrc* cur = new Cursor(fpath.string(),x,y);
+		CursorRsrc* cur = new cCursor(fpath.string(),x,y);
 		return cur;
 	}
 	

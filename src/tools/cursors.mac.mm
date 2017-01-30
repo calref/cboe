@@ -42,7 +42,7 @@ static NSImage* imageFromURL(CFURLRef url){
 	return newImage;
 }
 
-Cursor::Cursor(fs::path path, float hotSpotX, float hotSpotY){
+cCursor::cCursor(fs::path path, float hotSpotX, float hotSpotY){
 	FSRef ref;
 	FSPathMakeRef((UInt8*)path.c_str(), &ref, nullptr);
 	CFURLRef imgPath = CFURLCreateFromFSRef(nullptr, &ref);
@@ -54,11 +54,11 @@ Cursor::Cursor(fs::path path, float hotSpotX, float hotSpotY){
 	ptr = cursor;
 }
 
-Cursor::~Cursor(){
+cCursor::~cCursor(){
 	[(NSCursor*)ptr release];
 }
 
-void Cursor::apply(){
+void cCursor::apply(){
 	[(NSCursor*)ptr set];
 }
 
@@ -72,7 +72,7 @@ void set_cursor(cursor_type which_c) {
 	if(which_c == text_curs) {
 		[[NSCursor IBeamCursor] set];
 	} else {
-		Cursor& curs = *ResMgr::get<CursorRsrc>(cursors[which_c]);
+		cCursor& curs = *ResMgr::get<CursorRsrc>(cursors[which_c]);
 		curs.apply();
 	}
 }
