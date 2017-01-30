@@ -1875,7 +1875,7 @@
         </special>
         <editor />
     </terrain>
-    <terrain id="77">
+    <terrain id="80">
         <name>Waterfall</name>
         <pic>965</pic>
         <map>965</map>
@@ -1893,6 +1893,30 @@
         <arena>1</arena>
         <special>
             <type>falls-cave</type>
+            <flag>4</flag>
+            <flag>5</flag>
+            <flag>90</flag>
+        </special>
+        <editor />
+    </terrain>
+    <terrain id="81">
+        <name>Waterfall</name>
+        <pic>975</pic>
+        <map>975</map>
+        <blockage>move-and-shoot</blockage>
+        <transform>0</transform>
+        <fly>false</fly>
+        <boat>false</boat>
+        <ride>true</ride>
+        <archetype>false</archetype>
+        <light>0</light>
+        <step-sound>step</step-sound>
+        <trim>waterfall</trim>
+        <ground>5</ground>
+        <trim-for>3</trim-for>
+        <arena>1</arena>
+        <special>
+            <type>falls-mntn</type>
             <flag>4</flag>
             <flag>5</flag>
             <flag>90</flag>
