@@ -235,7 +235,7 @@ if not env.GetOption('clean'):
 			print disp, 'must be installed!'
 			Exit(1)
 
-	boost_versions = ['-1_55', '-1_56', '-1_57', '-1_58'] # This is a bit of a hack. :(
+	boost_versions = ['-1_54', '-1_55', '-1_56', '-1_57', '-1_58'] # This is a bit of a hack. :(
 	bundled_libs = []
 
 	check_header('boost/lexical_cast.hpp', 'Boost.LexicalCast')
