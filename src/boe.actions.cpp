@@ -1035,10 +1035,6 @@ bool handle_action(sf::Event event) {
 			// If we get here during these modes, something is probably not right, so bail out
 			add_string_to_buf("Unexpected game state!");
 			return are_done;
-		case MODE_ROOM_DESCR:
-			// TODO: This mode is not yet implemented.
-			// The idea is to put a long description in the transcript with something like "press any key to continue".
-			break;
 	}
 	
 	// MARK: Then, handle a button being hit.
@@ -1131,15 +1127,6 @@ bool handle_action(sf::Event event) {
 				}
 				break;
 		}
-	
-	// I think this was for a "click to continue" option in the transcript.
-	// Or it might be a relic of Exile II room descriptions displayed in the transcript.
-/*	if(overall_mode == 30) /// I don't know what this is for.
-		if(PtInRect(the_point, &text_panel_rect)) {
-			through_sending();
-			restore_mode();
-			print_buf();
-		} */
 	
 	// MARK: Begin: click in terrain
 	if(the_point.in(world_screen) && (is_out() || is_town() || is_combat())){
@@ -1745,9 +1732,17 @@ bool handle_keystroke(sf::Event& event){
 			are_done = handle_action(pass_event);
 			break;
 			
-		case '9':
+		case '9': // Special items
 			pass_point.x = item_screen_button_rects[6].left + ITEM_WIN_UL_X + ul.x;
 			pass_point.y = item_screen_button_rects[6].top + ITEM_WIN_UL_Y + ul.y;
+			pass_event.mouseButton.x = pass_point.x;
+			pass_event.mouseButton.y = pass_point.y;
+			are_done = handle_action(pass_event);
+			break;
+			
+		case '0': // Jobs/quests
+			pass_point.x = item_screen_button_rects[7].left + ITEM_WIN_UL_X + ul.x;
+			pass_point.y = item_screen_button_rects[7].top + ITEM_WIN_UL_Y + ul.y;
 			pass_event.mouseButton.x = pass_point.x;
 			pass_event.mouseButton.y = pass_point.y;
 			are_done = handle_action(pass_event);
@@ -1762,8 +1757,10 @@ bool handle_keystroke(sf::Event& event){
 				pass_event.mouseButton.y = pass_point.y + ul.y;
 				are_done = handle_action(pass_event);
 			} else if(overall_mode == MODE_SPELL_TARGET)
+				// Rotate a force wall
 				spell_cast_hit_return();
 			else if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT || overall_mode == MODE_OUTDOORS) {
+				// Pause (skip turn)
 				pass_point.x = terrain_click[5].x + ul.x;
 				pass_point.y = terrain_click[5].y + ul.y;
 				pass_event.mouseButton.x = pass_point.x;
@@ -1783,11 +1780,12 @@ bool handle_keystroke(sf::Event& event){
 			}
 			print_buf();
 			break;
-		case 'z':
+		case 'z': // Show active PC's inventory
 			if(((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) || (overall_mode == MODE_LOOK_COMBAT)) {
 				set_stat_window(univ.cur_pc);
 				put_item_screen(stat_window);
 			} else {
+				// ... or first PC's inventory... why?
 				set_stat_window(0);
 				put_item_screen(stat_window);
 			}
@@ -2030,7 +2028,7 @@ bool handle_keystroke(sf::Event& event){
 			if(!univ.debug_mode) break;
 			cChoiceDlog("help-debug").show();
 			break;
-		case 'a':
+		case 'a': // Show automap
 			if(overall_mode < MODE_TALK_TOWN) {
 				pass_point.x = (overall_mode == MODE_OUTDOORS) ? 180 : 221;
 				pass_point.y = 405;
@@ -2040,7 +2038,7 @@ bool handle_keystroke(sf::Event& event){
 			}
 			break;
 			
-		case 'u':
+		case 'u': // Use space
 			if(overall_mode == MODE_TOWN || overall_mode == MODE_USE_TOWN) {
 				pass_point.x = 220;
 				pass_point.y = 388;
@@ -2050,7 +2048,7 @@ bool handle_keystroke(sf::Event& event){
 			}
 			break;
 			
-		case 'b': case 'L':
+		case 'b': case 'L': // Bash door, pick lock
 			if(overall_mode == MODE_TOWN || overall_mode == MODE_BASH_TOWN) {
 				pass_point.x = chr == 'b' ? 1002 : 1003;
 				pass_point.y = 0;
@@ -2059,58 +2057,45 @@ bool handle_keystroke(sf::Event& event){
 				are_done = handle_action(pass_event);
 			}
 			
-		case 's': case 'x': case 'e':
-			if((overall_mode == MODE_COMBAT) ||
-				((overall_mode == MODE_FIRING)  && (chr == 's')) ||
-				((overall_mode == MODE_THROWING)  && (chr == 's')) ) {
-				pass_point.x = (chr == 's') ? 215 : 250;
-				pass_point.y = (chr == 'e') ? 390 : 406;
-				pass_event.mouseButton.x = pass_point.x + ul.x;
-				pass_event.mouseButton.y = pass_point.y + ul.y;
+		case 'A': // Alchemy
+			if(overall_mode == MODE_TOWN) {
+				pass_point.x = 1000 + ul.x;
+				pass_event.mouseButton.x = pass_point.x;
+				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event);
+			} else {
+				add_string_to_buf("Alchemy: In town only.");
+				print_buf();
+				return false;
 			}
 			break;
 			
-			
+		case 's': case 'x': case 'e':
 		case 'm': case 'p': case 'l': case 'r': case 'w': case 't': case 'd': case 'g': case 'f':
-		case 'M': case 'P': case 'A':
+		case 'M': case 'P':
 			int btn = 50;
 			if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET) { // cancel spell
 				if(chr == 'm') btn = 0;
 				else if(chr == 'p') btn = 1;
 			}
-			// TODO: There's several weird things about this conditional. Why 'f' when the key to initiate this is 's'? Why is it checking for 't' (though that can never be true)?
-			if(chr == 'f' && (overall_mode == MODE_FIRING || overall_mode == MODE_THROWING || chr == 't')) // cancel missile
-				btn = 6;
 			if((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_TOWN) || (overall_mode == MODE_COMBAT)) {
 				switch(chr) {
+						// Spells
 					case 'M': spell_forced = true; btn = 0; break;
 					case 'm': btn = 0; break;
 					case 'P': spell_forced = true; btn = 1; break;
 					case 'p': btn = 1; break;
+						// Look
 					case 'l': btn = 2; break;
-					case 'r':
+					case 'r': // Rest
 						if(overall_mode != MODE_OUTDOORS) return false;
 						btn = 3;
 						break;
-					case 't':
-						if(overall_mode == MODE_TOWN)
-							btn = 3;
-					else return false;
+					case 't': // Talk
+						if(overall_mode != MODE_TOWN) return false;
+						btn = 3;
 						break;
-					case 'A':
-						if(overall_mode == MODE_TOWN) {
-							pass_point.x = 1000 + ul.x;
-							pass_event.mouseButton.x = pass_point.x;
-							pass_event.mouseButton.y = pass_point.y;
-							are_done = handle_action(pass_event);
-						} else {
-							add_string_to_buf("Alchemy: In town only.");
-							print_buf();
-							return false;
-						}
-						break;
-					case 'w':
+					case 'w': // Wait (town), delay action (combat)
 						if(overall_mode == MODE_COMBAT)
 							btn = 5;
 						else if(overall_mode == MODE_TOWN) {
@@ -2125,20 +2110,33 @@ bool handle_keystroke(sf::Event& event){
 							return false;
 						}
 						break;
-					case 'd':
+					case 'd': // Parry
 						if(overall_mode != MODE_COMBAT) return false;
 						btn = 3;
 						break;
-					case 'g':
+					case 'g': // Get
 						if(overall_mode == MODE_OUTDOORS) return false;
 						btn = 4;
 						break;
-					case 'f':
-						if(overall_mode != MODE_TOWN) return false;
+					case 's': // Shoot
+						if(overall_mode != MODE_COMBAT) return false;
+						btn = 6;
+						break;
+					case 'x': // Toggle active
+						if(overall_mode != MODE_COMBAT) return false;
+						btn = 8;
+						break;
+					case 'e': // End combat
+						if(overall_mode != MODE_COMBAT) return false;
+						btn = 7;
+						break;
+					case 'f': // Fight (toggle combat)
+						if(overall_mode != MODE_TOWN && overall_mode != MODE_COMBAT) return false;
 						btn = 7;
 						break;
 				}
-			}
+			} else if(chr == 's' && (overall_mode == MODE_FIRING || overall_mode == MODE_THROWING))
+				btn = 6;
 			if(btn < 50) {
 				pass_point.x = bottom_buttons[btn].left + 5;
 				pass_point.y = bottom_buttons[btn].top + 5;
@@ -2545,6 +2543,8 @@ void handle_hunting() {
 		return;
 	if(flying())
 		return;
+	if(univ.out.is_road(univ.party.out_loc.x, univ.party.out_loc.y))
+		return;
 	ter_num_t ter = univ.out[univ.party.out_loc.x][univ.party.out_loc.y];
 	if(!wilderness_lore_present(ter))
 		return;
@@ -2670,8 +2670,10 @@ void start_new_game(bool force) {
 		edit_party();
 	
 	// if no PCs left, forget it
-	if(!univ.party.is_alive())
+	if(!univ.party.is_alive()) {
+		party_in_memory = false;
 		return;
+	}
 	
 	// everyone gets a weapon
 	for(short i = 0; i < 6; i++) {

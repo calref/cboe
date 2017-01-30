@@ -82,8 +82,6 @@ Notes and oddities:
 
 Helpful Links
 -------------
-* [Jenkins Server](http://te.calref.net:8080/) - Runs a build after
-  every push
 * [BoE Forum at Spiderweb
   Software](http://spiderwebforums.ipbhost.com/index.php?/forum/12-blades-
   of-exile/)
@@ -92,10 +90,7 @@ Helpful Links
 * [Original Game
   Source](http://www.spiderwebsoftware.com/blades/opensource.html) - Where
   it all began. Warning: Terrifying code.
-* [Ormus's Code](http://info.wsisiz.edu.pl/~kowalsg0/) - The basis for
-  most, if not all, of the older Win32 work (prior to the SFML port).
-  However, the current Win32 code is not based on it anymore.
 * [Experimental Builds](http://celmin.pwcsite.com/oboe/?C=M;O=D) - will be put
   up whenever Celtic Minstrel feels like it.
-* [Blades File Dump](http://blades.calref.net/) - A spot to quickly add
+* [Blades File Dump](https://blades.calref.net/) - A spot to quickly add
   project files; mostly contains older binaries from the Google Code page.

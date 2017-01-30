@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Major Waste Repository</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="0" bottom="44" right="47" />
+    <difficulty>0</difficulty>
+    <lighting>lit</lighting>
+    <onenter condition="alive">0</onenter>
+    <onenter condition="dead">0</onenter>
+    <timer freq="80">26</timer>
+    <flags />
+    <creature id="0">
+        <type>84</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>9</encounter>
+    </creature>
+    <creature id="1">
+        <type>84</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>9</encounter>
+    </creature>
+    <creature id="2">
+        <type>84</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>9</encounter>
+    </creature>
+    <creature id="3">
+        <type>88</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>9</encounter>
+    </creature>
+    <creature id="4">
+        <type>88</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>9</encounter>
+    </creature>
+    <creature id="5">
+        <type>88</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>9</encounter>
+    </creature>
+    <creature id="6">
+        <type>88</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>9</encounter>
+    </creature>
+    <creature id="7">
+        <type>88</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>9</encounter>
+    </creature>
+    <creature id="8">
+        <type>88</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>9</encounter>
+    </creature>
+    <creature id="9">
+        <type>140</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>8</encounter>
+    </creature>
+    <creature id="10">
+        <type>62</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="11">
+        <type>62</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="12">
+        <type>62</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="13">
+        <type>62</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="14">
+        <type>62</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="15">
+        <type>62</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="16">
+        <type>63</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="17">
+        <type>63</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="18">
+        <type>63</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="19">
+        <type>63</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="20">
+        <type>63</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="21">
+        <type>66</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <area top="2" left="19" bottom="17" right="28">Waste Arrival Chamber</area>
+    <area top="22" left="21" bottom="24" right="26">Control Chamber</area>
+    <area top="29" left="22" bottom="37" right="25">Entry Hall</area>
+    <sign id="0">
+        <![CDATA[CONTROL CHAMBER]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[PRIMARY WASTE STORAGE]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[PRIMARY WASTE STORAGE]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[FIRE CELL - KEEP OUT!]]>
+    </sign>
+    <sign id="4">
+        <![CDATA[FIRE CELL - KEEP OUT!]]>
+    </sign>
+    <sign id="5">
+        <![CDATA[FIRE CELL - KEEP OUT!]]>
+    </sign>
+    <sign id="6">
+        <![CDATA[CONTROL CHAMBER]]>
+    </sign>
+    <sign id="7">
+        <![CDATA[CONTROL CHAMBER]]>
+    </sign>
+    <sign id="8">
+        <![CDATA[CONTROL CHAMBER]]>
+    </sign>
+    <sign id="9">
+        <![CDATA[CONTROL CHAMBER]]>
+    </sign>
+    <sign id="10">
+        <![CDATA[WASTE ARRIVAL]]>
+    </sign>
+    <sign id="11">
+        <![CDATA[WASTE ARRIVAL]]>
+    </sign>
+    <sign id="12">
+        <![CDATA[WASTE ARRIVAL]]>
+    </sign>
+    <string id="0">
+        <![CDATA[You stand at the entrance to the Primary Waste Disposal. While the builders of the School of Magery obviously built this to be a massive and nearly impregnable structure, it has not proved to be impervious to the ravages of time.]]>
+    </string>
+    <string id="1">
+        <![CDATA[The massive basalt front of the structure has been cracked and eaten away by the foul ooze seeping out of it. Even as you watch, bits of the wall crumble away and dissolve, making the holes even wider and allowing more poison out. ]]>
+    </string>
+    <string id="2">
+        <![CDATA[This must be the true cause of the "curse" that afflicts the valley. More information is sure to be available inside.]]>
+    </string>
+    <string id="6">
+        <![CDATA[From here, at last, you can see the true causes of the curse on the Vale. They're right in front of you. You see boxes and barrels, dozens of them, many of them leaking.]]>
+    </string>
+    <string id="7">
+        <![CDATA[On the floor around the containers are all manner of alchemical and magical tools. You see beakers and flasks, vials and tubes, each of them covered with the residue of magical experiments.]]>
+    </string>
+    <string id="8">
+        <![CDATA[This structure contains the debris and poisonous detritus of a thousand failed experiments, badly mixed potions, and spells gone wrong. Nothing is more dangerous than the result of a miscast spell, and all of those leavings were just put into barrels.]]>
+    </string>
+    <string id="9">
+        <![CDATA[And left here. Left without proper protection, without anything that would effectively keep the refuse from poisoning the water of the Vale. Cold fury grows inside you. How could anyone be so careless?]]>
+    </string>
+    <string id="10">
+        <![CDATA[And how are you to take care of it? There's so much residue, so much waste here, you can't imagine how you will be able to get rid of it all. The cause is here. The solution is still far distant.]]>
+    </string>
+    <string id="12">
+        <![CDATA[You take note of all of this. The officials of the Vale are sure to be interested.]]>
+    </string>
+    <string id="13">
+        <![CDATA[This room must be where the barrels started to leak. It looks like there was a cave-in here. The barrels broke and the goo spilled out, eating away at the other containers from the outside.]]>
+    </string>
+    <string id="14">
+        <![CDATA[Now the stuff is working its ways to the other chambers, breaking open more containers as it goes. Soon every bit of waste here will be turned loose, unless you do something.]]>
+    </string>
+    <string id="15">
+        <![CDATA[Suddenly, things start climbing out of the acidic muck! You watch, stunned, amazed that anything could survive in that stuff. One thing sure can, though - demons.]]>
+    </string>
+    <string id="16">
+        <![CDATA[The hellish imps were having a pleasant, leisurely swim in the goop before you arrived. Now, annoyed that you want to end their fun, they decide to kill you ...]]>
+    </string>
+    <string id="21">
+        <![CDATA[You have finally managed to reach the control panel for the Primary Waste Storage facility. Perhaps here, you can find a way to contain the stuff. Or you could also make the problem much worse.]]>
+    </string>
+    <string id="22">
+        <![CDATA[Sit down ... if you dare.]]>
+    </string>
+    <string id="27">
+        <![CDATA[You back away. Probably a sensible idea.]]>
+    </string>
+    <string id="28">
+        <![CDATA[It's rather anticlimactic, after all. You sit down, examine the panel, and realize all the levers are locked down, the displays are dark, and the buttons have been removed entirely.]]>
+    </string>
+    <string id="29">
+        <![CDATA[There's nothing you can do here now. There may be somewhere you can go to activate this control panel, but you aren't optimistic.]]>
+    </string>
+    <string id="34">
+        <![CDATA[You sit down and look the controls over. At first, you think your trip to the Main Control Room was in vain. Everything looks pretty dark and uninteresting.]]>
+    </string>
+    <string id="35">
+        <![CDATA[Then you notice that one of the displays isn't dark after all. It's flickering very dimly. You bend down to read it. It says "Activate Purification Process. Danger - Safety Off" Next to the light is a tiny switch. ]]>
+    </string>
+    <string id="36">
+        <![CDATA[You could push the switch. However, you're a tiny bit nervous about the whole Safety thing.]]>
+    </string>
+    <string id="40">
+        <![CDATA[Probably a wise move. This isn't a suicide mission.]]>
+    </string>
+    <string id="41">
+        <![CDATA[You push the switch. A little hole opens up on the panel, and the words "Insert Crystal" appear next to it, written in letters of mist. Alas, you have no crystal, or anything similar.]]>
+    </string>
+    <string id="42">
+        <![CDATA[Disappointed, you back away. The hole closes up as you do.]]>
+    </string>
+    <string id="43">
+        <![CDATA[You push the switch. A little hole opens up on the panel, and the words "Insert Crystal" appear next to it, written in letters of mist. It looks like the crystal the Vahnatai gave you would fit perfectly.]]>
+    </string>
+    <string id="44">
+        <![CDATA[This would appear to be it. Do you insert the crystal?]]>
+    </string>
+    <string id="49">
+        <![CDATA[For all you know, you're about to bring a river of deadly goo pouring in on you. You back away, and the hole disappears.]]>
+    </string>
+    <string id="50">
+        <![CDATA[You insert the crystal. There is a flash of light and heat, and it disintegrates. You aren't allowed time to ponder what this means. At last, the powerful machinery of the School of Magery has been unleashed, as it should have been long before.]]>
+    </string>
+    <string id="51">
+        <![CDATA[Quickfire is the most thorough, devastating, rapacious magical effect known. It can and will devour anything and everything it can reach. You hear the roar of its unending flame roaring through the Storage areas, devouring the waste.]]>
+    </string>
+    <string id="52">
+        <![CDATA[For whatever reason, the waste destruction mechanisms weren't used when the School was closed. At last, they have been activated. ]]>
+    </string>
+    <string id="53">
+        <![CDATA[Unfortunately, the doors and gates that would keep the quickfire from reaching you are no longer working. You watch rusted shutters pathetically attempt to close over the windows surrounding you. They aren't working. The fire will soon reach you.]]>
+    </string>
+    <string id="54">
+        <![CDATA[Perhaps you should run ...]]>
+    </string>
+    <string id="56">
+        <![CDATA[That's odd. One of these boxes of waste is shaking. Do you open it?]]>
+    </string>
+    <string id="62">
+        <![CDATA[Oops. It would appear that not all of the waste placed here was inert.]]>
+    </string>
+    <string id="63">
+        <![CDATA[This chamber was where fresh, virulent waste was teleported in for storage. For extra safety, magic barriers were placed around the arrival portal. Most of the barriers have faded away on their own at this point.]]>
+    </string>
+    <string id="64">
+        <![CDATA[Not even adventurers as foolhardy as you would step into a portal this weak and unstable, leading to who knows where. You back away carefully.]]>
+    </string>
+    <string id="65">
+        <![CDATA[You've spent too long in this incredibly poisonous atmosphere. It's starting to get to you ...]]>
+    </string>
+    <string id="66">
+        <![CDATA[The quickfire advanced too fast. You didn't have a chance. You were trapped. The searing heat, which will burn away all the waste in the repository, will turn you to ash as well. You grow resigned. You have no hope.]]>
+    </string>
+    <string id="67">
+        <![CDATA[Then, suddenly, all is blackness. You are no longer in the School! You have been transported to an area of total darkness, where you float suspended in nothingness. Is this the end? Have you died?]]>
+    </string>
+    <string id="68">
+        <![CDATA[Then you hear a voice. You recognize it! It's Baia-Tel, the leader of the Vahnatai! He says "Gratitude and honor are thing we Vahnatai always much valuing. Your goodness to us is getting reward now. Saving you is but the least we can do."]]>
+    </string>
+    <string id="69">
+        <![CDATA["Thanking to you, and good luck."]]>
+    </string>
+    <string id="70">
+        <![CDATA[Then you are somewhere else ...]]>
+    </string>
+</town>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Za-Khazi Run, South</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>174</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <sign id="0">
+        <![CDATA[GUARDED PASS|NO PASS WITHOUT PAYMENT TO ASSIKVAS]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[GUARDED PASS|NO PASS WITHOUT PAYMENT TO ASSIKVAS]]>
+    </sign>
+    <area top="26" left="13" bottom="33" right="21">Near Assikvas</area>
+    <area top="3" left="22" bottom="8" right="35">Unicorn Cave</area>
+    <string id="0">
+        <![CDATA[You reach the massive jumble of sharp rocks. Looking just under the surface of the water, you can see them all there, threatening to rip the bottom out of your boat.]]>
+    </string>
+    <string id="1">
+        <![CDATA[Fortunately, you've learned the route to pass them safely. Moving your boat carefully, you thread your way past the hazardous stones, and pass the blockage.]]>
+    </string>
+    <string id="2">
+        <![CDATA[As you being to pilot your boat into this narrow river, you begin to notice that there are jagged rocks just below the surface of the water.]]>
+    </string>
+    <string id="3">
+        <![CDATA[Looking closer, you realize that this stream is a deathtrap - someone has placed sharpened stalagmites all along the river floor. Trying to pass here without knowing the safe way through would be suicide. You back away.]]>
+    </string>
+    <string id="4">
+        <![CDATA[The tunnel becomes very narrow. You don't hear or smell monsters, so you peek around inside. It was a good idea ... you realize that the walls are glittering. It's gold ore!]]>
+    </string>
+    <string id="5">
+        <![CDATA[Without proper tools, it would take a while to dig the stuff out. However, you could still make a good bit of money with only a day or so of digging. Do you?]]>
+    </string>
+    <string id="10">
+        <![CDATA[Regretfully, you leave the gold behind. It would be a great deal, but only if you had more time.]]>
+    </string>
+    <string id="11">
+        <![CDATA[Unfortunately, you've already dug out all the easy gold ore. You can't get any more out without more time and better tools.]]>
+    </string>
+    <string id="12">
+        <![CDATA[You spend the better part of the day striking the rock with clubs and broken stalagmites, and picking out the nicer bits. Before long, you have a large sack of high quality gold ore, suitable for barter.]]>
+    </string>
+    <string id="13">
+        <![CDATA[Ugh. You've detected a rank, unpleasant smell. You look around the corner into a large cavern and see small herds of pests. They mill around the cave, grazing on mushrooms and making unpleasant bleating noises.]]>
+    </string>
+    <string id="14">
+        <![CDATA[The cave is filled with the ruinous pests of the surface world: unicorns. They're nasty critters, about four feet tall, tough and irritable, and with a nasty, sharp horn. The Empire must have teleported a bunch of them down here, knowingly or not.]]>
+    </string>
+    <string id="15">
+        <![CDATA[The things are often cowardly, but they have been known to attack humans. You may want to tread carefully.]]>
+    </string>
+    <string id="19">
+        <![CDATA[A group of unicorns have built up their courage and started stalking you. You try to lose them, but they start trotting after you. You have no choice but to fight them.]]>
+    </string>
+    <string id="20">
+        <![CDATA[You sail out onto a large, subterranean lake. The green fungus light is unusually bright here, revealing large schools of pale cave fish swimming under the surface. Some of them boldly move close to look at you with eyes on tentacles, and swim away again.]]>
+    </string>
+    <string id="21">
+        <![CDATA[Looking around, you see the light of small fires to the northwest. Peering intently through the mist, you see a large island with a huge stone spire on it. Lights have been lit in windows in the spire. Someone must be living there!]]>
+    </string>
+</sector>

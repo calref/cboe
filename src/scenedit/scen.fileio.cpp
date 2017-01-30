@@ -913,7 +913,7 @@ map_data buildTownMapData(size_t which, cScenario& scenario) {
 			terrain.addFeature(town.preset_items[i].loc.x, town.preset_items[i].loc.y, eMapFeature::ITEM, i);
 	}
 	for(size_t i = 0; i < town.preset_fields.size(); i++) {
-		if(town.preset_fields[i].type > 0)
+		if(town.preset_fields[i].type > 0 && town.preset_fields[i].type < FIELD_DISPEL)
 			terrain.addFeature(town.preset_fields[i].loc.x,town.preset_fields[i].loc.y,eMapFeature::FIELD,town.preset_fields[i].type);
 	}
 	for(size_t i = 0; i < town.creatures.size(); i++) {

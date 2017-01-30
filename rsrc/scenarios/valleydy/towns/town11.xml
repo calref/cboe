@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Student Quarters</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="0" bottom="47" right="47" />
+    <difficulty>5</difficulty>
+    <lighting>dark</lighting>
+    <flags />
+    <wandering>
+        <monster>188</monster>
+        <monster>189</monster>
+        <monster>190</monster>
+    </wandering>
+    <wandering>
+        <monster>0</monster>
+        <monster>120</monster>
+    </wandering>
+    <item id="0">
+        <type>260</type>
+    </item>
+    <item id="1">
+        <type>260</type>
+    </item>
+    <item id="2">
+        <type>260</type>
+    </item>
+    <item id="3">
+        <type>261</type>
+    </item>
+    <item id="4">
+        <type>261</type>
+    </item>
+    <item id="5">
+        <type>261</type>
+    </item>
+    <item id="6">
+        <type>350</type>
+    </item>
+    <item id="7">
+        <type>351</type>
+    </item>
+    <item id="8">
+        <type>27</type>
+        <contained>true</contained>
+    </item>
+    <item id="9">
+        <type>21</type>
+    </item>
+    <item id="10">
+        <type>21</type>
+    </item>
+    <item id="11">
+        <type>19</type>
+    </item>
+    <item id="12">
+        <type>19</type>
+    </item>
+    <item id="13">
+        <type>21</type>
+    </item>
+    <item id="14">
+        <type>22</type>
+    </item>
+    <item id="15">
+        <type>22</type>
+    </item>
+    <item id="16">
+        <type>11</type>
+    </item>
+    <item id="17">
+        <type>13</type>
+    </item>
+    <item id="18">
+        <type>8</type>
+    </item>
+    <item id="19">
+        <type>23</type>
+    </item>
+    <item id="20">
+        <type>30</type>
+    </item>
+    <item id="21">
+        <type>7</type>
+    </item>
+    <item id="22">
+        <type>20</type>
+    </item>
+    <item id="23">
+        <type>8</type>
+    </item>
+    <item id="24">
+        <type>17</type>
+        <contained>true</contained>
+    </item>
+    <item id="25">
+        <type>7</type>
+        <contained>true</contained>
+    </item>
+    <item id="26">
+        <type>0</type>
+        <charges>150</charges>
+        <contained>true</contained>
+    </item>
+    <item id="27">
+        <type>182</type>
+        <contained>true</contained>
+    </item>
+    <item id="28">
+        <type>22</type>
+    </item>
+    <item id="29">
+        <type>5</type>
+    </item>
+    <item id="30">
+        <type>0</type>
+        <charges>800</charges>
+        <contained>true</contained>
+    </item>
+    <item id="31">
+        <type>40</type>
+    </item>
+    <item id="32">
+        <type>7</type>
+    </item>
+    <item id="33">
+        <type>156</type>
+    </item>
+    <item id="34">
+        <type>305</type>
+    </item>
+    <item id="35">
+        <type>0</type>
+        <charges>300</charges>
+        <contained>true</contained>
+    </item>
+    <item id="36">
+        <type>11</type>
+    </item>
+    <item id="37">
+        <type>21</type>
+    </item>
+    <item id="38">
+        <type>23</type>
+    </item>
+    <item id="39">
+        <type>14</type>
+    </item>
+    <item id="40">
+        <type>15</type>
+    </item>
+    <item id="41">
+        <type>22</type>
+    </item>
+    <item id="42">
+        <type>20</type>
+    </item>
+    <item id="43">
+        <type>204</type>
+        <contained>true</contained>
+    </item>
+    <item id="44">
+        <type>387</type>
+    </item>
+    <item id="45">
+        <type>176</type>
+    </item>
+    <item id="46">
+        <type>176</type>
+    </item>
+    <item id="47">
+        <type>177</type>
+    </item>
+    <item id="48">
+        <type>381</type>
+        <contained>true</contained>
+    </item>
+    <item id="49">
+        <type>381</type>
+        <contained>true</contained>
+    </item>
+    <item id="50">
+        <type>381</type>
+        <contained>true</contained>
+    </item>
+    <item id="51">
+        <type>0</type>
+        <charges>180</charges>
+        <contained>true</contained>
+    </item>
+    <creature id="0">
+        <type>190</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="1">
+        <type>190</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="2">
+        <type>190</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="3">
+        <type>190</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="4">
+        <type>190</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="5">
+        <type>190</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="6">
+        <type>190</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="7">
+        <type>190</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="8">
+        <type>190</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="9">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="10">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="11">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="12">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="13">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="14">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="15">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="16">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="17">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="18">
+        <type>188</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="19">
+        <type>188</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="20">
+        <type>188</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="21">
+        <type>188</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="22">
+        <type>188</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="23">
+        <type>188</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="24">
+        <type>188</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="25">
+        <type>188</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="26">
+        <type>188</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="27">
+        <type>120</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="28">
+        <type>120</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="29">
+        <type>120</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="30">
+        <type>120</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="31">
+        <type>120</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="32">
+        <type>120</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="33">
+        <type>120</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="34">
+        <type>120</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="35">
+        <type>120</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="36">
+        <type>120</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="37">
+        <type>120</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="38">
+        <type>191</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="11" y="0" />
+    </creature>
+    <creature id="39">
+        <type>65</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <area top="29" left="33" bottom="35" right="46">Destroyed Chamber</area>
+    <area top="18" left="33" bottom="27" right="46">Ransacked Quarters</area>
+    <area top="16" left="1" bottom="21" right="16">Ransacked Quarters</area>
+    <area top="8" left="1" bottom="11" right="15">Apothecary</area>
+    <area top="4" left="1" bottom="6" right="10">Apothecary Storage</area>
+    <area top="8" left="34" bottom="16" right="46">Possession Check-In</area>
+    <area top="29" left="22" bottom="43" right="31">Dining Hall</area>
+    <area top="42" left="1" bottom="46" right="4">Small Office</area>
+    <area top="23" left="1" bottom="37" right="16">3rd Year Student Cells</area>
+    <area top="39" left="38" bottom="46" right="41">Old Storeroom</area>
+    <area top="39" left="33" bottom="46" right="36">Abandoned Kitchen</area>
+    <area top="39" left="43" bottom="46" right="46">Dusty Barracks</area>
+    <sign id="0">
+        <![CDATA[PROVOST]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[SCHOOL OF MAGERY|LOWER SECTION|STUDENTS AND FACULTY ONLY BEYOND THIS POINT]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[SURRENDER THAT OF THE OUTSIDE WORLD BEFORE ENTERING]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[CHECK-IN CHAMBERS]]>
+    </sign>
+    <sign id="4">
+        <![CDATA[RECORDS AND SECRETARIAL]]>
+    </sign>
+    <sign id="5">
+        <![CDATA[DISCIPLINE]]>
+    </sign>
+    <sign id="6">
+        <![CDATA[EXAMINATION CHAMBER]]>
+    </sign>
+    <sign id="7">
+        <![CDATA[3RD YEAR]]>
+    </sign>
+    <sign id="8">
+        <![CDATA[ADMIN. & PROVOST - SOUTH|APOTHECARY & SHRINE - NORTH]]>
+    </sign>
+    <sign id="9">
+        <![CDATA[APOTHECARY]]>
+    </sign>
+    <sign id="10">
+        <![CDATA[1ST YEARS]]>
+    </sign>
+    <sign id="11">
+        <![CDATA[1ST YEARS]]>
+    </sign>
+    <sign id="12">
+        <![CDATA[TRANSCRIPTS]]>
+    </sign>
+    <sign id="13">
+        <![CDATA[COMMON HALL]]>
+    </sign>
+    <string id="0">
+        <![CDATA[You step through the open gates into the lower section of the School of Magery, where all the serious learning and research took place. The air is fresher here (if dustier) and it's a relief to leave the airborne poisons of the earlier caves behind.]]>
+    </string>
+    <string id="1">
+        <![CDATA[Although this area has been abandoned by its former owners, it is nowhere near unoccupied. You hear shrill, demonic screeches of laugher to the south, which don't bode well for your travels. ]]>
+    </string>
+    <string id="2">
+        <![CDATA[Refuse is everywhere, and what were once lovely frescoes on the walls have been scratched into unrecognizability. The current residents of the School don't seem to feel like keeping things neat.]]>
+    </string>
+    <string id="3">
+        <![CDATA[It has seemed that any long-lived creature which doesn't need to eat much has thrived while in the magical atmosphere of the school. It will probably be tough going from here on in ...]]>
+    </string>
+    <string id="6">
+        <![CDATA[Here is yet another area that was blown up before the School was abandoned. You haven't a clue what these rooms were used for. The destroyers were thorough.]]>
+    </string>
+    <string id="7">
+        <![CDATA[The books on these shelves were burned to bits by several well placed Flame spells.]]>
+    </string>
+    <string id="8">
+        <![CDATA[Although the desk is empty, you notice that there's a small piece of paper crumpled underneath it. It reads: "Don't forget. Caretaker key left with Provost. Healing Scepter still with Apothecary. Be sure to recover."]]>
+    </string>
+    <string id="9">
+        <![CDATA["If only we were given more time. Vinnia will have my head if they're left. Be sure not to forget."]]>
+    </string>
+    <string id="10">
+        <![CDATA[Beyond these heavy gates, the worldly possessions of the students here were stored, kept from them so that they could concentrate on their studies. It looks like a few items still remain.]]>
+    </string>
+    <string id="11">
+        <![CDATA[On a polished marble pedestal, you find a small scepter, resting on a pillow of velvet.]]>
+    </string>
+    <string id="12">
+        <![CDATA[It's not an impressive object, merely a piece of polished and varnished driftwood with a piece of rose quartz set in one end. Despite its unassuming appearance, you can't help but believe an object so well hidden must have at least a small value.]]>
+    </string>
+    <string id="17">
+        <![CDATA[The sceptre is slightly warm to the touch and feels solid and reassuring in your hand. Whatever it is, it's now yours.]]>
+    </string>
+    <string id="18">
+        <![CDATA[This book contains records of the students let into the infirmary, and the cause of the injuries that placed them there. The number placed here because of magical accidents is quite telling.]]>
+    </string>
+    <string id="19">
+        <![CDATA[The gremlins didn't tear this book up, although it shows signs that they flipped through it frequently. This is probably because they've found reading it to be very amusing.]]>
+    </string>
+    <string id="20">
+        <![CDATA[This areas contains the cells where the third year apprentices spent their traditional year of silence, privation, and quiet thought. This area looks far too enclosed and boring for the gremlins to live  here.]]>
+    </string>
+    <string id="21">
+        <![CDATA[One of the books on this bookshelf looks useful (the rest being moldy, esoteric, or pieces of amusing fiction). It's a book of magic, probably left here by a careless student. You can't understand the title.]]>
+    </string>
+    <string id="27">
+        <![CDATA[Alas, you can't understand the magical script inside. Maybe, if you had taken a few classes here, it would have made more sense ...]]>
+    </string>
+    <string id="28">
+        <![CDATA[It takes an hour of careful concentration, but you manage to decipher the runes inside. It is indeed a spellbook, teaching the words and subtle motions necessary to cast the Poison spell. You learn it well.]]>
+    </string>
+    <string id="29">
+        <![CDATA[The bookshelves in this room don't contain the spellbooks and dry magical tomes you've come to expect. Instead, they seem to contain fiction and other works of a lighter nature.]]>
+    </string>
+    <string id="30">
+        <![CDATA[Access to this room was probably a reward for third year students, or a brief respite from the ceaseless privations of being an apprentice here.]]>
+    </string>
+    <string id="31">
+        <![CDATA[This desk is empty.]]>
+    </string>
+    <string id="32">
+        <![CDATA[Most of the books, journals, and scrolls on these shelves have rotted away. The few that remain readable are useless to you, mainly forms and records.]]>
+    </string>
+    <string id="33">
+        <![CDATA[As you pull one book out, however, a shiny item falls to the floor with a metallic ring. You bend down to inspect it. It's a small silver key.]]>
+    </string>
+    <string id="38">
+        <![CDATA[At one time, the transcripts and student records in this chamber needed to be well hidden and guarded. Nobody cares anymore, of course, but hidden they remain.]]>
+    </string>
+    <string id="39">
+        <![CDATA[Someone has cast quite a spell on these doors. The walls to either side of them melted, and the stone flowed like water over their edges, solidifying in bars of rock, 5 inches thick.]]>
+    </string>
+    <string id="40">
+        <![CDATA[These doors are sealed. You'll have to find another way through.]]>
+    </string>
+    <string id="41">
+        <![CDATA[This door is locked. There is a silver keyhole, but you have no key that fits. Considering the power of the mages who sealed this portal, you aren't optimistic about your ability to open it.]]>
+    </string>
+    <string id="42">
+        <![CDATA[You find a locked door with a silver keyhole. You try the silver key you found nearby in the lock, and it fits. The door is now unlocked.]]>
+    </string>
+</town>

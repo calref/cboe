@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Muck</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="3" bottom="44" right="44" />
+    <difficulty>0</difficulty>
+    <lighting>lit</lighting>
+    <onenter condition="alive">6</onenter>
+    <onenter condition="dead">6</onenter>
+    <flags />
+    <item id="0">
+        <type>0</type>
+        <charges>59</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="1">
+        <type>376</type>
+    </item>
+    <item id="2">
+        <type>198</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="3">
+        <type>247</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="4">
+        <type>13</type>
+    </item>
+    <item id="5">
+        <type>15</type>
+    </item>
+    <item id="6">
+        <type>17</type>
+    </item>
+    <item id="7">
+        <type>5</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="8">
+        <type>5</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="9">
+        <type>7</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="10">
+        <type>17</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="11">
+        <type>6</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="12">
+        <type>0</type>
+        <charges>6</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="13">
+        <type>8</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="14">
+        <type>98</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="15">
+        <type>166</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="16">
+        <type>8</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="17">
+        <type>146</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="18">
+        <type>170</type>
+        <property>true</property>
+    </item>
+    <item id="19">
+        <type>170</type>
+        <property>true</property>
+    </item>
+    <item id="20">
+        <type>170</type>
+        <property>true</property>
+    </item>
+    <item id="21">
+        <type>170</type>
+        <property>true</property>
+    </item>
+    <item id="22">
+        <type>164</type>
+        <property>true</property>
+    </item>
+    <item id="23">
+        <type>164</type>
+        <property>true</property>
+    </item>
+    <item id="24">
+        <type>164</type>
+        <property>true</property>
+    </item>
+    <item id="25">
+        <type>164</type>
+        <property>true</property>
+    </item>
+    <item id="26">
+        <type>13</type>
+    </item>
+    <item id="27">
+        <type>366</type>
+        <property>true</property>
+    </item>
+    <item id="28">
+        <type>366</type>
+        <property>true</property>
+    </item>
+    <item id="29">
+        <type>367</type>
+        <property>true</property>
+    </item>
+    <item id="30">
+        <type>363</type>
+        <property>true</property>
+    </item>
+    <item id="31">
+        <type>363</type>
+        <property>true</property>
+    </item>
+    <item id="32">
+        <type>369</type>
+        <property>true</property>
+    </item>
+    <item id="33">
+        <type>369</type>
+        <property>true</property>
+    </item>
+    <item id="34">
+        <type>367</type>
+        <property>true</property>
+    </item>
+    <item id="35">
+        <type>367</type>
+        <property>true</property>
+    </item>
+    <item id="36">
+        <type>31</type>
+        <property>true</property>
+    </item>
+    <item id="37">
+        <type>31</type>
+        <property>true</property>
+    </item>
+    <item id="38">
+        <type>364</type>
+        <property>true</property>
+    </item>
+    <item id="39">
+        <type>364</type>
+    </item>
+    <item id="40">
+        <type>9</type>
+    </item>
+    <item id="41">
+        <type>9</type>
+    </item>
+    <item id="42">
+        <type>12</type>
+    </item>
+    <item id="43">
+        <type>12</type>
+    </item>
+    <item id="44">
+        <type>363</type>
+    </item>
+    <creature id="0">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="1">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="2">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="3">
+        <type>5</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>4</face>
+    </creature>
+    <creature id="4">
+        <type>5</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>4</face>
+    </creature>
+    <creature id="5">
+        <type>2</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>8</face>
+    </creature>
+    <creature id="6">
+        <type>8</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>56</face>
+    </creature>
+    <creature id="7">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="8">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="9">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="10">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="11">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="12">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="13">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="14">
+        <type>191</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>50</personality>
+        <face>10</face>
+        <sdf x="5" y="4" />
+    </creature>
+    <creature id="15">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="16">
+        <type>6</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>17</face>
+    </creature>
+    <creature id="17">
+        <type>192</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>51</personality>
+        <face>31</face>
+    </creature>
+    <creature id="18">
+        <type>22</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>52</personality>
+        <face>58</face>
+    </creature>
+    <creature id="19">
+        <type>7</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>53</personality>
+        <face>39</face>
+    </creature>
+    <creature id="20">
+        <type>4</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>54</personality>
+        <face>1</face>
+    </creature>
+    <creature id="21">
+        <type>34</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>55</personality>
+        <face>30</face>
+    </creature>
+    <creature id="22">
+        <type>4</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>56</personality>
+        <face>1</face>
+    </creature>
+    <area top="29" left="11" bottom="37" right="18">Barracks</area>
+    <area top="39" left="33" bottom="41" right="42">Punishment Cells</area>
+    <area top="10" left="36" bottom="14" right="42">Small Shrine</area>
+    <area top="10" left="10" bottom="18" right="18">Herb Factory</area>
+    <area top="20" left="10" bottom="24" right="18">Herb Factory Office</area>
+    <area top="10" left="25" bottom="15" right="30">Herb Processing</area>
+    <sign id="0">
+        <![CDATA[Dressing Chambers]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[Punishment Cells]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[JENETTE AND VOLPE - Fine Alchemical Herbs]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[HERB PROCESSING]]>
+    </sign>
+    <sign id="4">
+        <![CDATA[Processor Outfitting]]>
+    </sign>
+    <sign id="5">
+        <![CDATA[Serf Barracks]]>
+    </sign>
+    <sign id="6">
+        <![CDATA[Empire Barracks]]>
+    </sign>
+    <sign id="7">
+        <![CDATA[Keep out!]]>
+    </sign>
+    <string id="0">
+        <![CDATA[The floor stones in the doorway look a little bit loose. Could be shoddy construction. It could also be a trap.]]>
+    </string>
+    <string id="1">
+        <![CDATA[The smell of freshly cut and cleaned herbs is overpowering in here. Alchemical ingredients freshly recovered from the swamp are brought here to be sorted, treated, and packaged for sale to alchemists.]]>
+    </string>
+    <string id="2">
+        <![CDATA[Tired, pale serfs with stone knives are processing the herbs at a hectic pace. They're working as fast as they can, as if they were afraid of being punished for slow performance. They probably would be.]]>
+    </string>
+    <string id="3">
+        <![CDATA["You need to get a box in Selathni, and deliver it to the city of Zaskiva. To get the box, go to Elinor in Selathni, and say 'sainthood.' Then go to Zaskiva."]]>
+    </string>
+    <string id="4">
+        <![CDATA["Zaskiva is restricted, but we'll see that you can get there. Once there, search the city for a marble statue. Put the box in the niche in the wall behind the statue." He gives you a paper reviewing this.]]>
+    </string>
+    <string id="5">
+        <![CDATA[The word of your notoriety has reached this remote town. The guards draw their weapons, and move to intercept you.]]>
+    </string>
+    <string id="6">
+        <![CDATA[You reach the aptly named town of Muck, a sickly village on the border of the massive, foul Morrow Marsh. Muck's main business is farming alchemical ingredients, which tend to grow in large swamps.]]>
+    </string>
+    <string id="7">
+        <![CDATA[It's lucrative work, but dangerous, dirty, exhausting, and disease ridden. Not surprisingly, the serfs are tired, thin, and dangerously pale.]]>
+    </string>
+</town>

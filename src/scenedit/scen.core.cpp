@@ -30,6 +30,7 @@
 #include "spell.hpp"
 #include "mathutil.hpp"
 #include "winutil.hpp"
+#include "view_dialogs.hpp"
 
 extern short cen_x, cen_y,cur_town;
 extern bool mouse_button_held;
@@ -817,6 +818,14 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& m
 			monst.a[2].type = eMonstMelee(i);
 			put_monst_info_in_dlog(me,monst,which);
 		}
+	} else if(hit == "preview") {
+		cDialog monstInfo("monster-info", &me);
+		monstInfo["left"].hide();
+		monstInfo["right"].hide();
+		monstInfo.attachClickHandlers([](cDialog&,std::string,eKeyMod){return false;}, {"guard","mindless","invuln"});
+		monstInfo["done"].attachClickHandler(std::bind(&cDialog::toast, &monstInfo, true));
+		put_monst_info(monstInfo, monst, scenario);
+		monstInfo.run();
 	}
 	return true;
 }
@@ -853,7 +862,7 @@ bool edit_monst_type(short which) {
 	monst_dlg["priest"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 7, "priest spells"));
 	monst_dlg["treas"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 4, "treasure"));
 	monst_dlg.attachFocusHandlers(check_monst_dice,{"dice1","dice2","dice3","sides1","sides2","sides3"});
-	monst_dlg.attachClickHandlers(std::bind(edit_monst_type_event_filter,_1,_2,std::ref(monst),std::ref(which)),{"okay","abils","picktype","picktype1","picktype2","picktype3"});
+	monst_dlg.attachClickHandlers(std::bind(edit_monst_type_event_filter,_1,_2,std::ref(monst),std::ref(which)),{"okay","abils","picktype","picktype1","picktype2","picktype3","preview"});
 	
 	if(scenario.scen_monsters.size() == 1){
 		monst_dlg["left"].hide();
@@ -1665,6 +1674,21 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 		if(temp_item.variety != eItemType::NO_ITEM)
 			item = temp_item;
 		put_item_info_in_dlog(me, item, which);
+	} else if(hit == "preview") {
+		cItem temp_item = item;
+		temp_item.ident = true;
+		cDialog itemInfo("item-info", &me);
+		itemInfo["left"].hide();
+		itemInfo["right"].hide();
+		itemInfo["done"].attachClickHandler(std::bind(&cDialog::toast, &itemInfo, false));
+		itemInfo["magic"].attachClickHandler([](cDialog&, std::string, eKeyMod){return false;});
+		itemInfo["id"].attachClickHandler([&temp_item](cDialog& me, std::string, eKeyMod){
+			temp_item.ident = !temp_item.ident;
+			put_item_info(me, temp_item, scenario);
+			return true;
+		});
+		put_item_info(itemInfo, temp_item, scenario);
+		itemInfo.run();
 	}
 	return true;
 }
@@ -1718,7 +1742,7 @@ bool edit_item_type(short which) {
 	item_dlg["weight"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 250, "Weight"));
 	item_dlg["class"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 100, "Special Class"));
 	item_dlg["variety"].attachFocusHandler(std::bind(change_item_variety, _1, _2, std::ref(item)));
-	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(item), std::ref(which)), {"okay", "cancel", "abils", "choosepic", "choosetp", "choosemiss", "desc"});
+	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(item), std::ref(which)), {"okay", "cancel", "abils", "choosepic", "choosetp", "choosemiss", "desc", "preview"});
 	
 	if(scenario.scen_items.size() == 1) {
 		item_dlg["prev"].hide();

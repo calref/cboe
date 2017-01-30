@@ -1,0 +1,741 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="30">
+        <title>Yossi</title>
+        <look>
+            <![CDATA[At first, you aren't sure why this boy is walking so slowly and carefully. Then you figure it out - he's blind. His sharp ears pick up your approach, and he turns slowly to face you.]]>
+        </look>
+        <name>
+            <![CDATA[His voice is quiet. Talking to you seems to make him nervous. "I am Yossi."]]>
+        </name>
+        <job>
+            <![CDATA[He thinks. "I am ... I am ... trying to play."]]>
+        </job>
+        <unknown>
+            <![CDATA[He shrugs.]]>
+        </unknown>
+    </personality>
+    <personality id="31">
+        <title>Yvan</title>
+        <look>
+            <![CDATA[This girl should clearly be in bed. She's deathly pale, and is obviously quite weak. However, the scrapes on her legs and dirt everywhere else seems to indicate that this isn't a child who takes well to being cooped up. She stands up to walk up to you.]]>
+        </look>
+        <name>
+            <![CDATA[She limps up to you, bold as can be, and looks over your weapons and armor with great interest. "I'm Yvan."]]>
+        </name>
+        <job>
+            <![CDATA[She's slow in responding. You see that she's started feeling quite ill. She looks up at you. "I'm just trying to be outside."]]>
+        </job>
+        <unknown>
+            <![CDATA[She coughs.]]>
+        </unknown>
+    </personality>
+    <personality id="32">
+        <title>Vandor</title>
+        <look>
+            <![CDATA[Physically, this man is as strong a specimen as you've ever met. Inside, however, he's clearly a wreck. He stares at his empty mug despondently, barely even registering your presence.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Vandor," he mutters. "What do you want?"]]>
+        </name>
+        <job>
+            <![CDATA["I've heard of you. You're the adventurers. You want to know what my job is? Being worthless. That's what."]]>
+        </job>
+        <unknown>
+            <![CDATA[He shrugs.]]>
+        </unknown>
+    </personality>
+    <personality id="33">
+        <title>Somreth</title>
+        <look>
+            <![CDATA[The temple's sole occupant is a woman, who paces anxious orbits around the room. Although she's clearly lost in thought, you finally manage to get her attention.]]>
+        </look>
+        <name>
+            <![CDATA["I am Somreth. Welcome, adventurers."]]>
+        </name>
+        <job>
+            <![CDATA["I am the leader and teacher of the Temple of Divine Justice."]]>
+        </job>
+    </personality>
+    <personality id="34">
+        <title>Mayor Broder</title>
+        <look>
+            <![CDATA[You meet the mayor of Marralis. His nervous manner, facial tics, and constant sheen of nervous sweat all say one thing: bureaucrat desperately out of his depth.]]>
+        </look>
+        <name>
+            <![CDATA[He looks very glad to see you. "I am more than please, in fact, ecstatic, to have the honor of welcoming you. I am known as Mayor Broder, Esquire, Honored Empire Liaison to the Town of Marralis."]]>
+        </name>
+        <job>
+            <![CDATA["Ah, yes. That is a complicated and multi-faceted question, but I shall endeavor to answer. I am the mayor and leader of this town, and the first defense against fear and destruction."]]>
+        </job>
+        <unknown>
+            <![CDATA["Alas, I must confess that your question is somewhat impenetrable to me."]]>
+        </unknown>
+    </personality>
+    <personality id="35">
+        <title>Covington</title>
+        <look>
+            <![CDATA[This shop is run by a lovely blonde woman, who wears a charm with a black stone. Her longbow is kept close at hand, and she wears a full quiver of arrows.]]>
+        </look>
+        <name>
+            <![CDATA["I am Covington. Greetings."]]>
+        </name>
+        <job>
+            <![CDATA["I sell missiles of all sorts and all shapes and sizes, all the better for hunting the wide variety of vermin which surrounds us."]]>
+        </job>
+        <unknown>
+            <![CDATA[She shakes her head.]]>
+        </unknown>
+    </personality>
+    <personality id="36">
+        <title>Kevin</title>
+        <look>
+            <![CDATA[This man is prowling among his crops like a wolf, watching for the slightest sign of rot or disease. When he sees it, he stoops swiftly down to painstakingly cut the afflicted plant away. He seems loathe to turn away from his work to speak with you.]]>
+        </look>
+        <name>
+            <![CDATA["I am Kevin." While he says it, he watches his plants, not you.]]>
+        </name>
+        <job>
+            <![CDATA["I'm a farmer. Tough work, here in the Vale."]]>
+        </job>
+    </personality>
+    <personality id="37">
+        <title>Yvan</title>
+        <look>
+            <![CDATA[You meet a young girl who looks like she's coming out at the far end of an unpleasant illness. She's walking around slowly, but increasingly confidently.]]>
+        </look>
+        <name>
+            <![CDATA[She walks boldly up to you, fascinated by your weapons. "I'm Yvan."]]>
+        </name>
+        <job>
+            <![CDATA["I was sick. But now I'm not so sick."]]>
+        </job>
+        <unknown>
+            <![CDATA[She scratches and shakes her head.]]>
+        </unknown>
+    </personality>
+    <personality id="38">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="39">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="30">
+        <keyword>tryi</keyword>
+        <keyword>play</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It's hard to play with my eyes gone all funny. I move around, and try not to trip on things. It makes me sad. I like to wander all over."]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>eyes</keyword>
+        <keyword>funn</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I can't see things no more. They're all blurry and funny. My daddy says it's because of the water. They're trying to heal me, but it's tough."]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>dadd</keyword>
+        <keyword>wate</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He peers at you intently, trying to make out some details. "My daddy's Vandor. He says it's the water that burns that hurted me.  He's smart, but it all makes him sad."]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>heal</keyword>
+        <keyword>toug</keyword>
+        <type>if-sdf</type>
+        <param>3</param>
+        <param>2</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The grown ups are trying to find something that can heal us, but they can't. I hope they do. I want to wander again."]]>
+        </text>
+        <text>
+            <![CDATA["The grown ups got this healing scepter. That's what they say. It hasn't fixed me yet. I hope it does." He sighs.]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>wand</keyword>
+        <keyword>over</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He perks up, pleased that you're interested. "Yeah! I found a big scary hole, and I looked around the old magic school too!"]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>scar</keyword>
+        <keyword>hole</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks excited. "Yeah! It's straight south from town. You can't see it until you're really close. I didn't go in, because it's scary, but I liked to look at it!"]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>magi</keyword>
+        <keyword>scho</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I hiked up there. It's way up to the northeast. There are four ways in, and I went in 'em all! They all end in big doors. I couldn't open them, so I left. My daddy told me that was the old magic school. Don't know anything about that, though."]]>
+        </text>
+    </node>
+    <node for="31">
+        <keyword>outs</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She wavers slightly. "They all say I should be in bed. I don't like being in bed. I want to be out in the air, like daddy and brother. Why don't I get to play?"]]>
+        </text>
+    </node>
+    <node for="31">
+        <keyword>dadd</keyword>
+        <keyword>brot</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["My brother's Yossi. Daddy is Vandor. They say I can't play. I'm too weak."]]>
+        </text>
+    </node>
+    <node for="31">
+        <keyword>play</keyword>
+        <keyword>weak</keyword>
+        <type>end-force</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She suddenly becomes upset. "I just want to be outside. You want to take me in, don't you? I won't go in, I won't!" Tears streaming down her face, she moves away. ]]>
+        </text>
+        <text>
+            <![CDATA[She's trying to run, but she doesn't have the strength left, so she just stumbles back to where she was resting.]]>
+        </text>
+    </node>
+    <node for="32">
+        <keyword>hear</keyword>
+        <keyword>adve</keyword>
+        <type>if-sdf</type>
+        <param>3</param>
+        <param>2</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You're here to save us all. That's what they say. Good luck. I might as well be dead for all the good I've done."]]>
+        </text>
+        <text>
+            <![CDATA[He manages a small smile. "You brought the scepter back. Yvan is going to live a while longer. I appreciate that. It's nice to know not everyone's as worthless as me."]]>
+        </text>
+    </node>
+    <node for="32">
+        <keyword>wort</keyword>
+        <keyword>dead</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I might as well be dead for all the good I am. I raised crops, and they're rotting away. Yossi and Yvan look to me for help, and I can do nothing. Their mother trusted me, and now she's gone."]]>
+        </text>
+        <text>
+            <![CDATA["Why shouldn't I be dead?"]]>
+        </text>
+    </node>
+    <node for="32">
+        <keyword>moth</keyword>
+        <keyword>gone</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Most adults have survived the curse. One woman didn't." Suddenly, he slaps himself across the face as hard as he can. An angry red spot spreads over his cheek. "I should have done something. I'd be better off dead."]]>
+        </text>
+    </node>
+    <node for="32">
+        <keyword>crop</keyword>
+        <keyword>rott</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["People say all sorts of things about where the curse comes from, but I'm a farmer, and I know. The water. It's bitter. It eats the plants away. Soon, nothing's left but rot."]]>
+        </text>
+    </node>
+    <node for="32">
+        <keyword>yoss</keyword>
+        <keyword>yvan</keyword>
+        <type>if-sdf</type>
+        <param>3</param>
+        <param>2</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["My son's gone blind. My daughter is dying. Soon, the curse will leave me with no family left."]]>
+        </text>
+        <text>
+            <![CDATA["The healing scepter you brought back has helped my daughter. She'll live a bit longer. My son's still blind, though, and everything's still dying. I appreciate the favor, though. Thanks."]]>
+        </text>
+    </node>
+    <node for="33">
+        <keyword>lead</keyword>
+        <keyword>teac</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I spread wisdom and strength to all those who come and visit me. To the farmers, I give comfort. To those such as yourselves, I teach spells, if the interest is there."]]>
+        </text>
+    </node>
+    <node for="33">
+        <keyword>spel</keyword>
+        <keyword>purc</keyword>
+        <type>shop</type>
+        <param>4</param>
+        <param>13</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Somreth's Spells]]>
+        </text>
+    </node>
+    <node for="33">
+        <keyword>divi</keyword>
+        <keyword>just</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Alas, there has been all too little justice in the Vale lately. It is the curse."]]>
+        </text>
+    </node>
+    <node for="33">
+        <keyword>farm</keyword>
+        <keyword>comf</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She sighs. "Alas, with the curse about, it seems that no amount of comfort is ever enough."]]>
+        </text>
+    </node>
+    <node for="33">
+        <keyword>curs</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It is strange. We of the valley have been so occupied with keeping out bodies and spirits alive that we have had little energy left to spare to figure out what causes the curse that destroys us."]]>
+        </text>
+        <text>
+            <![CDATA["That is why I am here, pacing and thinking."]]>
+        </text>
+    </node>
+    <node for="33">
+        <keyword>paci</keyword>
+        <keyword>thin</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I think about the source of the curse, which appeared so suddenly and inexplicably. And, interestingly, there is one other inexplicable thing in this valley."]]>
+        </text>
+    </node>
+    <node for="33">
+        <keyword>inex</keyword>
+        <keyword>vall</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The old, abandoned School of Magery. It is a huge structure, full of power, unenterable and abandoned. And, as far as I know, there are only two people in the Vale who know of it: Avizo, and Axel."]]>
+        </text>
+    </node>
+    <node for="33">
+        <keyword>aviz</keyword>
+        <keyword>axel</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Last I heard, both resided in Sweetgrove. If you wish to lift the curse, be sure to speak with them. They may be able to help." There is a pause for thought. "Actually, I heard Avizo was fleeing."]]>
+        </text>
+    </node>
+    <node for="34">
+        <keyword>mayo</keyword>
+        <keyword>lead</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Whether my manifold paths leads me to bookkeeping, filling out forms, answering to my Empire superiors, or simply occupying space, I always strive to rise to the necessities of my position."]]>
+        </text>
+    </node>
+    <node for="34">
+        <keyword>nece</keyword>
+        <keyword>posi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He grimaces. "Alas, the painful fact of the curse has made it clear that my skill set for my current position is sadly inadequate."]]>
+        </text>
+    </node>
+    <node for="34">
+        <keyword>fear</keyword>
+        <keyword>dest</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Unfortunately, fear and destruction are much more relevant to our current situation than my previous form filling skills. Alas, the curse has shown all of us to be inadequate, each in our own special way."]]>
+        </text>
+    </node>
+    <node for="34">
+        <keyword>curs</keyword>
+        <keyword>inad</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The curse has, as you can imagine, severely curtailed the standard operating parameters of our village. Empire procedures regarding impending doom are stiffly insufficient."]]>
+        </text>
+        <text>
+            <![CDATA["Now, alas, I am forced to turn to adventurers for assistance."]]>
+        </text>
+    </node>
+    <node for="34">
+        <keyword>adve</keyword>
+        <keyword>assi</keyword>
+        <type>call-local</type>
+        <param>1</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The children of my village are ill. Dying, in fact. Our current healing magic is insufficient. However, I have heard rumors of the School of Magery, and suspect there may be magic inside which can help us."]]>
+        </text>
+        <text>
+            <![CDATA["Return something to us which can help us, and I will reward you to the extent of my meager abilities."]]>
+        </text>
+    </node>
+    <node for="34">
+        <keyword>scho</keyword>
+        <keyword>mage</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I'm afraid that the Empire could not discourage more any receiving of information on the School of Magery. I know nothing about it, and that is the way my Empire masters wish it. What makes this place so special, I know not, but there you are."]]>
+        </text>
+    </node>
+    <node for="34">
+        <keyword>empi</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Ah, yes, the Empire, savior and protector of us all," he says dryly.]]>
+        </text>
+    </node>
+    <node for="35">
+        <keyword>hunt</keyword>
+        <keyword>verm</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Between the goblins, the bears, and the bandits, it's a wonder I can make enough missiles to sustain us."]]>
+        </text>
+    </node>
+    <node for="35">
+        <keyword>gobl</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The goblins live, for the most part, to the north. Beware them - they seem weak, but they can easily swarm and overwhelm you."]]>
+        </text>
+    </node>
+    <node for="35">
+        <keyword>bear</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The bears to the south, normally placid creatures, have decided, in the face of lack of game, to hunt two-legged meat, if you catch my meaning."]]>
+        </text>
+    </node>
+    <node for="35">
+        <keyword>band</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The bandits live, for the most part, to the east, though I have heard rumors of a lair of them to the south."]]>
+        </text>
+    </node>
+    <node for="35">
+        <keyword>char</keyword>
+        <keyword>ston</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Her hand rises to her charm. "This? Merely a good luck charm."]]>
+        </text>
+    </node>
+    <node for="35">
+        <keyword>miss</keyword>
+        <keyword>purc</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Are you interested in bows, arrows, or throwables?"]]>
+        </text>
+    </node>
+    <node for="35">
+        <keyword>bows</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>3</param>
+        <param>14</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Covington's Bows]]>
+        </text>
+    </node>
+    <node for="35">
+        <keyword>arro</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>3</param>
+        <param>15</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Covington's Arrows]]>
+        </text>
+    </node>
+    <node for="35">
+        <keyword>thro</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>3</param>
+        <param>16</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Covington's Missiles]]>
+        </text>
+    </node>
+    <node for="36">
+        <keyword>farm</keyword>
+        <keyword>toug</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You can grow things here. You just have to work hard, and kill the afflicted plants the moment they're touched. There's only one lucky bugger who's managed to escape it."]]>
+        </text>
+    </node>
+    <node for="36">
+        <keyword>luck</keyword>
+        <keyword>esca</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah. His name's Pangle. He lives in a hut to the southwest." He thinks. "You know, maybe he can help us! If you talked to him, maybe he'd know something. Of course, he is pretty mean."]]>
+        </text>
+    </node>
+    <node for="36">
+        <keyword>talk</keyword>
+        <keyword>mean</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah. He's an old miser of a guy. But you know, he kind of likes me. Mention my name to him ... if he knows I sent you, he might help you."]]>
+        </text>
+    </node>
+    <node for="36">
+        <keyword>vale</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah, Skylark Vale, pure paradise." He spits.]]>
+        </text>
+    </node>
+    <node for="37">
+        <keyword>scep</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah! The magic healing scepter! They waved it over me, and I wasn't so sick. It didn't help my brother, though. It's sad."]]>
+        </text>
+    </node>
+    <node for="37">
+        <keyword>sick</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She smiles. "I was sick, but than someone brought back the big, neat scepter, and now I'm better."]]>
+        </text>
+    </node>
+    <node for="37">
+        <keyword>brot</keyword>
+        <keyword>xxxx</keyword>
+        <type>end-force</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah, Yossi still can't see so good. He'll be better though someday, I'll bet! I gotta' go. I gotta' work hard to get strong." She walks carefully away.]]>
+        </text>
+    </node>
+    <node for="33">
+        <keyword>flee</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["That means if he's even still in the valley, he'll probably be in Fort Talrus. That's where people stop when on their way to a saner place."]]>
+        </text>
+    </node>
+    <node for="34">
+        <keyword>arti</keyword>
+        <keyword>scho</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["A man named Pangle lives in a hut south of town. I heard him say once that he found some papers near the old, ruined school. Ask Kevin about Pangle. Kevin's a friend of his."]]>
+        </text>
+    </node>
+    <node for="34">
+        <keyword>kevi</keyword>
+        <keyword>pang</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Ask Kevin about Pangle. Kevin's around town somewhere."]]>
+        </text>
+    </node>
+</dialogue>

@@ -41,7 +41,6 @@ enum eGameMode {
 	MODE_DROP_COMBAT = 15,
 	MODE_TALKING = 20,
 	MODE_SHOPPING = 21,
-	MODE_ROOM_DESCR = 30, // for future use
 	MODE_LOOK_OUTDOORS = 35, // looking at something
 	MODE_LOOK_TOWN = 36,
 	MODE_LOOK_COMBAT = 37,

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Central Morrow&apos;s Isle</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>80</monster>
+        <monster>134</monster>
+        <monster>124</monster>
+        <monster>133</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>16</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>45</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>47</monster>
+        <monster>0</monster>
+        <monster>49</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>47</monster>
+        <monster>45</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>46</monster>
+        <monster>48</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>18</onwin>
+        <onflee>21</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>117</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>27</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>45</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>45</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>47</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>45</monster>
+        <monster>117</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <sign id="0">
+        <![CDATA[The sign is old, worn, and unreadable.]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[Selathni - 40 miles south|Muck - 25 miles northeast|Zaskiva - Northwest]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[NOTE: Northwest Morrow's Isle is now SEALED territory (as per Empire decree DIP34A). Please be prepared to identify yourself before entry.]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[NOTE: Northwest Morrow's Isle is now SEALED territory (as per Empire decree DIP34A). Please be prepared to identify yourself upon departure.]]>
+    </sign>
+    <area top="18" left="15" bottom="30" right="22">Ogre Hills</area>
+    <area top="29" left="10" bottom="33" right="13">Abandoned Valley</area>
+    <area top="2" left="30" bottom="15" right="46">Fields of Rubble</area>
+    <area top="2" left="21" bottom="5" right="23">Guarded Bridge</area>
+    <string id="0">
+        <![CDATA[As you start to climb down into a small valley, on your way through this rocky area, you suddenly get a strange feeling. Maybe things are a little too quiet, or a little too enclosed, but there's something about this place that makes you uncomfortable.]]>
+    </string>
+    <string id="6">
+        <![CDATA[As you walk down the valley, things get quieter. As you watch the rocks above you, you become more and more sure that you're being watched.]]>
+    </string>
+    <string id="7">
+        <![CDATA[Then, suddenly, people start standing up above you. They're dressed in light armors, like leather and chain, and definitely don't have Empire uniforms. They're heavily armed.]]>
+    </string>
+    <string id="8">
+        <![CDATA[You draw your weapons, but then realize that the people above you aren't preparing to attack. Instead, one of them gives you a sharp salute. Then, in mere moments, they're all gone.]]>
+    </string>
+    <string id="9">
+        <![CDATA[You can't be sure, but you suspect you were just found by a group of rebels. Fortunately, they knew who you were. You proceed unmolested.]]>
+    </string>
+    <string id="12">
+        <![CDATA[You back away from the valley. It was just too suspicious.]]>
+    </string>
+    <string id="13">
+        <![CDATA[As you cross the bridge, you see that a large contingent of Empire soldiers, clad in plate and wielding massive weapons, have set up a guard post in the middle.]]>
+    </string>
+    <string id="14">
+        <![CDATA[When you approach, they stop you and ask you to identify yourselves. They listen to you dubiously, look at some papers, laugh at you, and tell you "The northwest corner of the island is closed off. You aren't cleared to pass."]]>
+    </string>
+    <string id="15">
+        <![CDATA[You're forced to turn back, the derisive laughter of the Empire Dervishes following you.]]>
+    </string>
+    <string id="19">
+        <![CDATA[As you cross the bridge, you see that a large contingent of Empire soldiers, clad in plate and wielding massive weapons, have set up a guard post in the middle.]]>
+    </string>
+    <string id="20">
+        <![CDATA[As you approach, they favor you with snide smiles, and ask you to identify yourselves. Much to their surprise, however, when they look at their lists, they find your names.]]>
+    </string>
+    <string id="21">
+        <![CDATA[With a dismissive jerk of his thumb, the lead Empire Dervish says "OK. You can pass."]]>
+    </string>
+    <string id="25">
+        <![CDATA[Funny how you can always tell when you're entering humanoid territory. Hard to tell whether it's the shards of bones, the piles of rotting trash, or the mind numbing stench that tips you off first.]]>
+    </string>
+    <string id="26">
+        <![CDATA[Best be wary ... there are monsters ahead.]]>
+    </string>
+    <string id="27">
+        <![CDATA[You hear harsh laughter ahead. Looking up the hill walls, you see a large band of ogres, standing atop piles of massive, rounded boulders. Some of them are holding long sticks, no doubt to act as levers to roll rocks down on you.]]>
+    </string>
+    <string id="28">
+        <![CDATA[You could keep going, but you seem to be in a vulnerable spot.]]>
+    </string>
+    <string id="33">
+        <![CDATA[You back away. As you do, the ogres laugh and call you certain highly objectionable names.]]>
+    </string>
+    <string id="34">
+        <![CDATA[Sure enough, the ogres start rolling rocks down the hill towards you. There's a long way to climb, and they have a lot of rocks. After getting smashed up enough, you decide to retreat.]]>
+    </string>
+    <string id="35">
+        <![CDATA[The ogres have piled lots of smelly trash and rancid meat here. Unpleasant, feral creatures have taken up residence, living it up on their debris. Monster etiquette, of course, demands that they attack you.]]>
+    </string>
+    <string id="36">
+        <![CDATA[There might be undiscovered treasure under all this gunk. Unfortunately, the goo is gross beyond all human understanding. It will just have to stay undiscovered.]]>
+    </string>
+    <string id="37">
+        <![CDATA[A lot of ogres are up here, ready to throw rocks on people coming up the path below. The are quite put out to find that you've flanked them. They rush to attack.]]>
+    </string>
+    <string id="38">
+        <![CDATA[The ogre tribe destroyed, their loot is laid out for the taking. You leave the questionable meat behind, instead filling your packs with all manner of gold and trade goods.]]>
+    </string>
+    <string id="39">
+        <![CDATA[In addition, you find a potion, a necklace, and a scroll tube. Not a bad day's work, overall.]]>
+    </string>
+    <string id="40">
+        <![CDATA[At least you managed to get away. Considering how tough this tribe was, it's a small miracle.]]>
+    </string>
+    <string id="41">
+        <![CDATA[You reach the ogre's main lair. Not surprisingly, they knew you were coming. There are quite a few of them, and they're mean looking. Really mean looking.]]>
+    </string>
+    <string id="42">
+        <![CDATA[Oddly, they haven't attacked yet. Their chief seems to he holding them back. Perhaps, for once, some monsters are showing respect for your abilities. If you want, you can attack them. Or, you could just leave.]]>
+    </string>
+    <string id="47">
+        <![CDATA[As you walk away, one of the ogres shouts an insult at you. Fortunately, it's in ogrish, so you can't understand it.]]>
+    </string>
+    <string id="48">
+        <![CDATA[Oops. That's why they were waiting. They wanted to buy some time, so their mages could cast spells while you charged. The world begins to speed up around you. Then the ogres attack.]]>
+    </string>
+    <string id="49">
+        <![CDATA[The ogres keep their pets in caves down here. They must feed them by sending prisoners to walk up this path. At least, that's what all the gnawed bones suggest to you.]]>
+    </string>
+    <string id="50">
+        <![CDATA[The ogres must love their pet bears very much. Each one wears a collar, and each collar has a semi-precious stone set into it. This expedition suddenly became very profitable.]]>
+    </string>
+    <string id="51">
+        <![CDATA[How nice! Some alchemical herbs are growing on the riverbank, just waiting to be taken!]]>
+    </string>
+</sector>

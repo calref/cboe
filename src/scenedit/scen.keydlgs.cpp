@@ -1025,6 +1025,8 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, eStrM
 						break;
 					}
 				}
+				if(*str1 < 0)
+					*str1 = n;
 			}
 			fetch_str(str_mode, *str1) = str;
 		}
@@ -1039,6 +1041,8 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, eStrM
 						break;
 					}
 				}
+				if(*str2 < 0)
+					*str2 = n;
 			}
 			fetch_str(str_mode, *str2) = str;
 		}

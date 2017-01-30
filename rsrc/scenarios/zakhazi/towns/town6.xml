@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>32</size>
+    <name>Chasm of Fire</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="0" bottom="28" right="31" />
+    <difficulty>4</difficulty>
+    <lighting>lit</lighting>
+    <onenter condition="alive">1</onenter>
+    <onenter condition="dead">1</onenter>
+    <exit dir="n" x="30" y="22" />
+    <exit dir="s" x="30" y="26" />
+    <flags />
+    <item id="0">
+        <type>0</type>
+        <charges>50</charges>
+    </item>
+    <item id="1">
+        <type>0</type>
+        <charges>50</charges>
+    </item>
+    <item id="2">
+        <type>0</type>
+        <charges>80</charges>
+    </item>
+    <item id="3">
+        <type>0</type>
+        <charges>80</charges>
+    </item>
+    <item id="4">
+        <type>0</type>
+        <charges>74</charges>
+    </item>
+    <item id="5">
+        <type>90</type>
+    </item>
+    <item id="6">
+        <type>33</type>
+    </item>
+    <item id="7">
+        <type>17</type>
+    </item>
+    <item id="8">
+        <type>19</type>
+    </item>
+    <item id="9">
+        <type>30</type>
+    </item>
+    <item id="10">
+        <type>43</type>
+    </item>
+    <item id="11">
+        <type>169</type>
+    </item>
+    <item id="12">
+        <type>22</type>
+    </item>
+    <item id="13">
+        <type>99</type>
+    </item>
+    <item id="14">
+        <type>141</type>
+    </item>
+    <item id="15">
+        <type>215</type>
+    </item>
+    <item id="16">
+        <type>368</type>
+    </item>
+    <item id="17">
+        <type>387</type>
+    </item>
+    <item id="18">
+        <type>349</type>
+    </item>
+    <item id="19">
+        <type>381</type>
+    </item>
+    <item id="20">
+        <type>363</type>
+    </item>
+    <item id="21">
+        <type>96</type>
+    </item>
+    <item id="22">
+        <type>142</type>
+    </item>
+    <item id="23">
+        <type>9</type>
+    </item>
+    <item id="24">
+        <type>9</type>
+    </item>
+    <item id="25">
+        <type>9</type>
+    </item>
+    <item id="26">
+        <type>10</type>
+    </item>
+    <item id="27">
+        <type>10</type>
+    </item>
+    <item id="28">
+        <type>10</type>
+    </item>
+    <item id="29">
+        <type>24</type>
+    </item>
+    <item id="30">
+        <type>24</type>
+    </item>
+    <item id="31">
+        <type>23</type>
+    </item>
+    <item id="32">
+        <type>23</type>
+    </item>
+    <creature id="0">
+        <type>179</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="1">
+        <type>179</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="2">
+        <type>179</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="3">
+        <type>179</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="4">
+        <type>179</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="5">
+        <type>179</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="6">
+        <type>179</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="7">
+        <type>179</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="8">
+        <type>181</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="9">
+        <type>181</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="10">
+        <type>181</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="11">
+        <type>181</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="12">
+        <type>181</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <string id="0">
+        <![CDATA[The lava river becomes far too hot for you to make your way farther up it, magical protected or not.]]>
+    </string>
+    <string id="1">
+        <![CDATA[Your further progress is blocked by a river of fire. It's a slow moving flow of magma, coming from a tunnel to the east and dropping into a chasm to the west.]]>
+    </string>
+    <string id="2">
+        <![CDATA[The heat has attracted a family of pyrohydras, who have taken this cavern as their own personal health spa. They lurk at the edges of the huge cavern, but they'll probably hunt you down if they get the chance.]]>
+    </string>
+</town>

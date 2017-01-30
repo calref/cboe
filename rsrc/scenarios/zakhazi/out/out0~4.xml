@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Cavern of Poppy Shrooms</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>81</monster>
+        <monster>81</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>12</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>192</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>19</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <wandering can-flee="false" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>81</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>81</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <area top="4" left="2" bottom="13" right="9">Bubbling Fumarole</area>
+    <string id="0">
+        <![CDATA[You detect a peculiar smell in the air. It's sickly sweet, like slightly old fruit. It makes you feel very happy and pleasant, and somewhat light-headed. The farther north you walk, the stronger the smell gets.]]>
+    </string>
+    <string id="1">
+        <![CDATA[This cavern immediately reminds you of the unicorn cave, far to the south. It's a beautiful place, a massive, lovely, underground garden.]]>
+    </string>
+    <string id="2">
+        <![CDATA[The glow of the fungus overhead reveals a huge forest of soft, white mushrooms. Most of them are only a few inches high, but some are enormous. A few monstrous specimens even come up to your waist.]]>
+    </string>
+    <string id="3">
+        <![CDATA[It's not the mushrooms, however, that makes the cavern lovely. It's the smell. The things are putting off this lovely, sweet smell. Even the tiniest whiff of it makes you feel placid and relaxed.]]>
+    </string>
+    <string id="4">
+        <![CDATA[The scent makes you feel very happy. You can't imagine anything going wrong in here. You can hardly wait to enter.]]>
+    </string>
+    <string id="5">
+        <![CDATA[Looking around, you notice that there is a much higher concentration of mushrooms in the northwest corner of the cavern. Maybe you should go there ...]]>
+    </string>
+    <string id="7">
+        <![CDATA[This cavern immediately reminds you of the unicorn cave, far to the south. It's a beautiful place, a massive, lovely, underground garden.]]>
+    </string>
+    <string id="8">
+        <![CDATA[The glow of the fungus overhead reveals a huge forest of soft, white mushrooms. Most of them are only a few inches high, but some are enormous. A few monstrous specimens even come up to your waist.]]>
+    </string>
+    <string id="9">
+        <![CDATA[It's not the mushrooms, however, that makes the cavern lovely. It's the smell. The things are putting off this lovely, sweet smell. Even the tiniest whiff of it makes you feel placid and relaxed.]]>
+    </string>
+    <string id="10">
+        <![CDATA[Thanks to your knowledge of Cave Lore, however, you aren't fooled. You know exactly what these things are: poppy shrooms. Their hypnotic scent has distracted and entrapped many a wandering adventurer before you.]]>
+    </string>
+    <string id="11">
+        <![CDATA[This is the largest collection of the things you've ever heard of. To get through this cavern will require great force of will. ]]>
+    </string>
+    <string id="12">
+        <![CDATA[Looking around, you notice that there is a much higher concentration of mushrooms in the northwest corner of the cavern. Maybe a place to avoid ...]]>
+    </string>
+    <string id="13">
+        <![CDATA[You walk from a cloud of spores into a cloud of steam. You now know why the mushrooms were so concentrated here. The warmth and moisture pouring out of this caldera makes this area a lovely greenhouse for all manner of hostile fungi.]]>
+    </string>
+    <string id="14">
+        <![CDATA[Your head spinning and your eyes watering, you finally stumble out of the mushroom choked cavern. You lean against the wall and suck in cleaner air, relieved you made it through that place at all.]]>
+    </string>
+    <string id="15">
+        <![CDATA[As you wade through this exceptionally heavy patch of poppy shrooms, you notice that several of the nearby fungi are much, much larger than usual. In fact, they're taller than you.]]>
+    </string>
+    <string id="16">
+        <![CDATA[As the spores settle harmlessly on you, these enormous fungi suddenly charge you, apparently thinking you will be knocked unconscious. They have a surprise coming ...]]>
+    </string>
+    <string id="17">
+        <![CDATA[As you wade through this exceptionally heavy patch of poppy shrooms, you notice that several of the nearby fungi are much, much larger than usual. In fact, they're taller than you.]]>
+    </string>
+    <string id="18">
+        <![CDATA[As the spores settle on you, you feel your eyelids droop. As you stumble, the huge fungi suddenly rush to attack you! As the creatures charge, you struggle desperately to stay awake, but you feel so sleepy ...]]>
+    </string>
+    <string id="19">
+        <![CDATA[After a long period of hacking, the massive lumps of bark and fungus finally stop moving. You look around, and notice a trail of bone chips and scraps of fur to the southeast. That must be where the creatures dragged their prey ...]]>
+    </string>
+    <string id="20">
+        <![CDATA[Heaped at the bottom of a shallow crevasse, you find the shambler's combination compost heap and meat locker. Among the piles of smelly, decomposing goo, you see a wide variety of coinage and even a few weapons (some of which haven't rusted).]]>
+    </string>
+    <string id="21">
+        <![CDATA[It would be a slow, gross job, but you could pick some treasure out of here.]]>
+    </string>
+    <string id="26">
+        <![CDATA[Most of the weapons turned out to be, upon closer inspection, pitted, rusted, and useless. However, in addition to a bunch of gold, you find a small dagger which looks as new as the day it was made.]]>
+    </string>
+    <string id="27">
+        <![CDATA[Unfortunately, rooting around in filth is not done without penalty. You feel quite ill.]]>
+    </string>
+    <string id="28">
+        <![CDATA[You stumble upon a living testament to the dangers of the poppy shrooms. There is a small group of humans living in this cavern. ]]>
+    </string>
+    <string id="29">
+        <![CDATA[Some are naked. The rest are dressed in rags. All of them have the glazed stare of the lost, those whose minds have been lost to the constant ravages of poppy shroom spores.]]>
+    </string>
+    <string id="30">
+        <![CDATA[They sleep on the bare rock, near piles of mushrooms they have harvested. Some of them have been picked for food, some for spores.]]>
+    </string>
+    <string id="31">
+        <![CDATA[They barely even seem to notice you when you come near. As you watch them, you notice that one of them is wearing a ring. You doubt she cares about whether she keeps it. You could probably steal it easily.]]>
+    </string>
+    <string id="32">
+        <![CDATA[You could also try to free these creatures from their horrible bondage. Perhaps if you took them away from here, they could be restored to normality.]]>
+    </string>
+    <string id="34">
+        <![CDATA[Pulling them away doesn't work. They shake loose and run back. They don't respond when you talk to them, and you don't have adequate magic to cure them of the addiction.]]>
+    </string>
+    <string id="35">
+        <![CDATA[As a last resort, you try taking away their spore supply. That gets a response. They go mad, shrieking and attacking you. Despite their frail appearance, years of exposure to the spores has affected them strangely ...]]>
+    </string>
+    <string id="36">
+        <![CDATA[You leave their grove. They don't notice.]]>
+    </string>
+    <string id="37">
+        <![CDATA[It's shamefully easy. As she eats a large, gray fungus with one hand, you walk up and slide the ring off the other. Then you back away. She doesn't even notice.]]>
+    </string>
+    <string id="38">
+        <![CDATA[As you leave the grove, however, you look back, and see that all of the addicts have slipped away. Your presence must have agitated them.]]>
+    </string>
+    <string id="39">
+        <![CDATA[After the battle, you take the ring you saw earlier. Waste not, want not.]]>
+    </string>
+</sector>

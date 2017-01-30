@@ -12,8 +12,7 @@
 			buildConfigurationList = 912CF36F0FE44A2A0063B614 /* Build configuration list for PBXAggregateTarget "Common Data Files" */;
 			buildPhases = (
 				91A0B15F1900FFDA00EF438F /* Copy Shaders */,
-				912CF3560FE4494C0063B614 /* Copy Scenarios */,
-				91ACCE6218FFB5F300FAEF8B /* Copy Base Scenarios */,
+				91B0D5CA1E331910002BE4DA /* Pack Scenarios */,
 				914B2BB718E8BF99007B6799 /* Validate Dialog Definitions */,
 				914B2B9518E8008A007B6799 /* Copy Data Files */,
 				91C2A6E01B823C7B00346948 /* Generate Git Revision Information */,
@@ -80,13 +79,6 @@
 		91279BB60F9D03B7007B0D52 /* boesave.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91279BB30F9D03B6007B0D52 /* boesave.icns */; };
 		91279BB70F9D03B7007B0D52 /* boesounds.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91279BB40F9D03B7007B0D52 /* boesounds.icns */; };
 		91279BB80F9D03B7007B0D52 /* boegraphics.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91279BB50F9D03B7007B0D52 /* boegraphics.icns */; };
-		912CF3600FE449900063B614 /* busywork.exs in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 9122832D0FCF6C7200B21642 /* busywork.exs */; };
-		912CF3610FE449900063B614 /* stealth.exs in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AA0F90E7B500674AB3 /* stealth.exs */; };
-		912CF3620FE449900063B614 /* stealth.meg in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AB0F90E7B500674AB3 /* stealth.meg */; };
-		912CF3630FE449900063B614 /* valleydy.exs in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AC0F90E7B500674AB3 /* valleydy.exs */; };
-		912CF3640FE449900063B614 /* valleydy.meg in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AD0F90E7B500674AB3 /* valleydy.meg */; };
-		912CF3650FE449900063B614 /* zakhazi.exs in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AE0F90E7B500674AB3 /* zakhazi.exs */; };
-		912CF3660FE449900063B614 /* zakhazi.meg in Copy Scenarios */ = {isa = PBXBuildFile; fileRef = 91D635AF0F90E7B500674AB3 /* zakhazi.meg */; };
 		912DFE8F18E2872400B00D75 /* boe.menus.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 912DFE8E18E2872300B00D75 /* boe.menus.mac.mm */; };
 		913D6C050FC57A8E00E12527 /* boeresources.icns in Resources */ = {isa = PBXBuildFile; fileRef = 913D6C040FC57A8E00E12527 /* boeresources.icns */; };
 		914B2AA318E7E507007B6799 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA118E7E500007B6799 /* Cocoa.framework */; };
@@ -208,7 +200,6 @@
 		919DDC0E1900751C003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0F1900751F003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		91A0B1601900FFE500EF438F /* mask.frag in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 91A0B15A1900F73E00EF438F /* mask.frag */; };
-		91ACCE6418FFB61A00FAEF8B /* bladbase.exs in Copy Base Scenarios */ = {isa = PBXBuildFile; fileRef = 91B3EF250F969CE300BF5B67 /* bladbase.exs */; };
 		91ACCE7619002E5F00FAEF8B /* sfml-audio.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
 		91ACCE7719002E5F00FAEF8B /* sfml-graphics.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
 		91ACCE7919002E5F00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; };
@@ -221,6 +212,8 @@
 		91ACCE941900346C00FAEF8B /* sfml-graphics.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
 		91ACCE961900346C00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; };
 		91ACCE971900346C00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E118F87F3700E3EA15 /* sfml-window.framework */; };
+		91B0D5D11E3442FE002BE4DA /* view_dialogs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B0D5D01E34428E002BE4DA /* view_dialogs.cpp */; };
+		91B0D5D21E344300002BE4DA /* view_dialogs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B0D5D01E34428E002BE4DA /* view_dialogs.cpp */; };
 		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
 		91B3EF470F969F1700BF5B67 /* BoEScenEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDB0F969BA700BF5B67 /* BoEScenEd.icns */; };
 		91B3EF480F969F2300BF5B67 /* pc.main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF050F969BD300BF5B67 /* pc.main.cpp */; };
@@ -399,23 +392,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		912CF3560FE4494C0063B614 /* Copy Scenarios */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "Blades of Exile Scenarios";
-			dstSubfolderSpec = 16;
-			files = (
-				912CF3600FE449900063B614 /* busywork.exs in Copy Scenarios */,
-				912CF3610FE449900063B614 /* stealth.exs in Copy Scenarios */,
-				912CF3620FE449900063B614 /* stealth.meg in Copy Scenarios */,
-				912CF3630FE449900063B614 /* valleydy.exs in Copy Scenarios */,
-				912CF3640FE449900063B614 /* valleydy.meg in Copy Scenarios */,
-				912CF3650FE449900063B614 /* zakhazi.exs in Copy Scenarios */,
-				912CF3660FE449900063B614 /* zakhazi.meg in Copy Scenarios */,
-			);
-			name = "Copy Scenarios";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		914B2B9518E8008A007B6799 /* Copy Data Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -442,17 +418,6 @@
 				91BFA3D71901B18F001686E4 /* mask.vert in Copy Shaders */,
 			);
 			name = "Copy Shaders";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		91ACCE6218FFB5F300FAEF8B /* Copy Base Scenarios */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "Blades of Exile Base";
-			dstSubfolderSpec = 16;
-			files = (
-				91ACCE6418FFB61A00FAEF8B /* bladbase.exs in Copy Base Scenarios */,
-			);
-			name = "Copy Base Scenarios";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		91ACCE7319002E4700FAEF8B /* Copy Libraries and Frameworks */ = {
@@ -597,7 +562,6 @@
 		911F2DA31B98FF2300E3102E /* graphics */ = {isa = PBXFileReference; lastKnownFileType = folder; path = graphics; sourceTree = "<group>"; };
 		911F2DA41B98FF2300E3102E /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sounds; sourceTree = "<group>"; };
 		911F2DA51B98FF2700E3102E /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
-		9122832D0FCF6C7200B21642 /* busywork.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = busywork.exs; sourceTree = "<group>"; };
 		912283C80FD0E16C00B21642 /* undo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = undo.cpp; sourceTree = "<group>"; };
 		912287850FD41A2300B21642 /* simpletypes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = simpletypes.hpp; sourceTree = "<group>"; };
 		91279BAD0F9CFCBA007B0D52 /* boescenario.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = boescenario.icns; path = ../rsrc/icons/mac/boescenario.icns; sourceTree = SOURCE_ROOT; };
@@ -691,6 +655,13 @@
 		91AC62090FA2853700EEAE67 /* creatlist.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = creatlist.hpp; sourceTree = "<group>"; };
 		91AC620A0FA2853700EEAE67 /* creatlist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = creatlist.cpp; sourceTree = "<group>"; };
 		91ACCE82190032E000FAEF8B /* fix_dylibs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = fix_dylibs.sh; sourceTree = "<group>"; };
+		91B0D5CB1E33E579002BE4DA /* bladbase */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bladbase; path = ../bases/bladbase; sourceTree = "<group>"; };
+		91B0D5CC1E3408AB002BE4DA /* busywork */ = {isa = PBXFileReference; lastKnownFileType = folder; path = busywork; sourceTree = "<group>"; };
+		91B0D5CD1E3408AB002BE4DA /* stealth */ = {isa = PBXFileReference; lastKnownFileType = folder; path = stealth; sourceTree = "<group>"; };
+		91B0D5CE1E3408AB002BE4DA /* valleydy */ = {isa = PBXFileReference; lastKnownFileType = folder; path = valleydy; sourceTree = "<group>"; };
+		91B0D5CF1E3408AB002BE4DA /* zakhazi */ = {isa = PBXFileReference; lastKnownFileType = folder; path = zakhazi; sourceTree = "<group>"; };
+		91B0D5D01E34428E002BE4DA /* view_dialogs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = view_dialogs.cpp; sourceTree = "<group>"; };
+		91B0D5D31E3446CF002BE4DA /* view_dialogs.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = view_dialogs.hpp; sourceTree = "<group>"; };
 		91B3E8A50F938FFE00BF5B67 /* boe.consts.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.consts.hpp; sourceTree = "<group>"; };
 		91B3EED90F969BA700BF5B67 /* BoEScenEd-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoEScenEd-Info.plist"; path = "scenedit/BoEScenEd-Info.plist"; sourceTree = SOURCE_ROOT; };
 		91B3EEDB0F969BA700BF5B67 /* BoEScenEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BoEScenEd.icns; path = icons/mac/BoEScenEd.icns; sourceTree = "<group>"; };
@@ -722,7 +693,6 @@
 		91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.graphics.cpp; sourceTree = "<group>"; };
 		91B3EF110F969BD300BF5B67 /* BoECharEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BoECharEd.icns; path = icons/mac/BoECharEd.icns; sourceTree = "<group>"; };
 		91B3EF130F969BD300BF5B67 /* BoECharEd-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoECharEd-Info.plist"; path = "pcedit/BoECharEd-Info.plist"; sourceTree = SOURCE_ROOT; };
-		91B3EF250F969CE300BF5B67 /* bladbase.exs */ = {isa = PBXFileReference; lastKnownFileType = file; name = bladbase.exs; path = "../rsrc/Blades of Exile Bases/bladbase.exs"; sourceTree = "<group>"; };
 		91B3F1090F9779C300BF5B67 /* graphtool.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = graphtool.hpp; sourceTree = "<group>"; };
 		91B3F10A0F9779C300BF5B67 /* graphtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphtool.cpp; sourceTree = "<group>"; };
 		91B3F10E0F9779D000BF5B67 /* soundtool.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = soundtool.hpp; sourceTree = "<group>"; };
@@ -753,12 +723,6 @@
 		91CC173A1B421CA0003D9A69 /* scen_read.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen_read.cpp; sourceTree = "<group>"; };
 		91CC173B1B421CA0003D9A69 /* scen_write.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen_write.cpp; sourceTree = "<group>"; };
 		91CC173F1B421CAA003D9A69 /* catch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = catch.hpp; sourceTree = "<group>"; };
-		91D635AA0F90E7B500674AB3 /* stealth.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.exs; sourceTree = "<group>"; };
-		91D635AB0F90E7B500674AB3 /* stealth.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = stealth.meg; sourceTree = "<group>"; };
-		91D635AC0F90E7B500674AB3 /* valleydy.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = valleydy.exs; sourceTree = "<group>"; };
-		91D635AD0F90E7B500674AB3 /* valleydy.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = valleydy.meg; sourceTree = "<group>"; };
-		91D635AE0F90E7B500674AB3 /* zakhazi.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = zakhazi.exs; sourceTree = "<group>"; };
-		91D635AF0F90E7B500674AB3 /* zakhazi.meg */ = {isa = PBXFileReference; lastKnownFileType = file; path = zakhazi.meg; sourceTree = "<group>"; };
 		91E128E31BC1624700C8BE1D /* ter_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ter_legacy.cpp; sourceTree = "<group>"; };
 		91E128E51BC19DA400C8BE1D /* init.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = init.cpp; sourceTree = "<group>"; };
 		91E128E81BC2076B00C8BE1D /* 3choice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = 3choice.cpp; sourceTree = "<group>"; };
@@ -1121,6 +1085,7 @@
 				915325181A2E37EE000A9A1C /* specials_parse.cpp */,
 				91BFA3D81902AD78001686E4 /* tarball.cpp */,
 				912283C80FD0E16C00B21642 /* undo.cpp */,
+				91B0D5D01E34428E002BE4DA /* view_dialogs.cpp */,
 				919145FF18E63B70005CF3A4 /* winutil.mac.mm */,
 			);
 			name = src;
@@ -1142,6 +1107,7 @@
 				91BFA3D91902ADD5001686E4 /* tarball.hpp */,
 				917B573F100B956C0096C978 /* undo.hpp */,
 				9179A4621A47D4E200FEF872 /* vector2d.hpp */,
+				91B0D5D31E3446CF002BE4DA /* view_dialogs.hpp */,
 				919145FE18E63B41005CF3A4 /* winutil.hpp */,
 			);
 			name = headers;
@@ -1287,8 +1253,7 @@
 				911F2DA21B98FF2300E3102E /* cursors */,
 				911F2DA31B98FF2300E3102E /* graphics */,
 				911F2DA41B98FF2300E3102E /* sounds */,
-				91B3EF250F969CE300BF5B67 /* bladbase.exs */,
-				91D635A90F90E7B500674AB3 /* Blades of Exile Scenarios */,
+				91D635A90F90E7B500674AB3 /* Scenarios and Bases */,
 				914B2BB518E892AA007B6799 /* dialog-converting.txt */,
 			);
 			name = rsrc;
@@ -1450,18 +1415,17 @@
 			path = ../rsrc;
 			sourceTree = SOURCE_ROOT;
 		};
-		91D635A90F90E7B500674AB3 /* Blades of Exile Scenarios */ = {
+		91D635A90F90E7B500674AB3 /* Scenarios and Bases */ = {
 			isa = PBXGroup;
 			children = (
-				9122832D0FCF6C7200B21642 /* busywork.exs */,
-				91D635AA0F90E7B500674AB3 /* stealth.exs */,
-				91D635AB0F90E7B500674AB3 /* stealth.meg */,
-				91D635AC0F90E7B500674AB3 /* valleydy.exs */,
-				91D635AD0F90E7B500674AB3 /* valleydy.meg */,
-				91D635AE0F90E7B500674AB3 /* zakhazi.exs */,
-				91D635AF0F90E7B500674AB3 /* zakhazi.meg */,
+				91B0D5CB1E33E579002BE4DA /* bladbase */,
+				91B0D5CC1E3408AB002BE4DA /* busywork */,
+				91B0D5CD1E3408AB002BE4DA /* stealth */,
+				91B0D5CE1E3408AB002BE4DA /* valleydy */,
+				91B0D5CF1E3408AB002BE4DA /* zakhazi */,
 			);
-			path = "Blades of Exile Scenarios";
+			name = "Scenarios and Bases";
+			path = scenarios;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1728,6 +1692,30 @@
 			shellPath = /bin/sh;
 			shellScript = ./fix_dylibs.sh;
 		};
+		91B0D5CA1E331910002BE4DA /* Pack Scenarios */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../rsrc/bases/bladbase",
+				"$(SRCROOT)/../rsrc/scenarios/busywork",
+				"$(SRCROOT)/../rsrc/scenarios/valleydy",
+				"$(SRCROOT)/../rsrc/scenarios/stealth",
+				"$(SRCROOT)/../rsrc/scenarios/zakhazi",
+			);
+			name = "Pack Scenarios";
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Base/bladbase.boes",
+				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Scenarios/busywork.boes",
+				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Scenarios/valleydy.boes",
+				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Scenarios/stealth.boes",
+				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Scenarios/zakhazi.boes",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "test $SCRIPT_INPUT_FILE_COUNT -eq $SCRIPT_OUTPUT_FILE_COUNT || exit 1\nfor((i = 0; i < $SCRIPT_INPUT_FILE_COUNT; i++)); do\n\teval in=\\$SCRIPT_INPUT_FILE_$i\n\teval out=\\$SCRIPT_OUTPUT_FILE_$i\n\trm -f \"$out\"\n\tcd \"$in/..\"\n\tmv \"$in\" scenario\n\ttar -czf \"$out\" scenario\n\tmv scenario \"$in\"\ndone";
+		};
 		91C2A6E01B823C7B00346948 /* Generate Git Revision Information */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1771,6 +1759,7 @@
 				912DFE8F18E2872400B00D75 /* boe.menus.mac.mm in Sources */,
 				919145FC18E3AB1B005CF3A4 /* boe.appleevents.mm in Sources */,
 				915325171A2E1DF0000A9A1C /* oldstructs.cpp in Sources */,
+				91B0D5D11E3442FE002BE4DA /* view_dialogs.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1873,6 +1862,7 @@
 				91B3F1850F97894A00BF5B67 /* scen.graphics.cpp in Sources */,
 				914CA45819074E0100B6ADD1 /* scen.menus.mac.mm in Sources */,
 				91034D211B225E4A008F01C1 /* scen.appleevents.mm in Sources */,
+				91B0D5D21E344300002BE4DA /* view_dialogs.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

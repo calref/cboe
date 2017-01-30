@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Realm of Morog</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>67</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>64</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>66</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>67</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <area top="33" left="24" bottom="35" right="26">By Wurm Pit</area>
+    <string id="0">
+        <![CDATA[This cavern has many bone chips littering the ground, but this is the first full-sized body you've found. It looks like it's been here for some time, but the specters have sucked it so dry that it didn't rot.]]>
+    </string>
+    <string id="1">
+        <![CDATA[All of its belongings were stripped away by the undead. However, it still has a closed leather satchel at its belt.]]>
+    </string>
+    <string id="6">
+        <![CDATA[You find a journal inside. Apparently, this body was once the physical form of a man named Coriddo. He came into the Za-Khazi Run to search for a lost mine filled with opals of the highest quality.]]>
+    </string>
+    <string id="7">
+        <![CDATA[The last entry is of interest:]]>
+    </string>
+    <string id="8">
+        <![CDATA["The passage to the mines is just to the north. It is supposed to be then off to the east, and then down through rough territory."]]>
+    </string>
+    <string id="9">
+        <![CDATA["The mist beings have my trail, though. I will have to hurry. I'm sure I can afford a little sleep. Then I will be off again, and soon the wealth will be mine!"]]>
+    </string>
+    <string id="12">
+        <![CDATA[You reach the shore of a frigid, underground lake, devoid of living things. The thick layer of mist covers the surface.]]>
+    </string>
+    <string id="13">
+        <![CDATA[As you watch, several thick wisps of mist grow more solid and begin to float across the water towards you.]]>
+    </string>
+    <string id="18">
+        <![CDATA[You walk away quickly. As you do, the wisps of mist fade back into the darkness.]]>
+    </string>
+    <string id="19">
+        <![CDATA[When the mist gets close, you realize that they are the same sort of mist beings as the hostile creatures to the south. These spectres, however, don't bother to ask you any questions before they attack.]]>
+    </string>
+    <string id="20">
+        <![CDATA[You feel funny.]]>
+    </string>
+    <string id="21">
+        <![CDATA[You feel funny.]]>
+    </string>
+    <string id="22">
+        <![CDATA[You feel very, very odd.]]>
+    </string>
+    <string id="23">
+        <![CDATA[Your sharp eyes spot some of the natural bounty of these caverns. There are several twisted, brown growths growing nearby. A close inspection reveals that they're alchemical ingredients!]]>
+    </string>
+</sector>

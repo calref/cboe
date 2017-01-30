@@ -14,6 +14,7 @@
 #include "scen.core.hpp"
 #include "mathutil.hpp"
 #include "button.hpp"
+#include "field.hpp"
 #include "strdlog.hpp"
 #include "choicedlog.hpp"
 #include "winutil.hpp"
@@ -940,6 +941,139 @@ static bool check_talk_key(cDialog& me, std::string item_hit, bool losing) {
 
 typedef std::pair<short, cSpeech::cNode> node_ref_t;
 
+static bool check_talk_xtra(cDialog& me, std::stack<node_ref_t>& talk_edit_stack, std::string item_hit, bool losing) {
+	if(!losing) return true;
+	
+	eTalkNode type = talk_edit_stack.top().second.type;
+	int which = item_hit[5] - '1';
+	int lo = 0, hi = 0, msg = 0;
+	static const char*const messages[] = {
+		"", // No message required
+		"First part of Stuff Done flag must be from 0 to {max}.",
+		"Second part of Stuff Done flag must be from 0 to {max}.",
+		"Inn cost must be from 0 to {max}.",
+		"Inn quality must be from 0 to 3.",
+		"Town number must be from 0 to {max}.",
+		"Cost adjustment must be from 0 (cheapest) to 6 (most expensive).",
+		"Which shop must refer to an existing shop (0 - {max}).",
+		"Quest must be an existing quest (0 - {max}).",
+		"Enchantment type must be from 0 to 6. See the documentation for a list of possible abilities.",
+		// 10
+		"The first boat/horse must be in the legal range (0 - {max}).",
+		"The special item must be in the legal range (0 - {max}).",
+		"The town special node called must be in the legal range (0 - {max}), or -1 for No Special.",
+		"The scenario special node called must be in the legal range (0 - {max}), or -1 for No Special.",
+	};
+
+	switch(type) {
+		case eTalkNode::DEP_ON_SDF: case eTalkNode::SET_SDF:
+			if(which == 0) {
+				lo = 0; hi = 349;
+				msg = 1;
+			} else if(which == 1) {
+				lo = 0; hi = 49;
+				msg = 2;
+			}
+			break;
+		case eTalkNode::BUY_SDF:
+			if(which == 1) {
+				lo = 0; hi = 299;
+				msg = 1;
+			} else if(which == 2) {
+				lo = 0; hi = 9;
+				msg = 2;
+			}
+			break;
+		case eTalkNode::INN:
+			if(which == 0) {
+				lo = 0; hi = 1000;
+				msg = 3;
+			} else if(which == 1) {
+				lo = 0; hi = 3;
+				msg = 4;
+			}
+			break;
+		case eTalkNode::DEP_ON_TOWN:
+			if(which == 0) {
+				lo = 0; hi = scenario.towns.size() - 1;
+				msg = 5;
+			}
+			break;
+		case eTalkNode::BUY_TOWN_LOC:
+			if(which == 1) {
+				lo = 0; hi = scenario.towns.size() - 1;
+				msg = 5;
+			}
+			break;
+		case eTalkNode::SHOP:
+			if(which == 0) {
+				lo = 0; hi = 6;
+				msg = 6;
+			} else if(which == 1) {
+				lo = 0; hi = scenario.shops.size() - 1;
+				msg = 7;
+			}
+			break;
+		case eTalkNode::RECEIVE_QUEST:
+			if(which == 0) {
+				lo = 0; hi = scenario.quests.size() - 1;
+				msg = 8;
+			}
+			break;
+		case eTalkNode::ENCHANT:
+			if(which == 0) {
+				lo = 0; hi = 6;
+				msg = 9;
+			}
+			break;
+		case eTalkNode::BUY_SHIP:
+			if(which == 1) {
+				lo = 0; hi = scenario.boats.size() - 1;
+				msg = 10;
+			}
+			break;
+		case eTalkNode::BUY_HORSE:
+			if(which == 1) {
+				lo = 0; hi = scenario.horses.size() - 1;
+				msg = 10;
+			}
+			break;
+		case eTalkNode::BUY_SPEC_ITEM:
+			if(which == 0) {
+				lo = 0; hi = scenario.special_items.size() - 1;
+				msg = 11;
+			}
+			break;
+		case eTalkNode::CALL_TOWN_SPEC:
+			if(which == 0) {
+				lo = -1; hi = town->specials.size() - 1;
+				msg = 12;
+			}
+			break;
+		case eTalkNode::CALL_SCEN_SPEC:
+			if(which == 0) {
+				lo = -1; hi = scenario.scen_specials.size() - 1;
+				msg = 13;
+			}
+			break;
+		case eTalkNode::BUY_INFO: case eTalkNode::DEP_ON_TIME: case eTalkNode::DEP_ON_TIME_AND_EVENT: case eTalkNode::REGULAR:
+		case eTalkNode::END_ALARM: case eTalkNode::END_DIE: case eTalkNode::END_FIGHT: case eTalkNode::END_FORCE:
+		case eTalkNode::IDENTIFY: case eTalkNode::SELL_ARMOR: case eTalkNode::SELL_ITEMS: case eTalkNode::SELL_WEAPONS:
+		case eTalkNode::TRAINING: case eTalkNode::JOB_BANK:
+			break;
+	}
+	
+	if(msg) {
+		// This value needs validation
+		std::string text = messages[msg];
+		size_t n = text.find("{max}");
+		if(n != std::string::npos) text.replace(n, 5, std::to_string(hi));
+		return !cre(me[item_hit].getTextAsNum(), lo, hi, text, "", &me);
+	}
+	
+	return true;
+}
+
 static bool save_talk_node(cDialog& me, std::stack<node_ref_t>& talk_edit_stack, bool close_dlg, bool commit) {
 	if(!me.toast(true)) return false;
 	if(!close_dlg) me.untoast();
@@ -953,58 +1087,15 @@ static bool save_talk_node(cDialog& me, std::stack<node_ref_t>& talk_edit_stack,
 	link = me["key2"].getText();
 	std::copy(link.begin(), link.begin() + 4, talk_node.link2);
 	
-	for(int i = 0; i < 4; i++)
-		talk_node.extras[i] = me["extra" + std::to_string(i + 1)].getTextAsNum();
-	
-	switch(talk_node.type) {
-		case eTalkNode::DEP_ON_SDF: case eTalkNode::SET_SDF:
-			if(cre(talk_node.extras[0],0,299,"First part of Stuff Done flag must be from 0 to 299.","",&me)) return false;
-			if(cre(talk_node.extras[1],0,9,"Second part of Stuff Done flag must be from 0 to 9.","",&me)) return false;
-			break;
-		case eTalkNode::INN:
-			if(cre(talk_node.extras[0],0,1000,"Inn cost must be from 0 to 1000.","",&me)) return false;
-			if(cre(talk_node.extras[1],0,3,"Inn quality must be from 0 to 3.","",&me)) return false;
-			break;
-		case eTalkNode::DEP_ON_TIME_AND_EVENT:
-			if(cre(talk_node.extras[1],0,9,"Event must be from 0 to 9. (0 means no event)","",&me)) return false;
-			break;
-		case eTalkNode::DEP_ON_TOWN:
-			if(cre(talk_node.extras[0],0,scenario.towns.size(),"Town number must be from 0 to " + std::to_string(scenario.towns.size()) + ".","",&me)) return false;
-			break;
-		case eTalkNode::BUY_TOWN_LOC:
-			if(cre(talk_node.extras[1],0,scenario.towns.size(),"Town number must be from 0 to " + std::to_string(scenario.towns.size()) + ".","",&me)) return false;
-			break;
-		case eTalkNode::SHOP:
-			if(cre(talk_node.extras[0],0,6,"Cost adjustment must be from 0 (cheapest) to 6 (most expensive).","",&me)) return false;
-			if(cre(talk_node.extras[3],0,scenario.shops.size() - 1,"Which shop must refer to an existing shop.", "", &me)) return false;
-			break;
-		case eTalkNode::RECEIVE_QUEST:
-			if(cre(talk_node.extras[0], 0, scenario.quests.size() - 1, "Quest must be an existing quest.", "", &me)) return false;
-			break;
-		case eTalkNode::ENCHANT:
-			if(cre(talk_node.extras[0],0,6,"Enchantment type must be from 0 to 6. See the documentation for a list of possible abilities.","",&me)) return false;
-			break;
-		case eTalkNode::BUY_SDF:
-			if(cre(talk_node.extras[1],0,299,"First part of Stuff Done flag must be from 0 to 299.","",&me)) return false;
-			if(cre(talk_node.extras[2],0,9,"Second part of Stuff Done flag must be from 0 to 9.","",&me)) return false;
-			break;
-		case eTalkNode::BUY_SHIP: case eTalkNode::BUY_HORSE:
-			if(cre(talk_node.extras[1],0,29,"The first boat/horse must be in the legal range (0 - 29).","",&me)) return false;
-			break;
-		case eTalkNode::BUY_SPEC_ITEM:
-			if(cre(talk_node.extras[0],0,49,"The special item must be in the legal range (0 - 49).","",&me)) return false;
-			break;
-		case eTalkNode::CALL_TOWN_SPEC:
-			if(cre(talk_node.extras[0],-1,town->specials.size(),"The town special node called must be in the legal range (0 - 99), or -1 for No Special.","",&me)) return false;
-			break;
-		case eTalkNode::CALL_SCEN_SPEC:
-			if(cre(talk_node.extras[0],-1,scenario.scen_specials.size(),"The scenario special node called must be in the legal range (0 - 255), or -1 for No Special.","",&me)) return false;
-			break;
-		case eTalkNode::BUY_INFO: case eTalkNode::DEP_ON_TIME: case eTalkNode::REGULAR:
-		case eTalkNode::END_ALARM: case eTalkNode::END_DIE: case eTalkNode::END_FIGHT: case eTalkNode::END_FORCE:
-		case eTalkNode::IDENTIFY: case eTalkNode::SELL_ARMOR: case eTalkNode::SELL_ITEMS: case eTalkNode::SELL_WEAPONS:
-		case eTalkNode::TRAINING: case eTalkNode::JOB_BANK:
-			break;
+	for(int i = 0; i < 4; i++) {
+		std::string id = "extra" + std::to_string(i + 1);
+		cTextField& ctrl = dynamic_cast<cTextField&>(me[id]);
+		if(commit && !ctrl.hasFocus() && !ctrl.triggerFocusHandler(me, id, true)) {
+			me.untoast();
+			me.setFocus(&ctrl);
+			return false;
+		}
+		talk_node.extras[i] = ctrl.getTextAsNum();
 	}
 	
 	talk_node.str1 = me["str1"].getText();
@@ -1119,6 +1210,7 @@ short edit_talk_node(short which_node) {
 	talk_dlg.attachClickHandlers(std::bind(select_talk_node_value, _1, _2, std::ref(talk_edit_stack)), {"chooseA", "chooseB"});
 	talk_dlg["who"].attachFocusHandler(check_talk_personality);
 	talk_dlg.attachFocusHandlers(check_talk_key, {"key1", "key2"});
+	talk_dlg.attachFocusHandlers(std::bind(check_talk_xtra, _1, std::ref(talk_edit_stack), _2, _3), {"extra1", "extra2", "extra3", "extra4"});
 	
 	put_talk_node_in_dlog(talk_dlg, talk_edit_stack);
 	

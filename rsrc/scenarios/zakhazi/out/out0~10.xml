@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Giants&apos; Caverns</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>155</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>156</monster>
+        <monster>157</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>16</onwin>
+        <onflee>17</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <encounter can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>155</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>156</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>156</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">183</monster>
+        <onmeet>-1</onmeet>
+        <onwin>23</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>155</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="false" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>188</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <sign id="0">
+        <![CDATA[LAND OF THE GIANTZ - KEEP WAY OR DIE!!!!]]>
+    </sign>
+    <area top="16" left="35" bottom="29" right="42">Giants&apos; Lands</area>
+    <area top="13" left="35" bottom="15" right="37">Giant Bridge</area>
+    <string id="0">
+        <![CDATA[You find a natural steam vent. It's a steep depression in the cave floor, with cracks belching sulphurous steam at the base. The air is rank and thick with choking mists.]]>
+    </string>
+    <string id="1">
+        <![CDATA[While it hurts to breathe, the mist isn't so thick that you couldn't climb down into the vent, if you wanted to investigate.]]>
+    </string>
+    <string id="6">
+        <![CDATA[You work your way down to the base of the vent. You find that the drake Aleel left discarded scales and some spoor behind, but nothing else. You climb back out.]]>
+    </string>
+    <string id="7">
+        <![CDATA[The rocks are slippery, but you manage to make your way down to the bottom of the vent. You look around, and see shedded lizard scales. Large scales, as if they came from a massive creature.]]>
+    </string>
+    <string id="8">
+        <![CDATA[Suspecting a trap, you turn back, only to see an enormous drake perched on a pile of boulders about you. It looks down at you curiously. It doesn't seem inclined to attack, so you wait and see what it has to say.]]>
+    </string>
+    <string id="9">
+        <![CDATA["Hello, visitors," it chuckles. "I am Aleel, elder of Drakekind. Welcome to my temporary home. As tempting as it is to devour you, I am in need of assistance from your kind."]]>
+    </string>
+    <string id="10">
+        <![CDATA["I have come down to these cold caverns to find a valuable reagent for my magical work. I left it down here once, marked with a stone I shaped with my own, fiery breath."]]>
+    </string>
+    <string id="11">
+        <![CDATA[He describes the stones he needs to you. They are chalky and have a gray tinge. "Return these to me, and I give you a Drake's oath that I will reward you for them and let you go safely as well. Now go. That is all."]]>
+    </string>
+    <string id="12">
+        <![CDATA[Relieved, you climb out of the pit.]]>
+    </string>
+    <string id="13">
+        <![CDATA[You return to the steamy pit, bearing the stones Aleel requested. Aleel is there, and approaches you. You show him the stones. He sniffs them, tastes them with a long, forked tongue, and says "These are the correct stones."]]>
+    </string>
+    <string id="14">
+        <![CDATA["I have no treasure for you, but I do have knowledge. I will teach you a valuable spell." He explains to you how to cast the spell Avatar. ]]>
+    </string>
+    <string id="15">
+        <![CDATA[He then picks up the stones and puts them in his mouth, and, without a word of thanks, flies away.]]>
+    </string>
+    <string id="19">
+        <![CDATA[As you start to climb down into the pit, you meet Aleel. The drake sniffs you, and says "You haven't done what I asked. Do not return again without the stones, or I may forget my generous offer to not eat you."]]>
+    </string>
+    <string id="20">
+        <![CDATA[He climbs back down into the pit. You leave.]]>
+    </string>
+    <string id="25">
+        <![CDATA[Looking to the northwest and northeast, you realize that the seafaring portion of your journey is about to come to an unwilling end. ]]>
+    </string>
+    <string id="26">
+        <![CDATA[The river in both directions turns from the placid path you have been following to fast, wood crushing rapids, filled with sharp rocks and massive boulders. You have to continue on foot.]]>
+    </string>
+    <string id="31">
+        <![CDATA[The river is spanned by an enormous bridge, made of massive boulders and cavewood timbers, strong enough to support the giants who no doubt constructed it.]]>
+    </string>
+    <string id="32">
+        <![CDATA[A large war party of those giants is currently standing guard on the bridge. There are several of them, roasting giant lizards on a chunk of the bridge they decided to set on fire.]]>
+    </string>
+    <string id="33">
+        <![CDATA[When they see you, they stand and grab their weapons. They don't move to attack. Instead, they stay put and defend their post. The only way you'll pass this bridge is with a fight.]]>
+    </string>
+    <string id="37">
+        <![CDATA[You charge to attack. When you get close, you see that the giants are covered with scars, and many have the twisted and bent limbs that come with poorly set broken  bones.]]>
+    </string>
+    <string id="38">
+        <![CDATA[When they see you want to fight them, the giants are overwhelmed with childlike glee, as if there was nothing they would rather happen. Laughing and jumping around, they grab their weapons.]]>
+    </string>
+    <string id="39">
+        <![CDATA[Gasping and trembling, you stare out over the carnage. Massive bodies are strewn about like fallen trees. Streams of blood trickle through the cracks into the river below, attracting hungry cave fish.]]>
+    </string>
+    <string id="40">
+        <![CDATA[Searching the bodies, you find a good deal of gold. In addition, the tasty lizard they were roasting is still there.]]>
+    </string>
+    <string id="41">
+        <![CDATA[You escape the giants. They laugh at you and go back to their roasting lizard.]]>
+    </string>
+    <string id="42">
+        <![CDATA[You run into a giant hunting party. That is to say, not a hunting party with a lot of people in it, but a hunting party composed of giants. They decide to hunt you.]]>
+    </string>
+    <string id="43">
+        <![CDATA[You stumble upon yet another scene of horrible violence. Several giants have trapped a unicorn in a corner. It is one of the white unicorns, the legendary, good, magical kind.]]>
+    </string>
+    <string id="44">
+        <![CDATA[The unicorn is not radiating tranquility, however. The giants are moving in on it with violence on their minds. Do you help it?]]>
+    </string>
+    <string id="49">
+        <![CDATA[Giants are nasty, and unicorns should be more than able to help themselves. You back away.]]>
+    </string>
+    <string id="50">
+        <![CDATA[You run up and chip in. The unicorn seems relieved to get some help.]]>
+    </string>
+    <string id="51">
+        <![CDATA[The unicorn, bleeding slightly but still OK, prances over to you and touches his horn to the floor. Must be a sign of respect.]]>
+    </string>
+    <string id="52">
+        <![CDATA[It says "I am Handi, a wandering unicorn. To the north are several of my kind, living in a lovely glade. Mention my name to them, and they will render you assistance in thanks for your deed."]]>
+    </string>
+    <string id="53">
+        <![CDATA["Now, alas, I prefer my solitude, and the company of even those as noble as you is difficult for me to take. Good luck to you." Then, with remarkable speed and agility, it scampers off.]]>
+    </string>
+</sector>

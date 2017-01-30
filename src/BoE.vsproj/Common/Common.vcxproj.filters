@@ -220,6 +220,9 @@
     <ClInclude Include="..\..\dialogxml\choicedlog.hpp">
       <Filter>DialogXML\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\tools\view_dialogs.hpp">
+      <Filter>Tools\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\classes\creatlist.cpp">
@@ -395,6 +398,9 @@
     </ClCompile>
     <ClCompile Include="..\..\dialogxml\strdlog.cpp">
       <Filter>DialogXML\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\view_dialogs.cpp">
+      <Filter>Tools\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

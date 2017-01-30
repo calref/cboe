@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Fungal Cavern</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="0" bottom="44" right="47" />
+    <difficulty>5</difficulty>
+    <lighting>dark</lighting>
+    <timer freq="250">8</timer>
+    <flags />
+    <wandering>
+        <monster>82</monster>
+        <monster>82</monster>
+        <monster>82</monster>
+    </wandering>
+    <wandering>
+        <monster>99</monster>
+        <monster>99</monster>
+        <monster>99</monster>
+    </wandering>
+    <wandering>
+        <monster>58</monster>
+        <monster>58</monster>
+        <monster>58</monster>
+        <monster>58</monster>
+    </wandering>
+    <wandering>
+        <monster>134</monster>
+        <monster>134</monster>
+    </wandering>
+    <item id="0">
+        <type>3</type>
+        <charges>6</charges>
+    </item>
+    <item id="1">
+        <type>3</type>
+        <charges>5</charges>
+    </item>
+    <item id="2">
+        <type>3</type>
+        <charges>5</charges>
+    </item>
+    <item id="3">
+        <type>3</type>
+        <charges>6</charges>
+    </item>
+    <item id="4">
+        <type>367</type>
+    </item>
+    <item id="5">
+        <type>3</type>
+        <charges>6</charges>
+    </item>
+    <item id="6">
+        <type>3</type>
+        <charges>6</charges>
+    </item>
+    <item id="7">
+        <type>3</type>
+        <charges>6</charges>
+    </item>
+    <item id="8">
+        <type>10</type>
+    </item>
+    <item id="9">
+        <type>10</type>
+    </item>
+    <item id="10">
+        <type>10</type>
+    </item>
+    <item id="11">
+        <type>10</type>
+    </item>
+    <item id="12">
+        <type>10</type>
+    </item>
+    <item id="13">
+        <type>10</type>
+    </item>
+    <item id="14">
+        <type>10</type>
+    </item>
+    <item id="15">
+        <type>10</type>
+    </item>
+    <item id="16">
+        <type>10</type>
+    </item>
+    <item id="17">
+        <type>10</type>
+    </item>
+    <item id="18">
+        <type>10</type>
+    </item>
+    <item id="19">
+        <type>10</type>
+    </item>
+    <item id="20">
+        <type>10</type>
+    </item>
+    <item id="21">
+        <type>10</type>
+    </item>
+    <item id="22">
+        <type>23</type>
+    </item>
+    <item id="23">
+        <type>23</type>
+    </item>
+    <item id="24">
+        <type>23</type>
+    </item>
+    <item id="25">
+        <type>24</type>
+    </item>
+    <item id="26">
+        <type>24</type>
+    </item>
+    <item id="27">
+        <type>17</type>
+    </item>
+    <item id="28">
+        <type>17</type>
+    </item>
+    <item id="29">
+        <type>19</type>
+    </item>
+    <item id="30">
+        <type>0</type>
+        <charges>300</charges>
+    </item>
+    <item id="31">
+        <type>8</type>
+    </item>
+    <item id="32">
+        <type>268</type>
+    </item>
+    <item id="33">
+        <type>363</type>
+    </item>
+    <item id="34">
+        <type>364</type>
+    </item>
+    <creature id="0">
+        <type>175</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="1">
+        <type>175</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="2">
+        <type>175</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="3">
+        <type>175</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="4">
+        <type>175</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="5">
+        <type>175</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="6">
+        <type>175</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="7">
+        <type>175</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="8">
+        <type>175</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="9">
+        <type>66</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <area top="25" left="31" bottom="31" right="39">Concealed Crypt</area>
+    <sign id="0">
+        <![CDATA[Some message is etched into this wall. You can't understand what it says.]]>
+    </sign>
+    <string id="0">
+        <![CDATA[You have stumbled upon a strange, hidden underground wonderland! The air is cool and damp, the perfect atmosphere for the variety of fungi growing down here! ]]>
+    </string>
+    <string id="1">
+        <![CDATA[Molds, mosses, mushrooms and toadstools form a wild, undisturbed fairyland, which you are now free to frolic about in! It's actually quite lovely, and you can't imagine anything down here trying to hurt you.]]>
+    </string>
+    <string id="6">
+        <![CDATA[While this fungus infested series of caverns seemed completely undisturbed, it's quite clear that someone has been here before. You find the walls of some sort of stone structure.]]>
+    </string>
+    <string id="7">
+        <![CDATA[The dark stone is covered with thin cracks, as well as many thick patches of mold and lichen. Whatever it is, it's been here for quite some time.]]>
+    </string>
+    <string id="12">
+        <![CDATA[You find your way inside the structure, which is definitely a crypt. Bones crunch underfoot. However, they aren't the bones of those buried here, but of those unfortunate enough to stumble upon this place.]]>
+    </string>
+    <string id="13">
+        <![CDATA[There has been no shortage of spelunkers and adventurers slain here by the undead residents of this crypt. These lost souls are even now rising up, hoping to have you join them in their eternal, moldy slumber.]]>
+    </string>
+    <string id="18">
+        <![CDATA[You find a small gemstone hidden behind the brazier!]]>
+    </string>
+    <string id="19">
+        <![CDATA[Walking back behind the bier, you notice a small niche in its back, near the floor. You bend down and peer inside, and can make out a long, slender blade! There's also a number of small jewels. Looks like quite a haul.]]>
+    </string>
+    <string id="25">
+        <![CDATA[Unfortunately, you seem to have triggered some sort of a curse. The fate for graverobbers in this crypt is pretty unpleasant. Wracking stomach cramps double you over, and it feels like acid is coursing its way around your veins instead of blood.]]>
+    </string>
+    <string id="26">
+        <![CDATA[The moist atmosphere of these tunnels is starting to make you feel chilly.]]>
+    </string>
+</town>

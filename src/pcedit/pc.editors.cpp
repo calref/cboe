@@ -475,8 +475,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 		// TODO: Even though it includes 19 and 20, these will never match since they're handled separately above
 		for(int i = 0; i <= 20; i++) {
 			std::string id_base = boost::lexical_cast<std::string>(eSkill(i));
-			if(item_hit.length() < id_base.length() + 2) continue;
-			if(id_base.compare(0, id_base.length(), item_hit) == 0) {
+			if(id_base.compare(0, id_base.length(), item_hit, 0, item_hit.length() - 2) == 0) {
 				which_skill = eSkill(i);
 				break;
 			}

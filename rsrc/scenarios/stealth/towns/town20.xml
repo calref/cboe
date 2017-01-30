@@ -1,0 +1,815 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>64</size>
+    <name>Jaen&apos;s Headquarters</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="0" bottom="63" right="60" />
+    <difficulty>0</difficulty>
+    <lighting>lit</lighting>
+    <onenter condition="alive">41</onenter>
+    <onenter condition="dead">41</onenter>
+    <onexit dir="e">37</onexit>
+    <timer freq="50">42</timer>
+    <flags />
+    <wandering>
+        <monster>13</monster>
+        <monster>13</monster>
+        <monster>13</monster>
+        <monster>14</monster>
+    </wandering>
+    <wandering>
+        <monster>20</monster>
+        <monster>13</monster>
+    </wandering>
+    <wandering>
+        <monster>14</monster>
+        <monster>14</monster>
+        <monster>15</monster>
+    </wandering>
+    <wandering>
+        <monster>15</monster>
+        <monster>20</monster>
+    </wandering>
+    <item id="0">
+        <type>33</type>
+    </item>
+    <item id="1">
+        <type>37</type>
+    </item>
+    <item id="2">
+        <type>37</type>
+    </item>
+    <item id="3">
+        <type>172</type>
+    </item>
+    <item id="4">
+        <type>43</type>
+    </item>
+    <item id="5">
+        <type>43</type>
+    </item>
+    <item id="6">
+        <type>82</type>
+    </item>
+    <item id="7">
+        <type>21</type>
+    </item>
+    <item id="8">
+        <type>21</type>
+    </item>
+    <item id="9">
+        <type>223</type>
+    </item>
+    <item id="10">
+        <type>223</type>
+    </item>
+    <item id="11">
+        <type>58</type>
+    </item>
+    <item id="12">
+        <type>116</type>
+    </item>
+    <item id="13">
+        <type>116</type>
+    </item>
+    <item id="14">
+        <type>116</type>
+    </item>
+    <item id="15">
+        <type>113</type>
+    </item>
+    <item id="16">
+        <type>113</type>
+    </item>
+    <item id="17">
+        <type>52</type>
+    </item>
+    <item id="18">
+        <type>57</type>
+    </item>
+    <item id="19">
+        <type>2</type>
+        <charges>50</charges>
+        <contained>true</contained>
+    </item>
+    <item id="20">
+        <type>3</type>
+        <charges>50</charges>
+        <contained>true</contained>
+    </item>
+    <item id="21">
+        <type>1</type>
+        <charges>50</charges>
+        <contained>true</contained>
+    </item>
+    <item id="22">
+        <type>119</type>
+        <contained>true</contained>
+    </item>
+    <item id="23">
+        <type>148</type>
+        <contained>true</contained>
+    </item>
+    <item id="24">
+        <type>8</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="25">
+        <type>16</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="26">
+        <type>4</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="27">
+        <type>0</type>
+        <charges>4</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="28">
+        <type>18</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="29">
+        <type>7</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="30">
+        <type>16</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="31">
+        <type>15</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="32">
+        <type>17</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="33">
+        <type>18</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="34">
+        <type>5</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="35">
+        <type>5</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="36">
+        <type>8</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="37">
+        <type>8</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="38">
+        <type>4</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="39">
+        <type>0</type>
+        <charges>6</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="40">
+        <type>15</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="41">
+        <type>202</type>
+        <contained>true</contained>
+    </item>
+    <item id="42">
+        <type>100</type>
+        <contained>true</contained>
+    </item>
+    <item id="43">
+        <type>176</type>
+        <contained>true</contained>
+    </item>
+    <item id="44">
+        <type>175</type>
+        <contained>true</contained>
+    </item>
+    <item id="45">
+        <type>165</type>
+        <contained>true</contained>
+    </item>
+    <item id="46">
+        <type>1</type>
+        <charges>5</charges>
+    </item>
+    <item id="47">
+        <type>0</type>
+        <charges>2000</charges>
+        <contained>true</contained>
+    </item>
+    <item id="48">
+        <type>288</type>
+        <contained>true</contained>
+    </item>
+    <item id="49">
+        <type>252</type>
+        <contained>true</contained>
+    </item>
+    <item id="50">
+        <type>280</type>
+        <contained>true</contained>
+    </item>
+    <item id="51">
+        <type>370</type>
+        <charges>6</charges>
+        <contained>true</contained>
+    </item>
+    <creature id="0">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="1">
+        <type>11</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>200</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="2">
+        <type>195</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+        <onkill>17</onkill>
+    </creature>
+    <creature id="3">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="4">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="5">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="6">
+        <type>17</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="7">
+        <type>15</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="8">
+        <type>15</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="9">
+        <type>15</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="10">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="11">
+        <type>28</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>16</face>
+    </creature>
+    <creature id="12">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="13">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="14">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="15">
+        <type>35</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>201</personality>
+        <face>27</face>
+        <sdf x="20" y="6" />
+    </creature>
+    <creature id="16">
+        <type>112</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="17">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="18">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="19">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="20">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="21">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="22">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="23">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="24">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="25">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="26">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="27">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="28">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="29">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="30">
+        <type>14</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>11</face>
+    </creature>
+    <creature id="31">
+        <type>14</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>11</face>
+    </creature>
+    <creature id="32">
+        <type>14</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>11</face>
+    </creature>
+    <creature id="33">
+        <type>14</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>11</face>
+    </creature>
+    <creature id="34">
+        <type>14</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>11</face>
+    </creature>
+    <creature id="35">
+        <type>14</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>11</face>
+    </creature>
+    <creature id="36">
+        <type>14</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>11</face>
+    </creature>
+    <creature id="37">
+        <type>15</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+    </creature>
+    <creature id="38">
+        <type>15</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+    </creature>
+    <creature id="39">
+        <type>15</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+    </creature>
+    <creature id="40">
+        <type>15</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+    </creature>
+    <creature id="41">
+        <type>15</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+    </creature>
+    <creature id="42">
+        <type>15</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+    </creature>
+    <creature id="43">
+        <type>15</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+    </creature>
+    <creature id="44">
+        <type>15</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+    </creature>
+    <creature id="45">
+        <type>15</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+    </creature>
+    <creature id="46">
+        <type>15</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+    </creature>
+    <creature id="47">
+        <type>15</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+    </creature>
+    <creature id="48">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <creature id="49">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <creature id="50">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <creature id="51">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <creature id="52">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <creature id="53">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <creature id="54">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <creature id="55">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <creature id="56">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <creature id="57">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <creature id="58">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <creature id="59">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <area top="39" left="15" bottom="43" right="24">Jaen&apos;s Chambers</area>
+    <area top="20" left="10" bottom="31" right="24">Jaen&apos;s Central Hall</area>
+    <area top="20" left="26" bottom="31" right="40">Entry Hall</area>
+    <area top="33" left="35" bottom="43" right="39">Interrogation Chamber</area>
+    <area top="33" left="26" bottom="43" right="33">Main Barracks</area>
+    <area top="33" left="13" bottom="37" right="24">Library</area>
+    <area top="56" left="13" bottom="62" right="18">Trash Pit</area>
+    <area top="58" left="23" bottom="62" right="37">Holding Cells</area>
+    <area top="8" left="26" bottom="18" right="32">Common Room</area>
+    <area top="20" left="41" bottom="31" right="44">Front Gates</area>
+    <string id="0">
+        <![CDATA[When you get close to the door, a keyhole suddenly appears under the handle, surrounded by a circle of flames. On a hunch, you quickly insert Jaen's key into the hole and turn it. The flames disappear, and the door becomes unlocked.]]>
+    </string>
+    <string id="1">
+        <![CDATA[When you get close to the door, a keyhole suddenly appears under the handle, surrounded by a circle of flames. You try to get the door open, but you don't have a key that fits.]]>
+    </string>
+    <string id="2">
+        <![CDATA[The flames around the keyhole suddenly flare out at you, searing you! The keyhole then disappears. The door must be able to sense the improperness of your presence here.]]>
+    </string>
+    <string id="3">
+        <![CDATA[The shelves of Jaen's study are filled with ledgers, journals, and tomes, recording the movements, numbers, and supplies of his troops. The complete records of his forces are arrayed before you.]]>
+    </string>
+    <string id="4">
+        <![CDATA[Even one book from these shelves would be an incredibly valuable prize to present to Stalker and his minions.]]>
+    </string>
+    <string id="9">
+        <![CDATA[Jaen is, unfortunately, very paranoid about spies. That is why every single tome on these shelves has a magical, protective rune on it.]]>
+    </string>
+    <string id="10">
+        <![CDATA[You don't know how to deactivate the runes. You only know how to make them explode.]]>
+    </string>
+    <string id="11">
+        <![CDATA[A heavy, impressive tome, filled with all manner of fascinating magical inscriptions, is chained to this pedestal.]]>
+    </string>
+    <string id="17">
+        <![CDATA[The book records the magical experiments currently being performed by Jaen's men. There are currently two paths of study. Half of his mages are trying to figure out how to recreate Stalker's exploding boxes for their own use.]]>
+    </string>
+    <string id="18">
+        <![CDATA[Their guess is that Stalker's troops are filling the boxes with equal parts sulphur, saltpeter, and charcoal and somehow imbuing the mixture with extra magical power. They have not been able to do this themselves.]]>
+    </string>
+    <string id="19">
+        <![CDATA[The rest of the mages are trying to create their own magical weapons to use against the Hill Runners. Quickfire bombs are being worked on, as are ways of spreading plague from a distance, and of summoning dragons to firebomb the rebel cities.]]>
+    </string>
+    <string id="20">
+        <![CDATA[You have heard of a cult, called the Anama, who believe that magic is far too destructive a force and should be resisted entirely. Reading of all these potential tools for mass destruction, you can almost see their point.]]>
+    </string>
+    <string id="23">
+        <![CDATA[You pull the lever, and hear the massive winches and gears of the fort's gate mechanism kick into action.]]>
+    </string>
+    <string id="24">
+        <![CDATA[You pull the lever, and hear the massive winches and gears of the fort's gate mechanism kick into action.]]>
+    </string>
+    <string id="25">
+        <![CDATA[This cramped, shadowy passage is thick with the stenches of smoke, sour sweat, and despair. You hear a single, constant, low moan, coming from farther down the corridor.]]>
+    </string>
+    <string id="26">
+        <![CDATA[When he takes his death blow, Jaen has no final words, no dying speech to rally his followers. His final sound is a scream of fury. He howls out his anger at you, and his frustration with his failure.]]>
+    </string>
+    <string id="27">
+        <![CDATA[Then his scream fades to a gurgle, and ends. With the crash of armor on cobblestones, he keels over. The rebels have achieved another great victory.]]>
+    </string>
+    <string id="28">
+        <![CDATA[Jaen's men are stunned by his loss, but not for long. Professionals to the last, they soon return to the attack, but not before you're able to pick up and pocket the key that bounced out of Jaen's pocket.]]>
+    </string>
+    <string id="32">
+        <![CDATA[You stand at the entrance to a huge meeting hall, dominated by a huge oak table and many massive, granite pillars. The place is a strange echo of Stalker's meeting chamber, eerily similar in many ways.]]>
+    </string>
+    <string id="33">
+        <![CDATA[At last, you have come face to face with the leader of the Empire troops on Morrow's Isle. As imposing as the architecture is, however, it is nothing compared to the infamous Jaen himself.]]>
+    </string>
+    <string id="34">
+        <![CDATA[This is no spy, or diplomat. This man has clearly spent much of his life as a soldier. He stands well over six feet tall, and his massive frame is clad in equally imposing plate armor. The enormous hammer at his side could fell an ox in a single blow.]]>
+    </string>
+    <string id="35">
+        <![CDATA[You seem to have intruded on one of his strategy sessions, and all his lieutenants are present. A nastier bunch of heavily armed men, you'd have a hard time imagining. But here they all are, and they're all about to try and kill you.]]>
+    </string>
+    <string id="38">
+        <![CDATA[You find a small hole in the ground. Not so small you couldn't slide down it, but small enough that it would be a painful process. You may not be able to make it back up, either.]]>
+    </string>
+    <string id="39">
+        <![CDATA[Still, if this is the only safe way into Jaen's fortress, you may have no choice ...]]>
+    </string>
+    <string id="44">
+        <![CDATA[You shimmy down the hole. Again. And fall into a massive pile of filth. Again.]]>
+    </string>
+    <string id="45">
+        <![CDATA[You start to shimmy down the hole. At first, you climb down carefully and in a controlled way. Unfortunately, the hole becomes rather slick. Before long, you lose your grip, and start sliding down.]]>
+    </string>
+    <string id="46">
+        <![CDATA[You don't have long to fall. Soon, you're dumped out of a crack in the ceiling of a small cave, and fall into a huge pile of rotting garbage. It breaks your fall, but not in a pleasant way. You're now in Jaen's Fortress.]]>
+    </string>
+    <string id="47">
+        <![CDATA[After you broke into Jaen's Fortress for the first time, Jaen spared no effort to find the hole in his defenses. He found it, and, expecting someone would try to use it again, placed 100 strong men here to ambush whoever came through.]]>
+    </string>
+    <string id="48">
+        <![CDATA[After you are overwhelmed and captured and before you are executed, Jaen's interrogators get you to tell them everything they need to know about Jaen's forces and defenses.]]>
+    </string>
+    <string id="49">
+        <![CDATA[You hear many shouts of alarm and readiness. More guards have arrived from outside the fortress.]]>
+    </string>
+    <string id="50">
+        <![CDATA[As you get close to the gate into the main part of the fortress, you hear the all too familiar report of a Hill Runner explosive box. The blast is of comparable power to the one which destroyed Lord Volpe's fortress.]]>
+    </string>
+    <string id="51">
+        <![CDATA[The explosion was to the east. On the down side, the forces here will be alerted. On the up side, the distraction should be enough to get you in to kill Jaen.]]>
+    </string>
+    <string id="56">
+        <![CDATA[From here, you can see the result of the explosion. They destroyed the front gate of Jaen's fortress. You're thankful for it now. The hole in the wall will make it much easier for you to escape.]]>
+    </string>
+    <string id="57">
+        <![CDATA[You emerge from the well concealed cave entrance. It's covered by a magical illusion. It's amazing the rebels were able to find it. You'll be surprised if you're able to find it again.]]>
+    </string>
+    <string id="58">
+        <![CDATA[Not that you would want to ... you were lucky to survive this attack. The next time they will be more than ready for you. Your mission was completed. Stalker will be very pleased.]]>
+    </string>
+    <string id="59">
+        <![CDATA[You are very relieved to have escaped Jaen's fortress with your hides intact. Unfortunately, Jaen is still alive, and he spares no effort to chase you down before you can get far. Hordes of troops swarm over the countryside.]]>
+    </string>
+    <string id="60">
+        <![CDATA[After you are overwhelmed and captured and before you are executed, Jaen's interrogators get you to tell them everything they need to know about Stalker's forces and defenses.]]>
+    </string>
+    <string id="61">
+        <![CDATA[After a long march north, you reach the river. At first, you think that you have made some sort of mistake - you were supposed to have reached Jaen's fortress by now.]]>
+    </string>
+    <string id="62">
+        <![CDATA[As you wander around, you notice a hole in the ground. It's a recently dug shaft, framed with rough timbers. You walk up to it to investigate. As you peer over the edge, you notice people approaching you from all sides.]]>
+    </string>
+    <string id="63">
+        <![CDATA[They're Hill Runners. Only they could be this stealthy. One of them says "We've been waiting for you. Everything is in place. It is time. Climb down the hole."]]>
+    </string>
+    <string id="64">
+        <![CDATA[When you express your doubts about entering the hole, they don't hesitate to grab you and chuck you in. You land on a thick pile of furs below ...]]>
+    </string>
+</town>

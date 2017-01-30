@@ -309,6 +309,8 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 			return false;
 		}
 		univ.party[i].readFrom(fin);
+		// Do this to make sure the PC's internal party reference is correct
+		univ.party[i].join_party(univ.party);
 	}
 	
 	// Including stored PCs
@@ -344,7 +346,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 			// Read town maps
 			std::istream& fin2 = partyIn.getFile("save/townmaps.dat");
 			for(int i = 0; i < univ.scenario.towns.size(); i++)
-				for(int j = 0; j < 64; j++)
+				for(int j = 0; j < univ.scenario.towns[i]->max_dim; j++)
 					fin2 >> univ.scenario.towns[i]->maps[j];
 		} else univ.party.town_num = 200;
 		
@@ -420,11 +422,13 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 		if(univ.party.town_num < 200) {
 			// Write the current town data
 			univ.town.writeTo(partyOut.newFile("save/town.txt"));
-			
+		}
+		
+		{	
 			// Write the town map data
 			std::ostream& fout = partyOut.newFile("save/townmaps.dat");
 			for(int i = 0; i < univ.scenario.towns.size(); i++)
-				for(int j = 0; j < 64; j++)
+				for(int j = 0; j < univ.scenario.towns[i]->max_dim; j++)
 					fout << univ.scenario.towns[i]->maps[j] << '\n';
 		}
 		

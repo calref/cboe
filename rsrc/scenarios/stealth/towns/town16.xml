@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Pit of Plentiful Goo</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="3" bottom="47" right="44" />
+    <difficulty>0</difficulty>
+    <lighting>lit</lighting>
+    <exit dir="w" x="39" y="27" />
+    <exit dir="e" x="43" y="27" />
+    <flags />
+    <wandering>
+        <monster>0</monster>
+        <monster>138</monster>
+    </wandering>
+    <wandering>
+        <monster>0</monster>
+        <monster>139</monster>
+    </wandering>
+    <wandering>
+        <monster>0</monster>
+        <monster>140</monster>
+    </wandering>
+    <wandering>
+        <monster>0</monster>
+        <monster>141</monster>
+    </wandering>
+    <item id="0">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="1">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="2">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="3">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="4">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="5">
+        <type>64</type>
+        <contained>true</contained>
+    </item>
+    <item id="6">
+        <type>64</type>
+        <contained>true</contained>
+    </item>
+    <item id="7">
+        <type>64</type>
+        <contained>true</contained>
+    </item>
+    <item id="8">
+        <type>64</type>
+        <contained>true</contained>
+    </item>
+    <item id="9">
+        <type>64</type>
+        <contained>true</contained>
+    </item>
+    <item id="10">
+        <type>202</type>
+        <contained>true</contained>
+    </item>
+    <item id="11">
+        <type>187</type>
+        <contained>true</contained>
+    </item>
+    <item id="12">
+        <type>254</type>
+        <contained>true</contained>
+    </item>
+    <item id="13">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="14">
+        <type>100</type>
+        <contained>true</contained>
+    </item>
+    <item id="15">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="16">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="17">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="18">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="19">
+        <type>99</type>
+        <contained>true</contained>
+    </item>
+    <item id="20">
+        <type>13</type>
+    </item>
+    <item id="21">
+        <type>2</type>
+        <charges>6</charges>
+        <contained>true</contained>
+    </item>
+    <item id="22">
+        <type>3</type>
+        <charges>4</charges>
+        <contained>true</contained>
+    </item>
+    <item id="23">
+        <type>363</type>
+    </item>
+    <item id="24">
+        <type>364</type>
+    </item>
+    <item id="25">
+        <type>170</type>
+    </item>
+    <item id="26">
+        <type>165</type>
+    </item>
+    <item id="27">
+        <type>165</type>
+    </item>
+    <item id="28">
+        <type>64</type>
+    </item>
+    <item id="29">
+        <type>365</type>
+    </item>
+    <item id="30">
+        <type>177</type>
+    </item>
+    <item id="31">
+        <type>288</type>
+        <charges>2</charges>
+        <contained>true</contained>
+    </item>
+    <creature id="0">
+        <type>140</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="1">
+        <type>140</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="2">
+        <type>140</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="3">
+        <type>140</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="4">
+        <type>140</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="5">
+        <type>138</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="6">
+        <type>138</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="7">
+        <type>138</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="8">
+        <type>138</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="9">
+        <type>138</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="10">
+        <type>138</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="11">
+        <type>141</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="12">
+        <type>141</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="13">
+        <type>141</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="14">
+        <type>141</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="15">
+        <type>141</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="16">
+        <type>141</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="17">
+        <type>141</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="18">
+        <type>141</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="19">
+        <type>140</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="20">
+        <type>140</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="21">
+        <type>140</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="22">
+        <type>140</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="23">
+        <type>140</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="24">
+        <type>140</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="25">
+        <type>139</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="26">
+        <type>139</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="27">
+        <type>139</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="28">
+        <type>139</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="29">
+        <type>139</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="30">
+        <type>139</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="31">
+        <type>139</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="32">
+        <type>139</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="33">
+        <type>139</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="34">
+        <type>139</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="35">
+        <type>139</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="36">
+        <type>122</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="37">
+        <type>140</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="38">
+        <type>138</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="39">
+        <type>138</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <area top="1" left="15" bottom="2" right="18">Bomb Chamber</area>
+    <area top="6" left="27" bottom="9" right="35">Mage&apos;s Common Room</area>
+    <area top="1" left="26" bottom="4" right="29">Small Library</area>
+    <area top="3" left="19" bottom="5" right="24">Storeroom</area>
+    <area top="7" left="19" bottom="9" right="26">Lever Room</area>
+    <area top="38" left="10" bottom="46" right="14">Cave Filled With Bodies</area>
+    <sign id="0">
+        <![CDATA[GOO PITS A|WEST EXIT]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[GOO PITS D|EAST EXIT]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[GOO PITS C]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[(The writing has been burned off, as if by acid.)]]>
+    </sign>
+    <sign id="4">
+        <![CDATA[WARNING - Magical Experimentation Taking Place! Do not proceed without protective amulet.]]>
+    </sign>
+    <sign id="5">
+        <![CDATA[WARNING - Magical Experimentation Taking Place! Do not proceed without protective amulet.]]>
+    </sign>
+    <string id="0">
+        <![CDATA[You find a metal strongbox. A small sign on it reads "PROTECTIVE AMULETS - DO NOT proceed through caves without wearing one."]]>
+    </string>
+    <string id="6">
+        <![CDATA[The box contains a rack, which looks like it was designed to hold about a dozen necklaces. Considering how the day has gone, you won't be surprised to hear that the rack is empty. Disgusted, you close the box.]]>
+    </string>
+    <string id="7">
+        <![CDATA[You find a heavy metal strongbox, bolted to the floor. To protect it from the acidic secretions of the slimes, it has been coated with a thin layer of glass. A sign on the front reads "Sample Storage."]]>
+    </string>
+    <string id="13">
+        <![CDATA[The box contains several racks of vials. At first, excited, you think you've found a treasure trove of potions. Unfortunately, a closer look reveals that all the bottles contain are bits of the slimes, scraped off for later analysis.]]>
+    </string>
+    <string id="14">
+        <![CDATA[Annoyed, disappointed, and slightly disgusted, you close the box.]]>
+    </string>
+    <string id="15">
+        <![CDATA[The box still contains broken bottles of nasty goo. Fortunately, this time no little gelatinous friends are attracted by the smell.]]>
+    </string>
+    <string id="16">
+        <![CDATA[You open the box and immediately wish you hadn't. The box is filled with bottles of slime, used by the mages for analysis. Unfortunately, some sort of sharp blow has broken several of them open, and the smell of rotting goop is overpowering.]]>
+    </string>
+    <string id="17">
+        <![CDATA[You're not the only beings to have noticed it, either. The smell seems to have attracted several slimes, and put them in a rather agitated state.]]>
+    </string>
+    <string id="18">
+        <![CDATA[Well, you've solved the mystery of what happened to the mages who were doing research here. Actually, your nose tells you before your eyes do. They're all in here and quite thoroughly dead.]]>
+    </string>
+    <string id="19">
+        <![CDATA[The burns on their bodies look like they were inflicted by the highly acidic slimes, so it seems likely that the slimes got them all. ]]>
+    </string>
+    <string id="20">
+        <![CDATA[However, you can't help but wonder what they were all doing out here in this cave, and how the slimes were able to best them. They were, after all, quite skilled magic users, and the slimes aren't that tough.]]>
+    </string>
+    <string id="21">
+        <![CDATA[Yet another mystery, and yet more dead people. This island is starting to depress you.]]>
+    </string>
+    <string id="24">
+        <![CDATA[Your gorge rising, you pick through the stuff on the corpse. Your gross and thankless task is rewarded: you find a small silver key. You wipe it off and take it with you.]]>
+    </string>
+    <string id="25">
+        <![CDATA[You find the body of one of the mages who was working here. It looks like she was ambushed by several of the treacherous giant slimes, and killed in an exceptionally nasty way.]]>
+    </string>
+    <string id="26">
+        <![CDATA[On a thin chain around her neck, you find a small pewter key. Never hurts to have more keys. You take it.]]>
+    </string>
+    <string id="27">
+        <![CDATA[You find a small, hastily built subterranean structure. It looks like it was thrown together very quickly, and pillars have been placed everywhere to shore the ceiling up.]]>
+    </string>
+    <string id="28">
+        <![CDATA[Looking down this long corridor, you can see, in addition to the hostile slimes, 3 other portcullises, each with a protective rune to try to hold the hostile monsters out.]]>
+    </string>
+    <string id="29">
+        <![CDATA[There's something about this whole place that makes you think it involves magic, and maybe magical research. What they were doing down here, around so many hostile monsters, you may be able to find out inside.]]>
+    </string>
+    <string id="30">
+        <![CDATA[You also notice that the outpost is unusually quiet. There are no signs of people anywhere.]]>
+    </string>
+    <string id="33">
+        <![CDATA[You pull the lever, and hear a gentle, chiming noise. Then gears turn and chains clatter.]]>
+    </string>
+    <string id="34">
+        <![CDATA[As thieves say, nobody makes a locked door  like a wizard. Bound in mithral bands and covered in protective runes, this door is no exception. Alas, none of your keys fit the lock.]]>
+    </string>
+    <string id="35">
+        <![CDATA[You find a massive, magically locked door. Fortunately, one of your keys fits in the lock.]]>
+    </string>
+    <string id="36">
+        <![CDATA[You find a massive, magically locked door. Fortunately, one of your keys fits in the lock.]]>
+    </string>
+    <string id="37">
+        <![CDATA[You read through the journals the wizards here were keeping. This place was a rebel research facility, trying to find out ways to harness the magical slimes for military purposes.]]>
+    </string>
+    <string id="38">
+        <![CDATA[It turns out that the slimes here were specially brought from southern Valorim, where a plague of them caused a lot of trouble a few years back. The mages have been studying and modifying them, trying to to get them under control.]]>
+    </string>
+    <string id="39">
+        <![CDATA[They've been having luck changing the slimes, but not controlling them. Still, experiments for packing them in bombs have been proceeding rapidly.]]>
+    </string>
+    <string id="40">
+        <![CDATA[Exploding boxes. Midnight raids. Now slime bombs. This is all just too weird.]]>
+    </string>
+    <string id="43">
+        <![CDATA[Among the journals and tomes (which describe in grinding detail the biologies and mating habits of magical slimes), you find an ancient spell book. With a bit of effort, you manage to decipher the archaic writing.]]>
+    </string>
+    <string id="44">
+        <![CDATA[You can now cast the spell Death Arrows.]]>
+    </string>
+    <string id="45">
+        <![CDATA[Among the journals and tomes detailing in grinding detail the biologies and mating habits of magical slimes, you find an ancient spell book. Alas, try as you might, you can't decipher the archaic writing.]]>
+    </string>
+    <string id="46">
+        <![CDATA[That's odd. While you were outside, someone closed this portcullis, and put a fresh lock on it. Someone behind you really has it in for you.]]>
+    </string>
+    <string id="47">
+        <![CDATA[Your exit is blocked by a huge, iron gate, held shut by a massive padlock. The gate is more than heavy enough to withstand your blows, but you notice that the whole apparatus is quite rusty. Something stronger than you might be able to destroy it.]]>
+    </string>
+    <string id="48">
+        <![CDATA[Your exit is blocked by a huge, rusty gate. It's too heavy for you to knock it down, but the rebels' exploding boxes might do the trick. There's a small depression in the floor you could probably fit the exploding box into.]]>
+    </string>
+    <string id="54">
+        <![CDATA[You put the box in the depression, pull the rope in the side out, and run for it. You don't run quite fast enough. The blast partially catches you.]]>
+    </string>
+    <string id="55">
+        <![CDATA[Looking back, you see that it worked! The gate is still intact, but the blast broke the lock open. One push swings it open. You can get out now.]]>
+    </string>
+    <string id="56">
+        <![CDATA[As you walk around the curved passage, you hear a loud clang behind you. Trying to ignore that grim, sinking feeling, you look back, and see that someone has closed the portcullis behind you. God knows how.]]>
+    </string>
+    <string id="57">
+        <![CDATA[You hear footsteps receding in the distance. Someone on the other side is walking away, not feeling any need to hurry.]]>
+    </string>
+    <string id="58">
+        <![CDATA[Yep. The gate is closed all right. The metal is strong and new and properly oiled. No chance you'll be able to bash it down.]]>
+    </string>
+    <string id="59">
+        <![CDATA[The first explosive didn't even mar this gate. You decide to not even bother with wasting the second one.]]>
+    </string>
+    <string id="60">
+        <![CDATA[The massive, steel gate is still here, blocking your escape from these caves. Although the steel looks strong and new, there is a small chance one of the rebel's explosive boxes might affect it somehow.]]>
+    </string>
+    <string id="61">
+        <![CDATA[If you wanted to try, there is a small gap in the floor under the gate you could slide the box into.]]>
+    </string>
+    <string id="66">
+        <![CDATA[You put the box in, pull the rope, and run. Unfortunately, the thing explodes too quickly for you to get away damage-free.]]>
+    </string>
+    <string id="67">
+        <![CDATA[Unfortunately, the blast was nowhere near strong enough to affect the gate. It's not even scratched.]]>
+    </string>
+    <string id="68">
+        <![CDATA[This room contains two pedestals, each with a oak box on it. The boxes have ropes trailing out through holes in their sides.]]>
+    </string>
+    <string id="69">
+        <![CDATA[At this point, you'd have no excuse to not recognize some of the rebel's exploding boxes when you see them. Your guess is that pulling the rope makes the box explode.]]>
+    </string>
+    <string id="70">
+        <![CDATA[The boxes are too bulky to take both of them with you, but nothing is stopping you from taking one. You just hope they're not too unstable.]]>
+    </string>
+    <string id="74">
+        <![CDATA[There's still one explosive box left.]]>
+    </string>
+    <string id="80">
+        <![CDATA[You still have the first box you found and decide to leave the other one behind. They're extremely bulky and heavy.]]>
+    </string>
+</town>

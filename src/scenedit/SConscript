@@ -10,6 +10,7 @@ scened_sources = Split("""
 	scen.keydlgs.cpp
 	scen.main.cpp
 	scen.townout.cpp
+	../tools/view_dialogs.cpp
 """)
 
 if str(platform) == "darwin":

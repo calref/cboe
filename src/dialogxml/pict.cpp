@@ -720,12 +720,11 @@ void cPict::draw(){
 	inWindow->setActive();
 	
 	if(!visible) return;
-	if(picNum == BLANK) { // Just fill with black
-		fill_rect(*inWindow, rect, sf::Color::Black);
-		return;
-	}
 	
-	(this->*drawPict()[picType])(picNum,rect);
+	if(picNum == BLANK) // Just fill with black
+		fill_rect(*inWindow, rect, sf::Color::Black);
+	else (this->*drawPict()[picType])(picNum,rect);
+	
 	if(drawFramed) drawFrame(2,frameStyle);
 }
 

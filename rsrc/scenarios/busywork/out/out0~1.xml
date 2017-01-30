@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Mrrnah Hollow</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>18</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>19</monster>
+        <monster>27</monster>
+        <monster>24</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>11</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <string id="0">
+        <![CDATA[Someone was building a road out this way, but construction ended abruptly when the bandit attacks started. Piles of gravel and rusted picks and shovels are littered nearby.]]>
+    </string>
+    <string id="1">
+        <![CDATA[Interestingly, there are fresh tracks nearby. They seem to be leading to the east.]]>
+    </string>
+    <string id="2">
+        <![CDATA[One thing you can say about the bandits here - they're arrogant. A dozen of them are sitting here, bold and confidant as can be, waiting to shake you down.]]>
+    </string>
+    <string id="3">
+        <![CDATA[As you approach, they get up from around their cozy campfire and grab their weapons. One of them yells "Greetings, wanderers! I'm afraid we must require a small toll of you before you can pass!" ]]>
+    </string>
+    <string id="4">
+        <![CDATA[One of their mages seems to be preparing a spell as their leader yells "Only 100 gold to pass! What could be more reasonable? Do you accept, or must we sadly come to blows?"]]>
+    </string>
+    <string id="8">
+        <![CDATA[You back away. The bandits yell to you as you leave. "All right, then. No worries. We'll be here when you get back."]]>
+    </string>
+    <string id="9">
+        <![CDATA[You pay the bandits their 100 gold. They thank you, sheathe their weapons, and disappear into the hills. ]]>
+    </string>
+    <string id="10">
+        <![CDATA[After a short time, you try to track them, only to find that they're experts at concealing all traces of their passages. You can't figure out where they disappeared to.]]>
+    </string>
+    <string id="11">
+        <![CDATA[When the bandits see that you don't have 100 gold, they laugh. "Oh, well," the leader says. "We can't blame you for trying." They take what gold you do have and disappear into the hills.]]>
+    </string>
+    <string id="12">
+        <![CDATA[The bandits clearly would have preferred for you to have just paid them off. Combat is very inconvenient and messy, and makes muscles sore, and there's wounds and death and all.]]>
+    </string>
+    <string id="13">
+        <![CDATA[Still, they stoicly accept combat as an occasional part of the job. They approach you to do battle. You have to admire their dedication.]]>
+    </string>
+    <string id="14">
+        <![CDATA[Victory is yours! You search the bandits' camp, looking for treasure and some evidence of where there hide-out is. Unfortunately, you find neither. They were making some rabbit soup. That's all you get from them.]]>
+    </string>
+    <string id="15">
+        <![CDATA[There was a big combat here, probably about a month ago. There's still some chips of bone and shards of broken weapons. No other signs of what happened, or who did what to whom.]]>
+    </string>
+</sector>

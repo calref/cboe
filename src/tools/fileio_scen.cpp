@@ -296,6 +296,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 }
 
 ticpp::Document xmlDocFromStream(std::istream& stream, std::string name) {
+	if(!stream) throw std::string("Error loading scenario file: ") + name;
 	std::string contents;
 	stream.seekg(0, std::ios::end);
 	contents.reserve(stream.tellg());
@@ -1142,19 +1143,20 @@ void readItemsFromXml(ticpp::Document&& data, cScenario& scenario) {
 
 static std::pair<int,int> parseDice(std::string str, std::string elem, std::string attr, std::string fname, int row, int col) {
 	int count = 0, sides = 0;
-	bool found_d = false;
+	bool found_d = false, found_count = false;
 	for(char c : str) {
 		if(isdigit(c)) {
 			if(found_d) {
 				sides *= 10;
 				sides += c - '0';
 			} else {
+				found_count = true;
 				count *= 10;
 				count += c - '0';
 			}
 		} else if(!found_d && c == 'd') {
 			found_d = true;
-			if(count == 0) count = 1;
+			if(!found_count) count = 1;
 		}
 		else throw xBadVal(elem, attr, str, row, col, fname);
 	}

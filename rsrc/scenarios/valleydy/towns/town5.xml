@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>School Entry</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="3" bottom="44" right="44" />
+    <difficulty>0</difficulty>
+    <lighting>lit</lighting>
+    <onenter condition="alive">26</onenter>
+    <onenter condition="dead">26</onenter>
+    <exit dir="n" x="15" y="28" />
+    <exit dir="w" x="10" y="35" />
+    <exit dir="s" x="15" y="40" />
+    <exit dir="e" x="21" y="33" />
+    <flags />
+    <item id="0">
+        <type>19</type>
+    </item>
+    <item id="1">
+        <type>19</type>
+    </item>
+    <item id="2">
+        <type>19</type>
+    </item>
+    <item id="3">
+        <type>20</type>
+    </item>
+    <item id="4">
+        <type>20</type>
+    </item>
+    <item id="5">
+        <type>22</type>
+    </item>
+    <item id="6">
+        <type>22</type>
+    </item>
+    <item id="7">
+        <type>23</type>
+    </item>
+    <item id="8">
+        <type>31</type>
+        <contained>true</contained>
+    </item>
+    <item id="9">
+        <type>169</type>
+        <contained>true</contained>
+    </item>
+    <item id="10">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="11">
+        <type>0</type>
+        <charges>50</charges>
+        <contained>true</contained>
+    </item>
+    <item id="12">
+        <type>24</type>
+        <contained>true</contained>
+    </item>
+    <item id="13">
+        <type>149</type>
+        <contained>true</contained>
+    </item>
+    <item id="14">
+        <type>23</type>
+    </item>
+    <item id="15">
+        <type>223</type>
+        <contained>true</contained>
+    </item>
+    <item id="16">
+        <type>23</type>
+    </item>
+    <item id="17">
+        <type>23</type>
+    </item>
+    <item id="18">
+        <type>0</type>
+        <charges>48</charges>
+    </item>
+    <item id="19">
+        <type>40</type>
+    </item>
+    <item id="20">
+        <type>23</type>
+    </item>
+    <item id="21">
+        <type>171</type>
+    </item>
+    <item id="22">
+        <type>21</type>
+    </item>
+    <item id="23">
+        <type>19</type>
+    </item>
+    <item id="24">
+        <type>173</type>
+    </item>
+    <creature id="0">
+        <type>78</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="1">
+        <type>78</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="2">
+        <type>78</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="3">
+        <type>78</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="4">
+        <type>78</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="5">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="6">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="7">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="8">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="9">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="10">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="11">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="12">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="13">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="14">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="15">
+        <type>38</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="16">
+        <type>39</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="17">
+        <type>39</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="18">
+        <type>39</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="19">
+        <type>39</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>23</face>
+    </creature>
+    <creature id="20">
+        <type>115</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="21">
+        <type>115</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="22">
+        <type>115</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="23">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="24">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="25">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="26">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="27">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="28">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="29">
+        <type>116</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <area top="8" left="9" bottom="19" right="19">Old Stables</area>
+    <area top="8" left="29" bottom="19" right="40">Defunct Storeroom</area>
+    <area top="15" left="19" bottom="34" right="29">Entry Hall</area>
+    <area top="29" left="9" bottom="41" right="19">Temporary Quarters</area>
+    <area top="29" left="29" bottom="41" right="40">Waste Disposal</area>
+    <sign id="0">
+        <![CDATA[Stables]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[Stables]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[UPPER STORAGE|Please Leave Delivered Goods Here]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[Temporary Quarters]]>
+    </sign>
+    <sign id="4">
+        <![CDATA[Minor Waste Processing|Note: Major Wastes MUST go in Major Waste Processing]]>
+    </sign>
+    <sign id="5">
+        <![CDATA[SCHOOL OF MAGERY|CLOSED! OFF-LIMITS!|Empire Order SMH-451-D]]>
+    </sign>
+    <sign id="6">
+        <![CDATA[SCHOOL OF MAGERY|CLOSED! OFF-LIMITS!|Empire Order SMH-451-D]]>
+    </sign>
+    <sign id="7">
+        <![CDATA[SCHOOL OF MAGERY|CLOSED! OFF-LIMITS!|Empire Order SMH-451-D]]>
+    </sign>
+    <sign id="8">
+        <![CDATA[SCHOOL OF MAGERY|CLOSED! OFF-LIMITS!|Empire Order SMH-451-D]]>
+    </sign>
+    <string id="0">
+        <![CDATA[For the first time, you stand at the entrance to the School of Magery.]]>
+    </string>
+    <string id="1">
+        <![CDATA[You know practically nothing about it. It's a huge structure, and was clearly once quite beautiful. You have no idea how far down it goes, or what wonders and horrors are concealed inside.]]>
+    </string>
+    <string id="2">
+        <![CDATA[It's been abandoned by its former owners. That much is clear. There is dust and trash everywhere, and the massive portcullis just inside is closed to travelers. But why did they leave? And what is inside?]]>
+    </string>
+    <string id="3">
+        <![CDATA[And, most importantly, does it have anything to do with the curse that is tearing the Vale apart bit by bit?]]>
+    </string>
+    <string id="6">
+        <![CDATA[With a satisfying click, you place the opening stone into the last of the 4 depressions. At first, you think nothing has happened. There is a long pause, while long dormant machinery grinds back to life.]]>
+    </string>
+    <string id="7">
+        <![CDATA[Then, with a bone-jarring squeal, the old gears begin to grind. As showers of rust flakes rain down upon you, the portcullis opens. Soon, your way unbarred, you stare into the darkness of the abandoned school.]]>
+    </string>
+    <string id="8">
+        <![CDATA[At first, things are deathly quiet. Then, silently at first, then louder, you begin to hear growling and muttering. While the school's owners may have abandoned it, it seems other creatures have somehow taken up residence ...]]>
+    </string>
+    <string id="12">
+        <![CDATA[You place the stone into the depression. It's a perfect match. You wait for several minutes, hoping that something will happen. Nothing does.]]>
+    </string>
+    <string id="13">
+        <![CDATA[Disappointed, you remove the stone from the depression. Only then does something unusual happen. The hole fades away before your eyes, leaving a blank wall. Nothing else happens.]]>
+    </string>
+    <string id="14">
+        <![CDATA[You walk up to the massive iron portcullis, which is presenting quite an imposing barrier to your entry. The bars are close together, thick and strong, and, you suspect, magically augmented as well.]]>
+    </string>
+    <string id="15">
+        <![CDATA[You look around for anything that could help you gain entry. The only thing of interest you find is a small circular depression in the wall to the right of the portcullis. Unfortunately, you have nothing that would fit inside it.]]>
+    </string>
+    <string id="16">
+        <![CDATA[Disappointed, you turn back.]]>
+    </string>
+    <string id="20">
+        <![CDATA[You stand before a massive iron portcullis. To the right, on the wall, you notice a small circular depression. Interestingly, it looks like Avizo's stone would fit snugly inside it.]]>
+    </string>
+    <string id="26">
+        <![CDATA[You stand before a massive iron portcullis. To the right, on the wall, you notice a small circular depression. Interestingly, it looks like Avizo's stone would fit snugly inside it.]]>
+    </string>
+    <string id="32">
+        <![CDATA[You stand before a massive iron portcullis. To the right, on the wall, you notice a small circular depression. Interestingly, it looks like Avizo's stone would fit snugly inside it.]]>
+    </string>
+    <string id="38">
+        <![CDATA[You stand before a massive iron portcullis. To the right, on the wall, you notice a small circular depression. Interestingly, it looks like Avizo's stone would fit snugly inside it.]]>
+    </string>
+    <string id="44">
+        <![CDATA[As you walk down this corridor, you begin to detect a powerful, unpleasant stench, which becomes worse and worse with every passing step. This area is being used as someone's dump, and they aren't picky about sanitation.]]>
+    </string>
+    <string id="45">
+        <![CDATA[This is interesting - whoever ran the school set up a permanent, magical incinerator here. It is still generating a good deal of heat, even after all these years. Alas, whoever's been putting the trash here hasn't been bothering to burn it.]]>
+    </string>
+    <string id="46">
+        <![CDATA[This broad corridor slopes down to the second level of the school. The floor has been worn smooth by the hundreds (if not thousands) of apprentices and teachers that have passed through here.]]>
+    </string>
+</town>

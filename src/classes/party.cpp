@@ -189,6 +189,13 @@ void cParty::swap(cParty& other) {
 	memcpy(temp_setup, setup, sizeof(setup));
 	memcpy(setup, other.setup, sizeof(setup));
 	memcpy(other.setup, temp_setup, sizeof(setup));
+	// Fixup the references of PCs to their party
+	for(size_t i = 0; i < adven.size(); i++) {
+		adven[i]->join_party(*this);
+	}
+	for(size_t i = 0; i < other.adven.size(); i++) {
+		other.adven[i]->join_party(other);
+	}
 }
 
 void cParty::import_legacy(legacy::party_record_type& old, cUniverse& univ){
@@ -751,7 +758,7 @@ void cParty::writeTo(std::ostream& file, const cScenario& scen) const {
 					file << "CAMPAIGN " << campaign_id << ' ' << i << ' ' << j << ' ' << unsigned(iter->second.idx[i][j]) << '\n';
 	}
 	file << '\f';
-	for(int i = 0; i < 30; i++){
+	for(int i = 0; i < boats.size(); i++){
 		if(boats[i].exists) {
 			file << "BOAT " << i << '\n';
 			boats[i].writeTo(file);
@@ -759,7 +766,7 @@ void cParty::writeTo(std::ostream& file, const cScenario& scen) const {
 		}
 	}
 	file << '\f';
-	for(int i = 0; i < 30; i++){
+	for(int i = 0; i < horses.size(); i++){
 		if(horses[i].exists) {
 			file << "HORSE " << i << '\n';
 			horses[i].writeTo(file);
@@ -768,7 +775,7 @@ void cParty::writeTo(std::ostream& file, const cScenario& scen) const {
 	}
 	file << '\f';
 	for(auto& p : magic_store_items) {
-		for(int j = 0; j < 10; j++)
+		for(int j = 0; j < p.second.size(); j++)
 			if(p.second[j].variety != eItemType::NO_ITEM){
 				file << "MAGICSTORE " << p.first << ' ' << j << '\n';
 				p.second[j].writeTo(file);
@@ -783,7 +790,7 @@ void cParty::writeTo(std::ostream& file, const cScenario& scen) const {
 			file << "JOB " << j << ' ' << job_banks[i].jobs[j] << '\n';
 	}
 	file << '\f';
-	for(int i = 0; i < 10; i++)
+	for(int i = 0; i < out_c.size(); i++)
 		if(out_c[i].exists){
 			file << "ENCOUNTER " << i << "\n";
 			file << "DIRECTION " << out_c[i].direction << '\n';
@@ -809,7 +816,7 @@ void cParty::writeTo(std::ostream& file, const cScenario& scen) const {
 			}
 		}
 	file << '\f';
-	for(int i = 0; i < 3; i++)
+	for(int i = 0; i < stored_items.size(); i++)
 		for(size_t j = 0; j < stored_items[i].size(); j++)
 			if(stored_items[i][j].variety != eItemType::NO_ITEM){
 				file << "STORED " << i << ' ' << j << '\n';
@@ -1235,7 +1242,7 @@ iLiving& cParty::pc_present() const {
 
 // stuff done legit, i.e. flags are within proper ranges for stuff done flag
 bool cParty::sd_legit(short a, short b) {
-	if((minmax(0,349,a) == a) && (minmax(0,49,b) == b))
+	if((minmax(0,sdx_max,a) == a) && (minmax(0,sdy_max,b) == b))
 		return true;
 	return false;
 }

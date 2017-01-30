@@ -5,6 +5,7 @@ set SolutionDir=%1
 set Config=%2
 set VCDir=%~f3
 
+
 set ResourceDir=%SolutionDir%%Config%\..\..\..\rsrc
 set TargetDir=%SolutionDir%%Config%
 set DllSrcDir=%VCDir%bin
@@ -32,11 +33,17 @@ xcopy %ResourceDir%\strings\*.txt %TargetDir%\data\strings /s /y /i /d
 xcopy %ResourceDir%\..\src\tools\mask.* %TargetDir%\data\shaders /s /y /i /d
 
 @echo Copying base scenarios...
-xcopy %ResourceDir%\"Blades of Exile Bases" %TargetDir%\"Blades of Exile Base" /s /y /i /d
+cd %ResourceDir%\bases
+call %ResourceDir%\..\pkg\win\build-scen.bat bladbase bladbase.boes
+xcopy %ResourceDir%\bases\*.boes %TargetDir%\"Blades of Exile Base" /s /y /i /d
 
 @echo Copying scenario files...
-xcopy %ResourceDir%\"Blades of Exile Scenarios"\*.exs %TargetDir%\"Blades of Exile Scenarios" /s /y /i /d
-xcopy %ResourceDir%\"Blades of Exile Scenarios"\*.bmp %TargetDir%\"Blades of Exile Scenarios" /s /y /i /d
+cd %ResourceDir%\scenarios
+call %ResourceDir%\..\pkg\win\build-scen.bat busywork busywork.boes
+call %ResourceDir%\..\pkg\win\build-scen.bat valleydy valleydy.boes
+call %ResourceDir%\..\pkg\win\build-scen.bat stealth stealth.boes
+call %ResourceDir%\..\pkg\win\build-scen.bat zakhazi zakhazi.boes
+xcopy %ResourceDir%\scenarios\*.boes %TargetDir%\"Blades of Exile Scenarios" /s /y /i /d
 
 @echo Copying required DLLs...
 if %Config% == "Debug" (

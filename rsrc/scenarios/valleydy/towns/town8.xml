@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Storage Level</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="0" bottom="47" right="47" />
+    <difficulty>4</difficulty>
+    <lighting>dark</lighting>
+    <flags />
+    <item id="0">
+        <type>51</type>
+    </item>
+    <item id="1">
+        <type>41</type>
+    </item>
+    <item id="2">
+        <type>23</type>
+    </item>
+    <item id="3">
+        <type>23</type>
+        <contained>true</contained>
+    </item>
+    <item id="4">
+        <type>23</type>
+        <contained>true</contained>
+    </item>
+    <item id="5">
+        <type>20</type>
+        <contained>true</contained>
+    </item>
+    <item id="6">
+        <type>385</type>
+        <charges>5</charges>
+    </item>
+    <item id="7">
+        <type>385</type>
+        <charges>5</charges>
+    </item>
+    <item id="8">
+        <type>385</type>
+        <charges>5</charges>
+    </item>
+    <item id="9">
+        <type>385</type>
+        <charges>5</charges>
+    </item>
+    <item id="10">
+        <type>386</type>
+        <charges>4</charges>
+    </item>
+    <item id="11">
+        <type>386</type>
+        <charges>4</charges>
+    </item>
+    <item id="12">
+        <type>386</type>
+        <charges>4</charges>
+    </item>
+    <item id="13">
+        <type>386</type>
+        <charges>4</charges>
+    </item>
+    <item id="14">
+        <type>386</type>
+        <charges>4</charges>
+    </item>
+    <item id="15">
+        <type>17</type>
+    </item>
+    <item id="16">
+        <type>18</type>
+    </item>
+    <item id="17">
+        <type>197</type>
+    </item>
+    <item id="18">
+        <type>365</type>
+    </item>
+    <item id="19">
+        <type>365</type>
+    </item>
+    <item id="20">
+        <type>366</type>
+    </item>
+    <item id="21">
+        <type>367</type>
+    </item>
+    <item id="22">
+        <type>368</type>
+    </item>
+    <item id="23">
+        <type>8</type>
+    </item>
+    <item id="24">
+        <type>8</type>
+    </item>
+    <item id="25">
+        <type>8</type>
+    </item>
+    <item id="26">
+        <type>8</type>
+    </item>
+    <item id="27">
+        <type>51</type>
+    </item>
+    <item id="28">
+        <type>51</type>
+    </item>
+    <item id="29">
+        <type>51</type>
+    </item>
+    <item id="30">
+        <type>51</type>
+    </item>
+    <item id="31">
+        <type>77</type>
+    </item>
+    <item id="32">
+        <type>260</type>
+    </item>
+    <item id="33">
+        <type>369</type>
+    </item>
+    <item id="34">
+        <type>21</type>
+    </item>
+    <item id="35">
+        <type>23</type>
+    </item>
+    <item id="36">
+        <type>31</type>
+    </item>
+    <item id="37">
+        <type>385</type>
+        <charges>5</charges>
+    </item>
+    <item id="38">
+        <type>386</type>
+        <charges>5</charges>
+    </item>
+    <item id="39">
+        <type>23</type>
+    </item>
+    <item id="40">
+        <type>169</type>
+    </item>
+    <item id="41">
+        <type>100</type>
+        <charges>2</charges>
+    </item>
+    <item id="42">
+        <type>176</type>
+        <contained>true</contained>
+    </item>
+    <item id="43">
+        <type>177</type>
+        <contained>true</contained>
+    </item>
+    <item id="44">
+        <type>177</type>
+    </item>
+    <item id="45">
+        <type>177</type>
+    </item>
+    <item id="46">
+        <type>177</type>
+    </item>
+    <creature id="0">
+        <type>113</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="1">
+        <type>113</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="2">
+        <type>113</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="3">
+        <type>113</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="4">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="5">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="6">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="7">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="8">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="9">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="10">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="11">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="12">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="13">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="14">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="15">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="16">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="17">
+        <type>131</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="18">
+        <type>131</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="19">
+        <type>131</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="20">
+        <type>131</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="21">
+        <type>131</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="22">
+        <type>131</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="23">
+        <type>131</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="24">
+        <type>131</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="25">
+        <type>131</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="26">
+        <type>131</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="27">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="28">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="29">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="30">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="31">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="32">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="33">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="34">
+        <type>130</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="35">
+        <type>177</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>80</personality>
+        <face>22</face>
+        <sdf x="7" y="5" />
+    </creature>
+    <creature id="36">
+        <type>67</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="37">
+        <type>67</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="38">
+        <type>67</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="39">
+        <type>67</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <area top="1" left="18" bottom="11" right="21">Larvae Chambers</area>
+    <area top="6" left="11" bottom="11" right="17">Larvae Chambers</area>
+    <area top="20" left="27" bottom="24" right="38">Meat Locker</area>
+    <area top="1" left="27" bottom="18" right="46">Artificial Outdoors</area>
+    <area top="20" left="40" bottom="24" right="46">Slaughtering Room</area>
+    <area top="34" left="6" bottom="41" right="15">Prison of Pythras</area>
+    <area top="29" left="1" bottom="46" right="20">Huge Holding Cell</area>
+    <area top="1" left="1" bottom="24" right="20">School Storage Rooms</area>
+    <area top="26" left="27" bottom="46" right="46">Halls of Records</area>
+    <area top="23" left="22" bottom="29" right="25">By Husks of Goblins</area>
+    <sign id="0">
+        <![CDATA[STOREROOMS]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[MEAT LOCKER]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[MOBILE MEAT STORAGE]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[Slaughtering Room]]>
+    </sign>
+    <sign id="4">
+        <![CDATA[HIGH SECURITY CREATURE HOLDING CELL|DO NOT PROCEED WITHOUT PROTECTION!|UNAUTHORIZED ENTRY FORBIDDEN!]]>
+    </sign>
+    <sign id="5">
+        <![CDATA[Halls of Records]]>
+    </sign>
+    <sign id="6">
+        <![CDATA[Form Storage]]>
+    </sign>
+    <sign id="7">
+        <![CDATA[Student Records]]>
+    </sign>
+    <sign id="8">
+        <![CDATA[Spellbooks]]>
+    </sign>
+    <sign id="9">
+        <![CDATA[Faculty Records]]>
+    </sign>
+    <sign id="10">
+        <![CDATA[Historical Import]]>
+    </sign>
+    <sign id="11">
+        <![CDATA[School Archives/Indexing]]>
+    </sign>
+    <string id="0">
+        <![CDATA[The words "Sign in before seeing specimen." are carved into the pedestal. The sign-in book, however, is long absent.]]>
+    </string>
+    <string id="1">
+        <![CDATA[The floor of the corridor ahead is covered with strange weblike husks, each about 3 feet long. When you get closer, you see what they are: the bodies of goblins, each wrapped in webs and sucked dry.]]>
+    </string>
+    <string id="2">
+        <![CDATA[Some sort of magic keeps this chamber freezing cold, and, remarkably, the spell is still functioning many years after the school closed. You see many chunks of frozen, old meat.]]>
+    </string>
+    <string id="3">
+        <![CDATA[The School of Magery is filled with all manner of fascinating, long-lasting magical devices, and this thing is no exception. It's a machine for making chickens. Looking through a small window, you see rows of eggs waiting to hatch.]]>
+    </string>
+    <string id="4">
+        <![CDATA[You can't be sure where the eggs came from. The chickens hatched from the machine probably provide them - the machine has a pair of ominous mechanical arms, which probably occasionally grab a passing fowl.]]>
+    </string>
+    <string id="5">
+        <![CDATA[Any Empire organization generates an awful lot of paperwork, and the School was clearly no exception. Looking through this opening, you see room after room filled with bookshelves, no doubt for storing all manner of forms and bureaucratic mumbo-jumbo.]]>
+    </string>
+    <string id="6">
+        <![CDATA[Strangely, considering all the creatures that roam loose in the School, these chambers have been left completely undisturbed.]]>
+    </string>
+    <string id="7">
+        <![CDATA[As you walk down the corridor, your minds are suddenly attacked. One moment, nothing unusual is happening, The next, you feel a weighty presence floating in and out of your minds.]]>
+    </string>
+    <string id="8">
+        <![CDATA[As you struggle to concentrate and repel the presence, it suddenly decides to withdraw. As you feel it go, it leaves you a message, written neatly in among your memories. It says, simply:]]>
+    </string>
+    <string id="9">
+        <![CDATA["I am Pythras. I am imprisoned nearby. Come to me. I will help you."]]>
+    </string>
+    <string id="10">
+        <![CDATA[Pythras also left an image of herself in your minds. You recognize what she is immediately. She's a dragon.]]>
+    </string>
+    <string id="13">
+        <![CDATA[You are walking down a wide passage circling a massive basalt dome. Whatever the School liked to store inside here, they were determined to make sure it didn't escape. The floor just ahead has two runes of warding etched inside it.]]>
+    </string>
+    <string id="14">
+        <![CDATA[They are glowing brightly, and putting off a fair amount of heat as well. Heavy duty magic. They're definitely here to keep something in. The only question is whether they'll keep you out as well. Do you approach?]]>
+    </string>
+    <string id="19">
+        <![CDATA[You walk over the runes. They make you quite warm, but don't hurt you in any way. Lucky break.]]>
+    </string>
+    <string id="20">
+        <![CDATA[Being a valiant adventurer does not include, in your opinion, being baked alive by some sort of bizarre magical trap. You back away. ]]>
+    </string>
+    <string id="21">
+        <![CDATA[At first, you aren't sure what this machinery does. Then, when you approach, it makes a chirpy, humming sound, and spits out several pieces of greenish, moldy meat.]]>
+    </string>
+    <string id="22">
+        <![CDATA[This must be how the dragon gets fed. You try to get it to spit out meat again, but it doesn't. The machine must not like you very much. It also doesn't like Pythras, if this meat is the only thing it ever feeds her.]]>
+    </string>
+    <string id="23">
+        <![CDATA[This is very interesting. This room must have contained a number of spell books. Before the School was abandoned, however, someone came here, and, with a few well placed fireballs, burned them all.]]>
+    </string>
+    <string id="24">
+        <![CDATA[Considering the amount of ash and charred paper here, it must have been quite a library. You look over the wreckage, stunned by the sheer waste of it, and can only wonder who would do such a thing.]]>
+    </string>
+    <string id="25">
+        <![CDATA[What luck! Among the endless rows of meaningless, rotting paperwork, you find a spell book, which must have been misfiled. You flip through it for a bit. It's very well written - you don't have any trouble understanding it.]]>
+    </string>
+    <string id="26">
+        <![CDATA[Soon, you've committed the arcane instructions to memory. You now know the spell Wall of Ice.]]>
+    </string>
+    <string id="27">
+        <![CDATA[When you examine this bookshelf, you notice that it's leaning away from the wall slightly. Curious, you pull on it, and find that it swings away from the wall.]]>
+    </string>
+    <string id="28">
+        <![CDATA[Bookworms have had their way with the books on this shelf. Most of them crumble at your touch. One book, however, remains in good condition. It's a heavy tome, bound in black leather and brass fittings.]]>
+    </string>
+    <string id="29">
+        <![CDATA[You reach out to get it, hoping to examine it, and find it's icy cold to the touch. If you were careful, you could read it without freezing your fingers, but only if you wanted to ...]]>
+    </string>
+    <string id="34">
+        <![CDATA[You flip through the pages of the frigid book, only to find that the magical script inside is far beyond your understanding. In fact, even attempting to read it warps and twists your minds.]]>
+    </string>
+    <string id="35">
+        <![CDATA[You quickly close the book and put it back before it does you too much harm.]]>
+    </string>
+    <string id="36">
+        <![CDATA[The book contains various spells for the creation and manipulation of cold. You try to etch the runes into your memory. Most of the rituals are beyond your ability, but one isn't. You can now cast Ice Bolt.]]>
+    </string>
+    <string id="37">
+        <![CDATA[Wedged between to moldering tomes, you find a note, which seems to have never reached its addressee: "Pergaltho - Vinnia plans something. I know not what. She means us no good, though."]]>
+    </string>
+    <string id="38">
+        <![CDATA["Desperate times, my friend. I have done my best in Master Control to make sure disaster can avoided. We can only hope someone makes it down there, before disaster strikes. - Palhatis."]]>
+    </string>
+    <string id="39">
+        <![CDATA[The mystery of who has been protecting the bookshelves has been solved. Several insubstantial beings with very substantial claws have flowed out of the walls. One is in front of you. The rest are behind.]]>
+    </string>
+    <string id="40">
+        <![CDATA[Alas, you don't think they want to be friends.]]>
+    </string>
+    <string id="41">
+        <![CDATA[You find a detailed fresco set into the wall, providing a crude map of this level. It's divided into four quarters, each devoted to storing a different thing.]]>
+    </string>
+    <string id="42">
+        <![CDATA[The northwest corner is for dry goods. The northeast corner is for "live meat products." The southeast is dedicated to books and paperwork. Finally, the southwest corner is left intriguingly, ominously blank.]]>
+    </string>
+    <string id="47">
+        <![CDATA[Once, these pedestals bore books containing detailed catalogs of all the items stored in this area. Unfortunately, the books are gone. Chitrachs ate them.]]>
+    </string>
+    <string id="48">
+        <![CDATA[This enormous holding area has grown cold and quiet since you were last here. Pythras obviously lost no time in escaping. She certainly didn't stay behind to give you any thanks.]]>
+    </string>
+</town>

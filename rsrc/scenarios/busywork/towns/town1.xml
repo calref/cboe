@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>32</size>
+    <name>Abandoned Shack</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="3" bottom="28" right="28" />
+    <difficulty>0</difficulty>
+    <lighting>lit</lighting>
+    <flags>
+        <tavern>true</tavern>
+    </flags>
+    <item id="0">
+        <type>21</type>
+    </item>
+    <item id="1">
+        <type>21</type>
+    </item>
+    <item id="2">
+        <type>22</type>
+    </item>
+    <item id="3">
+        <type>19</type>
+    </item>
+    <item id="4">
+        <type>19</type>
+        <contained>true</contained>
+    </item>
+    <item id="5">
+        <type>19</type>
+    </item>
+    <item id="6">
+        <type>19</type>
+        <contained>true</contained>
+    </item>
+    <item id="7">
+        <type>22</type>
+        <contained>true</contained>
+    </item>
+    <item id="8">
+        <type>22</type>
+    </item>
+    <item id="9">
+        <type>22</type>
+    </item>
+    <item id="10">
+        <type>22</type>
+    </item>
+    <item id="11">
+        <type>20</type>
+    </item>
+    <item id="12">
+        <type>104</type>
+        <contained>true</contained>
+    </item>
+    <item id="13">
+        <type>1</type>
+        <charges>4</charges>
+        <contained>true</contained>
+    </item>
+    <item id="14">
+        <type>2</type>
+        <charges>25</charges>
+    </item>
+    <item id="15">
+        <type>37</type>
+    </item>
+    <item id="16">
+        <type>21</type>
+    </item>
+    <item id="17">
+        <type>18</type>
+    </item>
+    <item id="18">
+        <type>98</type>
+        <contained>true</contained>
+    </item>
+    <item id="19">
+        <type>45</type>
+    </item>
+    <item id="20">
+        <type>22</type>
+    </item>
+    <item id="21">
+        <type>19</type>
+    </item>
+    <string id="0">
+        <![CDATA[Sure, the bed in this shack is old and moldy, and the blankets are filthy. It's still much, much better (and more secure) than sleeping outside on the ground. Do you rest for a while?]]>
+    </string>
+    <string id="6">
+        <![CDATA[Sure, it's filthy, smelly, and cold, but, for now, it's home. You manage to sleep for a little while and recover some of your energy.]]>
+    </string>
+    <string id="7">
+        <![CDATA[You aren't sure who left this abandoned home, but, as you leave, you mutter a silent thanks to your unknown benefactors. It was, after all, infinitely preferable to sleeping out in the rain.]]>
+    </string>
+</town>

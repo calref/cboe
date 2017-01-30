@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Za-Khazi Run, South</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>48</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>50</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <encounter can-flee="false" force="true">
+        <monster>47</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>48</monster>
+        <monster>0</monster>
+        <monster>52</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>11</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>48</monster>
+        <monster>47</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="false" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>133</monster>
+        <monster>0</monster>
+        <monster>134</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <sign id="0">
+        <![CDATA[(The obelisk looks like it was molded from rock after it was made soft by some sort of incredible heat. There are no markings on it.)]]>
+    </sign>
+    <string id="0">
+        <![CDATA[You see a small group of slithzerikai. They see you. As you size each other up, you wonder if these are friendly or hostile sliths. You aren't kept in suspense for long.]]>
+    </string>
+    <string id="1">
+        <![CDATA[This cave is guarded by a band of about a dozen slithzerikai. In the dim green light of the caves, they manage to spot you from about a thousand feet away. However, instead of attacking, they immediately flee.]]>
+    </string>
+    <string id="2">
+        <![CDATA[You're a tough band, but you didn't think you looked that fearsome. You wonder where they went.]]>
+    </string>
+    <string id="3">
+        <![CDATA[The slith fortress has finally been cleaned out. You don't find much of anything to loot, unfortunately, all of the slith's possessions were carried with them.]]>
+    </string>
+    <string id="4">
+        <![CDATA[You have returned to the entrance of the Slithzerikai lair. Again, there are no guards outside, but you can hear the muttering of the creatures inside. Do you assault them again?]]>
+    </string>
+    <string id="10">
+        <![CDATA[Battling sliths, while admirable, isn't part of your mission. You back away.]]>
+    </string>
+    <string id="11">
+        <![CDATA[You charge into the slith lair, surprising a band of the reptilian creatures. Amazingly, they seem to have thought you wouldn't dare attack them again. They underestimated how persistent adventurers can be.]]>
+    </string>
+    <string id="12">
+        <![CDATA[There's quite a lot of them, however, and their surprise doesn't last for long. They grab their wicked, two-tined spears, and attack.]]>
+    </string>
+    <string id="13">
+        <![CDATA[This pit was probably where the sliths you saw earlier fled. It's a narrow tunnel sloping steeply down into the ground. You see several totems and crude sculptures nearby, which look like they were created by the lizard people.]]>
+    </string>
+    <string id="14">
+        <![CDATA[Listening at the cave entrance, you hear alert, sibilant voices inside.]]>
+    </string>
+    <string id="19">
+        <![CDATA[The tunnel leads to a wide, low cave, which is filled with dozens of Slithzerikai. A band of them immediately charge you, pushing you back out of their outpost with muscular, scaled arms.]]>
+    </string>
+    <string id="20">
+        <![CDATA[Once outside the cave, they attack you. Fortunately, so far the sliths have deemed only a small part of their number adequate to deal with you.]]>
+    </string>
+    <string id="21">
+        <![CDATA[Many of the sliths had large, leather satchels slung over their shoulders. Looking inside, you find that this outpost carries most of its supplies on its back. You find a ration-free supply of dried fish, mushrooms, and other tasty goodies.]]>
+    </string>
+    <string id="22">
+        <![CDATA[The leader also wore a bone necklace, with several semi-precious stones. You take it with you. It might be valuable.]]>
+    </string>
+    <string id="23">
+        <![CDATA[The corridor dead ends at a large pile of gray, chalky looking stones. You poke around in them, but you don't find anything of interest.]]>
+    </string>
+    <string id="24">
+        <![CDATA[At the end of this passage, you find the pile of gray, chalky stones Aleel told you about. Digging in the pile, you find 3 stones with just the right shade of mottled gray. They're large and heavy, but you manage to fit them into your packs.]]>
+    </string>
+    <string id="25">
+        <![CDATA[There are moldy stones jumbled all throughout this isolated cave. Most of them are dull. Worthless. Gray. One small rock, however, is rounded and glitters slightly. ]]>
+    </string>
+    <string id="26">
+        <![CDATA[You poke it gingerly with your finger and find that it's warm to the touch. Could be interesting.]]>
+    </string>
+    <string id="31">
+        <![CDATA[You find a small patch of holly!]]>
+    </string>
+    <string id="32">
+        <![CDATA[You find a small patch of comfrey root!]]>
+    </string>
+</sector>

@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Cavala</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="3" bottom="44" right="44" />
+    <difficulty>0</difficulty>
+    <lighting>lit</lighting>
+    <onenter condition="alive">2</onenter>
+    <onenter condition="dead">2</onenter>
+    <flags />
+    <item id="0">
+        <type>9</type>
+    </item>
+    <item id="1">
+        <type>9</type>
+    </item>
+    <item id="2">
+        <type>9</type>
+    </item>
+    <item id="3">
+        <type>43</type>
+    </item>
+    <item id="4">
+        <type>14</type>
+    </item>
+    <item id="5">
+        <type>14</type>
+    </item>
+    <item id="6">
+        <type>14</type>
+    </item>
+    <item id="7">
+        <type>14</type>
+    </item>
+    <item id="8">
+        <type>383</type>
+        <property>true</property>
+    </item>
+    <item id="9">
+        <type>383</type>
+        <property>true</property>
+    </item>
+    <item id="10">
+        <type>383</type>
+        <property>true</property>
+    </item>
+    <item id="11">
+        <type>383</type>
+        <property>true</property>
+    </item>
+    <item id="12">
+        <type>383</type>
+        <property>true</property>
+    </item>
+    <item id="13">
+        <type>383</type>
+        <property>true</property>
+    </item>
+    <item id="14">
+        <type>383</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="15">
+        <type>25</type>
+        <charges>10</charges>
+        <contained>true</contained>
+    </item>
+    <item id="16">
+        <type>3</type>
+        <charges>10</charges>
+        <always>true</always>
+    </item>
+    <item id="17">
+        <type>20</type>
+    </item>
+    <item id="18">
+        <type>21</type>
+        <contained>true</contained>
+    </item>
+    <item id="19">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="20">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="21">
+        <type>196</type>
+        <property>true</property>
+    </item>
+    <item id="22">
+        <type>59</type>
+        <property>true</property>
+    </item>
+    <item id="23">
+        <type>223</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="24">
+        <type>223</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="25">
+        <type>223</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="26">
+        <type>23</type>
+        <contained>true</contained>
+    </item>
+    <item id="27">
+        <type>107</type>
+        <property>true</property>
+    </item>
+    <item id="28">
+        <type>13</type>
+    </item>
+    <item id="29">
+        <type>2</type>
+        <charges>6</charges>
+    </item>
+    <item id="30">
+        <type>35</type>
+        <property>true</property>
+    </item>
+    <creature id="0">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="1">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="2">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="3">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="4">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="5">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="6">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="7">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="8">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="9">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="10">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="11">
+        <type>188</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>2</personality>
+        <face>80</face>
+        <sdf x="0" y="4" />
+    </creature>
+    <creature id="12">
+        <type>33</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>29</face>
+    </creature>
+    <creature id="13">
+        <type>28</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>1</personality>
+        <face>16</face>
+    </creature>
+    <creature id="14">
+        <type>6</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>3</personality>
+        <face>17</face>
+    </creature>
+    <creature id="15">
+        <type>1</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>0</face>
+    </creature>
+    <creature id="16">
+        <type>8</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>56</face>
+    </creature>
+    <area top="8" left="10" bottom="26" right="17">Ilona&apos;s Offices &amp; Barracks</area>
+    <area top="17" left="27" bottom="21" right="31">Cameron&apos;s Smithy</area>
+    <area top="17" left="33" bottom="21" right="40">Cameron&apos;s Quarters</area>
+    <area top="10" left="29" bottom="12" right="34">Dusty Temple</area>
+    <area top="31" left="9" bottom="37" right="17">Cavala Barracks</area>
+    <area top="26" left="27" bottom="33" right="31">City Hall</area>
+    <area top="26" left="32" bottom="28" right="36">City Hall</area>
+    <sign id="0">
+        <![CDATA[Caravan Quarters]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[Storage And Processing|No Entry Without Permission!]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[CAVALA BARRACKS]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[Visitor's Quarters]]>
+    </sign>
+    <sign id="4">
+        <![CDATA[CITY HALL]]>
+    </sign>
+    <sign id="5">
+        <![CDATA[Cameron's Smithy]]>
+    </sign>
+    <sign id="6">
+        <![CDATA[Sourgrass Processing I]]>
+    </sign>
+    <sign id="7">
+        <![CDATA[Sourgrass Processing II]]>
+    </sign>
+    <sign id="9">
+        <![CDATA[Sourgrass Processing II]]>
+    </sign>
+    <string id="0">
+        <![CDATA[The mayor of Cavala has been kind enough to set a bedroom in the barracks aside for you. When you need to rest, you can always return here.]]>
+    </string>
+    <string id="6">
+        <![CDATA[The beds are soft and comfortable, and the barracks are kept nice and warm. You have a pleasant, restful sleep.]]>
+    </string>
+    <string id="7">
+        <![CDATA[You finally arrive at the remote village of Cavala. Cavala is a very young town, based on the harvest of Sourgrass. Sourgrass is a rare, wiry plant, which can be boiled down to make Hrras juice, a nasty, bitter fluid known for its healing properties.]]>
+    </string>
+    <string id="8">
+        <![CDATA[Cavala grew quickly, at first. Then the bandits came. Overnight, a peaceful, properous town became a beseiged colony, on the brink of collapse. To the southwest, you see that they're starting to build a wall, meagre protection from the bandits outside.]]>
+    </string>
+    <string id="9">
+        <![CDATA[Your arrival creates quite a stir among the town's sparse population. Once they see that you aren't bandits, hope appears on their startled faces. Help has finally arrived ...]]>
+    </string>
+    <string id="13">
+        <![CDATA[It's the same old routine. An alarm goes off. The guards come running in. Mayor Leondardo comes soon after, giving you a look both annoyed and disappointed.]]>
+    </string>
+    <string id="14">
+        <![CDATA[You're warned not to search private property without permission again, and the guards leave.]]>
+    </string>
+    <string id="15">
+        <![CDATA[As you walk down the corridor, an alarm sounds, the same sort of alarm that went off last time. Once again, guards come running almost immediately. The grab you.]]>
+    </string>
+    <string id="16">
+        <![CDATA[Not long after, Mayor Leonardo walks in, looking extremely peeved. "Not again," he says. "Did I not tell you that we don't like strangers peeking into our private homes?"]]>
+    </string>
+    <string id="17">
+        <![CDATA["Release them," he says to the guards. "We appreictae your help, but you still have to live by our rules. Stay out of our private areas." He leaves, with the guards following behind.]]>
+    </string>
+    <string id="21">
+        <![CDATA[As you walk down the corridor, a loud alarm rings out! You freeze, pull your weapons, and get ready to be attacked.]]>
+    </string>
+    <string id="22">
+        <![CDATA[Soon after, guards come running in, led by Mayor Leonardo. When they see you, they relax. A few of them laugh. The Mayor, looking visibly relieved, says "Oh, it's you. We were afraid it was the bandits."]]>
+    </string>
+    <string id="23">
+        <![CDATA["While we appreciate your help in this unpleasant manner, we can't allow strangers to go poking around in our private quarters. Please respect us in this." Having said this, he leads the guards away.]]>
+    </string>
+    <string id="27">
+        <![CDATA[On the wall behind the potted plant, you find a small red button. It's pretty small ... you were lucky to notice it. You wonder what it does.]]>
+    </string>
+    <string id="33">
+        <![CDATA[The button is very quiet. It doesn't make any noise when you push it. It also doesn't seem to do anything. It probably had some effect somewhere, but you have no idea what.]]>
+    </string>
+    <string id="34">
+        <![CDATA[As you leave Ilona's offices, you see a half dozen guards leaving Cameron's smithy. At first, you think they might have captured him. Then you see that they look extremely disappointed.]]>
+    </string>
+    <string id="35">
+        <![CDATA[He probably got away, but you might still be able to find some useful evidence that was left behind.]]>
+    </string>
+    <string id="36">
+        <![CDATA[As you enter Cameron's smithy, a guard walks up to you. "We weren't fast enough," she says. "He ran off into the woods before we were able to catch him. He was helping the bandits all along."]]>
+    </string>
+    <string id="37">
+        <![CDATA["There was a locked up room in there. We knocked the door down. There's some stuff in there which might interest you. Be sure to look with." With that said, she walks off.]]>
+    </string>
+    <string id="42">
+        <![CDATA[Cameron emptied out this small chest before he fled. There's nothing left. No gold, no maps. However, behind the chest, you find something interesting. It's a map! Somehow, it fell back there. ]]>
+    </string>
+    <string id="43">
+        <![CDATA[The map is exactly what you were looking for. It shows, in a small side valley not far to the south, a concealed cave, marked "Hideout." Using the map, you will be able to find the bandit's lair.]]>
+    </string>
+    <string id="44">
+        <![CDATA[The books on these shelves contain records of the Sourgrass harvests and ledgers listing the number of bottles of Hrras juice made and sold. There's also descriptions of the caravans lost to bandits.]]>
+    </string>
+    <string id="45">
+        <![CDATA[You look through these records for a while, but you're unable to find anything which helps you uncover the hiding place of the bandits.]]>
+    </string>
+    <string id="46">
+        <![CDATA[This shrine is provided for the use of merchants and caravan workers. Unfortunately, it's unused and poorly tended. Dust covers everything.]]>
+    </string>
+    <string id="47">
+        <![CDATA["No more need! The bandit problem has been solved! Many thanks. When you leave the valley, I'm sure you will be given a great reward."]]>
+    </string>
+    <string id="48">
+        <![CDATA[Leonardo struggle to keep his fury from overwhelming him. "Cameron! It was Cameron all along! Be sure to search his home well. You may yet find the secrets to the bandit's location."]]>
+    </string>
+    <string id="49">
+        <![CDATA["Then find him, and punish him! Make him drown in his own blood, for all I care!"]]>
+    </string>
+    <string id="50">
+        <![CDATA[On a hunch, you show Leonardo the runed plate you found in Cameron's basement. He looks at it carefully. "That looks familiar. Can't quite place it, though." He snaps his fingers. "Wait! That's Ilona's!"]]>
+    </string>
+    <string id="51">
+        <![CDATA["Take it to her, and ask about the runed plate. She can tell you about it!"]]>
+    </string>
+    <string id="52">
+        <![CDATA["Thank you for returning my plate. Curse that Cameron!"]]>
+    </string>
+    <string id="53">
+        <![CDATA["Did you own a plate with runes on it," you ask. "Why, yes. It was a family heirloom. I sent it out with a caravan, but it was stolen in a bandit raid."]]>
+    </string>
+    <string id="54">
+        <![CDATA[You hand her the plate you found. "Is this the plate?" When she sees it, she smiles, then looks confused, then looks angry.]]>
+    </string>
+    <string id="55">
+        <![CDATA["Where did you find this?" You tell her. "Cameron's basement? Why, that means ... that means ... Cameron must be involved in the thefts!" She jumps up and runs out the door, shouting an alarm.]]>
+    </string>
+    <string id="59">
+        <![CDATA[After a few minutes, she returns. "Even now, guards are swarming over Cameron's home." She grins wickedly. "Soon, we'll be able to question him and find out how he found my plate."]]>
+    </string>
+    <string id="60">
+        <![CDATA["Oh, and thanks for returning it to me."]]>
+    </string>
+    <string id="61">
+        <![CDATA[You meet Mayor Leonardo again and tell him of your victory over the bandits. To say he is overjoyed would be a dramatic understatement. He calls in guards to tell the news, and they soon spread it around town.]]>
+    </string>
+    <string id="62">
+        <![CDATA[Leonardo turns to you and says "You have done well. Thanks to you, our village has a chance to grow and prosper once again."]]>
+    </string>
+    <string id="63">
+        <![CDATA["I have received a letter from the city of Krizsan. They tell me that, when you return, if you have completed your mission, you will be amply rewarded. I will send word ahead of you that that reward was well-earned."]]>
+    </string>
+    <string id="64">
+        <![CDATA["Thank you again, and good luck to you in your travels."]]>
+    </string>
+</town>

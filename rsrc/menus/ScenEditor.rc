@@ -102,8 +102,6 @@ BEGIN
         MENUITEM "  &Import Town",              IDM_SCEN_ADV_IMPORT_TOWN
         MENUITEM "  Import Outdoor Sector",     IDM_SCEN_ADV_IMPORT_OUT
         MENUITEM "  Edit Saved Item &Rectangles", IDM_SCEN_ADV_SAVE_RECTS
-        MENUITEM "  Edit &Horses",              IDM_SCEN_ADV_HORSES
-        MENUITEM "  Edit &Boats",               IDM_SCEN_ADV_BOATS
         MENUITEM "  Set &Variable Town Entry",  IDM_SCEN_ADV_TOWN_VARY
         MENUITEM "  Set Scenario &Event Timers", IDM_SCEN_ADV_EVENTS
         MENUITEM "  Edit Item &Placement Shortcuts", IDM_SCEN_ADV_SHORTCUTS

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="20">
+        <title>Masskriss</title>
+        <look>
+            <![CDATA[This massive male slith stares at you impassively, with dark reptilian eyes. He seems ready to attack you at a moment's notice.]]>
+        </look>
+        <name>
+            <![CDATA["I am Masskriss, of Assikvas."]]>
+        </name>
+        <job>
+            <![CDATA["Thisss Assikvas." His grasp of your tongue seems poor. "To pass our river, you mussst us payment givesss. Only then give you secrets of river."]]>
+        </job>
+        <unknown>
+            <![CDATA[He looks confused. "What isss you sssay?"]]>
+        </unknown>
+    </personality>
+    <personality id="21">
+        <title>Sssah</title>
+        <look>
+            <![CDATA[This female Slithzerikai has the pale, dry scales of an older member of the race, and the markings and necklaces of a priest or other elder. She watches you intently, seemingly fascinated by you.]]>
+        </look>
+        <name>
+            <![CDATA["I am Sssah, of Assikvas."]]>
+        </name>
+        <job>
+            <![CDATA[Her grammar is poor, and she has to struggle to be understood. "I here gold give for you passage. I humans meet glad."]]>
+        </job>
+        <unknown>
+            <![CDATA["What wasss that?"]]>
+        </unknown>
+    </personality>
+    <personality id="22">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="23">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="24">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="25">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="26">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="27">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="28">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="29">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="20">
+        <keyword>secr</keyword>
+        <keyword>rive</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Riversss to north block with sharp ssstones. We mussst get paymentsss before you may passss."]]>
+        </text>
+    </node>
+    <node for="20">
+        <keyword>assi</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Assikvas be our city home. We not like slithsss who mussst warfare with humansss. We just lives here and makesss livingsss."]]>
+        </text>
+    </node>
+    <node for="20">
+        <keyword>give</keyword>
+        <keyword>paym</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We tell you secretsss of passing the river to northwessst. To get, you mussst give usss much gold. Or else you must give us good treasure which is value to usss. What will it be? Gold or treasure?"]]>
+        </text>
+    </node>
+    <node for="20">
+        <keyword>gold</keyword>
+        <keyword>xxxx</keyword>
+        <type>call-local</type>
+        <param>28</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[You already know how to pass the river to the northwest, so you don't try to pay.]]>
+        </text>
+    </node>
+    <node for="20">
+        <keyword>trea</keyword>
+        <keyword>xxxx</keyword>
+        <type>call-local</type>
+        <param>34</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[You already know how to pass the river to the northwest, so you don't try to pay.]]>
+        </text>
+    </node>
+    <node for="20">
+        <keyword>slit</keyword>
+        <keyword>warf</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We has no great love for humansss, but no great hate or greed either. We but eat fish and live and study and worship. We leave the futile warsss to othersss."]]>
+        </text>
+    </node>
+    <node for="20">
+        <keyword>stud</keyword>
+        <keyword>wors</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We sliths value knowing much, and value more the following of our many godsss, and the remembering and making statuesss of our revered ancestors." It says this with the air of one annoyed by having to say the obvious.]]>
+        </text>
+    </node>
+    <node for="21">
+        <keyword>huma</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You humans. Me glad."]]>
+        </text>
+    </node>
+    <node for="21">
+        <keyword>meet</keyword>
+        <keyword>glad</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Not meet human ever yet. You pale and soft." She concentrates, trying to come up with an appropriate word. "Interest."]]>
+        </text>
+    </node>
+    <node for="21">
+        <keyword>inte</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I have interest on you kind. No want hurt you with fists." Interesting. Ahsss doesn't have the long, sibilant s sounds you're used to hearing in slith speech.]]>
+        </text>
+    </node>
+    <node for="21">
+        <keyword>gold</keyword>
+        <keyword>pass</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Speak to Masskriss. He take gold to give knowing how to move up river to north. To help you can me sell things to get gold to give."]]>
+        </text>
+    </node>
+    <node for="21">
+        <keyword>sell</keyword>
+        <keyword>xxxx</keyword>
+        <type>sell-any</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Sssah shrewdly appraises your identified items and makes an offer on each of them.]]>
+        </text>
+    </node>
+    <node for="21">
+        <keyword>mass</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She points at the slith warrior sitting silently next to her.]]>
+        </text>
+    </node>
+</dialogue>

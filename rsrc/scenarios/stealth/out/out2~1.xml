@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Central Morrow&apos;s Isle</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>155</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>156</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>8</onwin>
+        <onflee>7</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>178</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>13</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>116</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>18</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>27</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <sign id="0">
+        <![CDATA[Fahl - 4 miles south|Buzzard - 25 miles northeast]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[WARNING: Hill Runner activity to northeast! Only go northeast with proper Empire escort!]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[EMPIRE SCUM STAY AWAY! THIS IS HILL RUNNER TERRITORY!]]>
+    </sign>
+    <area top="28" left="23" bottom="34" right="28">Clearing Around Fahl</area>
+    <area top="6" left="36" bottom="11" right="41">Near Buzzard</area>
+    <area top="1" left="26" bottom="18" right="46">Hill Runner Lands</area>
+    <string id="0">
+        <![CDATA[If it wasn't for your sharp Woodsman's senses, you never would have noticed it. There's a large path heading north into the woods, surprisingly well concealed considering its size.]]>
+    </string>
+    <string id="1">
+        <![CDATA[For creatures as large and lumbering as hill giants, this band has grown surprisingly adept at hiding its tracks. You're right on top of them before you realize you're at their camp.]]>
+    </string>
+    <string id="2">
+        <![CDATA[When you arrive, they lose no time attacking you. They don't want you getting back and sending a horde of Empire soldiers after them.]]>
+    </string>
+    <string id="7">
+        <![CDATA[You beat feet. As you run, you hear the giants run off in the other direction. Now that they've been discovered, you can bet they'll be much, much better at hiding the next time.]]>
+    </string>
+    <string id="8">
+        <![CDATA[You defeated the giants! Unfortunately, now that their bodies lie before you, you see that they were a rather pitiful band, ill fed and clothed. You only find a few hundred gold worth of trinkets and small change in their camp.]]>
+    </string>
+    <string id="9">
+        <![CDATA[You can't pity them too much, though. At least now they won't be raiding the much weaker farmers to the south.]]>
+    </string>
+    <string id="10">
+        <![CDATA[The bridge is heavily worn, and has had two ruts worn into it by the passage of many sleds. To the east, you see a thick forest. Wide swaths of wood have been cut from it, and dragged to the south to build the cities there.]]>
+    </string>
+    <string id="11">
+        <![CDATA[The guardpost by the bridge is empty, and nobody is traveling the roads. This area is the No Man's Land between the rebels to the northeast and the Empire cities to the south.]]>
+    </string>
+    <string id="12">
+        <![CDATA[You stand at the edge of the huge swath of cleared land the city of Fahl cleared out of this forest. You see stumps and trampled undergrowth for miles around, the trees cleared away to build the cities of Morrow's Isle.]]>
+    </string>
+    <string id="13">
+        <![CDATA[Even from here, you can see that all is not well in the city of Fahl. You see that two massive holes have been torn into its walls, and nobody is moving around the town.]]>
+    </string>
+    <string id="18">
+        <![CDATA[With all their heads, hydras have the keenest sense of smell of any creature in these woods. Thus, these hydras knew you were coming from a mile away. They move to greet you ...]]>
+    </string>
+    <string id="19">
+        <![CDATA[After a bit of searching, you find the hydra's nest. There's a number of gold coins, rusted weapons, and a freshly killed deer. In addition, you find a strange blade. It's razor sharp, made of good metal, and curved in a strange wavy pattern.]]>
+    </string>
+    <string id="20">
+        <![CDATA[You notice that one of the stones on the path is a slightly different color than the others. On a hunch, you turn it over, and find the words "Stone 3" carved on the underside. How odd.]]>
+    </string>
+    <string id="21">
+        <![CDATA[You climb up the steep road into the mountains, which, or so you've heard, are filled with Hill Runners and other rebels. You certainly haven't seen any.]]>
+    </string>
+    <string id="22">
+        <![CDATA[However, as you climb farther up, you start to suspect you are being closely watched. It's not surprising - you doubt anyone moves into these mountains without being instantly spotted.]]>
+    </string>
+    <string id="23">
+        <![CDATA[You have definitely been watched as you climbed. A band of rebels show themselves well above you on the hills above the path. Many have bows and arrows, others crossbows. Some stand ready to roll rocks down onto you.]]>
+    </string>
+    <string id="24">
+        <![CDATA[One of them shouts "We don't know if you're friend or foe, but you aren't welcome here. Turn back, adventurers."]]>
+    </string>
+    <string id="29">
+        <![CDATA[Rebuffed, you turn back. The rebels may have welcomed you here, but they don't trust you enough to let you near their stronghold.]]>
+    </string>
+    <string id="30">
+        <![CDATA[The rebels weren't joking. They let their arrows fly. After taking a fair amount of damage, you realize that the approach is futile, and turn back.]]>
+    </string>
+    <string id="31">
+        <![CDATA[After an hour of searching, you finally find a gate through this huge wall. Both the wall and gate are well guarded by rebels with crossbows and halberds, and between the guards and the terrain, you can see why the Empire troops don't go up here.]]>
+    </string>
+    <string id="32">
+        <![CDATA[At the gate, grim, scarred veterans let you through immediately, giving you only mild disapproving looks. You enter the lands of the Hill Runners for the first time.]]>
+    </string>
+</sector>

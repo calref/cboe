@@ -78,6 +78,9 @@ test/junk/*.xml
 test/junk/*.spec
 test/junk/*.map
 
+# Packed scenarios
+*.boes
+
 # Misc
 *~
 oldstructs.txt

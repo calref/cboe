@@ -1406,11 +1406,14 @@ static bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, short& p
 
 short pick_a_scen() {
 	using namespace std::placeholders;
+	extern fs::path scenDir;
 	// TODO: Add a button to jump to the scenarios folder
 	build_scen_headers();
 	
 	if(scen_headers.empty()) {
-		cChoiceDlog("no-scenarios").show();
+		cChoiceDlog err("no-scenarios");
+		err->getControl("path").setText(scenDir.string());
+		err.show();
 		return -1;
 	}
 	make_cursor_sword();

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Realm of Morog</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>101</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <wandering can-flee="false" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>101</monster>
+        <monster>102</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>67</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>65</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <sign id="0">
+        <![CDATA[THIS TUNNEL IS CLAIMED FOR THE EMPIRE|Anyone trying to steal what is ours will be destroyed!]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[FORTRESS OF MOROG]]>
+    </sign>
+    <area top="21" left="19" bottom="31" right="31">On Plateau</area>
+    <area top="16" left="15" bottom="35" right="35">Base of Plateau</area>
+    <string id="0">
+        <![CDATA[The entrance to this narrow valley is marked by a long row of very grisly trophies. They're dead humans. Some wear the uniforms of the Exile armor. Some are dressed like travelers. All have been hanging here for some time.]]>
+    </string>
+    <string id="1">
+        <![CDATA[A sign under one of the bodies gives you an idea of who is responsible for this crime. It reads "Death to all Exiles", and has the family seal of Emperor Hawthorne.]]>
+    </string>
+    <string id="2">
+        <![CDATA[Hawthorne was a foe of Exile before he was assassinated. That would mean that some of these totems were made decades ago. However, some of them are clearly much newer than that. Very odd.]]>
+    </string>
+    <string id="6">
+        <![CDATA[The path to the south is steep. Very steep. It slopes downward at a 45 degree angle, and then grows even steeper. Sliding down it would be no problem. However, without climbing equipment, which you lack, getting back up would be a problem.]]>
+    </string>
+    <string id="7">
+        <![CDATA[At the top of the slope, you find an abandoned campsite, and you can see another at the bottom. The campsite at the top is fresh ... someone lives near here. At least that tells you that there's probably a way to get out, should you climb down.]]>
+    </string>
+    <string id="12">
+        <![CDATA[Sure enough, you manage to get to the bottom safely. Nothing is harmed, apart from the scratches in the seat of your armor from where you needed to slide down.]]>
+    </string>
+    <string id="13">
+        <![CDATA[You try to climb back up the slope. However, without any sort of climbing equipment, there's no way you can make it back up the smooth, sheer path.]]>
+    </string>
+    <string id="14">
+        <![CDATA[You are at the south end of a steep path up to the top of a plateau. Whoever was at the top of the plateau would have a panoramic view of the whole cavern to the south. Of course, why anyone would walk to look at that mess is beyond you.]]>
+    </string>
+    <string id="15">
+        <![CDATA[As you walk out of this tunnel, you notice that someone has etched into the side of a boulder the words "Look up."]]>
+    </string>
+    <string id="16">
+        <![CDATA[You look up, and see several red creatures floating about you. You look around, and see another boulder farther down, which reads "Leave money." It would appear that, if you left some gold, they would leave you alone. Maybe.]]>
+    </string>
+    <string id="21">
+        <![CDATA[You back away. Maybe there's another way out of this.]]>
+    </string>
+    <string id="22">
+        <![CDATA[You put a pile of cash on the ground and back away. The creatures swoop down, pass over the treasure, rise back up, and fly away. You're a bit poorer, but still alive.]]>
+    </string>
+    <string id="23">
+        <![CDATA[You refuse to submit to the creatures' extortion. Angered by your defiance, they swoop down and attack you.]]>
+    </string>
+    <string id="24">
+        <![CDATA[On this small, remote ledge, you find a tunnel leading into the rock wall. It's very quiet, and there's no sign of anything walking in or out.]]>
+    </string>
+    <string id="30">
+        <![CDATA[You come across the lair of some sort of vicious, carnivorous creatures. Fortunately, the owners are currently absent. There's some gold around, and you see a nice helmet as well.]]>
+    </string>
+    <string id="36">
+        <![CDATA[You quickly collect the treasure and leave the lair. You managed to get away without running into the owners.]]>
+    </string>
+    <string id="37">
+        <![CDATA[You finally leave the grim, undead filled cavern, with its rubble, bones, and stench. It's as if a constant, heavy weight has been lifted from your shoulders.]]>
+    </string>
+    <string id="38">
+        <![CDATA[You've reached the boundary of what's been constructed. Wait for more.]]>
+    </string>
+</sector>

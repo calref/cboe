@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Valley Entry</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>38</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>115</monster>
+        <monster>0</monster>
+        <monster>39</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>5</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>115</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>38</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>18</monster>
+        <monster>0</monster>
+        <monster>13</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <sign id="0">
+        <![CDATA[Welcome to Skylark Vale|  Sweetgrove - 25 mi. north]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[WARNING - Skylark Vale is designated an Unhealthy Zone|  Take precautions|  Empire Order D-UZ-DL34420]]>
+    </sign>
+    <string id="0">
+        <![CDATA[You are approached by a patrol of guards, out hunting for wolves (and worse). They look underfed and bedraggled - they fit in well with the rest of the valley. After talking with you briefly, they depart.]]>
+    </string>
+    <string id="1">
+        <![CDATA[At the end of the valley, you find a small cave. Investigating, you discover the body of a soldier hidden in the back. Your best guess: he was trying to hide from wolves, but didn't quite hide well enough.]]>
+    </string>
+    <string id="2">
+        <![CDATA[Off to one side of the cave, away from the grisly remains, you find a broadsword. It's pretty morbid, but, heck, he isn't using it anymore.]]>
+    </string>
+    <string id="7">
+        <![CDATA[Traveling down this isolated valley may have been a mistake. You hear the harsh howls of wolves and the alien battle cries of goblins. A hunting pack has spotted you, and is closing in for the kill.]]>
+    </string>
+    <string id="8">
+        <![CDATA[The battle won, you search the corpses of your victims. On the body of the goblin leader, you find a modest reward: a small sack of silver coins.]]>
+    </string>
+    <string id="9">
+        <![CDATA[For the first time, you look out over Skylark Vale. It's hard not to be shocked by what you see.]]>
+    </string>
+    <string id="10">
+        <![CDATA[It looks like the life itself has been slowly, painstakingly, inexorably drained out of the land. The trees are withered, the grass is shot through with streaks of gray, and the smell of decay rises from the earth.]]>
+    </string>
+    <string id="11">
+        <![CDATA[To the north, you see a slow flowing river wind through patches of fen and stands of stunted trees. No birds circle overhead, and no squirrels climb the trees.]]>
+    </string>
+    <string id="12">
+        <![CDATA[Something is wrong here. Terribly, terribly wrong.]]>
+    </string>
+</sector>

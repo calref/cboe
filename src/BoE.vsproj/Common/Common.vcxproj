@@ -68,6 +68,7 @@
     <ClInclude Include="..\..\tools\tarball.hpp" />
     <ClInclude Include="..\..\tools\undo.hpp" />
     <ClInclude Include="..\..\tools\vector2d.hpp" />
+    <ClInclude Include="..\..\tools\view_dialogs.hpp" />
     <ClInclude Include="..\..\tools\winutil.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +131,7 @@
     <ClCompile Include="..\..\tools\specials_parse.cpp" />
     <ClCompile Include="..\..\tools\tarball.cpp" />
     <ClCompile Include="..\..\tools\undo.cpp" />
+    <ClCompile Include="..\..\tools\view_dialogs.cpp" />
     <ClCompile Include="..\..\tools\winutil.win.cpp" />
   </ItemGroup>
   <ItemGroup>

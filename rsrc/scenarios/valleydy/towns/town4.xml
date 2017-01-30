@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>32</size>
+    <name>Pangle&apos;s Hut</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="3" bottom="28" right="28" />
+    <difficulty>8</difficulty>
+    <lighting>lit</lighting>
+    <onenter condition="alive">10</onenter>
+    <flags />
+    <item id="0">
+        <type>17</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="1">
+        <type>20</type>
+        <contained>true</contained>
+    </item>
+    <item id="2">
+        <type>22</type>
+        <contained>true</contained>
+    </item>
+    <item id="3">
+        <type>0</type>
+        <charges>2</charges>
+        <contained>true</contained>
+    </item>
+    <item id="4">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="5">
+        <type>7</type>
+        <contained>true</contained>
+    </item>
+    <item id="6">
+        <type>1</type>
+        <charges>100</charges>
+        <contained>true</contained>
+    </item>
+    <item id="7">
+        <type>2</type>
+        <charges>100</charges>
+        <contained>true</contained>
+    </item>
+    <item id="8">
+        <type>3</type>
+        <charges>100</charges>
+        <contained>true</contained>
+    </item>
+    <item id="9">
+        <type>59</type>
+        <contained>true</contained>
+    </item>
+    <item id="10">
+        <type>13</type>
+    </item>
+    <item id="11">
+        <type>14</type>
+    </item>
+    <item id="12">
+        <type>2</type>
+        <charges>4</charges>
+    </item>
+    <item id="13">
+        <type>19</type>
+    </item>
+    <item id="14">
+        <type>19</type>
+    </item>
+    <item id="15">
+        <type>19</type>
+    </item>
+    <item id="16">
+        <type>20</type>
+    </item>
+    <item id="17">
+        <type>20</type>
+    </item>
+    <item id="18">
+        <type>20</type>
+    </item>
+    <item id="19">
+        <type>21</type>
+    </item>
+    <item id="20">
+        <type>21</type>
+    </item>
+    <item id="21">
+        <type>21</type>
+    </item>
+    <item id="22">
+        <type>22</type>
+    </item>
+    <item id="23">
+        <type>22</type>
+    </item>
+    <item id="24">
+        <type>22</type>
+    </item>
+    <item id="25">
+        <type>23</type>
+    </item>
+    <item id="26">
+        <type>25</type>
+    </item>
+    <item id="27">
+        <type>7</type>
+    </item>
+    <item id="28">
+        <type>14</type>
+    </item>
+    <item id="29">
+        <type>33</type>
+    </item>
+    <item id="30">
+        <type>98</type>
+        <charges>1</charges>
+    </item>
+    <item id="31">
+        <type>0</type>
+        <charges>1</charges>
+    </item>
+    <item id="32">
+        <type>9</type>
+    </item>
+    <item id="33">
+        <type>9</type>
+    </item>
+    <item id="34">
+        <type>9</type>
+    </item>
+    <item id="35">
+        <type>10</type>
+    </item>
+    <item id="36">
+        <type>10</type>
+    </item>
+    <item id="37">
+        <type>10</type>
+    </item>
+    <item id="38">
+        <type>11</type>
+    </item>
+    <item id="39">
+        <type>11</type>
+    </item>
+    <item id="40">
+        <type>12</type>
+    </item>
+    <creature id="0">
+        <type>1</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>40</personality>
+        <face>28</face>
+    </creature>
+    <creature id="1">
+        <type>110</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>41</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="2">
+        <type>114</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>42</personality>
+        <face>-1</face>
+    </creature>
+    <area top="21" left="5" bottom="25" right="11">Storage Shed</area>
+    <area top="6" left="7" bottom="10" right="13">Pangle&apos;s Common Room</area>
+    <area top="12" left="7" bottom="14" right="13">Pangle&apos;s Bedroom</area>
+    <area top="22" left="21" bottom="25" right="26">Small Stable</area>
+    <sign id="0">
+        <![CDATA[SHED]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[HOME OF PANGLE|KEEP AWAY!!!|THERE IS NO HELP FOR YOU HERE!]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[Pangle's Hut|Keep away!|THERE IS NO HELP FOR YOU HERE!!!]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[HOME OF PANGLE|KEEP AWAY!!!|THERE IS NO HELP FOR YOU HERE!]]>
+    </sign>
+    <string id="0">
+        <![CDATA[Like most farms, this one has a storage shed. However, the shed seems to be full of trash and old, forgotten stuff instead of the expected tools and seed. It would take weeks to sort through this garbage.]]>
+    </string>
+    <string id="1">
+        <![CDATA[For reasons unclear to you, this chest is filled with old scraps of cloth and fur. A quick search reveals nothing of value. You close it.]]>
+    </string>
+    <string id="2">
+        <![CDATA[For reasons unclear to you, this chest is filled with old scraps of paper and vellum. A quick search reveals nothing of value. You close it.]]>
+    </string>
+    <string id="3">
+        <![CDATA[Remembering what Pangle told you, you carefully search the massive jumble of scraps of paper filling this chest. Sure enough, you soon find your reward. It's a sheaf of 8 ancient vellum scrolls.]]>
+    </string>
+    <string id="4">
+        <![CDATA[The scrolls are covered with intricate designs and notes, explaining how to operate the controls on the lowest level of the School of Magery. This could be very useful.]]>
+    </string>
+    <string id="5">
+        <![CDATA[You arrive at a true rarity in Skylark Vale - a working farm. The plants are not afflicted by rot, the animals are not dying. A small lake fails to assails your noses with acrid fumes.]]>
+    </string>
+    <string id="6">
+        <![CDATA[It's a nice change of pace.]]>
+    </string>
+    <string id="7">
+        <![CDATA[You look under the boulder, and find a collection of dry, heavily chewed bones. On closer inspection, however, you notice that one of the "bones" is actually a scroll tube!]]>
+    </string>
+</town>

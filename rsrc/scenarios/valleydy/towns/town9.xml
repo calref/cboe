@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>64</size>
+    <name>Administration</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="0" bottom="59" right="63" />
+    <difficulty>0</difficulty>
+    <lighting>lit</lighting>
+    <onenter condition="alive">0</onenter>
+    <onenter condition="dead">0</onenter>
+    <flags />
+    <item id="0">
+        <type>202</type>
+        <contained>true</contained>
+    </item>
+    <item id="1">
+        <type>202</type>
+        <contained>true</contained>
+    </item>
+    <item id="2">
+        <type>17</type>
+    </item>
+    <item id="3">
+        <type>17</type>
+    </item>
+    <item id="4">
+        <type>17</type>
+    </item>
+    <item id="5">
+        <type>364</type>
+        <contained>true</contained>
+    </item>
+    <item id="6">
+        <type>364</type>
+        <contained>true</contained>
+    </item>
+    <item id="7">
+        <type>269</type>
+        <contained>true</contained>
+    </item>
+    <item id="8">
+        <type>21</type>
+    </item>
+    <item id="9">
+        <type>22</type>
+    </item>
+    <item id="10">
+        <type>19</type>
+    </item>
+    <item id="11">
+        <type>13</type>
+    </item>
+    <item id="12">
+        <type>10</type>
+    </item>
+    <item id="13">
+        <type>10</type>
+    </item>
+    <item id="14">
+        <type>10</type>
+    </item>
+    <item id="15">
+        <type>10</type>
+    </item>
+    <item id="16">
+        <type>9</type>
+    </item>
+    <item id="17">
+        <type>9</type>
+    </item>
+    <item id="18">
+        <type>9</type>
+    </item>
+    <item id="19">
+        <type>9</type>
+    </item>
+    <item id="20">
+        <type>0</type>
+        <charges>300</charges>
+        <contained>true</contained>
+    </item>
+    <creature id="0">
+        <type>119</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>92</personality>
+        <face>45</face>
+    </creature>
+    <creature id="1">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="2">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="3">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="4">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="5">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="6">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="7">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="8">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="9">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="10">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="11">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="12">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="13">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="14">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="15">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="16">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="17">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="18">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="19">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="20">
+        <type>119</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>93</personality>
+        <face>45</face>
+    </creature>
+    <creature id="21">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="22">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="23">
+        <type>119</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>94</personality>
+        <face>45</face>
+    </creature>
+    <creature id="24">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="25">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="26">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="27">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="28">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="29">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="30">
+        <type>132</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="31">
+        <type>77</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="32">
+        <type>77</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="33">
+        <type>65</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="34">
+        <type>119</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>95</personality>
+        <face>45</face>
+        <time type="after-event">
+            <day>0</day>
+            <event>2</event>
+        </time>
+    </creature>
+    <creature id="35">
+        <type>62</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="36">
+        <type>62</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="37">
+        <type>62</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="38">
+        <type>62</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="39">
+        <type>62</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="40">
+        <type>62</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="41">
+        <type>62</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="42">
+        <type>62</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="43">
+        <type>60</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="44">
+        <type>60</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="45">
+        <type>119</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>96</personality>
+        <face>45</face>
+    </creature>
+    <creature id="46">
+        <type>60</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="47">
+        <type>60</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="48">
+        <type>60</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="49">
+        <type>59</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="100" y="8" />
+    </creature>
+    <creature id="50">
+        <type>66</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="51">
+        <type>67</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="100" y="7" />
+    </creature>
+    <creature id="52">
+        <type>67</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="100" y="7" />
+    </creature>
+    <creature id="53">
+        <type>62</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="54">
+        <type>62</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="55">
+        <type>63</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="100" y="9" />
+    </creature>
+    <creature id="56">
+        <type>65</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="57">
+        <type>65</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="58">
+        <type>119</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>90</personality>
+        <face>45</face>
+    </creature>
+    <creature id="59">
+        <type>119</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>91</personality>
+        <face>45</face>
+    </creature>
+    <area top="49" left="5" bottom="54" right="13">Barricaded Hall</area>
+    <area top="1" left="25" bottom="7" right="33">Refuse Filled Cavern</area>
+    <area top="10" left="40" bottom="18" right="48">Foul Fountain</area>
+    <area top="33" left="32" bottom="35" right="51">Sealed Passages</area>
+    <area top="37" left="12" bottom="48" right="23">Abandoned Offices</area>
+    <area top="39" left="26" bottom="54" right="61">Spider Caves</area>
+    <area top="2" left="55" bottom="8" right="62">Gnat Hatchery</area>
+    <area top="1" left="30" bottom="28" right="61">Gnat Caves</area>
+    <sign id="0">
+        <![CDATA[ADMINISTRATION LEVEL]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[ADMINISTRATION LEVEL]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[Please Return Spellbooks After Reading]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[None of the runes are readable, but they all look pretty ominous.]]>
+    </sign>
+    <sign id="4">
+        <![CDATA[None of the runes are readable, but they all look pretty ominous.]]>
+    </sign>
+    <sign id="5">
+        <![CDATA[None of the runes are readable, but they all look pretty ominous.]]>
+    </sign>
+    <string id="0">
+        <![CDATA[It looks like a force of nature has smashed its way through this chamber. The exit to the south was blocked by a massive barrier, no doubt placed by the wizards of the school to keep intruders from penetrating farther into the school.]]>
+    </string>
+    <string id="1">
+        <![CDATA[The wizards did not reckon, however, on the wall having to deflect the attacks of an enraged dragon. Pythras tore this wall down and passed through, having the fortunate incidental effect of enabling you to pass as well.]]>
+    </string>
+    <string id="2">
+        <![CDATA[You start to experience a familiar, unpleasant sinking feeling. Your explorations of the School of Magery have suddenly been sharply limited. The wizards of the School erected a serious barrier to your progress.]]>
+    </string>
+    <string id="3">
+        <![CDATA[The south exit from the room is blocked by a massive black wall, magically shaped from the living rock of the caverns. As if a five foot thick sheet of solid rock wasn't enough, it's also covered with a multitude of protective runes. This is a problem.]]>
+    </string>
+    <string id="4">
+        <![CDATA[The destruction of this level miraculously left this small shrine somewhat intact. In particular, the altar managed to survive, its aura of holiness protecting it from the evil and horror all around you.]]>
+    </string>
+    <string id="5">
+        <![CDATA[If you want, you can take advantage of it ...]]>
+    </string>
+    <string id="10">
+        <![CDATA[You kneel in front of the altar and offer sincere thanks and prayer to, well, whoever the altar was built to. This indiscriminate homage has a positive effect. You feel much better.]]>
+    </string>
+    <string id="11">
+        <![CDATA[Unfortunately, you seem to have exhausted its holy energy. The positive energy in the temple has faded away. Oh well.]]>
+    </string>
+    <string id="12">
+        <![CDATA[Considering the amount of time it's been closed up, the good condition of the School has been quite a surprise. The rooms, furniture, and (unfortunately) denizens have been amazingly intact.]]>
+    </string>
+    <string id="13">
+        <![CDATA[At first, it seems that you've found areas that have been struck by the inevitable decay. This floor is in an advanced state of disrepair. The walls have collapsed, the ceiling has caved in in places, and rubble and debris are everywhere.]]>
+    </string>
+    <string id="14">
+        <![CDATA[Looking closer, however, you realize that the decay was not natural. The walls and rubble have been scorched by fire, and the structures look less like they've fallen apart and more like they were torn apart. ]]>
+    </string>
+    <string id="15">
+        <![CDATA[Before the school was closed, someone went to an awful lot of effort to make sure that this level was blown to pieces. Curiouser and curiouser ...]]>
+    </string>
+    <string id="18">
+        <![CDATA[This spellbook managed to escape the destruction of this floor. Unfortunately, you can't understand a word of it. Maybe if you studied the magical arts more ...]]>
+    </string>
+    <string id="19">
+        <![CDATA[You find a spellbook which managed to escape the destruction of this floor. It's tricky, but you manage to decode it. You can now cast the spell Venom Arrows.]]>
+    </string>
+    <string id="20">
+        <![CDATA[The desk is filled with ashes and bits of charred paper. Someone didn't even bother to take all the papers out before burning them.]]>
+    </string>
+    <string id="21">
+        <![CDATA[You hear voices ahead. Adrenaline rushes through your veins. Whoever's ahead, you will be able to ambush them! You stalk forward in as stealthy a manner as possible.]]>
+    </string>
+    <string id="22">
+        <![CDATA[As you get closer, however, you notice that something isn't right about the voices. They're not gruff and guttural, like goblin voices. They're high pitched, chirpy, and friendly, like ... like ...]]>
+    </string>
+    <string id="23">
+        <![CDATA[Oh no. You've heard of these creatures. They're some of the rarest and most feared denizens of the dungeons of the world: the legendary Giant Intelligent Friendly Talking Spiders. ]]>
+    </string>
+    <string id="24">
+        <![CDATA[You see them ahead, skittering about on the arachnid legs, making webs, chatting happily, and keeping busy. Some monsters are more dangerous. But few are more irritating ...]]>
+    </string>
+    <string id="27">
+        <![CDATA[You leave the spiders' caves and enter a new area. Instead of spiders bothering you, you are now surrounded by flying gnats. Like the spiders, these gnats are much larger than usual. In fact, each is about the size of your hand.]]>
+    </string>
+    <string id="28">
+        <![CDATA[They're pretty big and annoying. At least they don't talk.]]>
+    </string>
+    <string id="29">
+        <![CDATA[Just under the surface of the stagnant water, you see dozens of clutches of gnat eggs, each promising a multitude of nasty, annoying flying creatures. One of the clusters of eggs is just close enough for you to grab it.]]>
+    </string>
+    <string id="35">
+        <![CDATA[Interesting ... you wouldn't have thought that gnats would act like pack rats. Mindless as they may be, they've happily gathered all manner of junk in this room. You see broken scroll tubes, scraps of paper, pottery, and all manner of junk.]]>
+    </string>
+    <string id="36">
+        <![CDATA[There might even be something useful buried in there. Alas, you don't have the months it would take to sort through it all.]]>
+    </string>
+    <string id="37">
+        <![CDATA[You're in luck! If the spiders hadn't told you about it, you wouldn't have even known to look. You find a small, round black stone, carefully polished, not unlike the stone you used to get inside the School.]]>
+    </string>
+    <string id="38">
+        <![CDATA[It's very smooth, as if many people had rubbed it in the past. You can only hope that it's useful.]]>
+    </string>
+    <string id="43">
+        <![CDATA[There are two things that are interesting about this cave. First, of course, is the fountain in the center. ]]>
+    </string>
+    <string id="44">
+        <![CDATA[It somehow survived and continued to function despite the explosion that destroyed this floor. Magical pumps bring water up from below, and spray it in high, elegant arcs through the air.]]>
+    </string>
+    <string id="45">
+        <![CDATA[The second interesting thing is the nature of the water. It has the same oily sheen and bitter, acrid smell as the water on the surface. For some reason, the curse is present inside the school too.]]>
+    </string>
+    <string id="46">
+        <![CDATA[After the water is pumped up from below, it drains back down again through large grates. You wonder where it goes ...]]>
+    </string>
+    <string id="49">
+        <![CDATA[You find a bunch of rotten, unreadable books. Disappointing.]]>
+    </string>
+    <string id="50">
+        <![CDATA[You find yet another magical book. You grab it eagerly, flipping through the delicate pages for useful information. Unfortunately, you can't understand any of it.]]>
+    </string>
+    <string id="51">
+        <![CDATA[You return the book to its shelf ... it's far too fragile to carry with you,]]>
+    </string>
+    <string id="52">
+        <![CDATA[You find an ancient, fragile spellbook in the bookshelf. Carefully inspecting it, you find it's written in an old, but still decipherable script. Studying carefully, you learn the spell Slow Group.]]>
+    </string>
+    <string id="53">
+        <![CDATA[You return the book to its shelf ... it's far too fragile to carry with you,]]>
+    </string>
+    <string id="54">
+        <![CDATA[The spiders have placed the gnat eggs you provided in the piles of refuse here. They are already starting to hatch, and will soon provide many, many tasty spider snacks.]]>
+    </string>
+    <string id="55">
+        <![CDATA["Yeah, we can help you! Thanks for the happy eggs, by the way. Don't forget ... a gnat took the stone. It was small and shiny and black, and it's sure to be hidden in the gnat caves somewhere or other."]]>
+    </string>
+    <string id="56">
+        <![CDATA[You give the chief spider the gnat eggs. It does a happy little dance. "Thank you! Now we can raise our own yummy gnats and not hunt them! In return, I will help you and stuff!"]]>
+    </string>
+    <string id="57">
+        <![CDATA["We had a pretty magic stone, but a gnat grabbed it and flew it to the north. If you search the gnat's caves you're sure to find it!" (You take note of this.)]]>
+    </string>
+</town>

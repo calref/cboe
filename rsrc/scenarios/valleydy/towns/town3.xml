@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Marralis</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="3" bottom="44" right="44" />
+    <difficulty>4</difficulty>
+    <lighting>lit</lighting>
+    <flags />
+    <item id="0">
+        <type>172</type>
+        <property>true</property>
+    </item>
+    <item id="1">
+        <type>172</type>
+        <property>true</property>
+    </item>
+    <item id="2">
+        <type>172</type>
+        <property>true</property>
+    </item>
+    <item id="3">
+        <type>169</type>
+        <property>true</property>
+    </item>
+    <item id="4">
+        <type>169</type>
+        <property>true</property>
+    </item>
+    <item id="5">
+        <type>169</type>
+        <property>true</property>
+    </item>
+    <item id="6">
+        <type>164</type>
+        <property>true</property>
+    </item>
+    <item id="7">
+        <type>164</type>
+        <property>true</property>
+    </item>
+    <item id="8">
+        <type>164</type>
+        <property>true</property>
+    </item>
+    <item id="9">
+        <type>104</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="10">
+        <type>109</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="11">
+        <type>108</type>
+        <property>true</property>
+    </item>
+    <item id="12">
+        <type>103</type>
+        <property>true</property>
+    </item>
+    <item id="13">
+        <type>27</type>
+        <contained>true</contained>
+    </item>
+    <item id="14">
+        <type>17</type>
+    </item>
+    <item id="15">
+        <type>17</type>
+    </item>
+    <item id="16">
+        <type>4</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="17">
+        <type>4</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="18">
+        <type>5</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="19">
+        <type>5</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="20">
+        <type>31</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="21">
+        <type>4</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="22">
+        <type>6</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="23">
+        <type>31</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="24">
+        <type>16</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="25">
+        <type>13</type>
+        <always>true</always>
+    </item>
+    <item id="26">
+        <type>260</type>
+        <property>true</property>
+    </item>
+    <item id="27">
+        <type>187</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="28">
+        <type>194</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="29">
+        <type>20</type>
+        <contained>true</contained>
+    </item>
+    <item id="30">
+        <type>19</type>
+        <contained>true</contained>
+    </item>
+    <item id="31">
+        <type>23</type>
+        <contained>true</contained>
+    </item>
+    <item id="32">
+        <type>22</type>
+        <contained>true</contained>
+    </item>
+    <item id="33">
+        <type>18</type>
+        <contained>true</contained>
+    </item>
+    <item id="34">
+        <type>18</type>
+        <contained>true</contained>
+    </item>
+    <item id="35">
+        <type>18</type>
+        <contained>true</contained>
+    </item>
+    <item id="36">
+        <type>12</type>
+    </item>
+    <item id="37">
+        <type>12</type>
+    </item>
+    <item id="38">
+        <type>12</type>
+    </item>
+    <item id="39">
+        <type>12</type>
+    </item>
+    <item id="40">
+        <type>10</type>
+    </item>
+    <item id="41">
+        <type>10</type>
+    </item>
+    <item id="42">
+        <type>10</type>
+    </item>
+    <item id="43">
+        <type>19</type>
+    </item>
+    <item id="44">
+        <type>21</type>
+    </item>
+    <item id="45">
+        <type>22</type>
+    </item>
+    <item id="46">
+        <type>23</type>
+    </item>
+    <item id="47">
+        <type>23</type>
+    </item>
+    <item id="48">
+        <type>13</type>
+    </item>
+    <creature id="0">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="1">
+        <type>9</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>30</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="2">
+        <type>10</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>31</personality>
+        <face>-1</face>
+        <time type="until-event">
+            <day>0</day>
+            <event>1</event>
+        </time>
+    </creature>
+    <creature id="3">
+        <type>4</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>32</personality>
+        <face>3</face>
+    </creature>
+    <creature id="4">
+        <type>22</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>33</personality>
+        <face>41</face>
+    </creature>
+    <creature id="5">
+        <type>33</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>34</personality>
+        <face>29</face>
+    </creature>
+    <creature id="6">
+        <type>19</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>35</personality>
+        <face>54</face>
+    </creature>
+    <creature id="7">
+        <type>3</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>36</personality>
+        <face>2</face>
+    </creature>
+    <creature id="8">
+        <type>36</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>24</personality>
+        <face>55</face>
+        <time type="travel-a" />
+    </creature>
+    <creature id="9">
+        <type>10</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>37</personality>
+        <face>-1</face>
+        <time type="after-event">
+            <day>0</day>
+            <event>1</event>
+        </time>
+    </creature>
+    <creature id="10">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="11">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="12">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="13">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="14">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="15">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="16">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <area top="10" left="13" bottom="18" right="45">Around Failing Crops</area>
+    <area top="23" left="7" bottom="29" right="13">Private Home</area>
+    <area top="23" left="18" bottom="29" right="21">Abandoned Shop</area>
+    <area top="23" left="26" bottom="29" right="32">Communal Storeroom</area>
+    <area top="25" left="37" bottom="29" right="41">Private Home</area>
+    <area top="36" left="39" bottom="41" right="41">Small Shop</area>
+    <area top="35" left="29" bottom="41" right="34">City Hall</area>
+    <area top="35" left="6" bottom="41" right="13">Temple of Divine Justice</area>
+    <sign id="0">
+        <![CDATA[TEMPLE OF DIVINE JUSTICE]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[Covington's Archery]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[Marralis Warehouse]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[Marralis Magical Goods|Temporarily Closed]]>
+    </sign>
+    <string id="0">
+        <![CDATA[By any measure, this town's crops are a disaster. They get plenty of sun and plenty of water from the nearby river, and yet they are dying by the bushel. The dead plant matter then rots, coating the ground with a thick, viscous mass.]]>
+    </string>
+    <string id="1">
+        <![CDATA[You can't blame people for abandoning the Vale, if this is all their life's work amounts to.]]>
+    </string>
+    <string id="2">
+        <![CDATA["Much to our relief, the scepter you returned has shown signs of alleviating the afflictions of the curse. Alas, it only helps, not cures. Still, you may take satisfaction in your endeavors. You have performed a great and kind act."]]>
+    </string>
+    <string id="3">
+        <![CDATA[Broder's jaw drops. He takes the scepter reverently. "I have heard of this blessed object, but had not dreamed that we could find it." He removes from a pouch a slender wand. "Here is a reward. Thank you again for your invaluable help!"]]>
+    </string>
+    <string id="4">
+        <![CDATA["He thinks. That reminds me. I know someone else who owns an artifact from the school."]]>
+    </string>
+    <string id="5">
+        <![CDATA["By the way, have you found the other artifact from the school?"]]>
+    </string>
+</town>

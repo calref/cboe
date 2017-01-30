@@ -1,0 +1,33 @@
+
+language: cpp
+sudo: required
+services: ['docker']
+
+script: travis_wait scons --jobs=2
+
+compiler:
+ - clang
+
+matrix:
+ allow_failures:
+  - os: linux
+ include:
+  - os: linux
+    sudo: required
+    dist: trusty
+  - os: osx
+
+install:
+ - ./.travis-install-deps.sh
+
+branches:
+ except:
+  - legacy-win32
+
+notifications:
+ email: false
+ irc:
+  channels: ["irc.freenode.net#openboe"]
+  use_notice: true
+  on_success: change
+  on_failure: always
