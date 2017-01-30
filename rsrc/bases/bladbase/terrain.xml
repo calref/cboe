@@ -1875,6 +1875,84 @@
         </special>
         <editor />
     </terrain>
+    <terrain id="77">
+        <name>Bridge</name>
+        <pic>977</pic>
+        <map>977</map>
+        <blockage>none</blockage>
+        <transform>0</transform>
+        <fly>false</fly>
+        <boat>true</boat>
+        <ride>true</ride>
+        <archetype>false</archetype>
+        <light>1</light>
+        <step-sound>step</step-sound>
+        <trim>frills</trim>
+        <ground>7</ground>
+        <trim-for>-1</trim-for>
+        <arena>0</arena>
+        <special>
+            <type>bridge</type>
+            <flag>0</flag>
+            <flag>0</flag>
+            <flag>0</flag>
+        </special>
+        <editor>
+            <shortcut>l</shortcut>
+        </editor>
+    </terrain>
+    <terrain id="78">
+        <name>Bridge</name>
+        <pic>978</pic>
+        <map>978</map>
+        <blockage>none</blockage>
+        <transform>0</transform>
+        <fly>false</fly>
+        <boat>true</boat>
+        <ride>true</ride>
+        <archetype>false</archetype>
+        <light>1</light>
+        <step-sound>step</step-sound>
+        <trim>frills</trim>
+        <ground>7</ground>
+        <trim-for>-1</trim-for>
+        <arena>0</arena>
+        <special>
+            <type>bridge</type>
+            <flag>0</flag>
+            <flag>0</flag>
+            <flag>0</flag>
+        </special>
+        <editor>
+            <shortcut>l</shortcut>
+        </editor>
+    </terrain>
+    <terrain id="79">
+        <name>Rock in Lava</name>
+        <pic>979</pic>
+        <map>979</map>
+        <blockage>move</blockage>
+        <transform>0</transform>
+        <fly>true</fly>
+        <boat>false</boat>
+        <ride>true</ride>
+        <archetype>false</archetype>
+        <light>1</light>
+        <step-sound>step</step-sound>
+        <trim>frills</trim>
+        <ground>7</ground>
+        <trim-for>-1</trim-for>
+        <arena>4</arena>
+        <special>
+            <type>none</type>
+            <flag>-1</flag>
+            <flag>0</flag>
+            <flag>0</flag>
+        </special>
+        <editor>
+            <shortcut>l</shortcut>
+        </editor>
+    </terrain>
     <terrain id="80">
         <name>Waterfall</name>
         <pic>965</pic>
