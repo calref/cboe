@@ -219,6 +219,7 @@
             <cold>50</cold>
         </immunity>
         <abilities>
+            <guard />
             <missile type="missile">
                 <type>spear</type>
                 <missile>5</missile>
