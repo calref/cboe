@@ -6027,6 +6027,30 @@
         </special>
         <editor />
     </terrain>
+    <terrain id="246">
+        <name>Hut</name>
+        <pic>204</pic>
+        <map>204</map>
+        <blockage>none</blockage>
+        <transform>0</transform>
+        <fly>false</fly>
+        <boat>false</boat>
+        <ride>true</ride>
+        <archetype>false</archetype>
+        <light>0</light>
+        <step-sound>step</step-sound>
+        <trim>none</trim>
+        <ground>4</ground>
+        <trim-for>-1</trim-for>
+        <arena>2</arena>
+        <special>
+            <type>town</type>
+            <flag>36</flag>
+            <flag>0</flag>
+            <flag>0</flag>
+        </special>
+        <editor />
+    </terrain>
     <terrain id="247">
         <name>Town</name>
         <pic>187</pic>
@@ -6067,6 +6091,54 @@
         <ground>0</ground>
         <trim-for>-1</trim-for>
         <arena>1</arena>
+        <special>
+            <type>town</type>
+            <flag>0</flag>
+            <flag>0</flag>
+            <flag>0</flag>
+        </special>
+        <editor />
+    </terrain>
+    <terrain id="249">
+        <name>Fort</name>
+        <pic>232</pic>
+        <map>232</map>
+        <blockage>none</blockage>
+        <transform>0</transform>
+        <fly>false</fly>
+        <boat>false</boat>
+        <ride>true</ride>
+        <archetype>false</archetype>
+        <light>0</light>
+        <step-sound>step</step-sound>
+        <trim>city</trim>
+        <ground>0</ground>
+        <trim-for>-1</trim-for>
+        <arena>0</arena>
+        <special>
+            <type>town</type>
+            <flag>0</flag>
+            <flag>0</flag>
+            <flag>0</flag>
+        </special>
+        <editor />
+    </terrain>
+    <terrain id="250">
+        <name>Hut</name>
+        <pic>239</pic>
+        <map>239</map>
+        <blockage>none</blockage>
+        <transform>0</transform>
+        <fly>false</fly>
+        <boat>false</boat>
+        <ride>true</ride>
+        <archetype>false</archetype>
+        <light>0</light>
+        <step-sound>step</step-sound>
+        <trim>city</trim>
+        <ground>0</ground>
+        <trim-for>-1</trim-for>
+        <arena>0</arena>
         <special>
             <type>town</type>
             <flag>0</flag>
