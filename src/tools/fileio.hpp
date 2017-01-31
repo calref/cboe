@@ -20,6 +20,7 @@ class cUniverse;
 
 namespace fs = boost::filesystem; // TODO: Centralize this alias!
 
+fs::path locate_scenario(std::string scen_name);
 bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header = false);
 
 bool load_party(fs::path file_to_load, cUniverse& univ);

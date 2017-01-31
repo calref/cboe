@@ -222,8 +222,14 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 	cUniverse univ;
 	
 	if(in_scen){
-		fs::path path;
-		path = progDir/"Blades of Exile Scenarios"/store_party.scen_name;
+		fs::path path = locate_scenario(store_party.scen_name);
+		if(path.empty()) {
+			std::ostringstream msg;
+			msg << "The scenario that this party was in (\"" << store_party.scen_name;
+			msg << "\") could not be found. Most likely, it is not installed in the Scenarios directory.";
+			showError(msg.str());
+			return false;
+		}
 		
 		if(!load_scenario(path, univ.scenario))
 			return false;
@@ -326,10 +332,14 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 	}
 	
 	if(!univ.party.scen_name.empty()) {
-		fs::path path;
-		path = scenDir/univ.party.scen_name;
-		if(!fs::exists(path))
-			path = progDir/"Blades of Exile Scenarios"/univ.party.scen_name;
+		fs::path path = locate_scenario(univ.party.scen_name);
+		if(path.empty()) {
+			std::ostringstream msg;
+			msg << "The scenario that this party was in (\"" << univ.party.scen_name;
+			msg << "\") could not be found. Most likely, it is not installed in the Scenarios directory.";
+			showError(msg.str());
+			return false;
+		}
 		
 		if(!load_scenario(path, univ.scenario))
 			return false;
