@@ -15,7 +15,7 @@ Party Death
 Throw Missile
 Shop Purchase
 Enter Town
-Footstep Splash
+Poison Squish
 Enter Combat/Monster Alert
 Polearm Miss
 Resting Yawn
@@ -53,7 +53,7 @@ Enchant Weapon
 Generic Spell Sound 1
 Magic Explosion
 Fear
-Poison Squish
+Footstep Splash
 Drink
 Information Ding
 Open Door
