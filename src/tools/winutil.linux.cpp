@@ -4,6 +4,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Image.hpp>
 #include <sstream>
+#include <X11/Xlib.h>
 
 extern sf::RenderWindow mainPtr;
 
@@ -86,13 +87,58 @@ char keyToChar(sf::Keyboard::Key key, bool isShift) {
 }
 
 std::string get_os_version() {
-	return "Microsoft Windows XP";
+	// TODO: Be more specific
+	return "Linux/BSD";
 }
 
 void makeFrontWindow(sf::Window& win) {
 }
 
 void setWindowFloating(sf::Window& win, bool floating) {
+	// Code adapted from <http://stackoverflow.com/a/16235920>
+	Atom wmStateAbove = XInternAtom(NULL, "_NET_WM_STATE_ABOVE", true);
+	if(wmStateAbove != None) {
+		std::cout << "_NET_WM_STATE_ABOVE has atom of " << long(wmStateAbove) << std::endl;
+	} else {
+		std::cerr << "ERROR: cannot find atom for _NET_WM_STATE_ABOVE!\n";
+	}
+		
+	Atom wmNetWmState = XInternAtom(NULL, "_NET_WM_STATE", true);
+	if(wmNetWmState != None) {
+		std::cout << "_NET_WM_STATE has atom of " << long(wmNetWmState) << std::endl;
+	} else {
+		std::cerr << "ERROR: cannot find atom for _NET_WM_STATE !\n";
+	}
+	// set window always on top hint
+	if(wmStateAbove != None) {
+		XClientMessageEvent xclient;
+		memset(&xclient, 0, sizeof(xclient));
+		
+		//window  = the respective client window
+		//message_type = _NET_WM_STATE
+		//format = 32
+		//data.l[0] = the action, as listed below
+		//data.l[1] = first property to alter
+		//data.l[2] = second property to alter
+		//data.l[3] = source indication (0-unk,1-normal app,2-pager)
+		//other data.l[] elements = 0
+		
+		xclient.type = ClientMessage;
+		xclient.window = mywin; // GDK_WINDOW_XID(window);
+		xclient.message_type = wmNetWmState; //gdk_x11_get_xatom_by_name_for_display( display, "_NET_WM_STATE" );
+		xclient.format = 32;
+		xclient.data.l[0] = floating ? 1 : 0;
+		xclient.data.l[1] = wmStateAbove; //gdk_x11_atom_to_xatom_for_display (display, state1);
+		xclient.data.l[2] = 0; //gdk_x11_atom_to_xatom_for_display (display, state2);
+		xclient.data.l[3] = 0;
+		xclient.data.l[4] = 0;
+		XSendEvent(display,
+			root, // !! DefaultRootWindow( display ) !!!
+			False,
+			SubstructureRedirectMask | SubstructureNotifyMask,
+			(XEvent *)&xclient
+		);
+	}
 }
 
 void init_fileio() {
