@@ -1107,12 +1107,14 @@ void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent) {
 				break;
 			}
 		}
-		for(short i = *str1; i < *str1 + 6; i++)
-			fetch_str(mode, i).clear();
+		if(*str1 >= 0) {
+			for(short i = *str1; i < *str1 + 6; i++)
+				fetch_str(mode, i).clear();
+		}
 	}
 	if(*str1 < 0) {
-		showError("To create a dialog, you need 6 consecutive unused messages. To free up 6 messages, select Edit Out/Town/Scenario Text from the menus.","",parent);
-		return;
+		*str1 = num_strs(mode);
+		ensure_str(mode, *str1 + 5);
 	}
 	
 	using namespace std::placeholders;
