@@ -5691,8 +5691,8 @@
     </terrain>
     <terrain id="232">
         <name>Fire Pit</name>
-        <pic>177</pic>
-        <map>177</map>
+        <pic>987</pic>
+        <map>987</map>
         <blockage>move-and-shoot</blockage>
         <transform>0</transform>
         <fly>false</fly>
