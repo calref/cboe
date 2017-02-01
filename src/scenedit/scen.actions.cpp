@@ -956,7 +956,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				mouse_button_held = true;
 				break;
 			case MODE_CLEAR_FIELDS:
-				for(int i = 8; i <= BARRIER_CAGE; i++)
+				for(int i = 8; i <= SPECIAL_ROAD; i++)
 					take_field_type(spot_hit.x,spot_hit.y, eFieldType(i));
 				mouse_button_held = true;
 				break;
