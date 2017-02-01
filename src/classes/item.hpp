@@ -69,8 +69,8 @@ std::istream& operator >> (std::istream& in, eItemUse& e);
 
 class cSpecItem {
 public:
-	short flags;
-	short special;
+	short flags = 0;
+	short special = -1;
 	std::string name;
 	std::string descr;
 };
