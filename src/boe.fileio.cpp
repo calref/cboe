@@ -419,7 +419,7 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 	scen_head.name = temp_scenario.scen_name;
 	scen_head.who1 = temp_scenario.who_wrote[0];
 	scen_head.who2 = temp_scenario.who_wrote[1];
-	scen_head.file = fname;
+	scen_head.file = fname == "header.exs" ? file.parent_path().filename().string() : fname;
 	scen_head.intro_pic = temp_scenario.intro_pic;
 	scen_head.rating = temp_scenario.rating;
 	scen_head.difficulty = temp_scenario.difficulty;
