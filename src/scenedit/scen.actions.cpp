@@ -1845,6 +1845,7 @@ void flood_fill_terrain(location start, ter_num_t terrain_type) {
 	std::stack<location> to_visit;
 	std::set<location, loc_compare> visited;
 	to_visit.push(start);
+	int max_dim = editing_town ? town->max_dim : current_terrain->max_dim;
 	
 	while(!to_visit.empty()) {
 		location this_loc = to_visit.top();
@@ -1854,6 +1855,8 @@ void flood_fill_terrain(location start, ter_num_t terrain_type) {
 			location adj_loc = this_loc;
 			adj_loc.x += dx[i];
 			adj_loc.y += dy[i];
+			if(adj_loc.x < 0 || adj_loc.x >= max_dim || adj_loc.y < 0 || adj_loc.y >= max_dim)
+				continue;
 			ter_num_t check = editing_town ? town->terrain(adj_loc.x, adj_loc.y) : current_terrain->terrain[adj_loc.x][adj_loc.y];
 			if(check == to_replace && !visited.count(adj_loc))
 				to_visit.push(adj_loc);
