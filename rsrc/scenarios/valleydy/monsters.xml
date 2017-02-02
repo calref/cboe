@@ -219,6 +219,7 @@
             <cold>50</cold>
         </immunity>
         <abilities>
+            <guard />
             <missile type="missile">
                 <type>spear</type>
                 <missile>5</missile>
@@ -2353,6 +2354,10 @@
             <attack type="bite">1d10</attack>
         </attacks>
         <immunity />
+        <loot>
+            <type>371</type>
+            <chance>60</chance>
+        </loot>
         <abilities>
             <general type="status2">
                 <type>touch</type>
