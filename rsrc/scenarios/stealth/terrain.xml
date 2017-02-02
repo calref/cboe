@@ -898,7 +898,7 @@
         <trim-for>1</trim-for>
         <arena>2</arena>
         <special>
-            <type>none</type>
+            <type>wild-wood</type>
             <flag>-1</flag>
             <flag>0</flag>
             <flag>0</flag>
@@ -924,7 +924,7 @@
         <trim-for>1</trim-for>
         <arena>2</arena>
         <special>
-            <type>none</type>
+            <type>wild-wood</type>
             <flag>-1</flag>
             <flag>0</flag>
             <flag>0</flag>
@@ -2284,7 +2284,7 @@
         <trim-for>-1</trim-for>
         <arena>6</arena>
         <special>
-            <type>none</type>
+            <type>wild-cave</type>
             <flag>-1</flag>
             <flag>0</flag>
             <flag>0</flag>
@@ -2310,7 +2310,7 @@
         <trim-for>-1</trim-for>
         <arena>7</arena>
         <special>
-            <type>none</type>
+            <type>wild-cave</type>
             <flag>-1</flag>
             <flag>0</flag>
             <flag>0</flag>
@@ -2336,7 +2336,7 @@
         <trim-for>-1</trim-for>
         <arena>7</arena>
         <special>
-            <type>none</type>
+            <type>wild-cave</type>
             <flag>-1</flag>
             <flag>0</flag>
             <flag>0</flag>
@@ -2356,7 +2356,7 @@
         <ride>true</ride>
         <archetype>false</archetype>
         <light>0</light>
-        <step-sound>squish</step-sound>
+        <step-sound>step</step-sound>
         <trim>none</trim>
         <ground>0</ground>
         <trim-for>-1</trim-for>
@@ -2436,7 +2436,7 @@
         <trim-for>-1</trim-for>
         <arena>13</arena>
         <special>
-            <type>none</type>
+            <type>wild-cave</type>
             <flag>-1</flag>
             <flag>0</flag>
             <flag>0</flag>
@@ -2826,7 +2826,7 @@
         <trim-for>-1</trim-for>
         <arena>11</arena>
         <special>
-            <type>none</type>
+            <type>wild-wood</type>
             <flag>-1</flag>
             <flag>0</flag>
             <flag>0</flag>
@@ -2852,7 +2852,7 @@
         <trim-for>-1</trim-for>
         <arena>12</arena>
         <special>
-            <type>none</type>
+            <type>wild-wood</type>
             <flag>-1</flag>
             <flag>0</flag>
             <flag>0</flag>
@@ -3289,7 +3289,7 @@
         <arena>1</arena>
         <special>
             <type>fragile</type>
-            <flag>0</flag>
+            <flag>84</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -3313,7 +3313,7 @@
         <arena>1</arena>
         <special>
             <type>fragile</type>
-            <flag>0</flag>
+            <flag>84</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -3337,7 +3337,7 @@
         <arena>1</arena>
         <special>
             <type>fragile</type>
-            <flag>0</flag>
+            <flag>84</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -3703,7 +3703,7 @@
         <arena>1</arena>
         <special>
             <type>fragile</type>
-            <flag>0</flag>
+            <flag>84</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -3727,7 +3727,7 @@
         <arena>1</arena>
         <special>
             <type>fragile</type>
-            <flag>0</flag>
+            <flag>84</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -3751,7 +3751,7 @@
         <arena>1</arena>
         <special>
             <type>fragile</type>
-            <flag>0</flag>
+            <flag>84</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -4069,7 +4069,7 @@
         <arena>1</arena>
         <special>
             <type>fragile</type>
-            <flag>0</flag>
+            <flag>84</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -4093,7 +4093,7 @@
         <arena>1</arena>
         <special>
             <type>fragile</type>
-            <flag>0</flag>
+            <flag>84</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -4117,7 +4117,7 @@
         <arena>1</arena>
         <special>
             <type>fragile</type>
-            <flag>0</flag>
+            <flag>84</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -5661,8 +5661,8 @@
     </terrain>
     <terrain id="231">
         <name>Fire Pit</name>
-        <pic>177</pic>
-        <map>177</map>
+        <pic>987</pic>
+        <map>987</map>
         <blockage>move-and-shoot</blockage>
         <transform>0</transform>
         <fly>false</fly>
@@ -5749,7 +5749,7 @@
         <arena>0</arena>
         <special>
             <type>town</type>
-            <flag>0</flag>
+            <flag>2</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -5773,7 +5773,7 @@
         <arena>0</arena>
         <special>
             <type>town</type>
-            <flag>0</flag>
+            <flag>2</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -5917,7 +5917,7 @@
         <arena>0</arena>
         <special>
             <type>town</type>
-            <flag>0</flag>
+            <flag>2</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -5941,7 +5941,7 @@
         <arena>0</arena>
         <special>
             <type>town</type>
-            <flag>0</flag>
+            <flag>2</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -5965,7 +5965,7 @@
         <arena>0</arena>
         <special>
             <type>town</type>
-            <flag>0</flag>
+            <flag>2</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -5989,7 +5989,7 @@
         <arena>0</arena>
         <special>
             <type>town</type>
-            <flag>0</flag>
+            <flag>2</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -6013,7 +6013,7 @@
         <arena>0</arena>
         <special>
             <type>town</type>
-            <flag>0</flag>
+            <flag>2</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>

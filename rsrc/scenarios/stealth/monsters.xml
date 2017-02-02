@@ -219,6 +219,7 @@
             <cold>50</cold>
         </immunity>
         <abilities>
+            <guard />
             <missile type="missile">
                 <type>spear</type>
                 <missile>5</missile>
@@ -1783,7 +1784,7 @@
         </abilities>
     </monster>
     <monster id="78">
-        <name>Cave Rat</name>
+        <name>Giant Rat</name>
         <pic w="1" h="1">70</pic>
         <race>beast</race>
         <level>2</level>
@@ -2350,6 +2351,10 @@
             <attack type="bite">1d10</attack>
         </attacks>
         <immunity />
+        <loot>
+            <type>371</type>
+            <chance>60</chance>
+        </loot>
         <abilities>
             <general type="status2">
                 <type>touch</type>
@@ -2697,7 +2702,7 @@
         <skill>12</skill>
         <hp>40</hp>
         <speed>4</speed>
-        <attitude>docile</attitude>
+        <attitude>hostile-a</attitude>
         <summon>0</summon>
         <treasure>0</treasure>
         <attacks>
@@ -3418,10 +3423,11 @@
             <poison>0</poison>
         </immunity>
         <abilities>
-            <general type="kill">
+            <general type="status">
                 <type>touch</type>
-                <strength>2</strength>
-                <chance>66.7</chance>
+                <strength>500</strength>
+                <chance>0.0</chance>
+                <extra>paralysis</extra>
             </general>
         </abilities>
     </monster>
