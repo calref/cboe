@@ -3467,7 +3467,7 @@
         <arena>1</arena>
         <special>
             <type>step-change</type>
-            <flag>146</flag>
+            <flag>141</flag>
             <flag>58</flag>
             <flag>0</flag>
         </special>
@@ -4721,7 +4721,7 @@
         <boat>false</boat>
         <ride>true</ride>
         <archetype>false</archetype>
-        <light>0</light>
+        <light>7</light>
         <step-sound>step</step-sound>
         <trim>none</trim>
         <ground>13</ground>
