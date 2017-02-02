@@ -219,6 +219,7 @@
             <cold>50</cold>
         </immunity>
         <abilities>
+            <guard />
             <missile type="missile">
                 <type>spear</type>
                 <missile>5</missile>
@@ -2338,6 +2339,10 @@
             <attack type="bite">1d10</attack>
         </attacks>
         <immunity />
+        <loot>
+            <type>371</type>
+            <chance>60</chance>
+        </loot>
         <abilities>
             <general type="status2">
                 <type>touch</type>
@@ -2685,7 +2690,7 @@
         <skill>12</skill>
         <hp>40</hp>
         <speed>4</speed>
-        <attitude>docile</attitude>
+        <attitude>hostile-a</attitude>
         <summon>0</summon>
         <treasure>0</treasure>
         <attacks>
@@ -4252,7 +4257,7 @@
     <monster id="174">
         <name>Unicorn</name>
         <pic w="1" h="1">144</pic>
-        <race>beast</race>
+        <race>magic</race>
         <level>10</level>
         <armor>14</armor>
         <skill>6</skill>
