@@ -229,6 +229,8 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 			pic_dlg = new cPictChoice(pics, parent);
 			break;
 	}
+	if(!all_pics.empty())
+		cur_choice = std::find(all_pics.begin(), all_pics.end(), cur_choice) - all_pics.begin();
 	if(!pic_dlg) {
 		if(all_pics.size());
 		else if(total_pics > 0) {
