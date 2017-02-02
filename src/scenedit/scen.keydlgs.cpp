@@ -1092,8 +1092,10 @@ static bool edit_dialog_text_event_filter(cDialog& me, std::string item_hit, eSt
 
 // mode 0 - scen 1 - out 2 - town
 void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent) {
-	if(*str1 >= num_strs(mode) - 6)
+	if(*str1 >= num_strs(mode))
 		*str1 = -1;
+	else if(*str1 + 5 >= num_strs(mode))
+		ensure_str(mode, *str1 + 5);
 	// first, assign the 6 strs for the dialog.
 	if(*str1 < 0) {
 		size_t n = num_strs(mode);
