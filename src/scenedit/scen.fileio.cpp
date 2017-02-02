@@ -310,11 +310,23 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.PushText(scenario.spec_strs[i], true);
 		data.CloseElement("string");
 	}
+	// Preserve trailing empty strings
+	if(!scenario.spec_strs.empty() && scenario.spec_strs.back().empty()) {
+		data.OpenElement("string");
+		data.PushAttribute("id", scenario.spec_strs.size() - 1);
+		data.CloseElement("string");
+	}
 	for(size_t i = 0; i < scenario.journal_strs.size(); i++) {
 		if(scenario.journal_strs[i].empty()) continue;
 		data.OpenElement("journal");
 		data.PushAttribute("id", i);
 		data.PushText(scenario.journal_strs[i], true);
+		data.CloseElement("journal");
+	}
+	// Preserve trailing empty journals
+	if(!scenario.journal_strs.empty() && scenario.journal_strs.back().empty()) {
+		data.OpenElement("journal");
+		data.PushAttribute("id", scenario.journal_strs.size() - 1);
 		data.CloseElement("journal");
 	}
 	data.CloseElement("game");
@@ -640,6 +652,12 @@ void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector) {
 		data.PushText(sector.sign_locs[i].text, true);
 		data.CloseElement("sign");
 	}
+	// Preserve trailing empty signs
+	if(!sector.sign_locs.empty() && sector.sign_locs.back().text.empty()) {
+		data.OpenElement("sign");
+		data.PushAttribute("id", sector.sign_locs.size() - 1);
+		data.CloseElement("sign");
+	}
 	for(auto& area : sector.area_desc) {
 		if(!area.descr.empty() && area.top < area.bottom && area.left < area.right)
 			data.PushElement("area", area);
@@ -649,6 +667,12 @@ void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector) {
 		data.OpenElement("string");
 		data.PushAttribute("id", i);
 		data.PushText(sector.spec_strs[i], true);
+		data.CloseElement("string");
+	}
+	// Preserve trailing empty strings
+	if(!sector.spec_strs.empty() && sector.spec_strs.back().empty()) {
+		data.OpenElement("string");
+		data.PushAttribute("id", sector.spec_strs.size() - 1);
 		data.CloseElement("string");
 	}
 	data.CloseElement("sector");
@@ -788,11 +812,23 @@ void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 		data.PushText(town.sign_locs[i].text, true);
 		data.CloseElement("sign");
 	}
+	// Preserve trailing empty signs
+	if(!town.sign_locs.empty() && town.sign_locs.back().text.empty()) {
+		data.OpenElement("sign");
+		data.PushAttribute("id", town.sign_locs.size() - 1);
+		data.CloseElement("sign");
+	}
 	for(size_t i = 0; i < town.spec_strs.size(); i++) {
 		if(town.spec_strs[i].empty()) continue;
 		data.OpenElement("string");
 		data.PushAttribute("id", i);
 		data.PushText(town.spec_strs[i], true);
+		data.CloseElement("string");
+	}
+	// Preserve trailing empty strings
+	if(!town.spec_strs.empty() && town.spec_strs.back().empty()) {
+		data.OpenElement("string");
+		data.PushAttribute("id", town.spec_strs.size() - 1);
 		data.CloseElement("string");
 	}
 	data.CloseElement("town");
