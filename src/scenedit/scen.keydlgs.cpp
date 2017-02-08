@@ -1138,16 +1138,19 @@ void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent) {
 static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, short spec_mode) {
 	size_t num_specs;
 	switch(spec_mode) {
-		case 0: num_specs = scenario.scen_specials.size();
-		case 1: num_specs = current_terrain->specials.size();
-		case 2: num_specs = town->specials.size();
+		case 0: num_specs = scenario.scen_specials.size(); break;
+		case 1: num_specs = current_terrain->specials.size(); break;
+		case 2: num_specs = town->specials.size(); break;
 	}
 	
 	if(item_hit == "cancel") me.setResult<short>(-1);
 	else if(item_hit == "okay") {
 		short i = me["num"].getTextAsNum();
 		if(i < 0 || i >= num_specs) {
-			showWarning("There is no special node with that number. The available range is 0 to " + std::to_string(num_specs - 1) + ".","The node has been set anyway. To create it, select Edit Special Nodes from the menu, scroll to the bottom, and select Create new Node.",&me);
+			std::string range = num_specs
+				? "The available range is 0 to " + std::to_string(num_specs - 1) + "."
+				: "There are currently no nodes defined at all.";
+			showWarning("There is no special node with that number. " + range,"The node has been set anyway. To create it, select Edit Special Nodes from the menu, scroll to the bottom, and select Create new Node.",&me);
 		}
 		me.setResult(i);
 		me.toast(true);
