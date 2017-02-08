@@ -36,7 +36,7 @@ bool cTextField::callHandler(event_fcn<EVT_DEFOCUS>::type onFocus, cDialog& me, 
 		} catch(boost::bad_lexical_cast) {
 			static const std::map<const eFldType, const std::string> typeNames = {
 				{FLD_INT, "an integer"},
-				{FLD_UINT, "a positive integer"},
+				{FLD_UINT, "a non-negative integer"},
 				{FLD_REAL, "a number"},
 			};
 			showError("You need to enter " + typeNames.at(field_type) + "!","",parent);
