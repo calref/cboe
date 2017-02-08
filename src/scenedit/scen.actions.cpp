@@ -2182,24 +2182,22 @@ void place_edit_special(location loc) {
 		return;
 	}
 	auto& specials = editing_town ? town->special_locs : current_terrain->special_locs;
-	if(editing_town) {
-		for(short i = 0; i < specials.size(); i++)
-			if(specials[i] == loc && specials[i].spec >= 0) {
-				edit_spec_enc(specials[i].spec, editing_town ? 2 : 1, nullptr);
-				return;
+	for(short i = 0; i < specials.size(); i++)
+		if(specials[i] == loc && specials[i].spec >= 0) {
+			edit_spec_enc(specials[i].spec, editing_town ? 2 : 1, nullptr);
+			return;
+		}
+	// new special
+	short spec = get_fresh_spec(editing_town ? 2 : 1);
+	for(short i = 0; i <= specials.size(); i++) {
+		if(i == specials.size())
+			specials.emplace_back(-1,-1,-1);
+		if(specials[i].spec < 0) {
+			if(edit_spec_enc(spec, editing_town ? 2: 1, nullptr)) {
+				specials[i] = loc;
+				specials[i].spec = spec;
 			}
-		// new special
-		short spec = get_fresh_spec(editing_town ? 2 : 1);
-		for(short i = 0; i <= specials.size(); i++) {
-			if(i == specials.size())
-				specials.emplace_back(-1,-1,-1);
-			if(specials[i].spec < 0) {
-				if(edit_spec_enc(spec, editing_town ? 2: 1, nullptr)) {
-					specials[i] = loc;
-					specials[i].spec = spec;
-				}
-				break;
-			}
+			break;
 		}
 	}
 }
