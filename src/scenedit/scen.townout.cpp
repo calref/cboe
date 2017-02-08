@@ -566,7 +566,7 @@ static bool edit_out_wand_event_filter(cDialog& me, std::string hit, short& whic
 	return true;
 }
 
-static bool edit_out_wand_spec(cDialog& me, std::string hit, short which, cOutdoors::cWandering wand) {
+static bool edit_out_wand_spec(cDialog& me, std::string hit, short which, cOutdoors::cWandering& wand) {
 	if(!me.toast(true)) return true;
 	me.untoast();
 	save_out_wand(me, which, wand, 100);
@@ -579,18 +579,18 @@ static bool edit_out_wand_spec(cDialog& me, std::string hit, short which, cOutdo
 	return true;
 }
 
-static bool edit_out_wand_monst(cDialog& me, std::string hit, short which, cOutdoors::cWandering wand) {
+static bool edit_out_wand_monst(cDialog& me, std::string hit, short which, cOutdoors::cWandering& wand) {
 	if(!me.toast(true)) return true;
 	me.untoast();
 	save_out_wand(me, which, wand, 100);
 	std::string fld = hit.substr(7);
 	short i;
 	if(fld[0] == 'f') {
-		i = choose_text(STRT_MONST,wand.monst[fld[3] - '0']-1,&me,"Choose Which Monster:") + 1;
-		if(i >= 0) wand.monst[fld[3] - '0'] = i;
+		i = choose_text(STRT_MONST,wand.monst[fld[3] - '1']-1,&me,"Choose Which Monster:") + 1;
+		if(i >= 0) wand.monst[fld[3] - '1'] = i;
 	} else if(fld[0] == 'a') {
-		i = choose_text(STRT_MONST,wand.friendly[fld[4] - '0']-1,&me,"Choose Which Monster:") + 1;
-		if(i >= 0) wand.friendly[fld[4] - '0'] = i;
+		i = choose_text(STRT_MONST,wand.friendly[fld[4] - '1']-1,&me,"Choose Which Monster:") + 1;
+		if(i >= 0) wand.friendly[fld[4] - '1'] = i;
 	}
 	me[fld].setText(scenario.scen_monsters[i].m_name);
 	return true;
