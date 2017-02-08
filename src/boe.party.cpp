@@ -2160,7 +2160,7 @@ bool pick_pc_graphic(short pc_num,short mode,cDialog* parent) {
 	
 	make_cursor_sword();
 	
-	cPictChoice pcPic(0,35,PIC_PC,parent);
+	cPictChoice pcPic(0,36,PIC_PC,parent);
 	// Customize it for this special case of choosing a PC graphic
 	dynamic_cast<cPict&>(pcPic->getControl("mainpic")).setPict(7);
 	pcPic->getControl("prompt").setText("Select a graphic for your PC:");

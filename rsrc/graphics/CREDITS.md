@@ -29,7 +29,7 @@ though in some cases rearranged a little:
 - outhelp.png
 - pcedbuttons.png
 - pcedtitle.png
-- pcs.png
+- pcs.png (except the Vahnatai which is by Kelyar-Ihrno)
 - pixpats.png
 - scenpics.png
 - spidlogo.png
