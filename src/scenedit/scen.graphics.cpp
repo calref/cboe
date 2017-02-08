@@ -1295,13 +1295,43 @@ void place_location() {
 	short picture_wanted;
 	tileImage(mainPtr, terrain_buttons_rect, bg[17]);
 	frame_rect(mainPtr, terrain_buttons_rect, sf::Color::Black);
+	location mouse = sf::Mouse::getPosition(mainPtr);
 	
-	location moveTo(5, terrain_rects[255].bottom + 6);
+	location moveTo(5, terrain_rects[255].top + 18);
 	draw_rect = text_rect;
 	draw_rect.offset(moveTo);
-	if(overall_mode < MODE_MAIN_SCREEN)
-		sout << "Center: x = " << cen_x << ", y = " << cen_y;
-	else {
+	if(overall_mode < MODE_MAIN_SCREEN) {
+		std::cout << "Mouse: " << mouse << " Buttons: " << terrain_buttons_rect << " Terrain: " << terrain_rect << std::endl;
+		if(mouse.in(terrain_buttons_rect)) {
+			location rel_mouse = mouse;
+			rel_mouse.x -= RIGHT_AREA_UL_X;
+			rel_mouse.y -= RIGHT_AREA_UL_Y;
+			for(int i = 0; i < 256; i++) {
+				if(rel_mouse.in(terrain_rects[i])) {
+					int first = pal_sbar->getPosition() * 16;
+					switch(draw_mode) {
+						case DRAW_TERRAIN:
+							if(first + i < scenario.ter_types.size())
+								sout << "Terrain: " << scenario.ter_types[first + i].name;
+							break;
+						case DRAW_ITEM:
+							if(first + i < scenario.scen_items.size())
+								sout << "Item: " << scenario.scen_items[first + i].full_name;
+							break;
+						case DRAW_MONST:
+							if(first + i + 1 < scenario.scen_monsters.size())
+								sout << "Monster: " << scenario.scen_monsters[first + i + 1].m_name;
+							break;
+					}
+					break;
+				}
+			}
+		} else if(mouse.in(terrain_rect) && mouse_spot.x >= 0)
+			sout << "Under mouse: x = " << (cen_x - 4 + mouse_spot.x)
+				<< ", y = " << (cen_y - 4 + mouse_spot.y);
+		if(sout.str().empty())
+			sout << "Center: x = " << cen_x << ", y = " << cen_y;
+	} else {
 		moveTo.y += 13; // TODO: Not sure how important this is.
 		sout << "Click terrain to edit. ";
 	}

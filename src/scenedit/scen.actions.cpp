@@ -196,6 +196,7 @@ void update_mouse_spot(location the_point) {
 			set_cursor(eyedropper_curs);
 		else set_cursor(wand_curs);
 	}
+	if(overall_mode < MODE_MAIN_SCREEN) place_location();
 }
 
 static bool handle_lb_action(location the_point) {
