@@ -988,21 +988,7 @@ bool handle_action(sf::Event event) {
 	location the_point,point_in_area;
 	
 	the_point = location(event.mouseButton.x, event.mouseButton.y);
-	the_point.x -= ul.x;
-	the_point.y -= ul.y;
 	end_scenario = false;
-	
-	// Now split off the extra stuff, like talking and shopping.
-	if(overall_mode == MODE_TALKING) {
-		handle_talk_event(the_point);
-		if(overall_mode != MODE_TALKING)
-			return false;
-	}
-	if(overall_mode == MODE_SHOPPING) {
-		handle_shop_event(the_point);
-		if(overall_mode != MODE_SHOPPING)
-			return false;
-	}
 	
 	// MARK: First, figure out where party is
 	switch(overall_mode) {
@@ -1035,6 +1021,21 @@ bool handle_action(sf::Event event) {
 			// If we get here during these modes, something is probably not right, so bail out
 			add_string_to_buf("Unexpected game state!");
 			return are_done;
+	}
+	
+	the_point.x -= ul.x;
+	the_point.y -= ul.y;
+	
+	// Now split off the extra stuff, like talking and shopping.
+	if(overall_mode == MODE_TALKING) {
+		handle_talk_event(the_point);
+		if(overall_mode != MODE_TALKING)
+			return false;
+	}
+	if(overall_mode == MODE_SHOPPING) {
+		handle_shop_event(the_point);
+		if(overall_mode != MODE_SHOPPING)
+			return false;
 	}
 	
 	// MARK: Then, handle a button being hit.
