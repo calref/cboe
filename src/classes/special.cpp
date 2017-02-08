@@ -579,7 +579,7 @@ static const char*const button_dict[7][11] = {
 		"s   ss   s     +    s==+s  =   ", // ex2b
 		"               =           s   ", // ex2c
 	}, { // town nodes
-		"mmmmmmmmmmmmmmm   dddmmmmmmmmmmmmmM", // msg1
+		"mmmmmmmmmmmmmm    dddmmmmmmmmmmmmmM", // msg1
 		"                                   ", // msg2
 		"                                   ", // msg3
 		" 8                ppp              ", // pic
