@@ -225,7 +225,7 @@
 @once-dlog = 32
 	sdf 1, 9
 	msg 27, -1, 1
-	pic 252, 1
+	pic 208, 1
 	ex1 -1, -1, -1
 	ex2 -1, -1, -1
 	goto -1

@@ -201,6 +201,30 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			pictype = PIC_TER;
 			m3 = m2;
 			m2 = -1;
+			switch(pic) {
+				case 247: pic = 210; break;
+				case 248: pic = 211; break;
+				case 249: pic = 212; break;
+				case 250: pic = 213; break;
+				case 202: pic = 0; break;
+				case 203: pic = 2; break;
+				case 204: pic = 32; break;
+				case 207: pic = 0; break;
+				case 208: pic = 123; break;
+				case 209: pic = 210; break;
+				case 210: pic = 163; break;
+				case 211: pic = 2; break;
+				case 212: pic = 32; break;
+				case 218: case 219: case 220: case 221:
+				case 222: case 223: case 224: case 225:
+				case 215: pic = 216; break;
+				case 233: pic = 137; break;
+				case 213: pic = 214; break;
+				case 214: pic = 215; break;
+				case 246: pic = 209; break;
+				case 251: pic = 207; break;
+				case 252: pic = 208; break;
+			}
 			if(old.type == 56) type = eSpecType::ONCE_DIALOG;
 			else if(old.type == 59) type = eSpecType::ONCE_GIVE_ITEM_DIALOG;
 			else type = eSpecType::TOWN_LEVER;
