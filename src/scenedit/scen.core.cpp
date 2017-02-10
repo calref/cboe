@@ -2412,8 +2412,6 @@ static bool add_shop_entry(cDialog& me, std::string type, cShop& shop, size_t wh
 		cItem item('spec');
 		size_t amount = 0;
 		edit_shop_special(me, item, amount);
-		if(item.item_level < 0)
-			return true;
 		shop.addSpecial(item.full_name, item.desc, item.graphic_num, item.item_level, item.value, amount);
 	} else if(type == "class") {
 		int n = get_monst_abil_num("Which special class?", 0, 100, me);
