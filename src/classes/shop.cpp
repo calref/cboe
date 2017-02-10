@@ -212,11 +212,11 @@ void cShop::replaceSpecial(size_t i, eShopItemType type, int n) {
 		items[i].item.item_level = n;
 		items[i].item.full_name = get_str("skills", n * 2 + 1);
 	} else if(type == eShopItemType::TREASURE) {
-		items[i].item.graphic_num = 45;
+		items[i].item.graphic_num = 17;
 		items[i].item.item_level = n;
 		items[i].item.full_name = "Treasure (type " + std::to_string(n) + ")";
 	} else if(type == eShopItemType::CLASS) {
-		items[i].item.graphic_num = 65;
+		items[i].item.graphic_num = 105;
 		items[i].item.special_class = n;
 		items[i].item.full_name = "Item of special class " + std::to_string(n);
 	} else {
