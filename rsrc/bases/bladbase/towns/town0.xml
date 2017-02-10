@@ -228,6 +228,18 @@
         <personality>5</personality>
         <face>4</face>
     </creature>
+    <area top="26" left="15" bottom="32" right="22">Armory of Mayhem</area>
+    <area top="35" left="8" bottom="39" right="14">Shrine of Divine Health</area>
+    <area top="14" left="9" bottom="20" right="15">Sage&apos;s Library</area>
+    <area top="8" left="33" bottom="18" right="39">Training Grounds</area>
+    <area top="12" left="30" bottom="18" right="32">Training Grounds</area>
+    <area top="29" left="29" bottom="39" right="39">The Warrior&apos;s Arms</area>
+    <area top="8" left="15" bottom="14" right="21">Archer&apos;s Workshop</area>
+    <area top="8" left="9" bottom="12" right="15">Highly Robbable House</area>
+    <area top="12" left="9" bottom="14" right="15">Webby Walkway</area>
+    <area top="26" left="5" bottom="30" right="10">West Guard Post</area>
+    <area top="38" left="19" bottom="42" right="22">South Guard Post</area>
+    <area top="5" left="26" bottom="9" right="30">North Guard Post</area>
     <sign id="0">
         <![CDATA[Training Arena|  All are welcome]]>
     </sign>
