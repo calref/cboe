@@ -243,6 +243,8 @@ void handle_menu_choice(eMenu item_hit) {
 			save_scenario(true);
 			break;
 		case eMenu::FILE_NEW:
+			if(!save_check("save-before-close"))
+				break;
 			if(build_scenario()) {
 				overall_mode = MODE_MAIN_SCREEN;
 				set_up_main_screen();
