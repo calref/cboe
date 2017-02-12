@@ -288,10 +288,6 @@ void handle_menu_choice(eMenu item_hit) {
 			isEdit = true;
 			break;
 		case eMenu::TOWN_CREATE:
-			if(change_made) {
-				showError("You need to save the changes made to your scenario before you can add a new town.");
-				return;
-			}
 			if(scenario.towns.size() >= 200) {
 				showError("You have reached the limit of 200 towns you can have in one scenario.");
 				return;
@@ -343,10 +339,6 @@ void handle_menu_choice(eMenu item_hit) {
 			start_string_editing(STRS_JOURNAL,0);
 			break;
 		case eMenu::TOWN_IMPORT:
-			if(change_made) {
-				showError("You need to save the changes made to your scenario before you can import a town.");
-				return;
-			}
 			if(cTown* town = pick_import_town()) {
 				town->reattach(scenario);
 				delete scenario.towns[cur_town];
@@ -357,10 +349,6 @@ void handle_menu_choice(eMenu item_hit) {
 			}
 			break;
 		case eMenu::OUT_IMPORT:
-			if(change_made) {
-				showError("You need to save the changes made to your scenario before you can import a sector.");
-				return;
-			}
 			if(cOutdoors* out = pick_import_out()) {
 				out->reattach(scenario);
 				delete scenario.outdoors[cur_out.x][cur_out.y];
@@ -386,10 +374,6 @@ void handle_menu_choice(eMenu item_hit) {
 			edit_item_placement();
 			break;
 		case eMenu::TOWN_DELETE:
-			if(change_made) {
-				showError("You need to save the changes made to your scenario before you can delete a town.");
-				return;
-			}
 			if(scenario.towns.size() == 1) {
 				showError("You can't delete the last town in a scenario. All scenarios must have at least 1 town.");
 				return;

@@ -248,10 +248,6 @@ static bool handle_lb_action(location the_point) {
 						start_item_editing(0);
 						break;
 					case LB_NEW_TOWN:
-						if(change_made) {
-							showError("You need to save the changes made to your scenario before you can add a new town.");
-							return true;
-						}
 						if(scenario.towns.size() >= 200) {
 							showError("You have reached the limit of 200 towns you can have in one scenario.");
 							return true;
@@ -273,10 +269,6 @@ static bool handle_lb_action(location the_point) {
 						start_shops_editing(false);
 						break;
 					case LB_LOAD_OUT:
-						if(change_made) {
-							if(!save_check("save-section-confirm"))
-								break;
-						}
 						spot_hit = pick_out(cur_out, scenario);
 						if(spot_hit != cur_out) {
 							cur_out = spot_hit;
@@ -289,10 +281,6 @@ static bool handle_lb_action(location the_point) {
 						mouse_button_held = false;
 						break;
 					case LB_LOAD_TOWN:
-						if(change_made) {
-							if(!save_check("save-section-confirm"))
-								break;
-						}
 						x = pick_town_num("select-town-edit",cur_town,scenario);
 						if(x >= 0){
 							cur_town = x;
