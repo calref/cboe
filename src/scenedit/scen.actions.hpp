@@ -1,5 +1,6 @@
 
 #include "scen.global.hpp"
+#include "undo.hpp"
 
 void init_screen_locs();
 void handle_action(location the_point,sf::Event event);
@@ -45,3 +46,12 @@ void place_edit_special(location loc);
 void set_special(location spot_hit);
 bool save_check(std::string which_dlog);
 
+/// Represents the action of adding a new town to the end of the list
+class aNewTown : public cAction {
+	class cTown* theTown;
+public:
+	aNewTown(class cTown* t);
+	void undo() override;
+	void redo() override;
+	~aNewTown();
+};

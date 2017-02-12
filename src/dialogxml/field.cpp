@@ -703,6 +703,7 @@ void aTextInsert::undo() {
 	auto result = contents.erase(del_start, del_end);
 	in.setText(contents);
 	in.selectionPoint = in.insertionPoint = result - contents.begin();
+	done = false;
 }
 
 void aTextInsert::redo() {
@@ -710,6 +711,7 @@ void aTextInsert::redo() {
 	contents.insert(at, text);
 	in.setText(contents);
 	in.selectionPoint = in.insertionPoint = at + text.length();
+	done = true;
 }
 
 void aTextInsert::append(char c) {
@@ -725,6 +727,7 @@ void aTextDelete::undo() {
 	contents.insert(start, text);
 	in.setText(contents);
 	in.selectionPoint = in.insertionPoint = start + ip;
+	done = false;
 }
 
 void aTextDelete::redo() {
@@ -734,6 +737,7 @@ void aTextDelete::redo() {
 	auto result = contents.erase(del_start, del_end);
 	in.setText(contents);
 	in.selectionPoint = in.insertionPoint = result - contents.begin();
+	done = true;
 }
 
 void aTextDelete::append_front(char c) {

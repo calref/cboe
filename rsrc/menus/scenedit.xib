@@ -327,6 +327,7 @@
 									<reference key="NSMixedImage" ref="909111550"/>
 								</object>
 							</array>
+							<bool key="NSNoAutoenable">YES</bool>
 						</object>
 					</object>
 					<object class="NSMenuItem" id="741259600">

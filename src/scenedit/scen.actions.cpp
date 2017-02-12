@@ -38,6 +38,7 @@ short current_terrain_type = 0;
 short safety = 0;
 location spot_hit,last_spot_hit(-1,-1),mouse_spot(-1,-1);
 short copied_spec = -1;
+cUndoList undo_list;
 
 cTown::cItem store_place_item;
 
@@ -228,8 +229,7 @@ static bool handle_lb_action(location the_point) {
 					case LB_LOAD_SCEN:
 						file_to_load = nav_get_scenario();
 						if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
-							cur_town = scenario.last_town_edited;
-							town = scenario.towns[cur_town];
+							set_current_town(scenario.last_town_edited);
 							cur_out = scenario.last_out_edited;
 							current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
 							overall_mode = MODE_MAIN_SCREEN;
@@ -252,7 +252,7 @@ static bool handle_lb_action(location the_point) {
 							showError("You have reached the limit of 200 towns you can have in one scenario.");
 							return true;
 						}
-						if(new_town(scenario.towns.size()))
+						if(new_town())
 							set_up_main_screen();
 						break;
 					case LB_EDIT_TEXT:
@@ -302,6 +302,7 @@ static bool handle_lb_action(location the_point) {
 				set_up_main_screen();
 			}
 			mouse_button_held = false;
+			update_edit_menu();
 			return true;
 		}
 	return false;

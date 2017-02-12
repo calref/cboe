@@ -208,6 +208,7 @@ void Handle_Update() {
 
 extern fs::path progDir;
 void handle_menu_choice(eMenu item_hit) {
+	extern cUndoList undo_list;
 	bool isEdit = false, isHelp = false;
 	std::string helpDlog;
 	fs::path file_to_load;
@@ -232,6 +233,8 @@ void handle_menu_choice(eMenu item_hit) {
 				set_up_main_screen();
 			} else if(!file_to_load.empty())
 				set_up_start_screen(); // Failed to load file, dump to start
+			undo_list.clear();
+			update_edit_menu();
 			break;
 		case eMenu::FILE_SAVE:
 			save_scenario();
@@ -244,6 +247,8 @@ void handle_menu_choice(eMenu item_hit) {
 				overall_mode = MODE_MAIN_SCREEN;
 				set_up_main_screen();
 			}
+			undo_list.clear();
+			update_edit_menu();
 			break;
 		case eMenu::FILE_CLOSE:
 			if(!save_check("save-before-close"))
@@ -253,6 +258,8 @@ void handle_menu_choice(eMenu item_hit) {
 			pal_sbar->hide();
 			shut_down_menus(0);
 			set_up_start_screen();
+			undo_list.clear();
+			update_edit_menu();
 			break;
 		case eMenu::QUIT: // quit
 			if(!save_check("save-before-quit"))
@@ -292,9 +299,8 @@ void handle_menu_choice(eMenu item_hit) {
 				showError("You have reached the limit of 200 towns you can have in one scenario.");
 				return;
 			}
-			if(new_town(scenario.towns.size()))
+			if(new_town())
 				set_up_main_screen();
-			change_made = true;
 			break;
 		case eMenu::OUT_RESIZE:
 			if(resize_outdoors())
@@ -523,7 +529,15 @@ void handle_menu_choice(eMenu item_hit) {
 	if(isEdit) {
 		if(!cDialog::sendInput(editKey)) {
 			// Handle non-dialog edit operations here.
-			// switch(editKey.k) {}
+			switch(editKey.k) {
+				case key_undo: undo_list.undo(); break;
+				case key_redo: undo_list.redo(); break;
+				default: break;
+			}
+			update_edit_menu();
+			if(overall_mode == MODE_MAIN_SCREEN)
+				set_up_main_screen();
+			redraw_screen();
 		}
 	}
 	if(isHelp)

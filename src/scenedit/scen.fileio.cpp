@@ -20,6 +20,7 @@
 #include "map_parse.hpp"
 #include "winutil.hpp"
 #include "choicedlog.hpp"
+#include "undo.hpp"
 
 extern cScenario scenario;
 
@@ -994,6 +995,9 @@ void save_scenario(bool rename) {
 		toFile = nav_put_scenario(def);
 		if(toFile.empty()) return;
 	}
+	
+	extern cUndoList undo_list;
+	undo_list.save();
 	
 	if(scenario.is_legacy && cChoiceDlog("save-legacy-scen", {"update", "cancel"}).show() == "update")
 		scenario.is_legacy = false;

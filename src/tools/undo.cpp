@@ -28,11 +28,22 @@ void cUndoList::redo(){
 	(*cur)->redo();
 }
 
-bool cUndoList::noUndo() {
+std::string cUndoList::undoName() const {
+	if(noUndo()) return "";
+	return (*cur)->getActionName();
+}
+
+std::string cUndoList::redoName() const {
+	if(noRedo()) return "";
+	auto next = std::next(cur);
+	return (*next)->getActionName();
+}
+
+bool cUndoList::noUndo() const {
 	return cur == theList.end();
 }
 
-bool cUndoList::noRedo() {
+bool cUndoList::noRedo() const {
 	return cur == theList.begin();
 }
 

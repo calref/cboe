@@ -13,12 +13,11 @@
 #include <iostream>
 #include "fileio.hpp"
 #include "scen.actions.hpp"
+#include "scen.townout.hpp"
 
 //extern bool ae_loading, startup_loaded, All_Done, party_in_memory, finished_init;
 extern cScenario scenario;
-extern cTown* town;
 extern cOutdoors* current_terrain;
-extern short cur_town;
 extern location cur_out;
 extern bool change_made, ae_loading;
 
@@ -52,8 +51,7 @@ void set_up_apple_events(int, char*[]) {
 	std::copy(msg.get(), msg.get() + len, std::inserter(fileName, fileName.begin()));
 	
 	if(load_scenario(fileName, scenario)) {
-		cur_town = scenario.last_town_edited;
-		town = scenario.towns[cur_town];
+		set_current_town(scenario.last_town_edited);
 		cur_out = scenario.last_out_edited;
 		current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
 		change_made = false;

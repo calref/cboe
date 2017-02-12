@@ -16,9 +16,10 @@ short edit_talk_node(short which_node);
 location pick_out(location default_loc,cScenario& scenario);
 cTown* pick_import_town();
 cOutdoors* pick_import_out();
-bool new_town(short which_town);
+bool new_town();
 bool resize_outdoors();
 void edit_placed_item(short which_i);
 
 void delete_last_town();
 void edit_town_wand();
+void set_current_town(int to);

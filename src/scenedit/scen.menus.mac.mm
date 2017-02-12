@@ -10,12 +10,14 @@
 #include "scenario.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
 #include <Cocoa/Cocoa.h>
 #include "winutil.hpp"
+#include "undo.hpp"
 
 using MenuHandle = NSMenu*;
 MenuHandle menu_bar_handle;
 MenuHandle file_menu, edit_menu, app_menu, scen_menu, town_menu, out_menu, help_menu;
 
 extern cScenario scenario;
+extern cUndoList undo_list;
 
 @interface MenuHandler : NSObject
 -(void) menuChoice:(id) sender;
@@ -138,6 +140,27 @@ void shut_down_menus(short mode) {
 	if(mode == 5) {
 		[[menu_bar_handle itemWithTitle: @"File"] setEnabled: NO];
 		[[menu_bar_handle itemWithTitle: @"Edit"] setEnabled: NO];
+	}
+}
+
+void update_edit_menu() {
+	NSMenuItem* mi_undo = [edit_menu itemAtIndex: 0];
+	if(undo_list.noUndo()) {
+		[mi_undo setTitle: @"Can't Undo"];
+		[mi_undo setEnabled: NO];
+	} else {
+		std::string undo_name = "Undo " + undo_list.undoName();
+		[mi_undo setTitle: [NSString stringWithCString: undo_name.c_str() encoding: NSASCIIStringEncoding]];
+		[mi_undo setEnabled: YES];
+	}
+	NSMenuItem* mi_redo = [edit_menu itemAtIndex: 1];
+	if(undo_list.noRedo()) {
+		[mi_redo setTitle: @"Can't Redo"];
+		[mi_redo setEnabled: NO];
+	} else {
+		std::string redo_name = "Redo " + undo_list.redoName();
+		[mi_redo setTitle: [NSString stringWithCString: redo_name.c_str() encoding: NSASCIIStringEncoding]];
+		[mi_redo setEnabled: YES];
 	}
 }
 

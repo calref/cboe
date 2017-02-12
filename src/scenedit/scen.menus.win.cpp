@@ -190,6 +190,10 @@ void shut_down_menus(short mode) {
 	DrawMenuBar(mainPtr.getSystemHandle());
 }
 
+void update_edit_menu() {
+	// TODO: Set the undo/redo menuitem title according to the current action to be undone/redone
+}
+
 #include "cursors.hpp"
 
 LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -212,17 +216,15 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 
 #include "fileio.hpp"
 #include "scen.actions.hpp"
+#include "scen.townout.hpp"
 
-extern short cur_town;
 extern location cur_out;
-extern cTown* town;
 extern cOutdoors* current_terrain;
 extern bool change_made, ae_loading;
 void set_up_apple_events(int argc, char* argv[]) {
 	if(argc > 1) {
 		if(load_scenario(argv[1], scenario)) {
-			cur_town = scenario.last_town_edited;
-			town = scenario.towns[cur_town];
+			set_current_town(scenario.last_town_edited);
 			cur_out = scenario.last_out_edited;
 			current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
 			change_made = false;

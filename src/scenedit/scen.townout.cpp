@@ -7,6 +7,7 @@
 #include "scenario.hpp"
 #include "town.hpp"
 #include "graphtool.hpp"
+#include "scen.actions.hpp"
 #include "scen.graphics.hpp"
 #include "scen.townout.hpp"
 #include "scen.keydlgs.hpp"
@@ -31,6 +32,7 @@ extern ter_num_t template_terrain[64][64];
 extern cScenario scenario;
 extern cOutdoors* current_terrain;
 extern location cur_out;
+extern cUndoList undo_list;
 
 const char *day_str_1[] = {"Unused","Day creature appears","Day creature disappears",
 	"Unused","Unused","Unused","Unused","Unused","Unused"};
@@ -1283,9 +1285,37 @@ location pick_out(location default_loc,cScenario& scenario) {
 	return default_loc;
 }
 
-bool new_town(short which_town) {
+void set_current_town(int to) {
+	if(to < 0 || to >= scenario.towns.size()) return;
+	cur_town = to;
+	town = scenario.towns[cur_town];
+	scenario.last_town_edited = cur_town;
+}
+
+aNewTown::aNewTown(cTown* t)
+	: cAction("add town")
+	, theTown(t)
+{}
+
+void aNewTown::undo() {
+	scenario.towns.resize(scenario.towns.size() - 1);
+	done = false;
+	set_current_town(scenario.towns.size() - 1);
+}
+
+void aNewTown::redo() {
+	scenario.towns.push_back(theTown);
+	done = true;
+	set_current_town(scenario.towns.size() - 1);
+}
+
+aNewTown::~aNewTown() {
+	if(!done) delete theTown;
+}
+
+bool new_town() {
 	cChoiceDlog new_dlg("new-town", {"okay", "cancel"});
-	new_dlg->getControl("num").setTextToNum(which_town);
+	new_dlg->getControl("num").setTextToNum(scenario.towns.size());
 	if(new_dlg.show() == "cancel") return false;
 	
 	std::string size = dynamic_cast<cLedGroup&>(new_dlg->getControl("size")).getSelected();
@@ -1295,9 +1325,7 @@ bool new_town(short which_town) {
 	else if(size == "med") scenario.towns.push_back(new cTown(scenario, AREA_MEDIUM));
 	else if(size == "sm") scenario.towns.push_back(new cTown(scenario, AREA_SMALL));
 	
-	cur_town = which_town;
-	town = scenario.towns[cur_town];
-	scenario.last_town_edited = cur_town;
+	set_current_town(scenario.towns.size() - 1);
 	town->name = new_dlg->getControl("name").getText().substr(0,30);
 	
 	for(short i = 0; i < town->max_dim; i++)
@@ -1314,6 +1342,7 @@ bool new_town(short which_town) {
 				}
 			}
 
+	undo_list.add(action_ptr(new aNewTown(scenario.towns.back())));
 	change_made = true;
 	
 	return true;

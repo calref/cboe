@@ -9,6 +9,9 @@
  *
  */
 
+#ifndef BOE_UNDO_HPP
+#define BOE_UNDO_HPP
+
 #include <list>
 #include <memory>
 #include <string>
@@ -16,7 +19,7 @@
 class cAction {
 	std::string actname;
 protected:
-	bool done = false;
+	bool done = true;
 public:
 	cAction(std::string name) : actname(name) {}
 	virtual void undo() = 0; ///< Undoes this action if it has not already been undone
@@ -39,18 +42,14 @@ public:
 	void save(); ///< Sets the last saved action to the current action
 	void revert(); ///< Undoes all actions back to (but excluding) the last saved action
 	void clear(); ///< Clears the list
-	bool noUndo(); ///< Check whether there's an action to undo
-	bool noRedo(); ///< Check whether there's an action to redo
+	bool noUndo() const; ///< Check whether there's an action to undo
+	bool noRedo() const; ///< Check whether there's an action to redo
+	std::string undoName() const; ///< Get the action name of the next action to undo
+	std::string redoName() const; ///< Get the action name of the next action to redo
 	void add(action_ptr what);
 	static size_t maxUndoSize;
 };
 
 // As a special convention, I will prefix action classes with 'a' instead of 'c'
-/*
-class aEditMonster : public cAction {
-	cMonster oldMonst, newMonst;
-};
 
-class aEditItem : public cAction {
-	cItem oldItem, newItem;
-};*/
+#endif

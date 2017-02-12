@@ -11,6 +11,7 @@
 
 void init_menubar();
 void shut_down_menus(short mode);
+void update_edit_menu();
 
 enum class eMenu {
 	NONE, ABOUT, QUIT, FRILL, UNFRILL,
