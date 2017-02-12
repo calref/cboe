@@ -1,6 +1,5 @@
 
 #include "pc.graphics.hpp"
-#include "pc.global.hpp"
 #include "universe.hpp"
 #include "pc.editors.hpp"
 #include "graphtool.hpp"

@@ -44,9 +44,6 @@
     <ClInclude Include="..\..\pcedit\pc.fileio.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\pcedit\pc.global.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\pcedit\pc.graphics.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

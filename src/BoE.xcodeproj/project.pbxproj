@@ -684,7 +684,6 @@
 		91B3EEFC0F969BD300BF5B67 /* pc.action.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pc.action.hpp; sourceTree = "<group>"; };
 		91B3EEFD0F969BD300BF5B67 /* pc.editors.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pc.editors.hpp; sourceTree = "<group>"; };
 		91B3EEFE0F969BD300BF5B67 /* pc.fileio.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pc.fileio.hpp; sourceTree = "<group>"; };
-		91B3EEFF0F969BD300BF5B67 /* pc.global.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pc.global.hpp; sourceTree = "<group>"; };
 		91B3EF000F969BD300BF5B67 /* pc.graphics.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pc.graphics.hpp; sourceTree = "<group>"; };
 		91B3EF050F969BD300BF5B67 /* pc.main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.main.cpp; sourceTree = "<group>"; };
 		91B3EF060F969BD300BF5B67 /* pc.action.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.action.cpp; sourceTree = "<group>"; };
@@ -1211,7 +1210,6 @@
 				91B3EEFC0F969BD300BF5B67 /* pc.action.hpp */,
 				91B3EEFD0F969BD300BF5B67 /* pc.editors.hpp */,
 				91B3EEFE0F969BD300BF5B67 /* pc.fileio.hpp */,
-				91B3EEFF0F969BD300BF5B67 /* pc.global.hpp */,
 				91B3EF000F969BD300BF5B67 /* pc.graphics.hpp */,
 				91FCC8DA18FE2CCA007026CE /* pc.menus.hpp */,
 			);

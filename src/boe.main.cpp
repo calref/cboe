@@ -1,5 +1,4 @@
 
-#define DIR_ARRAY_DEF
 #include "boe.global.hpp"
 #include "universe.hpp"
 
@@ -56,8 +55,6 @@ long start_time;
 
 short on_spell_menu[2][62];
 short on_monst_menu[256];
-signed char dir_x_dif[9] = {0,1,1,1,0,-1,-1,-1,0};
-signed char dir_y_dif[9] = {-1,-1,0,1,1,1,0,-1,0};
 
 extern bool map_visible;
 
@@ -204,7 +201,6 @@ void Handle_One_Event() {
 	through_sending();
 	Handle_Update();
 	
-	//(cur_time - last_anim_time > 42)
 	if((animTimer.getElapsedTime().asMilliseconds() >= fortyTicks) && (overall_mode != MODE_STARTUP) && (anim_onscreen) && get_bool_pref("DrawTerrainAnimation", true)
 	   && (!gInBackground)) {
 		animTimer.restart();

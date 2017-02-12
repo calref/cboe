@@ -104,7 +104,6 @@
     <ClInclude Include="..\..\pcedit\pc.action.hpp" />
     <ClInclude Include="..\..\pcedit\pc.editors.hpp" />
     <ClInclude Include="..\..\pcedit\pc.fileio.hpp" />
-    <ClInclude Include="..\..\pcedit\pc.global.hpp" />
     <ClInclude Include="..\..\pcedit\pc.graphics.hpp" />
     <ClInclude Include="..\..\pcedit\pc.menus.hpp" />
     <ClInclude Include="..\..\..\rsrc\menus\pcresource.h" />

@@ -2,30 +2,22 @@
 #ifndef BOE_SCEN_GLOBAL_HPP
 #define BOE_SCEN_GLOBAL_HPP
 
-#define DRAG_EDGE		15
+const int BITMAP_WIDTH = 28;
+const int BITMAP_HEIGHT = 36;
 
-#define	DISPLAY_LEFT	23
-#define	DISPLAY_TOP		23
-#define	BITMAP_WIDTH	28
-#define	BITMAP_HEIGHT	36
-#define	NUM_BUTTONS		15
+const int NUM_DLOG_B = 53;
 
-#define	NUM_DLOG_B		53
+const int NLS = 26; // number of left slots for buttons
+#define	NRS	right_button_status.size() // number of right slots for scrolling list
+const int NRSONPAGE = 33; // number of right slots for scrolling list on page at 1 time
 
-#define NLS	26
-// number of left slots for buttons
-#define	NRS	right_button_status.size()
-// number of right slots for scrolling list
-#define NRSONPAGE	33
-// number of right slots for scrolling list on page at 1 time
+const int RIGHT_AREA_UL_X = 287;
+const int RIGHT_AREA_UL_Y = 5;
+const int RIGHT_AREA_WIDTH = 290;
+const int RIGHT_AREA_HEIGHT = 400;
 
-#define	RIGHT_AREA_UL_X	287
-#define	RIGHT_AREA_UL_Y	5
-#define	RIGHT_AREA_WIDTH	290
-#define	RIGHT_AREA_HEIGHT	400
-
-#define	TER_RECT_UL_X	6
-#define	TER_RECT_UL_Y	19 // Formerly 25
+const int TER_RECT_UL_X = 6;
+const int TER_RECT_UL_Y = 19;
 
 enum eScenMode {
 	MODE_DRAWING = 0,

@@ -2,7 +2,6 @@
 #include <cstring>
 #include <cstdio>
 
-#include "pc.global.hpp"
 #include "universe.hpp"
 #include "pc.fileio.hpp"
 #include "pc.graphics.hpp"

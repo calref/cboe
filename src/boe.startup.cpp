@@ -145,7 +145,6 @@ void show_logo() {
 	from_rect = rectangle(pict_to_draw);
 	
 	play_sound(-95);
-	// TODO: Looping 10 times here is a bit of a hack; fix it
 	while(sound_going(95)) {
 		draw_splash(pict_to_draw, mainPtr, logo_from);
 		handle_splash_events();

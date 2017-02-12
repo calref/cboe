@@ -11,19 +11,6 @@
 
 #include <set>
 
-/*
- This file contain numerous constans in form of #defines.
- Almost all of these constants cannot be changed because
- that would make the game work improperly.
- */
-
-#define NUM_OF_PCS			6
-#define INVALID_PC			NUM_OF_PCS
-#define INVALID_TOWN		200
-
-#define NUM_OF_BOATS		30
-#define NUM_OF_HORSES		30
-
 /* overall mode; some seem to be missing */
 enum eGameMode {
 	MODE_OUTDOORS = 0,
@@ -36,7 +23,7 @@ enum eGameMode {
 	MODE_COMBAT = 10,
 	MODE_SPELL_TARGET = 11,
 	MODE_FIRING = 12, // firing from bow or crossbow
-	MODE_THROWING = 13, // throwing missle
+	MODE_THROWING = 13, // throwing missile
 	MODE_FANCY_TARGET = 14, // spell target, that is; I think it's for multitarget spells
 	MODE_DROP_COMBAT = 15,
 	MODE_TALKING = 20,
@@ -68,58 +55,11 @@ enum eStatMode {
 	MODE_ENCHANT = 6,
 };
 
-#ifndef DIR_ARRAY_DEF
-extern signed char dir_x_dif[9];
-extern signed char dir_y_dif[9];
-#endif
-
-//inline eDamageType operator + (eDamageType lhs, eDamageType rhs){
-//	if(lhs == DAMAGE_MARKED || lhs == DAMAGE_NO_PRINT){
-//		if(rhs != DAMAGE_MARKED && rhs != DAMAGE_NO_PRINT)
-//			return (eDamageType) ((int)lhs + (int)rhs);
-//	}else if(rhs == DAMAGE_MARKED || rhs == DAMAGE_NO_PRINT)
-//		return (eDamageType) ((int)lhs + (int)rhs);
-//	else{
-//		int a = lhs, b = rhs, c = 0;
-//		if(a > 30){
-//			c += 30;
-//			a -= 30;
-//			if(b > 30) b -= 30;
-//			else if(b > 10) b -= 10;
-//			if(a == b) c += a;
-//			else c += 4;
-//		}else if(b > 30){
-//			c += 30;
-//			b -= 30;
-//			if(a > 30) a -= 30;
-//			else if(a > 10) a -= 10;
-//			if(a == b) c += a;
-//			else c += 4;
-//		}else if(a > 10){
-//			c += 10;
-//			a -= 10;
-//			if(b > 30){
-//				b -= 30;
-//				c += 20;
-//			}else if(b > 10) b -= 10;
-//			if(a == b) c += a;
-//			else c += 4;
-//		}else if(b > 10){
-//			c += 10;
-//			b -= 10;
-//			if(a > 30){
-//				a -= 30;
-//				c += 20;
-//			}else if(a > 10) a -= 10;
-//			if(a == b) c += a;
-//			else c += 4;
-//		}
-//		return (eDamageType) c; // this SHOULD guarantee a valid result...
-//	}
-//}
+static const signed char dir_x_dif[9] = {0,1,1,1,0,-1,-1,-1,0};
+static const signed char dir_y_dif[9] = {-1,-1,0,1,1,1,0,-1,0};
 
 /* trap type */
-/* used in pc_record_type::runTrap(...) */
+/* used in run_trap(...) */
 enum eTrapType {
 	TRAP_RANDOM = 0,
 	TRAP_BLADE = 1,
@@ -138,51 +78,40 @@ enum eTrapType {
 };
 
 // Startup button rects
-#define STARTBTN_LOAD		0
-#define STARTBTN_NEW		1
-#define STARTBTN_ORDER		2
-#define STARTBTN_JOIN		3
-#define STARTBTN_CUSTOM		4
+const int STARTBTN_LOAD = 0;
+const int STARTBTN_NEW = 1;
+const int STARTBTN_ORDER = 2;
+const int STARTBTN_JOIN = 3;
+const int STARTBTN_CUSTOM = 4;
 
 // Shop rects
-#define SHOPRECT_WHOLE_AREA		0
-#define SHOPRECT_ACTIVE_AREA	1
-#define SHOPRECT_GRAPHIC		2
-#define SHOPRECT_ITEM_NAME		3
-#define SHOPRECT_ITEM_COST		4
-#define SHOPRECT_ITEM_EXTRA		5
-#define SHOPRECT_ITEM_HELP		6
+const int SHOPRECT_WHOLE_AREA = 0;
+const int SHOPRECT_ACTIVE_AREA = 1;
+const int SHOPRECT_GRAPHIC = 2;
+const int SHOPRECT_ITEM_NAME = 3;
+const int SHOPRECT_ITEM_COST = 4;
+const int SHOPRECT_ITEM_EXTRA = 5;
+const int SHOPRECT_ITEM_HELP = 6;
 
 // Item button rects
-#define ITEMBTN_NAME		0
-#define ITEMBTN_USE			1
-#define ITEMBTN_GIVE		2
-#define ITEMBTN_DROP		3
-#define ITEMBTN_INFO		4
-#define ITEMBTN_SPEC		5 // Sell, Identify, or Enchant
-#define ITEMBTN_ALL			10 // use, give, drop, info
-#define ITEMBTN_NORM		11 // give, drop, info
+const int ITEMBTN_NAME = 0;
+const int ITEMBTN_USE = 1;
+const int ITEMBTN_GIVE = 2;
+const int ITEMBTN_DROP = 3;
+const int ITEMBTN_INFO = 4;
+const int ITEMBTN_SPEC = 5; // Sell, Identify, or Enchant
+const int ITEMBTN_ALL = 10; // use, give, drop, info
+const int ITEMBTN_NORM = 11; // give, drop, info
 
 // PC button rects
-#define PCBTN_NAME			0
-#define PCBTN_HP			1
-#define PCBTN_SP			2
-#define PCBTN_INFO			3
-#define PCBTN_TRADE			4
+const int PCBTN_NAME = 0;
+const int PCBTN_HP = 1;
+const int PCBTN_SP = 2;
+const int PCBTN_INFO = 3;
+const int PCBTN_TRADE = 4;
 
 // Item window modes (non-PC)
-#define ITEM_WIN_SPECIAL	6
-#define ITEM_WIN_QUESTS		7
-
-//Spell select
-#define SPELL_SELECT_NONE		0
-#define SPELL_SELECT_ACTIVE		1
-#define SPELL_SELECT_ANY		2
-
-//Spell refer
-#define SPELL_REFER				0
-#define SPELL_IMMED				1
-#define SPELL_TARGET			2
-#define SPELL_FANCY_TARGET		3
+const int ITEM_WIN_SPECIAL = 6;
+const int ITEM_WIN_QUESTS = 7;
 
 #endif

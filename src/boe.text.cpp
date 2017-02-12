@@ -1,5 +1,6 @@
-#define  LINES_IN_TEXT_WIN	11
-#define	TEXT_BUF_LEN	70
+
+const int LINES_IN_TEXT_WIN = 11;
+const int TEXT_BUF_LEN = 70;
 
 #include <sstream>
 #include <list>
@@ -1055,7 +1056,6 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 		through_sending();
 	}
 	sprintf((char *)text_buffer[buf_pointer].line, "%-49.49s", str.c_str());
-//	c2pstr((char *)text_buffer[buf_pointer].line);
 	if(buf_pointer == (TEXT_BUF_LEN - 1))
 		buf_pointer = 0;
 	else buf_pointer++;
@@ -1193,15 +1193,10 @@ void draw_text_label(const text_label_t& label) {
 	win_draw_string(terrain_screen_gworld, text_rect, label.str, eTextMode::LEFT_TOP, style);
 }
 
-// TODO: This seems to duplicate logic found in graphtool to get a rect from a picture index
+// TODO: Replace uses of this function with direct use of calc_rect
 rectangle coord_to_rect(short i,short j) {
-	rectangle to_return;
-	
-	to_return.left = 13 + BITMAP_WIDTH * i;
-	to_return.right = to_return.left + BITMAP_WIDTH;
-	to_return.top = 13 + BITMAP_HEIGHT * j;
-	to_return.bottom = to_return.top + BITMAP_HEIGHT;
-	
+	rectangle to_return = calc_rect(i, j);
+	to_return.offset(13, 13);
 	return to_return;
 }
 

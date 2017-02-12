@@ -20,8 +20,6 @@
 
 namespace fs = boost::filesystem;
 
-#define LINES_IN_TEXT_WIN	11
-
 struct m_pic_index_t {
 	unsigned char i, x, y;
 };

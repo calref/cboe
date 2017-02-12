@@ -21,8 +21,6 @@
 #include "winutil.hpp"
 #include "choicedlog.hpp"
 
-#define	DONE_BUTTON_ITEM	1
-
 extern cScenario scenario;
 
 extern cTown* town;

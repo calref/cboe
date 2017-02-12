@@ -2,7 +2,6 @@
 #include <iostream>
 #include <cstring>
 #include <boost/filesystem/operations.hpp>
-#include "pc.global.hpp"
 #include "universe.hpp"
 #include "pc.graphics.hpp"
 #include "pc.editors.hpp"

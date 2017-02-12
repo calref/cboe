@@ -1569,10 +1569,10 @@ void draw_targeting_line(location where_curs) {
 						if((abs(store_loc.x - which_space.x) <= 4) &&
 							(abs(store_loc.y - which_space.y) <= 4) &&
 							(current_pat.pattern[store_loc.x - which_space.x + 4][store_loc.y - which_space.y + 4] != 0)) {
-							target_rect.left = 13 + BITMAP_WIDTH * i + 5 + ul.x;
-							target_rect.right = target_rect.left + BITMAP_WIDTH;
-							target_rect.top = 13 + BITMAP_HEIGHT * j + 5 + ul.y;
-							target_rect.bottom = target_rect.top + BITMAP_HEIGHT;
+							target_rect.left = 13 + 28 * i + 5 + ul.x;
+							target_rect.right = target_rect.left + 28;
+							target_rect.top = 13 + 36 * j + 5 + ul.y;
+							target_rect.bottom = target_rect.top + 36;
 							frame_rect(mainPtr, target_rect, sf::Color::White);
 							target_rect.inset(-5,-5);
 							redraw_rect2 = rectunion(target_rect,redraw_rect2);
