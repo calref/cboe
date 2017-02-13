@@ -295,7 +295,7 @@
         <![CDATA[You finally arrive at the remote village of Cavala. Cavala is a very young town, based on the harvest of Sourgrass. Sourgrass is a rare, wiry plant, which can be boiled down to make Hrras juice, a nasty, bitter fluid known for its healing properties.]]>
     </string>
     <string id="8">
-        <![CDATA[Cavala grew quickly, at first. Then the bandits came. Overnight, a peaceful, properous town became a beseiged colony, on the brink of collapse. To the southwest, you see that they're starting to build a wall, meagre protection from the bandits outside.]]>
+        <![CDATA[Cavala grew quickly, at first. Then the bandits came. Overnight, a peaceful, properous town became a beseiged colony, on the brink of collapse. To the southwest, you see that they're starting to build a wall, meager protection from the bandits outside.]]>
     </string>
     <string id="9">
         <![CDATA[Your arrival creates quite a stir among the town's sparse population. Once they see that you aren't bandits, hope appears on their startled faces. Help has finally arrived ...]]>
@@ -307,13 +307,13 @@
         <![CDATA[You're warned not to search private property without permission again, and the guards leave.]]>
     </string>
     <string id="15">
-        <![CDATA[As you walk down the corridor, an alarm sounds, the same sort of alarm that went off last time. Once again, guards come running almost immediately. The grab you.]]>
+        <![CDATA[As you walk down the corridor, an alarm sounds, the same sort of alarm that went off last time. Once again, guards come running almost immediately. They grab you.]]>
     </string>
     <string id="16">
         <![CDATA[Not long after, Mayor Leonardo walks in, looking extremely peeved. "Not again," he says. "Did I not tell you that we don't like strangers peeking into our private homes?"]]>
     </string>
     <string id="17">
-        <![CDATA["Release them," he says to the guards. "We appreictae your help, but you still have to live by our rules. Stay out of our private areas." He leaves, with the guards following behind.]]>
+        <![CDATA["Release them," he says to the guards. "We appreciate your help, but you still have to live by our rules. Stay out of our private areas." He leaves, with the guards following behind.]]>
     </string>
     <string id="21">
         <![CDATA[As you walk down the corridor, a loud alarm rings out! You freeze, pull your weapons, and get ready to be attacked.]]>
@@ -340,7 +340,7 @@
         <![CDATA[As you enter Cameron's smithy, a guard walks up to you. "We weren't fast enough," she says. "He ran off into the woods before we were able to catch him. He was helping the bandits all along."]]>
     </string>
     <string id="37">
-        <![CDATA["There was a locked up room in there. We knocked the door down. There's some stuff in there which might interest you. Be sure to look with." With that said, she walks off.]]>
+        <![CDATA["There was a locked up room in there. We knocked the door down. There's some stuff in there which might interest you. Be sure to look thoroughly." With that said, she walks off.]]>
     </string>
     <string id="42">
         <![CDATA[Cameron emptied out this small chest before he fled. There's nothing left. No gold, no maps. However, behind the chest, you find something interesting. It's a map! Somehow, it fell back there. ]]>
@@ -361,7 +361,7 @@
         <![CDATA["No more need! The bandit problem has been solved! Many thanks. When you leave the valley, I'm sure you will be given a great reward."]]>
     </string>
     <string id="48">
-        <![CDATA[Leonardo struggle to keep his fury from overwhelming him. "Cameron! It was Cameron all along! Be sure to search his home well. You may yet find the secrets to the bandit's location."]]>
+        <![CDATA[Leonardo struggles to keep his fury from overwhelming him. "Cameron! It was Cameron all along! Be sure to search his home well. You may yet find the secrets to the bandits' location."]]>
     </string>
     <string id="49">
         <![CDATA["Then find him, and punish him! Make him drown in his own blood, for all I care!"]]>
@@ -376,7 +376,7 @@
         <![CDATA["Thank you for returning my plate. Curse that Cameron!"]]>
     </string>
     <string id="53">
-        <![CDATA["Did you own a plate with runes on it," you ask. "Why, yes. It was a family heirloom. I sent it out with a caravan, but it was stolen in a bandit raid."]]>
+        <![CDATA["Did you own a plate with runes on it?" you ask. "Why, yes. It was a family heirloom. I sent it out with a caravan, but it was stolen in a bandit raid."]]>
     </string>
     <string id="54">
         <![CDATA[You hand her the plate you found. "Is this the plate?" When she sees it, she smiles, then looks confused, then looks angry.]]>

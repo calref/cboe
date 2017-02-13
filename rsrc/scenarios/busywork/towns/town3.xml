@@ -555,10 +555,10 @@
     <area top="33" left="9" bottom="39" right="16">Training Room</area>
     <area top="34" left="1" bottom="46" right="7">Dining Hall</area>
     <string id="0">
-        <![CDATA[You finally make your way into the Bandit's Hideout. It was well concealed ... mounds of brush were heaped in front of the entrance, and dirt was piles onto the brush. You were only able to see it from right outside.]]>
+        <![CDATA[You finally make your way into the bandits' hideout. It was well concealed ... mounds of brush were heaped in front of the entrance, and dirt was piled onto the brush. You were only able to see it from right outside.]]>
     </string>
     <string id="1">
-        <![CDATA[Once you're in, you're greeted by a grim, stomach turning sight. The cavern is filled with grisly totems, weapons and bones taken from the merchants killed while trying to leave Mrrnah Hollow. They must be trying to scare off anyone who gets that far.]]>
+        <![CDATA[Once you're in, you're greeted by a grim, stomach turning sight. The cavern is filled with grisly totems, weapons and bones taken from the merchants killed while trying to leave Mrrnah Hollow. They must be trying to scare off anyone who gets this far.]]>
     </string>
     <string id="2">
         <![CDATA[They didn't count on you, though ...]]>
@@ -573,7 +573,7 @@
         <![CDATA[As you search this bunch of stalagmites, one of them moves slightly when your hand brushes against it. You push the loose stalagmite, and find that it moves like a lever.]]>
     </string>
     <string id="9">
-        <![CDATA[You puch it until it stops. When it does, you hear a loud click, followed by a grinding noise from the west.]]>
+        <![CDATA[You push it until it stops. When it does, you hear a loud click, followed by a grinding noise from the west.]]>
     </string>
     <string id="10">
         <![CDATA[This is a storeroom, filled with new, well oiled weapons. You recognize them ... they were clearly made in Cameron's smithy back in Cavala. Now you know why he was working so hard.]]>
@@ -585,6 +585,6 @@
         <![CDATA[With a final, decisive blow, Cameron, leader of the bandits and traitor of Cavala, dies. With him dies the bandits' dominance in Mrrnah Hollow.]]>
     </string>
     <string id="13">
-        <![CDATA[With this victory, your mission here is completed. Thanks to you Cavala will be able to grow and prosper once again.]]>
+        <![CDATA[With this victory, your mission here is completed. Thanks to you, Cavala will be able to grow and prosper once again.]]>
     </string>
 </town>
