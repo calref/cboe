@@ -8484,6 +8484,9 @@
             <data>0</data>
             <use-flag>help-one</use-flag>
         </ability>
+        <description>
+            <![CDATA[Hrras Juice is the export of Mrrnah Hollow. It is sour, bitter, and unpleasant, but it has mild healing properties.]]>
+        </description>
     </item>
     <item id="384">
         <variety>object</variety>
@@ -8501,5 +8504,8 @@
         <properties>
             <identified>true</identified>
         </properties>
+        <description>
+            <![CDATA[This is a ceramic plate painted with ornate but nonmagical runes. It looks like an antique.]]>
+        </description>
     </item>
 </items>
