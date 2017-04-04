@@ -50,6 +50,11 @@ if str(platform) == "posix":
 	env.Append(CXXFLAGS="-std=c++11 -stdlib=libstdc++")
 	env["CC"] = 'clang'
 	env["CXX"] = 'clang++'
+	env.Append(LIBPATH=Split("""
+		/usr/lib
+	"""), CPPPATH=Split("""
+		/usr/include
+	"""))
 if str(platform) == "darwin":
 	env.Append(CXXFLAGS="-std=c++11 -stdlib=libc++", RPATH='../Frameworks')
 	env["CC"] = 'clang'
@@ -292,6 +297,7 @@ elif str(platform) == "win32":
 elif str(platform) == "posix":
 	env.Append(LIBS=Split("""
 		GL
+		X11
 	"""))
 
 Export("env platform")

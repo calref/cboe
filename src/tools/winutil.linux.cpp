@@ -6,6 +6,9 @@
 #include <sstream>
 #include <X11/Xlib.h>
 
+#include <sys/utsname.h>
+#include <stdio.h>
+
 extern sf::RenderWindow mainPtr;
 
 // TODO: I'm sure there's a better way to do this (maybe one that's keyboard layout agnostic)
@@ -87,8 +90,14 @@ char keyToChar(sf::Keyboard::Key key, bool isShift) {
 }
 
 std::string get_os_version() {
-	// TODO: Be more specific
-	return "Linux/BSD";
+    utsname details;
+    uname(&details);
+    
+    std::ostringstream version;
+    
+    version << details.sysname << ' ' << details.nodename << ' ' << details.release << ' ' << details.version;
+    
+	return version.str();
 }
 
 void makeFrontWindow(sf::Window& win) {
@@ -96,14 +105,15 @@ void makeFrontWindow(sf::Window& win) {
 
 void setWindowFloating(sf::Window& win, bool floating) {
 	// Code adapted from <http://stackoverflow.com/a/16235920>
-	Atom wmStateAbove = XInternAtom(NULL, "_NET_WM_STATE_ABOVE", true);
+	auto display = XOpenDisplay(NULL);
+	Atom wmStateAbove = XInternAtom(display, "_NET_WM_STATE_ABOVE", true);
 	if(wmStateAbove != None) {
 		std::cout << "_NET_WM_STATE_ABOVE has atom of " << long(wmStateAbove) << std::endl;
 	} else {
 		std::cerr << "ERROR: cannot find atom for _NET_WM_STATE_ABOVE!\n";
 	}
 		
-	Atom wmNetWmState = XInternAtom(NULL, "_NET_WM_STATE", true);
+	Atom wmNetWmState = XInternAtom(display, "_NET_WM_STATE", true);
 	if(wmNetWmState != None) {
 		std::cout << "_NET_WM_STATE has atom of " << long(wmNetWmState) << std::endl;
 	} else {
@@ -114,17 +124,8 @@ void setWindowFloating(sf::Window& win, bool floating) {
 		XClientMessageEvent xclient;
 		memset(&xclient, 0, sizeof(xclient));
 		
-		//window  = the respective client window
-		//message_type = _NET_WM_STATE
-		//format = 32
-		//data.l[0] = the action, as listed below
-		//data.l[1] = first property to alter
-		//data.l[2] = second property to alter
-		//data.l[3] = source indication (0-unk,1-normal app,2-pager)
-		//other data.l[] elements = 0
-		
 		xclient.type = ClientMessage;
-		xclient.window = mywin; // GDK_WINDOW_XID(window);
+		xclient.window = win.getSystemHandle(); // GDK_WINDOW_XID(window);
 		xclient.message_type = wmNetWmState; //gdk_x11_get_xatom_by_name_for_display( display, "_NET_WM_STATE" );
 		xclient.format = 32;
 		xclient.data.l[0] = floating ? 1 : 0;
@@ -133,7 +134,7 @@ void setWindowFloating(sf::Window& win, bool floating) {
 		xclient.data.l[3] = 0;
 		xclient.data.l[4] = 0;
 		XSendEvent(display,
-			root, // !! DefaultRootWindow( display ) !!!
+			win.getSystemHandle(), // !! DefaultRootWindow( display ) !!!
 			False,
 			SubstructureRedirectMask | SubstructureNotifyMask,
 			(XEvent *)&xclient
@@ -144,20 +145,40 @@ void setWindowFloating(sf::Window& win, bool floating) {
 void init_fileio() {
 }
 
+static std::string runFileDialog(const std::string& file, bool save) {
+    std::string filename;
+    filename.reserve(1024);
+    std::string command = "zenity --file-selection";
+    if (file != "")
+        command += " --filename=\"" + file + "\"";
+    if (save)
+        command += " --save";
+    FILE* hfile = popen(command.c_str(), "r");
+    char buffer[128];
+    while (!feof(hfile)) {
+        if (fgets(buffer, 128, hfile) != NULL)
+            filename += buffer;
+    }
+    pclose(hfile);
+    return filename;
+}
+
 fs::path nav_get_party() {
-	return "";
+	return runFileDialog("Blades of Exile Save.exg", false);
 }
 
 fs::path nav_put_party(fs::path def) {
-	return "";
+    if (def.empty())
+        def = "Blades of Exile Save.exg";
+	return runFileDialog(def.string(), true);
 }
 
 fs::path nav_get_scenario() {
-	return "";
+	return runFileDialog("", false);
 }
 
 fs::path nav_put_scenario(fs::path def) {
-	return "";
+	return runFileDialog(def.string(), false);
 }
 
 
