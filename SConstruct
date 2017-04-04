@@ -18,6 +18,10 @@ env = Environment(TARGET_ARCH='x86',ENV=os.environ)
 env.VariantDir('#build/obj', 'src')
 env.VariantDir('#build/obj/test', 'test')
 
+debug = ARGUMENTS.get('debug', 0)
+if int(debug):
+   env.Append(CCFLAGS = '-g')
+
 # This command generates the header with git revision information
 def gen_gitrev(env, target, source):
 	revid = subprocess.check_output(["git", "rev-parse", "HEAD"]);
@@ -46,6 +50,11 @@ if str(platform) == "posix":
 	env.Append(CXXFLAGS="-std=c++11 -stdlib=libstdc++")
 	env["CC"] = 'clang'
 	env["CXX"] = 'clang++'
+	env.Append(LIBPATH=Split("""
+		/usr/lib
+	"""), CPPPATH=Split("""
+		/usr/include
+	"""))
 if str(platform) == "darwin":
 	env.Append(CXXFLAGS="-std=c++11 -stdlib=libc++", RPATH='../Frameworks')
 	env["CC"] = 'clang'
@@ -288,6 +297,7 @@ elif str(platform) == "win32":
 elif str(platform) == "posix":
 	env.Append(LIBS=Split("""
 		GL
+		X11
 	"""))
 
 Export("env platform")
