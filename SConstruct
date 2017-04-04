@@ -18,6 +18,10 @@ env = Environment(TARGET_ARCH='x86',ENV=os.environ)
 env.VariantDir('#build/obj', 'src')
 env.VariantDir('#build/obj/test', 'test')
 
+debug = ARGUMENTS.get('debug', 0)
+if int(debug):
+   env.Append(CCFLAGS = '-g')
+
 # This command generates the header with git revision information
 def gen_gitrev(env, target, source):
 	revid = subprocess.check_output(["git", "rev-parse", "HEAD"]);
