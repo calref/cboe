@@ -49,9 +49,9 @@ bool save_check(std::string which_dlog);
 /// Represents the action of adding a new town to the end of the list
 class aNewTown : public cAction {
 	class cTown* theTown;
+	bool undo_me() override;
+	bool redo_me() override;
 public:
 	aNewTown(class cTown* t);
-	void undo() override;
-	void redo() override;
 	~aNewTown();
 };

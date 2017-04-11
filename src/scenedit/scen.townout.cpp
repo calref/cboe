@@ -1297,20 +1297,20 @@ aNewTown::aNewTown(cTown* t)
 	, theTown(t)
 {}
 
-void aNewTown::undo() {
+bool aNewTown::undo_me() {
 	scenario.towns.resize(scenario.towns.size() - 1);
-	done = false;
 	set_current_town(scenario.towns.size() - 1);
+	return true;
 }
 
-void aNewTown::redo() {
+bool aNewTown::redo_me() {
 	scenario.towns.push_back(theTown);
-	done = true;
 	set_current_town(scenario.towns.size() - 1);
+	return true;
 }
 
 aNewTown::~aNewTown() {
-	if(!done) delete theTown;
+	if(!isDone()) delete theTown;
 }
 
 bool new_town() {

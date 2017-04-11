@@ -98,9 +98,9 @@ class aTextInsert : public cAction {
 	cTextField& in;
 	int at;
 	std::string text;
+	bool undo_me() override, redo_me() override;
 public:
 	aTextInsert(cTextField& in, int at, std::string text = "");
-	void undo(), redo();
 	void append(char c);
 	~aTextInsert() {}
 };
@@ -109,10 +109,10 @@ class aTextDelete : public cAction {
 	cTextField& in;
 	int start, end, ip;
 	std::string text;
+	bool undo_me() override, redo_me() override;
 public:
 	aTextDelete(cTextField& in, int start, int end);
 	aTextDelete(cTextField& in, int start, std::string content, bool from_start);
-	void undo(), redo();
 	void append_front(char c);
 	void append_back(char c);
 	~aTextDelete() {}

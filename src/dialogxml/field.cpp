@@ -696,22 +696,22 @@ std::string cTextField::parse(ticpp::Element& who, std::string fname) {
 
 aTextInsert::aTextInsert(cTextField& in, int at, std::string text) : cAction("insert text"), in(in), at(at), text(text) {}
 
-void aTextInsert::undo() {
+bool aTextInsert::undo_me() {
 	std::string contents = in.getText();
 	auto del_start = contents.begin() + at;
 	auto del_end = del_start + text.length();
 	auto result = contents.erase(del_start, del_end);
 	in.setText(contents);
 	in.selectionPoint = in.insertionPoint = result - contents.begin();
-	done = false;
+	return true;
 }
 
-void aTextInsert::redo() {
+bool aTextInsert::redo_me() {
 	std::string contents = in.getText();
 	contents.insert(at, text);
 	in.setText(contents);
 	in.selectionPoint = in.insertionPoint = at + text.length();
-	done = true;
+	return true;
 }
 
 void aTextInsert::append(char c) {
@@ -722,22 +722,22 @@ aTextDelete::aTextDelete(cTextField& in, int start, int end) : cAction("delete t
 
 aTextDelete::aTextDelete(cTextField& in, int start, std::string content, bool from_start) : cAction("delete text"), in(in), start(start), end(start + content.size()), text(content), ip(from_start ? 0 : content.size()) {}
 
-void aTextDelete::undo() {
+bool aTextDelete::undo_me() {
 	std::string contents = in.getText();
 	contents.insert(start, text);
 	in.setText(contents);
 	in.selectionPoint = in.insertionPoint = start + ip;
-	done = false;
+	return true;
 }
 
-void aTextDelete::redo() {
+bool aTextDelete::redo_me() {
 	std::string contents = in.getText();
 	auto del_start = contents.begin() + start;
 	auto del_end = contents.begin() + end;
 	auto result = contents.erase(del_start, del_end);
 	in.setText(contents);
 	in.selectionPoint = in.insertionPoint = result - contents.begin();
-	done = true;
+	return true;
 }
 
 void aTextDelete::append_front(char c) {

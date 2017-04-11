@@ -10,6 +10,16 @@
 
 cAction::~cAction() {}
 
+void cAction::undo() {
+	if(done && undo_me())
+		done = false;
+}
+
+void cAction::redo() {
+	if(!done && redo_me())
+		done = true;
+}
+
 cUndoList::cUndoList(){
 	lastSave = cur = theList.begin();
 }
