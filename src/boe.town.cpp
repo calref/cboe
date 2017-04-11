@@ -86,19 +86,17 @@ void start_town_mode(short which_town, short entry_dir) {
 	}
 	
 	// Now adjust town number as necessary.
-	for(short i = 0; i < univ.scenario.town_mods.size(); i++)
-		if(univ.scenario.town_mods[i].spec >= 0 && univ.scenario.town_mods[i].spec < 200 &&
-			town_number == univ.scenario.town_mods[i].spec &&
-			univ.party.sd_legit(univ.scenario.town_mods[i].x,univ.scenario.town_mods[i].y)) {
+	for(const auto& mod : univ.scenario.town_mods)
+		if(mod.spec >= 0 && mod.spec < 200 && town_number == mod.spec && univ.party.sd_legit(mod.x, mod.y)) {
 			former_town = town_number;
-			town_number += PSD[univ.scenario.town_mods[i].x][univ.scenario.town_mods[i].y];
+			town_number += PSD[mod.x][mod.y];
 			// Now update horses & boats
-			for(short i = 0; i < univ.party.horses.size(); i++)
-				if((univ.party.horses[i].exists) && (univ.party.horses[i].which_town == former_town))
-					univ.party.horses[i].which_town = town_number;
-			for(short i = 0; i < univ.party.boats.size(); i++)
-				if((univ.party.boats[i].exists) && (univ.party.boats[i].which_town == former_town))
-					univ.party.boats[i].which_town = town_number;
+			for(auto& horse : univ.party.horses)
+				if(horse.exists && horse.which_town == former_town)
+					horse.which_town = town_number;
+			for(auto& boat : univ.party.boats)
+				if(boat.exists && boat.which_town == former_town)
+					boat.which_town = town_number;
 		}
 	
 	
@@ -129,6 +127,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			if(univ.town->maps[j][i])
 				make_explored(i,j);
 			
+			// TODO: Don't hard-code these ground types!
 			if(univ.town->terrain(i,j) == 0)
 				current_ground = 0;
 			else if(univ.town->terrain(i,j) == 2)
@@ -147,81 +146,81 @@ void start_town_mode(short which_town, short entry_dir) {
 			univ.town.monst = pop;
 			monsters_loaded = true;
 			
-			for(short j = 0; j < univ.town.monst.size(); j++) {
-				if(loc_off_act_area(univ.town.monst[j].cur_loc))
-					univ.town.monst[j].active = 0;
-				if(univ.town.monst[j].active == 2)
-					univ.town.monst[j].active = 1;
-				univ.town.monst[j].cur_loc = univ.town.monst[j].start_loc;
-				univ.town.monst[j].health = univ.town.monst[j].m_health;
-				univ.town.monst[j].mp = univ.town.monst[j].max_mp;
-				univ.town.monst[j].morale = univ.town.monst[j].m_morale;
-				univ.town.monst[j].status.clear();
-				if(univ.town.monst[j].summon_time > 0)
-					univ.town.monst[j].active = 0;
-				univ.town.monst[j].target = 6;
+			for(auto& monst : univ.town.monst) {
+				if(loc_off_act_area(monst.cur_loc))
+					monst.active = 0;
+				if(monst.active == 2)
+					monst.active = 1;
+				monst.cur_loc = monst.start_loc;
+				monst.health = monst.m_health;
+				monst.mp = monst.max_mp;
+				monst.morale = monst.m_morale;
+				monst.status.clear();
+				if(monst.summon_time > 0)
+					monst.active = 0;
+				monst.target = 6;
 				// Bonus SP and HP wear off
-				if(univ.town.monst[j].mp > univ.town.monst[j].max_mp)
-					univ.town.monst[j].mp = univ.town.monst[j].max_mp;
-				if(univ.town.monst[j].health > univ.town.monst[j].m_health)
-					univ.town.monst[j].health = univ.town.monst[j].m_health;
+				if(monst.mp > monst.max_mp)
+					monst.mp = monst.max_mp;
+				if(monst.health > monst.m_health)
+					monst.health = monst.m_health;
 			}
 			
 			// Now, travelling NPCs might have arrived. Go through and put them in.
 			// These should have protected status (i.e. spec1 >= 200, spec1 <= 204)
-			for(short j = 0; j < univ.town.monst.size(); j++) {
-				switch(univ.town.monst[j].time_flag){
+			for(auto& monst : univ.town.monst) {
+				switch(monst.time_flag){
 					case eMonstTime::ALWAYS: break; // Nothing to do.
 					case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
-						if((univ.party.calc_day() % 3) + 3 != int(univ.town.monst[j].time_flag))
-							univ.town.monst[j].active = 0;
+						if((univ.party.calc_day() % 3) + 3 != int(monst.time_flag))
+							monst.active = 0;
 						else {
-							univ.town.monst[j].active = 1;
-							univ.town.monst[j].spec_enc_code = 0;
-							univ.town.monst[j].cur_loc = univ.town.monst[j].start_loc;
-							univ.town.monst[j].health = univ.town.monst[j].m_health;
+							monst.active = 1;
+							monst.spec_enc_code = 0;
+							monst.cur_loc = monst.start_loc;
+							monst.health = monst.m_health;
 						}
 						break ;
 						
 						// Now, appearing/disappearing monsters might have arrived/disappeared.
 					case eMonstTime::APPEAR_ON_DAY:
-						if(day_reached(univ.town.monst[j].monster_time, univ.town.monst[j].time_code)) {
-							univ.town.monst[j].active = 1;
-							univ.town.monst[j].time_flag = eMonstTime::ALWAYS;
+						if(day_reached(monst.monster_time, monst.time_code)) {
+							monst.active = 1;
+							monst.time_flag = eMonstTime::ALWAYS;
 						}
 						break;
 					case eMonstTime::DISAPPEAR_ON_DAY:
-						if(day_reached(univ.town.monst[j].monster_time, univ.town.monst[j].time_code)) {
-							univ.town.monst[j].active = 0;
-							univ.town.monst[j].time_flag = eMonstTime::ALWAYS;
+						if(day_reached(monst.monster_time, monst.time_code)) {
+							monst.active = 0;
+							monst.time_flag = eMonstTime::ALWAYS;
 						}
 						break;
 					case eMonstTime::APPEAR_WHEN_EVENT:
-						if(univ.party.key_times.find(univ.town.monst[j].time_code) == univ.party.key_times.end())
+						if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
 							break; // Event hasn't happened yet
-						if(univ.party.calc_day() >= univ.party.key_times[univ.town.monst[j].time_code]){ //calc_day is used because of the "definition" of univ.party.key_times
-							univ.town.monst[j].active = 1;
-							univ.town.monst[j].time_flag = eMonstTime::ALWAYS;
+						if(univ.party.calc_day() >= univ.party.key_times[monst.time_code]){ //calc_day is used because of the "definition" of univ.party.key_times
+							monst.active = 1;
+							monst.time_flag = eMonstTime::ALWAYS;
 						}
 						break;
 						
 					case eMonstTime::DISAPPEAR_WHEN_EVENT:
-						if(univ.party.key_times.find(univ.town.monst[j].time_code) == univ.party.key_times.end())
+						if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
 							break; // Event hasn't happened yet
-						if(univ.party.calc_day() >= univ.party.key_times[univ.town.monst[j].time_code]){
-							univ.town.monst[j].active = 0;
-							univ.town.monst[j].time_flag = eMonstTime::ALWAYS;
+						if(univ.party.calc_day() >= univ.party.key_times[monst.time_code]){
+							monst.active = 0;
+							monst.time_flag = eMonstTime::ALWAYS;
 						}
 						break;
 					case eMonstTime::APPEAR_AFTER_CHOP:
 						// TODO: Should these two cases be separated?
 						if(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
-							univ.town.monst[j].active += 10;
+							monst.active += 10;
 						else if(univ.town->is_cleaned_out())
-							univ.town.monst[j].active += 10;
-						else univ.town.monst[j].active = 0;
-						if(univ.town.monst[j].active >= 10)
-							univ.town.monst[j].time_flag = eMonstTime::ALWAYS;
+							monst.active += 10;
+						else monst.active = 0;
+						if(monst.active >= 10)
+							monst.time_flag = eMonstTime::ALWAYS;
 						break;
 				}
 			}
@@ -242,59 +241,60 @@ void start_town_mode(short which_town, short entry_dir) {
 		for(short i = 0; i < univ.town->creatures.size(); i++){
 			if(univ.town->creatures[i].number > 0) {
 				// First set up the values.
-				cTownperson& preset = univ.town->creatures[i];
+				const cTownperson& preset = univ.town->creatures[i];
 				univ.town.monst.assign(i, preset, univ.scenario.scen_monsters[preset.number], univ.party.easy_mode, univ.difficulty_adjust());
+				cCreature& monst = univ.town.monst[i];
 				
-				if(univ.town.monst[i].spec_enc_code > 0)
-					univ.town.monst[i].active = 0;
+				if(monst.spec_enc_code > 0)
+					monst.active = 0;
 				
 				// Now, if necessary, fry the monster.
-				switch(univ.town.monst[i].time_flag) {
+				switch(monst.time_flag) {
 					case eMonstTime::APPEAR_ON_DAY:
-						if(!day_reached(univ.town.monst[i].monster_time, univ.town.monst[i].time_code))
-							univ.town.monst[i].active = 0;
+						if(!day_reached(monst.monster_time, monst.time_code))
+							monst.active = 0;
 						break;
 					case eMonstTime::DISAPPEAR_ON_DAY:
-						if(day_reached(univ.town.monst[i].monster_time, univ.town.monst[i].time_code))
-							univ.town.monst[i].active = 0;
+						if(day_reached(monst.monster_time, monst.time_code))
+							monst.active = 0;
 						break;
 					case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
-						if((univ.party.calc_day() % 3) + 3 != int(univ.town.monst[i].time_flag)) {
-							univ.town.monst[i].active = 0;
+						if((univ.party.calc_day() % 3) + 3 != int(monst.time_flag)) {
+							monst.active = 0;
 						}
 						else {
-							univ.town.monst[i].active = 1;
+							monst.active = 1;
 						}
 						break;
 					case eMonstTime::APPEAR_WHEN_EVENT:
-						if(univ.party.key_times.find(univ.town.monst[i].time_code) == univ.party.key_times.end())
-							univ.town.monst[i].active = 0; // Event hasn't happened yet
+						if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
+							monst.active = 0; // Event hasn't happened yet
 						else if(univ.party.calc_day() < univ.party.key_times[univ.town.monst[i].time_code])
-							univ.town.monst[i].active = 0; // This would only be reached if the time was set back (or in a legacy save)
+							monst.active = 0; // This would only be reached if the time was set back (or in a legacy save)
 						break;
 						
 					case eMonstTime::DISAPPEAR_WHEN_EVENT:
-						if(univ.party.key_times.find(univ.town.monst[i].time_code) == univ.party.key_times.end())
+						if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
 							break; // Event hasn't happened yet
 						if(univ.party.calc_day() >= univ.party.key_times[univ.town.monst[i].time_code])
-							univ.town.monst[i].active = 0;
+							monst.active = 0;
 						break;
 					case eMonstTime::APPEAR_AFTER_CHOP:
 						// TODO: Should these two cases be separated?
 						if(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
-							univ.town.monst[i].active += 10;
+							monst.active += 10;
 							else if(univ.town->is_cleaned_out())
-							univ.town.monst[i].active += 10;
-						else univ.town.monst[i].active = 0;
+							monst.active += 10;
+						else monst.active = 0;
 						break;
 					case eMonstTime::ALWAYS:
 						break;
 				}
 				
-				if(univ.town.monst[i].active) {
+				if(monst.active) {
 					// In forcecage?
-					if(univ.town.is_force_cage(univ.town.monst[i].cur_loc.x, univ.town.monst[i].cur_loc.y))
-						univ.town.monst[i].status[eStatus::FORCECAGE] = 1000;
+					if(univ.town.is_force_cage(monst.cur_loc.x, monst.cur_loc.y))
+						monst.status[eStatus::FORCECAGE] = 1000;
 				}
 			}
 		}
@@ -319,18 +319,17 @@ void start_town_mode(short which_town, short entry_dir) {
 	if(univ.town->town_chop_time > 0) {
 		if(day_reached(univ.town->town_chop_time,univ.town->town_chop_key)) {
 			add_string_to_buf("Area has been abandoned.");
-			for(short i = 0; i < univ.town.monst.size(); i++)
-				if((univ.town.monst[i].active > 0) && (univ.town.monst[i].active < 10) &&
-					!univ.town.monst[i].is_friendly())
-					univ.town.monst[i].active += 10;
+			for(auto& monst : univ.town.monst)
+				if(monst.active > 0 && monst.active < 10 && !monst.is_friendly())
+					monst.active += 10;
 			town_toast = true;
 		}
 	}
 	if(town_toast) {
-		for(short i = 0; i < univ.town.monst.size(); i++)
-			if(univ.town.monst[i].active >= 10)
-				univ.town.monst[i].active -= 10;
-			else univ.town.monst[i].active = 0;
+		for(auto& monst : univ.town.monst)
+			if(monst.active >= 10)
+				monst.active -= 10;
+			else monst.active = 0;
 	}
 	handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc);
 	
@@ -368,67 +367,69 @@ void start_town_mode(short which_town, short entry_dir) {
 		if((univ.town->preset_items[i].code >= 0)
 			&& (!univ.town->item_taken[i] ||
 			(univ.town->preset_items[i].always_there))) {
+			const cTown::cItem& preset = univ.town->preset_items[i];
 			// place the preset item, if party hasn't gotten it already
-			univ.town.items.push_back(univ.scenario.get_stored_item(univ.town->preset_items[i].code));
+			univ.town.items.push_back(univ.scenario.get_stored_item(preset.code));
+			cItem& item = univ.town.items[i];
 			// Don't place special items if already in the party's possession
-			if(univ.town.items[i].variety == eItemType::SPECIAL && univ.party.spec_items.count(univ.town.items[i].item_level))
+			if(item.variety == eItemType::SPECIAL && univ.party.spec_items.count(item.item_level))
 				break;
 			// Don't place quest items if party already started
-			if(univ.town.items[i].variety == eItemType::QUEST && univ.party.quest_status[univ.town.items[i].item_level] != eQuestStatus::AVAILABLE)
+			if(item.variety == eItemType::QUEST && univ.party.quest_status[item.item_level] != eQuestStatus::AVAILABLE)
 				break;
-			univ.town.items[i].item_loc = univ.town->preset_items[i].loc;
+			item.item_loc = preset.loc;
 			
 			// Not use the items data flags, starting with forcing an ability
-			if(univ.town->preset_items[i].ability >= 0) {
+			if(preset.ability >= 0) {
 				// TODO: What other ways might there be to use this?
-				switch(univ.town.items[i].variety) {
+				switch(item.variety) {
 					case eItemType::ONE_HANDED:
 					case eItemType::TWO_HANDED: {
-						if(univ.town->preset_items[i].ability > int(eEnchant::BLESSED))
+						if(preset.ability > int(eEnchant::BLESSED))
 							break;
 						// TODO: This array and accompanying calculation is now duplicated here and in place_buy_button()
 						const short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
-						int ench = univ.town->preset_items[i].ability;
-						int val = max(aug_cost[ench] * 100, univ.town.items[i].value * (5 + aug_cost[ench]));
-						univ.town.items[i].enchant_weapon(eEnchant(ench), val);
+						int ench = preset.ability;
+						int val = max(aug_cost[ench] * 100, item.value * (5 + aug_cost[ench]));
+						item.enchant_weapon(eEnchant(ench), val);
 						break;
 					}
 					default: break; // Silence compiler warning
 				}
 			}
 			
-			if(univ.town->preset_items[i].charges > 0) {
-				eItemType variety = univ.town.items[i].variety;
-				if(univ.town.items[i].charges > 0)
-					univ.town.items[i].charges = univ.town->preset_items[i].charges;
+			if(preset.charges > 0) {
+				eItemType variety = item.variety;
+				if(item.charges > 0)
+					item.charges = preset.charges;
 				else if(variety == eItemType::GOLD || variety == eItemType::FOOD)
-					univ.town.items[i].item_level = univ.town->preset_items[i].charges;
+					item.item_level = preset.charges;
 			}
 			
 			if(town_toast)
-				univ.town.items[i].property = false;
+				item.property = false;
 			else
-				univ.town.items[i].property = univ.town->preset_items[i].property;
-			univ.town.items[i].contained = univ.town->preset_items[i].contained;
-			int x = univ.town.items[i].item_loc.x, y = univ.town.items[i].item_loc.y;
-			if(univ.town.items[i].contained && (univ.town.is_barrel(x,y) || univ.town.is_crate(x,y)))
-				univ.town.items[i].held = true;
-			univ.town.items[i].is_special = i + 1;
+				item.property = preset.property;
+			item.contained = preset.contained;
+			int x = item.item_loc.x, y = item.item_loc.y;
+			if(item.contained && (univ.town.is_barrel(x,y) || univ.town.is_crate(x,y)))
+				item.held = true;
+			item.is_special = i + 1;
 		}
 	
 	
-	for(short i = 0; i < univ.town.monst.size(); i++)
-		if(loc_off_act_area(univ.town.monst[i].cur_loc))
-			univ.town.monst[i].active = 0;
-	for(short i = 0; i < univ.town.items.size(); i++)
-		if(loc_off_act_area(univ.town.items[i].item_loc))
-			univ.town.items[i].variety = eItemType::NO_ITEM;
+	for(auto& monst : univ.town.monst)
+		if(loc_off_act_area(monst.cur_loc))
+			monst.active = 0;
+	for(auto& item : univ.town.items)
+		if(loc_off_act_area(item.item_loc))
+			item.variety = eItemType::NO_ITEM;
 	
 	// Clean out unwanted monsters
-	for(short i = 0; i < univ.town.monst.size(); i++)
-		if(univ.party.sd_legit(univ.town.monst[i].spec1,univ.town.monst[i].spec2)) {
-			if(PSD[univ.town.monst[i].spec1][univ.town.monst[i].spec2] > 0)
-				univ.town.monst[i].active = 0;
+	for(auto& monst : univ.town.monst)
+		if(univ.party.sd_legit(monst.spec1, monst.spec2)) {
+			if(PSD[monst.spec1][monst.spec2] > 0)
+				monst.active = 0;
 		}
 	
 	erase_specials();
@@ -480,9 +481,9 @@ void start_town_mode(short which_town, short entry_dir) {
 			}
 	}
 	
-	for(short i = 0; i < univ.town.monst.size(); i++) {
-		univ.town.monst[i].targ_loc.x = 0;
-		univ.town.monst[i].targ_loc.y = 0;
+	for(auto& monst : univ.town.monst) {
+		monst.targ_loc.x = 0;
+		monst.targ_loc.y = 0;
 	}
 	
 	// check horses

@@ -33,6 +33,8 @@ public:
 	cCreature& operator[](size_t n);
 	const cCreature& operator[](size_t n) const;
 	cPopulation() : which_town(200) {}
+	std::vector<cCreature>::iterator begin() {return dudes.begin();}
+	std::vector<cCreature>::iterator end() {return dudes.end();}
 	// Apparently Visual Studio needs this to work
 	cPopulation& operator=(const cPopulation& other) = default;
 	void swap(cPopulation& other);
