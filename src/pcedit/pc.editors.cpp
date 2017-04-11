@@ -115,6 +115,16 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 	dynamic_cast<cPict&>(pcInfo["pic"]).setPict(14 + mode,PIC_DLOG);
 	
 	pcInfo.run();
+	
+	if(mode >= 10) {
+		mode %= 10;
+		for(short i = 0; i < 62; i++) {
+			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+			bool set = dynamic_cast<cLed&>(pcInfo[id]).getState() != led_off;
+			if(mode == 0) univ.party[pc_num].mage_spells[i] = set;
+			else if(mode == 1) univ.party[pc_num].priest_spells[i] = set;
+		}
+	}
 }
 
 static void display_traits_graphics(cDialog& me) {

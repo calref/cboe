@@ -767,14 +767,11 @@ void display_party() {
 				default:
 					break;
 			}
+			dest_rect.top -= style.lineHeight;
+			win_draw_string(mainPtr,dest_rect,"Edit",eTextMode::CENTRE,style);
 			if(i < 2) {
-				dest_rect.top -= style.lineHeight;
-				win_draw_string(mainPtr,dest_rect,"Add",eTextMode::CENTRE,style);
 				dest_rect.top += style.lineHeight * 2;
 				win_draw_string(mainPtr,dest_rect,"Spells",eTextMode::CENTRE,style);
-			} else {
-				dest_rect.top -= style.lineHeight;
-				win_draw_string(mainPtr,dest_rect,"Edit",eTextMode::CENTRE,style);
 			}
 		}
 		style.colour = sf::Color::Black;
