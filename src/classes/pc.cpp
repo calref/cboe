@@ -1184,8 +1184,7 @@ void cPlayer::writeTo(std::ostream& file) const {
 			file << "SKILL " << int(p.first) << ' ' << p.second << '\n';
 	}
 	file << "HEALTH " << cur_health << '\n';
-	if(cur_sp != max_sp)
-		file << "MANA " << cur_sp << '\n';
+	file << "MANA " << cur_sp << '\n';
 	file << "EXPERIENCE " << experience << '\n';
 	file << "SKILLPTS " << skill_pts << '\n';
 	file << "LEVEL " << level << '\n';
