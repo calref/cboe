@@ -368,53 +368,53 @@ void start_town_mode(short which_town, short entry_dir) {
 		if((univ.town->preset_items[i].code >= 0)
 			&& (!univ.town->item_taken[i] ||
 			(univ.town->preset_items[i].always_there))) {
-				// place the preset item, if party hasn't gotten it already
-				univ.town.items.push_back(univ.scenario.get_stored_item(univ.town->preset_items[i].code));
-				// Don't place special items if already in the party's possession
-				if(univ.town.items[i].variety == eItemType::SPECIAL && univ.party.spec_items.count(univ.town.items[i].item_level))
-					break;
-				// Don't place quest items if party already started
-				if(univ.town.items[i].variety == eItemType::QUEST && univ.party.quest_status[univ.town.items[i].item_level] != eQuestStatus::AVAILABLE)
-					break;
-				univ.town.items[i].item_loc = univ.town->preset_items[i].loc;
-				
-				// Not use the items data flags, starting with forcing an ability
-				if(univ.town->preset_items[i].ability >= 0) {
-					// TODO: What other ways might there be to use this?
-					switch(univ.town.items[i].variety) {
-						case eItemType::ONE_HANDED:
-						case eItemType::TWO_HANDED: {
-							if(univ.town->preset_items[i].ability > int(eEnchant::BLESSED))
-								break;
-							// TODO: This array and accompanying calculation is now duplicated here and in place_buy_button()
-							const short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
-							int ench = univ.town->preset_items[i].ability;
-							int val = max(aug_cost[ench] * 100, univ.town.items[i].value * (5 + aug_cost[ench]));
-							univ.town.items[i].enchant_weapon(eEnchant(ench), val);
+			// place the preset item, if party hasn't gotten it already
+			univ.town.items.push_back(univ.scenario.get_stored_item(univ.town->preset_items[i].code));
+			// Don't place special items if already in the party's possession
+			if(univ.town.items[i].variety == eItemType::SPECIAL && univ.party.spec_items.count(univ.town.items[i].item_level))
+				break;
+			// Don't place quest items if party already started
+			if(univ.town.items[i].variety == eItemType::QUEST && univ.party.quest_status[univ.town.items[i].item_level] != eQuestStatus::AVAILABLE)
+				break;
+			univ.town.items[i].item_loc = univ.town->preset_items[i].loc;
+			
+			// Not use the items data flags, starting with forcing an ability
+			if(univ.town->preset_items[i].ability >= 0) {
+				// TODO: What other ways might there be to use this?
+				switch(univ.town.items[i].variety) {
+					case eItemType::ONE_HANDED:
+					case eItemType::TWO_HANDED: {
+						if(univ.town->preset_items[i].ability > int(eEnchant::BLESSED))
 							break;
-						}
-						default: break; // Silence compiler warning
+						// TODO: This array and accompanying calculation is now duplicated here and in place_buy_button()
+						const short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
+						int ench = univ.town->preset_items[i].ability;
+						int val = max(aug_cost[ench] * 100, univ.town.items[i].value * (5 + aug_cost[ench]));
+						univ.town.items[i].enchant_weapon(eEnchant(ench), val);
+						break;
 					}
+					default: break; // Silence compiler warning
 				}
-				
-				if(univ.town->preset_items[i].charges > 0) {
-					eItemType variety = univ.town.items[i].variety;
-					if(univ.town.items[i].charges > 0)
-						univ.town.items[i].charges = univ.town->preset_items[i].charges;
-					else if(variety == eItemType::GOLD || variety == eItemType::FOOD)
-						univ.town.items[i].item_level = univ.town->preset_items[i].charges;
-				}
-				
-				if(town_toast)
-					univ.town.items[i].property = false;
-				else
-					univ.town.items[i].property = univ.town->preset_items[i].property;
-				univ.town.items[i].contained = univ.town->preset_items[i].contained;
-				int x = univ.town.items[i].item_loc.x, y = univ.town.items[i].item_loc.y;
-				if(univ.town.items[i].contained && (univ.town.is_barrel(x,y) || univ.town.is_crate(x,y)))
-					univ.town.items[i].held = true;
-				univ.town.items[i].is_special = i + 1;
 			}
+			
+			if(univ.town->preset_items[i].charges > 0) {
+				eItemType variety = univ.town.items[i].variety;
+				if(univ.town.items[i].charges > 0)
+					univ.town.items[i].charges = univ.town->preset_items[i].charges;
+				else if(variety == eItemType::GOLD || variety == eItemType::FOOD)
+					univ.town.items[i].item_level = univ.town->preset_items[i].charges;
+			}
+			
+			if(town_toast)
+				univ.town.items[i].property = false;
+			else
+				univ.town.items[i].property = univ.town->preset_items[i].property;
+			univ.town.items[i].contained = univ.town->preset_items[i].contained;
+			int x = univ.town.items[i].item_loc.x, y = univ.town.items[i].item_loc.y;
+			if(univ.town.items[i].contained && (univ.town.is_barrel(x,y) || univ.town.is_crate(x,y)))
+				univ.town.items[i].held = true;
+			univ.town.items[i].is_special = i + 1;
+		}
 	
 	
 	for(short i = 0; i < univ.town.monst.size(); i++)
