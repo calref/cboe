@@ -364,20 +364,28 @@ void start_town_mode(short which_town, short entry_dir) {
 		}
 	
 	for(short i = 0; i < univ.town->preset_items.size(); i++)
-		if((univ.town->preset_items[i].code >= 0)
-			&& (!univ.town->item_taken[i] ||
-			(univ.town->preset_items[i].always_there))) {
+		if(univ.town->preset_items[i].code >= 0) {
 			const cTown::cItem& preset = univ.town->preset_items[i];
 			// place the preset item, if party hasn't gotten it already
 			univ.town.items.push_back(univ.scenario.get_stored_item(preset.code));
-			cItem& item = univ.town.items[i];
-			// Don't place special items if already in the party's possession
-			if(item.variety == eItemType::SPECIAL && univ.party.spec_items.count(item.item_level))
-				break;
-			// Don't place quest items if party already started
-			if(item.variety == eItemType::QUEST && univ.party.quest_status[item.item_level] != eQuestStatus::AVAILABLE)
-				break;
+			cItem& item = univ.town.items.back();
 			item.item_loc = preset.loc;
+			
+			// Don't place special items if already in the party's possession
+			if(item.variety == eItemType::SPECIAL && univ.party.spec_items.count(item.item_level)) {
+				univ.town.items.pop_back();
+				continue;
+			}
+			// Don't place quest items if party already started
+			if(item.variety == eItemType::QUEST && univ.party.quest_status[item.item_level] != eQuestStatus::AVAILABLE) {
+				univ.town.items.pop_back();
+				continue;
+			}
+			// Don't place the item if the party already took it, unless it's always there
+			if(univ.town->item_taken[i] && !preset.always_there) {
+				univ.town.items.pop_back();
+				continue;
+			}
 			
 			// Not use the items data flags, starting with forcing an ability
 			if(preset.ability >= 0) {
