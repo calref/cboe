@@ -474,22 +474,6 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 								</object>
-								<object class="NSMenuItem" id="137435295">
-									<reference key="NSMenu" ref="399390342"/>
-									<string key="NSTitle">  Edit Horses</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="229763992"/>
-									<reference key="NSMixedImage" ref="909111550"/>
-								</object>
-								<object class="NSMenuItem" id="174312674">
-									<reference key="NSMenu" ref="399390342"/>
-									<string key="NSTitle">  Edit Boats</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="229763992"/>
-									<reference key="NSMixedImage" ref="909111550"/>
-								</object>
 								<object class="NSMenuItem" id="949025402">
 									<reference key="NSMenu" ref="399390342"/>
 									<string key="NSTitle">  Set Variable Town Entry</string>
@@ -1270,12 +1254,10 @@
 							<reference ref="811786778"/>
 							<reference ref="726312118"/>
 							<reference ref="926133930"/>
-							<reference ref="137435295"/>
 							<reference ref="788000512"/>
 							<reference ref="637087210"/>
 							<reference ref="878691898"/>
 							<reference ref="800006778"/>
-							<reference ref="174312674"/>
 							<reference ref="344591363"/>
 							<reference ref="580939217"/>
 							<reference ref="949025402"/>
@@ -1405,11 +1387,6 @@
 						<reference key="parent" ref="399390342"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">815</int>
-						<reference key="object" ref="137435295"/>
-						<reference key="parent" ref="399390342"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">816</int>
 						<reference key="object" ref="788000512"/>
 						<reference key="parent" ref="399390342"/>
@@ -1427,11 +1404,6 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">819</int>
 						<reference key="object" ref="800006778"/>
-						<reference key="parent" ref="399390342"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">820</int>
-						<reference key="object" ref="174312674"/>
 						<reference key="parent" ref="399390342"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -1722,13 +1694,11 @@
 				<string key="812.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="813.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="814.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="815.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="816.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="817.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="818.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="819.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="82.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="820.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="821.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="822.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="823.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
