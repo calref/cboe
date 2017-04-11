@@ -25,7 +25,7 @@ enum class eMenu {
 	EDIT_DAY, LEAVE_TOWN, RESET_TOWNS, ADD_OUT_MAPS, ADD_TOWN_MAPS, LEAVE_SCENARIO, SET_SDF,
 };
 
-void handle_item_menu(int item_hit);
+void handle_item_menu(class cItem& item);
 void handle_menu_choice(eMenu item_hit);
 
 #endif

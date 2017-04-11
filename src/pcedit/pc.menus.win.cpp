@@ -113,8 +113,8 @@ void init_menubar() {
 void update_item_menu() {
 	if(menuHandle == NULL) return;
 	auto& item_list = univ.scenario.scen_items;
-	int per_menu = item_list.size() / 4;
-	int per_col = per_menu / 4;
+	int per_menu = 1 + (item_list.size() - 1) / 4;
+	int per_col = 1 + (per_menu - 1) / 4;
 	for(int j = 0; j < 4; j++) {
 		HMENU items_menu = GetSubMenu(menuHandle, ITEMS_MENU_POS + j);
 		while(GetMenuItemCount(items_menu)) RemoveMenu(items_menu, 0, MF_BYPOSITION);
@@ -125,7 +125,6 @@ void update_item_menu() {
 			UINT flags = MF_STRING | MF_ENABLED;
 			if(i % per_col == 0) flags |= MF_MENUBARBREAK;
 			AppendMenuA(items_menu, flags, 1000 + j * per_menu + i, item.full_name.c_str());
-			// TODO: Also disable gold or food
 			EnableMenuItem(items_menu, i, MF_BYPOSITION | (item.variety != eItemType::NO_ITEM ? MF_ENABLED : MF_GRAYED));
 		}
 	}
@@ -160,7 +159,7 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 	if(message == WM_COMMAND) {
 		int cmd = LOWORD(wParam);
 		if(cmd >= 1000) { // Item menus
-			handle_item_menu(cmd - 1000);
+			handle_item_menu(univ.scenario.scen_items[cmd - 1000]);
 		} else handle_menu_choice(menuChoices[cmd]);
 	} else if(message == WM_SETCURSOR) {
 		// Windows resets the cursor to an arrow whenever the mouse moves, unless we do this.

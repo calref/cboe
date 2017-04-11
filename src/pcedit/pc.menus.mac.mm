@@ -108,17 +108,16 @@ void menu_activate() {
 void update_item_menu() {
 	id targ = [[file_menu itemAtIndex: 0] target];
 	auto& item_list = univ.scenario.scen_items;
-	int per_menu = item_list.size() / 4;
+	int per_menu = 1 + (item_list.size() - 1) / 4;
 	for(int j = 0; j < 4; j++){
 		[items_menu[j] removeAllItems];
 		if(!scen_items_loaded) {
 			[[items_menu[j] addItemWithTitle: @"Items Not Loaded" action: @selector(itemMenu:) keyEquivalent: @""] setEnabled: NO];
 		} else for(int i = 0; i < per_menu && i + j * per_menu < item_list.size(); i++) {
-			ItemWrapper* item = [ItemWrapper withItem: i + per_menu * j];
+			ItemWrapper* item = [ItemWrapper withItem: i + j * per_menu];
 			NSString* item_name = [NSString stringWithCString: item_list[i + j * per_menu].full_name.c_str() encoding: NSASCIIStringEncoding];
 			NSMenuItem* choice = [items_menu[j] addItemWithTitle: item_name action: @selector(itemMenu:) keyEquivalent: @""];
 			[choice setTarget: targ];
-			// TODO: Also disable gold or food
 			[choice setEnabled: [item item].variety != eItemType::NO_ITEM];
 			[choice setRepresentedObject: item];
 		}
@@ -129,12 +128,7 @@ void update_item_menu() {
 -(void) itemMenu:(id) sender {
 	ItemWrapper* item = [sender representedObject];
 	class cItem& theItem = [item item];
-	(void) theItem; // Suppress "unused parameter" warning
-	for(int i = 0; i < 4; i++) {
-		int whichItem = [items_menu[i] indexOfItem: sender];
-		if(whichItem >= 0)
-			handle_item_menu(whichItem + 100 * i);
-	}
+	handle_item_menu(theItem);
 }
 
 -(void) menuChoice:(id) sender {

@@ -321,9 +321,8 @@ void handle_menu_choice(eMenu item_hit) {
 }
 
 // TODO: Let this take the item directly instead of the index
-void handle_item_menu(int item_hit) {
-	cItem store_i;
-	store_i = univ.scenario.scen_items[item_hit];
+void handle_item_menu(cItem& item) {
+	cItem store_i = item;
 	store_i.ident = true;
 	if(!univ.party[current_active_pc].give_item(store_i,GIVE_ALLOW_OVERLOAD))
 		showError("Sorry, that PC has no free inventory slots left! You'll have to either drop something or give it to a different PC.");
