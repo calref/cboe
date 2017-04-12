@@ -6,6 +6,7 @@
 #include "scenario.hpp"
 #include "winutil.hpp"
 #include "menu_accel.win.hpp"
+#include "undo.hpp"
 
 // Include this last because some #defines in the Windows headers cause compile errors in my headers.
 // Fortunately they're on symbols not used in this file, so this should work.
@@ -24,6 +25,7 @@ enum {
 
 extern sf::RenderWindow mainPtr;
 extern cScenario scenario;
+extern cUndoList undo_list;
 LONG_PTR mainProc;
 HMENU menuHandle = NULL;
 accel_table_t accel;
@@ -139,7 +141,7 @@ void shut_down_menus(short mode) {
 		EnableMenuItem(menuHandle, TOWN_MENU_POS, MF_GRAYED | MF_BYPOSITION);
 		EnableMenuItem(menuHandle, OUT_MENU_POS, MF_GRAYED | MF_BYPOSITION);
 	}
-	std::shared_ptr<char> buf(new char[256]);
+	std::shared_ptr<char> buf(new char[256], std::default_delete<char[]>());
 	MENUITEMINFOA info;
 	info.cbSize = sizeof(MENUITEMINFOA);
 	info.dwTypeData = buf.get();
@@ -191,7 +193,25 @@ void shut_down_menus(short mode) {
 }
 
 void update_edit_menu() {
-	// TODO: Set the undo/redo menuitem title according to the current action to be undone/redone
+	if(menuHandle == NULL) return;
+	HMENU edit_menu = GetSubMenu(menuHandle, EDIT_MENU_POS);
+	if(undo_list.noUndo()) {
+		ModifyMenuA(edit_menu, IDM_EDIT_UNDO, MF_BYCOMMAND, IDM_EDIT_UNDO, "Can't Undo\tCtrl+Z");
+		EnableMenuItem(edit_menu, IDM_EDIT_UNDO, MF_BYCOMMAND | MF_GRAYED);
+	} else {
+		std::string title = "Undo " + undo_list.undoName() + "\tCtrl+Z";
+		ModifyMenuA(edit_menu, IDM_EDIT_UNDO, MF_BYCOMMAND, IDM_EDIT_UNDO, title.c_str());
+		EnableMenuItem(edit_menu, IDM_EDIT_UNDO, MF_BYCOMMAND | MF_ENABLED);
+	}
+	if(undo_list.noRedo()) {
+		ModifyMenuA(edit_menu, IDM_EDIT_REDO, MF_BYCOMMAND, IDM_EDIT_REDO, "Can't Redo\tCtrl+Y");
+		EnableMenuItem(edit_menu, IDM_EDIT_REDO, MF_BYCOMMAND | MF_GRAYED);
+	} else {
+		std::string title = "Redo " + undo_list.redoName() + "\tCtrl+Y";
+		ModifyMenuA(edit_menu, IDM_EDIT_REDO, MF_BYCOMMAND, IDM_EDIT_REDO, title.c_str());
+		EnableMenuItem(edit_menu, IDM_EDIT_REDO, MF_BYCOMMAND | MF_ENABLED);
+	}
+	DrawMenuBar(mainPtr.getSystemHandle());
 }
 
 #include "cursors.hpp"
