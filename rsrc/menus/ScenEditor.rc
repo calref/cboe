@@ -66,23 +66,23 @@ BEGIN
         MENUITEM "&New Scenario\tCtrl+N",       IDM_FILE_NEW
         MENUITEM "&Open Scenario\tCtrl+O",      IDM_FILE_OPEN
         MENUITEM SEPARATOR
-        MENUITEM "Close Scenario\tCtrl+W",      IDM_FILE_CLOSE
+        MENUITEM "&Close Scenario\tCtrl+W",     IDM_FILE_CLOSE
         MENUITEM "&Save Scenario\tCtrl+S",      IDM_FILE_SAVE
         MENUITEM "Save &As\tCtrl+Shift+S",      IDM_FILE_SAVE_AS
-        MENUITEM "Revert to Saved",             IDM_FILE_REVERT
+        MENUITEM "&Revert to Saved",            IDM_FILE_REVERT
         MENUITEM SEPARATOR
         MENUITEM "&Quit\tCtrl+Q",               IDM_FILE_QUIT
     END
     POPUP "Edit"
     BEGIN
-        MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO
-        MENUITEM "Redo\tCtrl+Y",                IDM_EDIT_REDO
+        MENUITEM "&Undo\tCtrl+Z",               IDM_EDIT_UNDO
+        MENUITEM "&Redo\tCtrl+Y",               IDM_EDIT_REDO
         MENUITEM SEPARATOR
-        MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT
-        MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY
-        MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE
-        MENUITEM "Delete",                      IDM_EDIT_DELETE
-        MENUITEM "Select All\tCtrl+A",          IDM_EDIT_SELECT
+        MENUITEM "Cu&t\tCtrl+X",                IDM_EDIT_CUT
+        MENUITEM "&Copy\tCtrl+C",               IDM_EDIT_COPY
+        MENUITEM "&Paste\tCtrl+V",              IDM_EDIT_PASTE
+        MENUITEM "&Delete",                     IDM_EDIT_DELETE
+        MENUITEM "Select &All\tCtrl+A",         IDM_EDIT_SELECT
     END
     POPUP "&Scenario"
     BEGIN
@@ -95,7 +95,7 @@ BEGIN
         MENUITEM "Classify Custom &Graphics",   IDM_SCEN_CUSTOM_PICS
         MENUITEM "Edit Custom Sounds",          IDM_SCEN_CUSTOM_SNDS
         MENUITEM SEPARATOR
-        MENUITEM "Advanced:",                   IDM_SCEN_NEW_TOWN, GRAYED
+        MENUITEM "Advanced:",                   IDM_GRAYED_LABEL, GRAYED
         MENUITEM "  Edit Special &Nodes",       IDM_SCEN_ADV_SPECIALS
         MENUITEM "  Edit Scenario &Text",       IDM_SCEN_ADV_TEXT
         MENUITEM "  Edit Journal Entries",      IDM_SCEN_ADV_JOURNAL
@@ -108,10 +108,10 @@ BEGIN
         MENUITEM "  &Delete Last Town",         IDM_SCEN_ADV_DELETE_TOWN
         MENUITEM "  Write D&ata To Text File",  IDM_SCEN_ADV_DATA_DUMP
         MENUITEM "  Do &Full Text Dump",        IDM_SCEN_ADV_TEXT_DUMP
-        MENUITEM "  Scenario Shoppin&g Text Dump", IDM_SCEN_PASSWORD
-        MENUITEM "  Scenario &Monster Dump",    IDM_SCEN_PASSWORD
-        MENUITEM "  Scenario Specials D&ump",   IDM_SCEN_PASSWORD
-        MENUITEM "  Scenario Ob&ject Data Dump", IDM_SCEN_PASSWORD
+        MENUITEM "  Scenario Shoppin&g Text Dump", 1000
+        MENUITEM "  Scenario &Monster Dump",    1000
+        MENUITEM "  Scenario Specials D&ump",   1000
+        MENUITEM "  Scenario Ob&ject Data Dump", 1000
     END
     POPUP "&Town"
     BEGIN
@@ -119,7 +119,7 @@ BEGIN
         MENUITEM "Town &Wandering Monsters",    IDM_TOWN_WANDER
         MENUITEM "Set Town &Boundaries",        IDM_TOWN_BOUNDS
         MENUITEM "&Frill Up Terrain",           IDM_TOWN_FRILL
-        MENUITEM "Remo&ve Terrain Frills",      IDM_TOWN_UNFRILL
+        MENUITEM "&Remove Terrain Frills",      IDM_TOWN_UNFRILL
         MENUITEM "Edit &Area Descriptions",     IDM_TOWN_AREAS
         MENUITEM SEPARATOR
         MENUITEM "Set Starting &Location",      IDM_SCEN_START
@@ -127,30 +127,30 @@ BEGIN
         MENUITEM "Set All Items Not Propert&y", IDM_TOWN_NOT_PROPERTY
         MENUITEM "Clear All &Items",            IDM_TOWN_CLEAR_ITEMS
         MENUITEM SEPARATOR
-        MENUITEM "Advanced:",                   212, GRAYED
+		MENUITEM "Advanced:",                   IDM_GRAYED_LABEL, GRAYED
         MENUITEM "  Edit Special &Nodes\tCtrl+1", IDM_TOWN_ADV_SPECIALS
         MENUITEM "  Edit Town &Text\tCtrl+2",   IDM_TOWN_ADV_TEXT
         MENUITEM "  Edit Town &Signs\tCtrl+3",  IDM_TOWN_ADV_SIGNS
         MENUITEM "  Advanced Town Detai&ls\tCtrl+4", IDM_TOWN_ADV_DETAILS
         MENUITEM "  Set Town &Event Timers\tCtrl+5", IDM_TOWN_ADV_EVENTS
-        MENUITEM "  Concise Town &Report\tCtrl+6", IDM_TOWN_ADV_REPORT
+        MENUITEM "  Concise Town Report\tCtrl+6", IDM_TOWN_ADV_REPORT
     END
     POPUP "&Outdoors"
     BEGIN
         MENUITEM "Outdoor &Details\tCtrl+D",    IDM_OUT_DETAILS
         MENUITEM "Outdoor &Wandering Monsters", IDM_OUT_WANDER
-        MENUITEM "&Outdoor Special Encounters", IDM_OUT_ENCOUNTER
+        MENUITEM "Outdoor Special &Encounters", IDM_OUT_ENCOUNTER
         MENUITEM "&Frill Up Terrain",           IDM_OUT_FRILL
-        MENUITEM "Remo&ve Terrain Frills",      IDM_OUT_UNFRILL
+        MENUITEM "&Remove Terrain Frills",      IDM_OUT_UNFRILL
         MENUITEM "Edit &Area Descriptions",     IDM_OUT_AREAS
         MENUITEM SEPARATOR
-        MENUITEM "Set Starting Location",       IDM_OUT_START
+        MENUITEM "Set Starting &Location",      IDM_OUT_START
         MENUITEM SEPARATOR
-        MENUITEM "Advanced:",                   310, GRAYED
+        MENUITEM "Advanced:",                   IDM_GRAYED_LABEL, GRAYED
         MENUITEM "  Edit Special &Nodes\tCtrl+7", IDM_OUT_ADV_SPECIALS
         MENUITEM "  Edit Outdoor &Text\tCtrl+8", IDM_OUT_ADV_TEXT
         MENUITEM "  Edit Outdoor &Signs\tCtrl+9", IDM_OUT_ADV_SIGNS
-        MENUITEM "  Concise Outdoor &Report\tCtrl+0", IDM_OUT_ADV_REPORT
+        MENUITEM "  Concise Outdoor Report\tCtrl+0", IDM_OUT_ADV_REPORT
     END
     POPUP "E&xtras"
     BEGIN
