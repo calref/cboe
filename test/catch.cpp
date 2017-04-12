@@ -12,7 +12,9 @@ cUniverse univ;
 
 // And these are referenced from the scenario code, though not used in test cases
 #include "scenario.hpp"
+#include "undo.hpp"
 location cur_out;
 short cur_town;
 cScenario scenario;
 bool change_made;
+cUndoList undo_list;

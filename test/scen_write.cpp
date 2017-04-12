@@ -250,7 +250,7 @@ TEST_CASE("Saving a scenario record") {
 		CHECK(scen.shops[2].getItem(11).item.desc == "This is magic!");
 		ResMgr::popPath<StringRsrc>();
 	}
-	SECTION("With some empty strings, only trailing ones are stripped") {
+	SECTION("With some empty strings, none are stripped") {
 		scen.spec_strs.resize(12);
 		scen.spec_strs[3] = "Hello World!";
 		scen.spec_strs[9] = "Goodbye World!";
@@ -258,10 +258,10 @@ TEST_CASE("Saving a scenario record") {
 		scen.journal_strs[7] = "My best journal!";
 		scen.intro_strs[4] = "Another intro string!";
 		in_and_out("empty strings", scen);
-		REQUIRE(scen.spec_strs.size() == 10);
+		REQUIRE(scen.spec_strs.size() == 12);
 		CHECK(scen.spec_strs[3] == "Hello World!");
 		CHECK(scen.spec_strs[9] == "Goodbye World!");
-		REQUIRE(scen.journal_strs.size() == 8);
+		REQUIRE(scen.journal_strs.size() == 19);
 		CHECK(scen.journal_strs[7] == "My best journal!");
 		CHECK(scen.intro_strs[4] == "Another intro string!");
 	}
