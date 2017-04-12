@@ -45,7 +45,7 @@ std::string cUndoList::undoName() const {
 
 std::string cUndoList::redoName() const {
 	if(noRedo()) return "";
-	auto next = std::next(cur);
+	auto next = std::prev(cur);
 	return (*next)->getActionName();
 }
 
