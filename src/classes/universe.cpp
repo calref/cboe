@@ -1326,6 +1326,8 @@ void cUniverse::enter_scenario(const std::string& name) {
 	party.i_w_c = {0, 0};
 	party.loc_in_sec = scenario.out_start;
 	party.out_loc = scenario.out_start;
+	party.boats.clear();
+	party.horses.clear();
 	std::copy_if(scenario.boats.begin(), scenario.boats.end(), std::back_inserter(party.boats), std::bind(&cVehicle::exists, _1));
 	std::copy_if(scenario.horses.begin(), scenario.horses.end(), std::back_inserter(party.horses), std::bind(&cVehicle::exists, _1));
 	for(auto& pc : party) {

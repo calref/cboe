@@ -1942,6 +1942,7 @@ void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 						what->sector = which;
 						what->loc = loc(x,y);
 						what->property = feat.second < 0;
+						what->exists = true;
 						break;
 					case eMapFeature::FIELD:
 						if(feat.second == SPECIAL_SPOT)
@@ -1989,6 +1990,7 @@ void loadTownMapData(map_data&& data, int which, cScenario& scen) {
 						what->which_town = which;
 						what->loc = loc(x,y);
 						what->property = feat.second < 0;
+						what->exists = true;
 						break;
 					case eMapFeature::SIGN:
 						if(feat.second >= town.sign_locs.size())
