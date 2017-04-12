@@ -4621,10 +4621,11 @@ void handle_message(eSpecCtx which_mode,short cur_type,short mess1,short mess2,s
 		return;
 	}
 	get_strs(str1, str2, cur_type, mess1, mess2);
+	if(str1.empty() && str2.empty()) return;
 	where1 = is_out() ? univ.party.outdoor_corner.x + univ.party.i_w_c.x : univ.party.town_num;
 	where2 = is_out() ? univ.party.outdoor_corner.y + univ.party.i_w_c.y : univ.party.town_num;
 	std::string placename = is_out() ? univ.out->name : univ.town->name;
-	cStrDlog display_strings(str1.c_str(), str2.c_str(),title,pic,pt,0);
+	cStrDlog display_strings(str1, str2, title, pic, pt, 0);
 	display_strings.setSound(57);
 	display_strings.setRecordHandler(cStringRecorder(note_type).string1(mess1).string2(mess2).from(where1,where2).at(placename));
 	display_strings.show();
