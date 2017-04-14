@@ -465,9 +465,7 @@ bool cPlayer::give_item(cItem item, int flags) {
 	}
 	if(item.variety == eItemType::QUEST) {
 		if(!party) return false;
-		party->quest_status[item.item_level] = eQuestStatus::STARTED;
-		party->quest_start[item.item_level] = party->calc_day();
-		party->quest_source[item.item_level] = -1;
+		party->active_quests[item.item_level] = cJob(party->calc_day());
 		if(do_print && print_result)
 			print_result("You get a quest.");
 		return true;
@@ -832,7 +830,7 @@ eBuyStatus cPlayer::ok_to_buy(short cost,cItem item) const {
 		if(party->spec_items.count(item.item_level))
 			return eBuyStatus::HAVE_LOTS;
 	} else if(item.variety == eItemType::QUEST) {
-		if(party->quest_status[item.item_level] != eQuestStatus::AVAILABLE)
+		if(party->active_quests[item.item_level].status != eQuestStatus::AVAILABLE)
 			return eBuyStatus::HAVE_LOTS;
 	} else if(item.variety != eItemType::GOLD && item.variety != eItemType::FOOD) {
 		for(int i = 0; i < items.size(); i++)

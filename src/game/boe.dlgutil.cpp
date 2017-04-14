@@ -638,9 +638,7 @@ static void show_job_bank(int which_bank, std::string title) {
 		int which = hit[4] - '1';
 		me["prompt"].setText("Job accepted.");
 		job_bank_t& bank = univ.party.job_banks[which_bank];
-		univ.party.quest_status[bank.jobs[which]] = eQuestStatus::STARTED;
-		univ.party.quest_source[bank.jobs[which]] = store_personality;
-		univ.party.quest_start[bank.jobs[which]] = univ.party.calc_day();
+		univ.party.active_quests[bank.jobs[which]] = cJob(univ.party.calc_day(), store_personality);
 		// Now, if there are spare jobs available, fill in. Otherwise, clear space.
 		if(bank.jobs[4] >= 0)
 			std::swap(bank.jobs[which], bank.jobs[4]);
@@ -977,11 +975,9 @@ void handle_talk_event(location p) {
 				showError("Tried to give a nonexistent quest!");
 				return;
 			}
-			switch(univ.party.quest_status[a]) {
+			switch(univ.party.active_quests[a].status) {
 				case eQuestStatus::AVAILABLE:
-					univ.party.quest_status[a] = eQuestStatus::STARTED;
-					univ.party.quest_source[a] = -1;
-					univ.party.quest_start[a] = univ.party.calc_day();
+					univ.party.active_quests[a] = cJob(univ.party.calc_day());
 					break;
 				case eQuestStatus::STARTED:
 					break;

@@ -495,9 +495,9 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 			univ.party.spec_items.insert(item.item_level);
 			set_item_flag(&item);
 		} else if(item.variety == eItemType::QUEST) {
-			univ.party.quest_status[item.item_level] = eQuestStatus::STARTED;
-			univ.party.quest_start[item.item_level] = univ.party.calc_day();
-			univ.party.quest_source[item.item_level] = -1;
+			univ.party.active_quests[item.item_level].status = eQuestStatus::STARTED;
+			univ.party.active_quests[item.item_level].start = univ.party.calc_day();
+			univ.party.active_quests[item.item_level].source = -1;
 			set_item_flag(&item);
 		} else {
 			if(!allow_overload && item.item_weight() > univ.party[current_getting_pc].free_weight()) {

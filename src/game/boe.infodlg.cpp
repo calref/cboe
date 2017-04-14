@@ -675,7 +675,7 @@ void put_quest_info(short which_i) {
 	cDialog quest_dlg("quest-info");
 	quest_dlg["name"].setText(quest.name);
 	quest_dlg["descr"].setText(quest.descr);
-	int start = univ.party.quest_start[which_i];
+	int start = univ.party.active_quests[which_i].start;
 	quest_dlg["start"].setText("Day " + std::to_string(start));
 	if(quest.deadline > 0)
 		quest_dlg["chop"].setText("Day " + std::to_string(quest.deadline + (quest.flags % 10) * start));

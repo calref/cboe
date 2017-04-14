@@ -1369,9 +1369,7 @@ void cUniverse::enter_scenario(const std::string& name) {
 	}
 	for(short i = 0; i < scenario.quests.size(); i++) {
 		if(scenario.quests[i].flags >= 10) {
-			party.quest_status[i] = eQuestStatus::STARTED;
-			party.quest_start[i] = 1;
-			party.quest_source[i] = -1;
+			party.active_quests[i] = cJob(1);
 		}
 	}
 	
@@ -1397,7 +1395,7 @@ void cUniverse::generate_job_bank(int which, job_bank_t& bank) {
 	for(size_t i = 0; iSlot < 4 && i < scenario.quests.size(); i++) {
 		if(scenario.quests[i].bank1 != which && scenario.quests[i].bank2 != which)
 			continue;
-		if(party.quest_status[i] != eQuestStatus::AVAILABLE)
+		if(party.active_quests[i].status != eQuestStatus::AVAILABLE)
 			continue;
 		if(get_ran(1,1,100) <= 50 - bank.anger)
 			bank.jobs[iSlot++] = i;

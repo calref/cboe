@@ -111,10 +111,7 @@ public:
 	std::vector<cEncNote> special_notes;
 	std::vector<cConvers> talk_save;
 	std::map<ePartyStatus,short> status;
-	// Quest stuff
-	std::map<int, eQuestStatus> quest_status;
-	std::map<int, int> quest_start; // the day the quest was started; used for quests with relative deadlines
-	std::map<int, int> quest_source; // if gotten from a job board, this is the number of the job board; otherwise -1
+	std::map<int, cJob> active_quests;
 	location left_at;
 	size_t left_in;
 	eDirection direction;

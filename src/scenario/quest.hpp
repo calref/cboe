@@ -22,6 +22,15 @@ public:
 	std::string descr;
 };
 
+class cJob {
+public:
+	cJob() : status(eQuestStatus::AVAILABLE), start(0), source(-1) {}
+	explicit cJob(int start, int source = -1) : status(eQuestStatus::STARTED), start(start), source(source) {}
+	eQuestStatus status;
+	int start; // the day the quest was started; used for quests with relative deadlines
+	int source; // if gotten from a job board, this is the number of the job board; otherwise -1
+};
+
 std::istream& operator>>(std::istream& in, eQuestStatus& type);
 std::ostream& operator<<(std::ostream& out, eQuestStatus type);
 

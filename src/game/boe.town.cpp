@@ -377,7 +377,7 @@ void start_town_mode(short which_town, short entry_dir) {
 				continue;
 			}
 			// Don't place quest items if party already started
-			if(item.variety == eItemType::QUEST && univ.party.quest_status[item.item_level] != eQuestStatus::AVAILABLE) {
+			if(item.variety == eItemType::QUEST && univ.party.active_quests[item.item_level].status != eQuestStatus::AVAILABLE) {
 				univ.town.items.pop_back();
 				continue;
 			}

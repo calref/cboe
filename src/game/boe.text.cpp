@@ -573,13 +573,13 @@ void set_stat_window(short new_stat) {
 		case ITEM_WIN_QUESTS:
 			std::fill(spec_item_array.begin(), spec_item_array.end(), -1);
 			for(short i = 0; i < univ.scenario.quests.size(); i++)
-				if(univ.party.quest_status[i] == eQuestStatus::STARTED) {
+				if(univ.party.active_quests[i].status == eQuestStatus::STARTED) {
 					spec_item_array.push_back(i);
 					array_pos++;
-				} else if(univ.party.quest_status[i] == eQuestStatus::COMPLETED) {
+				} else if(univ.party.active_quests[i].status == eQuestStatus::COMPLETED) {
 					spec_item_array.push_back(i + 10000);
 					array_pos++;
-				} else if(univ.party.quest_status[i] == eQuestStatus::FAILED) {
+				} else if(univ.party.active_quests[i].status == eQuestStatus::FAILED) {
 					spec_item_array.push_back(i + 20000);
 					array_pos++;
 				}

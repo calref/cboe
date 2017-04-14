@@ -86,9 +86,7 @@ cParty::cParty(const cParty& other)
 	, special_notes(other.special_notes)
 	, talk_save(other.talk_save)
 	, status(other.status)
-	, quest_status(other.quest_status)
-	, quest_start(other.quest_start)
-	, quest_source(other.quest_source)
+	, active_quests(other.active_quests)
 	, left_at(other.left_at)
 	, left_in(other.left_in)
 	, direction(other.direction)
@@ -158,9 +156,7 @@ void cParty::swap(cParty& other) {
 	std::swap(special_notes, other.special_notes);
 	std::swap(talk_save, other.talk_save);
 	std::swap(status, other.status);
-	std::swap(quest_status, other.quest_status);
-	std::swap(quest_start, other.quest_start);
-	std::swap(quest_source, other.quest_source);
+	std::swap(active_quests, other.active_quests);
 	std::swap(left_at, other.left_at);
 	std::swap(left_in, other.left_in);
 	std::swap(direction, other.direction);
@@ -741,8 +737,8 @@ void cParty::writeTo(std::ostream& file, const cScenario& scen) const {
 	file << "SCENARIO " << scen_name << '\n';
 	file << "WON " << scen_won << '\n';
 	file << "PLAYED " << scen_played << '\n';
-	for(auto p : quest_status)
-		file << "QUEST " << p.first << ' ' << p.second << ' ' << quest_start.at(p.first) << ' ' << quest_source.at(p.first) << '\n';
+	for(auto p : active_quests)
+		file << "QUEST " << p.first << ' ' << p.second.status << ' ' << p.second.start << ' ' << p.second.source << '\n';
 	for(auto p : store_limited_stock) {
 		for(auto p2 : p.second) {
 			file << "SHOPSTOCK " << p.first << p2.first << p2.second;
@@ -990,7 +986,7 @@ void cParty::readFrom(std::istream& file, cScenario& scen){
 		} else if(cur == "QUEST") {
 			int i;
 			sin >> i;
-			sin >> quest_status[i] >> quest_start[i] >> quest_source[i];
+			sin >> active_quests[i].status >> active_quests[i].start >> active_quests[i].source;
 		} else if(cur == "SHOPSTOCK") {
 			int i, j;
 			sin >> i >> j >> store_limited_stock[i][j];
