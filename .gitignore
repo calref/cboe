@@ -84,3 +84,4 @@ test/junk/*.map
 # Misc
 oldstructs.txt
 src/tools/gitrev.hpp
+rsrc/**/scenario
