@@ -9,6 +9,7 @@
 #include "living.hpp"
 
 #include <set>
+#include <algorithm>
 #include "mathutil.hpp"
 
 void iLiving::apply_status(eStatus which, int how_much) {
@@ -46,21 +47,24 @@ void iLiving::apply_status(eStatus which, int how_much) {
 }
 
 void iLiving::clear_bad_status() {
-	status[eStatus::POISON] = 0;
-	if(status[eStatus::BLESS_CURSE] < 0)
-		status[eStatus::BLESS_CURSE] = 0;
-	if(status[eStatus::HASTE_SLOW] < 0)
-		status[eStatus::HASTE_SLOW] = 0;
-	status[eStatus::WEBS] = 0;
-	status[eStatus::DISEASE] = 0;
-	if(status[eStatus::DUMB] > 0)
-		status[eStatus::DUMB] = 0;
-	if(status[eStatus::ASLEEP] > 0)
-		status[eStatus::ASLEEP] = 0;
-	status[eStatus::PARALYZED] = 0;
-	status[eStatus::ACID] = 0;
-	if(status[eStatus::MAGIC_RESISTANCE] < 0)
-		status[eStatus::MAGIC_RESISTANCE] = 0;
+	std::map<eStatus, short> old;
+	status.swap(old);
+	std::remove_copy_if(old.begin(), old.end(), std::inserter(status, status.begin()), [](std::pair<const eStatus, short> kv) {
+		return isStatusNegative(kv.first) ? kv.second > 0 : kv.second < 0;
+	});
+}
+
+void iLiving::clear_brief_status() {
+	std::map<eStatus, short> old;
+	status.swap(old);
+	std::remove_copy_if(old.begin(), old.end(), std::inserter(status, status.begin()), [](std::pair<const eStatus, short> kv) -> bool {
+		if(kv.first == eStatus::POISON) return false;
+		if(kv.first == eStatus::DISEASE) return false;
+		if(kv.first == eStatus::DUMB) return false;
+		if(kv.first == eStatus::ACID && kv.second > 2)
+			return false;
+		return true;
+	});
 }
 
 void iLiving::void_sanctuary() {

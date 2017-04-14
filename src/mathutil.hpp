@@ -25,16 +25,6 @@ inline void move_to_zero(T& val){
 		val--;
 }
 
-// Not quite mathutil... perhaps I need a more general util file.
-// This is from <http://stackoverflow.com/a/16597048>.
-template<typename ContainerT, typename PredicateT >
-void erase_if(ContainerT& items, const PredicateT& predicate) {
-    for(auto it = items.begin(); it != items.end();) {
-		if(predicate(*it)) it = items.erase(it);
-		else ++it;
-    }
-};
-
 // Case-insensitive string comparison seems to be semi-standard, but with different names.
 #if defined(__APPLE__)
 #define strnicmp strncasecmp

@@ -578,9 +578,10 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		
 		to_return = univ.party.out_loc;
 		
-		erase_if(univ.party.party_event_timers, [](const cTimer& t) {
+		auto& timers = univ.party.party_event_timers;
+		timers.erase(std::remove_if(timers.begin(), timers.end(), [](const cTimer& t) {
 			return t.node_type == 2;
-		});
+		}), timers.end());
 		
 	}
 	
@@ -629,16 +630,8 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		
 		univ.party.status[ePartyStatus::STEALTH] = 0;
 		univ.party.status[ePartyStatus::DETECT_LIFE] = 0; // TODO: Yes? No? Maybe?
-		for(short i = 0; i < 6; i++)
-			erase_if(univ.party[i].status, [](std::pair<const eStatus, short> kv) -> bool {
-				if(kv.first == eStatus::POISON) return false;
-				if(kv.first == eStatus::DISEASE) return false;
-				if(kv.first == eStatus::DUMB) return false;
-				if(kv.first == eStatus::ACID && kv.second > 2)
-					return false;
-				return true;
-			});
-		
+		for(cPlayer& who : univ.party)
+			who.clear_brief_status();
 		
 		update_explored(to_return);
 		redraw_screen(REFRESH_TERRAIN | REFRESH_TEXT);

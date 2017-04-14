@@ -30,6 +30,7 @@ public:
 	virtual int get_shared_dmg(int base_dmg) const = 0; // And this goes with the above.
 	
 	virtual void apply_status(eStatus which, int how_much);
+	virtual void clear_brief_status();
 	virtual void clear_bad_status();
 	virtual void void_sanctuary();
 	
