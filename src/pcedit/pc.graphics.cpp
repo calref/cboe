@@ -4,9 +4,9 @@
 #include "pc.graphics.hpp"
 #include "pc.editors.hpp"
 #include "pc.action.hpp"
-#include "soundtool.hpp"
+#include "sounds.hpp"
 #include "graphtool.hpp"
-#include "restypes.hpp"
+#include "res_image.hpp"
 #include "message.hpp"
 #include "mathutil.hpp"
 #include "gitrev.hpp"
@@ -788,8 +788,3 @@ void display_party() {
 		win_draw_string(mainPtr,dest_rect,to_draw.str(),eTextMode::WRAP,style);
 	}
 }
-
-void make_cursor_sword() {
-	set_cursor(sword_curs);
-}
-

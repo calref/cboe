@@ -1,5 +1,5 @@
 
-#include "simpletypes.hpp"
+#include "fields.hpp"
 
 void Set_up_win ();
 void run_startup_g();

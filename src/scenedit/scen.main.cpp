@@ -11,7 +11,7 @@
 #include "scen.actions.hpp"
 #include "scen.fileio.hpp"
 #include "scen.btnmg.hpp"
-#include "soundtool.hpp"
+#include "sounds.hpp"
 #include "scen.townout.hpp"
 #include "scen.core.hpp"
 #include "scen.keydlgs.hpp"
@@ -23,7 +23,7 @@
 #include "strdlog.hpp"
 #include "choicedlog.hpp"
 #include "scen.menus.hpp"
-#include "restypes.hpp"
+#include "res_image.hpp"
 
 /* Globals */
 bool  All_Done = false;

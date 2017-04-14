@@ -17,7 +17,7 @@
 #include "3choice.hpp"
 #include "strchoice.hpp"
 #include "pictchoice.hpp"
-#include "restypes.hpp"
+#include "res_strings.hpp"
 #include "spell.hpp"
 
 extern short cen_x, cen_y;
@@ -1208,8 +1208,4 @@ void edit_scen_intro() {
 	dynamic_cast<cPict&>(edit["pic"]).setPict(scenario.intro_pic);
 	
 	edit.run();
-}
-
-void make_cursor_sword() {
-	set_cursor(wand_curs);
 }

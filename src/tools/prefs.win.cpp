@@ -9,7 +9,6 @@
 #include <boost/any.hpp>
 #include <boost/lexical_cast.hpp>
 
-namespace fs = boost::filesystem;
 std::map<std::string,boost::any> prefs;
 using iarray = std::vector<int>;
 static bool prefsLoaded = false, prefsDirty = false;

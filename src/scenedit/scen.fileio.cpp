@@ -10,7 +10,7 @@
 #include "scen.keydlgs.hpp"
 #include "graphtool.hpp"
 #include "scen.core.hpp"
-#include "soundtool.hpp"
+#include "sounds.hpp"
 #include "mathutil.hpp"
 #include "oldstructs.hpp"
 #include "fileio.hpp"

@@ -7,7 +7,7 @@
 #include "pc.editors.hpp"
 #include "pc.action.hpp"
 #include "pc.fileio.hpp"
-#include "soundtool.hpp"
+#include "sounds.hpp"
 #include "graphtool.hpp"
 #include "boe.consts.hpp"
 #include "dialog.hpp"
@@ -18,7 +18,7 @@
 #include "pc.menus.hpp"
 #include "winutil.hpp"
 #include "cursors.hpp"
-#include "restypes.hpp"
+#include "res_image.hpp"
 
 cUniverse univ;
 
