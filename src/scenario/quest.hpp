@@ -22,4 +22,7 @@ public:
 	std::string descr;
 };
 
+std::istream& operator>>(std::istream& in, eQuestStatus& type);
+std::ostream& operator<<(std::ostream& out, eQuestStatus type);
+
 #endif

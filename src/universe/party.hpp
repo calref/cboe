@@ -236,9 +236,5 @@ bool operator==(const cParty::cEncNote& one, const cParty::cEncNote& two);
 
 std::istream& operator>>(std::istream& in, eEncNoteType& type);
 std::ostream& operator<<(std::ostream& out, eEncNoteType type);
-std::istream& operator>>(std::istream& in, ePartyStatus& type);
-std::ostream& operator<<(std::ostream& out, ePartyStatus type);
-std::istream& operator>>(std::istream& in, eQuestStatus& type);
-std::ostream& operator<<(std::ostream& out, eQuestStatus type);
 
 #endif

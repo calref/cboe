@@ -111,4 +111,7 @@ inline eItemAbilCat getItemAbilCategory(eItemAbil abil) {
 	return eItemAbilCat::INVALID;
 }
 
+std::ostream& operator << (std::ostream& out, eItemAbil e);
+std::istream& operator >> (std::istream& in, eItemAbil& e);
+
 #endif

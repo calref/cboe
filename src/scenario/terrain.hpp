@@ -49,13 +49,4 @@ public:
 	void writeTo(std::ostream& file) const;
 };
 
-std::ostream& operator << (std::ostream& out, eTerSpec e);
-std::istream& operator >> (std::istream& in, eTerSpec& e);
-std::ostream& operator << (std::ostream& out, eTrimType e);
-std::istream& operator >> (std::istream& in, eTrimType& e);
-std::ostream& operator << (std::ostream& out, eTerObstruct e);
-std::istream& operator >> (std::istream& in, eTerObstruct& e);
-std::ostream& operator << (std::ostream& out, eStepSnd e);
-std::istream& operator >> (std::istream& in, eStepSnd& e);
-
 #endif

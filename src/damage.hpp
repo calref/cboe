@@ -116,7 +116,14 @@ inline bool isDead(eMainStatus stat) {
 
 std::ostream& operator << (std::ostream& out, eStatus e);
 std::istream& operator >> (std::istream& in, eStatus& e);
+std::istream& operator >> (std::istream& in, ePartyStatus& type);
+std::ostream& operator << (std::ostream& out, ePartyStatus type);
+std::ostream& operator << (std::ostream& out, eMainStatus e);
+std::istream& operator >> (std::istream& in, eMainStatus& e);
 std::ostream& operator << (std::ostream& out, eDamageType e);
 std::istream& operator >> (std::istream& in, eDamageType& e);
+
+void operator += (eMainStatus& stat, eMainStatus othr);
+void operator -= (eMainStatus& stat, eMainStatus othr);
 
 #endif

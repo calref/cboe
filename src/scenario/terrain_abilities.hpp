@@ -86,4 +86,13 @@ inline bool blocksMove(eTerObstruct block) {
 
 enum class eStepSnd {STEP, SQUISH, CRUNCH, NONE, SPLASH};
 
+std::ostream& operator << (std::ostream& out, eTerSpec e);
+std::istream& operator >> (std::istream& in, eTerSpec& e);
+std::ostream& operator << (std::ostream& out, eTrimType e);
+std::istream& operator >> (std::istream& in, eTrimType& e);
+std::ostream& operator << (std::ostream& out, eTerObstruct e);
+std::istream& operator >> (std::istream& in, eTerObstruct& e);
+std::ostream& operator << (std::ostream& out, eStepSnd e);
+std::istream& operator >> (std::istream& in, eStepSnd& e);
+
 #endif

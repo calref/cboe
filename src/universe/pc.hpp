@@ -176,11 +176,4 @@ public:
 	cPlayer& operator=(cPlayer other) = delete;
 };
 
-void operator += (eMainStatus& stat, eMainStatus othr);
-void operator -= (eMainStatus& stat, eMainStatus othr);
-std::ostream& operator << (std::ostream& out, eMainStatus e);
-std::istream& operator >> (std::istream& in, eMainStatus& e);
-std::ostream& operator << (std::ostream& out, eTrait e);
-std::istream& operator >> (std::istream& in, eTrait& e);
-
 #endif

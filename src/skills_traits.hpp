@@ -60,4 +60,9 @@ enum class eTrait {
 	ANAMA = 16,
 };
 
+std::ostream& operator << (std::ostream& out, eSkill e);
+std::istream& operator >> (std::istream& in, eSkill& e);
+std::ostream& operator << (std::ostream& out, eTrait e);
+std::istream& operator >> (std::istream& in, eTrait& e);
+
 #endif

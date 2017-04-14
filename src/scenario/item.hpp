@@ -61,15 +61,6 @@ public:
 	void readFrom(std::istream& sin);
 };
 
-std::ostream& operator << (std::ostream& out, eItemType e);
-std::ostream& operator << (std::ostream& out, eItemAbil e);
-std::istream& operator >> (std::istream& in, eItemType& e);
-std::istream& operator >> (std::istream& in, eItemAbil& e);
-std::ostream& operator << (std::ostream& out, eSkill e);
-std::istream& operator >> (std::istream& in, eSkill& e);
-std::ostream& operator << (std::ostream& out, eItemUse e);
-std::istream& operator >> (std::istream& in, eItemUse& e);
-
 class cSpecItem {
 public:
 	short flags = 0;
