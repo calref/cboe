@@ -656,7 +656,7 @@ static int offsets[] = {
 	int(eSpecType::OUT_MAKE_WANDER),
 };
 
-eSpecCat getNodeCategory(eSpecType node) {
+static eSpecCat getNodeCategory(eSpecType node) {
 	int code = (int) node;
 	if(code >= 0 && code <= 47)
 		return eSpecCat::GENERAL;
@@ -688,6 +688,7 @@ static std::map<eSpecType, node_properties_t> loadProps() {
 		if(category == eSpecCat::INVALID) continue;
 		node_properties_t props;
 		props.self = check;
+		props.cat = category;
 		int j = int(category), k = i - offsets[j];
 		props.m1_btn = button_dict[j][0][k];
 		props.m2_btn = button_dict[j][1][k];
@@ -716,8 +717,10 @@ static std::map<eSpecType, node_properties_t> loadProps() {
 }
 
 const node_properties_t& operator* (eSpecType t) {
+	static node_properties_t invalid;
 	static std::map<eSpecType, node_properties_t> allNodeProps = loadProps();
-	return allNodeProps.at(t);
+	auto iter = allNodeProps.find(t);
+	return iter == allNodeProps.end() ? invalid : iter->second;
 }
 
 std::string node_properties_t::opcode() const {

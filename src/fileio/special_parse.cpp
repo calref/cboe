@@ -121,7 +121,7 @@ static void init_specials_parse() {
 	using underlying = unsigned short;
 	for(underlying i = 1; i < std::numeric_limits<underlying>::max(); i++) {
 		eSpecType check = (eSpecType) i;
-		eSpecCat category = getNodeCategory(check);
+		eSpecCat category = (*check).cat;
 		if(category == eSpecCat::INVALID) continue;
 		if((*check).opcode().empty())
 			warn_missing_opcode(i);

@@ -120,6 +120,7 @@ enum class eSpecCat {
 
 struct node_properties_t {
 	eSpecType self;
+	eSpecCat cat;
 	std::string opcode() const;
 	std::string name() const, descr() const;
 	std::string sdf1_lbl() const, sdf2_lbl() const, sdf1_hlp() const, sdf2_hlp() const;
@@ -130,11 +131,10 @@ struct node_properties_t {
 	std::string jmp_lbl() const, jmp_hlp() const;
 	char sd1_btn, sd2_btn, m1_btn, m2_btn, m3_btn, p_btn, pt_btn;
 	char x1a_btn, x1b_btn, x1c_btn, x2a_btn, x2b_btn, x2c_btn;
-	node_properties_t() {}
+	node_properties_t() : self(eSpecType::INVALID), cat(eSpecCat::INVALID) {}
 	node_properties_t(std::initializer_list<std::function<void(node_properties_t)>>);
 };
 
 const node_properties_t& operator* (eSpecType t);
-eSpecCat getNodeCategory(eSpecType node);
 
 #endif

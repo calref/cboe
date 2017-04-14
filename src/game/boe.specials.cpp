@@ -2059,7 +2059,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 			special_in_progress = false;
 			return;
 		}
-		switch(getNodeCategory(cur_node.type)) {
+		switch((*cur_node.type).cat) {
 			case eSpecCat::GENERAL:
 				if(cur_node.type == eSpecType::NONE && univ.debug_mode) {
 					std::string type("???");
