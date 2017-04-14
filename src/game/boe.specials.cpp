@@ -297,7 +297,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 				play_sound(-1 * ter_flag2);
 			}
 			give_help(47,65);
-			if(blocksMove(univ.scenario.ter_types[ter].blockage))
+			if(univ.scenario.ter_types[ter].blocksMove())
 				can_enter = false;
 			break;
 		case eTerSpec::DAMAGING:
@@ -1018,7 +1018,7 @@ void use_item(short pc,short item) {
 						case ePartyStatus::DETECT_LIFE: ASB("  Your vision of life becomes blurry."); break;
 						case ePartyStatus::FLIGHT:
 							if(i <= str) {
-								if(blocksMove(univ.scenario.ter_types[univ.out[univ.party.out_loc.x][univ.party.out_loc.y]].blockage)) {
+								if(univ.scenario.ter_types[univ.out[univ.party.out_loc.x][univ.party.out_loc.y]].blocksMove()) {
 									add_string_to_buf("  You plummet to your deaths.");
 									slay_party(eMainStatus::DEAD);
 									print_buf();

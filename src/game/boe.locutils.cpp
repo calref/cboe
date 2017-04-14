@@ -208,7 +208,7 @@ short sight_obscurity(short x,short y) {
 }
 
 short combat_obscurity(short x, short y) {
-	if(blocksMove(univ.scenario.ter_types[coord_to_ter(x,y)].blockage)) return 5;
+	if(univ.scenario.ter_types[coord_to_ter(x,y)].blocksMove()) return 5;
 	if(is_lava(x,y)) return 5;
 	return sight_obscurity(x,y);
 }
@@ -440,7 +440,7 @@ bool outd_is_special(location to_check) {
 }
 
 bool impassable(ter_num_t terrain_to_check) {
-	if(blocksMove(univ.scenario.ter_types[terrain_to_check].blockage))
+	if(univ.scenario.ter_types[terrain_to_check].blocksMove())
 		return true;
 	else return false;
 }

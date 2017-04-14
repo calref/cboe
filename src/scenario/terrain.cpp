@@ -408,3 +408,8 @@ void cTerrain::import_legacy(legacy::terrain_type_type& old){
 	else if(i == 37)
 		frill_for = 36, frill_chance = 25;
 }
+
+bool cTerrain::blocksMove() const {
+	int code = (int) blockage;
+	return code > 2;
+}

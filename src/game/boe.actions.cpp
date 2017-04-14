@@ -2346,7 +2346,7 @@ void increase_age() {
 	if(univ.party.status[ePartyStatus::FLIGHT] == 2)
 		add_string_to_buf("You are starting to descend.");
 	if(univ.party.status[ePartyStatus::FLIGHT] == 1) {
-		if(blocksMove(univ.scenario.ter_types[univ.out[univ.party.out_loc.x][univ.party.out_loc.y]].blockage)) {
+		if(univ.scenario.ter_types[univ.out[univ.party.out_loc.x][univ.party.out_loc.y]].blocksMove()) {
 			add_string_to_buf("  You plummet to your deaths.");
 			slay_party(eMainStatus::DEAD);
 			print_buf();

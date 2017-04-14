@@ -79,11 +79,6 @@ enum class eTerObstruct {
 	BLOCK_MOVE_AND_SIGHT = 5,
 };
 
-inline bool blocksMove(eTerObstruct block) {
-	int code = (int) block;
-	return code > 2;
-}
-
 enum class eStepSnd {STEP, SQUISH, CRUNCH, NONE, SPLASH};
 
 std::ostream& operator << (std::ostream& out, eTerSpec e);
