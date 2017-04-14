@@ -11,7 +11,12 @@
 #include <map>
 #include <stdexcept>
 
-#include "graphtool.hpp"
+#include "gfxsheets.hpp"
+#include "render_shapes.hpp"
+#include "render_image.hpp"
+#include "render_text.hpp"
+#include "tiling.hpp"
+#include "location.hpp"
 #include "dialog.hpp"
 #include "res_image.hpp"
 

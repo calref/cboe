@@ -18,7 +18,7 @@
 #include <map>
 #include <vector>
 #include "control.hpp"
-#include "graphtool.hpp" // for eFont
+#include "render_text.hpp"
 
 /// A button type.
 enum eBtnType {	// w x h

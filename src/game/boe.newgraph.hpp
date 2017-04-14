@@ -3,6 +3,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "location.hpp"
 #include "item.hpp"
+#include "gfxsheets.hpp"
 
 struct word_rect_t {
 	std::string word;

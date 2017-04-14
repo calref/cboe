@@ -14,7 +14,7 @@
 #include <sstream>
 
 #include "oldstructs.hpp"
-#include "graphtool.hpp" // for NO_PIC
+#include "gfxsheets.hpp" // for NO_PIC
 #include "boe.consts.hpp" // TODO: Put these constants in a global file
 #include "damage.hpp"
 

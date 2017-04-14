@@ -10,7 +10,7 @@
 #include <numeric>
 #include <iostream>
 #include "mathutil.hpp"
-#include "graphtool.hpp" // for get_str
+#include "utility.hpp"
 
 std::map<eSkill,short> skill_cost = {
 	{eSkill::STRENGTH,3}, {eSkill::DEXTERITY,3}, {eSkill::INTELLIGENCE,3},

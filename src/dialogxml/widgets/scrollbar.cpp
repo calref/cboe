@@ -8,7 +8,8 @@
 
 #include "scrollbar.hpp"
 #include "res_image.hpp"
-#include "graphtool.hpp"
+#include "render_image.hpp"
+#include "render_shapes.hpp"
 #include "mathutil.hpp"
 #include "cursors.hpp"
 

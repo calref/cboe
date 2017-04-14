@@ -13,7 +13,6 @@
 /// Scrollbar-related classes and types.
 
 #include "control.hpp"
-#include "graphtool.hpp"
 
 /// Specifies the style of a scrollbar.
 enum eScrollStyle {

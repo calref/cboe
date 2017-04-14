@@ -17,7 +17,6 @@
 #include "sounds.hpp"
 #include "boe.monster.hpp"
 #include "boe.main.hpp"
-#include "graphtool.hpp"
 #include "mathutil.hpp"
 #include "strdlog.hpp"
 #include "3choice.hpp"

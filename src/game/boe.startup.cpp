@@ -21,6 +21,7 @@
 #include "res_image.hpp"
 #include "prefs.hpp"
 #include "cursors.hpp"
+#include "render_image.hpp"
 
 #include <vector>
 using std::vector;

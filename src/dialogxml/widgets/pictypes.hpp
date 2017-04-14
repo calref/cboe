@@ -12,8 +12,6 @@
 /// @file
 /// Constants to specify the type of an icon
 
-typedef signed short pic_num_t; ///< An icon's unique number
-
 /// Specifies an icon type.
 enum ePicType {
 	PIC_TER = 1,				///< 28x36 terrain graphic from the preset sheets

@@ -15,7 +15,7 @@
 #include "boe.newgraph.hpp"
 #include "boe.main.hpp"
 #include "mathutil.hpp"
-#include "graphtool.hpp"
+#include "gfxsheets.hpp"
 
 extern eGameMode overall_mode;
 extern short which_combat_type;

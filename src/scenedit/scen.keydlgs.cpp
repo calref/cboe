@@ -6,7 +6,8 @@
 #include <boost/lexical_cast.hpp>
 #include "scen.global.hpp"
 #include "scenario.hpp"
-#include "graphtool.hpp"
+#include "gfxsheets.hpp"
+#include "utility.hpp"
 #include "scen.graphics.hpp"
 #include "scen.keydlgs.hpp"
 #include "scen.core.hpp"

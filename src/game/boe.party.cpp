@@ -26,7 +26,7 @@
 #include "boe.text.hpp"
 #include "sounds.hpp"
 #include "boe.main.hpp"
-#include "graphtool.hpp"
+#include "utility.hpp"
 #include "mathutil.hpp"
 #include "strdlog.hpp"
 #include "choicedlog.hpp"

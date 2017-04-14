@@ -27,6 +27,7 @@
 #include "spell.hpp"
 #include "view_dialogs.hpp"
 #include "cursors.hpp"
+#include "utility.hpp"
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
 

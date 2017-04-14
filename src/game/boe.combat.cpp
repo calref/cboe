@@ -23,6 +23,7 @@
 #include "boe.menus.hpp"
 #include "spell.hpp"
 #include "prefs.hpp"
+#include "utility.hpp"
 
 extern eGameMode overall_mode;
 extern short which_combat_type;

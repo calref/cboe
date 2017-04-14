@@ -15,7 +15,7 @@
 
 #include "strdlog.hpp"
 #include "oldstructs.hpp"
-#include "graphtool.hpp"
+#include "utility.hpp"
 
 #include "spell.hpp"
 #include "skills_traits.hpp"

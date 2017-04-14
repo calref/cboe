@@ -7,7 +7,7 @@
 #include <stack>
 #include "scen.global.hpp"
 #include "scenario.hpp"
-#include "graphtool.hpp"
+#include "render_shapes.hpp"
 #include "scen.graphics.hpp"
 #include "scen.actions.hpp"
 #include "sounds.hpp"

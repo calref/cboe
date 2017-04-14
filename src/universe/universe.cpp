@@ -18,6 +18,7 @@
 #include "oldstructs.hpp"
 #include "mathutil.hpp"
 #include "fileio.hpp"
+#include "gfxsheets.hpp"
 
 void cCurOut::import_legacy(legacy::out_info_type& old){
 	for(int i = 0; i < 96; i++)

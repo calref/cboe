@@ -17,7 +17,7 @@
 
 #include "boe.consts.hpp" // TODO: If this is needed here, maybe it shouldn't be in the "boe" namespace
 #include "oldstructs.hpp"
-#include "graphtool.hpp" // for get_str()
+#include "utility.hpp"
 #include "fileio.hpp"
 
 #include "damage.hpp"

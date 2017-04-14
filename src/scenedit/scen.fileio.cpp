@@ -8,7 +8,7 @@
 #include <boost/filesystem/operations.hpp>
 #include "scen.fileio.hpp"
 #include "scen.keydlgs.hpp"
-#include "graphtool.hpp"
+#include "gfxsheets.hpp"
 #include "scen.core.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"

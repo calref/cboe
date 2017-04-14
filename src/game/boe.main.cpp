@@ -19,7 +19,8 @@
 #include "boe.main.hpp"
 #include "winutil.hpp"
 #include "sounds.hpp"
-#include "graphtool.hpp"
+#include "render_image.hpp"
+#include "tiling.hpp"
 #include "mathutil.hpp"
 #include "fileio.hpp"
 #include "strdlog.hpp"
@@ -152,7 +153,8 @@ void init_boe(int argc, char* argv[]) {
 	init_directories(argv[0]);
 	init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
 	sync_prefs();
-	init_graph_tool();
+	init_shaders();
+	init_tiling();
 	init_snd_tool();
 	
 	cDialog::init();

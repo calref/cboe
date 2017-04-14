@@ -4,7 +4,11 @@
 #include <cstring>
 #include "scen.global.hpp"
 #include "scenario.hpp"
-#include "graphtool.hpp"
+#include "gfxsheets.hpp"
+#include "render_image.hpp"
+#include "render_shapes.hpp"
+#include "render_text.hpp"
+#include "tiling.hpp" // for bg
 #include "scen.graphics.hpp"
 #include <cmath>
 #include "scen.keydlgs.hpp"

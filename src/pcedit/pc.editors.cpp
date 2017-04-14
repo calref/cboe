@@ -2,7 +2,7 @@
 #include "pc.graphics.hpp"
 #include "universe.hpp"
 #include "pc.editors.hpp"
-#include "graphtool.hpp"
+#include "utility.hpp"
 #include "dialog.hpp"
 #include "control.hpp"
 #include "button.hpp"

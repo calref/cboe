@@ -14,7 +14,7 @@
 #include <algorithm>
 
 #include "dialog.hpp"
-#include "graphtool.hpp"
+#include "render_image.hpp"
 
 #include <cmath>
 #include <climits>

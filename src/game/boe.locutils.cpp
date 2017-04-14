@@ -6,6 +6,7 @@
 #include "boe.locutils.hpp"
 #include "boe.text.hpp"
 #include "boe.monster.hpp"
+#include "utility.hpp"
 
 bool combat_pt_in_light();
 location obs_sec;

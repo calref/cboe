@@ -5,7 +5,6 @@
 #include "universe.hpp"
 #include "pc.fileio.hpp"
 #include "pc.graphics.hpp"
-#include "graphtool.hpp"
 #include "sounds.hpp"
 #include "pc.editors.hpp"
 #include "mathutil.hpp"

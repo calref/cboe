@@ -11,7 +11,7 @@
 #include "dialog.hpp"
 #include "sounds.hpp"
 #include "button.hpp"
-#include "graphtool.hpp"
+#include "render_shapes.hpp"
 #include "res_image.hpp"
 #include "mathutil.hpp"
 #include "prefs.hpp"

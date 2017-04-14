@@ -14,7 +14,6 @@
 #include "boe.dlgutil.hpp"
 #include "boe.infodlg.hpp"
 #include "boe.graphutil.hpp"
-#include "graphtool.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"
 #include "strdlog.hpp"

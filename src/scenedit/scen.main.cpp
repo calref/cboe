@@ -6,7 +6,8 @@
 
 #include "scen.global.hpp"
 #include "scenario.hpp"
-#include "graphtool.hpp"
+#include "render_image.hpp"
+#include "tiling.hpp"
 #include "scen.graphics.hpp"
 #include "scen.actions.hpp"
 #include "scen.fileio.hpp"
@@ -101,7 +102,8 @@ void init_scened(int argc, char* argv[]) {
 	init_directories(argv[0]);
 	init_menubar();
 	// TODO: Sync and load prefs
-	init_graph_tool();
+	init_shaders();
+	init_tiling();
 	init_snd_tool();
 	
 	sf::VideoMode mode = sf::VideoMode::getDesktopMode();

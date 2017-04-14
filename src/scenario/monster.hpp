@@ -15,7 +15,6 @@
 #include <iosfwd>
 
 #include "sounds.hpp"
-#include "graphtool.hpp"
 #include "living.hpp"
 #include "monster_abilities.hpp"
 #include "race.hpp"

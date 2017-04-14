@@ -15,7 +15,7 @@
 #include "gzstream.h"
 
 #include "universe.hpp"
-#include "graphtool.hpp"
+#include "gfxsheets.hpp"
 
 #include "porting.hpp"
 #include "tarball.hpp"

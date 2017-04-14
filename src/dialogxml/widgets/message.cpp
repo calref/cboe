@@ -7,7 +7,6 @@
  */
 
 #include "message.hpp"
-#include "graphtool.hpp"
 #include "mathutil.hpp"
 #include "dialog.hpp"
 

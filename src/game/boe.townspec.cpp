@@ -17,6 +17,7 @@
 #include "choicedlog.hpp"
 #include "winutil.hpp"
 #include "boe.menus.hpp"
+#include "utility.hpp"
 
 extern eGameMode overall_mode;
 extern short stat_window;

@@ -18,7 +18,7 @@
 #include "town.hpp"
 #include "map_parse.hpp"
 #include "special_parse.hpp"
-#include "graphtool.hpp"
+#include "gfxsheets.hpp"
 #include "mathutil.hpp"
 #include "gzstream.h"
 #include "tarball.hpp"

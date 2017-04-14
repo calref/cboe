@@ -8,7 +8,9 @@
 #include "pc.action.hpp"
 #include "pc.fileio.hpp"
 #include "sounds.hpp"
-#include "graphtool.hpp"
+#include "render_image.hpp"
+#include "tiling.hpp"
+#include "utility.hpp"
 #include "boe.consts.hpp"
 #include "dialog.hpp"
 #include "control.hpp"
@@ -72,7 +74,8 @@ int main(int argc, char* argv[]) {
 		init_fileio();
 		init_main_buttons();
 		Set_up_win();
-		init_graph_tool();
+		init_shaders();
+		init_tiling();
 		init_snd_tool();
 		
 		set_up_apple_events(argc, argv);

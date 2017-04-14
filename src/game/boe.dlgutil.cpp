@@ -20,7 +20,7 @@
 #include <cstdio>
 #include "boe.newgraph.hpp"
 #include "boe.infodlg.hpp"
-#include "graphtool.hpp"
+#include "utility.hpp"
 #include "mathutil.hpp"
 #include "strdlog.hpp"
 #include "choicedlog.hpp"

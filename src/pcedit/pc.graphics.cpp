@@ -5,11 +5,15 @@
 #include "pc.editors.hpp"
 #include "pc.action.hpp"
 #include "sounds.hpp"
-#include "graphtool.hpp"
+#include "gfxsheets.hpp"
+#include "render_shapes.hpp"
+#include "render_image.hpp"
 #include "res_image.hpp"
 #include "message.hpp"
 #include "mathutil.hpp"
 #include "gitrev.hpp"
+#include "tiling.hpp" // for bg
+#include "utility.hpp"
 
 extern cUniverse univ;
 

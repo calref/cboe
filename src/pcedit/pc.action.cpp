@@ -6,7 +6,6 @@
 #include "pc.editors.hpp"
 #include "pc.fileio.hpp"
 #include "pc.action.hpp"
-#include "graphtool.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"
 #include "dialog.hpp"

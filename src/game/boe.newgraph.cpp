@@ -15,7 +15,10 @@
 #include "boe.text.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"
-#include "graphtool.hpp"
+#include "render_image.hpp"
+#include "render_shapes.hpp"
+#include "tiling.hpp"
+#include "utility.hpp"
 #include "scrollbar.hpp"
 #include <memory>
 #include "location.hpp"

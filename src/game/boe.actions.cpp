@@ -34,6 +34,7 @@
 #include "spell.hpp"
 #include "shop.hpp"
 #include "prefs.hpp"
+#include "render_shapes.hpp"
 
 rectangle bottom_buttons[14];
 rectangle world_screen = {23, 23, 346, 274};

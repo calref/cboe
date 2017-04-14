@@ -7,7 +7,8 @@
 //
 
 #include "spell.hpp"
-#include "graphtool.hpp" // for get_str
+
+#include "utility.hpp"
 
 std::map<eSpell,cSpell> cSpell::dictionary;
 

@@ -14,7 +14,7 @@
 
 #include <string>
 #include "control.hpp"
-#include "graphtool.hpp"
+#include "render_text.hpp"
 #include "undo.hpp"
 
 /// The field's expected input type.

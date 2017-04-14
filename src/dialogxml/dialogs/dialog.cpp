@@ -9,7 +9,7 @@
 #include <cmath>
 #include <stdexcept>
 #include "dialog.hpp"
-#include "graphtool.hpp"
+#include "tiling.hpp" // for bg
 #include "sounds.hpp"
 #include "pict.hpp"
 #include "button.hpp"

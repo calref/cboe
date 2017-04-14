@@ -13,7 +13,7 @@
 #include <boost/lexical_cast.hpp>
 #include "dialog.hpp"
 #include "strdlog.hpp"
-#include "graphtool.hpp"
+#include "render_shapes.hpp"
 #include "winutil.hpp"
 #include "cursors.hpp"
 
