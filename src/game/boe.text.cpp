@@ -305,29 +305,27 @@ void put_item_screen(short screen_num) {
 				dest_rect.left += 36;
 				dest_rect.top -= 2;
 				
-				if(univ.party[pc].items[i_num].variety == eItemType::NO_ITEM) {
-					
-				}
-				else {
+				const cPlayer& who = univ.party[pc];
+				const cItem& item = who.items[i_num];
+				
+				if(item.variety != eItemType::NO_ITEM) {
 					style.font = FONT_PLAIN;
-					if(univ.party[pc].equip[i_num]) {
+					if(who.equip[i_num]) {
 						style.italic = true;
-						if(univ.party[pc].items[i_num].variety == eItemType::ONE_HANDED || univ.party[pc].items[i_num].variety == eItemType::TWO_HANDED)
+						if(item.variety == eItemType::ONE_HANDED || item.variety == eItemType::TWO_HANDED)
 							style.colour = sf::Color::Magenta;
-						else if((*univ.party[pc].items[i_num].variety).is_armour)
+						else if((*item.variety).is_armour)
 							style.colour = sf::Color::Green;
 						else style.colour = sf::Color::Blue;
 					} else style.colour = sf::Color::Black;
 					
 					sout.str("");
-					if(!univ.party[pc].items[i_num].ident)
-						sout << univ.party[pc].items[i_num].name << "  ";
+					if(!item.ident)
+						sout << item.name << "  ";
 					else { /// Don't place # of charges when Sell button up and space tight
-						sout << univ.party[pc].items[i_num].full_name << ' ';
-						// TODO: Why are bashing weapons excluded from this?
-						if(univ.party[pc].items[i_num].charges > 0 && univ.party[pc].items[i_num].ability != eItemAbil::MESSAGE
-						   && (stat_screen_mode == MODE_INVEN || stat_screen_mode == MODE_SHOP))
-							sout << '(' << int(univ.party[pc].items[i_num].charges) << ')';
+						sout << item.full_name << ' ';
+						if(item.charges > 0 && item.ability != eItemAbil::MESSAGE && (stat_screen_mode == MODE_INVEN || stat_screen_mode == MODE_SHOP))
+							sout << '(' << int(item.charges) << ')';
 					}
 					dest_rect.left -= 2;
 					win_draw_string(item_stats_gworld,dest_rect,sout.str(),eTextMode::WRAP,style);
@@ -350,7 +348,7 @@ void put_item_screen(short screen_num) {
 							((is_town()) || (is_out()) || ((is_combat()) && (pc == univ.cur_pc)))) { // place give and drop and use
 							place_item_button(1,i,2,0);
 							place_item_button(2,i,3,0);
-							if(abil_chart[univ.party[pc].items[i_num].ability]) // place use if can
+							if(abil_chart[item.ability]) // place use if can
 								place_item_button(0,i,1,0);
 						}
 					}
@@ -375,58 +373,50 @@ void place_buy_button(short position,short pc_num,short item_num) {
 	// TODO: This is now duplicated here and in start_town_mode()
 	short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
 	
-	if(univ.party[pc_num].items[item_num].variety == eItemType::NO_ITEM)
+	const cPlayer& pc = univ.party[pc_num];
+	const cItem& item = pc.items[item_num];
+	
+	if(item.variety == eItemType::NO_ITEM)
 		return;
 	
 	dest_rect = item_buttons[position][5];
 	
-	val_to_place = (univ.party[pc_num].items[item_num].charges > 0) ?
-	univ.party[pc_num].items[item_num].charges * univ.party[pc_num].items[item_num].value :
-	univ.party[pc_num].items[item_num].value;
+	val_to_place = (item.charges > 0) ?
+		item.charges * item.value :
+		item.value;
 	val_to_place = val_to_place / 2;
 	
 	switch(stat_screen_mode) {
 		case MODE_IDENTIFY:
-			if(!univ.party[pc_num].items[item_num].ident) {
+			if(!item.ident) {
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[0];
 				val_to_place = shop_identify_cost;
 			}
 			break;
 		case MODE_SELL_WEAP:
-			if((*univ.party[pc_num].items[item_num].variety).is_weapon &&
-				(!univ.party[pc_num].equip[item_num]) &&
-				(univ.party[pc_num].items[item_num].ident) && (val_to_place > 0) &&
-				(!univ.party[pc_num].items[item_num].unsellable)) {
+			if((*item.variety).is_weapon && !pc.equip[item_num] && item.ident && val_to_place > 0 && !item.unsellable) {
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[1];
 			}
 			break;
 		case MODE_SELL_ARMOR:
-			if((*univ.party[pc_num].items[item_num].variety).is_armour &&
-			   (!univ.party[pc_num].equip[item_num]) &&
-			   (univ.party[pc_num].items[item_num].ident) && (val_to_place > 0) &&
-			   (!univ.party[pc_num].items[item_num].unsellable)) {
+			if((*item.variety).is_armour && !pc.equip[item_num] && item.ident && val_to_place > 0 && !item.unsellable) {
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[1];
 			}
 			break;
 		case MODE_SELL_ANY:
-			if((val_to_place > 0) && (univ.party[pc_num].items[item_num].ident) &&
-				(!univ.party[pc_num].equip[item_num]) &&
-				(!univ.party[pc_num].items[item_num].unsellable)) {
+			if(!pc.equip[item_num] && item.ident && val_to_place > 0 && !item.unsellable) {
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[1];
 			}
 			break;
 		case MODE_ENCHANT:
-			if((univ.party[pc_num].items[item_num].variety == eItemType::ONE_HANDED || univ.party[pc_num].items[item_num].variety == eItemType::TWO_HANDED) &&
-				(univ.party[pc_num].items[item_num].ident) &&
-				univ.party[pc_num].items[item_num].ability == eItemAbil::NONE &&
-				(!univ.party[pc_num].items[item_num].magic)) {
+			if((item.variety == eItemType::ONE_HANDED || item.variety == eItemType::TWO_HANDED) && item.ident && item.ability == eItemAbil::NONE && !item.magic) {
 				item_area_button_active[position][5] = true;
 				source_rect = button_sources[2];
-				val_to_place = max(aug_cost[shop_identify_cost] * 100,univ.party[pc_num].items[item_num].value * (5 + aug_cost[shop_identify_cost]));
+				val_to_place = max(aug_cost[shop_identify_cost] * 100, item.value * (5 + aug_cost[shop_identify_cost]));
 			}
 			break;
 		case MODE_INVEN: case MODE_SHOP:

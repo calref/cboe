@@ -2277,30 +2277,31 @@ bool damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace ty
 	if(damage_type == eDamageType::WEAPON || damage_type == eDamageType::UNDEAD || damage_type == eDamageType::DEMON) {
 		how_much -= minmax(-5,5,which_pc.status[eStatus::BLESS_CURSE]);
 		for(short i = 0; i < which_pc.items.size(); i++) {
-			if((which_pc.items[i].variety != eItemType::NO_ITEM) && (which_pc.equip[i])) {
-				if((*which_pc.items[i].variety).is_armour) {
-					r1 = get_ran(1,1,which_pc.items[i].item_level);
+			const cItem& item = which_pc.items[i];
+			if(item.variety != eItemType::NO_ITEM && which_pc.equip[i]) {
+				if((*item.variety).is_armour) {
+					r1 = get_ran(1,1,item.item_level);
 					how_much -= r1;
 					
 					// bonus for magical items
-					if(which_pc.items[i].bonus > 0) {
-						r1 = get_ran(1,1,which_pc.items[i].bonus);
+					if(item.bonus > 0) {
+						r1 = get_ran(1,1,item.bonus);
 						how_much -= r1;
-						how_much -= which_pc.items[i].bonus / 2;
+						how_much -= item.bonus / 2;
 					}
-					if(which_pc.items[i].bonus < 0) {
-						how_much = how_much - which_pc.items[i].bonus;
+					if(item.bonus < 0) {
+						how_much = how_much - item.bonus;
 					}
 					r1 = get_ran(1,1,100);
 					if(r1 < hit_chance[which_pc.skill(eSkill::DEFENSE)] - 20)
 						how_much -= 1;
 				}
-				if(which_pc.items[i].protection > 0) {
-					r1 = get_ran(1,1,which_pc.items[i].protection);
+				if(item.protection > 0) {
+					r1 = get_ran(1,1,item.protection);
 					how_much -= r1;
 				}
-				if(which_pc.items[i].protection < 0) {
-					r1 = get_ran(1,1,-1 * which_pc.items[i].protection);
+				if(item.protection < 0) {
+					r1 = get_ran(1,1,-1 * item.protection);
 					how_much += r1;
 				}
 			}

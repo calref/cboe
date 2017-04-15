@@ -544,7 +544,8 @@ bool cPlayer::give_item(cItem item, int flags) {
 }
 
 bool cPlayer::equip_item(int which_item, bool do_print) {
-	if((*items[which_item].variety).equip_count == 0) {
+	const cItem& item = items[which_item];
+	if((*item.variety).equip_count == 0) {
 		if(do_print && print_result)
 			print_result("Equip: Can't equip this item.");
 		return false;
@@ -552,13 +553,12 @@ bool cPlayer::equip_item(int which_item, bool do_print) {
 	unsigned short num_this_type = 0, hands_occupied = 0;
 	for(int i = 0; i < items.size(); i++)
 		if(equip[i]) {
-			if(items[i].variety == items[which_item].variety)
+			if(items[i].variety == item.variety)
 				num_this_type++;
 			hands_occupied += (*items[i].variety).num_hands;
 		}
 	
-	
-	eItemCat equip_item_type = (*items[which_item].variety).exclusion;
+	eItemCat equip_item_type = (*item.variety).exclusion;
 	// Now if missile is already equipped, no more missiles
 	if(equip_item_type != eItemCat::MISC) {
 		for(int i = 0; i < items.size(); i++)
@@ -572,11 +572,11 @@ bool cPlayer::equip_item(int which_item, bool do_print) {
 	}
 	
 	size_t hands_free = 2 - hands_occupied;
-	if(hands_free < (*items[which_item].variety).num_hands) {
+	if(hands_free < (*item.variety).num_hands) {
 		if(do_print && print_result)
 			print_result("Equip: Not enough free hands");
 		return false;
-	} else if((*items[which_item].variety).equip_count <= num_this_type) {
+	} else if((*item.variety).equip_count <= num_this_type) {
 		if(do_print && print_result)
 			print_result("Equip: Can't equip another");
 		return false;
