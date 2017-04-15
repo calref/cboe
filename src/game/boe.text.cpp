@@ -314,7 +314,7 @@ void put_item_screen(short screen_num) {
 						style.italic = true;
 						if(univ.party[pc].items[i_num].variety == eItemType::ONE_HANDED || univ.party[pc].items[i_num].variety == eItemType::TWO_HANDED)
 							style.colour = sf::Color::Magenta;
-						else if(isArmourType(univ.party[pc].items[i_num].variety))
+						else if((*univ.party[pc].items[i_num].variety).is_armour)
 							style.colour = sf::Color::Green;
 						else style.colour = sf::Color::Blue;
 					} else style.colour = sf::Color::Black;
@@ -394,7 +394,7 @@ void place_buy_button(short position,short pc_num,short item_num) {
 			}
 			break;
 		case MODE_SELL_WEAP:
-			if(isWeaponType(univ.party[pc_num].items[item_num].variety) &&
+			if((*univ.party[pc_num].items[item_num].variety).is_weapon &&
 				(!univ.party[pc_num].equip[item_num]) &&
 				(univ.party[pc_num].items[item_num].ident) && (val_to_place > 0) &&
 				(!univ.party[pc_num].items[item_num].unsellable)) {
@@ -403,7 +403,7 @@ void place_buy_button(short position,short pc_num,short item_num) {
 			}
 			break;
 		case MODE_SELL_ARMOR:
-			if(isArmourType(univ.party[pc_num].items[item_num].variety) &&
+			if((*univ.party[pc_num].items[item_num].variety).is_armour &&
 			   (!univ.party[pc_num].equip[item_num]) &&
 			   (univ.party[pc_num].items[item_num].ident) && (val_to_place > 0) &&
 			   (!univ.party[pc_num].items[item_num].unsellable)) {

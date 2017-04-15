@@ -18,10 +18,6 @@
 #include "mathutil.hpp"
 #include "fileio.hpp"
 
-extern const std::multiset<eItemType> equippable;
-extern const std::multiset<eItemType> num_hands_to_use;
-extern std::map<const eItemType, const short> excluding_types;
-
 extern short skill_bonus[21];
 // A nice convenient bitset with just the low 30 bits set, for initializing spells
 const uint32_t cPlayer::basic_spells = std::numeric_limits<uint32_t>::max() >> 2;
@@ -496,24 +492,18 @@ bool cPlayer::give_item(cItem item, int flags) {
 			print_result(announce.str());
 		}
 		
-		if(equip_type != 0 && equippable.count(item.variety)) {
+		if(equip_type != 0 && (*item.variety).equip_count) {
 			if(!equip_item(free_space.slot, false) && equip_type != GIVE_EQUIP_SOFT) {
-				int exclude = 0;
-				if(num_hands_to_use.count(item.variety))
-					exclude = 100;
-				else exclude = excluding_types[item.variety];
+				eItemCat exclude = (*item.variety).exclusion;
 				int rem1 = items.size(), rem2 = items.size();
 				for(int i = 0; i < items.size(); i++) {
 					if(i == free_space.slot) continue;
 					if(!equip[i]) continue;
-					int check_exclude = 0;
-					if(num_hands_to_use.count(items[i].variety))
-						check_exclude = 100;
-					else check_exclude = excluding_types[items[i].variety];
+					eItemCat check_exclude = (*items[i].variety).exclusion;
 					if(exclude != check_exclude) continue;
-					if(exclude == 0 && item.variety != items[i].variety)
+					if(exclude == eItemCat::MISC && item.variety != items[i].variety)
 						continue;
-					if(exclude == 100) {
+					if(exclude == eItemCat::HANDS) {
 						if(rem1 == items.size()) {
 							if(item.variety == eItemType::ONE_HANDED || item.variety == eItemType::TWO_HANDED || rem2 < items.size())
 								rem1 = i;
@@ -528,18 +518,13 @@ bool cPlayer::give_item(cItem item, int flags) {
 				}
 				bool can_rem1 = rem1 < items.size() && (!items[rem1].cursed || equip_type == GIVE_EQUIP_FORCE);
 				bool can_rem2 = rem2 < items.size() && (!items[rem2].cursed || equip_type == GIVE_EQUIP_FORCE);
-				if(exclude == 100) {
-					if(item.variety == eItemType::TWO_HANDED) {
-						if(can_rem1) equip[rem1] = false;
-						if(can_rem2) equip[rem2] = false;
-					} else if(item.variety == eItemType::ONE_HANDED) {
+				if(exclude == eItemCat::HANDS) {
+					if((*item.variety).num_hands == 2 && can_rem1 && can_rem2) {
+						equip[rem1] = false;
+						equip[rem2] = false;
+					} else if((*item.variety).num_hands == 1) {
 						if(can_rem1) equip[rem1] = false;
 						else if(can_rem2) equip[rem2] = false;
-					} else { // It's a shield
-						if(can_rem2 && items[rem2].variety != item.variety)
-							equip[rem2] = false;
-						else if(can_rem1 && items[rem1].variety != item.variety)
-							equip[rem1] = false;
 					}
 					if((rem1 == weap_poisoned.slot && !equip[rem1]) || (rem2 == weap_poisoned.slot && !equip[rem2])) {
 						status[eStatus::POISONED_WEAPON] = 0;
@@ -559,7 +544,7 @@ bool cPlayer::give_item(cItem item, int flags) {
 }
 
 bool cPlayer::equip_item(int which_item, bool do_print) {
-	if(!equippable.count(items[which_item].variety)) {
+	if((*items[which_item].variety).equip_count == 0) {
 		if(do_print && print_result)
 			print_result("Equip: Can't equip this item.");
 		return false;
@@ -569,15 +554,15 @@ bool cPlayer::equip_item(int which_item, bool do_print) {
 		if(equip[i]) {
 			if(items[i].variety == items[which_item].variety)
 				num_this_type++;
-			hands_occupied += num_hands_to_use.count(items[i].variety);
+			hands_occupied += (*items[i].variety).num_hands;
 		}
 	
 	
-	short equip_item_type = excluding_types[items[which_item].variety];
+	eItemCat equip_item_type = (*items[which_item].variety).exclusion;
 	// Now if missile is already equipped, no more missiles
-	if(equip_item_type > 0) {
+	if(equip_item_type != eItemCat::MISC) {
 		for(int i = 0; i < items.size(); i++)
-			if(equip[i] && excluding_types[items[i].variety] == equip_item_type) {
+			if(equip[i] && (*items[i].variety).exclusion == equip_item_type) {
 				if(do_print && print_result) {
 					print_result("Equip: You have something of this type");
 					print_result("  equipped.");
@@ -587,11 +572,11 @@ bool cPlayer::equip_item(int which_item, bool do_print) {
 	}
 	
 	size_t hands_free = 2 - hands_occupied;
-	if(hands_free < num_hands_to_use.count(items[which_item].variety)) {
+	if(hands_free < (*items[which_item].variety).num_hands) {
 		if(do_print && print_result)
 			print_result("Equip: Not enough free hands");
 		return false;
-	} else if(equippable.count(items[which_item].variety) <= num_this_type) {
+	} else if((*items[which_item].variety).equip_count <= num_this_type) {
 		if(do_print && print_result)
 			print_result("Equip: Can't equip another");
 		return false;

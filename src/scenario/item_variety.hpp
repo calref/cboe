@@ -44,19 +44,18 @@ enum class eItemType {
 	QUEST = 27,
 };
 
-inline bool isArmourType(eItemType type) {
-	int code = (int) type;
-	return code >= 12 && code <= 17;
-}
+enum class eItemCat {
+	MISC, MISSILE_WEAPON, MISSILE_AMMO, HANDS,
+};
 
-inline bool isWeaponType(eItemType type) {
-	int code = (int) type;
-	return (code >= 1 && code <= 6 && code != 3) || (code >= 23 && code <= 25);
-}
+struct item_variety_t {
+	eItemType self;
+	bool is_armour, is_weapon, is_missile;
+	int equip_count, num_hands;
+	eItemCat exclusion;
+};
 
-inline bool isMissileType(eItemType type) {
-	return type == eItemType::ARROW || type == eItemType::BOLTS || type == eItemType::THROWN_MISSILE || type == eItemType::MISSILE_NO_AMMO;
-}
+const item_variety_t& operator*(eItemType type);
 
 enum class eItemUse {HELP_ONE, HARM_ONE, HELP_ALL, HARM_ALL};
 

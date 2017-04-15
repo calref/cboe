@@ -2278,7 +2278,7 @@ bool damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace ty
 		how_much -= minmax(-5,5,which_pc.status[eStatus::BLESS_CURSE]);
 		for(short i = 0; i < which_pc.items.size(); i++) {
 			if((which_pc.items[i].variety != eItemType::NO_ITEM) && (which_pc.equip[i])) {
-				if(isArmourType(which_pc.items[i].variety)) {
+				if((*which_pc.items[i].variety).is_armour) {
 					r1 = get_ran(1,1,which_pc.items[i].item_level);
 					how_much -= r1;
 					

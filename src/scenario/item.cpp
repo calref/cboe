@@ -24,25 +24,50 @@
 #include "spell.hpp"
 #include "race.hpp"
 
-extern const std::multiset<eItemType> equippable = {
-	eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::BOW, eItemType::ARROW, eItemType::THROWN_MISSILE,
-	eItemType::TOOL, eItemType::SHIELD, eItemType::ARMOR, eItemType::HELM, eItemType::GLOVES,
-	eItemType::SHIELD_2, eItemType::BOOTS, eItemType::RING, eItemType::NECKLACE, eItemType::PANTS,
-	eItemType::CROSSBOW, eItemType::BOLTS, eItemType::MISSILE_NO_AMMO,
-	// And these are the ones that you can equip two of
-	eItemType::ONE_HANDED, eItemType::RING,
-};
+static std::array<item_variety_t, 28> load_item_type_info() {
+	std::multiset<eItemType> equippable = {
+		eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::BOW, eItemType::ARROW, eItemType::THROWN_MISSILE,
+		eItemType::TOOL, eItemType::SHIELD, eItemType::ARMOR, eItemType::HELM, eItemType::GLOVES,
+		eItemType::SHIELD_2, eItemType::BOOTS, eItemType::RING, eItemType::NECKLACE, eItemType::PANTS,
+		eItemType::CROSSBOW, eItemType::BOLTS, eItemType::MISSILE_NO_AMMO,
+		// And these are the ones that you can equip two of
+		eItemType::ONE_HANDED, eItemType::RING,
+	};
+	
+	std::multiset<eItemType> num_hands_to_use = {
+		eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::TWO_HANDED, eItemType::SHIELD, eItemType::SHIELD_2,
+	};
+	
+	// For following, if an item of type n is equipped, no other items of type n can be equipped,
+	std::map<const eItemType, const eItemCat> excluding_types = {
+		{eItemType::BOW, eItemCat::MISSILE_WEAPON},
+		{eItemType::CROSSBOW, eItemCat::MISSILE_WEAPON},
+		{eItemType::MISSILE_NO_AMMO, eItemCat::MISSILE_WEAPON},
+		{eItemType::ARROW, eItemCat::MISSILE_AMMO},
+		{eItemType::THROWN_MISSILE, eItemCat::MISSILE_AMMO},
+		{eItemType::BOLTS, eItemCat::MISSILE_AMMO},
+	};
+	
+	std::array<item_variety_t, 28> all_info;
+	int i = -1;
+	for(auto& info : all_info) {
+		eItemType type = eItemType(++i);
+		info.self = type;
+		// TODO: Maybe don't base these on i?
+		info.is_armour = i >= 12 && i <= 17;
+		info.is_weapon = (i >= 1 && i <= 6 && i != 3) || (i >= 23 && i <= 25);
+		info.is_missile = i == 5 || i == 6 || i == 24 || i == 25;
+		info.equip_count = equippable.count(type);
+		info.num_hands = num_hands_to_use.count(type);
+		info.exclusion = info.num_hands ? eItemCat::HANDS : excluding_types[type];
+	}
+	return all_info;
+}
 
-extern const std::multiset<eItemType> num_hands_to_use = {
-	eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::TWO_HANDED, eItemType::SHIELD, eItemType::SHIELD_2,
-};
-
-// For following, if an item of type n is equipped, no other items of type n can be equipped,
-// TODO: Should SHIELD and SHIELD_2 have an entry here?
-std::map<const eItemType, const short> excluding_types = {
-	{eItemType::BOW, 2}, {eItemType::ARROW, 1}, {eItemType::THROWN_MISSILE, 1},
-	{eItemType::CROSSBOW, 2}, {eItemType::BOLTS, 1}, {eItemType::MISSILE_NO_AMMO, 2}
-};
+const item_variety_t& operator*(eItemType type) {
+	static std::array<item_variety_t, 28> item_type_info = load_item_type_info();
+	return item_type_info[int(type)];
+}
 
 unsigned char cItem::rec_treas_class() const {
 	short tmp = value;
