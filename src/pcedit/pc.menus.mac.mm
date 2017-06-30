@@ -29,7 +29,7 @@ MenuHandle apple_menu, file_menu, reg_menu, extra_menu, items_menu[4];
 @end
 
 @interface ItemWrapper : NSObject
-+(id) withItem:(int) theItem;
++(id) withItem:(int) theItem NS_RETURNS_RETAINED;
 -(class cItem&) item;
 -(void) setItem:(int) theItem;
 @end
