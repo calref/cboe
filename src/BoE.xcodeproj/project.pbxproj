@@ -89,9 +89,9 @@
 		914B2AA818E7E50E007B6799 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA218E7E500007B6799 /* OpenGL.framework */; };
 		914CA45819074E0100B6ADD1 /* scen.menus.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 914CA45719074D0A00B6ADD1 /* scen.menus.mac.mm */; };
 		915325171A2E1DF0000A9A1C /* oldstructs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915325161A2E1DA8000A9A1C /* oldstructs.cpp */; };
-		9153C79E1A994A0D00D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
-		9153C79F1A994A1300D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
-		9153C7A01A994A1700D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
+		9153C79E1A994A0D00D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		9153C79F1A994A1300D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		9153C7A01A994A1700D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		915AF9E81BBF8B5C008AEF49 /* scrollpane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A81BBE2B54009905A4 /* scrollpane.cpp */; };
 		9169C3211B3B23530041002B /* libboost_thread.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
 		9169C3231B3B235A0041002B /* libboost_thread.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
@@ -103,33 +103,33 @@
 		9178235D1B2EA0C5007F3444 /* vorbisenc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; };
 		9178235E1B2EA0C5007F3444 /* vorbisenc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; };
 		9178235F1B2EA0C5007F3444 /* vorbisenc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; };
-		917823641B2F3226007F3444 /* vorbisenc.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; };
-		917823651B2F322B007F3444 /* vorbisenc.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; };
-		917823661B2F3231007F3444 /* vorbisenc.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; };
+		917823641B2F3226007F3444 /* vorbisenc.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		917823651B2F322B007F3444 /* vorbisenc.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		917823661B2F3231007F3444 /* vorbisenc.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		917823681B2F32DD007F3444 /* vorbisfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; };
 		917823691B2F32DD007F3444 /* vorbisfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; };
 		9178236A1B2F32DD007F3444 /* vorbisfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; };
-		9178236B1B2F32E3007F3444 /* vorbisfile.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; };
-		9178236C1B2F32E9007F3444 /* vorbisfile.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; };
-		9178236D1B2F32EC007F3444 /* vorbisfile.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; };
+		9178236B1B2F32E3007F3444 /* vorbisfile.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		9178236C1B2F32E9007F3444 /* vorbisfile.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		9178236D1B2F32EC007F3444 /* vorbisfile.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		9178236F1B2F331D007F3444 /* vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178236E1B2F331D007F3444 /* vorbis.framework */; };
 		917823701B2F331D007F3444 /* vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178236E1B2F331D007F3444 /* vorbis.framework */; };
 		917823711B2F331D007F3444 /* vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178236E1B2F331D007F3444 /* vorbis.framework */; };
-		917823721B2F3320007F3444 /* vorbis.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178236E1B2F331D007F3444 /* vorbis.framework */; };
-		917823731B2F3324007F3444 /* vorbis.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178236E1B2F331D007F3444 /* vorbis.framework */; };
-		917823741B2F3327007F3444 /* vorbis.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178236E1B2F331D007F3444 /* vorbis.framework */; };
+		917823721B2F3320007F3444 /* vorbis.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178236E1B2F331D007F3444 /* vorbis.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		917823731B2F3324007F3444 /* vorbis.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178236E1B2F331D007F3444 /* vorbis.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		917823741B2F3327007F3444 /* vorbis.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178236E1B2F331D007F3444 /* vorbis.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		917823761B2F334C007F3444 /* ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 917823751B2F334C007F3444 /* ogg.framework */; };
 		917823771B2F334C007F3444 /* ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 917823751B2F334C007F3444 /* ogg.framework */; };
 		917823781B2F334C007F3444 /* ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 917823751B2F334C007F3444 /* ogg.framework */; };
-		917823791B2F334E007F3444 /* ogg.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823751B2F334C007F3444 /* ogg.framework */; };
-		9178237A1B2F3353007F3444 /* ogg.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823751B2F334C007F3444 /* ogg.framework */; };
-		9178237B1B2F3359007F3444 /* ogg.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823751B2F334C007F3444 /* ogg.framework */; };
+		917823791B2F334E007F3444 /* ogg.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823751B2F334C007F3444 /* ogg.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		9178237A1B2F3353007F3444 /* ogg.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823751B2F334C007F3444 /* ogg.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		9178237B1B2F3359007F3444 /* ogg.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 917823751B2F334C007F3444 /* ogg.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		9178237D1B2F33E9007F3444 /* FLAC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
 		9178237E1B2F33E9007F3444 /* FLAC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
 		9178237F1B2F33E9007F3444 /* FLAC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
-		917823801B2F33EB007F3444 /* FLAC.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
-		917823811B2F33F1007F3444 /* FLAC.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
-		917823821B2F33F5007F3444 /* FLAC.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
+		917823801B2F33EB007F3444 /* FLAC.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		917823811B2F33F1007F3444 /* FLAC.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		917823821B2F33F5007F3444 /* FLAC.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		91870F84190C90980081C150 /* scenedit.xib in Resources */ = {isa = PBXBuildFile; fileRef = 914CA49F190C4E9200B6ADD1 /* scenedit.xib */; };
 		919145FC18E3AB1B005CF3A4 /* boe.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */; };
 		9192C12018F2745C0088A580 /* game.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9192C11E18F271920088A580 /* game.xib */; };
@@ -196,22 +196,22 @@
 		919DDC0A1900750D003E7FED /* freetype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0B1900750D003E7FED /* freetype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0C1900750D003E7FED /* freetype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
-		919DDC0D19007517003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
-		919DDC0E1900751C003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
-		919DDC0F1900751F003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
+		919DDC0D19007517003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		919DDC0E1900751C003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		919DDC0F1900751F003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		91A0B1601900FFE500EF438F /* mask.frag in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 91A0B15A1900F73E00EF438F /* mask.frag */; };
-		91ACCE7619002E5F00FAEF8B /* sfml-audio.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
-		91ACCE7719002E5F00FAEF8B /* sfml-graphics.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
-		91ACCE7919002E5F00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; };
-		91ACCE7A19002E5F00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E118F87F3700E3EA15 /* sfml-window.framework */; };
-		91ACCE881900344B00FAEF8B /* sfml-audio.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
-		91ACCE891900344B00FAEF8B /* sfml-graphics.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
-		91ACCE8B1900344B00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; };
-		91ACCE8C1900344B00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E118F87F3700E3EA15 /* sfml-window.framework */; };
-		91ACCE931900346C00FAEF8B /* sfml-audio.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
-		91ACCE941900346C00FAEF8B /* sfml-graphics.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
-		91ACCE961900346C00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; };
-		91ACCE971900346C00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E118F87F3700E3EA15 /* sfml-window.framework */; };
+		91ACCE7619002E5F00FAEF8B /* sfml-audio.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		91ACCE7719002E5F00FAEF8B /* sfml-graphics.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		91ACCE7919002E5F00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		91ACCE7A19002E5F00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E118F87F3700E3EA15 /* sfml-window.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		91ACCE881900344B00FAEF8B /* sfml-audio.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		91ACCE891900344B00FAEF8B /* sfml-graphics.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		91ACCE8B1900344B00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		91ACCE8C1900344B00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E118F87F3700E3EA15 /* sfml-window.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		91ACCE931900346C00FAEF8B /* sfml-audio.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		91ACCE941900346C00FAEF8B /* sfml-graphics.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		91ACCE961900346C00FAEF8B /* sfml-system.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		91ACCE971900346C00FAEF8B /* sfml-window.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E118F87F3700E3EA15 /* sfml-window.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		91B0D5D11E3442FE002BE4DA /* view_dialogs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B0D5D01E34428E002BE4DA /* view_dialogs.cpp */; };
 		91B0D5D21E344300002BE4DA /* view_dialogs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B0D5D01E34428E002BE4DA /* view_dialogs.cpp */; };
 		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
@@ -898,7 +898,7 @@
 				91B3EECD0F969B7000BF5B67 /* ScenEd */,
 				91CC17281B421BD5003D9A69 /* test */,
 				91B3EF220F969CA300BF5B67 /* rsrc */,
-				914B2AA018E7E4A3007B6799 /* Linked Frameworks */,
+				914B2AA018E7E4A3007B6799 /* Frameworks */,
 				911F2DA11B98F45100E3102E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -1112,7 +1112,7 @@
 			name = headers;
 			sourceTree = "<group>";
 		};
-		914B2AA018E7E4A3007B6799 /* Linked Frameworks */ = {
+		914B2AA018E7E4A3007B6799 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				DCCA42011A8C467800E6A9A5 /* libz.dylib */,
@@ -1134,7 +1134,7 @@
 				910D9CA31B36439100414B17 /* libboost_thread.dylib */,
 				91ACCE82190032E000FAEF8B /* fix_dylibs.sh */,
 			);
-			name = "Linked Frameworks";
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		91B3EECD0F969B7000BF5B67 /* ScenEd */ = {
@@ -1568,7 +1568,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = NO;
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0830;
 			};
 			buildConfigurationList = 2BF04AA20BF51845006C0831 /* Build configuration list for PBXProject "BoE" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1975,20 +1975,34 @@
 		2BF04AA30BF51845006C0831 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_ENABLE_PASCAL_STRINGS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_INPUT_FILETYPE = automatic;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = TIXML_USE_TICPP;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -1998,12 +2012,14 @@
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks @loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "\"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/lib/\"";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
@@ -2023,6 +2039,7 @@
 					"-lboost_filesystem",
 					"$(OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1)",
 				);
+				SDKROOT = macosx;
 				STRIP_INSTALLED_PRODUCT = NO;
 				WARNING_CFLAGS = (
 					"-Wfloat-equal",
@@ -2034,23 +2051,32 @@
 		2BF04AA40BF51845006C0831 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-					x86_64,
-				);
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_ENABLE_PASCAL_STRINGS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_INPUT_FILETYPE = automatic;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = TIXML_USE_TICPP;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -2060,12 +2086,14 @@
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks @loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "\"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/lib/\"";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
@@ -2084,6 +2112,7 @@
 					"-lboost_filesystem",
 					"$(OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1)",
 				);
+				SDKROOT = macosx;
 				WARNING_CFLAGS = (
 					"-Wfloat-equal",
 					"-Wno-long-long",
@@ -2095,22 +2124,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LOCAL_LIBRARY_DIR)/Frameworks",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/BoE-Info.plist";
-				INSTALL_PATH = "$(HOME)/Applications";
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)/Blades Of Exile";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lboost_system",
 					"-lboost_filesystem",
 					"$(OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1)",
-					"-lCommon",
-					"-lCommon-Party",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.spidweb.bladesofexile;
 				PRODUCT_NAME = "Blades of Exile";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2120,21 +2145,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LOCAL_LIBRARY_DIR)/Frameworks",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/BoE-Info.plist";
-				INSTALL_PATH = "$(HOME)/Applications";
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)/Blades Of Exile";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lboost_system",
 					"-lboost_filesystem",
 					"$(OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1)",
-					"-lCommon",
-					"-lCommon-Party",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.spidweb.bladesofexile;
 				PRODUCT_NAME = "Blades of Exile";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2174,7 +2195,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/lib";
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -2196,7 +2216,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/lib";
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -2205,22 +2224,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LOCAL_LIBRARY_DIR)/Frameworks",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_DYNAMIC_NO_PIC = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/pcedit/BoECharEd-Info.plist";
-				INSTALL_PATH = "$(HOME)/Applications";
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)/Blades Of Exile";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lboost_system",
 					"-lboost_filesystem",
 					"$(OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1)",
-					"-lCommon-Party",
-					"-lCommon",
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "-L\"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/\"";
+				PRODUCT_BUNDLE_IDENTIFIER = com.spidweb.boepceditor;
 				PRODUCT_NAME = "BoE Character Editor";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2230,22 +2245,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LOCAL_LIBRARY_DIR)/Frameworks",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/pcedit/BoECharEd-Info.plist";
-				INSTALL_PATH = "$(HOME)/Applications";
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)/Blades Of Exile";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lboost_system",
 					"-lboost_filesystem",
 					"$(OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1)",
-					"-lCommon-Party",
-					"-lCommon",
 				);
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "-L\"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/\"";
+				PRODUCT_BUNDLE_IDENTIFIER = com.spidweb.boepceditor;
 				PRODUCT_NAME = "BoE Character Editor";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2255,22 +2265,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LOCAL_LIBRARY_DIR)/Frameworks",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_DYNAMIC_NO_PIC = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/scenedit/BoEScenEd-Info.plist";
-				INSTALL_PATH = "$(HOME)/Applications";
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)/Blades Of Exile";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lboost_system",
 					"-lboost_filesystem",
 					"$(OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1)",
-					"-lCommon",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.spidweb.boesceneditor;
 				PRODUCT_NAME = "BoE Scenario Editor";
-				SDKROOT = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2279,22 +2285,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LOCAL_LIBRARY_DIR)/Frameworks",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/scenedit/BoEScenEd-Info.plist";
-				INSTALL_PATH = "$(HOME)/Applications";
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)/Blades Of Exile";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lboost_system",
 					"-lboost_filesystem",
 					"$(OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1)",
-					"-lCommon",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.spidweb.boesceneditor;
 				PRODUCT_NAME = "BoE Scenario Editor";
-				SDKROOT = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

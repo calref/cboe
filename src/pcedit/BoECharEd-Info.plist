@@ -32,19 +32,23 @@
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
-	<string>BoE Character Editor</string>
+	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIconFile</key>
 	<string>BoECharEd</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.spidweb.boepceditor</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>blxe</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>
