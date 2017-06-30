@@ -247,7 +247,7 @@ fs::path nav_get_scenario() {
 	bool gotFile = [dlg_get_scen runModal] != NSFileHandlingPanelCancelButton;
 	makeFrontWindow(mainPtr);
 	if(gotFile) {
-		return fs::path([[[[dlg_get_scen URL] absoluteURL] path] UTF8String]);
+		return fs::path([[[[dlg_get_scen URL] absoluteURL] path] fileSystemRepresentation]);
 	}
 	return "";
 }
@@ -261,7 +261,7 @@ fs::path nav_put_scenario(fs::path def) {
 	bool gotFile = [dlg_put_scen runModal] != NSFileHandlingPanelCancelButton;
 	makeFrontWindow(mainPtr);
 	if(gotFile)
-		return fs::path([[[[dlg_put_scen URL] absoluteURL] path] UTF8String]);
+		return fs::path([[[[dlg_put_scen URL] absoluteURL] path] fileSystemRepresentation]);
 	return "";
 }
 
@@ -269,7 +269,7 @@ fs::path nav_get_party() {
 	bool gotFile = [dlg_get_game runModal] != NSFileHandlingPanelCancelButton;
 	makeFrontWindow(mainPtr);
 	if(gotFile)
-		return fs::path([[[[dlg_get_game URL] absoluteURL] path] UTF8String]);
+		return fs::path([[[[dlg_get_game URL] absoluteURL] path] fileSystemRepresentation]);
 	return "";
 }
 
@@ -282,7 +282,7 @@ fs::path nav_put_party(fs::path def) {
 	bool gotFile = [dlg_put_game runModal] != NSFileHandlingPanelCancelButton;
 	makeFrontWindow(mainPtr);
 	if(gotFile)
-		return fs::path([[[[dlg_put_game URL] absoluteURL] path] UTF8String]);
+		return fs::path([[[[dlg_put_game URL] absoluteURL] path] fileSystemRepresentation]);
 	return "";
 }
 
@@ -295,7 +295,7 @@ fs::path nav_get_rsrc(std::initializer_list<std::string> extensions) {
 	[dlg_get_rsrc setAllowedFileTypes: allowTypes];
 	bool gotFile = [dlg_get_rsrc runModal] != NSFileHandlingPanelCancelButton;
 	if(gotFile)
-		return fs::path([[[[dlg_get_rsrc URL] absoluteURL] path] UTF8String]);
+		return fs::path([[[[dlg_get_rsrc URL] absoluteURL] path] fileSystemRepresentation]);
 	return "";
 }
 
@@ -313,7 +313,7 @@ fs::path nav_put_rsrc(std::initializer_list<std::string> extensions, fs::path de
 	[dlg_put_rsrc setAllowedFileTypes: allowTypes];
 	bool gotFile = [dlg_put_rsrc runModal] != NSFileHandlingPanelCancelButton;
 	if(gotFile)
-		return fs::path([[[[dlg_put_rsrc URL] absoluteURL] path] UTF8String]);
+		return fs::path([[[[dlg_put_rsrc URL] absoluteURL] path] fileSystemRepresentation]);
 	return "";
 }
 
