@@ -164,6 +164,8 @@ void set_clipboard_img(sf::Image& img) {
 	NSImage * image = [[NSImage alloc] initWithSize: NSMakeSize(sz.x, sz.y)];
 	[image addRepresentation: bmp];
 	NSArray* contents = [NSArray arrayWithObject: image];
+	[image release];
+	[bmp release];
 	NSPasteboard* pb = [NSPasteboard generalPasteboard];
 	[pb clearContents];
 	[pb writeObjects: contents];
@@ -178,6 +180,7 @@ std::unique_ptr<sf::Image> get_clipboard_img() {
 		return ret; // a null pointer
 	NSImage* img = [[NSImage alloc] initWithPasteboard: pb];
 	ret.reset(sfImageFromNSImage(img));
+	[img release];
 	return ret;
 }
 
@@ -347,6 +350,7 @@ sf::Image* sfImageFromNSImage(NSImage *image) {
 	
 	sf::Image* sfi = new sf::Image;
 	sfi->create(width, height, (UInt8*) [rep bitmapData]);
+	[rep release];
 	
 	return sfi;
 }

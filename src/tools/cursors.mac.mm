@@ -13,6 +13,7 @@
 
 extern cursor_type current_cursor;
 
+static NSImage* imageFromURL(CFURLRef url) NS_RETURNS_RETAINED;
 static NSImage* imageFromURL(CFURLRef url){
 	CGImageSourceRef imageSource = CGImageSourceCreateWithURL(url, nullptr);
 	CGImageRef theImage = nil;
@@ -20,7 +21,10 @@ static NSImage* imageFromURL(CFURLRef url){
 	if(imageSource == nil) return nil;
 	
 	theImage = CGImageSourceCreateImageAtIndex(imageSource, 0, nullptr);
-	if(theImage == nil) return nil;
+	if(theImage == nil) {
+		CFRelease( imageSource );
+		return nil;
+	}
 	
 	CFRelease( imageSource );
 	
@@ -38,6 +42,7 @@ static NSImage* imageFromURL(CFURLRef url){
 	CGContextRef imageContext = (CGContextRef) [[NSGraphicsContext currentContext] graphicsPort];
 	CGContextDrawImage(imageContext, *(CGRect*)&imageRect, theImage);
 	[newImage unlockFocus];
+	CGImageRelease(theImage);
 	
 	return newImage;
 }

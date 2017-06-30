@@ -24,12 +24,12 @@ MenuHandle menu_bar_handle;
 MenuHandle apple_menu, file_menu, reg_menu, extra_menu, items_menu[4];
 
 @interface MenuHandler : NSObject
--(void) itemMenu:(id) sender;
--(void) menuChoice:(id) sender;
+-(IBAction) itemMenu:(id) sender;
+-(IBAction) menuChoice:(id) sender;
 @end
 
 @interface ItemWrapper : NSObject
-+(id) withItem:(int) theItem;
++(id) withItem:(int) theItem NS_RETURNS_RETAINED;
 -(class cItem&) item;
 -(void) setItem:(int) theItem;
 @end

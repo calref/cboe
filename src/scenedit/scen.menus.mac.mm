@@ -20,7 +20,7 @@ extern cScenario scenario;
 extern cUndoList undo_list;
 
 @interface MenuHandler : NSObject
--(void) menuChoice:(id) sender;
+-(IBAction) menuChoice:(id) sender;
 @end
 
 static void setMenuCallback(NSMenuItem* item, id targ, SEL selector, int num) {
