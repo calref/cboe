@@ -202,17 +202,15 @@ NSSavePanel* dlg_put_game;
 NSSavePanel* dlg_put_rsrc;
 extern sf::RenderWindow mainPtr;
 
-// TODO: I'm not sure if I'll need delegates to enable selection of files with no file extension that have file creator types?
-
 void init_fileio(){
 	dlg_get_scen = [NSOpenPanel openPanel];
-	[dlg_get_scen setAllowedFileTypes: [NSArray arrayWithObjects: @"exs", @"boes", nil]];
+	[dlg_get_scen setAllowedFileTypes: [NSArray arrayWithObjects: @"exs", @"boes", NSFileTypeForHFSTypeCode('BETM'), nil]];
 	[dlg_get_scen setMessage: @"Select a scenario to edit:"];
 	[dlg_get_scen setTitle: @"Load Scenario"];
 	[dlg_get_scen retain];
 	
 	dlg_get_game = [NSOpenPanel openPanel];
-	[dlg_get_game setAllowedFileTypes: [NSArray arrayWithObjects: @"exg", @"boe", @"SAV", @"mac", nil]];
+	[dlg_get_game setAllowedFileTypes: [NSArray arrayWithObjects: @"exg", @"boe", @"SAV", @"mac", NSFileTypeForHFSTypeCode('beSV'), nil]];
 	[dlg_get_game setMessage: @"Select a saved game to resume:"];
 	[dlg_get_game setTitle: @"Load Game"];
 	[dlg_get_game retain];
