@@ -4,6 +4,9 @@ import os
 import subprocess
 
 platform = ARGUMENTS.get('OS', Platform())
+toolset = ARGUMENTS.get('toolset', 'default')
+sixty_four = ARGUMENTS.get('64bit', false)
+arch = 'x86_64' if sixty_four else 'x86'
 
 if str(platform) not in ("darwin", "win32"):
 	print "Sorry, your platform is not supported."
@@ -14,7 +17,10 @@ if str(platform) not in ("darwin", "win32"):
 
 print 'Building for:', platform
 
-env = Environment(TARGET_ARCH='x86',ENV=os.environ)
+if toolset != 'default':
+	env = Environment(TARGET_ARCH=arch,ENV=os.environ, tools = [toolset])
+else:
+	env = Environment(TARGET_ARCH=arch,ENV=os.environ)
 env.VariantDir('#build/obj', 'src')
 env.VariantDir('#build/obj/test', 'test')
 
@@ -38,7 +44,8 @@ if path.exists(".git"):
 	env.Command('src/tools/gitrev.hpp', git_refs, gen_gitrev)
 else:
 	# Zipped source downloads from github do not include the repo (probably a good thing)
-	env.Command('src/tools/gitrev.hpp', '', """
+	# TODO: This does not work on Windows
+	env.Command('src/tools/gitrev.hpp', '', r"""
 		echo -e "\n#define GIT_REVISION \"\"\n#define GIT_TAG \"\"\n#define GIT_TAG_REVISION \"\"\n" > #TARGET
 	""")
 
@@ -196,12 +203,14 @@ if not env.GetOption('clean'):
 		print "There's a problem with your compiler!"
 		Exit(1)
 
-	if not conf.CheckLib('zlib' if str(platform) == "win32" else 'z'):
+	if not conf.CheckLib('zlib' if (str(platform) == "win32" and 'mingw' not in env["TOOLS"]) else 'z'):
 		print 'zlib must be installed!'
 		Exit(1)
 
 	def check_lib(lib, disp, suffixes=[], versions=[]):
 		if str(platform) == "win32" and lib.startswith("boost"):
+			lib = "lib" + lib
+		if "mingw" in env["TOOLS"] and lib.startswith("sfml"):
 			lib = "lib" + lib
 		possible_names = [lib]
 		if str(platform) == "win32":
@@ -367,3 +376,4 @@ SConscript("build/pkg/SConscript")
 # Cleanup
 
 env.Clean('.', 'build')
+env.Clean('.', '.sconsign.dblite')

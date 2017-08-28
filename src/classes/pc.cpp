@@ -423,7 +423,9 @@ void cPlayer::sort_items() {
 			   item_priority[items[i].variety]) {
 			  	no_swaps = false;
 				std::swap(items[i + 1], items[i]);
-				std::swap(equip[i + 1], equip[i]);
+				auto temp_equip = equip[i];
+				equip[i] = equip[i + 1];
+				equip[i + 1] = temp_equip;
 				if(weap_poisoned.slot == i + 1)
 					weap_poisoned.slot--;
 				else if(weap_poisoned.slot == i)

@@ -51,7 +51,7 @@ Cursor::Cursor(fs::path imgPath, float hotSpotX, float hotSpotY) {
 	sf::Image gif;
 	if(!gif.loadFromFile(imgPath.string())) {
 		std::string error = "Error loading cursor from " + imgPath.string();
-		throw std::exception(error.c_str());
+		throw error;
 	}
 	// Calculate the AND and XOR masks
 	HBITMAP cursorAnd = CreateCompatibleBitmap(GetDC(NULL), gif.getSize().x, gif.getSize().y);

@@ -968,11 +968,13 @@ bool operator==(const tessel_ref_t& a, const tessel_ref_t& b) {
 	return a.key == b.key;
 }
 
-template<> struct std::hash<tessel_ref_t> {
+namespace std {
+template<> struct hash<tessel_ref_t> {
 	size_t operator()(tessel_ref_t key) const {
 		return key.key;
 	}
 };
+}
 
 std::unordered_map<tessel_ref_t, tessel_t> tiling_reservoir;
 static int tessel_index = 0;

@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <ctime>
+#include <cstring>
 
 #ifdef _MSC_VER
 // For some bizarre reason, Visual Studio doesn't declare snprintf in <cstdio>

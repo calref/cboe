@@ -132,7 +132,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 }
 
 bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restore, bool in_scen, bool maps_there, bool must_port){
-	std::ifstream fin(file_to_load.c_str(), std::ios_base::binary);
+	std::ifstream fin(file_to_load.string().c_str(), std::ios_base::binary);
 	fin.seekg(3*sizeof(short),std::ios_base::beg); // skip the header, which is 6 bytes in the old format
 	
 	legacy::party_record_type store_party;

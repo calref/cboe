@@ -1,4 +1,6 @@
 
+#if defined(_MSC_VER) && !defined(NDEBUG)
+
 #include <sstream>
 #include <iostream>
 #include <windows.h>
@@ -36,3 +38,5 @@ void set_debug_buffers() {
 	std::cout.rdbuf(&dbg_buf);
 	std::cerr.rdbuf(&dbg_err_buf);
 }
+
+#endif

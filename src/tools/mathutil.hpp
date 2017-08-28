@@ -38,7 +38,7 @@ void erase_if(ContainerT& items, const PredicateT& predicate) {
 // Case-insensitive string comparison seems to be semi-standard, but with different names.
 #if defined(__APPLE__)
 #define strnicmp strncasecmp
-#elif defined(_MSC_VER)
+#elif defined(_WIN32)
 #define strnicmp _strnicmp
 #else
 #error Missing strnicmp / strncasecmp

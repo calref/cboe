@@ -321,7 +321,7 @@ void add_outdoor_maps() {
 
 void start_data_dump() {
 	fs::path path = progDir/"Data Dump.txt";
-	std::ofstream fout(path.c_str());
+	std::ofstream fout(path.string().c_str());
 	
 	fout << "Begin data dump:\n";
 	fout << "  Overall mode  " << overall_mode << "\n";

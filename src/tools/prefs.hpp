@@ -11,6 +11,7 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
 
 void set_pref(std::string keypath, bool value);
 bool get_bool_pref(std::string keypath, bool fallback = false);

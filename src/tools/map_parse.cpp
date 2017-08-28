@@ -10,6 +10,7 @@
 
 #include <fstream>
 #include <cctype>
+#include <cstring>
 #include <iterator>
 #include <numeric>
 

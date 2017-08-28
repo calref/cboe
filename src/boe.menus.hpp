@@ -9,6 +9,11 @@
 #ifndef BoE_boe_menus_h
 #define BoE_boe_menus_h
 
+// Needed for MinGW builds for some reason
+#ifdef FILE_OPEN
+#undef FILE_OPEN
+#endif
+
 void init_menubar();
 void adjust_monst_menu();
 void init_spell_menus();

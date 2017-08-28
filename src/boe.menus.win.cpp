@@ -17,6 +17,7 @@
 #include <windows.h>
 #include <gl/GL.h>
 #undef HELP_INDEX // Except this one
+#undef FILE_OPEN
 
 // This is the index of each menu on the menubar
 enum {

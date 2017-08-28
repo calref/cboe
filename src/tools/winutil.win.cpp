@@ -5,6 +5,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Image.hpp>
 #include <sstream>
+#include <cmath>
 
 extern sf::RenderWindow mainPtr;
 OPENFILENAMEA getParty, getScen, getRsrc, putParty, putScen, putRsrc;

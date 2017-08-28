@@ -1,6 +1,8 @@
 
 Import("env")
 
+env = env.Clone()
+env.Append(CXXFLAGS="-fpermissive")
 dlog_util = env.StaticLibrary("#build/lib/dlogutil", Glob("*.cpp") + Glob("xml-parser/*.cpp"))
 
 Return("dlog_util")
