@@ -9,8 +9,15 @@
 #include "catch.hpp"
 #include "oldstructs.hpp"
 #include "special.hpp"
-#include "restypes.hpp"
+#include "res_strings.hpp"
 #include "pictypes.hpp"
+#include "spell.hpp"
+#include "damage.hpp"
+#include "skills_traits.hpp"
+#include "fields.hpp"
+#include "race.hpp"
+#include "monster.hpp" // for eAttitude
+#include "town.hpp" // for lighting constants
 
 using namespace std;
 

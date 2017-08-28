@@ -6,7 +6,8 @@
 #include <boost/lexical_cast.hpp>
 #include "scen.global.hpp"
 #include "scenario.hpp"
-#include "graphtool.hpp"
+#include "gfxsheets.hpp"
+#include "utility.hpp"
 #include "scen.graphics.hpp"
 #include "scen.keydlgs.hpp"
 #include "scen.core.hpp"
@@ -17,7 +18,7 @@
 #include "3choice.hpp"
 #include "strchoice.hpp"
 #include "pictchoice.hpp"
-#include "restypes.hpp"
+#include "res_strings.hpp"
 #include "spell.hpp"
 
 extern short cen_x, cen_y;
@@ -657,12 +658,11 @@ static bool edit_spec_enc_type(cDialog& me, std::string item_hit, node_stack_t& 
 	else if(item_hit == "rect") category = eSpecCat::RECT;
 	int start = -1, finish = -1, current = int(edit_stack.top().node.type);
 	for(int i = 0; i < std::numeric_limits<unsigned short>::max(); i++) {
-		eSpecType check = eSpecType(i);
-		eSpecCat checkCat = getNodeCategory(check);
-		if(start >= 0 && checkCat == eSpecCat::INVALID) {
+		eSpecCat check = (*eSpecType(i)).cat;
+		if(start >= 0 && check == eSpecCat::INVALID) {
 			finish = i - 1;
 			break;
-		} else if(checkCat == category && start < 0)
+		} else if(check == category && start < 0)
 			start = i;
 	}
 	if(start < 0 || finish < 0) return true;
@@ -1208,8 +1208,4 @@ void edit_scen_intro() {
 	dynamic_cast<cPict&>(edit["pic"]).setPict(scenario.intro_pic);
 	
 	edit.run();
-}
-
-void make_cursor_sword() {
-	set_cursor(wand_curs);
 }

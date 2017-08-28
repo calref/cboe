@@ -9,7 +9,7 @@
 #include "catch.hpp"
 #include "scenario.hpp"
 #include "creature.hpp"
-#include "creatlist.hpp"
+#include "population.hpp"
 #include "pc.hpp"
 #include "party.hpp"
 

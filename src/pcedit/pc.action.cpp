@@ -6,11 +6,11 @@
 #include "pc.editors.hpp"
 #include "pc.fileio.hpp"
 #include "pc.action.hpp"
-#include "graphtool.hpp"
-#include "soundtool.hpp"
+#include "sounds.hpp"
 #include "mathutil.hpp"
 #include "dialog.hpp"
 #include "control.hpp"
+#include "cursors.hpp"
 #include <boost/lexical_cast.hpp>
 
 extern cUniverse univ;
@@ -105,7 +105,7 @@ void edit_gold_or_food(short which_to_edit) {
 	
 	store_which_to_edit = which_to_edit;
 	
-	make_cursor_sword();
+	set_cursor(sword_curs);
 	cDialog dlog("get-num");
 	dlog["okay"].attachClickHandler(get_num_event_filter);
 	if(which_to_edit == 0)
@@ -126,7 +126,7 @@ void edit_day() {
 	location view_loc;
 	
 	
-	make_cursor_sword();
+	set_cursor(sword_curs);
 	
 	cDialog dlog("edit-day");
 	dlog["okay"].attachClickHandler(get_num_event_filter);
@@ -154,7 +154,7 @@ bool take_gold(short amount,bool /*print_result*/) {
 void edit_xp(cPlayer *pc) {
 	location view_loc;
 	
-	make_cursor_sword();
+	set_cursor(sword_curs);
 	
 	cDialog dlog("edit-xp");
 	dlog["okay"].attachClickHandler(get_num_event_filter);

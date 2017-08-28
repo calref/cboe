@@ -10,6 +10,8 @@
 #include "item.hpp"
 #include "oldstructs.hpp"
 #include "spell.hpp"
+#include "damage.hpp"
+#include "race.hpp"
 
 static void set_item_name(legacy::item_record_type& item, const std::string& full, const std::string& name) {
 	std::copy_n(full.begin(), std::min<size_t>(25, 1 + full.size()), item.full_name);

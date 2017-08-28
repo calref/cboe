@@ -4,12 +4,16 @@
 #include "pc.graphics.hpp"
 #include "pc.editors.hpp"
 #include "pc.action.hpp"
-#include "soundtool.hpp"
-#include "graphtool.hpp"
-#include "restypes.hpp"
+#include "sounds.hpp"
+#include "gfxsheets.hpp"
+#include "render_shapes.hpp"
+#include "render_image.hpp"
+#include "res_image.hpp"
 #include "message.hpp"
 #include "mathutil.hpp"
 #include "gitrev.hpp"
+#include "tiling.hpp" // for bg
+#include "utility.hpp"
 
 extern cUniverse univ;
 
@@ -788,8 +792,3 @@ void display_party() {
 		win_draw_string(mainPtr,dest_rect,to_draw.str(),eTextMode::WRAP,style);
 	}
 }
-
-void make_cursor_sword() {
-	set_cursor(sword_curs);
-}
-

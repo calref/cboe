@@ -8,9 +8,9 @@
 #include <boost/filesystem/operations.hpp>
 #include "scen.fileio.hpp"
 #include "scen.keydlgs.hpp"
-#include "graphtool.hpp"
+#include "gfxsheets.hpp"
 #include "scen.core.hpp"
-#include "soundtool.hpp"
+#include "sounds.hpp"
 #include "mathutil.hpp"
 #include "oldstructs.hpp"
 #include "fileio.hpp"
@@ -439,9 +439,9 @@ void writeItemsToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.PushElement("protection", item.protection);
 		if(item.charges > 0)
 			data.PushElement("charges", item.charges);
-		if(isWeaponType(item.variety) && item.variety != eItemType::ARROW && item.variety != eItemType::BOLTS)
+		if((*item.variety).is_weapon && item.variety != eItemType::ARROW && item.variety != eItemType::BOLTS)
 			data.PushElement("weapon-type", item.weap_type);
-		if(item.missile > 0 || isMissileType(item.variety))
+		if(item.missile > 0 || (*item.variety).is_missile)
 			data.PushElement("missile-type", item.missile);
 		data.PushElement("pic", item.graphic_num);
 		if(item.type_flag > 0)

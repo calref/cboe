@@ -6,7 +6,7 @@
 #include "scen.global.hpp"
 #include "scenario.hpp"
 #include "town.hpp"
-#include "graphtool.hpp"
+#include "utility.hpp"
 #include "scen.actions.hpp"
 #include "scen.graphics.hpp"
 #include "scen.townout.hpp"

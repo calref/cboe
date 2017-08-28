@@ -2,7 +2,7 @@
 #include "pc.graphics.hpp"
 #include "universe.hpp"
 #include "pc.editors.hpp"
-#include "graphtool.hpp"
+#include "utility.hpp"
 #include "dialog.hpp"
 #include "control.hpp"
 #include "button.hpp"
@@ -10,6 +10,7 @@
 #include "strdlog.hpp"
 #include "choicedlog.hpp"
 #include "winutil.hpp"
+#include "cursors.hpp"
 #include <boost/lexical_cast.hpp>
 
 /*
@@ -98,7 +99,7 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 	}
 	which_pc_displayed = pc_num;
 	
-	make_cursor_sword();
+	set_cursor(sword_curs);
 	
 	cDialog pcInfo("pc-spell-info", parent);
 	pcInfo.attachClickHandlers(std::bind(display_pc_event_filter, _1, _2, mode),{"done","left","right"});
@@ -194,7 +195,7 @@ void pick_race_abil(cPlayer *pc,short mode,cDialog* parent) {
 	static const char*const start_str2 = "Click on advantage button to add/remove.";
 	
 	store_pc = pc;
-	make_cursor_sword();
+	set_cursor(sword_curs);
 	
 	cDialog pickAbil("pick-race-abil",parent);
 	pickAbil["done"].attachClickHandler(std::bind(&cDialog::toast, &pickAbil, true));
@@ -231,7 +232,7 @@ extern const eItemAbil alch_ingred2[20] = {
 };
 
 void display_alchemy(bool allowEdit,cDialog* parent) {
-	make_cursor_sword();
+	set_cursor(sword_curs);
 	
 	cChoiceDlog showAlch("pc-alchemy-info", {"done"}, parent);
 	
@@ -539,7 +540,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 bool spend_xp(short pc_num, short mode, cDialog* parent) {
 	using namespace std::placeholders;
 	
-	make_cursor_sword();
+	set_cursor(sword_curs);
 	
 	xp_dlog_state save;
 	save.who = pc_num;

@@ -74,7 +74,7 @@ Order of Includes
 -----------------
 
 Include files at the top of any file (header or source) should appear in
-the following order, with a blank line between groups:
+the following order:
 
 * the source file's counterpart header (only applicable for source
 files)
@@ -88,7 +88,10 @@ for C headers)
 * Component-specific Blades of Exile headers
 
 All except the last three and the first one should use the angle
-brackets include style.
+brackets include style. Normally, there should be a blank line
+between groups; however, if there are only one or two headers in
+a group, it can be merged with an adjacent group. The counterpart
+header should always be followed by a blank line, however.
 
 Try to make all includes explicit in the header files, rather than
 relying on indirect includes by including one file that includes others.

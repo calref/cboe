@@ -5,7 +5,6 @@
 #include "scen.global.hpp"
 #include <array>
 #include <string>
-#include "graphtool.hpp"
 #include "scen.graphics.hpp"
 #include <cmath>
 #include "scen.btnmg.hpp"

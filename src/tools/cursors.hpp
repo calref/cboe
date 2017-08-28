@@ -12,8 +12,6 @@
 #include <string>
 #include <boost/filesystem/path.hpp>
 
-namespace fs = boost::filesystem;
-
 enum cursor_type {
 	wand_curs = 0,
 	eyedropper_curs = 1,
@@ -47,6 +45,7 @@ enum cursor_type {
 class Cursor {
 	void* ptr;
 public:
+	static cursor_type current;
 	Cursor(fs::path imgPath, float hotSpotX, float hotSpotY);
 	~Cursor();
 	void apply();
@@ -67,6 +66,12 @@ static const char*const cursors[26] = {
 	"SW", "S", "SE",
 	"sword", "boot", "drop", "target",
 	"talk", "key", "look", "bucket", "watch",
+};
+
+static const cursor_type arrow_curs[3][3] = {
+	{NW_curs, N_curs, NE_curs},
+	{W_curs, wait_curs, E_curs},
+	{SW_curs, S_curs, SE_curs},
 };
 
 #endif

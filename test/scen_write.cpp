@@ -6,7 +6,7 @@
 #include "catch.hpp"
 #include "scenario.hpp"
 #include "town.hpp"
-#include "restypes.hpp"
+#include "res_strings.hpp"
 
 using namespace std;
 using namespace ticpp;
