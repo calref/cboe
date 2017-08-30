@@ -186,7 +186,7 @@ void beep() {
 }
 
 void launchURL(std::string url) {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithCString:url.c_str() encoding:NSUTF8StringEncoding]]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.c_str()]]];
 }
 
 int getMenubarHeight() {
@@ -202,17 +202,15 @@ NSSavePanel* dlg_put_game;
 NSSavePanel* dlg_put_rsrc;
 extern sf::RenderWindow mainPtr;
 
-// TODO: I'm not sure if I'll need delegates to enable selection of files with no file extension that have file creator types?
-
 void init_fileio(){
 	dlg_get_scen = [NSOpenPanel openPanel];
-	[dlg_get_scen setAllowedFileTypes: [NSArray arrayWithObjects: @"exs", @"boes", nil]];
+	[dlg_get_scen setAllowedFileTypes: [NSArray arrayWithObjects: @"exs", @"boes", NSFileTypeForHFSTypeCode('BETM'), nil]];
 	[dlg_get_scen setMessage: @"Select a scenario to edit:"];
 	[dlg_get_scen setTitle: @"Load Scenario"];
 	[dlg_get_scen retain];
 	
 	dlg_get_game = [NSOpenPanel openPanel];
-	[dlg_get_game setAllowedFileTypes: [NSArray arrayWithObjects: @"exg", @"boe", @"SAV", @"mac", nil]];
+	[dlg_get_game setAllowedFileTypes: [NSArray arrayWithObjects: @"exg", @"boe", @"SAV", @"mac", NSFileTypeForHFSTypeCode('beSV'), nil]];
 	[dlg_get_game setMessage: @"Select a saved game to resume:"];
 	[dlg_get_game setTitle: @"Load Game"];
 	[dlg_get_game retain];
@@ -244,7 +242,7 @@ fs::path nav_get_scenario() {
 	bool gotFile = [dlg_get_scen runModal] != NSFileHandlingPanelCancelButton;
 	makeFrontWindow(mainPtr);
 	if(gotFile) {
-		return fs::path([[[[dlg_get_scen URL] absoluteURL] path] UTF8String]);
+		return fs::path([[[dlg_get_scen URL] path] fileSystemRepresentation]);
 	}
 	return "";
 }
@@ -258,7 +256,7 @@ fs::path nav_put_scenario(fs::path def) {
 	bool gotFile = [dlg_put_scen runModal] != NSFileHandlingPanelCancelButton;
 	makeFrontWindow(mainPtr);
 	if(gotFile)
-		return fs::path([[[[dlg_put_scen URL] absoluteURL] path] UTF8String]);
+		return fs::path([[[dlg_put_scen URL] path] fileSystemRepresentation]);
 	return "";
 }
 
@@ -266,7 +264,7 @@ fs::path nav_get_party() {
 	bool gotFile = [dlg_get_game runModal] != NSFileHandlingPanelCancelButton;
 	makeFrontWindow(mainPtr);
 	if(gotFile)
-		return fs::path([[[[dlg_get_game URL] absoluteURL] path] UTF8String]);
+		return fs::path([[[dlg_get_game URL] path] fileSystemRepresentation]);
 	return "";
 }
 
@@ -279,20 +277,21 @@ fs::path nav_put_party(fs::path def) {
 	bool gotFile = [dlg_put_game runModal] != NSFileHandlingPanelCancelButton;
 	makeFrontWindow(mainPtr);
 	if(gotFile)
-		return fs::path([[[[dlg_put_game URL] absoluteURL] path] UTF8String]);
+		return fs::path([[[dlg_put_game URL] path] fileSystemRepresentation]);
 	return "";
 }
 
 fs::path nav_get_rsrc(std::initializer_list<std::string> extensions) {
-	NSMutableArray* allowTypes = [NSMutableArray arrayWithCapacity: extensions.size()];
+	NSMutableArray* allowTypes = [[NSMutableArray alloc] initWithCapacity: extensions.size()];
 	for(std::string ext : extensions) {
 		NSString* the_ext = [NSString stringWithUTF8String: ext.c_str()];
 		[allowTypes addObject: the_ext];
 	}
 	[dlg_get_rsrc setAllowedFileTypes: allowTypes];
+	[allowTypes release];
 	bool gotFile = [dlg_get_rsrc runModal] != NSFileHandlingPanelCancelButton;
 	if(gotFile)
-		return fs::path([[[[dlg_get_rsrc URL] absoluteURL] path] UTF8String]);
+		return fs::path([[[dlg_get_rsrc URL] path] fileSystemRepresentation]);
 	return "";
 }
 
@@ -310,7 +309,7 @@ fs::path nav_put_rsrc(std::initializer_list<std::string> extensions, fs::path de
 	[dlg_put_rsrc setAllowedFileTypes: allowTypes];
 	bool gotFile = [dlg_put_rsrc runModal] != NSFileHandlingPanelCancelButton;
 	if(gotFile)
-		return fs::path([[[[dlg_put_rsrc URL] absoluteURL] path] UTF8String]);
+		return fs::path([[[dlg_put_rsrc URL] path] fileSystemRepresentation]);
 	return "";
 }
 
