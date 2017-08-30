@@ -14,6 +14,7 @@
 #include <iosfwd>
 #include <array>
 #include <bitset>
+#include <cstdint>
 
 #include "item.hpp"
 #include "pictypes.hpp"

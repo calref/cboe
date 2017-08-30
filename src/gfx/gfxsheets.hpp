@@ -11,6 +11,7 @@
 
 #include <utility>
 #include <vector>
+#include <memory>
 #include <SFML/Graphics/Texture.hpp>
 #include "location.hpp"
 

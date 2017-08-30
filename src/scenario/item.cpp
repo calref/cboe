@@ -15,7 +15,6 @@
 #include <sstream>
 #include <boost/lexical_cast.hpp>
 
-#include "boe.consts.hpp" // TODO: If this is needed here, maybe it shouldn't be in the "boe" namespace
 #include "oldstructs.hpp"
 #include "utility.hpp"
 #include "fileio.hpp"

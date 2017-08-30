@@ -14,7 +14,6 @@
 #include "scen.keydlgs.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"
-#include "boe.consts.hpp" // TODO: Put these constants in a global file
 #include "cursors.hpp"
 
 #include "dialog.hpp"

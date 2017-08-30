@@ -11,7 +11,6 @@
 #include "render_image.hpp"
 #include "tiling.hpp"
 #include "utility.hpp"
-#include "boe.consts.hpp"
 #include "dialog.hpp"
 #include "control.hpp"
 #include "strdlog.hpp"

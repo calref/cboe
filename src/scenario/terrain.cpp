@@ -12,10 +12,10 @@
 #include <vector>
 #include <map>
 #include <sstream>
+#include <set>
 
 #include "oldstructs.hpp"
 #include "gfxsheets.hpp" // for NO_PIC
-#include "boe.consts.hpp" // TODO: Put these constants in a global file
 #include "damage.hpp"
 
 void cTerrain::import_legacy(legacy::terrain_type_type& old){

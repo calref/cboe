@@ -74,10 +74,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;TIXML_USE_TICPP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\rsrc\menus;..\..\tools\resmgr;..\..\tools\gzstream;..\..\tools;..\..\dialogxml\xml-parser;..\..\dialogxml;..\..\classes;..\..;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\rsrc\menus\;..\..\game;..\..\universe;..\..\tools;..\..\scenario;..\..\gfx;..\..\fileio\resmgr;..\..\fileio\xml-parser;..\..\fileio\gzstream;..\..\fileio;..\..\dialogxml\widgets;..\..\dialogxml\dialogs;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
       <DisableSpecificWarnings>4800;4290;4244;4996;4018</DisableSpecificWarnings>
+      <ForcedIncludeFiles>global.hpp</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -95,53 +96,51 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\boe.actions.hpp" />
-    <ClInclude Include="..\..\boe.combat.hpp" />
-    <ClInclude Include="..\..\boe.consts.hpp" />
-    <ClInclude Include="..\..\boe.dlgutil.hpp" />
-    <ClInclude Include="..\..\boe.fileio.hpp" />
-    <ClInclude Include="..\..\boe.global.hpp" />
-    <ClInclude Include="..\..\boe.graphics.hpp" />
-    <ClInclude Include="..\..\boe.graphutil.hpp" />
-    <ClInclude Include="..\..\boe.infodlg.hpp" />
-    <ClInclude Include="..\..\boe.items.hpp" />
-    <ClInclude Include="..\..\boe.locutils.hpp" />
-    <ClInclude Include="..\..\boe.main.hpp" />
-    <ClInclude Include="..\..\boe.menus.hpp" />
-    <ClInclude Include="..\..\boe.monster.hpp" />
-    <ClInclude Include="..\..\boe.newgraph.hpp" />
-    <ClInclude Include="..\..\boe.party.hpp" />
-    <ClInclude Include="..\..\boe.specials.hpp" />
-    <ClInclude Include="..\..\boe.startup.hpp" />
-    <ClInclude Include="..\..\boe.text.hpp" />
-    <ClInclude Include="..\..\boe.town.hpp" />
-    <ClInclude Include="..\..\boe.townspec.hpp" />
+    <ClInclude Include="..\..\game\boe.actions.hpp" />
+    <ClInclude Include="..\..\game\boe.combat.hpp" />
+    <ClInclude Include="..\..\game\boe.consts.hpp" />
+    <ClInclude Include="..\..\game\boe.dlgutil.hpp" />
+    <ClInclude Include="..\..\game\boe.fileio.hpp" />
+    <ClInclude Include="..\..\game\boe.global.hpp" />
+    <ClInclude Include="..\..\game\boe.graphics.hpp" />
+    <ClInclude Include="..\..\game\boe.graphutil.hpp" />
+    <ClInclude Include="..\..\game\boe.infodlg.hpp" />
+    <ClInclude Include="..\..\game\boe.items.hpp" />
+    <ClInclude Include="..\..\game\boe.locutils.hpp" />
+    <ClInclude Include="..\..\game\boe.main.hpp" />
+    <ClInclude Include="..\..\game\boe.menus.hpp" />
+    <ClInclude Include="..\..\game\boe.monster.hpp" />
+    <ClInclude Include="..\..\game\boe.newgraph.hpp" />
+    <ClInclude Include="..\..\game\boe.party.hpp" />
+    <ClInclude Include="..\..\game\boe.specials.hpp" />
+    <ClInclude Include="..\..\game\boe.text.hpp" />
+    <ClInclude Include="..\..\game\boe.town.hpp" />
+    <ClInclude Include="..\..\game\boe.townspec.hpp" />
     <ClInclude Include="..\..\..\rsrc\menus\boeresource.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\..\rsrc\menus\BladesOfExile.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\boe.actions.cpp" />
-    <ClCompile Include="..\..\boe.combat.cpp" />
-    <ClCompile Include="..\..\boe.dlgutil.cpp" />
-    <ClCompile Include="..\..\boe.fileio.cpp" />
-    <ClCompile Include="..\..\boe.graphics.cpp" />
-    <ClCompile Include="..\..\boe.graphutil.cpp" />
-    <ClCompile Include="..\..\boe.infodlg.cpp" />
-    <ClCompile Include="..\..\boe.items.cpp" />
-    <ClCompile Include="..\..\boe.locutils.cpp" />
-    <ClCompile Include="..\..\boe.main.cpp" />
-    <ClCompile Include="..\..\boe.menus.win.cpp" />
-    <ClCompile Include="..\..\boe.monster.cpp" />
-    <ClCompile Include="..\..\boe.newgraph.cpp" />
-    <ClCompile Include="..\..\boe.party.cpp" />
-    <ClCompile Include="..\..\boe.specials.cpp" />
-    <ClCompile Include="..\..\boe.startup.cpp" />
-    <ClCompile Include="..\..\boe.text.cpp" />
-    <ClCompile Include="..\..\boe.town.cpp" />
-    <ClCompile Include="..\..\boe.townspec.cpp" />
-    <ClCompile Include="..\..\oldstructs.cpp" />
+    <ClCompile Include="..\..\game\boe.actions.cpp" />
+    <ClCompile Include="..\..\game\boe.combat.cpp" />
+    <ClCompile Include="..\..\game\boe.dlgutil.cpp" />
+    <ClCompile Include="..\..\game\boe.fileio.cpp" />
+    <ClCompile Include="..\..\game\boe.graphics.cpp" />
+    <ClCompile Include="..\..\game\boe.graphutil.cpp" />
+    <ClCompile Include="..\..\game\boe.infodlg.cpp" />
+    <ClCompile Include="..\..\game\boe.items.cpp" />
+    <ClCompile Include="..\..\game\boe.locutils.cpp" />
+    <ClCompile Include="..\..\game\boe.main.cpp" />
+    <ClCompile Include="..\..\game\boe.menus.win.cpp" />
+    <ClCompile Include="..\..\game\boe.monster.cpp" />
+    <ClCompile Include="..\..\game\boe.newgraph.cpp" />
+    <ClCompile Include="..\..\game\boe.party.cpp" />
+    <ClCompile Include="..\..\game\boe.specials.cpp" />
+    <ClCompile Include="..\..\game\boe.startup.cpp" />
+    <ClCompile Include="..\..\game\boe.text.cpp" />
+    <ClCompile Include="..\..\game\boe.town.cpp" />
+    <ClCompile Include="..\..\game\boe.townspec.cpp" />
     <ClCompile Include="..\..\pcedit\pc.editors.cpp" />
   </ItemGroup>
   <ItemGroup>
