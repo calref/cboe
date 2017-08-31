@@ -40,13 +40,13 @@ MenuHandle actions_menu,music_menu,mage_spells_menu,priest_spells_menu;
 
 @interface MonsterWrapper : NSObject
 @property cMonster* monst;
-+(id) withMonster: (cMonster&) theMonster;
++(id) withMonster: (cMonster&) theMonster NS_RETURNS_RETAINED;
 @end
 
 @interface SpellWrapper : NSObject
 @property int num;
 @property eSkill type;
-+(id) withSpell:(int) num ofType:(eSkill) type;
++(id) withSpell:(int) num ofType:(eSkill) type NS_RETURNS_RETAINED;
 @end
 
 void hideMenuBar() {
@@ -132,7 +132,7 @@ void init_menubar() {
 		eMenu::NONE, eMenu::HELP_HINTS, eMenu::HELP_SPELLS,
 	};
 	
-	MenuHandler* handler = [[[MenuHandler alloc] init] retain];
+	MenuHandler* handler = [[MenuHandler alloc] init];
 	setMenuCallback([apple_menu itemWithTitle: @"About Blades of Exile"], handler, @selector(menuChoice:), int(eMenu::ABOUT));
 	setMenuCallback([apple_menu itemWithTitle: @"Preferences…"], handler, @selector(menuChoice:), int(eMenu::PREFS));
 	setMenuCallback([apple_menu itemWithTitle: @"Quit Blades of Exile"], handler, @selector(menuChoice:), int(eMenu::QUIT));
@@ -301,7 +301,7 @@ void menu_activate() {
 +(id) withMonster:(cMonster&) theMonster {
 	MonsterWrapper* wrapper = [[MonsterWrapper alloc] init];
 	[wrapper setMonst: &theMonster];
-	return [wrapper retain];
+	return wrapper;
 }
 @end
 
@@ -312,7 +312,7 @@ void menu_activate() {
 	SpellWrapper* wrapper = [[SpellWrapper alloc] init];
 	[wrapper setType: type];
 	[wrapper setNum: num];
-	return [wrapper retain];
+	return wrapper;
 }
 @end
 

@@ -11,6 +11,7 @@
 #include <string>
 #include "res_cursor.hpp"
 
+static NSImage* imageFromURL(CFURLRef url) NS_RETURNS_RETAINED;
 static NSImage* imageFromURL(CFURLRef url){
 	CGImageSourceRef imageSource = CGImageSourceCreateWithURL(url, nullptr);
 	CGImageRef theImage = nil;
@@ -18,7 +19,10 @@ static NSImage* imageFromURL(CFURLRef url){
 	if(imageSource == nil) return nil;
 	
 	theImage = CGImageSourceCreateImageAtIndex(imageSource, 0, nullptr);
-	if(theImage == nil) return nil;
+	if(theImage == nil) {
+		CFRelease( imageSource );
+		return nil;
+	}
 	
 	CFRelease( imageSource );
 	
@@ -36,14 +40,14 @@ static NSImage* imageFromURL(CFURLRef url){
 	CGContextRef imageContext = (CGContextRef) [[NSGraphicsContext currentContext] graphicsPort];
 	CGContextDrawImage(imageContext, *(CGRect*)&imageRect, theImage);
 	[newImage unlockFocus];
+	CGImageRelease(theImage);
 	
 	return newImage;
 }
 
 Cursor::Cursor(fs::path path, float hotSpotX, float hotSpotY){
-	FSRef ref;
-	FSPathMakeRef((UInt8*)path.c_str(), &ref, nullptr);
-	CFURLRef imgPath = CFURLCreateFromFSRef(nullptr, &ref);
+	NSString *ref = [[NSFileManager defaultManager] stringWithFileSystemRepresentation:path.c_str() length:strlen(path.c_str())];
+	CFURLRef imgPath = (CFURLRef)[NSURL fileURLWithPath:ref];
 	
 	NSImage *img = imageFromURL(imgPath);
 	NSCursor *cursor = [[NSCursor alloc] initWithImage:img hotSpot:NSMakePoint(hotSpotX, hotSpotY)];
