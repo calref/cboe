@@ -6,12 +6,13 @@
 
 #include "scen.global.hpp"
 #include "scenario.hpp"
-#include "graphtool.hpp"
+#include "render_image.hpp"
+#include "tiling.hpp"
 #include "scen.graphics.hpp"
 #include "scen.actions.hpp"
 #include "scen.fileio.hpp"
 #include "scen.btnmg.hpp"
-#include "soundtool.hpp"
+#include "sounds.hpp"
 #include "scen.townout.hpp"
 #include "scen.core.hpp"
 #include "scen.keydlgs.hpp"
@@ -23,7 +24,7 @@
 #include "strdlog.hpp"
 #include "choicedlog.hpp"
 #include "scen.menus.hpp"
-#include "restypes.hpp"
+#include "res_image.hpp"
 
 /* Globals */
 bool  All_Done = false;
@@ -101,7 +102,8 @@ void init_scened(int argc, char* argv[]) {
 	init_directories(argv[0]);
 	init_menubar();
 	// TODO: Sync and load prefs
-	init_graph_tool();
+	init_shaders();
+	init_tiling();
 	init_snd_tool();
 	
 	sf::VideoMode mode = sf::VideoMode::getDesktopMode();

@@ -3,9 +3,8 @@
 #include <windows.h>
 #include <exception>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "restypes.hpp"
+#include "res_cursor.hpp"
 
-extern cursor_type current_cursor;
 extern sf::RenderWindow mainPtr;
 
 // This function adapted from <http://www.codeproject.com/Articles/5220/Creating-a-color-cursor-from-a-bitmap>
@@ -51,7 +50,7 @@ Cursor::Cursor(fs::path imgPath, float hotSpotX, float hotSpotY) {
 	sf::Image gif;
 	if(!gif.loadFromFile(imgPath.string())) {
 		std::string error = "Error loading cursor from " + imgPath.string();
-		throw std::exception(error.c_str());
+		throw error;
 	}
 	// Calculate the AND and XOR masks
 	HBITMAP cursorAnd = CreateCompatibleBitmap(GetDC(NULL), gif.getSize().x, gif.getSize().y);
@@ -92,7 +91,7 @@ void obscureCursor() {
 
 void set_cursor(cursor_type which_c) {
 	if(which_c != watch_curs)
-		current_cursor = which_c;
+		Cursor::current = which_c;
 	if(which_c == text_curs) {
 		SetCursor(LoadCursor(NULL, IDC_IBEAM));
 	} else {
@@ -102,5 +101,5 @@ void set_cursor(cursor_type which_c) {
 }
 
 void restore_cursor() {
-	set_cursor(current_cursor);
+	set_cursor(Cursor::current);
 }

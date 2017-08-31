@@ -4,20 +4,24 @@
 #include <cstring>
 #include "scen.global.hpp"
 #include "scenario.hpp"
-#include "graphtool.hpp"
+#include "gfxsheets.hpp"
+#include "render_image.hpp"
+#include "render_shapes.hpp"
+#include "render_text.hpp"
+#include "tiling.hpp" // for bg
 #include "scen.graphics.hpp"
 #include <cmath>
 #include "scen.keydlgs.hpp"
-#include "soundtool.hpp"
+#include "sounds.hpp"
 #include "mathutil.hpp"
-#include "boe.consts.hpp" // TODO: Put these constants in a global file
+#include "cursors.hpp"
 
 #include "dialog.hpp"
 
 #include "scen.core.hpp"
 #include "scen.townout.hpp"
 #include "scrollbar.hpp"
-#include "restypes.hpp"
+#include "res_image.hpp"
 
 #include "scen.btnmg.hpp"
 

@@ -61,7 +61,7 @@ pkg/win/data.nsi
 
 # Shader Builder projects
 # It's an sqlite3 database and not particularly important, so exclude it
-src/tools/*.sbproj
+*.sbproj
 
 # Doxygen stuff
 src/doxy/html/
@@ -84,3 +84,4 @@ test/junk/*.map
 # Misc
 oldstructs.txt
 src/tools/gitrev.hpp
+rsrc/**/scenario

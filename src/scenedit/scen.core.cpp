@@ -9,7 +9,8 @@
 #include "scen.global.hpp"
 #include "scenario.hpp"
 #include "town.hpp"
-#include "graphtool.hpp"
+#include "gfxsheets.hpp"
+#include "utility.hpp"
 #include "scen.graphics.hpp"
 #include "scen.core.hpp"
 #include "scen.keydlgs.hpp"
@@ -25,7 +26,10 @@
 #include "strchoice.hpp"
 #include "fileio.hpp"
 #include "field.hpp"
-#include "restypes.hpp"
+#include "res_strings.hpp"
+#include "res_image.hpp"
+#include "res_sound.hpp"
+#include "cursors.hpp"
 #include "stack.hpp"
 #include "spell.hpp"
 #include "mathutil.hpp"
@@ -43,7 +47,6 @@ extern ter_num_t template_terrain[64][64];
 extern cScenario scenario;
 extern cCustomGraphics spec_scen_g;
 extern location cur_out;
-extern const std::multiset<eItemType> equippable;
 
 const std::set<eItemAbil> items_no_strength = {
 	eItemAbil::NONE, eItemAbil::HEALING_WEAPON, eItemAbil::RETURNING_MISSILE, eItemAbil::SEEKING_MISSILE, eItemAbil::DRAIN_MISSILES,
@@ -1914,7 +1917,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 		put_item_abils_in_dlog(me, item, which);
 	} else if(hit == "weapon") {
 		save_item_abils(me, item);
-		if(!isWeaponType(item.variety)) {
+		if(!(*item.variety).is_weapon) {
 			showError("You can only give an ability of this sort to a weapon.","",&me);
 			return true;
 		}
@@ -1932,7 +1935,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 		put_item_abils_in_dlog(me, item, which);
 	} else if(hit == "general") {
 		save_item_abils(me, item);
-		if(equippable.count(item.variety) == 0 || item.variety == eItemType::ARROW || item.variety == eItemType::THROWN_MISSILE || item.variety == eItemType::BOLTS){
+		if((*item.variety).equip_count == 0 || item.variety == eItemType::ARROW || item.variety == eItemType::THROWN_MISSILE || item.variety == eItemType::BOLTS){
 			showError("You can only give an ability of this sort to an non-missile item which can be equipped (like armor, or a ring).",&me);
 			return true;
 		}

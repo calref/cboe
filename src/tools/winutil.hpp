@@ -13,8 +13,6 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics/Image.hpp>
 
-namespace fs = boost::filesystem; // TODO: Centralize this alias
-
 char keyToChar(sf::Keyboard::Key key, bool isShift);
 
 void makeFrontWindow(sf::Window& win);

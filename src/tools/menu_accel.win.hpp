@@ -1,6 +1,7 @@
 
 #include <windows.h>
 #include <vector>
+#include <string>
 
 struct accel_table_t {
 	std::vector<ACCEL> table;

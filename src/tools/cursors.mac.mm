@@ -9,9 +9,7 @@
 #include "cursors.hpp"
 #include <Cocoa/Cocoa.h>
 #include <string>
-#include "restypes.hpp"
-
-extern cursor_type current_cursor;
+#include "res_cursor.hpp"
 
 static NSImage* imageFromURL(CFURLRef url) NS_RETURNS_RETAINED;
 static NSImage* imageFromURL(CFURLRef url){
@@ -72,7 +70,7 @@ void obscureCursor() {
 
 void set_cursor(cursor_type which_c) {
 	if(which_c != watch_curs)
-		current_cursor = which_c;
+		Cursor::current = which_c;
 	if(which_c == text_curs) {
 		[[NSCursor IBeamCursor] set];
 	} else {
@@ -82,5 +80,5 @@ void set_cursor(cursor_type which_c) {
 }
 
 void restore_cursor(){
-	set_cursor(current_cursor);
+	set_cursor(Cursor::current);
 }

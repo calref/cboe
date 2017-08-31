@@ -9,7 +9,6 @@
 #include <boost/any.hpp>
 #include <boost/lexical_cast.hpp>
 
-namespace fs = boost::filesystem;
 std::map<std::string,boost::any> prefs;
 using iarray = std::vector<int>;
 static bool prefsLoaded = false, prefsDirty = false;
@@ -41,7 +40,7 @@ void append_iarray_pref(std::string keypath, int value) {
 	if(prefs.find(keypath) == prefs.end() || prefs[keypath].type() != typeid(iarray))
 		prefs[keypath] = iarray{value};
 	else {
-		iarray& arr = boost::any_cast<iarray>(prefs[keypath]);
+		iarray& arr = boost::any_cast<iarray&>(prefs[keypath]);
 		arr.push_back(value);
 		prefs[keypath] = arr;
 	}
@@ -49,7 +48,7 @@ void append_iarray_pref(std::string keypath, int value) {
 
 std::vector<int> get_iarray_pref(std::string keypath) {
 	if(prefs.find(keypath) == prefs.end()) return {};
-	if(prefs[keypath].type() == typeid(iarray)) return boost::any_cast<iarray>(prefs[keypath]);
+	if(prefs[keypath].type() == typeid(iarray)) return boost::any_cast<iarray&>(prefs[keypath]);
 	return {};
 }
 
@@ -65,7 +64,7 @@ static bool save_prefs(fs::path fpath) {
 	std::ofstream fout(fpath.string().c_str());
 	for(auto& kv : prefs) {
 		if(kv.second.type() == typeid(iarray)) {
-			iarray& arr = boost::any_cast<iarray>(kv.second);
+			const iarray& arr = boost::any_cast<iarray&>(kv.second);
 			fout << kv.first << " = [";
 			for(int i : arr) fout << i << ' ';
 			fout.seekp(-1,std::ios::cur); // To overwrite the final space written in the loop

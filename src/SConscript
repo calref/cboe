@@ -34,7 +34,7 @@ elif str(platform) == "win32":
 	game_sources.extend(Split("""
 		boe.menus.win.cpp
 	"""))
-	game_sources.append(env.RES('#build/obj/BladesOfExile.res', '#rsrc/menus/BladesOfExile.rc'))
+	game_sources.append(env.RES('#rsrc/menus/BladesOfExile.rc'))
 
 boe = env.Program("#build/bin/Blades of Exile", common_sources + party_classes + game_sources)
 

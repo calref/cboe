@@ -7,10 +7,10 @@
 #include <stack>
 #include "scen.global.hpp"
 #include "scenario.hpp"
-#include "graphtool.hpp"
+#include "render_shapes.hpp"
 #include "scen.graphics.hpp"
 #include "scen.actions.hpp"
-#include "soundtool.hpp"
+#include "sounds.hpp"
 #include "scen.core.hpp"
 #include "scen.fileio.hpp"
 #include "scen.keydlgs.hpp"

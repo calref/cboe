@@ -9,6 +9,7 @@
 #include "catch.hpp"
 #include "terrain.hpp"
 #include "oldstructs.hpp"
+#include "damage.hpp"
 
 TEST_CASE("Converting terrain types from legacy scenarios") {
 	cTerrain new_ter;

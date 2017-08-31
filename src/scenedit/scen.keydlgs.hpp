@@ -32,7 +32,6 @@ void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent);
 short edit_special_num(short mode,short what_start);
 void edit_scen_intro();
 bool edit_area_rect_str(info_rect_t& r);
-void make_cursor_sword() ;
 size_t num_strs(eStrMode str_mode);
 
 pic_num_t choose_damage_type(short cur, cDialog* parent, bool allow_spec);

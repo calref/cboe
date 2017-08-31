@@ -11,130 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\classes\creatlist.hpp" />
-    <ClInclude Include="..\..\classes\creature.hpp" />
-    <ClInclude Include="..\..\classes\item.hpp" />
-    <ClInclude Include="..\..\classes\living.hpp" />
-    <ClInclude Include="..\..\classes\location.hpp" />
-    <ClInclude Include="..\..\classes\monster.hpp" />
-    <ClInclude Include="..\..\classes\outdoors.hpp" />
-    <ClInclude Include="..\..\classes\party.hpp" />
-    <ClInclude Include="..\..\classes\pc.hpp" />
-    <ClInclude Include="..\..\classes\scenario.hpp" />
-    <ClInclude Include="..\..\classes\shop.hpp" />
-    <ClInclude Include="..\..\classes\simpletypes.hpp" />
-    <ClInclude Include="..\..\classes\special.hpp" />
-    <ClInclude Include="..\..\classes\spell.hpp" />
-    <ClInclude Include="..\..\classes\talking.hpp" />
-    <ClInclude Include="..\..\classes\terrain.hpp" />
-    <ClInclude Include="..\..\classes\town.hpp" />
-    <ClInclude Include="..\..\classes\universe.hpp" />
-    <ClInclude Include="..\..\classes\vehicle.hpp" />
-    <ClInclude Include="..\..\dialogxml\3choice.hpp" />
-    <ClInclude Include="..\..\dialogxml\button.hpp" />
-    <ClInclude Include="..\..\dialogxml\choicedlog.hpp" />
-    <ClInclude Include="..\..\dialogxml\control.hpp" />
-    <ClInclude Include="..\..\dialogxml\dialog.hpp" />
-    <ClInclude Include="..\..\dialogxml\dialog.keys.hpp" />
-    <ClInclude Include="..\..\dialogxml\dlogevt.hpp" />
-    <ClInclude Include="..\..\dialogxml\field.hpp" />
-    <ClInclude Include="..\..\dialogxml\message.hpp" />
-    <ClInclude Include="..\..\dialogxml\pict.hpp" />
-    <ClInclude Include="..\..\dialogxml\pictchoice.hpp" />
-    <ClInclude Include="..\..\dialogxml\scrollbar.hpp" />
-    <ClInclude Include="..\..\dialogxml\scrollpane.hpp" />
-    <ClInclude Include="..\..\dialogxml\stack.hpp" />
-    <ClInclude Include="..\..\dialogxml\strchoice.hpp" />
-    <ClInclude Include="..\..\dialogxml\strdlog.hpp" />
-    <ClInclude Include="..\..\dialogxml\xml-parser\ticpp.h" />
-    <ClInclude Include="..\..\dialogxml\xml-parser\ticpprc.h" />
-    <ClInclude Include="..\..\dialogxml\xml-parser\tinystr.h" />
-    <ClInclude Include="..\..\dialogxml\xml-parser\tinyxml.h" />
-    <ClInclude Include="..\..\dialogxml\xml-parser\tinyprint.h" />
-    <ClInclude Include="..\..\oldstructs.hpp" />
-    <ClInclude Include="..\..\tools\cursors.hpp" />
-    <ClInclude Include="..\..\tools\fileio.hpp" />
-    <ClInclude Include="..\..\tools\graphtool.hpp" />
-    <ClInclude Include="..\..\tools\gzstream\gzstream.h" />
-    <ClInclude Include="..\..\tools\map_parse.hpp" />
-    <ClInclude Include="..\..\tools\mathutil.hpp" />
-    <ClInclude Include="..\..\tools\menu_accel.win.hpp" />
-    <ClInclude Include="..\..\tools\porting.hpp" />
-    <ClInclude Include="..\..\tools\prefs.hpp" />
-    <ClInclude Include="..\..\tools\resmgr\resmgr.hpp" />
-    <ClInclude Include="..\..\tools\resmgr\restypes.hpp" />
-    <ClInclude Include="..\..\tools\soundtool.hpp" />
-    <ClInclude Include="..\..\tools\special_parse.hpp" />
-    <ClInclude Include="..\..\tools\tarball.hpp" />
-    <ClInclude Include="..\..\tools\undo.hpp" />
-    <ClInclude Include="..\..\tools\vector2d.hpp" />
-    <ClInclude Include="..\..\tools\view_dialogs.hpp" />
-    <ClInclude Include="..\..\tools\winutil.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\classes\creatlist.cpp" />
-    <ClCompile Include="..\..\classes\creature.cpp" />
-    <ClCompile Include="..\..\classes\estreams.cpp" />
-    <ClCompile Include="..\..\classes\item.cpp" />
-    <ClCompile Include="..\..\classes\living.cpp" />
-    <ClCompile Include="..\..\classes\location.cpp" />
-    <ClCompile Include="..\..\classes\monster.cpp" />
-    <ClCompile Include="..\..\classes\outdoors.cpp" />
-    <ClCompile Include="..\..\classes\party.cpp" />
-    <ClCompile Include="..\..\classes\pc.cpp" />
-    <ClCompile Include="..\..\classes\scenario.cpp" />
-    <ClCompile Include="..\..\classes\shop.cpp" />
-    <ClCompile Include="..\..\classes\special.cpp" />
-    <ClCompile Include="..\..\classes\spell.cpp" />
-    <ClCompile Include="..\..\classes\talking.cpp" />
-    <ClCompile Include="..\..\classes\terrain.cpp" />
-    <ClCompile Include="..\..\classes\town.cpp" />
-    <ClCompile Include="..\..\classes\universe.cpp" />
-    <ClCompile Include="..\..\classes\vehicle.cpp" />
-    <ClCompile Include="..\..\dialogxml\3choice.cpp" />
-    <ClCompile Include="..\..\dialogxml\basicbtns.cpp" />
-    <ClCompile Include="..\..\dialogxml\button.cpp" />
-    <ClCompile Include="..\..\dialogxml\choicedlog.cpp" />
-    <ClCompile Include="..\..\dialogxml\control.cpp" />
-    <ClCompile Include="..\..\dialogxml\dialog.cpp" />
-    <ClCompile Include="..\..\dialogxml\field.cpp" />
-    <ClCompile Include="..\..\dialogxml\message.cpp" />
-    <ClCompile Include="..\..\dialogxml\pict.cpp" />
-    <ClCompile Include="..\..\dialogxml\pictchoice.cpp" />
-    <ClCompile Include="..\..\dialogxml\scrollbar.cpp" />
-    <ClCompile Include="..\..\dialogxml\scrollpane.cpp" />
-    <ClCompile Include="..\..\dialogxml\stack.cpp" />
-    <ClCompile Include="..\..\dialogxml\strchoice.cpp" />
-    <ClCompile Include="..\..\dialogxml\strdlog.cpp" />
-    <ClCompile Include="..\..\dialogxml\xml-parser\ticpp.cpp" />
-    <ClCompile Include="..\..\dialogxml\xml-parser\tinystr.cpp" />
-    <ClCompile Include="..\..\dialogxml\xml-parser\tinyxml.cpp" />
-    <ClCompile Include="..\..\dialogxml\xml-parser\tinyprint.cpp" />
-    <ClCompile Include="..\..\dialogxml\xml-parser\tinyxmlerror.cpp" />
-    <ClCompile Include="..\..\dialogxml\xml-parser\tinyxmlparser.cpp" />
-    <ClCompile Include="..\..\tools\cursors.win.cpp" />
-    <ClCompile Include="..\..\tools\debugout.win.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\tools\fileio.cpp" />
-    <ClCompile Include="..\..\tools\fileio_party.cpp" />
-    <ClCompile Include="..\..\tools\fileio_scen.cpp" />
-    <ClCompile Include="..\..\tools\graphtool.cpp" />
-    <ClCompile Include="..\..\tools\gzstream\gzstream.cpp" />
-    <ClCompile Include="..\..\tools\map_parse.cpp" />
-    <ClCompile Include="..\..\tools\mathutil.cpp" />
-    <ClCompile Include="..\..\tools\menu_accel.win.cpp" />
-    <ClCompile Include="..\..\tools\porting.cpp" />
-    <ClCompile Include="..\..\tools\prefs.win.cpp" />
-    <ClCompile Include="..\..\tools\resmgr\restypes.cpp" />
-    <ClCompile Include="..\..\tools\soundtool.cpp" />
-    <ClCompile Include="..\..\tools\specials_parse.cpp" />
-    <ClCompile Include="..\..\tools\tarball.cpp" />
-    <ClCompile Include="..\..\tools\undo.cpp" />
-    <ClCompile Include="..\..\tools\view_dialogs.cpp" />
-    <ClCompile Include="..\..\tools\winutil.win.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <Xml Include="..\..\..\rsrc\dialogs\1str-lg.xml" />
     <Xml Include="..\..\..\rsrc\dialogs\1str-title-lg.xml" />
     <Xml Include="..\..\..\rsrc\dialogs\1str-title.xml" />
@@ -315,6 +191,159 @@
     <Xml Include="..\..\..\rsrc\dialogs\view-sign.xml" />
     <Xml Include="..\..\..\rsrc\dialogs\welcome.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\dialogxml\dialogs\3choice.cpp" />
+    <ClCompile Include="..\..\dialogxml\dialogs\choicedlog.cpp" />
+    <ClCompile Include="..\..\dialogxml\dialogs\dialog.cpp" />
+    <ClCompile Include="..\..\dialogxml\dialogs\pictchoice.cpp" />
+    <ClCompile Include="..\..\dialogxml\dialogs\strchoice.cpp" />
+    <ClCompile Include="..\..\dialogxml\dialogs\strdlog.cpp" />
+    <ClCompile Include="..\..\dialogxml\widgets\basicbtns.cpp" />
+    <ClCompile Include="..\..\dialogxml\widgets\button.cpp" />
+    <ClCompile Include="..\..\dialogxml\widgets\control.cpp" />
+    <ClCompile Include="..\..\dialogxml\widgets\field.cpp" />
+    <ClCompile Include="..\..\dialogxml\widgets\message.cpp" />
+    <ClCompile Include="..\..\dialogxml\widgets\pict.cpp" />
+    <ClCompile Include="..\..\dialogxml\widgets\scrollbar.cpp" />
+    <ClCompile Include="..\..\dialogxml\widgets\scrollpane.cpp" />
+    <ClCompile Include="..\..\dialogxml\widgets\stack.cpp" />
+    <ClCompile Include="..\..\fileio\debugout.win.cpp" />
+    <ClCompile Include="..\..\fileio\estreams.cpp" />
+    <ClCompile Include="..\..\fileio\fileio.cpp" />
+    <ClCompile Include="..\..\fileio\fileio_party.cpp" />
+    <ClCompile Include="..\..\fileio\fileio_scen.cpp" />
+    <ClCompile Include="..\..\fileio\gzstream\gzstream.cpp" />
+    <ClCompile Include="..\..\fileio\map_parse.cpp" />
+    <ClCompile Include="..\..\fileio\resmgr\restypes.cpp" />
+    <ClCompile Include="..\..\fileio\special_parse.cpp" />
+    <ClCompile Include="..\..\fileio\tarball.cpp" />
+    <ClCompile Include="..\..\fileio\xml-parser\ticpp.cpp" />
+    <ClCompile Include="..\..\fileio\xml-parser\tinyprint.cpp" />
+    <ClCompile Include="..\..\fileio\xml-parser\tinystr.cpp" />
+    <ClCompile Include="..\..\fileio\xml-parser\tinyxml.cpp" />
+    <ClCompile Include="..\..\fileio\xml-parser\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\fileio\xml-parser\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\gfx\gfxsheets.cpp" />
+    <ClCompile Include="..\..\gfx\render_image.cpp" />
+    <ClCompile Include="..\..\gfx\render_shapes.cpp" />
+    <ClCompile Include="..\..\gfx\render_text.cpp" />
+    <ClCompile Include="..\..\gfx\tiling.cpp" />
+    <ClCompile Include="..\..\location.cpp" />
+    <ClCompile Include="..\..\mathutil.cpp" />
+    <ClCompile Include="..\..\oldstructs.cpp" />
+    <ClCompile Include="..\..\porting.cpp" />
+    <ClCompile Include="..\..\scenario\item.cpp" />
+    <ClCompile Include="..\..\scenario\monster.cpp" />
+    <ClCompile Include="..\..\scenario\outdoors.cpp" />
+    <ClCompile Include="..\..\scenario\scenario.cpp" />
+    <ClCompile Include="..\..\scenario\shop.cpp" />
+    <ClCompile Include="..\..\scenario\special.cpp" />
+    <ClCompile Include="..\..\scenario\talking.cpp" />
+    <ClCompile Include="..\..\scenario\terrain.cpp" />
+    <ClCompile Include="..\..\scenario\town.cpp" />
+    <ClCompile Include="..\..\scenario\vehicle.cpp" />
+    <ClCompile Include="..\..\sounds.cpp" />
+    <ClCompile Include="..\..\spell.cpp" />
+    <ClCompile Include="..\..\tools\cursors.win.cpp" />
+    <ClCompile Include="..\..\tools\menu_accel.win.cpp" />
+    <ClCompile Include="..\..\tools\prefs.win.cpp" />
+    <ClCompile Include="..\..\tools\undo.cpp" />
+    <ClCompile Include="..\..\tools\winutil.win.cpp" />
+    <ClCompile Include="..\..\universe\creature.cpp" />
+    <ClCompile Include="..\..\universe\living.cpp" />
+    <ClCompile Include="..\..\universe\party.cpp" />
+    <ClCompile Include="..\..\universe\pc.cpp" />
+    <ClCompile Include="..\..\universe\population.cpp" />
+    <ClCompile Include="..\..\universe\universe.cpp" />
+    <ClCompile Include="..\..\utility.cpp" />
+    <ClCompile Include="..\..\view_dialogs.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\alchemy.hpp" />
+    <ClInclude Include="..\..\damage.hpp" />
+    <ClInclude Include="..\..\dialogxml\dialogs\3choice.hpp" />
+    <ClInclude Include="..\..\dialogxml\dialogs\choicedlog.hpp" />
+    <ClInclude Include="..\..\dialogxml\dialogs\dialog.hpp" />
+    <ClInclude Include="..\..\dialogxml\dialogs\dialog.keys.hpp" />
+    <ClInclude Include="..\..\dialogxml\dialogs\dlogevt.hpp" />
+    <ClInclude Include="..\..\dialogxml\dialogs\pictchoice.hpp" />
+    <ClInclude Include="..\..\dialogxml\dialogs\strchoice.hpp" />
+    <ClInclude Include="..\..\dialogxml\dialogs\strdlog.hpp" />
+    <ClInclude Include="..\..\dialogxml\widgets\button.hpp" />
+    <ClInclude Include="..\..\dialogxml\widgets\control.hpp" />
+    <ClInclude Include="..\..\dialogxml\widgets\field.hpp" />
+    <ClInclude Include="..\..\dialogxml\widgets\message.hpp" />
+    <ClInclude Include="..\..\dialogxml\widgets\pict.hpp" />
+    <ClInclude Include="..\..\dialogxml\widgets\pictypes.hpp" />
+    <ClInclude Include="..\..\dialogxml\widgets\scrollbar.hpp" />
+    <ClInclude Include="..\..\dialogxml\widgets\scrollpane.hpp" />
+    <ClInclude Include="..\..\dialogxml\widgets\stack.hpp" />
+    <ClInclude Include="..\..\fields.hpp" />
+    <ClInclude Include="..\..\fileio\fileio.hpp" />
+    <ClInclude Include="..\..\fileio\gzstream\gzstream.h" />
+    <ClInclude Include="..\..\fileio\map_parse.hpp" />
+    <ClInclude Include="..\..\fileio\resmgr\resmgr.hpp" />
+    <ClInclude Include="..\..\fileio\resmgr\res_cursor.hpp" />
+    <ClInclude Include="..\..\fileio\resmgr\res_font.hpp" />
+    <ClInclude Include="..\..\fileio\resmgr\res_image.hpp" />
+    <ClInclude Include="..\..\fileio\resmgr\res_sound.hpp" />
+    <ClInclude Include="..\..\fileio\resmgr\res_strings.hpp" />
+    <ClInclude Include="..\..\fileio\special_parse.hpp" />
+    <ClInclude Include="..\..\fileio\tarball.hpp" />
+    <ClInclude Include="..\..\fileio\xml-parser\ticpp.h" />
+    <ClInclude Include="..\..\fileio\xml-parser\ticpprc.h" />
+    <ClInclude Include="..\..\fileio\xml-parser\tinyprint.h" />
+    <ClInclude Include="..\..\fileio\xml-parser\tinystr.h" />
+    <ClInclude Include="..\..\fileio\xml-parser\tinyxml.h" />
+    <ClInclude Include="..\..\gfx\gfxsheets.hpp" />
+    <ClInclude Include="..\..\gfx\render_image.hpp" />
+    <ClInclude Include="..\..\gfx\render_shapes.hpp" />
+    <ClInclude Include="..\..\gfx\render_text.hpp" />
+    <ClInclude Include="..\..\gfx\tiling.hpp" />
+    <ClInclude Include="..\..\global.hpp" />
+    <ClInclude Include="..\..\location.hpp" />
+    <ClInclude Include="..\..\mathutil.hpp" />
+    <ClInclude Include="..\..\oldstructs.hpp" />
+    <ClInclude Include="..\..\porting.hpp" />
+    <ClInclude Include="..\..\race.hpp" />
+    <ClInclude Include="..\..\scenario\area.hpp" />
+    <ClInclude Include="..\..\scenario\item.hpp" />
+    <ClInclude Include="..\..\scenario\item_abilities.hpp" />
+    <ClInclude Include="..\..\scenario\item_variety.hpp" />
+    <ClInclude Include="..\..\scenario\monster.hpp" />
+    <ClInclude Include="..\..\scenario\monster_abilities.hpp" />
+    <ClInclude Include="..\..\scenario\outdoors.hpp" />
+    <ClInclude Include="..\..\scenario\quest.hpp" />
+    <ClInclude Include="..\..\scenario\scenario.hpp" />
+    <ClInclude Include="..\..\scenario\shop.hpp" />
+    <ClInclude Include="..\..\scenario\special.hpp" />
+    <ClInclude Include="..\..\scenario\talking.hpp" />
+    <ClInclude Include="..\..\scenario\terrain.hpp" />
+    <ClInclude Include="..\..\scenario\terrain_abilities.hpp" />
+    <ClInclude Include="..\..\scenario\town.hpp" />
+    <ClInclude Include="..\..\scenario\vehicle.hpp" />
+    <ClInclude Include="..\..\skills_traits.hpp" />
+    <ClInclude Include="..\..\sounds.hpp" />
+    <ClInclude Include="..\..\spell.hpp" />
+    <ClInclude Include="..\..\tools\cursors.hpp" />
+    <ClInclude Include="..\..\tools\gitrev.hpp" />
+    <ClInclude Include="..\..\tools\menu_accel.win.hpp" />
+    <ClInclude Include="..\..\tools\prefs.hpp" />
+    <ClInclude Include="..\..\tools\undo.hpp" />
+    <ClInclude Include="..\..\tools\vector2d.hpp" />
+    <ClInclude Include="..\..\tools\winutil.hpp" />
+    <ClInclude Include="..\..\universe\creature.hpp" />
+    <ClInclude Include="..\..\universe\living.hpp" />
+    <ClInclude Include="..\..\universe\party.hpp" />
+    <ClInclude Include="..\..\universe\pc.hpp" />
+    <ClInclude Include="..\..\universe\population.hpp" />
+    <ClInclude Include="..\..\universe\universe.hpp" />
+    <ClInclude Include="..\..\utility.hpp" />
+    <ClInclude Include="..\..\view_dialogs.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\scenario\town_import.tpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1347FE79-73BD-4176-9280-0FE39E3534E2}</ProjectGuid>
     <RootNamespace>Common</RootNamespace>
@@ -376,10 +405,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;TIXML_USE_TICPP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\tools\resmgr;..\..\tools\gzstream;..\..\tools;..\..\dialogxml\xml-parser;..\..\dialogxml;..\..\classes;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\universe;..\..\tools;..\..\scenario;..\..\gfx;..\..\fileio\resmgr;..\..\fileio\xml-parser;..\..\fileio\gzstream;..\..\fileio;..\..\dialogxml\widgets;..\..\dialogxml\dialogs;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
       <DisableSpecificWarnings>4800;4290;4244;4996;4018</DisableSpecificWarnings>
+      <ForcedIncludeFiles>global.hpp</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
