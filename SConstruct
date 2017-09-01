@@ -5,7 +5,7 @@ import subprocess
 
 platform = ARGUMENTS.get('OS', Platform())
 toolset = ARGUMENTS.get('toolset', 'default')
-sixty_four = ARGUMENTS.get('64bit', false)
+sixty_four = ARGUMENTS.get('64bit', False)
 arch = 'x86_64' if sixty_four else 'x86'
 
 if str(platform) not in ("darwin", "win32"):
