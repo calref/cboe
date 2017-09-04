@@ -1139,6 +1139,11 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		if(dynamic_cast<cLed&>(me["resethelp"]).getState() == led_red) {
 			reset_help = true;
 		}
+		cLed& ui_scale = dynamic_cast<cLed&>(me["scaleui"]);
+		if(ui_scale.getState() == led_off)
+			set_pref("UIScale", 1.0);
+		else if(ui_scale.getState() == led_red)
+			set_pref("UIScale", 2.0);
 	}
 	save_prefs(reset_help);
 	return true;
@@ -1202,12 +1207,15 @@ void pick_preferences() {
 			break;
 	}
 	
+	float ui_scale = get_float_pref("UIScale", 1.0);
+	dynamic_cast<cLed&>(prefsDlog["scaleui"]).setState(ui_scale == 1.0 ? led_off : (ui_scale == 2.0 ? led_red : led_green));
+	
 	void (*give_help)(short,short,cDialog&) = ::give_help;
 	
 	int store_display_mode = get_int_pref("DisplayMode");
 	prefsDlog.run(std::bind(give_help, 55, 0, std::ref(prefsDlog)));
 	
-	if(get_int_pref("DisplayMode") != store_display_mode)
+	if(get_int_pref("DisplayMode") != store_display_mode || get_float_pref("UIScale") != ui_scale)
 		changed_display_mode = true;
 }
 

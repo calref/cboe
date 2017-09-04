@@ -35,6 +35,17 @@ int get_int_pref(std::string keypath, int fallback) {
 	return fallback;
 }
 
+void set_pref(std::string keypath, double value) {
+	prefsDirty = true;
+	prefs[keypath] = value;
+}
+
+double get_float_pref(std::string keypath, double fallback) {
+	if(prefs.find(keypath) == prefs.end()) return fallback;
+	if(prefs[keypath].type() == typeid(double)) return boost::any_cast<double>(prefs[keypath]);
+	return fallback;
+}
+
 void append_iarray_pref(std::string keypath, int value) {
 	prefsDirty = true;
 	if(prefs.find(keypath) == prefs.end() || prefs[keypath].type() != typeid(iarray))

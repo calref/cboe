@@ -37,6 +37,16 @@ int get_int_pref(std::string keypath, int fallback) {
 	return fallback;
 }
 
+void set_pref(std::string keypath, double value) {
+	[[NSUserDefaults standardUserDefaults] setDouble: value forKey: convertKey(keypath)];
+}
+
+double get_float_pref(std::string keypath, double fallback) {
+	id val = [[NSUserDefaults standardUserDefaults] objectForKey: convertKey(keypath)];
+	if([val isKindOfClass: [NSNumber class]]) return [val doubleValue];
+	return fallback;
+}
+
 void append_iarray_pref(std::string keypath, int value) {
 	NSString* key = convertKey(keypath);
 	NSArray* list = [[NSUserDefaults standardUserDefaults] arrayForKey: key];

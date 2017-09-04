@@ -131,7 +131,9 @@ void adjust_window_mode() {
 	hideMenuBar();
 	int menubarHeight = getMenubarHeight();
 	bool firstTime = !mainPtr.isOpen();
-	float width = 605, height = 430;
+	float ui_scale = get_float_pref("UIScale", 1.0);
+	if(ui_scale < 0.1) ui_scale = 1.0;
+	float width = 605 * ui_scale, height = 430 * ui_scale;
 	location ul;
 	
 	// TODO: Make display_mode an enum
@@ -165,8 +167,8 @@ void adjust_window_mode() {
 	sf::FloatRect mainPort;
 	mainPort.left = float(ul.x) / windRect.width();
 	mainPort.top = float(ul.y) / windRect.height();
-	mainPort.width = width / windRect.width();
-	mainPort.height = height / windRect.height();
+	mainPort.width = ui_scale * width / windRect.width();
+	mainPort.height = ui_scale * height / windRect.height();
 	mainView.setViewport(mainPort);
 	
 #ifndef __APPLE__ // This overrides Dock icon on OSX, which isn't what we want at all

@@ -39,6 +39,8 @@
 	<led name='easier' top='389' left='53' width='352'>Make game easier (monsters much weaker)</led>
 	<led name='lesswm' top='409' left='53' width='340'>Fewer wandering monsters</led>
 	<led name='skipsplash' top='429' left='53' width='340'>Skip splash screen on startup</led>
-	<button name='okay' type='regular' top='446' left='354'>OK</button>
-	<button name='cancel' type='regular' def-key='esc' top='446' left='281'>Cancel</button>
+	<led name='scaleui' top='449' left='53' width='340'>Apply UI scaling</led>
+	
+	<button name='okay' type='regular' top='466' left='354'>OK</button>
+	<button name='cancel' type='regular' def-key='esc' top='466' left='281'>Cancel</button>
 </dialog>
