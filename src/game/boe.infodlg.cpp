@@ -649,9 +649,7 @@ static void give_help(short help1,short help2,cDialog* parent) {
 		help_forced = true;
 		help1 -= 200;
 	}
-	if(!get_bool_pref("ShowInstantHelp", true) && !help_forced)
-		return;
-	if(get_iarray_pref_contains("ReceivedHelp", help1))
+	if(!help_forced && (!get_bool_pref("ShowInstantHelp", true) || get_iarray_pref_contains("ReceivedHelp", help1)))
 		return;
 	append_iarray_pref("ReceivedHelp", help1);
 	append_iarray_pref("ReceivedHelp", help2);
