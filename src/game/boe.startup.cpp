@@ -29,10 +29,10 @@ using std::vector;
 extern bool party_in_memory;
 extern long register_flag;
 extern sf::RenderWindow mainPtr;
-extern location ul;
 extern std::vector<scen_header_type> scen_headers;
 extern cUniverse univ;
 extern eGameMode overall_mode;
+extern sf::View mainView;
 
 rectangle startup_button[6];
 
@@ -42,8 +42,7 @@ bool handle_startup_press(location the_point) {
 	std::string scen_name;
 	bool force_party = false;
 	
-	the_point.x -= ul.x;
-	the_point.y -= ul.y;
+	the_point = mainPtr.mapPixelToCoords(the_point, mainView);
 	
 	for(short i = 0; i < 5; i++)
 		if(the_point.in(startup_button[i])) {

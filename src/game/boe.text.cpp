@@ -64,7 +64,6 @@ extern sf::RenderTexture pc_stats_gworld, item_stats_gworld, text_area_gworld;
 extern sf::RenderTexture terrain_screen_gworld;
 
 // game globals
-extern location ul;
 extern rectangle item_buttons[8][6];
 // name, use, give, drip, info, sell/id
 extern rectangle pc_buttons[6][5];
@@ -599,23 +598,13 @@ short first_active_pc() {
 
 void refresh_stat_areas(short mode) {
 	sf::BlendMode x;
-	rectangle dest_rect,parts_of_area_to_draw[3] = {{0,0,17,271},{16,0,123,256},{123,0,144,271}};
+	extern rectangle win_to_rects[6];
 	
-	dest_rect = rectangle(pc_stats_gworld);
-	rectangle oldRect = dest_rect;
-	dest_rect.offset(PC_WIN_UL_X,PC_WIN_UL_Y);
 	if(mode == 1) x = sf::BlendAdd;
 	else x = sf::BlendNone;
-	rect_draw_some_item (pc_stats_gworld.getTexture(), oldRect, dest_rect,ul, x);
-	for(short i = 0; i < 3; i++) {
-		dest_rect = parts_of_area_to_draw[i];
-		dest_rect.offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
-		rect_draw_some_item(item_stats_gworld.getTexture(), parts_of_area_to_draw[i], dest_rect,ul, x);
-	}
-	dest_rect = rectangle(text_area_gworld);
-	oldRect = dest_rect;
-	dest_rect.offset(TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
-	rect_draw_some_item(text_area_gworld.getTexture(),oldRect, dest_rect,ul, x);
+	rect_draw_some_item(pc_stats_gworld.getTexture(), rectangle(pc_stats_gworld), mainPtr, win_to_rects[WINRECT_PCSTATS], x);
+	rect_draw_some_item(item_stats_gworld.getTexture(), rectangle(item_stats_gworld), mainPtr, win_to_rects[WINRECT_INVEN], x);
+	rect_draw_some_item(text_area_gworld.getTexture(), rectangle(text_area_gworld), mainPtr, win_to_rects[WINRECT_TRANSCRIPT], x);
 }
 
 // get job info gone
@@ -1132,7 +1121,7 @@ void Draw_Some_Item (sf::Texture& src_gworld, rectangle src_rect, sf::RenderTarg
 		return;
 	
 	destrec = coord_to_rect(target.x,target.y);
-	if(main_win == 1) destrec.offset(ul.x + 5,ul.y + 5);
+	if(main_win == 1) destrec.offset(5,5);
 	
 	if(main_win == 0) {
 		if(masked == 1)

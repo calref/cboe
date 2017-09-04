@@ -17,8 +17,6 @@
 
 sf::Shader maskShader;
 extern fs::path progDir;
-// TODO: Shouldn't need this
-extern sf::RenderWindow mainPtr;
 
 void init_shaders() {
 	fs::path shaderPath = progDir/"data"/"shaders";
@@ -88,11 +86,6 @@ void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::Re
 	yScale /= src_rect.height();
 	tile.setScale(xScale, yScale);
 	targ_gworld.draw(tile, mode);
-}
-
-void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,rectangle targ_rect,location offset, sf::BlendMode mode) {
-	targ_rect.offset(offset);
-	rect_draw_some_item(src_gworld,src_rect,mainPtr,targ_rect,mode);
 }
 
 void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,const sf::Texture& mask_gworld,sf::RenderTarget& targ_gworld,rectangle targ_rect) {

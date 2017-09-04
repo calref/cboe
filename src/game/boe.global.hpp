@@ -11,13 +11,6 @@
 #define ASB	add_string_to_buf
 #define	PSD	univ.party.stuff_done
 
-const int PC_WIN_UL_X = 291;
-const int PC_WIN_UL_Y = 5;
-const int ITEM_WIN_UL_X = 291;
-const int ITEM_WIN_UL_Y = 130;
-const int TEXT_WIN_UL_X = 291;
-const int TEXT_WIN_UL_Y = 283;
-
 const int NUM_MONST_G = 173;
 const int NUM_TER_G = 251;
 const int NUM_ITEM_G = 120;

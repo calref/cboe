@@ -146,6 +146,7 @@ bool cTextField::handleClick(location clickLoc) {
 		} else if(e.type == sf::Event::MouseMoved){
 			restore_cursor();
 			location newLoc(e.mouseMove.x, e.mouseMove.y);
+			newLoc = inWindow->mapPixelToCoords(newLoc);
 			set_ip(newLoc, &cTextField::selectionPoint);
 			if(is_double) {
 				if(selectionPoint > initial_ip) {

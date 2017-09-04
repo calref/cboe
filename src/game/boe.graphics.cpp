@@ -42,7 +42,6 @@ extern bool flushingInput;
 extern bool cartoon_happening, fog_lifted;
 extern short anim_step;
 extern effect_pat_type current_pat;
-extern location ul;
 extern location center;
 extern short which_combat_type;
 extern bool monsters_going,boom_anim_active;
@@ -68,13 +67,14 @@ extern std::string save_talk_str1, save_talk_str2;
 
 rectangle		menuBarRect;
 Region originalGrayRgn, newGrayRgn, underBarRgn;
+sf::View mainView;
 
 long anim_ticks = 0;
 
 // 0 - terrain   1 - buttons   2 - pc stats
 // 3 - item stats   4 - text bar   5 - text area (not right)
 rectangle win_from_rects[6] = {{0,0,350,278},{0,0,37,258},{0,0,115,288},{0,0,143,288},{0,0,21,279},{0,0,0,288}};
-rectangle win_to_rects[6] = {{5,5,356,284},{383,5,421,271},{0,0,116,271},{0,0,144,271},{358,5,379,284},{0,0,138,256}};
+rectangle win_to_rects[6] = {{7,19,358,298},{385,19,423,285},{7,305,123,576},{132,305,276,576},{360,19,381,298},{285,305,423,561}};
 
 // 0 - title  1 - button  2 - credits  3 - base button
 rectangle startup_from[4] = {{0,0,274,602},{274,0,322,301},{0,301,67,579},{274,301,314,341}};
@@ -125,47 +125,61 @@ location ok_space[4] = {loc(),loc(),loc(),loc()};
 sf::Image hold_pict;
 
 void adjust_window_mode() {
-	sf::FloatRect r;
 	sf::ContextSettings winSettings;
 	winSettings.stencilBits = 1;
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 	hideMenuBar();
 	int menubarHeight = getMenubarHeight();
 	bool firstTime = !mainPtr.isOpen();
+	float width = 605, height = 430;
+	location ul;
 	
 	// TODO: Make display_mode an enum
 	// 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
-	if(get_int_pref("DisplayMode") == 5) {
-		ul.x = 14; ul.y = 2;
-		int height = 430 + menubarHeight;
-		mainPtr.create(sf::VideoMode(605, height, 32), "Blades of Exile", sf::Style::Titlebar | sf::Style::Close, winSettings);
-		mainPtr.setPosition({static_cast<int>((desktop.width - 605) / 2), static_cast<int>((desktop.height - height) / 2)});
-		r = rectangle(mainPtr);
-	}
-	else {
+	int mode = get_int_pref("DisplayMode");
+	if(mode == 5) {
+		int winHeight = height + menubarHeight;
+		mainPtr.create(sf::VideoMode(width, winHeight, 32), "Blades of Exile", sf::Style::Titlebar | sf::Style::Close, winSettings);
+		mainPtr.setPosition({static_cast<int>((desktop.width - width) / 2), static_cast<int>((desktop.height - height) / 2)});
+	} else {
 		mainPtr.create(desktop, "Blades of Exile", sf::Style::None, winSettings);
 		mainPtr.setPosition({0,0});
-		rectangle windRect(mainPtr);
-		switch(get_int_pref("DisplayMode")) {
-			case 0: ul.x = (windRect.right - 560) / 2; ul.y = (windRect.bottom - 422) / 2 + 14; break;
-			case 1:	ul.x = 10; ul.y = 28; break;
-			case 2: ul.x = windRect.right - 570 - 6; ul.y = 28;	break; // was 560. not 570
-			case 3: ul.x = 10; ul.y = windRect.bottom - 422 - 6; break;
-			case 4: ul.x = windRect.right - 570 - 6; ul.y = windRect.bottom - 422 - 6; break;
-		}
-		r = windRect;
 	}
+	
+	rectangle windRect(mainPtr);
+	if(mode == 0) {
+		ul.x = (windRect.right - width) / 2;
+		ul.y = (windRect.bottom - height) / 2;
+	} else if(mode < 5) {
+		if(mode == 1 || mode == 3)
+			ul.x = 10;
+		else ul.x = windRect.right - width - 10;
+		if(mode == 1 || mode == 2)
+			ul.y = 28 + menubarHeight;
+		else ul.y = windRect.bottom - height - 28;
+	}
+	
+	// Initialize the viewport for the game UI
+	mainView.setSize(width, height);
+	mainView.setCenter(/*ul.x +*/ width / 2, /*ul.y +*/ height / 2);
+	sf::FloatRect mainPort;
+	mainPort.left = float(ul.x) / windRect.width();
+	mainPort.top = float(ul.y) / windRect.height();
+	mainPort.width = width / windRect.width();
+	mainPort.height = height / windRect.height();
+	mainView.setViewport(mainPort);
+	
 #ifndef __APPLE__ // This overrides Dock icon on OSX, which isn't what we want at all
 	ImageRsrc& icon = *ResMgr::get<ImageRsrc>("icon");
 	mainPtr.setIcon(icon.getSize().x, icon.getSize().y, icon.copyToImage().getPixelsPtr());
 #endif
 	if(!firstTime) redraw_screen(REFRESH_NONE);
 	if(text_sbar) {
-		text_sbar->relocate({ul.x + 546,ul.y + 283});
-		item_sbar->relocate({ul.x + 546,ul.y + 146});
-		shop_sbar->relocate({ul.x + 258,ul.y + 67});
-		done_btn->relocate({ul.x + 217,ul.y + 393});
-		help_btn->relocate({ul.x + 259,ul.y + 10});
+		text_sbar->relocate({560,285});
+		item_sbar->relocate({560,148});
+		shop_sbar->relocate({272,69});
+		done_btn->relocate({231,395});
+		help_btn->relocate({273,12});
 	}
 	init_menubar();
 	showMenuBar();
@@ -179,19 +193,11 @@ void init_startup() {
 }
 
 void draw_startup(short but_type) {
-	rectangle to_rect;
-	rectangle r1 = {-1000,-1000,5,1000},r2 = {-1000,-1000,1000,5},r3 = {418,-1000,2000,1000},
-	r4 = {-1000,579,1000,2500};
-	
 	sf::Texture& startup_gworld = *ResMgr::get<ImageRsrc>("startup");
-	to_rect = startup_from[0];
-	to_rect.offset(-13,5);
-	rect_draw_some_item(startup_gworld,startup_from[0],to_rect,ul);
-	to_rect = startup_top;
-	to_rect.offset(ul);
+	rect_draw_some_item(startup_gworld,startup_from[0],mainPtr,startup_top);
 	
 	for(short i = 0; i < 5; i++) {
-		rect_draw_some_item(startup_gworld,startup_from[1],startup_button[i],ul);
+		rect_draw_some_item(startup_gworld,startup_from[1],mainPtr,startup_button[i]);
 		draw_start_button(i,but_type);
 	}
 	draw_startup_anim(false);
@@ -207,9 +213,9 @@ void draw_startup_anim(bool advance) {
 	anim_from = anim_to;
 	anim_from.offset(-1,-4 + startup_anim_pos);
 	if(advance) startup_anim_pos = (startup_anim_pos + 1) % 542;
-	rect_draw_some_item(*ResMgr::get<ImageRsrc>("startbut"),anim_size,startup_button[5],ul);
+	rect_draw_some_item(*ResMgr::get<ImageRsrc>("startbut"),anim_size,mainPtr,startup_button[5]);
 	anim_to.offset(startup_button[5].left, startup_button[5].top);
-	rect_draw_some_item(*ResMgr::get<ImageRsrc>("startanim"),anim_from,anim_to,ul,sf::BlendAlpha);
+	rect_draw_some_item(*ResMgr::get<ImageRsrc>("startanim"),anim_from,mainPtr,anim_to,sf::BlendAlpha);
 }
 
 void draw_startup_stats() {
@@ -226,22 +232,24 @@ void draw_startup_stats() {
 	
 	if(!party_in_memory) {
 		style.pointSize = 20;
-		to_rect.offset(175,40);
-		win_draw_string(mainPtr,to_rect,"No Party in Memory",eTextMode::WRAP,style,ul);
+		to_rect.offset(193,40);
+		win_draw_string(mainPtr,to_rect,"No Party in Memory",eTextMode::WRAP,style);
 	} else {
 		frame_rect = startup_top;
 		frame_rect.inset(50,50);
 		frame_rect.top += 30;
-		frame_rect.offset(ul.x - 9,ul.y + 10);
+		frame_rect.left += 18;
+		frame_rect.offset(-9,10);
 		// TODO: Maybe I should rename that variable
 		::frame_rect(mainPtr, frame_rect, sf::Color::White);
 		
-		to_rect.offset(203,37);
-		win_draw_string(mainPtr,to_rect,"Your party:",eTextMode::WRAP,style,ul);
+		to_rect.offset(221,37);
+		win_draw_string(mainPtr,to_rect,"Your party:",eTextMode::WRAP,style);
 		style.pointSize = 12;
 		style.font = FONT_BOLD;
 		for(short i = 0; i < 6; i++) {
 			pc_rect = startup_top;
+			pc_rect.left += 18;
 			pc_rect.right = pc_rect.left + 300;
 			pc_rect.bottom = pc_rect.top + 79;
 			pc_rect.offset(60 + 232 * (i / 3) - 9,95 + 45 * (i % 3));
@@ -253,7 +261,7 @@ void draw_startup_stats() {
 				if(pic >= 1000) {
 					sf::Texture* gw;
 					graf_pos_ref(gw, from_rect) = spec_scen_g.find_graphic(pic % 1000, pic >= 10000);
-					rect_draw_some_item(*gw,from_rect,to_rect,ul,sf::BlendAlpha);
+					rect_draw_some_item(*gw,from_rect,mainPtr,to_rect,sf::BlendAlpha);
 				} else if(pic >= 100) {
 					pic -= 100;
 					// Note that we assume it's a 1x1 graphic.
@@ -261,16 +269,16 @@ void draw_startup_stats() {
 					from_rect = get_monster_template_rect(pic, 0, 0);
 					int which_sheet = m_pic_index[pic].i / 20;
 					sf::Texture& monst_gworld = *ResMgr::get<ImageRsrc>("monst" + std::to_string(1 + which_sheet));
-					rect_draw_some_item(monst_gworld,from_rect,to_rect,ul,sf::BlendAlpha);
+					rect_draw_some_item(monst_gworld,from_rect,mainPtr,to_rect,sf::BlendAlpha);
 				} else {
 					from_rect = calc_rect(2 * (pic / 8), pic % 8);
 					sf::Texture& pc_gworld = *ResMgr::get<ImageRsrc>("pcs");
-					rect_draw_some_item(pc_gworld,from_rect,to_rect,ul,sf::BlendAlpha);
+					rect_draw_some_item(pc_gworld,from_rect,mainPtr,to_rect,sf::BlendAlpha);
 				}
 				
 				style.pointSize = 14;
 				pc_rect.offset(35,0);
-				win_draw_string(mainPtr,pc_rect,univ.party[i].name,eTextMode::WRAP,style,ul);
+				win_draw_string(mainPtr,pc_rect,univ.party[i].name,eTextMode::WRAP,style);
 				to_rect.offset(pc_rect.left + 8,pc_rect.top + 8);
 				
 			}
@@ -302,7 +310,7 @@ void draw_startup_stats() {
 						case eRace::BIRD: status += " Bird"; break;
 						default: status += " *ERROR INVALID RACE*"; break;
 					}
-					win_draw_string(mainPtr,pc_rect,status,eTextMode::WRAP,style,ul);
+					win_draw_string(mainPtr,pc_rect,status,eTextMode::WRAP,style);
 					pc_rect.offset(0,13);
 					status = "Health " + std::to_string(univ.party[i].max_health);
 					status += ", Spell pts. " + std::to_string(univ.party[i].max_sp);
@@ -324,7 +332,7 @@ void draw_startup_stats() {
 					break;
 			}
 			if(!status.empty())
-				win_draw_string(mainPtr,pc_rect,status,eTextMode::WRAP,style,ul);
+				win_draw_string(mainPtr,pc_rect,status,eTextMode::WRAP,style);
 		}
 	}
 	
@@ -338,13 +346,13 @@ void draw_startup_stats() {
 	std::string copyright = sout.str();
 	style.font = FONT_BOLD;
 	style.pointSize = 10;
-	pc_rect = startup_from[0];
+	pc_rect = startup_top;
 	pc_rect.offset(5,5);
-	pc_rect.top = pc_rect.bottom - 25;
-	pc_rect.left = pc_rect.right - string_length(copyright, style) - 45;
+	pc_rect.top = pc_rect.bottom - 30;
+	pc_rect.left = pc_rect.right - string_length(copyright, style) - 32;
 	// TODO: Should replace this with a more appropriate copyright string
 	// Windows replaced it with "That is not dead which can eternally lie..." - I don't think that's quite appropriate though.
-	win_draw_string(mainPtr, pc_rect, copyright, eTextMode::WRAP, style, ul);
+	win_draw_string(mainPtr, pc_rect, copyright, eTextMode::WRAP, style);
 }
 
 
@@ -363,7 +371,7 @@ void draw_start_button(short which_position,short which_button) {
 	to_rect.left += 4; to_rect.top += 4;
 	to_rect.right = to_rect.left + 40;
 	to_rect.bottom = to_rect.top + 40;
-	rect_draw_some_item(*ResMgr::get<ImageRsrc>("startup"),from_rect,to_rect,ul);
+	rect_draw_some_item(*ResMgr::get<ImageRsrc>("startup"),from_rect,mainPtr,to_rect);
 	
 	TextStyle style;
 	style.font = FONT_DUNGEON;
@@ -377,7 +385,7 @@ void draw_start_button(short which_position,short which_button) {
 	base_color.b += (48 * which_button);
 	style.colour = base_color;
 	style.lineHeight = 18;
-	win_draw_string(mainPtr,to_rect,button_labels[which_position],eTextMode::CENTRE,style,ul);
+	win_draw_string(mainPtr,to_rect,button_labels[which_position],eTextMode::CENTRE,style);
 }
 
 void main_button_click(int which_button) {
@@ -392,7 +400,6 @@ void main_button_click(int which_button) {
 }
 
 void arrow_button_click(rectangle button_rect) {
-	button_rect.offset(ul);
 	mainPtr.setActive();
 	clip_rect(mainPtr, button_rect);
 	// TODO: Mini-event loop so that the click doesn't happen until releasing the mouse button
@@ -450,7 +457,9 @@ void redraw_screen(int refresh) {
 	if(refresh & REFRESH_INVEN) put_item_screen(stat_window);
 	if(refresh & REFRESH_TRANS) print_buf();
 	
+	mainPtr.setView(mainPtr.getDefaultView());
 	put_background();
+	mainPtr.setView(mainView);
 	switch(overall_mode) {
 		case MODE_STARTUP:
 			draw_startup(0);
@@ -581,8 +590,7 @@ void draw_buttons(short mode) {
 			rect_draw_some_item(buttons_gworld, source_rect, button_gw, to_rect, sf::BlendAlpha);
 			to_rect.inset(-3,-3);
 		}
-		to_rect.offset(win_to_rects[1].topLeft());
-		to_rect.offset(ul);
+		to_rect.offset(win_to_rects[WINRECT_ACTBTNS].topLeft());
 		if(i == mode)
 			fill_rect(mainPtr, to_rect, sf::Color::Blue);
 		else fill_rect(mainPtr, to_rect, sf::Color::Black);
@@ -594,8 +602,7 @@ void draw_buttons(short mode) {
 	}
 	button_gw.display();
 	
-	dest_rec = win_to_rects[1];
-	dest_rec.offset(ul);
+	dest_rec = win_to_rects[WINRECT_ACTBTNS];
 	rect_draw_some_item(button_gw.getTexture(), rectangle(button_gw), mainPtr, dest_rec, sf::BlendAdd);
 }
 
@@ -642,7 +649,7 @@ void draw_text_bar() {
 
 void put_text_bar(std::string str) {
 	text_bar_gworld.setActive();
-	rect_draw_some_item(*ResMgr::get<ImageRsrc>("textbar"), win_from_rects[4], text_bar_gworld, win_from_rects[4]);
+	rect_draw_some_item(*ResMgr::get<ImageRsrc>("textbar"), win_from_rects[WINRECT_STATUS], text_bar_gworld, win_from_rects[WINRECT_STATUS]);
 	TextStyle style;
 	style.colour = sf::Color::White;
 	style.font = FONT_BOLD;
@@ -682,7 +689,7 @@ void put_text_bar(std::string str) {
 
 void refresh_text_bar() {
 	mainPtr.setActive();
-	rect_draw_some_item(text_bar_gworld.getTexture(), win_from_rects[4], win_to_rects[4],ul);
+	rect_draw_some_item(text_bar_gworld.getTexture(), win_from_rects[WINRECT_STATUS], mainPtr, win_to_rects[WINRECT_STATUS]);
 }
 
 // this is used for determinign whether to round off walkway corners
@@ -1409,10 +1416,10 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	dest_rect.offset(x_adj,y_adj);
 	dest_rect &= big_to;
 	
-	dest_rect.offset(win_to_rects[0].left,win_to_rects[0].top);
+	dest_rect.offset(win_to_rects[WINRECT_TERVIEW].topLeft());
 	
 	source_rect.offset(-store_rect.left + 28 * type,-store_rect.top);
-	rect_draw_some_item(*ResMgr::get<ImageRsrc>("booms"),source_rect,dest_rect,ul,sf::BlendAlpha);
+	rect_draw_some_item(*ResMgr::get<ImageRsrc>("booms"),source_rect,mainPtr,dest_rect,sf::BlendAlpha);
 	
 	if(damage > 0 && dest_rect.right - dest_rect.left >= 28 && dest_rect.bottom - dest_rect.top >= 36) {
 		TextStyle style;
@@ -1424,12 +1431,12 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 		std::string dam_str = std::to_string(damage);
 		style.colour = sf::Color::White;
 		text_rect.offset(-1,-1);
-		win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style,ul);
+		win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style);
 		text_rect.offset(2,2);
-		win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style,ul);
+		win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style);
 		style.colour = sf::Color::Black;
 		text_rect.offset(-1,-1);
-		win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style,ul);
+		win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style);
 	}
 	mainPtr.display();
 	bool skip_boom_delay = get_bool_pref("SkipBoomDelay");
@@ -1448,32 +1455,47 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 		frame_active_pc(center);
 }
 
+// dir = 0 - down, 1 - left, 2 - right, 3 - up
+// pos = row or column to centre the arrow in, range 0..8
+static void draw_one_pointing_arrow(int dir, int pos) {
+	rectangle from_rect = {351, 1, 359, 9};
+	from_rect.offset(9 * dir, 0);
+	
+	rectangle ter_view_rect = win_to_rects[WINRECT_TERVIEW];
+	rectangle to_rect;
+	
+	if(dir == 0 || dir == 3)
+		to_rect.left = ter_view_rect.left + 23 + pos * 28;
+	else to_rect.top = ter_view_rect.top + 23 + pos * 36;
+	if(dir == 0) to_rect.top = ter_view_rect.bottom - 10;
+	else if(dir == 1) to_rect.left = ter_view_rect.left + 2;
+	else if(dir == 2) to_rect.left = ter_view_rect.right - 10;
+	else if(dir == 3) to_rect.top = ter_view_rect.top + 2;
+	
+	to_rect.width() = to_rect.height() = 8;
+	
+	rect_draw_some_item(terrain_screen_gworld.getTexture(), from_rect, mainPtr, to_rect, sf::BlendAlpha);
+}
 
 void draw_pointing_arrows() {
-	static const rectangle sources[4] = {
-		{351,28,359,36}, // up
-		{351,10,359,18}, // left
-		{351,01,359,9}, // down
-		{351,19,359,27}  // right
-	};
-	static const rectangle dests[8] = {
-		{7,100,15,108},{7,170,15,178},{140,7,148,15},{212,7,220,15},
-		{346,100,354,108},{346,170,354,178},{140,274,148,282},{212,274,220,282}
-	};
-	
 	if(monsters_going || !scrollableModes.count(overall_mode))
 		return;
-	for(short i = 0; i < 4; i++) {
-		rect_draw_some_item(terrain_screen_gworld.getTexture(),sources[i],dests[i * 2],ul,sf::BlendAlpha);
-		rect_draw_some_item(terrain_screen_gworld.getTexture(),sources[i],dests[i * 2 + 1],ul,sf::BlendAlpha);
-	}
+	
+	draw_one_pointing_arrow(0, 3);
+	draw_one_pointing_arrow(0, 5);
+	draw_one_pointing_arrow(1, 3);
+	draw_one_pointing_arrow(1, 5);
+	draw_one_pointing_arrow(2, 3);
+	draw_one_pointing_arrow(2, 5);
+	draw_one_pointing_arrow(3, 3);
+	draw_one_pointing_arrow(3, 5);
 }
 
 void redraw_terrain() {
 	rectangle to_rect;
 	
-	to_rect = win_to_rects[0];
-	rect_draw_some_item(terrain_screen_gworld.getTexture(), win_from_rects[0], to_rect,ul);
+	to_rect = win_to_rects[WINRECT_TERVIEW];
+	rect_draw_some_item(terrain_screen_gworld.getTexture(), win_from_rects[WINRECT_TERVIEW], mainPtr, to_rect);
 	apply_light_mask(true);
 	
 	
@@ -1485,16 +1507,15 @@ void redraw_terrain() {
 
 
 void draw_targets(location center) {
-	rectangle source_rect = {74,36,85,47},dest_rect;
-	
 	if(!univ.party.is_alive())
 		return;
 	
 	sf::Texture& src_gworld = *ResMgr::get<ImageRsrc>("trim");
 	for(short i = 0; i < 8; i++)
 		if((spell_targets[i].x != 120) && (point_onscreen(center,spell_targets[i]))) {
-			dest_rect = coord_to_rect(spell_targets[i].x - center.x + 4,spell_targets[i].y - center.y + 4);
-			rect_draw_some_item(src_gworld,calc_rect(6,0),dest_rect,ul,sf::BlendAlpha);
+			rectangle dest_rect = coord_to_rect(spell_targets[i].x - center.x + 4,spell_targets[i].y - center.y + 4);
+			dest_rect.offset(win_to_rects[WINRECT_TERVIEW].topLeft());
+			rect_draw_some_item(src_gworld,calc_rect(6,0),mainPtr,dest_rect,sf::BlendAlpha);
 		}
 }
 
@@ -1509,11 +1530,11 @@ void frame_space(location where,short mode,short width,short height) {
 	where_put.x = 4 + where.x - center.x;
 	where_put.y = 4 + where.y - center.y;
 	
-	to_frame.top = 18 + where_put.y * 36;
-	to_frame.left = 18 + where_put.x * 28;
-	to_frame.bottom = 54 + where_put.y * 36 + 36 * (height - 1);
-	to_frame.right = 46 + where_put.x * 28 + 28 * (width - 1);
-	to_frame.offset(ul);
+	to_frame.top = 13 + where_put.y * 36;
+	to_frame.left = 13 + where_put.x * 28;
+	to_frame.bottom = 49 + where_put.y * 36 + 36 * (height - 1);
+	to_frame.right = 41 + where_put.x * 28 + 28 * (width - 1);
+	to_frame.offset(win_to_rects[WINRECT_TERVIEW].topLeft());
 	
 	frame_roundrect(mainPtr, to_frame, 8, (mode == 0) ? sf::Color::Red : sf::Color::Green);
 }
@@ -1529,9 +1550,12 @@ void erase_spot(short i,short j) {
 
 void draw_targeting_line(location where_curs) {
 	location which_space,store_loc;
-	rectangle redraw_rect,redraw_rect2,terrain_rect = {0,0,351,279},target_rect;
+	rectangle redraw_rect,redraw_rect2,target_rect;
 	location from_loc;
-	rectangle on_screen_terrain_area = {23, 23, 346, 274};
+	rectangle on_screen_terrain_area = win_to_rects[WINRECT_TERVIEW];
+	on_screen_terrain_area.inset(13, 13);
+	
+	where_curs = mainPtr.mapPixelToCoords(where_curs, mainView);
 	
 	if(overall_mode >= MODE_COMBAT)
 		from_loc = univ.current_pc().combat_pos;
@@ -1539,29 +1563,26 @@ void draw_targeting_line(location where_curs) {
 	if((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
 		|| ((overall_mode == MODE_TOWN_TARGET) && (current_pat.pattern[4][4] != 0))) {
 		
-		on_screen_terrain_area.offset(ul);
 		if(where_curs.in(on_screen_terrain_area)) {
 			// && (point_onscreen(center,univ.party[current_pc].combat_pos))){
-			which_space.x = center.x + (where_curs.x - 23 - ul.x) / 28 - 4;
-			which_space.y = center.y + (where_curs.y - 23 - ul.y) / 36 - 4;
+			which_space.x = center.x + (where_curs.x - 37) / 28 - 4;
+			which_space.y = center.y + (where_curs.y - 25) / 36 - 4;
 			
 			int xBound = (short) (from_loc.x - center.x + 4);
 			int yBound = (short) (from_loc.y - center.y + 4);
-			xBound = (xBound * 28) + 32 + ul.x;
-			yBound = (yBound * 36) + 36 + ul.y;
+			xBound = (xBound * 28) + 46;
+			yBound = (yBound * 36) + 38;
 			
 			if((can_see_light(from_loc,which_space,sight_obscurity) < 5)
 				&& (dist(from_loc,which_space) <= current_spell_range)) {
-			 	terrain_rect.inset(13,13);
-			 	terrain_rect.offset(5 + ul.x,5 + ul.y);
 				mainPtr.setActive();
-				clip_rect(mainPtr, terrain_rect);
+				clip_rect(mainPtr, on_screen_terrain_area);
 				draw_line(mainPtr, where_curs, location(xBound, yBound), 2, {128,128,128}, sf::BlendAdd);
 				redraw_rect.left = min(where_curs.x,xBound) - 4;
 				redraw_rect.right = max(where_curs.x,xBound) + 4;
 				redraw_rect.top = min(where_curs.y,yBound) - 4;
 				redraw_rect.bottom = max(where_curs.y,yBound) + 4;
-				redraw_rect2 = redraw_rect & terrain_rect;
+				redraw_rect2 = redraw_rect & on_screen_terrain_area;
 				
 				// Now place targeting pattern
 				for(short i = 0; i < 9; i++)
@@ -1571,9 +1592,9 @@ void draw_targeting_line(location where_curs) {
 						if((abs(store_loc.x - which_space.x) <= 4) &&
 							(abs(store_loc.y - which_space.y) <= 4) &&
 							(current_pat.pattern[store_loc.x - which_space.x + 4][store_loc.y - which_space.y + 4] != 0)) {
-							target_rect.left = 13 + 28 * i + 5 + ul.x;
+							target_rect.left = 13 + 28 * i + 19;
 							target_rect.right = target_rect.left + 28;
-							target_rect.top = 13 + 36 * j + 5 + ul.y;
+							target_rect.top = 13 + 36 * j + 7;
 							target_rect.bottom = target_rect.top + 36;
 							frame_rect(mainPtr, target_rect, sf::Color::White);
 							target_rect.inset(-5,-5);
@@ -1605,12 +1626,11 @@ void redraw_partial_terrain(rectangle redraw_rect) {
 	rectangle from_rect;
 	
 	from_rect = redraw_rect;
-	from_rect.offset(-ul.x,-ul.y);
 	
 	// as rect_draw_some_item will shift redraw_rect before drawing, we need to compensate
-	redraw_rect.offset(-ul.x + 5,-ul.y + 5);
+	redraw_rect.offset(5,5);
 	
-	rect_draw_some_item(terrain_screen_gworld.getTexture(),from_rect,redraw_rect,ul);
+	rect_draw_some_item(terrain_screen_gworld.getTexture(),from_rect,mainPtr,redraw_rect);
 	
 }
 

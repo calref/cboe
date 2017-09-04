@@ -48,7 +48,6 @@ short monsters_faces[190] = {
 	0,0,0,0,26,26,0,0,0,50,
 	23,0,0,0,0,0,0,0,23,23,
 	0,0,0,55,23,36,31,0,0,0};
-extern location ul;
 extern rectangle	windRect;
 extern long anim_ticks;
 extern tessel_ref_t bg[];
@@ -73,6 +72,7 @@ extern bool fog_lifted;
 extern const short alch_difficulty[20];
 extern const eItemAbil alch_ingred1[20];
 extern const eItemAbil alch_ingred2[20];
+extern rectangle win_to_rects[6];
 
 // Talk vars
 extern eGameMode store_pre_talk_mode;
@@ -228,7 +228,6 @@ void apply_light_mask(bool onWindow) {
 		}
 	
 	dark_mask_region.offset(5,5);
-	dark_mask_region.offset(ul);
 }
 
 void start_missile_anim() {
@@ -273,8 +272,6 @@ void add_missile(location dest,miss_num_t missile_type,short path_type,short x_a
 }
 
 void run_a_missile(location from,location fire_to,miss_num_t miss_type,short path,short sound_num,short x_adj,short y_adj,short len) {
-//	if((cartoon_happening) && (anim_step < 140))
-//		return;
 	start_missile_anim();
 	add_missile(fire_to,miss_type,path, x_adj, y_adj);
 	do_missile_anim(len,from, sound_num);
@@ -282,9 +279,6 @@ void run_a_missile(location from,location fire_to,miss_num_t miss_type,short pat
 }
 
 void run_a_boom(location boom_where,short type,short x_adj,short y_adj,short snd) {
-	
-//	if((cartoon_happening) && (anim_step < 140))
-//		return;
 	if((type < 0) || (type > 2))
 		return;
 	start_missile_anim();
@@ -338,7 +332,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	
 	short x1[30],x2[30],y1[30],y2[30]; // for path paramaterization
 	rectangle missile_place_rect[30],missile_origin_rect[30];
-	location current_terrain_ul;
+	location current_terrain_ul = win_to_rects[WINRECT_TERVIEW].topLeft();
 	
 	if(!have_missile || !boom_anim_active) {
 		boom_anim_active = false;
@@ -349,20 +343,13 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 		return m.missile_type == 0;
 	})) return;
 	
-	// initialize general data
-	// TODO: This is probably yet another relic of the Exile III demo
-	if(overall_mode == MODE_STARTUP) {
-		current_terrain_ul.x = 306;
-		current_terrain_ul.y = 5;
-	} else current_terrain_ul.x = current_terrain_ul.y = 5;
-	
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
 	to_rect = rectangle(terrain_screen_gworld);
 	to_rect.bottom -= 10; // Adjust for pointing buttons
 	rectangle oldBounds = to_rect;
 	to_rect.offset(current_terrain_ul);
-	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldBounds,to_rect,ul);
+	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldBounds,mainPtr,to_rect);
 	
 	mainPtr.setActive();
 	
@@ -411,7 +398,6 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 				temp_rect = missile_origin_base;
 				temp_rect.offset(-8 + x2[i] + (x1[i] * t) / num_steps,
 								 -8 + y2[i] + (y1[i] * t) / num_steps);
-				temp_rect.offset(ul);
 				temp_rect.offset(current_terrain_ul);
 				
 				// now adjust for different paths
@@ -461,7 +447,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	to_rect.bottom -= 10; // Adjust for pointing buttons
 	rectangle oldRect = to_rect;
 	to_rect.offset(current_terrain_ul);
-	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,to_rect,ul);
+	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,mainPtr,to_rect);
 }
 
 short get_missile_direction(location origin_point,location the_point) {
@@ -506,7 +492,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	location screen_ul;
 	
 	short cur_boom_type = 0;
-	location current_terrain_ul;
+	location current_terrain_ul = win_to_rects[WINRECT_TERVIEW].topLeft();;
 	short boom_type_sound[6] = {5,10,53,53,53,75};
 	
 	if(!have_boom || !boom_anim_active) {
@@ -518,13 +504,6 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 		return b.boom_type == 0;
 	})) return;
 	
-	// initialize general data
-	if(overall_mode == MODE_STARTUP) {
-		// TODO: I think this is a relic of the "demo" on the main screen of Exile III
-		current_terrain_ul.x = 306;
-		current_terrain_ul.y = 5;
-	} else current_terrain_ul.x = current_terrain_ul.y = 5;
-	
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
 	if(special_draw != 2) {
@@ -532,7 +511,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 		to_rect.bottom -= 10; // Adjust for pointing buttons
 		rectangle oldRect = to_rect;
 		to_rect.offset(current_terrain_ul);
-		rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,to_rect,ul);
+		rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,mainPtr,to_rect);
 	}
 	
 	TextStyle style;
@@ -549,7 +528,6 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 			explode_place_rect[i] = base_rect;
 			explode_place_rect[i].offset(13 + 28 * (store_booms[i].dest.x - screen_ul.x) + store_booms[i].x_adj,
 										 13 + 36 * (store_booms[i].dest.y - screen_ul.y) + store_booms[i].y_adj);
-			explode_place_rect[i].offset(ul);
 			explode_place_rect[i].offset(current_terrain_ul);
 			
 			if((store_booms[i].place_type == 1) && (special_draw < 2)) {
@@ -826,15 +804,14 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 void refresh_shopping() {
 	rectangle from_rect(talk_gworld);
 	rectangle to_rect = from_rect;
-	to_rect.offset(5,5);
-	rect_draw_some_item(talk_gworld.getTexture(),from_rect,to_rect,ul);
+	to_rect.offset(19,7);
+	rect_draw_some_item(talk_gworld.getTexture(),from_rect,mainPtr,to_rect);
 	shop_sbar->draw();
 }
 
 static void place_talk_face() {
 	rectangle face_rect = {6,6,38,38};
 	face_rect.offset(talk_area_rect.topLeft());
-	face_rect.offset(ul);
 	mainPtr.setActive();
 	short face_to_draw = univ.scenario.scen_monsters[store_monst_type].default_facial_pic;
 	if(store_talk_face_pic >= 0)
@@ -853,9 +830,8 @@ static void place_talk_face() {
 void click_talk_rect(word_rect_t word) {
 	rectangle talkRect(talk_gworld), wordRect(word.rect);
 	mainPtr.setActive();
-	rect_draw_some_item(talk_gworld.getTexture(),talkRect,talk_area_rect,ul);
+	rect_draw_some_item(talk_gworld.getTexture(),talkRect,mainPtr,talk_area_rect);
 	wordRect.offset(talk_area_rect.topLeft());
-	wordRect.offset(ul);
 	TextStyle style;
 	style.font = FONT_DUNGEON;
 	style.pointSize = 18;
@@ -865,7 +841,7 @@ void click_talk_rect(word_rect_t word) {
 	place_talk_face();
 	mainPtr.display();
 	play_sound(37, time_in_ticks(5));
-	rect_draw_some_item(talk_gworld.getTexture(),talkRect,talk_area_rect,ul);
+	rect_draw_some_item(talk_gworld.getTexture(),talkRect,mainPtr,talk_area_rect);
 	place_talk_face();
 }
 
@@ -953,7 +929,6 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	if(c_rect.right > 0) {
 		mainPtr.setActive();
 		c_rect.offset(talk_area_rect.topLeft());
-		c_rect.offset(ul);
 		clip_rect(mainPtr, c_rect);
 	}
 	
@@ -1055,14 +1030,14 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	
 	// Finally place processed graphics
 	mainPtr.setActive();
-	rect_draw_some_item(talk_gworld.getTexture(),oldRect,talk_area_rect,ul);
+	rect_draw_some_item(talk_gworld.getTexture(),oldRect,mainPtr,talk_area_rect);
 	// I have no idea what this check is for; I'm jsut preserving it in case it was important
 	if(c_rect.right == 0) place_talk_face();
 }
 
 void refresh_talking() {
 	rectangle tempRect(talk_gworld);
-	rect_draw_some_item(talk_gworld.getTexture(),tempRect,talk_area_rect,ul);
+	rect_draw_some_item(talk_gworld.getTexture(),tempRect,mainPtr,talk_area_rect);
 	place_talk_face();
 }
 

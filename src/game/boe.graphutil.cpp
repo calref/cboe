@@ -36,7 +36,6 @@ extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x
 extern sf::RenderTexture terrain_screen_gworld;
 extern std::queue<pending_special_type> special_queue;
 
-extern location ul;
 extern location center;
 extern short which_combat_type;
 extern bool monsters_going,anim_onscreen;
@@ -273,7 +272,7 @@ void frame_active_pc(location center) {
 	active_pc_rect.left = 18 + where_draw.x * 28;
 	active_pc_rect.bottom = 54 + where_draw.y * 36;
 	active_pc_rect.right = 46 + where_draw.x * 28;
-	active_pc_rect.offset(ul);
+	active_pc_rect.offset(14,2);
 	
 	frame_roundrect(mainPtr, active_pc_rect, 8, sf::Color::Magenta);
 }

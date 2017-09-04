@@ -45,7 +45,6 @@ eDrawMode draw_mode = DRAW_TERRAIN;
 extern short available_dlog_buttons[NUM_DLOG_B];
 extern bool editing_town;
 extern cScenario scenario;
-extern rectangle world_screen;
 extern sf::Texture bg_gworld;
 extern rectangle right_buttons[NRSONPAGE];
 extern rectangle right_scrollbar_rect;

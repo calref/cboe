@@ -37,7 +37,6 @@
 #include "render_shapes.hpp"
 
 rectangle bottom_buttons[14];
-rectangle world_screen = {23, 23, 346, 274};
 rectangle item_screen_button_rects[9] = {
 	{125,10,141,28},{125,40,141,58},{125,68,141,86},{125,98,141,116},{125,126,141,144},{125,156,141,174},
 	{126,176,141,211},
@@ -60,6 +59,7 @@ rectangle pc_buttons[6][5];
 // name, hp, sp, info, trade
 
 extern rectangle startup_button[6];
+extern rectangle win_to_rects[6];
 extern bool flushingInput;
 extern bool fog_lifted;
 extern bool cartoon_happening;
@@ -69,7 +69,7 @@ bool item_area_button_active[8][6];
 bool pc_area_button_active[6][5];
 short item_bottom_button_active[9] = {0,0,0,0,0, 0,1,1,1};
 
-rectangle pc_help_button,pc_area_rect,item_area_rect;
+rectangle pc_help_button;
 
 short current_terrain_type = 0,num_out_moves = 0;
 short store_drop_item;
@@ -85,6 +85,7 @@ extern eGameMode overall_mode;
 extern location	to_create;
 extern bool All_Done,spell_forced,monsters_going;
 extern bool party_in_memory;
+extern sf::View mainView;
 
 // game info globals
 extern sf::RenderWindow mainPtr;
@@ -107,7 +108,6 @@ extern eStatMode stat_screen_mode;
 extern bool map_visible;
 extern sf::RenderWindow mini_map;
 
-extern location ul;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern short shop_identify_cost;
 
@@ -128,7 +128,7 @@ bool current_bash_is_bash = false;
 extern void edit_stuff_done();
 
 void init_screen_locs() {
-	rectangle startup_base = {279,5,327,306};
+	rectangle startup_base = {281,1,329,302};
 	rectangle shop_base = {63,12,99,267};
 	
 	for(short i = 0; i < 7; i++)
@@ -155,11 +155,11 @@ void init_screen_locs() {
 	
 	for(short i = 0; i < 6; i++) {
 		startup_button[i] = startup_base;
-		startup_button[i].offset(301 * (i / 3)  - 18,48 * (i % 3));
+		startup_button[i].offset(301 * (i / 3), 48 * (i % 3));
 	}
-	startup_top.top = 5;
+	startup_top.top = 7;
 	startup_top.bottom = startup_button[STARTBTN_LOAD].top;
-	startup_top.left = 5;
+	startup_top.left = startup_base.left;
 	startup_top.right = startup_button[STARTBTN_JOIN].right;
 	
 	// name, use, give, drip, info, sell/id   each one 13 down
@@ -229,20 +229,6 @@ void init_screen_locs() {
 	pc_help_button.bottom = 114;
 	pc_help_button.left = 251;
 	pc_help_button.right = 267;
-	
-	pc_area_rect.top = PC_WIN_UL_Y;
-	pc_area_rect.left = PC_WIN_UL_X;
-	pc_area_rect.bottom = PC_WIN_UL_Y + 116;
-	pc_area_rect.right = PC_WIN_UL_X + 271;
-	item_area_rect.top = ITEM_WIN_UL_Y;
-	item_area_rect.left = ITEM_WIN_UL_X;
-	item_area_rect.bottom = ITEM_WIN_UL_Y + 143;
-	item_area_rect.right = ITEM_WIN_UL_X + 271;
-	
-	extern rectangle win_to_rects[6];
-	win_to_rects[5].offset(TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
-	win_to_rects[2].offset(PC_WIN_UL_X,PC_WIN_UL_Y);
-	win_to_rects[3].offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
 }
 
 bool prime_time() {
@@ -984,11 +970,14 @@ bool handle_action(sf::Event event) {
 	short button_hit = 12;
 	bool right_button = event.mouseButton.button == sf::Mouse::Right;
 	eGameMode previous_mode;
+	rectangle world_screen = win_to_rects[WINRECT_TERVIEW];
+	world_screen.inset(13, 13);
 	
 	std::ostringstream str;
 	location the_point,point_in_area;
 	
 	the_point = location(event.mouseButton.x, event.mouseButton.y);
+	the_point = mainPtr.mapPixelToCoords(the_point, mainView);
 	end_scenario = false;
 	
 	// MARK: First, figure out where party is
@@ -1023,9 +1012,6 @@ bool handle_action(sf::Event event) {
 			add_string_to_buf("Unexpected game state!");
 			return are_done;
 	}
-	
-	the_point.x -= ul.x;
-	the_point.y -= ul.y;
 	
 	// Now split off the extra stuff, like talking and shopping.
 	if(overall_mode == MODE_TALKING) {
@@ -1132,8 +1118,8 @@ bool handle_action(sf::Event event) {
 	
 	// MARK: Begin: click in terrain
 	if(the_point.in(world_screen) && (is_out() || is_town() || is_combat())){
-		int i = (the_point.x - 23) / 28;
-		int j = (the_point.y - 23) / 36;
+		int i = (the_point.x - 32) / 28;
+		int j = (the_point.y - 20) / 36;
 		location destination = cur_loc;
 		
 		// Check for quick look
@@ -1247,14 +1233,15 @@ bool handle_action(sf::Event event) {
 	// MARK: End: Screen shift
 	
 	// MARK: Process clicks in PC stats area
-	if(the_point.in(pc_area_rect)) {
+	if(the_point.in(win_to_rects[WINRECT_PCSTATS])) {
+		location pc_win_ul = win_to_rects[WINRECT_PCSTATS].topLeft();
 		point_in_area = the_point;
-		point_in_area.x -= PC_WIN_UL_X;
-		point_in_area.y -= PC_WIN_UL_Y;
+		point_in_area.x -= pc_win_ul.x;
+		point_in_area.y -= pc_win_ul.y;
 		if(point_in_area.in(pc_help_button)) {
-			pc_help_button.offset(PC_WIN_UL_X,PC_WIN_UL_Y);
-			arrow_button_click(pc_help_button);
-			pc_help_button.offset(-PC_WIN_UL_X,-PC_WIN_UL_Y);
+			rectangle help_button = pc_help_button;
+			help_button.offset(pc_win_ul);
+			arrow_button_click(help_button);
 			cChoiceDlog("help-party").show();
 		}
 		for(int i = 0; i < 6; i++)
@@ -1262,9 +1249,9 @@ bool handle_action(sf::Event event) {
 				if(pc_area_button_active[i][j] && point_in_area.in(pc_buttons[i][j])) {
 					if((j == 1 || j == 2) && !univ.party[i].is_alive())
 						break;
-					pc_buttons[i][j].offset(PC_WIN_UL_X,PC_WIN_UL_Y);
-					arrow_button_click(pc_buttons[i][j]);
-					pc_buttons[i][j].offset(-PC_WIN_UL_X,-PC_WIN_UL_Y);
+					rectangle button_rect = pc_buttons[i][j];
+					button_rect.offset(pc_win_ul);
+					arrow_button_click(button_rect);
 					switch(j) {
 						case 0:
 							handle_switch_pc(i, need_redraw);
@@ -1306,16 +1293,17 @@ bool handle_action(sf::Event event) {
 	}
 	
 	// Process clicks in item stats area
-	if(the_point.in(item_area_rect)) {
+	if(the_point.in(win_to_rects[WINRECT_INVEN])) {
+		location item_win_ul = win_to_rects[WINRECT_INVEN].topLeft();
 		point_in_area = the_point;
-		point_in_area.x -= ITEM_WIN_UL_X;
-		point_in_area.y -= ITEM_WIN_UL_Y;
+		point_in_area.x -= item_win_ul.x;
+		point_in_area.y -= item_win_ul.y;
 		
 		for(int i = 0; i < 9; i++)
 			if(item_bottom_button_active[i] > 0 && point_in_area.in(item_screen_button_rects[i])) {
-				item_screen_button_rects[i].offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
-				arrow_button_click(item_screen_button_rects[i]);
-				item_screen_button_rects[i].offset(-ITEM_WIN_UL_X,-ITEM_WIN_UL_Y);
+				rectangle button_rect = item_screen_button_rects[i];
+				button_rect.offset(item_win_ul);
+				arrow_button_click(button_rect);
 				switch(i) {
 					case 6: // special screen
 						give_help(50,0);
@@ -1336,9 +1324,9 @@ bool handle_action(sf::Event event) {
 			for(int i = 0; i < 8; i++)
 				for(int j = 0; j < 6; j++)
 					if(item_area_button_active[i][j] && point_in_area.in(item_buttons[i][j])) {
-						item_buttons[i][j].offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
-						arrow_button_click(item_buttons[i][j]);
-						item_buttons[i][j].offset(-ITEM_WIN_UL_X,-ITEM_WIN_UL_Y);
+						rectangle button_rect = item_buttons[i][j];
+						button_rect.offset(item_win_ul);
+						arrow_button_click(button_rect);
 						
 						item_hit = item_sbar->getPosition() + i;
 						switch(j) {
@@ -1541,8 +1529,9 @@ void handle_menu_spell(eSpell spell_picked) {
 		pass_point.x = bottom_buttons[1].left + 5;
 		pass_point.y = bottom_buttons[1].top + 5;
 	}
-	event.mouseButton.x = pass_point.x + ul.x;
-	event.mouseButton.y = pass_point.y + ul.y;
+	pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
+	event.mouseButton.x = pass_point.x;
+	event.mouseButton.y = pass_point.y;
 	handle_action(event);
 }
 
@@ -1651,8 +1640,9 @@ bool handle_keystroke(sf::Event& event){
 		for(short i = 0; i < 9; i++)
 			if(chr2 == talk_chars[i] && (!talk_end_forced || i == 6 || i == 5)) {
 				int j = talk_end_forced ? i - 5 : i;
-				pass_point.x = talk_words[j].rect.left + 9 + ul.x;
-				pass_point.y = talk_words[j].rect.top + 9 + ul.y;
+				pass_point = talk_words[j].rect.topLeft();
+				pass_point.x += 9; pass_point.y += 9;
+				pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
 				pass_event.mouseButton.x = pass_point.x;
 				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event);
@@ -1665,8 +1655,9 @@ bool handle_keystroke(sf::Event& event){
 		}
 		for(short i = 0; i < 8; i++)
 			if(chr2 == shop_chars[i]) {
-				pass_point.x = shopping_rects[i][SHOPRECT_ACTIVE_AREA].left + 9 + ul.x;
-				pass_point.y = shopping_rects[i][SHOPRECT_ACTIVE_AREA].top + 9 + ul.y;
+				pass_point = shopping_rects[i][SHOPRECT_ACTIVE_AREA].topLeft();
+				pass_point.x += 9; pass_point.y += 9;
+				pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
 				pass_event.mouseButton.x = pass_point.x;
 				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event);
@@ -1678,8 +1669,7 @@ bool handle_keystroke(sf::Event& event){
 					chr2 = kb::Z;
 				}
 				else {
-					pass_point.x = terrain_click[i].x + ul.x;
-					pass_point.y = terrain_click[i].y + ul.y;
+					pass_point = mainPtr.mapCoordsToPixel(terrain_click[i], mainView);
 					pass_event.mouseButton.x = pass_point.x;
 					pass_event.mouseButton.y = pass_point.y;
 					are_done = handle_action(pass_event);
@@ -1727,24 +1717,30 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case '1': case '2': case '3': case '4': case '5': case '6':
-			pass_point.x = pc_buttons[((short) chr) - 49][0].left + 1 + PC_WIN_UL_X + ul.x;
-			pass_point.y = pc_buttons[((short) chr) - 49][0].top + PC_WIN_UL_Y + ul.y;
+			pass_point = pc_buttons[((short) chr) - 49][0].topLeft();
+			pass_point.x += 1 + win_to_rects[WINRECT_PCSTATS].left;
+			pass_point.y += win_to_rects[WINRECT_PCSTATS].top;
+			pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
 			pass_event.mouseButton.x = pass_point.x;
 			pass_event.mouseButton.y = pass_point.y;
 			are_done = handle_action(pass_event);
 			break;
 			
 		case '9': // Special items
-			pass_point.x = item_screen_button_rects[6].left + ITEM_WIN_UL_X + ul.x;
-			pass_point.y = item_screen_button_rects[6].top + ITEM_WIN_UL_Y + ul.y;
+			pass_point = item_screen_button_rects[6].topLeft();
+			pass_point.x += win_to_rects[WINRECT_INVEN].left;
+			pass_point.y += win_to_rects[WINRECT_INVEN].top;
+			pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
 			pass_event.mouseButton.x = pass_point.x;
 			pass_event.mouseButton.y = pass_point.y;
 			are_done = handle_action(pass_event);
 			break;
 			
 		case '0': // Jobs/quests
-			pass_point.x = item_screen_button_rects[7].left + ITEM_WIN_UL_X + ul.x;
-			pass_point.y = item_screen_button_rects[7].top + ITEM_WIN_UL_Y + ul.y;
+			pass_point = item_screen_button_rects[7].topLeft();
+			pass_point.x += win_to_rects[WINRECT_INVEN].left;
+			pass_point.y += win_to_rects[WINRECT_INVEN].top;
+			pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
 			pass_event.mouseButton.x = pass_point.x;
 			pass_event.mouseButton.y = pass_point.y;
 			are_done = handle_action(pass_event);
@@ -1754,17 +1750,16 @@ bool handle_keystroke(sf::Event& event){
 			if(overall_mode == MODE_FANCY_TARGET) { // cast multi-target spell, set # targets to 0 so that
 				// space clicked doesn't matter
 				num_targets_left = 0;
-				pass_point = terrain_click[5];
-				pass_event.mouseButton.x = pass_point.x + ul.x;
-				pass_event.mouseButton.y = pass_point.y + ul.y;
+				pass_point = mainPtr.mapCoordsToPixel(terrain_click[5], mainView);
+				pass_event.mouseButton.x = pass_point.x;
+				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event);
 			} else if(overall_mode == MODE_SPELL_TARGET)
 				// Rotate a force wall
 				spell_cast_hit_return();
 			else if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT || overall_mode == MODE_OUTDOORS) {
 				// Pause (skip turn)
-				pass_point.x = terrain_click[5].x + ul.x;
-				pass_point.y = terrain_click[5].y + ul.y;
+				pass_point = mainPtr.mapCoordsToPixel(terrain_click[5], mainView);
 				pass_event.mouseButton.x = pass_point.x;
 				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event);
@@ -2032,36 +2027,33 @@ bool handle_keystroke(sf::Event& event){
 			break;
 		case 'a': // Show automap
 			if(overall_mode < MODE_TALK_TOWN) {
-				pass_point.x = (overall_mode == MODE_OUTDOORS) ? 180 : 221;
-				pass_point.y = 405;
-				pass_event.mouseButton.x = pass_point.x + ul.x;
-				pass_event.mouseButton.y = pass_point.y + ul.y;
+				pass_point = mainPtr.mapCoordsToPixel({overall_mode == MODE_OUTDOORS ? 180 : 221, 405}, mainView);
+				pass_event.mouseButton.x = pass_point.x;
+				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event);
 			}
 			break;
 			
 		case 'u': // Use space
 			if(overall_mode == MODE_TOWN || overall_mode == MODE_USE_TOWN) {
-				pass_point.x = 220;
-				pass_point.y = 388;
-				pass_event.mouseButton.x = pass_point.x + ul.x;
-				pass_event.mouseButton.y = pass_point.y + ul.y;
+				pass_point = mainPtr.mapCoordsToPixel({220, 388}, mainView);
+				pass_event.mouseButton.x = pass_point.x;
+				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event);
 			}
 			break;
 			
 		case 'b': case 'L': // Bash door, pick lock
 			if(overall_mode == MODE_TOWN || overall_mode == MODE_BASH_TOWN) {
-				pass_point.x = chr == 'b' ? 1002 : 1003;
-				pass_point.y = 0;
-				pass_event.mouseButton.x = pass_point.x + ul.x;
-				pass_event.mouseButton.y = pass_point.y + ul.y;
+				pass_point = mainPtr.mapCoordsToPixel({chr == 'b' ? 1002 : 1003, 0}, mainView);
+				pass_event.mouseButton.x = pass_point.x;
+				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event);
 			}
 			
 		case 'A': // Alchemy
 			if(overall_mode == MODE_TOWN) {
-				pass_point.x = 1000 + ul.x;
+				pass_point = mainPtr.mapCoordsToPixel({1000, 0}, mainView);
 				pass_event.mouseButton.x = pass_point.x;
 				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event);
@@ -2101,7 +2093,7 @@ bool handle_keystroke(sf::Event& event){
 						if(overall_mode == MODE_COMBAT)
 							btn = 5;
 						else if(overall_mode == MODE_TOWN) {
-							pass_point.x = 1001 + ul.x;
+							pass_point = mainPtr.mapCoordsToPixel({1001, 0}, mainView);
 							pass_event.mouseButton.x = pass_point.x;
 							pass_event.mouseButton.y = pass_point.y;
 							are_done = handle_action(pass_event);
@@ -2142,8 +2134,9 @@ bool handle_keystroke(sf::Event& event){
 			if(btn < 50) {
 				pass_point.x = bottom_buttons[btn].left + 5;
 				pass_point.y = bottom_buttons[btn].top + 5;
-				pass_event.mouseButton.x = pass_point.x + ul.x;
-				pass_event.mouseButton.y = pass_point.y + ul.y;
+				pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
+				pass_event.mouseButton.x = pass_point.x;
+				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event);
 			}
 			break;
@@ -2154,12 +2147,13 @@ bool handle_keystroke(sf::Event& event){
 
 bool handle_scroll(sf::Event& event) {
 	rectangle status_panel_rect = {0,0,144,271}, text_panel_rect = {0,0,138,271};
-	status_panel_rect.offset(ul);
-	status_panel_rect.offset(ITEM_WIN_UL_X,ITEM_WIN_UL_Y);
-	text_panel_rect.offset(ul);
-	text_panel_rect.offset(TEXT_WIN_UL_X,TEXT_WIN_UL_Y);
+	rectangle world_screen = win_to_rects[WINRECT_TERVIEW];
+	world_screen.inset(13, 13);
+	status_panel_rect.offset(win_to_rects[WINRECT_INVEN].topLeft());
+	text_panel_rect.offset(win_to_rects[WINRECT_TRANSCRIPT].topLeft());
 	fill_rect(mainPtr, world_screen, sf::Color::Magenta);
 	location pos(event.mouseWheel.x, event.mouseWheel.y);
+	pos = mainPtr.mapPixelToCoords(pos, mainView);
 	int amount = event.mouseWheel.delta;
 	if(item_sbar->isVisible() && pos.in(status_panel_rect)) {
 		item_sbar->setPosition(item_sbar->getPosition() - amount);

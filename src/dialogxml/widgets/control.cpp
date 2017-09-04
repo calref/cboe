@@ -203,11 +203,15 @@ bool cControl::handleClick(location){
 		if(!inWindow->pollEvent(e)) continue;
 		if(e.type == sf::Event::MouseButtonReleased){
 			done = true;
-			clicked = frame.contains(e.mouseButton.x, e.mouseButton.y);
+			location clickPos(e.mouseButton.x, e.mouseButton.y);
+			clickPos = inWindow->mapPixelToCoords(clickPos);
+			clicked = frame.contains(clickPos);
 			depressed = false;
 		} else if(e.type == sf::Event::MouseMoved){
 			restore_cursor();
-			depressed = frame.contains(e.mouseMove.x, e.mouseMove.y);
+			location toPos(e.mouseMove.x, e.mouseMove.y);
+			toPos = inWindow->mapPixelToCoords(toPos);
+			depressed = frame.contains(toPos);
 		}
 	}
 	if(get_bool_pref("PlaySounds", true)) {

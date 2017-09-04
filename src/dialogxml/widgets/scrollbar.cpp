@@ -111,11 +111,14 @@ bool cScrollbar::handleClick(location where) {
 	while(!done){
 		redraw();
 		if(!inWindow->pollEvent(e)) continue;
-		sf::Vector2i mouseLoc = sf::Mouse::getPosition(*inWindow);
+		location mouseLoc = sf::Mouse::getPosition(*inWindow);
+		mouseLoc = inWindow->mapPixelToCoords(mouseLoc);
 		int mousePos = vert ? mouseLoc.y : mouseLoc.x;
 		if(e.type == sf::Event::MouseButtonReleased){
 			done = true;
-			clicked = frame.contains(e.mouseButton.x, e.mouseButton.y);
+			location clickLoc(e.mouseButton.x, e.mouseButton.y);
+			clickLoc = inWindow->mapPixelToCoords(clickLoc);
+			clicked = frame.contains(clickLoc);
 			depressed = false;
 			switch(pressedPart) {
 				case PART_UP: pos--; break;
@@ -147,7 +150,9 @@ bool cScrollbar::handleClick(location where) {
 					depressed = mousePos >= bar_end - btn_size;
 					break;
 			}
-			if(pressedPart != PART_THUMB && !frame.contains(e.mouseMove.x, e.mouseMove.y)) depressed = false;
+			location toLoc(e.mouseMove.x, e.mouseMove.y);
+			toLoc = inWindow->mapPixelToCoords(toLoc);
+			if(pressedPart != PART_THUMB && !frame.contains(toLoc)) depressed = false;
 		}
 		pos = minmax(0,max,pos);
 		if(parent && !link.empty())

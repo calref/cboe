@@ -39,7 +39,6 @@ extern short stat_window;
 extern eGameMode overall_mode;
 extern bool changed_display_mode;
 extern sf::RenderWindow mainPtr;
-extern location ul;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
 extern eStatMode stat_screen_mode;
@@ -67,7 +66,7 @@ short store_personality,store_personality_graphic,shop_identify_cost;
 std::string save_talk_str1, save_talk_str2;
 sf::RenderTexture talk_gworld;
 bool talk_end_forced;
-rectangle talk_area_rect = {5,5,420,284}, word_place_rect = {44,7,372,257},talk_help_rect = {5,254,21,272};
+rectangle talk_area_rect = {7,19,422,298}, word_place_rect = {44,7,372,257},talk_help_rect = {7,268,23,286};
 std::string title_string;
 mon_num_t store_monst_type;
 short store_m_num;
@@ -206,16 +205,14 @@ void handle_shop_event(location p) {
 	unsigned long store_what_picked;
 	
 	if(p.in(talk_help_rect)) {
-		location loc = {p.x + ul.x, p.y + ul.y};
-		if(!help_btn->handleClick(loc))
+		if(!help_btn->handleClick(p))
 			return;
 		give_help(226,27);
 		return;
 	}
 	
 	if(p.in(shop_done_rect)) {
-		location loc = {p.x + ul.x, p.y + ul.y};
-		if(done_btn->handleClick(loc))
+		if(done_btn->handleClick(p))
 			end_shop_mode();
 		return;
 	}
@@ -675,8 +672,7 @@ void handle_talk_event(location p) {
 	eTalkNode ttype;
 	
 	if(p.in(talk_help_rect)) {
-		location loc = {p.x + ul.x, p.y + ul.y};
-		if(!help_btn->handleClick(loc))
+		if(!help_btn->handleClick(p))
 			return;
 		give_help(205,6);
 		return;

@@ -38,7 +38,6 @@ struct text_params_t {
 	TextStyle style;
 	eTextMode mode;
 	bool showBreaks = false;
-	location offset = {0,0};
 	// Hilite ranges are, like the STL, of the form [first, last).
 	std::vector<hilite_t> hilite_ranges;
 	sf::Color hilite_fg, hilite_bg = sf::Color::Transparent;
@@ -95,8 +94,6 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	short total_width = 0;
 	short adjust_x = 0,adjust_y = 0;
 	
-	adjust_x = options.offset.x;
-	adjust_y = options.offset.y;
 	str_to_draw.setString("fj"); // Something that has both an ascender and a descender
 	adjust_y -= str_to_draw.getLocalBounds().height;
 	
@@ -188,11 +185,10 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	}
 }
 
-void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style, location offset) {
+void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style) {
 	text_params_t params;
 	params.mode = mode;
 	params.style = style;
-	params.offset = offset;
 	win_draw_string(dest_window, dest_rect, str, params);
 }
 

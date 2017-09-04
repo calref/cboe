@@ -114,4 +114,12 @@ const int PCBTN_TRADE = 4;
 const int ITEM_WIN_SPECIAL = 6;
 const int ITEM_WIN_QUESTS = 7;
 
+// Gobal window rects
+const int WINRECT_TERVIEW = 0;
+const int WINRECT_ACTBTNS = 1;
+const int WINRECT_PCSTATS = 2;
+const int WINRECT_INVEN = 3;
+const int WINRECT_STATUS = 4;
+const int WINRECT_TRANSCRIPT = 5;
+
 #endif

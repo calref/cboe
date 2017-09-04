@@ -55,6 +55,7 @@ short on_spell_menu[2][62];
 short on_monst_menu[256];
 
 extern bool map_visible;
+extern sf::View mainView;
 
 std::string scenario_temp_dir_name = "scenario";
 
@@ -71,7 +72,6 @@ bool finished_init = false;
 
 sf::RenderWindow mini_map;
 short which_item_page[6] = {0,0,0,0,0,0}; // Remembers which of the 2 item pages pc looked at
-location ul = {28,10};
 short current_ground = 0;
 eStatMode stat_screen_mode;
 short anim_step = -1;
@@ -320,6 +320,7 @@ void Mouse_Pressed() {
 	
 	if(overall_mode != MODE_STARTUP) {
 		location mousePos(event.mouseButton.x, event.mouseButton.y);
+		mousePos = mainPtr.mapPixelToCoords(mousePos, mainView);
 		volatile bool doneScrolling = false;
 		if(mousePos.in(text_sbar->getBounds())) {
 			mainPtr.setActive(false);
@@ -625,10 +626,11 @@ static cursor_type get_mode_cursor(){
 void change_cursor(location where_curs) {
 	cursor_type cursor_needed;
 	location cursor_direction;
-	rectangle world_screen = {23, 23, 346, 274};
+	extern rectangle win_to_rects[6];
+	rectangle world_screen = win_to_rects[WINRECT_TERVIEW];
+	world_screen.inset(13, 13);
 	
-	where_curs.x -= ul.x;
-	where_curs.y -= ul.y;
+	where_curs = mainPtr.mapPixelToCoords(where_curs, mainView);
 	
 	if(!world_screen.contains(where_curs))
 		cursor_needed = sword_curs;
