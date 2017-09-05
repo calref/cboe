@@ -162,7 +162,7 @@ void adjust_window_mode() {
 		if(mode == 1 || mode == 2)
 			ul.y = 28
 #ifndef _WIN32
-				+ menubarHeight;
+				+ menubarHeight
 #endif
 			;
 		else ul.y = windRect.bottom - height - 28;
