@@ -440,7 +440,7 @@ void draw_lb_slot (short which,short mode)  {
 		from_rect = blue_button_from;
 		if(mode > 0)
 			from_rect.offset(0,from_rect.height());
-		rect_draw_some_item(*ResMgr::get<ImageRsrc>("edbuttons"),from_rect,left_buttons[which][1],location{0,0});
+		rect_draw_some_item(*ResMgr::get<ImageRsrc>("edbuttons"),from_rect,mainPtr,left_buttons[which][1]);
 	}
 	if(left_button_status[which].mode == LB_INDENT)
 		text_rect.left += 16;
