@@ -2,19 +2,22 @@
 Import("env platform")
 
 tools = Split("""
-	fileio_scen.cpp
-	fileio.cpp
-	graphtool.cpp
-	map_parse.cpp
-	mathutil.cpp
-	porting.cpp
-	soundtool.cpp
-	specials_parse.cpp
-	tarball.cpp
 	undo.cpp
-	gzstream/gzstream.cpp
-	resmgr/restypes.cpp
-""")
+	../location.cpp
+	../mathutil.cpp
+	../porting.cpp
+	../sounds.cpp
+	../spell.cpp
+	../utility.cpp
+	../fileio/estreams.cpp
+	../fileio/fileio.cpp
+	../fileio/fileio_scen.cpp
+	../fileio/map_parse.cpp
+	../fileio/special_parse.cpp
+	../fileio/tarball.cpp
+	../fileio/gzstream/gzstream.cpp
+	../fileio/resmgr/restypes.cpp
+""") + Glob("../gfx/*.cpp") + Glob("../scenario/*.cpp")
 
 if str(platform) == "darwin":
 	tools.extend(Glob("*.mac.*"))

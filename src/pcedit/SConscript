@@ -7,7 +7,7 @@ pced_sources = Split("""
 	pc.fileio.cpp
 	pc.graphics.cpp
 	pc.main.cpp
-	../tools/fileio_party.cpp
+	../fileio/fileio_party.cpp
 """)
 
 if str(platform) == "darwin":

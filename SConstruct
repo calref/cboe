@@ -50,7 +50,7 @@ else:
 	""")
 
 if str(platform) == "darwin":
-	env.Append(CXXFLAGS="-std=c++11 -stdlib=libc++", RPATH='../Frameworks')
+	env.Append(CXXFLAGS="-std=c++11 -stdlib=libc++ -include src/global.hpp", RPATH='../Frameworks')
 	env["CC"] = 'clang'
 	env["CXX"] = 'clang++'
 	env.Append(BUILDERS={
@@ -134,7 +134,7 @@ elif str(platform) == "win32":
 	if 'msvc' in env['TOOLS']:
 		env.Append(
 			LINKFLAGS='/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup /MACHINE:X86',
-			CXXFLAGS='/EHsc /MD',
+			CXXFLAGS='/EHsc /MD /FIsrc/global.hpp',
 			LIBPATH=("C:\Program Files (x86)\Microsoft Visual Studio " + env['MSVC_VERSION'] + "\VC\lib"),
 			LIBS=Split("""
 				kernel32
@@ -151,6 +151,8 @@ elif str(platform) == "win32":
 				odbccp32
 			""")
 		)
+	else:
+		env.Append(CXXFLAGS="-include src/global.hpp")
 	def build_app_package(env, source, build_dir, info):
 		env.Install(build_dir, source)
 
@@ -264,10 +266,15 @@ env.Append(CPPPATH=Split("""
 	#src/
 	#src/classes/
 	#src/tools/
-	#src/tools/gzstream/
-	#src/tools/resmgr/
-	#src/dialogxml/
-	#src/dialogxml/xml-parser/
+	#src/fileio/
+	#src/fileio/gzstream/
+	#src/fileio/resmgr/
+	#src/fileio/xml-parser/
+	#src/gfx/
+	#src/dialogxml/dialogs/
+	#src/dialogxml/widgets/
+	#src/scenario/
+	#src/universe/
 """))
 
 if str(platform) == "win32":
@@ -297,17 +304,17 @@ Export("env platform")
 
 # Gather common sources
 
-common_classes, party_classes = SConscript("build/obj/classes/SConscript")
 tools = SConscript("build/obj/tools/SConscript")
 dlog_util = SConscript("build/obj/dialogxml/SConscript")
-common_sources = common_classes + dlog_util + tools
+common_sources = dlog_util + tools
 install_dir = "#build/Blades of Exile"
+party_classes = Glob("#src/universe/*.cpp")
 Export("install_dir party_classes common_sources")
 
 # Programs
 
 SConscript([
-	"build/obj/SConscript",
+	"build/obj/game/SConscript",
 	"build/obj/pcedit/SConscript",
 	"build/obj/scenedit/SConscript",
 	"build/obj/test/SConscript"
