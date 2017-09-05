@@ -149,6 +149,9 @@ void adjust_window_mode() {
 	}
 	
 	rectangle windRect(mainPtr);
+#ifdef _WIN32
+	windRect.height() -= menubarHeight;
+#endif
 	if(mode == 0) {
 		ul.x = (windRect.right - width) / 2;
 		ul.y = (windRect.bottom - height) / 2;
@@ -157,13 +160,17 @@ void adjust_window_mode() {
 			ul.x = 10;
 		else ul.x = windRect.right - width - 10;
 		if(mode == 1 || mode == 2)
-			ul.y = 28 + menubarHeight;
+			ul.y = 28
+#ifndef _WIN32
+				+ menubarHeight;
+#endif
+			;
 		else ul.y = windRect.bottom - height - 28;
 	}
 	
 	// Initialize the viewport for the game UI
 	mainView.setSize(width, height);
-	mainView.setCenter(/*ul.x +*/ width / 2, /*ul.y +*/ height / 2);
+	mainView.setCenter(width / 2, height / 2);
 	sf::FloatRect mainPort;
 	mainPort.left = float(ul.x) / windRect.width();
 	mainPort.top = float(ul.y) / windRect.height();

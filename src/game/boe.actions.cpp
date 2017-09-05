@@ -2027,7 +2027,8 @@ bool handle_keystroke(sf::Event& event){
 			break;
 		case 'a': // Show automap
 			if(overall_mode < MODE_TALK_TOWN) {
-				pass_point = mainPtr.mapCoordsToPixel({overall_mode == MODE_OUTDOORS ? 180 : 221, 405}, mainView);
+				pass_point = loc(overall_mode == MODE_OUTDOORS ? 180 : 221, 405);
+				pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
 				pass_event.mouseButton.x = pass_point.x;
 				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event);
@@ -2045,7 +2046,8 @@ bool handle_keystroke(sf::Event& event){
 			
 		case 'b': case 'L': // Bash door, pick lock
 			if(overall_mode == MODE_TOWN || overall_mode == MODE_BASH_TOWN) {
-				pass_point = mainPtr.mapCoordsToPixel({chr == 'b' ? 1002 : 1003, 0}, mainView);
+				pass_point = loc(chr == 'b' ? 1002 : 1003, 0);
+				pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
 				pass_event.mouseButton.x = pass_point.x;
 				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event);
