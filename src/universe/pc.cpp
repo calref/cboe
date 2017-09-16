@@ -17,6 +17,7 @@
 #include "oldstructs.hpp"
 #include "mathutil.hpp"
 #include "fileio.hpp"
+#include "sounds.hpp"
 
 extern short skill_bonus[21];
 // A nice convenient bitset with just the low 30 bits set, for initializing spells

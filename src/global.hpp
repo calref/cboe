@@ -16,6 +16,7 @@ typedef signed short spec_num_t;
 typedef signed short item_num_t;
 typedef unsigned short str_num_t;
 typedef signed short pic_num_t;
+typedef signed int snd_num_t;
 
 // OBoE Current Version
 const unsigned long long OBOE_CURRENT_VERSION = 0x020000; // MMmmff; M - major, m - minor, f - bugfix

@@ -12,8 +12,9 @@
 #include <iosfwd>
 #include <array>
 #include <boost/filesystem/path.hpp>
-#include "terrain.hpp"
 #include "monster.hpp"
+// For reasons unknown, putting terrain above monster breaks the tests build in MSVC 2013
+#include "terrain.hpp"
 #include "vehicle.hpp"
 #include "item.hpp"
 #include "special.hpp"

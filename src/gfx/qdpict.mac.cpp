@@ -7,8 +7,12 @@
 //
 
 #ifndef __APPLE__
-#error qdpict.cpp uses Apple APIs at the moment; try omitting it from the build
+#ifdef _MSC_VER
+#pragma message("qdpict.cpp uses Apple APIs at the moment; try omitting it from the build")
+#else
+#warning qdpict.cpp uses Apple APIs at the moment; try omitting it from the build
 #endif
+#else
 
 // TODO: Don't use the resource manager
 #include <CoreServices/CoreServices.h>
@@ -509,3 +513,4 @@ bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store) {
 	if(data != nullptr) delete[] data;
 	return true;
 }
+#endif

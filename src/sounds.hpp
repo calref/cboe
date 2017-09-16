@@ -11,7 +11,6 @@
 
 #include <SFML/Audio.hpp>
 
-typedef signed int snd_num_t;
 void init_snd_tool();
 bool sound_going(snd_num_t which_s);
 void play_sound(short which, sf::Time delay = sf::Time());

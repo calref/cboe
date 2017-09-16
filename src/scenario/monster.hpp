@@ -14,10 +14,9 @@
 #include <array>
 #include <iosfwd>
 
-#include "sounds.hpp"
-#include "living.hpp"
 #include "monster_abilities.hpp"
 #include "race.hpp"
+#include "location.hpp"
 
 namespace legacy {
 	struct monster_record_type;

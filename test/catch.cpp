@@ -1,4 +1,8 @@
 
+#ifdef _MSC_VER
+#pragma warning(disable:4805)
+#endif
+
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
