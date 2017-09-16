@@ -52,12 +52,12 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="data.nsi" />
-    <None Include="fileassoc.nsh" />
-    <None Include="gen-data.py">
+    <None Include="..\..\..\pkg\win\data.nsi" />
+    <None Include="..\..\..\pkg\win\fileassoc.nsh" />
+    <None Include="..\..\..\pkg\win\gen-data.py">
       <FileType>Script</FileType>
     </None>
-    <None Include="main.nsi" />
+    <None Include="..\..\..\pkg\win\main.nsi" />
     <None Include="Makefile.mak">
       <FileType>Makefile</FileType>
     </None>

@@ -7,17 +7,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\pkg\win\main.nsi">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="..\..\..\pkg\win\data.nsi">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="..\..\..\pkg\win\gen-data.py">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="Makefile.mak" />
-    <None Include="fileassoc.nsh">
+    <None Include="..\..\..\pkg\win\main.nsi" />
+    <None Include="..\..\..\pkg\win\gen-data.py" />
+    <None Include="..\..\..\pkg\win\data.nsi" />
+    <None Include="..\..\..\pkg\win\fileassoc.nsh">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

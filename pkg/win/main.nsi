@@ -72,13 +72,10 @@ Section "Blades of Exile" Section1
 	File "${RELEASE_DIR}\zlib1.dll"
 	; Scenarios
 	SetOutPath "$INSTDIR\Blades of Exile Scenarios"
-	File "${RELEASE_DIR}\Blades of Exile Scenarios\busywork.exs"
-	File "${RELEASE_DIR}\Blades of Exile Scenarios\STEALTH.BMP"
-	File "${RELEASE_DIR}\Blades of Exile Scenarios\stealth.exs"
-	File "${RELEASE_DIR}\Blades of Exile Scenarios\VALLEYDY.BMP"
-	File "${RELEASE_DIR}\Blades of Exile Scenarios\valleydy.exs"
-	File "${RELEASE_DIR}\Blades of Exile Scenarios\ZAKHAZI.BMP"
-	File "${RELEASE_DIR}\Blades of Exile Scenarios\zakhazi.exs"
+	File "${RELEASE_DIR}\Blades of Exile Scenarios\busywork.boes"
+	File "${RELEASE_DIR}\Blades of Exile Scenarios\stealth.boes"
+	File "${RELEASE_DIR}\Blades of Exile Scenarios\valleydy.boes"
+	File "${RELEASE_DIR}\Blades of Exile Scenarios\zakhazi.boes"
 	!include data.nsi
 	SetShellVarContext all
 	CreateShortCut "$DESKTOP\Blades of Exile.lnk" "$INSTDIR\Blades of Exile.exe"
@@ -241,13 +238,10 @@ Section Uninstall
 
 	; Clean up Blades of Exile
 	Delete "$INSTDIR\Blades of Exile.exe"
-	Delete "$INSTDIR\Blades of Exile Scenarios\busywork.exs"
-	Delete "$INSTDIR\Blades of Exile Scenarios\STEALTH.BMP"
-	Delete "$INSTDIR\Blades of Exile Scenarios\stealth.exs"
-	Delete "$INSTDIR\Blades of Exile Scenarios\VALLEYDY.BMP"
-	Delete "$INSTDIR\Blades of Exile Scenarios\valleydy.exs"
-	Delete "$INSTDIR\Blades of Exile Scenarios\ZAKHAZI.BMP"
-	Delete "$INSTDIR\Blades of Exile Scenarios\zakhazi.exs"
+	Delete "$INSTDIR\Blades of Exile Scenarios\busywork.boes"
+	Delete "$INSTDIR\Blades of Exile Scenarios\stealth.boes"
+	Delete "$INSTDIR\Blades of Exile Scenarios\valleydy.boes"
+	Delete "$INSTDIR\Blades of Exile Scenarios\zakhazi.boes"
 	Delete "$INSTDIR\VCRedistInstall.exe"
 	Delete "$INSTDIR\libsndfile-1.dll"
 	Delete "$INSTDIR\sfml-audio-2.dll"
@@ -264,7 +258,7 @@ Section Uninstall
 
 	; Clean up Scenario Editor
 	Delete "$INSTDIR\Scen Editor.exe"
-	Delete "$INSTDIR\Blades of Exile Base\bladbase.exs"
+	Delete "$INSTDIR\Blades of Exile Base\bladbase.boes"
 
 	; Remove remaining directories
 	RMDir "$INSTDIR\Blades of Exile Scenarios\"
