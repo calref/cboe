@@ -152,7 +152,7 @@ void apply_light_mask(bool onWindow) {
 	rectangle temp = {0,0,108,84},paint_rect,base_rect = {0,0,36,28};
 	rectangle big_to = {13,13,337,265};
 	bool same_mask = true;
-	if(!get_bool_pref("DrawTerrainFrills", true) > 0 || fog_lifted)
+	if(!get_bool_pref("DrawTerrainFrills", true) || fog_lifted)
 		return;
 	if(is_out() || overall_mode == MODE_RESTING)
 		return;
