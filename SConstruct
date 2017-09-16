@@ -50,7 +50,7 @@ else:
 	""")
 
 if str(platform) == "darwin":
-	env.Append(CXXFLAGS="-std=c++11 -stdlib=libc++ -include src/global.hpp", RPATH='../Frameworks')
+	env.Append(CXXFLAGS="-std=c++11 -stdlib=libc++ -include global.hpp", RPATH='../Frameworks')
 	env["CC"] = 'clang'
 	env["CXX"] = 'clang++'
 	env.Append(BUILDERS={
@@ -134,7 +134,7 @@ elif str(platform) == "win32":
 	if 'msvc' in env['TOOLS']:
 		env.Append(
 			LINKFLAGS='/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup /MACHINE:X86',
-			CXXFLAGS='/EHsc /MD /FIsrc/global.hpp',
+			CXXFLAGS='/EHsc /MD /FIglobal.hpp',
 			LIBPATH=("C:\Program Files (x86)\Microsoft Visual Studio " + env['MSVC_VERSION'] + "\VC\lib"),
 			LIBS=Split("""
 				kernel32
@@ -195,6 +195,23 @@ if path.exists('deps/lib'):
 
 if path.exists('deps/include'):
 	env.Append(CPPPATH='deps/include')
+
+# Include directories
+
+env.Append(CPPPATH=Split("""
+	#src/
+	#src/classes/
+	#src/tools/
+	#src/fileio/
+	#src/fileio/gzstream/
+	#src/fileio/resmgr/
+	#src/fileio/xml-parser/
+	#src/gfx/
+	#src/dialogxml/dialogs/
+	#src/dialogxml/widgets/
+	#src/scenario/
+	#src/universe/
+"""))
 
 env['CONFIGUREDIR'] = '#build/conf'
 env['CONFIGURELOG'] = '#build/conf/config.log'
@@ -259,23 +276,6 @@ if not env.GetOption('clean'):
 	env = conf.Finish()
 
 env.Append(CPPDEFINES="TIXML_USE_TICPP")
-
-# Include directories
-
-env.Append(CPPPATH=Split("""
-	#src/
-	#src/classes/
-	#src/tools/
-	#src/fileio/
-	#src/fileio/gzstream/
-	#src/fileio/resmgr/
-	#src/fileio/xml-parser/
-	#src/gfx/
-	#src/dialogxml/dialogs/
-	#src/dialogxml/widgets/
-	#src/scenario/
-	#src/universe/
-"""))
 
 if str(platform) == "win32":
 	# For the *resource.h headers

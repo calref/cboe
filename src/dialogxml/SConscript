@@ -2,7 +2,8 @@
 Import("env")
 
 env = env.Clone()
-env.Append(CXXFLAGS="-fpermissive")
+if 'msvc' not in env["TOOLS"]:
+	env.Append(CXXFLAGS="-fpermissive")
 dlog_util = env.StaticLibrary("#build/lib/dlogutil", Glob("dialogs/*.cpp") + Glob("widgets/*.cpp") + Glob("../fileio/xml-parser/*.cpp"))
 
 Return("dlog_util")
