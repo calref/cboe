@@ -55,10 +55,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;TIXML_USE_TICPP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\rsrc\menus;..\..\tools\resmgr;..\..\tools\gzstream;..\..\tools;..\..\dialogxml\xml-parser;..\..\dialogxml;..\..\classes;..\..;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\rsrc\menus\;..\..\scenedit;..\..\universe;..\..\tools;..\..\scenario;..\..\gfx;..\..\fileio\resmgr;..\..\fileio\xml-parser;..\..\fileio\gzstream;..\..\fileio;..\..\dialogxml\widgets;..\..\dialogxml\dialogs;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;4290;4244;4996;4018</DisableSpecificWarnings>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
+      <ForcedIncludeFiles>global.hpp</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
