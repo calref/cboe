@@ -19,6 +19,11 @@
 #    pragma GCC system_header
 #endif
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable:4805)
+#endif
+
 // #included from: internal/catch_suppress_warnings.h
 
 #define TWOBLUECUBES_CATCH_SUPPRESS_WARNINGS_H_INCLUDED
@@ -9412,6 +9417,10 @@ using Catch::Detail::Approx;
 #    endif
 #elif defined __GNUC__
 #    pragma GCC diagnostic pop
+#endif
+
+#ifdef _MSC_VER
+#pragma warning(pop)
 #endif
 
 #endif // TWOBLUECUBES_SINGLE_INCLUDE_CATCH_HPP_INCLUDED
