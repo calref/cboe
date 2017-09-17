@@ -16,6 +16,7 @@ if str(platform) not in ("darwin", "win32"):
 	Exit(1)
 
 print 'Building for:', platform
+print 'Using toolchain:', toolset
 
 if toolset != 'default':
 	env = Environment(TARGET_ARCH=arch,ENV=os.environ, tools = [toolset])
@@ -152,7 +153,7 @@ elif str(platform) == "win32":
 			""")
 		)
 	else:
-		env.Append(CXXFLAGS="-include src/global.hpp")
+		env.Append(CXXFLAGS="-include global.hpp")
 	def build_app_package(env, source, build_dir, info):
 		env.Install(build_dir, source)
 
@@ -249,11 +250,13 @@ if not env.GetOption('clean'):
 					bundled_libs.append(test + ver)
 					return # Success!
 		print disp, 'must be installed!'
+		print "  If you're sure it's installed, try passing LIBPATH=..."
 		Exit(1)
 
 	def check_header(header, disp):
 		if not conf.CheckCXXHeader(header, '<>'):
 			print disp, 'must be installed!'
+			print "  If you're sure it's installed, try passing INCLUDEPATH=..."
 			Exit(1)
 
 	boost_versions = ['-1_55', '-1_56', '-1_57', '-1_58'] # This is a bit of a hack. :(
@@ -383,4 +386,4 @@ SConscript("build/pkg/SConscript")
 # Cleanup
 
 env.Clean('.', 'build')
-env.Clean('.', '.sconsign.dblite')
+env.Clean('.', Glob('.sconsign.*'))

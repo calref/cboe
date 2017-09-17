@@ -23,7 +23,7 @@ namespace ResMgr {
 	/// Each line in the file becomes one string in the resulting list.
 	/// (Empty lines are included too.)
 	template<> inline StringRsrc* resLoader<StringRsrc>::operator() (fs::path fpath) {
-		std::ifstream fin(fpath.c_str());
+		std::ifstream fin(fpath.string().c_str());
 		if(fin.fail()) {
 			std::cerr << std_fmterr << ": Error opening file";
 			throw xResMgrErr("Failed to load string list: " + fpath.string());
