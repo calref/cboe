@@ -44,6 +44,8 @@ cParty::cParty(long party_preset) {
 		out_c[i].exists = false;
 	for(int i = 0; i < 6; i++)
 		adven[i] = new cPlayer(*this, party_preset, i);
+	for(auto& monst : imprisoned_monst)
+		monst = 0;
 }
 
 cParty::~cParty() {

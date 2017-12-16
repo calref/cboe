@@ -563,7 +563,7 @@ bool cPlayer::equip_item(int which_item, bool do_print) {
 	
 	eItemCat equip_item_type = (*item.variety).exclusion;
 	// Now if missile is already equipped, no more missiles
-	if(equip_item_type != eItemCat::MISC) {
+	if(equip_item_type == eItemCat::MISSILE_AMMO || equip_item_type == eItemCat::MISSILE_WEAPON) {
 		for(int i = 0; i < items.size(); i++)
 			if(equip[i] && (*items[i].variety).exclusion == equip_item_type) {
 				if(do_print && print_result) {
