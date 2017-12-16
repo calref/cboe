@@ -2183,6 +2183,7 @@ void do_load() {
 	finish_load_party();
 	if(overall_mode != MODE_STARTUP)
 		post_load();
+	univ.file = file_to_load;
 	menu_activate();
 }
 
@@ -2683,6 +2684,7 @@ void start_new_game(bool force) {
 	if(force) return;
 	fs::path file = nav_put_party();
 	if(!file.empty()) save_party(file, univ);
+	univ.file = file;
 }
 
 location get_cur_direction(location the_point) {
