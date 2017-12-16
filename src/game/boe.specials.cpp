@@ -3184,8 +3184,8 @@ void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			break;
 		case eSpecType::AFFECT_TRAITS:
 			if(pc_num >= 100) break;
-			if(spec.ex1a < 0 || spec.ex1a > 15) {
-				showError("Trait is out of range (0 - 15).");
+			if(spec.ex1a < 0 || spec.ex1a > 16) {
+				showError("Trait is out of range (0 - 16).");
 				break;
 			}
 			for(short i = 0; i < 6; i++)
@@ -3501,8 +3501,8 @@ void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
 			}
 			break;
 		case eSpecType::IF_TRAIT:
-			if(spec.ex1a < 0 || spec.ex1a > 15) {
-				showError("Invalid trait (0...15)");
+			if(spec.ex1a < 0 || spec.ex1a > 16) {
+				showError("Invalid trait (0...16)");
 			} else {
 				int i = trait_present(eTrait(spec.ex1a)), j = minmax(1, party_size(true), spec.ex2a);
 				if(spec.ex2b == -2 && i <= j) *next_spec = spec.ex1b;
