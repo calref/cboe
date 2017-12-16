@@ -236,7 +236,7 @@ void adjust_spell_menus() {
 		}
 		for(short i = 0; i < 62; i++)
 			if(on_spell_menu[1][i] >= 0) {
-				eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[1][i]);
+				eSpell spell = cSpell::fromNum(eSkill::PRIEST_SPELLS, on_spell_menu[1][i]);
 				std::ostringstream sout;
 				sout << " L" << (*spell).level << " - " << (*spell).name() << ", C ";
 				if((*spell).cost >= 0) sout << (*spell).cost; else sout << '?';

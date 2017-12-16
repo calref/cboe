@@ -235,11 +235,11 @@ void adjust_spell_menus() {
 		}
 		for(i = 0; i < 62; i++)
 			if(on_spell_menu[1][i] >= 0) {
-				eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, on_spell_menu[1][i]);
+				eSpell spell = cSpell::fromNum(eSkill::PRIEST_SPELLS, on_spell_menu[1][i]);
 				std::ostringstream sout;
 				sout << " L" << (*spell).level << " - " << (*spell).name() << ", C ";
 				if((*spell).cost >= 0) sout << (*spell).cost; else sout << '?';
-				AppendMenuA(spell_menu, MF_STRING | MF_ENABLED, 2000 + int(spell), sout.str().c_str());
+				AppendMenuA(spell_menu, MF_STRING | MF_ENABLED, 2900 + int(spell), sout.str().c_str());
 			}
 	}
 
