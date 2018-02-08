@@ -8,11 +8,11 @@ toolset = ARGUMENTS.get('toolset', 'default')
 sixty_four = ARGUMENTS.get('64bit', False)
 arch = 'x86_64' if sixty_four else 'x86'
 
-if str(platform) not in ("darwin", "win32"):
+if str(platform) not in ("darwin", "win32", "posix"):
 	print "Sorry, your platform is not supported."
 	print "Platform is:", platform
 	print "Specify OS=<your-platform> if you believe this is incorrect."
-	print "(Supported platforms are: darwin, win32)"
+	print "(Supported platforms are: darwin, win32, posix)"
 	Exit(1)
 
 print 'Building for:', platform
@@ -24,6 +24,10 @@ else:
 	env = Environment(TARGET_ARCH=arch,ENV=os.environ)
 env.VariantDir('#build/obj', 'src')
 env.VariantDir('#build/obj/test', 'test')
+
+debug = ARGUMENTS.get('debug', 0)
+if int(debug):
+   env.Append(CCFLAGS = '-g')
 
 # This command generates the header with git revision information
 def gen_gitrev(env, target, source):
@@ -50,6 +54,15 @@ else:
 		echo -e "\n#define GIT_REVISION \"\"\n#define GIT_TAG \"\"\n#define GIT_TAG_REVISION \"\"\n" > #TARGET
 	""")
 
+if str(platform) == "posix":
+	env.Append(CXXFLAGS="-std=c++11 -stdlib=libstdc++")
+	env["CC"] = 'clang'
+	env["CXX"] = 'clang++'
+	env.Append(LIBPATH=Split("""
+		/usr/lib
+	"""), CPPPATH=Split("""
+		/usr/include
+	"""))
 if str(platform) == "darwin":
 	env.Append(CXXFLAGS="-std=c++11 -stdlib=libc++ -include global.hpp", RPATH='../Frameworks')
 	env["CC"] = 'clang'
@@ -156,6 +169,9 @@ elif str(platform) == "win32":
 		env.Append(CXXFLAGS="-include global.hpp")
 	def build_app_package(env, source, build_dir, info):
 		env.Install(build_dir, source)
+elif str(platform) == "posix":
+	def build_app_package(env, source, build_dir, info):
+		env.Install(build_dir, source)
 
 env.AddMethod(build_app_package, "Package")
 
@@ -259,7 +275,7 @@ if not env.GetOption('clean'):
 			print "  If you're sure it's installed, try passing INCLUDEPATH=..."
 			Exit(1)
 
-	boost_versions = ['-1_55', '-1_56', '-1_57', '-1_58'] # This is a bit of a hack. :(
+	boost_versions = ['-1_54', '-1_55', '-1_56', '-1_57', '-1_58'] # This is a bit of a hack. :(
 	bundled_libs = []
 
 	check_header('boost/lexical_cast.hpp', 'Boost.LexicalCast')
@@ -293,9 +309,14 @@ if str(platform) == "darwin":
 		OpenGL
 		Cocoa
 	"""))
-else:
+elif str(platform) == "win32":
 	env.Append(LIBS=Split("""
 		opengl32
+	"""))
+elif str(platform) == "posix":
+	env.Append(LIBS=Split("""
+		GL
+		X11
 	"""))
 
 Export("env platform")

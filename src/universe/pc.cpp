@@ -12,6 +12,8 @@
 #include <set>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
+#include <utility>
 
 #include "universe.hpp"
 #include "oldstructs.hpp"

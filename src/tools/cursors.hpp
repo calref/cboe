@@ -42,7 +42,7 @@ enum cursor_type {
 	text_curs, // Keep this one last
 };
 
-class Cursor {
+class cCursor {
 	void* ptr;
 public:
 	static cursor_type current;
