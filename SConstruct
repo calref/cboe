@@ -170,6 +170,7 @@ elif str(platform) == "win32":
 	def build_app_package(env, source, build_dir, info):
 		env.Install(build_dir, source)
 elif str(platform) == "posix":
+	env.Append(CXXFLAGS="-include global.hpp")
 	def build_app_package(env, source, build_dir, info):
 		env.Install(build_dir, source)
 

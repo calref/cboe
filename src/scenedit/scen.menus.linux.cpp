@@ -26,6 +26,9 @@ void init_menubar() {
 void shut_down_menus(short mode) {
 }
 
+void update_edit_menu() {
+}
+
 #include "cursors.hpp"
 
 #include "fileio.hpp"

@@ -1,28 +1,34 @@
 
 #include "cursors.hpp"
-#include "restypes.hpp" // Include before X11 to avoid macro conflicts in SFML
-#include <X11/Xlib.h>
-#include <X11/cursorfont.h>
+// #include "restypes.hpp" // Include before X11 to avoid macro conflicts in SFML
+#include "res_cursor.hpp"
 
-Cursor ibeam; // = XCreateFontCursor(NULL, XC_xterm);
+namespace x11 {
 
-extern cursor_type current_cursor;
+    #include <X11/Xlib.h>
+    #include <X11/cursorfont.h>
+
+}
+
+x11::Cursor ibeam; // = XCreateFontCursor(NULL, XC_xterm);
+
+// extern cursor_type current_cursor;
 extern sf::RenderWindow mainPtr;
 
-cCursor::cCursor(fs::path imgPath, float hotSpotX, float hotSpotY)
+Cursor::Cursor(fs::path imgPath, float hotSpotX, float hotSpotY)
     : ptr(nullptr) {
     
 }
 
-cCursor::~cCursor() {
+Cursor::~Cursor() {
     if (ptr != nullptr) {
-	    Cursor* realPtr = reinterpret_cast<Cursor*>(ptr);
-	    XFreeCursor(NULL, *realPtr);
+	    x11::Cursor* realPtr = reinterpret_cast<x11::Cursor*>(ptr);
+	    x11::XFreeCursor(NULL, *realPtr);
 	    delete realPtr;
 	}
 }
 
-void cCursor::apply() {
+void Cursor::apply() {
 	// XDefineCursor(NULL, current_window, *reinterpret_cast<Cursor*>(ptr));
 }
 
@@ -33,15 +39,16 @@ void obscureCursor() {
 
 void set_cursor(cursor_type which_c) {
 	if(which_c != watch_curs)
-		current_cursor = which_c;
+		// current_cursor = which_c;
+        Cursor::current = which_c;
 	if(which_c == text_curs) {
 		// XDefineCursor(NULL, current_window, ibeam);
 	} else {
-		cCursor& curs = *ResMgr::get<CursorRsrc>(cursors[which_c]);
+		Cursor& curs = *ResMgr::get<CursorRsrc>(cursors[which_c]);
 		curs.apply();
 	}
 }
 
 void restore_cursor() {
-	set_cursor(current_cursor);
+	set_cursor(Cursor::current);
 }
