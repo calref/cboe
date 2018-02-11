@@ -82,13 +82,10 @@ Notes and oddities:
 
 Helpful Links
 -------------
-* [BoE Forum at Spiderweb
-  Software](http://spiderwebforums.ipbhost.com/index.php?/forum/12-blades-
-  of-exile/)
+* [BoE Forum at Spiderweb Software](http://spiderwebforums.ipbhost.com/index.php?/forum/12-blades-of-exile/)
 * [Official IRC channel](http://webchat.freenode.net/?channels=%23openboe) (or join
 #openboe on irc.freenode.net)
-* [Original Game
-  Source](http://www.spiderwebsoftware.com/blades/opensource.html) - Where
+* [Original Game Source](http://www.spiderwebsoftware.com/blades/opensource.html) - Where
   it all began. Warning: Terrifying code.
 * [Experimental Builds](http://celmin.pwcsite.com/oboe/?C=M;O=D) - will be put
   up whenever Celtic Minstrel feels like it.
