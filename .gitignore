@@ -50,6 +50,7 @@ src/*.vsproj/*/Release/
 src/*.vsproj/Debug/
 src/*.vsproj/Release/
 src/*.vsproj/*/ipch/
+src/*.vsproj/.vs
 
 # SCons junk files
 .sconsign.dblite
