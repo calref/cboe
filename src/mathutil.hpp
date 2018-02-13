@@ -6,8 +6,19 @@
  *
  */
 
+#pragma once
+
 #include <cmath>
 #include <SFML/System/Time.hpp>
+
+// Make sure min and max macros are not defined.
+// Some Windows headers may define these.
+#ifdef min
+#undef min
+#endif
+#ifdef max
+#undef max
+#endif
 
 using std::abs;
 short get_ran(short times, short min, short max);
