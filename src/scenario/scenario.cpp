@@ -529,13 +529,11 @@ cItem cScenario::return_treasure(int loot, bool allow_junk) {
 	return treas;
 }
 
-cOutdoors& cScenario::get_sector(int x, int y)
-{
+cOutdoors& cScenario::get_sector(int x, int y) {
 	return *outdoors[x][y];
 }
 
-bool cScenario::is_town_entrance_valid(spec_loc_t loc) const
-{
+bool cScenario::is_town_entrance_valid(spec_loc_t loc) const {
 	auto towns_in_scenario = towns.size();
 	return loc.spec >= 0 && loc.spec < towns_in_scenario;
 }

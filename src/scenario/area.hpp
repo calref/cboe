@@ -43,8 +43,7 @@ public:
 		, maps(dim, boost::dynamic_bitset<>(dim))
 	{}
 
-	bool is_on_map(location loc) const
-	{
+	bool is_on_map(location loc) const {
 		return loc.x < max_dim && loc.y < max_dim && loc.x >= 0 && loc.y >= 0;
 	}
 };
