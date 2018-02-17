@@ -1282,7 +1282,8 @@ void erase_hidden_towns(cOutdoors& sector, int quadrant_x, int quadrant_y)
 void erase_completed_specials(cOutdoors& sector)
 {
 	for (auto tile_index = 0; tile_index < sector.special_locs.size(); tile_index++) {
-		if (sector.special_locs[tile_index].spec < 0)
+		if (sector.special_locs[tile_index].spec < 0 ||
+			sector.special_locs[tile_index].spec >= sector.specials.size())
 			continue;
 
 		auto sn = sector.specials[sector.special_locs[tile_index].spec];
