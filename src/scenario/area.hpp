@@ -16,6 +16,7 @@
 #include "vector2d.hpp"
 #include "location.hpp"
 #include "special.hpp"
+#include "mathutil.hpp"
 
 enum {
 	AREA_TINY = 24,
@@ -41,6 +42,11 @@ public:
 		, terrain(dim, dim)
 		, maps(dim, boost::dynamic_bitset<>(dim))
 	{}
+
+	bool is_on_map(location loc) const
+	{
+		return loc.x < max_dim && loc.y < max_dim && loc.x >= 0 && loc.y >= 0;
+	}
 };
 
 #endif

@@ -21,13 +21,11 @@
 #include "boe.specials.hpp"
 #include "boe.infodlg.hpp"
 #include "mathutil.hpp"
-#include "boe.main.hpp"
 #include "render_image.hpp"
 #include "render_shapes.hpp"
 #include "render_text.hpp"
 #include "tiling.hpp"
 #include "strdlog.hpp"
-#include "fileio.hpp"
 #include "winutil.hpp"
 #include "res_image.hpp"
 
@@ -1247,52 +1245,64 @@ void erase_specials() {
 }
 
 void erase_out_specials() {
-	
-	short out_num;
-	cSpecial sn;
-	short sd1,sd2;
-	location where;
-	
-	for(short i = 0; i < 2; i++)
-		for(short j = 0; j < 2; j++)
-			if(quadrant_legal(i,j)) {
-				cOutdoors& sector = *univ.scenario.outdoors[univ.party.outdoor_corner.x + i][univ.party.outdoor_corner.y + j];
-				for(short k = 0; k < sector.city_locs.size(); k++) {
-					if(sector.city_locs[k].spec >= 0 && sector.city_locs[k].x < 48 &&
-						univ.scenario.ter_types[sector.terrain[sector.city_locs[k].x][sector.city_locs[k].y]].special == eTerSpec::TOWN_ENTRANCE &&
-					   (sector.city_locs[k].x == minmax(0,47,sector.city_locs[k].x)) &&
-					   (sector.city_locs[k].y == minmax(0,47,sector.city_locs[k].y))) {
-						if(sector.city_locs[k].spec < 0 || sector.city_locs[k].spec >= univ.scenario.towns.size())
-							continue;
-						if(!univ.scenario.towns[sector.city_locs[k].spec]->can_find) {
-							univ.out[48 * i + sector.city_locs[k].x][48 * j + sector.city_locs[k].y] =
-								univ.scenario.ter_types[sector.terrain[sector.city_locs[k].x][sector.city_locs[k].y]].flag1;
-						}
-						else if(univ.scenario.towns[sector.city_locs[k].spec]->can_find) {
-							univ.out[48 * i + sector.city_locs[k].x][48 * j + sector.city_locs[k].y] =
-								sector.terrain[sector.city_locs[k].x][sector.city_locs[k].y];
-							
-						}
-					}
-				}
-				for(int k = 0; k < sector.special_locs.size(); k++) {
-					if(sector.special_locs[k].spec < 0) continue; // TODO: Is this needed? Seems to be important, so why was it commented out?
-					out_num = univ.scenario.outdoors.width() * (univ.party.outdoor_corner.y + j) + univ.party.outdoor_corner.x + i;
-					
-					sn = sector.specials[sector.special_locs[k].spec];
-					sd1 = sn.sd1; sd2 = sn.sd2;
-					if((univ.party.sd_legit(sd1,sd2)) && (PSD[sd1][sd2] == 250)) {
-						where = sector.special_locs[k];
-						if(where.x > 48 || where.y > 48 || where.x < 0 || where.y < 0) {
-							beep();
-							add_string_to_buf("Outdoor section corrupt. Problem fixed.");
-							sector.special_locs[k].spec = -1; // TODO: Again, was there a reason for commenting this out?
-						}
-						
-						sector.special_spot[where.x][where.y] = false;
-					}
-				}
+	for(short i = 0; i < 2; i++) {
+		for (short j = 0; j < 2; j++) {
+			if (!quadrant_legal(i, j)) continue;
+			auto& sector = univ.scenario.get_sector(univ.party.outdoor_corner.x + i, univ.party.outdoor_corner.y + j);
+
+			erase_hidden_towns(sector, i, j);
+
+			erase_completed_specials(sector);
+		}
+	}
+}
+
+void erase_hidden_towns(cOutdoors& sector, int quadrant_x, int quadrant_y)
+{
+	for (short tile_index = 0; tile_index < sector.city_locs.size(); tile_index++) {
+		auto city_loc = sector.city_locs[tile_index];
+		if (!univ.scenario.is_town_entrance_valid(city_loc) ||
+			!does_location_have_special(sector, city_loc, eTerSpec::TOWN_ENTRANCE) ||
+			!sector.is_on_map(city_loc)) {
+			continue;
+		}
+		auto town_pos_x = AREA_MEDIUM * quadrant_x + sector.city_locs[tile_index].x;
+		auto town_pos_y = AREA_MEDIUM * quadrant_y + sector.city_locs[tile_index].y;
+		auto spec_pos_x = sector.city_locs[tile_index].x;
+		auto spec_pos_y = sector.city_locs[tile_index].y;
+		auto area_index = sector.terrain[spec_pos_x][spec_pos_y];
+		if (!univ.scenario.towns[sector.city_locs[tile_index].spec]->can_find) {
+			univ.out[town_pos_x][town_pos_y] = univ.scenario.ter_types[area_index].flag1;
+		} else {
+			univ.out[town_pos_x][town_pos_y] = area_index;
+		}
+	}
+}
+
+void erase_completed_specials(cOutdoors& sector)
+{
+	for (auto tile_index = 0; tile_index < sector.special_locs.size(); tile_index++) {
+		if (sector.special_locs[tile_index].spec < 0)
+			continue;
+
+		auto sn = sector.specials[sector.special_locs[tile_index].spec];
+		if (univ.party.sd_legit(sn.sd1, sn.sd2) && PSD[sn.sd1][sn.sd2] == SDF_COMPLETE) {
+			auto completed_special = sector.special_locs[tile_index];
+			if (!sector.is_on_map(completed_special)) {
+				beep();
+				add_string_to_buf("Outdoor section corrupt. Problem fixed.");
+				sector.special_locs[tile_index].spec = -1; // TODO: Again, was there a reason for commenting this out?
 			}
+
+			sector.special_spot[completed_special.x][completed_special.y] = false;
+		}
+	}
+}
+
+bool does_location_have_special(cOutdoors& sector, location loc, eTerSpec special)
+{
+	auto terrain_index = sector.terrain[loc.x][loc.y];
+	return univ.scenario.ter_types[terrain_index].special == special;
 }
 
 // TODO: I don't think we need this

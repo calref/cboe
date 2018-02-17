@@ -1,5 +1,6 @@
 
 #include <SFML/Graphics.hpp>
+#include "outdoors.hpp"
 
 void force_town_enter(short which_town,location where_start);
 void start_town_mode(short which_town, short entry_dir);
@@ -21,7 +22,10 @@ void dump_gold(short print_mes);
 void pick_lock(location where,short pc_num);
 void bash_door(location where,short pc_num);
 void erase_specials();
+void erase_hidden_towns(cOutdoors& sector, int quadrant_x, int quadrant_y);
+void erase_completed_specials(cOutdoors& sector);
 void erase_out_specials();
+bool does_location_have_special(cOutdoors& sector, location loc, eTerSpec type);
 void clear_map();
 void draw_map(bool need_refresh);
 bool is_door(location destination);

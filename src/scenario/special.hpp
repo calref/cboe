@@ -16,6 +16,8 @@
 
 namespace legacy { struct special_node_type; };
 
+static const short SDF_COMPLETE = 250;
+
 // TODO: Add win/lose option to END_SCENARIO
 // TODO: Allow OUT_MOVE_PARTY to change the current sector
 enum class eSpecType {
