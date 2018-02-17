@@ -2105,7 +2105,7 @@ void run_special(eSpecCtx which_mode,short which_type,short start_spec,location 
 	}
 	if(is_out())
 		erase_out_specials();
-	else erase_specials();
+	else erase_town_specials();
 	special_in_progress = false;
 	
 	// TODO: Should find a way to do this that doesn't risk stack overflow

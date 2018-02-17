@@ -441,7 +441,7 @@ void start_town_mode(short which_town, short entry_dir) {
 				monst.active = 0;
 		}
 	
-	erase_specials();
+	erase_town_specials();
 //	make_town_trim(0);
 	
 	
@@ -1213,7 +1213,7 @@ void bash_door(location where,short pc_num) {
 }
 
 
-void erase_specials() {
+void erase_town_specials() {
 	location where;
 	short sd1,sd2;
 	cSpecial sn;
