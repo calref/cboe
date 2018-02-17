@@ -101,6 +101,10 @@ cTown* cCurTown::operator -> (){
 	return record();
 }
 
+cTown& cCurTown::operator * (){
+	return *record();
+}
+
 void cCurTown::place_preset_fields() {
 	// Initialize barriers, etc. Note non-sfx gets forgotten if this is a town recently visited.
 	for(int i = 0; i < 64; i++)

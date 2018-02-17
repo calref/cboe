@@ -53,6 +53,7 @@ public:
 	void import_legacy(legacy::big_tr_type& old);
 	
 	cTown* operator -> ();
+	cTown& operator * ();
 	explicit cCurTown(cUniverse& univ);
 	short countMonsters();
 	cSpeech& cur_talk(); // Get the currently loaded speech

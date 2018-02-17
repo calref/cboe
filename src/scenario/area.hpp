@@ -33,6 +33,7 @@ public:
 	std::vector<spec_loc_t> special_locs;
 	std::vector<sign_loc_t> sign_locs;
 	std::vector<info_rect_t> area_desc;
+	std::vector<cSpecial> specials;
 	std::string name;
 	// Persistent data for saved games
 	std::vector<boost::dynamic_bitset<>> maps;

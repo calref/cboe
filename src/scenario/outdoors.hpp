@@ -63,7 +63,6 @@ public:
 	std::vector<spec_loc_t> city_locs;
 	std::array<cWandering,4> wandering, special_enc;
 	std::array<location,4> wandering_locs;
-	std::vector<cSpecial> specials;
 	std::string comment;
 	std::vector<std::string> spec_strs;
 	bool special_spot[48][48];

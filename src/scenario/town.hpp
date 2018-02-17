@@ -87,7 +87,6 @@ public:
 	short spec_on_entry,spec_on_entry_if_dead;
 	short spec_on_hostile;
 	std::array<cTimer,8> timers;
-	std::vector<cSpecial> specials;
 	bool strong_barriers, defy_mapping, defy_scrying;
 	bool is_hidden, has_tavern;
 	short difficulty;

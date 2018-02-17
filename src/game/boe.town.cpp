@@ -1214,34 +1214,14 @@ void bash_door(location where,short pc_num) {
 
 
 void erase_town_specials() {
-	location where;
-	short sd1,sd2;
-	cSpecial sn;
-	
 	if((is_combat()) && (which_combat_type == 0))
 		return;
 	if(!is_town() && !is_combat())
 		return;
-	for(short k = 0; k < univ.town->special_locs.size(); k++) {
-		if(univ.town->special_locs[k].spec < 0 || univ.town->special_locs[k].spec >= univ.town->specials.size())
-			continue;
-		sn = univ.town->specials[univ.town->special_locs[k].spec];
-		sd1 = sn.sd1; sd2 = sn.sd2;
-		if((univ.party.sd_legit(sd1,sd2)) && (PSD[sd1][sd2] == 250)) {
-			long spec = univ.town->special_locs[k].spec;
-			where = univ.town->special_locs[k];
-			if(spec >= 0 && (where.x > univ.town->max_dim || where.y > univ.town->max_dim || where.x < 0 || where.y < 0)) {
-				beep();
-				add_string_to_buf("Town corrupt. Problem fixed.");
-				print_nums(where.x,where.y,k);
-				univ.town->special_locs[k].spec = -1;
-			}
-			
-			if(spec >= 0) {
-				univ.town.set_spot(where.x,where.y,false);
-			}
-		}
-	}
+	
+	erase_completed_specials(*univ.town, [](location where){
+		univ.town.set_spot(where.x, where.y, false);
+	});
 }
 
 void erase_out_specials() {
@@ -1252,7 +1232,9 @@ void erase_out_specials() {
 
 			erase_hidden_towns(sector, i, j);
 
-			erase_completed_specials(sector);
+			erase_completed_specials(sector, [&sector](location where){
+				sector.special_spot[where.x][where.y] = false;
+			});
 		}
 	}
 }
@@ -1278,7 +1260,7 @@ void erase_hidden_towns(cOutdoors& sector, int quadrant_x, int quadrant_y) {
 	}
 }
 
-void erase_completed_specials(cOutdoors& sector) {
+void erase_completed_specials(cArea& sector, std::function<void(location)> clear_spot) {
 	for(auto tile_index = 0; tile_index < sector.special_locs.size(); tile_index++) {
 		if(sector.special_locs[tile_index].spec < 0 ||
 			sector.special_locs[tile_index].spec >= sector.specials.size())
@@ -1289,11 +1271,12 @@ void erase_completed_specials(cOutdoors& sector) {
 			auto completed_special = sector.special_locs[tile_index];
 			if(!sector.is_on_map(completed_special)) {
 				beep();
-				add_string_to_buf("Outdoor section corrupt. Problem fixed.");
-				sector.special_locs[tile_index].spec = -1; // TODO: Again, was there a reason for commenting this out?
+				add_string_to_buf("Area corrupt. Problem fixed.");
+				print_nums(completed_special.x, completed_special.y, tile_index);
+				sector.special_locs[tile_index].spec = -1;
 			}
-
-			sector.special_spot[completed_special.x][completed_special.y] = false;
+			
+			clear_spot(completed_special);
 		}
 	}
 }

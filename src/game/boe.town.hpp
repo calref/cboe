@@ -23,7 +23,7 @@ void pick_lock(location where,short pc_num);
 void bash_door(location where,short pc_num);
 void erase_town_specials();
 void erase_hidden_towns(cOutdoors& sector, int quadrant_x, int quadrant_y);
-void erase_completed_specials(cOutdoors& sector);
+void erase_completed_specials(cArea& sector, std::function<void(location)> clear_spot);
 void erase_out_specials();
 bool does_location_have_special(cOutdoors& sector, location loc, eTerSpec type);
 void clear_map();
