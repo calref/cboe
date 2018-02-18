@@ -1291,13 +1291,12 @@ static bool handle_toolpal_action(location cur_point2) {
 						break;
 					case PAL_RECT_HOLLOW:
 						overall_mode = MODE_HOLLOW_RECT;
+						set_string("Fill rectangle (hollow)","Select upper left corner");
 						if(false) // Skip next statement
 					case PAL_RECT_FILLED:
-							overall_mode = MODE_FILLED_RECT;
+							overall_mode = MODE_FILLED_RECT,
+							set_string("Fill rectangle (solid)","Select upper left corner");
 						mode_count = 2;
-						if(i == 6)
-							set_string("Fill rectangle (hollow)","Select upper left corner");
-						else set_string("Fill rectangle (solid)","Select upper left corner");
 						break;
 					case PAL_BUCKET:
 						overall_mode = MODE_FLOOD_FILL;
