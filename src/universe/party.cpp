@@ -1016,11 +1016,15 @@ void cParty::readFrom(std::istream& file, cScenario& scen){
 		if(cur == "BOAT") {
 			int i;
 			bin >> i;
+			if(i >= boats.size())
+				boats.resize(i + 1);
 			boats[i].exists = true;
 			boats[i].readFrom(bin);
 		} else if(cur == "HORSE") {
 			int i;
 			bin >> i;
+			if(i >= horses.size())
+				horses.resize(i + 1);
 			horses[i].exists = true;
 			horses[i].readFrom(bin);
 		} else if(cur == "MAGICSTORE") {
