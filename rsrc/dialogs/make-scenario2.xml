@@ -17,7 +17,7 @@
 	<text size='large' top='32' left='59' width='158' height='18'>Size of Outdoors:</text>
 	<text size='large' top='166' left='59' width='235' height='18'>Number of towns/dungeons:</text>
 	<text top='52' left='70' width='377' height='39'>
-		The outdoors for your scenario can have up to 100 48x48 sections. 
+		The outdoors for your scenario can have as many 48x48 sections as you like.
 		Note, however, that more than 50 sections may be a bit too large.
 	</text>
 	<text top='186' left='70' width='383' height='52'>
