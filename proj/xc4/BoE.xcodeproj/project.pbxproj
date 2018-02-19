@@ -509,7 +509,7 @@
 
 /* Begin PBXFileReference section */
 		2B8F435C0C0973680012E4A8 /* BoE.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BoE.icns; path = icons/mac/BoE.icns; sourceTree = "<group>"; };
-		2BF04AC30BF518D4006C0831 /* BoE-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BoE-Info.plist"; sourceTree = SOURCE_ROOT; };
+		2BF04AC30BF518D4006C0831 /* BoE-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "BoE-Info.plist"; path = "../../pkg/mac/BoE-Info.plist"; sourceTree = SOURCE_ROOT; };
 		2BF04ACB0BF51923006C0831 /* boe.main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = boe.main.cpp; sourceTree = "<group>"; };
 		2BF04ACC0BF51923006C0831 /* boe.main.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = boe.main.hpp; sourceTree = "<group>"; };
 		2BF04ACD0BF51923006C0831 /* boe.graphutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = boe.graphutil.cpp; sourceTree = "<group>"; };
@@ -568,7 +568,7 @@
 		910BBAB50FB91A26001E34EA /* field.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = field.cpp; sourceTree = "<group>"; };
 		910BBAB80FB91ADB001E34EA /* message.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = message.hpp; sourceTree = "<group>"; };
 		910BBAB90FB91ADB001E34EA /* message.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = message.cpp; sourceTree = "<group>"; };
-		910D9CA31B36439100414B17 /* libboost_thread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_thread.dylib; path = ../../../../../../usr/local/lib/libboost_thread.dylib; sourceTree = "<group>"; };
+		910D9CA31B36439100414B17 /* libboost_thread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_thread.dylib; path = /usr/local/lib/libboost_thread.dylib; sourceTree = "<absolute>"; };
 		911F2D981B98F43B00E3102E /* libCommon.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCommon.a; path = lib/libCommon.a; sourceTree = "<group>"; };
 		911F2D9D1B98F44700E3102E /* libCommon-Party.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libCommon-Party.a"; path = "lib/libCommon-Party.a"; sourceTree = "<group>"; };
 		911F2DA21B98FF2300E3102E /* cursors */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cursors; sourceTree = "<group>"; };
@@ -576,7 +576,7 @@
 		911F2DA41B98FF2300E3102E /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sounds; sourceTree = "<group>"; };
 		911F2DA51B98FF2700E3102E /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		912283C80FD0E16C00B21642 /* undo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = undo.cpp; sourceTree = "<group>"; };
-		91279BAD0F9CFCBA007B0D52 /* boescenario.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = boescenario.icns; path = ../rsrc/icons/mac/boescenario.icns; sourceTree = SOURCE_ROOT; };
+		91279BAD0F9CFCBA007B0D52 /* boescenario.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = boescenario.icns; path = icons/mac/boescenario.icns; sourceTree = "<group>"; };
 		91279BB30F9D03B6007B0D52 /* boesave.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = boesave.icns; path = icons/mac/boesave.icns; sourceTree = "<group>"; };
 		91279BB40F9D03B7007B0D52 /* boesounds.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = boesounds.icns; path = icons/mac/boesounds.icns; sourceTree = "<group>"; };
 		91279BB50F9D03B7007B0D52 /* boegraphics.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = boegraphics.icns; path = icons/mac/boegraphics.icns; sourceTree = "<group>"; };
@@ -612,7 +612,7 @@
 		914701A918F64A85008A6DC9 /* dialog.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = dialog.xsd; path = schemas/dialog.xsd; sourceTree = "<group>"; };
 		914B2AA118E7E500007B6799 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		914B2AA218E7E500007B6799 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
-		914B2BB518E892AA007B6799 /* dialog-converting.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "dialog-converting.txt"; path = "dialogxml/dialog-converting.txt"; sourceTree = SOURCE_ROOT; };
+		914B2BB518E892AA007B6799 /* dialog-converting.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "dialog-converting.txt"; sourceTree = "<group>"; };
 		914CA45719074D0A00B6ADD1 /* scen.menus.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = scen.menus.mac.mm; sourceTree = "<group>"; };
 		914CA4641909B00100B6ADD1 /* scen.menus.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = scen.menus.hpp; sourceTree = "<group>"; };
 		914CA49F190C4E9200B6ADD1 /* scenedit.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = scenedit.xib; path = menus/scenedit.xib; sourceTree = "<group>"; };
@@ -630,11 +630,11 @@
 		9176FEC11D550EFC006EF694 /* scen_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen_legacy.cpp; sourceTree = "<group>"; };
 		9176FEC41D550EFD006EF694 /* talk_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = talk_legacy.cpp; sourceTree = "<group>"; };
 		9176FEC51D550EFE006EF694 /* town_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = town_legacy.cpp; sourceTree = "<group>"; };
-		9178235C1B2EA0C5007F3444 /* vorbisenc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbisenc.framework; path = ../../../../../../Library/Frameworks/vorbisenc.framework; sourceTree = "<group>"; };
-		917823671B2F32DD007F3444 /* vorbisfile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbisfile.framework; path = ../../../../../../Library/Frameworks/vorbisfile.framework; sourceTree = "<group>"; };
-		9178236E1B2F331D007F3444 /* vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbis.framework; path = ../../../../../../Library/Frameworks/vorbis.framework; sourceTree = "<group>"; };
-		917823751B2F334C007F3444 /* ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ogg.framework; path = ../../../../../../Library/Frameworks/ogg.framework; sourceTree = "<group>"; };
-		9178237C1B2F33E9007F3444 /* FLAC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FLAC.framework; path = ../../../../../../Library/Frameworks/FLAC.framework; sourceTree = "<group>"; };
+		9178235C1B2EA0C5007F3444 /* vorbisenc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbisenc.framework; path = /Library/Frameworks/vorbisenc.framework; sourceTree = "<absolute>"; };
+		917823671B2F32DD007F3444 /* vorbisfile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbisfile.framework; path = /Library/Frameworks/vorbisfile.framework; sourceTree = "<absolute>"; };
+		9178236E1B2F331D007F3444 /* vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbis.framework; path = /Library/Frameworks/vorbis.framework; sourceTree = "<absolute>"; };
+		917823751B2F334C007F3444 /* ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ogg.framework; path = /Library/Frameworks/ogg.framework; sourceTree = "<absolute>"; };
+		9178237C1B2F33E9007F3444 /* FLAC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FLAC.framework; path = /Library/Frameworks/FLAC.framework; sourceTree = "<absolute>"; };
 		9179A4621A47D4E200FEF872 /* vector2d.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = vector2d.hpp; sourceTree = "<group>"; };
 		9179A4631A4867E200FEF872 /* stack.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = stack.hpp; sourceTree = "<group>"; };
 		9179A4641A48681800FEF872 /* stack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stack.cpp; sourceTree = "<group>"; };
@@ -672,7 +672,7 @@
 		919B13A81BBE2B54009905A4 /* scrollpane.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scrollpane.cpp; sourceTree = "<group>"; };
 		919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_filesystem.dylib; path = /usr/local/lib/libboost_filesystem.dylib; sourceTree = "<absolute>"; };
 		919DDBFB19006CC9003E7FED /* libboost_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_system.dylib; path = /usr/local/lib/libboost_system.dylib; sourceTree = "<absolute>"; };
-		919DDC091900750D003E7FED /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../../../../../Library/Frameworks/freetype.framework; sourceTree = "<group>"; };
+		919DDC091900750D003E7FED /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = /Library/Frameworks/freetype.framework; sourceTree = "<absolute>"; };
 		91A0B15A1900F73E00EF438F /* mask.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = mask.frag; sourceTree = "<group>"; };
 		91A32BD10FDB797B00C4E957 /* basicbtns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = basicbtns.cpp; sourceTree = "<group>"; };
 		91AC607E0FA26A3B00EEAE67 /* area.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = area.hpp; sourceTree = "<group>"; };
@@ -681,7 +681,7 @@
 		91AC61C50FA2729900EEAE67 /* universe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = universe.cpp; sourceTree = "<group>"; };
 		91AC62090FA2853700EEAE67 /* population.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = population.hpp; sourceTree = "<group>"; };
 		91AC620A0FA2853700EEAE67 /* population.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = population.cpp; sourceTree = "<group>"; };
-		91ACCE82190032E000FAEF8B /* fix_dylibs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = fix_dylibs.sh; sourceTree = "<group>"; };
+		91ACCE82190032E000FAEF8B /* fix_dylibs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = fix_dylibs.sh; path = ../../pkg/mac/fix_dylibs.sh; sourceTree = "<group>"; };
 		91B0D5CB1E33E579002BE4DA /* bladbase */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bladbase; path = ../bases/bladbase; sourceTree = "<group>"; };
 		91B0D5CC1E3408AB002BE4DA /* busywork */ = {isa = PBXFileReference; lastKnownFileType = folder; path = busywork; sourceTree = "<group>"; };
 		91B0D5CD1E3408AB002BE4DA /* stealth */ = {isa = PBXFileReference; lastKnownFileType = folder; path = stealth; sourceTree = "<group>"; };
@@ -690,7 +690,7 @@
 		91B0D5D01E34428E002BE4DA /* view_dialogs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = view_dialogs.cpp; sourceTree = "<group>"; };
 		91B0D5D31E3446CF002BE4DA /* view_dialogs.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = view_dialogs.hpp; sourceTree = "<group>"; };
 		91B3E8A50F938FFE00BF5B67 /* boe.consts.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.consts.hpp; sourceTree = "<group>"; };
-		91B3EED90F969BA700BF5B67 /* BoEScenEd-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoEScenEd-Info.plist"; path = "scenedit/BoEScenEd-Info.plist"; sourceTree = SOURCE_ROOT; };
+		91B3EED90F969BA700BF5B67 /* BoEScenEd-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoEScenEd-Info.plist"; path = "../../pkg/mac/BoEScenEd-Info.plist"; sourceTree = SOURCE_ROOT; };
 		91B3EEDB0F969BA700BF5B67 /* BoEScenEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BoEScenEd.icns; path = icons/mac/BoEScenEd.icns; sourceTree = "<group>"; };
 		91B3EEDE0F969BA700BF5B67 /* scen.global.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scen.global.hpp; sourceTree = "<group>"; };
 		91B3EEE00F969BA700BF5B67 /* scen.keydlgs.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scen.keydlgs.hpp; sourceTree = "<group>"; };
@@ -718,7 +718,7 @@
 		91B3EF080F969BD300BF5B67 /* pc.fileio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.fileio.cpp; sourceTree = "<group>"; };
 		91B3EF0A0F969BD300BF5B67 /* pc.graphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.graphics.cpp; sourceTree = "<group>"; };
 		91B3EF110F969BD300BF5B67 /* BoECharEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BoECharEd.icns; path = icons/mac/BoECharEd.icns; sourceTree = "<group>"; };
-		91B3EF130F969BD300BF5B67 /* BoECharEd-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoECharEd-Info.plist"; path = "pcedit/BoECharEd-Info.plist"; sourceTree = SOURCE_ROOT; };
+		91B3EF130F969BD300BF5B67 /* BoECharEd-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoECharEd-Info.plist"; path = "../../pkg/mac/BoECharEd-Info.plist"; sourceTree = SOURCE_ROOT; };
 		91B3F1090F9779C300BF5B67 /* render_image.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = render_image.hpp; sourceTree = "<group>"; };
 		91B3F10A0F9779C300BF5B67 /* render_image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = render_image.cpp; sourceTree = "<group>"; };
 		91B3F10E0F9779D000BF5B67 /* sounds.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = sounds.hpp; sourceTree = "<group>"; };
@@ -945,7 +945,8 @@
 				910BBA140FB8BE7D001E34EA /* widgets */,
 				910BBA150FB8BE88001E34EA /* dialogs */,
 			);
-			path = dialogxml;
+			name = dialogxml;
+			path = ../../src/dialogxml;
 			sourceTree = SOURCE_ROOT;
 		};
 		910BBA140FB8BE7D001E34EA /* widgets */ = {
@@ -1094,7 +1095,8 @@
 				91AC62090FA2853700EEAE67 /* population.hpp */,
 				91AC61C40FA2729900EEAE67 /* universe.hpp */,
 			);
-			path = universe;
+			name = universe;
+			path = ../../src/universe;
 			sourceTree = "<group>";
 		};
 		9185BD941EA01BCC0027C346 /* scenario */ = {
@@ -1128,7 +1130,8 @@
 				91AC607F0FA26A3B00EEAE67 /* town_import.tpp */,
 				91279C740F9D15E4007B0D52 /* vehicle.hpp */,
 			);
-			path = scenario;
+			name = scenario;
+			path = ../../src/scenario;
 			sourceTree = "<group>";
 		};
 		9185BDA11EA041570027C346 /* tools */ = {
@@ -1146,7 +1149,8 @@
 				919145FE18E63B41005CF3A4 /* winutil.hpp */,
 				91C2A6E11B823CCD00346948 /* gitrev.sh */,
 			);
-			path = tools;
+			name = tools;
+			path = ../../src/tools;
 			sourceTree = "<group>";
 		};
 		9185BDA21EA042BE0027C346 /* gfx */ = {
@@ -1166,7 +1170,8 @@
 				91A0B15A1900F73E00EF438F /* mask.frag */,
 				91BFA3D61901B024001686E4 /* mask.vert */,
 			);
-			path = gfx;
+			name = gfx;
+			path = ../../src/gfx;
 			sourceTree = "<group>";
 		};
 		9185BDA31EA044790027C346 /* fileio */ = {
@@ -1187,7 +1192,8 @@
 				912DFE8718E24B0B00B00D75 /* resmgr */,
 				910BBA190FB8C43E001E34EA /* xml-parser */,
 			);
-			path = fileio;
+			name = fileio;
+			path = ../../src/fileio;
 			sourceTree = "<group>";
 		};
 		9185BDA41EA053E00027C346 /* misc */ = {
@@ -1217,6 +1223,7 @@
 				91B0D5D31E3446CF002BE4DA /* view_dialogs.hpp */,
 			);
 			name = misc;
+			path = ../../src;
 			sourceTree = "<group>";
 		};
 		91B3EECD0F969B7000BF5B67 /* ScenEd */ = {
@@ -1227,7 +1234,7 @@
 				91B3EED50F969BA700BF5B67 /* rsrc */,
 			);
 			name = ScenEd;
-			path = scenedit;
+			path = ../../src/scenedit;
 			sourceTree = "<group>";
 		};
 		91B3EED50F969BA700BF5B67 /* rsrc */ = {
@@ -1239,7 +1246,7 @@
 				914CA49F190C4E9200B6ADD1 /* scenedit.xib */,
 			);
 			name = rsrc;
-			path = ../rsrc;
+			path = ../../rsrc;
 			sourceTree = SOURCE_ROOT;
 		};
 		91B3EEDC0F969BA700BF5B67 /* headers */ = {
@@ -1283,7 +1290,7 @@
 				91B3EF0D0F969BD300BF5B67 /* rsrc */,
 			);
 			name = CharEd;
-			path = pcedit;
+			path = ../../src/pcedit;
 			sourceTree = "<group>";
 		};
 		91B3EEFB0F969BD300BF5B67 /* headers */ = {
@@ -1320,7 +1327,7 @@
 				91FCC8D718FE28CC007026CE /* pcedit.xib */,
 			);
 			name = rsrc;
-			path = ../rsrc;
+			path = ../../rsrc;
 			sourceTree = SOURCE_ROOT;
 		};
 		91B3EF220F969CA300BF5B67 /* rsrc */ = {
@@ -1337,7 +1344,7 @@
 				914B2BB518E892AA007B6799 /* dialog-converting.txt */,
 			);
 			name = rsrc;
-			path = ../rsrc;
+			path = ../../rsrc;
 			sourceTree = SOURCE_ROOT;
 		};
 		91B3EF380F969E4A00BF5B67 /* Game */ = {
@@ -1348,7 +1355,7 @@
 				91D62F2E0F8EB80200674AB3 /* rsrc */,
 			);
 			name = Game;
-			path = game;
+			path = ../../src/game;
 			sourceTree = "<group>";
 		};
 		91BFA3DC19033E00001686E4 /* gzstream */ = {
@@ -1368,7 +1375,7 @@
 				91BC33971B439BEA0008882C /* files */,
 			);
 			name = test;
-			path = ../test;
+			path = ../../test;
 			sourceTree = "<group>";
 		};
 		91CC17371B421C83003D9A69 /* headers */ = {
@@ -1480,7 +1487,7 @@
 				9192C11E18F271920088A580 /* game.xib */,
 			);
 			name = rsrc;
-			path = ../rsrc;
+			path = ../../rsrc;
 			sourceTree = SOURCE_ROOT;
 		};
 		91D635A90F90E7B500674AB3 /* Scenarios and Bases */ = {
@@ -1706,7 +1713,7 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/../rsrc/dialogs/*.xml",
+				"$(SRCROOT)/../../rsrc/dialogs/*.xml",
 			);
 			name = "Validate Dialog Definitions";
 			outputPaths = (
@@ -1714,7 +1721,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "\nfunction filter() {\n\tgrep -v 'validates' -\n\treturn 0\n}\n\ncd ../rsrc/dialogs/\nset -o pipefail\nxmllint --nonet --noout --schema \"$SOURCE_ROOT/../rsrc/schemas/dialog.xsd\" \"$SOURCE_ROOT/../rsrc/dialogs/\"*.xml 2>&1 | sed 's/%20/ /g' | filter\n";
+			shellScript = "../../pkg/validate-dialogs.sh \"$SOURCE_ROOT/../../rsrc\"";
 			showEnvVarsInLog = 0;
 		};
 		91ACCE801900302D00FAEF8B /* Fix dylib install names */ = {
@@ -1729,7 +1736,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = ./fix_dylibs.sh;
+			shellScript = ../../pkg/mac/fix_dylibs.sh;
 			showEnvVarsInLog = 0;
 		};
 		91ACCE861900342E00FAEF8B /* Fix dylib install names */ = {
@@ -1744,7 +1751,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = ./fix_dylibs.sh;
+			shellScript = ../../pkg/mac/fix_dylibs.sh;
 		};
 		91ACCE911900345400FAEF8B /* Fix dylib install names */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1758,7 +1765,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = ./fix_dylibs.sh;
+			shellScript = ../../pkg/mac/fix_dylibs.sh;
 		};
 		91B0D5CA1E331910002BE4DA /* Pack Scenarios */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1766,11 +1773,11 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/../rsrc/bases/bladbase",
-				"$(SRCROOT)/../rsrc/scenarios/busywork",
-				"$(SRCROOT)/../rsrc/scenarios/valleydy",
-				"$(SRCROOT)/../rsrc/scenarios/stealth",
-				"$(SRCROOT)/../rsrc/scenarios/zakhazi",
+				"$(SRCROOT)/../../rsrc/bases/bladbase",
+				"$(SRCROOT)/../../rsrc/scenarios/busywork",
+				"$(SRCROOT)/../../rsrc/scenarios/valleydy",
+				"$(SRCROOT)/../../rsrc/scenarios/stealth",
+				"$(SRCROOT)/../../rsrc/scenarios/zakhazi",
 			);
 			name = "Pack Scenarios";
 			outputPaths = (
@@ -1782,7 +1789,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "test $SCRIPT_INPUT_FILE_COUNT -eq $SCRIPT_OUTPUT_FILE_COUNT || exit 1\nfor((i = 0; i < $SCRIPT_INPUT_FILE_COUNT; i++)); do\n\teval in=\\$SCRIPT_INPUT_FILE_$i\n\teval out=\\$SCRIPT_OUTPUT_FILE_$i\n\trm -f \"$out\"\n\tcd \"$in/..\"\n\tmv \"$in\" scenario\n\ttar -czf \"$out\" scenario\n\tmv scenario \"$in\"\ndone";
+			shellScript = "test $SCRIPT_INPUT_FILE_COUNT -eq $SCRIPT_OUTPUT_FILE_COUNT || exit 1\nfor((i = 0; i < $SCRIPT_INPUT_FILE_COUNT; i++)); do\n\teval in=\\$SCRIPT_INPUT_FILE_$i\n\teval out=\\$SCRIPT_OUTPUT_FILE_$i\n\t../../pkg/pack-scenario.sh \"$in\" \"$out\"\ndone";
 		};
 		91C2A6E01B823C7B00346948 /* Generate Git Revision Information */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1796,7 +1803,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "export PATH=/opt/local/bin:$PATH\n./tools/gitrev.sh";
+			shellScript = "export PATH=/opt/local/bin:$PATH\n../../pkg/gitrev.sh \"$SOURCE_ROOT/../../src\"";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2067,7 +2074,7 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREFIX_HEADER = global.hpp;
+				GCC_PREFIX_HEADER = ../../src/global.hpp;
 				GCC_PREPROCESSOR_DEFINITIONS = TIXML_USE_TICPP;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
@@ -2130,7 +2137,7 @@
 				GCC_ENABLE_PASCAL_STRINGS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_INPUT_FILETYPE = automatic;
-				GCC_PREFIX_HEADER = global.hpp;
+				GCC_PREFIX_HEADER = ../../src/global.hpp;
 				GCC_PREPROCESSOR_DEFINITIONS = TIXML_USE_TICPP;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
@@ -2183,7 +2190,7 @@
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				INFOPLIST_FILE = "$(SRCROOT)/BoE-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/../../pkg/mac/BoE-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
@@ -2205,7 +2212,7 @@
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				INFOPLIST_FILE = "$(SRCROOT)/BoE-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/../../pkg/mac/BoE-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
@@ -2288,7 +2295,7 @@
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
-				INFOPLIST_FILE = "$(SRCROOT)/pcedit/BoECharEd-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/../../pkg/mac/pcedit/BoECharEd-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
@@ -2311,7 +2318,7 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/pcedit/BoECharEd-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/../../pkg/mac/pcedit/BoECharEd-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
@@ -2334,7 +2341,7 @@
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
-				INFOPLIST_FILE = "$(SRCROOT)/scenedit/BoEScenEd-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/../../pkg/mac/scenedit/BoEScenEd-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
@@ -2358,7 +2365,7 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/scenedit/BoEScenEd-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/../../pkg/mac/scenedit/BoEScenEd-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (

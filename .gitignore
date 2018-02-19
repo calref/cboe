@@ -34,10 +34,10 @@ exe/
 configvars.make
 
 # XCode Junk Files
-src/*.xcodeproj/**/xcuserdata
-src/*.xcodeproj/**/*.xccheckout
-src/*.xcodeproj/*.mode*
-src/*.xcodeproj/*.pbxuser
+proj/xc*/*.xcodeproj/**/xcuserdata
+proj/xc*/*.xcodeproj/**/*.xccheckout
+proj/xc*/*.xcodeproj/*.mode*
+proj/xc*/*.xcodeproj/*.pbxuser
 
 # Visual Studio Junk Files
 src/*.vsproj/*sdf
@@ -54,6 +54,7 @@ src/*.vsproj/.vs
 
 # SCons junk files
 .sconsign.dblite
+.sconsign.tmp
 build/
 deps/
 

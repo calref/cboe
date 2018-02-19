@@ -29,7 +29,7 @@ scened = env.Program("#build/bin/BoE Scenario Editor", common_sources + scened_s
 if str(platform) == "darwin":
 	scened_info = {
 		'nib': '#rsrc/menus/scenedit',
-		'plist': 'BoEScenEd-Info.plist',
+		'plist': '#pkg/mac/BoEScenEd-Info.plist',
 		'creator': 'BlEd',
 		'icons': 'boescenario BoEScenEd',
 	}

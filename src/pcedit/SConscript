@@ -26,7 +26,7 @@ pced = env.Program("#build/bin/BoE Character Editor", common_sources + party_cla
 if str(platform) == "darwin":
 	pced_info = {
 		'nib': '#rsrc/menus/pcedit',
-		'plist': 'BoECharEd-Info.plist',
+		'plist': '#pkg/mac/BoECharEd-Info.plist',
 		'creator': 'blxe',
 		'icons': 'BoECharEd',
 	}
