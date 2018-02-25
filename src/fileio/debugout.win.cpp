@@ -15,8 +15,8 @@ public:
 	}
 protected:
 	int sync() {
-		output_debug_string(str().c_str());
-		str(std::basic_string<CharT>()); // Clear the string buffer
+		output_debug_string(this->str().c_str());
+		this->str(std::basic_string<CharT>()); // Clear the string buffer
 		return 0;
 	}
 

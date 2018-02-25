@@ -976,7 +976,7 @@ void draw_terrain(){
 
 void draw_monsts() {
 	short width,height,m_start_pic;
-	sf::Texture* from_gworld;
+	sf::Texture* from_gworld = nullptr;
 	rectangle source_rect;
 	location where_draw,store_loc;
 	

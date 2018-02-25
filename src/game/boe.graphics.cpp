@@ -31,7 +31,9 @@
 #include "boe.menus.hpp"
 #include "winutil.hpp"
 #include "prefs.hpp"
+#ifndef MSBUILD_GITREV
 #include "gitrev.hpp"
+#endif
 
 extern sf::RenderWindow mainPtr;
 extern short stat_window;

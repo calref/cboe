@@ -831,8 +831,8 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 	bool choose_string = true;
 	eStrType strt;
 	short str_adj = 0;
-	const char* title;
-	cSpecial* node_to_change_to;
+	const char* title = "";
+	cSpecial* node_to_change_to = nullptr;
 	switch(btn) {
 		case 'm':
 			choose_string = false;
