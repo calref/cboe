@@ -67,4 +67,4 @@ xcopy "%DllSrcDir%\openal32.dll" %TargetDir% /s /y /i /d
 cd %ResourceDir%\..\src
 
 rem TODO: Unfortunately this hardcodes the location of bash.
-c:\bin\Git\bin\bash.exe tools/gitrev.sh
+c:\bin\Git\bin\bash.exe ../pkg/gitrev.sh .
