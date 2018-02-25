@@ -31,7 +31,7 @@ There are currently four ways to build Blades of Exile:
 
 - The build.sh shell-script, which builds and runs a Makefile.
 - XCode 4 or later
-- Microsoft Visual Studio 2013 or later
+- Microsoft Visual Studio 2013/2017
 - scons
 
 The officially supported method is scons. The script is currently a work-in-progress and
@@ -57,8 +57,16 @@ The following dependencies are required:
 - [Boost](http://www.boost.org/) - Filesystem, System, and Thread, plus several header-only
   libraries; if you're picky, you can run scons and see it enumerate exactly which
   libraries are needed
-- ZLib - This is included with the system on the Mac, but you may need to install it if
-  compiling on Windows.
+- ZLib - This is included with the system on the Mac.
+
+If you are using Visual Studio, we recommend installing [vcpkg](https://github.com/Microsoft/vcpkg) to manage these dependencies.
+Use the following commands to install the required dependencies:
+For 32-bit builds:
+```vcpkg install zlib:x86-windows sfml:x86-windows opengl:x86-windows boost-any:x86-windows boost-dynamic-bitset:x86-windows boost-ptr-container:x86-windows boost-core:x86-windows boost-filesystem:x86-windows boost-system:x86-windows boost-date-time:x86-windows boost-chrono:x86-windows boost-thread:x86-windows```
+For 64-bit builds (Not supported in Visual Studio projects, yet):
+```vcpkg install zlib:x64-windows sfml:x64-windows opengl:x64-windows boost-any:x64-windows boost-dynamic-bitset:x64-windows boost-ptr-container:x64-windows boost-core:x64-windows boost-filesystem:x64-windows boost-system:x64-windows boost-date-time:x64-windows boost-chrono:x64-windows boost-thread:x64-windows```
+If this is the first time installing packages with vcpkg since install you will need to run the `integrate` command:
+```vcpkg integrate install```
 
 If you're using XCode, you may need to adjust the project file settings to specify the
 correct place to search. For example, if you installed Boost via Homebrew, you may need to
