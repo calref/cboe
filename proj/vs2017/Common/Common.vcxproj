@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{540A4D47-DB2C-40E1-9E10-9F6425377022}</ProjectGuid>
+    <RootNamespace>Common</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <DefineConstants>$(DefineConstants);GIT_REVISION = $(GitCommit); GIT_TAG = $(GitTag); GIT_TAG_REVISION = "no-tag-rev"</DefineConstants>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <SourcePath>$(SolutionDir)..\..\src;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <SourcePath>$(SolutionDir)..\..\src;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>
+      </SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
+      <DisableSpecificWarnings>
+      </DisableSpecificWarnings>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE;TIXML_USE_TICPP;%(PreprocessorDefinitions);_DEBUG</PreprocessorDefinitions>
+      <AdditionalUsingDirectories>
+      </AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\Gfx;$(SolutionDir)..\..\src</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE;TIXML_USE_TICPP;%(PreprocessorDefinitions);_DEBUG</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\Gfx;$(SolutionDir)..\..\src</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>
+      </SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
+      <DisableSpecificWarnings>
+      </DisableSpecificWarnings>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE;TIXML_USE_TICPP;%(PreprocessorDefinitions);NDEBUG</PreprocessorDefinitions>
+      <AdditionalUsingDirectories>
+      </AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\Gfx;$(SolutionDir)..\..\src</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE;TIXML_USE_TICPP;%(PreprocessorDefinitions);NDEBUG</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\Gfx;$(SolutionDir)..\..\src</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Xml Include="..\..\..\rsrc\dialogs\1str-lg.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\1str-title-lg.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\1str-title.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\1str.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\2str-lg.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\2str-title-lg.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\2str-title.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\2str.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\abort-game.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\about-boe.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\about-pced.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\about-scened.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\add-new-sheet.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\add-random-items.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\adventure-notes.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\attack-friendly.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\basic-button.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\basic-lever.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\basic-portal.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\basic-slope-down.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\basic-slope-up.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\basic-stair-down.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\basic-stair-up.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\basic-trap.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\boat-bridge.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\cast-spell.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\change-terrain.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\choose-bg.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\choose-pict.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\choose-string.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\clear-items-confirm.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\confirm-interrupt.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\congrats-save.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\convert-pics-now.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\dark-slope-down.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\dark-slope-up.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\data-dump-confirm.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\delete-pc-confirm.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\delete-town-confirm.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\dialog.xsl" />
+    <Xml Include="..\..\..\rsrc\dialogs\discard-special-node.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\drop-item-confirm.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-day.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-dialog-text.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-intro.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-item-abils.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-item-shortcut.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-item.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-mabil-general.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-mabil-missile.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-mabil-radiate.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-mabil-special.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-mabil-summon.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-monster-abils.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-monster.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-outdoor-details.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-outdoor-encounter.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-party.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-personality.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-placed-item.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-quest.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-save-rects.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-scenario-details.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-scenario-events.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-shop-item.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-shop-special.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-shop.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-sign.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-sounds.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-special-assign.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-special-item.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-special-node.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-special-text-sm.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-special-text.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-talk-node.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-ter-obj.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-terrain.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-text.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-town-advanced.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-town-details.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-town-events.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-town-varying.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-town-wandering.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-townperson-advanced.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-townperson.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-vehicle.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\edit-xp.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\event-journal.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\get-items.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\get-mabil-num.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\get-num.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\get-response.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\graphic-sheets.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\graphic-types.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\have-no-pics.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\have-only-full-pics.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\help-combat.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\help-contest.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\help-debug.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\help-distributing.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\help-editing.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\help-fields.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\help-hints.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\help-inventory.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\help-magic.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\help-outdoor.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\help-party.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\help-testing.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\help-town.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\inventory-full.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\item-info.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\job-board.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\keep-stored-items.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\leave-scenario.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\leave-town.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\locked-door-action.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\make-scenario1.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\make-scenario2.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\many-str.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\monster-info.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\must-delete-in-order.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\need-party.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\new-party.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\new-town.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\no-scenarios.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\not-at-edge.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\not-split.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\party-death.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\pc-alchemy-info.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\pc-info.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\pc-spell-info.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\pick-pc-name.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\pick-potion.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\pick-prefab-scen.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\pick-race-abil.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\pick-scenario.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\pick-spec-type.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\preferences.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\quest-info.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\quit-confirm-nosave.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\quit-confirm-save.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\removed-special-items.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\resize-outdoors.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\restart-game.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\reunite-first.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\reunited.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\save-before-close.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\save-before-load.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\save-before-quit.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\save-before-revert.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\save-close.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\save-legacy-scen.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\save-open.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\save-quit.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\save-revert.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\scen-version-mismatch.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\select-import-town.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\select-pc.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\select-sector.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\select-town-edit.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\select-town-enter.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\set-area-desc.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\set-not-owned.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\set-sdf.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\show-map.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\skill-info.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\slimy-stair-down.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\slimy-stair-up.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\soul-crystal.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\spell-info.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\spend-xp.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\steal-item.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\talk-notes.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\text-dump-confirm.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\tip-of-day.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\view-sign.xml" />
+    <Xml Include="..\..\..\rsrc\dialogs\welcome.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\rsrc\dialogs\dialog.css" />
+    <None Include="..\..\..\src\scenario\town_import.tpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\dialogxml\dialogs\3choice.cpp" />
+    <ClCompile Include="..\..\..\src\dialogxml\dialogs\choicedlog.cpp" />
+    <ClCompile Include="..\..\..\src\dialogxml\dialogs\dialog.cpp" />
+    <ClCompile Include="..\..\..\src\dialogxml\dialogs\pictchoice.cpp" />
+    <ClCompile Include="..\..\..\src\dialogxml\dialogs\strchoice.cpp" />
+    <ClCompile Include="..\..\..\src\dialogxml\dialogs\strdlog.cpp" />
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\basicbtns.cpp" />
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\button.cpp" />
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\control.cpp" />
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\field.cpp" />
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\message.cpp" />
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\pict.cpp" />
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\scrollbar.cpp" />
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\scrollpane.cpp" />
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\stack.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\debugout.win.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\estreams.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\fileio.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\fileio_party.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\fileio_scen.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\gzstream\gzstream.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\map_parse.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\resmgr\restypes.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\special_parse.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\tarball.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\xml-parser\ticpp.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\xml-parser\tinyprint.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\xml-parser\tinystr.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\xml-parser\tinyxml.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\xml-parser\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\xml-parser\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\..\src\gfx\gfxsheets.cpp" />
+    <ClCompile Include="..\..\..\src\gfx\qdpict.mac.cpp" />
+    <ClCompile Include="..\..\..\src\gfx\render_image.cpp" />
+    <ClCompile Include="..\..\..\src\gfx\render_shapes.cpp" />
+    <ClCompile Include="..\..\..\src\gfx\render_text.cpp" />
+    <ClCompile Include="..\..\..\src\gfx\tiling.cpp" />
+    <ClCompile Include="..\..\..\src\location.cpp" />
+    <ClCompile Include="..\..\..\src\mathutil.cpp" />
+    <ClCompile Include="..\..\..\src\oldstructs.cpp" />
+    <ClCompile Include="..\..\..\src\porting.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\item.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\monster.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\outdoors.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\scenario.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\shop.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\special.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\talking.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\terrain.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\town.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\vehicle.cpp" />
+    <ClCompile Include="..\..\..\src\sounds.cpp" />
+    <ClCompile Include="..\..\..\src\spell.cpp" />
+    <ClCompile Include="..\..\..\src\tools\cursors.win.cpp" />
+    <ClCompile Include="..\..\..\src\tools\menu_accel.win.cpp" />
+    <ClCompile Include="..\..\..\src\tools\prefs.win.cpp" />
+    <ClCompile Include="..\..\..\src\tools\undo.cpp" />
+    <ClCompile Include="..\..\..\src\tools\winutil.win.cpp" />
+    <ClCompile Include="..\..\..\src\universe\creature.cpp" />
+    <ClCompile Include="..\..\..\src\universe\living.cpp" />
+    <ClCompile Include="..\..\..\src\universe\party.cpp" />
+    <ClCompile Include="..\..\..\src\universe\pc.cpp" />
+    <ClCompile Include="..\..\..\src\universe\population.cpp" />
+    <ClCompile Include="..\..\..\src\universe\universe.cpp" />
+    <ClCompile Include="..\..\..\src\utility.cpp" />
+    <ClCompile Include="..\..\..\src\view_dialogs.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\alchemy.hpp" />
+    <ClInclude Include="..\..\..\src\damage.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\3choice.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\choicedlog.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\dialog.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\dialog.keys.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\dlogevt.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\pictchoice.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\strchoice.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\strdlog.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\button.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\control.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\field.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\message.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\pict.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\pictypes.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\scrollbar.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\scrollpane.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\stack.hpp" />
+    <ClInclude Include="..\..\..\src\fields.hpp" />
+    <ClInclude Include="..\..\..\src\fileio\fileio.hpp" />
+    <ClInclude Include="..\..\..\src\fileio\gzstream\gzstream.h" />
+    <ClInclude Include="..\..\..\src\fileio\map_parse.hpp" />
+    <ClInclude Include="..\..\..\src\fileio\resmgr\resmgr.hpp" />
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_cursor.hpp" />
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_font.hpp" />
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_image.hpp" />
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_sound.hpp" />
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_strings.hpp" />
+    <ClInclude Include="..\..\..\src\fileio\special_parse.hpp" />
+    <ClInclude Include="..\..\..\src\fileio\tarball.hpp" />
+    <ClInclude Include="..\..\..\src\fileio\xml-parser\ticpp.h" />
+    <ClInclude Include="..\..\..\src\fileio\xml-parser\ticppapi.h" />
+    <ClInclude Include="..\..\..\src\fileio\xml-parser\ticpprc.h" />
+    <ClInclude Include="..\..\..\src\fileio\xml-parser\tinyprint.h" />
+    <ClInclude Include="..\..\..\src\fileio\xml-parser\tinystr.h" />
+    <ClInclude Include="..\..\..\src\fileio\xml-parser\tinyxml.h" />
+    <ClInclude Include="..\..\..\src\gfx\gfxsheets.hpp" />
+    <ClInclude Include="..\..\..\src\gfx\render_image.hpp" />
+    <ClInclude Include="..\..\..\src\gfx\render_shapes.hpp" />
+    <ClInclude Include="..\..\..\src\gfx\render_text.hpp" />
+    <ClInclude Include="..\..\..\src\gfx\tiling.hpp" />
+    <ClInclude Include="..\..\..\src\global.hpp" />
+    <ClInclude Include="..\..\..\src\location.hpp" />
+    <ClInclude Include="..\..\..\src\mathutil.hpp" />
+    <ClInclude Include="..\..\..\src\oldstructs.hpp" />
+    <ClInclude Include="..\..\..\src\porting.hpp" />
+    <ClInclude Include="..\..\..\src\race.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\area.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\item.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\item_abilities.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\item_variety.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\monster.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\monster_abilities.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\outdoors.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\quest.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\scenario.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\shop.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\special.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\talking.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\terrain.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\terrain_abilities.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\town.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\vehicle.hpp" />
+    <ClInclude Include="..\..\..\src\skills_traits.hpp" />
+    <ClInclude Include="..\..\..\src\sounds.hpp" />
+    <ClInclude Include="..\..\..\src\spell.hpp" />
+    <ClInclude Include="..\..\..\src\tools\cursors.hpp" />
+    <ClInclude Include="..\..\..\src\tools\gitrev.hpp" />
+    <ClInclude Include="..\..\..\src\tools\menu_accel.win.hpp" />
+    <ClInclude Include="..\..\..\src\tools\prefs.hpp" />
+    <ClInclude Include="..\..\..\src\tools\undo.hpp" />
+    <ClInclude Include="..\..\..\src\tools\vector2d.hpp" />
+    <ClInclude Include="..\..\..\src\tools\winutil.hpp" />
+    <ClInclude Include="..\..\..\src\universe\creature.hpp" />
+    <ClInclude Include="..\..\..\src\universe\living.hpp" />
+    <ClInclude Include="..\..\..\src\universe\party.hpp" />
+    <ClInclude Include="..\..\..\src\universe\pc.hpp" />
+    <ClInclude Include="..\..\..\src\universe\population.hpp" />
+    <ClInclude Include="..\..\..\src\universe\universe.hpp" />
+    <ClInclude Include="..\..\..\src\utility.hpp" />
+    <ClInclude Include="..\..\..\src\view_dialogs.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+  <!--RESOURCES-->
+  <ItemGroup>
+    <cursors Include="$(SolutionDir)..\..\rsrc\cursors\**\*.*" />
+    <dialogs Include="$(SolutionDir)..\..\rsrc\dialogs\**\*.*" />
+    <fonts Include="$(SolutionDir)..\..\rsrc\fonts\**\*.*" />
+    <graphics Include="$(SolutionDir)..\..\rsrc\graphics\**\*.*" />
+    <shaders Include="$(SolutionDir)..\..\src\gfx\mask.frag;$(SolutionDir)..\..\src\gfx\mask.vert" />
+    <sounds Include="$(SolutionDir)..\..\rsrc\sounds\**\*.*" />
+    <strings Include="$(SolutionDir)..\..\rsrc\strings\**\*.*" />
+    <boe-base Include="$(SolutionDir)..\..\rsrc\bases\*.boes" />
+    <scenarios Include="$(SolutionDir)..\..\rsrc\scenarios\*.boes" />
+  </ItemGroup>
+  <!--BUILD SCENARIOS-->
+  <Target Name="BuildBase" AfterTargets="AfterBuild">
+    <Exec Command="$(SolutionDir)..\..\pkg\win\build-scen.bat $(SolutionDir)..\..\rsrc\bases\bladbase $(SolutionDir)..\..\rsrc\bases\bladbase.boes" />
+  </Target>
+  <Target Name="BuildScenarios" AfterTargets="BuildBase">
+    <Exec Command="$(SolutionDir)..\..\pkg\win\build-scen.bat $(SolutionDir)..\..\rsrc\scenarios\busywork $(SolutionDir)..\..\rsrc\scenarios\busywork.boes" />
+    <Exec Command="$(SolutionDir)..\..\pkg\win\build-scen.bat $(SolutionDir)..\..\rsrc\scenarios\valleydy $(SolutionDir)..\..\rsrc\scenarios\valleydy.boes" />
+    <Exec Command="$(SolutionDir)..\..\pkg\win\build-scen.bat $(SolutionDir)..\..\rsrc\scenarios\stealth $(SolutionDir)..\..\rsrc\scenarios\stealth.boes" />
+    <Exec Command="$(SolutionDir)..\..\pkg\win\build-scen.bat $(SolutionDir)..\..\rsrc\scenarios\zakhazi $(SolutionDir)..\..\rsrc\scenarios\zakhazi.boes" />
+  </Target>
+  <!--COPY FILES TO OUTPUT DIRECTORY-->
+  <Target Name="CopyFiles" AfterTargets="BuildScenarios">
+    <!--CURSORS-->
+    <Message Text="Copying data\cursors to output directory..." />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(cursors)" DestinationFiles="@(cursors->'$(SolutionDir)$(Configuration)\data\cursors\%(RecursiveDir)%(Filename)%(Extension)')">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedCursors" />
+    </Copy>
+    <Message Text="changed:@(Changed)" Importance="high" />
+    <!--DIALOGS-->
+    <Message Text="Copying data\dialogs to output directory..." />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(dialogs)" DestinationFiles="@(dialogs->'$(SolutionDir)$(Configuration)\data\dialogs\%(RecursiveDir)%(Filename)%(Extension)')">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedDialogs" />
+    </Copy>
+    <Message Text="changed:@(ChangedDialogs)" Importance="high" />
+    <!--FONTS-->
+    <Message Text="Copying data\fonts to output directory..." />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(fonts)" DestinationFiles="@(fonts->'$(SolutionDir)$(Configuration)\data\fonts\%(RecursiveDir)%(Filename)%(Extension)')">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedFonts" />
+    </Copy>
+    <Message Text="changed:@(ChangedFonts)" Importance="high" />
+    <!--GRAPHICS-->
+    <Message Text="Copying data\graphics to output directory..." />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(graphics)" DestinationFiles="@(graphics->'$(SolutionDir)$(Configuration)\data\graphics\%(RecursiveDir)%(Filename)%(Extension)')">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedGraphics" />
+    </Copy>
+    <Message Text="changed:@(ChangedGraphics)" Importance="high" />
+    <!--SHADERS-->
+    <Message Text="Copying data\shaders to output directory..." />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(shaders)" DestinationFolder="$(SolutionDir)$(Configuration)\data\shaders">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedShaders" />
+    </Copy>
+    <Message Text="changed:@(ChangedShaders)" Importance="high" />
+    <!--SOUNDS-->
+    <Message Text="Copying data\sounds to output directory..." />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(sounds)" DestinationFiles="@(sounds->'$(SolutionDir)$(Configuration)\data\sounds\%(RecursiveDir)%(Filename)%(Extension)')">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedSounds" />
+    </Copy>
+    <Message Text="changed:@(ChangedSounds)" Importance="high" />
+    <!--STRINGS-->
+    <Message Text="Copying data\strings to output directory..." />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(strings)" DestinationFiles="@(strings->'$(SolutionDir)$(Configuration)\data\strings\%(RecursiveDir)%(Filename)%(Extension)')">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedStrings" />
+    </Copy>
+    <Message Text="changed:@(ChangedStrings)" Importance="high" />
+    <!--SCENARIOS-->
+    <Message Text="Copying scenarios to output directory..." />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(boe-base)" DestinationFolder="$(SolutionDir)$(Configuration)\Blades of Exile Base">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedBase" />
+    </Copy>
+    <Message Text="changed:@(ChangedBase)" Importance="high" />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(scenarios)" DestinationFiles="@(scenarios->'$(SolutionDir)$(Configuration)\Blades of Exile Scenarios\%(Filename)%(Extension)')">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedScenarios" />
+    </Copy>
+    <Message Text="changed:@(ChangedScenarios)" Importance="high" />
+  </Target>
+</Project>
