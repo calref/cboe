@@ -95,19 +95,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\pcedit\pc.action.cpp" />
-    <ClCompile Include="..\..\pcedit\pc.editors.cpp" />
-    <ClCompile Include="..\..\pcedit\pc.fileio.cpp" />
-    <ClCompile Include="..\..\pcedit\pc.graphics.cpp" />
-    <ClCompile Include="..\..\pcedit\pc.main.cpp" />
-    <ClCompile Include="..\..\pcedit\pc.menus.win.cpp" />
+    <ClCompile Include="..\..\..\src\pcedit\pc.action.cpp" />
+    <ClCompile Include="..\..\..\src\pcedit\pc.editors.cpp" />
+    <ClCompile Include="..\..\..\src\pcedit\pc.fileio.cpp" />
+    <ClCompile Include="..\..\..\src\pcedit\pc.graphics.cpp" />
+    <ClCompile Include="..\..\..\src\pcedit\pc.main.cpp" />
+    <ClCompile Include="..\..\..\src\pcedit\pc.menus.win.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\pcedit\pc.action.hpp" />
-    <ClInclude Include="..\..\pcedit\pc.editors.hpp" />
-    <ClInclude Include="..\..\pcedit\pc.fileio.hpp" />
-    <ClInclude Include="..\..\pcedit\pc.graphics.hpp" />
-    <ClInclude Include="..\..\pcedit\pc.menus.hpp" />
+    <ClInclude Include="..\..\..\src\pcedit\pc.action.hpp" />
+    <ClInclude Include="..\..\..\src\pcedit\pc.editors.hpp" />
+    <ClInclude Include="..\..\..\src\pcedit\pc.fileio.hpp" />
+    <ClInclude Include="..\..\..\src\pcedit\pc.graphics.hpp" />
+    <ClInclude Include="..\..\..\src\pcedit\pc.menus.hpp" />
     <ClInclude Include="..\..\..\rsrc\menus\pcresource.h" />
   </ItemGroup>
   <ItemGroup>

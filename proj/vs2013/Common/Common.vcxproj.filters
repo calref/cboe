@@ -582,405 +582,405 @@
     </Xml>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\utility.cpp" />
-    <ClCompile Include="..\..\view_dialogs.cpp" />
-    <ClCompile Include="..\..\location.cpp" />
-    <ClCompile Include="..\..\mathutil.cpp" />
-    <ClCompile Include="..\..\porting.cpp" />
-    <ClCompile Include="..\..\sounds.cpp" />
-    <ClCompile Include="..\..\spell.cpp" />
-    <ClCompile Include="..\..\universe\creature.cpp">
+    <ClCompile Include="..\..\..\src\view_dialogs.cpp" />
+    <ClCompile Include="..\..\..\src\utility.cpp" />
+    <ClCompile Include="..\..\..\src\spell.cpp" />
+    <ClCompile Include="..\..\..\src\sounds.cpp" />
+    <ClCompile Include="..\..\..\src\porting.cpp" />
+    <ClCompile Include="..\..\..\src\oldstructs.cpp" />
+    <ClCompile Include="..\..\..\src\mathutil.cpp" />
+    <ClCompile Include="..\..\..\src\location.cpp" />
+    <ClCompile Include="..\..\..\src\universe\universe.cpp">
       <Filter>Universe</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\universe\living.cpp">
+    <ClCompile Include="..\..\..\src\universe\population.cpp">
       <Filter>Universe</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\universe\party.cpp">
+    <ClCompile Include="..\..\..\src\universe\pc.cpp">
       <Filter>Universe</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\universe\pc.cpp">
+    <ClCompile Include="..\..\..\src\universe\party.cpp">
       <Filter>Universe</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\universe\population.cpp">
+    <ClCompile Include="..\..\..\src\universe\living.cpp">
       <Filter>Universe</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\universe\universe.cpp">
+    <ClCompile Include="..\..\..\src\universe\creature.cpp">
       <Filter>Universe</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tools\winutil.win.cpp">
+    <ClCompile Include="..\..\..\src\tools\winutil.win.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tools\cursors.win.cpp">
+    <ClCompile Include="..\..\..\src\tools\undo.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tools\menu_accel.win.cpp">
+    <ClCompile Include="..\..\..\src\tools\prefs.win.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tools\prefs.win.cpp">
+    <ClCompile Include="..\..\..\src\tools\menu_accel.win.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tools\undo.cpp">
+    <ClCompile Include="..\..\..\src\tools\cursors.win.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenario\special.cpp">
+    <ClCompile Include="..\..\..\src\scenario\vehicle.cpp">
       <Filter>Scenario</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenario\talking.cpp">
+    <ClCompile Include="..\..\..\src\scenario\town.cpp">
       <Filter>Scenario</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenario\terrain.cpp">
+    <ClCompile Include="..\..\..\src\scenario\terrain.cpp">
       <Filter>Scenario</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenario\town.cpp">
+    <ClCompile Include="..\..\..\src\scenario\talking.cpp">
       <Filter>Scenario</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenario\vehicle.cpp">
+    <ClCompile Include="..\..\..\src\scenario\special.cpp">
       <Filter>Scenario</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenario\item.cpp">
+    <ClCompile Include="..\..\..\src\scenario\shop.cpp">
       <Filter>Scenario</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenario\monster.cpp">
+    <ClCompile Include="..\..\..\src\scenario\scenario.cpp">
       <Filter>Scenario</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenario\outdoors.cpp">
+    <ClCompile Include="..\..\..\src\scenario\outdoors.cpp">
       <Filter>Scenario</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenario\scenario.cpp">
+    <ClCompile Include="..\..\..\src\scenario\monster.cpp">
       <Filter>Scenario</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenario\shop.cpp">
+    <ClCompile Include="..\..\..\src\scenario\item.cpp">
       <Filter>Scenario</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\gfx\render_image.cpp">
+    <ClCompile Include="..\..\..\src\gfx\gfxsheets.cpp">
       <Filter>Gfx</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\gfx\render_shapes.cpp">
+    <ClCompile Include="..\..\..\src\gfx\render_image.cpp">
       <Filter>Gfx</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\gfx\render_text.cpp">
+    <ClCompile Include="..\..\..\src\gfx\render_shapes.cpp">
       <Filter>Gfx</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\gfx\tiling.cpp">
+    <ClCompile Include="..\..\..\src\gfx\render_text.cpp">
       <Filter>Gfx</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\gfx\gfxsheets.cpp">
+    <ClCompile Include="..\..\..\src\gfx\tiling.cpp">
       <Filter>Gfx</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\fileio\debugout.win.cpp">
+    <ClCompile Include="..\..\..\src\fileio\tarball.cpp">
       <Filter>FileIO</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\fileio\estreams.cpp">
+    <ClCompile Include="..\..\..\src\fileio\special_parse.cpp">
       <Filter>FileIO</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\fileio\fileio.cpp">
+    <ClCompile Include="..\..\..\src\fileio\map_parse.cpp">
       <Filter>FileIO</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\fileio\fileio_party.cpp">
+    <ClCompile Include="..\..\..\src\fileio\fileio_scen.cpp">
       <Filter>FileIO</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\fileio\fileio_scen.cpp">
+    <ClCompile Include="..\..\..\src\fileio\fileio_party.cpp">
       <Filter>FileIO</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\fileio\map_parse.cpp">
+    <ClCompile Include="..\..\..\src\fileio\fileio.cpp">
       <Filter>FileIO</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\fileio\special_parse.cpp">
+    <ClCompile Include="..\..\..\src\fileio\estreams.cpp">
       <Filter>FileIO</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\fileio\tarball.cpp">
+    <ClCompile Include="..\..\..\src\fileio\debugout.win.cpp">
       <Filter>FileIO</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\fileio\xml-parser\tinystr.cpp">
+    <ClCompile Include="..\..\..\src\fileio\xml-parser\tinyxmlparser.cpp">
       <Filter>FileIO\TinyXML</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\fileio\xml-parser\tinyxml.cpp">
+    <ClCompile Include="..\..\..\src\fileio\xml-parser\tinyxmlerror.cpp">
       <Filter>FileIO\TinyXML</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\fileio\xml-parser\tinyxmlerror.cpp">
+    <ClCompile Include="..\..\..\src\fileio\xml-parser\tinyxml.cpp">
       <Filter>FileIO\TinyXML</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\fileio\xml-parser\tinyxmlparser.cpp">
+    <ClCompile Include="..\..\..\src\fileio\xml-parser\tinystr.cpp">
       <Filter>FileIO\TinyXML</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\fileio\xml-parser\ticpp.cpp">
+    <ClCompile Include="..\..\..\src\fileio\xml-parser\tinyprint.cpp">
       <Filter>FileIO\TinyXML</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\fileio\xml-parser\tinyprint.cpp">
+    <ClCompile Include="..\..\..\src\fileio\xml-parser\ticpp.cpp">
       <Filter>FileIO\TinyXML</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\fileio\gzstream\gzstream.cpp">
+    <ClCompile Include="..\..\..\src\fileio\resmgr\restypes.cpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\fileio\gzstream\gzstream.cpp">
       <Filter>FileIO\GZStream</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\fileio\resmgr\restypes.cpp">
-      <Filter>FileIO\ResMgr</Filter>
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\stack.cpp">
+      <Filter>DialogXML\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dialogxml\dialogs\pictchoice.cpp">
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\scrollpane.cpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\scrollbar.cpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\pict.cpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\message.cpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\field.cpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\control.cpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\button.cpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\basicbtns.cpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dialogxml\dialogs\strdlog.cpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dialogxml\dialogs\strchoice.cpp">
+    <ClCompile Include="..\..\..\src\dialogxml\dialogs\strchoice.cpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dialogxml\dialogs\strdlog.cpp">
+    <ClCompile Include="..\..\..\src\dialogxml\dialogs\pictchoice.cpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dialogxml\dialogs\3choice.cpp">
+    <ClCompile Include="..\..\..\src\dialogxml\dialogs\dialog.cpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dialogxml\dialogs\choicedlog.cpp">
+    <ClCompile Include="..\..\..\src\dialogxml\dialogs\choicedlog.cpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dialogxml\dialogs\dialog.cpp">
+    <ClCompile Include="..\..\..\src\dialogxml\dialogs\3choice.cpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dialogxml\widgets\message.cpp">
-      <Filter>DialogXML\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dialogxml\widgets\pict.cpp">
-      <Filter>DialogXML\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dialogxml\widgets\scrollbar.cpp">
-      <Filter>DialogXML\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dialogxml\widgets\scrollpane.cpp">
-      <Filter>DialogXML\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dialogxml\widgets\stack.cpp">
-      <Filter>DialogXML\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dialogxml\widgets\basicbtns.cpp">
-      <Filter>DialogXML\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dialogxml\widgets\button.cpp">
-      <Filter>DialogXML\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dialogxml\widgets\control.cpp">
-      <Filter>DialogXML\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dialogxml\widgets\field.cpp">
-      <Filter>DialogXML\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\oldstructs.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\utility.hpp" />
-    <ClInclude Include="..\..\view_dialogs.hpp" />
-    <ClInclude Include="..\..\alchemy.hpp" />
-    <ClInclude Include="..\..\damage.hpp" />
-    <ClInclude Include="..\..\fields.hpp" />
-    <ClInclude Include="..\..\global.hpp" />
-    <ClInclude Include="..\..\location.hpp" />
-    <ClInclude Include="..\..\mathutil.hpp" />
-    <ClInclude Include="..\..\oldstructs.hpp" />
-    <ClInclude Include="..\..\porting.hpp" />
-    <ClInclude Include="..\..\race.hpp" />
-    <ClInclude Include="..\..\skills_traits.hpp" />
-    <ClInclude Include="..\..\sounds.hpp" />
-    <ClInclude Include="..\..\spell.hpp" />
-    <ClInclude Include="..\..\universe\universe.hpp">
+    <ClInclude Include="..\..\..\src\view_dialogs.hpp" />
+    <ClInclude Include="..\..\..\src\utility.hpp" />
+    <ClInclude Include="..\..\..\src\spell.hpp" />
+    <ClInclude Include="..\..\..\src\sounds.hpp" />
+    <ClInclude Include="..\..\..\src\skills_traits.hpp" />
+    <ClInclude Include="..\..\..\src\race.hpp" />
+    <ClInclude Include="..\..\..\src\porting.hpp" />
+    <ClInclude Include="..\..\..\src\oldstructs.hpp" />
+    <ClInclude Include="..\..\..\src\mathutil.hpp" />
+    <ClInclude Include="..\..\..\src\location.hpp" />
+    <ClInclude Include="..\..\..\src\global.hpp" />
+    <ClInclude Include="..\..\..\src\fields.hpp" />
+    <ClInclude Include="..\..\..\src\damage.hpp" />
+    <ClInclude Include="..\..\..\src\alchemy.hpp" />
+    <ClInclude Include="..\..\..\src\universe\universe.hpp">
       <Filter>Universe</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\universe\creature.hpp">
+    <ClInclude Include="..\..\..\src\universe\population.hpp">
       <Filter>Universe</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\universe\living.hpp">
+    <ClInclude Include="..\..\..\src\universe\pc.hpp">
       <Filter>Universe</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\universe\party.hpp">
+    <ClInclude Include="..\..\..\src\universe\party.hpp">
       <Filter>Universe</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\universe\pc.hpp">
+    <ClInclude Include="..\..\..\src\universe\living.hpp">
       <Filter>Universe</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\universe\population.hpp">
+    <ClInclude Include="..\..\..\src\universe\creature.hpp">
       <Filter>Universe</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tools\winutil.hpp">
+    <ClInclude Include="..\..\..\src\tools\winutil.hpp">
       <Filter>Tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tools\cursors.hpp">
+    <ClInclude Include="..\..\..\src\tools\vector2d.hpp">
       <Filter>Tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tools\gitrev.hpp">
+    <ClInclude Include="..\..\..\src\tools\undo.hpp">
       <Filter>Tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tools\menu_accel.win.hpp">
+    <ClInclude Include="..\..\..\src\tools\prefs.hpp">
       <Filter>Tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tools\prefs.hpp">
+    <ClInclude Include="..\..\..\src\tools\menu_accel.win.hpp">
       <Filter>Tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tools\undo.hpp">
+    <ClInclude Include="..\..\..\src\tools\gitrev.hpp">
       <Filter>Tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tools\vector2d.hpp">
+    <ClInclude Include="..\..\..\src\tools\cursors.hpp">
       <Filter>Tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenario\shop.hpp">
+    <ClInclude Include="..\..\..\src\scenario\vehicle.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenario\special.hpp">
+    <ClInclude Include="..\..\..\src\scenario\town.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenario\talking.hpp">
+    <ClInclude Include="..\..\..\src\scenario\terrain_abilities.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenario\terrain.hpp">
+    <ClInclude Include="..\..\..\src\scenario\terrain.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenario\terrain_abilities.hpp">
+    <ClInclude Include="..\..\..\src\scenario\talking.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenario\town.hpp">
+    <ClInclude Include="..\..\..\src\scenario\special.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenario\vehicle.hpp">
+    <ClInclude Include="..\..\..\src\scenario\shop.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenario\area.hpp">
+    <ClInclude Include="..\..\..\src\scenario\scenario.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenario\item.hpp">
+    <ClInclude Include="..\..\..\src\scenario\quest.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenario\item_abilities.hpp">
+    <ClInclude Include="..\..\..\src\scenario\outdoors.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenario\item_variety.hpp">
+    <ClInclude Include="..\..\..\src\scenario\monster_abilities.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenario\monster.hpp">
+    <ClInclude Include="..\..\..\src\scenario\monster.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenario\monster_abilities.hpp">
+    <ClInclude Include="..\..\..\src\scenario\item_variety.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenario\outdoors.hpp">
+    <ClInclude Include="..\..\..\src\scenario\item_abilities.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenario\quest.hpp">
+    <ClInclude Include="..\..\..\src\scenario\item.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scenario\scenario.hpp">
+    <ClInclude Include="..\..\..\src\scenario\area.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\gfx\gfxsheets.hpp">
+    <ClInclude Include="..\..\..\src\gfx\gfxsheets.hpp">
       <Filter>Gfx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\gfx\render_image.hpp">
+    <ClInclude Include="..\..\..\src\gfx\render_image.hpp">
       <Filter>Gfx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\gfx\render_shapes.hpp">
+    <ClInclude Include="..\..\..\src\gfx\render_shapes.hpp">
       <Filter>Gfx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\gfx\render_text.hpp">
+    <ClInclude Include="..\..\..\src\gfx\render_text.hpp">
       <Filter>Gfx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\gfx\tiling.hpp">
+    <ClInclude Include="..\..\..\src\gfx\tiling.hpp">
       <Filter>Gfx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\fileio\fileio.hpp">
+    <ClInclude Include="..\..\..\src\fileio\tarball.hpp">
       <Filter>FileIO</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\fileio\map_parse.hpp">
+    <ClInclude Include="..\..\..\src\fileio\special_parse.hpp">
       <Filter>FileIO</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\fileio\special_parse.hpp">
+    <ClInclude Include="..\..\..\src\fileio\map_parse.hpp">
       <Filter>FileIO</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\fileio\tarball.hpp">
+    <ClInclude Include="..\..\..\src\fileio\fileio.hpp">
       <Filter>FileIO</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\fileio\xml-parser\tinystr.h">
+    <ClInclude Include="..\..\..\src\fileio\xml-parser\tinyxml.h">
       <Filter>FileIO\TinyXML</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\fileio\xml-parser\tinyxml.h">
+    <ClInclude Include="..\..\..\src\fileio\xml-parser\tinystr.h">
       <Filter>FileIO\TinyXML</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\fileio\xml-parser\ticpp.h">
+    <ClInclude Include="..\..\..\src\fileio\xml-parser\tinyprint.h">
       <Filter>FileIO\TinyXML</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\fileio\xml-parser\ticpprc.h">
+    <ClInclude Include="..\..\..\src\fileio\xml-parser\ticpprc.h">
       <Filter>FileIO\TinyXML</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\fileio\xml-parser\tinyprint.h">
+    <ClInclude Include="..\..\..\src\fileio\xml-parser\ticpp.h">
       <Filter>FileIO\TinyXML</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\fileio\gzstream\gzstream.h">
+    <ClInclude Include="..\..\..\src\fileio\resmgr\resmgr.hpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_strings.hpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_sound.hpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_image.hpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_font.hpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_cursor.hpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fileio\gzstream\gzstream.h">
       <Filter>FileIO\GZStream</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\fileio\resmgr\res_image.hpp">
-      <Filter>FileIO\ResMgr</Filter>
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\stack.hpp">
+      <Filter>DialogXML\Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\fileio\resmgr\res_sound.hpp">
-      <Filter>FileIO\ResMgr</Filter>
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\scrollpane.hpp">
+      <Filter>DialogXML\Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\fileio\resmgr\res_strings.hpp">
-      <Filter>FileIO\ResMgr</Filter>
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\scrollbar.hpp">
+      <Filter>DialogXML\Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\fileio\resmgr\resmgr.hpp">
-      <Filter>FileIO\ResMgr</Filter>
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\pictypes.hpp">
+      <Filter>DialogXML\Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\fileio\resmgr\res_cursor.hpp">
-      <Filter>FileIO\ResMgr</Filter>
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\pict.hpp">
+      <Filter>DialogXML\Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\fileio\resmgr\res_font.hpp">
-      <Filter>FileIO\ResMgr</Filter>
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\message.hpp">
+      <Filter>DialogXML\Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\dialogxml\dialogs\pictchoice.hpp">
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\field.hpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\control.hpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\button.hpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\strdlog.hpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\dialogxml\dialogs\strchoice.hpp">
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\strchoice.hpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\dialogxml\dialogs\strdlog.hpp">
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\pictchoice.hpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\dialogxml\dialogs\3choice.hpp">
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\dlogevt.hpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\dialogxml\dialogs\choicedlog.hpp">
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\dialog.keys.hpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\dialogxml\dialogs\dialog.hpp">
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\dialog.hpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\dialogxml\dialogs\dialog.keys.hpp">
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\choicedlog.hpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\dialogxml\dialogs\dlogevt.hpp">
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\3choice.hpp">
       <Filter>DialogXML\Dialogs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dialogxml\widgets\message.hpp">
-      <Filter>DialogXML\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dialogxml\widgets\pict.hpp">
-      <Filter>DialogXML\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dialogxml\widgets\pictypes.hpp">
-      <Filter>DialogXML\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dialogxml\widgets\scrollbar.hpp">
-      <Filter>DialogXML\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dialogxml\widgets\scrollpane.hpp">
-      <Filter>DialogXML\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dialogxml\widgets\stack.hpp">
-      <Filter>DialogXML\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dialogxml\widgets\button.hpp">
-      <Filter>DialogXML\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dialogxml\widgets\control.hpp">
-      <Filter>DialogXML\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dialogxml\widgets\field.hpp">
-      <Filter>DialogXML\Widgets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\scenario\town_import.tpp">
+    <None Include="..\..\..\src\scenario\town_import.tpp">
       <Filter>Scenario</Filter>
     </None>
   </ItemGroup>

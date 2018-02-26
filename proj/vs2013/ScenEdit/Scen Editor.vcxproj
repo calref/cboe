@@ -95,26 +95,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\scenedit\scen.actions.cpp" />
-    <ClCompile Include="..\..\scenedit\scen.btnmg.cpp" />
-    <ClCompile Include="..\..\scenedit\scen.core.cpp" />
-    <ClCompile Include="..\..\scenedit\scen.fileio.cpp" />
-    <ClCompile Include="..\..\scenedit\scen.graphics.cpp" />
-    <ClCompile Include="..\..\scenedit\scen.keydlgs.cpp" />
-    <ClCompile Include="..\..\scenedit\scen.main.cpp" />
-    <ClCompile Include="..\..\scenedit\scen.menus.win.cpp" />
-    <ClCompile Include="..\..\scenedit\scen.townout.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.actions.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.btnmg.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.core.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.fileio.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.graphics.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.keydlgs.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.main.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.menus.win.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.townout.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\scenedit\scen.actions.hpp" />
-    <ClInclude Include="..\..\scenedit\scen.btnmg.hpp" />
-    <ClInclude Include="..\..\scenedit\scen.core.hpp" />
-    <ClInclude Include="..\..\scenedit\scen.fileio.hpp" />
-    <ClInclude Include="..\..\scenedit\scen.global.hpp" />
-    <ClInclude Include="..\..\scenedit\scen.graphics.hpp" />
-    <ClInclude Include="..\..\scenedit\scen.keydlgs.hpp" />
-    <ClInclude Include="..\..\scenedit\scen.menus.hpp" />
-    <ClInclude Include="..\..\scenedit\scen.townout.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.actions.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.btnmg.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.core.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.fileio.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.global.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.graphics.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.keydlgs.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.menus.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.townout.hpp" />
     <ClInclude Include="..\..\..\rsrc\menus\scenresource.h" />
   </ItemGroup>
   <ItemGroup>
