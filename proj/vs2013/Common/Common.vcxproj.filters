@@ -983,5 +983,6 @@
     <None Include="..\..\..\src\scenario\town_import.tpp">
       <Filter>Scenario</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

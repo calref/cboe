@@ -343,10 +343,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\src\scenario\town_import.tpp" />
+    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1347FE79-73BD-4176-9280-0FE39E3534E2}</ProjectGuid>
     <RootNamespace>Common</RootNamespace>
+    <DefineConstants>$(DefineConstants);GIT_REVISION = $(GitCommit); GIT_TAG = $(GitTag); GIT_TAG_REVISION = "no-tag-rev"</DefineConstants>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -372,7 +374,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup>
+    <NuGetPackageImportStamp>cc3b470a</NuGetPackageImportStamp>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -394,8 +398,10 @@
       <NoEntryPoint>false</NoEntryPoint>
     </Link>
     <PostBuildEvent>
-      <Command>call "$(ProjectDir)CopyFiles.bat" "$(SolutionDir)" "$(Configuration)" "$(VCInstallDir)"</Command>
-      <Message>Copy resource files</Message>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -419,11 +425,97 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>call "$(ProjectDir)CopyFiles.bat" "$(SolutionDir)" "$(Configuration)" "$(VCInstallDir)"</Command>
-      <Message>Copy resource files</Message>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\GitInfo.2.0.10\build\GitInfo.targets" Condition="Exists('..\packages\GitInfo.2.0.10\build\GitInfo.targets')" />
   </ImportGroup>
+  <!--RESOURCES-->
+  <ItemGroup>
+    <cursors Include="$(SolutionDir)..\..\rsrc\cursors\**\*.*" />
+    <dialogs Include="$(SolutionDir)..\..\rsrc\dialogs\**\*.*" />
+    <fonts Include="$(SolutionDir)..\..\rsrc\fonts\**\*.*" />
+    <graphics Include="$(SolutionDir)..\..\rsrc\graphics\**\*.*" />
+    <shaders Include="$(SolutionDir)..\..\src\gfx\mask.frag;$(SolutionDir)..\..\src\gfx\mask.vert" />
+    <sounds Include="$(SolutionDir)..\..\rsrc\sounds\**\*.*" />
+    <strings Include="$(SolutionDir)..\..\rsrc\strings\**\*.*" />
+    <boe-base Include="$(SolutionDir)..\..\rsrc\bases\*.boes" />
+    <scenarios Include="$(SolutionDir)..\..\rsrc\scenarios\*.boes" />
+  </ItemGroup>
+  <!--BUILD SCENARIOS-->
+  <Target Name="BuildBase" AfterTargets="AfterBuild">
+    <Exec Command="$(SolutionDir)..\..\pkg\win\build-scen.bat $(SolutionDir)..\..\rsrc\bases\bladbase $(SolutionDir)..\..\rsrc\bases\bladbase.boes" />
+  </Target>
+  <Target Name="BuildScenarios" AfterTargets="BuildBase">
+    <Exec Command="$(SolutionDir)..\..\pkg\win\build-scen.bat $(SolutionDir)..\..\rsrc\scenarios\busywork $(SolutionDir)..\..\rsrc\scenarios\busywork.boes" />
+    <Exec Command="$(SolutionDir)..\..\pkg\win\build-scen.bat $(SolutionDir)..\..\rsrc\scenarios\valleydy $(SolutionDir)..\..\rsrc\scenarios\valleydy.boes" />
+    <Exec Command="$(SolutionDir)..\..\pkg\win\build-scen.bat $(SolutionDir)..\..\rsrc\scenarios\stealth $(SolutionDir)..\..\rsrc\scenarios\stealth.boes" />
+    <Exec Command="$(SolutionDir)..\..\pkg\win\build-scen.bat $(SolutionDir)..\..\rsrc\scenarios\zakhazi $(SolutionDir)..\..\rsrc\scenarios\zakhazi.boes" />
+  </Target>
+  <!--COPY FILES TO OUTPUT DIRECTORY-->
+  <Target Name="CopyFiles" AfterTargets="BuildScenarios">
+    <!--CURSORS-->
+    <Message Text="Copying data\cursors to output directory..." />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(cursors)" DestinationFiles="@(cursors->'$(SolutionDir)$(Configuration)\data\cursors\%(RecursiveDir)%(Filename)%(Extension)')">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedCursors" />
+    </Copy>
+    <Message Text="changed:@(Changed)" Importance="high" />
+    <!--DIALOGS-->
+    <Message Text="Copying data\dialogs to output directory..." />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(dialogs)" DestinationFiles="@(dialogs->'$(SolutionDir)$(Configuration)\data\dialogs\%(RecursiveDir)%(Filename)%(Extension)')">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedDialogs" />
+    </Copy>
+    <Message Text="changed:@(ChangedDialogs)" Importance="high" />
+    <!--FONTS-->
+    <Message Text="Copying data\fonts to output directory..." />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(fonts)" DestinationFiles="@(fonts->'$(SolutionDir)$(Configuration)\data\fonts\%(RecursiveDir)%(Filename)%(Extension)')">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedFonts" />
+    </Copy>
+    <Message Text="changed:@(ChangedFonts)" Importance="high" />
+    <!--GRAPHICS-->
+    <Message Text="Copying data\graphics to output directory..." />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(graphics)" DestinationFiles="@(graphics->'$(SolutionDir)$(Configuration)\data\graphics\%(RecursiveDir)%(Filename)%(Extension)')">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedGraphics" />
+    </Copy>
+    <Message Text="changed:@(ChangedGraphics)" Importance="high" />
+    <!--SHADERS-->
+    <Message Text="Copying data\shaders to output directory..." />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(shaders)" DestinationFolder="$(SolutionDir)$(Configuration)\data\shaders">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedShaders" />
+    </Copy>
+    <Message Text="changed:@(ChangedShaders)" Importance="high" />
+    <!--SOUNDS-->
+    <Message Text="Copying data\sounds to output directory..." />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(sounds)" DestinationFiles="@(sounds->'$(SolutionDir)$(Configuration)\data\sounds\%(RecursiveDir)%(Filename)%(Extension)')">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedSounds" />
+    </Copy>
+    <Message Text="changed:@(ChangedSounds)" Importance="high" />
+    <!--STRINGS-->
+    <Message Text="Copying data\strings to output directory..." />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(strings)" DestinationFiles="@(strings->'$(SolutionDir)$(Configuration)\data\strings\%(RecursiveDir)%(Filename)%(Extension)')">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedStrings" />
+    </Copy>
+    <Message Text="changed:@(ChangedStrings)" Importance="high" />
+    <!--SCENARIOS-->
+    <Message Text="Copying scenarios to output directory..." />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(boe-base)" DestinationFolder="$(SolutionDir)$(Configuration)\Blades of Exile Base">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedBase" />
+    </Copy>
+    <Message Text="changed:@(ChangedBase)" Importance="high" />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(scenarios)" DestinationFiles="@(scenarios->'$(SolutionDir)$(Configuration)\Blades of Exile Scenarios\%(Filename)%(Extension)')">
+      <Output TaskParameter="CopiedFiles" ItemName="ChangedScenarios" />
+    </Copy>
+    <Message Text="changed:@(ChangedScenarios)" Importance="high" />
+  </Target>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\GitInfo.2.0.10\build\GitInfo.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GitInfo.2.0.10\build\GitInfo.targets'))" />
+  </Target>
 </Project>
