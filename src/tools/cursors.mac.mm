@@ -46,9 +46,8 @@ static NSImage* imageFromURL(CFURLRef url){
 }
 
 Cursor::Cursor(fs::path path, float hotSpotX, float hotSpotY){
-	FSRef ref;
-	FSPathMakeRef((UInt8*)path.c_str(), &ref, nullptr);
-	CFURLRef imgPath = CFURLCreateFromFSRef(nullptr, &ref);
+	NSString *ref = [[NSFileManager defaultManager] stringWithFileSystemRepresentation:path.c_str() length:strlen(path.c_str())];
+	CFURLRef imgPath = (CFURLRef)[NSURL fileURLWithPath:ref];
 	
 	NSImage *img = imageFromURL(imgPath);
 	NSCursor *cursor = [[NSCursor alloc] initWithImage:img hotSpot:NSMakePoint(hotSpotX, hotSpotY)];
