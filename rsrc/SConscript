@@ -2,7 +2,8 @@
 from __future__ import print_function
 import os.path as path
 import subprocess, tarfile
-from os import walk as walk_dir
+import os
+walk_dir = os.walk
 
 Import("env platform data_dir install_dir")
 
@@ -12,7 +13,7 @@ env.Install(path.join(data_dir, "cursors"), Glob("cursors/*.gif"))
 env.Install(path.join(data_dir, "dialogs"), Glob("dialogs/*.xml"))
 env.Install(path.join(data_dir, "fonts"), Glob("fonts/*.ttf"))
 env.Install(path.join(data_dir, "graphics"), Glob("graphics/*.png"))
-env.Install(path.join(data_dir, "sounds"), Glob("sounds/*.WAV"))
+env.Install(path.join(data_dir, "sounds"), Glob("sounds/*.wav"))
 env.Install(path.join(data_dir, "strings"), Glob("strings/*.txt"))
 
 env.Install(path.join(data_dir, "shaders"), Glob("#src/gfx/mask.*"))
@@ -46,7 +47,9 @@ env.Install(path.join(install_dir, "Blades of Exile Base"), Glob("#build/rsrc/ba
 
 have_xmllint = False
 
-if ((str(platform) != "win32" and subprocess.call(['which', '-s', 'xmllint']) == 0) or
+nulldev = open(os.devnull, 'w')
+
+if ((str(platform) != "win32" and subprocess.call(['which', 'xmllint'], stdout=nulldev, stderr=nulldev) == 0) or
 		(str(platform) == "win32" and subprocess.call(['where', '/Q', 'xmllint'])) == 0):
 	have_xmllint = True
 	xmllint_command = ('xmllint', '--nonet', '--noout', '--schema', '../schemas/dialog.xsd')

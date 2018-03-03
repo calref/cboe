@@ -10,7 +10,7 @@ test_sources = Glob("""*.cpp""") + Split("""
 if str(platform) == "win32" and 'msvc' in env["TOOLS"]:
 	test = env.Program("#build/bin/boe_test", party_classes + common_sources + test_sources, LINKFLAGS='/nologo /SUBSYSTEM:CONSOLE /MACHINE:X86')
 else:
-	test = env.Program("#build/bin/boe_test", party_classes + common_sources + test_sources)
+	test = env.Program("#build/bin/boe_test", test_sources + party_classes + common_sources)
 
 def run_tests(env,target,source):
    import subprocess

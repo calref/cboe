@@ -9,8 +9,6 @@ compiler:
  - clang
 
 matrix:
- allow_failures:
-  - os: linux
  include:
   - os: linux
     sudo: required

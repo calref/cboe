@@ -12,6 +12,7 @@
 #include "message.hpp"
 #include "pict.hpp"
 #include "scrollbar.hpp"
+#include <climits>
 
 bool cStack::hasChild(std::string id) {
 	return controls.find(id) != controls.end();

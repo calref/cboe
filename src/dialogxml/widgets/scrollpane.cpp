@@ -13,6 +13,7 @@
 #include "pict.hpp"
 #include "stack.hpp"
 #include "render_shapes.hpp"
+#include <climits>
 
 cScrollPane::cScrollPane(cDialog& parent) : cContainer(CTRL_PANE, parent), scroll(parent) {
 	recalcRect();

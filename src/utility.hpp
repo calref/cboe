@@ -21,6 +21,8 @@ std::string get_str(std::string list, short j);
 #define strnicmp strncasecmp
 #elif defined(_WIN32)
 #define strnicmp _strnicmp
+#elif defined(__unix__)
+#define strnicmp strncasecmp
 #else
 #error Missing strnicmp / strncasecmp
 #endif

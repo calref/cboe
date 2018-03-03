@@ -88,6 +88,7 @@ test/junk/*.map
 *.boes
 
 # Misc
+*~
 oldstructs.txt
 src/tools/gitrev.hpp
 rsrc/**/scenario
