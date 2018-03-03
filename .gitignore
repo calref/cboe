@@ -40,17 +40,6 @@ proj/xc*/*.xcodeproj/*.mode*
 proj/xc*/*.xcodeproj/*.pbxuser
 
 # Visual Studio Junk Files
-src/*.vsproj/*sdf
-src/*.vsproj/*/*.user
-src/*.vsproj/*.suo
-src/*.vsproj/*.aps
-src/*.vsproj/*/*.aps
-src/*.vsproj/*/Debug/
-src/*.vsproj/*/Release/
-src/*.vsproj/Debug/
-src/*.vsproj/Release/
-src/*.vsproj/*/ipch/
-src/*.vsproj/.vs
 proj/vs*/*sdf
 proj/vs*/*/*.user
 proj/vs*/*.suo

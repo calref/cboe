@@ -95,7 +95,7 @@
     <ClCompile Include="..\..\..\test\catch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenedit\scen.fileio.cpp">
+    <ClCompile Include="..\..\..\src\scenedit\scen.fileio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
