@@ -15,63 +15,63 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\scenedit\scen.actions.cpp">
+    <ClCompile Include="..\..\..\src\scenedit\scen.townout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenedit\scen.btnmg.cpp">
+    <ClCompile Include="..\..\..\src\scenedit\scen.menus.win.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenedit\scen.core.cpp">
+    <ClCompile Include="..\..\..\src\scenedit\scen.main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenedit\scen.fileio.cpp">
+    <ClCompile Include="..\..\..\src\scenedit\scen.keydlgs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenedit\scen.graphics.cpp">
+    <ClCompile Include="..\..\..\src\scenedit\scen.graphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenedit\scen.keydlgs.cpp">
+    <ClCompile Include="..\..\..\src\scenedit\scen.fileio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenedit\scen.main.cpp">
+    <ClCompile Include="..\..\..\src\scenedit\scen.core.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenedit\scen.townout.cpp">
+    <ClCompile Include="..\..\..\src\scenedit\scen.btnmg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scenedit\scen.menus.win.cpp">
+    <ClCompile Include="..\..\..\src\scenedit\scen.actions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\scenedit\scen.actions.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scenedit\scen.btnmg.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scenedit\scen.core.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scenedit\scen.fileio.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scenedit\scen.global.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scenedit\scen.graphics.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scenedit\scen.keydlgs.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scenedit\scen.menus.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scenedit\scen.townout.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\rsrc\menus\scenresource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\scenedit\scen.townout.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\scenedit\scen.menus.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\scenedit\scen.keydlgs.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\scenedit\scen.graphics.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\scenedit\scen.global.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\scenedit\scen.fileio.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\scenedit\scen.core.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\scenedit\scen.btnmg.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\scenedit\scen.actions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

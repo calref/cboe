@@ -11,22 +11,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6152336C-C003-4BAF-BC96-11B25A8954FC}</ProjectGuid>
-    <RootNamespace>OBoETests</RootNamespace>
+    <ProjectGuid>{87C53CC0-ED7A-4BF8-8844-FCA34401C1CA}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>ScenEditor</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -38,74 +39,83 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <TargetName>BoE Scenario Editor</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <TargetName>BoE Scenario Editor</TargetName>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <ForcedIncludeFiles>global.hpp</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>..\..\universe;..\..\tools;..\..\scenario;..\..\gfx;..\..\fileio\resmgr;..\..\fileio\xml-parser;..\..\fileio\gzstream;..\..\fileio;..\..\dialogxml\widgets;..\..\dialogxml\dialogs;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;TIXML_USE_TICPP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;TIXML_USE_TICPP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\Gfx;$(SolutionDir)..\..\src;D:\repositories\cboe\rsrc\menus</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;4290;4244;4996;4018</DisableSpecificWarnings>
+      <PrecompiledHeaderFile />
+      <PrecompiledHeaderOutputFile />
+      <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;libboost_filesystem-vc120-mt-gd-*.lib;libboost_system-vc120-mt-gd-*.lib;libboost_thread-vc120-mt-gd-*.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>..\..\..\rsrc\icons\win;..\..\..\rsrc\menus</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\universe;..\..\tools;..\..\scenario;..\..\gfx;..\..\fileio\resmgr;..\..\fileio\xml-parser;..\..\fileio\gzstream;..\..\fileio;..\..\dialogxml\widgets;..\..\dialogxml\dialogs;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>global.hpp</ForcedIncludeFiles>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;TIXML_USE_TICPP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\Gfx;$(SolutionDir)..\..\src;D:\repositories\cboe\rsrc\menus</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile />
+      <PrecompiledHeaderOutputFile />
       <DisableSpecificWarnings>4800;4290;4244;4996;4018</DisableSpecificWarnings>
+      <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>opengl32.lib;sfml-system.lib;sfml-window.lib;sfml-graphics.lib;sfml-audio.lib;libboost_filesystem-vc120-mt-*.lib;libboost_system-vc120-mt-*.lib;libboost_thread-vc120-mt-*.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\test\catch.cpp" />
-    <ClCompile Include="..\..\..\test\enums.cpp" />
-    <ClCompile Include="..\..\..\test\init.cpp" />
-    <ClCompile Include="..\..\..\test\item_legacy.cpp" />
-    <ClCompile Include="..\..\..\test\item_read.cpp" />
-    <ClCompile Include="..\..\..\test\item_write.cpp" />
-    <ClCompile Include="..\..\..\test\map_read.cpp" />
-    <ClCompile Include="..\..\..\test\map_write.cpp" />
-    <ClCompile Include="..\..\..\test\monst_legacy.cpp" />
-    <ClCompile Include="..\..\..\test\monst_read.cpp" />
-    <ClCompile Include="..\..\..\test\monst_write.cpp" />
-    <ClCompile Include="..\..\..\test\out_legacy.cpp" />
-    <ClCompile Include="..\..\..\test\out_read.cpp" />
-    <ClCompile Include="..\..\..\test\out_write.cpp" />
-    <ClCompile Include="..\..\..\test\pc_read.cpp" />
-    <ClCompile Include="..\..\..\test\scen_legacy.cpp" />
-    <ClCompile Include="..\..\..\test\scen_read.cpp" />
-    <ClCompile Include="..\..\..\test\scen_write.cpp" />
-    <ClCompile Include="..\..\..\test\spec_legacy.cpp" />
-    <ClCompile Include="..\..\..\test\talk_legacy.cpp" />
-    <ClCompile Include="..\..\..\test\talk_read.cpp" />
-    <ClCompile Include="..\..\..\test\talk_write.cpp" />
-    <ClCompile Include="..\..\..\test\ter_legacy.cpp" />
-    <ClCompile Include="..\..\..\test\ter_read.cpp" />
-    <ClCompile Include="..\..\..\test\ter_write.cpp" />
-    <ClCompile Include="..\..\..\test\town_legacy.cpp" />
-    <ClCompile Include="..\..\..\test\town_read.cpp" />
-    <ClCompile Include="..\..\..\test\town_write.cpp" />
-    <ClCompile Include="..\..\scenedit\scen.fileio.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.actions.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.btnmg.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.core.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.fileio.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.graphics.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.keydlgs.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.main.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.menus.win.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.townout.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\test\catch.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.actions.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.btnmg.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.core.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.fileio.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.global.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.graphics.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.keydlgs.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.menus.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.townout.hpp" />
+    <ClInclude Include="..\..\..\rsrc\menus\scenresource.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">
@@ -116,6 +126,12 @@
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\..\rsrc\menus\ScenEditor.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\rsrc\icons\win\BOE Editor.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

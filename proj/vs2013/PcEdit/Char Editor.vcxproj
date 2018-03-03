@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A0C19353-478B-4F21-9FE3-FA8EE4D15147}</ProjectGuid>
+    <ProjectGuid>{3A6D88AD-45CD-4736-85F7-5E602ECB3D3C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>BladesofExile</RootNamespace>
+    <RootNamespace>CharEditor</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -41,9 +41,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <TargetName>BoE Character Editor</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <TargetName>BoE Character Editor</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -51,11 +55,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;TIXML_USE_TICPP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\Gfx;$(SolutionDir)..\..\src;D:\repositories\cboe\rsrc\menus</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4800;4290;4244;4996;4018</DisableSpecificWarnings>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
-      <AdditionalIncludeDirectories>..\..\..\rsrc\menus\;..\..\game;..\..\universe;..\..\tools;..\..\scenario;..\..\gfx;..\..\fileio\resmgr;..\..\fileio\xml-parser;..\..\fileio\gzstream;..\..\fileio;..\..\dialogxml\widgets;..\..\dialogxml\dialogs;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4800;4290;4244;4996;4018</DisableSpecificWarnings>
-      <ForcedIncludeFiles>global.hpp</ForcedIncludeFiles>
+      <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -64,7 +68,7 @@
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>..\..\..\rsrc\icons\win;..\..\..\rsrc\menus;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\rsrc\icons\win;..\..\..\rsrc\menus</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -75,11 +79,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;TIXML_USE_TICPP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\rsrc\menus\;..\..\game;..\..\universe;..\..\tools;..\..\scenario;..\..\gfx;..\..\fileio\resmgr;..\..\fileio\xml-parser;..\..\fileio\gzstream;..\..\fileio;..\..\dialogxml\widgets;..\..\dialogxml\dialogs;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\Gfx;$(SolutionDir)..\..\src;D:\repositories\cboe\rsrc\menus</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
       <DisableSpecificWarnings>4800;4290;4244;4996;4018</DisableSpecificWarnings>
-      <ForcedIncludeFiles>global.hpp</ForcedIncludeFiles>
+      <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -89,60 +93,25 @@
       <AdditionalDependencies>opengl32.lib;sfml-system.lib;sfml-window.lib;sfml-graphics.lib;sfml-audio.lib;libboost_filesystem-vc120-mt-*.lib;libboost_system-vc120-mt-*.lib;libboost_thread-vc120-mt-*.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
-    <ResourceCompile>
-      <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
+    <ClCompile Include="..\..\..\src\pcedit\pc.action.cpp" />
+    <ClCompile Include="..\..\..\src\pcedit\pc.editors.cpp" />
+    <ClCompile Include="..\..\..\src\pcedit\pc.fileio.cpp" />
+    <ClCompile Include="..\..\..\src\pcedit\pc.graphics.cpp" />
+    <ClCompile Include="..\..\..\src\pcedit\pc.main.cpp" />
+    <ClCompile Include="..\..\..\src\pcedit\pc.menus.win.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\game\boe.actions.hpp" />
-    <ClInclude Include="..\..\game\boe.combat.hpp" />
-    <ClInclude Include="..\..\game\boe.consts.hpp" />
-    <ClInclude Include="..\..\game\boe.dlgutil.hpp" />
-    <ClInclude Include="..\..\game\boe.fileio.hpp" />
-    <ClInclude Include="..\..\game\boe.global.hpp" />
-    <ClInclude Include="..\..\game\boe.graphics.hpp" />
-    <ClInclude Include="..\..\game\boe.graphutil.hpp" />
-    <ClInclude Include="..\..\game\boe.infodlg.hpp" />
-    <ClInclude Include="..\..\game\boe.items.hpp" />
-    <ClInclude Include="..\..\game\boe.locutils.hpp" />
-    <ClInclude Include="..\..\game\boe.main.hpp" />
-    <ClInclude Include="..\..\game\boe.menus.hpp" />
-    <ClInclude Include="..\..\game\boe.monster.hpp" />
-    <ClInclude Include="..\..\game\boe.newgraph.hpp" />
-    <ClInclude Include="..\..\game\boe.party.hpp" />
-    <ClInclude Include="..\..\game\boe.specials.hpp" />
-    <ClInclude Include="..\..\game\boe.text.hpp" />
-    <ClInclude Include="..\..\game\boe.town.hpp" />
-    <ClInclude Include="..\..\game\boe.townspec.hpp" />
-    <ClInclude Include="..\..\..\rsrc\menus\boeresource.h" />
+    <ClInclude Include="..\..\..\src\pcedit\pc.action.hpp" />
+    <ClInclude Include="..\..\..\src\pcedit\pc.editors.hpp" />
+    <ClInclude Include="..\..\..\src\pcedit\pc.fileio.hpp" />
+    <ClInclude Include="..\..\..\src\pcedit\pc.graphics.hpp" />
+    <ClInclude Include="..\..\..\src\pcedit\pc.menus.hpp" />
+    <ClInclude Include="..\..\..\rsrc\menus\pcresource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\..\..\rsrc\menus\BladesOfExile.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\game\boe.actions.cpp" />
-    <ClCompile Include="..\..\game\boe.combat.cpp" />
-    <ClCompile Include="..\..\game\boe.dlgutil.cpp" />
-    <ClCompile Include="..\..\game\boe.fileio.cpp" />
-    <ClCompile Include="..\..\game\boe.graphics.cpp" />
-    <ClCompile Include="..\..\game\boe.graphutil.cpp" />
-    <ClCompile Include="..\..\game\boe.infodlg.cpp" />
-    <ClCompile Include="..\..\game\boe.items.cpp" />
-    <ClCompile Include="..\..\game\boe.locutils.cpp" />
-    <ClCompile Include="..\..\game\boe.main.cpp" />
-    <ClCompile Include="..\..\game\boe.menus.win.cpp" />
-    <ClCompile Include="..\..\game\boe.monster.cpp" />
-    <ClCompile Include="..\..\game\boe.newgraph.cpp" />
-    <ClCompile Include="..\..\game\boe.party.cpp" />
-    <ClCompile Include="..\..\game\boe.specials.cpp" />
-    <ClCompile Include="..\..\game\boe.startup.cpp" />
-    <ClCompile Include="..\..\game\boe.text.cpp" />
-    <ClCompile Include="..\..\game\boe.town.cpp" />
-    <ClCompile Include="..\..\game\boe.townspec.cpp" />
-    <ClCompile Include="..\..\pcedit\pc.editors.cpp" />
+    <Image Include="..\..\..\Win32\scenedit\BLSCENED.ICO" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">
@@ -155,9 +124,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\rsrc\icons\win\BOE Icon.ico" />
-    <Image Include="..\..\..\rsrc\icons\win\BOE Save.ico" />
-    <Image Include="..\..\..\rsrc\icons\win\BOE Scenario.ico" />
+    <ResourceCompile Include="..\..\..\rsrc\menus\CharEditor.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
