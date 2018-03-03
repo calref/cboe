@@ -46,7 +46,7 @@ static void GetMaskBitmaps(const sf::Image& srcImage, HBITMAP& hAndMaskBitmap, H
 	ReleaseDC(NULL, hDC);
 }
 
-cCursor::cCursor(fs::path imgPath, float hotSpotX, float hotSpotY) {
+Cursor::Cursor(fs::path imgPath, float hotSpotX, float hotSpotY) {
 	sf::Image gif;
 	if(!gif.loadFromFile(imgPath.string())) {
 		std::string error = "Error loading cursor from " + imgPath.string();
@@ -75,12 +75,12 @@ cCursor::cCursor(fs::path imgPath, float hotSpotX, float hotSpotY) {
 	DeleteObject(cursorXor);
 }
 
-cCursor::~cCursor() {
+Cursor::~Cursor() {
 	HCURSOR curs = (HCURSOR)ptr;
 	DestroyIcon(curs);
 }
 
-void cCursor::apply() {
+void Cursor::apply() {
 	HCURSOR curs = (HCURSOR)ptr;
 	SetCursor(curs);
 }
@@ -95,7 +95,7 @@ void set_cursor(cursor_type which_c) {
 	if(which_c == text_curs) {
 		SetCursor(LoadCursor(NULL, IDC_IBEAM));
 	} else {
-		cCursor& curs = *ResMgr::get<CursorRsrc>(cursors[which_c]);
+		Cursor& curs = *ResMgr::get<CursorRsrc>(cursors[which_c]);
 		curs.apply();
 	}
 }

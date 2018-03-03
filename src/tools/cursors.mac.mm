@@ -45,16 +45,10 @@ static NSImage* imageFromURL(CFURLRef url){
 	return newImage;
 }
 
-<<<<<<< HEAD
 Cursor::Cursor(fs::path path, float hotSpotX, float hotSpotY){
-	NSString *ref = [[NSFileManager defaultManager] stringWithFileSystemRepresentation:path.c_str() length:strlen(path.c_str())];
-	CFURLRef imgPath = (CFURLRef)[NSURL fileURLWithPath:ref];
-=======
-cCursor::cCursor(fs::path path, float hotSpotX, float hotSpotY){
 	FSRef ref;
 	FSPathMakeRef((UInt8*)path.c_str(), &ref, nullptr);
 	CFURLRef imgPath = CFURLCreateFromFSRef(nullptr, &ref);
->>>>>>> linux
 	
 	NSImage *img = imageFromURL(imgPath);
 	NSCursor *cursor = [[NSCursor alloc] initWithImage:img hotSpot:NSMakePoint(hotSpotX, hotSpotY)];
@@ -63,11 +57,11 @@ cCursor::cCursor(fs::path path, float hotSpotX, float hotSpotY){
 	ptr = cursor;
 }
 
-cCursor::~cCursor(){
+Cursor::~Cursor(){
 	[(NSCursor*)ptr release];
 }
 
-void cCursor::apply(){
+void Cursor::apply(){
 	[(NSCursor*)ptr set];
 }
 
@@ -81,7 +75,7 @@ void set_cursor(cursor_type which_c) {
 	if(which_c == text_curs) {
 		[[NSCursor IBeamCursor] set];
 	} else {
-		cCursor& curs = *ResMgr::get<CursorRsrc>(cursors[which_c]);
+		Cursor& curs = *ResMgr::get<CursorRsrc>(cursors[which_c]);
 		curs.apply();
 	}
 }
