@@ -25,6 +25,9 @@ else:
 env.VariantDir('#build/obj', 'src')
 env.VariantDir('#build/obj/test', 'test')
 
+# Allow arbitrary flags
+env.Append(CXXFLAGS=os.environ.get('CXXFLAGS', ''))
+
 debug = ARGUMENTS.get('debug', 0)
 if int(debug):
    env.Append(CCFLAGS = '-g')

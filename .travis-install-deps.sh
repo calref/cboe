@@ -7,5 +7,5 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
 	brew install scons sfml
 else
 	sudo apt-get update -qq
-	sudo apt-get install -qq libsfml-dev libboost-dev libboost-filesystem-dev libboost-thread-dev
+	sudo apt-get install -qq libsfml-dev libboost-dev libboost-filesystem-dev libboost-thread-dev libxml2-utils
 fi
