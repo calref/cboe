@@ -24,8 +24,8 @@ branches:
 
 notifications:
  email: false
- irc:
-  channels: ["irc.freenode.net#openboe"]
-  use_notice: true
-  on_success: change
-  on_failure: always
+# irc:
+#  channels: ["irc.freenode.net#openboe"]
+#  use_notice: true
+#  on_success: change
+#  on_failure: always
