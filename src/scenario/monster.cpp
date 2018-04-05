@@ -801,41 +801,41 @@ void cMonster::writeTo(std::ostream& file) const {
 	file << "PICTURE " << picture_num << '\n';
 	file << "SOUND " << ambient_sound << '\n';
 	file << '\f';
-	for(auto& abil : abil) {
-		if(!abil.second.active || abil.first == eMonstAbil::NO_ABIL) continue;
-		file << "ABIL " << abil.first << '\n';
-		switch(getMonstAbilCategory(abil.first)) {
+	for(auto& abil_element : abil) {
+		if(!abil_element.second.active || abil_element.first == eMonstAbil::NO_ABIL) continue;
+		file << "ABIL " << abil_element.first << '\n';
+		switch(getMonstAbilCategory(abil_element.first)) {
 			case eMonstAbilCat::INVALID: continue;
 			case eMonstAbilCat::MISSILE:
-				file << "TYPE " << abil.second.missile.type << ' ' << abil.second.missile.pic << '\n';
-				file << "DAMAGE " << abil.second.missile.dice << ' ' << abil.second.missile.sides << '\n';
-				file << "SKILL " << abil.second.missile.skill << '\n';
-				file << "RANGE " << abil.second.missile.range << '\n';
-				file << "CHANCE " << abil.second.missile.odds << '\n';
+				file << "TYPE " << abil_element.second.missile.type << ' ' << abil_element.second.missile.pic << '\n';
+				file << "DAMAGE " << abil_element.second.missile.dice << ' ' << abil_element.second.missile.sides << '\n';
+				file << "SKILL " << abil_element.second.missile.skill << '\n';
+				file << "RANGE " << abil_element.second.missile.range << '\n';
+				file << "CHANCE " << abil_element.second.missile.odds << '\n';
 				break;
 			case eMonstAbilCat::GENERAL:
-				file << "TYPE " << abil.second.gen.type << ' ' << abil.second.gen.pic << '\n';
-				file << "DAMAGE " << abil.second.gen.strength << '\n';
-				file << "RANGE " << abil.second.gen.range << '\n';
-				file << "CHANCE " << abil.second.gen.odds << '\n';
-				if(abil.first == eMonstAbil::DAMAGE || abil.first == eMonstAbil::DAMAGE2)
-					file << "EXTRA " << abil.second.gen.dmg << '\n';
-				else if(abil.first == eMonstAbil::FIELD)
-					file << "EXTRA " << abil.second.gen.fld << '\n';
-				else if(abil.first == eMonstAbil::STATUS || abil.first == eMonstAbil::STATUS2 || abil.first == eMonstAbil::STUN)
-					file << "EXTRA " << abil.second.gen.stat;
+				file << "TYPE " << abil_element.second.gen.type << ' ' << abil_element.second.gen.pic << '\n';
+				file << "DAMAGE " << abil_element.second.gen.strength << '\n';
+				file << "RANGE " << abil_element.second.gen.range << '\n';
+				file << "CHANCE " << abil_element.second.gen.odds << '\n';
+				if(abil_element.first == eMonstAbil::DAMAGE || abil_element.first == eMonstAbil::DAMAGE2)
+					file << "EXTRA " << abil_element.second.gen.dmg << '\n';
+				else if(abil_element.first == eMonstAbil::FIELD)
+					file << "EXTRA " << abil_element.second.gen.fld << '\n';
+				else if(abil_element.first == eMonstAbil::STATUS || abil_element.first == eMonstAbil::STATUS2 || abil_element.first == eMonstAbil::STUN)
+					file << "EXTRA " << abil_element.second.gen.stat;
 				break;
 			case eMonstAbilCat::RADIATE:
-				file << "TYPE " << abil.second.radiate.type << '\n';
-				file << "CHANCE " << abil.second.radiate.chance << '\n';
+				file << "TYPE " << abil_element.second.radiate.type << '\n';
+				file << "CHANCE " << abil_element.second.radiate.chance << '\n';
 				break;
 			case eMonstAbilCat::SUMMON:
-				file << "TYPE " << abil.second.summon.type << '\t' << abil.second.summon.what << '\n';
-				file << "HOWMANY " << abil.second.summon.min << ' ' << abil.second.summon.max << '\n';
-				file << "CHANCE " << abil.second.summon.chance << '\n';
+				file << "TYPE " << abil_element.second.summon.type << '\t' << abil_element.second.summon.what << '\n';
+				file << "HOWMANY " << abil_element.second.summon.min << ' ' << abil_element.second.summon.max << '\n';
+				file << "CHANCE " << abil_element.second.summon.chance << '\n';
 				break;
 			case eMonstAbilCat::SPECIAL:
-				file << "EXTRA " << abil.second.special.extra1 << ' ' << abil.second.special.extra2 << '\n';
+				file << "EXTRA " << abil_element.second.special.extra1 << ' ' << abil_element.second.special.extra2 << '\n';
 				break;
 		}
 		file << '\f';
