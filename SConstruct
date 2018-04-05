@@ -404,9 +404,10 @@ elif str(platform) == "win32":
 
 if str(platform) == "darwin":
 	env.VariantDir("#build/pkg", "pkg/mac")
+	SConscript("build/pkg/SConscript")
 elif str(platform) == "win32" and subprocess.call(['where', '/Q', 'makensis']) == 0:
 	env.VariantDir("#build/pkg", "pkg/win")
-SConscript("build/pkg/SConscript")
+	SConscript("build/pkg/SConscript")
 
 # Cleanup
 
