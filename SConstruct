@@ -41,6 +41,7 @@ if platform not in ("darwin", "win32", "posix"):
 	Exit(1)
 print 'Building for:', platform
 print 'Using toolchain:', toolset
+print 'C++ compiler:', env['CXX']
 
 env.VariantDir('#build/obj', 'src')
 env.VariantDir('#build/obj/test', 'test')
@@ -73,15 +74,6 @@ else:
 		echo -e "\n#define GIT_REVISION \"\"\n#define GIT_TAG \"\"\n#define GIT_TAG_REVISION \"\"\n" > #TARGET
 	""")
 
-if platform == "posix":
-	env.Append(CXXFLAGS="-std=c++11 -stdlib=libstdc++")
-	env["CC"] = 'clang'
-	env["CXX"] = 'clang++'
-	env.Append(LIBPATH=Split("""
-		/usr/lib
-	"""), CPPPATH=Split("""
-		/usr/include
-	"""))
 if platform == "darwin":
 	env.Append(CXXFLAGS=["-std=c++11","-stdlib=libc++","-include","global.hpp"], RPATH='../Frameworks')
 	env["CC"] = 'clang'
@@ -189,7 +181,7 @@ elif platform == "win32":
 	def build_app_package(env, source, build_dir, info):
 		env.Install(build_dir, source)
 elif platform == "posix":
-	env.Append(CXXFLAGS=["-include","global.hpp"])
+	env.Append(CXXFLAGS=["-std=c++11","-include","global.hpp"])
 	def build_app_package(env, source, build_dir, info):
 		env.Install(build_dir, source)
 
