@@ -3,34 +3,51 @@ import os.path as path
 import os
 import subprocess
 
-platform = ARGUMENTS.get('OS', Platform())
-toolset = ARGUMENTS.get('toolset', 'default')
-sixty_four = ARGUMENTS.get('64bit', False)
-arch = 'x86_64' if sixty_four else 'x86'
+# Build options
+opts = Variables(None, ARGUMENTS)
 
-if str(platform) not in ("darwin", "win32", "posix"):
+opts.Add(EnumVariable('OS', "Target platform", str(Platform()), ('darwin', 'win32', 'posix')))
+opts.Add('toolset', "Toolset to pass to the SCons builder", 'default')
+opts.Add(BoolVariable('debug', "Build with debug symbols", False))
+opts.Add(EnumVariable('bits', "Build for 32-bit or 64-bit architectures", '32', ('32', '64')))
+
+# Compiler configuration
+opts.Add("CXX", "C++ compiler")
+opts.Add("CC", "C compiler")
+opts.Add("LINK", "Linker")
+opts.Add("CCFLAGS", "Custom flags for both the C and C++ compilers")
+opts.Add("CXXFLAGS", "Custom flags for the C++ compiler")
+opts.Add("CFLAGS", "Custom flags for the C compiler")
+opts.Add("LINKFLAGS", "Custom flags for the linker")
+
+# Initialize environment with options and full user environment
+env = Environment(variables=opts, ENV=os.environ)
+Help(opts.GenerateHelpText(env))
+
+platform = env['OS']
+toolset = env['toolset']
+arch = 'x86_64' if (env['bits'] == '64') else 'x86'
+
+# Update env based on options
+env.Replace(TARGET_ARCH=arch)
+env.Replace(tools=[toolset])
+
+# Check for platform support
+if platform not in ("darwin", "win32", "posix"):
 	print "Sorry, your platform is not supported."
 	print "Platform is:", platform
 	print "Specify OS=<your-platform> if you believe this is incorrect."
 	print "(Supported platforms are: darwin, win32, posix)"
 	Exit(1)
-
 print 'Building for:', platform
 print 'Using toolchain:', toolset
+print 'C++ compiler:', env['CXX']
 
-if toolset != 'default':
-	env = Environment(TARGET_ARCH=arch,ENV=os.environ, tools = [toolset])
-else:
-	env = Environment(TARGET_ARCH=arch,ENV=os.environ)
 env.VariantDir('#build/obj', 'src')
 env.VariantDir('#build/obj/test', 'test')
 
-# Allow arbitrary flags
-env.Append(CXXFLAGS=os.environ.get('CXXFLAGS', ''))
-
-debug = ARGUMENTS.get('debug', 0)
-if int(debug):
-   env.Append(CCFLAGS = '-g')
+if env['debug']:
+   env.Append(CCFLAGS=['-g'])
 
 # This command generates the header with git revision information
 def gen_gitrev(env, target, source):
@@ -57,17 +74,8 @@ else:
 		echo -e "\n#define GIT_REVISION \"\"\n#define GIT_TAG \"\"\n#define GIT_TAG_REVISION \"\"\n" > #TARGET
 	""")
 
-if str(platform) == "posix":
-	env.Append(CXXFLAGS="-std=c++11 -stdlib=libstdc++")
-	env["CC"] = 'clang'
-	env["CXX"] = 'clang++'
-	env.Append(LIBPATH=Split("""
-		/usr/lib
-	"""), CPPPATH=Split("""
-		/usr/include
-	"""))
-if str(platform) == "darwin":
-	env.Append(CXXFLAGS="-std=c++11 -stdlib=libc++ -include global.hpp", RPATH='../Frameworks')
+if platform == "darwin":
+	env.Append(CXXFLAGS=["-std=c++11","-stdlib=libc++","-include","global.hpp"], RPATH='../Frameworks')
 	env["CC"] = 'clang'
 	env["CXX"] = 'clang++'
 	env.Append(BUILDERS={
@@ -147,11 +155,11 @@ if str(platform) == "darwin":
 					Execute(Copy(dest_path, src_path))
 					bundle_libraries_for(target, [File(check_path)], env)
 					break
-elif str(platform) == "win32":
+elif platform == "win32":
 	if 'msvc' in env['TOOLS']:
 		env.Append(
-			LINKFLAGS='/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup /MACHINE:X86',
-			CXXFLAGS='/EHsc /MD /FIglobal.hpp',
+			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup','/MACHINE:X86'],
+			CXXFLAGS=['/EHsc','/MD','/FIglobal.hpp'],
 			LIBPATH=("C:\Program Files (x86)\Microsoft Visual Studio " + env['MSVC_VERSION'] + "\VC\lib"),
 			LIBS=Split("""
 				kernel32
@@ -169,11 +177,11 @@ elif str(platform) == "win32":
 			""")
 		)
 	else:
-		env.Append(CXXFLAGS="-include global.hpp")
+		env.Append(CXXFLAGS=["-include","global.hpp"])
 	def build_app_package(env, source, build_dir, info):
 		env.Install(build_dir, source)
-elif str(platform) == "posix":
-	env.Append(CXXFLAGS="-include global.hpp")
+elif platform == "posix":
+	env.Append(CXXFLAGS=["-std=c++11","-include","global.hpp"])
 	def build_app_package(env, source, build_dir, info):
 		env.Install(build_dir, source)
 
@@ -181,41 +189,41 @@ env.AddMethod(build_app_package, "Package")
 
 # Allow user to specify additional library/include paths
 env.Append(
-	LIBPATH = ARGUMENTS.get('LIBPATH', '').split(path.pathsep),
-	CPPPATH = ARGUMENTS.get('INCLUDEPATH', '').split(path.pathsep)
+	LIBPATH=ARGUMENTS.get('LIBPATH', '').split(path.pathsep),
+	CPPPATH=ARGUMENTS.get('INCLUDEPATH', '').split(path.pathsep)
 )
-if str(platform) == 'darwin':
+if platform == 'darwin':
 	env.Append(FRAMEWORKPATH=ARGUMENTS.get('FRAMEWORKPATH', '').split(path.pathsep))
 	# If any package managers are installed, add their dirs too.
 	if subprocess.call(['which', '-s', 'port']) == 0: # MacPorts
 		env.Append(
-			LIBPATH = '/opt/local/lib',
-			CPPPATH = '/opt/local/include',
-			FRAMEWORKPATH = '/opt/local/Library/Frameworks'
+			LIBPATH=['/opt/local/lib'],
+			CPPPATH=['/opt/local/include'],
+			FRAMEWORKPATH=['/opt/local/Library/Frameworks']
 		)
 
 	if subprocess.call(['which', '-s', 'fink']) == 0: # Fink
 		env.Append(
-			LIBPATH = '/sw/lib',
-			CPPPATH = '/sw/include'
+			LIBPATH=['/sw/lib'],
+			CPPPATH=['/sw/include']
 		)
 
 	# pretty sketchy, but should point to your boost install
 	if subprocess.call(['which', '-s', 'brew']) == 0: # HomeBrew
 		brew_boost_version = '1.58.0'
 		env.Append(
-			LIBPATH = '/usr/local/Cellar/boost/'+brew_boost_version+'/lib',
-			CPPPATH = '/usr/local/Cellar/boost/'+brew_boost_version+'/include')
+			LIBPATH=['/usr/local/Cellar/boost/'+brew_boost_version+'/lib'],
+			CPPPATH=['/usr/local/Cellar/boost/'+brew_boost_version+'/include'])
 
 # Sometimes it's easier just to copy the dependencies into the repo dir
 # We try to auto-detect this.
 if path.exists('deps/lib'):
-	env.Append(LIBPATH='deps/lib')
-	if str(platform) == 'darwin':
-		env.Append(FRAMEWORKPATH='deps/lib')
+	env.Append(LIBPATH=['deps/lib'])
+	if platform == 'darwin':
+		env.Append(FRAMEWORKPATH=['deps/lib'])
 
 if path.exists('deps/include'):
-	env.Append(CPPPATH='deps/include')
+	env.Append(CPPPATH=['deps/include'])
 
 # Include directories
 
@@ -243,17 +251,17 @@ if not env.GetOption('clean'):
 		print "There's a problem with your compiler!"
 		Exit(1)
 
-	if not conf.CheckLib('zlib' if (str(platform) == "win32" and 'mingw' not in env["TOOLS"]) else 'z'):
+	if not conf.CheckLib('zlib' if (platform == "win32" and 'mingw' not in env["TOOLS"]) else 'z'):
 		print 'zlib must be installed!'
 		Exit(1)
 
 	def check_lib(lib, disp, suffixes=[], versions=[]):
-		if str(platform) == "win32" and lib.startswith("boost"):
+		if platform == "win32" and lib.startswith("boost"):
 			lib = "lib" + lib
 		if "mingw" in env["TOOLS"] and lib.startswith("sfml"):
 			lib = "lib" + lib
 		possible_names = [lib]
-		if str(platform) == "win32":
+		if platform == "win32":
 			if 'msvc' in env['TOOLS']:
 				vc_suffix = '-vc' + env['MSVC_VERSION'].replace('.','')
 				possible_names.append(lib + vc_suffix)
@@ -298,13 +306,13 @@ if not env.GetOption('clean'):
 
 	env = conf.Finish()
 
-env.Append(CPPDEFINES="TIXML_USE_TICPP")
+env.Append(CPPDEFINES=["TIXML_USE_TICPP"])
 
-if str(platform) == "win32":
+if platform == "win32":
 	# For the *resource.h headers
-	env.Append(CPPPATH="#rsrc/menus")
+	env.Append(CPPPATH=["#rsrc/menus"])
 
-if str(platform) == "darwin":
+if platform == "darwin":
 	env.Append(LIBS=Split("""
 		objc
 		c++
@@ -313,11 +321,11 @@ if str(platform) == "darwin":
 		OpenGL
 		Cocoa
 	"""))
-elif str(platform) == "win32":
+elif platform == "win32":
 	env.Append(LIBS=Split("""
 		opengl32
 	"""))
-elif str(platform) == "posix":
+elif platform == "posix":
 	env.Append(LIBS=Split("""
 		GL
 		X11
@@ -356,7 +364,7 @@ SConscript(["rsrc/SConscript", "doc/SConscript"])
 
 # Bundle required frameworks and libraries
 
-if str(platform) == "darwin":
+if platform == "darwin":
 	targets = [
 		"Blades of Exile",
 		"BoE Character Editor",
@@ -366,7 +374,7 @@ if str(platform) == "darwin":
 		target_dir = path.join(install_dir, targ + '.app', 'Contents/Frameworks')
 		binary = path.join(install_dir, targ + '.app', 'Contents/MacOS', targ)
 		env.Command(Dir(target_dir), binary, [Delete(target_dir), bundle_libraries_for])
-elif str(platform) == "win32":
+elif platform == "win32":
 	bundled_libs = Split("""
 		libsndfile-1
 		openal32
@@ -402,10 +410,10 @@ elif str(platform) == "win32":
 			# (Because the installer is an optional component.)
 			open("build/Blades of Exile/VCRedistInstall.exe", 'w').close()
 
-if str(platform) == "darwin":
+if platform == "darwin":
 	env.VariantDir("#build/pkg", "pkg/mac")
 	SConscript("build/pkg/SConscript")
-elif str(platform) == "win32" and subprocess.call(['where', '/Q', 'makensis']) == 0:
+elif platform == "win32" and subprocess.call(['where', '/Q', 'makensis']) == 0:
 	env.VariantDir("#build/pkg", "pkg/win")
 	SConscript("build/pkg/SConscript")
 

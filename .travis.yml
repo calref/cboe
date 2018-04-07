@@ -3,24 +3,26 @@ language: cpp
 sudo: required
 services: ['docker']
 
-script: CXXFLAGS=-DBOOST_NO_CXX11_SCOPED_ENUMS scons
-
-compiler:
- - clang
+branches:
+ except:
+  - legacy-win32
 
 matrix:
  include:
   - os: linux
-    sudo: required
     dist: trusty
+    compiler: clang
+  - os: linux
+    dist: trusty
+    compiler: gcc
   - os: osx
+    compiler: clang
 
 install:
  - ./.travis-install-deps.sh
 
-branches:
- except:
-  - legacy-win32
+script:
+ - scons CC=$CC CXX=$CXX CXXFLAGS=-DBOOST_NO_CXX11_SCOPED_ENUMS
 
 notifications:
  email: false
