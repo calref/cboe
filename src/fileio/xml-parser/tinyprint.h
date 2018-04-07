@@ -41,18 +41,18 @@ namespace ticpp {
 			CloseElement(tagName);
 		}
 	};
-}
 
-template<> inline void ticpp::Printer::PushAttribute(std::string attrName, bool attrVal) {
-	PushAttribute(attrName, attrVal ? "true" : "false");
-}
+	template<> inline void Printer::PushAttribute(std::string attrName, bool attrVal) {
+		PushAttribute(attrName, attrVal ? "true" : "false");
+	}
 
-template<> inline void ticpp::Printer::PushElement(std::string attrName, bool attrVal, bool cdata) {
-	PushElement(attrName, attrVal ? "true" : "false", cdata);
-}
+	template<> inline void Printer::PushElement(std::string attrName, bool attrVal, bool cdata) {
+		PushElement(attrName, attrVal ? "true" : "false", cdata);
+	}
 
-template<> inline void ticpp::Printer::PushText(bool textVal, bool cdata) {
-	PushText(textVal ? "true" : "false", cdata);
+	template<> inline void Printer::PushText(bool textVal, bool cdata) {
+		PushText(textVal ? "true" : "false", cdata);
+	}
 }
 
 #endif
