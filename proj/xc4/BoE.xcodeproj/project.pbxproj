@@ -731,7 +731,7 @@
 		91BFA3D91902ADD5001686E4 /* tarball.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tarball.hpp; sourceTree = "<group>"; };
 		91BFA3DE19033E01001686E4 /* gzstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gzstream.cpp; sourceTree = "<group>"; };
 		91BFA3DF19033E01001686E4 /* gzstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gzstream.h; sourceTree = "<group>"; };
-		91C2A6E11B823CCD00346948 /* gitrev.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = gitrev.sh; sourceTree = "<group>"; };
+		91C2A6E11B823CCD00346948 /* gitrev.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = gitrev.sh; path = ../../pkg/gitrev.sh; sourceTree = SOURCE_ROOT; };
 		91C2A6E21B8244F700346948 /* gitrev.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = gitrev.hpp; sourceTree = "<group>"; };
 		91C2A6EC1B8FA91400346948 /* town_read.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = town_read.cpp; sourceTree = "<group>"; };
 		91C2A6ED1B8FA9FB00346948 /* out_read.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = out_read.cpp; sourceTree = "<group>"; };
