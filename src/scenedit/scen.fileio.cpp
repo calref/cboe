@@ -63,59 +63,61 @@ static std::string boolstr(bool b) {
 	return b ? "true" : "false";
 }
 
-template<> void ticpp::Printer::PushElement(std::string tagName, location pos, bool) {
-	OpenElement(tagName);
-	PushAttribute("x", pos.x);
-	PushAttribute("y", pos.y);
-	CloseElement(tagName);
-}
-
-template<> void ticpp::Printer::PushElement(std::string tagName, rectangle rect, bool) {
-	OpenElement(tagName);
-	PushAttribute("top", rect.top);
-	PushAttribute("left", rect.left);
-	PushAttribute("bottom", rect.bottom);
-	PushAttribute("right", rect.right);
-	CloseElement(tagName);
-}
-
-template<> void ticpp::Printer::PushElement(std::string tagName, cMonster::cAttack attack, bool) {
-	OpenElement(tagName);
-	PushAttribute("type", attack.type);
-	std::ostringstream strength;
-	strength << attack.dice << 'd' << attack.sides;
-	PushText(strength.str());
-	CloseElement(tagName);
-}
-
-template<> void ticpp::Printer::PushElement(std::string tagName, cOutdoors::cWandering enc, bool) {
-	OpenElement(tagName);
-	PushAttribute("can-flee", !enc.cant_flee);
-	PushAttribute("force", enc.forced);
-	for(size_t i = 0; i < enc.monst.size(); i++) {
-		PushElement("monster", enc.monst[i]);
+namespace ticpp {
+	template<> void Printer::PushElement(std::string tagName, location pos, bool) {
+		OpenElement(tagName);
+		PushAttribute("x", pos.x);
+		PushAttribute("y", pos.y);
+		CloseElement(tagName);
 	}
-	for(size_t i = 0; i < enc.friendly.size(); i++) {
-		OpenElement("monster");
-		PushAttribute("friendly", true);
-		PushText(enc.friendly[i]);
-		CloseElement("monster");
-	}
-	PushElement("onmeet", enc.spec_on_meet);
-	PushElement("onwin", enc.spec_on_win);
-	PushElement("onflee", enc.spec_on_flee);
-	PushElement("sdf", loc(enc.end_spec1, enc.end_spec2));
-	CloseElement(tagName);
-}
 
-template<> void ticpp::Printer::PushElement(std::string tagName, info_rect_t rect, bool cdata) {
-	OpenElement(tagName);
-	PushAttribute("top", rect.top);
-	PushAttribute("left", rect.left);
-	PushAttribute("bottom", rect.bottom);
-	PushAttribute("right", rect.right);
-	PushText(rect.descr, cdata);
-	CloseElement(tagName);
+	template<> void Printer::PushElement(std::string tagName, rectangle rect, bool) {
+		OpenElement(tagName);
+		PushAttribute("top", rect.top);
+		PushAttribute("left", rect.left);
+		PushAttribute("bottom", rect.bottom);
+		PushAttribute("right", rect.right);
+		CloseElement(tagName);
+	}
+
+	template<> void Printer::PushElement(std::string tagName, cMonster::cAttack attack, bool) {
+		OpenElement(tagName);
+		PushAttribute("type", attack.type);
+		std::ostringstream strength;
+		strength << attack.dice << 'd' << attack.sides;
+		PushText(strength.str());
+		CloseElement(tagName);
+	}
+
+	template<> void Printer::PushElement(std::string tagName, cOutdoors::cWandering enc, bool) {
+		OpenElement(tagName);
+		PushAttribute("can-flee", !enc.cant_flee);
+		PushAttribute("force", enc.forced);
+		for(size_t i = 0; i < enc.monst.size(); i++) {
+			PushElement("monster", enc.monst[i]);
+		}
+		for(size_t i = 0; i < enc.friendly.size(); i++) {
+			OpenElement("monster");
+			PushAttribute("friendly", true);
+			PushText(enc.friendly[i]);
+			CloseElement("monster");
+		}
+		PushElement("onmeet", enc.spec_on_meet);
+		PushElement("onwin", enc.spec_on_win);
+		PushElement("onflee", enc.spec_on_flee);
+		PushElement("sdf", loc(enc.end_spec1, enc.end_spec2));
+		CloseElement(tagName);
+	}
+
+	template<> void Printer::PushElement(std::string tagName, info_rect_t rect, bool cdata) {
+		OpenElement(tagName);
+		PushAttribute("top", rect.top);
+		PushAttribute("left", rect.left);
+		PushAttribute("bottom", rect.bottom);
+		PushAttribute("right", rect.right);
+		PushText(rect.descr, cdata);
+		CloseElement(tagName);
+	}
 }
 
 void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
