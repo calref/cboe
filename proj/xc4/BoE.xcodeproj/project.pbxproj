@@ -2295,7 +2295,7 @@
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
-				INFOPLIST_FILE = "$(SRCROOT)/../../pkg/mac/pcedit/BoECharEd-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/../../pkg/mac/BoECharEd-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
@@ -2318,7 +2318,7 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/../../pkg/mac/pcedit/BoECharEd-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/../../pkg/mac/BoECharEd-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
@@ -2341,7 +2341,7 @@
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
-				INFOPLIST_FILE = "$(SRCROOT)/../../pkg/mac/scenedit/BoEScenEd-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/../../pkg/mac/BoEScenEd-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
@@ -2365,7 +2365,7 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/../../pkg/mac/scenedit/BoEScenEd-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/../../pkg/mac/BoEScenEd-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
