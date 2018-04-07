@@ -46,7 +46,7 @@ env.VariantDir('#build/obj', 'src')
 env.VariantDir('#build/obj/test', 'test')
 
 if env['debug']:
-   env.Append(CCFLAGS = '-g')
+   env.Append(CCFLAGS=['-g'])
 
 # This command generates the header with git revision information
 def gen_gitrev(env, target, source):
@@ -83,7 +83,7 @@ if platform == "posix":
 		/usr/include
 	"""))
 if platform == "darwin":
-	env.Append(CXXFLAGS="-std=c++11 -stdlib=libc++ -include global.hpp", RPATH='../Frameworks')
+	env.Append(CXXFLAGS=["-std=c++11","-stdlib=libc++","-include","global.hpp"], RPATH='../Frameworks')
 	env["CC"] = 'clang'
 	env["CXX"] = 'clang++'
 	env.Append(BUILDERS={
@@ -166,8 +166,8 @@ if platform == "darwin":
 elif platform == "win32":
 	if 'msvc' in env['TOOLS']:
 		env.Append(
-			LINKFLAGS='/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup /MACHINE:X86',
-			CXXFLAGS='/EHsc /MD /FIglobal.hpp',
+			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup','/MACHINE:X86'],
+			CXXFLAGS=['/EHsc','/MD','/FIglobal.hpp'],
 			LIBPATH=("C:\Program Files (x86)\Microsoft Visual Studio " + env['MSVC_VERSION'] + "\VC\lib"),
 			LIBS=Split("""
 				kernel32
@@ -185,11 +185,11 @@ elif platform == "win32":
 			""")
 		)
 	else:
-		env.Append(CXXFLAGS="-include global.hpp")
+		env.Append(CXXFLAGS=["-include","global.hpp"])
 	def build_app_package(env, source, build_dir, info):
 		env.Install(build_dir, source)
 elif platform == "posix":
-	env.Append(CXXFLAGS="-include global.hpp")
+	env.Append(CXXFLAGS=["-include","global.hpp"])
 	def build_app_package(env, source, build_dir, info):
 		env.Install(build_dir, source)
 
@@ -197,41 +197,41 @@ env.AddMethod(build_app_package, "Package")
 
 # Allow user to specify additional library/include paths
 env.Append(
-	LIBPATH = ARGUMENTS.get('LIBPATH', '').split(path.pathsep),
-	CPPPATH = ARGUMENTS.get('INCLUDEPATH', '').split(path.pathsep)
+	LIBPATH=ARGUMENTS.get('LIBPATH', '').split(path.pathsep),
+	CPPPATH=ARGUMENTS.get('INCLUDEPATH', '').split(path.pathsep)
 )
 if platform == 'darwin':
 	env.Append(FRAMEWORKPATH=ARGUMENTS.get('FRAMEWORKPATH', '').split(path.pathsep))
 	# If any package managers are installed, add their dirs too.
 	if subprocess.call(['which', '-s', 'port']) == 0: # MacPorts
 		env.Append(
-			LIBPATH = '/opt/local/lib',
-			CPPPATH = '/opt/local/include',
-			FRAMEWORKPATH = '/opt/local/Library/Frameworks'
+			LIBPATH=['/opt/local/lib'],
+			CPPPATH=['/opt/local/include'],
+			FRAMEWORKPATH=['/opt/local/Library/Frameworks']
 		)
 
 	if subprocess.call(['which', '-s', 'fink']) == 0: # Fink
 		env.Append(
-			LIBPATH = '/sw/lib',
-			CPPPATH = '/sw/include'
+			LIBPATH=['/sw/lib'],
+			CPPPATH=['/sw/include']
 		)
 
 	# pretty sketchy, but should point to your boost install
 	if subprocess.call(['which', '-s', 'brew']) == 0: # HomeBrew
 		brew_boost_version = '1.58.0'
 		env.Append(
-			LIBPATH = '/usr/local/Cellar/boost/'+brew_boost_version+'/lib',
-			CPPPATH = '/usr/local/Cellar/boost/'+brew_boost_version+'/include')
+			LIBPATH=['/usr/local/Cellar/boost/'+brew_boost_version+'/lib'],
+			CPPPATH=['/usr/local/Cellar/boost/'+brew_boost_version+'/include'])
 
 # Sometimes it's easier just to copy the dependencies into the repo dir
 # We try to auto-detect this.
 if path.exists('deps/lib'):
-	env.Append(LIBPATH='deps/lib')
+	env.Append(LIBPATH=['deps/lib'])
 	if platform == 'darwin':
-		env.Append(FRAMEWORKPATH='deps/lib')
+		env.Append(FRAMEWORKPATH=['deps/lib'])
 
 if path.exists('deps/include'):
-	env.Append(CPPPATH='deps/include')
+	env.Append(CPPPATH=['deps/include'])
 
 # Include directories
 
@@ -314,11 +314,11 @@ if not env.GetOption('clean'):
 
 	env = conf.Finish()
 
-env.Append(CPPDEFINES="TIXML_USE_TICPP")
+env.Append(CPPDEFINES=["TIXML_USE_TICPP"])
 
 if platform == "win32":
 	# For the *resource.h headers
-	env.Append(CPPPATH="#rsrc/menus")
+	env.Append(CPPPATH=["#rsrc/menus"])
 
 if platform == "darwin":
 	env.Append(LIBS=Split("""
