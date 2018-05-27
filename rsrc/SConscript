@@ -83,21 +83,16 @@ if str(platform) == "darwin":
 	def set_dir_icon(env, target, source):
 		env.Command(target, source, action = [
 			Mkdir("build/rsrc/icons"),
-			"sips -i $SOURCE --out build/rsrc/icons/${SOURCE.file}",
-			"DeRez -only icns build/rsrc/icons/${SOURCE.file} > \
-				build/rsrc/icons/${SOURCE.filebase}.rsrc",
-			"Rez -append build/rsrc/icons/${SOURCE.filebase}.rsrc -o $TARGET",
-			"SetFile -a C ${TARGET.dir}",
-			"chflags hidden $TARGET",
+			"rsrc/icons/mac/fileicon.sh set $TARGET.dir $SOURCE.dir/$SOURCE.file",
 		])
 	env.AddMethod(set_dir_icon, "SetDirIcon")
 	icons = {
-		'': 'boeresources.icns',
-		'dialogs/': 'boeresources.icns',
-		'strings/': 'boeresources.icns',
-		'cursors/': 'boegraphics.icns',
-		'graphics/': 'boegraphics.icns',
-		'sounds/': 'boesounds.icns',
+		'': 'boeresources.png',
+		'dialogs/': 'boeresources.png',
+		'strings/': 'boeresources.png',
+		'cursors/': 'boegraphics.png',
+		'graphics/': 'boegraphics.png',
+		'sounds/': 'boesounds.png',
 	}
 	for dir, icon in icons.items():
 		env.SetDirIcon(
