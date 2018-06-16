@@ -1,8 +1,19 @@
+import os.path as path
 
-Import("env platform")
+Import("env platform install_dir")
 
 if str(platform) != "darwin":
 	print "Error: Building for", str(platform), "but trying to create a Mac install package"
+
+# Fix dylib paths.
+targets = [
+	"Blades of Exile",
+	"BoE Character Editor",
+	"BoE Scenario Editor",
+]
+for targ in targets:
+	source_file = path.join(install_dir, targ + '.app')
+	env.Command(None, source_file, action='pkg/mac/fix_dylibs.sh "' + source_file.replace('#','') + '" "' + targ + '"')
 
 env.Command('OBoE.dmg', "#build/Blades of Exile", 
 	action='hdiutil create -fs HFS+ -volname "Blades of Exile" -srcfolder $SOURCE $TARGET')
