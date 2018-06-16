@@ -8,6 +8,10 @@
 
 echo "Fixing boost dylib install names..."
 
+# Get in the right path.
+pushd "$1"
+
+# Set up variables
 EXEPATH="Contents/Frameworks"
 BOEPATH="Contents/MacOS/$2"
 BFSPATH="$EXEPATH/libboost_filesystem.dylib"
@@ -31,3 +35,6 @@ install_name_tool -rpath libboost_system.dylib "$EXEPATH/libboost_system.dylib" 
 chmod -w "$EXEPATH/libboost_system.dylib"
 chmod -w "$EXEPATH/libboost_filesystem.dylib"
 chmod -w "$EXEPATH/libboost_thread-mt.dylib"
+
+# Restore path.
+popd
