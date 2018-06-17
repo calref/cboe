@@ -6,10 +6,7 @@
 #  Created by Celtic Minstrel on 14-04-17.
 #
 
-echo "Fixing boost dylib install names..."
-
-# Get in the right path.
-pushd "$1"
+echo "Fixing Boost and SFML dylib install names..."
 
 # Set up variables - Boost
 OLD_BOOST_PATH="/usr/local/opt/boost/lib/libboost_system.dylib"
@@ -41,11 +38,11 @@ EXEPATH="Contents/MacOS/$2"
 
 # Fix permissions so we can change stuff.
 chmod +wx "$EXEPATH"
-chmod +w "$NEW_ABSOLUTE_BOOST_FS_PATH"
-chmod +w "$NEW_ABSOLUTE_BOOST_THREAD_PATH"
-chmod +w "$NEW_ABSOLUTE_SFML_GRAPHICS_PATH"
-chmod +w "$NEW_ABSOLUTE_SFML_AUDIO_PATH"
-chmod +w "$NEW_ABSOLUTE_SFML_WINDOW_PATH"
+chmod +wx "$NEW_ABSOLUTE_BOOST_FS_PATH"
+chmod +wx "$NEW_ABSOLUTE_BOOST_THREAD_PATH"
+chmod +wx "$NEW_ABSOLUTE_SFML_GRAPHICS_PATH"
+chmod +wx "$NEW_ABSOLUTE_SFML_AUDIO_PATH"
+chmod +wx "$NEW_ABSOLUTE_SFML_WINDOW_PATH"
 
 # Update references in the executable file
 install_name_tool -change "$OLD_BOOST_PATH" "$NEW_BOOST_PATH" "$EXEPATH"
@@ -72,6 +69,3 @@ chmod -w "$NEW_ABSOLUTE_BOOST_THREAD_PATH"
 chmod -w "$NEW_ABSOLUTE_SFML_GRAPHICS_PATH"
 chmod -w "$NEW_ABSOLUTE_SFML_AUDIO_PATH"
 chmod -w "$NEW_ABSOLUTE_SFML_WINDOW_PATH"
-
-# Restore path.
-popd
