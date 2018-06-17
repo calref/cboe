@@ -38,8 +38,10 @@ EXEPATH="Contents/MacOS/$2"
 
 # Fix permissions so we can change stuff.
 chmod +wx "$EXEPATH"
+chmod +wx "$NEW_ABSOLUTE_BOOST_PATH"
 chmod +wx "$NEW_ABSOLUTE_BOOST_FS_PATH"
 chmod +wx "$NEW_ABSOLUTE_BOOST_THREAD_PATH"
+chmod +wx "$NEW_ABSOLUTE_SFML_PATH"
 chmod +wx "$NEW_ABSOLUTE_SFML_GRAPHICS_PATH"
 chmod +wx "$NEW_ABSOLUTE_SFML_AUDIO_PATH"
 chmod +wx "$NEW_ABSOLUTE_SFML_WINDOW_PATH"
@@ -64,8 +66,10 @@ install_name_tool -change "$OLD_SFML_WINDOW_PATH" "$NEW_SFML_WINDOW_PATH" "$NEW_
 
 # Remove temporary write permissions.
 chmod -w "$EXEPATH"
+chmod -w "$NEW_ABSOLUTE_BOOST_PATH"
 chmod -w "$NEW_ABSOLUTE_BOOST_FS_PATH"
 chmod -w "$NEW_ABSOLUTE_BOOST_THREAD_PATH"
+chmod -w "$NEW_ABSOLUTE_SFML_PATH"
 chmod -w "$NEW_ABSOLUTE_SFML_GRAPHICS_PATH"
 chmod -w "$NEW_ABSOLUTE_SFML_AUDIO_PATH"
 chmod -w "$NEW_ABSOLUTE_SFML_WINDOW_PATH"
