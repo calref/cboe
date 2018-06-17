@@ -46,7 +46,7 @@ chmod +wx "$NEW_ABSOLUTE_SFML_GRAPHICS_PATH"
 chmod +wx "$NEW_ABSOLUTE_SFML_AUDIO_PATH"
 chmod +wx "$NEW_ABSOLUTE_SFML_WINDOW_PATH"
 
-# Update references in the executable file
+# Add new paths
 install_name_tool -add_rpath "$NEW_BOOST_PATH" "$EXEPATH"
 install_name_tool -add_rpath "$NEW_BOOST_FS_PATH" "$EXEPATH"
 install_name_tool -add_rpath "$NEW_BOOST_THREAD_PATH" "$EXEPATH"
@@ -54,15 +54,29 @@ install_name_tool -add_rpath "$NEW_SFML_PATH" "$EXEPATH"
 install_name_tool -add_rpath "$NEW_SFML_GRAPHICS_PATH" "$EXEPATH"
 install_name_tool -add_rpath "$NEW_SFML_AUDIO_PATH" "$EXEPATH"
 install_name_tool -add_rpath "$NEW_SFML_WINDOW_PATH" "$EXEPATH"
-
-# Update references within Boost
 install_name_tool -add_rpath "$NEW_BOOST_FS_PATH" "$NEW_ABSOLUTE_BOOST_PATH"
 install_name_tool -add_rpath "$NEW_BOOST_THREAD_PATH" "$NEW_ABSOLUTE_BOOST_PATH"
-
-# Update references within SFML
 install_name_tool -add_rpath "$NEW_SFML_GRAPHICS_PATH" "$NEW_ABSOLUTE_SFML_PATH"
 install_name_tool -add_rpath "$NEW_SFML_AUDIO_PATH" "$NEW_ABSOLUTE_SFML_PATH"
 install_name_tool -add_rpath "$NEW_SFML_WINDOW_PATH" "$NEW_ABSOLUTE_SFML_PATH"
+
+# Update references in the executable file
+install_name_tool -change "$OLD_BOOST_PATH" "$NEW_BOOST_PATH" "$EXEPATH"
+install_name_tool -change "$OLD_BOOST_FS_PATH" "$NEW_BOOST_FS_PATH" "$EXEPATH"
+install_name_tool -change "$OLD_BOOST_THREAD_PATH" "$NEW_BOOST_THREAD_PATH" "$EXEPATH"
+install_name_tool -change "$OLD_SFML_PATH" "$NEW_SFML_PATH" "$EXEPATH"
+install_name_tool -change "$OLD_SFML_GRAPHICS_PATH" "$NEW_SFML_GRAPHICS_PATH" "$EXEPATH"
+install_name_tool -change "$OLD_SFML_AUDIO_PATH" "$NEW_SFML_AUDIO_PATH" "$EXEPATH"
+install_name_tool -change "$OLD_SFML_WINDOW_PATH" "$NEW_SFML_WINDOW_PATH" "$EXEPATH"
+
+# Update references within Boost
+install_name_tool -change "$OLD_BOOST_FS_PATH" "$NEW_BOOST_FS_PATH" "$NEW_ABSOLUTE_BOOST_PATH"
+install_name_tool -change "$OLD_BOOST_THREAD_PATH" "$NEW_BOOST_THREAD_PATH" "$NEW_ABSOLUTE_BOOST_PATH"
+
+# Update references within SFML
+install_name_tool -change "$OLD_SFML_GRAPHICS_PATH" "$NEW_SFML_GRAPHICS_PATH" "$NEW_ABSOLUTE_SFML_PATH"
+install_name_tool -change "$OLD_SFML_AUDIO_PATH" "$NEW_SFML_AUDIO_PATH" "$NEW_ABSOLUTE_SFML_PATH"
+install_name_tool -change "$OLD_SFML_WINDOW_PATH" "$NEW_SFML_WINDOW_PATH" "$NEW_ABSOLUTE_SFML_PATH"
 
 # Remove temporary write permissions.
 chmod -w "$EXEPATH"
