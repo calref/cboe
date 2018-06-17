@@ -34,7 +34,7 @@ NEW_SFML_AUDIO_PATH="@executable_path/../Contents/Frameworks/libsfml-audio.2.4.2
 NEW_SFML_WINDOW_PATH="@executable_path/../Contents/Frameworks/libsfml-window.2.4.2.dylib"
 
 # Set up variables - General
-EXEPATH="Contents/MacOS/$2"
+EXEPATH="$1/Contents/MacOS/$2"
 
 # Fix permissions so we can change stuff.
 chmod +wx "$EXEPATH"
