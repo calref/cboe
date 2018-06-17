@@ -1,4 +1,4 @@
-import os.path as path
+import os.path
 
 Import("env platform install_dir")
 
@@ -12,7 +12,7 @@ targets = [
 	"BoE Scenario Editor",
 ]
 for targ in targets:
-	source_file = path.join(install_dir, targ + '.app')
+	source_file = os.path.abspath(os.path.join(install_dir, targ + '.app'))
 	env.Command(None, source_file, action='pkg/mac/fix_dylibs.sh "' + source_file.replace('#','') + '" "' + targ + '"')
 
 env.Command('OBoE.dmg', "#build/Blades of Exile", 
