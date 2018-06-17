@@ -29,6 +29,7 @@ toolset = env['toolset']
 # Mac-specific environment update: 64-bit builds required now
 if platform == "darwin":
 	env.Replace(bits=64)
+	env.Append(LINKFLAGS="-rpath @executable_path/../Contents/Frameworks")
 arch = 'x86_64' if (env['bits'] == '64') else 'x86'
 
 # Update env based on options

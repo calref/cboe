@@ -15,9 +15,9 @@ OLD_BOOST_THREAD_PATH="/usr/local/opt/boost/lib/libboost_thread-mt.dylib"
 NEW_ABSOLUTE_BOOST_PATH="$1/Contents/Frameworks/libboost_system.dylib"
 NEW_ABSOLUTE_BOOST_FS_PATH="$1/Contents/Frameworks/libboost_filesystem.dylib"
 NEW_ABSOLUTE_BOOST_THREAD_PATH="$1/Contents/Frameworks/libboost_thread-mt.dylib"
-NEW_BOOST_PATH="@executable_path/../Contents/Frameworks/libboost_system.dylib"
-NEW_BOOST_FS_PATH="@executable_path/../Contents/Frameworks/libboost_filesystem.dylib"
-NEW_BOOST_THREAD_PATH="@executable_path/../Contents/Frameworks/libboost_thread-mt.dylib"
+NEW_BOOST_PATH="@rpath/libboost_system.dylib"
+NEW_BOOST_FS_PATH="@rpath/libboost_filesystem.dylib"
+NEW_BOOST_THREAD_PATH="@rpath/libboost_thread-mt.dylib"
 
 # Set up variables - SFML
 OLD_SFML_PATH="/usr/local/opt/sfml/lib/libsfml-system.2.4.2.dylib"
@@ -28,10 +28,10 @@ NEW_ABSOLUTE_SFML_PATH="$1/Contents/Frameworks/libsfml-system.2.4.2.dylib"
 NEW_ABSOLUTE_SFML_GRAPHICS_PATH="$1/Contents/Frameworks/libsfml-graphics.2.4.2.dylib"
 NEW_ABSOLUTE_SFML_AUDIO_PATH="$1/Contents/Frameworks/libsfml-audio.2.4.2.dylib"
 NEW_ABSOLUTE_SFML_WINDOW_PATH="$1/Contents/Frameworks/libsfml-window.2.4.2.dylib"
-NEW_SFML_PATH="@executable_path/../Contents/Frameworks/libsfml-system.2.4.2.dylib"
-NEW_SFML_GRAPHICS_PATH="@executable_path/../Contents/Frameworks/libsfml-graphics.2.4.2.dylib"
-NEW_SFML_AUDIO_PATH="@executable_path/../Contents/Frameworks/libsfml-audio.2.4.2.dylib"
-NEW_SFML_WINDOW_PATH="@executable_path/../Contents/Frameworks/libsfml-window.2.4.2.dylib"
+NEW_SFML_PATH="@rpath/libsfml-system.2.4.2.dylib"
+NEW_SFML_GRAPHICS_PATH="@rpath/libsfml-graphics.2.4.2.dylib"
+NEW_SFML_AUDIO_PATH="@rpath/libsfml-audio.2.4.2.dylib"
+NEW_SFML_WINDOW_PATH="@rpath/libsfml-window.2.4.2.dylib"
 
 # Set up variables - General
 EXEPATH="$1/Contents/MacOS/$2"
@@ -47,22 +47,22 @@ chmod +wx "$NEW_ABSOLUTE_SFML_AUDIO_PATH"
 chmod +wx "$NEW_ABSOLUTE_SFML_WINDOW_PATH"
 
 # Update references in the executable file
-install_name_tool -change "$OLD_BOOST_PATH" "$NEW_BOOST_PATH" "$EXEPATH"
-install_name_tool -change "$OLD_BOOST_FS_PATH" "$NEW_BOOST_FS_PATH" "$EXEPATH"
-install_name_tool -change "$OLD_BOOST_THREAD_PATH" "$NEW_BOOST_THREAD_PATH" "$EXEPATH"
-install_name_tool -change "$OLD_SFML_PATH" "$NEW_SFML_PATH" "$EXEPATH"
-install_name_tool -change "$OLD_SFML_GRAPHICS_PATH" "$NEW_SFML_GRAPHICS_PATH" "$EXEPATH"
-install_name_tool -change "$OLD_SFML_AUDIO_PATH" "$NEW_SFML_AUDIO_PATH" "$EXEPATH"
-install_name_tool -change "$OLD_SFML_WINDOW_PATH" "$NEW_SFML_WINDOW_PATH" "$EXEPATH"
+install_name_tool -add_rpath "$NEW_BOOST_PATH" "$EXEPATH"
+install_name_tool -add_rpath "$NEW_BOOST_FS_PATH" "$EXEPATH"
+install_name_tool -add_rpath "$NEW_BOOST_THREAD_PATH" "$EXEPATH"
+install_name_tool -add_rpath "$NEW_SFML_PATH" "$EXEPATH"
+install_name_tool -add_rpath "$NEW_SFML_GRAPHICS_PATH" "$EXEPATH"
+install_name_tool -add_rpath "$NEW_SFML_AUDIO_PATH" "$EXEPATH"
+install_name_tool -add_rpath "$NEW_SFML_WINDOW_PATH" "$EXEPATH"
 
 # Update references within Boost
-install_name_tool -change "$OLD_BOOST_FS_PATH" "$NEW_BOOST_FS_PATH" "$NEW_ABSOLUTE_BOOST_PATH"
-install_name_tool -change "$OLD_BOOST_THREAD_PATH" "$NEW_BOOST_THREAD_PATH" "$NEW_ABSOLUTE_BOOST_PATH"
+install_name_tool -add_rpath "$NEW_BOOST_FS_PATH" "$NEW_ABSOLUTE_BOOST_PATH"
+install_name_tool -add_rpath "$NEW_BOOST_THREAD_PATH" "$NEW_ABSOLUTE_BOOST_PATH"
 
 # Update references within SFML
-install_name_tool -change "$OLD_SFML_GRAPHICS_PATH" "$NEW_SFML_GRAPHICS_PATH" "$NEW_ABSOLUTE_SFML_PATH"
-install_name_tool -change "$OLD_SFML_AUDIO_PATH" "$NEW_SFML_AUDIO_PATH" "$NEW_ABSOLUTE_SFML_PATH"
-install_name_tool -change "$OLD_SFML_WINDOW_PATH" "$NEW_SFML_WINDOW_PATH" "$NEW_ABSOLUTE_SFML_PATH"
+install_name_tool -add_rpath "$NEW_SFML_GRAPHICS_PATH" "$NEW_ABSOLUTE_SFML_PATH"
+install_name_tool -add_rpath "$NEW_SFML_AUDIO_PATH" "$NEW_ABSOLUTE_SFML_PATH"
+install_name_tool -add_rpath "$NEW_SFML_WINDOW_PATH" "$NEW_ABSOLUTE_SFML_PATH"
 
 # Remove temporary write permissions.
 chmod -w "$EXEPATH"
