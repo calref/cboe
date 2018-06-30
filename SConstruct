@@ -26,6 +26,9 @@ Help(opts.GenerateHelpText(env))
 
 platform = env['OS']
 toolset = env['toolset']
+# Mac-specific environment update: 64-bit builds required now
+if platform == "darwin":
+	env.Replace(bits=64)
 arch = 'x86_64' if (env['bits'] == '64') else 'x86'
 
 # Update env based on options
@@ -210,10 +213,14 @@ if platform == 'darwin':
 
 	# pretty sketchy, but should point to your boost install
 	if subprocess.call(['which', '-s', 'brew']) == 0: # HomeBrew
-		brew_boost_version = '1.58.0'
+		brew_boost_version = '1.67.0_1'
 		env.Append(
 			LIBPATH=['/usr/local/Cellar/boost/'+brew_boost_version+'/lib'],
 			CPPPATH=['/usr/local/Cellar/boost/'+brew_boost_version+'/include'])
+		brew_sfml_version = '2.4.2_1'
+		env.Append(
+			LIBPATH=['/usr/local/Cellar/sfml/'+brew_sfml_version+'/lib'],
+			CPPPATH=['/usr/local/Cellar/sfml/'+brew_sfml_version+'/include'])
 
 # Sometimes it's easier just to copy the dependencies into the repo dir
 # We try to auto-detect this.
