@@ -16,6 +16,7 @@ matrix:
     dist: trusty
     compiler: gcc
   - os: osx
+    osx_image: xcode6.4
     compiler: clang
 
 install:
