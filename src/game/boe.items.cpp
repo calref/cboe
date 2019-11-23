@@ -248,7 +248,7 @@ short dist_from_party(location where) {
 void set_item_flag(cItem* item) {
 	if((item->is_special > 0) && (item->is_special < 65)) {
 		item->is_special--;
-		univ.town->item_taken.set(item->is_special);
+		univ.town->set_item_taken(item->is_special);
 		item->is_special = 0;
 	}
 }

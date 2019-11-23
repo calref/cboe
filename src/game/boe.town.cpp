@@ -383,7 +383,7 @@ void start_town_mode(short which_town, short entry_dir) {
 				continue;
 			}
 			// Don't place the item if the party already took it, unless it's always there
-			if(univ.town->item_taken[i] && !preset.always_there) {
+			if(univ.town->is_item_taken(i) && !preset.always_there) {
 				univ.town.items.pop_back();
 				continue;
 			}

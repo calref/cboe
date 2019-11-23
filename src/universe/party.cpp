@@ -274,7 +274,7 @@ void cParty::import_legacy(legacy::party_record_type& old, cUniverse& univ){
 		univ.scenario.towns[i]->can_find = old.can_find_town[i];
 		univ.scenario.towns[i]->m_killed = old.m_killed[i];
 		for(short j = 0; j < 64; j++)
-			univ.scenario.towns[i]->item_taken[j] = old.item_taken[i][j / 8] & (1 << j % 8);
+			univ.scenario.towns[i]->set_item_taken(j, old.item_taken[i][j / 8] & (1 << j % 8));
 	}
 	for(short i = 0; i < 100; i++)
 		key_times[i] = old.key_times[i];

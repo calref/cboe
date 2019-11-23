@@ -245,3 +245,17 @@ void cTown::writeTerrainTo(std::ostream& file) {
 void cTown::readTerrainFrom(std::istream& file) {
 	readArray(file, terrain, max_dim, max_dim);
 }
+
+bool cTown::is_item_taken(size_t i) const {
+	if(i >= item_taken.size()) return false;
+	return item_taken[i];
+}
+
+void cTown::clear_items_taken() {
+	item_taken.clear();
+}
+
+void cTown::set_item_taken(size_t i, bool val) {
+	if(i >= item_taken.size()) item_taken.resize(i + 1);
+	item_taken.set(i, val);
+}

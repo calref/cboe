@@ -12,7 +12,7 @@
 #include <vector>
 #include <iosfwd>
 #include <array>
-#include <bitset>
+#include <boost/dynamic_bitset.hpp>
 #include "location.hpp"
 #include "special.hpp"
 #include "monster.hpp"
@@ -41,6 +41,7 @@ enum eLighting {
 class cScenario;
 
 class cTown : public cArea { // formerly town_record_type
+	friend class cParty; // so the read/save functions can access item_taken directly
 protected:
 	cScenario* scenario;
 public:
@@ -95,8 +96,10 @@ public:
 	std::array<std::string,3> comment;
 	std::vector<std::string> spec_strs;
 	cSpeech talking;
+private:
 	// Persistent data for saved games
-	std::bitset<64> item_taken;
+	boost::dynamic_bitset<> item_taken;
+public:
 	bool can_find;
 	long m_killed;
 	
@@ -112,6 +115,10 @@ public:
 	void reattach(cScenario& to);
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);
+	// Work with the item_taken bitset
+	bool is_item_taken(size_t i) const;
+	void clear_items_taken();
+	void set_item_taken(size_t i, bool val = true);
 };
 
 std::ostream& operator<< (std::ostream& out, eLighting light);

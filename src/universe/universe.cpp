@@ -1361,7 +1361,7 @@ void cUniverse::enter_scenario(const std::string& name) {
 	for(auto town : scenario.towns) {
 		town->can_find = !town->is_hidden;
 		town->m_killed = 0;
-		town->item_taken.reset();
+		town->clear_items_taken();
 		for(auto& m : town->maps)
 			m.reset();
 	}
