@@ -55,7 +55,7 @@ short store_sum_monst_cost;
 extern cUniverse univ;
 
 location out_start_loc(20,23);
-short hit_chance[51] = {
+std::array<short, 51> hit_chance = {
 	20,30,40,45,50,55,60,65,69,73,
 	77,81,84,87,90,92,94,96,97,98,99
 	,99,99,99,99,99,99,99,99,99,99
@@ -534,7 +534,7 @@ void pc_attack(short who_att,iLiving* target) {
 	auto& weap2 = weapons.second;
 	
 	hit_adj = (-5 * minmax(-8,8,attacker.status[eStatus::BLESS_CURSE])) + 5 * minmax(-8,8,target->status[eStatus::BLESS_CURSE])
-		- attacker.stat_adj(eSkill::DEXTERITY) * 5 + (get_encumbrance(who_att)) * 5;
+		- attacker.stat_adj(eSkill::DEXTERITY) * 5 + (attacker.total_encumbrance(hit_chance)) * 5;
 	
 	dam_adj = minmax(-8,8,attacker.status[eStatus::BLESS_CURSE]) - minmax(-8,8,target->status[eStatus::BLESS_CURSE])
 		+ attacker.stat_adj(eSkill::STRENGTH);
@@ -4692,7 +4692,7 @@ bool combat_cast_mage_spell() {
 		add_string_to_buf("Cast: No spell points.");
 	else if(univ.current_pc().skill(eSkill::MAGE_SPELLS) == 0)
 		add_string_to_buf("Cast: No mage skill.");
-	else if(get_encumbrance(univ.cur_pc) > 1) {
+	else if(univ.current_pc().total_encumbrance(hit_chance) > 1) {
 		add_string_to_buf("Cast: Too encumbered.");
 		take_ap(6);
 		give_help(40,0);

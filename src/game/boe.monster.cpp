@@ -20,7 +20,7 @@
 extern eGameMode overall_mode;
 extern short which_combat_type;
 extern short spell_caster, missile_firer,current_monst_tactic;
-extern short hit_chance[21];
+extern std::array<short, 51> hit_chance;
 
 extern location center;
 extern short boom_gr[8],futzing;
@@ -530,7 +530,7 @@ short switch_target_to_adjacent(short which_m,short orig_target) {
 	if(is_combat())
 		for(short i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE && monst_adjacent(univ.party[i].combat_pos,which_m) &&
-			   (get_encumbrance(i) < 2))
+			   (univ.party[i].total_encumbrance(hit_chance) < 2))
 		 		return i;
 	
 	// Check for a nice, adjacent, friendly monster and maybe attack
@@ -1184,26 +1184,6 @@ void activate_monsters(short code,short /*attitude*/) {
 			univ.town.set_crate(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y,false);
 			univ.town.set_barrel(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y,false);
 		}
-}
-
-short get_encumbrance(short pc_num) {
-	short store = 0,what_val;
-	
-	what_val = univ.party[pc_num].free_weight();
-	if(what_val < 0) store += what_val / -10;
-	
-	for(short i = 0; i < univ.party[pc_num].items.size(); i++)
-		if(univ.party[pc_num].equip[i]) {
-			what_val = univ.party[pc_num].items[i].awkward;
-			if(univ.party[pc_num].items[i].ability == eItemAbil::ENCUMBERING)
-				what_val += univ.party[pc_num].items[i].abil_data[0];
-			if(what_val == 1 && get_ran(1,0,130) < hit_chance[univ.party[pc_num].skill(eSkill::DEFENSE)])
-				what_val--;
-			if(what_val > 1 && get_ran(1,0,70) < hit_chance[univ.party[pc_num].skill(eSkill::DEFENSE)])
-				what_val--;
-			store += what_val;
-		}
-	return store;
 }
 
 mon_num_t get_summon_monster(short summon_class) {

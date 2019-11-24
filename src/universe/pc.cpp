@@ -658,6 +658,34 @@ short cPlayer::free_weight() const {
 	return max_weight() - cur_weight();
 }
 
+short cPlayer::armor_encumbrance() const {
+	short total = 0;
+	for(short i = 0; i < items.size(); i++) {
+		if(equip[i]) total += items[i].awkward;
+	}
+	return total;
+}
+
+short cPlayer::total_encumbrance(const std::array<short, 51>& reduce_chance) const {
+	short total = 0;
+	
+	short burden = free_weight();
+	if(burden < 0) total += burden / -10;
+	
+	for(short i = 0; i < items.size(); i++)
+		if(equip[i]) {
+			short item_encumbrance = items[i].awkward;
+			if(items[i].ability == eItemAbil::ENCUMBERING)
+				item_encumbrance += items[i].abil_data[0];
+			if(item_encumbrance == 1 && get_ran(1,0,130) < reduce_chance[skill(eSkill::DEFENSE)])
+				item_encumbrance--;
+			if(item_encumbrance > 1 && get_ran(1,0,70) < reduce_chance[skill(eSkill::DEFENSE)])
+				item_encumbrance--;
+			total += item_encumbrance;
+		}
+	return total;
+}
+
 cInvenSlot cPlayer::has_space() {
 	for(int i = 0; i < items.size(); i++) {
 		if(items[i].variety == eItemType::NO_ITEM)

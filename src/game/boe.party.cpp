@@ -70,7 +70,8 @@ extern eStatMode stat_screen_mode;
 extern effect_pat_type null_pat,single,t,square,radius2,radius3,small_square,open_square;
 extern effect_pat_type current_pat;
 extern short current_spell_range;
-extern short hit_chance[21],combat_active_pc;
+extern std::array<short, 51> hit_chance;
+extern short combat_active_pc;
 extern std::map<eDamageType,int> boom_gr;
 extern short current_ground;
 extern location golem_m_locs[16];
@@ -2528,7 +2529,7 @@ void set_pc_moves() {
 			univ.party[i].ap = 0;
 		else {
 			univ.party[i].ap = univ.party[i].traits[eTrait::SLUGGISH] ? 3 : 4;
-			short r = get_encumbrance(i);
+			short r = univ.party[i].total_encumbrance(hit_chance);
 			univ.party[i].ap = minmax(1,8,univ.party[i].ap - (r / 3));
 			
 			if(int speed = univ.party[i].get_prot_level(eItemAbil::SPEED))

@@ -12,7 +12,6 @@ void place_item_button(short button_position,short which_slot,eItemButton button
 void place_item_graphic(short which_slot,short graphic);
 short first_active_pc();
 void refresh_stat_areas(short mode);
-short total_encumbrance(short pc_num);
 void draw_pc_effects(short pc);
 void print_party_stats() ;
 short do_look(location space);

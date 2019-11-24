@@ -140,6 +140,10 @@ public:
 	short max_weight() const;
 	short cur_weight() const;
 	short free_weight() const;
+	// Counts the encumbrance from armor only, excluding cursed effects; used for display
+	short armor_encumbrance() const;
+	// Counts the actual total encumbrance used for combat calculations
+	short total_encumbrance(const std::array<short, 51>& reduce_chance) const;
 	short get_prot_level(eItemAbil abil, short dat = -1) const;
 	
 	const cInvenSlot has_abil_equip(eItemAbil abil, short dat = -1) const;

@@ -347,7 +347,7 @@ static void display_pc_info(cDialog& me, const short pc) {
 		me[boost::lexical_cast<std::string>(skill)].setText(to_draw.str());
 		to_draw.str("");
 	}
-	me["encumb"].setTextToNum(total_encumbrance(pc));
+	me["encumb"].setTextToNum(univ.party[pc].armor_encumbrance());
 	me["name"].setText(univ.party[pc].name);
 	me["lvl"].setTextToNum(univ.party[pc].level);
 	me["xp"].setTextToNum(univ.party[pc].experience);
@@ -363,7 +363,7 @@ static void display_pc_info(cDialog& me, const short pc) {
 	auto& weap1 = weapons.first;
 	auto& weap2 = weapons.second;
 	
-	hit_adj = univ.party[pc].stat_adj(eSkill::DEXTERITY) * 5 - (total_encumbrance(pc)) * 5
+	hit_adj = univ.party[pc].stat_adj(eSkill::DEXTERITY) * 5 - (univ.party[pc].armor_encumbrance()) * 5
 		+ 5 * minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
 	if(!univ.party[pc].traits[eTrait::AMBIDEXTROUS] && weap2)
 		hit_adj -= 25;
