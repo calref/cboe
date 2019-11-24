@@ -40,10 +40,6 @@ extern sf::Texture pc_gworld;
 extern sf::RenderTexture map_gworld;
 extern cUniverse univ;
 
-extern const std::multiset<eItemType> equippable;
-extern const std::multiset<eItemType> num_hands_to_use;
-extern std::map<const eItemType, const short> excluding_types;
-
 short selected;
 
 bool GTP(short item_num) {
