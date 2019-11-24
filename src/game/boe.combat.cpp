@@ -985,13 +985,13 @@ void place_target(location target) {
 			if(spell_targets[i] == target) {
 				add_string_to_buf("  Target removed.");
 				num_targets_left++;
-				spell_targets[i].x = 120;
+				spell_targets[i].x = -1;
 				play_sound(-1);
 				return;
 			}
 		}
 		for(short i = 0; i < 8; i++)
-			if(spell_targets[i].x == 120) {
+			if(spell_targets[i].x == -1) {
 				add_string_to_buf("  Target added.");
 				spell_targets[i] = target;
 				num_targets_left--;
@@ -1073,9 +1073,9 @@ void do_combat_cast(location target) {
 	combat_posing_monster = current_working_monster = univ.cur_pc;
 	
 	for(short i = 0; i < num_targets; i++)
-		if(spell_targets[i].x != 120) {
+		if(spell_targets[i].x != -1) {
 			target = spell_targets[i];
-			spell_targets[i].x = 120; // nullify target as it is used
+			spell_targets[i].x = -1; // nullify target as it is used
 			
 			if(!cost_taken && !freebie && spell_being_cast != eSpell::MINDDUEL && spell_being_cast != eSpell::SIMULACRUM) {
 				caster.cur_sp -= (*spell_being_cast).cost;
@@ -4009,7 +4009,7 @@ void damage_target(short target,short dam,eDamageType type,short sound_type) {
 
 //short mode; // 0 - hostile casting  1 - friendly casting
 location find_fireball_loc(location where,short radius,short mode,short *m) {
-	location check_loc,cast_loc(120,0);
+	location check_loc,cast_loc(-1,0);
 	short cur_lev,level_max = 10;
 	
 	for(check_loc.x = 1; check_loc.x < univ.town->max_dim - 1; check_loc.x ++)
@@ -4030,7 +4030,7 @@ location find_fireball_loc(location where,short radius,short mode,short *m) {
 }
 
 location closest_pc_loc(location where) {
-	location pc_where(120,120);
+	location pc_where(-1,-1);
 	
 	for(cPlayer& pc : univ.party)
 		if(pc.main_status == eMainStatus::ALIVE)
@@ -5138,7 +5138,7 @@ void start_spell_targeting(eSpell num, bool freebie, int spell_range, eSpellPat 
 }
 
 void start_fancy_spell_targeting(eSpell num, bool freebie, int spell_range, eSpellPat pat, int targets) {
-	location null_loc(120,0);
+	location null_loc(-1,0);
 	
 	// First, remember what spell was cast.
 	spell_being_cast = num;

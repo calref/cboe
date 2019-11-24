@@ -1524,7 +1524,7 @@ void draw_targets(location center) {
 	
 	sf::Texture& src_gworld = *ResMgr::get<ImageRsrc>("trim");
 	for(short i = 0; i < 8; i++)
-		if((spell_targets[i].x != 120) && (point_onscreen(center,spell_targets[i]))) {
+		if((spell_targets[i].x != -1) && (point_onscreen(center,spell_targets[i]))) {
 			rectangle dest_rect = coord_to_rect(spell_targets[i].x - center.x + 4,spell_targets[i].y - center.y + 4);
 			dest_rect.offset(win_to_rects[WINRECT_TERVIEW].topLeft());
 			rect_draw_some_item(src_gworld,calc_rect(6,0),mainPtr,dest_rect,sf::BlendAlpha);
