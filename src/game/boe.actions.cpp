@@ -352,36 +352,38 @@ static void handle_pause(bool& did_something, bool& need_redraw) {
 		check_fields(univ.current_pc().combat_pos,eSpecCtx::COMBAT_MOVE,univ.current_pc());
 	} else {
 		add_string_to_buf("Pause.");
-		for(int k = 0; k < 6; k++)
-			if(univ.party[k].main_status == eMainStatus::ALIVE && univ.party[k].status[eStatus::WEBS] > 0) {
-				add_string_to_buf(univ.party[k].name + " cleans webs.");
-				move_to_zero(univ.party[k].status[eStatus::WEBS]);
-				move_to_zero(univ.party[k].status[eStatus::WEBS]);
+		for(cPlayer& pc : univ.party)
+			if(pc.main_status == eMainStatus::ALIVE && pc.status[eStatus::WEBS] > 0) {
+				add_string_to_buf(pc.name + " cleans webs.");
+				move_to_zero(pc.status[eStatus::WEBS]);
+				move_to_zero(pc.status[eStatus::WEBS]);
 			}
 		if(univ.party.in_horse >= 0) {
+			cVehicle& horse = univ.party.horses[univ.party.in_horse];
 			if(overall_mode == MODE_OUTDOORS) {
-				univ.party.horses[univ.party.in_horse].which_town = 200;
-				univ.party.horses[univ.party.in_horse].loc = global_to_local(univ.party.out_loc);
-				univ.party.horses[univ.party.in_horse].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
-				univ.party.horses[univ.party.in_horse].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
+				horse.which_town = 200;
+				horse.loc = global_to_local(univ.party.out_loc);
+				horse.sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
+				horse.sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 				univ.party.in_horse = -1;
 			} else if(overall_mode == MODE_TOWN){
-				univ.party.horses[univ.party.in_horse].loc = univ.party.town_loc;
-				univ.party.horses[univ.party.in_horse].which_town = univ.party.town_num;
+				horse.loc = univ.party.town_loc;
+				horse.which_town = univ.party.town_num;
 				univ.party.in_horse = -1;
 			}
 		}
 		if(univ.party.in_boat >= 0) {
 			// If you pause on a bridge or other passable terrain, leave boat.
+			cVehicle& boat = univ.party.boats[univ.party.in_boat];
 			if(overall_mode == MODE_OUTDOORS && !impassable(univ.out[univ.party.out_loc.x][univ.party.out_loc.y])) {
-				univ.party.boats[univ.party.in_boat].which_town = 200;
-				univ.party.boats[univ.party.in_boat].loc = global_to_local(univ.party.out_loc);
-				univ.party.boats[univ.party.in_boat].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
-				univ.party.boats[univ.party.in_boat].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
+				boat.which_town = 200;
+				boat.loc = global_to_local(univ.party.out_loc);
+				boat.sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
+				boat.sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 				univ.party.in_boat = -1;
 			} else if(overall_mode == MODE_TOWN && !impassable(univ.town->terrain(univ.party.town_loc.x,univ.party.town_loc.y))) {
-				univ.party.boats[univ.party.in_boat].loc = univ.party.town_loc;
-				univ.party.boats[univ.party.in_boat].which_town = univ.party.town_num;
+				boat.loc = univ.party.town_loc;
+				boat.which_town = univ.party.town_num;
 				univ.party.in_boat = -1;
 			}
 		} else {
@@ -639,37 +641,39 @@ static void handle_bash_pick(location destination, bool& did_something, bool& ne
 }
 
 static void handle_switch_pc(short which_pc, bool& need_redraw) {
+	cPlayer& pc = univ.party[which_pc];
 	if(!prime_time() && overall_mode != MODE_SHOPPING && overall_mode != MODE_TALKING)
 		add_string_to_buf("Set active: Finish what you're doing first.");
 	else if(is_combat()) {
-		if(univ.party[which_pc].ap > 0) {
+		if(pc.ap > 0) {
 			draw_terrain();
 			univ.cur_pc = which_pc;
 			combat_next_step();
 			set_stat_window_for_pc(univ.cur_pc);
 			put_pc_screen();
 		} else add_string_to_buf("Set active: PC has no APs.");
-	} else if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::ALLOW_DEAD))
+	} else if(pc.main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::ALLOW_DEAD))
 		add_string_to_buf("Set active: PC must be here & active.");
 	else {
 		univ.cur_pc = which_pc;
 		set_stat_window_for_pc(which_pc);
-		add_string_to_buf("Now " + std::string(overall_mode == MODE_SHOPPING ? "shopping" : "active") + ": " + univ.party[which_pc].name);
+		add_string_to_buf("Now " + std::string(overall_mode == MODE_SHOPPING ? "shopping" : "active") + ": " + pc.name);
 		adjust_spell_menus();
 		need_redraw = true;
 	}
 }
 
 static void handle_switch_pc_items(short which_pc, bool& need_redraw) {
+	cPlayer& pc = univ.party[which_pc];
 	if(!prime_time() && overall_mode != MODE_TALKING && overall_mode != MODE_SHOPPING)
 		add_string_to_buf("Set active: Finish what you're doing first.");
 	else {
 		if(!is_combat()) {
-			if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::ALLOW_DEAD))
+			if(pc.main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::ALLOW_DEAD))
 				add_string_to_buf("Set active: PC must be here & active.");
 			else {
 				univ.cur_pc = which_pc;
-				add_string_to_buf("Now active: " + univ.party[which_pc].name);
+				add_string_to_buf("Now active: " + pc.name);
 				adjust_spell_menus();
 				need_redraw = true;
 			}
@@ -740,6 +744,8 @@ static void handle_drop_item(short item_hit, bool& need_redraw) {
 
 static void handle_item_shop_action(short item_hit) {
 	long i = item_hit - item_sbar->getPosition();
+	cPlayer& shopper = univ.party[stat_window];
+	cItem& target = shopper.items[item_hit];
 	switch(stat_screen_mode) {
 		case MODE_IDENTIFY:
 			if(!take_gold(shop_identify_cost,false))
@@ -747,15 +753,15 @@ static void handle_item_shop_action(short item_hit) {
 			else {
 				play_sound(68);
 				ASB("Your item is identified.");
-				univ.party[stat_window].items[item_hit].ident = true;
-				univ.party[stat_window].combine_things();
+				target.ident = true;
+				shopper.combine_things();
 			}
 			break;
 		case MODE_SELL_WEAP: case MODE_SELL_ARMOR: case MODE_SELL_ANY:
 			play_sound(-39);
 			univ.party.gold += store_selling_values[i];
 			ASB("You sell your item.");
-			univ.party[stat_window].take_item(item_hit);
+			shopper.take_item(item_hit);
 			put_item_screen(stat_window);
 			break;
 		case MODE_ENCHANT:
@@ -765,7 +771,7 @@ static void handle_item_shop_action(short item_hit) {
 				play_sound(51);
 				ASB("Your item is now enchanted.");
 				eEnchant ench = eEnchant(shop_identify_cost);
-				univ.party[stat_window].items[item_hit].enchant_weapon(ench,store_selling_values[i]);
+				target.enchant_weapon(ench,store_selling_values[i]);
 			}
 			break;
 		case MODE_INVEN: case MODE_SHOP:
@@ -783,7 +789,7 @@ static void handle_alchemy(bool& need_redraw, bool& need_reprint) {
 }
 
 static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
-	short store_hp[6];
+	std::vector<short> store_hp;
 	sf::Event dummy_evt;
 	need_reprint = true;
 	need_redraw = true;
@@ -796,9 +802,9 @@ static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 		play_sound(-20);
 		draw_rest_screen();
 		pause(10);
-		for(int i = 0; i < 6; i++) {
-			store_hp[i] = univ.party[i].cur_health;
-			univ.party[i].status[eStatus::WEBS] = 0;
+		for(cPlayer& pc : univ.party) {
+			store_hp.push_back(pc.cur_health);
+			pc.status[eStatus::WEBS] = 0;
 		}
 	}
 	
@@ -927,9 +933,9 @@ static void handle_victory() {
 }
 
 static void handle_party_death() {
-	for(int i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::FLED)
-			univ.party[i].main_status = eMainStatus::ALIVE;
+	for(cPlayer& pc : univ.party)
+		if(pc.main_status == eMainStatus::FLED)
+			pc.main_status = eMainStatus::ALIVE;
 	if(is_combat() && univ.party.is_alive()) {
 		// TODO: Should this only happen in outdoor combat? Or should we allow fleeing town during combat?
 		end_town_mode(0,univ.party.town_loc);
@@ -1245,7 +1251,8 @@ bool handle_action(sf::Event event) {
 		for(int i = 0; i < 6; i++)
 			for(auto j : pc_buttons[i].keys())
 				if(pc_area_button_active[i][j] && point_in_area.in(pc_buttons[i][j])) {
-					if((j == PCBTN_HP || j == PCBTN_SP) && !univ.party[i].is_alive())
+					cPlayer& pc = univ.party[i];
+					if((j == PCBTN_HP || j == PCBTN_SP) && !pc.is_alive())
 						break;
 					rectangle button_rect = pc_buttons[i][j];
 					button_rect.offset(pc_win_ul);
@@ -1257,14 +1264,14 @@ bool handle_action(sf::Event event) {
 							break;
 						case PCBTN_HP:
 							str.str("");
-							str << univ.party[i].name << " has ";
-							str << univ.party[i].cur_health << " health out of " << univ.party[i].max_health << '.';
+							str << pc.name << " has ";
+							str << pc.cur_health << " health out of " << pc.max_health << '.';
 							add_string_to_buf(str.str());
 							break;
 						case PCBTN_SP:
 							str.str("");
-							str << univ.party[i].name << " has ";
-							str << univ.party[i].cur_health << " spell pts. out of " << univ.party[i].max_health << '.';
+							str << pc.name << " has ";
+							str << pc.cur_health << " spell pts. out of " << pc.max_health << '.';
 							add_string_to_buf(str.str());
 							break;
 						case PCBTN_INFO:
@@ -1404,8 +1411,8 @@ bool handle_action(sf::Event event) {
 	if(cartoon_happening) {
 		need_redraw = true;
 		if(!is_combat()) {
-			for(int i = 0; i < 6; i++)
-				univ.party[i].combat_pos = {-1,-1};
+			for(cPlayer& pc : univ.party)
+				pc.combat_pos.x = pc.combat_pos.y = -1;
 		}
 	}
 	fog_lifted = false;
@@ -1427,7 +1434,7 @@ void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 	play_ambient_sound();
 	
 	if(is_combat() && overall_mode != MODE_LOOK_COMBAT) {
-		if(no_pcs_left()) {
+		if(!univ.party.is_alive()) {
 			end_combat();
 			if(which_combat_type == 0) {
 				end_town_mode(0,univ.party.out_loc);
@@ -1478,9 +1485,9 @@ void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 }
 
 bool someone_awake() {
-	for(short i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE &&
-		   univ.party[i].status[eStatus::ASLEEP] <= 0 && univ.party[i].status[eStatus::PARALYZED] <= 0)
+	for(cPlayer& pc : univ.party)
+		if(pc.main_status == eMainStatus::ALIVE &&
+		   pc.status[eStatus::ASLEEP] <= 0 && pc.status[eStatus::PARALYZED] <= 0)
 			return true;
 	return false;
 }
@@ -1790,14 +1797,13 @@ bool handle_keystroke(sf::Event& event){
 			if(!univ.debug_mode) break;
 			univ.party.gold += 100;
 			univ.party.food += 100;
-			for(short i = 0; i < 6; i++) {
-				univ.party[i].main_status = eMainStatus::ALIVE;
-				univ.party[i].cur_health = univ.party[i].max_health;
-				univ.party[i].cur_sp = 100;
+			for(cPlayer& pc : univ.party) {
+				pc.main_status = eMainStatus::ALIVE;
+				pc.cur_health = pc.max_health;
+				pc.cur_sp = 100;
 			}
 			award_party_xp(25);
-			for(short i = 0; i < 6; i++) {
-				auto& who = univ.party[i];
+			for(cPlayer& who : univ.party) {
 				who.priest_spells.set();
 				who.mage_spells.set();
 			}
@@ -1870,9 +1876,9 @@ bool handle_keystroke(sf::Event& event){
 			if(!univ.debug_mode) break;
 			univ.party.gold += 100;
 			univ.party.food += 100;
-			for(short i = 0; i < 6; i++) {
-				if(isDead(univ.party[i].main_status))
-					univ.party[i].main_status = eMainStatus::ALIVE;
+			for(cPlayer& pc : univ.party) {
+				if(isDead(pc.main_status))
+					pc.main_status = eMainStatus::ALIVE;
 			}
 			univ.party.heal(250);
 			univ.party.restore_sp(100);
@@ -2252,8 +2258,8 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 	univ.party.status[ePartyStatus::DETECT_LIFE] = 0;
 	univ.party.status[ePartyStatus::FIREWALK] = 0;
 	univ.party.status[ePartyStatus::FLIGHT] = 0; // This one shouldn't be nonzero anyway, since you can't rest while flying.
-	for(int i = 0; i < 6; i++)
-		univ.party[i].status.clear();
+	for(cPlayer& pc : univ.party)
+		pc.status.clear();
 	// Specials countdowns
 	if((length > 500 || age_before / 500 < univ.party.age / 500) && univ.party.has_abil(eItemAbil::OCCASIONAL_STATUS)) {
 		// TODO: There used to be a "display strings" here; should we hook in a special node call?
@@ -2364,8 +2370,8 @@ void increase_age() {
 	
 	if(is_town() && univ.town->lighting_type != LIGHT_NORMAL) {
 		int radiance = 0;
-		for(int i = 0; i < 6; i++)
-			radiance += univ.party[i].get_prot_level(eItemAbil::RADIANT);
+		for(cPlayer& pc : univ.party)
+			radiance += pc.get_prot_level(eItemAbil::RADIANT);
 		if(radiance > 0 && univ.party.light_level < radiance && get_ran(1,1,10) < radiance) {
 			ASB("One of your items is glowing softly!");
 			univ.party.light_level += radiance * 3;
@@ -2397,27 +2403,27 @@ void increase_age() {
 	}
 	
 	// Protection, etc.
-	for(short i = 0; i < 6; i++) { // Process some status things, and check if stats updated
+	for(cPlayer& pc : univ.party) { // Process some status things, and check if stats updated
 		
-		if(univ.party[i].status[eStatus::INVULNERABLE] == 1 || abs(univ.party[i].status[eStatus::MAGIC_RESISTANCE]) == 1
-		   || univ.party[i].status[eStatus::INVISIBLE] == 1 || univ.party[i].status[eStatus::MARTYRS_SHIELD] == 1
-		   || abs(univ.party[i].status[eStatus::ASLEEP]) == 1 || univ.party[i].status[eStatus::PARALYZED] == 1)
-		move_to_zero(univ.party[i].status[eStatus::INVULNERABLE]);
-		move_to_zero(univ.party[i].status[eStatus::MAGIC_RESISTANCE]);
-		move_to_zero(univ.party[i].status[eStatus::INVISIBLE]);
-		move_to_zero(univ.party[i].status[eStatus::MARTYRS_SHIELD]);
-		move_to_zero(univ.party[i].status[eStatus::ASLEEP]);
-		move_to_zero(univ.party[i].status[eStatus::PARALYZED]);
-		if(univ.party.age % 40 == 0 && univ.party[i].status[eStatus::POISONED_WEAPON] > 0) {
-			move_to_zero(univ.party[i].status[eStatus::POISONED_WEAPON]);
+		if(pc.status[eStatus::INVULNERABLE] == 1 || abs(pc.status[eStatus::MAGIC_RESISTANCE]) == 1
+		   || pc.status[eStatus::INVISIBLE] == 1 || pc.status[eStatus::MARTYRS_SHIELD] == 1
+		   || abs(pc.status[eStatus::ASLEEP]) == 1 || pc.status[eStatus::PARALYZED] == 1)
+		move_to_zero(pc.status[eStatus::INVULNERABLE]);
+		move_to_zero(pc.status[eStatus::MAGIC_RESISTANCE]);
+		move_to_zero(pc.status[eStatus::INVISIBLE]);
+		move_to_zero(pc.status[eStatus::MARTYRS_SHIELD]);
+		move_to_zero(pc.status[eStatus::ASLEEP]);
+		move_to_zero(pc.status[eStatus::PARALYZED]);
+		if(univ.party.age % 40 == 0 && pc.status[eStatus::POISONED_WEAPON] > 0) {
+			move_to_zero(pc.status[eStatus::POISONED_WEAPON]);
 		}
 		
 	}
 	
 	// Food
 	if((univ.party.age % 1000 == 0) && (overall_mode < MODE_COMBAT)) {
-		for(short i = 0; i < 6; i++)
-			if(univ.party[i].main_status == eMainStatus::ALIVE)
+		for(cPlayer& pc : univ.party)
+			if(pc.main_status == eMainStatus::ALIVE)
 				how_many_short++;
 		how_many_short = take_food (how_many_short,false);
 		if(how_many_short > 0) {
@@ -2435,24 +2441,24 @@ void increase_age() {
 	}
 	
 	// Poison, acid, disease damage
-	for(short i = 0; i < 6; i++) // Poison
-		if(univ.party[i].status[eStatus::POISON] > 0) {
-			i = 6;
+	for(cPlayer& pc : univ.party) // Poison
+		if(pc.status[eStatus::POISON] > 0) {
 			if(((overall_mode == MODE_OUTDOORS) && (univ.party.age % 50 == 0)) || ((overall_mode == MODE_TOWN) && (univ.party.age % 20 == 0))) {
 				do_poison();
 			}
+			break;
 		}
-	for(short i = 0; i < 6; i++) // Disease
-		if(univ.party[i].status[eStatus::DISEASE] > 0) {
-			i = 6;
+	for(cPlayer& pc : univ.party) // Disease
+		if(pc.status[eStatus::DISEASE] > 0) {
 			if(((overall_mode == MODE_OUTDOORS) && (univ.party.age % 100 == 0)) || ((overall_mode == MODE_TOWN) && (univ.party.age % 25 == 0))) {
 				handle_disease();
 			}
+			break;
 		}
-	for(short i = 0; i < 6; i++) // Acid
-		if(univ.party[i].status[eStatus::ACID] > 0) {
-			i = 6;
+	for(cPlayer& pc : univ.party) // Acid
+		if(pc.status[eStatus::ACID] > 0) {
 			handle_acid();
+			break;
 		}
 	
 	// Healing and restoration of spell pts.
@@ -2463,40 +2469,40 @@ void increase_age() {
 	}
 	else {
 		if(univ.party.age % 50 == 0) {
-			for(short i = 0; i < 6; i++)
-				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_health > univ.party[i].max_health)
-					univ.party[i].cur_health--; // Bonus HP wears off
+			for(cPlayer& pc : univ.party)
+				if(pc.main_status == eMainStatus::ALIVE && pc.cur_health > pc.max_health)
+					pc.cur_health--; // Bonus HP wears off
 			univ.party.heal(1);
 		}
 	}
 	if(is_out()) {
 		if(univ.party.age % 80 == 0) {
 			univ.party.restore_sp(2);
-			for(short i = 0; i < 6; i++)
-				if(univ.party[i].status[eStatus::DUMB] < 0)
-					univ.party[i].status[eStatus::DUMB]++;
+			for(cPlayer& pc : univ.party)
+				if(pc.status[eStatus::DUMB] < 0)
+					pc.status[eStatus::DUMB]++;
 		}
 	}
 	else {
 		if(univ.party.age % 40 == 0) {
-			for(short i = 0; i < 6; i++) {
-				if(univ.party[i].main_status == eMainStatus::ALIVE && univ.party[i].cur_sp > univ.party[i].max_sp)
-					univ.party[i].cur_sp--; // Bonus SP wears off
-				if(univ.party[i].status[eStatus::DUMB] < 0)
-					univ.party[i].status[eStatus::DUMB]++;
+			for(cPlayer& pc : univ.party) {
+				if(pc.main_status == eMainStatus::ALIVE && pc.cur_sp > pc.max_sp)
+					pc.cur_sp--; // Bonus SP wears off
+				if(pc.status[eStatus::DUMB] < 0)
+					pc.status[eStatus::DUMB]++;
 			}
 			univ.party.restore_sp(1);
 		}
 	}
 	
 	// Recuperation and chronic disease disads
-	for(short i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE) {
-			if(univ.party[i].traits[eTrait::RECUPERATION] && get_ran(1,0,10) == 1 && univ.party[i].cur_health < univ.party[i].max_health) {
-				univ.party[i].heal(2);
+	for(cPlayer& pc : univ.party)
+		if(pc.main_status == eMainStatus::ALIVE) {
+			if(pc.traits[eTrait::RECUPERATION] && get_ran(1,0,10) == 1 && pc.cur_health < pc.max_health) {
+				pc.heal(2);
 			}
-			if(univ.party[i].traits[eTrait::CHRONIC_DISEASE] && get_ran(1,0,110) == 1) {
-				univ.party[i].disease(4);
+			if(pc.traits[eTrait::CHRONIC_DISEASE] && get_ran(1,0,110) == 1) {
+				pc.disease(4);
 			}
 			
 		}
@@ -2553,10 +2559,10 @@ void handle_hunting() {
 	if(trait == eTrait::PACIFIST)
 		return;
 	
-	for(int i = 0; i < 6; i++)
-		if(univ.party[i].is_alive() && univ.party[i].traits[trait] && get_ran(1,0,12) == 5) {
+	for(cPlayer& pc : univ.party)
+		if(pc.is_alive() && pc.traits[trait] && get_ran(1,0,12) == 5) {
 			univ.party.food += get_ran(univ.scenario.ter_types[ter].flag1,1,6);
-			add_string_to_buf(univ.party[i].name + "hunts.");
+			add_string_to_buf(pc.name + "hunts.");
 			put_pc_screen();
 		}
 }
@@ -2673,9 +2679,9 @@ void start_new_game(bool force) {
 	}
 	
 	// everyone gets a weapon
-	for(short i = 0; i < 6; i++) {
-		if(univ.party[i].main_status == eMainStatus::ALIVE) {
-			univ.party[i].finish_create();
+	for(cPlayer& pc : univ.party) {
+		if(pc.main_status == eMainStatus::ALIVE) {
+			pc.finish_create();
 		}
 	}
 	party_in_memory = true;
@@ -3112,8 +3118,8 @@ bool town_move_party(location destination,short forced) {
 
 
 bool someone_poisoned() {
-	for(short i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE && (univ.party[i].status[eStatus::POISON] > 0))
+	for(cPlayer& pc : univ.party)
+		if(pc.main_status == eMainStatus::ALIVE && (pc.status[eStatus::POISON] > 0))
 			return true;
 	return false;
 }

@@ -48,7 +48,6 @@ void hit_space(location target,short dam,eDamageType type,short report,short hit
 void do_poison();
 void handle_disease();
 void handle_acid();
-bool no_pcs_left();
 bool hit_end_c_button();
 bool out_monst_all_dead();
 void end_combat();

@@ -323,58 +323,59 @@ void display_alchemy() {
 	alchemy.run();
 }
 
-static void display_pc_info(cDialog& me, const short pc) {
+static void display_pc_info(cDialog& me, const short pc_num) {
 	std::ostringstream to_draw;
+	cPlayer& pc = univ.party[pc_num];
 	
 	short hit_adj = 0, dam_adj = 0;
 	
-	to_draw << univ.party[pc].name << " is carrying " << univ.party[pc].cur_weight() << " stones out of " << univ.party[pc].max_weight() << '.';
+	to_draw << pc.name << " is carrying " << pc.cur_weight() << " stones out of " << pc.max_weight() << '.';
 	me["weight"].setText(to_draw.str());
 	to_draw.str("");
 	
-	to_draw << univ.party[pc].cur_health << " out of " << univ.party[pc].max_health << '.';
+	to_draw << pc.cur_health << " out of " << pc.max_health << '.';
 	me["hp"].setText(to_draw.str());
 	to_draw.str("");
-	to_draw << univ.party[pc].cur_sp << " out of " << univ.party[pc].max_sp << '.';
+	to_draw << pc.cur_sp << " out of " << pc.max_sp << '.';
 	me["sp"].setText(to_draw.str());
 	to_draw.str("");
 	
 	for(short i = 0; i < 19; i++) {
 		eSkill skill = eSkill(i);
-		int bonus = univ.party[pc].get_prot_level(eItemAbil::BOOST_STAT, i);
-		to_draw << univ.party[pc].skills[skill];
+		int bonus = pc.get_prot_level(eItemAbil::BOOST_STAT, i);
+		to_draw << pc.skills[skill];
 		if(bonus > 0) to_draw << '+' << bonus;
 		me[boost::lexical_cast<std::string>(skill)].setText(to_draw.str());
 		to_draw.str("");
 	}
-	me["encumb"].setTextToNum(univ.party[pc].armor_encumbrance());
-	me["name"].setText(univ.party[pc].name);
-	me["lvl"].setTextToNum(univ.party[pc].level);
-	me["xp"].setTextToNum(univ.party[pc].experience);
-	me["skp"].setTextToNum(univ.party[pc].skill_pts);
-	me["progress"].setTextToNum(univ.party[pc].level * univ.party[pc].get_tnl());
-	pic_num_t pic = univ.party[pc].which_graphic;
+	me["encumb"].setTextToNum(pc.armor_encumbrance());
+	me["name"].setText(pc.name);
+	me["lvl"].setTextToNum(pc.level);
+	me["xp"].setTextToNum(pc.experience);
+	me["skp"].setTextToNum(pc.skill_pts);
+	me["progress"].setTextToNum(pc.level * pc.get_tnl());
+	pic_num_t pic = pc.which_graphic;
 	if(pic >= 100 && pic < 1000)
 		dynamic_cast<cPict&>(me["pic"]).setPict(pic - 100,PIC_MONST);
 	else dynamic_cast<cPict&>(me["pic"]).setPict(pic,PIC_PC);
 	
 	// Fight bonuses
-	auto weapons = univ.party[pc].get_weapons();
+	auto weapons = pc.get_weapons();
 	auto& weap1 = weapons.first;
 	auto& weap2 = weapons.second;
 	
-	hit_adj = univ.party[pc].stat_adj(eSkill::DEXTERITY) * 5 - (univ.party[pc].armor_encumbrance()) * 5
-		+ 5 * minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
-	if(!univ.party[pc].traits[eTrait::AMBIDEXTROUS] && weap2)
+	hit_adj = pc.stat_adj(eSkill::DEXTERITY) * 5 - (pc.armor_encumbrance()) * 5
+		+ 5 * minmax(-8,8,pc.status[eStatus::BLESS_CURSE]);
+	if(!pc.traits[eTrait::AMBIDEXTROUS] && weap2)
 		hit_adj -= 25;
 	
 	// TODO: Perhaps dam_adj and hit_adj calculation should be moved into a function somewhere?
-	dam_adj = univ.party[pc].stat_adj(eSkill::STRENGTH) + minmax(-8,8,univ.party[pc].status[eStatus::BLESS_CURSE]);
-	if(cInvenSlot skill_item = univ.party[pc].has_abil_equip(eItemAbil::SKILL)) {
+	dam_adj = pc.stat_adj(eSkill::STRENGTH) + minmax(-8,8,pc.status[eStatus::BLESS_CURSE]);
+	if(cInvenSlot skill_item = pc.has_abil_equip(eItemAbil::SKILL)) {
 		hit_adj += 5 * (skill_item->abil_data[0] / 2 + 1);
 		dam_adj += skill_item->abil_data[0] / 2;
 	}
-	if(cInvenSlot skill_item = univ.party[pc].has_abil_equip(eItemAbil::GIANT_STRENGTH)) {
+	if(cInvenSlot skill_item = pc.has_abil_equip(eItemAbil::GIANT_STRENGTH)) {
 		dam_adj += skill_item->abil_data[0];
 		hit_adj += skill_item->abil_data[0] * 2;
 	}
