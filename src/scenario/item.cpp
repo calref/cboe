@@ -1358,3 +1358,65 @@ void cItem::readFrom(std::istream& sin){
 		else if(cur == "UNSELLABLE") unsellable = true;
 	}
 }
+
+enum {USE_COMBAT = 1, USE_TOWN = 2, USE_OUTDOORS = 4, USE_MAGIC = 8};
+
+std::map<eItemAbil, short> abil_chart = {
+	{eItemAbil::POISON_WEAPON, USE_TOWN | USE_COMBAT},
+	{eItemAbil::AFFECT_STATUS, USE_TOWN | USE_COMBAT | USE_MAGIC}, // This is the default, some statuses can also be used outdoors though
+	// CAST_SPELL is omitted, taken from the spell's info
+	{eItemAbil::BLISS_DOOM, USE_TOWN | USE_COMBAT | USE_MAGIC},
+	{eItemAbil::AFFECT_EXPERIENCE, USE_TOWN | USE_COMBAT | USE_OUTDOORS | USE_MAGIC},
+	{eItemAbil::AFFECT_SKILL_POINTS, USE_TOWN | USE_COMBAT | USE_OUTDOORS | USE_MAGIC},
+	{eItemAbil::AFFECT_HEALTH, USE_TOWN | USE_COMBAT | USE_OUTDOORS | USE_MAGIC},
+	{eItemAbil::AFFECT_SPELL_POINTS, USE_TOWN | USE_COMBAT | USE_OUTDOORS | USE_MAGIC},
+	{eItemAbil::LIGHT, USE_TOWN | USE_COMBAT},
+	{eItemAbil::AFFECT_PARTY_STATUS, USE_TOWN | USE_COMBAT | USE_MAGIC},
+	{eItemAbil::HEALTH_POISON, USE_TOWN | USE_COMBAT | USE_OUTDOORS | USE_MAGIC},
+	{eItemAbil::CALL_SPECIAL, USE_TOWN | USE_COMBAT | USE_OUTDOORS | USE_MAGIC},
+	{eItemAbil::SUMMONING, USE_TOWN | USE_COMBAT | USE_MAGIC},
+	{eItemAbil::MASS_SUMMONING, USE_TOWN | USE_COMBAT | USE_MAGIC},
+	{eItemAbil::QUICKFIRE, USE_TOWN | USE_COMBAT | USE_MAGIC},
+	{eItemAbil::MESSAGE, USE_TOWN | USE_COMBAT | USE_OUTDOORS},
+};
+
+bool cItem::use_in_combat() const {
+	if(ability == eItemAbil::CAST_SPELL) {
+		auto spell = eSpell(abil_data[1]);
+		int when = (*spell).when_cast;
+		return when & WHEN_COMBAT;
+	} else if(ability == eItemAbil::AFFECT_PARTY_STATUS && abil_data[1] == int(ePartyStatus::FLIGHT))
+		return false;
+	return abil_chart[ability] & USE_COMBAT;
+}
+
+bool cItem::use_in_town() const {
+	if(ability == eItemAbil::CAST_SPELL) {
+		auto spell = eSpell(abil_data[1]);
+		int when = (*spell).when_cast;
+		return when & WHEN_TOWN;
+	} else if(ability == eItemAbil::AFFECT_PARTY_STATUS && abil_data[1] == int(ePartyStatus::FLIGHT))
+		return false;
+	return abil_chart[ability] & USE_TOWN;
+}
+
+bool cItem::use_outdoors() const {
+	if(ability == eItemAbil::CAST_SPELL) {
+		auto spell = eSpell(abil_data[1]);
+		int when = (*spell).when_cast;
+		return when & WHEN_OUTDOORS;
+	} else if(ability == eItemAbil::AFFECT_STATUS) {
+		auto status = eStatus(abil_data[1]);
+		if(status == eStatus::POISON || status == eStatus::DISEASE || status == eStatus::HASTE_SLOW || status == eStatus:: BLESS_CURSE)
+			return true;
+	}
+	return abil_chart[ability] & USE_OUTDOORS;
+}
+
+bool cItem::use_magic() const {
+	return abil_chart[ability] & USE_MAGIC;
+}
+
+bool cItem::can_use() const {
+	return use_in_town() || use_in_combat() || use_outdoors();
+}

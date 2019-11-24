@@ -72,7 +72,6 @@ extern enum_map(eItemButton, bool) item_area_button_active[8];
 extern enum_map(ePlayerButton, bool) pc_area_button_active[6];
 extern rectangle item_screen_button_rects[9];
 extern std::vector<int> spec_item_array;
-extern std::map<eItemAbil, short> abil_chart;
 // combat globals
 extern short item_bottom_button_active[9];
 extern cUniverse univ;
@@ -322,7 +321,7 @@ void put_item_screen(eItemWinMode screen_num) {
 					if((stat_screen_mode == MODE_SHOP) &&
 						((is_town()) || (is_out()) || ((is_combat()) && (pc == univ.cur_pc)))) { // place give and drop and use
 						place_item_graphic(i,univ.party[pc].items[i_num].graphic_num);
-						if(abil_chart[univ.party[pc].items[i_num].ability]) // place use if can
+						if(item.can_use()) // place use if can
 							place_item_button(ITEMBTN_NORM,i);
 						else place_item_button(ITEMBTN_ALL,i);
 					}
@@ -333,7 +332,7 @@ void put_item_screen(eItemWinMode screen_num) {
 							((is_town()) || (is_out()) || ((is_combat()) && (pc == univ.cur_pc)))) { // place give and drop and use
 							place_item_button(1,i,ITEMBTN_GIVE);
 							place_item_button(2,i,ITEMBTN_DROP);
-							if(abil_chart[item.ability]) // place use if can
+							if(item.can_use()) // place use if can
 								place_item_button(0,i,ITEMBTN_USE);
 						}
 					}

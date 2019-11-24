@@ -52,6 +52,11 @@ public:
 	void enchant_weapon(eEnchant enchant_type, short new_val);
 	bool abil_harms() const;
 	bool abil_group() const;
+	bool can_use() const;
+	bool use_in_combat() const;
+	bool use_in_town() const;
+	bool use_outdoors() const;
+	bool use_magic() const;
 	
 	cItem();
 	explicit cItem(long preset);

@@ -80,15 +80,6 @@ static void start_cartoon() {
 	cartoon_happening = true;
 }
 
-// 0 - can't use 1 - combat only 2 - town only 3 - town & combat only  4 - everywhere  5 - outdoor
-// + 10 - mag. inept can use
-std::map<eItemAbil, short> abil_chart = {
-	{eItemAbil::POISON_WEAPON,13}, {eItemAbil::AFFECT_STATUS,3}, {eItemAbil::BLISS_DOOM,3}, {eItemAbil::AFFECT_EXPERIENCE,4},
-	{eItemAbil::AFFECT_SKILL_POINTS,4}, {eItemAbil::AFFECT_HEALTH,4}, {eItemAbil::AFFECT_SPELL_POINTS,4},
-	{eItemAbil::LIGHT,13}, {eItemAbil::AFFECT_PARTY_STATUS,3}, {eItemAbil::HEALTH_POISON,4},
-	{eItemAbil::CALL_SPECIAL,4}, {eItemAbil::CAST_SPELL,4}, {eItemAbil::MESSAGE,14},
-};
-
 // which is unused
 //short mode; // 0 - pre  1 - end by victory  2 - end by flight
 // wanderin spec 99 -> generic spec
@@ -553,46 +544,18 @@ void use_spec_item(short item) {
 
 
 void use_item(short pc,short item) {
-	bool take_charge = true,inept_ok = false;
-	short level,item_use_code,str,r1;
+	bool take_charge = true;
+	short level,str,r1;
 	short sp[3] = {}; // Dummy values to pass to run_special; not actually used
 	std::string str1, str2; // Used by books
 	eStatus status;
 	eItemUse type;
 	eSpell spell;
 	location user_loc;
-	eItemAbil abil = univ.party[pc].items[item].ability;
+	const cItem& item_rec = univ.party[pc].items[item];
+	eItemAbil abil = item_rec.ability;
+	bool inept_ok = !item_rec.use_magic();
 	level = univ.party[pc].items[item].item_level;
-	
-	// TODO: Replace abil_chart with a cItem member function
-	item_use_code = abil_chart[abil];
-	if(item_use_code >= 10) {
-		item_use_code -= 10;
-		inept_ok = true;
-	}
-	if(abil == eItemAbil::AFFECT_STATUS) {
-		status = eStatus(univ.party[pc].items[item].abil_data[1]);
-		if(status == eStatus::POISON || status == eStatus::DISEASE || status == eStatus::HASTE_SLOW || status == eStatus:: BLESS_CURSE)
-			item_use_code = 4;
-	} else if(abil == eItemAbil::CAST_SPELL) {
-		spell = eSpell(univ.party[pc].items[item].abil_data[1]);
-		int when = (*spell).when_cast;
-		// Rather than trying to translate the spell's "when cast" value to the less expressive item_use_code,
-		// simply check if it's useable in the current context.
-		if(is_out() && when & WHEN_OUTDOORS)
-			item_use_code = 5;
-		else if(is_town() && when & WHEN_TOWN)
-			item_use_code = 2;
-		else if(is_combat() && when & WHEN_COMBAT)
-			item_use_code = 1;
-		else {
-			// It's not useable in the current context, so translate to the item_use_code that gives the best error message
-			if(is_town() || is_out())
-				item_use_code = 1;
-			else item_use_code = 2;
-		}
-	} else if(abil == eItemAbil::AFFECT_PARTY_STATUS && univ.party[pc].items[item].abil_data[1] == int(ePartyStatus::FLIGHT))
-		item_use_code = 5;
 	
 	if(is_out())
 		user_loc = univ.party.out_loc;
@@ -601,7 +564,7 @@ void use_item(short pc,short item) {
 	if(is_combat())
 		user_loc = univ.current_pc().combat_pos;
 	
-	if(item_use_code == 0) {
+	if(!item_rec.can_use()) {
 		add_string_to_buf("Use: Can't use this item.");
 		take_charge = false;
 	}
@@ -610,23 +573,21 @@ void use_item(short pc,short item) {
 		take_charge = false;
 	}
 	
-	// 0 - can't use 1 - combat only 2 - town only 3 - town & combat only  4 - everywhere  5 - outdoor
 	if(take_charge) {
-		if(overall_mode == MODE_OUTDOORS && item_use_code < 4) {
+		if(overall_mode == MODE_OUTDOORS && !item_rec.use_outdoors()) {
 			add_string_to_buf("Use: Not while outdoors.");
 			take_charge = false;
 		}
-		// TODO: Almost all of these look wrong!
-		if((overall_mode == MODE_TOWN) && (item_use_code == 1)) {
+		if((overall_mode != MODE_OUTDOORS) && !item_rec.use_in_town() && !item_rec.use_in_combat()){
+			add_string_to_buf("Use: Only outdoors.");
+			take_charge = false;
+		}
+		if((overall_mode == MODE_TOWN) && !item_rec.use_in_town()) {
 			add_string_to_buf("Use: Not while in town.");
 			take_charge = false;
 		}
-		if((overall_mode == MODE_COMBAT) && (item_use_code == 2)) {
+		if((overall_mode == MODE_COMBAT) && !item_rec.use_in_combat()) {
 			add_string_to_buf("Use: Not in combat.");
-			take_charge = false;
-		}
-		if((overall_mode != MODE_OUTDOORS) && (item_use_code == 5)){
-			add_string_to_buf("Use: Only outdoors.");
 			take_charge = false;
 		}
 	}
