@@ -34,7 +34,8 @@
 
 extern sf::RenderWindow mainPtr;
 extern eGameMode overall_mode;
-extern short which_combat_type,stat_window;
+extern eItemWinMode stat_window;
+extern short which_combat_type;
 extern location center;
 extern bool processing_fields,monsters_going,boom_anim_active;
 extern effect_pat_type single,t,square,radius2,radius3,small_square,open_square,field[8];

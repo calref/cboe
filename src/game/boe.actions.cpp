@@ -35,6 +35,7 @@
 #include "shop.hpp"
 #include "prefs.hpp"
 #include "render_shapes.hpp"
+#include "tools/enum_map.hpp"
 
 rectangle bottom_buttons[14];
 rectangle item_screen_button_rects[9] = {
@@ -53,20 +54,17 @@ rectangle medium_buttons[4] = {
 	{383, 227, 401, 263}, {402, 227,420, 263}
 };
 
-rectangle item_buttons[8][6];
-// name, use, give, drip, info, sell/id
-rectangle pc_buttons[6][5];
-// name, hp, sp, info, trade
-
-extern rectangle startup_button[6];
-extern rectangle win_to_rects[6];
+enum_map(eItemButton, rectangle) item_buttons[8];
+enum_map(ePlayerButton, rectangle) pc_buttons[6];
+extern enum_map(eStartButton, rectangle) startup_button;
+extern enum_map(eGuiArea, rectangle) win_to_rects;
 extern bool flushingInput;
 extern bool fog_lifted;
 extern bool cartoon_happening;
 rectangle startup_top;
 
-bool item_area_button_active[8][6];
-bool pc_area_button_active[6][5];
+enum_map(eItemButton, bool) item_area_button_active[8];
+enum_map(ePlayerButton, bool) pc_area_button_active[6];
 short item_bottom_button_active[9] = {0,0,0,0,0, 0,1,1,1};
 
 rectangle pc_help_button;
@@ -80,8 +78,9 @@ short store_selling_values[8] = {0,0,0,0,0,0,0,0};
 extern cShop active_shop;
 
 extern rectangle shop_frame;
-extern short cen_x, cen_y, stat_window;//,pc_moves[6];
+extern short cen_x, cen_y;//,pc_moves[6];
 extern eGameMode overall_mode;
+extern eItemWinMode stat_window;
 extern location	to_create;
 extern bool All_Done,spell_forced,monsters_going;
 extern bool party_in_memory;
@@ -119,7 +118,7 @@ cCreature save_monster_type;
 short wand_loc_count = 0;
 short monst_place_count = 0; // 1 - standard place	2 - place last
 
-rectangle shopping_rects[8][7];
+enum_map(eShopArea, rectangle) shopping_rects[8];
 std::queue<pending_special_type> special_queue;
 bool end_scenario = false;
 bool current_bash_is_bash = false;
@@ -131,8 +130,7 @@ void init_screen_locs() {
 	rectangle startup_base = {281,1,329,302};
 	rectangle shop_base = {63,12,99,267};
 	
-	for(short i = 0; i < 7; i++)
-		shopping_rects[0][i] = shop_base;
+	std::fill(shopping_rects[0].begin(), shopping_rects[0].end(), shop_base);
 	shopping_rects[0][SHOPRECT_ACTIVE_AREA].right -= 35;
 	shopping_rects[0][SHOPRECT_GRAPHIC].right = shopping_rects[0][SHOPRECT_GRAPHIC].left + 28;
 	shopping_rects[0][SHOPRECT_ITEM_NAME].top += 4;
@@ -147,15 +145,15 @@ void init_screen_locs() {
 	shopping_rects[0][SHOPRECT_ITEM_HELP].right -= 19;
 	shopping_rects[0][SHOPRECT_ITEM_HELP].left = shopping_rects[0][SHOPRECT_ITEM_HELP].right - 14;
 	for(short i = 1; i < 8; i++)
-		for(short j = 0; j < 7; j++) {
+		for(auto& j : shopping_rects[i].keys()) {
 			shopping_rects[i][j] = shopping_rects[0][j];
 			shopping_rects[i][j].offset(0,i * 36);
 		}
 	
 	
-	for(short i = 0; i < 6; i++) {
-		startup_button[i] = startup_base;
-		startup_button[i].offset(301 * (i / 3), 48 * (i % 3));
+	for(auto btn : startup_button.keys()) {
+		startup_button[btn] = startup_base;
+		startup_button[btn].offset(301 * (btn / 3), 48 * (btn % 3));
 	}
 	startup_top.top = 7;
 	startup_top.bottom = startup_button[STARTBTN_LOAD].top;
@@ -167,7 +165,7 @@ void init_screen_locs() {
 	item_buttons[0][ITEMBTN_NAME].bottom = item_buttons[0][ITEMBTN_NAME].top + 12;
 	item_buttons[0][ITEMBTN_NAME].left = 3;
 	item_buttons[0][ITEMBTN_NAME].right = item_buttons[0][ITEMBTN_NAME].left + 185;
-	item_buttons[0][ITEMBTN_USE] = item_buttons[0][0];
+	item_buttons[0][ITEMBTN_USE] = item_buttons[0][ITEMBTN_NAME];
 	item_buttons[0][ITEMBTN_USE].left = 196;
 	item_buttons[0][ITEMBTN_USE].right = 210;
 	item_buttons[0][ITEMBTN_GIVE] = item_buttons[0][ITEMBTN_NAME];
@@ -184,7 +182,7 @@ void init_screen_locs() {
 	item_buttons[0][ITEMBTN_SPEC].right = 232;
 	item_buttons[0][ITEMBTN_NAME].top += 3;
 	for(short i = 1; i < 8; i++)
-		for(short j = 0; j < 6; j++) {
+		for(auto j : item_buttons[i].keys()) {
 			item_buttons[i][j] = item_buttons[0][j];
 			item_buttons[i][j].offset(0,13 * i);
 		}
@@ -221,7 +219,7 @@ void init_screen_locs() {
 	pc_buttons[0][PCBTN_TRADE].right = 262;
 	pc_buttons[0][PCBTN_NAME].top += 3;
 	for(short i = 1; i < 6; i++)
-		for(short j = 0; j < 5; j++) {
+		for(auto j : pc_buttons[i].keys()) {
 			pc_buttons[i][j] = pc_buttons[0][j];
 			pc_buttons[i][j].offset(0,13 * i);
 		}
@@ -648,14 +646,14 @@ static void handle_switch_pc(short which_pc, bool& need_redraw) {
 			draw_terrain();
 			univ.cur_pc = which_pc;
 			combat_next_step();
-			set_stat_window(univ.cur_pc);
+			set_stat_window_for_pc(univ.cur_pc);
 			put_pc_screen();
 		} else add_string_to_buf("Set active: PC has no APs.");
 	} else if(univ.party[which_pc].main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::ALLOW_DEAD))
 		add_string_to_buf("Set active: PC must be here & active.");
 	else {
 		univ.cur_pc = which_pc;
-		set_stat_window(which_pc);
+		set_stat_window_for_pc(which_pc);
 		add_string_to_buf("Now " + std::string(overall_mode == MODE_SHOPPING ? "shopping" : "active") + ": " + univ.party[which_pc].name);
 		adjust_spell_menus();
 		need_redraw = true;
@@ -676,7 +674,7 @@ static void handle_switch_pc_items(short which_pc, bool& need_redraw) {
 				need_redraw = true;
 			}
 		}
-		set_stat_window(which_pc);
+		set_stat_window_for_pc(which_pc);
 		if(overall_mode == MODE_SHOPPING) {
 			set_up_shop_array();
 			draw_shop_graphics(0,item_screen_button_rects[which_pc]); // rect is dummy
@@ -855,7 +853,7 @@ static void handle_combat_switch(bool& did_something, bool& need_redraw, bool& n
 				handle_wandering_specials(0,1);
 				menu_activate();
 				put_pc_screen();
-				set_stat_window(univ.cur_pc);
+				set_stat_window_for_pc(univ.cur_pc);
 			} else add_string_to_buf("Can't end combat yet.");
 		} else {
 			eDirection dir = end_town_combat();
@@ -866,7 +864,7 @@ static void handle_combat_switch(bool& did_something, bool& need_redraw, bool& n
 			}
 			univ.party.direction = dir;
 			center = univ.party.town_loc;
-			set_stat_window(univ.cur_pc);
+			set_stat_window_for_pc(univ.cur_pc);
 			redraw_screen(REFRESH_TERRAIN | REFRESH_TEXT | REFRESH_STATS);
 			play_sound(93);
 			need_reprint = true;
@@ -1245,34 +1243,34 @@ bool handle_action(sf::Event event) {
 			cChoiceDlog("help-party").show();
 		}
 		for(int i = 0; i < 6; i++)
-			for(int j = 0; j < 5; j++)
+			for(auto j : pc_buttons[i].keys())
 				if(pc_area_button_active[i][j] && point_in_area.in(pc_buttons[i][j])) {
-					if((j == 1 || j == 2) && !univ.party[i].is_alive())
+					if((j == PCBTN_HP || j == PCBTN_SP) && !univ.party[i].is_alive())
 						break;
 					rectangle button_rect = pc_buttons[i][j];
 					button_rect.offset(pc_win_ul);
 					arrow_button_click(button_rect);
 					switch(j) {
-						case 0:
+						case PCBTN_NAME:
 							handle_switch_pc(i, need_redraw);
 							need_reprint = true;
 							break;
-						case 1:
+						case PCBTN_HP:
 							str.str("");
 							str << univ.party[i].name << " has ";
 							str << univ.party[i].cur_health << " health out of " << univ.party[i].max_health << '.';
 							add_string_to_buf(str.str());
 							break;
-						case 2:
+						case PCBTN_SP:
 							str.str("");
 							str << univ.party[i].name << " has ";
 							str << univ.party[i].cur_health << " spell pts. out of " << univ.party[i].max_health << '.';
 							add_string_to_buf(str.str());
 							break;
-						case 3: // pc info
+						case PCBTN_INFO:
 							give_pc_info(i);
 							break;
-						case 4: // trade places
+						case PCBTN_TRADE:
 							if(!prime_time())
 								add_string_to_buf("Trade places: Finish what you're doing first.");
 							else if(is_combat())
@@ -1288,7 +1286,7 @@ bool handle_action(sf::Event event) {
 		put_item_screen(stat_window);
 		if(overall_mode == MODE_SHOPPING) {
 			set_up_shop_array();
-			draw_shop_graphics(0,pc_buttons[0][0]);
+			draw_shop_graphics(0,pc_buttons[0][PCBTN_NAME]);
 		}
 	}
 	
@@ -1322,7 +1320,7 @@ bool handle_action(sf::Event event) {
 			}
 		if(stat_window <= ITEM_WIN_QUESTS) {
 			for(int i = 0; i < 8; i++)
-				for(int j = 0; j < 6; j++)
+				for(auto j : item_buttons[i].keys())
 					if(item_area_button_active[i][j] && point_in_area.in(item_buttons[i][j])) {
 						rectangle button_rect = item_buttons[i][j];
 						button_rect.offset(item_win_ul);
@@ -1330,29 +1328,29 @@ bool handle_action(sf::Event event) {
 						
 						item_hit = item_sbar->getPosition() + i;
 						switch(j) {
-							case 0: // equip
+							case ITEMBTN_NAME: // equip
 								handle_equip_item(item_hit, need_redraw);
 								break;
-							case 1: // use
+							case ITEMBTN_USE:
 								handle_use_item(item_hit, did_something, need_redraw);
 								break;
-							case 2: // give
+							case ITEMBTN_GIVE:
 								handle_give_item(item_hit, did_something, need_redraw);
 								break;
-							case 3: // drop
+							case ITEMBTN_DROP:
 								if(stat_window == ITEM_WIN_SPECIAL) {
 									use_spec_item(spec_item_array[item_hit]);
 									need_redraw = true;
 								} else handle_drop_item(item_hit, need_redraw);
 								break;
-							case 4: // info
+							case ITEMBTN_INFO:
 								if(stat_window == ITEM_WIN_SPECIAL)
 									put_spec_item_info(spec_item_array[item_hit]);
 								else if(stat_window == ITEM_WIN_QUESTS)
 									put_quest_info(spec_item_array[item_hit]);
 								else display_pc_item(stat_window, item_hit,univ.party[stat_window].items[item_hit],0);
 								break;
-							case 5: // sell? That this code was reached indicates that the item was sellable
+							case ITEMBTN_SPEC: // sell? That this code was reached indicates that the item was sellable
 								// (Based on item_area_button_active)
 								handle_item_shop_action(item_hit);
 								break;
@@ -1386,7 +1384,7 @@ bool handle_action(sf::Event event) {
 		//pause(2);
 		univ.cur_pc++;
 		combat_next_step();
-		set_stat_window(univ.cur_pc);
+		set_stat_window_for_pc(univ.cur_pc);
 		put_pc_screen();
 	}
  	
@@ -1717,7 +1715,7 @@ bool handle_keystroke(sf::Event& event){
 			break;
 			
 		case '1': case '2': case '3': case '4': case '5': case '6':
-			pass_point = pc_buttons[((short) chr) - 49][0].topLeft();
+			pass_point = pc_buttons[((short) chr) - 49][PCBTN_NAME].topLeft();
 			pass_point.x += 1 + win_to_rects[WINRECT_PCSTATS].left;
 			pass_point.y += win_to_rects[WINRECT_PCSTATS].top;
 			pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
@@ -1779,11 +1777,11 @@ bool handle_keystroke(sf::Event& event){
 			break;
 		case 'z': // Show active PC's inventory
 			if(((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) || (overall_mode == MODE_LOOK_COMBAT)) {
-				set_stat_window(univ.cur_pc);
+				set_stat_window_for_pc(univ.cur_pc);
 				put_item_screen(stat_window);
 			} else {
 				// ... or first PC's inventory... why?
-				set_stat_window(0);
+				set_stat_window(ITEM_WIN_PC1);
 				put_item_screen(stat_window);
 			}
 			break;
@@ -2203,7 +2201,7 @@ void post_load() {
 	text_sbar->show();
 	item_sbar->show();
 	shop_sbar->hide();
-	set_stat_window(0);
+	set_stat_window(ITEM_WIN_PC1);
 	put_pc_screen();
 	draw_terrain();
 	draw_buttons(0);
@@ -2572,7 +2570,7 @@ void switch_pc(short which) {
 				univ.cur_pc = which;
 			else if(univ.cur_pc == which)
 				univ.cur_pc = current_switch;
-			set_stat_window(univ.cur_pc);
+			set_stat_window_for_pc(univ.cur_pc);
 		} else ASB("Switch: Not with self.");
 		current_switch = 6;
 	}
@@ -2595,7 +2593,7 @@ void drop_pc(short which) {
 	for(short i = which; i < 5; i++)
 		univ.party.swap_pcs(i, i + 1);
 	univ.party[5].main_status = eMainStatus::ABSENT;
-	set_stat_window(0);
+	set_stat_window(ITEM_WIN_PC1);
 	put_pc_screen();
 }
 

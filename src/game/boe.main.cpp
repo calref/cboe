@@ -30,6 +30,7 @@
 #include "cursors.hpp"
 #include "prefs.hpp"
 #include "button.hpp"
+#include "tools/enum_map.hpp"
 
 bool All_Done = false;
 sf::Event event;
@@ -66,7 +67,7 @@ std::vector<int> spec_item_array;
 short current_spell_range;
 eGameMode overall_mode = MODE_STARTUP;
 bool anim_onscreen = false,changed_display_mode = false;
-short stat_window = 0;
+eItemWinMode stat_window = ITEM_WIN_PC1;
 bool monsters_going = false,boom_anim_active = false;
 bool finished_init = false;
 
@@ -626,7 +627,7 @@ static cursor_type get_mode_cursor(){
 void change_cursor(location where_curs) {
 	cursor_type cursor_needed;
 	location cursor_direction;
-	extern rectangle win_to_rects[6];
+	extern enum_map(eGuiArea, rectangle) win_to_rects;
 	rectangle world_screen = win_to_rects[WINRECT_TERVIEW];
 	world_screen.inset(13, 13);
 	

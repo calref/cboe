@@ -26,8 +26,9 @@
 #include "winutil.hpp"
 #include "cursors.hpp"
 
-extern short stat_window,which_combat_type;
+extern short which_combat_type;
 extern eGameMode overall_mode;
+extern eItemWinMode stat_window;
 extern sf::RenderWindow mainPtr;
 extern bool boom_anim_active;
 extern rectangle d_rects[80];

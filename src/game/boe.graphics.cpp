@@ -18,6 +18,7 @@
 #include "sounds.hpp"
 #include "mathutil.hpp"
 #include "button.hpp"
+#include "tools/enum_map.hpp"
 
 #include "boe.party.hpp"
 #include "boe.town.hpp"
@@ -36,7 +37,7 @@
 #endif
 
 extern sf::RenderWindow mainPtr;
-extern short stat_window;
+extern eItemWinMode stat_window;
 extern eGameMode overall_mode;
 extern short current_spell_range;
 extern bool anim_onscreen,party_in_memory;
@@ -75,12 +76,12 @@ long anim_ticks = 0;
 
 // 0 - terrain   1 - buttons   2 - pc stats
 // 3 - item stats   4 - text bar   5 - text area (not right)
-rectangle win_from_rects[6] = {{0,0,350,278},{0,0,37,258},{0,0,115,288},{0,0,143,288},{0,0,21,279},{0,0,0,288}};
-rectangle win_to_rects[6] = {{7,19,358,298},{385,19,423,285},{7,305,123,576},{132,305,276,576},{360,19,381,298},{285,305,423,561}};
+enum_map(eGuiArea, rectangle) win_from_rects = {{0,0,350,278},{0,0,37,258},{0,0,115,288},{0,0,143,288},{0,0,21,279},{0,0,0,288}};
+enum_map(eGuiArea, rectangle) win_to_rects = {{7,19,358,298},{385,19,423,285},{7,305,123,576},{132,305,276,576},{360,19,381,298},{285,305,423,561}};
 
 // 0 - title  1 - button  2 - credits  3 - base button
 rectangle startup_from[4] = {{0,0,274,602},{274,0,322,301},{0,301,67,579},{274,301,314,341}};
-extern rectangle startup_button[6];
+extern enum_map(eStartButton, rectangle) startup_button;
 
 rectangle	top_left_rec = {0,0,36,28};
 short which_graphic_index[6] = {50,50,50,50,50,50};
@@ -207,9 +208,9 @@ void draw_startup(short but_type) {
 	sf::Texture& startup_gworld = *ResMgr::get<ImageRsrc>("startup");
 	rect_draw_some_item(startup_gworld,startup_from[0],mainPtr,startup_top);
 	
-	for(short i = 0; i < 5; i++) {
-		rect_draw_some_item(startup_gworld,startup_from[1],mainPtr,startup_button[i]);
-		draw_start_button(i,but_type);
+	for(auto btn : startup_button.keys()) {
+		rect_draw_some_item(startup_gworld,startup_from[1],mainPtr,startup_button[btn]);
+		draw_start_button(btn,but_type);
 	}
 	draw_startup_anim(false);
 	
@@ -224,8 +225,8 @@ void draw_startup_anim(bool advance) {
 	anim_from = anim_to;
 	anim_from.offset(-1,-4 + startup_anim_pos);
 	if(advance) startup_anim_pos = (startup_anim_pos + 1) % 542;
-	rect_draw_some_item(*ResMgr::get<ImageRsrc>("startbut"),anim_size,mainPtr,startup_button[5]);
-	anim_to.offset(startup_button[5].left, startup_button[5].top);
+	rect_draw_some_item(*ResMgr::get<ImageRsrc>("startbut"),anim_size,mainPtr,startup_button[STARTBTN_SCROLL]);
+	anim_to.offset(startup_button[STARTBTN_SCROLL].left, startup_button[STARTBTN_SCROLL].top);
 	rect_draw_some_item(*ResMgr::get<ImageRsrc>("startanim"),anim_from,mainPtr,anim_to,sf::BlendAlpha);
 }
 
@@ -368,7 +369,7 @@ void draw_startup_stats() {
 
 
 
-void draw_start_button(short which_position,short which_button) {
+void draw_start_button(eStartButton which_position,short which_button) {
 	rectangle from_rect,to_rect;
 	// TODO: Change third button (Windows calls it "Support and Downloads")
 	const char *button_labels[] = {"Load Game","Make New Party","How To Order",

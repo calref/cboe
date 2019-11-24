@@ -20,7 +20,7 @@
 #include "utility.hpp"
 
 extern eGameMode overall_mode;
-extern short stat_window;
+extern eItemWinMode stat_window;
 extern location center;
 extern sf::RenderWindow mainPtr;
 extern cUniverse univ;

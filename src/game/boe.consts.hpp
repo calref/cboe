@@ -77,49 +77,74 @@ enum eTrapType {
 	TRAP_CUSTOM = 13,
 };
 
-// Startup button rects
-const int STARTBTN_LOAD = 0;
-const int STARTBTN_NEW = 1;
-const int STARTBTN_ORDER = 2;
-const int STARTBTN_JOIN = 3;
-const int STARTBTN_CUSTOM = 4;
+// Startup buttons
+enum eStartButton {
+	STARTBTN_LOAD = 0,
+	STARTBTN_NEW = 1,
+	STARTBTN_ORDER = 2,
+	STARTBTN_JOIN = 3,
+	STARTBTN_CUSTOM = 4,
+	STARTBTN_SCROLL = 5,
+	MAX_eStartButton // keep last
+};
 
 // Shop rects
-const int SHOPRECT_WHOLE_AREA = 0;
-const int SHOPRECT_ACTIVE_AREA = 1;
-const int SHOPRECT_GRAPHIC = 2;
-const int SHOPRECT_ITEM_NAME = 3;
-const int SHOPRECT_ITEM_COST = 4;
-const int SHOPRECT_ITEM_EXTRA = 5;
-const int SHOPRECT_ITEM_HELP = 6;
+enum eShopArea {
+	SHOPRECT_WHOLE_AREA = 0,
+	SHOPRECT_ACTIVE_AREA = 1,
+	SHOPRECT_GRAPHIC = 2,
+	SHOPRECT_ITEM_NAME = 3,
+	SHOPRECT_ITEM_COST = 4,
+	SHOPRECT_ITEM_EXTRA = 5,
+	SHOPRECT_ITEM_HELP = 6,
+	MAX_eShopArea // keep last
+};
 
-// Item button rects
-const int ITEMBTN_NAME = 0;
-const int ITEMBTN_USE = 1;
-const int ITEMBTN_GIVE = 2;
-const int ITEMBTN_DROP = 3;
-const int ITEMBTN_INFO = 4;
-const int ITEMBTN_SPEC = 5; // Sell, Identify, or Enchant
+// Item buttons
+enum eItemButton {
+	ITEMBTN_NAME = 0,
+	ITEMBTN_USE = 1,
+	ITEMBTN_GIVE = 2,
+	ITEMBTN_DROP = 3,
+	ITEMBTN_INFO = 4,
+	ITEMBTN_SPEC = 5, // Sell, Identify, or Enchant
+	MAX_eItemButton // keep last
+};
+
 const int ITEMBTN_ALL = 10; // use, give, drop, info
 const int ITEMBTN_NORM = 11; // give, drop, info
 
-// PC button rects
-const int PCBTN_NAME = 0;
-const int PCBTN_HP = 1;
-const int PCBTN_SP = 2;
-const int PCBTN_INFO = 3;
-const int PCBTN_TRADE = 4;
+// PC buttons
+enum ePlayerButton {
+	PCBTN_NAME = 0,
+	PCBTN_HP = 1,
+	PCBTN_SP = 2,
+	PCBTN_INFO = 3,
+	PCBTN_TRADE = 4,
+	MAX_ePlayerButton // keep last
+};
 
 // Item window modes (non-PC)
-const int ITEM_WIN_SPECIAL = 6;
-const int ITEM_WIN_QUESTS = 7;
+enum eItemWinMode {
+	ITEM_WIN_PC1 = 0,
+	ITEM_WIN_PC2 = 1,
+	ITEM_WIN_PC3 = 2,
+	ITEM_WIN_PC4 = 3,
+	ITEM_WIN_PC5 = 4,
+	ITEM_WIN_PC6 = 5,
+	ITEM_WIN_SPECIAL = 6,
+	ITEM_WIN_QUESTS = 7,
+};
 
 // Gobal window rects
-const int WINRECT_TERVIEW = 0;
-const int WINRECT_ACTBTNS = 1;
-const int WINRECT_PCSTATS = 2;
-const int WINRECT_INVEN = 3;
-const int WINRECT_STATUS = 4;
-const int WINRECT_TRANSCRIPT = 5;
+enum eGuiArea {
+	WINRECT_TERVIEW = 0,
+	WINRECT_ACTBTNS = 1,
+	WINRECT_PCSTATS = 2,
+	WINRECT_INVEN = 3,
+	WINRECT_STATUS = 4,
+	WINRECT_TRANSCRIPT = 5,
+	MAX_eGuiArea // keep last
+};
 
 #endif

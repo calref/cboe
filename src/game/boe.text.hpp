@@ -4,10 +4,12 @@ class cVehicle;
 
 void put_pc_screen();
 void place_buy_button(short position,short pc_num,short item_num);
-void put_item_screen(short screen_num);
+void put_item_screen(eItemWinMode screen_num);
 void place_item_bottom_buttons();
-void set_stat_window(short new_stat);
-void place_item_button(short which_button_to_put,short which_slot,short which_button_position,short extra_val);
+void set_stat_window(eItemWinMode new_stat);
+void set_stat_window_for_pc(int pc);
+void place_item_button(short button_position,short which_slot,eItemButton button_type = ITEMBTN_USE);
+void place_item_graphic(short which_slot,short graphic);
 short first_active_pc();
 void refresh_stat_areas(short mode);
 short total_encumbrance(short pc_num);

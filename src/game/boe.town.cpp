@@ -29,8 +29,9 @@
 #include "winutil.hpp"
 #include "res_image.hpp"
 
-extern short stat_window,store_spell_target,which_combat_type,combat_active_pc;
+extern short store_spell_target,which_combat_type,combat_active_pc;
 extern eGameMode overall_mode;
+extern eItemWinMode stat_window;
 extern location center;
 extern sf::RenderWindow mainPtr;
 extern short store_current_pc,current_ground;
@@ -704,7 +705,7 @@ void start_town_combat(eDirection direction) {
 	center = univ.current_pc().combat_pos;
 	draw_buttons(0);
 	put_pc_screen();
-	set_stat_window(univ.cur_pc);
+	set_stat_window_for_pc(univ.cur_pc);
 	give_help(48,49);
 	
 }

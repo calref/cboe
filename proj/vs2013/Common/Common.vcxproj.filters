@@ -978,6 +978,9 @@
     <ClInclude Include="..\..\..\src\dialogxml\dialogs\3choice.hpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\tools\enum_map.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\src\scenario\town_import.tpp">

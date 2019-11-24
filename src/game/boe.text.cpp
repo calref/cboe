@@ -20,6 +20,7 @@ const int TEXT_BUF_LEN = 70;
 #include "res_image.hpp"
 #include "res_font.hpp"
 #include "spell.hpp"
+#include "tools/enum_map.hpp"
 
 typedef struct {
 	char line[50];
@@ -46,8 +47,9 @@ extern short had_text_freeze;
 extern eStatMode stat_screen_mode;
 
 // graphics globals
-extern short which_combat_type,stat_window;
+extern short which_combat_type;
 extern eGameMode overall_mode;
+extern eItemWinMode stat_window;
 extern sf::RenderWindow mainPtr;
 extern rectangle more_info_button;
 extern short which_item_page[6];
@@ -64,12 +66,10 @@ extern sf::RenderTexture pc_stats_gworld, item_stats_gworld, text_area_gworld;
 extern sf::RenderTexture terrain_screen_gworld;
 
 // game globals
-extern rectangle item_buttons[8][6];
-// name, use, give, drip, info, sell/id
-extern rectangle pc_buttons[6][5];
-// name, hp, sp, info, trade
-extern bool item_area_button_active[8][6];
-extern bool pc_area_button_active[6][5];
+extern enum_map(eItemButton, rectangle) item_buttons[8];
+extern enum_map(ePlayerButton, rectangle) pc_buttons[6];
+extern enum_map(eItemButton, bool) item_area_button_active[8];
+extern enum_map(ePlayerButton, bool) pc_area_button_active[6];
 extern rectangle item_screen_button_rects[9];
 extern std::vector<int> spec_item_array;
 extern std::map<eItemAbil, short> abil_chart;
@@ -91,7 +91,7 @@ void put_pc_screen() {
 	rectangle day_rect[2] = {{103,174,114,201}, {103,147,114,172}};
 	rectangle title_rects[3] = {{4,4,16,180}, {4,184,16,214}, {4,214,16,237}};
 	rectangle bottom_bar_rect = {99,0,116,271};
-	rectangle info_from = {0,1,12,13};
+	rectangle info_from = {0,1,12,13}, switch_from = {0, 13, 12, 25};
 	
 	pc_stats_gworld.setActive();
 	
@@ -123,8 +123,8 @@ void put_pc_screen() {
 	sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
 	for(short i = 0; i < 6; i++) {
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
-			for(short j = 0; j < 5; j++)
-				pc_area_button_active[i][j] = 1;
+			for(auto& flag : pc_area_button_active[i])
+				flag = true;
 			if(i == univ.cur_pc) {
 				style.italic = true;
 				style.colour = sf::Color::Blue;
@@ -182,18 +182,12 @@ void put_pc_screen() {
 			style.colour = sf::Color::Black;
 			
 			// Now put trade and info buttons
-			//rect_draw_some_item(mixed_gworld,info_from,pc_stats_gworld,pc_buttons[i][3],1,0);
-			//rect_draw_some_item(mixed_gworld,switch_from,pc_stats_gworld,pc_buttons[i][4],1,0);
-			// do faster!
-			to_draw_rect = pc_buttons[i][PCBTN_INFO];
-			to_draw_rect.right = pc_buttons[i][PCBTN_TRADE].right + 1;
-			from_rect = info_from;
-			from_rect.right = from_rect.left + to_draw_rect.right - to_draw_rect.left;
-			rect_draw_some_item(invenbtn_gworld,from_rect,pc_stats_gworld,to_draw_rect,sf::BlendAlpha);
+			rect_draw_some_item(invenbtn_gworld,info_from,pc_stats_gworld,pc_buttons[i][PCBTN_INFO],sf::BlendAlpha);
+			rect_draw_some_item(invenbtn_gworld,switch_from,pc_stats_gworld,pc_buttons[i][PCBTN_TRADE],sf::BlendAlpha);
 		}
 		else {
-			for(short j = 0; j < 5; j++)
-				pc_area_button_active[i][j] = 0;
+			for(auto& flag : pc_area_button_active[i])
+				flag = false;
 		}
 	}
 	
@@ -206,21 +200,13 @@ void put_pc_screen() {
 	// Sometimes this gets called when character is slain. when that happens, if items for
 	// that PC are up, switch item page.
 	if(univ.cur_pc < 6 && univ.current_pc().main_status != eMainStatus::ALIVE && stat_window == univ.cur_pc) {
-		set_stat_window(univ.cur_pc);
+		set_stat_window_for_pc(univ.cur_pc);
 	}
 }
 
 // Draws item area in middle right
 // Screen_num is what page is visible in the item menu.
-//    0 - 5 pc inventory  6 - special item  7 - missions
-// Stat_screen_mode ... 0 - normal, adventuring, all buttons vis
-//						1 - in shop, item info only
-//						2 - in shop, identifying, shop_identify_cost is cost
-//						3 - in shop, selling weapons
-//						4 - in shop, selling armor
-//						5 - in shop, selling all
-//						6 - in shop, augmenting weapon,shop_identify_cost is type
-void put_item_screen(short screen_num) {
+void put_item_screen(eItemWinMode screen_num) {
 	std::ostringstream sout;
 	long i_num;
 	long item_offset;
@@ -239,8 +225,8 @@ void put_item_screen(short screen_num) {
 	item_offset = item_sbar->getPosition();
 	
 	for(short i = 0; i < 8; i++)
-		for(short j = 0; j < 6; j++)
-			item_area_button_active[i][j] = false;
+		for(auto& flag : item_area_button_active[i])
+			flag = false;
 	
 	TextStyle style;
 	style.lineHeight = 10;
@@ -255,10 +241,10 @@ void put_item_screen(short screen_num) {
 				if(i_num < spec_item_array.size()) {
 					win_draw_string(item_stats_gworld,item_buttons[i][ITEMBTN_NAME],univ.scenario.special_items[spec_item_array[i_num]].name,eTextMode::WRAP,style);
 					
-					place_item_button(3,i,4,0);
+					place_item_button(3,i,ITEMBTN_INFO);
 					if((univ.scenario.special_items[spec_item_array[i_num]].flags % 10 == 1)
 						&& (!(is_combat())))
-						place_item_button(0,i,3,0);
+						place_item_button(0,i,ITEMBTN_DROP); // TODO: Shouldn't this be ITEMBTN_USE?
 				}
 			}
 			break;
@@ -282,7 +268,7 @@ void put_item_screen(short screen_num) {
 						draw_line(item_stats_gworld, from, to, 1, sf::Color::Green);
 					}
 					
-					place_item_button(3,i,4,0);
+					place_item_button(3,i,ITEMBTN_INFO);
 				}
 			}
 			break;
@@ -335,20 +321,20 @@ void put_item_screen(short screen_num) {
 					// make go faster, and I got lazy.
 					if((stat_screen_mode == MODE_SHOP) &&
 						((is_town()) || (is_out()) || ((is_combat()) && (pc == univ.cur_pc)))) { // place give and drop and use
-						place_item_button(0,i,0,univ.party[pc].items[i_num].graphic_num); // item_graphic
+						place_item_graphic(i,univ.party[pc].items[i_num].graphic_num);
 						if(abil_chart[univ.party[pc].items[i_num].ability]) // place use if can
-							place_item_button(ITEMBTN_NORM,i,1,0);
-						else place_item_button(ITEMBTN_ALL,i,1,0);
+							place_item_button(ITEMBTN_NORM,i);
+						else place_item_button(ITEMBTN_ALL,i);
 					}
 					else {
-						place_item_button(0,i,0,univ.party[pc].items[i_num].graphic_num); // item_graphic
-						place_item_button(3,i,4,0); // info button
+						place_item_graphic(i,univ.party[pc].items[i_num].graphic_num); 
+						place_item_button(3,i,ITEMBTN_INFO); // info button
 						if((stat_screen_mode == MODE_INVEN) &&
 							((is_town()) || (is_out()) || ((is_combat()) && (pc == univ.cur_pc)))) { // place give and drop and use
-							place_item_button(1,i,2,0);
-							place_item_button(2,i,3,0);
+							place_item_button(1,i,ITEMBTN_GIVE);
+							place_item_button(2,i,ITEMBTN_DROP);
 							if(abil_chart[item.ability]) // place use if can
-								place_item_button(0,i,1,0);
+								place_item_button(0,i,ITEMBTN_USE);
 						}
 					}
 					if(stat_screen_mode != MODE_INVEN && stat_screen_mode != MODE_SHOP) {
@@ -378,7 +364,7 @@ void place_buy_button(short position,short pc_num,short item_num) {
 	if(item.variety == eItemType::NO_ITEM)
 		return;
 	
-	dest_rect = item_buttons[position][5];
+	dest_rect = item_buttons[position][ITEMBTN_SPEC];
 	
 	val_to_place = (item.charges > 0) ?
 		item.charges * item.value :
@@ -388,32 +374,32 @@ void place_buy_button(short position,short pc_num,short item_num) {
 	switch(stat_screen_mode) {
 		case MODE_IDENTIFY:
 			if(!item.ident) {
-				item_area_button_active[position][5] = true;
+				item_area_button_active[position][ITEMBTN_SPEC] = true;
 				source_rect = button_sources[0];
 				val_to_place = shop_identify_cost;
 			}
 			break;
 		case MODE_SELL_WEAP:
 			if((*item.variety).is_weapon && !pc.equip[item_num] && item.ident && val_to_place > 0 && !item.unsellable) {
-				item_area_button_active[position][5] = true;
+				item_area_button_active[position][ITEMBTN_SPEC] = true;
 				source_rect = button_sources[1];
 			}
 			break;
 		case MODE_SELL_ARMOR:
 			if((*item.variety).is_armour && !pc.equip[item_num] && item.ident && val_to_place > 0 && !item.unsellable) {
-				item_area_button_active[position][5] = true;
+				item_area_button_active[position][ITEMBTN_SPEC] = true;
 				source_rect = button_sources[1];
 			}
 			break;
 		case MODE_SELL_ANY:
 			if(!pc.equip[item_num] && item.ident && val_to_place > 0 && !item.unsellable) {
-				item_area_button_active[position][5] = true;
+				item_area_button_active[position][ITEMBTN_SPEC] = true;
 				source_rect = button_sources[1];
 			}
 			break;
 		case MODE_ENCHANT:
 			if((item.variety == eItemType::ONE_HANDED || item.variety == eItemType::TWO_HANDED) && item.ident && item.ability == eItemAbil::NONE && !item.magic) {
-				item_area_button_active[position][5] = true;
+				item_area_button_active[position][ITEMBTN_SPEC] = true;
 				source_rect = button_sources[2];
 				val_to_place = max(aug_cost[shop_identify_cost] * 100, item.value * (5 + aug_cost[shop_identify_cost]));
 			}
@@ -422,10 +408,10 @@ void place_buy_button(short position,short pc_num,short item_num) {
 			// These modes don't have buy buttons, so we shouldn't get here; bail out!
 			return;
 	}
-	if(item_area_button_active[position][5]) {
+	if(item_area_button_active[position][ITEMBTN_SPEC]) {
 		sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
 		store_selling_values[position] = val_to_place;
-		dest_rect = item_buttons[position][5];
+		dest_rect = item_buttons[position][ITEMBTN_SPEC];
 		dest_rect.right = dest_rect.left + 30;
 		rect_draw_some_item(invenbtn_gworld, source_rect, item_stats_gworld, dest_rect, sf::BlendAlpha);
 		TextStyle style;
@@ -440,54 +426,58 @@ void place_buy_button(short position,short pc_num,short item_num) {
 // name, use, give, drop, info, sell/id
 // shortcuts - if which_button_to_put is 10, all 4 buttons now
 //				if which_button_to_put is 11, just right 2
-void place_item_button(short which_button_to_put,short which_slot,short which_button_position,short extra_val) {
+void place_item_graphic(short which_slot,short graphic) {
 	rectangle from_rect = {0,0,18,18},to_rect;
 	
-	if(which_button_position == 0) { // this means put little item graphic, extra val is which_graphic
-		item_area_button_active[which_slot][which_button_position] = true;
-		from_rect.offset((extra_val % 10) * 18,(extra_val / 10) * 18);
-		to_rect = item_buttons[which_slot][0];
-		to_rect.right = to_rect.left + (to_rect.bottom - to_rect.top);
-		to_rect.inset(-1,-1);
-		to_rect.offset(20,1);
-		from_rect.inset(2,2);
-		if(extra_val >= 10000) {
-			sf::Texture* src_gw;
-			graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(extra_val - 10000, true);
-			rect_draw_some_item(*src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
-		} else if(extra_val >= 1000) {
-			sf::Texture* src_gw;
-			graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(extra_val - 1000);
-			rect_draw_some_item(*src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
-		}
-		else rect_draw_some_item(*ResMgr::get<ImageRsrc>("tinyobj"), from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
-		return;
+	item_area_button_active[which_slot][ITEMBTN_NAME] = true;
+	from_rect.offset((graphic % 10) * 18,(graphic / 10) * 18);
+	to_rect = item_buttons[which_slot][ITEMBTN_NAME];
+	to_rect.right = to_rect.left + (to_rect.bottom - to_rect.top);
+	to_rect.inset(-1,-1);
+	to_rect.offset(20,1);
+	from_rect.inset(2,2);
+	if(graphic >= 10000) {
+		sf::Texture* src_gw;
+		graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(graphic - 10000, true);
+		rect_draw_some_item(*src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
+	} else if(graphic >= 1000) {
+		sf::Texture* src_gw;
+		graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(graphic - 1000);
+		rect_draw_some_item(*src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
 	}
+	else rect_draw_some_item(*ResMgr::get<ImageRsrc>("tinyobj"), from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+}
+
+void place_item_button(short button_position,short which_slot,eItemButton button_type) {
+	rectangle from_rect = {0,0,18,18},to_rect;
+	
 	sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
-	if(which_button_to_put < 4) { // this means put a regular item button
-		item_area_button_active[which_slot][which_button_position] = true;
-		rect_draw_some_item(invenbtn_gworld, item_buttons_from[which_button_to_put], item_stats_gworld, item_buttons[which_slot][which_button_position], sf::BlendAlpha);
-	}
-	if(which_button_to_put == ITEMBTN_ALL) { // this means put all 4
-		item_area_button_active[which_slot][1] = true;
-		item_area_button_active[which_slot][2] = true;
-		item_area_button_active[which_slot][3] = true;
-		item_area_button_active[which_slot][4] = true;
+	switch(button_position) {
+	default: // this means put a regular item button
+		item_area_button_active[which_slot][button_type] = true;
+		rect_draw_some_item(invenbtn_gworld, item_buttons_from[button_type], item_stats_gworld, item_buttons[which_slot][button_type], sf::BlendAlpha);
+		break;
+	case ITEMBTN_ALL: // this means put all 4
+		item_area_button_active[which_slot][ITEMBTN_USE] = true;
+		item_area_button_active[which_slot][ITEMBTN_GIVE] = true;
+		item_area_button_active[which_slot][ITEMBTN_DROP] = true;
+		item_area_button_active[which_slot][ITEMBTN_INFO] = true;
 		from_rect = item_buttons_from[0];
 		from_rect.right = item_buttons_from[3].right;
-		to_rect = item_buttons[which_slot][1];
+		to_rect = item_buttons[which_slot][ITEMBTN_USE];
 		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
 		rect_draw_some_item(invenbtn_gworld, from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
-	}
-	if(which_button_to_put == ITEMBTN_NORM) { // this means put right 3
-		item_area_button_active[which_slot][2] = true;
-		item_area_button_active[which_slot][3] = true;
-		item_area_button_active[which_slot][4] = true;
+		break;
+	case ITEMBTN_NORM: // this means put right 3
+		item_area_button_active[which_slot][ITEMBTN_GIVE] = true;
+		item_area_button_active[which_slot][ITEMBTN_DROP] = true;
+		item_area_button_active[which_slot][ITEMBTN_INFO] = true;
 		from_rect = item_buttons_from[1];
 		from_rect.right = item_buttons_from[3].right;
-		to_rect = item_buttons[which_slot][2];
+		to_rect = item_buttons[which_slot][ITEMBTN_GIVE];
 		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
 		rect_draw_some_item(invenbtn_gworld, from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+		break;
 	}
 }
 
@@ -544,12 +534,18 @@ void place_item_bottom_buttons() {
 	rect_draw_some_item(invenbtn_gworld, help_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 }
 
-void set_stat_window(short new_stat) {
+void set_stat_window_for_pc(int pc) {
+	if(pc < 0) pc = 0;
+	if(pc > 5) pc = 5;
+	set_stat_window(eItemWinMode(pc));
+}
+
+void set_stat_window(eItemWinMode new_stat) {
 	short array_pos = 0;
 	
 	stat_window = new_stat;
 	if(stat_window < ITEM_WIN_SPECIAL && univ.party[stat_window].main_status != eMainStatus::ALIVE)
-		stat_window = first_active_pc();
+		stat_window = eItemWinMode(first_active_pc());
 	item_sbar->setPageSize(8);
 	spec_item_array.clear();
 	switch(stat_window) {
@@ -598,7 +594,7 @@ short first_active_pc() {
 
 void refresh_stat_areas(short mode) {
 	sf::BlendMode x;
-	extern rectangle win_to_rects[6];
+	extern enum_map(eGuiArea, rectangle) win_to_rects;
 	
 	if(mode == 1) x = sf::BlendAdd;
 	else x = sf::BlendNone;
@@ -633,7 +629,7 @@ void draw_pc_effects(short pc) {
 	
 	TextStyle style;
 	name_width = string_length(univ.party[pc].name, style);
-	right_limit = pc_buttons[0][1].left - 5;
+	right_limit = pc_buttons[0][PCBTN_HP].left - 5;
 	dest_rect.left = name_width + 33;
 	dest_rect.right = dest_rect.left + 12;
 	dest_rect.top += pc * 13;

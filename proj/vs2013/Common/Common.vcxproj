@@ -326,6 +326,7 @@
     <ClInclude Include="..\..\..\src\sounds.hpp" />
     <ClInclude Include="..\..\..\src\spell.hpp" />
     <ClInclude Include="..\..\..\src\tools\cursors.hpp" />
+    <ClInclude Include="..\..\..\src\tools\enum_map.hpp" />
     <ClInclude Include="..\..\..\src\tools\gitrev.hpp" />
     <ClInclude Include="..\..\..\src\tools\menu_accel.win.hpp" />
     <ClInclude Include="..\..\..\src\tools\prefs.hpp" />

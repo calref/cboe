@@ -56,7 +56,7 @@ bool spell_button_active[90];
 
 extern short fast_bang;
 extern bool flushingInput;
-extern short stat_window;
+extern eItemWinMode stat_window;
 extern eGameMode overall_mode;
 extern fs::path progDir;
 extern location center;
@@ -186,7 +186,7 @@ void put_party_in_scen(std::string scen_name) {
 	update_explored(univ.scenario.where_start);
 	overall_mode = MODE_TOWN;
 	redraw_screen(REFRESH_ALL);
-	set_stat_window(0);
+	set_stat_window(ITEM_WIN_PC1);
 	adjust_spell_menus();
 	adjust_monst_menu();
 	
@@ -2519,7 +2519,7 @@ void kill_pc(cPlayer& which_pc,eMainStatus type) {
 	if(univ.current_pc().main_status != eMainStatus::ALIVE)
 		univ.cur_pc = first_active_pc();
 	put_pc_screen();
-	set_stat_window(univ.cur_pc);
+	set_stat_window_for_pc(univ.cur_pc);
 }
 
 void set_pc_moves() {

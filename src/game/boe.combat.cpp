@@ -27,7 +27,7 @@
 
 extern eGameMode overall_mode;
 extern short which_combat_type;
-extern short stat_window;
+extern eItemWinMode stat_window;
 extern location center;
 extern short combat_active_pc;
 extern bool monsters_going,spell_forced;
@@ -364,7 +364,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short nu
 	center = univ.current_pc().combat_pos;
 	draw_buttons(0);
 	put_pc_screen();
-	set_stat_window(univ.cur_pc);
+	set_stat_window_for_pc(univ.cur_pc);
 	
 	adjust_spell_menus();
 	
@@ -1979,7 +1979,7 @@ bool combat_next_step() {
 	}
 	if((univ.cur_pc != store_pc) || (to_return)) {
 		put_pc_screen();
-		set_stat_window(univ.cur_pc);
+		set_stat_window_for_pc(univ.cur_pc);
 	}
 	return to_return;
 }

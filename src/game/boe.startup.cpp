@@ -22,6 +22,7 @@
 #include "prefs.hpp"
 #include "cursors.hpp"
 #include "render_image.hpp"
+#include "tools/enum_map.hpp"
 
 #include <vector>
 using std::vector;
@@ -34,7 +35,7 @@ extern cUniverse univ;
 extern eGameMode overall_mode;
 extern sf::View mainView;
 
-rectangle startup_button[6];
+enum_map(eStartButton, rectangle) startup_button;
 
 // TODO: Always returns false, so make it void
 bool handle_startup_press(location the_point) {
@@ -44,13 +45,13 @@ bool handle_startup_press(location the_point) {
 	
 	the_point = mainPtr.mapPixelToCoords(the_point, mainView);
 	
-	for(short i = 0; i < 5; i++)
-		if(the_point.in(startup_button[i])) {
-			draw_start_button(i,5);
+	for(auto btn : startup_button.keys())
+		if(the_point.in(startup_button[btn])) {
+			draw_start_button(btn,5);
 			mainPtr.display(); // TODO: I suspect this won't work
 			play_sound(37, time_in_ticks(5));
-			draw_start_button(i,0);
-			switch(i) {
+			draw_start_button(btn,0);
+			switch(btn) {
 				case STARTBTN_LOAD:
 					do_load();
 					break;

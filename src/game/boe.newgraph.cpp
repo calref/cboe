@@ -27,6 +27,7 @@
 #include "button.hpp"
 #include "res_image.hpp"
 #include "prefs.hpp"
+#include "tools/enum_map.hpp"
 
 short monsters_faces[190] = {
 	0,1,2,3,4,5,6,7,8,9,
@@ -72,7 +73,7 @@ extern bool fog_lifted;
 extern const short alch_difficulty[20];
 extern const eItemAbil alch_ingred1[20];
 extern const eItemAbil alch_ingred2[20];
-extern rectangle win_to_rects[6];
+extern enum_map(eGuiArea, rectangle) win_to_rects;
 
 // Talk vars
 extern eGameMode store_pre_talk_mode;
@@ -88,7 +89,7 @@ std::vector<word_rect_t> talk_words;
 // Shop vars
 extern cShop active_shop;
 extern eGameMode store_pre_shop_mode;
-extern rectangle shopping_rects[8][7];
+extern enum_map(eShopArea, rectangle) shopping_rects[8];
 extern rectangle bottom_help_rects[4];
 extern rectangle shop_name_str;
 extern rectangle shop_frame ;

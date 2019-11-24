@@ -34,8 +34,9 @@
 #include "prefs.hpp"
 #include "shop.hpp"
 #include "cursors.hpp"
+#include "tools/enum_map.hpp"
 
-extern short stat_window;
+extern eItemWinMode stat_window;
 extern eGameMode overall_mode;
 extern bool changed_display_mode;
 extern sf::RenderWindow mainPtr;
@@ -87,7 +88,7 @@ extern std::vector<word_rect_t> talk_words;
 // n000 + i - magic store n item i
 // talk_area_rect and talk_help_rect used for this too
 eGameMode store_pre_shop_mode;
-extern rectangle shopping_rects[8][7];
+extern enum_map(eShopArea, rectangle) shopping_rects[8];
 rectangle bottom_help_rects[4] = {{356,6,368,250},{374,6,386,270},{386,6,398,250},{398,6,410,250}};
 rectangle shop_name_str = {44,6,56,200};
 rectangle shop_frame = {62,10,352,269};
