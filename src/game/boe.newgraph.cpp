@@ -796,7 +796,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	talk_gworld.display();
 	
 	refresh_shopping();
-	if(shop_sbar->getMaximum() > 1)
+	if(shop_sbar->getMaximum() > 0)
 		shop_sbar->show();
 	else shop_sbar->hide();
 	done_btn->show();
