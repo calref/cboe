@@ -290,7 +290,7 @@
             </entries>
         </shop>
         <shop>
-            <name>Karen&apos;s Scrolls</name>
+            <name>Karen&apos;s Arcana</name>
             <type>live</type>
             <prompt>shop</prompt>
             <face>0</face>
@@ -303,14 +303,6 @@
                 <item quantity="infinite">201</item>
                 <item quantity="infinite">202</item>
                 <item quantity="infinite">203</item>
-            </entries>
-        </shop>
-        <shop>
-            <name>Karen&apos;s Potions</name>
-            <type>live</type>
-            <prompt>shop</prompt>
-            <face>0</face>
-            <entries>
                 <item quantity="infinite">260</item>
                 <item quantity="infinite">261</item>
                 <item quantity="infinite">262</item>
@@ -318,6 +310,13 @@
                 <item quantity="infinite">264</item>
                 <item quantity="infinite">265</item>
             </entries>
+        </shop>
+        <shop>
+            <name>Unused Shop</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries />
         </shop>
         <shop>
             <name>Blinlock Foundry</name>
@@ -366,30 +365,28 @@
             <entries>
                 <item quantity="infinite">108</item>
                 <item quantity="infinite">109</item>
-            </entries>
-        </shop>
-        <shop>
-            <name>Covington&apos;s Arrows</name>
-            <type>live</type>
-            <prompt>shop</prompt>
-            <face>0</face>
-            <entries>
                 <item quantity="infinite">103</item>
                 <item quantity="infinite">104</item>
-            </entries>
-        </shop>
-        <shop>
-            <name>Covington&apos;s Missiles</name>
-            <type>live</type>
-            <prompt>shop</prompt>
-            <face>0</face>
-            <entries>
                 <item quantity="infinite">98</item>
                 <item quantity="infinite">99</item>
                 <item quantity="infinite">100</item>
                 <item quantity="infinite">101</item>
                 <item quantity="infinite">102</item>
             </entries>
+        </shop>
+        <shop>
+            <name>Unused Shop</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries />
+        </shop>
+        <shop>
+            <name>Unused Shop</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries />
         </shop>
         <shop>
             <name>Zereen&apos;s Spells</name>

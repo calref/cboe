@@ -627,37 +627,13 @@
     <node for="15">
         <keyword>purc</keyword>
         <keyword>xxxx</keyword>
-        <type>reg</type>
-        <param>0</param>
-        <param>0</param>
-        <param>0</param>
-        <param>0</param>
-        <text>
-            <![CDATA[Your denseness irritates her. "Be specific! Scrolls or potions?"]]>
-        </text>
-    </node>
-    <node for="15">
-        <keyword>scro</keyword>
-        <keyword>xxxx</keyword>
         <type>shop</type>
         <param>3</param>
         <param>9</param>
         <param>0</param>
         <param>0</param>
         <text>
-            <![CDATA[Karen's Scrolls]]>
-        </text>
-    </node>
-    <node for="15">
-        <keyword>poti</keyword>
-        <keyword>xxxx</keyword>
-        <type>shop</type>
-        <param>4</param>
-        <param>10</param>
-        <param>0</param>
-        <param>0</param>
-        <text>
-            <![CDATA[Karen's Potions]]>
+            <![CDATA[Karen's Arcana]]>
         </text>
     </node>
     <node for="15">

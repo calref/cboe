@@ -573,45 +573,9 @@
     <node for="35">
         <keyword>miss</keyword>
         <keyword>purc</keyword>
-        <type>reg</type>
-        <param>0</param>
-        <param>0</param>
-        <param>0</param>
-        <param>0</param>
-        <text>
-            <![CDATA["Are you interested in bows, arrows, or throwables?"]]>
-        </text>
-    </node>
-    <node for="35">
-        <keyword>bows</keyword>
-        <keyword>xxxx</keyword>
         <type>shop</type>
         <param>3</param>
         <param>14</param>
-        <param>0</param>
-        <param>0</param>
-        <text>
-            <![CDATA[Covington's Bows]]>
-        </text>
-    </node>
-    <node for="35">
-        <keyword>arro</keyword>
-        <keyword>xxxx</keyword>
-        <type>shop</type>
-        <param>3</param>
-        <param>15</param>
-        <param>0</param>
-        <param>0</param>
-        <text>
-            <![CDATA[Covington's Arrows]]>
-        </text>
-    </node>
-    <node for="35">
-        <keyword>thro</keyword>
-        <keyword>xxxx</keyword>
-        <type>shop</type>
-        <param>3</param>
-        <param>16</param>
         <param>0</param>
         <param>0</param>
         <text>
