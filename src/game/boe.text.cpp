@@ -454,7 +454,7 @@ void place_item_button(short button_position,short which_slot,eItemButton button
 	switch(button_position) {
 	default: // this means put a regular item button
 		item_area_button_active[which_slot][button_type] = true;
-		rect_draw_some_item(invenbtn_gworld, item_buttons_from[button_type], item_stats_gworld, item_buttons[which_slot][button_type], sf::BlendAlpha);
+		rect_draw_some_item(invenbtn_gworld, item_buttons_from[button_type - 1], item_stats_gworld, item_buttons[which_slot][button_type], sf::BlendAlpha);
 		break;
 	case ITEMBTN_ALL: // this means put all 4
 		item_area_button_active[which_slot][ITEMBTN_USE] = true;
