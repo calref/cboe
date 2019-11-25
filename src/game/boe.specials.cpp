@@ -1752,7 +1752,6 @@ void push_things() {
 }
 
 void special_increase_age(long length, bool queue) {
-	short s1,s2,s3;
 	bool redraw = false,stat_area = false;
 	location trigger_loc;
 	unsigned long age_before = univ.party.age - length;
@@ -1814,15 +1813,16 @@ void special_increase_age(long length, bool queue) {
 		for(short i = 0; i < univ.town->timers.size(); i++)
 			if(univ.town->timers[i].time > 0) {
 				short time = univ.town->timers[i].time;
+				short dummy, need_redraw = 0;
 				for(unsigned long j = age_before + (time == 1); j <= current_age; j++)
 					if(j % time == 0) {
 						if(queue) {
 							univ.party.age = j;
 							queue_special(eSpecCtx::TOWN_TIMER, 2, univ.town->timers[i].node, trigger_loc);
-						} else run_special(eSpecCtx::TOWN_TIMER,2,univ.town->timers[i].node,trigger_loc,&s1,&s2,&s3);
+						} else run_special(eSpecCtx::TOWN_TIMER,2,univ.town->timers[i].node,trigger_loc,&dummy,&dummy,&need_redraw);
 					}
 				stat_area = true;
-				if(s3 > 0)
+				if(need_redraw > 0)
 					redraw = true;
 			}
 	}
@@ -1830,15 +1830,16 @@ void special_increase_age(long length, bool queue) {
 	for(short i = 0; i < univ.scenario.scenario_timers.size(); i++)
 		if(univ.scenario.scenario_timers[i].time > 0) {
 			short time = univ.scenario.scenario_timers[i].time;
+			short dummy, need_redraw = 0;
 			for(unsigned long j = age_before + (time == 1); j <= current_age; j++)
 				if(j % time == 0) {
 					if(queue) {
 						univ.party.age = j;
 						queue_special(eSpecCtx::SCEN_TIMER, 0, univ.scenario.scenario_timers[i].node, trigger_loc);
-					} else run_special(eSpecCtx::SCEN_TIMER,0,univ.scenario.scenario_timers[i].node,trigger_loc,&s1,&s2,&s3);
+					} else run_special(eSpecCtx::SCEN_TIMER,0,univ.scenario.scenario_timers[i].node,trigger_loc,&dummy,&dummy,&need_redraw);
 				}
 			stat_area = true;
-			if(s3 > 0)
+			if(need_redraw > 0)
 				redraw = true;
 		}
 	univ.party.age = current_age;
@@ -1847,13 +1848,14 @@ void special_increase_age(long length, bool queue) {
 		if(party_timers[i].time <= length) {
 			univ.party.age = age_before + party_timers[i].time;
 			short which_type = party_timers[i].node_type;
+			short dummy, need_redraw = 0;
 			if(queue)
 				queue_special(eSpecCtx::PARTY_TIMER, which_type, party_timers[i].node, trigger_loc);
-			else run_special(eSpecCtx::PARTY_TIMER, which_type, party_timers[i].node, trigger_loc, &s1, &s2, &s3);
+			else run_special(eSpecCtx::PARTY_TIMER, which_type, party_timers[i].node, trigger_loc, &dummy, &dummy, &need_redraw);
 			univ.party.party_event_timers[i].time = 0;
 			univ.party.party_event_timers[i].node = -1;
 			stat_area = true;
-			if(s3 > 0)
+			if(need_redraw > 0)
 				redraw = true;
 		} else univ.party.party_event_timers[i].time -= length;
 	}
