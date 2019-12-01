@@ -101,7 +101,7 @@ private:
 	boost::dynamic_bitset<> item_taken;
 public:
 	bool can_find;
-	long m_killed;
+	long m_killed = 0;
 	
 	template<typename T>
 	void import_legacy(T& old, int town_num);
