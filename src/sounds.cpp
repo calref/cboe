@@ -61,7 +61,7 @@ void init_snd_tool(){
 	atexit(exit_snd_tool);
 }
 
-void play_sound(short which, sf::Time delay) { // if < 0, play asynch
+void play_sound(snd_num_t which, sf::Time delay) { // if < 0, play asynch
 	static bool inited = false;
 	if(!inited) {
 		inited = true;
@@ -104,7 +104,7 @@ void play_sound(short which, sf::Time delay) { // if < 0, play asynch
 		sf::sleep(time_in_ticks(sound_delay[-1 * which]));
 }
 
-void one_sound(short which) {
+void one_sound(snd_num_t which) {
 	if(which == last_played)
 		return;
 	play_sound(which);
