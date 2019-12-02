@@ -42,8 +42,9 @@ const char* oboeVersionString() {
 	std::ostringstream sout;
 	sout << M << '.' << m << '.' << f;
 	std::string vers = sout.str();
-	version.reset(new char[vers.length()], std::default_delete<char[]>());
+	version.reset(new char[vers.length() + 1], std::default_delete<char[]>());
 	std::copy(vers.begin(), vers.end(), version.get());
+	version.get()[vers.length()] = 0;
 	return version.get();
 }
 
