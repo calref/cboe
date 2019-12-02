@@ -101,7 +101,7 @@ public:
 	short in_boat;
 	short in_horse;
 	std::array<cOutdoors::cCreature,10> out_c;
-	std::map<int,std::array<cItem,30>> magic_store_items;
+	std::map<int,std::map<int,cItem>> magic_store_items;
 	std::map<int,std::map<int,int>> store_limited_stock;
 	std::vector<job_bank_t> job_banks;
 	std::array<mon_num_t,4> imprisoned_monst; // Soul Crystal

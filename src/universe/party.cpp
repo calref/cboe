@@ -37,9 +37,6 @@ cParty::cParty(long party_preset) {
 	in_boat = -1;
 	in_horse = -1;
 	std::fill(magic_ptrs.begin(), magic_ptrs.end(), 0);
-	for(int i = 0; i < 5; i++)
-		for(int j = 0; j < 10; j++)
-			magic_store_items[i][j].variety = eItemType::NO_ITEM;
 	for(int i = 0; i < 10; i++)
 		out_c[i].exists = false;
 	for(int i = 0; i < 6; i++)
@@ -773,10 +770,10 @@ void cParty::writeTo(std::ostream& file, const cScenario& scen) const {
 	}
 	file << '\f';
 	for(auto& p : magic_store_items) {
-		for(int j = 0; j < p.second.size(); j++)
-			if(p.second[j].variety != eItemType::NO_ITEM){
-				file << "MAGICSTORE " << p.first << ' ' << j << '\n';
-				p.second[j].writeTo(file);
+		for(auto& p2 : p.second)
+			if(p2.second.variety != eItemType::NO_ITEM){
+				file << "MAGICSTORE " << p.first << ' ' << p2.first << '\n';
+				p2.second.writeTo(file);
 				file << '\f';
 			}
 	}
@@ -1030,7 +1027,6 @@ void cParty::readFrom(std::istream& file, cScenario& scen){
 		} else if(cur == "MAGICSTORE") {
 			int i,j;
 			bin >> i >> j;
-			if(j < 0 || j >= 30) continue;
 			magic_store_items[i][j].readFrom(bin);
 		} else if(cur == "ENCOUNTER") {
 			int i;

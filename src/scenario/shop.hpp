@@ -57,7 +57,7 @@ struct cShopItem {
 };
 
 class cShop {
-	std::array<cShopItem,30> items;
+	std::vector<cShopItem> items;
 	int cost_adj;
 	std::string name;
 	eShopType type;
@@ -79,7 +79,8 @@ public:
 	void replaceItem(size_t i, cShopItem newItem);
 	void replaceSpecial(size_t i, eShopItemType type, int n = 0);
 	void refreshItems(std::vector<cItem>& fromList);
-	size_t size();
+	size_t size() const;
+	size_t num_items() const;
 	cShopItem getItem(size_t i) const;
 	eShopType getType() const;
 	int getCostAdjust() const;

@@ -2191,7 +2191,8 @@ static void put_shop_in_dlog(cDialog& me, const cShop& shop, size_t which_shop) 
 	dynamic_cast<cLedGroup&>(me["prompt"]).setSelected("p" + std::to_string(int(shop.getPrompt()) + 1));
 	
 	cStack& items = dynamic_cast<cStack&>(me["items"]);
-	for(int i = 0; i < 6; i++) {
+	items.setPageCount(std::max<int>(1, ceil(shop.size() / 5.0)));
+	for(int i = 0; i < items.getPageCount(); i++) {
 		items.setPage(i);
 		for(int j = 0; j < 5; j++) {
 			std::string id = std::to_string(j + 1);
@@ -2208,6 +2209,14 @@ static void put_shop_in_dlog(cDialog& me, const cShop& shop, size_t which_shop) 
 		}
 	}
 	items.setPage(0);
+
+	if(items.getPageCount() <= 1) {
+		dynamic_cast<cButton&>(me["up"]).hide();
+		dynamic_cast<cButton&>(me["down"]).hide();
+	} else {
+		dynamic_cast<cButton&>(me["up"]).show();
+		dynamic_cast<cButton&>(me["down"]).show();
+	}
 }
 
 static bool save_shop_from_dlog(cDialog& me, cShop& shop, size_t which_shop, bool close) {
@@ -2391,16 +2400,14 @@ static bool delete_shop_entry(cDialog& me, std::string which, cShop& shop, size_
 	int page = items.getPage();
 	shop.clearItem((which[3] - '1') + 5 * page);
 	put_shop_in_dlog(me, shop, which_shop);
+	if(page == items.getPageCount())
+		page--;
 	items.setPage(page);
 	change_shop_dlog_items_page(me, "stay", shop);
 	return true;
 }
 
 static bool add_shop_entry(cDialog& me, std::string type, cShop& shop, size_t which_shop) {
-	if(shop.size() == 30) {
-		showError("There is no more room in this shop to add another item. Each shop can only have up to 30 items.", &me);
-		return true;
-	}
 	if(type == "item" || type == "opt") {
 		size_t which_item = 0, amount = 0;
 		edit_shop_item(me, which_item, amount, type == "opt");
@@ -2491,7 +2498,6 @@ bool edit_shop(size_t which_shop, cDialog* parent) {
 		shop_dlg.attachClickHandlers(std::bind(change_shop_dlog_page, _1, _2, std::ref(shop), std::ref(which_shop)), {"left", "right"});
 	}
 	
-	dynamic_cast<cStack&>(shop_dlg["items"]).setPageCount(6);
 	put_shop_in_dlog(shop_dlg, shop, which_shop);
 	shop_dlg.run();
 	return shop_dlg.accepted();

@@ -96,7 +96,7 @@ extern rectangle shop_frame ;
 extern rectangle shop_done_rect;
 extern char *heal_types[];
 extern short heal_costs[8];
-extern short shop_array[30];
+extern std::vector<int> shop_array;
 
 // Missile anim vars
 struct store_missile_type {
@@ -726,8 +726,8 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	// Place all the items
 	for(short i = 0; i < 8; i++) {
 		current_pos = i + shop_sbar->getPosition();
-		if(shop_array[current_pos] < 0)
-			break; // theoretically, this shouldn't happen
+		if(current_pos >= shop_array.size() || shop_array[current_pos] < 0)
+			break; // theoretically, the second condition shouldn't happen
 		cShopItem item = active_shop.getItem(shop_array[current_pos]);
 		eSpell spell;
 		cur_cost = item.getCost(active_shop.getCostAdjust());

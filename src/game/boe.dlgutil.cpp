@@ -93,7 +93,7 @@ rectangle bottom_help_rects[4] = {{356,6,368,250},{374,6,386,270},{386,6,398,250
 rectangle shop_name_str = {44,6,56,200};
 rectangle shop_frame = {62,10,352,269};
 rectangle shop_done_rect = {388,212,411,275};
-short shop_array[30];
+std::vector<int> shop_array;
 
 cShop active_shop;
 short active_shop_num;
@@ -125,9 +125,9 @@ void start_shop_mode(short which,short cost_adj,std::string store_name) {
 		for(auto p : univ.party.store_limited_stock[active_shop_num]) {
 			int which_item, quant_left;
 			std::tie(which_item, quant_left) = p;
-			if(which_item < 0 || which_item >= 30) continue;
+			if(which_item < 0 || which_item >= active_shop.size()) continue;
 			cShopItem entry = active_shop.getItem(which_item);
-			if(entry.quantity == 0) continue; // Just in case a stray entry accidentally gets put in for an infinite stock item
+			if(entry.quantity == 0) continue; // Just in case a stray entry accidentally gets put in for an infinite stock item (or an item was changed from finite to infinite)
 			if(quant_left == 0)
 				entry.type = eShopItemType::EMPTY;
 			else if(entry.type == eShopItemType::OPT_ITEM)
@@ -184,15 +184,16 @@ void end_shop_mode() {
 	
 	// If it was a random shop, we need to update the stored list of items so that bought items don't reappear
 	if(active_shop.getType() == eShopType::RANDOM) {
-		for(int i = 0; i < 30; i++) {
+		auto& this_shop = univ.party.magic_store_items[active_shop_num];
+		this_shop.clear();
+		for(int i = 0; i < active_shop.size(); i++) {
 			cShopItem item = active_shop.getItem(i);
-			if(item.type != eShopItemType::EMPTY && univ.party.magic_store_items[active_shop_num][i].variety != eItemType::NO_ITEM)
-				univ.party.magic_store_items[active_shop_num][i] = item.item;
-			else univ.party.magic_store_items[active_shop_num][i].variety = eItemType::NO_ITEM;
+			if(item.type == eShopItemType::TREASURE || item.type == eShopItemType::CLASS || item.type == eShopItemType::OPT_ITEM)
+				this_shop[i] = item.item;
 		}
 	}
 	// We also need to save any limited stock
-	for(int i = 0; i < 30; i++) {
+	for(int i = 0; i < active_shop.size(); i++) {
 		cShopItem item = active_shop.getItem(i);
 		if(item.quantity > 0) {
 			// This means the stock is limited.
@@ -203,8 +204,6 @@ void end_shop_mode() {
 }
 
 void handle_shop_event(location p) {
-	unsigned long store_what_picked;
-	
 	if(p.in(talk_help_rect)) {
 		if(!help_btn->handleClick(p))
 			return;
@@ -222,18 +221,18 @@ void handle_shop_event(location p) {
 	p.y -= 5;
 	
 	for(short i = 0; i < 8; i++) {
-		store_what_picked = shop_array[i + shop_sbar->getPosition()];
-		if(store_what_picked >= 30) break;
-		if(active_shop.getItem(store_what_picked).type == eShopItemType::EMPTY)
+		unsigned long what_picked = shop_array[i + shop_sbar->getPosition()];
+		if(what_picked >= active_shop.size()) break;
+		if(active_shop.getItem(what_picked).type == eShopItemType::EMPTY)
 			break;
 		if(p.in(shopping_rects[i][SHOPRECT_ACTIVE_AREA])) {
 			click_shop_rect(shopping_rects[i][SHOPRECT_ACTIVE_AREA]);
-			handle_sale(active_shop.getItem(store_what_picked), store_what_picked);
+			handle_sale(active_shop.getItem(what_picked), what_picked);
 			set_up_shop_array();
 			draw_shop_graphics(false, {});
 		} else if(p.in(shopping_rects[i][SHOPRECT_ITEM_HELP])){
 			click_shop_rect(shopping_rects[i][SHOPRECT_ITEM_HELP]);
-			handle_info_request(active_shop.getItem(store_what_picked));
+			handle_info_request(active_shop.getItem(what_picked));
 		}
 	}
 }
@@ -386,8 +385,6 @@ void handle_sale(cShopItem item, int i) {
 				play_sound(62);
 				ASB("You learn a little...");
 				active_shop.takeOne(i);
-				if(active_shop.size() != size_before)
-					shop_sbar->setMaximum(shop_sbar->getMaximum() - 1);
 				univ.current_pc().skills[skill]++;
 			}
 			break;
@@ -397,6 +394,8 @@ void handle_sale(cShopItem item, int i) {
 		beep();
 		ASB("Shop error 1. Report This!");
 	}
+	// Maybe that was the last of that item, so re-init the shop array just in case.
+	set_up_shop_array();
 	draw_shop_graphics(0,dummy_rect);
 	print_buf();
 	put_pc_screen();
@@ -465,12 +464,8 @@ void handle_info_request(cShopItem item) {
 }
 
 void set_up_shop_array() {
-	#ifdef _MSC_VER
-		#pragma warning(push)
-		#pragma warning(disable:4258)
-	#endif
-	int i = 0;
-	for(int j = 0; i < 30 && j < 30; j++) {
+	shop_array.clear();
+	for(int j = 0; j < active_shop.size(); j++) {
 		cShopItem entry = active_shop.getItem(j);
 		switch(entry.type) {
 			case eShopItemType::ITEM:
@@ -478,55 +473,55 @@ void set_up_shop_array() {
 			case eShopItemType::PRIEST_SPELL:
 			case eShopItemType::ALCHEMY:
 			case eShopItemType::SKILL:
-				shop_array[i++] = j;
+				shop_array.push_back(j);
 				break;
 			case eShopItemType::HEAL_WOUNDS:
 				if(univ.current_pc().cur_health < univ.current_pc().max_health)
-					shop_array[i++] = j;
+					shop_array.push_back(j);
 				break;
 			case eShopItemType::CURE_POISON:
 				if(univ.current_pc().status[eStatus::POISON] > 0)
-					shop_array[i++] = j;
+					shop_array.push_back(j);
 				break;
 			case eShopItemType::CURE_DISEASE:
 				if(univ.current_pc().status[eStatus::DISEASE] > 0)
-					shop_array[i++] = j;
+					shop_array.push_back(j);
 				break;
 			case eShopItemType::CURE_ACID:
 				if(univ.current_pc().status[eStatus::ACID] > 0)
-					shop_array[i++] = j;
+					shop_array.push_back(j);
 				break;
 			case eShopItemType::CURE_PARALYSIS:
 				if(univ.current_pc().status[eStatus::PARALYZED] > 0)
-					shop_array[i++] = j;
+					shop_array.push_back(j);
 				break;
 			case eShopItemType::CURE_DUMBFOUNDING:
 				if(univ.current_pc().status[eStatus::DUMB] > 0)
-					shop_array[i++] = j;
+					shop_array.push_back(j);
 				break;
 			case eShopItemType::DESTONE:
 				if(univ.current_pc().main_status == eMainStatus::STONE)
-					shop_array[i++] = j;
+					shop_array.push_back(j);
 				break;
 			case eShopItemType::RAISE_DEAD:
 				if(univ.current_pc().main_status == eMainStatus::DEAD)
-					shop_array[i++] = j;
+					shop_array.push_back(j);
 				break;
 			case eShopItemType::RESURRECT:
 				if(univ.current_pc().main_status == eMainStatus::DUST)
-					shop_array[i++] = j;
+					shop_array.push_back(j);
 				break;
 			case eShopItemType::REMOVE_CURSE:
 				for(int i = 0; i < univ.current_pc().items.size(); i++) {
 					if((univ.current_pc().equip[i]) && (univ.current_pc().items[i].cursed)) {
-						shop_array[i++] = j;
+						shop_array.push_back(j);
 						break;
 					}
 				}
 				break;
 			case eShopItemType::CALL_SPECIAL:
 				if(PSD[entry.item.abil_data[0]][entry.item.abil_data[1]])
-					shop_array[i++] = j;
+					shop_array.push_back(j);
 				break;
 			case eShopItemType::OPT_ITEM:
 				entry.quantity %= 1000;
@@ -536,7 +531,7 @@ void set_up_shop_array() {
 				entry.item = univ.party.magic_store_items[active_shop_num][j];
 				if(entry.item.variety == eItemType::NO_ITEM)
 					entry.type = eShopItemType::EMPTY;
-				else shop_array[i++] = j;
+				else shop_array.push_back(j);
 				entry.quantity = 1;
 				active_shop.replaceItem(j, entry);
 				break;
@@ -544,11 +539,7 @@ void set_up_shop_array() {
 				break;
 		}
 	}
-	#ifdef _MSC_VER
-		#pragma warning(pop)
-	#endif
-	shop_sbar->setMaximum(i - 8);
-	std::fill(shop_array + i, shop_array + 30, -1);
+	shop_sbar->setMaximum(shop_array.size() - 8);
 }
 
 void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short store_face_pic) {

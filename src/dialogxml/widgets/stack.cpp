@@ -81,14 +81,17 @@ bool cStack::setPage(size_t n) {
 	for(auto p : controls) {
 		const std::string& id = p.first;
 		cControl& ctrl = *p.second;
-		storage[curPage][id] = ctrl.store();
-		if(!ctrl.triggerFocusHandler(*parent, id, true))
-			failed = true;
-		if(!failed) {
-			ctrl.restore(storage[n][id]);
-			if(focus == &ctrl && !ctrl.triggerFocusHandler(*parent, id, false)) {
+		// Only trigger focus handlers if the current page still exists.
+		if(curPage < nPages) {
+			storage[curPage][id] = ctrl.store();
+			if(!ctrl.triggerFocusHandler(*parent, id, true))
 				failed = true;
-				ctrl.restore(storage[curPage][id]);
+			if(!failed) {
+				ctrl.restore(storage[n][id]);
+				if(focus == &ctrl && !ctrl.triggerFocusHandler(*parent, id, false)) {
+					failed = true;
+					ctrl.restore(storage[curPage][id]);
+				}
 			}
 		}
 	}

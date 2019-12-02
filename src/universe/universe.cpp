@@ -1348,9 +1348,7 @@ void cUniverse::enter_scenario(const std::string& name) {
 		pop.which_town = 200;
 	for(short i = 0; i < 10; i++)
 		party.out_c[i].exists = false;
-	for(short i = 0; i < 5; i++)
-		for(short j = 0; j < 10; j++)
-			party.magic_store_items[i][j].variety = eItemType::NO_ITEM;
+	party.magic_store_items.clear();
 	// TODO: Now uncertain if the journal should really persist
 //	univ.party.journal.clear();
 	party.special_notes.clear();
@@ -1419,7 +1417,7 @@ void cUniverse::refresh_store_items() {
 	for(size_t i = 0; i < scenario.shops.size(); i++) {
 		if(scenario.shops[i].getType() != eShopType::RANDOM)
 			continue;
-		for(int j = 0; j < 30; j++) {
+		for(int j = 0; j < scenario.shops[i].size(); j++) {
 			cShopItem entry = scenario.shops[i].getItem(j);
 			if(entry.type == eShopItemType::TREASURE) {
 				party.magic_store_items[i][j] = get_random_store_item(entry.item.item_level, entry.item.item_level == 0);
@@ -1444,7 +1442,6 @@ void cUniverse::refresh_store_items() {
 					continue;
 				}
 			}
-			party.magic_store_items[i][j] = cItem();
 		}
 	}
 	

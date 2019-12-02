@@ -558,13 +558,9 @@ static void readShopFromXml(ticpp::Element& data, cShop& shop) {
 		} else if(type == "entries") {
 			cItem dummy_item;
 			dummy_item.variety = eItemType::GOLD;
-			int entries_found = 0;
 			Iterator<Element> entry;
 			for(entry = entry.begin(elem.Get()); entry != entry.end(); entry++) {
 				entry->GetValue(&type);
-				if(entries_found >= 30)
-					throw xBadNode(type, entry->Row(), entry->Column(), fname);
-				entries_found++;
 				if(type == "item") {
 					int amount = -1, num, chance = 100;
 					std::string title, descr;

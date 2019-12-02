@@ -93,15 +93,21 @@ size_t cShop::firstEmpty() {
 	return items.size();
 }
 
-size_t cShop::size() {
-	return std::count_if(items.begin(), items.end(), [](cShopItem& item) {
+size_t cShop::size() const {
+	return items.size();
+}
+
+size_t cShop::num_items() const {
+	return std::count_if(items.begin(), items.end(), [](const cShopItem& item) {
 		return item.type != eShopItemType::EMPTY;
 	});
 }
 
 void cShop::addItem(size_t n, cItem item, size_t quantity, int chance) {
 	size_t i = firstEmpty();
-	if(i >= items.size()) return;
+	if(i >= items.size()) {
+		items.resize(i + 1);
+	}
 	if(item.variety == eItemType::NO_ITEM) return;
 	items[i].type = chance == 100 ? eShopItemType::ITEM : eShopItemType::OPT_ITEM;
 	items[i].item = item;
@@ -196,7 +202,9 @@ void cShop::replaceSpecial(size_t i, eShopItemType type, int n) {
 	if(type == eShopItemType::ITEM) return;
 	if(type == eShopItemType::OPT_ITEM) return;
 	if(type == eShopItemType::CALL_SPECIAL) return;
-	if(i >= items.size()) return;
+	if(i >= items.size()) {
+		items.resize(i + 1);
+	}
 	items[i].type = type;
 	if(type >= eShopItemType::HEAL_WOUNDS)
 		items[i].index = int(type) - int(eShopItemType::HEAL_WOUNDS);
@@ -232,7 +240,9 @@ void cShop::replaceSpecial(size_t i, eShopItemType type, int n) {
 
 void cShop::addSpecial(std::string name, std::string descr, pic_num_t pic, int node, int cost, int quantity) {
 	size_t i = firstEmpty();
-	if(i >= items.size()) return;
+	if(i >= items.size()) {
+		items.resize(i + 1);
+	}
 	items[i].type = eShopItemType::CALL_SPECIAL;
 	items[i].quantity = quantity;
 	items[i].item.full_name = name;
@@ -243,6 +253,7 @@ void cShop::addSpecial(std::string name, std::string descr, pic_num_t pic, int n
 }
 
 cShopItem cShop::getItem(size_t i) const {
+	if(i >= items.size()) return cShopItem();
 	return items[i];
 }
 
@@ -294,17 +305,18 @@ void cShop::takeOne(size_t i) {
 }
 
 void cShop::replaceItem(size_t i, cShopItem newItem) {
-	if(i >= 30) return;
+	if(i >= items.size()) {
+		items.resize(i + 1);
+	}
 	items[i] = newItem;
 }
 
 void cShop::clearItem(size_t i) {
-	std::copy(items.begin() + i + 1, items.end(), items.begin() + i);
-	items.back().type = eShopItemType::EMPTY;
+	items.erase(items.begin() + i);
 }
 
 void cShop::clear() {
-	std::fill(items.begin(), items.end(), cShopItem());
+	items.clear();
 }
 
 int cShopItem::getCost(int adj) {
