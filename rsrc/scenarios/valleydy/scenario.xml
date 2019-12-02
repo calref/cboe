@@ -236,7 +236,7 @@
             </entries>
         </shop>
         <shop>
-            <name>Bristow&apos;s Weapons</name>
+            <name>Bristow&apos;s Smithy</name>
             <type>live</type>
             <prompt>shop</prompt>
             <face>0</face>
@@ -266,14 +266,6 @@
                 <item quantity="infinite">53</item>
                 <item quantity="infinite">54</item>
                 <item quantity="infinite">55</item>
-            </entries>
-        </shop>
-        <shop>
-            <name>Bristow&apos;s Armor</name>
-            <type>live</type>
-            <prompt>shop</prompt>
-            <face>0</face>
-            <entries>
                 <item quantity="infinite">120</item>
                 <item quantity="infinite">121</item>
                 <item quantity="infinite">122</item>
@@ -287,6 +279,13 @@
                 <item quantity="infinite">130</item>
                 <item quantity="infinite">131</item>
             </entries>
+        </shop>
+        <shop>
+            <name>Unused Shop</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries />
         </shop>
         <shop>
             <name>Karen&apos;s Arcana</name>
