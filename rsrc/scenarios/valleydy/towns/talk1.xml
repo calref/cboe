@@ -373,19 +373,19 @@
         </text>
     </node>
     <node for="12">
-        <keyword>purc</keyword>
         <keyword>disc</keyword>
+        <keyword>xxxx</keyword>
         <type>reg</type>
         <param>0</param>
         <param>0</param>
         <param>0</param>
         <param>0</param>
         <text>
-            <![CDATA["Times are hard, but I'll give you what discount I can. Do you want weapons or armor?"]]>
+            <![CDATA["Times are hard, but I'll give you what discount I can. Just let me know when you're ready to purchase."]]>
         </text>
     </node>
     <node for="12">
-        <keyword>weap</keyword>
+        <keyword>purc</keyword>
         <keyword>xxxx</keyword>
         <type>shop</type>
         <param>1</param>
@@ -393,19 +393,7 @@
         <param>0</param>
         <param>0</param>
         <text>
-            <![CDATA[Bristow's Weapons]]>
-        </text>
-    </node>
-    <node for="12">
-        <keyword>armo</keyword>
-        <keyword>xxxx</keyword>
-        <type>shop</type>
-        <param>1</param>
-        <param>8</param>
-        <param>0</param>
-        <param>0</param>
-        <text>
-            <![CDATA[Bristow's Armor]]>
+            <![CDATA[Bristow's Smithy]]>
         </text>
     </node>
     <node for="12">
