@@ -2228,13 +2228,16 @@ void do_save(short mode) {
 		return;
 	}
 	fs::path file = univ.file;
-	if(mode == 1) file = nav_put_party(file);
+	if(mode == 1 || file.empty())
+		file = nav_put_party(file);
+	bool saved = false;
 	if(!file.empty()) {
 		univ.file = file;
-		save_party(univ.file, univ);
+		saved = save_party(univ.file, univ);
 	}
 	
-	add_string_to_buf("Save: Game saved");
+	if(saved)
+		add_string_to_buf("Save: Game saved");
 	
 	pause(6);
 	redraw_screen(REFRESH_TEXT);
