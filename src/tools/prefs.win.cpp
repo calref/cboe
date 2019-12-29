@@ -85,7 +85,7 @@ static bool save_prefs(fs::path fpath) {
 		else if(kv.second.type() == typeid(int))
 			fout << kv.first << " = " << boost::any_cast<int>(kv.second) << std::endl;
 		else if(kv.second.type() == typeid(double))
-			fout << kv.first << " = " << boost::any_cast<double>(kv.second) << std::endl;
+			fout << kv.first << " = " << std::fixed << boost::any_cast<double>(kv.second) << std::endl;
 		else printf("Warning: Unknown preference value type, skipping...\n");
 		if(!fout) {
 			perror("Error writing preferences");
