@@ -131,10 +131,10 @@ static bool load_prefs(fs::path fpath) {
 			iarray vals;
 			while(arr_vals >> i) vals.push_back(i);
 			temp_prefs[key] = vals;
-		} else try {
-			temp_prefs[key] = boost::lexical_cast<int>(val);
-		} catch(boost::bad_lexical_cast&) {
+		} else if(val.find_first_of('.') != std::string::npos) {
 			temp_prefs[key] = boost::lexical_cast<double>(val);
+		} else {
+			temp_prefs[key] = boost::lexical_cast<int>(val);
 		}
 	}
 	prefs.swap(temp_prefs);
