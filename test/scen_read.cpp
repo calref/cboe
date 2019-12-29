@@ -442,11 +442,6 @@ TEST_CASE("Loading a new-format scenario record") {
 			CHECK(scen.shops[0].getItem(13).quantity == 0);
 			CHECK(scen.shops[0].getItem(13).index == 89);
 		}
-		SECTION("Too many items") {
-			fin.open("files/scenario/shop-overflow.xml");
-			doc = xmlDocFromStream(fin, "shop-overflow.xml");
-			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
-		}
 		SECTION("Invalid attribute on regular item") {
 			fin.open("files/scenario/shop-bad_item.xml");
 			doc = xmlDocFromStream(fin, "shop-bad_item.xml");
