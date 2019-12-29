@@ -64,9 +64,7 @@ bool handle_startup_press(location the_point) {
 					break;
 					
 				case STARTBTN_ORDER:
-					// TODO: Figure out something to put here.
-//					give_reg_info();
-//					draw_startup(0);
+					pick_preferences();
 					break;
 					
 				case STARTBTN_JOIN: // regular scen

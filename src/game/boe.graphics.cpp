@@ -372,7 +372,7 @@ void draw_startup_stats() {
 void draw_start_button(eStartButton which_position,short which_button) {
 	rectangle from_rect,to_rect;
 	// TODO: Change third button (Windows calls it "Support and Downloads")
-	const char *button_labels[] = {"Load Game","Make New Party","How To Order",
+	const char *button_labels[] = {"Load Game","Make New Party","Preferences",
 		"Start Scenario","Custom Scenario","Quit"};
 	// The 0..65535 version of the blue component was 14472; the commented version was 43144431
 	sf::Color base_color = {0,0,57};
