@@ -548,9 +548,7 @@ void use_item(short pc,short item) {
 	short level,str,r1;
 	short sp[3] = {}; // Dummy values to pass to run_special; not actually used
 	std::string str1, str2; // Used by books
-	eStatus status;
 	eItemUse type;
-	eSpell spell;
 	location user_loc;
 	const cItem& item_rec = univ.party[pc].items[item];
 	eItemAbil abil = item_rec.ability;
@@ -610,7 +608,8 @@ void use_item(short pc,short item) {
 			case eItemAbil::POISON_WEAPON: // poison weapon
 				take_charge = poison_weapon(pc,str,false);
 				break;
-			case eItemAbil::AFFECT_STATUS:
+			case eItemAbil::AFFECT_STATUS: {
+				auto status = eStatus(univ.party[pc].items[item].abil_data[1]);
 				switch(status) {
 					case eStatus::MAIN: case eStatus::CHARM:
 						// These don't make any sense in this context.
@@ -842,7 +841,7 @@ void use_item(short pc,short item) {
 						}
 						break;
 				}
-				break;
+			} break;
 			case eItemAbil::BLISS_DOOM:
 				switch(type) {
 					case eItemUse::HELP_ONE:
@@ -1044,12 +1043,13 @@ void use_item(short pc,short item) {
 					take_charge = false;
 				break;
 				
-			case eItemAbil::CAST_SPELL:
+			case eItemAbil::CAST_SPELL: {
 				if(univ.town.is_antimagic(user_loc.x, user_loc.y)) {
 					add_string_to_buf("  Not in antimagic field.");
 					take_charge = false;
 					break;
 				}
+				auto spell = eSpell(univ.party[pc].items[item].abil_data[1]);
 				switch(spell) {
 					case eSpell::FLAME: add_string_to_buf("  It fires a bolt of flame."); break;
 					case eSpell::FIREBALL: add_string_to_buf("  It shoots a fireball."); break;
@@ -1095,7 +1095,7 @@ void use_item(short pc,short item) {
 				} else if((*spell).is_priest())
 					do_priest_spell(univ.cur_pc, spell, true);
 				else do_mage_spell(univ.cur_pc, spell, true);
-				break;
+			} break;
 			case eItemAbil::SUMMONING:
 				if(!summon_monster(univ.party[pc].items[item].abil_data[1],user_loc,str,eAttitude::FRIENDLY,true))
 					add_string_to_buf("  Summon failed.");
