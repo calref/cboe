@@ -329,6 +329,7 @@ elif platform == "posix":
 	env.Append(LIBS=Split("""
 		GL
 		X11
+		pthread
 	"""))
 
 Export("env platform")
