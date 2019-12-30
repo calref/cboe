@@ -720,8 +720,9 @@ void cParty::writeTo(std::ostream& file, const cScenario& scen) const {
 	for(int i = 0; i < scen.towns.size(); i++) {
 		if(scen.towns[i]->item_taken.any())
 			file << "ITEMTAKEN " << i << ' ' << scen.towns[i]->item_taken << '\n';
-		if(scen.towns[i]->can_find == scen.towns[i]->is_hidden)
-			file << (scen.towns[i]->can_find ? "TOWNVISIBLE " : "TOWNHIDDEN ") << i << '\n';
+		if(scen.towns[i]->can_find)
+			file << "TOWNVISIBLE " << i << '\n';
+		else file << "TOWNHIDDEN " << i << '\n';
 		if(scen.towns[i]->m_killed > 0)
 			file << "TOWNSLAUGHTER " << i << ' ' << scen.towns[i]->m_killed << '\n';
 	}
