@@ -45,7 +45,8 @@ bool handle_startup_press(location the_point) {
 	
 	the_point = mainPtr.mapPixelToCoords(the_point, mainView);
 	
-	for(auto btn : startup_button.keys())
+	for(auto btn : startup_button.keys()) {
+		if(btn == eStartButton::STARTBTN_SCROLL) continue;
 		if(the_point.in(startup_button[btn])) {
 			draw_start_button(btn,5);
 			mainPtr.display(); // TODO: I suspect this won't work
@@ -122,6 +123,7 @@ bool handle_startup_press(location the_point) {
 					break;
 			}
 		}
+	}
 	return false;
 }
 
