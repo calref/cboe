@@ -669,7 +669,7 @@ bool cParty::start_timer(short time, short node, short type){
 	return(true);
 }
 
-void cParty::writeTo(std::ostream& file, const cScenario& scen) const {
+void cParty::writeTo(std::ostream& file) const {
 	file << "CREATEVERSION " << std::hex << OBOE_CURRENT_VERSION << std::dec << '\n';
 	file << "AGE " << age << '\n';
 	file << "GOLD " << gold << '\n';
@@ -717,15 +717,6 @@ void cParty::writeTo(std::ostream& file, const cScenario& scen) const {
 	for(int i = 0; i < alchemy.size(); i++)
 		if(alchemy[i])
 			file << "ALCHEMY " << i << '\n';
-	for(int i = 0; i < scen.towns.size(); i++) {
-		if(scen.towns[i]->item_taken.any())
-			file << "ITEMTAKEN " << i << ' ' << scen.towns[i]->item_taken << '\n';
-		if(scen.towns[i]->can_find)
-			file << "TOWNVISIBLE " << i << '\n';
-		else file << "TOWNHIDDEN " << i << '\n';
-		if(scen.towns[i]->m_killed > 0)
-			file << "TOWNSLAUGHTER " << i << ' ' << scen.towns[i]->m_killed << '\n';
-	}
 	for(auto key : key_times)
 		file << "EVENT " << key.first << ' ' << key.second << '\n';
 	for(int i : spec_items)
@@ -854,7 +845,7 @@ void cParty::writeTo(std::ostream& file, const cScenario& scen) const {
 	}
 }
 
-void cParty::readFrom(std::istream& file, cScenario& scen){
+void cParty::readFrom(std::istream& file){
 	// TODO: Error-check input
 	// TODO: Don't call this sin, it's a trig function
 	std::istringstream bin;
@@ -910,11 +901,6 @@ void cParty::readFrom(std::istream& file, cScenario& scen){
 			int n;
 			sin >> stat >> n;
 			status[stat] = n;
-		}else if(cur == "ITEMTAKEN"){
-			int i;
-			sin >> i;
-			if(i >= 0 && i < scen.towns.size())
-				sin >> scen.towns[i]->item_taken;
 		}else if(cur == "LIGHT")
 			sin >> light_level;
 		else if(cur == "OUTCORNER")
@@ -960,16 +946,6 @@ void cParty::readFrom(std::istream& file, cScenario& scen){
 			if(i < 0 || i >= creature_save.size()) continue;
 			sin >> creature_save[i].which_town >> str;
 			creature_save[i].hostile = str == "HOSTILE";
-		} else if(cur == "TOWNVISIBLE") {
-			int i;
-			sin >> i;
-			if(i >= 0 && i < scen.towns.size())
-				scen.towns[i]->can_find = true;
-		} else if(cur == "TOWNHIDDEN") {
-			int i;
-			sin >> i;
-			if(i >= 0 && i < scen.towns.size())
-				scen.towns[i]->can_find = false;
 		}else if(cur == "EVENT"){
 			int i;
 			sin >> i;
@@ -978,11 +954,6 @@ void cParty::readFrom(std::istream& file, cScenario& scen){
 			int i;
 			sin >> i;
 			spec_items.insert(i);
-		}else if(cur == "TOWNSLAUGHTER"){
-			int i;
-			sin >> i;
-			if(i >= 0 && i < scen.towns.size())
-				sin >> scen.towns[i]->m_killed;
 		} else if(cur == "QUEST") {
 			int i;
 			sin >> i;

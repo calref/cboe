@@ -537,3 +537,50 @@ bool cScenario::is_town_entrance_valid(spec_loc_t loc) const {
 	auto towns_in_scenario = towns.size();
 	return loc.spec >= 0 && loc.spec < towns_in_scenario;
 }
+
+void cScenario::writeTo(std::ostream& file) const {
+	for(int i = 0; i < towns.size(); i++) {
+		if(towns[i]->item_taken.any())
+			file << "ITEMTAKEN " << i << ' ' << towns[i]->item_taken << '\n';
+		if(towns[i]->can_find)
+			file << "TOWNVISIBLE " << i << '\n';
+		else file << "TOWNHIDDEN " << i << '\n';
+		if(towns[i]->m_killed > 0)
+			file << "TOWNSLAUGHTER " << i << ' ' << towns[i]->m_killed << '\n';
+	}
+}
+
+void cScenario::readFrom(std::istream& file){
+	// TODO: Error-check input
+	// TODO: Don't call this sin, it's a trig function
+	std::istringstream bin;
+	std::string cur;
+	getline(file, cur, '\f');
+	bin.str(cur);
+	while(bin) { // continue as long as no error, such as eof, occurs
+		getline(bin, cur);
+		std::istringstream sin(cur);
+		sin >> cur;
+		if(cur == "ITEMTAKEN"){
+			int i;
+			sin >> i;
+			if(i >= 0 && i < towns.size())
+				sin >> towns[i]->item_taken;
+		} else if(cur == "TOWNVISIBLE") {
+			int i;
+			sin >> i;
+			if(i >= 0 && i < towns.size())
+				towns[i]->can_find = true;
+		} else if(cur == "TOWNHIDDEN") {
+			int i;
+			sin >> i;
+			if(i >= 0 && i < towns.size())
+				towns[i]->can_find = false;
+		} else if(cur == "TOWNSLAUGHTER"){
+			int i;
+			sin >> i;
+			if(i >= 0 && i < towns.size())
+				sin >> towns[i]->m_killed;
+		}
+	}
+}

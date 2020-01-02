@@ -286,7 +286,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 			showError("Loading Blades of Exile save file failed.");
 			return false;
 		}
-		univ.party.readFrom(fin, univ.scenario);
+		univ.party.readFrom(fin);
 	}
 	
 	{ // Then the "setup" array
@@ -343,6 +343,16 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 		
 		if(!load_scenario(path, univ.scenario))
 			return false;
+
+		if(partyIn.hasFile("save/scenario.txt")) {
+			// Load scenario data
+			std::istream& fin = partyIn.getFile("save/scenario.txt");
+			if(!fin) {
+				showError("Loading Blades of Exile save file failed.");
+				return false;
+			}
+			univ.scenario.readFrom(fin);
+		}
 		
 		if(partyIn.hasFile("save/town.txt")) {
 			// Load town data
@@ -403,7 +413,8 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 	tarball partyOut;
 	
 	// First, write the main party data
-	univ.party.writeTo(partyOut.newFile("save/party.txt"), univ.scenario);
+	univ.party.writeTo(partyOut.newFile("save/party.txt"));
+	univ.scenario.writeTo(partyOut.newFile("save/scenario.txt"));
 	{
 		std::ostream& fout = partyOut.newFile("save/setup.dat");
 		static uint16_t magic = 0x0B0E;

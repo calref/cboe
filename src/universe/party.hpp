@@ -189,8 +189,8 @@ public:
 	bool start_timer(short time, short node, short type);
 	cPlayer& operator[](unsigned short n);
 	const cPlayer& operator[](unsigned short n) const;
-	void writeTo(std::ostream& file, const cScenario& scen) const;
-	void readFrom(std::istream& file, cScenario& scen);
+	void writeTo(std::ostream& file) const;
+	void readFrom(std::istream& file);
 	
 	bool give_item(cItem item,int flags);
 	bool forced_give(cItem item,eItemAbil abil,short dat = -1);

@@ -97,6 +97,7 @@ public:
 	void import_legacy(legacy::scenario_data_type& old);
 	void import_legacy(legacy::scen_item_data_type& old);
 	void writeTo(std::ostream& file) const;
+	void readFrom(std::istream& file);
 	std::string format_scen_version();
 	std::string format_ed_version();
 	

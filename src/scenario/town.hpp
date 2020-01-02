@@ -41,7 +41,7 @@ enum eLighting {
 class cScenario;
 
 class cTown : public cArea { // formerly town_record_type
-	friend class cParty; // so the read/save functions can access item_taken directly
+	friend class cScenario; // so the read/save functions can access item_taken directly
 protected:
 	cScenario* scenario;
 public:
