@@ -1306,9 +1306,11 @@ void cItem::writeTo(std::ostream& file, std::string prefix) const {
 	file << prefix << "VALUE " << value << '\n';
 	file << prefix << "WEIGHT " << weight << '\n';
 	file << prefix << "SPEC " << special_class << '\n';
+	file << prefix << "MISSILE " << missile << '\n';
 	file << prefix << "AT " << item_loc.x << ' ' << item_loc.y << '\n';
 	file << prefix << "FULLNAME " << maybe_quote_string(full_name) << '\n';
 	file << prefix << "NAME " << maybe_quote_string(name) << '\n';
+	file << prefix << "DESCR " << maybe_quote_string(desc) << '\n';
 	file << prefix << "TREASURE " << treas_class << '\n';
 	if(ident) file << prefix << "IDENTIFIED\n";
 	if(property) file << prefix << "PROPERTY\n";
@@ -1343,9 +1345,11 @@ void cItem::readFrom(std::istream& sin){
 		else if(cur == "VALUE") sin >> value;
 		else if(cur == "WEIGHT") sin >> weight;
 		else if(cur == "SPEC") sin >> special_class;
+		else if(cur == "MISSILE") sin >> missile;
 		else if(cur == "AT") sin >> item_loc.x >> item_loc.y;
 		else if(cur == "FULLNAME") full_name = read_maybe_quoted_string(sin);
 		else if(cur == "NAME") name = read_maybe_quoted_string(sin);
+		else if(cur == "DESCR") desc = read_maybe_quoted_string(sin);
 		else if(cur == "TREASURE") sin >> treas_class;
 		else if(cur == "IDENTIFIED") ident = true;
 		else if(cur == "PROPERTY") property = true;
