@@ -151,6 +151,7 @@ static void init_btn(std::shared_ptr<cButton>& btn, eBtnType type) {
 }
 
 void init_boe(int argc, char* argv[]) {
+	set_up_apple_events(argc, argv);
 	init_directories(argv[0]);
 	init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
 	sync_prefs();
@@ -183,7 +184,6 @@ void init_boe(int argc, char* argv[]) {
 	
 	cUniverse::print_result = iLiving::print_result = add_string_to_buf;
 	cPlayer::give_help = give_help;
-	set_up_apple_events(argc, argv);
 	init_fileio();
 	init_spell_menus();
 	init_mini_map();
