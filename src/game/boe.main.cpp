@@ -171,18 +171,15 @@ void init_boe(int argc, char* argv[]) {
 	mainPtr.display();
 	
 	set_cursor(watch_curs);
-	boost::thread init_thread([]() {
-		init_buf();
-		check_for_intel();
-		srand(time(nullptr));
-		init_screen_locs();
-		init_startup();
-		flushingInput = true;
-	});
+	init_buf();
+	check_for_intel();
+	srand(time(nullptr));
+	init_screen_locs();
+	init_startup();
+	flushingInput = true;
 	show_logo();
 	if(get_bool_pref("ShowStartupSplash", true))
 		plop_fancy_startup();
-	init_thread.join();
 	
 	cUniverse::print_result = iLiving::print_result = add_string_to_buf;
 	cPlayer::give_help = give_help;
