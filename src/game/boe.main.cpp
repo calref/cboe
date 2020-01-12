@@ -30,7 +30,7 @@
 #include "cursors.hpp"
 #include "prefs.hpp"
 #include "button.hpp"
-#include "tools/enum_map.hpp"
+#include "enum_map.hpp"
 
 bool All_Done = false;
 sf::Event event;

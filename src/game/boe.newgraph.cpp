@@ -27,7 +27,7 @@
 #include "button.hpp"
 #include "res_image.hpp"
 #include "prefs.hpp"
-#include "tools/enum_map.hpp"
+#include "enum_map.hpp"
 
 short monsters_faces[190] = {
 	0,1,2,3,4,5,6,7,8,9,

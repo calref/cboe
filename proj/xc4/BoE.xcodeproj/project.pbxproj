@@ -618,6 +618,7 @@
 		914CA49F190C4E9200B6ADD1 /* scenedit.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = scenedit.xib; path = menus/scenedit.xib; sourceTree = "<group>"; };
 		915325161A2E1DA8000A9A1C /* oldstructs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oldstructs.cpp; sourceTree = "<group>"; };
 		915325181A2E37EE000A9A1C /* special_parse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = special_parse.cpp; sourceTree = "<group>"; };
+		91574CC323CB97C5004766F8 /* enum_map.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = enum_map.hpp; sourceTree = "<group>"; };
 		91597A6C1A3BED2D00BE7BF9 /* spell.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = spell.hpp; sourceTree = "<group>"; };
 		91597A6E1A3BEDC700BE7BF9 /* spell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spell.cpp; sourceTree = "<group>"; };
 		915AF9E91BC04171008AEF49 /* dlogevt.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = dlogevt.hpp; sourceTree = "<group>"; };
@@ -1142,6 +1143,7 @@
 				912283C80FD0E16C00B21642 /* undo.cpp */,
 				919145FF18E63B70005CF3A4 /* winutil.mac.mm */,
 				91C688E60FD702B9000F6D01 /* cursors.hpp */,
+				91574CC323CB97C5004766F8 /* enum_map.hpp */,
 				91C2A6E21B8244F700346948 /* gitrev.hpp */,
 				91EC480E18FBAA8700BB1E86 /* prefs.hpp */,
 				917B573F100B956C0096C978 /* undo.hpp */,

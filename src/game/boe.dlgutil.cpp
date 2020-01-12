@@ -34,7 +34,7 @@
 #include "prefs.hpp"
 #include "shop.hpp"
 #include "cursors.hpp"
-#include "tools/enum_map.hpp"
+#include "enum_map.hpp"
 
 extern eItemWinMode stat_window;
 extern eGameMode overall_mode;

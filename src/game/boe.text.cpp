@@ -20,7 +20,7 @@ const int TEXT_BUF_LEN = 70;
 #include "res_image.hpp"
 #include "res_font.hpp"
 #include "spell.hpp"
-#include "tools/enum_map.hpp"
+#include "enum_map.hpp"
 
 typedef struct {
 	char line[50];

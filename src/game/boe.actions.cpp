@@ -35,7 +35,7 @@
 #include "shop.hpp"
 #include "prefs.hpp"
 #include "render_shapes.hpp"
-#include "tools/enum_map.hpp"
+#include "enum_map.hpp"
 
 rectangle bottom_buttons[14];
 rectangle item_screen_button_rects[9] = {

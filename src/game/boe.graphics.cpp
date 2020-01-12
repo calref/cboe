@@ -18,7 +18,7 @@
 #include "sounds.hpp"
 #include "mathutil.hpp"
 #include "button.hpp"
-#include "tools/enum_map.hpp"
+#include "enum_map.hpp"
 
 #include "boe.party.hpp"
 #include "boe.town.hpp"

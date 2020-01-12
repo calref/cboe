@@ -22,7 +22,7 @@
 #include "prefs.hpp"
 #include "cursors.hpp"
 #include "render_image.hpp"
-#include "tools/enum_map.hpp"
+#include "enum_map.hpp"
 
 #include <vector>
 using std::vector;
