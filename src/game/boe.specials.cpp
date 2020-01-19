@@ -80,28 +80,30 @@ static void start_cartoon() {
 	cartoon_happening = true;
 }
 
-// which is unused
 //short mode; // 0 - pre  1 - end by victory  2 - end by flight
-// wanderin spec 99 -> generic spec
-bool handle_wandering_specials (short /*which*/,short mode) {
+bool handle_wandering_specials(short mode) {
 	
 	// TODO: Is loc_in_sec the correct location to pass here?
 	// (I'm pretty sure it is, but I should verify it somehow.)
 	// (It's either that or univ.party.p_loc.)
-	short s1 = 0,s2 = 0,s3 = 0;
-	// TODO: If s2 > 0, encounter is forced (monsters don't flee even if they're weak)
-	
-	if((mode == 0) && (store_wandering_special.spec_on_meet >= 0)) { // When encountering
-		run_special(eSpecCtx::OUTDOOR_ENC,1,store_wandering_special.spec_on_meet,univ.party.loc_in_sec,&s1,&s2,&s3);
-		if(s1 > 0)
-			return false;
-	}
-	
-	if((mode == 1) && (store_wandering_special.spec_on_win >= 0))  {// After defeating
-		run_special(eSpecCtx::WIN_ENCOUNTER,1,store_wandering_special.spec_on_win,univ.party.loc_in_sec,&s1,&s2,&s3);
-	}
-	if((mode == 2) && (store_wandering_special.spec_on_flee >= 0))  {// After fleeing like a buncha girly men
-		run_special(eSpecCtx::FLEE_ENCOUNTER,1,store_wandering_special.spec_on_flee,univ.party.loc_in_sec,&s1,&s2,&s3);
+	short dummy;
+	switch(mode) {
+	case 0: // pre-combat, possibly prevent the fight
+		// TODO: If s2 > 0, encounter is forced (monsters don't flee even if they're weak)
+			
+		if((mode == 0) && (store_wandering_special.spec_on_meet >= 0)) { // When encountering
+			short prevent;
+			run_special(eSpecCtx::OUTDOOR_ENC,1,store_wandering_special.spec_on_meet,univ.party.loc_in_sec,&prevent,&dummy,&dummy);
+			if(prevent > 0)
+				return false;
+		}
+		break;
+	case 1: // end by victory
+		run_special(eSpecCtx::WIN_ENCOUNTER,1,store_wandering_special.spec_on_win,univ.party.loc_in_sec,&dummy,&dummy,&dummy);
+		break;
+	case 2: // end by loss (flight or total party kill)
+		run_special(eSpecCtx::FLEE_ENCOUNTER,1,store_wandering_special.spec_on_flee,univ.party.loc_in_sec,&dummy,&dummy,&dummy);
+		break;
 	}
 	return true;
 }

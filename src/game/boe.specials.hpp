@@ -1,7 +1,7 @@
 
 #include "creature.hpp"
 
-bool handle_wandering_specials (short which,short mode);
+bool handle_wandering_specials(short mode);
 bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,bool *forced);
 void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc);
 void use_spec_item(short item);

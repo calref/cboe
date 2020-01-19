@@ -856,7 +856,7 @@ static void handle_combat_switch(bool& did_something, bool& need_redraw, bool& n
 				end_town_mode(0,univ.party.town_loc);
 				play_sound(93);
 				add_string_to_buf("End combat.");
-				handle_wandering_specials(0,1);
+				handle_wandering_specials(1);
 				menu_activate();
 				put_pc_screen();
 				set_stat_window_for_pc(univ.cur_pc);
@@ -940,7 +940,7 @@ static void handle_party_death() {
 		// TODO: Should this only happen in outdoor combat? Or should we allow fleeing town during combat?
 		end_town_mode(0,univ.party.town_loc);
 		add_string_to_buf("End combat.");
-		handle_wandering_specials(0,2);
+		handle_wandering_specials(2);
 	}
 	if(!univ.party.is_alive() && univ.party.is_split()) {
 		univ.party.end_split(0);
@@ -1439,7 +1439,7 @@ void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 			if(which_combat_type == 0) {
 				end_town_mode(0,univ.party.out_loc);
 				add_string_to_buf("Fled the combat.");
-				handle_wandering_specials(0,2);
+				handle_wandering_specials(2);
 			}
 		} else {
 			if(need_redraw) {
@@ -1466,7 +1466,7 @@ void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 					if((adjacent(univ.party.out_loc,univ.party.out_c[i].m_loc) || univ.party.out_c[i].what_monst.forced)
 					   && univ.party.in_boat < 0 && !flying()) {
 						store_wandering_special = univ.party.out_c[i].what_monst;
-						if(handle_wandering_specials(0,0))
+						if(handle_wandering_specials(0))
 							initiate_outdoor_combat(i);
 						univ.party.out_c[i].exists = false;
 						
