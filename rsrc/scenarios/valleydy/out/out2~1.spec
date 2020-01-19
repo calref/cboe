@@ -93,7 +93,7 @@
 	sdf -1, -1
 	msg 36, -1, -1
 	pic 0, 4
-	ex1 0, 0, -1
+	ex1 1, 0, -1
 	ex2 0, 0, -1
 	goto -1
 @once-give-item = 14
@@ -114,7 +114,7 @@
 	sdf -1, -1
 	msg -1, -1, -1
 	pic 0, 4
-	ex1 0, 0, -1
+	ex1 1, 0, -1
 	ex2 0, 0, -1
 	goto -1
 @disp-msg = 17

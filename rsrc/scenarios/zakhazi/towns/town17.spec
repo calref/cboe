@@ -156,7 +156,7 @@
 	sdf -1, -1
 	msg -1, -1, -1
 	pic 0, 4
-	ex1 0, -1, -1
+	ex1 1, -1, -1
 	ex2 0, -1, -1
 	goto -1
 @split-party = 23
@@ -184,7 +184,7 @@
 	sdf -1, -1
 	msg 18, 19, -1
 	pic 0, 4
-	ex1 0, -1, -1
+	ex1 1, -1, -1
 	ex2 0, -1, -1
 	goto -1
 @once-dlog = 27
@@ -198,7 +198,7 @@
 	sdf -1, -1
 	msg -1, -1, -1
 	pic 0, 4
-	ex1 0, -1, -1
+	ex1 1, -1, -1
 	ex2 0, -1, -1
 	goto -1
 @unite-party = 29
@@ -261,7 +261,7 @@
 	sdf -1, -1
 	msg 38, -1, -1
 	pic 0, 4
-	ex1 0, -1, -1
+	ex1 1, -1, -1
 	ex2 0, -1, -1
 	goto -1
 @once-disp-msg = 38
@@ -401,7 +401,7 @@
 	sdf -1, -1
 	msg 62, -1, -1
 	pic 0, 4
-	ex1 0, -1, -1
+	ex1 1, -1, -1
 	ex2 0, -1, -1
 	goto -1
 @portal-generic = 58

@@ -23,7 +23,7 @@
 	sdf -1, -1
 	msg 8, 9, -1
 	pic 0, 4
-	ex1 0, -1, -1
+	ex1 1, -1, -1
 	ex2 0, -1, -1
 	goto 4
 @damage = 4
@@ -72,14 +72,14 @@
 	sdf -1, -1
 	msg 26, -1, -1
 	pic 0, 4
-	ex1 0, -1, -1
+	ex1 1, -1, -1
 	ex2 0, -1, -1
 	goto -1
 @block-move = 11
 	sdf -1, -1
 	msg 27, 28, -1
 	pic 0, 4
-	ex1 0, -1, -1
+	ex1 1, -1, -1
 	ex2 0, -1, -1
 	goto 12
 @damage = 12
@@ -226,7 +226,7 @@
 	sdf -1, -1
 	msg 39, -1, -1
 	pic 0, 4
-	ex1 0, -1, -1
+	ex1 1, -1, -1
 	ex2 0, -1, -1
 	goto -1
 @once-set-sdf = 33
@@ -387,7 +387,7 @@
 	sdf -1, -1
 	msg -1, -1, -1
 	pic 0, 4
-	ex1 0, -1, -1
+	ex1 1, -1, -1
 	ex2 0, -1, -1
 	goto -1
 @change-ter = 56
