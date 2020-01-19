@@ -194,7 +194,6 @@ void init_boe(int argc, char* argv[]) {
 	init_screen_locs();
 	init_startup();
 	flushingInput = true;
-	show_logo();
 	// Hidden preference to hide the startup logo - should be kept hidden
 	if(get_bool_pref("ShowStartupLogo", true))
 		show_logo();
