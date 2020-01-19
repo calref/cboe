@@ -45,7 +45,6 @@ short current_active_pc = 0;
 bool All_Done = false;
 sf::Event event;
 sf::RenderWindow mainPtr;
-bool gInBackground = false;
 fs::path file_in_mem;
 bool party_in_scen = false;
 bool scen_items_loaded = false;

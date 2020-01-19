@@ -48,7 +48,6 @@ bool bgm_on = false,bgm_init = false;
 location store_anim_ul;
 cUniverse univ;
 
-bool gInBackground = false;
 bool flushingInput = false, ae_loading = false;
 long start_time;
 
@@ -198,8 +197,7 @@ void Handle_One_Event() {
 	through_sending();
 	Handle_Update();
 	
-	if((animTimer.getElapsedTime().asMilliseconds() >= fortyTicks) && (overall_mode != MODE_STARTUP) && (anim_onscreen) && get_bool_pref("DrawTerrainAnimation", true)
-	   && (!gInBackground)) {
+	if((animTimer.getElapsedTime().asMilliseconds() >= fortyTicks) && (overall_mode != MODE_STARTUP) && (anim_onscreen) && get_bool_pref("DrawTerrainAnimation", true)) {
 		animTimer.restart();
 		draw_terrain();
 	}
@@ -247,11 +245,10 @@ void Handle_One_Event() {
 		case sf::Event::GainedFocus:
 			Handle_Update();
 			makeFrontWindow(mainPtr);
+			// fallthru
+
 		case sf::Event::MouseMoved:
-			if(!gInBackground) {
-				location where(event.mouseMove.x, event.mouseMove.y);
-				change_cursor(where);
-			}
+			change_cursor({event.mouseMove.x, event.mouseMove.y});
 			break;
 			
 		case sf::Event::MouseWheelMoved:
