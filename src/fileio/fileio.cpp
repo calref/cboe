@@ -73,7 +73,11 @@ void init_directories(const char* exec_path) {
 	std::cerr << "Testing cerr" << std::endl;
 	sf::err().rdbuf(std::cerr.rdbuf());
 #endif
-	std::cout << progDir << std::endl;
+	// Now print all the paths
+	std::cout << "Working directory: " << fs::current_path() << std::endl;
+	std::cout << "Program directory: " << progDir << std::endl;
+	std::cout << "Scenario directory: " << scenDir << std::endl;
+	std::cout << "Temporary directory: " << tempDir << std::endl;
 }
 
 void check_for_intel() {
