@@ -310,11 +310,14 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 				ex1a += 30;
 			break;
 		case 4: // Secret passage
-		case 11: // Can't enter
-		case 26: // Wandering will fight
 			type = eSpecType::CANT_ENTER;
 			ex1a = 0;
 			ex2a = (old.type == 4);
+			break;
+		case 11: // Can't enter
+		case 26: // Wandering will fight
+			type = eSpecType::CANT_ENTER;
+			ex1a = 1;
 			break;
 		case 171: case 226: // Change terrain (town/outdoor)
 			type = eSpecType::CHANGE_TER;
