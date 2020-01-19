@@ -1169,6 +1169,8 @@ void cUniverse::exportGraphics() {
 	for(mon_num_t monst : party.imprisoned_monst) {
 		if(monst > 0 && monst < scenario.scen_monsters.size())
 			check_monst(scenario.scen_monsters[monst]);
+		else if(monst >= 10000 && monst - 10000 < party.summons.size())
+			check_monst(party.summons[monst - 10000]);
 	}
 	// And then, just add all the graphics, and update references to them
 	for(auto pic : update_pcs) {
