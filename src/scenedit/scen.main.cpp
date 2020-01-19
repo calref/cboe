@@ -25,6 +25,7 @@
 #include "choicedlog.hpp"
 #include "scen.menus.hpp"
 #include "res_image.hpp"
+#include "prefs.hpp"
 
 /* Globals */
 bool  All_Done = false;
@@ -101,7 +102,7 @@ static void init_sbar(std::shared_ptr<cScrollbar>& sbar, rectangle rect, int pgS
 void init_scened(int argc, char* argv[]) {
 	init_directories(argv[0]);
 	init_menubar();
-	// TODO: Sync and load prefs
+	sync_prefs();
 	init_shaders();
 	init_tiling();
 	init_snd_tool();
@@ -151,7 +152,8 @@ void init_scened(int argc, char* argv[]) {
 		load_graphics();
 		cDialog::init();
 	});
-	run_startup_g();
+	if(get_bool_pref("ShowStartupLogo", true))
+		run_startup_g();
 	init_thread.join();
 	set_cursor(sword_curs);
 	

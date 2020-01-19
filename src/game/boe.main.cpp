@@ -178,6 +178,10 @@ void init_boe(int argc, char* argv[]) {
 	init_startup();
 	flushingInput = true;
 	show_logo();
+	// Hidden preference to hide the startup logo - should be kept hidden
+	if(get_bool_pref("ShowStartupLogo", true))
+		show_logo();
+	// The preference to hide the startup splash is exposed however.
 	if(get_bool_pref("ShowStartupSplash", true))
 		plop_fancy_startup();
 	
