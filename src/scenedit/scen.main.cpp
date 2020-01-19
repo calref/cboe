@@ -126,35 +126,32 @@ void init_scened(int argc, char* argv[]) {
 	mainPtr.display();
 	
 	set_cursor(watch_curs);
-	boost::thread init_thread([]() {
-		check_for_intel();
-		srand(time(nullptr));
+	check_for_intel();
+	srand(time(nullptr));
 		
-		cen_x = 18;
-		cen_y = 18;
+	cen_x = 18;
+	cen_y = 18;
 		
-		right_sbar_rect.top = RIGHT_AREA_UL_Y - 1;
-		right_sbar_rect.left = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1 - 16;
-		right_sbar_rect.bottom = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT + 1;
-		right_sbar_rect.right = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1;
-		rectangle pal_sbar_rect = terrain_buttons_rect;
-		pal_sbar_rect.offset(RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
-		pal_sbar_rect.left = pal_sbar_rect.right - 16;
-		pal_sbar_rect.height() = 17 * 16;
+	right_sbar_rect.top = RIGHT_AREA_UL_Y - 1;
+	right_sbar_rect.left = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1 - 16;
+	right_sbar_rect.bottom = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT + 1;
+	right_sbar_rect.right = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1;
+	rectangle pal_sbar_rect = terrain_buttons_rect;
+	pal_sbar_rect.offset(RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
+	pal_sbar_rect.left = pal_sbar_rect.right - 16;
+	pal_sbar_rect.height() = 17 * 16;
 		
-		init_sbar(right_sbar, right_sbar_rect, NRSONPAGE - 1);
-		init_sbar(pal_sbar, pal_sbar_rect, 16);
-		init_lb();
-		init_rb();
+	init_sbar(right_sbar, right_sbar_rect, NRSONPAGE - 1);
+	init_sbar(pal_sbar, pal_sbar_rect, 16);
+	init_lb();
+	init_rb();
 	
-		Set_up_win();
-		init_screen_locs();
-		load_graphics();
-		cDialog::init();
-	});
+	Set_up_win();
+	init_screen_locs();
+	load_graphics();
+	cDialog::init();
 	if(get_bool_pref("ShowStartupLogo", true))
 		run_startup_g();
-	init_thread.join();
 	set_cursor(sword_curs);
 	
 	cDialog::defaultBackground = cDialog::BG_LIGHT;
