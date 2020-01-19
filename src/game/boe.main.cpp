@@ -117,8 +117,25 @@ int main(int argc, char* argv[]) {
 		
 		menu_activate();
 		restore_cursor();
-		while(!All_Done)
-			Handle_One_Event();
+		// As of year 2020, the game is causing too high CPU load on modern CPUs (i7-7700HQ), but due
+		// to mistakes in architecture we cannot simply use SFML's native framerate capping
+		// mechanism (setFramerateLimit), so we have to make our own.
+		//
+		// Note that due to the fact that various underlying pieces of code redraw, redisplay and
+		// pause the game as they see fit, this is not exactly framerate capping.
+		//     ~xq
+		sf::Clock framerate_clock;
+		const sf::Int64 desired_microseconds_per_frame { 1000000 / 60}; // us / FPS
+		while(!All_Done) {
+			// If this call indicates that it did something expensive by returning true,
+			// we do the performance capping. The logic here is that we do not want to
+			// do expensive things too many times per second.
+			//     ~xq
+			if(!Handle_One_Event()) continue;
+			const sf::Int64 remaining_time_budget = desired_microseconds_per_frame - framerate_clock.getElapsedTime().asMicroseconds();
+			if(remaining_time_budget > 0) sf::sleep(sf::microseconds(remaining_time_budget));
+			framerate_clock.restart();
+		}
 		
 		close_program();
 		return 0;
@@ -194,12 +211,12 @@ void init_boe(int argc, char* argv[]) {
 	showMenuBar();
 }
 
-void Handle_One_Event() {
+// Return true if we redrew the screen
+bool Handle_One_Event() {
 	static const long twentyTicks = time_in_ticks(20).asMilliseconds();
 	static const long fortyTicks = time_in_ticks(40).asMilliseconds();
 	
 	through_sending();
-	Handle_Update();
 	
 	if((animTimer.getElapsedTime().asMilliseconds() >= fortyTicks) && (overall_mode != MODE_STARTUP) && (anim_onscreen) && get_bool_pref("DrawTerrainAnimation", true)) {
 		animTimer.restart();
@@ -226,18 +243,18 @@ void Handle_One_Event() {
 		}
 		flushingInput = false;
 		redraw_screen(REFRESH_NONE);
-		return;
+		return true;
 	}
 	switch(event.type) {
 		case sf::Event::KeyPressed:
-			if(flushingInput) return;
+			if(flushingInput) return false;
 			if(!(event.key.*systemKey))
 				handle_keystroke(event);
 			
 			break;
 			
 		case sf::Event::MouseButtonPressed:
-			if(flushingInput) return;
+			if(flushingInput) return false;
 			Mouse_Pressed();
 			break;
 			
@@ -249,14 +266,16 @@ void Handle_One_Event() {
 		case sf::Event::GainedFocus:
 			Handle_Update();
 			makeFrontWindow(mainPtr);
-			// fallthru
+			change_cursor({event.mouseMove.x, event.mouseMove.y});
+			return true;
 
 		case sf::Event::MouseMoved:
 			change_cursor({event.mouseMove.x, event.mouseMove.y});
-			break;
+			flushingInput = false;
+			return false;
 			
 		case sf::Event::MouseWheelMoved:
-			if(flushingInput) return;
+			if(flushingInput) return false;
 			handle_scroll(event);
 			break;
 			
@@ -291,6 +310,7 @@ void Handle_One_Event() {
 			break; // There's several events we don't need to handle at all
 	}
 	flushingInput = false; // TODO: Could there be a case when the key and mouse input that needs to be flushed has other events interspersed?
+	return true;
 }
 
 

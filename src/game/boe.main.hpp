@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 
 int main(int argc, char* argv[]);
-void Handle_One_Event();
+bool Handle_One_Event();
 void Handle_Update();
 void Mouse_Pressed();
 void close_program();
