@@ -8,7 +8,7 @@ opts = Variables(None, ARGUMENTS)
 
 opts.Add(EnumVariable('OS', "Target platform", str(Platform()), ('darwin', 'win32', 'posix')))
 opts.Add('toolset', "Toolset to pass to the SCons builder", 'default')
-opts.Add(BoolVariable('debug', "Build with debug symbols", False))
+opts.Add(BoolVariable('debug', "Build with debug symbols and no optimization", False))
 opts.Add(EnumVariable('bits', "Build for 32-bit or 64-bit architectures", '32', ('32', '64')))
 
 # Compiler configuration
@@ -47,7 +47,7 @@ env.VariantDir('#build/obj', 'src')
 env.VariantDir('#build/obj/test', 'test')
 
 if env['debug']:
-   env.Append(CCFLAGS=['-g'])
+   env.Append(CCFLAGS=['-g','-o0'])
 
 # This command generates the header with git revision information
 def gen_gitrev(env, target, source):
