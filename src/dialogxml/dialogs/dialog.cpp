@@ -387,13 +387,9 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	// TODO: The introduction of the static topWindow means I may be able to use this instead of parent->win; do I still need parent?
 	sf::RenderWindow* parentWin = &(parent ? parent->win : mainPtr);
 	cursor_type former_curs = Cursor::current;
-	set_cursor(sword_curs);
-	using kb = sf::Keyboard;
-	kb::Key k;
-	cKey key, pendingKey = {true};
-	sf::Event currentEvent;
-	std::string itemHit = "";
 	dialogNotToast = true;
+	set_cursor(sword_curs);
+	sf::Event currentEvent;
 	// Focus the first text field, if there is one
 	if(!tabOrder.empty()) {
 		auto iter = std::find_if(tabOrder.begin(), tabOrder.end(), [](std::pair<std::string,cTextField*> ctrl){
@@ -421,153 +417,184 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	ModalSession dlog(win, *parentWin);
 	if(onopen) onopen(*this);
 	animTimer.restart();
-	while(dialogNotToast){
-		draw();
-		if(!win.pollEvent(currentEvent)) continue;
-		location where;
-		switch(currentEvent.type){
-			case sf::Event::KeyPressed:
-				k = currentEvent.key.code;
-				switch(k){
-					case kb::Up:
-						key.spec = true;
-						key.k = key_up;
-						break;
-					case kb::Right:
-						key.spec = true;
-						key.k = key_right;
-						break;
-					case kb::Left:
-						key.spec = true;
-						key.k = key_left;
-						break;
-					case kb::Down:
-						key.spec = true;
-						key.k = key_down;
-						break;
-					case kb::Escape:
-						key.spec = true;
-						key.k = key_esc;
-						break;
-					case kb::Return: // TODO: Also enter (keypad)
-						key.spec = true;
-						key.k = key_enter;
-						break;
-					case kb::BackSpace:
-						key.spec = true;
-						key.k = key_bsp;
-						break;
-					case kb::Delete:
-						key.spec = true;
-						key.k = key_del;
-						break;
-					case kb::Tab:
-						key.spec = true;
-						key.k = key_tab;
-						break;
-					case kb::Insert:
-						key.spec = true;
-						key.k = key_insert;
-						break;
-					case kb::F1:
-						key.spec = true;
-						key.k = key_help;
-						break;
-					case kb::Home:
-						key.spec = true;
-						key.k = key_home;
-						break;
-					case kb::End:
-						key.spec = true;
-						key.k = key_end;
-						break;
-					case kb::PageUp:
-						key.spec = true;
-						key.k = key_pgup;
-						break;
-					case kb::PageDown:
-						key.spec = true;
-						key.k = key_pgdn;
-						break;
-					case kb::LShift:
-					case kb::RShift:
-					case kb::LAlt:
-					case kb::RAlt:
-					case kb::LControl:
-					case kb::RControl:
-					case kb::LSystem:
-					case kb::RSystem:
-						continue;
-					default:
-						key.spec = false;
-						key.c = keyToChar(k, false);
-						break;
-				}
-				key.mod = mod_none;
-				if(currentEvent.key.*systemKey)
-					key.mod += mod_ctrl;
-				if(currentEvent.key.shift) key.mod += mod_shift;
-				if(currentEvent.key.alt) key.mod += mod_alt;
-				process_keystroke(key);
-				// Now check for focused fields.
-				if(currentFocus.empty()) break;
-				// If it's a tab, handle tab order
-				if(key.spec && key.k == key_tab){
-					// Could use key.mod, but this is slightly easier.
-					if(currentEvent.key.shift)
-						handleTabOrder(currentFocus, tabOrder.rbegin(), tabOrder.rend());
-					else handleTabOrder(currentFocus, tabOrder.begin(), tabOrder.end());
-				} else {
-					// If it's a character key, and the system key (control/command) is not pressed,
-					// we have an upcoming TextEntered event which contains more information.
-					// Otherwise, handle it right away. But never handle enter or escape.
-					if((key.spec && key.k != key_enter && key.k != key_esc) || mod_contains(key.mod, mod_ctrl))
-						dynamic_cast<cTextField*>(controls[currentFocus])->handleInput(key);
-					pendingKey = key;
-					if(key.k != key_enter && key.k != key_esc) itemHit = "";
-				}
-				break;
-			case sf::Event::TextEntered:
-				if(!pendingKey.spec && !currentFocus.empty()) {
-					pendingKey.c = currentEvent.text.unicode;
-					if(pendingKey.c != '\t')
-						dynamic_cast<cTextField*>(controls[currentFocus])->handleInput(pendingKey);
-				}
-				break;
-			case sf::Event::MouseButtonPressed:
-				key.mod = mod_none;
-				if(kb::isKeyPressed(kb::LControl)) key.mod += mod_ctrl;
-				if(kb::isKeyPressed(kb::RControl)) key.mod += mod_ctrl;
-				if(kb::isKeyPressed(kb::LSystem)) key.mod += mod_ctrl;
-				if(kb::isKeyPressed(kb::RSystem)) key.mod += mod_ctrl;
-				if(kb::isKeyPressed(kb::LAlt)) key.mod += mod_alt;
-				if(kb::isKeyPressed(kb::RAlt)) key.mod += mod_alt;
-				if(kb::isKeyPressed(kb::LShift)) key.mod += mod_shift;
-				if(kb::isKeyPressed(kb::RShift)) key.mod += mod_shift;
-				where = {currentEvent.mouseButton.x, currentEvent.mouseButton.y};
-				process_click(where, key.mod);
-				break;
-			default: // To silence warning of unhandled enum values
-				break;
-			case sf::Event::GainedFocus:
-			case sf::Event::MouseMoved:
-				bool inField = false;
-				for(auto& ctrl : controls) {
-					if(ctrl.second->getType() == CTRL_FIELD && ctrl.second->getBounds().contains(currentEvent.mouseMove.x, currentEvent.mouseMove.y)) {
-						set_cursor(text_curs);
-						inField = true;
-						break;
-					}
-				}
-				if(!inField) set_cursor(sword_curs);
-				break;
-		}
-	}
+
+	handle_events();
+
 	win.setVisible(false);
 	while(parentWin->pollEvent(currentEvent));
 	set_cursor(former_curs);
 	topWindow = formerTop;
 	makeFrontWindow(*parentWin);
+}
+
+// This method is a main event event loop of the dialog.
+void cDialog::handle_events() {
+	sf::Event currentEvent;
+
+	sf::Clock framerate_clock;
+	const sf::Int64 desired_microseconds_per_frame { 1000000 / 60 }; // us / FPS
+
+	while(dialogNotToast) {
+		while(win.pollEvent(currentEvent)) handle_one_event(currentEvent);
+
+		// Ideally, this should be the only draw call that is done in a cycle.
+		draw();
+
+		// Prevent the loop from executing too fast.
+		const sf::Int64 remaining_time_budget = desired_microseconds_per_frame - framerate_clock.getElapsedTime().asMicroseconds();
+		if(remaining_time_budget > 0) sf::sleep(sf::microseconds(remaining_time_budget));
+		framerate_clock.restart();
+	}
+}
+
+// This method handles one event received by the dialog.
+void cDialog::handle_one_event(const sf::Event& currentEvent) {
+	using kb = sf::Keyboard;
+
+	cKey key;
+	// HACK: This needs to be stored between consecutive invocations of this function
+	static cKey pendingKey = {true};
+	std::string itemHit = "";
+	location where;
+
+	switch(currentEvent.type) {
+		case sf::Event::KeyPressed:
+			switch(currentEvent.key.code){
+				case kb::Up:
+					key.spec = true;
+					key.k = key_up;
+					break;
+				case kb::Right:
+					key.spec = true;
+					key.k = key_right;
+					break;
+				case kb::Left:
+					key.spec = true;
+					key.k = key_left;
+					break;
+				case kb::Down:
+					key.spec = true;
+					key.k = key_down;
+					break;
+				case kb::Escape:
+					key.spec = true;
+					key.k = key_esc;
+					break;
+				case kb::Return: // TODO: Also enter (keypad)
+					key.spec = true;
+					key.k = key_enter;
+					break;
+				case kb::BackSpace:
+					key.spec = true;
+					key.k = key_bsp;
+					break;
+				case kb::Delete:
+					key.spec = true;
+					key.k = key_del;
+					break;
+				case kb::Tab:
+					key.spec = true;
+					key.k = key_tab;
+					break;
+				case kb::Insert:
+					key.spec = true;
+					key.k = key_insert;
+					break;
+				case kb::F1:
+					key.spec = true;
+					key.k = key_help;
+					break;
+				case kb::Home:
+					key.spec = true;
+					key.k = key_home;
+					break;
+				case kb::End:
+					key.spec = true;
+					key.k = key_end;
+					break;
+				case kb::PageUp:
+					key.spec = true;
+					key.k = key_pgup;
+					break;
+				case kb::PageDown:
+					key.spec = true;
+					key.k = key_pgdn;
+					break;
+				case kb::LShift:
+				case kb::RShift:
+				case kb::LAlt:
+				case kb::RAlt:
+				case kb::LControl:
+				case kb::RControl:
+				case kb::LSystem:
+				case kb::RSystem:
+					return;
+				default:
+					key.spec = false;
+					key.c = keyToChar(currentEvent.key.code, false);
+					break;
+			}
+			key.mod = mod_none;
+			if(currentEvent.key.*systemKey)
+				key.mod += mod_ctrl;
+			if(currentEvent.key.shift) key.mod += mod_shift;
+			if(currentEvent.key.alt) key.mod += mod_alt;
+			process_keystroke(key);
+			// Now check for focused fields.
+			if(currentFocus.empty()) break;
+			// If it's a tab, handle tab order
+			if(key.spec && key.k == key_tab) {
+				// Could use key.mod, but this is slightly easier.
+				if(currentEvent.key.shift) {
+					handleTabOrder(currentFocus, tabOrder.rbegin(), tabOrder.rend());
+				} else {
+					handleTabOrder(currentFocus, tabOrder.begin(), tabOrder.end());
+				}
+			} else {
+				// If it's a character key, and the system key (control/command) is not pressed,
+				// we have an upcoming TextEntered event which contains more information.
+				// Otherwise, handle it right away. But never handle enter or escape.
+				if((key.spec && key.k != key_enter && key.k != key_esc) || mod_contains(key.mod, mod_ctrl))
+					dynamic_cast<cTextField*>(controls[currentFocus])->handleInput(key);
+				pendingKey = key;
+				if(key.k != key_enter && key.k != key_esc) itemHit = "";
+			}
+			break;
+		case sf::Event::TextEntered:
+			if(!pendingKey.spec && !currentFocus.empty()) {
+				pendingKey.c = currentEvent.text.unicode;
+				if(pendingKey.c != '\t')
+					dynamic_cast<cTextField*>(controls[currentFocus])->handleInput(pendingKey);
+			}
+			break;
+		case sf::Event::MouseButtonPressed:
+			key.mod = mod_none;
+			if(kb::isKeyPressed(kb::LControl)) key.mod += mod_ctrl;
+			if(kb::isKeyPressed(kb::RControl)) key.mod += mod_ctrl;
+			if(kb::isKeyPressed(kb::LSystem)) key.mod += mod_ctrl;
+			if(kb::isKeyPressed(kb::RSystem)) key.mod += mod_ctrl;
+			if(kb::isKeyPressed(kb::LAlt)) key.mod += mod_alt;
+			if(kb::isKeyPressed(kb::RAlt)) key.mod += mod_alt;
+			if(kb::isKeyPressed(kb::LShift)) key.mod += mod_shift;
+			if(kb::isKeyPressed(kb::RShift)) key.mod += mod_shift;
+			where = {currentEvent.mouseButton.x, currentEvent.mouseButton.y};
+			process_click(where, key.mod);
+			break;
+		default: // To silence warning of unhandled enum values
+			break;
+		case sf::Event::GainedFocus:
+		case sf::Event::MouseMoved:
+			bool inField = false;
+			for(auto& ctrl : controls) {
+				if(ctrl.second->getType() == CTRL_FIELD && ctrl.second->getBounds().contains(currentEvent.mouseMove.x, currentEvent.mouseMove.y)) {
+					set_cursor(text_curs);
+					inField = true;
+					break;
+				}
+			}
+			if(!inField) set_cursor(sword_curs);
+			break;
+	}
 }
 
 template<typename Iter> void cDialog::handleTabOrder(string& itemHit, Iter begin, Iter end) {
