@@ -334,3 +334,10 @@ void set_up_apple_events(int argc, char* argv[]) {
 			post_load();
 	}
 }
+
+bool menuBarProcessEvent(const sf::Event&) {
+	return false;
+}
+
+void drawMenuBar() {
+}

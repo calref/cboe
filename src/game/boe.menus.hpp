@@ -22,6 +22,12 @@ void menu_activate();
 void hideMenuBar();
 void showMenuBar();
 
+// If a menubar runs inside our own event loop, we need ways to supply it with events and to draw it.
+namespace sf { class Event; };
+// Return true if event has been consumed by the menubar.
+bool menuBarProcessEvent(const sf::Event&);
+void drawMenuBar();
+
 enum class eMenu {
 	NONE, ABOUT, PREFS, QUIT,
 	FILE_NEW, FILE_OPEN, FILE_ABORT, FILE_SAVE, FILE_SAVE_AS,

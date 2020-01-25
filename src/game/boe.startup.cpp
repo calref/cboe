@@ -128,7 +128,7 @@ bool handle_startup_press(location the_point) {
 }
 
 void handle_splash_events() {
-	extern sf::Event event;
+	sf::Event event;
 	if(!mainPtr.pollEvent(event)) return;
 	if(event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)
 		set_cursor(sword_curs);

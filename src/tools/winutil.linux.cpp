@@ -4,6 +4,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Image.hpp>
 #include <sstream>
+#include <cstdlib>
 #include <X11/Xlib.h>
 
 #include <sys/utsname.h>
@@ -201,6 +202,7 @@ void beep() {
 }
 
 void launchURL(std::string url) {
+	system((std::string { "xdg-open " } + url).c_str());
 }
 
 // TODO: Implement modal session.
@@ -216,5 +218,7 @@ ModalSession::~ModalSession() {
 }
 
 int getMenubarHeight() {
-	return 1;
+	// TODO: somehow get this constant in here from boe.consts.hpp
+	// return MENUBAR_HEIGHT;
+	return 20;
 }

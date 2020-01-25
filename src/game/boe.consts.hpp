@@ -147,4 +147,15 @@ enum eGuiArea {
 	MAX_eGuiArea // keep last
 };
 
+// height of the menubar in pixels
+const int MENUBAR_HEIGHT = 20;
+
+// amount of player-castable spells
+const int NUM_MAGE_SPELLS = 62;
+const int NUM_PRIEST_SPELLS = 62;
+
+// spell levels
+const int MAGE_SPELL_LEVEL_MAX = 7;
+const int PRIEST_SPELL_LEVEL_MAX = 7;
+
 #endif

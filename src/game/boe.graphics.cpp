@@ -132,60 +132,42 @@ void adjust_window_mode() {
 	winSettings.stencilBits = 1;
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 	hideMenuBar();
-	int menubarHeight = getMenubarHeight();
 	bool firstTime = !mainPtr.isOpen();
 	float ui_scale = get_float_pref("UIScale", 1.0);
 	if(ui_scale < 0.1) ui_scale = 1.0;
 	float width = 605 * ui_scale, height = 430 * ui_scale;
-	location ul;
 	
 	// TODO: Make display_mode an enum
 	// 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
 	int mode = get_int_pref("DisplayMode");
 	if(mode == 5) {
-		int winHeight = height + menubarHeight;
+		// Increase window height to make room for the menubar
+		int winHeight = height;
+#ifndef _WIN32
+		// Not on Windows, for some reason
+		winHeight += getMenubarHeight();
+#endif
+
 		mainPtr.create(sf::VideoMode(width, winHeight, 32), "Blades of Exile", sf::Style::Titlebar | sf::Style::Close, winSettings);
+
+		// Center the small window on the desktop
 		mainPtr.setPosition({static_cast<int>((desktop.width - width) / 2), static_cast<int>((desktop.height - height) / 2)});
 	} else {
 		mainPtr.create(desktop, "Blades of Exile", sf::Style::None, winSettings);
 		mainPtr.setPosition({0,0});
 	}
-	
-	rectangle windRect(mainPtr);
-#ifdef _WIN32
-	windRect.height() -= menubarHeight;
-#endif
-	if(mode == 0) {
-		ul.x = (windRect.right - width) / 2;
-		ul.y = (windRect.bottom - height) / 2;
-	} else if(mode < 5) {
-		if(mode == 1 || mode == 3)
-			ul.x = 10;
-		else ul.x = windRect.right - width - 10;
-		if(mode == 1 || mode == 2)
-			ul.y = 28
-#ifndef _WIN32
-				+ menubarHeight
-#endif
-			;
-		else ul.y = windRect.bottom - height - 28;
-	}
-	
-	// Initialize the viewport for the game UI
+
+	// Initialize the view
 	mainView.setSize(width, height);
 	mainView.setCenter(width / 2, height / 2);
-	sf::FloatRect mainPort;
-	mainPort.left = float(ul.x) / windRect.width();
-	mainPort.top = float(ul.y) / windRect.height();
-	mainPort.width = ui_scale * width / windRect.width();
-	mainPort.height = ui_scale * height / windRect.height();
+
+	sf::FloatRect mainPort = compute_viewport(mainPtr, mode, ui_scale, width, height);
 	mainView.setViewport(mainPort);
 	
 #ifndef __APPLE__ // This overrides Dock icon on OSX, which isn't what we want at all
 	ImageRsrc& icon = *ResMgr::get<ImageRsrc>("icon");
 	mainPtr.setIcon(icon.getSize().x, icon.getSize().y, icon.copyToImage().getPixelsPtr());
 #endif
-	if(!firstTime) redraw_screen(REFRESH_NONE);
 	if(text_sbar) {
 		text_sbar->relocate({560,285});
 		item_sbar->relocate({560,148});
@@ -195,6 +177,70 @@ void adjust_window_mode() {
 	}
 	init_menubar();
 	showMenuBar();
+}
+
+// Viewport is applied to the View and designates where in the OS window the source of the View is drawn.
+sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, int mode, float ui_scale, float width, float height) {
+
+	sf::FloatRect viewport;
+
+	// Dimensions of the OS window.
+	rectangle windRect { mainPtr };
+
+	// This is an additional offset between the "logical" top of the window an the UI.
+	// On Windows and Mac no offset is needed because the menubar is not a part of the mainPtr, but
+	// on Linux it is.
+	int os_specific_y_offset =
+#if defined(SFML_SYSTEM_WINDOWS) || defined(SFML_SYSTEM_MAC)
+		0;
+#else
+		getMenubarHeight();
+#endif
+
+	// Width and height: how large the viewport is. They seem to be calculated
+	// in terms of *source* dimensions, with values above 1 resulting in an upscale.
+	viewport.width  = ui_scale * width / windRect.width();
+	viewport.height = ui_scale * height / windRect.height();
+
+	// Buffer in pixels between ui edge and window edge. There seem to be
+	// implicit (builtin) buffers the top and bottom of the UI so this is just for the sides.
+	int const extra_horizontal_buffer { 7 };
+
+	// Left and top: where the viewport is.
+	// Left and top seem to be in terms *target* dimensions,
+	// so top = 0.5 with window height 450 means 225 px offset from the top.
+	if(mode == 0) {
+		// Fullscreen centered
+		viewport.left = float((windRect.width() - width) / 2) / windRect.width();
+		viewport.top  = float((windRect.height() - height - os_specific_y_offset) / 2)/ windRect.height();
+	} else if(mode == 1) {
+		// Fullscreen top left
+		viewport.left = float(extra_horizontal_buffer) / windRect.width();
+		viewport.top  = float(os_specific_y_offset) / windRect.height();
+	} else if(mode == 2) {
+		// Fullscreen top right
+		viewport.left = float(windRect.right - width - extra_horizontal_buffer) / windRect.width();
+		viewport.top  = float(os_specific_y_offset) / windRect.height();
+	} else if(mode == 3) {
+		// Fullscreen bottom left
+		viewport.left = float(extra_horizontal_buffer) / windRect.width();
+		// DIRTY HACK: windRect in fullscreen modes gives us the entire display, but at the same time
+		// there could be a windows taskbar / mac os dock / xfce taskbar / etc that consumes a part
+		// of that display, and that we do not know size of. So we need to account for that somehow,
+		// so we add 28 more pixels (this was the amount in the previous version of this code).
+		viewport.top  = float(windRect.bottom - height - os_specific_y_offset - 28) / windRect.height();
+	} else if(mode == 4) {
+		// Fullscreen bottom right
+		viewport.left = float(windRect.right - width - extra_horizontal_buffer) / windRect.width();
+		// DIRTY HACK: same as for mode 3
+		viewport.top  = float(windRect.bottom - height - os_specific_y_offset - 28) / windRect.height();
+	} else if(mode == 5) {
+		// Small windowed
+		viewport.left = 0;
+		viewport.top  = float(os_specific_y_offset) / windRect.height();
+	}
+
+	return viewport;
 }
 
 void init_startup() {
@@ -254,7 +300,7 @@ void draw_startup_stats() {
 		frame_rect.offset(-9,10);
 		// TODO: Maybe I should rename that variable
 		::frame_rect(mainPtr, frame_rect, sf::Color::White);
-		
+
 		to_rect.offset(221,37);
 		win_draw_string(mainPtr,to_rect,"Your party:",eTextMode::WRAP,style);
 		style.pointSize = 12;
@@ -265,7 +311,7 @@ void draw_startup_stats() {
 			pc_rect.right = pc_rect.left + 300;
 			pc_rect.bottom = pc_rect.top + 79;
 			pc_rect.offset(60 + 232 * (i / 3) - 9,95 + 45 * (i % 3));
-			
+
 			if(univ.party[i].main_status != eMainStatus::ABSENT) {
 				to_rect = party_to;
 				to_rect.offset(pc_rect.left,pc_rect.top);
@@ -464,11 +510,14 @@ void load_main_screen() {
 
 void redraw_screen(int refresh) {
 	// We may need to update some of the offscreen textures
-	if(refresh & REFRESH_TERRAIN) draw_terrain(1);
-	if(refresh & REFRESH_STATS) put_pc_screen();
-	if(refresh & REFRESH_INVEN) put_item_screen(stat_window);
-	if(refresh & REFRESH_TRANS) print_buf();
-	
+	if(overall_mode != MODE_STARTUP) {
+		if(refresh & REFRESH_TERRAIN) draw_terrain(1);
+		if(refresh & REFRESH_STATS) put_pc_screen();
+		if(refresh & REFRESH_INVEN) put_item_screen(stat_window);
+		if(refresh & REFRESH_TRANS) print_buf();
+	}
+
+	// Temporarily switch to the original view to fill in the background
 	mainPtr.setView(mainPtr.getDefaultView());
 	put_background();
 	mainPtr.setView(mainView);
@@ -507,6 +556,9 @@ void redraw_screen(int refresh) {
 	shop_sbar->draw();
 	done_btn->draw();
 	help_btn->draw();
+
+	drawMenuBar();
+
 	mainPtr.display();
 }
 
@@ -762,7 +814,6 @@ void draw_terrain(short	mode) {
 	sector_p_in.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
 	sector_p_in.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 	
-	anim_ticks++;
 	anim_onscreen = false;
 	
 	if(is_town())

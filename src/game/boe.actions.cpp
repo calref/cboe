@@ -964,7 +964,7 @@ static void handle_party_death() {
 	}
 }
 
-bool handle_action(sf::Event event) {
+bool handle_action(const sf::Event& event) {
 	short s1,s2,s3;
 	long item_hit;
 	bool are_done = false;
@@ -1573,7 +1573,7 @@ void initiate_outdoor_combat(short i) {
 	draw_terrain();
 }
 
-bool handle_keystroke(sf::Event& event){
+bool handle_keystroke(const sf::Event& event){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
 	std::ostringstream sout;
@@ -2151,7 +2151,7 @@ bool handle_keystroke(sf::Event& event){
 	return are_done;
 }
 
-bool handle_scroll(sf::Event& event) {
+bool handle_scroll(const sf::Event& event) {
 	rectangle status_panel_rect = {0,0,144,271}, text_panel_rect = {0,0,138,271};
 	rectangle world_screen = win_to_rects[WINRECT_TERVIEW];
 	world_screen.inset(13, 13);
