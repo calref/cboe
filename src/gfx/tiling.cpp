@@ -101,8 +101,8 @@ void init_tiling() {
 	bg_rects[7].top += 32;
 	
 	rectangle bw_rect = {0,0,8,8};
-	sf::Texture& bg_gworld = *ResMgr::get<ImageRsrc>("pixpats");
-	sf::Texture& bw_gworld = *ResMgr::get<ImageRsrc>("bwpats");
+	sf::Texture& bg_gworld = *ResMgr::graphics.get("pixpats");
+	sf::Texture& bw_gworld = *ResMgr::graphics.get("bwpats");
 	for(int i = 0; i < 21; i++) {
 		if(i < 6) {
 			bw_pats[i] = prepareForTiling(bw_gworld, bw_rect);

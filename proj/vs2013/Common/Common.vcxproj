@@ -214,7 +214,6 @@
     <ClCompile Include="..\..\..\src\fileio\fileio_scen.cpp" />
     <ClCompile Include="..\..\..\src\fileio\gzstream\gzstream.cpp" />
     <ClCompile Include="..\..\..\src\fileio\map_parse.cpp" />
-    <ClCompile Include="..\..\..\src\fileio\resmgr\restypes.cpp" />
     <ClCompile Include="..\..\..\src\fileio\special_parse.cpp" />
     <ClCompile Include="..\..\..\src\fileio\tarball.cpp" />
     <ClCompile Include="..\..\..\src\fileio\xml-parser\ticpp.cpp" />
@@ -223,6 +222,11 @@
     <ClCompile Include="..\..\..\src\fileio\xml-parser\tinyxml.cpp" />
     <ClCompile Include="..\..\..\src\fileio\xml-parser\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\..\src\fileio\xml-parser\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_cursor.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_font.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_image.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_sound.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_strings.cpp" />
     <ClCompile Include="..\..\..\src\gfx\gfxsheets.cpp" />
     <ClCompile Include="..\..\..\src\gfx\render_image.cpp" />
     <ClCompile Include="..\..\..\src\gfx\render_shapes.cpp" />

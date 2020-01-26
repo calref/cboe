@@ -1402,7 +1402,7 @@ void draw_map(bool need_refresh) {
 		else out_mode = false;
 		
 		// TODO: It could be possible to draw the entire map here and then only refresh if a spot actually changes terrain type
-		sf::Texture& small_ter_gworld = *ResMgr::get<ImageRsrc>("termap");
+		sf::Texture& small_ter_gworld = *ResMgr::graphics.get("termap");
 		for(where.x = redraw_rect.left; where.x < redraw_rect.right; where.x++)
 			for(where.y = redraw_rect.top; where.y < redraw_rect.bottom; where.y++) {
 				draw_rect = orig_draw_rect;
@@ -1428,7 +1428,7 @@ void draw_map(bool need_refresh) {
 					if(pic >= 1000) {
 						if(spec_scen_g) {
 							//print_nums(0,99,pic);
-							sf::Texture* src_gw;
+							const sf::Texture* src_gw;
 							if(drawLargeIcon) {
 								pic = pic % 1000;
 								graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic);
@@ -1445,10 +1445,10 @@ void draw_map(bool need_refresh) {
 					} else if(drawLargeIcon) {
 						if(pic >= 960) {
 							custom_from = calc_rect(4 * ((pic - 960) / 5),(pic - 960) % 5);
-							rect_draw_some_item(*ResMgr::get<ImageRsrc>("teranim"), custom_from, map_gworld, draw_rect);
+							rect_draw_some_item(*ResMgr::graphics.get("teranim"), custom_from, map_gworld, draw_rect);
 						} else {
 							int which_sheet = pic / 50;
-							sf::Texture* src_gw = ResMgr::get<ImageRsrc>("ter" + std::to_string(1 + which_sheet)).get();
+							const sf::Texture* src_gw = &ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet));
 							pic %= 50;
 							custom_from = calc_rect(pic % 10, pic / 10);
 							rect_draw_some_item(*src_gw, custom_from, map_gworld, draw_rect);
@@ -1464,7 +1464,7 @@ void draw_map(bool need_refresh) {
 					
 					if(is_out() ? univ.out->roads[where.x][where.y] : univ.town.is_road(where.x,where.y)) {
 						draw_rect.inset(1,1);
-						rect_draw_some_item(*ResMgr::get<ImageRsrc>("trim"),{8,112,12,116},map_gworld,draw_rect);
+						rect_draw_some_item(*ResMgr::graphics.get("trim"),{8,112,12,116},map_gworld,draw_rect);
 					}
 				}
 			}

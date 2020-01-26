@@ -12,7 +12,7 @@
 
 std::string get_str(std::string list, short j){
 	if(j == 0) return list;
-	StringRsrc& strings = *ResMgr::get<StringRsrc>(list);
+	const StringList& strings = *ResMgr::strings.get(list);
 	return strings[j - 1];
 }
 

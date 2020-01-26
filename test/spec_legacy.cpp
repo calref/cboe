@@ -30,7 +30,7 @@ TEST_CASE("When converting legacy special nodes (general)") {
 	legacy::special_node_type oldSpec = {0,-1,-1,0,-1,-1,-1,-1,-1,-1,-1};
 	// Fetching opcodes requires strings to be available
 	// Here we fetch them from the rsrc dir, rather than the data dir
-	ResMgr::pushPath<StringRsrc>("../rsrc/strings");
+	ResMgr::strings.pushPath("../rsrc/strings");
 	
 	oldSpec.jumpto = 12;
 	SECTION("Null Special") {
@@ -295,7 +295,7 @@ TEST_CASE("When converting legacy special nodes (general)") {
 		CHECK(newSpec.jumpto == 12);
 	}
 	// Clean up after ourselves
-	ResMgr::popPath<StringRsrc>();
+	ResMgr::strings.popPath();
 }
 
 TEST_CASE("When converting legacy special nodes (one-shot)") {
@@ -303,7 +303,7 @@ TEST_CASE("When converting legacy special nodes (one-shot)") {
 	legacy::special_node_type oldSpec = {0,-1,-1,0,-1,-1,-1,-1,-1,-1,-1};
 	// Fetching opcodes requires strings to be available
 	// Here we fetch them from the rsrc dir, rather than the data dir
-	ResMgr::pushPath<StringRsrc>("../rsrc/strings");
+	ResMgr::strings.pushPath("../rsrc/strings");
 	
 	oldSpec.sd1 = 8; oldSpec.sd2 = 7;
 	oldSpec.m1 = 4; oldSpec.m2 = 5;
@@ -481,7 +481,7 @@ TEST_CASE("When converting legacy special nodes (one-shot)") {
 		CHECK(newSpec.jumpto == 12);
 	}
 	// Clean up after ourselves
-	ResMgr::popPath<StringRsrc>();
+	ResMgr::strings.popPath();
 }
 
 TEST_CASE("When converting legacy special nodes (affect)") {
@@ -489,7 +489,7 @@ TEST_CASE("When converting legacy special nodes (affect)") {
 	legacy::special_node_type oldSpec = {0,-1,-1,0,-1,-1,-1,-1,-1,-1,-1};
 	// Fetching opcodes requires strings to be available
 	// Here we fetch them from the rsrc dir, rather than the data dir
-	ResMgr::pushPath<StringRsrc>("../rsrc/strings");
+	ResMgr::strings.pushPath("../rsrc/strings");
 	
 	oldSpec.m1 = 4; oldSpec.m2 = 5;
 	oldSpec.jumpto = 12;
@@ -761,7 +761,7 @@ TEST_CASE("When converting legacy special nodes (affect)") {
 		CHECK(newSpec.jumpto == 12);
 	}
 	// Clean up after ourselves
-	ResMgr::popPath<StringRsrc>();
+	ResMgr::strings.popPath();
 }
 
 TEST_CASE("When converting legacy special nodes (if-then)") {
@@ -769,7 +769,7 @@ TEST_CASE("When converting legacy special nodes (if-then)") {
 	legacy::special_node_type oldSpec = {0,-1,-1,0,-1,-1,-1,-1,-1,-1,-1};
 	// Fetching opcodes requires strings to be available
 	// Here we fetch them from the rsrc dir, rather than the data dir
-	ResMgr::pushPath<StringRsrc>("../rsrc/strings");
+	ResMgr::strings.pushPath("../rsrc/strings");
 	
 	oldSpec.jumpto = 12;
 	SECTION("Stuff Done Flag?") {
@@ -1035,7 +1035,7 @@ TEST_CASE("When converting legacy special nodes (if-then)") {
 		CHECK(newSpec.jumpto == 12);
 	}
 	// Clean up after ourselves
-	ResMgr::popPath<StringRsrc>();
+	ResMgr::strings.popPath();
 }
 
 TEST_CASE("When converting legacy special nodes (town)") {
@@ -1043,7 +1043,7 @@ TEST_CASE("When converting legacy special nodes (town)") {
 	legacy::special_node_type oldSpec = {0,-1,-1,0,-1,-1,-1,-1,-1,-1,-1};
 	// Fetching opcodes requires strings to be available
 	// Here we fetch them from the rsrc dir, rather than the data dir
-	ResMgr::pushPath<StringRsrc>("../rsrc/strings");
+	ResMgr::strings.pushPath("../rsrc/strings");
 	
 	oldSpec.m1 = 4; oldSpec.m2 = 5;
 	oldSpec.jumpto = 12;
@@ -1312,7 +1312,7 @@ TEST_CASE("When converting legacy special nodes (town)") {
 		CHECK(newSpec.jumpto == 12);
 	}
 	// Clean up after ourselves
-	ResMgr::popPath<StringRsrc>();
+	ResMgr::strings.popPath();
 }
 
 TEST_CASE("When converting legacy special nodes (rect)") {
@@ -1320,7 +1320,7 @@ TEST_CASE("When converting legacy special nodes (rect)") {
 	legacy::special_node_type oldSpec = {0,-1,-1,0,-1,-1,-1,-1,-1,-1,-1};
 	// Fetching opcodes requires strings to be available
 	// Here we fetch them from the rsrc dir, rather than the data dir
-	ResMgr::pushPath<StringRsrc>("../rsrc/strings");
+	ResMgr::strings.pushPath("../rsrc/strings");
 	
 	oldSpec.m1 = 4; oldSpec.m2 = 5;
 	oldSpec.pic = 1;
@@ -1608,7 +1608,7 @@ TEST_CASE("When converting legacy special nodes (rect)") {
 		CHECK(newSpec.jumpto == 12);
 	}
 	// Clean up after ourselves
-	ResMgr::popPath<StringRsrc>();
+	ResMgr::strings.popPath();
 }
 
 TEST_CASE("When converting legacy special nodes (outdoors)") {
@@ -1616,7 +1616,7 @@ TEST_CASE("When converting legacy special nodes (outdoors)") {
 	legacy::special_node_type oldSpec = {0,-1,-1,0,-1,-1,-1,-1,-1,-1,-1};
 	// Fetching opcodes requires strings to be available
 	// Here we fetch them from the rsrc dir, rather than the data dir
-	ResMgr::pushPath<StringRsrc>("../rsrc/strings");
+	ResMgr::strings.pushPath("../rsrc/strings");
 	
 	oldSpec.jumpto = 12;
 	SECTION("Make Outdoor Wandering") {
@@ -1671,7 +1671,7 @@ TEST_CASE("When converting legacy special nodes (outdoors)") {
 		CHECK(newSpec.ex2b == 4);
 	}
 	// Clean up after ourselves
-	ResMgr::popPath<StringRsrc>();
+	ResMgr::strings.popPath();
 }
 
 TEST_CASE("When converting classic special nodes") {
@@ -1679,7 +1679,7 @@ TEST_CASE("When converting classic special nodes") {
 	legacy::special_node_type oldSpec = {0,-1,-1,0,-1,-1,-1,-1,-1,-1,-1};
 	// Fetching opcodes requires strings to be available
 	// Here we fetch them from the rsrc dir, rather than the data dir
-	ResMgr::pushPath<StringRsrc>("../rsrc/strings");
+	ResMgr::strings.pushPath("../rsrc/strings");
 	
 	oldSpec.jumpto = 12;
 	SECTION("If Statistic") {
@@ -1744,7 +1744,7 @@ TEST_CASE("When converting classic special nodes") {
 		CHECK(newSpec.jumpto == 12);
 	}
 	// Clean up after ourselves
-	ResMgr::popPath<StringRsrc>();
+	ResMgr::strings.popPath();
 }
 
 ostream& operator<< (ostream& out, eSpecType spec) {

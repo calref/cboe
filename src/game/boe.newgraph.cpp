@@ -389,7 +389,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	
 	play_sound(-1 * sound_num);
 	
-	sf::Texture& missiles_gworld = *ResMgr::get<ImageRsrc>("missiles");
+	sf::Texture& missiles_gworld = *ResMgr::graphics.get("missiles");
 	// Now, at last, launch missile
 	for(short t = 0; t < num_steps; t++) {
 		draw_terrain();
@@ -424,7 +424,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 						base -= 10000;
 					} else base -= 1000;
 					base += step % 4;
-					sf::Texture* from_gw = nullptr;
+					const sf::Texture* from_gw = nullptr;
 					graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(base, isParty);
 					if(from_gw == nullptr) continue;
 					from_rect.width() = 18;
@@ -547,7 +547,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 		play_sound(-1 * snd_num);
 	}
 	
-	sf::Texture& boom_gworld = *ResMgr::get<ImageRsrc>("booms");
+	sf::Texture& boom_gworld = *ResMgr::graphics.get("booms");
 	// Now, at last, do explosion
 	for(short t = (special_draw == 2) ? 6 : 0; t < ((special_draw == 1) ? 6 : 11); t++) { // t goes up to 10 to make sure screen gets cleaned up
 		draw_terrain();
@@ -557,7 +557,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 			if(store_booms[i].boom_type >= 0) {
 				if((t + store_booms[i].offset >= 0) && (t + store_booms[i].offset <= 7)) {
 					if(cur_boom_type >= 1000) {
-						sf::Texture* src_gworld;
+						const sf::Texture* src_gworld;
 						graf_pos_ref(src_gworld, from_rect) = spec_scen_g.find_graphic(cur_boom_type - 1000 + t);
 						rect_draw_some_item(*src_gworld, from_rect, mainPtr, explode_place_rect[i], sf::BlendAlpha);
 					} else {
@@ -606,12 +606,12 @@ void click_shop_rect(rectangle area_rect) {
 graf_pos calc_item_rect(int num,rectangle& to_rect) {
 	if(num >= 1000) return spec_scen_g.find_graphic(num - 1000);
 	rectangle from_rect = {0,0,18,18};
-	sf::Texture *from_gw;
+	const sf::Texture *from_gw;
 	if(num < 55) {
-		from_gw = ResMgr::get<ImageRsrc>("objects").get();
+		from_gw = &ResMgr::graphics.get("objects");
 		from_rect = calc_rect(num % 5, num / 5);
 	}else{
-		from_gw = ResMgr::get<ImageRsrc>("tinyobj").get();
+		from_gw = &ResMgr::graphics.get("tinyobj");
 		to_rect.inset(5,9);
 		from_rect.offset(18 * (num % 10), 18 * (num / 10));
 	}
@@ -666,13 +666,13 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	// Place store icon
 	if(!pressed) {
 		rectangle from_rect = {0,0,32,32};
-		sf::Texture* from_gw;
+		const sf::Texture* from_gw;
 		int i = std::max<int>(0, active_shop.getFace());
 		if(i >= 1000) {
 			graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(i - 1000);
 		} else {
 			from_rect.offset(32 * (i % 10),32 * (i / 10));
-			from_gw = ResMgr::get<ImageRsrc>("talkportraits").get();
+			from_gw = &ResMgr::graphics.get("talkportraits");
 		}
 		rect_draw_some_item(*from_gw, from_rect, talk_gworld, face_rect);
 	}
@@ -722,7 +722,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		style.colour = c[4];
 	else style.colour = sf::Color::Black;
 	
-	sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
+	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
 	// Place all the items
 	for(short i = 0; i < 8; i++) {
 		current_pos = i + shop_sbar->getPosition();
@@ -734,7 +734,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		base_item = item.item;
 		std::string cur_name = base_item.full_name, cur_info_str;
 		rectangle from_rect, to_rect = shopping_rects[i][SHOPRECT_GRAPHIC];
-		sf::Texture* from_gw;
+		const sf::Texture* from_gw;
 		switch(item.type) {
 			case eShopItemType::ITEM:
 				base_item.ident = true;

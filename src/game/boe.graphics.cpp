@@ -165,8 +165,8 @@ void adjust_window_mode() {
 	mainView.setViewport(mainPort);
 	
 #ifndef __APPLE__ // This overrides Dock icon on OSX, which isn't what we want at all
-	ImageRsrc& icon = *ResMgr::get<ImageRsrc>("icon");
-	mainPtr.setIcon(icon.getSize().x, icon.getSize().y, icon.copyToImage().getPixelsPtr());
+	const ImageRsrc& icon = ResMgr::graphics.get("icon");
+	mainPtr.setIcon(icon->getSize().x, icon->getSize().y, icon->copyToImage().getPixelsPtr());
 #endif
 	if(text_sbar) {
 		text_sbar->relocate({560,285});
@@ -245,13 +245,13 @@ sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, int mode, float 
 
 void init_startup() {
 	// Preload the main startup images
-	ResMgr::get<ImageRsrc>("startup");
-	ResMgr::get<ImageRsrc>("startbut");
-	ResMgr::get<ImageRsrc>("startanim");
+	ResMgr::graphics.get("startup");
+	ResMgr::graphics.get("startbut");
+	ResMgr::graphics.get("startanim");
 }
 
 void draw_startup(short but_type) {
-	sf::Texture& startup_gworld = *ResMgr::get<ImageRsrc>("startup");
+	sf::Texture& startup_gworld = *ResMgr::graphics.get("startup");
 	rect_draw_some_item(startup_gworld,startup_from[0],mainPtr,startup_top);
 	
 	for(auto btn : startup_button.keys()) {
@@ -271,9 +271,9 @@ void draw_startup_anim(bool advance) {
 	anim_from = anim_to;
 	anim_from.offset(-1,-4 + startup_anim_pos);
 	if(advance) startup_anim_pos = (startup_anim_pos + 1) % 542;
-	rect_draw_some_item(*ResMgr::get<ImageRsrc>("startbut"),anim_size,mainPtr,startup_button[STARTBTN_SCROLL]);
+	rect_draw_some_item(*ResMgr::graphics.get("startbut"),anim_size,mainPtr,startup_button[STARTBTN_SCROLL]);
 	anim_to.offset(startup_button[STARTBTN_SCROLL].left, startup_button[STARTBTN_SCROLL].top);
-	rect_draw_some_item(*ResMgr::get<ImageRsrc>("startanim"),anim_from,mainPtr,anim_to,sf::BlendAlpha);
+	rect_draw_some_item(*ResMgr::graphics.get("startanim"),anim_from,mainPtr,anim_to,sf::BlendAlpha);
 }
 
 void draw_startup_stats() {
@@ -317,7 +317,7 @@ void draw_startup_stats() {
 				to_rect.offset(pc_rect.left,pc_rect.top);
 				pic_num_t pic = univ.party[i].which_graphic;
 				if(pic >= 1000) {
-					sf::Texture* gw;
+					const sf::Texture* gw;
 					graf_pos_ref(gw, from_rect) = spec_scen_g.find_graphic(pic % 1000, pic >= 10000);
 					rect_draw_some_item(*gw,from_rect,mainPtr,to_rect,sf::BlendAlpha);
 				} else if(pic >= 100) {
@@ -326,11 +326,11 @@ void draw_startup_stats() {
 					// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
 					from_rect = get_monster_template_rect(pic, 0, 0);
 					int which_sheet = m_pic_index[pic].i / 20;
-					sf::Texture& monst_gworld = *ResMgr::get<ImageRsrc>("monst" + std::to_string(1 + which_sheet));
+					sf::Texture& monst_gworld = *ResMgr::graphics.get("monst" + std::to_string(1 + which_sheet));
 					rect_draw_some_item(monst_gworld,from_rect,mainPtr,to_rect,sf::BlendAlpha);
 				} else {
 					from_rect = calc_rect(2 * (pic / 8), pic % 8);
-					sf::Texture& pc_gworld = *ResMgr::get<ImageRsrc>("pcs");
+					sf::Texture& pc_gworld = *ResMgr::graphics.get("pcs");
 					rect_draw_some_item(pc_gworld,from_rect,mainPtr,to_rect,sf::BlendAlpha);
 				}
 				
@@ -429,7 +429,7 @@ void draw_start_button(eStartButton which_position,short which_button) {
 	to_rect.left += 4; to_rect.top += 4;
 	to_rect.right = to_rect.left + 40;
 	to_rect.bottom = to_rect.top + 40;
-	rect_draw_some_item(*ResMgr::get<ImageRsrc>("startup"),from_rect,mainPtr,to_rect);
+	rect_draw_some_item(*ResMgr::graphics.get("startup"),from_rect,mainPtr,to_rect);
 	
 	TextStyle style;
 	style.font = FONT_DUNGEON;
@@ -491,7 +491,7 @@ void end_startup() {
 }
 
 static void loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName) {
-	sf::Texture& temp_gworld = *ResMgr::get<ImageRsrc>(imgName);
+	sf::Texture& temp_gworld = *ResMgr::graphics.get(imgName);
 	rectangle texrect(temp_gworld);
 	tex.create(texrect.width(), texrect.height());
 	rect_draw_some_item(temp_gworld, texrect, tex, texrect, sf::BlendNone);
@@ -499,13 +499,13 @@ static void loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName
 
 void load_main_screen() {
 	// Preload the main game interface images
-	ResMgr::get<ImageRsrc>("invenbtns");
+	ResMgr::graphics.get("invenbtns");
 	loadImageToRenderTexture(terrain_screen_gworld, "terscreen");
 	loadImageToRenderTexture(pc_stats_gworld, "statarea");
 	loadImageToRenderTexture(item_stats_gworld, "inventory");
 	loadImageToRenderTexture(text_area_gworld, "transcript");
 	loadImageToRenderTexture(text_bar_gworld, "textbar");
-	ResMgr::get<ImageRsrc>("buttons");
+	ResMgr::graphics.get("buttons");
 }
 
 void redraw_screen(int refresh) {
@@ -620,7 +620,7 @@ void draw_buttons(short mode) {
 		button_gw.create(266,38);
 	}
 	
-	sf::Texture& buttons_gworld = *ResMgr::get<ImageRsrc>("buttons");
+	sf::Texture& buttons_gworld = *ResMgr::graphics.get("buttons");
 	dest_rec = lg_rect;
 	
 	bool bottom_half = false;
@@ -713,7 +713,7 @@ void draw_text_bar() {
 
 void put_text_bar(std::string str) {
 	text_bar_gworld.setActive();
-	rect_draw_some_item(*ResMgr::get<ImageRsrc>("textbar"), win_from_rects[WINRECT_STATUS], text_bar_gworld, win_from_rects[WINRECT_STATUS]);
+	rect_draw_some_item(*ResMgr::graphics.get("textbar"), win_from_rects[WINRECT_STATUS], text_bar_gworld, win_from_rects[WINRECT_STATUS]);
 	TextStyle style;
 	style.colour = sf::Color::White;
 	style.font = FONT_BOLD;
@@ -725,7 +725,7 @@ void put_text_bar(std::string str) {
 	win_draw_string(text_bar_gworld, to_rect, str, eTextMode::LEFT_TOP, style);
 	
 	if(!monsters_going) {
-		sf::Texture& status_gworld = *ResMgr::get<ImageRsrc>("staticons");
+		sf::Texture& status_gworld = *ResMgr::graphics.get("staticons");
 		to_rect.top -= 2;
 		to_rect.left = to_rect.right - 15;
 		to_rect.width() = 12;
@@ -991,7 +991,7 @@ void draw_terrain(short	mode) {
 	// Draw top half of forcecages (this list is populated by draw_fields)
 	// TODO: Move into the above loop to eliminate global variable
 	for(location fc_loc : forcecage_locs)
-		Draw_Some_Item(*ResMgr::get<ImageRsrc>("fields"),calc_rect(2,0),terrain_screen_gworld,fc_loc,1,0);
+		Draw_Some_Item(*ResMgr::graphics.get("fields"),calc_rect(2,0),terrain_screen_gworld,fc_loc,1,0);
 	// Draw any posted labels, then clear them out
 	clip_rect(terrain_screen_gworld, {13, 13, 337, 265});
 	for(text_label_t lbl : posted_labels)
@@ -1158,7 +1158,7 @@ static void init_trim_mask(std::unique_ptr<sf::Texture>& mask, rectangle src_rec
 	std::tie(dest_rect.top, dest_rect.bottom) = std::make_tuple(36 - dest_rect.top, 36 - dest_rect.bottom);
 	render.create(28, 36);
 	render.clear(sf::Color::White);
-	rect_draw_some_item(*ResMgr::get<ImageRsrc>("trim"), src_rect, render, dest_rect);
+	rect_draw_some_item(*ResMgr::graphics.get("trim"), src_rect, render, dest_rect);
 	render.display();
 	mask.reset(new sf::Texture);
 	mask->create(28, 36);
@@ -1191,7 +1191,7 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	};
 	static std::unique_ptr<sf::Texture> trim_masks[12], walkway_masks[9];
 	rectangle from_rect = {0,0,36,28},to_rect;
-	sf::Texture* from_gworld;
+	const sf::Texture* from_gworld;
 	sf::Texture* mask;
 	static bool inited = false;
 	if(!inited){
@@ -1219,11 +1219,11 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	unsigned short pic = univ.scenario.ter_types[ground_ter].picture;
 	if(pic < 960){
 		int which_sheet = pic / 50;
-		from_gworld = ResMgr::get<ImageRsrc>("ter" + std::to_string(1 + which_sheet)).get();
+		from_gworld = &ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet));
 		pic %= 50;
 		from_rect.offset(28 * (pic % 10), 36 * (pic / 10));
 	}else if(pic < 1000){
-		from_gworld = ResMgr::get<ImageRsrc>("teranim").get();
+		from_gworld = &ResMgr::graphics.get("teranim");
 		pic -= 960;
 		from_rect.offset(112 * (pic / 5),36 * (pic % 5));
 	}else{
@@ -1305,7 +1305,7 @@ void place_road(short q,short r,location where,bool here) {
 		{16,12,20,16},	// central spot
 	};
 	
-	sf::Texture& roads_gworld = *ResMgr::get<ImageRsrc>("trim");
+	sf::Texture& roads_gworld = *ResMgr::graphics.get("trim");
 	
 	if(here){
 		to_rect = road_dest_rects[6];
@@ -1482,7 +1482,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	dest_rect.offset(win_to_rects[WINRECT_TERVIEW].topLeft());
 	
 	source_rect.offset(-store_rect.left + 28 * type,-store_rect.top);
-	rect_draw_some_item(*ResMgr::get<ImageRsrc>("booms"),source_rect,mainPtr,dest_rect,sf::BlendAlpha);
+	rect_draw_some_item(*ResMgr::graphics.get("booms"),source_rect,mainPtr,dest_rect,sf::BlendAlpha);
 	
 	if(damage > 0 && dest_rect.right - dest_rect.left >= 28 && dest_rect.bottom - dest_rect.top >= 36) {
 		TextStyle style;
@@ -1573,7 +1573,7 @@ void draw_targets(location center) {
 	if(!univ.party.is_alive())
 		return;
 	
-	sf::Texture& src_gworld = *ResMgr::get<ImageRsrc>("trim");
+	sf::Texture& src_gworld = *ResMgr::graphics.get("trim");
 	for(short i = 0; i < 8; i++)
 		if((spell_targets[i].x != -1) && (point_onscreen(center,spell_targets[i]))) {
 			rectangle dest_rect = coord_to_rect(spell_targets[i].x - center.x + 4,spell_targets[i].y - center.y + 4);

@@ -36,7 +36,7 @@ void restore_mode();
 void through_sending();
 rectangle coord_to_rect(short i,short j);
 bool day_reached(unsigned short which_day, unsigned short which_event);
-void Draw_Some_Item (sf::Texture& src_gworld, rectangle src_rect, sf::RenderTarget& targ_gworld, location target, char masked, short main_win);
+void Draw_Some_Item(const sf::Texture& src_gworld, rectangle src_rect, sf::RenderTarget& targ_gworld, location target, char masked, short main_win);
 rectangle get_stat_effect_rect(int which_effect);
 
 struct text_label_t {

@@ -9,33 +9,15 @@
 #ifndef BOE_RES_STRINGS_HPP
 #define BOE_RES_STRINGS_HPP
 
-#include <fstream>
-#include <boost/filesystem/path.hpp>
+#include <vector>
+#include <string>
 #include "resmgr.hpp"
 
-using StringRsrc = std::vector<std::string>;
-
-// Redeclare this instead of including "fileio.h"
-extern std::ostream& std_fmterr(std::ostream& out);
+using StringList = std::vector<std::string>;
+using StringRsrc = ResMgr::cPointer<StringList>;
 
 namespace ResMgr {
-	/// Load a list of strings from a TXT file.
-	/// Each line in the file becomes one string in the resulting list.
-	/// (Empty lines are included too.)
-	template<> inline StringRsrc* resLoader<StringRsrc>::operator() (fs::path fpath) {
-		std::ifstream fin(fpath.string().c_str());
-		if(fin.fail()) {
-			std::cerr << std_fmterr << ": Error opening file";
-			throw xResMgrErr("Failed to load string list: " + fpath.string());
-		}
-		std::string next;
-		StringRsrc* strlist = new StringRsrc;
-		while(!fin.eof()) {
-			getline(fin,next);
-			strlist->push_back(next);
-		}
-		return strlist;
-	}
+	extern cPool<StringList> strings;
 }
 
 #endif

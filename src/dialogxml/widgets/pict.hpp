@@ -89,7 +89,7 @@ public:
 	cPict& operator=(cPict& other) = delete;
 	cPict(cPict& other) = delete;
 private:
-	static std::shared_ptr<sf::Texture> getSheet(eSheetType type, size_t n = 0);
+	static const sf::Texture* getSheet(eSheetType type, size_t n = 0);
 	static short animFrame;
 	pic_num_t picNum;
 	ePicType picType;

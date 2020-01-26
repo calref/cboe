@@ -168,7 +168,7 @@ TEST_CASE("Saving a scenario record") {
 	SECTION("With a shop") {
 		// Loading/building shops requires strings to be available
 		// Here we fetch them from the rsrc dir, rather than the data dir
-		ResMgr::pushPath<StringRsrc>("../rsrc/strings");
+		ResMgr::strings.pushPath("../rsrc/strings");
 		cItem dummy_item('alch');
 		scen.shops.resize(3);
 		scen.shops[0] = cShop('junk');
@@ -248,7 +248,7 @@ TEST_CASE("Saving a scenario record") {
 		CHECK(scen.shops[2].getItem(11).item.graphic_num == 24);
 		CHECK(scen.shops[2].getItem(11).item.full_name == "Magic!");
 		CHECK(scen.shops[2].getItem(11).item.desc == "This is magic!");
-		ResMgr::popPath<StringRsrc>();
+		ResMgr::strings.popPath();
 	}
 	SECTION("With some empty strings, none are stripped") {
 		scen.spec_strs.resize(12);

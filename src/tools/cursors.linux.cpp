@@ -44,7 +44,7 @@ void set_cursor(cursor_type which_c) {
 	if(which_c == text_curs) {
 		// XDefineCursor(NULL, current_window, ibeam);
 	} else {
-		Cursor& curs = *ResMgr::get<CursorRsrc>(cursors[which_c]);
+		Cursor& curs = *ResMgr::cursors.get(cursors[which_c]);
 		curs.apply();
 	}
 }

@@ -9,6 +9,7 @@
 #include "fileio.hpp"
 
 #include <fstream>
+#include <iostream>
 #include <stdexcept>
 #include <boost/filesystem/operations.hpp>
 
@@ -35,11 +36,11 @@ void init_directories(const char* exec_path) {
 #endif
 	progDir = progDir.parent_path();
 	// Initialize the resource manager paths
-	ResMgr::pushPath<ImageRsrc>(progDir/"data"/"graphics");
-	ResMgr::pushPath<CursorRsrc>(progDir/"data"/"cursors");
-	ResMgr::pushPath<FontRsrc>(progDir/"data"/"fonts");
-	ResMgr::pushPath<StringRsrc>(progDir/"data"/"strings");
-	ResMgr::pushPath<SoundRsrc>(progDir/"data"/"sounds");
+	ResMgr::graphics.pushPath(progDir/"data"/"graphics");
+	ResMgr::cursors.pushPath(progDir/"data"/"cursors");
+	ResMgr::fonts.pushPath(progDir/"data"/"fonts");
+	ResMgr::strings.pushPath(progDir/"data"/"strings");
+	ResMgr::sounds.pushPath(progDir/"data"/"sounds");
 	
 	// We need a location for temporary files, primarily for loading and saving operations
 	// The scenario editor may also use this location as "scratch space"

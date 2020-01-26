@@ -10,6 +10,7 @@
 #include <cmath>
 #include <cstdio>
 #include <sstream>
+#include <iostream>
 #include <memory>
 #include <unordered_set>
 #include <unordered_map>
@@ -45,7 +46,7 @@ bool sound_going(snd_num_t which_s) {
 	return false;
 }
 
-static std::string sound_to_fname_map(snd_num_t snd_num) {
+std::string sound_to_fname(snd_num_t snd_num) {
 	std::ostringstream sout;
 	sout << "SND" << snd_num;
 	return sout.str();
@@ -57,25 +58,20 @@ static void exit_snd_tool() {
 
 void init_snd_tool(){
 	for(auto& ch : chan) ch.reset(new sf::Sound);
-	ResMgr::setIdMapFn<SoundRsrc>(sound_to_fname_map);
 	atexit(exit_snd_tool);
 }
 
 void play_sound(snd_num_t which, sf::Time delay) { // if < 0, play asynch
-	static bool inited = false;
-	if(!inited) {
-		inited = true;
-		ResMgr::setIdMapFn<SoundRsrc>(sound_to_fname_map);
-	}
-	
-	std::shared_ptr<sf::SoundBuffer> sndhandle;
+	const sf::SoundBuffer* sndhandle;
 	if(!get_bool_pref("PlaySounds", true)) {
 		if(which >= 0)
 			sf::sleep(delay);
 		return;
 	}
 	
-	if(abs(which) >= 100 && !ResMgr::have<SoundRsrc>(abs(which))) {
+	std::string sndname = sound_to_fname(abs(which));
+	
+	if(abs(which) >= 100 && !ResMgr::sounds.have(sndname)) {
 		std::cerr << "Error: Sound #" << abs(which) << " does not exist." << std::endl;
 		return;
 	}
@@ -85,7 +81,7 @@ void play_sound(snd_num_t which, sf::Time delay) { // if < 0, play asynch
 	if(channel >= numchannel) channel = 0;
 	
 	if(!sound_going(abs(which)))
-		sndhandle = ResMgr::get<SoundRsrc>(abs(which));
+		sndhandle = &ResMgr::sounds.get(sndname);
 	
 	if(which > 0)
  		if(always_async.find(which) != always_async.end())

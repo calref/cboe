@@ -95,7 +95,7 @@ void put_pc_screen() {
 	pc_stats_gworld.setActive();
 	
 	// First clean up gworld with pretty patterns
-	sf::Texture& orig = *ResMgr::get<ImageRsrc>("statarea");
+	sf::Texture& orig = *ResMgr::graphics.get("statarea");
 	rect_draw_some_item(orig, rectangle(orig), pc_stats_gworld, rectangle(pc_stats_gworld));
 	tileImage(pc_stats_gworld, erase_rect,bg[6]);
 	
@@ -119,7 +119,7 @@ void put_pc_screen() {
 	win_draw_string(pc_stats_gworld,day_rect[0],std::to_string(univ.party.calc_day()),eTextMode::WRAP,style);
 	style.colour = sf::Color::Black;
 	
-	sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
+	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
 	for(short i = 0; i < 6; i++) {
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			for(auto& flag : pc_area_button_active[i])
@@ -216,7 +216,7 @@ void put_item_screen(eItemWinMode screen_num) {
 	item_stats_gworld.setActive();
 	
 	// First clean up gworld with pretty patterns
-	sf::Texture& orig = *ResMgr::get<ImageRsrc>("inventory");
+	sf::Texture& orig = *ResMgr::graphics.get("inventory");
 	rect_draw_some_item(orig, rectangle(orig), item_stats_gworld, rectangle(item_stats_gworld));
 	tileImage(item_stats_gworld, erase_rect,bg[6]);
 	
@@ -408,7 +408,7 @@ void place_buy_button(short position,short pc_num,short item_num) {
 			return;
 	}
 	if(item_area_button_active[position][ITEMBTN_SPEC]) {
-		sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
+		sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
 		store_selling_values[position] = val_to_place;
 		dest_rect = item_buttons[position][ITEMBTN_SPEC];
 		dest_rect.right = dest_rect.left + 30;
@@ -435,22 +435,21 @@ void place_item_graphic(short which_slot,short graphic) {
 	to_rect.inset(-1,-1);
 	to_rect.offset(20,1);
 	from_rect.inset(2,2);
+	const sf::Texture* src_gw;
 	if(graphic >= 10000) {
-		sf::Texture* src_gw;
 		graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(graphic - 10000, true);
 		rect_draw_some_item(*src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
 	} else if(graphic >= 1000) {
-		sf::Texture* src_gw;
 		graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(graphic - 1000);
 		rect_draw_some_item(*src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
 	}
-	else rect_draw_some_item(*ResMgr::get<ImageRsrc>("tinyobj"), from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+	else rect_draw_some_item(*ResMgr::graphics.get("tinyobj"), from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 }
 
 void place_item_button(short button_position,short which_slot,eItemButton button_type) {
 	rectangle from_rect = {0,0,18,18},to_rect;
 	
-	sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
+	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
 	switch(button_position) {
 	default: // this means put a regular item button
 		item_area_button_active[which_slot][button_type] = true;
@@ -490,14 +489,14 @@ void place_item_bottom_buttons() {
 	style.font = FONT_BOLD;
 	style.colour = sf::Color::Yellow;
 	
-	sf::Texture& invenbtn_gworld = *ResMgr::get<ImageRsrc>("invenbtns");
+	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
 	for(short i = 0; i < 6; i++) {
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 		 	item_bottom_button_active[i] = true;
 		 	to_rect = item_screen_button_rects[i];
 			rect_draw_some_item(invenbtn_gworld, but_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 			pic_num_t pic = univ.party[i].which_graphic;
-			sf::Texture* from_gw;
+			const sf::Texture* from_gw;
 			if(pic >= 1000) {
 				bool isParty = pic >= 10000;
 				pic_num_t need_pic = pic % 1000;
@@ -509,10 +508,10 @@ void place_item_bottom_buttons() {
 				int mode = 0;
 				pc_from_rect = get_monster_template_rect(need_pic, mode, 0);
 				int which_sheet = m_pic_index[need_pic].i / 20;
-				from_gw = ResMgr::get<ImageRsrc>("monst" + std::to_string(1 + which_sheet)).get();
+				from_gw = &ResMgr::graphics.get("monst" + std::to_string(1 + which_sheet));
 			} else {
 				pc_from_rect = calc_rect(2 * (pic / 8), pic % 8);
-				from_gw = ResMgr::get<ImageRsrc>("pcs").get();
+				from_gw = &ResMgr::graphics.get("pcs");
 			}
 			to_rect.inset(2,2);
 			rect_draw_some_item(*from_gw, pc_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
@@ -625,7 +624,7 @@ void draw_pc_effects(short pc) {
 		return;
 	
 	univ.party[pc].status[eStatus::HASTE_SLOW]; // This just makes sure it exists in the map, without changing its value if it does
-	sf::Texture& status_gworld = *ResMgr::get<ImageRsrc>("staticons");
+	sf::Texture& status_gworld = *ResMgr::graphics.get("staticons");
 	for(auto next : univ.party[pc].status) {
 		short placedIcon = -1;
 		if(next.first == eStatus::POISON && next.second > 4) placedIcon = 1;
@@ -1055,7 +1054,7 @@ void print_buf () {
 	location moveTo;
 	while((line_to_print!= buf_pointer) && (num_lines_printed < LINES_IN_TEXT_WIN)) {
 		moveTo = location(4, 1 + 12 * num_lines_printed);
-		sf::Text text(text_buffer[line_to_print].line, *ResMgr::get<FontRsrc>("plain"), 12);
+		sf::Text text(text_buffer[line_to_print].line, *ResMgr::fonts.get("plain"), 12);
 		text.setColor(sf::Color::Black);
 		text.setPosition(moveTo);
 		text_area_gworld.draw(text);
@@ -1093,7 +1092,7 @@ void through_sending() {
 
 /* Draw a bitmap in the world window. hor in 0 .. 8, vert in 0 .. 8,
  object is ptr. to bitmap to be drawn, and masking is for Copybits. */
-void Draw_Some_Item (sf::Texture& src_gworld, rectangle src_rect, sf::RenderTarget& targ_gworld,location target, char masked, short main_win) {
+void Draw_Some_Item(const sf::Texture& src_gworld, rectangle src_rect, sf::RenderTarget& targ_gworld,location target, char masked, short main_win) {
 	rectangle	destrec = {0,0,36,28};
 	
 	if((target.x < 0) || (target.y < 0) || (target.x > 8) || (target.y > 8))

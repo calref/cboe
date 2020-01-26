@@ -710,11 +710,23 @@
     <ClCompile Include="..\..\..\src\fileio\xml-parser\ticpp.cpp">
       <Filter>FileIO\TinyXML</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\fileio\resmgr\restypes.cpp">
-      <Filter>FileIO\ResMgr</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\fileio\gzstream\gzstream.cpp">
       <Filter>FileIO\GZStream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_cursor.cpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_font.cpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_image.cpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_sound.cpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_strings.cpp">
+      <Filter>FileIO\ResMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\dialogxml\widgets\stack.cpp">
       <Filter>DialogXML\Widgets</Filter>
@@ -753,12 +765,6 @@
       <Filter>DialogXML\Dialogs</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\dialogxml\dialogs\dialog.cpp">
-      <Filter>DialogXML\Dialogs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\dialogxml\dialogs\choicedlog.cpp">
-      <Filter>DialogXML\Dialogs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\dialogxml\dialogs\3choice.cpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClCompile>
   </ItemGroup>
@@ -909,21 +915,6 @@
     <ClInclude Include="..\..\..\src\fileio\resmgr\resmgr.hpp">
       <Filter>FileIO\ResMgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\fileio\resmgr\res_strings.hpp">
-      <Filter>FileIO\ResMgr</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\fileio\resmgr\res_sound.hpp">
-      <Filter>FileIO\ResMgr</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\fileio\resmgr\res_image.hpp">
-      <Filter>FileIO\ResMgr</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\fileio\resmgr\res_font.hpp">
-      <Filter>FileIO\ResMgr</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\fileio\resmgr\res_cursor.hpp">
-      <Filter>FileIO\ResMgr</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\fileio\gzstream\gzstream.h">
       <Filter>FileIO\GZStream</Filter>
     </ClInclude>
@@ -975,11 +966,23 @@
     <ClInclude Include="..\..\..\src\dialogxml\dialogs\choicedlog.hpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\dialogxml\dialogs\3choice.hpp">
-      <Filter>DialogXML\Dialogs</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\tools\enum_map.hpp">
       <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_cursor.hpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_font.hpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_image.hpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_sound.hpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_strings.hpp">
+      <Filter>FileIO\ResMgr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -118,8 +118,8 @@ void init_scened(int argc, char* argv[]) {
 	mainPtr.create(sf::VideoMode(windRect.width(), windRect.height()), "Blades of Exile Scenario Editor", sf::Style::Titlebar | sf::Style::Close);
 	mainPtr.setPosition(windRect.topLeft());
 #ifndef __APPLE__ // This overrides Dock icon on OSX, which isn't what we want at all
-	ImageRsrc& icon = *ResMgr::get<ImageRsrc>("icon");
-	mainPtr.setIcon(icon.getSize().x, icon.getSize().y, icon.copyToImage().getPixelsPtr());
+	const ImageRsrc& icon = ResMgr::graphics.get("icon");
+	mainPtr.setIcon(icon->getSize().x, icon->getSize().y, icon->copyToImage().getPixelsPtr());
 #endif
 	init_menubar(); // This is called twice because Windows and Mac have different ordering requirements
 	mainPtr.clear(sf::Color::Black);

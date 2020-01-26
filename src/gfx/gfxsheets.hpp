@@ -16,8 +16,8 @@
 #include "location.hpp"
 
 static const pic_num_t NO_PIC = -1;
-using graf_pos = std::pair<sf::Texture*,rectangle>;
-using graf_pos_ref = std::pair<sf::Texture*&,rectangle&>;
+using graf_pos = std::pair<const sf::Texture*,rectangle>;
+using graf_pos_ref = std::pair<const sf::Texture*&,rectangle&>;
 
 struct m_pic_index_t {
 	unsigned char i, x, y;

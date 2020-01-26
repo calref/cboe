@@ -384,7 +384,7 @@ TEST_CASE("Loading a new-format scenario record") {
 	SECTION("With a shop") {
 		// Loading shops requires strings to be available
 		// Here we fetch them from the rsrc dir, rather than the data dir
-		ResMgr::pushPath<StringRsrc>("../rsrc/strings");
+		ResMgr::strings.pushPath("../rsrc/strings");
 		SECTION("Valid shop") {
 			fin.open("files/scenario/shop.xml");
 			doc = xmlDocFromStream(fin, "shop.xml");
@@ -472,7 +472,7 @@ TEST_CASE("Loading a new-format scenario record") {
 			doc = xmlDocFromStream(fin, "shop-missing_node.xml");
 			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xMissingElem);
 		}
-		ResMgr::popPath<StringRsrc>();
+		ResMgr::strings.popPath();
 	}
 	SECTION("With item storage shortcuts") {
 		SECTION("Valid") {

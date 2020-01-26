@@ -207,7 +207,7 @@ void cScrollbar::draw_horizontal() {
 	draw_rect.width() = btn_size;
 	if(depressed && pressedPart == PART_UP)
 		from_rect = up_rect[style][HORZ_PRESSED];
-	sf::Texture scroll_gw = *ResMgr::get<ImageRsrc>(scroll_textures[style]);
+	sf::Texture scroll_gw = *ResMgr::graphics.get(scroll_textures[style]);
 	rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
 	if(pos > 0) {
 		from_rect = bar_rect[style][HORZ];
@@ -270,7 +270,7 @@ void cScrollbar::draw_vertical() {
 	draw_rect.height() = btn_size;
 	if(depressed && pressedPart == PART_UP)
 		from_rect = up_rect[style][VERT_PRESSED];
-	sf::Texture scroll_gw = *ResMgr::get<ImageRsrc>(scroll_textures[style]);
+	sf::Texture scroll_gw = *ResMgr::graphics.get(scroll_textures[style]);
 	rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
 	if(pos > 0) {
 		from_rect = bar_rect[style][VERT];

@@ -211,7 +211,7 @@ bool pick_string(std::string from_file, cDialog& parent, std::string result_fld,
 		cTextField& fld_ctrl = dynamic_cast<cTextField&>(parent[result_fld]);
 		cur_sel = fld_ctrl.getTextAsNum();
 	}
-	StringRsrc strings = *ResMgr::get<StringRsrc>(from_file);
+	StringList strings = *ResMgr::strings.get(from_file);
 	// TODO: Does it need a title?
 	cStringChoice str_dlg(strings, "", &parent);
 	size_t result = str_dlg.show(cur_sel);
@@ -228,7 +228,7 @@ bool pick_string(std::string from_file, cDialog& parent, std::string result_fld,
 }
 
 static bool show_help(std::string from_file, cDialog& parent, pic_num_t pic){
-	StringRsrc strings = *ResMgr::get<StringRsrc>(from_file);
+	StringList strings = *ResMgr::strings.get(from_file);
 	cThreeChoice help(strings,basic_buttons[1],pic,PIC_DLOG,&parent);
 	help.show();
 	return true;
@@ -3353,7 +3353,7 @@ void edit_custom_sheets() {
 		spec_scen_g.init_sheet(0);
 		spec_scen_g.sheets[0].copyToImage().saveToFile((pic_dir/"sheet0.png").string().c_str());
 		all_pics.insert(all_pics.begin(), 0);
-		ResMgr::pushPath<ImageRsrc>(pic_dir);
+		ResMgr::graphics.pushPath(pic_dir);
 	}
 	
 	set_cursor(watch_curs);
@@ -3392,7 +3392,7 @@ void edit_custom_sheets() {
 			std::string resName = "sheet" + std::to_string(all_pics[cur]);
 			fs::path toPath = pic_dir/(resName + ".png");
 			img->saveToFile(toPath.string().c_str());
-			ResMgr::free<ImageRsrc>(resName);
+			ResMgr::graphics.free(resName);
 			return true;
 		}
 		sheets[cur] = *img;
@@ -3411,7 +3411,7 @@ void edit_custom_sheets() {
 			std::string resName = "sheet" + std::to_string(all_pics[cur]);
 			fs::path toPath = pic_dir/(resName + ".png");
 			img.saveToFile(toPath.string().c_str());
-			ResMgr::free<ImageRsrc>(resName);
+			ResMgr::graphics.free(resName);
 			return true;
 		}
 		sheets[cur] = img;
@@ -3482,7 +3482,7 @@ void edit_custom_sheets() {
 					if(!fs::exists(from)) continue; // Just in case
 					fs::remove(to);
 					fs::rename(from, to);
-					ResMgr::free<ImageRsrc>("sheet" + std::to_string(which_pic));
+					ResMgr::graphics.free("sheet" + std::to_string(which_pic));
 				}
 				auto end = std::find(all_pics.begin() + cur, all_pics.end(), which_pic - 1);
 				if(end != all_pics.end())
@@ -3496,7 +3496,7 @@ void edit_custom_sheets() {
 				spec_scen_g.numSheets = which_pic;
 				spec_scen_g.sheets = new sf::Texture[which_pic];
 				std::copy_n(wasSheets, which_pic, spec_scen_g.sheets);
-				ResMgr::free<ImageRsrc>("sheet" + std::to_string(which_pic));
+				ResMgr::graphics.free("sheet" + std::to_string(which_pic));
 			}
 			delete[] wasSheets;
 		}
@@ -3578,7 +3578,7 @@ static bool edit_custom_sound_action(cDialog& me, std::string action, std::vecto
 			return true;
 		}
 		fs::copy_file(fpath, sndfile, fs::copy_option::overwrite_if_exists);
-		ResMgr::free<SoundRsrc>(which_snd);
+		ResMgr::sounds.free(sound_to_fname(which_snd));
 		if(which_snd > max_snd)
 			max_snd = which_snd;
 		if(max_snd % 10 == 9) {

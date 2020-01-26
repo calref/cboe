@@ -1313,7 +1313,7 @@ static bool tip_of_day_event_filter(cDialog& me, std::string item_hit, short& pa
 		me.toast(true);
 	} else if(item_hit == "next") {
 		page++;
-		if(page == ResMgr::get<StringRsrc>("tips")->size() - 50)
+		if(page == ResMgr::strings.get("tips")->size() - 50)
 			page = 0;
 		place_str = get_str("tips",50 + page);
 		me["tip"].setText(place_str);
@@ -1324,7 +1324,7 @@ static bool tip_of_day_event_filter(cDialog& me, std::string item_hit, short& pa
 void tip_of_day() {
 	using namespace std::placeholders;
 	
-	short page = get_ran(1,0,ResMgr::get<StringRsrc>("tips")->size() - 51);
+	short page = get_ran(1,0,ResMgr::strings.get("tips")->size() - 51);
 	
 	set_cursor(sword_curs);
 	

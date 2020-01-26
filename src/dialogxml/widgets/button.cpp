@@ -70,7 +70,7 @@ void cButton::draw(){
 			to_rect.right = to_rect.left + 14;
 			to_rect.bottom = to_rect.top + 10;
 		}
-		rect_draw_some_item(*ResMgr::get<ImageRsrc>(buttons[btnGW[type]]),from_rect,*inWindow,to_rect,sf::BlendAlpha);
+		rect_draw_some_item(*ResMgr::graphics.get(buttons[btnGW[type]]),from_rect,*inWindow,to_rect,sf::BlendAlpha);
 		style.colour = sf::Color::Black;
 		style.lineHeight = 8;
 		eTextMode textMode = eTextMode::CENTRE;
@@ -376,7 +376,7 @@ void cLed::draw(){
 		to_rect = frame;
 		to_rect.right = to_rect.left + 14;
 		to_rect.bottom = to_rect.top + 10;
-		rect_draw_some_item(*ResMgr::get<ImageRsrc>(buttons[btnGW[BTN_LED]]),from_rect,*inWindow,to_rect);
+		rect_draw_some_item(*ResMgr::graphics.get(buttons[btnGW[BTN_LED]]),from_rect,*inWindow,to_rect);
 		style.colour = textClr;
 		to_rect.right = frame.right;
 		to_rect.left = frame.left + 18; // Possibly could be 20
