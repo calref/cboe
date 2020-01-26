@@ -54,6 +54,7 @@ std::string sound_to_fname(snd_num_t snd_num) {
 
 static void exit_snd_tool() {
 	for(auto& ch : chan) ch.reset();
+	ResMgr::sounds.drain();
 }
 
 void init_snd_tool(){
