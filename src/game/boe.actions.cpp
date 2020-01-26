@@ -160,7 +160,11 @@ void init_screen_locs() {
 	startup_top.left = startup_base.left;
 	startup_top.right = startup_button[STARTBTN_JOIN].right;
 	
-	// name, use, give, drip, info, sell/id   each one 13 down
+	// icon, name, use, give, drip, info, sell/id   each one 13 down
+	item_buttons[0][ITEMBTN_ICON].top = 15;
+	item_buttons[0][ITEMBTN_ICON].bottom = item_buttons[0][ITEMBTN_ICON].top + 18;
+	item_buttons[0][ITEMBTN_ICON].left = 20;
+	item_buttons[0][ITEMBTN_ICON].right = item_buttons[0][ITEMBTN_ICON].left + 18;
 	item_buttons[0][ITEMBTN_NAME].top = 17;
 	item_buttons[0][ITEMBTN_NAME].bottom = item_buttons[0][ITEMBTN_NAME].top + 12;
 	item_buttons[0][ITEMBTN_NAME].left = 3;

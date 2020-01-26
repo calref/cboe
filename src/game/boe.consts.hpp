@@ -102,12 +102,13 @@ enum eShopArea {
 
 // Item buttons
 enum eItemButton {
-	ITEMBTN_NAME = 0,
-	ITEMBTN_USE = 1,
-	ITEMBTN_GIVE = 2,
-	ITEMBTN_DROP = 3,
-	ITEMBTN_INFO = 4,
-	ITEMBTN_SPEC = 5, // Sell, Identify, or Enchant
+	ITEMBTN_ICON = 0,
+	ITEMBTN_NAME = 1,
+	ITEMBTN_USE = 2,
+	ITEMBTN_GIVE = 3,
+	ITEMBTN_DROP = 4,
+	ITEMBTN_INFO = 5,
+	ITEMBTN_SPEC = 6, // Sell, Identify, or Enchant
 	MAX_eItemButton // keep last
 };
 

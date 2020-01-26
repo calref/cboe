@@ -422,19 +422,12 @@ void place_buy_button(short position,short pc_num,short item_num) {
 	}
 }
 
-// name, use, give, drop, info, sell/id
-// shortcuts - if which_button_to_put is 10, all 4 buttons now
-//				if which_button_to_put is 11, just right 2
 void place_item_graphic(short which_slot,short graphic) {
 	rectangle from_rect = {0,0,18,18},to_rect;
 	
-	item_area_button_active[which_slot][ITEMBTN_NAME] = true;
+	item_area_button_active[which_slot][ITEMBTN_ICON] = true;
 	from_rect.offset((graphic % 10) * 18,(graphic / 10) * 18);
-	to_rect = item_buttons[which_slot][ITEMBTN_NAME];
-	to_rect.right = to_rect.left + (to_rect.bottom - to_rect.top);
-	to_rect.inset(-1,-1);
-	to_rect.offset(20,1);
-	from_rect.inset(2,2);
+	to_rect = item_buttons[which_slot][ITEMBTN_ICON];
 	std::shared_ptr<const sf::Texture> src_gw;
 	if(graphic >= 10000) {
 		graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(graphic - 10000, true);
@@ -446,6 +439,9 @@ void place_item_graphic(short which_slot,short graphic) {
 	else rect_draw_some_item(*ResMgr::graphics.get("tinyobj"), from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 }
 
+// name, use, give, drop, info, sell/id
+// shortcuts - if which_button_to_put is 10, all 4 buttons now
+//				if which_button_to_put is 11, just right 2
 void place_item_button(short button_position,short which_slot,eItemButton button_type) {
 	rectangle from_rect = {0,0,18,18},to_rect;
 	
@@ -453,7 +449,7 @@ void place_item_button(short button_position,short which_slot,eItemButton button
 	switch(button_position) {
 	default: // this means put a regular item button
 		item_area_button_active[which_slot][button_type] = true;
-		rect_draw_some_item(invenbtn_gworld, item_buttons_from[button_type - 1], item_stats_gworld, item_buttons[which_slot][button_type], sf::BlendAlpha);
+		rect_draw_some_item(invenbtn_gworld, item_buttons_from[button_type - 2], item_stats_gworld, item_buttons[which_slot][button_type], sf::BlendAlpha);
 		break;
 	case ITEMBTN_ALL: // this means put all 4
 		item_area_button_active[which_slot][ITEMBTN_USE] = true;
