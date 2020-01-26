@@ -69,6 +69,6 @@ class CursorLoader : public ResMgr::cLoader<Cursor> {
 };
 
 // We'll allow all cursors to be loaded simultaneously (and leave some leeway in case a few more cursors are added)
-CursorLoader loader;
+static CursorLoader loader;
 ResMgr::cPool<Cursor> ResMgr::cursors(loader, 30);
 

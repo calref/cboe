@@ -27,5 +27,5 @@ class SoundLoader : public ResMgr::cLoader<sf::SoundBuffer> {
 };
 
 // TODO: What's a good max sound count?
-SoundLoader loader;
+static SoundLoader loader;
 ResMgr::cPool<sf::SoundBuffer> ResMgr::sounds(loader, 50);

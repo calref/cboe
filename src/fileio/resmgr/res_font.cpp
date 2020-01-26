@@ -27,5 +27,5 @@ class FontLoader : public ResMgr::cLoader<sf::Font> {
 };
 
 // We'll allow all fonts to be loaded simultaneously (and leave some leeway in case a few more fonts are added)
-FontLoader loader;
+static FontLoader loader;
 ResMgr::cPool<sf::Font> ResMgr::fonts(loader, 10);

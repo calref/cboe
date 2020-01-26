@@ -8,6 +8,7 @@
 
 #include "res_strings.hpp"
 #include <iostream>
+#include <fstream>
 
 // Redeclare this instead of including "fileio.h"
 extern std::ostream& std_fmterr(std::ostream& out);
@@ -41,5 +42,5 @@ class StringsLoader : public ResMgr::cLoader<StringList> {
 };
 
 // TODO: What's a good max strings count?
-StringsLoader loader;
+static StringsLoader loader;
 ResMgr::cPool<StringList> ResMgr::strings(loader, 100);

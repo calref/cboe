@@ -27,5 +27,5 @@ class ImageLoader : public ResMgr::cLoader<sf::Texture> {
 };
 
 // TODO: What's a good max texture count?
-ImageLoader loader;
+static ImageLoader loader;
 ResMgr::cPool<sf::Texture> ResMgr::graphics(loader, 50);
