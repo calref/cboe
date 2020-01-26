@@ -2,6 +2,7 @@
 #include "cursors.hpp"
 // #include "restypes.hpp" // Include before X11 to avoid macro conflicts in SFML
 #include "res_cursor.hpp"
+#include <SFML/Graphics.hpp>
 
 namespace x11 {
 

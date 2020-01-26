@@ -16,8 +16,7 @@ tools = Split("""
 	../fileio/special_parse.cpp
 	../fileio/tarball.cpp
 	../fileio/gzstream/gzstream.cpp
-	../fileio/resmgr/restypes.cpp
-""") + Glob("../gfx/*.cpp") + Glob("../scenario/*.cpp")
+""") + Glob("../fileio/resmgr/*.cpp") + Glob("../gfx/*.cpp") + Glob("../scenario/*.cpp")
 
 if str(platform) == "darwin":
 	tools.extend(Glob("*.mac.*"))
