@@ -19,7 +19,27 @@
 #include "mathutil.hpp"
 #include "prefs.hpp"
 
-std::shared_ptr<sf::Sound> chan[4];
+struct SoundChannel {
+	std::shared_ptr<sf::Sound> player;
+	std::shared_ptr<const sf::SoundBuffer> sound;
+	void play(const std::shared_ptr<const sf::SoundBuffer> what) {
+		sound = what;
+		player->setBuffer(*what);
+		player->play();
+	}
+	bool isPlaying() const {
+		return player->getStatus() == sf::Sound::Playing;
+	}
+	void reset() {
+		player.reset();
+		sound.reset();
+	}
+	void init() {
+		player.reset(new sf::Sound);
+	}
+};
+
+SoundChannel chan[4];
 const int numchannel = 4;
 int channel;
 short snd_played[4];
@@ -42,7 +62,7 @@ short store_last_sound_played;
 bool sound_going(snd_num_t which_s) {
 	for(short i = 0; i < 4; i++)
 		if(snd_played[i] == which_s)
-			return chan[i]->getStatus() == sf::Sound::Playing;
+			return chan[i].isPlaying();
 	return false;
 }
 
@@ -58,7 +78,7 @@ static void exit_snd_tool() {
 }
 
 void init_snd_tool(){
-	for(auto& ch : chan) ch.reset(new sf::Sound);
+	for(auto& ch : chan) ch.init();
 	atexit(exit_snd_tool);
 }
 
@@ -89,11 +109,10 @@ void play_sound(snd_num_t which, sf::Time delay) { // if < 0, play asynch
 			which *= -1;
 	
  	if(sndhandle) {
-		chan[channel]->setBuffer(*sndhandle);
-		chan[channel]->play();
+		chan[channel].play(sndhandle);
 		
 		if(which > 0) {
-			while(chan[channel]->getStatus() == sf::Sound::Playing);
+			while(chan[channel].isPlaying());
 		}
 		snd_played[channel] = abs(which);
 	}
