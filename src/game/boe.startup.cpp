@@ -143,7 +143,7 @@ void show_logo() {
 	
 	whole_window = rectangle(mainPtr);
 	logo_from.offset((whole_window.right - logo_from.right) / 2,(whole_window.bottom - logo_from.bottom) / 2);
-	sf::Texture& pict_to_draw = *ResMgr::graphics.get("spidlogo");
+	sf::Texture& pict_to_draw = *ResMgr::graphics.get("spidlogo", true);
 	from_rect = rectangle(pict_to_draw);
 	
 	play_sound(-95);
@@ -165,7 +165,7 @@ void plop_fancy_startup() {
 	whole_window = rectangle(mainPtr);
 	sf::Time delay = time_in_ticks(220);
 	intro_from.offset((whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
-	sf::Texture& pict_to_draw = *ResMgr::graphics.get("startsplash");
+	sf::Texture& pict_to_draw = *ResMgr::graphics.get("startsplash", true);
 	
 	play_sound(-22);
 	sf::Clock timer;

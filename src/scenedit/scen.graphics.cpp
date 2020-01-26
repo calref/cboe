@@ -354,7 +354,7 @@ void Set_up_win() {
 
 void run_startup_g() {
 	sf::Event event;
-	sf::Texture& pict_to_draw = *ResMgr::graphics.get("edsplash");
+	sf::Texture& pict_to_draw = *ResMgr::graphics.get("edsplash", true);
 	rectangle dest_rect = rectangle(pict_to_draw);
 	
 	play_sound(-95);

@@ -29,7 +29,7 @@ graf_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 	else if(numSheets == 0) valid = false;
 	if(!valid) {
 	INVALID:
-		std::shared_ptr<const sf::Texture> blank = &ResMgr::graphics.get("blank");
+		std::shared_ptr<const sf::Texture> blank = &ResMgr::graphics.get("blank", true);
 		return {blank, {0,0,36,28}};
 	}
 	short sheet = which_rect / 100;

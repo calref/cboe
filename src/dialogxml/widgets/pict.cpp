@@ -634,6 +634,7 @@ void cPict::recalcRect() {
 
 std::shared_ptr<const sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
 	std::ostringstream sout;
+	bool purgeable = false;
 	switch(type) {
 		case NUM_SHEET_TYPES:
 			break;
@@ -692,6 +693,7 @@ std::shared_ptr<const sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
 			// TODO: Implement this
 			break;
 		case SHEET_FULL:
+			purgeable = true;
 			switch(n) {
 				case 1100:
 					sout << "invenhelp";
@@ -713,10 +715,11 @@ std::shared_ptr<const sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
 					break;
 				default:
 					// TODO: The scenario should be allowed to define a sheet1100.png without it being ignored in favour of invenhelp.png
+					purgeable = false;
 					sout << "sheet" << n;
 			}
 	}
-	return &ResMgr::graphics.get(sout.str());
+	return &ResMgr::graphics.get(sout.str(), purgeable);
 }
 
 void cPict::draw(){

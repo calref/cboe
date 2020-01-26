@@ -165,7 +165,7 @@ void adjust_window_mode() {
 	mainView.setViewport(mainPort);
 	
 #ifndef __APPLE__ // This overrides Dock icon on OSX, which isn't what we want at all
-	const ImageRsrc& icon = ResMgr::graphics.get("icon");
+	const ImageRsrc& icon = ResMgr::graphics.get("icon", true);
 	mainPtr.setIcon(icon->getSize().x, icon->getSize().y, icon->copyToImage().getPixelsPtr());
 #endif
 	if(text_sbar) {
@@ -245,13 +245,13 @@ sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, int mode, float 
 
 void init_startup() {
 	// Preload the main startup images
-	ResMgr::graphics.get("startup");
-	ResMgr::graphics.get("startbut");
-	ResMgr::graphics.get("startanim");
+	ResMgr::graphics.get("startup", true);
+	ResMgr::graphics.get("startbut", true);
+	ResMgr::graphics.get("startanim", true);
 }
 
 void draw_startup(short but_type) {
-	sf::Texture& startup_gworld = *ResMgr::graphics.get("startup");
+	sf::Texture& startup_gworld = *ResMgr::graphics.get("startup", true);
 	rect_draw_some_item(startup_gworld,startup_from[0],mainPtr,startup_top);
 	
 	for(auto btn : startup_button.keys()) {
@@ -271,9 +271,9 @@ void draw_startup_anim(bool advance) {
 	anim_from = anim_to;
 	anim_from.offset(-1,-4 + startup_anim_pos);
 	if(advance) startup_anim_pos = (startup_anim_pos + 1) % 542;
-	rect_draw_some_item(*ResMgr::graphics.get("startbut"),anim_size,mainPtr,startup_button[STARTBTN_SCROLL]);
+	rect_draw_some_item(*ResMgr::graphics.get("startbut",true),anim_size,mainPtr,startup_button[STARTBTN_SCROLL]);
 	anim_to.offset(startup_button[STARTBTN_SCROLL].left, startup_button[STARTBTN_SCROLL].top);
-	rect_draw_some_item(*ResMgr::graphics.get("startanim"),anim_from,mainPtr,anim_to,sf::BlendAlpha);
+	rect_draw_some_item(*ResMgr::graphics.get("startanim",true),anim_from,mainPtr,anim_to,sf::BlendAlpha);
 }
 
 void draw_startup_stats() {
@@ -429,7 +429,7 @@ void draw_start_button(eStartButton which_position,short which_button) {
 	to_rect.left += 4; to_rect.top += 4;
 	to_rect.right = to_rect.left + 40;
 	to_rect.bottom = to_rect.top + 40;
-	rect_draw_some_item(*ResMgr::graphics.get("startup"),from_rect,mainPtr,to_rect);
+	rect_draw_some_item(*ResMgr::graphics.get("startup",true),from_rect,mainPtr,to_rect);
 	
 	TextStyle style;
 	style.font = FONT_DUNGEON;
