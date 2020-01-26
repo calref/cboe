@@ -62,7 +62,7 @@ bool gave_no_g_error = false;
 void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 	rectangle where_draw;
 	rectangle source_rect;
-	const sf::Texture* source_gworld;
+	std::shared_ptr<const sf::Texture> source_gworld;
 	short anim_type = 0;
 	location l;
 	
@@ -146,7 +146,7 @@ void draw_monsters() {
 					if(picture_wanted >= 0) {
 						if(picture_wanted >= 1000) {
 							for(short k = 0; k < width * height; k++) {
-								const sf::Texture* src_gw;
+								std::shared_ptr<const sf::Texture> src_gw;
 								graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000 +
 																							 ((enc.direction < 4) ? 0 : (width * height)) + k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
@@ -189,7 +189,7 @@ void draw_monsters() {
 							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.scenario.ter_types[ter].flag1);
 						else if(monst.picture_num >= 1000) {
 							bool isParty = monst.picture_num >= 10000;
-							const sf::Texture* src_gw;
+							std::shared_ptr<const sf::Texture> src_gw;
 							pic_num_t need_pic = (monst.picture_num % 1000) + k;
 							if(monst.direction >= 4) need_pic += width * height;
 							if(combat_posing_monster == i + 100) need_pic += (2 * width * height);
@@ -228,7 +228,7 @@ void draw_combat_pc(cPlayer& who, location center, bool attacking) {
 		if(point_onscreen(center, who.combat_pos) && (cartoon_happening || party_can_see(who.combat_pos) < 6)) {
 			location where_draw(who.combat_pos.x - center.x + 4, who.combat_pos.y - center.y + 4);
 			rectangle source_rect;
-			const sf::Texture* from_gw;
+			std::shared_ptr<const sf::Texture> from_gw;
 			pic_num_t pic = who.which_graphic;
 			if(pic >= 1000) {
 				bool isParty = pic >= 10000;
@@ -303,7 +303,7 @@ void draw_items(location where){
 		if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where) {
 			if(univ.town.items[i].contained) continue;
 			if(party_can_see(where) >= 6) continue;
-			const sf::Texture* src_gw;
+			std::shared_ptr<const sf::Texture> src_gw;
 			to_rect = coord_to_rect(where_draw.x,where_draw.y);
 			if(univ.town.items[i].graphic_num >= 10000){
 				graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(univ.town.items[i].graphic_num - 10000, true);
@@ -451,7 +451,7 @@ void draw_party_symbol(location center) {
 	
 	if((univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
 		i = first_active_pc();
-		const sf::Texture* from_gw;
+		std::shared_ptr<const sf::Texture> from_gw;
 		pic_num_t pic = univ.party[i].which_graphic;
 		if(pic >= 1000) {
 			bool isParty = pic >= 10000;

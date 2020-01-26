@@ -3348,10 +3348,10 @@ void edit_custom_sheets() {
 	
 	if(must_init_spec_g) {
 		spec_scen_g.clear();
-		spec_scen_g.sheets = new sf::Texture[1];
+		spec_scen_g.sheets.resize(1);
 		spec_scen_g.numSheets = 1;
 		spec_scen_g.init_sheet(0);
-		spec_scen_g.sheets[0].copyToImage().saveToFile((pic_dir/"sheet0.png").string().c_str());
+		spec_scen_g.sheets[0]->copyToImage().saveToFile((pic_dir/"sheet0.png").string().c_str());
 		all_pics.insert(all_pics.begin(), 0);
 		ResMgr::graphics.pushPath(pic_dir);
 	}
@@ -3362,7 +3362,7 @@ void edit_custom_sheets() {
 	size_t cur = 0;
 	std::unordered_map<size_t, sf::Image> sheets;
 	for(size_t i = 0; i < spec_scen_g.numSheets; i++) {
-		sheets[i] = spec_scen_g.sheets[i].copyToImage();
+		sheets[i] = spec_scen_g.sheets[i]->copyToImage();
 	}
 	auto sheetsSave = sheets;
 	
@@ -3438,11 +3438,9 @@ void edit_custom_sheets() {
 		int newSheet = pickNum->getControl("num").getTextAsNum();
 		fs::path sheetPath = pic_dir/("sheet" + std::to_string(newSheet) + ".png");
 		if(newSheet == spec_scen_g.numSheets) {
-			sf::Texture* wasSheets = spec_scen_g.sheets;
-			spec_scen_g.sheets = new sf::Texture[spec_scen_g.numSheets + 1];
-			std::copy_n(wasSheets, spec_scen_g.numSheets, spec_scen_g.sheets);
+			spec_scen_g.sheets.emplace_back();
 			spec_scen_g.init_sheet(newSheet);
-			spec_scen_g.sheets[newSheet].copyToImage().saveToFile(sheetPath.string().c_str());
+			spec_scen_g.sheets[newSheet]->copyToImage().saveToFile(sheetPath.string().c_str());
 			spec_scen_g.numSheets++;
 			auto iter = all_pics.insert(std::upper_bound(all_pics.begin(), all_pics.end(), newSheet), newSheet);
 			cur = iter - all_pics.begin();
@@ -3470,11 +3468,8 @@ void edit_custom_sheets() {
 			if(which_pic < spec_scen_g.numSheets - 1)
 				choice = cChoiceDlog("must-delete-in-order", {"cancel", "del", "move"}, &me).show();
 			if(choice == "cancel") return true;
-			sf::Texture* wasSheets = spec_scen_g.sheets;
 			if(choice == "move") {
-				spec_scen_g.sheets = new sf::Texture[spec_scen_g.numSheets-1];
-				std::copy_n(wasSheets, which_pic, spec_scen_g.sheets);
-				std::copy(wasSheets + which_pic + 1, wasSheets + spec_scen_g.numSheets, spec_scen_g.sheets + which_pic);
+				spec_scen_g.sheets.erase(spec_scen_g.sheets.begin() + which_pic);
 				spec_scen_g.numSheets--;
 				for(; which_pic < spec_scen_g.numSheets; which_pic++) {
 					fs::path from = pic_dir/("sheet" + std::to_string(which_pic + 1) + ".png");
@@ -3494,11 +3489,9 @@ void edit_custom_sheets() {
 			} else if(choice == "del") {
 				all_pics.erase(all_pics.begin() + cur);
 				spec_scen_g.numSheets = which_pic;
-				spec_scen_g.sheets = new sf::Texture[which_pic];
-				std::copy_n(wasSheets, which_pic, spec_scen_g.sheets);
+				spec_scen_g.sheets.resize(which_pic);
 				ResMgr::graphics.free("sheet" + std::to_string(which_pic));
 			}
-			delete[] wasSheets;
 		}
 		fs::path fpath = pic_dir/("sheet" + std::to_string(which_pic) + ".png");
 		if(fs::exists(fpath)) fs::remove(fpath);

@@ -1428,7 +1428,7 @@ void draw_map(bool need_refresh) {
 					if(pic >= 1000) {
 						if(spec_scen_g) {
 							//print_nums(0,99,pic);
-							const sf::Texture* src_gw;
+							std::shared_ptr<const sf::Texture> src_gw;
 							if(drawLargeIcon) {
 								pic = pic % 1000;
 								graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic);
@@ -1448,7 +1448,7 @@ void draw_map(bool need_refresh) {
 							rect_draw_some_item(*ResMgr::graphics.get("teranim"), custom_from, map_gworld, draw_rect);
 						} else {
 							int which_sheet = pic / 50;
-							const sf::Texture* src_gw = &ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet));
+							auto src_gw = &ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet));
 							pic %= 50;
 							custom_from = calc_rect(pic % 10, pic / 10);
 							rect_draw_some_item(*src_gw, custom_from, map_gworld, draw_rect);

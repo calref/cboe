@@ -435,7 +435,7 @@ void place_item_graphic(short which_slot,short graphic) {
 	to_rect.inset(-1,-1);
 	to_rect.offset(20,1);
 	from_rect.inset(2,2);
-	const sf::Texture* src_gw;
+	std::shared_ptr<const sf::Texture> src_gw;
 	if(graphic >= 10000) {
 		graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(graphic - 10000, true);
 		rect_draw_some_item(*src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
@@ -496,7 +496,7 @@ void place_item_bottom_buttons() {
 		 	to_rect = item_screen_button_rects[i];
 			rect_draw_some_item(invenbtn_gworld, but_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 			pic_num_t pic = univ.party[i].which_graphic;
-			const sf::Texture* from_gw;
+			std::shared_ptr<const sf::Texture> from_gw;
 			if(pic >= 1000) {
 				bool isParty = pic >= 10000;
 				pic_num_t need_pic = pic % 1000;

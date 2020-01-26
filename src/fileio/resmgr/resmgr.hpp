@@ -73,8 +73,8 @@ namespace ResMgr {
 			return **res_ptr;
 		}
 		// Overloading the address operator...
-		const T*const operator&() const {
-			return res_ptr.get()->get();
+		std::shared_ptr<const T> operator&() const {
+			return *res_ptr.get();
 		}
 	};
 	

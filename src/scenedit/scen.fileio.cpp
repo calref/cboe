@@ -1089,7 +1089,7 @@ void save_scenario(bool rename) {
 	if(spec_scen_g.is_old) {
 		spec_scen_g.convert_sheets();
 		for(size_t i = 0; i < spec_scen_g.numSheets; i++) {
-			sf::Image sheet = spec_scen_g.sheets[i].copyToImage();
+			sf::Image sheet = spec_scen_g.sheets[i]->copyToImage();
 			fs::path tempPath = tempDir/"temp.png";
 			sheet.saveToFile(tempPath.string());
 			std::ostream& pic_out = scen_file.newFile("scenario/graphics/sheet" + std::to_string(i) + ".png");

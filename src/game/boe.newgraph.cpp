@@ -424,7 +424,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 						base -= 10000;
 					} else base -= 1000;
 					base += step % 4;
-					const sf::Texture* from_gw = nullptr;
+					std::shared_ptr<const sf::Texture> from_gw = nullptr;
 					graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(base, isParty);
 					if(from_gw == nullptr) continue;
 					from_rect.width() = 18;
@@ -557,7 +557,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 			if(store_booms[i].boom_type >= 0) {
 				if((t + store_booms[i].offset >= 0) && (t + store_booms[i].offset <= 7)) {
 					if(cur_boom_type >= 1000) {
-						const sf::Texture* src_gworld;
+						std::shared_ptr<const sf::Texture> src_gworld;
 						graf_pos_ref(src_gworld, from_rect) = spec_scen_g.find_graphic(cur_boom_type - 1000 + t);
 						rect_draw_some_item(*src_gworld, from_rect, mainPtr, explode_place_rect[i], sf::BlendAlpha);
 					} else {
@@ -606,7 +606,7 @@ void click_shop_rect(rectangle area_rect) {
 graf_pos calc_item_rect(int num,rectangle& to_rect) {
 	if(num >= 1000) return spec_scen_g.find_graphic(num - 1000);
 	rectangle from_rect = {0,0,18,18};
-	const sf::Texture *from_gw;
+	std::shared_ptr<const sf::Texture> from_gw;
 	if(num < 55) {
 		from_gw = &ResMgr::graphics.get("objects");
 		from_rect = calc_rect(num % 5, num / 5);
@@ -666,7 +666,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	// Place store icon
 	if(!pressed) {
 		rectangle from_rect = {0,0,32,32};
-		const sf::Texture* from_gw;
+		std::shared_ptr<const sf::Texture> from_gw;
 		int i = std::max<int>(0, active_shop.getFace());
 		if(i >= 1000) {
 			graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(i - 1000);
@@ -734,7 +734,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		base_item = item.item;
 		std::string cur_name = base_item.full_name, cur_info_str;
 		rectangle from_rect, to_rect = shopping_rects[i][SHOPRECT_GRAPHIC];
-		const sf::Texture* from_gw;
+		std::shared_ptr<const sf::Texture> from_gw;
 		switch(item.type) {
 			case eShopItemType::ITEM:
 				base_item.ident = true;

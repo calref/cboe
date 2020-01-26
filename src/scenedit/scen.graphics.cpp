@@ -518,7 +518,7 @@ void set_up_terrain_buttons(bool reset) {
 				ter_from = ter_from_base;
 				pic = scenario.ter_types[i].picture;
 				if(pic >= 1000) {
-					const sf::Texture* source_gworld;
+					std::shared_ptr<const sf::Texture> source_gworld;
 					graf_pos_ref(source_gworld, ter_from) = spec_scen_g.find_graphic(pic % 1000);
 					rect_draw_some_item(*source_gworld, ter_from, mainPtr, draw_rect);
 				}
@@ -555,7 +555,7 @@ void set_up_terrain_buttons(bool reset) {
 					pic %= 1000;
 					tiny_to.width() = tiny_to.width() / 2;
 					tiny_to.height() = tiny_to.height() / 2;
-					const sf::Texture* source_gworld;
+					std::shared_ptr<const sf::Texture> source_gworld;
 					graf_pos_ref(source_gworld, ter_from) = spec_scen_g.find_graphic(pic);
 					rect_draw_some_item(*source_gworld, ter_from, mainPtr, tiny_to, sf::BlendAlpha);
 					pic++;
@@ -575,7 +575,7 @@ void set_up_terrain_buttons(bool reset) {
 					tiny_to.width() = tiny_to.width() / 2;
 					tiny_to.height() = tiny_to.height() / 2;
 					tiny_to.offset(tiny_to.width() / 2, 0);
-					const sf::Texture* source_gworld;
+					std::shared_ptr<const sf::Texture> source_gworld;
 					graf_pos_ref(source_gworld, ter_from) = spec_scen_g.find_graphic(pic);
 					rect_draw_some_item(*source_gworld, ter_from, mainPtr, tiny_to, sf::BlendAlpha);
 					pic++;
@@ -587,7 +587,7 @@ void set_up_terrain_buttons(bool reset) {
 					tiny_to.width() = tiny_to.width() / 2;
 					tiny_to.height() = tiny_to.height() / 2;
 					tiny_to.offset(0, tiny_to.height() / 2);
-					const sf::Texture* source_gworld;
+					std::shared_ptr<const sf::Texture> source_gworld;
 					graf_pos_ref(source_gworld, ter_from) = spec_scen_g.find_graphic(pic);
 					rect_draw_some_item(*source_gworld, ter_from, mainPtr, tiny_to, sf::BlendAlpha);
 					pic++;
@@ -596,7 +596,7 @@ void set_up_terrain_buttons(bool reset) {
 					rect_draw_some_item(*source_gworld, ter_from, mainPtr, tiny_to, sf::BlendAlpha);
 				} else if(pic >= 1000) {
 					pic %= 1000;
-					const sf::Texture* source_gworld;
+					std::shared_ptr<const sf::Texture> source_gworld;
 					graf_pos_ref(source_gworld, ter_from) = spec_scen_g.find_graphic(pic);
 					rect_draw_some_item(*source_gworld, ter_from, mainPtr, tiny_to, sf::BlendAlpha);
 				} else {
@@ -653,7 +653,7 @@ void set_up_terrain_buttons(bool reset) {
 				tiny_to = draw_rect;
 				frame_rect(mainPtr, tiny_to, sf::Color::Black);
 				if(pic >= 1000) {
-					const sf::Texture* source_gworld;
+					std::shared_ptr<const sf::Texture> source_gworld;
 					graf_pos_ref(source_gworld, ter_from) = spec_scen_g.find_graphic(pic % 1000);
 					rect_draw_some_item(*source_gworld, ter_from, mainPtr, tiny_to, sf::BlendAlpha);
 				} else {
@@ -976,7 +976,7 @@ void draw_terrain(){
 
 void draw_monsts() {
 	short width,height,m_start_pic;
-	const sf::Texture* from_gworld = nullptr;
+	std::shared_ptr<const sf::Texture> from_gworld = nullptr;
 	rectangle source_rect;
 	location where_draw,store_loc;
 	
@@ -1059,7 +1059,7 @@ void draw_items() {
 				(where_draw.y >= 0) && (where_draw.y <= 8))  {
 				
 				if(pic_num >= 1000) {
-					const sf::Texture* source_gworld;
+					std::shared_ptr<const sf::Texture> source_gworld;
 					graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(pic_num - 1000);
 					dest_rect = calc_rect(where_draw.x,where_draw.y);
 					dest_rect.offset(8+TER_RECT_UL_X,8+TER_RECT_UL_Y);
@@ -1095,7 +1095,7 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	location where_draw;
 	rectangle source_rect;
 	short picture_wanted;
-	const sf::Texture* source_gworld;
+	std::shared_ptr<const sf::Texture> source_gworld;
 	
 	if(i < 0 || i > 8 || j < 0 || j > 8)
 		return;
@@ -1136,7 +1136,7 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 	rectangle dest_rect = {0,0,size,size},from_rect = {0,0,12,12};
 	short picture_wanted;
 	bool drawLargeIcon = false;
-	const sf::Texture* source_gworld;
+	std::shared_ptr<const sf::Texture> source_gworld;
 	
 	picture_wanted = scenario.ter_types[terrain_to_draw].map_pic;
 	if(picture_wanted == NO_PIC) {
@@ -1160,7 +1160,7 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 		rect_draw_some_item(*source_gworld, from_rect, mainPtr, dest_rect);
 	} else {
 		if(picture_wanted >= 1000) {
-			const sf::Texture* from_gw;
+			std::shared_ptr<const sf::Texture> from_gw;
 			graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
 			from_rect.right = from_rect.left + 12;
 			from_rect.bottom = from_rect.top + 12;
@@ -1261,7 +1261,7 @@ static void place_selected_terrain(ter_num_t ter, rectangle draw_rect) {
 	pic_num_t picture_wanted = scenario.ter_types[ter].picture;
 	rectangle source_rect;
 	if(picture_wanted >= 1000)	{
-		const sf::Texture* source_gworld;
+		std::shared_ptr<const sf::Texture> source_gworld;
 		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
 		rect_draw_some_item(*source_gworld, source_rect,mainPtr,draw_rect);
 	}
@@ -1377,7 +1377,7 @@ void place_location() {
 				picture_wanted %= 1000;
 				to_rect.width() = to_rect.width() / 2;
 				to_rect.height() = to_rect.height() / 2;
-				const sf::Texture* source_gworld;
+				std::shared_ptr<const sf::Texture> source_gworld;
 				graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(picture_wanted);
 				rect_draw_some_item(*source_gworld, source_rect, mainPtr, to_rect, sf::BlendAlpha);
 				picture_wanted++;
@@ -1397,7 +1397,7 @@ void place_location() {
 				to_rect.width() = to_rect.width() / 2;
 				to_rect.height() = to_rect.height() / 2;
 				to_rect.offset(to_rect.width() / 2, 0);
-				const sf::Texture* source_gworld;
+				std::shared_ptr<const sf::Texture> source_gworld;
 				graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(picture_wanted);
 				rect_draw_some_item(*source_gworld, source_rect, mainPtr, to_rect, sf::BlendAlpha);
 				picture_wanted++;
@@ -1409,7 +1409,7 @@ void place_location() {
 				to_rect.width() = to_rect.width() / 2;
 				to_rect.height() = to_rect.height() / 2;
 				to_rect.offset(0, to_rect.height() / 2);
-				const sf::Texture* source_gworld;
+				std::shared_ptr<const sf::Texture> source_gworld;
 				graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(picture_wanted);
 				rect_draw_some_item(*source_gworld, source_rect, mainPtr, to_rect, sf::BlendAlpha);
 				picture_wanted++;
@@ -1418,7 +1418,7 @@ void place_location() {
 				rect_draw_some_item(*source_gworld, source_rect, mainPtr, to_rect, sf::BlendAlpha);
 			} else if(picture_wanted >= 1000) {
 				picture_wanted %= 1000;
-				const sf::Texture* source_gworld;
+				std::shared_ptr<const sf::Texture> source_gworld;
 				graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(picture_wanted);
 				rect_draw_some_item(*source_gworld, source_rect, mainPtr, to_rect, sf::BlendAlpha);
 			} else {
@@ -1472,7 +1472,7 @@ void place_location() {
 		} else if(overall_mode == MODE_PLACE_ITEM || overall_mode == MODE_PLACE_SAME_ITEM) {
 			picture_wanted = scenario.scen_items[mode_count].graphic_num;
 			if(picture_wanted >= 1000) {
-				const sf::Texture* source_gworld;
+				std::shared_ptr<const sf::Texture> source_gworld;
 				graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
 				rect_draw_some_item(*source_gworld,source_rect,mainPtr,draw_rect,sf::BlendAlpha);
 			} else if(picture_wanted < 55) {

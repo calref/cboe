@@ -391,9 +391,10 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 		sf::Image party_sheet;
 		StdInputStream stream(fin);
 		if(party_sheet.loadFromStream(stream)) {
-			spec_scen_g.party_sheet.reset(new sf::Texture);
-			spec_scen_g.party_sheet->create(party_sheet.getSize().x, party_sheet.getSize().y);
-			spec_scen_g.party_sheet->update(party_sheet);
+			sf::Texture sheet;
+			sheet.create(party_sheet.getSize().x, party_sheet.getSize().y);
+			sheet.update(party_sheet);
+			spec_scen_g.party_sheet.reset(new sf::Texture(sheet));
 		} else showWarning("There was an error loading the party custom graphics.");
 	}
 	

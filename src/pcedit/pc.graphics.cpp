@@ -392,7 +392,7 @@ void display_party() {
 			if(univ.party[i].main_status != eMainStatus::ABSENT) { // PC exists?
 				// draw PC graphic
 				pic_num_t pic = univ.party[i].which_graphic;
-				const sf::Texture* from_gw;
+				std::shared_ptr<const sf::Texture> from_gw;
 				if(pic >= 1000) {
 					bool isParty = pic >= 10000;
 					pic_num_t need_pic = pic % 1000;

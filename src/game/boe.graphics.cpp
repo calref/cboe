@@ -317,7 +317,7 @@ void draw_startup_stats() {
 				to_rect.offset(pc_rect.left,pc_rect.top);
 				pic_num_t pic = univ.party[i].which_graphic;
 				if(pic >= 1000) {
-					const sf::Texture* gw;
+					std::shared_ptr<const sf::Texture> gw;
 					graf_pos_ref(gw, from_rect) = spec_scen_g.find_graphic(pic % 1000, pic >= 10000);
 					rect_draw_some_item(*gw,from_rect,mainPtr,to_rect,sf::BlendAlpha);
 				} else if(pic >= 100) {
@@ -1191,7 +1191,7 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	};
 	static std::unique_ptr<sf::Texture> trim_masks[12], walkway_masks[9];
 	rectangle from_rect = {0,0,36,28},to_rect;
-	const sf::Texture* from_gworld;
+	std::shared_ptr<const sf::Texture> from_gworld;
 	sf::Texture* mask;
 	static bool inited = false;
 	if(!inited){

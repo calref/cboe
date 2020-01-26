@@ -16,8 +16,8 @@
 #include "location.hpp"
 
 static const pic_num_t NO_PIC = -1;
-using graf_pos = std::pair<const sf::Texture*,rectangle>;
-using graf_pos_ref = std::pair<const sf::Texture*&,rectangle&>;
+using graf_pos = std::pair<std::shared_ptr<const sf::Texture>,rectangle>;
+using graf_pos_ref = std::pair<std::shared_ptr<const sf::Texture>&,rectangle&>;
 
 struct m_pic_index_t {
 	unsigned char i, x, y;
@@ -25,18 +25,18 @@ struct m_pic_index_t {
 
 struct cCustomGraphics {
 	size_t numSheets;
-	sf::Texture* sheets = nullptr;
-	std::shared_ptr<sf::Texture> party_sheet;
+	std::vector<std::shared_ptr<const sf::Texture>> sheets;
+	std::shared_ptr<const sf::Texture> party_sheet;
 	bool is_old = false;
 	void clear() {
-		if(sheets != nullptr) delete[] sheets;
-		sheets = nullptr;
-	}
-	~cCustomGraphics() {
-		clear();
+		sheets.clear();
+		party_sheet.reset();
 	}
 	explicit operator bool() {
-		return sheets;
+		return !sheets.empty() && bool(sheets[0]);
+	}
+	bool operator!() {
+		return !bool(*this);
 	}
 	void convert_sheets();
 	void copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlots);
