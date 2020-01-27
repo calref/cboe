@@ -59,6 +59,10 @@ The following dependencies are required:
   libraries are needed
 - ZLib - This is included with the system on the Mac.
 
+For Linux builds, the following additional dependencies are required:
+- [TGUI](https://tgui.eu/) - version 0.9 or later required
+- zenity command-line tools
+
 If you are using Visual Studio, we recommend installing [vcpkg](https://github.com/Microsoft/vcpkg) to manage these dependencies.
 Use the following commands to install the required dependencies:
 For 32-bit builds:
@@ -100,7 +104,7 @@ Helpful Links
 #openboe on irc.freenode.net)
 * [Original Game Source](http://www.spiderwebsoftware.com/blades/opensource.html) - Where
   it all began. Warning: Terrifying code.
-* [Experimental Builds](http://celmin.pwcsite.com/oboe/?C=M;O=D) - will be put
+* [Experimental Windows/Mac Builds](http://pentalithia.ca/oboe/?C=M;O=D) - will be put
   up whenever Celtic Minstrel feels like it.
-* [Blades File Dump](https://blades.calref.net/) - A spot to quickly add
+* [Official Web Site](https://openboe.com/) - A spot to quickly add
   project files; mostly contains older binaries from the Google Code page.
