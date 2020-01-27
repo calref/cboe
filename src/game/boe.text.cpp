@@ -234,6 +234,23 @@ void put_item_screen(eItemWinMode screen_num) {
 	switch(screen_num) {
 		case ITEM_WIN_SPECIAL:
 			win_draw_string(item_stats_gworld,upper_frame_rect,"Special items:",eTextMode::WRAP,style);
+			break;
+		case ITEM_WIN_QUESTS:
+			win_draw_string(item_stats_gworld,upper_frame_rect,"Quests/Jobs:",eTextMode::WRAP,style);
+			break;
+			
+		default: // on an items page
+			pc = screen_num;
+			sout.str("");;
+			sout << univ.party[pc].name << " inventory:",
+			win_draw_string(item_stats_gworld,upper_frame_rect,sout.str(),eTextMode::WRAP,style);
+			break;
+	}
+
+	// TODO: The item graphics are 18x18 but the height of each line is 13px, so set a clip rect to ensure it doesn't overflow onto the border
+	clip_rect(item_stats_gworld, erase_rect);
+	switch(screen_num) {
+		case ITEM_WIN_SPECIAL:
 			style.colour = sf::Color::Black;
 			for(short i = 0; i < 8; i++) {
 				i_num = i + item_offset;
@@ -248,7 +265,6 @@ void put_item_screen(eItemWinMode screen_num) {
 			}
 			break;
 		case ITEM_WIN_QUESTS:
-			win_draw_string(item_stats_gworld,upper_frame_rect,"Quests/Jobs:",eTextMode::WRAP,style);
 			style.colour = sf::Color::Black;
 			for(short i = 0; i < 8; i++) {
 				i_num = i + item_offset;
@@ -273,10 +289,6 @@ void put_item_screen(eItemWinMode screen_num) {
 			break;
 			
 		default: // on an items page
-			pc = screen_num;
-			sout.str("");;
-			sout << univ.party[pc].name << " inventory:",
-			win_draw_string(item_stats_gworld,upper_frame_rect,sout.str(),eTextMode::WRAP,style);
 			style.colour = sf::Color::Black;
 			
 			for(short i = 0; i < 8; i++) {
@@ -345,6 +357,7 @@ void put_item_screen(eItemWinMode screen_num) {
 			} // end of for(short i = 0; i < 8; i++)
 			break;
 	}
+	undo_clip(item_stats_gworld);
 	
 	place_item_bottom_buttons();
 	item_stats_gworld.display();
