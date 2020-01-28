@@ -1339,7 +1339,7 @@ bool handle_action(const sf::Event& event) {
 						
 						item_hit = item_sbar->getPosition() + i;
 						switch(j) {
-							case ITEMBTN_NAME: // equip
+							case ITEMBTN_NAME: case ITEMBTN_ICON: // equip
 								handle_equip_item(item_hit, need_redraw);
 								break;
 							case ITEMBTN_USE:

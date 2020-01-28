@@ -438,7 +438,7 @@ void place_buy_button(short position,short pc_num,short item_num) {
 void place_item_graphic(short which_slot,short graphic) {
 	rectangle from_rect = {0,0,18,18},to_rect;
 	
-	item_area_button_active[which_slot][ITEMBTN_ICON] = true;
+	item_area_button_active[which_slot][ITEMBTN_NAME] = item_area_button_active[which_slot][ITEMBTN_ICON] = true;
 	from_rect.offset((graphic % 10) * 18,(graphic / 10) * 18);
 	to_rect = item_buttons[which_slot][ITEMBTN_ICON];
 	std::shared_ptr<const sf::Texture> src_gw;
