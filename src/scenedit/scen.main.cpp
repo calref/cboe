@@ -29,8 +29,8 @@
 
 /* Globals */
 bool  All_Done = false;
-sf::Event event;
 sf::RenderWindow mainPtr;
+sf::View mainView;
 cTown* town = nullptr;
 bool mouse_button_held = false,editing_town = false;
 short cur_viewing_mode = 0;
@@ -49,12 +49,15 @@ location cur_out;
 
 /* Prototypes */
 static void init_scened(int, char*[]);
-void Handle_One_Event();
+void handle_events();
+void handle_one_event(const sf::Event&);
 void Handle_Activate();
-void Handle_Update();
-void Mouse_Pressed();
+void redraw_everything();
+void Mouse_Pressed(const sf::Event&);
 void close_program();
 void ding();
+void init_main_window(sf::RenderWindow&, sf::View&);
+sf::FloatRect compute_viewport(sf::RenderWindow&, float ui_scale);
 
 cScenario scenario;
 rectangle right_sbar_rect;
@@ -75,8 +78,7 @@ int main(int argc, char* argv[]) {
 			set_up_start_screen();
 		}
 		
-		while(!All_Done)
-			Handle_One_Event();
+		handle_events();
 		
 		close_program();
 		return 0;
@@ -99,29 +101,71 @@ static void init_sbar(std::shared_ptr<cScrollbar>& sbar, rectangle rect, int pgS
 	sbar->hide();
 }
 
-void init_scened(int argc, char* argv[]) {
-	init_directories(argv[0]);
-	init_menubar();
-	sync_prefs();
-	init_shaders();
-	init_tiling();
-	init_snd_tool();
+sf::FloatRect compute_viewport(sf::RenderWindow& mainPtr, float ui_scale) {
+
+	// See compute_viewport() in boe.graphics.cpp
+	int const os_specific_y_offset =
+#if defined(SFML_SYSTEM_WINDOWS) || defined(SFML_SYSTEM_MAC)
+		0;
+#else
+		getMenubarHeight();
+#endif
+
+	sf::FloatRect viewport;
 	
-	sf::VideoMode mode = sf::VideoMode::getDesktopMode();
-	rectangle windRect;
-	windRect.width() = mode.width;
-	windRect.height() = mode.height;
-	int height = 420 + getMenubarHeight();
+	viewport.top    = float(os_specific_y_offset) / mainPtr.getSize().y;
+	viewport.left   = 0;
+	viewport.width  = ui_scale;
+	viewport.height = ui_scale;
 	
-	windRect.inset((windRect.right - 584) / 2,(windRect.bottom - height) / 2);
-	windRect.offset(0,18);
-	mainPtr.create(sf::VideoMode(windRect.width(), windRect.height()), "Blades of Exile Scenario Editor", sf::Style::Titlebar | sf::Style::Close);
-	mainPtr.setPosition(windRect.topLeft());
-#ifndef __APPLE__ // This overrides Dock icon on OSX, which isn't what we want at all
+	return viewport;
+}
+
+void init_main_window (sf::RenderWindow & mainPtr, sf::View & mainView) {
+
+	// TODO: things might still be broken when upscaled.
+	//   translate_mouse_coordinates has been applied in some places but more work might be needed.
+	//   In particular, the white area on the right side of the main menu needs fixing.
+	float ui_scale = get_float_pref("UIScale", 1.0);
+	
+	int const width  = ui_scale * 584;
+	int const height = ui_scale * 420
+#ifndef SFML_SYSTEM_WINDOWS
+		+ getMenubarHeight()
+#endif
+	;
+	
+	mainPtr.create(sf::VideoMode(width, height), "Blades of Exile Scenario Editor", sf::Style::Titlebar | sf::Style::Close);
+	mainPtr.setPosition({0,0});
+
+	// Initialize the view
+	mainView.setSize(width, height);
+	mainView.setCenter(width / 2, height / 2);
+
+	// Apply the viewport to the view
+	sf::FloatRect mainPort = compute_viewport(mainPtr, ui_scale);
+	mainView.setViewport(mainPort);
+
+	// Apply view to the main window
+	mainPtr.setView(mainView);
+
+#ifndef SFML_SYSTEM_MAC // This overrides Dock icon on OSX, which isn't what we want at all
 	const ImageRsrc& icon = ResMgr::graphics.get("icon", true);
 	mainPtr.setIcon(icon->getSize().x, icon->getSize().y, icon->copyToImage().getPixelsPtr());
 #endif
+}
+
+void init_scened(int argc, char* argv[]) {
+	init_directories(argv[0]);
+	sync_prefs();
+	init_main_window(mainPtr, mainView);
+	init_menubar();
+	init_shaders();
+	init_tiling();
+	init_snd_tool();
+#ifdef SFML_SYSTEM_MAC
 	init_menubar(); // This is called twice because Windows and Mac have different ordering requirements
+#endif
 	mainPtr.clear(sf::Color::Black);
 	mainPtr.display();
 	
@@ -161,11 +205,30 @@ void init_scened(int argc, char* argv[]) {
 	redraw_screen();
 }
 
-void Handle_One_Event() {
-	ae_loading = false;
-	Handle_Update();
+void handle_events() {
+	sf::Event currentEvent;
+	sf::Clock framerate_clock;
+	const sf::Int64 desired_microseconds_per_frame { 1000000 / 60 }; // us / FPS
+
+	while(!All_Done) {
+		while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent);
+
+		// Why do we have to set this to false after handling every event?
+		ae_loading = false;
+
+		redraw_everything();
+
+		// Prevent the loop from executing too fast.
+		const sf::Int64 remaining_time_budget = desired_microseconds_per_frame - framerate_clock.getElapsedTime().asMicroseconds();
+		if(remaining_time_budget > 0) sf::sleep(sf::microseconds(remaining_time_budget));
+		framerate_clock.restart();
+	}
+}
+
+void handle_one_event(sf::Event const & event) {
 	
-	if(!mainPtr.waitEvent(event)) return;
+	// Check if the menubar wants to handle this event.
+	if(menuBarProcessEvent(event)) return;
 	
 	switch(event.type) {
 		case sf::Event::KeyPressed:
@@ -174,13 +237,13 @@ void Handle_One_Event() {
 			break;
 			
 		case sf::Event::MouseButtonPressed:
-			Mouse_Pressed();
+			Mouse_Pressed(event);
 			break;
 			
 		case sf::Event::MouseMoved:
 			if(mouse_button_held)
-				handle_action(loc(event.mouseMove.x,event.mouseMove.y),event);
-			update_mouse_spot(loc(event.mouseMove.x,event.mouseMove.y));
+				handle_action(location { translate_mouse_coordinates({event.mouseMove.x,event.mouseMove.y})},event);
+			update_mouse_spot(location { translate_mouse_coordinates({event.mouseMove.x,event.mouseMove.y})});
 			break;
 			
 		case sf::Event::MouseWheelMoved:
@@ -202,7 +265,7 @@ void Handle_One_Event() {
 	}
 }
 
-void Handle_Update() {
+void redraw_everything() {
 	redraw_screen();
 	restore_cursor();
 }
@@ -559,9 +622,11 @@ static void handleUpdateWhileScrolling(volatile bool& doneScrolling) {
 	mainPtr.setActive(false);
 }
 
-void Mouse_Pressed() {
+void Mouse_Pressed(sf::Event const & event) {
 	
-	location mousePos(event.mouseButton.x, event.mouseButton.y);
+	// Translate coordinates
+	location mousePos { translate_mouse_coordinates({event.mouseButton.x, event.mouseButton.y}) }; 
+	
 	volatile bool doneScrolling = false;
 	if(right_sbar->isVisible() && mousePos.in(right_sbar->getBounds())) {
 		mainPtr.setActive(false);
@@ -578,7 +643,7 @@ void Mouse_Pressed() {
 		updater.join();
 		redraw_screen(/*REFRESH_RIGHT_BAR*/);
 		set_up_terrain_buttons(false);
-	} else handle_action(loc(event.mouseButton.x,event.mouseButton.y),event);
+	} else handle_action(mousePos,event);
 }
 
 void close_program() {

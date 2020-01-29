@@ -13,6 +13,10 @@ void init_menubar();
 void shut_down_menus(short mode);
 void update_edit_menu();
 
+namespace sf { class Event; };
+bool menuBarProcessEvent(const sf::Event&);
+void drawMenuBar();
+
 enum class eMenu {
 	NONE, ABOUT, QUIT, FRILL, UNFRILL,
 	FILE_NEW, FILE_OPEN, FILE_CLOSE, FILE_SAVE, FILE_SAVE_AS, FILE_REVERT,

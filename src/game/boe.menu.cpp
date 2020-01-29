@@ -110,6 +110,13 @@ bool OpenBoEMenu::handle_event(const sf::Event& event) {
 // Returns true if event was consumed
 bool OpenBoEMenu::handle_keypressed_event(const sf::Event& event) {
 
+	// NOTE: menu items get dynamically enabled/disabled based
+	// on gamestate, but these keyboard shortcuts do not. So
+	// this may not be the best way to implement them.
+
+	// NOTE: since we are manually adding keyboard shortcut descriptions
+	// to the menu items, they become parts of menu hierarchies
+
 	bool event_was_consumed { false };
 
 	if(this->is_control_key_pressed()) {
@@ -133,7 +140,7 @@ bool OpenBoEMenu::handle_keypressed_event(const sf::Event& event) {
 	return event_was_consumed;
 }
 
-bool OpenBoEMenu::is_control_key_pressed() {
+bool OpenBoEMenu::is_control_key_pressed() const {
 
 	// NOTE: Control is not cross-platform (apple)
 
@@ -161,7 +168,7 @@ void OpenBoEMenu::update_for_game_state(eGameMode overall_mode, bool party_in_me
 		menubar->setMenuEnabled("Cast Mage",   false);
 		menubar->setMenuEnabled("Cast Priest", false);
 
-		menubar->setMenuItemEnabled({ "File", "Save Game" }, false);
+		menubar->setMenuItemEnabled({ "File", "Save Game Ctrl-S" }, false);
 		if(party_in_memory) {
 			menubar->setMenuItemEnabled({ "File", "Save As..." }, true);
 		} else {
@@ -174,7 +181,7 @@ void OpenBoEMenu::update_for_game_state(eGameMode overall_mode, bool party_in_me
 		menubar->setMenuEnabled("Cast Mage",   true);
 		menubar->setMenuEnabled("Cast Priest", true);
 
-		menubar->setMenuItemEnabled({ "File", "Save Game"  }, true);
+		menubar->setMenuItemEnabled({ "File", "Save Game Ctrl-S"  }, true);
 		menubar->setMenuItemEnabled({ "File", "Save As..." }, true);
 	}
 }
@@ -195,7 +202,7 @@ void OpenBoEMenu::purge_spell_menus(tgui::MenuBar::Ptr& menubar) {
 void OpenBoEMenu::update_mage_spells_menu(tgui::MenuBar::Ptr& menubar) {
 
 	// Add "About" menu item and store connection id
-	const OpenBoEMenu::MenuHierarchy about_hierarchy {{ "Cast Mage", "About this menu" }};
+	const OpenBoEMenu::MenuHierarchy about_hierarchy { "Cast Mage", "About this menu" };
 	menubar->addMenuItem(about_hierarchy);
 	this->spell_menus_connection_ids.push_back(
 		menubar->connectMenuItem(about_hierarchy, handle_menu_choice, eMenu::ABOUT_MAGE)
@@ -205,7 +212,7 @@ void OpenBoEMenu::update_mage_spells_menu(tgui::MenuBar::Ptr& menubar) {
 	for(int spell_id = 0; spell_id < NUM_MAGE_SPELLS; ++spell_id) {
 		eSpell spell = cSpell::fromNum(eSkill::MAGE_SPELLS, spell_id);
 		if(pc_can_cast_spell(this->univ.current_pc(), spell)) {
-			const OpenBoEMenu::MenuHierarchy spell_hierarchy = this->menu_hierarchy_from_spell(*spell);
+			const auto spell_hierarchy = this->menu_hierarchy_from_spell(*spell);
 			menubar->addMenuItem(spell_hierarchy);
 			// Connect and store connection id
 			this->spell_menus_connection_ids.push_back(
@@ -218,7 +225,7 @@ void OpenBoEMenu::update_mage_spells_menu(tgui::MenuBar::Ptr& menubar) {
 void OpenBoEMenu::update_priest_spells_menu(tgui::MenuBar::Ptr& menubar) {
 
 	// Add "About" menu item and store connection id
-	const OpenBoEMenu::MenuHierarchy about_hierarchy { { "Cast Priest", "About this menu" } };
+	const OpenBoEMenu::MenuHierarchy about_hierarchy { "Cast Priest", "About this menu" };
 	menubar->addMenuItem(about_hierarchy);
 	this->spell_menus_connection_ids.push_back(
 		menubar->connectMenuItem(about_hierarchy, handle_menu_choice, eMenu::ABOUT_PRIEST)
@@ -228,7 +235,7 @@ void OpenBoEMenu::update_priest_spells_menu(tgui::MenuBar::Ptr& menubar) {
 	for (int spell_id = 0; spell_id < NUM_PRIEST_SPELLS; ++spell_id) {
 		eSpell spell = cSpell::fromNum(eSkill::PRIEST_SPELLS, spell_id);
 		if(pc_can_cast_spell(this->univ.current_pc(), spell)) {
-			const OpenBoEMenu::MenuHierarchy spell_hierarchy = this->menu_hierarchy_from_spell(*spell);
+			const auto spell_hierarchy = this->menu_hierarchy_from_spell(*spell);
 			menubar->addMenuItem(spell_hierarchy);
 			// Connect and store connection id
 			this->spell_menus_connection_ids.push_back(
@@ -238,7 +245,7 @@ void OpenBoEMenu::update_priest_spells_menu(tgui::MenuBar::Ptr& menubar) {
 	}
 }
 
-// Create a menu hierarcy from cSpell
+// Create a menu hierarchy from cSpell
 OpenBoEMenu::MenuHierarchy OpenBoEMenu::menu_hierarchy_from_spell(const cSpell& spell) const {
 	OpenBoEMenu::MenuHierarchy hier;
 

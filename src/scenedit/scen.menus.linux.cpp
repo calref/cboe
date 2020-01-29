@@ -1,43 +1,33 @@
-
 #include "scen.menus.hpp"
-#include <map>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "scenario.hpp"
-#include "winutil.hpp"
-
-// This is the index of each menu on the menubar
-enum {
-	FILE_MENU_POS = 0,
-	EDIT_MENU_POS = 1,
-	SCEN_MENU_POS = 2,
-	TOWN_MENU_POS = 3,
-	OUT_MENU_POS = 4,
-	HELP_MENU_POS = 6,
-};
+#include <memory>
+#include "scen.menu.hpp"
+#include "undo.hpp"
 
 extern sf::RenderWindow mainPtr;
-extern cScenario scenario;
-std::map<int,eMenu> menuChoices;
+extern cUndoList undo_list;
 
+std::shared_ptr <OpenBoESceneditMenu> menu_ptr;
 
 void init_menubar() {
+	menu_ptr.reset(new OpenBoESceneditMenu(mainPtr));
 }
 
 void shut_down_menus(short mode) {
+	menu_ptr->update_for_mode(mode);
 }
 
 void update_edit_menu() {
+	menu_ptr->update_edit_menu(undo_list);
 }
 
-#include "cursors.hpp"
+bool menuBarProcessEvent(const sf::Event& event) {
+	return menu_ptr->handle_event(event);
+}
 
-#include "fileio.hpp"
-#include "scen.actions.hpp"
+void drawMenuBar() {
+	menu_ptr->draw();
+}
 
-extern short cur_town;
-extern location cur_out;
-extern cTown* town;
-extern cOutdoors* current_terrain;
-extern bool change_made, ae_loading;
 void set_up_apple_events(int argc, char* argv[]) {
 }

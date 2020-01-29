@@ -19,6 +19,7 @@
 #include "dialog.hpp"
 
 #include "scen.core.hpp"
+#include "scen.menus.hpp"
 #include "scen.townout.hpp"
 #include "scrollbar.hpp"
 #include "res_image.hpp"
@@ -36,6 +37,7 @@ void sort_specials();
 
 extern cOutdoors* current_terrain;
 extern sf::RenderWindow mainPtr;
+extern sf::View mainView;
 extern cTown* current_town;
 extern short cen_x, cen_y,current_terrain_type,cur_town;
 extern cTown* town;
@@ -385,10 +387,23 @@ void load_graphics(){
 
 void redraw_screen() {
 	rectangle windRect(mainPtr);
+	
+	// Switch back to the default view while drawing the background tiles
+	// so that they are not upscaled
+	mainPtr.setView(mainPtr.getDefaultView());
 	tileImage(mainPtr,windRect,bg[20]);
+	mainPtr.setView(mainView);
+	
 	draw_main_screen();
+	
 	if(overall_mode < MODE_MAIN_SCREEN)
 		draw_terrain();
+	
+	// DIRTY FIX to a problem that exist somewhere else. But where?
+	undo_clip(mainPtr);
+	
+	drawMenuBar();	
+	
 	mainPtr.display();
 }
 
@@ -961,7 +976,7 @@ void draw_terrain(){
 			yMin = cen_y + 5 - (324 / size);
 			yMax = cen_y + 5;
 		} else yMax = std::min(yMax, 324 / size);
-		std::cout << "Drawing map for x = " << xMin << "..." << xMax << " and y = " << yMin << "..." << yMax << std::endl;
+		// std::cout << "Drawing map for x = " << xMin << "..." << xMax << " and y = " << yMin << "..." << yMax << std::endl;
 		for(short q = xMin; q < xMax; q++)
 			for(short r = yMin; r < yMax; r++) {
 				if(q - xMin < 0 || q - xMin >= max_dim || r - yMin < 0 || r - yMin >= max_dim)
@@ -1298,13 +1313,13 @@ void place_location() {
 	short picture_wanted;
 	tileImage(mainPtr, terrain_buttons_rect, bg[17]);
 	frame_rect(mainPtr, terrain_buttons_rect, sf::Color::Black);
-	location mouse = sf::Mouse::getPosition(mainPtr);
+	location mouse = translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr));
 	
 	location moveTo(5, terrain_rects[255].top + 18);
 	draw_rect = text_rect;
 	draw_rect.offset(moveTo);
 	if(overall_mode < MODE_MAIN_SCREEN) {
-		std::cout << "Mouse: " << mouse << " Buttons: " << terrain_buttons_rect << " Terrain: " << terrain_rect << std::endl;
+		// std::cout << "Mouse: " << mouse << " Buttons: " << terrain_buttons_rect << " Terrain: " << terrain_rect << std::endl;
 		if(mouse.in(terrain_buttons_rect)) {
 			location rel_mouse = mouse;
 			rel_mouse.x -= RIGHT_AREA_UL_X;
@@ -1613,3 +1628,8 @@ bool container_there(location l) {
 }
 
 void record_display_strings(){}
+
+// Translate mouse event coordinates based on the global view and viewport
+sf::Vector2f translate_mouse_coordinates(sf::Vector2i const point) {
+	return mainPtr.mapPixelToCoords(point, mainView);
+}

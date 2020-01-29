@@ -1,4 +1,5 @@
 
+#include <SFML/Graphics/RenderWindow.hpp>
 #include "fields.hpp"
 #include "location.hpp"
 
@@ -36,3 +37,4 @@ short string_length(char *str);
 rectangle get_custom_rect (short which_rect);
 void init_dialogs();
 void record_display_strings();
+sf::Vector2f translate_mouse_coordinates(sf::Vector2i const point);

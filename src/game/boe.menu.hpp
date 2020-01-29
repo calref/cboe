@@ -22,7 +22,7 @@ public:
 	void update_spell_menus();
 	void update_monsters_menu();
 
-	private:
+private:
 
 	using MenuHierarchy = std::vector<sf::String>;
 
@@ -34,7 +34,7 @@ public:
 
 	tgui::MenuBar::Ptr build_menubar() const;
 	bool handle_keypressed_event(const sf::Event&);
-	bool is_control_key_pressed();
+	bool is_control_key_pressed() const;
 	void add_menu_placeholders(tgui::MenuBar::Ptr&) const;
 	void add_persistent_menu_items(tgui::MenuBar::Ptr&) const;
 	tgui::MenuBar::Ptr get_menubar_ptr() const;

@@ -1776,13 +1776,13 @@ void handle_keystroke(sf::Event event) {
 	mouse_button_held = false;
 }
 
-void handle_scroll(sf::Event& event) {
+void handle_scroll(const sf::Event& event) {
 	rectangle pal_rect = terrain_buttons_rect, right_area_rect = {0,0,RIGHT_AREA_HEIGHT,RIGHT_AREA_WIDTH};
 	right_area_rect.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y);
 	pal_rect.offset(RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
 	pal_rect.height() = 16 * 17 + 2;
 	fill_rect(mainPtr, right_area_rect, sf::Color::Magenta);
-	location pos(event.mouseWheel.x, event.mouseWheel.y);
+	location pos { translate_mouse_coordinates({event.mouseMove.x,event.mouseMove.y}) };
 	int amount = event.mouseWheel.delta;
 	if(right_sbar->isVisible() && pos.in(right_area_rect)) {
 		right_sbar->setPosition(right_sbar->getPosition() - amount);
@@ -2288,7 +2288,7 @@ void set_up_start_screen() {
 	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"Copyright 1997, All rights reserved.");
 	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,version());
 	change_made = false;
-	update_mouse_spot(sf::Mouse::getPosition(mainPtr));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
 }
 
 void set_up_main_screen() {
@@ -2328,7 +2328,7 @@ void set_up_main_screen() {
 	shut_down_menus(4);
 	shut_down_menus(3);
 	redraw_screen();
-	update_mouse_spot(sf::Mouse::getPosition(mainPtr));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
 }
 
 void start_town_edit() {
@@ -2358,7 +2358,7 @@ void start_town_edit() {
 				current_ground = 0;
 			else if(town->terrain(i,j) == 2)
 				current_ground = 2;
-	update_mouse_spot(sf::Mouse::getPosition(mainPtr));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
 }
 
 void start_out_edit() {
@@ -2389,7 +2389,7 @@ void start_out_edit() {
 				current_ground = 0;
 			else if(current_terrain->terrain[i][j] == 2)
 				current_ground = 2;
-	update_mouse_spot(sf::Mouse::getPosition(mainPtr));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
 	redraw_screen();
 }
 
@@ -2402,7 +2402,7 @@ void start_terrain_editing() {
 	place_location();
 	
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete/clear",true);
-	update_mouse_spot(sf::Mouse::getPosition(mainPtr));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
 }
 
 void start_monster_editing(bool just_redo_text) {
@@ -2426,7 +2426,7 @@ void start_monster_editing(bool just_redo_text) {
 		set_rb(i - 1,RB_MONST, i, title);
 	}
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(sf::Mouse::getPosition(mainPtr));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
 	redraw_screen();
 }
 
@@ -2456,7 +2456,7 @@ void start_item_editing(bool just_redo_text) {
 		set_rb(i,RB_ITEM, i, title);
 	}
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(sf::Mouse::getPosition(mainPtr));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
 	redraw_screen();
 }
 
@@ -2483,7 +2483,7 @@ void start_special_item_editing(bool just_redo_text) {
 		set_rb(i,RB_SPEC_ITEM, i, title);
 	}
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(sf::Mouse::getPosition(mainPtr));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
 	redraw_screen();
 }
 
@@ -2508,7 +2508,7 @@ void start_quest_editing(bool just_redo_text) {
 		set_rb(i, RB_QUEST, i, title);
 	}
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(sf::Mouse::getPosition(mainPtr));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
 	redraw_screen();
 }
 
@@ -2533,7 +2533,7 @@ void start_shops_editing(bool just_redo_text) {
 		set_rb(i, RB_SHOP, i, title);
 	}
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(sf::Mouse::getPosition(mainPtr));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
 	redraw_screen();
 }
 
@@ -2606,7 +2606,7 @@ void start_string_editing(eStrMode mode,short just_redo_text) {
 	
 	pos = right_sbar->getPosition();
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(sf::Mouse::getPosition(mainPtr));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
 	redraw_screen();
 }
 
@@ -2655,7 +2655,7 @@ void start_special_editing(short mode,short just_redo_text) {
 		case 2: set_rb(num_specs, RB_TOWN_SPEC, num_specs, make_new); break;
 	}
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(sf::Mouse::getPosition(mainPtr));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
 	redraw_screen();
 }
 
@@ -2691,7 +2691,7 @@ void start_dialogue_editing(short restoring) {
 	}
 	set_rb(10 + n_nodes, RB_DIALOGUE, n_nodes, "Create New Node");
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click node to delete",true);
-	update_mouse_spot(sf::Mouse::getPosition(mainPtr));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
 	redraw_screen();
 }
 
