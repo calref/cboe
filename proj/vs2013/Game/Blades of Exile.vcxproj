@@ -117,6 +117,7 @@
     <ClInclude Include="..\..\..\src\game\boe.text.hpp" />
     <ClInclude Include="..\..\..\src\game\boe.town.hpp" />
     <ClInclude Include="..\..\..\src\game\boe.townspec.hpp" />
+    <ClInclude Include="..\..\..\src\game\boe.ui.hpp" />
     <ClInclude Include="..\..\..\rsrc\menus\boeresource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +143,7 @@
     <ClCompile Include="..\..\..\src\game\boe.text.cpp" />
     <ClCompile Include="..\..\..\src\game\boe.town.cpp" />
     <ClCompile Include="..\..\..\src\game\boe.townspec.cpp" />
+    <ClCompile Include="..\..\..\src\game\boe.ui.cpp" />
     <ClCompile Include="..\..\..\src\pcedit\pc.editors.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -18,6 +18,7 @@
 #include "boe.specials.hpp"
 #include "boe.graphutil.hpp"
 #include "boe.main.hpp"
+#include "boe.ui.hpp"
 #include "mathutil.hpp"
 #include "choicedlog.hpp"
 #include "boe.menus.hpp"
@@ -360,7 +361,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short nu
 	set_pc_moves();
 	pick_next_pc();
 	center = univ.current_pc().combat_pos;
-	draw_buttons(0);
+	UI::toolbar.draw(mainPtr);
 	put_pc_screen();
 	set_stat_window_for_pc(univ.cur_pc);
 	
@@ -4656,7 +4657,7 @@ void end_combat() {
 	if(univ.current_pc().main_status != eMainStatus::ALIVE)
 		univ.cur_pc = first_active_pc();
 	put_item_screen(stat_window);
-	draw_buttons(0);
+	UI::toolbar.draw(mainPtr);
 }
 
 

@@ -25,6 +25,7 @@
 #include "boe.items.hpp"
 #include "boe.dlgutil.hpp"
 #include "boe.infodlg.hpp"
+#include "boe.ui.hpp"
 
 #include "scrollbar.hpp"
 
@@ -74,10 +75,7 @@ sf::View mainView;
 
 long anim_ticks = 0;
 
-// 0 - terrain   1 - buttons   2 - pc stats
-// 3 - item stats   4 - text bar   5 - text area (not right)
-enum_map(eGuiArea, rectangle) win_from_rects = {{0,0,350,278},{0,0,37,258},{0,0,115,288},{0,0,143,288},{0,0,21,279},{0,0,0,288}};
-enum_map(eGuiArea, rectangle) win_to_rects = {{7,19,358,298},{385,19,423,285},{7,305,123,576},{132,305,276,576},{360,19,381,298},{285,305,423,561}};
+extern enum_map(eGuiArea, rectangle) win_to_rects;
 
 // 0 - title  1 - button  2 - credits  3 - base button
 rectangle startup_from[4] = {{0,0,274,602},{274,0,322,301},{0,301,67,579},{274,301,314,341}};
@@ -446,17 +444,6 @@ void draw_start_button(eStartButton which_position,short which_button) {
 	win_draw_string(mainPtr,to_rect,button_labels[which_position],eTextMode::CENTRE,style);
 }
 
-void main_button_click(int which_button) {
-	mainPtr.setActive();
-	// TODO: Mini-event loop so that the click doesn't happen until releasing the mouse button
-	
-	draw_buttons(which_button);
-	mainPtr.display();
-	play_sound(37, time_in_ticks(5));
-	draw_buttons(-1);
-	undo_clip(mainPtr);
-}
-
 void arrow_button_click(rectangle button_rect) {
 	mainPtr.setActive();
 	clip_rect(mainPtr, button_rect);
@@ -539,7 +526,7 @@ void redraw_screen(int refresh) {
 			if(refresh & REFRESH_BAR)
 				draw_text_bar();
 			refresh_text_bar();
-			draw_buttons(-1);
+			UI::toolbar.draw(mainPtr);
 			break;
 	}
 	if(overall_mode == MODE_COMBAT)
@@ -595,81 +582,6 @@ void put_background() {
 	tileImage(mainPtr, rectangle(mainPtr), bg_pict);
 }
 
-// mode; -1 - all buttons, normal; otherwise draw this button pressed
-void draw_buttons(short mode) {
-	rectangle lg_rect = {0,0,38,38}, sm_rect[2] = {{0,38,19,76}, {19,38,38,76}}, dest_rec;
-	static const int MAX_TOOLBAR_BUTTONS = 14;
-	static const location null_loc(-1,-1);
-	static const location out_buttons[MAX_TOOLBAR_BUTTONS] = {
-		{0,0}, {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {5,1}, null_loc, null_loc, null_loc, null_loc, null_loc, null_loc, null_loc
-	};
-	static const location town_buttons[MAX_TOOLBAR_BUTTONS] = {
-		{0,0}, {1,0}, {2,0}, {2,1}, {3,1}, {4,2}, {5,2}, {4,1}, null_loc, null_loc, null_loc, null_loc, null_loc, null_loc
-	};
-	static const location combat_buttons[MAX_TOOLBAR_BUTTONS] = {
-		{0,0}, {1,0}, {2,0}, {0,1}, {1,1}, {0,2}, {2,2}, {1,2}, {3,2}, null_loc, null_loc, null_loc, null_loc, null_loc
-	};
-	extern rectangle bottom_buttons[MAX_TOOLBAR_BUTTONS];
-	
-	const location* toolbar = is_combat() ? combat_buttons : (is_town() ? town_buttons : out_buttons);
-	
-	static bool inited = false;
-	static sf::RenderTexture button_gw;
-	if(!inited) {
-		inited = true;
-		button_gw.create(266,38);
-	}
-	
-	sf::Texture& buttons_gworld = *ResMgr::graphics.get("buttons");
-	dest_rec = lg_rect;
-	
-	bool bottom_half = false;
-	std::fill_n(bottom_buttons, MAX_TOOLBAR_BUTTONS, rectangle());
-	for(int i = 0; i < MAX_TOOLBAR_BUTTONS && toolbar[i] != null_loc; i++) {
-		rectangle source_rect = {0, 0, 32, 32};
-		rectangle to_rect = dest_rec, btn_rect, icon_rect;
-		source_rect.offset(32 * toolbar[i].x, 38 + 32 * toolbar[i].y);
-		if(toolbar[i].y == 2) {
-			// Small button
-			btn_rect = sm_rect[bottom_half];
-			source_rect.height() = 13;
-			to_rect.height() = 19;
-			if(bottom_half) {
-				to_rect.offset(0,19);
-				bottom_half = false;
-			} else bottom_half = true;
-			icon_rect = {3,3,13,13};
-		} else {
-			// Large button
-			btn_rect = lg_rect;
-			if(bottom_half) {
-				dest_rec.offset(38,0);
-				bottom_half = false;
-			}
-			icon_rect = {3,3,32,32};
-		}
-		if(mode == -1) {
-			rect_draw_some_item(buttons_gworld, btn_rect, button_gw, to_rect);
-			to_rect.inset(3,3);
-			rect_draw_some_item(buttons_gworld, source_rect, button_gw, to_rect, sf::BlendAlpha);
-			to_rect.inset(-3,-3);
-		}
-		to_rect.offset(win_to_rects[WINRECT_ACTBTNS].topLeft());
-		if(i == mode)
-			fill_rect(mainPtr, to_rect, sf::Color::Blue);
-		else fill_rect(mainPtr, to_rect, sf::Color::Black);
-		bottom_buttons[i] = to_rect;
-		if(toolbar[i].y != 2 || !bottom_half) {
-			dest_rec.offset(38,0);
-			bottom_half = false;
-		}
-	}
-	button_gw.display();
-	
-	dest_rec = win_to_rects[WINRECT_ACTBTNS];
-	rect_draw_some_item(button_gw.getTexture(), rectangle(button_gw), mainPtr, dest_rec, sf::BlendAdd);
-}
-
 void draw_text_bar() {
 	location loc;
 	
@@ -713,7 +625,8 @@ void draw_text_bar() {
 
 void put_text_bar(std::string str) {
 	text_bar_gworld.setActive();
-	rect_draw_some_item(*ResMgr::graphics.get("textbar"), win_from_rects[WINRECT_STATUS], text_bar_gworld, win_from_rects[WINRECT_STATUS]);
+	auto& bar_gw = *ResMgr::graphics.get("textbar");
+	rect_draw_some_item(bar_gw, rectangle(bar_gw), text_bar_gworld, rectangle(bar_gw));
 	TextStyle style;
 	style.colour = sf::Color::White;
 	style.font = FONT_BOLD;
@@ -753,7 +666,7 @@ void put_text_bar(std::string str) {
 
 void refresh_text_bar() {
 	mainPtr.setActive();
-	rect_draw_some_item(text_bar_gworld.getTexture(), win_from_rects[WINRECT_STATUS], mainPtr, win_to_rects[WINRECT_STATUS]);
+	rect_draw_some_item(text_bar_gworld.getTexture(), rectangle(text_bar_gworld), mainPtr, win_to_rects[WINRECT_STATUS]);
 }
 
 // this is used for determinign whether to round off walkway corners
@@ -1555,10 +1468,9 @@ void draw_pointing_arrows() {
 }
 
 void redraw_terrain() {
-	rectangle to_rect;
-	
-	to_rect = win_to_rects[WINRECT_TERVIEW];
-	rect_draw_some_item(terrain_screen_gworld.getTexture(), win_from_rects[WINRECT_TERVIEW], mainPtr, to_rect);
+	rectangle to_rect = win_to_rects[WINRECT_TERVIEW], from_rect(terrain_screen_gworld);
+	from_rect.bottom -= 10; // Clip off the little arrows TODO: Maybe move them to another sheet?
+	rect_draw_some_item(terrain_screen_gworld.getTexture(), from_rect, mainPtr, to_rect);
 	apply_light_mask(true);
 	
 	

@@ -176,7 +176,7 @@ void init_boe(int argc, char* argv[]) {
 	init_buf();
 	check_for_intel();
 	srand(time(nullptr));
-	init_screen_locs();
+	init_screen_locs();	
 	init_startup();
 	flushingInput = true;
 	// Hidden preference to hide the startup logo - should be kept hidden

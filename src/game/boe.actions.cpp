@@ -23,6 +23,7 @@
 #include "sounds.hpp"
 #include "boe.infodlg.hpp"
 #include "boe.main.hpp"
+#include "boe.ui.hpp"
 #include "mathutil.hpp"
 #include "fileio.hpp"
 #include "choicedlog.hpp"
@@ -37,7 +38,6 @@
 #include "render_shapes.hpp"
 #include "enum_map.hpp"
 
-rectangle bottom_buttons[14];
 rectangle item_screen_button_rects[9] = {
 	{125,10,141,28},{125,40,141,58},{125,68,141,86},{125,98,141,116},{125,126,141,144},{125,156,141,174},
 	{126,176,141,211},
@@ -122,6 +122,8 @@ enum_map(eShopArea, rectangle) shopping_rects[8];
 std::queue<pending_special_type> special_queue;
 bool end_scenario = false;
 bool current_bash_is_bash = false;
+
+static void advance_time(bool did_something, bool need_redraw, bool need_reprint);
 
 // This is defined in pc.editors.cpp since the PC editor also uses it
 extern void edit_stuff_done();
@@ -292,6 +294,51 @@ static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_
 	}
 	put_pc_screen();
 	put_item_screen(stat_window);
+}
+
+static void handle_begin_look(bool& need_redraw) {
+	if(overall_mode == MODE_OUTDOORS) overall_mode = MODE_LOOK_OUTDOORS;
+	if(overall_mode == MODE_TOWN) overall_mode = MODE_LOOK_TOWN;
+	if(overall_mode == MODE_COMBAT) overall_mode = MODE_LOOK_COMBAT;
+	add_string_to_buf("Look: Select a space. You can also right click to look.", 2);
+	need_redraw = true;
+}
+
+static void handle_begin_talk(bool& need_reprint) {
+	overall_mode = MODE_TALK_TOWN;
+	add_string_to_buf("Talk: Select someone.");
+	need_reprint = true;
+}
+
+static void handle_stand_ready(bool& need_redraw, bool& need_reprint) {
+	need_reprint = true;
+	need_redraw = true;
+	//draw_terrain();
+	//pause(2);
+	univ.cur_pc++;
+	combat_next_step();
+	set_stat_window_for_pc(univ.cur_pc);
+	put_pc_screen();
+}
+
+static void handle_parry(bool& did_something, bool& need_redraw, bool& need_reprint) {
+	add_string_to_buf("Parry.");
+	char_parry();
+	did_something = true;
+	need_reprint = true;
+	need_redraw = true;
+}
+
+static void handle_toggle_active(bool& need_reprint) {
+	if(combat_active_pc == 6) {
+		add_string_to_buf("This PC now active.");
+		combat_active_pc = univ.cur_pc;
+	} else {
+		add_string_to_buf("All PC's now active.");
+		univ.cur_pc = combat_active_pc;
+		combat_active_pc = 6;
+	}
+	need_reprint = true;
 }
 
 static void handle_rest(bool& need_redraw, bool& need_reprint) {
@@ -969,56 +1016,27 @@ static void handle_party_death() {
 }
 
 bool handle_action(const sf::Event& event) {
-	short s1,s2,s3;
 	long item_hit;
 	bool are_done = false;
 	bool need_redraw = false, did_something = false, need_reprint = false;
-	bool pc_delayed = false;
-	location cur_loc,loc_in_sec,cur_direction;
-	short button_hit = 12;
+	location loc_in_sec,cur_direction;
 	bool right_button = event.mouseButton.button == sf::Mouse::Right;
 	eGameMode previous_mode;
 	rectangle world_screen = win_to_rects[WINRECT_TERVIEW];
 	world_screen.inset(13, 13);
 	
 	std::ostringstream str;
-	location the_point,point_in_area;
+	location point_in_area;
 	
-	the_point = location(event.mouseButton.x, event.mouseButton.y);
+	location the_point(event.mouseButton.x, event.mouseButton.y);
 	the_point = mainPtr.mapPixelToCoords(the_point, mainView);
 	end_scenario = false;
 	
 	// MARK: First, figure out where party is
-	switch(overall_mode) {
-		case MODE_OUTDOORS: case MODE_LOOK_OUTDOORS:
-			cur_loc = univ.party.out_loc;
-			for(int i = 0; i < 14; i++)
-				if(the_point.in(bottom_buttons[i])) {
-					button_hit = i;
-					if(!spell_forced)
-						main_button_click(i);
-				}
-			break;
-			
-		case MODE_TOWN: case MODE_TALK_TOWN: case MODE_TOWN_TARGET: case MODE_USE_TOWN: case MODE_LOOK_TOWN:
-		case MODE_DROP_TOWN: case MODE_BASH_TOWN:
-		case MODE_COMBAT: case MODE_SPELL_TARGET: case MODE_FIRING: case MODE_THROWING:
-		case MODE_FANCY_TARGET: case MODE_DROP_COMBAT: case MODE_LOOK_COMBAT:
-			cur_loc = center;
-			for(int i = 0; i < 14; i++)
-				if(the_point.in(bottom_buttons[i])) {
-					button_hit = i;
-					if(!spell_forced)
-						main_button_click(i);
-				}
-			break;
-			
-		case MODE_TALKING: case MODE_SHOPPING: break;
-			
-		case MODE_STARTUP: case MODE_RESTING: case MODE_CUTSCENE:
-			// If we get here during these modes, something is probably not right, so bail out
-			add_string_to_buf("Unexpected game state!");
-			return are_done;
+	if(overall_mode == MODE_STARTUP || overall_mode == MODE_RESTING || overall_mode == MODE_CUTSCENE) {
+		// If we get here during these modes, something is probably not right, so bail out
+		add_string_to_buf("Unexpected game state!");
+		return are_done;
 	}
 	
 	// Now split off the extra stuff, like talking and shopping.
@@ -1032,53 +1050,61 @@ bool handle_action(const sf::Event& event) {
 		if(overall_mode != MODE_SHOPPING)
 			return false;
 	}
-	
+
+	// Otherwise they're in a terrain view mode
+	location cur_loc = is_out() ? univ.party.out_loc : center;
+	auto button_hit = UI::toolbar.button_hit(mainPtr, the_point);
+
 	// MARK: Then, handle a button being hit.
-	if(button_hit != 12)
 		switch(button_hit) {
-			case 0: case 1:
-				handle_spellcast(button_hit == 0 ? eSkill::MAGE_SPELLS : eSkill::PRIEST_SPELLS, did_something, need_redraw, need_reprint);
+			case TOOLBAR_NONE: break;
+			case TOOLBAR_MAGE: case TOOLBAR_PRIEST:
+				handle_spellcast(button_hit == TOOLBAR_MAGE ? eSkill::MAGE_SPELLS : eSkill::PRIEST_SPELLS, did_something, need_redraw, need_reprint);
 				break;
 				
-			case 2:
-				if(overall_mode == MODE_OUTDOORS) overall_mode = MODE_LOOK_OUTDOORS;
-				if(overall_mode == MODE_TOWN) overall_mode = MODE_LOOK_TOWN;
-				if(overall_mode == MODE_COMBAT) overall_mode = MODE_LOOK_COMBAT;
-				add_string_to_buf("Look: Select a space. You can also right click to look.", 2);
-				need_redraw = true;
+			case TOOLBAR_LOOK:
+				handle_begin_look(need_redraw);
 				break;
 				
-			case 3:
-				if(overall_mode == MODE_COMBAT) {
-					add_string_to_buf("Parry.");
-					char_parry();
-					did_something = true;
-					need_reprint = true;
-					need_redraw = true;
-				} else if(overall_mode == MODE_TOWN) {
-					overall_mode = MODE_TALK_TOWN;
-					add_string_to_buf("Talk: Select someone.");
-					need_reprint = true;
-				} else if(overall_mode == MODE_OUTDOORS)
+			case TOOLBAR_SHIELD:
+				if(overall_mode == MODE_COMBAT)
+					handle_parry(did_something, need_redraw, need_reprint);
+				break;
+				
+			case TOOLBAR_TALK:
+				if(overall_mode == MODE_TOWN)
+					handle_begin_talk(need_reprint);
+				break;
+				
+			case TOOLBAR_CAMP:
+				if(overall_mode == MODE_OUTDOORS)
 					handle_rest(need_redraw, need_reprint);
 				break;
 				
-			case 4:
-				if(overall_mode == MODE_OUTDOORS) {
+			case TOOLBAR_SCROLL: case TOOLBAR_MAP:
+				if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN) {
 					give_help(62,0);
 					display_map();
 					set_cursor(sword_curs);
-				} else if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT)
+				}
+				break;
+				
+			case TOOLBAR_BAG: case TOOLBAR_HAND:
+				if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT)
 					handle_get_items(did_something, need_redraw, need_reprint);
 				break;
 				
-			case 5:
+			case TOOLBAR_SAVE:
 				if(overall_mode == MODE_OUTDOORS) {
 					save_party(univ.file, univ);
 					need_redraw = true;
 					current_switch = 6;
 					break;
-				} else if(overall_mode == MODE_TOWN) {
+				}
+				break;
+				
+			case TOOLBAR_USE:
+				if(overall_mode == MODE_TOWN) {
 					add_string_to_buf("Use: Select a space or item.");
 					add_string_to_buf("  (Hit button again to cancel.)");
 					need_reprint = true;
@@ -1087,39 +1113,32 @@ bool handle_action(const sf::Event& event) {
 					overall_mode = MODE_TOWN;
 					need_reprint = true;
 					add_string_to_buf("  Cancelled.");
-				} else if(overall_mode == MODE_COMBAT) {
-					need_reprint = true;
-					need_redraw = true;
-					pc_delayed = true;
 				}
-				
 				break;
 				
-			case 6:
+			case TOOLBAR_WAIT:
+				if(overall_mode == MODE_COMBAT) {
+					handle_stand_ready(need_redraw, need_reprint);
+				}
+				break;
+				
+			case TOOLBAR_LOAD:
 				if(overall_mode == MODE_OUTDOORS)
 					do_load();
-				else if(overall_mode == MODE_TOWN) {
-					give_help(62,0);
-					display_map();
-					set_cursor(sword_curs);
-				} else handle_missile(need_redraw, need_reprint);
 				break;
 				
-			case 7:
+			case TOOLBAR_SHOOT:
+				if(overall_mode == MODE_COMBAT || overall_mode == MODE_FIRING || overall_mode == MODE_THROWING)
+					handle_missile(need_redraw, need_reprint);
+				break;
+				
+			case TOOLBAR_SWORD: case TOOLBAR_END:
 				handle_combat_switch(did_something, need_redraw, need_reprint);
 				break;
 				
-			case 8:
+			case TOOLBAR_ACT:
 				if(overall_mode == MODE_COMBAT) {
-					if(combat_active_pc == 6) {
-						add_string_to_buf("This PC now active.");
-						combat_active_pc = univ.cur_pc;
-					} else {
-						add_string_to_buf("All PC's now active.");
-						univ.cur_pc = combat_active_pc;
-						combat_active_pc = 6;
-					}
-					need_reprint = true;
+					handle_toggle_active(need_reprint);
 				}
 				break;
 		}
@@ -1389,20 +1408,17 @@ bool handle_action(const sf::Event& event) {
 		need_reprint = true;
 	}
 	
- 	// MARK: If in combat and pc delayed, jump forward a step
- 	if(pc_delayed) {
- 		draw_terrain();
-		//pause(2);
-		univ.cur_pc++;
-		combat_next_step();
-		set_stat_window_for_pc(univ.cur_pc);
-		put_pc_screen();
-	}
- 	
+	advance_time(did_something, need_redraw, need_reprint);
+	
+	are_done = All_Done;
+	return are_done;
+}
+
+static void advance_time(bool did_something, bool need_redraw, bool need_reprint) {
  	// MARK: At this point, see if any specials have been queued up, and deal with them
 	// Note: We just check once here instead of looping because run_special also pulls from the queue.
 	if(!special_queue.empty()) {
-		s3 = 0;
+		short s1 = 0, s2 = 0, s3 = 0;
 		pending_special_type pending = special_queue.front();
 		special_queue.pop();
 		run_special(pending, &s1, &s2, &s3);
@@ -1428,9 +1444,6 @@ bool handle_action(const sf::Event& event) {
 		handle_party_death();
 	else if(end_scenario)
 		handle_victory();
-	
-	are_done = All_Done;
-	return are_done;
 }
 
 void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
@@ -1522,26 +1535,10 @@ void handle_menu_spell(eSpell spell_picked) {
 			if((store_spell_target = char_select_pc((*spell_picked).need_select == SELECT_ANY ? 1 : 0,"Cast spell on who?")) == 6)
 				return;
 	}
-/*	if((is_combat()) && (((spell_type == 0) && (refer_mage[spell_picked] > 0)) ||
-						  ((spell_type == 1) && (refer_priest[spell_picked] > 0)))){
-		if((spell_type == 0) && (mage_need_select[spell_picked] > 0))
-			store_spell_target = char_select_pc(2 - mage_need_select[spell_picked],0,"Cast spell on who?");
-		else if((spell_type == 1) && (priest_need_select[spell_picked] > 0))
-			store_spell_target = char_select_pc(2 - priest_need_select[spell_picked],0,"Cast spell on who?");
-	}
-	else {
-	} */
-	if(spell_type == eSkill::MAGE_SPELLS) {
-		pass_point.x = bottom_buttons[0].left + 5;
-		pass_point.y = bottom_buttons[0].top + 5;
-	} else {
-		pass_point.x = bottom_buttons[1].left + 5;
-		pass_point.y = bottom_buttons[1].top + 5;
-	}
-	pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
-	event.mouseButton.x = pass_point.x;
-	event.mouseButton.y = pass_point.y;
-	handle_action(event);
+	
+	bool did_something = false, need_redraw = false, need_reprint = false;
+	handle_spellcast(spell_type, did_something, need_redraw, need_reprint);
+	advance_time(did_something, need_redraw, need_reprint);
 }
 
 void initiate_outdoor_combat(short i) {
@@ -1686,6 +1683,8 @@ bool handle_keystroke(const sf::Event& event){
 				}
 			}
 	}
+	
+	bool did_something = false, need_redraw = false, need_reprint = false;
 	
 	char chr = keyToChar(chr2, event.key.shift);
 	// F1 should bring up help.
@@ -2074,80 +2073,99 @@ bool handle_keystroke(const sf::Event& event){
 			}
 			break;
 			
-		case 's': case 'x': case 'e':
-		case 'm': case 'p': case 'l': case 'r': case 'w': case 't': case 'd': case 'g': case 'f':
-		case 'M': case 'P':
-			int btn = 50;
-			if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET) { // cancel spell
-				if(chr == 'm') btn = 0;
-				else if(chr == 'p') btn = 1;
+			// Spells (cast/cancel)
+		case 'M': spell_forced = true;
+		case 'm':
+			if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET || overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
+				handle_spellcast(eSkill::MAGE_SPELLS, did_something, need_redraw, need_reprint);
+				advance_time(did_something, need_redraw, need_reprint);
 			}
+			break;
+			
+		case 'P': spell_forced = true;
+		case 'p':
+			if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET || overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
+				handle_spellcast(eSkill::PRIEST_SPELLS, did_something, need_redraw, need_reprint);
+				advance_time(did_something, need_redraw, need_reprint);
+			}
+			break;
+			
+		case 'l': // Look
 			if((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_TOWN) || (overall_mode == MODE_COMBAT)) {
-				switch(chr) {
-						// Spells
-					case 'M': spell_forced = true; btn = 0; break;
-					case 'm': btn = 0; break;
-					case 'P': spell_forced = true; btn = 1; break;
-					case 'p': btn = 1; break;
-						// Look
-					case 'l': btn = 2; break;
-					case 'r': // Rest
-						if(overall_mode != MODE_OUTDOORS) return false;
-						btn = 3;
-						break;
-					case 't': // Talk
-						if(overall_mode != MODE_TOWN) return false;
-						btn = 3;
-						break;
-					case 'w': // Wait (town), delay action (combat)
-						if(overall_mode == MODE_COMBAT)
-							btn = 5;
-						else if(overall_mode == MODE_TOWN) {
-							pass_point = mainPtr.mapCoordsToPixel({1001, 0}, mainView);
-							pass_event.mouseButton.x = pass_point.x;
-							pass_event.mouseButton.y = pass_point.y;
-							are_done = handle_action(pass_event);
-						}
-						else {
-							add_string_to_buf("Wait: In town only.");
-							print_buf();
-							return false;
-						}
-						break;
-					case 'd': // Parry
-						if(overall_mode != MODE_COMBAT) return false;
-						btn = 3;
-						break;
-					case 'g': // Get
-						if(overall_mode == MODE_OUTDOORS) return false;
-						btn = 4;
-						break;
-					case 's': // Shoot
-						if(overall_mode != MODE_COMBAT) return false;
-						btn = 6;
-						break;
-					case 'x': // Toggle active
-						if(overall_mode != MODE_COMBAT) return false;
-						btn = 8;
-						break;
-					case 'e': // End combat
-						if(overall_mode != MODE_COMBAT) return false;
-						btn = 7;
-						break;
-					case 'f': // Fight (toggle combat)
-						if(overall_mode != MODE_TOWN && overall_mode != MODE_COMBAT) return false;
-						btn = 7;
-						break;
-				}
-			} else if(chr == 's' && (overall_mode == MODE_FIRING || overall_mode == MODE_THROWING))
-				btn = 6;
-			if(btn < 50) {
-				pass_point.x = bottom_buttons[btn].left + 5;
-				pass_point.y = bottom_buttons[btn].top + 5;
-				pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
+				handle_begin_look(need_redraw);
+				advance_time(did_something, need_redraw, need_reprint);
+			}
+			break;
+			
+		case 'r': // Rest (outdoors)
+			if(overall_mode == MODE_OUTDOORS) {
+				handle_rest(need_redraw, need_reprint);
+				advance_time(did_something, need_redraw, need_reprint);
+			}
+			break;
+			
+		case 't': // Talk
+			if(overall_mode == MODE_TOWN) {
+				handle_begin_talk(need_reprint);
+				advance_time(did_something, need_redraw, need_reprint);
+			}
+			break;
+			
+		case 'w': // Wait / delay
+			if(overall_mode == MODE_TOWN) {
+				pass_point = mainPtr.mapCoordsToPixel({1001, 0}, mainView);
 				pass_event.mouseButton.x = pass_point.x;
 				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event);
+			} else if(overall_mode == MODE_COMBAT) {
+				handle_stand_ready(need_redraw, need_reprint);
+				advance_time(did_something, need_redraw, need_reprint);
+			} else if(overall_mode == MODE_OUTDOORS) {
+				add_string_to_buf("Wait: In town only.");
+				print_buf();
+				return false;
+			}
+			break;
+			
+		case 'd': // Parry
+			if(overall_mode == MODE_COMBAT) {
+				handle_parry(did_something, need_redraw, need_reprint);
+				advance_time(did_something, need_redraw, need_reprint);
+			}
+			break;
+			
+		case 'g': // Get items
+			if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
+				handle_get_items(did_something, need_redraw, need_reprint);
+				advance_time(did_something, need_redraw, need_reprint);
+			}
+			break;
+			
+		case 's': // Shoot
+			if(overall_mode == MODE_COMBAT || overall_mode == MODE_FIRING || overall_mode == MODE_THROWING) {
+				handle_missile(need_redraw, need_reprint);
+				advance_time(did_something, need_redraw, need_reprint);
+			}
+			break;
+			
+		case 'x': // Toggle active
+			if(overall_mode == MODE_COMBAT) {
+				handle_toggle_active(need_reprint);
+				advance_time(did_something, need_redraw, need_reprint);
+			}
+			break;
+			
+		case 'e': // End combat
+			if(overall_mode == MODE_COMBAT) {
+				handle_combat_switch(did_something, need_redraw, need_reprint);
+				advance_time(did_something, need_redraw, need_reprint);
+			}
+			break;
+			
+		case 'f': // Toggle combat
+			if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
+				handle_combat_switch(did_something, need_redraw, need_reprint);
+				advance_time(did_something, need_redraw, need_reprint);
 			}
 			break;
 	}
@@ -2214,7 +2232,7 @@ void post_load() {
 	set_stat_window(ITEM_WIN_PC1);
 	put_pc_screen();
 	draw_terrain();
-	draw_buttons(0);
+	UI::toolbar.draw(mainPtr);
 	draw_text_bar();
 	
 	print_buf();

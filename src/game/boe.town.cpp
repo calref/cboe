@@ -20,6 +20,7 @@
 #include "boe.locutils.hpp"
 #include "boe.specials.hpp"
 #include "boe.infodlg.hpp"
+#include "boe.ui.hpp"
 #include "mathutil.hpp"
 #include "render_image.hpp"
 #include "render_shapes.hpp"
@@ -703,7 +704,7 @@ void start_town_combat(eDirection direction) {
 	set_pc_moves();
 	pick_next_pc();
 	center = univ.current_pc().combat_pos;
-	draw_buttons(0);
+	UI::toolbar.draw(mainPtr);
 	put_pc_screen();
 	set_stat_window_for_pc(univ.cur_pc);
 	give_help(48,49);

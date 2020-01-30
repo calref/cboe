@@ -544,7 +544,6 @@ void set_up_shop_array() {
 
 void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short store_face_pic) {
 	rectangle area_rect;
-	std::string place_string1;
 	
 	store_personality = personality;
 	
@@ -570,10 +569,11 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	current_talk_node = TALK_LOOK;
 	
 	// Bring up and place first strings.
-	place_string1 = univ.town.cur_talk().people[personality % 10].look;
+	save_talk_str1 = univ.town.cur_talk().people[personality % 10].look;
+	save_talk_str2 = "";
 	can_save_talk = true;
 	
-	place_talk_str(place_string1, "", 0, dummy_rect);
+	place_talk_str(save_talk_str1, "", 0, dummy_rect);
 	
 	put_item_screen(stat_window);
 	give_help(5,6);

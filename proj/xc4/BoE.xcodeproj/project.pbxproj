@@ -299,6 +299,7 @@
 		91FCC8D818FE28CC007026CE /* pcedit.xib in Resources */ = {isa = PBXBuildFile; fileRef = 91FCC8D718FE28CC007026CE /* pcedit.xib */; };
 		91FCC8DC18FE2CE8007026CE /* pc.menus.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91FCC8DB18FE2CE8007026CE /* pc.menus.mac.mm */; };
 		91FCC8F418FF0866007026CE /* pc.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91FCC8F318FF069A007026CE /* pc.appleevents.mm */; };
+		91FD417423DFC9D4003D5B8A /* boe.ui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91FD417223DFC5C1003D5B8A /* boe.ui.cpp */; };
 		DCCA42001A8C467000E6A9A5 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
 		DCCA42021A8C467800E6A9A5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.dylib */; };
 		DCCA42031A8C469400E6A9A5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.dylib */; };
@@ -814,6 +815,8 @@
 		91FCC8DA18FE2CCA007026CE /* pc.menus.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = pc.menus.hpp; sourceTree = "<group>"; };
 		91FCC8DB18FE2CE8007026CE /* pc.menus.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = pc.menus.mac.mm; sourceTree = "<group>"; };
 		91FCC8F318FF069A007026CE /* pc.appleevents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = pc.appleevents.mm; sourceTree = "<group>"; };
+		91FD417223DFC5C1003D5B8A /* boe.ui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boe.ui.cpp; sourceTree = "<group>"; };
+		91FD417323DFC5C1003D5B8A /* boe.ui.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.ui.hpp; sourceTree = "<group>"; };
 		91FDB5771A4E71A900DE5983 /* shop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shop.hpp; sourceTree = "<group>"; };
 		91FDB5791A4E774E00DE5983 /* shop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shop.cpp; sourceTree = "<group>"; };
 		DCCA42011A8C467800E6A9A5 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -1458,6 +1461,7 @@
 				2BF04B070BF51924006C0831 /* boe.text.cpp */,
 				2BF04B090BF51924006C0831 /* boe.town.cpp */,
 				2BF04AD50BF51923006C0831 /* boe.townspec.cpp */,
+				91FD417223DFC5C1003D5B8A /* boe.ui.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -1485,6 +1489,7 @@
 				2BF04B080BF51924006C0831 /* boe.text.hpp */,
 				2BF04B0A0BF51924006C0831 /* boe.town.hpp */,
 				2BF04AD60BF51923006C0831 /* boe.townspec.hpp */,
+				91FD417323DFC5C1003D5B8A /* boe.ui.hpp */,
 			);
 			name = headers;
 			sourceTree = "<group>";
@@ -1849,6 +1854,7 @@
 				919145FC18E3AB1B005CF3A4 /* boe.appleevents.mm in Sources */,
 				915325171A2E1DF0000A9A1C /* oldstructs.cpp in Sources */,
 				91B0D5D11E3442FE002BE4DA /* view_dialogs.cpp in Sources */,
+				91FD417423DFC9D4003D5B8A /* boe.ui.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
