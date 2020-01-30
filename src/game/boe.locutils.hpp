@@ -1,4 +1,7 @@
 
+#include <functional>
+#include "location.hpp"
+
 bool is_explored(short i,short j);
 void make_explored(short i,short j);
 void take_explored(short i,short j);
