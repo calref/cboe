@@ -24,7 +24,6 @@ class cToolbar {
 	// These correspond to the button frames in buttons.png (top row)
 	enum eButtonType {BTN_LG, BTN_SM_HI, BTN_SM_LO};
 	
-	static std::vector<eToolbarButton> out_buttons, town_buttons, fight_buttons;
 	struct cButton {
 		eToolbarButton btn;
 		eButtonType type;
@@ -37,6 +36,8 @@ class cToolbar {
 	enum eMode {UNKNOWN, OUTDOORS, TOWN, COMBAT};
 	eMode cur_mode = UNKNOWN, get_mode();
 	int active = -1;
+	void place_buttons(const std::vector<eToolbarButton>& src);
+	void draw_buttons();
 	void init();
 public:
 	void draw(sf::RenderTarget& targ);

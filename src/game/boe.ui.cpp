@@ -24,7 +24,14 @@ namespace UI {
 }
 
 // The location of each UI area
-enum_map(eGuiArea, rectangle) win_to_rects = {{7,19,358,298},{385,19,423,285},{7,305,123,576},{132,305,276,576},{360,19,381,298},{285,305,423,561}};
+enum_map(eGuiArea, rectangle) win_to_rects = {
+	{7,19,358,298},      // terrain view
+	{385,19,423,285},    // action buttons
+	{7,305,123,576},     // pc stats area
+	{132,305,276,576},   // inventory area
+	{360,19,381,298},    // info bar
+	{285,305,423,561},   // text transcript
+};
 
 // Get the location of the button icon in buttons.png.
 static location btn_pos(eToolbarButton icon) {
@@ -35,12 +42,12 @@ static location btn_pos(eToolbarButton icon) {
 }
 
 // The list of buttons for each mode
-std::vector<eToolbarButton> cToolbar::out_buttons = {TOOLBAR_MAGE, TOOLBAR_PRIEST, TOOLBAR_LOOK, TOOLBAR_CAMP, TOOLBAR_SCROLL, TOOLBAR_SAVE, TOOLBAR_LOAD};
-std::vector<eToolbarButton> cToolbar::town_buttons = {TOOLBAR_MAGE, TOOLBAR_PRIEST, TOOLBAR_LOOK, TOOLBAR_TALK, TOOLBAR_HAND, TOOLBAR_USE, TOOLBAR_MAP, TOOLBAR_SWORD};
-std::vector<eToolbarButton> cToolbar::fight_buttons = {TOOLBAR_MAGE, TOOLBAR_PRIEST, TOOLBAR_LOOK, TOOLBAR_SHIELD, TOOLBAR_BAG, TOOLBAR_WAIT, TOOLBAR_SHOOT, TOOLBAR_END, TOOLBAR_ACT};
+static const std::vector<eToolbarButton> out_buttons = {TOOLBAR_MAGE, TOOLBAR_PRIEST, TOOLBAR_LOOK, TOOLBAR_CAMP, TOOLBAR_SCROLL, TOOLBAR_SAVE, TOOLBAR_LOAD};
+static const std::vector<eToolbarButton> town_buttons = {TOOLBAR_MAGE, TOOLBAR_PRIEST, TOOLBAR_LOOK, TOOLBAR_TALK, TOOLBAR_HAND, TOOLBAR_USE, TOOLBAR_MAP, TOOLBAR_SWORD};
+static const std::vector<eToolbarButton> fight_buttons = {TOOLBAR_MAGE, TOOLBAR_PRIEST, TOOLBAR_LOOK, TOOLBAR_SHIELD, TOOLBAR_BAG, TOOLBAR_WAIT, TOOLBAR_SHOOT, TOOLBAR_END, TOOLBAR_ACT};
 
 // Source rects for each button type in buttons.png.
-static rectangle btn_src_rects[] = {{0,0,38,38}, {0,38,19,76}, {19,38,38,76}};
+static const rectangle btn_src_rects[] = {{0,0,38,38}, {0,38,19,76}, {19,38,38,76}};
 
 eToolbarButton cToolbar::button_hit(sf::RenderWindow& win, location click) {
 	rectangle dest_rect = win_to_rects[WINRECT_ACTBTNS];
@@ -92,24 +99,31 @@ void cToolbar::init() {
 	eMode mode = get_mode();
 	if(mode == cur_mode) return;
 	cur_mode = mode;
-	// Step 1: Select the correct toolbar
-	std::vector<eToolbarButton>* src;
 	switch(mode) {
 		case UNKNOWN: case OUTDOORS:
-			src = &out_buttons;
+			place_buttons(out_buttons);
 			break;
 		case TOWN:
-			src = &town_buttons;
+			place_buttons(town_buttons);
 			break;
 		case COMBAT:
-			src = &fight_buttons;
+			place_buttons(fight_buttons);
 			break;
 	}
-	// Step 2: calculate the positions of the toolbar buttons
+	draw_buttons();
+	// Calculate total bounds
+	if(toolbar.empty()) return;
+	total_rect = std::accumulate(toolbar.begin() + 1, toolbar.end(), toolbar[0].bounds, [](const rectangle& accum, const cButton& next) {
+		return rectunion(accum, next.bounds);
+	});
+}
+
+void cToolbar::place_buttons(const std::vector<eToolbarButton>& src) {
+	// Calculate the positions of the toolbar buttons
 	toolbar.clear();
 	int offset = 0;
 	bool bottom_half = false;
-	for(eToolbarButton btn : *src) {
+	for(eToolbarButton btn : src) {
 		location slot = btn_pos(btn);
 		cButton btn_info;
 		btn_info.btn = btn;
@@ -130,10 +144,14 @@ void cToolbar::init() {
 		if(btn_info.type != BTN_SM_HI) offset += 38;
 		toolbar.push_back(btn_info);
 	}
-	// Step 3: draw the buttons into the cache
+}
+
+void cToolbar::draw_buttons() {
+	// Draw the buttons into the cache
 	static bool inited = false;
 	if(!inited) {
 		inited = true;
+		// TODO: Possibly this should be based on total_rect instead of hard-coded?
 		cache.create(266,38);
 		cache.clear(sf::Color::Black);
 	}
@@ -141,19 +159,17 @@ void cToolbar::init() {
 	for(const auto& btn : toolbar) {
 		rectangle icon_rect = {0, 0, 32, 32}, to_rect = btn.bounds;
 		location slot = btn_pos(btn.btn);
-		if(btn.type != BTN_LG) icon_rect.bottom = 16;
+		// Small buttons are half the height, so the icon is also half the height
+		if(btn.type != BTN_LG) icon_rect.bottom /= 2;
+		// buttons.png consists of 1 row of 38x38 buttons, two rows of 32x32 icons, and one row of 32x16 icons.
 		icon_rect.offset(32 * slot.x, 38 + 32 * slot.y);
 		rect_draw_some_item(buttons_gworld, btn_src_rects[btn.type], cache, to_rect);
 		to_rect.inset(3,3);
+		// Insetting the small rect overcompensates, so correct for that.
 		if(btn.type != BTN_LG) to_rect.bottom += 3;
 		rect_draw_some_item(buttons_gworld, icon_rect, cache, to_rect, sf::BlendAlpha);
 	}
 	cache.display();
-	// Step 4: Calculate total bounds
-	if(toolbar.empty()) return;
-	total_rect = std::accumulate(toolbar.begin() + 1, toolbar.end(), toolbar[0].bounds, [](const rectangle& accum, const cButton& next) {
-		return rectunion(accum, next.bounds);
-	});
 }
 
 void cToolbar::draw(sf::RenderTarget& targ) {

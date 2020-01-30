@@ -20,6 +20,7 @@ game_sources = Split("""
 	boe.text.cpp
 	boe.town.cpp
 	boe.townspec.cpp
+	boe.ui.cpp
 	../pcedit/pc.editors.cpp
 	../fileio/fileio_party.cpp
 	../view_dialogs.cpp
