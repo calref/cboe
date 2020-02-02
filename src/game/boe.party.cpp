@@ -559,12 +559,12 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 	short target,r1,adj,store;
 	location where;
 	
-	if(univ.party[pc_num].traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
-		add_string_to_buf("Cast: You're a pacifist!");
-		return;
-	}
 	if(univ.party[pc_num].traits[eTrait::ANAMA]) {
 		add_string_to_buf("Cast: You're an Anama!");
+		return;
+	}
+	if(univ.party[pc_num].traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
+		add_string_to_buf("Cast: You're a pacifist!");
 		return;
 	}
 	
