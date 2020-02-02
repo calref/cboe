@@ -10,6 +10,7 @@ const int TEXT_BUF_LEN = 70;
 #include "universe.hpp"
 #include "boe.text.hpp"
 #include "boe.locutils.hpp"
+#include "boe.infodlg.hpp"
 #include "mathutil.hpp"
 #include "render_text.hpp"
 #include "render_image.hpp"
@@ -548,6 +549,9 @@ void set_stat_window_for_pc(int pc) {
 }
 
 void set_stat_window(eItemWinMode new_stat) {
+	if(new_stat == ITEM_WIN_SPECIAL)
+		give_help(50,0);
+	
 	short array_pos = 0;
 	
 	stat_window = new_stat;

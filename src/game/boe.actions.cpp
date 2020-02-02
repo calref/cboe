@@ -716,7 +716,7 @@ static void handle_bash_pick(location destination, bool& did_something, bool& ne
 	put_item_screen(stat_window);
 }
 
-static void handle_switch_pc(short which_pc, bool& need_redraw) {
+static void handle_switch_pc(short which_pc, bool& need_redraw, bool& need_reprint) {
 	cPlayer& pc = univ.party[which_pc];
 	if(!prime_time() && overall_mode != MODE_SHOPPING && overall_mode != MODE_TALKING)
 		add_string_to_buf("Set active: Finish what you're doing first.");
@@ -737,6 +737,7 @@ static void handle_switch_pc(short which_pc, bool& need_redraw) {
 		adjust_spell_menus();
 		need_redraw = true;
 	}
+	need_reprint = true;
 }
 
 static void handle_switch_pc_items(short which_pc, bool& need_redraw) {
@@ -1296,8 +1297,7 @@ bool handle_action(const sf::Event& event) {
 					arrow_button_click(button_rect);
 					switch(j) {
 						case PCBTN_NAME:
-							handle_switch_pc(i, need_redraw);
-							need_reprint = true;
+							handle_switch_pc(i, need_redraw, need_reprint);
 							break;
 						case PCBTN_HP:
 							str.str("");
@@ -1348,7 +1348,6 @@ bool handle_action(const sf::Event& event) {
 				arrow_button_click(button_rect);
 				switch(i) {
 					case 6: // special screen
-						give_help(50,0);
 						set_stat_window(ITEM_WIN_SPECIAL);
 						break;
 					case 7:
@@ -1721,33 +1720,15 @@ bool handle_keystroke(const sf::Event& event){
 			break;
 			
 		case '1': case '2': case '3': case '4': case '5': case '6':
-			pass_point = pc_buttons[((short) chr) - 49][PCBTN_NAME].topLeft();
-			pass_point.x += 1 + win_to_rects[WINRECT_PCSTATS].left;
-			pass_point.y += win_to_rects[WINRECT_PCSTATS].top;
-			pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
-			pass_event.mouseButton.x = pass_point.x;
-			pass_event.mouseButton.y = pass_point.y;
-			are_done = handle_action(pass_event);
+			handle_switch_pc(((short) chr) - 49, need_redraw, need_reprint);
 			break;
 			
 		case '9': // Special items
-			pass_point = item_screen_button_rects[6].topLeft();
-			pass_point.x += win_to_rects[WINRECT_INVEN].left;
-			pass_point.y += win_to_rects[WINRECT_INVEN].top;
-			pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
-			pass_event.mouseButton.x = pass_point.x;
-			pass_event.mouseButton.y = pass_point.y;
-			are_done = handle_action(pass_event);
+			set_stat_window(ITEM_WIN_SPECIAL);
 			break;
 			
 		case '0': // Jobs/quests
-			pass_point = item_screen_button_rects[7].topLeft();
-			pass_point.x += win_to_rects[WINRECT_INVEN].left;
-			pass_point.y += win_to_rects[WINRECT_INVEN].top;
-			pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
-			pass_event.mouseButton.x = pass_point.x;
-			pass_event.mouseButton.y = pass_point.y;
-			are_done = handle_action(pass_event);
+			set_stat_window(ITEM_WIN_QUESTS);
 			break;
 			
 		case ' ':
