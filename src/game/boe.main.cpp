@@ -604,11 +604,7 @@ void handle_menu_choice(eMenu item_hit) {
 			if(!prime_time()) {
 				ASB("Finish what you're doing first.");
 				print_buf();
-			}
-			else {
-				give_help(62,0);
-				display_map();
-			}
+			} else display_map();
 			set_cursor(sword_curs);
 			break;
 		case eMenu::HELP_TOC:

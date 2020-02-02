@@ -29,6 +29,7 @@
 #include "strdlog.hpp"
 #include "winutil.hpp"
 #include "res_image.hpp"
+#include "cursors.hpp"
 
 extern short store_spell_target,which_combat_type,combat_active_pc;
 extern eGameMode overall_mode;
@@ -1549,6 +1550,8 @@ bool is_door(location destination) {
 void display_map() {
 	// Show the automap if it's not already visible
 	if(map_visible) return;
+	give_help(62,0);
+	
 	rectangle the_rect;
 	rectangle	dlogpicrect = {6,6,42,42};
 	
@@ -1556,6 +1559,8 @@ void display_map() {
 	map_visible = true;
 	draw_map(true);
 	makeFrontWindow(mainPtr);
+	
+	set_cursor(sword_curs);
 }
 
 void check_done() {

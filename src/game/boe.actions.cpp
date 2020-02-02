@@ -660,6 +660,19 @@ static void handle_drop_item(location destination, bool& need_redraw) {
 	put_item_screen(stat_window);
 }
 
+static void handle_use_space_select(bool& need_reprint) {
+	if(overall_mode == MODE_TOWN) {
+		add_string_to_buf("Use: Select a space or item.");
+		add_string_to_buf("  (Hit button again to cancel.)");
+		need_reprint = true;
+		overall_mode = MODE_USE_TOWN;
+	} else if(overall_mode == MODE_USE_TOWN) {
+		overall_mode = MODE_TOWN;
+		need_reprint = true;
+		add_string_to_buf("  Cancelled.");
+	}
+}
+
 static void handle_use_space(location destination, bool& did_something, bool& need_redraw) {
 	if(!adjacent(destination,univ.party.town_loc))
 		add_string_to_buf("  Must be adjacent.");
@@ -668,6 +681,18 @@ static void handle_use_space(location destination, bool& did_something, bool& ne
 	need_redraw = true;
 	put_pc_screen();
 	put_item_screen(stat_window);
+}
+
+static void handle_bash_pick_select(bool& need_reprint, bool isBash) {
+	if(overall_mode == MODE_BASH_TOWN) {
+		add_string_to_buf("  Cancelled.");
+		overall_mode = MODE_TOWN;
+	} else {
+		overall_mode = MODE_BASH_TOWN;
+		current_bash_is_bash = isBash;
+		add_string_to_buf(isBash ? "Bash Door: Select a space." : "Pick Lock: Select a space.");
+	}
+	need_reprint = true;
 }
 
 static void handle_bash_pick(location destination, bool& did_something, bool& need_redraw, bool isBash) {
@@ -1082,11 +1107,8 @@ bool handle_action(const sf::Event& event) {
 				break;
 				
 			case TOOLBAR_SCROLL: case TOOLBAR_MAP:
-				if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN) {
-					give_help(62,0);
+				if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN)
 					display_map();
-					set_cursor(sword_curs);
-				}
 				break;
 				
 			case TOOLBAR_BAG: case TOOLBAR_HAND:
@@ -1104,16 +1126,8 @@ bool handle_action(const sf::Event& event) {
 				break;
 				
 			case TOOLBAR_USE:
-				if(overall_mode == MODE_TOWN) {
-					add_string_to_buf("Use: Select a space or item.");
-					add_string_to_buf("  (Hit button again to cancel.)");
-					need_reprint = true;
-					overall_mode = MODE_USE_TOWN;
-				} else if(overall_mode == MODE_USE_TOWN) {
-					overall_mode = MODE_TOWN;
-					need_reprint = true;
-					add_string_to_buf("  Cancelled.");
-				}
+				if(overall_mode == MODE_TOWN || overall_mode == MODE_USE_TOWN)
+					handle_use_space_select(need_reprint);
 				break;
 				
 			case TOOLBAR_WAIT:
@@ -1392,22 +1406,6 @@ bool handle_action(const sf::Event& event) {
 		need_reprint = true;
 	}
 	
-	
-	// MARK: Fake clicks (alchemy, town rest)
-	if(the_point.x == 1000) handle_alchemy(need_redraw, need_reprint);
-	if(the_point.x == 1001) handle_town_wait(need_redraw, need_reprint);
-	if(the_point.x == 1002 || the_point.x == 1003) {
-		if(overall_mode == MODE_BASH_TOWN) {
-			add_string_to_buf("  Cancelled.");
-			overall_mode = MODE_TOWN;
-		} else {
-			overall_mode = MODE_BASH_TOWN;
-			current_bash_is_bash = the_point.x == 1002;
-			add_string_to_buf(the_point.x == 1002 ? "Bash Door: Select a space." : "Pick Lock: Select a space.");
-		}
-		need_reprint = true;
-	}
-	
 	advance_time(did_something, need_redraw, need_reprint);
 	
 	are_done = All_Done;
@@ -1517,8 +1515,6 @@ void handle_menu_spell(eSpell spell_picked) {
 		print_buf();
 		return;
 	}
-	location pass_point;
-	sf::Event event;
 	
 	spell_forced = true;
 	pc_casting = univ.cur_pc;
@@ -2033,44 +2029,27 @@ bool handle_keystroke(const sf::Event& event){
 			cChoiceDlog("help-debug").show();
 			break;
 		case 'a': // Show automap
-			if(overall_mode < MODE_TALK_TOWN) {
-				pass_point = loc(overall_mode == MODE_OUTDOORS ? 180 : 221, 405);
-				pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
-				pass_event.mouseButton.x = pass_point.x;
-				pass_event.mouseButton.y = pass_point.y;
-				are_done = handle_action(pass_event);
-			}
+			if(overall_mode == MODE_TOWN || overall_mode == MODE_OUTDOORS)
+				display_map();
 			break;
 			
 		case 'u': // Use space
-			if(overall_mode == MODE_TOWN || overall_mode == MODE_USE_TOWN) {
-				pass_point = mainPtr.mapCoordsToPixel({220, 388}, mainView);
-				pass_event.mouseButton.x = pass_point.x;
-				pass_event.mouseButton.y = pass_point.y;
-				are_done = handle_action(pass_event);
-			}
+			if(overall_mode == MODE_TOWN || overall_mode == MODE_USE_TOWN)
+				handle_use_space_select(need_reprint);
 			break;
 			
-		case 'b': case 'L': // Bash door, pick lock
-			if(overall_mode == MODE_TOWN || overall_mode == MODE_BASH_TOWN) {
-				pass_point = loc(chr == 'b' ? 1002 : 1003, 0);
-				pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
-				pass_event.mouseButton.x = pass_point.x;
-				pass_event.mouseButton.y = pass_point.y;
-				are_done = handle_action(pass_event);
-			}
+		case 'b': // Bash door
+			if(overall_mode == MODE_TOWN || overall_mode == MODE_BASH_TOWN)
+				handle_bash_pick_select(need_reprint, true);
+			break;
+			
+		case 'L': // Pick lock
+			if(overall_mode == MODE_TOWN || overall_mode == MODE_BASH_TOWN)
+				handle_bash_pick_select(need_reprint, false);
+			break;
 			
 		case 'A': // Alchemy
-			if(overall_mode == MODE_TOWN) {
-				pass_point = mainPtr.mapCoordsToPixel({1000, 0}, mainView);
-				pass_event.mouseButton.x = pass_point.x;
-				pass_event.mouseButton.y = pass_point.y;
-				are_done = handle_action(pass_event);
-			} else {
-				add_string_to_buf("Alchemy: In town only.");
-				print_buf();
-				return false;
-			}
+			handle_alchemy(need_redraw, need_reprint);
 			break;
 			
 			// Spells (cast/cancel)
@@ -2113,10 +2092,7 @@ bool handle_keystroke(const sf::Event& event){
 			
 		case 'w': // Wait / delay
 			if(overall_mode == MODE_TOWN) {
-				pass_point = mainPtr.mapCoordsToPixel({1001, 0}, mainView);
-				pass_event.mouseButton.x = pass_point.x;
-				pass_event.mouseButton.y = pass_point.y;
-				are_done = handle_action(pass_event);
+				handle_town_wait(need_redraw, need_reprint);
 			} else if(overall_mode == MODE_COMBAT) {
 				handle_stand_ready(need_redraw, need_reprint);
 				advance_time(did_something, need_redraw, need_reprint);
