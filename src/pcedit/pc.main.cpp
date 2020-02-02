@@ -94,7 +94,6 @@ int main(int argc, char* argv[]) {
 		cDialog::init();
 		redraw_screen();
 		menu_activate();
-		update_item_menu();
 		
 		handle_events();
 
@@ -249,7 +248,6 @@ void handle_menu_choice(eMenu item_hit) {
 						party_in_scen = !univ.party.scen_name.empty();
 						if(!party_in_scen) load_base_item_defs();
 						scen_items_loaded = true;
-						update_item_menu();
 					}
 				}
 				menu_activate();
@@ -369,8 +367,13 @@ void handle_menu_choice(eMenu item_hit) {
 				}
 				cStringChoice dlog(strings, "Add which item?");
 				auto choice = dlog.show(all_items.size());
-				if(choice < all_items.size())
-					handle_item_menu(all_items[choice]);
+				if(choice < all_items.size()) {
+					cItem store_i = all_items[choice];
+					store_i.ident = true;
+					if(!univ.party[current_active_pc].give_item(store_i,GIVE_ALLOW_OVERLOAD))
+						showError("Sorry, that PC has no free inventory slots left! You'll have to either drop something or give it to a different PC.");
+					else redraw_screen();
+				}
 			}
 			break;
 		case eMenu::EDIT_TRAITS:
@@ -391,14 +394,6 @@ void handle_menu_choice(eMenu item_hit) {
 			else launchURL("http://openboe.com/docs/game/Editor.html");
 			break;
 	}
-}
-
-void handle_item_menu(cItem& item) {
-	cItem store_i = item;
-	store_i.ident = true;
-	if(!univ.party[current_active_pc].give_item(store_i,GIVE_ALLOW_OVERLOAD))
-		showError("Sorry, that PC has no free inventory slots left! You'll have to either drop something or give it to a different PC.");
-	else redraw_screen();
 }
 
 bool verify_restore_quit(std::string dlog) {

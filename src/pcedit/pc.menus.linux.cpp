@@ -15,9 +15,6 @@ void init_menubar() {
 	menu_ptr.reset(new OpenBoEPCEditMenu(mainPtr));
 }
 
-void update_item_menu() {
-}
-
 void menu_activate() {
 	menu_ptr->update_for_editor_state(!file_in_mem.empty(), party_in_scen);
 }

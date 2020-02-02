@@ -93,9 +93,6 @@ void menu_activate() {
 	}
 }
 
-void update_item_menu() {
-}
-
 bool menuBarProcessEvent(const sf::Event&) {
 	return false;
 }

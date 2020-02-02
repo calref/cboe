@@ -16,8 +16,7 @@ enum {
 	FILE_MENU_POS = 0,
 	PARTY_MENU_POS = 1,
 	SCEN_MENU_POS = 2,
-	ITEMS_MENU_POS = 3,
-	HELP_MENU_POS = 7,
+	HELP_MENU_POS = 3,
 };
 
 extern sf::RenderWindow mainPtr;
@@ -110,27 +109,6 @@ void init_menubar() {
 	accel.build();
 }
 
-void update_item_menu() {
-	if(menuHandle == NULL) return;
-	auto& item_list = univ.scenario.scen_items;
-	int per_menu = 1 + (item_list.size() - 1) / 4;
-	int per_col = 1 + (per_menu - 1) / 4;
-	for(int j = 0; j < 4; j++) {
-		HMENU items_menu = GetSubMenu(menuHandle, ITEMS_MENU_POS + j);
-		while(GetMenuItemCount(items_menu)) RemoveMenu(items_menu, 0, MF_BYPOSITION);
-		if(!scen_items_loaded) {
-			AppendMenuA(items_menu, MF_STRING | MF_GRAYED, 1000, "Items Not Loaded");
-		} else for(int i = 0; i < per_menu && i + j * per_menu < item_list.size(); i++) {
-			cItem& item = item_list[i + j * per_menu];
-			UINT flags = MF_STRING | MF_ENABLED;
-			if(i % per_col == 0) flags |= MF_MENUBARBREAK;
-			AppendMenuA(items_menu, flags, 1000 + j * per_menu + i, item.full_name.c_str());
-			EnableMenuItem(items_menu, i, MF_BYPOSITION | (item.variety != eItemType::NO_ITEM ? MF_ENABLED : MF_GRAYED));
-		}
-	}
-	DrawMenuBar(mainPtr.getSystemHandle());
-}
-
 void menu_activate() {
 	if(menuHandle == NULL) return;
 	HMENU file_menu = GetSubMenu(menuHandle, FILE_MENU_POS);
@@ -158,9 +136,7 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 	}
 	if(message == WM_COMMAND) {
 		int cmd = LOWORD(wParam);
-		if(cmd >= 1000) { // Item menus
-			handle_item_menu(univ.scenario.scen_items[cmd - 1000]);
-		} else handle_menu_choice(menuChoices[cmd]);
+		handle_menu_choice(menuChoices[cmd]);
 	} else if(message == WM_SETCURSOR) {
 		// Windows resets the cursor to an arrow whenever the mouse moves, unless we do this.
 		// Note: By handling this message, sf::Window::setMouseCursorVisible() will NOT work.
@@ -189,7 +165,6 @@ void set_up_apple_events(int argc, char* argv[]) {
 			party_in_scen = !univ.party.scen_name.empty();
 			if(!party_in_scen) load_base_item_defs();
 			scen_items_loaded = true;
-			update_item_menu();
 			menu_activate();
 		}
 	}

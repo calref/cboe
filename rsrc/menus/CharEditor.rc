@@ -72,7 +72,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Quit\tCtrl+Q",               IDM_FILE_QUIT
     END
-    POPUP "&Edit Party"
+    POPUP "&Party"
     BEGIN
         MENUITEM "Edit Gold",                   IDM_PARTY_GOLD
         MENUITEM "Edit Food",                   IDM_PARTY_FOOD
@@ -91,7 +91,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Reunite Party",               IDM_PARTY_REUNITE
     END
-    POPUP "&Scenario Editing"
+    POPUP "&Scenario"
     BEGIN
         MENUITEM "Edit Day",                    IDM_SCEN_DAY
         MENUITEM SEPARATOR
@@ -103,22 +103,6 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Remove Party From Scenario",  IDM_SCEN_LEAVE
         MENUITEM "Set Stuff Done Flag",         IDM_SCEN_SDF
-    END
-    POPUP "&I1"
-    BEGIN
-        MENUITEM "None",                        1000
-    END
-    POPUP "&I2"
-    BEGIN
-        MENUITEM "None",                        1001
-    END
-    POPUP "&I3"
-    BEGIN
-        MENUITEM "None",                        1002
-    END
-    POPUP "&I4"
-    BEGIN
-        MENUITEM "None",                        1003
     END
     POPUP "&Help"
     BEGIN
