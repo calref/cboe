@@ -571,7 +571,7 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::HELP_TOC:
 			if(fs::is_directory(progDir/"doc"))
 				launchURL("file://" + (progDir/"doc/editor/Contents.html").string());
-			else launchURL("https://blades.calref.net/doc/editor/Contents.html");
+			else launchURL("http://openboe.com/docs/editor/Contents.html");
 			break;
 		case eMenu::HELP_START:
 			helpDlog = "help-editing";

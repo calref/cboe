@@ -614,7 +614,7 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::HELP_TOC:
 			if(fs::is_directory(progDir/"doc"))
 				launchURL("file://" + (progDir/"doc/game/Contents.html").string());
-			else launchURL("https://blades.calref.net/doc/game/Contents.html");
+			else launchURL("http://openboe.com/docs/game/Contents.html");
 			break;
 		case eMenu::ABOUT_MAGE:
 		case eMenu::ABOUT_PRIEST:

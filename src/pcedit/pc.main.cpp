@@ -374,7 +374,7 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::HELP_TOC:
 			if(fs::is_directory(progDir/"doc"))
 				launchURL("file://" + (progDir/"doc/game/Editor.html").string());
-			else launchURL("https://blades.calref.net/doc/game/Editor.html");
+			else launchURL("http://openboe.com/docs/game/Editor.html");
 			break;
 	}
 }
