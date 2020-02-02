@@ -11,6 +11,7 @@
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+#include <cstdlib>
 #include <boost/filesystem/operations.hpp>
 
 #include "res_image.hpp"
@@ -26,6 +27,8 @@ fs::path progDir, tempDir, scenDir;
 cursor_type Cursor::current = sword_curs;
 
 std::filebuf logfile;
+
+static fs::path get_posix_tempdir();
 
 void init_directories(const char* exec_path) {
 	progDir = fs::canonical(exec_path);
@@ -47,14 +50,12 @@ void init_directories(const char* exec_path) {
 #if defined(_WIN32) || defined(_WIN64)
 	tempDir = getenv("APPDATA");
 	tempDir /= "Blades of Exile";
-#else
+#elif defined(__APPLE__)
 	tempDir = getenv("HOME");
-#ifdef __APPLE__
 	tempDir /= "Library/Application Support/Blades of Exile";
 #else
-	tempDir /= ".oboe/blades";
-#endif // __APPLE__
-#endif // _Win32||_Win64
+	tempDir = get_posix_tempdir();
+#endif
 	scenDir = tempDir/"Scenarios";
 	fs::create_directories(scenDir);
 	tempDir /= "Temporary Files";
@@ -79,6 +80,30 @@ void init_directories(const char* exec_path) {
 	std::cout << "Program directory: " << progDir << std::endl;
 	std::cout << "Scenario directory: " << scenDir << std::endl;
 	std::cout << "Temporary directory: " << tempDir << std::endl;
+}
+
+fs::path get_posix_tempdir() {
+
+	fs::path tempdir;
+
+	const char* xdg_config_dir = std::getenv("XDG_CONFIG_HOME");
+
+	if(xdg_config_dir != nullptr) {
+		tempdir = xdg_config_dir;
+	} else {
+		// Default to $HOME/.config
+		const char* home = std::getenv("HOME");
+
+		if(home == nullptr)
+			throw std::runtime_error { "HOME and XDG_CONFIG_HOME env variables not set!" };
+
+		tempdir = home;
+		tempdir /= ".config";
+	}
+
+	tempdir /= "openboe/blades";
+
+	return tempdir;
 }
 
 void check_for_intel() {
