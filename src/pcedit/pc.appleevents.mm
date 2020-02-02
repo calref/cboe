@@ -45,7 +45,6 @@ void set_up_apple_events(int, char*[]) {
 		party_in_scen = !univ.party.scen_name.empty();
 		if(!party_in_scen) load_base_item_defs();
 		scen_items_loaded = true;
-		update_item_menu();
 		menu_activate();
 	}
 	return TRUE;
