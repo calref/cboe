@@ -1732,22 +1732,16 @@ bool handle_keystroke(const sf::Event& event){
 			break;
 			
 		case ' ':
-			if(overall_mode == MODE_FANCY_TARGET) { // cast multi-target spell, set # targets to 0 so that
-				// space clicked doesn't matter
+			if(overall_mode == MODE_FANCY_TARGET) {
+				// cast multi-target spell, set # targets to 0 so that space clicked doesn't matter
 				num_targets_left = 0;
-				pass_point = mainPtr.mapCoordsToPixel(terrain_click[5], mainView);
-				pass_event.mouseButton.x = pass_point.x;
-				pass_event.mouseButton.y = pass_point.y;
-				are_done = handle_action(pass_event);
+				handle_target_space(center, did_something, need_redraw, need_reprint);
 			} else if(overall_mode == MODE_SPELL_TARGET)
 				// Rotate a force wall
 				spell_cast_hit_return();
 			else if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT || overall_mode == MODE_OUTDOORS) {
 				// Pause (skip turn)
-				pass_point = mainPtr.mapCoordsToPixel(terrain_click[5], mainView);
-				pass_event.mouseButton.x = pass_point.x;
-				pass_event.mouseButton.y = pass_point.y;
-				are_done = handle_action(pass_event);
+				handle_pause(did_something, need_redraw);
 			}
 			break;
 			
