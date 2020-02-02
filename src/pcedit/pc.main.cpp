@@ -15,6 +15,7 @@
 #include "control.hpp"
 #include "strdlog.hpp"
 #include "choicedlog.hpp"
+#include "strchoice.hpp"
 #include "fileio.hpp"
 #include "pc.menus.hpp"
 #include "winutil.hpp"
@@ -359,6 +360,19 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::EDIT_PRIEST:
 			display_pc(current_active_pc,11,0);
 			break;
+		case eMenu::EDIT_ITEM:
+			if(scen_items_loaded) {
+				auto& all_items = univ.scenario.scen_items;
+				std::vector<std::string> strings;
+				for(cItem& item : all_items) {
+					strings.push_back(item.full_name);
+				}
+				cStringChoice dlog(strings, "Add which item?");
+				auto choice = dlog.show(all_items.size());
+				if(choice < all_items.size())
+					handle_item_menu(all_items[choice]);
+			}
+			break;
 		case eMenu::EDIT_TRAITS:
 			pick_race_abil(&univ.party[current_active_pc],0);
 			break;
@@ -379,12 +393,12 @@ void handle_menu_choice(eMenu item_hit) {
 	}
 }
 
-// TODO: Let this take the item directly instead of the index
 void handle_item_menu(cItem& item) {
 	cItem store_i = item;
 	store_i.ident = true;
 	if(!univ.party[current_active_pc].give_item(store_i,GIVE_ALLOW_OVERLOAD))
 		showError("Sorry, that PC has no free inventory slots left! You'll have to either drop something or give it to a different PC.");
+	else redraw_screen();
 }
 
 bool verify_restore_quit(std::string dlog) {

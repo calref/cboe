@@ -21,17 +21,10 @@ extern cUniverse univ;
 extern fs::path file_in_mem;
 extern bool scen_items_loaded, party_in_scen;
 MenuHandle menu_bar_handle;
-MenuHandle apple_menu, file_menu, reg_menu, extra_menu, items_menu[4];
+MenuHandle apple_menu, file_menu, reg_menu, extra_menu;
 
 @interface MenuHandler : NSObject
--(void) itemMenu:(id) sender;
 -(void) menuChoice:(id) sender;
-@end
-
-@interface ItemWrapper : NSObject
-+(id) withItem:(int) theItem NS_RETURNS_RETAINED;
--(class cItem&) item;
--(void) setItem:(int) theItem;
 @end
 
 static void setMenuCallback(NSMenuItem* item, id targ, SEL selector, int num) {
@@ -51,12 +44,8 @@ void init_menubar() {
 	
 	apple_menu = [[menu_bar_handle itemWithTitle: @"BoE Character Editor"] submenu];
 	file_menu = [[menu_bar_handle itemWithTitle: @"File"] submenu];
-	reg_menu = [[menu_bar_handle itemWithTitle: @"Edit Party"] submenu];
-	extra_menu = [[menu_bar_handle itemWithTitle: @"Scenario Edit"] submenu];
-	items_menu[0] = [[menu_bar_handle itemWithTitle: @"Items 1"] submenu];
-	items_menu[1] = [[menu_bar_handle itemWithTitle: @"Items 2"] submenu];
-	items_menu[2] = [[menu_bar_handle itemWithTitle: @"Items 3"] submenu];
-	items_menu[3] = [[menu_bar_handle itemWithTitle: @"Items 4"] submenu];
+	reg_menu = [[menu_bar_handle itemWithTitle: @"Party"] submenu];
+	extra_menu = [[menu_bar_handle itemWithTitle: @"Scenario"] submenu];
 	
 	static const eMenu file_choices[] = {
 		eMenu::FILE_OPEN, eMenu::FILE_CLOSE, eMenu::NONE, eMenu::FILE_SAVE, eMenu::FILE_SAVE_AS, eMenu::FILE_REVERT,
@@ -64,7 +53,7 @@ void init_menubar() {
 	static const eMenu party_choices[] = {
 		eMenu::EDIT_GOLD, eMenu::EDIT_FOOD, eMenu::EDIT_ALCHEMY, eMenu::NONE,
 		eMenu::HEAL_DAMAGE, eMenu::RESTORE_MANA, eMenu::RAISE_DEAD, eMenu::CURE_CONDITIONS, eMenu::NONE,
-		eMenu::EDIT_MAGE, eMenu::EDIT_PRIEST, eMenu::EDIT_TRAITS, eMenu::EDIT_SKILLS, eMenu::EDIT_XP, eMenu::NONE,
+		eMenu::EDIT_MAGE, eMenu::EDIT_PRIEST, eMenu::EDIT_ITEM, eMenu::EDIT_TRAITS, eMenu::EDIT_SKILLS, eMenu::EDIT_XP, eMenu::NONE,
 		eMenu::REUNITE_PARTY,
 	};
 	static const eMenu scen_choices[] = {
@@ -87,7 +76,6 @@ void init_menubar() {
 	for(eMenu opt : scen_choices)
 		setMenuCallback([extra_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));
 	
-	update_item_menu();
 	menu_activate();
 }
 
@@ -106,22 +94,6 @@ void menu_activate() {
 }
 
 void update_item_menu() {
-	id targ = [[file_menu itemAtIndex: 0] target];
-	auto& item_list = univ.scenario.scen_items;
-	int per_menu = 1 + (item_list.size() - 1) / 4;
-	for(int j = 0; j < 4; j++){
-		[items_menu[j] removeAllItems];
-		if(!scen_items_loaded) {
-			[[items_menu[j] addItemWithTitle: @"Items Not Loaded" action: @selector(itemMenu:) keyEquivalent: @""] setEnabled: NO];
-		} else for(int i = 0; i < per_menu && i + j * per_menu < item_list.size(); i++) {
-			ItemWrapper* item = [ItemWrapper withItem: i + j * per_menu];
-			NSString* item_name = [NSString stringWithCString: item_list[i + j * per_menu].full_name.c_str() encoding: NSASCIIStringEncoding];
-			NSMenuItem* choice = [items_menu[j] addItemWithTitle: item_name action: @selector(itemMenu:) keyEquivalent: @""];
-			[choice setTarget: targ];
-			[choice setEnabled: [item item].variety != eItemType::NO_ITEM];
-			[choice setRepresentedObject: item];
-		}
-	}
 }
 
 bool menuBarProcessEvent(const sf::Event&) {
@@ -132,34 +104,8 @@ void drawMenuBar() {
 }
 
 @implementation MenuHandler
--(void) itemMenu:(id) sender {
-	ItemWrapper* item = [sender representedObject];
-	class cItem& theItem = [item item];
-	handle_item_menu(theItem);
-}
-
 -(void) menuChoice:(id) sender {
 	eMenu opt = eMenu([[sender representedObject] intValue]);
 	handle_menu_choice(opt);
 }
-@end
-
-@implementation ItemWrapper {
-	int itemID;
-}
-
-+(id) withItem:(int) theItem {
-	ItemWrapper* item = [[ItemWrapper alloc] init];
-	[item setItem: theItem];
-	return item;
-}
-
--(void) setItem:(int) theItem {
-	self->itemID = theItem;
-}
-
--(class cItem&) item {
-	return univ.scenario.scen_items[self->itemID];
-}
-
 @end
