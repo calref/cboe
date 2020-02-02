@@ -4,6 +4,7 @@
 #include "pc.graphics.hpp"
 #include "pc.editors.hpp"
 #include "pc.action.hpp"
+#include "pc.menus.hpp"
 #include "sounds.hpp"
 #include "gfxsheets.hpp"
 #include "render_shapes.hpp"
@@ -18,6 +19,7 @@
 extern cUniverse univ;
 
 extern sf::RenderWindow mainPtr;
+extern sf::View mainView;
 extern bool party_in_scen,scen_items_loaded;
 extern fs::path file_in_mem;
 
@@ -203,6 +205,9 @@ void redraw_screen() {
 	draw_main_screen();
 	display_party();
 	draw_items();
+	
+	drawMenuBar();
+	
 	mainPtr.display();
 }
 
@@ -226,7 +231,13 @@ void draw_main_screen() {
 	rectangle source_rect,dest_rec,dest_rect;
 	rectangle reg_rect;
 	
-	tileImage(mainPtr,whole_win_rect,bg[12]); // fill whole window with background texture
+	// fill whole window with background texture
+	// Switch back to the default view while drawing the background tiles
+	// so that they are not upscaled
+	rectangle windRect { mainPtr };
+	mainPtr.setView(mainPtr.getDefaultView());
+	tileImage(mainPtr,windRect,bg[12]);
+	mainPtr.setView(mainView);
 	
 	sf::Texture& icon_gworld = *ResMgr::graphics.get("icon");
 	dest_rec = source_rect = rectangle(icon_gworld);
@@ -791,4 +802,9 @@ void display_party() {
 		to_draw << " Food: " << univ.party.food;
 		win_draw_string(mainPtr,dest_rect,to_draw.str(),eTextMode::WRAP,style);
 	}
+}
+
+// Translate mouse event coordinates based on the global view and viewport
+sf::Vector2f translate_mouse_coordinates(sf::Vector2i const point) {
+	return mainPtr.mapPixelToCoords(point, mainView);
 }

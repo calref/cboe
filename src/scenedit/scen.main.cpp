@@ -57,7 +57,7 @@ void Mouse_Pressed(const sf::Event&);
 void close_program();
 void ding();
 void init_main_window(sf::RenderWindow&, sf::View&);
-sf::FloatRect compute_viewport(sf::RenderWindow&, float ui_scale);
+sf::FloatRect compute_viewport(const sf::RenderWindow&, float ui_scale);
 
 cScenario scenario;
 rectangle right_sbar_rect;
@@ -101,7 +101,7 @@ static void init_sbar(std::shared_ptr<cScrollbar>& sbar, rectangle rect, int pgS
 	sbar->hide();
 }
 
-sf::FloatRect compute_viewport(sf::RenderWindow& mainPtr, float ui_scale) {
+sf::FloatRect compute_viewport(sf::RenderWindow const & mainPtr, float ui_scale) {
 
 	// See compute_viewport() in boe.graphics.cpp
 	int const os_specific_y_offset =

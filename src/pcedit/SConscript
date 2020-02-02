@@ -23,6 +23,7 @@ elif str(platform) == "win32":
 elif str(platform) == "posix":
 	pced_sources.extend(Split("""
 		pc.menus.linux.cpp
+		pc.menu.cpp
 	"""))
 
 pced = env.Program("#build/bin/BoE Character Editor", pced_sources + common_sources + party_classes)

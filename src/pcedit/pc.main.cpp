@@ -20,6 +20,7 @@
 #include "winutil.hpp"
 #include "cursors.hpp"
 #include "res_image.hpp"
+#include "prefs.hpp"
 
 cUniverse univ;
 
@@ -43,19 +44,21 @@ short current_active_pc = 0;
 
 /* Mac stuff globals */
 bool All_Done = false;
-sf::Event event;
 sf::RenderWindow mainPtr;
+sf::View mainView;
 fs::path file_in_mem;
 bool party_in_scen = false;
 bool scen_items_loaded = false;
 
 /* Prototypes */
 int main(int argc, char* argv[]);
-void Initialize(void);
-void Handle_One_Event();
+void handle_events();
+void handle_one_event(const sf::Event&);
+void redraw_everything();
 void Handle_Activate();
-void Handle_Update();
-void Mouse_Pressed();
+void Mouse_Pressed(const sf::Event&);
+void init_main_window(sf::RenderWindow&, sf::View&);
+sf::FloatRect compute_viewport(const sf::RenderWindow&, float ui_scale);
 bool verify_restore_quit(std::string dlog);
 void set_up_apple_events(int argc, char* argv[]);
 extern bool cur_scen_is_mac;
@@ -67,14 +70,22 @@ char start_name[256];
 int main(int argc, char* argv[]) {
 	try {
 		init_directories(argv[0]);
+		sync_prefs();
+		init_main_window(mainPtr, mainView);
 		init_menubar();
-		Initialize();
 		init_fileio();
 		init_main_buttons();
 		Set_up_win();
 		init_shaders();
 		init_tiling();
 		init_snd_tool();
+
+#ifdef SFML_SYSTEM_MAC
+		init_menubar(); // This is called twice because Windows and Mac have different ordering requirements
+#endif
+
+		check_for_intel();
+		srand(time(nullptr));
 		
 		set_up_apple_events(argc, argv);
 		
@@ -83,9 +94,8 @@ int main(int argc, char* argv[]) {
 		menu_activate();
 		update_item_menu();
 		
-		while(!All_Done)
-			Handle_One_Event();
-		return 0;
+		handle_events();
+
 	} catch(std::exception& x) {
 		showFatalError(x.what());
 		throw;
@@ -96,43 +106,89 @@ int main(int argc, char* argv[]) {
 		showFatalError("An unknown error occurred!");
 		throw;
 	}
+	
+	return 0;
 }
 
-void Initialize(void) {
+sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, float ui_scale) {
+
+	// See compute_viewport() in boe.graphics.cpp
+	int const os_specific_y_offset =
+#if defined(SFML_SYSTEM_WINDOWS) || defined(SFML_SYSTEM_MAC)
+		0;
+#else
+		getMenubarHeight();
+#endif
+
+	sf::FloatRect viewport;
 	
-	check_for_intel();
+	viewport.top    = float(os_specific_y_offset) / mainPtr.getSize().y;
+	viewport.left   = 0;
+	viewport.width  = ui_scale;
+	viewport.height = ui_scale;
 	
-	//
-	//	To make the Random sequences truly random, we need to make the seed start
-	//	at a different number.  An easy way to do this is to put the current time
-	//	and date into the seed.  Since it is always incrementing the starting seed
-	//	will always be different.  Don’t for each call of Random, or the sequence
-	//	will no longer be random.  Only needed once, here in the init.
-	srand(time(nullptr));
+	return viewport;
+}
+
+void init_main_window (sf::RenderWindow& mainPtr, sf::View& mainView) {
+
+	float ui_scale = get_float_pref("UIScale", 1.0);
 	
-	//	Make a new window for drawing in, and it must be a color window.
-	//	The window is full screen size, made smaller to make it more visible.
-	int height = 440 + getMenubarHeight();
-	mainPtr.create(sf::VideoMode(590, height), "Blades of Exile Character Editor", sf::Style::Titlebar | sf::Style::Close);
-#ifndef __APPLE__ // This overrides Dock icon on OSX, which isn't what we want at all
-	const ImageRsrc& icon = ResMgr::graphics.get("icon");
+	int const width  = ui_scale * 590;
+	int const height = ui_scale * 440
+#ifndef SFML_SYSTEM_WINDOWS
+		+ getMenubarHeight()
+#endif
+	;
+	
+	mainPtr.create(sf::VideoMode(width, height), "Blades of Exile Character Editor", sf::Style::Titlebar | sf::Style::Close);
+	mainPtr.setPosition({0,0});
+
+	// Initialize the view
+	mainView.setSize(width, height);
+	mainView.setCenter(width / 2, height / 2);
+
+	// Apply the viewport to the view
+	sf::FloatRect mainPort = compute_viewport(mainPtr, ui_scale);
+	mainView.setViewport(mainPort);
+
+	// Apply view to the main window
+	mainPtr.setView(mainView);
+
+#ifndef SFML_SYSTEM_MAC // This overrides Dock icon on OSX, which isn't what we want at all
+	const ImageRsrc& icon = ResMgr::graphics.get("icon", true);
 	mainPtr.setIcon(icon->getSize().x, icon->getSize().y, icon->copyToImage().getPixelsPtr());
 #endif
-	init_menubar();
 }
 
-void Handle_One_Event() {
-	if(!mainPtr.pollEvent(event)) return;
+void handle_events() {
+	sf::Event currentEvent;
+	sf::Clock framerate_clock;
+	const sf::Int64 desired_microseconds_per_frame { 1000000 / 60 }; // us / FPS
+
+	while(!All_Done) {
+		while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent);
+
+		redraw_everything();
+
+		// Prevent the loop from executing too fast.
+		const sf::Int64 remaining_time_budget = desired_microseconds_per_frame - framerate_clock.getElapsedTime().asMicroseconds();
+		if(remaining_time_budget > 0) sf::sleep(sf::microseconds(remaining_time_budget));
+		framerate_clock.restart();
+	}
+}
+
+void handle_one_event (const sf::Event& event) {
 	
-	init_main_buttons();
-	redraw_screen();
+	// Check if the menubar wants to handle this event.
+	if(menuBarProcessEvent(event)) return;
 	
 	switch(event.type){
 		case sf::Event::KeyPressed:
 			break;
 			
 		case sf::Event::MouseButtonPressed:
-			Mouse_Pressed();
+			Mouse_Pressed(event);
 			break;
 			
 		case sf::Event::GainedFocus:
@@ -148,7 +204,11 @@ void Handle_One_Event() {
 	}
 }
 
-void Mouse_Pressed() {
+void redraw_everything() {
+	redraw_screen();
+}
+
+void Mouse_Pressed(const sf::Event& event) {
 	bool try_to_end;
 	
 	try_to_end = handle_action(event);

@@ -1,42 +1,34 @@
 
 #include "pc.menus.hpp"
-#include <map>
-#include <SFML/Graphics/RenderWindow.hpp>
-#include "universe.hpp"
+#include "pc.menu.hpp"
 #include "winutil.hpp"
-
-// This is the index of each menu on the menubar
-enum {
-	FILE_MENU_POS = 0,
-	PARTY_MENU_POS = 1,
-	SCEN_MENU_POS = 2,
-	ITEMS_MENU_POS = 3,
-	HELP_MENU_POS = 7,
-};
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <memory>
 
 extern sf::RenderWindow mainPtr;
-extern cUniverse univ;
-extern bool scen_items_loaded, party_in_scen;
+extern bool party_in_scen;
 extern fs::path file_in_mem;
-std::map<int,eMenu> menuChoices;
 
+std::shared_ptr<OpenBoEPCEditMenu> menu_ptr;
 
 void init_menubar() {
+	menu_ptr.reset(new OpenBoEPCEditMenu(mainPtr));
 }
 
 void update_item_menu() {
 }
 
 void menu_activate() {
+	menu_ptr->update_for_editor_state(!file_in_mem.empty(), party_in_scen);
 }
 
-#include "cursors.hpp"
+bool menuBarProcessEvent (sf::Event const & event) {
+	return menu_ptr->handle_event(event);
+}
 
+void drawMenuBar() {
+	menu_ptr->draw();
+}
 
-#include "fileio.hpp"
-#include "pc.fileio.hpp"
-
-extern bool party_in_scen, scen_items_loaded;
-extern fs::path file_in_mem;
 void set_up_apple_events(int argc, char* argv[]) {
 }

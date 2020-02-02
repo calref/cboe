@@ -124,6 +124,13 @@ void update_item_menu() {
 	}
 }
 
+bool menuBarProcessEvent(const sf::Event&) {
+	return false;
+}
+
+void drawMenuBar() {
+}
+
 @implementation MenuHandler
 -(void) itemMenu:(id) sender {
 	ItemWrapper* item = [sender representedObject];

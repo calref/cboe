@@ -170,6 +170,13 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 	return CallWindowProc(reinterpret_cast<WNDPROC>(mainProc), handle, message, wParam, lParam);
 }
 
+bool menuBarProcessEvent(const sf::Event&) {
+	return false;
+}
+
+void drawMenuBar() {
+}
+
 #include "fileio.hpp"
 #include "pc.fileio.hpp"
 

@@ -13,6 +13,10 @@ void init_menubar();
 void update_item_menu();
 void menu_activate();
 
+namespace sf { class Event; };
+bool menuBarProcessEvent(const sf::Event&);
+void drawMenuBar();
+
 enum class eMenu {
 	NONE, ABOUT, QUIT,
 	FILE_OPEN, FILE_CLOSE, FILE_SAVE, FILE_SAVE_AS, FILE_REVERT, HELP_TOC,

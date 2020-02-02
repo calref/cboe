@@ -8,10 +8,6 @@
 #include <stdexcept>
 #include <utility>
 
-// implemented elsewhere
-void handle_menu_choice(eMenu);
-void handle_menu_spell(eSpell);
-
 OpenBoEMenu::OpenBoEMenu(sf::RenderWindow& window, cUniverse& universe)
 	: tgui { window }
 	, mainPtr { window }
