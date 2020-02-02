@@ -1368,7 +1368,7 @@ enum {USE_COMBAT = 1, USE_TOWN = 2, USE_OUTDOORS = 4, USE_MAGIC = 8};
 std::map<eItemAbil, short> abil_chart = {
 	{eItemAbil::POISON_WEAPON, USE_TOWN | USE_COMBAT},
 	{eItemAbil::AFFECT_STATUS, USE_TOWN | USE_COMBAT | USE_MAGIC}, // This is the default, some statuses can also be used outdoors though
-	// CAST_SPELL is omitted, taken from the spell's info
+	{eItemAbil::CAST_SPELL, USE_MAGIC}, // Omits when flags, taken from the spell's info
 	{eItemAbil::BLISS_DOOM, USE_TOWN | USE_COMBAT | USE_MAGIC},
 	{eItemAbil::AFFECT_EXPERIENCE, USE_TOWN | USE_COMBAT | USE_OUTDOORS | USE_MAGIC},
 	{eItemAbil::AFFECT_SKILL_POINTS, USE_TOWN | USE_COMBAT | USE_OUTDOORS | USE_MAGIC},
