@@ -465,7 +465,7 @@ void draw_lb_slot (short which,short mode)  {
 	}
 	else text_rect.offset(0,2);
 	if(mode > 0)
-		style.colour = sf::Color::Blue;
+		style.colour = Colours::BLUE;
 	style.lineHeight = 12;
 	win_draw_string(mainPtr,text_rect,left_button_status[which].label,eTextMode::WRAP,style);
 }
@@ -492,7 +492,7 @@ void draw_rb_slot (short which,short mode)  {
 	
 	TextStyle style;
 	if(mode > 0)
-		style.colour = sf::Color::Red;
+		style.colour = Colours::RED;
 	style.lineHeight = 12;
 	win_draw_string(mainPtr,text_rect,right_button_status[which].label,eTextMode::WRAP,style);
 }
@@ -929,7 +929,7 @@ void draw_terrain(){
 					draw_rect.bottom = 24 + 36 * (town->area_desc[i].bottom - cen_y + 4);
 					draw_rect.inset(-10, -13);
 					draw_rect.offset(TER_RECT_UL_X,TER_RECT_UL_Y);
-					frame_rect(mainPtr, draw_rect, sf::Color::Red);
+					frame_rect(mainPtr, draw_rect, Colours::RED);
 				}
 			// draw border rect
 			draw_rect.left = 21 + 28 * (town->in_town_rect.left - cen_x + 4);
@@ -950,7 +950,7 @@ void draw_terrain(){
 					draw_rect.bottom = 24 + 36 * (current_terrain->area_desc[i].bottom - cen_y + 4);
 					draw_rect.inset(-10, -13);
 					draw_rect.offset(TER_RECT_UL_X, TER_RECT_UL_Y);
-					frame_rect(mainPtr, draw_rect, sf::Color::Red);
+					frame_rect(mainPtr, draw_rect, Colours::RED);
 				}
 		}
 		clip_rect(mainPtr, terrain_rect);
@@ -1258,12 +1258,12 @@ void draw_frames() {
 				if((which_pt.x == town->wandering_locs[i].x) &&
 					(which_pt.y == town->wandering_locs[i].y)) {
 					
-					frame_rect(mainPtr, draw_rect, sf::Color::Red);
+					frame_rect(mainPtr, draw_rect, Colours::RED);
 				}
 			for(short i = 0; i < town->start_locs.size(); i++)
 				if((which_pt.x == town->start_locs[i].x) &&
 					(which_pt.y == town->start_locs[i].y)) {
-					frame_rect(mainPtr, draw_rect, sf::Color::Magenta);
+					frame_rect(mainPtr, draw_rect, Colours::PINK);
 				}
 			
 			

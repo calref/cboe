@@ -20,6 +20,7 @@
 #include "pictchoice.hpp"
 #include "res_strings.hpp"
 #include "spell.hpp"
+#include "render_shapes.hpp" // for colour constants
 
 extern short cen_x, cen_y;
 extern bool mouse_button_held;
@@ -129,7 +130,7 @@ short choose_background(short cur_choice, cDialog* parent) {
 	auto set_colour_for = [&](int which) {
 		sf::Color to = sf::Color::Black;
 		if(which == 2)
-			to = sf::Color::Red;
+			to = Colours::RED;
 		else if(which == 3)
 			to = {0x00, 0x00, 0x80};
 		else if(which == 11)

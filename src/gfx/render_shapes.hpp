@@ -43,4 +43,18 @@ void clip_rect(sf::RenderTarget& where, rectangle rect);
 void clip_region(sf::RenderWindow& where, Region& region);
 void undo_clip(sf::RenderTarget& where);
 
+// reference colours for BoE's UI
+
+namespace Colours {
+	const sf::Color WHITE = sf::Color::White;
+	const sf::Color BLACK = sf::Color::Black;
+	const sf::Color RED    { 0xdd, 0x00, 0x00};
+	const sf::Color GREEN  { 0x00, 0x88, 0x00};
+	const sf::Color BLUE   { 0x00, 0x00, 0xdd};
+	const sf::Color TEAL   { 0x59, 0x97, 0x8f};
+	const sf::Color PINK   { 0xff, 0x00, 0x99};
+	const sf::Color YELLOW { 0xff, 0xff, 0x31};
+	const sf::Color ORANGE { 0xff, 0x80, 0x00};
+}
+
 #endif

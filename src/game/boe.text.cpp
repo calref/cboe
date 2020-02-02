@@ -102,7 +102,7 @@ void put_pc_screen() {
 	TextStyle style;
 	style.font = FONT_BOLD;
 	style.pointSize = 10;
-	style.colour = sf::Color::Yellow;
+	style.colour = Colours::YELLOW;
 	style.lineHeight = 10;
 	win_draw_string(pc_stats_gworld,food_rect[1],"Food:",eTextMode::WRAP,style);
 	win_draw_string(pc_stats_gworld,gold_rect[1],"Gold:",eTextMode::WRAP,style);
@@ -126,7 +126,7 @@ void put_pc_screen() {
 				flag = true;
 			if(i == univ.cur_pc) {
 				style.italic = true;
-				style.colour = sf::Color::Blue;
+				style.colour = Colours::BLUE;
 			}
 			
 			std::ostringstream sout;
@@ -141,16 +141,16 @@ void put_pc_screen() {
 			switch(univ.party[i].main_status) {
 				case eMainStatus::ALIVE:
 					if(univ.party[i].cur_health == univ.party[i].max_health)
-						style.colour = sf::Color::Green;
+						style.colour = Colours::GREEN;
 					else if(univ.party[i].cur_health > univ.party[i].max_health)
-						style.colour = {0xff,0x80,0}; // Orange
-					else style.colour = sf::Color::Red;
+						style.colour = Colours::ORANGE;
+					else style.colour = Colours::RED;
 					win_draw_string( pc_stats_gworld,pc_buttons[i][PCBTN_HP],std::to_string(univ.party[i].cur_health),eTextMode::WRAP,style);
 					if(univ.party[i].cur_sp == univ.party[i].max_sp)
-						style.colour = sf::Color::Blue;
+						style.colour = Colours::BLUE;
 					else if(univ.party[i].cur_sp > univ.party[i].max_sp)
-						style.colour = {0,0xff,0x80}; // Teal
-					else style.colour = sf::Color::Magenta;
+						style.colour = Colours::TEAL;
+					else style.colour = Colours::PINK;
 					win_draw_string( pc_stats_gworld,pc_buttons[i][PCBTN_SP],std::to_string(univ.party[i].cur_sp),eTextMode::WRAP,style);
 					draw_pc_effects(i);
 					break;
@@ -230,7 +230,7 @@ void put_item_screen(eItemWinMode screen_num) {
 	TextStyle style;
 	style.lineHeight = 10;
 	style.font = FONT_BOLD;
-	style.colour = sf::Color::Yellow;
+	style.colour = Colours::YELLOW;
 	switch(screen_num) {
 		case ITEM_WIN_SPECIAL:
 			win_draw_string(item_stats_gworld,upper_frame_rect,"Special items:",eTextMode::WRAP,style);
@@ -271,7 +271,7 @@ void put_item_screen(eItemWinMode screen_num) {
 				if(i_num < spec_item_array.size()) {
 					int which_quest = spec_item_array[i_num] % 10000;
 					if(spec_item_array[i_num] / 10000 == 2)
-						style.colour = sf::Color::Red;
+						style.colour = Colours::RED;
 					
 					win_draw_string(item_stats_gworld,item_buttons[i][ITEMBTN_NAME],univ.scenario.quests[which_quest].name,eTextMode::WRAP,style);
 					
@@ -280,7 +280,7 @@ void put_item_screen(eItemWinMode screen_num) {
 						from = to = item_buttons[i][ITEMBTN_NAME].centre();
 						from.x = item_buttons[i][ITEMBTN_NAME].left;
 						to.x = from.x + string_length(univ.scenario.quests[which_quest].name, style);
-						draw_line(item_stats_gworld, from, to, 1, sf::Color::Green);
+						draw_line(item_stats_gworld, from, to, 1, Colours::GREEN);
 					}
 					
 					place_item_button(3,i,ITEMBTN_INFO);
@@ -309,11 +309,11 @@ void put_item_screen(eItemWinMode screen_num) {
 					if(who.equip[i_num]) {
 						style.italic = true;
 						if(item.variety == eItemType::ONE_HANDED || item.variety == eItemType::TWO_HANDED)
-							style.colour = sf::Color::Magenta;
+							style.colour = Colours::PINK;
 						else if((*item.variety).is_armour)
-							style.colour = sf::Color::Green;
-						else style.colour = sf::Color::Blue;
-					} else style.colour = sf::Color::Black;
+							style.colour = Colours::GREEN;
+						else style.colour = Colours::BLUE;
+					} else style.colour = Colours::BLACK;
 					
 					sout.str("");
 					if(!item.ident)
@@ -496,7 +496,7 @@ void place_item_bottom_buttons() {
 	style.lineHeight = 10;
 	style.pointSize = 12;
 	style.font = FONT_BOLD;
-	style.colour = sf::Color::Yellow;
+	style.colour = Colours::YELLOW;
 	
 	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
 	for(short i = 0; i < 6; i++) {

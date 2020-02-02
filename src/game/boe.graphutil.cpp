@@ -274,7 +274,7 @@ void frame_active_pc(location center) {
 	active_pc_rect.right = 46 + where_draw.x * 28;
 	active_pc_rect.offset(14,2);
 	
-	frame_roundrect(mainPtr, active_pc_rect, 8, sf::Color::Magenta);
+	frame_roundrect(mainPtr, active_pc_rect, 8, Colours::PINK);
 }
 
 void draw_pcs(location center) {

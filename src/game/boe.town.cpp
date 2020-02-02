@@ -1510,8 +1510,8 @@ void draw_map(bool need_refresh) {
 								draw_rect.right = draw_rect.left + 6;
 								draw_rect.bottom = draw_rect.top + 6;
 								
-								fill_rect(mini_map, draw_rect, sf::Color::Green);
-								frame_circle(mini_map, draw_rect, sf::Color::Blue);
+								fill_rect(mini_map, draw_rect, Colours::GREEN);
+								frame_circle(mini_map, draw_rect, Colours::BLUE);
 							}
 					}
 			if((overall_mode != MODE_SHOPPING) && (overall_mode != MODE_TALKING)) {
@@ -1521,7 +1521,7 @@ void draw_map(bool need_refresh) {
 				draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
 				draw_rect.right = draw_rect.left + 6;
 				draw_rect.bottom = draw_rect.top + 6;
-				fill_rect(mini_map, draw_rect, sf::Color::Red);
+				fill_rect(mini_map, draw_rect, Colours::RED);
 				frame_circle(mini_map, draw_rect, sf::Color::Black);
 				
 			}

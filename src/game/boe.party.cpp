@@ -38,6 +38,7 @@
 #include "button.hpp"
 #include "spell.hpp"
 #include "cursors.hpp"
+#include "render_shapes.hpp" // for colour constants
 
 extern short skill_bonus[21];
 
@@ -1660,7 +1661,7 @@ static void put_pc_caster_buttons(cDialog& me) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(me["caster" + n].isVisible()) {
 			if(i == pc_casting)
-				me["pc" + n].setColour(sf::Color::Red);
+				me["pc" + n].setColour(Colours::RED);
 			else me["pc" + n].setColour(me.getDefTextClr());
 		}
 	}
@@ -1670,8 +1671,8 @@ static void put_pc_target_buttons(cDialog& me, short& store_last_target_darkened
 	
 	if(store_spell_target < 6) {
 		std::string n = boost::lexical_cast<std::string>(store_spell_target + 1);
-		me["hp" + n].setColour(sf::Color::Red);
-		me["sp" + n].setColour(sf::Color::Red);
+		me["hp" + n].setColour(Colours::RED);
+		me["sp" + n].setColour(Colours::RED);
 	}
 	if((store_last_target_darkened < 6) && (store_last_target_darkened != store_spell_target)) {
 		std::string n = boost::lexical_cast<std::string>(store_last_target_darkened + 1);

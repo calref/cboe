@@ -393,7 +393,7 @@ void display_party() {
 			win_draw_string(mainPtr,from_rect,"Party is in a scenario (day " + std::to_string(1 + univ.party.age / 3700) + ").",eTextMode::WRAP,style);
 		for(short i = 0; i < 6; i++) {
 			if(i == current_active_pc) // active pc is drawn in blue
-				fill_rect(mainPtr, pc_area_buttons[i][0], sf::Color::Blue);
+				fill_rect(mainPtr, pc_area_buttons[i][0], Colours::BLUE);
 			else fill_rect(mainPtr, pc_area_buttons[i][0], sf::Color::Black);
 			
 			from_rect = (current_pressed_button == i) ? ed_buttons_from[1] : ed_buttons_from[0];

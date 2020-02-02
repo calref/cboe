@@ -11,6 +11,7 @@
 #include "choicedlog.hpp"
 #include "winutil.hpp"
 #include "cursors.hpp"
+#include "render_shapes.hpp" // for colour constants
 #include <boost/lexical_cast.hpp>
 
 /*
@@ -339,7 +340,7 @@ static void draw_xp_skills(cDialog& me,xp_dlog_state& save) {
 		eSkill skill = eSkill(i);
 		cControl& cur = me[boost::lexical_cast<std::string>(skill)];
 		if(can_change_skill(skill, save, true))
-			cur.setColour(sf::Color::Red);
+			cur.setColour(Colours::RED);
 		else cur.setColour(me.getDefTextClr());
 		if(i < 19)
 			cur.setTextToNum(save.skills[skill]);

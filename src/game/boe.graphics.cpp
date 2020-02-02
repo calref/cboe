@@ -1511,7 +1511,7 @@ void frame_space(location where,short mode,short width,short height) {
 	to_frame.right = 41 + where_put.x * 28 + 28 * (width - 1);
 	to_frame.offset(win_to_rects[WINRECT_TERVIEW].topLeft());
 	
-	frame_roundrect(mainPtr, to_frame, 8, (mode == 0) ? sf::Color::Red : sf::Color::Green);
+	frame_roundrect(mainPtr, to_frame, 8, (mode == 0) ? Colours::RED : Colours::GREEN);
 }
 
 
