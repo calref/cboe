@@ -66,6 +66,7 @@ std::map<eDamageType,int> boom_gr = {
 	{eDamageType::SPECIAL, 1},
 };
 short store_item_spell_level = 10;
+extern short store_spell_target;
 
 // global values for when processing special encounters
 iLiving* current_pc_picked_in_spec_enc = nullptr;
@@ -1075,6 +1076,11 @@ void use_item(short pc,short item) {
 					case eSpell::CHARM_FOE: add_string_to_buf("  It fires a lovely, sparkling beam."); break;
 					case eSpell::ANTIMAGIC: add_string_to_buf("  Your hair stands on end."); break;
 					default: add_string_to_buf("  It casts a spell: " + (*spell).name()); break;
+				}
+				switch((*spell).need_select) {
+					case SELECT_NO: break;
+					case SELECT_ACTIVE: store_spell_target = select_pc(0); break;
+					case SELECT_ANY: store_spell_target = select_pc(1); break;
 				}
 				if(overall_mode == MODE_COMBAT) {
 					bool priest = (*spell).is_priest();
