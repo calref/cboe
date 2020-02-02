@@ -67,47 +67,47 @@ BEGIN
         MENUITEM "Close\tCtrl+W",               IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "&Save Game\tCtrl+S",          IDM_FILE_SAVE
-        MENUITEM "Save As...",                  IDM_FILE_SAVE_AS
-        MENUITEM "Revert to Saved",             IDM_FILE_REVERT
+        MENUITEM "Save &As...",                 IDM_FILE_SAVE_AS
+        MENUITEM "&Revert to Saved",            IDM_FILE_REVERT
         MENUITEM SEPARATOR
         MENUITEM "&Quit\tCtrl+Q",               IDM_FILE_QUIT
     END
     POPUP "&Party"
     BEGIN
-        MENUITEM "Edit Gold",                   IDM_PARTY_GOLD
-        MENUITEM "Edit Food",                   IDM_PARTY_FOOD
-        MENUITEM "Edit Alchemy",                IDM_PARTY_ALCHEMY
+        MENUITEM "Edit &Gold",                  IDM_PARTY_GOLD
+        MENUITEM "Edit &Food",                  IDM_PARTY_FOOD
+        MENUITEM "Edit &Alchemy",               IDM_PARTY_ALCHEMY
         MENUITEM SEPARATOR
-        MENUITEM "Heal Damage",                 IDM_PARTY_DAMAGE
+        MENUITEM "&Heal Damage",                IDM_PARTY_DAMAGE
         MENUITEM "Restore Spell Points",        IDM_PARTY_MANA
-        MENUITEM "Raise Dead, Destone, etc.",   IDM_PARTY_DEAD
+        MENUITEM "Raise &Dead, Destone, etc.",  IDM_PARTY_DEAD
         MENUITEM "Remove Bad Conditions",       IDM_PARTY_CONDITIONS
         MENUITEM SEPARATOR
-        MENUITEM "Edit Mage Spells",            IDM_PARTY_MAGE
-        MENUITEM "Edit Priest Spells",          IDM_PARTY_PRIEST
-        MENUITEM "Edit Traits",                 IDM_PARTY_TRAITS
-        MENUITEM "Edit Skills",                 IDM_PARTY_SKILLS
-        MENUITEM "Edit XP",                     IDM_PARTY_XP
+        MENUITEM "Edit &Mage Spells",           IDM_PARTY_MAGE
+        MENUITEM "Edit &Priest Spells",         IDM_PARTY_PRIEST
+        MENUITEM "Edit &Traits",                IDM_PARTY_TRAITS
+        MENUITEM "Edit &Skills",                IDM_PARTY_SKILLS
+        MENUITEM "Edit &XP",                    IDM_PARTY_XP
         MENUITEM SEPARATOR
         MENUITEM "Reunite Party",               IDM_PARTY_REUNITE
     END
     POPUP "&Scenario"
     BEGIN
-        MENUITEM "Edit Day",                    IDM_SCEN_DAY
+        MENUITEM "Edit &Day",                   IDM_SCEN_DAY
         MENUITEM SEPARATOR
-        MENUITEM "Leave Town",                  IDM_SCEN_LEAVE_TOWN
-        MENUITEM "Make Towns Forget You",       IDM_SCEN_TOWN_RESET
-        MENUITEM "Add All Town Maps",           IDM_SCEN_TOWN_MAP
-        MENUITEM "Add All Outdoor Maps",        IDM_SCEN_OUT_MAP
-        MENUITEM "Own All Boats/Horses",        IDM_PARTY_VEHICLES
+        MENUITEM "&Leave Town",                 IDM_SCEN_LEAVE_TOWN
+        MENUITEM "Make Towns &Forget You",      IDM_SCEN_TOWN_RESET
+        MENUITEM "Add All &Town Maps",          IDM_SCEN_TOWN_MAP
+        MENUITEM "Add All &Outdoor Maps",       IDM_SCEN_OUT_MAP
+        MENUITEM "Own All &Boats/Horses",       IDM_PARTY_VEHICLES
         MENUITEM SEPARATOR
-        MENUITEM "Remove Party From Scenario",  IDM_SCEN_LEAVE
-        MENUITEM "Set Stuff Done Flag",         IDM_SCEN_SDF
+        MENUITEM "&Remove Party From Scenario", IDM_SCEN_LEAVE
+        MENUITEM "Set &Stuff Done Flag",        IDM_SCEN_SDF
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "About Blades of Exile Editor", IDM_ABOUT
-        MENUITEM "Blades of Exile Editor Help\tF1", IDM_HELP
+        MENUITEM "&About Blades of Exile Editor", IDM_ABOUT
+        MENUITEM "Blades of Exile Editor &Help\tF1", IDM_HELP
     END
 END
 
