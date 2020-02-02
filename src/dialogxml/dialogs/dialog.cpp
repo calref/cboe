@@ -22,6 +22,7 @@
 #include "mathutil.hpp"
 #include "cursors.hpp"
 #include "prefs.hpp"
+#include "framerate_limiter.hpp"
 
 using namespace std;
 using namespace ticpp;
@@ -430,9 +431,7 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 // This method is a main event event loop of the dialog.
 void cDialog::handle_events() {
 	sf::Event currentEvent;
-
-	sf::Clock framerate_clock;
-	const sf::Int64 desired_microseconds_per_frame { 1000000 / 60 }; // us / FPS
+	cFramerateLimiter fps_limiter;
 
 	while(dialogNotToast) {
 		while(win.pollEvent(currentEvent)) handle_one_event(currentEvent);
@@ -441,9 +440,7 @@ void cDialog::handle_events() {
 		draw();
 
 		// Prevent the loop from executing too fast.
-		const sf::Int64 remaining_time_budget = desired_microseconds_per_frame - framerate_clock.getElapsedTime().asMicroseconds();
-		if(remaining_time_budget > 0) sf::sleep(sf::microseconds(remaining_time_budget));
-		framerate_clock.restart();
+		fps_limiter.frame_finished();
 	}
 }
 

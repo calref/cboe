@@ -3,6 +3,7 @@ Import("env platform")
 
 tools = Split("""
 	undo.cpp
+	framerate_limiter.cpp
 	../location.cpp
 	../mathutil.cpp
 	../porting.cpp

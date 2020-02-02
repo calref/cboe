@@ -31,6 +31,7 @@
 #include "prefs.hpp"
 #include "button.hpp"
 #include "enum_map.hpp"
+#include "framerate_limiter.hpp"
 
 bool All_Done = false;
 sf::RenderWindow mainPtr;
@@ -197,8 +198,7 @@ void init_boe(int argc, char* argv[]) {
 
 void handle_events() {
 	sf::Event currentEvent;
-	sf::Clock framerate_clock;
-	const sf::Int64 desired_microseconds_per_frame { 1000000 / 60 }; // us / FPS
+	cFramerateLimiter fps_limiter;
 
 	while(!All_Done) {
 		while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent);
@@ -224,9 +224,7 @@ void handle_events() {
 		redraw_everything();
 
 		// Prevent the loop from executing too fast.
-		const sf::Int64 remaining_time_budget = desired_microseconds_per_frame - framerate_clock.getElapsedTime().asMicroseconds();
-		if(remaining_time_budget > 0) sf::sleep(sf::microseconds(remaining_time_budget));
-		framerate_clock.restart();
+		fps_limiter.frame_finished();
 	}
 }
 

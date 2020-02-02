@@ -623,6 +623,9 @@
     <ClCompile Include="..\..\..\src\tools\cursors.win.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\tools\framerate_limiter.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\scenario\vehicle.cpp">
       <Filter>Scenario</Filter>
     </ClCompile>
@@ -802,6 +805,9 @@
       <Filter>Universe</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tools\winutil.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tools\framerate_limiter.hpp">
       <Filter>Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tools\vector2d.hpp">

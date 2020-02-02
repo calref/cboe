@@ -284,6 +284,8 @@
 		91EF27791B693D5F00666469 /* item_write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91EF27781B693D5F00666469 /* item_write.cpp */; };
 		91EF277B1B693D6E00666469 /* monst_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91EF277A1B693D6E00666469 /* monst_read.cpp */; };
 		91EF277D1B693D7D00666469 /* monst_write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91EF277C1B693D7D00666469 /* monst_write.cpp */; };
+		91F3205023E65EA3009650AF /* framerate_limiter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91F3204E23E65EA3009650AF /* framerate_limiter.cpp */; };
+		91F3205123E65EA3009650AF /* framerate_limiter.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 91F3204F23E65EA3009650AF /* framerate_limiter.hpp */; };
 		91F6F8E318F87F3700E3EA15 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
 		91F6F8E418F87F3700E3EA15 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
 		91F6F8E518F87F3700E3EA15 /* sfml-audio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
@@ -805,6 +807,8 @@
 		91EF277A1B693D6E00666469 /* monst_read.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = monst_read.cpp; sourceTree = "<group>"; };
 		91EF277C1B693D7D00666469 /* monst_write.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = monst_write.cpp; sourceTree = "<group>"; };
 		91F06E8F1A2EBEE70038E902 /* special_parse.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = special_parse.hpp; sourceTree = "<group>"; };
+		91F3204E23E65EA3009650AF /* framerate_limiter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = framerate_limiter.cpp; sourceTree = "<group>"; };
+		91F3204F23E65EA3009650AF /* framerate_limiter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = framerate_limiter.hpp; sourceTree = "<group>"; };
 		91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-audio.framework"; path = "/Library/Frameworks/sfml-audio.framework"; sourceTree = "<absolute>"; };
 		91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-graphics.framework"; path = "/Library/Frameworks/sfml-graphics.framework"; sourceTree = "<absolute>"; };
 		91F6F8E018F87F3700E3EA15 /* sfml-system.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-system.framework"; path = "/Library/Frameworks/sfml-system.framework"; sourceTree = "<absolute>"; };
@@ -1154,11 +1158,13 @@
 			isa = PBXGroup;
 			children = (
 				91C688E70FD702B9000F6D01 /* cursors.mac.mm */,
+				91F3204E23E65EA3009650AF /* framerate_limiter.cpp */,
 				91EC481018FBABB100BB1E86 /* prefs.mac.mm */,
 				912283C80FD0E16C00B21642 /* undo.cpp */,
 				919145FF18E63B70005CF3A4 /* winutil.mac.mm */,
 				91C688E60FD702B9000F6D01 /* cursors.hpp */,
 				91574CC323CB97C5004766F8 /* enum_map.hpp */,
+				91F3204F23E65EA3009650AF /* framerate_limiter.hpp */,
 				91C2A6E21B8244F700346948 /* gitrev.hpp */,
 				91EC480E18FBAA8700BB1E86 /* prefs.hpp */,
 				917B573F100B956C0096C978 /* undo.hpp */,
@@ -1536,6 +1542,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91F3205123E65EA3009650AF /* framerate_limiter.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1936,6 +1943,7 @@
 				91EC1F0623DDFF9D00271891 /* res_image.cpp in Sources */,
 				91EC1F0723DDFF9D00271891 /* res_sound.cpp in Sources */,
 				91EC1F0823DDFF9D00271891 /* res_strings.cpp in Sources */,
+				91F3205023E65EA3009650AF /* framerate_limiter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
