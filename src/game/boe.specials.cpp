@@ -594,24 +594,24 @@ void use_item(short pc,short item) {
 	if(take_charge) {
 		cItem& the_item = univ.party[pc].items[item];
 		std::string name;
-		if(!univ.party[pc].items[item].ident)
-			name = univ.party[pc].items[item].name.c_str();
-		else name = univ.party[pc].items[item].full_name.c_str();
+		if(!the_item.ident)
+			name = the_item.name.c_str();
+		else name = the_item.full_name.c_str();
 		add_string_to_buf("Use: " + name);
 		
-		if(univ.party[pc].items[item].variety == eItemType::POTION)
+		if(the_item.variety == eItemType::POTION)
 			play_sound(56);
 		
-		str = univ.party[pc].items[item].abil_data[0];
+		str = the_item.abil_data[0];
 		store_item_spell_level = str;
-		type = univ.party[pc].items[item].magic_use_type;
+		type = the_item.magic_use_type;
 		
 		switch(abil) {
 			case eItemAbil::POISON_WEAPON: // poison weapon
 				take_charge = poison_weapon(pc,str,false);
 				break;
 			case eItemAbil::AFFECT_STATUS: {
-				auto status = eStatus(univ.party[pc].items[item].abil_data[1]);
+				auto status = eStatus(the_item.abil_data[1]);
 				switch(status) {
 					case eStatus::MAIN: case eStatus::CHARM:
 						// These don't make any sense in this context.
@@ -1012,7 +1012,7 @@ void use_item(short pc,short item) {
 						} else ASB("  You rise into the air!");
 						break;
 				}
-				if(take_charge) univ.party.status[ePartyStatus(univ.party[pc].items[item].abil_data[1])] += str;
+				if(take_charge) univ.party.status[ePartyStatus(the_item.abil_data[1])] += str;
 				break;
 			case eItemAbil::HEALTH_POISON:
 				switch(type) {
@@ -1051,7 +1051,7 @@ void use_item(short pc,short item) {
 					take_charge = false;
 					break;
 				}
-				auto spell = eSpell(univ.party[pc].items[item].abil_data[1]);
+				auto spell = eSpell(the_item.abil_data[1]);
 				switch(spell) {
 					case eSpell::FLAME: add_string_to_buf("  It fires a bolt of flame."); break;
 					case eSpell::FIREBALL: add_string_to_buf("  It shoots a fireball."); break;
@@ -1099,14 +1099,14 @@ void use_item(short pc,short item) {
 				else do_mage_spell(univ.cur_pc, spell, true);
 			} break;
 			case eItemAbil::SUMMONING:
-				if(!summon_monster(univ.party[pc].items[item].abil_data[1],user_loc,str,eAttitude::FRIENDLY,true))
+				if(!summon_monster(the_item.abil_data[1],user_loc,str,eAttitude::FRIENDLY,true))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case eItemAbil::MASS_SUMMONING:
 				r1 = get_ran(str,1,4); // TODO: This value was never used, so why is it here?
 				r1 = get_ran(1,3,5);
 				for(short i = 0; i < r1; i++)
-					if(!summon_monster(univ.party[pc].items[item].abil_data[1],user_loc,r1,eAttitude::FRIENDLY,true))
+					if(!summon_monster(the_item.abil_data[1],user_loc,r1,eAttitude::FRIENDLY,true))
 						add_string_to_buf("  Summon failed.");
 				break;
 			case eItemAbil::QUICKFIRE:
@@ -1115,15 +1115,15 @@ void use_item(short pc,short item) {
 				break;
 			case eItemAbil::MESSAGE:
 				take_charge = false;
-				r1 = univ.party[pc].items[item].desc.find("|||");
-				str1 = univ.party[pc].items[item].desc.substr(r1 + 3);
+				r1 = the_item.desc.find("|||");
+				str1 = the_item.desc.substr(r1 + 3);
 				r1 = str1.find("|||");
 				if(r1 != std::string::npos) {
 					str2 = str1.substr(r1 + 3);
 					str1 = str1.substr(0, r1);
 				}
-				r1 = univ.party[pc].items[item].graphic_num;
-				cStrDlog(str1, str2, "Reading " + univ.party[pc].items[item].name, r1, PIC_ITEM).show();
+				r1 = the_item.graphic_num;
+				cStrDlog(str1, str2, "Reading " + the_item.name, r1, PIC_ITEM).show();
 				break;
 				// Now for all the non-usable abilities. These are enumerated here so that the compiler can catch if we've missed one.
 			case eItemAbil::ACCURACY: case eItemAbil::ANTIMAGIC_WEAPON: case eItemAbil::ASPTONGUE: case eItemAbil::BOOST_MAGIC:
