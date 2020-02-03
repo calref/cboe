@@ -216,11 +216,12 @@ void clip_rect(sf::RenderTarget& where, rectangle rect) {
 	rect &= rectangle(where); // Make sure we don't draw out of bounds
 	// TODO: Make sure this works for the scissor test...
 	setActiveRenderTarget(where);
+	auto viewport = where.getView().getViewport();
 	rectangle winRect(where);
 	location pivot = rect.bottomLeft();
 	pivot = where.mapCoordsToPixel(pivot);
 	glEnable(GL_SCISSOR_TEST);
-	glScissor(pivot.x, rectangle(where).height() - pivot.y, rect.width(), rect.height());
+	glScissor(pivot.x, rectangle(where).height() - pivot.y, rect.width() * viewport.width, rect.height() * viewport.height);
 }
 
 void clip_region(sf::RenderWindow& where, Region& region) {
