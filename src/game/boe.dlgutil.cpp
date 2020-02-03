@@ -361,8 +361,8 @@ void handle_sale(cShopItem item, int i) {
 			if(univ.party.gold < cost)
 				ASB("Not enough gold.");
 			else {
-				short s1, s2, s3;
-				run_special(eSpecCtx::SHOPPING, 0, base_item.item_level, {0,0}, &s1, &s2, &s3);
+				short s1;
+				run_special(eSpecCtx::SHOPPING, eSpecCtxType::SCEN, base_item.item_level, {0,0}, &s1);
 				if(s1 <= 0) {
 					take_gold(cost,false);
 					active_shop.takeOne(i);
@@ -657,7 +657,7 @@ static void show_job_bank(int which_bank, std::string title) {
 }
 
 void handle_talk_event(location p) {
-	short get_pc,s1 = -1,s2 = -1,s3 = -1;
+	short get_pc,s1 = -1,s2 = -1;
 	char asked[4];
 	
 	short a,b,c,d;
@@ -1018,24 +1018,24 @@ void handle_talk_event(location p) {
 			break;
 			// TODO: Strings resulting from this don't seem to be recordable; whyever not!?
 		case eTalkNode::CALL_TOWN_SPEC:
-			run_special(eSpecCtx::TALK,2,a,univ.party.town_loc,&s1,&s2,&s3);
+			run_special(eSpecCtx::TALK, eSpecCtxType::TOWN, a, univ.party.town_loc, &s1, &s2);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if((s1 >= 0) || (s2 >= 0)) {
 				save_talk_str1 = s1 >= 0 ? univ.town->spec_strs[s1] : "";
 				save_talk_str2 = s2 >= 0 ? univ.town->spec_strs[s2] : "";
 			}
-			get_strs(save_talk_str1,save_talk_str2,2,s1,s2);
+			get_strs(save_talk_str1, save_talk_str2, eSpecCtxType::TOWN, s1, s2);
 			put_pc_screen();
 			put_item_screen(stat_window);
 			break;
 		case eTalkNode::CALL_SCEN_SPEC:
-			run_special(eSpecCtx::TALK,0,a,univ.party.town_loc,&s1,&s2,&s3);
+			run_special(eSpecCtx::TALK, eSpecCtxType::SCEN, a, univ.party.town_loc, &s1, &s2);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if((s1 >= 0) || (s2 >= 0)) {
 				save_talk_str1 = s1 >= 0 ? univ.scenario.spec_strs[s1] : "";
 				save_talk_str2 = s2 >= 0 ? univ.scenario.spec_strs[s2] : "";
 			}
-			get_strs(save_talk_str1,save_talk_str2,0,s1,s2);
+			get_strs(save_talk_str1, save_talk_str2, eSpecCtxType::SCEN, s1, s2);
 			put_pc_screen();
 			put_item_screen(stat_window);
 			break;

@@ -89,10 +89,14 @@ public:
 	void writeTo(std::ostream& file, int n) const;
 };
 
+enum class eSpecCtxType {
+	SCEN, OUT, TOWN,
+};
+
 class cTimer {
 public:
 	long time = 0;
-	short node_type = 0;
+	eSpecCtxType node_type = eSpecCtxType::SCEN;
 	short node = -1;
 };
 
@@ -110,7 +114,7 @@ enum class eSpecCtx {
 struct pending_special_type {
 	spec_num_t spec;
 	eSpecCtx mode;
-	unsigned short type; // 0 - scen, 1 - out, 2 - town
+	eSpecCtxType type;
 	location where;
 	long long trigger_time;
 };

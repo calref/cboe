@@ -19,26 +19,9 @@ bool run_stone_circle(short which);
 void fade_party();
 void change_level(short town_num,short x,short y);
 void push_things();
-void queue_special(eSpecCtx mode, unsigned short which_type, short spec, location spec_loc);
-void run_special(eSpecCtx which_mode,short which_type,short start_spec,location spec_loc,short *a,short *b,short *redraw);
-void run_special(pending_special_type spec, short* a, short* b, short* redraw);
-cSpecial get_node(short cur_spec,short cur_spec_type);
-void general_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw);
-void setsd(short a,short b,short val);
-void handle_message(eSpecCtx which_mode,short cur_type,short mess1,short mess2,short*a,short*b,std::string title="",pic_num_t pic=-1,ePicType pt=PIC_SCEN);
-void get_strs(std::string& str1, std::string& str2,short cur_type,short which_str1,short which_str2) ;
-void ifthen_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw);
-void affect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw);
-void oneshot_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw);
-void townmode_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw);
-void rect_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw);
-void outdoor_spec(eSpecCtx which_mode,cSpecial cur_node,short cur_spec_type,
-	short *next_spec,short *next_spec_type,short *a,short *b,short *redraw);
+void queue_special(eSpecCtx mode, eSpecCtxType which_type, spec_num_t spec, location spec_loc);
+void run_special(eSpecCtx which_mode, eSpecCtxType which_type, spec_num_t start_spec, location spec_loc, short* a = nullptr, short* b = nullptr, bool* redraw = nullptr);
+void run_special(pending_special_type spec, short* a, short* b, bool* redraw);
+void get_strs(std::string& str1, std::string& str2,eSpecCtxType cur_type,short which_str1,short which_str2);
 
 void set_campaign_flag(short sdf_a, short sdf_b, short cpf_a, short cpf_b, short str, bool get_send);

@@ -218,7 +218,7 @@ void play_see_monster_str(unsigned short m, location monst_loc) {
 	spec = univ.scenario.scen_monsters[m].see_spec;
 	// Then run the special, if any
 	if(spec > -1){
-		queue_special(eSpecCtx::SEE_MONST, 0, spec, monst_loc);
+		queue_special(eSpecCtx::SEE_MONST, eSpecCtxType::SCEN, spec, monst_loc);
 	}
 }
 

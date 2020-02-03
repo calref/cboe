@@ -106,12 +106,12 @@ void equip_item(short pc_num,short item_num) {
 
 
 void drop_item(short pc_num,short item_num,location where_drop) {
-	short s1, s2, s3 = 0;
+	short s1, s2;
 	int spec = -1;
 	std::string choice;
 	short how_many = 1;
 	cItem item_store;
-	bool take_given_item = true;
+	bool take_given_item = true, need_redraw = false;
 	location loc;
 	
 	item_store = univ.party[pc_num].items[item_num];
@@ -158,8 +158,8 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 	}
 	if(spec >= 0)
 		while(how_many--)
-			run_special(eSpecCtx::DROP_ITEM, 0, spec, where_drop, &s1, &s2, &s3);
-	if(s3 > 0)
+			run_special(eSpecCtx::DROP_ITEM, eSpecCtxType::SCEN, spec, where_drop, &s1, &s2, &need_redraw);
+	if(need_redraw)
 		draw_terrain(0);
 }
 
@@ -305,7 +305,6 @@ void make_town_hostile() {
 // Set Attitude node adapted from *i, meant to replace make_town_hostile node
 void set_town_attitude(short lo,short hi,eAttitude att) {
 	short num;
-	short a[3] = {}; // Dummy values to pass to run_special.
 	
 	if(which_combat_type == 0)
 		return;
@@ -348,7 +347,7 @@ void set_town_attitude(short lo,short hi,eAttitude att) {
 	// In some towns, doin' this'll getcha' killed.
 	// (Or something else! Killing the party would be the responsibility of whatever special node is called.)
 	if(univ.town.monst.hostile && univ.town->spec_on_hostile >= 0)
-		run_special(eSpecCtx::TOWN_HOSTILE, 2, univ.town->spec_on_hostile, univ.party.town_loc, &a[0], &a[1], &a[2]);
+		run_special(eSpecCtx::TOWN_HOSTILE, eSpecCtxType::TOWN, univ.town->spec_on_hostile, univ.party.town_loc);
 }
 
 // TODO: Set town status to "dead"? Could reuse above with magic att (eg -1), or write new function.
@@ -625,7 +624,7 @@ void custom_pic_dialog(std::string title, pic_num_t bigpic) {
 	pic_dlg.run();
 }
 
-void story_dialog(std::string title, str_num_t first, str_num_t last, int which_str_type, pic_num_t pic, ePicType pt) {
+void story_dialog(std::string title, str_num_t first, str_num_t last, eSpecCtxType which_str_type, pic_num_t pic, ePicType pt) {
 	cDialog story_dlg("many-str");
 	dynamic_cast<cPict&>(story_dlg["pict"]).setPict(pic, pt);
 	str_num_t cur = first;
@@ -638,11 +637,11 @@ void story_dialog(std::string title, str_num_t first, str_num_t last, int which_
 		} else if(clicked == "right") {
 			cur++;
 		}
-		if(which_str_type == 0)
+		if(which_str_type == eSpecCtxType::SCEN)
 			me["str"].setText(univ.scenario.spec_strs[cur]);
-		else if(which_str_type == 1)
+		else if(which_str_type == eSpecCtxType::OUT)
 			me["str"].setText(univ.out->spec_strs[cur]);
-		else if(which_str_type == 2)
+		else if(which_str_type == eSpecCtxType::TOWN)
 			me["str"].setText(univ.town->spec_strs[cur]);
 		return true;
 	}, {"left", "right", "done"});

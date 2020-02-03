@@ -230,7 +230,7 @@ void cParty::import_legacy(legacy::party_record_type& old, cUniverse& univ){
 		horses[i].import_legacy(old.horses[i]);
 		cTimer t;
 		t.time = old.party_event_timers[i];
-		t.node_type = old.global_or_town[i];
+		t.node_type = old.global_or_town[i] ? eSpecCtxType::TOWN : eSpecCtxType::SCEN;
 		t.node = old.node_to_call[i];
 		party_event_timers.push_back(t);
 	}
@@ -659,7 +659,7 @@ bool cParty::check_class(unsigned int item_class,bool take) {
 	return false;
 }
 
-bool cParty::start_timer(short time, short node, short type){
+bool cParty::start_timer(short time, spec_num_t node, eSpecCtxType type){
 	if(party_event_timers.size() == party_event_timers.max_size()) return false; // Shouldn't be reached
 	cTimer t;
 	t.time = time;
@@ -791,7 +791,7 @@ void cParty::writeTo(std::ostream& file) const {
 	file << '\f';
 	file << '\f';
 	for(unsigned int i = 0; i < party_event_timers.size(); i++)
-		file << "TIMER " << ' ' << party_event_timers[i].time << ' ' << party_event_timers[i].node_type
+		file << "TIMER " << ' ' << party_event_timers[i].time << ' ' << int(party_event_timers[i].node_type)
 			 << ' ' << party_event_timers[i].node << '\f';
 	file << '\f';
 	for(int i = 0; i < creature_save.size(); i++)
@@ -1027,10 +1027,11 @@ void cParty::readFrom(std::istream& file){
 			if(i < 25 && j < 25)
 				campaign_flags[cur].idx[i][j] = val;
 		} else if(cur == "TIMER") {
-			int i;
+			int i, j;
 			bin >> i;
 			cTimer timer;
-			bin >> timer.time >> timer.node_type >> timer.node;
+			bin >> timer.time >> j >> timer.node;
+			timer.node_type = eSpecCtxType(j);
 			party_event_timers.push_back(timer);
 		} else if(cur == "CREATURE") {
 			int i, j;

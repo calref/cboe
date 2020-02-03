@@ -243,7 +243,8 @@ bool prime_time() {
 
 static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw, bool& need_reprint) {
 	short store_sp[6];
-	extern short spec_target_type, spec_target_fail;
+	extern short spec_target_fail;
+	extern eSpecCtxType spec_target_type;
 	if(!someone_awake()) {
 		ASB("Everyone's asleep/paralyzed.");
 		need_reprint = true;
@@ -574,10 +575,8 @@ static void handle_talk(location destination, bool& did_something, bool& need_re
 				did_something = true;
 				need_redraw = true;
 				if(univ.town.monst[i].special_on_talk >= 0) {
-					short s1, s2, s3;
-					run_special(eSpecCtx::HAIL, 2, univ.town.monst[i].special_on_talk, univ.town.monst[i].cur_loc, &s1, &s2, &s3);
-					if(s3 > 0)
-						need_redraw = true;
+					short s1;
+					run_special(eSpecCtx::HAIL, eSpecCtxType::TOWN, univ.town.monst[i].special_on_talk, univ.town.monst[i].cur_loc, &s1, nullptr, &need_redraw);
 					if(s1 > 0)
 						break;
 				}
@@ -1415,11 +1414,9 @@ static void advance_time(bool did_something, bool need_redraw, bool need_reprint
  	// MARK: At this point, see if any specials have been queued up, and deal with them
 	// Note: We just check once here instead of looping because run_special also pulls from the queue.
 	if(!special_queue.empty()) {
-		short s1 = 0, s2 = 0, s3 = 0;
 		pending_special_type pending = special_queue.front();
 		special_queue.pop();
-		run_special(pending, &s1, &s2, &s3);
-		if(s3 > 0) need_redraw = true;
+		run_special(pending, nullptr, nullptr, &need_redraw);
 	}
 	
 	// MARK: Handle non-PC stuff (like monsters) if the party actually did something

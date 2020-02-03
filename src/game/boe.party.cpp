@@ -52,7 +52,8 @@ short combat_percent[20] = {
 short who_cast,which_pc_displayed;
 eSpell town_spell;
 extern bool spell_freebie;
-extern short spec_target_type, spec_target_fail, spec_target_options;
+extern eSpecCtxType spec_target_type;
+extern short spec_target_fail, spec_target_options;
 bool spell_button_active[90];
 
 extern short fast_bang;
@@ -199,8 +200,7 @@ void put_party_in_scen(std::string scen_name) {
 			custom_choice_dialog(univ.scenario.intro_strs, univ.scenario.intro_mess_pic, PIC_SCEN, buttons);
 			j = 6;
 		}
-	short i,j,k;
-	run_special(eSpecCtx::STARTUP, 0, univ.scenario.init_spec, loc(0,0), &i, &j, &k);
+	run_special(eSpecCtx::STARTUP, eSpecCtxType::SCEN, univ.scenario.init_spec, loc(0,0));
 	give_help(1,2);
 	
 	// Compatibility flags
@@ -1183,7 +1183,8 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 
 extern short spell_caster;
 void cast_town_spell(location where) {
-	short adjust,r1,store;
+	short r1,store;
+	bool need_redraw = false;
 	location loc;
 	ter_num_t ter;
 	
@@ -1193,11 +1194,11 @@ void cast_town_spell(location where) {
 		(where.y >= univ.town->in_town_rect.bottom)) {
 		add_string_to_buf("  Can't target outside town.");
 		if(town_spell == eSpell::NONE)
-			run_special(eSpecCtx::TARGET, spec_target_type, spec_target_fail, where, &r1, &store, &adjust);
+			run_special(eSpecCtx::TARGET, spec_target_type, spec_target_fail, where);
 		return;
 	}
 	
-	adjust = can_see_light(univ.party.town_loc,where,sight_obscurity);
+	short adjust = can_see_light(univ.party.town_loc,where,sight_obscurity);
 	if(!spell_freebie)
 		univ.party[who_cast].cur_sp -= (*town_spell).cost;
 	ter = univ.town->terrain(where.x,where.y);
@@ -1227,9 +1228,8 @@ void cast_town_spell(location where) {
 		add_string_to_buf("  Can't see target.");
 	else switch(town_spell) {
 		case eSpell::NONE: // Not a spell but a special node targeting
-			r1 = store = 0;
-			run_special(eSpecCtx::TARGET, spec_target_type, spell_caster, where, &r1, &adjust, &store);
-			if(store > 0) redraw_screen(REFRESH_ALL);
+			run_special(eSpecCtx::TARGET, spec_target_type, spell_caster, where, nullptr, nullptr, &need_redraw);
+			if(need_redraw) redraw_screen(REFRESH_ALL);
 			break;
 		case eSpell::SCRY_MONSTER: case eSpell::CAPTURE_SOUL:
 			if(iLiving* targ = univ.target_there(where, TARG_MONST)) {
@@ -1353,14 +1353,15 @@ void cast_town_spell(location where) {
 
 // TODO: Currently, the node is called before any spell-specific behaviour (eg missiles) occurs.
 bool cast_spell_on_space(location where, eSpell spell) {
-	short s1 = 0,s2 = 0,s3 = 0;
+	short s1 = 0;
 	
 	for(size_t i = 0; i < univ.town->special_locs.size(); i++)
 		if(where == univ.town->special_locs[i]) {
+			bool need_redraw = false;
 			// TODO: Is there a way to skip this condition without breaking compatibility?
 			if(univ.town->specials[univ.town->special_locs[i].spec].type == eSpecType::IF_CONTEXT)
-				run_special(eSpecCtx::TARGET,2,univ.town->special_locs[i].spec,where,&s1,&s2,&s3);
-			if(s3) redraw_terrain();
+				run_special(eSpecCtx::TARGET, eSpecCtxType::TOWN, univ.town->special_locs[i].spec, where, &s1, nullptr, &need_redraw);
+			if(need_redraw) redraw_terrain();
 			return !s1;
 		}
 	if(spell == eSpell::RITUAL_SANCTIFY)

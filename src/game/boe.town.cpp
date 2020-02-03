@@ -584,7 +584,7 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		
 		auto& timers = univ.party.party_event_timers;
 		timers.erase(std::remove_if(timers.begin(), timers.end(), [](const cTimer& t) {
-			return t.node_type == 2;
+			return t.node_type == eSpecCtxType::TOWN;
 		}), timers.end());
 		
 	}
@@ -651,11 +651,11 @@ location end_town_mode(short switching_level,location destination) { // returns 
 }
 
 void handle_town_specials(short /*town_number*/, bool town_dead,location /*start_loc*/) {
-	queue_special(eSpecCtx::ENTER_TOWN, 2, town_dead ? univ.town->spec_on_entry_if_dead : univ.town->spec_on_entry, univ.party.town_loc);
+	queue_special(eSpecCtx::ENTER_TOWN, eSpecCtxType::TOWN, town_dead ? univ.town->spec_on_entry_if_dead : univ.town->spec_on_entry, univ.party.town_loc);
 }
 
 void handle_leave_town_specials(short /*town_number*/, short which_spec,location /*start_loc*/) {
-	queue_special(eSpecCtx::LEAVE_TOWN, 2, which_spec, univ.party.out_loc);
+	queue_special(eSpecCtx::LEAVE_TOWN, eSpecCtxType::TOWN, which_spec, univ.party.out_loc);
 }
 
 bool abil_exists(eItemAbil abil) { // use when outdoors

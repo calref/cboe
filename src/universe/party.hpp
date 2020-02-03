@@ -186,7 +186,7 @@ public:
 	bool save_talk(const std::string& who, const std::string& where, const std::string& str1, const std::string& str2);
 	bool add_to_journal(const std::string& event, short day);
 	bool record(eEncNoteType type, const std::string& what, const std::string& where);
-	bool start_timer(short time, short node, short type);
+	bool start_timer(short time, spec_num_t node, eSpecCtxType type);
 	cPlayer& operator[](unsigned short n);
 	const cPlayer& operator[](unsigned short n) const;
 	void writeTo(std::ostream& file) const;
