@@ -44,11 +44,6 @@ rectangle item_screen_button_rects[9] = {
 	{126,213,141,248},
 	{127,251,140,267}
 };
-
-rectangle border_rect[4] = {
-	{5, 5, 15, 283}, {5, 5, 355, 15},
-	{345, 5, 355, 283}, {5, 273, 355, 283}
-};
 rectangle medium_buttons[4] = {
 	{383,190,401,225}, {402, 190, 420, 225},
 	{383, 227, 401, 263}, {402, 227,420, 263}
@@ -1048,6 +1043,7 @@ bool handle_action(const sf::Event& event) {
 	bool right_button = event.mouseButton.button == sf::Mouse::Right;
 	eGameMode previous_mode;
 	rectangle world_screen = win_to_rects[WINRECT_TERVIEW];
+	rectangle terrain_viewport = world_screen;
 	world_screen.inset(13, 13);
 	
 	std::ostringstream str;
@@ -1253,20 +1249,20 @@ bool handle_action(const sf::Event& event) {
 	// MARK: End: click in terrain
 	
 	// MARK: Begin: Screen shift
-	if(scrollableModes.count(overall_mode)) {
-		if(the_point.in(border_rect[0]) && center.y > univ.town->in_town_rect.top && center.y > 4) {
+	if(scrollableModes.count(overall_mode) && the_point.in(terrain_viewport) && !the_point.in(world_screen)) {
+		if(the_point.y < world_screen.top && center.y > univ.town->in_town_rect.top && center.y > 4) {
 			center.y--;
 			need_redraw = true;
 		}
-		if(the_point.in(border_rect[1]) && center.x > univ.town->in_town_rect.left && center.x > 4) {
+		if(the_point.x < world_screen.left && center.x > univ.town->in_town_rect.left && center.x > 4) {
 			center.x--;
 			need_redraw = true;
 		}
-		if(the_point.in(border_rect[2]) && center.y < univ.town->in_town_rect.bottom && center.y < univ.town->max_dim - 5) {
+		if(the_point.y > world_screen.bottom && center.y < univ.town->in_town_rect.bottom && center.y < univ.town->max_dim - 5) {
 			center.y++;
 			need_redraw = true;
 		}
-		if(the_point.in(border_rect[3]) && center.x < univ.town->in_town_rect.right && center.x < univ.town->max_dim - 5) {
+		if(the_point.x > world_screen.right && center.x < univ.town->in_town_rect.right && center.x < univ.town->max_dim - 5) {
 			center.x++;
 			need_redraw = true;
 		}
