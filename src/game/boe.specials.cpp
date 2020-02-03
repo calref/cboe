@@ -123,16 +123,16 @@ bool handle_wandering_specials(short mode) {
 			
 		if((mode == 0) && (store_wandering_special.spec_on_meet >= 0)) { // When encountering
 			short prevent;
-			run_special(eSpecCtx::OUTDOOR_ENC,eSpecCtxType::OUT,store_wandering_special.spec_on_meet,univ.party.loc_in_sec,&prevent);
+			run_special(eSpecCtx::OUTDOOR_ENC,eSpecCtxType::OUTDOOR,store_wandering_special.spec_on_meet,univ.party.loc_in_sec,&prevent);
 			if(prevent > 0)
 				return false;
 		}
 		break;
 	case 1: // end by victory
-		run_special(eSpecCtx::WIN_ENCOUNTER,eSpecCtxType::OUT,store_wandering_special.spec_on_win,univ.party.loc_in_sec);
+		run_special(eSpecCtx::WIN_ENCOUNTER,eSpecCtxType::OUTDOOR,store_wandering_special.spec_on_win,univ.party.loc_in_sec);
 		break;
 	case 2: // end by loss (flight or total party kill)
-		run_special(eSpecCtx::FLEE_ENCOUNTER,eSpecCtxType::OUT,store_wandering_special.spec_on_flee,univ.party.loc_in_sec);
+		run_special(eSpecCtx::FLEE_ENCOUNTER,eSpecCtxType::OUTDOOR,store_wandering_special.spec_on_flee,univ.party.loc_in_sec);
 		break;
 	}
 	return true;
@@ -199,7 +199,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			if(out_where == univ.out->special_locs[i]) {
 				spec_num = univ.out->special_locs[i].spec;
 				// call special
-				run_special(mode, eSpecCtxType::OUT, spec_num, out_where, &s1, &s2);
+				run_special(mode, eSpecCtxType::OUTDOOR, spec_num, out_where, &s1, &s2);
 				if(s1 > 0)
 					can_enter = false;
 				else if(s2 > 0)
@@ -461,7 +461,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			if(ter_flag2 == 1){
 				if(mode == eSpecCtx::TOWN_MOVE || (mode == eSpecCtx::COMBAT_MOVE && which_combat_type == 1))
 					spec_type = eSpecCtxType::TOWN;
-				else spec_type = eSpecCtxType::OUT;
+				else spec_type = eSpecCtxType::OUTDOOR;
 			}
 			run_special(mode, spec_type, ter_flag1, where_check, &s1, &s2);
 			if(s1 > 0)
@@ -1257,7 +1257,7 @@ bool use_space(location where) {
 		eSpecCtxType spec_type = eSpecCtxType::SCEN;
 		if(univ.scenario.ter_types[ter].flag2 == 1){
 			if(is_town() || (is_combat() && which_combat_type == 1)) spec_type = eSpecCtxType::TOWN;
-			else spec_type = eSpecCtxType::OUT;
+			else spec_type = eSpecCtxType::OUTDOOR;
 		}
 		run_special(eSpecCtx::USE_SPACE, spec_type, univ.scenario.ter_types[ter].flag1, where);
 		return true;
@@ -2014,7 +2014,7 @@ void run_special(eSpecCtx which_mode, eSpecCtxType which_type, spec_num_t start_
 					std::string type("???");
 					switch(ctx.cur_spec_type) {
 						case eSpecCtxType::SCEN: type = "scenario"; break;
-						case eSpecCtxType::OUT: type = "outdoors" ; break;
+						case eSpecCtxType::OUTDOOR: type = "outdoors" ; break;
 						case eSpecCtxType::TOWN: type = "town"; break;
 					}
 					add_string_to_buf("Warning: Null " + type + " special called (ID " + std::to_string(cur_spec) + ") - was this intended?", 4);
@@ -2075,7 +2075,7 @@ cSpecial get_node(spec_num_t cur_spec, eSpecCtxType cur_spec_type) {
 				return dummy_node;
 			}
 			return univ.scenario.scen_specials[cur_spec];
-		case eSpecCtxType::OUT:
+		case eSpecCtxType::OUTDOOR:
 			if(cur_spec != minmax(0,univ.out->specials.size() - 1,cur_spec)) {
 				showError("The scenario called an outdoor special node out of range.");
 				return dummy_node;
@@ -4512,7 +4512,7 @@ void handle_message(const runtime_state& ctx, const std::string& title, pic_num_
 		case eSpecCtxType::SCEN:
 			note_type = NOTE_SCEN;
 			break;
-		case eSpecCtxType::OUT:
+		case eSpecCtxType::OUTDOOR:
 			note_type = NOTE_OUT;
 			break;
 		case eSpecCtxType::TOWN:
@@ -4545,7 +4545,7 @@ void get_strs(std::string& str1,std::string& str2,eSpecCtxType cur_type,short wh
 	size_t num_strs;
 	if(cur_type == eSpecCtxType::SCEN)
 		num_strs = univ.scenario.spec_strs.size();
-	else if(cur_type == eSpecCtxType::OUT)
+	else if(cur_type == eSpecCtxType::OUTDOOR)
 		num_strs = univ.out->spec_strs.size();
 	else if(cur_type == eSpecCtxType::TOWN)
 		num_strs = univ.town->spec_strs.size();
@@ -4562,7 +4562,7 @@ void get_strs(std::string& str1,std::string& str2,eSpecCtxType cur_type,short wh
 			if(which_str2 >= 0)
 				str2 = univ.scenario.spec_strs[which_str2];
 			break;
-		case eSpecCtxType::OUT:
+		case eSpecCtxType::OUTDOOR:
 			if(which_str1 >= 0)
 				str1 = univ.out->spec_strs[which_str1];
 			if(which_str2 >= 0)

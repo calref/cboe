@@ -155,7 +155,7 @@ TEST_CASE("Loading a town definition") {
 		CHECK(town->defy_mapping);
 		CHECK(town->defy_scrying);
 		REQUIRE(town->timers.size() >= 1);
-		CHECK(town->timers[0].node_type == 2);
+		CHECK(town->timers[0].node_type == eSpecCtxType::TOWN);
 		CHECK(town->timers[0].node == 15);
 		CHECK(town->timers[0].time == 100);
 		REQUIRE(town->wandering.size() >= 1);

@@ -100,7 +100,7 @@ TEST_CASE("Saving a scenario record") {
 		scen.store_item_towns[0] = 5;
 		REQUIRE(scen.scenario_timers.size() >= 1); // A safety valve for if I ever make this array dynamic
 		scen.scenario_timers[0].node = 3;
-		scen.scenario_timers[0].node_type = 1;
+		scen.scenario_timers[0].node_type = eSpecCtxType::OUTDOOR;
 		scen.scenario_timers[0].time = 30000;
 		scen.spec_strs.push_back("This is a sample special string!");
 		scen.journal_strs.push_back("This is a sample journal string!");
@@ -110,7 +110,7 @@ TEST_CASE("Saving a scenario record") {
 		CHECK(scen.store_item_rects[0] == rect(1,2,3,4));
 		CHECK(scen.store_item_towns[0] == 5);
 		CHECK(scen.scenario_timers[0].node == 3);
-		CHECK(scen.scenario_timers[0].node_type == 0); // This is inferred by the fact that it's in the scenario file
+		CHECK(scen.scenario_timers[0].node_type == eSpecCtxType::SCEN); // This is inferred by the fact that it's in the scenario file
 		CHECK(scen.scenario_timers[0].time == 30000);
 		REQUIRE(scen.spec_strs.size() == 1);
 		CHECK(scen.spec_strs[0] == "This is a sample special string!");

@@ -90,7 +90,7 @@ public:
 };
 
 enum class eSpecCtxType {
-	SCEN, OUT, TOWN,
+	SCEN, OUTDOOR, TOWN,
 };
 
 class cTimer {

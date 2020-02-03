@@ -639,7 +639,7 @@ void story_dialog(std::string title, str_num_t first, str_num_t last, eSpecCtxTy
 		}
 		if(which_str_type == eSpecCtxType::SCEN)
 			me["str"].setText(univ.scenario.spec_strs[cur]);
-		else if(which_str_type == eSpecCtxType::OUT)
+		else if(which_str_type == eSpecCtxType::OUTDOOR)
 			me["str"].setText(univ.out->spec_strs[cur]);
 		else if(which_str_type == eSpecCtxType::TOWN)
 			me["str"].setText(univ.town->spec_strs[cur]);

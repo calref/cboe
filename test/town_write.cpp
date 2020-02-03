@@ -90,7 +90,7 @@ TEST_CASE("Saving a town") {
 		CHECK(town->defy_mapping);
 		CHECK(town->defy_scrying);
 		REQUIRE(town->timers.size() >= 1);
-		CHECK(town->timers[0].node_type == 2);
+		CHECK(town->timers[0].node_type == eSpecCtxType::TOWN);
 		CHECK(town->timers[0].node == 12);
 		CHECK(town->timers[0].time == 2500);
 		REQUIRE(town->wandering.size() >= 1);

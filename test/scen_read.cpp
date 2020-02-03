@@ -210,7 +210,7 @@ TEST_CASE("Loading a new-format scenario record") {
 		REQUIRE(scen.scenario_timers.size() >= 1);
 		CHECK(scen.scenario_timers[0].time == 100);
 		CHECK(scen.scenario_timers[0].node == 15);
-		CHECK(scen.scenario_timers[0].node_type == 0);
+		CHECK(scen.scenario_timers[0].node_type == eSpecCtxType::SCEN);
 		REQUIRE(scen.snd_names.size() >= 1);
 		CHECK(scen.snd_names[0] == "The name of my custom sound");
 	}
