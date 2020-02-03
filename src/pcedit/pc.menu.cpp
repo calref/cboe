@@ -51,6 +51,7 @@ void OpenBoEPCEditMenu::add_persistent_menu_items(tgui::MenuBar::Ptr& menubar) c
 		{ { "Party", "Removed Bad Conditions"        }, eMenu::CURE_CONDITIONS },
 		{ { "Party", "Edit Mage Spells"              }, eMenu::EDIT_MAGE       },
 		{ { "Party", "Edit Priest Spells"            }, eMenu::EDIT_PRIEST     },
+		{ { "Party", "Add Item"                      }, eMenu::EDIT_ITEM       },
 		{ { "Party", "Edit Traits"                   }, eMenu::EDIT_TRAITS     },
 		{ { "Party", "Edit Skills"                   }, eMenu::EDIT_SKILLS     },
 		{ { "Party", "Edit XP"                       }, eMenu::EDIT_XP         },
@@ -66,7 +67,7 @@ void OpenBoEPCEditMenu::add_persistent_menu_items(tgui::MenuBar::Ptr& menubar) c
 		{ { "Scenario", "Set Stuff Done Flag"        }, eMenu::SET_SDF         },
 		
 		{ { "Help", "About Blades of Exile Editor"   }, eMenu::ABOUT           },
-		{ { "Help", "Blades of Exile Editor Help"    }, eMenu::HELP_TOC        },
+		{ { "Help", "Blades of Exile Editor Help F1" }, eMenu::HELP_TOC        },
 	};
 
 	// Note that signal connection ids are discarded.
@@ -99,6 +100,14 @@ bool OpenBoEPCEditMenu::handle_keypressed_event(const sf::Event& event) const {
 		} else {
 			event_was_consumed = this->handle_ctrl_keypress(event);
 		}
+	}
+
+	switch(event.key.code) {
+		case sf::Keyboard::F1:
+			handle_menu_choice(eMenu::HELP_TOC);
+			event_was_consumed = true;
+			break;
+		default: break;
 	}
 
 	return event_was_consumed;

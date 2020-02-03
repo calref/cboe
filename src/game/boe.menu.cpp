@@ -78,7 +78,7 @@ void OpenBoEMenu::add_persistent_menu_items(tgui::MenuBar::Ptr& menubar) const {
 		{ { "Library", "Tip of the Day"           }, eMenu::LIBRARY_TIPS            },
 		{ { "Library", "Show Introductory Dialog" }, eMenu::LIBRARY_INTRO           },
 
-		{ { "Help", "Index"                       }, eMenu::HELP_TOC                },
+		{ { "Help", "Index F1"                    }, eMenu::HELP_TOC                },
 		{ { "Help", "About Blades of Exile"       }, eMenu::ABOUT                   },
 		{ { "Help", "Outdoor Commands"            }, eMenu::HELP_OUT                },
 		{ { "Help", "Town Commands"               }, eMenu::HELP_TOWN               },
@@ -117,6 +117,14 @@ bool OpenBoEMenu::handle_keypressed_event(const sf::Event& event) const {
 		} else {
 			event_was_consumed = this->handle_ctrl_keypress(event);
 		}
+	}
+	
+	switch(event.key.code) {
+		case sf::Keyboard::F1:
+			handle_menu_choice(eMenu::HELP_TOC);
+			event_was_consumed = true;
+			break;
+		default: break;
 	}
 
 	return event_was_consumed;

@@ -116,7 +116,7 @@ void OpenBoESceneditMenu::add_persistent_menu_items(tgui::MenuBar::Ptr& menubar)
 		{ { "Outdoors", "Edit Area Descriptions"     }, eMenu::OUT_AREAS      },
 		{ { "Outdoors", "Set Starting Location"      }, eMenu::OUT_START      },
 		
-		{ { "Help", "Index"                          }, eMenu::HELP_TOC       },
+		{ { "Help", "Index F1"                       }, eMenu::HELP_TOC       },
 		{ { "Help", "About Blades Scenario Editor"   }, eMenu::ABOUT          },
 		{ { "Help", "Getting Started"                }, eMenu::HELP_START     },
 		{ { "Help", "Testing Your Scenario"          }, eMenu::HELP_TEST      },
@@ -152,6 +152,14 @@ bool OpenBoESceneditMenu::handle_keypressed_event(const sf::Event& event) const 
 		} else {
 			event_was_consumed = this->handle_ctrl_keypress(event);
 		}
+	}
+
+	switch(event.key.code) {
+		case sf::Keyboard::F1:
+			handle_menu_choice(eMenu::HELP_TOC);
+			event_was_consumed = true;
+			break;
+		default: break;
 	}
 
 	return event_was_consumed;
