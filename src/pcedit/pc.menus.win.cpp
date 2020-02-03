@@ -77,7 +77,7 @@ void init_menubar() {
 	static const eMenu party_choices[] = {
 		eMenu::EDIT_GOLD, eMenu::EDIT_FOOD, eMenu::EDIT_ALCHEMY, eMenu::NONE,
 		eMenu::HEAL_DAMAGE, eMenu::RESTORE_MANA, eMenu::RAISE_DEAD, eMenu::CURE_CONDITIONS, eMenu::NONE,
-		eMenu::EDIT_MAGE, eMenu::EDIT_PRIEST, eMenu::EDIT_TRAITS, eMenu::EDIT_SKILLS, eMenu::EDIT_XP, eMenu::NONE,
+		eMenu::EDIT_MAGE, eMenu::EDIT_PRIEST, eMenu::EDIT_ITEM, eMenu::EDIT_TRAITS, eMenu::EDIT_SKILLS, eMenu::EDIT_XP, eMenu::NONE,
 		eMenu::REUNITE_PARTY,
 	};
 	static const eMenu scen_choices[] = {

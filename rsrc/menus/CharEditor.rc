@@ -85,6 +85,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Edit &Mage Spells",           IDM_PARTY_MAGE
         MENUITEM "Edit &Priest Spells",         IDM_PARTY_PRIEST
+        MENUITEM "Add &Item",                   IDM_PARTY_ITEM
         MENUITEM "Edit &Traits",                IDM_PARTY_TRAITS
         MENUITEM "Edit &Skills",                IDM_PARTY_SKILLS
         MENUITEM "Edit &XP",                    IDM_PARTY_XP

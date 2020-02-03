@@ -32,6 +32,7 @@
 #define IDM_SCEN_SDF                    127
 #define IDM_HELP                        128
 #define IDM_ABOUT                       129
+#define IDM_PARTY_ITEM                  130
 
 // Next default values for new objects
 // 
