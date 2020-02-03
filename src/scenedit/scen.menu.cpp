@@ -41,21 +41,21 @@ void OpenBoESceneditMenu::add_menu_placeholders(tgui::MenuBar::Ptr& menubar) con
 // This method fills the menu with items that never change.
 void OpenBoESceneditMenu::add_persistent_menu_items(tgui::MenuBar::Ptr& menubar) const {
 	const std::vector<std::pair <OpenBoESceneditMenu::MenuHierarchy, eMenu>> persistent_menu_items {
-		{ { "File", "New Scenario"         }, eMenu::FILE_NEW     },
-		{ { "File", "Open Scenario Ctrl-O" }, eMenu::FILE_OPEN    },
-		{ { "File", "Close Scenario"       }, eMenu::FILE_CLOSE   },
-		{ { "File", "Save Scenario"        }, eMenu::FILE_SAVE    },
-		{ { "File", "Save As..."           }, eMenu::FILE_SAVE_AS },
-		{ { "File", "Revert to Saved"      }, eMenu::FILE_REVERT  },
-		{ { "File", "Quit Ctrl-Q"          }, eMenu::QUIT         },
+		{ { "File", "New Scenario Ctrl-N"     }, eMenu::FILE_NEW     },
+		{ { "File", "Open Scenario Ctrl-O"    }, eMenu::FILE_OPEN    },
+		{ { "File", "Close Scenario Ctrl-W"   }, eMenu::FILE_CLOSE   },
+		{ { "File", "Save Scenario Ctrl-S"    }, eMenu::FILE_SAVE    },
+		{ { "File", "Save As... Ctrl-Shift-S" }, eMenu::FILE_SAVE_AS },
+		{ { "File", "Revert to Saved"         }, eMenu::FILE_REVERT  },
+		{ { "File", "Quit Ctrl-Q"             }, eMenu::QUIT         },
 
-		{ { "Edit", "Undo"       }, eMenu::EDIT_UNDO       },
-		{ { "Edit", "Redo"       }, eMenu::EDIT_REDO       },
-		{ { "Edit", "Cut"        }, eMenu::EDIT_CUT        },
-		{ { "Edit", "Copy"       }, eMenu::EDIT_COPY       },
-		{ { "Edit", "Paste"      }, eMenu::EDIT_PASTE      },
-		{ { "Edit", "Delete"     }, eMenu::EDIT_DELETE     },
-		{ { "Edit", "Select All" }, eMenu::EDIT_SELECT_ALL },
+		{ { "Edit", "Undo Ctrl-Z"       }, eMenu::EDIT_UNDO       },
+		{ { "Edit", "Redo Ctrl-Y"       }, eMenu::EDIT_REDO       },
+		{ { "Edit", "Cut Ctrl-X"        }, eMenu::EDIT_CUT        },
+		{ { "Edit", "Copy Ctrl-C"       }, eMenu::EDIT_COPY       },
+		{ { "Edit", "Paste Ctrl-V"      }, eMenu::EDIT_PASTE      },
+		{ { "Edit", "Delete"            }, eMenu::EDIT_DELETE     },
+		{ { "Edit", "Select All Ctrl-A" }, eMenu::EDIT_SELECT_ALL },
 	
 		{ { "Scenario", "Advanced", "Edit Special Nodes"            }, eMenu::SCEN_SPECIALS        },
 		{ { "Scenario", "Advanced", "Edit Scenario Text"            }, eMenu::SCEN_TEXT            },
@@ -75,7 +75,6 @@ void OpenBoESceneditMenu::add_persistent_menu_items(tgui::MenuBar::Ptr& menubar)
 		// { { "Scenario", "Advanced", "Scenario Specials Dump"      }, eMenu::NONE                 },
 		// { { "Scenario", "Advanced", "Scenario Object Data Dump"   }, eMenu::NONE                 },
 	
-		{ { "Scenario", "Create New Town"            }, eMenu::TOWN_CREATE  },
 		{ { "Scenario", "Create New Town"            }, eMenu::TOWN_CREATE  },
 		{ { "Scenario", "Resize Outdoors"            }, eMenu::OUT_RESIZE   },
 		{ { "Scenario", "Scenario Details"           }, eMenu::SCEN_DETAILS },
@@ -140,29 +139,97 @@ bool OpenBoESceneditMenu::handle_event(const sf::Event& event) {
 }
 
 // Returns true if event was consumed
-bool OpenBoESceneditMenu::handle_keypressed_event(const sf::Event& event) {
-
-	// NOTE: menu items get dynamically enabled/disabled based
-	// on gamestate, but these keyboard shortcuts do not. So
-	// this may not be the best way to implement them.
+bool OpenBoESceneditMenu::handle_keypressed_event(const sf::Event& event) const {
 
 	// NOTE: since we are manually adding keyboard shortcut descriptions
 	// to the menu items, they become parts of menu hierarchies
 
 	bool event_was_consumed { false };
-
+	
 	if(this->is_control_key_pressed()) {
-		switch(event.key.code) {
-			case sf::Keyboard::O:
-				handle_menu_choice(eMenu::FILE_OPEN);
-				event_was_consumed = true;
-				break;
-			case sf::Keyboard::Q:
-				handle_menu_choice(eMenu::QUIT);
-				event_was_consumed = true;
-				break;
-			default: break;
+		if(this->is_shift_key_pressed()) {
+			event_was_consumed = this->handle_ctrl_shift_keypress(event);
+		} else {
+			event_was_consumed = this->handle_ctrl_keypress(event);
 		}
+	}
+
+	return event_was_consumed;
+}
+
+bool OpenBoESceneditMenu::handle_ctrl_keypress(const sf::Event& event) const {
+	auto menubar = this->get_menubar_ptr();
+	bool event_was_consumed { false };
+
+	switch(event.key.code) {
+		case sf::Keyboard::S:
+			if(!menubar->getMenuItemEnabled({ "File", "Save Scenario Ctrl-S" })) break;
+			handle_menu_choice(eMenu::FILE_SAVE);
+			event_was_consumed = true;
+			break;
+		case sf::Keyboard::W:
+			if(!menubar->getMenuItemEnabled({ "File", "Close Scenario Ctrl-W" })) break;
+			handle_menu_choice(eMenu::FILE_CLOSE);
+			event_was_consumed = true;
+			break;
+		case sf::Keyboard::Z:
+			if(!menubar->getMenuItemEnabled({ "Edit", "Undo Ctrl-Z" })) break;
+			handle_menu_choice(eMenu::EDIT_UNDO);
+			event_was_consumed = true;
+			break;
+		case sf::Keyboard::Y:
+			if(!menubar->getMenuItemEnabled({ "Edit", "Redo Ctrl-Y" })) break;
+			handle_menu_choice(eMenu::EDIT_REDO);
+			event_was_consumed = true;
+		case sf::Keyboard::X:
+			if(!menubar->getMenuItemEnabled({ "Edit", "Cut Ctrl-X" })) break;
+			handle_menu_choice(eMenu::EDIT_CUT);
+			event_was_consumed = true;
+			break;
+		case sf::Keyboard::C:
+			if(!menubar->getMenuItemEnabled({ "Edit", "Copy Ctrl-C" })) break;
+			handle_menu_choice(eMenu::EDIT_COPY);
+			event_was_consumed = true;
+			break;
+		case sf::Keyboard::V:
+			if(!menubar->getMenuItemEnabled({ "Edit", "Paste Ctrl-V" })) break;
+			handle_menu_choice(eMenu::EDIT_PASTE);
+			event_was_consumed = true;
+			break;
+		case sf::Keyboard::A:
+			if(!menubar->getMenuItemEnabled({ "Edit", "Select All Ctrl-A" })) break;
+			handle_menu_choice(eMenu::EDIT_SELECT_ALL);
+			event_was_consumed = true;
+			break;
+		case sf::Keyboard::O:
+			handle_menu_choice(eMenu::FILE_OPEN);
+			event_was_consumed = true;
+			break;
+		case sf::Keyboard::Q:
+			handle_menu_choice(eMenu::QUIT);
+			event_was_consumed = true;
+			break;
+		case sf::Keyboard::N:
+			handle_menu_choice(eMenu::FILE_NEW);
+			event_was_consumed = true;
+			break;
+		default: break;
+	}
+	
+	return event_was_consumed;
+}
+
+bool OpenBoESceneditMenu::handle_ctrl_shift_keypress(const sf::Event& event) const {
+	auto menubar = this->get_menubar_ptr();
+	bool event_was_consumed { false };
+
+	switch(event.key.code) {
+		case sf::Keyboard::S:
+			if(!menubar->getMenuItemEnabled({ "File", "Save As... Ctrl-Shift-S" })) break;
+			handle_menu_choice(eMenu::FILE_SAVE_AS);
+			event_was_consumed = true;
+			break;
+		default: break;
 	}
 
 	return event_was_consumed;
@@ -174,6 +241,11 @@ bool OpenBoESceneditMenu::is_control_key_pressed() const {
 
 	return (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)
 		 || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl));
+}
+
+bool OpenBoESceneditMenu::is_shift_key_pressed() const {
+	return (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)
+		 || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift));
 }
 
 void OpenBoESceneditMenu::draw() {
@@ -204,8 +276,10 @@ void OpenBoESceneditMenu::update_for_mode(short mode) {
 void OpenBoESceneditMenu::update_for_mode_0() {
 	auto menubar = this->get_menubar_ptr();
 
-	menubar->setMenuItemEnabled({ "File", "Save Scenario" }, false);
-	menubar->setMenuItemEnabled({ "File", "Save As..."    }, false);
+	menubar->setMenuItemEnabled({ "File", "Save Scenario Ctrl-S" }, false);
+	menubar->setMenuItemEnabled({ "File", "Save As... Ctrl-Shift-S" }, false);
+	menubar->setMenuItemEnabled({ "File", "Close Scenario Ctrl-W" }, false);
+	menubar->setMenuItemEnabled({ "File", "Revert to Saved" }, false);
 	
 	menubar->setMenuEnabled("Scenario", false);
 	menubar->setMenuEnabled("Town",     false);
@@ -234,8 +308,10 @@ void OpenBoESceneditMenu::update_for_mode_3() {
 void OpenBoESceneditMenu::update_for_mode_4() {
 	auto menubar = this->get_menubar_ptr();
 
-	menubar->setMenuItemEnabled({ "File", "Save Scenario" }, true);
-	menubar->setMenuItemEnabled({ "File", "Save As..."    }, true);
+	menubar->setMenuItemEnabled({ "File", "Save Scenario Ctrl-S" }, true);
+	menubar->setMenuItemEnabled({ "File", "Save As... Ctrl-Shift-S" }, true);
+	menubar->setMenuItemEnabled({ "File", "Close Scenario Ctrl-W" }, true);
+	menubar->setMenuItemEnabled({ "File", "Revert to Saved" }, true);
 	
 	menubar->setMenuEnabled("Scenario", true);
 	menubar->setMenuEnabled("Town",     true);
@@ -244,20 +320,8 @@ void OpenBoESceneditMenu::update_for_mode_4() {
 
 void OpenBoESceneditMenu::update_edit_menu(cUndoList const & undo_list) {
 	auto menubar = this->get_menubar_ptr();
-	
-	OpenBoESceneditMenu::MenuHierarchy const undo_menu_item { "Edit", "Undo" };
-	OpenBoESceneditMenu::MenuHierarchy const redo_menu_item { "Edit", "Redo" };
 
-	if(undo_list.noUndo()) {
-		menubar->setMenuItemEnabled(undo_menu_item, false);
-	} else {
-		menubar->setMenuItemEnabled(undo_menu_item, true);
-	}
-	
-	if(undo_list.noRedo()) {
-		menubar->setMenuItemEnabled(redo_menu_item, false);
-	} else {
-		menubar->setMenuItemEnabled(redo_menu_item, true);
-	}
+	menubar->setMenuItemEnabled({ "Edit", "Undo Ctrl-Z" }, !undo_list.noUndo());
+	menubar->setMenuItemEnabled({ "Edit", "Redo Ctrl-Y" }, !undo_list.noRedo());
 }
 

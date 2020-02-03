@@ -36,9 +36,9 @@ void OpenBoEPCEditMenu::add_persistent_menu_items(tgui::MenuBar::Ptr& menubar) c
 
 	const std::vector<std::pair <OpenBoEPCEditMenu::MenuHierarchy, eMenu>> persistent_menu_items {
 		{ { "File", "Open Game Ctrl-O"               }, eMenu::FILE_OPEN       },
-		{ { "File", "Close"                          }, eMenu::FILE_CLOSE      },
+		{ { "File", "Close Ctrl-W"                   }, eMenu::FILE_CLOSE      },
 		{ { "File", "Save Game Ctrl-S"               }, eMenu::FILE_SAVE       },
-		{ { "File", "Save As..."                     }, eMenu::FILE_SAVE_AS    },
+		{ { "File", "Save As... Ctrl-Shift-S"        }, eMenu::FILE_SAVE_AS    },
 		{ { "File", "Revert to Saved"                }, eMenu::FILE_REVERT     },
 		{ { "File", "Quit Ctrl-Q"                    }, eMenu::QUIT            },
 
@@ -86,33 +86,64 @@ bool OpenBoEPCEditMenu::handle_event(const sf::Event& event) {
 }
 
 // Returns true if event was consumed
-bool OpenBoEPCEditMenu::handle_keypressed_event(const sf::Event& event) {
-
-	// NOTE: menu items get dynamically enabled/disabled based
-	// on gamestate, but these keyboard shortcuts do not. So
-	// this may not be the best way to implement them.
+bool OpenBoEPCEditMenu::handle_keypressed_event(const sf::Event& event) const {
 
 	// NOTE: since we are manually adding keyboard shortcut descriptions
 	// to the menu items, they become parts of menu hierarchies
 
 	bool event_was_consumed { false };
-
+	
 	if(this->is_control_key_pressed()) {
-		switch(event.key.code) {
-			case sf::Keyboard::O:
-				handle_menu_choice(eMenu::FILE_OPEN);
-				event_was_consumed = true;
-				break;
-			case sf::Keyboard::S:
-				handle_menu_choice(eMenu::FILE_SAVE);
-				event_was_consumed = true;
-				break;
-			case sf::Keyboard::Q:
-				handle_menu_choice(eMenu::QUIT);
-				event_was_consumed = true;
-				break;
-			default: break;
+		if(this->is_shift_key_pressed()) {
+			event_was_consumed = this->handle_ctrl_shift_keypress(event);
+		} else {
+			event_was_consumed = this->handle_ctrl_keypress(event);
 		}
+	}
+
+	return event_was_consumed;
+}
+
+bool OpenBoEPCEditMenu::handle_ctrl_keypress(const sf::Event& event) const {
+	auto menubar = this->get_menubar_ptr();
+	bool event_was_consumed { false };
+
+	switch(event.key.code) {
+		case sf::Keyboard::S:
+			if(!menubar->getMenuItemEnabled({ "File", "Save Game Ctrl-S" })) break;
+			handle_menu_choice(eMenu::FILE_SAVE);
+			event_was_consumed = true;
+			break;
+		case sf::Keyboard::W:
+			if(!menubar->getMenuItemEnabled({ "File", "Close Ctrl-W" })) break;
+			handle_menu_choice(eMenu::FILE_CLOSE);
+			event_was_consumed = true;
+			break;
+		case sf::Keyboard::O:
+			handle_menu_choice(eMenu::FILE_OPEN);
+			event_was_consumed = true;
+			break;
+		case sf::Keyboard::Q:
+			handle_menu_choice(eMenu::QUIT);
+			event_was_consumed = true;
+			break;
+		default: break;
+	}
+	
+	return event_was_consumed;
+}
+
+bool OpenBoEPCEditMenu::handle_ctrl_shift_keypress(const sf::Event& event) const {
+	auto menubar = this->get_menubar_ptr();
+	bool event_was_consumed { false };
+
+	switch(event.key.code) {
+		case sf::Keyboard::S:
+			if(!menubar->getMenuItemEnabled({ "File", "Save As... Ctrl-Shift-S" })) break;
+			handle_menu_choice(eMenu::FILE_SAVE_AS);
+			event_was_consumed = true;
+			break;
+		default: break;
 	}
 
 	return event_was_consumed;
@@ -124,6 +155,11 @@ bool OpenBoEPCEditMenu::is_control_key_pressed() const {
 
 	return (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)
 		 || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl));
+}
+
+bool OpenBoEPCEditMenu::is_shift_key_pressed() const {
+	return (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)
+		 || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift));
 }
 
 void OpenBoEPCEditMenu::draw() {
@@ -141,17 +177,17 @@ void OpenBoEPCEditMenu::update_for_editor_state(bool party_in_memory, bool party
 		menubar->setMenuEnabled("Party"   , true);
 		menubar->setMenuEnabled("Scenario", party_in_scenario);
 
-		menubar->setMenuItemEnabled({ "File", "Close"            }, true);
+		menubar->setMenuItemEnabled({ "File", "Close Ctrl-W"     }, true);
 		menubar->setMenuItemEnabled({ "File", "Save Game Ctrl-S" }, true);
-		menubar->setMenuItemEnabled({ "File", "Save As..."       }, true);
+		menubar->setMenuItemEnabled({ "File", "Save As... Ctrl-Shift-S" }, true);
 		menubar->setMenuItemEnabled({ "File", "Revert to Saved"  }, true);
 	} else {
 		menubar->setMenuEnabled("Party"   , false);
 		menubar->setMenuEnabled("Scenario", false);
 
-		menubar->setMenuItemEnabled({ "File", "Close"            }, false);
+		menubar->setMenuItemEnabled({ "File", "Close Ctrl-W"     }, false);
 		menubar->setMenuItemEnabled({ "File", "Save Game Ctrl-S" }, false);
-		menubar->setMenuItemEnabled({ "File", "Save As..."       }, false);
+		menubar->setMenuItemEnabled({ "File", "Save As... Ctrl-Shift-S" }, false);
 		menubar->setMenuItemEnabled({ "File", "Revert to Saved"  }, false);
 	}
 }

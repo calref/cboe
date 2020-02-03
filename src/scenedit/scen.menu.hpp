@@ -30,8 +30,11 @@ private:
 	void add_menu_placeholders(tgui::MenuBar::Ptr&) const;
 	void add_persistent_menu_items(tgui::MenuBar::Ptr&) const;
 	tgui::MenuBar::Ptr get_menubar_ptr() const;
-	bool handle_keypressed_event(const sf::Event&);
+	bool handle_keypressed_event(const sf::Event&) const;
+	bool handle_ctrl_keypress(const sf::Event&) const;
+	bool handle_ctrl_shift_keypress(const sf::Event&) const;
 	bool is_control_key_pressed() const;
+	bool is_shift_key_pressed() const;
 	void update_for_mode_0();
 	void update_for_mode_1();
 	void update_for_mode_2();

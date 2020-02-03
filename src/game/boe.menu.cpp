@@ -50,11 +50,11 @@ void OpenBoEMenu::add_menu_placeholders(tgui::MenuBar::Ptr& menubar) const {
 void OpenBoEMenu::add_persistent_menu_items(tgui::MenuBar::Ptr& menubar) const {
 
 	const std::vector<std::pair <OpenBoEMenu::MenuHierarchy, eMenu>> persistent_menu_items {
-		{ { "File", "New Game"                    }, eMenu::FILE_NEW                },
+		{ { "File", "New Game Ctrl-N"             }, eMenu::FILE_NEW                },
 		{ { "File", "Open Game Ctrl-O"            }, eMenu::FILE_OPEN               },
 		{ { "File", "Abort"                       }, eMenu::FILE_ABORT              },
 		{ { "File", "Save Game Ctrl-S"            }, eMenu::FILE_SAVE               },
-		{ { "File", "Save As..."                  }, eMenu::FILE_SAVE_AS            },
+		{ { "File", "Save As... Ctrl-Shift-S"     }, eMenu::FILE_SAVE_AS            },
 		{ { "File", "Preferences"                 }, eMenu::PREFS                   },
 		{ { "File", "Quit Ctrl-Q"                 }, eMenu::QUIT                    },
 
@@ -67,9 +67,9 @@ void OpenBoEMenu::add_persistent_menu_items(tgui::MenuBar::Ptr& menubar) const {
 		{ { "Options", "See Overall Party Stats"  }, eMenu::OPTIONS_STATS           },
 		{ { "Options", "See Journal"              }, eMenu::OPTIONS_JOURNAL         },
 
-		{ { "Actions", "Do Alchemy"               }, eMenu::ACTIONS_ALCHEMY         },
-		{ { "Actions", "Wait 80 Moves"            }, eMenu::ACTIONS_WAIT            },
-		{ { "Actions", "Display AutoMap"          }, eMenu::ACTIONS_AUTOMAP         },
+		{ { "Actions", "Do Alchemy Ctrl-A"        }, eMenu::ACTIONS_ALCHEMY         },
+		{ { "Actions", "Wait 80 Moves Ctrl-W"     }, eMenu::ACTIONS_WAIT            },
+		{ { "Actions", "Display AutoMap A"        }, eMenu::ACTIONS_AUTOMAP         },
 
 		{ { "Library", "Mage Spells"              }, eMenu::LIBRARY_MAGE            },
 		{ { "Library", "Priest Spells"            }, eMenu::LIBRARY_PRIEST          },
@@ -104,33 +104,73 @@ bool OpenBoEMenu::handle_event(const sf::Event& event) {
 }
 
 // Returns true if event was consumed
-bool OpenBoEMenu::handle_keypressed_event(const sf::Event& event) {
-
-	// NOTE: menu items get dynamically enabled/disabled based
-	// on gamestate, but these keyboard shortcuts do not. So
-	// this may not be the best way to implement them.
+bool OpenBoEMenu::handle_keypressed_event(const sf::Event& event) const {
 
 	// NOTE: since we are manually adding keyboard shortcut descriptions
 	// to the menu items, they become parts of menu hierarchies
 
 	bool event_was_consumed { false };
-
+	
 	if(this->is_control_key_pressed()) {
-		switch(event.key.code) {
-			case sf::Keyboard::S:
-				handle_menu_choice(eMenu::FILE_SAVE);
-				event_was_consumed = true;
-				break;
-			case sf::Keyboard::O:
-				handle_menu_choice(eMenu::FILE_OPEN);
-				event_was_consumed = true;
-				break;
-			case sf::Keyboard::Q:
-				handle_menu_choice(eMenu::QUIT);
-				event_was_consumed = true;
-				break;
-			default: break;
+		if(this->is_shift_key_pressed()) {
+			event_was_consumed = this->handle_ctrl_shift_keypress(event);
+		} else {
+			event_was_consumed = this->handle_ctrl_keypress(event);
 		}
+	}
+
+	return event_was_consumed;
+}
+
+bool OpenBoEMenu::handle_ctrl_keypress(const sf::Event& event) const {
+	auto menubar = this->get_menubar_ptr();
+	bool event_was_consumed { false };
+
+	switch(event.key.code) {
+		case sf::Keyboard::S:
+			if(!menubar->getMenuItemEnabled({ "File", "Save Game Ctrl-S" })) break;
+			handle_menu_choice(eMenu::FILE_SAVE);
+			event_was_consumed = true;
+			break;
+		case sf::Keyboard::A:
+			if(!menubar->getMenuItemEnabled({ "Actions", "Do Alchemy Ctrl-A" })) break;
+			handle_menu_choice(eMenu::ACTIONS_ALCHEMY);
+			event_was_consumed = true;
+			break;
+		case sf::Keyboard::W:
+			if(!menubar->getMenuItemEnabled({ "Actions", "Wait 80 Moves Ctrl-W" })) break;
+			handle_menu_choice(eMenu::ACTIONS_WAIT);
+			event_was_consumed = true;
+			break;
+		case sf::Keyboard::N:
+			handle_menu_choice(eMenu::FILE_NEW);
+			event_was_consumed = true;
+			break;
+		case sf::Keyboard::O:
+			handle_menu_choice(eMenu::FILE_OPEN);
+			event_was_consumed = true;
+			break;
+		case sf::Keyboard::Q:
+			handle_menu_choice(eMenu::QUIT);
+			event_was_consumed = true;
+			break;
+		default: break;
+	}
+	
+	return event_was_consumed;
+}
+
+bool OpenBoEMenu::handle_ctrl_shift_keypress(const sf::Event& event) const {
+	auto menubar = this->get_menubar_ptr();
+	bool event_was_consumed { false };
+
+	switch(event.key.code) {
+		case sf::Keyboard::S:
+			if(!menubar->getMenuItemEnabled({ "File", "Save As... Ctrl-Shift-S" })) break;
+			handle_menu_choice(eMenu::FILE_SAVE_AS);
+			event_was_consumed = true;
+			break;
+		default: break;
 	}
 
 	return event_was_consumed;
@@ -142,6 +182,11 @@ bool OpenBoEMenu::is_control_key_pressed() const {
 
 	return (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)
 		 || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl));
+}
+
+bool OpenBoEMenu::is_shift_key_pressed() const {
+	return (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)
+		 || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift));
 }
 
 tgui::MenuBar::Ptr OpenBoEMenu::get_menubar_ptr() const {
@@ -165,11 +210,8 @@ void OpenBoEMenu::update_for_game_state(eGameMode overall_mode, bool party_in_me
 		menubar->setMenuEnabled("Cast Priest", false);
 
 		menubar->setMenuItemEnabled({ "File", "Save Game Ctrl-S" }, false);
-		if(party_in_memory) {
-			menubar->setMenuItemEnabled({ "File", "Save As..." }, true);
-		} else {
-			menubar->setMenuItemEnabled({ "File", "Save As..." }, false);
-		}
+		menubar->setMenuItemEnabled({ "File", "Save As... Ctrl-Shift-S" }, party_in_memory);
+		menubar->setMenuItemEnabled({ "File", "Abort" }, false);
 	} else {
 		menubar->setMenuEnabled("Options",     true);
 		menubar->setMenuEnabled("Actions",     true);
@@ -178,7 +220,8 @@ void OpenBoEMenu::update_for_game_state(eGameMode overall_mode, bool party_in_me
 		menubar->setMenuEnabled("Cast Priest", true);
 
 		menubar->setMenuItemEnabled({ "File", "Save Game Ctrl-S"  }, true);
-		menubar->setMenuItemEnabled({ "File", "Save As..." }, true);
+		menubar->setMenuItemEnabled({ "File", "Save As... Ctrl-Shift-S" }, true);
+		menubar->setMenuItemEnabled({ "File", "Abort" }, true);
 	}
 }
 
