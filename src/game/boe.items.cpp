@@ -231,7 +231,7 @@ void give_thing(short pc_num, short item_num) {
 short dist_from_party(location where) {
 	short store = 1000;
 	
-	if((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) {
+	if(is_combat()) {
 		for(short i = 0; i < 6; i++)
 			if(univ.party[i].main_status == eMainStatus::ALIVE)
 				store = min(store,dist(univ.party[i].combat_pos,where));

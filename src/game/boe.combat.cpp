@@ -2198,7 +2198,7 @@ void do_monster_turn() {
 	monsters_going = true; // This affects how graphics are drawn.
 	
 	num_monst = univ.town.monst.size();
-	if(overall_mode < MODE_COMBAT)
+	if(!is_combat())
 		which_combat_type = 1;
 	
 	for(short i = 0; i < num_monst; i++) {  // Give monsters ap's, check activity
@@ -2574,7 +2574,7 @@ void do_monster_turn() {
 			}
 			
 			// pcs attack any fleeing monsters
-			if((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING))
+			if(is_combat())
 				for(short k = 0; k < 6; k++)
 					if(univ.party[k].main_status == eMainStatus::ALIVE && !monst_adjacent(univ.party[k].combat_pos,i)
 						&& pc_adj[k] && !cur_monst->is_friendly() && cur_monst->active > 0 &&
@@ -2739,7 +2739,7 @@ void do_monster_turn() {
 	}
 	
 	// If in town, need to restore center
-	if(overall_mode < MODE_COMBAT)
+	if(!is_combat())
 		center = univ.party.town_loc;
 	if(had_monst)
 		put_pc_screen();
@@ -2990,7 +2990,7 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 	cPlayer* pc_target = dynamic_cast<cPlayer*>(target);
 	cCreature* m_target = dynamic_cast<cCreature*>(target);
 	
-	if(((overall_mode >= MODE_COMBAT) && (overall_mode <= MODE_TALKING)) && (center_on_monst)) {
+	if(is_combat() && center_on_monst) {
 		frame_space(source,0,univ.town.monst[m_num].x_width,univ.town.monst[m_num].y_width);
 		if(m_target != nullptr)
 			frame_space(targ_space,1,m_target->x_width,m_target->y_width);
@@ -3344,7 +3344,7 @@ bool monst_breathe(cCreature *caster,location targ_space,uAbility abil) {
 	
 	caster->breathe_note();
 	short level = get_ran(abil.gen.strength,1,8);
-	if(overall_mode < MODE_COMBAT)
+	if(!is_combat())
 		level = level / 3;
 	start_missile_anim();
 	hit_space(targ_space,level,abil.gen.dmg,1,1);
@@ -4497,20 +4497,19 @@ void hit_space(location target,short dam,eDamageType type,short report,short hit
 				stop_hitting = (hit_all == 1) ? false : true;
 			}
 	
-	if(overall_mode >= MODE_COMBAT)
+	if(is_combat()) {
 		for(cPlayer& pc : univ.party)
 			if(pc.main_status == eMainStatus::ALIVE && !stop_hitting)
 				if(pc.combat_pos == target) {
 					damage_pc(pc,dam,type,eRace::UNKNOWN,0);
 					stop_hitting = (hit_all == 1) ? false : true;
 				}
-	if(overall_mode < MODE_COMBAT)
-		if(target == univ.party.town_loc) {
-			fast_bang = 1;
-			hit_party(dam,type);
-			fast_bang = 0;
-			stop_hitting = (hit_all == 1) ? false : true;
-		}
+	} else if(target == univ.party.town_loc) {
+		fast_bang = 1;
+		hit_party(dam,type);
+		fast_bang = 0;
+		stop_hitting = (hit_all == 1) ? false : true;
+	}
 	
 	if((report == 1) && (hit_all == 0) && !stop_hitting)
 		add_string_to_buf("  Missed.");
@@ -4609,7 +4608,7 @@ void handle_acid() {
 					damage_pc(pc,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
 					move_to_zero(pc.status[eStatus::ACID]);
 				}
-		if(overall_mode < MODE_COMBAT)
+		if(!is_combat())
 			boom_space(univ.party.out_loc,overall_mode,3,r1,8);
 	}
 }
@@ -5417,18 +5416,17 @@ void scloud_space(short m,short n) {
 	
 	univ.town.set_scloud(m,n,true);
 	
-	if(overall_mode >= MODE_COMBAT)
+	if(is_combat()) {
 		for(cPlayer& pc : univ.party)
 			if(pc.main_status == eMainStatus::ALIVE)
 				if(pc.combat_pos == target) {
 					pc.curse(get_ran(1,1,2));
 				}
-	if(overall_mode < MODE_COMBAT)
-		if(target == univ.party.town_loc) {
-			for(cPlayer& pc : univ.party)
-				if(pc.main_status == eMainStatus::ALIVE)
-					pc.curse(get_ran(1,1,2));
-		}
+	} else if(target == univ.party.town_loc) {
+		for(cPlayer& pc : univ.party)
+			if(pc.main_status == eMainStatus::ALIVE)
+				pc.curse(get_ran(1,1,2));
+	}
 }
 
 void web_space(short m,short n) {
@@ -5436,33 +5434,31 @@ void web_space(short m,short n) {
 	
 	univ.town.set_web(m,n,true);
 	
-	if(overall_mode >= MODE_COMBAT)
+	if(is_combat()) {
 		for(cPlayer& pc : univ.party)
 			if(pc.main_status == eMainStatus::ALIVE)
 				if(pc.combat_pos == target) {
 					pc.web(3);
 				}
-	if(overall_mode < MODE_COMBAT)
-		if(target == univ.party.town_loc) {
-			for(cPlayer& pc : univ.party)
-				pc.web(3);
-		}
+	} else if(target == univ.party.town_loc) {
+		for(cPlayer& pc : univ.party)
+			pc.web(3);
+	}
 }
 void sleep_cloud_space(short m,short n) {
 	location target(m, n);
 	
 	univ.town.set_sleep_cloud(m,n,true);
 	
-	if(overall_mode >= MODE_COMBAT)
+	if(is_combat()) {
 		for(cPlayer& pc : univ.party)
 			if(pc.main_status == eMainStatus::ALIVE)
 				if(pc.combat_pos == target) {
 					pc.sleep(eStatus::ASLEEP,3,0);
 				}
-	if(overall_mode < MODE_COMBAT)
-		if(target == univ.party.town_loc) {
-			univ.party.sleep(eStatus::ASLEEP,3,0);
-		}
+	} else if(target == univ.party.town_loc) {
+		univ.party.sleep(eStatus::ASLEEP,3,0);
+	}
 }
 
 

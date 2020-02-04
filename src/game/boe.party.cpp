@@ -15,6 +15,7 @@
 #include "boe.specials.hpp"
 #include "boe.infodlg.hpp"
 #include "boe.items.hpp"
+#include "boe.actions.hpp"
 #include <cstring>
 #include <queue>
 #include "boe.party.hpp"
@@ -485,11 +486,10 @@ bool repeat_cast_ok(eSkill type) {
 	eSpellSelect store_select;
 	eSpell what_spell;
 	
-	if(overall_mode == MODE_COMBAT)
+	if(!prime_time()) return false;
+	else if(overall_mode == MODE_COMBAT)
 		who_would_cast = univ.cur_pc;
-	else if(overall_mode < MODE_TALK_TOWN)
-		who_would_cast = pc_casting;
-	else return false;
+	else who_would_cast = pc_casting;
 	
 	if(is_combat())
 		what_spell = univ.party[who_would_cast].last_cast[type];
@@ -900,7 +900,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 			
 		case eSpell::WORD_RECALL:
-			if(overall_mode > MODE_OUTDOORS) {
+			if(!is_out()) {
 				add_string_to_buf("  Can only cast outdoors.");
 				return;
 			}
@@ -2476,7 +2476,7 @@ void kill_pc(cPlayer& which_pc,eMainStatus type) {
 		for(short i = 0; i < which_pc.items.size(); i++)
 			which_pc.equip[i] = false;
 		
-		item_loc = (overall_mode >= MODE_COMBAT) ? which_pc.combat_pos : univ.party.town_loc;
+		item_loc = is_combat() ? which_pc.combat_pos : univ.party.town_loc;
 		
 		if(!is_out()) {
 			if(type == eMainStatus::DUST)

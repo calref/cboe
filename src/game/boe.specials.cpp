@@ -259,7 +259,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	if(!can_enter)
 		return false;
 	
-	if((!is_out()) && (overall_mode < MODE_TALKING)) {
+	if(!is_out()) {
 		check_fields(where_check,mode,which_pc);
 		
 		if(univ.town.is_web(where_check.x,where_check.y) && univ.current_pc().race != eRace::BUG) {
@@ -532,7 +532,7 @@ void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 		r1 = get_ran(2,1,6);
 		if(mode == eSpecCtx::COMBAT_MOVE)
 			damage_pc(which_pc,r1,eDamageType::COLD,eRace::UNKNOWN,0);
-		if(overall_mode < MODE_COMBAT)
+		if(!is_combat())
 			boom_space(univ.party.town_loc,overall_mode,4,r1,7);
 	}
 	if(univ.town.is_blade_wall(where_check.x,where_check.y)) {

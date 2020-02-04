@@ -75,7 +75,7 @@ void set_up_apple_events(int, char*[]) {
 		return NSTerminateNow;
 	}
 	
-	if(overall_mode < MODE_TALK_TOWN || (overall_mode == MODE_STARTUP && party_in_memory)) {
+	if(overall_mode == MODE_TOWN || overall_mode == MODE_OUTDOORS || (overall_mode == MODE_STARTUP && party_in_memory)) {
 		std::string choice = cChoiceDlog("quit-confirm-save", {"save", "quit", "cancel"}).show();
 		if(choice == "cancel") return NSTerminateCancel;
 		if(choice == "save")

@@ -14,18 +14,21 @@
 /* overall mode; some seem to be missing */
 enum eGameMode {
 	MODE_OUTDOORS = 0,
+	// Town modes
 	MODE_TOWN = 1,
 	MODE_TALK_TOWN = 2, // looking for someone to talk
 	MODE_TOWN_TARGET = 3, // spell target, that is
 	MODE_USE_TOWN = 4,
 	MODE_DROP_TOWN = 5,
 	MODE_BASH_TOWN = 6, // unused
+	// Combat modes
 	MODE_COMBAT = 10,
 	MODE_SPELL_TARGET = 11,
 	MODE_FIRING = 12, // firing from bow or crossbow
 	MODE_THROWING = 13, // throwing missile
 	MODE_FANCY_TARGET = 14, // spell target, that is; I think it's for multitarget spells
 	MODE_DROP_COMBAT = 15,
+	// Other modes
 	MODE_TALKING = 20,
 	MODE_SHOPPING = 21,
 	MODE_LOOK_OUTDOORS = 35, // looking at something

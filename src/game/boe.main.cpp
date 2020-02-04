@@ -283,17 +283,16 @@ void handle_one_event(const sf::Event& event) {
 				All_Done = true;
 				break;
 			}
-			if(overall_mode > MODE_TOWN){
-				std::string choice = cChoiceDlog("quit-confirm-nosave", {"quit", "cancel"}).show();
-				if(choice == "cancel")
-					break;
-			}
-			else {
+			if(overall_mode == MODE_TOWN || overall_mode == MODE_OUTDOORS){
 				std::string choice = cChoiceDlog("quit-confirm-save", {"save", "quit", "cancel"}).show();
 				if(choice == "cancel")
 					break;
 				if(choice == "save")
 					save_party(univ.file, univ);
+			} else {
+				std::string choice = cChoiceDlog("quit-confirm-nosave", {"quit", "cancel"}).show();
+				if(choice == "cancel")
+					break;
 			}
 			All_Done = true;
 		default:
@@ -459,12 +458,7 @@ void handle_menu_choice(eMenu item_hit) {
 				All_Done = true;
 				break;
 			}
-			if(overall_mode > MODE_TOWN) {
-				std::string choice = cChoiceDlog("quit-confirm-nosave",{"quit","cancel"}).show();
-				if(choice == "cancel")
-					return;
-			}
-			else {
+			if(overall_mode == MODE_TOWN || overall_mode == MODE_OUTDOORS) {
 				std::string choice = cChoiceDlog("quit-confirm-save",{"quit","save","cancel"}).show();
 				if(choice == "cancel")
 					break;
@@ -475,6 +469,10 @@ void handle_menu_choice(eMenu item_hit) {
 					}
 					save_party(univ.file, univ);
 				}
+			} else {
+				std::string choice = cChoiceDlog("quit-confirm-nosave",{"quit","cancel"}).show();
+				if(choice == "cancel")
+					return;
 			}
 			All_Done = true;
 			break;
@@ -697,11 +695,11 @@ void move_sound(ter_num_t ter,short step){
 		on_swamp = true;
 	} else on_swamp = false;
 	
-	if(!monsters_going && (overall_mode < MODE_COMBAT) && (univ.party.in_boat >= 0)) {
+	if(!monsters_going && !is_combat() && (univ.party.in_boat >= 0)) {
 		if(spec == eTerSpec::TOWN_ENTRANCE)
 			return;
 		play_sound(48); //play boat sound
-	} else if(!monsters_going && (overall_mode < MODE_COMBAT) && (univ.party.in_horse >= 0)) {
+	} else if(!monsters_going && !is_combat() && (univ.party.in_horse >= 0)) {
 		play_sound(85); //so play horse sound
 	} else switch(univ.scenario.ter_types[ter].step_sound){
 		case eStepSnd::SQUISH:

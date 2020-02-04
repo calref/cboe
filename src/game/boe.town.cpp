@@ -1330,8 +1330,8 @@ void draw_map(bool need_refresh) {
 	// area_to_draw_on is final draw to rect
 	// extern short store_pre_shop_mode,store_pre_talk_mode;
 	if((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == 0)) ||
-		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == 0))) {
+		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == MODE_OUTDOORS)) ||
+		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == MODE_OUTDOORS))) {
 		view_rect.left = minmax(0,8,univ.party.loc_in_sec.x - 20);
 		view_rect.right = view_rect.left + 40;
 		view_rect.top = minmax(0,8,univ.party.loc_in_sec.y - 20);
@@ -1362,8 +1362,8 @@ void draw_map(bool need_refresh) {
 		}
 	}
 	if((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == 0)) ||
-		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == 0)) ||
+		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == MODE_OUTDOORS)) ||
+		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == MODE_OUTDOORS)) ||
 		is_town() || is_combat()) {
 		area_to_draw_from = view_rect;
 		area_to_draw_from.width() = 40;
@@ -1398,8 +1398,8 @@ void draw_map(bool need_refresh) {
 		
 		if((is_out()) ||
 			((is_combat()) && (which_combat_type == 0)) ||
-			((overall_mode == MODE_TALKING) && (store_pre_talk_mode == 0)) ||
-			((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == 0)))
+			((overall_mode == MODE_TALKING) && (store_pre_talk_mode == MODE_OUTDOORS)) ||
+			((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == MODE_OUTDOORS)))
 			out_mode = true;
 		else out_mode = false;
 		

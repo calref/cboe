@@ -642,7 +642,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		"Expensive","Exorbitant","Utterly Ridiculous"};
 	cItem base_item;
 	
-	if(overall_mode != 21) {
+	if(overall_mode != MODE_SHOPPING) {
 		return;
 	}
 	

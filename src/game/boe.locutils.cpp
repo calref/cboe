@@ -215,15 +215,7 @@ short combat_obscurity(short x, short y) {
 }
 
 ter_num_t coord_to_ter(short x,short y) {
-	ter_num_t what_terrain;
-	
-	if((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_LOOK_OUTDOORS))
-		what_terrain = univ.out[x][y];
-	else if(((overall_mode > MODE_OUTDOORS) && (overall_mode < MODE_COMBAT))|| (overall_mode == MODE_LOOK_TOWN))
-		what_terrain = univ.town->terrain(x,y);
-	else
-		what_terrain = univ.town->terrain(x,y);
-	return what_terrain;
+	return is_out() ? univ.out[x][y] : univ.town->terrain(x,y);
 }
 
 ////
@@ -250,7 +242,7 @@ void update_explored(location dest) {
 	which_party_sec.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
 	which_party_sec.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 	
-	if(overall_mode == MODE_OUTDOORS) {
+	if(is_out()) {
 		univ.out.out_e[dest.x][dest.y] = 2;
 		for(look.x = shortdest.x - 4; look.x < shortdest.x + 5; look.x++)
 			for(look.y = shortdest.y - 4; look.y < shortdest.y + 5; look.y++) {
@@ -261,11 +253,7 @@ void update_explored(location dest) {
 						univ.out.out_e[look.x][look.y] = 1;
 				//}
 			}
-		
-		
-	}
-	
-	if(overall_mode > MODE_OUTDOORS) {
+	} else {
 		make_explored(dest.x,dest.y);
 		for(look2.x = max(0,dest.x - 4); look2.x < min(univ.town->max_dim,dest.x + 5); look2.x++)
 			for(look2.y = max(0,dest.y - 4); look2.y < min(univ.town->max_dim,dest.y + 5); look2.y++)

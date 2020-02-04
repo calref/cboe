@@ -896,7 +896,7 @@ void draw_terrain(short	mode) {
 		draw_monsters();
 	}
 	
-	if((overall_mode < MODE_COMBAT) || (overall_mode == MODE_LOOK_OUTDOORS) || ((overall_mode == MODE_LOOK_TOWN) && (point_onscreen(univ.party.town_loc,center)))
+	if(is_out() || (is_town() && point_onscreen(univ.party.town_loc,center))
 		|| (overall_mode == MODE_RESTING))
 		draw_party_symbol(center);
 	else if(overall_mode != MODE_LOOK_TOWN)
@@ -921,7 +921,7 @@ void draw_terrain(short	mode) {
 	if(mode == 0) {
 		redraw_terrain();
 		draw_text_bar();
-		if((overall_mode >= MODE_COMBAT) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_RESTING))
+		if(is_combat())
 			frame_active_pc(center);
 		if(overall_mode == MODE_FANCY_TARGET)
 			draw_targets(center);
@@ -1358,7 +1358,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 		return;
 	
 	// Redraw terrain in proper position
-	if(((!point_onscreen(center,where) && (overall_mode >= MODE_COMBAT)) || (overall_mode == MODE_OUTDOORS))
+	if(((!point_onscreen(center,where) && is_combat()) || (overall_mode == MODE_OUTDOORS))
 		) {
 		play_sound(sound_to_play);
 		
@@ -1427,7 +1427,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 			sf::sleep(time_in_ticks(del_len));
 	}
 	redraw_terrain();
-	if((overall_mode >= MODE_COMBAT/*9*/) && (overall_mode != MODE_LOOK_OUTDOORS) && (overall_mode != MODE_LOOK_TOWN) && (overall_mode != MODE_RESTING))
+	if(is_combat())
 		frame_active_pc(center);
 }
 

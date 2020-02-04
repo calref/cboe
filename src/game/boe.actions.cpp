@@ -231,9 +231,7 @@ void init_screen_locs() {
 }
 
 bool prime_time() {
-	if((overall_mode < MODE_TALK_TOWN) || (overall_mode == MODE_COMBAT))
-		return true;
-	return false;
+	return overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT;
 }
 
 static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw, bool& need_reprint) {
@@ -1750,7 +1748,7 @@ bool handle_keystroke(const sf::Event& event){
 			print_buf();
 			break;
 		case 'z': // Show active PC's inventory
-			if(((overall_mode >= MODE_COMBAT) && (overall_mode < MODE_TALKING)) || (overall_mode == MODE_LOOK_COMBAT)) {
+			if(is_combat()) {
 				set_stat_window_for_pc(univ.cur_pc);
 				put_item_screen(stat_window);
 			} else {
@@ -2188,7 +2186,7 @@ void post_load() {
 
 //mode; // 0 - normal  1 - save as
 void do_save(short mode) {
-	if(overall_mode > MODE_TOWN && overall_mode != MODE_STARTUP) {
+	if(overall_mode != MODE_TOWN && overall_mode != MODE_OUTDOORS && overall_mode != MODE_STARTUP) {
 		add_string_to_buf("Save: Only while outdoors, or in town and not looking/casting.", 2);
 		print_buf();
 		return;
@@ -2261,7 +2259,7 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 				pc.disease(6);
 			}
 			cInvenSlot item = pc.has_abil_equip(eItemAbil::REGENERATE);
-			if(item && pc.cur_health < pc.max_health && (overall_mode > MODE_OUTDOORS || get_ran(1,0,10) == 5)){
+			if(item && pc.cur_health < pc.max_health && (overall_mode != MODE_OUTDOORS || get_ran(1,0,10) == 5)){
 				int j = get_ran(1,0,item->abil_data[0] / 3);
 				if(item->abil_data[0] / 3 == 0)
 					j = get_ran(1,0,1);
@@ -2328,7 +2326,7 @@ void increase_age() {
 	
 	move_to_zero(univ.party.status[ePartyStatus::FLIGHT]);
 	
-	if(overall_mode > MODE_OUTDOORS && univ.town->lighting_type >= LIGHT_DRAINS) {
+	if(overall_mode != MODE_OUTDOORS && univ.town->lighting_type >= LIGHT_DRAINS) {
 		increase_light(-9);
 		if(univ.town->lighting_type == LIGHT_NONE) {
 			if(univ.party.light_level > 0)
@@ -2390,7 +2388,7 @@ void increase_age() {
 	}
 	
 	// Food
-	if((univ.party.age % 1000 == 0) && (overall_mode < MODE_COMBAT)) {
+	if(univ.party.age % 1000 == 0 && !is_combat()) {
 		for(cPlayer& pc : univ.party)
 			if(pc.main_status == eMainStatus::ALIVE)
 				how_many_short++;
@@ -2400,7 +2398,8 @@ void increase_age() {
 			play_sound(66);
 			r1 = get_ran(3,1,6);
 			hit_party(r1,eDamageType::SPECIAL);
-			if(overall_mode < MODE_COMBAT)
+			// Might seem redudant but maybe hit_party could change the mode if TPK?
+			if(!is_combat())
 				boom_space(univ.party.out_loc,overall_mode,0,r1,0);
 		}
 		else {
@@ -2483,7 +2482,7 @@ void increase_age() {
 			move_to_zero(pc.status[eStatus::BLESS_CURSE]);
 			move_to_zero(pc.status[eStatus::HASTE_SLOW]);
 			if(cInvenSlot item = pc.has_abil_equip(eItemAbil::REGENERATE)) {
-				if(pc.cur_health < pc.max_health && (overall_mode > MODE_OUTDOORS || get_ran(1,0,10) == 5)) {
+				if(pc.cur_health < pc.max_health && (overall_mode != MODE_OUTDOORS || get_ran(1,0,10) == 5)) {
 					int j = get_ran(1,0,item->abil_data[0] / 3);
 					if(item->abil_data[0] / 3 == 0)
 						j = get_ran(1,0,1);
