@@ -111,7 +111,6 @@ void cShop::addItem(size_t n, cItem item, size_t quantity, int chance) {
 	if(item.variety == eItemType::NO_ITEM) return;
 	items[i].type = chance == 100 ? eShopItemType::ITEM : eShopItemType::OPT_ITEM;
 	items[i].item = item;
-	items[i].item.ident = true;
 	items[i].quantity = quantity;
 	items[i].index = n;
 	if(chance < 100)
@@ -123,6 +122,8 @@ void cShop::refreshItems(std::vector<cItem>& fromList) {
 	for(size_t i = 0; i < items.size(); i++) {
 		if(items[i].type == eShopItemType::ITEM || items[i].type == eShopItemType::OPT_ITEM)
 			items[i].item = fromList[items[i].index];
+		// Prevent shops from selling unidentified items
+		items[i].item.ident = true;
 	}
 }
 
