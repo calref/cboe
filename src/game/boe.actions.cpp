@@ -1052,7 +1052,7 @@ bool handle_action(const sf::Event& event) {
 	end_scenario = false;
 	
 	// MARK: First, figure out where party is
-	if(overall_mode == MODE_STARTUP || overall_mode == MODE_RESTING || overall_mode == MODE_CUTSCENE) {
+	if(overall_mode == MODE_STARTUP || overall_mode == MODE_RESTING) {
 		// If we get here during these modes, something is probably not right, so bail out
 		add_string_to_buf("Unexpected game state!");
 		return are_done;

@@ -13,30 +13,29 @@
 
 /* overall mode; some seem to be missing */
 enum eGameMode {
-	MODE_OUTDOORS = 0,
+	MODE_OUTDOORS,
 	// Town modes
-	MODE_TOWN = 1,
-	MODE_TALK_TOWN = 2, // looking for someone to talk
-	MODE_TOWN_TARGET = 3, // spell target, that is
-	MODE_USE_TOWN = 4,
-	MODE_DROP_TOWN = 5,
-	MODE_BASH_TOWN = 6, // unused
+	MODE_TOWN,
+	MODE_TALK_TOWN, // looking for someone to talk
+	MODE_TOWN_TARGET, // spell target, that is
+	MODE_USE_TOWN,
+	MODE_DROP_TOWN,
+	MODE_BASH_TOWN,
 	// Combat modes
-	MODE_COMBAT = 10,
-	MODE_SPELL_TARGET = 11,
-	MODE_FIRING = 12, // firing from bow or crossbow
-	MODE_THROWING = 13, // throwing missile
-	MODE_FANCY_TARGET = 14, // spell target, that is; I think it's for multitarget spells
-	MODE_DROP_COMBAT = 15,
+	MODE_COMBAT,
+	MODE_SPELL_TARGET,
+	MODE_FIRING, // firing from bow or crossbow
+	MODE_THROWING, // throwing missile
+	MODE_FANCY_TARGET, // spell target, that is; I think it's for multitarget spells
+	MODE_DROP_COMBAT,
 	// Other modes
-	MODE_TALKING = 20,
-	MODE_SHOPPING = 21,
-	MODE_LOOK_OUTDOORS = 35, // looking at something
-	MODE_LOOK_TOWN = 36,
-	MODE_LOOK_COMBAT = 37,
-	MODE_STARTUP = 45,
-	MODE_RESTING = 50,
-	MODE_CUTSCENE = 51, // for future use
+	MODE_TALKING,
+	MODE_SHOPPING,
+	MODE_LOOK_OUTDOORS, // looking at something
+	MODE_LOOK_TOWN,
+	MODE_LOOK_COMBAT,
+	MODE_STARTUP,
+	MODE_RESTING,
 };
 
 static const std::set<eGameMode> scrollableModes = {
