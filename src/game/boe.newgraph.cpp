@@ -435,9 +435,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 				}
 			}
 		mainPtr.display();
-		int speed = get_int_pref("GameSpeed");
-		if(speed == 3 || (speed == 1 && t % 4 == 0) || (speed == 2 && t % 3 == 0))
-			sf::sleep(time_in_ticks(1));
+		sf::sleep(sf::milliseconds(2 + 5 * get_int_pref("GameSpeed")));
 	}
 	
 	// Exit gracefully, and clean up screen
