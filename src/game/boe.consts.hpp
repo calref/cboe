@@ -20,7 +20,8 @@ enum eGameMode {
 	MODE_TOWN_TARGET, // spell target, that is
 	MODE_USE_TOWN,
 	MODE_DROP_TOWN,
-	MODE_BASH_TOWN,
+	MODE_BASH_TOWN, // Bashing down a door
+	MODE_PICK_TOWN, // Picking a lock
 	// Combat modes
 	MODE_COMBAT,
 	MODE_SPELL_TARGET,

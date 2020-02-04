@@ -116,7 +116,6 @@ short monst_place_count = 0; // 1 - standard place	2 - place last
 enum_map(eShopArea, rectangle) shopping_rects[8];
 std::queue<pending_special_type> special_queue;
 bool end_scenario = false;
-bool current_bash_is_bash = false;
 
 static void advance_time(bool did_something, bool need_redraw, bool need_reprint);
 
@@ -676,12 +675,11 @@ static void handle_use_space(location destination, bool& did_something, bool& ne
 }
 
 static void handle_bash_pick_select(bool& need_reprint, bool isBash) {
-	if(overall_mode == MODE_BASH_TOWN) {
+	if(overall_mode == MODE_BASH_TOWN || overall_mode == MODE_PICK_TOWN) {
 		add_string_to_buf("  Cancelled.");
 		overall_mode = MODE_TOWN;
 	} else {
-		overall_mode = MODE_BASH_TOWN;
-		current_bash_is_bash = isBash;
+		overall_mode = isBash ? MODE_BASH_TOWN : MODE_PICK_TOWN;
 		add_string_to_buf(isBash ? "Bash Door: Select a space." : "Pick Lock: Select a space.");
 	}
 	need_reprint = true;
@@ -1238,10 +1236,10 @@ bool handle_action(const sf::Event& event) {
 		}
 		
 		// Bashing/lockpicking
-		else if(overall_mode == MODE_BASH_TOWN) {
+		else if(overall_mode == MODE_BASH_TOWN || overall_mode == MODE_PICK_TOWN) {
 			destination.x += i - 4;
 			destination.y += j - 4;
-			handle_bash_pick(destination, did_something, need_redraw, current_bash_is_bash);
+			handle_bash_pick(destination, did_something, need_redraw, overall_mode == MODE_BASH_TOWN);
 		}
 	}
 	// MARK: End: click in terrain
@@ -2010,7 +2008,7 @@ bool handle_keystroke(const sf::Event& event){
 			break;
 			
 		case 'L': // Pick lock
-			if(overall_mode == MODE_TOWN || overall_mode == MODE_BASH_TOWN)
+			if(overall_mode == MODE_TOWN || overall_mode == MODE_PICK_TOWN)
 				handle_bash_pick_select(need_reprint, false);
 			break;
 			
