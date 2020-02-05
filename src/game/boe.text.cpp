@@ -112,13 +112,13 @@ void put_pc_screen() {
 	win_draw_string(pc_stats_gworld,title_rects[1],"HP:",eTextMode::WRAP,style);
 	win_draw_string(pc_stats_gworld,title_rects[2],"SP:",eTextMode::WRAP,style);
 	
-	style.colour = sf::Color::White;
+	style.colour = Colours::WHITE;
 	style.pointSize = 12;
 	// Put food, gold, day
 	win_draw_string(pc_stats_gworld,food_rect[0],std::to_string(univ.party.food),eTextMode::WRAP,style);
 	win_draw_string(pc_stats_gworld,gold_rect[0],std::to_string(univ.party.gold),eTextMode::WRAP,style);
 	win_draw_string(pc_stats_gworld,day_rect[0],std::to_string(univ.party.calc_day()),eTextMode::WRAP,style);
-	style.colour = sf::Color::Black;
+	style.colour = Colours::BLACK;
 	
 	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
 	for(short i = 0; i < 6; i++) {
@@ -134,7 +134,7 @@ void put_pc_screen() {
 			sout << i + 1 << ". " << univ.party[i].name;
 			win_draw_string(pc_stats_gworld,pc_buttons[i][PCBTN_NAME],sout.str(),eTextMode::WRAP,style);
 			style.italic = false;
-			style.colour = sf::Color::Black;
+			style.colour = Colours::BLACK;
 			
 			to_draw_rect = pc_buttons[i][PCBTN_HP];
 			to_draw_rect.right += 20;
@@ -179,7 +179,7 @@ void put_pc_screen() {
 			}
 			if(univ.party[i].main_status != eMainStatus::ALIVE)
 				win_draw_string( pc_stats_gworld,to_draw_rect,sout.str(),eTextMode::WRAP,style);
-			style.colour = sf::Color::Black;
+			style.colour = Colours::BLACK;
 			
 			// Now put trade and info buttons
 			rect_draw_some_item(invenbtn_gworld,info_from,pc_stats_gworld,pc_buttons[i][PCBTN_INFO],sf::BlendAlpha);
@@ -248,11 +248,10 @@ void put_item_screen(eItemWinMode screen_num) {
 			break;
 	}
 
-	// TODO: The item graphics are 18x18 but the height of each line is 13px, so set a clip rect to ensure it doesn't overflow onto the border
 	clip_rect(item_stats_gworld, erase_rect);
 	switch(screen_num) {
 		case ITEM_WIN_SPECIAL:
-			style.colour = sf::Color::Black;
+			style.colour = Colours::BLACK;
 			for(short i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if(i_num < spec_item_array.size()) {
@@ -266,7 +265,7 @@ void put_item_screen(eItemWinMode screen_num) {
 			}
 			break;
 		case ITEM_WIN_QUESTS:
-			style.colour = sf::Color::Black;
+			style.colour = Colours::BLACK;
 			for(short i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if(i_num < spec_item_array.size()) {
@@ -290,7 +289,7 @@ void put_item_screen(eItemWinMode screen_num) {
 			break;
 			
 		default: // on an items page
-			style.colour = sf::Color::Black;
+			style.colour = Colours::BLACK;
 			
 			for(short i = 0; i < 8; i++) {
 				i_num = i + item_offset;
@@ -327,7 +326,7 @@ void put_item_screen(eItemWinMode screen_num) {
 					dest_rect.left -= 2;
 					win_draw_string(item_stats_gworld,dest_rect,sout.str(),eTextMode::WRAP,style);
 					style.italic = false;
-					style.colour = sf::Color::Black;
+					style.colour = Colours::BLACK;
 					
 					// this is kludgy, awkwark, and has redundant code. Done this way to
 					// make go faster, and I got lazy.
@@ -1068,7 +1067,7 @@ void print_buf () {
 	while((line_to_print!= buf_pointer) && (num_lines_printed < LINES_IN_TEXT_WIN)) {
 		moveTo = location(4, 1 + 12 * num_lines_printed);
 		sf::Text text(text_buffer[line_to_print].line, *ResMgr::fonts.get("plain"), 12);
-		text.setColor(sf::Color::Black);
+		text.setColor(Colours::BLACK);
 		text.setPosition(moveTo);
 		text_area_gworld.draw(text);
 		num_lines_printed++;
@@ -1157,7 +1156,7 @@ void draw_text_label(const text_label_t& label) {
 	sf::Color back_clr = {64, 64, 64, 42};
 	TextStyle style;
 	style.font = FONT_PLAIN;
-	style.colour = sf::Color::White;
+	style.colour = Colours::WHITE;
 	rectangle back_rect = label.text_rect, text_rect = label.text_rect;
 	back_rect.inset(-7,-7);
 	back_rect.offset(0,-2);
