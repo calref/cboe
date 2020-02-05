@@ -30,6 +30,14 @@ std::filebuf logfile;
 
 static fs::path get_posix_tempdir();
 
+static void add_resmgr_paths(const fs::path& basePath) {
+	ResMgr::graphics.pushPath(basePath/"graphics");
+	ResMgr::cursors.pushPath(basePath/"cursors");
+	ResMgr::fonts.pushPath(basePath/"fonts");
+	ResMgr::strings.pushPath(basePath/"strings");
+	ResMgr::sounds.pushPath(basePath/"sounds");
+}
+
 void init_directories(const char* exec_path) {
 	progDir = fs::canonical(exec_path);
 #ifdef __APPLE__
@@ -39,11 +47,7 @@ void init_directories(const char* exec_path) {
 #endif
 	progDir = progDir.parent_path();
 	// Initialize the resource manager paths
-	ResMgr::graphics.pushPath(progDir/"data"/"graphics");
-	ResMgr::cursors.pushPath(progDir/"data"/"cursors");
-	ResMgr::fonts.pushPath(progDir/"data"/"fonts");
-	ResMgr::strings.pushPath(progDir/"data"/"strings");
-	ResMgr::sounds.pushPath(progDir/"data"/"sounds");
+	add_resmgr_paths(progDir/"data");
 	
 	// We need a location for temporary files, primarily for loading and saving operations
 	// The scenario editor may also use this location as "scratch space"
@@ -58,6 +62,7 @@ void init_directories(const char* exec_path) {
 #endif
 	scenDir = tempDir/"Scenarios";
 	fs::create_directories(scenDir);
+	add_resmgr_paths(tempDir/"data");
 	tempDir /= "Temporary Files";
 	
 	// Depending on the build environment, we may need to redirect stdout and stderr.
