@@ -2507,7 +2507,7 @@ void oneshot_spec(const runtime_state& ctx) {
 				buttons[1] = spec.ex1a;
 				buttons[2] = spec.ex2a;
 				if((spec.ex1a >= 0) || (spec.ex2a >= 0))
-					buttons[0] = 20;
+					buttons[0] = 9;
 			}
 			if(spec.m3 <= 0) {
 				buttons[0] = spec.ex1a;
