@@ -41,7 +41,7 @@ extern sf::RenderWindow mainPtr;
 extern eItemWinMode stat_window;
 extern eGameMode overall_mode;
 extern short current_spell_range;
-extern bool anim_onscreen,party_in_memory;
+extern bool party_in_memory;
 extern bool flushingInput;
 extern bool cartoon_happening, fog_lifted;
 extern short anim_step;
@@ -726,8 +726,6 @@ void draw_terrain(short	mode) {
 	
 	sector_p_in.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
 	sector_p_in.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
-	
-	anim_onscreen = false;
 	
 	if(is_town())
 		view_loc = univ.party.town_loc;

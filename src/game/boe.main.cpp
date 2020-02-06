@@ -65,7 +65,7 @@ short fast_bang = false; // Note: This mostly behaves as a boolean variable, but
 std::vector<int> spec_item_array;
 short current_spell_range;
 eGameMode overall_mode = MODE_STARTUP;
-bool anim_onscreen = false,changed_display_mode = false;
+bool changed_display_mode = false;
 eItemWinMode stat_window = ITEM_WIN_PC1;
 bool monsters_going = false,boom_anim_active = false;
 bool finished_init = false;
@@ -314,7 +314,6 @@ void update_terrain_animation() {
 
 	if(overall_mode == MODE_STARTUP) return;
 	if(!get_bool_pref("DrawTerrainAnimation", true)) return;
-	if(!anim_onscreen) return;
 	if(animTimer.getElapsedTime().asMilliseconds() < fortyTicks) return;
 
 	anim_ticks++;

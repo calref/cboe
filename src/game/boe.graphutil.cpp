@@ -27,7 +27,6 @@ extern short stat_window;
 extern bool cartoon_happening;
 extern eGameMode overall_mode;
 extern short current_spell_range;
-extern bool anim_onscreen;
 extern cUniverse univ;
 extern effect_pat_type current_pat;
 extern sf::RenderWindow mini_map;
@@ -38,7 +37,7 @@ extern std::queue<pending_special_type> special_queue;
 
 extern location center;
 extern short which_combat_type;
-extern bool monsters_going,anim_onscreen;
+extern bool monsters_going;
 
 extern short num_targets_left;
 extern location spell_targets[8];
@@ -105,11 +104,6 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 		terrain_to_draw %= 50;
 		source_rect = calc_rect(terrain_to_draw % 10, terrain_to_draw / 10);
 		anim_type = -1;
-	}
-	
-	if(anim_type >= 0) {
-		if((is_town()) || (is_out()))
-			anim_onscreen = true;
 	}
 	
 	rect_draw_some_item(*source_gworld, source_rect, terrain_screen_gworld, where_draw);
