@@ -616,13 +616,21 @@
 		914698FB1A7362D900F20F5E /* living.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = living.cpp; sourceTree = "<group>"; };
 		914698FD1A747BED00F20F5E /* creature.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = creature.hpp; sourceTree = "<group>"; };
 		914698FE1A747C4500F20F5E /* creature.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = creature.cpp; sourceTree = "<group>"; };
-		914701A918F64A85008A6DC9 /* dialog.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = dialog.xsd; path = schemas/dialog.xsd; sourceTree = "<group>"; };
+		914701A918F64A85008A6DC9 /* dialog.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = dialog.xsd; sourceTree = "<group>"; };
 		914B2AA118E7E500007B6799 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		914B2AA218E7E500007B6799 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		914B2BB518E892AA007B6799 /* dialog-converting.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "dialog-converting.txt"; sourceTree = "<group>"; };
 		914CA45719074D0A00B6ADD1 /* scen.menus.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = scen.menus.mac.mm; sourceTree = "<group>"; };
 		914CA4641909B00100B6ADD1 /* scen.menus.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = scen.menus.hpp; sourceTree = "<group>"; };
 		914CA49F190C4E9200B6ADD1 /* scenedit.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = scenedit.xib; path = menus/scenedit.xib; sourceTree = "<group>"; };
+		914F412723EBD27500DB53BD /* common.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = common.xsd; sourceTree = "<group>"; };
+		914F412823EBD27500DB53BD /* dialogue.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = dialogue.xsd; sourceTree = "<group>"; };
+		914F412923EBD27500DB53BD /* items.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = items.xsd; sourceTree = "<group>"; };
+		914F412A23EBD27500DB53BD /* monsters.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = monsters.xsd; sourceTree = "<group>"; };
+		914F412B23EBD27500DB53BD /* outdoor.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = outdoor.xsd; sourceTree = "<group>"; };
+		914F412C23EBD27500DB53BD /* scenario.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = scenario.xsd; sourceTree = "<group>"; };
+		914F412D23EBD27500DB53BD /* terrain.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = terrain.xsd; sourceTree = "<group>"; };
+		914F412E23EBD27500DB53BD /* town.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = town.xsd; sourceTree = "<group>"; };
 		915325161A2E1DA8000A9A1C /* oldstructs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oldstructs.cpp; sourceTree = "<group>"; };
 		915325181A2E37EE000A9A1C /* special_parse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = special_parse.cpp; sourceTree = "<group>"; };
 		91574CC323CB97C5004766F8 /* enum_map.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = enum_map.hpp; sourceTree = "<group>"; };
@@ -1099,6 +1107,23 @@
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
 		};
+		914F412623EBD25900DB53BD /* Schemas */ = {
+			isa = PBXGroup;
+			children = (
+				914F412723EBD27500DB53BD /* common.xsd */,
+				914F412823EBD27500DB53BD /* dialogue.xsd */,
+				914F412923EBD27500DB53BD /* items.xsd */,
+				914F412A23EBD27500DB53BD /* monsters.xsd */,
+				914F412B23EBD27500DB53BD /* outdoor.xsd */,
+				914F412C23EBD27500DB53BD /* scenario.xsd */,
+				914F412D23EBD27500DB53BD /* terrain.xsd */,
+				914F412E23EBD27500DB53BD /* town.xsd */,
+				914701A918F64A85008A6DC9 /* dialog.xsd */,
+			);
+			name = Schemas;
+			path = schemas;
+			sourceTree = "<group>";
+		};
 		9185BD931EA01BB50027C346 /* universe */ = {
 			isa = PBXGroup;
 			children = (
@@ -1356,7 +1381,7 @@
 		91B3EF220F969CA300BF5B67 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
-				914701A918F64A85008A6DC9 /* dialog.xsd */,
+				914F412623EBD25900DB53BD /* Schemas */,
 				91C749B71A2D6432008E0E10 /* strings */,
 				91C749B91A2D66F7008E0E10 /* dialogs */,
 				911F2DA51B98FF2700E3102E /* fonts */,
