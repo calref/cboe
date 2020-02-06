@@ -45,7 +45,7 @@ graf_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 }
 
 size_t cCustomGraphics::count(bool party) {
-	if(!party && !sheets.empty()) return 0;
+	if(!party && sheets.empty()) return 0;
 	else if(party && party_sheet == nullptr) return 0;
 	else if(is_old || party) {
 		rectangle bounds(party ? *party_sheet : *sheets[0]);
