@@ -387,6 +387,8 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	cDialog* formerTop = topWindow;
 	// TODO: The introduction of the static topWindow means I may be able to use this instead of parent->win; do I still need parent?
 	sf::RenderWindow* parentWin = &(parent ? parent->win : mainPtr);
+	auto parentPos = parentWin->getPosition();
+	auto parentSz = parentWin->getSize();
 	cursor_type former_curs = Cursor::current;
 	dialogNotToast = true;
 	set_cursor(sword_curs);
@@ -409,6 +411,7 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	win.create(sf::VideoMode(1,1),"");
 	win.close();
 	win.create(sf::VideoMode(winRect.width(), winRect.height()), "Dialog", sf::Style::Titlebar);
+	win.setPosition({parentPos.x + int(parentSz.x - winRect.width()) / 2, parentPos.y + int(parentSz.y - winRect.height()) / 2});
 	draw();
 	makeFrontWindow(parent ? parent-> win : mainPtr);
 	makeFrontWindow(win);
