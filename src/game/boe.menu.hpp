@@ -10,14 +10,16 @@
 #include "boe.consts.hpp"
 #include "spell.hpp"
 #include "skills_traits.hpp"
+#include "event_listener.hpp"
+#include "drawable.hpp"
 
-class OpenBoEMenu {
+class OpenBoEMenu : public iEventListener, public iDrawable {
 public:
 
 	OpenBoEMenu(sf::RenderWindow&, cUniverse&);
 
-	bool handle_event(const sf::Event&);
-	void draw();
+	virtual bool handle_event(const sf::Event&) override;
+	virtual void draw() override;
 	void update_for_game_state(eGameMode overall_mode, bool party_in_memory);
 	void update_spell_menus();
 	void update_monsters_menu();
@@ -27,7 +29,6 @@ private:
 	using MenuHierarchy = std::vector<sf::String>;
 
 	tgui::Gui tgui;
-	sf::RenderWindow& mainPtr;
 	cUniverse& univ;
 	const sf::String internal_menubar_widget_name { "openboe-menu" };
 	std::vector<unsigned int> spell_menus_connection_ids;

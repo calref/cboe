@@ -19,6 +19,9 @@ const int RIGHT_AREA_HEIGHT = 400;
 const int TER_RECT_UL_X = 6;
 const int TER_RECT_UL_Y = 19;
 
+const int UI_LAYER_DEFAULT = 1000;
+const int UI_LAYER_MENUBAR = 1200;
+
 enum eScenMode {
 	MODE_DRAWING = 0,
 	MODE_TOGGLE_ROAD = 1,

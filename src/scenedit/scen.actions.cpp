@@ -1777,25 +1777,12 @@ void handle_keystroke(sf::Event event) {
 }
 
 void handle_scroll(const sf::Event& event) {
-	rectangle pal_rect = terrain_buttons_rect, right_area_rect = {0,0,RIGHT_AREA_HEIGHT,RIGHT_AREA_WIDTH};
-	right_area_rect.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y);
-	pal_rect.offset(RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
-	pal_rect.height() = 16 * 17 + 2;
-	fill_rect(mainPtr, right_area_rect, sf::Color::Magenta);
 	location pos { translate_mouse_coordinates({event.mouseMove.x,event.mouseMove.y}) };
 	int amount = event.mouseWheel.delta;
-	if(right_sbar->isVisible() && pos.in(right_area_rect)) {
-		right_sbar->setPosition(right_sbar->getPosition() - amount);
-		redraw_screen();
-	} else if(pal_sbar->isVisible() && pos.in(pal_rect)) {
-		pal_sbar->setPosition(pal_sbar->getPosition() - amount);
-		set_up_terrain_buttons(false);
-		redraw_screen();
-	} else if(overall_mode < MODE_MAIN_SCREEN && pos.in(terrain_rect)) {
+	if(overall_mode < MODE_MAIN_SCREEN && pos.in(terrain_rect)) {
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
 			cen_x = minmax(4, town->max_dim - 5, cen_x - amount);
 		else cen_y = minmax(4, town->max_dim - 5, cen_y - amount);
-		redraw_screen();
 	}
 }
 

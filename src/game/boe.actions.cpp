@@ -72,7 +72,6 @@ cOutdoors::cWandering store_wandering_special;
 short store_selling_values[8] = {0,0,0,0,0,0,0,0};
 extern cShop active_shop;
 
-extern rectangle shop_frame;
 extern short cen_x, cen_y;//,pc_moves[6];
 extern eGameMode overall_mode;
 extern eItemWinMode stat_window;
@@ -2114,29 +2113,19 @@ bool handle_keystroke(const sf::Event& event){
 }
 
 bool handle_scroll(const sf::Event& event) {
-	rectangle status_panel_rect = {0,0,144,271}, text_panel_rect = {0,0,138,271};
 	rectangle world_screen = win_to_rects[WINRECT_TERVIEW];
 	world_screen.inset(13, 13);
-	status_panel_rect.offset(win_to_rects[WINRECT_INVEN].topLeft());
-	text_panel_rect.offset(win_to_rects[WINRECT_TRANSCRIPT].topLeft());
 	fill_rect(mainPtr, world_screen, sf::Color::Magenta);
+	
+	// XXX TODO centralize this translation somewhere
 	location pos(event.mouseWheel.x, event.mouseWheel.y);
 	pos = mainPtr.mapPixelToCoords(pos, mainView);
+	
 	int amount = event.mouseWheel.delta;
-	if(item_sbar->isVisible() && pos.in(status_panel_rect)) {
-		item_sbar->setPosition(item_sbar->getPosition() - amount);
-		redraw_screen(REFRESH_INVEN);
-	} else if(text_sbar->isVisible() && pos.in(text_panel_rect)) {
-		text_sbar->setPosition(text_sbar->getPosition() - amount);
-		redraw_screen(REFRESH_TRANS);
-	} else if(shop_sbar->isVisible() && pos.in(shop_frame)) {
-		shop_sbar->setPosition(shop_sbar->getPosition() - amount);
-		redraw_screen(REFRESH_DLOG);
-	} else if(scrollableModes.count(overall_mode) && pos.in(world_screen)) {
+	if(scrollableModes.count(overall_mode) && pos.in(world_screen)) {
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
 			center.x = minmax(4, univ.town->max_dim - 5, center.x - amount);
 		else center.y = minmax(4, univ.town->max_dim - 5, center.y - amount);
-		redraw_screen(REFRESH_TERRAIN);
 	}
 	return true;
 }

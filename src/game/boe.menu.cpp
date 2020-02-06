@@ -10,7 +10,6 @@
 
 OpenBoEMenu::OpenBoEMenu(sf::RenderWindow& window, cUniverse& universe)
 	: tgui { window }
-	, mainPtr { window }
 	, univ { universe } {
 
 	// Build a menubar and store it in tgui with a known name
@@ -26,7 +25,7 @@ OpenBoEMenu::OpenBoEMenu(sf::RenderWindow& window, cUniverse& universe)
 tgui::MenuBar::Ptr OpenBoEMenu::build_menubar() const {
 	auto menubar = tgui::MenuBar::create();
 
-	menubar->setSize(this->mainPtr.getSize().x, MENUBAR_HEIGHT);
+	menubar->setSize("100%", MENUBAR_HEIGHT);
 
 	this->add_menu_placeholders(menubar);
 	this->add_persistent_menu_items(menubar);
