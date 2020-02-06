@@ -306,6 +306,14 @@ void handle_one_minimap_event(const sf::Event& event) {
 		map_visible = false;
 	} else if(event.type == sf::Event::GainedFocus) {
 		makeFrontWindow(mainPtr);
+	} else if(event.type == sf::Event::KeyPressed) {
+		switch(event.key.code) {
+			case sf::Keyboard::Escape:
+				mini_map.setVisible(false);
+				map_visible = false;
+				break;
+			default: break;
+		}
 	}
 }
 
