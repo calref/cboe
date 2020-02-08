@@ -569,12 +569,12 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 						text_rect.top += 13;
 						text_rect.height() = 10;
 						std::string dam_str = std::to_string(store_booms[i].val_to_place);
-						style.colour = sf::Color::White;
+						style.colour = Colours::WHITE; 
 						text_rect.offset(-1,-1);
 						win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style);
 						text_rect.offset(2,2);
 						win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style);
-						style.colour = sf::Color::Black;
+						style.colour = Colours::BLACK; 
 						text_rect.offset(-1,-1);
 						win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style);
 						mainPtr.setActive();
@@ -655,11 +655,11 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	}
 	
 	area_rect = rectangle(talk_gworld);
-	frame_rect(talk_gworld, area_rect, sf::Color::Black);
+	frame_rect(talk_gworld, area_rect, Colours::BLACK); 
 	area_rect.inset(1,1);
 	tileImage(talk_gworld, area_rect,bg[12]);
 	
-	frame_rect(talk_gworld, shop_frame, sf::Color::Black);
+	frame_rect(talk_gworld, shop_frame, Colours::BLACK); 
 	
 	// Place store icon
 	if(!pressed) {
@@ -677,19 +677,19 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	
 	
 	// Place name of store and shopper name
-	style.colour = c[3];
+	style.colour = Colours::SHADOW; 
 	style.lineHeight = 18;
 	dest_rect = title_rect;
 	dest_rect.offset(1,1);
 	win_draw_string(talk_gworld,dest_rect,active_shop.getName(),eTextMode::LEFT_TOP,style);
 	dest_rect.offset(-1,-1);
-	style.colour = c[4];
+	style.colour = Colours::TITLE_BLUE; 
 	win_draw_string(talk_gworld,dest_rect,active_shop.getName(),eTextMode::LEFT_TOP,style);
 	
 	style.font = FONT_BOLD;
 	style.pointSize = 12;
 	
-	style.colour = c[3];
+	style.colour = Colours::SHADOW;
 	std::ostringstream title;
 	switch(active_shop.getPrompt()) {
 		case eShopPrompt::HEALING:
@@ -717,8 +717,9 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	win_draw_string(talk_gworld,shopper_name,title.str(),eTextMode::LEFT_TOP,style);
 	
 	if(pressed)
-		style.colour = c[4];
-	else style.colour = sf::Color::Black;
+		style.colour = Colours::TITLE_BLUE; 
+	else 
+		style.colour = Colours::BLACK; 
 	
 	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
 	// Place all the items
@@ -912,13 +913,6 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	rectangle dest_rect,help_from = {46,60,59,76};
 	sf::Text str_to_draw;
 	
-	// In the 0..65535 range, these blue components were: 0, 32767, 14535, 26623, 59391
-	// The green components on the second line were 40959 and 24575
-	sf::Color c[8] = {
-		{0,0,0},{0,0,128},{0,0,57},{0,0,104},{0,0,232},
-		{0,160,0},{0,96,0},{160,0,20}
-	};
-	
 	talk_gworld.setActive();
 	
 	TextStyle style;
@@ -937,13 +931,13 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	tileImage(talk_gworld, area_rect,bg[12]);
 	
 	// Place name oftalkee
-	style.colour = c[3];
+	style.colour = Colours::SHADOW; 
 	style.lineHeight = 18;
 	dest_rect = title_rect;
 	dest_rect.offset(1,1);
 	win_draw_string(talk_gworld,dest_rect,title_string,eTextMode::LEFT_TOP,style);
 	dest_rect.offset(-1,-1);
-	style.colour = c[4];
+	style.colour = Colours::TITLE_BLUE; 
 	win_draw_string(talk_gworld,dest_rect,title_string,eTextMode::LEFT_TOP,style);
 	
 	talk_words.clear();
@@ -962,13 +956,14 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	
 	// Place buttons at bottom.
 	if(color == 0)
-		style.colour = c[5];
-	else style.colour = c[6];
+		style.colour = Colours::DARK_GREEN; 
+	else 
+		style.colour = Colours::LIGHT_GREEN; 
 	for(short i = 0; i < 9; i++) {
 		if(!talk_end_forced || i == 6 || i == 5) {
 			word_rect_t preset_word(preset_words[i], preset_rects[i]);
-			preset_word.on = c[5];
-			preset_word.off = c[6];
+			preset_word.on = Colours::DARK_GREEN; 
+			preset_word.off = Colours::LIGHT_GREEN; 
 			switch(i) {
 				case 0: preset_word.node = TALK_LOOK; break;
 				case 1: preset_word.node = TALK_NAME; break;
@@ -987,7 +982,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	}
 	
 	dest_rect = word_place_rect;
-	style.colour = c[2];
+	style.colour = Colours::NAVY; 
 	// First determine the offsets of clickable words.
 	// The added spaces ensure that end-of-word boundaries are found
 	std::string str = str_to_place + " |" + str_to_place2 + " ";
@@ -1008,7 +1003,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		}
 	}
 	
-	std::vector<rectangle> word_rects = draw_string_hilite(talk_gworld, dest_rect, str, style, hilites, color ? c[1] : c[7]);
+	std::vector<rectangle> word_rects = draw_string_hilite(talk_gworld, dest_rect, str, style, hilites, color ? Colours::DARK_BLUE : Colours::DARK_RED); 
 	
 	if(!talk_end_forced) {
 		// Now build the list of word rects
@@ -1017,8 +1012,8 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 			thisRect.word = str.substr(hilites[i].first, hilites[i].second - hilites[i].first);
 			thisRect.rect = word_rects[i];
 			thisRect.node = nodes[i];
-			thisRect.on = c[1];
-			thisRect.off = c[2]; // Note: "off" is never used
+			thisRect.on = Colours::DARK_BLUE; 
+			thisRect.off = Colours::NAVY; // Note: "off" is never used
 			talk_words.push_back(thisRect);
 		}
 	}

@@ -55,6 +55,15 @@ namespace Colours {
 	const sf::Color PINK   { 0xff, 0x00, 0x99};
 	const sf::Color YELLOW { 0xff, 0xff, 0x31};
 	const sf::Color ORANGE { 0xff, 0x80, 0x00};
+	// Text colours for shopping / talking
+	// TODO: The Windows version appears to use completely different colours?
+	const sf::Color SHADOW      { 0x00, 0x00, 0x68}; // formerly c[3] QD colour = {0,0,26623} (shop/character name shadow, shop subtitle)
+	const sf::Color TITLE_BLUE  { 0x00, 0x00, 0xe8}; // formerly c[4] QD colour = {0,0,59391} (shop/character name)
+	const sf::Color NAVY        { 0x00, 0x00, 0x39}; // formerly c[2] QD colour = {0,0,14535} (talking text)
+	const sf::Color DARK_BLUE   { 0x00, 0x00, 0x80}; // formerly c[1] QD colour = {0,0,32767} (talking text pressed)
+	const sf::Color DARK_GREEN  { 0x00, 0x60, 0x00}; // formerly c[5] QD colour = {0,40959,0} (talking buttons)
+	const sf::Color LIGHT_GREEN { 0x00, 0xa0, 0x00}; // formerly c[6] QD colour = {0,24575,0} (talking buttons pressed)
+	const sf::Color DARK_RED    { 0xa0, 0x00, 0x14}; // formerly c[7] (clickable text, new in OBoE)
 }
 
 #endif
