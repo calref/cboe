@@ -56,9 +56,6 @@
 		2BF04B2D0BF51924006C0831 /* boe.text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B070BF51924006C0831 /* boe.text.cpp */; };
 		2BF04B2E0BF51924006C0831 /* boe.town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B090BF51924006C0831 /* boe.town.cpp */; };
 		91034D211B225E4A008F01C1 /* scen.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91034D201B225E49008F01C1 /* scen.appleevents.mm */; };
-		910D9CA41B36439100414B17 /* libboost_thread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
-		910D9CA51B36439100414B17 /* libboost_thread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
-		910D9CA61B36439100414B17 /* libboost_thread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
 		911A14031B8FAFC600900FD9 /* town_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C2A6EC1B8FA91400346948 /* town_read.cpp */; };
 		911A14041B8FB00300900FD9 /* talk_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C2A6EE1B8FAA8E00346948 /* talk_read.cpp */; };
 		911A14051B8FB00600900FD9 /* out_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C2A6ED1B8FA9FB00346948 /* out_read.cpp */; };
@@ -94,9 +91,6 @@
 		9153C79F1A994A1300D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
 		9153C7A01A994A1700D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
 		915AF9E81BBF8B5C008AEF49 /* scrollpane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A81BBE2B54009905A4 /* scrollpane.cpp */; };
-		9169C3211B3B23530041002B /* libboost_thread.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
-		9169C3231B3B235A0041002B /* libboost_thread.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
-		9169C3241B3B23610041002B /* libboost_thread.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
 		9176FEC71D550EFE006EF694 /* out_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9176FEC01D550EFC006EF694 /* out_legacy.cpp */; };
 		9176FEC81D550EFE006EF694 /* scen_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9176FEC11D550EFC006EF694 /* scen_legacy.cpp */; };
 		9176FECB1D550EFE006EF694 /* talk_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9176FEC41D550EFD006EF694 /* talk_legacy.cpp */; };
@@ -243,7 +237,6 @@
 		91BC338F1B4388E80008882C /* FLAC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
 		91BC33901B4388E80008882C /* libboost_filesystem.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */; };
 		91BC33911B4388E80008882C /* libboost_system.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFB19006CC9003E7FED /* libboost_system.dylib */; };
-		91BC33921B4388E80008882C /* libboost_thread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 910D9CA31B36439100414B17 /* libboost_thread.dylib */; };
 		91BC33981B4481EF0008882C /* scen.fileio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF20F969BA700BF5B67 /* scen.fileio.cpp */; };
 		91BFA3D71901B18F001686E4 /* mask.vert in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 91BFA3D61901B024001686E4 /* mask.vert */; };
 		91C548F81D8B2FE400FE6A7B /* pc_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C548F71D8B2EE400FE6A7B /* pc_read.cpp */; };
@@ -302,6 +295,7 @@
 		91FCC8DC18FE2CE8007026CE /* pc.menus.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91FCC8DB18FE2CE8007026CE /* pc.menus.mac.mm */; };
 		91FCC8F418FF0866007026CE /* pc.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91FCC8F318FF069A007026CE /* pc.appleevents.mm */; };
 		91FD417423DFC9D4003D5B8A /* boe.ui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91FD417223DFC5C1003D5B8A /* boe.ui.cpp */; };
+		91FE0E3823F084B70084CA6B /* drawable_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91FE0E3523F084B70084CA6B /* drawable_manager.cpp */; };
 		DCCA42001A8C467000E6A9A5 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
 		DCCA42021A8C467800E6A9A5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.dylib */; };
 		DCCA42031A8C469400E6A9A5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.dylib */; };
@@ -459,7 +453,6 @@
 				917823801B2F33EB007F3444 /* FLAC.framework in Copy Libraries and Frameworks */,
 				919DDC0019006CF9003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */,
 				919DDC0119006CF9003E7FED /* libboost_system.dylib in Copy Libraries and Frameworks */,
-				9169C3241B3B23610041002B /* libboost_thread.dylib in Copy Libraries and Frameworks */,
 			);
 			name = "Copy Libraries and Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -483,7 +476,6 @@
 				917823811B2F33F1007F3444 /* FLAC.framework in Copy Libraries and Frameworks */,
 				919DDBFE19006CF6003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */,
 				919DDBFF19006CF6003E7FED /* libboost_system.dylib in Copy Libraries and Frameworks */,
-				9169C3231B3B235A0041002B /* libboost_thread.dylib in Copy Libraries and Frameworks */,
 			);
 			name = "Copy Libraries and Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -507,7 +499,6 @@
 				917823821B2F33F5007F3444 /* FLAC.framework in Copy Libraries and Frameworks */,
 				919DDBFC19006CF2003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */,
 				919DDBFD19006CF2003E7FED /* libboost_system.dylib in Copy Libraries and Frameworks */,
-				9169C3211B3B23530041002B /* libboost_thread.dylib in Copy Libraries and Frameworks */,
 			);
 			name = "Copy Libraries and Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -575,7 +566,6 @@
 		910BBAB50FB91A26001E34EA /* field.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = field.cpp; sourceTree = "<group>"; };
 		910BBAB80FB91ADB001E34EA /* message.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = message.hpp; sourceTree = "<group>"; };
 		910BBAB90FB91ADB001E34EA /* message.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = message.cpp; sourceTree = "<group>"; };
-		910D9CA31B36439100414B17 /* libboost_thread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_thread.dylib; path = /usr/local/lib/libboost_thread.dylib; sourceTree = "<absolute>"; };
 		911F2D981B98F43B00E3102E /* libCommon.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCommon.a; path = lib/libCommon.a; sourceTree = "<group>"; };
 		911F2D9D1B98F44700E3102E /* libCommon-Party.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libCommon-Party.a"; path = "lib/libCommon-Party.a"; sourceTree = "<group>"; };
 		911F2DA21B98FF2300E3102E /* cursors */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cursors; sourceTree = "<group>"; };
@@ -831,6 +821,10 @@
 		91FD417323DFC5C1003D5B8A /* boe.ui.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.ui.hpp; sourceTree = "<group>"; };
 		91FDB5771A4E71A900DE5983 /* shop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shop.hpp; sourceTree = "<group>"; };
 		91FDB5791A4E774E00DE5983 /* shop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shop.cpp; sourceTree = "<group>"; };
+		91FE0E3523F084B70084CA6B /* drawable_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = drawable_manager.cpp; sourceTree = "<group>"; };
+		91FE0E3623F084B70084CA6B /* drawable_manager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = drawable_manager.hpp; sourceTree = "<group>"; };
+		91FE0E3723F084B70084CA6B /* event_listener.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = event_listener.hpp; sourceTree = "<group>"; };
+		91FE0E3B23F084C60084CA6B /* drawable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = drawable.hpp; sourceTree = "<group>"; };
 		DCCA42011A8C467800E6A9A5 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -853,7 +847,6 @@
 				9178236F1B2F331D007F3444 /* vorbis.framework in Frameworks */,
 				917823761B2F334C007F3444 /* ogg.framework in Frameworks */,
 				9178237D1B2F33E9007F3444 /* FLAC.framework in Frameworks */,
-				910D9CA41B36439100414B17 /* libboost_thread.dylib in Frameworks */,
 				911F2D991B98F43B00E3102E /* libCommon.a in Frameworks */,
 				911F2D9E1B98F44700E3102E /* libCommon-Party.a in Frameworks */,
 			);
@@ -891,7 +884,6 @@
 				917823701B2F331D007F3444 /* vorbis.framework in Frameworks */,
 				917823771B2F334C007F3444 /* ogg.framework in Frameworks */,
 				9178237E1B2F33E9007F3444 /* FLAC.framework in Frameworks */,
-				910D9CA51B36439100414B17 /* libboost_thread.dylib in Frameworks */,
 				911F2D9A1B98F43C00E3102E /* libCommon.a in Frameworks */,
 				911F2D9F1B98F44700E3102E /* libCommon-Party.a in Frameworks */,
 			);
@@ -915,7 +907,6 @@
 				917823711B2F331D007F3444 /* vorbis.framework in Frameworks */,
 				917823781B2F334C007F3444 /* ogg.framework in Frameworks */,
 				9178237F1B2F33E9007F3444 /* FLAC.framework in Frameworks */,
-				910D9CA61B36439100414B17 /* libboost_thread.dylib in Frameworks */,
 				911F2D9B1B98F43C00E3102E /* libCommon.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -940,7 +931,6 @@
 				91BC338F1B4388E80008882C /* FLAC.framework in Frameworks */,
 				91BC33901B4388E80008882C /* libboost_filesystem.dylib in Frameworks */,
 				91BC33911B4388E80008882C /* libboost_system.dylib in Frameworks */,
-				91BC33921B4388E80008882C /* libboost_thread.dylib in Frameworks */,
 				911F2D9C1B98F43C00E3102E /* libCommon.a in Frameworks */,
 				911F2DA01B98F44700E3102E /* libCommon-Party.a in Frameworks */,
 			);
@@ -1101,7 +1091,6 @@
 				9178237C1B2F33E9007F3444 /* FLAC.framework */,
 				919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */,
 				919DDBFB19006CC9003E7FED /* libboost_system.dylib */,
-				910D9CA31B36439100414B17 /* libboost_thread.dylib */,
 				91ACCE82190032E000FAEF8B /* fix_dylibs.sh */,
 			);
 			name = "Linked Frameworks";
@@ -1183,12 +1172,16 @@
 			isa = PBXGroup;
 			children = (
 				91C688E70FD702B9000F6D01 /* cursors.mac.mm */,
+				91FE0E3523F084B70084CA6B /* drawable_manager.cpp */,
 				91F3204E23E65EA3009650AF /* framerate_limiter.cpp */,
 				91EC481018FBABB100BB1E86 /* prefs.mac.mm */,
 				912283C80FD0E16C00B21642 /* undo.cpp */,
 				919145FF18E63B70005CF3A4 /* winutil.mac.mm */,
 				91C688E60FD702B9000F6D01 /* cursors.hpp */,
+				91FE0E3B23F084C60084CA6B /* drawable.hpp */,
+				91FE0E3623F084B70084CA6B /* drawable_manager.hpp */,
 				91574CC323CB97C5004766F8 /* enum_map.hpp */,
+				91FE0E3723F084B70084CA6B /* event_listener.hpp */,
 				91F3204F23E65EA3009650AF /* framerate_limiter.hpp */,
 				91C2A6E21B8244F700346948 /* gitrev.hpp */,
 				91EC480E18FBAA8700BB1E86 /* prefs.hpp */,
@@ -1969,6 +1962,7 @@
 				91EC1F0723DDFF9D00271891 /* res_sound.cpp in Sources */,
 				91EC1F0823DDFF9D00271891 /* res_strings.cpp in Sources */,
 				91F3205023E65EA3009650AF /* framerate_limiter.cpp in Sources */,
+				91FE0E3823F084B70084CA6B /* drawable_manager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
