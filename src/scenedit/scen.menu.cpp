@@ -6,9 +6,7 @@
 #include <stdexcept>
 
 OpenBoESceneditMenu::OpenBoESceneditMenu(sf::RenderWindow& window)
-	: tgui { window }
-	, mainPtr { window } {
-
+	: tgui { window } {
 	// Build a menubar and store it in tgui with a known name
 	this->tgui.add(this->build_menubar(), this->internal_menubar_widget_name);
 }
@@ -17,7 +15,7 @@ tgui::MenuBar::Ptr OpenBoESceneditMenu::build_menubar() const {
 	auto menubar = tgui::MenuBar::create();
 
 	// XXX can we get this constant magic number from somewhere?
-	menubar->setSize(this->mainPtr.getSize().x, 20);
+	menubar->setSize("100%", 20);
 
 	this->add_menu_placeholders(menubar);
 	this->add_persistent_menu_items(menubar);

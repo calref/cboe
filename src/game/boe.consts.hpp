@@ -158,8 +158,8 @@ const int MENUBAR_HEIGHT = 20;
 const int NUM_MAGE_SPELLS = 62;
 const int NUM_PRIEST_SPELLS = 62;
 
-// spell levels
-const int MAGE_SPELL_LEVEL_MAX = 7;
-const int PRIEST_SPELL_LEVEL_MAX = 7;
+// UI layers
+const int UI_LAYER_DEFAULT = 1000;
+const int UI_LAYER_MENUBAR = 1200;
 
 #endif

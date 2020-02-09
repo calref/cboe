@@ -13,6 +13,8 @@
 /// Scrollbar-related classes and types.
 
 #include "control.hpp"
+#include "event_listener.hpp"
+#include "drawable.hpp"
 
 /// Specifies the style of a scrollbar.
 enum eScrollStyle {
@@ -24,7 +26,7 @@ enum eScrollStyle {
 /// This has no coupling with scrollable data; that must be handled externally by
 /// using the methods to get the scrollbar's position.
 /// Alternatively, it can be used as a slider control.
-class cScrollbar : public cControl {
+class cScrollbar : public cControl, public iEventListener, public iDrawable {
 	int pos, max, pgsz;
 	std::string link;
 	// Make sure this is equal to the number of constants in eScrollStyle
@@ -34,7 +36,7 @@ class cScrollbar : public cControl {
 		VERT, VERT_PRESSED, HORZ, HORZ_PRESSED
 	};
 	// Note: For horizontal scrollbars, up is left and down is right.
-	enum {
+	enum eScrollbarPart {
 		PART_UP,
 		PART_PGUP,
 		PART_THUMB,
@@ -45,7 +47,20 @@ class cScrollbar : public cControl {
 	bool vert = true;
 	static std::string scroll_textures[NUM_STYLES];
 	static const rectangle up_rect[NUM_STYLES][4], down_rect[NUM_STYLES][4], bar_rect[NUM_STYLES][4], thumb_rect[NUM_STYLES][4];
+	// Mouse wheel scrolling events inside this rectangle will be handled by the scrollbar.
+	// Should at least cover the scrollbar itself, but can extend outside (example: scrolling
+	// in the inventory area). 
+	rectangle wheel_event_rect {0, 0, 0, 0};
 	void draw_vertical(), draw_horizontal();
+	location translated_location(sf::Vector2i const) const;
+	eScrollbarPart location_to_part(location const & location) const;
+	location mouse_pressed_at;
+	int drag_start_position;
+	bool handle_mouse_pressed(sf::Event const &);
+	bool handle_mouse_moved(sf::Event const &);
+	bool handle_mouse_released(sf::Event const &);
+	bool handle_mouse_wheel_scrolled(sf::Event const &);
+	void handle_thumb_drag(location const &);
 public:
 	/// @copydoc cDialog::init()
 	static void init();
@@ -114,7 +129,9 @@ public:
 	/// Set the scrollbar style.
 	/// @param newStyle The new style.
 	void setStyle(eScrollStyle newStyle);
-	void draw();
+	void set_wheel_event_rect(rectangle);
+	virtual void draw() override;
+	virtual bool handle_event(sf::Event const &) override;
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers

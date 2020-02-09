@@ -14,6 +14,7 @@
 #include "scen.keydlgs.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"
+#include "drawable_manager.hpp"
 #include "cursors.hpp"
 
 #include "dialog.hpp"
@@ -38,6 +39,7 @@ void sort_specials();
 extern cOutdoors* current_terrain;
 extern sf::RenderWindow mainPtr;
 extern sf::View mainView;
+extern cDrawableManager drawable_mgr;
 extern cTown* current_town;
 extern short cen_x, cen_y,current_terrain_type,cur_town;
 extern cTown* town;
@@ -402,7 +404,7 @@ void redraw_screen() {
 	// DIRTY FIX to a problem that exist somewhere else. But where?
 	undo_clip(mainPtr);
 	
-	drawMenuBar();	
+	drawable_mgr.draw_all();
 	
 	mainPtr.display();
 }
@@ -424,14 +426,12 @@ void draw_main_screen() {
 		tileImage(mainPtr,draw_rect,bg[17]);
 		
 		draw_rb();
-		right_sbar->draw();
 	}
 	
 	// draw terrain palette
 	if((overall_mode < MODE_MAIN_SCREEN) || (overall_mode == MODE_EDIT_TYPES)) {
 		place_location();
 		set_up_terrain_buttons(false);
-		pal_sbar->draw();
 	}
 	
 	

@@ -278,13 +278,6 @@ void menu_activate() {
 	[[file_menu itemWithTitle: @"Save As…"] setEnabled: YES];
 }
 
-bool menuBarProcessEvent(const sf::Event&) {
-	return false;
-}
-
-void drawMenuBar() {
-}
-
 @implementation MenuHandler
 -(void) monstMenu:(id) sender {
 	cMonster* monst = [[sender representedObject] monst];

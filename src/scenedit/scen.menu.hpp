@@ -7,14 +7,16 @@
 #include <TGUI/TGUI.hpp>
 #include <vector>
 #include "undo.hpp"
+#include "event_listener.hpp"
+#include "drawable.hpp"
 
-class OpenBoESceneditMenu {
+class OpenBoESceneditMenu : public iEventListener, public iDrawable  {
 public:
 
 	OpenBoESceneditMenu(sf::RenderWindow &);
 	
-	bool handle_event(const sf::Event&);
-	void draw();
+	virtual bool handle_event(const sf::Event&) override;
+	virtual void draw() override;
 	void update_for_mode(short mode);
 	void update_edit_menu(cUndoList const &);
 	
@@ -23,7 +25,6 @@ private:
 	using MenuHierarchy = std::vector<sf::String>;
 	
 	tgui::Gui tgui;
-	sf::RenderWindow& mainPtr;
 	const sf::String internal_menubar_widget_name { "openboe-scenedit-menu" };
 
 	tgui::MenuBar::Ptr build_menubar() const;

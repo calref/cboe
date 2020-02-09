@@ -62,6 +62,10 @@ void cScrollbar::setStyle(eScrollStyle newStyle) {
 	style = newStyle;
 }
 
+void cScrollbar::set_wheel_event_rect(rectangle rect) {
+	this->wheel_event_rect = rect;
+}
+
 long cScrollbar::getPosition() {
 	return pos;
 }
@@ -84,6 +88,190 @@ std::string cScrollbar::getLink() {
 
 eScrollStyle cScrollbar::getStyle() {
 	return style;
+}
+
+// TODO: centralize this translation somewhere
+// Translate raw x/y position using the view of the current rendering target
+location cScrollbar::translated_location(sf::Vector2i const point) const {
+	return location { this->inWindow->mapPixelToCoords(point) };
+}
+
+bool cScrollbar::handle_event(sf::Event const & event) {
+	// Not visible -> not interested
+	if(!this->isVisible())
+		return false;
+	
+	// Visible but no maximum -> not interested
+	if(this->getMaximum() == 0) {
+		return false;
+	}
+		
+	switch(event.type) {
+		case sf::Event::MouseButtonPressed:
+			return this->handle_mouse_pressed(event);
+		case sf::Event::MouseMoved:
+			return this->handle_mouse_moved(event);
+		case sf::Event::MouseButtonReleased:
+			return this->handle_mouse_released(event);
+		case sf::Event::MouseWheelScrolled:
+			return this->handle_mouse_wheel_scrolled(event);
+		default: break;
+	}
+
+	return false;
+}
+
+bool cScrollbar::handle_mouse_wheel_scrolled(sf::Event const & event) {
+	location event_location = this->translated_location({
+		event.mouseWheelScroll.x,
+		event.mouseWheelScroll.y
+	});
+	
+	// Scrolling outside of catching area or own frame -> not interested.
+	if(!(event_location.in(this->wheel_event_rect) || event_location.in(this->getBounds())))
+		return false;
+	
+	this->setPosition(this->getPosition() - event.mouseWheelScroll.delta);
+	
+	return true;
+}
+ 
+// Given a (translated) location, determine which part of the scrollbar it corresponds to
+auto cScrollbar::location_to_part(location const & location) const -> eScrollbarPart {
+	
+	cScrollbar::eScrollbarPart part;
+	
+	// Yes, this is a mess, but at least it's relatively small.
+	int clickPos       = this->vert ? location.y           : location.x;
+	int bar_start      = this->vert ? this->frame.top      : this->frame.left;
+	int bar_end        = this->vert ? this->frame.bottom   : this->frame.right;
+	int total_bar_size = this->vert ? this->frame.height() : this->frame.width();
+
+	int btn_size  = this->vert
+		? this->up_rect[this->style][cScrollbar::VERT].height()
+		: this->up_rect[this->style][cScrollbar::HORZ].width();
+
+	int bar_size = total_bar_size - btn_size * 2;
+	int thumbPos = bar_start + btn_size + this->pos * (bar_size - btn_size) / this->max;
+
+	if(clickPos < bar_start + btn_size) {
+		part = cScrollbar::PART_UP;
+	} else if(clickPos < thumbPos) {
+		part = cScrollbar::PART_PGUP;
+	} else if(clickPos < thumbPos + btn_size) {
+		part = cScrollbar::PART_THUMB;
+	} else if(clickPos < bar_end - btn_size) {
+		part = cScrollbar::PART_PGDN;
+	} else {
+		part = cScrollbar::PART_DOWN;
+	}
+	
+	return part;
+}
+
+bool cScrollbar::handle_mouse_pressed(sf::Event const & event) {
+	location event_location = this->translated_location({
+		event.mouseButton.x,
+		event.mouseButton.y
+	});
+	
+	// Mouse pressed somewhere outside -> not interested
+	if(!event_location.in(this->getBounds())) return false;
+	
+	// NOTE: depressed actually means pressed
+	this->depressed   = true;
+	this->pressedPart = this->location_to_part(event_location);
+	
+	// If the thumb is being dragged, record the initial click location
+	if(this->pressedPart == cScrollbar::eScrollbarPart::PART_THUMB) {
+		this->mouse_pressed_at = event_location;
+		this->drag_start_position = this->pos;
+	}
+	
+	return true;
+}
+
+bool cScrollbar::handle_mouse_moved(sf::Event const & event) {
+	// Mouse movements while not pressed -> not interested
+	// NOTE: depressed actually means pressed
+	if(!this->depressed) return false;
+
+	// is there a need for restore_cursor() anywhere around here, and why?
+	
+	location event_location = this->translated_location({
+		event.mouseMove.x,
+		event.mouseMove.y
+	});
+	
+	if(this->pressedPart == cScrollbar::eScrollbarPart::PART_THUMB) {
+		// Thumb being dragged.
+		this->handle_thumb_drag(event_location);
+		return true;
+	} else {
+		// Dragging something ... but not thumb
+		if(!event_location.in(this->getBounds())) {
+			// Mouse was moved out of the scrollbar and not dragging thumb
+			
+			// NOTE: depressed actually means pressed
+			this->depressed = false;
+			
+			// The event is outside the scrollbar so someone else might want to consume this.
+			return false;
+		}
+	}
+	
+	// Dragging something, but not thumb, but still within scrollbar bounds. Okay.jpg.
+	return true;
+}
+
+void cScrollbar::handle_thumb_drag(location const & event_location) {
+	int bar_start = this->vert ? this->frame.top    : this->frame.left;
+	int bar_end   = this->vert ? this->frame.bottom : this->frame.right;
+	int btn_size  = this->vert
+		? this->up_rect[this->style][cScrollbar::VERT].height()
+		: this->up_rect[this->style][cScrollbar::HORZ].width();
+
+	// XXX A lot of this looks like it can be precalculated once, but
+	// be careful with the integer rounding.
+	
+	int thumb_min_position = bar_start + btn_size;
+	int thumb_max_position = bar_end - 2 * btn_size; // <- two button sizes: one for the top/left arrow and one for the thumb
+
+	int start   = this->vert ? this->mouse_pressed_at.y : this->mouse_pressed_at.x;
+	int current = this->vert ? event_location.y         : event_location.x;
+	
+	// This is done in this particular way to minimize integer rounding
+	// that would otherwise heavily impact the result (when max is
+	// significantly large compared to the pixel size of the scrollbar).
+	int diff_in_steps = (current - start) * this->max / (thumb_max_position - thumb_min_position);
+
+	this->setPosition(this->drag_start_position + diff_in_steps);
+}
+
+bool cScrollbar::handle_mouse_released(sf::Event const & event) {
+	// Mouse released while not pressed -> not interested
+	// NOTE: depressed actually means pressed
+	if(!this->depressed) return false;
+	
+	switch(this->pressedPart) {
+		case cScrollbar::PART_UP:   this->pos--; break;
+		case cScrollbar::PART_DOWN: this->pos++; break;
+		
+		case cScrollbar::PART_PGUP: this->pos -= this->pgsz; break;
+		case cScrollbar::PART_PGDN: this->pos += this->pgsz; break;
+		
+		case cScrollbar::PART_THUMB: break;
+		
+		default: break;
+	}
+
+	// Normalize
+	this->pos = minmax(0, this->max, this->pos);
+
+	// NOTE: depressed actually means pressed
+	this->depressed = false;
+
+	return true;
 }
 
 bool cScrollbar::handleClick(location where) {

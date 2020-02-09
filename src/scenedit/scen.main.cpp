@@ -1,7 +1,7 @@
 
-#define BOOST_NO_CXX11_NUMERIC_LIMITS // Because my libc++ is old and not quite standard-compliant, which breaks Boost.Thread
 #include <cstdio>
-#include <boost/thread.hpp>
+#include <string>
+#include <memory>
 #include <boost/filesystem/operations.hpp>
 
 #include "scen.global.hpp"
@@ -27,6 +27,8 @@
 #include "res_image.hpp"
 #include "prefs.hpp"
 #include "framerate_limiter.hpp"
+#include "event_listener.hpp"
+#include "drawable_manager.hpp"
 
 /* Globals */
 bool  All_Done = false;
@@ -52,7 +54,6 @@ location cur_out;
 static void init_scened(int, char*[]);
 void handle_events();
 void handle_one_event(const sf::Event&);
-void Handle_Activate();
 void redraw_everything();
 void Mouse_Pressed(const sf::Event&);
 void close_program();
@@ -65,6 +66,10 @@ rectangle right_sbar_rect;
 extern rectangle terrain_buttons_rect;
 
 extern void set_up_apple_events(int argc, char* argv[]);
+
+// TODO: these should be members of some global entity instead of being here
+std::unordered_map <std::string, std::shared_ptr <iEventListener>> event_listeners;
+cDrawableManager drawable_mgr;
 
 //Changed to ISO C specified argument and return type.
 int main(int argc, char* argv[]) {
@@ -95,11 +100,32 @@ int main(int argc, char* argv[]) {
 	}
 }
 
-static void init_sbar(std::shared_ptr<cScrollbar>& sbar, rectangle rect, int pgSz) {
+static void init_sbar(std::shared_ptr<cScrollbar>& sbar, std::string const name, rectangle rect, rectangle events_rect, int pgSz) {
 	sbar.reset(new cScrollbar(mainPtr));
 	sbar->setBounds(rect);
+	sbar->set_wheel_event_rect(events_rect);
 	sbar->setPageSize(pgSz);
 	sbar->hide();
+	
+	drawable_mgr.add_drawable(UI_LAYER_DEFAULT, name, sbar);
+	event_listeners[name] = std::dynamic_pointer_cast <iEventListener> (sbar);
+}
+
+static void init_scrollbars () {
+	right_sbar_rect.top = RIGHT_AREA_UL_Y - 1;
+	right_sbar_rect.left = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1 - 16;
+	right_sbar_rect.bottom = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT + 1;
+	right_sbar_rect.right = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1;
+	rectangle pal_sbar_rect = terrain_buttons_rect;
+	pal_sbar_rect.offset(RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
+	pal_sbar_rect.left = pal_sbar_rect.right - 16;
+	pal_sbar_rect.height() = 17 * 16;
+	
+	rectangle const right_sbar_event_rect { 5, 287, 405, 577 };
+	rectangle const pal_sbar_event_rect   { 5, 287, 279, 581 };
+		
+	init_sbar(right_sbar, "right_sbar", right_sbar_rect, right_sbar_event_rect, NRSONPAGE - 1);
+	init_sbar(pal_sbar, "pal_sbar", pal_sbar_rect, pal_sbar_event_rect, 16);
 }
 
 sf::FloatRect compute_viewport(sf::RenderWindow const & mainPtr, float ui_scale) {
@@ -177,17 +203,7 @@ void init_scened(int argc, char* argv[]) {
 	cen_x = 18;
 	cen_y = 18;
 		
-	right_sbar_rect.top = RIGHT_AREA_UL_Y - 1;
-	right_sbar_rect.left = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1 - 16;
-	right_sbar_rect.bottom = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT + 1;
-	right_sbar_rect.right = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1;
-	rectangle pal_sbar_rect = terrain_buttons_rect;
-	pal_sbar_rect.offset(RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
-	pal_sbar_rect.left = pal_sbar_rect.right - 16;
-	pal_sbar_rect.height() = 17 * 16;
-		
-	init_sbar(right_sbar, right_sbar_rect, NRSONPAGE - 1);
-	init_sbar(pal_sbar, pal_sbar_rect, 16);
+	init_scrollbars();
 	init_lb();
 	init_rb();
 	
@@ -203,7 +219,6 @@ void init_scened(int argc, char* argv[]) {
 	cDialog::doAnimations = true;
 	set_up_apple_events(argc, argv);
 	init_fileio();
-	redraw_screen();
 }
 
 void handle_events() {
@@ -225,8 +240,10 @@ void handle_events() {
 
 void handle_one_event(sf::Event const & event) {
 	
-	// Check if the menubar wants to handle this event.
-	if(menuBarProcessEvent(event)) return;
+	// Check if any of the event listeners want this event.
+	for (auto & listener : event_listeners) {
+		if(listener.second->handle_event(event)) return;
+	}
 	
 	switch(event.type) {
 		case sf::Event::KeyPressed:
@@ -609,39 +626,9 @@ void handle_menu_choice(eMenu item_hit) {
 	redraw_screen();
 }
 
-static void handleUpdateWhileScrolling(volatile bool& doneScrolling) {
-	while(!doneScrolling) {
-		sf::sleep(sf::milliseconds(10));
-		// TODO: redraw_screen should probably take the argument specifying what to update
-		redraw_screen(/*REFRESH_RIGHT_BAR*/);
-		if(overall_mode < MODE_MAIN_SCREEN || overall_mode == MODE_EDIT_TYPES)
-			set_up_terrain_buttons(false);
-	}
-	mainPtr.setActive(false);
-}
-
 void Mouse_Pressed(sf::Event const & event) {
-	
-	// Translate coordinates
 	location mousePos { translate_mouse_coordinates({event.mouseButton.x, event.mouseButton.y}) }; 
-	
-	volatile bool doneScrolling = false;
-	if(right_sbar->isVisible() && mousePos.in(right_sbar->getBounds())) {
-		mainPtr.setActive(false);
-		boost::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling)));
-		right_sbar->handleClick(mousePos);
-		doneScrolling = true;
-		updater.join();
-		redraw_screen(/*REFRESH_RIGHT_BAR*/);
-	} else if(pal_sbar->isVisible() && mousePos.in(pal_sbar->getBounds())) {
-		mainPtr.setActive(false);
-		boost::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling)));
-		pal_sbar->handleClick(mousePos);
-		doneScrolling = true;
-		updater.join();
-		redraw_screen(/*REFRESH_RIGHT_BAR*/);
-		set_up_terrain_buttons(false);
-	} else handle_action(mousePos,event);
+	handle_action(mousePos,event);
 }
 
 void close_program() {

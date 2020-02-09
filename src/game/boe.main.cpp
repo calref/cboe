@@ -2,9 +2,10 @@
 #include "boe.global.hpp"
 #include "universe.hpp"
 
-#define BOOST_NO_CXX11_NUMERIC_LIMITS // Because my libc++ is old and not quite standard-compliant, which breaks Boost.Thread
-#include <boost/thread.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <unordered_map>
+#include <string>
+#include <memory>
 #include "boe.graphics.hpp"
 #include "boe.newgraph.hpp"
 #include "boe.fileio.hpp"
@@ -17,6 +18,8 @@
 #include "boe.dlgutil.hpp"
 #include "boe.infodlg.hpp"
 #include "boe.main.hpp"
+#include "boe.consts.hpp"
+#include "boe.ui.hpp"
 #include "winutil.hpp"
 #include "sounds.hpp"
 #include "render_image.hpp"
@@ -32,7 +35,8 @@
 #include "button.hpp"
 #include "enum_map.hpp"
 #include "framerate_limiter.hpp"
-
+#include "event_listener.hpp"
+#include "drawable_manager.hpp"
 bool All_Done = false;
 sf::RenderWindow mainPtr;
 short had_text_freeze = 0,num_fonts;
@@ -41,9 +45,10 @@ bool first_sound_played = false,spell_forced = false;
 bool party_in_memory = false;
 std::shared_ptr<cScrollbar> text_sbar, item_sbar, shop_sbar;
 std::shared_ptr<cButton> done_btn, help_btn;
-rectangle sbar_rect = {283,546,421,562};
-rectangle shop_sbar_rect = {67,258,357,274};
-rectangle item_sbar_rect = {146,546,253,562};
+// TODO: move these 3 to boe.ui.cpp ?
+extern rectangle const sbar_rect      = {285,560,423,576};
+extern rectangle const shop_sbar_rect = {69,272,359,288};
+extern rectangle const item_sbar_rect = {148,560,255,576};
 bool bgm_on = false,bgm_init = false;
 location store_anim_ul;
 cUniverse univ;
@@ -56,6 +61,9 @@ short on_monst_menu[256];
 
 extern bool map_visible;
 extern sf::View mainView;
+
+extern rectangle shop_frame;
+extern enum_map(eGuiArea, rectangle) win_to_rects;
 
 std::string scenario_temp_dir_name = "scenario";
 
@@ -90,6 +98,10 @@ short combat_active_pc;
 effect_pat_type current_pat;
 short missile_firer,current_monst_tactic;
 short store_current_pc = 0;
+
+// TODO: these should be members of some global entity instead of being here
+std::unordered_map <std::string, std::shared_ptr <iEventListener>> event_listeners;
+cDrawableManager drawable_mgr;
 
 sf::Clock animTimer;
 extern long anim_ticks;
@@ -135,19 +147,63 @@ int main(int argc, char* argv[]) {
 	}
 }
 
-static void init_sbar(std::shared_ptr<cScrollbar>& sbar, rectangle rect, int max, int pgSz, int start = 0) {
+static void init_sbar(std::shared_ptr<cScrollbar>& sbar, std::string const name, rectangle rect, rectangle events_rect, int max, int pgSz, int start = 0) {
 	sbar.reset(new cScrollbar(mainPtr));
 	sbar->setBounds(rect);
 	sbar->setMaximum(max);
 	sbar->setPosition(start);
 	sbar->setPageSize(pgSz);
+	sbar->set_wheel_event_rect(events_rect);
 	sbar->hide();
+	
+	drawable_mgr.add_drawable(UI_LAYER_DEFAULT, name, sbar);
+	event_listeners[name] = std::dynamic_pointer_cast <iEventListener> (sbar);
 }
 
-static void init_btn(std::shared_ptr<cButton>& btn, eBtnType type) {
+static void init_scrollbars() {
+
+	// Cover entire transcript + scrollbar
+	rectangle const transcript_events_rect {
+		win_to_rects[WINRECT_TRANSCRIPT].top,
+		win_to_rects[WINRECT_TRANSCRIPT].left,
+		sbar_rect.bottom,
+		sbar_rect.right
+	};
+	
+	// Cover entire inventory + scrollbar
+	rectangle const inventory_events_rect {
+		win_to_rects[WINRECT_INVEN].top,
+		win_to_rects[WINRECT_INVEN].left,
+		item_sbar_rect.bottom,
+		item_sbar_rect.right
+	};
+	
+	// MAGIC NUMBERS: max size, page size, initial position - all in abstract "step" units
+	init_sbar(text_sbar, "transcript-scrollbar", sbar_rect, transcript_events_rect, 58, 11, 58);
+	init_sbar(item_sbar, "inventory-scrollbar", item_sbar_rect, inventory_events_rect, 16, 8);
+	init_sbar(shop_sbar, "shop-scrollbar", shop_sbar_rect, shop_frame, 16, 8);	
+}
+
+static void init_btn(std::shared_ptr<cButton>& btn, eBtnType type, location loc) {
 	btn.reset(new cButton(mainPtr));
 	btn->setBtnType(type);
+	btn->relocate(loc);
 	btn->hide();
+}
+
+static void init_buttons() {
+	
+	// MAGIC NUMBERS: move to boe.ui.cpp ?
+	
+	init_btn(done_btn, BTN_DONE, {231,395});
+	init_btn(help_btn, BTN_HELP, {273,12});
+}
+
+// NOTE: this should possibly be moved to boe.ui.cpp at some point
+static void init_ui() {
+	cDialog::init();
+	init_scrollbars();
+	init_buttons();
 }
 
 void init_boe(int argc, char* argv[]) {
@@ -161,12 +217,7 @@ void init_boe(int argc, char* argv[]) {
 	init_tiling();
 	init_snd_tool();
 	
-	cDialog::init();
-	init_sbar(text_sbar, sbar_rect, 58, 11, 58);
-	init_sbar(item_sbar, item_sbar_rect, 16, 8);
-	init_sbar(shop_sbar, shop_sbar_rect, 16, 8);
-	init_btn(done_btn, BTN_DONE);
-	init_btn(help_btn, BTN_HELP);
+	init_ui();
 	
 	adjust_window_mode();
 	// If we don't do this now it'll flash white to start with
@@ -236,8 +287,10 @@ void handle_one_event(const sf::Event& event) {
 	// What does this do and should it be here?
 	clear_sound_memory();
 
-	// Check if the menubar wants to handle this event.
-	if(menuBarProcessEvent(event)) return;
+	// Check if any of the event listeners want this event.
+	for(auto & listener : event_listeners) {
+		if(listener.second->handle_event(event)) return;
+	}
 
 	switch(event.type) {
 		case sf::Event::KeyPressed:
@@ -264,6 +317,7 @@ void handle_one_event(const sf::Event& event) {
 			change_cursor({event.mouseMove.x, event.mouseMove.y});
 			return;
 
+		// TODO: EVENT TYPE DEPRECATED IN SFML 2.5.1
 		case sf::Event::MouseWheelMoved:
 			if(flushingInput) return;
 			handle_scroll(event);
@@ -348,14 +402,6 @@ void redraw_everything() {
 	if(map_visible) draw_map(false);
 }
 
-static void handleUpdateWhileScrolling(volatile bool& doneScrolling, int refresh) {
-	while(!doneScrolling) {
-		sf::sleep(sf::milliseconds(10));
-		redraw_screen(refresh);
-	}
-	mainPtr.setActive(false);
-}
-
 void Mouse_Pressed(sf::Event const & event) {
 
 	// What is this stuff? Why is it here?
@@ -364,37 +410,14 @@ void Mouse_Pressed(sf::Event const & event) {
 		return;
 	}
 	
-	if(overall_mode != MODE_STARTUP) {
-		location mousePos(event.mouseButton.x, event.mouseButton.y);
-		mousePos = mainPtr.mapPixelToCoords(mousePos, mainView);
-		volatile bool doneScrolling = false;
-		if(mousePos.in(text_sbar->getBounds())) {
-			mainPtr.setActive(false);
-			boost::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling), REFRESH_TRANS));
-			text_sbar->handleClick(mousePos);
-			doneScrolling = true;
-			updater.join();
-			redraw_screen(REFRESH_TRANS);
-		} else if(mousePos.in(item_sbar->getBounds())) {
-			mainPtr.setActive(false);
-			boost::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling), REFRESH_INVEN));
-			item_sbar->handleClick(mousePos);
-			doneScrolling = true;
-			updater.join();
-			redraw_screen(REFRESH_INVEN);
-		} else if(overall_mode == MODE_SHOPPING && mousePos.in(shop_sbar->getBounds())) {
-			mainPtr.setActive(false);
-			boost::thread updater(std::bind(handleUpdateWhileScrolling, std::ref(doneScrolling), REFRESH_DLOG));
-			shop_sbar->handleClick(mousePos);
-			doneScrolling = true;
-			updater.join();
-			redraw_screen(REFRESH_DLOG);
-		} else All_Done = handle_action(event);
-	} else All_Done = handle_startup_press({event.mouseButton.x, event.mouseButton.y});
+	if(overall_mode == MODE_STARTUP) {
+		All_Done = handle_startup_press({event.mouseButton.x, event.mouseButton.y});
+	} else {
+		All_Done = handle_action(event);
+	}
 	
 	// Why does every mouse click activate a menu?
 	menu_activate();
-	
 }
 
 void close_program() {

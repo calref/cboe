@@ -2,6 +2,9 @@
 #include <cstring>
 #include <cstdio>
 #include <list>
+#include <unordered_map>
+#include <string>
+#include <memory>
 
 #include "boe.global.hpp"
 
@@ -19,6 +22,7 @@
 #include "mathutil.hpp"
 #include "button.hpp"
 #include "enum_map.hpp"
+#include "drawable_manager.hpp"
 
 #include "boe.party.hpp"
 #include "boe.town.hpp"
@@ -56,7 +60,8 @@ extern location spell_targets[8];
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
 extern sf::Texture bg_gworld;
-extern rectangle sbar_rect,item_sbar_rect,shop_sbar_rect,startup_top;
+extern rectangle const sbar_rect,item_sbar_rect,shop_sbar_rect;
+extern rectangle startup_top;
 extern rectangle talk_area_rect, word_place_rect;
 extern location store_anim_ul;
 extern long register_flag;
@@ -68,6 +73,7 @@ extern cCustomGraphics spec_scen_g;
 extern sf::RenderWindow mini_map;
 bool map_visible = false;
 extern std::string save_talk_str1, save_talk_str2;
+extern cDrawableManager drawable_mgr;
 
 rectangle		menuBarRect;
 Region originalGrayRgn, newGrayRgn, underBarRgn;
@@ -166,13 +172,7 @@ void adjust_window_mode() {
 	const ImageRsrc& icon = ResMgr::graphics.get("icon", true);
 	mainPtr.setIcon(icon->getSize().x, icon->getSize().y, icon->copyToImage().getPixelsPtr());
 #endif
-	if(text_sbar) {
-		text_sbar->relocate({560,285});
-		item_sbar->relocate({560,148});
-		shop_sbar->relocate({272,69});
-		done_btn->relocate({231,395});
-		help_btn->relocate({273,12});
-	}
+
 	init_menubar();
 	showMenuBar();
 }
@@ -538,13 +538,10 @@ void redraw_screen(int refresh) {
 			draw_targeting_line(sf::Mouse::getPosition(mainPtr));
 		refresh_stat_areas(0);
 	}
-	text_sbar->draw();
-	item_sbar->draw();
-	shop_sbar->draw();
 	done_btn->draw();
 	help_btn->draw();
 
-	drawMenuBar();
+	drawable_mgr.draw_all();
 
 	mainPtr.display();
 }

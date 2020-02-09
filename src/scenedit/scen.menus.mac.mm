@@ -164,13 +164,6 @@ void update_edit_menu() {
 	}
 }
 
-bool menuBarProcessEvent(const sf::Event&) {
-	return false;
-}
-
-void drawMenuBar() {
-}
-
 @implementation MenuHandler
 -(void) menuChoice:(id) sender {
 	handle_menu_choice(eMenu([[sender representedObject] intValue]));

@@ -1,28 +1,31 @@
 #include "boe.menus.hpp"
 #include "boe.consts.hpp"
 
+#include <unordered_map>
+#include <string>
 #include <memory>
 #include <SFML/Graphics.hpp>
 
 #include "boe.menu.hpp"
+#include "boe.consts.hpp"
+
+#include "event_listener.hpp"
+#include "drawable_manager.hpp"
 
 extern sf::RenderWindow mainPtr;
 extern cUniverse univ;
 extern bool party_in_memory;
 extern eGameMode overall_mode;
+extern std::unordered_map<std::string, std::shared_ptr<iEventListener>>event_listeners;
+extern cDrawableManager drawable_mgr;
 
 std::shared_ptr<OpenBoEMenu> menu_ptr;
 
 void init_menubar() {
 	menu_ptr.reset(new OpenBoEMenu(mainPtr, univ));
-}
-
-bool menuBarProcessEvent(const sf::Event& event) {
-	return menu_ptr->handle_event(event);
-}
-
-void drawMenuBar() {
-	menu_ptr->draw();
+	
+	event_listeners["menubar"] = std::dynamic_pointer_cast<iEventListener>(menu_ptr); 
+	drawable_mgr.add_drawable(UI_LAYER_MENUBAR, "menubar", menu_ptr); 
 }
 
 void adjust_monst_menu() {
