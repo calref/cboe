@@ -2,8 +2,6 @@
 #include "boe.global.hpp"
 #include "universe.hpp"
 
-// XXX now that we no longer use boost threads, do we still need this #define?
-#define BOOST_NO_CXX11_NUMERIC_LIMITS // Because my libc++ is old and not quite standard-compliant, which breaks Boost.Thread
 #include <boost/filesystem/operations.hpp>
 #include <unordered_map>
 #include <string>
@@ -47,7 +45,7 @@ bool first_sound_played = false,spell_forced = false;
 bool party_in_memory = false;
 std::shared_ptr<cScrollbar> text_sbar, item_sbar, shop_sbar;
 std::shared_ptr<cButton> done_btn, help_btn;
-// XXX move these 3 to boe.ui.cpp ?
+// TODO: move these 3 to boe.ui.cpp ?
 extern rectangle const sbar_rect      = {285,560,423,576};
 extern rectangle const shop_sbar_rect = {69,272,359,288};
 extern rectangle const item_sbar_rect = {148,560,255,576};
@@ -101,7 +99,7 @@ effect_pat_type current_pat;
 short missile_firer,current_monst_tactic;
 short store_current_pc = 0;
 
-/* stuff that should not be here XXX */
+// TODO: these should be members of some global entity instead of being here
 std::unordered_map <std::string, std::shared_ptr <iEventListener>> event_listeners;
 cDrawableManager drawable_mgr;
 
@@ -155,17 +153,17 @@ static void init_sbar(std::shared_ptr<cScrollbar>& sbar, std::string const name,
 	sbar->setMaximum(max);
 	sbar->setPosition(start);
 	sbar->setPageSize(pgSz);
-	sbar->set_mousewheel_event_catching_rect(events_rect);
+	sbar->set_wheel_event_rect(events_rect);
 	sbar->hide();
 	
 	drawable_mgr.add_drawable(UI_LAYER_DEFAULT, name, sbar);
 	event_listeners[name] = std::dynamic_pointer_cast <iEventListener> (sbar);
 }
 
-static void init_scrollbars () {
+static void init_scrollbars() {
 
-	// Cover entire message log + scrollbar
-	rectangle const message_log_events_rect {
+	// Cover entire transcript + scrollbar
+	rectangle const transcript_events_rect {
 		win_to_rects[WINRECT_TRANSCRIPT].top,
 		win_to_rects[WINRECT_TRANSCRIPT].left,
 		sbar_rect.bottom,
@@ -181,7 +179,7 @@ static void init_scrollbars () {
 	};
 	
 	// MAGIC NUMBERS: max size, step size, initial position - all in abstract "step" units
-	init_sbar(text_sbar, "message-log-scrollbar", sbar_rect, message_log_events_rect, 58, 11, 58);
+	init_sbar(text_sbar, "transcript-scrollbar", sbar_rect, transcript_events_rect, 58, 11, 58);
 	init_sbar(item_sbar, "inventory-scrollbar", item_sbar_rect, inventory_events_rect, 16, 8);
 	init_sbar(shop_sbar, "shop-scrollbar", shop_sbar_rect, shop_frame, 16, 8);	
 }
@@ -193,7 +191,7 @@ static void init_btn(std::shared_ptr<cButton>& btn, eBtnType type, location loc)
 	btn->hide();
 }
 
-static void init_buttons () {
+static void init_buttons() {
 	
 	// MAGIC NUMBERS: move to boe.ui.cpp ?
 	
@@ -201,7 +199,8 @@ static void init_buttons () {
 	init_btn(help_btn, BTN_HELP, {273,12});
 }
 
-static void init_ui () {
+// NOTE: this should possibly be moved to boe.ui.cpp at some point
+static void init_ui() {
 	cDialog::init();
 	init_scrollbars();
 	init_buttons();
@@ -289,7 +288,7 @@ void handle_one_event(const sf::Event& event) {
 	clear_sound_memory();
 
 	// Check if any of the event listeners want this event.
-	for (auto & listener : event_listeners) {
+	for(auto & listener : event_listeners) {
 		if(listener.second->handle_event(event)) return;
 	}
 
@@ -318,7 +317,7 @@ void handle_one_event(const sf::Event& event) {
 			change_cursor({event.mouseMove.x, event.mouseMove.y});
 			return;
 
-		// XXX EVENT TYPE DEPRECATED IN SFML 2.5.1
+		// TODO: EVENT TYPE DEPRECATED IN SFML 2.5.1
 		case sf::Event::MouseWheelMoved:
 			if(flushingInput) return;
 			handle_scroll(event);

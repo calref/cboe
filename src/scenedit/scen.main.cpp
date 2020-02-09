@@ -1,5 +1,4 @@
 
-#define BOOST_NO_CXX11_NUMERIC_LIMITS // Because my libc++ is old and not quite standard-compliant, which breaks Boost.Thread
 #include <cstdio>
 #include <string>
 #include <memory>
@@ -68,7 +67,7 @@ extern rectangle terrain_buttons_rect;
 
 extern void set_up_apple_events(int argc, char* argv[]);
 
-/* stuff that should not be here XXX */
+// TODO: these should be members of some global entity instead of being here
 std::unordered_map <std::string, std::shared_ptr <iEventListener>> event_listeners;
 cDrawableManager drawable_mgr;
 
@@ -104,7 +103,7 @@ int main(int argc, char* argv[]) {
 static void init_sbar(std::shared_ptr<cScrollbar>& sbar, std::string const name, rectangle rect, rectangle events_rect, int pgSz) {
 	sbar.reset(new cScrollbar(mainPtr));
 	sbar->setBounds(rect);
-	sbar->set_mousewheel_event_catching_rect(events_rect);
+	sbar->set_wheel_event_rect(events_rect);
 	sbar->setPageSize(pgSz);
 	sbar->hide();
 	

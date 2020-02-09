@@ -3,7 +3,7 @@
 
 class iDrawable {
 	
-	public:
+public:
 	
 	virtual void draw () = 0;
 	

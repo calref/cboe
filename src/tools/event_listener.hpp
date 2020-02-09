@@ -5,7 +5,7 @@
 
 class iEventListener {
 	
-	public:
+public:
 	
 	virtual bool handle_event (sf::Event const &) = 0;
 	

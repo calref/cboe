@@ -9,7 +9,7 @@
 
 class cDrawableManager {
 	
-	public:
+public:
 	
 	void draw_all ();
 	
@@ -17,7 +17,7 @@ class cDrawableManager {
 		this->layers[layer_id][name] = std::dynamic_pointer_cast <iDrawable> (drawable);
 	}
 	
-	private:
+private:
 	
 	using Layer = std::unordered_map <std::string, std::shared_ptr <iDrawable>>;
 	

@@ -2117,7 +2117,7 @@ bool handle_scroll(const sf::Event& event) {
 	world_screen.inset(13, 13);
 	fill_rect(mainPtr, world_screen, sf::Color::Magenta);
 	
-	// XXX TODO centralize this translation somewhere
+	// TODO: centralize this translation somewhere
 	location pos(event.mouseWheel.x, event.mouseWheel.y);
 	pos = mainPtr.mapPixelToCoords(pos, mainView);
 	

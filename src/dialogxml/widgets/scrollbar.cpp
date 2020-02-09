@@ -62,8 +62,8 @@ void cScrollbar::setStyle(eScrollStyle newStyle) {
 	style = newStyle;
 }
 
-void cScrollbar::set_mousewheel_event_catching_rect(rectangle rect) {
-	this->mousewheel_event_catching_rect = rect;
+void cScrollbar::set_wheel_event_rect(rectangle rect) {
+	this->wheel_event_rect = rect;
 }
 
 long cScrollbar::getPosition() {
@@ -90,22 +90,23 @@ eScrollStyle cScrollbar::getStyle() {
 	return style;
 }
 
+// TODO: centralize this translation somewhere
 // Translate raw x/y position using the view of the current rendering target
-location cScrollbar::translated_location (sf::Vector2i const point) const {
+location cScrollbar::translated_location(sf::Vector2i const point) const {
 	return location { this->inWindow->mapPixelToCoords(point) };
 }
 
-bool cScrollbar::handle_event (sf::Event const & event) {
+bool cScrollbar::handle_event(sf::Event const & event) {
 	// Not visible -> not interested
-	if (!this->isVisible())
+	if(!this->isVisible())
 		return false;
 	
 	// Visible but no maximum -> not interested
-	if (this->getMaximum() == 0) {
+	if(this->getMaximum() == 0) {
 		return false;
 	}
 		
-	switch (event.type) {
+	switch(event.type) {
 		case sf::Event::MouseButtonPressed:
 			return this->handle_mouse_pressed(event);
 		case sf::Event::MouseMoved:
@@ -120,14 +121,14 @@ bool cScrollbar::handle_event (sf::Event const & event) {
 	return false;
 }
 
-bool cScrollbar::handle_mouse_wheel_scrolled (sf::Event const & event) {
+bool cScrollbar::handle_mouse_wheel_scrolled(sf::Event const & event) {
 	location event_location = this->translated_location({
 		event.mouseWheelScroll.x,
 		event.mouseWheelScroll.y
 	});
 	
-	// Scrolling outside of catching area -> not interested
-	if (!event_location.in(this->mousewheel_event_catching_rect))
+	// Scrolling outside of catching area or own frame -> not interested.
+	if(!(event_location.in(this->wheel_event_rect) || event_location.in(this->getBounds())))
 		return false;
 	
 	this->setPosition(this->getPosition() - event.mouseWheelScroll.delta);
@@ -136,7 +137,7 @@ bool cScrollbar::handle_mouse_wheel_scrolled (sf::Event const & event) {
 }
  
 // Given a (translated) location, determine which part of the scrollbar it corresponds to
-cScrollbar::eScrollbarPart cScrollbar::location_to_part (location const & location) const {
+auto cScrollbar::location_to_part(location const & location) const -> eScrollbarPart {
 	
 	cScrollbar::eScrollbarPart part;
 	
@@ -153,13 +154,13 @@ cScrollbar::eScrollbarPart cScrollbar::location_to_part (location const & locati
 	int bar_size = total_bar_size - btn_size * 2;
 	int thumbPos = bar_start + btn_size + this->pos * (bar_size - btn_size) / this->max;
 
-	if (clickPos < bar_start + btn_size) {
+	if(clickPos < bar_start + btn_size) {
 		part = cScrollbar::PART_UP;
-	} else if (clickPos < thumbPos) {
+	} else if(clickPos < thumbPos) {
 		part = cScrollbar::PART_PGUP;
-	} else if (clickPos < thumbPos + btn_size) {
+	} else if(clickPos < thumbPos + btn_size) {
 		part = cScrollbar::PART_THUMB;
-	} else if (clickPos < bar_end - btn_size) {
+	} else if(clickPos < bar_end - btn_size) {
 		part = cScrollbar::PART_PGDN;
 	} else {
 		part = cScrollbar::PART_DOWN;
@@ -168,21 +169,21 @@ cScrollbar::eScrollbarPart cScrollbar::location_to_part (location const & locati
 	return part;
 }
 
-bool cScrollbar::handle_mouse_pressed (sf::Event const & event) {
+bool cScrollbar::handle_mouse_pressed(sf::Event const & event) {
 	location event_location = this->translated_location({
 		event.mouseButton.x,
 		event.mouseButton.y
 	});
 	
 	// Mouse pressed somewhere outside -> not interested
-	if (!event_location.in(this->getBounds())) return false;
+	if(!event_location.in(this->getBounds())) return false;
 	
 	// NOTE: depressed actually means pressed
 	this->depressed   = true;
 	this->pressedPart = this->location_to_part(event_location);
 	
 	// If the thumb is being dragged, record the initial click location
-	if (this->pressedPart == cScrollbar::eScrollbarPart::PART_THUMB) {
+	if(this->pressedPart == cScrollbar::eScrollbarPart::PART_THUMB) {
 		this->mouse_pressed_at = event_location;
 		this->drag_start_position = this->pos;
 	}
@@ -190,10 +191,10 @@ bool cScrollbar::handle_mouse_pressed (sf::Event const & event) {
 	return true;
 }
 
-bool cScrollbar::handle_mouse_moved (sf::Event const & event) {
+bool cScrollbar::handle_mouse_moved(sf::Event const & event) {
 	// Mouse movements while not pressed -> not interested
 	// NOTE: depressed actually means pressed
-	if (!this->depressed) return false;
+	if(!this->depressed) return false;
 
 	// is there a need for restore_cursor() anywhere around here, and why?
 	
@@ -202,13 +203,13 @@ bool cScrollbar::handle_mouse_moved (sf::Event const & event) {
 		event.mouseMove.y
 	});
 	
-	if (this->pressedPart == cScrollbar::eScrollbarPart::PART_THUMB) {
+	if(this->pressedPart == cScrollbar::eScrollbarPart::PART_THUMB) {
 		// Thumb being dragged.
 		this->handle_thumb_drag(event_location);
 		return true;
 	} else {
 		// Dragging something ... but not thumb
-		if (!event_location.in(this->getBounds())) {
+		if(!event_location.in(this->getBounds())) {
 			// Mouse was moved out of the scrollbar and not dragging thumb
 			
 			// NOTE: depressed actually means pressed
@@ -223,7 +224,7 @@ bool cScrollbar::handle_mouse_moved (sf::Event const & event) {
 	return true;
 }
 
-void cScrollbar::handle_thumb_drag (location const & event_location) {
+void cScrollbar::handle_thumb_drag(location const & event_location) {
 	int bar_start = this->vert ? this->frame.top    : this->frame.left;
 	int bar_end   = this->vert ? this->frame.bottom : this->frame.right;
 	int btn_size  = this->vert
@@ -247,12 +248,12 @@ void cScrollbar::handle_thumb_drag (location const & event_location) {
 	this->setPosition(this->drag_start_position + diff_in_steps);
 }
 
-bool cScrollbar::handle_mouse_released (sf::Event const & event) {
+bool cScrollbar::handle_mouse_released(sf::Event const & event) {
 	// Mouse released while not pressed -> not interested
 	// NOTE: depressed actually means pressed
-	if (!this->depressed) return false;
+	if(!this->depressed) return false;
 	
-	switch (this->pressedPart) {
+	switch(this->pressedPart) {
 		case cScrollbar::PART_UP:   this->pos--; break;
 		case cScrollbar::PART_DOWN: this->pos++; break;
 		
