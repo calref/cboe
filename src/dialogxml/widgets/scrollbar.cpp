@@ -266,7 +266,7 @@ bool cScrollbar::handle_mouse_released(sf::Event const & event) {
 	}
 
 	// Normalize
-	this->pos = minmax(0, max, this->pos);
+	this->pos = minmax(0, this->max, this->pos);
 
 	// NOTE: depressed actually means pressed
 	this->depressed = false;
