@@ -13,7 +13,7 @@
 		<text size='large' top='42' left='150' width='300' height='17'>------      CREDITS      ------</text>
 		<!-- TODO: Get a proper right-aligned text setting so that I don't have to use this hack of weird numbers of spaces -->
 		<!-- The height of this text needs to be 10 times the number of lines. -->
-		<text top='52' left='50' width='400' height='210'>
+		<text top='52' left='50' width='400' height='240'>
 			ORIGINAL GAME: <br/>
 			   Concept, Design, Programming: <br/>
 			                                          Graphics: <br/>
@@ -21,8 +21,8 @@
 			                     Title/Splash Screens: <br/>
 			<br/>
 			OPEN SOURCE CREDITS: <br/>
-			                                   Programming: <br/><br/><br/><br/><br/><br/>
-			                                          Graphics: <br/><br/><br/>
+			                                   Programming: <br/><br/><br/><br/><br/><br/><br/>
+			                                          Graphics: <br/><br/><br/><br/><br/>
 			         Testing and Troubleshooting: <br/>
 			<br/>
 			SCENARIO FIXES AND UPDATES: <br/>
@@ -31,7 +31,7 @@
 		<!-- The height of this text needs to be 10 times the number of lines. -->
 		<!-- Also make sure that it properly aligns with the previous text. -->
 		<!-- Comments are included to aid with this. Don't mess it up! Test it to be sure! -->
-		<text top='52' left='250' width='230' height='210'>
+		<text top='52' left='250' width='230' height='240'>
 			<!-- ORIGINAL GAME --><br/>
 			<!-- Concept, Design, Programming -->Jeff Vogel (SpidWeb@spidweb.com) <br/>
 			<!-- Graphics -->Andrew Hunter (Wormius@aol.com) <br/>
@@ -44,9 +44,12 @@
 			Celtic Minstrel <br/>
 			Ben Scott <br/>
 			Sylae Corell <br/>
+			xq <br/>
 			<!-- Graphics -->The Almighty Doer of Stuff <br/>
 			Mistb0rn <br/>
 			Celtic Minstrel <br/>
+			Kelyar-Ihrno <br/>
+			Jewels <br/>
 			<!-- Testing and Troubleshooting -->The Almighty Doer of Stuff <br/>
 			<br/><!-- SCENARIO FIXES AND UPDATES --><br/>
 			<!-- Bandit Busywork -->The Almighty Doer of Stuff <br/>
@@ -66,6 +69,7 @@
 	<text top='240' left='60' width='353' height='66'>
 		Comments and questions? The creators and maintainers of Exile want to hear them.
 		Visit http://www.spidweb.com/, where you can find the official discussion forum and other great games!
+		<br/>Or open a ticket at https://github.com/calref/cboe/issues.
 	</text>
 	<button name='okay' type='regular' top='299' left='435'>OK</button>
 </dialog>
