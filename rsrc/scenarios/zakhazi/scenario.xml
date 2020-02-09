@@ -564,6 +564,17 @@
         <default-ground>2</default-ground>
         <last-out-section x="0" y="0" />
         <last-town>1</last-town>
+        <graphics>
+            <pic index="0">monster-tall</pic>
+            <pic index="8">monster-large</pic>
+            <pic index="24">monster-wide</pic>
+            <pic index="32">item</pic>
+            <pic index="33">item</pic>
+            <pic index="34">terrain</pic>
+            <pic index="35">terrain</pic>
+            <pic index="36">terrain</pic>
+            <pic index="37">dialog</pic>
+        </graphics>
         <storage>
             <on-terrain>201</on-terrain>
             <is-property>false</is-property>
