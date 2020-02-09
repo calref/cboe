@@ -14,6 +14,7 @@
 
 /// Specifies an icon type.
 enum ePicType {
+	PIC_NONE = 0,				///< Mostly unused, means just show a black square
 	PIC_TER = 1,				///< 28x36 terrain graphic from the preset sheets
 	PIC_TER_ANIM = 2,			///< 28x36 terrain graphic from the preset animated terrain sheet
 	PIC_MONST = 3,				///< 28x36 monster graphic from the preset sheets
@@ -136,5 +137,8 @@ ePicType&operator -=(ePicType&lhs, ePicTypeMod rhs);
 /// @param rhs The modifier type to test for.
 /// @return true if the modifier is present.
 bool operator& (ePicType lhs, ePicTypeMod rhs);
+
+std::ostream& operator<< (std::ostream& out, ePicType pic);
+std::istream& operator>> (std::istream& in, ePicType& pic);
 
 #endif

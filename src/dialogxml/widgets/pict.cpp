@@ -575,7 +575,7 @@ std::string cPict::parse(ticpp::Element& who, std::string fname) {
 void cPict::recalcRect() {
 	rectangle bounds = getBounds();
 	switch(picType) {
-		case NUM_PIC_TYPES: break;
+		case NUM_PIC_TYPES: case PIC_NONE: break;
 		case PIC_TER: case PIC_CUSTOM_TER:
 		case PIC_TER_ANIM: case PIC_CUSTOM_TER_ANIM:
 		case PIC_MONST: case PIC_CUSTOM_MONST: case PIC_PARTY_MONST:

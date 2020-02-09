@@ -3152,7 +3152,7 @@ void edit_scenario_events() {
 
 static void fill_custom_pics_types(cDialog& me, std::vector<ePicType>& pics, pic_num_t first) {
 	pic_num_t last = first + 9;
-	if(last >= pics.size()) pics.resize(last + 1, PIC_FULL);
+	if(last >= pics.size()) pics.resize(last + 1, PIC_NONE);
 	me["num0"].setTextToNum(first);
 	for(pic_num_t i = first; i <= last; i++) {
 		std::string id = std::to_string(i - first + 1);
@@ -3209,8 +3209,8 @@ static void fill_custom_pics_types(cDialog& me, std::vector<ePicType>& pics, pic
 			case PIC_STATUS: // Not currently supported, but reserve for later
 				break;
 			default: // Fix any potential errors
-				pics[i] = PIC_FULL;
-			case PIC_FULL:
+				pics[i] = PIC_NONE;
+			case PIC_NONE:
 				grp.setSelected("none" + id);
 				break;
 		}
@@ -3256,7 +3256,7 @@ static bool set_custom_pic_type(cDialog& me, std::string hit, std::vector<ePicTy
 	} else if(hit == "miss") {
 		pics[pic] = PIC_MISSILE;
 	} else if(hit == "none") {
-		pics[pic] = PIC_FULL;
+		pics[pic] = PIC_NONE;
 	}
 	return true;
 }

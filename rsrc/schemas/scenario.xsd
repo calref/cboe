@@ -10,6 +10,24 @@
 			</xs:simpleType>
 		</xs:union>
 	</xs:simpleType>
+	<xs:simpleType name="picClass">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="terrain"/>
+			<xs:enumeration value="terrain-anim"/>
+			<xs:enumeration value="terrain-map"/
+			<xs:enumeration value="monster-small"/>
+			<xs:enumeration value="monster-wide"/>
+			<xs:enumeration value="monster-tall"/>
+			<xs:enumeration value="monster-large"/>
+			<xs:enumeration value="dialog"/>
+			<xs:enumeration value="dialog-large"/>
+			<xs:enumeration value="talk"/>
+			<xs:enumeration value="item"/>
+			<xs:enumeration value="boom"/>
+			<xs:enumeration value="missile"/>
+			<xs:enumeration value="none"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:complexType mixed="true" name="scenIcon">
 		<xs:attribute name="custom" type="bool" default="false"/>
 		<xs:attribute name="split" type="bool" default="false"/>
@@ -252,7 +270,7 @@
 			<xs:element name="string" minOccurs="0" maxOccurs="unbounded">
 				<xs:complexType>
 					<xs:simpleContent>
-						<xs:extension base="xs:string">
+						<xs:extension base="picClass">
 							<xs:attribute name="id" type="xs:integer" use="required"/>
 						</xs:extension>
 					</xs:simpleContent>

@@ -705,3 +705,26 @@ std::istream& operator>> (std::istream& in, eSpellPat& pat) {
 		in.setstate(std::ios::failbit);
 	return in;
 }
+
+// MARK: ePicType
+
+cEnumLookup pic_type_strs = {
+	"none", "terrain", "terrain-anim", "monster-small", "dialog", "talk", "scenario", "item", "player", "field",
+	"boom", "sheet", "missile", "dialog-large", "scenario-large", "terrain-map", "status", "item-small", "", "",
+	"", "", "", "monster-wide", "", "", "", "", "", "",
+	"", "", "", "", "", "", "", "", "", "",
+	"", "", "", "monster-tall", "", "", "", "", "", "",
+	"", "", "", "", "", "", "", "", "", "",
+	"", "", "", "monster-large",
+};
+
+std::ostream& operator<< (std::ostream& out, ePicType pic) {
+	writeEnum(out, pic, pic_type_strs, "none");
+	return out;
+}
+
+std::istream& operator>> (std::istream& in, ePicType& pic) {
+	if(!readEnum(in, pic, pic_type_strs, PIC_NONE))
+		in.setstate(std::ios::failbit);
+	return in;
+}

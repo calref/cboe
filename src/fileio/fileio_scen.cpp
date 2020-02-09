@@ -881,30 +881,38 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 						scenario.snd_names.resize(sndnum + 1);
 					edit->GetText(&scenario.snd_names[sndnum], false);
 				} else if(type == "graphics") {
-					static const std::set<int> valid_pictypes = {1,2,3,4,5,7,10,11,12,13,15,16,23,43,63};
+					static const std::set<ePicType> valid_pictypes = {
+						PIC_TER, PIC_TER_ANIM, PIC_TER_MAP,
+						PIC_MONST,  PIC_MONST_WIDE, PIC_MONST_TALL, PIC_MONST_LG,
+						PIC_DLOG, PIC_DLOG_LG, PIC_ITEM,
+						PIC_TALK, PIC_BOOM, PIC_MISSILE, PIC_NONE
+					};
 					if(num_pics > 0)
 						throw xBadNode(type, edit->Row(), edit->Column(), fname);
+					scenario.custom_graphics.clear();
 					Iterator<Element> pic;
 					for(pic = pic.begin(edit.Get()); pic != pic.end(); pic++) {
 						pic->GetValue(&type);
 						if(type != "pic")
 							throw xBadNode(type, pic->Row(), pic->Column(), fname);
-						int i = -1, pictype;
+						int i = -1;
+						ePicType pictype;
 						pic->GetText(&pictype);
-						if(pictype == 0) continue; // As a special case, treat 0 as equivalent to 11 (ie, unclassified)
+						if(pictype == PIC_FULL) pictype = PIC_NONE; // As a special case, treat FULL as equivalent to NONE
+						if(pictype == PIC_NONE) continue;
 						for(attr = attr.begin(pic.Get()); attr != attr.end(); attr++) {
 							attr->GetName(&name);
 							if(name != "index")
 								throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
 							attr->GetValue(&i);
 							if(i >= scenario.custom_graphics.size())
-								scenario.custom_graphics.resize(i + 1);
+								scenario.custom_graphics.resize(i + 1, PIC_FULL);
 						}
 						if(i < 0)
 							throw xMissingAttr(type, "index", pic->Row(), pic->Column(), fname);
 						if(!valid_pictypes.count(pictype))
-							throw xBadVal(type, xBadVal::CONTENT, std::to_string(pictype), pic->Row(), pic->Column(), fname);
-						scenario.custom_graphics[i] = ePicType(pictype);
+							throw xBadVal(type, xBadVal::CONTENT, pic->GetText(), pic->Row(), pic->Column(), fname);
+						scenario.custom_graphics[i] = pictype;
 						num_pics++;
 					}
 				} else if(type == "storage") {
