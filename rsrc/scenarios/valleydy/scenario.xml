@@ -463,6 +463,16 @@
         <default-ground>2</default-ground>
         <last-out-section x="0" y="2" />
         <last-town>9</last-town>
+        <graphics>
+            <pic index="0">terrain-anim</pic>
+            <pic index="4">terrain</pic>
+            <pic index="5">terrain</pic>
+            <pic index="6">terrain</pic>
+            <pic index="7">terrain</pic>
+            <pic index="8">monster-small</pic>
+            <pic index="12">monster-small</pic>
+            <pic index="16">monster-small</pic>
+        </graphics>
         <storage>
             <on-terrain>2</on-terrain>
             <is-property>false</is-property>
