@@ -178,7 +178,7 @@ static void init_scrollbars() {
 		item_sbar_rect.right
 	};
 	
-	// MAGIC NUMBERS: max size, step size, initial position - all in abstract "step" units
+	// MAGIC NUMBERS: max size, page size, initial position - all in abstract "step" units
 	init_sbar(text_sbar, "transcript-scrollbar", sbar_rect, transcript_events_rect, 58, 11, 58);
 	init_sbar(item_sbar, "inventory-scrollbar", item_sbar_rect, inventory_events_rect, 16, 8);
 	init_sbar(shop_sbar, "shop-scrollbar", shop_sbar_rect, shop_frame, 16, 8);	
