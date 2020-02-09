@@ -7,7 +7,7 @@ class iEventListener {
 	
 public:
 	
-	virtual bool handle_event(sf::Event const &) = 0;
+	virtual bool handle_event(const sf::Event&) = 0;
 	
 	virtual ~iEventListener() {}
 	

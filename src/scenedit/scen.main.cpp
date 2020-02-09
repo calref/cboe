@@ -68,7 +68,7 @@ extern rectangle terrain_buttons_rect;
 extern void set_up_apple_events(int argc, char* argv[]);
 
 // TODO: these should be members of some global entity instead of being here
-std::unordered_map <std::string, std::shared_ptr <iEventListener>> event_listeners;
+std::unordered_map<std::string, std::shared_ptr <iEventListener>> event_listeners;
 cDrawableManager drawable_mgr;
 
 //Changed to ISO C specified argument and return type.
@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
 	}
 }
 
-static void init_sbar(std::shared_ptr<cScrollbar>& sbar, std::string const name, rectangle rect, rectangle events_rect, int pgSz) {
+static void init_sbar(std::shared_ptr<cScrollbar>& sbar, const std::string& name, rectangle rect, rectangle events_rect, int pgSz) {
 	sbar.reset(new cScrollbar(mainPtr));
 	sbar->setBounds(rect);
 	sbar->set_wheel_event_rect(events_rect);
@@ -108,10 +108,10 @@ static void init_sbar(std::shared_ptr<cScrollbar>& sbar, std::string const name,
 	sbar->hide();
 	
 	drawable_mgr.add_drawable(UI_LAYER_DEFAULT, name, sbar);
-	event_listeners[name] = std::dynamic_pointer_cast <iEventListener> (sbar);
+	event_listeners[name] = std::dynamic_pointer_cast<iEventListener>(sbar);
 }
 
-static void init_scrollbars () {
+static void init_scrollbars() {
 	right_sbar_rect.top = RIGHT_AREA_UL_Y - 1;
 	right_sbar_rect.left = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1 - 16;
 	right_sbar_rect.bottom = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT + 1;
@@ -128,10 +128,10 @@ static void init_scrollbars () {
 	init_sbar(pal_sbar, "pal_sbar", pal_sbar_rect, pal_sbar_event_rect, 16);
 }
 
-sf::FloatRect compute_viewport(sf::RenderWindow const & mainPtr, float ui_scale) {
+sf::FloatRect compute_viewport(const sf::RenderWindow & mainPtr, float ui_scale) {
 
 	// See compute_viewport() in boe.graphics.cpp
-	int const os_specific_y_offset =
+	const int os_specific_y_offset =
 #if defined(SFML_SYSTEM_WINDOWS) || defined(SFML_SYSTEM_MAC)
 		0;
 #else
@@ -155,8 +155,8 @@ void init_main_window (sf::RenderWindow & mainPtr, sf::View & mainView) {
 	//   In particular, the white area on the right side of the main menu needs fixing.
 	float ui_scale = get_float_pref("UIScale", 1.0);
 	
-	int const width  = ui_scale * 584;
-	int const height = ui_scale * 420
+	const int width  = ui_scale * 584;
+	const int height = ui_scale * 420
 #ifndef SFML_SYSTEM_WINDOWS
 		+ getMenubarHeight()
 #endif
@@ -238,10 +238,10 @@ void handle_events() {
 	}
 }
 
-void handle_one_event(sf::Event const & event) {
+void handle_one_event(const sf::Event& event) {
 	
 	// Check if any of the event listeners want this event.
-	for (auto & listener : event_listeners) {
+	for (auto& listener : event_listeners) {
 		if(listener.second->handle_event(event)) return;
 	}
 	
@@ -626,7 +626,7 @@ void handle_menu_choice(eMenu item_hit) {
 	redraw_screen();
 }
 
-void Mouse_Pressed(sf::Event const & event) {
+void Mouse_Pressed(const sf::Event & event) {
 	location mousePos { translate_mouse_coordinates({event.mouseButton.x, event.mouseButton.y}) }; 
 	handle_action(mousePos,event);
 }

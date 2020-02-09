@@ -52,15 +52,15 @@ class cScrollbar : public cControl, public iEventListener, public iDrawable {
 	// in the inventory area). 
 	rectangle wheel_event_rect {0, 0, 0, 0};
 	void draw_vertical(), draw_horizontal();
-	location translated_location(sf::Vector2i const) const;
-	eScrollbarPart location_to_part(location const & location) const;
+	location translated_location(const sf::Vector2i) const;
+	eScrollbarPart location_to_part(const location& location) const;
 	location mouse_pressed_at;
 	int drag_start_position;
-	bool handle_mouse_pressed(sf::Event const &);
-	bool handle_mouse_moved(sf::Event const &);
-	bool handle_mouse_released(sf::Event const &);
-	bool handle_mouse_wheel_scrolled(sf::Event const &);
-	void handle_thumb_drag(location const &);
+	bool handle_mouse_pressed(const sf::Event&);
+	bool handle_mouse_moved(const sf::Event&);
+	bool handle_mouse_released(const sf::Event&);
+	bool handle_mouse_wheel_scrolled(const sf::Event&);
+	void handle_thumb_drag(const location&);
 public:
 	/// @copydoc cDialog::init()
 	static void init();
@@ -131,7 +131,7 @@ public:
 	void setStyle(eScrollStyle newStyle);
 	void set_wheel_event_rect(rectangle);
 	virtual void draw() override;
-	virtual bool handle_event(sf::Event const &) override;
+	virtual bool handle_event(const sf::Event&) override;
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers

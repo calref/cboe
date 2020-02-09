@@ -60,7 +60,7 @@ extern location spell_targets[8];
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
 extern sf::Texture bg_gworld;
-extern rectangle const sbar_rect,item_sbar_rect,shop_sbar_rect;
+extern const rectangle sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern rectangle startup_top;
 extern rectangle talk_area_rect, word_place_rect;
 extern location store_anim_ul;
@@ -202,7 +202,7 @@ sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, int mode, float 
 
 	// Buffer in pixels between ui edge and window edge. There seem to be
 	// implicit (builtin) buffers the top and bottom of the UI so this is just for the sides.
-	int const extra_horizontal_buffer { 7 };
+	const int extra_horizontal_buffer { 7 };
 
 	// Left and top: where the viewport is.
 	// Left and top seem to be in terms *target* dimensions,

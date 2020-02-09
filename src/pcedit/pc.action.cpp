@@ -28,7 +28,7 @@ extern rectangle name_rect;
 extern rectangle pc_race_rect;
 extern rectangle edit_rect[5];
 
-bool handle_action(sf::Event const & event) {
+bool handle_action(const sf::Event & event) {
 	location the_point = translate_mouse_coordinates({event.mouseButton.x, event.mouseButton.y});
 	
 	bool to_return = false;

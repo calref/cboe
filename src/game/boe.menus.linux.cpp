@@ -16,7 +16,7 @@ extern sf::RenderWindow mainPtr;
 extern cUniverse univ;
 extern bool party_in_memory;
 extern eGameMode overall_mode;
-extern std::unordered_map<std::string, std::shared_ptr<iEventListener>>event_listeners;
+extern std::unordered_map<std::string, std::shared_ptr<iEventListener>> event_listeners;
 extern cDrawableManager drawable_mgr;
 
 std::shared_ptr<OpenBoEMenu> menu_ptr;

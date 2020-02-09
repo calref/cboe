@@ -4,7 +4,7 @@
 int main(int argc, char* argv[]);
 void update_everything();
 void redraw_everything();
-void Mouse_Pressed(sf::Event const &);
+void Mouse_Pressed(const sf::Event&);
 void close_program();
 void change_cursor(location where_curs);
 void set_up_apple_events(int argc, char* argv[]);
@@ -18,6 +18,6 @@ void plop_fancy_startup();
 void update_terrain_animation();
 void update_startup_animation();
 void handle_events();
-void handle_one_event(sf::Event const &);
-void handle_one_minimap_event(sf::Event const &);
+void handle_one_event(const sf::Event&);
+void handle_one_minimap_event(const sf::Event &);
 

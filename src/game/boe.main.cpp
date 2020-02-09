@@ -46,9 +46,9 @@ bool party_in_memory = false;
 std::shared_ptr<cScrollbar> text_sbar, item_sbar, shop_sbar;
 std::shared_ptr<cButton> done_btn, help_btn;
 // TODO: move these 3 to boe.ui.cpp ?
-extern rectangle const sbar_rect      = {285,560,423,576};
-extern rectangle const shop_sbar_rect = {69,272,359,288};
-extern rectangle const item_sbar_rect = {148,560,255,576};
+extern const rectangle sbar_rect      = {285,560,423,576};
+extern const rectangle shop_sbar_rect = {69,272,359,288};
+extern const rectangle item_sbar_rect = {148,560,255,576};
 bool bgm_on = false,bgm_init = false;
 location store_anim_ul;
 cUniverse univ;
@@ -147,7 +147,7 @@ int main(int argc, char* argv[]) {
 	}
 }
 
-static void init_sbar(std::shared_ptr<cScrollbar>& sbar, std::string const name, rectangle rect, rectangle events_rect, int max, int pgSz, int start = 0) {
+static void init_sbar(std::shared_ptr<cScrollbar>& sbar, const std::string& name, rectangle rect, rectangle events_rect, int max, int pgSz, int start = 0) {
 	sbar.reset(new cScrollbar(mainPtr));
 	sbar->setBounds(rect);
 	sbar->setMaximum(max);
@@ -163,7 +163,7 @@ static void init_sbar(std::shared_ptr<cScrollbar>& sbar, std::string const name,
 static void init_scrollbars() {
 
 	// Cover entire transcript + scrollbar
-	rectangle const transcript_events_rect {
+	const rectangle transcript_events_rect {
 		win_to_rects[WINRECT_TRANSCRIPT].top,
 		win_to_rects[WINRECT_TRANSCRIPT].left,
 		sbar_rect.bottom,
@@ -171,7 +171,7 @@ static void init_scrollbars() {
 	};
 	
 	// Cover entire inventory + scrollbar
-	rectangle const inventory_events_rect {
+	const rectangle inventory_events_rect {
 		win_to_rects[WINRECT_INVEN].top,
 		win_to_rects[WINRECT_INVEN].left,
 		item_sbar_rect.bottom,
@@ -402,7 +402,7 @@ void redraw_everything() {
 	if(map_visible) draw_map(false);
 }
 
-void Mouse_Pressed(sf::Event const & event) {
+void Mouse_Pressed(const sf::Event& event) {
 
 	// What is this stuff? Why is it here?
 	if(had_text_freeze > 0) {
