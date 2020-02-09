@@ -16,7 +16,7 @@ extern sf::RenderWindow mainPtr;
 extern cUniverse univ;
 extern bool party_in_memory;
 extern eGameMode overall_mode;
-extern std::unordered_map <std::string, std::shared_ptr <iEventListener>> event_listeners;
+extern std::unordered_map<std::string, std::shared_ptr<iEventListener>>event_listeners;
 extern cDrawableManager drawable_mgr;
 
 std::shared_ptr<OpenBoEMenu> menu_ptr;
@@ -24,7 +24,7 @@ std::shared_ptr<OpenBoEMenu> menu_ptr;
 void init_menubar() {
 	menu_ptr.reset(new OpenBoEMenu(mainPtr, univ));
 	
-	event_listeners["menubar"] = std::dynamic_pointer_cast <iEventListener> (menu_ptr); 
+	event_listeners["menubar"] = std::dynamic_pointer_cast<iEventListener>(menu_ptr); 
 	drawable_mgr.add_drawable(UI_LAYER_MENUBAR, "menubar", menu_ptr); 
 }
 

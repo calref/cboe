@@ -5,9 +5,9 @@ class iDrawable {
 	
 public:
 	
-	virtual void draw () = 0;
+	virtual void draw() = 0;
 	
-	virtual ~iDrawable () {}
+	virtual ~iDrawable() {}
 	
 };
 

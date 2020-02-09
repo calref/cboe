@@ -11,15 +11,15 @@ class cDrawableManager {
 	
 public:
 	
-	void draw_all ();
+	void draw_all();
 	
-	template <typename T> void add_drawable (int layer_id, std::string const name, std::shared_ptr <T> drawable) {
-		this->layers[layer_id][name] = std::dynamic_pointer_cast <iDrawable> (drawable);
+	template <typename T> void add_drawable (int layer_id, std::string const name, std::shared_ptr<T>drawable) {
+		this->layers[layer_id][name] = std::dynamic_pointer_cast<iDrawable>(drawable);
 	}
 	
 private:
 	
-	using Layer = std::unordered_map <std::string, std::shared_ptr <iDrawable>>;
+	using Layer = std::unordered_map <std::string, std::shared_ptr<iDrawable>>;
 	
 	std::map <int, Layer> layers;
 };
