@@ -1197,11 +1197,11 @@ static bool connect_roads(ter_num_t ter){
 void place_road(short q,short r,location where,bool here) {
 	rectangle to_rect;
 	static const rectangle road_rects[5] = {
-		{4,112,8,125},	// horizontal partial
-		{0,144,18,148},	// vertical partial
-		{0,112,4,140},	// horizontal full
-		{0,140,36,144},	// vertical full
-		{8,112,12,116},	// central spot
+		{76,28,80,41},	// horizontal partial
+		{72,60,90,64},	// vertical partial
+		{72,28,75,56},	// horizontal full
+		{72,56,108,60},	// vertical full
+		{80,28,84,32},	// central spot
 	};
 	static const rectangle road_dest_rects[7] = {
 		{0,12,18,16},	// top
@@ -1213,7 +1213,7 @@ void place_road(short q,short r,location where,bool here) {
 		{16,12,20,16},	// central spot
 	};
 	
-	sf::Texture& roads_gworld = *ResMgr::graphics.get("trim");
+	sf::Texture& roads_gworld = *ResMgr::graphics.get("fields");
 	
 	if(here){
 		to_rect = road_dest_rects[6];
@@ -1426,26 +1426,37 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 		frame_active_pc(center);
 }
 
-// dir = 0 - down, 1 - left, 2 - right, 3 - up
-// pos = row or column to centre the arrow in, range 0..8
+// dir = 0 - down, 1 - left, 2 - right, 3 - up, 4 - down/left, 5 - up/left, 6 - up/right, 7 - down/right
+// pos = row or column to centre the arrow in, range 0..8, ignored for dir >= 4
 static void draw_one_pointing_arrow(int dir, int pos) {
-	rectangle from_rect = {351, 1, 359, 9};
-	from_rect.offset(9 * dir, 0);
+	rectangle from_rect = {62, 1, 70, 9};
+	from_rect.offset(9 * (dir % 4), 9 * (dir / 4));
 	
 	rectangle ter_view_rect = win_to_rects[WINRECT_TERVIEW];
-	rectangle to_rect;
+	rectangle to_rect = ter_view_rect;
 	
+	// Left-pointing arrows
+	if(dir == 1 || dir == 4 || dir == 5)
+		to_rect.left += 2;
+	// Right-pointing arrows
+	if(dir == 2 || dir == 6 || dir == 7)
+		to_rect.left = to_rect.right - 10;
+	// Up-pointing arrows
+	if(dir == 3 || dir == 5 || dir == 6)
+		to_rect.top += 2;
+	// Down-pointing arrows
+	if(dir == 0 || dir == 4 || dir == 7)
+		to_rect.top = to_rect.bottom - 10;
+	// Horizontal arrows
 	if(dir == 0 || dir == 3)
-		to_rect.left = ter_view_rect.left + 23 + pos * 28;
-	else to_rect.top = ter_view_rect.top + 23 + pos * 36;
-	if(dir == 0) to_rect.top = ter_view_rect.bottom - 10;
-	else if(dir == 1) to_rect.left = ter_view_rect.left + 2;
-	else if(dir == 2) to_rect.left = ter_view_rect.right - 10;
-	else if(dir == 3) to_rect.top = ter_view_rect.top + 2;
+		to_rect.left += 23 + pos * 28;
+	// Vertical arrows
+	if(dir == 1 || dir == 2)
+		to_rect.top += 23 + pos * 36;
 	
 	to_rect.width() = to_rect.height() = 8;
 	
-	rect_draw_some_item(terrain_screen_gworld.getTexture(), from_rect, mainPtr, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(*ResMgr::graphics.get("invenbtns"), from_rect, mainPtr, to_rect, sf::BlendAlpha);
 }
 
 void draw_pointing_arrows() {
@@ -1460,11 +1471,14 @@ void draw_pointing_arrows() {
 	draw_one_pointing_arrow(2, 5);
 	draw_one_pointing_arrow(3, 3);
 	draw_one_pointing_arrow(3, 5);
+	draw_one_pointing_arrow(4, 0);
+	draw_one_pointing_arrow(5, 0);
+	draw_one_pointing_arrow(6, 0);
+	draw_one_pointing_arrow(7, 0);
 }
 
 void redraw_terrain() {
 	rectangle to_rect = win_to_rects[WINRECT_TERVIEW], from_rect(terrain_screen_gworld);
-	from_rect.bottom -= 10; // Clip off the little arrows TODO: Maybe move them to another sheet?
 	rect_draw_some_item(terrain_screen_gworld.getTexture(), from_rect, mainPtr, to_rect);
 	apply_light_mask(true);
 	
@@ -1479,13 +1493,15 @@ void redraw_terrain() {
 void draw_targets(location center) {
 	if(!univ.party.is_alive())
 		return;
+	const rectangle src_rect{0,46,12,58};
 	
-	sf::Texture& src_gworld = *ResMgr::graphics.get("trim");
+	sf::Texture& src_gworld = *ResMgr::graphics.get("invenbtns");
 	for(short i = 0; i < 8; i++)
 		if((spell_targets[i].x != -1) && (point_onscreen(center,spell_targets[i]))) {
 			rectangle dest_rect = coord_to_rect(spell_targets[i].x - center.x + 4,spell_targets[i].y - center.y + 4);
+			dest_rect.inset(8,12);
 			dest_rect.offset(win_to_rects[WINRECT_TERVIEW].topLeft());
-			rect_draw_some_item(src_gworld,calc_rect(6,0),mainPtr,dest_rect,sf::BlendAlpha);
+			rect_draw_some_item(src_gworld,src_rect,mainPtr,dest_rect,sf::BlendAlpha);
 		}
 }
 
