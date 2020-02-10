@@ -113,7 +113,7 @@ bool cScrollbar::handle_event(const sf::Event& event) {
 			return this->handle_mouse_moved(event);
 		case sf::Event::MouseButtonReleased:
 			return this->handle_mouse_released(event);
-		case sf::Event::MouseWheelScrolled:
+		case sf::Event::MouseWheelMoved: // TODO: Deprecated in latest SFML
 			return this->handle_mouse_wheel_scrolled(event);
 		default: break;
 	}
@@ -123,15 +123,15 @@ bool cScrollbar::handle_event(const sf::Event& event) {
 
 bool cScrollbar::handle_mouse_wheel_scrolled(const sf::Event& event) {
 	location event_location = this->translated_location({
-		event.mouseWheelScroll.x,
-		event.mouseWheelScroll.y
+		event.mouseWheel.x,
+		event.mouseWheel.y
 	});
 	
 	// Scrolling outside of catching area or own frame -> not interested.
 	if(!(event_location.in(this->wheel_event_rect) || event_location.in(this->getBounds())))
 		return false;
 	
-	this->setPosition(this->getPosition() - event.mouseWheelScroll.delta);
+	this->setPosition(this->getPosition() - event.mouseWheel.delta);
 	
 	return true;
 }
