@@ -770,6 +770,11 @@
     <ClCompile Include="..\..\..\src\dialogxml\dialogs\dialog.cpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\dialogxml\dialogs\3choice.cpp" />
+    <ClCompile Include="..\..\..\src\dialogxml\dialogs\choicedlog.cpp" />
+    <ClCompile Include="..\..\..\src\tools\drawable_manager.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\view_dialogs.hpp" />
@@ -989,6 +994,16 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\fileio\resmgr\res_strings.hpp">
       <Filter>FileIO\ResMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\3choice.hpp" />
+    <ClInclude Include="..\..\..\src\tools\drawable.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tools\drawable_manager.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tools\event_listener.hpp">
+      <Filter>Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

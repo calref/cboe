@@ -249,6 +249,7 @@
     <ClCompile Include="..\..\..\src\sounds.cpp" />
     <ClCompile Include="..\..\..\src\spell.cpp" />
     <ClCompile Include="..\..\..\src\tools\cursors.win.cpp" />
+    <ClCompile Include="..\..\..\src\tools\drawable_manager.cpp" />
     <ClCompile Include="..\..\..\src\tools\menu_accel.win.cpp" />
     <ClCompile Include="..\..\..\src\tools\prefs.win.cpp" />
     <ClCompile Include="..\..\..\src\tools\undo.cpp" />
@@ -331,7 +332,10 @@
     <ClInclude Include="..\..\..\src\sounds.hpp" />
     <ClInclude Include="..\..\..\src\spell.hpp" />
     <ClInclude Include="..\..\..\src\tools\cursors.hpp" />
+    <ClInclude Include="..\..\..\src\tools\drawable.hpp" />
+    <ClInclude Include="..\..\..\src\tools\drawable_manager.hpp" />
     <ClInclude Include="..\..\..\src\tools\enum_map.hpp" />
+    <ClInclude Include="..\..\..\src\tools\event_listener.hpp" />
     <ClInclude Include="..\..\..\src\tools\gitrev.hpp" />
     <ClInclude Include="..\..\..\src\tools\menu_accel.win.hpp" />
     <ClInclude Include="..\..\..\src\tools\prefs.hpp" />
