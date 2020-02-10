@@ -3318,6 +3318,8 @@ void edit_custom_sheets() {
 	int max_pic = -1;
 	std::vector<int> all_pics;
 	fs::path pic_dir = tempDir/scenario_temp_dir_name/"graphics";
+	if(!scenario.scen_file.has_extension()) // It's an unpacked scenario
+		pic_dir = scenario.scen_file/"graphics";
 	if(!fs::exists(pic_dir)) fs::create_directories(pic_dir);
 	for(fs::directory_iterator iter(pic_dir); iter != fs::directory_iterator(); iter++) {
 		std::string fname = iter->path().filename().string().c_str();
