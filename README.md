@@ -54,7 +54,7 @@ _deps/include_ would have two subfolders _boost/_ and _SFML/_.
 The following dependencies are required:
 
 - [SFML](http://www.sfml-dev.org/) - all components except sfml-net.
-- [Boost](http://www.boost.org/) - Filesystem, System, and Thread, plus several header-only
+- [Boost](http://www.boost.org/) - Filesystem and System, plus several header-only
   libraries; if you're picky, you can run scons and see it enumerate exactly which
   libraries are needed
 - ZLib - This is included with the system on the Mac.
@@ -67,11 +67,11 @@ If you are using Visual Studio, we recommend installing [vcpkg](https://github.c
 Use the following commands to install the required dependencies:
 For 32-bit builds:
 
-    vcpkg install zlib:x86-windows sfml:x86-windows opengl:x86-windows boost-any:x86-windows boost-dynamic-bitset:x86-windows boost-ptr-container:x86-windows boost-core:x86-windows boost-filesystem:x86-windows boost-system:x86-windows boost-date-time:x86-windows boost-chrono:x86-windows boost-thread:x86-windows
+    vcpkg install zlib:x86-windows sfml:x86-windows opengl:x86-windows boost-any:x86-windows boost-dynamic-bitset:x86-windows boost-ptr-container:x86-windows boost-core:x86-windows boost-filesystem:x86-windows boost-system:x86-windows boost-date-time:x86-windows boost-chrono:x86-windows
 
 For 64-bit builds (Not supported in Visual Studio projects, yet):
 
-    vcpkg install zlib:x64-windows sfml:x64-windows opengl:x64-windows boost-any:x64-windows boost-dynamic-bitset:x64-windows boost-ptr-container:x64-windows boost-core:x64-windows boost-filesystem:x64-windows boost-system:x64-windows boost-date-time:x64-windows boost-chrono:x64-windows boost-thread:x64-windows
+    vcpkg install zlib:x64-windows sfml:x64-windows opengl:x64-windows boost-any:x64-windows boost-dynamic-bitset:x64-windows boost-ptr-container:x64-windows boost-core:x64-windows boost-filesystem:x64-windows boost-system:x64-windows boost-date-time:x64-windows boost-chrono:x64-windows
 
 If this is the first time installing packages with vcpkg since install you will need to run the `integrate` command:
 
