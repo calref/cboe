@@ -23,10 +23,10 @@
 class cTextMsg : public cControl {
 public:
 	std::string parse(ticpp::Element& who, std::string fname);
-	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
-	short getFormat(eFormat prop) throw(xUnsupportedProp);
-	void setColour(sf::Color clr) throw(xUnsupportedProp);
-	sf::Color getColour() throw(xUnsupportedProp);
+	void setFormat(eFormat prop, short val);
+	short getFormat(eFormat prop);
+	void setColour(sf::Color clr);
+	sf::Color getColour();
 	/// Create a new text message.
 	/// @param parent The parent dialog.
 	explicit cTextMsg(cDialog& parent);

@@ -32,23 +32,23 @@ void cContainer::callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, st
 		getChild(which_clicked).triggerClickHandler(me, which_clicked, mods);
 }
 
-void cStack::setFormat(eFormat prop, short val) throw(xUnsupportedProp) {
+void cStack::setFormat(eFormat prop, short val) {
 	if(prop == TXT_FRAME) drawFramed = val;
 	else if(prop == TXT_FRAMESTYLE) frameStyle = eFrameStyle(val);
 	else throw xUnsupportedProp(prop);
 }
 
-short cStack::getFormat(eFormat prop) throw(xUnsupportedProp) {
+short cStack::getFormat(eFormat prop) {
 	if(prop == TXT_FRAME) return drawFramed;
 	else if(prop == TXT_FRAMESTYLE) return frameStyle;
 	throw xUnsupportedProp(prop);
 }
 
-void cStack::setColour(sf::Color) throw(xUnsupportedProp) {
+void cStack::setColour(sf::Color) {
 	// TODO: Colour is not supported
 }
 
-sf::Color cStack::getColour() throw(xUnsupportedProp) {
+sf::Color cStack::getColour() {
 	// TODO: Colour is not supported
 	return sf::Color();
 }

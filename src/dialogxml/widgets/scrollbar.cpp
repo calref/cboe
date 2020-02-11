@@ -353,19 +353,19 @@ bool cScrollbar::handleClick(location where) {
 	return clicked;
 }
 
-void cScrollbar::setFormat(eFormat prop, short) throw(xUnsupportedProp) {
+void cScrollbar::setFormat(eFormat prop, short) {
 	throw xUnsupportedProp(prop);
 }
 
-short cScrollbar::getFormat(eFormat prop) throw(xUnsupportedProp) {
+short cScrollbar::getFormat(eFormat prop) {
 	throw xUnsupportedProp(prop);
 }
 
-void cScrollbar::setColour(sf::Color) throw(xUnsupportedProp) {
+void cScrollbar::setColour(sf::Color) {
 	// TODO: Colour is unsupported
 }
 
-sf::Color cScrollbar::getColour() throw(xUnsupportedProp) {
+sf::Color cScrollbar::getColour() {
 	// TODO: Colour is unsupported
 	return sf::Color();
 }

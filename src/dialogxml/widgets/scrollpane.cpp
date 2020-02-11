@@ -70,23 +70,23 @@ void cScrollPane::recalcRect() {
 	frame.right += scrollFrame.width();
 }
 
-void cScrollPane::setFormat(eFormat prop, short val) throw(xUnsupportedProp) {
+void cScrollPane::setFormat(eFormat prop, short val) {
 	if(prop == TXT_FRAME) framed = val;
 	else if(prop == TXT_FRAMESTYLE) frameStyle = eFrameStyle(val);
 	else throw xUnsupportedProp(prop);
 }
 
-short cScrollPane::getFormat(eFormat prop) throw(xUnsupportedProp) {
+short cScrollPane::getFormat(eFormat prop) {
 	if(prop == TXT_FRAME) return framed;
 	else if(prop == TXT_FRAMESTYLE) return frameStyle;
 	else throw xUnsupportedProp(prop);
 }
 
-void cScrollPane::setColour(sf::Color) throw(xUnsupportedProp) {
+void cScrollPane::setColour(sf::Color) {
 	// TODO: Colour is not supported
 }
 
-sf::Color cScrollPane::getColour() throw(xUnsupportedProp) {
+sf::Color cScrollPane::getColour() {
 	// TODO: Colour is not supported
 	return sf::Color();
 }

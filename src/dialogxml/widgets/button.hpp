@@ -51,10 +51,10 @@ public:
 	/// @copydoc cDialog::init()
 	static void init();
 	std::string parse(ticpp::Element& who, std::string fname);
-	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
-	short getFormat(eFormat prop) throw(xUnsupportedProp);
-	void setColour(sf::Color clr) throw(xUnsupportedProp);
-	sf::Color getColour() throw(xUnsupportedProp);
+	void setFormat(eFormat prop, short val);
+	short getFormat(eFormat prop);
+	void setColour(sf::Color clr);
+	sf::Color getColour();
 	/// Set the type of this button.
 	/// @param newType The desired button type.
 	void setBtnType(eBtnType newType);
@@ -115,8 +115,8 @@ public:
 	/// @return true to indicate the event should continue.
 	static bool noAction(cDialog&,std::string,eKeyMod) {return true;}
 	std::string parse(ticpp::Element& who, std::string fname) override;
-	void setFormat(eFormat prop, short val) throw(xUnsupportedProp) override;
-	short getFormat(eFormat prop) throw(xUnsupportedProp) override;
+	void setFormat(eFormat prop, short val) override;
+	short getFormat(eFormat prop) override;
 	storage_t store() override;
 	void restore(storage_t to) override;
 	/// Create a new LED button.
@@ -176,7 +176,7 @@ class cLedGroup : public cContainer {
 	cLedGroup(cLedGroup& other) = delete;
 public:
 	/// @deprecated in favour of @ref attachEventHandler
-	void attachFocusHandler(std::function<bool(cDialog&,std::string,bool)> f) throw(xHandlerNotSupported) override;
+	void attachFocusHandler(std::function<bool(cDialog&,std::string,bool)> f) override;
 	std::string parse(ticpp::Element& who, std::string fname) override;
 	/// @copydoc cControl::attachClickHandler()
 	///
@@ -210,10 +210,10 @@ public:
 	/// Show one of the choices in this group.
 	/// @param id The unique key of the choice.
 	void show(std::string id);
-	void setFormat(eFormat prop, short val) throw(xUnsupportedProp) override;
-	short getFormat(eFormat prop) throw(xUnsupportedProp) override;
-	void setColour(sf::Color clr) throw(xUnsupportedProp) override;
-	sf::Color getColour() throw(xUnsupportedProp) override;
+	void setFormat(eFormat prop, short val) override;
+	short getFormat(eFormat prop) override;
+	void setColour(sf::Color clr) override;
+	sf::Color getColour() override;
 	/// Create a new LED group.
 	/// @param parent The parent dialog.
 	explicit cLedGroup(cDialog& parent);

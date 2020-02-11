@@ -26,10 +26,10 @@ public:
 	/// @copydoc cDialog::init()
 	static void init();
 	std::string parse(ticpp::Element& who, std::string fname);
-	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
-	short getFormat(eFormat prop) throw(xUnsupportedProp);
-	void setColour(sf::Color clr) throw(xUnsupportedProp);
-	sf::Color getColour() throw(xUnsupportedProp);
+	void setFormat(eFormat prop, short val);
+	short getFormat(eFormat prop);
+	void setColour(sf::Color clr);
+	sf::Color getColour();
 	storage_t store();
 	void restore(storage_t to);
 	/// @copydoc setPict(pic_num_t)

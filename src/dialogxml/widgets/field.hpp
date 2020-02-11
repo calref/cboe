@@ -42,9 +42,9 @@ public:
 		return {EVT_FOCUS, EVT_DEFOCUS};
 	}
 	bool handleClick(location where) override;
-	void setFormat(eFormat prop, short val) throw(xUnsupportedProp) override;
-	short getFormat(eFormat prop) throw(xUnsupportedProp) override;
-	void setColour(sf::Color clr) throw(xUnsupportedProp) override;
+	void setFormat(eFormat prop, short val) override;
+	short getFormat(eFormat prop) override;
+	void setColour(sf::Color clr) override;
 	void setText(std::string to) override;
 	storage_t store() override;
 	void restore(storage_t to) override;
@@ -54,7 +54,7 @@ public:
 	/// Set the input type of the field.
 	/// @param newType The new input type.
 	void setInputType(eFldType newType);
-	sf::Color getColour() throw(xUnsupportedProp) override;
+	sf::Color getColour() override;
 	/// Create a new editable text field.
 	/// @param parent The parent dialog.
 	explicit cTextField(cDialog& parent);

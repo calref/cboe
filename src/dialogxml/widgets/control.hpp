@@ -129,7 +129,7 @@ public:
 	///
 	/// A click handler must be able to accept three parameters: a reference to the containing dialog, the unique key of the
 	/// clicked item, and a representation of any modifier keys that are currently held.
-	virtual void attachClickHandler(std::function<bool(cDialog&,std::string,eKeyMod)> f) throw(xHandlerNotSupported);
+	virtual void attachClickHandler(std::function<bool(cDialog&,std::string,eKeyMod)> f);
 	/// Attach a focus handler to this control.
 	/// @param f The focus handler to attach.
 	/// @throw xHandlerNotSupported if this control does not support focus handlers. Most controls do not support focus handlers.
@@ -140,7 +140,7 @@ public:
 	/// clicked item, and a boolean indicating whether focus is being lost or gained; a value of true indicates that
 	/// focus is being lost, while false indicates it's being gained. Most handlers will only need to act when the
 	/// third parameter is true. If the handler returns false, the focus change is cancelled.
-	virtual void attachFocusHandler(std::function<bool(cDialog&,std::string,bool)> f) throw(xHandlerNotSupported);
+	virtual void attachFocusHandler(std::function<bool(cDialog&,std::string,bool)> f);
 	/// Trigger an event on this control.
 	/// @tparam t The type of event to trigger.
 	/// @tparam Params Additional parameters, depending on the event type.
@@ -216,20 +216,20 @@ public:
 	/// @param prop The parameter to set.
 	/// @param val The desired value of the parameter.
 	/// @throw xUnsupportedProp if this control doesn't support the given parameter.
-	virtual void setFormat(eFormat prop, short val) throw(xUnsupportedProp) = 0;
+	virtual void setFormat(eFormat prop, short val) = 0;
 	/// Get one of the control's formatting parameters.
 	/// @param prop The parameter to retrieve.
 	/// @return The value of the parameter.
 	/// @throw xUnsupportedProp if this control doesn't support the given parameter.
-	virtual short getFormat(eFormat prop) throw(xUnsupportedProp) = 0;
+	virtual short getFormat(eFormat prop) = 0;
 	/// Set the control's colour (usually text colour).
 	/// @param clr The desired colour.
 	/// @throw xUnsupportedProp if this control does not support colour.
-	virtual void setColour(sf::Color clr) throw(xUnsupportedProp) = 0;
+	virtual void setColour(sf::Color clr) = 0;
 	/// Get the control's colour.
 	/// @return The current colour.
 	/// @throw xUnsupportedProp if this control does not support colour.
-	virtual sf::Color getColour() throw(xUnsupportedProp) = 0;
+	virtual sf::Color getColour() = 0;
 	/// Check if the control is clickable.
 	/// @return true if it's clickable.
 	/// @note This does not indicate whether the control supports click handlers.

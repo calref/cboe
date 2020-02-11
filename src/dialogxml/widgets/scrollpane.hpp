@@ -25,10 +25,10 @@ public:
 	explicit cScrollPane(cDialog& parent);
 	std::string parse(ticpp::Element& who, std::string fname) override;
 	bool handleClick(location where) override;
-	void setFormat(eFormat prop, short val) throw(xUnsupportedProp) override;
-	short getFormat(eFormat prop) throw(xUnsupportedProp) override;
-	void setColour(sf::Color clr) throw(xUnsupportedProp) override;
-	sf::Color getColour() throw(xUnsupportedProp) override;
+	void setFormat(eFormat prop, short val) override;
+	short getFormat(eFormat prop) override;
+	void setColour(sf::Color clr) override;
+	sf::Color getColour() override;
 	bool hasChild(std::string id) override;
 	cControl& getChild(std::string id) override;
 	storage_t store() override;

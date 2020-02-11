@@ -165,19 +165,19 @@ bool cTextField::handleClick(location clickLoc) {
 	return true;
 }
 
-void cTextField::setFormat(eFormat prop, short) throw(xUnsupportedProp){
+void cTextField::setFormat(eFormat prop, short){
 	throw xUnsupportedProp(prop);
 }
 
-short cTextField::getFormat(eFormat prop) throw(xUnsupportedProp){
+short cTextField::getFormat(eFormat prop){
 	throw xUnsupportedProp(prop);
 }
 
-void cTextField::setColour(sf::Color clr) throw(xUnsupportedProp) {
+void cTextField::setColour(sf::Color clr) {
 	color = clr;
 }
 
-sf::Color cTextField::getColour() throw(xUnsupportedProp) {
+sf::Color cTextField::getColour() {
 	return color;
 }
 

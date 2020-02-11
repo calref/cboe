@@ -277,7 +277,7 @@ cControl::cControl(eControlType t, cDialog& p) : parent(&p), inWindow(&p.win), t
 cControl::cControl(eControlType t, sf::RenderWindow& p) : parent(nullptr), inWindow(&p), type(t), visible(true), key({false, 0, mod_none}), frameStyle(FRM_INSET) {}
 
 
-void cControl::attachClickHandler(std::function<bool(cDialog&,std::string,eKeyMod)> f) throw(xHandlerNotSupported) {
+void cControl::attachClickHandler(std::function<bool(cDialog&,std::string,eKeyMod)> f) {
 	if(!f) {
 		attachEventHandler<EVT_CLICK>(nullptr);
 		return;
@@ -287,7 +287,7 @@ void cControl::attachClickHandler(std::function<bool(cDialog&,std::string,eKeyMo
 	});
 }
 
-void cControl::attachFocusHandler(std::function<bool(cDialog&,std::string,bool)> f) throw(xHandlerNotSupported) {
+void cControl::attachFocusHandler(std::function<bool(cDialog&,std::string,bool)> f) {
 	if(!f) {
 		attachEventHandler<EVT_FOCUS>(nullptr);
 		attachEventHandler<EVT_DEFOCUS>(nullptr);

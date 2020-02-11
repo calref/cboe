@@ -75,25 +75,25 @@ std::map<ePicType,void(cPict::*)(short,rectangle)>& cPict::drawPict(){
 	return f;
 }
 
-void cPict::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
+void cPict::setFormat(eFormat prop, short val){
 	if(prop == TXT_FRAME) drawFramed = val;
 	else if(prop == TXT_FRAMESTYLE) frameStyle = eFrameStyle(val);
 	else if(prop == TXT_WRAP) drawScaled = !val;
 	else throw xUnsupportedProp(prop);
 }
 
-short cPict::getFormat(eFormat prop) throw(xUnsupportedProp){
+short cPict::getFormat(eFormat prop){
 	if(prop == TXT_FRAME) return drawFramed;
 	else if(prop == TXT_FRAMESTYLE) return frameStyle;
 	else if(prop == TXT_WRAP) return !drawScaled;
 	else throw xUnsupportedProp(prop);
 }
 
-void cPict::setColour(sf::Color) throw(xUnsupportedProp) {
+void cPict::setColour(sf::Color) {
 	// TODO: Colour is not supported
 }
 
-sf::Color cPict::getColour() throw(xUnsupportedProp) {
+sf::Color cPict::getColour() {
 	// TODO: Colour is not supported
 	return sf::Color();
 }

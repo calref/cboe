@@ -72,10 +72,10 @@ public:
 	/// @param parent The parent dialog.
 	explicit cScrollbar(cDialog& parent);
 	bool handleClick(location where);
-	void setFormat(eFormat prop, short val) throw(xUnsupportedProp);
-	short getFormat(eFormat prop) throw(xUnsupportedProp);
-	void setColour(sf::Color clr) throw(xUnsupportedProp);
-	sf::Color getColour() throw(xUnsupportedProp);
+	void setFormat(eFormat prop, short val);
+	short getFormat(eFormat prop);
+	void setColour(sf::Color clr);
+	sf::Color getColour();
 	storage_t store();
 	void restore(storage_t to);
 	bool isClickable();

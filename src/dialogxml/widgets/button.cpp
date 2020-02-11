@@ -90,23 +90,23 @@ void cButton::draw(){
 	}
 }
 
-void cButton::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
+void cButton::setFormat(eFormat prop, short val){
 	if(prop == TXT_WRAP) wrapLabel = val;
 	else if(prop == TXT_FRAMESTYLE) frameStyle = eFrameStyle(val);
 	else throw xUnsupportedProp(prop);
 }
 
-short cButton::getFormat(eFormat prop) throw(xUnsupportedProp){
+short cButton::getFormat(eFormat prop){
 	if(prop == TXT_WRAP) return wrapLabel;
 	else if(prop == TXT_FRAMESTYLE) return frameStyle;
 	else throw xUnsupportedProp(prop);
 }
 
-void cButton::setColour(sf::Color clr) throw(xUnsupportedProp) {
+void cButton::setColour(sf::Color clr) {
 	textClr = clr;
 }
 
-sf::Color cButton::getColour() throw(xUnsupportedProp) {
+sf::Color cButton::getColour() {
 	return textClr;
 }
 
@@ -348,14 +348,14 @@ void cLed::callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::str
 	}
 }
 
-void cLed::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
+void cLed::setFormat(eFormat prop, short val){
 	if(prop == TXT_FONT) textFont = (eFont) val;
 	else if(prop == TXT_SIZE) textSize = val;
 	else if(prop == TXT_WRAP) wrapLabel = val;
 	else throw xUnsupportedProp(prop);
 }
 
-short cLed::getFormat(eFormat prop) throw(xUnsupportedProp){
+short cLed::getFormat(eFormat prop){
 	if(prop == TXT_FONT) return textFont;
 	else if(prop == TXT_SIZE) return textSize;
 	else if(prop == TXT_WRAP) return wrapLabel;
@@ -600,7 +600,7 @@ void cLedGroup::callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std
 	return;
 }
 
-void cLedGroup::attachFocusHandler(std::function<bool(cDialog&,std::string,bool)> f) throw(xHandlerNotSupported) {
+void cLedGroup::attachFocusHandler(std::function<bool(cDialog&,std::string,bool)> f) {
 	if(!f) {
 		attachEventHandler<EVT_FOCUS>(nullptr);
 		return;
@@ -627,23 +627,23 @@ void cLedGroup::hide(std::string id){
 	choices[id]->hide();
 }
 
-void cLedGroup::setFormat(eFormat prop, short val) throw(xUnsupportedProp) {
+void cLedGroup::setFormat(eFormat prop, short val) {
 	if(prop == TXT_FRAME) drawFramed = val;
 	else if(prop == TXT_FRAMESTYLE) frameStyle = eFrameStyle(val);
 	else throw xUnsupportedProp(prop);
 }
 
-short cLedGroup::getFormat(eFormat prop) throw(xUnsupportedProp) {
+short cLedGroup::getFormat(eFormat prop) {
 	if(prop == TXT_FRAME) return drawFramed;
 	else if(prop == TXT_FRAMESTYLE) return frameStyle;
 	throw xUnsupportedProp(prop);
 }
 
-void cLedGroup::setColour(sf::Color) throw(xUnsupportedProp) {
+void cLedGroup::setColour(sf::Color) {
 	// TODO: Colour is not supported
 }
 
-sf::Color cLedGroup::getColour() throw(xUnsupportedProp) {
+sf::Color cLedGroup::getColour() {
 	// TODO: Colour is not supported
 	return sf::Color();
 }

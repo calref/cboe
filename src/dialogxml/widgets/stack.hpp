@@ -39,10 +39,10 @@ class cStack : public cContainer {
 	bool drawFramed = false;
 public:
 	std::string parse(ticpp::Element& who, std::string fname) override;
-	void setFormat(eFormat prop, short val) throw(xUnsupportedProp) override;
-	short getFormat(eFormat prop) throw(xUnsupportedProp) override;
-	void setColour(sf::Color clr) throw(xUnsupportedProp) override;
-	sf::Color getColour() throw(xUnsupportedProp) override;
+	void setFormat(eFormat prop, short val) override;
+	short getFormat(eFormat prop) override;
+	void setColour(sf::Color clr) override;
+	sf::Color getColour() override;
 	bool isClickable() override;
 	bool isFocusable() override;
 	bool isScrollable() override;

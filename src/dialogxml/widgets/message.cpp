@@ -12,11 +12,11 @@
 
 extern sf::Texture bg_gworld;
 
-void cTextMsg::setColour(sf::Color clr) throw(xUnsupportedProp) {
+void cTextMsg::setColour(sf::Color clr) {
 	color = clr;
 }
 
-void cTextMsg::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
+void cTextMsg::setFormat(eFormat prop, short val){
 	switch(prop){
 		case TXT_FRAME:
 			drawFramed = val;
@@ -38,11 +38,11 @@ void cTextMsg::setFormat(eFormat prop, short val) throw(xUnsupportedProp){
 	}
 }
 
-sf::Color cTextMsg::getColour() throw(xUnsupportedProp) {
+sf::Color cTextMsg::getColour() {
 	return color;
 }
 
-short cTextMsg::getFormat(eFormat prop) throw(xUnsupportedProp){
+short cTextMsg::getFormat(eFormat prop){
 	switch(prop){
 		case TXT_FRAME:
 			return drawFramed;
