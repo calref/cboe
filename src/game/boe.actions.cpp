@@ -121,11 +121,11 @@ static void advance_time(bool did_something, bool need_redraw, bool need_reprint
 // This is defined in pc.editors.cpp since the PC editor also uses it
 extern void edit_stuff_done();
 
-void init_screen_locs() {
-	rectangle startup_base = {281,1,329,302};
+static void init_shopping_rects() {
 	rectangle shop_base = {63,12,99,267};
 	
 	std::fill(shopping_rects[0].begin(), shopping_rects[0].end(), shop_base);
+
 	shopping_rects[0][SHOPRECT_ACTIVE_AREA].right -= 35;
 	shopping_rects[0][SHOPRECT_GRAPHIC].right = shopping_rects[0][SHOPRECT_GRAPHIC].left + 28;
 	shopping_rects[0][SHOPRECT_ITEM_NAME].top += 4;
@@ -139,12 +139,19 @@ void init_screen_locs() {
 	shopping_rects[0][SHOPRECT_ITEM_HELP].bottom -= 21;
 	shopping_rects[0][SHOPRECT_ITEM_HELP].right -= 19;
 	shopping_rects[0][SHOPRECT_ITEM_HELP].left = shopping_rects[0][SHOPRECT_ITEM_HELP].right - 14;
-	for(short i = 1; i < 8; i++)
+
+	for(short i = 1; i < 8; i++) {
 		for(auto& j : shopping_rects[i].keys()) {
 			shopping_rects[i][j] = shopping_rects[0][j];
 			shopping_rects[i][j].offset(0,i * 36);
 		}
+	}
+}
+
+void init_screen_locs() {
+	init_shopping_rects();
 	
+	rectangle startup_base = {281,1,329,302};
 	
 	for(auto btn : startup_button.keys()) {
 		startup_button[btn] = startup_base;

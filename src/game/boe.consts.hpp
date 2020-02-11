@@ -162,4 +162,8 @@ const int NUM_PRIEST_SPELLS = 62;
 const int UI_LAYER_DEFAULT = 1000;
 const int UI_LAYER_MENUBAR = 1200;
 
+// Offset at which talk_gworld rendering target is drawn in mainPtr.
+const int talk_gword_offset_x = 19;
+const int talk_gword_offset_y = 7;
+
 #endif

@@ -16,6 +16,7 @@
 #include "boe.townspec.hpp"
 #include "boe.main.hpp"
 #include "boe.items.hpp"
+#include "boe.consts.hpp"
 #include "sounds.hpp"
 #include <cstdio>
 #include "boe.newgraph.hpp"
@@ -216,22 +217,28 @@ void handle_shop_event(location p) {
 			end_shop_mode();
 		return;
 	}
-	
-	p.x -= 5;
-	p.y -= 5;
-	
+
 	for(short i = 0; i < 8; i++) {
 		unsigned long what_picked = shop_array[i + shop_sbar->getPosition()];
 		if(what_picked >= active_shop.size()) break;
 		if(active_shop.getItem(what_picked).type == eShopItemType::EMPTY)
 			break;
-		if(p.in(shopping_rects[i][SHOPRECT_ACTIVE_AREA])) {
-			click_shop_rect(shopping_rects[i][SHOPRECT_ACTIVE_AREA]);
+
+		// Since shop UI was drawn into the game window with offsets, we need to apply
+		// the same offsets to event catching areas.
+		rectangle active_rect { shopping_rects[i][SHOPRECT_ACTIVE_AREA] };
+		active_rect.offset(talk_gword_offset_x, talk_gword_offset_y);
+
+		rectangle item_help_rect { shopping_rects[i][SHOPRECT_ITEM_HELP] };
+		item_help_rect.offset(talk_gword_offset_x, talk_gword_offset_y);
+
+		if(p.in(active_rect)) {
+			click_shop_rect(active_rect);
 			handle_sale(active_shop.getItem(what_picked), what_picked);
 			set_up_shop_array();
 			draw_shop_graphics(false, {});
-		} else if(p.in(shopping_rects[i][SHOPRECT_ITEM_HELP])){
-			click_shop_rect(shopping_rects[i][SHOPRECT_ITEM_HELP]);
+		} else if(p.in(item_help_rect)){
+			click_shop_rect(item_help_rect);
 			handle_info_request(active_shop.getItem(what_picked));
 		}
 	}

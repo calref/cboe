@@ -13,6 +13,7 @@
 #include "boe.fileio.hpp"
 #include "boe.locutils.hpp"
 #include "boe.text.hpp"
+#include "boe.consts.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"
 #include "render_image.hpp"
@@ -593,12 +594,12 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 }
 
 void click_shop_rect(rectangle area_rect) {
-	
+
 	draw_shop_graphics(1,area_rect);
 	mainPtr.display();
 	play_sound(37, time_in_ticks(5));
 	draw_shop_graphics(0,area_rect);
-	
+
 }
 
 graf_pos calc_item_rect(int num,rectangle& to_rect) {
@@ -778,7 +779,6 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		style.pointSize = 10;
 		win_draw_string(talk_gworld,shopping_rects[i][SHOPRECT_ITEM_EXTRA],cur_info_str,eTextMode::WRAP,style);
 		rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld,shopping_rects[i][SHOPRECT_ITEM_HELP],pressed ? sf::BlendNone : sf::BlendAlpha);
-		
 	}
 	
 	// Finally, cost info and help strs
@@ -804,9 +804,8 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 void refresh_shopping() {
 	rectangle from_rect(talk_gworld);
 	rectangle to_rect = from_rect;
-	to_rect.offset(19,7);
+	to_rect.offset(talk_gword_offset_x, talk_gword_offset_y);
 	rect_draw_some_item(talk_gworld.getTexture(),from_rect,mainPtr,to_rect);
-	shop_sbar->draw();
 }
 
 static void place_talk_face() {
