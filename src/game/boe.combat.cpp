@@ -2850,14 +2850,14 @@ void monster_attack(short who_att,iLiving* target) {
 				store_hp = target->get_health();
 				sound_type = get_monst_sound(attacker,i);
 				size_t i_monst = univ.get_target_i(*target);
-				short damaged = false;
+				short damaged = 0;
 				if(m_target != nullptr) {
 					// TODO: Maybe this damage should be printed?
 					damaged = damage_monst(*m_target,7,r2,dam_type,sound_type,false);
 				} else if(pc_target != nullptr) {
 					damaged = damage_pc(*pc_target,r2,dam_type,attacker->m_type,sound_type);
 					if(store_hp - target->get_health() <= 0)
-						damaged = false;
+						damaged = 0;
 				}
 				if(damaged) {
 					damaged_message(store_hp - target->get_health(), attacker->a[i].type);
