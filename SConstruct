@@ -298,7 +298,6 @@ if not env.GetOption('clean'):
 	check_header('boost/spirit/include/classic.hpp', 'Boost.Spirit.Classic')
 	check_lib('boost_system', 'Boost.System', ['-mt'], boost_versions)
 	check_lib('boost_filesystem', 'Boost.Filesystem', ['-mt'], boost_versions)
-	check_lib('boost_thread', 'Boost.Thread', ['-mt'], boost_versions)
 	check_lib('sfml-system', 'SFML-system')
 	check_lib('sfml-window', 'SFML-window')
 	check_lib('sfml-audio', 'SFML-audio')
@@ -329,7 +328,6 @@ elif platform == "posix":
 	env.Append(LIBS=Split("""
 		GL
 		X11
-		pthread
 		tgui
 	"""))
 
