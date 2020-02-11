@@ -202,7 +202,9 @@ public:
 	cCurTown town;
 	cCurOut out;
 	fs::path file;
-	bool debug_mode, ghost_mode, node_step_through;
+	bool debug_mode { false };
+	bool ghost_mode { false };
+	bool node_step_through { false };
 	
 	void clear_stored_pcs();
 	void import_legacy(legacy::stored_town_maps_type& old);
