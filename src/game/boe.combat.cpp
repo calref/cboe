@@ -805,29 +805,34 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 				dmg_snd = 0;
 				break;
 		}
+
+		// Existing damage values r2, spec_dam, bonus_dam will get adjusted for armor and
+		//   resistances, so we need to store the actual amounts of damage done.
+		short inflicted_weapon_damage  = 0;
+		short inflicted_special_damage = 0;
+		short inflicted_bonus_damage   = 0;
 		// TODO: Change these to damage_target()
-		bool damaged = false;
 		if(cCreature* monst = dynamic_cast<cCreature*>(&target)) {
 			if(dmg_snd != no_dmg)
-				damaged = damaged || damage_monst(*monst, who_att, r2, eDamageType::WEAPON, dmg_snd, false);
+				inflicted_weapon_damage  = damage_monst(*monst, who_att, r2, eDamageType::WEAPON, dmg_snd, false);
 			if(spec_dam)
-				damaged = damaged || damage_monst(*monst, who_att, spec_dam, eDamageType::SPECIAL, 5, false);
+				inflicted_special_damage = damage_monst(*monst, who_att, spec_dam, eDamageType::SPECIAL, 5, false);
 			if(bonus_dam)
-				damaged = damaged || damage_monst(*monst, who_att, bonus_dam, dmg_tp, 0, false);
-			if(damaged)
-				monst->damaged_msg(r2, spec_dam + bonus_dam);
+				inflicted_bonus_damage   = damage_monst(*monst, who_att, bonus_dam, dmg_tp, 0, false);
+			if(inflicted_weapon_damage || inflicted_special_damage || inflicted_bonus_damage)
+				monst->damaged_msg(inflicted_weapon_damage, inflicted_special_damage + inflicted_bonus_damage);
 		} else if(cPlayer* who = dynamic_cast<cPlayer*>(&target)) {
 			eRace race = attacker.race;
 			if(dmg_snd != no_dmg)
-				damaged = damaged || damage_pc(*who, r2, eDamageType::WEAPON, race, dmg_snd, false);
+				inflicted_weapon_damage  = damage_pc(*who, r2, eDamageType::WEAPON, race, dmg_snd, false);
 			if(spec_dam)
-				damaged = damaged || damage_pc(*who, spec_dam, eDamageType::SPECIAL, race, dmg_snd, false);
+				inflicted_special_damage = damage_pc(*who, spec_dam, eDamageType::SPECIAL, race, dmg_snd, false);
 			if(bonus_dam)
-				damaged = damaged || damage_pc(*who, bonus_dam, dmg_tp, race, dmg_snd, false);
-			if(damaged) {
-				std::string msg = "  " + who->name + " takes " + std::to_string(r2);
-				if(spec_dam + bonus_dam)
-					msg += '+' + std::to_string(spec_dam + bonus_dam);
+				inflicted_bonus_damage   = damage_pc(*who, bonus_dam, dmg_tp, race, dmg_snd, false);
+			if(inflicted_weapon_damage || inflicted_special_damage || inflicted_bonus_damage) {
+				std::string msg = "  " + who->name + " takes " + std::to_string(inflicted_weapon_damage);
+				if(inflicted_special_damage + inflicted_bonus_damage)
+					msg += '+' + std::to_string(inflicted_special_damage + inflicted_bonus_damage);
 				add_string_to_buf(msg + '.');
 			}
 		}
@@ -1804,23 +1809,30 @@ void fire_missile(location target) {
 			else if((victim = univ.target_there(target))) {
 				eDamageType dmg_tp = eDamageType::SPECIAL;
 				spec_dam = calc_spec_dam(ammo.ability,ammo.abil_data[0],ammo.abil_data[1],*victim,dmg_tp);
+
+				// Existing damage values r2, spec_dam will get adjusted for armor and
+				//   resistances, so we need to store the actual amounts of damage done.
+				short inflicted_weapon_damage  = 0;
+				short inflicted_special_damage = 0;
+
 				if(ammo.ability == eItemAbil::HEALING_WEAPON) {
 					ASB("  There is a flash of light.");
 					victim->heal(r2);
 				} else if(cCreature* monst = dynamic_cast<cCreature*>(victim)) {
-					bool damaged = damage_monst(*monst, univ.cur_pc, r2, eDamageType::WEAPON,13,false);
+					inflicted_weapon_damage = damage_monst(*monst, univ.cur_pc, r2, eDamageType::WEAPON,13,false);
 					if(spec_dam > 0)
-						damaged = damaged || damage_monst(*monst, univ.cur_pc, spec_dam, dmg_tp, 0,false);
-					if(damaged) monst->damaged_msg(r2, spec_dam);
+						inflicted_special_damage = damage_monst(*monst, univ.cur_pc, spec_dam, dmg_tp, 0,false);
+					if(inflicted_weapon_damage || inflicted_special_damage)
+						monst->damaged_msg(inflicted_weapon_damage, inflicted_special_damage);
 				} else if(cPlayer* who = dynamic_cast<cPlayer*>(victim)) {
 					// TODO: Should the race really be included here? Maybe it's meant for melee attacks only.
 					eRace race = missile_firer.race;
-					bool damaged = damage_pc(*who, r2, eDamageType::WEAPON, race, 0, false);
+					inflicted_weapon_damage = damage_pc(*who, r2, eDamageType::WEAPON, race, 0, false);
 					if(spec_dam > 0)
-						damaged = damaged || damage_pc(*who, spec_dam, dmg_tp, race, 0, false);
-					if(damaged) {
-						std::string msg = "  " + who->name + " takes " + std::to_string(r2);
-						if(spec_dam) msg += '+' + std::to_string(spec_dam);
+						inflicted_special_damage = damage_pc(*who, spec_dam, dmg_tp, race, 0, false);
+					if(inflicted_weapon_damage || inflicted_special_damage) {
+						std::string msg = "  " + who->name + " takes " + std::to_string(inflicted_weapon_damage);
+						if(spec_dam) msg += '+' + std::to_string(inflicted_special_damage);
 						add_string_to_buf(msg + '.');
 					}
 				}
