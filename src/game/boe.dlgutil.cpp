@@ -233,12 +233,12 @@ void handle_shop_event(location p) {
 		item_help_rect.offset(talk_gword_offset_x, talk_gword_offset_y);
 
 		if(p.in(active_rect)) {
-			play_sound(37, time_in_ticks(5));
+			click_shop_rect(active_rect);
 			handle_sale(active_shop.getItem(what_picked), what_picked);
 			set_up_shop_array();
 			draw_shop_graphics(false, {});
 		} else if(p.in(item_help_rect)){
-			play_sound(37, time_in_ticks(5));
+			click_shop_rect(item_help_rect);
 			handle_info_request(active_shop.getItem(what_picked));
 		}
 	}

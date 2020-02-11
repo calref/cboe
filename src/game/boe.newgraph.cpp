@@ -593,6 +593,15 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 			store_booms[i].boom_type = -1;
 }
 
+void click_shop_rect(rectangle area_rect) {
+
+	draw_shop_graphics(1,area_rect);
+	mainPtr.display();
+	play_sound(37, time_in_ticks(5));
+	draw_shop_graphics(0,area_rect);
+
+}
+
 graf_pos calc_item_rect(int num,rectangle& to_rect) {
 	if(num >= 1000) return spec_scen_g.find_graphic(num - 1000);
 	rectangle from_rect = {0,0,18,18};
