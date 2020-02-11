@@ -2242,11 +2242,9 @@ bool flying() {
 }
 
 void hit_party(short how_much,eDamageType damage_type,short snd_type) {
-	bool dummy;
-	
 	for(short i = 0; i < 6; i++)
 		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			dummy = damage_pc(univ.party[i],how_much,damage_type,eRace::UNKNOWN,snd_type);
+			damage_pc(univ.party[i],how_much,damage_type,eRace::UNKNOWN,snd_type);
 	put_pc_screen();
 }
 
@@ -2258,7 +2256,7 @@ void slay_party(eMainStatus mode) {
 	put_pc_screen();
 }
 
-bool damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace type_of_attacker, short sound_type,bool do_print) {
+short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace type_of_attacker, short sound_type,bool do_print) {
 	short r1,level;
 	
 	if(which_pc.main_status != eMainStatus::ALIVE)
@@ -2316,7 +2314,6 @@ bool damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace ty
 	if(damage_type == eDamageType::WEAPON && which_pc.parry < 100)
 		how_much -= which_pc.parry / 4;
 	
-	
 	if(damage_type != eDamageType::MARKED) {
 		if(univ.party.easy_mode)
 			how_much -= 3;
@@ -2333,15 +2330,18 @@ bool damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace ty
 		if(damage_type == eDamageType::WEAPON) how_much -= level;
 		else how_much = how_much / 2;
 	}
+	
 	// TODO: Do these perhaps depend on the ability strength less than they should?
 	if((level = which_pc.get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(type_of_attacker))) > 0)
 		how_much = how_much / 2;
+		
 	if(isHumanoid(type_of_attacker) && !isHuman(type_of_attacker) && type_of_attacker != eRace::HUMANOID) {
 		// If it's a slith, nephil, vahnatai, or goblin, Protection from Humanoids also helps
 		// Humanoid is explicitly excluded here because otherwise it would help twice.
 		if((level = which_pc.get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(eRace::HUMANOID))) > 0)
 			how_much = how_much / 2;
 	}
+	
 	if(type_of_attacker == eRace::SKELETAL) {
 		// Protection from Undead helps with both types of undead
 		if((level = which_pc.get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(eRace::UNDEAD))) > 0)
@@ -2429,7 +2429,8 @@ bool damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace ty
 	if(which_pc.cur_health == 0 && which_pc.main_status == eMainStatus::ALIVE)
 		play_sound(3);
 	put_pc_screen();
-	return true;
+	
+	return how_much;
 }
 
 void petrify_pc(cPlayer& which_pc,int strength) {

@@ -1409,7 +1409,7 @@ void change_level(short town_num,short x,short y) {
 
 
 // Damaging and killing monsters needs to be here because several have specials attached to them.
-bool damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType dam_type, short sound_type, bool do_print) {
+short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType dam_type, short sound_type, bool do_print) {
 	short r1,which_spot;
 	location where_put;
 	
@@ -1556,7 +1556,7 @@ bool damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType 
 		make_town_hostile();
 	}
 	
-	return true;
+	return how_much;
 }
 
 void petrify_monst(cCreature& which_m,int strength) {
