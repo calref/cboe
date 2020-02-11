@@ -56,7 +56,6 @@ void add_missile(location dest,miss_num_t missile_type,short path_type,short x_a
 void add_explosion(location dest,short val_to_place,short place_type,short boom_type,short x_adj,short y_adj);
 void do_missile_anim(short num_steps,location missile_origin,short sound_num) ;
 void do_explosion_anim(short sound_num,short expand,short snd = -1);
-void click_shop_rect(rectangle area_rect);
 void draw_shop_graphics(bool pressed,rectangle clip_area_rect);
 void refresh_shopping();
 std::string get_item_interesting_string(cItem item);
