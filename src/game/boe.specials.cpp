@@ -1977,7 +1977,7 @@ void run_special(eSpecCtx which_mode, eSpecCtxType which_type, spec_num_t start_
 		ctx.next_spec = -1;
 		ctx.cur_spec = get_node(cur_spec, ctx.cur_spec_type);
 		
-		if(univ.node_step_through) {
+		if(univ.debug_mode && univ.node_step_through) {
 			give_help(68,69);
 			std::string debug = "Step: ";
 			debug += (*ctx.cur_spec.type).name();
