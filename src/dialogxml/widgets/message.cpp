@@ -12,167 +12,85 @@
 
 extern sf::Texture bg_gworld;
 
-void cTextMsg::setColour(sf::Color clr) {
-	color = clr;
-}
-
-void cTextMsg::setFormat(eFormat prop, short val){
-	switch(prop){
+bool cTextMsg::manageFormat(eFormat prop, bool set, boost::any* val) {
+	switch(prop) {
 		case TXT_FRAME:
-			drawFramed = val;
-			break;
-		case TXT_FRAMESTYLE:
-			frameStyle = eFrameStyle(val);
+			if(val) {
+				if(set) frameStyle = boost::any_cast<eFrameStyle>(*val);
+				else *val = frameStyle;
+			}
 			break;
 		case TXT_SIZE:
-			textSize = val;
+			if(val) {
+				if(set) textSize = boost::any_cast<short>(*val);
+				else *val = textSize;
+			}
 			break;
 		case TXT_FONT:
-			if(val == FONT_DUNGEON) textFont = FONT_DUNGEON;
-			else if(val == FONT_PLAIN) textFont = FONT_PLAIN;
-			else if(val == FONT_MAIDWORD) textFont = FONT_MAIDWORD;
-			else textFont = FONT_BOLD; // Defaults to bold if an invalid value is provided.
+			if(val) {
+				if(set) textFont = boost::any_cast<eFont>(*val);
+				else *val = textFont;
+			}
 			break;
-		case TXT_WRAP:
-			throw xUnsupportedProp(prop);
-	}
-}
-
-sf::Color cTextMsg::getColour() {
-	return color;
-}
-
-short cTextMsg::getFormat(eFormat prop){
-	switch(prop){
-		case TXT_FRAME:
-			return drawFramed;
-		case TXT_FRAMESTYLE:
-			return frameStyle;
-		case TXT_SIZE:
-			return textSize;
-		case TXT_FONT:
-			return textFont;
-		case TXT_WRAP:
-			throw xUnsupportedProp(prop);
-	}
-	return 0;
-}
-
-std::string cTextMsg::parse(ticpp::Element& who, std::string fname) {
-	using namespace ticpp;
-	Iterator<Attribute> attr;
-	Iterator<Node> node;
-	std::string name, id;
-	int width = 0, height = 0;
-	bool foundTop = false, foundLeft = false; // top and left are required attributes
-	rectangle frame;
-	if(parent->getBg() == cDialog::BG_DARK)
-		setColour(sf::Color::White);
-	for(attr = attr.begin(&who); attr != attr.end(); attr++){
-		attr->GetName(&name);
-		if(name == "name")
-			attr->GetValue(&id);
-		else if(name == "framed"){
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "true") setFormat(TXT_FRAME, true);
-		}else if(name == "outline") {
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "solid") setFormat(TXT_FRAMESTYLE, FRM_SOLID);
-			else if(val == "inset") setFormat(TXT_FRAMESTYLE, FRM_INSET);
-			else if(val == "outset") setFormat(TXT_FRAMESTYLE, FRM_OUTSET);
-			else if(val == "double") setFormat(TXT_FRAMESTYLE, FRM_DOUBLE);
-		}else if(name == "font"){
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "dungeon")
-				setFormat(TXT_FONT, FONT_DUNGEON);
-			else if(val == "plain")
-				setFormat(TXT_FONT, FONT_PLAIN);
-			else if(val == "bold")
-				setFormat(TXT_FONT, FONT_BOLD);
-			else if(val == "maidenword")
-				setFormat(TXT_FONT, FONT_MAIDWORD);
-			else throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
-		}else if(name == "size"){
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "large")
-				setFormat(TXT_SIZE, 12);
-			else if(val == "small")
-				setFormat(TXT_SIZE, 10);
-			else if(val == "title")
-				setFormat(TXT_SIZE, 18);
-			else throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
-		}else if(name == "color" || name == "colour"){
-			std::string val;
-			attr->GetValue(&val);
-			sf::Color clr;
-			try{
-				clr = parseColor(val);
-			}catch(int){
-				throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
+		case TXT_COLOUR:
+			if(val) {
+				if(set) color = boost::any_cast<sf::Color>(*val);
+				else *val = color;
 			}
-			setColour(clr);
-		}else if(name == "def-key"){
-			std::string val;
-			attr->GetValue(&val);
-			try{
-				attachKey(parseKey(val));
-			}catch(int){
-				throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
-			}
-		}else if(name == "top"){
-			attr->GetValue(&frame.top), foundTop = true;
-		}else if(name == "left"){
-			attr->GetValue(&frame.left), foundLeft = true;
-		}else if(name == "width"){
-			attr->GetValue(&width);
-		}else if(name == "height"){
-			attr->GetValue(&height);
-//		}else if(name == "fromlist"){
-//			attr->GetValue(&p.second->fromList);
-		}else throw xBadAttr("text",name,attr->Row(),attr->Column(),fname);
+			break;
+		default: return false;
 	}
-	if(!foundTop) throw xMissingAttr("text","top",who.Row(),who.Column(),fname);
-	if(!foundLeft) throw xMissingAttr("text","left",who.Row(),who.Column(),fname);
-	frame.right = frame.left + width;
-	frame.bottom = frame.top + height;
-	setBounds(frame);
-	std::string content;
-	for(node = node.begin(&who); node != node.end(); node++){
-		std::string val;
-		int type = node->Type();
-		node->GetValue(&val);
-		// TODO: De-magic the | character
-		if(type == TiXmlNode::ELEMENT && val == "br") content += '|'; // because vertical bar is replaced by a newline when drawing strings
-		else if(type == TiXmlNode::TEXT)
-			content += dlogStringFilter(val);
-		else if(type != TiXmlNode::COMMENT) {
-			val = '<' + val + '>';
-			throw xBadVal("text",xBadVal::CONTENT,content + val,node->Row(),node->Column(),fname);
+	return true;
+}
+
+bool cTextMsg::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) {
+	if(attr.Name() == "def-key"){
+		std::string val = attr.Value();
+		try {
+			attachKey(parseKey(val));
+		} catch(int){ 
+			throw xBadVal(tagName, attr.Name(), val, attr.Row(), attr.Column(), fname);
 		}
+		return true;
 	}
-	setText(content);
-	return id;
+	return cControl::parseAttribute(attr, tagName, fname);
+}
+
+bool cTextMsg::parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) {
+	if(content.Type() == TiXmlNode::TEXT) {
+		text += dlogStringFilter(content.Value());
+		return true;
+	} else if(content.Value() == "br") {
+		// TODO: De-magic the | character
+		text += '|'; // because vertical bar is replaced by a newline when drawing strings
+		return true;
+	}
+	return cControl::parseContent(content, n, tagName, fname, text);
+}
+
+void cTextMsg::validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) {
+	cControl::validatePostParse(who, fname, attrs, nodes);
+	if(!attrs.count("color") && !attrs.count("colour") && parent->getBg() == cDialog::BG_DARK)
+		setColour(sf::Color::White);
 }
 
 cTextMsg::cTextMsg(cDialog& parent) :
 	cControl(CTRL_TEXT,parent),
-	drawFramed(false),
 	textFont(FONT_BOLD),
 	textSize(10),
 	color(parent.getDefTextClr()),
-	fromList("none") {}
+	fromList("none") {
+	setFormat(TXT_FRAME, FRM_NONE);
+}
 
 cTextMsg::cTextMsg(sf::RenderWindow& parent) :
 	cControl(CTRL_TEXT,parent),
-	drawFramed(false),
 	textFont(FONT_BOLD),
 	textSize(10),
 	color(cDialog::defaultBackground == cDialog::BG_DARK ? sf::Color::White : sf::Color::Black),
-	fromList("none") {}
+	fromList("none") {
+	setFormat(TXT_FRAME, FRM_NONE);
+}
 
 bool cTextMsg::isClickable(){
 	return haveHandler(EVT_CLICK);
@@ -195,7 +113,7 @@ void cTextMsg::draw(){
 		TextStyle style;
 		style.font = textFont;
 		style.pointSize = textSize;
-		if(drawFramed) drawFrame(2,frameStyle);
+		drawFrame(2, frameStyle);
 		sf::Color draw_color = color;
 		if(depressed){
 			draw_color.r = 256 - draw_color.r;

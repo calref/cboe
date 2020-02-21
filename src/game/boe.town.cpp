@@ -1486,7 +1486,7 @@ void draw_map(bool need_refresh) {
 	cPict theGraphic(mini_map);
 	theGraphic.setBounds(dlogpicrect);
 	theGraphic.setPict(21, PIC_DLOG);
-	theGraphic.setFormat(TXT_FRAME, false);
+	theGraphic.setFormat(TXT_FRAME, FRM_NONE);
 	theGraphic.draw();
 	style.colour = sf::Color::White;
 	style.lineHeight = 12;

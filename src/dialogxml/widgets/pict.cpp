@@ -75,27 +75,24 @@ std::map<ePicType,void(cPict::*)(short,rectangle)>& cPict::drawPict(){
 	return f;
 }
 
-void cPict::setFormat(eFormat prop, short val){
-	if(prop == TXT_FRAME) drawFramed = val;
-	else if(prop == TXT_FRAMESTYLE) frameStyle = eFrameStyle(val);
-	else if(prop == TXT_WRAP) drawScaled = !val;
-	else throw xUnsupportedProp(prop);
-}
-
-short cPict::getFormat(eFormat prop){
-	if(prop == TXT_FRAME) return drawFramed;
-	else if(prop == TXT_FRAMESTYLE) return frameStyle;
-	else if(prop == TXT_WRAP) return !drawScaled;
-	else throw xUnsupportedProp(prop);
-}
-
-void cPict::setColour(sf::Color) {
-	// TODO: Colour is not supported
-}
-
-sf::Color cPict::getColour() {
-	// TODO: Colour is not supported
-	return sf::Color();
+bool cPict::manageFormat(eFormat prop, bool set, boost::any* val) {
+	switch(prop) {
+		case TXT_FRAME:
+			if(val) {
+				if(set) frameStyle = boost::any_cast<eFrameStyle>(*val);
+				else *val = frameStyle;
+			}
+			break;
+		case TXT_WRAP:
+			if(val) {
+				if(set) drawScaled = !boost::any_cast<bool>(*val);
+				else *val = !drawScaled;
+			}
+			break;
+		// TODO: Color is not supported
+		default: return false;
+	}
+	return true;
 }
 
 void cPict::setPict(pic_num_t num, ePicType type){
@@ -133,12 +130,14 @@ ePicType cPict::getPicType(){
 }
 
 cPict::cPict(cDialog& parent) :
-	cControl(CTRL_PICT,parent),
-	drawFramed(true) {}
+	cControl(CTRL_PICT,parent) {
+	setFormat(TXT_FRAME, FRM_SOLID);
+}
 
 cPict::cPict(sf::RenderWindow& parent) :
-	cControl(CTRL_PICT, parent),
-	drawFramed(true) {}
+	cControl(CTRL_PICT, parent) {
+	setFormat(TXT_FRAME, FRM_SOLID);
+}
 
 bool cPict::isClickable(){
 	return haveHandler(EVT_CLICK);
@@ -435,141 +434,95 @@ void cPict::advanceAnim() {
 	if(animFrame >= 256) animFrame = 0;
 }
 
-std::string cPict::parse(ticpp::Element& who, std::string fname) {
-	using namespace ticpp;
-	Iterator<Attribute> attr;
-	std::string name, id;
-	ePicType type;
-	bool wide = false, tall = false, custom = false, tiny = false;
-	bool foundTop = false, foundLeft = false, foundType = false, foundNum = false; // required attributes
-	rectangle frame;
-	int width = 0, height = 0;
-	for(attr = attr.begin(&who); attr != attr.end(); attr++){
-		attr->GetName(&name);
-		if(name == "name")
-			attr->GetValue(&id);
-		else if(name == "type"){
-			std::string val;
-			foundType = true;
-			attr->GetValue(&val);
-			if(val == "blank"){
-				setPict(cPict::BLANK, PIC_TER);
-				foundNum = true;
-				continue;
-			}else if(val == "ter")
-				type = PIC_TER;
-			else if(val == "teranim")
-				type = PIC_TER_ANIM;
-			else if(val == "monst")
-				type = PIC_MONST;
-			else if(val == "dlog")
-				type = PIC_DLOG;
-			else if(val == "talk")
-				type = PIC_TALK;
-			else if(val == "scen")
-				type = PIC_SCEN;
-			else if(val == "item")
-				type = PIC_ITEM;
-			else if(val == "pc")
-				type = PIC_PC;
-			else if(val == "field")
-				type = PIC_FIELD;
-			else if(val == "boom")
-				type = PIC_BOOM;
-			else if(val == "missile")
-				type = PIC_MISSILE;
-			else if(val == "full")
-				type = PIC_FULL;
-			else if(val == "map")
-				type = PIC_TER_MAP;
-			else if(val == "status")
-				type = PIC_STATUS;
-			else throw xBadVal("pict",name,val,attr->Row(),attr->Column(),fname);
-			if(foundNum) {
-				pic_num_t wasPic = getPicNum();
-				setPict(wasPic, type);
-			}
-		}else if(name == "custom"){
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "true") custom = true;
-		}else if(name == "scaled"){
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "true") setFormat(TXT_WRAP, false);
-		}else if(name == "size"){
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "wide") wide = true;
-			else if(val == "tall") tall = true;
-			else if(val == "large") wide = tall = true;
-			else if(val == "small") tiny = true;
-			else throw xBadVal("pict",name,val,attr->Row(),attr->Column(),fname);
-		}else if(name == "def-key"){
-			std::string val;
-			attr->GetValue(&val);
-			try{
-				attachKey(parseKey(val));
-			}catch(int){
-				throw xBadVal("pict",name,val,attr->Row(),attr->Column(),fname);
-			}
-		}else if(name == "num"){
-			pic_num_t newPic;
-			attr->GetValue(&newPic), foundNum = true;
-			if(foundType) setPict(newPic, type);
-			else setPict(newPic);
-		}else if(name == "top"){
-			attr->GetValue(&frame.top), foundTop = true;
-		}else if(name == "left"){
-			attr->GetValue(&frame.left), foundLeft = true;
-		}else if(name == "width"){
-			attr->GetValue(&width);
-		}else if(name == "height"){
-			attr->GetValue(&height);
-		}else if(name == "framed"){
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "true") setFormat(TXT_FRAME, true);
-			else setFormat(TXT_FRAME, false);
-		}else if(name == "outline") {
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "solid") setFormat(TXT_FRAMESTYLE, FRM_SOLID);
-			else if(val == "inset") setFormat(TXT_FRAMESTYLE, FRM_INSET);
-			else if(val == "outset") setFormat(TXT_FRAMESTYLE, FRM_OUTSET);
-			else if(val == "double") setFormat(TXT_FRAMESTYLE, FRM_DOUBLE);
-		}else throw xBadAttr("pict",name,attr->Row(),attr->Column(),fname);
-	}
-	if(!foundType) throw xMissingAttr("pict","type",who.Row(),who.Column(),fname);
-	if(!foundNum) throw xMissingAttr("pict","num",who.Row(),who.Column(),fname);
-	if(!foundTop) throw xMissingAttr("pict","top",who.Row(),who.Column(),fname);
-	if(!foundLeft) throw xMissingAttr("pict","left",who.Row(),who.Column(),fname);
-	if(wide || tall) {
-		pic_num_t wasPic = getPicNum();
-		if(wide && !tall && getPicType() == PIC_MONST) setPict(wasPic, PIC_MONST_WIDE);
-		else if(!wide && tall && getPicType() == PIC_MONST) setPict(wasPic, PIC_MONST_TALL);
-		else if(wide && tall){
-			if(getPicType() == PIC_MONST) setPict(wasPic, PIC_MONST_LG);
-			else if(getPicType() == PIC_SCEN) setPict(wasPic, PIC_SCEN_LG);
-			else if(getPicType() == PIC_DLOG) setPict(wasPic, PIC_DLOG_LG);
+
+bool cPict::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) {
+	std::string name = attr.Name();
+	if(name == "type") {
+		std::string val = attr.Value();
+		if(val == "blank")
+			blank = true;
+		else if(val == "ter")
+			picType = PIC_TER;
+		else if(val == "teranim")
+			picType = PIC_TER_ANIM;
+		else if(val == "monst")
+			picType = PIC_MONST;
+		else if(val == "dlog")
+			picType = PIC_DLOG;
+		else if(val == "talk")
+			picType = PIC_TALK;
+		else if(val == "scen")
+			picType = PIC_SCEN;
+		else if(val == "item")
+			picType = PIC_ITEM;
+		else if(val == "pc")
+			picType = PIC_PC;
+		else if(val == "field")
+			picType = PIC_FIELD;
+		else if(val == "boom")
+			picType = PIC_BOOM;
+		else if(val == "missile")
+			picType = PIC_MISSILE;
+		else if(val == "full")
+			picType = PIC_FULL;
+		else if(val == "map")
+			picType = PIC_TER_MAP;
+		else if(val == "status")
+			picType = PIC_STATUS;
+		else throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
+		return true;
+	} else if(name == "num") {
+		try {
+			attr.GetValue(&picNum);
+		} catch(ticpp::Exception&) {
+			throw xBadVal(tagName, name, attr.Value(), attr.Row(), attr.Column(), fname);
 		}
-	} else if(tiny && type == PIC_ITEM) {
-		pic_num_t wasPic = getPicNum();
-		setPict(wasPic, PIC_TINY_ITEM);
+		return true;
+	} else if(name == "custom") {
+		custom = true;
+		return true;
+	} else if(name == "size") {
+		std::string val = attr.Value();
+		if(val == "wide") wide = true;
+		else if(val == "tall") tall = true;
+		else if(val == "large") wide = tall = true;
+		else if(val == "small") tiny = true;
+		else throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
+		return true;
+	} else if(name == "scaled") {
+		std::string val = attr.Value();
+		if(val == "true") setFormat(TXT_WRAP, false);
+		else if(val == "false") setFormat(TXT_WRAP, true);
+		else throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
+		return true;
+	} else if(name == "def-key") {
+		try {
+			attachKey(parseKey(attr.Value()));
+		} catch(int) {
+			throw xBadVal(tagName, name, attr.Value(), attr.Row(), attr.Column(), fname);
+		}
+		return true;
+	} else if(name == "wrap") {
+		return false;
 	}
-	frame.right = frame.left;
-	frame.bottom = frame.top;
-	if(width > 0 || height > 0 || getPicType() == PIC_FULL){
-		frame.right = frame.left + width;
-		frame.bottom = frame.top + height;
-	}
-	setBounds(frame);
-	pic_num_t wasPic = getPicNum();
-	if(custom) {
-		setPict(wasPic, getPicType() + PIC_CUSTOM);
-	} else setPict(wasPic, getPicType());
-	// The above line also sets the graphic's bounding rect, if necessary
-	return id;
+	return cControl::parseAttribute(attr, tagName, fname);
+}
+
+void cPict::validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) {
+	if(!attrs.count("type")) throw xMissingAttr(who.Value(), "type", who.Row(), who.Column(), fname);
+	if(blank && attrs.count("num")) throw xBadAttr(who.Value(), "num", who.Row(), who.Column(), fname);
+	else if(!blank && !attrs.count("num")) throw xMissingAttr(who.Value(), "num", who.Row(), who.Column(), fname);
+	
+	if(blank) picType = PIC_MONST, picNum = BLANK;
+	else if(tiny && picType == PIC_ITEM) picType = PIC_TINY_ITEM;
+	else if(custom) picType += PIC_CUSTOM;
+	
+	if(wide && tall) picType += PIC_LARGE;
+	else if(wide) picType += PIC_WIDE;
+	else if(tall) picType += PIC_TALL;
+	
+	setPict(picNum, picType);
+	return cControl::validatePostParse(who, fname, attrs, nodes);
 }
 
 void cPict::recalcRect() {
@@ -733,7 +686,7 @@ void cPict::draw(){
 		fill_rect(*inWindow, rect, sf::Color::Black);
 	else (this->*drawPict()[picType])(picNum,rect);
 	
-	if(drawFramed) drawFrame(2,frameStyle);
+	drawFrame(2, frameStyle);
 }
 
 void cPict::drawPresetTer(short num, rectangle to_rect){
@@ -1325,7 +1278,7 @@ void cPict::drawAt(sf::RenderWindow& win, rectangle dest, pic_num_t which_g, ePi
 	cPict pic(win);
 	pic.frame = dest;
 	pic.setPict(which_g, type_g);
-	pic.setFormat(TXT_FRAME, framed);
+	pic.setFormat(TXT_FRAME, framed ? FRM_SOLID : FRM_NONE);
 	pic.draw();
 }
 

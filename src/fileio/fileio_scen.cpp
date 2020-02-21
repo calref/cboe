@@ -520,7 +520,7 @@ static void readQuestFromXml(ticpp::Element& data, cQuest& quest) {
 				elem->GetText(&quest.bank1);
 			else if(banks_found == 1)
 				elem->GetText(&quest.bank2);
-			else throw xBadNode(name, elem->Row(), elem->Column(), fname);
+			else throw xBadNode(type, elem->Row(), elem->Column(), fname);
 			banks_found++;
 		} else if(type == "name") {
 			elem->GetText(&quest.name, false);

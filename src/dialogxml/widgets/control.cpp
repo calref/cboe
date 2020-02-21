@@ -67,9 +67,6 @@ const char* xUnsupportedProp::what() const throw(){
 			case TXT_FRAME:
 				s = "TXT_FRAME";
 				break;
-			case TXT_FRAMESTYLE:
-				s = "TXT_FRAMESTYLE";
-				break;
 			case TXT_FONT:
 				s = "TXT_FONT";
 				break;
@@ -79,8 +76,10 @@ const char* xUnsupportedProp::what() const throw(){
 			case TXT_WRAP:
 				s = "TXT_WRAP";
 				break;
+			case TXT_COLOUR:
+				s = "TXT_COLOUR";
+				break;
 		}
-		// TODO: Support colour, which doesn't use the setFormat function
 		sprintf(msg,"Format property %s not valid for this control.\n",s.c_str());
 	}
 	return msg;
@@ -186,6 +185,69 @@ cKey cControl::getAttachedKey() {
 
 void cControl::setActive(bool active) {
 	depressed = active;
+}
+
+void cControl::setFormat(eFormat prop, short val) {
+	boost::any newVal;
+	switch(prop) {
+		case TXT_WRAP:
+			newVal = bool(val);
+			break;
+		case TXT_FONT:
+			newVal = eFont(val);
+			break;
+		case TXT_SIZE:
+			newVal = val;
+			break;
+		case TXT_FRAME:
+			newVal = eFrameStyle(val);
+			break;
+		case TXT_COLOUR: // Interpret as a shade of grey
+			newVal = sf::Color{val, val, val};
+			break;
+	}
+	if(!manageFormat(prop, true, &newVal))
+		throw xUnsupportedProp(prop);
+}
+
+short cControl::getFormat(eFormat prop) {
+	boost::any curVal;
+	if(!manageFormat(prop, false, &curVal))
+		throw xUnsupportedProp(prop);
+	switch(prop) {
+		case TXT_WRAP:
+			return boost::any_cast<bool>(curVal);
+		case TXT_FONT:
+			return boost::any_cast<eFont>(curVal);
+		case TXT_SIZE:
+			return boost::any_cast<short>(curVal);
+		case TXT_FRAME:
+			return boost::any_cast<eFrameStyle>(curVal);
+		case TXT_COLOUR: // Interpret as a shade of grey
+			return boost::any_cast<sf::Color>(curVal).toInteger();
+	}
+	return 0;
+}
+
+bool cControl::canFormat(eFormat prop) {
+	return manageFormat(prop, false, nullptr);
+}
+
+void cControl::setColour(sf::Color clr) {
+	boost::any newVal = clr;
+	if(!manageFormat(TXT_COLOUR, true, &newVal))
+		throw xUnsupportedProp(TXT_COLOUR);
+}
+
+sf::Color cControl::getColour() {
+	boost::any curVal;
+	if(!manageFormat(TXT_COLOUR, false, &curVal))
+		throw xUnsupportedProp(TXT_COLOUR);
+	return boost::any_cast<sf::Color>(curVal);
+}
+
+bool cControl::manageFormat(eFormat, bool, boost::any*) {
+	return false;
 }
 
 void cControl::redraw() {
@@ -312,6 +374,7 @@ bool cControl::triggerFocusHandler(cDialog& dlg, std::string id, bool losing){
 }
 
 void cControl::drawFrame(short amt, eFrameStyle frameStyle){
+	if(frameStyle == FRM_NONE) return;
 	// dk_gray had a 0..65535 component of 12287, and med_gray had a 0..65535 component of 24574
 	static sf::Color lt_gray = {224,224,224},dk_gray = {48,48,48};
 	rectangle rect = frame, ul_rect;
@@ -338,6 +401,122 @@ void cControl::drawFrame(short amt, eFrameStyle frameStyle){
 		rect.inset(-amt, -amt);
 		frame_rect(*inWindow, rect, dk_gray);
 	}
+}
+
+std::string cControl::parse(ticpp::Element& who, std::string fname) {
+	using namespace ticpp;
+	std::string tagName, id;
+	who.GetValue(&tagName);
+	Iterator<Attribute> attr;
+	Iterator<Node> node;
+	std::set<std::string> foundAttrs;
+	std::multiset<std::string> foundNodes;
+	int width = 0, height = 0;
+	rectangle frame;
+	for(attr = attr.begin(&who); attr != attr.end(); attr++){
+		std::string attrName = attr->Name();
+		foundAttrs.insert(attrName);
+		if(attrName == "name") attr->GetValue(&id);
+		else if(attrName == "top") attr->GetValue(&frame.top);
+		else if(attrName == "left") attr->GetValue(&frame.left);
+		else if(attrName == "width") attr->GetValue(&width);
+		else if(attrName == "height") attr->GetValue(&height);
+		else if(!parseAttribute(*attr, tagName, fname))
+			throw xBadAttr(tagName, attrName, attr->Row(), attr->Column(), fname);
+	}
+	std::string text;
+	for(node = node.begin(&who); node != node.end(); node++){
+		int type = node->Type();
+		std::string nodeTag;
+		if(type == TiXmlNode::ELEMENT)
+			nodeTag = node->Value();
+		if(type == TiXmlNode::COMMENT) continue;
+		else if(!parseContent(*node, foundNodes.count(nodeTag), tagName, fname, text)) {
+			std::string val = nodeTag.empty() ? nodeTag : xBadVal::CONTENT;
+			throw xBadVal(tagName, xBadVal::CONTENT, val, node->Row(), node->Column(), fname);
+		}
+		foundNodes.insert(nodeTag);
+	}
+	setText(text);
+	location bestSz = getPreferredSize();
+	frame.width() = width > 0 ? width : bestSz.x;
+	frame.height() = height > 0 ? height : bestSz.y;
+	setBounds(frame);
+	validatePostParse(who, fname, foundAttrs, foundNodes);
+	return id;
+}
+
+bool cControl::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) {
+	std::string name;
+	attr.GetName(&name);
+	// Colour and formatting, if supported
+	if(name == "framed" && canFormat(TXT_FRAME)) {
+		std::string val;
+		attr.GetValue(&val);
+		if(val == "true") setFormat(TXT_FRAME, FRM_SOLID);
+		else if(val == "false") setFormat(TXT_FRAME, FRM_NONE);
+		else throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
+		return true;
+	}
+	if(name == "outline" && canFormat(TXT_FRAME)) {
+		std::string val;
+		attr.GetValue(&val);
+		if(val == "none") setFormat(TXT_FRAME, FRM_NONE);
+		else if(val == "solid") setFormat(TXT_FRAME, FRM_SOLID);
+		else if(val == "inset") setFormat(TXT_FRAME, FRM_INSET);
+		else if(val == "outset") setFormat(TXT_FRAME, FRM_OUTSET);
+		else if(val == "double") setFormat(TXT_FRAME, FRM_DOUBLE);
+		else throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
+		return true;
+	}
+	if(name == "font" && canFormat(TXT_FONT)) {
+		std::string val;
+		attr.GetValue(&val);
+		if(val == "plain") setFormat(TXT_FONT, FONT_PLAIN);
+		else if(val == "bold") setFormat(TXT_FONT, FONT_BOLD);
+		else if(val == "dungeon") setFormat(TXT_FONT, FONT_DUNGEON);
+		else if(val == "maidenword") setFormat(TXT_FONT, FONT_MAIDWORD);
+		else throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
+		return true;
+	}
+	if(name == "size" && canFormat(TXT_SIZE)) {
+		std::string val;
+		attr.GetValue(&val);
+		if(val == "small") setFormat(TXT_SIZE, 10);
+		else if(val == "large") setFormat(TXT_SIZE, 12);
+		else if(val == "title") setFormat(TXT_SIZE, 18);
+		else throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
+		return true;
+	}
+	if(name == "wrap" && canFormat(TXT_WRAP)) {
+		std::string val;
+		attr.GetValue(&val);
+		if(val == "true") setFormat(TXT_WRAP, true);
+		else if(val == "false") setFormat(TXT_WRAP, false);
+		else throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
+		return true;
+	}
+	if((name == "color" || name == "colour") && canFormat(TXT_COLOUR)) {
+		std::string val;
+		try{
+			sf::Color clr = parseColor(val);
+			setColour(clr);
+		} catch(int) {
+			throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
+		}
+		return true;
+	}
+	return false;
+}
+
+
+bool cControl::parseContent(ticpp::Node&, int, std::string, std::string, std::string&) {
+	return false;
+}
+
+void cControl::validatePostParse(ticpp::Element& elem, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>&) {
+	if(!attrs.count("left")) throw xMissingAttr(elem.Value(), "left", elem.Row(), elem.Column(), fname);
+	if(!attrs.count("top")) throw xMissingAttr(elem.Value(), "top", elem.Row(), elem.Column(), fname);
 }
 
 cControl::~cControl() {}

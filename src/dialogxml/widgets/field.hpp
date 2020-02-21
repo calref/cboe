@@ -33,7 +33,8 @@ enum eFldType {
 /// There is no Unicode support.
 class cTextField : public cControl {
 public:
-	std::string parse(ticpp::Element& who, std::string fname) override;
+	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
+	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;
 	/// For text fields, this is triggered when it loses or gains the input focus.
 	/// @copydoc cControl::getSupportedHandlers
 	///
@@ -42,9 +43,6 @@ public:
 		return {EVT_FOCUS, EVT_DEFOCUS};
 	}
 	bool handleClick(location where) override;
-	void setFormat(eFormat prop, short val) override;
-	short getFormat(eFormat prop) override;
-	void setColour(sf::Color clr) override;
 	void setText(std::string to) override;
 	storage_t store() override;
 	void restore(storage_t to) override;
@@ -54,7 +52,6 @@ public:
 	/// Set the input type of the field.
 	/// @param newType The new input type.
 	void setInputType(eFldType newType);
-	sf::Color getColour() override;
 	/// Create a new editable text field.
 	/// @param parent The parent dialog.
 	explicit cTextField(cDialog& parent);
@@ -76,6 +73,7 @@ public:
 private:
 	void callHandler(event_fcn<EVT_FOCUS>::type onFocus, cDialog& me, std::string id) override;
 	bool callHandler(event_fcn<EVT_DEFOCUS>::type onFocus, cDialog& me, std::string id) override;
+	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
 	void set_ip(location clickLoc, int cTextField::* insertionPoint);
 	cUndoList history;
 	action_ptr current_action;

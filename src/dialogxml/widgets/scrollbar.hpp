@@ -64,7 +64,9 @@ class cScrollbar : public cControl, public iEventListener, public iDrawable {
 public:
 	/// @copydoc cDialog::init()
 	static void init();
-	std::string parse(ticpp::Element& who, std::string fname);
+	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
+	void validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) override;
+	location getPreferredSize() override;
 	/// Create a new scrollbar without a parent dialog.
 	/// @param parent The parent window.
 	explicit cScrollbar(sf::RenderWindow& parent);

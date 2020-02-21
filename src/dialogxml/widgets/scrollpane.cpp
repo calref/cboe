@@ -70,25 +70,18 @@ void cScrollPane::recalcRect() {
 	frame.right += scrollFrame.width();
 }
 
-void cScrollPane::setFormat(eFormat prop, short val) {
-	if(prop == TXT_FRAME) framed = val;
-	else if(prop == TXT_FRAMESTYLE) frameStyle = eFrameStyle(val);
-	else throw xUnsupportedProp(prop);
-}
-
-short cScrollPane::getFormat(eFormat prop) {
-	if(prop == TXT_FRAME) return framed;
-	else if(prop == TXT_FRAMESTYLE) return frameStyle;
-	else throw xUnsupportedProp(prop);
-}
-
-void cScrollPane::setColour(sf::Color) {
-	// TODO: Colour is not supported
-}
-
-sf::Color cScrollPane::getColour() {
-	// TODO: Colour is not supported
-	return sf::Color();
+bool cScrollPane::manageFormat(eFormat prop, bool set, boost::any* val) {
+	switch(prop) {
+		case TXT_FRAME:
+			if(val) {
+				if(set) frameStyle = boost::any_cast<eFrameStyle>(*val);
+				else *val = frameStyle;
+			}
+			break;
+		// TODO: Colour is not supported
+		default: return false;
+	}
+	return true;
 }
 
 cControl::storage_t cScrollPane::store() {
@@ -179,92 +172,52 @@ void cScrollPane::forEach(std::function<void(std::string,cControl&)> callback) {
 		callback(ctrl.first, *ctrl.second);
 }
 
-std::string cScrollPane::parse(ticpp::Element& who, std::string fname) {
-	using namespace ticpp;
-	Iterator<Attribute> attr;
-	Iterator<Element> node;
-	std::string name, id;
-	rectangle frame;
-	int width = 0, height = 0;
-	bool foundTop = false, foundLeft = false;
-	scroll.setStyle(SCROLL_LED);
-	for(attr = attr.begin(&who); attr != attr.end(); attr++) {
-		attr->GetName(&name);
-		if(name == "name")
-			attr->GetValue(&id);
-		else if(name == "top")
-			attr->GetValue(&frame.top), foundTop = true;
-		else if(name == "left")
-			attr->GetValue(&frame.left), foundLeft = true;
-		else if(name == "width")
-			attr->GetValue(&width);
-		else if(name == "height")
-			attr->GetValue(&height);
-		else if(name == "framed") {
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "true") setFormat(TXT_FRAME, true);
-			else setFormat(TXT_FRAME, false);
-		}else if(name == "outline") {
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "solid") setFormat(TXT_FRAMESTYLE, FRM_SOLID);
-			else if(val == "inset") setFormat(TXT_FRAMESTYLE, FRM_INSET);
-			else if(val == "outset") setFormat(TXT_FRAMESTYLE, FRM_OUTSET);
-			else if(val == "double") setFormat(TXT_FRAMESTYLE, FRM_DOUBLE);
-		}else if(name == "style"){
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "white") setStyle(SCROLL_WHITE);
-			else if(val == "led") setStyle(SCROLL_LED);
-			else throw xBadVal("slider", name, val, attr->Row(), attr->Column(), fname);
-		} else throw xBadAttr("pane",name,attr->Row(),attr->Column(),fname);
+bool cScrollPane::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) {
+	if(attr.Name() == "style"){
+		std::string val = attr.Value();
+		if(val == "white") setStyle(SCROLL_WHITE);
+		else if(val == "led") setStyle(SCROLL_LED);
+		else throw xBadVal(tagName, attr.Name(), val, attr.Row(), attr.Column(), fname);
+		return true;
 	}
-	if(!foundTop) throw xMissingAttr("pane","top",who.Row(),who.Column(),fname);
-	if(!foundLeft) throw xMissingAttr("pane","left",who.Row(),who.Column(),fname);
-	if(width > 0) {
-		frame.width() = width;
-	}else{
-		throw xMissingAttr("pane","width",who.Row(),who.Column(),fname);
+	return cContainer::parseAttribute(attr, tagName, fname);
+}
+
+bool cScrollPane::parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) {
+	if(content.Type() == TiXmlNode::ELEMENT) {
+		std::string tag = content.Value();
+		auto& elem = dynamic_cast<ticpp::Element&>(content);
+		if(tag == "field") {
+			auto field = parent->parse<cTextField>(elem);
+			contents.insert(field);
+			// TODO: Add field to tab order
+			//tabOrder.push_back(field);
+		} else if(tag == "text") {
+			auto text = parent->parse<cTextMsg>(elem);
+			contents.insert(text);
+		} else if(tag == "pict") {
+			auto pict = parent->parse<cPict>(elem);
+			contents.insert(pict);
+		} else if(tag == "slider") {
+			auto slide = parent->parse<cScrollbar>(elem);
+			contents.insert(slide);
+		} else if(tag == "button") {
+			auto button = parent->parse<cButton>(elem);
+			contents.insert(button);
+		} else if(tag == "led") {
+			auto led = parent->parse<cLed>(elem);
+			contents.insert(led);
+		} else if(tag == "group") {
+			auto group = parent->parse<cLedGroup>(elem);
+			contents.insert(group);
+		} else throw xBadNode(tag, content.Row(), content.Column(), fname);
+		return true;
 	}
-	if(height > 0) {
-		frame.height() = height;
-	}else{
-		frame.height() = 10;
-	}
-	setBounds(frame);
-	for(node = node.begin(&who); node != node.end(); node++) {
-		std::string val;
-		int type = node->Type();
-		node->GetValue(&val);
-		if(type == TiXmlNode::ELEMENT) {
-			if(val == "field") {
-				auto field = parent->parse<cTextField>(*node);
-				contents.insert(field);
-				// TODO: Add field to tab order
-				//tabOrder.push_back(field);
-			} else if(val == "text") {
-				auto text = parent->parse<cTextMsg>(*node);
-				contents.insert(text);
-			} else if(val == "pict") {
-				auto pict = parent->parse<cPict>(*node);
-				contents.insert(pict);
-			} else if(val == "slider") {
-				auto slide = parent->parse<cScrollbar>(*node);
-				contents.insert(slide);
-			} else if(val == "button") {
-				auto button = parent->parse<cButton>(*node);
-				contents.insert(button);
-			} else if(val == "led") {
-				auto led = parent->parse<cLed>(*node);
-				contents.insert(led);
-			} else if(val == "group") {
-				auto group = parent->parse<cLedGroup>(*node);
-				contents.insert(group);
-			} else throw xBadNode(val,node->Row(),node->Column(),fname);
-		} else if(type != TiXmlNode::COMMENT)
-			throw xBadVal("pane",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
-	}
+	return cContainer::parseContent(content, n, tagName, fname, text);
+}
+
+void cScrollPane::validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) {
+	cContainer::validatePostParse(who, fname, attrs, nodes);
+	if(!attrs.count("style")) setStyle(SCROLL_LED);
 	recalcRect();
-	return id;
 }

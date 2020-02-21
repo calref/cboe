@@ -22,11 +22,10 @@
 /// This class can also create a frame for grouping controls or a clickable area.
 class cTextMsg : public cControl {
 public:
-	std::string parse(ticpp::Element& who, std::string fname);
-	void setFormat(eFormat prop, short val);
-	short getFormat(eFormat prop);
-	void setColour(sf::Color clr);
-	sf::Color getColour();
+	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
+	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;
+	void validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) override;
+	bool manageFormat(eFormat prop, bool set, boost::any* val);
 	/// Create a new text message.
 	/// @param parent The parent dialog.
 	explicit cTextMsg(cDialog& parent);
@@ -47,7 +46,6 @@ public:
 	cTextMsg& operator=(cTextMsg& other) = delete;
 	cTextMsg(cTextMsg& other) = delete;
 private:
-	bool drawFramed;
 	short textSize;
 	eFont textFont;
 	sf::Color color;

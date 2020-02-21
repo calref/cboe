@@ -226,17 +226,17 @@ private:
 	friend class cControl;
 };
 
-/// Thrown when an invalid element is found while parsing an XML dialog definition.
+/// Thrown when an invalid node (element or text/cdata) is found while parsing an XML dialog definition.
 class xBadNode : public std::exception {
 	std::string type, dlg;
 	int row, col;
 	mutable const char* msg;
 public:
 	/// Construct a new exception.
-	/// @param t The tag name of the invalid element.
-	/// @param r The line number of the element in the source.
-	/// @param c The column number of the element in the source.
-	/// @param dlg The name of the file in which the element occurred.
+	/// @param t The tag name of the invalid element, or empty if the invalid node was a text node.
+	/// @param r The line number of the node in the source.
+	/// @param c The column number of the node in the source.
+	/// @param dlg The name of the file in which the node occurred.
 	xBadNode(std::string t, int r, int c, std::string dlg) throw();
 	~xBadNode() throw();
 	/// @return The error message.

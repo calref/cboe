@@ -1620,7 +1620,7 @@ static void put_target_status_graphics(cDialog& me, short for_pc) {
 	for(auto next : univ.party[for_pc].status) {
 		std::string id2 = id + "-stat" + std::to_string(slot + 1);
 		cPict& pic = dynamic_cast<cPict&>(me[id2]);
-		pic.setFormat(TXT_FRAME, false);
+		pic.setFormat(TXT_FRAME, FRM_NONE);
 		if(isAlive) {
 			short placedIcon = -1;
 			if(next.first == eStatus::POISON && next.second > 4) placedIcon = 1;

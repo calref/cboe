@@ -165,20 +165,17 @@ bool cTextField::handleClick(location clickLoc) {
 	return true;
 }
 
-void cTextField::setFormat(eFormat prop, short){
-	throw xUnsupportedProp(prop);
-}
-
-short cTextField::getFormat(eFormat prop){
-	throw xUnsupportedProp(prop);
-}
-
-void cTextField::setColour(sf::Color clr) {
-	color = clr;
-}
-
-sf::Color cTextField::getColour() {
-	return color;
+bool cTextField::manageFormat(eFormat prop, bool set, boost::any* val) {
+	switch(prop) {
+		case TXT_COLOUR:
+			if(val) {
+				if(set) color = boost::any_cast<sf::Color>(*val);
+				else *val = color;
+			}
+			break;
+		default: return false;
+	}
+	return true;
 }
 
 eFldType cTextField::getInputType() {
@@ -638,61 +635,33 @@ void cTextField::handleInput(cKey key) {
 	selectionPoint = sp;
 }
 
-std::string cTextField::parse(ticpp::Element& who, std::string fname) {
-	using namespace ticpp;
-	Iterator<Attribute> attr;
-	Iterator<Node> node;
-	std::string name, id;
-	int width = 0, height = 0;
-	bool foundTop = false, foundLeft = false; // requireds
-	rectangle frame;
-	for(attr = attr.begin(&who); attr != attr.end(); attr++){
-		attr->GetName(&name);
-		if(name == "name")
-			attr->GetValue(&id);
-		else if(name == "type"){
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "int")
-				setInputType(FLD_INT);
-			else if(val == "uint")
-				setInputType(FLD_UINT);
-			else if(val == "real")
-				setInputType(FLD_REAL);
-			else if(val == "text")
-				setInputType(FLD_TEXT);
-			else throw xBadVal("field",name,val,attr->Row(),attr->Column(),fname);
-		}else if(name == "top"){
-			attr->GetValue(&frame.top), foundTop = true;
-		}else if(name == "left"){
-			attr->GetValue(&frame.left), foundLeft = true;
-		}else if(name == "width"){
-			attr->GetValue(&width);
-		}else if(name == "height"){
-			attr->GetValue(&height);
-		}else if(name == "tab-order"){
-			attr->GetValue(&tabOrder);
-		}else throw xBadAttr("field",name,attr->Row(),attr->Column(),fname);
+bool cTextField::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) {
+	std::string name = attr.Name();
+	if(name == "type"){
+		std::string val = attr.Value();
+		if(val == "int")
+			setInputType(FLD_INT);
+		else if(val == "uint")
+			setInputType(FLD_UINT);
+		else if(val == "real")
+			setInputType(FLD_REAL);
+		else if(val == "text")
+			setInputType(FLD_TEXT);
+		else throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
+		return true;
+	} else if(name == "tab-order"){
+		attr.GetValue(&tabOrder);
+		return true;
 	}
-	if(!foundTop) throw xMissingAttr("field","top",attr->Row(),attr->Column(),fname);
-	if(!foundLeft) throw xMissingAttr("field","left",attr->Row(),attr->Column(),fname);
-	frame.right = frame.left + width;
-	frame.bottom = frame.top + height;
-	setBounds(frame);
-	std::string content;
-	for(node = node.begin(&who); node != node.end(); node++){
-		std::string val;
-		int type = node->Type();
-		node->GetValue(&val);
-		if(type == TiXmlNode::TEXT)
-			content += dlogStringFilter(val);
-		else if(type != TiXmlNode::COMMENT) {
-			val = '<' + val + '>';
-			throw xBadVal("field",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
-		}
+	return cControl::parseAttribute(attr, tagName, fname);
+}
+
+bool cTextField::parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) {
+	if(content.Type() == TiXmlNode::TEXT) {
+		text += dlogStringFilter(content.Value());
+		return true;
 	}
-	setText(content);
-	return id;
+	return cControl::parseContent(content, n, tagName, fname, text);
 }
 
 aTextInsert::aTextInsert(cTextField& in, int at, std::string text) : cAction("insert text"), in(in), at(at), text(text) {}

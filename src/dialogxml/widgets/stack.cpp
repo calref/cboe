@@ -32,25 +32,18 @@ void cContainer::callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, st
 		getChild(which_clicked).triggerClickHandler(me, which_clicked, mods);
 }
 
-void cStack::setFormat(eFormat prop, short val) {
-	if(prop == TXT_FRAME) drawFramed = val;
-	else if(prop == TXT_FRAMESTYLE) frameStyle = eFrameStyle(val);
-	else throw xUnsupportedProp(prop);
-}
-
-short cStack::getFormat(eFormat prop) {
-	if(prop == TXT_FRAME) return drawFramed;
-	else if(prop == TXT_FRAMESTYLE) return frameStyle;
-	throw xUnsupportedProp(prop);
-}
-
-void cStack::setColour(sf::Color) {
-	// TODO: Colour is not supported
-}
-
-sf::Color cStack::getColour() {
-	// TODO: Colour is not supported
-	return sf::Color();
+bool cStack::manageFormat(eFormat prop, bool set, boost::any* val) {
+	switch(prop) {
+		case TXT_FRAME:
+			if(val) {
+				if(set) frameStyle = boost::any_cast<eFrameStyle>(*val);
+				else *val = frameStyle;
+			}
+			break;
+		// TODO: Colour is not supported
+		default: return false;
+	}
+	return true;
 }
 
 bool cStack::isClickable() {
@@ -158,65 +151,56 @@ void cStack::forEach(std::function<void(std::string,cControl&)> callback) {
 		callback(ctrl.first, *ctrl.second);
 }
 
-std::string cStack::parse(ticpp::Element& who, std::string fname) {
-	using namespace ticpp;
-	Iterator<Attribute> attr;
-	Iterator<Element> node;
-	std::string name, id;
-	for(attr = attr.begin(&who); attr != attr.end(); attr++) {
-		attr->GetName(&name);
-		if(name == "name")
-			attr->GetValue(&id);
-		else if(name == "pages") {
-			size_t val;
-			attr->GetValue(&val);
-			setPageCount(val);
-		}else if(name == "framed"){
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "true") setFormat(TXT_FRAME, true);
-		}else if(name == "outline") {
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "solid") setFormat(TXT_FRAMESTYLE, FRM_SOLID);
-			else if(val == "inset") setFormat(TXT_FRAMESTYLE, FRM_INSET);
-			else if(val == "outset") setFormat(TXT_FRAMESTYLE, FRM_OUTSET);
-			else if(val == "double") setFormat(TXT_FRAMESTYLE, FRM_DOUBLE);
-		} else throw xBadAttr("stack",name,attr->Row(),attr->Column(),fname);
+
+bool cStack::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) {
+	if(attr.Name() == "pages") {
+		try {
+			size_t n;
+			attr.GetValue(&n);
+			setPageCount(n);
+		} catch(ticpp::Exception&) {
+			throw xBadVal(tagName, attr.Name(), attr.Value(), attr.Row(), attr.Column(), fname);
+		}
+		return true;
 	}
-	for(node = node.begin(&who); node != node.end(); node++) {
-		std::string val;
-		int type = node->Type();
-		node->GetValue(&val);
-		if(type == TiXmlNode::ELEMENT) {
-			if(val == "field") {
-				auto field = parent->parse<cTextField>(*node);
-				controls.insert(field);
-				// TODO: Add field to tab order
-				//tabOrder.push_back(field);
-			} else if(val == "text") {
-				auto text = parent->parse<cTextMsg>(*node);
-				controls.insert(text);
-			} else if(val == "pict") {
-				auto pict = parent->parse<cPict>(*node);
-				controls.insert(pict);
-			} else if(val == "slider") {
-				auto slide = parent->parse<cScrollbar>(*node);
-				controls.insert(slide);
-			} else if(val == "button") {
-				auto button = parent->parse<cButton>(*node);
-				controls.insert(button);
-			} else if(val == "led") {
-				auto led = parent->parse<cLed>(*node);
-				controls.insert(led);
-			} else if(val == "group") {
-				auto group = parent->parse<cLedGroup>(*node);
-				controls.insert(group);
-			} else throw xBadNode(val,node->Row(),node->Column(),fname);
-		} else if(type != TiXmlNode::COMMENT)
-			throw xBadVal("stack",xBadVal::CONTENT,val,node->Row(),node->Column(),fname);
+	return cContainer::parseAttribute(attr, tagName, fname);
+}
+
+bool cStack::parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) {
+	if(content.Type() == TiXmlNode::ELEMENT) {
+		std::string tag = content.Value();
+		auto& elem = dynamic_cast<ticpp::Element&>(content);
+		if(tag == "field") {
+			auto field = parent->parse<cTextField>(elem);
+			controls.insert(field);
+			// TODO: Add field to tab order
+			//tabOrder.push_back(field);
+		} else if(tag == "text") {
+			auto text = parent->parse<cTextMsg>(elem);
+			controls.insert(text);
+		} else if(tag == "pict") {
+			auto pict = parent->parse<cPict>(elem);
+			controls.insert(pict);
+		} else if(tag == "slider") {
+			auto slide = parent->parse<cScrollbar>(elem);
+			controls.insert(slide);
+		} else if(tag == "button") {
+			auto button = parent->parse<cButton>(elem);
+			controls.insert(button);
+		} else if(tag == "led") {
+			auto led = parent->parse<cLed>(elem);
+			controls.insert(led);
+		} else if(tag == "group") {
+			auto group = parent->parse<cLedGroup>(elem);
+			controls.insert(group);
+		} else throw xBadNode(tag, content.Row(), content.Column(), fname);
+		return true;
 	}
+	return cContainer::parseContent(content, n, tagName, fname, text);
+}
+
+void cStack::validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) {
+	validatePostParse(who, fname, attrs, nodes);
 	recalcRect();
-	return id;
 }
 

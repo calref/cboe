@@ -25,15 +25,16 @@
 
 /// Formatting properties
 enum eFormat {
-	TXT_FRAME,	///< Whether to draw a frame around the control. Should be a boolean (true or false).
+	TXT_FRAME,	///< The control's frame style. Should be an enum from @ref eFrameStyle.
 	TXT_FONT,	///< The control's text font. Should be one of the constants FONT_PLAIN, FONT_BOLD, FONT_DUNGEON, FONT_MAIDEN.
 	TXT_SIZE,	///< The control's text size. Should be an integer indicating point size.
 	TXT_WRAP,	///< Whether the control should wrap. Should be a boolean (true or false).
-	TXT_FRAMESTYLE, ///< The control's frame style. Should be an enum from @ref eFrameStyle.
+	TXT_COLOUR, ///< The control's text colour. Should be an sf::Color. Use the separate set/getColour functions to set this.
 };
 
 /// Frame styles
 enum eFrameStyle {
+	FRM_NONE,	///< No frame.
 	FRM_INSET,	///< An outline style that makes it look like the interior is slightly depressed.
 	FRM_OUTSET,	///< An outline style that makes it look like the interior is slightly raise.
 	FRM_SOLID,	///< A solid outline.
@@ -91,8 +92,46 @@ public:
 class cControl {
 public:
 	using storage_t = std::map<std::string, boost::any>;
+protected:
 	/// Parses the control from an XML element
-	virtual std::string parse(ticpp::Element& who, std::string fname) = 0;
+	/// Most controls probably don't need to override this. Override parseAttribute() and parseContent() instead.
+	/// @param who A reference to the XML element being parsed.
+	/// @param fname The file being parsed, for error messages.
+	/// @return The unique ID of the widget.
+	/// @throw xBadNode if an unsupported sub-element is detected, or if text is found in an element that does not support it
+	virtual std::string parse(ticpp::Element& who, std::string fname);
+	/// Parses an attribute on the XML element representing this control.
+	/// All controls should defer to cControl::parseAttribute if they don't recognize the attribute.
+	/// @param attr A reference to the XML attribute being parsed.
+	/// @param tagName The name of the XML element, for error messages.
+	/// @param fname The file being parsed, for error messages.
+	/// @return true if the attribute is valid and was successfully parsed, false if it is unrecognized.
+	/// @throw xBadVal if the attribute is allowed but its content is invalid.
+	virtual bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname);
+	/// Parses content of the XML element representing this control, either text or a nested element.
+	/// Comments will not be passed to this function.
+	/// @param content A reference to the XML node being parsed; it will be either an element node or a text node.
+	/// @param tagName The name of the XML parent element, for error messages.
+	/// @param counter The number of previously-parsed nodes of the same tag name (or previously-parsed text nodes), excluding the current one.
+	/// @param[out] text If non-empty, this becomes the widget's text content.
+	/// @return true if the node is recognized and allowed in this location, false otherwise.
+	/// @throw xBadAttr if the node is an element and one of its attributes is not allowed.
+	/// @throw xMissingAttr if the node is an element and is missing a required attribute.
+	/// @throw xMissingElem if the node is an element and is missing a mandatory sub-element.
+	/// @throw xBadVal if the value of the node or (if the node is an element) an attribute is invalid.
+	/// The third argument can be used to accumulate the control's text.
+	virtual bool parseContent(ticpp::Node& content, int counter, std::string tagName, std::string fname, std::string& text);
+	/// Performs final validation of a parsed widget.
+	/// This can be used to throw errors for missing required attributes or elements,
+	/// or set defaults for optional values that were not found while parsing.
+	/// @param who A reference to the XML element being validated.
+	/// @param fname The file being parsed, for error messages
+	/// @param attrs A set containing all the attributes parsed from the widget's root element.
+	/// @param nodes A multiset containing all the sub-elements parsed from the widget's root element. Text nodes are also included in this set under the key "".
+	/// @throw xMissingAttr if a required attribute is missing
+	/// @throw xMissingElem if a required attribute is either missing or present in insufficient quantity
+	virtual void validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes);
+public:
 	/// Attach a keyboard shortcut to a control. Pressing the keyboard shortcut is equivalent to clicking the control.
 	/// @param key The desired keyboard shortcut.
 	void attachKey(cKey key);
@@ -203,6 +242,11 @@ public:
 	/// Set the bounding rect of this control.
 	/// @param newBounds The new bounding rect.
 	void setBounds(rectangle newBounds);
+	/// Calculate a preferred size for this control.
+	/// This can specify an exact preferred size or just a preferred width or height.
+	/// The preferred size is only used if the size is not specified in the XML.
+	/// @return The preferred size, or (0,0) if there is no preferred size.
+	virtual location getPreferredSize() {return {0,0};}
 	/// Set the position of this control.
 	/// @param to The new position.
 	void relocate(location to);
@@ -216,20 +260,27 @@ public:
 	/// @param prop The parameter to set.
 	/// @param val The desired value of the parameter.
 	/// @throw xUnsupportedProp if this control doesn't support the given parameter.
-	virtual void setFormat(eFormat prop, short val) = 0;
+	void setFormat(eFormat prop, short val);
 	/// Get one of the control's formatting parameters.
 	/// @param prop The parameter to retrieve.
 	/// @return The value of the parameter.
 	/// @throw xUnsupportedProp if this control doesn't support the given parameter.
-	virtual short getFormat(eFormat prop) = 0;
+	short getFormat(eFormat prop);
+	/// Test if the control supports a given formatting parameter
+	/// @param prop The parameter to check.
+	/// @return true if supported, false if not.
+	bool canFormat(eFormat prop);
 	/// Set the control's colour (usually text colour).
 	/// @param clr The desired colour.
 	/// @throw xUnsupportedProp if this control does not support colour.
-	virtual void setColour(sf::Color clr) = 0;
+	void setColour(sf::Color clr);
 	/// Get the control's colour.
 	/// @return The current colour.
 	/// @throw xUnsupportedProp if this control does not support colour.
-	virtual sf::Color getColour() = 0;
+	sf::Color getColour();
+	/// Test if the control supports colour
+	/// @return true if supported, false if not.
+	bool canColour();
 	/// Check if the control is clickable.
 	/// @return true if it's clickable.
 	/// @note This does not indicate whether the control supports click handlers.
@@ -326,6 +377,14 @@ protected:
 		if(handler) return handler(dlg, id, newVal);
 		return true;
 	}
+	/// Called to manage a format setting on this control.
+	/// No action is taken if the parameter is unsupported.
+	/// @param prop The parameter to manage.
+	/// @param set Whether to set the value.
+	/// @param val If @a set is true, set to this value, otherwise store the value here. Ignored if null.
+	/// The real type of this value depends on @a prop.
+	/// @return true if the parameter is supported, false otherwise.
+	virtual bool manageFormat(eFormat prop, bool set, boost::any* val);
 	/// Parses an HTML colour code.
 	/// Recognizes three-digit hex, six-digit hex, and HTML colour names.
 	/// @param code The colour code to parse.

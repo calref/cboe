@@ -519,54 +519,46 @@ void cScrollbar::draw() {
 	else draw_horizontal();
 }
 
-std::string cScrollbar::parse(ticpp::Element& who, std::string fname) {
-	using namespace ticpp;
-	Iterator<Attribute> attr;
-	std::string name, id;
-	bool foundTop = false, foundLeft = false, foundMax = false; // required attributes
-	bool foundVertical = false;
-	rectangle frame;
-	int width = 0, height = 0;
-	style = SCROLL_LED; // Dialog scrollbars have a different default.
-	for(attr = attr.begin(&who); attr != attr.end(); attr++){
-		attr->GetName(&name);
-		if(name == "name")
-			attr->GetValue(&id);
-		else if(name == "vertical"){
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "true") vert = true;
-			else vert = false;
-			foundVertical = true;
-		}else if(name == "style"){
-			std::string val;
-			attr->GetValue(&val);
-			if(val == "white") style = SCROLL_WHITE;
-			else if(val == "led") style = SCROLL_LED;
-			else throw xBadVal("slider", name, val, attr->Row(), attr->Column(), fname);
-		}else if(name == "link"){
-			attr->GetValue(&link);
-		}else if(name == "initial"){
-			attr->GetValue(&pos);
-		}else if(name == "max"){
-			attr->GetValue(&max);
-			foundMax = true;
-		}else if(name == "page-size"){
-			attr->GetValue(&pgsz);
-		}else if(name == "top"){
-			attr->GetValue(&frame.top), foundTop = true;
-		}else if(name == "left"){
-			attr->GetValue(&frame.left), foundLeft = true;
-		}else if(name == "width"){
-			attr->GetValue(&width);
-		}else if(name == "height"){
-			attr->GetValue(&height);
-		}else throw xBadAttr("slider",name,attr->Row(),attr->Column(),fname);
+bool cScrollbar::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) {
+	std::string name = attr.Name();
+	if(name == "vertical"){
+		std::string val;
+		attr.GetValue(&val);
+		if(val == "true") vert = true;
+		else vert = false;
+	}else if(name == "style"){
+		std::string val;
+		attr.GetValue(&val);
+		if(val == "white") style = SCROLL_WHITE;
+		else if(val == "led") style = SCROLL_LED;
+		else throw xBadVal("slider", name, val, attr.Row(), attr.Column(), fname);
+	}else if(name == "link"){
+		attr.GetValue(&link);
+	}else if(name == "initial"){
+		attr.GetValue(&pos);
+	}else if(name == "max"){
+		attr.GetValue(&max);
+	}else if(name == "page-size"){
+		attr.GetValue(&pgsz);
 	}
-	if(!foundMax) throw xMissingAttr("slider","num",who.Row(),who.Column(),fname);
-	if(!foundTop) throw xMissingAttr("slider","top",who.Row(),who.Column(),fname);
-	if(!foundLeft) throw xMissingAttr("slider","left",who.Row(),who.Column(),fname);
-	if(pos > max) throw xBadAttr("slider","initial",who.Row(),who.Column(),fname);
+	return cControl::parseAttribute(attr, tagName, fname);
+}
+
+
+void cScrollbar::validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) {
+	cControl::validatePostParse(who, fname, attrs, nodes);
+	if(!attrs.count("max")) throw xMissingAttr(who.Value(), "max", who.Row(), who.Column(), fname);
+	if(pos > max) throw xBadVal(who.Value(), "initial", std::to_string(pos), who.Row(), who.Column(), fname);
+	if(!attrs.count("vertical")) {
+		// Try to guess whether it's horizontal or vertical based on its size
+		int width, height;
+		who.GetAttributeOrDefault("width", &width, 0);
+		who.GetAttributeOrDefault("height", &height, 0);
+		if(height > width) vert = true;
+		else if(width > height) vert = false;
+		else throw xMissingAttr(who.Value(), "vertical", who.Row(), who.Column(), fname);
+	}
+	/*
 	int thickness = vert ? up_rect[style][VERT].width() : up_rect[style][HORZ].height();
 	if(width > 0) {
 		frame.right = frame.left + width;
@@ -585,10 +577,14 @@ std::string cScrollbar::parse(ticpp::Element& who, std::string fname) {
 		if(vert) frame.height() = 25;
 		else frame.height() = thickness;
 	}
-	setBounds(frame);
+	*/
 	if(parent->hasControl(link))
 		parent->getControl(link).setTextToNum(pos);
-	return id;
+}
+
+location cScrollbar::getPreferredSize() {
+	if(vert) return {up_rect[style][VERT].width(), 0};
+	else return {0, up_rect[style][HORZ].height()};
 }
 
 cControl::storage_t cScrollbar::store() {

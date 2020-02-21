@@ -37,12 +37,11 @@ class cStack : public cContainer {
 	std::vector<std::map<std::string,storage_t>> storage;
 	std::map<std::string,cControl*> controls;
 	bool drawFramed = false;
+	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
 public:
-	std::string parse(ticpp::Element& who, std::string fname) override;
-	void setFormat(eFormat prop, short val) override;
-	short getFormat(eFormat prop) override;
-	void setColour(sf::Color clr) override;
-	sf::Color getColour() override;
+	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
+	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;
+	void validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) override;
 	bool isClickable() override;
 	bool isFocusable() override;
 	bool isScrollable() override;

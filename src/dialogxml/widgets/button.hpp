@@ -50,11 +50,10 @@ class cButton : public cControl {
 public:
 	/// @copydoc cDialog::init()
 	static void init();
-	std::string parse(ticpp::Element& who, std::string fname);
-	void setFormat(eFormat prop, short val);
-	short getFormat(eFormat prop);
-	void setColour(sf::Color clr);
-	sf::Color getColour();
+	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
+	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;
+	void validatePostParse(ticpp::Element& elem, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& elems) override;
+	location getPreferredSize() override;
 	/// Set the type of this button.
 	/// @param newType The desired button type.
 	void setBtnType(eBtnType newType);
@@ -88,6 +87,7 @@ protected:
 	/// @param t The type of control. Should be either CTRL_LED or CTRL_BTN.
 	cButton(cDialog& parent,eControlType t);
 private:
+	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
 	bool labelWithKey;
 	std::string fromList;
 	static rectangle btnRects[13][2];
@@ -114,9 +114,8 @@ public:
 	/// default toggle-selected action of an LED.
 	/// @return true to indicate the event should continue.
 	static bool noAction(cDialog&,std::string,eKeyMod) {return true;}
-	std::string parse(ticpp::Element& who, std::string fname) override;
-	void setFormat(eFormat prop, short val) override;
-	short getFormat(eFormat prop) override;
+	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
+	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;
 	storage_t store() override;
 	void restore(storage_t to) override;
 	/// Create a new LED button.
@@ -141,6 +140,7 @@ public:
 private:
 	void defaultClickHandler(cDialog&, std::string, eKeyMod);
 	void callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::string id, eKeyMod mods) override;
+	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
 	eLedState state;
 	eFont textFont;
 	short textSize;
@@ -166,7 +166,6 @@ private:
 /// However, when the focus handler of the LED group is called, the selection _has_ been updated.,
 /// so getSelected() will return the new selection. (This is the reason for the getPreviousSelection() method.)
 class cLedGroup : public cContainer {
-	bool drawFramed = false;
 	std::map<std::string,cLed*> choices;
 	std::string fromList;
 	std::string curSelect, prevSelect;
@@ -177,7 +176,8 @@ class cLedGroup : public cContainer {
 public:
 	/// @deprecated in favour of @ref attachEventHandler
 	void attachFocusHandler(std::function<bool(cDialog&,std::string,bool)> f) override;
-	std::string parse(ticpp::Element& who, std::string fname) override;
+	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;
+	void validatePostParse(ticpp::Element& elem, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& elems) override;
 	/// @copydoc cControl::attachClickHandler()
 	///
 	/// The click handler is called whenever an LED in the group is clicked, even if it's the currently selected LED.
@@ -210,10 +210,6 @@ public:
 	/// Show one of the choices in this group.
 	/// @param id The unique key of the choice.
 	void show(std::string id);
-	void setFormat(eFormat prop, short val) override;
-	short getFormat(eFormat prop) override;
-	void setColour(sf::Color clr) override;
-	sf::Color getColour() override;
 	/// Create a new LED group.
 	/// @param parent The parent dialog.
 	explicit cLedGroup(cDialog& parent);

@@ -20,15 +20,14 @@ class cScrollPane : public cContainer {
 	std::map<std::string, cControl*> contents;
 	rectangle globalFrame;
 	bool framed = false;
+	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
 public:
 	/// Create a new scroll pane
 	explicit cScrollPane(cDialog& parent);
-	std::string parse(ticpp::Element& who, std::string fname) override;
+	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
+	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;
+	void validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) override;
 	bool handleClick(location where) override;
-	void setFormat(eFormat prop, short val) override;
-	short getFormat(eFormat prop) override;
-	void setColour(sf::Color clr) override;
-	sf::Color getColour() override;
 	bool hasChild(std::string id) override;
 	cControl& getChild(std::string id) override;
 	storage_t store() override;

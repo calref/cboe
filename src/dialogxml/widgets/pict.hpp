@@ -25,11 +25,9 @@ class cPict : public cControl {
 public:
 	/// @copydoc cDialog::init()
 	static void init();
-	std::string parse(ticpp::Element& who, std::string fname);
-	void setFormat(eFormat prop, short val);
-	short getFormat(eFormat prop);
-	void setColour(sf::Color clr);
-	sf::Color getColour();
+	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
+	void validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) override;
+	bool manageFormat(eFormat prop, bool set, boost::any* val);
 	storage_t store();
 	void restore(storage_t to);
 	/// @copydoc setPict(pic_num_t)
@@ -93,7 +91,9 @@ private:
 	static short animFrame;
 	pic_num_t picNum;
 	ePicType picType;
-	bool drawFramed, drawScaled;
+	bool drawScaled;
+	// Transient parse flags
+	bool wide = false, tall = false, tiny = false, custom = false, blank = false;
 	void drawPresetTer(short num, rectangle to_rect);
 	void drawPresetTerAnim(short num, rectangle to_rect);
 	void drawPresetMonstSm(short num, rectangle to_rect);
