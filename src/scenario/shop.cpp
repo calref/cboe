@@ -58,17 +58,17 @@ cShop::cShop(eShopType type, eShopPrompt prompt, pic_num_t pic, int adj, std::st
 
 cShop::cShop(std::string name) : cShop(eShopType::NORMAL, eShopPrompt::SHOPPING, 0, 0, name) {}
 
-cShop::cShop(long preset) {
+cShop::cShop(eShopPreset preset) {
 	const short loot_index[10] = {1,1,1,1,2,2,2,3,3,4};
 	
-	if(preset == 'junk') {
+	if(preset == SHOP_JUNK) {
 		type = eShopType::RANDOM;
 		prompt = eShopPrompt::SHOPPING;
 		face = 0;
 		name = "Magic Shop";
 		for(int i = 0; i < 10; i++)
 			addSpecial(eShopItemType::TREASURE, loot_index[i]);
-	} else if(preset == 'heal') {
+	} else if(preset == SHOP_HEALING) {
 		type = eShopType::ALLOW_DEAD;
 		prompt = eShopPrompt::HEALING;
 		face = 41;
@@ -128,7 +128,7 @@ void cShop::refreshItems(std::vector<cItem>& fromList) {
 }
 
 static cItem store_mage_spells(short which_s) {
-	cItem spell('spel');
+	cItem spell(ITEM_SPELL);
 	static const short cost[62] = {
 		// TODO: Costs for the level 1-3 spells
 		5,5,5,5,5,5,5,5,5,5,
@@ -149,7 +149,7 @@ static cItem store_mage_spells(short which_s) {
 }
 
 static cItem store_priest_spells(short which_s) {
-	cItem spell('spel');
+	cItem spell(ITEM_SPELL);
 	static const short cost[62] = {
 		// TODO: Costs for the level 1-3 spells
 		5,5,5,5,5,5,5,5,5,5,
@@ -170,7 +170,7 @@ static cItem store_priest_spells(short which_s) {
 }
 
 static cItem store_alchemy(short which_s) {
-	cItem spell('spel');
+	cItem spell(ITEM_SPELL);
 	static const short val[20] = {
 		50,75,30,130,100,
 		150, 200,200,300,250,

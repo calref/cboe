@@ -20,6 +20,21 @@
 
 namespace legacy { struct item_record_type; };
 
+enum eItemPreset {
+	ITEM_KNIFE,
+	ITEM_BUCKLER,
+	ITEM_BOW,
+	ITEM_ARROW,
+	ITEM_POLEARM,
+	ITEM_HELM,
+	ITEM_RAZORDISK,
+	ITEM_FOOD,
+	ITEM_SPELL,
+	ITEM_POTION,
+	ITEM_SPECIAL,
+	ITEM_SHOP,
+};
+
 class cItem {
 public:
 	eItemType variety;
@@ -59,7 +74,7 @@ public:
 	bool use_magic() const;
 	
 	cItem();
-	explicit cItem(long preset);
+	explicit cItem(eItemPreset preset);
 	explicit cItem(eAlchemy recipe);
 	void import_legacy(legacy::item_record_type& old);
 	void writeTo(std::ostream& file, std::string prefix = "") const;

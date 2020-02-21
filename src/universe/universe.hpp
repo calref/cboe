@@ -213,7 +213,7 @@ public:
 	void refresh_store_items();
 	void generate_job_bank(int which, job_bank_t& bank);
 	short difficulty_adjust() const;
-	explicit cUniverse(long party_type = 'dflt');
+	explicit cUniverse(ePartyPreset party_type = PARTY_DEFAULT);
 	~cUniverse();
 	// Copy-and-swap
 	void swap(cUniverse& other);

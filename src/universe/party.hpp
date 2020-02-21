@@ -218,7 +218,7 @@ public:
 	typedef std::vector<cEncNote>::iterator encIter;
 	typedef std::vector<cJournal>::iterator journalIter;
 	typedef std::vector<cConvers>::iterator talkIter;
-	cParty(long party_preset = 'dflt');
+	cParty(ePartyPreset party_preset = PARTY_DEFAULT);
 	~cParty();
 	// Copy-and-swap
 	void swap(cParty& other);

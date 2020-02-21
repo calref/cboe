@@ -21,7 +21,7 @@
 #include "fileio.hpp"
 #include "mathutil.hpp"
 
-cParty::cParty(long party_preset) {
+cParty::cParty(ePartyPreset party_preset) {
 	gold = 200;
 	food = 100;
 	// Note: These starting position values were in the original code and so are included here.

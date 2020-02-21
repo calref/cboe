@@ -27,6 +27,8 @@ namespace legacy { struct pc_record_type; };
 
 enum class eBuyStatus {OK, NO_SPACE, NEED_GOLD, TOO_HEAVY, HAVE_LOTS};
 
+enum ePartyPreset {PARTY_BLANK, PARTY_DEFAULT, PARTY_DEBUG};
+
 enum {
 	GIVE_DO_PRINT = 1,
 	GIVE_ALLOW_OVERLOAD = 2,
@@ -168,7 +170,7 @@ public:
 	
 	void import_legacy(legacy::pc_record_type old);
 	cPlayer(cParty& party);
-	cPlayer(cParty& party,long key,short slot);
+	cPlayer(cParty& party,ePartyPreset key,short slot);
 	short get_tnl();
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);

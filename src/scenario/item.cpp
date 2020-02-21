@@ -127,9 +127,9 @@ cItem::cItem(){
 	cursed = concealed = enchanted = unsellable = false;
 }
 
-cItem::cItem(long preset) : cItem() {
+cItem::cItem(eItemPreset preset) : cItem() {
 	switch(preset){
-		case 'nife':
+		case ITEM_KNIFE:
 			variety = eItemType::ONE_HANDED;
 			item_level = 4;
 			bonus = 1;
@@ -141,7 +141,7 @@ cItem::cItem(long preset) : cItem() {
 			name = "Knife";
 			ident = true;
 			break;
-		case 'buck':
+		case ITEM_BUCKLER:
 			variety = eItemType::SHIELD;
 			item_level = 1;
 			awkward = 1;
@@ -152,7 +152,7 @@ cItem::cItem(long preset) : cItem() {
 			name = "Buckler";
 			ident = true;
 			break;
-		case 'bow ':
+		case ITEM_BOW:
 			variety = eItemType::BOW;
 			weap_type = eSkill::ARCHERY;
 			graphic_num = 10;
@@ -162,7 +162,7 @@ cItem::cItem(long preset) : cItem() {
 			name = "Bow";
 			ident = true;
 			break;
-		case 'arrw':
+		case ITEM_ARROW:
 			variety = eItemType::ARROW;
 			item_level = 12;
 			charges = 12;
@@ -174,7 +174,7 @@ cItem::cItem(long preset) : cItem() {
 			name = "Arrows";
 			ident = true;
 			break;
-		case 'pole':
+		case ITEM_POLEARM:
 			variety = eItemType::TWO_HANDED;
 			item_level = 9;
 			weap_type = eSkill::POLE_WEAPONS;
@@ -185,7 +185,7 @@ cItem::cItem(long preset) : cItem() {
 			name = "Spear";
 			ident = true;
 			break;
-		case 'helm':
+		case ITEM_HELM:
 			variety = eItemType::HELM;
 			item_level = 1;
 			weap_type = eSkill::INVALID;
@@ -196,7 +196,7 @@ cItem::cItem(long preset) : cItem() {
 			name = "Helm";
 			ident = true;
 			break;
-		case 'rdsk':
+		case ITEM_RAZORDISK:
 			variety = eItemType::THROWN_MISSILE;
 			item_level = 9;
 			bonus = 1;
@@ -210,17 +210,17 @@ cItem::cItem(long preset) : cItem() {
 			name = "Razordisks";
 			ident = true;
 			break;
-		case 'food':
+		case ITEM_FOOD:
 			variety = eItemType::FOOD;
 			graphic_num = 72;
 			full_name = "Food";
 			name = "Food";
 			break;
-		case 'spel':
+		case ITEM_SPELL:
 			variety = eItemType::NON_USE_OBJECT;
 			graphic_num = 63;
 			break;
-		case 'alch':
+		case ITEM_POTION:
 			variety = eItemType::POTION;
 			charges = 1;
 			graphic_num = 60;
@@ -229,16 +229,16 @@ cItem::cItem(long preset) : cItem() {
 			name = "Potion";
 			magic = true;
 			break;
-		case 'spec':
+		case ITEM_SPECIAL:
 			item_level = -1;
 			full_name = "Call Special Node";
-		case 'shop':
+		case ITEM_SHOP:
 			graphic_num = 105; // The blank graphic
 			break;
 	}
 }
 
-cItem::cItem(eAlchemy recipe) : cItem('alch') {
+cItem::cItem(eAlchemy recipe) : cItem(ITEM_POTION) {
 	full_name = get_str("magic-names", int(recipe) + 200);
 	switch(recipe) {
 		case eAlchemy::NONE: break;

@@ -290,10 +290,10 @@ void cScenario::import_legacy(legacy::scen_item_data_type& old){
 	for(short i = 0; i < 256; i++)
 		ter_types[i].name = old.ter_names[i];
 	// Some default shops - the five magic shops and the healing shop.
-	cShop magic_shop('junk');
+	cShop magic_shop(SHOP_JUNK);
 	for(short i = 0; i < 5; i++)
 		shops.push_back(magic_shop);
-	shops.push_back(cShop('heal'));
+	shops.push_back(cShop(SHOP_HEALING));
 }
 
 static std::string format_version(const unsigned char(& ver)[3]) {
@@ -469,7 +469,7 @@ cItem cScenario::return_treasure(int loot, bool allow_junk) {
 		case FOOD:
 			// food doesn't always appear
 			if(get_ran(1,0,2) == 1) {
-				treas = cItem('food');
+				treas = cItem(ITEM_FOOD);
 				treas.graphic_num += get_ran(1,0,2);
 				treas.item_level = get_ran(1,5,10);
 				if(get_ran(1,0,9) == 5)

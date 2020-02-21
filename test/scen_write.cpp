@@ -169,10 +169,10 @@ TEST_CASE("Saving a scenario record") {
 		// Loading/building shops requires strings to be available
 		// Here we fetch them from the rsrc dir, rather than the data dir
 		ResMgr::strings.pushPath("../rsrc/strings");
-		cItem dummy_item('alch');
+		cItem dummy_item(ITEM_POTION);
 		scen.shops.resize(3);
-		scen.shops[0] = cShop('junk');
-		scen.shops[1] = cShop('heal');
+		scen.shops[0] = cShop(SHOP_JUNK);
+		scen.shops[1] = cShop(SHOP_HEALING);
 		scen.shops[2].setName("The Test Shop");
 		scen.shops[2].setType(eShopType::NORMAL);
 		scen.shops[2].setPrompt(eShopPrompt::SHOPPING);

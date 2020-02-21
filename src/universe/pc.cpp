@@ -896,21 +896,21 @@ void cPlayer::finish_create() {
 	// Start items
 	switch(race) {
 		case eRace::HUMAN:
-			items[0] = cItem('nife');
-			items[1] = cItem('buck');
+			items[0] = cItem(ITEM_KNIFE);
+			items[1] = cItem(ITEM_BUCKLER);
 			break;
 		case eRace::NEPHIL:
-			items[0] = cItem('bow ');
-			items[1] = cItem('arrw');
+			items[0] = cItem(ITEM_BOW);
+			items[1] = cItem(ITEM_ARROW);
 			break;
 		case eRace::SLITH:
-			items[0] = cItem('pole');
-			items[1] = cItem('helm');
+			items[0] = cItem(ITEM_POLEARM);
+			items[1] = cItem(ITEM_HELM);
 			break;
 		case eRace::VAHNATAI:
 			// TODO: Should they have a robe instead of a knife?
-			items[0] = cItem('nife');
-			items[1] = cItem('rdsk');
+			items[0] = cItem(ITEM_KNIFE);
+			items[1] = cItem(ITEM_RAZORDISK);
 			break;
 		default: break; // Silence compiler warning
 			// It's impossible to reach this point, anyway.
@@ -971,11 +971,11 @@ cPlayer::cPlayer(cParty& party) : party(&party), weap_poisoned(*this) {
 	unique_id = party.next_pc_id++;
 }
 
-cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
+cPlayer::cPlayer(cParty& party,ePartyPreset key,short slot) : cPlayer(party) {
 	main_status = eMainStatus::ALIVE;
 	unique_id = slot + 1000;
 	party.next_pc_id = max(unique_id + 1, party.next_pc_id);
-	if(key == 'dbug'){
+	if(key == PARTY_DEBUG){
 		switch(slot) {
 			case 0:
 				name = "Gunther";
@@ -1025,7 +1025,7 @@ cPlayer::cPlayer(cParty& party,long key,short slot) : cPlayer(party) {
 		
 		race = eRace::HUMAN;
 		direction = DIR_N;
-	}else if(key == 'dflt'){
+	}else if(key == PARTY_DEFAULT){
 		static std::map<eSkill, short> pc_stats[6] = {
 			{
 				{eSkill::STRENGTH,8}, {eSkill::DEXTERITY,6}, {eSkill::INTELLIGENCE,2},

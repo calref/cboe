@@ -52,9 +52,11 @@ enum class eShopItemType {
 struct cShopItem {
 	eShopItemType type = eShopItemType::EMPTY;
 	size_t quantity, index;
-	cItem item = cItem('shop');
+	cItem item{ITEM_SHOP};
 	int getCost(int adj);
 };
+
+enum eShopPreset {SHOP_HEALING, SHOP_JUNK};
 
 class cShop {
 	std::vector<cShopItem> items;
@@ -69,7 +71,7 @@ public:
 	cShop();
 	cShop(eShopType type, eShopPrompt prompt, pic_num_t pic, int adj, std::string name);
 	explicit cShop(std::string name);
-	explicit cShop(long preset);
+	explicit cShop(eShopPreset preset);
 	void addItem(size_t i, cItem item, size_t quantity, int chance = 100);
 	void addSpecial(std::string name, std::string descr, pic_num_t pic, int node, int cost, int quantity);
 	void addSpecial(eShopItemType type, int n = 0);

@@ -904,7 +904,7 @@ bool cCurOut::is_road(int x, int y) {
 	return univ.scenario.outdoors[sector_x][sector_y]->roads[x][y];
 }
 
-cUniverse::cUniverse(long party_type) : party(party_type), out(*this), town(*this) {}
+cUniverse::cUniverse(ePartyPreset party_type) : party(party_type), out(*this), town(*this) {}
 
 cUniverse::cUniverse(const cUniverse& other)
 	: strbuf(other.strbuf)

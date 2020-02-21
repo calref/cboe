@@ -2609,7 +2609,7 @@ void start_new_game(bool force) {
 	// Destroy the universe
 	univ.~cUniverse();
 	
-	long party_type = 'dflt';
+	ePartyPreset party_type = PARTY_DEFAULT;
 	
 //	display_intro();
 	// If system key held down, create debug party
@@ -2618,7 +2618,7 @@ void start_new_game(bool force) {
 #else
 	if(kb::isKeyPressed(kb::LControl) || kb::isKeyPressed(kb::RControl))
 #endif
-		party_type = 'dbug';
+		party_type = PARTY_DEBUG;
 	
 	// And now, reconstruct the universe.
 	new(&univ) cUniverse(party_type);

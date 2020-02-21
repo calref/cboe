@@ -2419,7 +2419,7 @@ static bool add_shop_entry(cDialog& me, std::string type, cShop& shop, size_t wh
 			shop.addItem(which_item, scenario.scen_items[which_item], amount);
 		else shop.addItem(which_item, scenario.scen_items[which_item], amount % 1000, amount / 1000);
 	} else if(type == "spec") {
-		cItem item('spec');
+		cItem item(ITEM_SPECIAL);
 		size_t amount = 0;
 		edit_shop_special(me, item, amount);
 		shop.addSpecial(item.full_name, item.desc, item.graphic_num, item.item_level, item.value, amount);
@@ -2486,7 +2486,7 @@ bool edit_shop(size_t which_shop, cDialog* parent) {
 	shop_dlg.attachClickHandlers(std::bind(edit_shop_entry, _1, _2, std::ref(shop)), {"ed1", "ed2", "ed3", "ed4", "ed5"});
 	shop_dlg.attachClickHandlers(std::bind(add_shop_entry, _1, _2, std::ref(shop), std::ref(which_shop)), {"item", "opt", "spec", "mage", "priest", "alch", "skill", "treas", "heal", "class"});
 	shop_dlg["rand"].attachClickHandler([&shop,which_shop](cDialog& me, std::string, eKeyMod) -> bool {
-		shop = cShop('junk');
+		shop = cShop(SHOP_JUNK);
 		put_shop_in_dlog(me, shop, which_shop);
 		return true;
 	});
@@ -2988,7 +2988,7 @@ bool build_scenario() {
 		warriors_grove->reattach(scenario);
 	}
 	
-	scenario.shops.push_back(cShop('heal'));
+	scenario.shops.push_back(cShop(SHOP_HEALING));
 	
 	overall_mode = MODE_MAIN_SCREEN;
 	
