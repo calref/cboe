@@ -157,7 +157,7 @@ static void init_sbar(std::shared_ptr<cScrollbar>& sbar, const std::string& name
 	sbar->hide();
 	
 	drawable_mgr.add_drawable(UI_LAYER_DEFAULT, name, sbar);
-	event_listeners[name] = std::dynamic_pointer_cast <iEventListener> (sbar);
+	event_listeners[name] = std::dynamic_pointer_cast<iEventListener>(sbar);
 }
 
 static void init_scrollbars() {
