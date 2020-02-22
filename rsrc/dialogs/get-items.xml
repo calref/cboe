@@ -3,12 +3,12 @@
 <dialog defbtn='done'>
 	<button name='done' type='done' top='408' left='337'/>
 	<pict type='dlog' num='2' top='10' left='10'/>
-	<button name='pc1' type='small' def-key='1' top='354' left='89'>1</button>
-	<button name='pc2' type='small' def-key='2' top='354' left='174'>2</button>
-	<button name='pc3' type='small' def-key='3' top='354' left='259'>3</button>
-	<button name='pc4' type='small' def-key='4' top='397' left='89'>4</button>
-	<button name='pc5' type='small' def-key='5' top='397' left='174'>5</button>
-	<button name='pc6' type='small' def-key='6' top='397' left='259'>6</button>
+	<button name='pc1' type='small' def-key='1' top='354' left='89'><key/></button>
+	<button name='pc2' type='small' def-key='2' top='354' left='174'><key/></button>
+	<button name='pc3' type='small' def-key='3' top='354' left='259'><key/></button>
+	<button name='pc4' type='small' def-key='4' top='397' left='89'><key/></button>
+	<button name='pc5' type='small' def-key='5' top='397' left='174'><key/></button>
+	<button name='pc6' type='small' def-key='6' top='397' left='259'><key/></button>
 	<button name='up' type='up' def-key='up' top='5' left='342'/>
 	<button name='down' type='down' def-key='down' top='346' left='342'/>
 	<pict name='pc1-g' type='pc' num='0' top='348' left='123'/>

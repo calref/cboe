@@ -84,7 +84,11 @@ void cButton::draw(){
 			int w = string_length(lbl, style);
 			to_rect.inset((w - 30) / -2,0);
 		}
-		win_draw_string(*inWindow,to_rect,lbl,textMode,style);
+		std::string label = lbl, keyDesc = getAttachedKeyDescription();
+		for(size_t key_pos = label.find_first_of('\a'); key_pos < label.size(); key_pos = label.find_first_of('\a')) {
+			label.replace(key_pos, 1, keyDesc);
+		}
+		win_draw_string(*inWindow,to_rect,label,textMode,style);
 		// frame default button, to provide a visual cue that it's the default
 		if(key.spec && key.k == key_enter) drawFrame(2,frameStyle);
 	}
@@ -151,9 +155,7 @@ bool cButton::parseContent(ticpp::Node& content, int n, std::string tagName, std
 		text += dlogStringFilter(content.Value());
 		return true;
 	} else if(content.Value() == "key") {
-		// TODO: There's surely a better way to do this
-		if(text.length() > 0) throw xBadVal("button", xBadVal::CONTENT, text + "<key/>", content.Row(), content.Column(), fname);
-		labelWithKey = true;
+		text += '\a';
 		return true;
 	}
 	return cControl::parseContent(content, n, tagName, fname, text);

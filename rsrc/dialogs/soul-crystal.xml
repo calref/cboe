@@ -5,16 +5,16 @@
 	<!--
 	 TODO: What about showing the monster's graphic?
 	 -->
-	<button name='pick1' type='small' def-key='1' top='50' left='50'>1</button>
+	<button name='pick1' type='small' def-key='1' top='50' left='50'><key/></button>
 	<text name='slot1' framed='true' top='52' left='83' width='172' height='16'>(spot empty)</text>
 	<text name='lvl1' framed='true' top='52' left='262' width='31' height='16'/>
-	<button name='pick2' type='small' def-key='2' top='72' left='50'>2</button>
+	<button name='pick2' type='small' def-key='2' top='72' left='50'><key/></button>
 	<text name='slot2' framed='true' top='74' left='83' width='172' height='16'>(spot empty)</text>
 	<text name='lvl2' framed='true' top='74' left='262' width='31' height='16'/>
-	<button name='pick3' type='small' def-key='3' top='94' left='50'>3</button>
+	<button name='pick3' type='small' def-key='3' top='94' left='50'><key/></button>
 	<text name='slot3' framed='true' top='96' left='83' width='172' height='16'>(spot empty)</text>
 	<text name='lvl3' framed='true' top='96' left='262' width='31' height='16'/>
-	<button name='pick4' type='small' def-key='4' top='116' left='50'>4</button>
+	<button name='pick4' type='small' def-key='4' top='116' left='50'><key/></button>
 	<text name='slot4' framed='true' top='118' left='83' width='172' height='16'>(spot empty)</text>
 	<text name='lvl4' framed='true' top='118' left='262' width='31' height='16'/>
 	<text size='large' top='6' left='50' width='251' height='16'>Select monster to summon:</text>

@@ -311,18 +311,60 @@ static unsigned char removeShift(unsigned char c){
 	return afterUnShift[c - ' '];
 }
 
-void cControl::setTextToKey() {
-	if(key.spec); // TODO: Handle this case
-	else {
+std::string cControl::getAttachedKeyDescription() {
+	std::string s;
+	if(key.spec) {
+		auto mod = key.mod;
+		std::string keyName;
+		switch(key.k) {
+			case key_left: keyName = "left"; break;
+			case key_right: keyName = "right"; break;
+			case key_up: keyName = "up"; break;
+			case key_down: keyName = "down"; break;
+			case key_esc: keyName = "esc"; break;
+			case key_enter: keyName = "enter"; break;
+			case key_tab: keyName = "tab"; break;
+			case key_help: keyName = "help"; break;
+			case key_bsp: keyName = "backspace"; break;
+			case key_del: keyName = "delete"; break;
+			case key_home: keyName = "home"; break;
+			case key_end: keyName = "end"; break;
+			case key_pgup: keyName = "pgup"; break;
+			case key_pgdn: keyName = "pgdn"; break;
+			case key_insert: keyName = "insert"; break;
+			case key_copy: keyName = "c"; mod += mod_ctrl; break;
+			case key_cut: keyName = "x"; mod += mod_ctrl; break;
+			case key_paste: keyName = "v"; mod += mod_ctrl; break;
+			case key_selectall: keyName = "a"; mod += mod_ctrl; break;
+			case key_undo: keyName = "z"; mod += mod_ctrl; break;
+			case key_redo: keyName = "y"; mod += mod_ctrl; break;
+			case key_top: keyName = "home"; mod += mod_ctrl; break;
+			case key_bottom: keyName = "end"; mod += mod_ctrl; break;
+#ifdef __APPLE__
+			case key_word_left: keyName = "left"; mod += mod_alt; break;
+			case key_word_right: keyName = "right"; mod += mod_alt; break;
+			case key_word_bsp: keyName = "backspace"; mod += mod_alt; break;
+			case key_word_del: keyName = "delete"; mod += mod_alt; break;
+#else
+			case key_word_left: keyName = "left"; mod += mod_ctrl; break;
+			case key_word_right: keyName = "right"; mod += mod_ctrl; break;
+			case key_word_bsp: keyName = "backspace"; mod += mod_ctrl; break;
+			case key_word_del: keyName = "delete"; mod += mod_ctrl; break;
+#endif
+		}
+		if(mod_contains(mod, mod_ctrl)) s += '^';
+		if(mod_contains(mod, mod_alt)) s = '#';
+		if(mod_contains(mod, mod_shift)) s += '$';
+	} else {
 		unsigned char c = key.c;
-		if(key.mod - mod_shift != key.mod) c = applyShift(c);
+		if(mod_contains(key.mod, mod_shift)) c = applyShift(c);
 		else c = removeShift(c);
-		lbl.clear();
-		if(key.mod - mod_ctrl != key.mod) lbl += '^';
-		else if(key.mod - mod_alt != key.mod) lbl = '*';
-		lbl += c;
+		if(mod_contains(key.mod, mod_ctrl)) s += '^';
+		if(mod_contains(key.mod, mod_alt)) s = '#';
+		if(c == ' ') s += "space";
+		else s += c;
 	}
-	if(isVisible()) draw();
+	return s;
 }
 
 void cControl::attachKey(cKey key){

@@ -137,8 +137,6 @@ public:
 	void attachKey(cKey key);
 	/// Detach any currently assigned keyboard shortcut from the control.
 	void detachKey();
-	/// Set the control's text to a representation of its assigned keyboard shortcut.
-	void setTextToKey();
 	/// Check if the control has an assigned keyboard shortcut.
 	/// @return true if a keyboard shortcut is assigned.
 	bool hasKey();
@@ -146,6 +144,9 @@ public:
 	/// @return the currently-assigned keyboard shortcut.
 	/// @note You should first check that a shortcut is assigned using hasKey().
 	cKey getAttachedKey();
+	/// Retrieve the control's current keyboard shortcut as a human-readable string.
+	/// @return the currently-assigned keyboard shortcut, or an empty string if none is assigned.
+	std::string getAttachedKeyDescription();
 	/// Attach an event handler to this control.
 	/// @tparam t The type of event to attach.
 	/// @param handler The event handler function or functor. Its signature depends on the event type.

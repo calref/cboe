@@ -88,7 +88,6 @@ protected:
 	cButton(cDialog& parent,eControlType t);
 private:
 	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
-	bool labelWithKey;
 	std::string fromList;
 	static rectangle btnRects[13][2];
 protected:

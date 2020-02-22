@@ -4,21 +4,21 @@
 	<!-- Unexpected button control -->
 	<pict name='pic' type='dlog' num='12' top='9' left='9'/>
 	<text size='large' top='6' left='54' width='139' height='18'>Select a Spell:</text>
-	<button name='caster1' type='regular' def-key='1' top='81' left='10'>1</button>
-	<button name='caster2' type='regular' def-key='2' top='105' left='10'>2</button>
-	<button name='caster3' type='regular' def-key='3' top='129' left='10'>3</button>
-	<button name='caster4' type='regular' def-key='4' top='153' left='10'>4</button>
-	<button name='caster5' type='regular' def-key='5' top='177' left='10'>5</button>
-	<button name='caster6' type='regular' def-key='6' top='201' left='10'>6</button>
+	<button name='caster1' type='regular' def-key='1' top='81' left='10'><key/></button>
+	<button name='caster2' type='regular' def-key='2' top='105' left='10'><key/></button>
+	<button name='caster3' type='regular' def-key='3' top='129' left='10'><key/></button>
+	<button name='caster4' type='regular' def-key='4' top='153' left='10'><key/></button>
+	<button name='caster5' type='regular' def-key='5' top='177' left='10'><key/></button>
+	<button name='caster6' type='regular' def-key='6' top='201' left='10'><key/></button>
 	<!--
 	 TODO: Use the <key/> element here.
 	 -->
-	<button name='target1' type='small' def-key='shift 1' top='82' left='235'>!</button>
-	<button name='target2' type='small' def-key='shift 2' top='106' left='235'>@</button>
-	<button name='target3' type='small' def-key='shift 3' top='130' left='235'>#</button>
-	<button name='target4' type='small' def-key='shift 4' top='154' left='235'>$</button>
-	<button name='target5' type='small' def-key='shift 5' top='178' left='235'>%</button>
-	<button name='target6' type='small' def-key='shift 6' top='202' left='235'>^</button>
+	<button name='target1' type='small' def-key='shift 1' top='82' left='235'><key/></button>
+	<button name='target2' type='small' def-key='shift 2' top='106' left='235'><key/></button>
+	<button name='target3' type='small' def-key='shift 3' top='130' left='235'><key/></button>
+	<button name='target4' type='small' def-key='shift 4' top='154' left='235'><key/></button>
+	<button name='target5' type='small' def-key='shift 5' top='178' left='235'><key/></button>
+	<button name='target6' type='small' def-key='shift 6' top='202' left='235'><key/></button>
 	<button name='cancel' type='regular' def-key='esc' top='394' left='479'>Cancel</button>
 	<button name='cast' type='regular' top='394' left='549'>Cast</button>
 	<text name='pc1' top='84' left='88' width='122' height='16'/>
