@@ -168,7 +168,8 @@ bool cStack::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::st
 
 bool cStack::parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) {
 	if(content.Type() == TiXmlNode::ELEMENT) {
-		return parseChildControl(dynamic_cast<ticpp::Element&>(content), controls);
+		std::string id;
+		return parseChildControl(dynamic_cast<ticpp::Element&>(content), controls, id);
 	}
 	return cContainer::parseContent(content, n, tagName, fname, text);
 }
