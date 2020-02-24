@@ -624,14 +624,6 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	rectangle face_rect = {6,6,38,38};
 	rectangle title_rect = {15,48,42,260};
 	rectangle dest_rect,help_from = {85,36,101,54};
-	
-	// In the 0..65535 range, these blue components were: 0, 32767, 14535, 26623, 59391
-	// The green components on the second line were 40959 and 24575
-	// TODO: The Windows version appears to use completely different colours?
-	sf::Color c[7] = {
-		{0,0,0},{0,0,128},{0,0,57},{0,0,104},{0,0,232},
-		{0,160,0},{0,96,0}
-	};
 	rectangle shopper_name = {44,6,56,260};
 	long current_pos;
 	
