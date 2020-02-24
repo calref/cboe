@@ -219,5 +219,4 @@ bool cScrollPane::parseContent(ticpp::Node& content, int n, std::string tagName,
 void cScrollPane::validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) {
 	cContainer::validatePostParse(who, fname, attrs, nodes);
 	if(!attrs.count("style")) setStyle(SCROLL_LED);
-	recalcRect();
 }

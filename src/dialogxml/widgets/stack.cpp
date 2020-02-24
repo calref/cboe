@@ -201,6 +201,5 @@ bool cStack::parseContent(ticpp::Node& content, int n, std::string tagName, std:
 
 void cStack::validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) {
 	validatePostParse(who, fname, attrs, nodes);
-	recalcRect();
 }
 

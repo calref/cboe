@@ -41,7 +41,7 @@ public:
 	/// @note This function is intended for internal use, which is why it takes a control pointer instead of a unique key.
 	void addChild(cControl* ctrl, std::string key);
 	/// Recalculate the pane's bounding rect based on its contained controls.
-	void recalcRect();
+	void recalcRect() override;
 	/// Get the pane's current scroll position.
 	/// @return The current position.
 	long getPosition();

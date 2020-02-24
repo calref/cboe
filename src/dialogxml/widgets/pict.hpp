@@ -47,7 +47,7 @@ public:
 	/// @param num The new icon index.
 	void setPict(pic_num_t num);
 	/// Automatically recalculate the icon's bounding rect based on its current picture.
-	void recalcRect();
+	void recalcRect() override;
 	/// Get the current icon.
 	/// @return The number of the current icon.
 	pic_num_t getPicNum();

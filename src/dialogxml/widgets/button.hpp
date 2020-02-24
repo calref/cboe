@@ -54,6 +54,7 @@ public:
 	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;
 	void validatePostParse(ticpp::Element& elem, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& elems) override;
 	location getPreferredSize() override;
+	void recalcRect() override;
 	/// Set the type of this button.
 	/// @param newType The desired button type.
 	void setBtnType(eBtnType newType);
@@ -115,6 +116,7 @@ public:
 	static bool noAction(cDialog&,std::string,eKeyMod) {return true;}
 	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
 	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;
+	location getPreferredSize() override;
 	storage_t store() override;
 	void restore(storage_t to) override;
 	/// Create a new LED button.
@@ -239,7 +241,7 @@ public:
 	/// Recalculate the LED group's bounding rect.
 	/// Call this after adding choices to the group to ensure that the choice is within the bounding rect.
 	/// If a choice is not within the bounding rect, it will not respond to clicks.
-	void recalcRect();
+	void recalcRect() override;
 	void forEach(std::function<void(std::string,cControl&)> callback) override;
 	/// A convenience type for making an iterator into the choice map.
 	typedef std::map<std::string,cLed*>::iterator ledIter;

@@ -37,6 +37,29 @@ void cControl::relocate(location to) {
 	frame.offset(to.x - frame.left, to.y - frame.top);
 }
 
+void cControl::relocateRelative(location to, cControl* anchor, ePosition h, ePosition v) {
+	if(anchor == nullptr) anchor = this;
+	// Determine the anchor point of the relocation
+	location anchorPoint;
+	switch(h) {
+		case POS_ABS: anchorPoint.x = 0; break;
+		case POS_REL_PLUS: anchorPoint.x = anchor->frame.right; break;
+		case POS_REL_NEG: anchorPoint.x = anchor->frame.left; to.x = -to.x; break;
+		case POS_CONT_PLUS: anchorPoint.x = anchor->frame.left; break;
+		case POS_CONT_NEG: anchorPoint.x = anchor->frame.right; to.x = -to.x; break;
+	}
+	switch(v) {
+		case POS_ABS: anchorPoint.y = 0; break;
+		case POS_REL_PLUS: anchorPoint.y = anchor->frame.bottom; break;
+		case POS_REL_NEG: anchorPoint.y = anchor->frame.top; to.y = -to.y; break;
+		case POS_CONT_PLUS: anchorPoint.y = anchor->frame.top; break;
+		case POS_CONT_NEG: anchorPoint.y = anchor->frame.bottom; to.y = -to.y; break;
+	}
+	to.x += anchorPoint.x;
+	to.y += anchorPoint.y;
+	relocate(to);
+}
+
 const char* xHandlerNotSupported::msg[4] = {
 	"This control cannot handle click events.\n",
 	"This control cannot handle focus events.\n",
@@ -491,6 +514,51 @@ std::string cControl::parse(ticpp::Element& who, std::string fname) {
 bool cControl::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) {
 	std::string name;
 	attr.GetName(&name);
+	// Relative positioning
+	if(name == "relative") {
+		static auto space = " \t";
+		std::string rel = attr.Value();
+		const xBadVal err(tagName, name, rel, attr.Row(), attr.Column(), fname);
+		size_t border = rel.find_first_of(space);
+		if(border != std::string::npos) {
+			size_t border_end = rel.find_last_of(space);
+			// Error if any of [border, border_end] are not spaces
+			for(size_t i = border + 1; i < border_end; i++) {
+				if(rel[i] != ' ' && rel[i] != '\t') throw err;
+			}
+			std::string h = rel.substr(0, border), v = rel.substr(border_end + 1);
+			if(h == "abs") horz = POS_ABS;
+			else if(h == "pos") horz = POS_REL_PLUS;
+			else if(h == "neg") horz = POS_REL_NEG;
+			else if(h == "pos-in") horz = POS_CONT_PLUS;
+			else if(h == "neg-in") horz = POS_CONT_NEG;
+			else throw err;
+			if(v == "abs") vert = POS_ABS;
+			else if(v == "pos") vert = POS_REL_PLUS;
+			else if(v == "neg") vert = POS_REL_NEG;
+			else if(v == "pos-in") vert = POS_CONT_PLUS;
+			else if(v == "neg-in") vert = POS_CONT_NEG;
+			else throw err;
+		}
+		else if(rel == "abs") horz = vert = POS_ABS;
+		else if(rel == "pos") horz = vert = POS_REL_PLUS;
+		else if(rel == "neg") horz = vert = POS_REL_NEG;
+		else if(rel == "pos-in") horz = vert = POS_CONT_PLUS;
+		else if(rel == "neg-in") horz = vert = POS_CONT_NEG;
+		else throw err;
+		return true;
+	}
+	if(name == "anchor") {
+		anchor = attr.Value();
+		return true;
+	}
+	if(name == "rel-anchor") {
+		std::string val = attr.Value();
+		if(val == "next") anchor = "$$next$$";
+		else if(val == "prev") anchor = "$$prev$$";
+		else throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
+		return true;
+	}
 	// Colour and formatting, if supported
 	if(name == "framed" && canFormat(TXT_FRAME)) {
 		std::string val;
@@ -559,6 +627,13 @@ bool cControl::parseContent(ticpp::Node&, int, std::string, std::string, std::st
 void cControl::validatePostParse(ticpp::Element& elem, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>&) {
 	if(!attrs.count("left")) throw xMissingAttr(elem.Value(), "left", elem.Row(), elem.Column(), fname);
 	if(!attrs.count("top")) throw xMissingAttr(elem.Value(), "top", elem.Row(), elem.Column(), fname);
+	if(attrs.count("relative") && !attrs.count("anchor") && !attrs.count("rel-anchor")) {
+		// If relative is specified, an anchor is required... unless it's abs or neg
+		if((horz != POS_ABS && horz != POS_REL_NEG) || (vert != POS_ABS && vert != POS_REL_NEG))
+			throw xMissingAttr(elem.Value(), "anchor", elem.Row(), elem.Column(), fname);
+	}
+	if(attrs.count("anchor") && attrs.count("rel-anchor"))
+	   throw xBadAttr(elem.Value(), "(rel-)anchor", elem.Row(), elem.Column(), fname);
 }
 
 cControl::~cControl() {}

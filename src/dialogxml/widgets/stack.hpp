@@ -68,7 +68,7 @@ public:
 	/// @return The number of pages
 	size_t getPageCount();
 	/// Recalculate the stack's bounding rect based on its contained controls.
-	void recalcRect();
+	void recalcRect() override;
 	/// Adds any fields in this stack to the tab order building arrays.
 	/// Meant for internal use.
 	void fillTabOrder(std::vector<int>& specificTabs, std::vector<int>& reverseTabs);

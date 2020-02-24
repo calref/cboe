@@ -71,6 +71,25 @@
 			<xs:enumeration value="double"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="relAnchor">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="next"/>
+			<xs:enumeration value="prev"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="relPosition">
+		<xs:list>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="abs"/>
+					<xs:enumeration value="pos"/>
+					<xs:enumeration value="neg"/>
+					<xs:enumeration value="pos-in"/>
+					<xs:enumeration value="neg-in"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:list>
+	</xs:simpleType>
 	<xs:attributeGroup name="rect-size">
 		<xs:attribute name="top" use="required" type="xs:integer"/>
 		<xs:attribute name="left" use="required" type="xs:integer"/>
@@ -80,6 +99,11 @@
 	<xs:attributeGroup name="frame">
 		<xs:attribute name="framed" default="false" type="bool"/>
 		<xs:attribute name="outline" default="inset" type="frameStyle"/>
+	</xs:attributeGroup>
+	<xs:attributeGroup name="position">
+		<xs:attribute name="anchor" type="xs:token"/>
+		<xs:attribute name="rel-anchor" type="relAnchor"/>
+		<xs:attribute name="relative" default="abs" type="relPosition"/>
 	</xs:attributeGroup>
 	<xs:attribute name="def-key" type="key"/>
 	<xs:attributeGroup name="font">
@@ -136,6 +160,7 @@
 		<xs:attribute ref="def-key"/>
 		<xs:attribute name="fromlist" default="none" type="xs:string"/>
 		<xs:attributeGroup ref="rect-size"/>
+		<xs:attributeGroup ref="position"/>
 	</xs:complexType>
 	<xs:complexType name="pict">
 		<xs:attribute name="name" type="xs:token"/>
@@ -157,6 +182,7 @@
 		<xs:attribute ref="def-key"/>
 		<xs:attribute name="num" use="required" type="xs:integer"/>
 		<xs:attributeGroup ref="rect-size"/>
+		<xs:attributeGroup ref="position"/>
 	</xs:complexType>
 	<xs:complexType mixed="true" name="button">
 		<xs:sequence>
@@ -170,6 +196,7 @@
 		<xs:attribute ref="def-key"/>
 		<xs:attribute name="fromlist" default="none" type="xs:string"/>
 		<xs:attributeGroup ref="rect-size"/>
+		<xs:attributeGroup ref="position"/>
 	</xs:complexType>
 	<xs:complexType name="led">
 		<xs:simpleContent>
@@ -185,6 +212,7 @@
 					</xs:simpleType>
 				</xs:attribute>
 				<xs:attributeGroup ref="rect-size"/>
+				<xs:attributeGroup ref="position"/>
 				<xs:attributeGroup ref="font"/>
 				<xs:attribute name="wrap" default="false" type="bool"/>
 			</xs:extension>
@@ -199,6 +227,7 @@
 		<xs:attribute name="link" type="xs:token"/>
 		<xs:attribute name="style" type="scrollStyle" default="led"/>
 		<xs:attributeGroup ref="rect-size"/>
+		<xs:attributeGroup ref="position"/>
 	</xs:complexType>
 	<xs:complexType name="ledGroup">
 		<xs:sequence>
@@ -236,6 +265,7 @@
 		<xs:attributeGroup ref="frame"/>
 		<xs:attribute name="style" type="scrollStyle" default="led"/>
 		<xs:attributeGroup ref="rect-size"/>
+		<xs:attributeGroup ref="position"/>
 	</xs:complexType>
 	<xs:element name="dialog">
 		<xs:complexType>
@@ -277,6 +307,10 @@
 		<xs:keyref name="sliderLink" refer="uniqueID">
 			<xs:selector xpath="slider"/>
 			<xs:field xpath="@link"/>
+		</xs:keyref>
+		<xs:keyref name="anchorLink" refer="uniqueID">
+			<xs:selector xpath="*"/>
+			<xs:field xpath="@anchor"/>
 		</xs:keyref>
 	</xs:element>
 </xs:schema>

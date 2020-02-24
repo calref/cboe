@@ -216,43 +216,132 @@ void cDialog::loadFromFile(std::string path){
 		}
 		
 		vector<int> specificTabs, reverseTabs;
+		std::pair<std::string,cControl*> prevCtrl{"", nullptr};
 		for(node = node.begin(xml.FirstChildElement()); node != node.end(); node++){
 			node->GetValue(&type);
+			ctrlIter inserted;
 			// Yes, I'm using insert instead of [] to add elements to the map.
 			// In this situation, it's actually easier that way; the reason being, the
 			// map key is obtained from the name attribute of each element.
 			if(type == "field") {
 				auto field = parse<cTextField>(*node);
-				controls.insert(field);
+				inserted = controls.insert(field).first;
 				tabOrder.push_back(field);
 				if(field.second->tabOrder > 0)
 					specificTabs.push_back(field.second->tabOrder);
 				else if(field.second->tabOrder < 0)
 					reverseTabs.push_back(field.second->tabOrder);
 			} else if(type == "text")
-				controls.insert(parse<cTextMsg>(*node));
+				inserted = controls.insert(parse<cTextMsg>(*node)).first;
 			else if(type == "pict")
-				controls.insert(parse<cPict>(*node));
+				inserted = controls.insert(parse<cPict>(*node)).first;
 			else if(type == "slider")
-				controls.insert(parse<cScrollbar>(*node));
+				inserted = controls.insert(parse<cScrollbar>(*node)).first;
 			else if(type == "button")
-				controls.insert(parse<cButton>(*node));
+				inserted = controls.insert(parse<cButton>(*node)).first;
 			else if(type == "led")
-				controls.insert(parse<cLed>(*node));
+				inserted = controls.insert(parse<cLed>(*node)).first;
 			else if(type == "group")
-				controls.insert(parse<cLedGroup>(*node));
+				inserted = controls.insert(parse<cLedGroup>(*node)).first;
 			else if(type == "stack") {
 				auto parsed = parse<cStack>(*node);
-				controls.insert(parsed);
+				inserted = controls.insert(parsed).first;
 				// Now, if it contains any fields, their tab order must be accounted for
 				parsed.second->fillTabOrder(specificTabs, reverseTabs);
 			} else if(type == "pane") {
 				auto parsed = parse<cScrollPane>(*node);
-				controls.insert(parsed);
+				inserted = controls.insert(parsed).first;
 				// TODO: Now, if it contains any fields, their tab order must be accounted for
 				//parsed.second->fillTabOrder(specificTabs, reverseTabs);
 			} else throw xBadNode(type,node->Row(),node->Column(),fname);
+			if(prevCtrl.second) {
+				if(inserted->second->anchor == "$$prev$$" && prevCtrl.second->anchor == "$$next$$") {
+					throw xBadVal(type, "anchor", "<circular dependency>", node->Row(), node->Column(), fname);
+				} else if(inserted->second->anchor == "$$prev$$") {
+					inserted->second->anchor = prevCtrl.first;
+				} else if(prevCtrl.second->anchor == "$$next$$") {
+					prevCtrl.second->anchor = inserted->first;
+				}
+			}
+			prevCtrl = *inserted;
 		}
+		
+		// Resolve relative positioning
+		bool all_resolved = true;
+		do {
+			all_resolved = true;
+			for(auto& p : controls) {
+				auto ctrl = p.second;
+				if(!ctrl->anchor.empty()) {
+					auto anchor = controls[ctrl->anchor];
+					if(!anchor->anchor.empty()) {
+						// Make sure it's not a loop!
+						std::vector<std::string> refs{ctrl->anchor};
+						while(!anchor->anchor.empty()) {
+							refs.push_back(anchor->anchor);
+							anchor = controls[anchor->anchor];
+							if(std::find(refs.begin(), refs.end(), anchor->anchor) != refs.end()) {
+								std::string ctrlType;
+								switch(ctrl->getType()) {
+									case CTRL_UNKNOWN: ctrlType = "???"; break;
+									case CTRL_BTN: ctrlType = "button"; break;
+									case CTRL_LED: ctrlType = "led"; break;
+									case CTRL_PICT: ctrlType = "pict"; break;
+									case CTRL_FIELD: ctrlType = "field"; break;
+									case CTRL_TEXT: ctrlType = "text"; break;
+									case CTRL_GROUP: ctrlType = "group"; break;
+									case CTRL_STACK: ctrlType = "stack"; break;
+									case CTRL_SCROLL: ctrlType = "slider"; break;
+									case CTRL_PANE: ctrlType = "pane"; break;
+								}
+								throw xBadVal(ctrlType, "anchor", "<circular dependency>", 0, 0, fname);
+							}
+						}
+						all_resolved = false;
+						continue;
+					}
+					ctrl->relocateRelative(ctrl->frame.topLeft(), anchor, ctrl->horz, ctrl->vert);
+					ctrl->anchor.clear();
+					ctrl->horz = ctrl->vert = POS_ABS;
+				} else if(auto pane = dynamic_cast<cContainer*>(ctrl)) {
+					pane->forEach([this, &all_resolved](const std::string&, cControl& ctrl) {
+						// TODO: Deduplicate this code (it's functionally identical to the above non-container code)
+						if(!ctrl.anchor.empty()) {
+							auto anchor = controls[ctrl.anchor];
+							if(!anchor->anchor.empty()) {
+								// Make sure it's not a loop!
+								std::vector<std::string> refs{ctrl.anchor};
+								while(!anchor->anchor.empty()) {
+									refs.push_back(anchor->anchor);
+									anchor = controls[anchor->anchor];
+									if(std::find(refs.begin(), refs.end(), anchor->anchor) != refs.end()) {
+										std::string ctrlType;
+										switch(ctrl.getType()) {
+											case CTRL_UNKNOWN: ctrlType = "???"; break;
+											case CTRL_BTN: ctrlType = "button"; break;
+											case CTRL_LED: ctrlType = "led"; break;
+											case CTRL_PICT: ctrlType = "pict"; break;
+											case CTRL_FIELD: ctrlType = "field"; break;
+											case CTRL_TEXT: ctrlType = "text"; break;
+											case CTRL_GROUP: ctrlType = "group"; break;
+											case CTRL_STACK: ctrlType = "stack"; break;
+											case CTRL_SCROLL: ctrlType = "slider"; break;
+											case CTRL_PANE: ctrlType = "pane"; break;
+										}
+										throw xBadVal(ctrlType, "anchor", "<circular dependency>", 0, 0, fname);
+									}
+								}
+								all_resolved = false;
+								return;
+							}
+							ctrl.relocateRelative(ctrl.frame.topLeft(), anchor, ctrl.horz, ctrl.vert);
+							ctrl.anchor.clear();
+							ctrl.horz = ctrl.vert = POS_ABS;
+						}
+					});
+				}
+			}
+		} while(!all_resolved);
 		
 		// Set the default button.
 		if(hasControl(defaultButton))
@@ -317,29 +406,43 @@ void cDialog::loadFromFile(std::string path){
 	// now calculate window rect
 	winRect = rectangle();
 	recalcRect();
-	ctrlIter iter = controls.begin();
 	currentFocus = "";
-	while(iter != controls.end()){
+	for(ctrlIter iter = controls.begin(); iter != controls.end(); iter++){
 		if(typeid(iter->second) == typeid(cTextField*)){
 			if(currentFocus.empty()) currentFocus = iter->first;
 			break;
 		}
-		iter++;
 	}
 }
 
 void cDialog::recalcRect(){
-	ctrlIter iter = controls.begin();
-	while(iter != controls.end()){
+	bool haveRel = false;
+	for(ctrlIter iter = controls.begin(); iter != controls.end(); iter++) {
+		using namespace std::placeholders;
+		if(auto container = dynamic_cast<cContainer*>(iter->second))
+			container->forEach(std::bind(&cControl::recalcRect, _2));
+		iter->second->recalcRect();
 		rectangle frame = iter->second->getBounds();
-		if(frame.right > winRect.right)
+		haveRel = haveRel || iter->second->horz != POS_ABS || iter->second->vert != POS_ABS;
+		if(iter->second->horz != POS_REL_NEG && frame.right > winRect.right)
 			winRect.right = frame.right;
-		if(frame.bottom > winRect.bottom)
+		if(iter->second->vert != POS_REL_NEG && frame.bottom > winRect.bottom)
 			winRect.bottom = frame.bottom;
-		iter++;
 	}
 	winRect.right += 6;
 	winRect.bottom += 6;
+	if(!haveRel) return;
+	// Resolve any remaining relative positions
+	// Controls placed relative to the dialog's edges can go off the edge of the dialog
+	for(ctrlIter iter = controls.begin(); iter != controls.end(); iter++) {
+		location pos = iter->second->getBounds().topLeft();
+		if(iter->second->horz == POS_REL_NEG)
+			pos.x = winRect.right - pos.x;
+		if(iter->second->vert == POS_REL_NEG)
+			pos.y = winRect.bottom - pos.y;
+		iter->second->horz = iter->second->vert = POS_ABS;
+		iter->second->relocate(pos);
+	}
 }
 
 void cDialog::init(){

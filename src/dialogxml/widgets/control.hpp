@@ -55,6 +55,14 @@ enum eControlType {
 	CTRL_PANE,	///< A scroll pane
 };
 
+enum ePosition {
+	POS_ABS, ///< Absolute positioning (possibly relative to a container)
+	POS_REL_PLUS, ///< Positioned relative to another widget, measuring down from its bottom edge or right from its right edge
+	POS_REL_NEG, ///< Positioned relative to another widget, measuring up from its top edge or left from its left edge
+	POS_CONT_PLUS, ///< Positioned relative to another widget, measuring down from its top edge or right from its left edge
+	POS_CONT_NEG, ///< Positioned relative to another widget, measuering up from its bottom edge or left from its right edge
+};
+
 /// Thrown when you try to set a handler that the control does not support.
 class xHandlerNotSupported : public std::exception {
 	static const char* msg[4];
@@ -251,6 +259,13 @@ public:
 	/// Set the position of this control.
 	/// @param to The new position.
 	void relocate(location to);
+	/// Set the position of this control relative to another control.
+	/// @param to The new relative position.
+	/// @param anchor The position will be calculated relative to this control's position.
+	/// If nullptr, the control will be moved relative to its current position.
+	/// @param horz How to place the control on the horizontal axis.
+	/// @param vert How to place the control on the vertical axis.
+	void relocateRelative(location to, cControl* anchor, ePosition horz, ePosition vert);
 	/// Get the control's text as an integer.
 	/// @return The control's text, coerced to an integer.
 	long long getTextAsNum();
@@ -330,6 +345,10 @@ public:
 	cControl& operator=(cControl& other) = delete;
 	cControl(cControl& other) = delete;
 protected:
+	/// If the control automatically determines its rect based on certain criteria, override this.
+	/// It will automatically be called during parsing.
+	/// When overridden, it should normally be public.
+	virtual void recalcRect() {}
 	/// Returns a list of event handlers that this control supports.
 	/// @return The list of handlers as a std::set.
 	///
@@ -426,6 +445,9 @@ private:
 	friend class cDialog; // TODO: This is only so it can access parseColour... hack!
 	eControlType type;
 	std::map<eDlogEvt, boost::any> event_handlers;
+	// Transient values only used during parsing
+	ePosition horz = POS_ABS, vert = POS_ABS;
+	std::string anchor;
 };
 
 /// A superclass to represent a control that contains other controls.

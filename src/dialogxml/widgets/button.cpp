@@ -160,11 +160,12 @@ bool cButton::parseContent(ticpp::Node& content, int n, std::string tagName, std
 	}
 	return cControl::parseContent(content, n, tagName, fname, text);
 }
+
+static const std::set<eBtnType> labelledButtons{BTN_TINY, BTN_LED, BTN_PUSH};
 	
 void cButton::validatePostParse(ticpp::Element& elem, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& elems) {
 	cControl::validatePostParse(elem, fname, attrs, elems);
 	if(getType() == CTRL_BTN && !attrs.count("type")) throw xMissingAttr(elem.Value(), "type", elem.Row(), elem.Column(), fname);
-	static const std::set<eBtnType> labelledButtons{BTN_TINY, BTN_LED, BTN_PUSH};
 	if(labelledButtons.count(type)) {
 		if(!attrs.count("color") && !attrs.count("colour") && parent->getBg() == cDialog::BG_DARK)
 			setColour(sf::Color::White);
@@ -175,6 +176,17 @@ void cButton::validatePostParse(ticpp::Element& elem, std::string fname, const s
 
 location cButton::getPreferredSize() {
 	return {btnRects[type][0].width(), btnRects[type][0].height()};
+}
+
+void cButton::recalcRect() {
+	location bestSz = getPreferredSize();
+	if(labelledButtons.count(type)) {
+		if(frame.width() < bestSz.x) frame.width() = bestSz.x;
+		if(frame.height() < bestSz.y) frame.height() = bestSz.y;
+	} else {
+		frame.width() = bestSz.x;
+		frame.height() = bestSz.y;
+	}
 }
 
 // Indices within the buttons array.
@@ -402,6 +414,10 @@ bool cLed::parseContent(ticpp::Node& content, int n, std::string tagName, std::s
 	if(content.Type() == TiXmlNode::ELEMENT && content.Value() == "key")
 		return false;
 	return cButton::parseContent(content, n, tagName, fname, text);
+}
+
+location cLed::getPreferredSize() {
+	return {ledRects[0][0].width(), ledRects[0][0].height()};
 }
 
 void cLedGroup::addChoice(cLed* ctrl, std::string key) {
@@ -649,6 +665,5 @@ bool cLedGroup::parseContent(ticpp::Node& content, int n, std::string tagName, s
 void cLedGroup::validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) {
 	// Don't defer to super-class; groups are an abstract container that doesn't require a position.
 	//cControl::validatePostParse(who, fname, attrs, nodes);
-	recalcRect();
 	frameStyle = FRM_NONE;
 }

@@ -27,7 +27,25 @@ The following attributes are allowed on all or most elements:
 rect of the control within the dialog. All non-container controls
 support these attributes, and in fact the `top` and `left` attributes
 are required. Some controls may ignore the `width` and `height`
-attributes.
+attributes. All of these must be non-negative integers.
+* `relative` - Specifies how the location is computed; defaults to `"abs"`.
+Must be one or two (space-separated) of the following;
+if two are specified, they represent the mode used for calculating x and y respectively:
+  * `abs` - Computed in global dialog space, relative to the top left corner.
+  * `pos` - Computed relative to the reference widget's bottom right corner.
+  * `pos-in` - Computed relative to the reference widget's top left corner.
+  * `neg` - Computed relative to the reference widget's top left corner,
+with the axes inverted (as if top and left were negative).
+As a special case, if this is used with no reference widget,
+the widget's size does not contribute to computation of the dialog's size,
+and the widget is positioned relative to the dialog's bottom right corner.
+  * `neg-in` - Computed relative to the reference widget's bottom right corner,
+with the axes inverted.
+* `anchor` - Specifies the `name` of the reference widget for this widget's location.
+* `rel-anchor` - Set to `prev` or `next` to use the previous or next element in the XML ordering
+as the reference widget for this widget's location.
+This currently does not work for widgets in containers.
+Mutually exclusive with `anchor`.
 * `def-key` - Specifies the default keyboard shortcut for the
 control. See **Keyboard Shortcuts** below for more information on the
 format of this attribute.
