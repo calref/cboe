@@ -185,33 +185,7 @@ bool cScrollPane::parseAttribute(ticpp::Attribute& attr, std::string tagName, st
 
 bool cScrollPane::parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) {
 	if(content.Type() == TiXmlNode::ELEMENT) {
-		std::string tag = content.Value();
-		auto& elem = dynamic_cast<ticpp::Element&>(content);
-		if(tag == "field") {
-			auto field = parent->parse<cTextField>(elem);
-			contents.insert(field);
-			// TODO: Add field to tab order
-			//tabOrder.push_back(field);
-		} else if(tag == "text") {
-			auto text = parent->parse<cTextMsg>(elem);
-			contents.insert(text);
-		} else if(tag == "pict") {
-			auto pict = parent->parse<cPict>(elem);
-			contents.insert(pict);
-		} else if(tag == "slider") {
-			auto slide = parent->parse<cScrollbar>(elem);
-			contents.insert(slide);
-		} else if(tag == "button") {
-			auto button = parent->parse<cButton>(elem);
-			contents.insert(button);
-		} else if(tag == "led") {
-			auto led = parent->parse<cLed>(elem);
-			contents.insert(led);
-		} else if(tag == "group") {
-			auto group = parent->parse<cLedGroup>(elem);
-			contents.insert(group);
-		} else throw xBadNode(tag, content.Row(), content.Column(), fname);
-		return true;
+		return parseChildControl(dynamic_cast<ticpp::Element&>(content), contents);
 	}
 	return cContainer::parseContent(content, n, tagName, fname, text);
 }

@@ -224,6 +224,7 @@ private:
 	std::string fname;
 	sf::Clock animTimer, paintTimer;
 	friend class cControl;
+	friend class cContainer;
 };
 
 /// Thrown when an invalid node (element or text/cdata) is found while parsing an XML dialog definition.

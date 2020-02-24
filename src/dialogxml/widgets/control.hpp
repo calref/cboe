@@ -454,6 +454,12 @@ private:
 class cContainer : public cControl {
 	void callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::string id, eKeyMod mods) override;
 	std::string clicking;
+protected:
+	/// Parses a child control.
+	/// @param elem The element defining the control.
+	/// @param controls The map into which the control will be inserted.
+	/// @return true if the element was a valid control, false otherwise.
+	bool parseChildControl(ticpp::Element& elem, std::map<std::string,cControl*>& controls);
 public:
 	/// Create a new container control attached to an arbitrary window, rather than a dialog.
 	/// @param t The type of the control.

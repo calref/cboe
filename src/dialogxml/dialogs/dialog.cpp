@@ -415,6 +415,35 @@ void cDialog::loadFromFile(std::string path){
 	}
 }
 
+// TODO: Move to a dedicated container.cpp?
+bool cContainer::parseChildControl(ticpp::Element& elem, std::map<std::string,cControl*>& controls) {
+	std::string tag = elem.Value();
+	if(tag == "field") {
+		auto field = parent->parse<cTextField>(elem);
+		controls.insert(field);
+		parent->tabOrder.push_back(field);
+	} else if(tag == "text") {
+		auto text = parent->parse<cTextMsg>(elem);
+		controls.insert(text);
+	} else if(tag == "pict") {
+		auto pict = parent->parse<cPict>(elem);
+		controls.insert(pict);
+	} else if(tag == "slider") {
+		auto slide = parent->parse<cScrollbar>(elem);
+		controls.insert(slide);
+	} else if(tag == "button") {
+		auto button = parent->parse<cButton>(elem);
+		controls.insert(button);
+	} else if(tag == "led") {
+		auto led = parent->parse<cLed>(elem);
+		controls.insert(led);
+	} else if(tag == "group") {
+		auto group = parent->parse<cLedGroup>(elem);
+		controls.insert(group);
+	} else return false;
+	return true;
+}
+
 void cDialog::recalcRect(){
 	bool haveRel = false;
 	for(ctrlIter iter = controls.begin(); iter != controls.end(); iter++) {
