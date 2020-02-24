@@ -143,7 +143,8 @@ void init_main_window (sf::RenderWindow& mainPtr, sf::View& mainView) {
 	;
 	
 	mainPtr.create(sf::VideoMode(width, height), "Blades of Exile Character Editor", sf::Style::Titlebar | sf::Style::Close);
-	mainPtr.setPosition({0,0});
+	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+	mainPtr.setPosition({static_cast<int>((desktop.width - width) / 2), static_cast<int>((desktop.height - height) / 2)});
 
 	// Initialize the view
 	mainView.setSize(width, height);
