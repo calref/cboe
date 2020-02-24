@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='cast'>
-	<!-- Unexpected button control -->
 	<pict name='pic' type='dlog' num='12' top='9' left='9'/>
 	<text size='large' top='6' left='54' width='139' height='18'>Select a Spell:</text>
 	<button name='caster1' type='regular' def-key='1' top='81' left='10'><key/></button>
@@ -10,9 +9,6 @@
 	<button name='caster4' type='regular' def-key='4' top='153' left='10'><key/></button>
 	<button name='caster5' type='regular' def-key='5' top='177' left='10'><key/></button>
 	<button name='caster6' type='regular' def-key='6' top='201' left='10'><key/></button>
-	<!--
-	 TODO: Use the <key/> element here.
-	 -->
 	<button name='target1' type='small' def-key='shift 1' top='82' left='235'><key/></button>
 	<button name='target2' type='small' def-key='shift 2' top='106' left='235'><key/></button>
 	<button name='target3' type='small' def-key='shift 3' top='130' left='235'><key/></button>
@@ -81,16 +77,13 @@
 	<button name='other' type='large' def-key='space' top='394' left='371'>Other Spells</button>
 	<text size='large' top='60' left='9' width='75' height='16'>Caster:</text>
 	<text size='large' top='60' left='209' width='223' height='16'>Target:  HP:   SP:    Status:</text>
-	<!--
-	 TODO: Change this from option to alt
-	 -->
 	<text top='0' left='202' width='290' height='57'>
 		Keyboard:
 		Type '1'-'6' to pick caster,
 		Shift-'1' - '6' to select target,
 		'space' for Other Spells,
 		key by spell to cast spell.
-		Option-click spell name for description.
+		Alt-click spell name for description.
 	</text>
 	<button name='help' type='help' def-key='help' top='6' left='596'/>
 	<text name='col1' top='227' left='10' width='100' height='16'/>
