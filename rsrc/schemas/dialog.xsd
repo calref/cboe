@@ -149,11 +149,16 @@
 		</xs:simpleContent>
 	</xs:complexType>
 	<xs:complexType mixed="true" name="message">
-		<xs:sequence>
-			<xs:element name="br" minOccurs="0" maxOccurs="unbounded">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="br">
 				<xs:complexType/>
 			</xs:element>
-		</xs:sequence>
+			<xs:element name="key">
+				<xs:complexType>
+					<xs:attribute name='ref' type='xs:token'/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
 		<xs:attribute name="name" type="xs:token"/>
 		<xs:attributeGroup ref="frame"/>
 		<xs:attributeGroup ref="font"/>
@@ -311,6 +316,10 @@
 		<xs:keyref name="anchorLink" refer="uniqueID">
 			<xs:selector xpath="*"/>
 			<xs:field xpath="@anchor"/>
+		</xs:keyref>
+		<xs:keyref name="keyRef" refer="uniqueID">
+			<xs:selector xpath="key"/>
+			<xs:field xpath="@ref"/>
 		</xs:keyref>
 	</xs:element>
 </xs:schema>

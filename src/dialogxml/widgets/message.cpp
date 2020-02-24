@@ -64,6 +64,13 @@ bool cTextMsg::parseContent(ticpp::Node& content, int n, std::string tagName, st
 		// TODO: De-magic the | character
 		text += '|'; // because vertical bar is replaced by a newline when drawing strings
 		return true;
+	} else if(content.Value() == "key") {
+		auto elem = dynamic_cast<ticpp::Element&>(content);
+		if(elem.HasAttribute("ref"))
+			keyRefs.push_back(elem.GetAttribute("ref"));
+		else keyRefs.push_back(boost::none);
+		text += '\a';
+		return true;
 	}
 	return cControl::parseContent(content, n, tagName, fname, text);
 }
@@ -120,15 +127,23 @@ void cTextMsg::draw(){
 			draw_color.g = 256 - draw_color.g;
 			draw_color.b = 256 - draw_color.b;
 		}
+		std::string msg = lbl;
+		for(const auto& key : keyRefs) {
+			size_t pos = msg.find_first_of('\a');
+			if(pos == std::string::npos) break;
+			if(key && !parent->hasControl(*key)) continue;
+			cControl& ctrl = key ? parent->getControl(*key) : *this;
+			msg.replace(pos, 1, ctrl.getAttachedKeyDescription());
+		}
 		style.colour = draw_color;
 		if(to_rect.bottom - to_rect.top < 20) { // essentially, it's a single line
 			style.lineHeight = 12;
 			to_rect.left += 3;
-			win_draw_string(*inWindow,to_rect,lbl,eTextMode::LEFT_BOTTOM,style);
+			win_draw_string(*inWindow,to_rect,msg,eTextMode::LEFT_BOTTOM,style);
 		}else {
 			style.lineHeight = textSize + 2;
 			to_rect.inset(4,4);
-			win_draw_string(*inWindow,to_rect,lbl,eTextMode::WRAP,style);
+			win_draw_string(*inWindow,to_rect,msg,eTextMode::WRAP,style);
 		}
 	}
 }

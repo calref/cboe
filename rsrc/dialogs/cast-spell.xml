@@ -79,10 +79,14 @@
 	<text size='large' top='60' left='209' width='223' height='16'>Target:  HP:   SP:    Status:</text>
 	<text top='0' left='202' width='290' height='57'>
 		Keyboard:
-		Type '1'-'6' to pick caster,
-		Shift-'1' - '6' to select target,
-		'space' for Other Spells,
-		key by spell to cast spell.
+		<key ref='caster1'/><key ref='caster2'/><key ref='caster3'/>
+		<key ref='caster4'/><key ref='caster5'/><key ref='caster6'/>
+		 to pick caster,<br/>
+		<key ref='target1'/><key ref='target2'/><key ref='target3'/>
+		<key ref='target4'/><key ref='target5'/><key ref='target6'/>
+		 to select target,<br/>
+		<key ref='other'/> for Other Spells,<br/>
+		key by spell to cast spell.<br/>
 		Alt-click spell name for description.
 	</text>
 	<button name='help' type='help' def-key='help' top='6' left='596'/>

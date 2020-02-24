@@ -15,6 +15,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <string>
+#include <boost/optional.hpp>
 #include "control.hpp"
 #include "render_text.hpp"
 
@@ -49,6 +50,7 @@ private:
 	short textSize;
 	eFont textFont;
 	sf::Color color;
+	std::vector<boost::optional<std::string>> keyRefs;
 	std::string fromList;
 };
 #endif
