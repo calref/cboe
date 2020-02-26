@@ -31,6 +31,7 @@
 #include "scrollbar.hpp"
 #include "button.hpp"
 #include "pict.hpp"
+#include "stack.hpp"
 #include <boost/lexical_cast.hpp>
 #include "prefs.hpp"
 #include "shop.hpp"
@@ -54,8 +55,6 @@ extern sf::RenderWindow mini_map;
 extern cUniverse univ;
 extern sf::Texture pc_gworld;
 extern std::map<eSkill,short> skill_max;
-
-extern std::vector<scen_header_type> scen_headers;
 
 short sign_mode,person_graphic,store_person_graphic,store_sign_mode;
 long num_talk_entries;
@@ -1349,96 +1348,126 @@ void tip_of_day() {
 	
 }
 
-static void put_scen_info(cDialog& me, short page) {
-	std::ostringstream sout;
-	static const char *difficulty[] = {"Low","Medium","High","Very High"};
-	
-	for(short i = 0; i < 3; i++) {
-		sout.clear();
-		sout.str("");
-		sout << i + 1;
-		std::string n = sout.str();
-		if(scen_headers.size() > (page * 3 + i)) {
-			me["pic" + n].show();
-			dynamic_cast<cPict&>(me["pic" + n]).setPict(scen_headers[page * 3 + i].intro_pic);
-			sout.str("");
-			sout << scen_headers[page * 3 + i].name;
-			sout << " v" << int(scen_headers[page * 3 + i].ver[0]);
-			sout << '.' << int(scen_headers[page * 3 + i].ver[1]);
-			sout << '.' << int(scen_headers[page * 3 + i].ver[2]);
-			sout << " - |  Difficulty: " << difficulty[scen_headers[page * 3 + i].difficulty];
-			sout << ", Rating: " << scen_headers[page * 3 + i].rating;
-			sout << " |" << scen_headers[page * 3 + i].who1;
-			sout << " |" << scen_headers[page * 3 + i].who2;
-			me["desc" + n].setText(sout.str());
-			me["start" + n].show();
+class cChooseScenario {
+	cDialog me{"pick-scenario"};
+	std::vector<scen_header_type> scen_headers;
+	void put_scen_info() {
+		std::ostringstream sout;
+		static const char *difficulty[] = {"Low","Medium","High","Very High"};
+		auto& stk = dynamic_cast<cStack&>(me["list"]);
+		stk.setPageCount(1 + ceil(scen_headers.size() / 3.0));
+		
+		for(size_t n = 1; n < stk.getPageCount(); n++) {
+			short page = n - 1;
+			stk.setPage(n);
+			for(short i = 0; i < 3; i++) {
+				sout.clear();
+				sout.str("");
+				sout << i + 1;
+				std::string n = sout.str();
+				if(scen_headers.size() > (page * 3 + i)) {
+					me["pic" + n].show();
+					dynamic_cast<cPict&>(me["pic" + n]).setPict(scen_headers[page * 3 + i].intro_pic);
+					sout.str("");
+					sout << scen_headers[page * 3 + i].name;
+					sout << " v" << int(scen_headers[page * 3 + i].ver[0]);
+					sout << '.' << int(scen_headers[page * 3 + i].ver[1]);
+					sout << '.' << int(scen_headers[page * 3 + i].ver[2]);
+					sout << " - |  Difficulty: " << difficulty[scen_headers[page * 3 + i].difficulty];
+					sout << ", Rating: " << scen_headers[page * 3 + i].rating;
+					sout << " |" << scen_headers[page * 3 + i].who1;
+					sout << " |" << scen_headers[page * 3 + i].who2;
+					me["desc" + n].setText(sout.str());
+					me["start" + n].show();
+				} else {
+					me["pic" + n].hide();
+					me["desc" + n].setText("");
+					me["start" + n].hide();
+				}
+			}
 		}
-		else {
-			me["pic" + n].hide();
-			me["desc" + n].setText("");
-			me["start" + n].hide();
-		}
+		stk.setPage(0);
 	}
-}
 
-static bool pick_a_scen_event_filter(cDialog& me, std::string item_hit, short& page) {
-	if(item_hit == "cancel") {
-		me.setResult<short>(-1);
+	bool doCancel() {
+		scen_header_type null;
+		me.setResult<scen_header_type>(null);
 		me.toast(false);
-	} else if(item_hit == "next") {
-		if(page == 0)
-			page = (scen_headers.size() - 1) / 3;
-		else page--;
-		put_scen_info(me, page);
-	} else if(item_hit == "prev") {
-		if(page == (scen_headers.size() - 1) / 3)
-			page = 0;
-		else page++;
-		put_scen_info(me, page);
-	} else if(item_hit.substr(0,item_hit.length()-1) == "start") {
-		int scen_hit = item_hit[item_hit.length()-1] - '1';
-		me.setResult<short>(scen_hit + page * 3);
+		return true;
+	}
+	
+	bool doSelectPage(int dir) {
+		auto& stk = dynamic_cast<cStack&>(me["list"]);
+		int curPage = stk.getPage(), nPages = stk.getPageCount();
+		curPage += dir;
+		if(curPage < 0) curPage += nPages;
+		else if(curPage >= nPages) curPage -= nPages;
+		stk.setPage(curPage);
+		return true;
+	}
+	
+	bool doSelectScenario(int which) {
+		int page = dynamic_cast<cStack&>(me["list"]).getPage();
+		if(page == 0) {
+			scen_header_type prefab;
+			switch(which) {
+				case 0: prefab.file = "valleydy.boes"; break;
+				case 1: prefab.file = "stealth.boes"; break;
+				case 2: prefab.file = "zakhazi.boes"; break;
+				case 3: prefab.file = "busywork.boes"; break;
+			}
+			// Assume prefabs have the right version, I guess
+			prefab.prog_make_ver[0] = 2;
+			prefab.prog_make_ver[1] = 0;
+			prefab.prog_make_ver[2] = 0;
+			me.setResult<scen_header_type>(prefab);
+		} else {
+			int scen_hit = which + (page - 1) * 3;
+			if(scen_hit >= scen_headers.size()) return false;
+			me.setResult<scen_header_type>(scen_headers[scen_hit]);
+		}
 		me.toast(true);
+		return true;
 	}
-	return true;
-}
+public:
+	cChooseScenario() {
+		// TODO: Add a button to jump to the scenarios folder
+		scen_headers = build_scen_headers(); // TODO: Either make this local to this class, or make it take scen_headers by reference
+	}
+	scen_header_type run() {
+		using namespace std::placeholders;
+		extern fs::path scenDir;
+		
+		if(scen_headers.empty()) { // TODO: Arrange this to be a check before calling run()
+			cChoiceDlog err("no-scenarios");
+			err->getControl("path").setText(scenDir.string());
+			err.show();
+			return scen_header_type();
+		}
+		set_cursor(sword_curs);
+		
+		me["cancel"].attachClickHandler(std::bind(&cChooseScenario::doCancel, this));
+		me["next"].attachClickHandler(std::bind(&cChooseScenario::doSelectPage, this, 1));
+		me["prev"].attachClickHandler(std::bind(&cChooseScenario::doSelectPage, this, -1));
+		me["start1"].attachClickHandler(std::bind(&cChooseScenario::doSelectScenario, this, 0));
+		me["start2"].attachClickHandler(std::bind(&cChooseScenario::doSelectScenario, this, 1));
+		me["start3"].attachClickHandler(std::bind(&cChooseScenario::doSelectScenario, this, 2));
+		me["scen1"].attachClickHandler(std::bind(&cChooseScenario::doSelectScenario, this, 0));
+		me["scen2"].attachClickHandler(std::bind(&cChooseScenario::doSelectScenario, this, 1));
+		me["scen3"].attachClickHandler(std::bind(&cChooseScenario::doSelectScenario, this, 2));
+		
+		put_scen_info();
+		
+		if(scen_headers.size() <= 3) {
+			me["next"].hide();
+			me["prev"].hide();
+		}
+		
+		me.run();
+		return me.getResult<scen_header_type>();
+	}
+};
 
-short pick_a_scen() {
-	using namespace std::placeholders;
-	extern fs::path scenDir;
-	// TODO: Add a button to jump to the scenarios folder
-	build_scen_headers();
-	
-	if(scen_headers.empty()) {
-		cChoiceDlog err("no-scenarios");
-		err->getControl("path").setText(scenDir.string());
-		err.show();
-		return -1;
-	}
-	set_cursor(sword_curs);
-	
-	cDialog pickScen("pick-scenario");
-	short page = 0;
-	pickScen.attachClickHandlers(std::bind(pick_a_scen_event_filter, _1, _2, std::ref(page)), {"cancel", "next", "prev", "start1", "start2", "start3"});
-	
-	put_scen_info(pickScen, 0);
-	
-	if(scen_headers.size() <= 3) {
-		pickScen["next"].hide();
-		pickScen["prev"].hide();
-	}
-	
-	pickScen.run();
-	return pickScen.getResult<short>();
-}
-
-short pick_prefab_scen() {
-	
-	set_cursor(sword_curs);
-	
-	cChoiceDlog pickScenario("pick-prefab-scen", {"cancel", "scen1", "scen2", "scen3"});
-	
-	std::string item_hit = pickScenario.show();
-	if(item_hit == "cancel") return -1;
-	else return item_hit[4] - '1';
+scen_header_type pick_a_scen() {
+	return cChooseScenario().run();
 }

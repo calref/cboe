@@ -23,7 +23,6 @@ void edit_party();
 void pick_preferences();
 void save_prefs(bool resetHelp = false);
 void tip_of_day();
-short pick_a_scen();
-short pick_prefab_scen();
+struct scen_header_type pick_a_scen();
 
 #endif

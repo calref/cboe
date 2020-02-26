@@ -30,7 +30,6 @@ using std::vector;
 extern bool party_in_memory;
 extern long register_flag;
 extern sf::RenderWindow mainPtr;
-extern std::vector<scen_header_type> scen_headers;
 extern cUniverse univ;
 extern eGameMode overall_mode;
 extern sf::View mainView;
@@ -67,8 +66,10 @@ bool handle_startup_press(location the_point) {
 				case STARTBTN_ORDER:
 					pick_preferences();
 					break;
+				
+				case STARTBTN_CUSTOM: break; // Currently unused
 					
-				case STARTBTN_JOIN: // regular scen
+				case STARTBTN_JOIN:
 					if(!party_in_memory) {
 						if(kb::isKeyPressed(kb::LAlt) || kb::isKeyPressed(kb::RAlt)) {
 							force_party = true;
@@ -79,44 +80,19 @@ bool handle_startup_press(location the_point) {
 						}
 					}
 					
-					switch(pick_prefab_scen()) {
-						case 0: scen_name = "valleydy.boes"; break;
-						case 1: scen_name = "stealth.boes"; break;
-						case 2: scen_name = "zakhazi.boes"; break;
-						case 3: scen_name = "busywork.boes"; break;
-						default:
-							if(force_party) party_in_memory = false;
-							break;
-					}
-					put_party_in_scen(scen_name);
-					if(force_party && scen_name != univ.party.scen_name)
-						party_in_memory = false;
-					break;
-					
-				case STARTBTN_CUSTOM: // custom
-					if(!party_in_memory) {
-						if(kb::isKeyPressed(kb::LAlt) || kb::isKeyPressed(kb::RAlt)) {
-							force_party = true;
-							start_new_game(true);
-						} else {
-							cChoiceDlog("need-party").show();
-							break;
-						}
-					}
-					
-					int scen = pick_a_scen();
-					if(scen < 0) {
+					auto scen = pick_a_scen();
+					if(scen.file.empty()) {
 						if(force_party)
 							party_in_memory = false;
 						break;
 					}
-					if(scen_headers[scen].prog_make_ver[0] > 2 || scen_headers[scen].prog_make_ver[1] > 0) {
+					if(scen.prog_make_ver[0] > 2 || scen.prog_make_ver[1] > 0) {
 						if(force_party)
 							party_in_memory = false;
 						cChoiceDlog("scen-version-mismatch").show();
 						break;
 					}
-					scen_name = scen_headers[scen].file;
+					scen_name = scen.file;
 					put_party_in_scen(scen_name);
 					if(force_party && scen_name != univ.party.scen_name)
 						party_in_memory = false;

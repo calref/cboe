@@ -34,7 +34,6 @@ extern sf::RenderWindow mini_map;
 extern short which_combat_type;
 extern short cur_town_talk_loaded;
 extern cUniverse univ;
-std::vector<scen_header_type> scen_headers;
 extern bool mac_is_intel;
 
 bool loaded_yet = false, got_nagged = false;
@@ -342,17 +341,20 @@ void start_data_dump() {
 }
 
 extern fs::path scenDir;
-void build_scen_headers() {
+std::vector<scen_header_type> build_scen_headers() {
 	fs::create_directories(scenDir);
 	std::cout << progDir << '\n' << scenDir << std::endl;
-	scen_headers.clear();
+	std::vector<scen_header_type> scen_headers;
 	fs::recursive_directory_iterator iter(scenDir);
 	set_cursor(watch_curs);
 	
 	while(iter != fs::recursive_directory_iterator()) {
 		fs::file_status stat = iter->status();
-		if(stat.type() == fs::regular_file)
-			load_scenario_header(iter->path());
+		if(stat.type() == fs::regular_file) {
+			scen_header_type scen_head;
+			if(load_scenario_header(iter->path(), scen_head))
+				scen_headers.push_back(scen_head);
+		}
 		iter++;
 	}
 	if(scen_headers.size() == 0) { // no scens present
@@ -369,10 +371,11 @@ void build_scen_headers() {
 			return a < b;
 		});
 	}
+	return scen_headers;
 }
 
 // This is only called at startup, when bringing headers of active scenarios.
-bool load_scenario_header(fs::path file/*,short header_entry*/){
+bool load_scenario_header(fs::path file,scen_header_type& scen_head){
 	bool file_ok = false;
 	
 	std::string fname = file.filename().string();
@@ -396,7 +399,7 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 	} else if(file_ext == ".boes") {
 		if(fs::is_directory(file)) {
 			if(fs::exists(file/"header.exs"))
-				return load_scenario_header(file/"header.exs");
+				return load_scenario_header(file/"header.exs", scen_head);
 		} else {
 			unsigned char magic[2];
 			std::ifstream fin(file.string(), std::ios::binary);
@@ -414,7 +417,6 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 	if(!load_scenario(file, temp_scenario, true))
 		return false;
 	
-	scen_header_type scen_head;
 	scen_head.name = temp_scenario.scen_name;
 	scen_head.who1 = temp_scenario.who_wrote[0];
 	scen_head.who2 = temp_scenario.who_wrote[1];
@@ -430,8 +432,6 @@ bool load_scenario_header(fs::path file/*,short header_entry*/){
 	
 	if(fname == "valleydy" || fname == "stealth" || fname == "zakhazi"/* || fname == "busywork" */)
 		return false;
-	
-	scen_headers.push_back(scen_head);
 	
 	return true;
 }
