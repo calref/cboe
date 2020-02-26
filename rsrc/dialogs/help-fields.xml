@@ -6,69 +6,74 @@
 	<text top='23' left='60' width='418' height='27'>
 		There are a wide variety of magical walls and barriers which you can create and will encounter...
 	</text>
-	<pict type='field' num='9' top='59' left='15'/>
-	<pict type='field' num='8' top='108' left='15'/>
-	<text top='55' left='51' width='181' height='86'>
+	<!-- Left column -->
+	<pict type='field' num='9' top='60' left='15'/>
+	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='180' height='45'>
 		Wall of Fire -
 		The weakest wall. Short lived and low damage.
-		<br/><br/>
+	</text>
+	<pict type='field' num='8' top='110' left='15'/>
+	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='180' height='45'>
 		Wall of Force -
 		Does more damage than a Wall of Fire and lasts a bit longer.
 	</text>
-	<pict type='field' num='12' top='158' left='15'/>
-	<pict type='field' num='13' top='207' left='15'/>
-	<text top='154' left='51' width='182' height='86'>
+	<pict type='field' num='12' top='160' left='15'/>
+	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='180' height='45'>
 		Wall of Ice -
 		Does as much damage as a Wall of Force,
 		but lasts much longer.
-		<br/><br/>
+	</text>
+	<pict type='field' num='13' top='210' left='15'/>
+	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='180' height='45'>
 		Wall of Blades -
 		Long lasting, and does the most damage of the wall spells.
 	</text>
-	<pict type='field' num='11' top='257' left='15'/>
-	<text top='253' left='51' width='179' height='40'>
+	<pict type='field' num='11' top='260' left='15'/>
+	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='180' height='45'>
 		Stinking Cloud -
 		Lasts a short time, and curses anyone who enters.
 	</text>
-	<pict type='field' num='5' top='62' left='250'/>
-	<pict type='field' num='10' top='123' left='250'/>
-	<text top='54' left='284' width='219' height='104'>
+	<!-- Right column -->
+	<pict type='field' num='5' top='60' left='250'/>
+	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='180' height='45'>
 		Web -
 		Lasts until walked through.
 		Slows down the victim, and interfers with attacks.
 		Pause to clean off webs.
-		<br/><br/>
+	</text>
+	<pict type='field' num='10' top='110' left='250'/>
+	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='180' height='45'>
 		Antimagic Field -
 		Spells cannot be casts while in this,
 		nor may they be targeted into it.
 		It fades eventually.
 	</text>
-	<pict type='teranim' num='14' top='177' left='250'/>
-	<text top='169' left='284' width='216' height='81'>
+	<pict type='teranim' num='14' top='160' left='250'/>
+	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='180' height='90'>
 		Fire Barrier -
 		Permanent.
 		Only removable by Dispel Barrier spell.
 		Damages anyone who walks into it.
 		Blocks quickfire.
-		<br/>
+		<br/><br/>
 		Force Barrier -
 		Like Fire Barrier, but cannot be moved through.
 	</text>
-	<pict type='field' num='14' top='265' left='250'/>
-	<text top='261' left='284' width='215' height='43'>
+	<pict type='field' num='14' top='260' left='250'/>
+	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='180' height='45'>
 		Sleep Wall -
 		Walking through can put character to sleep.
 		Very dangerous.
 	</text>
-	<pict type='field' num='7' top='306' left='15'/>
-	<pict type='field' num='6' top='306' left='53'/>
-	<text top='309' left='86' width='411' height='28'>
+	<pict type='field' num='7' top='310' left='15'/>
+	<pict type='field' num='6' top='310' left='53'/>
+	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='410' height='28'>
 		Barrels, Crates -
 		Can be pushed around.
 		Have items in them sometimes.
 	</text>
-	<pict type='field' num='15' top='352' left='15'/>
-	<text top='348' left='49' width='449' height='41'>
+	<pict type='field' num='15' top='360' left='15'/>
+	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='410' height='41'>
 		Quickfire -
 		The most deadly of the barriers,
 		once created it spreads through the dungeon/town destroying everything.
