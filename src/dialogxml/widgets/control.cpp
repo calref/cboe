@@ -607,8 +607,14 @@ bool cControl::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::
 		return true;
 	}
 	if((name == "color" || name == "colour") && canFormat(TXT_COLOUR)) {
-		std::string val;
-		try{
+		std::string val = attr.Value();
+		if(val == "link") {
+			// TODO: Would be nice if it could work for other backgrounds too...
+			if(parent->getBg() == cDialog::BG_DARK)
+				setColour({0x7f, 0xd7, 0xFF});
+			if(parent->getBg() == cDialog::BG_LIGHT)
+				setColour({0x00, 0x00, 0xFF});
+		} else try {
 			sf::Color clr = parseColor(val);
 			setColour(clr);
 		} catch(int) {
