@@ -33,6 +33,13 @@
 		Stinking Cloud -
 		Lasts a short time, and curses anyone who enters.
 	</text>
+	<pict type='field' num='7' top='310' left='15'/>
+	<pict type='field' num='6' top='310' left='53'/>
+	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='150' height='45'>
+		Barrels, Crates -
+		Can be pushed around.
+		Have items in them sometimes.
+	</text>
 	<!-- Right column -->
 	<pict type='field' num='5' top='60' left='250'/>
 	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='180' height='45'>
@@ -65,20 +72,28 @@
 		Walking through can put character to sleep.
 		Very dangerous.
 	</text>
-	<pict type='field' num='7' top='310' left='15'/>
-	<pict type='field' num='6' top='310' left='53'/>
-	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='410' height='28'>
-		Barrels, Crates -
+	<pict type='field' num='3' top='310' left='250'/>
+	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='180' height='45'>
+		Stone Block -
 		Can be pushed around.
-		Have items in them sometimes.
+		Maybe it'll activate a pressure plate or something?
 	</text>
-	<pict type='field' num='15' top='360' left='15'/>
-	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='410' height='41'>
+	<!-- Full-width entries -->
+	<pict type='field' num='0' top='360' left='15'/>
+	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='400' height='41'>
+		Forcecage -
+		Confines a single creature and prevents them from moving.
+		You can still attack, but at a penalty.
+		However, enemies also get a penalty when attacking you.
+		Pole weapons are better at penetrating the field.
+	</text>
+	<pict type='field' num='15' top='410' left='15'/>
+	<text relative='pos pos-in' rel-anchor='prev' top='0' left='8' width='400' height='41'>
 		Quickfire -
 		The most deadly of the barriers,
 		once created it spreads through the dungeon/town destroying everything.
 		It can only be blocked by the two barrier spells.
 		Antimagic fields slow it down.
 	</text>
-	<button name='okay' type='regular' top='391' left='441'>OK</button>
+	<button name='okay' type='regular' top='430' left='430'>OK</button>
 </dialog>
