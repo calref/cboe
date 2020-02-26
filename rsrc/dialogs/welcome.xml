@@ -1,54 +1,57 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay'>
-	<!--
-	 TODO: This dialog contains out-of-date info such as the location of the instructions and license and the notes on older machines.
-	-->
 	<pict type='dlog' num='16' top='6' left='6'/>
-	<text top='4' left='136' width='265' height='16'>WELCOME TO BLADES OF EXILE!</text>
-	<text top='22' left='50' width='413' height='53'>
-		Welcome to the wonderful world of Blades of Exile!
-		Blades of Exile is the gateway to a nearly infinite
-		variety of adventures. First, it come with 3 exciting
-		scenarios, filled with many hours of puzzles, fighting,
-		and adventure.
+	<text top='4' left='136' width='265' height='16'>WELCOME TO OPEN BLADES OF EXILE!</text>
+	<text top='22' left='50' width='413' height='48'>
+		Welcome to the evolving world of Open Blades of Exile!<br/>
+		Open Blades of Exile is the open-source variant of the
+		Blades of Exile game developed by Spiderweb Software in 
+		1997 and released as Free Open-Source Software in 2005.
 	</text>
-	<text top='76' left='50' width='413' height='40'>
+	<text name='spidweb' relative='pos-in pos' rel-anchor='prev' top='0' left='16' width='390' height='12' colour='link' underline='true'>
+		http://www.spidweb.com/blades/opensource.html	
+	</text>
+	<text relative='neg pos' rel-anchor='prev' top='12' left='16' width='413' height='36'>
+		Three exciting original scenarios await you, filled 
+		with many hours of puzzles, fighting and adventure!
+		In addition to these, hundreds more written by 
+		community members, are available for download online!
+	</text>
+	<text name='scen' relative='pos-in pos' rel-anchor='prev' top='0' left='16' width='390' height='12' colour='link' underline='true'>
+		http://openboe.com/scenarios
+	</text>
+	<text relative='neg pos' rel-anchor='prev' top='12' left='16' width='413' height='84'>
 		Even better, when you are through with those adventures,
 		you can make your own using the Blades of Exile scenario
-		editor or obtain the adventures other people have made
-		and try them out for yourself!
-	</text>
-	<text top='117' left='50' width='412' height='54'>
+		editor!
+		<br/><br/>
 		Blades of Exile is, like most games of its type,
 		slightly complicated. Fortunately, there are plenty of
-		places to look for help should you get confused. Be sure
-		to look at the file "Blades Instructions/Order Form"
-		which comes with the game.
+		places to look for help should you get confused. In-game
+		hints are available, as well as an instruction manual.
+		You can also find playing hints and related discussion
+		at the Spiderweb Software game forums.
 	</text>
-	<text top='172' left='50' width='418' height='51'>
-		Also be sure to look at the Preferences Window (in the
-		Options menu). It can make the game move faster (very
-		useful for older machines), slower, and even easier,
-		change the display, and remove the special effects.
+	<text name='forum' relative='pos-in pos' rel-anchor='prev' top = '0' left='16' width='390' height='12' colour='link' underline='true'>
+		http://spiderwebforums.ipbhost.com/
 	</text>
-	<text top='280' left='50' width='421' height='28'>
-		Be sure to look at the file "Blades of Exile License."
-		By playing this game, you are agreeing to abide by all
-		terms of this license.
+	<text relative='neg pos' rel-anchor='prev' top='12' left='16' width='413' height='96'>
+		Also be sure to look at the Preferences Window, where
+		you can change animation speed, game difficulty, display
+		options and special effects settings.
+		<br/><br/>
+		Blades of Exile Game/Editor/Character Editor are released 
+		under the terms of the GNU General Public License V2.
+		See the file LICENSE.txt for details.
+		<br/><br/>
+		        The Open Blades of Exile team
 	</text>
-	<text top='225' left='50' width='420' height='53'>
-		Finally, alas, the Macintosh world nowadays is rife with
-		extension conflicts and other problems. If you
-		experience crashes playing Blades of Exile, there is
-		troubleshooting info in the file
-		"READ ME - Game and ASP Info".
+	<text name='home' relative='pos-in pos' rel-anchor='prev' top='0' left='16' width='390' height='12' colour='link' underline='true'>
+		http://openboe.com
 	</text>
-	<text top='310' left='306' width='165' height='52'>
-		Jeff Vogel <br/>
-		Keeper of Exile <br/>
-		Spidweb@spidweb.com <br/>
-		http://www.spidweb.com/
+	<text name='src' relative='pos-in pos' rel-anchor='prev' top='0' left='0' width='390' height='12' colour='link' underline='true'>
+		https://github.com/calref/cboe
 	</text>
-	<button name='okay' type='regular' top='365' left='406'>OK</button>
+	<button name='okay' relative='neg' type='regular' top='30' left='70'>OK</button>
 </dialog>
