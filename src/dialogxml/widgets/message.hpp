@@ -52,5 +52,6 @@ private:
 	sf::Color color;
 	std::vector<boost::optional<std::string>> keyRefs;
 	std::string fromList;
+	bool underlined = false;
 };
 #endif

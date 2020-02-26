@@ -52,6 +52,12 @@ bool cTextMsg::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::
 			throw xBadVal(tagName, attr.Name(), val, attr.Row(), attr.Column(), fname);
 		}
 		return true;
+	} else if(attr.Name() == "underline") {
+		std::string val = attr.Value();
+		if(val == "true") underlined = true;
+		else if(val == "false") underlined = false;
+		else throw xBadVal(tagName, attr.Name(), val, attr.Row(), attr.Column(), fname);
+		return true;
 	}
 	return cControl::parseAttribute(attr, tagName, fname);
 }
@@ -120,6 +126,7 @@ void cTextMsg::draw(){
 		TextStyle style;
 		style.font = textFont;
 		style.pointSize = textSize;
+		style.underline = underlined;
 		drawFrame(2, frameStyle);
 		sf::Color draw_color = color;
 		if(depressed){
