@@ -251,6 +251,22 @@
 			<xs:element name="led" type="led"/>
 			<xs:element name="group" type="ledGroup"/>
 			<xs:element name="slider" type="slider"/>
+			<xs:element name="page">
+				<xs:complexType>
+					<xs:choice minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="field" type="field"/>
+						<xs:element name="text" type="message"/>
+						<xs:element name="pict" type="pict"/>
+						<xs:element name="button" type="button"/>
+						<xs:element name="led" type="led"/>
+						<xs:element name="group" type="ledGroup"/>
+						<xs:element name="slider" type="slider"/>
+					</xs:choice>
+					<xs:attribute name="span" type="xs:integer"/>
+					<xs:attribute name="default" type="bool"/>
+					<xs:attribute name="template" type="xs:token"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 		<xs:attribute name="name" type="xs:token"/>
 		<xs:attributeGroup ref="frame"/>
@@ -282,7 +298,16 @@
 				<xs:element name="led" type="led"/>
 				<xs:element name="group" type="ledGroup"/>
 				<xs:element name="slider" type="slider"/>
-				<xs:element name="stack" type="stack"/>
+				<xs:element name="stack" type="stack">
+					<xs:unique name="pageName">
+						<xs:selector xpath="page"/>
+						<xs:field xpath="@template"/>
+					</xs:unique>
+					<xs:unique name="onlyOneDefault">
+						<xs:selector xpath="page"/>
+						<xs:field xpath="@default"/>
+					</xs:unique>
+				</xs:element>
 				<xs:element name="pane" type="scrollPane"/>
 			</xs:choice>
 			<xs:attribute name="skin" default="dark">

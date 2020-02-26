@@ -663,6 +663,7 @@ bool cControl::hasKey(){
 cControl::storage_t cControl::store() {
 	storage_t storage;
 	storage["text"] = lbl;
+	storage["visible"] = visible;
 	return storage;
 }
 
@@ -670,4 +671,6 @@ void cControl::restore(storage_t to) {
 	if(to.find("text") != to.end())
 		lbl = boost::any_cast<std::string>(to["text"]);
 	else lbl = "";
+	if(to.find("visible") != to.end())
+		boost::any_cast<bool>(to["visible"]) ? show() : hide();
 }

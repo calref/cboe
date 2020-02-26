@@ -262,6 +262,23 @@ The `<stack>` tag accepts the following attributes:
 * `pages` - The initial number of pages in the stack. This can also be
 set programmatically.
 
+In addition to nested widgets, the `<stack>` tag can contain `<page>` elements.
+Each `<page>` element contains a group of widgets that will be visible on a
+particular page. Unless changed programmatically, any widgets in a `<page>`
+element will be visible if and if only the corresponding page is active.
+Widgets not assigned to a `<page>` will always be visible.
+A `<page>` can contain any elements except for nested `<stack>` or `<pane>` elements.
+
+The `<page>` tag accepts the following attributes:
+
+* `span` - If set to an integer greater than 1, the same page definition will be
+used for a span of this many pages, as if the entire element had been duplicated
+that many times.
+* `default` - If set to true, this page will be used as the default definition for
+any new pages added programmatically. Only one page may be the default.
+* `template` - If set to a string, this can be used to apply the page definition to
+a page programmatically.
+
 The `<pane>` tag
 ----------------
 

@@ -38,6 +38,10 @@ class cStack : public cContainer {
 	std::map<std::string,cControl*> controls;
 	bool drawFramed = false;
 	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
+	std::vector<std::vector<std::string>> templates;
+	std::map<std::string, size_t> templateNames;
+	size_t defaultTemplate = std::numeric_limits<size_t>::max();
+	void applyTemplate(size_t n);
 public:
 	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
 	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;
@@ -64,6 +68,9 @@ public:
 	/// Add a new page to the end of the stack.
 	/// This is equivalent to calling setPageCount(getPageCount() + 1).
 	void addPage();
+	/// Apply a named template to the current page.
+	/// @param name The name of the template to apply
+	void applyTemplate(const std::string& name);
 	// Get the number of pages in the stack.
 	/// @return The number of pages
 	size_t getPageCount();
