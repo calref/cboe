@@ -4,70 +4,70 @@
 	<!--
 	 TODO: Add width attributes to the LEDs
 	 -->
-	<pict name='pic' type='dlog' num='14' top='6' left='6'/>
-	<led name='spell1' state='off' top='57' left='32'/>
-	<led name='spell2' state='off' top='69' left='32'/>
-	<led name='spell3' state='off' top='81' left='32'/>
-	<led name='spell4' state='off' top='93' left='32'/>
-	<led name='spell5' state='off' top='105' left='32'/>
-	<led name='spell6' state='off' top='117' left='32'/>
-	<led name='spell7' state='off' top='129' left='32'/>
-	<led name='spell8' state='off' top='141' left='32'/>
-	<led name='spell9' state='off' top='153' left='32'/>
-	<led name='spell10' state='off' top='165' left='32'/>
-	<led name='spell11' state='off' top='57' left='150'/>
-	<led name='spell12' state='off' top='69' left='150'/>
-	<led name='spell13' state='off' top='81' left='150'/>
-	<led name='spell14' state='off' top='93' left='150'/>
-	<led name='spell15' state='off' top='105' left='150'/>
-	<led name='spell16' state='off' top='117' left='150'/>
-	<led name='spell17' state='off' top='129' left='150'/>
-	<led name='spell18' state='off' top='141' left='150'/>
-	<led name='spell19' state='off' top='153' left='150'/>
-	<led name='spell20' state='off' top='165' left='150'/>
-	<led name='spell21' state='off' top='57' left='268'/>
-	<led name='spell22' state='off' top='69' left='268'/>
-	<led name='spell23' state='off' top='81' left='268'/>
-	<led name='spell24' state='off' top='93' left='268'/>
-	<led name='spell25' state='off' top='105' left='268'/>
-	<led name='spell26' state='off' top='117' left='268'/>
-	<led name='spell27' state='off' top='129' left='268'/>
-	<led name='spell28' state='off' top='141' left='268'/>
-	<led name='spell29' state='off' top='153' left='268'/>
-	<led name='spell30' state='off' top='165' left='268'/>
-	<led name='spell31' state='off' top='57' left='386'/>
-	<led name='spell32' state='off' top='69' left='386'/>
-	<led name='spell33' state='off' top='81' left='386'/>
-	<led name='spell34' state='off' top='93' left='386'/>
-	<led name='spell35' state='off' top='105' left='386'/>
-	<led name='spell36' state='off' top='117' left='386'/>
-	<led name='spell37' state='off' top='129' left='386'/>
-	<led name='spell38' state='off' top='141' left='386'/>
-	<led name='spell39' state='off' top='188' left='32'/>
-	<led name='spell40' state='off' top='200' left='32'/>
-	<led name='spell41' state='off' top='212' left='32'/>
-	<led name='spell42' state='off' top='224' left='32'/>
-	<led name='spell43' state='off' top='236' left='32'/>
-	<led name='spell44' state='off' top='248' left='32'/>
-	<led name='spell45' state='off' top='260' left='32'/>
-	<led name='spell46' state='off' top='272' left='32'/>
-	<led name='spell47' state='off' top='188' left='150'/>
-	<led name='spell48' state='off' top='200' left='150'/>
-	<led name='spell49' state='off' top='212' left='150'/>
-	<led name='spell50' state='off' top='224' left='150'/>
-	<led name='spell51' state='off' top='236' left='150'/>
-	<led name='spell52' state='off' top='248' left='150'/>
-	<led name='spell53' state='off' top='260' left='150'/>
-	<led name='spell54' state='off' top='272' left='150'/>
-	<led name='spell55' state='off' top='188' left='268'/>
-	<led name='spell56' state='off' top='200' left='268'/>
-	<led name='spell57' state='off' top='212' left='268'/>
-	<led name='spell58' state='off' top='224' left='268'/>
-	<led name='spell59' state='off' top='236' left='268'/>
-	<led name='spell60' state='off' top='248' left='268'/>
-	<led name='spell61' state='off' top='260' left='268'/>
-	<led name='spell62' state='off' top='272' left='268'/>
-	<button name='done' type='done' top='310' left='422'/>
+	<pict name='pic' type='dlog' num='14' top='6' left='6' width='14'/>
+	<led name='spell1' state='off' top='57' left='32' width='14'/>
+	<led name='spell2' state='off' top='69' left='32' width='14'/>
+	<led name='spell3' state='off' top='81' left='32' width='14'/>
+	<led name='spell4' state='off' top='93' left='32' width='14'/>
+	<led name='spell5' state='off' top='105' left='32' width='14'/>
+	<led name='spell6' state='off' top='117' left='32' width='14'/>
+	<led name='spell7' state='off' top='129' left='32' width='14'/>
+	<led name='spell8' state='off' top='141' left='32' width='14'/>
+	<led name='spell9' state='off' top='153' left='32' width='14'/>
+	<led name='spell10' state='off' top='165' left='32' width='14'/>
+	<led name='spell11' state='off' top='57' left='150' width='14'/>
+	<led name='spell12' state='off' top='69' left='150' width='14'/>
+	<led name='spell13' state='off' top='81' left='150' width='14'/>
+	<led name='spell14' state='off' top='93' left='150' width='14'/>
+	<led name='spell15' state='off' top='105' left='150' width='14'/>
+	<led name='spell16' state='off' top='117' left='150' width='14'/>
+	<led name='spell17' state='off' top='129' left='150' width='14'/>
+	<led name='spell18' state='off' top='141' left='150' width='14'/>
+	<led name='spell19' state='off' top='153' left='150' width='14'/>
+	<led name='spell20' state='off' top='165' left='150' width='14'/>
+	<led name='spell21' state='off' top='57' left='268' width='14'/>
+	<led name='spell22' state='off' top='69' left='268' width='14'/>
+	<led name='spell23' state='off' top='81' left='268' width='14'/>
+	<led name='spell24' state='off' top='93' left='268' width='14'/>
+	<led name='spell25' state='off' top='105' left='268' width='14'/>
+	<led name='spell26' state='off' top='117' left='268' width='14'/>
+	<led name='spell27' state='off' top='129' left='268' width='14'/>
+	<led name='spell28' state='off' top='141' left='268' width='14'/>
+	<led name='spell29' state='off' top='153' left='268' width='14'/>
+	<led name='spell30' state='off' top='165' left='268' width='14'/>
+	<led name='spell31' state='off' top='57' left='386' width='14'/>
+	<led name='spell32' state='off' top='69' left='386' width='14'/>
+	<led name='spell33' state='off' top='81' left='386' width='14'/>
+	<led name='spell34' state='off' top='93' left='386' width='14'/>
+	<led name='spell35' state='off' top='105' left='386' width='14'/>
+	<led name='spell36' state='off' top='117' left='386' width='14'/>
+	<led name='spell37' state='off' top='129' left='386' width='14'/>
+	<led name='spell38' state='off' top='141' left='386' width='14'/>
+	<led name='spell39' state='off' top='188' left='32' width='14'/>
+	<led name='spell40' state='off' top='200' left='32' width='14'/>
+	<led name='spell41' state='off' top='212' left='32' width='14'/>
+	<led name='spell42' state='off' top='224' left='32' width='14'/>
+	<led name='spell43' state='off' top='236' left='32' width='14'/>
+	<led name='spell44' state='off' top='248' left='32' width='14'/>
+	<led name='spell45' state='off' top='260' left='32' width='14'/>
+	<led name='spell46' state='off' top='272' left='32' width='14'/>
+	<led name='spell47' state='off' top='188' left='150' width='14'/>
+	<led name='spell48' state='off' top='200' left='150' width='14'/>
+	<led name='spell49' state='off' top='212' left='150' width='14'/>
+	<led name='spell50' state='off' top='224' left='150' width='14'/>
+	<led name='spell51' state='off' top='236' left='150' width='14'/>
+	<led name='spell52' state='off' top='248' left='150' width='14'/>
+	<led name='spell53' state='off' top='260' left='150' width='14'/>
+	<led name='spell54' state='off' top='272' left='150' width='14'/>
+	<led name='spell55' state='off' top='188' left='268' width='14'/>
+	<led name='spell56' state='off' top='200' left='268' width='14'/>
+	<led name='spell57' state='off' top='212' left='268' width='14'/>
+	<led name='spell58' state='off' top='224' left='268' width='14'/>
+	<led name='spell59' state='off' top='236' left='268' width='14'/>
+	<led name='spell60' state='off' top='248' left='268' width='14'/>
+	<led name='spell61' state='off' top='260' left='268' width='14'/>
+	<led name='spell62' state='off' top='272' left='268' width='14'/>
+	<button name='done' type='done' top='310' left='422' width='14'/>
 	<button name='left' type='left' def-key='left' top='310' left='12'/>
 	<button name='right' type='right' def-key='right' top='309' left='79'/>
 	<text name='who' size='large' top='15' left='53' width='83' height='16'>Spells For:</text>

@@ -15,9 +15,9 @@
 	<text top='128' left='145' width='139' height='14'>Medium (48x48)</text>
 	<text top='145' left='145' width='139' height='14'>Small (32x32)</text>
 	<group name='size'>
-		<led name='lg' top='114' left='301' state='red'/>
-		<led name='med' top='131' left='301'/>
-		<led name='sm' top='148' left='301'/>
+		<led name='lg' top='114' left='301' state='red' width='14'/>
+		<led name='med' top='131' left='301' width='14'/>
+		<led name='sm' top='148' left='301' width='14'/>
 	</group>
 	<text top='164' left='51' width='105' height='14'>Preset terrain:</text>
 	<!--
@@ -27,9 +27,9 @@
 	<text top='181' left='168' width='102' height='15'>Plain Grass</text>
 	<text top='198' left='168' width='127' height='15'>Grass with flowers</text>
 	<group name='preset'>
-		<led name='cave' top='167' left='301' state='red'/>
-		<led name='grass' top='184' left='301'/>
-		<led name='flowers' top='201' left='301'/>
+		<led name='cave' top='167' left='301' state='red' width='14'/>
+		<led name='grass' top='184' left='301' width='14'/>
+		<led name='flowers' top='201' left='301' width='14'/>
 	</group>
 	<text top='28' left='50' width='147' height='14'>Creating town number:</text>
 	<text name='num' top='28' left='201' width='33' height='14'/>
