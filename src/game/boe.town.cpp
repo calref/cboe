@@ -1474,7 +1474,7 @@ void draw_map(bool need_refresh) {
 		map_gworld.display();
 	}
 	
-	mini_map.setActive();
+	mini_map.setActive(false);
 	
 	// Now place terrain map gworld
 	TextStyle style;
@@ -1528,7 +1528,7 @@ void draw_map(bool need_refresh) {
 			}
 		}
 	}
-	
+    mini_map.setActive();
 	mini_map.display();
 	
 	// Now exit gracefully
