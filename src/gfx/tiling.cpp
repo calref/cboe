@@ -10,6 +10,7 @@
 
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
+#include <SFML/OpenGL.hpp>
 #include "res_image.hpp"
 #include "render_image.hpp"
 #include "render_shapes.hpp"
@@ -110,4 +111,8 @@ void init_tiling() {
 		}
 		bg[i] = prepareForTiling(bg_gworld, bg_rects[i]);
 	}
+#ifdef __APPLE__
+	// FIXME: the texture are destroyed at the end of this function, so we must force a glFlush
+	glFlush();
+#endif
 }
