@@ -542,7 +542,6 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 			currentFocus = iter->first;
 		}
 	}
-#if 0
 	// Sometimes it seems like the Cocoa menu handling clobbers the active rendering context.
 	// For whatever reason, delaying 100 milliseconds appears to fix this.
 	sf::sleep(sf::milliseconds(100));
@@ -550,10 +549,9 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	// Instantiating a window and then closing it seems to fix the update error, because magic.
 	win.create(sf::VideoMode(1,1),"");
 	win.close();
-#endif
 	win.create(sf::VideoMode(winRect.width(), winRect.height()), "Dialog", sf::Style::Titlebar);
 	win.setPosition({parentPos.x + int(parentSz.x - winRect.width()) / 2, parentPos.y + int(parentSz.y - winRect.height()) / 2});
-    draw();
+	draw();
 	makeFrontWindow(parent ? parent-> win : mainPtr);
 	makeFrontWindow(win);
 	// This is a loose modal session, as it doesn't prevent you from clicking away,
@@ -1049,7 +1047,7 @@ xBadVal::~xBadVal() throw(){
 bool cDialog::doAnimations = false;
 
 void cDialog::draw(){
-	win.setActive(false);
+	win.setActive();
 	tileImage(win,winRect,::bg[bg]);
 	if(doAnimations && animTimer.getElapsedTime().asMilliseconds() >= 500) {
 		cPict::advanceAnim();
@@ -1062,7 +1060,6 @@ void cDialog::draw(){
 		iter++;
 	}
 	
-    win.setActive();
 	win.display();
 }
 
