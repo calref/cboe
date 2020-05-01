@@ -93,6 +93,9 @@ void finish_load_party(){
 	
 	overall_mode = town_restore ? MODE_TOWN : MODE_OUTDOORS;
 	stat_screen_mode = MODE_INVEN;
+	// build_outdoors call add_outdoor_maps, so we must update them first
+	// checkme: true for actual files, unsure for a legacy saved file
+	save_outdoor_maps();
 	build_outdoors();
 	erase_out_specials();
 	
