@@ -979,7 +979,8 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 	size_t last = 0, new_last = str.find_last_not_of(' ');
 	while(last < str.length() && str[last] == text_buffer[prev_pointer].line[last])
 		last++;
-	while(text_buffer[prev_pointer].line[--last] == ' ');
+	// ASAN last can be 0
+	while(last>0 && text_buffer[prev_pointer].line[--last] == ' ');
 	bool is_dup = false;
 	if(last == new_last) {
 		size_t num_pos = 0;

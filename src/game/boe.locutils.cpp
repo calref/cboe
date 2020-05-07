@@ -215,7 +215,12 @@ short combat_obscurity(short x, short y) {
 }
 
 ter_num_t coord_to_ter(short x,short y) {
-	return is_out() ? univ.out[x][y] : univ.town->terrain(x,y);
+	if (is_out())
+		return univ.out[x][y];
+	// ASAN called by place_road(..., false) with (x,y)=(univ.town->max_dim,univ.town->max_dim)
+	if (x<0 || y<0 || x>=univ.town->max_dim || y>=univ.town->max_dim)
+		return 0;
+	return univ.town->terrain(x,y);
 }
 
 ////
