@@ -1188,7 +1188,8 @@ void activate_monsters(short code,short /*attitude*/) {
 
 mon_num_t get_summon_monster(short summon_class) {
 	for(short i = 0; i < 200; i++) {
-		short j = get_ran(1,0,255);
+		// ASAN univ.scenario.scen_monsters.size() can be less than 255
+		short j = get_ran(1,0,univ.scenario.scen_monsters.size()-1);
 		if(univ.scenario.scen_monsters[j].summon_type == summon_class) {
 			return j;
 		}
