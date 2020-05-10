@@ -717,7 +717,7 @@ location find_clear_spot(location from_where,short mode) {
 	location loc,store_loc;
 	short num_tries = 0,r1;
 	// Here 254 indicates the low byte of the town fields, minus explored spaces (which is lowest bit).
-	unsigned long blocking_fields = SPECIAL_SPOT_BIT | OBJECT_CRATE_BIT | OBJECT_BARREL_BIT | OBJECT_BLOCK_BIT | FIELD_QUICKFIRE_BIT | 254;
+	unsigned long blocking_fields = SPECIAL_SPOT | OBJECT_CRATE | OBJECT_BARREL | OBJECT_BLOCK | FIELD_QUICKFIRE | 254;
 	
 	while(num_tries < 75) {
 		num_tries++;
