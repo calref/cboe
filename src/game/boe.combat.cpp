@@ -2419,7 +2419,11 @@ void do_monster_turn() {
 					if((!monst_adjacent(targ_space,i) || (get_ran(1,0,2) < 2) || (cur_monst->number >= 160)
 						 || (cur_monst->level > 9))
 						&& (dist(cur_monst->cur_loc,targ_space) <= 10)) {
-						acted_yet = monst_cast_mage(cur_monst,target);
+						// ASAN: if it summons another monster, univ.town.monst can grow, ...
+						// checkme: this supposes that i remains valid
+						//		  even if the monster has killed other monters
+						if (monst_cast_mage(cur_monst,target))
+							cur_monst = &univ.town.monst[i];
 						had_monst = true;
 						acted_yet = true;
 						take_m_ap(5,cur_monst);
@@ -2429,7 +2433,8 @@ void do_monster_turn() {
 				if((cur_monst->cl > 0) && (get_ran(1,1,8) < 7) && !acted_yet) {
 					if((!monst_adjacent(targ_space,i) || (get_ran(1,0,2) < 2) || (cur_monst->level > 9))
 						&& (dist(cur_monst->cur_loc,targ_space) <= 10)) {
-						acted_yet = monst_cast_priest(cur_monst,target);
+						if (monst_cast_priest(cur_monst,target))
+							cur_monst = &univ.town.monst[i];
 						had_monst = true;
 						acted_yet = true;
 						take_m_ap(4,cur_monst);
