@@ -202,55 +202,55 @@ cTown*const cCurTown::record() const {
 
 bool cCurTown::is_explored(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & SPECIAL_EXPLORED_BIT;
+	return fields[x][y] & SPECIAL_EXPLORED;
 }
 
 bool cCurTown::is_force_wall(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & WALL_FORCE_BIT;
+	return fields[x][y] & WALL_FORCE;
 }
 
 bool cCurTown::is_fire_wall(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & WALL_FIRE_BIT;
+	return fields[x][y] & WALL_FIRE;
 }
 
 bool cCurTown::is_antimagic(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & FIELD_ANTIMAGIC_BIT;
+	return fields[x][y] & FIELD_ANTIMAGIC;
 }
 
 bool cCurTown::is_scloud(short x, short y) const{ // stinking cloud
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & CLOUD_STINK_BIT;
+	return fields[x][y] & CLOUD_STINK;
 }
 
 bool cCurTown::is_ice_wall(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & WALL_ICE_BIT;
+	return fields[x][y] & WALL_ICE;
 }
 
 bool cCurTown::is_blade_wall(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & WALL_BLADES_BIT;
+	return fields[x][y] & WALL_BLADES;
 }
 
 bool cCurTown::is_sleep_cloud(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & CLOUD_SLEEP_BIT;
+	return fields[x][y] & CLOUD_SLEEP;
 }
 
 bool cCurTown::is_block(short x, short y) const{ // currently unused
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & OBJECT_BLOCK_BIT;
+	return fields[x][y] & OBJECT_BLOCK;
 }
 
 bool cCurTown::is_spot(short x, short y) const{
-	return fields[x][y] & SPECIAL_SPOT_BIT;
+	return fields[x][y] & SPECIAL_SPOT;
 }
 
 bool cCurTown::is_road(short x, short y) const{
-	return fields[x][y] & SPECIAL_ROAD_BIT;
+	return fields[x][y] & SPECIAL_ROAD;
 }
 
 bool cCurTown::is_special(short x, short y) const{
@@ -264,83 +264,83 @@ bool cCurTown::is_special(short x, short y) const{
 
 bool cCurTown::is_web(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & FIELD_WEB_BIT;
+	return fields[x][y] & FIELD_WEB;
 }
 
 bool cCurTown::is_crate(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & OBJECT_CRATE_BIT;
+	return fields[x][y] & OBJECT_CRATE;
 }
 
 bool cCurTown::is_barrel(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & OBJECT_BARREL_BIT;
+	return fields[x][y] & OBJECT_BARREL;
 }
 
 bool cCurTown::is_fire_barr(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & BARRIER_FIRE_BIT;
+	return fields[x][y] & BARRIER_FIRE;
 }
 
 bool cCurTown::is_force_barr(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & BARRIER_FORCE_BIT;
+	return fields[x][y] & BARRIER_FORCE;
 }
 
 bool cCurTown::is_quickfire(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & FIELD_QUICKFIRE_BIT;
+	return fields[x][y] & FIELD_QUICKFIRE;
 }
 
 bool cCurTown::is_sm_blood(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & SFX_SMALL_BLOOD_BIT;
+	return fields[x][y] & SFX_SMALL_BLOOD;
 }
 
 bool cCurTown::is_med_blood(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & SFX_MEDIUM_BLOOD_BIT;
+	return fields[x][y] & SFX_MEDIUM_BLOOD;
 }
 
 bool cCurTown::is_lg_blood(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & SFX_LARGE_BLOOD_BIT;
+	return fields[x][y] & SFX_LARGE_BLOOD;
 }
 
 bool cCurTown::is_sm_slime(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & SFX_SMALL_SLIME_BIT;
+	return fields[x][y] & SFX_SMALL_SLIME;
 }
 
 bool cCurTown::is_lg_slime(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & SFX_LARGE_SLIME_BIT;
+	return fields[x][y] & SFX_LARGE_SLIME;
 }
 
 bool cCurTown::is_ash(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & SFX_ASH_BIT;
+	return fields[x][y] & SFX_ASH;
 }
 
 bool cCurTown::is_bones(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & SFX_BONES_BIT;
+	return fields[x][y] & SFX_BONES;
 }
 
 bool cCurTown::is_rubble(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & SFX_RUBBLE_BIT;
+	return fields[x][y] & SFX_RUBBLE;
 }
 
 bool cCurTown::is_force_cage(short x, short y) const{
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	return fields[x][y] & BARRIER_CAGE_BIT;
+	return fields[x][y] & BARRIER_CAGE;
 }
 
 bool cCurTown::set_explored(short x, short y, bool b){
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	if(b) fields[x][y] |=  SPECIAL_EXPLORED_BIT;
-	else  fields[x][y] &= ~SPECIAL_EXPLORED_BIT;
+	if(b) fields[x][y] |=  SPECIAL_EXPLORED;
+	else  fields[x][y] &= ~SPECIAL_EXPLORED;
 	return true;
 }
 
@@ -355,9 +355,9 @@ bool cCurTown::set_force_wall(short x, short y, bool b){
 			return false;
 		set_web(x,y,false);
 		set_fire_wall(x,y,false);
-		fields[x][y]  |=  WALL_FORCE_BIT;
+		fields[x][y]  |=  WALL_FORCE;
 	}
-	else fields[x][y] &= ~WALL_FORCE_BIT;
+	else fields[x][y] &= ~WALL_FORCE;
 	return true;
 }
 
@@ -374,9 +374,9 @@ bool cCurTown::set_fire_wall(short x, short y, bool b){
 			return false;
 		set_web(x,y,false);
 		set_fire_wall(x,y,false);
-		fields[x][y]  |=  WALL_FIRE_BIT;
+		fields[x][y]  |=  WALL_FIRE;
 	}
-	else fields[x][y] &= ~WALL_FIRE_BIT;
+	else fields[x][y] &= ~WALL_FIRE;
 	return true;
 }
 
@@ -394,9 +394,9 @@ bool cCurTown::set_antimagic(short x, short y, bool b){
 		set_ice_wall(x,y,false);
 		set_blade_wall(x,y,false);
 		set_sleep_cloud(x,y,false);
-		fields[x][y]  |=  FIELD_ANTIMAGIC_BIT;
+		fields[x][y]  |=  FIELD_ANTIMAGIC;
 	}
-	else fields[x][y] &= ~FIELD_ANTIMAGIC_BIT;
+	else fields[x][y] &= ~FIELD_ANTIMAGIC;
 	return true;
 }
 
@@ -411,9 +411,9 @@ bool cCurTown::set_scloud(short x, short y, bool b){ // stinking cloud
 			return false;
 		if(is_fire_barr(x,y) || is_force_barr(x,y))
 			return false;
-		fields[x][y]  |=  CLOUD_STINK_BIT;
+		fields[x][y]  |=  CLOUD_STINK;
 	}
-	else fields[x][y] &= ~CLOUD_STINK_BIT;
+	else fields[x][y] &= ~CLOUD_STINK;
 	return true;
 }
 
@@ -430,9 +430,9 @@ bool cCurTown::set_ice_wall(short x, short y, bool b){
 			return false;
 		set_fire_wall(x,y,false);
 		set_scloud(x,y,false);
-		fields[x][y]  |=  WALL_ICE_BIT;
+		fields[x][y]  |=  WALL_ICE;
 	}
-	else fields[x][y] &= ~WALL_ICE_BIT;
+	else fields[x][y] &= ~WALL_ICE;
 	return true;
 }
 
@@ -445,9 +445,9 @@ bool cCurTown::set_blade_wall(short x, short y, bool b){
 			return false;
 		set_force_wall(x,y,false);
 		set_fire_wall(x,y,false);
-		fields[x][y]  |=  WALL_BLADES_BIT;
+		fields[x][y]  |=  WALL_BLADES;
 	}
-	else fields[x][y] &= ~WALL_BLADES_BIT;
+	else fields[x][y] &= ~WALL_BLADES;
 	return true;
 }
 
@@ -460,30 +460,30 @@ bool cCurTown::set_sleep_cloud(short x, short y, bool b){
 			return false;
 		set_force_wall(x,y,false);
 		set_fire_wall(x,y,false);
-		fields[x][y]  |=  CLOUD_SLEEP_BIT;
+		fields[x][y]  |=  CLOUD_SLEEP;
 	}
-	else fields[x][y] &= ~CLOUD_SLEEP_BIT;
+	else fields[x][y] &= ~CLOUD_SLEEP;
 	return true;
 }
 
 bool cCurTown::set_block(short x, short y, bool b){ // currently unused
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	if(b) fields[x][y] |=  OBJECT_BLOCK_BIT;
-	else  fields[x][y] &= ~OBJECT_BLOCK_BIT;
+	if(b) fields[x][y] |=  OBJECT_BLOCK;
+	else  fields[x][y] &= ~OBJECT_BLOCK;
 	return true;
 }
 
 bool cCurTown::set_spot(short x, short y, bool b){
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	if(b) fields[x][y] |=  SPECIAL_SPOT_BIT;
-	else  fields[x][y] &= ~SPECIAL_SPOT_BIT;
+	if(b) fields[x][y] |=  SPECIAL_SPOT;
+	else  fields[x][y] &= ~SPECIAL_SPOT;
 	return true;
 }
 
 bool cCurTown::set_road(short x, short y, bool b){
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	if(b) fields[x][y] |=  SPECIAL_ROAD_BIT;
-	else  fields[x][y] &= ~SPECIAL_ROAD_BIT;
+	if(b) fields[x][y] |=  SPECIAL_ROAD;
+	else  fields[x][y] &= ~SPECIAL_ROAD;
 	return true;
 }
 
@@ -498,9 +498,9 @@ bool cCurTown::set_web(short x, short y, bool b){
 			return false;
 		if(is_ice_wall(x, y) || is_blade_wall(x,y) || is_sleep_cloud(x,y))
 			return false;
-		fields[x][y]  |=  FIELD_WEB_BIT;
+		fields[x][y]  |=  FIELD_WEB;
 	}
-	else fields[x][y] &= ~FIELD_WEB_BIT;
+	else fields[x][y] &= ~FIELD_WEB;
 	return true;
 }
 
@@ -509,9 +509,9 @@ bool cCurTown::set_crate(short x, short y, bool b){
 	if(b){ // If certain things are on the space, there's no room for a crate.
 		if(is_fire_barr(x,y) || is_force_barr(x,y) || is_quickfire(x,y) || is_barrel(x,y))
 			return false;
-		fields[x][y]  |=  OBJECT_CRATE_BIT;
+		fields[x][y]  |=  OBJECT_CRATE;
 	}
-	else fields[x][y] &= ~OBJECT_CRATE_BIT;
+	else fields[x][y] &= ~OBJECT_CRATE;
 	return true;
 }
 
@@ -520,9 +520,9 @@ bool cCurTown::set_barrel(short x, short y, bool b){
 	if(b){ // If certain things are on the space, there's no room for a crate.
 		if(is_fire_barr(x,y) || is_force_barr(x,y) || is_quickfire(x,y) || is_crate(x,y))
 			return false;
-		fields[x][y]  |=  OBJECT_BARREL_BIT;
+		fields[x][y]  |=  OBJECT_BARREL;
 	}
-	else fields[x][y] &= ~OBJECT_BARREL_BIT;
+	else fields[x][y] &= ~OBJECT_BARREL;
 	return true;
 }
 
@@ -542,9 +542,9 @@ bool cCurTown::set_fire_barr(short x, short y, bool b){
 		set_ice_wall(x,y,false);
 		set_blade_wall(x,y,false);
 		set_sleep_cloud(x,y,false);
-		fields[x][y]  |=  BARRIER_FIRE_BIT;
+		fields[x][y]  |=  BARRIER_FIRE;
 	}
-	else fields[x][y] &= ~BARRIER_FIRE_BIT;
+	else fields[x][y] &= ~BARRIER_FIRE;
 	return true;
 }
 
@@ -564,9 +564,9 @@ bool cCurTown::set_force_barr(short x, short y, bool b){
 		set_ice_wall(x,y,false);
 		set_blade_wall(x,y,false);
 		set_sleep_cloud(x,y,false);
-		fields[x][y]  |=  BARRIER_FORCE_BIT;
+		fields[x][y]  |=  BARRIER_FORCE;
 	}
-	else fields[x][y] &= ~BARRIER_FORCE_BIT;
+	else fields[x][y] &= ~BARRIER_FORCE;
 	return true;
 }
 
@@ -596,9 +596,9 @@ bool cCurTown::set_quickfire(short x, short y, bool b){
 		set_barrel(x,y,false);
 		set_force_barr(x,y,false);
 		set_fire_barr(x,y,false);
-		fields[x][y]  |=  FIELD_QUICKFIRE_BIT;
+		fields[x][y]  |=  FIELD_QUICKFIRE;
 	}
-	else fields[x][y] &= ~FIELD_QUICKFIRE_BIT;
+	else fields[x][y] &= ~FIELD_QUICKFIRE;
 	return true;
 }
 
@@ -621,9 +621,9 @@ bool cCurTown::set_sm_blood(short x, short y, bool b){
 		set_ash(x,y,false);
 		set_bones(x,y,false);
 		set_rubble(x,y,false);
-		fields[x][y]  |=  SFX_SMALL_BLOOD_BIT;
+		fields[x][y]  |=  SFX_SMALL_BLOOD;
 	}
-	else fields[x][y] &= ~SFX_SMALL_BLOOD_BIT;
+	else fields[x][y] &= ~SFX_SMALL_BLOOD;
 	return true;
 }
 
@@ -639,9 +639,9 @@ bool cCurTown::set_med_blood(short x, short y, bool b){
 		set_ash(x,y,false);
 		set_bones(x,y,false);
 		set_rubble(x,y,false);
-		fields[x][y]  |=  SFX_MEDIUM_BLOOD_BIT;
+		fields[x][y]  |=  SFX_MEDIUM_BLOOD;
 	}
-	else fields[x][y] &= ~SFX_MEDIUM_BLOOD_BIT;
+	else fields[x][y] &= ~SFX_MEDIUM_BLOOD;
 	return true;
 }
 
@@ -656,9 +656,9 @@ bool cCurTown::set_lg_blood(short x, short y, bool b){
 		set_ash(x,y,false);
 		set_bones(x,y,false);
 		set_rubble(x,y,false);
-		fields[x][y]  |=  SFX_LARGE_BLOOD_BIT;
+		fields[x][y]  |=  SFX_LARGE_BLOOD;
 	}
-	else fields[x][y] &= ~SFX_LARGE_BLOOD_BIT;
+	else fields[x][y] &= ~SFX_LARGE_BLOOD;
 	return true;
 }
 
@@ -673,9 +673,9 @@ bool cCurTown::set_sm_slime(short x, short y, bool b){
 		set_ash(x,y,false);
 		set_bones(x,y,false);
 		set_rubble(x,y,false);
-		fields[x][y]  |=  SFX_SMALL_SLIME_BIT;
+		fields[x][y]  |=  SFX_SMALL_SLIME;
 	}
-	else fields[x][y] &= ~SFX_SMALL_SLIME_BIT;
+	else fields[x][y] &= ~SFX_SMALL_SLIME;
 	return true;
 }
 
@@ -690,9 +690,9 @@ bool cCurTown::set_lg_slime(short x, short y, bool b){
 		set_ash(x,y,false);
 		set_bones(x,y,false);
 		set_rubble(x,y,false);
-		fields[x][y]  |=  SFX_LARGE_SLIME_BIT;
+		fields[x][y]  |=  SFX_LARGE_SLIME;
 	}
-	else fields[x][y] &= ~SFX_LARGE_SLIME_BIT;
+	else fields[x][y] &= ~SFX_LARGE_SLIME;
 	return true;
 }
 
@@ -707,9 +707,9 @@ bool cCurTown::set_ash(short x, short y, bool b){
 		set_lg_slime(x,y,false);
 		set_bones(x,y,false);
 		set_rubble(x,y,false);
-		fields[x][y]  |=  SFX_ASH_BIT;
+		fields[x][y]  |=  SFX_ASH;
 	}
-	else fields[x][y] &= ~SFX_ASH_BIT;
+	else fields[x][y] &= ~SFX_ASH;
 	return true;
 }
 
@@ -724,9 +724,9 @@ bool cCurTown::set_bones(short x, short y, bool b){
 		set_lg_slime(x,y,false);
 		set_ash(x,y,false);
 		set_rubble(x,y,false);
-		fields[x][y]  |=  SFX_BONES_BIT;
+		fields[x][y]  |=  SFX_BONES;
 	}
-	else fields[x][y] &= ~SFX_BONES_BIT;
+	else fields[x][y] &= ~SFX_BONES;
 	return true;
 }
 
@@ -741,9 +741,9 @@ bool cCurTown::set_rubble(short x, short y, bool b){
 		set_lg_slime(x,y,false);
 		set_ash(x,y,false);
 		set_bones(x,y,false);
-		fields[x][y]  |=  SFX_RUBBLE_BIT;
+		fields[x][y]  |=  SFX_RUBBLE;
 	}
-	else fields[x][y] &= ~SFX_RUBBLE_BIT;
+	else fields[x][y] &= ~SFX_RUBBLE;
 	return true;
 }
 
@@ -751,8 +751,8 @@ bool cCurTown::set_force_cage(short x, short y, bool b){
 	// TODO: Consider whether placing a forcecage should erase anything already present, or fail due to something already present
 	// TODO: Also consider checking for forcecage in some of the other placement functions.
 	if(x > record()->max_dim || y > record()->max_dim) return false;
-	if(b) fields[x][y] |=  BARRIER_CAGE_BIT;
-	else  fields[x][y] &= ~BARRIER_CAGE_BIT;
+	if(b) fields[x][y] |=  BARRIER_CAGE;
+	else  fields[x][y] &= ~BARRIER_CAGE;
 	return true;
 }
 
