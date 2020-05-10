@@ -2082,7 +2082,7 @@ cSpecial get_node(spec_num_t cur_spec, eSpecCtxType cur_spec_type) {
 			}
 			return univ.out->specials[cur_spec];
 		case eSpecCtxType::TOWN:
-			if (!is_town() && !is_combat()) {
+			if (!is_town()) {
 				showError("The scenario called a town special node but it is not in town.");
 				return dummy_node;
 			}
