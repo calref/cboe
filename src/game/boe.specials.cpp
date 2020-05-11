@@ -2470,7 +2470,7 @@ void oneshot_spec(const runtime_state& ctx) {
 	}
 	switch(cur_node.type) {
 		case eSpecType::ONCE_GIVE_ITEM:
-			if(spec.ex2b >= 0 && spec.ex2b < univ.scenario.scen_items.size() &&
+			if(spec.ex1a >= 0 && spec.ex1a < univ.scenario.scen_items.size() &&
 					!univ.party.forced_give(univ.scenario.scen_items[spec.ex1a],eItemAbil::NONE)) {
 				set_sd = false;
 				if( spec.ex2b >= 0)
