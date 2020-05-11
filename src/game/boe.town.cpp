@@ -1040,8 +1040,9 @@ void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
 				univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = surf_camp[k][j];
 	}
 	
-	
-	if(ter_base[ter_type] == 0) {
+	// asan: can be called with ter_type=36
+	short final_ter_type=ter_type<20 ? ter_base[ter_type] : ter_type;
+	if(final_ter_type == 0) {
 		for(short i = 0; i < num_walls; i++) {
 			r1 = get_ran(1,0,3);
 			for(short j = 9; j < 35; j++)
@@ -1069,7 +1070,7 @@ void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
 		if((univ.town->terrain(8,20) == 9) && (univ.town->terrain(17,35) == 12))
 			univ.town->terrain(8,35) = 20;
 	}
-	if(ter_base[ter_type] == 36) {
+	if(final_ter_type == 36) {
 		for(short i = 0; i < num_walls; i++) {
 			r1 = get_ran(1,0,3);
 			for(short j = 9; j < 35; j++)
