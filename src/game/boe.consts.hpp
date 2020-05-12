@@ -166,4 +166,13 @@ const int UI_LAYER_MENUBAR = 1200;
 const int talk_gword_offset_x = 19;
 const int talk_gword_offset_y = 7;
 
+#ifdef __APPLE__
+enum eMenuChoice {
+	MENU_CHOICE_NONE,
+	MENU_CHOICE_GENERIC,
+	MENU_CHOICE_MONSTER_INFO,
+	MENU_CHOICE_SPELL
+};
+#endif
+
 #endif

@@ -16,6 +16,9 @@
 #include "boe.consts.hpp"
 #include "spell.hpp"
 
+extern eMenuChoice menuChoice;
+extern short menuChoiceId;
+
 extern short on_spell_menu[2][62];
 extern short on_monst_menu[256];
 extern bool party_in_memory;
@@ -282,16 +285,22 @@ void menu_activate() {
 -(void) monstMenu:(id) sender {
 	cMonster* monst = [[sender representedObject] monst];
 	(void) monst; // Mark variable as unused
-	handle_monster_info_menu([monster_info_menu indexOfItem: sender] - 1);
+	menuChoice=eMenuChoice::MENU_CHOICE_MONSTER_INFO;
+	menuChoiceId=short([monster_info_menu indexOfItem: sender] - 1);
+	//handle_monster_info_menu([monster_info_menu indexOfItem: sender] - 1);
 }
 
 -(void) spellMenu:(id) sender {
 	SpellWrapper* spell = [sender representedObject];
-	handle_menu_spell(cSpell::fromNum([spell type], [spell num]));
+	menuChoice=eMenuChoice::MENU_CHOICE_SPELL;
+	menuChoiceId=short(cSpell::fromNum([spell type], [spell num]));
+	//handle_menu_spell(cSpell::fromNum([spell type], [spell num]));
 }
 
 -(void) menuChoice:(id) sender {
-	handle_menu_choice(eMenu([[sender representedObject] intValue]));
+	menuChoice=eMenuChoice::MENU_CHOICE_GENERIC;
+	menuChoiceId=short([[sender representedObject] intValue]);
+	//handle_menu_choice(eMenu([[sender representedObject] intValue]));
 }
 @end
 
