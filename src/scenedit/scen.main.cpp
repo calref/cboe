@@ -30,6 +30,10 @@
 #include "event_listener.hpp"
 #include "drawable_manager.hpp"
 
+#ifdef __APPLE__
+short menuChoiceId=-1;
+#endif
+
 /* Globals */
 bool  All_Done = false;
 sf::RenderWindow mainPtr;
@@ -227,6 +231,12 @@ void handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(!All_Done) {
+#ifdef __APPLE__
+		if (menuChoiceId>=0) {
+			handle_menu_choice(eMenu(menuChoiceId));
+			menuChoiceId=-1;
+		}
+#endif
 		while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent);
 
 		// Why do we have to set this to false after handling every event?
