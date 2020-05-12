@@ -729,6 +729,8 @@ void draw_terrain(short	mode) {
 	if(is_combat())
 		view_loc = univ.party[(univ.cur_pc < 6) ? univ.cur_pc : first_active_pc()].combat_pos;
 	
+	// ASAN: check also outside bound
+	short max_dim = is_out() ? 96 : univ.town->max_dim;
 	for(short i = 0; i < 13; i++)
 		for(short j = 0; j < 13; j++) {
 			where_draw =  (is_out()) ? univ.party.out_loc : center;
@@ -736,8 +738,8 @@ void draw_terrain(short	mode) {
 			where_draw.y += j - 6;
 			if(!(is_out()))
 				light_area[i][j] = (is_town()) ? pt_in_light(view_loc,where_draw) : combat_pt_in_light(where_draw);
-			if(!(is_out()) && ((where_draw.x < 0) || (where_draw.x > univ.town->max_dim - 1)
-								|| (where_draw.y < 0) || (where_draw.y > univ.town->max_dim - 1)))
+			if((where_draw.x < 0) || (where_draw.x > max_dim - 1)
+				|| (where_draw.y < 0) || (where_draw.y > max_dim - 1))
 				unexplored_area[i][j] = 0;
 			else unexplored_area[i][j] = 1 - is_explored(where_draw.x,where_draw.y);
 		}
