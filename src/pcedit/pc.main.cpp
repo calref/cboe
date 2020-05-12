@@ -24,6 +24,10 @@
 #include "prefs.hpp"
 #include "framerate_limiter.hpp"
 
+#ifdef __APPLE__
+short menuChoiceId=-1;
+#endif
+
 cUniverse univ;
 
 rectangle pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
@@ -168,6 +172,12 @@ void handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(!All_Done) {
+#ifdef __APPLE__
+		if (menuChoiceId>=0) {
+			handle_menu_choice(eMenu(menuChoiceId));
+			menuChoiceId=-1;
+		}
+#endif
 		while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent);
 
 		redraw_everything();
