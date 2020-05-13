@@ -407,6 +407,9 @@ bool can_see_monst(location l,short m_num) {
 
 bool outd_is_blocked(location to_check) {
 	if(overall_mode == MODE_OUTDOORS) {
+		// ASAN to_check can be bad if called by outdoor_move_monster (by rand_move)
+		if (to_check.x<0 || to_check.y<0 || to_check.x>=96 || to_check.y>=96)
+			return true;
 		if(impassable(univ.out[to_check.x][to_check.y])) {
 			return true;
 		}
