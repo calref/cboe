@@ -2653,11 +2653,14 @@ void do_monster_turn() {
 					if(what_summon) r1 = get_ran(1, abil.summon.min, abil.summon.max);
 					else r1 = 0;
 					if(r1 && summon_monster(what_summon, cur_monst->cur_loc,abil.summon.len,cur_monst->attitude,cur_monst->is_friendly())) {
+						cur_monst = &univ.town.monst[i];
 						cur_monst->spell_note(33);
 						play_sound(61);
 						bool failed = false;
 						while(--r1 && !failed) {
 							failed = summon_monster(what_summon,cur_monst->cur_loc,abil.summon.len,cur_monst->attitude,cur_monst->is_friendly());
+							if (!failed)
+								cur_monst = &univ.town.monst[i];
 						}
 					}
 				}
