@@ -3576,10 +3576,6 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 			case eSpell::SUMMON_WEAK: case eSpell::SUMMON: case eSpell::SUMMON_MAJOR: {
 				int j;
 				play_sound(25);
-				// ASAN: save data as caster may be bad after summoning
-				auto cur_loc=caster->cur_loc;
-				auto attitude=caster->attitude;
-				bool is_friendly=caster->is_friendly();
 				if(spell == eSpell::SUMMON_WEAK) {
 					r1 = get_summon_monster(1);
 					if(r1 == 0)
@@ -3602,7 +3598,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				int x = get_ran(4,1,4);
 				for(short i = 0; i < j; i++){
 					play_sound(-61);
-					if(!summon_monster(r1,cur_loc,x,attitude,is_friendly)) {
+					if(!summon_monster(r1,caster->cur_loc,x,caster->attitude,caster->is_friendly())) {
 						add_string_to_buf("  Summon failed."); i = j;}
 				}
 				break;
