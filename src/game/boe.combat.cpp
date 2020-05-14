@@ -1031,11 +1031,24 @@ void do_combat_cast(location target) {
 	iLiving* victim;
 	cPlayer& caster = univ.current_pc();
 	bool allow_obstructed = false, allow_antimagic = false;
-	if(spell_being_cast == eSpell::DISPEL_BARRIER || (spell_being_cast == eSpell::NONE && spec_target_options % 10 == 1))
+	static std::set<eSpell> oneHitSpell =
+	{
+		// dispell barrier
+		eSpell::DISPEL_BARRIER,
+		// magic spell
+		eSpell::DUMBFOUND, eSpell::FEAR,
+		eSpell::FLAME, eSpell::GOO,
+		eSpell::ICE_BOLT, eSpell::KILL, eSpell::POISON,
+		eSpell::POISON_MINOR, eSpell::SCARE, eSpell::SCRY_MONSTER,
+		eSpell::SLOW, eSpell::SPARK, eSpell::WRACK,
+		// priest spell
+		eSpell::CHARM_FOE, eSpell::CURSE, eSpell::DISPEL_UNDEAD, eSpell::HOLY_SCOURGE,
+		eSpell::STUMBLE, eSpell::TURN_UNDEAD, eSpell::WOUND,
+	};
+	if(oneHitSpell.find(spell_being_cast)!=oneHitSpell.end() || (spell_being_cast == eSpell::NONE && spec_target_options % 10 == 1))
 		allow_obstructed = true;
 	if(spell_being_cast == eSpell::NONE && spec_target_options / 10 == 2)
-		allow_antimagic = false;
-	
+		allow_antimagic = false; // checkme: make no sense, allow_antimagic is always false
 	location ashes_loc;
 	
 	// to wedge in animations, have to kludge like crazy
