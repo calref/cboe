@@ -701,15 +701,25 @@ void cStringRecorder::operator()(cDialog& me) {
 	switch(type) {
 		case NOTE_SCEN:
 			str1 = univ.scenario.spec_strs[label1];
-			str2 = univ.scenario.spec_strs[label2];
+			if (label2>=univ.scenario.spec_strs.size())
+				showError("cStringRecorder(): bad label 2.");
+			else
+				str2 = univ.scenario.spec_strs[label2];
 			break;
 		case NOTE_TOWN:
 			str1 = univ.town->spec_strs[label1];
-			str2 = univ.town->spec_strs[label2];
+			if (label2>=univ.town->spec_strs.size())
+				showError("cStringRecorder(): bad label 2.");
+			else
+				str2 = univ.town->spec_strs[label2];
 			break;
 		case NOTE_OUT:
 			str1 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label1];
-			str2 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label2];
+			// memory problem, ie. called with label=65535(-1)
+			if (label2>=univ.scenario.outdoors[label1b][label2b]->spec_strs.size())
+				showError("cStringRecorder(): bad label 2.");
+			else
+				str2 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label2];
 			break;
 	}
 	if(univ.party.record(type, str1, location))
