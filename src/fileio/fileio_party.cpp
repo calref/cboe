@@ -289,22 +289,6 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 		univ.party.readFrom(fin);
 	}
 	
-	{ // Then the "setup" array
-		std::istream& fin = partyIn.getFile("save/setup.dat");
-		if(!fin) {
-			showError("Loading Blades of Exile save file failed.");
-			return false;
-		}
-		uint16_t magic;
-		fin.read((char*)&magic, 2);
-		fin.read((char*)&univ.party.setup, sizeof(univ.party.setup));
-		if(magic == 0x0E0B) // should be 0x0B0E!
-			for(auto& i : univ.party.setup)
-				for(auto& j : i)
-					for(auto& k : j)
-						flip_short(reinterpret_cast<int16_t*>(&k));
-	}
-	
 	// Next load the PCs
 	for(int i = 0; i < 6; i++) {
 		static char fname[] = "save/pc1.txt";
@@ -352,6 +336,22 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 				return false;
 			}
 			univ.scenario.readFrom(fin);
+		}
+		
+		{ // Then the "setup" array
+			std::istream& fin = partyIn.getFile("save/setup.dat");
+			if(!fin) {
+				showError("Loading Blades of Exile save file failed.");
+				return false;
+			}
+			uint16_t magic;
+			fin.read((char*)&magic, 2);
+			fin.read((char*)&univ.party.setup, sizeof(univ.party.setup));
+			if(magic == 0x0E0B) // should be 0x0B0E!
+			for(auto& i : univ.party.setup)
+			for(auto& j : i)
+			for(auto& k : j)
+			flip_short(reinterpret_cast<int16_t*>(&k));
 		}
 		
 		if(partyIn.hasFile("save/town.txt")) {
@@ -416,13 +416,6 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 	
 	// First, write the main party data
 	univ.party.writeTo(partyOut.newFile("save/party.txt"));
-	univ.scenario.writeTo(partyOut.newFile("save/scenario.txt"));
-	{
-		std::ostream& fout = partyOut.newFile("save/setup.dat");
-		static uint16_t magic = 0x0B0E;
-		fout.write((char*)&magic, 2);
-		fout.write((char*)&univ.party.setup, sizeof(univ.party.setup));
-	}
 	
 	// Then write the data for each of the party members
 	for(int i = 0; i < 6; i++) {
@@ -442,6 +435,15 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 	}
 	
 	if(!univ.party.scen_name.empty()) {
+		univ.scenario.writeTo(partyOut.newFile("save/scenario.txt"));
+
+		{
+			std::ostream& fout = partyOut.newFile("save/setup.dat");
+			static uint16_t magic = 0x0B0E;
+			fout.write((char*)&magic, 2);
+			fout.write((char*)&univ.party.setup, sizeof(univ.party.setup));
+		}
+
 		if(univ.party.town_num < 200) {
 			// Write the current town data
 			univ.town.writeTo(partyOut.newFile("save/town.txt"));
