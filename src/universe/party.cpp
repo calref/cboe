@@ -732,7 +732,7 @@ void cParty::writeTo(std::ostream& file) const {
 		file << "QUEST " << p.first << ' ' << p.second.status << ' ' << p.second.start << ' ' << p.second.source << '\n';
 	for(auto p : store_limited_stock) {
 		for(auto p2 : p.second) {
-			file << "SHOPSTOCK " << p.first << p2.first << p2.second;
+			file << "SHOPSTOCK " << p.first << ' ' << p2.first << ' ' << p2.second << '\n';
 		}
 	}
 	for(auto iter = campaign_flags.begin(); iter != campaign_flags.end(); iter++){
