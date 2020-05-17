@@ -249,7 +249,14 @@ void cScenario::import_legacy(legacy::scenario_data_type& old){
 	horses.resize(30);
 	for(short i = 0; i < 30; i++) {
 		boats[i].import_legacy(old.scen_boats[i]);
+		// in the .exs scenario, the boats in town seem to defined with exists=false
+		//    I suppose that this is also true for outdoor's boat
+		if (boats[i].which_town>=0)
+			boats[i].exists = true;
 		horses[i].import_legacy(old.scen_horses[i]);
+		// I suppose that this is similar for horses
+		if (horses[i].which_town>=0)
+			horses[i].exists = true;
 	}
 	ter_types.resize(256);
 	scen_specials.resize(256);
