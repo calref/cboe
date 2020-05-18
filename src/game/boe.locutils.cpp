@@ -253,7 +253,7 @@ void update_explored(location dest) {
 			for(look.y = shortdest.y - 4; look.y < shortdest.y + 5; look.y++) {
 				// TODO: Windows had an extra check, is this needed?
 				//if((look.x == minmax(0,95,(int)look.x)) && (look.y == minmax(0,95,(int)look.y))) {
-				if(univ.out.out_e[look.x][look.y] == 0)
+				if(look.x>=0 && look.y>=0 && look.x<univ.out->max_dim && look.y<univ.out->max_dim && univ.out.out_e[look.x][look.y] == 0)
 					if(can_see_light(shortdest, look, sight_obscurity) < 5)
 						univ.out.out_e[look.x][look.y] = 1;
 				//}
