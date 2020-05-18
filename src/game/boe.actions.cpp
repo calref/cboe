@@ -2754,7 +2754,7 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 		univ.party.boats[univ.party.in_boat].which_town = univ.party.town_num;
 	}else{
 		univ.party.boats[univ.party.in_boat].which_town = 200;
-		univ.party.boats[univ.party.in_boat].loc = univ.party.out_loc;
+		univ.party.boats[univ.party.in_boat].loc = global_to_local(univ.party.out_loc);
 		univ.party.boats[univ.party.in_boat].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
 		univ.party.boats[univ.party.in_boat].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 	}
@@ -2935,7 +2935,7 @@ bool outd_move_party(location destination,bool forced) {
 			}
 			if(univ.party.in_horse >= 0) {
 				univ.party.horses[univ.party.in_horse].which_town = 200;
-				univ.party.horses[univ.party.in_horse].loc = univ.party.out_loc;
+				univ.party.horses[univ.party.in_horse].loc = global_to_local(univ.party.out_loc);
 				univ.party.horses[univ.party.in_horse].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
 				univ.party.horses[univ.party.in_horse].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 				
