@@ -859,7 +859,9 @@ void draw_terrain(short	mode) {
 			
 			if(is_town() || is_combat())
 				draw_items(where_draw);
-			if(is_out() && univ.out.out_e[where_draw.x][where_draw.y] && univ.out.is_road(where_draw.x,where_draw.y))
+			// ASAN: where_draw.y can be equal to -1, ...
+			if(is_out() && where_draw.x>=0 && where_draw.x<96 && where_draw.y>=0 && where_draw.y<96 &&
+				univ.out.out_e[where_draw.x][where_draw.y] && univ.out.is_road(where_draw.x,where_draw.y))
 				place_road(q,r,where_draw,true);
 			else if(is_town() && univ.town.is_explored(where_draw.x,where_draw.y) && univ.town.is_road(where_draw.x, where_draw.y))
 				place_road(q,r,where_draw,true);
