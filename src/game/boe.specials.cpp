@@ -183,10 +183,10 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	// TODO: Why not support conveyors outdoors, too?
 	if(mode != eSpecCtx::OUT_MOVE && ter_special == eTerSpec::CONVEYOR) {
 		if(
-			((ter_flag3 == DIR_N) && (where_check.y > from_loc.y)) ||
-			((ter_flag3 == DIR_E) && (where_check.x < from_loc.x)) ||
-			((ter_flag3 == DIR_S) && (where_check.y < from_loc.y)) ||
-			((ter_flag3 == DIR_W) && (where_check.x > from_loc.x)) ) {
+			((ter_flag1 == DIR_N) && (where_check.y > from_loc.y)) ||
+			((ter_flag1 == DIR_E) && (where_check.x < from_loc.x)) ||
+			((ter_flag1 == DIR_S) && (where_check.y < from_loc.y)) ||
+			((ter_flag1 == DIR_W) && (where_check.x > from_loc.x)) ) {
 			ASB("The moving floor prevents you.");
 			return false;
 		}
@@ -1670,11 +1670,13 @@ void push_things() {
 		if(univ.town.monst[i].active > 0) {
 			l = univ.town.monst[i].cur_loc;
 			ter = univ.town->terrain(l.x,l.y);
-			switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
-				case DIR_N: l.y--; break;
-				case DIR_E: l.x++; break;
-				case DIR_S: l.y++; break;
-				case DIR_W: l.x--; break;
+			if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
+				switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+					case DIR_N: l.y--; break;
+					case DIR_E: l.x++; break;
+					case DIR_S: l.y++; break;
+					case DIR_W: l.x--; break;
+				}
 			}
 			if(l != univ.town.monst[i].cur_loc) {
 				univ.town.monst[i].cur_loc = l;
@@ -1687,11 +1689,13 @@ void push_things() {
 		if(univ.town.items[i].variety != eItemType::NO_ITEM) {
 			l = univ.town.items[i].item_loc;
 			ter = univ.town->terrain(l.x,l.y);
-			switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
-				case DIR_N: l.y--; break;
-				case DIR_E: l.x++; break;
-				case DIR_S: l.y++; break;
-				case DIR_W: l.x--; break;
+			if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
+				switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+					case DIR_N: l.y--; break;
+					case DIR_E: l.x++; break;
+					case DIR_S: l.y++; break;
+					case DIR_W: l.x--; break;
+				}
 			}
 			if(l != univ.town.items[i].item_loc) {
 				univ.town.items[i].item_loc = l;
@@ -1704,11 +1708,13 @@ void push_things() {
 	if(is_town()) {
 		ter = univ.town->terrain(univ.party.town_loc.x,univ.party.town_loc.y);
 		l = univ.party.town_loc;
-		switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
-			case DIR_N: l.y--; break;
-			case DIR_E: l.x++; break;
-			case DIR_S: l.y++; break;
-			case DIR_W: l.x--; break;
+		if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
+			switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+				case DIR_N: l.y--; break;
+				case DIR_E: l.x++; break;
+				case DIR_S: l.y++; break;
+				case DIR_W: l.x--; break;
+			}
 		}
 		if(l != univ.party.town_loc) {
 			// TODO: Will this push you into a placed forcecage or barrier? Should it?
@@ -1744,11 +1750,13 @@ void push_things() {
 			if(univ.party[i].main_status == eMainStatus::ALIVE) {
 				ter = univ.town->terrain(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y);
 				l = univ.party[i].combat_pos;
-				switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
-					case DIR_N: l.y--; break;
-					case DIR_E: l.x++; break;
-					case DIR_S: l.y++; break;
-					case DIR_W: l.x--; break;
+				if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
+					switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+						case DIR_N: l.y--; break;
+						case DIR_E: l.x++; break;
+						case DIR_S: l.y++; break;
+						case DIR_W: l.x--; break;
+					}
 				}
 				if(l != univ.party[i].combat_pos) {
 					ASB("Someone gets pushed.");
