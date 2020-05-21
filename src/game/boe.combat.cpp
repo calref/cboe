@@ -3612,13 +3612,9 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				}
 				sf::sleep(time_in_ticks(12)); // gives sound time to end
 				int x = get_ran(4,1,4);
-				// ASAN: save data, summon_monster can make caster invalid
-				location cur_loc=caster->cur_loc;
-				eAttitude attitude=caster->attitude;
-				bool is_friendly=caster->is_friendly();
 				for(short i = 0; i < j; i++){
 					play_sound(-61);
-					if(!summon_monster(r1,cur_loc,x,attitude,is_friendly)) {
+					if(!summon_monster(r1,caster->cur_loc,x,caster->attitude,caster->is_friendly())) {
 						add_string_to_buf("  Summon failed."); i = j;}
 				}
 				break;
