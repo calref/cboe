@@ -319,6 +319,11 @@ void draw_outd_boats(location center) {
 		if(boat.which_town != 200) continue;
 		if(univ.party.in_boat >= 0 && univ.party.boats[univ.party.in_boat] == boat) continue;
 		location loc = local_to_global(boat.loc);
+		if (is_out()) {
+			// we must also check that the sector is ok
+			loc.x += 48*(boat.sector.x-univ.party.outdoor_corner.x-univ.party.i_w_c.x);
+			loc.y += 48*(boat.sector.y-univ.party.outdoor_corner.y-univ.party.i_w_c.y);
+		}
 		if(point_onscreen(center, loc) && can_see_light(center, loc, sight_obscurity) < 5) {
 			where_draw.x = loc.x - center.x + 4;
 			where_draw.y = loc.y - center.y + 4;
@@ -330,6 +335,11 @@ void draw_outd_boats(location center) {
 		if(horse.which_town != 200) continue;
 		if(univ.party.in_horse >= 0 && univ.party.horses[univ.party.in_horse] == horse) continue;
 		location loc = local_to_global(horse.loc);
+		if (is_out()) {
+			// we must also check that the sector is ok
+			loc.x += 48*(horse.sector.x-univ.party.outdoor_corner.x-univ.party.i_w_c.x);
+			loc.y += 48*(horse.sector.y-univ.party.outdoor_corner.y-univ.party.i_w_c.y);
+		}
 		if(point_onscreen(center, loc) && can_see_light(center, loc, sight_obscurity) < 5) {
 			where_draw.x = loc.x - center.x + 4;
 			where_draw.y = loc.y - center.y + 4;
