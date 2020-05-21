@@ -3852,10 +3852,6 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 		acted = true;
 		caster->mp -= cost;
 		draw_terrain(2);
-		// ASAN save caster data because of summon
-		location cur_loc=caster->cur_loc;
-		eAttitude attitude=caster->attitude;
-		bool is_friendly=caster->is_friendly();
 		switch(spell) {
 			case eSpell::WRACK:
 				run_a_missile(l,vict_loc,8,0,24,0,0,80);
@@ -3888,7 +3884,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				play_sound(-61);
 				
 				x =  get_ran(3,1,4);
-				summon_monster(spell == eSpell::SUMMON_SPIRIT ? 125 : 122,cur_loc,x,attitude,is_friendly);
+				summon_monster(spell == eSpell::SUMMON_SPIRIT ? 125 : 122,caster->cur_loc,x,caster->attitude,caster->is_friendly());
 				break;
 			case eSpell::DISEASE:
 				run_a_missile(l,vict_loc,11,0,24,0,0,80);
@@ -3924,7 +3920,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 					play_sound(-61);
 					r2 = get_ran(1,0,7);
 					x = get_ran(3,1,4);
-					summon_monster((r2 == 1) ? 100 : 99,cur_loc,x,attitude,is_friendly);
+					summon_monster((r2 == 1) ? 100 : 99,caster->cur_loc,x,caster->attitude,caster->is_friendly());
 				}
 				break;
 			case eSpell::MARTYRS_SHIELD: // martyr's shield
@@ -3938,7 +3934,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				summon_monster(126,caster->cur_loc,x,caster->attitude,caster->is_friendly());
 				for(short i = 0; i < 4; i++)	{
 					play_sound(-61);
-					if(!summon_monster(125,cur_loc,x,attitude,is_friendly))
+					if(!summon_monster(125,caster->cur_loc,x,caster->attitude,caster->is_friendly()))
 						i = 4;
 				}
 				break;
@@ -3946,7 +3942,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				play_sound(24);
 				r1 = get_ran(2,0,2);
 				r2 = get_ran(1,0,2);
-				if(!is_friendly)
+				if(!caster->is_friendly())
 					for(short i = 0; i < 6; i++)
 						if(pc_near(i,caster->cur_loc,8)) {
 							if(spell == eSpell::CURSE_ALL)
