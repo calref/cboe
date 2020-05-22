@@ -484,8 +484,9 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 					}
 				}
 			} else if(overall_mode == MODE_LOOK_OUTDOORS) {
+				location lDest=global_to_local(destination);
 				for(int k = 0; k < univ.out->sign_locs.size(); k++) {
-					if(destination == univ.out->sign_locs[k]) {
+					if(lDest == univ.out->sign_locs[k]) {
 						need_reprint = true;
 						if(adjacent(univ.out->sign_locs[k],univ.party.loc_in_sec))
 							do_sign(200 + get_outdoor_num(),k,ter_looked_at);
@@ -1182,7 +1183,7 @@ bool handle_action(const sf::Event& event) {
 		
 		// Looking at something
 		else if(overall_mode == MODE_LOOK_OUTDOORS || overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_LOOK_COMBAT) {
-			if(overall_mode == MODE_LOOK_OUTDOORS) destination = univ.party.loc_in_sec;
+			if(overall_mode == MODE_LOOK_OUTDOORS) destination = univ.party.out_loc;
 			destination.x = destination.x + i - 4;
 			destination.y = destination.y + j - 4;
 			handle_look(destination, need_redraw, need_reprint);
