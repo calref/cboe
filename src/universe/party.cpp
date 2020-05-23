@@ -8,6 +8,7 @@
 
 #include "party.hpp"
 
+#include <cstring>
 #include <string>
 #include <vector>
 #include <map>
@@ -36,6 +37,7 @@ cParty::cParty(ePartyPreset party_preset) {
 	out_loc.y = 84;
 	in_boat = -1;
 	in_horse = -1;
+	std::memset(stuff_done, 0, sizeof(stuff_done));
 	std::fill(magic_ptrs.begin(), magic_ptrs.end(), 0);
 	for(int i = 0; i < 10; i++)
 		out_c[i].exists = false;
