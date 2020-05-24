@@ -1393,6 +1393,8 @@ void cUniverse::enter_scenario(const std::string& name) {
 		for(auto& m : sector->maps)
 			m.reset();
 	
+	// time to init the town's difficulty
+	town.difficulty = scenario.difficulty;
 	party.scen_name = name;
 }
 
