@@ -264,7 +264,10 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 					}
 				}
 			}
-		else univ.party.town_num = 200;
+		else {
+			univ.party.town_num = 200;
+			univ.town.difficulty = univ.scenario.difficulty;
+		}
 	}
 	
 	real_univ = std::move(univ);
