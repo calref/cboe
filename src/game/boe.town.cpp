@@ -1389,7 +1389,7 @@ void draw_map(bool need_refresh) {
 		canMap = false;
 	}
 	else if(need_refresh) {
-		map_gworld.setActive();
+		map_gworld.setActive(false);
 		
 		fill_rect(map_gworld, map_world_rect, sf::Color::Black);
 		
@@ -1472,6 +1472,7 @@ void draw_map(bool need_refresh) {
 				}
 			}
 		
+		map_gworld.setActive();
 		map_gworld.display();
 	}
 	
