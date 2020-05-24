@@ -214,7 +214,7 @@ void put_item_screen(eItemWinMode screen_num) {
 	rectangle erase_rect = {17,2,122,255},dest_rect;
 	rectangle upper_frame_rect = {3,3,15,268};
 	
-	item_stats_gworld.setActive();
+	item_stats_gworld.setActive(false);
 	
 	// First clean up gworld with pretty patterns
 	sf::Texture& orig = *ResMgr::graphics.get("inventory");
@@ -360,6 +360,7 @@ void put_item_screen(eItemWinMode screen_num) {
 	undo_clip(item_stats_gworld);
 	
 	place_item_bottom_buttons();
+	item_stats_gworld.setActive();
 	item_stats_gworld.display();
 }
 

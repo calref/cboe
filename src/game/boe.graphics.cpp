@@ -621,7 +621,7 @@ void draw_text_bar() {
 }
 
 void put_text_bar(std::string str) {
-	text_bar_gworld.setActive();
+	text_bar_gworld.setActive(false);
 	auto& bar_gw = *ResMgr::graphics.get("textbar");
 	rect_draw_some_item(bar_gw, rectangle(bar_gw), text_bar_gworld, rectangle(bar_gw));
 	TextStyle style;
@@ -658,12 +658,14 @@ void put_text_bar(std::string str) {
 		}
 	}
 	
+	text_bar_gworld.setActive();
 	text_bar_gworld.display();
 }
 
 void refresh_text_bar() {
-	mainPtr.setActive();
+	mainPtr.setActive(false);
 	rect_draw_some_item(text_bar_gworld.getTexture(), rectangle(text_bar_gworld), mainPtr, win_to_rects[WINRECT_STATUS]);
+	mainPtr.setActive();
 }
 
 // this is used for determinign whether to round off walkway corners
@@ -1565,7 +1567,7 @@ void draw_targeting_line(location where_curs) {
 			
 			if((can_see_light(from_loc,which_space,sight_obscurity) < 5)
 				&& (dist(from_loc,which_space) <= current_spell_range)) {
-				mainPtr.setActive();
+				mainPtr.setActive(false);
 				clip_rect(mainPtr, on_screen_terrain_area);
 				draw_line(mainPtr, where_curs, location(xBound, yBound), 2, {128,128,128}, sf::BlendAdd);
 				redraw_rect.left = min(where_curs.x,xBound) - 4;
@@ -1606,6 +1608,7 @@ void draw_targeting_line(location where_curs) {
 					}
 				
 				redraw_rect2.inset(-5,-5);
+				mainPtr.setActive();
 				undo_clip(mainPtr);
 			}
 		}
