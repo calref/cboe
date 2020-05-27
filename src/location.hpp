@@ -127,14 +127,15 @@ struct sign_loc_t : public location {
 struct spec_loc_t : public location {
 	long spec;
 	
+	spec_loc_t() : location(), spec(-1) {}
 	spec_loc_t(int x, int y, long spec) : location(x,y), spec(spec) {}
-	spec_loc_t(const location& loc) : location(loc) {}
+	spec_loc_t(const location& loc) : location(loc), spec(-1) {}
 	spec_loc_t& operator=(const location& loc) {
 		*this = spec_loc_t(loc);
+		spec = -1;
 		return *this;
 	}
 	// Declaring one constructor suppresses all implicit constructors, so declare them explicitly
-	spec_loc_t() = default;
 	spec_loc_t(const spec_loc_t& other) = default;
 	// Ditto for assignment operator
 	spec_loc_t& operator=(const spec_loc_t& other) = default;
