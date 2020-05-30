@@ -1436,7 +1436,7 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 	// Absorb damage?
 	if((dam_type == eDamageType::FIRE || dam_type == eDamageType::MAGIC || dam_type == eDamageType::COLD)
 		&& victim.abil[eMonstAbil::ABSORB_SPELLS].active && get_ran(1,1,1000) <= victim.abil[eMonstAbil::ABSORB_SPELLS].special.extra1) {
-		if(32767 - victim.health > how_much)
+		if(32767 - victim.health < how_much)
 			victim.health = 32767;
 		else victim.health += how_much;
 		ASB("  Magic absorbed.");
