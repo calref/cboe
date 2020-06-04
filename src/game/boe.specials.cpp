@@ -2656,8 +2656,10 @@ void affect_spec(const runtime_state& ctx) {
 			// (Actually, I think the only compatibility thing is that it's <= instead of ==)
 			if(spec.ex2a <= 0) {
 				int i;
-				if(spec.ex1a == 2)
+				if(spec.ex1a == 2) {
+					i = -1; // CHECKME
 					ctx.cur_target = &univ.party;
+				}
 				else if(spec.ex1a == 1) {
 					i = select_pc(0);
 					if(i != 6)
@@ -2821,7 +2823,13 @@ void affect_spec(const runtime_state& ctx) {
 				for(short i = 0; i < 6; i++)
 					if(pc_num == 6 || pc_num == i) {
 						if(spec.ex1b == 0) {
-							if(spec.ex1a == 3 && is_combat() && which_combat_type == 0 && univ.party[i].main_status == eMainStatus::FLED)
+							if(spec.ex1a == 0 && univ.party[i].main_status == eMainStatus::DEAD)
+								univ.party[i].main_status = eMainStatus::ALIVE;
+							else if(spec.ex1a == 1 && univ.party[i].main_status == eMainStatus::DUST)
+								univ.party[i].main_status = eMainStatus::ALIVE;
+							else if(spec.ex1a == 2 && univ.party[i].main_status == eMainStatus::STONE)
+								univ.party[i].main_status = eMainStatus::ALIVE;
+							else if(spec.ex1a == 3 && is_combat() && which_combat_type == 0 && univ.party[i].main_status == eMainStatus::FLED)
 								univ.party[i].main_status = eMainStatus::ALIVE;
 							else if(spec.ex1a == 4)
 								univ.party[i].main_status -= eMainStatus::SPLIT;
