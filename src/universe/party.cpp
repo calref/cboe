@@ -792,9 +792,12 @@ void cParty::writeTo(std::ostream& file) const {
 		}
 	file << '\f';
 	file << '\f';
-	for(unsigned int i = 0; i < party_event_timers.size(); i++)
+	for(unsigned int i = 0; i < party_event_timers.size(); i++) {
+		if (party_event_timers[i].node<0)
+			continue;
 		file << "TIMER " << ' ' << party_event_timers[i].time << ' ' << int(party_event_timers[i].node_type)
 			 << ' ' << party_event_timers[i].node << '\f';
+	}
 	file << '\f';
 	for(int i = 0; i < creature_save.size(); i++)
 		for(int j = 0; j < creature_save[i].size(); j++) {
@@ -1029,8 +1032,7 @@ void cParty::readFrom(std::istream& file){
 			if(i < 25 && j < 25)
 				campaign_flags[cur].idx[i][j] = val;
 		} else if(cur == "TIMER") {
-			int i, j;
-			bin >> i;
+			int j;
 			cTimer timer;
 			bin >> timer.time >> j >> timer.node;
 			timer.node_type = eSpecCtxType(j);
