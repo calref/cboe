@@ -793,7 +793,7 @@ void cParty::writeTo(std::ostream& file) const {
 	file << '\f';
 	file << '\f';
 	for(unsigned int i = 0; i < party_event_timers.size(); i++) {
-		if (party_event_timers[i].node<0)
+		if (party_event_timers[i].node<=-200 || (party_event_timers[i].node>=-9 && party_event_timers[i].node<0))
 			continue;
 		file << "TIMER " << ' ' << party_event_timers[i].time << ' ' << int(party_event_timers[i].node_type)
 			 << ' ' << party_event_timers[i].node << '\f';
