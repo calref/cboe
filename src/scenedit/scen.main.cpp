@@ -25,6 +25,7 @@
 #include "choicedlog.hpp"
 #include "scen.menus.hpp"
 #include "res_image.hpp"
+#include "button.hpp"
 #include "prefs.hpp"
 #include "framerate_limiter.hpp"
 #include "event_listener.hpp"
@@ -36,6 +37,7 @@ short menuChoiceId=-1;
 
 /* Globals */
 bool  All_Done = false;
+bool changed_display_mode = false;
 sf::RenderWindow mainPtr;
 sf::View mainView;
 cTown* town = nullptr;
@@ -62,8 +64,12 @@ void redraw_everything();
 void Mouse_Pressed(const sf::Event&);
 void close_program();
 void ding();
-void init_main_window(sf::RenderWindow&, sf::View&);
+void adjust_windows(sf::RenderWindow&, sf::View&);
 sf::FloatRect compute_viewport(const sf::RenderWindow&, float ui_scale);
+
+void pick_preferences();
+void save_prefs();
+bool prefs_event_filter (cDialog& me, std::string id, eKeyMod);
 
 cScenario scenario;
 rectangle right_sbar_rect;
@@ -152,7 +158,7 @@ sf::FloatRect compute_viewport(const sf::RenderWindow & mainPtr, float ui_scale)
 	return viewport;
 }
 
-void init_main_window (sf::RenderWindow & mainPtr, sf::View & mainView) {
+void adjust_windows (sf::RenderWindow & mainPtr, sf::View & mainView) {
 
 	// TODO: things might still be broken when upscaled.
 	//   translate_mouse_coordinates has been applied in some places but more work might be needed.
@@ -185,13 +191,14 @@ void init_main_window (sf::RenderWindow & mainPtr, sf::View & mainView) {
 	const ImageRsrc& icon = ResMgr::graphics.get("icon", true);
 	mainPtr.setIcon(icon->getSize().x, icon->getSize().y, icon->copyToImage().getPixelsPtr());
 #endif
+	init_menubar();
 }
 
 void init_scened(int argc, char* argv[]) {
 	init_directories(argv[0]);
 	sync_prefs();
-	init_main_window(mainPtr, mainView);
-	init_menubar();
+	adjust_windows(mainPtr, mainView);
+	//init_menubar();
 	init_shaders();
 	init_tiling();
 	init_snd_tool();
@@ -231,6 +238,11 @@ void handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(!All_Done) {
+		if(changed_display_mode) {
+			changed_display_mode = false;
+			adjust_windows(mainPtr, mainView);
+		}
+
 #ifdef __APPLE__
 		if (menuChoiceId>=0) {
 			handle_menu_choice(eMenu(menuChoiceId));
@@ -352,6 +364,9 @@ void handle_menu_choice(eMenu item_hit) {
 			set_up_start_screen();
 			undo_list.clear();
 			update_edit_menu();
+			break;
+		case eMenu::PREFS:
+			pick_preferences();
 			break;
 		case eMenu::QUIT: // quit
 			if(!save_check("save-before-quit"))
@@ -635,6 +650,49 @@ void handle_menu_choice(eMenu item_hit) {
 	if(isHelp)
 		cChoiceDlog(helpDlog).show();
 	redraw_screen();
+}
+
+void save_prefs(){
+	bool success = sync_prefs();
+	if(!success){
+		showWarning("There was a problem writing to the preferences file. When the game is next run the preferences will revert to their previously set values.","Should you manage to resolve the problem without closing the program, simply open the preferences screen and click \"OK\" to try again.");
+	}
+}
+
+bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
+	bool did_cancel = false;
+	
+	if(id == "okay") {
+		me.toast(true);
+	} else if(id == "cancel") {
+		me.toast(false);
+		did_cancel = true;
+	}
+	
+	if(!did_cancel) {
+		cLed& ui_scale = dynamic_cast<cLed&>(me["scaleui"]);
+		if(ui_scale.getState() == led_off)
+			set_pref("UIScale", 1.0);
+		else if(ui_scale.getState() == led_red)
+			set_pref("UIScale", 2.0);
+	}
+	save_prefs();
+	return true;
+}
+
+void pick_preferences() {
+	set_cursor(sword_curs);
+	
+	cDialog prefsDlog("pref-scenario");
+	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
+	
+	float ui_scale = get_float_pref("UIScale", 1.0);
+	dynamic_cast<cLed&>(prefsDlog["scaleui"]).setState(ui_scale == 1.0 ? led_off : (ui_scale == 2.0 ? led_red : led_green));
+	
+	prefsDlog.run();
+	
+	if(get_float_pref("UIScale") != ui_scale)
+		changed_display_mode = true;
 }
 
 void Mouse_Pressed(const sf::Event & event) {
