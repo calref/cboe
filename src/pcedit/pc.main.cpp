@@ -21,6 +21,7 @@
 #include "winutil.hpp"
 #include "cursors.hpp"
 #include "res_image.hpp"
+#include "button.hpp"
 #include "prefs.hpp"
 #include "framerate_limiter.hpp"
 
@@ -50,6 +51,7 @@ short current_active_pc = 0;
 
 /* Mac stuff globals */
 bool All_Done = false;
+bool changed_display_mode = false;
 sf::RenderWindow mainPtr;
 sf::View mainView;
 fs::path file_in_mem;
@@ -63,10 +65,15 @@ void handle_one_event(const sf::Event&);
 void redraw_everything();
 void Handle_Activate();
 void Mouse_Pressed(const sf::Event&);
-void init_main_window(sf::RenderWindow&, sf::View&);
+void adjust_window(sf::RenderWindow&, sf::View&);
 sf::FloatRect compute_viewport(const sf::RenderWindow&, float ui_scale);
 bool verify_restore_quit(std::string dlog);
 void set_up_apple_events(int argc, char* argv[]);
+
+void pick_preferences();
+void save_prefs();
+bool prefs_event_filter (cDialog& me, std::string id, eKeyMod);
+
 extern bool cur_scen_is_mac;
 extern fs::path progDir;
 short specials_res_id;
@@ -77,8 +84,8 @@ int main(int argc, char* argv[]) {
 	try {
 		init_directories(argv[0]);
 		sync_prefs();
-		init_main_window(mainPtr, mainView);
-		init_menubar();
+		adjust_window(mainPtr, mainView);
+		//init_menubar();
 		init_fileio();
 		init_main_buttons();
 		Set_up_win();
@@ -135,7 +142,7 @@ sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, float ui_scale) 
 	return viewport;
 }
 
-void init_main_window (sf::RenderWindow& mainPtr, sf::View& mainView) {
+void adjust_window (sf::RenderWindow& mainPtr, sf::View& mainView) {
 
 	float ui_scale = get_float_pref("UIScale", 1.0);
 	
@@ -165,6 +172,8 @@ void init_main_window (sf::RenderWindow& mainPtr, sf::View& mainView) {
 	const ImageRsrc& icon = ResMgr::graphics.get("icon", true);
 	mainPtr.setIcon(icon->getSize().x, icon->getSize().y, icon->copyToImage().getPixelsPtr());
 #endif
+	
+	init_menubar();
 }
 
 void handle_events() {
@@ -172,6 +181,11 @@ void handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(!All_Done) {
+		if(changed_display_mode) {
+			changed_display_mode = false;
+			adjust_window(mainPtr, mainView);
+		}
+
 #ifdef __APPLE__
 		if (menuChoiceId>=0) {
 			handle_menu_choice(eMenu(menuChoiceId));
@@ -268,7 +282,10 @@ void handle_menu_choice(eMenu item_hit) {
 			if(verify_restore_quit("save-close"))
 				file_in_mem = "";
 			break;
-		case eMenu::QUIT:
+		case eMenu::PREFS:
+			pick_preferences();
+			break;
+		case eMenu::QUIT: // quit				case eMenu::QUIT:
 			All_Done = verify_restore_quit("save-quit");
 			break;
 		case eMenu::EDIT_GOLD:
@@ -475,3 +492,47 @@ void display_skills(eSkill skill,cDialog* parent) {
 	
 	skillDlog.run();
 }
+
+void save_prefs(){
+	bool success = sync_prefs();
+	if(!success){
+		showWarning("There was a problem writing to the preferences file. When the character editor is next run the preferences will revert to their previously set values.","Should you manage to resolve the problem without closing the program, simply open the preferences screen and click \"OK\" to try again.");
+	}
+}
+
+bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
+	bool did_cancel = false;
+	
+	if(id == "okay") {
+		me.toast(true);
+	} else if(id == "cancel") {
+		me.toast(false);
+		did_cancel = true;
+	}
+	
+	if(!did_cancel) {
+		cLed& ui_scale = dynamic_cast<cLed&>(me["scaleui"]);
+		if(ui_scale.getState() == led_off)
+			set_pref("UIScale", 1.0);
+		else if(ui_scale.getState() == led_red)
+			set_pref("UIScale", 2.0);
+	}
+	save_prefs();
+	return true;
+}
+
+void pick_preferences() {
+	set_cursor(sword_curs);
+	
+	cDialog prefsDlog("pref-character");
+	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
+	
+	float ui_scale = get_float_pref("UIScale", 1.0);
+	dynamic_cast<cLed&>(prefsDlog["scaleui"]).setState(ui_scale == 1.0 ? led_off : (ui_scale == 2.0 ? led_red : led_green));
+	
+	prefsDlog.run();
+	
+	if(get_float_pref("UIScale") != ui_scale)
+		changed_display_mode = true;
+}
+
