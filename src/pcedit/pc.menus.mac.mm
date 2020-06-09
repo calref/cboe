@@ -65,6 +65,7 @@ void init_menubar() {
 	
 	MenuHandler* handler = [[[MenuHandler alloc] init] retain];
 	setMenuCallback([apple_menu itemWithTitle: @"About BoE Character Editor"], handler, @selector(menuChoice:), int(eMenu::ABOUT));
+	setMenuCallback([apple_menu itemWithTitle: @"Preferences…"], handler, @selector(menuChoice:), int(eMenu::PREFS));
 	setMenuCallback([apple_menu itemWithTitle: @"Quit BoE Character Editor"], handler, @selector(menuChoice:), int(eMenu::QUIT));
 	setMenuCallback([[[menu_bar_handle itemWithTitle: @"Help"] submenu] itemAtIndex: 0], handler, @selector(menuChoice:), int(eMenu::HELP_TOC));
 	
