@@ -516,6 +516,7 @@ bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 			set_pref("UIScale", 1.0);
 		else if(ui_scale.getState() == led_red)
 			set_pref("UIScale", 2.0);
+		set_pref("PlaySounds", dynamic_cast<cLed&>(me["nosound"]).getState() == led_off);
 	}
 	save_prefs();
 	return true;
@@ -529,6 +530,7 @@ void pick_preferences() {
 	
 	float ui_scale = get_float_pref("UIScale", 1.0);
 	dynamic_cast<cLed&>(prefsDlog["scaleui"]).setState(ui_scale == 1.0 ? led_off : (ui_scale == 2.0 ? led_red : led_green));
+	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySounds", true) ? led_off : led_red);
 	
 	prefsDlog.run();
 	
