@@ -5,7 +5,8 @@
 	<text size='large' relative='pos pos-in' rel-anchor='prev' top='0' left='4' width='218' height='16'>
 		BoE Character Editor Preferences
 	</text>
-	<led name='scaleui' relative='pos-in pos' rel-anchor='prev' top='31' left='0' width='340'>Apply UI scaling</led>
+	<led name='nosound' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='117'>No Sounds</led>
+	<led name='scaleui' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='340'>Apply UI scaling</led>
 	
 	<button name='okay' relative='abs pos' rel-anchor='prev' type='regular' top='7' left='354'>OK</button>
 	<button name='cancel' relative='neg pos-in' anchor='okay' type='regular' def-key='esc' top='0' left='73'>Cancel</button>
