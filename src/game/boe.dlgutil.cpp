@@ -1154,9 +1154,7 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 void pick_preferences() {
 	set_cursor(sword_curs);
 	
-	float ui_scale = get_float_pref("UIScale", 1.0);
-	// FIXME: scaling = 2.0 can pose problem if the screen height is too small
-	cDialog prefsDlog("preferences", nullptr, ui_scale > 1.5 ? 1.5 : ui_scale);
+	cDialog prefsDlog("preferences");
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 	
 	cLedGroup& displayMode = dynamic_cast<cLedGroup&>(prefsDlog["display"]);
@@ -1211,6 +1209,7 @@ void pick_preferences() {
 			break;
 	}
 	
+	float ui_scale = get_float_pref("UIScale", 1.0);
 	dynamic_cast<cLed&>(prefsDlog["scaleui"]).setState(ui_scale == 1.0 ? led_off : (ui_scale == 2.0 ? led_red : led_green));
 	
 	void (*give_help)(short,short,cDialog&) = ::give_help;

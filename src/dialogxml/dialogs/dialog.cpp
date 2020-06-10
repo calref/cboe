@@ -167,14 +167,9 @@ cKey cControl::parseKey(string what){
 	return key;
 }
 
-cDialog::cDialog(cDialog* p, float scale) : parent(p), ui_scale(scale) {
-	if (ui_scale<0) ui_scale = get_float_pref("UIScale", 1.0);
-	if (ui_scale < 0.1) ui_scale = 1.0;
-}
+cDialog::cDialog(cDialog* p) : parent(p) {}
 
-cDialog::cDialog(std::string path, cDialog* p, float scale) : parent(p), ui_scale(scale) {
-	if (ui_scale<0) ui_scale = get_float_pref("UIScale", 1.0);
-	if (ui_scale < 0.1) ui_scale = 1.0;
+cDialog::cDialog(std::string path, cDialog* p) : parent(p) {
 	loadFromFile(path + ".xml");
 }
 
@@ -556,20 +551,9 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	win.create(sf::VideoMode(1,1),"");
 	win.close();
 #endif
-	int wWidth=int(ui_scale*winRect.width()), wHeight=int(ui_scale*winRect.height());
-	win.create(sf::VideoMode(wWidth, wHeight), "Dialog", sf::Style::Titlebar);
-	sf::FloatRect viewport;
-	viewport.top    = 0;
-	viewport.left   = 0;
-	viewport.width  = ui_scale;
-	viewport.height = ui_scale;
-	sf::View view;
-	view.reset(sf::FloatRect(0, 0, wWidth, wHeight));
-	view.setViewport(viewport);
-	win.setView(view);
-
+	win.create(sf::VideoMode(winRect.width(), winRect.height()), "Dialog", sf::Style::Titlebar);
 	// ASAN overflow
-	win.setPosition({parentPos.x + (int(parentSz.x) - wWidth) / 2, parentPos.y + (int(parentSz.y) - wHeight) / 2});
+	win.setPosition({parentPos.x + (int(parentSz.x) - winRect.width()) / 2, parentPos.y + (int(parentSz.y) - winRect.height()) / 2});
 	draw();
 	makeFrontWindow(parent ? parent-> win : mainPtr);
 	makeFrontWindow(win);
@@ -735,7 +719,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 			if(kb::isKeyPressed(kb::RAlt)) key.mod += mod_alt;
 			if(kb::isKeyPressed(kb::LShift)) key.mod += mod_shift;
 			if(kb::isKeyPressed(kb::RShift)) key.mod += mod_shift;
-			where = {int(currentEvent.mouseButton.x/ui_scale), int(currentEvent.mouseButton.y/ui_scale)};
+			where = {currentEvent.mouseButton.x, currentEvent.mouseButton.y};
 			process_click(where, key.mod);
 			break;
 		default: // To silence warning of unhandled enum values
@@ -744,7 +728,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 		case sf::Event::MouseMoved:
 			bool inField = false;
 			for(auto& ctrl : controls) {
-				if(ctrl.second->getType() == CTRL_FIELD && ctrl.second->getBounds().contains(currentEvent.mouseMove.x/ui_scale, currentEvent.mouseMove.y/ui_scale)) {
+				if(ctrl.second->getType() == CTRL_FIELD && ctrl.second->getBounds().contains(currentEvent.mouseMove.x, currentEvent.mouseMove.y)) {
 					set_cursor(text_curs);
 					inField = true;
 					break;
