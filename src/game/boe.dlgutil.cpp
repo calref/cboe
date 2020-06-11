@@ -1141,11 +1141,28 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		if(dynamic_cast<cLed&>(me["resethelp"]).getState() == led_red) {
 			reset_help = true;
 		}
-		cLed& ui_scale = dynamic_cast<cLed&>(me["scaleui"]);
-		if(ui_scale.getState() == led_off)
+		std::string scale = dynamic_cast<cLedGroup&>(me["scaleui"]).getSelected();
+		if(scale == "1")
 			set_pref("UIScale", 1.0);
-		else if(ui_scale.getState() == led_red)
+		else if(scale == "1_5")
+			set_pref("UIScale", 1.5);
+		else if(scale == "2")
 			set_pref("UIScale", 2.0);
+		else if(scale == "3")
+			set_pref("UIScale", 3.0);
+		else if(scale == "4")
+			set_pref("UIScale", 4.0);
+		std::string scale_map = dynamic_cast<cLedGroup&>(me["scalemap"]).getSelected();
+		if(scale_map == "1")
+			set_pref("UIMapScale", 1.0);
+		else if(scale_map == "1_5")
+			set_pref("UIMapScale", 1.5);
+		else if(scale_map == "2")
+			set_pref("UIMapScale", 2.0);
+		else if(scale_map == "3")
+			set_pref("UIMapScale", 3.0);
+		else if(scale_map == "4")
+			set_pref("UIMapScale", 4.0);
 	}
 	save_prefs(reset_help);
 	return true;
@@ -1209,15 +1226,30 @@ void pick_preferences() {
 			break;
 	}
 	
+	cLedGroup& uiScale = dynamic_cast<cLedGroup&>(prefsDlog["scaleui"]);
 	float ui_scale = get_float_pref("UIScale", 1.0);
-	dynamic_cast<cLed&>(prefsDlog["scaleui"]).setState(ui_scale == 1.0 ? led_off : (ui_scale == 2.0 ? led_red : led_green));
-	
+	if (ui_scale>0.95 && ui_scale<1.05) uiScale.setSelected("1");
+	else if (ui_scale>1.45 && ui_scale<1.55) uiScale.setSelected("1_5");
+	else if (ui_scale>1.95 && ui_scale<2.05) uiScale.setSelected("2");
+	else if (ui_scale>2.95 && ui_scale<3.05) uiScale.setSelected("3");
+	else if (ui_scale>3.95 && ui_scale<4.05) uiScale.setSelected("4");
+	else uiScale.setSelected("other");
+
+	cLedGroup& uiMapScale = dynamic_cast<cLedGroup&>(prefsDlog["scalemap"]);
+	float ui_map_scale = get_float_pref("UIMapScale", 1.0);
+	if (ui_map_scale>0.95 && ui_map_scale<1.05) uiMapScale.setSelected("1");
+	else if (ui_map_scale>1.45 && ui_map_scale<1.55) uiMapScale.setSelected("1_5");
+	else if (ui_map_scale>1.95 && ui_map_scale<2.05) uiMapScale.setSelected("2");
+	else if (ui_map_scale>2.95 && ui_map_scale<3.05) uiMapScale.setSelected("3");
+	else if (ui_map_scale>3.95 && ui_map_scale<4.05) uiMapScale.setSelected("4");
+	else uiMapScale.setSelected("other");
+
 	void (*give_help)(short,short,cDialog&) = ::give_help;
 	
 	int store_display_mode = get_int_pref("DisplayMode");
 	prefsDlog.run(std::bind(give_help, 55, 0, std::ref(prefsDlog)));
 	
-	if(get_int_pref("DisplayMode") != store_display_mode || get_float_pref("UIScale") != ui_scale)
+	if(get_int_pref("DisplayMode") != store_display_mode || get_float_pref("UIScale") != ui_scale || get_float_pref("UIMapScale") != ui_map_scale)
 		changed_display_mode = true;
 }
 
