@@ -358,6 +358,8 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			break;
 		case 182: // Destroy all monsters of particular type
 			type = eSpecType::TOWN_NUKE_MONSTS;
+			if (ex1a>=-2 && ex1a<=0) // FIXME: if ex1a:type==0, we do not want to remove all monsters
+				ex1a=-3;
 			break;
 		case 183: // Destroy all monsters, or all friendly / all hostile
 			type = eSpecType::TOWN_NUKE_MONSTS;
