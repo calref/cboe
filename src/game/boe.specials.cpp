@@ -4395,21 +4395,22 @@ void rect_spec(const runtime_state& ctx){
 							case FIELD_SMASH: crumble_wall(loc(i,j)); break;
 						}
 					break;
-				case eSpecType::RECT_MOVE_ITEMS:
+				case eSpecType::RECT_MOVE_ITEMS: {
 					if(is_out())
 						return;
-					i = is_container(loc(spec.sd1,spec.sd2));
+					bool isContainer=is_container(loc(spec.sd1,spec.sd2));
 					for(short k = 0; k < univ.town.items.size(); k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].item_loc == l) {
 							univ.town.items[k].item_loc.x = spec.sd1;
 							univ.town.items[k].item_loc.y = spec.sd2;
-							if(i && spec.m3) {
+							if(isContainer && spec.m3) {
 								univ.town.items[k].contained = is_container(univ.town.items[k].item_loc);
 								if(univ.town.is_crate(spec.sd1,spec.sd2) || univ.town.is_barrel(spec.sd1,spec.sd2))
 									univ.town.items[k].held = true;
 							}
 						}
 					break;
+				}
 				case eSpecType::RECT_DESTROY_ITEMS:
 					if(is_out())
 						return;
