@@ -6,6 +6,7 @@
 	<text name='str1' framed='true' top='37' left='53' width='257' height='92'/>
 	<text name='str2' framed='true' top='136' left='53' width='257' height='92'/>
 	<text name='str3' framed='true' top='235' left='53' width='257' height='92'/>
+    <text name='str4' framed='true' top='334' left='53' width='257' height='1'/>
 	<text size='large' top='9' left='53' width='257' height='19'>Encounter Notes:</text>
 	<button name='left' type='left' def-key='left' top='340' left='48'/>
 	<button name='right' type='right' def-key='right' top='340' left='111'/>

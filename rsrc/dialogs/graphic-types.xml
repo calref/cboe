@@ -26,164 +26,164 @@
 	<pict name='pic9' type='item' num='8' top='68' left='300'/>
 	<pict name='pic10' type='item' num='9' top='68' left='336'/>
 	<group name='type1'>
-		<led name='ter1' top='110' left='20'/>
-		<led name='anim1' top='125' left='20'/>
-		<led name='map1' top='140' left='20'/>
-		<led name='monst-sm1' top='155' left='20'/>
-		<led name='monst-wide1' top='170' left='20'/>
-		<led name='monst-tall1' top='185' left='20'/>
-		<led name='monst-lg1' top='200' left='20'/>
-		<led name='dlog1' top='215' left='20'/>
-		<led name='dlog-lg1' top='230' left='20'/>
-		<led name='talk1' top='245' left='20'/>
-		<led name='item1' top='260' left='20'/>
-		<led name='boom1' top='275' left='20'/>
-		<led name='miss1' top='290' left='20'/>
-		<led name='none1' top='305' left='20'/>
+		<led name='ter1' width='5' top='110' left='20'/>
+		<led name='anim1' width='5' top='125' left='20'/>
+		<led name='map1' width='5' top='140' left='20'/>
+		<led name='monst-sm1' width='5' top='155' left='20'/>
+		<led name='monst-wide1' width='5' top='170' left='20'/>
+		<led name='monst-tall1' width='5' top='185' left='20'/>
+		<led name='monst-lg1' width='5' top='200' left='20'/>
+		<led name='dlog1' width='5' top='215' left='20'/>
+		<led name='dlog-lg1' width='5' top='230' left='20'/>
+		<led name='talk1' width='5' top='245' left='20'/>
+		<led name='item1' width='5' top='260' left='20'/>
+		<led name='boom1' width='5' top='275' left='20'/>
+		<led name='miss1' width='5' top='290' left='20'/>
+		<led name='none1' width='5' top='305' left='20'/>
 	</group>
 	<group name='type2'>
-		<led name='ter2' top='110' left='56'/>
-		<led name='anim2' top='125' left='56'/>
-		<led name='map2' top='140' left='56'/>
-		<led name='monst-sm2' top='155' left='56'/>
-		<led name='monst-wide2' top='170' left='56'/>
-		<led name='monst-tall2' top='185' left='56'/>
-		<led name='monst-lg2' top='200' left='56'/>
-		<led name='dlog2' top='215' left='56'/>
-		<led name='dlog-lg2' top='230' left='56'/>
-		<led name='talk2' top='245' left='56'/>
-		<led name='item2' top='260' left='56'/>
-		<led name='boom2' top='275' left='56'/>
-		<led name='miss2' top='290' left='56'/>
-		<led name='none2' top='305' left='56'/>
+		<led name='ter2' width='5' top='110' left='56'/>
+		<led name='anim2' width='5' top='125' left='56'/>
+		<led name='map2' width='5' top='140' left='56'/>
+		<led name='monst-sm2' width='5' top='155' left='56'/>
+		<led name='monst-wide2' width='5' top='170' left='56'/>
+		<led name='monst-tall2' width='5' top='185' left='56'/>
+		<led name='monst-lg2' width='5' top='200' left='56'/>
+		<led name='dlog2' width='5' top='215' left='56'/>
+		<led name='dlog-lg2' width='5' top='230' left='56'/>
+		<led name='talk2' width='5' top='245' left='56'/>
+		<led name='item2' width='5' top='260' left='56'/>
+		<led name='boom2' width='5' top='275' left='56'/>
+		<led name='miss2' width='5' top='290' left='56'/>
+		<led name='none2' width='5' top='305' left='56'/>
 	</group>
 	<group name='type3'>
-		<led name='ter3' top='110' left='92'/>
-		<led name='anim3' top='125' left='92'/>
-		<led name='map3' top='140' left='92'/>
-		<led name='monst-sm3' top='155' left='92'/>
-		<led name='monst-wide3' top='170' left='92'/>
-		<led name='monst-tall3' top='185' left='92'/>
-		<led name='monst-lg3' top='200' left='92'/>
-		<led name='dlog3' top='215' left='92'/>
-		<led name='dlog-lg3' top='230' left='92'/>
-		<led name='talk3' top='245' left='92'/>
-		<led name='item3' top='260' left='92'/>
-		<led name='boom3' top='275' left='92'/>
-		<led name='miss3' top='290' left='92'/>
-		<led name='none3' top='305' left='92'/>
+		<led name='ter3' width='5' top='110' left='92'/>
+		<led name='anim3' width='5' top='125' left='92'/>
+		<led name='map3' width='5' top='140' left='92'/>
+		<led name='monst-sm3' width='5' top='155' left='92'/>
+		<led name='monst-wide3' width='5' top='170' left='92'/>
+		<led name='monst-tall3' width='5' top='185' left='92'/>
+		<led name='monst-lg3' width='5' top='200' left='92'/>
+		<led name='dlog3' width='5' top='215' left='92'/>
+		<led name='dlog-lg3' width='5' top='230' left='92'/>
+		<led name='talk3' width='5' top='245' left='92'/>
+		<led name='item3' width='5' top='260' left='92'/>
+		<led name='boom3' width='5' top='275' left='92'/>
+		<led name='miss3' width='5' top='290' left='92'/>
+		<led name='none3' width='5' top='305' left='92'/>
 	</group>
 	<group name='type4'>
-		<led name='ter4' top='110' left='128'/>
-		<led name='anim4' top='125' left='128'/>
-		<led name='map4' top='140' left='128'/>
-		<led name='monst-sm4' top='155' left='128'/>
-		<led name='monst-wide4' top='170' left='128'/>
-		<led name='monst-tall4' top='185' left='128'/>
-		<led name='monst-lg4' top='200' left='128'/>
-		<led name='dlog4' top='215' left='128'/>
-		<led name='dlog-lg4' top='230' left='128'/>
-		<led name='talk4' top='245' left='128'/>
-		<led name='item4' top='260' left='128'/>
-		<led name='boom4' top='275' left='128'/>
-		<led name='miss4' top='290' left='128'/>
-		<led name='none4' top='305' left='128'/>
+		<led name='ter4' width='5' top='110' left='128'/>
+		<led name='anim4' width='5' top='125' left='128'/>
+		<led name='map4' width='5' top='140' left='128'/>
+		<led name='monst-sm4' width='5' top='155' left='128'/>
+		<led name='monst-wide4' width='5' top='170' left='128'/>
+		<led name='monst-tall4' width='5' top='185' left='128'/>
+		<led name='monst-lg4' width='5' top='200' left='128'/>
+		<led name='dlog4' width='5' top='215' left='128'/>
+		<led name='dlog-lg4' width='5' top='230' left='128'/>
+		<led name='talk4' width='5' top='245' left='128'/>
+		<led name='item4' width='5' top='260' left='128'/>
+		<led name='boom4' width='5' top='275' left='128'/>
+		<led name='miss4' width='5' top='290' left='128'/>
+		<led name='none4' width='5' top='305' left='128'/>
 	</group>
 	<group name='type5'>
-		<led name='ter5' top='110' left='164'/>
-		<led name='anim5' top='125' left='164'/>
-		<led name='map5' top='140' left='164'/>
-		<led name='monst-sm5' top='155' left='164'/>
-		<led name='monst-wide5' top='170' left='164'/>
-		<led name='monst-tall5' top='185' left='164'/>
-		<led name='monst-lg5' top='200' left='164'/>
-		<led name='dlog5' top='215' left='164'/>
-		<led name='dlog-lg5' top='230' left='164'/>
-		<led name='talk5' top='245' left='164'/>
-		<led name='item5' top='260' left='164'/>
-		<led name='boom5' top='275' left='164'/>
-		<led name='miss5' top='290' left='164'/>
-		<led name='none5' top='305' left='164'/>
+		<led name='ter5' width='5' top='110' left='164'/>
+		<led name='anim5' width='5' top='125' left='164'/>
+		<led name='map5' width='5' top='140' left='164'/>
+		<led name='monst-sm5' width='5' top='155' left='164'/>
+		<led name='monst-wide5' width='5' top='170' left='164'/>
+		<led name='monst-tall5' width='5' top='185' left='164'/>
+		<led name='monst-lg5' width='5' top='200' left='164'/>
+		<led name='dlog5' width='5' top='215' left='164'/>
+		<led name='dlog-lg5' width='5' top='230' left='164'/>
+		<led name='talk5' width='5' top='245' left='164'/>
+		<led name='item5' width='5' top='260' left='164'/>
+		<led name='boom5' width='5' top='275' left='164'/>
+		<led name='miss5' width='5' top='290' left='164'/>
+		<led name='none5' width='5' top='305' left='164'/>
 	</group>
 	<group name='type6'>
-		<led name='ter6' top='110' left='200'/>
-		<led name='anim6' top='125' left='200'/>
-		<led name='map6' top='140' left='200'/>
-		<led name='monst-sm6' top='155' left='200'/>
-		<led name='monst-wide6' top='170' left='200'/>
-		<led name='monst-tall6' top='185' left='200'/>
-		<led name='monst-lg6' top='200' left='200'/>
-		<led name='dlog6' top='215' left='200'/>
-		<led name='dlog-lg6' top='230' left='200'/>
-		<led name='talk6' top='245' left='200'/>
-		<led name='item6' top='260' left='200'/>
-		<led name='boom6' top='275' left='200'/>
-		<led name='miss6' top='290' left='200'/>
-		<led name='none6' top='305' left='200'/>
+		<led name='ter6' width='5' top='110' left='200'/>
+		<led name='anim6' width='5' top='125' left='200'/>
+		<led name='map6' width='5' top='140' left='200'/>
+		<led name='monst-sm6' width='5' top='155' left='200'/>
+		<led name='monst-wide6' width='5' top='170' left='200'/>
+		<led name='monst-tall6' width='5' top='185' left='200'/>
+		<led name='monst-lg6' width='5' top='200' left='200'/>
+		<led name='dlog6' width='5' top='215' left='200'/>
+		<led name='dlog-lg6' width='5' top='230' left='200'/>
+		<led name='talk6' width='5' top='245' left='200'/>
+		<led name='item6' width='5' top='260' left='200'/>
+		<led name='boom6' width='5' top='275' left='200'/>
+		<led name='miss6' width='5' top='290' left='200'/>
+		<led name='none6' width='5' top='305' left='200'/>
 	</group>
 	<group name='type7'>
-		<led name='ter7' top='110' left='236'/>
-		<led name='anim7' top='125' left='236'/>
-		<led name='map7' top='140' left='236'/>
-		<led name='monst-sm7' top='155' left='236'/>
-		<led name='monst-wide7' top='170' left='236'/>
-		<led name='monst-tall7' top='185' left='236'/>
-		<led name='monst-lg7' top='200' left='236'/>
-		<led name='dlog7' top='215' left='236'/>
-		<led name='dlog-lg7' top='230' left='236'/>
-		<led name='talk7' top='245' left='236'/>
-		<led name='item7' top='260' left='236'/>
-		<led name='boom7' top='275' left='236'/>
-		<led name='miss7' top='290' left='236'/>
-		<led name='none7' top='305' left='236'/>
+		<led name='ter7' width='5' top='110' left='236'/>
+		<led name='anim7' width='5' top='125' left='236'/>
+		<led name='map7' width='5' top='140' left='236'/>
+		<led name='monst-sm7' width='5' top='155' left='236'/>
+		<led name='monst-wide7' width='5' top='170' left='236'/>
+		<led name='monst-tall7' width='5' top='185' left='236'/>
+		<led name='monst-lg7' width='5' top='200' left='236'/>
+		<led name='dlog7' width='5' top='215' left='236'/>
+		<led name='dlog-lg7' width='5' top='230' left='236'/>
+		<led name='talk7' width='5' top='245' left='236'/>
+		<led name='item7' width='5' top='260' left='236'/>
+		<led name='boom7' width='5' top='275' left='236'/>
+		<led name='miss7' width='5' top='290' left='236'/>
+		<led name='none7' width='5' top='305' left='236'/>
 	</group>
 	<group name='type8'>
-		<led name='ter8' top='110' left='272'/>
-		<led name='anim8' top='125' left='272'/>
-		<led name='map8' top='140' left='272'/>
-		<led name='monst-sm8' top='155' left='272'/>
-		<led name='monst-wide8' top='170' left='272'/>
-		<led name='monst-tall8' top='185' left='272'/>
-		<led name='monst-lg8' top='200' left='272'/>
-		<led name='dlog8' top='215' left='272'/>
-		<led name='dlog-lg8' top='230' left='272'/>
-		<led name='talk8' top='245' left='272'/>
-		<led name='item8' top='260' left='272'/>
-		<led name='boom8' top='275' left='272'/>
-		<led name='miss8' top='290' left='272'/>
-		<led name='none8' top='305' left='272'/>
+		<led name='ter8' width='5' top='110' left='272'/>
+		<led name='anim8' width='5' top='125' left='272'/>
+		<led name='map8' width='5' top='140' left='272'/>
+		<led name='monst-sm8' width='5' top='155' left='272'/>
+		<led name='monst-wide8' width='5' top='170' left='272'/>
+		<led name='monst-tall8' width='5' top='185' left='272'/>
+		<led name='monst-lg8' width='5' top='200' left='272'/>
+		<led name='dlog8' width='5' top='215' left='272'/>
+		<led name='dlog-lg8' width='5' top='230' left='272'/>
+		<led name='talk8' width='5' top='245' left='272'/>
+		<led name='item8' width='5' top='260' left='272'/>
+		<led name='boom8' width='5' top='275' left='272'/>
+		<led name='miss8' width='5' top='290' left='272'/>
+		<led name='none8' width='5' top='305' left='272'/>
 	</group>
 	<group name='type9'>
-		<led name='ter9' top='110' left='308'/>
-		<led name='anim9' top='125' left='308'/>
-		<led name='map9' top='140' left='308'/>
-		<led name='monst-sm9' top='155' left='308'/>
-		<led name='monst-wide9' top='170' left='308'/>
-		<led name='monst-tall9' top='185' left='308'/>
-		<led name='monst-lg9' top='200' left='308'/>
-		<led name='dlog9' top='215' left='308'/>
-		<led name='dlog-lg9' top='230' left='308'/>
-		<led name='talk9' top='245' left='308'/>
-		<led name='item9' top='260' left='308'/>
-		<led name='boom9' top='275' left='308'/>
-		<led name='miss9' top='290' left='308'/>
-		<led name='none9' top='305' left='308'/>
+		<led name='ter9' width='5' top='110' left='308'/>
+		<led name='anim9' width='5' top='125' left='308'/>
+		<led name='map9' width='5' top='140' left='308'/>
+		<led name='monst-sm9' width='5' top='155' left='308'/>
+		<led name='monst-wide9' width='5' top='170' left='308'/>
+		<led name='monst-tall9' width='5' top='185' left='308'/>
+		<led name='monst-lg9' width='5' top='200' left='308'/>
+		<led name='dlog9' width='5' top='215' left='308'/>
+		<led name='dlog-lg9' width='5' top='230' left='308'/>
+		<led name='talk9' width='5' top='245' left='308'/>
+		<led name='item9' width='5' top='260' left='308'/>
+		<led name='boom9' width='5' top='275' left='308'/>
+		<led name='miss9' width='5' top='290' left='308'/>
+		<led name='none9' width='5' top='305' left='308'/>
 	</group>
 	<group name='type10'>
-		<led name='ter10' top='110' left='344'/>
-		<led name='anim10' top='125' left='344'/>
-		<led name='map10' top='140' left='344'/>
-		<led name='monst-sm10' top='155' left='344'/>
-		<led name='monst-wide10' top='170' left='344'/>
-		<led name='monst-tall10' top='185' left='344'/>
-		<led name='monst-lg10' top='200' left='344'/>
-		<led name='dlog10' top='215' left='344'/>
-		<led name='dlog-lg10' top='230' left='344'/>
-		<led name='talk10' top='245' left='344'/>
-		<led name='item10' top='260' left='344'/>
-		<led name='boom10' top='275' left='344'/>
-		<led name='miss10' top='290' left='344'/>
-		<led name='none10' top='305' left='344'/>
+		<led name='ter10' width='5' top='110' left='344'/>
+		<led name='anim10' width='5' top='125' left='344'/>
+		<led name='map10' width='5' top='140' left='344'/>
+		<led name='monst-sm10' width='5' top='155' left='344'/>
+		<led name='monst-wide10' width='5' top='170' left='344'/>
+		<led name='monst-tall10' width='5' top='185' left='344'/>
+		<led name='monst-lg10' width='5' top='200' left='344'/>
+		<led name='dlog10' width='5' top='215' left='344'/>
+		<led name='dlog-lg10' width='5' top='230' left='344'/>
+		<led name='talk10' width='5' top='245' left='344'/>
+		<led name='item10' width='5' top='260' left='344'/>
+		<led name='boom10' width='5' top='275' left='344'/>
+		<led name='miss10' width='5' top='290' left='344'/>
+		<led name='none10' width='5' top='305' left='344'/>
 	</group>
 	<text framed='true' left='20' top='110' width='492' height='12'/>
 	<text framed='true' left='20' top='125' width='492' height='12'/>

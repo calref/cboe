@@ -23,10 +23,10 @@
 	<text top='177' left='122' width='204' height='14'>Very dark (light used 10x as fast</text>
 	<text top='194' left='122' width='164' height='14'>Totally dark (no light)</text>
 	<group name='lighting'>
-		<led name='lit' top='143' left='329'/>
-		<led name='dark' top='160' left='329'/>
-		<led name='drains' top='177' left='329'/>
-		<led name='no-light' top='194' left='329'/>
+		<led name='lit' width='4' top='143' left='329'/>
+		<led name='dark' width='4' top='160' left='329'/>
+		<led name='drains' width='4' top='177' left='329'/>
+		<led name='no-light' width='4' top='194' left='329'/>
 	</group>
 	<text top='216' left='50' width='234' height='42'>
 		Maximum number of monsters:
@@ -42,9 +42,9 @@
 		Use the LEDs to the left to switch between them.
 	</text>
 	<group name='pick-cmt'>
-		<led name='cmt1' top='327' left='30' state='red'/>
-		<led name='cmt2' top='347' left='30'/>
-		<led name='cmt3' top='367' left='30'/>
+		<led name='cmt1' width='4' top='327' left='30' state='red'/>
+		<led name='cmt2' width='4' top='347' left='30'/>
+		<led name='cmt3' width='4' top='367' left='30'/>
 	</group>
 	<stack name='cmt' pages='3'>
 		<field name='comment' top='317' left='162' width='251' height='80'/>

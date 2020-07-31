@@ -4,26 +4,26 @@
 	<text size='large' top='10' left='54' width='163' height='15'>Alchemy known:</text>
 	<pict type='dlog' num='20' top='6' left='6'/>
 	<button name='done' type='done' top='174' left='356'/>
-	<led name='potion1' state='off' top='33' left='217'/>
-	<led name='potion2' state='off' top='47' left='217'/>
-	<led name='potion3' state='off' top='61' left='217'/>
-	<led name='potion4' state='off' top='75' left='217'/>
-	<led name='potion5' state='off' top='89' left='217'/>
-	<led name='potion6' state='off' top='103' left='217'/>
-	<led name='potion7' state='off' top='117' left='217'/>
-	<led name='potion8' state='off' top='131' left='217'/>
-	<led name='potion9' state='off' top='145' left='217'/>
-	<led name='potion10' state='off' top='159' left='217'/>
-	<led name='potion11' state='off' top='33' left='402'/>
-	<led name='potion12' state='off' top='47' left='402'/>
-	<led name='potion13' state='off' top='61' left='402'/>
-	<led name='potion14' state='off' top='75' left='402'/>
-	<led name='potion15' state='off' top='89' left='402'/>
-	<led name='potion16' state='off' top='103' left='402'/>
-	<led name='potion17' state='off' top='117' left='402'/>
-	<led name='potion18' state='off' top='131' left='402'/>
-	<led name='potion19' state='off' top='145' left='402'/>
-	<led name='potion20' state='off' top='159' left='402'/>
+	<led name='potion1' state='off' width='5' top='33' left='217'/>
+	<led name='potion2' state='off' width='5' top='47' left='217'/>
+	<led name='potion3' state='off' width='5' top='61' left='217'/>
+	<led name='potion4' state='off' width='5' top='75' left='217'/>
+	<led name='potion5' state='off' width='5' top='89' left='217'/>
+	<led name='potion6' state='off' width='5' top='103' left='217'/>
+	<led name='potion7' state='off' width='5' top='117' left='217'/>
+	<led name='potion8' state='off' width='5' top='131' left='217'/>
+	<led name='potion9' state='off' width='5' top='145' left='217'/>
+	<led name='potion10' state='off' width='5' top='159' left='217'/>
+	<led name='potion11' state='off' width='5' top='33' left='402'/>
+	<led name='potion12' state='off' width='5' top='47' left='402'/>
+	<led name='potion13' state='off' width='5' top='61' left='402'/>
+	<led name='potion14' state='off' width='5' top='75' left='402'/>
+	<led name='potion15' state='off' width='5' top='89' left='402'/>
+	<led name='potion16' state='off' width='5' top='103' left='402'/>
+	<led name='potion17' state='off' width='5' top='117' left='402'/>
+	<led name='potion18' state='off' width='5' top='131' left='402'/>
+	<led name='potion19' state='off' width='5' top='145' left='402'/>
+	<led name='potion20' state='off' width='5' top='159' left='402'/>
 	<!--
 	 TODO: This originally had width=119; if it looks wrong in-game, try reverting to that
 	 -->
