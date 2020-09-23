@@ -276,7 +276,7 @@ public:
 	/// @param prop The parameter to set.
 	/// @param val The desired value of the parameter.
 	/// @throw xUnsupportedProp if this control doesn't support the given parameter.
-	void setFormat(eFormat prop, short val);
+	void setFormat(eFormat prop, sf::Uint8 val);
 	/// Get one of the control's formatting parameters.
 	/// @param prop The parameter to retrieve.
 	/// @return The value of the parameter.
