@@ -34,14 +34,14 @@ env.Replace(tools=[toolset])
 
 # Check for platform support
 if platform not in ("darwin", "win32", "posix"):
-	print "Sorry, your platform is not supported."
-	print "Platform is:", platform
-	print "Specify OS=<your-platform> if you believe this is incorrect."
-	print "(Supported platforms are: darwin, win32, posix)"
+	print("Sorry, your platform is not supported.")
+	print("Platform is:", platform)
+	print("Specify OS=<your-platform> if you believe this is incorrect.")
+	print("(Supported platforms are: darwin, win32, posix)")
 	Exit(1)
-print 'Building for:', platform
-print 'Using toolchain:', toolset
-print 'C++ compiler:', env['CXX']
+print('Building for:', platform)
+print('Using toolchain:', toolset)
+print('C++ compiler:', env['CXX'])
 
 env.VariantDir('#build/obj', 'src')
 env.VariantDir('#build/obj/test', 'test')
@@ -52,14 +52,14 @@ if env['debug']:
 # This command generates the header with git revision information
 def gen_gitrev(env, target, source):
 	revid = subprocess.check_output(["git", "rev-parse", "HEAD"]);
-	fulltag = subprocess.check_output(["git", "tag", "--sort=v:refname"]).split('\n')[-1]
+	fulltag = subprocess.check_output(["git", "tag", "--sort=v:refname"]).decode('utf-8').split('\n')[-1]
 	tagrev = subprocess.check_output(["git", "rev-parse", fulltag]) if fulltag else ""
 	with open(target[0].path, 'w') as gitrev_hpp:
-		print >>gitrev_hpp
-		print >>gitrev_hpp, '#define GIT_REVISION "' + revid[0:7] + '"'
-		print >>gitrev_hpp, '#define GIT_TAG "' + fulltag + '"'
-		print >>gitrev_hpp, '#define GIT_TAG_REVISION "' + tagrev[0:7] + '"'
-		print >>gitrev_hpp
+		print(gitrev_hpp)
+		print(gitrev_hpp, '#define GIT_REVISION "' + revid[0:7].decode('utf-8') + '"')
+		print(gitrev_hpp, '#define GIT_TAG "' + fulltag + '"')
+		print(gitrev_hpp, '#define GIT_TAG_REVISION "' + tagrev[0:7] + '"')
+		print(gitrev_hpp)
 if path.exists(".git"):
 	git_refs = ['.git/HEAD']
 	with open('.git/HEAD') as git_head:
@@ -90,6 +90,7 @@ if platform == "darwin":
 	"""), CPPPATH=Split("""
 		/usr/include
 		/usr/local/include
+		/usr/local/.include
 	"""), FRAMEWORKPATH=Split("""
 		/System/Library/Frameworks
 		/Library/Frameworks
@@ -118,7 +119,7 @@ if platform == "darwin":
 	def check_deps(source):
 		direct_deps = get_deps_for(source)
 		deps = set()
-		for i in xrange(len(direct_deps)):
+		for i in range(len(direct_deps)):
 			dep = direct_deps[i]
 			if dep.startswith('@rpath/'):
 				direct_deps[i] = dep = dep.split('/', 1)[1]
@@ -182,6 +183,13 @@ elif platform == "win32":
 		env.Install(build_dir, source)
 elif platform == "posix":
 	env.Append(CXXFLAGS=["-std=c++14","-include","global.hpp"])
+	env.Append(LIBPATH=Split("""
+               		/usr/lib
+               		/usr/local/lib
+               	"""), CPPPATH=Split("""
+               		/usr/include
+               		/usr/local/include
+               	"""))
 	def build_app_package(env, source, build_dir, info):
 		env.Install(build_dir, source)
 
@@ -210,10 +218,11 @@ if platform == 'darwin':
 
 	# pretty sketchy, but should point to your boost install
 	if subprocess.call(['which', '-s', 'brew']) == 0: # HomeBrew
-		brew_boost_version = '1.58.0'
+		brew_boost_version = '1.73.0'
 		env.Append(
 			LIBPATH=['/usr/local/Cellar/boost/'+brew_boost_version+'/lib'],
-			CPPPATH=['/usr/local/Cellar/boost/'+brew_boost_version+'/include'])
+			CPPPATH=['/usr/local/Cellar/boost/'+brew_boost_version+'/include'],
+			INCLUDEPATH=['/usr/local/Cellar/boost/'+brew_boost_version+'/include'])
 
 # Sometimes it's easier just to copy the dependencies into the repo dir
 # We try to auto-detect this.
@@ -248,11 +257,11 @@ if not env.GetOption('clean'):
 	conf = Configure(env)
 
 	if not conf.CheckCC() or not conf.CheckCXX():
-		print "There's a problem with your compiler!"
+		print("There's a problem with your compiler!")
 		Exit(1)
 
 	if not conf.CheckLib('zlib' if (platform == "win32" and 'mingw' not in env["TOOLS"]) else 'z'):
-		print 'zlib must be installed!'
+		print('zlib must be installed!')
 		Exit(1)
 
 	def check_lib(lib, disp, suffixes=[], versions=[]):
@@ -266,7 +275,7 @@ if not env.GetOption('clean'):
 				vc_suffix = '-vc' + env['MSVC_VERSION'].replace('.','')
 				possible_names.append(lib + vc_suffix)
 		n = len(possible_names)
-		for i in xrange(n):
+		for i in range(n):
 			for suff in suffixes:
 				possible_names.append(possible_names[i] + suff)
 		for test in possible_names:
@@ -277,14 +286,14 @@ if not env.GetOption('clean'):
 				if conf.CheckLib(test + ver, language='C++'):
 					bundled_libs.append(test + ver)
 					return # Success!
-		print disp, 'must be installed!'
-		print "  If you're sure it's installed, try passing LIBPATH=..."
+		print(disp, 'must be installed!')
+		print("  If you're sure it's installed, try passing LIBPATH=...")
 		Exit(1)
 
 	def check_header(header, disp):
 		if not conf.CheckCXXHeader(header, '<>'):
-			print disp, 'must be installed!'
-			print "  If you're sure it's installed, try passing INCLUDEPATH=..."
+			print(disp, 'must be installed!')
+			print("  If you're sure it's installed, try passing INCLUDEPATH=...")
 			Exit(1)
 
 	boost_versions = ['-1_54', '-1_55', '-1_56', '-1_57', '-1_58'] # This is a bit of a hack. :(
@@ -352,8 +361,8 @@ Export("install_dir party_classes common_sources")
 SConscript([
 	"build/obj/game/SConscript",
 	"build/obj/pcedit/SConscript",
-	"build/obj/scenedit/SConscript",
-	"build/obj/test/SConscript"
+	"build/obj/scenedit/SConscript"
+#	"build/obj/test/SConscript"
 ])
 
 # Data files
@@ -384,7 +393,8 @@ elif platform == "win32":
 		sfml-window-2
 		zlib1
 	""")
-	target_dirs = ["#build/Blades of Exile", "#build/test"]
+	# target_dirs = ["#build/Blades of Exile", "#build/test"]
+	target_dirs = ["#build/Blades of Exile"]
 	for lib in bundled_libs:
 		for lpath in env['LIBPATH']:
 			src_file = path.join(lpath, lib + ".dll")
@@ -403,17 +413,19 @@ elif platform == "win32":
 		if path.exists("dep/VCRedistInstall.exe"):
 			env.Install("build/Blades of Exile/", "dep/VCRedistInstall.exe")
 		else:
-			print "WARNING: Cannot find installer for the MSVC redistributable libraries for your version of Visual Studio."
-			print "Please download it from Microsoft's website and place it at:"
-			print "      dep/VCRedistInstall.exe"
+			print("WARNING: Cannot find installer for the MSVC redistributable libraries for your version of Visual Studio.")
+			print("Please download it from Microsoft's website and place it at:")
+			print("      dep/VCRedistInstall.exe")
 			# Create it so its lack doesn't cause makensis to break
 			# (Because the installer is an optional component.)
 			open("build/Blades of Exile/VCRedistInstall.exe", 'w').close()
 
 if platform == "darwin":
+	print("Building packages for Mac OS")
 	env.VariantDir("#build/pkg", "pkg/mac")
 	SConscript("build/pkg/SConscript")
 elif platform == "win32" and subprocess.call(['where', '/Q', 'makensis']) == 0:
+	print("Building packages for Windows")
 	env.VariantDir("#build/pkg", "pkg/win")
 	SConscript("build/pkg/SConscript")
 
