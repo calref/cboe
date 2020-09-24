@@ -210,7 +210,7 @@ void cControl::setActive(bool active) {
 	depressed = active;
 }
 
-void cControl::setFormat(eFormat prop, sf::Uint8 val) {
+void cControl::setFormat(eFormat prop, short val) {
 	boost::any newVal;
 	switch(prop) {
 		case TXT_WRAP:
