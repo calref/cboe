@@ -80,28 +80,30 @@ else:
 # Breaks build on Travis
 #
 # Assign custom icons
-# if str(platform) == "darwin":
-#	def set_dir_icon(env, target, source):
-#		env.Command(target, source, action = [
-#			Mkdir("build/rsrc/icons"),
-#			"sips -i $SOURCE --out build/rsrc/icons/${SOURCE.file}",
-#			"DeRez -only icns build/rsrc/icons/${SOURCE.file} > \
-#				build/rsrc/icons/${SOURCE.filebase}.rsrc",
-#			"Rez -append build/rsrc/icons/${SOURCE.filebase}.rsrc -o $TARGET",
-#			"SetFile -a C ${TARGET.dir}",
-#			"chflags hidden $TARGET",
-#		])
-#	env.AddMethod(set_dir_icon, "SetDirIcon")
-#	icons = {
-#		'': 'boeresources.icns',
-#		'dialogs/': 'boeresources.icns',
-#		'strings/': 'boeresources.icns',
-#		'cursors/': 'boegraphics.icns',
-#		'graphics/': 'boegraphics.icns',
-#		'sounds/': 'boesounds.icns',
-#	}
-#	for dir, icon in icons.items():
-#		env.SetDirIcon(
-#			path.join("#build/Blades of Exile/data", dir, 'Icon\r'),
-#			path.join("icons/mac/", icon)
-#		)
+"""
+if str(platform) == "darwin":
+	def set_dir_icon(env, target, source):
+		env.Command(target, source, action = [
+			Mkdir("build/rsrc/icons"),
+			"sips -i $SOURCE --out build/rsrc/icons/${SOURCE.file}",
+			"DeRez -only icns build/rsrc/icons/${SOURCE.file} > \
+				build/rsrc/icons/${SOURCE.filebase}.rsrc",
+			"Rez -append build/rsrc/icons/${SOURCE.filebase}.rsrc -o $TARGET",
+			"SetFile -a C ${TARGET.dir}",
+			"chflags hidden $TARGET",
+		])
+	env.AddMethod(set_dir_icon, "SetDirIcon")
+	icons = {
+		'': 'boeresources.icns',
+		'dialogs/': 'boeresources.icns',
+		'strings/': 'boeresources.icns',
+		'cursors/': 'boegraphics.icns',
+		'graphics/': 'boegraphics.icns',
+		'sounds/': 'boesounds.icns',
+	}
+	for dir, icon in icons.items():
+		env.SetDirIcon(
+			path.join("#build/Blades of Exile/data", dir, 'Icon\r'),
+			path.join("icons/mac/", icon)
+		)
+"""
