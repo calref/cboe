@@ -55,7 +55,7 @@ def gen_gitrev(env, target, source):
 	fulltag = subprocess.check_output(["git", "tag", "--sort=v:refname"]).decode('utf-8').split('\n')[-1]
 	tagrev = subprocess.check_output(["git", "rev-parse", fulltag]) if fulltag else ""
 	with open(target[0].path, 'w') as gitrev_hpp:
-		print(gitrev_hpp)
+		print(file=gitrev_hpp)
 		print(gitrev_hpp, '#define GIT_REVISION "' + revid[0:7].decode('utf-8') + '"')
 		print(gitrev_hpp, '#define GIT_TAG "' + fulltag + '"')
 		print(gitrev_hpp, '#define GIT_TAG_REVISION "' + tagrev[0:7] + '"')
