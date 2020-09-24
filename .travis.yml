@@ -1,26 +1,30 @@
 
 language: cpp
-sudo: required
-services: ['docker']
-
 branches:
  except:
   - legacy-win32
 
-matrix:
+jobs:
  include:
   - os: linux
-    dist: trusty
+    dist: focal
     compiler: clang
   - os: linux
-    dist: trusty
+    dist: focal
     compiler: gcc
   - os: osx
-    osx_image: xcode6.4
+    osx_image: xcode9.3
     compiler: clang
+    env: BOOST_VERSION=1.73.0 BOOST_BUILD=false
+    addons:
+      homebrew:
+        packages:
+          - boost
+        update: false
 
-install:
+before_install:
  - ./.travis-install-deps.sh
+ - ./.travis-install-tgui.sh
 
 script:
  - scons CC=$CC CXX=$CXX CXXFLAGS=-DBOOST_NO_CXX11_SCOPED_ENUMS
@@ -28,7 +32,7 @@ script:
 notifications:
  email: false
  irc:
-  channels: ["irc.freenode.net#openboe"]
-  use_notice: true
-  on_success: change
-  on_failure: always
+        channels: [ "irc.freenode.net#wojslaw" ]
+        use_notice: true
+        on_success: change
+        on_failure: always

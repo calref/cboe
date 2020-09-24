@@ -77,8 +77,10 @@ if have_xmllint: # This is separate so that alternate xml validators could be us
 else:
 	print("Note: Skipping XML dialog validation since no validator tool was found.")
 
+# Breaks build on Travis
+#
 # Assign custom icons
-
+"""
 if str(platform) == "darwin":
 	def set_dir_icon(env, target, source):
 		env.Command(target, source, action = [
@@ -104,3 +106,4 @@ if str(platform) == "darwin":
 			path.join("#build/Blades of Exile/data", dir, 'Icon\r'),
 			path.join("icons/mac/", icon)
 		)
+"""

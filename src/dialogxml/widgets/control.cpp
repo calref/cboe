@@ -226,7 +226,7 @@ void cControl::setFormat(eFormat prop, short val) {
 			newVal = eFrameStyle(val);
 			break;
 		case TXT_COLOUR: // Interpret as a shade of grey
-			newVal = sf::Color{val, val, val};
+			newVal = sf::Color{(sf::Uint8)val, (sf::Uint8)val, (sf::Uint8)val};
 			break;
 	}
 	if(!manageFormat(prop, true, &newVal))
