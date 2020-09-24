@@ -175,7 +175,7 @@ elif platform == "win32":
 				uuid
 				odbc32
 				odbccp32
-			""")
+		""")
 		)
 	else:
 		env.Append(CXXFLAGS=["-include","global.hpp"])
@@ -186,10 +186,10 @@ elif platform == "posix":
 	env.Append(LIBPATH=Split("""
                		/usr/lib
                		/usr/local/lib
-               	"""), CPPPATH=Split("""
+        """), CPPPATH=Split("""
                		/usr/include
                		/usr/local/include
-               	"""))
+        """))
 	def build_app_package(env, source, build_dir, info):
 		env.Install(build_dir, source)
 
