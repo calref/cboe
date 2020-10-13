@@ -200,6 +200,12 @@ void rectangle::inset(int dh, int dv) {
 	top += dv; bottom -= dv;
 }
 
+rectangle rectangle::rescale(sf::Vector2u const &fromSize, sf::Vector2u const &toSize) const
+{
+	float const scale[]={float(toSize.x)/fromSize.x, float(toSize.y)/fromSize.y};
+	return rectangle(int(scale[1]*top), int(scale[0]*left), int(scale[1]*bottom), int(scale[0]*right));
+}
+
 rectangle& rectangle::operator&=(rectangle other) {
 	left = std::max(left, other.left);
 	top = std::max(top, other.top);

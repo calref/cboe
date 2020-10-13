@@ -65,8 +65,6 @@ extern location center;
 extern cCustomGraphics spec_scen_g;
 extern sf::RenderTexture pc_stats_gworld, item_stats_gworld, text_area_gworld;
 extern sf::RenderTexture terrain_screen_gworld;
-extern rectangle item_stats_rect, pc_stats_rect, terrain_screen_rect, text_area_rect;
-
 
 // game globals
 extern enum_map(eItemButton, rectangle) item_buttons[8];
@@ -99,7 +97,7 @@ void put_pc_screen() {
 	
 	// First clean up gworld with pretty patterns
 	sf::Texture& orig = *ResMgr::graphics.get("statarea");
-	rect_draw_some_item(orig, rectangle(orig), pc_stats_gworld, pc_stats_rect);
+	rect_draw_some_item(orig, rectangle(orig), pc_stats_gworld, rectangle(pc_stats_gworld));
 	tileImage(pc_stats_gworld, erase_rect,bg[6]);
 	
 	TextStyle style;
@@ -220,7 +218,7 @@ void put_item_screen(eItemWinMode screen_num) {
 	
 	// First clean up gworld with pretty patterns
 	sf::Texture& orig = *ResMgr::graphics.get("inventory");
-	rect_draw_some_item(orig, rectangle(orig), item_stats_gworld, item_stats_rect);
+	rect_draw_some_item(orig, rectangle(orig), item_stats_gworld, rectangle(item_stats_gworld));
 	tileImage(item_stats_gworld, erase_rect,bg[6]);
 	
 	// Draw buttons at bottom
@@ -945,7 +943,7 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 		inited = true;
 		buf_style.font = FONT_PLAIN;
 		buf_style.pointSize = 12;
-		width = text_area_rect.width() - 5;
+		width = text_area_gworld.getSize().x - 5;
 	}
 	if(overall_mode == MODE_STARTUP)
 		return;
