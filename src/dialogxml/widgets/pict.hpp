@@ -19,6 +19,11 @@
 #include "control.hpp"
 #include "pictypes.hpp"
 
+struct cSheet {
+	std::shared_ptr<const sf::Texture> texture;
+	sf::Vector2u dimension;
+};
+
 /// A simple icon.
 /// This control can also be made clickable.
 class cPict : public cControl {
@@ -87,7 +92,7 @@ public:
 	cPict& operator=(cPict& other) = delete;
 	cPict(cPict& other) = delete;
 private:
-	static std::shared_ptr<const sf::Texture> getSheet(eSheetType type, size_t n = 0);
+	static cSheet getSheet(eSheetType type, size_t n = 0);
 	static short animFrame;
 	pic_num_t picNum;
 	ePicType picType;

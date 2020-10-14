@@ -23,6 +23,13 @@
 extern sf::Texture bg_gworld;
 extern cCustomGraphics spec_scen_g;
 const pic_num_t cPict::BLANK = -1;
+static void rect_draw_some_item(cSheet const &sheet, rectangle src_rect, sf::RenderTarget& targ_gworld,rectangle targ_rect, sf::BlendMode mode= sf::BlendNone){
+	if (!sheet.texture) return;
+	if (sheet.dimension.x<=0 || sheet.dimension.y<=0)
+		rect_draw_some_item(*sheet.texture, src_rect, targ_gworld, targ_rect, sf::BlendMode(mode));
+	else
+		rect_draw_some_item(*sheet.texture, src_rect.rescale(sheet.dimension, sheet.texture->getSize()), targ_gworld, targ_rect, sf::BlendMode(mode));
+}
 
 void cPict::init(){
 	drawPict()[PIC_TER] = &cPict::drawPresetTer;
@@ -129,13 +136,14 @@ ePicType cPict::getPicType(){
 	return picType;
 }
 
+// AsanU: unset
 cPict::cPict(cDialog& parent) :
-	cControl(CTRL_PICT,parent) {
+	cControl(CTRL_PICT,parent), drawScaled(false) {
 	setFormat(TXT_FRAME, FRM_SOLID);
 }
 
 cPict::cPict(sf::RenderWindow& parent) :
-	cControl(CTRL_PICT, parent) {
+	cControl(CTRL_PICT, parent), drawScaled(false) {
 	setFormat(TXT_FRAME, FRM_SOLID);
 }
 
@@ -577,58 +585,71 @@ void cPict::recalcRect() {
 		case PIC_CUSTOM_FULL:
 			if(drawScaled) break;
 			auto sheet = getSheet(SHEET_FULL, picNum);
-			sf::Vector2u sz = sheet->getSize();
-			bounds.width() = sz.x;
-			bounds.height() = sz.y;
+			bounds.width() = sheet.dimension.x;
+			bounds.height() = sheet.dimension.y;
 			break;
 	}
 	setBounds(bounds);
 }
 
-std::shared_ptr<const sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
+cSheet cPict::getSheet(eSheetType type, size_t n) {
 	std::ostringstream sout;
 	bool purgeable = false;
+	sf::Vector2u dimension={0,0};
 	switch(type) {
 		case NUM_SHEET_TYPES:
 			break;
 		case SHEET_TER:
 			sout << "ter" << n + 1;
+			dimension={280, 180};
 			break;
 		case SHEET_TER_ANIM:
 			sout << "teranim";
+			dimension={672, 180};
 			break;
 		case SHEET_MONST:
 			sout << "monst" << n + 1;
+			dimension={224,360};
 			break;
 		case SHEET_DLOG:
 			sout << "dlogpics";
+			dimension={144,360};
 			break;
 		case SHEET_TALK:
 			sout << "talkportraits";
+			dimension={320,288};
 			break;
 		case SHEET_SCEN:
 			sout << "scenpics";
+			dimension={160,224};
 			break;
 		case SHEET_SCEN_LG:
 			sout << "bigscenpics";
+			dimension={256,64};
 			break;
 		case SHEET_ITEM:
 			sout << "objects";
+			dimension={140,396};
 			break;
 		case SHEET_TINY_ITEM:
 			sout << "tinyobj";
+			dimension={180,252};
 			break;
 		case SHEET_PC:
 			sout << "pcs";
+			dimension={280,576};
 			break;
 		case SHEET_FIELD:
 			sout << "fields";
+			dimension={224,144};
 			break;
 		case SHEET_BOOM:
 			sout << "booms";
+			dimension={224,252};
 			break;
 		case SHEET_MISSILE:
 			sout << "missiles";
+			dimension={144,288};
 			break;
 		case SHEET_PARTY:
 			// TODO: Implement this
@@ -638,9 +659,11 @@ std::shared_ptr<const sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
 			break;
 		case SHEET_TER_MAP:
 			sout << "termap";
+			dimension={252,576};
 			break;
 		case SHEET_STATUS:
 			sout << "staticons";
+			dimension={36,120};
 			break;
 		case SHEET_CUSTOM:
 			// TODO: Implement this
@@ -650,21 +673,27 @@ std::shared_ptr<const sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
 			switch(n) {
 				case 1100:
 					sout << "invenhelp";
+					dimension={138,112};
 					break;
 				case 1200:
 					sout << "stathelp";
+					dimension={106,29};
 					break;
 				case 1300:
 					sout << "actionhelp";
+					dimension={275,100};
 					break;
 				case 1400:
 					sout << "outhelp";
+					dimension={320,125};
 					break;
 				case 1401:
 					sout << "fighthelp";
+					dimension={320,125};
 					break;
 				case 1402:
 					sout << "townhelp";
+					dimension={320,125};
 					break;
 				default:
 					// TODO: The scenario should be allowed to define a sheet1100.png without it being ignored in favour of invenhelp.png
@@ -672,7 +701,7 @@ std::shared_ptr<const sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
 					sout << "sheet" << n;
 			}
 	}
-	return &ResMgr::graphics.get(sout.str(), purgeable);
+	return {&ResMgr::graphics.get(sout.str(), purgeable), dimension};
 }
 
 void cPict::draw(){
@@ -691,12 +720,12 @@ void cPict::draw(){
 
 void cPict::drawPresetTer(short num, rectangle to_rect){
 	auto from_gw = getSheet(SHEET_TER, num / 50);
-	if(!from_gw) return;
+	if(!from_gw.texture) return;
 	num = num % 50;
 	rectangle from_rect = calc_rect(num % 10, num / 10);
 	if(to_rect.right - to_rect.left > 28)
 		to_rect.inset(4,0);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 }
 
 void cPict::drawPresetTerAnim(short num, rectangle to_rect){
@@ -706,7 +735,7 @@ void cPict::drawPresetTerAnim(short num, rectangle to_rect){
 		to_rect.inset(4,0);
 		to_rect.right = to_rect.left + 28;
 	}
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 }
 
 static rectangle calcDefMonstRect(short i, short animFrame){
@@ -728,13 +757,13 @@ static rectangle calcDefMonstRect(short i, short animFrame){
 void cPict::drawPresetMonstSm(short num, rectangle to_rect){
 	short m_start_pic = m_pic_index[num].i;
 	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
+	if(!from_gw.texture) return;
 	m_start_pic = m_start_pic % 20;
 	rectangle from_rect = calcDefMonstRect(m_start_pic, animFrame);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPresetMonstWide(short num, rectangle to_rect){
@@ -744,17 +773,17 @@ void cPict::drawPresetMonstWide(short num, rectangle to_rect){
 	
 	short m_start_pic = m_pic_index[num].i;
 	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
+	if(!from_gw.texture) return;
 	rectangle from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
 	small_monst_rect.offset(to_rect.left,to_rect.top + 7);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	m_start_pic = m_pic_index[num].i + 1;
 	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
+	if(!from_gw.texture) return;
 	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
 	small_monst_rect.offset(14,0);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPresetMonstTall(short num, rectangle to_rect){
@@ -765,17 +794,17 @@ void cPict::drawPresetMonstTall(short num, rectangle to_rect){
 	
 	short m_start_pic = m_pic_index[num].i;
 	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
+	if(!from_gw.texture) return;
 	rectangle from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
 	small_monst_rect.offset(to_rect.left + 7,to_rect.top);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	m_start_pic = m_pic_index[num].i + 1;
 	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
+	if(!from_gw.texture) return;
 	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
 	small_monst_rect.offset(0,18);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPresetMonstLg(short num, rectangle to_rect){
@@ -786,31 +815,31 @@ void cPict::drawPresetMonstLg(short num, rectangle to_rect){
 	
 	short m_start_pic = m_pic_index[num].i;
 	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
+	if(!from_gw.texture) return;
 	rectangle from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
 	small_monst_rect.offset(to_rect.left,to_rect.top);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	m_start_pic = m_pic_index[num].i + 1;
 	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
+	if(!from_gw.texture) return;
 	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
 	small_monst_rect.offset(14,0);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	m_start_pic = m_pic_index[num].i + 2;
 	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
+	if(!from_gw.texture) return;
 	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
 	small_monst_rect.offset(-14,18);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	m_start_pic = m_pic_index[num].i + 3;
 	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
+	if(!from_gw.texture) return;
 	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
 	small_monst_rect.offset(14,0);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPresetDlog(short num, rectangle to_rect){
@@ -819,7 +848,7 @@ void cPict::drawPresetDlog(short num, rectangle to_rect){
 	auto from_gw = getSheet(SHEET_DLOG);
 	rectangle from_rect = {0,0,36,36};
 	from_rect.offset(36 * (num % 4),36 * (num / 4));
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 }
 
 void cPict::drawPresetDlogLg(short num, rectangle to_rect){
@@ -828,7 +857,7 @@ void cPict::drawPresetDlogLg(short num, rectangle to_rect){
 	auto from_gw = getSheet(SHEET_DLOG);
 	rectangle from_rect = {0,0,72,72};
 	from_rect.offset(36 * (num % 4),36 * (num / 4));
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 }
 
 void cPict::drawPresetTalk(short num, rectangle to_rect){
@@ -837,7 +866,7 @@ void cPict::drawPresetTalk(short num, rectangle to_rect){
 	auto from_gw = getSheet(SHEET_TALK);
 	rectangle from_rect = {0,0,32,32};
 	from_rect.offset(32 * (num % 10),32 * (num / 10));
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 }
 
 void cPict::drawPresetScen(short num, rectangle to_rect){
@@ -846,7 +875,7 @@ void cPict::drawPresetScen(short num, rectangle to_rect){
 	from_rect.offset(32 * (num % 5),32 * (num / 5));
 	to_rect.right = to_rect.left + 32;
 	to_rect.bottom = to_rect.top + 32;
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 }
 
 void cPict::drawPresetScenLg(short num, rectangle to_rect){
@@ -855,14 +884,14 @@ void cPict::drawPresetScenLg(short num, rectangle to_rect){
 	to_rect.bottom = to_rect.top + (drawScaled ? getBounds().height() : 64);
 	rectangle from_rect = {0,0,64,64};
 	from_rect.offset(num * 64, 0);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 }
 
 void cPict::drawPresetItem(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	std::shared_ptr<const sf::Texture> from_gw;
+	cSheet from_gw;
 	rectangle from_rect = {0,0,18,18};
 	if(num < 55) {
 		from_gw = getSheet(SHEET_ITEM);
@@ -872,7 +901,7 @@ void cPict::drawPresetItem(short num, rectangle to_rect){
 		to_rect.inset(5,9);
 		from_rect.offset(18 * (num % 10), 18 * (num / 10));
 	}
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPresetTinyItem(short num, rectangle to_rect){
@@ -882,7 +911,7 @@ void cPict::drawPresetTinyItem(short num, rectangle to_rect){
 	rectangle from_rect = {0,0,18,18};
 	auto from_gw = getSheet(SHEET_TINY_ITEM);
 	from_rect.offset(18 * (num % 10), 18 * (num / 10));
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPresetPc(short num, rectangle to_rect){
@@ -891,7 +920,7 @@ void cPict::drawPresetPc(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPresetField(short num, rectangle to_rect){
@@ -900,7 +929,7 @@ void cPict::drawPresetField(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPresetBoom(short num, rectangle to_rect){
@@ -912,18 +941,18 @@ void cPict::drawPresetBoom(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawFullSheet(short num, rectangle to_rect){
-	rectangle from_rect;
 	auto from_gw = getSheet(SHEET_FULL, num);
-	from_rect = rectangle(*from_gw);
+	if (!from_gw.texture) return;
+	rectangle from_rect = from_gw.dimension;
 	if(!drawScaled) {
 		to_rect.right = to_rect.left + (from_rect.right - from_rect.left);
 		to_rect.bottom = to_rect.top + (from_rect.bottom - from_rect.top);
 	}
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 }
 
 void cPict::drawPresetMissile(short num, rectangle to_rect){
@@ -934,7 +963,7 @@ void cPict::drawPresetMissile(short num, rectangle to_rect){
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	short i = animFrame % 8;
 	from_rect.offset(18 * i, 18 * num);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPresetTerMap(short num, rectangle to_rect){
@@ -946,7 +975,7 @@ void cPict::drawPresetTerMap(short num, rectangle to_rect){
 	if(num >= 960)
 		from_rect.offset(12 * 20, 12 * (num - 960));
 	else from_rect.offset(12 * (num % 20), 12 * (num / 20));
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 }
 
 void cPict::drawStatusIcon(short num, rectangle to_rect){
@@ -960,7 +989,7 @@ void cPict::drawStatusIcon(short num, rectangle to_rect){
 		pat_rect.inset(-1,-1);
 		tileImage(*inWindow, pat_rect, bg[6]);
 	}
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawCustomTer(short num, rectangle to_rect){
@@ -1247,7 +1276,7 @@ void cPict::drawPartyScen(short num, rectangle to_rect){
 	from_rect.offset(32 * (num % 5),32 * (num / 5));
 	to_rect.right = to_rect.left + 32;
 	to_rect.bottom = to_rect.top + 32;
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 }
 
 void cPict::drawPartyItem(short num, rectangle to_rect){
