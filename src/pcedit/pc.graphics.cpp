@@ -245,7 +245,8 @@ void draw_main_screen() {
 	rect_draw_some_item(icon_gworld,source_rect,mainPtr,dest_rec);
 	
 	sf::Texture& title_gworld = *ResMgr::graphics.get("pcedtitle");
-	dest_rec = source_rect = rectangle(title_gworld);
+	source_rect = rectangle(title_gworld);
+	dest_rec = rectangle(0,0,70,310);
 	dest_rec.offset(66, 0);
 	rect_draw_some_item(title_gworld,source_rect,mainPtr,dest_rec,sf::BlendAlpha);
 	
@@ -385,7 +386,7 @@ void display_party() {
 	}
 	else {
 		sf::Texture& buttons_gworld = *ResMgr::graphics.get("pcedbuttons");
-        sf::Vector2u const buttons_pictSize(114,57);
+		sf::Vector2u const buttons_pictSize(114,57);
 		from_rect = pc_info_rect;
 		from_rect.top = from_rect.bottom - 11;
 		if(!party_in_scen)
