@@ -358,7 +358,7 @@ void Set_up_win() {
 
 void run_startup_g() {
 	sf::Event event;
-	sf::Texture& pict_to_draw = *ResMgr::graphics.get("edsplash", true);
+	auto & pict_to_draw = *ResMgr::textures.get("edsplash", true);
 	rectangle dest_rect = rectangle(pict_to_draw);
 	
 	play_sound(-95);
@@ -374,16 +374,16 @@ void run_startup_g() {
 	}
 	
 	// It's never needed again, so don't keep it in GPU memory
-	ResMgr::graphics.free("edsplash");
+	ResMgr::textures.free("edsplash");
 }
 
 void load_graphics(){
 	// Preload the main editor interface graphics
-	ResMgr::graphics.get("edbuttons");
-	ResMgr::graphics.get("teranim");
+	ResMgr::textures.get("edbuttons");
+	ResMgr::textures.get("teranim");
 	ResMgr::graphics.get("fields");
-	ResMgr::graphics.get("objects");
-	ResMgr::graphics.get("tinyobj");
+	ResMgr::textures.get("objects");
+	ResMgr::textures.get("tinyobj");
 	ResMgr::graphics.get("termap");
 }
 
@@ -455,7 +455,8 @@ void draw_lb_slot (short which,short mode)  {
 		from_rect = blue_button_from;
 		if(mode > 0)
 			from_rect.offset(0,from_rect.height());
-		rect_draw_some_item(*ResMgr::graphics.get("edbuttons"),from_rect,mainPtr,left_buttons[which][1]);
+		auto const &edbuttons=*ResMgr::textures.get("edbuttons");
+		rect_draw_some_item(edbuttons,from_rect,mainPtr,left_buttons[which][1]);
 	}
 	if(left_button_status[which].mode == LB_INDENT)
 		text_rect.left += 16;
@@ -520,7 +521,7 @@ void set_up_terrain_buttons(bool reset) {
 	int end = min(first + 256, max);
  	
 	// first make terrain buttons
-	sf::Texture& editor_mixed = *ResMgr::graphics.get("edbuttons");
+	auto const &editor_mixed = *ResMgr::textures.get("edbuttons");
 	for(short i = first; i < end; i++) {
 		rectangle draw_rect = terrain_rects[i - first];
 		draw_rect.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y);
@@ -550,7 +551,7 @@ void set_up_terrain_buttons(bool reset) {
 					ter_from.right = ter_from.left + 28;
 					ter_from.top = 36 * (pic % 5);
 					ter_from.bottom = ter_from.top + 36;
-					rect_draw_some_item(*ResMgr::graphics.get("teranim"), ter_from, mainPtr, draw_rect);
+					rect_draw_some_item(*ResMgr::textures.get("teranim"), ter_from, mainPtr, draw_rect);
 					
 				}
 				small_i = get_small_icon(i);
@@ -674,7 +675,7 @@ void set_up_terrain_buttons(bool reset) {
 				} else {
 					tiny_from = {0,0,18,18};
 					tiny_from.offset((pic % 10) * 18,(pic / 10) * 18);
-					rect_draw_some_item(*ResMgr::graphics.get("tinyobj"), tiny_from, mainPtr, tiny_to, sf::BlendAlpha);
+					rect_draw_some_item(*ResMgr::textures.get("tinyobj"), tiny_from, mainPtr, tiny_to, sf::BlendAlpha);
 				}
 				break;
 		}
@@ -812,7 +813,7 @@ void draw_terrain(){
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, BARRIER_FIRE)) {
 						from_rect = calc_rect(8,4);
-						rect_draw_some_item(*ResMgr::graphics.get("teranim"),from_rect,mainPtr,destrec,sf::BlendAlpha);
+						rect_draw_some_item(*ResMgr::textures.get("teranim"),from_rect,mainPtr,destrec,sf::BlendAlpha);
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, FIELD_QUICKFIRE)) {
 						from_rect = calc_rect(7,1);
@@ -820,7 +821,7 @@ void draw_terrain(){
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, BARRIER_FORCE)) {
 						from_rect = calc_rect(10,4);
-						rect_draw_some_item(*ResMgr::graphics.get("teranim"),from_rect,mainPtr,destrec,sf::BlendAlpha);
+						rect_draw_some_item(*ResMgr::textures.get("teranim"),from_rect,mainPtr,destrec,sf::BlendAlpha);
 					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, OBJECT_BLOCK)) {
 						from_rect = calc_rect(3,0);
@@ -848,7 +849,7 @@ void draw_terrain(){
 				if(!icons.empty()) {
 					bool has_start = icons[0] == -1;
 					rectangle tiny_from_base = {120, 0, 127, 7};
-					sf::Texture& editor_mixed = *ResMgr::graphics.get("edbuttons");
+					auto const &editor_mixed = *ResMgr::textures.get("edbuttons");
 					for(short icon : icons) {
 						rectangle tiny_from = tiny_from_base;
 						if(icon == -1) {
@@ -1090,7 +1091,7 @@ void draw_items() {
 						dest_rect.left += 5;
 						dest_rect.right -= 5;
 					}
-					rect_draw_some_item(*ResMgr::graphics.get((pic_num < 55) ? "objects" : "tinyobj"),
+					rect_draw_some_item(*ResMgr::textures.get((pic_num < 55) ? "objects" : "tinyobj"),
 										source_rect, mainPtr, dest_rect,sf::BlendAlpha);
 				}
 			}
@@ -1198,7 +1199,9 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 		rectangle road_rect = dest_rect;
 		int border = (size - 4) / 2;
 		road_rect.inset(border,border);
-		rect_draw_some_item(*ResMgr::graphics.get("edbuttons"), {120, 231, 124, 235}, mainPtr, road_rect);
+		auto const &edbuttons=*ResMgr::textures.get("edbuttons");
+		rectangle const road_from={120, 231, 124, 235};
+		rect_draw_some_item(edbuttons, road_from, mainPtr, road_rect);
 	}
 	if(mouse_spot.x >= 0 && mouse_spot.y >= 0) {
 		location where_draw(i,j);
@@ -1286,7 +1289,7 @@ static void place_selected_terrain(ter_num_t ter, rectangle draw_rect) {
 		source_rect.right = source_rect.left + 28;
 		source_rect.top = 36 * (picture_wanted % 5);
 		source_rect.bottom = source_rect.top + 36;
-		rect_draw_some_item(*ResMgr::graphics.get("teranim"),source_rect,mainPtr,draw_rect);
+		rect_draw_some_item(*ResMgr::textures.get("teranim"),source_rect,mainPtr,draw_rect);
 	}
 	else {
 		source_rect = get_template_rect(ter);
@@ -1302,7 +1305,7 @@ static void place_selected_terrain(ter_num_t ter, rectangle draw_rect) {
 	rectangle tiny_from = base_small_button_from;
 	tiny_from.offset(7 * (small_i % 30),7 * (small_i / 30));
 	if(small_i >= 0 && small_i < 255)
-		rect_draw_some_item(*ResMgr::graphics.get("edbuttons"),tiny_from,mainPtr,tiny_to);
+		rect_draw_some_item(*ResMgr::textures.get("edbuttons"),tiny_from,mainPtr,tiny_to);
 }
 
 void place_location() {
@@ -1519,7 +1522,7 @@ void place_location() {
 			rect_draw_some_item(*ResMgr::graphics.get("teranim"),source_rect,mainPtr,draw_rect,sf::BlendAlpha);
 		} else if(overall_mode == MODE_PLACE_FORCE_BARRIER) {
 			source_rect = calc_rect(8, 4);
-			rect_draw_some_item(*ResMgr::graphics.get("teranim"),source_rect,mainPtr,draw_rect,sf::BlendAlpha);
+			rect_draw_some_item(*ResMgr::textures.get("teranim"),source_rect,mainPtr,draw_rect,sf::BlendAlpha);
 		} else if(overall_mode == MODE_PLACE_QUICKFIRE) {
 			draw_field = true;
 			source_rect = calc_rect(7, 1);

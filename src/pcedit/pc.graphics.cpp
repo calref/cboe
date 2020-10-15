@@ -188,13 +188,13 @@ void init_main_buttons() {
 
 void Set_up_win () {
 	// Preload the main PC editor interface images
-	ResMgr::graphics.get("pcedtitle");
-	ResMgr::graphics.get("icon");
-	ResMgr::graphics.get("invenbtns");
-	ResMgr::graphics.get("staticons");
-	ResMgr::graphics.get("dlogpics");
+	ResMgr::textures.get("pcedtitle");
+	ResMgr::textures.get("icon");
+	ResMgr::textures.get("invenbtns");
+	ResMgr::textures.get("staticons");
+	ResMgr::textures.get("dlogpics");
 	ResMgr::textures.get("pcedbuttons");
-	ResMgr::graphics.get("pcs");
+	ResMgr::textures.get("pcs");
 }
 
 static void draw_main_screen();
@@ -239,12 +239,12 @@ void draw_main_screen() {
 	tileImage(mainPtr,windRect,bg[12]);
 	mainPtr.setView(mainView);
 	
-	sf::Texture& icon_gworld = *ResMgr::graphics.get("icon");
+	auto const & icon_gworld = *ResMgr::textures.get("icon");
 	dest_rec = source_rect = rectangle(icon_gworld);
 	dest_rec.offset(23, 16);
 	rect_draw_some_item(icon_gworld,source_rect,mainPtr,dest_rec);
 	
-	sf::Texture& title_gworld = *ResMgr::graphics.get("pcedtitle");
+	auto const &title_gworld = *ResMgr::textures.get("pcedtitle");
 	dest_rec = source_rect = rectangle(title_gworld);
 	dest_rec.offset(66, 0);
 	rect_draw_some_item(title_gworld,source_rect,mainPtr,dest_rec,sf::BlendAlpha);
