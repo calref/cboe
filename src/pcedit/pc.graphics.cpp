@@ -385,7 +385,6 @@ void display_party() {
 	}
 	else {
 		sf::Texture& buttons_gworld = *ResMgr::graphics.get("pcedbuttons");
-        sf::Vector2u const buttons_pictSize(114,57);
 		from_rect = pc_info_rect;
 		from_rect.top = from_rect.bottom - 11;
 		if(!party_in_scen)
@@ -398,7 +397,7 @@ void display_party() {
 			else fill_rect(mainPtr, pc_area_buttons[i][0], sf::Color::Black);
 			
 			from_rect = (current_pressed_button == i) ? ed_buttons_from[1] : ed_buttons_from[0];
-			from_rect.rescale(buttons_pictSize, buttons_gworld.getSize());
+			
 			rect_draw_some_item(buttons_gworld,from_rect,mainPtr,pc_area_buttons[i][0], sf::BlendAdd);
 			
 			if(univ.party[i].main_status != eMainStatus::ABSENT) { // PC exists?
@@ -756,7 +755,6 @@ void display_party() {
 		style.lineHeight = 16;
 		for(short i = 0; i < 5; i++) {
 			from_rect = (current_pressed_button == i + 10) ? ed_buttons_from[1] : ed_buttons_from[0];
-			from_rect.rescale(buttons_pictSize, buttons_gworld.getSize());
 			rect_draw_some_item(buttons_gworld,from_rect,mainPtr,edit_rect[i]);
 			style.colour = sf::Color::White;
 			rectangle dest_rect = edit_rect[i];

@@ -93,7 +93,6 @@ struct rectangle {
 	template<typename T>
 	void offset(sf::Vector2<T> diff) {offset(diff.x,diff.y);}
 	void inset(int dh, int dv);
-	rectangle rescale(sf::Vector2u const &fromSize, sf::Vector2u const &toSize) const;
 	rectangle& operator&=(rectangle other);
 	template<typename T>
 	operator typename sf::template Rect<T>() {

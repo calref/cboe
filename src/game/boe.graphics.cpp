@@ -84,8 +84,7 @@ long anim_ticks = 0;
 extern enum_map(eGuiArea, rectangle) win_to_rects;
 
 // 0 - title  1 - button  2 - credits  3 - base button
-sf::Vector2u const startup_pictSize={602, 322};
-rectangle const startup_from[4] = {{0,0,274,602},{274,0,322,301},{0,301,67,579},{274,301,314,341}};
+rectangle startup_from[4] = {{0,0,274,602},{274,0,322,301},{0,301,67,579},{274,301,314,341}};
 extern enum_map(eStartButton, rectangle) startup_button;
 
 rectangle	top_left_rec = {0,0,36,28};
@@ -97,19 +96,13 @@ short debug_nums[6] = {0,0,0,0,0,0};
 char light_area[13][13];
 char unexplored_area[13][13];
 
-// Declare the graphics and their dimension
+// Declare the graphics
 sf::RenderTexture pc_stats_gworld;
 sf::RenderTexture item_stats_gworld;
 sf::RenderTexture text_area_gworld;
 sf::RenderTexture terrain_screen_gworld;
 sf::RenderTexture text_bar_gworld;
 sf::RenderTexture map_gworld;
-
-rectangle item_stats_rect={0,0,144,271};
-rectangle pc_stats_rect={0,0,116,271};
-rectangle terrain_screen_rect={0,0,350,278};
-rectangle text_area_rect={0,0,138,256};
-rectangle text_bar_rect={0,0,22,279};
 
 bool has_run_anim = false,currently_loading_graphics = false;
 
@@ -256,11 +249,11 @@ void init_startup() {
 }
 
 void draw_startup(short but_type) {
-	sf::Texture const &startup_gworld = *ResMgr::graphics.get("startup", true);
-	rect_draw_some_item(startup_gworld,startup_from[0].rescale(startup_pictSize,startup_gworld.getSize()),mainPtr,startup_top);
+	sf::Texture& startup_gworld = *ResMgr::graphics.get("startup", true);
+	rect_draw_some_item(startup_gworld,startup_from[0],mainPtr,startup_top);
 	
 	for(auto btn : startup_button.keys()) {
-		rect_draw_some_item(startup_gworld,startup_from[1].rescale(startup_pictSize,startup_gworld.getSize()),mainPtr,startup_button[btn]);
+		rect_draw_some_item(startup_gworld,startup_from[1],mainPtr,startup_button[btn]);
 		draw_start_button(btn,but_type);
 	}
 	draw_startup_anim(false);
@@ -276,11 +269,9 @@ void draw_startup_anim(bool advance) {
 	anim_from = anim_to;
 	anim_from.offset(-1,-4 + startup_anim_pos);
 	if(advance) startup_anim_pos = (startup_anim_pos + 1) % 542;
-	sf::Texture const &startbut=*ResMgr::graphics.get("startbut",true);
-	rect_draw_some_item(startbut,rectangle(startbut),mainPtr,startup_button[STARTBTN_SCROLL]);
+	rect_draw_some_item(*ResMgr::graphics.get("startbut",true),anim_size,mainPtr,startup_button[STARTBTN_SCROLL]);
 	anim_to.offset(startup_button[STARTBTN_SCROLL].left, startup_button[STARTBTN_SCROLL].top);
-	sf::Texture const &startanim=*ResMgr::graphics.get("startanim",true);
-	rect_draw_some_item(startanim,anim_from.rescale({280,590},startanim.getSize()),mainPtr,anim_to,sf::BlendAlpha);
+	rect_draw_some_item(*ResMgr::graphics.get("startanim",true),anim_from,mainPtr,anim_to,sf::BlendAlpha);
 }
 
 void draw_startup_stats() {
@@ -429,14 +420,14 @@ void draw_start_button(eStartButton which_position,short which_button) {
 		"Start Scenario","Custom Scenario","Quit"};
 	// The 0..65535 version of the blue component was 14472; the commented version was 43144431
 	sf::Color base_color = {0,0,57};
-	sf::Texture const &startup_gworld = *ResMgr::graphics.get("startup",true);
+	
 	from_rect = startup_from[3];
 	from_rect.offset((which_button > 0) ? 40 : 0,0);
 	to_rect = startup_button[which_position];
 	to_rect.left += 4; to_rect.top += 4;
 	to_rect.right = to_rect.left + 40;
 	to_rect.bottom = to_rect.top + 40;
-	rect_draw_some_item(startup_gworld,from_rect.rescale(startup_pictSize,startup_gworld.getSize()),mainPtr,to_rect);
+	rect_draw_some_item(*ResMgr::graphics.get("startup",true),from_rect,mainPtr,to_rect);
 	
 	TextStyle style;
 	style.font = FONT_DUNGEON;
@@ -486,34 +477,21 @@ void end_startup() {
 	item_sbar->show();
 }
 
-/* FIXME: actually the resolution of imgName sets the resolution of the final texture zone.
-   It may be better to add another Vector2u to define this resolution independly of imgName */
-static void loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName, rectangle final) {
+static void loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName) {
 	sf::Texture& temp_gworld = *ResMgr::graphics.get(imgName);
 	rectangle texrect(temp_gworld);
 	tex.create(texrect.width(), texrect.height());
 	rect_draw_some_item(temp_gworld, texrect, tex, texrect, sf::BlendNone);
-
-	// now update the viewport so that a picture draw in 0,0,dim.y,dim.x fills the texture
-	sf::View view;
-	view.reset(sf::FloatRect(0, 0, texrect.width(), texrect.height()));
-	sf::FloatRect viewport;
-	viewport.left = 0;
-	viewport.top  = 0;
-	viewport.width  = float(texrect.width())/final.width();
-	viewport.height = float(texrect.height())/final.height();
-	view.setViewport(viewport);
-	tex.setView(view);
 }
 
 void load_main_screen() {
 	// Preload the main game interface images
 	ResMgr::graphics.get("invenbtns");
-	loadImageToRenderTexture(terrain_screen_gworld, "terscreen", terrain_screen_rect);
-	loadImageToRenderTexture(pc_stats_gworld, "statarea", pc_stats_rect);
-	loadImageToRenderTexture(item_stats_gworld, "inventory", item_stats_rect);
-	loadImageToRenderTexture(text_area_gworld, "transcript", text_area_rect);
-	loadImageToRenderTexture(text_bar_gworld, "textbar", text_bar_rect);
+	loadImageToRenderTexture(terrain_screen_gworld, "terscreen");
+	loadImageToRenderTexture(pc_stats_gworld, "statarea");
+	loadImageToRenderTexture(item_stats_gworld, "inventory");
+	loadImageToRenderTexture(text_area_gworld, "transcript");
+	loadImageToRenderTexture(text_bar_gworld, "textbar");
 	ResMgr::graphics.get("buttons");
 }
 
@@ -645,7 +623,7 @@ void draw_text_bar() {
 void put_text_bar(std::string str) {
 	text_bar_gworld.setActive(false);
 	auto& bar_gw = *ResMgr::graphics.get("textbar");
-	rect_draw_some_item(bar_gw, rectangle(bar_gw), text_bar_gworld, text_bar_rect);
+	rect_draw_some_item(bar_gw, rectangle(bar_gw), text_bar_gworld, rectangle(bar_gw));
 	TextStyle style;
 	style.colour = sf::Color::White;
 	style.font = FONT_BOLD;

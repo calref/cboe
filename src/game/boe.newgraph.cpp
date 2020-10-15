@@ -58,7 +58,6 @@ extern short which_combat_type;
 extern eGameMode overall_mode;
 extern bool boom_anim_active;
 extern sf::RenderTexture terrain_screen_gworld;
-extern rectangle terrain_screen_rect;
 extern rectangle sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
@@ -195,14 +194,14 @@ void apply_light_mask(bool onWindow) {
 	if(same_mask) {
 		return;
 	}
-#if 0
+	
 	std::cout << "Current light mask:\n";
 	for(short i = 0; i < 13; i++) {
 		for(short j = 0; j < 13; j++)
 			std::cout << int(light_area[j][i]) << ' ';
 		std::cout << '\n';
 	}
-#endif
+	
 	dark_mask_region.clear();
 	dark_mask_region.addRect(big_to);
 	for(short i = 0; i < 13; i++)
@@ -349,7 +348,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
-	to_rect = terrain_screen_rect;
+	to_rect = rectangle(terrain_screen_gworld);
 	to_rect.bottom -= 10; // Adjust for pointing buttons
 	rectangle oldBounds = to_rect;
 	to_rect.offset(current_terrain_ul);
@@ -446,7 +445,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	for(short i = 0; i < 30; i++)
 		store_missiles[i].missile_type = -1;
 	
-	to_rect = terrain_screen_rect;
+	to_rect = rectangle(terrain_screen_gworld);
 	to_rect.bottom -= 10; // Adjust for pointing buttons
 	rectangle oldRect = to_rect;
 	to_rect.offset(current_terrain_ul);
@@ -510,7 +509,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
 	if(special_draw != 2) {
-		to_rect = terrain_screen_rect;
+		to_rect = rectangle(terrain_screen_gworld);
 		to_rect.bottom -= 10; // Adjust for pointing buttons
 		rectangle oldRect = to_rect;
 		to_rect.offset(current_terrain_ul);
