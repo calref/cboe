@@ -80,7 +80,6 @@ extern rectangle left_buttons[NLS][2]; // 0 - whole, 1 - blue button
 rectangle left_button_base = {5,5,21,280};
 rectangle right_button_base = {RIGHT_AREA_UL_Y,RIGHT_AREA_UL_X,17,RIGHT_AREA_UL_Y};
 rectangle terrain_rect = {0,0,340,272};
-static sf::Vector2u const edbuttons_size = {251,164};
 std::string current_string[2];
 extern rectangle terrain_rects[256];
 
@@ -360,7 +359,7 @@ void Set_up_win() {
 void run_startup_g() {
 	sf::Event event;
 	sf::Texture& pict_to_draw = *ResMgr::graphics.get("edsplash", true);
-	rectangle dest_rect = {0,0,480,640};
+	rectangle dest_rect = rectangle(pict_to_draw);
 	
 	play_sound(-95);
 	sf::Time delay = time_in_ticks(120);
@@ -456,8 +455,7 @@ void draw_lb_slot (short which,short mode)  {
 		from_rect = blue_button_from;
 		if(mode > 0)
 			from_rect.offset(0,from_rect.height());
-		sf::Texture const &edbuttons=*ResMgr::graphics.get("edbuttons");
-		rect_draw_some_item(edbuttons,from_rect.rescale(edbuttons_size,edbuttons.getSize()),mainPtr,left_buttons[which][1]);
+		rect_draw_some_item(*ResMgr::graphics.get("edbuttons"),from_rect,mainPtr,left_buttons[which][1]);
 	}
 	if(left_button_status[which].mode == LB_INDENT)
 		text_rect.left += 16;
@@ -522,14 +520,14 @@ void set_up_terrain_buttons(bool reset) {
 	int end = min(first + 256, max);
  	
 	// first make terrain buttons
-	sf::Texture const &editor_mixed = *ResMgr::graphics.get("edbuttons");
+	sf::Texture& editor_mixed = *ResMgr::graphics.get("edbuttons");
 	for(short i = first; i < end; i++) {
 		rectangle draw_rect = terrain_rects[i - first];
 		draw_rect.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y);
 		switch(draw_mode){
 			case DRAW_TERRAIN:
 				if(i == scenario.ter_types.size()) {
-					rect_draw_some_item(editor_mixed, ter_plus_from.rescale(edbuttons_size,editor_mixed.getSize()), mainPtr, draw_rect);
+					rect_draw_some_item(editor_mixed, ter_plus_from, mainPtr, draw_rect);
 					break;
 				}
 				ter_from = ter_from_base;
@@ -562,7 +560,7 @@ void set_up_terrain_buttons(bool reset) {
 				tiny_to.top = tiny_to.bottom - 7;
 				tiny_to.left = tiny_to.right - 7;
 				if(small_i >= 0 && small_i < 255)
-					rect_draw_some_item(editor_mixed, tiny_from.rescale(edbuttons_size,editor_mixed.getSize()), mainPtr, tiny_to);
+					rect_draw_some_item(editor_mixed, tiny_from, mainPtr, tiny_to);
 				break;
 			case DRAW_MONST:
 				pic = scenario.scen_monsters[i].picture_num;
@@ -692,7 +690,7 @@ void set_up_terrain_buttons(bool reset) {
 					palette_from.offset(-RIGHT_AREA_UL_X, -RIGHT_AREA_UL_Y);
 					int n = cur_palette_buttons[j][i];
 					palette_from.offset((n%10) * 25, (n/10) * 17);
-					rect_draw_some_item(editor_mixed, palette_from.rescale(edbuttons_size,editor_mixed.getSize()), mainPtr, palette_to, sf::BlendAlpha);
+					rect_draw_some_item(editor_mixed, palette_from, mainPtr, palette_to, sf::BlendAlpha);
 				}
 				palette_to.offset(0,17);
 			}
@@ -860,7 +858,7 @@ void draw_terrain(){
 						} else {
 							tiny_from.offset((icon % 30) * 7, (icon / 30) * 7);
 						}
-						rect_draw_some_item(editor_mixed, tiny_from.rescale(edbuttons_size,editor_mixed.getSize()), mainPtr, tiny_to);
+						rect_draw_some_item(editor_mixed, tiny_from, mainPtr, tiny_to);
 						if(icon == -1) tiny_to.left += 14;
 						tiny_to.offset(0, -7);
 						// Now check to see if it's overflowing our space
@@ -1200,9 +1198,7 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 		rectangle road_rect = dest_rect;
 		int border = (size - 4) / 2;
 		road_rect.inset(border,border);
-		sf::Texture const &edbuttons=*ResMgr::graphics.get("edbuttons");
-		rectangle const road_from={120, 231, 124, 235};
-		rect_draw_some_item(edbuttons, road_from.rescale(edbuttons_size,edbuttons.getSize()), mainPtr, road_rect);
+		rect_draw_some_item(*ResMgr::graphics.get("edbuttons"), {120, 231, 124, 235}, mainPtr, road_rect);
 	}
 	if(mouse_spot.x >= 0 && mouse_spot.y >= 0) {
 		location where_draw(i,j);
@@ -1305,10 +1301,8 @@ static void place_selected_terrain(ter_num_t ter, rectangle draw_rect) {
 	tiny_to.left = tiny_to.right - 7;
 	rectangle tiny_from = base_small_button_from;
 	tiny_from.offset(7 * (small_i % 30),7 * (small_i / 30));
-	if(small_i >= 0 && small_i < 255) {
-		sf::Texture const &edbuttons=*ResMgr::graphics.get("edbuttons");
-		rect_draw_some_item(edbuttons,tiny_from.rescale(edbuttons_size,edbuttons.getSize()),mainPtr,tiny_to);
-	}
+	if(small_i >= 0 && small_i < 255)
+		rect_draw_some_item(*ResMgr::graphics.get("edbuttons"),tiny_from,mainPtr,tiny_to);
 }
 
 void place_location() {
