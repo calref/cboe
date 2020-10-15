@@ -129,13 +129,14 @@ ePicType cPict::getPicType(){
 	return picType;
 }
 
+// AsanU: unset
 cPict::cPict(cDialog& parent) :
-	cControl(CTRL_PICT,parent) {
+	cControl(CTRL_PICT,parent), drawScaled(false) {
 	setFormat(TXT_FRAME, FRM_SOLID);
 }
 
 cPict::cPict(sf::RenderWindow& parent) :
-	cControl(CTRL_PICT, parent) {
+	cControl(CTRL_PICT, parent), drawScaled(false) {
 	setFormat(TXT_FRAME, FRM_SOLID);
 }
 
@@ -577,15 +578,14 @@ void cPict::recalcRect() {
 		case PIC_CUSTOM_FULL:
 			if(drawScaled) break;
 			auto sheet = getSheet(SHEET_FULL, picNum);
-			sf::Vector2u sz = sheet->getSize();
-			bounds.width() = sz.x;
-			bounds.height() = sz.y;
+			bounds.width() = sheet->dimension.x;
+			bounds.height() = sheet->dimension.y;
 			break;
 	}
 	setBounds(bounds);
 }
 
-std::shared_ptr<const sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
+std::shared_ptr<const Texture> cPict::getSheet(eSheetType type, size_t n) {
 	std::ostringstream sout;
 	bool purgeable = false;
 	switch(type) {
@@ -672,7 +672,7 @@ std::shared_ptr<const sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
 					sout << "sheet" << n;
 			}
 	}
-	return &ResMgr::graphics.get(sout.str(), purgeable);
+	return &ResMgr::textures.get(sout.str(), purgeable);
 }
 
 void cPict::draw(){
@@ -862,7 +862,7 @@ void cPict::drawPresetItem(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	std::shared_ptr<const sf::Texture> from_gw;
+	std::shared_ptr<const Texture> from_gw;
 	rectangle from_rect = {0,0,18,18};
 	if(num < 55) {
 		from_gw = getSheet(SHEET_ITEM);
@@ -916,9 +916,9 @@ void cPict::drawPresetBoom(short num, rectangle to_rect){
 }
 
 void cPict::drawFullSheet(short num, rectangle to_rect){
-	rectangle from_rect;
 	auto from_gw = getSheet(SHEET_FULL, num);
-	from_rect = rectangle(*from_gw);
+	if (!from_gw) return;
+	rectangle from_rect = rectangle(*from_gw);
 	if(!drawScaled) {
 		to_rect.right = to_rect.left + (from_rect.right - from_rect.left);
 		to_rect.bottom = to_rect.top + (from_rect.bottom - from_rect.top);
