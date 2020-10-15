@@ -3355,7 +3355,7 @@ void edit_custom_sheets() {
 		spec_scen_g.init_sheet(0);
 		spec_scen_g.sheets[0]->copyToImage().saveToFile((pic_dir/"sheet0.png").string().c_str());
 		all_pics.insert(all_pics.begin(), 0);
-		ResMgr::graphics.pushPath(pic_dir);
+		ResMgr::textures.pushPath(pic_dir);
 	}
 	
 	set_cursor(watch_curs);

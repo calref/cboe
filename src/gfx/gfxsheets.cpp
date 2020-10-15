@@ -131,7 +131,7 @@ void cCustomGraphics::convert_sheets() {
 		fs::path sheetPath = pic_dir/("sheet" + std::to_string(i) + ".png");
 		sheets[i]->copyToImage().saveToFile(sheetPath.string().c_str());
 	}
-	ResMgr::graphics.pushPath(pic_dir);
+	ResMgr::textures.pushPath(pic_dir);
 }
 
 void cCustomGraphics::replace_sheet(size_t num, sf::Image& newSheet) {

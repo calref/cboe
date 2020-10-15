@@ -845,6 +845,7 @@
 		E2513E92245343E40066C6B1 /* SFML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SFML.framework; path = /usr/local/SFML/Frameworks/SFML.framework; sourceTree = "<absolute>"; };
 		E2AE6DAE24CC876500792E44 /* libboost_filesystem-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_filesystem-mt.dylib"; path = "/usr/local/Cellar/boost/1.72.0_3/lib/libboost_filesystem-mt.dylib"; sourceTree = "<absolute>"; };
 		E2AE6DB324CC879300792E44 /* libboost_system-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_system-mt.dylib"; path = "/usr/local/Cellar/boost/1.72.0_3/lib/libboost_system-mt.dylib"; sourceTree = "<absolute>"; };
+		E2DF0BFA2538C031000C7A1A /* texture.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = texture.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1227,6 +1228,7 @@
 				91B3F1090F9779C300BF5B67 /* render_image.hpp */,
 				91CE24871EA12620005BDCE4 /* render_shapes.hpp */,
 				91CE24851EA12534005BDCE4 /* render_text.hpp */,
+				E2DF0BFA2538C031000C7A1A /* texture.hpp */,
 				91CE24861EA12595005BDCE4 /* tiling.hpp */,
 				91A0B15A1900F73E00EF438F /* mask.frag */,
 				91BFA3D61901B024001686E4 /* mask.vert */,
