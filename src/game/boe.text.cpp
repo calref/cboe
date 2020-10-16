@@ -122,7 +122,7 @@ void put_pc_screen() {
 	win_draw_string(pc_stats_gworld,day_rect[0],std::to_string(univ.party.calc_day()),eTextMode::WRAP,style);
 	style.colour = Colours::BLACK;
 	
-	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
+	auto const & invenbtn_gworld = *ResMgr::textures.get("invenbtns");
 	for(short i = 0; i < 6; i++) {
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			for(auto& flag : pc_area_button_active[i])
@@ -425,7 +425,7 @@ void place_buy_button(short position,short pc_num,short item_num) {
 			return;
 	}
 	if(item_area_button_active[position][ITEMBTN_SPEC]) {
-		sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
+		auto const & invenbtn_gworld = *ResMgr::textures.get("invenbtns");
 		store_selling_values[position] = val_to_place;
 		dest_rect = item_buttons[position][ITEMBTN_SPEC];
 		dest_rect.right = dest_rect.left + 30;
@@ -453,7 +453,7 @@ void place_item_graphic(short which_slot,short graphic) {
 		graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(graphic - 1000);
 		rect_draw_some_item(*src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
 	}
-	else rect_draw_some_item(*ResMgr::graphics.get("tinyobj"), from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+	else rect_draw_some_item(*ResMgr::textures.get("tinyobj"), from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 }
 
 // name, use, give, drop, info, sell/id
@@ -462,7 +462,7 @@ void place_item_graphic(short which_slot,short graphic) {
 void place_item_button(short button_position,short which_slot,eItemButton button_type) {
 	rectangle from_rect = {0,0,18,18},to_rect;
 	
-	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
+	auto const & invenbtn_gworld = *ResMgr::textures.get("invenbtns");
 	switch(button_position) {
 	default: // this means put a regular item button
 		item_area_button_active[which_slot][button_type] = true;
@@ -502,7 +502,7 @@ void place_item_bottom_buttons() {
 	style.font = FONT_BOLD;
 	style.colour = Colours::YELLOW;
 	
-	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
+	auto const & invenbtn_gworld = *ResMgr::textures.get("invenbtns");
 	for(short i = 0; i < 6; i++) {
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 		 	item_bottom_button_active[i] = true;
@@ -640,7 +640,7 @@ void draw_pc_effects(short pc) {
 		return;
 	
 	univ.party[pc].status[eStatus::HASTE_SLOW]; // This just makes sure it exists in the map, without changing its value if it does
-	sf::Texture& status_gworld = *ResMgr::graphics.get("staticons");
+	auto const & status_gworld = *ResMgr::textures.get("staticons");
 	for(auto next : univ.party[pc].status) {
 		short placedIcon = -1;
 		if(next.first == eStatus::POISON && next.second > 4) placedIcon = 1;

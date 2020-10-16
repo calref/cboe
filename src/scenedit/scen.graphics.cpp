@@ -381,10 +381,10 @@ void load_graphics(){
 	// Preload the main editor interface graphics
 	ResMgr::textures.get("edbuttons");
 	ResMgr::textures.get("teranim");
-	ResMgr::graphics.get("fields");
+	ResMgr::textures.get("fields");
 	ResMgr::textures.get("objects");
 	ResMgr::textures.get("tinyobj");
-	ResMgr::graphics.get("termap");
+	ResMgr::textures.get("termap");
 }
 
 void redraw_screen() {
@@ -542,7 +542,7 @@ void set_up_terrain_buttons(bool reset) {
 					pic = pic % 50;
 					ter_from.offset(28 * (pic % 10), 36 * (pic / 10));
 					int which_sheet = scenario.ter_types[i].picture / 50;
-					rect_draw_some_item(*ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet)),
+					rect_draw_some_item(*ResMgr::textures.get("ter" + std::to_string(1 + which_sheet)),
 						ter_from, mainPtr, draw_rect);
 				}
 				else {
@@ -754,8 +754,8 @@ void draw_terrain(){
 				destrec.bottom = destrec.top + BITMAP_HEIGHT;
 				destrec.offset(TER_RECT_UL_X,TER_RECT_UL_Y);
 				
-				sf::Texture& fields_gworld = *ResMgr::graphics.get("fields");
-				sf::Texture& vehicle_gworld = *ResMgr::graphics.get("vehicle");
+				auto const & fields_gworld = *ResMgr::textures.get("fields");
+				auto const & vehicle_gworld = *ResMgr::textures.get("vehicle");
 				
 				if(is_road(cen_x + q - 4,cen_y + r - 4))
 					rect_draw_some_item(fields_gworld, calc_rect(0, 2), mainPtr, destrec, sf::BlendAlpha);
@@ -1184,7 +1184,7 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 			from_rect.offset((picture_wanted / 3) * 12, (picture_wanted % 3) * 12);
 			rect_draw_some_item(*from_gw, from_rect, mainPtr, dest_rect);
 		} else {
-			sf::Texture& small_ter_gworld = *ResMgr::graphics.get("termap");
+			auto const & small_ter_gworld = *ResMgr::textures.get("termap");
 			if(picture_wanted >= 960) {
 				picture_wanted -= 960;
 				from_rect.offset(12 * 20, (picture_wanted - 960) * 12);
@@ -1294,7 +1294,7 @@ static void place_selected_terrain(ter_num_t ter, rectangle draw_rect) {
 	else {
 		source_rect = get_template_rect(ter);
 		int which_sheet = picture_wanted / 50;
-		sf::Texture& terrain_gworld = *ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet));
+		auto const & terrain_gworld = *ResMgr::textures.get("ter" + std::to_string(1 + which_sheet));
 		rect_draw_some_item(terrain_gworld,source_rect,
 							mainPtr,draw_rect);
 	}
@@ -1495,12 +1495,12 @@ void place_location() {
 				rect_draw_some_item(*source_gworld,source_rect,mainPtr,draw_rect,sf::BlendAlpha);
 			} else if(picture_wanted < 55) {
 				source_rect = calc_rect(picture_wanted % 5,picture_wanted / 5);
-				rect_draw_some_item(*ResMgr::graphics.get("objects"),source_rect,mainPtr,draw_rect,sf::BlendAlpha);
+				rect_draw_some_item(*ResMgr::textures.get("objects"),source_rect,mainPtr,draw_rect,sf::BlendAlpha);
 			} else {
 				draw_rect.inset(5, 9);
 				rectangle tiny_from = {0,0,18,18};
 				tiny_from.offset((picture_wanted % 10) * 18,(picture_wanted / 10) * 18);
-				rect_draw_some_item(*ResMgr::graphics.get("tinyobj"),tiny_from,mainPtr,draw_rect,sf::BlendAlpha);
+				rect_draw_some_item(*ResMgr::textures.get("tinyobj"),tiny_from,mainPtr,draw_rect,sf::BlendAlpha);
 			}
 		} else if(overall_mode == MODE_TOGGLE_SPECIAL_DOT) {
 			draw_field = true;
@@ -1519,7 +1519,7 @@ void place_location() {
 			source_rect = calc_rect(7, 0);
 		} else if(overall_mode == MODE_PLACE_FIRE_BARRIER) {
 			source_rect = calc_rect(8, 4);
-			rect_draw_some_item(*ResMgr::graphics.get("teranim"),source_rect,mainPtr,draw_rect,sf::BlendAlpha);
+			rect_draw_some_item(*ResMgr::textures.get("teranim"),source_rect,mainPtr,draw_rect,sf::BlendAlpha);
 		} else if(overall_mode == MODE_PLACE_FORCE_BARRIER) {
 			source_rect = calc_rect(8, 4);
 			rect_draw_some_item(*ResMgr::textures.get("teranim"),source_rect,mainPtr,draw_rect,sf::BlendAlpha);
@@ -1534,7 +1534,7 @@ void place_location() {
 			source_rect = calc_rect(mode_count, 3);
 		}
 		if(draw_field) {
-			const sf::Texture& fields_gworld = *ResMgr::graphics.get("fields");
+			auto const & fields_gworld = *ResMgr::textures.get("fields");
 			rect_draw_some_item(fields_gworld,source_rect,mainPtr,draw_rect,sf::BlendAlpha);
 		}
 		draw_rect.offset(0,40);
