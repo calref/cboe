@@ -3394,7 +3394,7 @@ void edit_custom_sheets() {
 			std::string resName = "sheet" + std::to_string(all_pics[cur]);
 			fs::path toPath = pic_dir/(resName + ".png");
 			img->saveToFile(toPath.string().c_str());
-			ResMgr::graphics.free(resName);
+			ResMgr::textures.free(resName);
 			return true;
 		}
 		sheets[cur] = *img;
@@ -3413,7 +3413,7 @@ void edit_custom_sheets() {
 			std::string resName = "sheet" + std::to_string(all_pics[cur]);
 			fs::path toPath = pic_dir/(resName + ".png");
 			img.saveToFile(toPath.string().c_str());
-			ResMgr::graphics.free(resName);
+			ResMgr::textures.free(resName);
 			return true;
 		}
 		sheets[cur] = img;
@@ -3479,7 +3479,7 @@ void edit_custom_sheets() {
 					if(!fs::exists(from)) continue; // Just in case
 					fs::remove(to);
 					fs::rename(from, to);
-					ResMgr::graphics.free("sheet" + std::to_string(which_pic));
+					ResMgr::textures.free("sheet" + std::to_string(which_pic));
 				}
 				auto end = std::find(all_pics.begin() + cur, all_pics.end(), which_pic - 1);
 				if(end != all_pics.end())
@@ -3492,7 +3492,7 @@ void edit_custom_sheets() {
 				all_pics.erase(all_pics.begin() + cur);
 				spec_scen_g.numSheets = which_pic;
 				spec_scen_g.sheets.resize(which_pic);
-				ResMgr::graphics.free("sheet" + std::to_string(which_pic));
+				ResMgr::textures.free("sheet" + std::to_string(which_pic));
 			}
 		}
 		fs::path fpath = pic_dir/("sheet" + std::to_string(which_pic) + ".png");

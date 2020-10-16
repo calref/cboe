@@ -171,7 +171,7 @@ void adjust_window_mode() {
 	mainView.setViewport(mainPort);
 	
 #ifndef __APPLE__ // This overrides Dock icon on OSX, which isn't what we want at all
-	const ImageRsrc& icon = ResMgr::graphics.get("icon", true);
+	auto const & icon = *ResMgr::textures.get("icon", true);
 	mainPtr.setIcon(icon->getSize().x, icon->getSize().y, icon->copyToImage().getPixelsPtr());
 #endif
 
@@ -332,7 +332,7 @@ void draw_startup_stats() {
 					rect_draw_some_item(monst_gworld,from_rect,mainPtr,to_rect,sf::BlendAlpha);
 				} else {
 					from_rect = calc_rect(2 * (pic / 8), pic % 8);
-					sf::Texture& pc_gworld = *ResMgr::graphics.get("pcs");
+					auto const & pc_gworld = *ResMgr::textures.get("pcs");
 					rect_draw_some_item(pc_gworld,from_rect,mainPtr,to_rect,sf::BlendAlpha);
 				}
 				
@@ -1242,7 +1242,7 @@ void place_road(short q,short r,location where,bool here) {
 		{16,12,20,16},	// central spot
 	};
 	
-	sf::Texture& roads_gworld = *ResMgr::graphics.get("fields");
+	auto const & roads_gworld = *ResMgr::textures.get("fields");
 	
 	if(here){
 		to_rect = road_dest_rects[6];
@@ -1419,7 +1419,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	dest_rect.offset(win_to_rects[WINRECT_TERVIEW].topLeft());
 	
 	source_rect.offset(-store_rect.left + 28 * type,-store_rect.top);
-	rect_draw_some_item(*ResMgr::graphics.get("booms"),source_rect,mainPtr,dest_rect,sf::BlendAlpha);
+	rect_draw_some_item(*ResMgr::textures.get("booms"),source_rect,mainPtr,dest_rect,sf::BlendAlpha);
 	
 	if(damage > 0 && dest_rect.right - dest_rect.left >= 28 && dest_rect.bottom - dest_rect.top >= 36) {
 		TextStyle style;
@@ -1524,7 +1524,7 @@ void draw_targets(location center) {
 		return;
 	const rectangle src_rect{0,46,12,58};
 	
-	sf::Texture& src_gworld = *ResMgr::graphics.get("invenbtns");
+	auto const & src_gworld = *ResMgr::textures.get("invenbtns");
 	for(short i = 0; i < 8; i++)
 		if((spell_targets[i].x != -1) && (point_onscreen(center,spell_targets[i]))) {
 			rectangle dest_rect = coord_to_rect(spell_targets[i].x - center.x + 4,spell_targets[i].y - center.y + 4);

@@ -1405,7 +1405,7 @@ void draw_map(bool need_refresh) {
 		else out_mode = false;
 		
 		// TODO: It could be possible to draw the entire map here and then only refresh if a spot actually changes terrain type
-		sf::Texture& small_ter_gworld = *ResMgr::graphics.get("termap");
+		auto const & small_ter_gworld = *ResMgr::textures.get("termap");
 		for(where.x = redraw_rect.left; where.x < redraw_rect.right; where.x++)
 			for(where.y = redraw_rect.top; where.y < redraw_rect.bottom; where.y++) {
 				draw_rect = orig_draw_rect;
@@ -1448,7 +1448,7 @@ void draw_map(bool need_refresh) {
 					} else if(drawLargeIcon) {
 						if(pic >= 960) {
 							custom_from = calc_rect(4 * ((pic - 960) / 5),(pic - 960) % 5);
-							rect_draw_some_item(*ResMgr::graphics.get("teranim"), custom_from, map_gworld, draw_rect);
+							rect_draw_some_item(*ResMgr::textures.get("teranim"), custom_from, map_gworld, draw_rect);
 						} else {
 							int which_sheet = pic / 50;
 							auto src_gw = &ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet));
