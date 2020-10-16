@@ -1431,18 +1431,18 @@ void draw_map(bool need_refresh) {
 					if(pic >= 1000) {
 						if(spec_scen_g) {
 							//print_nums(0,99,pic);
-							std::shared_ptr<const sf::Texture> src_gw;
+							Texture src_gw;
 							if(drawLargeIcon) {
 								pic = pic % 1000;
-								graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic);
-								rect_draw_some_item(*src_gw,custom_from,map_gworld,draw_rect);
+								std::tie(src_gw,custom_from) = spec_scen_g.find_graphic(pic);
+								rect_draw_some_item(src_gw,custom_from,map_gworld,draw_rect);
 							} else {
-								graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic % 1000);
+								std::tie(src_gw,custom_from) = spec_scen_g.find_graphic(pic % 1000);
 								custom_from.right = custom_from.left + 12;
 								custom_from.bottom = custom_from.top + 12;
 								pic /= 1000; pic--;
 								custom_from.offset((pic / 3) * 12, (pic % 3) * 12);
-								rect_draw_some_item(*src_gw, custom_from, map_gworld, draw_rect);
+								rect_draw_some_item(src_gw,custom_from, map_gworld, draw_rect);
 							}
 						}
 					} else if(drawLargeIcon) {
@@ -1451,7 +1451,7 @@ void draw_map(bool need_refresh) {
 							rect_draw_some_item(*ResMgr::textures.get("teranim"), custom_from, map_gworld, draw_rect);
 						} else {
 							int which_sheet = pic / 50;
-							auto src_gw = &ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet));
+							auto src_gw = &ResMgr::textures.get("ter" + std::to_string(1 + which_sheet));
 							pic %= 50;
 							custom_from = calc_rect(pic % 10, pic / 10);
 							rect_draw_some_item(*src_gw, custom_from, map_gworld, draw_rect);
@@ -1467,7 +1467,7 @@ void draw_map(bool need_refresh) {
 					
 					if(is_out() ? univ.out->roads[where.x][where.y] : univ.town.is_road(where.x,where.y)) {
 						draw_rect.inset(1,1);
-						rect_draw_some_item(*ResMgr::graphics.get("trim"),{8,112,12,116},map_gworld,draw_rect);
+						rect_draw_some_item(*ResMgr::textures.get("trim"),{8,112,12,116},map_gworld,draw_rect);
 					}
 				}
 			}

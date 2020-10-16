@@ -966,20 +966,20 @@ void cPict::drawStatusIcon(short num, rectangle to_rect){
 void cPict::drawCustomTer(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
+	Texture from_gw;
 	rectangle from_rect;
-	std::shared_ptr<const sf::Texture> from_gw;
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 }
 
 void cPict::drawCustomTerAnim(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	num += animFrame % 4;
+	Texture from_gw;
 	rectangle from_rect;
-	std::shared_ptr<const sf::Texture> from_gw;
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 }
 
 void cPict::drawCustomMonstSm(short num, rectangle to_rect){
@@ -989,10 +989,10 @@ void cPict::drawCustomMonstSm(short num, rectangle to_rect){
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
+	Texture from_gw;
 	rectangle from_rect;
-	std::shared_ptr<const sf::Texture> from_gw;
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawCustomMonstWide(short num, rectangle to_rect){
@@ -1003,15 +1003,15 @@ void cPict::drawCustomMonstWide(short num, rectangle to_rect){
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
+	Texture from_gw;
 	rectangle from_rect;
-	std::shared_ptr<const sf::Texture> from_gw;
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num);
 	small_monst_rect.offset(to_rect.left,to_rect.top + 7);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+1);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num+1);
 	small_monst_rect.offset(14,0);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
 
 void cPict::drawCustomMonstTall(short num, rectangle to_rect){
@@ -1022,15 +1022,15 @@ void cPict::drawCustomMonstTall(short num, rectangle to_rect){
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
+	Texture from_gw;
 	rectangle from_rect;
-	std::shared_ptr<const sf::Texture> from_gw;
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num);
 	small_monst_rect.offset(to_rect.left + 7,to_rect.top);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+1);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num+1);
 	small_monst_rect.offset(0,18);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
 
 void cPict::drawCustomMonstLg(short num, rectangle to_rect){
@@ -1041,43 +1041,43 @@ void cPict::drawCustomMonstLg(short num, rectangle to_rect){
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
+	Texture from_gw;
 	rectangle from_rect;
-	std::shared_ptr<const sf::Texture> from_gw;
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num);
 	small_monst_rect.offset(to_rect.left,to_rect.top);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+1);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num+1);
 	small_monst_rect.offset(14,0);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+2);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num+2);
 	small_monst_rect.offset(-14,18);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+3);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num+3);
 	small_monst_rect.offset(14,0);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
 
 // This is a super-hacky way to wedge in scaled form, but at least it should work.
 static int dlog_to_w = 18, dlog_to_h = 36;
 
 void cPict::drawCustomDlog(short num, rectangle to_rect){
+	Texture from_gw;
 	rectangle from_rect;
-	std::shared_ptr<const sf::Texture> from_gw;
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num);
 	to_rect.right = to_rect.left + dlog_to_w;
 	to_rect.bottom = to_rect.top + dlog_to_h;
 	from_rect.right = from_rect.left + 18;
 	from_rect.bottom = from_rect.top + 36;
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 	
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+1);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num+1);
 	to_rect.offset(dlog_to_w,0);
 	from_rect.right = from_rect.left + 18;
 	from_rect.bottom = from_rect.top + 36;
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 }
 
 void cPict::drawCustomDlogLg(short num, rectangle to_rect){
@@ -1099,87 +1099,86 @@ void cPict::drawCustomDlogLg(short num, rectangle to_rect){
 }
 
 void cPict::drawCustomTalk(short num, rectangle to_rect){
+	Texture from_gw;
 	rectangle from_rect;
-	std::shared_ptr<const sf::Texture> from_gw;
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num);
 	to_rect.right = to_rect.left + 16;
 	to_rect.bottom = to_rect.top + 32;
 	from_rect.right = from_rect.left + 16;
 	from_rect.bottom = from_rect.top + 32;
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 	
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+1);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num+1);
 	to_rect.offset(16,0);
 	from_rect.right = from_rect.left + 16;
 	from_rect.bottom = from_rect.top + 32;
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 }
 
 void cPict::drawCustomItem(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
+	Texture from_gw;
 	rectangle from_rect;
-	std::shared_ptr<const sf::Texture> from_gw;
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num);
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawCustomTinyItem(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 18;
 	to_rect.bottom = to_rect.top + 18;
+	Texture from_gw;
 	rectangle from_rect;
-	std::shared_ptr<const sf::Texture> from_gw;
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num);
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawCustomBoom(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
+	Texture from_gw;
 	rectangle from_rect;
-	std::shared_ptr<const sf::Texture> from_gw;
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num + animFrame % 8);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num + animFrame % 8);
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawCustomMissile(short num, rectangle to_rect){
 	num += animFrame % 8;
+	Texture from_gw;
 	rectangle from_rect;
-	std::shared_ptr<const sf::Texture> from_gw;
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num);
 	from_rect.right = from_rect.left + 18;
 	from_rect.bottom = from_rect.top + 18;
 	if(animFrame >= 4) from_rect.offset(0, 18);
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	to_rect.inset(5,9);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawCustomTerMap(short num, rectangle to_rect){
+	Texture from_gw;
 	rectangle from_rect;
-	std::shared_ptr<const sf::Texture> from_gw;
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num % 1000);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num % 1000);
 	from_rect.right = from_rect.left + 12;
 	from_rect.bottom = from_rect.top + 12;
 	num /= 1000; num--;
 	from_rect.offset((num / 3) * 12, (num % 3) * 12);
 	to_rect.right = to_rect.left + 24;
 	to_rect.bottom = to_rect.top + 24;
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 }
 
 void cPict::drawPartyMonstSm(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	std::shared_ptr<const sf::Texture> from_gw;
+	Texture from_gw;
 	rectangle from_rect;
-	
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num, true);
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPartyMonstWide(short num, rectangle to_rect){
@@ -1187,16 +1186,15 @@ void cPict::drawPartyMonstWide(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	std::shared_ptr<const sf::Texture> from_gw;
+	Texture from_gw;
 	rectangle from_rect;
-	
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num, true);
 	small_monst_rect.offset(to_rect.left,to_rect.top + 7);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+1, true);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num+1, true);
 	small_monst_rect.offset(14,0);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPartyMonstTall(short num, rectangle to_rect){
@@ -1204,16 +1202,15 @@ void cPict::drawPartyMonstTall(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	std::shared_ptr<const sf::Texture> from_gw;
+	Texture from_gw;
 	rectangle from_rect;
-	
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num, true);
 	small_monst_rect.offset(to_rect.left + 7,to_rect.top);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	small_monst_rect.offset(0,18);
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+1, true);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num+1, true);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPartyMonstLg(short num, rectangle to_rect){
@@ -1221,24 +1218,23 @@ void cPict::drawPartyMonstLg(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	std::shared_ptr<const sf::Texture> from_gw;
+	Texture from_gw;
 	rectangle from_rect;
-	
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num, true);
 	small_monst_rect.offset(to_rect.left,to_rect.top);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	small_monst_rect.offset(14,0);
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+1, true);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num+1, true);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	small_monst_rect.offset(-14,18);
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+2, true);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num+2, true);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
 	small_monst_rect.offset(14,0);
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num+3, true);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num+3, true);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPartyScen(short num, rectangle to_rect){
@@ -1253,23 +1249,21 @@ void cPict::drawPartyScen(short num, rectangle to_rect){
 void cPict::drawPartyItem(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	std::shared_ptr<const sf::Texture> from_gw;
+	Texture from_gw;
 	rectangle from_rect;
-	
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num, true);
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPartyPc(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	std::shared_ptr<const sf::Texture> from_gw;
+	Texture from_gw;
 	rectangle from_rect;
-	
-	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
+	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(num, true);
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 cPict::~cPict() {}

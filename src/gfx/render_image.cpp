@@ -14,7 +14,6 @@
 
 #include "fileio.hpp"
 #include "render_shapes.hpp"
-#include "texture.hpp"
 #include "res_image.hpp"
 
 sf::Shader maskShader;
@@ -76,15 +75,9 @@ void rect_draw_some_item(const Texture& src_gworld,rectangle src_rect,sf::Render
 	rect_draw_some_item(src_gworld, src_rect, targ_gworld, targ_rect, sf::RenderStates(mode));
 }
 
-static rectangle rescale(rectangle const &orig, sf::Vector2u const &fromSize, sf::Vector2u const &toSize)
-{
-    float const scale[]={float(toSize.x)/fromSize.x, float(toSize.y)/fromSize.y};
-    return rectangle(int(scale[1]*orig.top), int(scale[0]*orig.left), int(scale[1]*orig.bottom), int(scale[0]*orig.right));
-}
-
 void rect_draw_some_item(const Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::RenderStates mode) {
 	setActiveRenderTarget(targ_gworld);
-	src_rect=rescale(src_rect, src_gworld.dimension, src_gworld->getSize());
+	src_rect=src_rect.rescale(src_gworld.dimension, src_gworld->getSize());
 	sf::Sprite tile(*src_gworld, src_rect);
 	tile.setPosition(targ_rect.left, targ_rect.top);
 	double xScale = targ_rect.width(), yScale = targ_rect.height();
@@ -95,7 +88,7 @@ void rect_draw_some_item(const Texture& src_gworld,rectangle src_rect,sf::Render
 }
 
 void rect_draw_some_item(const Texture& src_gworld,rectangle src_rect,const sf::Texture& mask_gworld,sf::RenderTarget& targ_gworld,rectangle targ_rect) {
-	rectangle real_src_rect=rescale(src_rect, src_gworld.dimension, src_gworld->getSize());
+	rectangle real_src_rect=src_rect.rescale(src_gworld.dimension, src_gworld->getSize());
 	static sf::RenderTexture src;
 	static bool inited = false;
 	if(!inited || real_src_rect.width() != src.getSize().x || real_src_rect.height() != src.getSize().y) {

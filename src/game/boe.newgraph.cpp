@@ -427,14 +427,14 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 						base -= 10000;
 					} else base -= 1000;
 					base += step % 4;
-					std::shared_ptr<const sf::Texture> from_gw = nullptr;
-					graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(base, isParty);
-					if(from_gw == nullptr) continue;
+					Texture from_gw;
+					std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(base, isParty);
+					if(!from_gw) continue;
 					from_rect.width() = 18;
 					from_rect.height() = 18;
 					if(step >= 4)
 						from_rect.offset(0,18);
-					rect_draw_some_item(*from_gw,from_rect, mainPtr,temp_rect,sf::BlendAlpha);
+					rect_draw_some_item(from_gw,from_rect, mainPtr,temp_rect,sf::BlendAlpha);
 				}
 			}
 		mainPtr.setActive();
@@ -559,9 +559,9 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 			if(store_booms[i].boom_type >= 0) {
 				if((t + store_booms[i].offset >= 0) && (t + store_booms[i].offset <= 7)) {
 					if(cur_boom_type >= 1000) {
-						std::shared_ptr<const sf::Texture> src_gworld;
-						graf_pos_ref(src_gworld, from_rect) = spec_scen_g.find_graphic(cur_boom_type - 1000 + t);
-						rect_draw_some_item(*src_gworld, from_rect, mainPtr, explode_place_rect[i], sf::BlendAlpha);
+						Texture src_gworld;
+						std::tie(src_gworld,from_rect) = spec_scen_g.find_graphic(cur_boom_type - 1000 + t);
+						rect_draw_some_item(src_gworld, from_rect, mainPtr, explode_place_rect[i], sf::BlendAlpha);
 					} else {
 						from_rect = base_rect;
 						from_rect.offset(28 * (t + store_booms[i].offset),36 * (1 + store_booms[i].boom_type));
@@ -606,15 +606,15 @@ void click_shop_rect(rectangle area_rect) {
 
 }
 
-graf_pos calc_item_rect(int num,rectangle& to_rect) {
+Texture_pos calc_item_rect(int num,rectangle& to_rect) {
 	if(num >= 1000) return spec_scen_g.find_graphic(num - 1000);
 	rectangle from_rect = {0,0,18,18};
-	std::shared_ptr<const sf::Texture> from_gw;
+	Texture from_gw;
 	if(num < 55) {
-		from_gw = &ResMgr::graphics.get("objects");
+		from_gw = *ResMgr::textures.get("objects");
 		from_rect = calc_rect(num % 5, num / 5);
 	}else{
-		from_gw = &ResMgr::graphics.get("tinyobj");
+		from_gw = *ResMgr::textures.get("tinyobj");
 		to_rect.inset(5,9);
 		from_rect.offset(18 * (num % 10), 18 * (num / 10));
 	}
@@ -660,15 +660,15 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	// Place store icon
 	if(!pressed) {
 		rectangle from_rect = {0,0,32,32};
-		std::shared_ptr<const sf::Texture> from_gw;
+		Texture from_gw;
 		int i = std::max<int>(0, active_shop.getFace());
 		if(i >= 1000) {
-			graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(i - 1000);
+			std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(i - 1000);
 		} else {
 			from_rect.offset(32 * (i % 10),32 * (i / 10));
-			from_gw = &ResMgr::graphics.get("talkportraits");
+			from_gw = *ResMgr::textures.get("talkportraits");
 		}
-		rect_draw_some_item(*from_gw, from_rect, talk_gworld, face_rect);
+		rect_draw_some_item(from_gw, from_rect, talk_gworld, face_rect);
 	}
 	
 	
@@ -729,7 +729,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		base_item = item.item;
 		std::string cur_name = base_item.full_name, cur_info_str;
 		rectangle from_rect, to_rect = shopping_rects[i][SHOPRECT_GRAPHIC];
-		std::shared_ptr<const sf::Texture> from_gw;
+		Texture from_gw;
 		switch(item.type) {
 			case eShopItemType::ITEM:
 				base_item.ident = true;
@@ -756,8 +756,8 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 				cur_info_str = "";
 				break;
 		}
-		graf_pos_ref(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
-		rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
+		std::tie(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
+		rect_draw_some_item(from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 		
 		// Now draw item
 		style.pointSize = 12;

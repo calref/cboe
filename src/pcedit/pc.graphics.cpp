@@ -402,11 +402,11 @@ void display_party() {
 			if(univ.party[i].main_status != eMainStatus::ABSENT) { // PC exists?
 				// draw PC graphic
 				pic_num_t pic = univ.party[i].which_graphic;
-				std::shared_ptr<const sf::Texture> from_gw;
+				Texture from_gw;
 				if(pic >= 1000) {
 					bool isParty = pic >= 10000;
 					pic_num_t need_pic = pic % 1000;
-					graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(need_pic, isParty);
+					std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(need_pic, isParty);
 				} else if(pic >= 100) {
 					// Note that we assume it's a 1x1 graphic.
 					// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
@@ -414,12 +414,12 @@ void display_party() {
 					pic_num_t picture_wanted = m_pic_index[need_pic].i % 20;
 					from_rect = calc_rect(2 * (picture_wanted / 10), picture_wanted % 10);
 					int which_sheet = m_pic_index[need_pic].i / 20;
-					from_gw = &ResMgr::graphics.get("monst" + std::to_string(1 + which_sheet));
+					from_gw = *ResMgr::textures.get("monst" + std::to_string(1 + which_sheet));
 				} else {
 					from_rect = calc_rect(2 * (pic / 8), pic % 8);
-					from_gw = &ResMgr::graphics.get("pcs");
+					from_gw = *ResMgr::textures.get("pcs");
 				}
-				rect_draw_some_item(*from_gw,from_rect,mainPtr,pc_area_buttons[i][1],sf::BlendAlpha);
+				rect_draw_some_item(from_gw,from_rect,mainPtr,pc_area_buttons[i][1],sf::BlendAlpha);
 				
 				// draw name
 				style.pointSize = 9;
