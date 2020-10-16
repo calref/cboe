@@ -445,13 +445,13 @@ void place_item_graphic(short which_slot,short graphic) {
 	item_area_button_active[which_slot][ITEMBTN_NAME] = item_area_button_active[which_slot][ITEMBTN_ICON] = true;
 	from_rect.offset((graphic % 10) * 18,(graphic / 10) * 18);
 	to_rect = item_buttons[which_slot][ITEMBTN_ICON];
-	std::shared_ptr<const sf::Texture> src_gw;
+	Texture src_gw;
 	if(graphic >= 10000) {
-		graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(graphic - 10000, true);
-		rect_draw_some_item(*src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
+		std::tie(src_gw,from_rect) = spec_scen_g.find_graphic(graphic - 10000, true);
+		rect_draw_some_item(src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
 	} else if(graphic >= 1000) {
-		graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(graphic - 1000);
-		rect_draw_some_item(*src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
+		std::tie(src_gw,from_rect) = spec_scen_g.find_graphic(graphic - 1000);
+		rect_draw_some_item(src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
 	}
 	else rect_draw_some_item(*ResMgr::textures.get("tinyobj"), from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 }
@@ -509,11 +509,11 @@ void place_item_bottom_buttons() {
 		 	to_rect = item_screen_button_rects[i];
 			rect_draw_some_item(invenbtn_gworld, but_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 			pic_num_t pic = univ.party[i].which_graphic;
-			std::shared_ptr<const sf::Texture> from_gw;
+			Texture from_gw;
 			if(pic >= 1000) {
 				bool isParty = pic >= 10000;
 				pic_num_t need_pic = pic % 1000;
-				graf_pos_ref(from_gw, pc_from_rect) = spec_scen_g.find_graphic(need_pic, isParty);
+				std::tie(from_gw,pc_from_rect) = spec_scen_g.find_graphic(need_pic, isParty);
 			} else if(pic >= 100) {
 				// Note that we assume it's a 1x1 graphic.
 				// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
@@ -521,13 +521,13 @@ void place_item_bottom_buttons() {
 				int mode = 0;
 				pc_from_rect = get_monster_template_rect(need_pic, mode, 0);
 				int which_sheet = m_pic_index[need_pic].i / 20;
-				from_gw = &ResMgr::graphics.get("monst" + std::to_string(1 + which_sheet));
+				from_gw = *ResMgr::textures.get("monst" + std::to_string(1 + which_sheet));
 			} else {
 				pc_from_rect = calc_rect(2 * (pic / 8), pic % 8);
-				from_gw = &ResMgr::graphics.get("pcs");
+				from_gw = *ResMgr::textures.get("pcs");
 			}
 			to_rect.inset(2,2);
-			rect_draw_some_item(*from_gw, pc_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+			rect_draw_some_item(from_gw, pc_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 			std::string numeral = std::to_string(i + 1);
 			short width = string_length(numeral, style);
 			// Offset "6" down two pixels to make it line up, because it has an ascender in this font
@@ -1109,7 +1109,7 @@ void through_sending() {
 
 /* Draw a bitmap in the world window. hor in 0 .. 8, vert in 0 .. 8,
  object is ptr. to bitmap to be drawn, and masking is for Copybits. */
-void Draw_Some_Item(const sf::Texture& src_gworld, rectangle src_rect, sf::RenderTarget& targ_gworld,location target, char masked, short main_win) {
+void Draw_Some_Item(const Texture& src_gworld, rectangle src_rect, sf::RenderTarget& targ_gworld,location target, char masked, short main_win) {
 	rectangle	destrec = {0,0,36,28};
 	
 	if((target.x < 0) || (target.y < 0) || (target.x > 8) || (target.y > 8))

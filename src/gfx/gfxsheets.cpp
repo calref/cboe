@@ -21,7 +21,7 @@ rectangle calc_rect(short i, short j){
 	return base_rect;
 }
 
-graf_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
+Texture_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 	bool valid = true;
 	if(party && !party_sheet) valid = false;
 	else if(!party && !is_old && (which_rect / 100) >= numSheets)
@@ -29,8 +29,8 @@ graf_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 	else if(numSheets == 0) valid = false;
 	if(!valid) {
 	INVALID:
-		std::shared_ptr<const sf::Texture> blank = &ResMgr::graphics.get("blank", true);
-		return {blank, {0,0,36,28}};
+		auto blank = &ResMgr::textures.get("blank", true);
+		return std::make_pair(*blank, rectangle(0,0,36,28));
 	}
 	short sheet = which_rect / 100;
 	if(is_old || party) sheet = 0;
@@ -82,23 +82,24 @@ void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlot
 		rect_draw_some_item(*party_sheet, rectangle(*party_sheet), temp, rectangle(*party_sheet));
 		party_sheet.reset(new sf::Texture(temp.getTexture()));
 	}
-	std::shared_ptr<const sf::Texture> from_sheet;
-	std::shared_ptr<const sf::Texture> to_sheet;
-	std::shared_ptr<const sf::Texture> last_src = nullptr;
+	Texture from_sheet;
+	Texture to_sheet;
+	std::shared_ptr<sf::Texture> last_src;
 	sf::RenderTexture temp;
 	rectangle from_rect, to_rect;
 	for(size_t i = 0; i < numSlots; i++) {
-		graf_pos_ref(from_sheet, from_rect) = find_graphic(src + i);
-		graf_pos_ref(to_sheet, to_rect) = find_graphic(dest + i, true);
-		if(to_sheet != last_src) {
-			if(last_src) last_src.reset(new sf::Texture(temp.getTexture()));
-			last_src = to_sheet;
+		std::tie(from_sheet,from_rect) = find_graphic(src + i);
+		std::tie(to_sheet,to_rect) = find_graphic(dest + i, true);
+		if(to_sheet.texture != last_src) {
+			if(last_src) *last_src=sf::Texture(temp.getTexture());
+			last_src = std::const_pointer_cast<sf::Texture>(to_sheet.texture);
 			temp.create(to_sheet->getSize().x, to_sheet->getSize().y);
-			rect_draw_some_item(*to_sheet, rectangle(*to_sheet), temp, rectangle(*to_sheet));
+			rect_draw_some_item(to_sheet, rectangle(to_sheet), temp, rectangle(*to_sheet.texture));
 		}
-		rect_draw_some_item(*from_sheet, from_rect, temp, to_rect);
+		rect_draw_some_item(from_sheet, from_rect, temp,
+							to_rect.rescale(to_sheet.dimension, to_sheet->getSize()));
 	}
-	last_src.reset(new sf::Texture(temp.getTexture()));
+	if (last_src) *last_src=sf::Texture(temp.getTexture());
 }
 
 extern std::string scenario_temp_dir_name;
@@ -144,7 +145,7 @@ void cCustomGraphics::replace_sheet(size_t num, sf::Image& newSheet) {
 	std::string sheetname = "sheet" + std::to_string(num);
 	fs::path tmpPath = tempDir/scenario_temp_dir_name/"graphics"/(sheetname + ".png");
 	newSheet.saveToFile(tmpPath.string().c_str());
-	ResMgr::graphics.free(sheetname);
+	ResMgr::textures.free(sheetname);
 }
 
 void cCustomGraphics::init_sheet(size_t num) {

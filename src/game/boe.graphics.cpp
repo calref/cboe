@@ -319,16 +319,16 @@ void draw_startup_stats() {
 				to_rect.offset(pc_rect.left,pc_rect.top);
 				pic_num_t pic = univ.party[i].which_graphic;
 				if(pic >= 1000) {
-					std::shared_ptr<const sf::Texture> gw;
-					graf_pos_ref(gw, from_rect) = spec_scen_g.find_graphic(pic % 1000, pic >= 10000);
-					rect_draw_some_item(*gw,from_rect,mainPtr,to_rect,sf::BlendAlpha);
+					Texture gw;
+					std::tie(gw,from_rect) = spec_scen_g.find_graphic(pic % 1000, pic >= 10000);
+					rect_draw_some_item(gw,from_rect,mainPtr,to_rect,sf::BlendAlpha);
 				} else if(pic >= 100) {
 					pic -= 100;
 					// Note that we assume it's a 1x1 graphic.
 					// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
 					from_rect = get_monster_template_rect(pic, 0, 0);
 					int which_sheet = m_pic_index[pic].i / 20;
-					sf::Texture& monst_gworld = *ResMgr::graphics.get("monst" + std::to_string(1 + which_sheet));
+					auto const & monst_gworld = *ResMgr::textures.get("monst" + std::to_string(1 + which_sheet));
 					rect_draw_some_item(monst_gworld,from_rect,mainPtr,to_rect,sf::BlendAlpha);
 				} else {
 					from_rect = calc_rect(2 * (pic / 8), pic % 8);
@@ -653,7 +653,7 @@ void put_text_bar(std::string str) {
 	win_draw_string(text_bar_gworld, to_rect, str, eTextMode::LEFT_TOP, style);
 	
 	if(!monsters_going) {
-		sf::Texture& status_gworld = *ResMgr::graphics.get("staticons");
+		auto const & status_gworld = *ResMgr::textures.get("staticons");
 		to_rect.top -= 2;
 		to_rect.left = to_rect.right - 15;
 		to_rect.width() = 12;
@@ -927,7 +927,7 @@ void draw_terrain(short	mode) {
 	// Draw top half of forcecages (this list is populated by draw_fields)
 	// TODO: Move into the above loop to eliminate global variable
 	for(location fc_loc : forcecage_locs)
-		Draw_Some_Item(*ResMgr::graphics.get("fields"),calc_rect(2,0),terrain_screen_gworld,fc_loc,1,0);
+		Draw_Some_Item(*ResMgr::textures.get("fields"),calc_rect(2,0),terrain_screen_gworld,fc_loc,1,0);
 	// Draw any posted labels, then clear them out
 	clip_rect(terrain_screen_gworld, {13, 13, 337, 265});
 	for(text_label_t lbl : posted_labels)
@@ -1094,7 +1094,7 @@ static void init_trim_mask(std::unique_ptr<sf::Texture>& mask, rectangle src_rec
 	std::tie(dest_rect.top, dest_rect.bottom) = std::make_tuple(36 - dest_rect.top, 36 - dest_rect.bottom);
 	render.create(28, 36);
 	render.clear(sf::Color::White);
-	rect_draw_some_item(*ResMgr::graphics.get("trim"), src_rect, render, dest_rect);
+	rect_draw_some_item(*ResMgr::textures.get("trim"), src_rect, render, dest_rect);
 	render.display();
 	mask.reset(new sf::Texture);
 	mask->create(28, 36);
@@ -1127,7 +1127,7 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	};
 	static std::unique_ptr<sf::Texture> trim_masks[12], walkway_masks[9];
 	rectangle from_rect = {0,0,36,28},to_rect;
-	std::shared_ptr<const sf::Texture> from_gworld;
+	Texture from_gworld;
 	sf::Texture* mask;
 	static bool inited = false;
 	if(!inited){
@@ -1155,16 +1155,16 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	unsigned short pic = univ.scenario.ter_types[ground_ter].picture;
 	if(pic < 960){
 		int which_sheet = pic / 50;
-		from_gworld = &ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet));
+		from_gworld = *ResMgr::textures.get("ter" + std::to_string(1 + which_sheet));
 		pic %= 50;
 		from_rect.offset(28 * (pic % 10), 36 * (pic / 10));
 	}else if(pic < 1000){
-		from_gworld = &ResMgr::graphics.get("teranim");
+		from_gworld = *ResMgr::textures.get("teranim");
 		pic -= 960;
 		from_rect.offset(112 * (pic / 5),36 * (pic % 5));
 	}else{
 		pic %= 1000;
-		graf_pos_ref(from_gworld, from_rect) = spec_scen_g.find_graphic(pic);
+		std::tie(from_gworld,from_rect) = spec_scen_g.find_graphic(pic);
 	}
 	if(which_trim < 50) {
 		if(!trim_masks[which_trim])
@@ -1178,7 +1178,7 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	}
 	to_rect = coord_to_rect(q,r);
 	
-	rect_draw_some_item(*from_gworld, from_rect, *mask, terrain_screen_gworld, to_rect);
+	rect_draw_some_item(from_gworld, from_rect, *mask, terrain_screen_gworld, to_rect);
 }
 
 
@@ -1485,7 +1485,7 @@ static void draw_one_pointing_arrow(int dir, int pos) {
 	
 	to_rect.width() = to_rect.height() = 8;
 	
-	rect_draw_some_item(*ResMgr::graphics.get("invenbtns"), from_rect, mainPtr, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(*ResMgr::textures.get("invenbtns"), from_rect, mainPtr, to_rect, sf::BlendAlpha);
 }
 
 void draw_pointing_arrows() {
