@@ -1451,10 +1451,10 @@ void draw_map(bool need_refresh) {
 							rect_draw_some_item(*ResMgr::textures.get("teranim"), custom_from, map_gworld, draw_rect);
 						} else {
 							int which_sheet = pic / 50;
-							auto src_gw = &ResMgr::textures.get("ter" + std::to_string(1 + which_sheet));
+							auto const &src_gw = *ResMgr::textures.get("ter" + std::to_string(1 + which_sheet));
 							pic %= 50;
 							custom_from = calc_rect(pic % 10, pic / 10);
-							rect_draw_some_item(*src_gw, custom_from, map_gworld, draw_rect);
+							rect_draw_some_item(src_gw, custom_from, map_gworld, draw_rect);
 						}
 					} else {
 						if(univ.scenario.ter_types[what_ter].picture < 960)

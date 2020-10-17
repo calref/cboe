@@ -63,7 +63,7 @@ void init_shaders() {
 
 void draw_splash(const Texture& splash, sf::RenderWindow& targ, rectangle dest_rect) {
 	targ.clear(sf::Color::Black);
-	rect_draw_some_item(splash, splash.dimension, targ, dest_rect);
+	rect_draw_some_item(splash, rectangle(splash), targ, dest_rect);
 	targ.display();
 }
 
@@ -92,32 +92,17 @@ void rect_draw_some_item(const Texture& src_gworld,rectangle src_rect,const sf::
 	static sf::RenderTexture src;
 	static bool inited = false;
 	if(!inited || real_src_rect.width() != src.getSize().x || real_src_rect.height() != src.getSize().y) {
-		src.create(real_src_rect.width(), real_src_rect.height());
-		inited =  true;
+			src.create(real_src_rect.width(), real_src_rect.height());
+			inited =  true;
 	}
 	rectangle dest_rect = real_src_rect;
 	dest_rect.offset(-dest_rect.left,-dest_rect.top);
-	rect_draw_some_item(src_gworld, real_src_rect, src, dest_rect);
+	rect_draw_some_item(src_gworld, src_rect, src, dest_rect);
 	src.display();
-	
+
 	maskShader.setParameter("texture", sf::Shader::CurrentTexture);
 	maskShader.setParameter("mask", mask_gworld);
 	rect_draw_some_item(src.getTexture(), dest_rect, targ_gworld, targ_rect, &maskShader);
-}
-
-void draw_splash(const sf::Texture& splash, sf::RenderWindow& targ, rectangle dest_rect) {
-	rectangle from_rect = rectangle(splash);
-	targ.clear(sf::Color::Black);
-	rect_draw_some_item(splash, from_rect, targ, dest_rect);
-	targ.display();
-}
-
-void rect_draw_some_item(sf::RenderTarget& targ_gworld,rectangle targ_rect) {
-	fill_rect(targ_gworld, targ_rect, sf::Color::Black);
-}
-
-void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::BlendMode mode){
-	rect_draw_some_item(src_gworld, src_rect, targ_gworld, targ_rect, sf::RenderStates(mode));
 }
 
 void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::RenderStates mode) {
@@ -128,24 +113,11 @@ void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::Re
 	xScale /= src_rect.width();
 	yScale /= src_rect.height();
 	tile.setScale(xScale, yScale);
-	targ_gworld.draw(tile, mode);
+	targ_gworld.draw(tile, sf::RenderStates(mode));
 }
 
-void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,const sf::Texture& mask_gworld,sf::RenderTarget& targ_gworld,rectangle targ_rect) {
-	static sf::RenderTexture src;
-	static bool inited = false;
-	if(!inited || src_rect.width() != src.getSize().x || src_rect.height() != src.getSize().y) {
-		src.create(src_rect.width(), src_rect.height());
-		inited =  true;
-	}
-	rectangle dest_rect = src_rect;
-	dest_rect.offset(-dest_rect.left,-dest_rect.top);
-	rect_draw_some_item(src_gworld, src_rect, src, dest_rect);
-	src.display();
-	
-	maskShader.setParameter("texture", sf::Shader::CurrentTexture);
-	maskShader.setParameter("mask", mask_gworld);
-	rect_draw_some_item(src.getTexture(), dest_rect, targ_gworld, targ_rect, &maskShader);
+void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::BlendMode mode){
+	rect_draw_some_item(src_gworld, src_rect, targ_gworld, targ_rect, sf::RenderStates(mode));
 }
 
 void setActiveRenderTarget(sf::RenderTarget& where) {

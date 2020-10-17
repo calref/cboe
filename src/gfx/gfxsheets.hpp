@@ -24,12 +24,12 @@ struct m_pic_index_t {
 
 struct cCustomGraphics {
 	size_t numSheets;
-	std::vector<std::shared_ptr<const sf::Texture>> sheets;
-	std::shared_ptr<const sf::Texture> party_sheet;
+	std::vector<Texture> sheets;
+	Texture party_sheet;
 	bool is_old = false;
 	void clear() {
 		sheets.clear();
-		party_sheet.reset();
+		party_sheet=Texture();
 	}
 	explicit operator bool() {
 		return !sheets.empty() && bool(sheets[0]);

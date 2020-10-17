@@ -1182,7 +1182,7 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 			from_rect.bottom = from_rect.top + 12;
 			picture_wanted /= 1000; picture_wanted--;
 			from_rect.offset((picture_wanted / 3) * 12, (picture_wanted % 3) * 12);
-			rect_draw_some_item(*from_gw, from_rect, mainPtr, dest_rect);
+			rect_draw_some_item(from_gw, from_rect, mainPtr, dest_rect);
 		} else {
 			auto const & small_ter_gworld = *ResMgr::textures.get("termap");
 			if(picture_wanted >= 960) {

@@ -23,7 +23,7 @@ struct Texture {
 	{
 	}
 	Texture(Texture const &)=default;
-	Texture(sf::Texture const &tex)
+	explicit Texture(sf::Texture const &tex)
 	: texture(std::make_shared<sf::Texture>(tex))
 	, dimension(0,0)
 	{

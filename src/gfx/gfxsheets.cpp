@@ -29,8 +29,8 @@ Texture_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 	else if(numSheets == 0) valid = false;
 	if(!valid) {
 	INVALID:
-		auto blank = &ResMgr::textures.get("blank", true);
-		return std::make_pair(*blank, rectangle(0,0,36,28));
+		auto const &blank = *ResMgr::textures.get("blank", true);
+		return std::make_pair(blank, rectangle(0,0,36,28));
 	}
 	short sheet = which_rect / 100;
 	if(is_old || party) sheet = 0;
@@ -38,22 +38,22 @@ Texture_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 	rectangle store_rect = {0,0,36,28};
 	
 	store_rect.offset(28 * (which_rect % 10),36 * (which_rect / 10));
-	std::shared_ptr<const sf::Texture> the_sheet = party ? party_sheet : sheets[sheet];
-	rectangle test(*the_sheet);
+	Texture const &the_sheet = party ? party_sheet : sheets[sheet];
+	rectangle test(the_sheet);
 	if((store_rect & test) != store_rect) goto INVALID; // FIXME: HACK
 	return std::make_pair(the_sheet,store_rect);
 }
 
 size_t cCustomGraphics::count(bool party) {
 	if(!party && sheets.empty()) return 0;
-	else if(party && party_sheet == nullptr) return 0;
+	else if(party && !party_sheet) return 0;
 	else if(is_old || party) {
-		rectangle bounds(party ? *party_sheet : *sheets[0]);
+		rectangle bounds(party ? party_sheet : sheets[0]);
 		if(bounds.width() < 280) return bounds.width() / 28;
 		return 10 * bounds.height() / 36;
 	} else {
 		size_t count = 100 * (numSheets - 1);
-		rectangle bounds(*sheets[numSheets - 1]);
+		rectangle bounds(sheets[numSheets - 1]);
 		if(bounds.width() < 280) count += bounds.width() / 28;
 		else count += 10 * bounds.height() / 36;
 		return count;
@@ -68,7 +68,7 @@ void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlot
 		sf::Texture sheet;
 		sheet.create(280, 180);
 		sheet.update(empty);
-		party_sheet.reset(new sf::Texture(sheet));
+		party_sheet=Texture(sheet);
 		numSheets = 1;
 	}
 	size_t havePics = count();
@@ -79,8 +79,8 @@ void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlot
 		sf::RenderTexture temp;
 		temp.create(280, party_sheet->getSize().y + 36 * addRows);
 		temp.clear(sf::Color::Transparent);
-		rect_draw_some_item(*party_sheet, rectangle(*party_sheet), temp, rectangle(*party_sheet));
-		party_sheet.reset(new sf::Texture(temp.getTexture()));
+		rect_draw_some_item(party_sheet, rectangle(party_sheet), temp, rectangle(*party_sheet));
+		party_sheet=Texture(temp.getTexture());
 	}
 	Texture from_sheet;
 	Texture to_sheet;
@@ -127,7 +127,7 @@ void cCustomGraphics::convert_sheets() {
 		sf::Texture sheet_tex;
 		sheet_tex.create(280, 360);
 		sheet_tex.update(sheet);
-		sheets[i].reset(new sf::Texture(sheet_tex));
+		sheets[i]=Texture(sheet_tex);
 		
 		fs::path sheetPath = pic_dir/("sheet" + std::to_string(i) + ".png");
 		sheets[i]->copyToImage().saveToFile(sheetPath.string().c_str());
@@ -139,7 +139,7 @@ void cCustomGraphics::replace_sheet(size_t num, sf::Image& newSheet) {
 	if(num >= numSheets) return; // TODO: Fail silently? Is that a good idea?
 	sf::Texture replacement;
 	replacement.loadFromImage(newSheet);
-	sheets[num].reset(new sf::Texture(replacement));
+	sheets[num]=Texture(replacement);
 	// Then we need to do some extra stuff to ensure the dialog engine also sees the change
 	extern fs::path tempDir;
 	std::string sheetname = "sheet" + std::to_string(num);
@@ -163,7 +163,7 @@ void cCustomGraphics::init_sheet(size_t num) {
 			}
 		}
 	}
-	sheets[num].reset(new sf::Texture(placeholder));
+	sheets[num]=Texture(placeholder);
 }
 
 extern const std::vector<m_pic_index_t> m_pic_index = {
