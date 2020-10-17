@@ -2462,7 +2462,7 @@ void load_spec_graphics_v1(fs::path scen_file) {
 			spec_scen_g.numSheets = 1;
 			sf::Texture sheet;
 			if(sheet.loadFromImage(graphics_store)) {
-				spec_scen_g.sheets[0].reset(new sf::Texture(sheet));
+				spec_scen_g.sheets[0]=Texture(sheet);
 			} else {
 				showWarning("An error occurred while converting old-style graphics into the new format.",noGraphics);
 				spec_scen_g.is_old = false;
@@ -2481,7 +2481,7 @@ void load_spec_graphics_v2(int num_sheets) {
 	}
 	while(num_sheets-- > 0) {
 		std::string name = "sheet" + std::to_string(num_sheets);
-		ResMgr::graphics.free(name);
-		spec_scen_g.sheets[num_sheets] = &ResMgr::graphics.get(name);
+		ResMgr::textures.free(name);
+		spec_scen_g.sheets[num_sheets] = *ResMgr::textures.get(name);
 	}
 }

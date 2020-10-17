@@ -21,7 +21,6 @@ tessel_ref_t bw_pats[6];
 
 struct tessel_t {
 	sf::RenderTexture* tessel;
-	sf::Texture* img;
 	rectangle srcRect;
 };
 
@@ -42,7 +41,6 @@ static int tessel_index = 0;
 
 tessel_ref_t prepareForTiling(Texture const & srcImg, rectangle srcRect) {
 	tessel_ref_t ref = {tessel_index++};
-	tiling_reservoir[ref].img = &const_cast<sf::Texture &>(*srcImg);
 	tiling_reservoir[ref].srcRect = srcRect;
 	tiling_reservoir[ref].tessel = new sf::RenderTexture;
 	tiling_reservoir[ref].tessel->create(srcRect.width(), srcRect.height());

@@ -272,7 +272,7 @@ void draw_startup_anim(bool advance) {
 	anim_from.offset(-1,-4 + startup_anim_pos);
 	if(advance) startup_anim_pos = (startup_anim_pos + 1) % 542;
 	auto const &startbut=*ResMgr::textures.get("startbut",true);
-	rect_draw_some_item(startbut,startbut.dimension,mainPtr,startup_button[STARTBTN_SCROLL]);
+	rect_draw_some_item(startbut,rectangle(startbut),mainPtr,startup_button[STARTBTN_SCROLL]);
 	anim_to.offset(startup_button[STARTBTN_SCROLL].left, startup_button[STARTBTN_SCROLL].top);
 	auto const &startanim=*ResMgr::textures.get("startanim",true);
 	rect_draw_some_item(startanim,anim_from,mainPtr,anim_to,sf::BlendAlpha);
