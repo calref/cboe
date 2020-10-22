@@ -650,7 +650,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		clip_rect(talk_gworld, clip_area_rect);
 	}
 	
-	area_rect = rectangle(talk_gworld);
+	area_rect = rectangle(0,0,talk_area_rect.height(),talk_area_rect.width());
 	frame_rect(talk_gworld, area_rect, Colours::BLACK); 
 	area_rect.inset(1,1);
 	tileImage(talk_gworld, area_rect,bg[12]);
@@ -799,9 +799,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 
 void refresh_shopping() {
 	rectangle from_rect(talk_gworld);
-	rectangle to_rect = from_rect;
-	to_rect.offset(talk_gword_offset_x, talk_gword_offset_y);
-	rect_draw_some_item(talk_gworld.getTexture(),from_rect,mainPtr,to_rect);
+	rect_draw_some_item(talk_gworld.getTexture(),from_rect,mainPtr,talk_area_rect);
 }
 
 static void place_talk_face() {
@@ -825,7 +823,7 @@ static void place_talk_face() {
 void click_talk_rect(word_rect_t word) {
 	rectangle talkRect(talk_gworld), wordRect(word.rect);
 	mainPtr.setActive();
-	rect_draw_some_item(talk_gworld.getTexture(),talkRect,mainPtr,talk_area_rect);
+	rect_draw_some_item(talk_gworld.getTexture(),rectangle(talk_gworld),mainPtr,talk_area_rect);
 	wordRect.offset(talk_area_rect.topLeft());
 	TextStyle style;
 	style.font = FONT_DUNGEON;
@@ -836,7 +834,7 @@ void click_talk_rect(word_rect_t word) {
 	place_talk_face();
 	mainPtr.display();
 	play_sound(37, time_in_ticks(5));
-	rect_draw_some_item(talk_gworld.getTexture(),talkRect,mainPtr,talk_area_rect);
+	rect_draw_some_item(talk_gworld.getTexture(),rectangle(talk_gworld),mainPtr,talk_area_rect);
 	place_talk_face();
 }
 
@@ -871,7 +869,7 @@ std::string get_item_interesting_string(cItem item) {
 		case eItemType::BOOTS: // coherent with damage_pc
 			sout << "Blocks "
 			<< (item.item_level>0 ? 1 : item.item_level) + (item.bonus>0 ? 1+item.bonus/2 : item.bonus) +
-				(item.protection > 0 ? 1 : item.protection)
+			   (item.protection > 0 ? 1 : item.protection)
 			<< '-'
 			<< item.item_level + (item.bonus>=0 ? 3*item.bonus/2 : item.bonus) +
 				(item.protection>=0 ? item.protection : -1)
@@ -926,7 +924,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		clip_rect(mainPtr, c_rect);
 	}
 	
-	area_rect = rectangle(talk_gworld);
+	area_rect = rectangle(0,0,talk_area_rect.height(),talk_area_rect.width());
 	frame_rect(talk_gworld, area_rect, sf::Color::Black);
 	area_rect.inset(1,1);
 	tileImage(talk_gworld, area_rect,bg[12]);
