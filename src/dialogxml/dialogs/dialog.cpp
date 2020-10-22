@@ -566,14 +566,9 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 
 	int wWidth=int(ui_scale*winRect.width()), wHeight=int(ui_scale*winRect.height());
 	win.create(sf::VideoMode(wWidth, wHeight), "Dialog", sf::Style::Titlebar);
-	sf::FloatRect viewport;
-	viewport.top	= 0;
-	viewport.left   = 0;
-	viewport.width  = ui_scale;
-	viewport.height = ui_scale;
 	sf::View view;
 	view.reset(sf::FloatRect(0, 0, wWidth, wHeight));
-	view.setViewport(viewport);
+	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
 	win.setView(view);
 
 	// ASAN overflow
