@@ -63,12 +63,18 @@ size_t cCustomGraphics::count(bool party) {
 void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlots) {
 	if(numSlots < 1) return;
 	if(!party_sheet) {
+		// retrieve the first sheet, do determine a valid scaling
+		Texture sheet0;
+		std::tie(sheet0,std::ignore) = find_graphic(dest,true);
+		float scale[2]={float(sheet0->getSize().x)/sheet0.dimension.x, float(sheet0->getSize().y)/sheet0.dimension.y};
+		
 		sf::Image empty;
-		empty.create(280, 180, sf::Color::Transparent);
+		empty.create(int(280*scale[0]), int(180*scale[1]), sf::Color::Transparent);
 		sf::Texture sheet;
-		sheet.create(280, 180);
+		sheet.create(int(280*scale[0]), int(180*scale[1]));
 		sheet.update(empty);
 		party_sheet=Texture(sheet);
+		party_sheet.dimension={280,180};
 		numSheets = 1;
 	}
 	size_t havePics = count();
@@ -76,11 +82,14 @@ void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlot
 		int addRows = 1;
 		while(havePics + 10 * addRows < dest + numSlots)
 			addRows++;
+		float scale[2]={float(party_sheet->getSize().x)/party_sheet.dimension.x, float(party_sheet->getSize().y)/party_sheet.dimension.y};
 		sf::RenderTexture temp;
-		temp.create(280, party_sheet->getSize().y + 36 * addRows);
+		temp.create(int(280*scale[0]), party_sheet->getSize().y+int(36 * addRows*scale[1]));
 		temp.clear(sf::Color::Transparent);
 		rect_draw_some_item(party_sheet, rectangle(party_sheet), temp, rectangle(*party_sheet));
+		unsigned oldY=party_sheet.dimension.y;
 		party_sheet=Texture(temp.getTexture());
+		party_sheet.dimension={280,oldY + 36 * addRows};
 	}
 	Texture from_sheet;
 	Texture to_sheet;
