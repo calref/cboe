@@ -901,6 +901,10 @@ bool cCurOut::is_road(int x, int y) {
 	if(y >= 48) sector_y++, y -= 48;
 	sector_x += univ.party.outdoor_corner.x;
 	sector_y += univ.party.outdoor_corner.y;
+	// ASAN can happens if a hole allows to goes out the scenario...
+	if (sector_x<0 || sector_x>=univ.scenario.outdoors.width() ||
+		sector_y<0 || sector_y>=univ.scenario.outdoors.height())
+		return false;
 	return univ.scenario.outdoors[sector_x][sector_y]->roads[x][y];
 }
 
@@ -1350,11 +1354,14 @@ void cUniverse::enter_scenario(const std::string& name) {
 		pop.which_town = 200;
 	for(short i = 0; i < 10; i++)
 		party.out_c[i].exists = false;
+	party.store_limited_stock.clear();
 	party.magic_store_items.clear();
 	// TODO: Now uncertain if the journal should really persist
 //	univ.party.journal.clear();
 	party.special_notes.clear();
 	party.talk_save.clear();
+	// reset the scried monster
+	party.m_noted.clear();
 	
 	party.direction = DIR_N;
 	party.at_which_save_slot = 0;
@@ -1390,6 +1397,8 @@ void cUniverse::enter_scenario(const std::string& name) {
 		for(auto& m : sector->maps)
 			m.reset();
 	
+	// time to init the town's difficulty
+	town.difficulty = scenario.difficulty;
 	party.scen_name = name;
 }
 

@@ -131,7 +131,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			// 154 was if text response
 		case 155: type = eSpecType::IF_SDF_EQ; break;
 			// 156-169 were undefined
-		case 170: type = eSpecType::MAKE_TOWN_HOSTILE; break;
+		case 170: type = eSpecType::MAKE_TOWN_HOSTILE; ex2a=1; break; // OSNOLA: make town always hostile
 			// 171-173 were change/swap/transform terrain
 		case 174: type = eSpecType::TOWN_MOVE_PARTY; break;
 		case 175: type = eSpecType::TOWN_HIT_SPACE; break;
@@ -316,7 +316,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			break;
 		case 11: // Can't enter
 			type = eSpecType::CANT_ENTER;
-			ex1a = 1;
+			ex1a = ex1a==0 ? 0 : 1;
 			ex2a = 0;
 			break;
 		case 26: // Wandering will fight
@@ -358,6 +358,8 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			break;
 		case 182: // Destroy all monsters of particular type
 			type = eSpecType::TOWN_NUKE_MONSTS;
+			if (ex1a>=-2 && ex1a<=0) // FIXME: if ex1a:type==0, we do not want to remove all monsters
+				ex1a=-3;
 			break;
 		case 183: // Destroy all monsters, or all friendly / all hostile
 			type = eSpecType::TOWN_NUKE_MONSTS;

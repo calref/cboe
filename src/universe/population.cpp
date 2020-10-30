@@ -14,26 +14,44 @@
 #include <sstream>
 
 #include "oldstructs.hpp"
+#include "strdlog.hpp"
+
+cCreature cPopulation::dummyDude;
 
 void cPopulation::import_legacy(legacy::creature_list_type old){
 	dudes.resize(60);
-	for(int i = 0; i < 60; i++)
-		dudes[i].import_legacy(old.dudes[i]);
+	for(int i = 0; i < 60; i++) {
+		dudes[i]=std::make_shared<cCreature>();
+		dudes[i]->import_legacy(old.dudes[i]);
+	}
 	which_town = old.which_town;
 	hostile = old.hostile;
 }
 
 const cCreature& cPopulation::operator[](size_t n) const {
-	return dudes[n];
+	if (n>=dudes.size() || dudes[n].get()==nullptr) {
+		showError("Monster does not exist\n");
+		return dummyDude;
+	}
+	return *dudes[n];
 }
 
 cCreature& cPopulation::operator[](size_t n){
-	return dudes[n];
+	if (n>=dudes.size() || dudes[n].get()==nullptr) {
+		showError("Monster does not exist\n");
+		return dummyDude;
+	}
+	return *dudes[n];
 }
 
 void cPopulation::init(size_t n) {
-	if(n >= dudes.size()) dudes.resize(n + 1);
-	dudes[n].active = 1;
+	if(n >= dudes.size()) {
+		size_t old_n=dudes.size();
+		dudes.resize(n + 1);
+		for (size_t i=old_n; i<=n; ++i)
+			dudes[i]=std::make_shared<cCreature>();
+	}
+	dudes[n]->active = 1;
 }
 
 // This function combines a cTownperson from a scenario town record with a cMonster from the scenario record
@@ -41,30 +59,30 @@ void cPopulation::init(size_t n) {
 // replaces return_monster_template() from boe.monsters.cpp
 void cPopulation::assign(size_t n, const cTownperson& other, const cMonster& base, bool easy, int difficulty_adjust){
 	// Make sure the space exists
-	if(n >= dudes.size()) dudes.resize(n + 1);
+	init(n);
 	// First copy over the superclass fields
-	static_cast<cTownperson&>(dudes[n]) = other;
-	static_cast<cMonster&>(dudes[n]) = base;
+	static_cast<cTownperson&>(*dudes[n]) = other;
+	static_cast<cMonster&>(*dudes[n]) = base;
 	// Now set up extra stuff
-	dudes[n].active = 1; // TODO: Is this right?
-	if(dudes[n].invisible) dudes[n].picture_num = 0;
-	dudes[n].m_health /= easy ? 2 : 1;
-	dudes[n].m_health *= difficulty_adjust;
-	dudes[n].health = dudes[n].m_health;
-	dudes[n].ap = 0;
-	if(dudes[n].mu > 0 || dudes[n].cl > 0)
-		dudes[n].max_mp = dudes[n].mp = 12 * dudes[n].level;
-	else dudes[n].max_mp = dudes[n].mp = 0;
-	dudes[n].m_morale = 10 * dudes[n].level;
-	if(dudes[n].level > 20)
-		dudes[n].m_morale += 10 * (dudes[n].level - 20);
-	dudes[n].morale = dudes[n].m_morale;
-	dudes[n].direction = DIR_HERE;
-	dudes[n].status.clear();
-	dudes[n].attitude = dudes[n].start_attitude;
-	dudes[n].cur_loc = dudes[n].start_loc;
-	dudes[n].target = 6; // No target
-	dudes[n].summon_time = 0;
+	// TODO: active=1 is set by init, is this right?
+	if(dudes[n]->invisible) dudes[n]->picture_num = 0;
+	dudes[n]->m_health /= easy ? 2 : 1;
+	dudes[n]->m_health *= difficulty_adjust;
+	dudes[n]->health = dudes[n]->m_health;
+	dudes[n]->ap = 0;
+	if(dudes[n]->mu > 0 || dudes[n]->cl > 0)
+		dudes[n]->max_mp = dudes[n]->mp = 12 * dudes[n]->level;
+	else dudes[n]->max_mp = dudes[n]->mp = 0;
+	dudes[n]->m_morale = 10 * dudes[n]->level;
+	if(dudes[n]->level > 20)
+		dudes[n]->m_morale += 10 * (dudes[n]->level - 20);
+	dudes[n]->morale = dudes[n]->m_morale;
+	dudes[n]->direction = DIR_HERE;
+	dudes[n]->status.clear();
+	dudes[n]->attitude = dudes[n]->start_attitude;
+	dudes[n]->cur_loc = dudes[n]->start_loc;
+	dudes[n]->target = 6; // No target
+	dudes[n]->summon_time = 0;
 }
 
 void cPopulation::swap(cPopulation& other) {
@@ -74,6 +92,15 @@ void cPopulation::swap(cPopulation& other) {
 }
 
 void cPopulation::readFrom(std::istream& in, size_t n) {
-	if(n >= dudes.size()) dudes.resize(n + 1);
-	dudes[n].readFrom(in);
+	init(n);
+	dudes[n]->active = 0; // TODO: I reset active to default, is this needed ?
+	dudes[n]->readFrom(in);
+}
+
+cCreature &cPopulation::iterator::operator*() {
+	if ((*it).get()==nullptr) {
+		showError("Monster does not exists\n");
+		return dummyDude;
+	}
+	return **it;
 }

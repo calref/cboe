@@ -299,7 +299,6 @@ void cPlayer::acid(int how_much) {
 
 void cPlayer::restore_sp(int amt) {
 	if(!is_alive()) return;
-	if(cur_sp >= max_sp) return;
 	cur_sp += amt;
 	if(cur_sp > max_sp)
 		cur_sp = max_sp;

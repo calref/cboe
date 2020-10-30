@@ -249,8 +249,8 @@ static bool display_monst_event_filter(cDialog& me, std::string item_hit, cCreat
 	if(roster[position % 60].number != on_monst_menu[position]) {
 		cMonster& monst = univ.scenario.scen_monsters[on_monst_menu[position]];
 		roster.assign(position % 60, cCreature(on_monst_menu[position]), monst, univ.party.easy_mode, univ.difficulty_adjust());
-		store_m = roster[position % 60];
 	}
+	store_m = roster[position % 60];
 	put_monst_info(me, store_m, univ.scenario);
 	return true;
 }
@@ -478,17 +478,8 @@ static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKey
 	}
 	for(short i = 0; i < 3; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
-		if(univ.party.special_notes.size() > i) {
-			me["str" + n].setText(univ.party.special_notes[i].the_str);
-			me["del" + n].show();
-		}
-		else me["del" + n].hide();
-	}
-	// TODO: What's this second loop for?
-	for(short i = store_page_on * 3; i < (store_page_on * 3) + 3; i++) {
-		std::string n = boost::lexical_cast<std::string>(i + 1);
-		if(univ.party.special_notes.size() > i) {
-			me["str" + n].setText(univ.party.special_notes[i].the_str);
+		if(univ.party.special_notes.size() > store_page_on * 3+i) {
+			me["str" + n].setText(univ.party.special_notes[store_page_on * 3+i].the_str);
 			me["del" + n].show();
 		}
 		else {
@@ -701,15 +692,25 @@ void cStringRecorder::operator()(cDialog& me) {
 	switch(type) {
 		case NOTE_SCEN:
 			str1 = univ.scenario.spec_strs[label1];
-			str2 = univ.scenario.spec_strs[label2];
+			if (label2>=univ.scenario.spec_strs.size())
+				showError("cStringRecorder(): bad label 2.");
+			else
+				str2 = univ.scenario.spec_strs[label2];
 			break;
 		case NOTE_TOWN:
 			str1 = univ.town->spec_strs[label1];
-			str2 = univ.town->spec_strs[label2];
+			if (label2>=univ.town->spec_strs.size())
+				showError("cStringRecorder(): bad label 2.");
+			else
+				str2 = univ.town->spec_strs[label2];
 			break;
 		case NOTE_OUT:
 			str1 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label1];
-			str2 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label2];
+			// memory problem, ie. called with label=65535(-1)
+			if (label2>=univ.scenario.outdoors[label1b][label2b]->spec_strs.size())
+				showError("cStringRecorder(): bad label 2.");
+			else
+				str2 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label2];
 			break;
 	}
 	if(univ.party.record(type, str1, location))

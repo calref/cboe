@@ -215,7 +215,12 @@ short combat_obscurity(short x, short y) {
 }
 
 ter_num_t coord_to_ter(short x,short y) {
-	return is_out() ? univ.out[x][y] : univ.town->terrain(x,y);
+	if (is_out())
+		return univ.out[x][y];
+	// ASAN called by place_road(..., false) with (x,y)=(univ.town->max_dim,univ.town->max_dim)
+	if (x<0 || y<0 || x>=univ.town->max_dim || y>=univ.town->max_dim)
+		return 0;
+	return univ.town->terrain(x,y);
 }
 
 ////
@@ -248,7 +253,7 @@ void update_explored(location dest) {
 			for(look.y = shortdest.y - 4; look.y < shortdest.y + 5; look.y++) {
 				// TODO: Windows had an extra check, is this needed?
 				//if((look.x == minmax(0,95,(int)look.x)) && (look.y == minmax(0,95,(int)look.y))) {
-				if(univ.out.out_e[look.x][look.y] == 0)
+				if(look.x>=0 && look.y>=0 && look.x<96 && look.y<96 && univ.out.out_e[look.x][look.y] == 0)
 					if(can_see_light(shortdest, look, sight_obscurity) < 5)
 						univ.out.out_e[look.x][look.y] = 1;
 				//}
@@ -268,8 +273,12 @@ void update_explored(location dest) {
 bool is_blocked(location to_check) {
 	short gr;
 	ter_num_t ter;
-	
+	// ASAN: location can be bad if we are called by place_party
+	if (to_check.x<0 || to_check.y<0)
+		return true;
 	if(is_out()) {
+		if (to_check.x>=96 || to_check.y>=96) // checkme: maybe >=48
+			return true;
 		if(impassable(univ.out[to_check.x][to_check.y])) {
 			return true;
 		}
@@ -283,6 +292,8 @@ bool is_blocked(location to_check) {
 	}
 	
 	if((is_town()) || (is_combat())) {
+		if (to_check.x >= univ.town->max_dim || to_check.y >= univ.town->max_dim)
+			return true;
 		ter = univ.town->terrain(to_check.x,to_check.y);
 		gr = univ.scenario.ter_types[ter].picture;
 		
@@ -396,6 +407,9 @@ bool can_see_monst(location l,short m_num) {
 
 bool outd_is_blocked(location to_check) {
 	if(overall_mode == MODE_OUTDOORS) {
+		// ASAN to_check can be bad if called by outdoor_move_monster (by rand_move)
+		if (to_check.x<0 || to_check.y<0 || to_check.x>=96 || to_check.y>=96)
+			return true;
 		if(impassable(univ.out[to_check.x][to_check.y])) {
 			return true;
 		}

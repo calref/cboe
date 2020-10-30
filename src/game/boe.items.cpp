@@ -21,6 +21,7 @@
 #include "strdlog.hpp"
 #include "3choice.hpp"
 #include "message.hpp"
+#include "prefs.hpp"
 #include <array>
 #include <boost/lexical_cast.hpp>
 #include "winutil.hpp"
@@ -312,17 +313,24 @@ void set_town_attitude(short lo,short hi,eAttitude att) {
 	univ.town.monst.hostile = true;
 	long long num_monst = univ.town.monst.size();
 	
-	// Nice smart indexing, like Python :D
-	if(lo <= -num_monst)
-		lo = 0;
-	if(lo < 0)
-		lo = num_monst + lo;
-	if(hi <= -num_monst)
-		hi = 0;
-	if(hi < 0)
-		hi = num_monst + hi;
-	if(hi < lo)
-		std::swap(lo, hi);
+	if (lo==-1 && hi==-1) {
+		// All monsters
+		lo=0;
+		hi=num_monst-1;
+	}
+	else {
+		// Nice smart indexing, like Python :D
+		if(lo <= -num_monst)
+			lo = 0;
+		if(lo < 0)
+			lo = num_monst + lo;
+		if(hi <= -num_monst)
+			hi = 0;
+		if(hi < 0)
+			hi = num_monst + hi;
+		if(hi < lo)
+			std::swap(lo, hi);
+	}
 	
 	for(short i = lo; i <= hi; i++) {
 		if(univ.town.monst[i].active > 0 && univ.town.monst[i].summon_time == 0){
@@ -387,7 +395,8 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 	if(first_item_shown == 0)
 		me["up"].hide();
 	else me["up"].show();
-	if(first_item_shown > item_array.size() - 7 ||
+	// ASAN undefined behaviour, ie. item_array.size can be less than 7
+	if(first_item_shown+7 > item_array.size() ||
 	   item_array.size() <= 8)
 		me["down"].hide();
 	else me["down"].show();
@@ -672,9 +681,17 @@ short get_num_of_items(short max_num) {
 }
 
 void init_mini_map() {
-	mini_map.create(sf::VideoMode(296,277), "Map", sf::Style::Titlebar | sf::Style::Close);
+	float ui_scale = get_float_pref("UIMapScale", 1.0);
+	if (ui_scale < 0.1) ui_scale = 1.0;
+	if (mini_map.isOpen()) mini_map.close();
+	mini_map.create(sf::VideoMode(ui_scale*296,ui_scale*277), "Map", sf::Style::Titlebar | sf::Style::Close);
 	mini_map.setPosition(sf::Vector2i(52,62));
+	sf::View view;
+	view.reset(sf::FloatRect(0, 0, ui_scale*296,ui_scale*277));
+	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
+	mini_map.setView(view);
 	mini_map.setVisible(false);
+	map_visible=false;
 	setWindowFloating(mini_map, true);
 	makeFrontWindow(mainPtr);
 	

@@ -484,8 +484,9 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 					}
 				}
 			} else if(overall_mode == MODE_LOOK_OUTDOORS) {
+				location lDest=global_to_local(destination);
 				for(int k = 0; k < univ.out->sign_locs.size(); k++) {
-					if(destination == univ.out->sign_locs[k]) {
+					if(lDest == univ.out->sign_locs[k]) {
 						need_reprint = true;
 						if(adjacent(univ.out->sign_locs[k],univ.party.loc_in_sec))
 							do_sign(200 + get_outdoor_num(),k,ter_looked_at);
@@ -589,7 +590,7 @@ static void handle_talk(location destination, bool& did_something, bool& need_re
 						str = univ.scenario.spec_strs[small_talk - 1000];
 					// TODO: Come up with a set of pre-cooked responses.
 					add_string_to_buf("Talk: " + str, 4);
-				} else {
+				} else if (univ.town.monst[i].active) {
 					start_talk_mode(i,univ.town.monst[i].personality,univ.town.monst[i].number,univ.town.monst[i].facial_pic);
 					did_something = false;
 					need_redraw = false;
@@ -1182,7 +1183,7 @@ bool handle_action(const sf::Event& event) {
 		
 		// Looking at something
 		else if(overall_mode == MODE_LOOK_OUTDOORS || overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_LOOK_COMBAT) {
-			if(overall_mode == MODE_LOOK_OUTDOORS) destination = univ.party.loc_in_sec;
+			if(overall_mode == MODE_LOOK_OUTDOORS) destination = univ.party.out_loc;
 			destination.x = destination.x + i - 4;
 			destination.y = destination.y + j - 4;
 			handle_look(destination, need_redraw, need_reprint);
@@ -2524,7 +2525,7 @@ void handle_hunting() {
 	for(cPlayer& pc : univ.party)
 		if(pc.is_alive() && pc.traits[trait] && get_ran(1,0,12) == 5) {
 			univ.party.food += get_ran(univ.scenario.ter_types[ter].flag1,1,6);
-			add_string_to_buf(pc.name + "hunts.");
+			add_string_to_buf(pc.name + " hunts.");
 			put_pc_screen();
 		}
 }
@@ -2582,7 +2583,7 @@ void handle_death() {
 			fs::path file_to_load = nav_get_party();
 			if(!file_to_load.empty()) load_party(file_to_load, univ);
 			if(univ.party.is_alive()) {
-				if(overall_mode != MODE_STARTUP)
+				if(overall_mode == MODE_STARTUP)
 					post_load(), finish_load_party();
             	return;
 			}
@@ -2625,7 +2626,7 @@ void start_new_game(bool force) {
 	
 	// Destroy party graphics
 	extern cCustomGraphics spec_scen_g;
-	spec_scen_g.party_sheet.reset();
+	spec_scen_g.party_sheet=Texture();
 	
 	// The original code called build_outdoors here, but they're not even in a scenario, so I removed it.
 	// It was probably a relic of Exile III.
@@ -2754,7 +2755,7 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 		univ.party.boats[univ.party.in_boat].which_town = univ.party.town_num;
 	}else{
 		univ.party.boats[univ.party.in_boat].which_town = 200;
-		univ.party.boats[univ.party.in_boat].loc = univ.party.out_loc;
+		univ.party.boats[univ.party.in_boat].loc = global_to_local(univ.party.out_loc);
 		univ.party.boats[univ.party.in_boat].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
 		univ.party.boats[univ.party.in_boat].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 	}
@@ -2935,7 +2936,7 @@ bool outd_move_party(location destination,bool forced) {
 			}
 			if(univ.party.in_horse >= 0) {
 				univ.party.horses[univ.party.in_horse].which_town = 200;
-				univ.party.horses[univ.party.in_horse].loc = univ.party.out_loc;
+				univ.party.horses[univ.party.in_horse].loc = global_to_local(univ.party.out_loc);
 				univ.party.horses[univ.party.in_horse].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
 				univ.party.horses[univ.party.in_horse].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 				
@@ -2971,10 +2972,10 @@ bool town_move_party(location destination,short forced) {
 		forced = true;
 	if(univ.debug_mode && univ.ghost_mode)
 		forced = keep_going = true;
-	
-	ter = univ.town->terrain(destination.x,destination.y);
-	
+
 	if(keep_going) {
+		// ASAN destination is only correct if keep_going=true
+		ter = univ.town->terrain(destination.x,destination.y);
 		if(univ.party.in_boat >= 0) {
 			if((!is_blocked(destination)) && (!is_special(destination))
 				// If to bridge, exit if heading diagonal, keep going if heading horiz or vert

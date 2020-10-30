@@ -264,7 +264,10 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 					}
 				}
 			}
-		else univ.party.town_num = 200;
+		else {
+			univ.party.town_num = 200;
+			univ.town.difficulty = univ.scenario.difficulty;
+		}
 	}
 	
 	real_univ = std::move(univ);
@@ -287,22 +290,6 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 			return false;
 		}
 		univ.party.readFrom(fin);
-	}
-	
-	{ // Then the "setup" array
-		std::istream& fin = partyIn.getFile("save/setup.dat");
-		if(!fin) {
-			showError("Loading Blades of Exile save file failed.");
-			return false;
-		}
-		uint16_t magic;
-		fin.read((char*)&magic, 2);
-		fin.read((char*)&univ.party.setup, sizeof(univ.party.setup));
-		if(magic == 0x0E0B) // should be 0x0B0E!
-			for(auto& i : univ.party.setup)
-				for(auto& j : i)
-					for(auto& k : j)
-						flip_short(reinterpret_cast<int16_t*>(&k));
 	}
 	
 	// Next load the PCs
@@ -354,6 +341,22 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 			univ.scenario.readFrom(fin);
 		}
 		
+		{ // Then the "setup" array
+			std::istream& fin = partyIn.getFile("save/setup.dat");
+			if(!fin) {
+				showError("Loading Blades of Exile save file failed.");
+				return false;
+			}
+			uint16_t magic;
+			fin.read((char*)&magic, 2);
+			fin.read((char*)&univ.party.setup, sizeof(univ.party.setup));
+			if(magic == 0x0E0B) // should be 0x0B0E!
+			for(auto& i : univ.party.setup)
+			for(auto& j : i)
+			for(auto& k : j)
+			flip_short(reinterpret_cast<int16_t*>(&k));
+		}
+		
 		if(partyIn.hasFile("save/town.txt")) {
 			// Load town data
 			std::istream& fin = partyIn.getFile("save/town.txt");
@@ -362,14 +365,15 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 				return false;
 			}
 			univ.town.readFrom(fin);
-			
+		} else univ.party.town_num = 200;
+
+		if (partyIn.hasFile("save/townmaps.dat")) {
 			// Read town maps
 			std::istream& fin2 = partyIn.getFile("save/townmaps.dat");
 			for(int i = 0; i < univ.scenario.towns.size(); i++)
 				for(int j = 0; j < univ.scenario.towns[i]->max_dim; j++)
 					fin2 >> univ.scenario.towns[i]->maps[j];
-		} else univ.party.town_num = 200;
-		
+		}
 		// Load outdoors data
 		std::istream& fin = partyIn.getFile("save/out.txt");
 		if(!fin) {
@@ -394,7 +398,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 			sf::Texture sheet;
 			sheet.create(party_sheet.getSize().x, party_sheet.getSize().y);
 			sheet.update(party_sheet);
-			spec_scen_g.party_sheet.reset(new sf::Texture(sheet));
+			spec_scen_g.party_sheet=Texture(sheet);
 		} else showWarning("There was an error loading the party custom graphics.");
 	}
 	
@@ -415,13 +419,6 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 	
 	// First, write the main party data
 	univ.party.writeTo(partyOut.newFile("save/party.txt"));
-	univ.scenario.writeTo(partyOut.newFile("save/scenario.txt"));
-	{
-		std::ostream& fout = partyOut.newFile("save/setup.dat");
-		static uint16_t magic = 0x0B0E;
-		fout.write((char*)&magic, 2);
-		fout.write((char*)&univ.party.setup, sizeof(univ.party.setup));
-	}
 	
 	// Then write the data for each of the party members
 	for(int i = 0; i < 6; i++) {
@@ -441,6 +438,15 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 	}
 	
 	if(!univ.party.scen_name.empty()) {
+		univ.scenario.writeTo(partyOut.newFile("save/scenario.txt"));
+
+		{
+			std::ostream& fout = partyOut.newFile("save/setup.dat");
+			static uint16_t magic = 0x0B0E;
+			fout.write((char*)&magic, 2);
+			fout.write((char*)&univ.party.setup, sizeof(univ.party.setup));
+		}
+
 		if(univ.party.town_num < 200) {
 			// Write the current town data
 			univ.town.writeTo(partyOut.newFile("save/town.txt"));

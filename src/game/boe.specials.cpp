@@ -183,10 +183,10 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	// TODO: Why not support conveyors outdoors, too?
 	if(mode != eSpecCtx::OUT_MOVE && ter_special == eTerSpec::CONVEYOR) {
 		if(
-			((ter_flag3 == DIR_N) && (where_check.y > from_loc.y)) ||
-			((ter_flag3 == DIR_E) && (where_check.x < from_loc.x)) ||
-			((ter_flag3 == DIR_S) && (where_check.y < from_loc.y)) ||
-			((ter_flag3 == DIR_W) && (where_check.x > from_loc.x)) ) {
+			((ter_flag1 == DIR_N) && (where_check.y > from_loc.y)) ||
+			((ter_flag1 == DIR_E) && (where_check.x < from_loc.x)) ||
+			((ter_flag1 == DIR_S) && (where_check.y < from_loc.y)) ||
+			((ter_flag1 == DIR_W) && (where_check.x > from_loc.x)) ) {
 			ASB("The moving floor prevents you.");
 			return false;
 		}
@@ -1436,7 +1436,7 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 	// Absorb damage?
 	if((dam_type == eDamageType::FIRE || dam_type == eDamageType::MAGIC || dam_type == eDamageType::COLD)
 		&& victim.abil[eMonstAbil::ABSORB_SPELLS].active && get_ran(1,1,1000) <= victim.abil[eMonstAbil::ABSORB_SPELLS].special.extra1) {
-		if(32767 - victim.health > how_much)
+		if(32767 - victim.health < how_much)
 			victim.health = 32767;
 		else victim.health += how_much;
 		ASB("  Magic absorbed.");
@@ -1670,11 +1670,13 @@ void push_things() {
 		if(univ.town.monst[i].active > 0) {
 			l = univ.town.monst[i].cur_loc;
 			ter = univ.town->terrain(l.x,l.y);
-			switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
-				case DIR_N: l.y--; break;
-				case DIR_E: l.x++; break;
-				case DIR_S: l.y++; break;
-				case DIR_W: l.x--; break;
+			if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
+				switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+					case DIR_N: l.y--; break;
+					case DIR_E: l.x++; break;
+					case DIR_S: l.y++; break;
+					case DIR_W: l.x--; break;
+				}
 			}
 			if(l != univ.town.monst[i].cur_loc) {
 				univ.town.monst[i].cur_loc = l;
@@ -1687,11 +1689,13 @@ void push_things() {
 		if(univ.town.items[i].variety != eItemType::NO_ITEM) {
 			l = univ.town.items[i].item_loc;
 			ter = univ.town->terrain(l.x,l.y);
-			switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
-				case DIR_N: l.y--; break;
-				case DIR_E: l.x++; break;
-				case DIR_S: l.y++; break;
-				case DIR_W: l.x--; break;
+			if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
+				switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+					case DIR_N: l.y--; break;
+					case DIR_E: l.x++; break;
+					case DIR_S: l.y++; break;
+					case DIR_W: l.x--; break;
+				}
 			}
 			if(l != univ.town.items[i].item_loc) {
 				univ.town.items[i].item_loc = l;
@@ -1704,11 +1708,13 @@ void push_things() {
 	if(is_town()) {
 		ter = univ.town->terrain(univ.party.town_loc.x,univ.party.town_loc.y);
 		l = univ.party.town_loc;
-		switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
-			case DIR_N: l.y--; break;
-			case DIR_E: l.x++; break;
-			case DIR_S: l.y++; break;
-			case DIR_W: l.x--; break;
+		if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
+			switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+				case DIR_N: l.y--; break;
+				case DIR_E: l.x++; break;
+				case DIR_S: l.y++; break;
+				case DIR_W: l.x--; break;
+			}
 		}
 		if(l != univ.party.town_loc) {
 			// TODO: Will this push you into a placed forcecage or barrier? Should it?
@@ -1744,11 +1750,13 @@ void push_things() {
 			if(univ.party[i].main_status == eMainStatus::ALIVE) {
 				ter = univ.town->terrain(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y);
 				l = univ.party[i].combat_pos;
-				switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
-					case DIR_N: l.y--; break;
-					case DIR_E: l.x++; break;
-					case DIR_S: l.y++; break;
-					case DIR_W: l.x--; break;
+				if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
+					switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+						case DIR_N: l.y--; break;
+						case DIR_E: l.x++; break;
+						case DIR_S: l.y++; break;
+						case DIR_W: l.x--; break;
+					}
 				}
 				if(l != univ.party[i].combat_pos) {
 					ASB("Someone gets pushed.");
@@ -1847,7 +1855,12 @@ void special_increase_age(long length, bool queue) {
 			if(univ.town->timers[i].time > 0) {
 				short time = univ.town->timers[i].time;
 				bool need_redraw = false;
-				for(unsigned long j = age_before + (time == 1); j <= current_age; j++)
+				// age_before is already done excepted the first time,
+				//	  so maybe j = age_before + ((age_before || time==1) ? 1 : 0)
+				// checkme: currently, in combat, current_pc_picked_in_spec_enc picks only the current character
+				//		  which seems bad, it seems better to alway pick the party in these cases:
+				//		  case eSpecCtx::TOWN_TIMER: case eSpecCtx::SCEN_TIMER: case eSpecCtx::PARTY_TIMER
+				for(unsigned long j = age_before + 1; j <= current_age; j++)
 					if(j % time == 0) {
 						if(queue) {
 							univ.party.age = j;
@@ -1864,7 +1877,7 @@ void special_increase_age(long length, bool queue) {
 		if(univ.scenario.scenario_timers[i].time > 0) {
 			short time = univ.scenario.scenario_timers[i].time;
 			bool need_redraw = false;
-			for(unsigned long j = age_before + (time == 1); j <= current_age; j++)
+			for(unsigned long j = age_before + 1; j <= current_age; j++)
 				if(j % time == 0) {
 					if(queue) {
 						univ.party.age = j;
@@ -1909,7 +1922,11 @@ void queue_special(eSpecCtx mode, eSpecCtxType which_type, spec_num_t spec, loca
 	queued_special.type = which_type;
 	queued_special.mode = mode;
 	queued_special.trigger_time = univ.party.age;
-	special_queue.push(queued_special);
+	// FIXME: I forced calling the leave special just to avoid calling them outside, ie. with town_num=200
+	if (mode==eSpecCtx::LEAVE_TOWN)
+		run_special(queued_special, nullptr, nullptr, nullptr);
+	else
+		special_queue.push(queued_special);
 }
 
 void run_special(pending_special_type spec, short* a, short* b, bool* redraw) {
@@ -2082,6 +2099,10 @@ cSpecial get_node(spec_num_t cur_spec, eSpecCtxType cur_spec_type) {
 			}
 			return univ.out->specials[cur_spec];
 		case eSpecCtxType::TOWN:
+			if (is_out()) {
+				showError("The scenario called a town special node but it is not in town.");
+				return dummy_node;
+			}
 			if(cur_spec != minmax(0,univ.town->specials.size() - 1,cur_spec)) {
 				showError("The scenario called a town special node out of range.");
 				return dummy_node;
@@ -2466,7 +2487,7 @@ void oneshot_spec(const runtime_state& ctx) {
 	}
 	switch(cur_node.type) {
 		case eSpecType::ONCE_GIVE_ITEM:
-			if(spec.ex2b >= 0 && spec.ex2b < univ.scenario.scen_items.size() &&
+			if(spec.ex1a >= 0 && spec.ex1a < univ.scenario.scen_items.size() &&
 					!univ.party.forced_give(univ.scenario.scen_items[spec.ex1a],eItemAbil::NONE)) {
 				set_sd = false;
 				if( spec.ex2b >= 0)
@@ -2635,8 +2656,10 @@ void affect_spec(const runtime_state& ctx) {
 			// (Actually, I think the only compatibility thing is that it's <= instead of ==)
 			if(spec.ex2a <= 0) {
 				int i;
-				if(spec.ex1a == 2)
+				if(spec.ex1a == 2) {
+					i = -1; // CHECKME
 					ctx.cur_target = &univ.party;
+				}
 				else if(spec.ex1a == 1) {
 					i = select_pc(0);
 					if(i != 6)
@@ -2800,7 +2823,13 @@ void affect_spec(const runtime_state& ctx) {
 				for(short i = 0; i < 6; i++)
 					if(pc_num == 6 || pc_num == i) {
 						if(spec.ex1b == 0) {
-							if(spec.ex1a == 3 && is_combat() && which_combat_type == 0 && univ.party[i].main_status == eMainStatus::FLED)
+							if(spec.ex1a == 0 && univ.party[i].main_status == eMainStatus::DEAD)
+								univ.party[i].main_status = eMainStatus::ALIVE;
+							else if(spec.ex1a == 1 && univ.party[i].main_status == eMainStatus::DUST)
+								univ.party[i].main_status = eMainStatus::ALIVE;
+							else if(spec.ex1a == 2 && univ.party[i].main_status == eMainStatus::STONE)
+								univ.party[i].main_status = eMainStatus::ALIVE;
+							else if(spec.ex1a == 3 && is_combat() && which_combat_type == 0 && univ.party[i].main_status == eMainStatus::FLED)
 								univ.party[i].main_status = eMainStatus::ALIVE;
 							else if(spec.ex1a == 4)
 								univ.party[i].main_status -= eMainStatus::SPLIT;
@@ -3685,11 +3714,11 @@ void ifthen_spec(const runtime_state& ctx) {
 				ctx.next_spec = spec.ex1c;
 			break;
 		case eSpecType::IF_IN_BOAT:
-			if((spec.ex1b == -1 && univ.party.in_boat >= 0) || spec.ex1b == univ.party.in_boat)
+			if(univ.party.in_boat >= 0 && (spec.ex1b < 0 || spec.ex1b == univ.party.in_boat))
 				ctx.next_spec = spec.ex1c;
 			break;
 		case eSpecType::IF_ON_HORSE:
-			if((spec.ex1b == -1 && univ.party.in_horse >= 0) || spec.ex1b == univ.party.in_horse)
+			if(univ.party.in_horse >= 0 && (spec.ex1b < 0 || spec.ex1b == univ.party.in_horse))
 				ctx.next_spec = spec.ex1c;
 			break;
 		default:
@@ -4366,21 +4395,22 @@ void rect_spec(const runtime_state& ctx){
 							case FIELD_SMASH: crumble_wall(loc(i,j)); break;
 						}
 					break;
-				case eSpecType::RECT_MOVE_ITEMS:
+				case eSpecType::RECT_MOVE_ITEMS: {
 					if(is_out())
 						return;
-					i = is_container(loc(spec.sd1,spec.sd2));
+					bool isContainer=is_container(loc(spec.sd1,spec.sd2));
 					for(short k = 0; k < univ.town.items.size(); k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].item_loc == l) {
 							univ.town.items[k].item_loc.x = spec.sd1;
 							univ.town.items[k].item_loc.y = spec.sd2;
-							if(i && spec.m3) {
+							if(isContainer && spec.m3) {
 								univ.town.items[k].contained = is_container(univ.town.items[k].item_loc);
 								if(univ.town.is_crate(spec.sd1,spec.sd2) || univ.town.is_barrel(spec.sd1,spec.sd2))
 									univ.town.items[k].held = true;
 							}
 						}
 					break;
+				}
 				case eSpecType::RECT_DESTROY_ITEMS:
 					if(is_out())
 						return;

@@ -113,8 +113,14 @@ void start_shop_mode(short which,short cost_adj,std::string store_name) {
 	active_shop.setName(store_name);
 	
 	area_rect = talk_area_rect;
-	talk_gworld.create(area_rect.width(), area_rect.height());
-	
+	float ui_scale= get_float_pref("UIScale", 1.0);
+	if (ui_scale < 1) ui_scale = 1.0;
+	talk_gworld.create(int(ui_scale*area_rect.width()), int(ui_scale*area_rect.height()));
+	sf::View view;
+	view.reset(sf::FloatRect(0,0, int(ui_scale*area_rect.width()), int(ui_scale*area_rect.height())));
+	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
+	talk_gworld.setView(view);
+
 	store_pre_shop_mode = overall_mode;
 	overall_mode = MODE_SHOPPING;
 	stat_screen_mode = MODE_SHOP;
@@ -218,6 +224,9 @@ void handle_shop_event(location p) {
 	}
 
 	for(short i = 0; i < 8; i++) {
+		// asan: 
+		if (i + shop_sbar->getPosition()>=shop_array.size())
+			break;
 		unsigned long what_picked = shop_array[i + shop_sbar->getPosition()];
 		if(what_picked >= active_shop.size()) break;
 		if(active_shop.getItem(what_picked).type == eShopItemType::EMPTY)
@@ -545,7 +554,8 @@ void set_up_shop_array() {
 				break;
 		}
 	}
-	shop_sbar->setMaximum(shop_array.size() - 8);
+	// ASAN undefined behaviour
+	shop_sbar->setMaximum(long(shop_array.size()) - 8);
 }
 
 void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short store_face_pic) {
@@ -557,7 +567,13 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	store_m_num = m_num;
 	store_talk_face_pic = store_face_pic; ////
 	area_rect = talk_area_rect;
-	talk_gworld.create(area_rect.width(), area_rect.height());
+	float ui_scale= get_float_pref("UIScale", 1.0);
+	if (ui_scale < 1) ui_scale = 1.0;
+	talk_gworld.create(int(ui_scale*area_rect.width()), int(ui_scale*area_rect.height()));
+	sf::View view;
+	view.reset(sf::FloatRect(0,0, talk_gworld.getSize().x, talk_gworld.getSize().y));
+	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
+	talk_gworld.setView(view);
 	help_btn->show();
 	
 	// This would be the place to show the text box, if I add it.
@@ -740,7 +756,7 @@ void handle_talk_event(location p) {
 				beep();
 				return;
 			}
-			if(univ.party.save_talk(univ.town->talking.people[store_personality].title, univ.town->name, save_talk_str1, save_talk_str2)) {
+			if(univ.party.save_talk(univ.town->talking.people[store_personality%10].title, univ.town->name, save_talk_str1, save_talk_str2)) {
 				give_help(57,0);
 				play_sound(0);
 				ASB("Noted in journal.");
@@ -1137,11 +1153,28 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		if(dynamic_cast<cLed&>(me["resethelp"]).getState() == led_red) {
 			reset_help = true;
 		}
-		cLed& ui_scale = dynamic_cast<cLed&>(me["scaleui"]);
-		if(ui_scale.getState() == led_off)
+		std::string scale = dynamic_cast<cLedGroup&>(me["scaleui"]).getSelected();
+		if(scale == "1")
 			set_pref("UIScale", 1.0);
-		else if(ui_scale.getState() == led_red)
+		else if(scale == "1_5")
+			set_pref("UIScale", 1.5);
+		else if(scale == "2")
 			set_pref("UIScale", 2.0);
+		else if(scale == "3")
+			set_pref("UIScale", 3.0);
+		else if(scale == "4")
+			set_pref("UIScale", 4.0);
+		std::string scale_map = dynamic_cast<cLedGroup&>(me["scalemap"]).getSelected();
+		if(scale_map == "1")
+			set_pref("UIMapScale", 1.0);
+		else if(scale_map == "1_5")
+			set_pref("UIMapScale", 1.5);
+		else if(scale_map == "2")
+			set_pref("UIMapScale", 2.0);
+		else if(scale_map == "3")
+			set_pref("UIMapScale", 3.0);
+		else if(scale_map == "4")
+			set_pref("UIMapScale", 4.0);
 	}
 	save_prefs(reset_help);
 	return true;
@@ -1205,15 +1238,30 @@ void pick_preferences() {
 			break;
 	}
 	
+	cLedGroup& uiScale = dynamic_cast<cLedGroup&>(prefsDlog["scaleui"]);
 	float ui_scale = get_float_pref("UIScale", 1.0);
-	dynamic_cast<cLed&>(prefsDlog["scaleui"]).setState(ui_scale == 1.0 ? led_off : (ui_scale == 2.0 ? led_red : led_green));
-	
+	if (ui_scale>0.95 && ui_scale<1.05) uiScale.setSelected("1");
+	else if (ui_scale>1.45 && ui_scale<1.55) uiScale.setSelected("1_5");
+	else if (ui_scale>1.95 && ui_scale<2.05) uiScale.setSelected("2");
+	else if (ui_scale>2.95 && ui_scale<3.05) uiScale.setSelected("3");
+	else if (ui_scale>3.95 && ui_scale<4.05) uiScale.setSelected("4");
+	else uiScale.setSelected("other");
+
+	cLedGroup& uiMapScale = dynamic_cast<cLedGroup&>(prefsDlog["scalemap"]);
+	float ui_map_scale = get_float_pref("UIMapScale", 1.0);
+	if (ui_map_scale>0.95 && ui_map_scale<1.05) uiMapScale.setSelected("1");
+	else if (ui_map_scale>1.45 && ui_map_scale<1.55) uiMapScale.setSelected("1_5");
+	else if (ui_map_scale>1.95 && ui_map_scale<2.05) uiMapScale.setSelected("2");
+	else if (ui_map_scale>2.95 && ui_map_scale<3.05) uiMapScale.setSelected("3");
+	else if (ui_map_scale>3.95 && ui_map_scale<4.05) uiMapScale.setSelected("4");
+	else uiMapScale.setSelected("other");
+
 	void (*give_help)(short,short,cDialog&) = ::give_help;
 	
 	int store_display_mode = get_int_pref("DisplayMode");
 	prefsDlog.run(std::bind(give_help, 55, 0, std::ref(prefsDlog)));
 	
-	if(get_int_pref("DisplayMode") != store_display_mode || get_float_pref("UIScale") != ui_scale)
+	if(get_int_pref("DisplayMode") != store_display_mode || get_float_pref("UIScale") != ui_scale || get_float_pref("UIMapScale") != ui_map_scale)
 		changed_display_mode = true;
 }
 

@@ -12,6 +12,8 @@
 #include "winutil.hpp"
 #include "undo.hpp"
 
+extern short menuChoiceId;
+
 using MenuHandle = NSMenu*;
 MenuHandle menu_bar_handle;
 MenuHandle file_menu, edit_menu, app_menu, scen_menu, town_menu, out_menu, help_menu;
@@ -77,6 +79,7 @@ void init_menubar() {
 	
 	MenuHandler* handler = [[[MenuHandler alloc] init] retain];
 	setMenuCallback([app_menu itemWithTitle: @"About BoE Scenario Editor"], handler, @selector(menuChoice:), int(eMenu::ABOUT));
+	setMenuCallback([app_menu itemWithTitle: @"Preferences…"], handler, @selector(menuChoice:), int(eMenu::PREFS));
 	setMenuCallback([app_menu itemWithTitle: @"Quit BoE Scenario Editor"], handler, @selector(menuChoice:), int(eMenu::QUIT));
 	
 	int i = 0;
@@ -166,6 +169,7 @@ void update_edit_menu() {
 
 @implementation MenuHandler
 -(void) menuChoice:(id) sender {
-	handle_menu_choice(eMenu([[sender representedObject] intValue]));
+	menuChoiceId=short([[sender representedObject] intValue]);
+	//handle_menu_choice(eMenu([[sender representedObject] intValue]));
 }
 @end

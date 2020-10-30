@@ -23,6 +23,7 @@
 
 #define	DONE_BUTTON_ITEM	1
 
+extern bool end_scenario;
 extern eStatMode stat_screen_mode;
 extern eGameMode overall_mode;
 extern bool party_in_memory;
@@ -59,6 +60,7 @@ void finish_load_party(){
 	bool town_restore = univ.party.town_num < 200;
 	bool in_scen = univ.party.scen_name.length() > 0;
 	
+	end_scenario = false;
 	party_in_memory = true;
 	
 	// now if not in scen, this is it.
@@ -93,6 +95,9 @@ void finish_load_party(){
 	
 	overall_mode = town_restore ? MODE_TOWN : MODE_OUTDOORS;
 	stat_screen_mode = MODE_INVEN;
+	// build_outdoors call add_outdoor_maps, so we must update them first
+	// checkme: true for actual files, unsure for a legacy saved file
+	save_outdoor_maps();
 	build_outdoors();
 	erase_out_specials();
 	

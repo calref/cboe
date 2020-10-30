@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='done'>
+	<pict name='pict' type='dlog' num='8' top='9' left='9'/>
+	<text name='title' framed='true' top='9' left='55' width='257' height='19'/>
+	<button name='done' type='done' top='40' left='251'/>
+	<button name='record' type='regular' def-key='r' top='40' left='8'>Record</button>
+</dialog>

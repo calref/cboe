@@ -1,6 +1,10 @@
 
 #include <SFML/Graphics.hpp>
 
+#ifdef __APPLE__
+extern eMenuChoice menuChoice;
+extern short menuChoiceId;
+#endif
 int main(int argc, char* argv[]);
 void update_everything();
 void redraw_everything();

@@ -84,7 +84,7 @@ long anim_ticks = 0;
 extern enum_map(eGuiArea, rectangle) win_to_rects;
 
 // 0 - title  1 - button  2 - credits  3 - base button
-rectangle startup_from[4] = {{0,0,274,602},{274,0,322,301},{0,301,67,579},{274,301,314,341}};
+rectangle const startup_from[4] = {{0,0,274,602},{274,0,322,301},{0,301,67,579},{274,301,314,341}};
 extern enum_map(eStartButton, rectangle) startup_button;
 
 rectangle	top_left_rec = {0,0,36,28};
@@ -96,13 +96,15 @@ short debug_nums[6] = {0,0,0,0,0,0};
 char light_area[13][13];
 char unexplored_area[13][13];
 
-// Declare the graphics
+// Declare the graphics and their dimension
 sf::RenderTexture pc_stats_gworld;
 sf::RenderTexture item_stats_gworld;
 sf::RenderTexture text_area_gworld;
 sf::RenderTexture terrain_screen_gworld;
 sf::RenderTexture text_bar_gworld;
 sf::RenderTexture map_gworld;
+rectangle terrain_screen_rect;
+rectangle text_area_rect;
 
 bool has_run_anim = false,currently_loading_graphics = false;
 
@@ -169,7 +171,7 @@ void adjust_window_mode() {
 	mainView.setViewport(mainPort);
 	
 #ifndef __APPLE__ // This overrides Dock icon on OSX, which isn't what we want at all
-	const ImageRsrc& icon = ResMgr::graphics.get("icon", true);
+	auto const & icon = *ResMgr::textures.get("icon", true);
 	mainPtr.setIcon(icon->getSize().x, icon->getSize().y, icon->copyToImage().getPixelsPtr());
 #endif
 
@@ -243,13 +245,13 @@ sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, int mode, float 
 
 void init_startup() {
 	// Preload the main startup images
-	ResMgr::graphics.get("startup", true);
-	ResMgr::graphics.get("startbut", true);
-	ResMgr::graphics.get("startanim", true);
+	ResMgr::textures.get("startup", true);
+	ResMgr::textures.get("startbut", true);
+	ResMgr::textures.get("startanim", true);
 }
 
 void draw_startup(short but_type) {
-	sf::Texture& startup_gworld = *ResMgr::graphics.get("startup", true);
+	auto const &startup_gworld = *ResMgr::textures.get("startup", true);
 	rect_draw_some_item(startup_gworld,startup_from[0],mainPtr,startup_top);
 	
 	for(auto btn : startup_button.keys()) {
@@ -269,9 +271,11 @@ void draw_startup_anim(bool advance) {
 	anim_from = anim_to;
 	anim_from.offset(-1,-4 + startup_anim_pos);
 	if(advance) startup_anim_pos = (startup_anim_pos + 1) % 542;
-	rect_draw_some_item(*ResMgr::graphics.get("startbut",true),anim_size,mainPtr,startup_button[STARTBTN_SCROLL]);
+	auto const &startbut=*ResMgr::textures.get("startbut",true);
+	rect_draw_some_item(startbut,rectangle(startbut),mainPtr,startup_button[STARTBTN_SCROLL]);
 	anim_to.offset(startup_button[STARTBTN_SCROLL].left, startup_button[STARTBTN_SCROLL].top);
-	rect_draw_some_item(*ResMgr::graphics.get("startanim",true),anim_from,mainPtr,anim_to,sf::BlendAlpha);
+	auto const &startanim=*ResMgr::textures.get("startanim",true);
+	rect_draw_some_item(startanim,anim_from,mainPtr,anim_to,sf::BlendAlpha);
 }
 
 void draw_startup_stats() {
@@ -315,20 +319,20 @@ void draw_startup_stats() {
 				to_rect.offset(pc_rect.left,pc_rect.top);
 				pic_num_t pic = univ.party[i].which_graphic;
 				if(pic >= 1000) {
-					std::shared_ptr<const sf::Texture> gw;
-					graf_pos_ref(gw, from_rect) = spec_scen_g.find_graphic(pic % 1000, pic >= 10000);
-					rect_draw_some_item(*gw,from_rect,mainPtr,to_rect,sf::BlendAlpha);
+					Texture gw;
+					std::tie(gw,from_rect) = spec_scen_g.find_graphic(pic % 1000, pic >= 10000);
+					rect_draw_some_item(gw,from_rect,mainPtr,to_rect,sf::BlendAlpha);
 				} else if(pic >= 100) {
 					pic -= 100;
 					// Note that we assume it's a 1x1 graphic.
 					// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
 					from_rect = get_monster_template_rect(pic, 0, 0);
 					int which_sheet = m_pic_index[pic].i / 20;
-					sf::Texture& monst_gworld = *ResMgr::graphics.get("monst" + std::to_string(1 + which_sheet));
+					auto const & monst_gworld = *ResMgr::textures.get("monst" + std::to_string(1 + which_sheet));
 					rect_draw_some_item(monst_gworld,from_rect,mainPtr,to_rect,sf::BlendAlpha);
 				} else {
 					from_rect = calc_rect(2 * (pic / 8), pic % 8);
-					sf::Texture& pc_gworld = *ResMgr::graphics.get("pcs");
+					auto const & pc_gworld = *ResMgr::textures.get("pcs");
 					rect_draw_some_item(pc_gworld,from_rect,mainPtr,to_rect,sf::BlendAlpha);
 				}
 				
@@ -420,14 +424,14 @@ void draw_start_button(eStartButton which_position,short which_button) {
 		"Start Scenario","Custom Scenario","Quit"};
 	// The 0..65535 version of the blue component was 14472; the commented version was 43144431
 	sf::Color base_color = {0,0,57};
-	
+	auto const &startup_gworld = *ResMgr::textures.get("startup",true);
 	from_rect = startup_from[3];
 	from_rect.offset((which_button > 0) ? 40 : 0,0);
 	to_rect = startup_button[which_position];
 	to_rect.left += 4; to_rect.top += 4;
 	to_rect.right = to_rect.left + 40;
 	to_rect.bottom = to_rect.top + 40;
-	rect_draw_some_item(*ResMgr::graphics.get("startup",true),from_rect,mainPtr,to_rect);
+	rect_draw_some_item(startup_gworld,from_rect,mainPtr,to_rect);
 	
 	TextStyle style;
 	style.font = FONT_DUNGEON;
@@ -477,22 +481,35 @@ void end_startup() {
 	item_sbar->show();
 }
 
-static void loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName) {
-	sf::Texture& temp_gworld = *ResMgr::graphics.get(imgName);
-	rectangle texrect(temp_gworld);
-	tex.create(texrect.width(), texrect.height());
-	rect_draw_some_item(temp_gworld, texrect, tex, texrect, sf::BlendNone);
+/* FIXME: normally, the renderTexture needed to be destroyed and recreated if the user
+		  change the UI scaling. Let assume for now that he restarts the application */
+static rectangle loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName) {
+	auto const& temp_gworld = *ResMgr::textures.get(imgName);
+	
+	float ui_scale = get_float_pref("UIScale", 1.0);
+	if(ui_scale < 1) ui_scale = 1.0;
+
+	rectangle texrect(*temp_gworld);
+	tex.create(int(ui_scale*temp_gworld.dimension.x), int(ui_scale*temp_gworld.dimension.y));
+	rect_draw_some_item(temp_gworld, rectangle(temp_gworld), tex, rectangle(tex), sf::BlendNone);
+
+	// now update the viewport so that a picture draw in 0,0,dim.y,dim.x fills the texture
+	sf::View view;
+	view.reset(sf::FloatRect(0, 0, rectangle(tex).width(), rectangle(tex).height()));
+	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
+	tex.setView(view);
+	return rectangle(0,0,temp_gworld.dimension.y,temp_gworld.dimension.x);
 }
 
 void load_main_screen() {
 	// Preload the main game interface images
-	ResMgr::graphics.get("invenbtns");
-	loadImageToRenderTexture(terrain_screen_gworld, "terscreen");
+	ResMgr::textures.get("invenbtns");
+	terrain_screen_rect=loadImageToRenderTexture(terrain_screen_gworld, "terscreen");
 	loadImageToRenderTexture(pc_stats_gworld, "statarea");
 	loadImageToRenderTexture(item_stats_gworld, "inventory");
-	loadImageToRenderTexture(text_area_gworld, "transcript");
+	text_area_rect=loadImageToRenderTexture(text_area_gworld, "transcript");
 	loadImageToRenderTexture(text_bar_gworld, "textbar");
-	ResMgr::graphics.get("buttons");
+	ResMgr::textures.get("buttons");
 }
 
 void redraw_screen(int refresh) {
@@ -621,8 +638,8 @@ void draw_text_bar() {
 }
 
 void put_text_bar(std::string str) {
-	text_bar_gworld.setActive();
-	auto& bar_gw = *ResMgr::graphics.get("textbar");
+	text_bar_gworld.setActive(false);
+	auto const &bar_gw = *ResMgr::textures.get("textbar");
 	rect_draw_some_item(bar_gw, rectangle(bar_gw), text_bar_gworld, rectangle(bar_gw));
 	TextStyle style;
 	style.colour = sf::Color::White;
@@ -635,7 +652,7 @@ void put_text_bar(std::string str) {
 	win_draw_string(text_bar_gworld, to_rect, str, eTextMode::LEFT_TOP, style);
 	
 	if(!monsters_going) {
-		sf::Texture& status_gworld = *ResMgr::graphics.get("staticons");
+		auto const & status_gworld = *ResMgr::textures.get("staticons");
 		to_rect.top -= 2;
 		to_rect.left = to_rect.right - 15;
 		to_rect.width() = 12;
@@ -658,12 +675,14 @@ void put_text_bar(std::string str) {
 		}
 	}
 	
+	text_bar_gworld.setActive();
 	text_bar_gworld.display();
 }
 
 void refresh_text_bar() {
-	mainPtr.setActive();
+	mainPtr.setActive(false);
 	rect_draw_some_item(text_bar_gworld.getTexture(), rectangle(text_bar_gworld), mainPtr, win_to_rects[WINRECT_STATUS]);
+	mainPtr.setActive();
 }
 
 // this is used for determinign whether to round off walkway corners
@@ -729,15 +748,17 @@ void draw_terrain(short	mode) {
 	if(is_combat())
 		view_loc = univ.party[(univ.cur_pc < 6) ? univ.cur_pc : first_active_pc()].combat_pos;
 	
+	// ASAN: check also outside bound
+	short max_dim = is_out() ? 96 : univ.town->max_dim;
 	for(short i = 0; i < 13; i++)
 		for(short j = 0; j < 13; j++) {
 			where_draw =  (is_out()) ? univ.party.out_loc : center;
 			where_draw.x += i - 6;
 			where_draw.y += j - 6;
 			if(!(is_out()))
-				light_area[i][j] = (is_town()) ? pt_in_light(view_loc,where_draw) : combat_pt_in_light(where_draw);
-			if(!(is_out()) && ((where_draw.x < 0) || (where_draw.x > univ.town->max_dim - 1)
-								|| (where_draw.y < 0) || (where_draw.y > univ.town->max_dim - 1)))
+				light_area[i][j] = (is_town()) ? (can_see_light(view_loc,where_draw,sight_obscurity)<=4) : combat_pt_in_light(where_draw);
+			if((where_draw.x < 0) || (where_draw.x > max_dim - 1)
+				|| (where_draw.y < 0) || (where_draw.y > max_dim - 1))
 				unexplored_area[i][j] = 0;
 			else unexplored_area[i][j] = 1 - is_explored(where_draw.x,where_draw.y);
 		}
@@ -857,6 +878,12 @@ void draw_terrain(short	mode) {
 			
 			if(is_town() || is_combat())
 				draw_items(where_draw);
+			// ASAN: where_draw.y can be equal to -1, ...
+			int max_dim = is_town() ? univ.town->max_dim : 96;
+			if (where_draw.x<0 || where_draw.x>=max_dim || where_draw.y<0 || where_draw.y>=max_dim) {
+				place_road(q,r,where_draw,false);
+				continue;
+			}
 			if(is_out() && univ.out.out_e[where_draw.x][where_draw.y] && univ.out.is_road(where_draw.x,where_draw.y))
 				place_road(q,r,where_draw,true);
 			else if(is_town() && univ.town.is_explored(where_draw.x,where_draw.y) && univ.town.is_road(where_draw.x, where_draw.y))
@@ -899,7 +926,7 @@ void draw_terrain(short	mode) {
 	// Draw top half of forcecages (this list is populated by draw_fields)
 	// TODO: Move into the above loop to eliminate global variable
 	for(location fc_loc : forcecage_locs)
-		Draw_Some_Item(*ResMgr::graphics.get("fields"),calc_rect(2,0),terrain_screen_gworld,fc_loc,1,0);
+		Draw_Some_Item(*ResMgr::textures.get("fields"),calc_rect(2,0),terrain_screen_gworld,fc_loc,1,0);
 	// Draw any posted labels, then clear them out
 	clip_rect(terrain_screen_gworld, {13, 13, 337, 265});
 	for(text_label_t lbl : posted_labels)
@@ -1066,7 +1093,7 @@ static void init_trim_mask(std::unique_ptr<sf::Texture>& mask, rectangle src_rec
 	std::tie(dest_rect.top, dest_rect.bottom) = std::make_tuple(36 - dest_rect.top, 36 - dest_rect.bottom);
 	render.create(28, 36);
 	render.clear(sf::Color::White);
-	rect_draw_some_item(*ResMgr::graphics.get("trim"), src_rect, render, dest_rect);
+	rect_draw_some_item(*ResMgr::textures.get("trim"), src_rect, render, dest_rect);
 	render.display();
 	mask.reset(new sf::Texture);
 	mask->create(28, 36);
@@ -1099,7 +1126,7 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	};
 	static std::unique_ptr<sf::Texture> trim_masks[12], walkway_masks[9];
 	rectangle from_rect = {0,0,36,28},to_rect;
-	std::shared_ptr<const sf::Texture> from_gworld;
+	Texture from_gworld;
 	sf::Texture* mask;
 	static bool inited = false;
 	if(!inited){
@@ -1127,16 +1154,16 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	unsigned short pic = univ.scenario.ter_types[ground_ter].picture;
 	if(pic < 960){
 		int which_sheet = pic / 50;
-		from_gworld = &ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet));
+		from_gworld = *ResMgr::textures.get("ter" + std::to_string(1 + which_sheet));
 		pic %= 50;
 		from_rect.offset(28 * (pic % 10), 36 * (pic / 10));
 	}else if(pic < 1000){
-		from_gworld = &ResMgr::graphics.get("teranim");
+		from_gworld = *ResMgr::textures.get("teranim");
 		pic -= 960;
 		from_rect.offset(112 * (pic / 5),36 * (pic % 5));
 	}else{
 		pic %= 1000;
-		graf_pos_ref(from_gworld, from_rect) = spec_scen_g.find_graphic(pic);
+		std::tie(from_gworld,from_rect) = spec_scen_g.find_graphic(pic);
 	}
 	if(which_trim < 50) {
 		if(!trim_masks[which_trim])
@@ -1150,7 +1177,7 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	}
 	to_rect = coord_to_rect(q,r);
 	
-	rect_draw_some_item(*from_gworld, from_rect, *mask, terrain_screen_gworld, to_rect);
+	rect_draw_some_item(from_gworld, from_rect, *mask, terrain_screen_gworld, to_rect);
 }
 
 
@@ -1185,6 +1212,7 @@ static bool can_build_roads_on(ter_num_t ter) {
 }
 
 static bool connect_roads(ter_num_t ter){
+	if (ter>=univ.scenario.ter_types.size()) return false;
 	eTrimType trim = univ.scenario.ter_types[ter].trim_type;
 	eTerSpec spec = univ.scenario.ter_types[ter].special;
 	if(trim == eTrimType::CITY)
@@ -1213,7 +1241,7 @@ void place_road(short q,short r,location where,bool here) {
 		{16,12,20,16},	// central spot
 	};
 	
-	sf::Texture& roads_gworld = *ResMgr::graphics.get("fields");
+	auto const & roads_gworld = *ResMgr::textures.get("fields");
 	
 	if(here){
 		to_rect = road_dest_rects[6];
@@ -1261,7 +1289,7 @@ void place_road(short q,short r,location where,bool here) {
 		
 		if(((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < univ.town->max_dim - 1)))
 			ter = coord_to_ter(where.x + 1,where.y);
-		eTrimType horzTrim = univ.scenario.ter_types[ter].trim_type;
+		eTrimType horzTrim = ter<univ.scenario.ter_types.size() ? univ.scenario.ter_types[ter].trim_type : eTrimType::NONE;
 		if(((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim - 1))
 			|| connect_roads(ter))
 			horz = can_build_roads_on(ref);
@@ -1271,7 +1299,7 @@ void place_road(short q,short r,location where,bool here) {
 		if(vert){
 			if(((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < univ.town->max_dim - 1)))
 				ter = coord_to_ter(where.x,where.y + 1);
-			eTrimType vertTrim = univ.scenario.ter_types[ter].trim_type;
+			eTrimType vertTrim = ter<univ.scenario.ter_types.size() ? univ.scenario.ter_types[ter].trim_type : eTrimType::NONE;
 			if(((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim - 1))
 				|| connect_roads(ter))
 				vert = can_build_roads_on(ref);
@@ -1390,7 +1418,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	dest_rect.offset(win_to_rects[WINRECT_TERVIEW].topLeft());
 	
 	source_rect.offset(-store_rect.left + 28 * type,-store_rect.top);
-	rect_draw_some_item(*ResMgr::graphics.get("booms"),source_rect,mainPtr,dest_rect,sf::BlendAlpha);
+	rect_draw_some_item(*ResMgr::textures.get("booms"),source_rect,mainPtr,dest_rect,sf::BlendAlpha);
 	
 	if(damage > 0 && dest_rect.right - dest_rect.left >= 28 && dest_rect.bottom - dest_rect.top >= 36) {
 		TextStyle style;
@@ -1456,7 +1484,7 @@ static void draw_one_pointing_arrow(int dir, int pos) {
 	
 	to_rect.width() = to_rect.height() = 8;
 	
-	rect_draw_some_item(*ResMgr::graphics.get("invenbtns"), from_rect, mainPtr, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(*ResMgr::textures.get("invenbtns"), from_rect, mainPtr, to_rect, sf::BlendAlpha);
 }
 
 void draw_pointing_arrows() {
@@ -1495,7 +1523,7 @@ void draw_targets(location center) {
 		return;
 	const rectangle src_rect{0,46,12,58};
 	
-	sf::Texture& src_gworld = *ResMgr::graphics.get("invenbtns");
+	auto const & src_gworld = *ResMgr::textures.get("invenbtns");
 	for(short i = 0; i < 8; i++)
 		if((spell_targets[i].x != -1) && (point_onscreen(center,spell_targets[i]))) {
 			rectangle dest_rect = coord_to_rect(spell_targets[i].x - center.x + 4,spell_targets[i].y - center.y + 4);
@@ -1561,7 +1589,7 @@ void draw_targeting_line(location where_curs) {
 			
 			if((can_see_light(from_loc,which_space,sight_obscurity) < 5)
 				&& (dist(from_loc,which_space) <= current_spell_range)) {
-				mainPtr.setActive();
+				mainPtr.setActive(false);
 				clip_rect(mainPtr, on_screen_terrain_area);
 				draw_line(mainPtr, where_curs, location(xBound, yBound), 2, {128,128,128}, sf::BlendAdd);
 				redraw_rect.left = min(where_curs.x,xBound) - 4;
@@ -1602,6 +1630,7 @@ void draw_targeting_line(location where_curs) {
 					}
 				
 				redraw_rect2.inset(-5,-5);
+				mainPtr.setActive();
 				undo_clip(mainPtr);
 			}
 		}

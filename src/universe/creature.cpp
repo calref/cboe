@@ -20,6 +20,8 @@ const short cCreature::charm_odds[21] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4
 cCreature::cCreature() {
 	attitude = eAttitude::DOCILE;
 	cur_loc.x = cur_loc.y = targ_loc.x = targ_loc.y = 80;
+	// ASAN party_summoned writed but unset
+	party_summoned = false;
 }
 
 cCreature::cCreature(int num) : cCreature() {

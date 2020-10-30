@@ -1413,7 +1413,8 @@ bool cItem::use_outdoors() const {
 		auto status = eStatus(abil_data[1]);
 		if(status == eStatus::POISON || status == eStatus::DISEASE || status == eStatus::HASTE_SLOW || status == eStatus:: BLESS_CURSE)
 			return true;
-	}
+	} else if(ability == eItemAbil::AFFECT_PARTY_STATUS && abil_data[1] == int(ePartyStatus::FLIGHT))
+		return true;
 	return abil_chart[ability] & USE_OUTDOORS;
 }
 

@@ -155,7 +155,7 @@ void cToolbar::draw_buttons() {
 		cache.create(266,38);
 		cache.clear(sf::Color::Black);
 	}
-	sf::Texture& buttons_gworld = *ResMgr::graphics.get("buttons");
+	auto const & buttons_gworld = *ResMgr::textures.get("buttons");
 	for(const auto& btn : toolbar) {
 		rectangle icon_rect = {0, 0, 32, 32}, to_rect = btn.bounds;
 		location slot = btn_pos(btn.btn);

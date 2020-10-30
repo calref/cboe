@@ -58,6 +58,7 @@ extern short which_combat_type;
 extern eGameMode overall_mode;
 extern bool boom_anim_active;
 extern sf::RenderTexture terrain_screen_gworld;
+extern rectangle terrain_screen_rect;
 extern rectangle sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
@@ -162,8 +163,9 @@ void apply_light_mask(bool onWindow) {
 		return;
 	
 	if(onWindow) {
-		mainPtr.setActive();
+		mainPtr.setActive(false);
 		fill_region(mainPtr, dark_mask_region, sf::Color::Black);
+		mainPtr.setActive();
 		return;
 	}
 	
@@ -193,14 +195,14 @@ void apply_light_mask(bool onWindow) {
 	if(same_mask) {
 		return;
 	}
-	
+#if 0
 	std::cout << "Current light mask:\n";
 	for(short i = 0; i < 13; i++) {
 		for(short j = 0; j < 13; j++)
 			std::cout << int(light_area[j][i]) << ' ';
 		std::cout << '\n';
 	}
-	
+#endif
 	dark_mask_region.clear();
 	dark_mask_region.addRect(big_to);
 	for(short i = 0; i < 13; i++)
@@ -347,13 +349,13 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
-	to_rect = rectangle(terrain_screen_gworld);
+	to_rect = terrain_screen_rect;
 	to_rect.bottom -= 10; // Adjust for pointing buttons
 	rectangle oldBounds = to_rect;
 	to_rect.offset(current_terrain_ul);
 	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldBounds,mainPtr,to_rect);
 	
-	mainPtr.setActive();
+	mainPtr.setActive(false);
 	
 	
 	// init missile paths
@@ -390,7 +392,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	
 	play_sound(-1 * sound_num);
 	
-	sf::Texture& missiles_gworld = *ResMgr::graphics.get("missiles");
+	auto const & missiles_gworld = *ResMgr::textures.get("missiles");
 	// Now, at last, launch missile
 	for(short t = 0; t < num_steps; t++) {
 		draw_terrain();
@@ -425,16 +427,17 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 						base -= 10000;
 					} else base -= 1000;
 					base += step % 4;
-					std::shared_ptr<const sf::Texture> from_gw = nullptr;
-					graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(base, isParty);
-					if(from_gw == nullptr) continue;
+					Texture from_gw;
+					std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(base, isParty);
+					if(!from_gw) continue;
 					from_rect.width() = 18;
 					from_rect.height() = 18;
 					if(step >= 4)
 						from_rect.offset(0,18);
-					rect_draw_some_item(*from_gw,from_rect, mainPtr,temp_rect,sf::BlendAlpha);
+					rect_draw_some_item(from_gw,from_rect, mainPtr,temp_rect,sf::BlendAlpha);
 				}
 			}
+		mainPtr.setActive();
 		mainPtr.display();
 		sf::sleep(sf::milliseconds(2 + 5 * get_int_pref("GameSpeed")));
 	}
@@ -443,7 +446,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	for(short i = 0; i < 30; i++)
 		store_missiles[i].missile_type = -1;
 	
-	to_rect = rectangle(terrain_screen_gworld);
+	to_rect = terrain_screen_rect;
 	to_rect.bottom -= 10; // Adjust for pointing buttons
 	rectangle oldRect = to_rect;
 	to_rect.offset(current_terrain_ul);
@@ -507,7 +510,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
 	if(special_draw != 2) {
-		to_rect = rectangle(terrain_screen_gworld);
+		to_rect = terrain_screen_rect;
 		to_rect.bottom -= 10; // Adjust for pointing buttons
 		rectangle oldRect = to_rect;
 		to_rect.offset(current_terrain_ul);
@@ -518,7 +521,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	style.font = FONT_BOLD;
 	style.pointSize = 10;
 	style.lineHeight = 10;
-	mainPtr.setActive();
+	mainPtr.setActive(false);
 	
 	// init missile paths
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;
@@ -546,7 +549,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 		play_sound(-1 * snd_num);
 	}
 	
-	sf::Texture& boom_gworld = *ResMgr::graphics.get("booms");
+	auto const & boom_gworld = *ResMgr::textures.get("booms");
 	// Now, at last, do explosion
 	for(short t = (special_draw == 2) ? 6 : 0; t < ((special_draw == 1) ? 6 : 11); t++) { // t goes up to 10 to make sure screen gets cleaned up
 		draw_terrain();
@@ -556,9 +559,9 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 			if(store_booms[i].boom_type >= 0) {
 				if((t + store_booms[i].offset >= 0) && (t + store_booms[i].offset <= 7)) {
 					if(cur_boom_type >= 1000) {
-						std::shared_ptr<const sf::Texture> src_gworld;
-						graf_pos_ref(src_gworld, from_rect) = spec_scen_g.find_graphic(cur_boom_type - 1000 + t);
-						rect_draw_some_item(*src_gworld, from_rect, mainPtr, explode_place_rect[i], sf::BlendAlpha);
+						Texture src_gworld;
+						std::tie(src_gworld,from_rect) = spec_scen_g.find_graphic(cur_boom_type - 1000 + t);
+						rect_draw_some_item(src_gworld, from_rect, mainPtr, explode_place_rect[i], sf::BlendAlpha);
 					} else {
 						from_rect = base_rect;
 						from_rect.offset(28 * (t + store_booms[i].offset),36 * (1 + store_booms[i].boom_type));
@@ -583,6 +586,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 				}
 			}
 		//if(((PSD[SDF_GAME_SPEED] == 1) && (t % 3 == 0)) || ((PSD[SDF_GAME_SPEED] == 2) && (t % 2 == 0)))
+		mainPtr.setActive();
 		mainPtr.display();
 		sf::sleep(time_in_ticks(2 * (1 + get_int_pref("GameSpeed"))));
 	}
@@ -602,15 +606,15 @@ void click_shop_rect(rectangle area_rect) {
 
 }
 
-graf_pos calc_item_rect(int num,rectangle& to_rect) {
+Texture_pos calc_item_rect(int num,rectangle& to_rect) {
 	if(num >= 1000) return spec_scen_g.find_graphic(num - 1000);
 	rectangle from_rect = {0,0,18,18};
-	std::shared_ptr<const sf::Texture> from_gw;
+	Texture from_gw;
 	if(num < 55) {
-		from_gw = &ResMgr::graphics.get("objects");
+		from_gw = *ResMgr::textures.get("objects");
 		from_rect = calc_rect(num % 5, num / 5);
 	}else{
-		from_gw = &ResMgr::graphics.get("tinyobj");
+		from_gw = *ResMgr::textures.get("tinyobj");
 		to_rect.inset(5,9);
 		from_rect.offset(18 * (num % 10), 18 * (num / 10));
 	}
@@ -637,17 +641,16 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		return;
 	}
 	
-	talk_gworld.setActive();
 	TextStyle style;
 	style.font = FONT_DUNGEON;
 	style.pointSize = 18;
 	
-	talk_gworld.setActive();
+	talk_gworld.setActive(false);
 	if(pressed) {
 		clip_rect(talk_gworld, clip_area_rect);
 	}
 	
-	area_rect = rectangle(talk_gworld);
+	area_rect = rectangle(0,0,talk_area_rect.height(),talk_area_rect.width());
 	frame_rect(talk_gworld, area_rect, Colours::BLACK); 
 	area_rect.inset(1,1);
 	tileImage(talk_gworld, area_rect,bg[12]);
@@ -657,15 +660,15 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	// Place store icon
 	if(!pressed) {
 		rectangle from_rect = {0,0,32,32};
-		std::shared_ptr<const sf::Texture> from_gw;
+		Texture from_gw;
 		int i = std::max<int>(0, active_shop.getFace());
 		if(i >= 1000) {
-			graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(i - 1000);
+			std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(i - 1000);
 		} else {
 			from_rect.offset(32 * (i % 10),32 * (i / 10));
-			from_gw = &ResMgr::graphics.get("talkportraits");
+			from_gw = *ResMgr::textures.get("talkportraits");
 		}
-		rect_draw_some_item(*from_gw, from_rect, talk_gworld, face_rect);
+		rect_draw_some_item(from_gw, from_rect, talk_gworld, face_rect);
 	}
 	
 	
@@ -714,7 +717,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	else 
 		style.colour = Colours::BLACK; 
 	
-	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
+	auto const & invenbtn_gworld = *ResMgr::textures.get("invenbtns");
 	// Place all the items
 	for(short i = 0; i < 8; i++) {
 		current_pos = i + shop_sbar->getPosition();
@@ -726,7 +729,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		base_item = item.item;
 		std::string cur_name = base_item.full_name, cur_info_str;
 		rectangle from_rect, to_rect = shopping_rects[i][SHOPRECT_GRAPHIC];
-		std::shared_ptr<const sf::Texture> from_gw;
+		Texture from_gw;
 		switch(item.type) {
 			case eShopItemType::ITEM:
 				base_item.ident = true;
@@ -753,8 +756,8 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 				cur_info_str = "";
 				break;
 		}
-		graf_pos_ref(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
-		rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
+		std::tie(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
+		rect_draw_some_item(from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 		
 		// Now draw item
 		style.pointSize = 12;
@@ -784,6 +787,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	win_draw_string(talk_gworld,bottom_help_rects[3],"'I' button brings up description.",eTextMode::WRAP,style);
 	
 	undo_clip(talk_gworld);
+	talk_gworld.setActive();
 	talk_gworld.display();
 	
 	refresh_shopping();
@@ -795,9 +799,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 
 void refresh_shopping() {
 	rectangle from_rect(talk_gworld);
-	rectangle to_rect = from_rect;
-	to_rect.offset(talk_gword_offset_x, talk_gword_offset_y);
-	rect_draw_some_item(talk_gworld.getTexture(),from_rect,mainPtr,to_rect);
+	rect_draw_some_item(talk_gworld.getTexture(),from_rect,mainPtr,talk_area_rect);
 }
 
 static void place_talk_face() {
@@ -821,7 +823,7 @@ static void place_talk_face() {
 void click_talk_rect(word_rect_t word) {
 	rectangle talkRect(talk_gworld), wordRect(word.rect);
 	mainPtr.setActive();
-	rect_draw_some_item(talk_gworld.getTexture(),talkRect,mainPtr,talk_area_rect);
+	rect_draw_some_item(talk_gworld.getTexture(),rectangle(talk_gworld),mainPtr,talk_area_rect);
 	wordRect.offset(talk_area_rect.topLeft());
 	TextStyle style;
 	style.font = FONT_DUNGEON;
@@ -832,7 +834,7 @@ void click_talk_rect(word_rect_t word) {
 	place_talk_face();
 	mainPtr.display();
 	play_sound(37, time_in_ticks(5));
-	rect_draw_some_item(talk_gworld.getTexture(),talkRect,mainPtr,talk_area_rect);
+	rect_draw_some_item(talk_gworld.getTexture(),rectangle(talk_gworld),mainPtr,talk_area_rect);
 	place_talk_face();
 }
 
@@ -864,8 +866,14 @@ std::string get_item_interesting_string(cItem item) {
 		case eItemType::HELM:
 		case eItemType::GLOVES:
 		case eItemType::SHIELD_2:
-		case eItemType::BOOTS: // TODO: Verify that this is displayed correctly
-			sout << "Blocks " << item.item_level + ((item.protection > 0) ? 1 : 0) << '-' << item.item_level + item.protection << " damage";
+		case eItemType::BOOTS: // coherent with damage_pc
+			sout << "Blocks "
+			<< (item.item_level>0 ? 1 : item.item_level) + (item.bonus>0 ? 1+item.bonus/2 : item.bonus) +
+			   (item.protection > 0 ? 1 : item.protection)
+			<< '-'
+			<< item.item_level + (item.bonus>=0 ? 3*item.bonus/2 : item.bonus) +
+				(item.protection>=0 ? item.protection : -1)
+			<< " damage";
 			break;
 		case eItemType::BOW:
 		case eItemType::CROSSBOW:
@@ -904,19 +912,19 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	rectangle dest_rect,help_from = {46,60,59,76};
 	sf::Text str_to_draw;
 	
-	talk_gworld.setActive();
+	talk_gworld.setActive(false);
 	
 	TextStyle style;
 	style.font = FONT_DUNGEON;
 	style.pointSize = 18;
 	
 	if(c_rect.right > 0) {
-		mainPtr.setActive();
+		mainPtr.setActive(false);
 		c_rect.offset(talk_area_rect.topLeft());
 		clip_rect(mainPtr, c_rect);
 	}
 	
-	area_rect = rectangle(talk_gworld);
+	area_rect = rectangle(0,0,talk_area_rect.height(),talk_area_rect.width());
 	frame_rect(talk_gworld, area_rect, sf::Color::Black);
 	area_rect.inset(1,1);
 	tileImage(talk_gworld, area_rect,bg[12]);
@@ -1009,6 +1017,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		}
 	}
 	
+	talk_gworld.setActive();
 	rectangle oldRect(talk_gworld);
 	undo_clip(talk_gworld);
 	talk_gworld.display();

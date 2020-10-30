@@ -108,6 +108,11 @@ extern long anim_ticks;
 
 static void init_boe(int, char*[]);
 
+#ifdef __APPLE__
+eMenuChoice menuChoice=eMenuChoice::MENU_CHOICE_NONE;
+short menuChoiceId=-1;
+#endif
+
 int main(int argc, char* argv[]) {
 #if 0
 	void debug_oldstructs();
@@ -252,6 +257,26 @@ void handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(!All_Done) {
+#ifdef __APPLE__
+		if (menuChoiceId>=0) {
+			eMenuChoice aMenuChoice=menuChoice;
+			menuChoice=eMenuChoice::MENU_CHOICE_NONE;
+			switch(aMenuChoice) {
+				case eMenuChoice::MENU_CHOICE_GENERIC:
+					handle_menu_choice(eMenu(menuChoiceId));
+					break;
+				case eMenuChoice::MENU_CHOICE_SPELL:
+					handle_menu_spell(eSpell(menuChoiceId));
+					break;
+				case eMenuChoice::MENU_CHOICE_MONSTER_INFO:
+					handle_monster_info_menu(menuChoiceId);
+					break;
+				case eMenuChoice::MENU_CHOICE_NONE:
+					break;
+			}
+			menuChoiceId=-1;
+		}
+#endif
 		while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent);
 
 		// It would be nice to have minimap inside the main game window (we have lots of screen space in fullscreen mode).
@@ -262,6 +287,7 @@ void handle_events() {
 		if(changed_display_mode) {
 			changed_display_mode = false;
 			adjust_window_mode();
+			init_mini_map();
 		}
 
 		// Still no idea what this does. It's possible that this does not work at all.

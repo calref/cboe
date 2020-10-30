@@ -4,6 +4,7 @@
 #include "location.hpp"
 #include "item.hpp"
 #include "gfxsheets.hpp"
+#include "texture.hpp"
 
 struct word_rect_t {
 	std::string word;
@@ -64,4 +65,4 @@ void click_talk_rect(word_rect_t word);
 void place_talk_str(std::string str_to_place,std::string str_to_place2,short color,rectangle c_rect);
 short scan_for_response(const char *str);
 void refresh_talking();
-graf_pos calc_item_rect(int num,rectangle& to_rect);
+Texture_pos calc_item_rect(int num,rectangle& to_rect);

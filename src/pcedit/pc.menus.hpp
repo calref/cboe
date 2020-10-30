@@ -17,7 +17,7 @@ bool menuBarProcessEvent(const sf::Event&);
 void drawMenuBar();
 
 enum class eMenu {
-	NONE, ABOUT, QUIT,
+	NONE, ABOUT, PREFS, QUIT,
 	FILE_OPEN, FILE_CLOSE, FILE_SAVE, FILE_SAVE_AS, FILE_REVERT, HELP_TOC,
 	// Edit Party menu
 	EDIT_GOLD, EDIT_FOOD, EDIT_ALCHEMY,

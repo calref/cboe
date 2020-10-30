@@ -8,6 +8,7 @@
 
 #include "party.hpp"
 
+#include <cstring>
 #include <string>
 #include <vector>
 #include <map>
@@ -36,6 +37,7 @@ cParty::cParty(ePartyPreset party_preset) {
 	out_loc.y = 84;
 	in_boat = -1;
 	in_horse = -1;
+	std::memset(stuff_done, 0, sizeof(stuff_done));
 	std::fill(magic_ptrs.begin(), magic_ptrs.end(), 0);
 	for(int i = 0; i < 10; i++)
 		out_c[i].exists = false;
@@ -685,7 +687,7 @@ void cParty::writeTo(std::ostream& file) const {
 	for(auto iter = pointers.begin(); iter != pointers.end(); iter++)
 		file << "POINTER " << iter->first << ' ' << iter->second.first << ' ' << iter->second.second << '\n';
 	for(int i = 0; i < magic_ptrs.size(); i++)
-		file << "POINTER " << i << ' ' << int(magic_ptrs[i]) << '\n';
+		file << "POINTER " << i+10 << ' ' << int(magic_ptrs[i]) << '\n';
 	file << "LIGHT " << light_level << '\n';
 	file << "OUTCORNER " << outdoor_corner.x << ' ' << outdoor_corner.y << '\n';
 	file << "INWHICHCORNER " << i_w_c.x << ' ' << i_w_c.y << '\n';
@@ -732,7 +734,7 @@ void cParty::writeTo(std::ostream& file) const {
 		file << "QUEST " << p.first << ' ' << p.second.status << ' ' << p.second.start << ' ' << p.second.source << '\n';
 	for(auto p : store_limited_stock) {
 		for(auto p2 : p.second) {
-			file << "SHOPSTOCK " << p.first << p2.first << p2.second;
+			file << "SHOPSTOCK " << p.first << ' ' << p2.first << ' ' << p2.second << '\n';
 		}
 	}
 	for(auto iter = campaign_flags.begin(); iter != campaign_flags.end(); iter++){
@@ -790,9 +792,12 @@ void cParty::writeTo(std::ostream& file) const {
 		}
 	file << '\f';
 	file << '\f';
-	for(unsigned int i = 0; i < party_event_timers.size(); i++)
+	for(unsigned int i = 0; i < party_event_timers.size(); i++) {
+		if (party_event_timers[i].node<=-200 || (party_event_timers[i].node>=-9 && party_event_timers[i].node<0))
+			continue;
 		file << "TIMER " << ' ' << party_event_timers[i].time << ' ' << int(party_event_timers[i].node_type)
 			 << ' ' << party_event_timers[i].node << '\f';
+	}
 	file << '\f';
 	for(int i = 0; i < creature_save.size(); i++)
 		for(int j = 0; j < creature_save[i].size(); j++) {
@@ -836,7 +841,7 @@ void cParty::writeTo(std::ostream& file) const {
 	if(talk_save.size() > 0) {
 		file << '\f';
 		for(const cConvers& note : talk_save) {
-			file << "TALKNOTE";
+			file << "TALKNOTE\n";
 			file << "WHO " << maybe_quote_string(note.who_said) << '\n';
 			file << "WHERE " << maybe_quote_string(note.in_town) << ' ' << maybe_quote_string(note.in_scen) << '\n';
 			file << "-\n" << note.the_str1 << '\n' << note.the_str2 << '\n';
@@ -1027,8 +1032,7 @@ void cParty::readFrom(std::istream& file){
 			if(i < 25 && j < 25)
 				campaign_flags[cur].idx[i][j] = val;
 		} else if(cur == "TIMER") {
-			int i, j;
-			bin >> i;
+			int j;
 			cTimer timer;
 			bin >> timer.time >> j >> timer.node;
 			timer.node_type = eSpecCtxType(j);
@@ -1061,12 +1065,14 @@ void cParty::readFrom(std::istream& file){
 			entry.in_scen = read_maybe_quoted_string(bin);
 			bin >> std::ws;
 			getline(bin, entry.the_str);
+			journal.push_back(entry);
 		} else if(cur == "ENCNOTE") {
 			cEncNote note;
 			bin >> note.type;
 			note.where = read_maybe_quoted_string(bin);
 			bin >> std::ws;
 			getline(bin, note.the_str);
+			special_notes.push_back(note);
 		} else if(cur == "TALKNOTE") {
 			cConvers note;
 			while(bin) {
@@ -1074,15 +1080,17 @@ void cParty::readFrom(std::istream& file){
 				std::istringstream sin(cur);
 				sin >> cur;
 				if(cur == "WHO")
-					note.who_said = read_maybe_quoted_string(bin);
+					note.who_said = read_maybe_quoted_string(sin);
 				else if(cur == "WHERE") {
-					note.in_town = read_maybe_quoted_string(bin);
+					note.in_town = read_maybe_quoted_string(sin);
 					note.in_scen = read_maybe_quoted_string(sin);
 				} else if(cur == "-") break;
 			}
 			bin >> std::ws;
 			getline(bin, note.the_str1);
 			getline(bin, note.the_str2);
+			note.filled=true;
+			talk_save.push_back(note);
 		} else if(cur == "JOB_BANK") {
 			int i;
 			bin >> i;

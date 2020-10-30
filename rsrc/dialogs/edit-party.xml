@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='done'>
-	<button name='help' relative='neg pos' type='help' def-key='help' top='6' left='22'/>
+	<button name='help' relative='neg pos' type='help' rel-anchor='next' def-key='help' top='6' left='22'/>
 	<text size='large' relative='pos pos-in' rel-anchor='next' top='10' left='8' width='205' height='16'>Create/Edit Party:</text>
 	<pict type='dlog' num='7' top='6' left='6'/>
 	
