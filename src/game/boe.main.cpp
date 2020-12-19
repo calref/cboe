@@ -107,6 +107,7 @@ sf::Clock animTimer;
 extern long anim_ticks;
 
 static void init_boe(int, char*[]);
+static void showWelcome();
 
 int main(int argc, char* argv[]) {
 #if 0
@@ -117,7 +118,7 @@ int main(int argc, char* argv[]) {
 		init_boe(argc, argv);
 		
 		if(!get_bool_pref("GameRunBefore"))
-			cChoiceDlog("welcome").show();
+			showWelcome();
 		else if(get_bool_pref("GiveIntroHint", true))
 			tip_of_day();
 		set_pref("GameRunBefore", true);
@@ -245,6 +246,15 @@ void init_boe(int argc, char* argv[]) {
 	init_mini_map();
 	redraw_screen(REFRESH_NONE);
 	showMenuBar();
+}
+
+void showWelcome() {
+	cChoiceDlog welcome("welcome");
+	welcome->attachClickHandlers([](cDialog& self, std::string clicked, eKeyMod) {
+		launchURL(self[clicked].getText());
+		return false;
+	}, {"spidweb", "scen", "forum", "home", "src"});
+	welcome.show();
 }
 
 void handle_events() {
@@ -617,7 +627,7 @@ void handle_menu_choice(eMenu item_hit) {
 			tip_of_day();
 			break;
 		case eMenu::LIBRARY_INTRO:
-			dialogToShow = "welcome";
+			showWelcome();
 			break;
 		case eMenu::ACTIONS_ALCHEMY:
 			dummyEvent.key.code = sf::Keyboard::A;
