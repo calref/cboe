@@ -828,7 +828,7 @@ void click_talk_rect(word_rect_t word) {
 	style.pointSize = 18;
 	style.lineHeight = 18;
 	style.colour = word.on;
-	win_draw_string(mainPtr, wordRect, word.word, eTextMode::LEFT_TOP, style);
+	win_draw_string(mainPtr, wordRect, word.word, eTextMode::WRAP, style);
 	place_talk_face();
 	mainPtr.display();
 	play_sound(37, time_in_ticks(5));
@@ -972,7 +972,6 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		}
 	}
 	
-	dest_rect = word_place_rect;
 	style.colour = Colours::NAVY; 
 	// First determine the offsets of clickable words.
 	// The added spaces ensure that end-of-word boundaries are found
@@ -994,7 +993,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		}
 	}
 	
-	std::vector<rectangle> word_rects = draw_string_hilite(talk_gworld, dest_rect, str, style, hilites, color ? Colours::DARK_BLUE : Colours::DARK_RED); 
+	std::vector<rectangle> word_rects = draw_string_hilite(talk_gworld, word_place_rect, str, style, hilites, color ? Colours::DARK_BLUE : Colours::DARK_RED);
 	
 	if(!talk_end_forced) {
 		// Now build the list of word rects
