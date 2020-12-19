@@ -9,7 +9,7 @@
 		Blades of Exile game developed by Spiderweb Software in 
 		1997 and released as Free Open-Source Software in 2005.
 	</text>
-	<text name='spidweb' relative='pos-in pos' rel-anchor='prev' top='0' left='16' width='390' height='12' colour='link' underline='true'>
+	<text name='spidweb' relative='pos-in pos' rel-anchor='prev' top='0' left='16' colour='link' underline='true'>
 		http://www.spidweb.com/blades/opensource.html	
 	</text>
 	<text relative='neg pos' rel-anchor='prev' top='12' left='16' width='413'>
@@ -18,7 +18,7 @@
 		In addition to these, hundreds more written by 
 		community members, are available for download online!
 	</text>
-	<text name='scen' relative='pos-in pos' rel-anchor='prev' top='0' left='16' width='390' height='12' colour='link' underline='true'>
+	<text name='scen' relative='pos-in pos' rel-anchor='prev' top='0' left='16' colour='link' underline='true'>
 		http://openboe.com/scenarios
 	</text>
 	<text relative='neg pos' rel-anchor='prev' top='12' left='16' width='413'>
@@ -33,7 +33,7 @@
 		You can also find playing hints and related discussion
 		at the Spiderweb Software game forums.
 	</text>
-	<text name='forum' relative='pos-in pos' rel-anchor='prev' top = '0' left='16' width='390' height='12' colour='link' underline='true'>
+	<text name='forum' relative='pos-in pos' rel-anchor='prev' top = '0' left='16' colour='link' underline='true'>
 		http://spiderwebforums.ipbhost.com/
 	</text>
 	<text relative='neg pos' rel-anchor='prev' top='12' left='16' width='413'>
@@ -41,16 +41,16 @@
 		you can change animation speed, game difficulty, display
 		options and special effects settings.
 		<br/><br/>
-		Blades of Exile Game/Editor/Character Editor are released 
+		Blades of Exile is released
 		under the terms of the GNU General Public License V2.
 		See the file LICENSE.txt for details.
 		<br/><br/>
 		        The Open Blades of Exile team
 	</text>
-	<text name='home' relative='pos-in pos' rel-anchor='prev' top='0' left='16' width='390' height='12' colour='link' underline='true'>
+	<text name='home' relative='pos-in pos' rel-anchor='prev' top='0' left='16' colour='link' underline='true'>
 		http://openboe.com
 	</text>
-	<text name='src' relative='pos-in pos' rel-anchor='prev' top='0' left='0' width='390' height='12' colour='link' underline='true'>
+	<text name='src' relative='pos-in pos' rel-anchor='prev' top='0' left='0' colour='link' underline='true'>
 		https://github.com/calref/cboe
 	</text>
 	<button name='okay' relative='neg' type='regular' top='30' left='70'>OK</button>
