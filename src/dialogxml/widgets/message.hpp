@@ -38,6 +38,7 @@ public:
 	bool isScrollable();
 	virtual ~cTextMsg();
 	void draw();
+	void recalcRect() override;
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers
@@ -52,6 +53,6 @@ private:
 	sf::Color color;
 	std::vector<boost::optional<std::string>> keyRefs;
 	std::string fromList;
-	bool underlined = false;
+	bool underlined = false, fixedWidth = false, fixedHeight = false;
 };
 #endif

@@ -9,6 +9,7 @@
 #include "message.hpp"
 #include "mathutil.hpp"
 #include "dialog.hpp"
+#include <numeric>
 
 extern sf::Texture bg_gworld;
 
@@ -85,6 +86,64 @@ void cTextMsg::validatePostParse(ticpp::Element& who, std::string fname, const s
 	cControl::validatePostParse(who, fname, attrs, nodes);
 	if(!attrs.count("color") && !attrs.count("colour") && parent->getBg() == cDialog::BG_DARK)
 		setColour(sf::Color::White);
+	if(attrs.count("width")) fixedWidth = true;
+	if(attrs.count("height")) fixedHeight = true;
+}
+
+void cTextMsg::recalcRect() {
+	if(fixedWidth && fixedHeight) return;
+	TextStyle style;
+	style.font = textFont;
+	style.pointSize = textSize;
+	style.underline = underlined;
+	style.lineHeight = textSize + 2;
+	std::string test = lbl;
+	size_t lines = 1, cur_line_chars = 0, max_line_chars = 0;
+	// Substitute | with newlines for measuring
+	for(auto& c : test) {
+		if(c == '|') {
+			c = '\n';
+			lines++;
+			max_line_chars = max(max_line_chars, cur_line_chars);
+			cur_line_chars = 0;
+		} else {
+			cur_line_chars++;
+		}
+	}
+	max_line_chars = max(max_line_chars, cur_line_chars);
+	std::vector<hilite_t> hilites;
+	std::vector<rectangle> rects;
+	hilites.emplace_back(0,test.size());
+	rectangle calc_rect = frame;
+	if(lines == 1) {
+		calc_rect.left += 3;
+	} else {
+		calc_rect.inset(4,4);
+	}
+	if(!fixedHeight) {
+		// Fix the width and calculate the height
+		calc_rect.height() = lines * style.lineHeight * 10;
+	} else if(!fixedWidth) {
+		// Fix the height and calculate the width
+		calc_rect.width() = 100 * max_line_chars;
+	} else return; // This case should be impossible, but just in case...
+	sf::RenderTexture temp;
+	temp.create(frame.width(), frame.height());
+	rectangle test_rect = calc_rect;
+	test_rect.offset(-test_rect.left, -test_rect.top);
+	rects = draw_string_hilite(temp, test_rect, lbl, style, hilites, sf::Color::Black);
+	if(rects.empty()) return;
+	// Basically take the the union of the rects, and add 8 to its height or width
+	rectangle combo = rects.back();
+	if(rects.size() > 1) {
+		combo = std::accumulate(rects.begin(), rects.end() - 1, combo, rectunion);
+	}
+	if(!fixedHeight) {
+		calc_rect.height() = combo.height() + 8;
+	} else if(!fixedWidth) {
+		calc_rect.width() = combo.width() + 8;
+	}
+	frame = calc_rect;
 }
 
 cTextMsg::cTextMsg(cDialog& parent) :
