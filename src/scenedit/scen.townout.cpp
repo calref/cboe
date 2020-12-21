@@ -19,6 +19,7 @@
 #include "strdlog.hpp"
 #include "choicedlog.hpp"
 #include "winutil.hpp"
+#include "ledgroup.hpp"
 #include "stack.hpp"
 #include "scrollpane.hpp"
 #include "fileio.hpp"

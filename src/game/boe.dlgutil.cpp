@@ -30,6 +30,7 @@
 #include "res_strings.hpp"
 #include "scrollbar.hpp"
 #include "button.hpp"
+#include "ledgroup.hpp"
 #include "pict.hpp"
 #include "stack.hpp"
 #include <boost/lexical_cast.hpp>

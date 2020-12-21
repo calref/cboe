@@ -17,6 +17,7 @@
 #include "boe.text.hpp"
 #include "render_image.hpp"
 #include "render_shapes.hpp"
+#include "render_text.hpp"
 #include "tiling.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"

@@ -11,6 +11,7 @@
 #include "dialog.hpp"
 #include "pict.hpp"
 #include "button.hpp"
+#include "led.hpp"
 
 #include "item.hpp"
 #include "creature.hpp"

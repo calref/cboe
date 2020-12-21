@@ -13,6 +13,7 @@
 /// Scroll-pane-related classes and types
 
 #include "scrollbar.hpp"
+#include "container.hpp"
 
 /// A container element that has a fixed viewport and a vertical scrollbar.
 class cScrollPane : public cContainer {
