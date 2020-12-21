@@ -358,9 +358,9 @@
     <ClInclude Include="..\..\..\src\universe\universe.hpp" />
     <ClInclude Include="..\..\..\src\utility.hpp" />
     <ClInclude Include="..\..\..\src\view_dialogs.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\town_import.tpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\src\scenario\town_import.tpp" />
     <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

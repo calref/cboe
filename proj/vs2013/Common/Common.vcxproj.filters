@@ -1026,11 +1026,11 @@
     <ClInclude Include="..\..\..\src\tools\event_listener.hpp">
       <Filter>Tools</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\scenario\town_import.tpp">
+      <Filter>Scenario</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\src\scenario\town_import.tpp">
-      <Filter>Scenario</Filter>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
 </Project>

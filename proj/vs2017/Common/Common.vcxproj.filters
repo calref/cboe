@@ -579,9 +579,6 @@
     <None Include="..\..\..\rsrc\dialogs\dialog.css">
       <Filter>Resource Files\dialogs</Filter>
     </None>
-    <None Include="..\..\..\src\scenario\town_import.tpp">
-      <Filter>Scenario</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\fileio\gzstream\gzstream.cpp">
@@ -780,6 +777,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\src\scenario\town_import.tpp">
+      <Filter>Scenario</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\fileio\gzstream\gzstream.h">
       <Filter>FileIO\GZStream</Filter>
     </ClInclude>
