@@ -111,12 +111,12 @@ void cTerrain::import_legacy(legacy::terrain_type_type& old){
 	// This is a weird expression, but necessary, because all archetypes except lava lack a special ability
 	is_archetype = archetypes.count(picture) && (old.special == 0) == (old.picture != 404);
 	blockage = (eTerObstruct) old.blockage;
-	if(picture < 260){
+	if(picture>=0 && picture < 260){
 		combat_arena = arenas[picture];
 		ground_type = ground[picture];
 		trim_type = (eTrimType) trims[picture];
 		trim_ter = trim_ters[picture];
-	}else if(picture >= 400 && picture < 1000){
+	}else if(picture >= 400 && picture < 140+274){
 		combat_arena = arenas[picture - 140];
 		ground_type = ground[picture - 140];
 		trim_type = (eTrimType) trims[picture - 140];
