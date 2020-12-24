@@ -59,7 +59,6 @@ class cParty : public iLiving {
 public:
 	class cConvers { // conversation; formerly talk_save_type
 	public:
-		bool filled = false;
 		std::string who_said, in_town, the_str1, the_str2, in_scen;
 		
 		void import_legacy(legacy::talk_save_type old, const cScenario& scenario);
