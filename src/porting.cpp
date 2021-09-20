@@ -68,6 +68,22 @@ void port_t_d(legacy::big_tr_type* old) {
 	}
 }
 
+void port_t_i(legacy::town_item_list* old)
+{
+	if(cur_scen_is_mac != mac_is_intel)
+		return;
+	for(short i = 0; i < 115; i++)
+		port_item_record(&(old->items[i]));
+}
+
+void port_stored_items_list(legacy::stored_items_list_type *old)
+{
+	if(cur_scen_is_mac != mac_is_intel)
+		return;
+	for(short i = 0; i < 115; i++)
+		port_item_record(&(old->items[i]));
+}
+
 void port_ave_t(legacy::ave_tr_type* old) {
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
@@ -178,16 +194,21 @@ void port_scenario(legacy::scenario_data_type* temp_scenario) {
 	flip_short(&temp_scenario->last_town_edited);
 }
 
+void port_item_record(legacy::item_record_type *old) {
+	if(cur_scen_is_mac != mac_is_intel)
+		return;
+
+	flip_short(&(old->variety));
+	flip_short(&(old->item_level));
+	flip_short(&(old->value));
+}
 
 void port_item_list(legacy::scen_item_data_type* old){
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
 	
-	for(short i = 0; i < 400; i++) {
-		flip_short(&(old->scen_items[i].variety));
-		flip_short(&(old->scen_items[i].item_level));
-		flip_short(&(old->scen_items[i].value));
-	}
+	for(short i = 0; i < 400; i++)
+		port_item_record(&(old->scen_items[i]));
 }
 
 void port_out(legacy::outdoor_record_type *out) {

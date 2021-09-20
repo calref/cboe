@@ -269,6 +269,10 @@ void cParty::import_legacy(legacy::party_record_type& old, cUniverse& univ){
 	at_which_save_slot = old.at_which_save_slot;
 	for(short i = 0; i < 20 ; i++)
 		alchemy[i] = old.alchemy[i];
+	for (short i=0; i<50; i++) {
+		if (old.spec_items[i]>0)
+			spec_items.insert(i);
+	}
 	for(short i = 0; i < univ.scenario.towns.size(); i++){
 		univ.scenario.towns[i]->can_find = old.can_find_town[i];
 		univ.scenario.towns[i]->m_killed = old.m_killed[i];
