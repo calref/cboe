@@ -67,8 +67,8 @@ void cCurTown::import_legacy(legacy::town_item_list& old){
 
 void cUniverse::import_legacy(legacy::stored_town_maps_type& old){
 	for(int n = 0; n < scenario.towns.size(); n++)
-		for(int i = 0; i < 64; i++)
-			for(int j = 0; j < 64; j++)
+		for(size_t j = 0; j < scenario.towns[n]->maps.size(); j++)
+			for(int i = 0; i < scenario.towns[n]->maps[j].size(); i++)
 				scenario.towns[n]->maps[j][i] = old.town_maps[n][i / 8][j] & (1 << (i % 8));
 }
 
@@ -834,8 +834,10 @@ void cCurTown::readFrom(std::istream& file){
 		getline(bin, cur);
 		sin.str(cur);
 		sin >> cur;
-		if(cur == "TOWN")
+		if(cur == "TOWN") {
 			sin >> univ.party.town_num;
+			monst.which_town=univ.party.town_num; // OSNOLA, checkme: to fix the creature save
+		}
 		else if(cur == "DIFFICULTY")
 			sin >> difficulty;
 		else if(cur == "HOSTILE")

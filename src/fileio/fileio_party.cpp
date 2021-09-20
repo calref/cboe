@@ -192,12 +192,14 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 			
 			len = (long) sizeof(legacy::town_item_list);
 			fin.read((char*)&t_i, len);
+			if(must_port) port_t_i(&t_i);
 		}
 		
 		// LOAD STORED ITEMS
 		for(int i = 0; i < 3; i++) {
 			len = (long) sizeof(legacy::stored_items_list_type);
 			fin.read((char*)&stored_items[i], len);
+			if(must_port) port_stored_items_list(&stored_items[i]);
 		}
 		
 		// LOAD SAVED MAPS
