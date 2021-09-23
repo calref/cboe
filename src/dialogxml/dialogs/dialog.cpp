@@ -265,6 +265,8 @@ void cDialog::loadFromFile(std::string path){
 				}
 			}
 			prevCtrl = *inserted;
+			// Needed to correctly resolve relative positioning
+			inserted->second->recalcRect();
 		}
 		
 		// Resolve relative positioning
