@@ -195,6 +195,14 @@ void rectangle::offset(location diff) {
 	offset(diff.x, diff.y);
 }
 
+void rectangle::move_to(int x, int y) {
+	offset(x - left, y - top);
+}
+
+void rectangle::move_to(location loc) {
+	move_to(loc.x, loc.y);
+}
+
 void rectangle::inset(int dh, int dv) {
 	left += dh; right -= dh;
 	top += dv; bottom -= dv;

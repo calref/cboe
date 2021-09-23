@@ -8,6 +8,7 @@
 
 #include "render_text.hpp"
 
+#include <iostream>
 #include "res_font.hpp"
 #include "render_shapes.hpp"
 
@@ -76,7 +77,8 @@ static void push_snippets(size_t start, size_t end, text_params_t& options, size
 		}
 		size_t amount = end - start;
 		snippets.push_back({str.substr(start,amount), loc, hilited});
-		loc.x += string_length(snippets[snippets.size()-1].text, options.style);
+		if(hilited) std::cout << "Hiliting passage : \"" << snippets.back().text << '"' << std::endl;
+		loc.x += string_length(snippets.back().text, options.style);
 		start = end;
 		end = upper_bound;
 		if(iHilite < hilites.size() && start >= hilites[iHilite].second)
@@ -92,9 +94,10 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	short str_len;
 	unsigned short last_line_break = 0,last_word_break = 0;
 	short total_width = 0;
-	short adjust_x = 0,adjust_y = 0;
+	short adjust_x = 1, adjust_y = 10;
 	
 	str_to_draw.setString("fj"); // Something that has both an ascender and a descender
+	// TODO: Why the heck are we drawing a whole line higher than requested!?
 	adjust_y -= str_to_draw.getLocalBounds().height;
 	
 	str_to_draw.setString(str);
@@ -121,7 +124,7 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	line_height -= 2; // TODO: ...why are we arbitrarily reducing the line height from the requested value?
 	
 	if(mode == eTextMode::WRAP) {
-		moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9);
+		moveTo = location(dest_rect.left + adjust_x, dest_rect.top + adjust_y);
 		short i;
 		for(i = 0; text_len(i) != text_len(i + 1) && i < str_len; i++) {
 			if(((text_len(i) - text_len(last_line_break) > (dest_rect.width() - 6))
@@ -146,15 +149,20 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 		}
 	} else {
 		switch(mode) {
+			// TODO: CENTRE and LEFT_BOTTOM don't work with text rect calculation...
+			// Low priority, since the API doesn't even offer a way to do this.
 			case eTextMode::CENTRE:
-				moveTo = location((dest_rect.right + dest_rect.left) / 2 - (4 * total_width) / 9 + adjust_x,
-								  (dest_rect.bottom + dest_rect.top - line_height) / 2 + 9 + adjust_y);
+				// TODO: Calculate adjust_x/y directly instead...
+				moveTo = location((dest_rect.right + dest_rect.left) / 2 - (4 * total_width) / 9,
+								  (dest_rect.bottom + dest_rect.top - line_height) / 2 + adjust_y - 1);
+				adjust_x = moveTo.x - dest_rect.left;
+				adjust_y = moveTo.y - dest_rect.top;
 				break;
 			case eTextMode::LEFT_TOP:
-				moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9);
+				moveTo = location(dest_rect.left + adjust_x, dest_rect.top + adjust_y);
 				break;
 			case eTextMode::LEFT_BOTTOM:
-				moveTo = location(dest_rect.left + 1 + adjust_x, dest_rect.top + 1 + adjust_y + 9 + dest_rect.height() / 6);
+				moveTo = location(dest_rect.left + adjust_x, dest_rect.top + adjust_y + dest_rect.height() / 6);
 				break;
 			case eTextMode::WRAP:
 				break; // Never happens, but put this here to silence warning
@@ -169,8 +177,8 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 			rectangle bounds = str_to_draw.getGlobalBounds();
 			// Adjust so that drawing the same text to
 			// the same rect is positioned exactly right
-			bounds.left = snippet.at.x - 1;
-			bounds.top = snippet.at.y + 5;
+			bounds.move_to(snippet.at);
+			bounds.offset(-adjust_x, -adjust_y);
 			if(options.returnType == text_params_t::RECTS)
 				options.returnRects.push_back(bounds);
 			str_to_draw.setColor(options.hilite_fg);
