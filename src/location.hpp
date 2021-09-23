@@ -90,6 +90,8 @@ struct rectangle {
 	bool contains(int x, int y);
 	void offset(int h, int v);
 	void offset(location diff);
+	void move_to(int x, int y);
+	void move_to(location loc);
 	template<typename T>
 	void offset(sf::Vector2<T> diff) {offset(diff.x,diff.y);}
 	void inset(int dh, int dv);

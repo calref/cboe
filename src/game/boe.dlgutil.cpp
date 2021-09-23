@@ -698,7 +698,10 @@ void handle_talk_event(location p) {
 	int which_talk_entry = TALK_DUNNO;
 	for(word_rect_t& word : talk_words) {
 		if(word.node == -1) continue;
-		if(!p.in(word.rect)) continue;
+		rectangle wordRect(word.rect);
+		wordRect.offset(talk_area_rect.topLeft());
+		wordRect.offset(-1, -10); // TODO: This corrects for the byzantine offsets that win_draw_string applies for some reason...
+		if(!p.in(wordRect)) continue;
 		click_talk_rect(word);
 		which_talk_entry = word.node;
 		break;
