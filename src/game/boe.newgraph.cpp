@@ -2,6 +2,7 @@
 #include <cstring>
 #include <cstdio>
 #include <vector>
+#include <iostream>
 
 #include "boe.global.hpp"
 
@@ -18,6 +19,7 @@
 #include "mathutil.hpp"
 #include "render_image.hpp"
 #include "render_shapes.hpp"
+#include "render_text.hpp"
 #include "tiling.hpp"
 #include "utility.hpp"
 #include "scrollbar.hpp"

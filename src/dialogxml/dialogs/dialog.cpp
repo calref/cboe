@@ -14,6 +14,7 @@
 #include "pict.hpp"
 #include "button.hpp"
 #include "field.hpp"
+#include "ledgroup.hpp"
 #include "message.hpp"
 #include "scrollbar.hpp"
 #include "scrollpane.hpp"
@@ -416,42 +417,6 @@ void cDialog::loadFromFile(std::string path){
 			break;
 		}
 	}
-}
-
-// TODO: Move to a dedicated container.cpp?
-bool cContainer::parseChildControl(ticpp::Element& elem, std::map<std::string,cControl*>& controls, std::string& id) {
-	std::string tag = elem.Value();
-	if(tag == "field") {
-		auto field = parent->parse<cTextField>(elem);
-		controls.insert(field);
-		parent->tabOrder.push_back(field);
-		id = field.first;
-	} else if(tag == "text") {
-		auto text = parent->parse<cTextMsg>(elem);
-		controls.insert(text);
-		id = text.first;
-	} else if(tag == "pict") {
-		auto pict = parent->parse<cPict>(elem);
-		controls.insert(pict);
-		id = pict.first;
-	} else if(tag == "slider") {
-		auto slide = parent->parse<cScrollbar>(elem);
-		controls.insert(slide);
-		id = slide.first;
-	} else if(tag == "button") {
-		auto button = parent->parse<cButton>(elem);
-		controls.insert(button);
-		id = button.first;
-	} else if(tag == "led") {
-		auto led = parent->parse<cLed>(elem);
-		controls.insert(led);
-		id = led.first;
-	} else if(tag == "group") {
-		auto group = parent->parse<cLedGroup>(elem);
-		controls.insert(group);
-		id = group.first;
-	} else return false;
-	return true;
 }
 
 void cDialog::recalcRect(){

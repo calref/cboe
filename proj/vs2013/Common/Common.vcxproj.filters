@@ -731,6 +731,9 @@
     <ClCompile Include="..\..\..\src\fileio\resmgr\res_strings.cpp">
       <Filter>FileIO\ResMgr</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\dialogxml\keycodes.cpp">
+      <Filter>DialogXML</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\dialogxml\widgets\stack.cpp">
       <Filter>DialogXML\Widgets</Filter>
     </ClCompile>
@@ -746,10 +749,19 @@
     <ClCompile Include="..\..\..\src\dialogxml\widgets\message.cpp">
       <Filter>DialogXML\Widgets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\ledgroup.cpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\led.cpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\dialogxml\widgets\field.cpp">
       <Filter>DialogXML\Widgets</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\dialogxml\widgets\control.cpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\container.cpp">
       <Filter>DialogXML\Widgets</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\dialogxml\widgets\button.cpp">
@@ -947,10 +959,19 @@
     <ClInclude Include="..\..\..\src\dialogxml\widgets\message.hpp">
       <Filter>DialogXML\Widgets</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\ledgroup.hpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\led.hpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\dialogxml\widgets\field.hpp">
       <Filter>DialogXML\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\dialogxml\widgets\control.hpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\container.hpp">
       <Filter>DialogXML\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\dialogxml\widgets\button.hpp">
@@ -968,14 +989,14 @@
     <ClInclude Include="..\..\..\src\dialogxml\dialogs\dlogevt.hpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\dialogxml\dialogs\dialog.keys.hpp">
-      <Filter>DialogXML\Dialogs</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\dialogxml\dialogs\dialog.hpp">
       <Filter>DialogXML\Dialogs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\dialogxml\dialogs\choicedlog.hpp">
       <Filter>DialogXML\Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\dialogxml\keycodes.hpp">
+      <Filter>DialogXML</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tools\enum_map.hpp">
       <Filter>Tools</Filter>

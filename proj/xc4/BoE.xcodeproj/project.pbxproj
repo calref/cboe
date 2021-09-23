@@ -79,6 +79,14 @@
 		91279BB80F9D03B7007B0D52 /* boegraphics.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91279BB50F9D03B7007B0D52 /* boegraphics.icns */; };
 		912DFE8F18E2872400B00D75 /* boe.menus.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 912DFE8E18E2872300B00D75 /* boe.menus.mac.mm */; };
 		913D6C050FC57A8E00E12527 /* boeresources.icns in Resources */ = {isa = PBXBuildFile; fileRef = 913D6C040FC57A8E00E12527 /* boeresources.icns */; };
+		9149924B25913E3F00B5BE97 /* container.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9149924525913E3F00B5BE97 /* container.cpp */; };
+		9149924C25913E3F00B5BE97 /* container.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 9149924625913E3F00B5BE97 /* container.hpp */; };
+		9149924D25913E3F00B5BE97 /* led.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9149924725913E3F00B5BE97 /* led.cpp */; };
+		9149924E25913E3F00B5BE97 /* led.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 9149924825913E3F00B5BE97 /* led.hpp */; };
+		9149924F25913E3F00B5BE97 /* ledgroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9149924925913E3F00B5BE97 /* ledgroup.cpp */; };
+		9149925025913E3F00B5BE97 /* ledgroup.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 9149924A25913E3F00B5BE97 /* ledgroup.hpp */; };
+		91499253259140FF00B5BE97 /* keycodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91499251259140FF00B5BE97 /* keycodes.cpp */; };
+		91499254259140FF00B5BE97 /* keycodes.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 91499252259140FF00B5BE97 /* keycodes.hpp */; };
 		914B2AA318E7E507007B6799 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA118E7E500007B6799 /* Cocoa.framework */; };
 		914B2AA418E7E509007B6799 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA118E7E500007B6799 /* Cocoa.framework */; };
 		914B2AA518E7E50A007B6799 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA118E7E500007B6799 /* Cocoa.framework */; };
@@ -607,6 +615,14 @@
 		914698FD1A747BED00F20F5E /* creature.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = creature.hpp; sourceTree = "<group>"; };
 		914698FE1A747C4500F20F5E /* creature.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = creature.cpp; sourceTree = "<group>"; };
 		914701A918F64A85008A6DC9 /* dialog.xsd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = dialog.xsd; sourceTree = "<group>"; };
+		9149924525913E3F00B5BE97 /* container.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = container.cpp; sourceTree = "<group>"; };
+		9149924625913E3F00B5BE97 /* container.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = container.hpp; sourceTree = "<group>"; };
+		9149924725913E3F00B5BE97 /* led.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = led.cpp; sourceTree = "<group>"; };
+		9149924825913E3F00B5BE97 /* led.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = led.hpp; sourceTree = "<group>"; };
+		9149924925913E3F00B5BE97 /* ledgroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ledgroup.cpp; sourceTree = "<group>"; };
+		9149924A25913E3F00B5BE97 /* ledgroup.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ledgroup.hpp; sourceTree = "<group>"; };
+		91499251259140FF00B5BE97 /* keycodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = keycodes.cpp; sourceTree = "<group>"; };
+		91499252259140FF00B5BE97 /* keycodes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = keycodes.hpp; sourceTree = "<group>"; };
 		914B2AA118E7E500007B6799 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		914B2AA218E7E500007B6799 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		914B2BB518E892AA007B6799 /* dialog-converting.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "dialog-converting.txt"; sourceTree = "<group>"; };
@@ -660,7 +676,6 @@
 		9185BDA61EA055180027C346 /* res_font.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = res_font.hpp; sourceTree = "<group>"; };
 		9185BDA71EA055180027C346 /* res_sound.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = res_sound.hpp; sourceTree = "<group>"; };
 		9185BDA81EA055180027C346 /* res_strings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = res_strings.hpp; sourceTree = "<group>"; };
-		918D59A718EA513900735B66 /* dialog.keys.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = dialog.keys.hpp; sourceTree = "<group>"; };
 		919086DF1A65C8E30071F7A0 /* tinyprint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyprint.cpp; sourceTree = "<group>"; };
 		919086E11A65D3250071F7A0 /* tinyprint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyprint.h; sourceTree = "<group>"; };
 		919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = boe.appleevents.mm; sourceTree = "<group>"; };
@@ -956,6 +971,8 @@
 		910BBA130FB8BE66001E34EA /* dialogxml */ = {
 			isa = PBXGroup;
 			children = (
+				91499251259140FF00B5BE97 /* keycodes.cpp */,
+				91499252259140FF00B5BE97 /* keycodes.hpp */,
 				910BBA140FB8BE7D001E34EA /* widgets */,
 				910BBA150FB8BE88001E34EA /* dialogs */,
 			);
@@ -968,16 +985,22 @@
 			children = (
 				91A32BD10FDB797B00C4E957 /* basicbtns.cpp */,
 				910BBA890FB8EC57001E34EA /* button.cpp */,
+				9149924525913E3F00B5BE97 /* container.cpp */,
 				910BBA3C0FB8DA8E001E34EA /* control.cpp */,
 				910BBAB50FB91A26001E34EA /* field.cpp */,
+				9149924725913E3F00B5BE97 /* led.cpp */,
+				9149924925913E3F00B5BE97 /* ledgroup.cpp */,
 				910BBAB90FB91ADB001E34EA /* message.cpp */,
 				910BBAA90FB8F733001E34EA /* pict.cpp */,
 				9191460018E63D8E005CF3A4 /* scrollbar.cpp */,
 				919B13A81BBE2B54009905A4 /* scrollpane.cpp */,
 				9179A4641A48681800FEF872 /* stack.cpp */,
 				910BBA880FB8EC57001E34EA /* button.hpp */,
+				9149924625913E3F00B5BE97 /* container.hpp */,
 				910BBA3B0FB8DA8E001E34EA /* control.hpp */,
 				910BBAB40FB91A26001E34EA /* field.hpp */,
+				9149924825913E3F00B5BE97 /* led.hpp */,
+				9149924A25913E3F00B5BE97 /* ledgroup.hpp */,
 				910BBAB80FB91ADB001E34EA /* message.hpp */,
 				910BBAA80FB8F733001E34EA /* pict.hpp */,
 				913FB40A1A5C90840067B9D2 /* pictypes.hpp */,
@@ -1000,7 +1023,6 @@
 				91E128F21BC2077600C8BE1D /* 3choice.hpp */,
 				91E128F31BC2077700C8BE1D /* choicedlog.hpp */,
 				910BBA170FB8BECA001E34EA /* dialog.hpp */,
-				918D59A718EA513900735B66 /* dialog.keys.hpp */,
 				915AF9E91BC04171008AEF49 /* dlogevt.hpp */,
 				91E128F41BC2077700C8BE1D /* pictchoice.hpp */,
 				91E128F51BC2077700C8BE1D /* strchoice.hpp */,
@@ -1561,6 +1583,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				91F3205123E65EA3009650AF /* framerate_limiter.hpp in Headers */,
+				9149924C25913E3F00B5BE97 /* container.hpp in Headers */,
+				9149924E25913E3F00B5BE97 /* led.hpp in Headers */,
+				9149925025913E3F00B5BE97 /* ledgroup.hpp in Headers */,
+				91499254259140FF00B5BE97 /* keycodes.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1963,6 +1989,10 @@
 				91EC1F0823DDFF9D00271891 /* res_strings.cpp in Sources */,
 				91F3205023E65EA3009650AF /* framerate_limiter.cpp in Sources */,
 				91FE0E3823F084B70084CA6B /* drawable_manager.cpp in Sources */,
+				9149924B25913E3F00B5BE97 /* container.cpp in Sources */,
+				9149924D25913E3F00B5BE97 /* led.cpp in Sources */,
+				9149924F25913E3F00B5BE97 /* ledgroup.cpp in Sources */,
+				91499253259140FF00B5BE97 /* keycodes.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

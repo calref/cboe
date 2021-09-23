@@ -236,6 +236,14 @@
 		E2513E9D245350180066C6B1 /* sfml-network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E91245343E30066C6B1 /* sfml-network.framework */; };
 		E2513E9E245350180066C6B1 /* sfml-system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E8F245343E30066C6B1 /* sfml-system.framework */; };
 		E2513E9F245350180066C6B1 /* sfml-window.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E90245343E30066C6B1 /* sfml-window.framework */; };
+		E26D458D26FCBBBF007984E6 /* led.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E26D458926FCBBBF007984E6 /* led.cpp */; };
+		E26D458E26FCBBBF007984E6 /* led.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E26D458A26FCBBBF007984E6 /* led.hpp */; };
+		E26D458F26FCBBBF007984E6 /* ledgroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E26D458B26FCBBBF007984E6 /* ledgroup.cpp */; };
+		E26D459026FCBBBF007984E6 /* ledgroup.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E26D458C26FCBBBF007984E6 /* ledgroup.hpp */; };
+		E26D459826FCBBCE007984E6 /* container.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E26D459626FCBBCE007984E6 /* container.hpp */; };
+		E26D459926FCBBCE007984E6 /* container.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E26D459726FCBBCE007984E6 /* container.cpp */; };
+		E26D45A126FCBBF4007984E6 /* keycodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E26D459F26FCBBF4007984E6 /* keycodes.cpp */; };
+		E26D45A226FCBBF4007984E6 /* keycodes.hpp in Headers */ = {isa = PBXBuildFile; fileRef = E26D45A026FCBBF4007984E6 /* keycodes.hpp */; };
 		E2AE6DAF24CC876500792E44 /* libboost_filesystem-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E2AE6DAE24CC876500792E44 /* libboost_filesystem-mt.dylib */; };
 		E2AE6DB024CC876500792E44 /* libboost_filesystem-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E2AE6DAE24CC876500792E44 /* libboost_filesystem-mt.dylib */; };
 		E2AE6DB124CC876500792E44 /* libboost_filesystem-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E2AE6DAE24CC876500792E44 /* libboost_filesystem-mt.dylib */; };
@@ -672,7 +680,6 @@
 		9185BDA61EA055180027C346 /* res_font.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = res_font.hpp; sourceTree = "<group>"; };
 		9185BDA71EA055180027C346 /* res_sound.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = res_sound.hpp; sourceTree = "<group>"; };
 		9185BDA81EA055180027C346 /* res_strings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = res_strings.hpp; sourceTree = "<group>"; };
-		918D59A718EA513900735B66 /* dialog.keys.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = dialog.keys.hpp; sourceTree = "<group>"; };
 		919086DF1A65C8E30071F7A0 /* tinyprint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyprint.cpp; sourceTree = "<group>"; };
 		919086E11A65D3250071F7A0 /* tinyprint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyprint.h; sourceTree = "<group>"; };
 		919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = boe.appleevents.mm; sourceTree = "<group>"; };
@@ -843,6 +850,14 @@
 		E2513E90245343E30066C6B1 /* sfml-window.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-window.framework"; path = "/usr/local/SFML/Frameworks/sfml-window.framework"; sourceTree = "<absolute>"; };
 		E2513E91245343E30066C6B1 /* sfml-network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-network.framework"; path = "/usr/local/SFML/Frameworks/sfml-network.framework"; sourceTree = "<absolute>"; };
 		E2513E92245343E40066C6B1 /* SFML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SFML.framework; path = /usr/local/SFML/Frameworks/SFML.framework; sourceTree = "<absolute>"; };
+		E26D458926FCBBBF007984E6 /* led.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = led.cpp; sourceTree = "<group>"; };
+		E26D458A26FCBBBF007984E6 /* led.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = led.hpp; sourceTree = "<group>"; };
+		E26D458B26FCBBBF007984E6 /* ledgroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ledgroup.cpp; sourceTree = "<group>"; };
+		E26D458C26FCBBBF007984E6 /* ledgroup.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ledgroup.hpp; sourceTree = "<group>"; };
+		E26D459626FCBBCE007984E6 /* container.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = container.hpp; sourceTree = "<group>"; };
+		E26D459726FCBBCE007984E6 /* container.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = container.cpp; sourceTree = "<group>"; };
+		E26D459F26FCBBF4007984E6 /* keycodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = keycodes.cpp; sourceTree = "<group>"; };
+		E26D45A026FCBBF4007984E6 /* keycodes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = keycodes.hpp; sourceTree = "<group>"; };
 		E2AE6DAE24CC876500792E44 /* libboost_filesystem-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_filesystem-mt.dylib"; path = "/usr/local/Cellar/boost/1.72.0_3/lib/libboost_filesystem-mt.dylib"; sourceTree = "<absolute>"; };
 		E2AE6DB324CC879300792E44 /* libboost_system-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_system-mt.dylib"; path = "/usr/local/Cellar/boost/1.72.0_3/lib/libboost_system-mt.dylib"; sourceTree = "<absolute>"; };
 		E2DF0BFA2538C031000C7A1A /* texture.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = texture.hpp; sourceTree = "<group>"; };
@@ -975,6 +990,8 @@
 		910BBA130FB8BE66001E34EA /* dialogxml */ = {
 			isa = PBXGroup;
 			children = (
+				E26D459F26FCBBF4007984E6 /* keycodes.cpp */,
+				E26D45A026FCBBF4007984E6 /* keycodes.hpp */,
 				910BBA140FB8BE7D001E34EA /* widgets */,
 				910BBA150FB8BE88001E34EA /* dialogs */,
 			);
@@ -987,8 +1004,14 @@
 			children = (
 				91A32BD10FDB797B00C4E957 /* basicbtns.cpp */,
 				910BBA890FB8EC57001E34EA /* button.cpp */,
+				E26D459726FCBBCE007984E6 /* container.cpp */,
+				E26D459626FCBBCE007984E6 /* container.hpp */,
 				910BBA3C0FB8DA8E001E34EA /* control.cpp */,
 				910BBAB50FB91A26001E34EA /* field.cpp */,
+				E26D458926FCBBBF007984E6 /* led.cpp */,
+				E26D458A26FCBBBF007984E6 /* led.hpp */,
+				E26D458B26FCBBBF007984E6 /* ledgroup.cpp */,
+				E26D458C26FCBBBF007984E6 /* ledgroup.hpp */,
 				910BBAB90FB91ADB001E34EA /* message.cpp */,
 				910BBAA90FB8F733001E34EA /* pict.cpp */,
 				9191460018E63D8E005CF3A4 /* scrollbar.cpp */,
@@ -1019,7 +1042,6 @@
 				91E128F21BC2077600C8BE1D /* 3choice.hpp */,
 				91E128F31BC2077700C8BE1D /* choicedlog.hpp */,
 				910BBA170FB8BECA001E34EA /* dialog.hpp */,
-				918D59A718EA513900735B66 /* dialog.keys.hpp */,
 				915AF9E91BC04171008AEF49 /* dlogevt.hpp */,
 				91E128F41BC2077700C8BE1D /* pictchoice.hpp */,
 				91E128F51BC2077700C8BE1D /* strchoice.hpp */,
@@ -1582,7 +1604,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E26D458E26FCBBBF007984E6 /* led.hpp in Headers */,
+				E26D459026FCBBBF007984E6 /* ledgroup.hpp in Headers */,
+				E26D459826FCBBCE007984E6 /* container.hpp in Headers */,
 				91F3205123E65EA3009650AF /* framerate_limiter.hpp in Headers */,
+				E26D45A226FCBBF4007984E6 /* keycodes.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1951,6 +1977,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				919CC24B1B37730300273FDA /* item.cpp in Sources */,
+				E26D459926FCBBCE007984E6 /* container.cpp in Sources */,
 				919CC24D1B37730E00273FDA /* location.cpp in Sources */,
 				919CC24E1B37731400273FDA /* monster.cpp in Sources */,
 				919CC24F1B37731800273FDA /* outdoors.cpp in Sources */,
@@ -1977,6 +2004,7 @@
 				919CC26D1B3773DB00273FDA /* message.cpp in Sources */,
 				919CC26E1B3773E000273FDA /* pict.cpp in Sources */,
 				919CC26F1B3773E700273FDA /* stack.cpp in Sources */,
+				E26D458F26FCBBBF007984E6 /* ledgroup.cpp in Sources */,
 				919CC2701B3773EC00273FDA /* scrollbar.cpp in Sources */,
 				919CC2711B3773F300273FDA /* cursors.mac.mm in Sources */,
 				919CC2721B3773F800273FDA /* fileio.cpp in Sources */,
@@ -2007,10 +2035,12 @@
 				91EC1F0423DDFF9D00271891 /* res_cursor.cpp in Sources */,
 				91EC1F0523DDFF9D00271891 /* res_font.cpp in Sources */,
 				91EC1F0623DDFF9D00271891 /* res_image.cpp in Sources */,
+				E26D45A126FCBBF4007984E6 /* keycodes.cpp in Sources */,
 				91EC1F0723DDFF9D00271891 /* res_sound.cpp in Sources */,
 				91EC1F0823DDFF9D00271891 /* res_strings.cpp in Sources */,
 				91F3205023E65EA3009650AF /* framerate_limiter.cpp in Sources */,
 				91FE0E3823F084B70084CA6B /* drawable_manager.cpp in Sources */,
+				E26D458D26FCBBBF007984E6 /* led.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,7 +12,7 @@
 #include <vector>
 #include <map>
 #include <string>
-#include "control.hpp"
+#include "container.hpp"
 
 /// A stack groups several controls that represent an array of data.
 /// Generally, each control would represent some aspect of a single element of the data.

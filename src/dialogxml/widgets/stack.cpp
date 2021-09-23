@@ -9,6 +9,7 @@
 #include "stack.hpp"
 #include "field.hpp"
 #include "button.hpp"
+#include "dialog.hpp"
 #include "message.hpp"
 #include "pict.hpp"
 #include "scrollbar.hpp"
@@ -21,15 +22,6 @@ bool cStack::hasChild(std::string id) {
 cControl& cStack::getChild(std::string id) {
 	if(!hasChild(id)) throw std::invalid_argument(id + " was not found in the stack");
 	return *controls[id];
-}
-
-void cContainer::callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::string id, eKeyMod mods) {
-	std::string which_clicked = clicking;
-	clicking = "";
-	
-	if(onClick) onClick(me, id, mods);
-	if(!which_clicked.empty())
-		getChild(which_clicked).triggerClickHandler(me, which_clicked, mods);
 }
 
 bool cStack::manageFormat(eFormat prop, bool set, boost::any* val) {
