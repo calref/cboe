@@ -12,7 +12,7 @@
 #include <functional>
 #include <string>
 #include <type_traits>
-#include "dialog.keys.hpp"
+#include "keycodes.hpp"
 
 /// Represents an event that can occur in a dialog.
 enum eDlogEvt {

@@ -10,6 +10,7 @@
 #include "message.hpp"
 #include "field.hpp"
 #include "button.hpp"
+#include "dialog.hpp"
 #include "pict.hpp"
 #include "stack.hpp"
 #include "render_shapes.hpp"
@@ -24,20 +25,6 @@ bool cScrollPane::handleClick(location where) {
 		return scroll.handleClick(where);
 	where.y += scroll.getPosition();
 	return cContainer::handleClick(where);
-}
-
-bool cContainer::handleClick(location where) {
-	std::string which_clicked;
-	bool success = false;
-	forEach([&](std::string id, cControl& ctrl) {
-		if(ctrl.isClickable() && ctrl.getBounds().contains(where)) {
-			success = ctrl.handleClick(where);
-			which_clicked = id;
-		}
-	});
-	if(!which_clicked.empty())
-		clicking = which_clicked;
-	return success;
 }
 
 void cScrollPane::recalcRect() {

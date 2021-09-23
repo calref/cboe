@@ -14,7 +14,7 @@
 #include <array>
 #include <boost/optional.hpp>
 
-#include "dialog.keys.hpp"
+#include "keycodes.hpp"
 #include "choicedlog.hpp"
 #include "button.hpp"
 #include "pictypes.hpp"

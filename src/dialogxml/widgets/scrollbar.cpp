@@ -7,6 +7,7 @@
 //
 
 #include "scrollbar.hpp"
+#include "dialog.hpp"
 #include "res_image.hpp"
 #include "render_image.hpp"
 #include "render_shapes.hpp"

@@ -6,6 +6,7 @@
 #include "dialog.hpp"
 #include "control.hpp"
 #include "button.hpp"
+#include "ledgroup.hpp"
 #include "pict.hpp"
 #include "strdlog.hpp"
 #include "choicedlog.hpp"

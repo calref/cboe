@@ -14,7 +14,7 @@
 #include <utility>
 
 #include "dialog.hpp"
-#include "button.hpp"
+#include "ledgroup.hpp"
 #include "pictypes.hpp"
 
 /// A dialog that presents a list of icons with LEDs and allows you to choose one.
