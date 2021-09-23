@@ -145,7 +145,6 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 	legacy::stored_items_list_type stored_items[3];
 	legacy::stored_town_maps_type town_maps;
 	legacy::stored_outdoor_maps_type o_maps;
-	unsigned char misc_i[64][64], sfx[64][64];
 	char *party_ptr;
 	char *pc_ptr;
 	long len,store_len,count;
@@ -211,11 +210,11 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 			fin.read((char*)&o_maps, len);
 		}
 		
-		// LOAD SFX & MISC_I
+		// SKIP SFX & MISC_I
 		len = (long) (64 * 64);
-		fin.read((char*)sfx, len);
+		fin.seekg(len, std::fstream::cur); // sfx
 		
-		fin.read((char*)misc_i, len);
+		fin.seekg(len, std::fstream::cur); // misc_i
 		
 	} // end if_scen
 	
@@ -254,7 +253,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 			univ.party.import_legacy(stored_items[i],i);
 		univ.import_legacy(town_maps);
 		univ.import_legacy(o_maps);
-		univ.town.import_legacy(sfx, misc_i);
+		univ.town.import_reset_fields_legacy();
 		if(town_restore) // Check items in crates/barrels
 			for(int i = 0; i < univ.town->max_dim; i++) {
 				for(int j = 0; j < univ.town->max_dim; j++) {

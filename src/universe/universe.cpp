@@ -23,7 +23,7 @@
 void cCurOut::import_legacy(legacy::out_info_type& old){
 	for(int i = 0; i < 96; i++)
 		for(int j = 0; j < 96; j++)
-			expl[i][j] = old.expl[i][j];
+			out_e[i][j] = old.expl[i][j];
 }
 
 void cCurTown::import_legacy(legacy::current_town_type& old){
@@ -84,17 +84,24 @@ void cUniverse::import_legacy(legacy::stored_outdoor_maps_type& old){
 					scenario.outdoors[x][y]->maps[i][j] = old.outdoor_maps[onm(x,y,scenario.outdoors.width())][i / 8][j] & (1 << i % 8);
 }
 
-void cCurTown::import_legacy(unsigned char(& old_sfx)[64][64], unsigned char(& old_misc_i)[64][64]){
-	for(int i = 0; i < 64; i++)
-		for(int j = 0; j < 64; j++){
-			unsigned long tmp_sfx, tmp_misc_i;
-			tmp_sfx = old_sfx[i][j];
-			tmp_misc_i = old_misc_i[i][j];
-			tmp_sfx <<= 16;
-			tmp_misc_i <<= 8;
-			fields[i][j] |= tmp_sfx;
-			fields[i][j] |= tmp_misc_i;
-		}
+void cCurTown::import_reset_fields_legacy(){
+	// boe does not use the stored sfx and misc_i
+	// but discard them and recompute their values
+	for (auto const &f : record()->preset_fields) {
+		if (f.loc.x<0 || f.loc.x>=64 || f.loc.y<0 || f.loc.y>=64) continue;
+		// only 0<old_type<9 and 14<=old_type<=21 are retrieved here
+		if ((f.type>8 && f.type<17) || (f.type>=30 & f.type<=37))
+			fields[f.loc.x][f.loc.y]|=f.type;
+	}
+	auto const &terrain=record()->terrain;
+	auto const &maxTerrain=univ.scenario.ter_types.max_size();
+	for (auto const &spec : record()->special_locs) {
+		if (spec.spec<0 || spec.x<0 || spec.x>=terrain.width() ||
+			spec.y<0 || spec.y>=terrain.height()) continue;
+		ter_num_t id=terrain[spec.x][spec.y];
+		if (id>=0 && id<maxTerrain && univ.scenario.ter_types[id].i==3000)
+			fields[spec.x][spec.y]|=SPECIAL_SPOT;
+	}
 }
 
 cTown* cCurTown::operator -> (){
@@ -775,7 +782,6 @@ ter_num_t& cCurOut::operator [] (location loc) {
 }
 
 void cCurOut::writeTo(std::ostream& file) const {
-	writeArray(file, expl, 96, 96);
 	writeArray(file, out, 96, 96);
 	writeArray(file, out_e, 96, 96);
 //	file << "OUTDOORS 0 0" << std::endl;
@@ -790,7 +796,6 @@ void cCurOut::writeTo(std::ostream& file) const {
 }
 
 void cCurOut::readFrom(std::istream& file) {
-	readArray(file, expl, 96, 96);
 	readArray(file, out, 96, 96);
 	readArray(file, out_e, 96, 96);
 }
@@ -958,7 +963,6 @@ void cUniverse::swap(cUniverse& other) {
 }
 
 void cCurOut::copy(const cCurOut& other) {
-	memcpy(expl, other.expl, sizeof(expl));
 	memcpy(out, other.out, sizeof(out));
 	memcpy(out_e, other.out_e, sizeof(out_e));
 }

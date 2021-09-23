@@ -49,7 +49,7 @@ public:
 	
 	void import_legacy(legacy::current_town_type& old);
 	void import_legacy(legacy::town_item_list& old);
-	void import_legacy(unsigned char(& old_sfx)[64][64], unsigned char(& old_misc_i)[64][64]);
+	void import_reset_fields_legacy();
 	void import_legacy(legacy::big_tr_type& old);
 	
 	cTown* operator -> ();
@@ -134,9 +134,8 @@ public:
 class cCurOut {
 	cUniverse& univ;
 public:
-	char expl[96][96]; // formerly out_info_type
 	ter_num_t out[96][96];
-	unsigned char out_e[96][96];
+	unsigned char out_e[96][96]; // formerly out_info_type;
 	
 	// These take global coords (ie 0..95)
 	bool is_spot(int x, int y);
