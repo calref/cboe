@@ -123,10 +123,11 @@ void cTextMsg::recalcRect() {
 	if(!fixedHeight) {
 		// Fix the width and calculate the height
 		calc_rect.height() = lines * style.lineHeight * 10;
-	} else if(!fixedWidth) {
+	}
+	if(!fixedWidth) {
 		// Fix the height and calculate the width
 		calc_rect.width() = 100 * max_line_chars;
-	} else return; // This case should be impossible, but just in case...
+	}
 	sf::RenderTexture temp;
 	temp.create(frame.width(), frame.height());
 	rectangle test_rect = calc_rect;
@@ -140,8 +141,9 @@ void cTextMsg::recalcRect() {
 	}
 	if(!fixedHeight) {
 		calc_rect.height() = combo.height() + 8;
-	} else if(!fixedWidth) {
-		calc_rect.width() = combo.width() + 8;
+	}
+	if(!fixedWidth) {
+		calc_rect.width() = combo.width() + 16;
 	}
 	frame = calc_rect;
 }
