@@ -425,7 +425,9 @@ void cDialog::recalcRect(){
 		using namespace std::placeholders;
 		if(auto container = dynamic_cast<cContainer*>(iter->second))
 			container->forEach(std::bind(&cControl::recalcRect, _2));
-		iter->second->recalcRect();
+		// fixme, in some dialogs, a long string can make the dialog very large (instead of be printed on many lines)
+		if (iter->second->getType() != eControlType::CTRL_TEXT)
+			iter->second->recalcRect();
 		rectangle frame = iter->second->getBounds();
 		haveRel = haveRel || iter->second->horz != POS_ABS || iter->second->vert != POS_ABS;
 		if(iter->second->horz != POS_REL_NEG && frame.right > winRect.right)
