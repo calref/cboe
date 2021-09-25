@@ -26,6 +26,8 @@
 #include "scen.menus.hpp"
 #include "res_image.hpp"
 #include "button.hpp"
+#include "keycodes.hpp"
+#include "led.hpp"
 #include "prefs.hpp"
 #include "framerate_limiter.hpp"
 #include "event_listener.hpp"
