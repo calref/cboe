@@ -941,45 +941,14 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	style.colour = Colours::TITLE_BLUE; 
 	win_draw_string(talk_gworld,dest_rect,title_string,eTextMode::LEFT_TOP,style);
 	
-	talk_words.clear();
-	static const rectangle preset_rects[9] = {
-		rectangle{366,4,386,54}, rectangle{366,70,386,130}, rectangle{366,136,386,186},
-		rectangle{389,4,409,54}, rectangle{389,70,409,120}, rectangle{389,121,409,186},
-		rectangle{389,210,409,270}, rectangle{366,190,386,270},
-		rectangle{343,4,363,134},
-	};
-	static const char*const preset_words[9] = {
-		"Look", "Name", "Job",
-		"Buy", "Sell", "Record",
-		"Done", "Go Back",
-		"Ask About...",
-	};
-	
 	// Place buttons at bottom.
 	if(color == 0)
 		style.colour = Colours::DARK_GREEN; 
 	else 
 		style.colour = Colours::LIGHT_GREEN; 
 	for(short i = 0; i < 9; i++) {
-		if(!talk_end_forced || i == 6 || i == 5) {
-			word_rect_t preset_word(preset_words[i], preset_rects[i]);
-			preset_word.on = Colours::DARK_GREEN; 
-			preset_word.off = Colours::LIGHT_GREEN; 
-			switch(i) {
-				case 0: preset_word.node = TALK_LOOK; break;
-				case 1: preset_word.node = TALK_NAME; break;
-				case 2: preset_word.node = TALK_JOB; break;
-				case 3: preset_word.node = TALK_BUY; break;
-				case 4: preset_word.node = TALK_SELL; break;
-				case 5: preset_word.node = TALK_RECORD; break;
-				case 6: preset_word.node = TALK_DONE; break;
-				case 7: preset_word.node = TALK_BACK; break;
-				case 8: preset_word.node = TALK_ASK; break;
-			}
-			talk_words.push_back(preset_word);
-			rectangle draw_rect = preset_word.rect;
-			win_draw_string(talk_gworld,draw_rect,preset_word.word,eTextMode::LEFT_TOP,style);
-		}
+		if(!talk_end_forced || i == 6 || i == 5)
+			win_draw_string(talk_gworld,talk_words[i].rect,talk_words[i].word,eTextMode::LEFT_TOP,style);
 	}
 	
 	style.colour = Colours::NAVY; 

@@ -77,7 +77,7 @@ static void push_snippets(size_t start, size_t end, text_params_t& options, size
 		}
 		size_t amount = end - start;
 		snippets.push_back({str.substr(start,amount), loc, hilited});
-		if(hilited) std::cout << "Hiliting passage : \"" << snippets.back().text << '"' << std::endl;
+		//if(hilited) std::cout << "Hiliting passage : \"" << snippets.back().text << '"' << std::endl;
 		loc.x += string_length(snippets.back().text, options.style);
 		start = end;
 		end = upper_bound;
