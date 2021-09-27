@@ -72,7 +72,7 @@ void force_town_enter(short which_town,location where_start) {
 void start_town_mode(short which_town, short entry_dir) {
 	short town_number;
 	short former_town;
-	bool monsters_loaded = false,town_toast = false;
+	bool monsters_loaded = false;
 	location loc;
 	unsigned short temp;
 	bool play_town_sound = false;
@@ -143,203 +143,125 @@ void start_town_mode(short which_town, short entry_dir) {
 	univ.town.monst.which_town = town_number;
 	univ.town.monst.hostile = false;
 	
-	for(auto& pop : univ.party.creature_save)
-		if(town_number == pop.which_town) {
-			univ.town.monst = pop;
-			monsters_loaded = true;
+	for(size_t i=0 ; i<univ.party.creature_save.size(); ++i) {
+		auto const &pop = univ.party.creature_save[i];
+		if(town_number != pop.which_town)
+			continue;
+		univ.town.monst = pop;
+		monsters_loaded = true;
 			
-			for(auto& monst : univ.town.monst) {
-				if(loc_off_act_area(monst.cur_loc))
-					monst.active = 0;
-				if(monst.active == 2)
-					monst.active = 1;
-				monst.cur_loc = monst.start_loc;
-				monst.health = monst.m_health;
-				monst.mp = monst.max_mp;
-				monst.morale = monst.m_morale;
-				monst.status.clear();
-				if(monst.summon_time > 0)
-					monst.active = 0;
-				monst.target = 6;
-				// Bonus SP and HP wear off
-				if(monst.mp > monst.max_mp)
-					monst.mp = monst.max_mp;
-				if(monst.health > monst.m_health)
-					monst.health = monst.m_health;
-			}
-			
-			// Now, travelling NPCs might have arrived. Go through and put them in.
-			// These should have protected status (i.e. spec1 >= 200, spec1 <= 204)
-			for(auto& monst : univ.town.monst) {
-				switch(monst.time_flag){
-					case eMonstTime::ALWAYS: break; // Nothing to do.
-					case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
-						if((univ.party.calc_day() % 3) + 3 != int(monst.time_flag))
-							monst.active = 0;
-						else {
-							monst.active = 1;
-							monst.spec_enc_code = 0;
-							monst.cur_loc = monst.start_loc;
-							monst.health = monst.m_health;
-						}
-						break ;
-						
-						// Now, appearing/disappearing monsters might have arrived/disappeared.
-					case eMonstTime::APPEAR_ON_DAY:
-						if(day_reached(monst.monster_time, monst.time_code)) {
-							monst.active = 1;
-							monst.time_flag = eMonstTime::ALWAYS;
-						}
-						break;
-					case eMonstTime::DISAPPEAR_ON_DAY:
-						if(day_reached(monst.monster_time, monst.time_code)) {
-							monst.active = 0;
-							monst.time_flag = eMonstTime::ALWAYS;
-						}
-						break;
-					case eMonstTime::APPEAR_WHEN_EVENT:
-						if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
-							break; // Event hasn't happened yet
-						if(univ.party.calc_day() >= univ.party.key_times[monst.time_code]){ //calc_day is used because of the "definition" of univ.party.key_times
-							monst.active = 1;
-							monst.time_flag = eMonstTime::ALWAYS;
-						}
-						break;
-						
-					case eMonstTime::DISAPPEAR_WHEN_EVENT:
-						if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
-							break; // Event hasn't happened yet
-						if(univ.party.calc_day() >= univ.party.key_times[monst.time_code]){
-							monst.active = 0;
-							monst.time_flag = eMonstTime::ALWAYS;
-						}
-						break;
-					case eMonstTime::APPEAR_AFTER_CHOP:
-						// TODO: Should these two cases be separated?
-						if(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
-							monst.active += 10;
-						else if(univ.town->is_cleaned_out())
-							monst.active += 10;
-						else monst.active = 0;
-						if(monst.active >= 10)
-							monst.time_flag = eMonstTime::ALWAYS;
-						break;
-				}
-			}
-			
-			for(short j = 0; j < univ.town->max_dim; j++)
-				for(short k = 0; k < univ.town->max_dim; k++) { // now load in saved setup,
-					// except that pushable things restore to orig locs
-					// TODO: THIS IS A TEMPORARY HACK TO GET i VALUE
-					int i = std::find_if(univ.party.creature_save.begin(), univ.party.creature_save.end(), [&pop](cPopulation& p) {return &p == &pop;}) - univ.party.creature_save.begin();
-					temp = univ.party.setup[i][j][k] << 8;
-					temp &= ~(OBJECT_CRATE | OBJECT_BARREL | OBJECT_BLOCK);
-					univ.town.fields[j][k] |= temp;
-				}
+		for(auto& monst : univ.town.monst) {
+			if(loc_off_act_area(monst.cur_loc))
+				monst.active = 0;
+			if(monst.active == 2)
+				monst.active = 1;
+			monst.cur_loc = monst.start_loc;
+			monst.health = monst.m_health;
+			monst.mp = monst.max_mp;
+			monst.morale = monst.m_morale;
+			monst.status.clear();
+			if(monst.summon_time > 0)
+				monst.active = 0;
+			monst.target = 6;
 		}
-	
+			
+		for(short j = 0; j < univ.town->max_dim; j++)
+			for(short k = 0; k < univ.town->max_dim; k++) { // now load in saved setup,
+				temp = univ.party.setup[i][j][k] << 8;
+				temp &= ~(OBJECT_CRATE | OBJECT_BARREL | OBJECT_BLOCK);
+				univ.town.fields[j][k] |= temp;
+			}
+	}
 	if(!monsters_loaded) {
 		univ.town.monst.clear();
 		for(short i = 0; i < univ.town->creatures.size(); i++){
 			if(univ.town->creatures[i].number > 0) {
-				// First set up the values.
+				// recreate the lists.
 				const cTownperson& preset = univ.town->creatures[i];
 				univ.town.monst.assign(i, preset, univ.scenario.scen_monsters[preset.number], univ.party.easy_mode, univ.difficulty_adjust());
-				cCreature& monst = univ.town.monst[i];
-				
-				if(monst.spec_enc_code > 0)
-					monst.active = 0;
-				
-				// Now, if necessary, fry the monster.
-				switch(monst.time_flag) {
-					case eMonstTime::APPEAR_ON_DAY:
-						if(!day_reached(monst.monster_time, monst.time_code))
-							monst.active = 0;
-						break;
-					case eMonstTime::DISAPPEAR_ON_DAY:
-						if(day_reached(monst.monster_time, monst.time_code))
-							monst.active = 0;
-						break;
-					case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
-						if((univ.party.calc_day() % 3) + 3 != int(monst.time_flag)) {
-							monst.active = 0;
-						}
-						else {
-							monst.active = 1;
-						}
-						break;
-					case eMonstTime::APPEAR_WHEN_EVENT:
-						if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
-							monst.active = 0; // Event hasn't happened yet
-						else if(univ.party.calc_day() < univ.party.key_times[univ.town.monst[i].time_code])
-							monst.active = 0; // This would only be reached if the time was set back (or in a legacy save)
-						break;
-						
-					case eMonstTime::DISAPPEAR_WHEN_EVENT:
-						if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
-							break; // Event hasn't happened yet
-						if(univ.party.calc_day() >= univ.party.key_times[univ.town.monst[i].time_code])
-							monst.active = 0;
-						break;
-					case eMonstTime::APPEAR_AFTER_CHOP:
-						// TODO: Should these two cases be separated?
-						if(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
-							monst.active += 10;
-							else if(univ.town->is_cleaned_out())
-							monst.active += 10;
-						else monst.active = 0;
-						break;
-					case eMonstTime::ALWAYS:
-						break;
-				}
-				
-				if(monst.active) {
-					// In forcecage?
-					if(univ.town.is_force_cage(monst.cur_loc.x, monst.cur_loc.y))
-						monst.status[eStatus::FORCECAGE] = 1000;
-				}
 			}
 		}
 	}
 	
-	// Now munch all large monsters that are misplaced
-	// only large monsters, as some smaller monsters are intentionally placed
-	// where they cannot be
-	for(short i = 0; i < univ.town.monst.size(); i++) {
-		if(univ.town.monst[i].active > 0)
-			if(((univ.town.monst[i].x_width > 1) || (univ.town.monst[i].y_width > 1)) &&
-				!monst_can_be_there(univ.town.monst[i].cur_loc,i))
-				univ.town.monst[i].active = 0;
-	}
-	
-	
-	// Thrash town?
-	if(univ.town->is_cleaned_out()) {
-		town_toast = true;
-		add_string_to_buf("Area has been cleaned out.");
-	}
-	if(univ.town->town_chop_time > 0) {
-		if(day_reached(univ.town->town_chop_time,univ.town->town_chop_key)) {
-			add_string_to_buf("Area has been abandoned.");
-			for(auto& monst : univ.town.monst)
-				if(monst.active > 0 && monst.active < 10 && !monst.is_friendly())
+	bool const town_toast=(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key)) ||
+						univ.town->is_cleaned_out();
+	if (town_toast)
+		add_string_to_buf(univ.town->is_cleaned_out() ? "Area has been cleaned out." : "Area has been abandoned.");
+	for(size_t i=0; i<univ.town.monst.size(); ++i) {
+		auto &monst=univ.town.monst[i];
+		if (!monsters_loaded && monst.spec_enc_code>0)
+			monst.active = 0;
+		// Now, travelling NPCs might have arrived. Go through and put them in.
+		// These should have protected status (i.e. spec1 >= 200, spec1 <= 204)
+		switch(monst.time_flag){
+			case eMonstTime::ALWAYS: break; // Nothing to do.
+			case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
+				monst.active = (univ.party.calc_day() % 3) + 3 == int(monst.time_flag) ? 1 : 0;
+				if (monst.active) monst.spec_enc_code=0;
+				break ;
+				
+			// Now, appearing/disappearing monsters might have arrived/disappeared.
+			case eMonstTime::APPEAR_ON_DAY:
+				monst.active = day_reached(monst.monster_time, monst.time_code) ? 1 : 0;
+				break;
+			case eMonstTime::DISAPPEAR_ON_DAY:
+				if(day_reached(monst.monster_time, monst.time_code)) {
+					monst.active = 0;
+					monst.time_flag = eMonstTime::ALWAYS;
+				}
+				break;
+			case eMonstTime::APPEAR_WHEN_EVENT:
+				monst.active = 0;
+				if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
+					break; // Event hasn't happened yet
+				if(univ.party.calc_day() >= univ.party.key_times[monst.time_code]) //calc_day is used because of the "definition" of univ.party.key_times
+					monst.active = 1;
+				break;
+			case eMonstTime::DISAPPEAR_WHEN_EVENT:
+				if (!monst.active)
+					break;
+				if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
+					break; // Event hasn't happened yet
+				if(univ.party.calc_day() >= univ.party.key_times[monst.time_code]) {
+					monst.active = 0;
+					monst.time_flag = eMonstTime::ALWAYS;
+				}
+				break;
+			// toasting
+			case eMonstTime::APPEAR_AFTER_CHOP:
+				if(town_toast)
 					monst.active += 10;
-			town_toast = true;
+				else
+					monst.active = 0;
+				break;
 		}
-	}
-	if(town_toast) {
-		for(auto& monst : univ.town.monst)
-			if(monst.active >= 10)
+		if (town_toast) {
+			if (univ.town->is_cleaned_out() || monst.active>=10 || monst.is_friendly())
 				monst.active -= 10;
-			else monst.active = 0;
+		}
+		if(monst.active<=0) {
+			monst.active=0;
+			continue;
+		}
+		monst.time_flag = eMonstTime::ALWAYS;
+		
+		// Flush excess doomguards and viscous goos
+		if(monst.abil[eMonstAbil::SPLITS].active &&
+			(i >= univ.town->creatures.size() || monst.number != univ.town->creatures[i].number))
+			monst.active = 0;
+
+		// In forcecage? checkme all case ?
+		if(!monsters_loaded && univ.town.is_force_cage(monst.cur_loc.x, monst.cur_loc.y))
+			monst.status[eStatus::FORCECAGE] = 1000;
+		
+		// Now munch all large monsters that are misplaced
+		// only large monsters, as some smaller monsters are intentionally placed
+		// where they cannot be
+		if((monst.x_width > 1 || monst.y_width > 1) && !monst_can_be_there(monst.cur_loc,i))
+			monst.active = 0;
 	}
-	handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc);
 	
-	// Flush excess doomguards and viscous goos
-	for(short i = 0; i < univ.town.monst.size(); i++)
-		if((univ.town.monst[i].abil[eMonstAbil::SPLITS].active) &&
-			(i >= univ.town->creatures.size() || univ.town.monst[i].number != univ.town->creatures[i].number))
-			univ.town.monst[i].active = 0;
+	handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc);
 	
 	// Set up field booleans, correct for doors
 	for(short j = 0; j < univ.town->max_dim; j++)
