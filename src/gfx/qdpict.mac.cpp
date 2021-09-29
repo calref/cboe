@@ -27,13 +27,15 @@
 
 static int16_t extract_word(char* ptr) {
 	int16_t s = *(int16_t*) ptr;
-	flip_short(&s);
+	if (porting::is_small_endian())
+		porting::flip_short(&s);
 	return s;
 }
 
 static int32_t extract_long(char* ptr) {
 	int32_t s = *(int32_t*) ptr;
-	flip_long(&s);
+	if (porting::is_small_endian())
+		porting::flip_long(&s);
 	return s;
 }
 
@@ -163,7 +165,8 @@ static legacy::Rect loadPixMapData(ptr_guard<char>& picData, ptr_guard<unsigned 
 	int rowBytes = extract_word(picData) & 0x7fff;
 	picData += 2; // Skip rowBytes; assume we have a v2 (colour) bitmap
 	legacy::Rect bounds = *(legacy::Rect*)picData;
-	flip_rect(&bounds);
+	if (porting::is_small_endian())
+		porting::flip_rect(&bounds);
 	picData += sizeof(legacy::Rect);
 	picData += 2 + 2 + 4; // Skip version, packType, and packSize
 	picData += 4 + 4; // Skip hRes and vRes

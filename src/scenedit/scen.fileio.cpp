@@ -30,12 +30,10 @@ extern location cur_out;
 extern cOutdoors* current_terrain;
 extern bool change_made;
 extern cCustomGraphics spec_scen_g;
-extern bool mac_is_intel;
 
 fs::path temp_file_to_load;
 std::string last_load_file = "Blades of Exile Scenario";
 extern fs::path progDir, tempDir;
-extern bool cur_scen_is_mac;
 
 void print_write_position ();
 void load_spec_graphics();
