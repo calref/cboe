@@ -20,7 +20,6 @@
 #include "porting.hpp"
 #include "tarball.hpp"
 
-extern bool mac_is_intel;
 extern fs::path progDir, tempDir;
 extern cCustomGraphics spec_scen_g;
 
@@ -39,19 +38,6 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 	short n;
 	struct {ushort a; ushort b; ushort c; ushort d;} flags;
 	
-	// TODO: Putting these flags in hex would make some things a bit clearer
-	static const unsigned short mac_flags[3][2] = {
-		{5790,1342}, // slot 0 ... 5790 - out,         1342 - town
-		{100,200},   // slot 1 ... 100  - in scenario, 200  - not in
-		{3422,5567}  // slot 2 ... 3422 - no maps,     5567 - maps
-	};
-	static const unsigned short win_flags[3][2] = {
-		{40470,15877}, // slot 0 ... 40470 - out,         15877 - town
-		{25600,51200}, // slot 1 ... 25600 - in scenario, 51200 - not in
-		{24077,48917}  // slot 2 ... 24077 - no maps,     48917 - maps
-	};
-	// but if the first flag is 0x0B0E, we have a new-format save
-	// the three flags still follow that.
 	FILE* file_id = fopen(file_to_load.string().c_str(), "rb");
 	if(file_id == nullptr) {
 		showError("Loading Blades of Exile save file failed.");
@@ -66,54 +52,43 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 		showError("This is not a Blades of Exile save file.");
 		return false;
 	}
-	
-	if(mac_is_intel && flags.a == 0x8B1F){ // Gzip header (new format)
+	if(porting::is_small_endian()) { // reset the flags in big endian
+		porting::flip_short((short*)&flags.a);
+		porting::flip_short((short*)&flags.b);
+		porting::flip_short((short*)&flags.c);
+	}
+	if(flags.a == 0x1F8B) // Gzip header (new format)
 		format = new_oboe;
-	}else if(!mac_is_intel && flags.a == 0x1F8B){ // Gzip header (new format)
-		format = new_oboe;
-	}else if(flags.a == mac_flags[0][0] || flags.a == mac_flags[0][1]){ // old format
-		if(mac_is_intel){ // it's actually a windows save
-			flip_short((short*)&flags.a);
-			flip_short((short*)&flags.b);
-			flip_short((short*)&flags.c);
-			format = old_win;
-			if(flags.a == win_flags[0][1]) town_restore = true;
-			else if(flags.a != win_flags[0][0]) format = unknown;
-			if(flags.b == win_flags[1][0]) in_scen = true;
-			else if(flags.b != win_flags[1][1]) format = unknown;
-			if(flags.c == win_flags[2][1]) maps_there = true;
-			else if(flags.c != win_flags[2][0]) format = unknown;
-		}else{ // mac save
-			format = old_mac;
-			if(flags.a == mac_flags[0][1]) town_restore = true;
-			else if(flags.a != mac_flags[0][0]) format = unknown;
-			if(flags.b == mac_flags[1][0]) in_scen = true;
-			else if(flags.b != mac_flags[1][1]) format = unknown;
-			if(flags.c == mac_flags[2][1]) maps_there = true;
-			else if(flags.c != mac_flags[2][0]) format = unknown;
+	else {
+		// expected flags when reading an old file in big endian
+		static const unsigned short old_flags[3][2] = {
+			{0x169e,0x053e}, // slot 0 ... 5790 - out,         1342 - town
+			{0x64,0xc8},   // slot 1 ... 100  - in scenario, 200  - not in
+			{0xd5e,0x15bf}  // slot 2 ... 3422 - no maps,     5567 - maps
+		};
+		// first test mac file then windows file
+		for (int step=0; step<2; ++step) {
+			if (step==1) {
+				porting::flip_short((short*)&flags.a);
+				porting::flip_short((short*)&flags.b);
+				porting::flip_short((short*)&flags.c);
+			}
+			format = unknown;
+			if(flags.a != old_flags[0][0] && flags.a != old_flags[0][1])
+				continue;
+			
+			format = step==0 ? old_mac : old_win;
+			town_restore = maps_there = in_scen = false;
+			if(flags.a == old_flags[0][1]) town_restore = true;
+			else if(flags.a != old_flags[0][0]) format = unknown;
+			if(flags.b == old_flags[1][0]) in_scen = true;
+			else if(flags.b != old_flags[1][1]) format = unknown;
+			if(flags.c == old_flags[2][1]) maps_there = true;
+			else if(flags.c != old_flags[2][0]) format = unknown;
+			if (format!=unknown)
+				break;
 		}
-	}else if(flags.a == win_flags[0][0] || flags.a == win_flags[0][1]){ // old format
-		if(mac_is_intel){ // it's actually a macintosh save
-			flip_short((short*)&flags.a);
-			flip_short((short*)&flags.b);
-			flip_short((short*)&flags.c);
-			format = old_mac;
-			if(flags.a == mac_flags[0][1]) town_restore = true;
-			else if(flags.a != mac_flags[0][0]) format = unknown;
-			if(flags.b == mac_flags[1][0]) in_scen = true;
-			else if(flags.b != mac_flags[1][1]) format = unknown;
-			if(flags.c == mac_flags[2][1]) maps_there = true;
-			else if(flags.c != mac_flags[2][0]) format = unknown;
-		}else{ // win save
-			format = old_win;
-			if(flags.a == win_flags[0][1]) town_restore = true;
-			else if(flags.a != win_flags[0][0]) format = unknown;
-			if(flags.b == win_flags[1][0]) in_scen = true;
-			else if(flags.b != win_flags[1][1]) format = unknown;
-			if(flags.c == win_flags[2][1]) maps_there = true;
-			else if(flags.c != win_flags[2][0]) format = unknown;
-		}
-	}else format = unknown;
+	}
 	
 	fclose(file_id);
 	switch(format){
@@ -130,7 +105,6 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 	return true;
 }
 
-extern bool cur_scen_is_mac;
 bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restore, bool in_scen, bool maps_there, bool mac_file){
 	std::ifstream fin(file_to_load.string().c_str(), std::ios_base::binary);
 	fin.seekg(3*sizeof(short),std::ios_base::beg); // skip the header, which is 6 bytes in the old format
@@ -150,13 +124,13 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 	long len,store_len,count;
 	
 	// ------- set scenario is mac to party_is_mac to make porting.cpp works
-	cur_scen_is_mac=mac_file;
+	porting::set_current_file_type(mac_file);
 
 	// LOAD PARTY
 	len = (long) sizeof(legacy::party_record_type); // should be 46398
 	store_len = len;
 	fin.read((char*)&store_party, len);
-	port_party(&store_party);
+	porting::port_party(&store_party);
 	party_ptr = (char*) &store_party;
 	for(count = 0; count < store_len; count++)
 		party_ptr[count] ^= 0x5C;
@@ -170,7 +144,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 	for(int i = 0; i < 6; i++) {
 		len = store_len;
 		fin.read((char*)&store_pc[i], len);
-		port_pc(&store_pc[i]);
+		porting::port_pc(&store_pc[i]);
 		pc_ptr = (char*) &store_pc[i];
 		for(count = 0; count < store_len; count++)
 			pc_ptr[count] ^= 0x6B;
@@ -186,22 +160,22 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 		if(town_restore) {
 			len = (long) sizeof(legacy::current_town_type);
 			fin.read((char*)&store_c_town, len);
-			port_c_town(&store_c_town);
+			porting::port_c_town(&store_c_town);
 			
 			len = (long) sizeof(legacy::big_tr_type);
 			fin.read((char*)&t_d, len);
-			port_t_d(&t_d);
+			porting::port_t_d(&t_d);
 			
 			len = (long) sizeof(legacy::town_item_list);
 			fin.read((char*)&t_i, len);
-			port_t_i(&t_i);
+			porting::port_t_i(&t_i);
 		}
 		
 		// LOAD STORED ITEMS
 		for(int i = 0; i < 3; i++) {
 			len = (long) sizeof(legacy::stored_items_list_type);
 			fin.read((char*)&stored_items[i], len);
-			port_stored_items_list(&stored_items[i]);
+			porting::port_stored_items_list(&stored_items[i]);
 		}
 		
 		// LOAD SAVED MAPS
@@ -222,7 +196,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 	} // end if_scen
 	
 	fin.close();
-	// ------- the data of the party are all port, so load_scenario can reset cur_scen_is_mac
+	// ------- the data of the party are all port, so load_scenario can reset the file type
 
 	cUniverse univ;
 	
@@ -361,7 +335,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 			for(auto& i : univ.party.setup)
 			for(auto& j : i)
 			for(auto& k : j)
-			flip_short(reinterpret_cast<int16_t*>(&k));
+				porting::flip_short(reinterpret_cast<int16_t*>(&k));
 		}
 		
 		if(partyIn.hasFile("save/town.txt")) {
@@ -373,7 +347,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 			}
 			univ.town.readFrom(fin);
 		} else univ.party.town_num = 200;
-
+		
 		if (partyIn.hasFile("save/townmaps.dat")) {
 			// Read town maps
 			std::istream& fin2 = partyIn.getFile("save/townmaps.dat");
