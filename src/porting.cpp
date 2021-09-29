@@ -245,6 +245,9 @@ void port_out(legacy::outdoor_record_type *out) {
 }
 
 void port_party(legacy::party_record_type* old){
+	if(cur_scen_is_mac != mac_is_intel)
+		return;
+
 	flip_long(&old->age);
 	flip_short(&old->gold);
 	flip_short(&old->food);
@@ -327,6 +330,9 @@ void port_party(legacy::party_record_type* old){
 }
 
 void port_pc(legacy::pc_record_type* old){
+	if(cur_scen_is_mac != mac_is_intel)
+		return;
+
 	flip_short(&old->main_status);
 	for(short i = 0; i < 30; i++)
 		flip_short(&old->skills[i]);
@@ -352,9 +358,12 @@ void port_pc(legacy::pc_record_type* old){
 }
 
 void port_c_town(legacy::current_town_type* old){
+	port_town(&old->town);
+	if(cur_scen_is_mac != mac_is_intel)
+		return;
+	
 	flip_short(&old->town_num);
 	flip_short(&old->difficulty);
-	port_town(&old->town);
 	flip_short(&old->monst.which_town);
 	flip_short(&old->monst.hostile);
 	for(short j = 0; j < 60; j++){
