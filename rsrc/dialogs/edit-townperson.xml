@@ -21,8 +21,8 @@
 		<led name='hostile-b' top='113' left='377' width='100'>Hostile, Type B</led>
 	</group>
 	<group name='mobility'>
-		<led name='mob1' width='4' top='133' left='224'>No</led>
-		<led name='mob2' width='4' top='133' left='282'>Yes</led>
+		<led name='mob1' top='133' left='224'>No</led>
+		<led name='mob2' top='133' left='282'>Yes</led>
 	</group>
 	<button name='okay' type='regular' top='224' left='471'>OK</button>
 	<button name='cancel' type='regular' top='224' left='405'>Cancel</button>

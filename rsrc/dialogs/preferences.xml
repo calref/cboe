@@ -38,24 +38,24 @@
 	<led name='easier' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='352'>Make game easier (monsters much weaker)</led>
 	<led name='lesswm' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='340'>Fewer wandering monsters</led>
 	<led name='skipsplash' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='340'>Skip splash screen on startup</led>
-    <text name='scale-head' size='large' relative='neg pos' anchor='skipsplash' top='17' left='10' width='260' height='17'>Scale UI:</text>
-    <group name='scaleui'>
-        <led name='1' relative='pos-in pos' anchor='scale-head' top='4' left='15' width='33'>1</led>
-        <led name='1_5' relative='pos-in pos' anchor='scale-head' top='4' left='55' width='33'>1.5</led>
-        <led name='2' relative='pos-in pos' anchor='scale-head' top='4' left='95' width='33'>2</led>
-        <led name='3' relative='pos-in pos' anchor='scale-head' top='4' left='135' width='33'>3</led>
-        <led name='4' relative='pos-in pos' anchor='scale-head' top='4' left='175' width='33'>4</led>
-        <led name='other' relative='pos-in pos' anchor='scale-head' top='4' left='215' width='43'>other</led>
+	<text name='scale-head' size='large' relative='neg pos' anchor='skipsplash' top='17' left='10' width='260' height='17'>Scale UI:</text>
+	<group name='scaleui'>
+		<led name='1' relative='pos-in pos' anchor='scale-head' top='4' left='15' width='33'>1</led>
+		<led name='1_5' relative='pos-in pos' anchor='scale-head' top='4' left='55' width='33'>1.5</led>
+		<led name='2' relative='pos-in pos' anchor='scale-head' top='4' left='95' width='33'>2</led>
+		<led name='3' relative='pos-in pos' anchor='scale-head' top='4' left='135' width='33'>3</led>
+		<led name='4' relative='pos-in pos' anchor='scale-head' top='4' left='175' width='33'>4</led>
+		<led name='other' relative='pos-in pos' anchor='scale-head' top='4' left='215' width='43'>other</led>
 	</group>
-    <text name='scalemap-head' size='large' relative='neg pos' anchor='scale-head' top='17' left='0' width='260' height='17'>Scale Map:</text>
-    <group name='scalemap'>
-        <led name='1' relative='pos-in pos' anchor='scalemap-head' top='4' left='15' width='33'>1</led>
-        <led name='1_5' relative='pos-in pos' anchor='scalemap-head' top='4' left='55' width='33'>1.5</led>
-        <led name='2' relative='pos-in pos' anchor='scalemap-head' top='4' left='95' width='33'>2</led>
-        <led name='3' relative='pos-in pos' anchor='scalemap-head' top='4' left='135' width='33'>3</led>
-        <led name='4' relative='pos-in pos' anchor='scalemap-head' top='4' left='175' width='33'>4</led>
-        <led name='other' relative='pos-in pos' anchor='scalemap-head' top='4' left='215' width='43'>other</led>
-    </group>
-    <button name='okay' relative='abs pos' anchor='scalemap-head' type='regular' top='17' left='354'>OK</button>
-    <button name='cancel' relative='neg pos-in' anchor='okay' type='regular' def-key='esc' top='0' left='73'>Cancel</button>
+	<text name='scalemap-head' size='large' relative='neg pos' anchor='scale-head' top='17' left='0' width='260' height='17'>Scale Map:</text>
+	<group name='scalemap'>
+		<led name='1' relative='pos-in pos' anchor='scalemap-head' top='4' left='15' width='33'>1</led>
+		<led name='1_5' relative='pos-in pos' anchor='scalemap-head' top='4' left='55' width='33'>1.5</led>
+		<led name='2' relative='pos-in pos' anchor='scalemap-head' top='4' left='95' width='33'>2</led>
+		<led name='3' relative='pos-in pos' anchor='scalemap-head' top='4' left='135' width='33'>3</led>
+		<led name='4' relative='pos-in pos' anchor='scalemap-head' top='4' left='175' width='33'>4</led>
+		<led name='other' relative='pos-in pos' anchor='scalemap-head' top='4' left='215' width='43'>other</led>
+	</group>
+	<button name='okay' relative='abs pos' anchor='scalemap-head' type='regular' top='17' left='354'>OK</button>
+	<button name='cancel' relative='neg pos-in' anchor='okay' type='regular' def-key='esc' top='0' left='73'>Cancel</button>
 </dialog>
