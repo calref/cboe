@@ -398,6 +398,8 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	// Now, at last, launch missile
 	for(short t = 0; t < num_steps; t++) {
 		draw_terrain();
+		// prevent drawing to happen outside the terrain windows
+		clip_rect(mainPtr, terrain_screen_rect);
 		for(short i = 0; i < 30; i++)
 			if(store_missiles[i].missile_type >= 0) {
 				// Where place?
@@ -439,6 +441,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 					rect_draw_some_item(from_gw,from_rect, mainPtr,temp_rect,sf::BlendAlpha);
 				}
 			}
+		undo_clip(mainPtr);
 		mainPtr.setActive();
 		mainPtr.display();
 		sf::sleep(sf::milliseconds(2 + 5 * get_int_pref("GameSpeed")));
