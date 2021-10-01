@@ -126,7 +126,7 @@ bool cButton::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::s
 		else if(val == "right") setBtnType(BTN_RIGHT);
 		else if(val == "up") setBtnType(BTN_UP);
 		else if(val == "down") setBtnType(BTN_DOWN);
-		else if(val == "tiny") setBtnType(BTN_DONE);
+		else if(val == "tiny") setBtnType(BTN_TINY);
 		else if(val == "done") setBtnType(BTN_DONE);
 		else if(val == "tall") setBtnType(BTN_TALL);
 		else if(val == "trait") setBtnType(BTN_TRAIT);
@@ -164,7 +164,9 @@ void cButton::validatePostParse(ticpp::Element& elem, std::string fname, const s
 	if(labelledButtons.count(type)) {
 		if(!attrs.count("color") && !attrs.count("colour") && parent->getBg() == cDialog::BG_DARK)
 			setColour(sf::Color::White);
-		if(!attrs.count("width"))
+		//  led and tiny with no width seems to work correctly,
+		//  does this test is needed for push button ?
+		if(type!=BTN_LED && type!=BTN_TINY && !attrs.count("width"))
 			throw xMissingAttr(elem.Value(), "width", elem.Row(), elem.Column(), fname);
 	}
 }
