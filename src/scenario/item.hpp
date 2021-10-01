@@ -76,7 +76,7 @@ public:
 	cItem();
 	explicit cItem(eItemPreset preset);
 	explicit cItem(eAlchemy recipe);
-	void import_legacy(legacy::item_record_type& old);
+	void import_legacy(legacy::item_record_type const & old);
 	void writeTo(std::ostream& file, std::string prefix = "") const;
 	void readFrom(std::istream& sin);
 };

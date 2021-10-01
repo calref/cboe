@@ -11,7 +11,6 @@
 #include "dialog.hpp"
 #include "control.hpp"
 #include "cursors.hpp"
-#include <boost/lexical_cast.hpp>
 
 extern cUniverse univ;
 extern sf::RenderWindow mainPtr;

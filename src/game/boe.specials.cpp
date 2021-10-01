@@ -2655,34 +2655,21 @@ void affect_spec(const runtime_state& ctx) {
 			// TODO: I think this is for compatibility with old scenarios? If so, remove it and just convert data on load.
 			// (Actually, I think the only compatibility thing is that it's <= instead of ==)
 			if(spec.ex2a <= 0) {
-				int i;
-				if(spec.ex1a == 2) {
-					i = -1; // CHECKME
+				int i=-1;
+				if(spec.ex1a == 2)
 					ctx.cur_target = &univ.party;
-				}
-				else if(spec.ex1a == 1) {
+				else if(spec.ex1a == 1)
 					i = select_pc(0);
-					if(i != 6)
-						ctx.cur_target = &univ.party[i];
-				}
-				else if(spec.ex1a == 0) {
+				else if(spec.ex1a == 0)
 					i = select_pc(1);
-					if(i != 6)
-						ctx.cur_target = &univ.party[i];
-				}
-				else if(spec.ex1a == 3) {
+				else if(spec.ex1a == 3)
 					i = select_pc(2);
-					if(i != 6)
-						ctx.cur_target = &univ.party[i];
-				}
-				else if(spec.ex1a == 4) {
+				else if(spec.ex1a == 4)
 					i = select_pc(3);
-					if(i != 6)
-						ctx.cur_target = &univ.party[i];
-				}
 				if(i == 6)// && (spec.ex1b >= 0))
 					ctx.next_spec = spec.ex1b;
-				
+				else if (i>=0 && i<6)
+					ctx.cur_target = &univ.party[i];
 			}
 			else if(spec.ex2a == 2) {
 				// Select a specific PC

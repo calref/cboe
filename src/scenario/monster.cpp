@@ -14,7 +14,6 @@
 #include <sstream>
 #include <iostream>
 #include <iomanip>
-#include <boost/lexical_cast.hpp>
 
 #include "oldstructs.hpp"
 #include "fileio.hpp"

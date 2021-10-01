@@ -23,7 +23,7 @@ struct import_helper {
 };
 
 template<typename T>
-void cTown::import_legacy(T& old, int){
+void cTown::import_legacy(T const & old, int){
 	typedef import_helper<T> sizes;
 	assert(max_dim == sizes::dim && "Tried to import legacy town into wrong-sized town");
 	cField the_field, the_road;
