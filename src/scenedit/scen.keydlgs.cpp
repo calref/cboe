@@ -833,7 +833,6 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 	eStrType strt;
 	short str_adj = 0;
 	const char* title = "";
-	cSpecial* node_to_change_to = nullptr;
 	switch(btn) {
 		case 'm':
 			choose_string = false;
@@ -852,23 +851,27 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			store = val;
 			edit_dialog_text(eStrMode(mode), &store, &me);
 			break;
-		case 's': case 'S':
+		case 's': case 'S': {
 			choose_string = false;
 			store = val < 0 ? get_fresh_spec(mode) : val;
 			me[field].setTextToNum(store);
 			save_spec_enc(me, edit_stack);
+			cSpecial* node_to_change_to = nullptr;
 			if(mode == 0)
 				node_to_change_to = &scenario.scen_specials[store];
 			else if(mode == 1)
 				node_to_change_to = &current_terrain->specials[store];
 			else if(mode == 2)
 				node_to_change_to = &town->specials[store];
-			if(node_to_change_to->pic < 0)
-				node_to_change_to->pic = 0;
-			edit_stack.push({store,mode,*node_to_change_to});
+			if (node_to_change_to) {
+				if(node_to_change_to->pic < 0)
+					node_to_change_to->pic = 0;
+				edit_stack.push({store,mode,*node_to_change_to});
+			}
 			put_spec_enc_in_dlog(me, edit_stack);
 			me["back"].show();
 			return true;
+		}
 		case 'p':
 			choose_string = false;
 			if(pictype < 0) me["pictype"].setTextToNum(PIC_DLOG);
