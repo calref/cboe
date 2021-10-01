@@ -34,7 +34,6 @@
 #include "pict.hpp"
 #include "render_shapes.hpp"
 #include "stack.hpp"
-#include <boost/lexical_cast.hpp>
 #include "prefs.hpp"
 #include "shop.hpp"
 #include "cursors.hpp"
@@ -1311,7 +1310,7 @@ void pick_preferences() {
 
 static void put_party_stats(cDialog& me) {
 	for(short i = 0; i < 6; i++) {
-		std::string n = boost::lexical_cast<std::string>(i + 1);
+		std::string n = std::to_string(i + 1);
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			me["name" + n].setText(univ.party[i].name);
 			me["trait" + n].show();
@@ -1383,7 +1382,7 @@ void edit_party() {
 	cDialog pcDialog("edit-party");
 	std::vector<std::string> buttons = {"done", "help"};
 	for(int i = 1; i <= 6; i++) {
-		std::string n = boost::lexical_cast<std::string>(i);
+		std::string n = std::to_string(i);
 		buttons.push_back("name" + n);
 		buttons.push_back("delete" + n);
 		buttons.push_back("trait" + n);
