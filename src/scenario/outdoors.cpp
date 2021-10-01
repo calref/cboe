@@ -17,7 +17,7 @@
 #include "oldstructs.hpp"
 #include "scenario.hpp"
 
-void cOutdoors::import_legacy(legacy::outdoor_record_type& old){
+void cOutdoors::import_legacy(legacy::outdoor_record_type const &old){
 	ambient_sound = AMBIENT_NONE;
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
 	std::vector<int> unused_special_slots;
@@ -126,7 +126,7 @@ cOutdoors::cOutdoors(cScenario& scenario) : cArea(AREA_MEDIUM), scenario(&scenar
 	comment = "Comment";
 }
 
-void cOutdoors::cWandering::import_legacy(legacy::out_wandering_type old){
+void cOutdoors::cWandering::import_legacy(legacy::out_wandering_type const &old){
 	for(int i = 0; i < 7; i++)
 		monst[i] = old.monst[i];
 	for(int j = 0; j < 3; j++)
@@ -140,7 +140,7 @@ void cOutdoors::cWandering::import_legacy(legacy::out_wandering_type old){
 	end_spec2 = old.end_spec2;
 }
 
-void cOutdoors::cCreature::import_legacy(legacy::outdoor_creature_type old){
+void cOutdoors::cCreature::import_legacy(legacy::outdoor_creature_type const &old){
 	exists = old.exists;
 	direction = old.direction;
 	what_monst.import_legacy(old.what_monst);

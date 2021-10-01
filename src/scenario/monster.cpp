@@ -20,7 +20,7 @@
 #include "spell.hpp"
 #include "gfxsheets.hpp" // for NO_PIC
 
-void cMonster::import_legacy(legacy::monster_record_type& old){
+void cMonster::import_legacy(legacy::monster_record_type const &old){
 	level = old.level;
 	m_name = std::string((char*) old.m_name, 26);
 	m_name.erase(m_name.begin() + m_name.find_first_of('\0'), m_name.end());
@@ -437,7 +437,7 @@ cTownperson::cTownperson(location loc, mon_num_t num, const cMonster& monst) : c
 	facial_pic = monst.default_facial_pic;
 }
 
-void cTownperson::import_legacy(legacy::creature_start_type old){
+void cTownperson::import_legacy(legacy::creature_start_type const &old){
 	number = old.number;
 	start_attitude = eAttitude(old.start_attitude);
 	start_loc.x = old.start_loc.x;
