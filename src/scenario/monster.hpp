@@ -73,7 +73,7 @@ public:
 	std::map<eMonstAbil,uAbility>::iterator addAbil(eMonstAbilTemplate what, int param = 0);
 	int addAttack(unsigned short dice, unsigned short sides, eMonstMelee type = eMonstMelee::SWING);
 	
-	void import_legacy(legacy::monster_record_type& old);
+	void import_legacy(legacy::monster_record_type const &old);
 	cMonster();
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
@@ -92,7 +92,7 @@ public:
 	short special_on_kill, special_on_talk;
 	pic_num_t facial_pic;
 	
-	void import_legacy(legacy::creature_start_type old);
+	void import_legacy(legacy::creature_start_type const &old);
 	cTownperson();
 	cTownperson(location loc, mon_num_t num, const cMonster& monst);
 };
