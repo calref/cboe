@@ -2455,6 +2455,8 @@ static bool add_shop_entry(cDialog& me, std::string type, cShop& shop, size_t wh
 			list = STRT_HEALING;
 			prompt = "What kind of healing?";
 		}
+		else
+			return false;
 		int i = choose_text(list, -1, &me, prompt);
 		if(i == -1) return true;
 		if(list == STRT_HEALING) {
