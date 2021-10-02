@@ -44,11 +44,11 @@ void set_up_apple_events(int, char*[]) {
 	(void) app; // Suppress "unused parameter" warning
 	if(file == nil) {
 		std::cerr << "Error: filename was nil" << std::endl;
-		return FALSE;
+		return NO;
 	}
 	
 	if(!load_party(file.fileSystemRepresentation, univ))
-		return FALSE;
+		return NO;
 	
 	if(!finished_init) {
 		ae_loading = true;
@@ -58,7 +58,7 @@ void set_up_apple_events(int, char*[]) {
 		end_startup();
 	if(overall_mode != MODE_STARTUP)
 		post_load();
-	return TRUE;
+	return YES;
 }
 
 // TODO: Something about the cChoiceDlog causes this to crash... AFTER returning.
