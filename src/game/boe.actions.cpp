@@ -1585,12 +1585,29 @@ bool handle_keystroke(const sf::Event& event){
 	Key talk_chars[9] = {kb::L,kb::N,kb::J,kb::B,kb::S,kb::R,kb::D,kb::G,kb::A};
 	Key shop_chars[8] = {kb::A,kb::B,kb::C,kb::D,kb::E,kb::F,kb::G,kb::H};
 	
-	if(map_visible && event.key.code == kb::Escape
-	   && (overall_mode != MODE_TALKING) && (overall_mode != MODE_SHOPPING)) {
-		mini_map.setVisible(false);
-		map_visible = false;
-		mainPtr.setActive();
-		return false;
+	if(event.key.code == kb::Escape) {
+		bool abort=true;
+		if (overall_mode == MODE_TALK_TOWN || overall_mode == MODE_LOOK_TOWN)
+			overall_mode = MODE_TOWN;
+		else if(overall_mode == MODE_LOOK_OUTDOORS)
+			overall_mode = MODE_OUTDOORS;
+		else if (overall_mode == MODE_LOOK_COMBAT)
+			overall_mode = MODE_COMBAT;
+		else
+			abort = false;
+		if (abort) {
+			play_sound(37);
+			add_string_to_buf("Aborted.");
+			print_buf();
+			obscureCursor();
+			return false;
+		}
+		if(map_visible && (overall_mode != MODE_TALKING) && (overall_mode != MODE_SHOPPING)) {
+			mini_map.setVisible(false);
+			map_visible = false;
+			mainPtr.setActive();
+			return false;
+		}
 	}
 	
 	if(overall_mode == MODE_STARTUP)
