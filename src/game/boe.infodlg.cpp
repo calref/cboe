@@ -434,7 +434,7 @@ static bool give_pc_info_event_filter(cDialog& me, std::string item_hit, short& 
 static bool give_pc_extra_info(cDialog& me, std::string item_hit, const short pc) {
 	if(item_hit == "seemage") display_pc(pc,0,&me);
 	else if(item_hit == "seepriest") display_pc(pc,1,&me);
-	else if(item_hit == "trait") pick_race_abil(&univ.party[pc],1,&me);
+	else if(item_hit == "trait") pick_race_abil(pc,1,&me);
 	else if(item_hit == "seealch") display_alchemy(false,&me);
 	return true;
 }

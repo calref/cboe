@@ -26,7 +26,7 @@ void put_spec_item_info (short which_i);
 void put_quest_info(short which_i);
 
 // These are defined in pc.editors.cpp since they are also used by the character editor
-void pick_race_abil(cPlayer *pc,short mode,cDialog* parent = nullptr);
+void pick_race_abil(short pc_num,short mode,cDialog* parent = nullptr);
 void display_pc(short pc_num,short mode,cDialog* parent_num);
 void display_alchemy(bool allowEdit,cDialog* parent);
 

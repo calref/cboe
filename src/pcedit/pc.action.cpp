@@ -54,7 +54,7 @@ bool handle_action(const sf::Event & event) {
 			 		display_pc(current_active_pc,11,nullptr);
 					break;
 				case 2:
-					pick_race_abil(&univ.party[current_active_pc],0);
+					pick_race_abil(current_active_pc,0);
 					break;
 				case 3:
 					spend_xp(current_active_pc,2,nullptr);
