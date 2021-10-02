@@ -171,7 +171,7 @@ public:
 	void import_legacy(legacy::pc_record_type old);
 	cPlayer(cParty& party);
 	cPlayer(cParty& party,ePartyPreset key,short slot);
-	short get_tnl();
+	short get_tnl() const;
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
 	virtual ~cPlayer() = default;
