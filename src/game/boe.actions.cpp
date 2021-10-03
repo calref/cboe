@@ -1373,16 +1373,18 @@ bool handle_action(const sf::Event& event) {
 								handle_equip_item(item_hit, need_redraw);
 								break;
 							case ITEMBTN_USE:
-								handle_use_item(item_hit, did_something, need_redraw);
+								if(stat_window == ITEM_WIN_SPECIAL) {
+									use_spec_item(spec_item_array[item_hit]);
+									need_redraw = true;
+								}
+								else
+									handle_use_item(item_hit, did_something, need_redraw);
 								break;
 							case ITEMBTN_GIVE:
 								handle_give_item(item_hit, did_something, need_redraw);
 								break;
 							case ITEMBTN_DROP:
-								if(stat_window == ITEM_WIN_SPECIAL) {
-									use_spec_item(spec_item_array[item_hit]);
-									need_redraw = true;
-								} else handle_drop_item(item_hit, need_redraw);
+								handle_drop_item(item_hit, need_redraw);
 								break;
 							case ITEMBTN_INFO:
 								if(stat_window == ITEM_WIN_SPECIAL)
