@@ -291,34 +291,45 @@ extern const eItemAbil alch_ingred2[20] = {
 	eItemAbil::ASPTONGUE,eItemAbil::EMBERF,eItemAbil::EMBERF,eItemAbil::ASPTONGUE,eItemAbil::EMBERF,
 };
 
+static bool pick_alchemy_led(cDialog& me, std::string item_hit, bool, bool allowEdit) {
+	if(item_hit.substr(0,6) != "potion")
+		return false;
+	int hit = item_hit[6] - '0';
+	if (item_hit.size()==8)
+		hit=10*hit+(item_hit[7] - '0');
+	--hit;
+	if (hit<0 || hit>=20)
+		return false;
+	if (allowEdit) {
+		univ.party.alchemy[hit]=!univ.party.alchemy[hit];
+		cLed& led = dynamic_cast<cLed&>(me.getControl(item_hit));
+		led.setState(univ.party.alchemy[hit] ? led_red : led_off);
+	}
+	// TODO: change message when hit==0
+	//       use a variable to store the beginning of the potion details
+	me["info"].setText(get_str("alchemy", hit+8));
+	return true;
+}
+
 void display_alchemy(bool allowEdit,cDialog* parent) {
+	using namespace std::placeholders;
 	set_cursor(sword_curs);
 	
 	cChoiceDlog showAlch("pc-alchemy-info", {"done"}, parent);
 	
+	auto led_selector = std::bind(pick_alchemy_led, _1, _2, _3, allowEdit);
 	for(short i = 0; i < 20; i++) {
 		std::string id = "potion" + std::to_string(i + 1);
 		std::string name = get_str("magic-names", i + 200) + " (";
 		name += std::to_string(alch_difficulty[i]);
 		name += ')';
 		showAlch->addLabelFor(id, name, LABEL_LEFT, 83, true);
-		if(!allowEdit)
-			showAlch->getControl(id).attachClickHandler(&cLed::noAction);
 		cLed& led = dynamic_cast<cLed&>(showAlch->getControl(id));
-		if(univ.party.alchemy[i])
-			led.setState(led_red);
-		else led.setState(led_off);
+		led.attachClickHandler(led_selector);
+		led.setState(univ.party.alchemy[i] ? led_red : led_off);
 	}
 	
 	showAlch.show();
-	if(!allowEdit) return;
-	
-	for(short i = 0; i < 20; i++) {
-		std::string id = "potion" + std::to_string(i + 1);
-		cLed& led = dynamic_cast<cLed&>(showAlch->getControl(id));
-		if(led.getState() == led_red) univ.party.alchemy[i] = true;
-		else univ.party.alchemy[i] = false;
-	}
 }
 
 // MARK: Start spend XP dialog
