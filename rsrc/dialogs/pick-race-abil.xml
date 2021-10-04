@@ -4,8 +4,8 @@
 	<text size='large' top='9' left='55' width='181' height='16'>Special Characteristics:</text>
 	<text name='name' size='large' top='9' left='240' width='174' height='16'/>
 	<pict type='dlog' num='7' top='6' left='6'/>
-	<button name='left' type='left' def-key='left' top='349' left='360'/>
-	<button name='right' type='right' def-key='right' top='349' left='423'/>
+	<button name='left' type='left' def-key='left' top='344' left='360'/>
+	<button name='right' type='right' def-key='right' top='344' left='423'/>
 	<button name='cancel' type='regular' def-key='esc' top='370' left='360'>Cancel</button>
 	<button name='done' type='done' top='370' left='423'/>
 	<text size='large' top='30' left='55' width='65' height='18'>Species:</text>
