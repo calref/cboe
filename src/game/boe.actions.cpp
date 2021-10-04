@@ -1684,7 +1684,7 @@ bool handle_keystroke(const sf::Event& event){
 			if(i == 0) {
 				chr2 = kb::Z;
 			}
-			else if (overall_mode == MODE_FIRING || overall_mode == MODE_THROWING || overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_TOWN_TARGET || overall_mode == MODE_FANCY_TARGET) {
+			else if (overall_mode == MODE_FIRING || overall_mode == MODE_THROWING || overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET) {
 				bool need_redraw=true;
 				if (i>=1 && i<=3 && center.y < univ.town->in_town_rect.bottom && center.y < univ.town->max_dim - 5)
 					center.y++;
