@@ -1200,14 +1200,16 @@ void cast_town_spell(location where) {
 	}
 	
 	short adjust = can_see_light(univ.party.town_loc,where,sight_obscurity);
-	if(!spell_freebie)
+	// legacy scenario always use pc characteristic
+	bool freebie = univ.scenario.is_legacy ? false : spell_freebie;
+	if(!freebie)
 		univ.party[who_cast].cur_sp -= (*town_spell).cost;
 	ter = univ.town->terrain(where.x,where.y);
-	short adj = spell_freebie ? 1 : univ.party[who_cast].stat_adj(eSkill::INTELLIGENCE);
-	short level = spell_freebie ? store_item_spell_level : univ.party[who_cast].level;
+	short adj = freebie ? 1 : univ.party[who_cast].stat_adj(eSkill::INTELLIGENCE);
+	short level = freebie ? store_item_spell_level : univ.party[who_cast].level;
 	if(!spell_freebie && (*town_spell).level <= univ.party[who_cast].get_prot_level(eItemAbil::MAGERY) && !(*town_spell).is_priest())
 		level++;
-	if(!spell_freebie && univ.party[who_cast].traits[eTrait::ANAMA] && (*town_spell).is_priest())
+	if(!freebie && univ.party[who_cast].traits[eTrait::ANAMA] && (*town_spell).is_priest())
 		level++;
 	
 	// TODO: Should we do this here? Or in the handling of targeting modes?
@@ -2049,9 +2051,9 @@ extern const eItemAbil alch_ingred2[20];
 static void display_alchemy_graphics(cDialog& me, short &pc_num);
 
 static bool alch_potion_event_filter(cDialog&me, short &pc_num, std::string item_hit, eKeyMod) {
-	int potion_id = boost::lexical_cast<int>(item_hit.substr(6));
+	int potion_id = boost::lexical_cast<int>(item_hit.substr(6))-1;
 	if(!univ.party[pc_num].has_space()) {
-		add_string_to_buf("Alchemy: Can't carry another item.");
+		me["result"].setText("Alchemy: Can't carry another item.");
 		return false;
 	}
 	
@@ -2078,7 +2080,8 @@ static bool alch_potion_event_filter(cDialog&me, short &pc_num, std::string item
 	};
 	int r1 = get_ran(1,1,100);
 	if(r1 < fail_chance[univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[potion_id]]) {
-		add_string_to_buf("Alchemy: Failed.");
+		me["result"].setColour(sf::Color::Red);
+		me["result"].setText("Alchemy: Failed.");
 		r1 = get_ran(1,0,1);
 		play_sound(41 );
 	}
@@ -2090,12 +2093,15 @@ static bool alch_potion_event_filter(cDialog&me, short &pc_num, std::string item
 			store_i.charges++;
 		store_i.graphic_num += get_ran(1,0,2);
 		if(!univ.party[pc_num].give_item(store_i,false)) {
-			add_string_to_buf("No room in inventory. Potion placed on floor.", 2);
+			me["result"].setColour(sf::Color::Red);
+			me["result"].setText("No room in inventory.\nPotion placed on floor.");
 			place_item(store_i,univ.party.town_loc);
 			// checkme: redraw terrain here?
 		}
-		else
-			add_string_to_buf("Alchemy: Successful.");
+		else {
+			me["result"].setColour(sf::Color::White);
+			me["result"].setText("Alchemy: Successful.");
+		}
 	}
 	put_item_screen(stat_window);
 	display_alchemy_graphics(me, pc_num);
