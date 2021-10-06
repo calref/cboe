@@ -240,23 +240,30 @@ void handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(!All_Done) {
+		bool need_redraw=false;
 		if(changed_display_mode) {
+			need_redraw = true;
 			changed_display_mode = false;
 			adjust_windows(mainPtr, mainView);
 		}
 
 #ifdef __APPLE__
 		if (menuChoiceId>=0) {
+			need_redraw = true;
 			handle_menu_choice(eMenu(menuChoiceId));
 			menuChoiceId=-1;
 		}
 #endif
-		while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent);
+		while(mainPtr.pollEvent(currentEvent)) {
+			need_redraw = true;
+			handle_one_event(currentEvent);
+		}
 
 		// Why do we have to set this to false after handling every event?
 		ae_loading = false;
 
-		redraw_everything();
+		if (need_redraw)
+			redraw_everything();
 
 		// Prevent the loop from executing too fast.
 		fps_limiter.frame_finished();
