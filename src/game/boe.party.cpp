@@ -559,7 +559,7 @@ void give_party_spell(short which) {
 void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 	short target,r1,adj,store;
 	location where;
-	
+	if (univ.scenario.is_legacy) freebie=false;
 	if(univ.party[pc_num].traits[eTrait::ANAMA]) {
 		add_string_to_buf("Cast: You're an Anama!");
 		return;
@@ -770,6 +770,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 	location loc;
 	location where;
 	
+	if (univ.scenario.is_legacy) freebie=false;
 	if(univ.party[pc_num].traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
 		add_string_to_buf("Cast: You're a pacifist!");
 		return;
@@ -1200,16 +1201,14 @@ void cast_town_spell(location where) {
 	}
 	
 	short adjust = can_see_light(univ.party.town_loc,where,sight_obscurity);
-	// legacy scenario always use pc characteristic
-	bool freebie = univ.scenario.is_legacy ? false : spell_freebie;
-	if(!freebie)
+	if(!spell_freebie)
 		univ.party[who_cast].cur_sp -= (*town_spell).cost;
 	ter = univ.town->terrain(where.x,where.y);
-	short adj = freebie ? 1 : univ.party[who_cast].stat_adj(eSkill::INTELLIGENCE);
-	short level = freebie ? store_item_spell_level : univ.party[who_cast].level;
+	short adj = spell_freebie ? 1 : univ.party[who_cast].stat_adj(eSkill::INTELLIGENCE);
+	short level = spell_freebie ? store_item_spell_level : univ.party[who_cast].level;
 	if(!spell_freebie && (*town_spell).level <= univ.party[who_cast].get_prot_level(eItemAbil::MAGERY) && !(*town_spell).is_priest())
 		level++;
-	if(!freebie && univ.party[who_cast].traits[eTrait::ANAMA] && (*town_spell).is_priest())
+	if(!spell_freebie && univ.party[who_cast].traits[eTrait::ANAMA] && (*town_spell).is_priest())
 		level++;
 	
 	// TODO: Should we do this here? Or in the handling of targeting modes?
@@ -2027,6 +2026,7 @@ void start_town_targeting(eSpell s_num,short who_c,bool freebie,eSpellPat pat) {
 	overall_mode = MODE_TOWN_TARGET;
 	town_spell = s_num;
 	who_cast = who_c;
+	if (univ.scenario.is_legacy) freebie=false;
 	spell_freebie = freebie;
 	switch(pat) {
 		case PAT_SINGLE: current_pat = single; break;
@@ -2053,6 +2053,7 @@ static void display_alchemy_graphics(cDialog& me, short &pc_num);
 static bool alch_potion_event_filter(cDialog&me, short &pc_num, std::string item_hit, eKeyMod) {
 	int potion_id = boost::lexical_cast<int>(item_hit.substr(6))-1;
 	if(!univ.party[pc_num].has_space()) {
+		me["result"].setColour(sf::Color::Red);
 		me["result"].setText("Alchemy: Can't carry another item.");
 		return false;
 	}
@@ -2096,7 +2097,7 @@ static bool alch_potion_event_filter(cDialog&me, short &pc_num, std::string item
 			me["result"].setColour(sf::Color::Red);
 			me["result"].setText("No room in inventory.\nPotion placed on floor.");
 			place_item(store_i,univ.party.town_loc);
-			// checkme: redraw terrain here?
+			redraw_terrain();
 		}
 		else {
 			me["result"].setColour(sf::Color::White);

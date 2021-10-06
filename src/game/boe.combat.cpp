@@ -4775,6 +4775,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 	snd_num_t store_sound = 0;
 	miss_num_t store_m_type = 0;
 	cPlayer& caster = univ.party[current_pc];
+	if (univ.scenario.is_legacy) freebie=false;
 	short bonus = freebie ? 1 : caster.stat_adj(eSkill::INTELLIGENCE);
 	short level = freebie ? store_item_spell_level : caster.level;
 	if(!freebie && (*spell_num).level <= caster.get_prot_level(eItemAbil::MAGERY))
@@ -4987,6 +4988,7 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 	snd_num_t store_sound = 0;
 	miss_num_t store_m_type = 0;
 	cPlayer& caster = univ.party[current_pc];
+	if (univ.scenario.is_legacy) freebie=false;
 	short bonus = freebie ? 1 : caster.stat_adj(eSkill::INTELLIGENCE);
 	short level = freebie ? store_item_spell_level : caster.level;
 	if(!freebie && caster.traits[eTrait::ANAMA])
@@ -5109,6 +5111,8 @@ void start_spell_targeting(eSpell num, bool freebie, int spell_range, eSpellPat 
 	
 	// First, remember what spell was cast.
 	spell_being_cast = num;
+	// legacy does not use freebie
+	if (univ.scenario.is_legacy) freebie=false;
 	spell_freebie = freebie;
 	
 	add_string_to_buf("  Target spell.");
@@ -5170,6 +5174,7 @@ void start_fancy_spell_targeting(eSpell num, bool freebie, int spell_range, eSpe
 	
 	// First, remember what spell was cast.
 	spell_being_cast = num;
+	if (univ.scenario.is_legacy) freebie=false;
 	spell_freebie = freebie;
 	
 	for(short i = 0; i < 8; i++)
