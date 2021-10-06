@@ -512,15 +512,6 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 			currentFocus = iter->first;
 		}
 	}
-#if 0
-	// Sometimes it seems like the Cocoa menu handling clobbers the active rendering context.
-	// For whatever reason, delaying 100 milliseconds appears to fix this.
-	sf::sleep(sf::milliseconds(100));
-	// So this little section of code is a real-life valley of dying things.
-	// Instantiating a window and then closing it seems to fix the update error, because magic.
-	win.create(sf::VideoMode(1,1),"");
-	win.close();
-#endif
 	if (ui_scale<=0) {
 		ui_scale = get_float_pref("UIScale", 1.0);
 		if (ui_scale < 0.1) ui_scale = 1.0;
