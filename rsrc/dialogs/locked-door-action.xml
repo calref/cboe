@@ -2,8 +2,8 @@
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='leave'>
 	<button name='leave' type='regular' top='36' left='271'>Leave</button>
-	<button name='pick' type='large' top='36' left='161'>Pick Lock</button>
-	<button name='bash' type='large' top='36' left='50'>Bash Door</button>
+	<button name='pick' type='large' def-key='p' top='36' left='161'>Pick Lock</button>
+	<button name='bash' type='large' def-key='b' top='36' left='50'>Bash Door</button>
 	<text top='8' left='50' width='252' height='19'>
 		This door is locked.
 		What do you do?
