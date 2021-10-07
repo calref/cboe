@@ -11,7 +11,6 @@
 	<field name='time7' top='301' left='130' width='67' height='16'/>
 	<field name='time8' top='329' left='130' width='67' height='16'/>
 	<field name='time9' top='357' left='130' width='67' height='16'/>
-	<field name='time10' top='385' left='130' width='67' height='16'/>
 	<field name='node1' top='133' left='270' width='39' height='16'/>
 	<field name='node2' top='161' left='270' width='39' height='16'/>
 	<field name='node3' top='189' left='270' width='39' height='16'/>
@@ -21,8 +20,11 @@
 	<field name='node7' top='301' left='270' width='39' height='16'/>
 	<field name='node8' top='329' left='270' width='39' height='16'/>
 	<field name='node9' top='357' left='270' width='39' height='16'/>
-	<field name='node10' top='385' left='270' width='39' height='16'/>
-	<button name='okay' type='regular' top='383' left='431'>OK</button>
+	<text framed='true' top='125' left='120' width='310' height='252'/>
+	<button name='up' type='up' def-key='up' top='100' left='342'/>
+	<button name='down' type='down' def-key='down' top='380' left='342'/>
+	<button name='cancel' type='regular' top='410' left='340'>Cancel</button>
+	<button name='okay' type='regular' top='410' left='406'>OK</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='256' height='17'>Scenario event timers</text>
 	<text top='25' left='50' width='438' height='55'>
@@ -48,7 +50,6 @@
 	<button name='edit7' type='large' top='299' left='324'>Create/Edit</button>
 	<button name='edit8' type='large' top='327' left='324'>Create/Edit</button>
 	<button name='edit9' type='large' top='355' left='324'>Create/Edit</button>
-	<button name='edit10' type='large' top='383' left='324'>Create/Edit</button>
 	<text top='353' left='2' width='119' height='52'>
 		Also, the time between events must be a multiple of 10.
 	</text>
