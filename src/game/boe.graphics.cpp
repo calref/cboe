@@ -139,7 +139,6 @@ void adjust_window_mode() {
 	winSettings.stencilBits = 1;
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 	hideMenuBar();
-	bool firstTime = !mainPtr.isOpen();
 	float ui_scale = get_float_pref("UIScale", 1.0);
 	if(ui_scale < 0.1) ui_scale = 1.0;
 	float width = 605 * ui_scale, height = 430 * ui_scale;
@@ -1106,7 +1105,7 @@ static void init_trim_mask(std::unique_ptr<sf::Texture>& mask, rectangle src_rec
 void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	/* TODO: Windows has a check for frills being enabled:
 	if(!frills_on || (((current_ground == 2) || (current_ground == 36)) && (PSD[SDF_COMPATIBILITY_FULL_TRIMS] == 0)))
-	    return;
+		return;
 	*/
 	// which_trim
 	// 0 - left, 1 - right, 2 - top, 3 - bottom, 4 - tl, 5 - tr, 6 - bl, 7 - br
