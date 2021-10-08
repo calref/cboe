@@ -520,8 +520,13 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 		sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 		if (desktop.width< ui_scale*winRect.width())
 			ui_scale=float(desktop.width)/winRect.width();
-		if ((desktop.height-30)< ui_scale*winRect.height())
-			ui_scale=float(desktop.height-30)/winRect.height();
+		int minFreeHeight=30;
+#ifndef _WIN32
+		// Checkme, probably, not on Windows, for some reason
+		minFreeHeight += getMenubarHeight();
+#endif
+		if ((desktop.height-minFreeHeight)< ui_scale*winRect.height())
+			ui_scale=float(desktop.height-minFreeHeight)/winRect.height();
 	}
 
 	int wWidth=int(ui_scale*winRect.width()), wHeight=int(ui_scale*winRect.height());
@@ -558,7 +563,7 @@ void cDialog::handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(dialogNotToast) {
-		bool need_redraw=false; // OSNOLA
+		bool need_redraw=false;
 		while(win.pollEvent(currentEvent)) handle_one_event(currentEvent, need_redraw);
 
 		if(doAnimations && animTimer.getElapsedTime().asMilliseconds() >= 500) {
@@ -585,6 +590,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, bool &need_redraw)
 	static cKey pendingKey = {true};
 	std::string itemHit = "";
 	location where;
+	bool prev_redraw=need_redraw;
 	need_redraw=true;
 	switch(currentEvent.type) {
 		case sf::Event::KeyPressed:
@@ -657,7 +663,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, bool &need_redraw)
 				case kb::RControl:
 				case kb::LSystem:
 				case kb::RSystem:
-					need_redraw=false;
+					need_redraw=prev_redraw;
 					return;
 				default:
 					key.spec = false;
@@ -711,7 +717,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, bool &need_redraw)
 			process_click(where, key.mod);
 			break;
 		default: // To silence warning of unhandled enum values
-			need_redraw=false;
+			need_redraw=prev_redraw;
 			return;
 		case sf::Event::GainedFocus:
 		case sf::Event::MouseMoved:
