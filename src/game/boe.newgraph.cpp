@@ -949,7 +949,9 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		style.colour = Colours::DARK_GREEN; 
 	else 
 		style.colour = Colours::LIGHT_GREEN; 
-	for(short i = 0; i < 9; i++) {
+	for(short i = 0; i < 10; i++) {
+		if (i==8) // TALK_FRONT shadow
+			continue;
 		if(!talk_end_forced || i == 6 || i == 5)
 			win_draw_string(talk_gworld,talk_words[i].rect,talk_words[i].word,eTextMode::LEFT_TOP,style);
 	}
@@ -978,7 +980,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	std::vector<rectangle> word_rects = draw_string_hilite(talk_gworld, word_place_rect, str, style, hilites, color ? Colours::DARK_BLUE : Colours::DARK_RED);
 	
 	if(!talk_end_forced) {
-		talk_words.resize(9); // clean the talk_words (if this code is called many times)
+		talk_words.resize(10); // clean the talk_words (if this code is called many times)
 		// Now build the list of word rects
 		for(size_t i = 0; i < hilites.size(); i++) {
 			word_rect_t thisRect;

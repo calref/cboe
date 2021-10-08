@@ -77,6 +77,8 @@ bool can_save_talk;
 short store_talk_face_pic;
 int current_talk_node;
 extern std::vector<word_rect_t> talk_words;
+static size_t talk_history_pos;
+static std::vector<int> talk_history_nodes;
 
 // Shopping vars
 
@@ -154,13 +156,16 @@ void start_shop_mode(short which,short cost_adj,std::string store_name) {
 }
 
 static void update_last_talk(int new_node) {
-	// Store last node in the Go Back button
-	for(word_rect_t& word : talk_words) {
-		if(word.word != "Go Back") continue;
-		word.node = current_talk_node;
-		current_talk_node = new_node;
-		break;
+	if (new_node==TALK_BUY || new_node==TALK_BUSINESS || new_node==TALK_SELL)
+		return;
+	// Store last node in the Go Back/Front button
+	if (talk_history_pos>=talk_history_nodes.size())
+		talk_history_nodes.push_back(new_node);
+	else if (new_node != talk_history_nodes[talk_history_pos]) {
+		talk_history_nodes[talk_history_pos]=new_node;
+		talk_history_nodes.resize(talk_history_pos+1);
 	}
+	++talk_history_pos;
 }
 
 void end_shop_mode() {
@@ -595,21 +600,21 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	
 	// first initialise talk_words here
 	talk_words.clear();
-	static const rectangle preset_rects[9] = {
+	static const rectangle preset_rects[10] = {
 		rectangle{366,4,386,54}, rectangle{366,70,386,130}, rectangle{366,136,386,186},
 		rectangle{389,4,409,54}, rectangle{389,70,409,120}, rectangle{389,121,409,186},
-		rectangle{389,210,409,270}, rectangle{366,190,386,270},
+		rectangle{389,210,409,270}, rectangle{366,190,386,270}, rectangle{1999,1999,2100,2100},
 		rectangle{343,4,363,134},
 	};
-	static const char*const preset_words[9] = {
+	static const char*const preset_words[10] = {
 		"Look", "Name", "Job",
 		"Buy", "Sell", "Record",
-		"Done", "Go Back",
+		"Done", "Go Back", "Go Front",
 		"Ask About...",
 	};
 	
 	// Place buttons at bottom.
-	for(short i = 0; i < 9; i++) {
+	for(short i = 0; i < 10; i++) {
 		word_rect_t preset_word(preset_words[i], preset_rects[i]);
 		preset_word.on = Colours::DARK_GREEN;
 		preset_word.off = Colours::LIGHT_GREEN;
@@ -622,7 +627,8 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 			case 5: preset_word.node = TALK_RECORD; break;
 			case 6: preset_word.node = TALK_DONE; break;
 			case 7: preset_word.node = TALK_BACK; break;
-			case 8: preset_word.node = TALK_ASK; break;
+			case 8: preset_word.node = TALK_FRONT; break;
+			case 9: preset_word.node = TALK_ASK; break;
 		}
 		talk_words.push_back(preset_word);
 	}
@@ -635,6 +641,9 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	save_talk_str2 = "";
 	can_save_talk = true;
 	
+	talk_history_nodes.clear();
+	talk_history_nodes.push_back(TALK_LOOK);
+	talk_history_pos=1;
 	place_talk_str(save_talk_str1, "", 0, dummy_rect);
 	
 	put_item_screen(stat_window);
@@ -742,13 +751,29 @@ void handle_talk_event(location p) {
 		wordRect.offset(talk_area_rect.topLeft());
 		wordRect.offset(-1, -10); // TODO: This corrects for the byzantine offsets that win_draw_string applies for some reason...
 		if(!p.in(wordRect)) continue;
-		click_talk_rect(word);
+		if (word.node != TALK_FRONT)
+			click_talk_rect(word);
 		which_talk_entry = word.node;
 		break;
 	}
 	if(which_talk_entry == TALK_DUNNO)
 		return;
-	
+	if (which_talk_entry==TALK_BACK) {
+		if (talk_history_pos<2 || talk_history_pos>=talk_history_nodes.size()+2) {
+			beep();
+			return;
+		}
+		talk_history_pos-=2;
+		which_talk_entry=talk_history_nodes[talk_history_pos];
+	}
+	else if (which_talk_entry==TALK_FRONT) {
+		if (talk_history_pos>=talk_history_nodes.size()) {
+			beep();
+			return;
+		}
+		which_talk_entry=talk_history_nodes[talk_history_pos];
+	}
+
 	switch(which_talk_entry) {
 		case TALK_DUNNO:
 		SPECIAL_DUNNO:
@@ -810,6 +835,8 @@ void handle_talk_event(location p) {
 		SPECIAL_DONE:
 			end_talk_mode();
 			return;
+		case TALK_FRONT:// only if there's nothing to go front to
+			return; // so, there's nothing to do here
 		case TALK_BACK: // only if there's nothing to go back to
 			return; // so, there's nothing to do here
 		case TALK_ASK: // ask about
