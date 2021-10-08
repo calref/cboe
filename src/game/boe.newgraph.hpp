@@ -27,6 +27,7 @@ enum {
 	TALK_DONE = -14,
 	TALK_BACK = -15,
 	TALK_ASK = -16,
+	TALK_FRONT = -17,
 };
 
 void apply_unseen_mask();

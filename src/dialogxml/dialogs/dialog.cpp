@@ -569,9 +569,10 @@ void cDialog::handle_events() {
 		// Ideally, this should be the only draw call that is done in a cycle.
 		if (need_redraw)
 			draw();
-
-		// Prevent the loop from executing too fast.
-		fps_limiter.frame_finished();
+		else
+			// Prevent the loop from executing too fast
+			//  when the user does nothing
+			fps_limiter.frame_finished();
 	}
 }
 
