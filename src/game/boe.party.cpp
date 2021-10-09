@@ -2226,7 +2226,6 @@ bool pick_pc_name(short pc_num,cDialog* parent) {
 }
 
 mon_num_t pick_trapped_monst() {
-	short i = 0;
 	std::string sp;
 	cMonster get_monst;
 	
@@ -2234,8 +2233,9 @@ mon_num_t pick_trapped_monst() {
 	
 	cChoiceDlog soulCrystal("soul-crystal",{"cancel","pick1","pick2","pick3","pick4"});
 	
+	short i = 0;
 	for(mon_num_t which : univ.party.imprisoned_monst) {
-		std::string n = std::to_string(i + 1);
+		std::string n = std::to_string(++i);
 		if(which == 0) {
 			soulCrystal->getControl("pick" + n).hide();
 		}
