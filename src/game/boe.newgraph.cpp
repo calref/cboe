@@ -603,12 +603,13 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 }
 
 void click_shop_rect(rectangle area_rect) {
-
-	draw_shop_graphics(1,area_rect);
+	// fixme: offset probably because we have offset the position in shop_mode
+	//        seems easier to only redraw the shop string here
+	area_rect.offset(-9,-9);
+	draw_shop_graphics(true,area_rect);
 	mainPtr.display();
 	play_sound(37, time_in_ticks(5));
-	draw_shop_graphics(0,area_rect);
-
+	draw_shop_graphics(false,area_rect);
 }
 
 Texture_pos calc_item_rect(int num,rectangle& to_rect) {
@@ -651,16 +652,14 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	style.pointSize = 18;
 	
 	talk_gworld.setActive(false);
-	if(pressed) {
-		clip_rect(talk_gworld, clip_area_rect);
-	}
 	
 	area_rect = rectangle(0,0,talk_area_rect.height(),talk_area_rect.width());
 	frame_rect(talk_gworld, area_rect, Colours::BLACK); 
 	area_rect.inset(1,1);
-	tileImage(talk_gworld, area_rect,bg[12]);
-	
-	frame_rect(talk_gworld, shop_frame, Colours::BLACK); 
+	tileImage(talk_gworld, pressed ? clip_area_rect : area_rect, bg[12]);
+	if(pressed)
+		clip_rect(talk_gworld, clip_area_rect);
+	frame_rect(talk_gworld, shop_frame, Colours::BLACK);
 	
 	// Place store icon
 	if(!pressed) {
