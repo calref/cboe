@@ -515,19 +515,19 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	if (ui_scale<=0) {
 		ui_scale = get_float_pref("UIScale", 1.0);
 		if (ui_scale < 0.1) ui_scale = 1.0;
-		
-		// check that the dialog can be displayed on the screen
-		sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-		if (desktop.width< ui_scale*winRect.width())
-			ui_scale=float(desktop.width)/winRect.width();
-		int minFreeHeight=30;
-#ifndef _WIN32
-		// Checkme, probably, not on Windows, for some reason
-		minFreeHeight += getMenubarHeight();
-#endif
-		if ((desktop.height-minFreeHeight)< ui_scale*winRect.height())
-			ui_scale=float(desktop.height-minFreeHeight)/winRect.height();
 	}
+
+	
+	// check that the dialog can be displayed on the screen
+	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+	if (desktop.width< ui_scale*winRect.width())
+		ui_scale=float(desktop.width)/winRect.width();
+	// we need keep enough space for the mac menu and the dialog title
+	// and add more space on a retina mac
+	// checkme: we need probably to also add getMenuHeight at least on Linux
+	int const minFreeHeight=desktop.height>1500 ? 100 : 50;
+	if ((desktop.height-minFreeHeight)< ui_scale*winRect.height())
+		ui_scale=float(desktop.height-minFreeHeight)/winRect.height();
 
 	int wWidth=int(ui_scale*winRect.width()), wHeight=int(ui_scale*winRect.height());
 	win.create(sf::VideoMode(wWidth, wHeight), "Dialog", sf::Style::Titlebar);
