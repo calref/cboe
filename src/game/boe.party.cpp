@@ -50,7 +50,7 @@ short combat_percent[20] = {
 	150,120,100,90,80,80,80,70,70,70,
 	70,70,67,62,57,52,47,42,40,40};
 
-short who_cast,which_pc_displayed;
+short who_cast;
 eSpell town_spell;
 extern bool spell_freebie;
 extern eSpecCtxType spec_target_type;
