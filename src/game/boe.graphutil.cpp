@@ -30,7 +30,6 @@ extern eGameMode overall_mode;
 extern short current_spell_range;
 extern cUniverse univ;
 extern effect_pat_type current_pat;
-extern sf::RenderWindow mini_map;
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 
 extern sf::RenderTexture terrain_screen_gworld;
