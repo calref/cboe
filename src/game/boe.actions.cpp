@@ -1593,7 +1593,9 @@ bool handle_keystroke(const sf::Event& event){
 			abort = false;
 		if (abort) {
 			play_sound(37);
-			add_string_to_buf("Cancelled.");
+			add_string_to_buf(" Cancelled.");
+			if (overall_mode==MODE_COMBAT)
+				center = univ.current_pc().combat_pos;
 			print_buf();
 			obscureCursor();
 			return false;

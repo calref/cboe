@@ -155,7 +155,9 @@ void apply_unseen_mask() {
 void apply_light_mask(bool onWindow) {
 	static Region dark_mask_region;
 	rectangle temp = {0,0,108,84},paint_rect,base_rect = {0,0,36,28};
-	rectangle big_to = {13,13,337,265};
+	// I correct the values to make the display ok
+	// but I am not sure what are the correct values
+	rectangle big_to = {13+2,13+14,337+3,265+15};
 	bool same_mask = true;
 	if(!get_bool_pref("DrawTerrainFrills", true) || fog_lifted)
 		return;
@@ -174,18 +176,16 @@ void apply_light_mask(bool onWindow) {
 	// Process the light array
 	for(short i = 1; i < 12; i++)
 		for(short j = 1; j < 12; j++)
-			if((light_area[i - 1][j - 1] >= 1) && (light_area[i + 1][j - 1] >= 1) &&
-				(light_area[i - 1][j] >= 1) && (light_area[i + 1][j] >= 1) &&
-				(light_area[i - 1][j + 1] >= 1) && (light_area[i + 1][j + 1] >= 1) &&
-				(light_area[i][j - 1] >= 1) && (light_area[i][j + 1] >= 1)) {
+			if(light_area[i-1][j-1] >= 1 && light_area[i][j-1] >= 1 && light_area[i+1][j-1]>=1 &&
+				light_area[i-1][j+0] >= 1 && light_area[i][j+0] >= 1 && light_area[i+1][j+0]>=1 &&
+				light_area[i-1][j+1] >= 1 && light_area[i][j+1] >= 1 && light_area[i+1][j+1]>=1) {
 				light_area[i][j] = 2;
 			}
 	for(short i = 1; i < 12; i++)
 		for(short j = 1; j < 12; j++)
-			if((light_area[i - 1][j - 1] >= 2) && (light_area[i + 1][j - 1] >= 2) &&
-				(light_area[i - 1][j] >= 2) && (light_area[i + 1][j] >= 2) &&
-				(light_area[i - 1][j + 1] >= 2) && (light_area[i + 1][j + 1] >= 2) &&
-				(light_area[i][j - 1] >= 2) && (light_area[i][j + 1] >= 2)) {
+			if(light_area[i-1][j-1] >= 2 && light_area[i][j-1] >= 2 && light_area[i+1][j-1]>=2 &&
+				light_area[i-1][j+0] >= 2 && light_area[i][j+0] >= 2 && light_area[i+1][j+0]>=2 &&
+				light_area[i-1][j+1] >= 2 && light_area[i][j+1] >= 2 && light_area[i+1][j+1]>=2) {
 				light_area[i][j] = 3;
 			}
 	
@@ -213,7 +213,8 @@ void apply_light_mask(bool onWindow) {
 	for(short i = 1; i < 12; i++)
 		for(short j = 1; j < 12; j++) {
 			if(light_area[i][j] == 2) {
-				int xOffset = 13 + 28 * (i - 3), yOffset = 13 + 36 * (j - 3);
+				// UNSURE WHY 28+...,18+... seems to gives better result that 13+...,13+...
+				int xOffset = 28 + 28 * (i - 3), yOffset = 18 + 36 * (j - 3);
 				Region oval_region;
 				oval_region.addEllipse(temp);
 				oval_region.offset(xOffset, yOffset);
