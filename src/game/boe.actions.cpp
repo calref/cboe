@@ -12,6 +12,7 @@
 #include "boe.fileio.hpp"
 #include "boe.dlgutil.hpp"
 #include "boe.locutils.hpp"
+#include "boe.minimap.hpp"
 #include "boe.town.hpp"
 #include "boe.text.hpp"
 #include "boe.party.hpp"
@@ -97,9 +98,6 @@ extern short which_combat_type,num_targets_left;
 extern location center;
 extern short combat_active_pc;
 extern eStatMode stat_screen_mode;
-
-extern bool map_visible;
-extern sf::RenderWindow mini_map;
 
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern short shop_identify_cost;
@@ -1107,7 +1105,7 @@ bool handle_action(const sf::Event& event) {
 				
 			case TOOLBAR_SCROLL: case TOOLBAR_MAP:
 				if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN)
-					display_map();
+					minimap::set_visible(true);
 				break;
 				
 			case TOOLBAR_BAG: case TOOLBAR_HAND:
@@ -1442,7 +1440,6 @@ static void advance_time(bool did_something, bool need_redraw, bool need_reprint
 }
 
 void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
-	draw_map(true);
 	play_ambient_sound();
 	
 	if(is_combat() && overall_mode != MODE_LOOK_COMBAT) {
@@ -1600,9 +1597,8 @@ bool handle_keystroke(const sf::Event& event){
 			obscureCursor();
 			return false;
 		}
-		if(map_visible && (overall_mode != MODE_TALKING) && (overall_mode != MODE_SHOPPING)) {
-			mini_map.setVisible(false);
-			map_visible = false;
+		if(minimap::is_visible() && (overall_mode != MODE_TALKING) && (overall_mode != MODE_SHOPPING)) {
+			minimap::set_visible(false);
 			mainPtr.setActive();
 			return false;
 		}
@@ -1836,7 +1832,7 @@ bool handle_keystroke(const sf::Event& event){
 			univ.party.end_split(0);
 			overall_mode = MODE_OUTDOORS;
 			position_party(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y,univ.party.out_loc.x,univ.party.out_loc.y);
-			clear_map();
+			minimap::draw(true);
 			add_string_to_buf("Debug: Reunite party and leave town.");
 			print_buf();
 			redraw_screen(REFRESH_ALL);
@@ -1964,7 +1960,7 @@ bool handle_keystroke(const sf::Event& event){
 					for(short j = 0; j < 64; j++)
 						make_explored(i,j);
 			}
-			clear_map();
+			minimap::draw(true);
 			add_string_to_buf("Debug:  Magic Map.");
 			print_buf();
 			break;
@@ -2044,7 +2040,7 @@ bool handle_keystroke(const sf::Event& event){
 			break;
 		case 'a': // Show automap
 			if(overall_mode == MODE_TOWN || overall_mode == MODE_OUTDOORS)
-				display_map();
+				minimap::set_visible(true);
 			break;
 			
 		case 'u': // Use space
@@ -2217,7 +2213,6 @@ void post_load() {
 	
 	print_buf();
 	
-	clear_map();
 	adjust_spell_menus();
 	adjust_monst_menu();
 }
@@ -2919,7 +2914,7 @@ bool outd_move_party(location destination,bool forced) {
 			
 			if((store_corner.x != univ.party.outdoor_corner.x) || (store_corner.y != univ.party.outdoor_corner.y) ||
 				(store_iwc.x != univ.party.i_w_c.x) || (store_iwc.y != univ.party.i_w_c.y))
-				clear_map();
+				minimap::add_pending_redraw();
 			
 			return true;
 		}
@@ -2941,7 +2936,7 @@ bool outd_move_party(location destination,bool forced) {
 			
 			if((store_corner.x != univ.party.outdoor_corner.x) || (store_corner.y != univ.party.outdoor_corner.y) ||
 				(store_iwc.x != univ.party.i_w_c.x) || (store_iwc.y != univ.party.i_w_c.y))
-				clear_map();
+				minimap::add_pending_redraw();
 			
 			return true;
 		}
@@ -2987,7 +2982,7 @@ bool outd_move_party(location destination,bool forced) {
 			
 			if((store_corner.x != univ.party.outdoor_corner.x) || (store_corner.y != univ.party.outdoor_corner.y) ||
 				(store_iwc.x != univ.party.i_w_c.x) || (store_iwc.y != univ.party.i_w_c.y))
-				clear_map();
+				minimap::add_pending_redraw();
 			
 			return true;
 		}
