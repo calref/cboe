@@ -1,6 +1,7 @@
 
 #include "boe.global.hpp"
 
+#include "framerate_limiter.hpp"
 #include "universe.hpp"
 #include "boe.newgraph.hpp"
 #include "boe.graphics.hpp"
@@ -124,15 +125,19 @@ void show_logo() {
 	auto const &pict_to_draw = *ResMgr::textures.get("spidlogo", true);
 	
 	play_sound(-95);
+	cFramerateLimiter fps_limiter;
 	while(sound_going(95)) {
 		draw_splash(pict_to_draw, mainPtr, logo_from);
 		handle_splash_events();
+		fps_limiter.frame_finished();
 	}
 	if(!get_int_pref("ShowStartupSplash", true)) {
 		sf::Time delay = time_in_ticks(60);
 		sf::Clock timer;
-		while(timer.getElapsedTime() < delay)
+		while(timer.getElapsedTime() < delay) {
 			handle_splash_events();
+			fps_limiter.frame_finished();
+		}
 	}
 }
 
@@ -149,9 +154,11 @@ void plop_fancy_startup() {
 	play_sound(-22);
 	sf::Clock timer;
 	
+	cFramerateLimiter fps_limiter;
 	while(timer.getElapsedTime() < delay) {
 		draw_splash(pict_to_draw, mainPtr, intro_from);
 		handle_splash_events();
+		fps_limiter.frame_finished();
 	}
 }
 

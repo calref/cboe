@@ -9,6 +9,7 @@
 #include "strdlog.hpp"
 #include "choicedlog.hpp"
 #include "fileio.hpp"
+#include "framerate_limiter.hpp"
 #include "spell.hpp"
 #include "sounds.hpp"
 #include "universe.hpp"
@@ -2006,9 +2007,11 @@ void run_special(eSpecCtx which_mode, eSpecCtxType which_type, spec_num_t start_
 			add_string_to_buf(debug);
 			redraw_screen(REFRESH_TRANS);
 			sf::Event evt;
+			cFramerateLimiter fps_limiter;
 			while(true) {
 				if(mainPtr.pollEvent(evt) && (evt.type == sf::Event::KeyPressed || evt.type == sf::Event::MouseButtonPressed))
 					break;
+				fps_limiter.frame_finished();
 			}
 			if(evt.type == sf::Event::KeyPressed && evt.key.code == sf::Keyboard::Escape)
 				univ.node_step_through = false;

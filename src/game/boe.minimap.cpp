@@ -93,6 +93,9 @@ void set_visible(bool vis)
 		windows.setVisible(true);
 		visible = true;
 		draw(true);
+		// when a game is loaded, the windows is not adapted correctly
+		// try to force a new refresh
+		changed = true;
 		makeFrontWindow(mainPtr);
 		
 		set_cursor(sword_curs);
@@ -354,6 +357,9 @@ bool pollEvent()
 		makeFrontWindow(mainPtr);
 	else if(event.type == sf::Event::KeyPressed) {
 		switch(event.key.code) {
+			// checkme: the zone seems big enough
+			//   but maybe we can check for arrows here to move
+			//   in the zone
 			case sf::Keyboard::Escape:
 				set_visible(false);
 				break;
