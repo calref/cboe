@@ -164,7 +164,6 @@
 		91B3EF590F969F3000BF5B67 /* scen.townout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF40F969BA700BF5B67 /* scen.townout.cpp */; };
 		91B3EF5A0F969F3000BF5B67 /* scen.btnmg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF50F969BA700BF5B67 /* scen.btnmg.cpp */; };
 		91B3F1850F97894A00BF5B67 /* scen.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF30F969BA700BF5B67 /* scen.graphics.cpp */; };
-		91BC33821B4388E80008882C /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.1.dylib */; };
 		91BC33831B4388E80008882C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA118E7E500007B6799 /* Cocoa.framework */; };
 		91BC33841B4388E80008882C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA218E7E500007B6799 /* OpenGL.framework */; };
 		91BC33981B4481EF0008882C /* scen.fileio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF20F969BA700BF5B67 /* scen.fileio.cpp */; };
@@ -214,9 +213,12 @@
 		91FCC8F418FF0866007026CE /* pc.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91FCC8F318FF069A007026CE /* pc.appleevents.mm */; };
 		91FD417423DFC9D4003D5B8A /* boe.ui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91FD417223DFC5C1003D5B8A /* boe.ui.cpp */; };
 		91FE0E3823F084B70084CA6B /* drawable_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91FE0E3523F084B70084CA6B /* drawable_manager.cpp */; };
-		DCCA42021A8C467800E6A9A5 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.1.dylib */; };
-		DCCA42031A8C469400E6A9A5 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.1.dylib */; };
-		DCCA42051A8C46B500E6A9A5 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.1.dylib */; };
+		E23F5D6D26FF4D5D00B3AE0C /* libzlib.1.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E23F5D6C26FF4D5D00B3AE0C /* libzlib.1.2.dylib */; };
+		E23F5D6E26FF4D5D00B3AE0C /* libzlib.1.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E23F5D6C26FF4D5D00B3AE0C /* libzlib.1.2.dylib */; };
+		E23F5D6F26FF4D5D00B3AE0C /* libzlib.1.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E23F5D6C26FF4D5D00B3AE0C /* libzlib.1.2.dylib */; };
+		E23F5D7026FF4D5E00B3AE0C /* libzlib.1.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E23F5D6C26FF4D5D00B3AE0C /* libzlib.1.2.dylib */; };
+		E23F5D7126FF4D5E00B3AE0C /* libzlib.1.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E23F5D6C26FF4D5D00B3AE0C /* libzlib.1.2.dylib */; };
+		E23F5D872707291E00B3AE0C /* universe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC61C50FA2729900EEAE67 /* universe.cpp */; };
 		E2513E862453439C0066C6B1 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E7F2453439B0066C6B1 /* OpenAL.framework */; };
 		E2513E872453439C0066C6B1 /* ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E802453439B0066C6B1 /* ogg.framework */; };
 		E2513E882453439C0066C6B1 /* FLAC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E812453439B0066C6B1 /* FLAC.framework */; };
@@ -252,7 +254,6 @@
 		E2AE6DB524CC879300792E44 /* libboost_system-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E2AE6DB324CC879300792E44 /* libboost_system-mt.dylib */; };
 		E2AE6DB624CC879300792E44 /* libboost_system-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E2AE6DB324CC879300792E44 /* libboost_system-mt.dylib */; };
 		E2AE6DB724CC879300792E44 /* libboost_system-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E2AE6DB324CC879300792E44 /* libboost_system-mt.dylib */; };
-		E2AE6DB824CC89EA00792E44 /* libz.1.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		E2AE6DBB24CC89EA00792E44 /* sfml-audio.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E8E245343E30066C6B1 /* sfml-audio.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E2AE6DBC24CC89EA00792E44 /* sfml-graphics.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E8D245343E30066C6B1 /* sfml-graphics.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E2AE6DBD24CC89EA00792E44 /* sfml-network.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E91245343E30066C6B1 /* sfml-network.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -283,8 +284,6 @@
 		E2AE6DD624CDB05C00792E44 /* vorbisfile.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E852453439C0066C6B1 /* vorbisfile.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E2AE6DD724CDB05C00792E44 /* libboost_filesystem-mt.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = E2AE6DAE24CC876500792E44 /* libboost_filesystem-mt.dylib */; };
 		E2AE6DD824CDB05C00792E44 /* libboost_system-mt.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = E2AE6DB324CC879300792E44 /* libboost_system-mt.dylib */; };
-		E2AE6DD924CDB06700792E44 /* libz.1.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.1.dylib */; };
-		E2AE6DEA24D489B100792E44 /* libz.1.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		E2AE6DED24D489B100792E44 /* sfml-audio.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E8E245343E30066C6B1 /* sfml-audio.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E2AE6DEE24D489B100792E44 /* sfml-graphics.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E8D245343E30066C6B1 /* sfml-graphics.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E2AE6DEF24D489B100792E44 /* sfml-network.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E91245343E30066C6B1 /* sfml-network.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -318,6 +317,7 @@
 		E2B4A69624541D7100857D44 /* sfml-system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E8F245343E30066C6B1 /* sfml-system.framework */; };
 		E2B4A69724541D7100857D44 /* sfml-window.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E90245343E30066C6B1 /* sfml-window.framework */; };
 		E2B4A69824541D7100857D44 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E92245343E40066C6B1 /* SFML.framework */; };
+		E2FE7CB127142B07008D567E /* boe.minimap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FE7CB027142B07008D567E /* boe.minimap.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -456,7 +456,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				E2AE6DB824CC89EA00792E44 /* libz.1.dylib in Copy Libraries and Frameworks */,
 				E2AE6DBB24CC89EA00792E44 /* sfml-audio.framework in Copy Libraries and Frameworks */,
 				E2AE6DBC24CC89EA00792E44 /* sfml-graphics.framework in Copy Libraries and Frameworks */,
 				E2AE6DBD24CC89EA00792E44 /* sfml-network.framework in Copy Libraries and Frameworks */,
@@ -482,7 +481,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				E2AE6DD924CDB06700792E44 /* libz.1.dylib in Copy Libraries and Frameworks */,
 				E2AE6DCA24CDB05C00792E44 /* sfml-audio.framework in Copy Libraries and Frameworks */,
 				E2AE6DCB24CDB05C00792E44 /* sfml-graphics.framework in Copy Libraries and Frameworks */,
 				E2AE6DCC24CDB05C00792E44 /* sfml-network.framework in Copy Libraries and Frameworks */,
@@ -508,7 +506,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				E2AE6DEA24D489B100792E44 /* libz.1.dylib in Copy Libraries and Frameworks */,
 				E2AE6DED24D489B100792E44 /* sfml-audio.framework in Copy Libraries and Frameworks */,
 				E2AE6DEE24D489B100792E44 /* sfml-graphics.framework in Copy Libraries and Frameworks */,
 				E2AE6DEF24D489B100792E44 /* sfml-network.framework in Copy Libraries and Frameworks */,
@@ -836,7 +833,7 @@
 		91FE0E3623F084B70084CA6B /* drawable_manager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = drawable_manager.hpp; sourceTree = "<group>"; };
 		91FE0E3723F084B70084CA6B /* event_listener.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = event_listener.hpp; sourceTree = "<group>"; };
 		91FE0E3B23F084C60084CA6B /* drawable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = drawable.hpp; sourceTree = "<group>"; };
-		DCCA42011A8C467800E6A9A5 /* libz.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.dylib; path = /usr/lib/libz.1.dylib; sourceTree = "<absolute>"; };
+		E23F5D6C26FF4D5D00B3AE0C /* libzlib.1.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libzlib.1.2.dylib; sourceTree = "<group>"; };
 		E2513E7F2453439B0066C6B1 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = /usr/local/SFML/extlibs/OpenAL.framework; sourceTree = "<absolute>"; };
 		E2513E802453439B0066C6B1 /* ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ogg.framework; path = /usr/local/SFML/extlibs/ogg.framework; sourceTree = "<absolute>"; };
 		E2513E812453439B0066C6B1 /* FLAC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FLAC.framework; path = /usr/local/SFML/extlibs/FLAC.framework; sourceTree = "<absolute>"; };
@@ -858,9 +855,11 @@
 		E26D459726FCBBCE007984E6 /* container.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = container.cpp; sourceTree = "<group>"; };
 		E26D459F26FCBBF4007984E6 /* keycodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = keycodes.cpp; sourceTree = "<group>"; };
 		E26D45A026FCBBF4007984E6 /* keycodes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = keycodes.hpp; sourceTree = "<group>"; };
-		E2AE6DAE24CC876500792E44 /* libboost_filesystem-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_filesystem-mt.dylib"; path = "/usr/local/Cellar/boost/1.72.0_3/lib/libboost_filesystem-mt.dylib"; sourceTree = "<absolute>"; };
-		E2AE6DB324CC879300792E44 /* libboost_system-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_system-mt.dylib"; path = "/usr/local/Cellar/boost/1.72.0_3/lib/libboost_system-mt.dylib"; sourceTree = "<absolute>"; };
+		E2AE6DAE24CC876500792E44 /* libboost_filesystem-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_filesystem-mt.dylib"; path = "/usr/local/Cellar/boost/1.75.0_2/lib/libboost_filesystem-mt.dylib"; sourceTree = "<absolute>"; };
+		E2AE6DB324CC879300792E44 /* libboost_system-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_system-mt.dylib"; path = "/usr/local/Cellar/boost/1.75.0_2/lib/libboost_system-mt.dylib"; sourceTree = "<absolute>"; };
 		E2DF0BFA2538C031000C7A1A /* texture.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = texture.hpp; sourceTree = "<group>"; };
+		E2FE7CB027142B07008D567E /* boe.minimap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boe.minimap.cpp; sourceTree = "<group>"; };
+		E2FE7CB727142B16008D567E /* boe.minimap.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.minimap.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -870,7 +869,6 @@
 			files = (
 				E2513E9B245350180066C6B1 /* sfml-audio.framework in Frameworks */,
 				E2513E9A24534FD40066C6B1 /* SFML.framework in Frameworks */,
-				DCCA42031A8C469400E6A9A5 /* libz.1.dylib in Frameworks */,
 				E2AE6DAF24CC876500792E44 /* libboost_filesystem-mt.dylib in Frameworks */,
 				E2513E9C245350180066C6B1 /* sfml-graphics.framework in Frameworks */,
 				E2513E9D245350180066C6B1 /* sfml-network.framework in Frameworks */,
@@ -880,6 +878,7 @@
 				914B2AA618E7E50D007B6799 /* OpenGL.framework in Frameworks */,
 				911F2D991B98F43B00E3102E /* libCommon.a in Frameworks */,
 				E2513E9F245350180066C6B1 /* sfml-window.framework in Frameworks */,
+				E23F5D6E26FF4D5D00B3AE0C /* libzlib.1.2.dylib in Frameworks */,
 				911F2D9E1B98F44700E3102E /* libCommon-Party.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -907,6 +906,7 @@
 				E2513E892453439C0066C6B1 /* vorbisenc.framework in Frameworks */,
 				E2513E96245343E40066C6B1 /* sfml-window.framework in Frameworks */,
 				E2513E98245343E40066C6B1 /* SFML.framework in Frameworks */,
+				E23F5D6D26FF4D5D00B3AE0C /* libzlib.1.2.dylib in Frameworks */,
 				E2513E862453439C0066C6B1 /* OpenAL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -916,7 +916,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2B4A68A24541C8E00857D44 /* sfml-system.framework in Frameworks */,
-				DCCA42021A8C467800E6A9A5 /* libz.1.dylib in Frameworks */,
 				914B2AA418E7E509007B6799 /* Cocoa.framework in Frameworks */,
 				E2AE6DB024CC876500792E44 /* libboost_filesystem-mt.dylib in Frameworks */,
 				914B2AA718E7E50E007B6799 /* OpenGL.framework in Frameworks */,
@@ -927,6 +926,7 @@
 				911F2D9A1B98F43C00E3102E /* libCommon.a in Frameworks */,
 				911F2D9F1B98F44700E3102E /* libCommon-Party.a in Frameworks */,
 				E2B4A68B24541C8E00857D44 /* sfml-window.framework in Frameworks */,
+				E23F5D6F26FF4D5D00B3AE0C /* libzlib.1.2.dylib in Frameworks */,
 				E2B4A68824541C8E00857D44 /* sfml-graphics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -935,13 +935,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DCCA42051A8C46B500E6A9A5 /* libz.1.dylib in Frameworks */,
 				E2B4A68D24541C8F00857D44 /* sfml-audio.framework in Frameworks */,
 				E2AE6DB124CC876500792E44 /* libboost_filesystem-mt.dylib in Frameworks */,
 				914B2AA518E7E50A007B6799 /* Cocoa.framework in Frameworks */,
 				914B2AA818E7E50E007B6799 /* OpenGL.framework in Frameworks */,
 				911F2D9B1B98F43C00E3102E /* libCommon.a in Frameworks */,
 				E2AE6DB624CC879300792E44 /* libboost_system-mt.dylib in Frameworks */,
+				E23F5D7026FF4D5E00B3AE0C /* libzlib.1.2.dylib in Frameworks */,
 				E2B4A69124541C8F00857D44 /* sfml-window.framework in Frameworks */,
 				E2B4A69024541C8F00857D44 /* sfml-system.framework in Frameworks */,
 				E2B4A68E24541C8F00857D44 /* sfml-graphics.framework in Frameworks */,
@@ -955,7 +955,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2B4A69624541D7100857D44 /* sfml-system.framework in Frameworks */,
-				91BC33821B4388E80008882C /* libz.1.dylib in Frameworks */,
 				E2B4A69324541D7100857D44 /* sfml-audio.framework in Frameworks */,
 				E2B4A69424541D7100857D44 /* sfml-graphics.framework in Frameworks */,
 				E2AE6DB224CC876500792E44 /* libboost_filesystem-mt.dylib in Frameworks */,
@@ -966,6 +965,7 @@
 				E2B4A69724541D7100857D44 /* sfml-window.framework in Frameworks */,
 				911F2D9C1B98F43C00E3102E /* libCommon.a in Frameworks */,
 				E2B4A69824541D7100857D44 /* SFML.framework in Frameworks */,
+				E23F5D7126FF4D5E00B3AE0C /* libzlib.1.2.dylib in Frameworks */,
 				911F2DA01B98F44700E3102E /* libCommon-Party.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1116,7 +1116,7 @@
 		914B2AA018E7E4A3007B6799 /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DCCA42011A8C467800E6A9A5 /* libz.1.dylib */,
+				E23F5D6C26FF4D5D00B3AE0C /* libzlib.1.2.dylib */,
 				914B2AA118E7E500007B6799 /* Cocoa.framework */,
 				914B2AA218E7E500007B6799 /* OpenGL.framework */,
 				E2513E8E245343E30066C6B1 /* sfml-audio.framework */,
@@ -1521,6 +1521,7 @@
 				2BF04AFA0BF51924006C0831 /* boe.locutils.cpp */,
 				2BF04ACB0BF51923006C0831 /* boe.main.cpp */,
 				912DFE8E18E2872300B00D75 /* boe.menus.mac.mm */,
+				E2FE7CB027142B07008D567E /* boe.minimap.cpp */,
 				2BF04AFC0BF51924006C0831 /* boe.monster.cpp */,
 				2BF04AFE0BF51924006C0831 /* boe.newgraph.cpp */,
 				2BF04B000BF51924006C0831 /* boe.party.cpp */,
@@ -1550,6 +1551,7 @@
 				2BF04AFB0BF51924006C0831 /* boe.locutils.hpp */,
 				2BF04ACC0BF51923006C0831 /* boe.main.hpp */,
 				9191460118E6591F005CF3A4 /* boe.menus.hpp */,
+				E2FE7CB727142B16008D567E /* boe.minimap.hpp */,
 				2BF04AFD0BF51924006C0831 /* boe.monster.hpp */,
 				2BF04AFF0BF51924006C0831 /* boe.newgraph.hpp */,
 				2BF04B010BF51924006C0831 /* boe.party.hpp */,
@@ -1938,6 +1940,7 @@
 				2BF04B1C0BF51924006C0831 /* boe.combat.cpp in Sources */,
 				2BF04B1D0BF51924006C0831 /* boe.dlgutil.cpp in Sources */,
 				2BF04B230BF51924006C0831 /* boe.infodlg.cpp in Sources */,
+				E2FE7CB127142B07008D567E /* boe.minimap.cpp in Sources */,
 				2BF04B250BF51924006C0831 /* boe.items.cpp in Sources */,
 				2BF04B260BF51924006C0831 /* boe.locutils.cpp in Sources */,
 				2BF04B270BF51924006C0831 /* boe.monster.cpp in Sources */,
@@ -2105,6 +2108,7 @@
 				91E128E61BC19DA400C8BE1D /* init.cpp in Sources */,
 				9176FEC71D550EFE006EF694 /* out_legacy.cpp in Sources */,
 				9176FEC81D550EFE006EF694 /* scen_legacy.cpp in Sources */,
+				E23F5D872707291E00B3AE0C /* universe.cpp in Sources */,
 				9176FECB1D550EFE006EF694 /* talk_legacy.cpp in Sources */,
 				9176FECC1D550EFE006EF694 /* town_legacy.cpp in Sources */,
 				91C548F81D8B2FE400FE6A7B /* pc_read.cpp in Sources */,
@@ -2228,7 +2232,7 @@
 				HEADER_SEARCH_PATHS = (
 					/opt/local/include,
 					/usr/local/SFML/include,
-					/usr/local/Cellar/boost/1.72.0_3/include/,
+					/usr/local/Cellar/boost/1.75.0_2/include/,
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -2303,7 +2307,7 @@
 				HEADER_SEARCH_PATHS = (
 					/opt/local/include,
 					/usr/local/SFML/include,
-					/usr/local/Cellar/boost/1.72.0_3/include/,
+					/usr/local/Cellar/boost/1.75.0_2/include/,
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -2356,7 +2360,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					/usr/local/Cellar/boost/1.72.0_3/lib,
+					/usr/local/Cellar/boost/1.75.0_2/lib,
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_system-mt",
@@ -2387,7 +2391,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					/usr/local/Cellar/boost/1.72.0_3/lib,
+					/usr/local/Cellar/boost/1.75.0_2/lib,
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_system-mt",
@@ -2465,6 +2469,10 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -2479,6 +2487,10 @@
 					"$(inherited)",
 					/usr/local/SFML/extlibs,
 					/usr/local/SFML/Frameworks,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -2499,7 +2511,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					/usr/local/Cellar/boost/1.72.0_3/lib,
+					/usr/local/Cellar/boost/1.75.0_2/lib,
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_system",
@@ -2527,7 +2539,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					/usr/local/Cellar/boost/1.72.0_3/lib,
+					/usr/local/Cellar/boost/1.75.0_2/lib,
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_system",
@@ -2555,7 +2567,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					/usr/local/Cellar/boost/1.72.0_3/lib,
+					/usr/local/Cellar/boost/1.75.0_2/lib,
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_system",
@@ -2584,7 +2596,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					/usr/local/Cellar/boost/1.72.0_3/lib,
+					/usr/local/Cellar/boost/1.75.0_2/lib,
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_system",
@@ -2612,7 +2624,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					/usr/local/Cellar/boost/1.72.0_3/lib,
+					/usr/local/Cellar/boost/1.75.0_2/lib,
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_system",
@@ -2633,7 +2645,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					/usr/local/Cellar/boost/1.72.0_3/lib,
+					/usr/local/Cellar/boost/1.75.0_2/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

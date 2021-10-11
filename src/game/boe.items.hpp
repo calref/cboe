@@ -24,7 +24,6 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 void custom_pic_dialog(std::string title, pic_num_t bigpic);
 void story_dialog(std::string title, str_num_t first, str_num_t last, eSpecCtxType which_str_type, pic_num_t pic, ePicType pt);
 short get_num_of_items(short max_num);
-void init_mini_map();
 void draw_help_dialog_item_buttons(cDialog& dialog,short item);
 void draw_help_dialog_forcefields(cDialog& dialog,short item);
 void place_glands(location where,mon_num_t m_type);
