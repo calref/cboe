@@ -100,8 +100,8 @@ Notes and oddities:
 Helpful Links
 -------------
 * [BoE Forum at Spiderweb Software](http://spiderwebforums.ipbhost.com/index.php?/forum/12-blades-of-exile/)
-* [Official IRC channel](http://webchat.freenode.net/?channels=%23openboe) (or join
-#openboe on irc.freenode.net)
+* [Official IRC channel](https://web.libera.chat/#openboe) (or join
+#openboe on irc.libera.chat)
 * [Original Game Source](http://www.spiderwebsoftware.com/blades/opensource.html) - Where
   it all began. Warning: Terrifying code.
 * [Experimental Windows/Mac Builds](http://pentalithia.ca/oboe/?C=M;O=D) - will be put
