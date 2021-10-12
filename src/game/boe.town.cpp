@@ -438,10 +438,6 @@ void start_town_mode(short which_town, short entry_dir) {
 
 location end_town_mode(short switching_level,location destination) { // returns new party location
 	location to_return;
-	bool data_saved = false,combat_end = false;
-	
-	if(is_combat())
-		combat_end = true;
 	
 	// Bonus SP and HP wear off
 	for(short i = 0; i < 6; i++) {
@@ -452,15 +448,16 @@ location end_town_mode(short switching_level,location destination) { // returns 
 	}
 	
 	if(overall_mode == MODE_TOWN) {
+		bool data_saved=false;
 		for(auto& pop : univ.party.creature_save)
 			if(pop.which_town == univ.party.town_num) {
+				data_saved=true;
 				pop = univ.town.monst;
 				// TODO: THIS IS A TEMPORARY HACK TO GET i VALUE
 				int i = std::find_if(univ.party.creature_save.begin(), univ.party.creature_save.end(), [&pop](cPopulation& p) {return &p == &pop;}) - univ.party.creature_save.begin();
 				for(short j = 0; j < univ.town->max_dim; j++)
 					for(short k = 0; k < univ.town->max_dim; k++)
 						univ.party.setup[i][j][k] = (univ.town.fields[j][k] & 0xff00) >> 8;
-				data_saved = true;
 			}
 		if(!data_saved) {
 			univ.party.creature_save[univ.party.at_which_save_slot] = univ.town.monst;

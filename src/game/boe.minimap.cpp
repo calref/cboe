@@ -124,11 +124,9 @@ void draw(bool need_refresh) {
 	
 	rectangle area_to_draw_from,area_to_draw_on = {29,47,269,287};
 	ter_num_t what_ter;
-	bool draw_surroundings = false,expl;
+	bool expl;
 	short total_size = 48; // if full redraw, use this to figure out everything
 	rectangle custom_from;
-	
-	draw_surroundings = true;
 	
 	// view rect is rect that is visible, redraw rect is area to redraw now
 	// area_to_draw_from is final draw from rect
