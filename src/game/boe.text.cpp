@@ -913,7 +913,7 @@ void print_nums(short a,short b,short c) {
 }
 
 short print_terrain(location space) {
-	ter_num_t which_terrain;
+	ter_num_t which_terrain=0;
 	
 	if(overall_mode == MODE_LOOK_OUTDOORS) {
 		which_terrain = univ.out[space.x][space.y];
@@ -1049,7 +1049,6 @@ void print_buf () {
 	long ctrl_val;
 	short line_to_print;
 	long start_print_point;
-	bool end_loop = false;
 	rectangle store_text_rect,dest_rect,erase_rect = {2,2,136,255};
 	
 	text_area_gworld.setActive();
@@ -1076,11 +1075,8 @@ void print_buf () {
 			line_to_print= 0;
 		}
 		
-		if((num_lines_printed == LINES_IN_TEXT_WIN - 1) && (printing_long)) {
-			end_loop = false;
+		if((num_lines_printed == LINES_IN_TEXT_WIN - 1) && (printing_long))
 			line_to_print= buf_pointer;
-		}
-		
 	}
 	
 	text_area_gworld.display();
