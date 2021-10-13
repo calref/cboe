@@ -1574,13 +1574,6 @@ bool handle_keystroke(const sf::Event& event){
 	using kb = sf::Keyboard;
 	using Key = sf::Keyboard::Key;
 	
-	Key keypad[10] = {
-		kb::Numpad0,kb::Numpad1,kb::Numpad2,kb::Numpad3,
-		kb::Numpad4,kb::Numpad5,kb::Numpad6,
-		kb::Numpad7,kb::Numpad8,kb::Numpad9
-	};
-	Key shop_chars[8] = {kb::A,kb::B,kb::C,kb::D,kb::E,kb::F,kb::G,kb::H};
-	
 	if(event.key.code == kb::Escape) {
 		bool abort=true;
 		if (overall_mode == MODE_TALK_TOWN || overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_TOWN_TARGET)
@@ -1668,6 +1661,7 @@ bool handle_keystroke(const sf::Event& event){
 			play_sound(37);
 			end_shop_mode();
 		}
+		Key const shop_chars[10] = {kb::A,kb::B,kb::C,kb::D,kb::E,kb::F,kb::G,kb::H,kb::Numpad2,kb::Numpad8};
 		for(short i = 0; i < 8; i++)
 			if(chr2 == shop_chars[i]) {
 				pass_point = shopping_rects[i][SHOPRECT_ACTIVE_AREA].topLeft();
@@ -1680,6 +1674,11 @@ bool handle_keystroke(const sf::Event& event){
 				are_done = handle_action(pass_event);
 			}
 	} else {
+		Key const keypad[10] = {
+			kb::Numpad0,kb::Numpad1,kb::Numpad2,kb::Numpad3,
+			kb::Numpad4,kb::Numpad5,kb::Numpad6,
+			kb::Numpad7,kb::Numpad8,kb::Numpad9
+		};
 		for(short i = 0; i < 10; i++) {
 			if(chr2 != keypad[i])
 				continue;
@@ -1702,7 +1701,7 @@ bool handle_keystroke(const sf::Event& event){
 					draw_terrain();
 			}
 			else {
-				location terrain_click[10] = {
+				sf::Vector2f const terrain_click[10] = {
 					{150,185},{120,215},{150,215},{180,215},
 					{120,185},{150,185},{180,185},
 					{120,155},{150,155},{180,135}
