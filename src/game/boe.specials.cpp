@@ -175,10 +175,11 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			std::cout << "Note: Improper mode passed to check_special_terrain: " << int(mode) << std::endl;
 			return false;
 	}
-	ter_special = univ.scenario.ter_types[ter].special;
-	ter_flag1 = univ.scenario.ter_types[ter].flag1;
-	ter_flag2 = univ.scenario.ter_types[ter].flag2;
-	ter_flag3 = univ.scenario.ter_types[ter].flag3;
+	cTerrain const &terrain=univ.scenario.ter_types[ter];
+	ter_special = terrain.special;
+	ter_flag1 = terrain.flag1;
+	ter_flag2 = terrain.flag2;
+	ter_flag3 = terrain.flag3;
 	
 	// TODO: Why not support conveyors outdoors, too?
 	if(mode != eSpecCtx::OUT_MOVE && ter_special == eTerSpec::CONVEYOR) {
@@ -210,8 +211,9 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			}
 	}
 	
-	if((is_combat()) && (univ.town.is_spot(where_check.x, where_check.y) ||
-						  (univ.scenario.ter_types[coord_to_ter(where_check.x, where_check.y)].trim_type == eTrimType::CITY))) {
+	// checkme in combat.c this is only called when is_combat() && ter_pic==406
+	//         due to a logical error
+	if(is_combat() && ((!univ.scenario.is_legacy && univ.town.is_spot(where_check.x, where_check.y)) || terrain.trim_type == eTrimType::CITY)) {
 		ASB("Move: Can't trigger this special in combat.");
 		return false; // TODO: Maybe replace eTrimType::CITY check with a blockage == clear/special && is_special() check?
 	}
@@ -235,7 +237,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 				if(ter_special == eTerSpec::CALL_SPECIAL) runSpecial = true;
 				if(univ.town->specials[spec_num].type == eSpecType::CANT_ENTER)
 					runSpecial = true;
-				if(!univ.scenario.is_legacy && univ.party.in_boat >= 0 && univ.scenario.ter_types[ter].boat_over)
+				if(!univ.scenario.is_legacy && univ.party.in_boat >= 0 && terrain.boat_over)
 					runSpecial = true;
 				if(runSpecial) {
 					give_help(54,0);
