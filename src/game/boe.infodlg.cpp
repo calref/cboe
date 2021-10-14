@@ -693,14 +693,14 @@ void cStringRecorder::operator()(cDialog& me) {
 		case NOTE_SCEN:
 			str1 = univ.scenario.spec_strs[label1];
 			if (label2>=univ.scenario.spec_strs.size())
-				showError("cStringRecorder(): bad label 2.");
+				add_string_to_buf("cStringRecorder()[scenario]: empty label 2.");
 			else
 				str2 = univ.scenario.spec_strs[label2];
 			break;
 		case NOTE_TOWN:
 			str1 = univ.town->spec_strs[label1];
 			if (label2>=univ.town->spec_strs.size())
-				showError("cStringRecorder(): bad label 2.");
+				add_string_to_buf("cStringRecorder()[town]: empty label 2.");
 			else
 				str2 = univ.town->spec_strs[label2];
 			break;
@@ -708,7 +708,7 @@ void cStringRecorder::operator()(cDialog& me) {
 			str1 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label1];
 			// memory problem, ie. called with label=65535(-1)
 			if (label2>=univ.scenario.outdoors[label1b][label2b]->spec_strs.size())
-				showError("cStringRecorder(): bad label 2.");
+				add_string_to_buf("cStringRecorder()[out]: empty label 2.");
 			else
 				str2 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label2];
 			break;
