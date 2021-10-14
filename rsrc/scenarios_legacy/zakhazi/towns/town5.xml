@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Citadel of Unicorns</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="5" left="7" bottom="42" right="44" />
+    <difficulty>0</difficulty>
+    <lighting>lit</lighting>
+    <onenter condition="alive">3</onenter>
+    <onenter condition="dead">3</onenter>
+    <flags />
+    <item id="0">
+        <type>104</type>
+    </item>
+    <item id="1">
+        <type>104</type>
+    </item>
+    <item id="2">
+        <type>116</type>
+    </item>
+    <item id="3">
+        <type>116</type>
+    </item>
+    <item id="4">
+        <type>99</type>
+    </item>
+    <item id="5">
+        <type>99</type>
+    </item>
+    <item id="6">
+        <type>254</type>
+    </item>
+    <item id="7">
+        <type>254</type>
+    </item>
+    <item id="8">
+        <type>255</type>
+    </item>
+    <item id="9">
+        <type>363</type>
+    </item>
+    <item id="10">
+        <type>364</type>
+    </item>
+    <item id="11">
+        <type>365</type>
+    </item>
+    <item id="12">
+        <type>25</type>
+    </item>
+    <item id="13">
+        <type>18</type>
+    </item>
+    <creature id="0">
+        <type>183</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>50</personality>
+        <face>-1</face>
+        <onkill>2</onkill>
+    </creature>
+    <creature id="1">
+        <type>183</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>51</personality>
+        <face>-1</face>
+        <onkill>2</onkill>
+    </creature>
+    <creature id="2">
+        <type>183</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>52</personality>
+        <face>-1</face>
+        <onkill>2</onkill>
+    </creature>
+    <area top="18" left="20" bottom="29" right="31">Central Chamber</area>
+    <area top="9" left="11" bottom="15" right="17">Lair of Aetherius</area>
+    <area top="32" left="11" bottom="38" right="17">Lair of Aeliopol</area>
+    <area top="32" left="34" bottom="38" right="40">Lair of Aeriassa</area>
+    <area top="9" left="34" bottom="15" right="40">Lair of Aessoforus</area>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[As you start to walk into this wing of the unicorn's dome, the air starts to feel very cold. The farther in you walk, the more uncomfortable you feel. Your skin begins to itch, and you feel like something is watching you.]]>
+    </string>
+    <string id="1">
+        <![CDATA[Eventually, you can't take it anymore. You walk back out.]]>
+    </string>
+    <string id="2">
+        <![CDATA[As the unicorn falls, you begin to feel ill. Whenever someone slays one of these beautiful, magical creatures, there is a horrible price that must be paid.]]>
+    </string>
+    <string id="3">
+        <![CDATA[Eventually, the illness leaves you. However, the weakness it leaves behind doesn't go away. Somehow, you suspect it never will.]]>
+    </string>
+    <string id="4">
+        <![CDATA[You arrive at a bright, glowing citadel, its elegantly curved walls and delicate spires providing a delightful respite from the unrelenting sameness of these caverns.]]>
+    </string>
+    <string id="5">
+        <![CDATA[The structure has one central dome with four smaller domes circling it, which are attached to the main structure by tunnels. The walls of the building are white marble. The stone glows slightly.]]>
+    </string>
+    <string id="6">
+        <![CDATA[A stone path leads into the central chamber of the dome. Looking inside, you see patches of grass and other surface plants! For the first time in quite a while, you smell flowers and the the pleasant tang of evergreens.]]>
+    </string>
+    <string id="7">
+        <![CDATA[This is a beautiful place, and inside the dome you can see one of the beings responsible. It's a unicorn, grazing daintily on the grass. It looks up, sees you, and scampers into one of the side domes.]]>
+    </string>
+    <string id="10">
+        <![CDATA["A unicorn's horn contains a good measure of its spirit. To lay one of our number truly to rest, the horn must be present. By taking her horn, the giants have taken some of my love's memory from me."]]>
+    </string>
+    <string id="11">
+        <![CDATA["We could reward you well if the horn was recovered from the giants. Would you accept this mission?"]]>
+    </string>
+    <string id="12">
+        <![CDATA[You present the horn to Aetherius. Overcome, he touches the tip of his horn to the ground in a sign of respect. He carries the horn in his mouth out of the dome. When he returns, he casts a spell.]]>
+    </string>
+    <string id="13">
+        <![CDATA[The charm he gave you earlier turns into a small horn, made of amber. "That is a part of your reward."]]>
+    </string>
+    <string id="14">
+        <![CDATA["My mate's horn has been hidden in a place of great respect. Now my mourning can truly begin. First, however, I want to make sure you have received an adequate reward."]]>
+    </string>
+    <string id="15">
+        <![CDATA["The giants have her horn. I have given you a charm to help find it. That is all I can say."]]>
+    </string>
+    <string id="16">
+        <![CDATA["Wonderful. I thank you. I can give you something to help you." He leaves, and returns with a charm. It is a small, silver horn, on a delicate chain. He gives it to you.]]>
+    </string>
+    <string id="17">
+        <![CDATA["When you are in the giant's lair, it will let you know when you are near my mate's horn. Return it to me, and I will reward you well. Also, we have spare supplies."]]>
+    </string>
+</town>

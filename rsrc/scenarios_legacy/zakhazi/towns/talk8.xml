@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="80">
+        <title>Morog</title>
+        <look>
+            <![CDATA[You come face to face with Morog the lich. It is nothing more than a skeleton, held together in unlife by pure force of will. it  radiates the heat of raw magical power. The eyes are still intact, and stare at you coldly.]]>
+        </look>
+        <name>
+            <![CDATA["I am Morog, queen of these regions." Her voice is icy, cold, and loud. It has a strange, otherworldly quality, as if it is being said somewhere far away, but you can somehow still hear it.]]>
+        </name>
+        <job>
+            <![CDATA["I am the mistress of my castle, and the host to all my visitors."]]>
+        </job>
+        <unknown>
+            <![CDATA[The lich stares at you with unblinking, glowing eyes.]]>
+        </unknown>
+    </personality>
+    <personality id="81">
+        <title>Cratho</title>
+        <look>
+            <![CDATA[You meet a small, shuffling, hunched over demonic creature. It is sweeping up the laboratory floor, and clearly hating every moment of it.]]>
+        </look>
+        <name>
+            <![CDATA["I am Crotho," it says. It then belches up a small cloud of unpleasant sulphurous gas and laughs at you.]]>
+        </name>
+        <job>
+            <![CDATA["I am a familiar of the mighty Morog."]]>
+        </job>
+    </personality>
+    <personality id="82">
+        <title>Zalat</title>
+        <look>
+            <![CDATA[A small imp sits behind the counter, poring through one of a large pile of books. They are on a wide variety of topics, from poison to spell casting to proper exercise techniques.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Zalat."]]>
+        </name>
+        <job>
+            <![CDATA["I train people, at Morog's command."]]>
+        </job>
+        <unknown>
+            <![CDATA["Huh?"]]>
+        </unknown>
+    </personality>
+    <personality id="83">
+        <title>Proth</title>
+        <look>
+            <![CDATA[A scaled, smelly imp sits behind the counter. It has a pile of coins by one hand and a pile of goods by the other.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Proth, idiot. Like it matters."]]>
+        </name>
+        <job>
+            <![CDATA["I'm here to help you," it says, in a voice dripping with irony. "I can identify items. You can sell me things. Or you can purchase all sorts of goods."]]>
+        </job>
+        <unknown>
+            <![CDATA["Make sense, idiot," it suggests helpfully.]]>
+        </unknown>
+    </personality>
+    <personality id="84">
+        <title>Vmok</title>
+        <look>
+            <![CDATA[A sullen imp polishes the counter of this empty inn. It looks at you with undisguised loathing.]]>
+        </look>
+        <name>
+            <![CDATA["I am Vmok. Looking at you makes me very hungry. How can I help you?"]]>
+        </name>
+        <job>
+            <![CDATA["I would drink your blood like fine wine. You can purchase meals from us, or you can sleep in the common room for 30 gold."]]>
+        </job>
+        <unknown>
+            <![CDATA["Oh, how I would love to kill you."]]>
+        </unknown>
+    </personality>
+    <personality id="85">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="86">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="87">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="88">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="89">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="80">
+        <keyword>mist</keyword>
+        <keyword>cast</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["In life, I wanted to have a vacation in Exile. In unlife, I created this fortress here."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>unli</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yes. Unlife. The word 'death' should seem inadequate." She laughs, a chilling, wheezy sound.]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>fort</keyword>
+        <keyword>here</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It is lovely, it is not? It has many visitors. Of course, it is not wise to wander from the path."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>vaca</keyword>
+        <keyword>exil</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The cold and dark have always appealed greatly to me. Then, when I prepared for my demise, I decided I would come here."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>prep</keyword>
+        <keyword>demi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["When I saw I was to die, I began the magical preparations to keep me in unlife, with my power intact. That was, oh, six centuries ago. Not long."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>host</keyword>
+        <keyword>visi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["These caverns are sort of a nexus for strange beings. Many travel through. Many come here to obtain my magical assistance. And some come here to get missions from me."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>nexu</keyword>
+        <keyword>stra</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Few humans come here. Many tunnels meet in this area. Thus, it is a natural place for unicorns, dragons, undead and all other sorts of odd beings."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>huma</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She graces you with a ghastly grin. "Humans have learned that it is not wise to come here in large numbers. Some, of course, can be tolerated."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>tole</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["After all, sometimes we need people to do missions for us."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>drag</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She chuckles dryly. "Yes, there is a dragon in these caves. More, I do not wish to tell you."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>trav</keyword>
+        <keyword>thro</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["As long as travelers pose no threat to me, I do not hinder those passing through my domain. Of course, sometimes my undead pets get hungry. When that happens, it is not my concern."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>magi</keyword>
+        <keyword>assi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Oh, there is much I could teach you. Alas, I do not aid humans. Apologies." She doesn't seem sincere. "Of course, we do have several shops here, which you might find useful."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>miss</keyword>
+        <keyword>xxxx</keyword>
+        <type>if-sdf</type>
+        <param>110</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I thought you would never ask. There are sorts of mushrooms that are useful in magic, but are hard to reach, because they grow so far below the earth, even below Vahnatai lands. I would reward you well for a few of them. Are you interested?"]]>
+        </text>
+        <text>
+            <![CDATA["Now that you have recovered the mushrooms, I have no need of you. You may wish to depart."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>seve</keyword>
+        <keyword>shop</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She points at the door in the northwest corner of the throne room. "Go through the portal there. There are several shops."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>wand</keyword>
+        <keyword>path</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Going to any place I do not tell you is safe is unwise. I am not attacking you for now. I can make no such guarantee for my pets."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>pets</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Specters are wonderful creatures. Bright. Loyal. Lethal. Wights are strong. Spirits are good artillery. What other friends does a being need?"]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>rewa</keyword>
+        <keyword>xxxx</keyword>
+        <type>if-sdf</type>
+        <param>110</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I give you my word that, if you bring me the mushrooms, I will give you an item that will be invaluable in your getting through to the north end of these caverns alive. If this interests you, I can give you information on how to get them."]]>
+        </text>
+        <text>
+            <![CDATA[Despite the caldera, the room suddenly grows very chilly. "You have received your reward. Ask no more of me."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>inte</keyword>
+        <keyword>info</keyword>
+        <type>if-sdf</type>
+        <param>110</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The mushrooms look ordinary, but have tiny, bright, red spots. To reach the deep caverns where they can be found, I have created a portal. Once you have the prize, return to me and ask of mushrooms. I will then reward you."]]>
+        </text>
+        <text>
+            <![CDATA["You have already recovered the mushrooms. Don't waste my time."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>port</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Leave this chamber through the southeast exit and use the portal. You will be in my laboratories. The portal leading to the deep caverns where the mushrooms can be found is there."]]>
+        </text>
+        <text>
+            <![CDATA["Do not worry. I do not believe anything dangerous lives down there."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>mush</keyword>
+        <keyword>xxxx</keyword>
+        <type>call-global</type>
+        <param>15</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You do not have any of the mushrooms I desire. Go, and do not waste my unlife! Even for the undead, time is not to be wasted."]]>
+        </text>
+    </node>
+    <node for="81">
+        <keyword>migh</keyword>
+        <keyword>moro</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Its tail twitches angrily. "Morog. Pfaugh. She has me sweeping! She mocks me and pokes me." He gets a sly look in his eyes. "Of course, she deserves some respect, considering all the treasure she has."]]>
+        </text>
+    </node>
+    <node for="81">
+        <keyword>fami</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["A magical servant, bound to her by her dark arts. Then doomed to clean floors and do other scut work far below me." He grins. "Of course, if she pays me any of her treasure, it would be worth it."]]>
+        </text>
+    </node>
+    <node for="81">
+        <keyword>trea</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[It bends close to you and whispers conspiratorially, "Morog has a huge treasure. I've seen it! It's behind a nasty maze."]]>
+        </text>
+    </node>
+    <node for="81">
+        <keyword>nast</keyword>
+        <keyword>maze</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Nasty, but nothing you couldn't pass. Just a few demons like me, and stuff like that. To get to the treasure, you just need to enter the correct portal."]]>
+        </text>
+    </node>
+    <node for="81">
+        <keyword>port</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Go through the center exit at the east side of Morog's throne room. You'll be near the treasure. I wish I could be going with you ... you're "]]>
+        </text>
+    </node>
+    <node for="81">
+        <keyword>than</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[It laughs, a high-pitched, annoying sound. "Just doing my job."]]>
+        </text>
+    </node>
+    <node for="82">
+        <keyword>trai</keyword>
+        <keyword>purc</keyword>
+        <type>train</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text />
+    </node>
+    <node for="82">
+        <keyword>moro</keyword>
+        <keyword>comm</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Ah. The mighty Morog. We are all ever eager to obey her slightest command." It rolls its eyes.]]>
+        </text>
+    </node>
+    <node for="83">
+        <keyword>iden</keyword>
+        <keyword>xxxx</keyword>
+        <type>id</type>
+        <param>25</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah. I figured you weren't bright enough to figure it out on your own. 25 gold for each item. Hurry up. What do you want to know about?"]]>
+        </text>
+    </node>
+    <node for="83">
+        <keyword>sell</keyword>
+        <keyword>xxxx</keyword>
+        <type>sell-any</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[It looks over your items and makes an offer for everything identified. "Just as I though. Junk. Garbage. Still, there's a few things I might be able to get a little for."]]>
+        </text>
+    </node>
+    <node for="83">
+        <keyword>purc</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah, I'll bet. What? Missiles? Weapons? Armor? Tools? Potions?"]]>
+        </text>
+    </node>
+    <node for="83">
+        <keyword>miss</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>6</param>
+        <param>9</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Proth's Missiles]]>
+        </text>
+    </node>
+    <node for="83">
+        <keyword>weap</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>6</param>
+        <param>10</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Proth's Weapons]]>
+        </text>
+    </node>
+    <node for="83">
+        <keyword>armo</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>6</param>
+        <param>11</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Proth's Armor]]>
+        </text>
+    </node>
+    <node for="83">
+        <keyword>tool</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>6</param>
+        <param>12</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Proth's Tools]]>
+        </text>
+    </node>
+    <node for="83">
+        <keyword>poti</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>6</param>
+        <param>13</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Proth's Potions]]>
+        </text>
+    </node>
+    <node for="84">
+        <keyword>fine</keyword>
+        <keyword>wine</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Oh, never mind me. It's just that I despise you and would like to inflict great pain upon you. That doesn't that I can't serve you well. Worm."]]>
+        </text>
+    </node>
+    <node for="84">
+        <keyword>purc</keyword>
+        <keyword>meal</keyword>
+        <type>shop</type>
+        <param>6</param>
+        <param>14</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Vmok's Meals]]>
+        </text>
+    </node>
+    <node for="84">
+        <keyword>comm</keyword>
+        <keyword>room</keyword>
+        <type>inn</type>
+        <param>30</param>
+        <param>1</param>
+        <param>25</param>
+        <param>7</param>
+        <text>
+            <![CDATA[It takes your gold and shows you to your room. As it leaves, it says "I hope I can keep from killing you in your sleep." Then it leaves. Understandably, you don't sleep well.]]>
+        </text>
+        <text>
+            <![CDATA["I'm afraid that you don't have the gold. Oh, and I wish I could tear your throat out with my fangs."]]>
+        </text>
+    </node>
+</dialogue>

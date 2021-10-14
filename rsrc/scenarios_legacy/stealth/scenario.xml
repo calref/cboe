@@ -1,0 +1,762 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<scenario boes="2.0.0">
+    <title>A Small Rebellion</title>
+    <icon>28</icon>
+    <id></id>
+    <version>1.0.1</version>
+    <language>en-US</language>
+    <author>
+        <name>Name not given</name>
+        <email>Spiderweb Software, (206)789-4438, spidweb@spidweb.com</email>
+    </author>
+    <text>
+        <teaser>You&apos;re hired to put down a rebellion, but should you?</teaser>
+        <teaser>By Jeff Vogel, C. 1997, All Rights Reserved</teaser>
+        <intro-msg>
+            <![CDATA[Times are tough for adventurers in Valorim, supposedly the wildest and most unsettled of the Empire's continents. The monsters have been subdued, the treasure has been claimed, and there's little for you to do.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[That's why, when you were contacted by an Empire agent and told of jobs for you on a place called Morrow's Isle, you jumped at the chance. However, the agent was rather vague about the nature of the problem.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[There are supposedly brigands there, or bandits, or some other sort of evil human determined to cause trouble and mayhem. Your job will be to track down and slay them, or something similar.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[At any rate, it's paying work, so you decide to go there and see what's going on. Two weeks travel over land and several hours on a boat later, you have been deposited on a dock in Selathni, the largest city on Morrow's Isle.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[You have a letter of introduction in your pocket. You're supposed to go see a man named Vonnegut, in the Sea Wurm inn, near the dock. He will explain more of what's going on, and give you your official orders.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[After months of scraping out a living, you start to get excited. At last, you can go out, have adventures, and fight evil!]]>
+        </intro-msg>
+    </text>
+    <ratings>
+        <content>PG</content>
+        <difficulty>2</difficulty>
+    </ratings>
+    <flags>
+        <adjust-difficulty>true</adjust-difficulty>
+        <legacy>true</legacy>
+        <custom-graphics>false</custom-graphics>
+    </flags>
+    <creator>
+        <type>oboe</type>
+        <version>2.0.0</version>
+        <os>Apple Mac OS X Version 11.5.2 (Build 20G95)</os>
+    </creator>
+    <game>
+        <num-towns>21</num-towns>
+        <out-width>4</out-width>
+        <out-height>3</out-height>
+        <start-town>1</start-town>
+        <town-start x="14" y="56" />
+        <outdoor-start x="1" y="2" />
+        <sector-start x="21" y="12" />
+        <town-flag town="17" add-x="15" add-y="1" />
+        <special-item start-with="true" useable="false" special="-1">
+            <name>Letter of Introduction</name>
+            <description>
+                <![CDATA[This is a Letter Of Introduction to present when meeting your first contact on Morrow's Isle, a man named Vonnegut. He will be found in the Sea Wurm Inn in Selathni.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Contact Note</name>
+            <description>
+                <![CDATA[You found this note in your pocket. Someone must have slipped it there. It says that, to contact the rebels, you must find someone names Canizares in the town of Liam, and say 'Invisible' to him.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Papers Mission Scroll</name>
+            <description>
+                <![CDATA[This piece of paper describes your first mission for the Hill Runners. You must recover Empire records from a ruined fort northwest of Selathni, and deposit them in a hidden crack in a Selathni storeroom.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Empire Papers</name>
+            <description>
+                <![CDATA[You found these papers deep in the ruined Empire fort. They look like accounts of troop movements and records of past actions. This is probably what the Hill Runners wanted.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>O&apos; Grady Scroll</name>
+            <description>
+                <![CDATA[Canizares gave you this scroll. It tells you to go find O' Grady in a town called Muck, and ask him about the 'rebellion.' He'll help you.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="true" special="0">
+            <name>Oak Box</name>
+            <description>
+                <![CDATA[This is a heavy, polished oak box. It's pretty bulky. You haven't opened it.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Luna Note</name>
+            <description>
+                <![CDATA[You found a note in the abandoned outpost by the Zaskiva sewers. It told you to go to the city of Buzzard (in the northeast mountains) and find someone named Luna.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Brass Key</name>
+            <description>
+                <![CDATA[You found this key in a linen chest in Liam.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Sewer Key 1</name>
+            <description>
+                <![CDATA[You found this tarnished copper key in the sewers under Zaskiva.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Sewer Key 2</name>
+            <description>
+                <![CDATA[You found this tarnished copper key in the sewers under Zaskiva.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Sewer Key 3</name>
+            <description>
+                <![CDATA[You found this tarnished copper key in the sewers under Zaskiva.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Letter for Zulli</name>
+            <description>
+                <![CDATA[Madeleine in Willow gave you this letter to deliver to Zulli in Zaskiva.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Box Mission Scroll</name>
+            <description>
+                <![CDATA[You are supposed to say 'Sainthood' to Elinor in Selathni to get a box. From there, you need to go to Zaskiva, and put the box in a niche behind a marble statue.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Slime Key 1</name>
+            <description>
+                <![CDATA[You found this key on a dead mage in the rebel's slime laboratory.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Slime Key 2</name>
+            <description>
+                <![CDATA[You found this key on a dead mage in the rebel's slime laboratory.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="true" special="4">
+            <name>Small Oak Box</name>
+            <description>
+                <![CDATA[This is a smaller version of the explosive boxes the rebels used to destroy Lord Volpe's palace. Pulling a rope on the side causes the box to explode. You aren't sure how long you have to get away.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Dock Key</name>
+            <description>
+                <![CDATA[This is a delicate silver key, which has the word "Dock" etched on the side.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Jaen&apos;s Key</name>
+            <description>
+                <![CDATA[You found this key near Jaen's freshly dead body.]]>
+            </description>
+        </special-item>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Healing</name>
+            <type>dead</type>
+            <prompt>heal</prompt>
+            <face>41</face>
+            <entries>
+                <heal>0</heal>
+                <heal>1</heal>
+                <heal>2</heal>
+                <heal>4</heal>
+                <heal>9</heal>
+                <heal>5</heal>
+                <heal>6</heal>
+                <heal>7</heal>
+                <heal>8</heal>
+            </entries>
+        </shop>
+        <shop>
+            <name>Welde&apos;s Spells</name>
+            <type>live</type>
+            <prompt>mage</prompt>
+            <face>43</face>
+            <entries>
+                <mage-spell>30</mage-spell>
+                <mage-spell>31</mage-spell>
+                <mage-spell>32</mage-spell>
+                <mage-spell>33</mage-spell>
+                <mage-spell>34</mage-spell>
+                <mage-spell>35</mage-spell>
+                <mage-spell>36</mage-spell>
+                <mage-spell>37</mage-spell>
+                <mage-spell>38</mage-spell>
+                <mage-spell>39</mage-spell>
+                <mage-spell>40</mage-spell>
+                <mage-spell>41</mage-spell>
+                <mage-spell>42</mage-spell>
+                <mage-spell>43</mage-spell>
+                <mage-spell>44</mage-spell>
+                <mage-spell>45</mage-spell>
+            </entries>
+        </shop>
+        <shop>
+            <name>Sea Wurm Inn</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>42</face>
+            <entries>
+                <item quantity="infinite">1</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Purdee&apos;s Resort</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>42</face>
+            <entries>
+                <item quantity="infinite">2</item>
+                <item quantity="infinite">3</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Haedrich&apos;s Weaponry</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">37</item>
+                <item quantity="infinite">38</item>
+                <item quantity="infinite">39</item>
+                <item quantity="infinite">40</item>
+                <item quantity="infinite">41</item>
+                <item quantity="infinite">42</item>
+                <item quantity="infinite">43</item>
+                <item quantity="infinite">44</item>
+                <item quantity="infinite">45</item>
+                <item quantity="infinite">46</item>
+                <item quantity="infinite">47</item>
+                <item quantity="infinite">48</item>
+                <item quantity="infinite">49</item>
+                <item quantity="infinite">50</item>
+                <item quantity="infinite">51</item>
+                <item quantity="infinite">52</item>
+                <item quantity="infinite">53</item>
+                <item quantity="infinite">54</item>
+                <item quantity="infinite">55</item>
+                <item quantity="infinite">56</item>
+                <item quantity="infinite">57</item>
+                <item quantity="infinite">58</item>
+                <item quantity="infinite">59</item>
+                <item quantity="infinite">60</item>
+                <item quantity="infinite">61</item>
+                <item quantity="infinite">62</item>
+                <item quantity="infinite">63</item>
+                <item quantity="infinite">64</item>
+                <item quantity="infinite">65</item>
+                <item quantity="infinite">66</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Armor by Iggers</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">120</item>
+                <item quantity="infinite">121</item>
+                <item quantity="infinite">122</item>
+                <item quantity="infinite">123</item>
+                <item quantity="infinite">124</item>
+                <item quantity="infinite">125</item>
+                <item quantity="infinite">126</item>
+                <item quantity="infinite">127</item>
+                <item quantity="infinite">128</item>
+                <item quantity="infinite">129</item>
+                <item quantity="infinite">130</item>
+                <item quantity="infinite">131</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Blue&apos;s Missiles</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">98</item>
+                <item quantity="infinite">99</item>
+                <item quantity="infinite">100</item>
+                <item quantity="infinite">101</item>
+                <item quantity="infinite">102</item>
+                <item quantity="infinite">103</item>
+                <item quantity="infinite">104</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Blue&apos;s Bows</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">108</item>
+                <item quantity="infinite">109</item>
+                <item quantity="infinite">110</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Blue&apos;s Bolts</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">115</item>
+                <item quantity="infinite">116</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Canizares&apos; Herbs</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">363</item>
+                <item quantity="infinite">364</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Canizares&apos; Potions</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">260</item>
+                <item quantity="infinite">261</item>
+                <item quantity="infinite">262</item>
+                <item quantity="infinite">263</item>
+                <item quantity="infinite">264</item>
+            </entries>
+        </shop>
+        <shop>
+            <name></name>
+            <type>dead</type>
+            <prompt>alch</prompt>
+            <face>43</face>
+            <entries>
+                <recipe>0</recipe>
+                <recipe>1</recipe>
+                <recipe>2</recipe>
+                <recipe>3</recipe>
+                <recipe>4</recipe>
+                <recipe>5</recipe>
+            </entries>
+        </shop>
+        <shop>
+            <name>Stephano&apos;s Spells</name>
+            <type>live</type>
+            <prompt>priest</prompt>
+            <face>43</face>
+            <entries>
+                <priest-spell>30</priest-spell>
+                <priest-spell>31</priest-spell>
+                <priest-spell>32</priest-spell>
+                <priest-spell>33</priest-spell>
+                <priest-spell>34</priest-spell>
+                <priest-spell>35</priest-spell>
+                <priest-spell>36</priest-spell>
+                <priest-spell>37</priest-spell>
+                <priest-spell>38</priest-spell>
+                <priest-spell>39</priest-spell>
+                <priest-spell>40</priest-spell>
+                <priest-spell>41</priest-spell>
+                <priest-spell>42</priest-spell>
+                <priest-spell>43</priest-spell>
+                <priest-spell>44</priest-spell>
+                <priest-spell>45</priest-spell>
+            </entries>
+        </shop>
+        <shop>
+            <name>Laserson</name>
+            <type>dead</type>
+            <prompt>alch</prompt>
+            <face>43</face>
+            <entries>
+                <recipe>2</recipe>
+                <recipe>3</recipe>
+                <recipe>4</recipe>
+                <recipe>5</recipe>
+                <recipe>6</recipe>
+            </entries>
+        </shop>
+        <shop>
+            <name>Poison &amp; Tools</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">169</item>
+                <item quantity="infinite">170</item>
+                <item quantity="infinite">171</item>
+                <item quantity="infinite">172</item>
+                <item quantity="infinite">173</item>
+                <item quantity="infinite">174</item>
+                <item quantity="infinite">175</item>
+                <item quantity="infinite">176</item>
+                <item quantity="infinite">177</item>
+                <item quantity="infinite">178</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Light Sources</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">17</item>
+                <item quantity="infinite">18</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Stan&apos;s Scrolls</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">196</item>
+                <item quantity="infinite">197</item>
+                <item quantity="infinite">198</item>
+                <item quantity="infinite">199</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Cartman&apos;s Armor</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">130</item>
+                <item quantity="infinite">131</item>
+                <item quantity="infinite">132</item>
+                <item quantity="infinite">133</item>
+                <item quantity="infinite">134</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Maya&apos;s Spells</name>
+            <type>live</type>
+            <prompt>mage</prompt>
+            <face>43</face>
+            <entries>
+                <mage-spell>30</mage-spell>
+                <mage-spell>31</mage-spell>
+                <mage-spell>32</mage-spell>
+                <mage-spell>33</mage-spell>
+                <mage-spell>34</mage-spell>
+                <mage-spell>35</mage-spell>
+                <mage-spell>36</mage-spell>
+                <mage-spell>37</mage-spell>
+                <mage-spell>38</mage-spell>
+                <mage-spell>39</mage-spell>
+                <mage-spell>40</mage-spell>
+                <mage-spell>41</mage-spell>
+                <mage-spell>42</mage-spell>
+                <mage-spell>43</mage-spell>
+                <mage-spell>44</mage-spell>
+                <mage-spell>45</mage-spell>
+            </entries>
+        </shop>
+        <shop>
+            <name>Buying Rations</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>42</face>
+            <entries>
+                <item quantity="infinite">1</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Luna&apos;s Arrows</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">103</item>
+                <item quantity="infinite">104</item>
+                <item quantity="infinite">105</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Luna&apos;s Crossbows</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">112</item>
+                <item quantity="infinite">113</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Luna&apos;s Bolts</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">115</item>
+                <item quantity="infinite">116</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Fine Rations</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>42</face>
+            <entries>
+                <item quantity="infinite">1</item>
+                <item quantity="infinite">2</item>
+                <item quantity="infinite">3</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Torri&apos;s Weapons</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">51</item>
+                <item quantity="infinite">52</item>
+                <item quantity="infinite">53</item>
+                <item quantity="infinite">54</item>
+                <item quantity="infinite">55</item>
+                <item quantity="infinite">56</item>
+                <item quantity="infinite">57</item>
+                <item quantity="infinite">58</item>
+                <item quantity="infinite">59</item>
+                <item quantity="infinite">60</item>
+                <item quantity="infinite">61</item>
+                <item quantity="infinite">62</item>
+                <item quantity="infinite">63</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Torri&apos;s Armor</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">126</item>
+                <item quantity="infinite">127</item>
+                <item quantity="infinite">128</item>
+                <item quantity="infinite">129</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Friendly Farmers</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>42</face>
+            <entries>
+                <item quantity="infinite">1</item>
+                <item quantity="infinite">2</item>
+                <item quantity="infinite">3</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Bazaar of Thieves</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">168</item>
+                <item quantity="infinite">169</item>
+                <item quantity="infinite">170</item>
+                <item quantity="infinite">171</item>
+                <item quantity="infinite">172</item>
+                <item quantity="infinite">173</item>
+                <item quantity="infinite">174</item>
+                <item quantity="infinite">175</item>
+                <item quantity="infinite">176</item>
+                <item quantity="infinite">177</item>
+                <item quantity="infinite">178</item>
+                <item quantity="infinite">179</item>
+                <item quantity="infinite">180</item>
+                <item quantity="infinite">181</item>
+                <item quantity="infinite">182</item>
+            </entries>
+        </shop>
+        <shop>
+            <name></name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">139</item>
+                <item quantity="infinite">140</item>
+                <item quantity="infinite">141</item>
+                <item quantity="infinite">142</item>
+                <item quantity="infinite">143</item>
+                <item quantity="infinite">144</item>
+                <item quantity="infinite">145</item>
+                <item quantity="infinite">146</item>
+                <item quantity="infinite">147</item>
+                <item quantity="infinite">148</item>
+                <item quantity="infinite">149</item>
+                <item quantity="infinite">150</item>
+                <item quantity="infinite">151</item>
+            </entries>
+        </shop>
+        <shop>
+            <name></name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">223</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Swamp Brews</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">253</item>
+                <item quantity="infinite">254</item>
+                <item quantity="infinite">255</item>
+                <item quantity="infinite">256</item>
+                <item quantity="infinite">257</item>
+            </entries>
+        </shop>
+        <string id="0">
+            <![CDATA[You try everything to get it open: force, lockpicks, even greater force, spells, even hitting it with a hammer. Nothing works. It stays stubbornly closed.]]>
+        </string>
+        <string id="1">
+            <![CDATA[The witches' curse suddenly falls full force upon your heads. Warts start appearing all over your bodies, and you feel dull witted.]]>
+        </string>
+        <string id="2">
+            <![CDATA[When you reach a place where this item can be used, you will be asked if you want to use it.]]>
+        </string>
+        <string id="3">
+            <![CDATA[You step on one of Jaen's specially designed runes, placed here to help defend his fortress in case of just this sort of emergency. Either the world has just sped up, or you've slowed down. Either way, it's bad.]]>
+        </string>
+        <string id="99">
+            <![CDATA[*End special strs]]>
+        </string>
+        <journal id="0">
+            <![CDATA[Begin journal strs]]>
+        </journal>
+        <journal id="49">
+            <![CDATA[End journal strs]]>
+        </journal>
+    </game>
+    <editor>
+        <default-ground>2</default-ground>
+        <last-out-section x="0" y="2" />
+        <last-town>5</last-town>
+        <storage>
+            <on-terrain>201</on-terrain>
+            <is-property>true</is-property>
+            <item chance="10">4</item>
+            <item chance="10">5</item>
+            <item chance="10">6</item>
+            <item chance="10">7</item>
+            <item chance="8">8</item>
+            <item chance="8">15</item>
+            <item chance="8">16</item>
+            <item chance="8">17</item>
+            <item chance="8">18</item>
+            <item chance="15">0</item>
+        </storage>
+    </editor>
+</scenario>

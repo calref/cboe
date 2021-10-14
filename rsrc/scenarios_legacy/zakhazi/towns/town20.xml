@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>64</size>
+    <name>Palace of Khoth</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="0" bottom="60" right="63" />
+    <difficulty>8</difficulty>
+    <lighting>lit</lighting>
+    <flags />
+    <item id="0">
+        <type>23</type>
+    </item>
+    <item id="1">
+        <type>24</type>
+    </item>
+    <item id="2">
+        <type>24</type>
+    </item>
+    <item id="3">
+        <type>23</type>
+    </item>
+    <item id="4">
+        <type>90</type>
+    </item>
+    <item id="5">
+        <type>142</type>
+    </item>
+    <item id="6">
+        <type>141</type>
+    </item>
+    <item id="7">
+        <type>227</type>
+    </item>
+    <item id="8">
+        <type>0</type>
+        <charges>97</charges>
+    </item>
+    <item id="9">
+        <type>91</type>
+    </item>
+    <item id="10">
+        <type>282</type>
+    </item>
+    <item id="11">
+        <type>363</type>
+    </item>
+    <item id="12">
+        <type>363</type>
+    </item>
+    <item id="13">
+        <type>364</type>
+    </item>
+    <item id="14">
+        <type>364</type>
+    </item>
+    <item id="15">
+        <type>370</type>
+    </item>
+    <item id="16">
+        <type>392</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="17">
+        <type>392</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="18">
+        <type>392</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="19">
+        <type>393</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="20">
+        <type>393</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="21">
+        <type>0</type>
+        <charges>400</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="22">
+        <type>0</type>
+        <charges>400</charges>
+        <property>true</property>
+    </item>
+    <item id="23">
+        <type>71</type>
+        <property>true</property>
+    </item>
+    <item id="24">
+        <type>71</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="25">
+        <type>94</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="26">
+        <type>113</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="27">
+        <type>268</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="28">
+        <type>8</type>
+        <property>true</property>
+    </item>
+    <item id="29">
+        <type>102</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="30">
+        <type>0</type>
+        <charges>600</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="31">
+        <type>249</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="32">
+        <type>195</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="33">
+        <type>281</type>
+        <property>true</property>
+    </item>
+    <item id="34">
+        <type>23</type>
+    </item>
+    <item id="35">
+        <type>171</type>
+        <property>true</property>
+    </item>
+    <item id="36">
+        <type>18</type>
+        <contained>true</contained>
+    </item>
+    <item id="37">
+        <type>393</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="38">
+        <type>365</type>
+        <property>true</property>
+    </item>
+    <item id="39">
+        <type>216</type>
+        <property>true</property>
+    </item>
+    <item id="40">
+        <type>254</type>
+        <contained>true</contained>
+    </item>
+    <item id="41">
+        <type>261</type>
+        <contained>true</contained>
+    </item>
+    <item id="42">
+        <type>271</type>
+        <contained>true</contained>
+    </item>
+    <item id="43">
+        <type>0</type>
+        <charges>50</charges>
+        <contained>true</contained>
+    </item>
+    <creature id="0">
+        <type>177</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>200</personality>
+        <face>22</face>
+        <sdf x="20" y="9" />
+        <onkill>54</onkill>
+    </creature>
+    <creature id="1">
+        <type>159</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="2">
+        <type>159</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="3">
+        <type>159</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="4">
+        <type>159</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="5">
+        <type>159</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="6">
+        <type>160</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="7">
+        <type>160</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="8">
+        <type>161</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="9">
+        <type>161</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="10">
+        <type>162</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="11">
+        <type>173</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>2</encounter>
+    </creature>
+    <creature id="12">
+        <type>173</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>2</encounter>
+    </creature>
+    <creature id="13">
+        <type>173</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>2</encounter>
+    </creature>
+    <creature id="14">
+        <type>173</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>2</encounter>
+    </creature>
+    <creature id="15">
+        <type>173</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>2</encounter>
+    </creature>
+    <creature id="16">
+        <type>83</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="17">
+        <type>83</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="18">
+        <type>103</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="19">
+        <type>103</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="20">
+        <type>171</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="21">
+        <type>171</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="22">
+        <type>171</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="23">
+        <type>137</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>3</encounter>
+    </creature>
+    <creature id="24">
+        <type>137</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>3</encounter>
+    </creature>
+    <creature id="25">
+        <type>178</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="26">
+        <type>178</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="27">
+        <type>178</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="28">
+        <type>178</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="29">
+        <type>178</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="30">
+        <type>178</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="31">
+        <type>178</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="32">
+        <type>65</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="33">
+        <type>65</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="34">
+        <type>65</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="35">
+        <type>65</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="36">
+        <type>65</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <area top="4" left="1" bottom="19" right="21">Chamber of Khoth</area>
+    <area top="21" left="1" bottom="29" right="17">Pillar Hall</area>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[When you walk around the corner, the massive iron gates blocking your exit from Khoth's fortress come into view. They're still closed. At first, you get the uncomfortable suspicion that Khoth won't meet his end of the bargain.]]>
+    </string>
+    <string id="1">
+        <![CDATA[Then one of Khoth's spirits floats by you towards the gates. It makes a few motions with its spectral hands. With a deafening creaking sound, one of the gates opens. At last, escape from the Za-Khazi Run is in your grasp.]]>
+    </string>
+    <string id="2">
+        <![CDATA[Looking through the opening, you can see several bookshelves, each heavily laden with all manner of intriguing tomes, scrolls, palimpsests, almanacs, maps, spell books, and works of fiction.]]>
+    </string>
+    <string id="3">
+        <![CDATA[A large part of the amazing body of knowledge amassed by Khoth the dragon lies before you, and the only thing keeping you from it is a large protective rune engraved on the floor in front of you.]]>
+    </string>
+    <string id="4">
+        <![CDATA[Pass it, and you can have access to some of Khoth's knowledge. Do you?]]>
+    </string>
+    <string id="8">
+        <![CDATA[You try to force yourself over the rune, taking the punishment it can deal out in return for the rewarding knowledge beyond. Alas, the power of the rune is too great for you to overcome.]]>
+    </string>
+    <string id="9">
+        <![CDATA[Eventually, you are thrown backwards, but not before the magical guardian sears you thoroughly.]]>
+    </string>
+    <string id="10">
+        <![CDATA[You look longingly through this opening, staring greedily at the variety of tomes beyond. Unfortunately, a powerful magical rune is etched into the floor in front of you, preventing you from entering.]]>
+    </string>
+    <string id="11">
+        <![CDATA[Then you notice that the rune is damaged. Somehow, the floor has become cracked, and the glyph has been broken slightly. You are able to pass it completely unharmed.]]>
+    </string>
+    <string id="12">
+        <![CDATA[At last, you come face to face with the dangerous and duplicitous Khoth, a member of that most ancient and feared race - the dragons. He may well be the largest creatures you've ever seen, eighty feet and ten tons of pure danger.]]>
+    </string>
+    <string id="13">
+        <![CDATA[Even though he told his golems to kill you and though you are heavily armed and well prepared to face him, he seems completely relaxed and unconcerned by your presence. When he sees you, he lazily motions with a massive claw for you to approach.]]>
+    </string>
+    <string id="14">
+        <![CDATA[When you hesitate, he says "Oh, don't waste my time. Trying to slay you was a whim. My whim is now to let you live. I know what you want. I know you are heading to the north. Come to me, so that we may deal."]]>
+    </string>
+    <string id="18">
+        <![CDATA[You enter the northern half of Khoth's fortress, where the mighty beast resides. As you do, a shade walks past you towards the libraries. You see several of the insubstantial creatures flitting about, carrying books, cleaning, and being useful.]]>
+    </string>
+    <string id="19">
+        <![CDATA[Khoth, like all dragons, has some treasure. However, it's in front of you, scattered about and covered with dust. Khoth's interest is in books and knowledge, and his avarice for ancient tomes is all consuming.]]>
+    </string>
+    <string id="20">
+        <![CDATA[You step over the charred and splintered bones and look through this opening. You can't help but feel twinges of greed for what you see beyond. Here is where Khoth keeps his most valued and ancient scrolls and tomes.]]>
+    </string>
+    <string id="21">
+        <![CDATA[Even from here, you think you can sense the energy emanating from these works, books which must contain only the most arcane of knowledge and powerful of rituals.]]>
+    </string>
+    <string id="22">
+        <![CDATA[Of course, that energy might instead be coming from the protective glyphs in front of you, glyphs you have no trouble recognizing as powerful, protective, and totally lethal. Trying to cross them would be an incredible risk. But the rewards ...]]>
+    </string>
+    <string id="26">
+        <![CDATA[Probably a wise choice. The bones surrounding you are warning enough.]]>
+    </string>
+    <string id="27">
+        <![CDATA[You knew the effects of the glyphs when you crossed them would be bad. You had know idea they would be this strong. Waves of force pummel you. Flames envelop you. Searing wind throws you back.]]>
+    </string>
+    <string id="28">
+        <![CDATA[As you get tossed about, you grit your teeth and try your best to survive ...]]>
+    </string>
+    <string id="29">
+        <![CDATA[The scrolls in this rack are dedicated to religious rituals, from all times and all races. One of the scrolls is of extra interest - it describes how to raise people from the dead.]]>
+    </string>
+    <string id="30">
+        <![CDATA[Unfortunately, it's written in a rather obscure tongue, and you are unable to understand several key parts of the ritual. Not wanted to risk angering Khoth, you leave the valuable scroll behind.]]>
+    </string>
+    <string id="31">
+        <![CDATA[The scrolls in this rack are dedicated to religious rituals, from all times and all races. One of the scrolls is of extra interest - it describes how to raise people from the dead.]]>
+    </string>
+    <string id="32">
+        <![CDATA[The paper is old, cracked, and faded, and the ritual is described in peculiar and hard to understand terms. Fortunately, your trained eye picks out the key details. You can now cast the spell Resurrect.]]>
+    </string>
+    <string id="33">
+        <![CDATA[One of the statues in this huge hall turns to speak with you. "Khoth sends his congratulations to you. Not all are able to pass his labyrinth of shifting floors."]]>
+    </string>
+    <string id="34">
+        <![CDATA["However, in the intervening time, he has realized that it would be much simpler and easier to simply have you slain and take for himself whatever treasures you have to offer him. Goodbye."]]>
+    </string>
+    <string id="35">
+        <![CDATA[Several of the other statues begin to move. You notice that they have an odd, gleaming metallic sheen, and several of them have large crystals set into their bodies. They move to attack you.]]>
+    </string>
+    <string id="39">
+        <![CDATA["Fine, then. Then Khoth has no interest in seeing you. You can easily depart to the south, and can return when you have something of value." The invisible wall of force remains.]]>
+    </string>
+    <string id="40">
+        <![CDATA[Your progress east is suddenly and painfully stopped by an invisible wall. You try to feel your way around it, but it stretches all the way across the hall.]]>
+    </string>
+    <string id="41">
+        <![CDATA[As you look for a way past, the statue comes to life. It turns towards you and begins to speak. "I bring you greetings from Khoth the dragon. This is his palace, and he welcomes all who have something to offer him."]]>
+    </string>
+    <string id="42">
+        <![CDATA["The only thing Khoth values more than knowledge is privacy. Thus, he only wishes to see you if you have some valuable treasure to offer him. In return for, say, passage through this fortress."]]>
+    </string>
+    <string id="43">
+        <![CDATA["If you have nothing valuable, you will have no choice but to turn back. Do you have a treasure?"]]>
+    </string>
+    <string id="46">
+        <![CDATA["Excellent. You may progress. If you have the intelligence and persistence to pass through the maze of shifting floors, you are worthy to see Khoth." The wall in front of you disappears, and the statue is still again.]]>
+    </string>
+    <string id="47">
+        <![CDATA[You step into the awesome entry hall of this huge fortress. If you want to escape the Za-Khazi Run, you have no choice but to find your way through here.]]>
+    </string>
+    <string id="48">
+        <![CDATA[As you enter, one of the statues turns to you. "The dragon Khoth welcomes you to his private home, and assures you that, if he feels you are wasting his time, you will pay severely."]]>
+    </string>
+    <string id="49">
+        <![CDATA[Khoth! You have heard of this legendary creature, one of the five dragons in Exile when it was first founded. He is renowned for his love of knowledge and his hatred of those who interrupt his solitude.]]>
+    </string>
+    <string id="50">
+        <![CDATA[You hear a peculiar humming sound. You look around the periphery of the hall, and see that some of the floors are metallic. Stranger still, they are moving! The floors are shifting around, no doubt to confuse and delay progress through this fortress.]]>
+    </string>
+    <string id="51">
+        <![CDATA[This is your final test. You have little choice but to be up to it.]]>
+    </string>
+    <string id="53">
+        <![CDATA["You humans are so foolish. You have already paid me, and, when it suits me, I am a creature of my word. Go to the north gates, and the way will be opened."]]>
+    </string>
+    <string id="54">
+        <![CDATA[Khoth sniffs the air around you and thinks. "Ah, yes! You have Morog's scroll of draconian history. For years now, he has taunted me with it. Give it to me, and passage is yours."]]>
+    </string>
+    <string id="60">
+        <![CDATA[Khoth shrugs, his huge scales shifting and creaking. "Fine, then. You can rot here."]]>
+    </string>
+    <string id="61">
+        <![CDATA[Khoth takes the item. "Fine, then. It has been a pleasure doing business with you. Go to the north gate, and the way will be open."]]>
+    </string>
+    <string id="62">
+        <![CDATA[Khoth sniffs the air around you and thinks. "What is that smell?" He sniffs again.]]>
+    </string>
+    <string id="63">
+        <![CDATA["Ah, yes. That is the scent of Vahnatai magic. You have a Crystal of Purity. I have been longing for one of their artifacts for some time. Give it to me, and you can have passage."]]>
+    </string>
+    <string id="68">
+        <![CDATA[Khoth sniffs the air around you and thinks. "Hmm. Smelles like gems." He sniffs again. "An opal! A large one! You must have had harsh words with those Empire fools in their opal mine."]]>
+    </string>
+    <string id="69">
+        <![CDATA["Gemstones are of little interest to me, but they can be traded for books with great ease. I suppose it will do. Give me your opal, and I will let you pass."]]>
+    </string>
+    <string id="74">
+        <![CDATA[Well, Khoth sure didn't expect that. He falls and dies. Another of their arrogant race has been and gone.]]>
+    </string>
+    <string id="75">
+        <![CDATA[Suddenly, he casts a brief spell! You feel slightly light headed for a moment. Then the feeling passes. Khoth carries on as if nothing has happened.]]>
+    </string>
+</town>

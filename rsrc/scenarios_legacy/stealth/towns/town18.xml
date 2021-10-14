@@ -1,0 +1,773 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>64</size>
+    <name>Stalker&apos;s Fortress</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="3" bottom="63" right="63" />
+    <difficulty>0</difficulty>
+    <lighting>lit</lighting>
+    <flags />
+    <item id="0">
+        <type>33</type>
+    </item>
+    <item id="1">
+        <type>31</type>
+    </item>
+    <item id="2">
+        <type>37</type>
+    </item>
+    <item id="3">
+        <type>7</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="4">
+        <type>8</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="5">
+        <type>18</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="6">
+        <type>15</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="7">
+        <type>0</type>
+        <charges>6</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="8">
+        <type>6</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="9">
+        <type>5</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="10">
+        <type>7</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="11">
+        <type>7</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="12">
+        <type>15</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="13">
+        <type>7</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="14">
+        <type>0</type>
+        <charges>6</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="15">
+        <type>123</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="16">
+        <type>43</type>
+        <property>true</property>
+    </item>
+    <item id="17">
+        <type>43</type>
+        <property>true</property>
+    </item>
+    <item id="18">
+        <type>43</type>
+        <property>true</property>
+    </item>
+    <item id="19">
+        <type>129</type>
+    </item>
+    <item id="20">
+        <type>117</type>
+    </item>
+    <item id="21">
+        <type>147</type>
+    </item>
+    <item id="22">
+        <type>324</type>
+    </item>
+    <item id="23">
+        <type>68</type>
+    </item>
+    <item id="24">
+        <type>166</type>
+    </item>
+    <item id="25">
+        <type>7</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="26">
+        <type>4</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="27">
+        <type>6</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="28">
+        <type>15</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="29">
+        <type>16</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="30">
+        <type>0</type>
+        <charges>6</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="31">
+        <type>8</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="32">
+        <type>15</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="33">
+        <type>15</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="34">
+        <type>0</type>
+        <charges>4</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="35">
+        <type>6</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="36">
+        <type>6</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="37">
+        <type>17</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="38">
+        <type>6</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="39">
+        <type>0</type>
+        <charges>6</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="40">
+        <type>5</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="41">
+        <type>7</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="42">
+        <type>6</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="43">
+        <type>7</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="44">
+        <type>15</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="45">
+        <type>17</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="46">
+        <type>4</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="47">
+        <type>16</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="48">
+        <type>16</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="49">
+        <type>27</type>
+        <property>true</property>
+    </item>
+    <item id="50">
+        <type>28</type>
+        <property>true</property>
+    </item>
+    <item id="51">
+        <type>13</type>
+    </item>
+    <item id="52">
+        <type>14</type>
+    </item>
+    <item id="53">
+        <type>15</type>
+    </item>
+    <item id="54">
+        <type>15</type>
+    </item>
+    <item id="55">
+        <type>15</type>
+    </item>
+    <item id="56">
+        <type>88</type>
+        <property>true</property>
+    </item>
+    <creature id="0">
+        <type>104</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="1">
+        <type>13</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="2">
+        <type>13</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="3">
+        <type>13</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="4">
+        <type>13</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="5">
+        <type>13</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="6">
+        <type>13</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="7">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="8">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="9">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="10">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="11">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="12">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="13">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="14">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="15">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="16">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="17">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="18">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="19">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="20">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="21">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="22">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="23">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="24">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="25">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="26">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="27">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="28">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="29">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="30">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="31">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="32">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="33">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="34">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="35">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="36">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="37">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="38">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="39">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="40">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="41">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="42">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="43">
+        <type>16</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+    </creature>
+    <creature id="44">
+        <type>16</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+    </creature>
+    <creature id="45">
+        <type>16</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+    </creature>
+    <creature id="46">
+        <type>16</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+    </creature>
+    <creature id="47">
+        <type>194</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>180</personality>
+        <face>72</face>
+        <onkill>13</onkill>
+    </creature>
+    <creature id="48">
+        <type>188</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>181</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="49">
+        <type>35</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>182</personality>
+        <face>32</face>
+    </creature>
+    <creature id="50">
+        <type>19</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>183</personality>
+        <face>54</face>
+    </creature>
+    <creature id="51">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="52">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <area top="8" left="7" bottom="18" right="21">Throne Room</area>
+    <area top="27" left="7" bottom="37" right="13">Forge</area>
+    <area top="43" left="26" bottom="62" right="41">Fortress Storage</area>
+    <sign id="0">
+        <![CDATA[HOLDING AND INTERROGATION]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[Fortress Storage]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[PAYROLL/TREASURE/MAGIC STORAGE|Warning! Do not enter without authorization!]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[HONOR BARRACKS]]>
+    </sign>
+    <sign id="4">
+        <![CDATA[HONOR BARRACKS]]>
+    </sign>
+    <sign id="5">
+        <![CDATA[TO DOCKS]]>
+    </sign>
+    <sign id="6">
+        <![CDATA[MAGICAL RESEARCH|EXPLOSIVE DEVELOPMENT]]>
+    </sign>
+    <sign id="7">
+        <![CDATA[STALKER'S THRONE ROOM]]>
+    </sign>
+    <sign id="8">
+        <![CDATA[STALKER'S THRONE ROOM]]>
+    </sign>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[You step inside Stalker's Fortress. It's not so much a castle as a warren, one incredibly well guarded gate, followed by a long, natural gallery with buildings burrowed into the wall along it.]]>
+    </string>
+    <string id="1">
+        <![CDATA[The guards are a motley bunch, wearing a wide variety of armor (some stolen from Empire troops), and wielding all manner of wicked blades, pole arms, and spiked clubs. They watch you with profound mistrust, but at least these guards don't attack you.]]>
+    </string>
+    <string id="2">
+        <![CDATA[As you enter, one of the guards says "Stalker wants to see you. He's to the north. Go see him. Don't go anywhere else. You aren't allowed." The other guards nod at the last bit. Friendly lot.]]>
+    </string>
+    <string id="6">
+        <![CDATA[You walk in on several wizards, performing delicate and dangerous experiments on explosive materials. When they see you, they stop what they're doing long enough to call for guards. They come and pull you away, telling you not to come back.]]>
+    </string>
+    <string id="7">
+        <![CDATA[These are the doors to the fortresses interrogation chambers. Behind the doors, you can dimly hear the sounds of people in pain.]]>
+    </string>
+    <string id="8">
+        <![CDATA[Fortunately, the doors are massive and heavily locked, so you're unable to go in there and see what's going on. It'll do a lot for your peace of mind.]]>
+    </string>
+    <string id="9">
+        <![CDATA[You enter Stalker's throne room. It's a massive chamber, clearly built with the intention of impressing all who are brought here, willingly or unwillingly. Huge, granite pillars tower above you on all sides, like a monumental stone forest.]]>
+    </string>
+    <string id="10">
+        <![CDATA[In the center of the chamber is a massive oak table, fifty feet long, where the leaders of the Hill Runners meet to plan tactics. At the far end sit Stalker and Canizares. They look up from their plans when you enter, and Stalker motions you forward.]]>
+    </string>
+    <string id="11">
+        <![CDATA[After hearing so much about him, you find his appearance somehow disappointing. There's nothing about his nondescript look and bearing that indicates the ruthlessness and genius that have made him the scourge of the Empire.]]>
+    </string>
+    <string id="15">
+        <![CDATA[The rebels have liberated a huge prayer book from the Empire. You spend some time looking at it. Most of the rituals are either uninteresting or already known to you. Alas, one spell seems useful, but you can't quite make sense of it.]]>
+    </string>
+    <string id="16">
+        <![CDATA[The rebels have liberated a huge prayer book from the Empire. You spend some time looking at it. Most of the rituals are either uninteresting or already known to you. Fortunately, one spell seems useful.]]>
+    </string>
+    <string id="17">
+        <![CDATA[You can now cast the spell Major Cleansing.]]>
+    </string>
+    <string id="18">
+        <![CDATA[The rebels have liberated a huge prayer book from the Empire. You spend some time looking at it. Most of the rituals are either uninteresting or already known to you. Fortunately, one spell seems useful.]]>
+    </string>
+    <string id="19">
+        <![CDATA[You can now cast the spell Revive All.]]>
+    </string>
+    <string id="20">
+        <![CDATA[You step in front of the altar, and feel a pleasant, soothing feeling. You feel much better when you walk away.]]>
+    </string>
+    <string id="21">
+        <![CDATA[The box is empty.]]>
+    </string>
+    <string id="22">
+        <![CDATA[The box contains a broadsword, a sack of gold, a silver key, and a note: "Thank you for your assistance. We wish you the best of luck in your further adventures, which, we hope, will take place elsewhere."]]>
+    </string>
+    <string id="23">
+        <![CDATA["This key will let you down to the docks, where a boat has been left to leave our isle. With our regards. Stalker."]]>
+    </string>
+    <string id="24">
+        <![CDATA[You aren't sure why Stalker wants you away from here, but the message is clear. Despite your services, you are no longer welcome. Maybe he's afraid you will be more popular than him. No matter. It's time to go.]]>
+    </string>
+    <string id="28">
+        <![CDATA[You have killed Stalker. He has a silver key around his neck. You grab it. Perhaps you should leave the island. It would appear you're out of friends here.]]>
+    </string>
+    <string id="29">
+        <![CDATA[The small army outside here has heard of Stalker's death and is waiting for revenge. They overpower you effortlessly and inflict unbelievable horrors upon you.]]>
+    </string>
+    <string id="30">
+        <![CDATA[This door leads to the docks behind Stalker's fortress. Unfortunately, the door is locked, and you don't have the key. Pity ... this dock may be your only route off this island.]]>
+    </string>
+    <string id="31">
+        <![CDATA[You find the door to the docks. It was locked, but your silver key fits. You may finally be able to escape Morrow's Isle.]]>
+    </string>
+    <string id="32">
+        <![CDATA[You find that the door has been locked behind you, and your silver key no longer works. You are no longer welcome here.]]>
+    </string>
+    <string id="33">
+        <![CDATA[Stalker leans back and begins to speak, with the tired patience of one used to repeating things again and again, and the confidence of one who knows his words must be obeyed, like it or not.]]>
+    </string>
+    <string id="34">
+        <![CDATA["There is only one person on this island who has the skill and strength to defeat me. His name is Jaen.]]>
+    </string>
+    <string id="35">
+        <![CDATA["As long as he lives, we will not be able to take Morrow's Isle. If we do take the Isle, though, we may be able to hold it against the Empire for years. It is not hard to defend an island."]]>
+    </string>
+    <string id="36">
+        <![CDATA["We have finally convinced an Empire prisoner to tell us where Jaen is. We have people there. All we need is someone good enough to get in and kill Jaen. That someone will be you."]]>
+    </string>
+    <string id="37">
+        <![CDATA["To get there, stand just north of the town of Liam, and walk due north. You will be contacted from there. Good luck to you. You will be doing the Hill Runners a great service."]]>
+    </string>
+    <string id="39">
+        <![CDATA["Be sure to go get supplies before leaving."]]>
+    </string>
+    <string id="40">
+        <![CDATA["Of course, you will receive a good reward for completing this mission. And this reward is, alas, one you can't live without."]]>
+    </string>
+    <string id="41">
+        <![CDATA[You return to Stalker's throne room in triumph, having managed to miraculously slay his greatest enemy. You walk in proudly, eager to bask in admiration and adulation.]]>
+    </string>
+    <string id="42">
+        <![CDATA[You are disappointed. For some reason, despite what you have done, the guards barely seem to even notice you. The rebel warriors seem to be taking great care not to admire your deed. Stalker seems to be, if anything, displeased to see you.]]>
+    </string>
+    <string id="43">
+        <![CDATA[This was unexpected. Looking into the rebel leader's eyes, you would swear you see envy and fear. It's as if he is afraid that you will take his place. This is going to be awkward.]]>
+    </string>
+</town>

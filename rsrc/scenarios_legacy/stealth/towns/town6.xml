@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Zaskiva</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="0" bottom="44" right="47" />
+    <difficulty>3</difficulty>
+    <lighting>lit</lighting>
+    <onenter condition="alive">0</onenter>
+    <onenter condition="dead">0</onenter>
+    <flags />
+    <item id="0">
+        <type>16</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="1">
+        <type>5</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="2">
+        <type>18</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="3">
+        <type>18</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="4">
+        <type>4</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="5">
+        <type>5</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="6">
+        <type>6</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="7">
+        <type>16</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="8">
+        <type>7</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="9">
+        <type>15</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="10">
+        <type>0</type>
+        <charges>5</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="11">
+        <type>8</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="12">
+        <type>15</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="13">
+        <type>18</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="14">
+        <type>4</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="15">
+        <type>5</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="16">
+        <type>8</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="17">
+        <type>0</type>
+        <charges>60</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="18">
+        <type>0</type>
+        <charges>14</charges>
+    </item>
+    <item id="19">
+        <type>1</type>
+        <charges>60</charges>
+        <property>true</property>
+    </item>
+    <item id="20">
+        <type>1</type>
+        <charges>60</charges>
+        <property>true</property>
+    </item>
+    <item id="21">
+        <type>1</type>
+        <charges>60</charges>
+        <property>true</property>
+    </item>
+    <item id="22">
+        <type>58</type>
+        <property>true</property>
+    </item>
+    <item id="23">
+        <type>58</type>
+        <property>true</property>
+    </item>
+    <item id="24">
+        <type>7</type>
+        <contained>true</contained>
+    </item>
+    <item id="25">
+        <type>7</type>
+        <contained>true</contained>
+    </item>
+    <item id="26">
+        <type>99</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="27">
+        <type>99</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="28">
+        <type>20</type>
+    </item>
+    <item id="29">
+        <type>22</type>
+    </item>
+    <item id="30">
+        <type>0</type>
+        <charges>5</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="31">
+        <type>260</type>
+        <property>true</property>
+    </item>
+    <item id="32">
+        <type>363</type>
+        <charges>1</charges>
+        <property>true</property>
+    </item>
+    <item id="33">
+        <type>37</type>
+        <property>true</property>
+    </item>
+    <item id="34">
+        <type>24</type>
+    </item>
+    <creature id="0">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="1">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="2">
+        <type>18</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>31</face>
+    </creature>
+    <creature id="3">
+        <type>66</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="4">
+        <type>66</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="5">
+        <type>66</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="6">
+        <type>15</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>60</personality>
+        <face>12</face>
+    </creature>
+    <creature id="7">
+        <type>27</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>61</personality>
+        <face>13</face>
+    </creature>
+    <creature id="8">
+        <type>15</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>62</personality>
+        <face>66</face>
+    </creature>
+    <creature id="9">
+        <type>4</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>63</personality>
+        <face>1</face>
+    </creature>
+    <creature id="10">
+        <type>28</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>64</personality>
+        <face>16</face>
+    </creature>
+    <creature id="11">
+        <type>6</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>65</personality>
+        <face>17</face>
+    </creature>
+    <creature id="12">
+        <type>13</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>8</face>
+    </creature>
+    <creature id="13">
+        <type>5</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>66</personality>
+        <face>4</face>
+    </creature>
+    <creature id="14">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="15">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="16">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="17">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="18">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="19">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="20">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="21">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="22">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="23">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="24">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="25">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="26">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="27">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="28">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="29">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="30">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="31">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="32">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="33">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="34">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="35">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="36">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="37">
+        <type>13</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="38">
+        <type>13</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="39">
+        <type>13</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <area top="11" left="1" bottom="16" right="4">Dock Warehouse</area>
+    <area top="7" left="8" bottom="24" right="10">Private Quarters</area>
+    <area top="29" left="1" bottom="42" right="7">Zaskiva Arms</area>
+    <area top="39" left="7" bottom="42" right="18">Zaskiva Arms</area>
+    <area top="29" left="12" bottom="34" right="18">Cartman&apos;s Armory</area>
+    <area top="29" left="30" bottom="39" right="39">School of Magery</area>
+    <area top="33" left="44" bottom="36" right="46">Small Shrine</area>
+    <area top="4" left="1" bottom="9" right="6">Zaskiva Docks</area>
+    <sign id="0">
+        <![CDATA[Hall of Memorial Statues|Entry by Keeper Permission Only]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[ZASKIVA ARMS|Fine lodging, reasonable prices.|NO VACANCY]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[COMMON ROOM]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[ZASKIVA SCHOOL OF MAGERY]]>
+    </sign>
+    <sign id="4">
+        <![CDATA[Cartman's Armory]]>
+    </sign>
+    <sign id="5">
+        <![CDATA[PALACE OF LORD VOLPE]]>
+    </sign>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[You return to the city of Zaskiva, which is still reeling from the effects of the explosion. One such effect is bands of uncontrolled guards roaming the streets, carrying out a vigilante "investigation" of the crime.]]>
+    </string>
+    <string id="1">
+        <![CDATA[They recognize you from a description gotten from a bystander at the explosion, and take you in for harsh questioning. By the time Jaen finds you, the questioning has gotten a bit out of hand. Fatally so.]]>
+    </string>
+    <string id="2">
+        <![CDATA[You enter the city of Zaskiva for the first time. It's a beautiful city, clean and prosperous, and relatively new. It was, in fact, only built in the last ten or so years, with construction starting when Lord Volpe arrived here.]]>
+    </string>
+    <string id="3">
+        <![CDATA[The city is beautiful, but the people are haggard. The streets are crowded with edgy merchants and sailors, held up here because of Lord Volpe's restrictions on traffic to and from here. It's a hectic place, reeking of stress and fear.]]>
+    </string>
+    <string id="4">
+        <![CDATA[You nonchalantly try to stroll into Lord Volpe's mansion. You don't even make it three steps inside before you find yourself surrounded by guards on all sides. Fortunately, their weapons aren't out yet.]]>
+    </string>
+    <string id="5">
+        <![CDATA[An Empire Dervish walks up to you and says "What is your business here? Why should Lord Volpe want to piss away his time with the likes of you?"]]>
+    </string>
+    <string id="6">
+        <![CDATA[You don't really have a satisfactory answer for that. Satisfied that you have no place here, the guards grab you and hustle you back out into the courtyard.]]>
+    </string>
+    <string id="10">
+        <![CDATA[You nervously step into the Zaskiva School of Magery. You've heard nasty rumors regarding trouble at other Schools of Magery in Valorim, and are on your guard.]]>
+    </string>
+    <string id="11">
+        <![CDATA[The place is dusty and quiet. You doubt school is in session - you only see one mage, sitting and reading at the far end of the room.]]>
+    </string>
+    <string id="12">
+        <![CDATA[This is a small laboratory, well equipped for simple magical and alchemical experiments. You notice that an alcove in the southeast corner of the room has been sealed off.]]>
+    </string>
+    <string id="13">
+        <![CDATA[This is a dusty lecture hall. The mages in your party have unpleasant flashbacks of years of grueling, mind numbing study in rooms just like this one.]]>
+    </string>
+    <string id="14">
+        <![CDATA[This is a small shrine. There's no priest here. It's a quiet, mildly holy place, like many others across the Empire, where soldiers and sailors can stop, leave a few coins, and say a few prayers for luck in the travels ahead.]]>
+    </string>
+    <string id="15">
+        <![CDATA[It's a pity there's no attendant here ... the floor could use a seriously good mopping.]]>
+    </string>
+    <string id="16">
+        <![CDATA[You stumble in on a half dozen heavily armed men and women, talking and planning. When they see you, they freeze, alarmed. At first, you think they're about to attack you. Then they recognize you.]]>
+    </string>
+    <string id="17">
+        <![CDATA["What do you think you're doing?" one of them hisses. "Go about your mission, and don't come back here. You'll bring the Empire down upon us all!" A woman in plate armor gets up and pushes you back out through the door.]]>
+    </string>
+    <string id="18">
+        <![CDATA[You find a small, concealed room, containing mops, brooms, and other powerful tools of cleaning. As you look around, a streetsweeper comes in, seizes a broom of formidable might, and walks out again.]]>
+    </string>
+    <string id="19">
+        <![CDATA[This room is packed with merchants, who are bunking together while waiting for permission to leave Zaskiva. They don't want to talk to you, and don't appreciate your intrusion. They push you out.]]>
+    </string>
+    <string id="20">
+        <![CDATA[Right behind the concealed passage, you find a massive door, reinforced with steel bands. The words "TO SEWERS - KEEP OUT" are painted on it in big, red letters.]]>
+    </string>
+    <string id="21">
+        <![CDATA[You enter a solemn memorial to former lords of Morrow's Isle. There are three statues in here. the two on the right aren't that nice, only carved out of granite. The statue to the left, of Lord Volpe, is carved out of beautiful white marble.]]>
+    </string>
+    <string id="27">
+        <![CDATA[You notice, off to one side of the marble statue, that a small stone has been removed from the wall of Lord Volpe's palace. Maybe someone should come here and fix that.]]>
+    </string>
+    <string id="28">
+        <![CDATA[Having found the marble statue, you look around for the hole in the wall you're supposed to put the box into. The instructions you've received were wrong. The crack isn't behind the statue, but off to the side.]]>
+    </string>
+    <string id="29">
+        <![CDATA[A brick has been removed from the wall of Lord Volpe's palace, leaving a hole just big enough to fit the oak box inside. This mission is almost complete. Do you insert the box?]]>
+    </string>
+    <string id="34">
+        <![CDATA[You slide the box into the hole, turn around, and find yourself face to face with 20 Empire soldiers, five of them Empire dervishes. Their weapons are drawn.]]>
+    </string>
+    <string id="35">
+        <![CDATA[Their commander smirks, and says "Well, well. The attempt on Volpe's life has come at last. You fools could not have been more obvious in your attempt. We've been following you even since you arrived here."]]>
+    </string>
+    <string id="36">
+        <![CDATA["Trying to blow up Volpe's mansion was an intriguing plan, but you must have been insane to think you can outwit ..."]]>
+    </string>
+    <string id="37">
+        <![CDATA[That's all he manages to say, before the whole world falls apart.]]>
+    </string>
+    <string id="40">
+        <![CDATA[The explosion didn't come from the box you delivered. It came from the front of Lord Volpe's palace. The commander shouts "It's a decoy! Damn them!" The soldiers try to run back out, but they don't make it.]]>
+    </string>
+    <string id="41">
+        <![CDATA[There are two more explosions, both from the front of the palace. The Hill Runner's magical devices are more powerful than you would have expected. You see the palace walls start to shake and buckle.]]>
+    </string>
+    <string id="42">
+        <![CDATA[You try to get away from the collapsing palace, but you don't get far. The whole place caves in, almost on top of you.]]>
+    </string>
+    <string id="46">
+        <![CDATA[Dazed, you stagger through the wreckage and rubble. Kenny, the statue caretaker, was crushed under a falling pillar. Casualties are all around you, and not all of them are soldiers. Moans of pain come from all directions. The palace has been destroyed.]]>
+    </string>
+    <string id="47">
+        <![CDATA[You stagger through the dust, barely able to keep standing. You are dimly aware of guards searching the area, looking for people to arrest for this heinous crime. They're getting close to you.]]>
+    </string>
+    <string id="48">
+        <![CDATA[Before you can think of trying to get away (or even think of anything coherent), rough hands grab you. Someone whispers "Come with us, quick!" You're in no position to refuse.]]>
+    </string>
+    <string id="49">
+        <![CDATA[They hustle you across the corridor, through a secret door, and down a passage. As you're pushed down a flight of stairs, one of them says "Make your way through here, and we'll get you on the other end. Good work, rebels."]]>
+    </string>
+    <string id="50">
+        <![CDATA[The effects of the blast start to fade, and your ears stop ringing. Little by little, you return to your senses. When you are fully aware, however, you realize you're not in Zaskiva anymore.]]>
+    </string>
+    <string id="51">
+        <![CDATA[You're in a crumbling room underground. And a portcullis has just been slammed shut behind you, blocking your retreat.]]>
+    </string>
+    <string id="52">
+        <![CDATA[These are the Zaskiva docks. Not many boats are coming and going. The island has been pretty well closed up by the cautious leaders of Morrow's Isle.]]>
+    </string>
+    <string id="53">
+        <![CDATA[He laughs. "What can I say? Love makes one greedy! One letter isn't enough. I will always want more, and more, until I can finally see her again."]]>
+    </string>
+    <string id="54">
+        <![CDATA[You give Madeleine's letter to Zulli. He lifts the visor of his helmet to look at it. You've obviously made his day. "This is wonderful! Thank you!" As a reward, he doesn't forget to give you 10 gold.]]>
+    </string>
+    <string id="55">
+        <![CDATA[You've done a very good deed.]]>
+    </string>
+</town>

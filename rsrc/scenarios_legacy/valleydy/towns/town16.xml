@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Control Chamber</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="3" bottom="47" right="47" />
+    <difficulty>3</difficulty>
+    <lighting>dark</lighting>
+    <flags />
+    <item id="0">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="1">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="2">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="3">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="4">
+        <type>313</type>
+    </item>
+    <creature id="0">
+        <type>123</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="1">
+        <type>75</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="2">
+        <type>75</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="3">
+        <type>75</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="4">
+        <type>75</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="5">
+        <type>75</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="6">
+        <type>77</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="7">
+        <type>77</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="8">
+        <type>61</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>160</personality>
+        <face>-1</face>
+    </creature>
+    <sign id="0">
+        <![CDATA[PRIMARY CONTROL]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[PRIMARY CONTROL]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[MAIN CONTROL CHAIR]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[AUX CONTROL CHAIR]]>
+    </sign>
+    <sign id="4">
+        <![CDATA[AUX CONTROL CHAIR]]>
+    </sign>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[You step into the clean, warm halls of the Main Control Center of the School of Magery. To be honest, you still have little idea what a "Main Control Center" is supposed to be.]]>
+    </string>
+    <string id="1">
+        <![CDATA[The air is dry, and a constant, low hum fills the air. The floor is still impeccably clean and polished, and no mold or sign of decay has successfully intruded on this place. Light is no problem. The walls themselves glow with the energy of the place.]]>
+    </string>
+    <string id="6">
+        <![CDATA[There can be no more doubt. The School of Magery was not just a teaching institution - some remarkable research was going on here as well. The strange devices in front of you are evidence enough of that.]]>
+    </string>
+    <string id="7">
+        <![CDATA[This room is filled with strange walls. Or panels. Or devices. You aren't sure. They're metal, and glow slightly, and emit a constant, soothing hum. Some have flashing lights on them, some buttons. None of them have a clear purpose.]]>
+    </string>
+    <string id="8">
+        <![CDATA[They're truly amazing devices. What they do and if it's possible for you to control them, however, remains an open question.]]>
+    </string>
+    <string id="12">
+        <![CDATA[The panel here has what looks like some sort of controls. There are several rows of buttons, each of which has a label, none of which you can read.]]>
+    </string>
+    <string id="13">
+        <![CDATA[You have no idea what to do with any of this. Of course, that doesn't stop you from trying.]]>
+    </string>
+    <string id="18">
+        <![CDATA[Unfortunately, you don't get far before a security spell gets wind of your interference. The buttons go dark, and you hear a brief alarm.]]>
+    </string>
+    <string id="19">
+        <![CDATA[The panel here has a large, friendly button, placed at about waist height. A sign above it reads "In Case of Injury."]]>
+    </string>
+    <string id="25">
+        <![CDATA[The moment you press the button, a sparkling green field appears, surrounding you. You feel it rapidly rejuvenate you, relaxing your muscles and erasing your wounds.]]>
+    </string>
+    <string id="26">
+        <![CDATA[Unfortunately, the green field abruptly disappears. Sparks and a cloud of smoke fly out of the panel. Looks like this device needs constant maintenance to function.]]>
+    </string>
+    <string id="27">
+        <![CDATA[The panel here has a large, friendly button, placed at about waist height. A sign above it reads "In Case of Injury."]]>
+    </string>
+    <string id="33">
+        <![CDATA[The panel in this little niche has a rectangle of glass set into it, about 1 foot by 1 foot. Peering through the glass, you can see words floating by in the darkness beyond. They're dim, but you can just make them out, if you try.]]>
+    </string>
+    <string id="39">
+        <![CDATA[A single blow from your weapon shatters the glass. One less sinister device in the School of Magery.]]>
+    </string>
+    <string id="40">
+        <![CDATA[You bent down and peer through the glass, reading the words as they pass by. You read arcane rituals, bits of history, ancient stories, theorems of mathematics, and all manner of other knowledge, carefully assembled and displayed here.]]>
+    </string>
+    <string id="41">
+        <![CDATA[Maybe you watch for an hour, maybe more. Eventually the words displayed begin to repeat themselves, and you walk away, feeling very enlightened.]]>
+    </string>
+    <string id="42">
+        <![CDATA[Here, deep inside the control chambers, you find an ornate, carved stone throne. Strangely, it has been set facing a bare wall. As experience has taught you, when you find something odd and inexplicable, magic must be involved.]]>
+    </string>
+    <string id="48">
+        <![CDATA[When you sit in the throne, words seem to try to form on the wall you're facing, coalescing out of thin air in letters of mist. However, before the words manage to come together, the mist dissipates, and they fade again.]]>
+    </string>
+    <string id="49">
+        <![CDATA[You stand up, confused. Perhaps you aren't authorized to use the chair, or perhaps the system is no longer functional.]]>
+    </string>
+    <string id="50">
+        <![CDATA[Here, deep inside the control chambers, you find an ornate, carved stone throne. Strangely, it has been set facing a bare wall. As experience has taught you, when you find something odd and inexplicable, magic must be involved.]]>
+    </string>
+    <string id="56">
+        <![CDATA[The moment you sit down, words spring up on the wall the chair faces, written in midair in letters of white mist. The words are in your tongue, but don't make sense to you. Phrases like "Directory Structure" and "Flow Control" are beyond you.]]>
+    </string>
+    <string id="57">
+        <![CDATA[Whatever this thing is, you have no idea how to operate it. You stand up before you break it, or kill yourself, or do something similarly unpleasant.]]>
+    </string>
+    <string id="58">
+        <![CDATA[The moment you sit down, words spring up on the wall before you, written in midair in letters of white mist. The words are in your tongue, but don't make sense to you. Phrases like "Directory Structure" and "Flow Control" are beyond your understanding.]]>
+    </string>
+    <string id="59">
+        <![CDATA[Fortunately, you do have the scrolls of instructions you bought from Pangle, and while they didn't make any sense before, they do now. From here, you can magically control gates and machinery all throughout the School of Magery.]]>
+    </string>
+    <string id="60">
+        <![CDATA[Commands are issued by pointing at the appropriate words of mist. Searching the instructions, you find the area describing waste disposal. Soon, you are able to bring up the command to reactivate the waste destruction system.]]>
+    </string>
+    <string id="61">
+        <![CDATA[Crossing your fingers, you point at the command. There is a pause, and a short chiming noise. The words "Power to Waste Cleanup System System Reactivated. Waste Cleanup Panel can now be used."]]>
+    </string>
+    <string id="62">
+        <![CDATA[The letters of mist disappear, and the room goes dark. Hmm. Now where is the Waste Cleanup Panel?]]>
+    </string>
+    <string id="64">
+        <![CDATA[Many years ago, four mages were brought into this cavern and murdered. Their multiply stabbed bodies are arrayed before you. Whoever closed the School of Magery, they wanted to close it for good.]]>
+    </string>
+</town>

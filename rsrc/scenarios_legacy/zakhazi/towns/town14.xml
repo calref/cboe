@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>32</size>
+    <name>Spiraling Crypt</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="3" bottom="28" right="28" />
+    <difficulty>5</difficulty>
+    <lighting>dark</lighting>
+    <onenter condition="alive">23</onenter>
+    <onenter condition="dead">23</onenter>
+    <flags />
+    <wandering>
+        <monster>193</monster>
+        <monster>193</monster>
+    </wandering>
+    <wandering>
+        <monster>194</monster>
+        <monster>194</monster>
+    </wandering>
+    <wandering>
+        <monster>194</monster>
+    </wandering>
+    <wandering>
+        <monster>193</monster>
+    </wandering>
+    <creature id="0">
+        <type>193</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="1">
+        <type>193</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="2">
+        <type>193</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="3">
+        <type>193</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="4">
+        <type>194</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>2</encounter>
+    </creature>
+    <creature id="5">
+        <type>194</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>2</encounter>
+    </creature>
+    <creature id="6">
+        <type>194</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>2</encounter>
+    </creature>
+    <creature id="7">
+        <type>194</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>2</encounter>
+    </creature>
+    <creature id="8">
+        <type>194</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>2</encounter>
+    </creature>
+    <creature id="9">
+        <type>193</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>3</encounter>
+    </creature>
+    <creature id="10">
+        <type>193</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>3</encounter>
+    </creature>
+    <creature id="11">
+        <type>193</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>3</encounter>
+    </creature>
+    <creature id="12">
+        <type>193</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>3</encounter>
+    </creature>
+    <creature id="13">
+        <type>193</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>3</encounter>
+    </creature>
+    <creature id="14">
+        <type>194</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>4</encounter>
+    </creature>
+    <creature id="15">
+        <type>194</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>4</encounter>
+    </creature>
+    <creature id="16">
+        <type>194</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>4</encounter>
+    </creature>
+    <creature id="17">
+        <type>194</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>4</encounter>
+    </creature>
+    <creature id="18">
+        <type>194</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>4</encounter>
+    </creature>
+    <creature id="19">
+        <type>194</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="20">
+        <type>194</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="21">
+        <type>194</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="22">
+        <type>194</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <area top="11" left="13" bottom="22" right="18">Central Garden</area>
+    <area top="4" left="13" bottom="9" right="18">Barge Docks</area>
+    <sign id="0">
+        <![CDATA[(You can't understand the writing on this obelisk. You recognize the language, though. It's Vahnatai.)]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[(You can't understand the writing on this obelisk. You recognize the language, though. It's Vahnatai.)]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[(You can't understand the writing on this obelisk. You recognize the language, though. It's Vahnatai.)]]>
+    </sign>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[An icy wind blows through the room.]]>
+    </string>
+    <string id="1">
+        <![CDATA[You catch a blur out of the corner of your eye. Turning, you see that a snarling creature has suddenly appeared. Looking around, you see that it isn't the only one ...]]>
+    </string>
+    <string id="2">
+        <![CDATA[Something in this room feels different. You feel as if you're being watched.]]>
+    </string>
+    <string id="3">
+        <![CDATA[You hear loud snarling. Looking into the shadows of the chamber, you see several savage beasts staring at you. You're sure that they weren't there before. They attack ...]]>
+    </string>
+    <string id="4">
+        <![CDATA[You finally reach the crypt's stone docks. There are two funeral biers chained here. The wide, flat boats are made of cavewood, surprisingly intact despite the many years they've been here. Steering poles are lashed to the sides.]]>
+    </string>
+    <string id="5">
+        <![CDATA[A barge is a slow, inelegant way to make your way downriver. However, considering the circumstances, they're much, much better than turning back.]]>
+    </string>
+    <string id="6">
+        <![CDATA[You carefully examine the pillar. Looking at the stone carefully, you notice that what had at first looked like a few cracks are, in fact, the edges of a small panel.]]>
+    </string>
+    <string id="7">
+        <![CDATA[Using a knife, you pry the panel open. There is a large, inviting red button behind it.]]>
+    </string>
+    <string id="12">
+        <![CDATA[You press the button. You hear a distant hum. Nothing else of interest happens.]]>
+    </string>
+    <string id="13">
+        <![CDATA[You hear a distant clang.]]>
+    </string>
+</town>

@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Wormy Hollow</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="0" bottom="47" right="44" />
+    <difficulty>4</difficulty>
+    <lighting>lit</lighting>
+    <flags>
+        <hidden>true</hidden>
+    </flags>
+    <item id="0">
+        <type>93</type>
+        <property>true</property>
+    </item>
+    <item id="1">
+        <type>96</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="2">
+        <type>30</type>
+        <contained>true</contained>
+    </item>
+    <item id="3">
+        <type>94</type>
+        <property>true</property>
+    </item>
+    <item id="4">
+        <type>93</type>
+        <property>true</property>
+    </item>
+    <item id="5">
+        <type>97</type>
+        <property>true</property>
+    </item>
+    <item id="6">
+        <type>96</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="7">
+        <type>96</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="8">
+        <type>222</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="9">
+        <type>222</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="10">
+        <type>222</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="11">
+        <type>30</type>
+        <contained>true</contained>
+    </item>
+    <item id="12">
+        <type>30</type>
+        <contained>true</contained>
+    </item>
+    <item id="13">
+        <type>30</type>
+        <contained>true</contained>
+    </item>
+    <item id="14">
+        <type>96</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="15">
+        <type>203</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="16">
+        <type>3</type>
+        <charges>40</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="17">
+        <type>92</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="18">
+        <type>2</type>
+        <charges>6</charges>
+    </item>
+    <item id="19">
+        <type>3</type>
+        <charges>5</charges>
+    </item>
+    <item id="20">
+        <type>386</type>
+        <charges>4</charges>
+    </item>
+    <item id="21">
+        <type>387</type>
+        <contained>true</contained>
+    </item>
+    <item id="22">
+        <type>387</type>
+        <contained>true</contained>
+    </item>
+    <item id="23">
+        <type>388</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="24">
+        <type>388</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="25">
+        <type>96</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="26">
+        <type>96</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="27">
+        <type>247</type>
+        <charges>3</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="28">
+        <type>17</type>
+    </item>
+    <creature id="0">
+        <type>168</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="19" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="1">
+        <type>168</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="19" y="3" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="2">
+        <type>168</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="19" y="2" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="3">
+        <type>168</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="19" y="1" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="4">
+        <type>81</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="5">
+        <type>81</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="6">
+        <type>81</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="7">
+        <type>81</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="8">
+        <type>134</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="9">
+        <type>134</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="10">
+        <type>134</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="11">
+        <type>81</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="12">
+        <type>133</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="13">
+        <type>133</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="14">
+        <type>133</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="15">
+        <type>91</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>48</face>
+    </creature>
+    <creature id="16">
+        <type>133</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="17">
+        <type>133</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="18">
+        <type>91</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>48</face>
+    </creature>
+    <creature id="19">
+        <type>91</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>48</face>
+    </creature>
+    <creature id="20">
+        <type>91</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>48</face>
+    </creature>
+    <creature id="21">
+        <type>91</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>48</face>
+    </creature>
+    <creature id="22">
+        <type>91</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>48</face>
+    </creature>
+    <creature id="23">
+        <type>91</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>48</face>
+    </creature>
+    <creature id="24">
+        <type>91</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>48</face>
+    </creature>
+    <creature id="25">
+        <type>92</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>190</personality>
+        <face>48</face>
+    </creature>
+    <creature id="26">
+        <type>95</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>191</personality>
+        <face>46</face>
+    </creature>
+    <creature id="27">
+        <type>96</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>192</personality>
+        <face>46</face>
+    </creature>
+    <creature id="28">
+        <type>98</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>193</personality>
+        <face>46</face>
+    </creature>
+    <creature id="29">
+        <type>107</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>194</personality>
+        <face>25</face>
+        <onkill>11</onkill>
+    </creature>
+    <area top="39" left="16" bottom="45" right="21">Commander&apos;s Office</area>
+    <area top="37" left="29" bottom="43" right="35">Crystal Soul Chamber</area>
+    <area top="42" left="36" bottom="47" right="44">Chamber of Contemplation</area>
+    <sign id="0">
+        <![CDATA[(The carvings on this obelisk are in many languages, including yours.)|WORMY HOLLOW OUTPOST]]>
+    </sign>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[One of the massive, pale worms blocking your entry into these tunnels has just fallen.]]>
+    </string>
+    <string id="1">
+        <![CDATA[Several massive piles of leaves, moss, and muck at the south end of the cavern shift, heave, and begin to move towards you. At least, that's what you think is happening, until you see the pairs of long eyestalks.]]>
+    </string>
+    <string id="2">
+        <![CDATA[One of them hawks a glob of powerful, acidic spit in your direction. They're giant slugs!]]>
+    </string>
+    <string id="3">
+        <![CDATA[You find signs of intelligent life! There's recent construction here - a large, stone wall blocking the corridor. When you get close, a concealed panel in it slides open, and a Vahnatai peers out at you. "Who being you?" it asks. "What doing you here?"]]>
+    </string>
+    <string id="4">
+        <![CDATA[You respond that you have seen Casser-Bok. The Vahnatai looks agitated and shuts the panel. After a few minutes, a secret door opens in the wall. The Vahnatai says "Our leader is speaking with you. Be in peace, or pay much in pain."]]>
+    </string>
+    <string id="9">
+        <![CDATA[You approach the Vahnatai wall once again. The panel opens, and one of their guards peers out at you. It recognizes you and lets you in.]]>
+    </string>
+    <string id="10">
+        <![CDATA[You find signs of intelligent life! There's recent construction here - a large, stone wall blocking the corridor. When you get close, a concelaed panel in it slides open, and a Vahnatai peers out at you. "Who being you?" is asks. "What doing you here?"]]>
+    </string>
+    <string id="11">
+        <![CDATA[You are unable to come up with an answer that satisfies him. He slams the panel shut. Even after a careful search, you can't find any cracks or other sign that there was even a panel in the wall, let alone a door.]]>
+    </string>
+    <string id="16">
+        <![CDATA[Although the Vahnatai were rather angry with Exile after it interfered with their destruction of the surface world some years before, since that time their people and yours have been in a state of uneasy truce.]]>
+    </string>
+    <string id="17">
+        <![CDATA[That has not stopped the Vahnatai from creating the occasional concealed outpost in Exile lands, such as this one. Such outposts are half diplomatic stations, half dens of espionage. This may be awkward.]]>
+    </string>
+    <string id="18">
+        <![CDATA[The Vahnatai have erected a teleporter here. Being adventurers, you are immediately tempted to leap through it. It seems safe ... you don't see fire or lava on the other side.]]>
+    </string>
+    <string id="24">
+        <![CDATA[The portal gives you the wrenching, painful feeling you've come to associate with being teleported a very long distance. You emerge at the other side and come face to face with about 30 very surprised looking Vahnatai.]]>
+    </string>
+    <string id="25">
+        <![CDATA[The portal must be their shortcut back to their homeland! You don't get a chance to look around, though, as they immediately grab you and throw you back into the portal.]]>
+    </string>
+    <string id="26">
+        <![CDATA["I have given the word. The gate to the Crystal Soul has been opened. You may see Presso-Bok now."]]>
+    </string>
+</town>

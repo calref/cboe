@@ -1,0 +1,754 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="0">
+        <title>Mayor Leonardo</title>
+        <look>
+            <![CDATA[You meet Leonardo, the first, and, so far, only mayor of Cavala. Recent months have been difficult for him. He's quite thin, and looks like he hasn't slept in weeks.]]>
+        </look>
+        <name>
+            <![CDATA[He nods to you. "I am Mayor Leonardo, leader of our tormented little village. It's good to see you."]]>
+        </name>
+        <job>
+            <![CDATA["Before, I worked for the town of Cavala, trying to help our young village grow and prosper. Then the bandits arrived."]]>
+        </job>
+        <unknown>
+            <![CDATA[He coughs. "Sorry? What was that?"]]>
+        </unknown>
+    </personality>
+    <personality id="1">
+        <title>Winslet</title>
+        <look>
+            <![CDATA[This woman strikes you as an eccentric shut-in. Her dress is torn and filthy, and her hair is stringy and filled with twigs and dirt. Yet, the magical paraphernalia scattered around her home indicates that there's more here than meets the eye.]]>
+        </look>
+        <name>
+            <![CDATA[She giggles, an unnerving, irritating sound. "I'm Winslet. Make yourself at home."]]>
+        </name>
+        <job>
+            <![CDATA["Well, I was a mage of great reknown. Then, well, then, well, then things went all funny."]]>
+        </job>
+        <unknown>
+            <![CDATA[She tugs nervously tugs the ends of her hair.]]>
+        </unknown>
+    </personality>
+    <personality id="2">
+        <title>Cameron</title>
+        <look>
+            <![CDATA[You meet Cameron, the town blacksmith. He's working frenetically, repairing weapons, forging spearheads, patching chain mail. Despite the sweltering heat, he's in full armor, and a broadsword hangs at his side.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Cameron." He voice is rough, and he sounds exhausted.]]>
+        </name>
+        <job>
+            <![CDATA["Sorry," he rasps. "I'm very busy, but I'll help you if I can. You can purchase weapons, or sell me your other goods."]]>
+        </job>
+        <unknown>
+            <![CDATA[He pretends to not have heard you.]]>
+        </unknown>
+    </personality>
+    <personality id="3">
+        <title>Ilona</title>
+        <look>
+            <![CDATA[The woman behind this huge, mahogany desk is a compact bundle of annoyance and frustration. As you approach, she's reading and rereading thick reports and ledgers, as if looking for some tiny bit of good news that's eluded her so far.]]>
+        </look>
+        <name>
+            <![CDATA[She looks you over. "I am Ilona. I run the business here."]]>
+        </name>
+        <job>
+            <![CDATA["I run this business. Or, this pitiful wreckage of a business."]]>
+        </job>
+        <unknown>
+            <![CDATA[Your questions are bothering her. "What is this? Please, I'm busy. Don't waste my time."]]>
+        </unknown>
+    </personality>
+    <personality id="4">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="5">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="6">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="7">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="8">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="9">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="0">
+        <keyword>town</keyword>
+        <keyword>cava</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["This is a lovely little town. This area is beautiful, and we have a resource that can make us all wealthy. The only problem, of course, is bandits."]]>
+        </text>
+        <text>
+            <![CDATA["Because of the bandits, few people remain in our town."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>reso</keyword>
+        <keyword>weal</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["This is one of the few areas where Sourgrass can be picked in quantity. In processed form, it's quite a valuable restorative."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>sour</keyword>
+        <keyword>rest</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Best ask Ilona about that."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>band</keyword>
+        <keyword>arri</keyword>
+        <type>if-sdf</type>
+        <param>100</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The bandit attacks started three months ago. So vicious and total were they that soon only a few merchants would dare come here to trade. I have been searching constantly for a way to deal with them."]]>
+        </text>
+        <text>
+            <![CDATA["Well, of course, you have solved our bandit problem, and for that we will be ever grateful. However, other bandits may come, attracted by our growing wealth. We must be ever vigilant."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>tact</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It takes two days for even a swift caravan to leave our valley. When it gets dark, and the caravan has to stop to rest, the bandits attack from all sides. First fireballs, then warriors. Then they return to their hidden lair."]]>
+        </text>
+        <text>
+            <![CDATA["In all of this, there is one thing that puzzles me."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>hidd</keyword>
+        <keyword>lair</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["That is the key problem with our disposing of them. Their lair is hidden, and, despite our best efforts, we can't find it. That is why I would suggest that you first focus on investigating this town."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>inve</keyword>
+        <keyword>town</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You see, there is something very puzzling about our situation."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>succ</keyword>
+        <keyword>puzz</keyword>
+        <type>if-sdf</type>
+        <param>100</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks uncomfortable. "The bandits always know exactly where and when the caravans are leaving, and no concealment, magical or otherwise, has concealed them." His voice lowers to a whisper. "I suspect they have spies inside Cavala."]]>
+        </text>
+        <text>
+            <![CDATA["No matter. The bandits are gone now."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>spie</keyword>
+        <keyword>insi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I suggest speaking with the people remaining in Cavala. Perhaps you will be able to uncover a spy among them. I hope that none of us is a traitor, but, at this point, I am not sure."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>peop</keyword>
+        <keyword>rema</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["There are a few guards, of course. Then there is Ilona, and Cameron, and, of course, Winslet." He shakes his head angrily. "This is maddening. I so wanted to be a good mayor."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>good</keyword>
+        <keyword>mayo</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["So many mayors in the Empire are cut-rate, more interested in lining their own pockets than leading well. I didn't want to be like that!" His whole body tenses with anger and frustration. "So instead, I got to preside over a dying village."]]>
+        </text>
+        <text>
+            <![CDATA["Not what I wanted. Not what I wanted at all."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>ilon</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["She is the businesswoman in charge of harvesting and processing the Sourgrass. The bandits have wounded her efforts, perhaps mortally."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>came</keyword>
+        <keyword>xxxx</keyword>
+        <type>if-sdf</type>
+        <param>0</param>
+        <param>4</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Cameron is the blacksmith. He's been working day and night providing weapons for the guards. In the bandits ever attack here, they'll be sorry."]]>
+        </text>
+        <text>
+            <![CDATA["Curse him! How could he betray us so? So much loss, so many deaths! No punishment could ever be enough."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>wins</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He shrugs. "She's a strange one. She lives in a small house in the northeast corner of town. She's a mage, but she spends more time talking to herself in her hovel than actually helping."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>sear</keyword>
+        <keyword>cons</keyword>
+        <type>if-sdf</type>
+        <param>100</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Searching to no avail. Perhaps you will have more luck. if you ever find any evidence, present it to me. Perhaps I can help with it." He thinks. "That reminds me. The bandits tactics were always the same, and their success was very puzzling."]]>
+        </text>
+        <text>
+            <![CDATA["I don't need to worry about bandits now, of course."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>evid</keyword>
+        <keyword>pres</keyword>
+        <type>call-local</type>
+        <param>24</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[You tell him what you have found so far. "Interesting," he says. "But not useful. Keep searching. You may find a clue which will lead us to the bandits' lair."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>went</keyword>
+        <keyword>funn</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Oh, you know. Bad expiriment. Strange effects. Made my head get a little, little, you know, scattered. Now I just live out here and wander the woods and watch people."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>wand</keyword>
+        <keyword>wood</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I walk out into the trees and talk to the squirrels and such. They don't say much back, but they're good listeners."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>tree</keyword>
+        <keyword>squi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I don't like to talk about the woods now. They're scary. So I stay here and watch people."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>watc</keyword>
+        <keyword>peop</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I watch Ilona, and Leonardo, and even busy, busy Cameron."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>ilon</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["She is very sad. She sells healing stuff, but ..." She forgets what she's talking about. After a minute, she remembers again, and picks up where she left off.]]>
+        </text>
+        <text>
+            <![CDATA["... but her business has hurt a lot lately."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>came</keyword>
+        <keyword>busy</keyword>
+        <type>if-sdf</type>
+        <param>0</param>
+        <param>4</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["He's very busy. I mean, First, he makes lots of weapons all the time to protect our town. Then, even then, he still has time to garden. He takes time to look after his plants."]]>
+        </text>
+        <text>
+            <![CDATA["Well, now Cameron's gone. Saw him run into the woods. He was in a big hurry. He looked scared. I hear he's not a good person. Serves him right."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>gard</keyword>
+        <keyword>plan</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah! Once, I was walking by late at night, and I saw Cameron bending over this plant in his home. He must have been taking care of it. Isn't that nice?"]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>leon</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Hmm. Actually, I don't see him much. He's always holed up in his office, you know."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>mage</keyword>
+        <keyword>rekn</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Well, maybe not that great reknown. Can't really remember. But I do remember some things I did. I trained people, and I taught spells, and even did identification."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>trai</keyword>
+        <keyword>xxxx</keyword>
+        <type>train</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text />
+    </node>
+    <node for="1">
+        <keyword>taug</keyword>
+        <keyword>spel</keyword>
+        <type>shop</type>
+        <param>1</param>
+        <param>6</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Winslet's Spells]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>iden</keyword>
+        <keyword>xxxx</keyword>
+        <type>id</type>
+        <param>4</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She looks over your items, and, over a long period of time, she manages to figure out what they are. "Identification. Only 4 gold an item!"]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>purc</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She thinks. "What did I do? Oh, yeah! I trained, and taught spells, and even did identification!"]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>busy</keyword>
+        <keyword>help</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I think, with no caravans anymore, it won't be long before the bandits raid here. I'm getting us ready. All the citizens here are trying their best."]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>citi</keyword>
+        <keyword>tryi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He stops working for a moment. "Hmm. Who's left? Oh, yeah. Ilona, and Leonardo, and Winslet. That's who's left." Satisfied he's remembered everyone, he returns to work.]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>ilon</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["She sells the healing potions to the caravans to take back. She always complains about how little she makes on each potion, but she's a good person, I think."]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>leon</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["He's trying his best to help, but he's out of his league, you know. A peacetime mayor, not a wartime mayor. But, I guess, that's why you're here."]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>wins</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He frowns. "Not sure about her. I don't think she's as scattered as she asks, and she's always walking off into the woods at all hours. And I saw her the other day with a bag of gold coins. Ask her about that!"]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>gold</keyword>
+        <keyword>coin</keyword>
+        <type>end-force</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She looks uncomfortable. "Yes, I have some gold, from my days as a mage. I buy food with it, yes?" She turns away. Your question seems to have bothered her.]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>walk</keyword>
+        <keyword>wood</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Winslet is always walking out into the woods. Bugs me. Doesn't she know there are bandits out there?"]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>purc</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>4</param>
+        <param>7</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Cameron's Weapons]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>sell</keyword>
+        <keyword>xxxx</keyword>
+        <type>sell-any</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Thanks," he says. We really need supplies of all sorts these days. He makes an offer for all of your identified items.]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>busi</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We harvest Sourgrass from the nearby forest. Then we boil it down to make Hrras juice. Then caravans, sometimes, haul it to civilization."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>sour</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It's a stringy, delicate plant. Really hard to find. For some reason, it grows naturally here. Go figure."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>hrra</keyword>
+        <keyword>juic</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It acts as a sort of a weak healing potion. Cut-rate magical healing for the masses, you know. It's an old Nephilim recipe."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>neph</keyword>
+        <keyword>reci</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["This valley is called Mrrnah hollow. Mrrnah is a Nephilim word. Safety, I think. Nephilim use to live here, before the Empire obligingly wiped them out for us. Now the hollow, and all its sourgrass, is ours."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>cara</keyword>
+        <keyword>civi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Thanks to the bandits, we haven't seen any caravans for a long time. It's killing our business. They're dirty gougers, but I need them."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>dirt</keyword>
+        <keyword>goug</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The merchants buy the Hrras Juice from us, and they're always haggling with us to lower the price. We make one deal, and then they wiggle out of it to make another. Makes me furious!"]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>safe</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She chuckles. "Of course, it wasn't too safe for the Nephilim. Tough luck."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>piti</keyword>
+        <keyword>wrec</keyword>
+        <type>if-sdf</type>
+        <param>100</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The bandits are costing me everything. I keep counting on the people here to do something about it, but they're all useless so far."]]>
+        </text>
+        <text>
+            <![CDATA["It will take a while to recover now that the bandits are gone. Still, there's hope now. I thank you for that. Now, I'd better get back to work."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>peop</keyword>
+        <keyword>usel</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Hardly anyone is left. Nobody competent. There's Mayor Leonardo left. And Cameron, thanks Heavens. And that weird mage."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>weir</keyword>
+        <keyword>mage</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Don't know anything about her. She just spends all of her time wandering around, muttering. No time for any of that nonsense. I mean I have no time. You know."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>mayo</keyword>
+        <keyword>leon</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["He's trying his best. I just wish he was the least bit competent. And I wish he spend less time holed up in city hall."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>city</keyword>
+        <keyword>hall</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Get out among the people! You know! Lead personally! I mean, what's he doing in there?"]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>came</keyword>
+        <keyword>xxxx</keyword>
+        <type>if-sdf</type>
+        <param>0</param>
+        <param>4</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Now, Cameron I can respect! Always working, trying his best to improve the situation! Be sure to talk to him. Lots of common sense, that one."]]>
+        </text>
+        <text>
+            <![CDATA["Cameron was responsible for the bandits. I knew it all along."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>rune</keyword>
+        <keyword>plat</keyword>
+        <type>call-local</type>
+        <param>30</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Don't know anything about that. What runed plate?"]]>
+        </text>
+    </node>
+</dialogue>

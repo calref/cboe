@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>32</size>
+    <name>Unicorn Gate</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="3" bottom="28" right="31" />
+    <difficulty>0</difficulty>
+    <lighting>lit</lighting>
+    <exit dir="n" x="7" y="27" />
+    <exit dir="s" x="7" y="31" />
+    <flags />
+    <item id="0">
+        <type>24</type>
+    </item>
+    <item id="1">
+        <type>24</type>
+    </item>
+    <item id="2">
+        <type>23</type>
+    </item>
+    <item id="3">
+        <type>23</type>
+    </item>
+    <item id="4">
+        <type>23</type>
+    </item>
+    <item id="5">
+        <type>162</type>
+    </item>
+    <item id="6">
+        <type>110</type>
+    </item>
+    <item id="7">
+        <type>21</type>
+    </item>
+    <item id="8">
+        <type>22</type>
+    </item>
+    <item id="9">
+        <type>178</type>
+    </item>
+    <item id="10">
+        <type>224</type>
+    </item>
+    <creature id="0">
+        <type>129</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="1">
+        <type>129</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="2">
+        <type>129</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="3">
+        <type>129</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="4">
+        <type>79</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="5">
+        <type>79</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="6">
+        <type>79</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="7">
+        <type>79</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="8">
+        <type>79</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="9">
+        <type>79</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="10">
+        <type>79</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[The air in here is clean and fresh, and the walls glow with their own soft luminescence. Although it is a lovely place, this gate house is still rather effectively blocking your progress down this passage.]]>
+    </string>
+    <string id="1">
+        <![CDATA[The gates in the walls are also glowing. However, the glow has a slightly more red, harsher tone. You touch the bars ... they're hot. They'll probably be difficult to open, if not impossible.]]>
+    </string>
+    <string id="2">
+        <![CDATA[The gates in the walls are also glowing. However, the glow has a slightly more red, harsher tone. When you get close, the amber charm the unicorns gave you begins to glow. The gates open smoothly, allowing you to pass.]]>
+    </string>
+    <string id="3">
+        <![CDATA[The amber charm begins to glow again. The gates open.]]>
+    </string>
+    <string id="4">
+        <![CDATA[The unicorns have created a beautiful garden inside this dome. An artificial, magical sun floats above you, shining cheerily down onto the grass and trees. How the unicorns got the seeds, you can't guess, but what they've done with them is remarkable.]]>
+    </string>
+    <string id="5">
+        <![CDATA[The air is so invigorating and the grove is so pleasant that resting here would be a lot calmer and healthier that resting outside.]]>
+    </string>
+    <string id="10">
+        <![CDATA[You lie down on the grass and sleep very well. When you wake up, for a few moments, you believe that you're on the surface again. Then you remember where you are, and your spirits fall again.]]>
+    </string>
+</town>

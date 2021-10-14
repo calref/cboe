@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Dark Maze</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>100</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>136</monster>
+        <monster>0</monster>
+        <monster>136</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>3</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>178</monster>
+        <monster>181</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>179</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <wandering can-flee="false" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>178</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="false" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>179</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="false" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>100</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>73</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <area top="27" left="6" bottom="31" right="8">Outside Unicorn Gate</area>
+    <string id="0">
+        <![CDATA[You start to enter this large cavern and immediately back away. It's filled with snakes! And not just small snakes either, but huge ones, fifteen feet long, with massive fangs dripping poison.]]>
+    </string>
+    <string id="1">
+        <![CDATA[If you entered, they might let you by unharmed. But probably not.]]>
+    </string>
+    <string id="6">
+        <![CDATA[Sure enough, the moment you enter the cavern, the snakes rise up as one and start slithering towards you. The synchronized behavior is bizarre, until you notice that several of the snakes are unusually large. And have human heads.]]>
+    </string>
+    <string id="7">
+        <![CDATA[The serpents didn't have much in the way of useful treasure. You are, fortunately, able to tap some nice weapon poison from their massive fangs.]]>
+    </string>
+    <string id="8">
+        <![CDATA[You notice an unusually large number of shedded lizard scales on the ground.]]>
+    </string>
+    <string id="9">
+        <![CDATA[Ahead of you, you see several lizards peek their heads around the corner. Then you realize that there's not several lizards there, but, in fact, only a few. They just have a lot of heads each.]]>
+    </string>
+    <string id="10">
+        <![CDATA[You feel a slight draft. It's not moist and cool, as expected. Instead, it's warm, and there is a hint of sulphur in the air. As you look around to see where the sulphur came from, you hear a roar. There are hydras nearby.]]>
+    </string>
+    <string id="11">
+        <![CDATA[You try to avoid them, but their many heads give the creatures an acute sense of smell. They soon find you.]]>
+    </string>
+    <string id="12">
+        <![CDATA[You stand at the entrance to a maze of twisty, winding passages, all alike.]]>
+    </string>
+    <string id="13">
+        <![CDATA[The tunnels are unusually narrow and winding, even for Exile. The glowing roof fungus is very sparse, and the floor is very uneven. These tunnels will probably be difficult to navigate.]]>
+    </string>
+    <string id="18">
+        <![CDATA[Exile has many thousands of small, natural pools and springs. Many of those are thought to have magical properties.]]>
+    </string>
+    <string id="19">
+        <![CDATA[Few, however, flaunt their magical nature are much as this tiny pool. The water has many small chips of mica suspended in it, which flicker and catch the light, and the air around the pool has the pronounced smell of mint.]]>
+    </string>
+    <string id="20">
+        <![CDATA[These pools are often beneficial. Sometimes, however, they aren't.]]>
+    </string>
+    <string id="24">
+        <![CDATA[You take deep swigs of the water. It makes you feel pleasantly energized. Even in the middle of this dark, alarming maze, you manage to feel somewhat relaxed.]]>
+    </string>
+    <string id="89">
+        <![CDATA[*End of special strs]]>
+    </string>
+</sector>

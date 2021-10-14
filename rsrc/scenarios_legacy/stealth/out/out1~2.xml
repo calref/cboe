@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Near Selathni</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>133</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>2</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>18</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>19</monster>
+        <monster>0</monster>
+        <monster>28</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>11</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>118</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>119</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>17</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>18</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>19</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>99</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>100</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <sign id="0">
+        <![CDATA[Willow - 20 miles east|Liam - 35 miles east|Fahl - 60 miles north]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[Don't be stupid! Watch out for rebels! Travel in groups!|Helpful Empire Message HEM104H]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[Don't be stupid! Watch out for rebels! Travel in groups!|Helpful Empire Message HEM104H]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[Zaskiva, Muck - north]]>
+    </sign>
+    <sign id="4">
+        <![CDATA[Don't be stupid! Watch out for rebels! Travel in groups!|Helpful Empire Message HEM104H]]>
+    </sign>
+    <area top="10" left="18" bottom="13" right="24">Near Selathni</area>
+    <area top="5" left="11" bottom="13" right="28">Farmlands Around Selathni</area>
+    <area top="33" left="12" bottom="39" right="19">Gooey Fen</area>
+    <area top="20" left="40" bottom="37" right="46">Farmlands</area>
+    <string id="0">
+        <![CDATA[As you enter the countryside of Morrow's Isle, you idly put your hand in your pocket. There's something unfamiliar there! You pull it out. It's a piece of paper. (A special item. To see it, click on the 'Spec' button on the items screen.)]]>
+    </string>
+    <string id="1">
+        <![CDATA[You read it. It says 'The rebellion needs help. We can reward you well. Go to Canizares, in the town of Liam. Say 'Invisible' to him. He will tell you of us. Fight for justice!']]>
+    </string>
+    <string id="2">
+        <![CDATA[The slugs dead, you wade through the acidic goo surrounding their lair, looking for loot. Most of their victims' possessions have either dissolved or sunk into the swampy mire.]]>
+    </string>
+    <string id="3">
+        <![CDATA[You do find one interesting thing. It's a halberd, which someone has placed up in the branches of a gnarled tree. It's still in decent condition.]]>
+    </string>
+    <string id="4">
+        <![CDATA[In the far corner of this grim fen, you find a large depression. You could climb down into it, although it would be tricky. After all, everything is covered with a thin layer of smelly, viscous goo.]]>
+    </string>
+    <string id="10">
+        <![CDATA[Probably a wise idea. Some things are better left alone. Especially gooey things.]]>
+    </string>
+    <string id="11">
+        <![CDATA[You make your gooey way down into the hollow. At first, the huge piles of bilious muck and goo make you think you've just found a large, abandoned trash pit. Then the piles of goo start to move!]]>
+    </string>
+    <string id="12">
+        <![CDATA[You find an isolated cluster of farmhouses, surrounded by a low, stone wall. You see some people working in and around it. When they catch sight of you, they shout to each other, and huddle nervously. Some have weapons.]]>
+    </string>
+    <string id="18">
+        <![CDATA[As you walk up, two of the farmers, each wielding a rusty broadsword, approach and greet you. In a brief, unhelpful conversation, they convey to you their nervousness with strangers in these troubled times, and the perceived extreme danger from rebels.]]>
+    </string>
+    <string id="19">
+        <![CDATA[When it becomes clear there's no help for you here, you depart.]]>
+    </string>
+    <string id="24">
+        <![CDATA[You find an isolated cluster of farmhouses, surrounded by a low, stone wall. You see some people working in and around it. When they catch sight of you, they shout to each other, and huddle nervously. Some have weapons.]]>
+    </string>
+    <string id="30">
+        <![CDATA[As you walk closer, you realize that the number of weapons visible is increasingly rapidly. You also notice that these "farmers" are wearing leather jerkins, and other sorts of non-agrarian oriented armor items.]]>
+    </string>
+    <string id="31">
+        <![CDATA[It would appear you've interrupted a particularly industrious group of brigands ...]]>
+    </string>
+    <string id="36">
+        <![CDATA[The brigands slain, you investigate the farmhouses. Fortunately, you arrived in time. You find the residents inside, tightly bound. After freeing them and receiving many heartfelt thanks and a few apple pies, you loot the bandits' bodies.]]>
+    </string>
+    <string id="37">
+        <![CDATA[They've had a so-so career. You find a fair amount of gold, but their armor and weapons are sub par. Only the mage's robes are of high quality. You help yourselves, and, after receiving many hugs and flowers from the farmers, you depart.]]>
+    </string>
+    <string id="42">
+        <![CDATA[(You later find that the apple pies are very tasty.)]]>
+    </string>
+    <string id="43">
+        <![CDATA[You stumble upon the remains of a small skirmish. The grass has been scorched by fireballs, and broken arrows and reddish brown stains mar the ground.]]>
+    </string>
+    <string id="44">
+        <![CDATA[Wandering through these lush, grassy fields, you can't help but notice how rich the land on the island is. The potential wealth here, for someone determined to work it hard, is considerable.]]>
+    </string>
+    <string id="45">
+        <![CDATA[And you've only seen a small part of Morrow's Isle. You're starting to see why people are so determined to fight over this place.]]>
+    </string>
+    <string id="46">
+        <![CDATA[Oh, no! Spiders! The mean kind!]]>
+    </string>
+    <string id="52">
+        <![CDATA[Phew! That was close!]]>
+    </string>
+    <string id="89">
+        <![CDATA[*End of special strs]]>
+    </string>
+</sector>

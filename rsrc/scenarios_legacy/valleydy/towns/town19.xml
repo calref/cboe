@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>32</size>
+    <name>Small Cave</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="3" bottom="28" right="28" />
+    <difficulty>0</difficulty>
+    <lighting>lit</lighting>
+    <flags>
+        <hidden>true</hidden>
+    </flags>
+    <item id="0">
+        <type>20</type>
+    </item>
+    <item id="1">
+        <type>21</type>
+    </item>
+    <item id="2">
+        <type>24</type>
+    </item>
+    <item id="3">
+        <type>98</type>
+    </item>
+    <item id="4">
+        <type>19</type>
+    </item>
+    <item id="5">
+        <type>0</type>
+        <charges>224</charges>
+        <contained>true</contained>
+    </item>
+    <item id="6">
+        <type>45</type>
+        <contained>true</contained>
+    </item>
+    <item id="7">
+        <type>53</type>
+        <contained>true</contained>
+    </item>
+    <item id="8">
+        <type>173</type>
+        <contained>true</contained>
+    </item>
+    <item id="9">
+        <type>170</type>
+        <contained>true</contained>
+    </item>
+    <item id="10">
+        <type>2</type>
+        <charges>4</charges>
+        <contained>true</contained>
+    </item>
+    <item id="11">
+        <type>3</type>
+        <charges>5</charges>
+        <contained>true</contained>
+    </item>
+    <item id="12">
+        <type>0</type>
+        <charges>93</charges>
+        <contained>true</contained>
+    </item>
+    <item id="13">
+        <type>32</type>
+        <contained>true</contained>
+    </item>
+    <item id="14">
+        <type>33</type>
+        <contained>true</contained>
+    </item>
+    <item id="15">
+        <type>20</type>
+    </item>
+    <item id="16">
+        <type>22</type>
+    </item>
+    <item id="17">
+        <type>19</type>
+    </item>
+    <item id="18">
+        <type>13</type>
+    </item>
+    <item id="19">
+        <type>16</type>
+    </item>
+    <item id="20">
+        <type>31</type>
+    </item>
+    <item id="21">
+        <type>385</type>
+        <charges>6</charges>
+    </item>
+    <creature id="0">
+        <type>150</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>50</face>
+        <sdf x="19" y="1" />
+    </creature>
+    <creature id="1">
+        <type>150</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>50</face>
+        <sdf x="19" y="2" />
+    </creature>
+    <creature id="2">
+        <type>150</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>50</face>
+        <sdf x="19" y="3" />
+    </creature>
+    <area top="5" left="10" bottom="10" right="17">Troglodyte Lair</area>
+    <area top="9" left="4" bottom="12" right="7">Trash Pit</area>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[You doubtthat  the troglodytes would leave a treasure chest here without some sort of nice, nasty trap on it ...]]>
+    </string>
+    <string id="1">
+        <![CDATA[This tunnel was a lot longer than it seemed at first ... it wound uphill for what must have been at least a mile. Fortunately, the School's magical lights were placed at frequent intervals along the path.]]>
+    </string>
+    <string id="2">
+        <![CDATA[At last, you've reached the far end of it, and see light ahead. The air also seems fresher ... this must be the School's back exit.]]>
+    </string>
+    <string id="3">
+        <![CDATA[The passage to the east slopes downward for quite a long way. The School's magical lights are placed at frequent intervals. Wherever the corridor leads, it's not near here.]]>
+    </string>
+</town>

@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="60">
+        <title>Zulli</title>
+        <look>
+            <![CDATA[This is one of the commanders of the large garrison stationed here at Zaskiva. Although the soldiers are constantly patrolling the place, he seems to feel he can spend a minute talking to you.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Captain Zulli. How may I help you?"]]>
+        </name>
+        <job>
+            <![CDATA["I'm doing what I do just about all the time," he says wearily. "Patrolling the city. Do you have anything suspicious to report?"]]>
+        </job>
+        <unknown>
+            <![CDATA[He shrugs.]]>
+        </unknown>
+    </personality>
+    <personality id="61">
+        <title>Stan</title>
+        <look>
+            <![CDATA[This man is pretty young for a mage. He looks to be still an apprentice, and yet he's busily writing spell scrolls, which is usually a task only attempted by more experienced magicians. Impressive.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Stan. Stan the mage. Hi."]]>
+        </name>
+        <job>
+            <![CDATA["Oh, I don't know. Just keeping busy making scrolls. It's just how I keep busy until the School reopens."]]>
+        </job>
+        <unknown>
+            <![CDATA["Huh? What?"]]>
+        </unknown>
+    </personality>
+    <personality id="62">
+        <title>Kenny</title>
+        <look>
+            <![CDATA[The hall of statues is guarded by a small soldier in ridiculously excessive armor. He can barely move, with all the plate covering him, and the slit on his helmet is so small it's a wonder he can breathe.]]>
+        </look>
+        <name>
+            <![CDATA["Mmmm, mmnmmm," he responds. You can't tell what he's saying with the heavy helmet he's wearing. Fortunately, the words "Hi. I'm Kenny." are etched into the breastplate.]]>
+        </name>
+        <job>
+            <![CDATA["Mmmm. Mmmmm, mmnmmmm." He thinks. "Mmmmm."]]>
+        </job>
+        <unknown>
+            <![CDATA["Mmmnmm. Mmmmm?"]]>
+        </unknown>
+    </personality>
+    <personality id="63">
+        <title>Cartman</title>
+        <look>
+            <![CDATA[This is one really, really, big, really, really sweaty guy. He's bustling busily around his smithy, trying to keep up with all the work he has to do.]]>
+        </look>
+        <name>
+            <![CDATA["What? Oh, uh, hi. I'm Cartman."]]>
+        </name>
+        <job>
+            <![CDATA["Me? Oh, uh, I'm making stuff, so we can kill the rebels faster."]]>
+        </job>
+        <unknown>
+            <![CDATA[He mumbles something under his breath.]]>
+        </unknown>
+    </personality>
+    <personality id="64">
+        <title>Maya</title>
+        <look>
+            <![CDATA[This mage looks reluctantly up from her book when you approach.]]>
+        </look>
+        <name>
+            <![CDATA[She sighs, resigned to dealing with your intrusion on her life of the mind. "I'm Maya."]]>
+        </name>
+        <job>
+            <![CDATA["I'm formerly of the School of Magery in Zaskiva. Now, I just study."]]>
+        </job>
+        <unknown>
+            <![CDATA["I haven't the foggiest idea what you're talking about."]]>
+        </unknown>
+    </personality>
+    <personality id="65">
+        <title>Kaley</title>
+        <look>
+            <![CDATA[This weary woman looks like she's traveled a long way. She's eating a thin bowl of soup, and looks like she trying to make it last a while.]]>
+        </look>
+        <name>
+            <![CDATA[She looks up from her soup. "I'm Kaley."]]>
+        </name>
+        <job>
+            <![CDATA["I'm a swamp worker. Well, that's normally what I am. I've traveled here to see Lord Volpe."]]>
+        </job>
+    </personality>
+    <personality id="66">
+        <title>Helena</title>
+        <look>
+            <![CDATA[You don't think you'll get much time from this innkeeper. People are constantly coming in and out, asking for food, demanding rooms, and just generally making her life hell.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Helena," she says, while brushing by you to give someone some ale.]]>
+        </name>
+        <job>
+            <![CDATA["We have some rations. Not much. Drinks are five gold. And some room in the common room just opened up. 2 gold. Pick your poison." She runs off to wipe up a spill, and returns to you.]]>
+        </job>
+        <unknown>
+            <![CDATA["Look, I'm busy, OK?"]]>
+        </unknown>
+    </personality>
+    <personality id="67">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="68">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="69">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="60">
+        <keyword>susp</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Have you seen anything peculiar?" You say you haven't. "Be sure to keep your eyes open. You citizens are our greatest tool in keeping Zaskiva safe from rebel scum."]]>
+        </text>
+    </node>
+    <node for="60">
+        <keyword>patr</keyword>
+        <keyword>city</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It's tough work. We have to be alert every moment of every day. One moment's distraction can mean complete disaster." You hear a sigh from inside his helmet. "Of course, every soldier carries around a bushel of distractions."]]>
+        </text>
+    </node>
+    <node for="60">
+        <keyword>bush</keyword>
+        <keyword>dist</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[You almost think he's blushing inside his helmet. "Me, I have Madeleine. She's a soldier, like me, but I haven't seen her in some time. She's stationed in Willow. I can't even get a letter to her from here."]]>
+        </text>
+    </node>
+    <node for="60">
+        <keyword>made</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["She's radiant beyond belief. Thoughts of her are very distracting indeed. Things would be much easier for me if I could just get one letter from her."]]>
+        </text>
+    </node>
+    <node for="60">
+        <keyword>lett</keyword>
+        <keyword>xxxx</keyword>
+        <type>call-local</type>
+        <param>26</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yes. One letter would be wonderful. Ah, well. We will just have to wait until this cursed war is over, I guess."]]>
+        </text>
+    </node>
+    <node for="61">
+        <keyword>maki</keyword>
+        <keyword>scro</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah. They want me here making scrolls to use against the fight against the rebels. All my friends are here, doing useful things to help." He looks at you conspiratorially. "Of course, if you wanted to purchase some firepower on the side, I could help."]]>
+        </text>
+    </node>
+    <node for="61">
+        <keyword>purc</keyword>
+        <keyword>fire</keyword>
+        <type>shop</type>
+        <param>4</param>
+        <param>21</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Stan's Scrolls]]>
+        </text>
+    </node>
+    <node for="61">
+        <keyword>frie</keyword>
+        <keyword>usef</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["My two friends here are Cartman and Kenny."]]>
+        </text>
+    </node>
+    <node for="61">
+        <keyword>cart</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Cartman's sort of a jerk, but he's my friend, in an 'I don't like him.' sort of way. He's a blacksmith, across town."]]>
+        </text>
+    </node>
+    <node for="61">
+        <keyword>kenn</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Kenny is the guard for the hall of statues. Its a sort of a memorial or something. They say it needs to be guarded all the time, but I don't see why."]]>
+        </text>
+        <text>
+            <![CDATA["Kenny's sort of hard to understand if you don't know him, but he's nice. If you asked him about the statues, I'm sure he'd let you see them."]]>
+        </text>
+    </node>
+    <node for="61">
+        <keyword>scho</keyword>
+        <keyword>reop</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah. I was going to the School of Magery, but it got closed so all the mages could be taken away and fight. I got off, but only because I make scrolls real good. Sort of a talent. Nice penmanship, I guess."]]>
+        </text>
+    </node>
+    <node for="61">
+        <keyword>penm</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah. If you write a spell scroll wrong, even just a tiny bit, boom!"]]>
+        </text>
+    </node>
+    <node for="62">
+        <keyword>mmmm</keyword>
+        <keyword>mmnm</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Mmmmnmmm? Mmmmmnnn." Every time you think you can almost make out what he says, it slips away from you.]]>
+        </text>
+    </node>
+    <node for="62">
+        <keyword>mmmn</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Mmmmmm! Mmmmmmmm!"]]>
+        </text>
+    </node>
+    <node for="62">
+        <keyword>stat</keyword>
+        <keyword>hall</keyword>
+        <type>call-global</type>
+        <param>3</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Mmmn? Mmmmmm!" He pulls a key from his pouch, and unlocks the door to the hall of statues.]]>
+        </text>
+    </node>
+    <node for="63">
+        <keyword>kill</keyword>
+        <keyword>rebe</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I hate the rebels! I hope they all get shot with arrows and die." He mimes an arrow shooting motion. "That's why I make armor. My friends do stuff too, but not as good."]]>
+        </text>
+    </node>
+    <node for="63">
+        <keyword>frie</keyword>
+        <keyword>good</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["My friends are Stan and Kenny. They're wimps."]]>
+        </text>
+    </node>
+    <node for="63">
+        <keyword>stan</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He scratches a huge, moist arm. "Stan? He just sits inside all day and works on his girly scrolls."]]>
+        </text>
+    </node>
+    <node for="63">
+        <keyword>kenn</keyword>
+        <keyword>stat</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Kenny just guards statues. Statues! That's stupid. If you ask him about his statues, he'll let you see them. They're stupid too."]]>
+        </text>
+    </node>
+    <node for="63">
+        <keyword>stat</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Don't ask me, stupid. Ask Kenny! He's the one who cares."]]>
+        </text>
+    </node>
+    <node for="63">
+        <keyword>stuf</keyword>
+        <keyword>armo</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yeah! Armor! It kicks! If you want to find out how good it is, you can purchase some."]]>
+        </text>
+    </node>
+    <node for="63">
+        <keyword>purc</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>5</param>
+        <param>22</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Cartman's Armor]]>
+        </text>
+    </node>
+    <node for="64">
+        <keyword>zask</keyword>
+        <keyword>xxxx</keyword>
+        <type>if-town</type>
+        <param>6</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yes. I'd gladly be somewhere else, but they won't let me leave. The movements of all mages are tightly controlled."]]>
+        </text>
+        <text>
+            <![CDATA["Yes. Boy, was I ever glad to get out of there. Fortunately, someone took care of Volpe once and for all. Buzzard is a lot easier to live in."]]>
+        </text>
+    </node>
+    <node for="64">
+        <keyword>volp</keyword>
+        <keyword>xxxx</keyword>
+        <type>if-town</type>
+        <param>6</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She smiles ironically. "A great man. A model of behavior for us all."]]>
+        </text>
+        <text>
+            <![CDATA["I'm not going to pretend to like the man. I'm glad he's dead."]]>
+        </text>
+    </node>
+    <node for="64">
+        <keyword>scho</keyword>
+        <keyword>mage</keyword>
+        <type>if-town</type>
+        <param>6</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It's closed for business. I was just left here to look after it. All mages capable of serving in any capacity were press ganged to fight the rebels. The ones who didn't join the rebels, that is. Apprentices on the front lines. Ridiculous."]]>
+        </text>
+        <text>
+            <![CDATA["It's closed for business, probably permanently now. All mages capable of serving in any capacity were press ganged to fight the rebels, and the empty school was heavily damaged by the explosion in Zaskiva, the one that killed Volpe."]]>
+        </text>
+    </node>
+    <node for="64">
+        <keyword>just</keyword>
+        <keyword>stud</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["What I study is none of your business. Of course, to make ends meet I do a little teaching to keep myself in books to read."]]>
+        </text>
+    </node>
+    <node for="64">
+        <keyword>book</keyword>
+        <keyword>read</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["What few books Volpe doesn't censor are awful expensive."]]>
+        </text>
+    </node>
+    <node for="64">
+        <keyword>teac</keyword>
+        <keyword>purc</keyword>
+        <type>shop</type>
+        <param>4</param>
+        <param>23</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Maya's Spells]]>
+        </text>
+    </node>
+    <node for="64">
+        <keyword>buzz</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I've always sympathized with the rebels. Now, I'm one of them. Big improvement."]]>
+        </text>
+    </node>
+    <node for="65">
+        <keyword>swam</keyword>
+        <keyword>work</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Have you ever been to Muck? It's a terrible place. They work us so hard, and there's so much disease, and little food. That's why I've come to see Lord Volpe."]]>
+        </text>
+    </node>
+    <node for="65">
+        <keyword>lord</keyword>
+        <keyword>volp</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I'm sure when Lord Volpe finds out how hard things are in the swamps, he'll do something to help us. That's why I traveled here. I'm just having trouble getting permission to see him."]]>
+        </text>
+    </node>
+    <node for="65">
+        <keyword>trav</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It took all the money I had to get here. The soldiers charged me tolls to use the roads." She looks ashamed. "Do you think you could give me a few gold? To get home?"]]>
+        </text>
+    </node>
+    <node for="65">
+        <keyword>give</keyword>
+        <keyword>gold</keyword>
+        <type>buy-info</type>
+        <param>5</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[You give her a few gold. Her face lights up. "Thank you so much! What a good omen! Lord Volpe will see me soon for sure!"]]>
+        </text>
+        <text>
+            <![CDATA[She looks at your empty purse. "No, never mind. You're worse off than me."]]>
+        </text>
+    </node>
+    <node for="65">
+        <keyword>trou</keyword>
+        <keyword>perm</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["They say he's busy. Every day, it's busy, busy, busy. But I will see him!" She looks you over. "Wait! You're adventurers! You have power. If you see him, could you do me a favor?"]]>
+        </text>
+    </node>
+    <node for="65">
+        <keyword>just</keyword>
+        <keyword>xxxx</keyword>
+        <type>end-force</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She looks alarmed at what she's been saying. "I'd better stop talking. People will think I'm a rebel, and I'll be in all sorts of trouble. I'm not. All we want is food." She turns back to her soup.]]>
+        </text>
+    </node>
+    <node for="65">
+        <keyword>adve</keyword>
+        <keyword>favo</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["When you talk to him, just mention my name to him. That might get me in to see him." She suddenly gets very angry, long suppressed fury slowly bubbling to the surface. "He must be told how things are in the swamps! I want justice! We demand justice!"]]>
+        </text>
+    </node>
+    <node for="66">
+        <keyword>rati</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>5</param>
+        <param>24</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Buying Rations]]>
+        </text>
+    </node>
+    <node for="66">
+        <keyword>comm</keyword>
+        <keyword>room</keyword>
+        <type>inn</type>
+        <param>2</param>
+        <param>1</param>
+        <param>5</param>
+        <param>42</param>
+        <text>
+            <![CDATA[She points at the door to the filthy, overcrowded common room. "Over there." You go, force people to give you room, and spend the longest night you've ever spent.]]>
+        </text>
+        <text>
+            <![CDATA[You don't have the gold.]]>
+        </text>
+    </node>
+    <node for="66">
+        <keyword>purc</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Room, rations, or drinks?"]]>
+        </text>
+    </node>
+    <node for="66">
+        <keyword>drin</keyword>
+        <keyword>xxxx</keyword>
+        <type>buy-info</type>
+        <param>5</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[You buy some ridiculously watered down ale. "Sorry it's a bit weak," Helena says. "Can't get new supplies. Everything's blockaded."]]>
+        </text>
+        <text>
+            <![CDATA[You don't have the gold.]]>
+        </text>
+    </node>
+    <node for="66">
+        <keyword>bloc</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["That's why things are so busy," she says while helping someone else out. "People are having a real hard time getting in and out of the city. Especially out. Need to file paperwork to leave. So everyone stays, while the paperwork moves. Slowly."]]>
+        </text>
+        <text>
+            <![CDATA["It's a pain, but there's no point in arguing with the empire."]]>
+        </text>
+    </node>
+</dialogue>

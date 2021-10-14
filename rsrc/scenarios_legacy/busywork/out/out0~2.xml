@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Mrrnah Hollow</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>115</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>116</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>10</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>115</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>117</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <sign id="0">
+        <![CDATA[WELCOME TO MRRNAH HOLLOW|Cavala - 20 miles north]]>
+    </sign>
+    <area top="36" left="19" bottom="46" right="27">Near Valley Entrance</area>
+    <area top="28" left="28" bottom="30" right="30">By Small Hut</area>
+    <string id="0">
+        <![CDATA[The road to the south leads up and out of Mrrnah Hollow. If you've completed your investigation to your satisfaction, you can leave now. Are you done here?]]>
+    </string>
+    <string id="6">
+        <![CDATA[You return to Krizsan and tell the commander there of your failure to complete your mission. Needless to say, you receive no reward. The commander dismisses you curtly, and sets to work finding a new group of adventurers to send.]]>
+    </string>
+    <string id="7">
+        <![CDATA[Oh well. Sometimes, failing an adventure means the end of the world . This time, it just means someone else will finish it. Not a problem. You ride off, looking for new things to try.|The end.]]>
+    </string>
+    <string id="8">
+        <![CDATA[You leave the valley triumphantly and return to Krizsan, where the commander is very happy to see you. Your mission was a complete success: the bandits are dead, and citizens are already returning to Cavala.]]>
+    </string>
+    <string id="9">
+        <![CDATA[The commander gives you your well-earned reward: a thousand gold pieces and a beautifully made short sword. After receiving a few more accolades, you move on. There are more adventures to be had!]]>
+    </string>
+    <string id="10">
+        <![CDATA[Sure, you didn't save the world, but there's still plenty of satisfaction in a small job done quickly and well. You may not have had the scale, but you had the craftsmanship.]]>
+    </string>
+    <string id="11">
+        <![CDATA[THE END]]>
+    </string>
+    <string id="14">
+        <![CDATA[You stumble upon a small, well hidden supply cache! You can't be sure whether it was left here by the bandits ... a careful search reveals no sign of who left these supplies here.]]>
+    </string>
+    <string id="15">
+        <![CDATA[There are several bags of food and a small bottle. The bottle is labeled 'Hrras Juice'. Hrras Juice is the Hollow's lead export - a sour drink with mild healing properties.]]>
+    </string>
+    <string id="16">
+        <![CDATA[All of the stuff is fresh. The cache is probably fairly new. It may well have been left by the bandits.]]>
+    </string>
+    <string id="20">
+        <![CDATA[You find the wolves lair nearby and soon figure out why they were so aggresive. The lair is filled with humanoid bones, all well gnawed. These wolves have feasted wel on the bandits' leavings.]]>
+    </string>
+    <string id="21">
+        <![CDATA[Unfortunately, there is no treasure among the grisly remains.]]>
+    </string>
+    <string id="22">
+        <![CDATA[Hiking up into these hills, you hear the distant howling of wolves.]]>
+    </string>
+    <string id="23">
+        <![CDATA[Wolves start appearing on the crags above you. They watch you intently as you march. Then they run off. You don't worry. Wolves aren't uncommon in the wilds, and they almost never actually attack humans.]]>
+    </string>
+    <string id="24">
+        <![CDATA[These wolves are different, however. The whole pack is waiting for you as you turn to march back down. They aren't the least bit nervous about humans. They attack.]]>
+    </string>
+    <string id="25">
+        <![CDATA[In the middle of this small copse of trees, you see what looks like the site of a recent combat.]]>
+    </string>
+    <string id="31">
+        <![CDATA[You were right. There was a fight here recently. Blood stains are still visible on the ground. The tracks lead you to guess that a caravan was attacked here recently. They were camped here when they were ambushed.]]>
+    </string>
+    <string id="32">
+        <![CDATA[Most of the tracks leading away have faded by now, and everything of value was stripped away. Unfortunately, you don't find any signs of who the bandits were or where they came from.]]>
+    </string>
+    <string id="89">
+        <![CDATA[*End of special strs]]>
+    </string>
+</sector>

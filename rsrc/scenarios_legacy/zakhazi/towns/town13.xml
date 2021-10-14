@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>32</size>
+    <name>Kimzahn&apos;s Caldera</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="1" left="3" bottom="28" right="30" />
+    <difficulty>4</difficulty>
+    <lighting>lit</lighting>
+    <onenter condition="alive">2</onenter>
+    <onenter condition="dead">2</onenter>
+    <flags />
+    <item id="0">
+        <type>3</type>
+        <charges>26</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="1">
+        <type>54</type>
+        <property>true</property>
+    </item>
+    <item id="2">
+        <type>8</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="3">
+        <type>223</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="4">
+        <type>223</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="5">
+        <type>223</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="6">
+        <type>223</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <creature id="0">
+        <type>83</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="13" y="0" />
+    </creature>
+    <creature id="1">
+        <type>83</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="13" y="0" />
+    </creature>
+    <creature id="2">
+        <type>83</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="13" y="0" />
+    </creature>
+    <creature id="3">
+        <type>83</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="13" y="0" />
+    </creature>
+    <creature id="4">
+        <type>83</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="13" y="0" />
+    </creature>
+    <creature id="5">
+        <type>137</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="6">
+        <type>137</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="7">
+        <type>137</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="8">
+        <type>137</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="9">
+        <type>137</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="10">
+        <type>137</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="11">
+        <type>137</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>130</personality>
+        <face>-1</face>
+        <sdf x="13" y="1" />
+        <onkill>0</onkill>
+    </creature>
+    <area top="7" left="20" bottom="13" right="26">Kimzahn&apos;s Home</area>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[With his dying breath, Kimzahn shouts out "Please, my brethren! Avenge me!" As he passes away, many other efreeti appear to get revenge.]]>
+    </string>
+    <string id="1">
+        <![CDATA[You enter Kimzahn's home. It's a dome, built with a high ceiling to fit the massive efreet. The air is thick with incense. There is a large, lit brazier in the center of the room, surrounded by thick rugs and pillows for lounging.]]>
+    </string>
+    <string id="2">
+        <![CDATA[After what you've seen so far, seeing that someone has built a forge by this lake of lava is less than a surprise. What is unusual is the creature repairing an axe on one of the anvils. It's a humanoid, about ten feet tall, with gleaming red skin.]]>
+    </string>
+    <string id="3">
+        <![CDATA[As you watch the creature work, you notice that it's on fire. Tiny flames constantly erupt from his skin, flicker for a few moments, and go out. You think you know what it is: an efreet, a massive, magical creature from, well, from you aren't sure where.]]>
+    </string>
+</town>

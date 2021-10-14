@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Southern Vale</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>83</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>19</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>117</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>38</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>18</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>19</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <area top="10" left="16" bottom="16" right="23">Village Ruins</area>
+    <area top="37" left="0" bottom="42" right="25">Remote Valley</area>
+    <string id="0">
+        <![CDATA[You return to the spot where you met the drake. He still hasn't returned. Nothing is left to mark his presence but a few tracks and some carelessly shedded scales.]]>
+    </string>
+    <string id="1">
+        <![CDATA[The drake is still here, and still dead. There is still nothing of value for you.]]>
+    </string>
+    <string id="2">
+        <![CDATA[When you approach, Zorvas sniffs the air eagerly. Whatever he smells, it pleases him. He runs up to you. "You are having the fang? Yes?" You pull it out and show it to him.]]>
+    </string>
+    <string id="3">
+        <![CDATA["Wondrous!" he responds. "I knew I was smelling it! Be giving it? Yes?" You hand it over. "Excellent. Now for your reward. Be listening!"]]>
+    </string>
+    <string id="4">
+        <![CDATA[He begins to say a series of magical instructions in his thick, reptilian accent. You listen carefully, picking up as much of it as you can. You now know the spells Ice Bolt and Slow Group.]]>
+    </string>
+    <string id="5">
+        <![CDATA[Then, his debt discharged, Zorvas bends down and eats the Drake fang. It takes a while, and involves a bit of gnawing. Then, this done, he flies off without a word. You are alone.]]>
+    </string>
+    <string id="8">
+        <![CDATA[Zorvas is still here, waiting patiently for the fang. When you arrive, he somehow seems to know you don't have it. He turns away from you without a single word.]]>
+    </string>
+    <string id="9">
+        <![CDATA[You are getting close to the end of this long, winding valley. When you look ahead, however, you see what could be trouble. It's a drake, a full forty feet from head to tail, and it's looking right at you!]]>
+    </string>
+    <string id="10">
+        <![CDATA[Drakes are vicious, blood-thirsty creatures. However, oddly, this one doesn't seem to want to attack you. It's just watching you. You can't help but wonder why.]]>
+    </string>
+    <string id="15">
+        <![CDATA[You back away. Best to play it safe.]]>
+    </string>
+    <string id="16">
+        <![CDATA[You decide that it's best to play it safe and charge to attack. The drake was peaceful at first, but there's no way it's going to ignore this affront.]]>
+    </string>
+    <string id="17">
+        <![CDATA[You walk up to the drake. When you do, it surprises you by bowing its head in greeting. "I am Zorvas," it says in a peculiar accent. "I am here in the hopes of finding help, and my luck is here in you." It's hard to understand him.]]>
+    </string>
+    <string id="18">
+        <![CDATA["I am here to be striving for completing the tests to be a great Drake Lord, but there is one thing I am never finding in 30 years of looking. I need the tooth of a Drake Lord. I cannot this find."]]>
+    </string>
+    <string id="19">
+        <![CDATA["If you can be bringing this, I will reward you well and give you no harm. This a Drake's Oath I swear." He then spreads his wings and flies off. As he goes, he shouts "Return here when it you are having. Luck to you!" Then he is gone.]]>
+    </string>
+    <string id="23">
+        <![CDATA[Now that the Drake is dead, you search eagerly for treasure. Unfortunately, you find nothing but gnawed bones and shedded scales. You're out of luck.]]>
+    </string>
+    <string id="24">
+        <![CDATA[This town can't have been ruins for long. You doubt it's been abandoned for more than five years or so. The giant lizards did fast work, however - they moved through, ate some things, tore everything else up, and left.]]>
+    </string>
+    <string id="25">
+        <![CDATA[Bandits picked apart the rest.]]>
+    </string>
+    <string id="26">
+        <![CDATA[There's nothing left here now, except for a grim warning of what the Vale will look like if the curse is left unchecked.]]>
+    </string>
+    <string id="89">
+        <![CDATA[*End of special strs]]>
+    </string>
+</sector>

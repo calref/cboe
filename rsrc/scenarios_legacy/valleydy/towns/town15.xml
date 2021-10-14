@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Vahnatai Caverns</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="0" bottom="47" right="47" />
+    <difficulty>3</difficulty>
+    <lighting>dark</lighting>
+    <flags />
+    <item id="0">
+        <type>94</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="1">
+        <type>97</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="2">
+        <type>30</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="3">
+        <type>30</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="4">
+        <type>3</type>
+        <charges>5</charges>
+        <contained>true</contained>
+    </item>
+    <item id="5">
+        <type>368</type>
+    </item>
+    <item id="6">
+        <type>368</type>
+    </item>
+    <item id="7">
+        <type>181</type>
+    </item>
+    <item id="8">
+        <type>181</type>
+    </item>
+    <item id="9">
+        <type>181</type>
+    </item>
+    <item id="10">
+        <type>181</type>
+    </item>
+    <item id="11">
+        <type>7</type>
+        <contained>true</contained>
+    </item>
+    <item id="12">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="13">
+        <type>18</type>
+        <contained>true</contained>
+    </item>
+    <item id="14">
+        <type>0</type>
+        <charges>108</charges>
+        <contained>true</contained>
+    </item>
+    <item id="15">
+        <type>177</type>
+        <contained>true</contained>
+    </item>
+    <creature id="0">
+        <type>75</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="1">
+        <type>75</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="2">
+        <type>75</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="3">
+        <type>75</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="4">
+        <type>82</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="5">
+        <type>82</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="6">
+        <type>82</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="7">
+        <type>82</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="8">
+        <type>82</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="9">
+        <type>82</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="10">
+        <type>82</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="11">
+        <type>82</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="12">
+        <type>82</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="13">
+        <type>82</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="14">
+        <type>89</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>150</personality>
+        <face>48</face>
+        <sdf x="15" y="1" />
+    </creature>
+    <creature id="15">
+        <type>91</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>152</personality>
+        <face>48</face>
+        <sdf x="15" y="1" />
+    </creature>
+    <creature id="16">
+        <type>95</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>151</personality>
+        <face>46</face>
+        <sdf x="15" y="1" />
+    </creature>
+    <creature id="17">
+        <type>93</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>153</personality>
+        <face>48</face>
+        <sdf x="15" y="1" />
+    </creature>
+    <area top="34" left="32" bottom="39" right="40">Vahnatai Cavern</area>
+    <area top="18" left="40" bottom="27" right="45">Vahnatai Cavern</area>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[You see that someone has etched several glyphs in the cave floor just ahead. There's no dust or moss on them, and they're still pretty clean. If you didn't know better, you'd think they were etched here very recently.]]>
+    </string>
+    <string id="1">
+        <![CDATA[They look magical, and maybe a little dangerous.]]>
+    </string>
+    <string id="6">
+        <![CDATA[When you try to walk over the runes, there's a small explosion. You're lightly toasted. Fortunately, it was more a trap to keep away pests than something deadly serious.]]>
+    </string>
+    <string id="7">
+        <![CDATA[You follow this passage for an hour, and it winds farther and farther down into the ground. After a while it splits, and then splits again.]]>
+    </string>
+    <string id="8">
+        <![CDATA[You try to mark your path, but you soon realize that there's nothing down here of interest. You carefully make your way back.]]>
+    </string>
+    <string id="9">
+        <![CDATA[The tunnel leads back up into the School of Magery.]]>
+    </string>
+    <string id="15">
+        <![CDATA[When you see the bizarre creature staring at you at the other end of the cavern, you reflexively draw your weapons. Your experience has taught you that something this alien is sure to immediately attack you.]]>
+    </string>
+    <string id="16">
+        <![CDATA[As you bare your blades, it does nothing. It simply sits and watches. You get a chance to look it over. It's about seven feet tall and humanoid. Its limbs are long, incredibly thin, triple jointed, and covered with tight, dry, gray skin.]]>
+    </string>
+    <string id="17">
+        <![CDATA[Its head is large and round, and its bug eyes glow slightly. Its sole garment also glows. It's a sheer, translucent poncho, brightly colored. It's a very strange creature, highly alien in appearance.]]>
+    </string>
+    <string id="18">
+        <![CDATA[As you gawk at it, you realize it is sizing you up in a similar way. A minute passes in silence. Then it raises a spindly arm, and waves for you to approach.]]>
+    </string>
+    <string id="21">
+        <![CDATA[She looks over to Baia-Tel, who nods. She then reaches under her sleeping pad, removes a long, slender crystal, and hands it to you. "Careful," she says. "it's hot." She's right. It's hot enough to burn flesh.]]>
+    </string>
+    <string id="22">
+        <![CDATA["We found this nearby. It is part of the controls of the School. We know not what it is used for. Perhaps you can find out."]]>
+    </string>
+</town>

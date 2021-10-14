@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Assikvas</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="0" bottom="47" right="47" />
+    <difficulty>3</difficulty>
+    <lighting>dark</lighting>
+    <onenter condition="alive">0</onenter>
+    <onenter condition="dead">2</onenter>
+    <flags />
+    <item id="0">
+        <type>90</type>
+        <property>true</property>
+    </item>
+    <item id="1">
+        <type>0</type>
+        <charges>300</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="2">
+        <type>3</type>
+        <charges>42</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="3">
+        <type>1</type>
+        <charges>20</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="4">
+        <type>31</type>
+    </item>
+    <item id="5">
+        <type>91</type>
+        <property>true</property>
+    </item>
+    <item id="6">
+        <type>3</type>
+        <charges>4</charges>
+    </item>
+    <item id="7">
+        <type>3</type>
+        <charges>6</charges>
+    </item>
+    <item id="8">
+        <type>1</type>
+        <charges>4</charges>
+    </item>
+    <item id="9">
+        <type>14</type>
+    </item>
+    <item id="10">
+        <type>13</type>
+    </item>
+    <item id="11">
+        <type>139</type>
+        <property>true</property>
+    </item>
+    <item id="12">
+        <type>0</type>
+        <charges>600</charges>
+        <contained>true</contained>
+    </item>
+    <item id="13">
+        <type>0</type>
+        <charges>400</charges>
+        <contained>true</contained>
+    </item>
+    <item id="14">
+        <type>91</type>
+        <contained>true</contained>
+    </item>
+    <item id="15">
+        <type>142</type>
+        <contained>true</contained>
+    </item>
+    <item id="16">
+        <type>218</type>
+        <contained>true</contained>
+    </item>
+    <item id="17">
+        <type>366</type>
+    </item>
+    <item id="18">
+        <type>366</type>
+    </item>
+    <item id="19">
+        <type>0</type>
+        <charges>40</charges>
+        <property>true</property>
+    </item>
+    <item id="20">
+        <type>27</type>
+        <contained>true</contained>
+    </item>
+    <item id="21">
+        <type>201</type>
+        <contained>true</contained>
+    </item>
+    <item id="22">
+        <type>0</type>
+        <charges>67</charges>
+        <contained>true</contained>
+    </item>
+    <item id="23">
+        <type>107</type>
+        <contained>true</contained>
+    </item>
+    <item id="24">
+        <type>160</type>
+        <contained>true</contained>
+    </item>
+    <item id="25">
+        <type>13</type>
+    </item>
+    <item id="26">
+        <type>16</type>
+    </item>
+    <item id="27">
+        <type>90</type>
+        <contained>true</contained>
+    </item>
+    <item id="28">
+        <type>17</type>
+    </item>
+    <item id="29">
+        <type>1</type>
+        <charges>6</charges>
+        <contained>true</contained>
+    </item>
+    <item id="30">
+        <type>24</type>
+        <contained>true</contained>
+    </item>
+    <item id="31">
+        <type>25</type>
+        <contained>true</contained>
+    </item>
+    <item id="32">
+        <type>254</type>
+        <contained>true</contained>
+    </item>
+    <item id="33">
+        <type>174</type>
+        <contained>true</contained>
+    </item>
+    <item id="34">
+        <type>127</type>
+        <contained>true</contained>
+    </item>
+    <item id="35">
+        <type>12</type>
+        <contained>true</contained>
+    </item>
+    <item id="36">
+        <type>13</type>
+    </item>
+    <creature id="0">
+        <type>48</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="1">
+        <type>48</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="2">
+        <type>48</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="3">
+        <type>48</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="4">
+        <type>48</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="5">
+        <type>48</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="6">
+        <type>48</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="7">
+        <type>47</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>20</personality>
+        <face>52</face>
+    </creature>
+    <creature id="8">
+        <type>49</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>21</personality>
+        <face>52</face>
+    </creature>
+    <creature id="9">
+        <type>47</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="10">
+        <type>47</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="11">
+        <type>47</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="12">
+        <type>47</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="13">
+        <type>47</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="14">
+        <type>47</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="15">
+        <type>47</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="16">
+        <type>47</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="17">
+        <type>48</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="18">
+        <type>48</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="19">
+        <type>48</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="20">
+        <type>48</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="21">
+        <type>48</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="22">
+        <type>48</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="23">
+        <type>53</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+        <sdf x="2" y="6" />
+    </creature>
+    <creature id="24">
+        <type>49</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="25">
+        <type>50</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="26">
+        <type>50</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="27">
+        <type>50</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="28">
+        <type>48</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="29">
+        <type>48</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="30">
+        <type>103</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="31">
+        <type>103</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="32">
+        <type>51</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <creature id="33">
+        <type>72</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="34">
+        <type>72</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="35">
+        <type>72</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="36">
+        <type>48</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>52</face>
+    </creature>
+    <area top="8" left="21" bottom="14" right="29">Greeting Hall</area>
+    <area top="34" left="2" bottom="37" right="6">Trash Pit</area>
+    <area top="20" left="4" bottom="32" right="11">Chief&apos;s Chambers</area>
+    <area top="7" left="8" bottom="12" right="12">Library</area>
+    <area top="6" left="36" bottom="8" right="39">Small Shrine</area>
+    <area top="19" left="32" bottom="26" right="41">Dining Hall</area>
+    <sign id="0">
+        <![CDATA[Our Honored Mothers and Fathers]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[Our Honored Mothers and Fathers]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[For River Passage, enter greeting hall.]]>
+    </sign>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[The Slithzerikai here remember about you, and they have not forgiven you for your actions the last time you were here.]]>
+    </string>
+    <string id="1">
+        <![CDATA[The Slithzerikai warrens are eerily silent. The few survivors of your earlier rampages have fled, rather than face your wrath again.]]>
+    </string>
+    <string id="2">
+        <![CDATA[When you approach this corridor, a slith warrior steps up to block your way. It brandishes a massive two-tined spear, the traditional weapon of the slith warrior.]]>
+    </string>
+    <string id="3">
+        <![CDATA[It says nothing, but its confrontation stance makes its meaning perfectly clear. To get by it, you will have to attack.]]>
+    </string>
+    <string id="8">
+        <![CDATA[You draw your weapons. The creature calls out an alarm. In moments, Assikvas is like an angry bee hive, humming with hostile intent.]]>
+    </string>
+    <string id="9">
+        <![CDATA[You back away. The slith, looking relieved that you decided not to attack, backs away and lowers its weapon.]]>
+    </string>
+    <string id="10">
+        <![CDATA[A Slithzerikai guard spots you. Alas, he is fully aware that you aren't supposed to be here. He shouts out an alarm, and in moments you hear the angry hisses of the alerted lizard people.]]>
+    </string>
+    <string id="11">
+        <![CDATA[You have found a secret back entrance into the Slithzerikai lair. You'd best avoid the guards. If they see you back here, their reaction will probably be swift and violent.]]>
+    </string>
+    <string id="12">
+        <![CDATA[You enter the Slithzerikai chieftain's chambers. Fortunately, they're currently empty. It's very hot in here. The sliths, being cold-blooded, keep their warrens as hot as possible.]]>
+    </string>
+    <string id="13">
+        <![CDATA[You notice that the book on the pedestal is very sparse, only 10 sheets of thick leather with crude maps painted on it. Walking over to investigate, you see that the pages contain charts of nearby bodies of water.]]>
+    </string>
+    <string id="14">
+        <![CDATA[In particular, you find a diagram of the placement of dangerously sharp stones in a river to the northwest. You take note of this information - you can now pass any dangerous areas the sliths have created in nearby rivers.]]>
+    </string>
+    <string id="15">
+        <![CDATA[Suddenly, the floor opens up underneath you! You slide down a chute, and find yourself in a different cavern.]]>
+    </string>
+    <string id="16">
+        <![CDATA[Suddenly, an alarm rings out! The battle roars of alerted sliths roar down the corridors, and you hear the distant sounds of weapons being drawn.]]>
+    </string>
+    <string id="17">
+        <![CDATA[You see several chests in the room to the south. Looks like you've found the treasure room.]]>
+    </string>
+    <string id="18">
+        <![CDATA[The altar is covered with hundreds of small, carefully carved figurines. Each represents some obscure Slithzerikai god or hero from centuries past.]]>
+    </string>
+    <string id="19">
+        <![CDATA[They're nice carvings, but not nice enough to be valuable. They are made of mundane types of stone, not anything you could sell for the materials.]]>
+    </string>
+    <string id="20">
+        <![CDATA[A sociologist could learn all sorts of things by looking at this. Being adventurers, currently in the process of butchering everyone here, you aren't too interested.]]>
+    </string>
+    <string id="24">
+        <![CDATA[The good news is that this is a nice, thick spell book. The bad news is that it is written in Slithzerikai magical notation. Not understanding it, the book does you no good.]]>
+    </string>
+    <string id="25">
+        <![CDATA[This is a nice, thick spell book. It's written in Slithzerikai spell notation, but, fortunately, you've learned some of it. Reading the parts you can understand, you learn how to cast the spell Protection.]]>
+    </string>
+    <string id="26">
+        <![CDATA[Masskriss says "Our toll to pass is large for humansss, who are unwelcome in our land. But we are generous. We letsss you pass for but 1200 gold piecesss. Will you pay us our fair toll?"]]>
+    </string>
+    <string id="27">
+        <![CDATA["If you haven't the gold, you can sell things to Sssah." He points at the priest sitting next to him.]]>
+    </string>
+    <string id="32">
+        <![CDATA[He snorts. "Fine, then. You can wait forever with no pass."]]>
+    </string>
+    <string id="33">
+        <![CDATA[He shakes its head, annoyed. "But no gold you has! Not enough! No pass for you!"]]>
+    </string>
+    <string id="34">
+        <![CDATA[You pay the gold, and the slith warrior explains in great detail the route to row your boat along to pass the jagged rocks in the river to the northwest safely.]]>
+    </string>
+    <string id="35">
+        <![CDATA[You take note of the information. The extortion money paid, you are free to continue.]]>
+    </string>
+    <string id="36">
+        <![CDATA[The slith asks "What itemsss might you have which has holy or great slith value to us?" Unfortunately, you don't have any items which you think the Slithzerikai might find holy.]]>
+    </string>
+    <string id="37">
+        <![CDATA[The slith asks "What itemsss might you have which has holy or great slith value to us?" You pull out the small statue you found in the crypt.]]>
+    </string>
+    <string id="38">
+        <![CDATA[The slith's eyes widen. "It is a figurine! It is of Sss-Thsss, great and power slith leader of old. Great lord! Great artifact! Will you give it to us for your passage?"]]>
+    </string>
+    <string id="43">
+        <![CDATA["Hmm. Fine then. I not tell you how to pass."]]>
+    </string>
+    <string id="44">
+        <![CDATA[You hand over the figurine, and Masskriss explains in great detail the route to row your boat to successfully navigate the treacherous waters to the northwest. You take note of the information. You can move on now.]]>
+    </string>
+</town>

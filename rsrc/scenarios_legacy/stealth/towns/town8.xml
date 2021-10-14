@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Icy Tunnels</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="4" left="0" bottom="47" right="47" />
+    <difficulty>5</difficulty>
+    <lighting>dark</lighting>
+    <onenter condition="alive">26</onenter>
+    <onenter condition="dead">26</onenter>
+    <exit dir="n" x="7" y="27" />
+    <onexit dir="n">23</onexit>
+    <timer freq="100">2</timer>
+    <flags />
+    <item id="0">
+        <type>24</type>
+    </item>
+    <item id="1">
+        <type>24</type>
+    </item>
+    <item id="2">
+        <type>254</type>
+    </item>
+    <item id="3">
+        <type>254</type>
+    </item>
+    <item id="5">
+        <type>255</type>
+    </item>
+    <item id="6">
+        <type>270</type>
+    </item>
+    <item id="7">
+        <type>271</type>
+    </item>
+    <item id="8">
+        <type>257</type>
+    </item>
+    <item id="9">
+        <type>257</type>
+    </item>
+    <item id="10">
+        <type>238</type>
+        <contained>true</contained>
+    </item>
+    <item id="11">
+        <type>0</type>
+        <charges>50</charges>
+    </item>
+    <item id="12">
+        <type>0</type>
+        <charges>50</charges>
+    </item>
+    <item id="13">
+        <type>0</type>
+        <charges>64</charges>
+    </item>
+    <item id="14">
+        <type>0</type>
+        <charges>123</charges>
+    </item>
+    <item id="15">
+        <type>37</type>
+    </item>
+    <item id="16">
+        <type>54</type>
+    </item>
+    <item id="17">
+        <type>71</type>
+    </item>
+    <item id="18">
+        <type>118</type>
+    </item>
+    <item id="19">
+        <type>127</type>
+    </item>
+    <item id="20">
+        <type>151</type>
+    </item>
+    <item id="21">
+        <type>166</type>
+    </item>
+    <item id="22">
+        <type>176</type>
+    </item>
+    <item id="23">
+        <type>378</type>
+    </item>
+    <item id="24">
+        <type>190</type>
+    </item>
+    <item id="25">
+        <type>223</type>
+    </item>
+    <item id="26">
+        <type>208</type>
+    </item>
+    <item id="27">
+        <type>274</type>
+    </item>
+    <item id="28">
+        <type>23</type>
+    </item>
+    <item id="29">
+        <type>23</type>
+    </item>
+    <item id="30">
+        <type>23</type>
+    </item>
+    <item id="31">
+        <type>24</type>
+    </item>
+    <item id="32">
+        <type>24</type>
+    </item>
+    <item id="33">
+        <type>255</type>
+    </item>
+    <creature id="0">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="1">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="2">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="3">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="4">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="5">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="6">
+        <type>129</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="7">
+        <type>129</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="8">
+        <type>129</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="9">
+        <type>129</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="10">
+        <type>129</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="11">
+        <type>129</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="12">
+        <type>129</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="13">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="14">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="15">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="16">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="17">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="18">
+        <type>129</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="19">
+        <type>129</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="20">
+        <type>179</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="21">
+        <type>179</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="22">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="23">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="24">
+        <type>129</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="25">
+        <type>129</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="26">
+        <type>129</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="27">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="28">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="29">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="30">
+        <type>128</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="31">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="32">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="33">
+        <type>74</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <area top="34" left="40" bottom="42" right="46">Below Pit</area>
+    <area top="16" left="22" bottom="28" right="29">Hydra Cave</area>
+    <area top="30" left="28" bottom="46" right="38">Underground Lake</area>
+    <area top="4" left="5" bottom="13" right="17">Drake Lair</area>
+    <area top="11" left="1" bottom="15" right="7">Drake Treasure Chamber</area>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[You enter a large chamber. In the ceiling, you see a shaft extending straight up about 30 or 40 feet to a brightly lit chamber. At the top, you see ogres peering down at you, laughing and pointing.]]>
+    </string>
+    <string id="1">
+        <![CDATA[The floor of this chamber is littered with broken ogre bodies. Bloody tracks leading to the south, however, indicate that not all of the ogres died in the fall. Some other unpleasant fate must have awaited them.]]>
+    </string>
+    <string id="2">
+        <![CDATA[As you make your way down the dark tunnel, there's one thing you notice before anything else: it's cold! That's to be expected to some extent in any system of caves, but this is unnatural. The walls and floor are covered with ice.]]>
+    </string>
+    <string id="3">
+        <![CDATA[Your teeth start to chatter. You'd better get moving, before hypothermia sets in.]]>
+    </string>
+    <string id="4">
+        <![CDATA[The unnatural cold of these tunnels is starting to get to you.]]>
+    </string>
+    <string id="5">
+        <![CDATA[As you leave the underground lake, you experience an all too familiar phenomenon: a disembodied voice, coming from the air around you. It's a slow, calm, sibilant, reptilian voice, icy and malevolent.]]>
+    </string>
+    <string id="6">
+        <![CDATA[It says "Ah! So yet another group of pitiful ogres has been sent to amuse me. Do not fear, little ogrelings. Do not concern yourselves. Your death is assured. There is no need to waste your energy on fear."]]>
+    </string>
+    <string id="7">
+        <![CDATA["You don't want your sacrifice to be in vain, do you? I thought not. Please move on. My pets are waiting to greet you."]]>
+    </string>
+    <string id="11">
+        <![CDATA[The reptilian voice reappears. This time, it's less disdainful, and more amused. "I sense you are still with us. That is much better than most of you little ogres do."]]>
+    </string>
+    <string id="12">
+        <![CDATA["Do not concern yourselves with my anger at your killing my children. If they were not able to handle the likes of you, they deserved to die. We are cruel down here, but fair. To some extent."]]>
+    </string>
+    <string id="13">
+        <![CDATA["I am amused by your progress. Continue. If you make it to the end, you will certainly have shown yourselves worthy of being eaten by me. It's more of an honor to my race than you might think."]]>
+    </string>
+    <string id="17">
+        <![CDATA[You hear the voice again. It is no longer amused, by quite surprised. "Still with us, I see? Now you ogres aren't cheating with your payments and throwing down a mage or two, are you?"]]>
+    </string>
+    <string id="18">
+        <![CDATA["Were that the case, rest assured I'll be up there before long to eat quite a few of you. Such surprises were not part of the deal."]]>
+    </string>
+    <string id="19">
+        <![CDATA[There is a pause. "Please, move on. I am eager to meet you. The new friend in the next cave, I'm sure you will have no trouble dispatching."]]>
+    </string>
+    <string id="23">
+        <![CDATA[The voice is starting to grow annoyed. "Now I am truly surprised by your progress. Surprised and angered. I see now I should have not put my valuable pets at risk, even to a bumbling group of ogres."]]>
+    </string>
+    <string id="24">
+        <![CDATA["Do not fret. Your ordeal is almost ended. Soon you will be face to face with me! Prepare well!"]]>
+    </string>
+    <string id="29">
+        <![CDATA[You find a large pool of brackish, iced over water, made slightly green by the algae imprisoned by the cold.]]>
+    </string>
+    <string id="30">
+        <![CDATA[By the main pool is a smaller pool, which, oddly, is not frozen. The pool is in a natural basin composed of a white, chalky substance. The stuff has infused the water, which has a milky appearance.]]>
+    </string>
+    <string id="35">
+        <![CDATA[You drink the water, and almost immediately start to feel invigorated! The chalky stuff must be doing it. You all bend down and drink more, almost immediately sucking up all of the small pool.]]>
+    </string>
+    <string id="36">
+        <![CDATA[The pool is gone, but your wounds are fully healed. You're ready to continue.]]>
+    </string>
+    <string id="37">
+        <![CDATA[At last, you reach the far end of this icy gauntlet and come face to face with your tormentor. You soon wish you hadn't. It's a ice drake! It's an enormous lizard, slightly smaller cousin to dragonkind, 40 feet from head to tail.]]>
+    </string>
+    <string id="38">
+        <![CDATA[When the fearsome blue creature sees you enter his cavern, it rears up, ready to breathe doom upon you. However, when it gets a good look at you, it lowers its forelegs to the ground, and looks at you, confused.]]>
+    </string>
+    <string id="39">
+        <![CDATA[This moment may be the distraction you can use to attack safely!]]>
+    </string>
+    <string id="43">
+        <![CDATA[The drake's delay in attacking was only temporary. It emits an amused, arrogant snort. Then, with a deafening roar, it moves forward to join with you in battle!]]>
+    </string>
+    <string id="44">
+        <![CDATA[You stare at each other for several stressful moments. Then the drake breaks into laughter! It roars with amusement, looks at you, then roars again!]]>
+    </string>
+    <string id="45">
+        <![CDATA["Oh, this is amusing," it chortles. "All this time I though you were just another ogre sacrifice that got lucky, and here you are, a fully equipped group of adventurers. How droll!"]]>
+    </string>
+    <string id="46">
+        <![CDATA["Well, I imagine you've just come to kill me and take my horde, or something tedious and futile like that. If that is the case, you might as well just attack me and get this over with."]]>
+    </string>
+    <string id="47">
+        <![CDATA[It thinks "Of course, you might be here for some other purpose. Sometimes humans, far in the past, before the dark days of the Empire, came to me for my wisdom. Have you come to see me for any other reason?"]]>
+    </string>
+    <string id="48">
+        <![CDATA[The drake might know what happened to the papers you're looking for. Of course, this could also be a trap. Do you talk to it and say what you're after?]]>
+    </string>
+    <string id="50">
+        <![CDATA[You describe to the drake the papers you're looking for. It thinks. "Old Empire records. Come to think of it, yes, I do have something like that." It leaves the cavern for a moment, and then returns.]]>
+    </string>
+    <string id="51">
+        <![CDATA["Yes! The ogres once thought that they could appease me with something besides sacrifices, and threw down to me everything they could get their hands on, including a bunch of old records."]]>
+    </string>
+    <string id="52">
+        <![CDATA["Normally, I would charge you a stiff price for these papers, like a human sacrifice or some such, but I have the nagging feeling the Empire really doesn't want you to have these."]]>
+    </string>
+    <string id="53">
+        <![CDATA["The Empire has killed almost all of my kind. Anything that annoys them, I will help with. Therefore, I will give you these papers for only 500 gold, or however much gold you have if you don't have that."]]>
+    </string>
+    <string id="54">
+        <![CDATA[It snorts a powerful cloud of frost from its enormous nostrils. "Do you agree?"]]>
+    </string>
+    <string id="56">
+        <![CDATA[It nods, satisfied (and perhaps slightly relieved at avoiding a combat with you). You pay it your gold, and it leaves the cavern to retrieve the Empire papers. It gives the thick bundle to you.]]>
+    </string>
+    <string id="57">
+        <![CDATA[It chuckles again, and says "Good luck with your efforts. The only thing I enjoy more than the taste of your kind's flesh is the thought of your leader's misfortune."]]>
+    </string>
+    <string id="58">
+        <![CDATA[With that benediction, it shows to you a rear exit at the far end of its lair, and slams a portcullis closed behind you with an enormous, clawed foot. It turns and walks away, leaving you with your prize, and the exit before you!]]>
+    </string>
+    <string id="62">
+        <![CDATA[Searching greedily through the drake's treasure trove, you notice a thick sheaf of papers tossed carelessly off in the corner. You look them over and realize that they're a packet of Empire troop orders and patrol rosters!]]>
+    </string>
+    <string id="63">
+        <![CDATA[These must be the papers you were sent to get. You put them safely in your pack.]]>
+    </string>
+    <string id="64">
+        <![CDATA[As you leave the drake's lair, you try to make a note of the location of the rear exit, so that you can return later and find more loot. Unfortunately, when you walk outside and look back, you see the tunnel you've emerged from is gone!]]>
+    </string>
+    <string id="65">
+        <![CDATA[You feel the natural stone walls, looking for a hidden entrance. The drake must have placed powerful magic here ... the entrance is completely gone.]]>
+    </string>
+    <string id="66">
+        <![CDATA[You see sunlight ahead. Looks like you're near the exit. You hesitate. Maybe it's not a good idea to leave here until you've got the papers you need. You turn back.]]>
+    </string>
+    <string id="67">
+        <![CDATA[As you start walking down the stairs, you hear a clang behind you. You look back, and see that the ogres have closed the huge portcullis behind you. With a sinking feeling, you realize you're trapped down here.]]>
+    </string>
+</town>

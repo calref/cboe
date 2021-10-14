@@ -1661,7 +1661,7 @@ bool handle_keystroke(const sf::Event& event){
 			play_sound(37);
 			end_shop_mode();
 		}
-		Key const shop_chars[8] = {kb::A,kb::B,kb::C,kb::D,kb::E,kb::F,kb::G,kb::H},
+		Key const shop_chars[8] = {kb::A,kb::B,kb::C,kb::D,kb::E,kb::F,kb::G,kb::H};
 		for(short i = 0; i < 8; i++)
 			if(chr2 == shop_chars[i]) {
 				pass_point = shopping_rects[i][SHOPRECT_ACTIVE_AREA].topLeft();

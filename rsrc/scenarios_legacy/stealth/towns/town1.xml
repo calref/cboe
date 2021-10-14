@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>64</size>
+    <name>Selathni</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="3" bottom="60" right="60" />
+    <difficulty>3</difficulty>
+    <lighting>lit</lighting>
+    <onenter condition="alive">26</onenter>
+    <onenter condition="dead">26</onenter>
+    <exit dir="n" x="21" y="11" />
+    <exit dir="w" x="19" y="12" />
+    <exit dir="s" x="21" y="13" />
+    <exit dir="e" x="23" y="12" />
+    <flags>
+        <tavern>true</tavern>
+    </flags>
+    <item id="0">
+        <type>20</type>
+    </item>
+    <item id="1">
+        <type>64</type>
+    </item>
+    <item id="2">
+        <type>19</type>
+    </item>
+    <item id="3">
+        <type>178</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="4">
+        <type>173</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="5">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="6">
+        <type>26</type>
+        <contained>true</contained>
+    </item>
+    <item id="7">
+        <type>3</type>
+        <charges>6</charges>
+        <property>true</property>
+    </item>
+    <item id="8">
+        <type>363</type>
+        <property>true</property>
+    </item>
+    <item id="9">
+        <type>34</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="10">
+        <type>35</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="11">
+        <type>15</type>
+    </item>
+    <item id="12">
+        <type>15</type>
+    </item>
+    <item id="13">
+        <type>16</type>
+    </item>
+    <item id="14">
+        <type>16</type>
+    </item>
+    <item id="15">
+        <type>16</type>
+    </item>
+    <item id="16">
+        <type>16</type>
+    </item>
+    <item id="17">
+        <type>2</type>
+        <charges>4</charges>
+        <property>true</property>
+    </item>
+    <item id="18">
+        <type>3</type>
+        <charges>4</charges>
+        <property>true</property>
+    </item>
+    <item id="19">
+        <type>13</type>
+    </item>
+    <item id="20">
+        <type>43</type>
+        <property>true</property>
+    </item>
+    <item id="21">
+        <type>146</type>
+        <property>true</property>
+    </item>
+    <item id="22">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="23">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="24">
+        <type>126</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="25">
+        <type>15</type>
+        <contained>true</contained>
+    </item>
+    <item id="26">
+        <type>4</type>
+        <contained>true</contained>
+    </item>
+    <item id="27">
+        <type>15</type>
+        <contained>true</contained>
+    </item>
+    <item id="28">
+        <type>17</type>
+        <contained>true</contained>
+    </item>
+    <item id="29">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="30">
+        <type>16</type>
+        <contained>true</contained>
+    </item>
+    <item id="31">
+        <type>0</type>
+        <charges>49</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="32">
+        <type>254</type>
+        <contained>true</contained>
+    </item>
+    <item id="33">
+        <type>38</type>
+        <contained>true</contained>
+    </item>
+    <item id="34">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="35">
+        <type>11</type>
+    </item>
+    <item id="36">
+        <type>124</type>
+        <property>true</property>
+    </item>
+    <item id="37">
+        <type>160</type>
+        <property>true</property>
+    </item>
+    <item id="38">
+        <type>46</type>
+        <property>true</property>
+    </item>
+    <item id="39">
+        <type>41</type>
+        <property>true</property>
+    </item>
+    <item id="40">
+        <type>47</type>
+        <property>true</property>
+    </item>
+    <item id="41">
+        <type>43</type>
+        <property>true</property>
+    </item>
+    <item id="42">
+        <type>108</type>
+        <property>true</property>
+    </item>
+    <item id="43">
+        <type>103</type>
+        <property>true</property>
+    </item>
+    <item id="44">
+        <type>27</type>
+        <property>true</property>
+    </item>
+    <item id="45">
+        <type>28</type>
+        <property>true</property>
+    </item>
+    <item id="46">
+        <type>12</type>
+    </item>
+    <item id="47">
+        <type>12</type>
+    </item>
+    <item id="48">
+        <type>171</type>
+        <contained>true</contained>
+    </item>
+    <item id="49">
+        <type>169</type>
+        <contained>true</contained>
+    </item>
+    <item id="50">
+        <type>12</type>
+    </item>
+    <item id="51">
+        <type>20</type>
+    </item>
+    <item id="52">
+        <type>2</type>
+        <charges>5</charges>
+        <contained>true</contained>
+    </item>
+    <item id="53">
+        <type>14</type>
+        <contained>true</contained>
+    </item>
+    <item id="54">
+        <type>14</type>
+        <contained>true</contained>
+    </item>
+    <item id="55">
+        <type>200</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <creature id="0">
+        <type>5</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>10</personality>
+        <face>4</face>
+    </creature>
+    <creature id="1">
+        <type>35</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>11</personality>
+        <face>82</face>
+        <sdf x="1" y="8" />
+    </creature>
+    <creature id="2">
+        <type>2</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>12</personality>
+        <face>3</face>
+    </creature>
+    <creature id="3">
+        <type>5</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>13</personality>
+        <face>4</face>
+    </creature>
+    <creature id="4">
+        <type>3</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>14</personality>
+        <face>2</face>
+    </creature>
+    <creature id="5">
+        <type>6</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>15</personality>
+        <face>17</face>
+    </creature>
+    <creature id="6">
+        <type>4</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>16</personality>
+        <face>1</face>
+    </creature>
+    <creature id="7">
+        <type>1</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>17</personality>
+        <face>0</face>
+    </creature>
+    <creature id="8">
+        <type>5</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>18</personality>
+        <face>4</face>
+    </creature>
+    <creature id="9">
+        <type>2</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>19</personality>
+        <face>8</face>
+    </creature>
+    <creature id="10">
+        <type>34</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>20</personality>
+        <face>17</face>
+        <time type="after-day">
+            <day>25</day>
+        </time>
+    </creature>
+    <creature id="11">
+        <type>15</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>21</personality>
+        <face>11</face>
+    </creature>
+    <creature id="12">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="13">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="14">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="15">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="16">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="17">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="18">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="19">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="20">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="21">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="22">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="23">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="24">
+        <type>12</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <area top="45" left="8" bottom="50" right="12">Empty Storeroom</area>
+    <area top="34" left="25" bottom="46" right="38">Sea Wurm Inn</area>
+    <area top="24" left="6" bottom="27" right="13">Stables</area>
+    <area top="5" left="5" bottom="22" right="14">Purdee&apos;s Resort</area>
+    <area top="6" left="14" bottom="13" right="20">Purdee&apos;s Resort</area>
+    <area top="21" left="37" bottom="27" right="44">Small Shrine</area>
+    <sign id="0">
+        <![CDATA[SHRINE OF BLESSED HEALING|Donations accepted]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[SELATHNI SHOPPING DISTRICT]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[Michael's Armory|Goods identified and purchased]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[KEEPERS OF KNOWLEDGE]]>
+    </sign>
+    <sign id="4">
+        <![CDATA[Fine Blades]]>
+    </sign>
+    <sign id="5">
+        <![CDATA[(This is a painting of a bow and arrows.)]]>
+    </sign>
+    <sign id="6">
+        <![CDATA[Sea Wurm Inn]]>
+    </sign>
+    <sign id="7">
+        <![CDATA[Sea Wurm Inn]]>
+    </sign>
+    <sign id="8">
+        <![CDATA[PURDEE'S RESORT|Fine dining and victuals|Vacancy]]>
+    </sign>
+    <sign id="9">
+        <![CDATA[Selathni Barracks]]>
+    </sign>
+    <sign id="10">
+        <![CDATA[DOCK STORAGE BINS|Thieves will be killed!]]>
+    </sign>
+    <sign id="11">
+        <![CDATA[Stables]]>
+    </sign>
+    <sign id="12">
+        <![CDATA[To leave Morrow's Isle, go to end of dock.]]>
+    </sign>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[You walk up the dock into the city of Selathni. Looking around, it's hard to believe there's any trouble here. The people look happy and well fed, and the buildings and streets are clean and well taken care of.]]>
+    </string>
+    <string id="1">
+        <![CDATA[To the northeast, you see a large inn with a long green sea serpent painted along its wall. Perhaps that's where you're supposed to meet Vonnegut and find out what's going on.]]>
+    </string>
+    <string id="6">
+        <![CDATA[You notice, at the base of the counter, the gap in the floor Canizares told you about. It's a crack, about a foot long, in the floor at the base of the counter. The Empire papers would just barely fit inside it.]]>
+    </string>
+    <string id="7">
+        <![CDATA[Do you drop the papers down the crack?]]>
+    </string>
+    <string id="12">
+        <![CDATA[You drop the papers into the crack, and they disappear from sight. You can only hope they get to whoever wants them.]]>
+    </string>
+    <string id="13">
+        <![CDATA[This hotel room has two reading stands set up in it. Each has a chair set up in front of it, so that you can read in comfort.]]>
+    </string>
+    <string id="14">
+        <![CDATA[The book is titled "History of Morrow's Isle." A summary:]]>
+    </string>
+    <string id="15">
+        <![CDATA[Morrow's Isle was first settled by humans about 200 years before. Valorim was a wild and unsettled continent, and the settlers had a very hard time of it.]]>
+    </string>
+    <string id="16">
+        <![CDATA[Eventually, a tormented band of them made it to this Isle, and, when they found rich grasslands, ore-filled hills, and a minimal number of hostile creatures, they knew they had reached their final destination.]]>
+    </string>
+    <string id="17">
+        <![CDATA[Once the few Nephilim living there were butchered, they were home at last. The settlers lived independently there for a hundred years, until the Empire finally noticed the Isle. Seeing the need for order, the Empire established a feudal state there.]]>
+    </string>
+    <string id="18">
+        <![CDATA[Despite a few minor difficulties which were easily dealt with, the transition of the island's population from settlers to serfs went smoothly, and, with hard work, the wealth of the island was harvested.]]>
+    </string>
+    <string id="19">
+        <![CDATA[Today, with many rich fields, productive mines, and happy citizens, Morrow's Isle is a virtual paradise to live and work in, thanks to the benevolent rule of the Empire and the hard work of the settlers.]]>
+    </string>
+    <string id="20">
+        <![CDATA[The leather bound tome is titled "A Report On Unrest In Morrow's Isle." A brief summary of the uncensored parts:]]>
+    </string>
+    <string id="21">
+        <![CDATA[There has been some unrest on Morrow's Isle for the past century, ever since the settlers there were brought under the control of a feudal lord. Until recently, the minor rebellions were easily dealt with.]]>
+    </string>
+    <string id="22">
+        <![CDATA[Now, however, there is a new, vicious force on the Isle. Known as the Hill Runners, and led by a person known only as Stalker, the rebels have had a good deal of success against the government.]]>
+    </string>
+    <string id="23">
+        <![CDATA[They have completely seized control of the northeastern mountains of Morrow's Isle, and, playing on and building up a small amount of mild discontent in the citizenry, they have done a good deal of harm to the Empire's control in this area.]]>
+    </string>
+    <string id="24">
+        <![CDATA[Part of their success can be attributed to their vicious tactics. Nobody, neither soldiers nor civilians, men nor women, is exempted from the Hill Runner's violence. Aiding an Empire soldier invites murder as surely as being one.]]>
+    </string>
+    <string id="25">
+        <![CDATA[Something should be done about this menace as quickly as possible. Otherwise, it is possible that malcontents in other areas will feel these tactics can succeed, and adopt them.]]>
+    </string>
+    <string id="26">
+        <![CDATA[Uh oh. It looks like someone has set an alarm in this dresser.]]>
+    </string>
+    <string id="27">
+        <![CDATA[The shrine's donation box is here. It's empty right now. A small sign hung on the front of the box says "Suggested, life-affirming donation: 100 gold."]]>
+    </string>
+    <string id="33">
+        <![CDATA[Unfortunately, you don't have 100 gold.]]>
+    </string>
+    <string id="34">
+        <![CDATA[You put the money in the box. As you watch, it slowly disappears! You have a warm, pleasant feeling.]]>
+    </string>
+    <string id="35">
+        <![CDATA[The shrine, as usual, is dominated by a large, gleaming altar. Even being near it fills you with a warm, comforting feeling. There are kneeling pads set in front, no doubt so you can pay your respects, get blessings, etc.]]>
+    </string>
+    <string id="41">
+        <![CDATA[Kneeling in front of the altar does, indeed, give you a warm, pleasant feeling. And that's all.]]>
+    </string>
+    <string id="42">
+        <![CDATA[When you kneel, the altar begins to glow warmly, bathing you in a healing white light. When the glow fades, you feel reinvigorated. Good shrine!]]>
+    </string>
+    <string id="43">
+        <![CDATA[Remembering Elinor's instructions, you pull the dresser away from the wall. Sure enough, in a gap in the wall, you find a heavy, polished mahogany box. It's about a foot by eight inches by six inches.]]>
+    </string>
+    <string id="44">
+        <![CDATA[It's pretty bulky, but you manage to fit it into your pack. Looks like it's time to go to Zaskiva.]]>
+    </string>
+    <string id="45">
+        <![CDATA[The Selathni harbor has a high stone wall built around it, sheltering it from rough waves and storms. You are on a narrow path, running along this section of the wall.]]>
+    </string>
+    <string id="46">
+        <![CDATA[As soon as the guards see you, they recognize you. Someone calls an alarm out. More guards come running. You obviously aren't welcome here anymore. Now what?]]>
+    </string>
+    <string id="47">
+        <![CDATA[You reach the end of the dock, only to find no boat waiting for you. Looks like, now that you're criminals, getting off the island will not be as easy as it once was.]]>
+    </string>
+    <string id="48">
+        <![CDATA[With heavy heart, you board the boat to leave Morrow's Isle. You came here with the dream of slaying evil, of fighting the good fight, of courage and nobility.]]>
+    </string>
+    <string id="49">
+        <![CDATA[Instead, you found corruption. You were only given a chance to be in the middle of a battle between selfish politicians and vicious rebels. Not what you had in mind.]]>
+    </string>
+    <string id="50">
+        <![CDATA[Maybe there was a way out of this, a way to, despite the mess, make things better. Probably not. You got away with your lives,  without making things any worse. It's not much of a reward, but hey, at least you'll be able to sleep at night.]]>
+    </string>
+    <string id="51">
+        <![CDATA[THE END]]>
+    </string>
+    <string id="54">
+        <![CDATA[You find a boat at the end of the dock, waiting to take passengers away from Morrow's Isle. If you want, you can leave this confusing, violent place now.]]>
+    </string>
+    <string id="60">
+        <![CDATA[You notice a large crack in the floor.]]>
+    </string>
+</town>

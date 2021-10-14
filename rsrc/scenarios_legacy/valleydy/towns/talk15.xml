@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="150">
+        <title>Torlek</title>
+        <look>
+            <![CDATA[You approach the strange creature. It watches you with its beady, glowing eyes.]]>
+        </look>
+        <name>
+            <![CDATA[It speaks, in a halting, heavily accented, very awkward version of your tongue. "Greet to you. I am being Torlek, of Vahnatai."]]>
+        </name>
+        <job>
+            <![CDATA["I am of the Vahnatai people. I am being guarding. Greet to humans."]]>
+        </job>
+        <unknown>
+            <![CDATA["I am not understanding."]]>
+        </unknown>
+    </personality>
+    <personality id="151">
+        <title>Baia-Tel</title>
+        <look>
+            <![CDATA[This tall, dignified Vahnatai wears a slender gold circlet. You would guess it's the group's leader. It nods in greeting as you approach.]]>
+        </look>
+        <name>
+            <![CDATA["I am calling Baia-Tel. To our people, Tel is a term of respect and  leadership."]]>
+        </name>
+        <job>
+            <![CDATA["I have much curious about your race, but I will refrain from knowledge gathering. We must discuss the poisoning of the land, for that is our purpose."]]>
+        </job>
+        <unknown>
+            <![CDATA[It is silent.]]>
+        </unknown>
+    </personality>
+    <personality id="152">
+        <title>Aati</title>
+        <look>
+            <![CDATA[This Vahnatai is just as spindly and frail looking as the others. The massive blade in his lap, however, disabuses you of any idea that this creature might be weak.]]>
+        </look>
+        <name>
+            <![CDATA[He scowls, and looks very unwilling to speak with you. "I Aati."]]>
+        </name>
+        <job>
+            <![CDATA["Warrior. Me." His grasp of your tongue is clearly quite poor. "Guard. Us. Poison."]]>
+        </job>
+        <unknown>
+            <![CDATA["What are you saying."]]>
+        </unknown>
+    </personality>
+    <personality id="153">
+        <title>Zereen</title>
+        <look>
+            <![CDATA[This Vahnatai sits cross-legged by the fire, peering intently into a small, glowing crystal. The stone is about the size of an orange, and almost flawless. It's remarkable.]]>
+        </look>
+        <name>
+            <![CDATA["I am Zereen. I am honored to greet you." She speaks your tongue surprisingly smoothly.]]>
+        </name>
+        <job>
+            <![CDATA["I am a magician." She holds up the crystal. "I am a study of the energetic spells of the Vahnatai."]]>
+        </job>
+        <unknown>
+            <![CDATA[She makes a peculiar hand motion, which seems to mean "What?"]]>
+        </unknown>
+    </personality>
+    <personality id="154">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="155">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="156">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="157">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="158">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="159">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="150">
+        <keyword>vahn</keyword>
+        <keyword>peop</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["That is what naming we give us. We are Vahnatai, and live far below."]]>
+        </text>
+    </node>
+    <node for="150">
+        <keyword>belo</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Vahnatai make living in the caves far, far below the world. We come up here now as mission, about poison."]]>
+        </text>
+    </node>
+    <node for="150">
+        <keyword>miss</keyword>
+        <keyword>pois</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["That not something I speak of, but my masters. Move on and be finding them."]]>
+        </text>
+    </node>
+    <node for="150">
+        <keyword>mast</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["They discuss poisons, and leave me to be guarding. Move on, for they want to be speaking at you."]]>
+        </text>
+    </node>
+    <node for="150">
+        <keyword>bein</keyword>
+        <keyword>guar</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Many small annoying things come to be eating us badly. Good masters leaving me here to watch, and they talk of poisons."]]>
+        </text>
+    </node>
+    <node for="150">
+        <keyword>gree</keyword>
+        <keyword>huma</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Though you humans made the poisons that harm us, we still honored to be meeting some of you. Maybe someday there can be peace and joy between our races, after this disaster is ending."]]>
+        </text>
+    </node>
+    <node for="150">
+        <keyword>race</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We Vahnatai have many colonies. Maybe other colonies of us have been meeting you already. We know not and have not, and greet you."]]>
+        </text>
+    </node>
+    <node for="151">
+        <keyword>race</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You humans seem to interesting being. We will someday wish knowledge of you."]]>
+        </text>
+    </node>
+    <node for="151">
+        <keyword>know</keyword>
+        <keyword>gath</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We Vahnatai praise knowledge gathering over so much. It fills us with joy."]]>
+        </text>
+    </node>
+    <node for="151">
+        <keyword>pois</keyword>
+        <keyword>purp</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["By now you must have seen it, the poisons from this place, seeping to the earth. They are seeping down to us, and hurting us, so we have been sent up to find the problem. Alas, we having many problems, in finding the solution."]]>
+        </text>
+    </node>
+    <node for="151">
+        <keyword>prob</keyword>
+        <keyword>solu</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We know what is needed to solve the poison. We do. But we are too few to fight the beasts of the School, which are guarding and interfering. We in and out, and are getting little bits of information, but can not act on it."]]>
+        </text>
+        <text>
+            <![CDATA["We know you want to solve. We can give you information to help you do so."]]>
+        </text>
+    </node>
+    <node for="151">
+        <keyword>info</keyword>
+        <keyword>solv</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[It thinks, and shows you something that might be a smile. "I glad you ask. There being a mechanism by the poisons to purge them away. There are controls where the foul chemicals leak out. Our scrying and magic tell us this is there, and what needs doing."]]>
+        </text>
+        <text>
+            <![CDATA["There are three goals."]]>
+        </text>
+    </node>
+    <node for="151">
+        <keyword>thre</keyword>
+        <keyword>goal</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You need the opening stone, and the crystal of power, and you need to use the main controls."]]>
+        </text>
+    </node>
+    <node for="151">
+        <keyword>crys</keyword>
+        <keyword>powe</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Baia-Tel points at another Vahnatai sitting at the fire. "Ask Zereen of the stone with power. She knows if it."]]>
+        </text>
+    </node>
+    <node for="151">
+        <keyword>open</keyword>
+        <keyword>ston</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["This School has many glowing portcullises, which are much hard to open. There was a key left behind to open them, good, and we think we know where it might be found. I met a peculiar insect."]]>
+        </text>
+    </node>
+    <node for="151">
+        <keyword>inse</keyword>
+        <keyword>pecu</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Perhaps that not right word. We met a thing with many legs that called itself a 'Chief Spider.' We spoke with it, and it, though odd, said it had a pretty rock at its lair. Maybe you should be asking it of this pretty rock if you met it."]]>
+        </text>
+    </node>
+    <node for="151">
+        <keyword>chie</keyword>
+        <keyword>spid</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Indeed that what it said. It was much a strange creature."]]>
+        </text>
+    </node>
+    <node for="151">
+        <keyword>main</keyword>
+        <keyword>cont</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Below all else are the controls that run the entire School. They must be reached. We know not what must be done there, but our spell tell us this must happen. But first you must beware, and have certain papers."]]>
+        </text>
+    </node>
+    <node for="151">
+        <keyword>bewa</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Fierce and odd beasts are being down there. Prepare well."]]>
+        </text>
+    </node>
+    <node for="151">
+        <keyword>cert</keyword>
+        <keyword>pape</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Instructions still exist for using the controls of the School. Our spells tell us where these instruction papers being. Not in the School but in the Vale above, in a hut, owned by a bitter man."]]>
+        </text>
+        <text>
+            <![CDATA["He will not speak with you, perhaps, but one in the Vale may tell you the secret to getting his response. Good luck to you."]]>
+        </text>
+    </node>
+    <node for="152">
+        <keyword>warr</keyword>
+        <keyword>guar</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Monsters here. Bad. I slay." He pats the wicked, curved blade in his lap. "Must bad. Like humans."]]>
+        </text>
+    </node>
+    <node for="152">
+        <keyword>huma</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Humans make poison. Humans loud on surface. Other trust. Are fools. Humans do bad poison and harm."]]>
+        </text>
+    </node>
+    <node for="152">
+        <keyword>pois</keyword>
+        <keyword>harm</keyword>
+        <type>end-force</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You humans. Humans make poison. Until you prove good, you not trust on by me." He produces a small stone and starts sharpening his blade, ignoring your further questions.]]>
+        </text>
+    </node>
+    <node for="153">
+        <keyword>ener</keyword>
+        <keyword>spel</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The energy inherent in a perfect crystal is amazing, to one who knows how to tap it. The mages in this place had some small idea. I would like to know of this thing they made, used for opening gates."]]>
+        </text>
+    </node>
+    <node for="153">
+        <keyword>magi</keyword>
+        <keyword>crys</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You do not know of us Vahnatai. We live far under the earth, and in our magic, we use the tools closest to us." He holds up the huge crystal. "We use our crystals. They give energy to our spells."]]>
+        </text>
+        <text>
+            <![CDATA["We even use them to preserve our ancestors."]]>
+        </text>
+    </node>
+    <node for="153">
+        <keyword>spel</keyword>
+        <keyword>vahn</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Normally, I would not be offering this, but it is urgent that we find a way to stop the poison from flowing down into the earth. We Vahnatai know many spells you don't, and I could teach them to you, for a price. Would you purchase them?"]]>
+        </text>
+    </node>
+    <node for="153">
+        <keyword>purc</keyword>
+        <keyword>teac</keyword>
+        <type>shop</type>
+        <param>4</param>
+        <param>17</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Zereen's Spells]]>
+        </text>
+    </node>
+    <node for="153">
+        <keyword>ston</keyword>
+        <keyword>powe</keyword>
+        <type>call-local</type>
+        <param>6</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She shakes her head. "You have the crystal. How it can be used is up to you to find."]]>
+        </text>
+    </node>
+    <node for="153">
+        <keyword>pres</keyword>
+        <keyword>ance</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Those of our people who are most honored, on them we cast our mightiest spell. We withdraw their very souls, and make them take physical form, as a crystal. These Crystal Souls are our guides, and most valued beings."]]>
+        </text>
+        <text>
+            <![CDATA["Perhaps one day you can meet one. It is a truly great honor."]]>
+        </text>
+    </node>
+    <node for="153">
+        <keyword>open</keyword>
+        <keyword>gate</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Ask Baia-Tel for his information. He has much to give you, including of the opening gates device."]]>
+        </text>
+    </node>
+</dialogue>

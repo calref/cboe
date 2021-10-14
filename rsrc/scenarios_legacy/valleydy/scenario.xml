@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<scenario boes="2.0.0">
+    <title>Valley of Dying Things</title>
+    <icon>5</icon>
+    <id></id>
+    <version>1.0.2</version>
+    <language>en-US</language>
+    <author>
+        <name>Name not given</name>
+        <email>Spiderweb Software, Inc. PO Box 85659, Seattle, WA 98145, (206) 789-4438.</email>
+    </author>
+    <text>
+        <teaser>Everyone in the valley is dying. Can you find out why?</teaser>
+        <teaser>By Jeff Vogel, C. 1997, All Rights Reserved</teaser>
+        <intro-msg>
+            <![CDATA[Adventuring! You are on the road at last, vagabonds, travelers, looking for missions to complete, people to help, adventures to have! Soon you will be heroes, if you have anything to say about it.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[Even better, the Empire hired you immediately, giving you a special mission. You are to go to Skylark Vale, and investigate a minor plague or disaster or some other sort of affliction.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[Sure, the Empire considers it seriously low priority. Otherwise they wouldn't send you. It'll probably be wrapped up in a week. Still, it's your first job, no doubt the first of many!]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[You have just arrived at Fort Talrus, an Empire outpost on the lip of Skylark Vale. Your orders are to speak with Commander Terrance, descend into the Vale to find out what the problem is, and deal with it.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[You've just stayed the night in your room at the fort, and have had a good night's sleep and a good meal. Time to go out and be heroes!]]>
+        </intro-msg>
+    </text>
+    <ratings>
+        <content>G</content>
+        <difficulty>1</difficulty>
+    </ratings>
+    <flags>
+        <adjust-difficulty>true</adjust-difficulty>
+        <legacy>true</legacy>
+        <custom-graphics>false</custom-graphics>
+    </flags>
+    <creator>
+        <type>oboe</type>
+        <version>2.0.0</version>
+        <os>Apple Mac OS X Version 11.5.2 (Build 20G95)</os>
+    </creator>
+    <game>
+        <num-towns>21</num-towns>
+        <out-width>3</out-width>
+        <out-height>3</out-height>
+        <start-town>0</start-town>
+        <town-start x="7" y="8" />
+        <outdoor-start x="2" y="2" />
+        <sector-start x="23" y="39" />
+        <store-items top="0" left="0" bottom="47" right="47" town="0" />
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Runed Stone</name>
+            <description>
+                <![CDATA[This is a black, polished stone sphere, about 4 inches in diameter. It is covered with small, finely etched runes and radiates energy constantly.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Crystal of Power</name>
+            <description>
+                <![CDATA[This six inch long quartz crystal would seem pretty ordinary were it not for one thing - it's searingly hot to the touch. Someone has somehow stored an amazing amount of power in it.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="true" special="9">
+            <name>Opening Stone</name>
+            <description>
+                <![CDATA[This is a simple black stone, about three inches long, which has been polished smooth by the rubbing of countless hands.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Stone Tablets</name>
+            <description>
+                <![CDATA[These old stone tablets contain a variety of information on the subject of mining. You can't understand any of it.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Stone Tablets</name>
+            <description>
+                <![CDATA[These old stone tablets contain a variety of information on the subject of woodcarving. You can't understand any of it.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="true" special="8">
+            <name>Healing Scepter</name>
+            <description>
+                <![CDATA[This is a bronze scepter with fittings of gold, about two feet long. A large, somewhat flawed opal is set into it at one end.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Instructions Scrolls</name>
+            <description>
+                <![CDATA[This sheaf of scrolls explains in some detail how to operate the control panels at the lowest level of the School of Magery.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Drake Fang</name>
+            <description>
+                <![CDATA[This tooth is bone white and about the length of your arm. Its owner was clearly a beast to be reckoned with.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Gnat Eggs</name>
+            <description>
+                <![CDATA[This is a cluster of white, moist eggs, still dripping swamp water. It's not the most pleasant thing to be carrying around.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Silver Key</name>
+            <description>
+                <![CDATA[You found this silver key in the Provost's office. You would imagine it fits in a door somewhere.]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Brass Key</name>
+            <description>
+                <![CDATA[This key was slipped into your pocket by invisible spirits for no particularly clear reason.]]>
+            </description>
+        </special-item>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Healing</name>
+            <type>dead</type>
+            <prompt>heal</prompt>
+            <face>41</face>
+            <entries>
+                <heal>0</heal>
+                <heal>1</heal>
+                <heal>2</heal>
+                <heal>4</heal>
+                <heal>9</heal>
+                <heal>5</heal>
+                <heal>6</heal>
+                <heal>7</heal>
+                <heal>8</heal>
+            </entries>
+        </shop>
+        <shop>
+            <name>McKean&apos;s Rations</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>42</face>
+            <entries>
+                <item quantity="infinite">1</item>
+                <item quantity="infinite">2</item>
+                <item quantity="infinite">3</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Bristow&apos;s Weapons</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">31</item>
+                <item quantity="infinite">32</item>
+                <item quantity="infinite">33</item>
+                <item quantity="infinite">34</item>
+                <item quantity="infinite">35</item>
+                <item quantity="infinite">36</item>
+                <item quantity="infinite">37</item>
+                <item quantity="infinite">38</item>
+                <item quantity="infinite">39</item>
+                <item quantity="infinite">40</item>
+                <item quantity="infinite">41</item>
+                <item quantity="infinite">42</item>
+                <item quantity="infinite">43</item>
+                <item quantity="infinite">44</item>
+                <item quantity="infinite">45</item>
+                <item quantity="infinite">46</item>
+                <item quantity="infinite">47</item>
+                <item quantity="infinite">48</item>
+                <item quantity="infinite">49</item>
+                <item quantity="infinite">50</item>
+                <item quantity="infinite">51</item>
+                <item quantity="infinite">52</item>
+                <item quantity="infinite">53</item>
+                <item quantity="infinite">54</item>
+                <item quantity="infinite">55</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Bristow&apos;s Armor</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">120</item>
+                <item quantity="infinite">121</item>
+                <item quantity="infinite">122</item>
+                <item quantity="infinite">123</item>
+                <item quantity="infinite">124</item>
+                <item quantity="infinite">125</item>
+                <item quantity="infinite">126</item>
+                <item quantity="infinite">127</item>
+                <item quantity="infinite">128</item>
+                <item quantity="infinite">129</item>
+                <item quantity="infinite">130</item>
+                <item quantity="infinite">131</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Karen&apos;s Scrolls</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">196</item>
+                <item quantity="infinite">197</item>
+                <item quantity="infinite">198</item>
+                <item quantity="infinite">199</item>
+                <item quantity="infinite">200</item>
+                <item quantity="infinite">201</item>
+                <item quantity="infinite">202</item>
+                <item quantity="infinite">203</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Karen&apos;s Potions</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">260</item>
+                <item quantity="infinite">261</item>
+                <item quantity="infinite">262</item>
+                <item quantity="infinite">263</item>
+                <item quantity="infinite">264</item>
+                <item quantity="infinite">265</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Blinlock Foundry</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">64</item>
+                <item quantity="infinite">65</item>
+                <item quantity="infinite">66</item>
+                <item quantity="infinite">67</item>
+                <item quantity="infinite">68</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Winstead&apos;s Bakery</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>42</face>
+            <entries>
+                <item quantity="infinite">1</item>
+                <item quantity="infinite">2</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Somreth&apos;s Spells</name>
+            <type>live</type>
+            <prompt>priest</prompt>
+            <face>43</face>
+            <entries>
+                <priest-spell>30</priest-spell>
+                <priest-spell>31</priest-spell>
+                <priest-spell>32</priest-spell>
+                <priest-spell>33</priest-spell>
+                <priest-spell>34</priest-spell>
+                <priest-spell>35</priest-spell>
+                <priest-spell>36</priest-spell>
+                <priest-spell>37</priest-spell>
+            </entries>
+        </shop>
+        <shop>
+            <name>Covington&apos;s Bows</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">108</item>
+                <item quantity="infinite">109</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Covington&apos;s Arrows</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">103</item>
+                <item quantity="infinite">104</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Covington&apos;s Missiles</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">98</item>
+                <item quantity="infinite">99</item>
+                <item quantity="infinite">100</item>
+                <item quantity="infinite">101</item>
+                <item quantity="infinite">102</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Zereen&apos;s Spells</name>
+            <type>live</type>
+            <prompt>mage</prompt>
+            <face>43</face>
+            <entries>
+                <mage-spell>34</mage-spell>
+                <mage-spell>35</mage-spell>
+            </entries>
+        </shop>
+        <shop>
+            <name>Athia&apos;s Concoctions</name>
+            <type>dead</type>
+            <prompt>alch</prompt>
+            <face>43</face>
+            <entries>
+                <recipe>0</recipe>
+                <recipe>1</recipe>
+            </entries>
+        </shop>
+        <shop>
+            <name>Cole&apos;s Supplies</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">169</item>
+                <item quantity="infinite">170</item>
+                <item quantity="infinite">171</item>
+                <item quantity="infinite">172</item>
+                <item quantity="infinite">173</item>
+            </entries>
+        </shop>
+        <string id="0">
+            <![CDATA["Yeah, that tablet you brought was a huge help. It's all about acid use in processing certain types of ores." She goes on about the details for a while. Your eyes glaze.]]>
+        </string>
+        <string id="1">
+            <![CDATA[She grabs the stone tablet eagerly. She doesn't stay enthusiastic for long. "What is this? It's on woodcarving. Why would I want this?"]]>
+        </string>
+        <string id="2">
+            <![CDATA[Disgusted, she returns it.]]>
+        </string>
+        <string id="3">
+            <![CDATA[She takes the tablet you found and looks at it. Her eyes light up. "This is perfect! Thank you so much!" Then, after you drop a few hints, she decides to reward you.]]>
+        </string>
+        <string id="4">
+            <![CDATA[She gives you a large pouch of gold coins, a pretty decent reward for a seemingly worthless slab of stone.]]>
+        </string>
+        <string id="5">
+            <![CDATA[You wave the scepter, and a warm light emerges from its tip. As the light washes over you, you feel a pleasant, tingling sensation.]]>
+        </string>
+        <string id="6">
+            <![CDATA[quark]]>
+        </string>
+        <string id="7">
+            <![CDATA[You rub the stone, and it makes a strong humming sound. The sound lasts for several seconds, and stops.]]>
+        </string>
+        <string id="8">
+            <![CDATA[You wade through the thin trickle of goo. At first, it seems like it's just nasty smelling mud. Then it starts to eat away at your boots, and the vapors begin to burn your skin. You feel violently ill.]]>
+        </string>
+        <string id="9">
+            <![CDATA[Whatever this stuff is, it's incredibly poisonous. Worse, it's pouring directly into the river that feeds the valley. Also, now it's all over you.]]>
+        </string>
+        <string id="10">
+            <![CDATA[Here, the poisonous goo is so concentrated that stepping in it would probably mean a quick, unpleasant death. You decide not to risk it.]]>
+        </string>
+        <string id="11">
+            <![CDATA[You have slain the ferocious, peculiar gremlord. That's another mess left behind by the masters of the School of Magery that you've had to clean up.]]>
+        </string>
+        <string id="12">
+            <![CDATA[The filth diseases you.]]>
+        </string>
+        <string id="99">
+            <![CDATA[*End special strs]]>
+        </string>
+        <journal id="0">
+            <![CDATA[Begin journal strs]]>
+        </journal>
+        <journal id="49">
+            <![CDATA[End journal strs]]>
+        </journal>
+    </game>
+    <editor>
+        <default-ground>2</default-ground>
+        <last-out-section x="0" y="2" />
+        <last-town>9</last-town>
+        <storage>
+            <on-terrain>2</on-terrain>
+            <is-property>false</is-property>
+        </storage>
+        <storage>
+            <on-terrain>201</on-terrain>
+            <is-property>true</is-property>
+            <item chance="10">4</item>
+            <item chance="10">5</item>
+            <item chance="10">6</item>
+            <item chance="10">7</item>
+            <item chance="10">17</item>
+            <item chance="12">31</item>
+            <item chance="4">37</item>
+            <item chance="8">13</item>
+            <item chance="8">14</item>
+            <item chance="10">16</item>
+        </storage>
+    </editor>
+</scenario>

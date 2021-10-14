@@ -1,0 +1,892 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="10">
+        <title>McKean</title>
+        <look>
+            <![CDATA[No city in the Empire is complete without an innkeeper, and Sweetgrove is no exception. The tired looking man behind the counter looks very relieved to see customers come in.]]>
+        </look>
+        <name>
+            <![CDATA[He grabs a rag and cleans up the bar a bit. "I'm McKean. Good to see visitors!"]]>
+        </name>
+        <job>
+            <![CDATA["Can't you tell?" He waves at the bar. "Business is slow, but I'll give you good service, cheap. We got a pleasant room for 5 gold, a good selection of rations, and even fine Sweetgrove beer for 2 gold a mug!"]]>
+        </job>
+        <unknown>
+            <![CDATA[He shrugs and wipes the bar.]]>
+        </unknown>
+    </personality>
+    <personality id="11">
+        <title>Mayor Crouch</title>
+        <look>
+            <![CDATA[You meet the Mayor of Sweetgrove, up to her neck in paperwork, reports, and accounts of the curse sweeping the Vale. She looks very pleased to see you.]]>
+        </look>
+        <name>
+            <![CDATA[She stands to shake you hand. "I am Mayor Crouch."]]>
+        </name>
+        <job>
+            <![CDATA["I am the chief Empire Liaison for Sweetgrove, and for most of Skylark Vale as well. The details are unimportant. I simply wish to put as many of my resources at your disposal as possible."]]>
+        </job>
+        <unknown>
+            <![CDATA[She shakes her head.]]>
+        </unknown>
+    </personality>
+    <personality id="12">
+        <title>Bristow</title>
+        <look>
+            <![CDATA[Like all farming communities, Sweetgrove has a blacksmith. He moves through the smithy slowly and painfully, as if bent down by some invisible weight.]]>
+        </look>
+        <name>
+            <![CDATA[He looks at you intently, but his eyes don't seem to be registering what he sees. He finally says, in a flat voice, "I'm Bristow."]]>
+        </name>
+        <job>
+            <![CDATA[His voice is dry and flat. "I've heard of you. You're trying to cure the curse. I'll help. You can sell me supplies. You can purchase weapons and armor at discount as well."]]>
+        </job>
+    </personality>
+    <personality id="13">
+        <title>Axel</title>
+        <look>
+            <![CDATA[A small man sits before you, staring intently into a crystal. The stone is on the floor in front of him, in the middle of a runic circle. As you approach, he looks up from it.]]>
+        </look>
+        <name>
+            <![CDATA[He nods in greeting. "I am Axel, sage of Sweetgrove."]]>
+        </name>
+        <job>
+            <![CDATA["I know of your coming, adventurers. Alas, the most I can offer to help you is identification. My research is probably of little interest to you."]]>
+        </job>
+        <unknown>
+            <![CDATA[He raises an eyebrow.]]>
+        </unknown>
+    </personality>
+    <personality id="14">
+        <title>Hamer</title>
+        <look>
+            <![CDATA[The town healer sits at her desk, depressed. She is currently grinding up some healing herbs, in another attempt to cure the diseases afflicting the Vale. Frustrated, she looks up at you.]]>
+        </look>
+        <name>
+            <![CDATA["I am Hamer, town healer of Sweetgrove."]]>
+        </name>
+        <job>
+            <![CDATA["I heal people. Or, at least, those who I am capable of aiding."]]>
+        </job>
+        <unknown>
+            <![CDATA[She looks serene.]]>
+        </unknown>
+    </personality>
+    <personality id="15">
+        <title>Karen</title>
+        <look>
+            <![CDATA[This alchemist is cloaked not only in a mage's robe, but in the impenetrable armor of undiluted arrogance. As uninterested as she is in spending some of her valuable time dealing with you, she deigns to give you a little bit of attention.]]>
+        </look>
+        <name>
+            <![CDATA["I am Karen, Sweetgrove's alchemist."]]>
+        </name>
+        <job>
+            <![CDATA["I am one of the few true seekers of knowledge in Skylark Vale. To fund my arcane researches, I produce scrolls and potions to sell to doomed adventurers."]]>
+        </job>
+        <unknown>
+            <![CDATA[She doesn't listen.]]>
+        </unknown>
+    </personality>
+    <personality id="16">
+        <title>Jenette</title>
+        <look>
+            <![CDATA[This sickly girl would make an effective poster child for the ills afflicting Skylark Vale. She looks to be about eight, but struggles along like a woman ten times older.]]>
+        </look>
+        <name>
+            <![CDATA[She shys away from you. "I'm Jenette," she says in a quiet voice.]]>
+        </name>
+        <job>
+            <![CDATA[She giggles. "I play, silly!"]]>
+        </job>
+        <unknown>
+            <![CDATA[She looks up at you shyly.]]>
+        </unknown>
+    </personality>
+    <personality id="17">
+        <title>Levitz</title>
+        <look>
+            <![CDATA[A small boy, maybe about five, sits by the lake. You have to make an effort to hide your shocked expressions - his skin is almost gray!]]>
+        </look>
+        <name>
+            <![CDATA[Nervousness and shyness combat his curiousity about who you are. Eventually, curiosity wins. "Levitz."]]>
+        </name>
+        <job>
+            <![CDATA[He reaches out to touch the lake water, and then pulls his fingers back, as if the water burns. "I wait here."]]>
+        </job>
+        <unknown>
+            <![CDATA[He looks nervous.]]>
+        </unknown>
+    </personality>
+    <personality id="18">
+        <title>Bruning</title>
+        <look>
+            <![CDATA[A lone man sits alone at the table, longbow near to hand. He is dividing his time between taking sips of beer and recoiling in disgust at the beer's taste.]]>
+        </look>
+        <name>
+            <![CDATA[He motions for you to join him. "I'm Bruning."]]>
+        </name>
+        <job>
+            <![CDATA[He sips his beer, gagging mildly. "I'm here for some bounty hunting. If you must know."]]>
+        </job>
+        <unknown>
+            <![CDATA[He sips some beer.]]>
+        </unknown>
+    </personality>
+    <personality id="19">
+        <title>Lillian</title>
+        <look>
+            <![CDATA[You meet a soldier of the Empire army. She is in the middle of some exercises. You watch her smooth, sharp movements with admiration. After a while, she turns too you.]]>
+        </look>
+        <name>
+            <![CDATA["I am Captain Lillian, head of the Sweetgrove guard."]]>
+        </name>
+        <job>
+            <![CDATA["Well, I spend some time running the town guard. However, I'm also forced to do some teaching."]]>
+        </job>
+    </personality>
+    <node for="10">
+        <keyword>busi</keyword>
+        <keyword>slow</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Nobody wants to come here anymore. Can't blame them."]]>
+        </text>
+    </node>
+    <node for="10">
+        <keyword>plea</keyword>
+        <keyword>room</keyword>
+        <type>inn</type>
+        <param>5</param>
+        <param>2</param>
+        <param>48</param>
+        <param>44</param>
+        <text>
+            <![CDATA[He shows you to a dusty room. It clearly hasn't been used for a few weeks. You sleep poorly.]]>
+        </text>
+        <text>
+            <![CDATA[He shakes his head. "Times are hard. If you have no gold, you can't stay."]]>
+        </text>
+    </node>
+    <node for="10">
+        <keyword>sele</keyword>
+        <keyword>rati</keyword>
+        <type>shop</type>
+        <param>4</param>
+        <param>6</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[McKean's Rations]]>
+        </text>
+    </node>
+    <node for="10">
+        <keyword>swee</keyword>
+        <keyword>beer</keyword>
+        <type>buy-info</type>
+        <param>2</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He fills some tankards and hands them to you. The beer tastes like the inside of a well-used boot. Your mouth burns, and your eyes water. McKean looks at you with sympathy. "Yeah, that's been a serious problem."]]>
+        </text>
+        <text>
+            <![CDATA["Times are tough. No gold, no beer."]]>
+        </text>
+    </node>
+    <node for="10">
+        <keyword>seri</keyword>
+        <keyword>prob</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It's the water, you see. When the curse appeared, the water turned bad. It was one of the first things to go. No good water, no good beer." He thinks, and adds brightly, "But it'll still get you drunk!"]]>
+        </text>
+    </node>
+    <node for="11">
+        <keyword>empi</keyword>
+        <keyword>liai</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I report back to the Empire goings on here, implement their commands, and in general facilitate goings on here." She frowns. "Alas, they have not aided me as they should have."]]>
+        </text>
+    </node>
+    <node for="11">
+        <keyword>aide</keyword>
+        <keyword>shou</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Bureaucratic maneuvering," she snaps angrily. "I reported the problems years ago, but it took all this time to wind up through channels to someone who could make a decision."]]>
+        </text>
+        <text>
+            <![CDATA["You are the first response to this crisis we've received. I pray to the Heavens you can help, because if you can't, many more will die."]]>
+        </text>
+    </node>
+    <node for="11">
+        <keyword>swee</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["This was a beautiful city, the jewel of Skylark Vale."]]>
+        </text>
+    </node>
+    <node for="11">
+        <keyword>skyl</keyword>
+        <keyword>vale</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She shakes her head miserably. "Skylark Vale was one of the most beautiful, productive areas for hundreds of miles around. Once, the wizards here were famed throughout the Empire. Now, look what the curse has reduced us to."]]>
+        </text>
+    </node>
+    <node for="11">
+        <keyword>empi</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She adds nervously, "Of course, despite my minor problems, the Empire's power and wisdom is a constant inspiration to me."]]>
+        </text>
+    </node>
+    <node for="11">
+        <keyword>deta</keyword>
+        <keyword>unim</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She waves silently at the massive piles of papers and forms on her desk.]]>
+        </text>
+    </node>
+    <node for="11">
+        <keyword>reso</keyword>
+        <keyword>disp</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I doubt there is a person in the Vale who will not tell you all they can to aid your investigation. Whatever happens, the curse must be ended."]]>
+        </text>
+        <text>
+            <![CDATA["In return, please occasionally report your progress to me. I would greatly appreciate it."]]>
+        </text>
+    </node>
+    <node for="11">
+        <keyword>curs</keyword>
+        <keyword>cris</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It all started five or six years ago. First, the water turned bitter, choking those who drank it. Then the plants and animals began to go, and diseases swept through the people. Worst, though, was what happened to the children."]]>
+        </text>
+    </node>
+    <node for="11">
+        <keyword>dise</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Strange wasting diseases, such as we had never seen before. Many of the townsfolk died. They suffered greatly. It was a long slow wasting away."]]>
+        </text>
+    </node>
+    <node for="11">
+        <keyword>chil</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The children were the worst affected by the diseases. Many of them, much of the new generation, were lost."]]>
+        </text>
+    </node>
+    <node for="11">
+        <keyword>wiza</keyword>
+        <keyword>fame</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You have not heard of the old School of Magery? Not surprising. It closed about a century ago. I actually know little of it. It's Axel you should ask about that. He lives at the east end of town."]]>
+        </text>
+    </node>
+    <node for="11">
+        <keyword>scho</keyword>
+        <keyword>mage</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She looks perplexed. "I know little about it, and it hardly seems important, now, does it? The important thing is the curse."]]>
+        </text>
+    </node>
+    <node for="11">
+        <keyword>repo</keyword>
+        <keyword>prog</keyword>
+        <type>call-local</type>
+        <param>10</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[You tell her what you've achieved so far. She doesn't look impressed. "Alas, the curse still continues. I wish I could applaud your efforts, but the deaths continue."]]>
+        </text>
+    </node>
+    <node for="12">
+        <keyword>purc</keyword>
+        <keyword>disc</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Times are hard, but I'll give you what discount I can. Do you want weapons or armor?"]]>
+        </text>
+    </node>
+    <node for="12">
+        <keyword>weap</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>1</param>
+        <param>7</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Bristow's Weapons]]>
+        </text>
+    </node>
+    <node for="12">
+        <keyword>armo</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>1</param>
+        <param>8</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Bristow's Armor]]>
+        </text>
+    </node>
+    <node for="12">
+        <keyword>sell</keyword>
+        <keyword>xxxx</keyword>
+        <type>sell-any</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks your identified items over. "Times are hard, but I'll give you the best offers I can."]]>
+        </text>
+    </node>
+    <node for="12">
+        <keyword>cure</keyword>
+        <keyword>curs</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He pauses for some time, unsure whether to open up to you. Finally, he says "You should meet my daughter."]]>
+        </text>
+    </node>
+    <node for="12">
+        <keyword>meet</keyword>
+        <keyword>daug</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Her name is Jenette. She plays outside a lot."]]>
+        </text>
+    </node>
+    <node for="12">
+        <keyword>jene</keyword>
+        <keyword>play</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Or at least she plays while she can. Meet her, and you'll see. Anything you can do for us, anything to help, we'd be very thankful."]]>
+        </text>
+    </node>
+    <node for="12">
+        <keyword>help</keyword>
+        <keyword>than</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks grim. "We're independent people. Asking for help is difficult for us. But we need it."]]>
+        </text>
+    </node>
+    <node for="13">
+        <keyword>iden</keyword>
+        <keyword>xxxx</keyword>
+        <type>id</type>
+        <param>6</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He casts a spell and looks over your inventory. "Yes, since you have came to help us, I will give you a considerable discount. I will identify your items for 6 gold each."]]>
+        </text>
+    </node>
+    <node for="13">
+        <keyword>rese</keyword>
+        <keyword>inte</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks surprised, as well as flattered that you asked. "Well, the main reason I came to the Vale was to learn of the School of Magery."]]>
+        </text>
+        <text>
+            <![CDATA["Then, lately, I have been trying to determine the cause of the curse which has afflicted us."]]>
+        </text>
+    </node>
+    <node for="13">
+        <keyword>scho</keyword>
+        <keyword>mage</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It was a school in the Vale, which taught some of the wisest mages in the Empire. It closed a century ago, and was sealed up. It was to the north of here. You can visit it if you wish."]]>
+        </text>
+        <text>
+            <![CDATA["However, you will likely have the same problems investigating I did."]]>
+        </text>
+    </node>
+    <node for="13">
+        <keyword>prob</keyword>
+        <keyword>inve</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Go up north and see for yourself. The mages who closed the place sealed it up well. I have been able to neither enter it nor find out why it was closed. Few here even know of it."]]>
+        </text>
+        <text>
+            <![CDATA[He thinks. "Come to think of it, there was one who lived nearby who was trying to enter as well. His name was Avizo"]]>
+        </text>
+    </node>
+    <node for="13">
+        <keyword>ente</keyword>
+        <keyword>aviz</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Avizo was a sickly man who left recently. However, he may not have made it out of the Vale yet. He was very ill." He thinks. "He told me he had found a runed stone of some sort when looking around the old school."]]>
+        </text>
+        <text>
+            <![CDATA["You may wish to ask him of it if you meet him."]]>
+        </text>
+    </node>
+    <node for="13">
+        <keyword>curs</keyword>
+        <keyword>affl</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Of course, I have had absolutely no luck finding the cause of the curse. But I'm trying." He shrugs.]]>
+        </text>
+    </node>
+    <node for="14">
+        <keyword>heal</keyword>
+        <keyword>peop</keyword>
+        <type>shop</type>
+        <param>1</param>
+        <param>5</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Hamer the Healer]]>
+        </text>
+    </node>
+    <node for="14">
+        <keyword>capa</keyword>
+        <keyword>aidi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She laughs bitterly. "Perhaps I can heal you. I certainly haven't been able to help my daughters, or poor Avizo."]]>
+        </text>
+    </node>
+    <node for="14">
+        <keyword>help</keyword>
+        <keyword>daug</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["One of them was thrown into Exile. I couldn't help her. Now poor Jenette wastes away, and there is nothing I can do. I only hope my husband can forgive me for my failure."]]>
+        </text>
+    </node>
+    <node for="14">
+        <keyword>husb</keyword>
+        <keyword>forg</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She sheds an unselfconscious tear. "He says he doesn't blame me. But then, who can truly tell." She thinks. "And who could blame him."]]>
+        </text>
+    </node>
+    <node for="14">
+        <keyword>poor</keyword>
+        <keyword>aviz</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Ah, poor Avizo, one of our town's mages. First he lost his son. The poor boy just wasted away when the curse came. Then he fell ill himself. He left us finally, but not before he went a little strange in the head."]]>
+        </text>
+    </node>
+    <node for="14">
+        <keyword>stra</keyword>
+        <keyword>head</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["He came to me saying something about some runed stone he found. He said it was sure to help solve the curse. Poor fellow. If you see him, you can ask him about it. That is, if you don't mind deluded rantings."]]>
+        </text>
+    </node>
+    <node for="15">
+        <keyword>purc</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Your denseness irritates her. "Be specific! Scrolls or potions?"]]>
+        </text>
+    </node>
+    <node for="15">
+        <keyword>scro</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>3</param>
+        <param>9</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Karen's Scrolls]]>
+        </text>
+    </node>
+    <node for="15">
+        <keyword>poti</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>4</param>
+        <param>10</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Karen's Potions]]>
+        </text>
+    </node>
+    <node for="15">
+        <keyword>arca</keyword>
+        <keyword>rese</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She gives you a condescending look. She clearly feels anything technical explained to you would be a waste of time.]]>
+        </text>
+    </node>
+    <node for="15">
+        <keyword>seek</keyword>
+        <keyword>know</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["My colleague Kelda, from Marralis, and I have tried to continue the tradition of the School of Magery, and use this valley as a base for all manner of magical learning."]]>
+        </text>
+    </node>
+    <node for="15">
+        <keyword>scho</keyword>
+        <keyword>mage</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It was a school in the Vale, where mages could master their arts in peace. If, for some obscure reason, you wish to learn more, speak to Axel. He lives across town."]]>
+        </text>
+    </node>
+    <node for="16">
+        <keyword>play</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I play!" She twirls around slowly. Her skin looks pale and gray in the sunlight. "But it's lonely."]]>
+        </text>
+    </node>
+    <node for="16">
+        <keyword>lone</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Most of my friends are gone. Taken away."]]>
+        </text>
+    </node>
+    <node for="16">
+        <keyword>take</keyword>
+        <keyword>away</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She looks confused. "Not around anymore. And Levitz won't play. He's hiding."]]>
+        </text>
+    </node>
+    <node for="16">
+        <keyword>levi</keyword>
+        <keyword>hidi</keyword>
+        <type>end-force</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Your questions are making her nervous. "He's around somewhere, but he's too small, and he's shy. He hides. I gotta' go." She tries to run away, but only manages a walk.]]>
+        </text>
+    </node>
+    <node for="17">
+        <keyword>wait</keyword>
+        <keyword>here</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[You ask what he waits for. He doesn't say anything. He just stares into the water.]]>
+        </text>
+    </node>
+    <node for="17">
+        <keyword>wate</keyword>
+        <keyword>burn</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks up at you, then back down at the water. "I hate water. It's yucky."]]>
+        </text>
+    </node>
+    <node for="17">
+        <keyword>yuck</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He points at the water. "Try it." You take a sip of river water. It truly tastes awful. Your eyes water. "Father doesn't like it either."]]>
+        </text>
+    </node>
+    <node for="17">
+        <keyword>fath</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["My dad runs the inn. He makes things with the water, but doesn't like it. When he works, I come here. People don't stare here."]]>
+        </text>
+    </node>
+    <node for="17">
+        <keyword>peop</keyword>
+        <keyword>star</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[The child weakly turns his gray face up to you, and you can clearly see how sick he is. "They stare at me. I don't like it."]]>
+        </text>
+    </node>
+    <node for="18">
+        <keyword>beer</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He coughs. "I know it's not their fault, but this place has the worst beer I've ever had. Anywhere."]]>
+        </text>
+    </node>
+    <node for="18">
+        <keyword>boun</keyword>
+        <keyword>hunt</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It's disgusting. The Vale has all sorts of problems. So what happens? All the vultures come here to roost."]]>
+        </text>
+    </node>
+    <node for="18">
+        <keyword>vult</keyword>
+        <keyword>roos</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Bandits. There's plenty of them around. Sweetgrove pays me to help hunt them down. Tough work, and a hard place to live, but the pay is good." He sips the beer, forcing himself to swallow it only with great effort.]]>
+        </text>
+        <text>
+            <![CDATA["Pity the beer isn't better."]]>
+        </text>
+    </node>
+    <node for="19">
+        <keyword>teac</keyword>
+        <keyword>forc</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Our trainer fled the Vale. We still needed one, and I was the only person qualified, so I took over. Do you need training?"]]>
+        </text>
+    </node>
+    <node for="19">
+        <keyword>trai</keyword>
+        <keyword>xxxx</keyword>
+        <type>train</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text />
+    </node>
+    <node for="19">
+        <keyword>town</keyword>
+        <keyword>guar</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Once the curse hit, we got another curse right behind it. Bandits. Goblins. Wolves. We became weak, and they came in. When you travel around, beware."]]>
+        </text>
+    </node>
+    <node for="19">
+        <keyword>trav</keyword>
+        <keyword>bewa</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["There's nothing bandits love more than a small group traveling alone. They'll have more victims. Just have a care that you don't number among them."]]>
+        </text>
+    </node>
+</dialogue>
