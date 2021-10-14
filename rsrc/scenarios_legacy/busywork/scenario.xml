@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<scenario boes="2.0.0">
+    <title>Bandit Busywork</title>
+    <icon>4</icon>
+    <id></id>
+    <version>1.0.0</version>
+    <language>en-US</language>
+    <author>
+        <name>Name not given</name>
+        <email>Spiderweb Software, Inc. PO Box 85659, Seattle, WA 98145, (206) 789-4438.</email>
+    </author>
+    <text>
+        <teaser>Save a small village from mysterious bandits.</teaser>
+        <teaser>By Jeff Vogel, C. 1997, All Rights Reserved</teaser>
+        <intro-msg>
+            <![CDATA[Adventurers have to do a lot more than just save the world. There are never any shortages of stray monsters, small uprisings, and other difficulties that require the violent touch of a small band of heroes.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[This is one of those cases. You were contacted by the commander of the Empire city of Krizsan and asked to travel to the city of Cavala in nearby Mrrnah Hollow. A number of caravans have been attacked by bandits there.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[You are to find the bandit hideout and wipe the vermin out. This may be difficult, however. Nobody has yet been able to figure out where the bandits live. You may have to do a bit of investigating first.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[Mrrnah Hollow is only a two day's march from Krizsan, and you arrive there without difficulty. After resting for the night in an abandoned home at the entrance to the valley, you wake up, refreshed and ready to begin your investigation.]]>
+        </intro-msg>
+        <intro-msg>
+            <![CDATA[The town of Cavala is a day's march to the north. It might be a good place to begin.]]>
+        </intro-msg>
+    </text>
+    <ratings>
+        <content>G</content>
+        <difficulty>1</difficulty>
+    </ratings>
+    <flags>
+        <adjust-difficulty>true</adjust-difficulty>
+        <legacy>true</legacy>
+        <custom-graphics>false</custom-graphics>
+    </flags>
+    <creator>
+        <type>oboe</type>
+        <version>2.0.0</version>
+        <os>Apple Mac OS X Version 11.5.2 (Build 20G95)</os>
+    </creator>
+    <game>
+        <num-towns>4</num-towns>
+        <out-width>1</out-width>
+        <out-height>3</out-height>
+        <start-town>1</start-town>
+        <town-start x="16" y="16" />
+        <outdoor-start x="0" y="2" />
+        <sector-start x="29" y="29" />
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Healing</name>
+            <type>dead</type>
+            <prompt>heal</prompt>
+            <face>41</face>
+            <entries>
+                <heal>0</heal>
+                <heal>1</heal>
+                <heal>2</heal>
+                <heal>4</heal>
+                <heal>9</heal>
+                <heal>5</heal>
+                <heal>6</heal>
+                <heal>7</heal>
+                <heal>8</heal>
+            </entries>
+        </shop>
+        <shop>
+            <name>Winslet&apos;s Spells</name>
+            <type>live</type>
+            <prompt>priest</prompt>
+            <face>43</face>
+            <entries>
+                <priest-spell>30</priest-spell>
+                <priest-spell>31</priest-spell>
+                <priest-spell>32</priest-spell>
+                <priest-spell>33</priest-spell>
+                <priest-spell>34</priest-spell>
+                <priest-spell>35</priest-spell>
+                <priest-spell>36</priest-spell>
+                <priest-spell>37</priest-spell>
+            </entries>
+        </shop>
+        <shop>
+            <name>Cameron&apos;s Weapons</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">37</item>
+                <item quantity="infinite">38</item>
+                <item quantity="infinite">39</item>
+                <item quantity="infinite">40</item>
+                <item quantity="infinite">41</item>
+                <item quantity="infinite">42</item>
+                <item quantity="infinite">43</item>
+                <item quantity="infinite">44</item>
+                <item quantity="infinite">45</item>
+                <item quantity="infinite">46</item>
+                <item quantity="infinite">47</item>
+                <item quantity="infinite">48</item>
+                <item quantity="infinite">49</item>
+                <item quantity="infinite">50</item>
+                <item quantity="infinite">51</item>
+                <item quantity="infinite">52</item>
+            </entries>
+        </shop>
+        <string id="0">
+            <![CDATA[*Begin special strs]]>
+        </string>
+        <string id="99">
+            <![CDATA[*End special strs]]>
+        </string>
+        <journal id="0">
+            <![CDATA[Begin journal strs]]>
+        </journal>
+        <journal id="49">
+            <![CDATA[End journal strs]]>
+        </journal>
+    </game>
+    <editor>
+        <default-ground>2</default-ground>
+        <last-out-section x="0" y="0" />
+        <last-town>0</last-town>
+    </editor>
+</scenario>

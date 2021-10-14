@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="180">
+        <title>Stalker</title>
+        <look>
+            <![CDATA[You come face to face with the infamous Stalker. He stands and shakes your hands in a clipped, businesslike manner. Then he sits.]]>
+        </look>
+        <name>
+            <![CDATA["My real name is lost, and I prefer it stay forgotten. I am called Stalker."]]>
+        </name>
+        <job>
+            <![CDATA["I am the leader of the Hill Runners. I fight the Empire however possible. By all means at my disposal."]]>
+        </job>
+        <unknown>
+            <![CDATA[He stares at you.]]>
+        </unknown>
+    </personality>
+    <personality id="181">
+        <title>Canizares</title>
+        <look>
+            <![CDATA[You meet Canizares again, the man who gave you your first Hill Runner mission on this island.]]>
+        </look>
+        <name>
+            <![CDATA["I am Canizares. Do you not remember?"]]>
+        </name>
+        <job>
+            <![CDATA["Well, well. You have worked out better for us than anyone expected."]]>
+        </job>
+    </personality>
+    <personality id="182">
+        <title>Pogue</title>
+        <look>
+            <![CDATA[You meet a small nervous man. He is pacing around, clearly on edge.]]>
+        </look>
+        <name>
+            <![CDATA["Uh, I'm Pogue."]]>
+        </name>
+        <job>
+            <![CDATA["I am the interrogator here."]]>
+        </job>
+        <unknown>
+            <![CDATA["Sorry?"]]>
+        </unknown>
+    </personality>
+    <personality id="183">
+        <title>Karen</title>
+        <look>
+            <![CDATA[There's a tired looking blonde woman behind the counter, trying to repair a dozen miserable looking arrows.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Karen. What?"]]>
+        </name>
+        <job>
+            <![CDATA[She looks at you unhappily. "I'm in charge of giving supplies."]]>
+        </job>
+    </personality>
+    <personality id="184">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="185">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="186">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="187">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="188">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="189">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="180">
+        <keyword>lead</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It has fallen to me to lead, and I do my best."]]>
+        </text>
+    </node>
+    <node for="180">
+        <keyword>hill</keyword>
+        <keyword>runn</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["That is the name my followers have taken for themselves."]]>
+        </text>
+    </node>
+    <node for="180">
+        <keyword>empi</keyword>
+        <keyword>poss</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["My hatred for the Empire knows no bounds. The tactics I use against them know no bounds either. That is why I wanted you brought here. I need to fight the Empire with any means at my disposal."]]>
+        </text>
+    </node>
+    <node for="180">
+        <keyword>know</keyword>
+        <keyword>boun</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks at the table. "I have my reasons for fighting them."]]>
+        </text>
+    </node>
+    <node for="180">
+        <keyword>reas</keyword>
+        <keyword>figh</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks straight at you. "The Empire has given me three reasons to hate them, three reasons that will never be returned to me. And I choose not discuss this anymore."]]>
+        </text>
+    </node>
+    <node for="180">
+        <keyword>mean</keyword>
+        <keyword>disp</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["My best weapon now is you. I know the Empire brought you here. I also know that, for whatever reason, you choose to join us. Sadly for you, you are trapped on this island."]]>
+        </text>
+        <text>
+            <![CDATA["I have a final mission for you. If you carry it out, you will be well rewarded."]]>
+        </text>
+    </node>
+    <node for="180">
+        <keyword>trap</keyword>
+        <keyword>isla</keyword>
+        <type>if-sdf</type>
+        <param>20</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The Empire will stop at nothing to kill you now. No Empire controlled city on this island will be safe for you. The docks at Selathni are lost to you. That is why, if you complete a mission for us, we will reward you."]]>
+        </text>
+        <text>
+            <![CDATA["You can't use the docks at Selathni to leave the island. Fortunately, we have a hidden dock here you can use. That is your reward."]]>
+        </text>
+    </node>
+    <node for="180">
+        <keyword>rewa</keyword>
+        <keyword>xxxx</keyword>
+        <type>if-sdf</type>
+        <param>20</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We will pay you well for completing our mission. In return, we will help you escape this island, and give you other trinkets as well."]]>
+        </text>
+        <text>
+            <![CDATA["You have completed your mission, and we will be good to our word. There is a chest in a room to the north. Your reward is in there."]]>
+        </text>
+    </node>
+    <node for="180">
+        <keyword>fina</keyword>
+        <keyword>miss</keyword>
+        <type>call-local</type>
+        <param>24</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You have done well for us. In return, we have gotten your reward ready."]]>
+        </text>
+    </node>
+    <node for="180">
+        <keyword>live</keyword>
+        <keyword>with</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You need to use our boat to get off this island. Selathni won't let you use their docks anymore. You have no choice but to help us. Let this be your final lesson in rebellion."]]>
+        </text>
+    </node>
+    <node for="180">
+        <keyword>less</keyword>
+        <keyword>rebe</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Use anyone and anything who will help you attain your sacred goal. That includes you."]]>
+        </text>
+    </node>
+    <node for="180">
+        <keyword>supp</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The supply depot is much farther inside our fortress. Karen is in charge there now. She will help outfit you for your mission."]]>
+        </text>
+    </node>
+    <node for="181">
+        <keyword>anyo</keyword>
+        <keyword>expe</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We were all debating about whether to try to convince you, or kill you. We hope we made the right choice."]]>
+        </text>
+    </node>
+    <node for="181">
+        <keyword>deba</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It was a difficult decision. The slightest betrayal, the smallest advantage, and Jaen would kill us all."]]>
+        </text>
+    </node>
+    <node for="181">
+        <keyword>conv</keyword>
+        <keyword>kill</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We knew that the Empire asked you to come here, and we suspected that you were being asked to infiltrate us. We would have killed you instantly, but we need good allies."]]>
+        </text>
+    </node>
+    <node for="181">
+        <keyword>good</keyword>
+        <keyword>alli</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We need all the help we can get. The Empire is a nearly overwhelming force."]]>
+        </text>
+    </node>
+    <node for="181">
+        <keyword>righ</keyword>
+        <keyword>choi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["To find out more about that, you should talk to Stalker."]]>
+        </text>
+    </node>
+    <node for="181">
+        <keyword>stal</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Stalker is a truly great man, a groundbreaking thinker. We had never realized what a powerful weapon utter ruthlessness could be."]]>
+        </text>
+    </node>
+    <node for="181">
+        <keyword>utte</keyword>
+        <keyword>ruth</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Again, you should speak with Stalker to learn more of that."]]>
+        </text>
+    </node>
+    <node for="181">
+        <keyword>over</keyword>
+        <keyword>forc</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Our goal is to control this island ourselves. Islands are not hard to defend, especially with magical help. But first, we need you to perform a mission for us." Stalker, listening, clears his throat.]]>
+        </text>
+        <text>
+            <![CDATA[Canizares, chastened, says "But you should talk to Stalker about that."]]>
+        </text>
+    </node>
+    <node for="182">
+        <keyword>inte</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Ummm ... I convince people who don't want to tell us things that they should."]]>
+        </text>
+    </node>
+    <node for="182">
+        <keyword>conv</keyword>
+        <keyword>peop</keyword>
+        <type>end-force</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Look, I'm not sure I'm allowed to be talking to you. I don't know if Stalker has said it's all right. I really should go. Bye."]]>
+        </text>
+    </node>
+    <node for="183">
+        <keyword>givi</keyword>
+        <keyword>supp</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["What little supplies there are to give. The rebels are all the same. Their little missions are all the most important things in the world, and need all of our pitiful supply of items. They cajole, they threaten, they hit on me."]]>
+        </text>
+        <text>
+            <![CDATA["But I turn them down, because I need to keep it all to go around. That's why this whole business with you makes me so angry."]]>
+        </text>
+    </node>
+    <node for="183">
+        <keyword>busi</keyword>
+        <keyword>angr</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I've been ordered to give you all of our best supplies. No explanations. People come to me every day, about to risk their lives and needing our weapons to save themselves. But I can't give them now, because you'll have them."]]>
+        </text>
+        <text>
+            <![CDATA["No matter. The supplies are there for you, in the east storeroom."]]>
+        </text>
+    </node>
+    <node for="183">
+        <keyword>east</keyword>
+        <keyword>stor</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The items you've been given are in the storerooms to the north of here. Help yourself. Good luck. I hope you're worth it."]]>
+        </text>
+    </node>
+    <node for="180">
+        <keyword>mach</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Stalker smiles. "Ah, yes. I have heard of him. Machrone, and his spreading of news. I will make good use of him, but not yet, not until we control Morrow's Isle."]]>
+        </text>
+    </node>
+</dialogue>

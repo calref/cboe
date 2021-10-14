@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Fahl</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="3" bottom="44" right="44" />
+    <difficulty>0</difficulty>
+    <lighting>lit</lighting>
+    <onenter condition="alive">1</onenter>
+    <onenter condition="dead">1</onenter>
+    <flags />
+    <wandering>
+        <monster>117</monster>
+    </wandering>
+    <wandering>
+        <monster>115</monster>
+        <monster>115</monster>
+        <monster>115</monster>
+    </wandering>
+    <item id="0">
+        <type>332</type>
+        <contained>true</contained>
+    </item>
+    <item id="1">
+        <type>20</type>
+    </item>
+    <item id="2">
+        <type>22</type>
+        <contained>true</contained>
+    </item>
+    <item id="3">
+        <type>19</type>
+    </item>
+    <item id="4">
+        <type>14</type>
+    </item>
+    <item id="5">
+        <type>10</type>
+    </item>
+    <item id="6">
+        <type>10</type>
+    </item>
+    <item id="7">
+        <type>9</type>
+    </item>
+    <item id="8">
+        <type>9</type>
+    </item>
+    <item id="9">
+        <type>9</type>
+    </item>
+    <item id="10">
+        <type>9</type>
+    </item>
+    <item id="11">
+        <type>9</type>
+    </item>
+    <item id="12">
+        <type>11</type>
+    </item>
+    <item id="13">
+        <type>11</type>
+    </item>
+    <item id="14">
+        <type>11</type>
+    </item>
+    <item id="15">
+        <type>12</type>
+    </item>
+    <item id="16">
+        <type>12</type>
+    </item>
+    <item id="17">
+        <type>12</type>
+    </item>
+    <item id="18">
+        <type>16</type>
+    </item>
+    <item id="19">
+        <type>16</type>
+    </item>
+    <item id="20">
+        <type>15</type>
+    </item>
+    <item id="21">
+        <type>15</type>
+    </item>
+    <item id="22">
+        <type>21</type>
+    </item>
+    <item id="23">
+        <type>260</type>
+        <contained>true</contained>
+    </item>
+    <item id="24">
+        <type>261</type>
+        <contained>true</contained>
+    </item>
+    <item id="25">
+        <type>262</type>
+        <contained>true</contained>
+    </item>
+    <item id="26">
+        <type>254</type>
+        <contained>true</contained>
+    </item>
+    <item id="27">
+        <type>255</type>
+        <contained>true</contained>
+    </item>
+    <item id="28">
+        <type>256</type>
+        <contained>true</contained>
+    </item>
+    <item id="29">
+        <type>172</type>
+    </item>
+    <item id="30">
+        <type>171</type>
+    </item>
+    <item id="31">
+        <type>64</type>
+    </item>
+    <item id="32">
+        <type>98</type>
+    </item>
+    <item id="33">
+        <type>3</type>
+        <charges>5</charges>
+        <property>true</property>
+    </item>
+    <creature id="0">
+        <type>122</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="11" y="0" />
+    </creature>
+    <creature id="1">
+        <type>117</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="11" y="1" />
+    </creature>
+    <creature id="2">
+        <type>117</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="11" y="1" />
+    </creature>
+    <creature id="3">
+        <type>117</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="11" y="1" />
+    </creature>
+    <creature id="4">
+        <type>117</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="11" y="1" />
+    </creature>
+    <creature id="5">
+        <type>117</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="11" y="1" />
+    </creature>
+    <creature id="6">
+        <type>117</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="11" y="1" />
+    </creature>
+    <creature id="7">
+        <type>1</type>
+        <attitude>docile</attitude>
+        <mobility>1</mobility>
+        <personality>110</personality>
+        <face>0</face>
+        <sdf x="11" y="2" />
+    </creature>
+    <creature id="8">
+        <type>20</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>111</personality>
+        <face>19</face>
+        <sdf x="11" y="3" />
+    </creature>
+    <area top="28" left="27" bottom="38" right="38">Inn of the Fallen Trees</area>
+    <area top="1" left="1" bottom="13" right="14">Explosion Site</area>
+    <area top="3" left="34" bottom="14" right="45">Explosion Site</area>
+    <area top="30" left="9" bottom="38" right="19">Abandoned Homes</area>
+    <sign id="0">
+        <![CDATA[Calidric's Jewelry]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[Inn of the Fallen Trees]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[Brews of Power - Fine Potions|Closed for Business]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[TOOLS OF THE TRADE|Fine Adventuring Supplies]]>
+    </sign>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[As you pick through the rubble here, you notice you're seeing a lot of broken weapons and scraps of armor. Several of the scraps of armor have Empire soldier insignia on them.]]>
+    </string>
+    <string id="1">
+        <![CDATA[It looks like there was a medium to large sized Empire garrison here. It's gone now, replaced by mounds of shattered stone.]]>
+    </string>
+    <string id="6">
+        <![CDATA[You enter the ruins of the city of Fahl. In your years of adventuring, you have never seen destruction as stunning and lethal as this.]]>
+    </string>
+    <string id="7">
+        <![CDATA[The northwest and northeast corners of the city have been completely caved in. A hundred giants could not have destroyed the walls more thoroughly. It was not blows that stove in the walls, however, but fire.]]>
+    </string>
+    <string id="8">
+        <![CDATA[Somehow, a fiery explosion shattered this towns defenses, and the flames greedily spread to other areas of the town. Its northern walls destroyed almost beyond repair, the Empire had no choice but to abandon this city before the rebels attacked.]]>
+    </string>
+    <string id="9">
+        <![CDATA[That the Hill Runners are capable of doing this, of wreaking devastation of this magnitude, is truly alarming. The Empire has done a good job of keeping this quiet, and you can see why.]]>
+    </string>
+    <string id="10">
+        <![CDATA[What is equally disconcerting is that, as far as you can tell, this was nothing but a peaceful logging village. Why would the rebels, supposedly concerned with the lot of the people, target this place?]]>
+    </string>
+    <string id="12">
+        <![CDATA[He cooks you up a large, hearty meal of wild turkey with all the trimmings. He even lets you have a healthy pile of leftovers to take with you.]]>
+    </string>
+</town>

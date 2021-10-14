@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>32</size>
+    <name>Small Cave</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="0" bottom="28" right="31" />
+    <difficulty>3</difficulty>
+    <lighting>dark</lighting>
+    <flags>
+        <hidden>true</hidden>
+    </flags>
+    <item id="0">
+        <type>222</type>
+    </item>
+    <item id="1">
+        <type>222</type>
+    </item>
+    <item id="2">
+        <type>222</type>
+    </item>
+    <item id="3">
+        <type>222</type>
+    </item>
+    <item id="4">
+        <type>222</type>
+    </item>
+    <item id="5">
+        <type>222</type>
+    </item>
+    <item id="6">
+        <type>222</type>
+    </item>
+    <item id="7">
+        <type>182</type>
+    </item>
+    <item id="8">
+        <type>182</type>
+    </item>
+    <creature id="0">
+        <type>73</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="1">
+        <type>73</type>
+        <attitude>hostile-a</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="2">
+        <type>73</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="3">
+        <type>73</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <area top="14" left="9" bottom="26" right="20">Lava Cavern</area>
+    <area top="19" left="1" bottom="25" right="2">Hall of Crystals</area>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[You stand at the far end of a long path, leading back down to the lowest depths of the School of Magery.]]>
+    </string>
+</town>

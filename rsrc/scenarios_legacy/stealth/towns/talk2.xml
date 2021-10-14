@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="20">
+        <title>Marin</title>
+        <look>
+            <![CDATA[You meet an elegant woman in a stylish, elegant dress. Her skin is flawless, her air is imperious, and her hair is perfectly coiffed. She could not be more conspicuous. She is walking through Selathni, looking things over.]]>
+        </look>
+        <name>
+            <![CDATA[She walks coolly up to you. "Greetings, adventurers. I am Marin, Inspector for the Empire."]]>
+        </name>
+        <job>
+            <![CDATA["I am an Inspector for the Empire. That is my official title. I am here to evaluate the situation here."]]>
+        </job>
+        <unknown>
+            <![CDATA[She raises an eyebrow. "What did you say?"]]>
+        </unknown>
+    </personality>
+    <personality id="21">
+        <title>Barnard</title>
+        <look>
+            <![CDATA[This is the captain of the guard for the city of Selathni. He was looking over charts and maps when you entered the room, and doesn't seem pleased that you're interrupting his work.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Commander Barnard. How can I help you?"]]>
+        </name>
+        <job>
+            <![CDATA["I'm the Commander for this garrison. It's not important. I'm glad I have this chance to discuss issues with you."]]>
+        </job>
+        <unknown>
+            <![CDATA[He shrugs.]]>
+        </unknown>
+    </personality>
+    <personality id="22">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="23">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="24">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="25">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="26">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="27">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="28">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="29">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="20">
+        <keyword>offi</keyword>
+        <keyword>titl</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Inspector for the Empire. Yes."]]>
+        </text>
+    </node>
+    <node for="20">
+        <keyword>insp</keyword>
+        <keyword>empi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We Inspectors are the Emperor's eyes. When something requires attention, we are sent to gather information and report. For example, I am here to look over this rebel situation."]]>
+        </text>
+    </node>
+    <node for="20">
+        <keyword>rebe</keyword>
+        <keyword>situ</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She sniffs derisively. "Here we all are, getting all worked up over a bunch of irritated hill folk. I fully plan to report that, despite their unusual tactics, they are not worth serious attention."]]>
+        </text>
+    </node>
+    <node for="20">
+        <keyword>seri</keyword>
+        <keyword>atte</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["A band of shabby rebels in a small area of a small island off a backward continent?" She laughs. "They are of little concern."]]>
+        </text>
+    </node>
+    <node for="20">
+        <keyword>unus</keyword>
+        <keyword>tact</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["What fools! They don't fight our army! They ambush caravans. Burn villages. Kill those who help the Empire. Murder isolated soldiers and patrols. All cowardly actions, all far away from our main forces! How can we take them seriously?"]]>
+        </text>
+    </node>
+    <node for="20">
+        <keyword>irri</keyword>
+        <keyword>hill</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["From what I hear, they are angry about the Empire's heavy presence here." She smiles wryly. "They had better get used to it. Once in a place, we never withdraw."]]>
+        </text>
+    </node>
+    <node for="20">
+        <keyword>seri</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It is not a serious situation. The only thing serious is the Empire representative's inability to deal with the rebels. Believe me when I say this: when I make my report back home, heads will roll here. Count on it."]]>
+        </text>
+    </node>
+    <node for="21">
+        <keyword>comm</keyword>
+        <keyword>garr</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The workings of this garrison are not your business."]]>
+        </text>
+    </node>
+    <node for="21">
+        <keyword>diss</keyword>
+        <keyword>issu</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You are far from the first adventurers to visit Morrow's Isle, and you will probably, like the others, be contacted by the Hill Runners."]]>
+        </text>
+    </node>
+    <node for="21">
+        <keyword>hill</keyword>
+        <keyword>runn</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yes, the rebels." He doesn't seem to know why you were brought here. You decide not to tell him. "They will contact you, and try to get you to help them. When they do, a small warning."]]>
+        </text>
+    </node>
+    <node for="21">
+        <keyword>smal</keyword>
+        <keyword>warn</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He gives an evil grin. "We'll find all of the rebels one of these days. When we do, it'll take days for you ... sorry, for them to die. Before they lure you to their side, remember that. You'll pay."]]>
+        </text>
+    </node>
+</dialogue>

@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>32</size>
+    <name>Under Cavala</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="0" bottom="31" right="31" />
+    <difficulty>0</difficulty>
+    <lighting>dark</lighting>
+    <flags />
+    <item id="0">
+        <type>383</type>
+        <property>true</property>
+    </item>
+    <item id="1">
+        <type>383</type>
+        <property>true</property>
+    </item>
+    <item id="2">
+        <type>383</type>
+        <property>true</property>
+    </item>
+    <item id="3">
+        <type>383</type>
+        <property>true</property>
+    </item>
+    <item id="4">
+        <type>383</type>
+        <property>true</property>
+    </item>
+    <item id="5">
+        <type>383</type>
+        <property>true</property>
+    </item>
+    <item id="6">
+        <type>223</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="7">
+        <type>223</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="8">
+        <type>223</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="9">
+        <type>223</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="10">
+        <type>223</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="11">
+        <type>223</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="12">
+        <type>38</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="13">
+        <type>38</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="14">
+        <type>2</type>
+        <charges>5</charges>
+        <contained>true</contained>
+    </item>
+    <item id="15">
+        <type>3</type>
+        <charges>6</charges>
+        <contained>true</contained>
+    </item>
+    <item id="16">
+        <type>122</type>
+        <property>true</property>
+    </item>
+    <item id="17">
+        <type>145</type>
+        <property>true</property>
+    </item>
+    <item id="18">
+        <type>4</type>
+    </item>
+    <item id="19">
+        <type>7</type>
+    </item>
+    <item id="20">
+        <type>127</type>
+        <property>true</property>
+    </item>
+    <item id="21">
+        <type>127</type>
+        <property>true</property>
+    </item>
+    <item id="22">
+        <type>127</type>
+        <property>true</property>
+    </item>
+    <item id="23">
+        <type>70</type>
+        <contained>true</contained>
+    </item>
+    <item id="24">
+        <type>70</type>
+        <contained>true</contained>
+    </item>
+    <item id="25">
+        <type>372</type>
+        <contained>true</contained>
+    </item>
+    <item id="26">
+        <type>383</type>
+        <property>true</property>
+    </item>
+    <item id="27">
+        <type>383</type>
+        <property>true</property>
+    </item>
+    <item id="28">
+        <type>0</type>
+        <charges>250</charges>
+        <contained>true</contained>
+    </item>
+    <item id="29">
+        <type>383</type>
+        <contained>true</contained>
+    </item>
+    <item id="30">
+        <type>383</type>
+        <contained>true</contained>
+    </item>
+    <item id="31">
+        <type>383</type>
+        <contained>true</contained>
+    </item>
+    <item id="32">
+        <type>384</type>
+        <contained>true</contained>
+    </item>
+    <item id="33">
+        <type>0</type>
+        <charges>61</charges>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="34">
+        <type>0</type>
+        <charges>300</charges>
+        <contained>true</contained>
+    </item>
+    <item id="35">
+        <type>171</type>
+        <contained>true</contained>
+    </item>
+    <item id="36">
+        <type>174</type>
+        <contained>true</contained>
+    </item>
+    <item id="37">
+        <type>177</type>
+        <contained>true</contained>
+    </item>
+    <creature id="0">
+        <type>80</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="1">
+        <type>80</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="2">
+        <type>80</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="3">
+        <type>80</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="4">
+        <type>80</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="5">
+        <type>79</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="6">
+        <type>79</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="7">
+        <type>79</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="8">
+        <type>79</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="9">
+        <type>79</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="10">
+        <type>79</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <sign id="0">
+        <![CDATA[How did you get here?]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[Cavala Treasury]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[Cavala Records Storage]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[PLEASE DON'T STEAL MY LIFE SAVINGS]]>
+    </sign>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[You kneel in front of the altar and pray for guidance. None is forthcoming. The prayer rug looks like it's been used a lot recently.]]>
+    </string>
+    <string id="1">
+        <![CDATA[These shelves contain reams of the forms the Empire requires mayors of its villages to complete. They're yellowed and boring, and provide no useful information.]]>
+    </string>
+    <string id="2">
+        <![CDATA[Among these completed forms, you find a number of building permits. Two people in this town recently had magical alarm systems installed. The forms mention "Concealed Deactivation Buttons."]]>
+    </string>
+    <string id="3">
+        <![CDATA[This chest contains several small bags of gold coins and a few bottles of Hrras juice. In addition, there's something reather unusual. It's a nice ceramic plate, with a number of runes painted on it in gold paint.]]>
+    </string>
+    <string id="4">
+        <![CDATA[You can't tell what the runes mean, but you doubt they're magical. It looks like an heirloom of some sort. Very odd ... what would something like this be doing hidden down here?]]>
+    </string>
+    <string id="5">
+        <![CDATA[A nasty looking magical rune has been etched in the floor here. Disarming won't help here. If you cross, it's probably going to hurt you.]]>
+    </string>
+    <string id="11">
+        <![CDATA[The rune flashes brightly and disappears. You feel ill.]]>
+    </string>
+    <string id="12">
+        <![CDATA[This is the main room where Sourgrass is boiled down to make Hrras juice. It's quiet and inactive now. With no merchants arriving to buy the stuff, there's not much point in making more.]]>
+    </string>
+</town>

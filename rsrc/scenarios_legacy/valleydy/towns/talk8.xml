@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="80">
+        <title>Pythras</title>
+        <look>
+            <![CDATA[Quaking nervously, you stand before this prisoner of the School of Magery. She towers above you, looking you over with ancient, furious eyes. She is a dragon, and she looks less than pleased with her imprisonment here.]]>
+        </look>
+        <name>
+            <![CDATA["I am Pythras, queen of lizardkind, and prisoner here." She breathes a searing gout of flame into the air. Fortunately, she seems to prefer speaking with you to devouring you.]]>
+        </name>
+        <job>
+            <![CDATA[She watches you carefully, trying to estimate how much she can get out of you. "I have no job now, except for escaping this infernal prison."]]>
+        </job>
+        <unknown>
+            <![CDATA[She grumbles. "This is wasting my time."]]>
+        </unknown>
+    </personality>
+    <personality id="81">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="82">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="83">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="84">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="85">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="86">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="87">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="88">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="89">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="80">
+        <keyword>infe</keyword>
+        <keyword>pris</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She laughs dryly, little puffs of flame coming out with each breath. "The humans' foolish Empire decided that magical beasts of all sorts are unwelcome, and fit only to be slain or studied."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>empi</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Bah! Say not that name in my presence!" Her roaring voice vibrates the very stone of the chamber.]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>slai</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I was not to be slain, but studied."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>stud</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Me! Queen of lizardkind! Tricked, set upon by a hundred warriors and as many mages, subdued, and brought here to be studied. Then, even worse, I am abandoned! Forgotten!"]]>
+        </text>
+        <text>
+            <![CDATA["I have been here for 127 years, and every day I only think of one thing. Escape."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>aban</keyword>
+        <keyword>forg</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It only took two weeks. The message came from the humans' Empire. This place was to be abandoned. Two weeks later, they were all gone. And me? Queen of lizardkind? I was discarded!"]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>disc</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Oh, how I hate them. They simply decided to store me here in case I was needed. They left me here to rot, without even the boon of a quick, merciful death!"]]>
+        </text>
+        <text>
+            <![CDATA["For over a hundred years, I have stared at these miserable walls, eating worthless food and going out of my mind with boredom. Oh, how I wish to escape and obtain my revenge."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>obta</keyword>
+        <keyword>reve</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She emits a pyrotechnic sigh. "What revenge is there for me? Those who victimized me died years ago. The only relief I can get is escape."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>esca</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It is strange. Just before the humans left, a lone wizard came to me. He did me a kindness. He told me of the nature of my cell."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>lone</keyword>
+        <keyword>wiza</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["He said his name was Palhatis, for what little that is worth."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>kind</keyword>
+        <keyword>cell</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The wizard was bothered about my being left here. He said he could not free me, but could tell me how to be freed later. If someone would free me, I would reward them. I can give instructions."]]>
+        </text>
+        <text>
+            <![CDATA[Her voice is bitter and choked with pain. It must be horrible for her draconian pride to ask you for help.]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>free</keyword>
+        <keyword>inst</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It is the runes around my cell that hold me in. They are controlled from the control room in the Holding Cell floor. At least that was what the wizard said. He said one other thing to me, some sort of magic word."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>magi</keyword>
+        <keyword>word</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The word was 'Quark'. He had to go and couldn't say what the word was used for. Maybe you can find out. If you can, and can free me, I shall make sure you have your reward."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>rewa</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I don't know why you are exploring the School, but I do know that it has been carefully sealed. If you free me, I give you my word as a queen of dragonkind that I will open the way to the lower levels, if it is within my power."]]>
+        </text>
+        <text>
+            <![CDATA["Now go. This all pains me."]]>
+        </text>
+    </node>
+    <node for="80">
+        <keyword>pain</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I am asking humans for help. It shall take centuries to wipe away the shame." Suddenly, overcome with horror over what she has been reduced to, she turns away.]]>
+        </text>
+    </node>
+</dialogue>

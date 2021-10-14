@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="0">
+        <title>Commander Yale</title>
+        <look>
+            <![CDATA[The commander of Fort Goodling looks like she's wearing her armor more for show than out of a desire to fight hand-to-hand. The books on tactics that surround her shows what her true focus is.]]>
+        </look>
+        <name>
+            <![CDATA[She stands to shake your hand.  Her movements are quick and precise. "I am Commander Yale. How can I help you, adventurers?"]]>
+        </name>
+        <job>
+            <![CDATA["I command this fortress in the battle against the sliths. That is why I asked our government to send you here. We have a critical mission for you."]]>
+        </job>
+        <unknown>
+            <![CDATA["I'm sorry?"]]>
+        </unknown>
+    </personality>
+    <personality id="1">
+        <title>Halgas</title>
+        <look>
+            <![CDATA[Like most of Exile's forts, this one has a wizard in residence, a powerful mage available to deal with problems large and small. This ancient sage is currently poring over pictures of unicorns.]]>
+        </look>
+        <name>
+            <![CDATA["I am Halgas. Greetings to you." His voice is old and tired.]]>
+        </name>
+        <job>
+            <![CDATA["I am the wizard in residence for Fort Goodling. I spend most of my time watching the river to the north. I also teach spells to those few who would benefit."]]>
+        </job>
+    </personality>
+    <personality id="2">
+        <title>Ocampo</title>
+        <look>
+            <![CDATA[You meet Fort Goodling's priest. She wears three holy symbols, has over a dozen potions in flasks at her belt, and carries a mace in her hand. Nobody is currently attacking, but if someone does, she sure will be ready.]]>
+        </look>
+        <name>
+            <![CDATA[She puts the mace aside for now, but you notice she is careful not to stray far from it. "I am Ocampo."]]>
+        </name>
+        <job>
+            <![CDATA["Well, as you can see, I am waiting for an attack. While waiting, I often provide healing, spells, and recipes."]]>
+        </job>
+    </personality>
+    <personality id="3">
+        <title>Mayer</title>
+        <look>
+            <![CDATA[You meet one of Exile's bold quartermasters, constantly fighting the eternal battle to keep soldiers from getting all the supplies they want. He looks tired.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Mayer."]]>
+        </name>
+        <job>
+            <![CDATA["You need supplies. Right? What does anyone ever want?" He rolls his eyes to the Heavens.]]>
+        </job>
+        <unknown>
+            <![CDATA["Huh?"]]>
+        </unknown>
+    </personality>
+    <personality id="4">
+        <title>Shadowy Figure</title>
+        <look>
+            <![CDATA[A small, insubstantial shade lurks in the back of this dusty storeroom. It's shaped like a humanoid, but its face is completely featureless.]]>
+        </look>
+        <name>
+            <![CDATA["I have no name."]]>
+        </name>
+        <job>
+            <![CDATA["I have a message for you."]]>
+        </job>
+        <unknown>
+            <![CDATA[It is silent.]]>
+        </unknown>
+    </personality>
+    <personality id="5">
+        <title>Vurg</title>
+        <look>
+            <![CDATA[Fort Goodling has several captains, bold fighters who are in charge of orchestrating the movements of the other soldiers. This particular captain has a sloping brow, a crooked nose, and what looks like 200 pounds of solid muscle.]]>
+        </look>
+        <name>
+            <![CDATA["I'm Captain Vurg." When he speaks, you notice he's missing quite a few teeth.]]>
+        </name>
+        <job>
+            <![CDATA["I keep my troops watchin' the whole Za-Khazi Run thing. Gotta' watch it close. There's all sort of nasty stuff out there."]]>
+        </job>
+        <unknown>
+            <![CDATA["Uh."]]>
+        </unknown>
+    </personality>
+    <personality id="6">
+        <title>Seletine</title>
+        <look>
+            <![CDATA[You recognize the robes this man wears. They are the traditional robes of the Triad of the Tower of Magi, the center of magical learning in Exile.]]>
+        </look>
+        <name>
+            <![CDATA["I am Seletine, of the Triad."]]>
+        </name>
+        <job>
+            <![CDATA["I am of the Triad, of the Tower of Magi. I have come here to render assistance in the fight."]]>
+        </job>
+        <unknown>
+            <![CDATA["I know little of that which you speak."]]>
+        </unknown>
+    </personality>
+    <personality id="7">
+        <title>Edward</title>
+        <look>
+            <![CDATA[Fort Goodling's trainer nods to you in greeting. His face bears a faint lattice of pale scars. You hope that isn't part of the training.]]>
+        </look>
+        <name>
+            <![CDATA["I am Edward. Edward the trainer."]]>
+        </name>
+        <job>
+            <![CDATA["I hear you are to help in the fight against the sliths. Allow me to provide training, if you wish it."]]>
+        </job>
+    </personality>
+    <personality id="8">
+        <title>Ahsss</title>
+        <look>
+            <![CDATA[You meet a slith warrior, sitting alone and shivering in its tiny room.]]>
+        </look>
+        <name>
+            <![CDATA["I am called Ahsss. It is nice to receive a visitor."]]>
+        </name>
+        <job>
+            <![CDATA["I am a soldier in Exilesss army. Now, though, I wait here, ignored."]]>
+        </job>
+        <unknown>
+            <![CDATA["Ssss. What sssspeaks you?"]]>
+        </unknown>
+    </personality>
+    <personality id="9">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="0">
+        <keyword>comm</keyword>
+        <keyword>fort</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Fort Goodling is the center of operations for troops all throughout this area. I direct their movements, and plan raids on the sliths. Of course, our job is easy compared to what's happening in Fort Cavalier."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>batt</keyword>
+        <keyword>slit</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She frowns. "The sliths are a far worse foe now than they were in the first war. Several of their barbarian tribes have united, something we never expected to happen, and their magical skills are as sharp as ever."]]>
+        </text>
+        <text>
+            <![CDATA["There's some useful books on this in the library. You may want to take a look."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>book</keyword>
+        <keyword>libr</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["It's in the east half of the fort. You may want to speak with Halgas while you're there."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>crit</keyword>
+        <keyword>miss</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["As you may have heard, Fort Cavalier, about 250 miles to the north, has been under siege for months. The sliths keep putting on the pressure, and unless they receive support, the fort will fall very soon. Very, very soon. This will be a disaster."]]>
+        </text>
+        <text>
+            <![CDATA["We need to carry a package to them, to help in their defense. The perils are great, as are the rewards. Do you accept?"]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>very</keyword>
+        <keyword>soon</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Unless it receives support, Fort Cavalier will fall within a month, perhaps in as few as 3 weeks."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>disa</keyword>
+        <keyword>cata</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Fort Cavalier is the last defense between the slith forces and the rich central caves of Exile. If it falls, Exile will have serious difficulties."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>fort</keyword>
+        <keyword>cava</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Fort Cavalier is the center of Exile operations in the north. If it fell to the sliths, it would be a catastrophe."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>acce</keyword>
+        <keyword>xxxx</keyword>
+        <type>set-sdf</type>
+        <param>0</param>
+        <param>2</param>
+        <param>1</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She looks pleased. "Excellent. Now I can tell you other things about the mission. Fort Cavalier is surrounded on three sides by sliths, but there is a less guarded approach. You will need to pick up a vital package, and take it downriver."]]>
+        </text>
+        <text>
+            <![CDATA["This fort can give you valuable supplies and assistance. Note, however, that time is very short. You must hurry!"]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>vita</keyword>
+        <keyword>pack</keyword>
+        <type>if-sdf</type>
+        <param>0</param>
+        <param>2</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I'm afraid I can't tell you of that until you accept the mission."]]>
+        </text>
+        <text>
+            <![CDATA["Go speak with Seletine. He should be in the common room right now. He will give you the package to take to the fort."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>time</keyword>
+        <keyword>hurr</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Our recon tells us that Fort Cavalier may fall in as few as 3 weeks. Even a small delay in your delivery of the package could mean disaster."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>guar</keyword>
+        <keyword>appr</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You will be carrying the package through the Za-Khazi Run. That is the name for the unsettled and savage rivers and caves to the north. The sliths don't guard it because they believe, possibly correctly, that nobody can get through there alive."]]>
+        </text>
+        <text>
+            <![CDATA["Talk to the people in this fort. Many of them have been in the Run, and can tell you things about it."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>supp</keyword>
+        <keyword>assi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Before you pick up the package and take the boat north into the Za-Khazi run, you should be sure to speak with Halgas, Ocampo, and Mayer."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>halg</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Our resident wizard. He can teach you a lot of different spells."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>ocam</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["She is a priest, who worked for some time as a teacher. She can teach you new spells, and I believe she knows some alchemy as well."]]>
+        </text>
+    </node>
+    <node for="0">
+        <keyword>maye</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Our supply master. Supplies are tight in the fort, but he has set aside some equipment to help you in the Run."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>purc</keyword>
+        <keyword>spel</keyword>
+        <type>shop</type>
+        <param>1</param>
+        <param>6</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Halgas]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>rive</keyword>
+        <keyword>nort</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Ah, yes. That is where you will be going, is it not? That area is called the Za-Khazi Run. It is named after an ancient Vahnatai pillar found in it, which simply said Za-Khazi. We don't know what it means."]]>
+        </text>
+        <text>
+            <![CDATA["At any rate, it is a wild and unsettled area."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>wild</keyword>
+        <keyword>unse</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Exile has settled most of the caves available to it. The Za-Khazi Run, however, has not been touched. This is because it is filled with many powerful creatures, both malevolent and benign, who have made it their home."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>vahn</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yes, the Vahnatai, the strange alien creatures who we fought against, then beside, then against, and now have an uneasy truce with. They once settled the Za-Khazi run, and their ruins may be found there."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>male</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Demons. Undead. Rogue sliths. It is even rumored that a dragon lives in the Run, though we know little in truth."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>beni</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Some have said that that rarest of creatures, the unicorn, may be found in the run. The good unicorns, that is, not the small, gray, ratlike pest unicorns. If you meet them, be sure to greet them. They may give you aid."]]>
+        </text>
+    </node>
+    <node for="1">
+        <keyword>drag</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He thinks. "Of course, there have, at various times, been five dragons living in Exile. Not all of their locations are known. So it is possible."]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>wait</keyword>
+        <keyword>atta</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The sliths have not attacked here for over a month. Their forces are concentrated at Fort Cavalier. However, this only means that a surprise attack grows more likely every day. The delay only makes us more alert, not less."]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>purc</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Healing, spells, or recipes?"]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>heal</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>1</param>
+        <param>5</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Ocampo the Healer]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>spel</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>1</param>
+        <param>7</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Ocampo's Spells]]>
+        </text>
+    </node>
+    <node for="2">
+        <keyword>reci</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>1</param>
+        <param>8</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Ocampo's Recipes]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>supp</keyword>
+        <keyword>xxxx</keyword>
+        <type>if-sdf</type>
+        <param>0</param>
+        <param>2</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I can't give you anything until you get a mission from the commander."]]>
+        </text>
+        <text>
+            <![CDATA["Yeah. Supplies. Commander Yale sent me word that I need to give you things." He sighs dramatically. "Oh well. Things aren't quite as tight as they were when we were fighting the Empire."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>give</keyword>
+        <keyword>thin</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["There are things for you in Supply Room B. You can get to it through the passage around the fort. Help yourself. Of course, we always need new stuff. You can have me identify your things and sell them to me too."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>figh</keyword>
+        <keyword>empi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Ah. How things change. Once, the Empire was our greatest foes. Now most of our people go up there to live with them, leaving the rest to struggle."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>rest</keyword>
+        <keyword>stru</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I could have gone up there to live a cushy live in Valorim! Sure! But in the Empire War I lost a brother and many friends to their troops. No way I go live with the surface scum. Exile is my home, and I'll fight and die for it."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>quit</keyword>
+        <keyword>tigh</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Once, I had to ration individual arrows. Now, supplies from the surface keep us well armed. We have weapons and food. It's people we're always short on."]]>
+        </text>
+    </node>
+    <node for="4">
+        <keyword>mess</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I have been sent by Morog, master of the Za-Khazi Run. He sent me to say that he wishes you peace."]]>
+        </text>
+    </node>
+    <node for="4">
+        <keyword>wish</keyword>
+        <keyword>peac</keyword>
+        <type>end-die</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You may enter the citadel of Morog without fear. He wishes, in his might and wisdom, to deal with you. That is all." The shade abruptly disappears.]]>
+        </text>
+    </node>
+    <node for="5">
+        <keyword>nast</keyword>
+        <keyword>stuf</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Nasty. Not just sliths, either. Magic creatures."]]>
+        </text>
+    </node>
+    <node for="5">
+        <keyword>slit</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Sliths I can handle. They're made of meat, like us. Hit 'em with an axe, and they die good enough. The magic in the Run, though, I don't know about that."]]>
+        </text>
+    </node>
+    <node for="5">
+        <keyword>magi</keyword>
+        <keyword>crea</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I hear rumors. Hordes of demons. A demon lord, thirty feet tall. Dragons. Giant pools of living acid. Monkeys. A witch army. All that's out there, and more. I don't envy you for going out there, that's fer' sure."]]>
+        </text>
+    </node>
+    <node for="5">
+        <keyword>drag</keyword>
+        <keyword>demo</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He thinks. "Well, that's what I hear anyway. We're watching the river real careful, just to make sure."]]>
+        </text>
+    </node>
+    <node for="6">
+        <keyword>tria</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The three greatest mages in Exile go to the Tower of Magi, to watch over the magic of our land and provide control and assistance."]]>
+        </text>
+    </node>
+    <node for="6">
+        <keyword>towe</keyword>
+        <keyword>magi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The center of magical learning in Exile. Recently destroyed, it has been rebuilt to be stronger and lovelier than ever. We hope that it doesn't get blown up again any time soon."]]>
+        </text>
+    </node>
+    <node for="6">
+        <keyword>rend</keyword>
+        <keyword>assi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We of the Tower of Magi have watched the fight for Fort Cavalier with great concern. To protect the fort, we have created a package to be taken to them, to aid in their defense."]]>
+        </text>
+    </node>
+    <node for="6">
+        <keyword>pack</keyword>
+        <keyword>defe</keyword>
+        <type>if-sdf</type>
+        <param>0</param>
+        <param>2</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He shakes his head. "I am sorry. I can only tell of that to one who has actually been given the mission."]]>
+        </text>
+        <text>
+            <![CDATA["We of the Tower are concerned by this small war, and decided to provide aid. For that reason, we have combined our magical powers to create a bundle of powerful wands to be carried to the besieged fort."]]>
+        </text>
+    </node>
+    <node for="6">
+        <keyword>besi</keyword>
+        <keyword>fort</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We believe the bundle of wands we have created will be of great assistance."]]>
+        </text>
+    </node>
+    <node for="6">
+        <keyword>bund</keyword>
+        <keyword>wand</keyword>
+        <type>call-local</type>
+        <param>15</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You have already received the wands. You should go now. I understand that the boats to the Za-Khazi Run are in the north half of the fort."]]>
+        </text>
+    </node>
+    <node for="7">
+        <keyword>purc</keyword>
+        <keyword>trai</keyword>
+        <type>train</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text />
+    </node>
+    <node for="7">
+        <keyword>figh</keyword>
+        <keyword>slit</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Aye. They are a mighty foe, but nothing compared to the Empire. The Empire's troops were devastating."]]>
+        </text>
+    </node>
+    <node for="7">
+        <keyword>empi</keyword>
+        <keyword>deva</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You know, half of the Exiles left us to go back up to the surface again. Near the Empire. Can you imagine! I prefer to stay in the most beautiful place in the world."]]>
+        </text>
+    </node>
+    <node for="7">
+        <keyword>beau</keyword>
+        <keyword>plac</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yes. Exile! I know many would disagree, but I'll take caves full of elegant crystal, romantic cavern lakes, and forests of mighty stalagmites over the garish sunlight of the surface any year."]]>
+        </text>
+    </node>
+    <node for="7">
+        <keyword>surf</keyword>
+        <keyword>imag</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Sure. The Empire thanks us for our help against the Vahnatai. Sure, they pretend to like us now. But any year now, the Empire will change its mind, and they'll pay, and we'll be safe down here. Mark my words."]]>
+        </text>
+    </node>
+    <node for="8">
+        <keyword>visi</keyword>
+        <keyword>igno</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Ssss. When I joined Exilessss army, I thought to fight now that our peoplesss are working together. But then other slithsss attack, and I become distrusssted."]]>
+        </text>
+    </node>
+    <node for="8">
+        <keyword>exil</keyword>
+        <keyword>army</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Many Slithzerikai have worked well with Exile for years, and our people have had some peace. So I joined Exilesss army."]]>
+        </text>
+    </node>
+    <node for="8">
+        <keyword>slit</keyword>
+        <keyword>dist</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["They tell me to sssstay here and not go out. They sssay it is so I am not mistaken for enemy slithssss, but I know it isss because they think I will betray them. I hear what they ssssay. But it isss wrong. I am loyal!"]]>
+        </text>
+    </node>
+    <node for="8">
+        <keyword>wron</keyword>
+        <keyword>loya</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I would givesss my life for my army. I hopesss to finally be given the chance."]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>iden</keyword>
+        <keyword>purc</keyword>
+        <type>id</type>
+        <param>5</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks over your goods with a practiced eye and offers to identify each item for 5 gold.]]>
+        </text>
+    </node>
+    <node for="3">
+        <keyword>sell</keyword>
+        <keyword>xxxx</keyword>
+        <type>sell-any</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Excellent! We're in dire need of fresh goods. Whaddaya' ya' got?"]]>
+        </text>
+    </node>
+</dialogue>

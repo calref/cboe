@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="200">
+        <title>Khoth</title>
+        <look>
+            <![CDATA[The enormous creature looks amused and intrigued by you. Someone proving their worth to speak with them must be a novel experience. The beast towers over you. As it looks you over, it idly scratches the floor with a broadsword sized claw.]]>
+        </look>
+        <name>
+            <![CDATA["I am Khoth." Small puffs of flame come out of its mouth and nose as it speaks.]]>
+        </name>
+        <job>
+            <![CDATA["My purpose? Why, I am a dragon, mightiest of creatures. I learn, and I increase my power at will. And, at times, I demand tribute."]]>
+        </job>
+        <unknown>
+            <![CDATA["Don't try my patience, human."]]>
+        </unknown>
+    </personality>
+    <personality id="201">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="202">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="203">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="204">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="205">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="206">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="207">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="208">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="209">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="200">
+        <keyword>drag</keyword>
+        <keyword>crea</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I, like my siblings, am master of whatever domain I choose. The only creatures that challenge dragons are humans, and rarely even them."]]>
+        </text>
+    </node>
+    <node for="200">
+        <keyword>sibl</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["My siblings. Motrax. Pyrog. Athron. Sulfras."]]>
+        </text>
+    </node>
+    <node for="200">
+        <keyword>motr</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The oldest of us. Slain by humans."]]>
+        </text>
+    </node>
+    <node for="200">
+        <keyword>pyro</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Furious and uncontrolled. Slain by humans. Humans are a pesky breed. Never should be trusted."]]>
+        </text>
+    </node>
+    <node for="200">
+        <keyword>athr</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["She has just had a brood of hatchlings. One can only hope they will carry our line to every corner of the world."]]>
+        </text>
+    </node>
+    <node for="200">
+        <keyword>sulf</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The strongest of us all, if not the smartest. I have not seen her for some time, but I know she plans a powerful reckoning against you humans for the inconvenience you have caused us."]]>
+        </text>
+    </node>
+    <node for="200">
+        <keyword>huma</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Humans. Small, treacherous, numerous. The humans of the Empire stole my books once, and then swarmed me when they invaded Exile. I have no love for humans. I only let you see me because I wish to take your tribute."]]>
+        </text>
+        <text>
+            <![CDATA[He smiles. "Of course, sometimes you humans are harried by other races, such as the Vahnatai, or the sliths. I enjoy this."]]>
+        </text>
+    </node>
+    <node for="200">
+        <keyword>lear</keyword>
+        <keyword>powe</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Other dragons lust for gold, and swords, and other inert things. I seek tomes, and spells, and other forms of knowledge. Living wealth! As my siblings grew old and feeble, I grew stronger. As my body goes, my strength increases. It is a wondrous thing."]]>
+        </text>
+    </node>
+    <node for="200">
+        <keyword>empi</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Pfaugh!" he roars. The fire from his mouth gets uncomfortably close to you. "They drove dragons from the surface! They stole from us and harassed us and even enslaved me for a time. Me!"]]>
+        </text>
+        <text>
+            <![CDATA["I will never pass up on a chance to harm the Empire. Never."]]>
+        </text>
+    </node>
+    <node for="200">
+        <keyword>slit</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The slithzerikai are lizard kin, so I feel some affinity for them. I have given them some knowledge for use in the battle against Exile. It amuses me to do so."]]>
+        </text>
+    </node>
+    <node for="200">
+        <keyword>vahn</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["A learned people. I respect them for that. They slew many of the humans in the Empire. I respect them even more for that."]]>
+        </text>
+    </node>
+    <node for="200">
+        <keyword>dema</keyword>
+        <keyword>trib</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You wish to leave my fortress to the north. I don't wish to let you. So. There are many treasures in the Za-Khazi run, treasures which I have coveted for some time. Make one of these treasures a payment to me, and I will let you pass."]]>
+        </text>
+    </node>
+    <node for="200">
+        <keyword>trea</keyword>
+        <keyword>paym</keyword>
+        <type>call-local</type>
+        <param>41</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Khoth sniffs the air. "We dragons can smell treasure, and I can tell you have nothing that would be of use to me. Leave, and return only when you have wealth."]]>
+        </text>
+    </node>
+</dialogue>

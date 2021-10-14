@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Swampy Area</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>181</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>180</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>189</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>189</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>133</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>181</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <string id="0">
+        <![CDATA[Way out here, deep in the grim marshes, you find a small, sod hut. A thin wisp of smoke rises from its chimney. It's surrounded by herb gardens on all sides. The door is closed, but you could knock on it.]]>
+    </string>
+    <string id="6">
+        <![CDATA[When you reach the door, you don't even have time to knock. The door flies open, and a withered, scowling crone peers out at you. She's ancient and twisted, and looks very dangerous.]]>
+    </string>
+    <string id="12">
+        <![CDATA[You pull out your swords. She jumps back, startled. As you start to enter her hut, she casts a spell. The hut shimmers around you, and disappears.]]>
+    </string>
+    <string id="13">
+        <![CDATA[As you stand alone in the fen, you hear a harsh, screeching voice coming from somewhere nearby: "You'll pay for your rudeness, children!"]]>
+    </string>
+    <string id="14">
+        <![CDATA[Oh well. Her herb garden stayed behind. You're able to pick some useful alchemical ingredients.]]>
+    </string>
+    <string id="15">
+        <![CDATA[When she sees that you don't intend to be rude, she smiles. Her teeth are a charming green color. She says "Come in, my children! Come in! It is so rare I have someone to share my skills with."]]>
+    </string>
+    <string id="16">
+        <![CDATA[She sees your hesitance at entering her hovel, and shrugs. "Oh well. Just as easy out here. I'm known as Fallatina, or I was, before I came out here to spend time with my cauldron and my herbs."]]>
+    </string>
+    <string id="17">
+        <![CDATA["Oh, the wonderful potions I can make! And I will share them with you, if you pay the price. Will you?"]]>
+    </string>
+    <string id="21">
+        <![CDATA[You respectfully decline. The witch shakes her head. "Ah, children, you do not know when you have had a generous offer made. Oh, well. I don't plan to go anywhere. Come back anytime." She withdraws into her hut, and slams the door.]]>
+    </string>
+    <string id="22">
+        <![CDATA[Swamp Brews]]>
+    </string>
+    <string id="23">
+        <![CDATA[Deep in the swamp, you find a deep, dank cave, almost overgrown with roots and reeds. There are large lizard tracks and gnawed bones everywhere, and the area stinks of reptilian malice.]]>
+    </string>
+    <string id="29">
+        <![CDATA[Deep in the swamp, you find a deep, dank cave, almost overgrown with roots and reeds. There are large lizard tracks and gnawed bones everywhere, and the area stinks of reptilian malice.]]>
+    </string>
+    <string id="35">
+        <![CDATA[Sure enough, inside the cavern, you find one of the many predatory, unfriendly denizens of the swamp. Its many heads growl hungrily, and it lumbers towards you.]]>
+    </string>
+    <string id="36">
+        <![CDATA[Sure enough, inside the cavern, you find one of the many predatory, unfriendly denizens of the swamp. Its many heads growl hungrily, and it lumbers towards you.]]>
+    </string>
+    <string id="37">
+        <![CDATA[As you walk through the trees, you suddenly stub your toe. Looking down, you see a stone slab, partially concealed by brush.]]>
+    </string>
+    <string id="38">
+        <![CDATA[Clearing away the brush, you see that the stone reads "First Stone." Odd.]]>
+    </string>
+    <string id="89">
+        <![CDATA[*End of special strs]]>
+    </string>
+</sector>

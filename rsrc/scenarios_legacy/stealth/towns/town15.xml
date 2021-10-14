@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>48</size>
+    <name>Empire Outpost</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="0" bottom="44" right="47" />
+    <difficulty>6</difficulty>
+    <lighting>lit</lighting>
+    <onenter condition="alive">1</onenter>
+    <onenter condition="dead">2</onenter>
+    <flags>
+        <hidden>true</hidden>
+    </flags>
+    <item id="0">
+        <type>182</type>
+    </item>
+    <item id="1">
+        <type>182</type>
+    </item>
+    <item id="2">
+        <type>364</type>
+    </item>
+    <item id="3">
+        <type>363</type>
+    </item>
+    <item id="4">
+        <type>365</type>
+    </item>
+    <item id="5">
+        <type>65</type>
+    </item>
+    <item id="6">
+        <type>65</type>
+    </item>
+    <item id="7">
+        <type>65</type>
+    </item>
+    <item id="8">
+        <type>157</type>
+    </item>
+    <item id="9">
+        <type>119</type>
+        <contained>true</contained>
+    </item>
+    <item id="10">
+        <type>98</type>
+        <contained>true</contained>
+    </item>
+    <item id="11">
+        <type>101</type>
+        <contained>true</contained>
+    </item>
+    <item id="12">
+        <type>165</type>
+    </item>
+    <item id="13">
+        <type>170</type>
+    </item>
+    <item id="14">
+        <type>173</type>
+    </item>
+    <item id="15">
+        <type>373</type>
+    </item>
+    <item id="16">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="17">
+        <type>15</type>
+        <contained>true</contained>
+    </item>
+    <item id="18">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="19">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="20">
+        <type>0</type>
+        <charges>6</charges>
+        <contained>true</contained>
+    </item>
+    <item id="21">
+        <type>4</type>
+        <contained>true</contained>
+    </item>
+    <item id="22">
+        <type>0</type>
+        <charges>5</charges>
+        <contained>true</contained>
+    </item>
+    <item id="23">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="24">
+        <type>17</type>
+        <contained>true</contained>
+    </item>
+    <item id="25">
+        <type>5</type>
+        <contained>true</contained>
+    </item>
+    <item id="26">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="27">
+        <type>8</type>
+        <contained>true</contained>
+    </item>
+    <item id="28">
+        <type>207</type>
+        <contained>true</contained>
+    </item>
+    <item id="29">
+        <type>0</type>
+        <charges>50</charges>
+        <contained>true</contained>
+    </item>
+    <item id="30">
+        <type>176</type>
+        <contained>true</contained>
+    </item>
+    <item id="31">
+        <type>176</type>
+        <contained>true</contained>
+    </item>
+    <item id="32">
+        <type>177</type>
+        <contained>true</contained>
+    </item>
+    <item id="33">
+        <type>177</type>
+        <contained>true</contained>
+    </item>
+    <item id="34">
+        <type>177</type>
+    </item>
+    <item id="35">
+        <type>292</type>
+    </item>
+    <item id="36">
+        <type>1</type>
+        <charges>5</charges>
+        <contained>true</contained>
+    </item>
+    <item id="37">
+        <type>1</type>
+        <charges>5</charges>
+        <contained>true</contained>
+    </item>
+    <item id="38">
+        <type>3</type>
+        <charges>6</charges>
+        <contained>true</contained>
+    </item>
+    <item id="39">
+        <type>3</type>
+        <charges>6</charges>
+        <contained>true</contained>
+    </item>
+    <item id="40">
+        <type>104</type>
+        <contained>true</contained>
+    </item>
+    <item id="41">
+        <type>51</type>
+    </item>
+    <item id="42">
+        <type>1</type>
+        <charges>6</charges>
+    </item>
+    <item id="43">
+        <type>3</type>
+        <charges>6</charges>
+    </item>
+    <item id="44">
+        <type>14</type>
+    </item>
+    <item id="45">
+        <type>14</type>
+    </item>
+    <item id="46">
+        <type>13</type>
+    </item>
+    <item id="47">
+        <type>13</type>
+    </item>
+    <item id="48">
+        <type>15</type>
+    </item>
+    <item id="49">
+        <type>99</type>
+        <contained>true</contained>
+    </item>
+    <item id="50">
+        <type>172</type>
+    </item>
+    <item id="51">
+        <type>0</type>
+        <charges>300</charges>
+        <contained>true</contained>
+    </item>
+    <item id="52">
+        <type>315</type>
+        <contained>true</contained>
+    </item>
+    <item id="53">
+        <type>270</type>
+        <contained>true</contained>
+    </item>
+    <item id="54">
+        <type>168</type>
+    </item>
+    <creature id="0">
+        <type>103</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="1">
+        <type>13</type>
+        <attitude>friendly</attitude>
+        <mobility>0</mobility>
+        <personality>150</personality>
+        <face>10</face>
+        <onkill>13</onkill>
+    </creature>
+    <creature id="2">
+        <type>28</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>16</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="3">
+        <type>15</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="4">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="5">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="6">
+        <type>17</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+        <sdf x="15" y="1" />
+        <onkill>58</onkill>
+    </creature>
+    <creature id="7">
+        <type>25</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>13</face>
+    </creature>
+    <creature id="8">
+        <type>26</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>58</face>
+    </creature>
+    <creature id="9">
+        <type>28</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>16</face>
+    </creature>
+    <creature id="10">
+        <type>16</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>12</face>
+    </creature>
+    <creature id="11">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="12">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="13">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="14">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="15">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="16">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="17">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="18">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="19">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <creature id="20">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <creature id="21">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <creature id="22">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <creature id="23">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <creature id="24">
+        <type>20</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>19</face>
+    </creature>
+    <creature id="25">
+        <type>28</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>16</face>
+    </creature>
+    <creature id="26">
+        <type>28</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>16</face>
+    </creature>
+    <creature id="27">
+        <type>28</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>16</face>
+    </creature>
+    <creature id="28">
+        <type>28</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>16</face>
+    </creature>
+    <creature id="29">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="30">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="31">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="32">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="33">
+        <type>14</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>11</face>
+    </creature>
+    <creature id="34">
+        <type>14</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>11</face>
+    </creature>
+    <creature id="35">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="36">
+        <type>13</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="37">
+        <type>24</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>13</face>
+    </creature>
+    <creature id="38">
+        <type>13</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <creature id="39">
+        <type>13</type>
+        <attitude>friendly</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>10</face>
+    </creature>
+    <area top="27" left="14" bottom="36" right="16">Guard Room</area>
+    <area top="31" left="6" bottom="36" right="12">Entry Chamber</area>
+    <area top="22" left="23" bottom="30" right="38">Barracks</area>
+    <area top="1" left="32" bottom="7" right="39">Hot Laboratory</area>
+    <sign id="0">
+        <![CDATA[EMPIRE LAB|CAUTION!|PROTECTIVE GEAR REQUIRED]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[LABORATORY]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[LABORATORY]]>
+    </sign>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[If the Hill Runners hadn't told you that this outpost would be here, you would never have known to look for it. Now that you know, however, the narrow path and soldier's tracks are readily apparent.]]>
+    </string>
+    <string id="1">
+        <![CDATA[The tracks led up to this mountain wall. There's no door or passage visible ... it's probably magically concealed.]]>
+    </string>
+    <string id="6">
+        <![CDATA[You return to the concealed Empire outpost. Following your successful raid, the place is abandoned.]]>
+    </string>
+    <string id="7">
+        <![CDATA[Suddenly, two rather unsettling things happen simultaneously. First, the portcullis behind you slams shut. Second, the room starts to grow warmer. The lava bubbles faster. You're starting to suspect you've stumbled into a trap.]]>
+    </string>
+    <string id="8">
+        <![CDATA[The room starts to cool down, and the portcullises at the north and south ends of the room open. Someone's decided not to kill you. That's refreshing.]]>
+    </string>
+    <string id="9">
+        <![CDATA[Deciding not to cause trouble, you back away.]]>
+    </string>
+    <string id="10">
+        <![CDATA[When you get close to the door, the watchful soldier says "Sorry, but you can't go in there. It's secret." His words aren't too threatening by themselves, but as he speaks, he pulls his sword slightly out of its sheathe.]]>
+    </string>
+    <string id="11">
+        <![CDATA[The message is clear. Keep going, and be ready to fight.]]>
+    </string>
+    <string id="16">
+        <![CDATA[Dylan shouts an alarm. Soon after, a loud, piercing noise echoes through the outpost. Behind you, you hear a gate slamming shut. Now you've done it.]]>
+    </string>
+    <string id="22">
+        <![CDATA[Walking inside the guard room, you see that there are two windows looking in on the room you were briefly trapped in. They weren't visible from that side ... must be magic.]]>
+    </string>
+    <string id="23">
+        <![CDATA[You hear the soothing clatter of a distant portcullis opening. Maybe you can escape this dangerous place at last.]]>
+    </string>
+    <string id="24">
+        <![CDATA[You approach the polished white marble altar, hoping to receive some sort of blessing or holy reward. Unfortunately, you can sense no positive energy, magical or otherwise, coming from the stone.]]>
+    </string>
+    <string id="25">
+        <![CDATA[This area hasn't been sanctified. The altar is here for psychological and aesthetic reasons, more than anything else.]]>
+    </string>
+    <string id="30">
+        <![CDATA[Your traditional excitement at seeing shelves full of books is short lived. These books are provided for the amusement and education of the soldiers, to pass the time during their long stays underground.]]>
+    </string>
+    <string id="31">
+        <![CDATA[Some of it is interesting, sure, and some of it is VERY interesting. But nothing magical or useful.]]>
+    </string>
+    <string id="32">
+        <![CDATA[You open the door, and the twin smells of ozone and alchemical ingredients hit you. You've stumbled into a hidden, underground magical laboratory.]]>
+    </string>
+    <string id="33">
+        <![CDATA[This room is a holding cell for experiments. There is a platform in the center of the room, mostly circled by magical fields, where dangerous spells can be tested safely. Several mages stand around it, waiting for you.]]>
+    </string>
+    <string id="38">
+        <![CDATA[This book is a lab journal. You browse through it briefly. The mages here were looking for a way to safely contain quickfire in some sort of a bomb, so that it could be easily transported into rebel lands.]]>
+    </string>
+    <string id="39">
+        <![CDATA[Looks like the war between the Empire and the Rebels is about to heat up. Literally.]]>
+    </string>
+    <string id="40">
+        <![CDATA[When you get close to the door, you hear a loud clicking noise. Someone has locked it from the other side. It's a very solid door, with a complex lock. It will take a while to open it.]]>
+    </string>
+    <string id="41">
+        <![CDATA[As you stare at the door, trying to figure out what to do, a panel slides away in the wall behind you ...]]>
+    </string>
+    <string id="42">
+        <![CDATA[Miraculously, you managed to find a concealed nook with a small door, which protects you as the quickfire rages outside. This hole must have been placed here to protect soldiers in case of a quickfire accident.]]>
+    </string>
+    <string id="43">
+        <![CDATA[Sweating, you wait it out. Soon, you hear chanting outside, and the heat fades away. The quickfire must have been dispelled. Then you hear a door opening. Someone is coming in to look for your bodies. They're going to be surprised.]]>
+    </string>
+    <string id="44">
+        <![CDATA[You hear a spell being completed. You look to the northwest, and see the door there start to glow slightly. Considering the caliber of the mages here, you're willing to guess that the door has received a much stronger than average locking spell.]]>
+    </string>
+    <string id="50">
+        <![CDATA[Suddenly, there is an explosion ahead! It's not a large one, and it's near the ceiling, so you don't suffer any more damage than a few rocks striking against your armor.]]>
+    </string>
+    <string id="51">
+        <![CDATA[However, when the smoke clears, you see that the northern passage has been blocked. Falling rock from the ceiling has effectively blocked the corridor. You'll have to head east.]]>
+    </string>
+    <string id="52">
+        <![CDATA[You open the iron box, hoping to find a key, or crowbar, or something that would help you open the locked door. Instead, you see a polished oak box. You immediately recognize it. It's one of the rebel's bombs.]]>
+    </string>
+    <string id="53">
+        <![CDATA[As you look at it, it vibrates slightly. It's about to explode, and destroy everything nearby with it!]]>
+    </string>
+    <string id="54">
+        <![CDATA[The box explodes. Rocks fall from the ceiling, and flames shoot out in all directions. The ground shimmies, and the walls crack. Hope you weren't too close ...]]>
+    </string>
+    <string id="55">
+        <![CDATA[You see the door ahead start to glow. Here we go again.]]>
+    </string>
+    <string id="56">
+        <![CDATA[You reach the lever, only to find that it's a fake. It doesn't even move. You hear clicking from the walls around you. The lever may be fake, but the panel that just opened up in the wall to the south is very real.]]>
+    </string>
+    <string id="57">
+        <![CDATA[You pull the lever. Click.]]>
+    </string>
+    <string id="58">
+        <![CDATA[At last, you have reached the final stand of the outpost's commander. He is an Empire Dervish, seven feet and 300 pounds of pure mean. He swings his greatsword like a twig, and is more than ready for a real fight.]]>
+    </string>
+    <string id="59">
+        <![CDATA[Of course, the mages, priests, and soldiers around him seem to be spoiling for a fight as well. This could be messy.]]>
+    </string>
+    <string id="64">
+        <![CDATA[The Dervish falls to a well timed blow. His enormous body hits the floor with a resounding crash. Your third mission for the rebels is complete.]]>
+    </string>
+    <string id="65">
+        <![CDATA[As you look at his body lying there, you experience a strange, sinking feeling. You have passed the point of no return. Jaen and his lackeys might have been able to forgive some things, but slaying Empire soldiers is beyond the pale.]]>
+    </string>
+    <string id="66">
+        <![CDATA[Like it or not, you're stuck with the rebels now. They're the only ones who would possibly have you.]]>
+    </string>
+</town>

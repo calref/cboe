@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="130">
+        <title>Kimzahn</title>
+        <look>
+            <![CDATA[Efreeti are powerful, unpredictable beings. Fortunately, this one seems inclined to be friendly. He stops working on his axe, puts down his hammer, and bows to you respectfully.]]>
+        </look>
+        <name>
+            <![CDATA["My name is long, and has much in the way of history and respect for my lineage." His lungs are powerful, and his voice is a deep, deafening baritone. "To customers, however, I am simply Kimzahn."]]>
+        </name>
+        <job>
+            <![CDATA["I operate this simple forge, in order to best serve my valued customers."]]>
+        </job>
+        <unknown>
+            <![CDATA[He shakes his head slowly.]]>
+        </unknown>
+    </personality>
+    <personality id="131">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="132">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="133">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="134">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="135">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="136">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="137">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="138">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="139">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="130">
+        <keyword>valu</keyword>
+        <keyword>cust</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I placed my forge in this remote place in order to make sure my customers were only the most honorable and dedicated. The mushrooms outside provide an appropriate screen."]]>
+        </text>
+    </node>
+    <node for="130">
+        <keyword>mush</keyword>
+        <keyword>outs</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The lesser beings, who bring me work with little honor, do not have the will to pass these things you call poppy shrooms. That you were able to pass them shows we can bring each other honor in our dealings."]]>
+        </text>
+    </node>
+    <node for="130">
+        <keyword>hono</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The concept of honor to beings such as I is sure to be alien to you, and hard to understand. For example, when my kind decides to grant one of yours a wish, it is our way of amassing honor for our race."]]>
+        </text>
+    </node>
+    <node for="130">
+        <keyword>gran</keyword>
+        <keyword>wish</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["When we grant a human a wish, it shows that the things you desire most are things that we can freely discard. Thus, we feel our race has gained honor."]]>
+        </text>
+        <text>
+            <![CDATA[He chuckles. "I know what you are thinking, but no. I am not worthy to be granting wishes now."]]>
+        </text>
+    </node>
+    <node for="130">
+        <keyword>simp</keyword>
+        <keyword>forg</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He bows again. Even hunched, he's far taller than you. "Here in this forge, I make great weapons for purchase by heroes. And, for those truly worthy, I have another service."]]>
+        </text>
+    </node>
+    <node for="130">
+        <keyword>weap</keyword>
+        <keyword>purc</keyword>
+        <type>shop</type>
+        <param>3</param>
+        <param>15</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Kimzahn's Forge]]>
+        </text>
+    </node>
+    <node for="130">
+        <keyword>anot</keyword>
+        <keyword>serv</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I am able to take an ordinary weapon and work magic upon it, in order to make it burst into flames whenever it is drawn. It is a powerful spell, and not inexpensive. If you desire it, however, I will honor you with the augmentation."]]>
+        </text>
+    </node>
+    <node for="130">
+        <keyword>spel</keyword>
+        <keyword>augm</keyword>
+        <type>ench</type>
+        <param>4</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Kimzahn looks at each of your identified, non-magical weapons and gives you the price to make them flaming weapons.]]>
+        </text>
+    </node>
+</dialogue>

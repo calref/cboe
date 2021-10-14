@@ -1,0 +1,760 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>64</size>
+    <name>Zaskiva Sewers</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="0" bottom="63" right="63" />
+    <difficulty>3</difficulty>
+    <lighting>dark</lighting>
+    <timer freq="500">54</timer>
+    <flags />
+    <item id="0">
+        <type>305</type>
+    </item>
+    <item id="1">
+        <type>170</type>
+    </item>
+    <item id="2">
+        <type>170</type>
+    </item>
+    <item id="3">
+        <type>164</type>
+    </item>
+    <item id="4">
+        <type>164</type>
+    </item>
+    <item id="5">
+        <type>19</type>
+        <contained>true</contained>
+    </item>
+    <item id="6">
+        <type>25</type>
+        <contained>true</contained>
+    </item>
+    <item id="7">
+        <type>260</type>
+        <charges>7</charges>
+        <contained>true</contained>
+    </item>
+    <item id="8">
+        <type>254</type>
+        <charges>3</charges>
+        <contained>true</contained>
+    </item>
+    <item id="9">
+        <type>26</type>
+        <contained>true</contained>
+    </item>
+    <item id="10">
+        <type>20</type>
+        <contained>true</contained>
+    </item>
+    <item id="11">
+        <type>169</type>
+        <contained>true</contained>
+    </item>
+    <item id="12">
+        <type>357</type>
+        <contained>true</contained>
+    </item>
+    <item id="13">
+        <type>104</type>
+        <charges>30</charges>
+    </item>
+    <item id="14">
+        <type>108</type>
+    </item>
+    <item id="15">
+        <type>128</type>
+        <contained>true</contained>
+    </item>
+    <item id="16">
+        <type>161</type>
+        <contained>true</contained>
+    </item>
+    <item id="17">
+        <type>178</type>
+        <contained>true</contained>
+    </item>
+    <item id="18">
+        <type>23</type>
+    </item>
+    <item id="19">
+        <type>24</type>
+    </item>
+    <item id="20">
+        <type>17</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="21">
+        <type>4</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="22">
+        <type>5</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="23">
+        <type>6</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="24">
+        <type>15</type>
+        <property>true</property>
+        <contained>true</contained>
+    </item>
+    <item id="25">
+        <type>107</type>
+        <contained>true</contained>
+    </item>
+    <item id="26">
+        <type>20</type>
+    </item>
+    <item id="27">
+        <type>0</type>
+        <charges>450</charges>
+        <contained>true</contained>
+    </item>
+    <item id="28">
+        <type>174</type>
+        <contained>true</contained>
+    </item>
+    <item id="29">
+        <type>247</type>
+        <contained>true</contained>
+    </item>
+    <item id="30">
+        <type>254</type>
+        <charges>3</charges>
+        <contained>true</contained>
+    </item>
+    <item id="31">
+        <type>350</type>
+        <charges>6</charges>
+        <contained>true</contained>
+    </item>
+    <item id="32">
+        <type>205</type>
+        <contained>true</contained>
+    </item>
+    <item id="33">
+        <type>269</type>
+        <contained>true</contained>
+    </item>
+    <item id="34">
+        <type>255</type>
+        <contained>true</contained>
+    </item>
+    <item id="35">
+        <type>254</type>
+        <contained>true</contained>
+    </item>
+    <item id="36">
+        <type>254</type>
+        <contained>true</contained>
+    </item>
+    <item id="37">
+        <type>247</type>
+        <contained>true</contained>
+    </item>
+    <item id="38">
+        <type>248</type>
+        <contained>true</contained>
+    </item>
+    <item id="39">
+        <type>201</type>
+    </item>
+    <item id="40">
+        <type>202</type>
+    </item>
+    <item id="41">
+        <type>254</type>
+    </item>
+    <item id="42">
+        <type>118</type>
+        <contained>true</contained>
+    </item>
+    <item id="43">
+        <type>285</type>
+        <contained>true</contained>
+    </item>
+    <creature id="0">
+        <type>68</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="1">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="2">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="3">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="4">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="5">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="6">
+        <type>119</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>45</face>
+    </creature>
+    <creature id="7">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="8">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="9">
+        <type>124</type>
+        <attitude>hostile-a</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="10">
+        <type>124</type>
+        <attitude>hostile-a</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="11">
+        <type>124</type>
+        <attitude>hostile-a</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="12">
+        <type>124</type>
+        <attitude>hostile-a</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="13">
+        <type>124</type>
+        <attitude>hostile-a</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="14">
+        <type>124</type>
+        <attitude>hostile-a</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="15">
+        <type>124</type>
+        <attitude>hostile-a</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="16">
+        <type>124</type>
+        <attitude>hostile-a</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="17">
+        <type>124</type>
+        <attitude>hostile-a</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="18">
+        <type>124</type>
+        <attitude>hostile-a</attitude>
+        <mobility>0</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="19">
+        <type>145</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>47</face>
+    </creature>
+    <creature id="20">
+        <type>145</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>47</face>
+    </creature>
+    <creature id="21">
+        <type>145</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>47</face>
+    </creature>
+    <creature id="22">
+        <type>144</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>47</face>
+    </creature>
+    <creature id="23">
+        <type>144</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>47</face>
+    </creature>
+    <creature id="24">
+        <type>144</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>47</face>
+    </creature>
+    <creature id="25">
+        <type>144</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>47</face>
+    </creature>
+    <creature id="26">
+        <type>144</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>47</face>
+    </creature>
+    <creature id="27">
+        <type>144</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>47</face>
+    </creature>
+    <creature id="28">
+        <type>146</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>47</face>
+    </creature>
+    <creature id="29">
+        <type>146</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>47</face>
+    </creature>
+    <creature id="30">
+        <type>146</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>47</face>
+    </creature>
+    <creature id="31">
+        <type>146</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>47</face>
+    </creature>
+    <creature id="32">
+        <type>147</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>47</face>
+    </creature>
+    <creature id="33">
+        <type>63</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="34">
+        <type>63</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="35">
+        <type>63</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="36">
+        <type>63</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="37">
+        <type>64</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="38">
+        <type>64</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="39">
+        <type>65</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="40">
+        <type>65</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="41">
+        <type>67</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="111" y="4" />
+    </creature>
+    <creature id="42">
+        <type>66</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="43">
+        <type>66</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="44">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="45">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="46">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="47">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="48">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="49">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="50">
+        <type>189</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="51">
+        <type>190</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="52">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="53">
+        <type>118</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="54">
+        <type>61</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>90</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="55">
+        <type>103</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="56">
+        <type>103</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <area top="18" left="17" bottom="28" right="30">Old Brigand&apos;s Lair</area>
+    <area top="51" left="25" bottom="56" right="30">Control Room C2</area>
+    <area top="1" left="1" bottom="7" right="6">Subterranean Dock</area>
+    <area top="1" left="20" bottom="6" right="24">Punishment Cells</area>
+    <area top="37" left="27" bottom="48" right="49">Roach Caves</area>
+    <area top="21" left="43" bottom="43" right="49">Roach Caves</area>
+    <sign id="0">
+        <![CDATA[Control Room C2]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[Sewer Administration]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[Chamber of Maps]]>
+    </sign>
+    <sign id="3">
+        <![CDATA[Chamber of Records]]>
+    </sign>
+    <sign id="4">
+        <![CDATA[Keep out! This means you!]]>
+    </sign>
+    <sign id="5">
+        <![CDATA[Supply Depot|Punishment Cells]]>
+    </sign>
+    <sign id="6">
+        <![CDATA[Please return boats to proper berth after use!]]>
+    </sign>
+    <sign id="7">
+        <![CDATA[PRESS IN CASE OF DISEASE!]]>
+    </sign>
+    <sign id="8">
+        <![CDATA[PRESS IN CASE OF DISEASE!]]>
+    </sign>
+    <sign id="9">
+        <![CDATA[PRESS IN CASE OF DISEASE]]>
+    </sign>
+    <sign id="10">
+        <![CDATA[Emergency Healing]]>
+    </sign>
+    <sign id="11">
+        <![CDATA[SWAMP ENTRANCE C]]>
+    </sign>
+    <sign id="12">
+        <![CDATA[PRESS IN CASE OF DISEASE]]>
+    </sign>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[This chest was once filled with suits of leather armor. The harsh atmosphere of the sewers has rotted them all away. Of course, being adventurers, you search through it all anyway, looking for loot.]]>
+    </string>
+    <string id="1">
+        <![CDATA[Your persistence is rewarded. You find a corroded old copper key. With typical Empire attention to detail, some sewer worker has scratched into its side the words "Sewer Key One." You take it with you.]]>
+    </string>
+    <string id="2">
+        <![CDATA[You notice that the bridge over the swampy muck to the south has collapsed. You won't be able to get to the passage across the liquid to the southwest. Not on foot, anyway.]]>
+    </string>
+    <string id="3">
+        <![CDATA[The rebels helped you escape from the aftermath of the destruction of Lord Volpe's fortress. Unfortunately, they've dropped you in a situation that doesn't seem like much of an improvement. You've been dumped into Zaskiva's sewer system.]]>
+    </string>
+    <string id="4">
+        <![CDATA[While Zaskiva is a relatively new city, neglect has left its sewer system in a condition which would be thought dreadful anywhere in the Empire. The walkways are crumbling, the ceiling looks likely to cave in, and the ventilation is awful.]]>
+    </string>
+    <string id="5">
+        <![CDATA[It's the last thing that concerns you the most at the moment. Right now, being an adventurer stinks. Literally. The stench assaults your nose, and makes the inside of your mouth feel like it's been coated with melted rubber.]]>
+    </string>
+    <string id="6">
+        <![CDATA[As if all this wasn't bad enough, you hear the growls and murmurs of monsters echoing through the passages. Good Heavens! Doesn't anyone come down here anymore?]]>
+    </string>
+    <string id="9">
+        <![CDATA[To the west, you see a subterranean dock, with two seaworthy (or perhaps sewerworthy) rowboats docked at it. The dock itself is in terrible condition, crumbling and covered with huge spiderwebs.]]>
+    </string>
+    <string id="10">
+        <![CDATA[It seems likely that, with all the pressure from the rebels, sewer maintenance simply has a low priority. Not good for you.]]>
+    </string>
+    <string id="11">
+        <![CDATA[This is a stairway up to Zaskiva. Unfortunately, it's been walled off. The sewer's probably been sealed in order to keep the monsters out of the city.]]>
+    </string>
+    <string id="12">
+        <![CDATA[You are blocked off from the next section of the sewers by an enormous steel door. It's rusty, but still plenty strong. Fortunately, the key you found fits in the lock, and, with some effort, you manage to pry the door open.]]>
+    </string>
+    <string id="13">
+        <![CDATA[You are blocked off from the next section of the sewers by an enormous steel door. It's rusty, but still plenty strong. It has a large keyhole. None of your keys fit in it.]]>
+    </string>
+    <string id="14">
+        <![CDATA[Looking ahead, you see that this section of sewer has been overgrown by large, brightly colored fungi. They look harmless.]]>
+    </string>
+    <string id="20">
+        <![CDATA[This trench is currently empty. It's still cut pretty deep, and the sides are slick, so climbing inside isn't an option. As if you'd want to.]]>
+    </string>
+    <string id="21">
+        <![CDATA[You've reached the south end of the empty trench. You notice that there's a huge effluent pipe positioned in the ceiling above the trench. Nothing is pouring out of it right now.]]>
+    </string>
+    <string id="22">
+        <![CDATA[The empty trench is blocked off by a crude brick wall. The wall is strong enough to defend itself against your efforts, but fragile enough that if something did pour down the trench, it would fall apart.]]>
+    </string>
+    <string id="23">
+        <![CDATA[Oh, no! As if this place wasn't gross and unpleasant enough, it has an infestation of cockroaches as well. Even worse, they're huge! One of the roaches in the cave to the south must be as large as a pony.]]>
+    </string>
+    <string id="24">
+        <![CDATA[You're heard rumors that some places in Valorim have infestations of giant cockroaches. You're horrified to find those rumors are true.]]>
+    </string>
+    <string id="29">
+        <![CDATA[You press the button. It makes a clicking noise, and stays stuck in the wall. A fine, clear spray shoots out of holes in the wall, coating you. It smells nice, and makes you feel much better.]]>
+    </string>
+    <string id="36">
+        <![CDATA[This doesn't look like Empire construction. Too rough. Looks like some sort of hideout. Your guess is that a bunch of bandits, rebels, or other never-do-wells were hiding here.]]>
+    </string>
+    <string id="37">
+        <![CDATA[Unfortunately, it looks like they came to a bad end. Perhaps they became trapped when the sewers were sealed off. There was certainly some ugly violence taking place here.]]>
+    </string>
+    <string id="38">
+        <![CDATA[Whoever this poor soul was, he died trying to claw his way through this heavy door. He was down here without any sort of protective gear. He does, however, have a copper key in his pocket, labeled "Sewer Key 2".]]>
+    </string>
+    <string id="39">
+        <![CDATA[You find another massive steel door. Unfortunately, you don't yet have the key to this one.]]>
+    </string>
+    <string id="40">
+        <![CDATA[You find another massive steel door. Fortunately, "Sewer Key 3" fits in the keyhole just fine. After a lot of pulling and prying, the rusty door swings open.]]>
+    </string>
+    <string id="41">
+        <![CDATA[This passage slopes sharps up to the west, to a sort of observation platform.]]>
+    </string>
+    <string id="42">
+        <![CDATA[This small door glows slightly. It's probably magically locked. It has a keyhole, but, unfortunately, none of your keys fit.]]>
+    </string>
+    <string id="43">
+        <![CDATA[This small door glows slightly. It's probably magically locked. Fortunately, "Sewer Key 2" fits perfectly.]]>
+    </string>
+    <string id="44">
+        <![CDATA[You pull the lever, and the swamps machinery whirls into brief, intense, and highly irrelevant motion. Nothing interesting happens, and soon it's quiet again.]]>
+    </string>
+    <string id="45">
+        <![CDATA[You pull the lever, and long dormant sewer machinery leaps into action! This lever controls the effluent pipe just outside the control room.]]>
+    </string>
+    <string id="46">
+        <![CDATA[With a loud, squeal, the cap of the pipe swings open, and thousands of gallons of sticky, foul smelling goo pour out of the pipe and into the empty trench below. From there, with a deafening roar, it rushes down the passage to the north.]]>
+    </string>
+    <string id="47">
+        <![CDATA[Soon, the flow turns from a load roar to a gentle, steady trickle. It seems safe to leave the control room. You can't help but wonder what effect all that goop had on the landscape.]]>
+    </string>
+    <string id="51">
+        <![CDATA[With typical bureaucratic senselessness, some genius had the idea of putting the administration and planning rooms for the sewers actually in the sewers. Of course, like everything else down here, it's been abandoned.]]>
+    </string>
+    <string id="52">
+        <![CDATA[Heaven help anyone who tries to take charge of getting this place under control, if all the plans are stuck down here.]]>
+    </string>
+    <string id="53">
+        <![CDATA[Once, the plans and maps for the sewers were on this wall. Unfortunately, the swamp folk have tried to take them down and read them, and the papers crumbled under their acidic touch.]]>
+    </string>
+    <string id="54">
+        <![CDATA[On the bright side, the records in this room are intact. On the down side, that means you now have access to hundreds of journals describing in minute detail sewage routes, quantities, and textures. Useless to you.]]>
+    </string>
+    <string id="55">
+        <![CDATA[This desk, like the others, is empty, cleaned out by the swamp folk. You do have the fortune to find something under the desk, though: a tarnished copper key. Writing on the side reads "Sewer Key 3."]]>
+    </string>
+    <string id="56">
+        <![CDATA[Suddenly, ahead of you, a thin, insubstantial creature appears. It's a ghost! It starts waving its hands. At first, you think it's going to attack or cast a spell, but then you realize its trying to get you to approach it.]]>
+    </string>
+    <string id="57">
+        <![CDATA["The specter! You killed it! I am avenged. I am free. Thanks to you. I will help you pass." It waves a spectral hand, and there is a flash of light to the north.]]>
+    </string>
+    <string id="58">
+        <![CDATA[How odd. Someone has placed a lot of lifelike statues down here. Very lifelike statues.]]>
+    </string>
+    <string id="59">
+        <![CDATA[The sewer is finally starting to get to you. The fumes start to make you feel incredibly nauseated.]]>
+    </string>
+    <string id="60">
+        <![CDATA[At last! You have finally reached a functioning stairway out of these hellish sewers.]]>
+    </string>
+    <string id="66">
+        <![CDATA["It is done. Goodbye." The ghost fades away, smiling at the thought of its final rest.]]>
+    </string>
+</town>

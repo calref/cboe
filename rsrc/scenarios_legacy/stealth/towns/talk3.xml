@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<dialogue boes="2.0.0">
+    <personality id="30">
+        <title>Canizares</title>
+        <look>
+            <![CDATA[You meet the town alchemist. He's a jolly, rounded, friendly man with a wide smile and pleasant eyes. His fingers are stained with the residue of many years of chopping healing herbs.]]>
+        </look>
+        <name>
+            <![CDATA["Welcome, friends. I am Canizares."]]>
+        </name>
+        <job>
+            <![CDATA["I am an alchemist. I have herbs, potions, and recipes for sale. How can I help you?"]]>
+        </job>
+        <unknown>
+            <![CDATA[He shakes his head in confusion.]]>
+        </unknown>
+    </personality>
+    <personality id="31">
+        <title>Stephano</title>
+        <look>
+            <![CDATA[The town priest is kneeling in front of the altar, lost in contemplative thought. When you approach, he jumps up to assist you. It's nice to see someone so loyal to his chosen work.]]>
+        </look>
+        <name>
+            <![CDATA["I am Stephano, of the Shrine of Lasting Harmony."]]>
+        </name>
+        <job>
+            <![CDATA["I work in this shrine, and try to increase harmony in our troubled people. In addition, when needed, I can provide healing and teach spells."]]>
+        </job>
+    </personality>
+    <personality id="32">
+        <title>Kim</title>
+        <look>
+            <![CDATA[You've interrupted someone in the middle of writing some scholarly paper or other. She looks mildly bothered at the intrusion.]]>
+        </look>
+        <name>
+            <![CDATA["I am Kim. I am a sage."]]>
+        </name>
+        <job>
+            <![CDATA[She thinks. "Well, only a little bit that could concern you. I came to study the natural magics of this island. It's difficult, however, with all the turmoil."]]>
+        </job>
+    </personality>
+    <personality id="33">
+        <title>Houlihan</title>
+        <look>
+            <![CDATA[You meet a wealthy old man, dressed in rich silk robes and sitting imperiously on his throne. There's something about this large, almost empty room that makes him look small and insignificant.]]>
+        </look>
+        <name>
+            <![CDATA[He looks you over with disinterest. "I am Houlihan. How may I help you?"]]>
+        </name>
+        <job>
+            <![CDATA["Why, I run this town. Keep the serfs in line. That sort of thing."]]>
+        </job>
+        <unknown>
+            <![CDATA["Sorry, but don't you have somewhere you should be going?"]]>
+        </unknown>
+    </personality>
+    <personality id="34">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="35">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="36">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="37">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="38">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <personality id="39">
+        <title>Unused</title>
+        <look></look>
+        <name></name>
+        <job></job>
+    </personality>
+    <node for="30">
+        <keyword>purc</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Herbs, potions, or recipes?"]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>herb</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>6</param>
+        <param>14</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Canizares' Herbs]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>poti</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>4</param>
+        <param>15</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Canizares' Potions]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>reci</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>3</param>
+        <param>16</param>
+        <param>0</param>
+        <param>0</param>
+        <text />
+    </node>
+    <node for="30">
+        <keyword>invi</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[His cheery, harmless demeanor falls from him like a cloak. His smile fades and his eyes turn flinty and cold. "Ah, yes. You want to learn of the rebellion."]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>rebe</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Many foes of the Empire come here, to learn our techniques. Others come to join our cause."]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>foes</keyword>
+        <keyword>empi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The Empire has many foes, but few have had luck in their rebellion. The reason is simple. They were weak, where we are strong. Fortunately for them, we will teach our secrets and techniques."]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>secr</keyword>
+        <keyword>tech</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We will teach them, but for a price. First, we must be paid in the same coin. Those who would learn must join our cause."]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>join</keyword>
+        <keyword>caus</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You were contacted because we learned of you when you arrived. You do not have any obvious Empire contacts, and adventurers are often free spirits, who hate the Empire. If you do not wish to help us, you oppose us, and should depart."]]>
+        </text>
+        <text>
+            <![CDATA["Otherwise, if you want to join our ranks, you must be tested."]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>free</keyword>
+        <keyword>hate</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He chuckles. "But then, who, who doesn't work for the Empire, doesn't hate it?"]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>oppo</keyword>
+        <keyword>depa</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["That's the first lesson in our techniques. Those who don't help us, oppose us. If the Empire is to be fought, ruthlessness is your first, best weapon."]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>ruth</keyword>
+        <keyword>weap</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Mercy should never be shown. To anybody. The Empire has never shown it. Neither shall we. Some doubt the morality in this belief."]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>rank</keyword>
+        <keyword>test</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The Empire is constantly trying to seed traitors in our ranks. Before we let anyone into our inner circles, they must perform a mission for us to prove they are worthy."]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>trai</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He leans close, and says "And believe me. If you are found to be a traitor, your death will take days. If you're lucky."]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>miss</keyword>
+        <keyword>wort</keyword>
+        <type>call-local</type>
+        <param>17</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You have retrieved the papers. Well done. You've proved yourselves worthy enough to get your next contact. You should go see O'Grady, in the town of Muck. Ask him of 'rebellion', and he will aid you." He gives you a piece of paper, saying all this.]]>
+        </text>
+        <text>
+            <![CDATA["I will be departing soon, as I suspect the Empire knows of me. Welcome to the resistance, and good luck."]]>
+        </text>
+    </node>
+    <node for="30">
+        <keyword>mora</keyword>
+        <keyword>beli</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["If you do, look at the Punishment Cells. Talk to the people and hear what the Empire has done and robbed them of. Learn of Lord Volpe and his corruption. Perhaps what we do is sometimes wrong."]]>
+        </text>
+        <text>
+            <![CDATA["But it is the lesser evil compared to what the Empire is doing to the people on this Isle."]]>
+        </text>
+    </node>
+    <node for="31">
+        <keyword>heal</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>3</param>
+        <param>5</param>
+        <param>0</param>
+        <param>0</param>
+        <text />
+    </node>
+    <node for="31">
+        <keyword>purc</keyword>
+        <keyword>spel</keyword>
+        <type>shop</type>
+        <param>4</param>
+        <param>17</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Stephano's Spells]]>
+        </text>
+    </node>
+    <node for="31">
+        <keyword>harm</keyword>
+        <keyword>shri</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["We priests of harmony try our hardest to bring forth peace and kindness in the people. This is a difficult goal, considering the increasing brutality on the isle."]]>
+        </text>
+    </node>
+    <node for="31">
+        <keyword>incr</keyword>
+        <keyword>brut</keyword>
+        <type>if-time</type>
+        <param>40</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["You won't have to talk to many people to find out what a torn, violent place this has become. Granted, there is great injustice, but things are only being made worse."]]>
+        </text>
+        <text>
+            <![CDATA[He looks upset. "Our Lord, Houlihan, was murdered! We are even striking down our leaders now! I can hardly stand to talk about it. This bitter discord seems to be beyond the control of all powers."]]>
+        </text>
+    </node>
+    <node for="31">
+        <keyword>wors</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["The Empire is not perfect, but it is, by and large, just. It keeps us from the cruelty of the Nephilim, and the terror of anarchy! These rebels may be right about the presence of injustice, but I will still side with the wisdom of our current leaders."]]>
+        </text>
+    </node>
+    <node for="31">
+        <keyword>grea</keyword>
+        <keyword>inju</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Some of the serfs are angry about the distribution of wealth on this island. I can agree with them that there may be the need for some improvements, but not to the point of condoning violence!"]]>
+        </text>
+    </node>
+    <node for="32">
+        <keyword>natu</keyword>
+        <keyword>magi</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She smiles. "You know, you could actually be of assistance to me. In the swamp to the east is a large cave. In the cave are valuable geodes I wish to study. If you could retrieve some, you could sell them to me for 50 gold pieces each."]]>
+        </text>
+        <text>
+            <![CDATA["I'd get them myself, but the turmoil makes it difficult."]]>
+        </text>
+    </node>
+    <node for="32">
+        <keyword>sell</keyword>
+        <keyword>geod</keyword>
+        <type>call-local</type>
+        <param>25</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She looks through your inventory. "Sorry. You have none of the geodes I need."]]>
+        </text>
+    </node>
+    <node for="32">
+        <keyword>turm</keyword>
+        <keyword>xxxx</keyword>
+        <type>if-time</type>
+        <param>40</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Yes. I've been trying to watch it with an impartial eye. You see, it has to do with the serfs on the isle, and their receiving of land."]]>
+        </text>
+        <text>
+            <![CDATA["Yes. I've been trying to watch it with an impartial eye, but it was difficult after the assassination. You see, it has to do with the serfs on the isle, and their receiving of land."]]>
+        </text>
+    </node>
+    <node for="32">
+        <keyword>diff</keyword>
+        <keyword>assa</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Lord Houlihan, over in city hall, was murdered by a band of rebels in broad daylight! Quite audacious, if you ask me. Not surprising, though. He was quite despised by the serfs."]]>
+        </text>
+    </node>
+    <node for="32">
+        <keyword>serf</keyword>
+        <keyword>land</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She looks uncomfortable. "I know, but it is not always safe to say. Let's just say that some serfs feel that the feudal state should have ended years ago, but the lords of the isle are more comfortable with it staying. And so violence ensued."]]>
+        </text>
+    </node>
+    <node for="32">
+        <keyword>viol</keyword>
+        <keyword>ensu</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["That's all I know. It's real estate. What better reason does anyone ever have to kill someone else? Real estate."]]>
+        </text>
+    </node>
+    <node for="32">
+        <keyword>real</keyword>
+        <keyword>esta</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She thinks. "Hmm. Perhaps there's a paper in that somewhere!"]]>
+        </text>
+    </node>
+    <node for="33">
+        <keyword>town</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Liam contains some of the richest land in Morrow's Isle. It's quite a prize."]]>
+        </text>
+    </node>
+    <node for="33">
+        <keyword>serf</keyword>
+        <keyword>line</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He frowns. "When Lord Volpe brought me here, he said nothing about the irritable peasants. Fortunately, they can be persuaded."]]>
+        </text>
+    </node>
+    <node for="33">
+        <keyword>lord</keyword>
+        <keyword>volp</keyword>
+        <type>if-sdf</type>
+        <param>101</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["I, and many others, came from far away with Volpe to take control of this Isle from the weak hands that held it."]]>
+        </text>
+        <text>
+            <![CDATA["Have you not heard? Volpe is dead! Horrid tragedy. I remember well when I came here with Volpe to take control of this Isle from the weak hands that held it."]]>
+        </text>
+    </node>
+    <node for="33">
+        <keyword>weak</keyword>
+        <keyword>hand</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Old Lord Brosterman. He was a fool. We were lucky to get rid of him."]]>
+        </text>
+    </node>
+    <node for="33">
+        <keyword>bros</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He looks suspicious. "Why do you ask? It doesn't concern you."]]>
+        </text>
+    </node>
+    <node for="33">
+        <keyword>pers</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He points at the small door in the corner of the room. "Liam, like all proper cities on this Isle, has a full complement of punishment cells."]]>
+        </text>
+    </node>
+    <node for="33">
+        <keyword>puni</keyword>
+        <keyword>cell</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA["Well, how else are you supposed to show a peasant who's boss without removing his ability to work? A few days in a room, with a little loving adjustment, and the message has been gotten across."]]>
+        </text>
+    </node>
+    <node for="33">
+        <keyword>lovi</keyword>
+        <keyword>adju</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[He laughs, and mimes a swinging motion with his arms. "What else?"]]>
+        </text>
+    </node>
+    <node for="32">
+        <keyword>purc</keyword>
+        <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[She sighs. "I suppose I can identify items, if you want."]]>
+        </text>
+    </node>
+    <node for="32">
+        <keyword>iden</keyword>
+        <keyword>xxxx</keyword>
+        <type>id</type>
+        <param>20</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Feeling the task is beneath her, she looks over your trinkets. "I'll tell you what each is for 20 gold."]]>
+        </text>
+    </node>
+</dialogue>

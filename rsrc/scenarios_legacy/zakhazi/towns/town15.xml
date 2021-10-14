@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>32</size>
+    <name>Spiraling Crypt</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="0" left="0" bottom="31" right="31" />
+    <difficulty>0</difficulty>
+    <lighting>lit</lighting>
+    <onenter condition="alive">0</onenter>
+    <onenter condition="dead">0</onenter>
+    <flags />
+    <creature id="0">
+        <type>71</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="1">
+        <type>71</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="2">
+        <type>71</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="3">
+        <type>71</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>1</encounter>
+    </creature>
+    <creature id="4">
+        <type>70</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>2</encounter>
+    </creature>
+    <creature id="5">
+        <type>70</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>2</encounter>
+    </creature>
+    <creature id="6">
+        <type>70</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>2</encounter>
+    </creature>
+    <creature id="7">
+        <type>70</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>2</encounter>
+    </creature>
+    <creature id="8">
+        <type>71</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>3</encounter>
+    </creature>
+    <creature id="9">
+        <type>71</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>3</encounter>
+    </creature>
+    <creature id="10">
+        <type>71</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>3</encounter>
+    </creature>
+    <creature id="11">
+        <type>71</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>3</encounter>
+    </creature>
+    <creature id="12">
+        <type>102</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>4</encounter>
+    </creature>
+    <creature id="13">
+        <type>81</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>4</encounter>
+    </creature>
+    <creature id="14">
+        <type>81</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <encounter>4</encounter>
+    </creature>
+    <creature id="15">
+        <type>71</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="15" y="6" />
+    </creature>
+    <creature id="16">
+        <type>71</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="15" y="6" />
+    </creature>
+    <creature id="17">
+        <type>71</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="15" y="6" />
+    </creature>
+    <creature id="18">
+        <type>71</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="15" y="6" />
+    </creature>
+    <creature id="19">
+        <type>71</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+        <sdf x="15" y="6" />
+    </creature>
+    <sign id="19" />
+    <string id="0">
+        <![CDATA[You climb the stairs to the second level of this strange tower. When you reach the top, you notice two things. First, the architecture on this floor is noticeably Vahnatai.]]>
+    </string>
+    <string id="1">
+        <![CDATA[Second, you see that the air around you is filled with brief, tiny flashes of light. The motes are too dim to see by but are constantly visible. All of them are white, and the effect is quite pretty.]]>
+    </string>
+    <string id="2">
+        <![CDATA[You hear a soft, gentle voice. It sounds like someone is whispering into your ear, even though there's nobody there.]]>
+    </string>
+    <string id="3">
+        <![CDATA[The voice says "The four darks are to go up."]]>
+    </string>
+    <string id="4">
+        <![CDATA[The voice says, "The colors are the key to move on."]]>
+    </string>
+    <string id="5">
+        <![CDATA[The voice says, "The four light colors for the docks."]]>
+    </string>
+    <string id="6">
+        <![CDATA[It says, "First the colors, then the checking rune."]]>
+    </string>
+    <string id="7">
+        <![CDATA[The rune glows when you step on it, and the  red, green, orange, and yellow sparkles following you begin to shake and swirl around you. A whispering voice says "The way to the docks is now clear." Then the rune stops glowing, and motes calm down.]]>
+    </string>
+    <string id="8">
+        <![CDATA[The rune turns black when you step on it, and the dark motes surrounding you all turn dead black. A cold, hostile voice whispers in your ear "Search the pillar by the slime, and you can come before me." Then the rune and motes return to "normal".]]>
+    </string>
+    <string id="9">
+        <![CDATA[You step on the rune. The bright motes surrounding you flash and shake slightly and then return to normal. A voice whispers in your ear "Your colors are not proper."]]>
+    </string>
+    <string id="10">
+        <![CDATA[When you step on the rune, bright white light pours out of it. The light seems to bleach the sparkling motes following you clean. The light disappears, and the motes shine with pure, untarnished white light.]]>
+    </string>
+    <string id="11">
+        <![CDATA[When you step on the rune, it begins to glow a dull, dark brown. The dark light changes several of the motes of light following you. Some of them remain brown. The rune turns dark again.]]>
+    </string>
+    <string id="12">
+        <![CDATA[The brown motes turn white again.]]>
+    </string>
+    <string id="13">
+        <![CDATA[When you step on the rune, it begins to glow a dull, dark blue. The dark light changes several of the motes of light following you. Some of them remain blue. The rune turns dark again.]]>
+    </string>
+    <string id="14">
+        <![CDATA[The dark blue motes turn white again.]]>
+    </string>
+    <string id="15">
+        <![CDATA[When you step on the rune, it begins to glow a dull, dark gray. The dark light changes several of the motes of light following you. Some of them remain gray. The rune turns dark again.]]>
+    </string>
+    <string id="16">
+        <![CDATA[The gray motes turn white again.]]>
+    </string>
+    <string id="17">
+        <![CDATA[When you step on the rune, it begins to glow a dull, dark black. The dark light changes several of the motes of light following you. Some of them remain black. The rune turns dark again.]]>
+    </string>
+    <string id="18">
+        <![CDATA[The black motes turn white again.]]>
+    </string>
+    <string id="19">
+        <![CDATA[When you step on the rune, it begins to glow a bright, cheery red. The light changes several of the motes of light following you. Some of them remain red. The rune turns dark again.]]>
+    </string>
+    <string id="20">
+        <![CDATA[The red motes turn white again.]]>
+    </string>
+    <string id="21">
+        <![CDATA[When you step on the rune, it begins to glow a bright, cheery green. The light changes several of the motes of light following you. Some of them remain green. The rune turns dark again.]]>
+    </string>
+    <string id="22">
+        <![CDATA[The green motes turn white again.]]>
+    </string>
+    <string id="23">
+        <![CDATA[When you step on the rune, it begins to glow a bright, cheery orange. The light changes several of the motes of light following you. Some of them remain orange. The rune turns dark again.]]>
+    </string>
+    <string id="24">
+        <![CDATA[The orange motes turn white again.]]>
+    </string>
+    <string id="25">
+        <![CDATA[When you step on the rune, it begins to glow a bright, cheery yellow. The light changes several of the motes of light following you. Some of them remain yellow. The rune turns dark again.]]>
+    </string>
+    <string id="26">
+        <![CDATA[The yellow motes turn white again.]]>
+    </string>
+    <string id="27">
+        <![CDATA[The rune flashes when you step on it, and the white motes following you turn red and angry. Then they return to their previous state, and several creatures appear to attack you. Clearly, the tower still intends to harm you.]]>
+    </string>
+</town>

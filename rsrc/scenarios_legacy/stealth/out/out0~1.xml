@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Western Morrow&apos;s Isle</name>
+    <comment>Comment</comment>
+    <encounter can-flee="false" force="true">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>103</monster>
+        <monster>0</monster>
+        <monster>103</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>5</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <encounter can-flee="false" force="true">
+        <monster>13</monster>
+        <monster>16</monster>
+        <monster>0</monster>
+        <monster>28</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>29</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>14</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </encounter>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>45</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>155</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <wandering can-flee="true" force="false">
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>0</monster>
+        <monster>103</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <monster friendly="true">0</monster>
+        <onmeet>-1</onmeet>
+        <onwin>-1</onwin>
+        <onflee>-1</onflee>
+        <sdf x="-1" y="-1" />
+    </wandering>
+    <sign id="0">
+        <![CDATA[BEWARE - This area is uncontrolled!|Travel with extreme caution!]]>
+    </sign>
+    <sign id="1">
+        <![CDATA[BEWARE - This area is uncontrolled!|Travel with extreme caution!]]>
+    </sign>
+    <sign id="2">
+        <![CDATA[BEWARE - This area is uncontrolled!|Travel with extreme caution!]]>
+    </sign>
+    <area top="29" left="33" bottom="33" right="39">Gravel Valley</area>
+    <string id="0">
+        <![CDATA[You find the remains of a mage who crash landed while flying over these mountains. The wand at his side is still intact. Most everything else has been eaten by bears.]]>
+    </string>
+    <string id="6">
+        <![CDATA[This path up into the mountains is lined with white gravel. It's broken up pieces of what looks like marble, broken into thumb sized pieces. Someone has been doing some peculiar, rustic landscaping.]]>
+    </string>
+    <string id="7">
+        <![CDATA[At the high end of the path, you find a low, dark cave entrance. The white gravel is piled much higher here, in some places coming up to your waist.]]>
+    </string>
+    <string id="13">
+        <![CDATA[You work your way slowly into the cave. Rounding a corner in the passage, you come upon an incredibly lifelike statue of a human male.]]>
+    </string>
+    <string id="14">
+        <![CDATA[Someone or something has been gnawing away at it - large chunks have been broken off, and there are scrapes around the broken bits that look like they were made by claws.]]>
+    </string>
+    <string id="15">
+        <![CDATA[You suddenly realize that the statue is made of the same material as the gravel. By the time you realize where the statue came from, the basilisks have already found you.]]>
+    </string>
+    <string id="19">
+        <![CDATA[The basilisk's lair is now yours to loot. You dive in with enthusiasm. There's a wide variety of coins and trinkets waiting for you in the back of the cave.]]>
+    </string>
+    <string id="20">
+        <![CDATA[Most of the weaponry and armor taken off the lizards' victims (mainly Empire patrols) has been eaten by the peculiar creatures. One small sword, however, was not of interest to them.]]>
+    </string>
+    <string id="21">
+        <![CDATA[If you hadn't found that peculiar "First Stone" at the east end of the island, you wouldn't have known to keep an eye open for the peculiar markers. You find another one in this grove.]]>
+    </string>
+    <string id="22">
+        <![CDATA[The marker is carved from granite. When you scrape off the moss, you reveal the words carved into its side: "Second Stone."]]>
+    </string>
+    <string id="23">
+        <![CDATA[At the far end of this peninsula, you see a small, walled community of stone and wood buildings, surrounded by fairly healthy looking, quite well armed townfolk. A sign reads "Phalia Colony - Strife will NOT be tolerated."]]>
+    </string>
+    <string id="24">
+        <![CDATA[Before you even get close, a band of soldiers materializes out of the brush around you. Their blades are out.]]>
+    </string>
+    <string id="25">
+        <![CDATA[One of them says "Hold on there, visitors. Strangers are welcome here, but you leave your fightin' ways out there. We'll have none of that rebel nonsense here. Agreed?"]]>
+    </string>
+    <string id="29">
+        <![CDATA[You draw your blades and attack. They shout for help, and you are disconcerted to see the entire colony drop what it's doing, grab the nearest weapon, and charge. They sure haven't survived out here by being soft.]]>
+    </string>
+    <string id="30">
+        <![CDATA[You are shown into Phalia Colony, where people warily greet you and ask of goings on in the rest of the Isle. This colony was formed by people sickened by the Empire's constant, bloody fighting with the rebels.]]>
+    </string>
+    <string id="31">
+        <![CDATA[They came here to try to avoid the strife, and one person says to you, over mugs of home brewed ale, "You'd be best not getting involved in any of that. There's no white and black hats, just butchers. If I were you, I'd leave this place."]]>
+    </string>
+    <string id="32">
+        <![CDATA[After a while, once you've both traded all of your information, the people start dropping hints that maybe you'd be happier moving on. Before you go, they ask if you'd like to barter for some trade goods. Would you?]]>
+    </string>
+    <string id="36">
+        <![CDATA[You bid farewell to the peculiar people of Phalia Colony. You have a hard time condoning their withdrawal from the world, but it's certainly easy to understand it.]]>
+    </string>
+    <string id="37">
+        <![CDATA[Bloodied and battered, you look at the Colony, hoping to find some good loot. Crestfallen, you see that the buildings are merrily ablaze. Someone must have put fire to them when they realized you were going to win the battle.]]>
+    </string>
+    <string id="38">
+        <![CDATA[What a waste of a perfectly good combat.]]>
+    </string>
+    <string id="39">
+        <![CDATA[Intrigued by this strange, semi-circular rock formation, you walk in to investigate. Soon, however, you find yourself on a path with high outcroppings on all sides. It's a perfect location for an ambush.]]>
+    </string>
+    <string id="40">
+        <![CDATA[As you turn back to get to more secure ground, you realize you're being watched. Empire soldiers have moved from concealment above you, surrounding you. Their weapons are out - for a moment, you think they're about to attack!]]>
+    </string>
+    <string id="41">
+        <![CDATA[As you prepare a defense, however, their leader, a massive Empire Dervish, salutes to you. How odd ... he must recognize you from somewhere. He makes a sharp, chopping hand signal, and the soldiers disappear into the rubble.]]>
+    </string>
+    <string id="42">
+        <![CDATA[What a lucky break. Word that you're supposed to be working for the Empire must have gotten around somehow.]]>
+    </string>
+    <string id="45">
+        <![CDATA[You find a motley network of abandoned log buildings. This used to be a lumberyard. Trees were cut down, shaped into rough planks, and carted out on rough, rutted roads.]]>
+    </string>
+    <string id="46">
+        <![CDATA[It's abandoned now, and not under peaceful circumstances. You find broken arrows, shattered windows, and even a few bloodstains.]]>
+    </string>
+    <string id="47">
+        <![CDATA[Being adventurers, you look around a little bit for loot. Most of what's left is junk. You do find a reasonably nice axe buried in a tree behind the mess hall.]]>
+    </string>
+    <string id="89">
+        <![CDATA[*End of special strs]]>
+    </string>
+</sector>
