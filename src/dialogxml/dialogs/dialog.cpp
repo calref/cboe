@@ -536,8 +536,8 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
 	win.setView(view);
 
-	// ASAN overflow
-	win.setPosition({parentPos.x + (int(parentSz.x) - wWidth) / 2, parentPos.y + (int(parentSz.y) - wHeight) / 2});
+	win.setPosition({std::max(0,parentPos.x + (int(parentSz.x) - wWidth) / 2),
+			std::max(0,parentPos.y + (int(parentSz.y) - wHeight) / 2)});
 	draw();
 	makeFrontWindow(parent ? parent-> win : mainPtr);
 	makeFrontWindow(win);
