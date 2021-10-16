@@ -20,6 +20,29 @@
 #include "pictypes.hpp"
 #include "texture.hpp"
 
+class cPictNum {
+public:
+	explicit cPictNum(pic_num_t nNum=-1, ePicType nType=ePicType::PIC_NONE)
+		: num(nNum)
+		, type(nType)
+	{
+	}
+	static cPictNum getPN_for_terrain(short num)
+	{
+		if(num < 960)
+			return cPictNum(num,PIC_TER);
+		else if(num < 1000)
+			return cPictNum(num-960,PIC_TER_ANIM);
+		else if(num < 2000)
+			return cPictNum(num-1000,PIC_CUSTOM_TER);
+		else
+			return cPictNum(num-2000,PIC_CUSTOM_TER_ANIM);
+	}
+
+	pic_num_t num;
+	ePicType type;
+};
+
 /// A simple icon.
 /// This control can also be made clickable.
 class cPict : public cControl {
@@ -44,6 +67,7 @@ public:
 	/// and applies the custom modifier. (If type is PIC_TER_MAP, it does not take the remainder by 1000.)
 	/// - If num is 10000 or greater and type is PIC_TER_MAP, it automatically subtracts 10000 and applies the party modifier.
 	void setPict(pic_num_t num, ePicType type);
+	void setPict(cPictNum const &num) { setPict(num.num, num.type); }
 	/// Set the pict's icon.
 	/// @param num The new icon index.
 	void setPict(pic_num_t num);
