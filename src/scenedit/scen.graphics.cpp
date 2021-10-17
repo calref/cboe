@@ -318,7 +318,7 @@ static std::vector<short> get_small_icons(location at, ter_num_t t_to_draw) {
 }
 
 static bool get_terrain_picture(cPictNum pict, Texture &source, rectangle &from_rect)
-{
+try {
 	source=Texture();
 	ePicType type=pict.type;
 	if (pict.num<0)
@@ -336,8 +336,14 @@ static bool get_terrain_picture(cPictNum pict, Texture &source, rectangle &from_
 			break;
 		case ePicType::PIC_TER_MAP:
 			source=*ResMgr::textures.get("termap");
-			from_rect.left = 12*(pict.num%20);
-			from_rect.top = 12*(pict.num/20);
+			if (pict.num<960) {
+				from_rect.left = 12*(pict.num%20);
+				from_rect.top = 12*(pict.num/20);
+			}
+			else {
+				from_rect.left = 12*20;
+				from_rect.top = 12*(pict.num-960);
+			}
 			from_rect.right = from_rect.left+12;
 			from_rect.bottom = from_rect.top+12;
 			break;
@@ -350,10 +356,17 @@ static bool get_terrain_picture(cPictNum pict, Texture &source, rectangle &from_
 		default:
 			break;
 	}
-	if (bool(source))
-		return true;
+	if (!source)
+		throw "can not find image";
+	return true;
+}
+catch (...) {
+	if (pict.num==-1) // ok no picture
+		return false;
 	std::cerr << "Error[get_terrain_picture]: can not find picture id=" << pict.num << "type=" << int(pict.type)<< "\n";
-	return false;
+	source = *ResMgr::textures.get("errors");
+	from_rect={0,0,40,40};
+	return true;
 }
 
 void Set_up_win() {

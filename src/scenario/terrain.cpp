@@ -438,10 +438,10 @@ cPictNum cTerrain::get_map_picture_num() const
 {
 	if (map_pic<0)
 		return get_picture_num();
-	if (map_pic<1000)
-		return cPictNum(map_pic+(map_pic<960 ? 0 : 400-960),PIC_TER_MAP);
+	if (map_pic < 1000)
+		return cPictNum(map_pic,PIC_TER_MAP);
 	if(map_pic < 2000)
-		return cPictNum(map_pic-1000,PIC_CUSTOM_TER);
-	return cPictNum(map_pic-2000,PIC_CUSTOM_TER_ANIM);
+		return cPictNum(map_pic-1000,PIC_CUSTOM_TER_MAP);
+	return cPictNum(map_pic-2000,PIC_CUSTOM_TER_MAP);
 	// checkme add force PIC_TER_MAP?
 }

@@ -353,15 +353,38 @@ static void fill_ter_info(cDialog& me, short ter){
 	cTerrain& ter_type = scenario.ter_types[ter];
 	{
 		cPict& pic_ctrl = dynamic_cast<cPict&>(me["graphic"]);
-		pic_ctrl.setPict(ter_type.get_picture_num());
+		bool bad=false;
+		if (ter_type.get_picture_num().type==ePicType::PIC_TER) {
+			// REMOVEME when setPict will not do fatal error
+			try {
+				*ResMgr::textures.get("ter" + std::to_string(1 + ter_type.get_picture_num().num / 50));
+			}
+			catch(...) {
+				bad=true;
+			}
+		}
+		if (!bad)
+			pic_ctrl.setPict(ter_type.get_picture_num());
+		else
+			pic_ctrl.setPict(cPictNum(1999,ePicType::PIC_CUSTOM_TER));
 		me["pict"].setTextToNum(ter_type.picture);
 	}{
 		cPict& pic_ctrl = dynamic_cast<cPict&>(me["seemap"]);
-		pic_num_t pic = ter_type.map_pic;
-		if(pic < 1000)
-			pic_ctrl.setPict(pic, PIC_TER_MAP);
-		else pic_ctrl.setPict(pic, PIC_CUSTOM_TER_MAP);
-		me["map"].setTextToNum(pic);
+		bool bad=false;
+		if (ter_type.get_map_picture_num().type==ePicType::PIC_TER) {
+			// REMOVEME when setPict will not do fatal error
+			try {
+				*ResMgr::textures.get("ter" + std::to_string(1 + ter_type.get_map_picture_num().num / 50));
+			}
+			catch(...) {
+				bad=true;
+			}
+		}
+		if (!bad) // FIXME the picture size is bad if we revert to the main picture
+			pic_ctrl.setPict(ter_type.get_map_picture_num());
+		else
+			pic_ctrl.setPict(cPictNum(1999,ePicType::PIC_CUSTOM_TER));
+		me["map"].setTextToNum(ter_type.map_pic);
 	}
 	me["number"].setTextToNum(ter);
 	me["name"].setText(ter_type.name);
