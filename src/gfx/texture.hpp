@@ -78,6 +78,7 @@ struct Texture {
 			 { "dlogscrollwh", {64,64} },
 			 { "edbuttons", {251,164} },
 			 { "edsplash", {640,480} },
+			 { "errors", {40,40} },
 			 { "fields", {224,144} },
 			 { "fighthelp", {320,125} },
 			 { "icon", {38,38} },
