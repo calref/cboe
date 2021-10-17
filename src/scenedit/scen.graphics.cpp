@@ -320,7 +320,10 @@ static std::vector<short> get_small_icons(location at, ter_num_t t_to_draw) {
 static bool get_terrain_picture(cPictNum pict, Texture &source, rectangle &from_rect)
 {
 	source=Texture();
-	switch (pict.type) {
+	ePicType type=pict.type;
+	if (pict.num<0)
+		type=ePicType::PIC_NONE;
+	switch (type) {
 		case ePicType::PIC_TER: {
 			source = *ResMgr::textures.get("ter" + std::to_string(1 + pict.num / 50));
 			int picture_wanted = pict.num%50;
@@ -330,6 +333,13 @@ static bool get_terrain_picture(cPictNum pict, Texture &source, rectangle &from_
 		case ePicType::PIC_TER_ANIM:
 			source = *ResMgr::textures.get("teranim");
 			from_rect = calc_rect(4 * (pict.num / 5),pict.num % 5);
+			break;
+		case ePicType::PIC_TER_MAP:
+			source=*ResMgr::textures.get("termap");
+			from_rect.left = 12*(pict.num%20);
+			from_rect.top = 12*(pict.num/20);
+			from_rect.right = from_rect.left+12;
+			from_rect.bottom = from_rect.top+12;
 			break;
 		case ePicType::PIC_CUSTOM_TER:
 		case ePicType::PIC_CUSTOM_TER_ANIM: // checkme
@@ -1140,37 +1150,12 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 }
 
 void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short size,bool road) {
-	rectangle dest_rect = {0,0,size,size},from_rect = {0,0,12,12};
-	short picture_wanted;
+	rectangle from_rect;
 	Texture source_gworld;
-	
-	picture_wanted = scenario.ter_types[terrain_to_draw].map_pic;
-	
+	rectangle dest_rect = {0,0,size,size};
 	dest_rect.offset(8 + TER_RECT_UL_X + size * i, 8 + TER_RECT_UL_Y + size * j);
-	if(picture_wanted == NO_PIC) {
-		if (get_terrain_picture(scenario.ter_types[terrain_to_draw].get_picture_num(), source_gworld, from_rect))
-			rect_draw_some_item(source_gworld, from_rect, mainPtr, dest_rect);
-	} else {
-		if(picture_wanted >= 1000) {
-			Texture from_gw;
-			std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
-			from_rect.right = from_rect.left + 12;
-			from_rect.bottom = from_rect.top + 12;
-			picture_wanted /= 1000; picture_wanted--;
-			from_rect.offset((picture_wanted / 3) * 12, (picture_wanted % 3) * 12);
-			rect_draw_some_item(from_gw, from_rect, mainPtr, dest_rect);
-		} else {
-			auto const & small_ter_gworld = *ResMgr::textures.get("termap");
-			if(picture_wanted >= 960) {
-				picture_wanted -= 960;
-				from_rect.offset(12 * 20, (picture_wanted - 960) * 12);
-				rect_draw_some_item(small_ter_gworld, from_rect, mainPtr, dest_rect);
-			} else {
-				from_rect.offset((picture_wanted % 20) * 12,(picture_wanted / 20) * 12);
-				rect_draw_some_item(small_ter_gworld, from_rect, mainPtr, dest_rect);
-			}
-		}
-	}
+	if (get_terrain_picture(scenario.ter_types[terrain_to_draw].get_map_picture_num(), source_gworld, from_rect))
+		rect_draw_some_item(source_gworld, from_rect, mainPtr, dest_rect);
 	if(road) {
 		rectangle road_rect = dest_rect;
 		int border = (size - 4) / 2;

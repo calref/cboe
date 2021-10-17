@@ -428,6 +428,20 @@ cPictNum cTerrain::get_picture_num_for_terrain(pic_num_t bigPicture)
 		return cPictNum(bigPicture-960,PIC_TER_ANIM);
 	if(bigPicture < 2000)
 		return cPictNum(bigPicture-1000,PIC_CUSTOM_TER);
-	return cPictNum(bigPicture-2000,PIC_CUSTOM_TER_ANIM);
+	if (bigPicture>=10000) // force to use PIC_TER
+		return cPictNum(bigPicture-10000,PIC_TER);
+	else
+		return cPictNum(bigPicture-2000,PIC_CUSTOM_TER_ANIM);
 }
 
+cPictNum cTerrain::get_map_picture_num() const
+{
+	if (map_pic<0)
+		return get_picture_num();
+	if (map_pic<1000)
+		return cPictNum(map_pic+(map_pic<960 ? 0 : 400-960),PIC_TER_MAP);
+	if(map_pic < 2000)
+		return cPictNum(map_pic-1000,PIC_CUSTOM_TER);
+	return cPictNum(map_pic-2000,PIC_CUSTOM_TER_ANIM);
+	// checkme add force PIC_TER_MAP?
+}
