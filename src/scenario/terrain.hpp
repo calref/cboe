@@ -50,6 +50,7 @@ public:
 	cPictNum get_picture_num() const {
 		return get_picture_num_for_terrain(picture);
 	}
+	cPictNum get_map_picture_num() const;
 	static cPictNum get_picture_num_for_terrain(pic_num_t bigPicture);
 	void import_legacy(legacy::terrain_type_type const &old);
 	void writeTo(std::ostream& file) const;
