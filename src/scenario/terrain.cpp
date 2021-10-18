@@ -421,7 +421,7 @@ cPictNum cTerrain::get_picture_num_for_terrain(pic_num_t bigPicture)
 				else             : PIC_CUSTOM_TER
 	 */
 	if(bigPicture < 0)
-		return cPictNum(-1,PIC_NONE);
+		return cPictNum(bigPicture,PIC_NONE);
 	if(bigPicture < 960)
 		return cPictNum(bigPicture,PIC_TER);
 	if(bigPicture < 1000)

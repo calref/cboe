@@ -49,6 +49,8 @@ public:
 		cItemStorage& operator = (legacy::item_storage_shortcut_type const &old);
 	};
 	void destroy_terrain();
+	cTerrain const &get_terrain(ter_num_t ter) const;
+	cTerrain &get_terrain(ter_num_t ter);
 public:
 	unsigned short difficulty,intro_pic,default_ground;
 	int bg_out, bg_fight, bg_town, bg_dungeon;

@@ -368,7 +368,11 @@ void edit_sign(sign_loc_t& which_sign,short num,short picture) {
 	cDialog sign_dlg("edit-sign");
 	sign_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &sign_dlg, false));
 	sign_dlg["okay"].attachClickHandler(std::bind(edit_sign_event_filter, _1, std::ref(which_sign)));
-	dynamic_cast<cPict&>(sign_dlg["pic"]).setPict(cTerrain::get_picture_num_for_terrain(picture)); // checkme: does this really need to be some terrain?
+	if (check_picture_num(cTerrain::get_picture_num_for_terrain(picture), false)) // REMOVEME
+		dynamic_cast<cPict&>(sign_dlg["pic"]).setPict(cTerrain::get_picture_num_for_terrain(picture)); // checkme: does this really need to be some terrain?
+	else
+		dynamic_cast<cPict&>(sign_dlg["pic"]).setPict(cPictNum(1999,ePicType::PIC_CUSTOM_TER));
+
 	
 	sign_dlg["num"].setTextToNum(num);
 	sign_dlg["text"].setText(which_sign.text);
