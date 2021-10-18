@@ -349,38 +349,34 @@ static bool fill_ter_flag_info(cDialog& me, std::string id, bool losing){
 	return true;
 }
 
+// REMOVEME when setPict will not do fatal error
+bool check_picture_num(cPictNum const &pic, bool noneIsOk)
+try {
+	if (noneIsOk && pic.num==-1)
+		return true;
+	if (pic.num<0)
+		return false;
+	if (pic.type==ePicType::PIC_TER)
+		// REMOVEME when setPict will not do fatal error
+		*ResMgr::textures.get("ter" + std::to_string(1 + pic.num / 50));
+	return true;
+}
+catch(...) {
+	return false;
+}
+
 static void fill_ter_info(cDialog& me, short ter){
-	cTerrain& ter_type = scenario.ter_types[ter];
+	cTerrain const & ter_type = scenario.get_terrain(ter);
 	{
 		cPict& pic_ctrl = dynamic_cast<cPict&>(me["graphic"]);
-		bool bad=false;
-		if (ter_type.get_picture_num().type==ePicType::PIC_TER) {
-			// REMOVEME when setPict will not do fatal error
-			try {
-				*ResMgr::textures.get("ter" + std::to_string(1 + ter_type.get_picture_num().num / 50));
-			}
-			catch(...) {
-				bad=true;
-			}
-		}
-		if (!bad)
+		if (check_picture_num(ter_type.get_picture_num(), false)) // REMOVEME
 			pic_ctrl.setPict(ter_type.get_picture_num());
 		else
 			pic_ctrl.setPict(cPictNum(1999,ePicType::PIC_CUSTOM_TER));
 		me["pict"].setTextToNum(ter_type.picture);
 	}{
 		cPict& pic_ctrl = dynamic_cast<cPict&>(me["seemap"]);
-		bool bad=false;
-		if (ter_type.get_map_picture_num().type==ePicType::PIC_TER) {
-			// REMOVEME when setPict will not do fatal error
-			try {
-				*ResMgr::textures.get("ter" + std::to_string(1 + ter_type.get_map_picture_num().num / 50));
-			}
-			catch(...) {
-				bad=true;
-			}
-		}
-		if (!bad) // FIXME the picture size is bad if we revert to the main picture
+		if (check_picture_num(ter_type.get_map_picture_num(), false)) // REMOVEME
 			pic_ctrl.setPict(ter_type.get_map_picture_num());
 		else
 			pic_ctrl.setPict(cPictNum(1999,ePicType::PIC_CUSTOM_TER));
@@ -453,7 +449,7 @@ static void fill_ter_info(cDialog& me, short ter){
 }
 
 static bool finish_editing_ter(cDialog& me, std::string id, ter_num_t& which) {
-	if(!save_ter_info(me, scenario.ter_types[which])) return true;
+	if(!save_ter_info(me, scenario.get_terrain(which))) return true;
 	
 	if(!me.toast(true)) return true;
 	if(id == "left") {
@@ -473,7 +469,7 @@ static bool finish_editing_ter(cDialog& me, std::string id, ter_num_t& which) {
 }
 
 static bool edit_ter_obj(cDialog& me, ter_num_t which_ter) {
-	cTerrain& ter = scenario.ter_types[which_ter];
+	cTerrain& ter = scenario.get_terrain(which_ter);
 	const pic_num_t pic = ter.picture;
 	cDialog obj_dlg("edit-ter-obj", &me);
 	obj_dlg.attachFocusHandlers([&pic](cDialog& me, std::string fld, bool losing) -> bool {
@@ -507,7 +503,10 @@ static bool edit_ter_obj(cDialog& me, ter_num_t which_ter) {
 		for(int x = 0; x < 4; x++) {
 			for(int y = 0; y < 4; y++) {
 				std::string id = "x" + std::to_string(x) + "y" + std::to_string(y);
-				dynamic_cast<cPict&>(me[id]).setPict(cTerrain::get_picture_num_for_terrain(obj[x][y]));
+				if (check_picture_num(cTerrain::get_picture_num_for_terrain(obj[x][y]), true))
+					dynamic_cast<cPict&>(me[id]).setPict(cTerrain::get_picture_num_for_terrain(obj[x][y]));
+				else
+					dynamic_cast<cPict&>(me[id]).setPict(cPictNum(1999,ePicType::PIC_CUSTOM_TER));
 			}
 		}
 		return true;
