@@ -212,7 +212,6 @@ void draw(bool need_refresh) {
 		else out_mode = false;
 		
 		// TODO: It could be possible to draw the entire map here and then only refresh if a spot actually changes terrain type
-		auto const & small_ter_gworld = *ResMgr::textures.get("termap");
 		for(where.x = redraw_rect.left; where.x < redraw_rect.right; where.x++)
 			for(where.y = redraw_rect.top; where.y < redraw_rect.bottom; where.y++) {
 				draw_rect = orig_draw_rect;
@@ -228,54 +227,17 @@ void draw(bool need_refresh) {
 					expl = univ.out.out_e[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
 				else expl = is_explored(where.x,where.y);
 				
-				if(expl != 0) {
-					pic = univ.scenario.ter_types[what_ter].map_pic;
-					bool drawLargeIcon = false;
-					if(pic == NO_PIC) {
-						pic = univ.scenario.ter_types[what_ter].picture;
-						drawLargeIcon = true;
-					}
-					if(pic >= 1000) {
-						if(spec_scen_g) {
-							//print_nums(0,99,pic);
-							Texture src_gw;
-							if(drawLargeIcon) {
-								pic = pic % 1000;
-								std::tie(src_gw,custom_from) = spec_scen_g.find_graphic(pic);
-								rect_draw_some_item(src_gw,custom_from,gworld,draw_rect);
-							} else {
-								std::tie(src_gw,custom_from) = spec_scen_g.find_graphic(pic % 1000);
-								custom_from.right = custom_from.left + 12;
-								custom_from.bottom = custom_from.top + 12;
-								pic /= 1000; pic--;
-								custom_from.offset((pic / 3) * 12, (pic % 3) * 12);
-								rect_draw_some_item(src_gw,custom_from, gworld, draw_rect);
-							}
-						}
-					} else if(drawLargeIcon) {
-						if(pic >= 960) {
-							custom_from = calc_rect(4 * ((pic - 960) / 5),(pic - 960) % 5);
-							rect_draw_some_item(*ResMgr::textures.get("teranim"), custom_from, gworld, draw_rect);
-						} else {
-							int which_sheet = pic / 50;
-							auto const &src_gw = *ResMgr::textures.get("ter" + std::to_string(1 + which_sheet));
-							pic %= 50;
-							custom_from = calc_rect(pic % 10, pic / 10);
-							rect_draw_some_item(src_gw, custom_from, gworld, draw_rect);
-						}
-					} else {
-						if(univ.scenario.ter_types[what_ter].picture < 960)
-							ter_temp_from.offset(12 * (univ.scenario.ter_types[what_ter].picture % 20),
-												 12 * (univ.scenario.ter_types[what_ter].picture / 20));
-						else ter_temp_from.offset(12 * 20,
-												  12 * (univ.scenario.ter_types[what_ter].picture - 960));
-						rect_draw_some_item(small_ter_gworld,ter_temp_from,gworld,draw_rect);
-					}
+				if(expl == 0)
+					continue;
+				Texture src_gw;
+				if (!cPict::get_terrain_picture(univ.get_terrain(what_ter).get_map_picture_num(), src_gw,custom_from))
+					fill_rect(gworld, draw_rect, sf::Color::Yellow);  // FIXME: show an error here
+				else
+					rect_draw_some_item(src_gw, custom_from, gworld, draw_rect);
 					
-					if(is_out() ? univ.out->roads[where.x][where.y] : univ.town.is_road(where.x,where.y)) {
-						draw_rect.inset(1,1);
-						rect_draw_some_item(*ResMgr::textures.get("trim"),{8,112,12,116},gworld,draw_rect);
-					}
+				if(is_out() ? univ.out->roads[where.x][where.y] : univ.town.is_road(where.x,where.y)) {
+					draw_rect.inset(1,1);
+					rect_draw_some_item(*ResMgr::textures.get("trim"),{8,112,12,116},gworld,draw_rect);
 				}
 			}
 		

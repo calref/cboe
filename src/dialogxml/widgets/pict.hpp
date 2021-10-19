@@ -82,6 +82,7 @@ public:
 	static void advanceAnim();
 	virtual ~cPict();
 	void draw();
+	static bool get_terrain_picture(cPictNum pict, Texture &source, rectangle &from_rect, int anim=0);
 	/// A utility function to draw an icon into an arbitrary window.
 	/// @param win The window to draw in.
 	/// @param dest The bounding rect to draw in (ignored for drawing the actual, but used for background fill and framing)
