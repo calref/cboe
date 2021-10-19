@@ -34,10 +34,10 @@ void cOutdoors::import_legacy(legacy::outdoor_record_type const &old){
 	for(short i = 0; i < 48; i++)
 		for(short j = 0; j < 48; j++){
 			terrain[i][j] = old.terrain[i][j];
-			if(scenario->ter_types[terrain[i][j]].i == 3000) // marker to indicate it used to be a special spot
+			if(scenario->get_terrain(terrain[i][j]).i == 3000) // marker to indicate it used to be a special spot
 				special_spot[i][j] = true;
 			else special_spot[i][j] = false;
-			if(scenario->ter_types[terrain[i][j]].i == 3001) // marker to indicate it used to be a road
+			if(scenario->get_terrain(terrain[i][j]).i == 3001) // marker to indicate it used to be a road
 				roads[i][j] = true;
 			else roads[i][j] = false;
 			// Convert roads that crossed grass/hill boundaries
@@ -50,19 +50,19 @@ void cOutdoors::import_legacy(legacy::outdoor_record_type const &old){
 			if(old.terrain[i][j] == 81 && i > 0 && i < 47 && j > 0 && j < 47) {
 				if(old.terrain[i+1][j] == 81) {
 					ter_num_t connect = old.terrain[i-1][j];
-					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+					if(connect == 80 || scenario->get_terrain(connect).trim_type == eTrimType::CITY)
 						terrain[i][j] = 44;
 				} else if(old.terrain[i-1][j] == 81) {
 					ter_num_t connect = old.terrain[i+1][j];
-					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+					if(connect == 80 || scenario->get_terrain(connect).trim_type == eTrimType::CITY)
 						terrain[i][j] = 40;
 				} else if(old.terrain[i][j+1] == 81) {
 					ter_num_t connect = old.terrain[i][j-1];
-					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+					if(connect == 80 || scenario->get_terrain(connect).trim_type == eTrimType::CITY)
 						terrain[i][j] = 42;
 				} else if(old.terrain[i][j-1] == 81) {
 					ter_num_t connect = old.terrain[i][j+1];
-					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+					if(connect == 80 || scenario->get_terrain(connect).trim_type == eTrimType::CITY)
 						terrain[i][j] = 38;
 				}
 			}
