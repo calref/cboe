@@ -431,7 +431,7 @@ void writeItemsToXml(ticpp::Printer&& data, cScenario& scenario) {
 	for(size_t i = 0; i < scenario.scen_items.size(); i++) {
 		data.OpenElement("item");
 		data.PushAttribute("id", i);
-		cItem& item = scenario.scen_items[i];
+		cItem const &item = scenario.scen_items[i];
 		data.PushElement("variety", item.variety);
 		data.PushElement("level", item.item_level);
 		data.PushElement("awkward", item.awkward);

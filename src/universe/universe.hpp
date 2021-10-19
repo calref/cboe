@@ -215,6 +215,8 @@ public:
 	explicit cUniverse(ePartyPreset party_type = PARTY_DEFAULT);
 	~cUniverse();
 
+	cItem const &get_item(item_num_t item) const { return scenario.get_item(item); }
+	cItem &get_item(item_num_t item) { return scenario.get_item(item); }
 	cTerrain const &get_terrain(ter_num_t ter) const { return scenario.get_terrain(ter); }
 	cTerrain &get_terrain(ter_num_t ter) { return scenario.get_terrain(ter); }
 
