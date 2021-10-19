@@ -212,13 +212,41 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 		item_odds[i] = 0;
 }
 
+static cItem getBadItem() {
+	cItem badItem;
+	badItem.graphic_num = 9999;
+	return badItem;
+}
+
+cItem const &cScenario::get_item(item_num_t item) const
+{
+	if (item>=0 && item<scen_items.size())
+		return scen_items[item];
+	static cItem badItem=getBadItem();
+	return badItem;
+}
+
+cItem &cScenario::get_item(item_num_t item)
+{
+	if (item>=0 && item<scen_items.size())
+		return scen_items[item];
+	static cItem badItem;
+	badItem=getBadItem();
+	return badItem;
+}
+
+static cTerrain getBadTerrain() {
+	cTerrain badTerrain;
+	badTerrain.picture = -3;
+	badTerrain.map_pic = -3;
+	return badTerrain;
+}
+
 cTerrain const &cScenario::get_terrain(ter_num_t ter) const
 {
 	if (ter<ter_types.size())
 		return ter_types[ter];
-	static cTerrain badTerrain;
-	badTerrain.picture = -3;
-	badTerrain.map_pic = -3;
+	static cTerrain badTerrain=getBadTerrain();
 	return badTerrain;
 }
 
@@ -227,8 +255,7 @@ cTerrain &cScenario::get_terrain(ter_num_t ter)
 	if (ter<ter_types.size())
 		return ter_types[ter];
 	static cTerrain badTerrain;
-	badTerrain.picture = -3;
-	badTerrain.map_pic = -3;
+	badTerrain=getBadTerrain();
 	return badTerrain;
 }
 
