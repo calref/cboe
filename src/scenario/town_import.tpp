@@ -45,12 +45,12 @@ void cTown::import_legacy(T const & old, int){
 		for(short j = 0; j < sizes::dim; j++) {
 			terrain[i][j] = old.terrain[i][j];
 			lighting[i][j] = old.lighting[i / 8][j] & (1 << (i % 8));
-			if(scenario->ter_types[terrain[i][j]].i == 3000) { // marker to indicate it used to be a special spot
+			if(scenario->get_terrain(terrain[i][j]).i == 3000) { // marker to indicate it used to be a special spot
 				the_field.loc.x = i;
 				the_field.loc.y = j;
 				preset_fields.push_back(the_field);
 			}
-			if(scenario->ter_types[terrain[i][j]].i == 3001) { // marker to indicate it used to be a road
+			if(scenario->get_terrain(terrain[i][j]).i == 3001) { // marker to indicate it used to be a road
 				the_road.loc.x = i;
 				the_road.loc.y = j;
 				preset_fields.push_back(the_road);
@@ -65,23 +65,23 @@ void cTown::import_legacy(T const & old, int){
 			if(old.terrain[i][j] == 81 && i > 0 && i < 47 && j > 0 && j < 47) {
 				if(old.terrain[i+1][j] == 81) {
 					ter_num_t connect = old.terrain[i-1][j];
-					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+					if(connect == 80 || scenario->get_terrain(connect).trim_type == eTrimType::CITY)
 						terrain[i][j] = 44;
 				} else if(old.terrain[i-1][j] == 81) {
 					ter_num_t connect = old.terrain[i+1][j];
-					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+					if(connect == 80 || scenario->get_terrain(connect).trim_type == eTrimType::CITY)
 						terrain[i][j] = 40;
 				} else if(old.terrain[i][j+1] == 81) {
 					ter_num_t connect = old.terrain[i][j-1];
-					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+					if(connect == 80 || scenario->get_terrain(connect).trim_type == eTrimType::CITY)
 						terrain[i][j] = 42;
 				} else if(old.terrain[i][j-1] == 81) {
 					ter_num_t connect = old.terrain[i][j+1];
-					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+					if(connect == 80 || scenario->get_terrain(connect).trim_type == eTrimType::CITY)
 						terrain[i][j] = 38;
 				}
 			}
-			if(scenario->ter_types[terrain[i][j]].boat_over) {
+			if(scenario->get_terrain(terrain[i][j]).boat_over) {
 				// Try to fix specials that could be triggered while in a boat
 				// (Boats never triggered specials in the old BoE, so we probably don't want them to trigger.)
 				int found_spec = -1;

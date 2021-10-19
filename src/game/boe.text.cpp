@@ -876,13 +876,9 @@ std::string get_m_name(mon_num_t num) {
 	return univ.scenario.scen_monsters[num].m_name;
 }
 std::string get_ter_name(ter_num_t num) {
-	std::string store_name = "Pit";
-	
-	if((num == 90) && ((is_out()) || (is_town()) || ((is_combat()) && (which_combat_type == 1))));
-	else {
-		store_name = univ.scenario.ter_types[num].name;
-	}
-	return store_name;
+	if(num == 90 && (is_out() || is_town() || (is_combat() && which_combat_type == 1)))
+		return "Pit";
+	return univ.get_terrain(num).name;
 }
 
 void print_monst_name(mon_num_t m_type) {
