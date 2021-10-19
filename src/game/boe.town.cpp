@@ -284,7 +284,7 @@ void start_town_mode(short which_town, short entry_dir) {
 		if(univ.town->preset_items[i].code >= 0) {
 			const cTown::cItem& preset = univ.town->preset_items[i];
 			// place the preset item, if party hasn't gotten it already
-			univ.town.items.push_back(univ.scenario.get_stored_item(preset.code));
+			univ.town.items.push_back(univ.get_item(preset.code));
 			cItem& item = univ.town.items.back();
 			item.item_loc = preset.loc;
 			

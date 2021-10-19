@@ -476,12 +476,6 @@ bool cScenario::is_item_used(item_num_t item) {
 	return false;
 }
 
-cItem cScenario::get_stored_item(int loot) {
-	if(loot >= 0 && loot < scen_items.size())
-		return scen_items[loot];
-	return cItem();
-}
-
 static const short loot_min[5] = {0,0,5,50,400};
 static const short loot_max[5] = {3,8,40,800,4000};
 
@@ -493,7 +487,7 @@ cItem cScenario::pull_item_of_type(unsigned int loot_max,short min_val,short max
 	}
 	for(short i = 0; i < 80; i++) {
 		int j = get_ran(1,0,scen_items.size() - 1);
-		cItem temp_i = get_stored_item(j);
+		cItem const &temp_i = get_item(j);
 		if(temp_i.variety == eItemType::NO_ITEM) continue;
 		if(std::find(types.begin(), types.end(), temp_i.variety) != types.end()) {
 			short val = (temp_i.charges > 0) ? temp_i.charges * temp_i.value : temp_i.value;
