@@ -258,10 +258,10 @@ void put_item_screen(eItemWinMode screen_num) {
 			for(short i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if(i_num < spec_item_array.size()) {
-					win_draw_string(item_stats_gworld,item_buttons[i][ITEMBTN_NAME],univ.scenario.special_items[spec_item_array[i_num]].name,eTextMode::WRAP,style);
+					win_draw_string(item_stats_gworld,item_buttons[i][ITEMBTN_NAME],univ.get_special_item(spec_item_array[i_num]).name,eTextMode::WRAP,style);
 					
 					place_item_button(3,i,ITEMBTN_INFO);
-					if((univ.scenario.special_items[spec_item_array[i_num]].flags % 10 == 1)
+					if((univ.get_special_item(spec_item_array[i_num]).flags % 10 == 1)
 						&& (!(is_combat())))
 						place_item_button(0,i,ITEMBTN_USE);
 				}

@@ -235,6 +235,28 @@ cItem &cScenario::get_item(item_num_t item)
 	return badItem;
 }
 
+static cSpecItem getBadSpecialItem() {
+	cSpecItem badItem;
+	badItem.name="Bad Special Item";
+	return badItem;
+}
+
+cSpecItem const &cScenario::get_special_item(item_num_t item) const
+{
+	if (item>=0 && item<special_items.size())
+		return special_items[item];
+	static cSpecItem badItem=getBadSpecialItem();
+	return badItem;
+}
+
+cSpecItem &cScenario::get_special_item(item_num_t item)
+{
+	if (item>=0 && item<special_items.size())
+		return special_items[item];
+	static cSpecItem badItem=getBadSpecialItem();
+	return badItem;
+}
+
 static cTerrain getBadTerrain() {
 	cTerrain badTerrain;
 	badTerrain.picture = -3;
