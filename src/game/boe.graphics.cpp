@@ -1143,7 +1143,7 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	rectangle from_rect;
 	Texture from_gworld;
 	rectangle to_rect = coord_to_rect(q,r);
-	if (!cPict::get_terrain_picture(univ.get_terrain(ground_ter).get_picture_num(), from_gworld, from_rect)) {
+	if (!cPict::get_picture(univ.get_terrain(ground_ter).get_picture_num(), from_gworld, from_rect)) {
 		fill_rect(terrain_screen_gworld, to_rect, sf::Color::Yellow);
 		return; // CHECKME better to draw a bad image to indicate that there is a problem here
 	}

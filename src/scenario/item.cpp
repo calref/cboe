@@ -15,13 +15,13 @@
 #include <set>
 #include <sstream>
 
-#include "oldstructs.hpp"
-#include "utility.hpp"
-#include "fileio.hpp"
-
 #include "damage.hpp"
-#include "spell.hpp"
+#include "fileio.hpp"
+#include "oldstructs.hpp"
+#include "pict.hpp"
 #include "race.hpp"
+#include "spell.hpp"
+#include "utility.hpp"
 
 static std::array<item_variety_t, 28> load_item_type_info() {
 	std::multiset<eItemType> equippable = {
@@ -236,6 +236,17 @@ cItem::cItem(eItemPreset preset) : cItem() {
 			graphic_num = 105; // The blank graphic
 			break;
 	}
+}
+
+cPictNum cItem::get_picture_num(bool tiny) const
+{
+	if (graphic_num<0)
+		return cPictNum(graphic_num, ePicType::PIC_NONE);
+	if (graphic_num>=1000)
+		return cPictNum(graphic_num-1000, tiny ? ePicType::PIC_CUSTOM_TINY_ITEM : ePicType::PIC_CUSTOM_ITEM);
+	if (graphic_num<55 && !tiny)
+		return cPictNum(graphic_num, ePicType::PIC_ITEM);
+	return cPictNum(graphic_num, ePicType::PIC_TINY_ITEM);
 }
 
 cItem::cItem(eAlchemy recipe) : cItem(ITEM_POTION) {

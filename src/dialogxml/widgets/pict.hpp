@@ -55,8 +55,8 @@ public:
 	/// - If num is 4 digits in decimal and type is not PIC_FULL, it automatically takes the remainder by 1000
 	/// and applies the custom modifier. (If type is PIC_TER_MAP, it does not take the remainder by 1000.)
 	/// - If num is 10000 or greater and type is PIC_TER_MAP, it automatically subtracts 10000 and applies the party modifier.
-	void setPict(pic_num_t num, ePicType type);
-	void setPict(cPictNum const &num) { setPict(num.num, num.type); }
+	void setPict(pic_num_t num, ePicType type, bool updateResultType=true);
+	void setPict(cPictNum const &num) { setPict(num.num, num.type, false); }
 	/// Set the pict's icon.
 	/// @param num The new icon index.
 	void setPict(pic_num_t num);
@@ -82,7 +82,8 @@ public:
 	static void advanceAnim();
 	virtual ~cPict();
 	void draw();
-	static bool get_terrain_picture(cPictNum pict, Texture &source, rectangle &from_rect, int anim=0);
+	// only implemented for item and terrain pictures
+	static bool get_picture(cPictNum pict, Texture &source, rectangle &from_rect, int anim=0);
 	/// A utility function to draw an icon into an arbitrary window.
 	/// @param win The window to draw in.
 	/// @param dest The bounding rect to draw in (ignored for drawing the actual, but used for background fill and framing)
@@ -105,7 +106,7 @@ private:
 	static std::shared_ptr<const Texture> getSheet(eSheetType type, size_t n = 0);
 	static short animFrame;
 	pic_num_t picNum;
-	ePicType picType;
+	ePicType fromType, resultType;
 	bool drawScaled;
 	// Transient parse flags
 	bool wide = false, tall = false, tiny = false, custom = false, blank = false;

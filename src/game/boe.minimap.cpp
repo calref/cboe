@@ -230,7 +230,7 @@ void draw(bool need_refresh) {
 				if(expl == 0)
 					continue;
 				Texture src_gw;
-				if (!cPict::get_terrain_picture(univ.get_terrain(what_ter).get_map_picture_num(), src_gw,custom_from))
+				if (!cPict::get_picture(univ.get_terrain(what_ter).get_map_picture_num(), src_gw,custom_from))
 					fill_rect(gworld, draw_rect, sf::Color::Yellow);  // FIXME: show an error here
 				else
 					rect_draw_some_item(src_gw, custom_from, gworld, draw_rect);
