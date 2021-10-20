@@ -35,6 +35,8 @@ enum eItemPreset {
 	ITEM_SHOP,
 };
 
+class cPictNum;
+
 class cItem {
 public:
 	eItemType variety;
@@ -76,6 +78,8 @@ public:
 	cItem();
 	explicit cItem(eItemPreset preset);
 	explicit cItem(eAlchemy recipe);
+	
+	cPictNum get_picture_num(bool tiny=false) const;
 	void import_legacy(legacy::item_record_type const & old);
 	void writeTo(std::ostream& file, std::string prefix = "") const;
 	void readFrom(std::istream& sin);

@@ -349,37 +349,15 @@ static bool fill_ter_flag_info(cDialog& me, std::string id, bool losing){
 	return true;
 }
 
-// REMOVEME when setPict will not do fatal error
-bool check_picture_num(cPictNum const &pic, bool noneIsOk)
-try {
-	if (noneIsOk && pic.num==-1)
-		return true;
-	if (pic.num<0)
-		return false;
-	if (pic.type==ePicType::PIC_TER)
-		// REMOVEME when setPict will not do fatal error
-		*ResMgr::textures.get("ter" + std::to_string(1 + pic.num / 50));
-	return true;
-}
-catch(...) {
-	return false;
-}
-
 static void fill_ter_info(cDialog& me, short ter){
 	cTerrain const & ter_type = scenario.get_terrain(ter);
 	{
 		cPict& pic_ctrl = dynamic_cast<cPict&>(me["graphic"]);
-		if (check_picture_num(ter_type.get_picture_num(), false)) // REMOVEME
-			pic_ctrl.setPict(ter_type.get_picture_num());
-		else
-			pic_ctrl.setPict(cPictNum(1999,ePicType::PIC_CUSTOM_TER));
+		pic_ctrl.setPict(ter_type.get_picture_num());
 		me["pict"].setTextToNum(ter_type.picture);
 	}{
 		cPict& pic_ctrl = dynamic_cast<cPict&>(me["seemap"]);
-		if (check_picture_num(ter_type.get_map_picture_num(), false)) // REMOVEME
-			pic_ctrl.setPict(ter_type.get_map_picture_num());
-		else
-			pic_ctrl.setPict(cPictNum(1999,ePicType::PIC_CUSTOM_TER));
+		pic_ctrl.setPict(ter_type.get_map_picture_num());
 		me["map"].setTextToNum(ter_type.map_pic);
 	}
 	me["number"].setTextToNum(ter);
@@ -503,10 +481,7 @@ static bool edit_ter_obj(cDialog& me, ter_num_t which_ter) {
 		for(int x = 0; x < 4; x++) {
 			for(int y = 0; y < 4; y++) {
 				std::string id = "x" + std::to_string(x) + "y" + std::to_string(y);
-				if (check_picture_num(cTerrain::get_picture_num_for_terrain(obj[x][y]), true))
-					dynamic_cast<cPict&>(me[id]).setPict(cTerrain::get_picture_num_for_terrain(obj[x][y]));
-				else
-					dynamic_cast<cPict&>(me[id]).setPict(cPictNum(1999,ePicType::PIC_CUSTOM_TER));
+				dynamic_cast<cPict&>(me[id]).setPict(cTerrain::get_picture_num_for_terrain(obj[x][y]));
 			}
 		}
 		return true;
@@ -1408,13 +1383,11 @@ cMonster edit_monst_abil(cMonster initial,short which,cDialog& parent) {
 	return initial;
 }
 
-static void put_item_info_in_dlog(cDialog& me, cItem& item, short which) {
+static void put_item_info_in_dlog(cDialog& me, cItem const &item, short which) {
 	me["num"].setTextToNum(which);
 	me["full"].setText(item.full_name);
 	me["short"].setText(item.name);
-	if(item.graphic_num >= 1000) // was 150
-		dynamic_cast<cPict&>(me["pic"]).setPict(item.graphic_num, PIC_CUSTOM_ITEM);
-	else dynamic_cast<cPict&>(me["pic"]).setPict(item.graphic_num, PIC_ITEM);
+	dynamic_cast<cPict&>(me["pic"]).setPict(item.get_picture_num(false));
 	me["picnum"].setTextToNum(item.graphic_num);
 	
 	bool missile = false, weapon = false;
@@ -2177,7 +2150,7 @@ bool edit_quest(size_t which_quest) {
 static bool put_shop_item_in_dlog(cPict& pic, cControl& num, cControl& title, const cShop& shop, int which) {
 	cShopItem entry = shop.getItem(which);
 	num.setTextToNum(which);
-	pic.setPict(entry.item.graphic_num);
+	pic.setPict(entry.item.get_picture_num(false));
 	if(entry.type == eShopItemType::EMPTY) {
 		title.setText("");
 		return false;
