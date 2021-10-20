@@ -53,6 +53,8 @@ public:
 	cTerrain &get_terrain(ter_num_t ter);
 	cItem const &get_item(item_num_t item) const;
 	cItem &get_item(item_num_t item);
+	cQuest const &get_quest(int quest) const;
+	cQuest &get_quest(int quest);
 	cSpecItem const &get_special_item(item_num_t item) const;
 	cSpecItem &get_special_item(item_num_t item);
 	

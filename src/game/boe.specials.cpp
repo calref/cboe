@@ -1820,7 +1820,7 @@ void special_increase_age(long length, bool queue) {
 	for(auto& p : univ.party.active_quests) {
 		if(p.second.status != eQuestStatus::STARTED)
 			continue;
-		cQuest& quest = univ.scenario.quests[p.first];
+		cQuest const &quest = univ.get_quest(p.first);
 		if(quest.deadline <= 0)
 			continue;
 		bool is_relative = quest.flags % 10;
@@ -2447,7 +2447,7 @@ void general_spec(const runtime_state& ctx) {
 				break;
 			}
 			auto& job = univ.party.active_quests[spec.ex1a];
-			auto& quest = univ.scenario.quests[spec.ex1a];
+			cQuest const &quest = univ.get_quest(spec.ex1a);
 			if(spec.ex1b == int(eQuestStatus::STARTED) && job.status != eQuestStatus::STARTED) {
 				job.start = univ.party.calc_day();
 				job.source = max(-1,spec.ex2a);
