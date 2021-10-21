@@ -280,13 +280,35 @@ cSpecItem &cScenario::get_special_item(item_num_t item)
 	return badItem;
 }
 
+static cShop getBadShop() {
+	cShop badShop;
+	badShop.setName("Bad Shop");
+	badShop.setFace(-3);
+	return badShop;
+}
+cShop const &cScenario::get_shop(int shop) const
+{
+	if (shop>=0 && shop<shops.size())
+		return shops[shop];
+	static cShop badShop=getBadShop();
+	return badShop;
+
+}
+cShop &cScenario::get_shop(int shop)
+{
+	if (shop>=0 && shop<shops.size())
+		return shops[shop];
+	static cShop badShop;
+	badShop=getBadShop();
+	return badShop;
+}
+
 static cTerrain getBadTerrain() {
 	cTerrain badTerrain;
 	badTerrain.picture = -3;
 	badTerrain.map_pic = -3;
 	return badTerrain;
 }
-
 cTerrain const &cScenario::get_terrain(ter_num_t ter) const
 {
 	if (ter<ter_types.size())
