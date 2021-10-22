@@ -313,11 +313,14 @@ void cParty::import_legacy(legacy::setup_save_type const & old){
 }
 
 void cParty::cConvers::import_legacy(legacy::talk_save_type const &old, const cScenario& scenario){
-	who_said = scenario.towns[old.personality / 10]->talking.people[old.personality % 10].title;
+	if (old.personality<0) // fixme: add an error message here
+		return;
+	cTown const *town=scenario.towns[old.personality/10];
+	who_said = town->talking.people[old.personality%10].title;
 	in_town = scenario.towns[old.town_num]->name;
-	int strnums[2] = {old.str1, old.str2};
-	std::string* strs[2] = {&the_str1, &the_str2};
 	for(int i = 0; i < 2; i++) {
+		int num=i==0 ? old.str1 : old.str2;
+		std::string &str=i==0 ? the_str1 : the_str2;
 		// Okay, so there's a ton of different places where the actual strings might be found.
 		// 0 means no string
 		// 10 + n is the "look" string for the nth personality in the town (ie, n is personality % 10)
@@ -327,21 +330,21 @@ void cParty::cConvers::import_legacy(legacy::talk_save_type const &old, const cS
 		// 40 + 2n + 1 is the second string from the nth talk not in the town
 		// 2000 + n is the nth town special text
 		// 3000 + n is the nth scenario special text
-		if(strnums[i] == 0) continue;
-		if(strnums[i] >= 3000)
-			strs[i]->assign(scenario.spec_strs[strnums[i] - 3000]);
-		else if(strnums[i] >= 2000)
-			strs[i]->assign(scenario.towns[old.personality / 10]->spec_strs[strnums[i] - 2000]);
-		else if(strnums[i] >= 40 && strnums[i] % 2 == 0)
-			strs[i]->assign(scenario.towns[old.personality / 10]->talking.talk_nodes[(strnums[i] - 40) / 2].str1);
-		else if(strnums[i] >= 40 && strnums[i] % 2 == 1)
-			strs[i]->assign(scenario.towns[old.personality / 10]->talking.talk_nodes[(strnums[i] - 40) / 2].str2);
-		else if(strnums[i] >= 30)
-			strs[i]->assign(scenario.towns[old.personality / 10]->talking.people[old.personality % 10].job);
-		else if(strnums[i] >= 20)
-			strs[i]->assign(scenario.towns[old.personality / 10]->talking.people[old.personality % 10].name);
-		else if(strnums[i] >= 10)
-			strs[i]->assign(scenario.towns[old.personality / 10]->talking.people[old.personality % 10].look);
+		if(num == 0) continue;
+		if(num >= 3000)
+			str.assign(scenario.get_special_string(num - 3000));
+		else if(num >= 2000)
+			str.assign(town->get_special_string(num - 2000));
+		else if(num >= 40 && num % 2 == 0)
+			str.assign(town->talking.talk_nodes[(num - 40) / 2].str1);
+		else if(num >= 40 && num % 2 == 1)
+			str.assign(town->talking.talk_nodes[(num - 40) / 2].str2);
+		else if(num >= 30)
+			str.assign(town->talking.people[num-30].job);
+		else if(num >= 20)
+			str.assign(town->talking.people[num-20].name);
+		else if(num >= 10)
+			str.assign(town->talking.people[num-10].look);
 	}
 }
 
@@ -350,17 +353,17 @@ void cParty::cEncNote::import_legacy(int16_t const (& old)[2], const cScenario& 
 	// TODO: Need to verify that I have the correct offsets here.
 	switch(old[0] / 1000) {
 		case 0:
-			the_str = scenario.spec_strs[old[0] - 160];
+			the_str = scenario.get_special_string(old[0] - 160);
 			where = scenario.scen_name; // Best we can do here; the actual location is long forgotten
 			type = NOTE_SCEN;
 			break;
 		case 1:
-			the_str = scenario.outdoors[old[1] % scenario.outdoors.width()][old[1] / scenario.outdoors.width()]->spec_strs[old[0] - 1010];
+			the_str = scenario.outdoors[old[1] % scenario.outdoors.width()][old[1] / scenario.outdoors.width()]->get_special_string(old[0] - 1010);
 			where = scenario.outdoors[old[1] % scenario.outdoors.width()][old[1] / scenario.outdoors.width()]->name;
 			type = NOTE_OUT;
 			break;
 		case 2:
-			the_str = scenario.towns[old[1]]->spec_strs[old[0] - 2020];
+			the_str = scenario.towns[old[1]]->get_special_string(old[0] - 2020);
 			where = scenario.towns[old[1]]->name;
 			type= NOTE_TOWN;
 			break;

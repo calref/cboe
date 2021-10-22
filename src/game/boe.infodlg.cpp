@@ -690,21 +690,21 @@ void cStringRecorder::operator()(cDialog& me) {
 	std::string str1, str2;
 	switch(type) {
 		case NOTE_SCEN:
-			str1 = univ.scenario.spec_strs[label1];
+			str1 = univ.scenario.get_special_string(label1);
 			if (label2>=univ.scenario.spec_strs.size())
 				add_string_to_buf("cStringRecorder()[scenario]: empty label 2.");
 			else
 				str2 = univ.scenario.spec_strs[label2];
 			break;
 		case NOTE_TOWN:
-			str1 = univ.town->spec_strs[label1];
+			str1 = univ.town->get_special_string(label1);
 			if (label2>=univ.town->spec_strs.size())
 				add_string_to_buf("cStringRecorder()[town]: empty label 2.");
 			else
 				str2 = univ.town->spec_strs[label2];
 			break;
 		case NOTE_OUT:
-			str1 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label1];
+			str1 = univ.scenario.outdoors[label1b][label2b]->get_special_string(label1);
 			// memory problem, ie. called with label=65535(-1)
 			if (label2>=univ.scenario.outdoors[label1b][label2b]->spec_strs.size())
 				add_string_to_buf("cStringRecorder()[out]: empty label 2.");

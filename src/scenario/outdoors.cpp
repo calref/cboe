@@ -17,6 +17,27 @@
 #include "oldstructs.hpp"
 #include "scenario.hpp"
 
+std::string &cOutdoors::get_special_string(int id)
+{
+       if (id>=0 && id<spec_strs.size())
+               return spec_strs[id];
+       if (id>=0 && id<200) {
+               spec_strs.resize(id+1);
+               return spec_strs[id];
+       }
+       static std::string badString;
+       badString="Bad Special String";
+       return badString;
+}
+
+std::string const &cOutdoors::get_special_string(int id) const
+{
+       if (id>=0 && id<spec_strs.size())
+               return spec_strs[id];
+       static std::string badString="Bad Special String";
+       return badString;
+}
+ 
 void cOutdoors::import_legacy(legacy::outdoor_record_type const &old){
 	ambient_sound = AMBIENT_NONE;
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
