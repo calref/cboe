@@ -119,6 +119,8 @@ public:
 	bool is_item_taken(size_t i) const;
 	void clear_items_taken();
 	void set_item_taken(size_t i, bool val = true);
+	std::string &get_special_string(int id);
+	std::string const &get_special_string(int id) const;
 };
 
 std::ostream& operator<< (std::ostream& out, eLighting light);

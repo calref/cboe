@@ -68,9 +68,9 @@ static void ensure_str(eStrMode str_mode, size_t which) {
 static std::string& fetch_str(eStrMode str_mode, size_t which) {
 	ensure_str(str_mode, which);
 	switch(str_mode) {
-		case 0: return scenario.spec_strs[which];
-		case 1: return current_terrain->spec_strs[which];
-		case 2: return town->spec_strs[which];
+		case 0: return scenario.get_special_string(which);
+		case 1: return current_terrain->get_special_string(which);
+		case 2: return town->get_special_string(which);
 		case 3: return scenario.journal_strs[which];
 		case 4: return current_terrain->sign_locs[which].text;
 		case 5: return town->sign_locs[which].text;
