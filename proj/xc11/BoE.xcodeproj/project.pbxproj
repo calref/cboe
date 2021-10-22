@@ -317,6 +317,7 @@
 		E2B4A69624541D7100857D44 /* sfml-system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E8F245343E30066C6B1 /* sfml-system.framework */; };
 		E2B4A69724541D7100857D44 /* sfml-window.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E90245343E30066C6B1 /* sfml-window.framework */; };
 		E2B4A69824541D7100857D44 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2513E92245343E40066C6B1 /* SFML.framework */; };
+		E2DC79012722F25800D6876A /* area.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2DC79002722F25800D6876A /* area.cpp */; };
 		E2FE7CB127142B07008D567E /* boe.minimap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FE7CB027142B07008D567E /* boe.minimap.cpp */; };
 /* End PBXBuildFile section */
 
@@ -857,6 +858,7 @@
 		E26D45A026FCBBF4007984E6 /* keycodes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = keycodes.hpp; sourceTree = "<group>"; };
 		E2AE6DAE24CC876500792E44 /* libboost_filesystem-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_filesystem-mt.dylib"; path = "/usr/local/Cellar/boost/1.75.0_2/lib/libboost_filesystem-mt.dylib"; sourceTree = "<absolute>"; };
 		E2AE6DB324CC879300792E44 /* libboost_system-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_system-mt.dylib"; path = "/usr/local/Cellar/boost/1.75.0_2/lib/libboost_system-mt.dylib"; sourceTree = "<absolute>"; };
+		E2DC79002722F25800D6876A /* area.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = area.cpp; sourceTree = "<group>"; };
 		E2DF0BFA2538C031000C7A1A /* texture.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = texture.hpp; sourceTree = "<group>"; };
 		E2FE7CB027142B07008D567E /* boe.minimap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boe.minimap.cpp; sourceTree = "<group>"; };
 		E2FE7CB727142B16008D567E /* boe.minimap.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.minimap.hpp; sourceTree = "<group>"; };
@@ -1179,6 +1181,7 @@
 		9185BD941EA01BCC0027C346 /* scenario */ = {
 			isa = PBXGroup;
 			children = (
+				E2DC79002722F25800D6876A /* area.cpp */,
 				91279D3D0F9D1D6A007B0D52 /* item.cpp */,
 				91279CC10F9D19DA007B0D52 /* monster.cpp */,
 				91E5C79D0F9F60FA00C21460 /* outdoors.cpp */,
@@ -1993,6 +1996,7 @@
 				919CC25C1B37735C00273FDA /* town.cpp in Sources */,
 				919CC25F1B37736E00273FDA /* vehicle.cpp in Sources */,
 				919CC2601B37737200273FDA /* estreams.cpp in Sources */,
+				E2DC79012722F25800D6876A /* area.cpp in Sources */,
 				919CC2611B37738100273FDA /* gzstream.cpp in Sources */,
 				919CC2621B37738A00273FDA /* ticpp.cpp in Sources */,
 				919CC2631B37739000273FDA /* tinystr.cpp in Sources */,
