@@ -71,9 +71,9 @@ static std::string& fetch_str(eStrMode str_mode, size_t which) {
 		case 0: return scenario.get_special_string(which);
 		case 1: return current_terrain->get_special_string(which);
 		case 2: return town->get_special_string(which);
-		case 3: return scenario.journal_strs[which];
-		case 4: return current_terrain->sign_locs[which].text;
-		case 5: return town->sign_locs[which].text;
+		case 3: return scenario.get_journal_string(which);
+		case 4: return current_terrain->get_sign_loc(which).text;
+		case 5: return town->get_sign_loc(which).text;
 		case 6: return current_terrain->area_desc[which].descr;
 		case 7: return town->area_desc[which].descr;
 	}
@@ -88,12 +88,12 @@ static std::string str_info(eStrMode str_mode, size_t which) {
 			sout << which;
 			break;
 		case 4:
-			sout << "(" << current_terrain->sign_locs[which].x;
-			sout << ", " << current_terrain->sign_locs[which].y << ")";
+			sout << "(" << current_terrain->get_sign_loc(which).x;
+			sout << ", " << current_terrain->get_sign_loc(which).y << ")";
 			break;
 		case 5:
-			sout << "(" << town->sign_locs[which].x;
-			sout << ", " << town->sign_locs[which].y << ")";
+			sout << "(" << town->get_sign_loc(which).x;
+			sout << ", " << town->get_sign_loc(which).y << ")";
 			break;
 		case 6:
 			sout << "(" << current_terrain->area_desc[which].left;

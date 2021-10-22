@@ -268,10 +268,10 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 		else if(i >= 4 && i < 10)
 			scenario.intro_strs[i-4] = tmp;
 		else if(i >= 10 && i < 60)
-			scenario.journal_strs[i-10] = tmp;
+			scenario.get_journal_string(i-10) = tmp;
 		else if(i >= 60 && i < 160) {
-			if(i % 2 == 0) scenario.special_items[(i-60)/2].name = tmp;
-			else scenario.special_items[(i-60)/2].descr = tmp;
+			if(i % 2 == 0) scenario.get_special_item((i-60)/2).name = tmp;
+			else scenario.get_special_item((i-60)/2).descr = tmp;
 		} else if(i >= 260) continue; // These were never ever used, for some reason.
 		else
 			scenario.get_special_string(i-160) = tmp;
@@ -894,9 +894,9 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					game->GetText(&scenario.get_special_string(strnum), false);
 				} else if(type == "journal") {
 					game->GetAttribute("id", &strnum);
-					if(strnum >= scenario.journal_strs.size()) // changeme: add a maximum and discard data if not in a range
+					if(strnum >= scenario.journal_strs.size() && strnum<10000)
 						scenario.journal_strs.resize(strnum + 1);
-					game->GetText(&scenario.journal_strs[strnum], false);
+					game->GetText(&scenario.get_journal_string(strnum), false);
 				} else throw xBadNode(type, game->Row(), game->Column(), fname);
 			}
 			if(!reqs.empty())
@@ -1643,9 +1643,9 @@ void readOutdoorsFromXml(ticpp::Document&& data, cOutdoors& out) {
 		} else if(type == "sign") {
 			int sign;
 			elem->GetAttribute("id", &sign);
-			if(sign >= out.sign_locs.size())
+			if(sign >= out.sign_locs.size() && sign<10000)
 				out.sign_locs.resize(sign + 1);
-			elem->GetText(&out.sign_locs[sign].text, false);
+			elem->GetText(&out.get_sign_loc(sign).text, false);
 		} else if(type == "area") {
 			if(num_rects >= out.area_desc.size())
 				out.area_desc.resize(num_rects + 1);
@@ -1776,9 +1776,9 @@ void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& scen) {
 		} else if(type == "sign") {
 			int sign;
 			elem->GetAttribute("id", &sign);
-			if(sign >= town->sign_locs.size())
+			if(sign >= town->sign_locs.size() && sign<10000)
 				town->sign_locs.resize(sign + 1);
-			elem->GetText(&town->sign_locs[sign].text, false);
+			elem->GetText(&town->get_sign_loc(sign).text, false);
 		} else if(type == "string") {
 			int str;
 			elem->GetAttribute("id", &str);
@@ -2001,7 +2001,7 @@ void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 						else throw xMapParseError(map_out_bad_field, feat.second, y, x, data.file);
 						break;
 					case eMapFeature::SIGN:
-						if(feat.second >= out.sign_locs.size())
+						if(feat.second<0 || feat.second >= out.sign_locs.size())
 							break;
 						static_cast<location&>(out.sign_locs[feat.second]) = loc(x,y);
 						break;
@@ -2042,7 +2042,7 @@ void loadTownMapData(map_data&& data, int which, cScenario& scen) {
 						what->exists = true;
 						break;
 					case eMapFeature::SIGN:
-						if(feat.second >= town.sign_locs.size())
+						if(feat.second<0 || feat.second >= town.sign_locs.size())
 							break;
 						static_cast<location&>(town.sign_locs[feat.second]) = loc(x,y);
 						break;
@@ -2352,7 +2352,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		else if(i >= 20 && i < 120)
 			the_town.get_special_string(i-20) = tmp;
 		else if(i >= 120 && i < 140)
-			the_town.sign_locs[i-120].text = tmp;
+			the_town.get_sign_loc(i-120).text = tmp;
 	}
 	
 	len = sizeof(legacy::talking_record_type);
@@ -2464,7 +2464,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 		else if(i >= 10 && i < 100)
 			the_out.get_special_string(i-10) = tmp;
 		else if(i >= 100 && i < 108)
-			the_out.sign_locs[i-100].text = tmp;
+			the_out.get_sign_loc(i-100).text = tmp;
 	}
 	
 	if(fclose(file_id) != 0) {
