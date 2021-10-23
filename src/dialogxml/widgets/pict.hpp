@@ -151,6 +151,9 @@ private:
 	void drawPartyScen(short num, rectangle to_rect);
 	void drawPartyItem(short num, rectangle to_rect);
 	void drawPartyPc(short num, rectangle to_rect);
+	ePicType getSourceType(ePicType defaultType) const {
+		return fromType==ePicType::PIC_NONE ? defaultType : fromType;
+	}
 	static std::map<ePicType,void(cPict::*)(short,rectangle)>& drawPict();
 };
 
