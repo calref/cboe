@@ -34,7 +34,6 @@ void undo_clip();
 
 short find_index_spot();
 bool is_s_d();
-void sort_specials();
 
 extern cOutdoors* current_terrain;
 extern sf::RenderWindow mainPtr;
@@ -1428,23 +1427,17 @@ bool is_special(short i,short j) {
 	return false;
 }
 
-void sort_specials() {
-}
-
 bool is_spot(short i,short j){
 	if(editing_town)
 		return is_field_type(i,j,SPECIAL_SPOT);
-	else if(i >= 0 && i < 48 && j >= 0 && j < 48)
-		return current_terrain->special_spot[i][j];
-	return false;
+	return current_terrain->is_special_spot(i,j);
 }
 
 bool is_road(short i,short j){
 	if(editing_town)
 		return is_field_type(i,j,SPECIAL_ROAD);
-	else if(i >= 0 && i < 48 && j >= 0 && j < 48)
-		return current_terrain->roads[i][j];
-	return false;
+	else
+		return current_terrain->is_road(i,j);
 }
 
 bool is_field_type(short i,short j,eFieldType field_type) {
