@@ -7,6 +7,27 @@
 
 #include "area.hpp"
 
+static info_rect_t getBadAreaDesc()
+{
+	info_rect_t bad_area={-1,-1,-1,-1,"Bad Aread Desc"};
+	return bad_area;
+}
+info_rect_t const &cArea::get_area_desc(int num) const
+{
+	if (num>=0 && num<area_desc.size())
+		return area_desc[num];
+	static info_rect_t bad_area=getBadAreaDesc();
+	return bad_area;
+}
+info_rect_t &cArea::get_area_desc(int num)
+{
+	if (num>=0 && num<area_desc.size())
+		return area_desc[num];
+	static info_rect_t bad_area;
+	bad_area=getBadAreaDesc();
+	return bad_area;
+}
+
 static sign_loc_t getBadSignLoc()
 {
 	return sign_loc_t(-1,-1,"Bad Sign");

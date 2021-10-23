@@ -94,7 +94,7 @@ void put_pc_screen() {
 	rectangle bottom_bar_rect = {99,0,116,271};
 	rectangle info_from = {0,1,12,13}, switch_from = {0, 13, 12, 25};
 	
-	pc_stats_gworld.setActive();
+	pc_stats_gworld.setActive(false);
 	
 	// First clean up gworld with pretty patterns
 	auto const &orig = *ResMgr::textures.get("statarea");
@@ -197,6 +197,7 @@ void put_pc_screen() {
 	to_draw_rect = {101,251,114,267};
 	rect_draw_some_item(invenbtn_gworld, help_from_rect, pc_stats_gworld, to_draw_rect, sf::BlendAlpha);
 	
+	pc_stats_gworld.setActive();
 	pc_stats_gworld.display();
 	
 	// Sometimes this gets called when character is slain. when that happens, if items for
@@ -718,13 +719,13 @@ short do_look(location space) {
 			}
 		}
 		location lSpace=global_to_local(space);
-		if(univ.out->roads[lSpace.x][lSpace.y])
+		if(univ.out->is_road(lSpace.x,lSpace.y))
 			add_string_to_buf("    Road");
 		if(out_boat_there(space))
 			add_string_to_buf("    Boat");
 		if(out_horse_there(space))
 			add_string_to_buf("    Horse");
-		if(univ.out->special_spot[lSpace.x][lSpace.y])
+		if(univ.out->is_special_spot(lSpace.x,lSpace.y))
 			add_string_to_buf("    Special Encounter");
 	}
 	
