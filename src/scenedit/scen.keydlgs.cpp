@@ -602,8 +602,8 @@ static bool commit_spec_enc(cDialog& me, std::string item_hit, node_stack_t& edi
 	int mode = edit_stack.top().mode, node = edit_stack.top().which;
 	switch(mode) {
 		case 0: scenario.scen_specials[node] = edit_stack.top().node; break;
-		case 1: current_terrain->specials[node] = edit_stack.top().node; break;
-		case 2: town->specials[node] = edit_stack.top().node; break;
+		case 1: current_terrain->get_special(node) = edit_stack.top().node; break;
+		case 2: town->get_special(node) = edit_stack.top().node; break;
 	}
 	edit_stack.pop();
 	if(item_hit == "okay") {
@@ -860,9 +860,9 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			if(mode == 0)
 				node_to_change_to = &scenario.scen_specials[store];
 			else if(mode == 1)
-				node_to_change_to = &current_terrain->specials[store];
+				node_to_change_to = &current_terrain->get_special(store);
 			else if(mode == 2)
-				node_to_change_to = &town->specials[store];
+				node_to_change_to = &town->get_special(store);
 			if (node_to_change_to) {
 				if(node_to_change_to->pic < 0)
 					node_to_change_to->pic = 0;
@@ -941,7 +941,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 	node_stack_t edit_stack;
 	
 	if(mode == 0) {
-		if(which_node >= scenario.scen_specials.size()) {
+		if(which_node<0 || which_node >= scenario.scen_specials.size()) {
 			showError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
 			return false;
 		}
@@ -949,7 +949,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 			scenario.scen_specials[which_node].pic = 0;
 		the_node = scenario.scen_specials[which_node];
 	} else if(mode == 1) {
-		if(which_node >= current_terrain->specials.size()) {
+		if(which_node<0 || which_node >= current_terrain->specials.size()) {
 			showError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
 			return false;
 		}
@@ -957,7 +957,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 			current_terrain->specials[which_node].pic = 0;
 		the_node = current_terrain->specials[which_node];
 	} else if(mode == 2) {
-		if(which_node >= town->specials.size()) {
+		if(which_node<0 || which_node >= town->specials.size()) {
 			showError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
 			return false;
 		}

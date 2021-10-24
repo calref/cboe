@@ -30,16 +30,12 @@ void cTown::import_legacy(T const & old, int){
 	the_field.type = SPECIAL_SPOT;
 	the_road.type = SPECIAL_ROAD;
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
+	std::set<int> call_special;
+	for(auto const &spec : specials)
+		call_special.insert(spec.jumpto);
 	std::vector<int> unused_special_slots;
-	for(short i = 0; i < 100; i++) {
-		if(specials[i].type == eSpecType::NONE && specials[i].jumpto == -1) {
-			// Also make sure no specials jump to it
-			bool is_free = true;
-			for(short j = 0; j < 100; j++) {
-				if(specials[j].jumpto == i) is_free = false;
-			}
-			if(is_free) unused_special_slots.push_back(i);
-		}
+	for(short i = 0; i < specials.size(); i++) {
+		if(specials[i].type == eSpecType::NONE && specials[i].jumpto == -1 && call_special.count(i)==0) unused_special_slots.push_back(i);
 	}
 	for(short i = 0; i < sizes::dim; i++)
 		for(short j = 0; j < sizes::dim; j++) {
