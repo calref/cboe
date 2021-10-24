@@ -48,6 +48,16 @@ void cScenario::destroy_terrain() {
 	}
 }
 
+cOutdoors *cScenario::get_bad_outdoor()
+{
+	static std::shared_ptr<cOutdoors> badOutdoor;
+	if (!badOutdoor)
+		badOutdoor=std::make_shared<cOutdoors>(*this);
+	badOutdoor->reattach(*this);
+	badOutdoor->name="Bad Outdoor";
+	return badOutdoor.get();
+}
+
 cScenario::cScenario() {
 	std::string temp_str;
 	
@@ -68,6 +78,7 @@ cScenario::cScenario() {
 	bg_fight = 4;
 	bg_town = 13;
 	bg_dungeon = 9;
+	outdoors.set_get_default_function([this](){return get_bad_outdoor();});
 	// ASAN used but unset
 	is_legacy = false;
 	for(short i = 0; i < town_mods.size(); i++) {
@@ -143,6 +154,7 @@ cScenario::cScenario(const cScenario& other)
 	for(size_t i = 0; i < outdoors.width(); i++)
 		for(size_t j = 0; j < outdoors.height(); j++)
 			outdoors[i][j] = new cOutdoors(*other.outdoors[i][j]);
+	outdoors.set_get_default_function([this](){return get_bad_outdoor();});
 }
 
 cScenario::cScenario(cScenario&& other) {
