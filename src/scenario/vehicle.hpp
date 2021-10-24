@@ -32,6 +32,13 @@ public:
 	void import_legacy(legacy::boat_record_type const &old);
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
+	
+	static cVehicle bad() {
+		cVehicle bad_vehicle;
+		bad_vehicle.loc={-1,-1};
+		bad_vehicle.exists=false;
+		return bad_vehicle;
+	}
 };
 
 bool operator==(const cVehicle& a, const cVehicle& b);

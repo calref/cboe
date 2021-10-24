@@ -364,12 +364,12 @@ void start_town_mode(short which_town, short entry_dir) {
 	univ.party.town_loc = (entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc;
 	center = univ.party.town_loc;
 	if(univ.party.in_boat >= 0) {
-		univ.party.boats[univ.party.in_boat].which_town = which_town;
-		univ.party.boats[univ.party.in_boat].loc = univ.party.town_loc;
+		univ.party.get_boat(univ.party.in_boat).which_town = which_town;
+		univ.party.get_boat(univ.party.in_boat).loc = univ.party.town_loc;
 	}
 	if(univ.party.in_horse >= 0) {
-		univ.party.horses[univ.party.in_horse].which_town = which_town;
-		univ.party.horses[univ.party.in_horse].loc = univ.party.town_loc;
+		univ.party.get_horse(univ.party.in_horse).which_town = which_town;
+		univ.party.get_horse(univ.party.in_horse).loc = univ.party.town_loc;
 	}
 	
 	
@@ -1155,18 +1155,15 @@ void erase_out_specials() {
 
 void erase_hidden_towns(cOutdoors& sector, int quadrant_x, int quadrant_y) {
 	for(short tile_index = 0; tile_index < sector.city_locs.size(); tile_index++) {
-		auto city_loc = sector.city_locs[tile_index];
-		if(!univ.scenario.is_town_entrance_valid(city_loc) ||
-			!does_location_have_special(sector, city_loc, eTerSpec::TOWN_ENTRANCE) ||
-			!sector.is_on_map(city_loc)) {
+		auto const &city_loc = sector.city_locs[tile_index];
+		if(!univ.scenario.is_town_entrance_valid(city_loc) || !does_location_have_special(sector, city_loc, eTerSpec::TOWN_ENTRANCE))
 			continue;
-		}
-		auto town_pos_x = AREA_MEDIUM * quadrant_x + sector.city_locs[tile_index].x;
-		auto town_pos_y = AREA_MEDIUM * quadrant_y + sector.city_locs[tile_index].y;
-		auto spec_pos_x = sector.city_locs[tile_index].x;
-		auto spec_pos_y = sector.city_locs[tile_index].y;
+		auto town_pos_x = AREA_MEDIUM * quadrant_x + city_loc.x;
+		auto town_pos_y = AREA_MEDIUM * quadrant_y + city_loc.y;
+		auto spec_pos_x = city_loc.x;
+		auto spec_pos_y = city_loc.y;
 		auto area_index = sector.terrain[spec_pos_x][spec_pos_y];
-		if(!univ.scenario.towns[sector.city_locs[tile_index].spec]->can_find) {
+		if(!univ.scenario.towns[city_loc.spec]->can_find) {
 			univ.out[town_pos_x][town_pos_y] = univ.get_terrain(area_index).flag1;
 		} else {
 			univ.out[town_pos_x][town_pos_y] = area_index;
@@ -1176,28 +1173,26 @@ void erase_hidden_towns(cOutdoors& sector, int quadrant_x, int quadrant_y) {
 
 void erase_completed_specials(cArea& sector, std::function<void(location)> clear_spot) {
 	for(auto tile_index = 0; tile_index < sector.special_locs.size(); tile_index++) {
-		if(sector.special_locs[tile_index].spec < 0 ||
-			sector.special_locs[tile_index].spec >= sector.specials.size())
+		auto const &tile = sector.special_locs[tile_index];
+		if(tile.spec < 0 || tile.spec >= sector.specials.size())
 			continue;
 
-		auto sn = sector.specials[sector.special_locs[tile_index].spec];
+		auto sn = sector.specials[tile.spec];
 		if(univ.party.sd_legit(sn.sd1, sn.sd2) && PSD[sn.sd1][sn.sd2] == SDF_COMPLETE) {
-			auto completed_special = sector.special_locs[tile_index];
-			if(!sector.is_on_map(completed_special)) {
+			if(!sector.is_on_map(tile)) {
 				beep();
 				add_string_to_buf("Area corrupt. Problem fixed.");
-				print_nums(completed_special.x, completed_special.y, tile_index);
+				print_nums(tile.x, tile.y, tile_index);
 				sector.special_locs[tile_index].spec = -1;
 			}
 			
-			clear_spot(completed_special);
+			clear_spot(tile);
 		}
 	}
 }
 
 bool does_location_have_special(cOutdoors& sector, location loc, eTerSpec special) {
-	auto terrain_index = sector.terrain[loc.x][loc.y];
-	return univ.get_terrain(terrain_index).special == special;
+	return sector.is_on_map(loc) && univ.get_terrain(sector.terrain[loc.x][loc.y]).special == special;
 }
 
 bool is_door(location destination) {

@@ -87,6 +87,12 @@ public:
 	cSpecial();
 	void import_legacy(legacy::special_node_type const & old);
 	void writeTo(std::ostream& file, int n) const;
+	
+	static cSpecial bad() {
+		cSpecial bad_special;
+		bad_special.pic=-3;
+		return bad_special;
+	}
 };
 
 enum class eSpecCtxType {

@@ -55,6 +55,8 @@ public:
 	info_rect_t &get_area_desc(int num);
 	sign_loc_t const &get_sign_loc(int num) const;
 	sign_loc_t &get_sign_loc(int num);
+	cSpecial const &get_special(int num) const;
+	cSpecial &get_special(int num);
 };
 
 #endif
