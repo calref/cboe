@@ -196,19 +196,19 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	if(mode == eSpecCtx::OUT_MOVE) {
 		out_where = global_to_local(where_check);
 		
-		for(short i = 0; i < univ.out->special_locs.size(); i++)
-			if(out_where == univ.out->special_locs[i]) {
-				spec_num = univ.out->special_locs[i].spec;
-				// call special
-				run_special(mode, eSpecCtxType::OUTDOOR, spec_num, out_where, &s1, &s2);
-				if(s1 > 0)
-					can_enter = false;
-				else if(s2 > 0)
-					*forced = true;
-				erase_out_specials();
-				put_pc_screen();
-				put_item_screen(stat_window);
-			}
+		for(short i = 0; i < univ.out->special_locs.size(); i++) {
+			if(out_where != univ.out->special_locs[i]) continue;
+			spec_num = univ.out->special_locs[i].spec;
+			// call special
+			run_special(mode, eSpecCtxType::OUTDOOR, spec_num, out_where, &s1, &s2);
+			if(s1 > 0)
+				can_enter = false;
+			else if(s2 > 0)
+				*forced = true;
+			erase_out_specials();
+			put_pc_screen();
+			put_item_screen(stat_window);
+		}
 	}
 	
 	if (is_combat()) {
@@ -240,26 +240,26 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	}
 	if((mode == eSpecCtx::TOWN_MOVE || (mode == eSpecCtx::COMBAT_MOVE && which_combat_type == 1))
 		&& can_enter && univ.town.is_special(where_check.x,where_check.y)) {
-		for(short i = 0; i < univ.town->special_locs.size(); i++)
-			if(where_check == univ.town->special_locs[i]) {
-				spec_num = univ.town->special_locs[i].spec;
-				bool runSpecial = false;
-				if(!is_blocked(where_check)) runSpecial = true;
-				if(ter_special == eTerSpec::CHANGE_WHEN_STEP_ON) runSpecial = true;
-				if(ter_special == eTerSpec::CALL_SPECIAL) runSpecial = true;
-				if(univ.town->specials[spec_num].type == eSpecType::CANT_ENTER)
-					runSpecial = true;
-				if(!univ.scenario.is_legacy && univ.party.in_boat >= 0 && terrain.boat_over)
-					runSpecial = true;
-				if(runSpecial) {
-					give_help(54,0);
-					run_special(mode, eSpecCtxType::TOWN, spec_num, where_check, &s1, &s2);
-					if(s1 > 0)
-						can_enter = false;
-					else if(s2 > 0)
-						*forced = true;
-				}
+		for(short i = 0; i < univ.town->special_locs.size(); i++) {
+			if(where_check != univ.town->special_locs[i]) continue;
+			spec_num = univ.town->special_locs[i].spec;
+			bool runSpecial = false;
+			if(!is_blocked(where_check)) runSpecial = true;
+			if(ter_special == eTerSpec::CHANGE_WHEN_STEP_ON) runSpecial = true;
+			if(ter_special == eTerSpec::CALL_SPECIAL) runSpecial = true;
+			if(univ.town->specials[spec_num].type == eSpecType::CANT_ENTER)
+				runSpecial = true;
+			if(!univ.scenario.is_legacy && univ.party.in_boat >= 0 && terrain.boat_over)
+				runSpecial = true;
+			if(runSpecial) {
+				give_help(54,0);
+				run_special(mode, eSpecCtxType::TOWN, spec_num, where_check, &s1, &s2);
+				if(s1 > 0)
+					can_enter = false;
+				else if(s2 > 0)
+					*forced = true;
 			}
+		}
 		put_pc_screen();
 		put_item_screen(stat_window);
 	}

@@ -837,15 +837,18 @@ void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
 			univ.town.fields[i][j] = 0;
 			if((j <= 8) || (j >= 35) || (i <= 8) || (i >= 35))
 				univ.town->terrain(i,j) = 90;
-			else univ.town->terrain(i,j) = ter_base[arena];
-		}
-	for(short i = 0; i < 48; i++)
-		for(short j = 0; j < 48; j++)
-			for(short k = 0; k < 5; k++)
-				if((univ.town->terrain(i,j) != 90) && (get_ran(1,1,1000) < terrain_odds[arena][k * 2 + 1]))
+			else
+				univ.town->terrain(i,j) = ter_base[arena];
+			if (univ.town->terrain(i,j) == 90)
+				continue;
+			for(short k = 0; k < 5; k++) {
+				if(get_ran(1,1,1000) < terrain_odds[arena][k * 2 + 1]) {
 					univ.town->terrain(i,j) = terrain_odds[arena][k * 2];
-	
-	univ.town->terrain(0,0) = ter_base[arena];
+					break;
+				}
+			}
+		}
+	univ.town->terrain(0,0) = ter_base[arena]; // to force an exit position?
 	
 	bool is_bridge = (arena == 3 || arena == 4);
 	

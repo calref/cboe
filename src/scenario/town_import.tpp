@@ -85,7 +85,7 @@ void cTown::import_legacy(T const & old, int){
 				// Try to fix specials that could be triggered while in a boat
 				// (Boats never triggered specials in the old BoE, so we probably don't want them to trigger.)
 				int found_spec = -1;
-				for(int k = 0; k < 50; k++) {
+				for(int k = 0; k < special_locs.size(); k++) {
 					if(i == special_locs[k].x && j == special_locs[k].y) {
 						found_spec = k;
 						break;
