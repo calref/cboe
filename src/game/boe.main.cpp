@@ -111,6 +111,7 @@ static void showWelcome();
 #ifdef __APPLE__
 eMenuChoice menuChoice=eMenuChoice::MENU_CHOICE_NONE;
 short menuChoiceId=-1;
+fs::path pending_file_to_load=fs::path();
 #endif
 
 int main(int argc, char* argv[]) {
@@ -268,6 +269,11 @@ void handle_events() {
 	while(!All_Done) {
 		bool need_redraw=false;
 #ifdef __APPLE__
+		if (!pending_file_to_load.empty()) {
+			// TODO: What if they're already in a scenario? It should ask for confirmation, right?
+			do_load(pending_file_to_load);
+			pending_file_to_load.clear();
+		}
 		if (menuChoiceId>=0) {
 			eMenuChoice aMenuChoice=menuChoice;
 			menuChoice=eMenuChoice::MENU_CHOICE_NONE;
