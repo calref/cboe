@@ -12,7 +12,7 @@
 #include <boost/filesystem/operations.hpp>
 
 #include "strdlog.hpp"
-#include "gzstream.h"
+#include "gzstream/gzstream.h"
 
 #include "universe.hpp"
 #include "gfxsheets.hpp"

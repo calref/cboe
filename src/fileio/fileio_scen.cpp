@@ -20,7 +20,7 @@
 #include "special_parse.hpp"
 #include "gfxsheets.hpp"
 #include "mathutil.hpp"
-#include "gzstream.h"
+#include "gzstream/gzstream.h"
 #include "tarball.hpp"
 
 #include "porting.hpp"
