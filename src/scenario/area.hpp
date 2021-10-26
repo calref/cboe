@@ -13,6 +13,8 @@
 #include <string>
 #include <boost/dynamic_bitset.hpp>
 
+#include "global.hpp"
+
 #include "vector2d.hpp"
 #include "location.hpp"
 #include "special.hpp"

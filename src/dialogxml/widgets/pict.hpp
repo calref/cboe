@@ -16,6 +16,7 @@
 
 #include <vector>
 #include <map>
+#include "global.hpp"
 #include "control.hpp"
 #include "pictypes.hpp"
 #include "texture.hpp"
