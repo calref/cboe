@@ -1,4 +1,5 @@
 
+#include "global.hpp"
 #include "prefs.hpp"
 #include <map>
 #include <string>
