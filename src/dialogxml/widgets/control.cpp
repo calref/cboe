@@ -238,39 +238,6 @@ bool cControl::handleClick(location){
 	return clicked;
 }
 
-static unsigned char applyShift(unsigned char c){
-	static const char afterShift[] = {
-		' ', '!', '"', '#', '$', '%', '&', '"', '(', ')', '*', '+', '<', '_', '>', '?',
-		')', '!', '@', '#', '$', '%', '^', '&', '*', '(', ':', ':', '<', '+', '>', '?',
-		'@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
-		'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{', '|', '}', '^', '_',
-		'~', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
-		'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{', '|', '}', '~',
-	};
-	if (c<' ')
-		return ' ';
-	if (c>=0x7f)
-		return c;
-	return afterShift[c - ' '];
-}
-
-static unsigned char removeShift(unsigned char c){
-	static const char afterUnShift[] = {
-		' ', '1', '\'','3', '4', '5', '7', '\'','9', '0', '8', '=', ',', '-', '.', '/',
-		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ';', ';', ',', '=', '.', '/',
-		'2', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-		'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', '\\',']', '6', '-',
-		'`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-		'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', '\\',']', '`',
-	};
-	// ASAN: c can be called with 0 by cControl::getAttachedKeyDescription()
-	if (c<' ')
-		return ' ';
-	if (c>=0x7f)
-		return c;
-	return afterUnShift[c - ' '];
-}
-
 std::string cControl::getAttachedKeyDescription() {
 	std::string s;
 	if(key.spec) {

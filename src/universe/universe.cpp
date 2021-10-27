@@ -1167,15 +1167,12 @@ void cUniverse::exportGraphics() {
 				used_graphics.insert(party[i].which_graphic - 10000 + j);
 		} else if(party[i].which_graphic >= 1000)
 			update_pcs[party[i].which_graphic - 1000].insert(&party[i]);
-		for(size_t j = 0; j < party[i].items.size(); j++) {
-			check_item(party[i].items[j]);
-		}
+		for (auto &item : party[i].items)
+			check_item(item);
 	}
-	for(size_t i = 0; i < party.stored_items.size(); i++) {
-		for(size_t j = 0; j < party.stored_items[i].size(); j++) {
-			check_item(party.stored_items[i][j]);
-		}
-	}
+	for (auto &items : party.stored_items)
+		for (auto &item : items)
+			check_item(item);
 	for(mon_num_t monst : party.imprisoned_monst) {
 		if(monst > 0 && monst < scenario.scen_monsters.size())
 			check_monst(scenario.scen_monsters[monst]);
