@@ -356,7 +356,8 @@ bool cCurTown::set_force_wall(short x, short y, bool b){
 	if(b){ // If certain things are on space, there's no room for field.
 		if(is_impassable(x,y))
 			return false;
-		if(is_antimagic(x,y) || is_blade_wall(x,y) || is_quickfire(x,y))
+		// checkme: do we really want to change the comportement of quickfire in new game
+		if(is_antimagic(x,y) || is_blade_wall(x,y) || (!univ.scenario.is_legacy && is_quickfire(x,y)))
 			return false;
 		if(is_crate(x,y) || is_barrel(x,y) || is_fire_barr(x,y) || is_force_barr(x,y))
 			return false;
@@ -1144,7 +1145,7 @@ pic_num_t cUniverse::addGraphic(pic_num_t pic, ePicType type) {
 	// And finally, actually transfer the graphic over
 	spec_scen_g.copy_graphic(pos, pic, needSlots);
 	// Also mark these slots used so we don't overwrite them with the next copy
-	for(pic_num_t i = 1; i < needSlots; i++) {
+	for(pic_num_t i = 0; i < needSlots; i++) {
 		used_graphics.insert(pos + i);
 	}
 	return pos;
