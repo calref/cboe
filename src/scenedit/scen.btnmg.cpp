@@ -1,12 +1,13 @@
 
+#include <array>
+#include <cmath>
 #include <cstring>
 #include <cstdio>
+#include <memory>
+#include <string>
 
 #include "scen.global.hpp"
-#include <array>
-#include <string>
 #include "scen.graphics.hpp"
-#include <cmath>
 #include "scen.btnmg.hpp"
 #include "scrollbar.hpp"
 
