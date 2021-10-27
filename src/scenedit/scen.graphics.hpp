@@ -1,5 +1,7 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
+
+#include "global.hpp"
 #include "fields.hpp"
 #include "location.hpp"
 

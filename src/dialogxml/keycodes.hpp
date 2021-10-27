@@ -86,4 +86,6 @@ bool operator== (cKey a, cKey b);
 /// @return true if the needle is in the haystack
 bool mod_contains(eKeyMod haystack, eKeyMod needle);
 
+unsigned char applyShift(unsigned char c);
+unsigned char removeShift(unsigned char c);
 #endif
