@@ -114,12 +114,7 @@ static void warn_missing_opcode(unsigned short i) {
 static void init_specials_parse() {
 	opcode.add((*eSpecType::NONE).opcode().c_str(), eSpecType::NONE);
 	// Fill in all the opcodes and check for missing types.
-	// There's really no need to check all the way to the max of the underlying type.
-	// It's unlikely we'd go above 255, so unsigned char would be fine, but just in case,
-	// let's use unsigned short.
-	// Could change the actual enum's underlying type instead though?
-	using underlying = unsigned short;
-	for(underlying i = 1; i < std::numeric_limits<underlying>::max(); i++) {
+	for(unsigned short i = 1; i <= int(eSpecType::MAX_SPEC_TYPE); i++) {
 		eSpecType check = (eSpecType) i;
 		eSpecCat category = (*check).cat;
 		if(category == eSpecCat::INVALID) continue;

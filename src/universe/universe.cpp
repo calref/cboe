@@ -1061,6 +1061,13 @@ struct cCustomUpdateState {
 	
 	std::set<cItem const *> seenItem;
 	std::set<cMonster const *> seenMonster;
+	void insert_missile_pict(miss_num_t &pict_id) {
+		if(pict_id >= 10000) {
+			for(int i = 0; i < 4; i++)
+				graphics.insert(pict_id - 10000 + i);
+		} else if(pict_id >= 1000)
+			missiles[pict_id - 1000].insert(&pict_id);
+	}
 	pic_num_t add_graphic(pic_num_t pic, ePicType type);
 	void check_monst(cUniverse &univers, cMonster & monst);
 	void check_item(cUniverse &univers, cItem& item);
@@ -1117,20 +1124,10 @@ void cCustomUpdateState::check_monst(cUniverse &univers, cMonster & monst) {
 	for(auto& abil : monst.abil) {
 		switch(getMonstAbilCategory(abil.first)) {
 			case eMonstAbilCat::MISSILE:
-				if(abil.second.missile.pic >= 10000) {
-					for(int i = 0; i < 4; i++)
-						graphics.insert(abil.second.missile.pic - 10000 + i);
-				} else if(abil.second.missile.pic >= 1000) {
-					missiles[abil.second.missile.pic - 1000].insert(&abil.second.missile.pic);
-				}
+				insert_missile_pict(abil.second.missile.pic);
 				break;
 			case eMonstAbilCat::GENERAL:
-				if(abil.second.gen.pic >= 10000) {
-					for(int i = 0; i < 4; i++)
-						graphics.insert(abil.second.gen.pic - 10000 + i);
-				} else if(abil.second.gen.pic >= 1000) {
-					missiles[abil.second.gen.pic - 1000].insert(&abil.second.gen.pic);
-				}
+				insert_missile_pict(abil.second.gen.pic);
 				break;
 			case eMonstAbilCat::SUMMON:
 				if(abil.second.summon.type == eMonstSummon::TYPE)
@@ -1158,13 +1155,8 @@ void cCustomUpdateState::check_item(cUniverse &universe, cItem& item) {
 			check_monst(universe, universe.party.summons[monst - 10000]);
 		else check_monst(universe, universe.scenario.scen_monsters[monst]);
 	}
-	if(item.variety == eItemType::ARROW || item.variety == eItemType::BOLTS || item.variety == eItemType::MISSILE_NO_AMMO || item.variety == eItemType::THROWN_MISSILE) {
-		if(item.missile >= 10000)
-			for(int i = 0; i < 4; i++)
-				graphics.insert(item.missile - 10000 + i);
-		else if(item.missile >= 1000)
-			missiles[item.missile - 1000].insert(&item.missile);
-	}
+	if(item.variety == eItemType::ARROW || item.variety == eItemType::BOLTS || item.variety == eItemType::MISSILE_NO_AMMO || item.variety == eItemType::THROWN_MISSILE)
+		insert_missile_pict(item.missile);
 }
 
 void cUniverse::exportGraphics() {
@@ -1234,29 +1226,29 @@ void cUniverse::exportSummons() {
 	for(int i = 0; i < 6; i++) {
 		if(party[i].main_status == eMainStatus::ABSENT)
 			continue;
-		for(size_t j = 0; j < party[i].items.size(); j++) {
-			if(party[i].items[j].variety == eItemType::NO_ITEM) continue;
-			if(party[i].items[j].ability == eItemAbil::SUMMONING || party[i].items[j].ability == eItemAbil::MASS_SUMMONING) {
-				mon_num_t monst = party[i].items[j].abil_data[1];
+		for(auto &item : party[i].items) {
+			if(item.variety == eItemType::NO_ITEM) continue;
+			if(item.ability == eItemAbil::SUMMONING || item.ability == eItemAbil::MASS_SUMMONING) {
+				mon_num_t monst = item.abil_data[1];
 				if(monst >= 10000)
 					used_monsters.insert(monst - 10000);
 				else {
 					need_monsters.insert(monst);
-					update_items[monst].insert(&party[i].items[j]);
+					update_items[monst].insert(&item);
 				}
 			}
 		}
 	}
-	for(size_t i = 0; i < party.stored_items.size(); i++) {
-		for(size_t j = 0; j < party.stored_items[i].size(); j++) {
-			if(party.stored_items[i][j].variety == eItemType::NO_ITEM) continue;
-			if(party.stored_items[i][j].ability == eItemAbil::SUMMONING||party.stored_items[i][j].ability == eItemAbil::MASS_SUMMONING) {
-				mon_num_t monst = party.stored_items[i][j].abil_data[1];
+	for(auto &items : party.stored_items) {
+		for(auto &item : items) {
+			if(item.variety == eItemType::NO_ITEM) continue;
+			if(item.ability == eItemAbil::SUMMONING||item.ability == eItemAbil::MASS_SUMMONING) {
+				mon_num_t monst = item.abil_data[1];
 				if(monst >= 10000)
 					used_monsters.insert(monst - 10000);
 				else {
 					need_monsters.insert(monst);
-					update_items[monst].insert(&party.stored_items[i][j]);
+					update_items[monst].insert(&item);
 				}
 			}
 		}

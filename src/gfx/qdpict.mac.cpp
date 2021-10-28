@@ -467,11 +467,11 @@ bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store) {
 	// TODO: There's no way around it; I'll have to read resource files for this section.
 	FSRef file;
 	ResFileRefNum custRef;
-	OSErr err = FSPathMakeRef((const UInt8*)gpath.c_str(), &file, nullptr);
-	err = FSOpenResourceFile(&file, 0, nullptr, fsRdPerm, &custRef);
+	FSPathMakeRef((const UInt8*)gpath.c_str(), &file, nullptr);
+	OSErr err = FSOpenResourceFile(&file, 0, nullptr, fsRdPerm, &custRef);
 	if(err != noErr) { // TODO: Is the error that would be returned if the resources were stored in the resource fork?
 		HFSUniStr255 rsrc;
-		err = FSGetResourceForkName(&rsrc);
+		FSGetResourceForkName(&rsrc);
 		err = FSOpenResourceFile(&file, rsrc.length, rsrc.unicode, fsRdPerm, &custRef);
 		if(err != noErr) {
 			showError("An old-style .meg graphics file was found, but neither data nor resource fork could be read.",noGraphics);
