@@ -91,6 +91,7 @@ bool load_party(fs::path const &file_to_load, cUniverse& univ){
 	}
 	
 	fclose(file_id);
+	spec_scen_g.party_sheet=Texture(); // FIXME: normally we must only reset this sheet if the party is loaded correctly
 	switch(format){
 		case old_mac:
 			return load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, true);
