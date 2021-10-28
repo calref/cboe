@@ -165,16 +165,6 @@ public:
 enum eTargetType {TARG_ANY, TARG_PC, TARG_MONST};
 
 class cUniverse{
-	template<typename T> using update_info = std::set<T*>;
-	// All these maps are transient data that doesn't need to be saved
-	std::map<pic_num_t, update_info<cItem>> update_items;
-	std::map<pic_num_t, update_info<cMonster>> update_monsters;
-	std::map<pic_num_t, update_info<cPlayer>> update_pcs;
-	std::map<pic_num_t, update_info<miss_num_t>> update_missiles;
-	std::set<pic_num_t> used_graphics;
-	pic_num_t addGraphic(pic_num_t pic, ePicType type);
-	void check_monst(cMonster& monst);
-	void check_item(cItem& item);
 	// The string buffer currently isn't saved
 	std::string strbuf;
 	std::map<int,std::string> extrabufs;
