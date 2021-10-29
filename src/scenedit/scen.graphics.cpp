@@ -686,6 +686,11 @@ void draw_terrain(){
 	if(cur_viewing_mode == 0) {
 		tileImage(mainPtr,terrain_rect,bg[17]);
 		frame_rect(mainPtr, terrain_rect, sf::Color::Black);
+		// limits for town: only town and for outside terrain: sector+one outside bordering
+		int const limits[]={editing_town ? 4 : 3, int(editing_town ? town->max_dim-1 : 48)-4};
+		// if outside, resets the position to center of the map
+		if (cen_x<limits[0] || cen_x>limits[1]) cen_x=(editing_town ? town->max_dim-1 : 48)/2;
+		if (cen_y<limits[0] || cen_y>limits[1]) cen_y=(editing_town ? town->max_dim-1 : 48)/2;
 		for(short q = 0; q < 9; q++)
 			for(short r = 0; r < 9; r++) {
 				where_draw.x = q;
