@@ -162,21 +162,7 @@ void SpecialParser::next_line(Iter, Iter end) {
 void SpecialParser::init_block(Iter, Iter) {
 	cur_node++;
 	temp_symbol.clear();
-	curSpec.type = eSpecType::NONE;
-	curSpec.sd1 = -1;
-	curSpec.sd2 = -1;
-	curSpec.m1 = -1;
-	curSpec.m2 = -1;
-	curSpec.m3 = -1;
-	curSpec.pic = -1;
-	curSpec.pictype = 4; // PIC_DLOG
-	curSpec.ex1a = -1;
-	curSpec.ex1b = -1;
-	curSpec.ex1c = -1;
-	curSpec.ex2a = -1;
-	curSpec.ex2b = -1;
-	curSpec.ex2c = -1;
-	curSpec.jumpto = -1;
+	curSpec = cSpecial();
 }
 
 void SpecialParser::prep_add_symbol(Iter start, Iter end) {
