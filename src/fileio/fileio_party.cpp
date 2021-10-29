@@ -459,7 +459,6 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 	
 	if(spec_scen_g.party_sheet) {
 		sf::Image party_pics = spec_scen_g.party_sheet->copyToImage();
-		party_pics.flipVertically();
 		fs::path tempPath = tempDir/"temp.png";
 		party_pics.saveToFile(tempPath.string());
 		std::ostream& pic_out = partyOut.newFile("save/export.png");
