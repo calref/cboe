@@ -42,7 +42,6 @@ static cTown::cItem store_place_item;
 
 rectangle terrain_rects[256];
 static rectangle terrain_rect_base = {0,0,16,16};
-extern rectangle terrain_buttons_rect;
 
 extern short cen_x, cen_y, cur_town;
 extern eScenMode overall_mode;
@@ -1134,33 +1133,28 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 		return true;
 	}
 	bool need_redraw = false;
-	if((the_point.in(border_rect[0])) & (cen_y > (editing_town ? 4 : 3))) {
+	short const minV=editing_town ? 4 : 3;
+	short const maxV=(editing_town ? town->max_dim - 1 : 48)-4;
+	if(the_point.in(border_rect[0]) && cen_y > minV) {
 		cen_y--;
-		if(ctrl_hit)
-			cen_y = ((editing_town) ? 4 : 3);
-		need_redraw = true;
-		mouse_button_held = true;
+		if(ctrl_hit) cen_y = minV;
+		mouse_button_held = need_redraw = true;
 	}
-	if((the_point.in(border_rect[1])) & (cen_x > (editing_town ? 4 : 3))) {
+	if(the_point.in(border_rect[1]) && cen_x > minV) {
 		cen_x--;
 		if(ctrl_hit)
-			cen_x = ((editing_town) ? 4 : 3);
-		need_redraw = true;
-		mouse_button_held = true;
+			cen_x = minV;
+		mouse_button_held = need_redraw = true;
 	}
-	if((the_point.in(border_rect[2])) & (cen_y < (editing_town ? town->max_dim - 5 : 44))) {
+	if(the_point.in(border_rect[2]) && cen_y < maxV) {
 		cen_y++;
-		if(ctrl_hit)
-			cen_y = (editing_town) ? town->max_dim - 5 : 44;
-		need_redraw = true;
-		mouse_button_held = true;
+		if(ctrl_hit) cen_y = maxV;
+		mouse_button_held = need_redraw = true;
 	}
-	if((the_point.in(border_rect[3])) & (cen_x < (editing_town ? town->max_dim - 5 : 44))) {
+	if(the_point.in(border_rect[3]) && cen_x < maxV) {
 		cen_x++;
-		if(ctrl_hit)
-			cen_x = (editing_town) ? town->max_dim - 5 : 44;
-		need_redraw = true;
-		mouse_button_held = true;
+		if(ctrl_hit) cen_x = maxV;
+		mouse_button_held = need_redraw = true;
 	}
 	if(need_redraw) {
 		draw_terrain();
@@ -1760,9 +1754,12 @@ void handle_scroll(const sf::Event& event) {
 	location pos { translate_mouse_coordinates({event.mouseMove.x,event.mouseMove.y}) };
 	int amount = event.mouseWheel.delta;
 	if(overall_mode < MODE_MAIN_SCREEN && pos.in(terrain_rect)) {
+		short const minV=editing_town ? 4 : 3;
+		short const maxV=(editing_town ? town->max_dim - 1 : 48)-4;
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
-			cen_x = minmax(4, town->max_dim - 5, cen_x - amount);
-		else cen_y = minmax(4, town->max_dim - 5, cen_y - amount);
+			cen_x = minmax(minV, maxV, cen_x - amount);
+		else
+			cen_y = minmax(minV, maxV, cen_y - amount);
 	}
 }
 

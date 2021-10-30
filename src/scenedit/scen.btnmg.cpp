@@ -14,10 +14,7 @@
 extern rectangle right_sbar_rect;
 
 extern rectangle right_buttons[NRSONPAGE];
-rectangle right_scrollbar_rect;
-extern short current_rs_top;
 
-bool left_buttons_active = 1,right_buttons_active = 0;
 extern std::array<lb_t,NLS> left_button_status;
 extern std::vector<rb_t> right_button_status;
 extern std::shared_ptr<cScrollbar> right_sbar;

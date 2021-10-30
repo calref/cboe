@@ -27,13 +27,7 @@
 
 #include "scen.btnmg.hpp"
 
-void load_terrain_template();
-short terrain_in_index();
-void put_terrain_in_template();
 void undo_clip();
-
-short find_index_spot();
-bool is_s_d();
 
 extern cOutdoors* current_terrain;
 extern sf::RenderWindow mainPtr;
@@ -45,39 +39,31 @@ extern cTown* town;
 extern short cur_viewing_mode;
 extern eScenMode overall_mode;
 eDrawMode draw_mode = DRAW_TERRAIN;
-extern short available_dlog_buttons[NUM_DLOG_B];
 extern bool editing_town;
 extern cScenario scenario;
 extern sf::Texture bg_gworld;
 extern rectangle right_buttons[NRSONPAGE];
-extern rectangle right_scrollbar_rect;
 extern std::shared_ptr<cScrollbar> right_sbar, pal_sbar;
 
-extern bool left_buttons_active,right_buttons_active;
 extern std::array<lb_t,NLS> left_button_status;
 extern std::vector<rb_t> right_button_status;
 short mini_map_scales[3] = {12, 6, 4};
-// TODO: What is this for?
-//extern btn_t buttons[];
 extern location cur_out, mouse_spot;
 extern ter_num_t current_ground;
-
-short num_ir[3] = {12,10,4};
 
 cCustomGraphics spec_scen_g;
 const sf::Color hilite_colour = {0xff, 0x00, 0x80, 0x40};
 
 // begin new stuff
 rectangle blue_button_from = {120,235,134,251};
-rectangle start_button_from = {120,70,127,91};
 rectangle base_small_button_from = {120,0,127,7};
 extern rectangle palette_buttons[10][6];
 extern ePalBtn town_buttons[6][10], out_buttons[6][10];
-rectangle palette_button_base = {0,0,18,26};
+static rectangle palette_button_base = {0,0,18,26};
 rectangle terrain_buttons_rect = {0,0,410,294};
 extern rectangle left_buttons[NLS][2]; // 0 - whole, 1 - blue button
-rectangle left_button_base = {5,5,21,280};
-rectangle right_button_base = {RIGHT_AREA_UL_Y,RIGHT_AREA_UL_X,17,RIGHT_AREA_UL_Y};
+static rectangle left_button_base = {5,5,21,280};
+static rectangle right_button_base = {RIGHT_AREA_UL_Y,RIGHT_AREA_UL_X,17,RIGHT_AREA_UL_Y};
 rectangle terrain_rect = {0,0,340,272};
 std::string current_string[2];
 extern rectangle terrain_rects[256];
@@ -688,7 +674,7 @@ void draw_terrain(){
 		frame_rect(mainPtr, terrain_rect, sf::Color::Black);
 		// limits for town: only town and for outside terrain: sector+one outside bordering
 		int const limits[]={editing_town ? 4 : 3, int(editing_town ? town->max_dim-1 : 48)-4};
-		// if outside, resets the position to center of the map
+		// if the position is outside, resets it to center of the map
 		if (cen_x<limits[0] || cen_x>limits[1]) cen_x=(editing_town ? town->max_dim-1 : 48)/2;
 		if (cen_y<limits[0] || cen_y>limits[1]) cen_y=(editing_town ? town->max_dim-1 : 48)/2;
 		for(short q = 0; q < 9; q++)
@@ -775,41 +761,44 @@ void draw_terrain(){
 							rect_draw_some_item(vehicle_gworld,source_rect,mainPtr,destrec,sf::BlendAlpha);
 						
 					}
-					if(is_field_type(cen_x + q - 4,cen_y + r - 4, FIELD_WEB)) {
+					std::set<eFieldType> list_fields;
+					for(auto const &field : town->preset_fields)
+						if(field.loc.x == cen_x + q - 4 && field.loc.y == cen_y + r - 4)
+							list_fields.insert(field.type);
+					if(list_fields.count(FIELD_WEB)) {
 						from_rect = calc_rect(5,0);
 						rect_draw_some_item(fields_gworld,from_rect,mainPtr,destrec,sf::BlendAlpha);
 					}
-					if(is_field_type(cen_x + q - 4,cen_y + r - 4, OBJECT_CRATE)) {
+					if(list_fields.count(OBJECT_CRATE)) {
 						from_rect = calc_rect(6,0);
 						rect_draw_some_item(fields_gworld,from_rect,mainPtr,destrec,sf::BlendAlpha);
 					}
-					if(is_field_type(cen_x + q - 4,cen_y + r - 4, OBJECT_BARREL)) {
+					if(list_fields.count(OBJECT_BARREL)) {
 						from_rect = calc_rect(7,0);
 						rect_draw_some_item(fields_gworld,from_rect,mainPtr,destrec,sf::BlendAlpha);
 					}
-					if(is_field_type(cen_x + q - 4,cen_y + r - 4, BARRIER_FIRE)) {
+					if(list_fields.count(BARRIER_FIRE)) {
 						from_rect = calc_rect(8,4);
 						rect_draw_some_item(*ResMgr::textures.get("teranim"),from_rect,mainPtr,destrec,sf::BlendAlpha);
 					}
-					if(is_field_type(cen_x + q - 4,cen_y + r - 4, FIELD_QUICKFIRE)) {
+					if(list_fields.count(FIELD_QUICKFIRE)) {
 						from_rect = calc_rect(7,1);
 						rect_draw_some_item(fields_gworld,from_rect,mainPtr,destrec,sf::BlendAlpha);
 					}
-					if(is_field_type(cen_x + q - 4,cen_y + r - 4, BARRIER_FORCE)) {
+					if(list_fields.count(BARRIER_FORCE)) {
 						from_rect = calc_rect(10,4);
 						rect_draw_some_item(*ResMgr::textures.get("teranim"),from_rect,mainPtr,destrec,sf::BlendAlpha);
 					}
-					if(is_field_type(cen_x + q - 4,cen_y + r - 4, OBJECT_BLOCK)) {
+					if(list_fields.count(OBJECT_BLOCK)) {
 						from_rect = calc_rect(3,0);
 						rect_draw_some_item(fields_gworld,from_rect,mainPtr,destrec,sf::BlendAlpha);
 					}
-					if(is_field_type(cen_x + q - 4,cen_y + r - 4, BARRIER_CAGE)) {
+					if(list_fields.count(BARRIER_CAGE)) {
 						from_rect = calc_rect(0,0);
 						rect_draw_some_item(fields_gworld,from_rect,mainPtr,destrec,sf::BlendAlpha);
 					}
 					for(short i = 0; i < 8; i++) {
-						eFieldType sfx = eFieldType(SFX_SMALL_BLOOD + i);
-						if(is_field_type(cen_x + q - 4,cen_y + r - 4,sfx)) {
+						if(list_fields.count(eFieldType(SFX_SMALL_BLOOD + i))) {
 							from_rect = calc_rect(i,3);
 							rect_draw_some_item(fields_gworld,from_rect,mainPtr,destrec,sf::BlendAlpha);
 						}
@@ -848,16 +837,13 @@ void draw_terrain(){
 				if(mouse_spot.x >= 0 && mouse_spot.y >= 0) {
 					bool need_hilite = false, large_hilite = false;
 					int d = dist(where_draw, mouse_spot);
-					if(overall_mode == MODE_SMALL_PAINTBRUSH && d <= 1) {
-						need_hilite = true;
-						large_hilite = true;
-					} else if((overall_mode == MODE_ERASER || overall_mode == MODE_SMALL_SPRAYCAN) && d <= 2) {
-						need_hilite = true;
-						large_hilite = true;
-					} else if((overall_mode == MODE_LARGE_PAINTBRUSH || overall_mode == MODE_LARGE_SPRAYCAN) && d <= 4) {
-						need_hilite = true;
-						large_hilite = true;
-					} else if(where_draw == mouse_spot)
+					if(overall_mode == MODE_SMALL_PAINTBRUSH && d <= 1)
+						large_hilite = need_hilite = true;
+					else if((overall_mode == MODE_ERASER || overall_mode == MODE_SMALL_SPRAYCAN) && d <= 2)
+						large_hilite = need_hilite = true;
+					else if((overall_mode == MODE_LARGE_PAINTBRUSH || overall_mode == MODE_LARGE_SPRAYCAN) && d <= 4)
+						large_hilite = need_hilite = true;
+					else if(where_draw == mouse_spot)
 						need_hilite = true;
 					else if(overall_mode == MODE_PLACE_CREATURE || overall_mode == MODE_PLACE_SAME_CREATURE) {
 						extern short mode_count;
@@ -937,8 +923,6 @@ void draw_terrain(){
 	}
 	
 	else {
-		// fixme: the bounds are now correct and the scrolling must be fluid,
-		//        however, the select procedure is bad
 		tileImage(mainPtr, terrain_rect,bg[17]);
 		frame_rect(mainPtr, terrain_rect, sf::Color::Black);
 		// Width available:  64 4x4 tiles, 42 6x6 tiles, or 21 12x12 tiles -- 256 pixels
@@ -1116,16 +1100,13 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 		location where_draw(i,j);
 		bool need_hilite = false, large_hilite = false;
 		int d = dist(where_draw, mouse_spot);
-		if(overall_mode == MODE_SMALL_PAINTBRUSH && d <= 1) {
-			need_hilite = true;
-			large_hilite = true;
-		} else if((overall_mode == MODE_ERASER || overall_mode == MODE_SMALL_SPRAYCAN) && d <= 2) {
-			need_hilite = true;
-			large_hilite = true;
-		} else if((overall_mode == MODE_LARGE_PAINTBRUSH || overall_mode == MODE_LARGE_SPRAYCAN) && d <= 4) {
-			need_hilite = true;
-			large_hilite = true;
-		} else if(where_draw == mouse_spot)
+		if(overall_mode == MODE_SMALL_PAINTBRUSH && d <= 1)
+			large_hilite = need_hilite = true;
+		else if((overall_mode == MODE_ERASER || overall_mode == MODE_SMALL_SPRAYCAN) && d <= 2)
+			large_hilite = need_hilite = true;
+		else if((overall_mode == MODE_LARGE_PAINTBRUSH || overall_mode == MODE_LARGE_SPRAYCAN) && d <= 4)
+			large_hilite = need_hilite = true;
+		else if(where_draw == mouse_spot)
 			need_hilite = true;
 		if(need_hilite) {
 			fill_rect(mainPtr, dest_rect, hilite_colour);
@@ -1210,9 +1191,8 @@ void place_location() {
 	frame_rect(mainPtr, terrain_buttons_rect, sf::Color::Black);
 	location mouse = translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr));
 	
-	location moveTo(5, terrain_rects[255].top + 18);
 	draw_rect = text_rect;
-	draw_rect.offset(moveTo);
+	draw_rect.offset({5, terrain_rects[255].top + 18});
 	if(overall_mode < MODE_MAIN_SCREEN) {
 		// std::cout << "Mouse: " << mouse << " Buttons: " << terrain_buttons_rect << " Terrain: " << terrain_rect << std::endl;
 		if(mouse.in(terrain_buttons_rect)) {
@@ -1252,7 +1232,6 @@ void place_location() {
 		if(sout.str().empty())
 			sout << "Center: x = " << cen_x << ", y = " << cen_y;
 	} else {
-		moveTo.y += 13; // TODO: Not sure how important this is.
 		sout << "Click terrain to edit. ";
 	}
 	TextStyle style;
@@ -1260,21 +1239,18 @@ void place_location() {
 	win_draw_string(mainPtr, draw_rect, sout.str(), eTextMode::LEFT_TOP, style);
 	sout.str("");
 	
-	moveTo = location(260 ,terrain_rects[255].top + 18);
 	draw_rect = text_rect;
-	draw_rect.offset(moveTo);
+	draw_rect.offset({260 ,terrain_rects[255].top + 18});
 	sout << current_terrain_type;
 	win_draw_string(mainPtr, draw_rect, sout.str(), eTextMode::LEFT_TOP, style);
 	sout.str("");
 	
 	if(overall_mode < MODE_MAIN_SCREEN) {
-		moveTo = location(5,terrain_rects[255].bottom + 121);
 		draw_rect = text_rect;
-		draw_rect.offset(moveTo);
+		draw_rect.offset({5,terrain_rects[255].bottom + 121});
 		win_draw_string(mainPtr, draw_rect, current_string[0], eTextMode::LEFT_TOP, style);
-		moveTo = location(RIGHT_AREA_WIDTH / 2,terrain_rects[255].bottom + 121);
 		draw_rect = text_rect;
-		draw_rect.offset(moveTo);
+		draw_rect.offset({RIGHT_AREA_WIDTH / 2,terrain_rects[255].bottom + 121});
 		win_draw_string(mainPtr, draw_rect, current_string[1], eTextMode::LEFT_TOP, style);
 	}
 	
@@ -1441,36 +1417,30 @@ void set_string(std::string string,std::string string2) {
 bool is_special(short i,short j) {
 	location check(i,j);
 	
-	if(editing_town)
-		for(short k = 0; k < town->special_locs.size(); k++)
-			if(town->special_locs[k] == check && town->special_locs[k].spec >= 0)
+	if(editing_town) {
+		for(auto const &spec : town->special_locs)
+			if(spec == check && spec.spec >= 0)
 				return true;
-	if(!editing_town)
-		for(short k = 0; k < current_terrain->special_locs.size(); k++)
-			if(current_terrain->special_locs[k] == check && current_terrain->special_locs[k].spec >= 0)
+	}
+	else {
+		for(auto const &spec : current_terrain->special_locs)
+			if(spec == check && spec.spec >= 0)
 				return true;
-	
+	}
 	return false;
 }
 
 bool is_spot(short i,short j){
-	if(editing_town)
-		return is_field_type(i,j,SPECIAL_SPOT);
-	return current_terrain->is_special_spot(i,j);
+	return editing_town ? is_field_type(i,j,SPECIAL_SPOT) : current_terrain->is_special_spot(i,j);
 }
 
 bool is_road(short i,short j){
-	if(editing_town)
-		return is_field_type(i,j,SPECIAL_ROAD);
-	else
-		return current_terrain->is_road(i,j);
+	return editing_town ? is_field_type(i,j,SPECIAL_ROAD) : current_terrain->is_road(i,j);
 }
 
 bool is_field_type(short i,short j,eFieldType field_type) {
-	for(short k = 0; k < town->preset_fields.size(); k++)
-		if((town->preset_fields[k].type == field_type) &&
-			(town->preset_fields[k].loc.x == i) &&
-			(town->preset_fields[k].loc.y == j))
+	for(auto const &field : town->preset_fields)
+		if(field.type == field_type && field.loc.x == i && field.loc.y == j)
 			return true;
 	return false;
 }
@@ -1478,27 +1448,20 @@ bool is_field_type(short i,short j,eFieldType field_type) {
 void make_field_type(short i,short j,eFieldType field_type) {
 	if(is_field_type(i,j,field_type))
 		return;
-	for(short k = 0; k < town->preset_fields.size(); k++)
-		if(town->preset_fields[k].type == 0) {
-			town->preset_fields[k].loc.x = i;
-			town->preset_fields[k].loc.y = j;
-			town->preset_fields[k].type = field_type;
+	cTown::cField the_field={{i,j}, field_type};
+	for(auto &field : town->preset_fields)
+		if(field.type == 0) {
+			field=the_field;
 			return;
 		}
-	cTown::cField the_field;
-	the_field.loc.x = i;
-	the_field.loc.y = j;
-	the_field.type = field_type;
 	town->preset_fields.push_back(the_field);
 }
 
 
 void take_field_type(short i,short j,eFieldType field_type) {
-	for(short k = 0; k < town->preset_fields.size(); k++)
-		if((town->preset_fields[k].type == field_type) &&
-			(town->preset_fields[k].loc.x == i) &&
-			(town->preset_fields[k].loc.y == j)) {
-			town->preset_fields[k].type = FIELD_DISPEL;
+	for(auto &field : town->preset_fields)
+		if(field.type == field_type && field.loc.x == i && field.loc.y == j) {
+			field.type = FIELD_DISPEL;
 			return;
 		}
 }
@@ -1508,14 +1471,8 @@ bool container_there(location l) {
 		return false;
 	if(scenario.get_terrain(town->terrain(l.x,l.y)).special == eTerSpec::IS_A_CONTAINER)
 		return true;
-	if(is_field_type(l.x,l.y, OBJECT_BARREL))
-		return true;
-	if(is_field_type(l.x,l.y, OBJECT_CRATE))
-		return true;
-	return 0;
+	return is_field_type(l.x,l.y, OBJECT_BARREL) || is_field_type(l.x,l.y, OBJECT_CRATE);
 }
-
-void record_display_strings(){}
 
 // Translate mouse event coordinates based on the global view and viewport
 sf::Vector2f translate_mouse_coordinates(sf::Vector2i const point) {
