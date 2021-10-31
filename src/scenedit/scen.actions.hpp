@@ -2,7 +2,6 @@
 #include "scen.global.hpp"
 #include "undo.hpp"
 
-void init_screen_locs();
 void handle_action(location the_point,sf::Event event);
 void flash_rect(rectangle to_flash);
 void swap_terrain();
