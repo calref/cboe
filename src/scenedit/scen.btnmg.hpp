@@ -1,3 +1,9 @@
+#include <array>
+#include <memory>
+#include <unordered_map>
+#include <vector>
+
+#include "scrollbar.hpp"
 
 enum eLBAction {
 	LB_NO_ACTION,
@@ -52,6 +58,12 @@ struct lb_t {
 	eLBMode mode;
 	eLBAction action;
 	std::string label;
+	
+	lb_t(eLBMode newMode=LB_CLEAR, eLBAction newAction=LB_NO_ACTION, std::string const &newLabel="")
+	: mode(newMode)
+	, action(newAction)
+	, label(newLabel) {
+	}
 };
 
 struct rb_t {
@@ -60,9 +72,52 @@ struct rb_t {
 	std::string label;
 };
 
-void init_lb();
-void reset_lb();
-void set_lb(short slot, eLBMode mode, eLBAction action, std::string label, bool do_draw = false);
-void init_rb() ;
-void reset_rb() ;
-void set_rb(short slot, eRBAction action, int i, std::string label, bool do_draw = false);
+class iEventListener;
+class cScenButtonsBars {
+public:
+	void init();
+	void show_palette_bar(bool show=true) {
+		if (!palette_bar)
+			return;
+		if (show)
+			palette_bar->show();
+		else
+			palette_bar->hide();
+	}
+	void show_right_bar(bool show=true) {
+		if (!right_bar)
+			return;
+		if (show)
+			right_bar->show();
+		else
+			right_bar->hide();
+	}
+
+	void draw_left_buttons();
+	void draw_left_slot(short which,short mode);
+	void set_left_button(short slot, eLBMode mode, eLBAction action, std::string const &label, bool do_draw = false);
+	void reset_left_buttons();
+
+	void draw_right_buttons() const;
+	void draw_right_slot(short which,short mode) const ;
+	void set_right_button(short slot, eRBAction action, int i, std::string const &label, bool do_draw = false);
+	void reset_right_bar_and_buttons();
+protected:
+	void init_bar(std::shared_ptr<cScrollbar>& sbar, const std::string& name, rectangle const &rect, rectangle const &events_rect, int pgSz);
+
+public:
+	std::array<lb_t,NLS> left_buttons;
+	std::array<rectangle[2],NLS> left_buttons_rectangles;  // 0 - whole, 1 - blue button
+	std::vector<rb_t> right_buttons;
+	std::array<rectangle,NRSONPAGE> right_buttons_rectangles;
+
+	rectangle terrain_rectangle; // the terrain main rectangle
+	rectangle terrain_border_rects[4]; // border rects order: top, left, bottom, right
+	rectangle terrain_rects[256];
+	
+	std::shared_ptr<cScrollbar> right_bar, palette_bar;
+
+	std::unordered_map<std::string, std::shared_ptr<iEventListener>> event_listeners;
+};
+
+extern cScenButtonsBars scen_controls;
