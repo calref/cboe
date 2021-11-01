@@ -42,33 +42,12 @@ extern eScenMode overall_mode;
 extern bool mouse_button_held,editing_town;
 extern short cur_viewing_mode;
 extern cTown* town;
-extern short mode_count,to_create;
-extern ter_num_t template_terrain[64][64];
+extern short mode_count;
 extern cScenario scenario;
 extern cOutdoors* current_terrain;
 extern location cur_out;
 extern sf::RenderWindow mainPtr;
 extern bool change_made;
-
-rectangle palette_buttons[10][6];
-
-ePalBtn out_buttons[6][10] = {
-	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_DROPPER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET},
-	{PAL_EDIT_TOWN, PAL_ERASE_TOWN, PAL_BLANK, PAL_BLANK, PAL_EDIT_SIGN, PAL_TEXT_AREA, PAL_WANDER, PAL_CHANGE, PAL_ZOOM, PAL_BLANK},
-	{PAL_SPEC, PAL_COPY_SPEC, PAL_PASTE_SPEC, PAL_ERASE_SPEC, PAL_EDIT_SPEC, PAL_SPEC_SPOT, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
-	{PAL_BOAT, PAL_HORSE, PAL_ROAD, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
-	{PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
-	{PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
-};
-
-ePalBtn town_buttons[6][10] = {
-	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_DROPPER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET},
-	{PAL_ENTER_N, PAL_ENTER_W, PAL_ENTER_S, PAL_ENTER_E, PAL_EDIT_SIGN, PAL_TEXT_AREA, PAL_WANDER, PAL_CHANGE, PAL_ZOOM, PAL_TERRAIN},
-	{PAL_SPEC, PAL_COPY_SPEC, PAL_PASTE_SPEC, PAL_ERASE_SPEC, PAL_EDIT_SPEC, PAL_SPEC_SPOT, PAL_EDIT_ITEM, PAL_SAME_ITEM, PAL_ERASE_ITEM, PAL_ITEM},
-	{PAL_BOAT, PAL_HORSE, PAL_ROAD, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_EDIT_MONST, PAL_SAME_MONST, PAL_ERASE_MONST, PAL_MONST},
-	{PAL_WEB, PAL_CRATE, PAL_BARREL, PAL_BLOCK, PAL_FIRE_BARR, PAL_FORCE_BARR, PAL_QUICKFIRE, PAL_FORCECAGE, PAL_ERASE_FIELD, PAL_BLANK},
-	{PAL_SFX_SB, PAL_SFX_MB, PAL_SFX_LB, PAL_SFX_SS, PAL_SFX_LS, PAL_SFX_ASH, PAL_SFX_BONE, PAL_SFX_ROCK, PAL_BLANK, PAL_BLANK},
-};
 
 static cTownperson last_placed_monst;
 
@@ -1214,10 +1193,10 @@ static bool handle_toolpal_action(location cur_point2) {
 	auto &controls=scen_controls;
 	for(int i = 0; i < 10; i++)
 		for(int j = 0; j < 6; j++) {
-			auto cur_palette_buttons = editing_town ? town_buttons : out_buttons;
-			if(cur_palette_buttons[j][i] != PAL_BLANK && !mouse_button_held && cur_point2.in(palette_buttons[i][j])
+			auto cur_palette_buttons = editing_town ? controls.town_buttons : controls.out_buttons;
+			if(cur_palette_buttons[j][i] != PAL_BLANK && !mouse_button_held && cur_point2.in(controls.palette_buttons[i][j])
 			   && /*((j < 3) || (editing_town)) &&*/ (overall_mode < MODE_MAIN_SCREEN)) {
-				rectangle temp_rect = palette_buttons[i][j];
+				rectangle temp_rect = controls.palette_buttons[i][j];
 				temp_rect.offset(RIGHT_AREA_UL_X + 5, RIGHT_AREA_UL_Y + controls.terrain_rects[255].bottom + 5);
 				flash_rect(temp_rect);
 				auto const &ter_type=scenario.get_terrain(current_terrain_type);
@@ -1664,23 +1643,23 @@ void handle_keystroke(sf::Event event) {
 			overall_mode = 8;
 			break;*/
 		case 'D':
-			pass_point.x = RIGHT_AREA_UL_X + 6 + palette_buttons[0][0].left;
-			pass_point.y = RIGHT_AREA_UL_Y + 6 + controls.terrain_rects[255].bottom + palette_buttons[0][0].top;
+			pass_point.x = RIGHT_AREA_UL_X + 6 + controls.palette_buttons[0][0].left;
+			pass_point.y = RIGHT_AREA_UL_Y + 6 + controls.terrain_rects[255].bottom + controls.palette_buttons[0][0].top;
 			handle_action(pass_point,event);
 			break;
 		case 'R':
-			pass_point.x = RIGHT_AREA_UL_X + 6 + palette_buttons[7][0].left;
-			pass_point.y = RIGHT_AREA_UL_Y + 6 + controls.terrain_rects[255].bottom + palette_buttons[7][0].top;
+			pass_point.x = RIGHT_AREA_UL_X + 6 + controls.palette_buttons[7][0].left;
+			pass_point.y = RIGHT_AREA_UL_Y + 6 + controls.terrain_rects[255].bottom + controls.palette_buttons[7][0].top;
 			handle_action(pass_point,event);
 			break;
 		case '1': case '2': case '3': case '4': case '5': case '6':
-			pass_point.x = RIGHT_AREA_UL_X + 6 + palette_buttons[chr - 49][4].left;
-			pass_point.y = RIGHT_AREA_UL_Y + 6 + controls.terrain_rects[255].bottom + palette_buttons[chr - 48][4].top;
+			pass_point.x = RIGHT_AREA_UL_X + 6 + controls.palette_buttons[chr - 49][4].left;
+			pass_point.y = RIGHT_AREA_UL_Y + 6 + controls.terrain_rects[255].bottom + controls.palette_buttons[chr - 48][4].top;
 			handle_action(pass_point,event);
 			break;
 		case '0':
-			pass_point.x = RIGHT_AREA_UL_X + 6 + palette_buttons[7][4].left;
-			pass_point.y = RIGHT_AREA_UL_Y + 6 + controls.terrain_rects[255].bottom + palette_buttons[7][4].top;
+			pass_point.x = RIGHT_AREA_UL_X + 6 + controls.palette_buttons[7][4].left;
+			pass_point.y = RIGHT_AREA_UL_Y + 6 + controls.terrain_rects[255].bottom + controls.palette_buttons[7][4].top;
 			handle_action(pass_point,event);
 			break;
 		case 'I':
@@ -2199,40 +2178,8 @@ void town_entry(location spot_hit) {
 	}
 }
 
-static std::string version() {
-	static std::string version;
-	if(version.empty()) {
-		std::ostringstream sout;
-		sout << "Version " << oboeVersionString();
-#if defined(GIT_REVISION) && defined(GIT_TAG_REVISION)
-		if(strcmp(GIT_REVISION, GIT_TAG_REVISION) != 0) {
-			sout << " [" << GIT_REVISION << "]";
-		}
-#endif
-		version = sout.str();
-	}
-	return version;
-}
-
-// is slot >= 0, force that slot
-// if -1, use 1st free slot
 void set_up_start_screen() {
-	auto &controls=scen_controls;
-	controls.reset_left_buttons();
-	controls.reset_right_bar_and_buttons();
-	controls.set_left_button(0,LB_TITLE,LB_NO_ACTION,"Blades of Exile");
-	controls.set_left_button(1,LB_TITLE,LB_NO_ACTION,"Scenario Editor");
-	controls.set_left_button(3,LB_TEXT,LB_NEW_SCEN,"Make New Scenario");
-	controls.set_left_button(4,LB_TEXT,LB_LOAD_SCEN,"Load Scenario");
-	controls.set_left_button(7,LB_TEXT,LB_NO_ACTION,"To find out how to use the");
-	controls.set_left_button(8,LB_TEXT,LB_NO_ACTION,"editor, select Getting Started ");
-	controls.set_left_button(9,LB_TEXT,LB_NO_ACTION,"from the Help menu.");
-	controls.set_left_button(NLS - 6,LB_TEXT,LB_NO_ACTION,"Be sure to read the file Blades");
-	controls.set_left_button(NLS - 5,LB_TEXT,LB_NO_ACTION,"of Exile License. Using this");
-	controls.set_left_button(NLS - 4,LB_TEXT,LB_NO_ACTION,"program implies that you agree ");
-	controls.set_left_button(NLS - 3,LB_TEXT,LB_NO_ACTION,"with the terms of the license.");
-	controls.set_left_button(NLS - 2,LB_TEXT,LB_NO_ACTION,"Copyright 1997, All rights reserved.");
-	controls.set_left_button(NLS - 1,LB_TEXT,LB_NO_ACTION,version());
+	scen_controls.set_startup_screen();
 	change_made = false;
 	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
 }
@@ -2240,38 +2187,8 @@ void set_up_start_screen() {
 void set_up_main_screen() {
 	std::ostringstream strb;
 	
-	auto &controls=scen_controls;
-	controls.reset_left_buttons();
-	controls.reset_right_bar_and_buttons();
-	controls.set_left_button(-1,LB_TITLE,LB_NO_ACTION,"Blades of Exile");
-	controls.set_left_button(-1,LB_TEXT,LB_NO_ACTION,"Scenario Options");
-	controls.set_left_button(-1,LB_TEXT,LB_EDIT_TER,"Edit Terrain Types");
-	controls.set_left_button(-1,LB_TEXT,LB_EDIT_MONST,"Edit Monsters");
-	controls.set_left_button(-1,LB_TEXT,LB_EDIT_ITEM,"Edit Items");
-	controls.set_left_button(-1,LB_TEXT,LB_NEW_TOWN,"Create New Town");
-	controls.set_left_button(-1,LB_TEXT,LB_EDIT_TEXT,"Edit Scenario Text");
-	controls.set_left_button(-1,LB_TEXT,LB_EDIT_SPECITEM,"Edit Special Items");
-	controls.set_left_button(-1,LB_TEXT,LB_EDIT_QUEST,"Edit Quests");
-	controls.set_left_button(-1,LB_TEXT,LB_EDIT_SHOPS,"Edit Shops");
-	controls.set_left_button(-1,LB_TEXT,LB_NO_ACTION,"");
-	controls.set_left_button(-1,LB_TEXT,LB_NO_ACTION,"Outdoors Options");
-	strb << "  Section x = " << cur_out.x << ", y = " << cur_out.y;
-	controls.set_left_button(-1,LB_TEXT,LB_NO_ACTION, strb.str());
-	controls.set_left_button(-1,LB_TEXT,LB_LOAD_OUT,"Load New Section");
-	controls.set_left_button(-1,LB_TEXT,LB_EDIT_OUT,"Edit Outdoor Terrain");
-	controls.set_left_button(-1,LB_TEXT,LB_NO_ACTION,"",0);
-	controls.set_left_button(-1,LB_TEXT,LB_NO_ACTION,"Town/Dungeon Options");
-	strb.str("");
-	strb << "  Town " << cur_town << ": " << town->name;
-	controls.set_left_button(-1,LB_TEXT,LB_NO_ACTION, strb.str());
-	controls.set_left_button(-1,LB_TEXT,LB_LOAD_TOWN,"Load Another Town");
-	controls.set_left_button(-1,LB_TEXT,LB_EDIT_TOWN,"Edit Town Terrain");
-	controls.set_left_button(-1,LB_TEXT,LB_EDIT_TALK,"Edit Town Dialogue");
-	controls.set_left_button(NLS - 2,LB_TEXT,LB_NO_ACTION,"Copyright 1997, All rights reserved.");
-	controls.set_left_button(NLS - 1,LB_TEXT,LB_NO_ACTION,version());
+	scen_controls.set_main_screen(cur_out, cur_town, town->name);
 	overall_mode = MODE_MAIN_SCREEN;
-	controls.show_right_bar();
-	controls.show_palette_bar(false);
 	shut_down_menus(4);
 	shut_down_menus(3);
 	redraw_screen();
@@ -2358,12 +2275,7 @@ void start_monster_editing(bool just_redo_text) {
 	auto &controls=scen_controls;
 	if(!just_redo_text) {
 		overall_mode = MODE_MAIN_SCREEN;
-		controls.show_right_bar();
-		controls.show_palette_bar(false);
-		
-		controls.right_bar->setPosition(0);;
-		controls.reset_right_bar_and_buttons();
-		controls.right_bar->setMaximum(num_options - 1 - NRSONPAGE);
+		controls.reset_right(num_options - 1 - NRSONPAGE);
 	}
 	for(short i = 1; i < num_options; i++) {
 		std::string title;
@@ -2389,12 +2301,7 @@ void start_item_editing(bool just_redo_text) {
 		if(overall_mode == MODE_EDIT_TYPES)
 			draw_full = true;
 		overall_mode = MODE_MAIN_SCREEN;
-		controls.show_right_bar();
-		controls.show_palette_bar(false);
-		
-		controls.right_bar->setPosition(0);;
-		controls.reset_right_bar_and_buttons();
-		controls.right_bar->setMaximum(num_options - NRSONPAGE);
+		controls.reset_right(num_options - NRSONPAGE);
 	}
 	for(short i = 0; i < num_options; i++) {
 		std::string title;
@@ -2416,12 +2323,7 @@ void start_special_item_editing(bool just_redo_text) {
 		if(overall_mode < MODE_MAIN_SCREEN)
 			set_up_main_screen();
 		overall_mode = MODE_MAIN_SCREEN;
-		controls.show_right_bar();
-		controls.show_palette_bar(false);
-		
-		controls.right_bar->setPosition(0);;
-		controls.reset_right_bar_and_buttons();
-		controls.right_bar->setMaximum(num_options - NRSONPAGE);
+		controls.reset_right(num_options - NRSONPAGE);
 	}
 	for(short i = 0; i < num_options; i++) {
 		std::string title;
@@ -2443,11 +2345,7 @@ void start_quest_editing(bool just_redo_text) {
 		if(overall_mode < MODE_MAIN_SCREEN)
 			set_up_main_screen();
 		overall_mode = MODE_MAIN_SCREEN;
-		controls.show_right_bar();
-		controls.show_palette_bar(false);
-		controls.right_bar->setPosition(0);;
-		controls.reset_right_bar_and_buttons();
-		controls.right_bar->setMaximum(num_options - NRSONPAGE);
+		controls.reset_right(num_options - NRSONPAGE);
 	}
 	for(int i = 0; i < num_options; i++) {
 		std::string title;
@@ -2469,11 +2367,7 @@ void start_shops_editing(bool just_redo_text) {
 		if(overall_mode < MODE_MAIN_SCREEN)
 			set_up_main_screen();
 		overall_mode = MODE_MAIN_SCREEN;
-		controls.show_right_bar();
-		controls.show_palette_bar(false);
-		controls.right_bar->setPosition(0);;
-		controls.reset_right_bar_and_buttons();
-		controls.right_bar->setMaximum(num_options - NRSONPAGE);
+		controls.reset_right(num_options - NRSONPAGE);
 	}
 	for(int i = 0; i < num_options; i++) {
 		std::string title;
@@ -2500,11 +2394,7 @@ void start_string_editing(eStrMode mode,short just_redo_text) {
 		if(overall_mode < MODE_MAIN_SCREEN)
 			set_up_main_screen();
 		overall_mode = MODE_MAIN_SCREEN;
-		controls.show_right_bar();
-		controls.show_palette_bar(false);
-		
-		controls.reset_right_bar_and_buttons();
-		controls.right_bar->setMaximum(num_strs(mode) + 1 - NRSONPAGE);
+		controls.reset_right(num_strs(mode) + 1 - NRSONPAGE);
 	}
 	size_t num_strs = ::num_strs(mode);
 	for(size_t i = 0; i < num_strs; i++) {
@@ -2577,11 +2467,7 @@ void start_special_editing(short mode,short just_redo_text) {
 		if(overall_mode < MODE_MAIN_SCREEN)
 			set_up_main_screen();
 		overall_mode = MODE_MAIN_SCREEN;
-		controls.show_right_bar();
-		controls.show_palette_bar(false);
-		
-		controls.reset_right_bar_and_buttons();
-		controls.right_bar->setMaximum(num_specs + 1 - NRSONPAGE);
+		controls.reset_right(num_specs + 1 - NRSONPAGE);
 	}
 	
 	for(size_t i = 0; i < num_specs; i++) {

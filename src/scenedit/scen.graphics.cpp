@@ -51,11 +51,6 @@ cCustomGraphics spec_scen_g;
 const sf::Color hilite_colour = {0xff, 0x00, 0x80, 0x40};
 
 // begin new stuff
-rectangle base_small_button_from = {120,0,127,7};
-extern rectangle palette_buttons[10][6];
-extern ePalBtn town_buttons[6][10], out_buttons[6][10];
-static rectangle palette_button_base = {0,0,18,26};
-rectangle terrain_buttons_rect = {0,0,410,294};
 std::string current_string[2];
 
 static short get_small_icon(ter_num_t ter){
@@ -290,26 +285,6 @@ static std::vector<short> get_small_icons(location at, ter_num_t t_to_draw) {
 	return icons;
 }
 
-void Set_up_win() {
-	terrain_buttons_rect.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y);
-	palette_button_base.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y);
-
-	for(short i = 0; i < 10; i++)
-		for(short j = 0; j < 6; j++) {
-			palette_buttons[i][j] = palette_button_base;
-			palette_buttons[i][j].offset(i * 25, j * 17);
-		}
-	for(short i = 0; i < 10; i++)
-		for(short j = /*2*/0; j < 6; j++)
-			palette_buttons[i][j].offset(0, 3);
-	for(short i = 0; i < 10; i++)
-		for(short j = /*3*/0; j < 6; j++)
-			palette_buttons[i][j].offset(0, 3);
-	for(short i = 0; i < 10; i++)
-		for(short j = /*4*/0; j < 6; j++)
-			palette_buttons[i][j].offset(0, 3);
-}
-
 void run_startup_g() {
 	sf::Event event;
 	auto & pict_to_draw = *ResMgr::textures.get("edsplash", true);
@@ -407,9 +382,8 @@ void set_up_terrain_buttons(bool reset) {
 	if(draw_mode == DRAW_MONST) first++, max++;
 	int end = min(first + 256, max);
  	
-	rectangle palette_from,palette_to = palette_button_base;
 	short pic,small_i;
-	rectangle ter_from,ter_from_base = {0,0,36,28}, ter_plus_from = {148,235,164,251};
+	rectangle ter_from;
 	rectangle tiny_from,tiny_to;
 	
 	// first make terrain buttons
@@ -420,6 +394,7 @@ void set_up_terrain_buttons(bool reset) {
 		switch(draw_mode){
 			case DRAW_TERRAIN: {
 				if(i == scenario.ter_types.size()) {
+					rectangle ter_plus_from = {148,235,164,251};
 					rect_draw_some_item(editor_mixed, ter_plus_from, mainPtr, draw_rect);
 					break;
 				}
@@ -427,7 +402,7 @@ void set_up_terrain_buttons(bool reset) {
 				if (cPict::get_picture(scenario.get_terrain(i).get_picture_num(), source_gworld, ter_from))
 					rect_draw_some_item(source_gworld,ter_from, mainPtr, draw_rect);
 				small_i = get_small_icon(i);
-				tiny_from = base_small_button_from;
+				tiny_from = controls.terrain_base_small_button_from;
 				tiny_from.offset(7 * (small_i % 30),7 * (small_i / 30));
 				tiny_to = draw_rect;
 				tiny_to.top = tiny_to.bottom - 7;
@@ -547,23 +522,8 @@ void set_up_terrain_buttons(bool reset) {
 		}
 	}
 	
-	if(overall_mode < MODE_MAIN_SCREEN) {
-		palette_to.offset(5,controls.terrain_rects[255].bottom + 14);
-		for(short i = 0; i < 10; i++){
-			for(short j = 0; j < 6; j++){
-				auto cur_palette_buttons = editing_town ? town_buttons : out_buttons;
-				if(cur_palette_buttons[j][i] != PAL_BLANK) {
-					palette_from = palette_button_base;
-					palette_from.offset(-RIGHT_AREA_UL_X, -RIGHT_AREA_UL_Y);
-					int n = cur_palette_buttons[j][i];
-					palette_from.offset((n%10) * 25, (n/10) * 17);
-					rect_draw_some_item(editor_mixed, palette_from, mainPtr, palette_to, sf::BlendAlpha);
-				}
-				palette_to.offset(0,17);
-			}
-			palette_to.offset(25,-6*17);
-		}
-	}
+	if(overall_mode < MODE_MAIN_SCREEN)
+		controls.draw_palette(editing_town);
 }
 
 void draw_terrain(){
@@ -1085,7 +1045,7 @@ static void place_selected_terrain(ter_num_t ter, rectangle draw_rect) {
 	rectangle tiny_to = draw_rect;
 	tiny_to.top = tiny_to.bottom - 7;
 	tiny_to.left = tiny_to.right - 7;
-	rectangle tiny_from = base_small_button_from;
+	rectangle tiny_from = scen_controls.terrain_base_small_button_from;
 	tiny_from.offset(7 * (small_i % 30),7 * (small_i / 30));
 	if(small_i >= 0 && small_i < 255)
 		rect_draw_some_item(*ResMgr::textures.get("edbuttons"),tiny_from,mainPtr,tiny_to);
@@ -1093,20 +1053,20 @@ static void place_selected_terrain(ter_num_t ter, rectangle draw_rect) {
 
 void place_location() {
 	std::ostringstream sout;
+	auto &controls=scen_controls;
 	rectangle draw_rect,source_rect;
 	rectangle text_rect = {0,0,12,100};
 	text_rect.offset(RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
 	short picture_wanted;
-	tileImage(mainPtr, terrain_buttons_rect, bg[17]);
-	frame_rect(mainPtr, terrain_buttons_rect, sf::Color::Black);
+	tileImage(mainPtr, controls.terrain_buttons_rect, bg[17]);
+	frame_rect(mainPtr, controls.terrain_buttons_rect, sf::Color::Black);
 	location mouse = translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr));
 	
-	auto &controls=scen_controls;
 	draw_rect = text_rect;
 	draw_rect.offset({5, controls.terrain_rects[255].top + 18});
 	if(overall_mode < MODE_MAIN_SCREEN) {
 		// std::cout << "Mouse: " << mouse << " Buttons: " << terrain_buttons_rect << " Terrain: " << terrain_rect << std::endl;
-		if(mouse.in(terrain_buttons_rect)) {
+		if(mouse.in(controls.terrain_buttons_rect)) {
 			location rel_mouse = mouse;
 			rel_mouse.x -= RIGHT_AREA_UL_X;
 			rel_mouse.y -= RIGHT_AREA_UL_Y;
@@ -1165,8 +1125,8 @@ void place_location() {
 		win_draw_string(mainPtr, draw_rect, current_string[1], eTextMode::LEFT_TOP, style);
 	}
 	
-	draw_rect.top = palette_buttons[0][0].top + controls.terrain_rects[255].bottom + 5;
-	draw_rect.left = palette_buttons[9][0].right + 10; // + 17;
+	draw_rect.top = controls.palette_buttons[0][0].top + controls.terrain_rects[255].bottom + 5;
+	draw_rect.left = controls.palette_buttons[9][0].right + 10; // + 17;
 	draw_rect.bottom = draw_rect.top + 36;
 	draw_rect.right = draw_rect.left + 28;
 	

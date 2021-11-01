@@ -5,7 +5,6 @@
 #include "fields.hpp"
 #include "location.hpp"
 
-void Set_up_win ();
 void run_startup_g();
 void load_graphics();
 void draw_main_screen();

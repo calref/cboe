@@ -30,7 +30,6 @@ struct cCustomGraphics {
 	bool is_old = false;
 	void clear() {
 		sheets.clear();
-		party_sheet=Texture();
 	}
 	explicit operator bool() {
 		return !sheets.empty() && bool(sheets[0]);

@@ -191,7 +191,6 @@ void init_scened(int argc, char* argv[]) {
 	
 	scen_controls.init();
 	
-	Set_up_win();
 	load_graphics();
 	cDialog::init();
 	if(get_bool_pref("ShowStartupLogo", true))
@@ -263,11 +262,8 @@ void handle_events() {
 }
 
 void handle_one_event(const sf::Event& event) {
-	
-	// Check if any of the event listeners want this event.
-	for (auto& listener : scen_controls.event_listeners) {
-		if(listener.second->handle_event(event)) return;
-	}
+	if (scen_controls.handle_one_event(event))
+		return;
 	
 	switch(event.type) {
 		case sf::Event::KeyPressed:
