@@ -68,7 +68,7 @@ void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlot
 		Texture sheet0;
 		std::tie(sheet0,std::ignore) = find_graphic(dest,true);
 		float scale[2]={float(sheet0->getSize().x)/sheet0.dimension.x, float(sheet0->getSize().y)/sheet0.dimension.y};
-		
+		// create an empty sheet 10 columns, 5 rows
 		sf::Image empty;
 		empty.create(int(280*scale[0]), int(180*scale[1]), sf::Color::Transparent);
 		sf::Texture sheet;
@@ -78,8 +78,9 @@ void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlot
 		party_sheet.dimension={280,180};
 		numSheets = 1;
 	}
-	size_t havePics = count();
+	size_t havePics = count(true);
 	if(havePics < dest + numSlots) {
+		// TODO: had a limit of columns here
 		int addRows = 1;
 		while(havePics + 10 * addRows < dest + numSlots)
 			addRows++;
@@ -89,7 +90,7 @@ void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlot
 		temp.clear(sf::Color::Transparent);
 		rect_draw_some_item(party_sheet, rectangle(party_sheet), temp, rectangle(*party_sheet));
 		unsigned oldY=party_sheet.dimension.y;
-		party_sheet=Texture(temp.getTexture());
+		party_sheet=Texture(temp.getTexture()); // checkme do we need to add a display?
 		party_sheet.dimension={280,oldY + 36 * addRows};
 	}
 	Texture from_sheet;
@@ -101,7 +102,7 @@ void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlot
 		std::tie(from_sheet,from_rect) = find_graphic(src + i);
 		std::tie(to_sheet,to_rect) = find_graphic(dest + i, true);
 		if(to_sheet.texture != last_src) {
-			if(last_src) *last_src=sf::Texture(temp.getTexture()); // save the old picture
+			if(last_src) *last_src=sf::Texture(temp.getTexture()); // save the old picture, checkme do we need to add a display?
 			last_src = std::const_pointer_cast<sf::Texture>(to_sheet.texture);
 			temp.create(to_sheet->getSize().x, to_sheet->getSize().y); // recreate a new picture from the new sheet
 			rect_draw_some_item(to_sheet, rectangle(to_sheet), temp, rectangle(*to_sheet.texture));
@@ -109,7 +110,13 @@ void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlot
 		rect_draw_some_item(from_sheet, from_rect, temp,
 							to_rect.rescale(to_sheet.dimension, to_sheet->getSize()));
 	}
-	if (last_src) *last_src=sf::Texture(temp.getTexture());
+	if (last_src) {
+		// checkme: this seems to resolve the upside down problem
+		//   at least if we begin with no party_sheet, unsure, what happens
+		//   if party_sheet already exists
+		temp.display();
+		*last_src=sf::Texture(temp.getTexture());
+	}
 }
 
 extern std::string scenario_temp_dir_name;
