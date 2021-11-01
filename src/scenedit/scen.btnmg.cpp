@@ -23,7 +23,23 @@ cScenButtonsBars scen_controls;
 
 extern sf::RenderWindow mainPtr;
 extern cDrawableManager drawable_mgr;
-extern rectangle terrain_buttons_rect;
+
+ePalBtn cScenButtonsBars::town_buttons[6][10] = {
+	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_DROPPER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET},
+	{PAL_ENTER_N, PAL_ENTER_W, PAL_ENTER_S, PAL_ENTER_E, PAL_EDIT_SIGN, PAL_TEXT_AREA, PAL_WANDER, PAL_CHANGE, PAL_ZOOM, PAL_TERRAIN},
+	{PAL_SPEC, PAL_COPY_SPEC, PAL_PASTE_SPEC, PAL_ERASE_SPEC, PAL_EDIT_SPEC, PAL_SPEC_SPOT, PAL_EDIT_ITEM, PAL_SAME_ITEM, PAL_ERASE_ITEM, PAL_ITEM},
+	{PAL_BOAT, PAL_HORSE, PAL_ROAD, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_EDIT_MONST, PAL_SAME_MONST, PAL_ERASE_MONST, PAL_MONST},
+	{PAL_WEB, PAL_CRATE, PAL_BARREL, PAL_BLOCK, PAL_FIRE_BARR, PAL_FORCE_BARR, PAL_QUICKFIRE, PAL_FORCECAGE, PAL_ERASE_FIELD, PAL_BLANK},
+	{PAL_SFX_SB, PAL_SFX_MB, PAL_SFX_LB, PAL_SFX_SS, PAL_SFX_LS, PAL_SFX_ASH, PAL_SFX_BONE, PAL_SFX_ROCK, PAL_BLANK, PAL_BLANK},
+};
+ePalBtn cScenButtonsBars::out_buttons[6][10] = {
+	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_DROPPER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET},
+	{PAL_EDIT_TOWN, PAL_ERASE_TOWN, PAL_BLANK, PAL_BLANK, PAL_EDIT_SIGN, PAL_TEXT_AREA, PAL_WANDER, PAL_CHANGE, PAL_ZOOM, PAL_BLANK},
+	{PAL_SPEC, PAL_COPY_SPEC, PAL_PASTE_SPEC, PAL_ERASE_SPEC, PAL_EDIT_SPEC, PAL_SPEC_SPOT, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
+	{PAL_BOAT, PAL_HORSE, PAL_ROAD, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
+	{PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
+	{PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
+};
 
 void cScenButtonsBars::init()
 {
@@ -53,6 +69,9 @@ void cScenButtonsBars::init()
 	// terrains
 	terrain_rectangle = {0,0,340,272};
 	terrain_rectangle.offset(TER_RECT_UL_X, TER_RECT_UL_Y);
+	terrain_buttons_rect = {0,0,410,294};
+	terrain_buttons_rect.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y);
+
 	for(auto &rect : terrain_border_rects)
 		rect = scen_controls.terrain_rectangle;
 	terrain_border_rects[0].bottom = terrain_border_rects[0].top + 8;
@@ -67,6 +86,25 @@ void cScenButtonsBars::init()
 			3 + (i / 16) * (terrain_rect_base.bottom + 1));
 	}
 
+	// palette buttons
+	palette_button_base = {0,0,18,26};
+	palette_button_base.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y);
+
+	for(short i = 0; i < 10; i++)
+		for(short j = 0; j < 6; j++) {
+			palette_buttons[i][j] = palette_button_base;
+			palette_buttons[i][j].offset(i * 25, j * 17);
+		}
+	for(short i = 0; i < 10; i++)
+		for(short j = /*2*/0; j < 6; j++)
+			palette_buttons[i][j].offset(0, 3);
+	for(short i = 0; i < 10; i++)
+		for(short j = /*3*/0; j < 6; j++)
+			palette_buttons[i][j].offset(0, 3);
+	for(short i = 0; i < 10; i++)
+		for(short j = /*4*/0; j < 6; j++)
+			palette_buttons[i][j].offset(0, 3);
+
 	// scrollbars
 	rectangle right_bar_rect;
 	right_bar_rect.top = RIGHT_AREA_UL_Y - 1;
@@ -77,10 +115,97 @@ void cScenButtonsBars::init()
 	right_bar->setPosition(0);
 	
 	rectangle pal_bar_rect = terrain_buttons_rect;
-	pal_bar_rect.offset(RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
 	pal_bar_rect.left = pal_bar_rect.right - 16;
 	pal_bar_rect.height() = 17 * 16;
 	init_bar(palette_bar, "pal_sbar", pal_bar_rect, { 5, 287, 279, 581 }, 16);
+}
+
+static std::string version() {
+	static std::string version;
+	if(version.empty()) {
+		std::ostringstream sout;
+		sout << "Version " << oboeVersionString();
+#if defined(GIT_REVISION) && defined(GIT_TAG_REVISION)
+		if(strcmp(GIT_REVISION, GIT_TAG_REVISION) != 0) {
+			sout << " [" << GIT_REVISION << "]";
+		}
+#endif
+		version = sout.str();
+	}
+	return version;
+}
+
+void cScenButtonsBars::set_startup_screen()
+{
+	reset_left_buttons();
+	reset_right_bar_and_buttons();
+	set_left_button(0,LB_TITLE,LB_NO_ACTION,"Blades of Exile");
+	set_left_button(1,LB_TITLE,LB_NO_ACTION,"Scenario Editor");
+	set_left_button(3,LB_TEXT,LB_NEW_SCEN,"Make New Scenario");
+	set_left_button(4,LB_TEXT,LB_LOAD_SCEN,"Load Scenario");
+	set_left_button(7,LB_TEXT,LB_NO_ACTION,"To find out how to use the");
+	set_left_button(8,LB_TEXT,LB_NO_ACTION,"editor, select Getting Started ");
+	set_left_button(9,LB_TEXT,LB_NO_ACTION,"from the Help menu.");
+	set_left_button(NLS - 6,LB_TEXT,LB_NO_ACTION,"Be sure to read the file Blades");
+	set_left_button(NLS - 5,LB_TEXT,LB_NO_ACTION,"of Exile License. Using this");
+	set_left_button(NLS - 4,LB_TEXT,LB_NO_ACTION,"program implies that you agree ");
+	set_left_button(NLS - 3,LB_TEXT,LB_NO_ACTION,"with the terms of the license.");
+	set_left_button(NLS - 2,LB_TEXT,LB_NO_ACTION,"Copyright 1997, All rights reserved.");
+	set_left_button(NLS - 1,LB_TEXT,LB_NO_ACTION,version());
+}
+
+void cScenButtonsBars::set_main_screen(location const &cur_out, int cur_town, std::string const &town_name)
+{
+	reset_left_buttons();
+	reset_right_bar_and_buttons();
+	set_left_button(-1,LB_TITLE,LB_NO_ACTION,"Blades of Exile");
+	set_left_button(-1,LB_TEXT,LB_NO_ACTION,"Scenario Options");
+	set_left_button(-1,LB_TEXT,LB_EDIT_TER,"Edit Terrain Types");
+	set_left_button(-1,LB_TEXT,LB_EDIT_MONST,"Edit Monsters");
+	set_left_button(-1,LB_TEXT,LB_EDIT_ITEM,"Edit Items");
+	set_left_button(-1,LB_TEXT,LB_NEW_TOWN,"Create New Town");
+	set_left_button(-1,LB_TEXT,LB_EDIT_TEXT,"Edit Scenario Text");
+	set_left_button(-1,LB_TEXT,LB_EDIT_SPECITEM,"Edit Special Items");
+	set_left_button(-1,LB_TEXT,LB_EDIT_QUEST,"Edit Quests");
+	set_left_button(-1,LB_TEXT,LB_EDIT_SHOPS,"Edit Shops");
+	set_left_button(-1,LB_TEXT,LB_NO_ACTION,"");
+	set_left_button(-1,LB_TEXT,LB_NO_ACTION,"Outdoors Options");
+	std::ostringstream strb;
+
+	strb << "  Section x = " << cur_out.x << ", y = " << cur_out.y;
+	set_left_button(-1,LB_TEXT,LB_NO_ACTION, strb.str());
+	set_left_button(-1,LB_TEXT,LB_LOAD_OUT,"Load New Section");
+	set_left_button(-1,LB_TEXT,LB_EDIT_OUT,"Edit Outdoor Terrain");
+	set_left_button(-1,LB_TEXT,LB_NO_ACTION,"",0);
+	set_left_button(-1,LB_TEXT,LB_NO_ACTION,"Town/Dungeon Options");
+	strb.str("");
+	strb << "  Town " << cur_town << ": " << town_name;
+	set_left_button(-1,LB_TEXT,LB_NO_ACTION, strb.str());
+	set_left_button(-1,LB_TEXT,LB_LOAD_TOWN,"Load Another Town");
+	set_left_button(-1,LB_TEXT,LB_EDIT_TOWN,"Edit Town Terrain");
+	set_left_button(-1,LB_TEXT,LB_EDIT_TALK,"Edit Town Dialogue");
+	set_left_button(NLS - 2,LB_TEXT,LB_NO_ACTION,"Copyright 1997, All rights reserved.");
+	set_left_button(NLS - 1,LB_TEXT,LB_NO_ACTION,version());
+	show_right_bar();
+	show_palette_bar(false);
+}
+
+void cScenButtonsBars::reset_right(long newMaximum)
+{
+	show_right_bar();
+	show_palette_bar(false);
+	
+	right_bar->setPosition(0);;
+	reset_right_bar_and_buttons();
+	right_bar->setMaximum(newMaximum);
+}
+
+bool cScenButtonsBars::handle_one_event(const sf::Event& event)
+{
+	for (auto& listener : scen_controls.event_listeners) {
+		if(listener.second->handle_event(event)) return true;
+	}
+	return false;
 }
 
 void cScenButtonsBars::draw_left_buttons() {
@@ -189,6 +314,27 @@ void cScenButtonsBars::reset_right_bar_and_buttons() {
 	draw_right_buttons();
 	right_bar->setMaximum(0);
 	right_bar->setPosition(0);
+}
+
+void cScenButtonsBars::draw_palette(bool editing_town) const
+{
+	rectangle palette_to = palette_button_base;
+	palette_to.offset(5,terrain_rects[255].bottom + 14);
+	auto const &editor_mixed = *ResMgr::textures.get("edbuttons");
+	auto const &cur_palette_buttons = editing_town ? town_buttons : out_buttons;
+	for(short i = 0; i < 10; i++){
+		for(short j = 0; j < 6; j++){
+			if(cur_palette_buttons[j][i] != PAL_BLANK) {
+				rectangle palette_from = palette_button_base;
+				palette_from.offset(-RIGHT_AREA_UL_X, -RIGHT_AREA_UL_Y);
+				int n = cur_palette_buttons[j][i];
+				palette_from.offset((n%10) * 25, (n/10) * 17);
+				rect_draw_some_item(editor_mixed, palette_from, mainPtr, palette_to, sf::BlendAlpha);
+			}
+			palette_to.offset(0,17);
+		}
+		palette_to.offset(25,-6*17);
+	}
 }
 
 void cScenButtonsBars::init_bar(std::shared_ptr<cScrollbar>& sbar, const std::string& name, rectangle const &rect, rectangle const &events_rect, int pgSz) {

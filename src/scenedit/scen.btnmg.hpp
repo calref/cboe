@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "scen.global.hpp"
 #include "scrollbar.hpp"
 
 enum eLBAction {
@@ -102,21 +103,42 @@ public:
 	void draw_right_slot(short which,short mode) const ;
 	void set_right_button(short slot, eRBAction action, int i, std::string const &label, bool do_draw = false);
 	void reset_right_bar_and_buttons();
+	void reset_right(long newMaximum);
+	
+	void draw_palette(bool editing_town) const;
+	
+	void set_startup_screen();
+	void set_main_screen(location const &cur_out, int cur_town, std::string const &town_name);
+	bool handle_one_event(const sf::Event& event);
+
 protected:
 	void init_bar(std::shared_ptr<cScrollbar>& sbar, const std::string& name, rectangle const &rect, rectangle const &events_rect, int pgSz);
 
 public:
 	std::array<lb_t,NLS> left_buttons;
 	std::array<rectangle[2],NLS> left_buttons_rectangles;  // 0 - whole, 1 - blue button
-	std::vector<rb_t> right_buttons;
-	std::array<rectangle,NRSONPAGE> right_buttons_rectangles;
-
 	rectangle terrain_rectangle; // the terrain main rectangle
 	rectangle terrain_border_rects[4]; // border rects order: top, left, bottom, right
 	rectangle terrain_rects[256];
-	
-	std::shared_ptr<cScrollbar> right_bar, palette_bar;
+	rectangle terrain_buttons_rect;
+	rectangle const terrain_base_small_button_from = {120,0,127,7};
 
+	// right: one big part
+	std::vector<rb_t> right_buttons;
+	std::array<rectangle,NRSONPAGE> right_buttons_rectangles;
+	std::shared_ptr<cScrollbar> right_bar;
+	
+	// right: two part
+	// ---- top -------
+	std::shared_ptr<cScrollbar> palette_bar; // big and half size right scrollbar
+
+	// ---- bottom -------
+	rectangle palette_buttons[10][6];
+	static ePalBtn out_buttons[6][10], town_buttons[6][10];
+protected:
+	rectangle palette_button_base;
+
+protected:
 	std::unordered_map<std::string, std::shared_ptr<iEventListener>> event_listeners;
 };
 
