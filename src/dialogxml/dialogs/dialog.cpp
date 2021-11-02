@@ -31,7 +31,6 @@ using namespace ticpp;
 // TODO: Would be nice if I could avoid depending on mainPtr
 extern sf::RenderWindow mainPtr;
 
-extern sf::Texture bg_gworld;
 const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
 short cDialog::defaultBackground = cDialog::BG_DARK;
 cDialog* cDialog::topWindow = nullptr;

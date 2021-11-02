@@ -15,8 +15,6 @@
 
 #include "res_image.hpp"
 
-extern sf::Texture bg_gworld;
-
 cButton::cButton(sf::RenderWindow& parent) :
 	cControl(CTRL_BTN,parent),
 	wrapLabel(false),

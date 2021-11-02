@@ -183,6 +183,7 @@ void draw(bool need_refresh) {
 	
 	const char* title_string = "Your map:";
 	bool canMap = true;
+	
 	static rectangle last_redraw_rect;
 	if (redraw_rect!=last_redraw_rect) {
 		need_refresh=true;
@@ -196,6 +197,11 @@ void draw(bool need_refresh) {
 		canMap = false;
 	}
 	else if(need_refresh) {
+		// CHECKME: unsure, but on osx, if mainPtr.setActive() is not called,
+		// the following code does not update the gworld texture if we are
+		// called just after closing a dialog
+		mainPtr.setActive();
+		
 		rectangle map_world_rect = rectangle(gworld);
 		gworld.setActive();
 		
