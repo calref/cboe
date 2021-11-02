@@ -20,7 +20,6 @@
 #include "dialog.hpp"
 #include "res_image.hpp"
 
-extern sf::Texture bg_gworld;
 extern cCustomGraphics spec_scen_g;
 const pic_num_t cPict::BLANK = -1;
 
