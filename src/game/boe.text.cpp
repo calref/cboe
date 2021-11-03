@@ -1048,7 +1048,7 @@ void print_buf () {
 	long start_print_point;
 	rectangle store_text_rect,dest_rect,erase_rect = {2,2,136,255};
 	
-	text_area_gworld.setActive();
+	text_area_gworld.setActive(false);
 	
 	// First clean up gworld with pretty patterns
 	tileImage(text_area_gworld, erase_rect,bg[6]);
@@ -1077,6 +1077,7 @@ void print_buf () {
 	}
 	
 	text_area_gworld.display();
+	text_area_gworld.setActive();
 }
 
 void restart_printing() {
