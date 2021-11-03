@@ -208,60 +208,61 @@ cTown*const cCurTown::record() const {
 
 bool cCurTown::is_explored(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & SPECIAL_EXPLORED;
+	return is_explored(fields[x][y]);
 }
 
 bool cCurTown::is_force_wall(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & WALL_FORCE;
+	return is_force_wall(fields[x][y]);
 }
 
 bool cCurTown::is_fire_wall(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & WALL_FIRE;
+	return is_fire_wall(fields[x][y]);
 }
 
 bool cCurTown::is_antimagic(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & FIELD_ANTIMAGIC;
+	return is_antimagic(fields[x][y]);
 }
 
 bool cCurTown::is_scloud(short x, short y) const{ // stinking cloud
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & CLOUD_STINK;
+	return is_scloud(fields[x][y]);
 }
 
 bool cCurTown::is_ice_wall(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & WALL_ICE;
+	return is_ice_wall(fields[x][y]);
 }
 
 bool cCurTown::is_blade_wall(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & WALL_BLADES;
+	return is_blade_wall(fields[x][y]);
 }
 
 bool cCurTown::is_sleep_cloud(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & CLOUD_SLEEP;
+	return is_sleep_cloud(fields[x][y]);
 }
 
 bool cCurTown::is_block(short x, short y) const{ // currently unused
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & OBJECT_BLOCK;
+	return is_block(fields[x][y]);
 }
 
 bool cCurTown::is_spot(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & SPECIAL_SPOT;
+	return is_spot(fields[x][y]);
 }
 
 bool cCurTown::is_road(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & SPECIAL_ROAD;
+	return is_road(fields[x][y]);
 }
 
 bool cCurTown::is_special(short x, short y) const{
+	if(!record()->is_on_map(x,y)) return false;
 	location check(x,y);
 	for(int i = 0; i < record()->special_locs.size(); i++)
 		if(check == record()->special_locs[i] && record()->special_locs[i].spec >= 0)
@@ -271,77 +272,77 @@ bool cCurTown::is_special(short x, short y) const{
 
 bool cCurTown::is_web(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & FIELD_WEB;
+	return is_web(fields[x][y]);
 }
 
 bool cCurTown::is_crate(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & OBJECT_CRATE;
+	return is_crate(fields[x][y]);
 }
 
 bool cCurTown::is_barrel(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & OBJECT_BARREL;
+	return is_barrel(fields[x][y]);
 }
 
 bool cCurTown::is_fire_barr(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & BARRIER_FIRE;
+	return is_fire_barr(fields[x][y]);
 }
 
 bool cCurTown::is_force_barr(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & BARRIER_FORCE;
+	return is_force_barr(fields[x][y]);
 }
 
 bool cCurTown::is_quickfire(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & FIELD_QUICKFIRE;
+	return is_quickfire(fields[x][y]);
 }
 
 bool cCurTown::is_sm_blood(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & SFX_SMALL_BLOOD;
+	return is_sm_blood(fields[x][y]);
 }
 
 bool cCurTown::is_med_blood(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & SFX_MEDIUM_BLOOD;
+	return is_med_blood(fields[x][y]);
 }
 
 bool cCurTown::is_lg_blood(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & SFX_LARGE_BLOOD;
+	return is_lg_blood(fields[x][y]);
 }
 
 bool cCurTown::is_sm_slime(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & SFX_SMALL_SLIME;
+	return is_sm_slime(fields[x][y]);
 }
 
 bool cCurTown::is_lg_slime(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & SFX_LARGE_SLIME;
+	return is_lg_slime(fields[x][y]);
 }
 
 bool cCurTown::is_ash(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & SFX_ASH;
+	return is_ash(fields[x][y]);
 }
 
 bool cCurTown::is_bones(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & SFX_BONES;
+	return is_bones(fields[x][y]);
 }
 
 bool cCurTown::is_rubble(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & SFX_RUBBLE;
+	return is_rubble(fields[x][y]);
 }
 
 bool cCurTown::is_force_cage(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return fields[x][y] & BARRIER_CAGE;
+	return is_force_cage(fields[x][y]);
 }
 
 bool cCurTown::set_explored(short x, short y, bool b){
