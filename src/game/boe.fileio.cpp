@@ -17,6 +17,7 @@
 #include "boe.graphutil.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"
+#include "prefs.hpp"
 #include "strdlog.hpp"
 #include "fileio.hpp"
 #include "cursors.hpp"
@@ -31,7 +32,6 @@ extern location center;
 extern long register_flag;
 extern sf::RenderWindow mainPtr;
 extern short which_combat_type;
-extern short cur_town_talk_loaded;
 extern cUniverse univ;
 
 bool loaded_yet = false, got_nagged = false;
@@ -57,6 +57,10 @@ void finish_load_party(){
 	
 	party_in_memory = true;
 	
+	// use user's easy mode and less wandering mode
+	univ.party.easy_mode=get_bool_pref("EasyMode", false);
+	univ.party.less_wm=get_bool_pref("lesswm", false);
+
 	// now if not in scen, this is it.
 	if(!in_scen) {
 		if(overall_mode != MODE_STARTUP) {
