@@ -2,15 +2,24 @@
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay'>
 	<!-- OK button -->
-	<field name='time1' top='133' left='130' width='67' height='16'/>
-	<field name='time2' top='161' left='130' width='67' height='16'/>
-	<field name='time3' top='189' left='130' width='67' height='16'/>
-	<field name='time4' top='217' left='130' width='67' height='16'/>
-	<field name='time5' top='245' left='130' width='67' height='16'/>
-	<field name='time6' top='273' left='130' width='67' height='16'/>
-	<field name='time7' top='301' left='130' width='67' height='16'/>
-	<field name='time8' top='329' left='130' width='67' height='16'/>
-	<field name='time9' top='357' left='130' width='67' height='16'/>
+	<text name='id1' top='133' left='130' width='20' height='16'/>
+	<text name='id2' top='161' left='130' width='20' height='16'/>
+	<text name='id3' top='189' left='130' width='20' height='16'/>
+	<text name='id4' top='217' left='130' width='20' height='16'/>
+	<text name='id5' top='245' left='130' width='20' height='16'/>
+	<text name='id6' top='273' left='130' width='20' height='16'/>
+	<text name='id7' top='301' left='130' width='20' height='16'/>
+	<text name='id8' top='329' left='130' width='20' height='16'/>
+	<text name='id9' top='357' left='130' width='20' height='16'/>
+	<field name='time1' top='133' left='160' width='67' height='16'/>
+	<field name='time2' top='161' left='160' width='67' height='16'/>
+	<field name='time3' top='189' left='160' width='67' height='16'/>
+	<field name='time4' top='217' left='160' width='67' height='16'/>
+	<field name='time5' top='245' left='160' width='67' height='16'/>
+	<field name='time6' top='273' left='160' width='67' height='16'/>
+	<field name='time7' top='301' left='160' width='67' height='16'/>
+	<field name='time8' top='329' left='160' width='67' height='16'/>
+	<field name='time9' top='357' left='160' width='67' height='16'/>
 	<field name='node1' top='133' left='270' width='39' height='16'/>
 	<field name='node2' top='161' left='270' width='39' height='16'/>
 	<field name='node3' top='189' left='270' width='39' height='16'/>
@@ -21,8 +30,8 @@
 	<field name='node8' top='329' left='270' width='39' height='16'/>
 	<field name='node9' top='357' left='270' width='39' height='16'/>
 	<text framed='true' top='125' left='120' width='310' height='252'/>
-	<button name='up' type='up' def-key='up' top='100' left='342'/>
-	<button name='down' type='down' def-key='down' top='380' left='342'/>
+	<button name='up' type='up' def-key='up' top='100' left='362'/>
+	<button name='down' type='down' def-key='down' top='380' left='362'/>
 	<button name='cancel' type='regular' top='410' left='340'>Cancel</button>
 	<button name='okay' type='regular' top='410' left='406'>OK</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
@@ -35,8 +44,9 @@
 	<text top='81' left='50' width='439' height='14'>
 		For more information on how this works, see the documentation.
 	</text>
-	<text top='97' left='102' width='135' height='28'>Number of moves between each call.</text>
-	<text top='97' left='239' width='131' height='28'>Scenario special node to call.</text>
+	<text top='97' left='120' width='20' height='28'>Id</text>
+	<text top='97' left='145' width='120' height='28'>Number of moves between each call.</text>
+	<text top='97' left='259' width='131' height='28'>Scenario special node to call.</text>
 	<text top='246' left='2' width='119' height='106'>
 		Note: If you leave the time between calls at 0, no special node is called.
 		Don't have special nodes called too often ... it slows the game down.
