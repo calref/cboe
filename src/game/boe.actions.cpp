@@ -2689,6 +2689,9 @@ void start_new_game(bool force) {
 		}
 	}
 	party_in_memory = true;
+	// use user's easy mode and less wandering mode
+	univ.party.easy_mode=get_bool_pref("EasyMode", false);
+	univ.party.less_wm=get_bool_pref("lesswm", false);
 	if(force) return;
 	fs::path file = nav_put_party();
 	if(!file.empty()) save_party(file, univ);
