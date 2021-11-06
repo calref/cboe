@@ -238,7 +238,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 		add_string_to_buf("  Force cage!");
 		can_enter = false;
 	}
-	if((mode == eSpecCtx::TOWN_MOVE || (mode == eSpecCtx::COMBAT_MOVE && which_combat_type == 1))
+	if((mode == eSpecCtx::TOWN_MOVE || (mode == eSpecCtx::COMBAT_MOVE && which_combat_type == 1 && !univ.town.is_spot_hidden_in_combat(where_check.x,where_check.y)))
 		&& can_enter && univ.town.is_special(where_check.x,where_check.y)) {
 		for(auto const &spec_loc : univ.town->special_locs) {
 			if(where_check != spec_loc) continue;

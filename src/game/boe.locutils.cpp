@@ -266,7 +266,6 @@ void update_explored(location dest) {
 
 // All purpose function to check is spot is free for travel into.
 bool is_blocked(location to_check) {
-	short gr;
 	ter_num_t ter;
 	// ASAN: location can be bad if we are called by place_party
 	if (to_check.x<0 || to_check.y<0)
