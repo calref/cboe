@@ -146,6 +146,8 @@ bool loc_off_world(location p1) {
 }
 
 bool loc_off_act_area(location p1) {
+	if (is_out())
+		return p1.x < 0 || p1.x >= 48 || p1.y < 0 || p1.y >= 48;
 	if (!univ.town->is_on_map(p1)) return true;
 	if((p1.x > univ.town->in_town_rect.left) && (p1.x < univ.town->in_town_rect.right) &&
 		(p1.y > univ.town->in_town_rect.top) && (p1.y < univ.town->in_town_rect.bottom))
@@ -266,7 +268,6 @@ void update_explored(location dest) {
 
 // All purpose function to check is spot is free for travel into.
 bool is_blocked(location to_check) {
-	short gr;
 	ter_num_t ter;
 	// ASAN: location can be bad if we are called by place_party
 	if (to_check.x<0 || to_check.y<0)
