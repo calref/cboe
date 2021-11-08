@@ -353,7 +353,7 @@ cEnumLookup field_names = {
 	"explored", "wall-force", "wall-fire", "field-antimagic", "cloud-stink", "wall-ice", "wall-blades", "cloud-sleep",
 	"obj-block", "spec-spot", "field-web", "obj-crate", "obj-barrel", "barr-fire", "barr-force", "field-quickfire",
 	"sfx-sm-bld", "sfx-med-bld", "sfx-lg-bld", "sfx-sm-slm", "sfx-lg-slm", "sfx-ash", "sfx-bone", "sfx-rock",
-	"barr-cage", "", "spec-hidden-spot", "", "", "", "", "",
+	"barr-cage", "", "", "", "", "", "", "",
 	"dispel", "smash",
 };
 

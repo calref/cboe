@@ -99,7 +99,7 @@ void cCurTown::import_reset_fields_legacy(){
 		if (spec.spec<0 || spec.x<0 || spec.x>=terrain.width() ||
 			spec.y<0 || spec.y>=terrain.height()) continue;
 		if (univ.get_terrain(terrain[spec.x][spec.y]).i==3000)
-			fields[spec.x][spec.y]|=SPECIAL_SPOT_HIDDEN_IN_COMBAT;
+			fields[spec.x][spec.y]|=SPECIAL_SPOT;
 	}
 }
 
@@ -124,9 +124,6 @@ void cCurTown::place_preset_fields() {
 				break;
 			case SPECIAL_SPOT:
 				set_spot(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
-				break;
-			case SPECIAL_SPOT_HIDDEN_IN_COMBAT:
-				set_spot_hidden_in_combat(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
 				break;
 			case SPECIAL_ROAD:
 				set_road(record()->preset_fields[i].loc.x,record()->preset_fields[i].loc.y,true);
@@ -254,14 +251,9 @@ bool cCurTown::is_block(short x, short y) const{ // currently unused
 	return is_block(fields[x][y]);
 }
 
-bool cCurTown::is_spot(short x, short y, bool combatMode) const{
+bool cCurTown::is_spot(short x, short y) const{
 	if(!record()->is_on_map(x,y)) return false;
-	return is_spot(fields[x][y]) || (!combatMode && is_spot_hidden_in_combat(fields[x][y]));
-}
-
-bool cCurTown::is_spot_hidden_in_combat(short x, short y) const {
-	if(!record()->is_on_map(x,y)) return false;
-	return is_spot_hidden_in_combat(fields[x][y]);
+	return is_spot(fields[x][y]);
 }
 
 bool cCurTown::is_road(short x, short y) const{
@@ -495,14 +487,6 @@ bool cCurTown::set_spot(short x, short y, bool b){
 	if(b)
 		fields[x][y] |=  SPECIAL_SPOT;
 	else  fields[x][y] &= ~SPECIAL_SPOT;
-	return true;
-}
-
-bool cCurTown::set_spot_hidden_in_combat(short x, short y, bool b) {
-	if(!record()->is_on_map(x,y)) return false;
-	if(b)
-		fields[x][y] |=  SPECIAL_SPOT_HIDDEN_IN_COMBAT;
-	else  fields[x][y] &= ~SPECIAL_SPOT_HIDDEN_IN_COMBAT;
 	return true;
 }
 

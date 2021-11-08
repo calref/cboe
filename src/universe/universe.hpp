@@ -71,7 +71,6 @@ public:
 	static bool is_sleep_cloud(unsigned long allFields) { return allFields & CLOUD_SLEEP; }
 	static bool is_block(unsigned long allFields) { return allFields & OBJECT_BLOCK; } // currently unused
 	static bool is_spot(unsigned long allFields) { return allFields & SPECIAL_SPOT; }
-	static bool is_spot_hidden_in_combat(unsigned long allFields) { return allFields & SPECIAL_SPOT_HIDDEN_IN_COMBAT; }
 	static bool is_web(unsigned long allFields) { return allFields & FIELD_WEB; }
 	static bool is_crate(unsigned long allFields) { return allFields & OBJECT_CRATE; }
 	static bool is_barrel(unsigned long allFields) { return allFields & OBJECT_BARREL; }
@@ -97,8 +96,7 @@ public:
 	bool is_blade_wall(short x, short y) const;
 	bool is_sleep_cloud(short x, short y) const;
 	bool is_block(short x, short y) const; // currently unused
-	bool is_spot_hidden_in_combat(short x, short y) const;
-	bool is_spot(short x, short y, bool combatMode=false) const;
+	bool is_spot(short x, short y) const;
 	bool is_special(short x, short y) const;
 	bool is_web(short x, short y) const;
 	bool is_crate(short x, short y) const;
@@ -126,7 +124,6 @@ public:
 	bool set_sleep_cloud(short x, short y, bool b);
 	bool set_block(short x, short y, bool b); // currently unused
 	bool set_spot(short x, short y, bool b);
-	bool set_spot_hidden_in_combat(short x, short y, bool b);
 	bool set_web(short x, short y, bool b);
 	bool set_crate(short x, short y, bool b);
 	bool set_barrel(short x, short y, bool b);

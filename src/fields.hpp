@@ -39,7 +39,6 @@ enum eFieldType {
 	SFX_RUBBLE = 23,
 	BARRIER_CAGE = 24,
 	SPECIAL_ROAD = 25,
-	SPECIAL_SPOT_HIDDEN_IN_COMBAT = 26, // for legacy game
 	// From here on are special values that don't index anything.
 	// Thus, they start at 32.
 	FIELD_DISPEL = 32, // Dispel field
