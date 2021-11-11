@@ -814,9 +814,8 @@ static void place_talk_face() {
 	short face_to_draw = univ.scenario.scen_monsters[store_monst_type].default_facial_pic;
 	if(store_talk_face_pic >= 0)
 		face_to_draw = store_talk_face_pic;
-	if(store_talk_face_pic >= 1000) {
-		cPict::drawAt(mainPtr, face_rect, store_talk_face_pic, PIC_CUSTOM_TALK, false);
-	}
+	if(store_talk_face_pic >= 1000)
+		cPict::drawAt(mainPtr, face_rect, store_talk_face_pic-1000, PIC_CUSTOM_TALK, false);
 	else {
 		if(face_to_draw == NO_PIC) {
 			short i = get_monst_picnum(store_monst_type);
