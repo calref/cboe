@@ -1575,7 +1575,8 @@ bool handle_keystroke(const sf::Event& event){
 	
 	if(event.key.code == kb::Escape) {
 		bool abort=true;
-		if (overall_mode == MODE_DROP_TOWN || overall_mode == MODE_TALK_TOWN || overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_TOWN_TARGET)
+		if (overall_mode == MODE_DROP_TOWN || overall_mode == MODE_USE_TOWN || overall_mode == MODE_TALK_TOWN || overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_TOWN_TARGET || overall_mode == MODE_BASH_TOWN ||
+			overall_mode == MODE_PICK_TOWN)
 			overall_mode = MODE_TOWN;
 		else if(overall_mode == MODE_LOOK_OUTDOORS)
 			overall_mode = MODE_OUTDOORS;
