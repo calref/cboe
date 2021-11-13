@@ -90,7 +90,7 @@ static cPictNum port_graphic_num(int pic) {
 	if (pic<900)
 		return cPictNum(pic-700, PIC_DLOG);
 	if (pic<1000)// ARGH: normally bwpats, force an error picture
-		return cPictNum(900, PIC_TER);
+		return cPictNum(800, PIC_TER);
 	if (pic < 1100)
 		return cPictNum(pic-1000, PIC_TALK);
 	if (pic < 1200)
@@ -98,7 +98,7 @@ static cPictNum port_graphic_num(int pic) {
 	if (pic < 1300)
 		return cPictNum(pic-1200, PIC_PC);
 	// ARGH: not implemented, force an error picture
-	return cPictNum(900, PIC_TER);
+	return cPictNum(800, PIC_TER);
 }
 	
 void cSpecial::import_legacy(legacy::special_node_type const &old){

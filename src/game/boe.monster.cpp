@@ -36,7 +36,7 @@ short out_enc_lev_tot(short which) {
 	
 	for(short i = 0; i < 7; i++)
 		if(univ.party.out_c[which].what_monst.monst[i] != 0)
-			count += univ.scenario.scen_monsters[univ.party.out_c[which].what_monst.monst[i]].level * num[i];
+			count += univ.scenario.get_monster(univ.party.out_c[which].what_monst.monst[i]).level * num[i];
 	return count;
 }
 
@@ -126,7 +126,7 @@ location get_monst_head(short m_num) {
 
 short get_monst_picnum(mon_num_t monst) {
 	if(monst >= 10000) return univ.party.summons[monst - 10000].picture_num;
-	return univ.scenario.scen_monsters[monst].picture_num;
+	return univ.scenario.get_monster(monst).picture_num;
 }
 
 ePicType get_monst_pictype(mon_num_t monst) {
@@ -134,7 +134,7 @@ ePicType get_monst_pictype(mon_num_t monst) {
 	short n;
 	if(monst >= 10000)
 		n = univ.party.summons[monst - 10000].picture_num;
-	else n = univ.scenario.scen_monsters[monst].picture_num;
+	else n = univ.scenario.get_monster(monst).picture_num;
 	if(n >= 1000){
 		type += PIC_CUSTOM;
 		switch(n / 1000){
@@ -157,7 +157,7 @@ ePicType get_monst_pictype(mon_num_t monst) {
 }
 
 std::pair<short,short> get_monst_dims(mon_num_t monst) {
-	cMonster& the_monst = monst >= 10000 ? univ.party.summons[monst - 10000] : univ.scenario.scen_monsters[monst];
+	cMonster& the_monst = monst >= 10000 ? univ.party.summons[monst - 10000] : univ.scenario.get_monster(monst);
 	return std::make_pair(the_monst.x_width, the_monst.y_width);
 }
 
@@ -165,7 +165,7 @@ std::pair<short,short> get_monst_dims(mon_num_t monst) {
 void set_up_monst(eAttitude mode,mon_num_t m_num) {
 	short which = univ.town.monst.size();
 	
-	cMonster& monst = m_num >= 10000 ? univ.party.summons[m_num - 10000] : univ.scenario.scen_monsters[m_num];
+	cMonster& monst = m_num >= 10000 ? univ.party.summons[m_num - 10000] : univ.scenario.get_monster(m_num);
 	univ.town.monst.assign(which, cCreature(m_num), monst, univ.party.easy_mode, univ.difficulty_adjust());
 	univ.town.monst[which].active = 2;
 	univ.town.monst[which].summon_time = 0;
@@ -1101,7 +1101,7 @@ short place_monster(mon_num_t which,location where,bool forced) {
 	}
 	
 	// 10000 or more means an exported summon saved with the party
-	cMonster& monst = which >= 10000 ? univ.party.summons[which - 10000] : univ.scenario.scen_monsters[which];
+	cMonster& monst = which >= 10000 ? univ.party.summons[which - 10000] : univ.scenario.get_monster(which);
 	univ.town.monst.assign(i, cCreature(which), monst, univ.party.easy_mode, univ.difficulty_adjust());
 	// TODO: Should this static_cast assignment be happening?
 	// One effect is resetting max health to ignore difficulty_adjust()
@@ -1172,7 +1172,7 @@ void activate_monsters(short code,short /*attitude*/) {
 	for(short i = 0; i < univ.town->creatures.size(); i++)
 		if(univ.town->creatures[i].spec_enc_code == code) {
 			cTownperson& monst = univ.town->creatures[i];
-			univ.town.monst.assign(i, monst, univ.scenario.scen_monsters[monst.number], univ.party.easy_mode, univ.difficulty_adjust());
+			univ.town.monst.assign(i, monst, univ.scenario.get_monster(monst.number), univ.party.easy_mode, univ.difficulty_adjust());
 			univ.town.monst[i].spec_enc_code = 0;
 			univ.town.monst[i].active = 2;
 			
@@ -1186,7 +1186,6 @@ void activate_monsters(short code,short /*attitude*/) {
 
 mon_num_t get_summon_monster(short summon_class) {
 	for(short i = 0; i < 200; i++) {
-		// ASAN univ.scenario.scen_monsters.size() can be less than 255
 		short j = get_ran(1,0,univ.scenario.scen_monsters.size()-1);
 		if(univ.scenario.scen_monsters[j].summon_type == summon_class) {
 			return j;

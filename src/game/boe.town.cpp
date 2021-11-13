@@ -169,7 +169,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			if(univ.town->creatures[i].number > 0) {
 				// recreate the lists.
 				const cTownperson& preset = univ.town->creatures[i];
-				univ.town.monst.assign(i, preset, univ.scenario.scen_monsters[preset.number], univ.party.easy_mode, univ.difficulty_adjust());
+				univ.town.monst.assign(i, preset, univ.scenario.get_monster(preset.number), univ.party.easy_mode, univ.difficulty_adjust());
 			}
 		}
 	}
