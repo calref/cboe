@@ -874,7 +874,7 @@ void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) {
 
 std::string get_m_name(mon_num_t num) {
 	if(num >= 10000) return univ.party.summons[num - 10000].m_name;
-	return univ.scenario.scen_monsters[num].m_name;
+	return univ.scenario.get_monster(num).m_name;
 }
 std::string get_ter_name(ter_num_t num) {
 	if(num == 90 && (is_out() || is_town() || (is_combat() && which_combat_type == 1)))

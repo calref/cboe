@@ -2234,7 +2234,7 @@ mon_num_t pick_trapped_monst() {
 		else {
 			sp = get_m_name(which);
 			soulCrystal->getControl("slot" + n).setText(sp);
-			get_monst = which >= 10000 ? univ.party.summons[which - 10000] : univ.scenario.scen_monsters[which];
+			get_monst = which >= 10000 ? univ.party.summons[which - 10000] : univ.scenario.get_monster(which);
 			soulCrystal->getControl("lvl" + n).setTextToNum(get_monst.level);
 		}
 	}

@@ -811,7 +811,7 @@ static void place_talk_face() {
 	rectangle face_rect = {6,6,38,38};
 	face_rect.offset(talk_area_rect.topLeft());
 	mainPtr.setActive();
-	short face_to_draw = univ.scenario.scen_monsters[store_monst_type].default_facial_pic;
+	short face_to_draw = univ.scenario.get_monster(store_monst_type).default_facial_pic;
 	if(store_talk_face_pic >= 0)
 		face_to_draw = store_talk_face_pic;
 	if(store_talk_face_pic >= 1000)
