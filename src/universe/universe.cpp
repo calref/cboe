@@ -1154,7 +1154,7 @@ void cCustomUpdateState::check_item(cUniverse &universe, cItem& item) {
 	if(item.ability == eItemAbil::SUMMONING || item.ability == eItemAbil::MASS_SUMMONING) {
 		mon_num_t monst = item.abil_data[1];
 		if(monst >= 10000)
-			check_monst(universe, universe.party.summons[monst - 10000]);
+			check_monst(universe, universe.party.get_summon(monst - 10000));
 		else check_monst(universe, universe.scenario.get_monster(monst));
 	}
 	if(item.variety == eItemType::ARROW || item.variety == eItemType::BOLTS || item.variety == eItemType::MISSILE_NO_AMMO || item.variety == eItemType::THROWN_MISSILE)
@@ -1188,7 +1188,7 @@ void cUniverse::exportGraphics() {
 		if(monst > 0 && monst < scenario.scen_monsters.size())
 			state.check_monst(*this, scenario.scen_monsters[monst]);
 		else if(monst >= 10000 && monst - 10000 < party.summons.size())
-			state.check_monst(*this, party.summons[monst - 10000]);
+			state.check_monst(*this, party.get_summon(monst - 10000));
 	}
 	// And then, just add all the graphics, and update references to them
 	for(auto const &pic : state.pcs) {

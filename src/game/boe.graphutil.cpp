@@ -600,7 +600,7 @@ void check_if_monst_seen(unsigned short m_num, location at) {
 	// Make the monster vocalize if applicable
 	snd_num_t sound = -1;
 	if(m_num >= 10000)
-		sound = univ.party.summons[m_num - 10000].ambient_sound;
+		sound = univ.party.get_summon(m_num - 10000).ambient_sound;
 	else sound = univ.scenario.get_monster(m_num).ambient_sound;
 	if(sound > 0 && get_ran(1,1,100) < 10)
 		play_sound(-sound);

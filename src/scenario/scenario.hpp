@@ -54,6 +54,8 @@ public:
 	cItem &get_item(item_num_t item);
 	std::string &get_journal_string(int id);
 	std::string const &get_journal_string(int id) const;
+	cMonster &get_monster(mon_num_t monst);
+	cMonster const &get_monster(mon_num_t monst) const;
 	cQuest const &get_quest(int quest) const;
 	cQuest &get_quest(int quest);
 	cShop const &get_shop(int shop) const;
@@ -122,8 +124,6 @@ public:
 	ter_num_t get_trim_terrain(unsigned short ground, unsigned short trim_g, eTrimType trim);
 	cOutdoors& get_sector(int x, int y);
 	bool is_town_entrance_valid(spec_loc_t loc) const;
-	cMonster &get_monster(mon_num_t monst);
-	cMonster const &get_monster(mon_num_t monst) const;
 	
 	bool is_ter_used(ter_num_t ter);
 	bool is_monst_used(mon_num_t monst);

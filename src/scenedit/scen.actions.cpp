@@ -1146,7 +1146,7 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 						set_string("Place the item:",scenario.get_item(mode_count).full_name);
 						break;
 					case DRAW_MONST:
-						if(k + 1 >= scenario.scen_monsters.size())
+						if(k + 1 < 0 || k + 1 >= scenario.scen_monsters.size())
 							break;
 						overall_mode = MODE_PLACE_CREATURE;
 						mode_count = k + 1;

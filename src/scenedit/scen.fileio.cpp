@@ -486,7 +486,7 @@ void writeMonstersToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.PushAttribute("id", i);
 		cMonster& monst = scenario.scen_monsters[i];
 		data.PushElement("name", monst.m_name);
-		if(monst.default_facial_pic > 0)
+		if(monst.default_facial_pic >= -1) // -1: means use monster pict
 			data.PushElement("default-face", monst.default_facial_pic);
 		
 		data.OpenElement("pic");

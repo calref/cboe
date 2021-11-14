@@ -125,7 +125,7 @@ location get_monst_head(short m_num) {
 }
 
 short get_monst_picnum(mon_num_t monst) {
-	if(monst >= 10000) return univ.party.summons[monst - 10000].picture_num;
+	if(monst >= 10000) return univ.party.get_summon(monst - 10000).picture_num;
 	return univ.scenario.get_monster(monst).picture_num;
 }
 
@@ -133,7 +133,7 @@ ePicType get_monst_pictype(mon_num_t monst) {
 	ePicType type = PIC_MONST;
 	short n;
 	if(monst >= 10000)
-		n = univ.party.summons[monst - 10000].picture_num;
+		n = univ.party.get_summon(monst - 10000).picture_num;
 	else n = univ.scenario.get_monster(monst).picture_num;
 	if(n >= 1000){
 		type += PIC_CUSTOM;
@@ -157,7 +157,7 @@ ePicType get_monst_pictype(mon_num_t monst) {
 }
 
 std::pair<short,short> get_monst_dims(mon_num_t monst) {
-	cMonster& the_monst = monst >= 10000 ? univ.party.summons[monst - 10000] : univ.scenario.get_monster(monst);
+	cMonster& the_monst = monst >= 10000 ? univ.party.get_summon(monst - 10000) : univ.scenario.get_monster(monst);
 	return std::make_pair(the_monst.x_width, the_monst.y_width);
 }
 
@@ -165,7 +165,7 @@ std::pair<short,short> get_monst_dims(mon_num_t monst) {
 void set_up_monst(eAttitude mode,mon_num_t m_num) {
 	short which = univ.town.monst.size();
 	
-	cMonster& monst = m_num >= 10000 ? univ.party.summons[m_num - 10000] : univ.scenario.get_monster(m_num);
+	cMonster& monst = m_num >= 10000 ? univ.party.get_summon(m_num - 10000) : univ.scenario.get_monster(m_num);
 	univ.town.monst.assign(which, cCreature(m_num), monst, univ.party.easy_mode, univ.difficulty_adjust());
 	univ.town.monst[which].active = 2;
 	univ.town.monst[which].summon_time = 0;
@@ -1101,7 +1101,7 @@ short place_monster(mon_num_t which,location where,bool forced) {
 	}
 	
 	// 10000 or more means an exported summon saved with the party
-	cMonster& monst = which >= 10000 ? univ.party.summons[which - 10000] : univ.scenario.get_monster(which);
+	cMonster& monst = which >= 10000 ? univ.party.get_summon(which - 10000) : univ.scenario.get_monster(which);
 	univ.town.monst.assign(i, cCreature(which), monst, univ.party.easy_mode, univ.difficulty_adjust());
 	// TODO: Should this static_cast assignment be happening?
 	// One effect is resetting max health to ignore difficulty_adjust()
