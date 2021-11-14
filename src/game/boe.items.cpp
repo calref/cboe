@@ -681,7 +681,7 @@ void place_glands(location where,mon_num_t m_type) {
 	cMonster monst;
 	
 	if(m_type >= 10000)
-		monst = univ.party.summons[m_type - 10000];
+		monst = univ.party.get_summon(m_type - 10000);
 	else monst = univ.scenario.get_monster(m_type);
 	
 	if(monst.corpse_item >= 0 && monst.corpse_item < univ.scenario.scen_items.size() && get_ran(1,1,100) < monst.corpse_item_chance)

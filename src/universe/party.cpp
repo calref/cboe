@@ -222,6 +222,22 @@ cVehicle const &cParty::get_horse(int id) const  {
 	return bad_vehicle;
 }
 
+cMonster const &cParty::get_summon(mon_num_t id) const
+{
+	if (id<summons.size())
+		return summons[id];
+	static cMonster bad_monster=cMonster::bad();
+	return bad_monster;
+}
+
+cMonster &cParty::get_summon(mon_num_t id) {
+	if (id<summons.size())
+		return summons[id];
+	static cMonster bad_monster;
+	bad_monster=cMonster::bad();
+	return bad_monster;
+}
+
 void cParty::import_legacy(legacy::party_record_type const & old, cUniverse& univ){
 	scen_name = old.scen_name;
 	age = old.age;
@@ -1103,9 +1119,9 @@ void cParty::readFrom(std::istream& file){
 			cMonster monst;
 			bin >> std::ws;
 			monst.readFrom(bin);
-			if(i >= summons.size())
+			if(i >= summons.size() && i<1000)
 				summons.resize(i + 1);
-			summons[i] = monst;
+			get_summon(i) = monst;
 		} else if(cur == "JOURNAL") {
 			cJournal entry;
 			bin >> entry.day;
