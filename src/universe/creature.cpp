@@ -20,7 +20,6 @@ const short cCreature::charm_odds[21] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4
 cCreature::cCreature() {
 	attitude = eAttitude::DOCILE;
 	cur_loc.x = cur_loc.y = targ_loc.x = targ_loc.y = 80;
-	// ASAN party_summoned writed but unset
 	party_summoned = false;
 }
 
@@ -309,8 +308,7 @@ int cCreature::magic_adjust(int how_much) {
 		return 0;
 	}
 	// TODO: Magic resistance status effect?
-	how_much *= resist[eDamageType::MAGIC];
-	how_much /= 100;
+	how_much = short((int(how_much)*int(resist[eDamageType::MAGIC]))/100);
 	return how_much;
 }
 

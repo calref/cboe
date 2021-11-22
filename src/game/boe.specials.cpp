@@ -1449,11 +1449,9 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 			sound_type = 11;
 	}
 	
-	if(dam_type < eDamageType::SPECIAL) {
-		how_much *= victim.resist[dam_type];
-		how_much /= 100;
-	}
-	
+	if(dam_type < eDamageType::SPECIAL)
+		how_much = short((int(how_much)*int(victim.resist[dam_type]))/100);
+
 	// Absorb damage?
 	if((dam_type == eDamageType::FIRE || dam_type == eDamageType::MAGIC || dam_type == eDamageType::COLD)
 		&& victim.abil[eMonstAbil::ABSORB_SPELLS].active && get_ran(1,1,1000) <= victim.abil[eMonstAbil::ABSORB_SPELLS].special.extra1) {
