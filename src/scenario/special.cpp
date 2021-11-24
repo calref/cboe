@@ -121,6 +121,8 @@ static cPictNum port_graphic_num(int pic) {
 		return cPictNum(pic-800, PIC_PC);
 	if (pic<1000)// ARGH: normally bwpats, force an error picture
 		return cPictNum(800, PIC_TER);
+	if (pic<1100)
+		return cPictNum(pic-1000, PIC_TALK);
 #if 0
 	if (pic == 1100 || pic==1200 || pic==1300 || (pic>=1400 && pic<=1402)) // maybe, but the picture's size will be bad and hide the message...
 		return cPictNum(pic, PIC_FULL);
