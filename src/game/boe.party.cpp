@@ -1175,7 +1175,8 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 			
 		default:
-			add_string_to_buf("  Error: Priest spell " + (*spell_num).name() + " not implemented for town mode.", 4);
+			add_string_to_buf("  Error: Priest spell " + (*spell_num).name() + " not implemented for "
+							  + (is_combat() ? "combat" : "town") +" mode.", 4);
 			break;
 	}
 }
