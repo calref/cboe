@@ -513,11 +513,7 @@ void place_item_bottom_buttons() {
 			} else if(pic >= 100) {
 				// Note that we assume it's a 1x1 graphic.
 				// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
-				pic_num_t need_pic = pic - 100;
-				int mode = 0;
-				pc_from_rect = get_monster_template_rect(need_pic, mode, 0);
-				int which_sheet = m_pic_index[need_pic].i / 20;
-				from_gw = *ResMgr::textures.get("monst" + std::to_string(1 + which_sheet));
+				cPict::get_picture(cPictNum(pic - 100,PIC_MONST), from_gw, pc_from_rect);
 			} else {
 				pc_from_rect = calc_rect(2 * (pic / 8), pic % 8);
 				from_gw = *ResMgr::textures.get("pcs");
@@ -831,10 +827,11 @@ cVehicle* town_boat_there(location where) {
 }
 cVehicle* out_boat_there(location where) {
 	where = global_to_local(where);
-	for(short i = 0; i < univ.party.boats.size(); i++)
-		if((univ.party.boats[i].exists) && (where == univ.party.boats[i].loc)
-			&& (univ.party.boats[i].which_town == 200))
-			return &univ.party.boats[i];
+	location sector = { univ.party.outdoor_corner.x + univ.party.i_w_c.x,
+		univ.party.outdoor_corner.y + univ.party.i_w_c.y };
+	for(auto &boat : univ.party.boats)
+		if(boat.exists && boat.which_town == 200 && where == boat.loc && boat.sector == sector)
+			return &boat;
 	return nullptr;
 }
 
@@ -847,10 +844,11 @@ cVehicle* town_horse_there(location where) {
 }
 cVehicle* out_horse_there(location where) {
 	where = global_to_local(where);
-	for(short i = 0; i < univ.party.horses.size(); i++)
-		if((univ.party.horses[i].exists) && (where == univ.party.horses[i].loc)
-			&& (univ.party.horses[i].which_town == 200))
-			return &univ.party.horses[i];
+	location sector = { univ.party.outdoor_corner.x + univ.party.i_w_c.x,
+		univ.party.outdoor_corner.y + univ.party.i_w_c.y };
+	for(auto &horse : univ.party.horses)
+		if(horse.exists && horse.which_town == 200 && where == horse.loc && horse.sector == sector)
+			return &horse;
 	return nullptr;
 }
 void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) {
