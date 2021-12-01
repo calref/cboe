@@ -410,11 +410,7 @@ void display_party() {
 				} else if(pic >= 100) {
 					// Note that we assume it's a 1x1 graphic.
 					// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
-					pic_num_t need_pic = pic - 100;
-					pic_num_t picture_wanted = m_pic_index[need_pic].i % 20;
-					from_rect = calc_rect(2 * (picture_wanted / 10), picture_wanted % 10);
-					int which_sheet = m_pic_index[need_pic].i / 20;
-					from_gw = *ResMgr::textures.get("monst" + std::to_string(1 + which_sheet));
+					cPict::get_picture(cPictNum(pic - 100,PIC_MONST), from_gw, from_rect);
 				} else {
 					from_rect = calc_rect(2 * (pic / 8), pic % 8);
 					from_gw = *ResMgr::textures.get("pcs");

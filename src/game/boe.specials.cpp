@@ -3002,7 +3002,7 @@ void affect_spec(const runtime_state& ctx) {
 				break;
 			}
 			for(short i = 0; i < 6; i++)
-				if((pc_num == 6 || pc_num == i) && get_ran(1,1,100) < spec.pic) {
+				if((pc_num == 6 || pc_num == i) && get_ran(1,0,100) < spec.pic) {
 					eSkill skill = eSkill(spec.ex2a);
 					int adj = spec.ex1a * (spec.ex1b != 0 ? -1: 1);
 					if(skill == eSkill::MAX_HP)

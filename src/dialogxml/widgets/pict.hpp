@@ -41,9 +41,9 @@ public:
 	static void init();
 	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
 	void validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) override;
-	bool manageFormat(eFormat prop, bool set, boost::any* val);
-	storage_t store();
-	void restore(storage_t to);
+	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
+	storage_t store() override;
+	void restore(storage_t to) override;
 	/// @copydoc setPict(pic_num_t)
 	/// @param type The type of the new icon
 	/// @note Calling this function automatically adjusts the bounding rect so that the picture fits perfectly.
@@ -75,16 +75,16 @@ public:
 	/// Create a new icon without a parent dialog.
 	/// @param parent The parent window.
 	explicit cPict(sf::RenderWindow& parent);
-	bool isClickable();
-	bool isFocusable();
-	bool isScrollable();
+	bool isClickable() override;
+	bool isFocusable() override;
+	bool isScrollable() override;
 	/// Advance the current animation frame.
 	/// Should be called at predictable intervals if the dialog might contain an animated graphic.
 	static void advanceAnim();
 	virtual ~cPict();
-	void draw();
+	void draw() override;
 	// only implemented for item and terrain pictures
-	static bool get_picture(cPictNum pict, Texture &source, rectangle &from_rect, int anim=0);
+	static bool get_picture(cPictNum pict, Texture &source, rectangle &from_rect, int anim=0, int which_part=0);
 	/// A utility function to draw an icon into an arbitrary window.
 	/// @param win The window to draw in.
 	/// @param dest The bounding rect to draw in (ignored for drawing the actual, but used for background fill and framing)
@@ -98,7 +98,7 @@ public:
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers
-	const std::set<eDlogEvt> getSupportedHandlers() const {
+	const std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_CLICK};
 	}
 	cPict& operator=(cPict& other) = delete;

@@ -851,24 +851,16 @@ void draw_monsts() {
 		height = monster.y_width;
 			
 		for(short k = 0; k < width * height; k++) {
-			store_loc = where_draw;
-			if(where_draw.x == minmax(0,8,where_draw.x) && where_draw.y == minmax(0,8,where_draw.y) && monster.picture_num >= 1000) {
+			if(where_draw.x == minmax(0,8,where_draw.x) && where_draw.y == minmax(0,8,where_draw.y) && monster.picture_num >= 1000)
 				std::tie(from_gworld,source_rect) = spec_scen_g.find_graphic((monster.picture_num + k) % 1000);
-				store_loc.x += k % width;
-				store_loc.y += k / width;
-			}
-			else if(monster.picture_num>=0 && monster.picture_num < 1000 && monster.picture_num<m_pic_index.size()) {
-				m_start_pic = m_pic_index[monster.picture_num].i + k;
-				int which_sheet = m_start_pic / 20;
-				from_gworld = *ResMgr::textures.get("monst" + std::to_string(1 + which_sheet));
-				m_start_pic = m_start_pic % 20;
-				source_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);
-				store_loc.x += k % width;
-				store_loc.y += k / width;
-			}
+			else if(monster.picture_num>=0 && monster.picture_num < 1000 && monster.picture_num<m_pic_index.size())
+				cPict::get_picture(cPictNum(monster.picture_num,PIC_MONST), from_gworld, source_rect, 0, k);
 			else
 				continue;
 				
+			store_loc = where_draw;
+			store_loc.x += k % width;
+			store_loc.y += k / width;
 			if(store_loc.x < 0 || store_loc.x > 8 || store_loc.y < 0 || store_loc.y > 8)
 				continue;
 				

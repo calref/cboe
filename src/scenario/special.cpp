@@ -154,11 +154,28 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 		case 1: type = eSpecType::SET_SDF; break;
 		case 2: type = eSpecType::INC_SDF; break;
 		case 3: type = eSpecType::DISPLAY_MSG; break;
-			// node 4 was "secret passage", handled later
+		case 4: // Secret passage
+			type = eSpecType::CANT_ENTER;
+			ex1a = 0;
+			ex2a = 1;
+			break;
 		case 5: type = eSpecType::DISPLAY_SM_MSG; break;
 		case 6: type = eSpecType::FLIP_SDF; break;
-			// 7, 8, 9, 10 were out/town/combat/look block
-			// 11 was "can't enter", handled with secret passage
+			// TODO: Originally the block nodes supported messages; the new version doesn't.
+			// (Will probably need to make special nodes a dynamic vector before fixing this.)
+		case 7: case 8: case 9: case 10: // out, town, combat, look block
+			type = eSpecType::IF_CONTEXT;
+			ex1b = ex1a;
+			if(old.type == 7) ex1a = (int) eSpecCtx::OUT_MOVE;
+			if(old.type == 8) ex1a = (int) eSpecCtx::TOWN_MOVE;
+			if(old.type == 9) ex1a = (int) eSpecCtx::COMBAT_MOVE;
+			if(old.type == 10) type = eSpecType::IF_LOOKING;
+			break;
+		case 11: // Can't enter
+			type = eSpecType::CANT_ENTER;
+			ex1a = ex1a==0 ? 0 : 1;
+			ex2a = 0;
+			break;
 		case 12: type = eSpecType::CHANGE_TIME; break;
 		case 13: type = eSpecType::SCEN_TIMER_START; break;
 		case 14: type = eSpecType::PLAY_SOUND; break;
@@ -171,126 +188,6 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 		case 21: type = eSpecType::CALL_GLOBAL; break;
 		case 22: type = eSpecType::SET_SDF_ROW; break;
 		case 23: type = eSpecType::COPY_SDF; break;
-			// 24 was ritual of sanctification
-		case 25: type = eSpecType::REST; break;
-			// 26 was originally wandering will fight, handled with can't enter
-		case 27: type = eSpecType::END_SCENARIO; break;
-			// 28-49 were undefined
-		case 50: type = eSpecType::ONCE_GIVE_ITEM; break;
-		case 51: type = eSpecType::ONCE_GIVE_SPEC_ITEM; break;
-		case 52: type = eSpecType::ONCE_NULL; break;
-		case 53: type = eSpecType::ONCE_SET_SDF; break;
-		case 54: type = eSpecType::ONCE_DISPLAY_MSG; break;
-			// 55,56,57 were standard dialogs
-			// 58,59,60 were give item dialogs
-		case 61: type = eSpecType::ONCE_OUT_ENCOUNTER; break;
-		case 62: type = eSpecType::ONCE_TOWN_ENCOUNTER; break;
-			// 63 was trap
-			// 64-79 were undefined
-		case 80: type = eSpecType::SELECT_TARGET; break;
-		case 81: type = eSpecType::DAMAGE; break;
-		case 82: type = eSpecType::AFFECT_HP; break;
-		case 83: type = eSpecType::AFFECT_SP; break;
-		case 84: type = eSpecType::AFFECT_XP; break;
-		case 85: type = eSpecType::AFFECT_SKILL_PTS; break;
-		case 86: type = eSpecType::AFFECT_DEADNESS; break;
-			// 87-97 were various "affect status" nodes
-		case 98: type = eSpecType::AFFECT_STAT; break;
-			// 99 and 100 were "affect mage/priest spell"
-		case 101: type = eSpecType::AFFECT_GOLD; break;
-		case 102: type = eSpecType::AFFECT_FOOD; break;
-		case 103: type = eSpecType::AFFECT_ALCHEMY; break;
-			// 104-106 were various affect stealth/firewalk/flight
-			// 107-129 were undefined
-		case 130: type = eSpecType::IF_SDF; break;
-		case 131: type = eSpecType::IF_TOWN_NUM; break;
-		case 132: type = eSpecType::IF_RANDOM; break;
-		case 133: type = eSpecType::IF_HAVE_SPECIAL_ITEM; break;
-		case 134: type = eSpecType::IF_SDF_COMPARE; break;
-			// 135, 136 were if town/out terrain
-			// 137-146 were various if-have and if-have+take
-		case 147: type = eSpecType::IF_DAY_REACHED; break;
-			// 148 and 149 were if barrels/crates
-		case 150: type = eSpecType::IF_EVENT_OCCURRED; break;
-			// 151 and 152 were if cave lore/woodsman
-			// 153 was if mage lore
-			// 154 was if text response
-		case 155: type = eSpecType::IF_SDF_EQ; break;
-			// 156-169 were undefined
-		case 170: type = eSpecType::MAKE_TOWN_HOSTILE; ex2a=1; break; // OSNOLA: make town always hostile
-			// 171-173 were change/swap/transform terrain
-		case 174: type = eSpecType::TOWN_MOVE_PARTY; break;
-		case 175: type = eSpecType::TOWN_HIT_SPACE; break;
-		case 176: type = eSpecType::TOWN_EXPLODE_SPACE; break;
-		case 177: type = eSpecType::TOWN_LOCK_SPACE; break;
-		case 178: type = eSpecType::TOWN_UNLOCK_SPACE; break;
-		case 179: type = eSpecType::TOWN_SFX_BURST; break;
-		case 180: type = eSpecType::TOWN_CREATE_WANDERING; break;
-		case 181: type = eSpecType::TOWN_PLACE_MONST; break;
-			// 182 and 183 were destroy monster
-		case 184: type = eSpecType::TOWN_GENERIC_LEVER; break;
-		case 185: type = eSpecType::TOWN_GENERIC_PORTAL; break;
-		case 186: type = eSpecType::TOWN_GENERIC_BUTTON; break;
-		case 187: type = eSpecType::TOWN_GENERIC_STAIR; break;
-			// 188 was town lever
-			// 189 was town portal
-			// 190 was town stair
-		case 191: type = eSpecType::TOWN_RELOCATE; break;
-		case 192: type = eSpecType::TOWN_PLACE_ITEM; break;
-			// 193, 194 were split/reunite party
-		case 195: type = eSpecType::TOWN_TIMER_START; break;
-			// 196-199 were undefined
-			// 200-211 were various rect place fields
-		case 212: type = eSpecType::RECT_MOVE_ITEMS; break;
-		case 213: type = eSpecType::RECT_DESTROY_ITEMS; break;
-		case 214: type = eSpecType::RECT_CHANGE_TER; break;
-		case 215: type = eSpecType::RECT_SWAP_TER; break;
-		case 216: type = eSpecType::RECT_TRANS_TER; break;
-		case 217: type = eSpecType::RECT_LOCK; break;
-		case 218: type = eSpecType::RECT_UNLOCK; break;
-			// 219-224 were undefined
-		case 225: type = eSpecType::OUT_MAKE_WANDER; break;
-			// 226 was change terrain
-		case 227: type = eSpecType::OUT_PLACE_ENCOUNTER; break;
-		case 228: type = eSpecType::OUT_MOVE_PARTY; break;
-			// 229 was outdoor shop
-			// 230-255 were undefined
-		case 55: case 58:
-		case 56: case 59: case 188: // Large dialogs with terrain graphics
-		case 57: case 60: // Large dialogs with monster graphics
-		case 189: case 190: {// Large dialogs with 36x36 dialog graphics
-			if (pic>=1000) {
-				if (old.type>=55 && old.type<=60 ) pic=(pic%1000)+2000;
-				if (old.type==55 || old.type==58) pic+=400;
-			}
-			cPictNum picTyp=port_graphic_num(pic);
-			pic=picTyp.num;
-			pictype=picTyp.type;
-			m3 = m2;
-			m2 = -1;
-			if(old.type<=57) type = eSpecType::ONCE_DIALOG; // 55-57
-			else if(old.type<=60) type = eSpecType::ONCE_GIVE_ITEM_DIALOG; // 58-60
-			else if(old.type == 188) type = eSpecType::TOWN_LEVER;
-			else if(old.type == 189) type = eSpecType::TOWN_PORTAL;
-			else type = eSpecType::TOWN_STAIR; // 190
-			if(type != eSpecType::ONCE_DIALOG) break;
-			// Duplicate Leave button
-			if(old.ex1a == 20)
-				ex1a = 9;
-			if(old.ex2a == 20)
-				ex2a = 9;
-			break;
-		}
-			// TODO: Originally the block nodes supported messages; the new version doesn't.
-			// (Will probably need to make special nodes a dynamic vector before fixing this.)
-		case 7: case 8: case 9: case 10: // out, town, combat, look block
-			type = eSpecType::IF_CONTEXT;
-			ex1b = ex1a;
-			if(old.type == 7) ex1a = (int) eSpecCtx::OUT_MOVE;
-			if(old.type == 8) ex1a = (int) eSpecCtx::TOWN_MOVE;
-			if(old.type == 9) ex1a = (int) eSpecCtx::COMBAT_MOVE;
-			if(old.type == 10) type = eSpecType::IF_LOOKING;
-			break;
 		case 24: // ritual of sanctification
 			type = eSpecType::IF_CONTEXT;
 			ex1c = jumpto;
@@ -298,83 +195,127 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 			ex1a = int(eSpecCtx::TARGET);
 			ex1b = int(eSpell::RITUAL_SANCTIFY);
 			break;
+		case 25: type = eSpecType::REST; break;
+		case 26: // Wandering will fight
+			type = eSpecType::CANT_ENTER;
+			ex1a = 1 - ex1a;
+			ex2a = 0;
+			break;
+		case 27: type = eSpecType::END_SCENARIO; break;
+		case 28: // not present in the first Mac versions
+			type = eSpecType::DISPLAY_PICTURE;
+			showWarning("This scenario contains a Display Picture special node created by the 'Classic Windows' version of the game. Although this version of the game also supports a Display Picture node, the format is incompatible, and automatic conversion is impossible.", "If this is not your scenario, consider contacting the scenario designer to get this fixed.");
+			ex1a = 0;
+			break;
+		case 29: // not present in the first Mac versions
+			type = eSpecType::SDF_RANDOM;
+			break;
+
+			// 30-49 were undefined
+
+		case 50: type = eSpecType::ONCE_GIVE_ITEM; break;
+		case 51: type = eSpecType::ONCE_GIVE_SPEC_ITEM; break;
+		case 52: type = eSpecType::ONCE_NULL; break;
+		case 53: type = eSpecType::ONCE_SET_SDF; break;
+		case 54: type = eSpecType::ONCE_DISPLAY_MSG; break;
+			// 55,56,57 were standard dialogs (handle latter)
+			// 58,59,60 were give item dialogs (handle latter)
+		case 61: type = eSpecType::ONCE_OUT_ENCOUNTER; break;
+		case 62: type = eSpecType::ONCE_TOWN_ENCOUNTER; break;
+		case 63: // Trap used to force a specific picture
+			type = eSpecType::ONCE_TRAP;
+			pic = 27;
+			pictype = PIC_DLOG;
+			break;
+			
+			// 64-79 were undefined
+			
+		case 80: type = eSpecType::SELECT_TARGET; break;
+		case 81: type = eSpecType::DAMAGE; break;
+		case 82: type = eSpecType::AFFECT_HP; break;
+		case 83: type = eSpecType::AFFECT_SP; break;
+		case 84: type = eSpecType::AFFECT_XP; break;
+		case 85: type = eSpecType::AFFECT_SKILL_PTS; break;
+		case 86: type = eSpecType::AFFECT_DEADNESS; break;
+			// Affect status effect (eleven individual node types were collapsed into one)
+		case 87:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::POISON);
+			break;
+		case 88:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::HASTE_SLOW);
+			break;
+		case 89:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::INVULNERABLE);
+			break;
+		case 90:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::MAGIC_RESISTANCE);
+			break;
+		case 91:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::WEBS);
+			break;
+		case 92:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::DISEASE);
+			break;
+		case 93:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::INVISIBLE);
+			break;
+		case 94:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::BLESS_CURSE);
+			break;
+		case 95:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::DUMB);
+			break;
+		case 96:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::ASLEEP);
+			break;
+		case 97:
+			type = eSpecType::AFFECT_STATUS;
+			ex1c = int(eStatus::PARALYZED);
+			break;
+		case 98: type = eSpecType::AFFECT_STAT; break;
 		case 99: case 100: // Add mage/priest spell TODO: Merge these by adding 100 if it's a priest spell
 			if(old.type == 99) type = eSpecType::AFFECT_MAGE_SPELL;
 			else type = eSpecType::AFFECT_PRIEST_SPELL;
 			ex1a += 30;
 			ex1b = 0; // Meaning give spell, not take
 			break;
-		case 148: case 149: // if barrels or crates
-			type = eSpecType::IF_FIELDS;
-			m1 = old.type == 148 ? OBJECT_BARREL : OBJECT_CRATE;
-			m2 = ex1b;
-			ex1a = ex1b = 0;
-			ex2a = ex2b = 64;
-			sd1 = 1;
-			sd2 = std::numeric_limits<short>::max();
+		case 101: type = eSpecType::AFFECT_GOLD; break;
+		case 102: type = eSpecType::AFFECT_FOOD; break;
+		case 103: type = eSpecType::AFFECT_ALCHEMY; break;
+			// Party statuses (three nodes collapsed into one)
+		case 104:
+			type = eSpecType::AFFECT_PARTY_STATUS;
+			ex1b = 0;
+			ex2a = int(ePartyStatus::STEALTH);
 			break;
-		case 151: case 152: // if has cave lore or woodsman
-			type = eSpecType::IF_TRAIT;
-			ex1a = old.type - 147;
-			// Set it to require at least 1 PC:
-			ex2a = 1;
-			ex2b = 2;
+		case 105:
+			type = eSpecType::AFFECT_PARTY_STATUS;
+			ex1b = 0;
+			ex2a = int(ePartyStatus::FIREWALK);
 			break;
-		case 63: // Trap used to force a specific picture
-			type = eSpecType::ONCE_TRAP;
-			pic = 27;
-			pictype = PIC_DLOG;
+		case 106:
+			type = eSpecType::AFFECT_PARTY_STATUS;
+			ex1b = 0;
+			ex2a = int(ePartyStatus::FLIGHT);
 			break;
-		case 153: // if enough mage lore
-			type = eSpecType::IF_STATISTIC;
-			if(ex2a >= 0) { // Windows version added "if statistic" much earlier, but it still needs a little conversion.
-				switch(ex2a) {
-					case 20: ex2a = 19; break; // Max HP
-					case 22: ex2a = 20; break; // Max SP
-					case 19: ex2a = 100; break; // Current HP
-					case 21: ex2a = 101; break; // Current SP
-					case 23: ex2a = 102; break; // Experience
-					case 24: ex2a = 103; break; // Skill points
-					case 25: ex2a = 104; break; // Level
-				}
-			} else ex2a = int(eSkill::MAGE_LORE);
-			ex2b = 0;
-			break;
-		case 154: // text response
-			type = eSpecType::IF_TEXT_RESPONSE;
-            		// id between 10 and 160 will be fixed later by port_special_text_response, ...
-			ex1a -= 160;
-			ex2a -= 160;
-			break;
-		case 229: // Outdoor store - fix spell IDs
-			type = eSpecType::ENTER_SHOP;
-			if(ex1b == 1 || ex1b == 2)
-				ex1a += 30;
-			break;
-		case 4: // Secret passage
-			type = eSpecType::CANT_ENTER;
-			ex1a = 0;
-			ex2a = 1;
-			break;
-		case 11: // Can't enter
-			type = eSpecType::CANT_ENTER;
-			ex1a = ex1a==0 ? 0 : 1;
-			ex2a = 0;
-			break;
-		case 26: // Wandering will fight
-			type = eSpecType::CANT_ENTER;
-			ex1a = 1 - ex1a;
-			ex2a = 0;
-			break;
-		case 171: case 226: // Change terrain (town/outdoor)
-			type = eSpecType::CHANGE_TER;
-			break;
-		case 172: // Swap terrain
-			type = eSpecType::SWAP_TER;
-			break;
-		case 173: // Transform terrain
-			type = eSpecType::TRANS_TER;
-			break;
+			
+			// 107-129 were undefined
+			
+		case 130: type = eSpecType::IF_SDF; break;
+		case 131: type = eSpecType::IF_TOWN_NUM; break;
+		case 132: type = eSpecType::IF_RANDOM; break;
+		case 133: type = eSpecType::IF_HAVE_SPECIAL_ITEM; break;
+		case 134: type = eSpecType::IF_SDF_COMPARE; break;
 		case 135: case 136: // If terrain
 			type = eSpecType::IF_TER_TYPE;
 			break;
@@ -398,6 +339,70 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 			type = eSpecType::IF_EQUIP_ITEM_CLASS;
 			ex2a = (old.type - 141) / 5;
 			break;
+		case 147: type = eSpecType::IF_DAY_REACHED; break;
+		case 148: case 149: // if barrels or crates
+			type = eSpecType::IF_FIELDS;
+			m1 = old.type == 148 ? OBJECT_BARREL : OBJECT_CRATE;
+			m2 = ex1b;
+			ex1a = ex1b = 0;
+			ex2a = ex2b = 64;
+			sd1 = 1;
+			sd2 = std::numeric_limits<short>::max();
+			break;
+		case 150: type = eSpecType::IF_EVENT_OCCURRED; break;
+		case 151: case 152: // if has cave lore or woodsman
+			type = eSpecType::IF_TRAIT;
+			ex1a = old.type - 147;
+			// Set it to require at least 1 PC:
+			ex2a = 1;
+			ex2b = 2;
+			break;
+		case 153: // if enough mage lore
+			type = eSpecType::IF_STATISTIC;
+			if(ex2a >= 0) { // Windows version added "if statistic" much earlier, but it still needs a little conversion.
+				switch(ex2a) {
+					case 20: ex2a = 19; break; // Max HP
+					case 22: ex2a = 20; break; // Max SP
+					case 19: ex2a = 100; break; // Current HP
+					case 21: ex2a = 101; break; // Current SP
+					case 23: ex2a = 102; break; // Experience
+					case 24: ex2a = 103; break; // Skill points
+					case 25: ex2a = 104; break; // Level
+				}
+			} else ex2a = int(eSkill::MAGE_LORE);
+			ex2b = 0;
+			break;
+		case 154: // text response
+			type = eSpecType::IF_TEXT_RESPONSE;
+					// id between 10 and 160 will be fixed later by port_special_text_response, ...
+			ex1a -= 160;
+			ex2a -= 160;
+			break;
+		case 155: type = eSpecType::IF_SDF_EQ; break;
+		case 156: // not present in the first Mac versions
+			type = eSpecType::IF_SPECIES;
+			break;
+
+			// 157-169 were undefined
+			
+		case 170: type = eSpecType::MAKE_TOWN_HOSTILE; ex2a=1; break; // OSNOLA: make town always hostile
+		case 171: // Change terrain (town/outdoor)
+			type = eSpecType::CHANGE_TER;
+			break;
+		case 172: // Swap terrain
+			type = eSpecType::SWAP_TER;
+			break;
+		case 173: // Transform terrain
+			type = eSpecType::TRANS_TER;
+			break;
+		case 174: type = eSpecType::TOWN_MOVE_PARTY; break;
+		case 175: type = eSpecType::TOWN_HIT_SPACE; break;
+		case 176: type = eSpecType::TOWN_EXPLODE_SPACE; break;
+		case 177: type = eSpecType::TOWN_LOCK_SPACE; break;
+		case 178: type = eSpecType::TOWN_UNLOCK_SPACE; break;
+		case 179: type = eSpecType::TOWN_SFX_BURST; break;
+		case 180: type = eSpecType::TOWN_CREATE_WANDERING; break;
+		case 181: type = eSpecType::TOWN_PLACE_MONST; break;
 		case 182: // Destroy all monsters of particular type
 			type = eSpecType::TOWN_NUKE_MONSTS;
 			if (ex1a>=-2 && ex1a<=0) // FIXME: if ex1a:type==0, we do not want to remove all monsters
@@ -407,6 +412,15 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 			type = eSpecType::TOWN_NUKE_MONSTS;
 			ex1a = -ex1a;
 			break;
+		case 184: type = eSpecType::TOWN_GENERIC_LEVER; break;
+		case 185: type = eSpecType::TOWN_GENERIC_PORTAL; break;
+		case 186: type = eSpecType::TOWN_GENERIC_BUTTON; break;
+		case 187: type = eSpecType::TOWN_GENERIC_STAIR; break;
+			// 188 was town lever (handle latter)
+			// 189 was town portal (handle latter)
+			// 190 was town stair (handle latter)
+		case 191: type = eSpecType::TOWN_RELOCATE; break;
+		case 192: type = eSpecType::TOWN_PLACE_ITEM; break;
 		case 193: // Split party
 			type = eSpecType::TOWN_SPLIT_PARTY;
 			if(ex2a > 0) ex2a = 10;
@@ -416,22 +430,16 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 			if(ex1a > 0) ex1a = 10;
 			ex2a = 0;
 			break;
-			// Party statuses (three nodes collapsed into one)
-		case 104:
-			type = eSpecType::AFFECT_PARTY_STATUS;
-			ex1b = 0;
-			ex2a = int(ePartyStatus::STEALTH);
+		case 195: type = eSpecType::TOWN_TIMER_START; break;
+		case 196: // not present in the first Mac versions
+			type = eSpecType::TOWN_CHANGE_LIGHTING;
 			break;
-		case 105:
-			type = eSpecType::AFFECT_PARTY_STATUS;
-			ex1b = 0;
-			ex2a = int(ePartyStatus::FIREWALK);
+		case 197: // not present in the first Mac versions
+			type = eSpecType::TOWN_SET_ATTITUDE;
 			break;
-		case 106:
-			type = eSpecType::AFFECT_PARTY_STATUS;
-			ex1b = 0;
-			ex2a = int(ePartyStatus::FLIGHT);
-			break;
+
+			// 198-199 were undefined
+			
 			// Place fields (twelve individual node types were collapsed into one)
 		case 200:
 			type = eSpecType::RECT_PLACE_FIELD;
@@ -485,69 +493,57 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 				case 2: sd2 = OBJECT_CRATE; break;
 			}
 			break;
-			// Affect status effect (eleven individual node types were collapsed into one)
-		case 87:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::POISON);
+		case 212: type = eSpecType::RECT_MOVE_ITEMS; break;
+		case 213: type = eSpecType::RECT_DESTROY_ITEMS; break;
+		case 214: type = eSpecType::RECT_CHANGE_TER; break;
+		case 215: type = eSpecType::RECT_SWAP_TER; break;
+		case 216: type = eSpecType::RECT_TRANS_TER; break;
+		case 217: type = eSpecType::RECT_LOCK; break;
+		case 218: type = eSpecType::RECT_UNLOCK; break;
+			
+			// 219-224 were undefined
+			
+		case 225: type = eSpecType::OUT_MAKE_WANDER; break;
+		case 226: // Change outdoor terrain
+			type = eSpecType::CHANGE_TER;
 			break;
-		case 88:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::HASTE_SLOW);
+		case 227: type = eSpecType::OUT_PLACE_ENCOUNTER; break;
+		case 228: type = eSpecType::OUT_MOVE_PARTY; break;
+		case 229: // Outdoor store - fix spell IDs
+			type = eSpecType::ENTER_SHOP;
+			if(ex1b == 1 || ex1b == 2)
+				ex1a += 30;
 			break;
-		case 89:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::INVULNERABLE);
+			
+			// 230-255 were undefined
+			
+		case 55: case 58:
+		case 56: case 59: case 188: // Large dialogs with terrain graphics
+		case 57: case 60: // Large dialogs with monster graphics
+		case 189: case 190: {// Large dialogs with 36x36 dialog graphics
+			if (pic>=1000) {
+				if (old.type>=55 && old.type<=60 ) pic=(pic%1000)+2000;
+				if (old.type==55 || old.type==58) pic+=400;
+			}
+			cPictNum picTyp=port_graphic_num(pic);
+			pic=picTyp.num;
+			pictype=picTyp.type;
+			m3 = m2;
+			m2 = -1;
+			if(old.type<=57) type = eSpecType::ONCE_DIALOG; // 55-57
+			else if(old.type<=60) type = eSpecType::ONCE_GIVE_ITEM_DIALOG; // 58-60
+			else if(old.type == 188) type = eSpecType::TOWN_LEVER;
+			else if(old.type == 189) type = eSpecType::TOWN_PORTAL;
+			else type = eSpecType::TOWN_STAIR; // 190
+			if(type != eSpecType::ONCE_DIALOG) break;
+			// Duplicate Leave button
+			if(old.ex1a == 20)
+				ex1a = 9;
+			if(old.ex2a == 20)
+				ex2a = 9;
 			break;
-		case 90:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::MAGIC_RESISTANCE);
-			break;
-		case 91:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::WEBS);
-			break;
-		case 92:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::DISEASE);
-			break;
-		case 93:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::INVISIBLE);
-			break;
-		case 94:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::BLESS_CURSE);
-			break;
-		case 95:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::DUMB);
-			break;
-		case 96:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::ASLEEP);
-			break;
-		case 97:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::PARALYZED);
-			break;
-			// These are ones that were added in the Windows version but only recently added to the Mac version.
-		case 28:
-			type = eSpecType::DISPLAY_PICTURE;
-			showWarning("This scenario contains a Display Picture special node created by the 'Classic Windows' version of the game. Although this version of the game also supports a Display Picture node, the format is incompatible, and automatic conversion is impossible.", "If this is not your scenario, consider contacting the scenario designer to get this fixed.");
-			ex1a = 0;
-			break;
-		case 29:
-			type = eSpecType::SDF_RANDOM;
-			break;
-		case 156:
-			type = eSpecType::IF_SPECIES;
-			break;
-		case 196:
-			type = eSpecType::TOWN_CHANGE_LIGHTING;
-			break;
-		case 197:
-			type = eSpecType::TOWN_SET_ATTITUDE;
-			break;
+		}
+			
 		case -1:
 			break;
 		default:
