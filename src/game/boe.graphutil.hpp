@@ -15,7 +15,6 @@ void draw_pcs(location center);
 void draw_outd_boats(location center);
 void draw_town_boat(location center) ;
 void draw_party_symbol(location center);
-rectangle get_monster_template_rect (pic_num_t type_wanted,short mode,short which_part) ;
 bool is_fluid(ter_num_t ter_type);
 bool is_shore(ter_num_t ter_type);
 bool is_wall(ter_num_t ter_type);
