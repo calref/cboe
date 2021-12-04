@@ -401,21 +401,9 @@ void display_party() {
 			
 			if(univ.party[i].main_status != eMainStatus::ABSENT) { // PC exists?
 				// draw PC graphic
-				pic_num_t pic = univ.party[i].which_graphic;
 				Texture from_gw;
-				if(pic >= 1000) {
-					bool isParty = pic >= 10000;
-					pic_num_t need_pic = pic % 1000;
-					std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(need_pic, isParty);
-				} else if(pic >= 100) {
-					// Note that we assume it's a 1x1 graphic.
-					// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
-					cPict::get_picture(cPictNum(pic - 100,PIC_MONST), from_gw, from_rect);
-				} else {
-					from_rect = calc_rect(2 * (pic / 8), pic % 8);
-					from_gw = *ResMgr::textures.get("pcs");
-				}
-				rect_draw_some_item(from_gw,from_rect,mainPtr,pc_area_buttons[i][1],sf::BlendAlpha);
+				if (cPict::get_picture(univ.party[i].get_picture_num(), from_gw, from_rect))
+					rect_draw_some_item(from_gw,from_rect,mainPtr,pc_area_buttons[i][1],sf::BlendAlpha);
 				
 				// draw name
 				style.pointSize = 9;

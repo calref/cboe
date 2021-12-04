@@ -1342,7 +1342,7 @@ static void put_party_stats(cDialog& me) {
 			me["delete" + n].setText("Delete");
 			me["pic" + n].show();
 			me["pc" + n].show();
-			dynamic_cast<cPict&>(me["pc" + n]).setPict(univ.party[i].which_graphic);
+			dynamic_cast<cPict&>(me["pc" + n]).setPict(univ.party[i].get_picture_num());
 		}
 		else {
 			me["name" + n].setText("Empty.");

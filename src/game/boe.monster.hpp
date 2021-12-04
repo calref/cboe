@@ -7,7 +7,6 @@ void create_wand_monst();
 void place_outd_wand_monst(location where,cOutdoors::cWandering group,short forced);
 location get_monst_head(short m_num);
 short get_monst_picnum(mon_num_t monst);
-ePicType get_monst_pictype(mon_num_t monst);
 std::pair<short,short> get_monst_dims(mon_num_t monst);
 void set_up_monst(eAttitude mode,mon_num_t m_num);
 void do_monsters();

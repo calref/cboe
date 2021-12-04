@@ -164,7 +164,8 @@ public:
 	short skill(eSkill skill) const;
 	short stat_adj(eSkill skill) const;
 	eBuyStatus ok_to_buy(short cost,cItem item) const;
-	
+	cPictNum get_picture_num() const;
+
 	void join_party(cParty& p) {party = &p;}
 	cPlayer* leave_party() {party = nullptr; return this;}
 	

@@ -238,50 +238,20 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 		case 85: type = eSpecType::AFFECT_SKILL_PTS; break;
 		case 86: type = eSpecType::AFFECT_DEADNESS; break;
 			// Affect status effect (eleven individual node types were collapsed into one)
-		case 87:
+		case 87: case 88:  case 89:
+		case 90: case 91:  case 92:
+		case 93: case 94:  case 95:
+		case 96: case 97: {
+			eStatus const status[]= {
+				eStatus::POISON, eStatus::HASTE_SLOW, eStatus::INVULNERABLE,
+				eStatus::MAGIC_RESISTANCE, eStatus::WEBS, eStatus::DISEASE,
+				eStatus::INVISIBLE, eStatus::BLESS_CURSE, eStatus::DUMB,
+				eStatus::ASLEEP, eStatus::PARALYZED
+			};
 			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::POISON);
+			ex1c = int(status[old.type-87]);
 			break;
-		case 88:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::HASTE_SLOW);
-			break;
-		case 89:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::INVULNERABLE);
-			break;
-		case 90:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::MAGIC_RESISTANCE);
-			break;
-		case 91:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::WEBS);
-			break;
-		case 92:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::DISEASE);
-			break;
-		case 93:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::INVISIBLE);
-			break;
-		case 94:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::BLESS_CURSE);
-			break;
-		case 95:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::DUMB);
-			break;
-		case 96:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::ASLEEP);
-			break;
-		case 97:
-			type = eSpecType::AFFECT_STATUS;
-			ex1c = int(eStatus::PARALYZED);
-			break;
+		}
 		case 98: type = eSpecType::AFFECT_STAT; break;
 		case 99: case 100: // Add mage/priest spell TODO: Merge these by adding 100 if it's a priest spell
 			if(old.type == 99) type = eSpecType::AFFECT_MAGE_SPELL;
@@ -293,22 +263,14 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 		case 102: type = eSpecType::AFFECT_FOOD; break;
 		case 103: type = eSpecType::AFFECT_ALCHEMY; break;
 			// Party statuses (three nodes collapsed into one)
-		case 104:
+		case 104: case 105: case 106: {
+			ePartyStatus const status[]={ ePartyStatus::STEALTH, ePartyStatus::FIREWALK, ePartyStatus::FLIGHT};
 			type = eSpecType::AFFECT_PARTY_STATUS;
 			ex1b = 0;
-			ex2a = int(ePartyStatus::STEALTH);
+			ex2a = int(status[old.type-104]);
 			break;
-		case 105:
-			type = eSpecType::AFFECT_PARTY_STATUS;
-			ex1b = 0;
-			ex2a = int(ePartyStatus::FIREWALK);
-			break;
-		case 106:
-			type = eSpecType::AFFECT_PARTY_STATUS;
-			ex1b = 0;
-			ex2a = int(ePartyStatus::FLIGHT);
-			break;
-			
+		}
+		
 			// 107-129 were undefined
 			
 		case 130: type = eSpecType::IF_SDF; break;
@@ -320,25 +282,18 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 			type = eSpecType::IF_TER_TYPE;
 			break;
 		case 137: case 142: // If has gold (and maybe take)
-			type = eSpecType::IF_HAS_GOLD;
-			ex2a = (old.type - 137) / 5;
-			break;
 		case 138: case 143: // If has food (and maybe take)
-			type = eSpecType::IF_HAS_FOOD;
-			ex2a = (old.type - 138) / 5;
-			break;
 		case 139: case 144: // If item on space (and maybe take)
-			type = eSpecType::IF_ITEM_CLASS_ON_SPACE;
-			ex2c = (old.type - 139) / 5;
-			break;
 		case 140: case 145: // If have item class (and maybe take)
-			type = eSpecType::IF_HAVE_ITEM_CLASS;
-			ex2a = (old.type - 140) / 5;
+		case 141: case 146: { // If equip item class (and maybe take)
+			eSpecType const types[]={
+				eSpecType::IF_HAS_GOLD, eSpecType::IF_HAS_FOOD, eSpecType::IF_ITEM_CLASS_ON_SPACE,
+				eSpecType::IF_HAVE_ITEM_CLASS, eSpecType::IF_EQUIP_ITEM_CLASS
+			};
+			type = types[(old.type-137)%5];
+			ex2a = (old.type<142 ? 0 : 1);
 			break;
-		case 141: case 146: // If equip item class (and maybe take)
-			type = eSpecType::IF_EQUIP_ITEM_CLASS;
-			ex2a = (old.type - 141) / 5;
-			break;
+		}
 		case 147: type = eSpecType::IF_DAY_REACHED; break;
 		case 148: case 149: // if barrels or crates
 			type = eSpecType::IF_FIELDS;
@@ -385,16 +340,10 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 
 			// 157-169 were undefined
 			
-		case 170: type = eSpecType::MAKE_TOWN_HOSTILE; ex2a=1; break; // OSNOLA: make town always hostile
-		case 171: // Change terrain (town/outdoor)
-			type = eSpecType::CHANGE_TER;
-			break;
-		case 172: // Swap terrain
-			type = eSpecType::SWAP_TER;
-			break;
-		case 173: // Transform terrain
-			type = eSpecType::TRANS_TER;
-			break;
+		case 170: type = eSpecType::MAKE_TOWN_HOSTILE; ex2a=1; break;
+		case 171: type = eSpecType::CHANGE_TER; break; // Change town terrain
+		case 172: type = eSpecType::SWAP_TER; break;
+		case 173: type = eSpecType::TRANS_TER; break;
 		case 174: type = eSpecType::TOWN_MOVE_PARTY; break;
 		case 175: type = eSpecType::TOWN_HIT_SPACE; break;
 		case 176: type = eSpecType::TOWN_EXPLODE_SPACE; break;
@@ -441,50 +390,20 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 			// 198-199 were undefined
 			
 			// Place fields (twelve individual node types were collapsed into one)
-		case 200:
+		case 200: case 201: case 202:
+		case 203: case 204: case 205:
+		case 206: case 207: case 208:
+		case 209: case 210: {
+			eFieldType const fields[]={
+				WALL_FIRE, WALL_FORCE, WALL_ICE,
+				WALL_BLADES, CLOUD_STINK, CLOUD_SLEEP,
+				FIELD_QUICKFIRE, BARRIER_FIRE, BARRIER_FORCE,
+				FIELD_DISPEL, SFX_SMALL_BLOOD
+			};
 			type = eSpecType::RECT_PLACE_FIELD;
-			sd2 = WALL_FIRE;
+			sd2 = fields[old.type-200];
 			break;
-		case 201:
-			type = eSpecType::RECT_PLACE_FIELD;
-			sd2 = WALL_FORCE;
-			break;
-		case 202:
-			type = eSpecType::RECT_PLACE_FIELD;
-			sd2 = WALL_ICE;
-			break;
-		case 203:
-			type = eSpecType::RECT_PLACE_FIELD;
-			sd2 = WALL_BLADES;
-			break;
-		case 204:
-			type = eSpecType::RECT_PLACE_FIELD;
-			sd2 = CLOUD_STINK;
-			break;
-		case 205:
-			type = eSpecType::RECT_PLACE_FIELD;
-			sd2 = CLOUD_SLEEP;
-			break;
-		case 206:
-			type = eSpecType::RECT_PLACE_FIELD;
-			sd2 = FIELD_QUICKFIRE;
-			break;
-		case 207:
-			type = eSpecType::RECT_PLACE_FIELD;
-			sd2 = BARRIER_FIRE;
-			break;
-		case 208:
-			type = eSpecType::RECT_PLACE_FIELD;
-			sd2 = BARRIER_FORCE;
-			break;
-		case 209:
-			type = eSpecType::RECT_PLACE_FIELD;
-			sd2 = FIELD_DISPEL;
-			break;
-		case 210:
-			type = eSpecType::RECT_PLACE_FIELD;
-			sd2 += SFX_SMALL_BLOOD;
-			break;
+		}
 		case 211:
 			type = eSpecType::RECT_PLACE_FIELD;
 			switch(old.sd2) {
@@ -504,9 +423,7 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 			// 219-224 were undefined
 			
 		case 225: type = eSpecType::OUT_MAKE_WANDER; break;
-		case 226: // Change outdoor terrain
-			type = eSpecType::CHANGE_TER;
-			break;
+		case 226: type = eSpecType::CHANGE_TER; break; // Change outdoor terrain
 		case 227: type = eSpecType::OUT_PLACE_ENCOUNTER; break;
 		case 228: type = eSpecType::OUT_MOVE_PARTY; break;
 		case 229: // Outdoor store - fix spell IDs
@@ -537,10 +454,8 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 			else type = eSpecType::TOWN_STAIR; // 190
 			if(type != eSpecType::ONCE_DIALOG) break;
 			// Duplicate Leave button
-			if(old.ex1a == 20)
-				ex1a = 9;
-			if(old.ex2a == 20)
-				ex2a = 9;
+			if(old.ex1a == 20) ex1a = 9;
+			if(old.ex2a == 20) ex2a = 9;
 			break;
 		}
 			
@@ -694,7 +609,7 @@ static const char*const button_dict[7][11] = {
 	}
 };
 
-static int offsets[] = {
+static int const offsets[] = {
 	int(eSpecType::NONE),
 	int(eSpecType::ONCE_GIVE_ITEM),
 	int(eSpecType::SELECT_TARGET),
