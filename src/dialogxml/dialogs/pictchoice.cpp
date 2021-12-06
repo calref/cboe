@@ -14,7 +14,7 @@
 
 cPictChoice::cPictChoice(const std::vector<pic_num_t>& pics,ePicType t,cDialog* parent) : cPictChoice(pics.begin(), pics.end(), t, parent) {}
 
-cPictChoice::cPictChoice(const std::vector<std::pair<pic_num_t,ePicType>>& pics,cDialog* parent) : dlg("choose-pict",parent) {
+cPictChoice::cPictChoice(const std::vector<cPictNum>& pics,cDialog* parent) : dlg("choose-pict",parent) {
 	picts = pics;
 	attachHandlers();
 }
@@ -26,7 +26,7 @@ cPictChoice::cPictChoice(
 		cDialog* parent
 	) : dlg("choose-pict",parent) {
 	for(auto iter = begin; iter != end; iter++) {
-		picts.push_back({*iter,t});
+		picts.push_back(cPictNum(*iter,t));
 	}
 	attachHandlers();
 }
@@ -88,8 +88,9 @@ void cPictChoice::fillPage(){
 		cPict& pic = dynamic_cast<cPict&>(dlg[sout.str()]);
 		if(page * per_page + i < picts.size()){
 			pic.show();
-			ePicType tp = picts[per_page * page + i].second;
-			pic.setPict(picts[per_page * page + i].first, tp);
+			auto const &pict=picts[per_page * page + i];
+			ePicType const tp = pict.type;
+			pic.setPict(pict, true);
 			rectangle b = pic.getBounds();
 			if(tp == PIC_DLOG_LG || tp == PIC_CUSTOM_DLOG_LG || tp == PIC_SCEN_LG) {
 				pic.setFormat(TXT_WRAP, false);
@@ -141,12 +142,8 @@ bool cPictChoice::onSelect(bool losing) {
 	return true;
 }
 
-pic_num_t cPictChoice::getPicChosen() {
-	return dlg.getResult<std::pair<pic_num_t,ePicType>>().first;
-}
-
-ePicType cPictChoice::getPicChosenType() {
-	return dlg.getResult<std::pair<pic_num_t,ePicType>>().second;
+cPictNum cPictChoice::getPicChosen() {
+	return dlg.getResult<cPictNum>();
 }
 
 size_t cPictChoice::getSelected() {
