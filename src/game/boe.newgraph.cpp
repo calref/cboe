@@ -808,30 +808,9 @@ void refresh_shopping() {
 }
 
 static ePicType get_monst_pictype(mon_num_t monst) {
-	ePicType type = PIC_MONST;
-	short n;
 	if(monst >= 10000)
-		n = univ.party.get_summon(monst - 10000).picture_num;
-	else n = univ.scenario.get_monster(monst).picture_num;
-	if(n >= 1000){
-		type += PIC_CUSTOM;
-		switch(n / 1000){
-			case 2:
-				type += PIC_WIDE;
-				break;
-			case 3:
-				type += PIC_TALL;
-				break;
-			case 4:
-				type += PIC_WIDE;
-				type += PIC_TALL;
-				break;
-		}
-	}else{
-		if(m_pic_index[n].x == 2) type += PIC_WIDE;
-		if(m_pic_index[n].y == 2) type += PIC_TALL;
-	}
-	return type;
+		return univ.party.get_summon(monst - 10000).get_picture_num().type;
+	return univ.scenario.get_monster(monst).get_picture_num().type;
 }
 
 static void place_talk_face() {
