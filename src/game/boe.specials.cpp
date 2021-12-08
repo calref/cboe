@@ -3126,7 +3126,7 @@ void affect_spec(const runtime_state& ctx) {
 			if(spec.ex1b == 0)
 				r1 = minmax(0,250,r1 + spec.ex1a);
 			else r1 = minmax(0,250,r1 - spec.ex1a);
-			univ.party.status[ePartyStatus::STEALTH] = r1;
+			univ.party.status[ePartyStatus(spec.ex2a)] = r1;
 			break;
 		case eSpecType::AFFECT_TRAITS:
 			if(pc_num >= 100) break;
