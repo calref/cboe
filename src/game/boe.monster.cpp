@@ -1140,21 +1140,21 @@ bool summon_monster(mon_num_t which,location where,short duration,eAttitude give
 }
 
 void activate_monsters(short code,short /*attitude*/) {
-	if(code == 0)
+	if(code <= 0)
 		return;
-	for(short i = 0; i < univ.town->creatures.size(); i++)
-		if(univ.town->creatures[i].spec_enc_code == code) {
-			cTownperson& monst = univ.town->creatures[i];
-			univ.town.monst.assign(i, monst, univ.scenario.get_monster(monst.number), univ.party.easy_mode, univ.difficulty_adjust());
-			univ.town.monst[i].spec_enc_code = 0;
-			univ.town.monst[i].active = 2;
+	for(short i = 0; i < univ.town->creatures.size(); i++) {
+		cTownperson& monst = univ.town->creatures[i];
+		if(univ.town->creatures[i].number == 0 || univ.town->creatures[i].spec_enc_code != code) continue;
+		univ.town.monst.assign(i, monst, univ.scenario.get_monster(monst.number), univ.party.easy_mode, univ.difficulty_adjust());
+		univ.town.monst[i].spec_enc_code = 0;
+		univ.town.monst[i].active = 2;
 			
-			univ.town.monst[i].summon_time = 0;
-			univ.town.monst[i].target = 6;
+		univ.town.monst[i].summon_time = 0;
+		univ.town.monst[i].target = 6;
 			
-			univ.town.set_crate(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y,false);
-			univ.town.set_barrel(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y,false);
-		}
+		univ.town.set_crate(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y,false);
+		univ.town.set_barrel(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y,false);
+	}
 }
 
 mon_num_t get_summon_monster(short summon_class) {
