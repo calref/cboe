@@ -41,40 +41,42 @@ short out_enc_lev_tot(short which) {
 }
 
 void create_wand_monst() {
-	short r1,r2,r3,num_tries = 0;
+	short num_tries = 0;
 	location p_loc;
 	
-	r1 = get_ran(1,0,univ.out->wandering.size() - 1);
 	if(overall_mode == MODE_OUTDOORS) {
+		short r1 = get_ran(1,0,univ.out->wandering.size()- 1);
 		if(!univ.out->wandering[r1].isNull()) {
-			r2 = get_ran(1,0,univ.out->wandering_locs.size() - 1);
+			short r2 = get_ran(1,0,univ.out->wandering_locs.size() - 1);
 			while(point_onscreen(univ.out->wandering_locs[r2], global_to_local(univ.party.out_loc)) && num_tries++ < 100)
-				r2 = get_ran(1,0,3);
+				r2 = get_ran(1,0,univ.out->wandering_locs.size() - 1);
 			if(!is_blocked(univ.out->wandering_locs[r2]))
 				place_outd_wand_monst(univ.out->wandering_locs[r2], univ.out->wandering[r1],0);
 		}
-	} else if(!univ.town->wandering[r1].isNull() && univ.town.countMonsters() <= 50
+	} else {
+		short r1 = get_ran(1,0,univ.town->wandering.size()- 1);
+		if(!univ.town->wandering[r1].isNull() && univ.town.countMonsters() <= 50
 			  && !univ.town->is_cleaned_out()) {
-		// won't place wandering if more than 50 monsters
-		r2 = get_ran(1,0,univ.town->wandering.size() - 1);
-		while(point_onscreen(univ.town->wandering_locs[r2],univ.party.town_loc) &&
-			  !loc_off_act_area(univ.town->wandering_locs[r2]) && num_tries++ < 100)
-			r2 = get_ran(1,0,3);
-		for(short i = 0; i < 4; i++) {
-			if(univ.town->wandering[r1].monst[i] != 0) { // place a monster
-				p_loc = univ.town->wandering_locs[r2];
-				p_loc.x += get_ran(1,0,4) - 2;
-				p_loc.y += get_ran(1,0,4) - 2;
-				if(!is_blocked(p_loc))
-					place_monster(univ.town->wandering[r1].monst[i],p_loc);
+			// won't place wandering if more than 50 monsters
+			short r2 = get_ran(1,0,univ.town->wandering_locs.size() - 1);
+			while(point_onscreen(univ.town->wandering_locs[r2],univ.party.town_loc) &&
+				  !loc_off_act_area(univ.town->wandering_locs[r2]) && num_tries++ < 100)
+				r2 = get_ran(1,0,univ.town->wandering_locs.size() - 1);
+			for(size_t i=0; i<univ.town->wandering[r1].monst.size(); ++i) {
+				mon_num_t const &monst=univ.town->wandering[r1].monst[i];
+				if(monst == 0) continue;
+				// compute the number of monsters that we want to place
+				int numMonst=1;
+				if (r1>=2 && i==0) ++numMonst;
+				if (r1>=3 && i==1) ++numMonst;
+				for (int w=0; w<numMonst; ++w) {
+					p_loc = univ.town->wandering_locs[r2];
+					p_loc.x += get_ran(1,0,4) - 2;
+					p_loc.y += get_ran(1,0,4) - 2;
+					if(!is_blocked(p_loc))
+						place_monster(monst,p_loc);
+				}
 			}
-			p_loc = univ.town->wandering_locs[r2];
-			p_loc.x += get_ran(1,0,4) - 2;
-			p_loc.y += get_ran(1,0,4) - 2;
-			// TODO: This contradicts the documentation which says only 1-2 are placed of the last monster
-			r3 = get_ran(1,0,3);
-			if(r3 >= 2 && !is_blocked(p_loc)) // place extra monsters?
-				place_monster(univ.town->wandering[r1].monst[3],p_loc);
 		}
 	}
 }
