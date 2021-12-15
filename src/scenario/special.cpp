@@ -270,9 +270,8 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 			ex2a = int(status[old.type-104]);
 			break;
 		}
-		
+
 			// 107-129 were undefined
-			
 		case 130: type = eSpecType::IF_SDF; break;
 		case 131: type = eSpecType::IF_TOWN_NUM; break;
 		case 132: type = eSpecType::IF_RANDOM; break;
@@ -291,7 +290,10 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 				eSpecType::IF_HAVE_ITEM_CLASS, eSpecType::IF_EQUIP_ITEM_CLASS
 			};
 			type = types[(old.type-137)%5];
-			ex2a = (old.type<142 ? 0 : 1);
+			if (old.type==139 || old.type==144) // ex1a, ex2a is used to store the item'slocation
+				ex2c = (old.type<142 ? 0 : 1);
+			else
+				ex2a = (old.type<142 ? 0 : 1);
 			break;
 		}
 		case 147: type = eSpecType::IF_DAY_REACHED; break;
