@@ -694,9 +694,7 @@ void cStringRecorder::operator()(cDialog& me) {
 			break;
 		case NOTE_TOWN:
 			str1 = univ.town->get_special_string(label1);
-			if (label2>=univ.town->spec_strs.size())
-				add_string_to_buf("cStringRecorder()[town]: empty label 2.");
-			else
+			if (label2<univ.town->spec_strs.size())
 				str2 = univ.town->spec_strs[label2];
 			break;
 		case NOTE_OUT:
