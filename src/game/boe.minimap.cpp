@@ -10,6 +10,7 @@
 #include <SFML/System.hpp>
 
 #include "cursors.hpp"
+#include "dialog.hpp"
 #include "gfxsheets.hpp"
 #include "pict.hpp"
 #include "prefs.hpp"
@@ -108,6 +109,11 @@ void set_visible(bool vis)
 }
 
 void draw(bool need_refresh) {
+#ifdef __APPLE__
+	// can not be updated when a dialog is running
+	if (cDialog::checkIfDialogIsRunning())
+		return;
+#endif
 	if (changed) {
 		need_refresh=true;
 		changed = false;
