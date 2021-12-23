@@ -28,10 +28,14 @@ public:
 		, type(nType)
 	{
 	}
-
+	bool operator==(const cPictNum&pict) const { return num==pict.num && type == pict.type; }
+	bool operator!=(const cPictNum&pict) const { return !operator==(pict);}
 	pic_num_t num;
 	ePicType type;
 };
+
+std::ostream& operator<< (std::ostream& out, cPictNum pic);
+std::istream& operator>> (std::istream& in, cPictNum& pic);
 
 /// A simple icon.
 /// This control can also be made clickable.

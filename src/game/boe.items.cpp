@@ -580,14 +580,14 @@ bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short 
 	
 }
 
-short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons) {
+short custom_choice_dialog(std::array<std::string, 6>& strs, cPictNum pic,std::array<short, 3>& buttons) {
 	set_cursor(sword_curs);
 	
 	std::vector<std::string> vec(strs.begin(), strs.end());
 	// Strip off trailing empty strings
 	while(vec.back().empty())
 		vec.pop_back();
-	cThreeChoice customDialog(vec, buttons, pic_num, pic_type);
+	cThreeChoice customDialog(vec, buttons, pic);
 	std::string item_hit = customDialog.show();
 	
 	for(int i = 0; i < 3; i++) {
