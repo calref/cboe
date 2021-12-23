@@ -16,12 +16,12 @@
 #include "pict.hpp"
 
 cThreeChoice::cThreeChoice
-  (std::vector<std::string>& strings, cBasicButtonType button, pic_num_t pic, ePicType t, cDialog* parent)
-  : cChoiceDlog(parent), type(t){
+  (std::vector<std::string>& strings, cBasicButtonType button, cPictNum pic, cDialog* parent)
+  : cChoiceDlog(parent) {
 	cDialog& parentDlog = *operator->();
 	parentDlog.setBg(cDialog::BG_DARK);
 	parentDlog.setDefTextClr(sf::Color::White);
-	if(type == PIC_CUSTOM_DLOG_LG || type == PIC_DLOG_LG || type == PIC_SCEN_LG)
+	if(pic.type == PIC_CUSTOM_DLOG_LG || pic.type == PIC_DLOG_LG || pic.type == PIC_SCEN_LG)
 		init_strings(strings,86);
 	else
 		init_strings(strings,50);
@@ -31,12 +31,12 @@ cThreeChoice::cThreeChoice
 }
 
 cThreeChoice::cThreeChoice
-  (std::vector<std::string>& strings, std::array<cBasicButtonType, 3>& buttons, pic_num_t pic, ePicType t, cDialog* parent)
-  : cChoiceDlog(parent), type(t){
+  (std::vector<std::string>& strings, std::array<cBasicButtonType, 3>& buttons, cPictNum pic, cDialog* parent)
+  : cChoiceDlog(parent) {
 	cDialog& parentDlog = *operator->();
 	parentDlog.setBg(cDialog::BG_DARK);
 	parentDlog.setDefTextClr(sf::Color::White);
-	if(type == PIC_CUSTOM_DLOG_LG || type == PIC_DLOG_LG || type == PIC_SCEN_LG)
+	if(pic.type == PIC_CUSTOM_DLOG_LG || pic.type == PIC_DLOG_LG || pic.type == PIC_SCEN_LG)
 		init_strings(strings,86);
 	else
 		init_strings(strings,50);
@@ -46,12 +46,12 @@ cThreeChoice::cThreeChoice
 }
 
 cThreeChoice::cThreeChoice
-  (std::vector<std::string>& strings,std::array<short, 3>& buttons,pic_num_t pic,ePicType t,cDialog* parent)
-  : cChoiceDlog(parent), type(t){
+  (std::vector<std::string>& strings,std::array<short, 3>& buttons, cPictNum pic, cDialog* parent)
+  : cChoiceDlog(parent){
 	cDialog& parentDlog = *operator->();
 	parentDlog.setBg(cDialog::BG_DARK);
 	parentDlog.setDefTextClr(sf::Color::White);
-	if(type == PIC_CUSTOM_DLOG_LG || type == PIC_DLOG_LG || type == PIC_SCEN_LG)
+	if(pic.type == PIC_CUSTOM_DLOG_LG || pic.type == PIC_DLOG_LG || pic.type == PIC_SCEN_LG)
 		init_strings(strings,86);
 	else
 		init_strings(strings,50);
@@ -152,11 +152,11 @@ void cThreeChoice::init_buttons(cBasicButtonType btn1, cBasicButtonType btn2, cB
 	}
 }
 
-void cThreeChoice::init_pict(pic_num_t pic){
+void cThreeChoice::init_pict(cPictNum pic){
 	cDialog* me = operator->();
 	cPict* pic_ctrl = new cPict(*me);
 	pic_ctrl->setBounds({8,8,8,8});
-	pic_ctrl->setPict(pic,type);
+	pic_ctrl->setPict(pic, true);
 	pic_ctrl->recalcRect();
 	me->add(pic_ctrl, pic_ctrl->getBounds(), "pict");
 }

@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 #include <sstream>
+
+#include "pict.hpp"
 #include "boe.consts.hpp"
 
 #define ASB	add_string_to_buf
@@ -18,7 +20,8 @@ const int NUM_FACE_G = 80;
 const int NUM_DLOG_G = 28;
 
 struct scen_header_type{
-	int intro_pic, rating, difficulty, ver[3], prog_make_ver[3];
+	cPictNum intro_pic;
+	int rating, difficulty, ver[3], prog_make_ver[3];
 	std::string name, who1, who2, file;
 };
 

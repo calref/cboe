@@ -728,3 +728,18 @@ std::istream& operator>> (std::istream& in, ePicType& pic) {
 		in.setstate(std::ios::failbit);
 	return in;
 }
+
+std::ostream& operator<< (std::ostream& out, cPictNum pic) {
+	out << pic.num << " " << int(pic.type);
+	return out;
+}
+std::istream& operator>> (std::istream& in, cPictNum& pic) {
+	in >> pic.num;
+	if (!in.eof()) {
+		// to be compatible with original boe.type
+		int type;
+		in >> type;
+		pic.type = ePicType(type);
+	}
+	return in;
+}

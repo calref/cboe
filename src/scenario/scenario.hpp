@@ -68,9 +68,10 @@ public:
 	cTerrain &get_terrain(ter_num_t ter);
 
 public:
-	unsigned short difficulty,intro_pic,default_ground;
+	unsigned short difficulty,default_ground;
+	cPictNum intro_pic;
 	int bg_out, bg_fight, bg_town, bg_dungeon;
-	short intro_mess_pic;
+	cPictNum intro_mess_pic;
 	location where_start,out_sec_start,out_start;
 	size_t which_town_start;
 	spec_num_t init_spec;
