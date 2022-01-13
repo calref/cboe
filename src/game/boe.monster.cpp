@@ -88,7 +88,7 @@ void place_outd_wand_monst(location where,cOutdoors::cWandering group,short forc
 	
 	while(i < 10) {
 		if(!univ.party.out_c[i].exists || ((i == 9) && (forced > 0))) {
-			if((univ.party.sd_legit(group.end_spec1,group.end_spec2)) && (PSD[group.end_spec1][group.end_spec2] > 0))
+			if(univ.party.sd_legit(group.end_spec1,group.end_spec2) && univ.party.sd(group.end_spec1,group.end_spec2) > 0)
 				return;
 			univ.party.out_c[i].exists = true;
 			univ.party.out_c[i].direction = 0;

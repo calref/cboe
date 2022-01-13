@@ -91,7 +91,7 @@ struct runtime_state {
 static cSpecial get_node(spec_num_t cur_spec, eSpecCtxType cur_spec_type);
 static iLiving& current_pc_picked_in_spec_enc(const runtime_state& ctx);
 static void resolve_pointers(cSpecial& cur_node);
-static void setsd(short a, short b, short val);
+static void set_sd(short a, short b, short val);
 static bool isValidField(int fld, bool allowSpecial);
 static void handle_message(const runtime_state& ctx, const std::string& title = "", pic_num_t pic = -1, ePicType pt = PIC_SCEN);
 
@@ -1614,7 +1614,7 @@ void kill_monst(cCreature& which_m,short who_killed,eMainStatus type) {
 	
 	// Special killing effects
 	if(univ.party.sd_legit(which_m.spec1,which_m.spec2))
-		PSD[which_m.spec1][which_m.spec2] = 1;
+		set_sd(which_m.spec1,which_m.spec2,1);
 	
 	if(which_m.special_on_kill >= 0)
 		run_special(eSpecCtx::KILL_MONST, eSpecCtxType::TOWN, which_m.special_on_kill, which_m.cur_loc);
@@ -2139,11 +2139,11 @@ void general_spec(const runtime_state& ctx) {
 		case eSpecType::NONE: break; // null spec
 		case eSpecType::SET_SDF:
 			check_mess = true;
-			setsd(cur_node.sd1,cur_node.sd2,cur_node.ex1a);
+			set_sd(cur_node.sd1,cur_node.sd2,cur_node.ex1a);
 			break;
 		case eSpecType::INC_SDF:
 			check_mess = true;
-			setsd(cur_node.sd1, cur_node.sd2, PSD[cur_node.sd1][cur_node.sd2] + ((cur_node.ex1b == 0) ? 1 : -1) * cur_node.ex1a);
+			set_sd(cur_node.sd1, cur_node.sd2, univ.party.sd(cur_node.sd1,cur_node.sd2) + ((cur_node.ex1b == 0) ? 1 : -1) * cur_node.ex1a);
 			break;
 		case eSpecType::DISPLAY_MSG:
 			check_mess = true;
@@ -2160,8 +2160,7 @@ void general_spec(const runtime_state& ctx) {
 				add_string_to_buf(str2, 4);
 			break;
 		case eSpecType::FLIP_SDF:
-			setsd(cur_node.sd1,cur_node.sd2,
-				  ((PSD[cur_node.sd1][cur_node.sd2] == 0) ? 1 : 0) );
+			set_sd(cur_node.sd1,cur_node.sd2, univ.party.sd(cur_node.sd1,cur_node.sd2) == 0 ? 1 : 0 );
 			check_mess = true;
 			break;
 		case eSpecType::CANT_ENTER:
@@ -2241,12 +2240,12 @@ void general_spec(const runtime_state& ctx) {
 		case eSpecType::SET_SDF_ROW:
 			if(spec.sd1 != minmax(0,299,spec.sd1))
 				showError("Stuff Done flag out of range.");
-			else for(short i = 0; i < 50; i++) PSD[spec.sd1][i] = spec.ex1a;
+			else for(short i = 0; i < 50; i++) set_sd(spec.sd1,i,spec.ex1a);
 			break;
 		case eSpecType::COPY_SDF:
 			if(!univ.party.sd_legit(spec.sd1,spec.sd2) || !univ.party.sd_legit(spec.ex1a,spec.ex1b))
 				showError("Stuff Done flag out of range.");
-			else PSD[spec.sd1][spec.sd2] = PSD[spec.ex1a][spec.ex1b];
+			else set_sd(spec.sd1,spec.sd2,univ.party.sd(spec.ex1a,spec.ex1b));
 			break;
 		case eSpecType::REST:
 			check_mess = true;
@@ -2292,7 +2291,7 @@ void general_spec(const runtime_state& ctx) {
 					max(cur_node.ex1a,cur_node.ex1b)
 				);
 			}
-			setsd(cur_node.sd1,cur_node.sd2,rand);
+			set_sd(cur_node.sd1,cur_node.sd2,rand);
 			//print_nums(rand, cur_node.ex1a, cur_node.ex1b);
 			break;
 		// SDF arithmetic! :D
@@ -2306,21 +2305,21 @@ void general_spec(const runtime_state& ctx) {
 		case eSpecType::SDF_TIMES: case eSpecType::SDF_POWER:
 		case eSpecType::SDF_DIVIDE: {
 			check_mess = true;
-			int i = spec.ex1b == -1 ? spec.ex1a : PSD[spec.ex1a][spec.ex1b];
-			int j = spec.ex2b == -1 ? spec.ex2a : PSD[spec.ex2a][spec.ex2b];
+			int i = spec.ex1b == -1 ? spec.ex1a : univ.party.sd(spec.ex1a,spec.ex1b);
+			int j = spec.ex2b == -1 ? spec.ex2a : univ.party.sd(spec.ex2a,spec.ex2b);
 			switch(spec.type) {
-				case eSpecType::SDF_ADD: setsd(spec.sd1, spec.sd2, i + j); break;
-				case eSpecType::SDF_DIFF: setsd(spec.sd1, spec.sd2, i - j); break;
-				case eSpecType::SDF_TIMES: setsd(spec.sd1, spec.sd2, i * j); break;
+				case eSpecType::SDF_ADD: set_sd(spec.sd1, spec.sd2, i + j); break;
+				case eSpecType::SDF_DIFF: set_sd(spec.sd1, spec.sd2, i - j); break;
+				case eSpecType::SDF_TIMES: set_sd(spec.sd1, spec.sd2, i * j); break;
 				case eSpecType::SDF_DIVIDE:
 					if(univ.party.sd_legit(spec.sd1, spec.sd2))
-						setsd(spec.sd1, spec.sd2, i / j);
+						set_sd(spec.sd1, spec.sd2, i / j);
 					if(univ.party.sd_legit(spec.ex1c, spec.ex2c))
-						setsd(spec.ex1c, spec.ex2c, i % j);
+						set_sd(spec.ex1c, spec.ex2c, i % j);
 					break;
 				case eSpecType::SDF_POWER:
-					if(i == 2) setsd(spec.sd1, spec.sd2, 1 << j);
-					else setsd(spec.sd1, spec.sd2, pow(i, j));
+					if(i == 2) set_sd(spec.sd1, spec.sd2, 1 << j);
+					else set_sd(spec.sd1, spec.sd2, pow(i, j));
 					break;
 				default: // Unreachable case
 					break;
@@ -2338,7 +2337,7 @@ void general_spec(const runtime_state& ctx) {
 			// TODO: Give more options?
 			switch(spec.pic) {
 				case 0: // Print SDF contents
-					print_nums(spec.sd1, spec.sd2, univ.party.stuff_done[spec.sd1][spec.sd2]);
+					print_nums(spec.sd1, spec.sd2, univ.party.sd(spec.sd1,spec.sd2));
 					break;
 				case 1: // Print three literal values (which might be pointers!)
 					print_nums(spec.ex1a, spec.ex1b, spec.ex1c);
@@ -2487,7 +2486,7 @@ void general_spec(const runtime_state& ctx) {
 }
 
 void oneshot_spec(const runtime_state& ctx) {
-	bool check_mess = true,set_sd = true;
+	bool check_mess = true, update_sd = true;
 	std::array<std::string, 6> strs;
 	std::array<short, 3> buttons = {-1,-1,-1};
 	cSpecial spec = ctx.cur_spec, cur_node = ctx.cur_spec;
@@ -2496,7 +2495,7 @@ void oneshot_spec(const runtime_state& ctx) {
 	int dlg_res;
 	
 	ctx.next_spec = cur_node.jumpto;
-	if((univ.party.sd_legit(spec.sd1,spec.sd2)) && (PSD[spec.sd1][spec.sd2] == 250)) {
+	if(univ.party.sd_legit(spec.sd1,spec.sd2) && univ.party.sd(spec.sd1,spec.sd2) == 250) {
 		ctx.next_spec = -1;
 		return;
 	}
@@ -2504,7 +2503,7 @@ void oneshot_spec(const runtime_state& ctx) {
 		case eSpecType::ONCE_GIVE_ITEM:
 			if(spec.ex1a >= 0 && spec.ex1a < univ.scenario.scen_items.size() &&
 					!univ.party.forced_give(univ.get_item(spec.ex1a),eItemAbil::NONE)) {
-				set_sd = false;
+				update_sd = false;
 				if( spec.ex2b >= 0)
 					ctx.next_spec = spec.ex2b;
 			}
@@ -2516,7 +2515,7 @@ void oneshot_spec(const runtime_state& ctx) {
 		case eSpecType::ONCE_GIVE_SPEC_ITEM:
 			if(spec.ex1a != minmax(0,49,spec.ex1a)) {
 				showError("Special item is out of range.");
-				set_sd = false;
+				update_sd = false;
 			}
 			else if(spec.ex1b == 0)
 				univ.party.spec_items.insert(spec.ex1a);
@@ -2526,7 +2525,7 @@ void oneshot_spec(const runtime_state& ctx) {
 			*ctx.redraw = 1;
 			break;
 		case eSpecType::ONCE_NULL:
-			set_sd = false;
+			update_sd = false;
 			check_mess = false;
 			break;
 		case eSpecType::ONCE_SET_SDF:
@@ -2557,7 +2556,7 @@ void oneshot_spec(const runtime_state& ctx) {
 			if(spec.m3 > 0) {
 				if(dlg_res == 1) {
 					if((spec.ex1a >= 0) || (spec.ex2a >= 0)) {
-						set_sd = false;
+						update_sd = false;
 					}
 				}
 				if(dlg_res == 2) ctx.next_spec = spec.ex1b;
@@ -2575,11 +2574,11 @@ void oneshot_spec(const runtime_state& ctx) {
 				get_strs(strs[i * 2],strs[i * 2 + 1], ctx.cur_spec_type, spec.m1 + i * 2, spec.m1 + i * 2 + 1);
 			buttons[0] = 20; buttons[1] = 19;
 			dlg_res = custom_choice_dialog(strs, cPictNum(spec.pic, ePicType(spec.pictype)), buttons);
-			if(dlg_res == 1) {set_sd = false; ctx.next_spec = -1;}
+			if(dlg_res == 1) {update_sd = false; ctx.next_spec = -1;}
 			else {
 				store_i = univ.get_item(spec.ex1a);
 				if((spec.ex1a >= 0) && (!univ.party.give_item(store_i,true))) {
-					set_sd = false; ctx.next_spec = -1;
+					update_sd = false; ctx.next_spec = -1;
 				}
 				else {
 					give_gold(spec.ex1b,true);
@@ -2599,7 +2598,7 @@ void oneshot_spec(const runtime_state& ctx) {
 		case eSpecType::ONCE_OUT_ENCOUNTER:
 			if(spec.ex1a != minmax(0,3,spec.ex1a)) {
 				showError("Special outdoor enc. is out of range. Must be 0-3.");
-				set_sd = false;
+				update_sd = false;
 			}
 			else {
 				l = global_to_local(univ.party.out_loc);
@@ -2619,7 +2618,7 @@ void oneshot_spec(const runtime_state& ctx) {
 			}
 			else dlg_res = cChoiceDlog("basic-trap",{"yes","no"}).show() == "no";
 			if(dlg_res == 1) {
-				set_sd = false;
+				update_sd = false;
 				ctx.next_spec = -1;
 				*ctx.ret_a = 1;
 			} else {
@@ -2627,7 +2626,7 @@ void oneshot_spec(const runtime_state& ctx) {
 					dlg_res = char_select_pc(0,"Trap! Who will disarm?");
 					if(dlg_res == 6){
 						*ctx.ret_a = 1;
-						set_sd = false;
+						update_sd = false;
 					}
 				} else dlg_res = univ.cur_pc;
 				bool disarmed = run_trap(dlg_res,eTrapType(spec.ex1a),spec.ex1b,spec.ex2a);
@@ -2648,8 +2647,8 @@ void oneshot_spec(const runtime_state& ctx) {
 	if(check_mess) {
 		handle_message(ctx);
 	}
-	if((set_sd) && (univ.party.sd_legit(spec.sd1,spec.sd2)))
-		PSD[spec.sd1][spec.sd2] = 250;
+	if(update_sd && univ.party.sd_legit(spec.sd1,spec.sd2))
+		set_sd(spec.sd1,spec.sd2,250);
 	
 }
 
@@ -2933,7 +2932,7 @@ void affect_spec(const runtime_state& ctx) {
 				case eStatus::DISEASE:
 					if(spec.ex1b == 0)
 						pc.apply_status(eStatus::DISEASE, -spec.ex1a);
-					else pc.disease(spec.ex1a);
+					else pc.disease(spec.ex1a); // CHECKME: on legacy mac this also called apply_status
 					break;
 				case eStatus::INVISIBLE:
 					if(spec.ex1b == 0)
@@ -3189,12 +3188,12 @@ void affect_spec(const runtime_state& ctx) {
 			univ.party[pc_num].skills[eSkill::INTELLIGENCE] = spec.ex2c;
 			ctx.cur_target = &univ.get_target(pc_num);
 			if(univ.party.sd_legit(spec.sd1, spec.sd2))
-				univ.party.stuff_done[spec.sd1][spec.sd2] = univ.party[pc_num].unique_id - 1000;
+				univ.party.sd_set(spec.sd1,spec.sd2,univ.party[pc_num].unique_id - 1000);
 			break;
 		case eSpecType::STORE_PC:
 			if(cPlayer* who = dynamic_cast<cPlayer*>(&pc)) {
 				if(univ.party.sd_legit(spec.sd1, spec.sd2))
-					univ.party.stuff_done[spec.sd1][spec.sd2] = univ.party[pc_num].unique_id - 1000;
+					univ.party.sd_set(spec.sd1,spec.sd2,univ.party[pc_num].unique_id - 1000);
 				if(spec.ex1a == 1) break;
 				who->main_status += eMainStatus::SPLIT;
 				univ.stored_pcs[who->unique_id] = who->leave_party();
@@ -3287,14 +3286,14 @@ void ifthen_spec(const runtime_state& ctx) {
 	switch(cur_node.type) {
 		case eSpecType::IF_SDF:
 			if(univ.party.sd_legit(spec.sd1,spec.sd2)) {
-				if((spec.ex1a >= 0) && (PSD[spec.sd1][spec.sd2] >= spec.ex1a))
+				if(spec.ex1a >= 0 && univ.party.sd(spec.sd1,spec.sd2) >= spec.ex1a)
 					ctx.next_spec = spec.ex1b;
-				else if((spec.ex2a >= 0) && (PSD[spec.sd1][spec.sd2] < spec.ex2a))
+				else if(spec.ex2a >= 0 && univ.party.sd(spec.sd1,spec.sd2) < spec.ex2a)
 					ctx.next_spec = spec.ex2b;
 			}
 			break;
 		case eSpecType::IF_TOWN_NUM:
-			if(((is_town()) || (is_combat())) && (univ.party.town_num == spec.ex1a))
+			if((is_town() || is_combat()) && univ.party.town_num == spec.ex1a)
 				ctx.next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_RANDOM:
@@ -3309,8 +3308,8 @@ void ifthen_spec(const runtime_state& ctx) {
 				ctx.next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_SDF_COMPARE:
-			if((univ.party.sd_legit(spec.sd1,spec.sd2)) && (univ.party.sd_legit(spec.ex1a,spec.ex1b))) {
-				if(PSD[spec.ex1a][spec.ex1b] < PSD[spec.sd1][spec.sd2])
+			if(univ.party.sd_legit(spec.sd1,spec.sd2) && univ.party.sd_legit(spec.ex1a,spec.ex1b)) {
+				if(univ.party.sd(spec.ex1a,spec.ex1b) < univ.party.sd(spec.sd1,spec.sd2))
 					ctx.next_spec = spec.ex2b;
 			}
 			else showError("A Stuff Done flag is out of range.");
@@ -3514,7 +3513,7 @@ void ifthen_spec(const runtime_state& ctx) {
 			if(spec.m2 > spec.m3) std::swap(spec.m2,spec.m3);
 			get_strs(str1,str1,eSpecCtxType::SCEN,spec.m1,-1);
 			int i = get_num_response(spec.m2,spec.m3,str1);
-			setsd(spec.sd1, spec.sd2, abs(i));
+			set_sd(spec.sd1, spec.sd2, abs(i));
 			int j = 0;
 			spec.pic = minmax(0,2,spec.pic);
 			switch(spec.pic) { // Comparison mode
@@ -3550,7 +3549,7 @@ void ifthen_spec(const runtime_state& ctx) {
 		}
 		case eSpecType::IF_SDF_EQ:
 			if(univ.party.sd_legit(spec.sd1,spec.sd2)) {
-				if(PSD[spec.sd1][spec.sd2] == spec.ex1a)
+				if(univ.party.sd(spec.sd1,spec.sd2) == spec.ex1a)
 					ctx.next_spec = spec.ex1b;
 			}
 			break;
@@ -4542,12 +4541,12 @@ void outdoor_spec(const runtime_state& ctx){
 	}
 }
 
-void setsd(short a, short b, short val) {
+void set_sd(short a, short b, short val) {
 	if(!univ.party.sd_legit(a,b)) {
 		showError("The scenario attempted to change an out of range Stuff Done flag.");
 		return;
 	}
-	PSD[a][b] = val;
+	univ.party.sd_set(a,b,val);
 }
 
 void handle_message(const runtime_state& ctx, const std::string& title, pic_num_t pic, ePicType pt) {
@@ -4638,14 +4637,14 @@ void set_campaign_flag(short sdf_a, short sdf_b, short cpf_a, short cpf_b, short
 		if(str >= 0 && str < univ.scenario.spec_strs.size()) {
 			std::string const &cp_id = univ.scenario.spec_strs[str];
 			if(get_send)
-				univ.party.stuff_done[sdf_a][sdf_b] = univ.cpn_flag(cpf_a, cpf_b, cp_id);
+				univ.party.sd_set(sdf_a,sdf_b,univ.cpn_flag(cpf_a, cpf_b, cp_id));
 			else
-				univ.cpn_flag(cpf_a, cpf_b, cp_id) = univ.party.stuff_done[sdf_a][sdf_b];
+				univ.cpn_flag(cpf_a, cpf_b, cp_id) = univ.party.sd(sdf_a,sdf_b);
 		} else {
 			if(get_send)
-				univ.party.stuff_done[sdf_a][sdf_b] = univ.cpn_flag(cpf_a, cpf_b);
+				univ.party.sd_set(sdf_a,sdf_b,univ.cpn_flag(cpf_a, cpf_b));
 			else
-				univ.cpn_flag(cpf_a, cpf_b) = univ.party.stuff_done[sdf_a][sdf_b];
+				univ.cpn_flag(cpf_a, cpf_b) = univ.party.sd(sdf_a,sdf_b);
 		}
 	} catch(std::range_error x) {
 		showError(x.what());
@@ -4703,4 +4702,5 @@ iLiving& current_pc_picked_in_spec_enc(const runtime_state& ctx) {
 				return *targ;
 			else return univ.party;
 	}
+	return univ.party;
 }
