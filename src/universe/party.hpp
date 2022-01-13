@@ -177,6 +177,8 @@ public:
 	int get_level() const;
 	int calc_day() const;
 	
+	void enter_scenario(cScenario const &scenario);
+	
 	void new_pc(size_t spot);
 	void replace_pc(size_t spot, cPlayer* with);
 	size_t free_space();
@@ -204,7 +206,10 @@ public:
 	iLiving& pc_present() const; // If only one pc is present, returns that pc. Otherwise returns party.
 	void swap_pcs(size_t a, size_t b);
 	
-	bool sd_legit(short a, short b);
+	// stuff done, check validity and get/set accessor
+	bool sd_legit(short a, short b) const;
+	unsigned char sd(short a, short b) const;
+	void sd_set(short a, short b, unsigned char val);
 	
 	auto begin() -> boost::indirect_iterator<decltype(adven)::iterator> {
 		return boost::make_indirect_iterator(adven.begin());

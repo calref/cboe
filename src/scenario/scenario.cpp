@@ -217,6 +217,8 @@ void cScenario::swap(cScenario& other) {
 	std::swap(scen_file, other.scen_file);
 	std::swap(outdoors, other.outdoors);
 	std::swap(towns, other.towns);
+	for(auto& town : towns) town->reattach(*this);
+	for(auto& town : other.towns) town->reattach(other);
 }
 
 cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {

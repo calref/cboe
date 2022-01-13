@@ -591,7 +591,6 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 					}
 				}
 			}
-		//if(((PSD[SDF_GAME_SPEED] == 1) && (t % 3 == 0)) || ((PSD[SDF_GAME_SPEED] == 2) && (t % 2 == 0)))
 		mainPtr.setActive();
 		mainPtr.display();
 		sf::sleep(time_in_ticks(2 * (1 + get_int_pref("GameSpeed"))));
