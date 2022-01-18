@@ -319,51 +319,51 @@ void draw_fields(location where){
 		return;
 	auto const fields=univ.town.fields[where.x][where.y];
 	if ((fields&~(unsigned long)SPECIAL_EXPLORED)==0) return;
-	if(univ.town.is_force_wall(fields))
+	if(fields & WALL_FORCE)
 		Draw_Some_Item(fields_gworld,calc_rect(0,1),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_fire_wall(fields))
+	if(fields & WALL_FIRE)
 		Draw_Some_Item(fields_gworld,calc_rect(1,1),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_antimagic(fields))
+	if(fields & FIELD_ANTIMAGIC)
 		Draw_Some_Item(fields_gworld,calc_rect(2,1),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_scloud(fields))
+	if(fields & CLOUD_STINK)
 		Draw_Some_Item(fields_gworld,calc_rect(3,1),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_ice_wall(fields))
+	if(fields & WALL_ICE)
 		Draw_Some_Item(fields_gworld,calc_rect(4,1),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_blade_wall(fields))
+	if(fields & WALL_BLADES)
 		Draw_Some_Item(fields_gworld,calc_rect(5,1),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_sleep_cloud(fields))
+	if(fields & CLOUD_SLEEP)
 		Draw_Some_Item(fields_gworld,calc_rect(6,1),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_block(fields))
+	if(fields & OBJECT_BLOCK)
 		Draw_Some_Item(fields_gworld,calc_rect(3,0),terrain_screen_gworld,where_draw,1,0);
-	if(!is_combat() && univ.town.is_spot(fields))
+	if(!is_combat() && (fields & SPECIAL_SPOT))
 		Draw_Some_Item(fields_gworld,calc_rect(4,0),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_web(fields))
+	if(fields & FIELD_WEB)
 		Draw_Some_Item(fields_gworld,calc_rect(5,0),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_crate(fields))
+	if(fields & OBJECT_CRATE)
 		Draw_Some_Item(fields_gworld,calc_rect(6,0),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_barrel(fields))
+	if(fields & OBJECT_BARREL)
 		Draw_Some_Item(fields_gworld,calc_rect(7,0),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_fire_barr(fields) || univ.town.is_force_barr(fields))
+	if(fields & (BARRIER_FIRE | BARRIER_FORCE))
 		Draw_Some_Item(*ResMgr::textures.get("teranim"),calc_rect(8+(anim_ticks%4),4),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_quickfire(fields))
+	if(fields & FIELD_QUICKFIRE)
 		Draw_Some_Item(fields_gworld,calc_rect(7,1),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_sm_blood(fields))
+	if(fields & SFX_SMALL_BLOOD)
 		Draw_Some_Item(fields_gworld,calc_rect(0,3),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_med_blood(fields))
+	if(fields & SFX_MEDIUM_BLOOD)
 		Draw_Some_Item(fields_gworld,calc_rect(1,3),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_lg_blood(fields))
+	if(fields & SFX_LARGE_BLOOD)
 		Draw_Some_Item(fields_gworld,calc_rect(2,3),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_sm_slime(fields))
+	if(fields & SFX_SMALL_SLIME)
 		Draw_Some_Item(fields_gworld,calc_rect(3,3),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_lg_slime(fields))
+	if(fields & SFX_LARGE_SLIME)
 		Draw_Some_Item(fields_gworld,calc_rect(4,3),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_ash(fields))
+	if(fields & SFX_ASH)
 		Draw_Some_Item(fields_gworld,calc_rect(5,3),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_bones(fields))
+	if(fields & SFX_BONES)
 		Draw_Some_Item(fields_gworld,calc_rect(6,3),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_rubble(fields))
+	if(fields & SFX_RUBBLE)
 		Draw_Some_Item(fields_gworld,calc_rect(7,3),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_force_cage(fields)) {
+	if(fields & BARRIER_CAGE) {
 		Draw_Some_Item(fields_gworld,calc_rect(1,0),terrain_screen_gworld,where_draw,1,0);
 		forcecage_locs.push_back(where_draw);
 	}
