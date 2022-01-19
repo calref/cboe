@@ -1130,9 +1130,9 @@ void do_combat_cast(location target) {
 			}
 			else if(dist(caster.combat_pos,target) > current_spell_range)
 				add_string_to_buf("  Target out of range.");
-			else if(sight_obscurity(target.x,target.y) == 5 && !allow_obstructed)
+			else if(!allow_obstructed && sight_obscurity(target.x,target.y) == 5)
 				add_string_to_buf("  Target space obstructed.");
-			else if(univ.town.is_antimagic(target.x,target.y) && !allow_antimagic)
+			else if(!allow_antimagic && univ.town.is_antimagic(target.x,target.y))
 				add_string_to_buf("  Target in antimagic field.");
 			else {
 				failed = false;
