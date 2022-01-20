@@ -59,11 +59,19 @@
 	</text>
 	<text name='prompt' top='347' left='1' width='66' height='79'/>
 	<text name='item1-weight' top='37' left='319' width='78' height='18'/>
+	<button name='item1-info' type='help' top='37' left='386'/>
 	<text name='item2-weight' top='74' left='319' width='78' height='18'/>
+	<button name='item2-info' type='help' top='74' left='386'/>
 	<text name='item3-weight' top='111' left='319' width='78' height='18'/>
+	<button name='item3-info' type='help' top='111' left='386'/>
 	<text name='item4-weight' top='148' left='319' width='78' height='18'/>
+	<button name='item4-info' type='help' top='148' left='386'/>
 	<text name='item5-weight' top='185' left='319' width='78' height='18'/>
+	<button name='item5-info' type='help' top='185' left='386'/>
 	<text name='item6-weight' top='222' left='319' width='78' height='18'/>
+	<button name='item6-info' type='help' top='222' left='386'/>
 	<text name='item7-weight' top='259' left='319' width='78' height='18'/>
+	<button name='item7-info' type='help' top='259' left='386'/>
 	<text name='item8-weight' top='297' left='319' width='78' height='18'/>
+	<button name='item8-info' type='help' top='297' left='386'/>
 </dialog>
