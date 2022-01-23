@@ -202,10 +202,10 @@ static bool display_pc_item_event_filter(cDialog& me, std::string item_hit, cIte
 	return true;
 }
 
-void display_pc_item(short pc_num,short item,cItem si,cDialog* parent) {
+void display_pc_item(short pc_num,short item,cItem const &si,cDialog* parent) {
 	using namespace std::placeholders;
 	cItem store_i;
-	if(pc_num == 6)
+	if(pc_num == 6 || pc_num == ITEM_WIN_JUNK)
 		store_i = si;
 	else store_i = univ.party[pc_num].items[item];
 	set_cursor(sword_curs);

@@ -651,7 +651,7 @@ static void handle_drop_item(location destination, bool& need_redraw) {
 			add_string_to_buf("Drop: must be adjacent.");
 		else if(sight_obscurity(destination.x,destination.y) == 5)
 			ASB("Drop: Space is blocked.");
-		else drop_item(univ.cur_pc,store_drop_item,destination);
+		else drop_item(stat_window == ITEM_WIN_JUNK ? 7 : univ.cur_pc,store_drop_item,destination);
 		overall_mode = MODE_TOWN;
 	}
 	need_redraw = true;
@@ -796,7 +796,7 @@ static void handle_give_item(short item_hit, bool& did_something, bool& need_red
 		add_string_to_buf("Give item: Finish what you're doing first.");
 		return;
 	}
-	give_thing(stat_window, item_hit);
+	give_thing(stat_window!=ITEM_WIN_JUNK ? stat_window : 7, item_hit);
 	did_something = true;
 	need_redraw = true;
 	take_ap(1);
@@ -1367,7 +1367,7 @@ bool handle_action(const sf::Event& event) {
 						break;
 				}
 			}
-		if(stat_window <= ITEM_WIN_QUESTS) {
+		if(stat_window <= ITEM_WIN_JUNK) {
 			for(int i = 0; i < 8; i++)
 				for(auto j : item_buttons[i].keys())
 					if(item_area_button_active[i][j] && point_in_area.in(item_buttons[i][j])) {
@@ -1399,7 +1399,10 @@ bool handle_action(const sf::Event& event) {
 									put_spec_item_info(spec_item_array[item_hit]);
 								else if(stat_window == ITEM_WIN_QUESTS)
 									put_quest_info(spec_item_array[item_hit]);
-								else display_pc_item(stat_window, item_hit,univ.party[stat_window].items[item_hit],0);
+								else if (stat_window == ITEM_WIN_JUNK)
+									display_pc_item(stat_window, item_hit,univ.party.get_junk_item(item_hit),0);
+								else
+									display_pc_item(stat_window, item_hit,univ.party[stat_window].items[item_hit],0);
 								break;
 							case ITEMBTN_SPEC: // sell? That this code was reached indicates that the item was sellable
 								// (Based on item_area_button_active)
@@ -1767,6 +1770,11 @@ bool handle_keystroke(const sf::Event& event){
 			
 		case '1': case '2': case '3': case '4': case '5': case '6':
 			handle_switch_pc(((short) chr) - 49, need_redraw, need_reprint);
+			break;
+
+		case '7': // Junk
+			if (univ.party.show_junk_bag)
+				set_stat_window(ITEM_WIN_JUNK);
 			break;
 			
 		case '9': // Special items
@@ -2708,6 +2716,7 @@ void start_new_game(bool force) {
 	// use user's easy mode and less wandering mode
 	univ.party.easy_mode=get_bool_pref("EasyMode", false);
 	univ.party.less_wm=get_bool_pref("LessWanderingMonsters", false);
+	univ.party.show_junk_bag=get_bool_pref("ShowJunkBag", false);
 	if(force) return;
 	fs::path file = nav_put_party();
 	if(!file.empty()) save_party(file, univ);

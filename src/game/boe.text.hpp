@@ -1,5 +1,7 @@
 #include <string>
 
+#include "outdoors.hpp"
+
 class cVehicle;
 struct Texture;
 

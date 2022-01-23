@@ -9,6 +9,7 @@
 	<button name='pc4' type='small' def-key='4' top='397' left='89'><key/></button>
 	<button name='pc5' type='small' def-key='5' top='397' left='174'><key/></button>
 	<button name='pc6' type='small' def-key='6' top='397' left='259'><key/></button>
+	<button name='junk' type='regular' def-key='7' top='377' left='334'>Bag</button>
 	<button name='up' type='up' def-key='up' top='5' left='342'/>
 	<button name='down' type='down' def-key='down' top='346' left='342'/>
 	<pict name='pc1-g' type='pc' num='0' top='348' left='123'/>
