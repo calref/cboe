@@ -4,13 +4,14 @@
 
 #include "item.hpp"
 #include "monster.hpp"
+#include "party.hpp"
 #include "pc.hpp"
 #include "creature.hpp"
 
 class cDialog;
 void display_spells(eSkill mode,short force_spell,cDialog* parent);
 void display_skills(eSkill force_skill,cDialog* parent);
-void display_pc_item(short pc_num,short item,class cItem si,cDialog* parent);
+void display_pc_item(short pc_num,short item,class cItem const &si,cDialog* parent);
 void display_monst(short array_pos,cCreature *which_m,short mode);
 void display_alchemy();
 void display_traits_graphics();
