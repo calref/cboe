@@ -339,11 +339,9 @@ void put_item_screen(eItemWinMode screen_num) {
 							if (is_town()) place_item_button(2,i,ITEMBTN_DROP);
 						}
 					}
-#if 0
-					if(stat_screen_mode != MODE_INVEN && stat_screen_mode != MODE_SHOP) {
-						place_buy_button(i,pc,i_num);
-					}
-#endif
+					// now add identify or sell button if in shop
+					if (stat_screen_mode==MODE_IDENTIFY || stat_screen_mode==MODE_SELL_WEAP  || stat_screen_mode==MODE_SELL_ARMOR || stat_screen_mode==MODE_SELL_ANY)
+						place_buy_button(i,7,i_num);
 				} // end of if item is there
 			} // end of for(short i = 0; i < 8; i++)
 			break;
@@ -419,18 +417,18 @@ void put_item_screen(eItemWinMode screen_num) {
 }
 
 void place_buy_button(short position,short pc_num,short item_num) {
+	if (pc_num<0 || pc_num>7) return;
 	rectangle dest_rect,source_rect;
 	rectangle button_sources[3] = {{24,0,36,30},{36,0,48,30},{48,0,60,30}};
 	short val_to_place;
 	// TODO: This is now duplicated here and in start_town_mode()
 	short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
 	
-	const cPlayer& pc = univ.party[pc_num];
-	const cItem& item = pc.items[item_num];
+	const cItem& item = pc_num<=6 ? univ.party[pc_num].items[item_num] : univ.party.get_junk_item(item_num);
 	
 	if(item.variety == eItemType::NO_ITEM)
 		return;
-	
+	bool const is_equipped = pc_num<=6 ? univ.party[pc_num].equip[item_num] : false;
 	dest_rect = item_buttons[position][ITEMBTN_SPEC];
 	
 	val_to_place = (item.charges > 0) ?
@@ -447,19 +445,19 @@ void place_buy_button(short position,short pc_num,short item_num) {
 			}
 			break;
 		case MODE_SELL_WEAP:
-			if((*item.variety).is_weapon && !pc.equip[item_num] && item.ident && val_to_place > 0 && !item.unsellable) {
+			if((*item.variety).is_weapon && !is_equipped && item.ident && val_to_place > 0 && !item.unsellable) {
 				item_area_button_active[position][ITEMBTN_SPEC] = true;
 				source_rect = button_sources[1];
 			}
 			break;
 		case MODE_SELL_ARMOR:
-			if((*item.variety).is_armour && !pc.equip[item_num] && item.ident && val_to_place > 0 && !item.unsellable) {
+			if((*item.variety).is_armour && !is_equipped && item.ident && val_to_place > 0 && !item.unsellable) {
 				item_area_button_active[position][ITEMBTN_SPEC] = true;
 				source_rect = button_sources[1];
 			}
 			break;
 		case MODE_SELL_ANY:
-			if(!pc.equip[item_num] && item.ident && val_to_place > 0 && !item.unsellable) {
+			if(!is_equipped && item.ident && val_to_place > 0 && !item.unsellable) {
 				item_area_button_active[position][ITEMBTN_SPEC] = true;
 				source_rect = button_sources[1];
 			}

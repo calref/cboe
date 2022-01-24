@@ -260,9 +260,7 @@ bool cParty::is_junk_item_compatible_with_town(item_num_t id, int townId) const
 
 static bool combine_items(cItem &item1, cItem const &item2)
 {
-	if (item1.variety != eItemType::NO_ITEM && item1.ident && item2.ident &&
-		item2.variety != eItemType::NO_ITEM && item1.type_flag == item2.type_flag &&
-		item1.name == item2.name && item1.special_class == item2.special_class) {
+	if (item1.can_be_combined_with(item2)) {
 		short test = item1.charges + item2.charges;
 		if(test > 125) {
 			item1.charges = 125;

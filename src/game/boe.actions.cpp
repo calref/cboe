@@ -820,8 +820,7 @@ static void handle_drop_item(short item_hit, bool& need_redraw) {
 
 static void handle_item_shop_action(short item_hit) {
 	long i = item_hit - item_sbar->getPosition();
-	cPlayer& shopper = univ.party[stat_window];
-	cItem& target = shopper.items[item_hit];
+	cItem& target = stat_window<=6 ? univ.party[stat_window].items[item_hit] : univ.party.get_junk_item(item_hit);
 	switch(stat_screen_mode) {
 		case MODE_IDENTIFY:
 			if(!take_gold(shop_identify_cost,false))
@@ -830,14 +829,22 @@ static void handle_item_shop_action(short item_hit) {
 				play_sound(68);
 				ASB("Your item is identified.");
 				target.ident = true;
-				shopper.combine_things();
+				if (stat_window<=6)
+					univ.party[stat_window].combine_things();
+				else {
+					univ.party.combine_junk_items();
+					set_stat_window(ITEM_WIN_JUNK);
+				}
 			}
 			break;
 		case MODE_SELL_WEAP: case MODE_SELL_ARMOR: case MODE_SELL_ANY:
 			play_sound(-39);
 			univ.party.gold += store_selling_values[i];
 			ASB("You sell your item.");
-			shopper.take_item(item_hit);
+			if (stat_window<=6)
+				univ.party[stat_window].take_item(item_hit);
+			else
+				univ.party.take_junk_item(item_hit);
 			put_item_screen(stat_window);
 			break;
 		case MODE_ENCHANT:
