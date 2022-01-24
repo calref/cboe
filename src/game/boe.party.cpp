@@ -630,8 +630,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				}
 				if (numDone) {
 					univ.party.combine_junk_items();
-					if (stat_window==ITEM_WIN_JUNK)
-						set_stat_window(ITEM_WIN_JUNK);
+					if (stat_window==ITEM_WIN_JUNK) set_stat_window(ITEM_WIN_JUNK);
 				}
 			}
 			break;

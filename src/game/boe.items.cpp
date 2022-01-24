@@ -196,10 +196,7 @@ void give_thing(short pc_num, short item_num) {
 		add_string_to_buf("Give: Item is cursed.");
 	else {
 		item_store = item_to_give;
-		if (univ.party.show_junk_bag && pc_num!=7)
-			who_to = char_select_pc(4, "Give item to who? (type '7' for Bag)");
-		else
-			who_to = char_select_pc(3, "Give item to who?");
+		who_to = char_select_pc((univ.party.show_junk_bag && pc_num!=7 && (item_to_give.cursed || !item_to_give.unsellable)) ? 4 : 3, "Give item to who?");
 		if(overall_mode == MODE_COMBAT && who_to < 6 && !adjacent(univ.party[pc_num].combat_pos,univ.party[who_to].combat_pos)) {
 			add_string_to_buf("Give: Must be adjacent.");
 			who_to = 6;
@@ -219,11 +216,11 @@ void give_thing(short pc_num, short item_num) {
 				; // ok
 			else {
 				if(who_to<6 && !univ.party[who_to].has_space())
-					ASB("Can't give: PC has max. # of items.");
+					add_string_to_buf("Can't give: PC has max. # of items.");
 				else if(who_to<6)
-					ASB("Can't give: PC carrying too much.");
+					add_string_to_buf("Can't give: PC carrying too much.");
 				else
-					ASB("Can't give: unknown problem.");
+					add_string_to_buf("Can't give: unknown problem.");
 				if(how_many > 0)
 					item_to_give.charges += how_many;
 				take_given_item = false;
@@ -550,7 +547,11 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 				give_help(38,0,me);
 				return true;
 			}
-			
+			if (current_getting_pc==7 && !item.cursed && item.unsellable) {
+				beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
+				me["prompt"].setText("The object resists any attempt to insert it into the bag.");
+				return true;
+			}
 			set_item_flag(&item);
 			play_sound(0); // formerly force_play_sound
 			if (current_getting_pc<6) {
@@ -559,8 +560,10 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 					flags |= GIVE_ALLOW_OVERLOAD;
 				univ.party[current_getting_pc].give_item(item, flags);
 			}
-			else
+			else {
 				univ.party.give_junk_item(item, is_combat() ? -1 : is_town() ? univ.party.town_num : 200);
+				if (stat_window==ITEM_WIN_JUNK) set_stat_window(stat_window);
+			}
 		}
 		*item_array[item_hit] = cItem();
 		item_array.erase(item_array.begin() + item_hit);
@@ -598,7 +601,6 @@ bool display_item(location from_loc,short /*pc_num*/,short mode, bool check_cont
 	else if(mode == 0)
 		stole_something = show_get_items("Getting all adjacent items:", item_array, current_getting_pc);
 	else stole_something = show_get_items("Getting all nearby items:", item_array, current_getting_pc);
-	if (stat_window==ITEM_WIN_JUNK) set_stat_window(stat_window); // FIXME MUST NO BE HERE
 	put_item_screen(stat_window);
 	put_pc_screen();
 	
@@ -942,7 +944,7 @@ short char_select_pc(short mode,const char *title) {
 	
 	set_cursor(sword_curs);
 	
-	cDialog selectPc("select-pc");
+	cDialog selectPc(mode==4 ? "select-pc-with-bag" : "select-pc");
 	selectPc.attachClickHandlers(select_pc_event_filter, {"cancel", "pick1", "pick2", "pick3", "pick4", "pick5", "pick6", "junk"});
 	
 	selectPc["title"].setText(title);

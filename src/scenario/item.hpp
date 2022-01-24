@@ -79,7 +79,8 @@ public:
 	cItem();
 	explicit cItem(eItemPreset preset);
 	explicit cItem(eAlchemy recipe);
-	
+	bool can_be_combined_with(cItem const &item) const;
+
 	cPictNum get_picture_num(bool tiny=false) const;
 	void import_legacy(legacy::item_record_type const & old);
 	void writeTo(std::ostream& file, std::string prefix = "") const;
