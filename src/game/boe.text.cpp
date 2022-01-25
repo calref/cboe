@@ -74,10 +74,10 @@ extern enum_map(eItemButton, rectangle) item_buttons[8];
 extern enum_map(ePlayerButton, rectangle) pc_buttons[6];
 extern enum_map(eItemButton, bool) item_area_button_active[8];
 extern enum_map(ePlayerButton, bool) pc_area_button_active[6];
-extern rectangle item_screen_button_rects[9];
+extern rectangle item_screen_button_rects[10];
 extern std::vector<int> spec_item_array;
 // combat globals
-extern short item_bottom_button_active[9];
+extern bool item_bottom_button_active[10];
 extern cUniverse univ;
 extern short shop_identify_cost;
 extern short store_selling_values[8];
@@ -543,7 +543,7 @@ void place_item_button(short button_position,short which_slot,eItemButton button
 
 void place_item_bottom_buttons() {
 	rectangle pc_from_rect = {0,0,36,28},but_from_rect = {30,60,46,78},to_rect;
-	rectangle spec_from_rect = {0,60,15,95}, job_from_rect = {15,60,30,95}, help_from_rect = {46,60,59,76};
+	rectangle spec_from_rect = {0,60,15,95}, job_from_rect = {15,60,30,95}, help_from_rect = {46,60,59,76}, bag_from_rect = {60,60,78,78};
 	// TODO: What about when the buttons are pressed?
 	TextStyle style;
 	style.lineHeight = 10;
@@ -576,6 +576,18 @@ void place_item_bottom_buttons() {
 	rect_draw_some_item(invenbtn_gworld, job_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 	to_rect = item_screen_button_rects[8];
 	rect_draw_some_item(invenbtn_gworld, help_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+	if (univ.party.show_junk_bag) {
+		to_rect = item_screen_button_rects[9];
+		item_bottom_button_active[9] = true;
+		rect_draw_some_item(invenbtn_gworld, bag_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+		to_rect.inset(2,2);
+		std::string numeral = "7";
+		short width = string_length(numeral, style);
+		to_rect.offset(-width - 5, 0);
+		win_draw_string(item_stats_gworld, to_rect, numeral, eTextMode::LEFT_TOP, style);
+	}
+	else
+		item_bottom_button_active[9] = false;
 }
 
 void set_stat_window_for_pc(int pc) {

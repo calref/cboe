@@ -629,10 +629,14 @@ bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short 
 		sout << "item" << i << "-info";
 		itemDialog[sout.str()].attachClickHandler(handler);
 	}
-	if (univ.party.show_junk_bag)
+	if (univ.party.show_junk_bag) {
 		itemDialog["junk"].show();
-	else
+		itemDialog["help-junk"].show();
+	}
+	else {
 		itemDialog["junk"].hide();
+		itemDialog["help-junk"].hide();
+	}
 	put_item_graphics(itemDialog, first_item, pc_getting, itemRefs);
 	
 	void (*give_help)(short,short,cDialog&) = ::give_help;

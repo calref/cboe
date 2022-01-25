@@ -46,6 +46,7 @@ though in some cases rearranged a little:
 - transcript.png
 - trim.png
 - vehicle.png (except the last row which is by ADoS and is currently unused)
+they have been undithered with ImageMagick.
 
 In booms.png, the last two rows and the right-most graphic on the first row are by ADoS.
 The yellow explosion is a simple invert of the blue one. The rest are original BoE.

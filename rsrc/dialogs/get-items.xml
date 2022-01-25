@@ -54,9 +54,12 @@
 	<text name='item8-detail' top='315' left='116' width='275' height='17'/>
 	<!-- End of item entries -->
 	<!-- Note: These two were originally framed, but I removed that because the code was unframing them before displaying the dialog. -->
-	<text top='203' left='1' width='64' height='125'>
+	<text top='103' left='1' width='64' height='125'>
 		=Keyboard: To get item, hit 'a' - 'h'.
 		To scroll, hit up and down arrows.
+	</text>
+	<text name='help-junk' top='195' left='1' width='64' height='125'>
+		To select the junk bag, hit '7'.
 	</text>
 	<text name='prompt' top='347' left='1' width='66' height='79'/>
 	<text name='item1-weight' top='37' left='319' width='78' height='18'/>

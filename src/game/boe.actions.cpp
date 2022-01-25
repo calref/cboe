@@ -39,11 +39,12 @@
 #include "render_shapes.hpp"
 #include "enum_map.hpp"
 
-rectangle item_screen_button_rects[9] = {
-	{125,10,141,28},{125,40,141,58},{125,68,141,86},{125,98,141,116},{125,126,141,144},{125,156,141,174},
-	{126,176,141,211},
-	{126,213,141,248},
-	{127,251,140,267}
+rectangle item_screen_button_rects[10] = {
+	{125,9,141,27},{125,37,141,55},{125,64,141,82},{125,92,141,110},{125,119,141,137},{125,147,141,165}, // pc
+	{126,190,141,222}, // special
+	{126,221,141,254}, // quest
+	{127,254,140,270}, // help
+	{125,174,141,189} // junk bag
 };
 rectangle medium_buttons[4] = {
 	{383,190,401,225}, {402, 190, 420, 225},
@@ -61,7 +62,7 @@ rectangle startup_top;
 
 enum_map(eItemButton, bool) item_area_button_active[8];
 enum_map(ePlayerButton, bool) pc_area_button_active[6];
-short item_bottom_button_active[9] = {0,0,0,0,0, 0,1,1,1};
+bool item_bottom_button_active[10] = {false,false,false,false,false, false,true,true,true,false};
 
 rectangle pc_help_button;
 
@@ -189,19 +190,6 @@ void init_screen_locs() {
 			item_buttons[i][j] = item_buttons[0][j];
 			item_buttons[i][j].offset(0,13 * i);
 		}
-	
-/*	for(short i = 0; i < 8; i++) {
-		item_screen_button_rects[i] = bottom_base;
-		OffsetRect(&item_screen_button_rects[i],10 + i * 29,126);
-	}
-	item_screen_button_rects[6].left = 176;
-	item_screen_button_rects[6].right = 211;
-	item_screen_button_rects[7].left = 213;
-	item_screen_button_rects[7].right = 248;
-	item_screen_button_rects[8].top = 127;
-	item_screen_button_rects[8].bottom = 140;
-	item_screen_button_rects[8].left = 251;
-	item_screen_button_rects[8].right = 267; */
 	
 	// name, hp, sp, info, trade
 	pc_buttons[0][PCBTN_NAME].top = 18;
@@ -1354,7 +1342,7 @@ bool handle_action(const sf::Event& event) {
 		point_in_area.x -= item_win_ul.x;
 		point_in_area.y -= item_win_ul.y;
 		
-		for(int i = 0; i < 9; i++)
+		for(int i = 0; i < 10; i++)
 			if(item_bottom_button_active[i] > 0 && point_in_area.in(item_screen_button_rects[i])) {
 				rectangle button_rect = item_screen_button_rects[i];
 				button_rect.offset(item_win_ul);
@@ -1368,6 +1356,9 @@ bool handle_action(const sf::Event& event) {
 						break;
 					case 8: // help
 						cChoiceDlog("help-inventory").show();
+						break;
+					case 9:
+						set_stat_window(ITEM_WIN_JUNK);
 						break;
 					default:
 						handle_switch_pc_items(i, need_redraw);
