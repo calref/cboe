@@ -251,7 +251,7 @@ void put_item_screen(eItemWinMode screen_num) {
 		default: // on an items page
 			pc = screen_num;
 			sout.str("");;
-			sout << univ.party[pc].name << " inventory:",
+			sout << univ.party[pc].name << " inventory:";
 			win_draw_string(item_stats_gworld,upper_frame_rect,sout.str(),eTextMode::WRAP,style);
 			break;
 	}
@@ -660,9 +660,9 @@ void refresh_stat_areas(short mode) {
 	
 	if(mode == 1) x = sf::BlendAdd;
 	else x = sf::BlendNone;
-	rect_draw_some_item(pc_stats_gworld.getTexture(), rectangle(pc_stats_gworld), mainPtr, win_to_rects[WINRECT_PCSTATS], x);
-	rect_draw_some_item(item_stats_gworld.getTexture(), rectangle(item_stats_gworld), mainPtr, win_to_rects[WINRECT_INVEN], x);
-	rect_draw_some_item(text_area_gworld.getTexture(), rectangle(text_area_gworld), mainPtr, win_to_rects[WINRECT_TRANSCRIPT], x);
+	rect_draw_some_item(Texture(pc_stats_gworld.getTexture()), rectangle(pc_stats_gworld), mainPtr, win_to_rects[WINRECT_PCSTATS], x);
+	rect_draw_some_item(Texture(item_stats_gworld.getTexture()), rectangle(item_stats_gworld), mainPtr, win_to_rects[WINRECT_INVEN], x);
+	rect_draw_some_item(Texture(text_area_gworld.getTexture()), rectangle(text_area_gworld), mainPtr, win_to_rects[WINRECT_TRANSCRIPT], x);
 }
 
 rectangle get_stat_effect_rect(int code) {
@@ -1152,27 +1152,14 @@ void through_sending() {
 
 /* Draw a bitmap in the world window. hor in 0 .. 8, vert in 0 .. 8,
  object is ptr. to bitmap to be drawn, and masking is for Copybits. */
-void Draw_Some_Item(const Texture& src_gworld, rectangle src_rect, sf::RenderTarget& targ_gworld,location target, char masked, short main_win) {
-	rectangle	destrec = {0,0,36,28};
-	
+void Draw_Some_Item(const Texture& src_gworld, rectangle src_rect, sf::RenderTarget& targ_gworld,location target, long modValue) {
 	if((target.x < 0) || (target.y < 0) || (target.x > 8) || (target.y > 8))
 		return;
 	if((supressing_some_spaces) && (target != ok_space[0]) &&
 		(target != ok_space[1]) && (target != ok_space[2]) && (target != ok_space[3]))
 		return;
 	
-	destrec = coord_to_rect(target.x,target.y);
-	if(main_win == 1) destrec.offset(5,5);
-	
-	if(main_win == 0) {
-		if(masked == 1)
-			rect_draw_some_item(src_gworld, src_rect, targ_gworld, destrec, sf::BlendAlpha);
-		else rect_draw_some_item(src_gworld, src_rect, targ_gworld, destrec, sf::BlendNone);
-	} else {
-		if(masked == 1)
-			rect_draw_some_item(src_gworld, src_rect, targ_gworld, destrec, sf::BlendAlpha);
-		else rect_draw_some_item(src_gworld, src_rect, targ_gworld, destrec, sf::BlendNone);
-	}
+	rect_draw_some_item(src_gworld, src_rect, targ_gworld, coord_to_rect(target.x,target.y), RenderState(sf::BlendAlpha, modValue));
 }
 
 std::list<text_label_t> posted_labels;
