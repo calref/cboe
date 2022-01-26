@@ -658,7 +658,7 @@ void put_text_bar(std::string str) {
 
 void refresh_text_bar() {
 	mainPtr.setActive(false);
-	rect_draw_some_item(text_bar_gworld.getTexture(), rectangle(text_bar_gworld), mainPtr, win_to_rects[WINRECT_STATUS]);
+	rect_draw_some_item(Texture(text_bar_gworld.getTexture()), rectangle(text_bar_gworld), mainPtr, win_to_rects[WINRECT_STATUS]);
 	mainPtr.setActive();
 }
 
@@ -847,7 +847,7 @@ void draw_terrain(short	mode) {
 				place_trim((short) q,(short) r,where_draw,spec_terrain);
 //			if((is_town() && univ.town.is_spot(where_draw.x,where_draw.y)) ||
 //			   (is_out() && univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].is_special_spot(where_draw.x,where_draw.y)))
-//				Draw_Some_Item(roads_gworld, calc_rect(6, 0), terrain_screen_gworld, loc(q,r), 1, 0);
+//				Draw_Some_Item(roads_gworld, calc_rect(6, 0), terrain_screen_gworld, loc(q,r));
 			// TODO: Move draw_sfx, draw_items, draw_fields, draw_spec_items, etc to here
 			
 			if(is_town() || is_combat())
@@ -899,7 +899,7 @@ void draw_terrain(short	mode) {
 	// Draw top half of forcecages (this list is populated by draw_fields)
 	// TODO: Move into the above loop to eliminate global variable
 	for(location fc_loc : forcecage_locs)
-		Draw_Some_Item(*ResMgr::textures.get("fields"),calc_rect(2,0),terrain_screen_gworld,fc_loc,1,0);
+		Draw_Some_Item(*ResMgr::textures.get("fields"),calc_rect(2,0),terrain_screen_gworld,fc_loc);
 	// Draw any posted labels, then clear them out
 	clip_rect(terrain_screen_gworld, {13, 13, 337, 265});
 	for(text_label_t lbl : posted_labels)
@@ -1068,7 +1068,7 @@ static void init_trim_mask(std::unique_ptr<sf::Texture>& mask, rectangle src_rec
 	render.create(28, 36);
 	render.clear(sf::Color::White);
 	rect_draw_some_item(*ResMgr::textures.get("trim"), src_rect, render, dest_rect);
-	render.display();
+	//render.display(); checkme: understand why this leads to up/down picture
 	mask.reset(new sf::Texture);
 	mask->create(28, 36);
 	mask->update(render.getTexture().copyToImage());
@@ -1139,11 +1139,9 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 			init_trim_mask(walkway_masks[which], walkway_rects[which]);
 		mask = walkway_masks[which].get();
 	}
-	
-	if (mask)
-		rect_draw_some_item(from_gworld, from_rect, *mask, terrain_screen_gworld, to_rect);
-	else
-		rect_draw_some_item(from_gworld, from_rect, terrain_screen_gworld, to_rect);
+	RenderState state;
+	if (mask) state.set_mask(*mask);
+	rect_draw_some_item(from_gworld, from_rect, terrain_screen_gworld, to_rect, state);
 }
 
 
@@ -1473,7 +1471,7 @@ void draw_pointing_arrows() {
 
 void redraw_terrain() {
 	rectangle to_rect = win_to_rects[WINRECT_TERVIEW], from_rect(terrain_screen_gworld);
-	rect_draw_some_item(terrain_screen_gworld.getTexture(), from_rect, mainPtr, to_rect);
+	rect_draw_some_item(Texture(terrain_screen_gworld.getTexture()), from_rect, mainPtr, to_rect);
 	apply_light_mask(true);
 	
 	
@@ -1611,7 +1609,7 @@ void redraw_partial_terrain(rectangle redraw_rect) {
 	// as rect_draw_some_item will shift redraw_rect before drawing, we need to compensate
 	redraw_rect.offset(5,5);
 	
-	rect_draw_some_item(terrain_screen_gworld.getTexture(),from_rect,mainPtr,redraw_rect);
+	rect_draw_some_item(Texture(terrain_screen_gworld.getTexture()),from_rect,mainPtr,redraw_rect);
 	
 }
 

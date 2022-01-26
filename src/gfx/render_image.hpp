@@ -19,11 +19,26 @@
 #include "pictypes.hpp"
 
 void init_shaders();
-void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::BlendMode mode = sf::BlendNone);
+
+struct RenderState {
+	RenderState() = default;
+	RenderState(sf::BlendMode blendMode, unsigned long colorMod=0)
+	: blend_mode(blendMode)
+	, color_mod(colorMod) {
+	}
+	RenderState(RenderState const &)=default;
+	RenderState &operator=(RenderState const &)=default;
+	void set_mask(const sf::Texture& mask_gworld) {
+		mask=&mask_gworld;
+	}
+	sf::BlendMode blend_mode = sf::BlendNone;
+	unsigned long color_mod=0;
+	sf::Texture const *mask=nullptr;
+};
 
 struct Texture;
-void rect_draw_some_item(const Texture & src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::BlendMode mode = sf::BlendNone);
-void rect_draw_some_item(const Texture& src_gworld,rectangle src_rect,const sf::Texture& mask_gworld,sf::RenderTarget& targ_gworld,rectangle targ_rect);
+void rect_draw_some_item(const Texture & src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,
+						 RenderState const &mode=RenderState());
 void draw_splash(const Texture & splash, sf::RenderWindow& targ, rectangle dest_rect);
 
 void setActiveRenderTarget(sf::RenderTarget& where);
