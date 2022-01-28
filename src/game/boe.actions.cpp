@@ -820,8 +820,10 @@ static void handle_item_shop_action(short item_hit) {
 				if (stat_window<=6)
 					univ.party[stat_window].combine_things();
 				else {
+					size_t num_items=univ.party.junk_items.size(); // checkme: if this is usefull
 					univ.party.combine_junk_items();
-					set_stat_window(ITEM_WIN_JUNK);
+					if (num_items!=univ.party.junk_items.size())
+						set_stat_window(ITEM_WIN_JUNK);
 				}
 			}
 			break;

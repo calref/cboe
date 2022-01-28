@@ -2650,7 +2650,7 @@ void do_monster_turn() {
 							break;
 					}
 				}
-				if(cur_monst->abil[eMonstAbil::SUMMON].active && get_ran(1,1,100) < cur_monst->abil[eMonstAbil::SUMMON].summon.chance) {
+				if(cur_monst->abil[eMonstAbil::SUMMON].active && get_ran(1,1,1000) < cur_monst->abil[eMonstAbil::SUMMON].summon.chance) {
 					uAbility abil = cur_monst->abil[eMonstAbil::SUMMON];
 					mon_num_t what_summon = 0;
 					switch(abil.summon.type) {
