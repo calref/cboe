@@ -362,38 +362,6 @@ void draw_main_screen() {
 	
 }
 	
-static void draw_creature_at(int pic, rectangle const &to_rect) {
-	rectangle tiny_to=to_rect;
-	int pic_x=1, pic_y=1;
-	if (pic >= 4000) pic_x = pic_y = 2; // custom LARGE
-	else if (pic >= 3000) pic_y = 2; // custom TALL
-	else if (pic >= 2000) pic_x = 2; // custom WIDE
-	else if (pic >= 0 && pic < m_pic_index.size()) { // normal
-		auto const &pic_info = m_pic_index[pic];
-		pic_x = pic_info.x;
-		pic_y = pic_info.y;
-	}
-	auto maxSize=std::max(pic_x, pic_y);
-	if (maxSize>1) {
-		tiny_to.width() /= maxSize;
-		tiny_to.height() /= maxSize;
-		tiny_to.offset(float(maxSize-pic_x)/2*tiny_to.width(), float(maxSize-pic_y)/2*tiny_to.height());
-	}
-	for (int k=0; k<pic_x*pic_y; ++k) {
-		if (k && (k%pic_x)==0)
-			tiny_to.offset(-(pic_x-1)*tiny_to.width(), tiny_to.height());
-		else if (k)
-			tiny_to.offset(tiny_to.width(), 0);
-		Texture src_gw;
-		rectangle ter_from;
-		if (pic<1000)
-			cPict::get_picture(cPictNum(pic,PIC_MONST), src_gw, ter_from, 0, k);
-		else
-			std::tie(src_gw,ter_from) = spec_scen_g.find_graphic((pic%1000)+k);
-		rect_draw_some_item(src_gw, ter_from, mainPtr, tiny_to, sf::BlendAlpha);
-	}
-}
-
 void set_up_terrain_buttons(bool reset) {
 	int max;
 	switch(draw_mode) {
@@ -444,7 +412,7 @@ void set_up_terrain_buttons(bool reset) {
 			}
 			case DRAW_MONST:
 				frame_rect(mainPtr, draw_rect, sf::Color::Black);
-				draw_creature_at(scenario.get_monster(i).picture_num, draw_rect);
+				cPict::draw_monster(mainPtr, scenario.get_monster(i).get_picture_num(), draw_rect);
 				break;
 			case DRAW_ITEM:
 				Texture source_gworld;
@@ -1061,9 +1029,9 @@ void place_location() {
 		place_selected_terrain(current_terrain_type, draw_rect);
 		extern short mode_count;
 		bool draw_field = false;
-		if(overall_mode == MODE_PLACE_CREATURE || overall_mode == MODE_PLACE_SAME_CREATURE) {
-			draw_creature_at(scenario.get_monster(mode_count).picture_num, draw_rect);
-		} else if(overall_mode == MODE_PLACE_ITEM || overall_mode == MODE_PLACE_SAME_ITEM) {
+		if(overall_mode == MODE_PLACE_CREATURE || overall_mode == MODE_PLACE_SAME_CREATURE)
+			cPict::draw_monster(mainPtr, scenario.get_monster(mode_count).get_picture_num(), draw_rect);
+		else if(overall_mode == MODE_PLACE_ITEM || overall_mode == MODE_PLACE_SAME_ITEM) {
 			cPictNum pic=scenario.get_item(mode_count).get_picture_num(false);
 			Texture source_gworld;
 			if (cPict::get_picture(pic,source_gworld, source_rect)) {
