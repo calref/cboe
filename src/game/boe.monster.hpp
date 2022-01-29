@@ -6,6 +6,7 @@ short out_enc_lev_tot(short which);
 void create_wand_monst();
 void place_outd_wand_monst(location where,cOutdoors::cWandering group,short forced);
 location get_monst_head(short m_num);
+cPictNum get_monst_picture_num(mon_num_t monst);
 short get_monst_picnum(mon_num_t monst);
 std::pair<short,short> get_monst_dims(mon_num_t monst);
 void set_up_monst(eAttitude mode,mon_num_t m_num);

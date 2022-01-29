@@ -7,9 +7,11 @@
  */
 
 #include "pict.hpp"
-#include <vector>
+
+#include <functional>
 #include <map>
 #include <stdexcept>
+#include <vector>
 
 #include "gfxsheets.hpp"
 #include "render_shapes.hpp"
@@ -24,9 +26,18 @@ extern cCustomGraphics spec_scen_g;
 const pic_num_t cPict::BLANK = -1;
 
 void cPict::init(){
+	using namespace std::placeholders;
 	drawPict()[PIC_TER] = &cPict::drawPresetTer;
 	drawPict()[PIC_TER_ANIM] = &cPict::drawPresetTerAnim;
-	drawPict()[PIC_MONST] = &cPict::drawPresetMonstSm;
+	
+	// monster
+	for (auto type : { PIC_MONST, PIC_MONST_WIDE, PIC_MONST_TALL, PIC_MONST_LG,
+		PIC_CUSTOM_MONST, PIC_CUSTOM_MONST_WIDE, PIC_CUSTOM_MONST_TALL, PIC_CUSTOM_MONST_LG,
+		PIC_PARTY_MONST, PIC_PARTY_MONST_WIDE, PIC_PARTY_MONST_TALL, PIC_PARTY_MONST_LG,
+	})
+		drawPict()[type] = std::bind(&cPict::drawMonster,_1,_2,type);
+	drawPict()[PIC_CUSTOM_PC] = std::bind(&cPict::drawMonster,_1,_2,PIC_CUSTOM_MONST); // checkme, I am not sure that this can happen
+
 	drawPict()[PIC_DLOG] = &cPict::drawPresetDlog;
 	drawPict()[PIC_TALK] = &cPict::drawPresetTalk;
 	drawPict()[PIC_SCEN] = &cPict::drawPresetScen;
@@ -41,37 +52,25 @@ void cPict::init(){
 	drawPict()[PIC_SCEN_LG] = &cPict::drawPresetScenLg;
 	drawPict()[PIC_TER_MAP] = &cPict::drawPresetTerMap;
 	drawPict()[PIC_STATUS] = &cPict::drawStatusIcon;
-	drawPict()[PIC_MONST_WIDE] = &cPict::drawPresetMonstWide;
-	drawPict()[PIC_MONST_TALL] = &cPict::drawPresetMonstTall;
-	drawPict()[PIC_MONST_LG] = &cPict::drawPresetMonstLg;
 	drawPict()[PIC_CUSTOM_TER] = &cPict::drawCustomTer;
 	drawPict()[PIC_CUSTOM_TER_ANIM] = &cPict::drawCustomTerAnim;
-	drawPict()[PIC_CUSTOM_MONST] = &cPict::drawCustomMonstSm;
 	drawPict()[PIC_CUSTOM_DLOG] = &cPict::drawCustomDlog;
 	drawPict()[PIC_CUSTOM_TALK] = &cPict::drawCustomTalk;
 	drawPict()[PIC_CUSTOM_SCEN] = &cPict::drawCustomTalk;
 	drawPict()[PIC_CUSTOM_ITEM] = &cPict::drawCustomItem;
-	drawPict()[PIC_CUSTOM_PC] = &cPict::drawCustomMonstSm; // checkme, I am not sure that this can happen
 	drawPict()[PIC_CUSTOM_TINY_ITEM] = &cPict::drawCustomTinyItem;
 	drawPict()[PIC_CUSTOM_FULL] = &cPict::drawFullSheet;
 	drawPict()[PIC_CUSTOM_BOOM] = &cPict::drawCustomBoom;
 	drawPict()[PIC_CUSTOM_MISSILE] = &cPict::drawCustomMissile;
 	drawPict()[PIC_CUSTOM_DLOG_LG] = &cPict::drawCustomDlogLg;
 	drawPict()[PIC_CUSTOM_TER_MAP] = &cPict::drawCustomTerMap;
-	drawPict()[PIC_CUSTOM_MONST_WIDE] = &cPict::drawCustomMonstWide;
-	drawPict()[PIC_CUSTOM_MONST_TALL] = &cPict::drawCustomMonstTall;
-	drawPict()[PIC_CUSTOM_MONST_LG] = &cPict::drawCustomMonstLg;
-	drawPict()[PIC_PARTY_MONST] = &cPict::drawPartyMonstSm;
 	drawPict()[PIC_PARTY_SCEN] = &cPict::drawPartyScen;
 	drawPict()[PIC_PARTY_ITEM] = &cPict::drawPartyItem;
 	drawPict()[PIC_PARTY_PC] = &cPict::drawPartyPc;
-	drawPict()[PIC_PARTY_MONST_WIDE] = &cPict::drawPartyMonstWide;
-	drawPict()[PIC_PARTY_MONST_TALL] = &cPict::drawPartyMonstTall;
-	drawPict()[PIC_PARTY_MONST_LG] = &cPict::drawPartyMonstLg;
 }
 
-std::map<ePicType,void(cPict::*)(rectangle)>& cPict::drawPict(){
-	static std::map<ePicType,void(cPict::*)(rectangle)> f;
+std::map<ePicType,std::function<void(cPict *, rectangle)>>& cPict::drawPict(){
+	static std::map<ePicType,std::function<void(cPict *, rectangle)> > f;
 	return f;
 }
 
@@ -676,8 +675,10 @@ void cPict::draw(){
 	
 	if(picture.num == BLANK) // Just fill with black
 		fill_rect(*inWindow, rect, sf::Color::Black);
+	else if (drawPict().count(resultType)==0) // internal problem, fill with violet
+		fill_rect(*inWindow, rect, sf::Color{155,38,182});
 	else
-		(this->*drawPict()[resultType])(rect);
+		drawPict()[resultType](this, rect);
 	
 	drawFrame(2, frameStyle);
 }
@@ -698,7 +699,7 @@ static rectangle calcDefMonstRect(short i, short animFrame){
 	return r;
 }
 
-bool cPict::get_picture(cPictNum pict, Texture& source, rectangle &from_rect, int anim, int which_part)
+bool cPict::get_picture(cPictNum const &pict, Texture& source, rectangle &from_rect, int anim, int which_part)
 try {
 	source=Texture();
 	ePicType type=pict.type;
@@ -886,84 +887,47 @@ void cPict::drawPresetTerAnim(rectangle to_rect){
 	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
 }
 
-void cPict::drawPresetMonstSm(rectangle to_rect){
+void cPict::draw_monster(sf::RenderTarget &window, cPictNum const &pict, rectangle to_rect, int anim)
+{
 	Texture source;
 	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_MONST), source, source_rect, animFrame))
-		return;
-	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	rect_draw_some_item(source, source_rect, *inWindow, to_rect, sf::BlendAlpha);
+	struct WH { int w, h;} dim={1,1};
+	location origin{0,0};
+	switch(pict.type) {
+		case PIC_MONST_WIDE: case PIC_CUSTOM_MONST_WIDE: case PIC_PARTY_MONST_WIDE:
+			dim={2,1}; origin={0,to_rect.height()/4}; break;
+		case PIC_MONST_TALL: case PIC_CUSTOM_MONST_TALL: case PIC_PARTY_MONST_TALL:
+			dim={1,2}; origin={to_rect.width()/4,0}; break;
+		case PIC_MONST_LG: case PIC_CUSTOM_MONST_LG: case PIC_PARTY_MONST_LG:
+			dim={2,2}; break;
+		default: break;
+	}
+	to_rect.left+=origin.x; to_rect.right-=origin.x;
+	to_rect.top+=origin.y; to_rect.bottom-=origin.y;
+	struct WH decal={ to_rect.width()/dim.w, to_rect.height()/dim.h};
+	rectangle small_monst_rect;
+	for (int h=0; h<dim.h; ++h) {
+		small_monst_rect.top=to_rect.top+h*decal.h;
+		small_monst_rect.bottom=small_monst_rect.top+decal.h;
+		for (int w=0; w<dim.w; ++w) {
+			Texture source;
+			rectangle source_rect;
+			if (!get_picture(pict, source, source_rect, anim, h*dim.w+w))
+				continue;
+			small_monst_rect.left=to_rect.left+w*decal.w;
+			small_monst_rect.right=small_monst_rect.left+decal.w;
+			rect_draw_some_item(source, source_rect, window, small_monst_rect, sf::BlendAlpha);
+		}
+	}
 }
 
-void cPict::drawPresetMonstWide(rectangle to_rect){
-	rectangle small_monst_rect = {0,0,18,14};
-	to_rect.right = to_rect.left + 28; to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	
-	Texture source;
-	rectangle source_rect;
-	cPictNum pict=getSourcePicture(ePicType::PIC_MONST);
-	if (!get_picture(pict, source, source_rect, animFrame))
-		return;
-	small_monst_rect.offset(to_rect.left,to_rect.top + 7);
-	rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
-	
-	if (!get_picture(pict, source, source_rect, animFrame, 1))
-		return;
-	small_monst_rect.offset(14,0);
-	rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
-}
-
-void cPict::drawPresetMonstTall(rectangle to_rect){
-	rectangle small_monst_rect = {0,0,18,14};
-	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	
-	Texture source;
-	rectangle source_rect;
-	cPictNum pict=getSourcePicture(ePicType::PIC_MONST);
-	if (!get_picture(pict, source, source_rect, animFrame))
-		return;
-	small_monst_rect.offset(to_rect.left + 7,to_rect.top);
-	rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
-	
-	if (!get_picture(pict, source, source_rect, animFrame, 1))
-		return;
-	small_monst_rect.offset(0,18);
-	rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
-}
-
-void cPict::drawPresetMonstLg(rectangle to_rect){
-	rectangle small_monst_rect = {0,0,18,14};
+void cPict::drawMonster(rectangle to_rect, ePicType defType)
+{
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
-	Texture source;
-	rectangle source_rect;
-	cPictNum pict=getSourcePicture(ePicType::PIC_MONST);
-	if (!get_picture(pict, source, source_rect, animFrame))
-		return;
-	small_monst_rect.offset(to_rect.left,to_rect.top);
-	rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
-	
-	if (!get_picture(pict, source, source_rect, animFrame, 1))
-		return;
-	small_monst_rect.offset(14,0);
-	rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
-	
-	if (!get_picture(pict, source, source_rect, animFrame, 2))
-		return;
-	small_monst_rect.offset(-14,18);
-	rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
-	
-	if (!get_picture(pict, source, source_rect, animFrame, 3))
-		return;
-	small_monst_rect.offset(14,0);
-	rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	draw_monster(*inWindow, getSourcePicture(defType), to_rect, animFrame);
 }
 
 void cPict::drawPresetDlog(rectangle to_rect){
@@ -1147,84 +1111,10 @@ void cPict::drawCustomTerAnim(rectangle to_rect){
 	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
 }
 
-void cPict::drawCustomMonstSm(rectangle to_rect){
-	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	
-	Texture source;
-	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_CUSTOM_MONST), source, source_rect, animFrame))
-		return;
-	rect_draw_some_item(source, source_rect, *inWindow, to_rect, sf::BlendAlpha);
-}
-
-void cPict::drawCustomMonstWide(rectangle to_rect){
-	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	
-	rectangle small_monst_rect = {0,0,18,14};
-	small_monst_rect.offset(to_rect.left,to_rect.top + 7);
-	cPictNum pict=getSourcePicture(ePicType::PIC_CUSTOM_MONST_WIDE);
-	
-	for (int part=0; part<2; ++part) {
-		Texture source;
-		rectangle source_rect;
-		if (!get_picture(pict, source, source_rect, animFrame, part))
-			continue;
-		if (part==1)
-			small_monst_rect.offset(14,0);
-		rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
-	}
-}
-
-void cPict::drawCustomMonstTall(rectangle to_rect){
-	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	
-	rectangle small_monst_rect = {0,0,18,14};
-	small_monst_rect.offset(to_rect.left + 7,to_rect.top);
-	cPictNum pict=getSourcePicture(ePicType::PIC_CUSTOM_MONST_WIDE);
-	
-	for (int part=0; part<2; ++part) {
-		Texture source;
-		rectangle source_rect;
-		if (!get_picture(pict, source, source_rect, animFrame, part))
-			continue;
-		if (part==1)
-			small_monst_rect.offset(0,18);
-		rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
-	}
-}
-
-void cPict::drawCustomMonstLg(rectangle to_rect){
-	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	
-	rectangle small_monst_rect = {0,0,18,14};
-	small_monst_rect.offset(to_rect.left,to_rect.top);
-	cPictNum pict=getSourcePicture(ePicType::PIC_CUSTOM_MONST_WIDE);
-	
-	for (int part=0; part<4; ++part) {
-		Texture source;
-		rectangle source_rect;
-		if (!get_picture(pict, source, source_rect, animFrame, part))
-			continue;
-		if (part==1 || part==3)
-			small_monst_rect.offset(14,0);
-		else if (part==2)
-			small_monst_rect.offset(-14,18);
-		rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
-	}
-}
-
 // This is a super-hacky way to wedge in scaled form, but at least it should work.
 static int dlog_to_w = 18, dlog_to_h = 36;
 
-void cPict::drawCustomDlog(int num, rectangle to_rect){
+void cPict::drawCustomNumDlog(int num, rectangle to_rect){
 	Texture source;
 	rectangle source_rect;
 	cPictNum pict=getSourcePicture(ePicType::PIC_CUSTOM_DLOG);
@@ -1249,7 +1139,7 @@ void cPict::drawCustomDlog(int num, rectangle to_rect){
 }
 
 void cPict::drawCustomDlog(rectangle to_rect){
-	drawCustomDlog(picture.num, to_rect);
+	drawCustomNumDlog(picture.num, to_rect);
 }
 
 void cPict::drawCustomDlogLg(rectangle to_rect){
@@ -1258,13 +1148,13 @@ void cPict::drawCustomDlogLg(rectangle to_rect){
 		dlog_to_w = 9;
 		dlog_to_h = 18;
 	}
-	drawCustomDlog(picture.num,to_rect);
+	drawCustomNumDlog(picture.num,to_rect);
 	to_rect.offset(dlog_to_h,0);
-	drawCustomDlog(picture.num + 2,to_rect);
+	drawCustomNumDlog(picture.num + 2,to_rect);
 	to_rect.offset(-dlog_to_h,dlog_to_h);
-	drawCustomDlog(picture.num + 4,to_rect);
+	drawCustomNumDlog(picture.num + 4,to_rect);
 	to_rect.offset(dlog_to_h,0);
-	drawCustomDlog(picture.num + 6,to_rect);
+	drawCustomNumDlog(picture.num + 6,to_rect);
 	if(drawScaled) {
 		dlog_to_w = 18;
 		dlog_to_h = 36;
@@ -1340,80 +1230,6 @@ void cPict::drawCustomTerMap(rectangle to_rect){
 	if (!get_picture(getSourcePicture(ePicType::PIC_CUSTOM_TER_MAP), source, source_rect, animFrame))
 		return;
 	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
-}
-
-void cPict::drawPartyMonstSm(rectangle to_rect){
-	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	
-	Texture source;
-	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_PARTY_MONST), source, source_rect, animFrame))
-		return;
-	rect_draw_some_item(source, source_rect, *inWindow, to_rect, sf::BlendAlpha);
-}
-
-void cPict::drawPartyMonstWide(rectangle to_rect){
-	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	
-	rectangle small_monst_rect = {0,0,18,14};
-	small_monst_rect.offset(to_rect.left,to_rect.top + 7);
-	cPictNum pict=getSourcePicture(ePicType::PIC_PARTY_MONST_WIDE);
-
-	for (int part=0; part<2; ++part) {
-		Texture source;
-		rectangle source_rect;
-		if (!get_picture(pict, source, source_rect, animFrame, part))
-			continue;
-		if (part==1)
-			small_monst_rect.offset(14,0);
-		rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
-	}
-}
-
-void cPict::drawPartyMonstTall(rectangle to_rect){
-	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
-
-	rectangle small_monst_rect = {0,0,18,14};
-	small_monst_rect.offset(to_rect.left+7,to_rect.top);
-	cPictNum pict=getSourcePicture(ePicType::PIC_PARTY_MONST_TALL);
-
-	for (int part=0; part<2; ++part) {
-		Texture source;
-		rectangle source_rect;
-		if (!get_picture(pict, source, source_rect, animFrame, part))
-			continue;
-		if (part==1)
-			small_monst_rect.offset(0,18);
-		rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
-	}
-}
-
-void cPict::drawPartyMonstLg(rectangle to_rect){
-	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	
-	rectangle small_monst_rect = {0,0,18,14};
-	small_monst_rect.offset(to_rect.left,to_rect.top);
-	cPictNum pict=getSourcePicture(ePicType::PIC_PARTY_MONST_LG);
-	for (int part=0; part<4; ++part) {
-		Texture source;
-		rectangle source_rect;
-		if (!get_picture(pict, source, source_rect, animFrame, part))
-			continue;
-		if (part==1 || part==3)
-			small_monst_rect.offset(14,0);
-		else if (part==2)
-			small_monst_rect.offset(-14,18);
-
-		rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
-	}
 }
 
 void cPict::drawPartyScen(rectangle to_rect){

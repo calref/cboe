@@ -65,6 +65,7 @@ public:
 	void print_attacks(iLiving* target);
 	void breathe_note();
 	void damaged_msg(int how_much, int extra);
+	void add_health(int how_much);
 	void killed_msg();
 	bool on_space(location loc) const;
 	
