@@ -65,7 +65,7 @@ TEST_CASE("Saving monster types") {
 	scen.scen_monsters[1].m_type = eRace::MAGICAL;
 	scen.scen_monsters[1].x_width = 1;
 	scen.scen_monsters[1].y_width = 2;
-	scen.scen_monsters[1].picture_num = 17;
+	scen.scen_monsters[1].picture= cMonster::get_picture_num(17);
 	scen.scen_monsters[1].default_attitude = eAttitude::HOSTILE_B;
 	SECTION("With the minimal required information") {
 		in_and_out("basic", scen);
@@ -78,7 +78,7 @@ TEST_CASE("Saving monster types") {
 		CHECK(scen.scen_monsters[1].m_type == eRace::MAGICAL);
 		CHECK(scen.scen_monsters[1].x_width == 1);
 		CHECK(scen.scen_monsters[1].y_width == 2);
-		CHECK(scen.scen_monsters[1].picture_num == 17);
+		CHECK(scen.scen_monsters[1].get_num_for_picture() == 17);
 		CHECK(scen.scen_monsters[1].default_attitude == eAttitude::HOSTILE_B);
 		CHECK_FALSE(scen.scen_monsters[1].mindless);
 		CHECK_FALSE(scen.scen_monsters[1].invuln);

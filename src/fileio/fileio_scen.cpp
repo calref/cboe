@@ -1491,7 +1491,9 @@ void readMonstersFromXml(ticpp::Document&& data, cScenario& scenario) {
 					num_attacks++;
 				}
 			} else if(type == "pic") {
-				monst->GetText(&the_mon.picture_num);
+				pic_num_t pict_num;
+				monst->GetText(&pict_num);
+				the_mon.picture=cMonster::get_picture_num(pict_num);
 				std::set<std::string> reqs = {"w", "h"};
 				for(attr = attr.begin(monst.Get()); attr != attr.end(); attr++) {
 					attr->GetName(&name);
@@ -1500,6 +1502,8 @@ void readMonstersFromXml(ticpp::Document&& data, cScenario& scenario) {
 						attr->GetValue(&the_mon.x_width);
 					else if(name == "h")
 						attr->GetValue(&the_mon.y_width);
+					else if (name == "tint")
+						attr->GetValue(&the_mon.picture.tint);
 					else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
 				}
 				if(!reqs.empty())

@@ -25,7 +25,7 @@
 
 class cPictNum {
 public:
-	cPictNum(pic_num_t nNum=-1, ePicType nType=ePicType::PIC_NONE, unsigned long tintMod=0)
+	cPictNum(pic_num_t nNum=-1, ePicType nType=ePicType::PIC_NONE,  sf::Uint32 tintMod=0)
 		: num(nNum)
 		, type(nType)
 		, tint(tintMod)
@@ -35,7 +35,7 @@ public:
 	bool operator!=(const cPictNum&pict) const { return !operator==(pict);}
 	pic_num_t num;
 	ePicType type;
-	unsigned long tint;
+	sf::Uint32 tint;
 };
 
 std::ostream& operator<< (std::ostream& out, cPictNum pic);
@@ -69,6 +69,7 @@ public:
 	}
 	void setPict(cPictNum const &num, bool updateResType=false) {
 		picture.num=num.num;
+		picture.tint=num.tint;
 		if (updateResType)
 			resultType=num.type;
 		else

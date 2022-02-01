@@ -88,7 +88,7 @@ TEST_CASE("Initialization sanity test for monster") {
 		CHECK(monst.default_attitude == eAttitude::DOCILE);
 		CHECK(monst.summon_type == 0);
 		CHECK(monst.default_facial_pic == 0);
-		CHECK(monst.picture_num == 149);
+		CHECK(monst.get_num_for_picture() == 149);
 		CHECK(monst.ambient_sound == -1);
 		CHECK(monst.see_spec == -1);
 	}
@@ -174,7 +174,7 @@ TEST_CASE("Construction sanity test for monster") {
 		pop.assign(0, dude, monst, false, 1);
 		REQUIRE(pop.size() == 1);
 		CHECK(pop[0].active == 1);
-		CHECK(pop[0].picture_num == 0);
+		CHECK(pop[0].get_num_for_picture() == 0);
 		CHECK(pop[0].m_health == 32);
 		CHECK(pop[0].health == 32);
 		CHECK(pop[0].max_mp == 60);

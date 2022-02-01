@@ -742,7 +742,7 @@ short do_look(location space) {
 			if((univ.town.monst[i].active != 0) && (is_lit)
 				&& univ.town.monst[i].on_space(space) &&
 				((overall_mode == MODE_LOOK_TOWN) || (can_see_light(univ.current_pc().combat_pos,space,sight_obscurity) < 5))
-				&& (univ.town.monst[i].picture_num != 0)) {
+				&& (univ.town.monst[i].get_num_for_picture() != 0)) {
 				
 				
 				msg = "    ";
@@ -1152,7 +1152,7 @@ void through_sending() {
 
 /* Draw a bitmap in the world window. hor in 0 .. 8, vert in 0 .. 8,
  object is ptr. to bitmap to be drawn, and masking is for Copybits. */
-void Draw_Some_Item(const Texture& src_gworld, rectangle src_rect, sf::RenderTarget& targ_gworld,location target, long modValue) {
+void Draw_Some_Item(const Texture& src_gworld, rectangle src_rect, sf::RenderTarget& targ_gworld,location target, sf::Uint32 modValue) {
 	if((target.x < 0) || (target.y < 0) || (target.x > 8) || (target.y > 8))
 		return;
 	if((supressing_some_spaces) && (target != ok_space[0]) &&

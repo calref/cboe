@@ -50,7 +50,7 @@ static void put_placed_monst_in_dlog(cDialog& me, cTownperson& monst, const shor
 	me["picnum"].setTextToNum(monst.facial_pic);
 	// TODO: Use -1 instead of 0 for "no pic", since 0 is a valid talking picture
  	if(short(monst.facial_pic) < 0)
-		dynamic_cast<cPict&>(me["pic"]).setPict(scenario.get_monster(monst.number).picture_num, PIC_MONST);
+		dynamic_cast<cPict&>(me["pic"]).setPict(scenario.get_monster(monst.number).picture, true);
 	else if((monst.facial_pic >= 1000))
 		dynamic_cast<cPict&>(me["pic"]).setPict(monst.facial_pic - 1000,PIC_CUSTOM_TALK);
 	else dynamic_cast<cPict&>(me["pic"]).setPict(monst.facial_pic,PIC_TALK);

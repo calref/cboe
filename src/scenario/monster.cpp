@@ -133,8 +133,7 @@ void cMonster::import_legacy(legacy::monster_record_type const &old){
 	if(default_facial_pic == 0)
 		default_facial_pic = NO_PIC;
 	else default_facial_pic--;
-	picture_num = old.picture_num;
-	if(picture_num == 122) picture_num = 119;
+	picture = get_picture_num(old.picture_num == 122 ? 119 : old.picture_num);
 	see_spec = -1;
 }
 
@@ -407,7 +406,7 @@ cMonster::cMonster(){
 	corpse_item = corpse_item_chance = treasure = 0;
 	mu = cl = 0;
 	summon_type = 0;
-	picture_num = 149;
+	picture = get_picture_num(149);
 	x_width = y_width = 1;
 	see_spec = -1;
 	m_type = eRace::HUMAN;
@@ -840,7 +839,8 @@ void cMonster::writeTo(std::ostream& file) const {
 	file << "ATTITUDE " << int(default_attitude) << '\n';
 	file << "SUMMON " << int(summon_type) << '\n';
 	file << "PORTRAIT " << default_facial_pic << '\n';
-	file << "PICTURE " << picture_num << '\n';
+	file << "PICTURE " << get_num_for_picture(picture) << '\n';
+	if (picture.tint!=0) file << "PICTURETINT " << picture.tint << '\n';
 	file << "SOUND " << ambient_sound << '\n';
 	file << '\f';
 	for(auto& abil_element : abil) {
@@ -918,8 +918,13 @@ void cMonster::readFrom(std::istream& file) {
 			line >> corpse_item >> corpse_item_chance;
 		else if(cur == "PORTRAIT")
 			line >> default_facial_pic;
-		else if(cur == "PICTURE")
+		else if(cur == "PICTURE") {
+			pic_num_t picture_num;
 			line >> picture_num;
+			picture = get_picture_num(picture_num);
+		}
+		else if(cur == "PICTURETINT")
+			line >> picture.tint;
 		else if(cur == "SOUND")
 			line >> ambient_sound;
 		else if(cur == "ATTITUDE")

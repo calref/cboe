@@ -16,48 +16,20 @@
 #include "render_shapes.hpp"
 #include "res_image.hpp"
 
-static sf::Shader maskShader;
+static sf::Shader maskShader, tintShader;
 extern fs::path progDir;
 
 void init_shaders() {
 	fs::path shaderPath = progDir/"data"/"shaders";
-	fs::path fragPath = shaderPath/"mask.frag", vertPath = shaderPath/"mask.vert";
+	fs::path fragPath = shaderPath/"mask.frag", vertPath = shaderPath/"mask.vert", tintPath = shaderPath/"tint.frag";
 	
 	do {
-		std::ifstream fin;
-		fin.open(fragPath.string().c_str());
-		if(!fin.good()) {
-			std::cerr << std_fmterr << ": Error loading fragment shader" << fragPath << std::endl;
-			break;
+		if(!maskShader.loadFromFile(vertPath.string(), fragPath.string())) {
+			std::cerr << "Error: Failed to load shaders from " << shaderPath << "\nVertex:\n" << vertPath.string() << "\nFragment:\n" << fragPath.string()  << std::endl;
 		}
-		fin.seekg(0, std::ios::end);
-		int size = fin.tellg();
-		fin.seekg(0);
-		char* fbuf = new char[size + 1];
-		fbuf[size] = 0;
-		fin.read(fbuf, size);
-		fbuf[fin.gcount()] = 0;
-		fin.close();
-
-		fin.open(vertPath.string().c_str());
-		if(!fin.good()) {
-			std::cerr << std_fmterr << ": Error loading vertex shader" << vertPath << std::endl;
-			delete[] fbuf;
-			break;
+		if(!tintShader.loadFromFile(tintPath.string(), sf::Shader::Fragment)) {
+			std::cerr << "Error: Failed to load shaders from " << shaderPath << "\nFragment:\n" << tintPath.string()  << std::endl;
 		}
-		fin.seekg(0, std::ios::end);
-		size = fin.tellg();
-		fin.seekg(0);
-		char* vbuf = new char[size + 1];
-		vbuf[size] = 0;
-		fin.read(vbuf, size);
-		vbuf[fin.gcount()] = 0;
-	
-		if(!maskShader.loadFromMemory(vbuf, fbuf)) {
-			std::cerr << "Error: Failed to load shaders from " << shaderPath << "\nVertex:\n" << vbuf << "\nFragment:\n" << fbuf << std::endl;
-		}
-		delete[] fbuf;
-		delete[] vbuf;
 	} while(false);
 }
 
@@ -68,17 +40,22 @@ void draw_splash(const Texture& splash, sf::RenderWindow& targ, rectangle dest_r
 }
 
 static void rect_draw_some_item(const Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,
-				sf::RenderStates const &mode, unsigned long colorMod) {
+				sf::RenderStates const &mode,  sf::Uint32 colorMod) {
 	setActiveRenderTarget(targ_gworld);
 	src_rect=src_rect.rescale(src_gworld.dimension, src_gworld->getSize());
 	sf::Sprite tile(*src_gworld, src_rect);
-	if(colorMod != 0) tile.setColor(sf::Color(colorMod));
 	tile.setPosition(targ_rect.left, targ_rect.top);
 	double xScale = targ_rect.width(), yScale = targ_rect.height();
 	xScale /= src_rect.width();
 	yScale /= src_rect.height();
 	tile.setScale(xScale, yScale);
-	targ_gworld.draw(tile, mode);
+	if(colorMod != 0) {
+		sf::Color color(colorMod);
+		tintShader.setUniform("tintColor", sf::Glsl::Vec4(float(color.r)/255, float(color.g)/255, float(color.b)/255, float(color.a)/255));
+		targ_gworld.draw(tile, &tintShader);
+	}
+	else
+		targ_gworld.draw(tile, mode);
 }
 
 void rect_draw_some_item(const Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,
@@ -97,7 +74,7 @@ void rect_draw_some_item(const Texture& src_gworld,rectangle src_rect,sf::Render
 	}
 	rectangle dest_rect = real_src_rect;
 	dest_rect.offset(-dest_rect.left,-dest_rect.top);
-	rect_draw_some_item(src_gworld, src_rect, src, dest_rect, sf::RenderStates(), 0);
+	rect_draw_some_item(src_gworld, src_rect, src, dest_rect, sf::RenderStates(sf::BlendNone), 0);
 	src.display();
 
 	maskShader.setParameter("texture", sf::Shader::CurrentTexture);
