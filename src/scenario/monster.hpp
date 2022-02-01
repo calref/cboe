@@ -67,17 +67,17 @@ public:
 	eAttitude default_attitude;
 	unsigned int summon_type;
 	pic_num_t default_facial_pic;
-	pic_num_t picture_num;
+	cPictNum picture;
 	snd_num_t ambient_sound; // has a chance of being played every move
 	spec_num_t see_spec;
 	
 	std::map<eMonstAbil,uAbility>::iterator addAbil(eMonstAbilTemplate what, int param = 0);
 	int addAttack(unsigned short dice, unsigned short sides, eMonstMelee type = eMonstMelee::SWING);
 	cPictNum get_picture_num() const {
-		return get_picture_num(picture_num);
+		return picture;
 	}
 	pic_num_t get_num_for_picture() const {
-		return picture_num;
+		return get_num_for_picture(picture);
 	}
 	static cPictNum get_picture_num(pic_num_t pic);
 	static pic_num_t get_num_for_picture(cPictNum const &pic);

@@ -2683,7 +2683,7 @@ void do_monster_turn() {
 			combat_posing_monster = current_working_monster = -1;
 			// Redraw monster after it goes
 			if(cur_monst->attitude != eAttitude::DOCILE && cur_monst->active > 0 && cur_monst->ap == 0
-				&& (is_combat()) && (cur_monst->picture_num > 0) && (party_can_see_monst(i) )) {
+				&& (is_combat()) && (cur_monst->picture.num > 0) && (party_can_see_monst(i) )) {
 				center = cur_monst->cur_loc;
 				draw_terrain(0);
 				

@@ -46,7 +46,7 @@ TEST_CASE("Converting monsters from legacy scenarios") {
 		CHECK(new_monst.y_width == 1);
 		CHECK(new_monst.default_attitude == eAttitude::FRIENDLY);
 		CHECK(new_monst.default_facial_pic == 51);
-		CHECK(new_monst.picture_num == 21);
+		CHECK(new_monst.get_num_for_picture() == 21);
 		CHECK(new_monst.summon_type == 1);
 		CHECK(new_monst.ambient_sound == snd_num_t(-1));
 		CHECK(new_monst.see_spec == -1);

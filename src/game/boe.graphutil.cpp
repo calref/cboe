@@ -134,19 +134,9 @@ void draw_monsters() {
 						store_loc = where_draw;
 						store_loc.x += k % width;
 						store_loc.y += k / width;
-						if(monst.picture_num >= 1000) {
-							bool isParty = monst.picture_num >= 10000;
-							pic_num_t need_pic = (monst.picture_num % 1000) + k;
-							if(monst.direction >= 4) need_pic += width * height;
-							if(combat_posing_monster == i + 100) need_pic += (2 * width * height);
-							Texture src_gw;
-							std::tie(src_gw,source_rect) = spec_scen_g.find_graphic(need_pic, isParty);
-							Draw_Some_Item(src_gw, source_rect, terrain_screen_gworld, store_loc);
-						} else {
-							Texture src_gw;
-							cPict::get_picture(cPictNum(monst.picture_num,PIC_MONST), src_gw, source_rect, (monst.direction < 4 ? 0 : 2) + (combat_posing_monster == i + 100 ? 1 : 0), k);
-							Draw_Some_Item(src_gw, source_rect, terrain_screen_gworld, store_loc);
-						}
+						Texture src_gw;
+						cPict::get_picture(monst.picture, src_gw, source_rect, (monst.direction < 4 ? 0 : 2) + (combat_posing_monster == i + 100 ? 1 : 0), k);
+						Draw_Some_Item(src_gw, source_rect, terrain_screen_gworld, store_loc, monst.picture.tint);
 					}
 				}
 		}

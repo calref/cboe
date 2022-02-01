@@ -1,10 +1,13 @@
 
+#include <algorithm>
 #include <cstdio>
 #include <cstring>
 #include <functional>
+#include <iomanip>
 #include <numeric>
-#include <algorithm>
+#include <sstream>
 #include <unordered_map>
+
 #include <boost/lexical_cast.hpp>
 #include "scen.global.hpp"
 #include "scenario.hpp"
@@ -585,7 +588,10 @@ static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which
 	dynamic_cast<cPict&>(me["talkpic"]).setPict(monst.default_facial_pic, PIC_TALK);
 	me["num"].setTextToNum(which);
 	me["name"].setText(monst.m_name);
-	me["pic"].setTextToNum(monst.picture_num);
+	me["pic"].setTextToNum(monst.get_num_for_picture());
+	strb << std::hex << std::setfill('0') << std::setw(8) << monst.picture.tint << std::dec;
+	me["pic-tint"].setText(strb.str());
+	strb.str("");
 	strb << "Width = " << int(monst.x_width);
 	me["w"].setText(strb.str());
 	strb.str("");
@@ -662,15 +668,16 @@ static bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& 
 	if(!losing) return true;
 	static size_t max_preset = m_pic_index.size() - 1;
 	static const std::string error = "Non-customized monster pic must be from 0 to " + std::to_string(max_preset) + ".";
-	if(check_range(me, id, losing, 0, 4999, "Monster pic")) {
+	if(id=="pic" && check_range(me, id, losing, 0, 4999, "Monster pic")) {
 		pic_num_t pic = me[id].getTextAsNum();
-		monst.picture_num = pic;
-		cPict& icon = dynamic_cast<cPict&>(me["icon"]);
+		unsigned long tint = monst.picture.tint;
+		monst.picture = cMonster::get_picture_num(pic);
+		monst.picture.tint = tint;
 		switch(pic / 1000) {
 			case 0:
 				if(cre(pic,0,max_preset,error,"",&me)) return false;
-				monst.x_width = m_pic_index[monst.picture_num].x;
-				monst.y_width = m_pic_index[monst.picture_num].y;
+				monst.x_width = m_pic_index[pic].x;
+				monst.y_width = m_pic_index[pic].y;
 				break;
 			case 1:
 				monst.x_width = 1;
@@ -689,7 +696,6 @@ static bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& 
 				monst.y_width = 2;
 				break;
 		}
-		icon.setPict(cMonster::get_picture_num(pic), true);
 		std::ostringstream strb;
 		strb << "Width = " << int(monst.x_width);
 		me["w"].setText(strb.str());
@@ -697,13 +703,25 @@ static bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& 
 		strb << "Height = " << int(monst.y_width);
 		me["h"].setText(strb.str());
 	}
+	else if (id=="pic-tint") {
+		sf::Uint32 tint=0;
+		std::stringstream picTint(me["pic-tint"].getText());
+		picTint >> std::hex >> tint;
+		monst.picture.tint = tint;
+	}
+	cPict& icon = dynamic_cast<cPict&>(me["icon"]);
+	icon.setPict(monst.get_picture_num(), true);
 	return true;
 }
 
 static bool save_monst_info(cDialog& me, cMonster& monst) {
 	
 	monst.m_name = me["name"].getText();
-	monst.picture_num = me["pic"].getTextAsNum();
+	monst.picture = cMonster::get_picture_num(me["pic"].getTextAsNum());
+	sf::Uint32 tint=0;
+	std::stringstream picTint(me["pic-tint"].getText());
+	picTint >> std::hex >> tint;
+	monst.picture.tint = tint;
 	monst.level = me["level"].getTextAsNum();
 	monst.m_health = me["health"].getTextAsNum();
 	monst.armor = me["armor"].getTextAsNum();
@@ -821,6 +839,7 @@ bool edit_monst_type(short which) {
 	monst_dlg["picktalk"].attachClickHandler(std::bind(pick_picture,PIC_TALK,_1,"talk","talkpic"));
 	monst_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &monst_dlg, false));
 	monst_dlg["pic"].attachFocusHandler(std::bind(check_monst_pic, _1, _2, _3, std::ref(monst)));
+	monst_dlg["pic-tint"].attachFocusHandler(std::bind(check_monst_pic, _1, _2, _3, std::ref(monst)));
 	monst_dlg["level"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 40, "level"));
 	monst_dlg["health"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 2500, "health"));
 	monst_dlg["armor"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 50, "armor"));

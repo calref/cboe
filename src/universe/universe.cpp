@@ -982,17 +982,17 @@ pic_num_t cCustomUpdateState::add_graphic(pic_num_t pic, ePicType type) {
 void cCustomUpdateState::check_monst(cUniverse &univers, cMonster & monst) {
 	if (seenMonster.count(&monst)) return; // Avoid infinite recursion
 	seenMonster.insert(&monst);
-	if(monst.picture_num >= 10000) {
-		int pic = monst.picture_num - 10000;
+	pic_num_t pict_num=monst.get_num_for_picture();
+	if(pict_num >= 10000) {
+		int pic = pict_num - 10000;
 		int sz = pic / 1000, base = pic % 1000;
 		int numGraph = 4;
 		if(sz > 1) numGraph *= 2;
 		if(sz == 4) numGraph *= 2;
 		for(int i = 0; i < numGraph; i++)
 			graphics.insert(base + i);
-	} else if(monst.picture_num >= 1000) {
-		monsters[monst.picture_num - 1000].insert(&monst);
-	}
+	} else if(pict_num >= 1000)
+		monsters[pict_num - 1000].insert(&monst);
 	for(auto& abil : monst.abil) {
 		switch(getMonstAbilCategory(abil.first)) {
 			case eMonstAbilCat::MISSILE:
@@ -1089,8 +1089,11 @@ void cUniverse::exportGraphics() {
 			default: continue;
 		}
 		pic_num_t pos = state.add_graphic(base, type);
-		for(auto& monst : pic.second)
-			monst->picture_num = 10000 + sz * 1000 + pos;
+		for(auto& monst : pic.second) {
+			unsigned long saved_tint=monst->picture.tint;
+			monst->picture = cMonster::get_picture_num(10000 + sz * 1000 + pos);
+			monst->picture.tint = saved_tint;
+		}
 	}
 }
 

@@ -131,7 +131,7 @@ TEST_CASE("Loading a monster type definition") {
 		CHECK(scen.scen_monsters[1].m_health == 10);
 		CHECK(scen.scen_monsters[1].speed == 4);
 		CHECK(scen.scen_monsters[1].m_type == eRace::HUMANOID);
-		CHECK(scen.scen_monsters[1].picture_num == 5);
+		CHECK(scen.scen_monsters[1].get_num_for_picture() == 5);
 		CHECK(scen.scen_monsters[1].x_width == 1);
 		CHECK(scen.scen_monsters[1].y_width == 1);
 		CHECK(scen.scen_monsters[1].default_attitude == eAttitude::HOSTILE_A);

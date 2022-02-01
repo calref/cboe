@@ -73,7 +73,7 @@ void cPopulation::assign(size_t n, const cTownperson& other, const cMonster& bas
 	static_cast<cMonster&>(*dudes[n]) = base;
 	// Now set up extra stuff
 	// TODO: active=1 is set by init, is this right?
-	if(dudes[n]->invisible) dudes[n]->picture_num = 0;
+	if(dudes[n]->invisible) dudes[n]->picture = cPictNum(0, ePicType::PIC_NONE);
 	dudes[n]->m_health /= easy ? 2 : 1;
 	dudes[n]->m_health *= difficulty_adjust;
 	dudes[n]->health = dudes[n]->m_health;

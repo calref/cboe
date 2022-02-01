@@ -492,7 +492,8 @@ void writeMonstersToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.OpenElement("pic");
 		data.PushAttribute("w", monst.x_width);
 		data.PushAttribute("h", monst.y_width);
-		data.PushText(monst.picture_num);
+		if (monst.picture.tint) data.PushAttribute("tint", monst.picture.tint);
+		data.PushText(monst.get_num_for_picture());
 		data.CloseElement("pic");
 		
 		data.PushElement("race", monst.m_type);

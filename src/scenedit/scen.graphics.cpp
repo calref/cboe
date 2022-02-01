@@ -752,15 +752,9 @@ void draw_monsts() {
 		auto const &monster=scenario.get_monster(creature.number);
 		width = monster.x_width;
 		height = monster.y_width;
-			
+		if(monster.picture.num<0) continue;
 		for(short k = 0; k < width * height; k++) {
-			if(where_draw.x == minmax(0,8,where_draw.x) && where_draw.y == minmax(0,8,where_draw.y) && monster.picture_num >= 1000)
-				std::tie(from_gworld,source_rect) = spec_scen_g.find_graphic((monster.picture_num%1000) + k);
-			else if(monster.picture_num>=0 && monster.picture_num < 1000 && monster.picture_num<m_pic_index.size())
-				cPict::get_picture(cPictNum(monster.picture_num,PIC_MONST), from_gworld, source_rect, 0, k);
-			else
-				continue;
-				
+			cPict::get_picture(monster.picture, from_gworld, source_rect, 0, k);
 			store_loc = where_draw;
 			store_loc.x += k % width;
 			store_loc.y += k / width;
@@ -777,7 +771,7 @@ void draw_monsts() {
 			destrec.top = destrec.bottom - (source_rect.bottom - source_rect.top);
 			destrec.offset(TER_RECT_UL_X,TER_RECT_UL_Y);
 				
-			rect_draw_some_item(from_gworld, source_rect, mainPtr, destrec, sf::BlendAlpha);
+			rect_draw_some_item(from_gworld, source_rect, mainPtr, destrec, RenderState(sf::BlendAlpha, monster.picture.tint));
 		}
 	}
 }

@@ -6,6 +6,7 @@
 	 -->
 	<field name='name' top='30' left='180' width='186' height='16'/>
 	<field name='pic' top='57' left='140' width='52' height='16'/>
+	<field name='pic-tint' top='57' left='560' width='70' height='16'/>
 	<field name='level' top='82' left='206' width='52' height='16'/>
 	<field name='health' top='106' left='206' width='52' height='16'/>
 	<field name='armor' top='130' left='206' width='52' height='16'/>
@@ -53,6 +54,7 @@
 	<text top='58' left='8' width='120' height='14'>Monster picture:</text>
 	<text name='w' top='59' left='334' width='86' height='14'>Width = </text>
 	<text name='h' top='59' left='426' width='86' height='14'>Height = </text>
+	<text top='59' left='518' width='40' height='14'>Tint = </text>
 	<text name='type' top='253' left='134' width='120' height='14'/>
 	<text name='type1' top='150' left='470' width='120' height='14'/>
 	<text name='type2' top='174' left='470' width='120' height='14'/>

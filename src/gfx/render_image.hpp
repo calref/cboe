@@ -22,7 +22,7 @@ void init_shaders();
 
 struct RenderState {
 	RenderState() = default;
-	RenderState(sf::BlendMode blendMode, unsigned long colorMod=0)
+	RenderState(sf::BlendMode blendMode,  sf::Uint32 colorMod=0)
 	: blend_mode(blendMode)
 	, color_mod(colorMod) {
 	}
@@ -32,7 +32,7 @@ struct RenderState {
 		mask=&mask_gworld;
 	}
 	sf::BlendMode blend_mode = sf::BlendNone;
-	unsigned long color_mod=0;
+	sf::Uint32 color_mod=0;
 	sf::Texture const *mask=nullptr;
 };
 
