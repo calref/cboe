@@ -502,6 +502,13 @@ void cTownperson::import_legacy(legacy::creature_start_type const &old){
 	personality = old.personality;
 	special_on_kill = old.special_on_kill;
 	facial_pic = old.facial_pic;
+	// a tentative to remove the do_frame=FALSE flag:
+	// in fact, it is more complex: num+3000 means do_frame=FALSE in draw dialog
+	// but when facial_pic>=1000, drawDialog was called with facial_pic+1400
+	// so this code will failed when 1600<=facial_pic<3000. Ie. if I understand
+	// the legacy code correctly, in this case, a not talking picture can be
+	// drawed
+	if (facial_pic>=3000) facial_pic-=3000;
 	if(facial_pic == 0)
 		facial_pic = NO_PIC;
 	else if (facial_pic<1000) // facial_pic>=1000 corresponds to 2x1 custom graphic
