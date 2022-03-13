@@ -15,6 +15,7 @@
 #include <array>
 #include <bitset>
 #include <cstdint>
+#include <limits>
 
 #include "item.hpp"
 #include "pictypes.hpp"

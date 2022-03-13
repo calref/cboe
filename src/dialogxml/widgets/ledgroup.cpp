@@ -7,6 +7,8 @@
  *
  */
 
+#include <climits>
+
 #include "ledgroup.hpp"
 
 #include "dialog.hpp"
