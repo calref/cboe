@@ -16,6 +16,7 @@
 
 #include <vector>
 #include <map>
+#include <memory>
 #include "control.hpp"
 #include "pictypes.hpp"
 

@@ -9,6 +9,8 @@
 #ifndef BoE_SKILLS_TRAITS_HPP
 #define BoE_SKILLS_TRAITS_HPP
 
+#include <iostream>
+
 enum class eSkill {
 	INVALID = -1,
 	STRENGTH = 0,

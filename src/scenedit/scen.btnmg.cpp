@@ -5,6 +5,7 @@
 #include "scen.global.hpp"
 #include <array>
 #include <string>
+#include <memory>
 #include "scen.graphics.hpp"
 #include <cmath>
 #include "scen.btnmg.hpp"

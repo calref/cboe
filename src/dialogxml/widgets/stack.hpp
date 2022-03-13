@@ -12,6 +12,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <limits>
 #include "container.hpp"
 
 /// A stack groups several controls that represent an array of data.
