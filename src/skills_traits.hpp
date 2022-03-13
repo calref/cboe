@@ -9,7 +9,7 @@
 #ifndef BoE_SKILLS_TRAITS_HPP
 #define BoE_SKILLS_TRAITS_HPP
 
-#include <iostream>
+#include <iosfwd>
 
 enum class eSkill {
 	INVALID = -1,
