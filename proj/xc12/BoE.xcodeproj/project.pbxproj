@@ -189,12 +189,12 @@
 		919CC27E1B37743B00273FDA /* undo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 912283C80FD0E16C00B21642 /* undo.cpp */; };
 		919CC27F1B37744000273FDA /* winutil.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FF18E63B70005CF3A4 /* winutil.mac.mm */; };
 		919CC2801B37744800273FDA /* pc.editors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF070F969BD300BF5B67 /* pc.editors.cpp */; };
-		919DDBFC19006CF2003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */; };
-		919DDBFD19006CF2003E7FED /* libboost_system.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFB19006CC9003E7FED /* libboost_system.dylib */; };
-		919DDBFE19006CF6003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */; };
-		919DDBFF19006CF6003E7FED /* libboost_system.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFB19006CC9003E7FED /* libboost_system.dylib */; };
-		919DDC0019006CF9003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */; };
-		919DDC0119006CF9003E7FED /* libboost_system.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFB19006CC9003E7FED /* libboost_system.dylib */; };
+		919DDBFC19006CF2003E7FED /* libboost_filesystem-mt.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFA19006CC9003E7FED /* libboost_filesystem-mt.dylib */; };
+		919DDBFD19006CF2003E7FED /* libboost_system-mt.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFB19006CC9003E7FED /* libboost_system-mt.dylib */; };
+		919DDBFE19006CF6003E7FED /* libboost_filesystem-mt.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFA19006CC9003E7FED /* libboost_filesystem-mt.dylib */; };
+		919DDBFF19006CF6003E7FED /* libboost_system-mt.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFB19006CC9003E7FED /* libboost_system-mt.dylib */; };
+		919DDC0019006CF9003E7FED /* libboost_filesystem-mt.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFA19006CC9003E7FED /* libboost_filesystem-mt.dylib */; };
+		919DDC0119006CF9003E7FED /* libboost_system-mt.dylib in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFB19006CC9003E7FED /* libboost_system-mt.dylib */; };
 		919DDC0A1900750D003E7FED /* freetype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0B1900750D003E7FED /* freetype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0C1900750D003E7FED /* freetype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
@@ -229,7 +229,7 @@
 		91B3EF590F969F3000BF5B67 /* scen.townout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF40F969BA700BF5B67 /* scen.townout.cpp */; };
 		91B3EF5A0F969F3000BF5B67 /* scen.btnmg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF50F969BA700BF5B67 /* scen.btnmg.cpp */; };
 		91B3F1850F97894A00BF5B67 /* scen.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF30F969BA700BF5B67 /* scen.graphics.cpp */; };
-		91BC33821B4388E80008882C /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.dylib */; };
+		91BC33821B4388E80008882C /* libz.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.1.tbd */; };
 		91BC33831B4388E80008882C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA118E7E500007B6799 /* Cocoa.framework */; };
 		91BC33841B4388E80008882C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA218E7E500007B6799 /* OpenGL.framework */; };
 		91BC33851B4388E80008882C /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
@@ -243,8 +243,8 @@
 		91BC338D1B4388E80008882C /* vorbisenc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; };
 		91BC338E1B4388E80008882C /* vorbisfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; };
 		91BC338F1B4388E80008882C /* FLAC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
-		91BC33901B4388E80008882C /* libboost_filesystem.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */; };
-		91BC33911B4388E80008882C /* libboost_system.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFB19006CC9003E7FED /* libboost_system.dylib */; };
+		91BC33901B4388E80008882C /* libboost_filesystem-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFA19006CC9003E7FED /* libboost_filesystem-mt.dylib */; };
+		91BC33911B4388E80008882C /* libboost_system-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFB19006CC9003E7FED /* libboost_system-mt.dylib */; };
 		91BC33981B4481EF0008882C /* scen.fileio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF20F969BA700BF5B67 /* scen.fileio.cpp */; };
 		91BFA3D71901B18F001686E4 /* mask.vert in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 91BFA3D61901B024001686E4 /* mask.vert */; };
 		91C548F81D8B2FE400FE6A7B /* pc_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C548F71D8B2EE400FE6A7B /* pc_read.cpp */; };
@@ -305,10 +305,10 @@
 		91FD417423DFC9D4003D5B8A /* boe.ui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91FD417223DFC5C1003D5B8A /* boe.ui.cpp */; };
 		91FE0E3823F084B70084CA6B /* drawable_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91FE0E3523F084B70084CA6B /* drawable_manager.cpp */; };
 		DCCA42001A8C467000E6A9A5 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
-		DCCA42021A8C467800E6A9A5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.dylib */; };
-		DCCA42031A8C469400E6A9A5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.dylib */; };
+		DCCA42021A8C467800E6A9A5 /* libz.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.1.tbd */; };
+		DCCA42031A8C469400E6A9A5 /* libz.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.1.tbd */; };
 		DCCA42041A8C46A600E6A9A5 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
-		DCCA42051A8C46B500E6A9A5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.dylib */; };
+		DCCA42051A8C46B500E6A9A5 /* libz.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.1.tbd */; };
 		DCCA42061A8C46BE00E6A9A5 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
 /* End PBXBuildFile section */
 
@@ -459,8 +459,8 @@
 				917823641B2F3226007F3444 /* vorbisenc.framework in Copy Libraries and Frameworks */,
 				9178236D1B2F32EC007F3444 /* vorbisfile.framework in Copy Libraries and Frameworks */,
 				917823801B2F33EB007F3444 /* FLAC.framework in Copy Libraries and Frameworks */,
-				919DDC0019006CF9003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */,
-				919DDC0119006CF9003E7FED /* libboost_system.dylib in Copy Libraries and Frameworks */,
+				919DDC0019006CF9003E7FED /* libboost_filesystem-mt.dylib in Copy Libraries and Frameworks */,
+				919DDC0119006CF9003E7FED /* libboost_system-mt.dylib in Copy Libraries and Frameworks */,
 			);
 			name = "Copy Libraries and Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -482,8 +482,8 @@
 				917823651B2F322B007F3444 /* vorbisenc.framework in Copy Libraries and Frameworks */,
 				9178236C1B2F32E9007F3444 /* vorbisfile.framework in Copy Libraries and Frameworks */,
 				917823811B2F33F1007F3444 /* FLAC.framework in Copy Libraries and Frameworks */,
-				919DDBFE19006CF6003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */,
-				919DDBFF19006CF6003E7FED /* libboost_system.dylib in Copy Libraries and Frameworks */,
+				919DDBFE19006CF6003E7FED /* libboost_filesystem-mt.dylib in Copy Libraries and Frameworks */,
+				919DDBFF19006CF6003E7FED /* libboost_system-mt.dylib in Copy Libraries and Frameworks */,
 			);
 			name = "Copy Libraries and Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -505,8 +505,8 @@
 				9178236B1B2F32E3007F3444 /* vorbisfile.framework in Copy Libraries and Frameworks */,
 				917823661B2F3231007F3444 /* vorbisenc.framework in Copy Libraries and Frameworks */,
 				917823821B2F33F5007F3444 /* FLAC.framework in Copy Libraries and Frameworks */,
-				919DDBFC19006CF2003E7FED /* libboost_filesystem.dylib in Copy Libraries and Frameworks */,
-				919DDBFD19006CF2003E7FED /* libboost_system.dylib in Copy Libraries and Frameworks */,
+				919DDBFC19006CF2003E7FED /* libboost_filesystem-mt.dylib in Copy Libraries and Frameworks */,
+				919DDBFD19006CF2003E7FED /* libboost_system-mt.dylib in Copy Libraries and Frameworks */,
 			);
 			name = "Copy Libraries and Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -690,8 +690,8 @@
 		919B13A51BBDE985009905A4 /* spec_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spec_legacy.cpp; sourceTree = "<group>"; };
 		919B13A71BBE297B009905A4 /* scrollpane.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = scrollpane.hpp; sourceTree = "<group>"; };
 		919B13A81BBE2B54009905A4 /* scrollpane.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scrollpane.cpp; sourceTree = "<group>"; };
-		919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_filesystem.dylib; path = /usr/local/lib/libboost_filesystem.dylib; sourceTree = "<absolute>"; };
-		919DDBFB19006CC9003E7FED /* libboost_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_system.dylib; path = /usr/local/lib/libboost_system.dylib; sourceTree = "<absolute>"; };
+		919DDBFA19006CC9003E7FED /* libboost_filesystem-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_filesystem-mt.dylib"; path = "/opt/local/libexec/boost/1.76/lib/libboost_filesystem-mt.dylib"; sourceTree = "<absolute>"; };
+		919DDBFB19006CC9003E7FED /* libboost_system-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_system-mt.dylib"; path = "/opt/local/libexec/boost/1.76/lib/libboost_system-mt.dylib"; sourceTree = "<absolute>"; };
 		919DDC091900750D003E7FED /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = /Library/Frameworks/freetype.framework; sourceTree = "<absolute>"; };
 		91A0B15A1900F73E00EF438F /* mask.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = mask.frag; sourceTree = "<group>"; };
 		91A32BD10FDB797B00C4E957 /* basicbtns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = basicbtns.cpp; sourceTree = "<group>"; };
@@ -840,7 +840,7 @@
 		91FE0E3623F084B70084CA6B /* drawable_manager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = drawable_manager.hpp; sourceTree = "<group>"; };
 		91FE0E3723F084B70084CA6B /* event_listener.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = event_listener.hpp; sourceTree = "<group>"; };
 		91FE0E3B23F084C60084CA6B /* drawable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = drawable.hpp; sourceTree = "<group>"; };
-		DCCA42011A8C467800E6A9A5 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		DCCA42011A8C467800E6A9A5 /* libz.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.tbd; path = ../MacOSX.sdk/usr/lib/libz.1.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -849,7 +849,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DCCA42041A8C46A600E6A9A5 /* SFML.framework in Frameworks */,
-				DCCA42031A8C469400E6A9A5 /* libz.dylib in Frameworks */,
+				DCCA42031A8C469400E6A9A5 /* libz.1.tbd in Frameworks */,
 				914B2AA318E7E507007B6799 /* Cocoa.framework in Frameworks */,
 				914B2AA618E7E50D007B6799 /* OpenGL.framework in Frameworks */,
 				91F6F8E318F87F3700E3EA15 /* sfml-audio.framework in Frameworks */,
@@ -885,7 +885,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DCCA42021A8C467800E6A9A5 /* libz.dylib in Frameworks */,
+				DCCA42021A8C467800E6A9A5 /* libz.1.tbd in Frameworks */,
 				DCCA42001A8C467000E6A9A5 /* SFML.framework in Frameworks */,
 				914B2AA418E7E509007B6799 /* Cocoa.framework in Frameworks */,
 				914B2AA718E7E50E007B6799 /* OpenGL.framework in Frameworks */,
@@ -909,7 +909,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DCCA42061A8C46BE00E6A9A5 /* SFML.framework in Frameworks */,
-				DCCA42051A8C46B500E6A9A5 /* libz.dylib in Frameworks */,
+				DCCA42051A8C46B500E6A9A5 /* libz.1.tbd in Frameworks */,
 				914B2AA518E7E50A007B6799 /* Cocoa.framework in Frameworks */,
 				914B2AA818E7E50E007B6799 /* OpenGL.framework in Frameworks */,
 				91F6F8E518F87F3700E3EA15 /* sfml-audio.framework in Frameworks */,
@@ -930,7 +930,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91BC33821B4388E80008882C /* libz.dylib in Frameworks */,
+				91BC33821B4388E80008882C /* libz.1.tbd in Frameworks */,
 				91BC33831B4388E80008882C /* Cocoa.framework in Frameworks */,
 				91BC33841B4388E80008882C /* OpenGL.framework in Frameworks */,
 				91BC33851B4388E80008882C /* SFML.framework in Frameworks */,
@@ -944,8 +944,8 @@
 				91BC338D1B4388E80008882C /* vorbisenc.framework in Frameworks */,
 				91BC338E1B4388E80008882C /* vorbisfile.framework in Frameworks */,
 				91BC338F1B4388E80008882C /* FLAC.framework in Frameworks */,
-				91BC33901B4388E80008882C /* libboost_filesystem.dylib in Frameworks */,
-				91BC33911B4388E80008882C /* libboost_system.dylib in Frameworks */,
+				91BC33901B4388E80008882C /* libboost_filesystem-mt.dylib in Frameworks */,
+				91BC33911B4388E80008882C /* libboost_system-mt.dylib in Frameworks */,
 				911F2D9C1B98F43C00E3102E /* libCommon.a in Frameworks */,
 				911F2DA01B98F44700E3102E /* libCommon-Party.a in Frameworks */,
 			);
@@ -1097,7 +1097,7 @@
 		914B2AA018E7E4A3007B6799 /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DCCA42011A8C467800E6A9A5 /* libz.dylib */,
+				DCCA42011A8C467800E6A9A5 /* libz.1.tbd */,
 				914B2AA118E7E500007B6799 /* Cocoa.framework */,
 				914B2AA218E7E500007B6799 /* OpenGL.framework */,
 				91F6F8E218F87F3700E3EA15 /* SFML.framework */,
@@ -1111,8 +1111,8 @@
 				9178235C1B2EA0C5007F3444 /* vorbisenc.framework */,
 				917823671B2F32DD007F3444 /* vorbisfile.framework */,
 				9178237C1B2F33E9007F3444 /* FLAC.framework */,
-				919DDBFA19006CC9003E7FED /* libboost_filesystem.dylib */,
-				919DDBFB19006CC9003E7FED /* libboost_system.dylib */,
+				919DDBFA19006CC9003E7FED /* libboost_filesystem-mt.dylib */,
+				919DDBFB19006CC9003E7FED /* libboost_system-mt.dylib */,
 				91ACCE82190032E000FAEF8B /* fix_dylibs.sh */,
 			);
 			name = "Linked Frameworks";
@@ -1715,6 +1715,32 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1240;
+				TargetAttributes = {
+					2BF04AC00BF518D4006C0831 = {
+						ProvisioningStyle = Manual;
+					};
+					912CF3570FE4494C0063B614 = {
+						ProvisioningStyle = Manual;
+					};
+					919CC22C1B37721400273FDA = {
+						ProvisioningStyle = Manual;
+					};
+					919CC23A1B3772B700273FDA = {
+						ProvisioningStyle = Manual;
+					};
+					91B3EF170F969C2200BF5B67 = {
+						ProvisioningStyle = Manual;
+					};
+					91B3EF3E0F969F0000BF5B67 = {
+						ProvisioningStyle = Manual;
+					};
+					91CC172C1B421C0A003D9A69 = {
+						ProvisioningStyle = Manual;
+					};
+					91EBE9DA0F9A33A1002356F2 = {
+						ProvisioningStyle = Manual;
+					};
+				};
 			};
 			buildConfigurationList = 2BF04AA20BF51845006C0831 /* Build configuration list for PBXProject "BoE" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2164,8 +2190,13 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
@@ -2195,8 +2226,15 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/opt/local/include,
+					"$(PROJECT_DIR)/../../src/fileio/gzstream",
+				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = "\"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/lib/\"";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/lib/\"",
+					/opt/local/lib,
+				);
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
@@ -2247,8 +2285,13 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
@@ -2276,8 +2319,15 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/opt/local/include,
+					"$(PROJECT_DIR)/../../src/fileio/gzstream",
+				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = "\"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/lib/\"";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/lib/\"",
+					/opt/local/lib,
+				);
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -2306,11 +2356,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LOCAL_LIBRARY_DIR)/Frameworks",
-				);
+				DEVELOPMENT_TEAM = "";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/../../pkg/mac/BoE-Info.plist";
@@ -2323,6 +2371,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.spidweb.bladesofexile;
 				PRODUCT_NAME = "Blades of Exile";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2331,11 +2380,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LOCAL_LIBRARY_DIR)/Frameworks",
-				);
+				DEVELOPMENT_TEAM = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/../../pkg/mac/BoE-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
@@ -2347,6 +2394,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.spidweb.bladesofexile;
 				PRODUCT_NAME = "Blades of Exile";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -2422,7 +2470,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
@@ -2439,6 +2489,7 @@
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "-L\"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.spidweb.boepceditor;
 				PRODUCT_NAME = "BoE Character Editor";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2447,8 +2498,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
@@ -2464,6 +2517,7 @@
 				OTHER_LDFLAGS_QUOTED_FOR_TARGET_1 = "-L\"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.spidweb.boepceditor;
 				PRODUCT_NAME = "BoE Character Editor";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -2472,7 +2526,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
@@ -2489,6 +2545,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.spidweb.boesceneditor;
 				PRODUCT_NAME = "BoE Scenario Editor";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2498,8 +2555,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
@@ -2515,6 +2574,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.spidweb.boesceneditor;
 				PRODUCT_NAME = "BoE Scenario Editor";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2524,6 +2584,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -2535,6 +2597,7 @@
 					"$(OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1)",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -2542,8 +2605,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};
