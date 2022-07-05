@@ -1,0 +1,197 @@
+{
+	name: CI,
+
+	on: {
+		push: {
+			branches: [ master, ci ]
+		},
+		pull_request: {
+			branches: [ master ]
+		}
+	},
+
+	jobs: {
+		macos-old: {
+			runs-on: macos-10.14,
+			env: {
+				DEVELOPER_DIR: /Applications/Xcode_10.3.app/Contents/Developer
+			},
+			steps: [
+				{
+					name: checkout,
+					uses: actions/checkout@v2
+				},
+				{
+					name: install Boost,
+					run: brew install Boost
+				},
+				{
+					name: install SFML,
+					run: ./.github/workflows/scripts/mac/install-sfml.sh
+				},
+				{
+					name: patch Xcode project,
+					run: ./.github/workflows/scripts/mac/fix-xcode-proj.sh
+				},
+				{
+					name: build,
+					run: ./.github/workflows/scripts/mac/xcode-build.sh
+				},
+				{
+					name: unit tests,
+					run: ./.github/workflows/scripts/mac/run-tests.sh
+				}
+			]
+		},
+		macos-xcode: {
+			runs-on: macos-10.15,
+			env: {
+				DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
+			},
+			steps: [
+				{
+					name: checkout,
+					uses: actions/checkout@v2
+				},
+				{
+					name: install Boost,
+					run: brew install Boost
+				},
+				{
+					name: install SFML,
+					run: ./.github/workflows/scripts/mac/install-sfml.sh
+				},
+				{
+					name: patch Xcode project,
+					run: ./.github/workflows/scripts/mac/fix-xcode-proj.sh
+				},
+				{
+					name: build,
+					run: ./.github/workflows/scripts/mac/xcode-build.sh
+				},
+				{
+					name: unit tests,
+					run: ./.github/workflows/scripts/mac/run-tests.sh
+				}
+			]
+		},
+		# macos-scons: {
+		# 	runs-on: macos-10.15,
+		# 	steps:  [
+		# 		{
+		# 			name: checkout,
+		# 			uses: actions/checkout@v2
+		# 		},
+		# 		{
+		# 			name: install dependencies,
+		# 			run: brew install scons SFML Boost
+		# 		},
+		# 		{
+		# 			name: build and unit test,
+		# 			run: ./.github/workflows/scripts/mac/scons-build.sh
+		# 		}
+		# 	]
+		# },
+		win-old: {
+			runs-on: windows-2016,
+			steps: [
+				{
+					name: checkout,
+					uses: actions/checkout@v2
+				},
+				{
+					name: install dependencies,
+					run: '.\.github\workflows\scripts\win\install-deps.bat x86'
+				},
+				{
+					name: build,
+					run: '.\.github\workflows\scripts\win\msvc-build.bat x86'
+				}
+			]
+		},
+		win: {
+			runs-on: windows-2019,
+			steps: [
+				{
+					name: checkout,
+					uses: actions/checkout@v2
+				},
+				{
+					name: install dependencies,
+					run: '.\.github\workflows\scripts\win\install-deps.bat x64'
+				},
+				{
+					name: build,
+					run: '.\.github\workflows\scripts\win\msvc-build.bat x64'
+				},
+				{
+					name: unit tests,
+					run: '.\.github\workflows\scripts\win\run-tests.bat'
+				}
+			]
+		},
+		win-scons: {
+			runs-on: windows-2019,
+			steps: [
+				{
+					name: checkout,
+					uses: actions/checkout@v2
+				},
+				{
+					name: install build dependencies,
+					run: 'vcpkg install libxml2 && pip install scons'
+				},
+				{
+					name: install dependencies,
+					run: '.\.github\workflows\scripts\win\install-deps.bat x64'
+				},
+				{
+					name: build and unit test,
+					run: '.\.github\workflows\scripts\win\scons-build.bat'
+				}
+			]
+		},
+		# win-mingw: {
+		# 	runs-on: windows-2019,
+		# 	steps: [
+		# 		{
+		# 			name: checkout,
+		# 			uses: actions/checkout@v2
+		# 		},
+		# 		{
+		# 			name: install build dependencies,
+		# 			run: 'vcpkg install libxml2 && pip install scons'
+		# 		},
+		# 		{
+		# 			name: install dependencies,
+		# 			run: '.\.github\workflows\scripts\win\install-deps.bat x64'
+		# 		},
+		# 		{
+		# 			name: build and unit test,
+		# 			run: scons toolset=mingw
+		# 		}
+		# 	]
+		# },
+		linux: {
+			runs-on: ubuntu-20.04,
+			steps: [
+				{
+					name: checkout,
+					uses: actions/checkout@v2
+				},
+				{
+					name: install dependencies,
+					run: 'sudo apt-get install scons libxml2-utils zlib1g libsfml-dev libboost-all-dev zenity'
+				},
+				{
+					name: install TGUI,
+					run: 'sudo ./.github/workflows/scripts/linux/install-tgui.sh'
+				},
+				{
+					name: build and unit test,
+					run: CCFLAGS=-fdiagnostics-color=always scons
+				}
+			],
+		}
+	}
+}
