@@ -154,9 +154,9 @@ public:
 		data.resize(w * h);
 		if(old_w < width) {
 			size_t dx = width - old_w;
-			for(int y = old_h - 1; y > 0; y--) {
-				std::move_backward(data.begin() + old_w * y, data.begin() + old_w * (y + 1), data.begin() + w * (y + 1) - dx);
-				std::fill_n(data.begin() + old_w + w * (y - 1), dx, Type());
+			for(size_t y = old_h; y > 1; y--) {
+				std::move_backward(data.begin() + old_w * y, data.begin() + old_w * y, data.begin() + w * y - dx);
+				std::fill_n(data.begin() + old_w + w * y, dx, Type());
 			}
 		}
 	}
