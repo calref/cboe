@@ -73,16 +73,16 @@ public:
 	/// Create a new scrollbar.
 	/// @param parent The parent dialog.
 	explicit cScrollbar(cDialog& parent);
-	bool handleClick(location where);
+	bool handleClick(location where) override;
 	void setFormat(eFormat prop, short val);
 	short getFormat(eFormat prop);
 	void setColour(sf::Color clr);
 	sf::Color getColour();
-	storage_t store();
-	void restore(storage_t to);
-	bool isClickable();
-	bool isFocusable();
-	bool isScrollable();
+	storage_t store() override;
+	void restore(storage_t to) override;
+	bool isClickable() override;
+	bool isFocusable() override;
+	bool isScrollable() override;
 	/// Get the scrollbar thumb's current position.
 	/// @return The current position.
 	long getPosition();
@@ -137,7 +137,7 @@ public:
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers
-	const std::set<eDlogEvt> getSupportedHandlers() const {
+	const std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_CLICK, EVT_SCROLL};
 	}
 	cScrollbar& operator=(cScrollbar& other) = delete;

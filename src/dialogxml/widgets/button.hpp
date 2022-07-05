@@ -52,15 +52,15 @@ public:
 	/// Create a button outside of a dialog
 	/// @param parent The parent window
 	explicit cButton(sf::RenderWindow& parent);
-	bool isClickable();
-	bool isFocusable();
-	bool isScrollable();
+	bool isClickable() override;
+	bool isFocusable() override;
+	bool isScrollable() override;
 	virtual ~cButton();
-	void draw();
+	void draw() override;
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers
-	const std::set<eDlogEvt> getSupportedHandlers() const {
+	const std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_CLICK};
 	}
 	cButton& operator=(cButton& other) = delete;

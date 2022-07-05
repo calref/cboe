@@ -26,23 +26,23 @@ public:
 	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
 	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;
 	void validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) override;
-	bool manageFormat(eFormat prop, bool set, boost::any* val);
+	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
 	/// Create a new text message.
 	/// @param parent The parent dialog.
 	explicit cTextMsg(cDialog& parent);
 	/// Create a new text message without a parent dialog.
 	/// @param parent The parent window.
 	explicit cTextMsg(sf::RenderWindow& parent);
-	bool isClickable();
-	bool isFocusable();
-	bool isScrollable();
+	bool isClickable() override;
+	bool isFocusable() override;
+	bool isScrollable() override;
 	virtual ~cTextMsg();
-	void draw();
+	void draw() override;
 	void recalcRect() override;
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers
-	const std::set<eDlogEvt> getSupportedHandlers() const {
+	const std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_CLICK};
 	}
 	cTextMsg& operator=(cTextMsg& other) = delete;
