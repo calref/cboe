@@ -28,7 +28,9 @@ cursor_type Cursor::current = sword_curs;
 
 std::filebuf logfile;
 
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__APPLE__)
 static fs::path get_posix_tempdir();
+#endif
 
 static void add_resmgr_paths(const fs::path& basePath) {
 	ResMgr::graphics.pushPath(basePath/"graphics");
@@ -87,6 +89,7 @@ void init_directories(const char* exec_path) {
 	std::cout << "Temporary directory: " << tempDir << std::endl;
 }
 
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__APPLE__)
 fs::path get_posix_tempdir() {
 
 	fs::path tempdir;
@@ -110,6 +113,7 @@ fs::path get_posix_tempdir() {
 
 	return tempdir;
 }
+#endif
 
 void check_for_intel() {
 	union {uint16_t x; uint8_t c;} endian;

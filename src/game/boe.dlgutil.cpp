@@ -248,7 +248,6 @@ void handle_sale(cShopItem item, int i) {
 	cItem base_item = item.item;
 	short cost = item.getCost(active_shop.getCostAdjust());
 	rectangle dummy_rect = {0,0,0,0};
-	size_t size_before = active_shop.size();
 	
 	switch(item.type) {
 		case eShopItemType::EMPTY: break; // Invalid

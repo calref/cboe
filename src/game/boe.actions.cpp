@@ -1320,6 +1320,8 @@ bool handle_action(const sf::Event& event) {
 								switch_pc(i);
 							}
 							break;
+						case MAX_ePlayerButton:
+							break; // Not a button
 					}
 				}
 		need_reprint = true;
@@ -1394,6 +1396,8 @@ bool handle_action(const sf::Event& event) {
 								// (Based on item_area_button_active)
 								handle_item_shop_action(item_hit);
 								break;
+							case MAX_eItemButton:
+								break; // Not a button
 						}
 					}
 		}

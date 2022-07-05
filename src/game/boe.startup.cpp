@@ -69,6 +69,10 @@ bool handle_startup_press(location the_point) {
 				
 				case STARTBTN_CUSTOM: break; // Currently unused
 					
+				case STARTBTN_SCROLL: case MAX_eStartButton:
+					// These aren't buttons
+					break;
+					
 				case STARTBTN_JOIN:
 					if(!party_in_memory) {
 						if(kb::isKeyPressed(kb::LAlt) || kb::isKeyPressed(kb::RAlt)) {

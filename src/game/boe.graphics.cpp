@@ -137,7 +137,6 @@ void adjust_window_mode() {
 	winSettings.stencilBits = 1;
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 	hideMenuBar();
-	bool firstTime = !mainPtr.isOpen();
 	float ui_scale = get_float_pref("UIScale", 1.0);
 	if(ui_scale < 0.1) ui_scale = 1.0;
 	float width = 605 * ui_scale, height = 430 * ui_scale;

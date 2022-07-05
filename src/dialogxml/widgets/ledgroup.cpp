@@ -242,7 +242,7 @@ bool cLedGroup::parseContent(ticpp::Node& content, int n, std::string tagName, s
 	return cContainer::parseContent(content, n, tagName, fname, text);
 }
 
-void cLedGroup::validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) {
+void cLedGroup::validatePostParse(ticpp::Element&, std::string, const std::set<std::string>&, const std::multiset<std::string>&) {
 	// Don't defer to super-class; groups are an abstract container that doesn't require a position.
 	//cControl::validatePostParse(who, fname, attrs, nodes);
 	frameStyle = FRM_NONE;
