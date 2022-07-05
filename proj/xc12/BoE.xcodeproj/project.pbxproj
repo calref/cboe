@@ -2259,6 +2259,7 @@
 					"-Wno-long-long",
 					"-Wno-quoted-include-in-framework-header",
 					"-Wno-shorten-64-to-32",
+					"-Wno-comma",
 				);
 			};
 			name = Debug;
@@ -2352,6 +2353,7 @@
 					"-Wno-long-long",
 					"-Wno-quoted-include-in-framework-header",
 					"-Wno-shorten-64-to-32",
+					"-Wno-comma",
 				);
 			};
 			name = Release;
