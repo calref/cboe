@@ -88,7 +88,7 @@ namespace ResMgr {
 		cLoader<T>& load;
 		/// Converts a resource name to an absolute file path referencing the resource
 		fs::path find(const std::string& resourceName) {
-			for(const std::string name : load.expand(resourceName)) {
+			for(const std::string& name : load.expand(resourceName)) {
 				fs::path path = name;
 				if(!directory.empty()) path = directory/path;
 				std::stack<fs::path> tmpPaths = paths;

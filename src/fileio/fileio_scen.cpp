@@ -666,7 +666,7 @@ static void readTimerFromXml(ticpp::Element& data, cTimer& timer) {
 static void initialXmlRead(ticpp::Document& data, std::string root_tag, int& maj, int& min, int& rev, std::string& fname) {
 	// This checks that the root tag is correct and reads the format version from the boes attribute.
 	using namespace ticpp;
-	maj = -1, min = -1, rev = -1; // These are currently unused, but eventually might be used if the format changes
+	maj = -1; min = -1; rev = -1; // These are currently unused, but eventually might be used if the format changes
 	std::string type, name, val;
 	data.GetValue(&fname);
 	data.FirstChildElement()->GetValue(&type);

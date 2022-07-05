@@ -2634,7 +2634,7 @@ void affect_spec(const runtime_state& ctx) {
 			// TODO: I think this is for compatibility with old scenarios? If so, remove it and just convert data on load.
 			// (Actually, I think the only compatibility thing is that it's <= instead of ==)
 			if(spec.ex2a <= 0) {
-				int i;
+				int i = 0;
 				if(spec.ex1a == 2)
 					ctx.cur_target = &univ.party;
 				else if(spec.ex1a == 1) {

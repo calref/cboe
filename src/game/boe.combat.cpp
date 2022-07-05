@@ -375,7 +375,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short nu
 
 bool pc_combat_move(location destination) {
 	std::string create_line;
-	short s1,s2,monst_exist;
+	short s1,monst_exist;
 	bool keep_going = true,forced = false,check_f = false;
 	location monst_loc,store_loc;
 	eDirection dir;
@@ -420,16 +420,16 @@ bool pc_combat_move(location destination) {
 			return true;
 		}
 		else if(monst_hit != nullptr) {
-			// s2 = 2 here appears to mean "go ahead and attack", while s2 = 1 means "cancel attack".
-			if(!monst_hit->is_friendly()) s2 = 2;
+			bool do_attack = false;
+			if(!monst_hit->is_friendly()) do_attack = true;
 			else {
 				std::string result = cChoiceDlog("attack-friendly",{"cancel","attack"}).show();
-				if(result == "cancel") s2 = 1;
-				else if(result == "attack") s2 = 2;
+				if(result == "cancel") do_attack = false;
+				else if(result == "attack") do_attack = true;
 			}
-			if(s2 == 2 && monst_hit->is_friendly())
-				make_town_hostile();
-			if(s2 == 2) {
+			if(do_attack) {
+				if(monst_hit->is_friendly())
+					make_town_hostile();
 				univ.current_pc().last_attacked = monst_hit;
 				pc_attack(univ.cur_pc,monst_hit);
 				return true;

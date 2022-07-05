@@ -400,7 +400,6 @@ short monst_pick_target(short which_m) {
 	if((dist(cur_monst->cur_loc,univ.town.monst[targ_m - 100].cur_loc) ==
 		 dist(cur_monst->cur_loc,univ.party[targ_pc].combat_pos)) && (get_ran(1,0,6) < 3))
 		return targ_m;
-	else return targ_pc;
 	if(dist(cur_monst->cur_loc,univ.town.monst[targ_m - 100].cur_loc) <
 		dist(cur_monst->cur_loc,univ.party[targ_pc].combat_pos))
 		return targ_m;

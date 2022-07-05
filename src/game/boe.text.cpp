@@ -242,8 +242,8 @@ void put_item_screen(eItemWinMode screen_num) {
 			
 		default: // on an items page
 			pc = screen_num;
-			sout.str("");;
-			sout << univ.party[pc].name << " inventory:",
+			sout.str("");
+			sout << univ.party[pc].name << " inventory:";
 			win_draw_string(item_stats_gworld,upper_frame_rect,sout.str(),eTextMode::WRAP,style);
 			break;
 	}
