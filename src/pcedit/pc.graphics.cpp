@@ -12,7 +12,9 @@
 #include "fileio/resmgr/res_image.hpp"
 #include "dialogxml/widgets/message.hpp"
 #include "mathutil.hpp"
+#ifndef MSBUILD_GITREV
 #include "tools/gitrev.hpp"
+#endif
 #include "gfx/tiling.hpp" // for bg
 #include "utility.hpp"
 
