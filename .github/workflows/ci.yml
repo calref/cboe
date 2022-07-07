@@ -11,38 +11,6 @@
 	},
 
 	jobs: {
-		macos-old: {
-			runs-on: macos-10.14,
-			env: {
-				DEVELOPER_DIR: /Applications/Xcode_10.3.app/Contents/Developer
-			},
-			steps: [
-				{
-					name: checkout,
-					uses: actions/checkout@v2
-				},
-				{
-					name: install Boost,
-					run: brew install Boost
-				},
-				{
-					name: install SFML,
-					run: ./.github/workflows/scripts/mac/install-sfml.sh
-				},
-				{
-					name: patch Xcode project,
-					run: ./.github/workflows/scripts/mac/fix-xcode-proj.sh
-				},
-				{
-					name: build,
-					run: ./.github/workflows/scripts/mac/xcode-build.sh
-				},
-				{
-					name: unit tests,
-					run: ./.github/workflows/scripts/mac/run-tests.sh
-				}
-			]
-		},
 		macos-xcode: {
 			runs-on: macos-10.15,
 			env: {
@@ -51,7 +19,8 @@
 			steps: [
 				{
 					name: checkout,
-					uses: actions/checkout@v2
+					uses: actions/checkout@v2,
+					with: { submodules: true }
 				},
 				{
 					name: install Boost,
@@ -80,7 +49,8 @@
 		# 	steps:  [
 		# 		{
 		# 			name: checkout,
-		# 			uses: actions/checkout@v2
+		# 			uses: actions/checkout@v2,
+		#			with: { submodules: true }
 		# 		},
 		# 		{
 		# 			name: install dependencies,
@@ -92,12 +62,13 @@
 		# 		}
 		# 	]
 		# },
-		win-old: {
-			runs-on: windows-2016,
+		win-vs32: {
+			runs-on: windows-2019,
 			steps: [
 				{
 					name: checkout,
-					uses: actions/checkout@v2
+					uses: actions/checkout@v2,
+					with: { submodules: true }
 				},
 				{
 					name: install dependencies,
@@ -109,12 +80,13 @@
 				}
 			]
 		},
-		win: {
+		win-vs64: {
 			runs-on: windows-2019,
 			steps: [
 				{
 					name: checkout,
-					uses: actions/checkout@v2
+					uses: actions/checkout@v2,
+					with: { submodules: true }
 				},
 				{
 					name: install dependencies,
@@ -135,7 +107,8 @@
 			steps: [
 				{
 					name: checkout,
-					uses: actions/checkout@v2
+					uses: actions/checkout@v2,
+					with: { submodules: true }
 				},
 				{
 					name: install build dependencies,
@@ -156,7 +129,8 @@
 		# 	steps: [
 		# 		{
 		# 			name: checkout,
-		# 			uses: actions/checkout@v2
+		# 			uses: actions/checkout@v2,
+		#			with: { submodules: true }
 		# 		},
 		# 		{
 		# 			name: install build dependencies,
@@ -177,7 +151,8 @@
 			steps: [
 				{
 					name: checkout,
-					uses: actions/checkout@v2
+					uses: actions/checkout@v2,
+					with: { submodules: true }
 				},
 				{
 					name: install dependencies,
