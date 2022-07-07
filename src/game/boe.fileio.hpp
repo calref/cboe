@@ -4,6 +4,7 @@
 
 #include <boost/filesystem/path.hpp>
 #include "location.hpp"
+#include "boe.global.hpp"
 
 void finish_load_party();
 void change_rect_terrain(rectangle r,ter_num_t terrain_type,short probability,bool hollow);

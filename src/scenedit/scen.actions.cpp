@@ -23,7 +23,9 @@
 #include "dialogxml/widgets/scrollbar.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
+#ifndef MSBUILD_GITREV
 #include "tools/gitrev.hpp"
+#endif
 
 #include "scen.btnmg.hpp"
 
