@@ -20,7 +20,7 @@
 #include "special.hpp"
 #include "outdoors.hpp"
 #include "town.hpp"
-#include "vector2d.hpp"
+#include "tools/vector2d.hpp"
 #include "shop.hpp"
 #include "quest.hpp"
 

@@ -11,7 +11,7 @@
 
 #include <iosfwd>
 #include "location.hpp"
-#include "monster.hpp"
+#include "scenario/monster.hpp"
 #include "living.hpp"
 
 class cCreature : public cMonster, public cTownperson, public iLiving {

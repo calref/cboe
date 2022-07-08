@@ -9,7 +9,7 @@
 #include "stack.hpp"
 #include "field.hpp"
 #include "button.hpp"
-#include "dialog.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
 #include "message.hpp"
 #include "pict.hpp"
 #include "scrollbar.hpp"

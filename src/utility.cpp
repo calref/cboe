@@ -8,7 +8,7 @@
 
 #include "utility.hpp"
 
-#include "res_strings.hpp"
+#include "fileio/resmgr/res_strings.hpp"
 
 std::string get_str(std::string list, short j){
 	if(j == 0) return list;

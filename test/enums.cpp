@@ -9,7 +9,7 @@
 #include <type_traits>
 #include <boost/lexical_cast.hpp>
 #include "catch.hpp"
-#include "universe.hpp"
+#include "universe/universe.hpp"
 
 using namespace std;
 using boost::lexical_cast;

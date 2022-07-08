@@ -11,9 +11,9 @@
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
-#include "res_image.hpp"
-#include "render_image.hpp"
-#include "render_shapes.hpp"
+#include "fileio/resmgr/res_image.hpp"
+#include "gfx/render_image.hpp"
+#include "gfx/render_shapes.hpp"
 
 rectangle bg_rects[21];
 tessel_ref_t bg[21];

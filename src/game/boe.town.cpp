@@ -4,7 +4,7 @@
 
 #include "boe.global.hpp"
 
-#include "universe.hpp"
+#include "universe/universe.hpp"
 
 #include "boe.graphutil.hpp"
 #include "boe.graphics.hpp"
@@ -22,14 +22,14 @@
 #include "boe.infodlg.hpp"
 #include "boe.ui.hpp"
 #include "mathutil.hpp"
-#include "render_image.hpp"
-#include "render_shapes.hpp"
-#include "render_text.hpp"
-#include "tiling.hpp"
-#include "strdlog.hpp"
-#include "winutil.hpp"
-#include "res_image.hpp"
-#include "cursors.hpp"
+#include "gfx/render_image.hpp"
+#include "gfx/render_shapes.hpp"
+#include "gfx/render_text.hpp"
+#include "gfx/tiling.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
+#include "tools/winutil.hpp"
+#include "fileio/resmgr/res_image.hpp"
+#include "tools/cursors.hpp"
 
 extern short store_spell_target,which_combat_type,combat_active_pc;
 extern eGameMode overall_mode;

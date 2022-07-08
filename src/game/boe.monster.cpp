@@ -3,7 +3,7 @@
 
 #include "boe.global.hpp"
 
-#include "universe.hpp"
+#include "universe/universe.hpp"
 #include "boe.locutils.hpp"
 #include "boe.monster.hpp"
 #include "boe.combat.hpp"
@@ -15,7 +15,7 @@
 #include "boe.newgraph.hpp"
 #include "boe.main.hpp"
 #include "mathutil.hpp"
-#include "gfxsheets.hpp"
+#include "gfx/gfxsheets.hpp"
 
 extern eGameMode overall_mode;
 extern short which_combat_type;

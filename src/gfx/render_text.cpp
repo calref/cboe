@@ -9,8 +9,8 @@
 #include "render_text.hpp"
 
 #include <iostream>
-#include "res_font.hpp"
-#include "render_shapes.hpp"
+#include "fileio/resmgr/res_font.hpp"
+#include "gfx/render_shapes.hpp"
 
 void TextStyle::applyTo(sf::Text& text) {
 	switch(font) {

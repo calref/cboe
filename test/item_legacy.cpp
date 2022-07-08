@@ -7,7 +7,7 @@
 //
 
 #include "catch.hpp"
-#include "item.hpp"
+#include "scenario/item.hpp"
 #include "oldstructs.hpp"
 #include "spell.hpp"
 #include "damage.hpp"

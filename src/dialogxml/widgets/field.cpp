@@ -11,11 +11,11 @@
 #include <map>
 #include <numeric>
 #include <boost/lexical_cast.hpp>
-#include "dialog.hpp"
-#include "strdlog.hpp"
-#include "render_shapes.hpp"
-#include "winutil.hpp"
-#include "cursors.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
+#include "gfx/render_shapes.hpp"
+#include "tools/winutil.hpp"
+#include "tools/cursors.hpp"
 
 bool cTextField::callHandler(event_fcn<EVT_DEFOCUS>::type onFocus, cDialog& me, std::string id) {
 	if(field_type != FLD_TEXT) {

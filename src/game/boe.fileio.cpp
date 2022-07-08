@@ -3,7 +3,7 @@
 #include <fstream>
 
 #include "boe.global.hpp"
-#include "universe.hpp"
+#include "universe/universe.hpp"
 #include "boe.fileio.hpp"
 #include "boe.text.hpp"
 #include "boe.town.hpp"
@@ -16,9 +16,9 @@
 #include "boe.graphutil.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"
-#include "strdlog.hpp"
-#include "fileio.hpp"
-#include "cursors.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
+#include "fileio/fileio.hpp"
+#include "tools/cursors.hpp"
 #include <boost/filesystem.hpp>
 
 #define	DONE_BUTTON_ITEM	1

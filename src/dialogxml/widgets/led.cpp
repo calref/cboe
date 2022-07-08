@@ -9,10 +9,10 @@
 
 #include "led.hpp"
 
-#include "dialog.hpp"
-#include "render_image.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
+#include "gfx/render_image.hpp"
 
-#include "res_image.hpp"
+#include "fileio/resmgr/res_image.hpp"
 
 rectangle cLed::ledRects[3][2];
 

@@ -9,7 +9,7 @@
 #include "scen.graphics.hpp"
 #include <cmath>
 #include "scen.btnmg.hpp"
-#include "scrollbar.hpp"
+#include "dialogxml/widgets/scrollbar.hpp"
 
 extern rectangle right_sbar_rect;
 

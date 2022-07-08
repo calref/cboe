@@ -5,22 +5,22 @@
 #include <numeric>
 #include <boost/lexical_cast.hpp>
 #include "scen.global.hpp"
-#include "scenario.hpp"
-#include "gfxsheets.hpp"
+#include "scenario/scenario.hpp"
+#include "gfx/gfxsheets.hpp"
 #include "utility.hpp"
 #include "scen.graphics.hpp"
 #include "scen.keydlgs.hpp"
 #include "scen.core.hpp"
-#include "dialog.hpp"
-#include "control.hpp"
-#include "button.hpp"
-#include "strdlog.hpp"
-#include "3choice.hpp"
-#include "strchoice.hpp"
-#include "pictchoice.hpp"
-#include "res_strings.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
+#include "dialogxml/widgets/control.hpp"
+#include "dialogxml/widgets/button.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/3choice.hpp"
+#include "dialogxml/dialogs/strchoice.hpp"
+#include "dialogxml/dialogs/pictchoice.hpp"
+#include "fileio/resmgr/res_strings.hpp"
 #include "spell.hpp"
-#include "render_shapes.hpp" // for colour constants
+#include "gfx/render_shapes.hpp" // for colour constants
 
 extern short cen_x, cen_y;
 extern bool mouse_button_held;

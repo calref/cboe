@@ -17,8 +17,8 @@
 #include <cstdint>
 #include <limits>
 
-#include "item.hpp"
-#include "pictypes.hpp"
+#include "scenario/item.hpp"
+#include "dialogxml/widgets/pictypes.hpp"
 #include "living.hpp"
 #include "skills_traits.hpp"
 #include "race.hpp"

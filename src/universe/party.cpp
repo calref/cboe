@@ -14,11 +14,11 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "scenario.hpp"
-#include "universe.hpp"
-#include "strdlog.hpp"
+#include "scenario/scenario.hpp"
+#include "universe/universe.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
 #include "oldstructs.hpp"
-#include "fileio.hpp"
+#include "fileio/fileio.hpp"
 #include "mathutil.hpp"
 
 cParty::cParty(ePartyPreset party_preset) {

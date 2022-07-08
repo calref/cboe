@@ -7,7 +7,7 @@
 //
 
 #include "catch.hpp"
-#include "terrain.hpp"
+#include "scenario/terrain.hpp"
 #include "oldstructs.hpp"
 #include "damage.hpp"
 

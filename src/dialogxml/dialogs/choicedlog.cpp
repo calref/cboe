@@ -9,7 +9,7 @@
 #include "choicedlog.hpp"
 
 #include <functional>
-#include "control.hpp"
+#include "dialogxml/widgets/control.hpp"
 
 cChoiceDlog::cChoiceDlog(std::string file, std::vector<std::string> buttons, cDialog* p) : dlg(file, p) {
 	using namespace std::placeholders;

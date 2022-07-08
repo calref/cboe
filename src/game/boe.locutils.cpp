@@ -2,7 +2,7 @@
 #include "mathutil.hpp"
 #include "boe.global.hpp"
 
-#include "universe.hpp"
+#include "universe/universe.hpp"
 #include "boe.locutils.hpp"
 #include "boe.text.hpp"
 #include "boe.monster.hpp"

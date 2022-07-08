@@ -12,9 +12,9 @@
 #include <sstream>
 
 #include "scenario.hpp"
-#include "strdlog.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
 #include "oldstructs.hpp"
-#include "fileio.hpp"
+#include "fileio/fileio.hpp"
 
 template<typename T>
 struct import_helper {

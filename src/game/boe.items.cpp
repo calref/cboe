@@ -4,7 +4,7 @@
 
 #include "boe.global.hpp"
 
-#include "universe.hpp"
+#include "universe/universe.hpp"
 
 #include "boe.graphics.hpp"
 #include "boe.text.hpp"
@@ -18,13 +18,13 @@
 #include "boe.monster.hpp"
 #include "boe.main.hpp"
 #include "mathutil.hpp"
-#include "strdlog.hpp"
-#include "3choice.hpp"
-#include "message.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/3choice.hpp"
+#include "dialogxml/widgets/message.hpp"
 #include <array>
 #include <boost/lexical_cast.hpp>
-#include "winutil.hpp"
-#include "cursors.hpp"
+#include "tools/winutil.hpp"
+#include "tools/cursors.hpp"
 
 extern short which_combat_type;
 extern eGameMode overall_mode;

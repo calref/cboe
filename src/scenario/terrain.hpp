@@ -12,7 +12,7 @@
 #include <string>
 #include <iosfwd>
 
-#include "pictypes.hpp"
+#include "dialogxml/widgets/pictypes.hpp"
 #include "location.hpp"
 #include "terrain_abilities.hpp"
 

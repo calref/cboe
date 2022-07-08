@@ -8,14 +8,14 @@
 
 #include "view_dialogs.hpp"
 
-#include "dialog.hpp"
-#include "pict.hpp"
-#include "button.hpp"
-#include "led.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
+#include "dialogxml/widgets/pict.hpp"
+#include "dialogxml/widgets/button.hpp"
+#include "dialogxml/widgets/led.hpp"
 
-#include "item.hpp"
-#include "creature.hpp"
-#include "scenario.hpp"
+#include "scenario/item.hpp"
+#include "universe/creature.hpp"
+#include "scenario/scenario.hpp"
 #include "utility.hpp"
 
 void put_item_info(cDialog& me, const cItem& s_i, const cScenario& scen) {

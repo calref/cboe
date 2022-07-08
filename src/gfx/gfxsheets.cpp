@@ -9,8 +9,8 @@
 #include "gfxsheets.hpp"
 
 #include "location.hpp"
-#include "res_image.hpp"
-#include "render_image.hpp"
+#include "fileio/resmgr/res_image.hpp"
+#include "gfx/render_image.hpp"
 
 bool use_win_graphics = false;
 

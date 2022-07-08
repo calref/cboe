@@ -9,7 +9,7 @@
 #include <fstream>
 #include "catch.hpp"
 #include "tinyprint.h"
-#include "scenario.hpp"
+#include "scenario/scenario.hpp"
 
 using namespace std;
 using namespace ticpp;

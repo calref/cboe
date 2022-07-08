@@ -2,15 +2,15 @@
 #include <cstdio>
 
 #include "pc.graphics.hpp"
-#include "universe.hpp"
+#include "universe/universe.hpp"
 #include "pc.editors.hpp"
 #include "pc.fileio.hpp"
 #include "pc.action.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"
-#include "dialog.hpp"
-#include "control.hpp"
-#include "cursors.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
+#include "dialogxml/widgets/control.hpp"
+#include "tools/cursors.hpp"
 #include <boost/lexical_cast.hpp>
 
 extern cUniverse univ;

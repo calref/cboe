@@ -7,10 +7,10 @@
 //
 
 #include "scen.menus.hpp"
-#include "scenario.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
+#include "scenario/scenario.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
 #include <Cocoa/Cocoa.h>
-#include "winutil.hpp"
-#include "undo.hpp"
+#include "tools/winutil.hpp"
+#include "tools/undo.hpp"
 
 using MenuHandle = NSMenu*;
 MenuHandle menu_bar_handle;

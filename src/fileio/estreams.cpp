@@ -16,21 +16,21 @@
 #include <boost/ptr_container/ptr_set.hpp>
 
 #include "spell.hpp"
-#include "item_abilities.hpp"
-#include "item_variety.hpp"
+#include "scenario/item_abilities.hpp"
+#include "scenario/item_variety.hpp"
 #include "damage.hpp"
 #include "race.hpp"
 #include "location.hpp"
 #include "fields.hpp"
-#include "quest.hpp"
-#include "shop.hpp"
-#include "terrain_abilities.hpp"
+#include "scenario/quest.hpp"
+#include "scenario/shop.hpp"
+#include "scenario/terrain_abilities.hpp"
 
-#include "monster.hpp"
-#include "party.hpp"
-#include "town.hpp"
-#include "talking.hpp"
-#include "scenario.hpp"
+#include "scenario/monster.hpp"
+#include "universe/party.hpp"
+#include "scenario/town.hpp"
+#include "scenario/talking.hpp"
+#include "scenario/scenario.hpp"
 
 const char* oboeVersionString() {
 	static std::shared_ptr<char> version;

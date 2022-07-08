@@ -21,7 +21,7 @@
 #include <memory>
 #include <boost/filesystem/path.hpp>
 
-#include "strdlog.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
 #include "porting.hpp"
 #include "location.hpp"
 

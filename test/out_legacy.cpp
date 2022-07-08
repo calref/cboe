@@ -7,8 +7,8 @@
 //
 
 #include "catch.hpp"
-#include "outdoors.hpp"
-#include "scenario.hpp"
+#include "scenario/outdoors.hpp"
+#include "scenario/scenario.hpp"
 #include "oldstructs.hpp"
 
 TEST_CASE("Converting legacy outdoor section data") {

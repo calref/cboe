@@ -3,7 +3,7 @@
 
 #include "boe.global.hpp"
 
-#include "universe.hpp"
+#include "universe/universe.hpp"
 #include "boe.monster.hpp"
 #include "boe.graphics.hpp"
 #include "boe.locutils.hpp"
@@ -20,10 +20,10 @@
 #include "boe.main.hpp"
 #include "boe.ui.hpp"
 #include "mathutil.hpp"
-#include "choicedlog.hpp"
+#include "dialogxml/dialogs/choicedlog.hpp"
 #include "boe.menus.hpp"
 #include "spell.hpp"
-#include "prefs.hpp"
+#include "tools/prefs.hpp"
 #include "utility.hpp"
 
 extern eGameMode overall_mode;

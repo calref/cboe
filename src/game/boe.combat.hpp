@@ -3,8 +3,8 @@
 #define BOE_GAME_COMBAT_H
 
 #include "location.hpp"
-#include "monster.hpp"
-#include "outdoors.hpp"
+#include "scenario/monster.hpp"
+#include "scenario/outdoors.hpp"
 #include "boe.global.hpp"
 #include "spell.hpp"
 

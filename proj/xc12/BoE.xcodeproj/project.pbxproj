@@ -2229,6 +2229,7 @@
 				HEADER_SEARCH_PATHS = (
 					/opt/local/include,
 					"$(PROJECT_DIR)/../../src/fileio/gzstream",
+					"$(PROJECT_DIR)/../../src/fileio/xml-parser",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -2254,6 +2255,8 @@
 					"$(OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1)",
 				);
 				STRIP_INSTALLED_PRODUCT = NO;
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../../src";
+				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wfloat-equal",
 					"-Wno-long-long",
@@ -2325,6 +2328,7 @@
 				HEADER_SEARCH_PATHS = (
 					/opt/local/include,
 					"$(PROJECT_DIR)/../../src/fileio/gzstream",
+					"$(PROJECT_DIR)/../../src/fileio/xml-parser",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -2348,6 +2352,8 @@
 					"-lboost_filesystem",
 					"$(OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1)",
 				);
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../../src";
+				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wfloat-equal",
 					"-Wno-long-long",

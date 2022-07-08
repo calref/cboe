@@ -7,9 +7,9 @@
 //
 
 #include "catch.hpp"
-#include "town.hpp"
-#include "talking.hpp"
-#include "scenario.hpp"
+#include "scenario/town.hpp"
+#include "scenario/talking.hpp"
+#include "scenario/scenario.hpp"
 #include "oldstructs.hpp"
 
 TEST_CASE("Converting legacy talk data") {

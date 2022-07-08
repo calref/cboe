@@ -9,21 +9,21 @@
 #include <cmath>
 #include <stdexcept>
 #include "dialog.hpp"
-#include "tiling.hpp" // for bg
+#include "gfx/tiling.hpp" // for bg
 #include "sounds.hpp"
-#include "pict.hpp"
-#include "button.hpp"
-#include "field.hpp"
-#include "ledgroup.hpp"
-#include "message.hpp"
-#include "scrollbar.hpp"
-#include "scrollpane.hpp"
-#include "stack.hpp"
-#include "winutil.hpp"
+#include "dialogxml/widgets/pict.hpp"
+#include "dialogxml/widgets/button.hpp"
+#include "dialogxml/widgets/field.hpp"
+#include "dialogxml/widgets/ledgroup.hpp"
+#include "dialogxml/widgets/message.hpp"
+#include "dialogxml/widgets/scrollbar.hpp"
+#include "dialogxml/widgets/scrollpane.hpp"
+#include "dialogxml/widgets/stack.hpp"
+#include "tools/winutil.hpp"
 #include "mathutil.hpp"
-#include "cursors.hpp"
-#include "prefs.hpp"
-#include "framerate_limiter.hpp"
+#include "tools/cursors.hpp"
+#include "tools/prefs.hpp"
+#include "tools/framerate_limiter.hpp"
 
 using namespace std;
 using namespace ticpp;

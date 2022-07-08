@@ -18,7 +18,7 @@
 #include "universe.hpp"
 #include "oldstructs.hpp"
 #include "mathutil.hpp"
-#include "fileio.hpp"
+#include "fileio/fileio.hpp"
 #include "sounds.hpp"
 
 extern short skill_bonus[21];

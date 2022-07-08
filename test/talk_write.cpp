@@ -13,7 +13,7 @@
 #include <fstream>
 #include "catch.hpp"
 #include "tinyprint.h"
-#include "talking.hpp"
+#include "scenario/talking.hpp"
 
 using namespace std;
 using namespace ticpp;

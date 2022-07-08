@@ -8,16 +8,16 @@
 
 #include "control.hpp"
 #include <sstream>
-#include "dialog.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
 #include "sounds.hpp"
 #include "button.hpp"
 #include "led.hpp"
-#include "render_shapes.hpp"
-#include "render_text.hpp"
-#include "res_image.hpp"
+#include "gfx/render_shapes.hpp"
+#include "gfx/render_text.hpp"
+#include "fileio/resmgr/res_image.hpp"
 #include "mathutil.hpp"
-#include "prefs.hpp"
-#include "cursors.hpp"
+#include "tools/prefs.hpp"
+#include "tools/cursors.hpp"
 
 void cControl::setText(std::string l){
 	lbl = l;

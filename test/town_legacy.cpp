@@ -7,8 +7,8 @@
 //
 
 #include "catch.hpp"
-#include "town.hpp"
-#include "scenario.hpp"
+#include "scenario/town.hpp"
+#include "scenario/scenario.hpp"
 #include "oldstructs.hpp"
 
 TEST_CASE("Converting legacy town data") {

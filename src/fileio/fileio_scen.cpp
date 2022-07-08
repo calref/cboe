@@ -12,20 +12,20 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include "strdlog.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
 
-#include "scenario.hpp"
-#include "town.hpp"
+#include "scenario/scenario.hpp"
+#include "scenario/town.hpp"
 #include "map_parse.hpp"
 #include "special_parse.hpp"
-#include "gfxsheets.hpp"
+#include "gfx/gfxsheets.hpp"
 #include "mathutil.hpp"
 #include "gzstream.h"
 #include "tarball.hpp"
 
 #include "porting.hpp"
-#include "res_image.hpp"
-#include "res_sound.hpp"
+#include "fileio/resmgr/res_image.hpp"
+#include "fileio/resmgr/res_sound.hpp"
 
 // Because the full template definition needs to be visible in this file
 // Also, for some reason, it's not found in the include paths, so use a relative path

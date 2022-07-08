@@ -14,11 +14,11 @@
 #include <cstdlib>
 #include <boost/filesystem/operations.hpp>
 
-#include "res_image.hpp"
-#include "res_cursor.hpp"
-#include "res_font.hpp"
-#include "res_strings.hpp"
-#include "res_sound.hpp"
+#include "fileio/resmgr/res_image.hpp"
+#include "fileio/resmgr/res_cursor.hpp"
+#include "fileio/resmgr/res_font.hpp"
+#include "fileio/resmgr/res_strings.hpp"
+#include "fileio/resmgr/res_sound.hpp"
 
 bool mac_is_intel;
 fs::path progDir, tempDir, scenDir;

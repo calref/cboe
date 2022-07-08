@@ -7,11 +7,11 @@
 //
 
 #include "catch.hpp"
-#include "scenario.hpp"
-#include "creature.hpp"
-#include "population.hpp"
-#include "pc.hpp"
-#include "party.hpp"
+#include "scenario/scenario.hpp"
+#include "universe/creature.hpp"
+#include "universe/population.hpp"
+#include "universe/pc.hpp"
+#include "universe/party.hpp"
 
 TEST_CASE("Initialization sanity test for terrain") {
 	cTerrain ter;

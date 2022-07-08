@@ -6,7 +6,7 @@
 
 #include "boe.global.hpp"
 
-#include "universe.hpp"
+#include "universe/universe.hpp"
 #include "boe.party.hpp"
 #include "boe.town.hpp"
 #include "boe.text.hpp"
@@ -25,9 +25,9 @@
 #include "boe.dlgutil.hpp"
 #include "mathutil.hpp"
 #include "boe.main.hpp"
-#include "strdlog.hpp"
-#include "choicedlog.hpp"
-#include "fileio.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/choicedlog.hpp"
+#include "fileio/fileio.hpp"
 #include <array>
 #include "spell.hpp"
 #include "boe.menus.hpp"

@@ -8,8 +8,8 @@
 
 #include <fstream>
 #include "catch.hpp"
-#include "pc.hpp"
-#include "party.hpp"
+#include "universe/pc.hpp"
+#include "universe/party.hpp"
 
 using namespace std;
 

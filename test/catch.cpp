@@ -4,16 +4,16 @@
 #include "catch.hpp"
 
 // After this are some globals that are referenced from common code but not defined, and not used in the test cases
-#include "gfxsheets.hpp"
-#include "universe.hpp"
+#include "gfx/gfxsheets.hpp"
+#include "universe/universe.hpp"
 sf::RenderWindow mainPtr;
 std::string scenario_temp_dir_name = "test_scenario";
 cCustomGraphics spec_scen_g;
 cUniverse univ;
 
 // And these are referenced from the scenario code, though not used in test cases
-#include "scenario.hpp"
-#include "undo.hpp"
+#include "scenario/scenario.hpp"
+#include "tools/undo.hpp"
 location cur_out;
 short cur_town;
 cScenario scenario;

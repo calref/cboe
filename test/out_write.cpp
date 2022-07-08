@@ -9,8 +9,8 @@
 #include <fstream>
 #include "catch.hpp"
 #include "tinyprint.h"
-#include "scenario.hpp"
-#include "outdoors.hpp"
+#include "scenario/scenario.hpp"
+#include "scenario/outdoors.hpp"
 
 using namespace std;
 using namespace ticpp;

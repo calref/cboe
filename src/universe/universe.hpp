@@ -16,11 +16,11 @@
 #include <boost/filesystem/path.hpp>
 #include "party.hpp"
 #include "population.hpp"
-#include "item.hpp"
-#include "town.hpp"
-#include "talking.hpp"
-#include "scenario.hpp"
-#include "pictypes.hpp"
+#include "scenario/item.hpp"
+#include "scenario/town.hpp"
+#include "scenario/talking.hpp"
+#include "scenario/scenario.hpp"
+#include "dialogxml/widgets/pictypes.hpp"
 
 namespace legacy {
 	struct out_info_type;

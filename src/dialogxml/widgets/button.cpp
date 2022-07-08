@@ -9,11 +9,11 @@
 
 #include "button.hpp"
 
-#include "dialog.hpp"
-#include "render_image.hpp"
-#include "render_text.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
+#include "gfx/render_image.hpp"
+#include "gfx/render_text.hpp"
 
-#include "res_image.hpp"
+#include "fileio/resmgr/res_image.hpp"
 
 extern sf::Texture bg_gworld;
 

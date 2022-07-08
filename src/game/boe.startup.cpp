@@ -1,7 +1,7 @@
 
 #include "boe.global.hpp"
 
-#include "universe.hpp"
+#include "universe/universe.hpp"
 #include "boe.newgraph.hpp"
 #include "boe.graphics.hpp"
 #include "boe.fileio.hpp"
@@ -13,16 +13,16 @@
 #include "boe.party.hpp"
 #include "boe.main.hpp"
 #include "sounds.hpp"
-#include "fileio.hpp"
-#include "choicedlog.hpp"
-#include "winutil.hpp"
+#include "fileio/fileio.hpp"
+#include "dialogxml/dialogs/choicedlog.hpp"
+#include "tools/winutil.hpp"
 #include "boe.menus.hpp"
 #include "mathutil.hpp"
-#include "res_image.hpp"
-#include "prefs.hpp"
-#include "cursors.hpp"
-#include "render_image.hpp"
-#include "enum_map.hpp"
+#include "fileio/resmgr/res_image.hpp"
+#include "tools/prefs.hpp"
+#include "tools/cursors.hpp"
+#include "gfx/render_image.hpp"
+#include "tools/enum_map.hpp"
 
 #include <vector>
 using std::vector;

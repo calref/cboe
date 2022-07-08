@@ -1,6 +1,6 @@
 
 #include "boe.global.hpp"
-#include "universe.hpp"
+#include "universe/universe.hpp"
 
 #include <boost/filesystem/operations.hpp>
 #include <unordered_map>
@@ -20,23 +20,23 @@
 #include "boe.main.hpp"
 #include "boe.consts.hpp"
 #include "boe.ui.hpp"
-#include "winutil.hpp"
+#include "tools/winutil.hpp"
 #include "sounds.hpp"
-#include "render_image.hpp"
-#include "tiling.hpp"
+#include "gfx/render_image.hpp"
+#include "gfx/tiling.hpp"
 #include "mathutil.hpp"
-#include "fileio.hpp"
-#include "strdlog.hpp"
-#include "choicedlog.hpp"
-#include "scrollbar.hpp"
+#include "fileio/fileio.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/choicedlog.hpp"
+#include "dialogxml/widgets/scrollbar.hpp"
 #include "boe.menus.hpp"
-#include "cursors.hpp"
-#include "prefs.hpp"
-#include "button.hpp"
-#include "enum_map.hpp"
-#include "framerate_limiter.hpp"
-#include "event_listener.hpp"
-#include "drawable_manager.hpp"
+#include "tools/cursors.hpp"
+#include "tools/prefs.hpp"
+#include "dialogxml/widgets/button.hpp"
+#include "tools/enum_map.hpp"
+#include "tools/framerate_limiter.hpp"
+#include "tools/event_listener.hpp"
+#include "tools/drawable_manager.hpp"
 bool All_Done = false;
 sf::RenderWindow mainPtr;
 short had_text_freeze = 0,num_fonts;

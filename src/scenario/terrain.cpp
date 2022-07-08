@@ -15,7 +15,7 @@
 #include <set>
 
 #include "oldstructs.hpp"
-#include "gfxsheets.hpp" // for NO_PIC
+#include "gfx/gfxsheets.hpp" // for NO_PIC
 #include "damage.hpp"
 
 void cTerrain::import_legacy(legacy::terrain_type_type& old){

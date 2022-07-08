@@ -6,8 +6,8 @@
 #include <string>
 #include <stack>
 #include "scen.global.hpp"
-#include "scenario.hpp"
-#include "render_shapes.hpp"
+#include "scenario/scenario.hpp"
+#include "gfx/render_shapes.hpp"
 #include "scen.graphics.hpp"
 #include "scen.actions.hpp"
 #include "sounds.hpp"
@@ -17,13 +17,13 @@
 #include "scen.townout.hpp"
 #include "scen.menus.hpp"
 #include "mathutil.hpp"
-#include "fileio.hpp"
-#include "winutil.hpp"
-#include "cursors.hpp"
-#include "scrollbar.hpp"
-#include "strdlog.hpp"
-#include "choicedlog.hpp"
-#include "gitrev.hpp"
+#include "fileio/fileio.hpp"
+#include "tools/winutil.hpp"
+#include "tools/cursors.hpp"
+#include "dialogxml/widgets/scrollbar.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/choicedlog.hpp"
+#include "tools/gitrev.hpp"
 
 #include "scen.btnmg.hpp"
 

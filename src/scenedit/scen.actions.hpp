@@ -1,6 +1,6 @@
 
 #include "scen.global.hpp"
-#include "undo.hpp"
+#include "tools/undo.hpp"
 
 void init_screen_locs();
 void handle_action(location the_point,sf::Event event);

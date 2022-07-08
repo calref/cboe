@@ -1,6 +1,6 @@
 
-#include "dialog.hpp"
-#include "pict.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
+#include "dialogxml/widgets/pict.hpp"
 
 bool GTP(short item_num);
 bool silent_GTP(short item_num);

@@ -7,7 +7,7 @@
 //
 
 #include "catch.hpp"
-#include "creature.hpp"
+#include "universe/creature.hpp"
 #include "oldstructs.hpp"
 
 TEST_CASE("Converting monsters from legacy scenarios") {

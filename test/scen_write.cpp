@@ -2,11 +2,11 @@
 #include <fstream>
 #include <iostream>
 #include "tinyprint.h"
-#include "dialog.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
 #include "catch.hpp"
-#include "scenario.hpp"
-#include "town.hpp"
-#include "res_strings.hpp"
+#include "scenario/scenario.hpp"
+#include "scenario/town.hpp"
+#include "fileio/resmgr/res_strings.hpp"
 
 using namespace std;
 using namespace ticpp;

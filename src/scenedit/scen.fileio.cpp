@@ -1,26 +1,26 @@
 
 #include <cstring>
 #include "scen.global.hpp"
-#include "scenario.hpp"
+#include "scenario/scenario.hpp"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 #include <boost/filesystem/operations.hpp>
 #include "scen.fileio.hpp"
 #include "scen.keydlgs.hpp"
-#include "gfxsheets.hpp"
+#include "gfx/gfxsheets.hpp"
 #include "scen.core.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"
 #include "oldstructs.hpp"
-#include "fileio.hpp"
-#include "tarball.hpp"
+#include "fileio/fileio.hpp"
+#include "fileio/tarball.hpp"
 #include "gzstream.h"
 #include "tinyprint.h"
-#include "map_parse.hpp"
-#include "winutil.hpp"
-#include "choicedlog.hpp"
-#include "undo.hpp"
+#include "fileio/map_parse.hpp"
+#include "tools/winutil.hpp"
+#include "dialogxml/dialogs/choicedlog.hpp"
+#include "tools/undo.hpp"
 
 extern cScenario scenario;
 

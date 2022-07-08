@@ -9,7 +9,7 @@
 #include "cursors.hpp"
 #include <Cocoa/Cocoa.h>
 #include <string>
-#include "res_cursor.hpp"
+#include "fileio/resmgr/res_cursor.hpp"
 
 static NSImage* imageFromURL(CFURLRef url) NS_RETURNS_RETAINED;
 static NSImage* imageFromURL(CFURLRef url){

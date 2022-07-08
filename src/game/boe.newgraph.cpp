@@ -6,7 +6,7 @@
 
 #include "boe.global.hpp"
 
-#include "universe.hpp"
+#include "universe/universe.hpp"
 #include "boe.graphics.hpp"
 #include "boe.graphutil.hpp"
 #include "boe.monster.hpp"
@@ -17,20 +17,20 @@
 #include "boe.consts.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"
-#include "render_image.hpp"
-#include "render_shapes.hpp"
-#include "render_text.hpp"
-#include "tiling.hpp"
+#include "gfx/render_image.hpp"
+#include "gfx/render_shapes.hpp"
+#include "gfx/render_text.hpp"
+#include "gfx/tiling.hpp"
 #include "utility.hpp"
-#include "scrollbar.hpp"
+#include "dialogxml/widgets/scrollbar.hpp"
 #include <memory>
 #include "location.hpp"
-#include "shop.hpp"
+#include "scenario/shop.hpp"
 #include "spell.hpp"
-#include "button.hpp"
-#include "res_image.hpp"
-#include "prefs.hpp"
-#include "enum_map.hpp"
+#include "dialogxml/widgets/button.hpp"
+#include "fileio/resmgr/res_image.hpp"
+#include "tools/prefs.hpp"
+#include "tools/enum_map.hpp"
 
 short monsters_faces[190] = {
 	0,1,2,3,4,5,6,7,8,9,

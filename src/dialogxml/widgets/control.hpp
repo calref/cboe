@@ -20,7 +20,7 @@
 #include <set>
 #include <map>
 #include <boost/any.hpp>
-#include "dlogevt.hpp"
+#include "dialogxml/dialogs/dlogevt.hpp"
 
 #include "location.hpp"
 

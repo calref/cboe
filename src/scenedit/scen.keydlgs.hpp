@@ -1,6 +1,6 @@
 
 #include <string>
-#include "pict.hpp" // for ePicType
+#include "dialogxml/widgets/pict.hpp" // for ePicType
 #include "location.hpp" // for info_rect_t
 class cDialog;
 

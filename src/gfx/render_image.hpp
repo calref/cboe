@@ -16,7 +16,7 @@
 #include <boost/filesystem/path.hpp>
 #include <SFML/Graphics.hpp>
 #include "location.hpp"
-#include "pictypes.hpp"
+#include "dialogxml/widgets/pictypes.hpp"
 
 void init_shaders();
 void rect_draw_some_item(sf::RenderTarget& targ_gworld,rectangle targ_rect);

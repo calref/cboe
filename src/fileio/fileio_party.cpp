@@ -11,14 +11,14 @@
 #include <fstream>
 #include <boost/filesystem/operations.hpp>
 
-#include "strdlog.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
 #include "gzstream.h"
 
-#include "universe.hpp"
-#include "gfxsheets.hpp"
+#include "universe/universe.hpp"
+#include "gfx/gfxsheets.hpp"
 
 #include "porting.hpp"
-#include "tarball.hpp"
+#include "fileio/tarball.hpp"
 
 extern bool mac_is_intel;
 extern fs::path progDir, tempDir;

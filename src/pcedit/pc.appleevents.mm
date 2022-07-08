@@ -6,10 +6,10 @@
 //
 //
 
-#include "universe.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
+#include "universe/universe.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
 #include <Cocoa/Cocoa.h>
 #include <string>
-#include "fileio.hpp"
+#include "fileio/fileio.hpp"
 #include "pc.menus.hpp"
 #include "pc.fileio.hpp"
 

@@ -10,7 +10,7 @@
 
 #include <sstream>
 #include <boost/lexical_cast.hpp>
-#include "pict.hpp"
+#include "dialogxml/widgets/pict.hpp"
 
 cPictChoice::cPictChoice(const std::vector<pic_num_t>& pics,ePicType t,cDialog* parent) : cPictChoice(pics.begin(), pics.end(), t, parent) {}
 

@@ -11,9 +11,9 @@
 
 #include <string>
 #include <functional>
-#include "pictypes.hpp"
+#include "dialogxml/widgets/pictypes.hpp"
 #include "sounds.hpp" // for snd_num_t
-#include "dialog.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
 
 /// The signature of a record handler for cStrDlog.
 typedef std::function<void(cDialog&)> record_callback_t;

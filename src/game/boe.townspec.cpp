@@ -1,7 +1,7 @@
 
 #include "boe.global.hpp"
 
-#include "universe.hpp"
+#include "universe/universe.hpp"
 #include "boe.party.hpp"
 #include "boe.town.hpp"
 #include "boe.items.hpp"
@@ -13,9 +13,9 @@
 #include "boe.townspec.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"
-#include "strdlog.hpp"
-#include "choicedlog.hpp"
-#include "winutil.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/choicedlog.hpp"
+#include "tools/winutil.hpp"
 #include "boe.menus.hpp"
 #include "utility.hpp"
 

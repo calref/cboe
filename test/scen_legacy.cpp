@@ -7,7 +7,7 @@
 //
 
 #include "catch.hpp"
-#include "scenario.hpp"
+#include "scenario/scenario.hpp"
 #include "oldstructs.hpp"
 
 TEST_CASE("Converting legacy scenario data") {

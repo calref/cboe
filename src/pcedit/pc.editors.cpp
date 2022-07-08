@@ -1,18 +1,18 @@
 
 #include "pc.graphics.hpp"
-#include "universe.hpp"
+#include "universe/universe.hpp"
 #include "pc.editors.hpp"
 #include "utility.hpp"
-#include "dialog.hpp"
-#include "control.hpp"
-#include "button.hpp"
-#include "ledgroup.hpp"
-#include "pict.hpp"
-#include "strdlog.hpp"
-#include "choicedlog.hpp"
-#include "winutil.hpp"
-#include "cursors.hpp"
-#include "render_shapes.hpp" // for colour constants
+#include "dialogxml/dialogs/dialog.hpp"
+#include "dialogxml/widgets/control.hpp"
+#include "dialogxml/widgets/button.hpp"
+#include "dialogxml/widgets/ledgroup.hpp"
+#include "dialogxml/widgets/pict.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/choicedlog.hpp"
+#include "tools/winutil.hpp"
+#include "tools/cursors.hpp"
+#include "gfx/render_shapes.hpp" // for colour constants
 #include <boost/lexical_cast.hpp>
 
 /*

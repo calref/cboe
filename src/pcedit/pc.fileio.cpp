@@ -2,13 +2,13 @@
 #include <cstring>
 #include <cstdio>
 
-#include "universe.hpp"
+#include "universe/universe.hpp"
 #include "pc.fileio.hpp"
 #include "pc.graphics.hpp"
 #include "sounds.hpp"
 #include "pc.editors.hpp"
 #include "mathutil.hpp"
-#include "fileio.hpp"
+#include "fileio/fileio.hpp"
 
 extern cUniverse univ;
 extern bool party_in_scen,scen_items_loaded;

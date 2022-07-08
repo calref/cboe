@@ -11,14 +11,14 @@
 #include <map>
 #include <stdexcept>
 
-#include "gfxsheets.hpp"
-#include "render_shapes.hpp"
-#include "render_image.hpp"
-#include "render_text.hpp"
-#include "tiling.hpp"
+#include "gfx/gfxsheets.hpp"
+#include "gfx/render_shapes.hpp"
+#include "gfx/render_image.hpp"
+#include "gfx/render_text.hpp"
+#include "gfx/tiling.hpp"
 #include "location.hpp"
-#include "dialog.hpp"
-#include "res_image.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
+#include "fileio/resmgr/res_image.hpp"
 
 extern sf::Texture bg_gworld;
 extern cCustomGraphics spec_scen_g;

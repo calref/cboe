@@ -8,22 +8,22 @@
 
 #include "boe.global.hpp"
 
-#include "universe.hpp"
+#include "universe/universe.hpp"
 #include "boe.graphics.hpp"
 #include "boe.newgraph.hpp"
 #include "boe.graphutil.hpp"
 #include "boe.monster.hpp"
 #include "boe.locutils.hpp"
 #include "boe.text.hpp"
-#include "render_image.hpp"
-#include "render_shapes.hpp"
-#include "render_text.hpp"
-#include "tiling.hpp"
+#include "gfx/render_image.hpp"
+#include "gfx/render_shapes.hpp"
+#include "gfx/render_text.hpp"
+#include "gfx/tiling.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"
-#include "button.hpp"
-#include "enum_map.hpp"
-#include "drawable_manager.hpp"
+#include "dialogxml/widgets/button.hpp"
+#include "tools/enum_map.hpp"
+#include "tools/drawable_manager.hpp"
 
 #include "boe.party.hpp"
 #include "boe.town.hpp"
@@ -32,14 +32,14 @@
 #include "boe.infodlg.hpp"
 #include "boe.ui.hpp"
 
-#include "scrollbar.hpp"
+#include "dialogxml/widgets/scrollbar.hpp"
 
-#include "res_image.hpp"
+#include "fileio/resmgr/res_image.hpp"
 #include "boe.menus.hpp"
-#include "winutil.hpp"
-#include "prefs.hpp"
+#include "tools/winutil.hpp"
+#include "tools/prefs.hpp"
 #ifndef MSBUILD_GITREV
-#include "gitrev.hpp"
+#include "tools/gitrev.hpp"
 #endif
 
 extern sf::RenderWindow mainPtr;

@@ -7,7 +7,7 @@
  */
 
 #define BTNS_DEFINED
-#include "3choice.hpp"
+#include "dialogxml/dialogs/3choice.hpp"
 
 /// @file
 /// Preset button specifications for cThreeChoice

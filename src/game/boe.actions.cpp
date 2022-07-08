@@ -4,7 +4,7 @@
 
 #include "boe.global.hpp"
 
-#include "universe.hpp"
+#include "universe/universe.hpp"
 #include "boe.actions.hpp"
 #include "boe.graphutil.hpp"
 #include "boe.graphics.hpp"
@@ -25,18 +25,18 @@
 #include "boe.main.hpp"
 #include "boe.ui.hpp"
 #include "mathutil.hpp"
-#include "fileio.hpp"
-#include "choicedlog.hpp"
-#include "dialog.hpp"
-#include "scrollbar.hpp"
+#include "fileio/fileio.hpp"
+#include "dialogxml/dialogs/choicedlog.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
+#include "dialogxml/widgets/scrollbar.hpp"
 #include "boe.menus.hpp"
-#include "winutil.hpp"
-#include "cursors.hpp"
+#include "tools/winutil.hpp"
+#include "tools/cursors.hpp"
 #include "spell.hpp"
-#include "shop.hpp"
-#include "prefs.hpp"
-#include "render_shapes.hpp"
-#include "enum_map.hpp"
+#include "scenario/shop.hpp"
+#include "tools/prefs.hpp"
+#include "gfx/render_shapes.hpp"
+#include "tools/enum_map.hpp"
 
 rectangle item_screen_button_rects[9] = {
 	{125,10,141,28},{125,40,141,58},{125,68,141,86},{125,98,141,116},{125,126,141,144},{125,156,141,174},

@@ -12,8 +12,8 @@
 #include <fstream>
 #include <boost/filesystem/path.hpp>
 
-#include "fileio.hpp"
-#include "render_shapes.hpp"
+#include "fileio/fileio.hpp"
+#include "gfx/render_shapes.hpp"
 
 sf::Shader maskShader;
 extern fs::path progDir;

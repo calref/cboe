@@ -4,7 +4,7 @@
 
 #include "boe.global.hpp"
 
-#include "universe.hpp"
+#include "universe/universe.hpp"
 
 #include "boe.graphics.hpp"
 #include "boe.newgraph.hpp"
@@ -19,14 +19,14 @@
 #include "boe.fileio.hpp"
 #include "boe.main.hpp"
 #include "mathutil.hpp"
-#include "strdlog.hpp"
-#include "button.hpp"
-#include "fileio.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/widgets/button.hpp"
+#include "fileio/fileio.hpp"
 #include <boost/lexical_cast.hpp>
-#include "prefs.hpp"
+#include "tools/prefs.hpp"
 #include "spell.hpp"
 #include "view_dialogs.hpp"
-#include "cursors.hpp"
+#include "tools/cursors.hpp"
 #include "utility.hpp"
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;

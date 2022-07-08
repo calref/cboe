@@ -13,7 +13,7 @@
 #include <sstream>
 #include <boost/lexical_cast.hpp>
 
-#include "strdlog.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
 #include "oldstructs.hpp"
 #include "utility.hpp"
 

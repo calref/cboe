@@ -16,7 +16,7 @@
 #include "scenario.hpp"
 #include "oldstructs.hpp"
 #include "mathutil.hpp"
-#include "fileio.hpp"
+#include "fileio/fileio.hpp"
 #include "utility.hpp"
 
 void cTown::import_legacy(legacy::town_record_type& old){

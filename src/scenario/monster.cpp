@@ -17,9 +17,9 @@
 #include <boost/lexical_cast.hpp>
 
 #include "oldstructs.hpp"
-#include "fileio.hpp"
+#include "fileio/fileio.hpp"
 #include "spell.hpp"
-#include "gfxsheets.hpp" // for NO_PIC
+#include "gfx/gfxsheets.hpp" // for NO_PIC
 
 void cMonster::import_legacy(legacy::monster_record_type& old){
 	level = old.level;

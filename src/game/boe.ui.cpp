@@ -9,13 +9,13 @@
 #include "boe.ui.hpp"
 
 #include <numeric>
-#include "enum_map.hpp"
+#include "tools/enum_map.hpp"
 #include "boe.consts.hpp"
 #include "boe.locutils.hpp"
 #include "boe.graphics.hpp"
-#include "render_shapes.hpp"
-#include "render_image.hpp"
-#include "res_image.hpp"
+#include "gfx/render_shapes.hpp"
+#include "gfx/render_image.hpp"
+#include "fileio/resmgr/res_image.hpp"
 #include "mathutil.hpp"
 #include "sounds.hpp"
 

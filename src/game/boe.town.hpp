@@ -1,6 +1,6 @@
 
 #include <SFML/Graphics.hpp>
-#include "outdoors.hpp"
+#include "scenario/outdoors.hpp"
 
 void force_town_enter(short which_town,location where_start);
 void start_town_mode(short which_town, short entry_dir);

@@ -3,7 +3,7 @@
 
 #include "boe.global.hpp"
 
-#include "universe.hpp"
+#include "universe/universe.hpp"
 
 #include "boe.dlgutil.hpp"
 #include "boe.text.hpp"
@@ -23,21 +23,21 @@
 #include "boe.infodlg.hpp"
 #include "utility.hpp"
 #include "mathutil.hpp"
-#include "strdlog.hpp"
-#include "choicedlog.hpp"
-#include "winutil.hpp"
-#include "fileio.hpp"
-#include "res_strings.hpp"
-#include "scrollbar.hpp"
-#include "button.hpp"
-#include "ledgroup.hpp"
-#include "pict.hpp"
-#include "stack.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/choicedlog.hpp"
+#include "tools/winutil.hpp"
+#include "fileio/fileio.hpp"
+#include "fileio/resmgr/res_strings.hpp"
+#include "dialogxml/widgets/scrollbar.hpp"
+#include "dialogxml/widgets/button.hpp"
+#include "dialogxml/widgets/ledgroup.hpp"
+#include "dialogxml/widgets/pict.hpp"
+#include "dialogxml/widgets/stack.hpp"
 #include <boost/lexical_cast.hpp>
-#include "prefs.hpp"
-#include "shop.hpp"
-#include "cursors.hpp"
-#include "enum_map.hpp"
+#include "tools/prefs.hpp"
+#include "scenario/shop.hpp"
+#include "tools/cursors.hpp"
+#include "tools/enum_map.hpp"
 
 extern eItemWinMode stat_window;
 extern eGameMode overall_mode;

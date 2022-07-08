@@ -6,7 +6,7 @@
 #include <array>
 #include <map>
 
-#include "universe.hpp"
+#include "universe/universe.hpp"
 
 #include "boe.fileio.hpp"
 #include "boe.graphics.hpp"
@@ -29,17 +29,17 @@
 #include "boe.main.hpp"
 #include "utility.hpp"
 #include "mathutil.hpp"
-#include "strdlog.hpp"
-#include "choicedlog.hpp"
-#include "pictchoice.hpp"
-#include "winutil.hpp"
-#include "fileio.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/choicedlog.hpp"
+#include "dialogxml/dialogs/pictchoice.hpp"
+#include "tools/winutil.hpp"
+#include "fileio/fileio.hpp"
 #include "boe.menus.hpp"
 #include <boost/lexical_cast.hpp>
-#include "button.hpp"
+#include "dialogxml/widgets/button.hpp"
 #include "spell.hpp"
-#include "cursors.hpp"
-#include "render_shapes.hpp" // for colour constants
+#include "tools/cursors.hpp"
+#include "gfx/render_shapes.hpp" // for colour constants
 
 extern short skill_bonus[21];
 

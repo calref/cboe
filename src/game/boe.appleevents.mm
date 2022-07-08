@@ -6,14 +6,14 @@
 //
 //
 
-#include "universe.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
+#include "universe/universe.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
 #include <Cocoa/Cocoa.h>
 #include <memory>
 #include <algorithm>
 #include <iostream>
-#include "fileio.hpp"
+#include "fileio/fileio.hpp"
 #include "boe.global.hpp"
-#include "choicedlog.hpp"
+#include "dialogxml/dialogs/choicedlog.hpp"
 
 extern void finish_load_party();
 extern void end_startup();

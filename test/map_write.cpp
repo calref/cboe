@@ -8,9 +8,9 @@
 
 #include <fstream>
 #include "catch.hpp"
-#include "map_parse.hpp"
-#include "scenario.hpp"
-#include "town.hpp"
+#include "fileio/map_parse.hpp"
+#include "scenario/scenario.hpp"
+#include "scenario/town.hpp"
 
 using namespace std;
 

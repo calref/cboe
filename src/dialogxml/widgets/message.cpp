@@ -8,7 +8,7 @@
 
 #include "message.hpp"
 #include "mathutil.hpp"
-#include "dialog.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
 #include <numeric>
 
 extern sf::Texture bg_gworld;

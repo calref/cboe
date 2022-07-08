@@ -4,8 +4,8 @@
 #include <stack>
 #include <boost/lexical_cast.hpp>
 #include "scen.global.hpp"
-#include "scenario.hpp"
-#include "town.hpp"
+#include "scenario/scenario.hpp"
+#include "scenario/town.hpp"
 #include "utility.hpp"
 #include "scen.actions.hpp"
 #include "scen.graphics.hpp"
@@ -14,15 +14,15 @@
 #include "scen.fileio.hpp"
 #include "scen.core.hpp"
 #include "mathutil.hpp"
-#include "button.hpp"
-#include "field.hpp"
-#include "strdlog.hpp"
-#include "choicedlog.hpp"
-#include "winutil.hpp"
-#include "ledgroup.hpp"
-#include "stack.hpp"
-#include "scrollpane.hpp"
-#include "fileio.hpp"
+#include "dialogxml/widgets/button.hpp"
+#include "dialogxml/widgets/field.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/choicedlog.hpp"
+#include "tools/winutil.hpp"
+#include "dialogxml/widgets/ledgroup.hpp"
+#include "dialogxml/widgets/stack.hpp"
+#include "dialogxml/widgets/scrollpane.hpp"
+#include "fileio/fileio.hpp"
 
 extern short cen_x, cen_y, overall_mode;
 extern bool mouse_button_held,editing_town,change_made;

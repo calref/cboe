@@ -10,10 +10,10 @@
 #include "message.hpp"
 #include "field.hpp"
 #include "button.hpp"
-#include "dialog.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
 #include "pict.hpp"
 #include "stack.hpp"
-#include "render_shapes.hpp"
+#include "gfx/render_shapes.hpp"
 #include <climits>
 
 cScrollPane::cScrollPane(cDialog& parent) : cContainer(CTRL_PANE, parent), scroll(parent) {

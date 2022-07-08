@@ -1,6 +1,6 @@
 
-#include "pict.hpp"
-#include "creature.hpp"
+#include "dialogxml/widgets/pict.hpp"
+#include "universe/creature.hpp"
 
 short out_enc_lev_tot(short which);
 void create_wand_monst();

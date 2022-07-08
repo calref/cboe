@@ -1,5 +1,5 @@
 
-#include "creature.hpp"
+#include "universe/creature.hpp"
 
 bool handle_wandering_specials(short mode);
 bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,bool *forced);

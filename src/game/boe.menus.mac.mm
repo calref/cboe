@@ -8,7 +8,7 @@
 
 #include "boe.menus.hpp"
 
-#include "universe.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
+#include "universe/universe.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
 #include <Cocoa/Cocoa.h>
 #include <sstream>
 #include "boe.party.hpp"

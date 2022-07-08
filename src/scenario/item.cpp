@@ -17,7 +17,7 @@
 
 #include "oldstructs.hpp"
 #include "utility.hpp"
-#include "fileio.hpp"
+#include "fileio/fileio.hpp"
 
 #include "damage.hpp"
 #include "spell.hpp"

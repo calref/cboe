@@ -14,8 +14,8 @@
 
 #include <string>
 #include "control.hpp"
-#include "render_text.hpp"
-#include "undo.hpp"
+#include "gfx/render_text.hpp"
+#include "tools/undo.hpp"
 
 /// The field's expected input type.
 enum eFldType {

@@ -13,7 +13,7 @@
 #include <string>
 #include <iosfwd>
 #include "item.hpp"
-#include "pictypes.hpp" // for pic_num_t
+#include "dialogxml/widgets/pictypes.hpp" // for pic_num_t
 
 // Windows headers are really annoying with their defined constants.
 #ifdef INFINITE

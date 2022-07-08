@@ -21,8 +21,8 @@
 #include <functional>
 
 #include "ticpp.h"
-#include "keycodes.hpp"
-#include "dlogevt.hpp"
+#include "dialogxml/keycodes.hpp"
+#include "dialogxml/dialogs/dlogevt.hpp"
 #include "location.hpp"
 #include <boost/any.hpp>
 

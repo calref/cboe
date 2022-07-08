@@ -14,11 +14,11 @@
 #include <sstream>
 #include <stack>
 
-#include "town.hpp"
+#include "scenario/town.hpp"
 #include "oldstructs.hpp"
 #include "mathutil.hpp"
-#include "fileio.hpp"
-#include "gfxsheets.hpp"
+#include "fileio/fileio.hpp"
+#include "gfx/gfxsheets.hpp"
 
 void cCurOut::import_legacy(legacy::out_info_type& old){
 	for(int i = 0; i < 96; i++)

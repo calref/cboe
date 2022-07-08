@@ -11,7 +11,7 @@
 
 #include "ledgroup.hpp"
 
-#include "dialog.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
 
 cLedGroup::cLedGroup(cDialog& parent) :
 	cContainer(CTRL_GROUP,parent),

@@ -13,9 +13,9 @@
 #include <string>
 #include <boost/dynamic_bitset.hpp>
 
-#include "vector2d.hpp"
+#include "tools/vector2d.hpp"
 #include "location.hpp"
-#include "special.hpp"
+#include "scenario/special.hpp"
 #include "mathutil.hpp"
 
 enum {

@@ -9,8 +9,8 @@
 #include <fstream>
 #include "ticpp.h"
 #include "catch.hpp"
-#include "dialog.hpp"
-#include "talking.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
+#include "scenario/talking.hpp"
 
 using namespace std;
 using namespace ticpp;

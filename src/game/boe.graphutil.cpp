@@ -6,7 +6,7 @@
 
 #include "boe.global.hpp"
 
-#include "universe.hpp"
+#include "universe/universe.hpp"
 #include "boe.graphutil.hpp"
 #include "boe.text.hpp"
 #include "boe.locutils.hpp"
@@ -15,11 +15,11 @@
 #include "boe.monster.hpp"
 #include "boe.specials.hpp"
 #include "sounds.hpp"
-#include "render_image.hpp"
-#include "render_shapes.hpp"
+#include "gfx/render_image.hpp"
+#include "gfx/render_shapes.hpp"
 #include "mathutil.hpp"
-#include "strdlog.hpp"
-#include "res_image.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
+#include "fileio/resmgr/res_image.hpp"
 
 extern sf::RenderWindow mainPtr;
 extern rectangle	windRect;

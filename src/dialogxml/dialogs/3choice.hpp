@@ -14,10 +14,10 @@
 #include <array>
 #include <boost/optional.hpp>
 
-#include "keycodes.hpp"
-#include "choicedlog.hpp"
-#include "button.hpp"
-#include "pictypes.hpp"
+#include "dialogxml/keycodes.hpp"
+#include "dialogxml/dialogs/choicedlog.hpp"
+#include "dialogxml/widgets/button.hpp"
+#include "dialogxml/widgets/pictypes.hpp"
 
 /// Basic button type template
 struct bbtt {

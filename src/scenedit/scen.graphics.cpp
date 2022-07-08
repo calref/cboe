@@ -3,27 +3,27 @@
 #include <sstream>
 #include <cstring>
 #include "scen.global.hpp"
-#include "scenario.hpp"
-#include "gfxsheets.hpp"
-#include "render_image.hpp"
-#include "render_shapes.hpp"
-#include "render_text.hpp"
-#include "tiling.hpp" // for bg
+#include "scenario/scenario.hpp"
+#include "gfx/gfxsheets.hpp"
+#include "gfx/render_image.hpp"
+#include "gfx/render_shapes.hpp"
+#include "gfx/render_text.hpp"
+#include "gfx/tiling.hpp" // for bg
 #include "scen.graphics.hpp"
 #include <cmath>
 #include "scen.keydlgs.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"
-#include "drawable_manager.hpp"
-#include "cursors.hpp"
+#include "tools/drawable_manager.hpp"
+#include "tools/cursors.hpp"
 
-#include "dialog.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
 
 #include "scen.core.hpp"
 #include "scen.menus.hpp"
 #include "scen.townout.hpp"
-#include "scrollbar.hpp"
-#include "res_image.hpp"
+#include "dialogxml/widgets/scrollbar.hpp"
+#include "fileio/resmgr/res_image.hpp"
 
 #include "scen.btnmg.hpp"
 

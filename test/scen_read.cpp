@@ -2,10 +2,10 @@
 #include <fstream>
 #include <iostream>
 #include "ticpp.h"
-#include "dialog.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
 #include "catch.hpp"
-#include "scenario.hpp"
-#include "res_strings.hpp"
+#include "scenario/scenario.hpp"
+#include "fileio/resmgr/res_strings.hpp"
 
 using namespace std;
 using namespace ticpp;

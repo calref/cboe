@@ -6,12 +6,12 @@
 //
 //
 
-#include "scenario.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
+#include "scenario/scenario.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
 #include <Cocoa/Cocoa.h>
 #include <memory>
 #include <algorithm>
 #include <iostream>
-#include "fileio.hpp"
+#include "fileio/fileio.hpp"
 #include "scen.actions.hpp"
 #include "scen.townout.hpp"
 

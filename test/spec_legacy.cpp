@@ -8,16 +8,16 @@
 
 #include "catch.hpp"
 #include "oldstructs.hpp"
-#include "special.hpp"
-#include "res_strings.hpp"
-#include "pictypes.hpp"
+#include "scenario/special.hpp"
+#include "fileio/resmgr/res_strings.hpp"
+#include "dialogxml/widgets/pictypes.hpp"
 #include "spell.hpp"
 #include "damage.hpp"
 #include "skills_traits.hpp"
 #include "fields.hpp"
 #include "race.hpp"
-#include "monster.hpp" // for eAttitude
-#include "town.hpp" // for lighting constants
+#include "scenario/monster.hpp" // for eAttitude
+#include "scenario/town.hpp" // for lighting constants
 
 using namespace std;
 
