@@ -724,7 +724,7 @@ std::ostream& operator<< (std::ostream& out, ePicType pic) {
 }
 
 std::istream& operator>> (std::istream& in, ePicType& pic) {
-	if(!readEnum(in, pic, pic_type_strs, PIC_NONE))
+	if(!readEnum(in, pic, pic_type_strs, NUM_PIC_TYPES))
 		in.setstate(std::ios::failbit);
 	return in;
 }

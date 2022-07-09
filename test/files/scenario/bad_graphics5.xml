@@ -41,6 +41,6 @@
         <default-ground>2</default-ground>
         <last-out-section x="0" y="0" />
         <last-town>0</last-town>
-        <graphics><pic index='1'>20</pic></graphics>
+        <graphics><pic index='1'>250</pic></graphics>
     </editor>
 </scenario>

@@ -284,7 +284,7 @@ TEST_CASE("When converting legacy special nodes (general)") {
 		oldSpec.ex1a = 1;
 		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::CANT_ENTER);
-		CHECK(newSpec.ex1a == 1);
+		CHECK(newSpec.ex1a == 0);
 		CHECK(newSpec.ex2a == 0);
 		CHECK(newSpec.jumpto == 12);
 	}
