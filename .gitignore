@@ -60,7 +60,8 @@ proj/vs*/packages/
 .sconsign.dblite
 .sconsign.tmp
 build/
-deps/
+deps/lib/
+deps/include/
 
 # Generated NSIS script file
 pkg/win/data.nsi

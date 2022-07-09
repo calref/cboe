@@ -2228,6 +2228,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					/opt/local/include,
+					"$(PROJECT_DIR)/../../deps/Catch2/single_include",
 					"$(PROJECT_DIR)/../../src/fileio/gzstream",
 					"$(PROJECT_DIR)/../../src/fileio/xml-parser",
 				);
@@ -2327,6 +2328,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					/opt/local/include,
+					"$(PROJECT_DIR)/../../deps/Catch2/single_include",
 					"$(PROJECT_DIR)/../../src/fileio/gzstream",
 					"$(PROJECT_DIR)/../../src/fileio/xml-parser",
 				);
