@@ -836,7 +836,7 @@ void cParty::writeTo(std::ostream& file) const {
 	if(talk_save.size() > 0) {
 		file << '\f';
 		for(const cConvers& note : talk_save) {
-			file << "TALKNOTE";
+			file << "TALKNOTE\n";
 			file << "WHO " << maybe_quote_string(note.who_said) << '\n';
 			file << "WHERE " << maybe_quote_string(note.in_town) << ' ' << maybe_quote_string(note.in_scen) << '\n';
 			file << "-\n" << note.the_str1 << '\n' << note.the_str2 << '\n';
@@ -1061,12 +1061,14 @@ void cParty::readFrom(std::istream& file){
 			entry.in_scen = read_maybe_quoted_string(bin);
 			bin >> std::ws;
 			getline(bin, entry.the_str);
+			journal.push_back(entry);
 		} else if(cur == "ENCNOTE") {
 			cEncNote note;
 			bin >> note.type;
 			note.where = read_maybe_quoted_string(bin);
 			bin >> std::ws;
 			getline(bin, note.the_str);
+			special_notes.push_back(note);
 		} else if(cur == "TALKNOTE") {
 			cConvers note;
 			while(bin) {
@@ -1074,15 +1076,17 @@ void cParty::readFrom(std::istream& file){
 				std::istringstream sin(cur);
 				sin >> cur;
 				if(cur == "WHO")
-					note.who_said = read_maybe_quoted_string(bin);
+					note.who_said = read_maybe_quoted_string(sin);
 				else if(cur == "WHERE") {
-					note.in_town = read_maybe_quoted_string(bin);
+					note.in_town = read_maybe_quoted_string(sin);
 					note.in_scen = read_maybe_quoted_string(sin);
 				} else if(cur == "-") break;
 			}
 			bin >> std::ws;
 			getline(bin, note.the_str1);
 			getline(bin, note.the_str2);
+			note.filled = true;
+			talk_save.push_back(note);
 		} else if(cur == "JOB_BANK") {
 			int i;
 			bin >> i;
