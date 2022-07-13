@@ -2286,6 +2286,8 @@
 					"-Werror=parentheses",
 					"-Werror=dangling-else",
 					"-Werror=array-bounds",
+					"-Werror=c++14-extensions",
+					"-Werror=c++17-extensions",
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_system",
@@ -2385,6 +2387,8 @@
 					"-Werror=parentheses",
 					"-Werror=dangling-else",
 					"-Werror=array-bounds",
+					"-Werror=c++14-extensions",
+					"-Werror=c++17-extensions",
 				);
 				OTHER_LDFLAGS = (
 					"-lboost_system",
