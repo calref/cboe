@@ -362,14 +362,15 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 				return false;
 			}
 			univ.town.readFrom(fin);
-			
+		} else univ.party.town_num = 200;
+
+		if (partyIn.hasFile("save/townmaps.dat")) {
 			// Read town maps
 			std::istream& fin2 = partyIn.getFile("save/townmaps.dat");
 			for(int i = 0; i < univ.scenario.towns.size(); i++)
 				for(int j = 0; j < univ.scenario.towns[i]->max_dim; j++)
 					fin2 >> univ.scenario.towns[i]->maps[j];
-		} else univ.party.town_num = 200;
-		
+		}
 		// Load outdoors data
 		std::istream& fin = partyIn.getFile("save/out.txt");
 		if(!fin) {
