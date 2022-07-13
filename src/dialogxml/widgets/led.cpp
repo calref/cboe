@@ -89,7 +89,7 @@ bool cLed::manageFormat(eFormat prop, bool set, boost::any* val) {
 void cLed::draw(){
 	rectangle from_rect, to_rect;
 	
-	inWindow->setActive();
+	inWindow->setActive(false);
 	
 	if(visible){
 		TextStyle style;
@@ -106,6 +106,8 @@ void cLed::draw(){
 		to_rect.left = frame.left + 18; // Possibly could be 20
 		win_draw_string(*inWindow,to_rect,lbl,wrapLabel ? eTextMode::WRAP : eTextMode::LEFT_TOP,style);
 	}
+
+	inWindow->setActive();
 }
 
 cControl::storage_t cLed::store() {

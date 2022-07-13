@@ -93,7 +93,7 @@ void put_pc_screen() {
 	rectangle bottom_bar_rect = {99,0,116,271};
 	rectangle info_from = {0,1,12,13}, switch_from = {0, 13, 12, 25};
 	
-	pc_stats_gworld.setActive();
+	pc_stats_gworld.setActive(false);
 	
 	// First clean up gworld with pretty patterns
 	sf::Texture& orig = *ResMgr::graphics.get("statarea");
@@ -195,6 +195,7 @@ void put_pc_screen() {
 	to_draw_rect = {101,251,114,267};
 	rect_draw_some_item(invenbtn_gworld, help_from_rect, pc_stats_gworld, to_draw_rect, sf::BlendAlpha);
 	
+	pc_stats_gworld.setActive();
 	pc_stats_gworld.display();
 	
 	// Sometimes this gets called when character is slain. when that happens, if items for
@@ -214,7 +215,7 @@ void put_item_screen(eItemWinMode screen_num) {
 	rectangle erase_rect = {17,2,122,255},dest_rect;
 	rectangle upper_frame_rect = {3,3,15,268};
 	
-	item_stats_gworld.setActive();
+	item_stats_gworld.setActive(false);
 	
 	// First clean up gworld with pretty patterns
 	sf::Texture& orig = *ResMgr::graphics.get("inventory");
@@ -360,6 +361,7 @@ void put_item_screen(eItemWinMode screen_num) {
 	undo_clip(item_stats_gworld);
 	
 	place_item_bottom_buttons();
+	item_stats_gworld.setActive();
 	item_stats_gworld.display();
 }
 
@@ -1052,7 +1054,7 @@ void print_buf () {
 	bool end_loop = false;
 	rectangle store_text_rect,dest_rect,erase_rect = {2,2,136,255};
 	
-	text_area_gworld.setActive();
+	text_area_gworld.setActive(false);
 	
 	// First clean up gworld with pretty patterns
 	tileImage(text_area_gworld, erase_rect,bg[6]);
@@ -1083,6 +1085,7 @@ void print_buf () {
 		
 	}
 	
+	text_area_gworld.setActive();
 	text_area_gworld.display();
 }
 
