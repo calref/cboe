@@ -201,6 +201,19 @@
 		919DDC0D19007517003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0E1900751C003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0F1900751F003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
+		919F2ECA287F023100F47750 /* SFML.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
+		919F2ECB287F023100F47750 /* sfml-audio.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
+		919F2ECC287F023100F47750 /* sfml-graphics.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
+		919F2ECD287F023100F47750 /* sfml-system.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E018F87F3700E3EA15 /* sfml-system.framework */; };
+		919F2ECE287F023100F47750 /* sfml-window.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E118F87F3700E3EA15 /* sfml-window.framework */; };
+		919F2ECF287F023100F47750 /* freetype.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
+		919F2ED0287F023100F47750 /* ogg.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 917823751B2F334C007F3444 /* ogg.framework */; };
+		919F2ED1287F023100F47750 /* vorbis.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 9178236E1B2F331D007F3444 /* vorbis.framework */; };
+		919F2ED2287F023100F47750 /* vorbisenc.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 9178235C1B2EA0C5007F3444 /* vorbisenc.framework */; };
+		919F2ED3287F023100F47750 /* vorbisfile.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 917823671B2F32DD007F3444 /* vorbisfile.framework */; };
+		919F2ED4287F023100F47750 /* FLAC.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
+		919F2ED5287F023100F47750 /* libboost_filesystem-mt.dylib in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFA19006CC9003E7FED /* libboost_filesystem-mt.dylib */; };
+		919F2ED6287F023100F47750 /* libboost_system-mt.dylib in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDBFB19006CC9003E7FED /* libboost_system-mt.dylib */; };
 		91A0B1601900FFE500EF438F /* mask.frag in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 91A0B15A1900F73E00EF438F /* mask.frag */; };
 		91ACCE7619002E5F00FAEF8B /* sfml-audio.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
 		91ACCE7719002E5F00FAEF8B /* sfml-graphics.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
@@ -428,6 +441,29 @@
 				911F2DA91B98FF5600E3102E /* sounds in Copy Data Files */,
 			);
 			name = "Copy Data Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		919F2EC9287F021B00F47750 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = TestFrameworks;
+			dstSubfolderSpec = 16;
+			files = (
+				919F2ECA287F023100F47750 /* SFML.framework in Copy Frameworks */,
+				919F2ECB287F023100F47750 /* sfml-audio.framework in Copy Frameworks */,
+				919F2ECC287F023100F47750 /* sfml-graphics.framework in Copy Frameworks */,
+				919F2ECD287F023100F47750 /* sfml-system.framework in Copy Frameworks */,
+				919F2ECE287F023100F47750 /* sfml-window.framework in Copy Frameworks */,
+				919F2ECF287F023100F47750 /* freetype.framework in Copy Frameworks */,
+				919F2ED0287F023100F47750 /* ogg.framework in Copy Frameworks */,
+				919F2ED1287F023100F47750 /* vorbis.framework in Copy Frameworks */,
+				919F2ED2287F023100F47750 /* vorbisenc.framework in Copy Frameworks */,
+				919F2ED3287F023100F47750 /* vorbisfile.framework in Copy Frameworks */,
+				919F2ED4287F023100F47750 /* FLAC.framework in Copy Frameworks */,
+				919F2ED5287F023100F47750 /* libboost_filesystem-mt.dylib in Copy Frameworks */,
+				919F2ED6287F023100F47750 /* libboost_system-mt.dylib in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		91A0B15F1900FFDA00EF438F /* Copy Shaders */ = {
@@ -1695,6 +1731,7 @@
 			buildConfigurationList = 91CC17341B421C0A003D9A69 /* Build configuration list for PBXNativeTarget "boe_test" */;
 			buildPhases = (
 				91CC17291B421C0A003D9A69 /* Sources */,
+				919F2EC9287F021B00F47750 /* Copy Frameworks */,
 				91CC172A1B421C0A003D9A69 /* Frameworks */,
 			);
 			buildRules = (
@@ -2604,6 +2641,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/TestFrameworks\"";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lboost_system",
@@ -2621,6 +2659,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/TestFrameworks\"";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
