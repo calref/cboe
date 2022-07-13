@@ -1,3 +1,4 @@
+#include <SFML/OpenGL.hpp>
 
 #include <cstdio>
 #include <queue>
@@ -1388,6 +1389,11 @@ void draw_map(bool need_refresh) {
 		canMap = false;
 	}
 	else if(need_refresh) {
+		// CHECKME: unsure, but on osx, if mainPtr.setActive() is not called,
+		// the following code does not update the gworld texture if we are
+		// called just after closing a dialog
+		mainPtr.setActive();
+
 		map_gworld.setActive();
 		
 		fill_rect(map_gworld, map_world_rect, sf::Color::Black);
@@ -1472,9 +1478,11 @@ void draw_map(bool need_refresh) {
 			}
 		
 		map_gworld.display();
+		// this stops flickering if the display time is too long
+		glFlush();
 	}
 	
-	mini_map.setActive();
+	mini_map.setActive(false);
 	
 	// Now place terrain map gworld
 	TextStyle style;
@@ -1529,6 +1537,7 @@ void draw_map(bool need_refresh) {
 		}
 	}
 	
+	mini_map.setActive(false);
 	mini_map.display();
 	
 	// Now exit gracefully

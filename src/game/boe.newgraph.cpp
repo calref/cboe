@@ -164,8 +164,9 @@ void apply_light_mask(bool onWindow) {
 		return;
 	
 	if(onWindow) {
-		mainPtr.setActive();
+		mainPtr.setActive(false);
 		fill_region(mainPtr, dark_mask_region, sf::Color::Black);
+		mainPtr.setActive();
 		return;
 	}
 	
@@ -355,7 +356,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	to_rect.offset(current_terrain_ul);
 	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldBounds,mainPtr,to_rect);
 	
-	mainPtr.setActive();
+	mainPtr.setActive(false);
 	
 	
 	// init missile paths
@@ -437,6 +438,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 					rect_draw_some_item(*from_gw,from_rect, mainPtr,temp_rect,sf::BlendAlpha);
 				}
 			}
+		mainPtr.setActive();
 		mainPtr.display();
 		sf::sleep(sf::milliseconds(2 + 5 * get_int_pref("GameSpeed")));
 	}
@@ -520,7 +522,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	style.font = FONT_BOLD;
 	style.pointSize = 10;
 	style.lineHeight = 10;
-	mainPtr.setActive();
+	mainPtr.setActive(false);
 	
 	// init missile paths
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;
@@ -585,6 +587,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 				}
 			}
 		//if(((PSD[SDF_GAME_SPEED] == 1) && (t % 3 == 0)) || ((PSD[SDF_GAME_SPEED] == 2) && (t % 2 == 0)))
+		mainPtr.setActive();
 		mainPtr.display();
 		sf::sleep(time_in_ticks(2 * (1 + get_int_pref("GameSpeed"))));
 	}
@@ -639,12 +642,11 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		return;
 	}
 	
-	talk_gworld.setActive();
 	TextStyle style;
 	style.font = FONT_DUNGEON;
 	style.pointSize = 18;
 	
-	talk_gworld.setActive();
+	talk_gworld.setActive(false);
 	if(pressed) {
 		clip_rect(talk_gworld, clip_area_rect);
 	}
@@ -786,6 +788,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	win_draw_string(talk_gworld,bottom_help_rects[3],"'I' button brings up description.",eTextMode::WRAP,style);
 	
 	undo_clip(talk_gworld);
+	talk_gworld.setActive();
 	talk_gworld.display();
 	
 	refresh_shopping();
@@ -906,14 +909,14 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	rectangle dest_rect,help_from = {46,60,59,76};
 	sf::Text str_to_draw;
 	
-	talk_gworld.setActive();
+	talk_gworld.setActive(false);
 	
 	TextStyle style;
 	style.font = FONT_DUNGEON;
 	style.pointSize = 18;
 	
 	if(c_rect.right > 0) {
-		mainPtr.setActive();
+		mainPtr.setActive(false);
 		c_rect.offset(talk_area_rect.topLeft());
 		clip_rect(mainPtr, c_rect);
 	}
@@ -1010,6 +1013,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		}
 	}
 	
+	talk_gworld.setActive();
 	rectangle oldRect(talk_gworld);
 	undo_clip(talk_gworld);
 	talk_gworld.display();

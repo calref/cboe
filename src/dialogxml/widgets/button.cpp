@@ -51,7 +51,7 @@ bool cButton::isScrollable(){
 void cButton::draw(){
 	rectangle from_rect, to_rect;
 	
-	inWindow->setActive();
+	inWindow->setActive(false);
 	
 	if(visible){
 		TextStyle style;
@@ -86,6 +86,7 @@ void cButton::draw(){
 		// frame default button, to provide a visual cue that it's the default
 		if(key.spec && key.k == key_enter) drawFrame(2,frameStyle);
 	}
+	inWindow->setActive();
 }
 
 bool cButton::manageFormat(eFormat prop, bool set, boost::any* val) {
