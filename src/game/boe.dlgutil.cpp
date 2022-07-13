@@ -743,7 +743,7 @@ void handle_talk_event(location p) {
 				beep();
 				return;
 			}
-			if(univ.party.save_talk(univ.town->talking.people[store_personality].title, univ.town->name, save_talk_str1, save_talk_str2)) {
+			if(univ.party.save_talk(univ.town->talking.people[store_personality%10].title, univ.town->name, save_talk_str1, save_talk_str2)) {
 				give_help(57,0);
 				play_sound(0);
 				ASB("Noted in journal.");
