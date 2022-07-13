@@ -2470,6 +2470,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				HEADER_SEARCH_PATHS = "\"$(PROJECT_DIR)/../../deps/Catch2/single_include\"";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lboost_system",
@@ -2483,6 +2484,7 @@
 		91CC17361B421C0A003D9A69 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = "\"$(PROJECT_DIR)/../../deps/Catch2/single_include\"";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
