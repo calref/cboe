@@ -2820,7 +2820,13 @@ void affect_spec(const runtime_state& ctx) {
 				for(short i = 0; i < 6; i++)
 					if(pc_num == 6 || pc_num == i) {
 						if(spec.ex1b == 0) {
-							if(spec.ex1a == 3 && is_combat() && which_combat_type == 0 && univ.party[i].main_status == eMainStatus::FLED)
+							if(spec.ex1a == 0 && univ.party[i].main_status == eMainStatus::DEAD)
+								univ.party[i].main_status = eMainStatus::ALIVE;
+							else if(spec.ex1a == 1 && univ.party[i].main_status == eMainStatus::DUST)
+								univ.party[i].main_status = eMainStatus::ALIVE;
+							else if(spec.ex1a == 2 && univ.party[i].main_status == eMainStatus::STONE)
+								univ.party[i].main_status = eMainStatus::ALIVE;
+							else if(spec.ex1a == 3 && is_combat() && which_combat_type == 0 && univ.party[i].main_status == eMainStatus::FLED)
 								univ.party[i].main_status = eMainStatus::ALIVE;
 							else if(spec.ex1a == 4)
 								univ.party[i].main_status -= eMainStatus::SPLIT;
