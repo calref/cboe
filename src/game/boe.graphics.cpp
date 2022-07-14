@@ -860,6 +860,13 @@ void draw_terrain(short	mode) {
 			
 			if(is_town() || is_combat())
 				draw_items(where_draw);
+			
+			int max_dim = is_town() ? int(univ.town->max_dim) : 96;
+			if (where_draw.x<0 || where_draw.x>=max_dim || where_draw.y<0 || where_draw.y>=max_dim) {
+				place_road(q,r,where_draw,false);
+				continue;
+			}
+
 			if(is_out() && univ.out.out_e[where_draw.x][where_draw.y] && univ.out.is_road(where_draw.x,where_draw.y))
 				place_road(q,r,where_draw,true);
 			else if(is_town() && univ.town.is_explored(where_draw.x,where_draw.y) && univ.town.is_road(where_draw.x, where_draw.y))
