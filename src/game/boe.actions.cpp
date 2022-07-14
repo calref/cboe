@@ -589,7 +589,7 @@ static void handle_talk(location destination, bool& did_something, bool& need_re
 						str = univ.scenario.spec_strs[small_talk - 1000];
 					// TODO: Come up with a set of pre-cooked responses.
 					add_string_to_buf("Talk: " + str, 4);
-				} else {
+				} else if(univ.town.monst[i].active) {
 					start_talk_mode(i,univ.town.monst[i].personality,univ.town.monst[i].number,univ.town.monst[i].facial_pic);
 					did_something = false;
 					need_redraw = false;
