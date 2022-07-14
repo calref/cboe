@@ -892,7 +892,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	////
 	which_m = &univ.town.monst[which_monst];
 	ter_abil = univ.scenario.ter_types[ter].special;
-	ter_dir = univ.scenario.ter_types[ter].flag3;
+	ter_dir = univ.scenario.ter_types[ter].flag1;
 	
 	if(mode > 0 && ter_abil == eTerSpec::CONVEYOR) {
 		if(
