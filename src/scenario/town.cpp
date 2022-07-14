@@ -193,7 +193,9 @@ void cTown::set_up_lights() {
 		for(short j = 0; j < this->max_dim; j++) {
 			l.x = i;
 			l.y = j;
-			rad = scenario->ter_types[this->terrain(i,j)].light_radius;
+			unsigned short terrain=this->terrain(i,j);
+			rad = terrain<scenario->ter_types.size() ?
+				scenario->ter_types[terrain].light_radius : 0;
 			if(rad > 0) {
 				for(where.x = std::max(0,i - rad); where.x < min(this->max_dim,short(i + rad + 1)); where.x++)
 					for(where.y = std::max(0,j - rad); where.y < min(this->max_dim,short(j + rad + 1)); where.y++)

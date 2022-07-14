@@ -388,7 +388,8 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 	if(first_item_shown == 0)
 		me["up"].hide();
 	else me["up"].show();
-	if(first_item_shown > item_array.size() - 7 ||
+	// ASAN undefined behaviour, ie. item_array.size can be less than 7
+	if(first_item_shown+7 > item_array.size() ||
 	   item_array.size() <= 8)
 		me["down"].hide();
 	else me["down"].show();

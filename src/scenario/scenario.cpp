@@ -66,6 +66,8 @@ cScenario::cScenario() {
 	bg_fight = 4;
 	bg_town = 13;
 	bg_dungeon = 9;
+	// ASAN used but unset
+	is_legacy = false;
 	for(short i = 0; i < town_mods.size(); i++) {
 		town_mods[i].spec = -1;
 	}

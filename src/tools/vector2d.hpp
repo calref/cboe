@@ -152,7 +152,8 @@ public:
 		size_t old_w = w, old_h = h;
 		w = width; h = height;
 		data.resize(w * h);
-		if(old_w < width) {
+		// ASAN undefined behaviour if old_h==0, y=old_h-1 is ...
+		if(old_w < width && old_h) {
 			size_t dx = width - old_w;
 			for(size_t y = old_h; y > 1; y--) {
 				std::move_backward(data.begin() + old_w * y, data.begin() + old_w * y, data.begin() + w * y - dx);
