@@ -313,17 +313,24 @@ void set_town_attitude(short lo,short hi,eAttitude att) {
 	univ.town.monst.hostile = true;
 	long long num_monst = univ.town.monst.size();
 	
-	// Nice smart indexing, like Python :D
-	if(lo <= -num_monst)
-		lo = 0;
-	if(lo < 0)
-		lo = num_monst + lo;
-	if(hi <= -num_monst)
-		hi = 0;
-	if(hi < 0)
-		hi = num_monst + hi;
-	if(hi < lo)
-		std::swap(lo, hi);
+	if (lo==-1 && hi==-1) {
+		// All monsters
+		lo=0;
+		hi=num_monst-1;
+	}
+	else {
+		// Nice smart indexing, like Python :D
+		if(lo <= -num_monst)
+			lo = 0;
+		if(lo < 0)
+			lo = num_monst + lo;
+		if(hi <= -num_monst)
+			hi = 0;
+		if(hi < 0)
+			hi = num_monst + hi;
+		if(hi < lo)
+			std::swap(lo, hi);
+	}
 	
 	for(short i = lo; i <= hi; i++) {
 		if(univ.town.monst[i].active > 0 && univ.town.monst[i].summon_time == 0){
