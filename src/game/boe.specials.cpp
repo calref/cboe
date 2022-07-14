@@ -3693,11 +3693,11 @@ void ifthen_spec(const runtime_state& ctx) {
 				ctx.next_spec = spec.ex1c;
 			break;
 		case eSpecType::IF_IN_BOAT:
-			if((spec.ex1b == -1 && univ.party.in_boat >= 0) || spec.ex1b == univ.party.in_boat)
+			if(univ.party.in_boat >= 0 && (spec.ex1b < 0 || spec.ex1b == univ.party.in_boat))
 				ctx.next_spec = spec.ex1c;
 			break;
 		case eSpecType::IF_ON_HORSE:
-			if((spec.ex1b == -1 && univ.party.in_horse >= 0) || spec.ex1b == univ.party.in_horse)
+			if(univ.party.in_horse >= 0 && (spec.ex1b < 0 || spec.ex1b == univ.party.in_horse))
 				ctx.next_spec = spec.ex1c;
 			break;
 		default:
