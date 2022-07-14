@@ -720,14 +720,14 @@ short do_look(location space) {
 				
 			}
 		}
-		
-		if(univ.out->roads[space.x][space.y])
+		location lSpace=global_to_local(space);
+		if(univ.out->roads[lSpace.x][lSpace.y])
 			add_string_to_buf("    Road");
 		if(out_boat_there(space))
 			add_string_to_buf("    Boat");
 		if(out_horse_there(space))
 			add_string_to_buf("    Horse");
-		if(univ.out->special_spot[space.x][space.y])
+		if(univ.out->special_spot[lSpace.x][lSpace.y])
 			add_string_to_buf("    Special Encounter");
 	}
 	
