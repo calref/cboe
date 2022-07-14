@@ -1855,7 +1855,7 @@ void special_increase_age(long length, bool queue) {
 			if(univ.town->timers[i].time > 0) {
 				short time = univ.town->timers[i].time;
 				bool need_redraw = false;
-				for(unsigned long j = age_before + (time == 1); j <= current_age; j++)
+				for(unsigned long j = age_before + 1; j <= current_age; j++)
 					if(j % time == 0) {
 						if(queue) {
 							univ.party.age = j;
@@ -1872,7 +1872,7 @@ void special_increase_age(long length, bool queue) {
 		if(univ.scenario.scenario_timers[i].time > 0) {
 			short time = univ.scenario.scenario_timers[i].time;
 			bool need_redraw = false;
-			for(unsigned long j = age_before + (time == 1); j <= current_age; j++)
+			for(unsigned long j = age_before + 1; j <= current_age; j++)
 				if(j % time == 0) {
 					if(queue) {
 						univ.party.age = j;
