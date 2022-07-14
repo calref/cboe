@@ -8,6 +8,7 @@
 
 #include "party.hpp"
 
+#include <cstring>
 #include <string>
 #include <vector>
 #include <map>
