@@ -28,7 +28,7 @@
 
 #include <gzstream.h>
 #include <iostream>
-#include <string.h>  // for memcpy
+#include <cstring>  // for memmove
 
 #ifdef GZSTREAM_NAMESPACE
 namespace GZSTREAM_NAMESPACE {
@@ -85,7 +85,8 @@ int gzstreambuf::underflow() { // used for input buffer only
     int n_putback = gptr() - eback();
     if( n_putback > 4)
         n_putback = 4;
-    memcpy( buffer + (4 - n_putback), gptr() - n_putback, n_putback);
+    // ASAN using memcpy with overlapping is undefined
+    std::memmove( buffer + (4 - n_putback), gptr() - n_putback, n_putback);
 
     int num = gzread( file, buffer+4, bufferSize-4);
     if(num <= 0) // ERROR or EOF
