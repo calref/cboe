@@ -219,6 +219,9 @@ void handle_shop_event(location p) {
 	}
 
 	for(short i = 0; i < 8; i++) {
+		// asan: 
+		if (i + shop_sbar->getPosition()>=shop_array.size())
+			break;
 		unsigned long what_picked = shop_array[i + shop_sbar->getPosition()];
 		if(what_picked >= active_shop.size()) break;
 		if(active_shop.getItem(what_picked).type == eShopItemType::EMPTY)
