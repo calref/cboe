@@ -131,7 +131,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			// 154 was if text response
 		case 155: type = eSpecType::IF_SDF_EQ; break;
 			// 156-169 were undefined
-		case 170: type = eSpecType::MAKE_TOWN_HOSTILE; break;
+		case 170: type = eSpecType::MAKE_TOWN_HOSTILE; ex2a=1; break; // OSNOLA: make town always hostile
 			// 171-173 were change/swap/transform terrain
 		case 174: type = eSpecType::TOWN_MOVE_PARTY; break;
 		case 175: type = eSpecType::TOWN_HIT_SPACE; break;
