@@ -141,6 +141,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			type = eSpecType::MAKE_TOWN_HOSTILE;
 			ex1a = 0;
 			ex1b = -1;
+			ex2a = 1; // we need also to give the final altitude
 			break;
 			// 171-173 were change/swap/transform terrain
 		case 174: type = eSpecType::TOWN_MOVE_PARTY; break;
