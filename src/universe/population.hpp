@@ -9,8 +9,8 @@
 #ifndef BOE_DATA_CREATLIST_H
 #define BOE_DATA_CREATLIST_H
 
-#include "scenario/monster.hpp"
 #include <iosfwd>
+#include <memory>
 #include "creature.hpp"
 
 namespace legacy {
@@ -19,8 +19,11 @@ namespace legacy {
 };
 
 class cPopulation {
-	std::vector<cCreature> dudes;
+	std::vector<std::shared_ptr<cCreature> > dudes;
+	static cCreature dummyDude;
 public:
+	class iterator;
+	
 	short which_town;
 	bool hostile;
 	
@@ -34,11 +37,36 @@ public:
 	const cCreature& operator[](size_t n) const;
 	// ASAN hostile copied but unset
 	cPopulation() : which_town(200), hostile(false) {}
-	std::vector<cCreature>::iterator begin() {return dudes.begin();}
-	std::vector<cCreature>::iterator end() {return dudes.end();}
+	iterator begin() {return iterator(dudes.begin());}
+	iterator end() {return iterator(dudes.end());}
 	// Apparently Visual Studio needs this to work
 	cPopulation& operator=(const cPopulation& other) = default;
 	void swap(cPopulation& other);
+	
+	class iterator {
+	public:
+		explicit iterator(std::vector<std::shared_ptr<cCreature>>::iterator it_)
+			: it(it_) {
+		}
+		iterator(const iterator&) = default;
+		~iterator() = default;
+		iterator& operator=(const iterator&) = default;
+		iterator& operator++() { //postfix increment
+			++it;
+			return *this;
+		}
+		iterator operator++(int) { //prefix increment
+			auto rIt=*this;
+			it++;
+			return rIt;
+		}
+		cCreature &operator*();
+		bool operator==(const iterator& other) const { return it == other.it; }
+		bool operator!=(const iterator& other) const { return !(*this == other); }
+
+		std::vector<std::shared_ptr<cCreature>>::iterator it;
+	};
+
 };
 
 #endif
