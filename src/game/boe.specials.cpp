@@ -1919,7 +1919,11 @@ void queue_special(eSpecCtx mode, eSpecCtxType which_type, spec_num_t spec, loca
 	queued_special.type = which_type;
 	queued_special.mode = mode;
 	queued_special.trigger_time = univ.party.age;
-	special_queue.push(queued_special);
+	// FIXME: I forced calling the leave special just to avoid calling them outside, ie. with town_num=200
+	if (mode==eSpecCtx::LEAVE_TOWN)
+		run_special(queued_special, nullptr, nullptr, nullptr);
+	else
+		special_queue.push(queued_special);
 }
 
 void run_special(pending_special_type spec, short* a, short* b, bool* redraw) {
