@@ -25,7 +25,6 @@ void handle_death();
 void start_new_game(bool force = false);
 location get_cur_direction(location the_point);
 bool outd_move_party(location destination,bool forced);
-bool town_move_party(location destination,short forced);
 bool someone_poisoned();
 short nearest_monster();
 void setup_outdoors(location where);

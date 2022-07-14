@@ -499,6 +499,7 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 	}
 }
 
+static bool town_move_party(location destination,short forced);
 static void handle_move(location destination, bool& did_something, bool& need_redraw, bool& need_reprint) {
 	bool town_move_done = false;
 	if(overall_mode == MODE_COMBAT) {
