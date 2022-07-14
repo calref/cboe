@@ -685,7 +685,7 @@ void cParty::writeTo(std::ostream& file) const {
 	for(auto iter = pointers.begin(); iter != pointers.end(); iter++)
 		file << "POINTER " << iter->first << ' ' << iter->second.first << ' ' << iter->second.second << '\n';
 	for(int i = 0; i < magic_ptrs.size(); i++)
-		file << "POINTER " << i << ' ' << int(magic_ptrs[i]) << '\n';
+		file << "POINTER " << i+10 << ' ' << int(magic_ptrs[i]) << '\n';
 	file << "LIGHT " << light_level << '\n';
 	file << "OUTCORNER " << outdoor_corner.x << ' ' << outdoor_corner.y << '\n';
 	file << "INWHICHCORNER " << i_w_c.x << ' ' << i_w_c.y << '\n';
