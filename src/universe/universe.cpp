@@ -1356,6 +1356,8 @@ void cUniverse::enter_scenario(const std::string& name) {
 //	univ.party.journal.clear();
 	party.special_notes.clear();
 	party.talk_save.clear();
+	// reset the scried monster
+	party.m_noted.clear();
 	
 	party.direction = DIR_N;
 	party.at_which_save_slot = 0;
