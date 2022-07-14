@@ -90,7 +90,7 @@ void cCreature::avatar() {
 void cCreature::heal(int amt) {
 	if(!is_alive()) return;
 	if(health >= m_health) return;
-	health += amt;
+	add_health(amt);
 	if(health > m_health)
 		health = m_health;
 	if(health < 0)
@@ -302,16 +302,24 @@ int cCreature::get_shared_dmg(int base_dmg) const {
 int cCreature::magic_adjust(int how_much) {
 	if(how_much <= 0) return how_much;
 	if(abil[eMonstAbil::ABSORB_SPELLS].active && get_ran(1,1,1000) <= abil[eMonstAbil::ABSORB_SPELLS].special.extra1) {
-		int gain = abil[eMonstAbil::ABSORB_SPELLS].special.extra2;
-		if(32767 - health > gain)
-			health = 32767;
-		else health += gain;
+		add_health(abil[eMonstAbil::ABSORB_SPELLS].special.extra2);
 		return 0;
 	}
 	// TODO: Magic resistance status effect?
 	how_much *= resist[eDamageType::MAGIC];
 	how_much /= 100;
 	return how_much;
+}
+
+void cCreature::add_health(int how_much)
+{
+	int new_health=int(health)+how_much;
+	if (new_health>32000)
+		health=32000;
+	else if (new_health<-32000)
+		health=-32000;
+	else
+		health=new_health;
 }
 
 int cCreature::get_health() const {
