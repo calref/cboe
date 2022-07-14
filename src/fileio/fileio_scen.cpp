@@ -2291,6 +2291,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 			break;
 	}
 	
+	the_town.is_hidden = scenario.town_hidden[which_town];
 	the_town.spec_strs.resize(100);
 	the_town.sign_locs.resize(20);
 	the_town.area_desc.resize(16);
