@@ -15,6 +15,8 @@
 #error pc.menus.mm is Mac-specific code; try compiling pc.menus.win.cpp instead
 #endif
 
+extern short menuChoiceId;
+
 using MenuHandle = NSMenu*;
 
 extern cUniverse univ;
@@ -102,7 +104,8 @@ void drawMenuBar() {
 
 @implementation MenuHandler
 -(void) menuChoice:(id) sender {
-	eMenu opt = eMenu([[sender representedObject] intValue]);
-	handle_menu_choice(opt);
+	menuChoiceId=short([[sender representedObject] intValue]);
+	//eMenu opt = eMenu([[sender representedObject] intValue]);
+	//handle_menu_choice(opt);
 }
 @end
