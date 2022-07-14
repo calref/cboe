@@ -738,7 +738,8 @@ void draw_terrain(short	mode) {
 			where_draw.y += j - 6;
 			if(!(is_out()))
 				light_area[i][j] = (is_town()) ? pt_in_light(view_loc,where_draw) : combat_pt_in_light(where_draw);
-			if(!is_out() && !univ.town.is_on_map(where_draw.x, where_draw.y))
+			if((!is_out() && !univ.town.is_on_map(where_draw.x, where_draw.y)) ||
+			   (is_out() && !univ.out.is_on_map(where_draw.x, where_draw.y)))
 				unexplored_area[i][j] = 0;
 			else unexplored_area[i][j] = 1 - is_explored(where_draw.x,where_draw.y);
 		}
