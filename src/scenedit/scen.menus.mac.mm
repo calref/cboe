@@ -12,6 +12,8 @@
 #include "tools/winutil.hpp"
 #include "tools/undo.hpp"
 
+extern short menuChoiceId;
+
 using MenuHandle = NSMenu*;
 MenuHandle menu_bar_handle;
 MenuHandle file_menu, edit_menu, app_menu, scen_menu, town_menu, out_menu, help_menu;
@@ -166,6 +168,7 @@ void update_edit_menu() {
 
 @implementation MenuHandler
 -(void) menuChoice:(id) sender {
-	handle_menu_choice(eMenu([[sender representedObject] intValue]));
+	menuChoiceId=short([[sender representedObject] intValue]);
+	//handle_menu_choice(eMenu([[sender representedObject] intValue]));
 }
 @end
