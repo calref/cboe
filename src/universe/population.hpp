@@ -12,6 +12,7 @@
 #include "scenario/monster.hpp"
 #include <deque>
 #include <iosfwd>
+#include <memory>
 #include "creature.hpp"
 
 namespace legacy {
@@ -22,6 +23,8 @@ namespace legacy {
 class cPopulation {
 	std::deque<cCreature> dudes;
 public:
+	class iterator;
+	
 	short which_town;
 	bool hostile;
 	
