@@ -498,6 +498,7 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 	}
 }
 
+static bool town_move_party(location destination,short forced);
 static void handle_move(location destination, bool& did_something, bool& need_redraw, bool& need_reprint) {
 	bool town_move_done = false;
 	if(overall_mode == MODE_COMBAT) {
@@ -2976,10 +2977,10 @@ bool town_move_party(location destination,short forced) {
 		forced = true;
 	if(univ.debug_mode && univ.ghost_mode)
 		forced = keep_going = true;
-	
-	ter = univ.town->terrain(destination.x,destination.y);
-	
+
 	if(keep_going) {
+		// ASAN destination is only correct if keep_going=true
+		ter = univ.town->terrain(destination.x,destination.y);
 		if(univ.party.in_boat >= 0) {
 			if((!is_blocked(destination)) && (!is_special(destination))
 				// If to bridge, exit if heading diagonal, keep going if heading horiz or vert
