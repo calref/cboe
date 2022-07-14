@@ -194,7 +194,7 @@ void draw_monsters() {
 							int pic_mode = (monst.direction) < 4 ? 0 : 1;
 							pic_mode += (combat_posing_monster == i + 100) ? 10 : 0;
 							source_rect = get_monster_template_rect(this_monst, pic_mode, k);
-							int which_sheet = m_pic_index[this_monst].i / 20;
+							int which_sheet = (m_pic_index[this_monst].i+k) / 20;
 							sf::Texture& monst_gworld = *ResMgr::graphics.get("monst" + std::to_string(1 + which_sheet));
 							Draw_Some_Item(monst_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0);
 						}
