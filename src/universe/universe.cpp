@@ -1350,6 +1350,7 @@ void cUniverse::enter_scenario(const std::string& name) {
 		pop.which_town = 200;
 	for(short i = 0; i < 10; i++)
 		party.out_c[i].exists = false;
+	party.store_limited_stock.clear();
 	party.magic_store_items.clear();
 	// TODO: Now uncertain if the journal should really persist
 //	univ.party.journal.clear();
