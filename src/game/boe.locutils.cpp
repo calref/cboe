@@ -250,20 +250,17 @@ void update_explored(location dest) {
 		univ.out.out_e[dest.x][dest.y] = 2;
 		for(look.x = shortdest.x - 4; look.x < shortdest.x + 5; look.x++)
 			for(look.y = shortdest.y - 4; look.y < shortdest.y + 5; look.y++) {
-				// TODO: Windows had an extra check, is this needed?
-				//if((look.x == minmax(0,95,(int)look.x)) && (look.y == minmax(0,95,(int)look.y))) {
-				if(univ.out.out_e[look.x][look.y] == 0)
+				if(look.x>=0 && look.y>=0 && look.x<96 && look.y<96 && univ.out.out_e[look.x][look.y] == 0) {
 					if(can_see_light(shortdest, look, sight_obscurity) < 5)
 						univ.out.out_e[look.x][look.y] = 1;
-				//}
+				}
 			}
 	} else {
 		make_explored(dest.x,dest.y);
 		for(look2.x = max(0,dest.x - 4); look2.x < min(univ.town->max_dim,dest.x + 5); look2.x++)
 			for(look2.y = max(0,dest.y - 4); look2.y < min(univ.town->max_dim,dest.y + 5); look2.y++)
-				if(!is_explored(look2.x,look2.y))
-					if((can_see_light(dest, look2,sight_obscurity) < 5) && (pt_in_light(dest,look2)))
-						make_explored(look2.x,look2.y);
+				if(!is_explored(look2.x,look2.y) && can_see_light(dest, look2,sight_obscurity) < 5 && pt_in_light(dest,look2))
+					make_explored(look2.x,look2.y);
 	}
 }
 
