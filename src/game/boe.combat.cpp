@@ -3679,7 +3679,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 					if((monst_near(i,caster->cur_loc,8,0)) &&
 						(caster->attitude == univ.town.monst[i].attitude)) {
 						affected = &univ.town.monst[i];
-						affected->health += get_ran(2,1,10);
+						affected->add_health(get_ran(2,1,10));
 						r1 = get_ran(3,1,4);
 						affected->curse(-r1);
 						affected->status[eStatus::WEBS] = 0;
@@ -3968,7 +3968,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 						if(spell == eSpell::BLESS_PARTY)
 							affected->curse(-r1);
 						if(spell == eSpell::REVIVE_ALL)
-							affected->health += r1;
+							affected->add_health(r1);
 					}
 				play_sound(4);
 				break;
