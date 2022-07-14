@@ -47,6 +47,7 @@ public:
 	void drain_sp(int how_much);
 	void restore_sp(int how_much);
 	
+	void add_health(int how_much);
 	int get_health() const;
 	int get_magic() const;
 	int get_level() const;
@@ -57,7 +58,7 @@ public:
 	bool is_shielded() const;
 	int get_shared_dmg(int base_dmg) const;
 	location get_loc() const;
-	
+
 	int magic_adjust(int base);
 	
 	void spell_note(int which);
