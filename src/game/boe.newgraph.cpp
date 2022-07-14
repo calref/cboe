@@ -869,8 +869,14 @@ std::string get_item_interesting_string(cItem item) {
 		case eItemType::HELM:
 		case eItemType::GLOVES:
 		case eItemType::SHIELD_2:
-		case eItemType::BOOTS: // TODO: Verify that this is displayed correctly
-			sout << "Blocks " << item.item_level + ((item.protection > 0) ? 1 : 0) << '-' << item.item_level + item.protection << " damage";
+		case eItemType::BOOTS: // coherent with damage_pc
+			sout << "Blocks "
+			<< (item.item_level>0 ? 1 : item.item_level) + (item.bonus>0 ? 1+item.bonus/2 : item.bonus) +
+				(item.protection > 0 ? 1 : item.protection)
+			<< '-'
+			<< item.item_level + (item.bonus>=0 ? 3*item.bonus/2 : item.bonus) +
+				(item.protection>=0 ? item.protection : -1)
+			<< " damage";
 			break;
 		case eItemType::BOW:
 		case eItemType::CROSSBOW:
