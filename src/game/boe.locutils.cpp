@@ -215,7 +215,11 @@ short combat_obscurity(short x, short y) {
 }
 
 ter_num_t coord_to_ter(short x,short y) {
-	return is_out() ? univ.out[x][y] : univ.town->terrain(x,y);
+	if (is_out())
+		return univ.out[x][y];
+	if (x<0 || y<0 || x>=univ.town->max_dim || y>=univ.town->max_dim)
+		return 0;
+	return univ.town->terrain(x,y);
 }
 
 ////
@@ -268,8 +272,11 @@ void update_explored(location dest) {
 bool is_blocked(location to_check) {
 	short gr;
 	ter_num_t ter;
-	
+	if (to_check.x<0 || to_check.y<0)
+		return true;
 	if(is_out()) {
+		if (to_check.x>=96 || to_check.y>=96) // checkme: maybe >=48
+			return true;
 		if(impassable(univ.out[to_check.x][to_check.y])) {
 			return true;
 		}
@@ -283,6 +290,8 @@ bool is_blocked(location to_check) {
 	}
 	
 	if((is_town()) || (is_combat())) {
+		if (to_check.x >= univ.town->max_dim || to_check.y >= univ.town->max_dim)
+			return true;
 		ter = univ.town->terrain(to_check.x,to_check.y);
 		gr = univ.scenario.ter_types[ter].picture;
 		
@@ -396,6 +405,8 @@ bool can_see_monst(location l,short m_num) {
 
 bool outd_is_blocked(location to_check) {
 	if(overall_mode == MODE_OUTDOORS) {
+		if (to_check.x<0 || to_check.y<0 || to_check.x>=96 || to_check.y>=96)
+			return true;
 		if(impassable(univ.out[to_check.x][to_check.y])) {
 			return true;
 		}
