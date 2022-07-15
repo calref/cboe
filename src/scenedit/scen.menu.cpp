@@ -45,6 +45,7 @@ void OpenBoESceneditMenu::add_persistent_menu_items(tgui::MenuBar::Ptr& menubar)
 		{ { "File", "Save Scenario Ctrl-S"    }, eMenu::FILE_SAVE    },
 		{ { "File", "Save As... Ctrl-Shift-S" }, eMenu::FILE_SAVE_AS },
 		{ { "File", "Revert to Saved"         }, eMenu::FILE_REVERT  },
+                { { "File", "Preferences"             }, eMenu::PREFS        },
 		{ { "File", "Quit Ctrl-Q"             }, eMenu::QUIT         },
 
 		{ { "Edit", "Undo Ctrl-Z"       }, eMenu::EDIT_UNDO       },
