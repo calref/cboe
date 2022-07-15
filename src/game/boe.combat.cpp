@@ -284,6 +284,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short nu
 	ter_num_t in_which_terrain = univ.out[where.x][where.y];
 	create_out_combat_terrain(in_which_terrain,num_walls,univ.out.is_road(where.x,where.y));
 	
+	univ.town.difficulty = univ.scenario.difficulty; // CHECKME: maybe we must retrieve the difficulty elsewhere
 	univ.town.monst.clear();
 	
 	for(short i = 0; i < 7; i++) {

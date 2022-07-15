@@ -873,6 +873,7 @@ void cCurTown::readFrom(std::istream& file){
 
 cCurTown::cCurTown(cUniverse& univ) : univ(univ) {
 	arena = nullptr;
+	difficulty = 0;
 	univ.party.town_num = 200;
 	for(int i = 0; i < 64; i++)
 		for(int j = 0; j < 64; j++)
