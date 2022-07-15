@@ -10,6 +10,7 @@
 #include "gfx/render_shapes.hpp"
 #include "gfx/render_image.hpp"
 #include "fileio/resmgr/res_image.hpp"
+#include "dialogxml/widgets/led.hpp"
 #include "dialogxml/widgets/message.hpp"
 #include "mathutil.hpp"
 #include "tools/gitrev.hpp"
