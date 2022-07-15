@@ -115,16 +115,17 @@ void handle_splash_events() {
 }
 
 void show_logo() {
-	rectangle whole_window,from_rect;
-	rectangle logo_from = {0,0,350,350};
+	rectangle whole_window;
 	
 	if(get_int_pref("DisplayMode") != 5)
 		hideMenuBar();
 	
 	whole_window = rectangle(mainPtr);
+	double ui_scale = get_float_pref("UIScale", 1.0);
+	if(ui_scale < 1) ui_scale = 1;
+	rectangle logo_from = {0, 0, int(ui_scale *350), int(ui_scale * 350)};
 	logo_from.offset((whole_window.right - logo_from.right) / 2,(whole_window.bottom - logo_from.bottom) / 2);
 	sf::Texture& pict_to_draw = *ResMgr::graphics.get("spidlogo", true);
-	from_rect = rectangle(pict_to_draw);
 	
 	play_sound(-95);
 	while(sound_going(95)) {
@@ -140,8 +141,10 @@ void show_logo() {
 }
 
 void plop_fancy_startup() {
+	float ui_scale = get_float_pref("UIScale", 1.0);
+	if (ui_scale<1) ui_scale=1;
 	rectangle whole_window,from_rect;
-	rectangle intro_from = {0,0,480,640};
+	rectangle intro_from = {0, 0, int(ui_scale * 480), int(ui_scale * 640)};
 	whole_window = rectangle(mainPtr);
 	sf::Time delay = time_in_ticks(220);
 	intro_from.offset((whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
