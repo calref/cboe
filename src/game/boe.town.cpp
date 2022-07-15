@@ -1526,7 +1526,7 @@ void draw_map(bool need_refresh) {
 		}
 	}
 	
-	mini_map.setActive(false);
+	mini_map.setActive();
 	mini_map.display();
 	
 	// Now exit gracefully
