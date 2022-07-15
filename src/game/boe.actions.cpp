@@ -2592,7 +2592,7 @@ void handle_death() {
 			fs::path file_to_load = nav_get_party();
 			if(!file_to_load.empty()) load_party(file_to_load, univ);
 			if(univ.party.is_alive()) {
-				if(overall_mode != MODE_STARTUP)
+				if(overall_mode == MODE_STARTUP)
 					post_load(), finish_load_party();
 				return;
 			}
