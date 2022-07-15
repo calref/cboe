@@ -26,6 +26,7 @@
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "scen.menus.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
 #include "fileio/resmgr/res_image.hpp"
 #include "tools/prefs.hpp"
 #include "tools/framerate_limiter.hpp"
@@ -684,7 +685,7 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 void pick_preferences() {
 	set_cursor(sword_curs);
 	
-	cDialog prefsDlog("pref-scenario");
+	cDialog prefsDlog(*ResMgr::dialogs.get("pref-scenario"));
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 	
 	float ui_scale = get_float_pref("UIScale", 1.0);

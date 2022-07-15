@@ -525,7 +525,7 @@ bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 void pick_preferences() {
 	set_cursor(sword_curs);
 	
-	cDialog prefsDlog("pref-character");
+	cDialog prefsDlog(*ResMgr::dialogs.get("pref-character"));
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 	
 	float ui_scale = get_float_pref("UIScale", 1.0);

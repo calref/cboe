@@ -56,6 +56,7 @@ class cDialog {
 	friend class cDialogIterator;
 	typedef std::map<std::string,cControl*>::iterator ctrlIter;
 	std::map<std::string,cControl*> controls;
+	float ui_scale;
 	short bg;
 	sf::Color defTextClr;
 	sf::RenderWindow win;
