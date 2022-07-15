@@ -23,6 +23,7 @@
 #include "dialogxml/widgets/message.hpp"
 #include <array>
 #include <boost/lexical_cast.hpp>
+#include "tools/prefs.hpp"
 #include "tools/winutil.hpp"
 #include "tools/cursors.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
@@ -672,9 +673,17 @@ short get_num_of_items(short max_num) {
 }
 
 void init_mini_map() {
-	mini_map.create(sf::VideoMode(296,277), "Map", sf::Style::Titlebar | sf::Style::Close);
+	float ui_scale = get_float_pref("UIScale", 1.0);
+	if (ui_scale < 0.1) ui_scale = 1.0;
+	if (mini_map.isOpen()) mini_map.close();
+	mini_map.create(sf::VideoMode(ui_scale*296,ui_scale*277), "Map", sf::Style::Titlebar | sf::Style::Close);
 	mini_map.setPosition(sf::Vector2i(52,62));
+	sf::View view;
+	view.reset(sf::FloatRect(0, 0, ui_scale*296,ui_scale*277));
+	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
+	mini_map.setView(view);
 	mini_map.setVisible(false);
+	map_visible=false;
 	setWindowFloating(mini_map, true);
 	makeFrontWindow(mainPtr);
 	
