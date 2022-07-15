@@ -358,6 +358,10 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			break;
 		case 182: // Destroy all monsters of particular type
 			type = eSpecType::TOWN_NUKE_MONSTS;
+			// 0: means all monsters, -1: friend monsters, -2: hostile monster
+			//    so, we must not use these values.
+			if(ex1a >= -2 && ex1a <= 0)
+				ex1a = -3;
 			break;
 		case 183: // Destroy all monsters, or all friendly / all hostile
 			type = eSpecType::TOWN_NUKE_MONSTS;
