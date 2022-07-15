@@ -144,20 +144,19 @@ public:
 	}
 	void resize(size_t width, size_t height) {
 		if(w > width) {
-			size_t dx = w - width;
-			for(int y = 1; y < h; y++) {
-				std::move(data.begin() + w * y, data.begin() + w * (y + 1) - dx, data.begin() + width * y);
-			}
+			for(int y = 1; y < h; y++)
+				std::move(data.begin() + w * y, data.begin() + w * y + width, data.begin() + width * y);
+			if (height>h) // we must erase the last data
+				std::fill_n(data.begin() + width * h, h*(w-width), Type());
 		}
 		size_t old_w = w, old_h = h;
 		w = width; h = height;
 		data.resize(w * h);
-		// ASAN undefined behaviour if old_h==0, y=old_h-1 is ...
-		if(old_w < width && old_h) {
+		if(old_w < width) {
 			size_t dx = width - old_w;
-			for(size_t y = old_h; y > 1; y--) {
-				std::move_backward(data.begin() + old_w * y, data.begin() + old_w * y, data.begin() + w * y - dx);
-				std::fill_n(data.begin() + old_w + w * y, dx, Type());
+			for(int y = int(old_h) - 1; y > 0; y--) {
+				std::move_backward(data.begin() + old_w * y, data.begin() + old_w * (y + 1), data.begin() + w * (y + 1) - dx);
+				std::fill_n(data.begin() + old_w + w * (y - 1), dx, Type());
 			}
 		}
 	}
