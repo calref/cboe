@@ -264,7 +264,10 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 					}
 				}
 			}
-		else univ.party.town_num = 200;
+		else {
+			univ.party.town_num = 200;
+			univ.town.difficulty = 0;
+		}
 	}
 	
 	real_univ = std::move(univ);
@@ -362,7 +365,10 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 				return false;
 			}
 			univ.town.readFrom(fin);
-		} else univ.party.town_num = 200;
+		} else {
+			univ.party.town_num = 200;
+			univ.town.difficulty = 0;
+		}
 
 		if (partyIn.hasFile("save/townmaps.dat")) {
 			// Read town maps
