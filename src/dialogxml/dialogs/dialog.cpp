@@ -171,9 +171,9 @@ cKey cControl::parseKey(string what){
 	return key;
 }
 
-cDialog::cDialog(cDialog* p) : parent(p) {}
+cDialog::cDialog(cDialog* p) : parent(p), ui_scale(-1) {}
 
-cDialog::cDialog(const DialogDefn& file, cDialog* p) : parent(p) {
+cDialog::cDialog(const DialogDefn& file, cDialog* p) : parent(p), ui_scale(-1) {
 	loadFromFile(file);
 }
 
@@ -517,16 +517,31 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 			currentFocus = iter->first;
 		}
 	}
-	// Sometimes it seems like the Cocoa menu handling clobbers the active rendering context.
-	// For whatever reason, delaying 100 milliseconds appears to fix this.
-	sf::sleep(sf::milliseconds(100));
-	// So this little section of code is a real-life valley of dying things.
-	// Instantiating a window and then closing it seems to fix the update error, because magic.
-	win.create(sf::VideoMode(1,1),"");
-	win.close();
-	win.create(sf::VideoMode(winRect.width(), winRect.height()), "Dialog", sf::Style::Titlebar);
-	winLastX = parentPos.x + (int(parentSz.x) - winRect.width()) / 2;
-	winLastY = parentPos.y + (int(parentSz.y) - winRect.height()) / 2;
+	if (ui_scale<=0) {
+		ui_scale = get_float_pref("UIScale", 1.0);
+		if (ui_scale < 0.1) ui_scale = 1.0;
+	}
+
+	// check that the dialog can be displayed on the screen
+	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+	if (desktop.width< ui_scale*winRect.width())
+		ui_scale=float(desktop.width)/winRect.width();
+	// we need keep enough space for the mac menu and the dialog title
+	// and add more space on a retina mac
+	// checkme: we need probably to also add getMenuHeight at least on Linux
+	int const minFreeHeight=desktop.height>1500 ? 100 : 50;
+	if ((desktop.height-minFreeHeight)< ui_scale*winRect.height())
+		ui_scale=float(desktop.height-minFreeHeight)/winRect.height();
+
+	int wWidth=int(ui_scale*winRect.width()), wHeight=int(ui_scale*winRect.height());
+	win.create(sf::VideoMode(wWidth, wHeight), "Dialog", sf::Style::Titlebar);
+	sf::View view;
+	view.reset(sf::FloatRect(0, 0, wWidth, wHeight));
+	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
+	win.setView(view);
+
+	winLastX = parentPos.x + (int(parentSz.x) - wWidth) / 2;
+	winLastY = parentPos.y + (int(parentSz.y) - wHeight) / 2;
 	win.setPosition({winLastX, winLastY});
 	draw();
 	makeFrontWindow(parent ? parent-> win : mainPtr);
@@ -682,7 +697,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 			if(kb.isMetaPressed()) key.mod += mod_ctrl;
 			if(kb.isAltPressed()) key.mod += mod_alt;
 			if(kb.isShiftPressed()) key.mod += mod_shift;
-			where = {currentEvent.mouseButton.x, currentEvent.mouseButton.y};
+			where = {int(currentEvent.mouseButton.x/ui_scale), int(currentEvent.mouseButton.y/ui_scale)};
 			process_click(where, key.mod);
 			break;
 		default: // To silence warning of unhandled enum values
@@ -700,7 +715,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 
 			bool inField = false;
 			for(auto& ctrl : controls) {
-				if(ctrl.second->getType() == CTRL_FIELD && ctrl.second->getBounds().contains(currentEvent.mouseMove.x, currentEvent.mouseMove.y)) {
+				if(ctrl.second->getType() == CTRL_FIELD && ctrl.second->getBounds().contains(currentEvent.mouseMove.x/ui_scale, currentEvent.mouseMove.y/ui_scale)) {
 					set_cursor(text_curs);
 					inField = true;
 					break;
