@@ -299,6 +299,7 @@ void handle_events() {
 		if(changed_display_mode) {
 			changed_display_mode = false;
 			adjust_window_mode();
+			init_mini_map();
 		}
 
 		// Still no idea what this does. It's possible that this does not work at all.
