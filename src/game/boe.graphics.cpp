@@ -1195,6 +1195,7 @@ static bool can_build_roads_on(ter_num_t ter) {
 }
 
 static bool connect_roads(ter_num_t ter){
+	if (ter>=univ.scenario.ter_types.size()) return false;
 	eTrimType trim = univ.scenario.ter_types[ter].trim_type;
 	eTerSpec spec = univ.scenario.ter_types[ter].special;
 	if(trim == eTrimType::CITY)
@@ -1271,7 +1272,7 @@ void place_road(short q,short r,location where,bool here) {
 		
 		if(((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < univ.town->max_dim - 1)))
 			ter = coord_to_ter(where.x + 1,where.y);
-		eTrimType horzTrim = univ.scenario.ter_types[ter].trim_type;
+		eTrimType horzTrim = ter<univ.scenario.ter_types.size() ? univ.scenario.ter_types[ter].trim_type : eTrimType::NONE;
 		if(((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim - 1))
 			|| connect_roads(ter))
 			horz = can_build_roads_on(ref);
@@ -1281,7 +1282,7 @@ void place_road(short q,short r,location where,bool here) {
 		if(vert){
 			if(((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < univ.town->max_dim - 1)))
 				ter = coord_to_ter(where.x,where.y + 1);
-			eTrimType vertTrim = univ.scenario.ter_types[ter].trim_type;
+			eTrimType vertTrim = ter<univ.scenario.ter_types.size() ? univ.scenario.ter_types[ter].trim_type : eTrimType::NONE;
 			if(((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim - 1))
 				|| connect_roads(ter))
 				vert = can_build_roads_on(ref);
