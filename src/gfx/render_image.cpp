@@ -26,7 +26,7 @@ void init_shaders() {
 		std::ifstream fin;
 		fin.open(fragPath.string().c_str());
 		if(!fin.good()) {
-			std::cerr << std_fmterr << ": Error loading fragment shader" << std::endl;
+			std::cerr << std_fmterr << ": Error loading fragment shader" << fragPath << std::endl;
 			break;
 		}
 		fin.seekg(0, std::ios::end);
@@ -40,7 +40,7 @@ void init_shaders() {
 
 		fin.open(vertPath.string().c_str());
 		if(!fin.good()) {
-			std::cerr << std_fmterr << ": Error loading vertex shader" << std::endl;
+			std::cerr << std_fmterr << ": Error loading vertex shader" << vertPath << std::endl;
 			delete[] fbuf;
 			break;
 		}
