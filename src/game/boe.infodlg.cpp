@@ -479,17 +479,8 @@ static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKey
 	}
 	for(short i = 0; i < 3; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
-		if(univ.party.special_notes.size() > i) {
-			me["str" + n].setText(univ.party.special_notes[i].the_str);
-			me["del" + n].show();
-		}
-		else me["del" + n].hide();
-	}
-	// TODO: What's this second loop for?
-	for(short i = store_page_on * 3; i < (store_page_on * 3) + 3; i++) {
-		std::string n = boost::lexical_cast<std::string>(i + 1);
-		if(univ.party.special_notes.size() > i) {
-			me["str" + n].setText(univ.party.special_notes[i].the_str);
+		if(univ.party.special_notes.size() > store_page_on * 3+i) {
+			me["str" + n].setText(univ.party.special_notes[store_page_on * 3+i].the_str);
 			me["del" + n].show();
 		}
 		else {
