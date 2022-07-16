@@ -155,6 +155,33 @@ template<typename Container> static void port_shop_spec_node(cSpecial& spec, std
 	spec.ex2a = spec.ex2b = -1;
 }
 
+static void port_special_text_response(cSpecial &special, cScenario& scenario)
+{
+	// 4-9: intro_strs : TODO
+	// 10-59: journal_strs : DONE
+	// 60-159: special_item name : DONE
+	// 160-259: special_strs : DONE
+	for (int step=0; step<2; ++step) {
+		auto &wh=step==0 ? special.ex1a : special.ex2a;
+		if (wh>=-100 && wh<0) { // (60-159)-160
+			int item=(wh+100)/2;
+			if (item < scenario.special_items.size()) {
+				wh=scenario.spec_strs.size();
+				scenario.spec_strs.push_back((wh%2 == 0) ? scenario.special_items[item].name : scenario.special_items[item].descr);
+			}
+		}
+		else if (wh>=-150 && wh<-100) { // (10-59) -160
+			int item=(wh+150);
+			if (item < scenario.journal_strs.size()) {
+				wh=scenario.spec_strs.size();
+				scenario.spec_strs.push_back(scenario.journal_strs[item]);
+			}
+		}
+		else if (wh==-161)
+			wh=-1;
+	}
+}
+
 static const std::string err_prefix = "Error loading Blades of Exile Scenario: ";
 bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_header){
 	bool file_ok = false;
@@ -274,11 +301,15 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	for(cSpecial& spec : scenario.scen_specials) {
 		if(spec.type == eSpecType::ENTER_SHOP)
 			port_shop_spec_node(spec, shops, scenario.spec_strs);
+		if(spec.type == eSpecType::IF_TEXT_RESPONSE)
+			port_special_text_response(spec, scenario);
 	}
 	for(cOutdoors* out : scenario.outdoors) {
 		for(cSpecial& spec : out->specials) {
 			if(spec.type == eSpecType::ENTER_SHOP)
 				port_shop_spec_node(spec, shops, out->spec_strs);
+			if(spec.type == eSpecType::IF_TEXT_RESPONSE)
+				port_special_text_response(spec, scenario);
 		}
 	}
 	// We'll check town nodes too, just in case.
@@ -286,6 +317,8 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 		for(cSpecial& spec : town->specials) {
 			if(spec.type == eSpecType::ENTER_SHOP)
 				port_shop_spec_node(spec, shops, town->spec_strs);
+			if(spec.type == eSpecType::IF_TEXT_RESPONSE)
+				port_special_text_response(spec, scenario);
 		}
 	}
 	
