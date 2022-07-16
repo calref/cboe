@@ -34,15 +34,12 @@ extern sf::RenderWindow mini_map;
 extern short which_combat_type;
 extern short cur_town_talk_loaded;
 extern cUniverse univ;
-extern bool mac_is_intel;
 
 bool loaded_yet = false, got_nagged = false;
 std::string last_load_file = "Blades of Exile Save";
 fs::path file_to_load;
 fs::path store_file_reply;
 short jl;
-
-extern bool cur_scen_is_mac;
 
 void print_write_position ();
 void save_outdoor_maps();

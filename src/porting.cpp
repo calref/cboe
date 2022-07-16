@@ -8,15 +8,31 @@
 
 #include "porting.hpp"
 
-extern bool cur_scen_is_mac, mac_is_intel;
-
-// check endian with cur_scen_is_mac and mac_is_intel
-// check cur_scen_is_mac to see if we need to convert RECT in Rect
+namespace porting {
+// check endian with cur_file_is_mac and is_computer_small_endian
+// check cur_file_is_mac to see if we need to convert RECT in Rect
 static void port_rect(legacy::Rect* s);
+
+bool is_computer_small_endian=true;
+void check_endian() {
+	union {uint16_t x; uint8_t c;} endian;
+	endian.x = 1;
+	is_computer_small_endian = endian.c;
+}
+bool is_small_endian()
+{
+	return is_computer_small_endian;
+}
+
+bool cur_file_is_mac=true;
+void set_current_file_type(bool isMac)
+{
+	cur_file_is_mac = isMac;
+}
 
 void port_town(legacy::town_record_type* dummy_town_ptr){
 	port_rect(&dummy_town_ptr->in_town_rect);
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	flip_short(&dummy_town_ptr->town_chop_time);
 	flip_short(&dummy_town_ptr->town_chop_key);
@@ -44,7 +60,7 @@ void port_town(legacy::town_record_type* dummy_town_ptr){
 }
 
 void port_talk_nodes(legacy::talking_record_type* dummy_talk_ptr) {
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	for(short i = 0; i < 60; i++) {
 		flip_short(&dummy_talk_ptr->talk_nodes[i].personality);
@@ -60,7 +76,7 @@ void port_t_d(legacy::big_tr_type* old) {
 	for(short i = 0; i < 16; i++)
 		port_rect(&old->room_rect[i]);
 
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	
 	for(short i = 0; i < 60; i++) {
@@ -75,7 +91,7 @@ void port_t_d(legacy::big_tr_type* old) {
 
 void port_t_i(legacy::town_item_list* old)
 {
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	for(short i = 0; i < 115; i++)
 		port_item_record(&(old->items[i]));
@@ -83,7 +99,7 @@ void port_t_i(legacy::town_item_list* old)
 
 void port_stored_items_list(legacy::stored_items_list_type *old)
 {
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	for(short i = 0; i < 115; i++)
 		port_item_record(&(old->items[i]));
@@ -93,7 +109,7 @@ void port_ave_t(legacy::ave_tr_type* old) {
 	for(short i = 0; i < 16; i++)
 		port_rect(&old->room_rect[i]);
 	
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	
 	for(short i = 0; i < 40; i++) {
@@ -110,7 +126,7 @@ void port_tiny_t(legacy::tiny_tr_type* old) {
 	for(short i = 0; i < 16; i++)
 		port_rect(&old->room_rect[i]);
 	
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	
 	for(short i = 0; i < 30; i++) {
@@ -127,7 +143,7 @@ void port_scenario(legacy::scenario_data_type* temp_scenario) {
 	for(short i = 0; i < 3; i++)
 		port_rect(&temp_scenario->store_item_rects[i]);
 
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	flip_short(&temp_scenario->flag_a);
 	flip_short(&temp_scenario->flag_b);
@@ -203,7 +219,7 @@ void port_scenario(legacy::scenario_data_type* temp_scenario) {
 }
 
 void port_item_record(legacy::item_record_type *old) {
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 
 	flip_short(&(old->variety));
@@ -212,7 +228,7 @@ void port_item_record(legacy::item_record_type *old) {
 }
 
 void port_item_list(legacy::scen_item_data_type* old){
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	
 	for(short i = 0; i < 400; i++)
@@ -223,7 +239,7 @@ void port_out(legacy::outdoor_record_type *out) {
 	for(short i = 0; i < 8; i++)
 		port_rect(&(out->info_rect[i]));
 
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	
 	for(short i = 0; i < 4; i++) {
@@ -245,7 +261,7 @@ void port_out(legacy::outdoor_record_type *out) {
 }
 
 void port_party(legacy::party_record_type* old){
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 
 	flip_long(&old->age);
@@ -330,7 +346,7 @@ void port_party(legacy::party_record_type* old){
 }
 
 void port_pc(legacy::pc_record_type* old){
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 
 	flip_short(&old->main_status);
@@ -359,7 +375,7 @@ void port_pc(legacy::pc_record_type* old){
 
 void port_c_town(legacy::current_town_type* old){
 	port_town(&old->town);
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	
 	flip_short(&old->town_num);
@@ -447,12 +463,13 @@ void flip_rect(legacy::Rect* s) {
 }
 
 void port_rect(legacy::Rect* s) {
-	if(cur_scen_is_mac == mac_is_intel) {
+	if(cur_file_is_mac == is_computer_small_endian) {
 		flip_short((int16_t *) &(s->top));
 		flip_short((int16_t *) &(s->bottom));
 		flip_short((int16_t *) &(s->left));
 		flip_short((int16_t *) &(s->right));
 	}
-	if(!cur_scen_is_mac) alter_rect(s);
+	if(!cur_file_is_mac) alter_rect(s);
 }
 
+}
