@@ -33,7 +33,7 @@ static fs::path get_posix_tempdir();
 #endif
 
 static void add_resmgr_paths(const fs::path& basePath) {
-	ResMgr::graphics.pushPath(basePath/"graphics");
+	ResMgr::textures.pushPath(basePath/"graphics");
 	ResMgr::cursors.pushPath(basePath/"cursors");
 	ResMgr::fonts.pushPath(basePath/"fonts");
 	ResMgr::strings.pushPath(basePath/"strings");
