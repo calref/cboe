@@ -2534,7 +2534,7 @@ void handle_hunting() {
 	for(cPlayer& pc : univ.party)
 		if(pc.is_alive() && pc.traits[trait] && get_ran(1,0,12) == 5) {
 			univ.party.food += get_ran(univ.scenario.ter_types[ter].flag1,1,6);
-			add_string_to_buf(pc.name + "hunts.");
+			add_string_to_buf(pc.name + " hunts.");
 			put_pc_screen();
 		}
 }
@@ -2629,7 +2629,7 @@ void start_new_game(bool force) {
 	
 	// Destroy party graphics
 	extern cCustomGraphics spec_scen_g;
-	spec_scen_g.party_sheet.reset();
+	spec_scen_g.party_sheet=Texture();
 	
 	// The original code called build_outdoors here, but they're not even in a scenario, so I removed it.
 	// It was probably a relic of Exile III.
