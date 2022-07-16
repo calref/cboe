@@ -25,6 +25,7 @@
 #include "mathutil.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
+#include "gfx/render_shapes.hpp"
 #include "tools/winutil.hpp"
 #include "fileio/fileio.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
@@ -578,6 +579,41 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	store_pre_talk_mode = overall_mode;
 	overall_mode = MODE_TALKING;
 	talk_end_forced = false;
+	
+	// first initialise talk_words here
+	talk_words.clear();
+	static const rectangle preset_rects[9] = {
+		rectangle{366,4,386,54}, rectangle{366,70,386,130}, rectangle{366,136,386,186},
+		rectangle{389,4,409,54}, rectangle{389,70,409,120}, rectangle{389,121,409,186},
+		rectangle{389,210,409,270}, rectangle{366,190,386,270},
+		rectangle{343,4,363,134},
+	};
+	static const char*const preset_words[9] = {
+		"Look", "Name", "Job",
+		"Buy", "Sell", "Record",
+		"Done", "Go Back",
+		"Ask About...",
+	};
+	
+	// Place buttons at bottom.
+	for(short i = 0; i < 9; i++) {
+		word_rect_t preset_word(preset_words[i], preset_rects[i]);
+		preset_word.on = Colours::DARK_GREEN;
+		preset_word.off = Colours::LIGHT_GREEN;
+		switch(i) {
+			case 0: preset_word.node = TALK_LOOK; break;
+			case 1: preset_word.node = TALK_NAME; break;
+			case 2: preset_word.node = TALK_JOB; break;
+			case 3: preset_word.node = TALK_BUY; break;
+			case 4: preset_word.node = TALK_SELL; break;
+			case 5: preset_word.node = TALK_RECORD; break;
+			case 6: preset_word.node = TALK_DONE; break;
+			case 7: preset_word.node = TALK_BACK; break;
+			case 8: preset_word.node = TALK_ASK; break;
+		}
+		talk_words.push_back(preset_word);
+	}
+	
 	stat_screen_mode = MODE_SHOP;
 	current_talk_node = TALK_LOOK;
 	
