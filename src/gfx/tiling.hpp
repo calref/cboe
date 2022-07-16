@@ -19,8 +19,10 @@ struct tessel_ref_t {
 
 bool operator==(const tessel_ref_t& a, const tessel_ref_t& b);
 
+struct Texture;
+
 void init_tiling();
-tessel_ref_t prepareForTiling(sf::Texture& srcImg, rectangle srcRect);
+tessel_ref_t prepareForTiling(Texture const &srcImg, rectangle srcRect);
 void tileImage(sf::RenderTarget& target, rectangle area, tessel_ref_t tessel, sf::BlendMode mode = sf::BlendNone);
 void tileImage(sf::RenderWindow& target, class Region& rgn, tessel_ref_t tessel, sf::BlendMode mode = sf::BlendNone);
 

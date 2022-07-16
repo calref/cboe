@@ -21,7 +21,6 @@ tessel_ref_t bw_pats[6];
 
 struct tessel_t {
 	sf::RenderTexture* tessel;
-	sf::Texture* img;
 	rectangle srcRect;
 };
 
@@ -40,9 +39,8 @@ template<> struct hash<tessel_ref_t> {
 std::unordered_map<tessel_ref_t, tessel_t> tiling_reservoir;
 static int tessel_index = 0;
 
-tessel_ref_t prepareForTiling(sf::Texture& srcImg, rectangle srcRect) {
+tessel_ref_t prepareForTiling(Texture const & srcImg, rectangle srcRect) {
 	tessel_ref_t ref = {tessel_index++};
-	tiling_reservoir[ref].img = &srcImg;
 	tiling_reservoir[ref].srcRect = srcRect;
 	tiling_reservoir[ref].tessel = new sf::RenderTexture;
 	tiling_reservoir[ref].tessel->create(srcRect.width(), srcRect.height());
@@ -102,8 +100,8 @@ void init_tiling() {
 	bg_rects[7].top += 32;
 	
 	rectangle bw_rect = {0,0,8,8};
-	sf::Texture& bg_gworld = *ResMgr::graphics.get("pixpats");
-	sf::Texture& bw_gworld = *ResMgr::graphics.get("bwpats");
+	auto const & bg_gworld = *ResMgr::textures.get("pixpats");
+	auto const & bw_gworld = *ResMgr::textures.get("bwpats");
 	for(int i = 0; i < 21; i++) {
 		if(i < 6) {
 			bw_pats[i] = prepareForTiling(bw_gworld, bw_rect);

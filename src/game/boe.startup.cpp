@@ -125,7 +125,7 @@ void show_logo() {
 	if (ui_scale<1) ui_scale=1;
 	rectangle logo_from = {0,0,int(ui_scale*350),int(ui_scale*350)};
 	logo_from.offset((whole_window.right - logo_from.right) / 2,(whole_window.bottom - logo_from.bottom) / 2);
-	sf::Texture& pict_to_draw = *ResMgr::graphics.get("spidlogo", true);
+	auto const &pict_to_draw = *ResMgr::textures.get("spidlogo", true);
 	
 	play_sound(-95);
 	while(sound_going(95)) {
@@ -148,7 +148,7 @@ void plop_fancy_startup() {
 	whole_window = rectangle(mainPtr);
 	sf::Time delay = time_in_ticks(220);
 	intro_from.offset((whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
-	sf::Texture& pict_to_draw = *ResMgr::graphics.get("startsplash", true);
+	auto const & pict_to_draw = *ResMgr::textures.get("startsplash", true);
 	
 	play_sound(-22);
 	sf::Clock timer;

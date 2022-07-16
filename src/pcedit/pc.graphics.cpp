@@ -191,13 +191,13 @@ void init_main_buttons() {
 
 void Set_up_win () {
 	// Preload the main PC editor interface images
-	ResMgr::graphics.get("pcedtitle");
-	ResMgr::graphics.get("icon");
-	ResMgr::graphics.get("invenbtns");
-	ResMgr::graphics.get("staticons");
-	ResMgr::graphics.get("dlogpics");
-	ResMgr::graphics.get("pcedbuttons");
-	ResMgr::graphics.get("pcs");
+	ResMgr::textures.get("pcedtitle");
+	ResMgr::textures.get("icon");
+	ResMgr::textures.get("invenbtns");
+	ResMgr::textures.get("staticons");
+	ResMgr::textures.get("dlogpics");
+	ResMgr::textures.get("pcedbuttons");
+	ResMgr::textures.get("pcs");
 }
 
 static void draw_main_screen();
@@ -242,12 +242,12 @@ void draw_main_screen() {
 	tileImage(mainPtr,windRect,bg[12]);
 	mainPtr.setView(mainView);
 	
-	sf::Texture& icon_gworld = *ResMgr::graphics.get("icon");
+	auto const &icon_gworld = *ResMgr::textures.get("icon");
 	dest_rec = source_rect = rectangle(icon_gworld);
 	dest_rec.offset(23, 16);
 	rect_draw_some_item(icon_gworld,source_rect,mainPtr,dest_rec);
 	
-	sf::Texture& title_gworld = *ResMgr::graphics.get("pcedtitle");
+	auto const &title_gworld = *ResMgr::textures.get("pcedtitle");
 	dest_rec = source_rect = rectangle(title_gworld);
 	dest_rec.offset(66, 0);
 	rect_draw_some_item(title_gworld,source_rect,mainPtr,dest_rec,sf::BlendAlpha);
@@ -345,7 +345,7 @@ void draw_items() {
 		frame_dlog_rect(mainPtr,name_rect); // draw the frame
 		return; // If PC is dead, it has no items
 	}
-	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
+	auto const & invenbtn_gworld = *ResMgr::textures.get("invenbtns");
 	for(short i = 0; i < univ.party[current_active_pc].items.size(); i++) // Loop through items and draw each
 		if(univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) { // i.e. does item exist
 			std::string to_draw = std::to_string(i + 1) + ". ";
@@ -387,7 +387,7 @@ void display_party() {
 		win_draw_string(mainPtr,no_party_rect,"No party loaded.",eTextMode::WRAP,style);
 	}
 	else {
-		sf::Texture& buttons_gworld = *ResMgr::graphics.get("pcedbuttons");
+		auto const &buttons_gworld = *ResMgr::textures.get("pcedbuttons");
 		from_rect = pc_info_rect;
 		from_rect.top = from_rect.bottom - 11;
 		if(!party_in_scen)
@@ -400,17 +400,16 @@ void display_party() {
 			else fill_rect(mainPtr, pc_area_buttons[i][0], sf::Color::Black);
 			
 			from_rect = (current_pressed_button == i) ? ed_buttons_from[1] : ed_buttons_from[0];
-			
 			rect_draw_some_item(buttons_gworld,from_rect,mainPtr,pc_area_buttons[i][0], sf::BlendAdd);
 			
 			if(univ.party[i].main_status != eMainStatus::ABSENT) { // PC exists?
 				// draw PC graphic
 				pic_num_t pic = univ.party[i].which_graphic;
-				std::shared_ptr<const sf::Texture> from_gw;
+				Texture from_gw;
 				if(pic >= 1000) {
 					bool isParty = pic >= 10000;
 					pic_num_t need_pic = pic % 1000;
-					graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(need_pic, isParty);
+					std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(need_pic, isParty);
 				} else if(pic >= 100) {
 					// Note that we assume it's a 1x1 graphic.
 					// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
@@ -418,12 +417,12 @@ void display_party() {
 					pic_num_t picture_wanted = m_pic_index[need_pic].i % 20;
 					from_rect = calc_rect(2 * (picture_wanted / 10), picture_wanted % 10);
 					int which_sheet = m_pic_index[need_pic].i / 20;
-					from_gw = &ResMgr::graphics.get("monst" + std::to_string(1 + which_sheet));
+					from_gw = *ResMgr::textures.get("monst" + std::to_string(1 + which_sheet));
 				} else {
 					from_rect = calc_rect(2 * (pic / 8), pic % 8);
-					from_gw = &ResMgr::graphics.get("pcs");
+					from_gw = *ResMgr::textures.get("pcs");
 				}
-				rect_draw_some_item(*from_gw,from_rect,mainPtr,pc_area_buttons[i][1],sf::BlendAlpha);
+				rect_draw_some_item(from_gw,from_rect,mainPtr,pc_area_buttons[i][1],sf::BlendAlpha);
 				
 				// draw name
 				style.pointSize = 9;

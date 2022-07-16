@@ -19,6 +19,7 @@
 #include <memory>
 #include "control.hpp"
 #include "pictypes.hpp"
+#include "gfx/texture.hpp"
 
 /// A simple icon.
 /// This control can also be made clickable.
@@ -88,7 +89,7 @@ public:
 	cPict& operator=(cPict& other) = delete;
 	cPict(cPict& other) = delete;
 private:
-	static std::shared_ptr<const sf::Texture> getSheet(eSheetType type, size_t n = 0);
+	static std::shared_ptr<const Texture> getSheet(eSheetType type, size_t n = 0);
 	static short animFrame;
 	pic_num_t picNum;
 	ePicType picType;
