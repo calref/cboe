@@ -194,11 +194,15 @@ void end_shop_mode() {
 	// If it was a random shop, we need to update the stored list of items so that bought items don't reappear
 	if(active_shop.getType() == eShopType::RANDOM) {
 		auto& this_shop = univ.party.magic_store_items[active_shop_num];
-		this_shop.clear();
+		/* FIXME: actually, we expect that the item quantity can be only equal to 1
+		          as in start_shop_mode, store_limited_stock is checked before the
+				  item is loaded from the magic store magic_store_items
+		 */
 		for(int i = 0; i < active_shop.size(); i++) {
 			cShopItem item = active_shop.getItem(i);
-			if(item.type == eShopItemType::TREASURE || item.type == eShopItemType::CLASS || item.type == eShopItemType::OPT_ITEM)
-				this_shop[i] = item.item;
+			if(item.quantity>0 && item.type == eShopItemType::EMPTY &&
+			   this_shop.find(i)!=this_shop.end())
+				this_shop.find(i)->second.variety = eItemType::NO_ITEM;
 		}
 	}
 	// We also need to save any limited stock
