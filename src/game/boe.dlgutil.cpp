@@ -114,8 +114,14 @@ void start_shop_mode(short which,short cost_adj,std::string store_name) {
 	active_shop.setName(store_name);
 	
 	area_rect = talk_area_rect;
-	talk_gworld.create(area_rect.width(), area_rect.height());
-	
+	float ui_scale= get_float_pref("UIScale", 1.0);
+	if (ui_scale < 1) ui_scale = 1.0;
+	talk_gworld.create(int(ui_scale*area_rect.width()), int(ui_scale*area_rect.height()));
+	sf::View view;
+	view.reset(sf::FloatRect(0,0, int(ui_scale*area_rect.width()), int(ui_scale*area_rect.height())));
+	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
+	talk_gworld.setView(view);
+
 	store_pre_shop_mode = overall_mode;
 	overall_mode = MODE_SHOPPING;
 	stat_screen_mode = MODE_SHOP;
@@ -561,7 +567,13 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	store_m_num = m_num;
 	store_talk_face_pic = store_face_pic; ////
 	area_rect = talk_area_rect;
-	talk_gworld.create(area_rect.width(), area_rect.height());
+	float ui_scale= get_float_pref("UIScale", 1.0);
+	if (ui_scale < 1) ui_scale = 1.0;
+	talk_gworld.create(int(ui_scale*area_rect.width()), int(ui_scale*area_rect.height()));
+	sf::View view;
+	view.reset(sf::FloatRect(0,0, talk_gworld.getSize().x, talk_gworld.getSize().y));
+	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
+	talk_gworld.setView(view);
 	help_btn->show();
 	
 	// This would be the place to show the text box, if I add it.

@@ -17,9 +17,7 @@ class TextureLoader : public ResMgr::cLoader<Texture> {
 		if(img->loadFromFile(fpath.string())) {
 			Texture *texture=new Texture;
 			texture->texture=img;
-			texture->dimension=Texture::getApplicationDimension(fpath.filename().string());
-			if (texture->dimension.x==0 || texture->dimension.y==0)
-				texture->dimension=sf::Vector2u(img->getSize());
+			texture->dimension=Texture::getApplicationDimension(fpath.filename().string(),sf::Vector2u(img->getSize()));
 			return texture;
 		}
 		throw ResMgr::xError(ResMgr::ERR_LOAD, "Failed to load PNG image: " + fpath.string());

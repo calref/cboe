@@ -56,8 +56,8 @@ struct Texture {
 	operator rectangle() const {
 		return rectangle(0, 0, dimension.y, dimension.x);
 	}
-    static sf::Vector2u getApplicationDimension(std::string const &name) {
-        if (name.size()<5 || name.substr(name.size()-4)!=".png") return {0,0};
+	static sf::Vector2u getApplicationDimension(std::string const &name, sf::Vector2u imgSize) {
+		if (name.size()<5 || name.substr(name.size()-4)!=".png") return imgSize;
         std::string const base=name.substr(0,name.size()-4);
         static std::map<std::string, sf::Vector2u> nameToDimensions = {
 			{ "actionhelp", {275,100} },
@@ -120,7 +120,13 @@ struct Texture {
             return {280,180};
 		if (base.size()>=6 && base.substr(0,5)=="monst" && base.substr(5).find_first_not_of( "0123456789" ) == std::string::npos)
 			return {224,360};
-		return {0,0};
+		if (base.size()>=6 && base.substr(0,5)=="sheet" && base.substr(5).find_first_not_of( "0123456789" ) == std::string::npos) {
+		   if (base.size()<=7 && (base.size()==6 || base[5]=='0' || base[5]=='1') && imgSize.x>280) {
+			   // assume that this is a scaled terrain/object sheet in a scenario
+			   return {280,unsigned(280/float(imgSize.x)*imgSize.y)};
+		   }
+		}
+	   return imgSize;
     }
 	std::shared_ptr<const sf::Texture> texture;
 	sf::Vector2u dimension;
