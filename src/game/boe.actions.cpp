@@ -1634,6 +1634,7 @@ bool handle_keystroke(const sf::Event& event){
 	else if(chr2 == kb::PageDown) chr2 = kb::Numpad3;
 	
 	sf::Event pass_event = {sf::Event::MouseButtonPressed};
+	extern rectangle talk_area_rect;
 	if(overall_mode == MODE_TALKING) {
 		if(chr2 == kb::Escape)
 			chr2 = kb::D;
@@ -1642,8 +1643,10 @@ bool handle_keystroke(const sf::Event& event){
 		for(short i = 0; i < 9; i++)
 			if(chr2 == talk_chars[i] && (!talk_end_forced || i == 6 || i == 5)) {
 				int j = talk_end_forced ? i - 5 : i;
+				// related to talk_area_rect, unsure why adding +9 is needed?
 				pass_point = talk_words[j].rect.topLeft();
-				pass_point.x += 9; pass_point.y += 9;
+				pass_point.x += talk_area_rect.left+9;
+				pass_point.y += talk_area_rect.top+9;
 				pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
 				pass_event.mouseButton.x = pass_point.x;
 				pass_event.mouseButton.y = pass_point.y;
@@ -1658,7 +1661,9 @@ bool handle_keystroke(const sf::Event& event){
 		for(short i = 0; i < 8; i++)
 			if(chr2 == shop_chars[i]) {
 				pass_point = shopping_rects[i][SHOPRECT_ACTIVE_AREA].topLeft();
-				pass_point.x += 9; pass_point.y += 9;
+				// related to talk_area_rect
+				pass_point.x += talk_area_rect.left+9;
+				pass_point.y += talk_area_rect.top+9;
 				pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
 				pass_event.mouseButton.x = pass_point.x;
 				pass_event.mouseButton.y = pass_point.y;
@@ -2590,7 +2595,7 @@ void handle_death() {
 			if(univ.party.is_alive()) {
 				if(overall_mode == MODE_STARTUP)
 					post_load(), finish_load_party();
-            	return;
+				return;
 			}
 		}
 		else if(choice == "new") {
