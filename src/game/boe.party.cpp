@@ -1553,7 +1553,7 @@ bool pc_can_cast_spell(const cPlayer& pc,eSpell spell_num) {
 
 static void draw_caster_buttons(cDialog& me, const eSkill store_situation) {
 	for(short i = 0; i < 6; i++) {
-		std::string id = "caster" + boost::lexical_cast<std::string>(i + 1);
+		std::string id = "caster" + std::to_string(i + 1);
 		if(!can_choose_caster) {
 			if(i == pc_casting) {
 				me[id].show();
@@ -1578,7 +1578,7 @@ static void draw_spell_info(cDialog& me, const eSkill store_situation, const sho
 	
 	if(store_spell == 70) { // No spell selected
 		for(int i = 0; i < 6; i++) {
-			std::string id = "target" + boost::lexical_cast<std::string>(i + 1);
+			std::string id = "target" + std::to_string(i + 1);
 			me[id].hide();
 		}
 		
@@ -1586,7 +1586,7 @@ static void draw_spell_info(cDialog& me, const eSkill store_situation, const sho
 	else { // Spell selected
 		
 		for(int i = 0; i < 6; i++) {
-			std::string id = "target" + boost::lexical_cast<std::string>(i + 1);
+			std::string id = "target" + std::to_string(i + 1);
 			switch((*cSpell::fromNum(store_situation,store_spell)).need_select) {
 				case SELECT_NO:
 					me[id].hide();
@@ -1645,7 +1645,7 @@ static void put_target_status_graphics(cDialog& me, short for_pc) {
 
 static void draw_spell_pc_info(cDialog& me) {
 	for(short i = 0; i < 6; i++) {
-		std::string n = boost::lexical_cast<std::string>(i + 1);
+		std::string n = std::to_string(i + 1);
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			me["pc" + n].setText(univ.party[i].name);
 			
@@ -1661,7 +1661,7 @@ static void draw_spell_pc_info(cDialog& me) {
 
 static void put_pc_caster_buttons(cDialog& me) {
 	for(short i = 0; i < 6; i++) {
-		std::string n = boost::lexical_cast<std::string>(i + 1);
+		std::string n = std::to_string(i + 1);
 		if(me["caster" + n].isVisible()) {
 			if(i == pc_casting)
 				me["pc" + n].setColour(Colours::RED);
@@ -1673,12 +1673,12 @@ static void put_pc_caster_buttons(cDialog& me) {
 static void put_pc_target_buttons(cDialog& me, short& store_last_target_darkened) {
 	
 	if(store_spell_target < 6) {
-		std::string n = boost::lexical_cast<std::string>(store_spell_target + 1);
+		std::string n = std::to_string(store_spell_target + 1);
 		me["hp" + n].setColour(Colours::RED);
 		me["sp" + n].setColour(Colours::RED);
 	}
 	if((store_last_target_darkened < 6) && (store_last_target_darkened != store_spell_target)) {
-		std::string n = boost::lexical_cast<std::string>(store_last_target_darkened + 1);
+		std::string n = std::to_string(store_last_target_darkened + 1);
 		me["hp" + n].setColour(me.getDefTextClr());
 		me["sp" + n].setColour(me.getDefTextClr());
 	}
@@ -1691,7 +1691,7 @@ static void put_spell_led_buttons(cDialog& me, const eSkill store_situation,cons
 	
 	for(short i = 0; i < 38; i++) {
 		spell_for_this_button = (on_which_spell_page == 0) ? i : spell_index[i];
-		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+		std::string id = "spell" + std::to_string(i + 1);
 		cLed& led = dynamic_cast<cLed&>(me[id]);
 		
 		if(spell_for_this_button < 90) {
@@ -1717,7 +1717,7 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 		me["col4"].setText("Level 4:");
 		for(short i = 0; i < 38; i++) {
 			std::ostringstream name;
-			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+			std::string id = "spell" + std::to_string(i + 1);
 			name << get_str("magic-names", i + (store_situation == eSkill::MAGE_SPELLS ? 1 : 101));
 			name << " (";
 			if((*cSpell::fromNum(store_situation,i)).cost < 0) { // Simulacrum, which has a variable cost
@@ -1736,7 +1736,7 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 		me["col4"].setText("");
 		for(short i = 0; i < 38; i++) {
 			std::ostringstream name;
-			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+			std::string id = "spell" + std::to_string(i + 1);
 			if(spell_index[i] < 90) {
 				name << get_str("magic-names", spell_index[i] + (store_situation == eSkill::MAGE_SPELLS ? 1 : 101));
 				name << " (";
@@ -1821,7 +1821,7 @@ static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods, con
 		put_spell_led_buttons(me, store_situation, store_spell);
 		
 		if(store_spell_target < 6) {
-			std::string targ = "target" + boost::lexical_cast<std::string>(store_spell_target + 1);
+			std::string targ = "target" + std::to_string(store_spell_target + 1);
 			if(!me[targ].isVisible()) {
 				store_spell_target = 6;
 				draw_spell_info(me, store_situation, store_spell);
@@ -1829,7 +1829,7 @@ static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods, con
 			}
 		}
 		// Cute trick now... if a target is needed, caster can always be picked
-		std::string targ = "target" + boost::lexical_cast<std::string>(pc_casting + 1);
+		std::string targ = "target" + std::to_string(pc_casting + 1);
 		if((store_spell_target == 6) && me[targ].isVisible()) {
 			me["feedback"].setText(choose_target);
 			draw_spell_info(me, store_situation, store_spell);
@@ -1986,7 +1986,7 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	
 	dynamic_cast<cPict&>(castSpell["pic"]).setPict(14 + (type == eSkill::PRIEST_SPELLS),PIC_DLOG);
 	for(int i = 0; i < 38; i++) {
-		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+		std::string id = "spell" + std::to_string(i + 1);
 		cKey key;
 		if(i > 25)
 			key = {false, static_cast<unsigned char>('a' + i - 26), mod_shift};
@@ -2140,7 +2140,7 @@ eAlchemy alch_choice(short pc_num) {
 	cDialog chooseAlchemy(*ResMgr::dialogs.get("pick-potion"));
 	chooseAlchemy.attachClickHandlers(alch_choice_event_filter, {"cancel", "help"});
 	for(short i = 0; i < 20; i++) {
-		std::string n = boost::lexical_cast<std::string>(i + 1);
+		std::string n = std::to_string(i + 1);
 		chooseAlchemy["label" + n].setText(get_str("magic-names", i + 200));
 		chooseAlchemy["potion" + n].attachClickHandler(alch_choice_event_filter);
 		if(univ.party[pc_num].skill(eSkill::ALCHEMY) < difficulty[i] || !univ.party.alchemy[i])
@@ -2216,7 +2216,7 @@ mon_num_t pick_trapped_monst() {
 	cChoiceDlog soulCrystal("soul-crystal",{"cancel","pick1","pick2","pick3","pick4"});
 	
 	for(mon_num_t which : univ.party.imprisoned_monst) {
-		std::string n = boost::lexical_cast<std::string>(i + 1);
+		std::string n = std::to_string(i + 1);
 		if(which == 0) {
 			soulCrystal->getControl("pick" + n).hide();
 		}

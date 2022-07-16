@@ -50,7 +50,7 @@ public:
 		std::array<mon_num_t,4> monst;
 		
 		bool isNull();
-		void import_legacy(legacy::wandering_type old);
+		void import_legacy(legacy::wandering_type const &old);
 	};
 	class cItem { // formerly preset_item_type
 	public:
@@ -59,7 +59,7 @@ public:
 		int charges = -1;
 		bool always_there = false, property = false, contained = false;
 		
-		void import_legacy(legacy::preset_item_type old);
+		void import_legacy(legacy::preset_item_type const &old);
 		cItem();
 		cItem(location loc, short num, ::cItem& item);
 	};
@@ -68,7 +68,7 @@ public:
 		location loc;
 		eFieldType type;
 		
-		void import_legacy(legacy::preset_field_type old);
+		void import_legacy(legacy::preset_field_type const &old);
 		cField() : type(FIELD_DISPEL) {}
 		cField(location l, eFieldType t) : loc(l), type(t) {}
 	};
@@ -104,14 +104,14 @@ public:
 	long m_killed = 0;
 	
 	template<typename T>
-	void import_legacy(T& old, int town_num);
+	void import_legacy(T const & old, int town_num);
 	void init_start();
 	void set_up_lights();
 	short light_obscurity(short x,short y); // Obscurity function used for calculating lighting
 	bool is_cleaned_out();
 	
 	explicit cTown(cScenario& scenario, size_t dim);
-	void import_legacy(legacy::town_record_type& old);
+	void import_legacy(legacy::town_record_type const & old);
 	void reattach(cScenario& to);
 	void writeTerrainTo(std::ostream& file);
 	void readTerrainFrom(std::istream& file);

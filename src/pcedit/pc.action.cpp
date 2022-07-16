@@ -12,7 +12,6 @@
 #include "dialogxml/widgets/control.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
 #include "tools/cursors.hpp"
-#include <boost/lexical_cast.hpp>
 
 extern cUniverse univ;
 extern sf::RenderWindow mainPtr;
