@@ -23,7 +23,6 @@
 
 #define	DONE_BUTTON_ITEM	1
 
-extern bool end_scenario;
 extern eStatMode stat_screen_mode;
 extern eGameMode overall_mode;
 extern bool party_in_memory;
@@ -59,7 +58,6 @@ cCustomGraphics spec_scen_g;
 void finish_load_party(){
 	bool town_restore = univ.party.town_num < 200;
 	
-	end_scenario = false;
 	party_in_memory = true;
 	
 	// now if not in scen, this is it.

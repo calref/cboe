@@ -58,6 +58,7 @@ extern eSpecCtxType spec_target_type;
 extern short spec_target_fail, spec_target_options;
 bool spell_button_active[90];
 
+extern bool end_scenario;
 extern short fast_bang;
 extern bool flushingInput;
 extern eItemWinMode stat_window;
@@ -152,9 +153,9 @@ void put_party_in_scen(std::string scen_name) {
 		return;
 	}
 	set_cursor(watch_curs);
+	end_scenario=false;
 	if(!load_scenario(path, univ.scenario))
 		return;
-	
 	bool stored_item = false;
 	for(auto& store : univ.party.stored_items)
 		stored_item = stored_item || std::any_of(store.begin(), store.end(), [](const cItem& item) {
