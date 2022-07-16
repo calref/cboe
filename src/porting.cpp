@@ -10,7 +10,12 @@
 
 extern bool cur_scen_is_mac, mac_is_intel;
 
+// check endian with cur_scen_is_mac and mac_is_intel
+// check cur_scen_is_mac to see if we need to convert RECT in Rect
+static void port_rect(legacy::Rect* s);
+
 void port_town(legacy::town_record_type* dummy_town_ptr){
+	port_rect(&dummy_town_ptr->in_town_rect);
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
 	flip_short(&dummy_town_ptr->town_chop_time);
@@ -18,7 +23,6 @@ void port_town(legacy::town_record_type* dummy_town_ptr){
 	flip_short(&dummy_town_ptr->lighting);
 	for(short i = 0; i < 4; i++)
 		flip_short(&dummy_town_ptr->exit_specs[i]);
-	flip_rect(&dummy_town_ptr->in_town_rect);
 	for(short i = 0; i < 64; i++) {
 		flip_short(&dummy_town_ptr->preset_items[i].item_code);
 		flip_short(&dummy_town_ptr->preset_items[i].ability);
@@ -53,11 +57,12 @@ void port_talk_nodes(legacy::talking_record_type* dummy_talk_ptr) {
 }
 
 void port_t_d(legacy::big_tr_type* old) {
+	for(short i = 0; i < 16; i++)
+		port_rect(&old->room_rect[i]);
+
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
 	
-	for(short i = 0; i < 16; i++)
-		flip_rect(&old->room_rect[i]);
 	for(short i = 0; i < 60; i++) {
 		flip_short(&old->creatures[i].spec1);
 		flip_short(&old->creatures[i].spec2);
@@ -85,11 +90,12 @@ void port_stored_items_list(legacy::stored_items_list_type *old)
 }
 
 void port_ave_t(legacy::ave_tr_type* old) {
+	for(short i = 0; i < 16; i++)
+		port_rect(&old->room_rect[i]);
+	
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
 	
-	for(short i = 0; i < 16; i++)
-		flip_rect(&old->room_rect[i]);
 	for(short i = 0; i < 40; i++) {
 		flip_short(&old->creatures[i].spec1);
 		flip_short(&old->creatures[i].spec2);
@@ -101,11 +107,12 @@ void port_ave_t(legacy::ave_tr_type* old) {
 }
 
 void port_tiny_t(legacy::tiny_tr_type* old) {
+	for(short i = 0; i < 16; i++)
+		port_rect(&old->room_rect[i]);
+	
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
 	
-	for(short i = 0; i < 16; i++)
-		flip_rect(&old->room_rect[i]);
 	for(short i = 0; i < 30; i++) {
 		flip_short(&old->creatures[i].spec1);
 		flip_short(&old->creatures[i].spec2);
@@ -117,6 +124,9 @@ void port_tiny_t(legacy::tiny_tr_type* old) {
 }
 
 void port_scenario(legacy::scenario_data_type* temp_scenario) {
+	for(short i = 0; i < 3; i++)
+		port_rect(&temp_scenario->store_item_rects[i]);
+
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
 	flip_short(&temp_scenario->flag_a);
@@ -142,8 +152,6 @@ void port_scenario(legacy::scenario_data_type* temp_scenario) {
 	for(short i = 0; i < 100; i++)
 		for(short j = 0; j < 2; j++)
 			flip_short(&temp_scenario->out_data_size[i][j]);
-	for(short i = 0; i < 3; i++)
-		flip_rect(&temp_scenario->store_item_rects[i]);
 	for(short i = 0; i < 3; i++)
 		flip_short(&temp_scenario->store_item_towns[i]);
 	for(short i = 0; i < 50; i++)
@@ -212,6 +220,9 @@ void port_item_list(legacy::scen_item_data_type* old){
 }
 
 void port_out(legacy::outdoor_record_type *out) {
+	for(short i = 0; i < 8; i++)
+		port_rect(&(out->info_rect[i]));
+
 	if(cur_scen_is_mac != mac_is_intel)
 		return;
 	
@@ -229,13 +240,14 @@ void port_out(legacy::outdoor_record_type *out) {
 		flip_short(&(out->special_enc[i].end_spec1));
 		flip_short(&(out->special_enc[i].end_spec2));
 	}
-	for(short i = 0; i < 8; i++)
-		flip_rect(&(out->info_rect[i]));
 	for(short i = 0; i < 60; i++)
 		flip_spec_node(&(out->specials[i]));
 }
 
 void port_party(legacy::party_record_type* old){
+	if(cur_scen_is_mac != mac_is_intel)
+		return;
+
 	flip_long(&old->age);
 	flip_short(&old->gold);
 	flip_short(&old->food);
@@ -318,6 +330,9 @@ void port_party(legacy::party_record_type* old){
 }
 
 void port_pc(legacy::pc_record_type* old){
+	if(cur_scen_is_mac != mac_is_intel)
+		return;
+
 	flip_short(&old->main_status);
 	for(short i = 0; i < 30; i++)
 		flip_short(&old->skills[i]);
@@ -343,9 +358,12 @@ void port_pc(legacy::pc_record_type* old){
 }
 
 void port_c_town(legacy::current_town_type* old){
+	port_town(&old->town);
+	if(cur_scen_is_mac != mac_is_intel)
+		return;
+	
 	flip_short(&old->town_num);
 	flip_short(&old->difficulty);
-	port_town(&old->town);
 	flip_short(&old->monst.which_town);
 	flip_short(&old->monst.hostile);
 	for(short j = 0; j < 60; j++){
@@ -426,5 +444,15 @@ void flip_rect(legacy::Rect* s) {
 	flip_short((int16_t *) &(s->bottom));
 	flip_short((int16_t *) &(s->left));
 	flip_short((int16_t *) &(s->right));
+}
+
+void port_rect(legacy::Rect* s) {
+	if(cur_scen_is_mac == mac_is_intel) {
+		flip_short((int16_t *) &(s->top));
+		flip_short((int16_t *) &(s->bottom));
+		flip_short((int16_t *) &(s->left));
+		flip_short((int16_t *) &(s->right));
+	}
 	if(!cur_scen_is_mac) alter_rect(s);
 }
+
