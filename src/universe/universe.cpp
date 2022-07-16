@@ -20,13 +20,13 @@
 #include "fileio/fileio.hpp"
 #include "gfx/gfxsheets.hpp"
 
-void cCurOut::import_legacy(legacy::out_info_type& old){
+void cCurOut::import_legacy(legacy::out_info_type const &old){
 	for(int i = 0; i < 96; i++)
 		for(int j = 0; j < 96; j++)
 			out_e[i][j] = old.expl[i][j];
 }
 
-void cCurTown::import_legacy(legacy::current_town_type& old){
+void cCurTown::import_legacy(legacy::current_town_type const &old){
 	univ.party.town_num = old.town_num;
 	difficulty = old.difficulty;
 	record()->import_legacy(old.town);
@@ -39,7 +39,7 @@ void cCurTown::import_legacy(legacy::current_town_type& old){
 	cur_talk_loaded = old.town_num;
 }
 
-void cCurTown::import_legacy(legacy::big_tr_type& old){
+void cCurTown::import_legacy(legacy::big_tr_type const &old){
 	for(short i = 0; i < record()->max_dim; i++)
 		for(short j = 0; j < record()->max_dim; j++)
 			record()->terrain(i,j) = old.terrain[i][j];
@@ -59,13 +59,13 @@ void cCurTown::import_legacy(legacy::big_tr_type& old){
 		}
 }
 
-void cCurTown::import_legacy(legacy::town_item_list& old){
+void cCurTown::import_legacy(legacy::town_item_list const &old){
 	items.resize(115);
 	for(int i = 0; i < 115; i++)
 		items[i].import_legacy(old.items[i]);
 }
 
-void cUniverse::import_legacy(legacy::stored_town_maps_type& old){
+void cUniverse::import_legacy(legacy::stored_town_maps_type const &old){
 	for(int n = 0; n < scenario.towns.size(); n++)
 		for(size_t j = 0; j < scenario.towns[n]->maps.size(); j++)
 			for(int i = 0; i < scenario.towns[n]->maps[j].size(); i++)
@@ -76,7 +76,7 @@ static short onm(char x_sector,char y_sector, char w) {
 	return y_sector * w + x_sector;
 }
 
-void cUniverse::import_legacy(legacy::stored_outdoor_maps_type& old){
+void cUniverse::import_legacy(legacy::stored_outdoor_maps_type const &old){
 	for(int x = 0; x < scenario.outdoors.width(); x++)
 		for(int y = 0; y < scenario.outdoors.height(); y++)
 			for(int i = 0; i < 48; i++)
