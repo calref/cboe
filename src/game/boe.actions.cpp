@@ -1642,9 +1642,8 @@ bool handle_keystroke(const sf::Event& event){
 			chr2 = kb::G;
 		for(short i = 0; i < 9; i++)
 			if(chr2 == talk_chars[i] && (!talk_end_forced || i == 6 || i == 5)) {
-				int j = talk_end_forced ? i - 5 : i;
 				// related to talk_area_rect, unsure why adding +9 is needed?
-				pass_point = talk_words[j].rect.topLeft();
+				pass_point = talk_words[i].rect.topLeft();
 				pass_point.x += talk_area_rect.left+9;
 				pass_point.y += talk_area_rect.top+9;
 				pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
