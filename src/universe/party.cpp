@@ -236,8 +236,15 @@ void cParty::import_legacy(legacy::party_record_type& old, cUniverse& univ){
 		t.node = old.node_to_call[i];
 		party_event_timers.push_back(t);
 	}
+	std::set<int> seen_towns;
 	for(short i = 0; i < 4; i++){
 		creature_save[i].import_legacy(old.creature_save[i]);
+		// check if the town has already been saved, if yes, sets it to unknown: 200
+		// ie. old save can have many towns 0, we want only to use the first one
+		if (seen_towns.find(creature_save[i].which_town)!=seen_towns.end())
+			creature_save[i].which_town=200;
+		else
+			seen_towns.insert(creature_save[i].which_town);
 		imprisoned_monst[i] = old.imprisoned_monst[i];
 	}
 	in_boat = old.in_boat;
@@ -269,6 +276,10 @@ void cParty::import_legacy(legacy::party_record_type& old, cUniverse& univ){
 	at_which_save_slot = old.at_which_save_slot;
 	for(short i = 0; i < 20 ; i++)
 		alchemy[i] = old.alchemy[i];
+	for (short i=0; i<50; i++) {
+		if (old.spec_items[i]>0)
+			spec_items.insert(i);
+	}
 	for(short i = 0; i < univ.scenario.towns.size(); i++){
 		univ.scenario.towns[i]->can_find = old.can_find_town[i];
 		univ.scenario.towns[i]->m_killed = old.m_killed[i];
@@ -293,7 +304,9 @@ void cParty::import_legacy(legacy::setup_save_type& old){
 	for(int n = 0; n < 4; n++)
 		for(int i = 0; i < 64; i++)
 			for(int j = 0; j < 64; j++)
-				setup[n][i][j] = old.setup[n][i][j];
+				// boe stored here misc_i, ...
+				// unsure maybe we want here (old&0xfe)<<8
+				setup[n][i][j] = (old.setup[n][i][j]<<8);
 }
 
 void cParty::cConvers::import_legacy(legacy::talk_save_type old, const cScenario& scenario){
