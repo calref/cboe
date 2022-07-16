@@ -47,10 +47,10 @@ public:
 	
 	std::vector<cItem> items; // formerly town_item_list type
 	
-	void import_legacy(legacy::current_town_type& old);
-	void import_legacy(legacy::town_item_list& old);
+	void import_legacy(legacy::current_town_type const &old);
+	void import_legacy(legacy::town_item_list const &old);
 	void import_reset_fields_legacy();
-	void import_legacy(legacy::big_tr_type& old);
+	void import_legacy(legacy::big_tr_type const &old);
 	
 	cTown* operator -> ();
 	cTown& operator * ();
@@ -152,7 +152,7 @@ public:
 	bool is_road(int x, int y) const;
 	bool is_on_map(int x, int y) const;
 	
-	void import_legacy(legacy::out_info_type& old);
+	void import_legacy(legacy::out_info_type const &old);
 	
 	using arr_96 = decltype(out)::value_type;
 	arr_96& operator [] (size_t i);
@@ -220,8 +220,8 @@ public:
 	bool node_step_through { false };
 	
 	void clear_stored_pcs();
-	void import_legacy(legacy::stored_town_maps_type& old);
-	void import_legacy(legacy::stored_outdoor_maps_type& old);
+	void import_legacy(legacy::stored_town_maps_type const &old);
+	void import_legacy(legacy::stored_outdoor_maps_type const &old);
 	void enter_scenario(const std::string& name);
 	void refresh_store_items();
 	void generate_job_bank(int which, job_bank_t& bank);

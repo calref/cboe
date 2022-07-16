@@ -211,7 +211,7 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 		item_odds[i] = 0;
 }
 
-void cScenario::import_legacy(legacy::scenario_data_type& old){
+void cScenario::import_legacy(legacy::scenario_data_type const &old){
 	is_legacy = true;
 	difficulty = old.difficulty;
 	intro_pic = old.intro_pic;
@@ -278,7 +278,7 @@ void cScenario::import_legacy(legacy::scenario_data_type& old){
 	adjust_diff = true;
 }
 
-cScenario::cItemStorage& cScenario::cItemStorage::operator = (legacy::item_storage_shortcut_type& old){
+cScenario::cItemStorage& cScenario::cItemStorage::operator = (legacy::item_storage_shortcut_type const &old){
 	ter_type = old.ter_type;
 	for(int i = 0; i < 10; i++) item_num[i] = old.item_num[i];
 	for(int i = 0; i < 10; i++) item_odds[i] = old.item_odds[i];
@@ -286,7 +286,7 @@ cScenario::cItemStorage& cScenario::cItemStorage::operator = (legacy::item_stora
 	return *this;
 }
 
-void cScenario::import_legacy(legacy::scen_item_data_type& old){
+void cScenario::import_legacy(legacy::scen_item_data_type const &old){
 	scen_items.resize(400);
 	for(short i = 0; i < 400; i++)
 		scen_items[i].import_legacy(old.scen_items[i]);

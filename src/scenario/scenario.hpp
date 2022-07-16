@@ -48,7 +48,7 @@ public:
 		short item_odds[10];
 		short property;
 		cItemStorage();
-		cItemStorage& operator = (legacy::item_storage_shortcut_type& old);
+		cItemStorage& operator = (legacy::item_storage_shortcut_type const &old);
 	};
 	void destroy_terrain();
 public:
@@ -96,8 +96,8 @@ public:
 		towns.push_back(new cTown(*this, dim));
 	}
 	
-	void import_legacy(legacy::scenario_data_type& old);
-	void import_legacy(legacy::scen_item_data_type& old);
+	void import_legacy(legacy::scenario_data_type const &old);
+	void import_legacy(legacy::scen_item_data_type const &old);
 	void writeTo(cTagFile& file) const;
 	void readFrom(const cTagFile& file);
 	std::string format_scen_version() const;

@@ -46,7 +46,7 @@ public:
 	unsigned short i; // for temporary use in porting
 	
 	bool blocksMove() const;
-	void import_legacy(legacy::terrain_type_type& old);
+	void import_legacy(legacy::terrain_type_type const &old);
 	void writeTo(std::ostream& file) const;
 };
 

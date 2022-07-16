@@ -50,7 +50,7 @@ public:
 		bool cant_flee, forced;
 		
 		bool isNull() const;
-		void import_legacy(legacy::out_wandering_type old);
+		void import_legacy(legacy::out_wandering_type const &old);
 		void writeTo(cTagFile_Page& page) const;
 		void readFrom(const cTagFile_Page& page);
 		cWandering();
@@ -62,7 +62,7 @@ public:
 		cWandering what_monst;
 		location which_sector,m_loc,home_sector; // home_sector is the sector it was spawned in
 		
-		void import_legacy(legacy::outdoor_creature_type old);
+		void import_legacy(legacy::outdoor_creature_type const &old);
 		void writeTo(cTagFile_Page& page) const;
 		void readFrom(const cTagFile_Page& page);
 	};
@@ -79,7 +79,7 @@ public:
 	int bg_out, bg_fight, bg_town, bg_dungeon;
 	
 	explicit cOutdoors(cScenario& scenario);
-	void import_legacy(legacy::outdoor_record_type& old);
+	void import_legacy(legacy::outdoor_record_type const &old);
 	void reattach(cScenario& to);
 };
 

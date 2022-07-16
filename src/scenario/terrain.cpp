@@ -18,7 +18,7 @@
 #include "gfx/gfxsheets.hpp" // for NO_PIC
 #include "damage.hpp"
 
-void cTerrain::import_legacy(legacy::terrain_type_type& old){
+void cTerrain::import_legacy(legacy::terrain_type_type const &old){
 	static const std::set<int> archetypes = {
 		// This lists graphics that represent the archetypal terrains for each ground type
 		// One line per graphics sheet; last line is the animated sheet
