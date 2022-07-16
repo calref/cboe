@@ -481,23 +481,22 @@ void end_startup() {
 	item_sbar->show();
 }
 
-/* FIXME: actually the resolution of imgName sets the resolution of the final texture zone.
-   It may be better to add another Vector2u to define this resolution independly of imgName */
+/* FIXME: normally, the renderTexture needed to be destroyed and recreated if the user
+		  change the UI scaling. Let assume for now that he restarts the application */
 static rectangle loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName) {
 	auto const& temp_gworld = *ResMgr::graphics.get(imgName);
+	
+	float ui_scale = get_float_pref("UIScale", 1.0);
+	if(ui_scale < 1) ui_scale = 1.0;
+
 	rectangle texrect(*temp_gworld);
-	tex.create(texrect.width(), texrect.height());
-	rect_draw_some_item(temp_gworld, rectangle(temp_gworld), tex, texrect, sf::BlendNone);
+	tex.create(int(ui_scale*temp_gworld.dimension.x), int(ui_scale*temp_gworld.dimension.y));
+	rect_draw_some_item(temp_gworld, rectangle(temp_gworld), tex, rectangle(tex), sf::BlendNone);
 
 	// now update the viewport so that a picture draw in 0,0,dim.y,dim.x fills the texture
 	sf::View view;
-	view.reset(sf::FloatRect(0, 0, texrect.width(), texrect.height()));
-	sf::FloatRect viewport;
-	viewport.left = 0;
-	viewport.top  = 0;
-	viewport.width  = float(texrect.width())/temp_gworld.dimension.x;
-	viewport.height = float(texrect.height())/temp_gworld.dimension.y;
-	view.setViewport(viewport);
+	view.reset(sf::FloatRect(0, 0, rectangle(tex).width(), rectangle(tex).height()));
+	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
 	tex.setView(view);
 	return rectangle(0,0,temp_gworld.dimension.y,temp_gworld.dimension.x);
 }
