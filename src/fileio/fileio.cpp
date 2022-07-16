@@ -14,13 +14,13 @@
 #include <cstdlib>
 #include <boost/filesystem/operations.hpp>
 
+#include "porting.hpp"
 #include "fileio/resmgr/res_image.hpp"
 #include "fileio/resmgr/res_cursor.hpp"
 #include "fileio/resmgr/res_font.hpp"
 #include "fileio/resmgr/res_strings.hpp"
 #include "fileio/resmgr/res_sound.hpp"
 
-bool mac_is_intel;
 fs::path progDir, tempDir, scenDir;
 
 // This is here to avoid unnecessarily duplicating it in platform-specific files.
@@ -116,9 +116,7 @@ fs::path get_posix_tempdir() {
 #endif
 
 void check_for_intel() {
-	union {uint16_t x; uint8_t c;} endian;
-	endian.x = 1;
-	mac_is_intel = endian.c;
+	porting::check_endian();
 }
 
 std::string read_maybe_quoted_string(std::istream& from) {
