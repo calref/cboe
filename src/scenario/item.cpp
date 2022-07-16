@@ -8,12 +8,12 @@
 
 #include "item.hpp"
 
+#include <array>
 #include <string>
 #include <vector>
 #include <map>
 #include <set>
 #include <sstream>
-#include <boost/lexical_cast.hpp>
 
 #include "oldstructs.hpp"
 #include "utility.hpp"
@@ -491,7 +491,7 @@ void cItem::enchant_weapon(eEnchant enchant_type,short new_val) {
 	full_name = store_name;
 }
 
-void cItem::import_legacy(legacy::item_record_type& old){
+void cItem::import_legacy(legacy::item_record_type const & old){
 	variety = (eItemType) old.variety;
 	item_level = old.item_level;
 	awkward = old.awkward;

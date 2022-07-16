@@ -85,7 +85,7 @@ public:
 	short jumpto;
 	
 	cSpecial();
-	void import_legacy(legacy::special_node_type& old);
+	void import_legacy(legacy::special_node_type const & old);
 	void writeTo(std::ostream& file, int n) const;
 };
 

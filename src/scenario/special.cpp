@@ -11,7 +11,6 @@
 #include <vector>
 #include <map>
 #include <sstream>
-#include <boost/lexical_cast.hpp>
 
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "oldstructs.hpp"
@@ -57,7 +56,7 @@ void cSpecial::writeTo(std::ostream& file, int n) const {
 	file << "\tgoto " << jumpto << '\n';
 }
 
-void cSpecial::import_legacy(legacy::special_node_type& old){
+void cSpecial::import_legacy(legacy::special_node_type const &old){
 	sd1 = old.sd1;
 	sd2 = old.sd2;
 	pic = old.pic;

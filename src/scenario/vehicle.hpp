@@ -30,8 +30,8 @@ public:
 	bool property;
 	
 	cVehicle();
-	void import_legacy(legacy::horse_record_type& old);
-	void import_legacy(legacy::boat_record_type& old);
+	void import_legacy(legacy::horse_record_type const & old);
+	void import_legacy(legacy::boat_record_type const & old);
 	void writeTo(cTagFile_Page& page) const;
 	void readFrom(const cTagFile_Page& page);
 };
