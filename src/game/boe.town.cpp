@@ -72,7 +72,7 @@ void force_town_enter(short which_town,location where_start) {
 //short entry_dir; // if 9, go to forced
 void start_town_mode(short which_town, short entry_dir) {
 	short town_number;
-	short at_which_save_slot,former_town;
+	short former_town;
 	bool monsters_loaded = false,town_toast = false;
 	location loc;
 	bool play_town_sound = false;
@@ -142,8 +142,6 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	univ.town.monst.which_town = town_number;
 	univ.town.monst.hostile = false;
-	
-	at_which_save_slot = univ.party.at_which_save_slot;
 	
 	for(auto& pop : univ.party.creature_save)
 		if(town_number == pop.which_town) {
