@@ -316,7 +316,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			break;
 		case 11: // Can't enter
 			type = eSpecType::CANT_ENTER;
-			ex1a = 1;
+			ex1a = ex1a==0 ? 0 : 1;
 			ex2a = 0;
 			break;
 		case 26: // Wandering will fight
