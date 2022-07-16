@@ -230,6 +230,9 @@ void cParty::import_legacy(legacy::party_record_type& old, cUniverse& univ){
 	for(short i = 0; i < 30; i++){
 		boats[i].import_legacy(old.boats[i]);
 		horses[i].import_legacy(old.horses[i]);
+		// boe: timer with time<=0 are empty timer
+		if (old.party_event_timers[i] <= 0)
+			continue;
 		cTimer t;
 		t.time = old.party_event_timers[i];
 		t.node_type = old.global_or_town[i] ? eSpecCtxType::TOWN : eSpecCtxType::SCEN;

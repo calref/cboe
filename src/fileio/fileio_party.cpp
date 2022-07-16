@@ -25,7 +25,7 @@ extern fs::path progDir, tempDir;
 extern cCustomGraphics spec_scen_g;
 
 // Load saved games
-static bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there, bool must_port);
+static bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there, bool mac_file);
 static bool load_party_v2(fs::path file_to_load, cUniverse& univ);
 
 bool load_party(fs::path file_to_load, cUniverse& univ){
@@ -118,20 +118,20 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 	fclose(file_id);
 	switch(format){
 		case old_mac:
-			return load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, mac_is_intel);
+			return load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, true);
 		case old_win:
-			return load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, !mac_is_intel);
+			return load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, false);
 		case new_oboe:
 			return load_party_v2(file_to_load, univ);
 		case unknown:
 			showError("This is not a Blades of Exile save file.");
 			return false;
 	}
-	
 	return true;
 }
 
-bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restore, bool in_scen, bool maps_there, bool must_port){
+extern bool cur_scen_is_mac;
+bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restore, bool in_scen, bool maps_there, bool mac_file){
 	std::ifstream fin(file_to_load.string().c_str(), std::ios_base::binary);
 	fin.seekg(3*sizeof(short),std::ios_base::beg); // skip the header, which is 6 bytes in the old format
 	
@@ -149,11 +149,14 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 	char *pc_ptr;
 	long len,store_len,count;
 	
+	// ------- set scenario is mac to party_is_mac to make porting.cpp works
+	cur_scen_is_mac=mac_file;
+
 	// LOAD PARTY
 	len = (long) sizeof(legacy::party_record_type); // should be 46398
 	store_len = len;
 	fin.read((char*)&store_party, len);
-	if(must_port) port_party(&store_party);
+	port_party(&store_party);
 	party_ptr = (char*) &store_party;
 	for(count = 0; count < store_len; count++)
 		party_ptr[count] ^= 0x5C;
@@ -167,7 +170,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 	for(int i = 0; i < 6; i++) {
 		len = store_len;
 		fin.read((char*)&store_pc[i], len);
-		if(must_port) port_pc(&store_pc[i]);
+		port_pc(&store_pc[i]);
 		pc_ptr = (char*) &store_pc[i];
 		for(count = 0; count < store_len; count++)
 			pc_ptr[count] ^= 0x6B;
@@ -183,22 +186,22 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 		if(town_restore) {
 			len = (long) sizeof(legacy::current_town_type);
 			fin.read((char*)&store_c_town, len);
-			if(must_port) port_c_town(&store_c_town);
+			port_c_town(&store_c_town);
 			
 			len = (long) sizeof(legacy::big_tr_type);
 			fin.read((char*)&t_d, len);
-			if(must_port) port_t_d(&t_d);
+			port_t_d(&t_d);
 			
 			len = (long) sizeof(legacy::town_item_list);
 			fin.read((char*)&t_i, len);
-			if(must_port) port_t_i(&t_i);
+			port_t_i(&t_i);
 		}
 		
 		// LOAD STORED ITEMS
 		for(int i = 0; i < 3; i++) {
 			len = (long) sizeof(legacy::stored_items_list_type);
 			fin.read((char*)&stored_items[i], len);
-			if(must_port) port_stored_items_list(&stored_items[i]);
+			port_stored_items_list(&stored_items[i]);
 		}
 		
 		// LOAD SAVED MAPS
@@ -219,7 +222,8 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 	} // end if_scen
 	
 	fin.close();
-	
+	// ------- the data of the party are all port, so load_scenario can reset cur_scen_is_mac
+
 	cUniverse univ;
 	
 	if(in_scen){
@@ -253,8 +257,9 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 			univ.party.import_legacy(stored_items[i],i);
 		univ.import_legacy(town_maps);
 		univ.import_legacy(o_maps);
-		univ.town.import_reset_fields_legacy();
-		if(town_restore) // Check items in crates/barrels
+		if(town_restore) {
+			univ.town.import_reset_fields_legacy();
+			// Check items in crates/barrels
 			for(int i = 0; i < univ.town->max_dim; i++) {
 				for(int j = 0; j < univ.town->max_dim; j++) {
 					if(univ.town.is_barrel(i,j) || univ.town.is_crate(i,j)) {
@@ -265,6 +270,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 					}
 				}
 			}
+		}
 		else {
 			univ.party.town_num = 200;
 			univ.town.difficulty = 0;
