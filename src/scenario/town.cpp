@@ -19,7 +19,7 @@
 #include "fileio/fileio.hpp"
 #include "utility.hpp"
 
-void cTown::import_legacy(legacy::town_record_type& old){
+void cTown::import_legacy(legacy::town_record_type const &old){
 	town_chop_time = old.town_chop_time;
 	town_chop_key = old.town_chop_key;
 	for(short i = 0; i < 4; i++){
@@ -128,14 +128,14 @@ void cTown::init_start() {
 	in_town_rect.right = s - 4;
 }
 
-void cTown::cWandering::import_legacy(legacy::wandering_type old){
+void cTown::cWandering::import_legacy(legacy::wandering_type const &old){
 	monst[0] = old.monst[0];
 	monst[1] = old.monst[1];
 	monst[2] = old.monst[2];
 	monst[3] = old.monst[3];
 }
 
-void cTown::cItem::import_legacy(legacy::preset_item_type old){
+void cTown::cItem::import_legacy(legacy::preset_item_type const &old){
 	loc.x = old.item_loc.x;
 	loc.y = old.item_loc.y;
 	code = old.item_code;
@@ -145,7 +145,7 @@ void cTown::cItem::import_legacy(legacy::preset_item_type old){
 	contained = old.contained;
 }
 
-void cTown::cField::import_legacy(legacy::preset_field_type old){
+void cTown::cField::import_legacy(legacy::preset_field_type const &old){
 	loc.x = old.field_loc.x;
 	loc.y = old.field_loc.y;
 	switch(old.field_type) {

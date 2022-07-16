@@ -22,7 +22,6 @@
 #include "dialogxml/dialogs/3choice.hpp"
 #include "dialogxml/widgets/message.hpp"
 #include <array>
-#include <boost/lexical_cast.hpp>
 #include "tools/prefs.hpp"
 #include "tools/winutil.hpp"
 #include "tools/cursors.hpp"
@@ -921,7 +920,7 @@ short char_select_pc(short mode,const char *title) {
 	selectPc["title"].setText(title);
 	
 	for(short i = 0; i < 6; i++) {
-		std::string n = boost::lexical_cast<std::string>(i + 1);
+		std::string n = std::to_string(i + 1);
 		bool can_pick = true;
 		if(univ.party[i].main_status == eMainStatus::ABSENT || univ.party[i].main_status == eMainStatus::FLED)
 			can_pick = false;

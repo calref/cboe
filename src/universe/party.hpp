@@ -61,7 +61,7 @@ public:
 	public:
 		std::string who_said, in_town, the_str1, the_str2, in_scen;
 		
-		void import_legacy(legacy::talk_save_type old, const cScenario& scenario);
+		void import_legacy(legacy::talk_save_type const &old, const cScenario& scenario);
 	};
 	class cJournal {
 	public:
@@ -73,7 +73,7 @@ public:
 		eEncNoteType type;
 		std::string the_str, where, in_scen;
 		
-		void import_legacy(int16_t(& old)[2], const cScenario& scenario);
+		void import_legacy(int16_t const (& old)[2], const cScenario& scenario);
 	};
 	// formerly party_record_type
 	// TODO: Should we make age a long long?
@@ -142,11 +142,11 @@ public:
 	void clear_ptr(unsigned short p);
 	unsigned char get_ptr(unsigned short p);
 	
-	void import_legacy(legacy::party_record_type& old, cUniverse& univ);
-	void import_legacy(legacy::big_tr_type& old);
-	void import_legacy(legacy::stored_items_list_type& old,short which_list);
-	void import_legacy(legacy::setup_save_type& old);
-	void import_legacy(legacy::pc_record_type(& old)[6]);
+	void import_legacy(legacy::party_record_type const & old, cUniverse& univ);
+	void import_legacy(legacy::big_tr_type const & old);
+	void import_legacy(legacy::stored_items_list_type const & old,short which_list);
+	void import_legacy(legacy::setup_save_type const & old);
+	void import_legacy(legacy::pc_record_type const (& old)[6]);
 	
 	bool is_alive() const;
 	bool is_friendly() const;

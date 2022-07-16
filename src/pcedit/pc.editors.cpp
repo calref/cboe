@@ -57,7 +57,7 @@ static void put_pc_spells(cDialog& me, short store_trait_mode) {
 	store_trait_mode %= 10;
 	
 	for(short i = 0; i < 62; i++) {
-		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+		std::string id = "spell" + std::to_string(i + 1);
 		cLed& cur = dynamic_cast<cLed&>(me[id]);
 		if(((store_trait_mode == 0) && univ.party[which_pc_displayed].mage_spells[i]) ||
 			((store_trait_mode == 1) && univ.party[which_pc_displayed].priest_spells[i]))
@@ -107,7 +107,7 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 	pcInfo.attachClickHandlers(std::bind(display_pc_event_filter, _1, _2, mode),{"done","left","right"});
 	
 	for(short i = 0; i < 62; i++) {
-		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+		std::string id = "spell" + std::to_string(i + 1);
 		label_str = get_str("magic-names", i + (mode % 10 == 0 ? 1 : 101));
 		pcInfo[id].setText(label_str);
 		if(mode < 10)
@@ -122,7 +122,7 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 	if(mode >= 10) {
 		mode %= 10;
 		for(short i = 0; i < 62; i++) {
-			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+			std::string id = "spell" + std::to_string(i + 1);
 			bool set = dynamic_cast<cLed&>(pcInfo[id]).getState() != led_off;
 			if(mode == 0) univ.party[pc_num].mage_spells[i] = set;
 			else if(mode == 1) univ.party[pc_num].priest_spells[i] = set;
@@ -134,16 +134,16 @@ static void display_traits_graphics(cDialog& me) {
 	short store;
 	
 	if(store_pc->race <= eRace::VAHNATAI) {
-		std::string race = "race" + boost::lexical_cast<std::string>(int(store_pc->race) + 1);
+		std::string race = "race" + std::to_string(int(store_pc->race) + 1);
 		dynamic_cast<cLedGroup&>(me["race"]).setSelected(race);
 	}
 	for(short i = 0; i < 10; i++) {
-		std::string id = "good" + boost::lexical_cast<std::string>(i + 1);
+		std::string id = "good" + std::to_string(i + 1);
 		eTrait trait = eTrait(i);
 		dynamic_cast<cLed&>(me[id]).setState(store_pc->traits[trait] ? led_red : led_off);
 	}
 	for(short i = 0; i < 7; i++) {
-		std::string id = "bad" + boost::lexical_cast<std::string>(i + 1);
+		std::string id = "bad" + std::to_string(i + 1);
 		eTrait trait = eTrait(i + 10);
 		dynamic_cast<cLed&>(me[id]).setState(store_pc->traits[trait] ? led_red : led_off);
 	}
@@ -239,7 +239,7 @@ void display_alchemy(bool allowEdit,cDialog* parent) {
 	cChoiceDlog showAlch("pc-alchemy-info", {"done"}, parent);
 	
 	for(short i = 0; i < 20; i++) {
-		std::string id = "potion" + boost::lexical_cast<std::string>(i + 1);
+		std::string id = "potion" + std::to_string(i + 1);
 		std::string name = get_str("magic-names", i + 200) + " (";
 		name += std::to_string(alch_difficulty[i]);
 		name += ')';
@@ -256,7 +256,7 @@ void display_alchemy(bool allowEdit,cDialog* parent) {
 	if(!allowEdit) return;
 	
 	for(short i = 0; i < 20; i++) {
-		std::string id = "potion" + boost::lexical_cast<std::string>(i + 1);
+		std::string id = "potion" + std::to_string(i + 1);
 		cLed& led = dynamic_cast<cLed&>(showAlch->getControl(id));
 		if(led.getState() == led_red) univ.party.alchemy[i] = true;
 		else univ.party.alchemy[i] = false;
