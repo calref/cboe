@@ -522,7 +522,7 @@ void adventure_notes() {
 }
 
 static void put_talk(cDialog& me) {
-	if(univ.party.talk_save[store_page_on].filled) {
+	if(store_page_on<store_num_i) {
 		me["loc"].setText(univ.party.talk_save[store_page_on].in_town);
 		me["who"].setText(univ.party.talk_save[store_page_on].who_said);
 		me["str1"].setText(univ.party.talk_save[store_page_on].the_str1);
@@ -541,18 +541,18 @@ static bool talk_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod) 
 			store_page_on = 0;
 		else store_page_on++;
 	} else if(item_hit == "del") {
-		// TODO: Actually remove it rather than filled to false
-		univ.party.talk_save[store_page_on].filled = false;
+		univ.party.talk_save.erase(univ.party.talk_save.begin()+store_page_on);
+		if(store_page_on == store_num_i - 1)
+			store_page_on = 0;
+		if(--store_num_i==0) me.toast(true);
+		// TODO: if store_num_i==1, we must also hide the right/left buttons
 	}
 	put_talk(me);
 	return true;
 }
 
 void talk_notes() {
-	store_num_i = 0;
-	for(size_t i = 0; i < univ.party.talk_save.size(); i++)
-		if(univ.party.talk_save[i].filled)
-			store_num_i = i + 1;
+	store_num_i = univ.party.talk_save.size();
 	store_page_on = 0;
 	if(store_num_i == 0) {
 		ASB("Nothing in your talk journal.");
