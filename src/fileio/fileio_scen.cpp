@@ -31,7 +31,6 @@
 // Also, for some reason, it's not found in the include paths, so use a relative path
 #include "../scenario/town_import.tpp"
 
-bool cur_scen_is_mac = true;
 extern cCustomGraphics spec_scen_g;
 extern fs::path tempDir, scenDir, progDir;
 
@@ -206,12 +205,12 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	
 	if((scenario.format.flag1 == 10) && (scenario.format.flag2 == 20) &&
 	   (scenario.format.flag3 == 30) && (scenario.format.flag4 == 40)) {
-	  	cur_scen_is_mac = true;
+		porting::set_current_file_type(true);
 	  	file_ok = true;
 	}
 	else if((scenario.format.flag1 == 20) && (scenario.format.flag2 == 40) &&
 			(scenario.format.flag3 == 60) && (scenario.format.flag4 == 80)) {
-	  	cur_scen_is_mac = false;
+		porting::set_current_file_type(false);
 	  	file_ok = true;
 	} else if(scenario.format.flag1 == 'O' && scenario.format.flag2 == 'B' && scenario.format.flag3 == 'O' && scenario.format.flag4 == 'E') {
 		// This means we're looking at the scenario header file of an unpacked new-format scenario.
@@ -229,14 +228,14 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 		fclose(file_id);
 		return false;
 	}
-	port_scenario(temp_scenario);
+	porting::port_scenario(temp_scenario);
 	len = sizeof(legacy::scen_item_data_type); // item data
 	if(fread(item_data, len, 1, file_id) < 1) {
 		showError(err_prefix + "Failed to read scenario items.", get_file_error());
 		fclose(file_id);
 		return false;
 	}
-	port_item_list(item_data);
+	porting::port_item_list(item_data);
 	scenario.import_legacy(*temp_scenario);
 	scenario.import_legacy(*item_data);
 	
@@ -2296,13 +2295,13 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		fclose(file_id);
 		return false;
 	}
-	port_town(&store_town);
+	porting::port_town(&store_town);
 	
 	switch(scenario.town_size[which_town]) {
 		case 0:
 			len = sizeof(legacy::big_tr_type);
 			fread(&t_d, len, 1, file_id);
-			port_t_d(&t_d);
+			porting::port_t_d(&t_d);
 			the_town.import_legacy(store_town);
 			the_town.import_legacy(t_d, which_town);
 			break;
@@ -2310,7 +2309,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		case 1:
 			len = sizeof(legacy::ave_tr_type);
 			fread(&ave_t, len, 1, file_id);
-			port_ave_t(&ave_t);
+			porting::port_ave_t(&ave_t);
 			the_town.import_legacy(store_town);
 			the_town.import_legacy(ave_t, which_town);
 			break;
@@ -2318,7 +2317,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		case 2:
 			len = sizeof(legacy::tiny_tr_type);
 			fread(&tiny_t, len, 1, file_id);
-			port_tiny_t(&tiny_t);
+			porting::port_tiny_t(&tiny_t);
 			the_town.import_legacy(store_town);
 			the_town.import_legacy(tiny_t, which_town);
 			break;
@@ -2349,7 +2348,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		fclose(file_id);
 		return false;
 	}
-	port_talk_nodes(&store_talk);
+	porting::port_talk_nodes(&store_talk);
 	
 	the_town.talking.talk_nodes.resize(60);
 	for(short i = 0; i < 170; i++) {
@@ -2433,7 +2432,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	
 	the_out.x = which_out.x;
 	the_out.y = which_out.y;
-	port_out(&store_out);
+	porting::port_out(&store_out);
 	the_out.import_legacy(store_out);
 	the_out.spec_strs.resize(90);
 	the_out.sign_locs.resize(8);

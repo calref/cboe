@@ -4438,6 +4438,7 @@ void rect_spec(const runtime_state& ctx){
 						*ctx.redraw = need_redraw_map= true;
 						break;
 					}
+					break;
 				case eSpecType::RECT_SET_EXPLORED:
 					if(spec.sd1)
 						make_explored(l.x, l.y);

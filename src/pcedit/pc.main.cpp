@@ -74,7 +74,6 @@ void pick_preferences();
 void save_prefs();
 bool prefs_event_filter (cDialog& me, std::string id, eKeyMod);
 
-extern bool cur_scen_is_mac;
 extern fs::path progDir;
 short specials_res_id;
 char start_name[256];
@@ -531,7 +530,7 @@ void pick_preferences() {
 	float ui_scale = get_float_pref("UIScale", 1.0);
 	dynamic_cast<cLed&>(prefsDlog["scaleui"]).setState(ui_scale == 1.0 ? led_off : (ui_scale == 2.0 ? led_red : led_green));
 	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySounds", true) ? led_off : led_red);
-	
+
 	prefsDlog.run();
 	
 	if(get_float_pref("UIScale") != ui_scale)
