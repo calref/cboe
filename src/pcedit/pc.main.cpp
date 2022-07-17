@@ -13,6 +13,7 @@
 #include "utility.hpp"
 #include "dialogxml/dialogs/dialog.hpp"
 #include "dialogxml/widgets/control.hpp"
+#include "dialogxml/widgets/ledgroup.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "dialogxml/dialogs/strchoice.hpp"
