@@ -26,7 +26,7 @@
  * For the game's purposes, these are declared in
  * boe.infodlg.h and boe.party.h.
  */
-void display_pc(short pc_num,short mode,cDialog* parent);
+void display_pc(short pc_num,short mode,bool edit, cDialog* parent);
 void display_alchemy(bool allowEdit,cDialog* parent);
 bool spend_xp(short pc_num, short mode, cDialog* parent);
 // TODO: There's probably a more logical way of arranging this
@@ -46,88 +46,83 @@ extern short d_rect_index[80];
 extern bool current_file_has_maps;
 bool choice_active[6];
 
-extern short which_pc_displayed;
 sf::Texture button_num_gworld;
 
 extern std::map<eSkill,short> skill_cost;
 extern std::map<eSkill,short> skill_max;
 extern std::map<eSkill,short> skill_g_cost;
 
-static void put_pc_spells(cDialog& me, short store_trait_mode) {
-	store_trait_mode %= 10;
-	
+// display pc spells
+static void put_pc_spells(cDialog& me, short pc_num, short mode) {
 	for(short i = 0; i < 62; i++) {
 		std::string id = "spell" + std::to_string(i + 1);
 		cLed& cur = dynamic_cast<cLed&>(me[id]);
-		if(((store_trait_mode == 0) && univ.party[which_pc_displayed].mage_spells[i]) ||
-			((store_trait_mode == 1) && univ.party[which_pc_displayed].priest_spells[i]))
+		if((mode == 0 && univ.party[pc_num].mage_spells[i]) ||
+			(mode == 1 && univ.party[pc_num].priest_spells[i]))
 			cur.setState(led_red);
 		else cur.setState(led_off);
 	}
 	
-	me["who"].setText(univ.party[which_pc_displayed].name.c_str());
+	me["who"].setText(univ.party[pc_num].name.c_str());
 }
 
-static bool display_pc_event_filter(cDialog& me, std::string item_hit, const short trait_mode) {
-	short pc_num;
-	
-	pc_num = which_pc_displayed;
-	if(item_hit == "done") {
-		me.toast(true);
-	} else if(item_hit == "left") {
-		do {
-			pc_num = (pc_num == 0) ? 5 : pc_num - 1;
-		} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
-		which_pc_displayed = pc_num;
-		put_pc_spells(me, trait_mode);
-	} else if(item_hit == "right") {
-		do {
-			pc_num = (pc_num == 5) ? 0 : pc_num + 1;
-		} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
-		which_pc_displayed = pc_num;
-		put_pc_spells(me, trait_mode);
-	}
-	return true;
-}
-
-void display_pc(short pc_num,short mode, cDialog* parent) {
-	using namespace std::placeholders;
-	std::string label_str;
-	
-	if(univ.party[pc_num].main_status == eMainStatus::ABSENT) {
-		for(pc_num = 0; pc_num < 6; pc_num++)
-			if(univ.party[pc_num].main_status == eMainStatus::ALIVE)
-				break;
-	}
-	which_pc_displayed = pc_num;
-	
-	set_cursor(sword_curs);
-	
-	cDialog pcInfo(*ResMgr::dialogs.get("pc-spell-info"), parent);
-	pcInfo.attachClickHandlers(std::bind(display_pc_event_filter, _1, _2, mode),{"done","left","right"});
-	
-	for(short i = 0; i < 62; i++) {
-		std::string id = "spell" + std::to_string(i + 1);
-		label_str = get_str("magic-names", i + (mode % 10 == 0 ? 1 : 101));
-		pcInfo[id].setText(label_str);
-		if(mode < 10)
-			pcInfo[id].attachClickHandler(&cLed::noAction);
-	}
-	put_pc_spells(pcInfo, mode);
-	
-	dynamic_cast<cPict&>(pcInfo["pic"]).setPict(14 + mode,PIC_DLOG);
-	
-	pcInfo.run();
-	
-	if(mode >= 10) {
-		mode %= 10;
+static bool display_pc_event_filter(cDialog& me, std::string item_hit, short &pc_num, const short mode, bool edit) {
+	if (edit) {
 		for(short i = 0; i < 62; i++) {
 			std::string id = "spell" + std::to_string(i + 1);
-			bool set = dynamic_cast<cLed&>(pcInfo[id]).getState() != led_off;
+			bool set = dynamic_cast<cLed&>(me[id]).getState() != led_off;
 			if(mode == 0) univ.party[pc_num].mage_spells[i] = set;
 			else if(mode == 1) univ.party[pc_num].priest_spells[i] = set;
 		}
 	}
+	if(item_hit == "done")
+		me.toast(true);
+	else if(item_hit == "left") {
+		do {
+			pc_num = (pc_num == 0) ? 5 : pc_num - 1;
+		} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
+		put_pc_spells(me, pc_num, mode);
+	} else if(item_hit == "right") {
+		do {
+			pc_num = (pc_num == 5) ? 0 : pc_num + 1;
+		} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
+		put_pc_spells(me, pc_num, mode);
+	}
+	return true;
+}
+
+void display_pc(short pc_num, short mode, bool edit, cDialog* parent) {
+	using namespace std::placeholders;
+	std::string label_str;
+	
+	short current_pc = pc_num;
+	if(current_pc<0 || current_pc>=6 || univ.party[current_pc].main_status == eMainStatus::ABSENT) {
+		for(current_pc = 0; current_pc < 6; current_pc++)
+			if(univ.party[current_pc].main_status == eMainStatus::ALIVE)
+				break;
+		if (current_pc>=6) {
+			beep();
+			return;
+		}
+	}
+	
+	set_cursor(sword_curs);
+	
+	cDialog pcInfo(*ResMgr::dialogs.get("pc-spell-info"), parent);
+	pcInfo.attachClickHandlers(std::bind(display_pc_event_filter, _1, _2, std::ref(current_pc), mode, edit),{"done","left","right"});
+	
+	for(short i = 0; i < 62; i++) {
+		std::string id = "spell" + std::to_string(i + 1);
+		label_str = get_str("magic-names", i + (mode == 0 ? 1 : 101));
+		pcInfo[id].setText(label_str);
+		if(!edit)
+			pcInfo[id].attachClickHandler(&cLed::noAction);
+	}
+	put_pc_spells(pcInfo, pc_num, mode);
+	
+	dynamic_cast<cPict&>(pcInfo["pic"]).setPict(14 + mode + (edit ? 10 : 0),PIC_DLOG);
+	
+	pcInfo.run();
 }
 
 // Start pick race dialog here
