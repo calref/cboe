@@ -270,10 +270,12 @@ void handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(!All_Done) {
+		bool need_redraw=false;
 #ifdef __APPLE__
 		if (menuChoiceId>=0) {
 			eMenuChoice aMenuChoice=menuChoice;
 			menuChoice=eMenuChoice::MENU_CHOICE_NONE;
+			need_redraw=true;
 			switch(aMenuChoice) {
 				case eMenuChoice::MENU_CHOICE_GENERIC:
 					handle_menu_choice(eMenu(menuChoiceId));
@@ -285,19 +287,27 @@ void handle_events() {
 					handle_monster_info_menu(menuChoiceId);
 					break;
 				case eMenuChoice::MENU_CHOICE_NONE:
+					need_redraw=false;
 					break;
 			}
 			menuChoiceId=-1;
 		}
 #endif
-		while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent);
+		while(mainPtr.pollEvent(currentEvent)) {
+			need_redraw=true;
+			handle_one_event(currentEvent);
+		}
 
 		// It would be nice to have minimap inside the main game window (we have lots of screen space in fullscreen mode).
 		// Alternatively, minimap could live on its own thread.
 		// But for now we just handle events from both windows on this thread.
-		while(map_visible && mini_map.pollEvent(currentEvent)) handle_one_minimap_event(currentEvent);
+		while(map_visible && mini_map.pollEvent(currentEvent)) {
+			need_redraw = true;
+			handle_one_minimap_event(currentEvent);
+		}
 
 		if(changed_display_mode) {
+			need_redraw = true;
 			changed_display_mode = false;
 			adjust_window_mode();
 			init_mini_map();
@@ -308,10 +318,12 @@ void handle_events() {
 
 		// Ideally this call should update all of the things that are happening in the world current tick.
 		// NOTE that update does not mean draw.
-		update_everything();
+		if (update_everything())
+			need_redraw=true;
 
 		// Ideally, this should be the only draw call that is done in a cycle.
-		redraw_everything();
+		if (need_redraw)
+			redraw_everything();
 
 		// Prevent the loop from executing too fast.
 		fps_limiter.frame_finished();
@@ -414,30 +426,32 @@ void handle_one_minimap_event(const sf::Event& event) {
 	}
 }
 
-void update_terrain_animation() {
+static bool update_terrain_animation() {
 	static const long fortyTicks = time_in_ticks(40).asMilliseconds();
 
-	if(overall_mode == MODE_STARTUP) return;
-	if(!get_bool_pref("DrawTerrainAnimation", true)) return;
-	if(animTimer.getElapsedTime().asMilliseconds() < fortyTicks) return;
+	if(overall_mode == MODE_STARTUP) return false;
+	if(!get_bool_pref("DrawTerrainAnimation", true)) return false;
+	if(animTimer.getElapsedTime().asMilliseconds() < fortyTicks) return false;
 
 	anim_ticks++;
 	animTimer.restart();
+	return true;
 }
 
-void update_startup_animation() {
+static bool update_startup_animation() {
 	static const long twentyTicks = time_in_ticks(20).asMilliseconds();
 
-	if(overall_mode != MODE_STARTUP) return;
-	if(animTimer.getElapsedTime().asMilliseconds() < twentyTicks) return;
+	if(overall_mode != MODE_STARTUP) return false;
+	if(animTimer.getElapsedTime().asMilliseconds() < twentyTicks) return false;
 
 	draw_startup_anim(true);
 	animTimer.restart();
+	return true;
 }
 
-void update_everything() {
-	update_terrain_animation();
-	update_startup_animation();
+bool update_everything() {
+	return update_terrain_animation() ||
+		update_startup_animation();
 }
 
 void redraw_everything() {

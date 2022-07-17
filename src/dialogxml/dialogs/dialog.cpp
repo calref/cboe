@@ -570,7 +570,7 @@ void cDialog::handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(dialogNotToast) {
-		bool need_redraw=false; // OSNOLA
+		bool need_redraw=false;
 		while(win.pollEvent(currentEvent)) handle_one_event(currentEvent, need_redraw);
 
 		if(doAnimations && animTimer.getElapsedTime().asMilliseconds() >= 500) {
@@ -581,9 +581,10 @@ void cDialog::handle_events() {
 		// Ideally, this should be the only draw call that is done in a cycle.
 		if (need_redraw)
 			draw();
-
-		// Prevent the loop from executing too fast.
-		fps_limiter.frame_finished();
+		else
+			// Prevent the loop from executing too fast
+			//  when the user does nothing
+			fps_limiter.frame_finished();
 	}
 }
 
