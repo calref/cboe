@@ -1979,7 +1979,7 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	cDialog castSpell(*ResMgr::dialogs.get("cast-spell"));
 	
 	castSpell.attachClickHandlers(std::bind(pick_spell_caster, _1, _2, type, std::ref(dark), std::ref(former_spell)), {"caster1","caster2","caster3","caster4","caster5","caster6"});
-	castSpell.attachClickHandlers(std::bind(pick_spell_target,_1,_2, type, dark, former_spell), {"target1","target2","target3","target4","target5","target6"});
+	castSpell.attachClickHandlers(std::bind(pick_spell_target,_1,_2, type, std::ref(dark), former_spell), {"target1","target2","target3","target4","target5","target6"});
 	castSpell.attachClickHandlers(std::bind(pick_spell_event_filter, _1, _2, type, former_spell), {"other", "help"});
 	castSpell["cast"].attachClickHandler(std::bind(finish_pick_spell, _1, false, former_target, std::ref(former_spell), type));
 	castSpell["cancel"].attachClickHandler(std::bind(finish_pick_spell, _1, true, former_target, std::ref(former_spell), type));

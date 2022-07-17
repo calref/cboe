@@ -108,11 +108,13 @@ ModalSession::ModalSession(sf::Window& win, sf::Window& /*parent*/) {
 }
 
 ModalSession::~ModalSession() {
+	if (!session) return;
 	NSModalSession nsHandle = (NSModalSession)session;
 	[[NSApplication sharedApplication] endModalSession: nsHandle];
 }
 
 void ModalSession::pumpEvents() {
+	if (!session) return;
 	NSModalSession nsHandle = (NSModalSession)session;
 	[[NSApplication sharedApplication] runModalSession: nsHandle];
 }
