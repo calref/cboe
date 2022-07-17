@@ -332,14 +332,9 @@ void put_item_screen(eItemWinMode screen_num) {
 					style.italic = false;
 					style.colour = Colours::BLACK;
 					
-					// this is kludgy, awkwark, and has redundant code. Done this way to
-					// make go faster, and I got lazy.
-					if((stat_screen_mode == MODE_SHOP) &&
-						((is_town()) || (is_out()) || ((is_combat()) && (pc == univ.cur_pc)))) { // place give and drop and use
+					if(stat_screen_mode == MODE_SHOP && !is_combat()) { // place give and drop and use
 						place_item_graphic(i,item.graphic_num);
-						if(item.can_use()) // place use if can
-							place_item_button(ITEMBTN_NORM,i);
-						else place_item_button(ITEMBTN_ALL,i);
+						place_item_button(3,i,ITEMBTN_INFO); // info button
 					}
 					else {
 						place_item_graphic(i,item.graphic_num); 
