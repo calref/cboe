@@ -1216,11 +1216,6 @@ bool does_location_have_special(cOutdoors& sector, location loc, eTerSpec specia
 void clear_map() {
 	rectangle map_world_rect(map_gworld);
 	
-//	if(!map_visible) {
-//		return;
-//	}
-//	draw_map(mini_map,11);
-	
 	fill_rect(map_gworld, map_world_rect, sf::Color::Black);
 	
 }
