@@ -147,13 +147,14 @@ struct sTraitsState {
 		}
 	}
 	void save(cUniverse &univ) const {
-		for (int i=0; i<6; ++i) {
-			auto &pc=univ.party[i];
-			pc.race=races[i];
-			for (int t=0; t<17; ++t) {
-				eTrait trait = eTrait(t);
-				pc.traits[trait]=traits[i][t];
-			}
+		for (short i=0; i<6; ++i)
+			save(i, univ.party[i]);
+	}
+	void save(short i, cPlayer &player) const {
+		player.race=races[i];
+		for (int t=0; t<17; ++t) {
+			eTrait trait = eTrait(t);
+			player.traits[trait]=traits[i][t];
 		}
 	}
 	short pc_num;
@@ -178,8 +179,9 @@ static void display_traits_graphics(cDialog& me, sTraitsState const &state) {
 		std::string id = "bad" + std::to_string(i + 1);
 		dynamic_cast<cLed&>(me[id]).setState(state.traits[pc_num][i+10] ? led_red : led_off);
 	}
-	
-	me["xp"].setTextToNum(pc.get_tnl());
+	cPlayer dumpPlayer(pc);
+	state.save(pc_num, dumpPlayer);
+	me["xp"].setTextToNum(dumpPlayer.get_tnl());
 }
 
 static bool pick_race_select_led(cDialog& me, sTraitsState &state, std::string item_hit, bool, const short store_trait_mode) {
