@@ -2039,123 +2039,140 @@ void start_town_targeting(eSpell s_num,short who_c,bool freebie,eSpellPat pat) {
 	}
 }
 
+//
+// do alchemy
+//
+
 extern const short alch_difficulty[20];
 extern const eItemAbil alch_ingred1[20];
 extern const eItemAbil alch_ingred2[20];
 
-void do_alchemy() {
+static void display_alchemy_graphics(cDialog& me, short &pc_num);
+
+static bool alch_potion_event_filter(cDialog&me, short &pc_num, std::string item_hit, eKeyMod) {
+	int potion_id = boost::lexical_cast<int>(item_hit.substr(6))-1;
+	if(!univ.party[pc_num].has_space()) {
+		me["result"].setText("Alchemy: Can't carry another item.");
+		return false;
+	}
+	
+	cInvenSlot which_item = univ.party[pc_num].has_abil(alch_ingred1[potion_id]);
+	if(alch_ingred2[potion_id] != eItemAbil::NONE) {
+		cInvenSlot which_item2 = univ.party[pc_num].has_abil(alch_ingred2[potion_id]);
+		// Take care with the order of removal so that remove_charge does not change the index of the second item removed
+		if(which_item.slot < which_item2.slot) {
+			univ.party[pc_num].remove_charge(which_item2.slot);
+			univ.party[pc_num].remove_charge(which_item.slot);
+		} else {
+			univ.party[pc_num].remove_charge(which_item.slot);
+			univ.party[pc_num].remove_charge(which_item2.slot);
+		}
+	} else univ.party[pc_num].remove_charge(which_item.slot);
+	
+	play_sound(8);
+	
 	static const short fail_chance[20] = {
 		50,40,30,20,10,
 		8,6,4,2,0,
 		0,0,0,0,0,
 		0,0,0,0,0
 	};
-	short r1;
-	short pc_num;
-	
-	pc_num = select_pc(0);
-	if(pc_num == 6)
-		return;
-	
-	eAlchemy potion = alch_choice(pc_num);
-	// TODO: Remove need for this cast by changing the above data to either std::maps or an unary operator*
-	int which_p = int(potion);
-	if(potion != eAlchemy::NONE) {
-		if(!univ.party[pc_num].has_space()) {
-			add_string_to_buf("Alchemy: Can't carry another item.");
-			return;
-		}
-		
-		cInvenSlot which_item = univ.party[pc_num].has_abil(alch_ingred1[which_p]);
-		if(!which_item) {
-			add_string_to_buf("Alchemy: Don't have ingredients.");
-			return;
-		}
-		
-		if(alch_ingred2[which_p] != eItemAbil::NONE) {
-			cInvenSlot which_item2 = univ.party[pc_num].has_abil(alch_ingred2[which_p]);
-			if(!which_item2) {
-				add_string_to_buf("Alchemy: Don't have ingredients.");
-				return;
-			}
-			// Take care with the order of removal so that remove_charge does not change the index of the second item removed
-			if(which_item.slot < which_item2.slot) {
-				univ.party[pc_num].remove_charge(which_item2.slot);
-				univ.party[pc_num].remove_charge(which_item.slot);
-			} else {
-				univ.party[pc_num].remove_charge(which_item.slot);
-				univ.party[pc_num].remove_charge(which_item2.slot);
-			}
-		} else univ.party[pc_num].remove_charge(which_item.slot);
-		
-		play_sound(8);
-		
-		r1 = get_ran(1,1,100);
-		if(r1 < fail_chance[univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[which_p]]) {
-			add_string_to_buf("Alchemy: Failed.");
-			r1 = get_ran(1,0,1);
-			play_sound(41 );
+	int r1 = get_ran(1,1,100);
+	if(r1 < fail_chance[univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[potion_id]]) {
+		me["result"].setColour(sf::Color::Red);
+		me["result"].setText("Alchemy: Failed.");
+		r1 = get_ran(1,0,1);
+		play_sound(41 );
+	}
+	else {
+		cItem store_i((eAlchemy)potion_id);
+		if(univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[potion_id] >= 5)
+			store_i.charges++;
+		if(univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[potion_id] >= 11)
+			store_i.charges++;
+		store_i.graphic_num += get_ran(1,0,2);
+		if(!univ.party[pc_num].give_item(store_i,false)) {
+			me["result"].setColour(sf::Color::Red);
+			me["result"].setText("No room in inventory.\nPotion placed on floor.");
+			place_item(store_i,univ.party.town_loc);
+			// checkme: redraw terrain here?
 		}
 		else {
-			cItem store_i(potion);
-			if(univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[which_p] >= 5)
-				store_i.charges++;
-			if(univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[which_p] >= 11)
-				store_i.charges++;
-			store_i.graphic_num += get_ran(1,0,2);
-			if(!univ.party[pc_num].give_item(store_i,false)) {
-				add_string_to_buf("No room in inventory. Potion placed on floor.", 2);
-				place_item(store_i,univ.party.town_loc);
-			}
-			else add_string_to_buf("Alchemy: Successful.");
+			me["result"].setColour(sf::Color::White);
+			me["result"].setText("Alchemy: Successful.");
 		}
-		put_item_screen(stat_window);
 	}
-	
-}
-
-static bool alch_choice_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
-	if(item_hit == "help") {
-		give_help(220,21,me);
-		return true;
-	}
-	if(item_hit == "cancel")
-		me.setResult<eAlchemy>(eAlchemy::NONE);
-	else {
-		int potion_id = boost::lexical_cast<int>(item_hit.substr(6));
-		me.setResult<eAlchemy>(eAlchemy(potion_id));
-	}
-	me.toast(true);
+	put_item_screen(stat_window);
+	display_alchemy_graphics(me, pc_num);
 	return true;
 }
 
-eAlchemy alch_choice(short pc_num) {
-	short difficulty[20] = {1,1,1,3,3, 4,5,5,7,9, 9,10,12,12,9, 14,19,10,16,20};
-	short store_alchemy_pc;
-	
-	set_cursor(sword_curs);
-	
-	store_alchemy_pc = pc_num;
-	
-	cDialog chooseAlchemy(*ResMgr::dialogs.get("pick-potion"));
-	chooseAlchemy.attachClickHandlers(alch_choice_event_filter, {"cancel", "help"});
+void display_alchemy_graphics(cDialog& me, short &pc_num) {
+	using namespace std::placeholders;
+	short const difficulty[20] = {1,1,1,3,3, 4,5,5,7,9, 9,10,12,12,9, 14,19,10,16,20};
 	for(short i = 0; i < 20; i++) {
 		std::string n = std::to_string(i + 1);
-		chooseAlchemy["label" + n].setText(get_str("magic-names", i + 200));
-		chooseAlchemy["potion" + n].attachClickHandler(alch_choice_event_filter);
-		if(univ.party[pc_num].skill(eSkill::ALCHEMY) < difficulty[i] || !univ.party.alchemy[i])
-			chooseAlchemy["potion" + n].hide();
+		me["label" + n].setText(get_str("magic-names", i + 200));
+		if(univ.party[pc_num].skill(eSkill::ALCHEMY) < difficulty[i] || !univ.party.alchemy[i] ||
+		   !univ.party[pc_num].has_abil(alch_ingred1[i]) ||
+		   (alch_ingred2[i] != eItemAbil::NONE && !univ.party[pc_num].has_abil(alch_ingred2[i])))
+			me["potion" + n].hide();
+		else {
+			me["potion" + n].attachClickHandler(std::bind(alch_potion_event_filter, _1, std::ref(pc_num), _2, _3));
+			me["potion" + n].show();
+		}
 	}
 	std::ostringstream sout;
 	sout << univ.party[pc_num].name;
 	sout << " (skill " << univ.party[pc_num].skill(eSkill::ALCHEMY) << ")";
-	chooseAlchemy["mixer"].setText(sout.str());
+	me["mixer"].setText(sout.str());
+}
+
+static bool alch_choice_event_filter(cDialog& me, short &pc_num, std::string item_hit, eKeyMod) {
+	if(item_hit == "help") {
+		give_help(220,21,me);
+		return true;
+	}
+	if (item_hit == "left") {
+		do {
+			pc_num = (pc_num + 5) % 6;
+		} while(univ.party[pc_num].main_status != eMainStatus::ALIVE);
+		display_alchemy_graphics(me, pc_num);
+		return true;
+	} else if (item_hit == "right") {
+		do {
+			pc_num = (pc_num + 1) % 6;
+		} while(univ.party[pc_num].main_status != eMainStatus::ALIVE);
+		display_alchemy_graphics(me, pc_num);
+		return true;
+	}
+	// cancel
+	me.toast(true);
+	return true;
+}
+
+void do_alchemy() {
+	using namespace std::placeholders;
+
+	if(univ.cur_pc == 6) {
+		add_string_to_buf("Alchemy: No pc selected.");
+		return;
+	}
+
+	set_cursor(sword_curs);
+	short pc_num = univ.cur_pc;
+	
+	cDialog chooseAlchemy(*ResMgr::dialogs.get("pick-potion"));
+	chooseAlchemy.attachClickHandlers(std::bind(alch_choice_event_filter, _1, std::ref(pc_num), _2, _3), {"cancel", "left", "right", "help"});
+	display_alchemy_graphics(chooseAlchemy, pc_num);
 	
 	void (*give_help)(short,short,cDialog&) = ::give_help;
-	
 	chooseAlchemy.run(std::bind(give_help, 20, 21, std::ref(chooseAlchemy)));
-	return chooseAlchemy.getResult<eAlchemy>();
 }
+
+//
+// pick pc, ...
+//
 
 // mode ... 0 - create  1 - created
 bool pick_pc_graphic(short pc_num,short mode,cDialog* parent) {
