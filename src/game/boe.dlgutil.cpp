@@ -1350,7 +1350,7 @@ static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod) 
 			else pick_pc_name(which_pc,&me);
 			put_party_stats(me);
 		} else if(item_hit == "trait") {
-			pick_race_abil(&univ.party[which_pc],0,&me);
+			pick_race_abil(which_pc,0,&me);
 			put_party_stats(me);
 		} else if(item_hit == "train") {
 			spend_xp(which_pc,0,&me);

@@ -2,8 +2,12 @@
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='done'>
 	<text size='large' top='9' left='55' width='181' height='16'>Special Characteristics:</text>
+	<text name='name' size='large' top='9' left='240' width='174' height='16'/>
 	<pict type='dlog' num='7' top='6' left='6'/>
-	<button name='done' type='done' top='349' left='423'/>
+	<button name='left' type='left' def-key='left' top='349' left='360'/>
+	<button name='right' type='right' def-key='right' top='349' left='423'/>
+	<button name='cancel' type='regular' def-key='esc' top='370' left='360'>Cancel</button>
+	<button name='done' type='done' top='370' left='423'/>
 	<text size='large' top='30' left='55' width='65' height='18'>Species:</text>
 	<text name='xp' framed='true' top='352' left='254' width='50' height='16'/>
 	<text name='info' framed='true' top='282' left='15' width='300' height='59'>Select species and traits.</text>

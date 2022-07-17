@@ -219,7 +219,7 @@ bool create_pc(short spot,cDialog* parent) {
 	if(spot == 6) return false;
 	univ.party.new_pc(spot);
 	
-	pick_race_abil(&univ.party[spot],0,parent);
+	pick_race_abil(spot,0,parent);
 	
 	still_ok = spend_xp(spot,0,parent);
 	if(!still_ok)

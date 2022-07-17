@@ -403,7 +403,7 @@ void handle_menu_choice(eMenu item_hit) {
 			}
 			break;
 		case eMenu::EDIT_TRAITS:
-			pick_race_abil(&univ.party[current_active_pc],0);
+			pick_race_abil(current_active_pc,0);
 			break;
 		case eMenu::EDIT_SKILLS:
 			spend_xp(current_active_pc,2,0);
