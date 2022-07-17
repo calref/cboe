@@ -32,7 +32,8 @@ typedef NSAppleEventDescriptor AEDescr;
 
 void set_up_apple_events(int argc, char* argv[]); // Suppress "no prototype" warning
 void set_up_apple_events(int, char*[]) {
-	AppleEventHandler* aeHandler = [[AppleEventHandler alloc] init];
+	static AppleEventHandler* aeHandler;
+	aeHandler = [[AppleEventHandler alloc] init];
 	[[NSApplication sharedApplication] setDelegate: aeHandler];
 }
 
@@ -43,18 +44,11 @@ void set_up_apple_events(int, char*[]) {
 	(void) app; // Suppress "unused parameter" warning
 	if(file == nil) {
 		std::cerr << "Error: filename was nil" << std::endl;
-		return FALSE;
+		return NO;
 	}
 	
-	unsigned long len = [file length], sz = len + 1;
-	auto msg = std::shared_ptr<unichar>(new unichar[sz], std::default_delete<unichar[]>());
-	std::fill(msg.get(), msg.get() + sz, 0);
-	[file getCharacters: msg.get() range: (NSRange){0, len}];
-	std::string fileName;
-	std::copy(msg.get(), msg.get() + len, std::inserter(fileName, fileName.begin()));
-	
-	if(!load_party(fileName, univ))
-		return FALSE;
+	if(!load_party(file.fileSystemRepresentation, univ))
+		return NO;
 	
 	if(!finished_init) {
 		ae_loading = true;
@@ -64,7 +58,7 @@ void set_up_apple_events(int, char*[]) {
 		end_startup();
 	if(overall_mode != MODE_STARTUP)
 		post_load();
-	return TRUE;
+	return YES;
 }
 
 // TODO: Something about the cChoiceDlog causes this to crash... AFTER returning.

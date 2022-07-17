@@ -25,10 +25,10 @@ extern fs::path progDir, tempDir;
 extern cCustomGraphics spec_scen_g;
 
 // Load saved games
-static bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there, bool mac_file);
-static bool load_party_v2(fs::path file_to_load, cUniverse& univ);
+static bool load_party_v1(fs::path const &file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there, bool mac_file);
+static bool load_party_v2(fs::path const &file_to_load, cUniverse& univ);
 
-bool load_party(fs::path file_to_load, cUniverse& univ){
+bool load_party(fs::path const &file_to_load, cUniverse& univ){
 	bool town_restore = false;
 	bool maps_there = false;
 	bool in_scen = false;
@@ -106,7 +106,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 	return true;
 }
 
-bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restore, bool in_scen, bool maps_there, bool mac_file){
+bool load_party_v1(fs::path const &file_to_load, cUniverse& real_univ, bool town_restore, bool in_scen, bool maps_there, bool mac_file){
 	std::ifstream fin(file_to_load.string().c_str(), std::ios_base::binary);
 	fin.seekg(3*sizeof(short),std::ios_base::beg); // skip the header, which is 6 bytes in the old format
 	
@@ -254,7 +254,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 }
 
 extern fs::path scenDir;
-bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
+bool load_party_v2(fs::path const &file_to_load, cUniverse& real_univ){
 	igzstream zin(file_to_load.string().c_str());
 	tarball partyIn;
 	partyIn.readFrom(zin);
