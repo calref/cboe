@@ -4318,6 +4318,7 @@ void rect_spec(const runtime_state& ctx){
 	ctx.next_spec = cur_node.jumpto;
 	
 	*ctx.redraw = true;
+	bool need_redraw_map=false;
 	for(short i = spec.ex1b;i <= spec.ex2b;i++)
 		for(short j = spec.ex1a; j <= spec.ex2a; j++) {
 			l.x = i; l.y = j;
@@ -4401,35 +4402,30 @@ void rect_spec(const runtime_state& ctx){
 				case eSpecType::RECT_CHANGE_TER:
 					if(get_ran(1,1,100) <= spec.sd2){
 						alter_space(l.x,l.y,spec.sd1);
-						*ctx.redraw = true;
-						draw_map(true);
+						*ctx.redraw = need_redraw_map= true;
 					}
 					break;
 				case eSpecType::RECT_SWAP_TER:
 					swap_ter(l.x,l.y,spec.sd1,spec.sd2);
-					*ctx.redraw = true;
-					draw_map(true);
+					*ctx.redraw = need_redraw_map= true;
 					break;
 				case eSpecType::RECT_TRANS_TER:
 					ter = coord_to_ter(i,j);
 					alter_space(l.x,l.y,univ.scenario.ter_types[ter].trans_to_what);
-					*ctx.redraw = true;
-					draw_map(true);
+					*ctx.redraw = need_redraw_map= true;
 					break;
 				case eSpecType::RECT_LOCK:
 					ter = coord_to_ter(i,j);
 					if(univ.scenario.ter_types[ter].special == eTerSpec::LOCKABLE){
 						alter_space(l.x,l.y,univ.scenario.ter_types[ter].flag1);
-						*ctx.redraw = true;
-						draw_map(true);
+						*ctx.redraw = need_redraw_map= true;
 					}
 					break;
 				case eSpecType::RECT_UNLOCK:
 					ter = coord_to_ter(i,j);
 					if(univ.scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
 						alter_space(l.x,l.y,univ.scenario.ter_types[ter].flag1);
-						*ctx.redraw = true;
-						draw_map(true);
+						*ctx.redraw = need_redraw_map= true;
 						break;
 					}
 				case eSpecType::RECT_SET_EXPLORED:
@@ -4443,6 +4439,8 @@ void rect_spec(const runtime_state& ctx){
 			}
 		}
 END:
+	if (need_redraw_map)
+		draw_map(true);
 	if(check_mess) {
 		handle_message(ctx);
 	}
