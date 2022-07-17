@@ -20,6 +20,7 @@
 #include "fileio/fileio.hpp"
 #include "dialogxml/widgets/button.hpp"
 #include "dialogxml/widgets/led.hpp"
+#include "dialogxml/widgets/ledgroup.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
 #include "tools/winutil.hpp"
 #include "tools/cursors.hpp"
@@ -678,11 +679,13 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 	}
 	
 	if(!did_cancel) {
-		cLed& ui_scale = dynamic_cast<cLed&>(me["scaleui"]);
-		if(ui_scale.getState() == led_off)
+		std::string scale = dynamic_cast<cLedGroup&>(me["scaleui"]).getSelected();
+		if(scale == "1")
 			set_pref("UIScale", 1.0);
-		else if(ui_scale.getState() == led_red)
+		else if(scale == "2")
 			set_pref("UIScale", 2.0);
+		else if(scale == "4")
+			set_pref("UIScale", 4.0);
 		set_pref("PlaySounds", dynamic_cast<cLed&>(me["nosound"]).getState() == led_off);
 	}
 	save_prefs();
@@ -696,7 +699,12 @@ void pick_preferences() {
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 	
 	float ui_scale = get_float_pref("UIScale", 1.0);
-	dynamic_cast<cLed&>(prefsDlog["scaleui"]).setState(ui_scale == 1.0 ? led_off : (ui_scale == 2.0 ? led_red : led_green));
+	cLedGroup& uiScale = dynamic_cast<cLedGroup&>(prefsDlog["scaleui"]);
+	if (ui_scale>0.95 && ui_scale<1.05) uiScale.setSelected("1");
+	else if (ui_scale>1.95 && ui_scale<2.05) uiScale.setSelected("2");
+	else if (ui_scale>3.95 && ui_scale<4.05) uiScale.setSelected("4");
+	else uiScale.setSelected("other");
+
 	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySounds", true) ? led_off : led_red);
 	
 	prefsDlog.run();
