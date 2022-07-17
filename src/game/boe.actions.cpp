@@ -1376,16 +1376,18 @@ bool handle_action(const sf::Event& event) {
 								handle_equip_item(item_hit, need_redraw);
 								break;
 							case ITEMBTN_USE:
-								handle_use_item(item_hit, did_something, need_redraw);
+								if(stat_window == ITEM_WIN_SPECIAL) {
+									use_spec_item(spec_item_array[item_hit]);
+									need_redraw = true;
+								}
+								else
+									handle_use_item(item_hit, did_something, need_redraw);
 								break;
 							case ITEMBTN_GIVE:
 								handle_give_item(item_hit, did_something, need_redraw);
 								break;
 							case ITEMBTN_DROP:
-								if(stat_window == ITEM_WIN_SPECIAL) {
-									use_spec_item(spec_item_array[item_hit]);
-									need_redraw = true;
-								} else handle_drop_item(item_hit, need_redraw);
+								handle_drop_item(item_hit, need_redraw);
 								break;
 							case ITEMBTN_INFO:
 								if(stat_window == ITEM_WIN_SPECIAL)
@@ -1582,11 +1584,6 @@ bool handle_keystroke(const sf::Event& event){
 		kb::Numpad4,kb::Numpad5,kb::Numpad6,
 		kb::Numpad7,kb::Numpad8,kb::Numpad9
 	};
-	location terrain_click[10] = {
-		{150,185},{120,215},{150,215},{180,215},
-		{120,185},{150,185},{180,185},
-		{120,155},{150,155},{180,135}
-	};
 	Key talk_chars[9] = {kb::L,kb::N,kb::J,kb::B,kb::S,kb::R,kb::D,kb::G,kb::A};
 	Key shop_chars[8] = {kb::A,kb::B,kb::C,kb::D,kb::E,kb::F,kb::G,kb::H};
 	
@@ -1612,7 +1609,7 @@ bool handle_keystroke(const sf::Event& event){
 			abort = false;
 		if (abort) {
 			play_sound(37);
-			add_string_to_buf("Aborted.");
+			add_string_to_buf("Cancelled.");
 			print_buf();
 			obscureCursor();
 			return false;
@@ -1696,19 +1693,40 @@ bool handle_keystroke(const sf::Event& event){
 				are_done = handle_action(pass_event);
 			}
 	} else {
-		for(short i = 0; i < 10; i++)
-			if(chr2 == keypad[i]) {
-				if(i == 0) {
-					chr2 = kb::Z;
-				}
-				else {
-					pass_point = mainPtr.mapCoordsToPixel(terrain_click[i], mainView);
-					pass_event.mouseButton.x = pass_point.x;
-					pass_event.mouseButton.y = pass_point.y;
-					are_done = handle_action(pass_event);
-					return are_done;
-				}
+		for(short i = 0; i < 10; i++) {
+			if(chr2 != keypad[i])
+				continue;
+			if(i == 0) {
+				chr2 = kb::Z;
 			}
+			else if (overall_mode == MODE_FIRING || overall_mode == MODE_THROWING || overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET) {
+				bool need_redraw=true;
+				if (i>=1 && i<=3 && center.y < univ.town->in_town_rect.bottom && center.y < univ.town->max_dim - 5)
+					center.y++;
+				else if (i>=6 && i<=9 && center.y > univ.town->in_town_rect.top && center.y > 4)
+					center.y--;
+				if ((i%3)==1 && center.x > univ.town->in_town_rect.left && center.x > 4)
+					center.x--;
+				else if ((i%3)==0 && center.x < univ.town->in_town_rect.right && center.x < univ.town->max_dim - 5)
+					center.x++;
+				else
+					need_redraw=false;
+				if (need_redraw)
+					draw_terrain();
+			}
+			else {
+				sf::Vector2f const terrain_click[10] = {
+					{150,185},{120,215},{150,215},{180,215},
+					{120,185},{150,185},{180,185},
+					{120,155},{150,155},{180,135}
+				};
+				pass_point = mainPtr.mapCoordsToPixel(terrain_click[i], mainView);
+				pass_event.mouseButton.x = pass_point.x;
+				pass_event.mouseButton.y = pass_point.y;
+				are_done = handle_action(pass_event);
+				return are_done;
+			}
+		}
 	}
 	
 	bool did_something = false, need_redraw = false, need_reprint = false;
