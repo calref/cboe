@@ -3102,14 +3102,64 @@ bool build_scenario() {
 	return true;
 }
 
-static bool save_scenario_events(cDialog& me, std::string, eKeyMod) {
-	if(!me.toast(true)) return true;
-	
-	for(short i = 0; i < scenario.scenario_timers.size(); i++) {
-		std::string id = std::to_string(i + 1);
-		scenario.scenario_timers[i].time = me["time" + id].getTextAsNum();
-		scenario.scenario_timers[i].node = me["node" + id].getTextAsNum();
+namespace {
+struct cTimersState {
+	cTimersState(size_t numItems=9)
+	: first_item(0)
+	, num_items(numItems)
+	{
 	}
+	size_t first_item;
+	size_t num_items;
+	std::vector<cTimer> timers;
+};
+}
+
+static void put_scenario_events(cDialog& me, ::cTimersState const &state)
+{
+	size_t first_item=state.first_item;
+	if (first_item==0)
+		me["up"].hide();
+	else
+		me["up"].show();
+	if (first_item+state.num_items>=state.timers.size())
+		me["down"].hide();
+	else
+		me["down"].show();
+	for(size_t i = 0; first_item+i < state.timers.size() && i < state.num_items; i++) {
+		std::string id = std::to_string(i + 1);
+		me["time" + id].setTextToNum(state.timers[first_item+i].time);
+		me["node" + id].setTextToNum(state.timers[first_item+i].node);
+	}
+}
+
+static bool display_scenario_events(cDialog& me, ::cTimersState &state, std::string item, eKeyMod) {
+	for(size_t i = 0; state.first_item+i < state.timers.size() && i < state.num_items; i++) {
+		std::string id = std::to_string(i + 1);
+		state.timers[state.first_item+i].time = me["time" + id].getTextAsNum();
+		state.timers[state.first_item+i].node = me["node" + id].getTextAsNum();
+	}
+	if (item=="up") {
+		if (state.first_item<=0)
+			return false;
+		--state.first_item;
+		put_scenario_events(me, state);
+		return true;
+	}
+	if (item=="down") {
+		if (state.first_item+state.num_items>=state.timers.size())
+			return false;
+		++state.first_item;
+		put_scenario_events(me, state);
+		return true;
+	}
+	
+	me.toast(true);
+	if (item!="okay")
+		return true;
+	
+	for(size_t i = 0; i < scenario.scenario_timers.size() && i < state.timers.size(); i++)// OSNOLA
+		scenario.scenario_timers[i]=state.timers[i];
 	return true;
 }
 
@@ -3136,19 +3186,26 @@ static bool edit_scenario_events_event_filter(cDialog& me, std::string item_hit,
 
 void edit_scenario_events() {
 	using namespace std::placeholders;
-	
+	size_t first_item = 0;
+	size_t const num_items=9;
+	::cTimersState state(9);
+	state.timers.insert(state.timers.begin(), scenario.scenario_timers.begin(), scenario.scenario_timers.end());
+
 	cDialog evt_dlg("edit-scenario-events");
-	evt_dlg["okay"].attachClickHandler(save_scenario_events);
-	// TODO: There are 20 events, not 10; allow editing the rest?
-	for(int i = 0; i < scenario.scenario_timers.size() && i < 10; i++) {
+	evt_dlg.attachClickHandlers(std::bind(display_scenario_events, _1, std::ref(state), _2, _3), {"okay", "cancel", "up", "down"});
+	for(int i = 0; i < scenario.scenario_timers.size() && i < num_items; i++) {
 		std::string id = std::to_string(i + 1);
 		evt_dlg["time" + id].attachFocusHandler(check_scenario_timer_time);
 		evt_dlg["node" + id].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, scenario.scen_specials.size(), "The scenario special node", "-1 for no special"));
 		evt_dlg["edit" + id].attachClickHandler(edit_scenario_events_event_filter);
-		evt_dlg["time" + id].setTextToNum(scenario.scenario_timers[i].time);
-		evt_dlg["node" + id].setTextToNum(scenario.scenario_timers[i].node);
 	}
-	
+	for(int i = state.timers.size(); i < num_items; i++) {
+		std::string id = std::to_string(i + 1);
+		evt_dlg["edit" + id].hide();
+		evt_dlg["time" + id].hide();
+		evt_dlg["node" + id].hide();
+	}
+	put_scenario_events(evt_dlg, state);
 	evt_dlg.run();
 }
 

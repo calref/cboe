@@ -1110,6 +1110,7 @@ static bool save_talk_node(cDialog& me, std::stack<node_ref_t>& talk_edit_stack,
 }
 
 static void put_talk_node_in_dlog(cDialog& me, std::stack<node_ref_t>& talk_edit_stack) {
+	int talk_node_id=talk_edit_stack.top().first;
 	cSpeech::cNode& talk_node =talk_edit_stack.top().second;
 	
 	me["who"].setTextToNum(talk_node.personality);
@@ -1142,6 +1143,21 @@ static void put_talk_node_in_dlog(cDialog& me, std::stack<node_ref_t>& talk_edit
 	if(talk_edit_stack.size() > 1)
 		me["back"].show();
 	else me["back"].hide();
+
+	if (talk_edit_stack.size()!=1 || talk_node_id<0 || talk_node_id>=town->talking.talk_nodes.size()) {
+		me["next"].hide();
+		me["prev"].hide();
+	}
+	else {
+		if (talk_node_id==0)
+			me["prev"].hide();
+		else
+			me["prev"].show();
+		if (talk_node_id+1<town->talking.talk_nodes.size())
+			me["next"].show();
+		else
+			me["next"].hide();
+	}
 }
 
 static bool talk_node_back(cDialog& me, std::stack<node_ref_t>& talk_edit_stack) {
@@ -1197,6 +1213,23 @@ static bool select_talk_node_value(cDialog& me, std::string item_hit, const std:
 	return true;
 }
 
+static bool select_talk_node_next_prev(cDialog& me, std::string const &item_hit, std::stack<node_ref_t>& talk_edit_stack) {
+	short talk_node_id = talk_edit_stack.top().first;
+	if(item_hit == "next")
+		++talk_node_id;
+	else if(item_hit == "prev")
+		--talk_node_id;
+	else
+		return false;
+	if (talk_node_id<0 || talk_node_id>=town->talking.talk_nodes.size())
+		return false;
+	save_talk_node(me, talk_edit_stack, false, true);
+	talk_edit_stack.pop();
+	talk_edit_stack.push({talk_node_id, town->talking.talk_nodes[talk_node_id]});
+	put_talk_node_in_dlog(me, talk_edit_stack);
+	return true;
+}
+
 // Returns -1 if accepted, otherwise the node that was cancelled
 short edit_talk_node(short which_node) {
 	using namespace std::placeholders;
@@ -1212,6 +1245,7 @@ short edit_talk_node(short which_node) {
 	talk_dlg["choose-type"].attachClickHandler(std::bind(select_talk_node_type, _1, std::ref(talk_edit_stack)));
 	talk_dlg.attachClickHandlers(std::bind(select_talk_node_value, _1, _2, std::ref(talk_edit_stack)), {"chooseA", "chooseB"});
 	talk_dlg["who"].attachFocusHandler(check_talk_personality);
+	talk_dlg.attachClickHandlers(std::bind(select_talk_node_next_prev, _1, _2, std::ref(talk_edit_stack)), {"next", "prev"});
 	talk_dlg.attachFocusHandlers(check_talk_key, {"key1", "key2"});
 	talk_dlg.attachFocusHandlers(std::bind(check_talk_xtra, _1, std::ref(talk_edit_stack), _2, _3), {"extra1", "extra2", "extra3", "extra4"});
 	
@@ -1525,7 +1559,8 @@ bool resize_outdoors() {
 cOutdoors* pick_import_out() {
 	cScenario temp_scenario;
 	fs::path path = nav_get_scenario();
-	load_scenario(path, temp_scenario);
+	if (!load_scenario(path, temp_scenario))
+		return nullptr;
 	location sector = pick_out({-1,-1},temp_scenario);
 	if(sector.x < 0 && sector.y < 0)
 		return nullptr;
