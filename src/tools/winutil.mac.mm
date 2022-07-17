@@ -196,17 +196,20 @@ void init_fileio(){
 	[dlg_get_scen setMessage: @"Select a scenario to edit:"];
 	[dlg_get_scen setTitle: @"Load Scenario"];
 	[dlg_get_scen retain];
-	
+	dlg_get_scen.allowsMultipleSelection = NO;
+
 	dlg_get_game = [NSOpenPanel openPanel];
 	[dlg_get_game setAllowedFileTypes: [NSArray arrayWithObjects: @"exg", @"boe", @"SAV", @"mac", NSFileTypeForHFSTypeCode('beSV'), nil]];
 	[dlg_get_game setMessage: @"Select a saved game to resume:"];
 	[dlg_get_game setTitle: @"Load Game"];
 	[dlg_get_game retain];
+	dlg_get_game.allowsMultipleSelection = NO;
 	
 	dlg_get_rsrc = [NSOpenPanel openPanel];
 	[dlg_get_rsrc setMessage: @"Select a resource to import:"];
 	[dlg_get_rsrc setTitle: @"Import Resource"];
 	[dlg_get_rsrc retain];
+	dlg_get_rsrc.allowsMultipleSelection = NO;
 	
 	dlg_put_scen = [NSSavePanel savePanel];
 	[dlg_put_scen setAllowedFileTypes: [NSArray arrayWithObjects: @"boes", nil]];
