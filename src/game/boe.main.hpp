@@ -6,7 +6,7 @@ extern eMenuChoice menuChoice;
 extern short menuChoiceId;
 #endif
 int main(int argc, char* argv[]);
-void update_everything();
+bool update_everything();
 void redraw_everything();
 void Mouse_Pressed(const sf::Event&);
 void close_program();
@@ -19,8 +19,6 @@ bool handle_startup_press(location the_point);
 void handle_splash_events();
 void show_logo();
 void plop_fancy_startup();
-void update_terrain_animation();
-void update_startup_animation();
 void handle_events();
 void handle_one_event(const sf::Event&);
 void handle_one_minimap_event(const sf::Event &);
