@@ -181,20 +181,27 @@ void handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(!All_Done) {
+		bool need_redraw=false;
 		if(changed_display_mode) {
+			need_redraw=true;
 			changed_display_mode = false;
 			adjust_window(mainPtr, mainView);
 		}
 
 #ifdef __APPLE__
 		if (menuChoiceId>=0) {
+			need_redraw=true;
 			handle_menu_choice(eMenu(menuChoiceId));
 			menuChoiceId=-1;
 		}
 #endif
-		while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent);
-
-		redraw_everything();
+		while(mainPtr.pollEvent(currentEvent)) {
+			need_redraw=true;
+			handle_one_event(currentEvent);
+		}
+		
+		if (need_redraw)
+			redraw_everything();
 
 		// Prevent the loop from executing too fast.
 		fps_limiter.frame_finished();
