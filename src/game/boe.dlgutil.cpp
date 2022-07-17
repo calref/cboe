@@ -866,7 +866,8 @@ void handle_talk_event(location p) {
 	save_talk_str2 = univ.town.cur_talk().talk_nodes[which_talk_entry].str2;
 	
 	can_save_talk = true;
-	
+	stat_screen_mode = MODE_SHOP;
+
 	switch(ttype) {
 		case eTalkNode::REGULAR:
 			break;
