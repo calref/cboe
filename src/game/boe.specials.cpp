@@ -392,7 +392,9 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			if(mode == eSpecCtx::OUT_MOVE && out_boat_there(where_check))
 				break;
 			//one_sound(17);
-			for(short i = mode == eSpecCtx::COMBAT_MOVE ? univ.get_target_i(which_pc) : 0 ; i < 6; i++)
+			for(short i = mode == eSpecCtx::COMBAT_MOVE ? univ.get_target_i(which_pc) : 0 ; i < 6; i++) {
+				if (i<0)
+					break;
 				if(univ.party[i].main_status == eMainStatus::ALIVE) {
 					if(get_ran(1,1,100) <= ter_flag2) {
 						switch((eStatus)ter_flag3){
@@ -448,9 +450,10 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 							case eStatus::MAIN: case eStatus::CHARM: // These magic values are illegal in this context
 								break;
 						}
-						if(mode == eSpecCtx::COMBAT_MOVE) break; // only damage once in combat!
 					}
 				}
+				if(mode == eSpecCtx::COMBAT_MOVE) break; // only damage one character in combat!
+			}
 			put_pc_screen();
 			if(ter_flag3 == int(eStatus::DUMB))
 				adjust_spell_menus();
