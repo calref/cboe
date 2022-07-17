@@ -59,7 +59,7 @@ void cPlayer::import_legacy(legacy::pc_record_type old){
 	direction = eDirection(old.direction);
 }
 
-short cPlayer::get_tnl(){
+short cPlayer::get_tnl() const {
 	short tnl = 100,store_per = 100;
 	// Omitting a race from this list gives it a value of 0, thanks to the defaulting implementation of operator[]
 	static std::map<const eRace, const int> rp = {{eRace::NEPHIL,12},{eRace::SLITH,20},{eRace::VAHNATAI,18}};
