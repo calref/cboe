@@ -1588,12 +1588,39 @@ bool handle_keystroke(const sf::Event& event){
 	Key talk_chars[9] = {Key::L,Key::N,Key::J,Key::B,Key::S,Key::R,Key::D,Key::G,Key::A};
 	Key shop_chars[8] = {Key::A,Key::B,Key::C,Key::D,Key::E,Key::F,Key::G,Key::H};
 	
-	if(map_visible && event.key.code == Key::Escape
-	   && (overall_mode != MODE_TALKING) && (overall_mode != MODE_SHOPPING)) {
-		mini_map.setVisible(false);
-		map_visible = false;
-		mainPtr.setActive();
-		return false;
+	if(event.key.code == Key::Escape) {
+		bool abort=true;
+		if (overall_mode == MODE_BASH_TOWN || overall_mode == MODE_DROP_TOWN ||
+			overall_mode == MODE_PICK_TOWN || overall_mode == MODE_USE_TOWN)
+			overall_mode = MODE_TOWN;
+		else if (overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_TOWN_TARGET ||
+			overall_mode == MODE_TALK_TOWN) {
+			overall_mode = MODE_TOWN;
+			center = univ.party.town_loc;
+		}
+		else if (overall_mode == MODE_DROP_COMBAT || overall_mode == MODE_FANCY_TARGET ||
+				 overall_mode == MODE_FIRING || overall_mode == MODE_LOOK_COMBAT ||
+				 overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_THROWING) {
+			overall_mode = MODE_COMBAT;
+			center = univ.current_pc().combat_pos;
+		}
+		else if(overall_mode == MODE_LOOK_OUTDOORS)
+			overall_mode = MODE_OUTDOORS;
+		else
+			abort = false;
+		if (abort) {
+			play_sound(37);
+			add_string_to_buf("Aborted.");
+			print_buf();
+			obscureCursor();
+			return false;
+		}
+		if(map_visible && (overall_mode != MODE_TALKING) && (overall_mode != MODE_SHOPPING)) {
+			mini_map.setVisible(false);
+			map_visible = false;
+			mainPtr.setActive();
+			return false;
+		}
 	}
 	
 	if(overall_mode == MODE_STARTUP)

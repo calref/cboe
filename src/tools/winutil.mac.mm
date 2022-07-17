@@ -79,7 +79,7 @@ std::string get_os_version() {
 	NSProcessInfo* info = [NSProcessInfo processInfo];
 	std::ostringstream os;
 	os << "Apple Mac OS X ";
-	os << [[info operatingSystemVersionString] cStringUsingEncoding:NSASCIIStringEncoding];
+	os << [[info operatingSystemVersionString] UTF8String];
 	return os.str();
 }
 
@@ -148,9 +148,9 @@ void set_clipboard_img(sf::Image& img) {
 	std::copy(img.getPixelsPtr(), img.getPixelsPtr() + data_sz, [bmp bitmapData]);
 	NSImage * image = [[NSImage alloc] initWithSize: NSMakeSize(sz.x, sz.y)];
 	[image addRepresentation: bmp];
+	[bmp release];
 	NSArray* contents = [NSArray arrayWithObject: image];
 	[image release];
-	[bmp release];
 	NSPasteboard* pb = [NSPasteboard generalPasteboard];
 	[pb clearContents];
 	[pb writeObjects: contents];
