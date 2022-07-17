@@ -305,9 +305,10 @@ static bool pick_alchemy_led(cDialog& me, std::string item_hit, bool, bool allow
 		cLed& led = dynamic_cast<cLed&>(me.getControl(item_hit));
 		led.setState(univ.party.alchemy[hit] ? led_red : led_off);
 	}
-	// TODO: change message when hit==0
-	//       use a variable to store the beginning of the potion details
-	me["info"].setText(get_str("alchemy", hit+8));
+	if (hit==0)
+		me["info"].setText("Weak Curing\n  Min. Skill - 1\nNeed holly. Cures poison somewhat.");
+	else
+		me["info"].setText(get_str("alchemy", hit+8));
 	return true;
 }
 
