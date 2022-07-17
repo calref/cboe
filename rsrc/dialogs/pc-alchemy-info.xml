@@ -3,7 +3,7 @@
 <dialog defbtn='done'>
 	<text size='large' top='10' left='54' width='163' height='15'>Alchemy known:</text>
 	<pict type='dlog' num='20' top='6' left='6'/>
-	<button name='done' type='done' top='174' left='356'/>
+	<button name='done' type='done' top='235' left='356'/>
 	<led name='potion1' state='off' top='33' left='217'/>
 	<led name='potion2' state='off' top='47' left='217'/>
 	<led name='potion3' state='off' top='61' left='217'/>
@@ -28,4 +28,5 @@
 	 TODO: This originally had width=119; if it looks wrong in-game, try reverting to that
 	 -->
 	<text top='179' left='8' width='250' height='16'>Number in ( ) is minimum skill to make.</text>
+	<text name='info' framed='true' top='200' left='8' width='300' height='59'>Select a potion.</text>
 </dialog>
