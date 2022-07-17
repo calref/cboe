@@ -750,11 +750,6 @@ void place_treasure(location where,short level,short loot,short mode) {
 		{100,90,80,70,0,0},
 		{100,80,80,75,75,75}
 	};
-	static const short id_odds[21] = {
-		0,10,15,20,25,30,35,
-		39,43,47,51,55,59,63,
-		67,71,73,75,77,79,81
-	};
 	static const short max_mult[5][10] = {
 		{0,0,0,0,0,0,0,0,0,1},
 		{0,0,1,1,1,1,2,3,5,20},
@@ -838,9 +833,14 @@ void place_treasure(location where,short level,short loot,short mode) {
 				new_item.variety = eItemType::NO_ITEM;
 			
 			if(new_item.variety != eItemType::NO_ITEM) {
+				static const short id_odds[21] = {
+					0,10,15,20,25,30,35,
+					39,43,47,51,55,59,63,
+					67,71,73,75,77,79,81
+				};
 				for(short i = 0; i < 6; i++)
 					if((univ.party[i].main_status == eMainStatus::ALIVE)
-					   && get_ran(1,1,100) < id_odds[univ.party[i].skill(eSkill::ITEM_LORE)])
+					   && get_ran(1,1,100) <= id_odds[univ.party[i].skill(eSkill::ITEM_LORE)])
 						new_item.ident = true;
 				place_item(new_item,where);
 			}
