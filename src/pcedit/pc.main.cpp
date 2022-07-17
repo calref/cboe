@@ -392,10 +392,10 @@ void handle_menu_choice(eMenu item_hit) {
 					m.set();
 			break;
 		case eMenu::EDIT_MAGE:
-			display_pc(current_active_pc,10,0);
+			display_pc(current_active_pc,0,true,nullptr);
 			break;
 		case eMenu::EDIT_PRIEST:
-			display_pc(current_active_pc,11,0);
+			display_pc(current_active_pc,1,true,nullptr);
 			break;
 		case eMenu::EDIT_ITEM:
 			if(scen_items_loaded) {
