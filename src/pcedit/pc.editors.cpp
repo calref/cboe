@@ -47,7 +47,6 @@ extern bool current_file_has_maps;
 bool choice_active[6];
 
 extern short which_pc_displayed;
-cPlayer *store_pc;
 sf::Texture button_num_gworld;
 
 extern std::map<eSkill,short> skill_cost;
@@ -131,33 +130,62 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 	}
 }
 
-static void display_traits_graphics(cDialog& me) {
-	short store;
-	
-	if(store_pc->race <= eRace::VAHNATAI) {
-		std::string race = "race" + std::to_string(int(store_pc->race) + 1);
+// Start pick race dialog here
+struct sTraitsState {
+	sTraitsState(cUniverse const &univ) : pc_num(-1)
+	{
+		for (int i=0; i<6; ++i) {
+			auto const &pc=univ.party[i];
+			races[i]=pc.race;
+			for (int t=0; t<17; ++t) {
+				eTrait trait = eTrait(t);
+				if (pc.traits.find(trait)!=pc.traits.end())
+					traits[i][t]=pc.traits[trait];
+				else
+					traits[i][t]=false;
+			}
+		}
+	}
+	void save(cUniverse &univ) const {
+		for (int i=0; i<6; ++i) {
+			auto &pc=univ.party[i];
+			pc.race=races[i];
+			for (int t=0; t<17; ++t) {
+				eTrait trait = eTrait(t);
+				pc.traits[trait]=traits[i][t];
+			}
+		}
+	}
+	short pc_num;
+	eRace races[6];
+	bool traits[6][17];
+};
+
+
+static void display_traits_graphics(cDialog& me, sTraitsState const &state) {
+	int const pc_num=state.pc_num;
+	auto const &pc=univ.party[pc_num];
+	me["name"].setText(pc.name);
+	if(pc.race <= eRace::VAHNATAI) {
+		std::string race = "race" + std::to_string(int(state.races[pc_num]) + 1);
 		dynamic_cast<cLedGroup&>(me["race"]).setSelected(race);
 	}
 	for(short i = 0; i < 10; i++) {
 		std::string id = "good" + std::to_string(i + 1);
-		eTrait trait = eTrait(i);
-		dynamic_cast<cLed&>(me[id]).setState(store_pc->traits[trait] ? led_red : led_off);
+		dynamic_cast<cLed&>(me[id]).setState(state.traits[pc_num][i] ? led_red : led_off);
 	}
 	for(short i = 0; i < 7; i++) {
 		std::string id = "bad" + std::to_string(i + 1);
-		eTrait trait = eTrait(i + 10);
-		dynamic_cast<cLed&>(me[id]).setState(store_pc->traits[trait] ? led_red : led_off);
+		dynamic_cast<cLed&>(me[id]).setState(state.traits[pc_num][i+10] ? led_red : led_off);
 	}
 	
-	store = store_pc->get_tnl();
-	me["xp"].setTextToNum(store);
+	me["xp"].setTextToNum(pc.get_tnl());
 }
 
-static bool pick_race_select_led(cDialog& me, std::string item_hit, bool, const short store_trait_mode) {
+static bool pick_race_select_led(cDialog& me, sTraitsState &state, std::string item_hit, bool, const short store_trait_mode) {
 	int abil_str = 0;
-	cPlayer *pc;
-	
-	pc = store_pc;
+
+	int const pc_num=state.pc_num;
 	if(item_hit == "race") {
 		item_hit = dynamic_cast<cLedGroup&>(me["race"]).getSelected();
 		eRace race;
@@ -169,22 +197,20 @@ static bool pick_race_select_led(cDialog& me, std::string item_hit, bool, const 
 			default: return false;
 		}
 		if(store_trait_mode == 0)
-			pc->race = race;
-		display_traits_graphics(me);
+			state.races[pc_num] = race;
+		display_traits_graphics(me,state);
 		abil_str = 36 + int(race) * 2;
 	} else if(item_hit.substr(0,3) == "bad") {
 		int hit = item_hit[3] - '1';
-		eTrait trait = eTrait(hit + 10);
 		if(store_trait_mode != 1)
-			pc->traits[trait] = !pc->traits[trait];
-		display_traits_graphics(me);
+			state.traits[pc_num][hit+10] = !state.traits[pc_num][hit+10];
+		display_traits_graphics(me,state);
 		abil_str = 22 + hit * 2;
 	} else if(item_hit.substr(0,4) == "good") {
 		int hit = boost::lexical_cast<int>(item_hit.substr(4)) - 1;
-		eTrait trait = eTrait(hit);
 		if(store_trait_mode != 1)
-			pc->traits[trait] = !pc->traits[trait];
-		display_traits_graphics(me);
+			state.traits[pc_num][hit] = !state.traits[pc_num][hit];
+		display_traits_graphics(me,state);
 		abil_str = 2 + hit * 2;
 	}
 	if(abil_str > 0)
@@ -192,28 +218,58 @@ static bool pick_race_select_led(cDialog& me, std::string item_hit, bool, const 
 	return store_trait_mode == 0;
 }
 
+// OSNOLA2
+static bool give_pick_race_event_filter(cDialog& me, std::string item_hit, sTraitsState &state) {
+	short &pc_num=state.pc_num;
+	if (item_hit == "cancel") {
+		me.toast(false);
+		me.setResult(false);
+	}
+	else if(item_hit == "done") {
+		me.setResult(true);
+		me.toast(true);
+	}
+	else if(item_hit == "left") {
+		do {
+			pc_num = (pc_num + 5) % 6;
+		} while(univ.party[pc_num].main_status != eMainStatus::ALIVE);
+		display_traits_graphics(me, state);
+	} else if(item_hit == "right") {
+		do {
+			pc_num = (pc_num + 1) % 6;
+		} while(univ.party[pc_num].main_status != eMainStatus::ALIVE);
+		display_traits_graphics(me, state);
+	}
+	return true;
+}
+
 //mode; // 0 - edit  1 - just display  2 - can't change race
-void pick_race_abil(cPlayer *pc,short mode,cDialog* parent) {
+void pick_race_abil(short pc_num,short mode,cDialog* parent) {
 	using namespace std::placeholders;
 	static const char*const start_str1 = "Click on button by name for description.";
 	static const char*const start_str2 = "Click on advantage button to add/remove.";
-	
-	store_pc = pc;
+	sTraitsState state(univ);
+	state.pc_num = pc_num;
 	set_cursor(sword_curs);
 	
 	cDialog pickAbil(*ResMgr::dialogs.get("pick-race-abil"),parent);
-	pickAbil["done"].attachClickHandler(std::bind(&cDialog::toast, &pickAbil, true));
-	auto led_selector = std::bind(pick_race_select_led, _1, _2, _3, mode);
+	pickAbil.attachClickHandlers(std::bind(give_pick_race_event_filter, _1, _2, std::ref(state)), {"done", "cancel", "left", "right"});
+	auto led_selector = std::bind(pick_race_select_led, _1, std::ref(state), _2, _3, mode);
 	pickAbil.attachFocusHandlers(led_selector, {"race", "bad1", "bad2", "bad3", "bad4", "bad5", "bad6", "bad7"});
 	pickAbil.attachFocusHandlers(led_selector, {"good1", "good2", "good3", "good4", "good5"});
 	pickAbil.attachFocusHandlers(led_selector, {"good6", "good7", "good8", "good9", "good10"});
 	
-	display_traits_graphics(pickAbil);
-	if(mode == 1)
+	display_traits_graphics(pickAbil, state);
+	if(mode == 1) {
+		pickAbil["cancel"].hide();
 		pickAbil["info"].setText(start_str1);
-	else pickAbil["info"].setText(start_str2);
-	
+	}
+	else
+		pickAbil["info"].setText(start_str2);
 	pickAbil.run();
+	
+	if (pickAbil.getResult<bool>() && mode!=1)
+		state.save(univ);;
 }
 
 extern const short alch_difficulty[20] = {
