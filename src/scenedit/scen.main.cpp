@@ -189,7 +189,7 @@ void adjust_windows (sf::RenderWindow & mainPtr, sf::View & mainView) {
 	// Apply view to the main window
 	mainPtr.setView(mainView);
 
-#ifndef SFML_SYSTEM_MAC // This overrides Dock icon on OSX, which isn't what we want at all
+#ifndef __APPLE__ // This overrides Dock icon on OSX, which isn't what we want at all
 	auto const & icon = *ResMgr::textures.get("icon", true);
 	mainPtr.setIcon(icon->getSize().x, icon->getSize().y, icon->copyToImage().getPixelsPtr());
 #endif

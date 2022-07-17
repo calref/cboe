@@ -755,7 +755,7 @@ void draw_terrain(short	mode) {
 			where_draw.x += i - 6;
 			where_draw.y += j - 6;
 			if(!(is_out()))
-				light_area[i][j] = (is_town()) ? (can_see_light(view_loc,where_draw,sight_obscurity)<=4) : combat_pt_in_light(where_draw);
+				light_area[i][j] = is_town() ? can_see_light(view_loc,where_draw,sight_obscurity)<=4 : combat_pt_in_light(where_draw);
 			if((where_draw.x < 0) || (where_draw.x > max_dim - 1)
 				|| (where_draw.y < 0) || (where_draw.y > max_dim - 1))
 				unexplored_area[i][j] = 0;
