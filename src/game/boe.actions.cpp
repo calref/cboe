@@ -1744,6 +1744,7 @@ bool handle_keystroke(const sf::Event& event){
 			else if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT || overall_mode == MODE_OUTDOORS) {
 				// Pause (skip turn)
 				handle_pause(did_something, need_redraw);
+				advance_time(did_something, need_redraw, need_reprint);
 			}
 			break;
 			
