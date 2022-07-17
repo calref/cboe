@@ -1582,7 +1582,6 @@ bool handle_keystroke(const sf::Event& event){
 		Key::Numpad4,Key::Numpad5,Key::Numpad6,
 		Key::Numpad7,Key::Numpad8,Key::Numpad9
 	};
-	Key talk_chars[9] = {Key::L,Key::N,Key::J,Key::B,Key::S,Key::R,Key::D,Key::G,Key::A};
 	Key shop_chars[8] = {Key::A,Key::B,Key::C,Key::D,Key::E,Key::F,Key::G,Key::H};
 	
 	if(event.key.code == Key::Escape) {
@@ -1660,19 +1659,21 @@ bool handle_keystroke(const sf::Event& event){
 	if(overall_mode == MODE_TALKING) {
 		if(chr2 == Key::Escape)
 			chr2 = Key::D;
-		if(chr2 == Key::Space)
+		if(chr2 == Key::Space || chr2== Key::Numpad4)
 			chr2 = Key::G;
-		for(short i = 0; i < 9; i++)
-			if(chr2 == talk_chars[i] && (!talk_end_forced || i == 6 || i == 5)) {
-				// related to talk_area_rect, unsure why adding +9 is needed?
-				pass_point = talk_words[i].rect.topLeft();
-				pass_point.x += talk_area_rect.left+9;
-				pass_point.y += talk_area_rect.top+9;
-				pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
-				pass_event.mouseButton.x = pass_point.x;
-				pass_event.mouseButton.y = pass_point.y;
-				are_done = handle_action(pass_event);
-			}
+		Key const talk_chars[10] = {Key::L,Key::N,Key::J,Key::B,Key::S,Key::R,Key::D,Key::G,Key::Numpad6,Key::A};
+		for(short i = 0; i < 10; i++) {
+			if(chr2 != talk_chars[i]) continue;
+			if (talk_end_forced && i != 5 && i != 6) continue;
+			// related to talk_area_rect, unsure why adding +9 is needed?
+			pass_point = talk_words[i].rect.topLeft();
+			pass_point.x += talk_area_rect.left+9;
+			pass_point.y += talk_area_rect.top+9;
+			pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
+			pass_event.mouseButton.x = pass_point.x;
+			pass_event.mouseButton.y = pass_point.y;
+			are_done = handle_action(pass_event);
+		}
 	}
 	else if(overall_mode == MODE_SHOPPING) { // shopping keystrokes
 		if(chr2 == Key::Escape) {
