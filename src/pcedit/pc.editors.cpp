@@ -179,7 +179,7 @@ static void display_traits_graphics(cDialog& me, sTraitsState const &state) {
 		std::string id = "bad" + std::to_string(i + 1);
 		dynamic_cast<cLed&>(me[id]).setState(state.traits[pc_num][i+10] ? led_red : led_off);
 	}
-	cPlayer dumpPlayer(pc);
+	cPlayer dumpPlayer(no_party, pc);
 	state.save(pc_num, dumpPlayer);
 	me["xp"].setTextToNum(dumpPlayer.get_tnl());
 }

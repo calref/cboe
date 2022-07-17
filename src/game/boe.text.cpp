@@ -264,7 +264,7 @@ void put_item_screen(eItemWinMode screen_num) {
 					place_item_button(3,i,ITEMBTN_INFO);
 					if((univ.scenario.special_items[spec_item_array[i_num]].flags % 10 == 1)
 						&& (!(is_combat())))
-						place_item_button(0,i,ITEMBTN_DROP); // TODO: Shouldn't this be ITEMBTN_USE?
+						place_item_button(0,i,ITEMBTN_USE);
 				}
 			}
 			break;
