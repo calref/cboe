@@ -216,14 +216,14 @@ public:
 private:
 	void draw();
 	void handle_events();
-	void handle_one_event(const sf::Event&);
+	void handle_one_event(const sf::Event&, bool &need_redraw);
 	void process_keystroke(cKey keyHit);
 	void process_click(location where, eKeyMod mods);
 	bool dialogNotToast, didAccept;
 	rectangle winRect;
 	boost::any result;
 	std::string fname;
-	sf::Clock animTimer, paintTimer;
+	sf::Clock animTimer;
 	friend class cControl;
 	friend class cContainer;
 };

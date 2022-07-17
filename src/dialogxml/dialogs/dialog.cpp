@@ -562,10 +562,17 @@ void cDialog::handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(dialogNotToast) {
-		while(win.pollEvent(currentEvent)) handle_one_event(currentEvent);
+		bool need_redraw=false; // OSNOLA
+		while(win.pollEvent(currentEvent)) handle_one_event(currentEvent, need_redraw);
 
+		if(doAnimations && animTimer.getElapsedTime().asMilliseconds() >= 500) {
+			need_redraw = true;
+			cPict::advanceAnim();
+			animTimer.restart();
+		}
 		// Ideally, this should be the only draw call that is done in a cycle.
-		draw();
+		if (need_redraw)
+			draw();
 
 		// Prevent the loop from executing too fast.
 		fps_limiter.frame_finished();
@@ -573,7 +580,7 @@ void cDialog::handle_events() {
 }
 
 // This method handles one event received by the dialog.
-void cDialog::handle_one_event(const sf::Event& currentEvent) {
+void cDialog::handle_one_event(const sf::Event& currentEvent, bool &need_redraw) {
 	using kb = sf::Keyboard;
 
 	cKey key;
@@ -581,7 +588,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 	static cKey pendingKey = {true};
 	std::string itemHit = "";
 	location where;
-
+	need_redraw=true;
 	switch(currentEvent.type) {
 		case sf::Event::KeyPressed:
 			switch(currentEvent.key.code){
@@ -653,6 +660,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 				case kb::RControl:
 				case kb::LSystem:
 				case kb::RSystem:
+					need_redraw=false;
 					return;
 				default:
 					key.spec = false;
@@ -706,7 +714,8 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 			process_click(where, key.mod);
 			break;
 		default: // To silence warning of unhandled enum values
-			break;
+			need_redraw=false;
+			return;
 		case sf::Event::GainedFocus:
 		case sf::Event::MouseMoved:
 			bool inField = false;
@@ -1035,10 +1044,6 @@ bool cDialog::doAnimations = false;
 void cDialog::draw(){
 	win.setActive(false);
 	tileImage(win,winRect,::bg[bg]);
-	if(doAnimations && animTimer.getElapsedTime().asMilliseconds() >= 500) {
-		cPict::advanceAnim();
-		animTimer.restart();
-	}
 	
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
