@@ -247,7 +247,7 @@ static bool put_placed_item_in_dlog(cDialog& me, const cTown::cItem& item, const
 	if(item.contained)
 		dynamic_cast<cLed&>(me["contained"]).setState(led_red);
 	
-	dynamic_cast<cPict&>(me["pic"]).setPict(base.graphic_num, PIC_ITEM);
+	dynamic_cast<cPict&>(me["pic"]).setPict(base.get_picture_num(false));
 	
 	me["charges"].show();
 	me["charges-lbl"].show();
@@ -368,10 +368,7 @@ void edit_sign(sign_loc_t& which_sign,short num,short picture) {
 	cDialog sign_dlg("edit-sign");
 	sign_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &sign_dlg, false));
 	sign_dlg["okay"].attachClickHandler(std::bind(edit_sign_event_filter, _1, std::ref(which_sign)));
-	if (check_picture_num(cTerrain::get_picture_num_for_terrain(picture), false)) // REMOVEME
-		dynamic_cast<cPict&>(sign_dlg["pic"]).setPict(cTerrain::get_picture_num_for_terrain(picture)); // checkme: does this really need to be some terrain?
-	else
-		dynamic_cast<cPict&>(sign_dlg["pic"]).setPict(cPictNum(1999,ePicType::PIC_CUSTOM_TER));
+	dynamic_cast<cPict&>(sign_dlg["pic"]).setPict(cTerrain::get_picture_num_for_terrain(picture)); // checkme: does this really need to be some terrain?
 
 	
 	sign_dlg["num"].setTextToNum(num);
