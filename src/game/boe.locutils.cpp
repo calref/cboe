@@ -294,13 +294,19 @@ bool is_blocked(location to_check) {
 			return true;
 		}
 		
-		// checkme in combat.c this is only called when is_combat() && ter_pic==406
-		//         due to a logical error
-		if(is_combat() && !univ.scenario.is_legacy && univ.town.is_spot(to_check.x, to_check.y))
-			return true;
-		if(is_combat() && univ.scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].trim_type == eTrimType::CITY)
-			return true; // TODO: Maybe replace eTrimType::CITY with a blockage == clear/special && is_special() check
-		// Note: The purpose of the above check is to avoid portals.
+		if (is_combat()) {
+			if (univ.scenario.is_legacy) {
+				// checkme in combat.c this is only called when is_combat() && ter_pic==406
+				//         (ie. ter_anim+6) due to a logical error
+				if (univ.scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].picture==966)
+					return true;
+			}
+			else {
+				if(univ.town.is_spot(to_check.x, to_check.y) || univ.scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].trim_type == eTrimType::CITY)
+					return true; // TODO: Maybe replace eTrimType::CITY with a blockage == clear/special && is_special() check
+					// Note: The purpose of the above check is to avoid portals.
+			}
+		}
 		
 		// Party there?
 		if(is_town() && to_check == univ.party.town_loc)

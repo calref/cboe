@@ -361,14 +361,7 @@ static void fill_ter_info(cDialog& me, short ter){
 	{
 		cPict& pic_ctrl = dynamic_cast<cPict&>(me["graphic"]);
 		pic_num_t pic = ter_type.picture;
-		if(pic < 960)
-			pic_ctrl.setPict(pic, PIC_TER);
-		else if(pic < 1000)
-			pic_ctrl.setPict(pic - 960, PIC_TER_ANIM);
-		else if(pic < 2000)
-			pic_ctrl.setPict(pic % 1000, PIC_CUSTOM_TER);
-		else
-			pic_ctrl.setPict(pic % 2000, PIC_CUSTOM_TER_ANIM);
+		pic_ctrl.setPict(cPictNum::getPN_for_terrain(pic));
 		me["pict"].setTextToNum(pic);
 	}{
 		cPict& pic_ctrl = dynamic_cast<cPict&>(me["seemap"]);
@@ -499,7 +492,7 @@ static bool edit_ter_obj(cDialog& me, ter_num_t which_ter) {
 		for(int x = 0; x < 4; x++) {
 			for(int y = 0; y < 4; y++) {
 				std::string id = "x" + std::to_string(x) + "y" + std::to_string(y);
-				dynamic_cast<cPict&>(me[id]).setPict(obj[x][y]);
+				dynamic_cast<cPict&>(me[id]).setPict(cPictNum::getPN_for_terrain(obj[x][y]));
 			}
 		}
 		return true;
