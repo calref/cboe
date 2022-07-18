@@ -54,12 +54,14 @@ public:
 	
 	cItem const &get_item(item_num_t item) const;
 	cItem &get_item(item_num_t item);
+	std::string &get_journal_string(int id);
+	std::string const &get_journal_string(int id) const;
 	cQuest const &get_quest(int quest) const;
 	cQuest &get_quest(int quest);
-	cSpecItem const &get_special_item(item_num_t item) const;
-	cSpecItem &get_special_item(item_num_t item);
 	cShop const &get_shop(int shop) const;
 	cShop &get_shop(int shop);
+	cSpecItem const &get_special_item(item_num_t item) const;
+	cSpecItem &get_special_item(item_num_t item);
 	std::string &get_special_string(int id);
 	std::string const &get_special_string(int id) const;
 	cTerrain const &get_terrain(ter_num_t ter) const;

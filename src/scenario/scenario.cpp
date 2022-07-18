@@ -242,6 +242,27 @@ static cQuest getBadQuest() {
 	return badQuest;
 }
 
+std::string &cScenario::get_journal_string(int id)
+{
+	   if (id>=0 && id<journal_strs.size())
+			   return journal_strs[id];
+	   if (id>=0 && id<200) {
+		   journal_strs.resize(id+1);
+			   return journal_strs[id];
+	   }
+	   static std::string badString;
+	   badString="Bad Journal String";
+	   return badString;
+}
+
+std::string const &cScenario::get_journal_string(int id) const
+{
+	   if (id>=0 && id<journal_strs.size())
+			   return journal_strs[id];
+	   static std::string badString="Bad Journal String";
+	   return badString;
+}
+
 cQuest const &cScenario::get_quest(int quest) const
 {
 	if (quest>=0 && quest<quests.size())

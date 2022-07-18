@@ -47,6 +47,9 @@ public:
 	bool is_on_map(location loc) const {
 		return loc.x < max_dim && loc.y < max_dim && loc.x >= 0 && loc.y >= 0;
 	}
+	
+	sign_loc_t const &get_sign_loc(int num) const;
+	sign_loc_t &get_sign_loc(int num);
 };
 
 #endif
