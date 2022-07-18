@@ -20,6 +20,7 @@ though in some cases rearranged a little:
 - dlogbtnsm.png
 - dlogbtntall.png
 - dlogpics.png
+- errors.png ( "Under Construction Grunge Sign" by Free Grunge Textures - www.freestock.ca is licensed under CC BY 2.0 )
 - edsplash.png (by James Ernest)
 - fighthelp.png
 - invenbtns.png (the coin was cropped from an item graphic)

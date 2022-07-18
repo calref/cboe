@@ -212,6 +212,26 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 		item_odds[i] = 0;
 }
 
+cTerrain const &cScenario::get_terrain(ter_num_t ter) const
+{
+	if (ter<ter_types.size())
+		return ter_types[ter];
+	static cTerrain badTerrain;
+	badTerrain.picture = -3;
+	badTerrain.map_pic = -3;
+	return badTerrain;
+}
+
+cTerrain &cScenario::get_terrain(ter_num_t ter)
+{
+	if (ter<ter_types.size())
+		return ter_types[ter];
+	static cTerrain badTerrain;
+	badTerrain.picture = -3;
+	badTerrain.map_pic = -3;
+	return badTerrain;
+}
+
 void cScenario::import_legacy(legacy::scenario_data_type const &old){
 	is_legacy = true;
 	difficulty = old.difficulty;

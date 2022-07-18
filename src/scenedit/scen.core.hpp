@@ -23,6 +23,7 @@ bool build_scenario();
 bool edit_vehicle(class cVehicle& what, int num, bool is_boat);
 class cArea* get_current_area();
 
+bool check_picture_num(cPictNum const &pic, bool noneIsOk);
 bool check_range_msg(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name,std::string xtra);
 bool check_range(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name);
 bool pick_string(std::string from_file, cDialog& parent, std::string result_fld, std::string str_fld);

@@ -796,7 +796,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 						break;
 					case 0:
 						overall_mode = MODE_DRAWING;
-						set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
+						set_string("Drawing mode",scenario.get_terrain(current_terrain_type).name);
 						break;
 				}
 				break;
@@ -983,7 +983,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 			{
 				auto& signs = cur_area->sign_locs;
 				auto iter = std::find(signs.begin(), signs.end(), spot_hit);
-				short picture = scenario.ter_types[cur_area->terrain(spot_hit.x,spot_hit.y)].picture;
+				short picture = scenario.get_terrain(cur_area->terrain(spot_hit.x,spot_hit.y)).picture;
 				if(iter != signs.end()) {
 					edit_sign(*iter, iter - signs.begin(), picture);
 				} else {
@@ -1145,7 +1145,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				break; // Nothing to do here, of course.
 		}
 		if((overall_mode == MODE_DRAWING) && (old_mode != MODE_DRAWING))
-			set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
+			set_string("Drawing mode",scenario.get_terrain(current_terrain_type).name);
 		draw_terrain();
 		return true;
 	}
@@ -1231,10 +1231,10 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 					else if(i == size_before) {
 						scenario.ter_types.resize(size_before + 16);
 						for(; i < scenario.ter_types.size(); i++)
-							scenario.ter_types[i].name = "New Terrain";
+							scenario.get_terrain(i).name = "New Terrain";
 					} else {
-						scenario.ter_types[i] = cTerrain();
-						scenario.ter_types[i].name = "Unused Terrain";
+						scenario.get_terrain(i) = cTerrain();
+						scenario.get_terrain(i).name = "Unused Terrain";
 					}
 				} else {
 					if(i == size_before) {
@@ -1265,27 +1265,28 @@ static bool handle_toolpal_action(location cur_point2) {
 				rectangle temp_rect = palette_buttons[i][j];
 				temp_rect.offset(RIGHT_AREA_UL_X + 5, RIGHT_AREA_UL_Y + terrain_rects[255].bottom + 5);
 				flash_rect(temp_rect);
+				auto const &ter_type=scenario.get_terrain(current_terrain_type);
 				switch(cur_palette_buttons[j][i]) {
 					case PAL_ARROW_UP: case PAL_ARROW_DOWN: // These two might never be used.
 					case PAL_BLANK: break;
 					case PAL_PENCIL:
-						set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
+						set_string("Drawing mode",ter_type.name);
 						overall_mode = MODE_DRAWING;
 						break;
 					case PAL_BRUSH_LG:
-						set_string("Paintbrush (large)",scenario.ter_types[current_terrain_type].name);
+						set_string("Paintbrush (large)",ter_type.name);
 						overall_mode = MODE_LARGE_PAINTBRUSH;
 						break;
 					case PAL_BRUSH_SM:
-						set_string("Paintbrush (small)",scenario.ter_types[current_terrain_type].name);
+						set_string("Paintbrush (small)",ter_type.name);
 						overall_mode = MODE_SMALL_PAINTBRUSH;
 						break;
 					case PAL_SPRAY_LG:
-						set_string("Spraycan (large)",scenario.ter_types[current_terrain_type].name);
+						set_string("Spraycan (large)",ter_type.name);
 						overall_mode = MODE_LARGE_SPRAYCAN;
 						break;
 					case PAL_SPRAY_SM:
-						set_string("Spraycan (small)",scenario.ter_types[current_terrain_type].name);
+						set_string("Spraycan (small)",ter_type.name);
 						overall_mode = MODE_SMALL_SPRAYCAN;
 						break;
 					case PAL_DROPPER:
@@ -1303,7 +1304,7 @@ static bool handle_toolpal_action(location cur_point2) {
 						break;
 					case PAL_BUCKET:
 						overall_mode = MODE_FLOOD_FILL;
-						set_string("Flood fill", scenario.ter_types[current_terrain_type].name);
+						set_string("Flood fill", ter_type.name);
 						break;
 					case PAL_ZOOM: // switch view
 						cur_viewing_mode = (cur_viewing_mode + 1) % 4;
@@ -1603,15 +1604,15 @@ void set_new_terrain(ter_num_t selected_terrain) {
 	if(selected_terrain >= scenario.ter_types.size()) return;
 	current_terrain_type = selected_terrain;
 	current_ground = scenario.get_ground_from_ter(selected_terrain);
-	cTerrain& ter = scenario.ter_types[current_terrain_type];
-	cTerrain& gter = scenario.ter_types[current_ground];
+	cTerrain const & ter = scenario.get_terrain(current_terrain_type);
+	cTerrain const &gter = scenario.get_terrain(current_ground);
 	if(gter.blockage >= eTerObstruct::BLOCK_MOVE || ter.trim_type == eTrimType::WALKWAY || /*current_ground == current_terrain_type ||*/
 	   (ter.trim_type >= eTrimType::S && ter.trim_type <= eTrimType::NW_INNER)) {
-		long trim = scenario.ter_types[current_ground].trim_ter;
+		long trim = gter.trim_ter;
 		if(trim < 0) current_ground = 0;
 		else current_ground = scenario.get_ter_from_ground(trim);
 	}
-	set_string(current_string[0],scenario.ter_types[current_terrain_type].name);
+	set_string(current_string[0],ter.name);
 }
 
 void handle_keystroke(sf::Event event) {
@@ -1871,7 +1872,7 @@ void unfrill_terrain() {
 	for(short i = 0; i < cur_area->max_dim; i++)
 		for(short j = 0; j < cur_area->max_dim; j++) {
 			terrain_type = cur_area->terrain(i,j);
-			cTerrain& ter = scenario.ter_types[terrain_type];
+			cTerrain const &ter = scenario.get_terrain(terrain_type);
 			
 			if(ter.frill_for >= 0)
 				terrain_type = ter.frill_for;
@@ -1895,21 +1896,19 @@ bool terrain_matches(unsigned char x, unsigned char y, ter_num_t ter) {
 	ter_num_t ter2;
 	ter2 = get_current_area()->terrain(x,y);
 	if(ter2 == ter) return true;
-	if(scenario.ter_types[ter2].ground_type != scenario.ter_types[ter].ground_type)
+	auto const &ter_type=scenario.get_terrain(ter);
+	auto const &ter_type2=scenario.get_terrain(ter2);
+	if(ter_type2.ground_type != ter_type.ground_type)
 		return false;
-	if(scenario.ter_types[ter].trim_type == eTrimType::NONE &&
-	   scenario.ter_types[ter2].trim_type >= eTrimType::S &&
-	   scenario.ter_types[ter2].trim_type <= eTrimType::NW_INNER)
+	if(ter_type.trim_type == eTrimType::NONE && ter_type2.trim_type >= eTrimType::S &&
+	   ter_type2.trim_type <= eTrimType::NW_INNER)
 		return ter == scenario.get_ground_from_ter(ter);
-	if(scenario.ter_types[ter2].trim_type == eTrimType::NONE &&
-	   scenario.ter_types[ter].trim_type >= eTrimType::S &&
-	   scenario.ter_types[ter].trim_type <= eTrimType::NW_INNER)
+	if(ter_type2.trim_type == eTrimType::NONE && ter_type.trim_type >= eTrimType::S &&
+	   ter_type.trim_type <= eTrimType::NW_INNER)
 		return ter2 == scenario.get_ground_from_ter(ter2);
-	if(scenario.ter_types[ter2].trim_type >= eTrimType::S &&
-	   scenario.ter_types[ter2].trim_type <= eTrimType::NW_INNER &&
-	   scenario.ter_types[ter].trim_type >= eTrimType::S &&
-	   scenario.ter_types[ter].trim_type <= eTrimType::NW_INNER)
-		return scenario.ter_types[ter].trim_type != scenario.ter_types[ter2].trim_type;
+	if(ter_type2.trim_type >= eTrimType::S && ter_type2.trim_type <= eTrimType::NW_INNER &&
+	   ter_type.trim_type >= eTrimType::S && ter_type.trim_type <= eTrimType::NW_INNER)
+		return ter_type.trim_type != ter_type2.trim_type;
 	return false;
 }
 
@@ -1927,10 +1926,11 @@ void set_terrain(location l,ter_num_t terrain_type) {
 	l2 = l;
 	
 	// Large objects (eg rubble)
-	if(scenario.ter_types[terrain_type].obj_num > 0){
-		int q = scenario.ter_types[terrain_type].obj_num;
-		location obj_loc = scenario.ter_types[terrain_type].obj_pos;
-		location obj_dim = scenario.ter_types[terrain_type].obj_size;
+	auto const &ter_type=scenario.get_terrain(terrain_type);
+	if(ter_type.obj_num > 0){
+		int q = ter_type.obj_num;
+		location obj_loc = ter_type.obj_pos;
+		location obj_dim = ter_type.obj_size;
 		while(obj_loc.x > 0) l2.x-- , obj_loc.x--;
 		while(obj_loc.y > 0) l2.y-- , obj_loc.y--;
 		for(short i = 0; i < obj_dim.x; i++)
@@ -1941,17 +1941,18 @@ void set_terrain(location l,ter_num_t terrain_type) {
 	
 	// First make sure surrounding spaces have the correct ground types.
 	// This should handle the case of placing hills around mountains.
-	unsigned int main_ground = scenario.ter_types[terrain_type].ground_type;
-	long trim_ground = scenario.ter_types[terrain_type].trim_ter;
+	auto const &terrain_ground=scenario.get_terrain(terrain_type);
+	unsigned int main_ground = terrain_ground.ground_type;
+	long trim_ground = terrain_ground.trim_ter;
 	for(int x = -1; x <= 1; x++) {
 		for(int y = -1; y <= 1; y++) {
 			location l3(l.x+x,l.y+y);
 			ter_num_t ter_there = cur_area->terrain(l3.x,l3.y);
-			unsigned int ground_there = scenario.ter_types[ter_there].ground_type;
+			unsigned int ground_there = scenario.get_terrain(ter_there).ground_type;
 			if(ground_there != main_ground && ground_there != trim_ground) {
 				ter_num_t new_ter = scenario.get_ter_from_ground(trim_ground);
 				if(new_ter > scenario.ter_types.size()) continue;
-				cTerrain& ter_type = scenario.ter_types[new_ter];
+				cTerrain const & ter_type = scenario.get_terrain(new_ter);
 				// We need to be very cautious here.
 				// Only make the change if the terrain already there is the archetype for the ground type
 				// that is the trim terrain of the terrain we're trying to place.
@@ -1969,7 +1970,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 		adjust_space(l3);
 	}
 	
-	if(scenario.ter_types[terrain_type].special == eTerSpec::IS_A_SIGN) {
+	if(terrain_ground.special == eTerSpec::IS_A_SIGN) {
 		if(!editing_town && (l.x == 0 || l.x == 47 || l.y == 0 || l.y == 47)) {
 			cChoiceDlog("not-at-edge").show();
 			mouse_button_held = false;
@@ -1981,7 +1982,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 			iter = std::find_if(signs.begin(), signs.end(), [cur_area](const sign_loc_t& sign) {
 				if(sign.x == 100) return true;
 				ter_num_t ter = cur_area->terrain(sign.x,sign.y);
-				return scenario.ter_types[ter].special != eTerSpec::IS_A_SIGN;
+				return scenario.get_terrain(ter).special != eTerSpec::IS_A_SIGN;
 			});
 			if(iter == signs.end()) {
 				signs.emplace_back();
@@ -1990,7 +1991,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 		}
 		static_cast<location&>(*iter) = l;
 		ter_num_t terrain_type = cur_area->terrain(iter->x,iter->y);
-		edit_sign(*iter, iter - signs.begin(), scenario.ter_types[terrain_type].picture);
+		edit_sign(*iter, iter - signs.begin(), scenario.get_terrain(terrain_type).picture);
 		mouse_button_held = false;
 	}
 }
@@ -2016,7 +2017,7 @@ void adjust_space(location l) {
 				continue;
 			}
 			store_ter[dx+1][dy+1] = cur_area->terrain(x,y);
-			cTerrain& ter_type = scenario.ter_types[store_ter[dx+1][dy+1]];
+			cTerrain& ter_type = scenario.get_terrain(store_ter[dx+1][dy+1]);
 			store_ter2[dx+1][dy+1] = ter_type.trim_ter;
 			store_ground[dx+1][dy+1] = ter_type.ground_type;
 			store_trim[dx+1][dy+1] = ter_type.trim_type;
@@ -2029,7 +2030,7 @@ void adjust_space(location l) {
 	if(store_trim[1][1] >= eTrimType::FRILLS || store_trim[1][1] == eTrimType::WALL)
 		return;
 	
-	bool have_wall = scenario.ter_types[store_ter[1][1]].blockage >= eTerObstruct::BLOCK_MOVE;
+	bool have_wall = scenario.get_terrain(store_ter[1][1]).blockage >= eTerObstruct::BLOCK_MOVE;
 	
 	unsigned int main_ground = store_ground[1][1];
 	long trim_ground = store_ter2[1][1];
@@ -2190,7 +2191,7 @@ void set_special(location spot_hit) {
 
 void town_entry(location spot_hit) {
 	ter_num_t ter = current_terrain->terrain[spot_hit.x][spot_hit.y];
-	if(scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
+	if(scenario.get_terrain(ter).special != eTerSpec::TOWN_ENTRANCE) {
 		showError("This space isn't a town entrance. Town entrances are marked by a small brown castle icon.");
 		return;
 	}
@@ -2198,7 +2199,7 @@ void town_entry(location spot_hit) {
 	for(short x = 0; x < current_terrain->city_locs.size(); x++)
 		if(current_terrain->city_locs[x].spec >= 0) {
 			ter = current_terrain->terrain[current_terrain->city_locs[x].x][current_terrain->city_locs[x].y];
-			if(scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE)
+			if(scenario.get_terrain(ter).special != eTerSpec::TOWN_ENTRANCE)
 				current_terrain->city_locs[x].spec = -1;
 		}
 	auto iter = std::find(current_terrain->city_locs.begin(), current_terrain->city_locs.end(), spot_hit);
@@ -2320,7 +2321,7 @@ void start_town_edit() {
 	shut_down_menus(2);
 	right_sbar->hide();
 	pal_sbar->show();
-	set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
+	set_string("Drawing mode",scenario.get_terrain(current_terrain_type).name);
 	place_location();
 	copied_spec = -1;
 	for(short i = 0; i < town->max_dim; i++)
@@ -2351,7 +2352,7 @@ void start_out_edit() {
 	pal_sbar->show();
 	shut_down_menus(4);
 	shut_down_menus(1);
-	set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
+	set_string("Drawing mode",scenario.get_terrain(current_terrain_type).name);
 	place_location();
 	copied_spec = -1;
 	for(short i = 0; i < 48; i++)
