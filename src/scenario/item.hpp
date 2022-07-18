@@ -47,6 +47,7 @@ union uItemAbilData {
 	eRace race;
 	eSkill skill;
 };
+class cPictNum;
 
 class cItem {
 public:
@@ -90,6 +91,8 @@ public:
 	cItem();
 	explicit cItem(eItemPreset preset);
 	explicit cItem(eAlchemy recipe);
+	
+	cPictNum get_picture_num(bool tiny=false) const;
 	void import_legacy(legacy::item_record_type const & old);
 	void writeTo(std::ostream& file, std::string prefix = "") const;
 	void readFrom(std::istream& sin);
