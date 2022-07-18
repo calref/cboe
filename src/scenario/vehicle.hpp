@@ -34,6 +34,13 @@ public:
 	void import_legacy(legacy::boat_record_type const & old);
 	void writeTo(cTagFile_Page& page) const;
 	void readFrom(const cTagFile_Page& page);
+	
+	static cVehicle bad() {
+		cVehicle bad_vehicle;
+		bad_vehicle.loc={-1,-1};
+		bad_vehicle.exists=false;
+		return bad_vehicle;
+	}
 };
 
 bool operator==(const cVehicle& a, const cVehicle& b);

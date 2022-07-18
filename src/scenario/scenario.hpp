@@ -134,6 +134,9 @@ public:
 	void reset_version();
 	explicit cScenario();
 	~cScenario();
+	
+	cOutdoors *get_bad_outdoor();
+	
 	// Copy-and-swap
 	friend void swap(cScenario& lhs, cScenario& rhs);
 	cScenario(const cScenario& other);

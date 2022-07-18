@@ -235,6 +235,11 @@ public:
 	typedef std::vector<cEncNote>::iterator encIter;
 	typedef std::vector<cJournal>::iterator journalIter;
 	typedef std::vector<cConvers>::iterator talkIter;
+	cVehicle &get_boat(int id);
+	cVehicle const &get_boat(int id) const;
+	cVehicle &get_horse(int id);
+	cVehicle const &get_horse(int id) const;
+
 	cParty(ePartyPreset party_preset = PARTY_DEFAULT);
 	// Copy-and-swap
 	friend void swap(cParty& lhs, cParty& rhs);

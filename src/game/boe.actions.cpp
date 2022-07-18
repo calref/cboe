@@ -408,7 +408,7 @@ static void handle_pause(bool& did_something, bool& need_redraw) {
 				move_to_zero(pc.status[eStatus::WEBS]);
 			}
 		if(univ.party.in_horse >= 0) {
-			cVehicle& horse = univ.party.horses[univ.party.in_horse];
+			cVehicle& horse = univ.party.get_horse(univ.party.in_horse);
 			if(overall_mode == MODE_OUTDOORS) {
 				horse.which_town = 200;
 				horse.loc = global_to_local(univ.party.out_loc);
@@ -423,7 +423,7 @@ static void handle_pause(bool& did_something, bool& need_redraw) {
 		}
 		if(univ.party.in_boat >= 0) {
 			// If you pause on a bridge or other passable terrain, leave boat.
-			cVehicle& boat = univ.party.boats[univ.party.in_boat];
+			cVehicle& boat = univ.party.get_boat(univ.party.in_boat);
 			if(overall_mode == MODE_OUTDOORS && !impassable(univ.out[univ.party.out_loc.x][univ.party.out_loc.y])) {
 				boat.which_town = 200;
 				boat.loc = global_to_local(univ.party.out_loc);
@@ -555,9 +555,9 @@ static void handle_move(location destination, bool& did_something, bool& need_re
 						need_redraw = false;
 						i = 8;
 						if(univ.party.in_boat >= 0)
-							univ.party.boats[univ.party.in_boat].which_town = univ.party.town_num;
+							univ.party.get_boat(univ.party.in_boat).which_town = univ.party.town_num;
 						if(univ.party.in_horse >= 0)
-							univ.party.horses[univ.party.in_horse].which_town = univ.party.town_num;
+							univ.party.get_horse(univ.party.in_horse).which_town = univ.party.town_num;
 					}
 				}
 		}
@@ -2801,13 +2801,13 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 		pause(8);
 	}
 	if(mode == 0){
-		univ.party.boats[univ.party.in_boat].loc = univ.party.town_loc;
-		univ.party.boats[univ.party.in_boat].which_town = univ.party.town_num;
+		univ.party.get_boat(univ.party.in_boat).loc = univ.party.town_loc;
+		univ.party.get_boat(univ.party.in_boat).which_town = univ.party.town_num;
 	}else{
-		univ.party.boats[univ.party.in_boat].which_town = 200;
-		univ.party.boats[univ.party.in_boat].loc = global_to_local(univ.party.out_loc);
-		univ.party.boats[univ.party.in_boat].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
-		univ.party.boats[univ.party.in_boat].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
+		univ.party.get_boat(univ.party.in_boat).which_town = 200;
+		univ.party.get_boat(univ.party.in_boat).loc = global_to_local(univ.party.out_loc);
+		univ.party.get_boat(univ.party.in_boat).sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
+		univ.party.get_boat(univ.party.in_boat).sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 	}
 }
 
@@ -2987,10 +2987,10 @@ bool outd_move_party(location destination,bool forced) {
 				run_waterfalls(1);
 			}
 			if(univ.party.in_horse >= 0) {
-				univ.party.horses[univ.party.in_horse].which_town = 200;
-				univ.party.horses[univ.party.in_horse].loc = global_to_local(univ.party.out_loc);
-				univ.party.horses[univ.party.in_horse].sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
-				univ.party.horses[univ.party.in_horse].sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
+				univ.party.get_horse(univ.party.in_horse).which_town = 200;
+				univ.party.get_horse(univ.party.in_horse).loc = global_to_local(univ.party.out_loc);
+				univ.party.get_horse(univ.party.in_horse).sector.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
+				univ.party.get_horse(univ.party.in_horse).sector.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 				
 			}
 			
@@ -3116,8 +3116,8 @@ bool town_move_party(location destination,short forced) {
 				run_waterfalls(0);
 			}
 			if(univ.party.in_horse >= 0) {
-				univ.party.horses[univ.party.in_horse].loc = univ.party.town_loc;
-				univ.party.horses[univ.party.in_horse].which_town = univ.party.town_num;
+				univ.party.get_horse(univ.party.in_horse).loc = univ.party.town_loc;
+				univ.party.get_horse(univ.party.in_horse).which_town = univ.party.town_num;
 			}
 			center = univ.party.town_loc;
 			return true;

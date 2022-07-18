@@ -54,6 +54,12 @@ public:
 	static cPictNum get_picture_num_for_terrain(pic_num_t bigPicture);
 	void import_legacy(legacy::terrain_type_type const &old);
 	void writeTo(std::ostream& file) const;
+	static cTerrain bad() {
+		cTerrain badTerrain;
+		badTerrain.picture = -3;
+		badTerrain.map_pic = -3;
+		return badTerrain;
+	}
 };
 
 #endif

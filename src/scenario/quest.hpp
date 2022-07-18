@@ -21,6 +21,11 @@ public:
 	short bank1 = -1, bank2 = -1; // which job bank(s) this quest is in; -1 for none
 	std::string name;
 	std::string descr;
+	static cQuest bad() {
+		cQuest badQuest;
+		badQuest.name = "Bad quest";
+		return badQuest;
+	}
 };
 
 class cJob {

@@ -92,6 +92,12 @@ public:
 	void takeOne(size_t i);
 	void clearItem(size_t i);
 	void clear();
+	static cShop bad() {
+		cShop badShop;
+		badShop.setName("Bad Shop");
+		badShop.setFace(-3);
+		return badShop;
+	}
 };
 
 std::istream& operator>>(std::istream& in, eShopType& type);

@@ -177,6 +177,33 @@ void swap(cParty& lhs, cParty& rhs) {
 	}
 }
 
+cVehicle &cParty::get_boat(int id) {
+	if (id>=0 && id<boats.size())
+		return boats[id];
+	static cVehicle bad_vehicle;
+	bad_vehicle=cVehicle::bad();
+	return bad_vehicle;
+}
+cVehicle const &cParty::get_boat(int id) const {
+	if (id>=0 && id<boats.size())
+		return boats[id];
+	static cVehicle bad_vehicle=cVehicle::bad();
+	return bad_vehicle;
+}
+cVehicle &cParty::get_horse(int id) {
+	if (id>=0 && id<horses.size())
+		return horses[id];
+	static cVehicle bad_vehicle;
+	bad_vehicle=cVehicle::bad();
+	return bad_vehicle;
+}
+cVehicle const &cParty::get_horse(int id) const  {
+	if (id>=0 && id<horses.size())
+		return horses[id];
+	static cVehicle bad_vehicle=cVehicle::bad();
+	return bad_vehicle;
+}
+
 void cParty::import_legacy(legacy::party_record_type const & old, cUniverse& univ){
 	scen_name = old.scen_name;
 	age = old.age;

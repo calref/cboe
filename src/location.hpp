@@ -114,6 +114,10 @@ struct info_rect_t : public rectangle {
 	info_rect_t(const info_rect_t& other) = default;
 	// Ditto for assignment operator
 	info_rect_t& operator=(const info_rect_t& other) = default;
+	
+	static info_rect_t bad() {
+		return {-1,-1,-1,-1,"Bad Aread Desc"};
+	}
 };
 
 struct sign_loc_t : public location {
@@ -126,6 +130,10 @@ struct sign_loc_t : public location {
 	sign_loc_t(const sign_loc_t& other) = default;
 	// Ditto for assignment operator
 	sign_loc_t& operator=(const sign_loc_t& other) = default;
+	static sign_loc_t bad()
+	{
+		return sign_loc_t(-1,-1,"Bad Sign");
+	}
 };
 
 struct spec_loc_t : public location {

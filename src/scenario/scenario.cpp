@@ -49,6 +49,16 @@ void cScenario::destroy_terrain() {
 	}
 }
 
+cOutdoors *cScenario::get_bad_outdoor()
+{
+	static std::shared_ptr<cOutdoors> badOutdoor;
+	if (!badOutdoor)
+		badOutdoor=std::make_shared<cOutdoors>(*this);
+	badOutdoor->reattach(*this);
+	badOutdoor->name="Bad Outdoor";
+	return badOutdoor.get();
+}
+
 cScenario::cScenario() {
 	std::string temp_str;
 	
@@ -70,6 +80,7 @@ cScenario::cScenario() {
 	bg_fight = 4;
 	bg_town = 13;
 	bg_dungeon = 9;
+	outdoors.set_get_default_function([this](){return get_bad_outdoor();});
 	for(short i = 0; i < town_mods.size(); i++) {
 		town_mods[i].spec = -1;
 	}
@@ -143,6 +154,7 @@ cScenario::cScenario(const cScenario& other)
 	for(size_t i = 0; i < outdoors.width(); i++)
 		for(size_t j = 0; j < outdoors.height(); j++)
 			outdoors[i][j] = new cOutdoors(*other.outdoors[i][j]);
+	outdoors.set_get_default_function([this](){return get_bad_outdoor();});
 }
 
 cScenario::cScenario(cScenario&& other) {
@@ -213,17 +225,11 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 		item_odds[i] = 0;
 }
 
-static cItem getBadItem() {
-	cItem badItem;
-	badItem.graphic_num = 9999;
-	return badItem;
-}
-
 cItem const &cScenario::get_item(item_num_t item) const
 {
 	if (item>=0 && item<scen_items.size())
 		return scen_items[item];
-	static cItem badItem=getBadItem();
+	static cItem badItem=cItem::bad();
 	return badItem;
 }
 
@@ -232,14 +238,8 @@ cItem &cScenario::get_item(item_num_t item)
 	if (item>=0 && item<scen_items.size())
 		return scen_items[item];
 	static cItem badItem;
-	badItem=getBadItem();
+	badItem=cItem::bad();
 	return badItem;
-}
-
-static cQuest getBadQuest() {
-	cQuest badQuest;
-	badQuest.name = "Bad quest";
-	return badQuest;
 }
 
 std::string &cScenario::get_journal_string(int id)
@@ -267,7 +267,7 @@ cQuest const &cScenario::get_quest(int quest) const
 {
 	if (quest>=0 && quest<quests.size())
 		return quests[quest];
-	static cQuest badQuest=getBadQuest();
+	static cQuest badQuest=cQuest::bad();
 	return badQuest;
 }
 
@@ -276,21 +276,15 @@ cQuest &cScenario::get_quest(int quest)
 	if (quest>=0 && quest<quests.size())
 		return quests[quest];
 	static cQuest badQuest;
-	badQuest=getBadQuest();
+	badQuest=cQuest::bad();
 	return badQuest;
-}
-
-static cSpecItem getBadSpecialItem() {
-	cSpecItem badItem;
-	badItem.name="Bad Special Item";
-	return badItem;
 }
 
 cSpecItem const &cScenario::get_special_item(item_num_t item) const
 {
 	if (item>=0 && item<special_items.size())
 		return special_items[item];
-	static cSpecItem badItem=getBadSpecialItem();
+	static cSpecItem badItem=cSpecItem::bad();
 	return badItem;
 }
 
@@ -298,21 +292,15 @@ cSpecItem &cScenario::get_special_item(item_num_t item)
 {
 	if (item>=0 && item<special_items.size())
 		return special_items[item];
-	static cSpecItem badItem=getBadSpecialItem();
+	static cSpecItem badItem=cSpecItem::bad();
 	return badItem;
 }
 
-static cShop getBadShop() {
-	cShop badShop;
-	badShop.setName("Bad Shop");
-	badShop.setFace(-3);
-	return badShop;
-}
 cShop const &cScenario::get_shop(int shop) const
 {
 	if (shop>=0 && shop<shops.size())
 		return shops[shop];
-	static cShop badShop=getBadShop();
+	static cShop badShop=cShop::bad();
 	return badShop;
 
 }
@@ -321,7 +309,7 @@ cShop &cScenario::get_shop(int shop)
 	if (shop>=0 && shop<shops.size())
 		return shops[shop];
 	static cShop badShop;
-	badShop=getBadShop();
+	badShop=cShop::bad();
 	return badShop;
 }
 
@@ -346,18 +334,11 @@ std::string const &cScenario::get_special_string(int id) const
 	   return badString;
 }
  
-static cTerrain getBadTerrain() {
-	cTerrain badTerrain;
-	badTerrain.picture = -3;
-	badTerrain.map_pic = -3;
-	return badTerrain;
-}
-
 cTerrain const &cScenario::get_terrain(ter_num_t ter) const
 {
 	if (ter<ter_types.size())
 		return ter_types[ter];
-	static cTerrain badTerrain=getBadTerrain();
+	static cTerrain badTerrain=cTerrain::bad();
 	return badTerrain;
 }
 
@@ -366,7 +347,7 @@ cTerrain &cScenario::get_terrain(ter_num_t ter)
 	if (ter<ter_types.size())
 		return ter_types[ter];
 	static cTerrain badTerrain;
-	badTerrain=getBadTerrain();
+	badTerrain=cTerrain::bad();
 	return badTerrain;
 }
 
@@ -706,8 +687,7 @@ cOutdoors& cScenario::get_sector(int x, int y) {
 }
 
 bool cScenario::is_town_entrance_valid(spec_loc_t loc) const {
-	auto towns_in_scenario = towns.size();
-	return loc.spec >= 0 && loc.spec < towns_in_scenario;
+	return loc.spec >= 0 && loc.spec < towns.size();
 }
 
 void cScenario::writeTo(cTagFile& file) const {

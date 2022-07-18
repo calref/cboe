@@ -99,6 +99,11 @@ public:
 	void import_legacy(legacy::item_record_type const & old);
 	void writeTo(cTagFile_Page& file) const;
 	void readFrom(const cTagFile_Page& sin);
+	static cItem bad() {
+		cItem badItem;
+		badItem.graphic_num = 9999;
+		return badItem;
+	}
 };
 
 class cSpecItem {
@@ -107,6 +112,11 @@ public:
 	short special = -1;
 	std::string name;
 	std::string descr;
+	static cSpecItem bad() {
+		cSpecItem badItem;
+		badItem.name="Bad Special Item";
+		return badItem;
+	}
 };
 
 #endif
