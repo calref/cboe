@@ -62,7 +62,6 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 	rectangle where_draw;
 	rectangle source_rect;
 	Texture source_gworld;
-	short anim_type = 0;
 	location l;
 	
 	l.x = i; l.y = j;
@@ -82,11 +81,9 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 		source_gworld = *ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet));
 		terrain_to_draw %= 50;
 		source_rect = calc_rect(terrain_to_draw % 10, terrain_to_draw / 10);
-		anim_type = -1;
 	}
 	else if(univ.scenario.ter_types[terrain_to_draw].picture >= 2000) { // custom
 		std::tie(source_gworld,source_rect) = spec_scen_g.find_graphic(univ.scenario.ter_types[terrain_to_draw].picture - 2000 + (anim_ticks % 4));
-		anim_type = 0;
 	}
 	else if(univ.scenario.ter_types[terrain_to_draw].picture >= 1000) { // custom
 		std::tie(source_gworld,source_rect) = spec_scen_g.find_graphic(univ.scenario.ter_types[terrain_to_draw].picture - 1000);
@@ -95,7 +92,6 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 		source_gworld = *ResMgr::graphics.get("teranim");
 		terrain_to_draw = univ.scenario.ter_types[terrain_to_draw].picture;
 		source_rect = calc_rect(4 * ((terrain_to_draw - 960) / 5) + (anim_ticks % 4),(terrain_to_draw - 960) % 5);
-		anim_type = 0;
 	}
 	else {
 		terrain_to_draw = univ.scenario.ter_types[terrain_to_draw].picture;
@@ -103,7 +99,6 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 		source_gworld = *ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet));
 		terrain_to_draw %= 50;
 		source_rect = calc_rect(terrain_to_draw % 10, terrain_to_draw / 10);
-		anim_type = -1;
 	}
 	
 	rect_draw_some_item(source_gworld, source_rect, terrain_screen_gworld, where_draw);
@@ -205,11 +200,7 @@ void draw_monsters() {
 }
 
 void play_see_monster_str(unsigned short m, location monst_loc) {
-	short pic, spec;
-	ePicType type;
-	pic = univ.scenario.scen_monsters[m].picture_num;
-	type =  get_monst_pictype(m);
-	spec = univ.scenario.scen_monsters[m].see_spec;
+	short spec = univ.scenario.scen_monsters[m].see_spec;
 	// Then run the special, if any
 	if(spec > -1){
 		queue_special(eSpecCtx::SEE_MONST, eSpecCtxType::SCEN, spec, monst_loc);

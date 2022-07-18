@@ -616,7 +616,6 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON_WEAK:
-			store = level / 5 + adj / 3 + get_ran(1,0,2);
 			r1 = get_summon_monster(1); ////
 			if(r1 < 0) break;
 			if(!freebie)
@@ -627,7 +626,6 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 					add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON:
-			store = level / 7 + adj / 3 + get_ran(1,0,1);
 			r1 = get_summon_monster(2); ////
 			if(r1 < 0) break;
 			if(!freebie)
@@ -645,7 +643,6 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON_MAJOR:
-			store = level / 10 + adj / 3 + get_ran(1,0,1);
 			r1 = get_summon_monster(3); ////
 			if(r1 < 0) break;
 			if(!freebie)
@@ -1184,7 +1181,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 
 extern short spell_caster;
 void cast_town_spell(location where) {
-	short r1,store;
+	short r1;
 	bool need_redraw = false;
 	location loc;
 	ter_num_t ter;
@@ -1331,7 +1328,6 @@ void cast_town_spell(location where) {
 					update_explored(univ.party.town_loc);
 				}
 				else {
-					store = get_ran(1,0,1);
 					play_sound(41);
 					add_string_to_buf("  Didn't work.");
 				}
@@ -2080,7 +2076,6 @@ static bool alch_potion_event_filter(cDialog&me, short &pc_num, std::string item
 	if(r1 < fail_chance[univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[potion_id]]) {
 		me["result"].setColour(sf::Color::Red);
 		me["result"].setText("Alchemy: Failed.");
-		r1 = get_ran(1,0,1);
 		play_sound(41 );
 	}
 	else {
@@ -2468,7 +2463,7 @@ void petrify_pc(cPlayer& which_pc,int strength) {
 }
 
 void kill_pc(cPlayer& which_pc,eMainStatus type) {
-	bool dummy,no_save = false;
+	bool no_save = false;
 	location item_loc;
 	
 	if(isSplit(type)) {
@@ -2522,7 +2517,7 @@ void kill_pc(cPlayer& which_pc,eMainStatus type) {
 		if(overall_mode != MODE_OUTDOORS)
 			for(cItem& item : which_pc.items)
 				if(item.variety != eItemType::NO_ITEM) {
-					dummy = place_item(item,item_loc);
+					place_item(item,item_loc);
 					item.variety = eItemType::NO_ITEM;
 				}
 		if(type == eMainStatus::DEAD || type == eMainStatus::DUST)

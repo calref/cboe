@@ -365,7 +365,8 @@ std::unique_ptr<cPlayer> cParty::remove_pc(size_t spot) {
 void cParty::new_pc(size_t spot) {
 	std::unique_ptr<cPlayer> new_pc{new cPlayer(*this)};
 	replace_pc(spot, std::move(new_pc));
-	adven[spot]->main_status = eMainStatus::ALIVE;
+	if (spot < 6)
+		adven[spot]->main_status = eMainStatus::ALIVE;
 }
 
 void cParty::replace_pc(size_t spot, std::unique_ptr<cPlayer> with) {

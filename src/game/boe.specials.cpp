@@ -144,7 +144,7 @@ bool handle_wandering_specials(short mode) {
 // sets forced to true if definitely can enter
 bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,bool *forced) {
 	ter_num_t ter;
-	short r1,door_pc,pic_type = 0,ter_pic = 0;
+	short r1,door_pc,pic_type = 0;
 	eTerSpec ter_special;
 	std::string choice;
 	int ter_flag1,ter_flag2,ter_flag3;
@@ -179,7 +179,6 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	ter_flag1 = univ.scenario.ter_types[ter].flag1;
 	ter_flag2 = univ.scenario.ter_types[ter].flag2;
 	ter_flag3 = univ.scenario.ter_types[ter].flag3;
-	ter_pic = univ.scenario.ter_types[ter].picture;
 	
 	// TODO: Why not support conveyors outdoors, too?
 	if(mode != eSpecCtx::OUT_MOVE && ter_special == eTerSpec::CONVEYOR) {
@@ -579,7 +578,7 @@ void use_spec_item(short item) {
 
 void use_item(short pc,short item) {
 	bool take_charge = true;
-	short level,str,r1;
+	short str,r1;
 	short sp[3] = {}; // Dummy values to pass to run_special; not actually used
 	std::string str1, str2; // Used by books
 	eItemUse type;
@@ -587,7 +586,6 @@ void use_item(short pc,short item) {
 	const cItem& item_rec = univ.party[pc].items[item];
 	eItemAbil abil = item_rec.ability;
 	bool inept_ok = !item_rec.use_magic();
-	level = univ.party[pc].items[item].item_level;
 	
 	if(is_out())
 		user_loc = univ.party.out_loc;
@@ -1140,7 +1138,6 @@ void use_item(short pc,short item) {
 					add_string_to_buf("  Summon failed.");
 				break;
 			case eItemAbil::MASS_SUMMONING:
-				r1 = get_ran(str,1,4); // TODO: This value was never used, so why is it here?
 				r1 = get_ran(1,3,5);
 				for(short i = 0; i < r1; i++)
 					if(!summon_monster(the_item.abil_data.value,user_loc,r1,eAttitude::FRIENDLY,true))
@@ -1339,9 +1336,6 @@ void teleport_party(short x,short y,short mode) {
 	// Clear forcecage status
 	for(int i = 0; i < 6; i++)
 		univ.party[i].status[eStatus::FORCECAGE] = 0;
-	
-	if(is_combat())
-		mode = 1;
 	
 	l = univ.party.town_loc;
 	update_explored(l);
@@ -1726,7 +1720,6 @@ void push_things() {
 			center = l;
 			univ.party.town_loc = l;
 			update_explored(l);
-			ter = univ.town->terrain(univ.party.town_loc.x,univ.party.town_loc.y);
 			minimap::add_pending_redraw();
 			if(univ.town.is_barrel(univ.party.town_loc.x,univ.party.town_loc.y)) {
 				univ.town.set_barrel(univ.party.town_loc.x,univ.party.town_loc.y,false);
@@ -3553,7 +3546,7 @@ void ifthen_spec(const runtime_state& ctx) {
 				ctx.next_spec = spec.ex1b;
 			else if(dynamic_cast<cPlayer*>(&current_pc_picked_in_spec_enc(ctx))) {
 				int pc = univ.get_target_i(current_pc_picked_in_spec_enc(ctx));
-				eMainStatus stat;
+				eMainStatus stat = eMainStatus::ALIVE;
 				switch(spec.ex1a) {
 					case 0:
 						stat = eMainStatus::DEAD;
@@ -4567,7 +4560,7 @@ void handle_message(const runtime_state& ctx, const std::string& title, pic_num_
 }
 
 void get_strs(std::string& str1,std::string& str2,eSpecCtxType cur_type,short which_str1,short which_str2) {
-	size_t num_strs;
+	size_t num_strs=0;
 	if(cur_type == eSpecCtxType::SCEN)
 		num_strs = univ.scenario.spec_strs.size();
 	else if(cur_type == eSpecCtxType::OUTDOOR)

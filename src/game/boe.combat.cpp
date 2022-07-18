@@ -250,9 +250,6 @@ effect_pat_type field[8] = {
 bool center_on_monst;
 
 
-
-
-
 void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short num_walls) {
 	short how_many,num_tries = 0;
 	short low[10] = {15,7,4,3,2,1,1,7,2,1};
@@ -1023,12 +1020,11 @@ void do_combat_cast(location target) {
 		CLOUD_STINK,CLOUD_STINK,
 		WALL_ICE,WALL_ICE,WALL_BLADES,
 	};
-	mon_num_t summon;
 	iLiving* victim;
 	cPlayer& caster = univ.current_pc();
 	// CHECKME: this make no sense, allow_antimagic is always false in this function
 	bool allow_obstructed = false, allow_antimagic = false;
-	static std::set<eSpell> oneHitSpell =
+	static std::set<eSpell> const oneHitSpell =
 	{
 		// magic spell
 		eSpell::DUMBFOUND, eSpell::FEAR,
@@ -1078,6 +1074,7 @@ void do_combat_cast(location target) {
 		spell_caster = univ.cur_pc;
 	
 	// assign monster summoned, if summoning
+	mon_num_t summon=0;
 	if(spell_being_cast == eSpell::SUMMON_BEAST || spell_being_cast == eSpell::SUMMON_WEAK) {
 		summon = get_summon_monster(1);
 	} else if(spell_being_cast == eSpell::SUMMON || spell_being_cast == eSpell::SUMMON_AID) {
@@ -2415,9 +2412,8 @@ void do_monster_turn() {
 				if(cur_monst->abil[eMonstAbil::DAMAGE2].active && cur_monst->abil[eMonstAbil::DAMAGE2].gen.type == eMonstGen::BREATH
 					&& !acted_yet && get_ran(1,1,1000) < cur_monst->abil[eMonstAbil::DAMAGE2].gen.odds) {
 					if(target != 6  && dist(cur_monst->cur_loc,targ_space) <= cur_monst->abil[eMonstAbil::DAMAGE2].gen.range) {
-						acted_yet = monst_breathe(cur_monst,targ_space,cur_monst->abil[eMonstAbil::DAMAGE2]);
-						had_monst = true;
-						acted_yet = true;
+						monst_breathe(cur_monst,targ_space,cur_monst->abil[eMonstAbil::DAMAGE2]);
+						had_monst = acted_yet = true;
 						take_m_ap(4,cur_monst);
 					}
 				}
@@ -2427,9 +2423,8 @@ void do_monster_turn() {
 					if((!monst_adjacent(targ_space,i) || (get_ran(1,0,2) < 2) || (cur_monst->number >= 160)
 						 || (cur_monst->level > 9))
 						&& (dist(cur_monst->cur_loc,targ_space) <= 10)) {
-						acted_yet = monst_cast_mage(cur_monst,target);
-						had_monst = true;
-						acted_yet = true;
+						monst_cast_mage(cur_monst,target);
+						had_monst = acted_yet = true;
 						take_m_ap(5,cur_monst);
 					}
 				}
@@ -2437,9 +2432,8 @@ void do_monster_turn() {
 				if((cur_monst->cl > 0) && (get_ran(1,1,8) < 7) && !acted_yet) {
 					if((!monst_adjacent(targ_space,i) || (get_ran(1,0,2) < 2) || (cur_monst->level > 9))
 						&& (dist(cur_monst->cur_loc,targ_space) <= 10)) {
-						acted_yet = monst_cast_priest(cur_monst,target);
-						had_monst = true;
-						acted_yet = true;
+						monst_cast_priest(cur_monst,target);
+						had_monst = acted_yet = true;
 						take_m_ap(4,cur_monst);
 					}
 				}
@@ -3297,7 +3291,6 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 			break;
 		case eMonstAbil::DRAIN_XP:
 			if(pc_target != nullptr) {
-				i = univ.get_target_i(*target);
 				if(pc_target->has_abil_equip(eItemAbil::LIFE_SAVING)) break;
 				drain_pc(*pc_target, percent(univ.town.monst[m_num].level, abil.second.gen.strength));
 			}
@@ -3960,7 +3953,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 			case eSpell::BLESS_PARTY: case eSpell::REVIVE_ALL:
 				play_sound(24);
 				// TODO: What's r2 for here? Should it be used for Revive All?
-				r1 =  get_ran(2,1,4); r2 = get_ran(3,1,6);
+				r1 =  get_ran(2,1,4); //r2 = get_ran(3,1,6);
 				for(short i = 0; i < univ.town.monst.size(); i++)
 					if((monst_near(i,caster->cur_loc,8,0)) &&
 						(caster->attitude == univ.town.monst[i].attitude)) {

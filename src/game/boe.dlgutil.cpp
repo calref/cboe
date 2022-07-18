@@ -1156,13 +1156,11 @@ void do_sign(short town_num, short which_sign, short sign_type) {
 	store_sign_mode = sign_type;
 	pict.setPict(univ.scenario.ter_types[sign_type].picture);
 	
-	if(town_num >= 200) {
-		town_num -= 200;
+	if(town_num >= 200)
 		sign_text = univ.out->sign_locs[which_sign].text;
-	}
-	else {
+	else
 		sign_text = univ.town->sign_locs[which_sign].text;
-	}
+
 	sign->getControl("sign").setText(sign_text);
 	
 	sign.show();

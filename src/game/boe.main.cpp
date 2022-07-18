@@ -751,10 +751,8 @@ void change_cursor(location where_curs) {
 
 void move_sound(ter_num_t ter,short step){
 	static bool on_swamp = false;
-	short pic;
 	eTerSpec spec;
 	
-	pic = univ.scenario.ter_types[ter].picture;
 	spec = univ.scenario.ter_types[ter].special;
 	eStepSnd snd = univ.scenario.ter_types[ter].step_sound;
 	
