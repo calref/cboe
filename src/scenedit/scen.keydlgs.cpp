@@ -75,8 +75,8 @@ static std::string& fetch_str(eStrMode str_mode, size_t which) {
 		case 3: return scenario.get_journal_string(which);
 		case 4: return current_terrain->get_sign_loc(which).text;
 		case 5: return town->get_sign_loc(which).text;
-		case 6: return current_terrain->area_desc[which].descr;
-		case 7: return town->area_desc[which].descr;
+		case 6: return current_terrain->get_area_desc(which).descr;
+		case 7: return town->get_area_desc(which).descr;
 	}
 	throw "Invalid string mode " + std::to_string(str_mode) + " (valid are 0-5)";
 }
@@ -97,16 +97,16 @@ static std::string str_info(eStrMode str_mode, size_t which) {
 			sout << ", " << town->get_sign_loc(which).y << ")";
 			break;
 		case 6:
-			sout << "(" << current_terrain->area_desc[which].left;
-			sout << ", " << current_terrain->area_desc[which].top;
-			sout << ")|(" << current_terrain->area_desc[which].right;
-			sout << ", " << current_terrain->area_desc[which].bottom << ")";
+			sout << "(" << current_terrain->get_area_desc(which).left;
+			sout << ", " << current_terrain->get_area_desc(which).top;
+			sout << ")|(" << current_terrain->get_area_desc(which).right;
+			sout << ", " << current_terrain->get_area_desc(which).bottom << ")";
 			break;
 		case 7:
-			sout << "(" << town->area_desc[which].left;
-			sout << ", " << town->area_desc[which].top;
-			sout << ")|(" << town->area_desc[which].right;
-			sout << ", " << town->area_desc[which].bottom << ")";
+			sout << "(" << town->get_area_desc(which).left;
+			sout << ", " << town->get_area_desc(which).top;
+			sout << ")|(" << town->get_area_desc(which).right;
+			sout << ", " << town->get_area_desc(which).bottom << ")";
 			break;
 	}
 	return sout.str();

@@ -501,7 +501,7 @@ ter_num_t cScenario::get_ter_from_ground(unsigned short ground) const {
 			else if(archetype < 0)
 				archetype = i;
 		}
-	return std::max(archetype, ter_num_t());
+	return archetype<0 ? ter_num_t() : archetype;
 }
 
 ter_num_t cScenario::get_trim_terrain(unsigned short ground, unsigned short trim_g, eTrimType trim) const {

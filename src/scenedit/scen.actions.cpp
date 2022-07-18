@@ -608,11 +608,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							current_terrain->area_desc.pop_back();
 						else if(j == size_before)
 							break;
-						else current_terrain->area_desc[j] = {0, 0, 0, 0, "*"};
+						else current_terrain->get_area_desc(j) = {0, 0, 0, 0, "*"};
 					} else {
 						if(j == size_before)
 							current_terrain->area_desc.emplace_back(0,0,0,0,"*");
-						if(!edit_text_str(j,STRS_OUT_RECT) && j == size_before && current_terrain->area_desc[j].descr == "*")
+						if(!edit_text_str(j,STRS_OUT_RECT) && j == size_before && current_terrain->get_area_desc(j).descr == "*")
 							current_terrain->area_desc.pop_back();
 					}
 					start_string_editing(STRS_OUT_RECT,size_before == current_terrain->area_desc.size());
@@ -627,11 +627,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							town->area_desc.pop_back();
 						else if(j == size_before)
 							break;
-						else town->area_desc[j] = {0, 0, 0, 0, "*"};
+						else town->get_area_desc(j) = {0, 0, 0, 0, "*"};
 					} else {
 						if(j == size_before)
 							town->area_desc.emplace_back(0,0,0,0,"*");
-						if(!edit_text_str(j,STRS_TOWN_RECT) && j == size_before && town->area_desc[j].descr == "*")
+						if(!edit_text_str(j,STRS_TOWN_RECT) && j == size_before && town->get_area_desc(j).descr == "*")
 							town->area_desc.pop_back();
 					}
 					start_string_editing(STRS_TOWN_RECT,size_before == town->area_desc.size());
@@ -931,8 +931,8 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					mouse_button_held = true;
 				} else {
 					if(!mouse_button_held)
-						mode_count = !current_terrain->special_spot[spot_hit.x][spot_hit.y];
-					current_terrain->special_spot[spot_hit.x][spot_hit.y] = mode_count;
+						mode_count = !current_terrain->is_special_spot(spot_hit.x,spot_hit.y);
+					current_terrain->set_special_spot(spot_hit.x,spot_hit.y,mode_count);
 					mouse_button_held = true;
 				}
 				break;
@@ -942,8 +942,8 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					mouse_button_held = true;
 				} else {
 					if(!mouse_button_held)
-						mode_count = !current_terrain->roads[spot_hit.x][spot_hit.y];
-					current_terrain->roads[spot_hit.x][spot_hit.y] = mode_count;
+						mode_count = !current_terrain->is_road(spot_hit.x,spot_hit.y);
+					current_terrain->set_road(spot_hit.x,spot_hit.y,mode_count);
 					mouse_button_held = true;
 				}
 				break;
@@ -2555,11 +2555,11 @@ void start_string_editing(eStrMode mode,short just_redo_text) {
 				set_rb(i,RB_TOWN_SIGN, i,str.str());
 				break;
 			case 6:
-				str << i << " - " << current_terrain->area_desc[i].descr.substr(0,30);
+				str << i << " - " << current_terrain->get_area_desc(i).descr.substr(0,30);
 				set_rb(i,RB_OUT_RECT, i,str.str());
 				break;
 			case 7:
-				str << i << " - " << town->area_desc[i].descr.substr(0,30);
+				str << i << " - " << town->get_area_desc(i).descr.substr(0,30);
 				set_rb(i,RB_TOWN_RECT, i,str.str());
 				break;
 		}

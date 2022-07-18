@@ -44,10 +44,15 @@ public:
 		, maps(dim, boost::dynamic_bitset<>(dim))
 	{}
 
-	bool is_on_map(location loc) const {
+	bool is_on_map(location const &loc) const {
 		return loc.x < max_dim && loc.y < max_dim && loc.x >= 0 && loc.y >= 0;
 	}
-	
+	bool is_on_map(short x, short y) const {
+		return x < max_dim && y < max_dim && x >= 0 && y >= 0;
+	}
+
+	info_rect_t const &get_area_desc(int num) const;
+	info_rect_t &get_area_desc(int num);
 	sign_loc_t const &get_sign_loc(int num) const;
 	sign_loc_t &get_sign_loc(int num);
 };

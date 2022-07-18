@@ -89,13 +89,14 @@ void cUniverse::import_legacy(legacy::stored_outdoor_maps_type const &old){
 void cCurTown::import_reset_fields_legacy(){
 	// boe does not use the stored sfx and misc_i
 	// but discard them and recompute their values
+	auto const &terrain=record()->terrain;
 	for (auto const &f : record()->preset_fields) {
-		if (f.loc.x<0 || f.loc.x>=64 || f.loc.y<0 || f.loc.y>=64) continue;
+		if (f.loc.x<0 || f.loc.x>=terrain.width() ||
+			f.loc.y<0 || f.loc.y>=terrain.height()) continue;
 		// only 0<old_type<9 and 14<=old_type<=21 are retrieved here
 		if ((f.type>8 && f.type<17) || (f.type>=30 & f.type<=37))
 			fields[f.loc.x][f.loc.y]|=f.type;
 	}
-	auto const &terrain=record()->terrain;
 	for (auto const &spec : record()->special_locs) {
 		if (spec.spec<0 || spec.x<0 || spec.x>=terrain.width() ||
 			spec.y<0 || spec.y>=terrain.height()) continue;
@@ -948,7 +949,7 @@ bool cCurOut::is_spot(int x, int y) const {
 	// can happen if a hole allows to goes out the scenario
 	if(sector_x < 0 || sector_x >= univ.scenario.outdoors.width() || sector_y < 0 || sector_y >= univ.scenario.outdoors.height())
 		return false;
-	return univ.scenario.outdoors[sector_x][sector_y]->special_spot[x][y];
+	return univ.scenario.outdoors[sector_x][sector_y]->is_special_spot(x,y);
 }
 
 bool cCurOut::is_road(int x, int y) const {
@@ -960,7 +961,7 @@ bool cCurOut::is_road(int x, int y) const {
 	// can happen if a hole allows to goes out the scenario...
 	if(sector_x < 0 || sector_x >= univ.scenario.outdoors.width() || sector_y < 0 || sector_y >= univ.scenario.outdoors.height())
 		return false;
-	return univ.scenario.outdoors[sector_x][sector_y]->roads[x][y];
+	return univ.scenario.outdoors[sector_x][sector_y]->is_road(x,y);
 }
 
 bool cCurOut::is_on_map(int x, int y) const {

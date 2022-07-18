@@ -861,7 +861,7 @@ void draw_terrain(short	mode) {
 			if((can_draw != 0) && (overall_mode != MODE_RESTING) && frills_on && draw_frills)
 				place_trim((short) q,(short) r,where_draw,spec_terrain);
 //			if((is_town() && univ.town.is_spot(where_draw.x,where_draw.y)) ||
-//			   (is_out() && univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_spot[where_draw.x][where_draw.y]))
+//			   (is_out() && univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].is_special_spot(where_draw.x,where_draw.y)))
 //				Draw_Some_Item(roads_gworld, calc_rect(6, 0), terrain_screen_gworld, loc(q,r), 1, 0);
 			// TODO: Move draw_sfx, draw_items, draw_fields, draw_spec_items, etc to here
 			
