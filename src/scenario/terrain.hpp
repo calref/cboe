@@ -12,6 +12,7 @@
 #include <string>
 #include <iosfwd>
 
+#include "dialogxml/widgets/pict.hpp"
 #include "dialogxml/widgets/pictypes.hpp"
 #include "location.hpp"
 #include "terrain_abilities.hpp"
@@ -46,6 +47,11 @@ public:
 	unsigned short i; // for temporary use in porting
 	
 	bool blocksMove() const;
+	cPictNum get_picture_num() const {
+		return get_picture_num_for_terrain(picture);
+	}
+	cPictNum get_map_picture_num() const;
+	static cPictNum get_picture_num_for_terrain(pic_num_t bigPicture);
 	void import_legacy(legacy::terrain_type_type const &old);
 	void writeTo(std::ostream& file) const;
 };
