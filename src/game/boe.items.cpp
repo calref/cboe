@@ -641,11 +641,11 @@ void story_dialog(std::string title, str_num_t first, str_num_t last, eSpecCtxTy
 			cur++;
 		}
 		if(which_str_type == eSpecCtxType::SCEN)
-			me["str"].setText(univ.scenario.spec_strs[cur]);
+			me["str"].setText(univ.scenario.get_special_string(cur));
 		else if(which_str_type == eSpecCtxType::OUTDOOR)
-			me["str"].setText(univ.out->spec_strs[cur]);
+			me["str"].setText(univ.out->get_special_string(cur));
 		else if(which_str_type == eSpecCtxType::TOWN)
-			me["str"].setText(univ.town->spec_strs[cur]);
+			me["str"].setText(univ.town->get_special_string(cur));
 		return true;
 	}, {"left", "right", "done"});
 	story_dlg["left"].triggerClickHandler(story_dlg, "left", eKeyMod());

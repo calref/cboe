@@ -58,6 +58,8 @@ public:
 	cSpecItem &get_special_item(item_num_t item);
 	cShop const &get_shop(int shop) const;
 	cShop &get_shop(int shop);
+	std::string &get_special_string(int id);
+	std::string const &get_special_string(int id) const;
 	cTerrain const &get_terrain(ter_num_t ter) const;
 	cTerrain &get_terrain(ter_num_t ter);
 

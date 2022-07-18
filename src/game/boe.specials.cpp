@@ -4575,21 +4575,21 @@ void get_strs(std::string& str1,std::string& str2,eSpecCtxType cur_type,short wh
 	switch(cur_type) {
 		case eSpecCtxType::SCEN:
 			if(which_str1 >= 0)
-				str1 = univ.scenario.spec_strs[which_str1];
+				str1 = univ.scenario.get_special_string(which_str1);
 			if(which_str2 >= 0)
-				str2 = univ.scenario.spec_strs[which_str2];
+				str2 = univ.scenario.get_special_string(which_str2);
 			break;
 		case eSpecCtxType::OUTDOOR:
 			if(which_str1 >= 0)
-				str1 = univ.out->spec_strs[which_str1];
+				str1 = univ.out->get_special_string(which_str1);
 			if(which_str2 >= 0)
-				str2 = univ.out->spec_strs[which_str2];
+				str2 = univ.out->get_special_string(which_str2);
 			break;
 		case eSpecCtxType::TOWN:
 			if(which_str1 >= 0)
-				str1 = univ.town->spec_strs[which_str1];
+				str1 = univ.town->get_special_string(which_str1);
 			if(which_str2 >= 0)
-				str2 = univ.town->spec_strs[which_str2];
+				str2 = univ.town->get_special_string(which_str2);
 			break;
 	}
 	
@@ -4605,7 +4605,7 @@ void set_campaign_flag(short sdf_a, short sdf_b, short cpf_a, short cpf_b, short
 	// get_send = true: Retrieve value from Campaign Flag and put in SDF
 	try {
 		if(str >= 0 && str < univ.scenario.spec_strs.size()) {
-			std::string cp_id = univ.scenario.spec_strs[str];
+			std::string const &cp_id = univ.scenario.spec_strs[str];
 			if(get_send)
 				univ.party.stuff_done[sdf_a][sdf_b] = univ.cpn_flag(cpf_a, cpf_b, cp_id);
 			else

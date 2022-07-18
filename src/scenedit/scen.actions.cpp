@@ -446,11 +446,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							scenario.spec_strs.pop_back();
 						else if(j == size_before)
 							scenario.spec_strs.resize(size_before + 8, "*");
-						else scenario.spec_strs[j] = "*";
+						else scenario.get_special_string(j) = "*";
 					} else {
 						if(j == size_before)
 							scenario.spec_strs.emplace_back("*");
-						if(!edit_text_str(j,STRS_SCEN) && j == size_before && scenario.spec_strs[j] == "*")
+						if(!edit_text_str(j,STRS_SCEN) && j == size_before && scenario.get_special_string(j) == "*")
 							scenario.spec_strs.pop_back();
 					}
 					start_string_editing(STRS_SCEN,size_before == scenario.spec_strs.size());
@@ -465,11 +465,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							current_terrain->spec_strs.pop_back();
 						else if(j == size_before)
 							current_terrain->spec_strs.resize(size_before + 8, "*");
-						else current_terrain->spec_strs[j] = "*";
+						else current_terrain->get_special_string(j) = "*";
 					} else {
 						if(j == size_before)
 							current_terrain->spec_strs.emplace_back("*");
-						if(!edit_text_str(j,STRS_OUT) && j == size_before && current_terrain->spec_strs[j] == "*")
+						if(!edit_text_str(j,STRS_OUT) && j == size_before && current_terrain->get_special_string(j) == "*")
 							current_terrain->spec_strs.pop_back();
 					}
 					start_string_editing(STRS_OUT,size_before == current_terrain->spec_strs.size());
@@ -484,11 +484,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							town->spec_strs.pop_back();
 						else if(j == size_before)
 							town->spec_strs.resize(size_before + 8, "*");
-						else town->spec_strs[j] = "*";
+						else town->get_special_string(j) = "*";
 					} else {
 						if(j == size_before)
 							town->spec_strs.emplace_back("*");
-						if(!edit_text_str(j,STRS_TOWN) && j == size_before && town->spec_strs[j] == "*")
+						if(!edit_text_str(j,STRS_TOWN) && j == size_before && town->get_special_string(j) == "*")
 							town->spec_strs.pop_back();
 					}
 					start_string_editing(STRS_TOWN,size_before == town->spec_strs.size());
@@ -2547,15 +2547,15 @@ void start_string_editing(eStrMode mode,short just_redo_text) {
 		std::ostringstream str;
 		switch(mode) {
 			case 0:
-				str << i << " - " << scenario.spec_strs[i].substr(0,30);
+				str << i << " - " << scenario.get_special_string(i).substr(0,30);
 				set_rb(i,RB_SCEN_STR, i,str.str());
 				break;
 			case 1:
-				str << i << " - " << current_terrain->spec_strs[i].substr(0,30);
+				str << i << " - " << current_terrain->get_special_string(i).substr(0,30);
 				set_rb(i,RB_OUT_STR, i,str.str());
 				break;
 			case 2:
-				str << i << " - " << town->spec_strs[i].substr(0,30);
+				str << i << " - " << town->get_special_string(i).substr(0,30);
 				set_rb(i,RB_TOWN_STR, i,str.str());
 				break;
 			case 3:

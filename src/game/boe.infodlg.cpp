@@ -690,17 +690,17 @@ void cStringRecorder::operator()(cDialog& me) {
 	std::string str1, str2;
 	switch(type) {
 		case NOTE_SCEN:
-			str1 = univ.scenario.spec_strs[label1];
+			str1 = univ.scenario.get_special_string(label1);
 			if (label2>=0 && label2<univ.scenario.spec_strs.size())
 				str2 = univ.scenario.spec_strs[label2];
 			break;
 		case NOTE_TOWN:
-			str1 = univ.town->spec_strs[label1];
+			str1 = univ.town->get_special_string(label1);
 			if (label2>=0 && label2<univ.town->spec_strs.size())
 				str2 = univ.town->spec_strs[label2];
 			break;
 		case NOTE_OUT:
-			str1 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label1];
+			str1 = univ.scenario.outdoors[label1b][label2b]->get_special_string(label1);
 			if (label2>=0 && label2<univ.scenario.outdoors[label1b][label2b]->spec_strs.size())
 				str2 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label2];
 			break;

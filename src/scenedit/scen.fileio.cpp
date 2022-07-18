@@ -227,7 +227,7 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.CloseElement("quest");
 	}
 	for(size_t i = 0; i < scenario.shops.size(); i++) {
-		cShop& shop = scenario.shops[i];
+		cShop const &shop = scenario.shops[i];
 		data.OpenElement("shop");
 		data.PushElement("name", shop.getName());
 		data.PushElement("type", shop.getType());
