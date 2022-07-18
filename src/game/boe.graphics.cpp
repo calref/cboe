@@ -701,7 +701,7 @@ void draw_terrain(short	mode) {
 	location sector_p_in,view_loc;
 	char can_draw;
 	ter_num_t spec_terrain;
-	bool off_terrain = false,draw_frills = true;
+	bool draw_frills = true;
 	bool frills_on = get_bool_pref("DrawTerrainShoreFrills", true);
 	
 	if(overall_mode == MODE_TALKING || overall_mode == MODE_SHOPPING || overall_mode == MODE_STARTUP)
@@ -765,7 +765,6 @@ void draw_terrain(short	mode) {
 			where_draw = (is_out()) ? univ.party.out_loc : center;
 			where_draw.x += q - 4;
 			where_draw.y += r - 4;
-			off_terrain = false;
 			
 			draw_frills = true;
 			if(!(is_out()) && ((where_draw.x < 0) || (where_draw.x > univ.town->max_dim - 1)

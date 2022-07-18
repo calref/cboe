@@ -377,7 +377,8 @@ void cParty::import_legacy(legacy::pc_record_type const (& old)[6]) {
 
 void cParty::new_pc(size_t spot) {
 	replace_pc(spot, new cPlayer(*this));
-	adven[spot]->main_status = eMainStatus::ALIVE;
+	if (spot < 6)
+		adven[spot]->main_status = eMainStatus::ALIVE;
 }
 
 void cParty::replace_pc(size_t spot, cPlayer* with) {

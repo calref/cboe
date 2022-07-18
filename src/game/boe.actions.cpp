@@ -1447,6 +1447,8 @@ static void advance_time(bool did_something, bool need_redraw, bool need_reprint
 
 void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 	play_ambient_sound();
+	if(univ.party.status[ePartyStatus::DETECT_LIFE] > 0)
+		minimap::add_pending_redraw();
 	
 	if(is_combat() && overall_mode != MODE_LOOK_COMBAT) {
 		if(!univ.party.is_alive()) {
