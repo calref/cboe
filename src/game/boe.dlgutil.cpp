@@ -176,10 +176,6 @@ void end_shop_mode() {
 	shop_sbar->hide();
 	done_btn->hide();
 	help_btn->hide();
-	if(store_pre_shop_mode == MODE_TALKING) {
-		place_talk_str("You conclude your business.", "", 0, dummy_rect);
-		update_last_talk(TALK_BUSINESS);
-	}
 	
 	overall_mode = store_pre_shop_mode;
 	if(overall_mode == MODE_TALK_TOWN)
@@ -188,7 +184,15 @@ void end_shop_mode() {
 		center = univ.party.town_loc;
 		update_explored(center);
 	}
-	stat_screen_mode = MODE_INVEN;
+	
+	if (overall_mode == MODE_TALKING) {
+		// fixme: there must be a function to reset the talking state correctly
+		place_talk_str("You conclude your business.", "", 0, dummy_rect);
+		stat_screen_mode = MODE_SHOP;
+		help_btn->show();
+	}
+	else
+		stat_screen_mode = MODE_INVEN;
 	put_item_screen(stat_window);
 	put_pc_screen();
 	// TODO: I suspect REFRESH_NONE will suffice here

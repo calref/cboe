@@ -602,10 +602,16 @@ void alter_space(short i,short j,ter_num_t ter) {
 		location l(i,j);
 		l = local_to_global(l);
 		univ.out[l.x][l.y] = ter;
-		univ.out->terrain[i][j] = ter;
+		if (univ.out->terrain[i][j] != ter) {
+			univ.out->terrain[i][j] = ter;
+			minimap::draw(true);
+		}
 	} else {
 		ter_num_t former = univ.town->terrain(i,j);
-		univ.town->terrain(i,j) = ter;
+		if (former!=ter) {
+			univ.town->terrain(i,j) = ter;
+			minimap::draw(true);
+		}
 		if(univ.scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
 			univ.town.belt_present = true;
 		if(univ.scenario.ter_types[former].light_radius != univ.scenario.ter_types[ter].light_radius)
