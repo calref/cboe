@@ -645,11 +645,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						if(j == scenario.quests.size() - 1)
 							scenario.quests.pop_back();
 						else {
-							scenario.quests[j] = cQuest();
-							scenario.quests[j].name = "Unused Quest";
+							scenario.get_quest(j) = cQuest();
+							scenario.get_quest(j).name = "Unused Quest";
 						}
 					} else {
-						if(!edit_quest(j) && j == size_before && scenario.quests[j].name == "New Quest")
+						if(!edit_quest(j) && j == size_before && scenario.get_quest(j).name == "New Quest")
 							scenario.quests.pop_back();
 					}
 					start_quest_editing(size_before == scenario.quests.size());
@@ -2475,7 +2475,7 @@ void start_quest_editing(bool just_redo_text) {
 		std::string title;
 		if(i == scenario.quests.size())
 			title = "Create New Quest";
-		else title = scenario.quests[i].name;
+		else title = scenario.get_quest(i).name;
 		title = std::to_string(i) + " - " + title;
 		set_rb(i, RB_QUEST, i, title);
 	}

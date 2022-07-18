@@ -236,6 +236,29 @@ cItem &cScenario::get_item(item_num_t item)
 	return badItem;
 }
 
+static cQuest getBadQuest() {
+	cQuest badQuest;
+	badQuest.name = "Bad quest";
+	return badQuest;
+}
+
+cQuest const &cScenario::get_quest(int quest) const
+{
+	if (quest>=0 && quest<quests.size())
+		return quests[quest];
+	static cQuest badQuest=getBadQuest();
+	return badQuest;
+}
+
+cQuest &cScenario::get_quest(int quest)
+{
+	if (quest>=0 && quest<quests.size())
+		return quests[quest];
+	static cQuest badQuest;
+	badQuest=getBadQuest();
+	return badQuest;
+}
+
 static cSpecItem getBadSpecialItem() {
 	cSpecItem badItem;
 	badItem.name="Bad Special Item";

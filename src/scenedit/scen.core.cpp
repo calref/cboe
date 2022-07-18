@@ -2094,7 +2094,7 @@ static bool save_quest_from_dlog(cDialog& me, cQuest& quest, size_t which_quest,
 		quest.bank2 = me["bank2"].getTextAsNum();
 	} else quest.bank1 = quest.bank2 = -1;
 	
-	scenario.quests[which_quest] = quest;
+	scenario.get_quest(which_quest) = quest;
 	if(!close) me.untoast();
 	return true;
 }
@@ -2113,7 +2113,7 @@ static bool change_quest_dlog_page(cDialog& me, std::string dir, cQuest& quest, 
 			which_quest = 0;
 	}
 	
-	quest = scenario.quests[which_quest];
+	quest = scenario.get_quest(which_quest);
 	put_quest_in_dlog(me, quest, which_quest);
 	return true;
 }
@@ -2124,7 +2124,7 @@ bool edit_quest(size_t which_quest) {
 		scenario.quests.resize(which_quest + 1);
 		scenario.quests[which_quest].name = "New Quest";
 	}
-	cQuest quest = scenario.quests[which_quest];
+	cQuest quest = scenario.get_quest(which_quest);
 	
 	cDialog quest_dlg(*ResMgr::dialogs.get("edit-quest"));
 	quest_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));

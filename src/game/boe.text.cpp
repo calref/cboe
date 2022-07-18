@@ -277,13 +277,13 @@ void put_item_screen(eItemWinMode screen_num) {
 					if(spec_item_array[i_num] / 10000 == 2)
 						style.colour = Colours::RED;
 					
-					win_draw_string(item_stats_gworld,item_buttons[i][ITEMBTN_NAME],univ.scenario.quests[which_quest].name,eTextMode::WRAP,style);
+					win_draw_string(item_stats_gworld,item_buttons[i][ITEMBTN_NAME],univ.get_quest(which_quest).name,eTextMode::WRAP,style);
 					
 					if(spec_item_array[i_num] / 10000 == 1) {
 						location from, to;
 						from = to = item_buttons[i][ITEMBTN_NAME].centre();
 						from.x = item_buttons[i][ITEMBTN_NAME].left;
-						to.x = from.x + string_length(univ.scenario.quests[which_quest].name, style);
+						to.x = from.x + string_length(univ.get_quest(which_quest).name, style);
 						draw_line(item_stats_gworld, from, to, 1, Colours::GREEN);
 					}
 					

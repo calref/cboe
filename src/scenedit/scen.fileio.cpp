@@ -199,7 +199,7 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.CloseElement("special-item");
 	}
 	for(size_t i = 0; i < scenario.quests.size(); i++) {
-		cQuest& quest = scenario.quests[i];
+		cQuest const &quest = scenario.quests[i];
 		data.OpenElement("quest");
 		data.PushAttribute("start-with", boolstr(quest.auto_start));
 		if(quest.deadline >= 0) {
