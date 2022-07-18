@@ -227,8 +227,8 @@ void port_item_list(legacy::scen_item_data_type* old){
 	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	
-	for(short i = 0; i < 400; i++)
-		port_item_record(&(old->scen_items[i]));
+	for(auto &item : old->scen_items)
+		port_item_record(&item);
 }
 
 void port_out(legacy::outdoor_record_type *out) {

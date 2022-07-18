@@ -395,9 +395,9 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::EDIT_ITEM:
 			if(scen_items_loaded) {
-				auto& all_items = univ.scenario.scen_items;
+				auto const & all_items = univ.scenario.scen_items;
 				std::vector<std::string> strings;
-				for(cItem& item : all_items) {
+				for(cItem const & item : all_items) {
 					strings.push_back(item.full_name);
 				}
 				cStringChoice dlog(strings, "Add which item?");

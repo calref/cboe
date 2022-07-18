@@ -1637,20 +1637,20 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 	} else if(hit == "okay") {
 		save_item_info(me, item);
 		if(!me.toast(true)) return true;
-		scenario.scen_items[which] = item;
+		scenario.get_item(which) = item;
 	} else if(hit == "prev") {
 		save_item_info(me, item);
-		scenario.scen_items[which] = item;
+		scenario.get_item(which) = item;
 		which--;
 		if(which < 0) which = scenario.scen_items.size() - 1;
-		item = scenario.scen_items[which];
+		item = scenario.get_item(which);
 		put_item_info_in_dlog(me, item, which);
 	} else if(hit == "next") {
 		save_item_info(me, item);
-		scenario.scen_items[which] = item;
+		scenario.get_item(which) = item;
 		which++;
 		if(which >= scenario.scen_items.size()) which = 0;
-		item = scenario.scen_items[which];
+		item = scenario.get_item(which);
 		put_item_info_in_dlog(me, item, which);
 	} else if(hit == "choosepic") {
 		save_item_info(me, item);
@@ -1747,7 +1747,7 @@ bool edit_item_type(short which) {
 	using namespace std::placeholders;
 	if(which == scenario.scen_items.size())
 		scenario.scen_items.resize(which + 1);
-	cItem item = scenario.scen_items[which];
+	cItem item = scenario.get_item(which);
 	
 	cDialog item_dlg(*ResMgr::dialogs.get("edit-item"));
 	item_dlg["level"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 50, "Item Level"));
@@ -2311,10 +2311,10 @@ static void edit_shop_item(cDialog& parent, size_t& item, size_t& quantity, bool
 		item_dlg["chance-prompt"].hide();
 	}
 	
-	item_dlg["item"].setText(scenario.scen_items[item].full_name);
+	item_dlg["item"].setText(scenario.get_item(item).full_name);
 	item_dlg["choose"].attachClickHandler([&item](cDialog& me, std::string, eKeyMod) -> bool {
 		item = choose_text(STRT_ITEM, item, &me, "Which item?");
-		me["item"].setText(scenario.scen_items[item].full_name);
+		me["item"].setText(scenario.get_item(item).full_name);
 		return true;
 	});
 	
@@ -2372,7 +2372,7 @@ static bool edit_shop_entry(cDialog& me, std::string which, cShop& shop) {
 		case eShopItemType::ITEM:
 		case eShopItemType::OPT_ITEM:
 			edit_shop_item(me, entry.index, entry.quantity, entry.type == eShopItemType::OPT_ITEM);
-			entry.item = scenario.scen_items[entry.index];
+			entry.item = scenario.get_item(entry.index);
 			shop.replaceItem(i, entry);
 			need_string = false;
 			break;
@@ -2426,13 +2426,14 @@ static bool add_shop_entry(cDialog& me, std::string type, cShop& shop, size_t wh
 	if(type == "item" || type == "opt") {
 		size_t which_item = 0, amount = 0;
 		edit_shop_item(me, which_item, amount, type == "opt");
-		if(scenario.scen_items[which_item].variety == eItemType::NO_ITEM)
+		cItem const &item=scenario.get_item(which_item);
+		if(item.variety == eItemType::NO_ITEM)
 			return true;
-		if(scenario.scen_items[which_item].variety == eItemType::GOLD)
+		if(item.variety == eItemType::GOLD)
 			return true;
 		if(type == "item")
-			shop.addItem(which_item, scenario.scen_items[which_item], amount);
-		else shop.addItem(which_item, scenario.scen_items[which_item], amount % 1000, amount / 1000);
+			shop.addItem(which_item, item, amount);
+		else shop.addItem(which_item, item, amount % 1000, amount / 1000);
 	} else if(type == "spec") {
 		cItem item(ITEM_SPECIAL);
 		size_t amount = 0;
