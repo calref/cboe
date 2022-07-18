@@ -215,7 +215,8 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 		if (univ.scenario.is_legacy) {
 			// checkme in combat.c this is only called when is_combat() && ter_pic==406
 			//         (ie. ter_anim+6) due to a logical error
-			if (univ.scenario.ter_types[coord_to_ter(where_check.x,where_check.y)].picture==966) {
+			cPictNum pict=univ.scenario.ter_types[coord_to_ter(where_check.x,where_check.y)].get_picture_num();
+			if (pict.num==6 && pict.type==ePicType::PIC_TER_ANIM) {
 				ASB("Move: Can't trigger this special in combat.");
 				return true;
 			}

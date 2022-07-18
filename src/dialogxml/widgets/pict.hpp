@@ -28,17 +28,6 @@ public:
 		, type(nType)
 	{
 	}
-	static cPictNum getPN_for_terrain(short num)
-	{
-		if(num < 960)
-			return cPictNum(num,PIC_TER);
-		else if(num < 1000)
-			return cPictNum(num-960,PIC_TER_ANIM);
-		else if(num < 2000)
-			return cPictNum(num-1000,PIC_CUSTOM_TER);
-		else
-			return cPictNum(num-2000,PIC_CUSTOM_TER_ANIM);
-	}
 
 	pic_num_t num;
 	ePicType type;
