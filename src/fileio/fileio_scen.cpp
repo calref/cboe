@@ -1644,14 +1644,14 @@ void readOutdoorsFromXml(ticpp::Document&& data, cOutdoors& out) {
 		} else if(type == "sign") {
 			int sign;
 			elem->GetAttribute("id", &sign);
-			if(sign >= out.sign_locs.size() && sign<10000)
+			if(sign >= out.sign_locs.size() && sign<1000)
 				out.sign_locs.resize(sign + 1);
 			elem->GetText(&out.get_sign_loc(sign).text, false);
 		} else if(type == "area") {
-			if(num_rects >= out.area_desc.size())
+			if(num_rects >= out.area_desc.size() && num_rects<1000)
 				out.area_desc.resize(num_rects + 1);
-			static_cast<rectangle&>(out.area_desc[num_rects]) = readRectFromXml(*elem);
-			elem->GetText(&out.area_desc[num_rects].descr, false);
+			static_cast<rectangle&>(out.get_area_desc(num_rects)) = readRectFromXml(*elem);
+			elem->GetText(&out.get_area_desc(num_rects).descr, false);
 			num_rects++;
 		} else if(type == "string") {
 			int str;
@@ -1861,10 +1861,10 @@ void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& scen) {
 			if(!reqs.empty())
 				throw xMissingElem("creature", *reqs.begin(), elem->Row(), elem->Column(), fname);
 		} else if(type == "area") {
-			if(num_rects >= town->area_desc.size())
+			if(num_rects >= town->area_desc.size() && num_rects<1000)
 				town->area_desc.resize(num_rects + 1);
-			static_cast<rectangle&>(town->area_desc[num_rects]) = readRectFromXml(*elem);
-			elem->GetText(&town->area_desc[num_rects].descr, false);
+			static_cast<rectangle&>(town->get_area_desc(num_rects)) = readRectFromXml(*elem);
+			elem->GetText(&town->get_area_desc(num_rects).descr, false);
 			num_rects++;
 		} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
 	}
@@ -1996,9 +1996,9 @@ void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 						break;
 					case eMapFeature::FIELD:
 						if(feat.second == SPECIAL_SPOT)
-							out.special_spot[x][y] = true;
+							out.set_special_spot(x,y,true);
 						else if(feat.second == SPECIAL_ROAD)
-							out.roads[x][y] = true;
+							out.set_road(x,y,true);
 						else throw xMapParseError(map_out_bad_field, feat.second, y, x, data.file);
 						break;
 					case eMapFeature::SIGN:
@@ -2347,7 +2347,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		std::string tmp=right_trim(temp_str);
 		if(i == 0) the_town.name = tmp;
 		else if(i >= 1 && i < 17)
-			the_town.area_desc[i-1].descr = tmp;
+			the_town.get_area_desc(i-1).descr = tmp;
 		else if(i >= 17 && i < 20)
 			the_town.comment[i-17] = tmp;
 		else if(i >= 20 && i < 120)
@@ -2461,7 +2461,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 		std::string tmp=right_trim(temp_str);		
 		if(i == 0) the_out.name = tmp;
 		else if(i == 9) the_out.comment = tmp;
-		else if(i < 9) the_out.area_desc[i-1].descr = tmp;
+		else if(i < 9) the_out.get_area_desc(i-1).descr = tmp;
 		else if(i >= 10 && i < 100)
 			the_out.get_special_string(i-10) = tmp;
 		else if(i >= 100 && i < 108)

@@ -708,6 +708,7 @@ void cStringRecorder::operator()(cDialog& me) {
 	}
 	if(univ.party.record(type, str1, location))
 		give_help(58,0,&me);
-	univ.party.record(type, str2, location);
+	if (!str2.empty())
+		univ.party.record(type, str2, location);
 }
 

@@ -889,7 +889,7 @@ map_data buildOutMapData(location which, cScenario& scenario) {
 			terrain.set(x, y, sector.terrain[x][y]);
 			if(sector.special_spot[x][y])
 				terrain.addFeature(x, y, eMapFeature::FIELD, SPECIAL_SPOT);
-			if(sector.roads[x][y])
+			if(sector.is_road(x,y))
 				terrain.addFeature(x, y, eMapFeature::FIELD, SPECIAL_ROAD);
 		}
 	}
