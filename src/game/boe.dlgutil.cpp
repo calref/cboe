@@ -1152,9 +1152,9 @@ void do_sign(short town_num, short which_sign, short sign_type) {
 	pict.setPict(univ.get_terrain(sign_type).get_picture_num());
 	
 	if(town_num >= 200)
-		sign_text = univ.out->sign_locs[which_sign].text;
+		sign_text = univ.out->get_sign_loc(which_sign).text;
 	else
-		sign_text = univ.town->sign_locs[which_sign].text;
+		sign_text = univ.town->get_sign_loc(which_sign).text;
 
 	sign->getControl("sign").setText(sign_text);
 	

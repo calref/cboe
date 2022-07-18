@@ -527,11 +527,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							scenario.journal_strs.pop_back();
 						else if(j == size_before)
 							scenario.journal_strs.resize(size_before + 8, "*");
-						else scenario.journal_strs[j] = "*";
+						else scenario.get_journal_string(j) = "*";
 					} else {
 						if(j == size_before)
 							scenario.journal_strs.emplace_back("*");
-						if(!edit_text_str(j,STRS_JOURNAL) && j == size_before && scenario.journal_strs[j] == "*")
+						if(!edit_text_str(j,STRS_JOURNAL) && j == size_before && scenario.get_journal_string(j) == "*")
 							scenario.journal_strs.pop_back();
 					}
 					start_string_editing(STRS_JOURNAL,size_before == scenario.journal_strs.size());
@@ -567,11 +567,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							current_terrain->sign_locs.pop_back();
 						else if(j == size_before)
 							break;
-						else current_terrain->sign_locs[j] = {-1, -1, "*"};
+						else current_terrain->get_sign_loc(j) = {-1, -1, "*"};
 					} else {
 						if(j == size_before)
 							current_terrain->sign_locs.emplace_back(-1,-1,"*");
-						if(!edit_text_str(j,STRS_OUT_SIGN) && j == size_before && current_terrain->sign_locs[j].text == "*")
+						if(!edit_text_str(j,STRS_OUT_SIGN) && j == size_before && current_terrain->get_sign_loc(j).text == "*")
 							current_terrain->sign_locs.pop_back();
 					}
 					start_string_editing(STRS_OUT_SIGN,size_before == current_terrain->sign_locs.size());
@@ -586,11 +586,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							town->sign_locs.pop_back();
 						else if(j == size_before)
 							break;
-						else town->sign_locs[j] = {-1, -1, "*"};
+						else town->get_sign_loc(j) = {-1, -1, "*"};
 					} else {
 						if(j == size_before)
 							town->sign_locs.emplace_back(-1,-1,"*");
-						if(!edit_text_str(j,STRS_TOWN_SIGN) && j == size_before && town->sign_locs[j].text == "*")
+						if(!edit_text_str(j,STRS_TOWN_SIGN) && j == size_before && town->get_sign_loc(j).text == "*")
 							town->sign_locs.pop_back();
 					}
 					start_string_editing(STRS_TOWN_SIGN,size_before == town->sign_locs.size());
@@ -2559,15 +2559,15 @@ void start_string_editing(eStrMode mode,short just_redo_text) {
 				set_rb(i,RB_TOWN_STR, i,str.str());
 				break;
 			case 3:
-				str << i << " - " << scenario.journal_strs[i].substr(0,30);
+				str << i << " - " << scenario.get_journal_string(i).substr(0,30);
 				set_rb(i,RB_JOURNAL, i,str.str());
 				break;
 			case 4:
-				str << i << " - " << current_terrain->sign_locs[i].text.substr(0,30);
+				str << i << " - " << current_terrain->get_sign_loc(i).text.substr(0,30);
 				set_rb(i,RB_OUT_SIGN, i,str.str());
 				break;
 			case 5:
-				str << i << " - " << town->sign_locs[i].text.substr(0,30);
+				str << i << " - " << town->get_sign_loc(i).text.substr(0,30);
 				set_rb(i,RB_TOWN_SIGN, i,str.str());
 				break;
 			case 6:
