@@ -74,6 +74,9 @@ public:
 	explicit cOutdoors(cScenario& scenario);
 	void import_legacy(legacy::outdoor_record_type const &old);
 	void reattach(cScenario& to);
+
+	std::string &get_special_string(int id);
+	std::string const &get_special_string(int id) const;
 };
 
 #endif

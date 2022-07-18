@@ -128,6 +128,27 @@ void cTown::init_start() {
 	in_town_rect.right = s - 4;
 }
 
+std::string &cTown::get_special_string(int id)
+{
+	if (id>=0 && id<spec_strs.size())
+		return spec_strs[id];
+	if (id>=0 && id<200) {
+		spec_strs.resize(id+1);
+		return spec_strs[id];
+	}
+	static std::string badString;
+	badString="Bad Special String";
+	return badString;
+}
+
+std::string const &cTown::get_special_string(int id) const
+{
+	if (id>=0 && id<spec_strs.size())
+		return spec_strs[id];
+	static std::string badString="Bad Special String";
+	return badString;
+}
+
 void cTown::cWandering::import_legacy(legacy::wandering_type const &old){
 	monst[0] = old.monst[0];
 	monst[1] = old.monst[1];
