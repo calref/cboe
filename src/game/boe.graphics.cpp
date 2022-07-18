@@ -12,6 +12,7 @@
 #include "boe.graphics.hpp"
 #include "boe.newgraph.hpp"
 #include "boe.graphutil.hpp"
+#include "boe.minimap.hpp"
 #include "boe.monster.hpp"
 #include "boe.locutils.hpp"
 #include "boe.text.hpp"
@@ -71,8 +72,6 @@ extern short fast_bang;
 extern tessel_ref_t bg[];
 extern cUniverse univ;
 extern cCustomGraphics spec_scen_g;
-extern sf::RenderWindow mini_map;
-bool map_visible = false;
 extern std::string save_talk_str1, save_talk_str2;
 extern cDrawableManager drawable_mgr;
 
@@ -103,7 +102,6 @@ sf::RenderTexture item_stats_gworld;
 sf::RenderTexture text_area_gworld;
 sf::RenderTexture terrain_screen_gworld;
 sf::RenderTexture text_bar_gworld;
-sf::RenderTexture map_gworld;
 rectangle terrain_screen_rect;
 rectangle text_area_rect;
 
@@ -462,8 +460,7 @@ void arrow_button_click(rectangle button_rect) {
 
 
 void reload_startup() {
-	mini_map.setVisible(false);
-	map_visible = false;
+	minimap::set_visible(false);
 	mainPtr.setActive();
 	init_startup();
 	

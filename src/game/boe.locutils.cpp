@@ -4,8 +4,10 @@
 
 #include "universe/universe.hpp"
 #include "boe.locutils.hpp"
-#include "boe.text.hpp"
+#include "boe.minimap.hpp"
 #include "boe.monster.hpp"
+#include "boe.text.hpp"
+#include "boe.town.hpp"
 #include "utility.hpp"
 
 bool combat_pt_in_light();
@@ -29,16 +31,20 @@ bool is_explored(short i,short j) {
 	else return univ.town.is_explored(i,j);
 }
 
-void make_explored(short i,short j) {
-	if(is_out())
-		univ.out.out_e[i][j] = 1;
-	else univ.town.set_explored(i,j,true);
-}
-
-void take_explored(short i,short j) {
-	if(is_out())
-		univ.out.out_e[i][j] = 0;
-	else univ.town.set_explored(i,j,false);
+void make_explored(short i,short j, short val) {
+	if(is_out()) {
+		if (univ.out.out_e[i][j] != val) {
+			minimap::add_pending_redraw();
+			univ.out.out_e[i][j] = val;
+		}
+	}
+	else {
+		bool bVal=bool(val);
+		if (bool(univ.town.is_explored(i,j)) != bVal) {
+			minimap::add_pending_redraw();
+			univ.town.set_explored(i,j,bVal);
+		}
+	}
 }
 
 bool is_out() {
@@ -236,12 +242,11 @@ void update_explored(const location dest) {
 	if(cartoon_happening) return;
 	location look;
 	
-	which_party_sec.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
-	which_party_sec.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
-	
 	if(is_out()) {
 		univ.out.out_e[dest.x][dest.y] = 2;
 		for(look.x = dest.x - 4; look.x < dest.x + 5; look.x++)
+			which_party_sec.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
+			which_party_sec.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 			for(look.y = dest.y - 4; look.y < dest.y + 5; look.y++) {
 				if(univ.out.is_on_map(look.x, look.y)) {
 					if(univ.out.out_e[look.x][look.y] == 0) {

@@ -17,6 +17,7 @@
 #include "boe.locutils.hpp"
 #include "boe.actions.hpp"
 #include "sounds.hpp"
+#include "boe.minimap.hpp"
 #include "boe.townspec.hpp"
 #include "boe.graphics.hpp"
 #include "boe.fileio.hpp"
@@ -44,7 +45,6 @@ extern cOutdoors::cWandering store_wandering_special;
 extern eSpell spell_being_cast, town_spell;
 extern eSpecCtxType spec_target_type;
 extern short spell_caster, spec_target_fail, spec_target_options;
-extern sf::RenderWindow mini_map;
 extern short fast_bang;
 extern bool end_scenario;
 extern cUniverse univ;
@@ -1376,7 +1376,7 @@ void teleport_party(short x,short y,short mode) {
 		do_explosion_anim(5,2);
 		end_missile_anim();
 	}
-	draw_map(true);
+	minimap::add_pending_redraw();
 }
 
 
@@ -1726,7 +1726,7 @@ void push_things() {
 			univ.party.town_loc = l;
 			update_explored(l);
 			ter = univ.town->terrain(univ.party.town_loc.x,univ.party.town_loc.y);
-			draw_map(true);
+			minimap::add_pending_redraw();
 			if(univ.town.is_barrel(univ.party.town_loc.x,univ.party.town_loc.y)) {
 				univ.town.set_barrel(univ.party.town_loc.x,univ.party.town_loc.y,false);
 				ASB("You smash the barrel.");
@@ -1766,7 +1766,7 @@ void push_things() {
 						draw_terrain(0);
 					univ.party[i].combat_pos = l;
 					update_explored(l);
-					draw_map(true);
+					minimap::add_pending_redraw();
 					if(univ.town.is_barrel(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y)) {
 						univ.town.set_barrel(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y,false);
 						ASB("You smash the barrel.");
@@ -2339,19 +2339,19 @@ void general_spec(const runtime_state& ctx) {
 		case eSpecType::CHANGE_TER:
 			alter_space(spec.ex1a,spec.ex1b,spec.ex2a);
 			*ctx.redraw = true;
-			draw_map(true);
+			minimap::draw(true);
 			check_mess = true;
 			break;
 		case eSpecType::SWAP_TER:
 			swap_ter(spec.ex1a,spec.ex1b,spec.ex2a,spec.ex2b);
 			*ctx.redraw = true;
-			draw_map(true);
+			minimap::draw(true);
 			check_mess = true;
 			break;
 		case eSpecType::TRANS_TER:
 			alter_space(spec.ex1a,spec.ex1b,univ.scenario.ter_types[coord_to_ter(spec.ex1a,spec.ex1b)].trans_to_what);
 			*ctx.redraw = true;
-			draw_map(true);
+			minimap::draw(true);
 			check_mess = true;
 			break;
 		case eSpecType::ENTER_SHOP:
@@ -4332,7 +4332,7 @@ void rect_spec(const runtime_state& ctx){
 	ctx.next_spec = cur_node.jumpto;
 	
 	*ctx.redraw = true;
-	bool need_redraw_map=false;
+	bool minimap_changed=false;
 	for(short i = spec.ex1b;i <= spec.ex2b;i++)
 		for(short j = spec.ex1a; j <= spec.ex2a; j++) {
 			l.x = i; l.y = j;
@@ -4418,37 +4418,35 @@ void rect_spec(const runtime_state& ctx){
 				case eSpecType::RECT_CHANGE_TER:
 					if(get_ran(1,1,100) <= spec.sd2){
 						alter_space(l.x,l.y,spec.sd1);
-						*ctx.redraw = need_redraw_map= true;
+						*ctx.redraw = minimap_changed = true;
 					}
 					break;
 				case eSpecType::RECT_SWAP_TER:
 					swap_ter(l.x,l.y,spec.sd1,spec.sd2);
-					*ctx.redraw = need_redraw_map= true;
+					*ctx.redraw = minimap_changed = true;
 					break;
 				case eSpecType::RECT_TRANS_TER:
 					ter = coord_to_ter(i,j);
 					alter_space(l.x,l.y,univ.scenario.ter_types[ter].trans_to_what);
-					*ctx.redraw = need_redraw_map= true;
+					*ctx.redraw = minimap_changed = true;
 					break;
 				case eSpecType::RECT_LOCK:
 					ter = coord_to_ter(i,j);
 					if(univ.scenario.ter_types[ter].special == eTerSpec::LOCKABLE){
 						alter_space(l.x,l.y,univ.scenario.ter_types[ter].flag1);
-						*ctx.redraw = need_redraw_map= true;
+						*ctx.redraw = minimap_changed = true;
 					}
 					break;
 				case eSpecType::RECT_UNLOCK:
 					ter = coord_to_ter(i,j);
 					if(univ.scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
 						alter_space(l.x,l.y,univ.scenario.ter_types[ter].flag1);
-						*ctx.redraw = need_redraw_map= true;
+						*ctx.redraw = minimap_changed = true;
 						break;
 					}
 					break;
 				case eSpecType::RECT_SET_EXPLORED:
-					if(spec.sd1)
-						make_explored(l.x, l.y);
-					else take_explored(l.x, l.y);
+					make_explored(l.x, l.y, spec.sd1 ? 1 : 0);
 					break;
 				default:
 					showError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
@@ -4456,8 +4454,8 @@ void rect_spec(const runtime_state& ctx){
 			}
 		}
 END:
-	if (need_redraw_map)
-		draw_map(true);
+	if (minimap_changed)
+		minimap::draw(true);
 	if(check_mess) {
 		handle_message(ctx);
 	}

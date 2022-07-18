@@ -35,10 +35,7 @@ extern bool boom_anim_active;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
 
-extern bool map_visible;
-extern sf::RenderWindow mini_map;
 extern sf::Texture pc_gworld;
-extern sf::RenderTexture map_gworld;
 extern cUniverse univ;
 
 short selected;
@@ -676,30 +673,6 @@ short get_num_of_items(short max_num) {
 	numPanel.run();
 	
 	return minmax(0,max_num,numPanel.getResult<int>());
-}
-
-void init_mini_map() {
-	double ui_scale = get_float_pref("UIScaleMap", 1.0);
-	if (ui_scale < 0.1) ui_scale = 1.0;
-	if (mini_map.isOpen()) mini_map.close();
-	mini_map.create(sf::VideoMode(ui_scale*296,ui_scale*277), "Map", sf::Style::Titlebar | sf::Style::Close);
-	mini_map.setPosition(sf::Vector2i(52,62));
-	sf::View view;
-	view.reset(sf::FloatRect(0, 0, ui_scale*296,ui_scale*277));
-	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
-	mini_map.setView(view);
-	mini_map.setVisible(false);
-	map_visible=false;
-	setWindowFloating(mini_map, true);
-	makeFrontWindow(mainPtr);
-	
-	// Create and initialize map gworld
-	if(!map_gworld.create(384, 384)) {
-		play_sound(2);
-		throw std::string("Failed to initialized automap!");
-	} else {
-		map_gworld.clear(sf::Color::White);
-	}
 }
 
 void place_glands(location where,mon_num_t m_type) {
