@@ -2442,13 +2442,21 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 		len = (long) (store_out.strlens[i]);
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
-		if(i == 0) the_out.name = temp_str;
-		else if(i == 9) the_out.comment = temp_str;
-		else if(i < 9) the_out.area_desc[i-1].descr = temp_str;
+		
+		std::string tmp=temp_str; // remove trailing space
+		const auto found = tmp.find_last_not_of(' ');
+		if (found!=std::string::npos)
+			tmp.erase(found+1);
+		else
+			tmp.clear();
+		
+		if(i == 0) the_out.name = tmp;
+		else if(i == 9) the_out.comment = tmp;
+		else if(i < 9) the_out.area_desc[i-1].descr = tmp;
 		else if(i >= 10 && i < 100)
-			the_out.spec_strs[i-10] = temp_str;
+			the_out.spec_strs[i-10] = tmp;
 		else if(i >= 100 && i < 108)
-			the_out.sign_locs[i-100].text = temp_str;
+			the_out.sign_locs[i-100].text = tmp;
 	}
 	
 	if(fclose(file_id) != 0) {

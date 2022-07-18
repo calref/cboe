@@ -294,10 +294,11 @@ bool is_blocked(location to_check) {
 			return true;
 		}
 		
-		// Keep away from marked specials during combat
-		if((is_combat()) && univ.town.is_spot(to_check.x, to_check.y))
+		// checkme in combat.c this is only called when is_combat() && ter_pic==406
+		//         due to a logical error
+		if(is_combat() && !univ.scenario.is_legacy && univ.town.is_spot(to_check.x, to_check.y))
 			return true;
-		if((is_combat()) && (univ.scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].trim_type == eTrimType::CITY))
+		if(is_combat() && univ.scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].trim_type == eTrimType::CITY)
 			return true; // TODO: Maybe replace eTrimType::CITY with a blockage == clear/special && is_special() check
 		// Note: The purpose of the above check is to avoid portals.
 		

@@ -1580,13 +1580,6 @@ bool handle_keystroke(const sf::Event& event){
 	std::ostringstream sout;
 	using Key = sf::Keyboard::Key;
 	
-	Key keypad[10] = {
-		Key::Numpad0,Key::Numpad1,Key::Numpad2,Key::Numpad3,
-		Key::Numpad4,Key::Numpad5,Key::Numpad6,
-		Key::Numpad7,Key::Numpad8,Key::Numpad9
-	};
-	Key shop_chars[8] = {Key::A,Key::B,Key::C,Key::D,Key::E,Key::F,Key::G,Key::H};
-	
 	if(event.key.code == Key::Escape) {
 		bool abort=true;
 		if (overall_mode == MODE_BASH_TOWN || overall_mode == MODE_DROP_TOWN ||
@@ -1682,6 +1675,7 @@ bool handle_keystroke(const sf::Event& event){
 			play_sound(37);
 			end_shop_mode();
 		}
+		Key const shop_chars[10] = {Key::A,Key::B,Key::C,Key::D,Key::E,Key::F,Key::G,Key::H,Key::Numpad2,Key::Numpad8};
 		for(short i = 0; i < 8; i++)
 			if(chr2 == shop_chars[i]) {
 				pass_point = shopping_rects[i][SHOPRECT_ACTIVE_AREA].topLeft();
@@ -1694,6 +1688,11 @@ bool handle_keystroke(const sf::Event& event){
 				are_done = handle_action(pass_event);
 			}
 	} else {
+		Key const keypad[10] = {
+			Key::Numpad0,Key::Numpad1,Key::Numpad2,Key::Numpad3,
+			Key::Numpad4,Key::Numpad5,Key::Numpad6,
+			Key::Numpad7,Key::Numpad8,Key::Numpad9
+		};
 		for(short i = 0; i < 10; i++) {
 			if(chr2 != keypad[i])
 				continue;

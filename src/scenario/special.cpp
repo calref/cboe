@@ -46,6 +46,8 @@ cSpecial::cSpecial(){
 }
 
 void cSpecial::writeTo(std::ostream& file, int n) const {
+	if (type==eSpecType::NONE) // do not write nop node
+		return;
 	// TODO: Output only the needed values somehow
 	file << '@' << (*type).opcode() << " = " << n << '\n';
 	file << "\tsdf " << sd1 << ", " << sd2 << '\n';
