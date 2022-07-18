@@ -278,7 +278,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	
 	fclose(file_id);
 	
-	scenario.ter_types[23].fly_over = false;
+	scenario.get_terrain(23).fly_over = false;
 	
 	scenario.scen_file = file_to_load;
 	if(only_header) return true;

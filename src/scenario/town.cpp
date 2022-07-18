@@ -195,7 +195,7 @@ void cTown::set_up_lights() {
 			l.y = j;
 			unsigned short terrain=this->terrain(i,j);
 			rad = terrain<scenario->ter_types.size() ?
-				scenario->ter_types[terrain].light_radius : 0;
+				scenario->get_terrain(terrain).light_radius : 0;
 			if(rad > 0) {
 				for(where.x = std::max(0,i - rad); where.x < min(this->max_dim,short(i + rad + 1)); where.x++)
 					for(where.y = std::max(0,j - rad); where.y < min(this->max_dim,short(j + rad + 1)); where.y++)
@@ -211,7 +211,7 @@ short cTown::light_obscurity(short x,short y) {
 	
 	what_terrain = this->terrain(x,y);
 	
-	store = scenario->ter_types[what_terrain].blockage;
+	store = scenario->get_terrain(what_terrain).blockage;
 	if(store == eTerObstruct::BLOCK_SIGHT || store == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
 		return 5;
 	if(store == eTerObstruct::BLOCK_MOVE_AND_SHOOT)

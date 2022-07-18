@@ -876,7 +876,6 @@ void monst_inflict_fields(short which_monst) {
 
 //mode; // 1 - town 2 - combat
 bool monst_check_special_terrain(location where_check,short mode,short which_monst) {
-	ter_num_t ter = 0;
 	short r1,guts = 0;
 	bool can_enter = true,mage = false;
 	location from_loc,to_loc;
@@ -886,11 +885,12 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	unsigned short ter_dir;
 	
 	from_loc = univ.town.monst[which_monst].cur_loc;
-	ter = univ.town->terrain(where_check.x,where_check.y);
 	////
 	which_m = &univ.town.monst[which_monst];
-	ter_abil = univ.scenario.ter_types[ter].special;
-	ter_dir = univ.scenario.ter_types[ter].flag1;
+	ter_num_t const ter_id=univ.town->terrain(where_check.x,where_check.y);
+	cTerrain const &terrain=univ.get_terrain(ter_id);
+	ter_abil = terrain.special;
+	ter_dir = terrain.flag1;
 	
 	if(mode > 0 && ter_abil == eTerSpec::CONVEYOR) {
 		if(
@@ -998,11 +998,11 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		}
 	}
 	if(monster_placid(which_monst) && // monsters don't hop into bed when things are calm
-		univ.scenario.ter_types[ter].special == eTerSpec::BED)
+		terrain.special == eTerSpec::BED)
 		can_enter = false;
 	if(mode == 1 && univ.town.is_spot(where_check.x, where_check.y))
 		can_enter = false;
-	if(ter == 90) {
+	if(ter_id == 90) {
 		if((is_combat()) && (which_combat_type == 0)) {
 			univ.town.monst[which_monst].active = 0;
 			add_string_to_buf("Monster escaped! ");
@@ -1016,10 +1016,10 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		case eTerSpec::CHANGE_WHEN_STEP_ON:
 			can_enter = false;
 			if(!(monster_placid(which_monst))) {
-				univ.town->terrain(where_check.x,where_check.y) = univ.scenario.ter_types[ter].flag1;
+				univ.town->terrain(where_check.x,where_check.y) = terrain.flag1;
 				do_look = true;
 				if(point_onscreen(center,where_check))
-					play_sound(univ.scenario.ter_types[ter].flag2);
+					play_sound(terrain.flag2);
 			}
 			break;
 			
@@ -1031,7 +1031,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 			break;
 			
 		case eTerSpec::DAMAGING:
-			if(univ.town.monst[which_monst].resist[eDamageType(univ.scenario.ter_types[ter].flag3)] == 0)
+			if(univ.town.monst[which_monst].resist[eDamageType(terrain.flag3)] == 0)
 				return true;
 			else return univ.town.monst[which_monst].invuln;
 			// TODO: Should it check any other terrain specials?

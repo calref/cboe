@@ -94,12 +94,10 @@ void cCurTown::import_reset_fields_legacy(){
 			fields[f.loc.x][f.loc.y]|=f.type;
 	}
 	auto const &terrain=record()->terrain;
-	auto const &maxTerrain=univ.scenario.ter_types.max_size();
 	for (auto const &spec : record()->special_locs) {
 		if (spec.spec<0 || spec.x<0 || spec.x>=terrain.width() ||
 			spec.y<0 || spec.y>=terrain.height()) continue;
-		ter_num_t id=terrain[spec.x][spec.y];
-		if (id>=0 && id<maxTerrain && univ.scenario.ter_types[id].i==3000)
+		if (univ.get_terrain(terrain[spec.x][spec.y]).i==3000)
 			fields[spec.x][spec.y]|=SPECIAL_SPOT;
 	}
 }
@@ -580,11 +578,11 @@ bool cCurTown::set_force_barr(short x, short y, bool b){
 bool cCurTown::set_quickfire(short x, short y, bool b){
 	if(x > record()->max_dim || y > record()->max_dim) return false;
 	if(b){ // If certain things are on space, there's no room for quickfire.
-		ter_num_t ter = record()->terrain(x,y);
-		if(univ.scenario.ter_types[ter].blockage == eTerObstruct::BLOCK_SIGHT)
+		cTerrain const &terrain=univ.get_terrain(record()->terrain(x,y));
+		if(terrain.blockage == eTerObstruct::BLOCK_SIGHT)
 			return false;
 		// TODO: Isn't it a little odd that BLOCK_MOVE_AND_SHOOT isn't included here?
-		if(univ.scenario.ter_types[ter].blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
+		if(terrain.blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
 			return false;
 		if(is_antimagic(x,y) && get_ran(1,0,1) == 0)
 			return false;
@@ -610,11 +608,8 @@ bool cCurTown::set_quickfire(short x, short y, bool b){
 }
 
 bool cCurTown::free_for_sfx(short x, short y) {
-	ter_num_t ter;
-	ter = record()->terrain(x,y);
-	if(univ.scenario.ter_types[ter].blockage != eTerObstruct::CLEAR)
-		return false;
-	return true;
+	cTerrain const &terrain= univ.get_terrain(record()->terrain(x,y));
+	return terrain.blockage == eTerObstruct::CLEAR;
 }
 
 bool cCurTown::set_sm_blood(short x, short y, bool b){
@@ -765,10 +760,8 @@ bool cCurTown::set_force_cage(short x, short y, bool b){
 
 // TODO: This seems to be wrong; impassable implies "blocks movement", which two other blockages also do
 bool cCurTown::is_impassable(short i,short  j) {
-	ter_num_t ter;
-	
-	ter = record()->terrain(i,j);
-	if(univ.scenario.ter_types[ter].blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
+	cTerrain const &terrain=univ.get_terrain(record()->terrain(i,j));
+	if(terrain.blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
 		return true;
 	else return false;
 }
@@ -841,7 +834,7 @@ void cCurTown::readFrom(std::istream& file){
 		sin >> cur;
 		if(cur == "TOWN") {
 			sin >> univ.party.town_num;
-			monst.which_town=univ.party.town_num; // OSNOLA, checkme: to fix the creature save
+			monst.which_town=univ.party.town_num; // OSNOLA
 		}
 		else if(cur == "DIFFICULTY")
 			sin >> difficulty;

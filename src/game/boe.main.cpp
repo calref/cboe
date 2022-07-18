@@ -748,8 +748,9 @@ void move_sound(ter_num_t ter,short step){
 	static bool on_swamp = false;
 	eTerSpec spec;
 	
-	spec = univ.scenario.ter_types[ter].special;
-	eStepSnd snd = univ.scenario.ter_types[ter].step_sound;
+	auto const &terrain=univ.get_terrain(ter);
+	spec = terrain.special;
+	eStepSnd snd = terrain.step_sound;
 	
 	// if on swamp don't play squish sound : BoE legacy behavior, can be removed safely
 	if(snd == eStepSnd::SPLASH && !flying() && univ.party.in_boat < 0){
@@ -763,7 +764,7 @@ void move_sound(ter_num_t ter,short step){
 		play_sound(48); //play boat sound
 	} else if(!monsters_going && !is_combat() && (univ.party.in_horse >= 0)) {
 		play_sound(85); //so play horse sound
-	} else switch(univ.scenario.ter_types[ter].step_sound){
+	} else switch(terrain.step_sound){
 		case eStepSnd::SQUISH:
 			play_sound(55);
 			break;

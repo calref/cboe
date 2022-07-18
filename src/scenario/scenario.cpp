@@ -8,6 +8,7 @@
 
 #include "scenario.hpp"
 
+#include <cmath>
 #include <string>
 #include <vector>
 #include <map>
@@ -326,7 +327,7 @@ void cScenario::import_legacy(legacy::scen_item_data_type const &old){
 		if(scen_monsters[i].m_type == eRace::HUMANOID && scen_monsters[i].m_name.find("Goblin") != std::string::npos)
 			scen_monsters[i].m_type = eRace::GOBLIN;
 	}
-	for(short i = 0; i < 256; i++)
+	for(short i = 0; i < std::min<short>(256, ter_types.size()); i++)
 		ter_types[i].name = old.ter_names[i];
 	// Some default shops - the five magic shops and the healing shop.
 	cShop magic_shop(SHOP_JUNK);
@@ -350,7 +351,7 @@ std::string cScenario::format_scen_version() {
 }
 
 ter_num_t cScenario::get_ground_from_ter(ter_num_t ter){
-	return get_ter_from_ground(ter_types[ter].ground_type);
+	return get_ter_from_ground(get_terrain(ter).ground_type);
 }
 
 ter_num_t cScenario::get_ter_from_ground(unsigned short ground){
