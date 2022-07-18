@@ -213,13 +213,41 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 		item_odds[i] = 0;
 }
 
+static cItem getBadItem() {
+	cItem badItem;
+	badItem.graphic_num = 9999;
+	return badItem;
+}
+
+cItem const &cScenario::get_item(item_num_t item) const
+{
+	if (item>=0 && item<scen_items.size())
+		return scen_items[item];
+	static cItem badItem=getBadItem();
+	return badItem;
+}
+
+cItem &cScenario::get_item(item_num_t item)
+{
+	if (item>=0 && item<scen_items.size())
+		return scen_items[item];
+	static cItem badItem;
+	badItem=getBadItem();
+	return badItem;
+}
+
+static cTerrain getBadTerrain() {
+	cTerrain badTerrain;
+	badTerrain.picture = -3;
+	badTerrain.map_pic = -3;
+	return badTerrain;
+}
+
 cTerrain const &cScenario::get_terrain(ter_num_t ter) const
 {
 	if (ter<ter_types.size())
 		return ter_types[ter];
-	static cTerrain badTerrain;
-	badTerrain.picture = -3;
-	badTerrain.map_pic = -3;
+	static cTerrain badTerrain=getBadTerrain();
 	return badTerrain;
 }
 
@@ -228,8 +256,7 @@ cTerrain &cScenario::get_terrain(ter_num_t ter)
 	if (ter<ter_types.size())
 		return ter_types[ter];
 	static cTerrain badTerrain;
-	badTerrain.picture = -3;
-	badTerrain.map_pic = -3;
+	badTerrain=getBadTerrain();
 	return badTerrain;
 }
 
@@ -450,12 +477,6 @@ bool cScenario::is_item_used(item_num_t item) const {
 	return false;
 }
 
-cItem cScenario::get_stored_item(int loot) const {
-	if(loot >= 0 && loot < scen_items.size())
-		return scen_items[loot];
-	return cItem();
-}
-
 static const short loot_min[5] = {0,0,5,50,400};
 static const short loot_max[5] = {3,8,40,800,4000};
 
@@ -467,7 +488,7 @@ cItem cScenario::pull_item_of_type(unsigned int loot_max,short min_val,short max
 	}
 	for(short i = 0; i < 80; i++) {
 		int j = get_ran(1,0,scen_items.size() - 1);
-		cItem temp_i = get_stored_item(j);
+		cItem const &temp_i = get_item(j);
 		if(temp_i.variety == eItemType::NO_ITEM) continue;
 		if(std::find(types.begin(), types.end(), temp_i.variety) != types.end()) {
 			short val = (temp_i.charges > 0) ? temp_i.charges * temp_i.value : temp_i.value;

@@ -1492,7 +1492,7 @@ void cUniverse::refresh_store_items() {
 				if(choice < choices.size()) {
 					auto iter = choices.begin();
 					std::advance(iter, choice);
-					party.magic_store_items[i][j] = scenario.scen_items[*iter];
+					party.magic_store_items[i][j] = scenario.get_item(*iter);
 					continue;
 				}
 			} else if(entry.type == eShopItemType::OPT_ITEM) {

@@ -342,7 +342,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 		else if(info.type == eShopItemType::ITEM) {
 			bool is_food_shop = true;
 			for(int i = info.first; i < info.first + info.count && i < scenario.scen_items.size(); i++) {
-				if(scenario.scen_items[i].variety != eItemType::FOOD)
+				if(scenario.get_item(i).variety != eItemType::FOOD)
 					is_food_shop = false;
 			}
 			if(is_food_shop)
@@ -1135,9 +1135,9 @@ void readItemsFromXml(ticpp::Document&& data, cScenario& scenario) {
 			throw xBadNode(type, elem->Row(), elem->Column(), fname);
 		int which_item;
 		elem->GetAttribute("id", &which_item);
-		if(which_item >= scenario.scen_items.size())
+		if(which_item >= scenario.scen_items.size() && which_item<5000) // checkme: what is a reasonnable maximum for the item
 			scenario.scen_items.resize(which_item + 1);
-		cItem& the_item = scenario.scen_items[which_item];
+		cItem& the_item = scenario.get_item(which_item);
 		the_item = cItem();
 		std::set<std::string> reqs = {"variety", "level", "pic", "value", "weight", "name", "full-name"};
 		Iterator<Element> item;

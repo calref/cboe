@@ -647,7 +647,7 @@ void set_up_terrain_buttons(bool reset) {
 				}
 				break;
 			case DRAW_ITEM:
-				pic = scenario.scen_items[i].graphic_num;
+				pic = scenario.get_item(i).graphic_num;
 				tiny_to = draw_rect;
 				frame_rect(mainPtr, tiny_to, sf::Color::Black);
 				if(pic >= 1000) {
@@ -1029,7 +1029,7 @@ void draw_items() {
 		if(town->preset_items[i].code >= 0) {
 			where_draw.x = town->preset_items[i].loc.x - cen_x + 4;
 			where_draw.y = town->preset_items[i].loc.y - cen_y + 4;
-			pic_num = scenario.scen_items[town->preset_items[i].code].graphic_num;
+			pic_num = scenario.get_item(town->preset_items[i].code).graphic_num;
 			if((where_draw.x >= 0) && (where_draw.x <= 8) &&
 				(where_draw.y >= 0) && (where_draw.y <= 8))  {
 				
@@ -1219,11 +1219,11 @@ void place_location() {
 								sout << "Terrain: " << scenario.ter_types[first + i].name;
 							break;
 						case DRAW_ITEM:
-							if(first + i < scenario.scen_items.size())
+							if(first+i >= 0 && first + i < scenario.scen_items.size())
 								sout << "Item: " << scenario.scen_items[first + i].full_name;
 							break;
 						case DRAW_MONST:
-							if(first + i + 1 < scenario.scen_monsters.size())
+							if(first+i >= 0 && first + i + 1 < scenario.scen_monsters.size())
 								sout << "Monster: " << scenario.scen_monsters[first + i + 1].m_name;
 							break;
 					}
@@ -1371,7 +1371,7 @@ void place_location() {
 				}
 			}
 		} else if(overall_mode == MODE_PLACE_ITEM || overall_mode == MODE_PLACE_SAME_ITEM) {
-			picture_wanted = scenario.scen_items[mode_count].graphic_num;
+			picture_wanted = scenario.get_item(mode_count).graphic_num;
 			if(picture_wanted >= 1000) {
 				Texture source_gworld;
 				std::tie(source_gworld,source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);

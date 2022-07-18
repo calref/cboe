@@ -1955,10 +1955,11 @@ bool handle_keystroke(const sf::Event& event){
 		case 'I':
 			if(univ.debug_mode) {
 				int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?");
-				int j = univ.scenario.scen_items[i].ident;
-				univ.scenario.scen_items[i].ident = true;
-				univ.party.give_item(univ.scenario.scen_items[i], true);
-				univ.scenario.scen_items[i].ident = j;
+				cItem &item = univ.get_item(i);
+				bool saveIdent = item.ident;
+				item.ident = true;
+				univ.party.give_item(item, true);
+				item.ident = saveIdent;
 				print_buf();
 				put_item_screen(stat_window);
 				put_pc_screen(); // In case the item was food or gold

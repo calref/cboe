@@ -41,12 +41,10 @@ extern cUniverse univ;
 short selected;
 
 bool GTP(short item_num) {
-	cItem item = univ.scenario.get_stored_item(item_num);
-	return univ.party.give_item(item,true);
+	return univ.party.give_item(univ.get_item(item_num),true);
 }
 bool silent_GTP(short item_num) {
-	cItem item = univ.scenario.get_stored_item(item_num);
-	return univ.party.give_item(item,false);
+	return univ.party.give_item(univ.get_item(item_num),false);
 }
 void give_gold(short amount,bool print_result) {
 	if(amount < 0) return;
@@ -683,10 +681,8 @@ void place_glands(location where,mon_num_t m_type) {
 		monst = univ.party.summons[m_type - 10000];
 	else monst = univ.scenario.scen_monsters[m_type];
 	
-	if((monst.corpse_item >= 0) && (monst.corpse_item < 400) && (get_ran(1,1,100) < monst.corpse_item_chance)) {
-		store_i = univ.scenario.get_stored_item(monst.corpse_item);
-		place_item(store_i,where);
-	}
+	if(monst.corpse_item >= 0 && monst.corpse_item < univ.scenario.scen_items.size() && get_ran(1,1,100) < monst.corpse_item_chance)
+		place_item(univ.get_item(monst.corpse_item),where);
 }
 
 void reset_item_max() {
@@ -704,7 +700,6 @@ short item_val(cItem item) {
 //short mode;  // 0 - normal, 1 - force
 void place_treasure(location where,short level,short loot,short mode) {
 	
-	cItem new_item;
 	short amt,r1;
 	// Make these static const because they are never changed.
 	// Saves them being initialized every time the function is called.
@@ -747,8 +742,9 @@ void place_treasure(location where,short level,short loot,short mode) {
 	if(univ.party.get_level() <= 60 && amt > 2)
 		amt += 2;
 	
+	cItem new_item;
 	if(amt > 3) {
-		new_item = univ.scenario.get_stored_item(0);
+		new_item = univ.scenario.get_item(0);
 		new_item.item_level = amt;
 		r1 = get_ran(1,1,9);
 		if(((loot > 1) && (r1 < 7)) || ((loot == 1) && (r1 < 5)) || (mode == 1)

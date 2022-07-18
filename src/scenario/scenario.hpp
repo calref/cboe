@@ -53,6 +53,8 @@ public:
 	void destroy_terrain();
 	cTerrain const &get_terrain(ter_num_t ter) const;
 	cTerrain &get_terrain(ter_num_t ter);
+	cItem const &get_item(item_num_t item) const;
+	cItem &get_item(item_num_t item);
 public:
 	unsigned short difficulty,intro_pic,default_ground;
 	int bg_out, bg_fight, bg_town, bg_dungeon;
@@ -114,7 +116,6 @@ public:
 	bool is_ter_used(ter_num_t ter) const;
 	bool is_monst_used(mon_num_t monst) const;
 	bool is_item_used(item_num_t item) const;
-	cItem get_stored_item(int loot) const;
 	cItem return_treasure(int loot, bool allow_junk_treasure = false) const;
 	cItem pull_item_of_type(unsigned int loot_max,short min_val,short max_val,const std::vector<eItemType>& types,bool allow_junk_treasure=false) const;
 	
