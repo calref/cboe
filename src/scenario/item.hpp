@@ -83,6 +83,11 @@ public:
 	void import_legacy(legacy::item_record_type const & old);
 	void writeTo(std::ostream& file, std::string prefix = "") const;
 	void readFrom(std::istream& sin);
+	static cItem bad() {
+		cItem badItem;
+		badItem.graphic_num = 9999;
+		return badItem;
+	}
 };
 
 class cSpecItem {
@@ -91,6 +96,11 @@ public:
 	short special = -1;
 	std::string name;
 	std::string descr;
+	static cSpecItem bad() {
+		cSpecItem badItem;
+		badItem.name="Bad Special Item";
+		return badItem;
+	}
 };
 
 #endif

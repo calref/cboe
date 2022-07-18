@@ -196,19 +196,19 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	if(mode == eSpecCtx::OUT_MOVE) {
 		out_where = global_to_local(where_check);
 		
-		for(short i = 0; i < univ.out->special_locs.size(); i++)
-			if(out_where == univ.out->special_locs[i]) {
-				spec_num = univ.out->special_locs[i].spec;
-				// call special
-				run_special(mode, eSpecCtxType::OUTDOOR, spec_num, out_where, &s1, &s2);
-				if(s1 > 0)
-					can_enter = false;
-				else if(s2 > 0)
-					*forced = true;
-				erase_out_specials();
-				put_pc_screen();
-				put_item_screen(stat_window);
-			}
+		for(short i = 0; i < univ.out->special_locs.size(); i++) {
+			if(out_where != univ.out->special_locs[i]) continue;
+			spec_num = univ.out->special_locs[i].spec;
+			// call special
+			run_special(mode, eSpecCtxType::OUTDOOR, spec_num, out_where, &s1, &s2);
+			if(s1 > 0)
+				can_enter = false;
+			else if(s2 > 0)
+				*forced = true;
+			erase_out_specials();
+			put_pc_screen();
+			put_item_screen(stat_window);
+		}
 	}
 	
 	if (is_combat()) {
@@ -240,26 +240,26 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	}
 	if((mode == eSpecCtx::TOWN_MOVE || (mode == eSpecCtx::COMBAT_MOVE && which_combat_type == 1))
 		&& can_enter && univ.town.is_special(where_check.x,where_check.y)) {
-		for(short i = 0; i < univ.town->special_locs.size(); i++)
-			if(where_check == univ.town->special_locs[i]) {
-				spec_num = univ.town->special_locs[i].spec;
-				bool runSpecial = false;
-				if(!is_blocked(where_check)) runSpecial = true;
-				if(ter_special == eTerSpec::CHANGE_WHEN_STEP_ON) runSpecial = true;
-				if(ter_special == eTerSpec::CALL_SPECIAL) runSpecial = true;
-				if(univ.town->specials[spec_num].type == eSpecType::CANT_ENTER)
-					runSpecial = true;
-				if(!univ.scenario.is_legacy && univ.party.in_boat >= 0 && terrain.boat_over)
-					runSpecial = true;
-				if(runSpecial) {
-					give_help(54,0);
-					run_special(mode, eSpecCtxType::TOWN, spec_num, where_check, &s1, &s2);
-					if(s1 > 0)
-						can_enter = false;
-					else if(s2 > 0)
-						*forced = true;
-				}
+		for(auto const &spec_loc : univ.town->special_locs) {
+			if(where_check != spec_loc) continue;
+			spec_num = spec_loc.spec;
+			bool runSpecial = false;
+			if(!is_blocked(where_check)) runSpecial = true;
+			if(ter_special == eTerSpec::CHANGE_WHEN_STEP_ON) runSpecial = true;
+			if(ter_special == eTerSpec::CALL_SPECIAL) runSpecial = true;
+			if(univ.town->get_special(spec_num).type == eSpecType::CANT_ENTER)
+				runSpecial = true;
+			if(!univ.scenario.is_legacy && univ.party.in_boat >= 0 && terrain.boat_over)
+				runSpecial = true;
+			if(runSpecial) {
+				give_help(54,0);
+				run_special(mode, eSpecCtxType::TOWN, spec_num, where_check, &s1, &s2);
+				if(s1 > 0)
+					can_enter = false;
+				else if(s2 > 0)
+					*forced = true;
 			}
+		}
 		put_pc_screen();
 		put_item_screen(stat_window);
 	}
@@ -2096,21 +2096,15 @@ cSpecial get_node(spec_num_t cur_spec, eSpecCtxType cur_spec_type) {
 			}
 			return univ.scenario.scen_specials[cur_spec];
 		case eSpecCtxType::OUTDOOR:
-			if(cur_spec != minmax(0,univ.out->specials.size() - 1,cur_spec)) {
+			if(cur_spec != minmax(0,univ.out->specials.size() - 1,cur_spec))
 				showError("The scenario called an outdoor special node out of range.");
-				return dummy_node;
-			}
-			return univ.out->specials[cur_spec];
+			return univ.out->get_special(cur_spec);
 		case eSpecCtxType::TOWN:
-			if (is_out()) {
+			if (is_out())
 				showError("The scenario called a town special node but it is not in town.");
-				return dummy_node;
-			}
-			if(cur_spec != minmax(0,univ.town->specials.size() - 1,cur_spec)) {
+			else if(cur_spec != minmax(0,univ.town->specials.size() - 1,cur_spec))
 				showError("The scenario called a town special node out of range.");
-				return dummy_node;
-			}
-			return univ.town->specials[cur_spec];
+			return univ.town->get_special(cur_spec);
 	}
 	return dummy_node;
 }
@@ -2182,13 +2176,13 @@ void general_spec(const runtime_state& ctx) {
 			check_mess = true;
 			if(spec.ex1a != minmax(0, univ.party.horses.size() - 1, cur_node.ex1a))
 				showError("Horse out of range.");
-			else univ.party.horses[cur_node.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
+			else univ.party.get_horse(cur_node.ex1a).property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case eSpecType::CHANGE_BOAT_OWNER:
 			check_mess = true;
 			if(spec.ex1a != minmax(0,univ.party.boats.size() - 1,spec.ex1a))
 				showError("Boat out of range.");
-			else univ.party.boats[cur_node.ex1a].property = (spec.ex2a == 0) ? 1 : 0;
+			else univ.party.get_boat(cur_node.ex1a).property = (spec.ex2a == 0) ? 1 : 0;
 			break;
 		case eSpecType::SET_TOWN_VISIBILITY:
 			check_mess = true;

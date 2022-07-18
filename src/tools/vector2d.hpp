@@ -12,6 +12,7 @@
 // Tried using boost::multi_array, but it kept causing weird issues, so I decided to make my own.
 // TODO: Fill out missing members (should have equivalents for most of the stuff in std::vector)
 
+#include <functional>
 #include <vector>
 
 template<typename Type, typename Alloc = std::allocator<Type>> class vector2d {
@@ -21,6 +22,7 @@ template<typename Type, typename Alloc = std::allocator<Type>> class vector2d {
 	friend class const_col_ref;
 	std::vector<Type, Alloc> data;
 	size_t w, h;
+	std::function<Type()> get_default_value_function=nullptr;
 public:
 	using value_type = Type;
 	class row_ref {
@@ -30,10 +32,14 @@ public:
 		row_ref(vector2d<Type, Alloc>& ref, size_t row) : ref(ref), y(row) {}
 	public:
 		Type& operator[](size_t x) {
-			return ref.data[ref.w * y + x];
+			if (x<ref.w)
+				return ref.data[ref.w * y + x];
+			return ref.get_bad_value();
 		}
 		const Type& operator[](size_t x) const {
-			return ref.data[ref.w * y + x];
+			if (x<ref.w)
+				return ref.data[ref.w * y + x];
+			return ref.get_bad_value();
 		}
 		row_ref operator=(row_ref&& other) {
 			row_ref& me = *this;
@@ -60,10 +66,14 @@ public:
 		col_ref(vector2d<Type, Alloc>& ref, size_t col) : ref(ref), x(col) {}
 	public:
 		Type& operator[](size_t y) {
-			return ref.data[ref.w * y + x];
+			if (y<ref.h)
+				return ref.data[ref.w * y + x];
+			return ref.get_bad_value();
 		}
 		const Type& operator[](size_t y) const {
-			return ref.data[ref.w * y + x];
+			if (y<ref.h)
+				return ref.data[ref.w * y + x];
+			return ref.get_bad_value();
 		}
 		col_ref operator=(col_ref&& other) {
 			col_ref& me = *this;
@@ -90,7 +100,9 @@ public:
 		const_row_ref(const vector2d<Type, Alloc>& ref, size_t row) : ref(ref), y(row) {}
 	public:
 		const Type& operator[](size_t x) const {
-			return ref.data[ref.w * y + x];
+			if (x<ref.w)
+				return ref.data[ref.w * y + x];
+			return ref.get_bad_value();
 		}
 	};
 	class const_col_ref {
@@ -100,32 +112,50 @@ public:
 		const_col_ref(const vector2d<Type, Alloc>& ref, size_t col) : ref(ref), x(col) {}
 	public:
 		const Type& operator[](size_t y) const {
-			return ref.data[ref.w * y + x];
+			if (y<ref.h)
+				return ref.data[ref.w * y + x];
+			return ref.get_bad_value();
 		}
 	};
 	col_ref operator[](size_t x) {
-		return col_ref(*this, x);
+		if (x<w)
+			return col_ref(*this, x);
+		return get_bad_vector()[0];
 	}
 	const_col_ref operator[](size_t x) const {
-		return const_col_ref(*this, x);
+		if (x<w)
+			return const_col_ref(*this, x);
+		return get_bad_const_vector()[0];
 	}
 	col_ref col(size_t x) {
-		return col_ref(*this, x);
+		if (x<w)
+			return col_ref(*this, x);
+		return get_bad_vector()[0];
 	}
 	const_col_ref col(size_t x) const {
-		return const_col_ref(*this, x);
+		if (x<w)
+			return const_col_ref(*this, x);
+		return get_bad_const_vector()[0];
 	}
-	row_ref row(size_t x) {
-		return row_ref(*this, x);
+	row_ref row(size_t y) {
+		if (y<h)
+			return row_ref(*this, y);
+		return get_bad_vector().row(0);
 	}
-	const_row_ref row(size_t x) const {
-		return const_row_ref(*this, x);
+	const_row_ref row(size_t y) const {
+		if (y<h)
+			return const_row_ref(*this, y);
+		return get_bad_const_vector().row(0);
 	}
 	Type& operator()(size_t x, size_t y) {
-		return (*this)[x][y];
+		if (x<w && y<h)
+			return (*this)[x][y];
+		return get_bad_value();
 	}
 	const Type& operator()(size_t x, size_t y) const {
-		return (*this)[x][y];
+		if (x<w && y<h)
+			return (*this)[x][y];
+		return get_bad_value();
 	}
 	size_t width() const {
 		return w;
@@ -171,6 +201,32 @@ public:
 	vector2d() : w(0), h(0) {}
 	vector2d(size_t w, size_t h) : w(w), h(h) {
 		resize(w,h);
+	}
+	
+	Type &get_bad_value() {
+		static Type badValue;
+		badValue=get_default_value_function ? get_default_value_function() : Type(-1);
+		return badValue;
+	}
+	const Type &get_bad_value() const {
+		static Type badValue;
+		badValue = get_default_value_function ? get_default_value_function() : Type(-1);
+		return badValue;
+	}
+	vector2d &get_bad_vector() {
+		static vector2d bad_vector(1,1);
+		bad_vector.data[0]=get_bad_value();
+		bad_vector.set_get_default_function(get_default_value_function);
+		return bad_vector;
+	}
+	vector2d const &get_bad_const_vector() const {
+		static vector2d bad_vector(1,1);
+		bad_vector.data[0]=get_bad_value();
+		bad_vector.set_get_default_function(get_default_value_function);
+		return bad_vector;
+	}
+	void set_get_default_function(std::function<Type()> const &func) {
+		get_default_value_function=func;
 	}
 };
 

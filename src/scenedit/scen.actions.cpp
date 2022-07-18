@@ -410,7 +410,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							current_terrain->specials.pop_back();
 						else if(j == size_before)
 							break;
-						else current_terrain->specials[j] = cSpecial();
+						else current_terrain->get_special(j) = cSpecial();
 					} else {
 						if(j == size_before)
 							current_terrain->specials.emplace_back();
@@ -428,7 +428,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							town->specials.pop_back();
 						else if(j == size_before)
 							break;
-						else town->specials[j] = cSpecial();
+						else town->get_special(j) = cSpecial();
 					} else {
 						if(j == size_before)
 							town->specials.emplace_back();
@@ -2159,9 +2159,9 @@ void place_edit_special(location loc) {
 		return;
 	}
 	auto& specials = editing_town ? town->special_locs : current_terrain->special_locs;
-	for(short i = 0; i < specials.size(); i++)
-		if(specials[i] == loc && specials[i].spec >= 0) {
-			edit_spec_enc(specials[i].spec, editing_town ? 2 : 1, nullptr);
+	for(auto &special : specials)
+		if(special == loc && special.spec >= 0) {
+			edit_spec_enc(special.spec, editing_town ? 2 : 1, nullptr);
 			return;
 		}
 	// new special
@@ -2185,10 +2185,10 @@ void set_special(location spot_hit) {
 		return;
 	}
 	auto& specials = editing_town ? town->special_locs : current_terrain->special_locs;
-	for(short x = 0; x < specials.size(); x++)
-		if(specials[x] == spot_hit && specials[x].spec >= 0) {
-			int spec = edit_special_num(editing_town ? 2 : 1,specials[x].spec);
-			if(spec >= 0) specials[x].spec = spec;
+	for(auto &special : specials)
+		if(special == spot_hit && special.spec >= 0) {
+			int spec = edit_special_num(editing_town ? 2 : 1,special.spec);
+			if(spec >= 0) special.spec = spec;
 			return;
 		}
 	for(short x = 0; x <= specials.size(); x++) {

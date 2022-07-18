@@ -26,7 +26,6 @@ void set_string(std::string string,std::string string2);
 bool is_special(short i,short j);
 void take_special(short i,short j);
 void make_special(short i,short j);
-void sort_specials();
 bool is_field_type(short i,short j,eFieldType field_type);
 void make_field_type(short i,short j,eFieldType field_type);
 void take_field_type(short i,short j,eFieldType field_type);

@@ -1351,15 +1351,15 @@ void cast_town_spell(location where) {
 bool cast_spell_on_space(location where, eSpell spell) {
 	short s1 = 0;
 	
-	for(size_t i = 0; i < univ.town->special_locs.size(); i++)
-		if(where == univ.town->special_locs[i]) {
-			bool need_redraw = false;
-			// TODO: Is there a way to skip this condition without breaking compatibility?
-			if(univ.town->specials[univ.town->special_locs[i].spec].type == eSpecType::IF_CONTEXT)
-				run_special(eSpecCtx::TARGET, eSpecCtxType::TOWN, univ.town->special_locs[i].spec, where, &s1, nullptr, &need_redraw);
-			if(need_redraw) redraw_terrain();
-			return !s1;
-		}
+	for(auto const &spec_loc : univ.town->special_locs) {
+		if(where != spec_loc) continue;
+		bool need_redraw = false;
+		// TODO: Is there a way to skip this condition without breaking compatibility?
+		if(univ.town->get_special(spec_loc.spec).type == eSpecType::IF_CONTEXT)
+			run_special(eSpecCtx::TARGET, eSpecCtxType::TOWN, spec_loc.spec, where, &s1, nullptr, &need_redraw);
+		if(need_redraw) redraw_terrain();
+		return !s1;
+	}
 	if(spell == eSpell::RITUAL_SANCTIFY)
 		add_string_to_buf("  Nothing happens.");
 	return true;
