@@ -304,12 +304,34 @@ cShop &cScenario::get_shop(int shop)
 	return badShop;
 }
 
+std::string &cScenario::get_special_string(int id)
+{
+	   if (id>=0 && id<spec_strs.size())
+			   return spec_strs[id];
+	   if (id>=0 && id<200) {
+			   spec_strs.resize(id+1);
+			   return spec_strs[id];
+	   }
+	   static std::string badString;
+	   badString="Bad Special String";
+	   return badString;
+}
+
+std::string const &cScenario::get_special_string(int id) const
+{
+	   if (id>=0 && id<spec_strs.size())
+			   return spec_strs[id];
+	   static std::string badString="Bad Special String";
+	   return badString;
+}
+ 
 static cTerrain getBadTerrain() {
 	cTerrain badTerrain;
 	badTerrain.picture = -3;
 	badTerrain.map_pic = -3;
 	return badTerrain;
 }
+
 cTerrain const &cScenario::get_terrain(ter_num_t ter) const
 {
 	if (ter<ter_types.size())

@@ -273,7 +273,8 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 			if(i % 2 == 0) scenario.special_items[(i-60)/2].name = tmp;
 			else scenario.special_items[(i-60)/2].descr = tmp;
 		} else if(i >= 260) continue; // These were never ever used, for some reason.
-		else scenario.spec_strs[i-160] = tmp;
+		else
+			scenario.get_special_string(i-160) = tmp;
 	}
 	
 	fclose(file_id);
@@ -887,9 +888,9 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					timers++;
 				} else if(type == "string") {
 					game->GetAttribute("id", &strnum);
-					if(strnum >= scenario.spec_strs.size()) // changeme: add a maximum and discard data if not in a range
+					if(strnum >= scenario.spec_strs.size() && strnum<10000)
 						scenario.spec_strs.resize(strnum + 1);
-					game->GetText(&scenario.spec_strs[strnum], false);
+					game->GetText(&scenario.get_special_string(strnum), false);
 				} else if(type == "journal") {
 					game->GetAttribute("id", &strnum);
 					if(strnum >= scenario.journal_strs.size()) // changeme: add a maximum and discard data if not in a range
@@ -1132,7 +1133,7 @@ void readItemsFromXml(ticpp::Document&& data, cScenario& scenario) {
 			throw xBadNode(type, elem->Row(), elem->Column(), fname);
 		int which_item;
 		elem->GetAttribute("id", &which_item);
-		if(which_item >= scenario.scen_items.size() && which_item<5000) // checkme: what is a reasonnable maximum for the item
+		if(which_item >= scenario.scen_items.size() && which_item<5000) // checkme: what is a reasonable maximum for the item
 			scenario.scen_items.resize(which_item + 1);
 		cItem& the_item = scenario.get_item(which_item);
 		the_item = cItem();
@@ -1654,9 +1655,9 @@ void readOutdoorsFromXml(ticpp::Document&& data, cOutdoors& out) {
 		} else if(type == "string") {
 			int str;
 			elem->GetAttribute("id", &str);
-			if(str >= out.spec_strs.size())
+			if(str >= out.spec_strs.size() && str<10000) // CHECKME: 10000 is probably too big?
 				out.spec_strs.resize(str + 1);
-			elem->GetText(&out.spec_strs[str], false);
+			elem->GetText(&out.get_special_string(str), false);
 		} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
 	}
 	if(!found_name)
@@ -1781,9 +1782,9 @@ void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& scen) {
 		} else if(type == "string") {
 			int str;
 			elem->GetAttribute("id", &str);
-			if(str >= town->spec_strs.size())
+			if(str >= town->spec_strs.size() && str<10000)
 				town->spec_strs.resize(str + 1);
-			elem->GetText(&town->spec_strs[str], false);
+			elem->GetText(&town->get_special_string(str), false);
 		} else if(type == "item") {
 			int which_item;
 			elem->GetAttribute("id", &which_item);
@@ -1888,19 +1889,20 @@ void readDialogueFromXml(ticpp::Document&& data, cSpeech& talk, int town_num) {
 			id %= 10;
 			std::set<std::string> reqs = {"title", "look", "name", "job"};
 			Iterator<Element> who;
+			cPersonality &people=talk.people[id];
 			for(who = who.begin(elem.Get()); who != who.end(); who++) {
 				who->GetValue(&type);
 				reqs.erase(type);
 				if(type == "title") {
-					who->GetText(&talk.people[id].title, false);
+					who->GetText(&people.title, false);
 				} else if(type == "look") {
-					who->GetText(&talk.people[id].look, false);
+					who->GetText(&people.look, false);
 				} else if(type == "name") {
-					who->GetText(&talk.people[id].name, false);
+					who->GetText(&people.name, false);
 				} else if(type == "job") {
-					who->GetText(&talk.people[id].job, false);
+					who->GetText(&people.job, false);
 				} else if(type == "unknown") {
-					who->GetText(&talk.people[id].dunno, false);
+					who->GetText(&people.dunno, false);
 				} else throw xBadNode(type, who->Row(), who->Column(), fname);
 			}
 			if(!reqs.empty())
@@ -2350,7 +2352,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		else if(i >= 17 && i < 20)
 			the_town.comment[i-17] = tmp;
 		else if(i >= 20 && i < 120)
-			the_town.spec_strs[i-20] = tmp;
+			the_town.get_special_string(i-20) = tmp;
 		else if(i >= 120 && i < 140)
 			the_town.sign_locs[i-120].text = tmp;
 	}
@@ -2462,7 +2464,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 		else if(i == 9) the_out.comment = tmp;
 		else if(i < 9) the_out.area_desc[i-1].descr = tmp;
 		else if(i >= 10 && i < 100)
-			the_out.spec_strs[i-10] = tmp;
+			the_out.get_special_string(i-10) = tmp;
 		else if(i >= 100 && i < 108)
 			the_out.sign_locs[i-100].text = tmp;
 	}

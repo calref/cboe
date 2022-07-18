@@ -1120,8 +1120,8 @@ void handle_talk_event(location p) {
 			run_special(eSpecCtx::TALK, eSpecCtxType::TOWN, a, univ.party.town_loc, &s1, &s2);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if((s1 >= 0) || (s2 >= 0)) {
-				save_talk_str1 = s1 >= 0 ? univ.town->spec_strs[s1] : "";
-				save_talk_str2 = s2 >= 0 ? univ.town->spec_strs[s2] : "";
+				save_talk_str1 = s1 >= 0 ? univ.town->get_special_string(s1) : "";
+				save_talk_str2 = s2 >= 0 ? univ.town->get_special_string(s2) : "";
 			}
 			get_strs(save_talk_str1, save_talk_str2, eSpecCtxType::TOWN, s1, s2);
 			put_pc_screen();
@@ -1131,8 +1131,8 @@ void handle_talk_event(location p) {
 			run_special(eSpecCtx::TALK, eSpecCtxType::SCEN, a, univ.party.town_loc, &s1, &s2);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if((s1 >= 0) || (s2 >= 0)) {
-				save_talk_str1 = s1 >= 0 ? univ.scenario.spec_strs[s1] : "";
-				save_talk_str2 = s2 >= 0 ? univ.scenario.spec_strs[s2] : "";
+				save_talk_str1 = s1 >= 0 ? univ.scenario.get_special_string(s1) : "";
+				save_talk_str2 = s2 >= 0 ? univ.scenario.get_special_string(s2) : "";
 			}
 			get_strs(save_talk_str1, save_talk_str2, eSpecCtxType::SCEN, s1, s2);
 			put_pc_screen();
