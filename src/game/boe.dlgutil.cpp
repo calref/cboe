@@ -1556,11 +1556,11 @@ public:
 		using namespace std::placeholders;
 		extern fs::path scenDir;
 		
-		if(scen_headers.empty()) { // TODO: Arrange this to be a check before calling run()
+		if(scen_headers.empty()) { // this means only prefabs
 			cChoiceDlog err("no-scenarios");
 			err->getControl("path").setText(scenDir.string());
 			err.show();
-			return scen_header_type();
+			//return scen_header_type();
 		}
 		set_cursor(sword_curs);
 		
@@ -1576,7 +1576,7 @@ public:
 		
 		put_scen_info();
 		
-		if(scen_headers.size() <= 3) {
+		if(scen_headers.empty()) { // this means no custom scenario
 			me["next"].hide();
 			me["prev"].hide();
 		}
