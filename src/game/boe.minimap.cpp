@@ -183,7 +183,11 @@ void draw(bool need_refresh) {
 	
 	const char* title_string = "Your map:";
 	bool canMap = true;
-	
+	static rectangle last_redraw_rect;
+	if (redraw_rect!=last_redraw_rect) {
+		need_refresh=true;
+		last_redraw_rect=redraw_rect;
+	}
 	if((is_combat()) && (which_combat_type == 0)) {
 		title_string = "No map in combat.";
 		canMap = false;

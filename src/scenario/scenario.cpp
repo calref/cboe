@@ -13,8 +13,9 @@
 #include <map>
 #include <sstream>
 
-#include "oldstructs.hpp"
 #include "mathutil.hpp"
+#include "oldstructs.hpp"
+#include "fileio/resmgr/res_strings.hpp"
 
 void cScenario::reset_version() {
 	format.prog_make_ver[0] = 2;
@@ -286,9 +287,18 @@ cScenario::cItemStorage& cScenario::cItemStorage::operator = (legacy::item_stora
 }
 
 void cScenario::import_legacy(legacy::scen_item_data_type const &old){
+
 	scen_items.resize(400);
-	for(short i = 0; i < 400; i++)
+	StringList strings = *ResMgr::strings.get("legacy-items-desc");
+	for(size_t i = 0; i < 400; i++) {
 		scen_items[i].import_legacy(old.scen_items[i]);
+		if (i>=strings.size())
+			continue;
+		if (!scen_items[i].desc.empty())
+			scen_items[i].desc=strings[i]+" ("+scen_items[i].desc+")";
+		else
+			scen_items[i].desc=strings[i];
+	}
 	for(short i = 0; i < 256; i++) {
 		scen_monsters[i].m_name = old.monst_names[i];
 		if(scen_monsters[i].m_type == eRace::UNDEAD && scen_monsters[i].m_name.find("Skeleton") != std::string::npos)
