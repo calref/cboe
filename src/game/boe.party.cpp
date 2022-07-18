@@ -19,6 +19,7 @@
 #include <cstring>
 #include <queue>
 #include "boe.party.hpp"
+#include "boe.minimap.hpp"
 #include "boe.monster.hpp"
 #include "boe.town.hpp"
 #include "boe.combat.hpp"
@@ -603,7 +604,6 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				for(where.y = 0; where.y < 64; where.y++)
 					if(dist(where,univ.party.town_loc) <= 2)
 						make_explored(where.x,where.y);
-			clear_map();
 			break;
 			
 		case eSpell::SUMMON_BEAST:
@@ -704,7 +704,6 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				for(short i = 0; i < 64; i++)
 					for(short j = 0; j < 64; j++)
 						make_explored(i,j);
-				clear_map();
 			}
 			break;
 		}
@@ -880,7 +879,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 		case eSpell::DETECT_LIFE:
 			add_string_to_buf("  Monsters now on map.");
 			univ.party.status[ePartyStatus::DETECT_LIFE] += 6 + get_ran(1,0,6);
-			clear_map();
+			minimap::draw(false);
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;

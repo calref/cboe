@@ -5,6 +5,7 @@
 #include "boe.global.hpp"
 #include "universe/universe.hpp"
 #include "boe.fileio.hpp"
+#include "boe.minimap.hpp"
 #include "boe.text.hpp"
 #include "boe.town.hpp"
 #include "boe.items.hpp"
@@ -29,8 +30,6 @@ extern bool party_in_memory;
 extern location center;
 extern long register_flag;
 extern sf::RenderWindow mainPtr;
-extern bool map_visible;
-extern sf::RenderWindow mini_map;
 extern short which_combat_type;
 extern short cur_town_talk_loaded;
 extern cUniverse univ;
@@ -116,6 +115,7 @@ void finish_load_party(){
 		center = univ.party.town_loc;
 	}
 	
+	minimap::set_visible(false);
 	redraw_screen(REFRESH_ALL);
 	univ.cur_pc = first_active_pc();
 	loaded_yet = true;

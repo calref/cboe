@@ -12,6 +12,7 @@
 #include "boe.newgraph.hpp"
 #include "boe.fileio.hpp"
 #include "boe.items.hpp"
+#include "boe.minimap.hpp"
 #include "boe.monster.hpp"
 #include "boe.town.hpp"
 #include "boe.combat.hpp"
@@ -41,28 +42,20 @@ extern short store_current_pc,current_ground;
 extern eGameMode store_pre_shop_mode,store_pre_talk_mode;
 extern std::queue<pending_special_type> special_queue;
 
-extern bool map_visible;
-extern sf::RenderWindow mini_map;
-
 extern location hor_vert_place[14];
 extern location diag_place[14];
 extern location golem_m_locs[16];
 extern cUniverse univ;
 extern cCustomGraphics spec_scen_g;
-bool need_map_full_refresh = true,forcing_map_button_redraw = false;
-extern sf::RenderTexture map_gworld;
 // In the 0..65535 range, this colour was {65535,65535,52428}
 sf::Color parchment = {255,255,205};
 
 long pause_dummy;
 
-location town_map_adj;
 short town_force = 200,store_which_shop,store_min,store_max,store_shop,store_selling_pc;
 short sell_offset = 0;
 location town_force_loc;
 bool shop_button_active[12];
-rectangle map_title_rect = {3,50,15,300};
-rectangle map_bar_rect = {15,50,27,300};
 
 void force_town_enter(short which_town,location where_start) {
 	town_force = which_town;
@@ -262,7 +255,7 @@ void start_town_mode(short which_town, short entry_dir) {
 		if((monst.x_width > 1 || monst.y_width > 1) && !monst_can_be_there(monst.cur_loc,i))
 			monst.active = 0;
 	}
-	
+
 	handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc);
 	
 	// Set up field booleans, correct for doors
@@ -438,12 +431,10 @@ void start_town_mode(short which_town, short entry_dir) {
 		}
 	}
 	
-	clear_map();
 	reset_item_max();
 	town_force = 200;
-	// TODO: One problem with this - it paints the terrain after the town entry dialog is dismissed
-	// ... except it actually doesn't, because the town enter special is only queued, not run immediately.
 	draw_terrain(1);
+	minimap::add_pending_redraw();
 }
 
 
@@ -561,14 +552,11 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		
 		update_explored(to_return);
 		redraw_screen(REFRESH_TERRAIN | REFRESH_TEXT);
-		
 	}
 	
-	if(!combat_end)
-		clear_map();
-	
 	univ.party.town_num = 200; // should be harmless...
-	
+	minimap::add_pending_redraw();
+
 	return to_return;
 }
 
@@ -1211,256 +1199,6 @@ bool does_location_have_special(cOutdoors& sector, location loc, eTerSpec specia
 	return univ.scenario.ter_types[terrain_index].special == special;
 }
 
-// TODO: I don't think we need this
-void clear_map() {
-	rectangle map_world_rect(map_gworld);
-	
-	fill_rect(map_gworld, map_world_rect, sf::Color::Black);
-	
-}
-
-void draw_map(bool need_refresh) {
-	if(!map_visible) return;
-	pic_num_t pic;
-	rectangle the_rect,map_world_rect = {0,0,384,384};
-	location where;
-	location kludge;
-	rectangle draw_rect,orig_draw_rect = {0,0,6,6},ter_temp_from,base_source_rect = {0,0,12,12};
-	rectangle	dlogpicrect = {6,6,42,42};
-	bool draw_pcs = true,out_mode;
-	rectangle view_rect= {0,0,48,48},tiny_rect = {0,0,32,32},
-	redraw_rect = {0,0,48,48},big_rect = {0,0,64,64}; // Rectangle visible in view screen
-	
-	rectangle area_to_draw_from,area_to_draw_on = {29,47,269,287};
-	ter_num_t what_ter;
-	bool draw_surroundings = false,expl;
-	short total_size = 48; // if full redraw, use this to figure out everything
-	rectangle custom_from;
-	
-	draw_surroundings = true;
-	
-	town_map_adj.x = 0;
-	town_map_adj.y = 0;
-	
-	// view rect is rect that is visible, redraw rect is area to redraw now
-	// area_to_draw_from is final draw from rect
-	// area_to_draw_on is final draw to rect
-	// extern short store_pre_shop_mode,store_pre_talk_mode;
-	if((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == MODE_OUTDOORS)) ||
-		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == MODE_OUTDOORS))) {
-		view_rect.left = minmax(0,8,univ.party.loc_in_sec.x - 20);
-		view_rect.right = view_rect.left + 40;
-		view_rect.top = minmax(0,8,univ.party.loc_in_sec.y - 20);
-		view_rect.bottom = view_rect.top + 40;
-		redraw_rect = view_rect;
-	}
-	else {
-		total_size = univ.town->max_dim;
-		switch(total_size) {
-			case 64:
-				view_rect.left = minmax(0,24,univ.party.town_loc.x - 20);
-				view_rect.right = view_rect.left + 40;
-				view_rect.top = minmax(0,24,univ.party.town_loc.y - 20);
-				view_rect.bottom = view_rect.top + 40;
-				redraw_rect = big_rect;
-				break;
-			case 48:
-				view_rect.left = minmax(0,8,univ.party.town_loc.x - 20);
-				view_rect.right = view_rect.left + 40;
-				view_rect.top = minmax(0,8,univ.party.town_loc.y - 20);
-				view_rect.bottom = view_rect.top + 40;
-				redraw_rect = view_rect;
-				break;
-			case 32:
-				view_rect = tiny_rect;
-				redraw_rect = view_rect;
-				break;
-		}
-	}
-	if((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == MODE_OUTDOORS)) ||
-		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == MODE_OUTDOORS)) ||
-		is_town() || is_combat()) {
-		area_to_draw_from = view_rect;
-		area_to_draw_from.width() = 40;
-		area_to_draw_from.height() = 40;
-		area_to_draw_from.left *= 6;
-		area_to_draw_from.right *= 6;
-		area_to_draw_from.top *= 6;
-		area_to_draw_from.bottom *= 6;
-	}
-	
-	if(is_combat())
-		draw_pcs = false;
-	
-	const char* title_string = "Your map:";
-	bool canMap = true;
-	
-	if((is_combat()) && (which_combat_type == 0)) {
-		title_string = "No map in combat.";
-		canMap = false;
-	}else if((is_town() && univ.town->defy_mapping)) {
-		title_string = "This place defies mapping.";
-		canMap = false;
-	}
-	else if(need_refresh) {
-		// CHECKME: unsure, but on osx, if mainPtr.setActive() is not called,
-		// the following code does not update the gworld texture if we are
-		// called just after closing a dialog
-		mainPtr.setActive();
-
-		map_gworld.setActive();
-		
-		fill_rect(map_gworld, map_world_rect, sf::Color::Black);
-		
-		// Now, if shopping or talking, just don't touch anything.
-		if((overall_mode == MODE_SHOPPING) || (overall_mode == MODE_TALKING))
-			redraw_rect.right = -1;
-		
-		if((is_out()) ||
-			((is_combat()) && (which_combat_type == 0)) ||
-			((overall_mode == MODE_TALKING) && (store_pre_talk_mode == MODE_OUTDOORS)) ||
-			((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == MODE_OUTDOORS)))
-			out_mode = true;
-		else out_mode = false;
-		
-		// TODO: It could be possible to draw the entire map here and then only refresh if a spot actually changes terrain type
-		auto const & small_ter_gworld = *ResMgr::textures.get("termap");
-		for(where.x = redraw_rect.left; where.x < redraw_rect.right; where.x++)
-			for(where.y = redraw_rect.top; where.y < redraw_rect.bottom; where.y++) {
-				draw_rect = orig_draw_rect;
-				draw_rect.offset(6 * where.x, 6 * where.y);
-				
-				if(out_mode)
-					what_ter = univ.out[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
-				else what_ter = univ.town->terrain(where.x,where.y);
-				
-				ter_temp_from = base_source_rect;
-				
-				if(out_mode)
-					expl = univ.out.out_e[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
-				else expl = is_explored(where.x,where.y);
-				
-				if(expl != 0) {
-					pic = univ.scenario.ter_types[what_ter].map_pic;
-					bool drawLargeIcon = false;
-					if(pic == NO_PIC) {
-						pic = univ.scenario.ter_types[what_ter].picture;
-						drawLargeIcon = true;
-					}
-					if(pic >= 1000) {
-						if(spec_scen_g) {
-							//print_nums(0,99,pic);
-							Texture src_gw;
-							if(drawLargeIcon) {
-								pic = pic % 1000;
-								std::tie(src_gw,custom_from) = spec_scen_g.find_graphic(pic);
-								rect_draw_some_item(src_gw,custom_from,map_gworld,draw_rect);
-							} else {
-								std::tie(src_gw,custom_from) = spec_scen_g.find_graphic(pic % 1000);
-								custom_from.right = custom_from.left + 12;
-								custom_from.bottom = custom_from.top + 12;
-								pic /= 1000; pic--;
-								custom_from.offset((pic / 3) * 12, (pic % 3) * 12);
-								rect_draw_some_item(src_gw,custom_from, map_gworld, draw_rect);
-							}
-						}
-					} else if(drawLargeIcon) {
-						if(pic >= 960) {
-							custom_from = calc_rect(4 * ((pic - 960) / 5),(pic - 960) % 5);
-							rect_draw_some_item(*ResMgr::textures.get("teranim"), custom_from, map_gworld, draw_rect);
-						} else {
-							int which_sheet = pic / 50;
-							auto const &src_gw = *ResMgr::textures.get("ter" + std::to_string(1 + which_sheet));
-							pic %= 50;
-							custom_from = calc_rect(pic % 10, pic / 10);
-							rect_draw_some_item(src_gw, custom_from, map_gworld, draw_rect);
-						}
-					} else {
-						if(univ.scenario.ter_types[what_ter].picture < 960)
-							ter_temp_from.offset(12 * (univ.scenario.ter_types[what_ter].picture % 20),
-												 12 * (univ.scenario.ter_types[what_ter].picture / 20));
-						else ter_temp_from.offset(12 * 20,
-												  12 * (univ.scenario.ter_types[what_ter].picture - 960));
-						rect_draw_some_item(small_ter_gworld,ter_temp_from,map_gworld,draw_rect);
-					}
-					
-					if(is_out() ? univ.out->roads[where.x][where.y] : univ.town.is_road(where.x,where.y)) {
-						draw_rect.inset(1,1);
-						rect_draw_some_item(*ResMgr::textures.get("trim"),{8,112,12,116},map_gworld,draw_rect);
-					}
-				}
-			}
-		
-		map_gworld.display();
-		// this stops flickering if the display time is too long
-		glFlush();
-	}
-	
-	mini_map.setActive(false);
-	
-	// Now place terrain map gworld
-	TextStyle style;
-	style.font = FONT_BOLD;
-	style.pointSize = 10;;
-	
-	the_rect = rectangle(mini_map);
-	tileImage(mini_map, the_rect,bg[4]);
-	cPict theGraphic(mini_map);
-	theGraphic.setBounds(dlogpicrect);
-	theGraphic.setPict(21, PIC_DLOG);
-	theGraphic.setFormat(TXT_FRAME, FRM_NONE);
-	theGraphic.draw();
-	style.colour = sf::Color::White;
-	style.lineHeight = 12;
-	win_draw_string(mini_map, map_title_rect,title_string,eTextMode::WRAP,style);
-	win_draw_string(mini_map, map_bar_rect,"(Hit Escape to close.)",eTextMode::WRAP,style);
-	
-	if(canMap) {
-		rect_draw_some_item(map_gworld.getTexture(),area_to_draw_from,mini_map,area_to_draw_on);
-		
-		// Now place PCs and monsters
-		if(draw_pcs) {
-			if((is_town()) && (univ.party.status[ePartyStatus::DETECT_LIFE] > 0))
-				for(short i = 0; i < univ.town.monst.size(); i++)
-					if(univ.town.monst[i].active > 0) {
-						where = univ.town.monst[i].cur_loc;
-						if((is_explored(where.x,where.y)) &&
-							((where.x >= view_rect.left) && (where.x < view_rect.right)
-							 && where.y >= view_rect.top && where.y < view_rect.bottom)){
-								
-								draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
-								draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-								draw_rect.right = draw_rect.left + 6;
-								draw_rect.bottom = draw_rect.top + 6;
-								
-								fill_rect(mini_map, draw_rect, Colours::GREEN);
-								frame_circle(mini_map, draw_rect, Colours::BLUE);
-							}
-					}
-			if((overall_mode != MODE_SHOPPING) && (overall_mode != MODE_TALKING)) {
-				where = (is_town()) ? univ.party.town_loc : global_to_local(univ.party.out_loc);
-				
-				draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
-				draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-				draw_rect.right = draw_rect.left + 6;
-				draw_rect.bottom = draw_rect.top + 6;
-				fill_rect(mini_map, draw_rect, Colours::RED);
-				frame_circle(mini_map, draw_rect, sf::Color::Black);
-				
-			}
-		}
-	}
-	
-	mini_map.setActive();
-	mini_map.display();
-	
-	// Now exit gracefully
-	mainPtr.setActive();
-	
-}
-
 
 
 bool is_door(location destination) {
@@ -1469,23 +1207,6 @@ bool is_door(location destination) {
 	   univ.scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == eTerSpec::CHANGE_WHEN_STEP_ON)
 		return true;
 	return false;
-}
-
-
-void display_map() {
-	// Show the automap if it's not already visible
-	if(map_visible) return;
-	give_help(62,0);
-	
-	rectangle the_rect;
-	rectangle	dlogpicrect = {6,6,42,42};
-	
-	mini_map.setVisible(true);
-	map_visible = true;
-	draw_map(true);
-	makeFrontWindow(mainPtr);
-	
-	set_cursor(sword_curs);
 }
 
 void check_done() {

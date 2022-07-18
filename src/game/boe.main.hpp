@@ -21,5 +21,4 @@ void show_logo();
 void plop_fancy_startup();
 void handle_events();
 void handle_one_event(const sf::Event&);
-void handle_one_minimap_event(const sf::Event &);
 
