@@ -176,7 +176,6 @@ void set_up_monst(eAttitude mode,mon_num_t m_num) {
 void do_monsters() {
 	short r1,target;
 	location l1,l2;
-	bool acted_yet = false;
 	
 	if(overall_mode == MODE_TOWN)
 		for(short i = 0; i < univ.town.monst.size(); i++)
@@ -202,15 +201,14 @@ void do_monsters() {
 				
 				if((univ.town.monst[i].active == 2)
 					|| (univ.town.monst[i].active != 0 && univ.town.monst[i].is_friendly())) {
-					acted_yet = false;
 					// TODO: I don't think this univ.town.hostile flag is ever actually set.
 					if((univ.town.monst[i].attitude == eAttitude::DOCILE || univ.town.monst[i].target == 6) && !univ.town.monst.hostile) {
 						if(univ.town.monst[i].mobility == 1) { // OK, it doesn't see the party or
 							// isn't nasty, and the town isn't totally hostile.
-							if(univ.town.monst[i].is_friendly() || get_ran(1,0,1) == 0) {
-								acted_yet = rand_move(i);
-							}
-							else acted_yet = seek_party(i,univ.town.monst[i].cur_loc,univ.party.town_loc);
+							if(univ.town.monst[i].is_friendly() || get_ran(1,0,1) == 0)
+								rand_move(i);
+							else
+								seek_party(i,univ.town.monst[i].cur_loc,univ.party.town_loc);
 						}
 					}
 					if(univ.town.monst[i].attitude != eAttitude::DOCILE || univ.town.monst.hostile) {
@@ -220,15 +218,15 @@ void do_monsters() {
 							
 							if(univ.town.monst[i].morale < 0 && !univ.town.monst[i].mindless
 							   && univ.town.monst[i].m_type != eRace::UNDEAD && univ.town.monst[i].m_type != eRace::SKELETAL)  {
-								acted_yet = flee_party(i,l1,l2);
+								flee_party(i,l1,l2);
 								if(get_ran(1,0,10) < 6)
 									univ.town.monst[i].morale++;
 							}
 							else if(monst_hate_spot(i,&l2))
-								acted_yet = seek_party(i,l1,l2);
+								seek_party(i,l1,l2);
 							else if(((univ.town.monst[i].mu == 0) && (univ.town.monst[i].mu == 0))
 									 || (can_see_light(l1,l2,sight_obscurity) > 3))
-								acted_yet = seek_party(i,l1,l2);
+								seek_party(i,l1,l2);
 						}
 					}
 				}
@@ -258,14 +256,14 @@ void do_monsters() {
 	if(overall_mode == MODE_OUTDOORS) {
 		for(short i = 0; i < 10; i++)
 			if(univ.party.out_c[i].exists) {
-				acted_yet = false;
 				l1 = univ.party.out_c[i].m_loc;
 				l2 = univ.party.out_loc;
 				
 				r1 = get_ran(1,1,6);
 				if(r1 == 3)
-					acted_yet = rand_move(i);
-				else acted_yet = seek_party(i,l1,l2);
+					rand_move(i);
+				else
+					seek_party(i,l1,l2);
 			}
 	}
 }

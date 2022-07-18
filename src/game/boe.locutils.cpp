@@ -294,7 +294,6 @@ bool is_blocked(location to_check) {
 		if (to_check.x >= univ.town->max_dim || to_check.y >= univ.town->max_dim)
 			return true;
 		ter = univ.town->terrain(to_check.x,to_check.y);
-		gr = univ.scenario.ter_types[ter].picture;
 		
 		// Terrain blocking?
 		if(impassable(ter)) {
