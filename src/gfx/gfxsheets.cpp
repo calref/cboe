@@ -29,8 +29,8 @@ Texture_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 	else if(numSheets == 0) valid = false;
 	if(!valid) {
 	INVALID:
-		auto const &blank = *ResMgr::textures.get("blank", true);
-		return std::make_pair(blank, rectangle(0,0,36,28));
+		auto const &error = *ResMgr::textures.get("errors", true);
+		return std::make_pair(error, rectangle(0,0,40,40));
 	}
 	short sheet = which_rect / 100;
 	if(is_old || party) sheet = 0;

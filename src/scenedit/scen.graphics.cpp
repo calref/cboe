@@ -88,15 +88,16 @@ extern bool small_any_drawn;
 
 static short get_small_icon(ter_num_t ter){
 	short icon = -1;
-	switch(scenario.ter_types[ter].special){
+	auto const &ter_type=scenario.get_terrain(ter);
+	switch(ter_type.special){
 		case eTerSpec::NONE:
-			icon = scenario.ter_types[ter].flag1;
+			icon = ter_type.flag1;
 			break;
 		case eTerSpec::CHANGE_WHEN_STEP_ON:
 			icon = 87;
 			break;
 		case eTerSpec::DAMAGING:
-			switch(eDamageType(scenario.ter_types[ter].flag3)) {
+			switch(eDamageType(ter_type.flag3)) {
 				case eDamageType::WEAPON:
 					icon = 16;
 					break;
@@ -136,50 +137,50 @@ static short get_small_icon(ter_num_t ter){
 			break;
 		case eTerSpec::DANGEROUS:
 			icon = 12;
-			switch((eStatus)scenario.ter_types[ter].flag3){
+			switch((eStatus)ter_type.flag3){
 				case eStatus::POISONED_WEAPON: // TODO: Do something here
 					break;
 				case eStatus::BLESS_CURSE:
-					icon = scenario.ter_types[ter].flag1 > 0 ? 4 : 5;
+					icon = ter_type.flag1 > 0 ? 4 : 5;
 					break;
 				case eStatus::POISON:
-					if(scenario.ter_types[ter].flag1 > 0)
+					if(ter_type.flag1 > 0)
 						icon = 1;
 					break;
 				case eStatus::HASTE_SLOW:
-					icon = scenario.ter_types[ter].flag1 > 0 ? 6 : 7;
+					icon = ter_type.flag1 > 0 ? 6 : 7;
 					break;
 				case eStatus::INVULNERABLE: // TODO: Do something here
 					break;
 				case eStatus::MAGIC_RESISTANCE: // TODO: Do something here
 					break;
 				case eStatus::WEBS:
-					if(scenario.ter_types[ter].flag1 > 0)
+					if(ter_type.flag1 > 0)
 						icon = 52;
 					break;
 				case eStatus::DISEASE:
-					if(scenario.ter_types[ter].flag1 > 0)
+					if(ter_type.flag1 > 0)
 						icon = 0;
 					break;
 				case eStatus::INVISIBLE: // TODO: Do something here
 					break;
 				case eStatus::DUMB:
-					icon = scenario.ter_types[ter].flag1 > 0 ? 8 : 9;
+					icon = ter_type.flag1 > 0 ? 8 : 9;
 					break;
 				case eStatus::MARTYRS_SHIELD: // TODO: Do something here
 					break;
 				case eStatus::ASLEEP:
-					if(scenario.ter_types[ter].flag1 > 0)
+					if(ter_type.flag1 > 0)
 						icon = 3;
 					break;
 				case eStatus::PARALYZED: // TODO: Do something here
 					break;
 				case eStatus::ACID:
-					if(scenario.ter_types[ter].flag1 > 0)
+					if(ter_type.flag1 > 0)
 						icon = 2;
 					break;
 				case eStatus::FORCECAGE:
-					if(scenario.ter_types[ter].flag1 > 0)
+					if(ter_type.flag1 > 0)
 						icon = 43;
 					break;
 				case eStatus::MAIN: case eStatus::CHARM:
@@ -194,8 +195,8 @@ static short get_small_icon(ter_num_t ter){
 			icon = 94;
 			break;
 		case eTerSpec::UNLOCKABLE:
-			if(scenario.ter_types[ter].flag2 >= 5)
-				icon = (scenario.ter_types[ter].flag2 == 10) ? 96 : 95;
+			if(ter_type.flag2 >= 5)
+				icon = (ter_type.flag2 == 10) ? 96 : 95;
 			else icon = 94;
 			break;
 		case eTerSpec::IS_A_SIGN:
@@ -203,7 +204,7 @@ static short get_small_icon(ter_num_t ter){
 			break;
 		case eTerSpec::CALL_SPECIAL:
 		case eTerSpec::CALL_SPECIAL_WHEN_USED:
-			icon = scenario.ter_types[ter].flag3;
+			icon = ter_type.flag3;
 			break;
 		case eTerSpec::IS_A_CONTAINER:
 			icon = 93;
@@ -213,7 +214,7 @@ static short get_small_icon(ter_num_t ter){
 			icon = 91;
 			break;
 		case eTerSpec::CONVEYOR:
-			switch(scenario.ter_types[ter].flag1){
+			switch(ter_type.flag1){
 				case DIR_N:
 					icon = 78;
 					break;
@@ -292,7 +293,7 @@ static std::vector<short> get_small_icons(location at, ter_num_t t_to_draw) {
 		else icons.push_back(88);
 	}
 	if(editing_town) {
-		if(scenario.ter_types[t_to_draw].light_radius > 0)
+		if(scenario.get_terrain(t_to_draw).light_radius > 0)
 			icons.push_back(83);
 		for(size_t i = 0; i < town->start_locs.size(); i++)
 			if(at == town->start_locs[i]) {
@@ -318,7 +319,7 @@ static std::vector<short> get_small_icons(location at, ter_num_t t_to_draw) {
 }
 
 static bool get_terrain_picture(cPictNum pict, Texture &source, rectangle &from_rect)
-{
+try {
 	source=Texture();
 	ePicType type=pict.type;
 	if (pict.num<0)
@@ -336,8 +337,14 @@ static bool get_terrain_picture(cPictNum pict, Texture &source, rectangle &from_
 			break;
 		case ePicType::PIC_TER_MAP:
 			source=*ResMgr::textures.get("termap");
-			from_rect.left = 12*(pict.num%20);
-			from_rect.top = 12*(pict.num/20);
+			if (pict.num<960) {
+				from_rect.left = 12*(pict.num%20);
+				from_rect.top = 12*(pict.num/20);
+			}
+			else {
+				from_rect.left = 12*20;
+				from_rect.top = 12*(pict.num-960);
+			}
 			from_rect.right = from_rect.left+12;
 			from_rect.bottom = from_rect.top+12;
 			break;
@@ -350,10 +357,17 @@ static bool get_terrain_picture(cPictNum pict, Texture &source, rectangle &from_
 		default:
 			break;
 	}
-	if (bool(source))
-		return true;
-	std::cerr << "Error[get_terrain_picture]: can not find picture id=" << pict.num << "type=" << int(pict.type)<< "\n";
-	return false;
+	if (!source)
+		throw "can not find image";
+	return true;
+}
+catch (...) {
+	if (pict.num==-1) // ok no picture
+		return false;
+	std::cerr << "Error[get_terrain_picture]: can not find picture id=" << pict.num << ", type=" << int(pict.type)<< "\n";
+	source = *ResMgr::textures.get("errors");
+	from_rect={0,0,40,40};
+	return true;
 }
 
 void Set_up_win() {
@@ -571,7 +585,7 @@ void set_up_terrain_buttons(bool reset) {
 					break;
 				}
 				Texture source_gworld;
-				if (get_terrain_picture(scenario.ter_types[i].get_picture_num(), source_gworld, ter_from))
+				if (get_terrain_picture(scenario.get_terrain(i).get_picture_num(), source_gworld, ter_from))
 					rect_draw_some_item(source_gworld,ter_from, mainPtr, draw_rect);
 				small_i = get_small_icon(i);
 				tiny_from = base_small_button_from;
@@ -914,7 +928,7 @@ void draw_terrain(){
 							}
 						}
 					} else if(overall_mode == MODE_DRAWING) {
-						cTerrain& ter = scenario.ter_types[current_terrain_type];
+						cTerrain& ter = scenario.get_terrain(current_terrain_type);
 						if(ter.obj_num > 0) {
 							// TODO: Don't do this if auto-completion of large terrain objects is disabled
 							for(int x = 0; x < ter.obj_size.x; x++) {
@@ -1133,7 +1147,7 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	
 	rectangle source_rect;
 	Texture source_gworld;
-	if (!get_terrain_picture(scenario.ter_types[terrain_to_draw].get_picture_num(), source_gworld, source_rect))
+	if (!get_terrain_picture(scenario.get_terrain(terrain_to_draw).get_picture_num(), source_gworld, source_rect))
 		return;
 
 	location where_draw;
@@ -1154,7 +1168,7 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 	Texture source_gworld;
 	rectangle dest_rect = {0,0,size,size};
 	dest_rect.offset(8 + TER_RECT_UL_X + size * i, 8 + TER_RECT_UL_Y + size * j);
-	if (get_terrain_picture(scenario.ter_types[terrain_to_draw].get_map_picture_num(), source_gworld, from_rect))
+	if (get_terrain_picture(scenario.get_terrain(terrain_to_draw).get_map_picture_num(), source_gworld, from_rect))
 		rect_draw_some_item(source_gworld, from_rect, mainPtr, dest_rect);
 	if(road) {
 		rectangle road_rect = dest_rect;
@@ -1193,7 +1207,7 @@ rectangle get_template_rect (unsigned short type_wanted) {
 	rectangle store_rect;
 	short picture_wanted;
 	
-	picture_wanted = scenario.ter_types[type_wanted].picture;
+	picture_wanted = scenario.get_terrain(type_wanted).picture;
 	if(picture_wanted >= 1000)
 		picture_wanted = 0;
 	picture_wanted = picture_wanted % 50;
@@ -1239,7 +1253,7 @@ void draw_frames() {
 static void place_selected_terrain(ter_num_t ter, rectangle draw_rect) {
 	rectangle source_rect;
 	Texture source_gworld;
-	if (get_terrain_picture(scenario.ter_types[ter].get_picture_num(), source_gworld, source_rect))
+	if (get_terrain_picture(scenario.get_terrain(ter).get_picture_num(), source_gworld, source_rect))
 		rect_draw_some_item(source_gworld,source_rect, mainPtr,draw_rect);
 
 	short small_i = get_small_icon(ter);
@@ -1276,7 +1290,7 @@ void place_location() {
 					int first = pal_sbar->getPosition() * 16;
 					switch(draw_mode) {
 						case DRAW_TERRAIN:
-							if(first + i < scenario.ter_types.size())
+							if(first+i >= 0 && first + i < scenario.ter_types.size())
 								sout << "Terrain: " << scenario.ter_types[first + i].name;
 							break;
 						case DRAW_ITEM:
@@ -1565,7 +1579,7 @@ void take_field_type(short i,short j,eFieldType field_type) {
 bool container_there(location l) {
 	if(!editing_town)
 		return false;
-	if(scenario.ter_types[town->terrain(l.x,l.y)].special == eTerSpec::IS_A_CONTAINER)
+	if(scenario.get_terrain(town->terrain(l.x,l.y)).special == eTerSpec::IS_A_CONTAINER)
 		return true;
 	if(is_field_type(l.x,l.y, OBJECT_BARREL))
 		return true;
