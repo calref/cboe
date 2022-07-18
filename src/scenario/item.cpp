@@ -17,6 +17,7 @@
 
 #include "oldstructs.hpp"
 #include "utility.hpp"
+#include "dialogxml/widgets/pict.hpp"
 #include "fileio/fileio.hpp"
 #include "fileio/tagfile.hpp"
 #include "mathutil.hpp"
@@ -316,6 +317,17 @@ cItem::cItem(eItemPreset preset) : cItem() {
 			graphic_num = 105; // The blank graphic
 			break;
 	}
+}
+
+cPictNum cItem::get_picture_num(bool tiny) const
+{
+	if (graphic_num<0)
+		return cPictNum(graphic_num, ePicType::PIC_NONE);
+	if (graphic_num>=1000)
+		return cPictNum(graphic_num-1000, tiny ? ePicType::PIC_CUSTOM_TINY_ITEM : ePicType::PIC_CUSTOM_ITEM);
+	if (graphic_num<55 && !tiny)
+		return cPictNum(graphic_num, ePicType::PIC_ITEM);
+	return cPictNum(graphic_num, ePicType::PIC_TINY_ITEM);
 }
 
 cItem::cItem(eAlchemy recipe) : cItem(ITEM_POTION) {

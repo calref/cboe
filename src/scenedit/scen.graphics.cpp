@@ -533,7 +533,7 @@ void set_up_terrain_buttons(bool reset) {
 					break;
 				}
 				Texture source_gworld;
-				if (cPict::get_terrain_picture(scenario.get_terrain(i).get_picture_num(), source_gworld, ter_from))
+				if (cPict::get_picture(scenario.get_terrain(i).get_picture_num(), source_gworld, ter_from))
 					rect_draw_some_item(source_gworld,ter_from, mainPtr, draw_rect);
 				small_i = get_small_icon(i);
 				tiny_from = base_small_button_from;
@@ -647,18 +647,11 @@ void set_up_terrain_buttons(bool reset) {
 				}
 				break;
 			case DRAW_ITEM:
-				pic = scenario.get_item(i).graphic_num;
+				Texture source_gworld;
 				tiny_to = draw_rect;
 				frame_rect(mainPtr, tiny_to, sf::Color::Black);
-				if(pic >= 1000) {
-					Texture source_gworld;
-					std::tie(source_gworld,ter_from) = spec_scen_g.find_graphic(pic % 1000);
+				if (cPict::get_picture(scenario.get_item(i).get_picture_num(true), source_gworld, ter_from))
 					rect_draw_some_item(source_gworld, ter_from, mainPtr, tiny_to, sf::BlendAlpha);
-				} else {
-					tiny_from = {0,0,18,18};
-					tiny_from.offset((pic % 10) * 18,(pic / 10) * 18);
-					rect_draw_some_item(*ResMgr::graphics.get("tinyobj"), tiny_from, mainPtr, tiny_to, sf::BlendAlpha);
-				}
 				break;
 		}
 	}
@@ -999,61 +992,36 @@ void draw_monsts() {
 		}
 }
 
-// Returns rect for drawing an item, if num < 25, rect is in big item template,
-// otherwise in small item template
-static rectangle get_item_template_rect (short type_wanted) {
-	rectangle store_rect;
-	
-	if(type_wanted < 55) {
-		store_rect.top = (type_wanted / 5) * BITMAP_HEIGHT;
-		store_rect.bottom = store_rect.top + BITMAP_HEIGHT;
-		store_rect.left = (type_wanted % 5) * BITMAP_WIDTH;
-		store_rect.right = store_rect.left + BITMAP_WIDTH;
-	}
-	else {
-		store_rect.top = (type_wanted / 10) * 18;
-		store_rect.bottom = store_rect.top + 18;
-		store_rect.left = (type_wanted % 10) * 18;
-		store_rect.right = store_rect.left + 18;
-	}
-	
-	return store_rect;
+static void update_item_rectangle(cPictNum const &pict, rectangle &rect)
+{
+	if (pict.type==ePicType::PIC_CUSTOM_ITEM || pict.num<45)
+		return;
+	rect.top += 9;
+	rect.bottom -= 9;
+	rect.left += 5;
+	rect.right -= 5;
 }
 
 void draw_items() {
-	rectangle source_rect,dest_rect;
+	rectangle dest_rect;
 	location where_draw;
-	short pic_num;
 	
 	for(short i = 0; i < town->preset_items.size(); i++) {
-		if(town->preset_items[i].code >= 0) {
-			where_draw.x = town->preset_items[i].loc.x - cen_x + 4;
-			where_draw.y = town->preset_items[i].loc.y - cen_y + 4;
-			pic_num = scenario.get_item(town->preset_items[i].code).graphic_num;
-			if((where_draw.x >= 0) && (where_draw.x <= 8) &&
-				(where_draw.y >= 0) && (where_draw.y <= 8))  {
-				
-				if(pic_num >= 1000) {
-					Texture source_gworld;
-					std::tie(source_gworld,source_rect)= spec_scen_g.find_graphic(pic_num - 1000);
-					dest_rect = calc_rect(where_draw.x,where_draw.y);
-					dest_rect.offset(8+TER_RECT_UL_X,8+TER_RECT_UL_Y);
-					rect_draw_some_item(source_gworld, source_rect, mainPtr, dest_rect, sf::BlendAlpha);
-				}
-				else {
-					source_rect = get_item_template_rect(pic_num);
-					dest_rect = calc_rect(where_draw.x,where_draw.y);
-					dest_rect.offset(8+TER_RECT_UL_X,8+TER_RECT_UL_Y);
-					if(pic_num >= 45) {
-						dest_rect.top += 9;
-						dest_rect.bottom -= 9;
-						dest_rect.left += 5;
-						dest_rect.right -= 5;
-					}
-					rect_draw_some_item(*ResMgr::graphics.get((pic_num < 55) ? "objects" : "tinyobj"),
-										source_rect, mainPtr, dest_rect,sf::BlendAlpha);
-				}
-			}
+		if(town->preset_items[i].code < 0)
+			continue;
+		where_draw.x = town->preset_items[i].loc.x - cen_x + 4;
+		where_draw.y = town->preset_items[i].loc.y - cen_y + 4;
+		if(where_draw.x < 0 || where_draw.x > 8 || where_draw.y < 0 || where_draw.y > 8)
+			continue;
+		auto const &pic_num = scenario.get_item(town->preset_items[i].code).get_picture_num(false);
+		rectangle source_rect;
+		Texture source_gworld;
+
+		dest_rect = calc_rect(where_draw.x,where_draw.y);
+		dest_rect.offset(8+TER_RECT_UL_X,8+TER_RECT_UL_Y);
+		if (cPict::get_picture(pic_num, source_gworld, source_rect)) {
+			update_item_rectangle(pic_num, dest_rect);
+			rect_draw_some_item(source_gworld, source_rect, mainPtr, dest_rect, sf::BlendAlpha);
 		}
 	}
 }
@@ -1072,7 +1040,7 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	
 	rectangle source_rect;
 	Texture source_gworld;
-	if (!cPict::cPict::get_terrain_picture(scenario.get_terrain(terrain_to_draw).get_picture_num(), source_gworld, source_rect))
+	if (!cPict::get_picture(scenario.get_terrain(terrain_to_draw).get_picture_num(), source_gworld, source_rect))
 		return;
 
 	location where_draw;
@@ -1093,7 +1061,7 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 	Texture source_gworld;
 	rectangle dest_rect = {0,0,size,size};
 	dest_rect.offset(8 + TER_RECT_UL_X + size * i, 8 + TER_RECT_UL_Y + size * j);
-	if (cPict::get_terrain_picture(scenario.get_terrain(terrain_to_draw).get_map_picture_num(), source_gworld, from_rect))
+	if (cPict::get_picture(scenario.get_terrain(terrain_to_draw).get_map_picture_num(), source_gworld, from_rect))
 		rect_draw_some_item(source_gworld, from_rect, mainPtr, dest_rect);
 	if(road) {
 		rectangle road_rect = dest_rect;
@@ -1178,7 +1146,7 @@ void draw_frames() {
 static void place_selected_terrain(ter_num_t ter, rectangle draw_rect) {
 	rectangle source_rect;
 	Texture source_gworld;
-	if (cPict::get_terrain_picture(scenario.get_terrain(ter).get_picture_num(), source_gworld, source_rect))
+	if (cPict::get_picture(scenario.get_terrain(ter).get_picture_num(), source_gworld, source_rect))
 		rect_draw_some_item(source_gworld,source_rect, mainPtr,draw_rect);
 
 	short small_i = get_small_icon(ter);
@@ -1371,19 +1339,11 @@ void place_location() {
 				}
 			}
 		} else if(overall_mode == MODE_PLACE_ITEM || overall_mode == MODE_PLACE_SAME_ITEM) {
-			picture_wanted = scenario.get_item(mode_count).graphic_num;
-			if(picture_wanted >= 1000) {
-				Texture source_gworld;
-				std::tie(source_gworld,source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
+			cPictNum pic=scenario.get_item(mode_count).get_picture_num(false);
+			Texture source_gworld;
+			if (cPict::get_picture(pic,source_gworld, source_rect)) {
+				update_item_rectangle(pic, draw_rect);
 				rect_draw_some_item(source_gworld,source_rect,mainPtr,draw_rect,sf::BlendAlpha);
-			} else if(picture_wanted < 55) {
-				source_rect = calc_rect(picture_wanted % 5,picture_wanted / 5);
-				rect_draw_some_item(*ResMgr::graphics.get("objects"),source_rect,mainPtr,draw_rect,sf::BlendAlpha);
-			} else {
-				draw_rect.inset(5, 9);
-				rectangle tiny_from = {0,0,18,18};
-				tiny_from.offset((picture_wanted % 10) * 18,(picture_wanted / 10) * 18);
-				rect_draw_some_item(*ResMgr::graphics.get("tinyobj"),tiny_from,mainPtr,draw_rect,sf::BlendAlpha);
 			}
 		} else if(overall_mode == MODE_TOGGLE_SPECIAL_DOT) {
 			draw_field = true;

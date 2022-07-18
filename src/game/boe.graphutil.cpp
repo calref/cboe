@@ -72,7 +72,12 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 
 	rectangle source_rect;
 	Texture source_gworld;
-	if (!cPict::get_terrain_picture(univ.get_terrain(terrain_to_draw).get_picture_num(), source_gworld, source_rect, anim_ticks % 4)) {
+	cPictNum pict;
+	if (terrain_to_draw>=10000) // force using a specific graphic
+		pict=cPictNum(terrain_to_draw-10000,ePicType::PIC_TER);
+	else
+		pict=univ.get_terrain(terrain_to_draw).get_picture_num();
+	if (!cPict::get_picture(pict, source_gworld, source_rect, anim_ticks % 4)) {
 		fill_rect(terrain_screen_gworld, where_draw, sf::Color::Yellow);
 		return; // CHECKME better to draw an error image to indicate that there is a problem here
 	}
