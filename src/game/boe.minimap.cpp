@@ -6,6 +6,7 @@
 //
 
 #include <SFML/Graphics.hpp>
+#include <SFML/OpenGL.hpp>
 #include <SFML/System.hpp>
 
 #include "sounds.hpp"
@@ -236,13 +237,17 @@ void draw(bool need_refresh) {
 				else
 					rect_draw_some_item(src_gw, custom_from, gworld, draw_rect);
 					
-				if(is_out() ? univ.out->roads[where.x][where.y] : univ.town.is_road(where.x,where.y)) {
+				if(is_out() ? univ.out->is_road(where.x,where.y) : univ.town.is_road(where.x,where.y)) {
 					draw_rect.inset(1,1);
 					rect_draw_some_item(*ResMgr::textures.get("trim"),{8,112,12,116},gworld,draw_rect);
 				}
 			}
 		
 		gworld.display();
+#ifdef __APPLE__
+		// this stops flickering if the display time is too long
+		glFlush();
+#endif
 	}
 	
 	windows.setActive(false);

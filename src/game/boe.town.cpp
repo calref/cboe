@@ -1145,7 +1145,7 @@ void erase_out_specials() {
 			erase_hidden_towns(sector, i, j);
 
 			erase_completed_specials(sector, [&sector](location where){
-				sector.special_spot[where.x][where.y] = false;
+				sector.set_special_spot(where.x,where.y,false);
 			});
 		}
 	}

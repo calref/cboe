@@ -77,6 +77,22 @@ public:
 
 	std::string &get_special_string(int id);
 	std::string const &get_special_string(int id) const;
+	bool is_road(int x, int y) const {
+		if (x<0 || x>=48 || y<0 || y>=48) return false;
+		return roads[x][y];
+	}
+	void set_road(int x, int y, bool set) {
+		if (x<0 || x>=48 || y<0 || y>=48) return;
+		roads[x][y]=set;
+	}
+	bool is_special_spot(int x, int y) const {
+		if (x<0 || x>=48 || y<0 || y>=48) return false;
+		return special_spot[x][y];
+	}
+	void set_special_spot(int x, int y, bool set) {
+		if (x<0 || x>=48 || y<0 || y>=48) return;
+		special_spot[x][y]=set;
+	}
 };
 
 #endif
