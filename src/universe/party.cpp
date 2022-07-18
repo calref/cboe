@@ -195,6 +195,33 @@ void cParty::swap(cParty& other) {
 	}
 }
 
+cVehicle &cParty::get_boat(int id) {
+	if (id>=0 && id<boats.size())
+		return boats[id];
+	static cVehicle bad_vehicle;
+	bad_vehicle=cVehicle::bad();
+	return bad_vehicle;
+}
+cVehicle const &cParty::get_boat(int id) const {
+	if (id>=0 && id<boats.size())
+		return boats[id];
+	static cVehicle bad_vehicle=cVehicle::bad();
+	return bad_vehicle;
+}
+cVehicle &cParty::get_horse(int id) {
+	if (id>=0 && id<horses.size())
+		return horses[id];
+	static cVehicle bad_vehicle;
+	bad_vehicle=cVehicle::bad();
+	return bad_vehicle;
+}
+cVehicle const &cParty::get_horse(int id) const  {
+	if (id>=0 && id<horses.size())
+		return horses[id];
+	static cVehicle bad_vehicle=cVehicle::bad();
+	return bad_vehicle;
+}
+
 void cParty::import_legacy(legacy::party_record_type const & old, cUniverse& univ){
 	scen_name = old.scen_name;
 	age = old.age;
@@ -1009,17 +1036,17 @@ void cParty::readFrom(std::istream& file){
 		if(cur == "BOAT") {
 			int i;
 			bin >> i;
-			if(i >= boats.size())
+			if(i >= boats.size() && i<1000)
 				boats.resize(i + 1);
-			boats[i].exists = true;
-			boats[i].readFrom(bin);
+			get_boat(i).exists = true;
+			get_boat(i).readFrom(bin);
 		} else if(cur == "HORSE") {
 			int i;
 			bin >> i;
-			if(i >= horses.size())
+			if(i >= horses.size() && i<1000)
 				horses.resize(i + 1);
-			horses[i].exists = true;
-			horses[i].readFrom(bin);
+			get_horse(i).exists = true;
+			get_horse(i).readFrom(bin);
 		} else if(cur == "MAGICSTORE") {
 			int i,j;
 			bin >> i >> j;

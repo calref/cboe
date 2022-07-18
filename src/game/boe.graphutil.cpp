@@ -285,10 +285,10 @@ void draw_outd_boats(location center) {
 	rectangle source_rect;
 	Texture& vehicle_gworld = *ResMgr::textures.get("vehicle");
 	
-	for(auto& boat : univ.party.boats) {
+	for(auto const &boat : univ.party.boats) {
 		if(!boat.exists) continue;
 		if(boat.which_town != 200) continue;
-		if(univ.party.in_boat >= 0 && univ.party.boats[univ.party.in_boat] == boat) continue;
+		if(univ.party.in_boat >= 0 && univ.party.get_boat(univ.party.in_boat) == boat) continue;
 		location loc = local_to_global(boat.loc);
 		if (is_out()) {
 			// we must also check that the sector is ok
@@ -304,7 +304,7 @@ void draw_outd_boats(location center) {
 	for(auto& horse : univ.party.horses) {
 		if(!horse.exists) continue;
 		if(horse.which_town != 200) continue;
-		if(univ.party.in_horse >= 0 && univ.party.horses[univ.party.in_horse] == horse) continue;
+		if(univ.party.in_horse >= 0 && univ.party.get_horse(univ.party.in_horse) == horse) continue;
 		location loc = local_to_global(horse.loc);
 		if (is_out()) {
 			// we must also check that the sector is ok
@@ -324,20 +324,20 @@ void draw_town_boat(location center) {
 	rectangle source_rect;
 	Texture const & vehicle_gworld = *ResMgr::textures.get("vehicle");
 	
-	for(auto& boat : univ.party.boats) {
+	for(auto const &boat : univ.party.boats) {
 		if(!boat.exists) continue;
 		if(boat.which_town != univ.party.town_num) continue;
-		if(univ.party.in_boat >= 0 && univ.party.boats[univ.party.in_boat] == boat) continue;
+		if(univ.party.in_boat >= 0 && univ.party.get_boat(univ.party.in_boat) == boat) continue;
 		if(point_onscreen(center, boat.loc) && can_see_light(center, boat.loc, sight_obscurity) < 5 && pt_in_light(center, boat.loc)) {
 			where_draw.x = boat.loc.x - center.x + 4;
 			where_draw.y = boat.loc.y - center.y + 4;
 			Draw_Some_Item(vehicle_gworld, calc_rect(1,0), terrain_screen_gworld, where_draw, 1, 0);
 		}
 	}
-	for(auto& horse : univ.party.horses) {
+	for(auto const &horse : univ.party.horses) {
 		if(!horse.exists) continue;
 		if(horse.which_town != univ.party.town_num) continue;
-		if(univ.party.in_horse >= 0 && univ.party.horses[univ.party.in_horse] == horse) continue;
+		if(univ.party.in_horse >= 0 && univ.party.get_horse(univ.party.in_horse) == horse) continue;
 		if(point_onscreen(center, horse.loc) && can_see_light(center, horse.loc, sight_obscurity) < 5 && pt_in_light(center, horse.loc)) {
 			where_draw.x = horse.loc.x - center.x + 4;
 			where_draw.y = horse.loc.y - center.y + 4;

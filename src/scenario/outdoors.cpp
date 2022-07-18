@@ -100,9 +100,7 @@ void cOutdoors::import_legacy(legacy::outdoor_record_type const &old){
 	sign_locs.resize(8);
 	area_desc.resize(8);
 	for(short i = 0; i < 8; i++){
-		city_locs[i].x = old.exit_locs[i].x;
-		city_locs[i].y = old.exit_locs[i].y;
-		city_locs[i].spec = old.exit_dests[i];
+		city_locs[i] = {old.exit_locs[i].x, old.exit_locs[i].y, old.exit_dests[i]};
 		sign_locs[i].x = old.sign_locs[i].x;
 		sign_locs[i].y = old.sign_locs[i].y;
 		area_desc[i].top = old.info_rect[i].top;

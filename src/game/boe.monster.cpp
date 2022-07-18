@@ -726,8 +726,8 @@ location find_clear_spot(location from_where,short mode) {
 		if(!loc_off_act_area(loc) && !is_blocked(loc)
 			&& can_see_light(from_where,loc,combat_obscurity) == 0
 			&& (!is_combat() || univ.target_there(loc,TARG_PC) == nullptr)
-			&& (!(is_town()) || (loc != univ.party.town_loc))
-			&& (!(univ.town.fields[loc.x][loc.y] & blocking_fields))) {
+			&& (!is_town() || loc != univ.party.town_loc)
+			&& (!is_town() || !(univ.town.fields[loc.x][loc.y] & blocking_fields))) {
 			if((mode == 0) || ((mode == 1) && (adjacent(from_where,loc))))
 				return loc;
 			else store_loc = loc;

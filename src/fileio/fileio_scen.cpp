@@ -1957,7 +1957,6 @@ void readDialogueFromXml(ticpp::Document&& data, cSpeech& talk, int town_num) {
 
 void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 	cOutdoors& out = *scen.outdoors[which.x][which.y];
-	int num_towns = 0;
 	for(int x = 0; x < 48; x++) {
 		for(int y = 0; y < 48; y++) {
 			out.terrain[x][y] = data.get(x,y);
@@ -1974,11 +1973,7 @@ void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 					case eMapFeature::ENTRANCE_WEST: case eMapFeature::ITEM: case eMapFeature::CREATURE:
 						break;
 					case eMapFeature::TOWN:
-						out.city_locs.emplace_back();
-						out.city_locs[num_towns].x = x;
-						out.city_locs[num_towns].y = y;
-						out.city_locs[num_towns].spec = feat.second;
-						num_towns++;
+						out.city_locs.push_back({x, y, feat.second});
 						break;
 					case eMapFeature::SPECIAL_NODE:
 						out.special_locs.push_back({x, y, feat.second});
