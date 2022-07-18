@@ -504,8 +504,8 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						else if(j == size_before)
 							break;
 						else {
-							scenario.special_items[j] = cSpecItem();
-							scenario.special_items[j].name = "Unused Special Item";
+							scenario.get_special_item(j) = cSpecItem();
+							scenario.get_special_item(j).name = "Unused Special Item";
 						}
 					} else {
 						if(j == size_before) {
@@ -2466,7 +2466,7 @@ void start_special_item_editing(bool just_redo_text) {
 		std::string title;
 		if(i == scenario.special_items.size())
 			title = "Create New Special Item";
-		else title = scenario.special_items[i].name;
+		else title = scenario.get_special_item(i).name;
 		title = std::to_string(i) + " - " + title;
 		set_rb(i,RB_SPEC_ITEM, i, title);
 	}

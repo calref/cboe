@@ -1971,7 +1971,7 @@ cItem edit_item_abil(cItem initial,short which_item,cDialog& parent) {
 	return initial;
 }
 
-static void put_spec_item_in_dlog(cDialog& me, cSpecItem& item, short which) {
+static void put_spec_item_in_dlog(cDialog& me, cSpecItem const &item, short which) {
 	me["num"].setTextToNum(which);
 	me["name"].setText(item.name);
 	me["descr"].setText(item.descr);
@@ -1989,7 +1989,7 @@ static bool save_spec_item(cDialog& me, cSpecItem& item, short which) {
 		item.flags += 10;
 	if(dynamic_cast<cLed&>(me["usable"]).getState() != led_off)
 		item.flags += 1;
-	scenario.special_items[which] = item;
+	scenario.get_special_item(which) = item;
 	return true;
 }
 
@@ -2002,13 +2002,13 @@ static bool edit_spec_item_event_filter(cDialog& me, std::string hit, cSpecItem&
 		if(!save_spec_item(me, item, which)) return true;
 		which--;
 		if(which < 0) which = scenario.special_items.size() - 1;
-		item = scenario.special_items[which];
+		item = scenario.get_special_item(which);
 		put_spec_item_in_dlog(me, item, which);
 	} else if(hit == "right") {
 		if(!save_spec_item(me, item, which)) return true;
 		which++;
 		if(which >= scenario.special_items.size()) which = 0;
-		item = scenario.special_items[which];
+		item = scenario.get_special_item(which);
 		put_spec_item_in_dlog(me, item, which);
 	} else if(hit == "edit-spec") {
 		if(!save_spec_item(me, item, which)) return true;
@@ -2026,20 +2026,20 @@ static bool edit_spec_item_event_filter(cDialog& me, std::string hit, cSpecItem&
 bool edit_spec_item(short which_item) {
 	short first = which_item;
 	using namespace std::placeholders;
-	cSpecItem item = scenario.special_items[which_item];
+	cSpecItem &item = scenario.get_special_item(first);
 	
 	cDialog item_dlg("edit-special-item");
 	item_dlg["spec"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, scenario.scen_specials.size(), "Scenario special node called", "-1 for no special"));
-	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(which_item)), {"okay", "cancel", "clear", "edit-spec"});
+	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(first)), {"okay", "cancel", "clear", "edit-spec"});
 	
 	if(scenario.special_items.size() == 1) {
 		item_dlg["left"].hide();
 		item_dlg["right"].hide();
 	} else {
-		item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(which_item)), {"left", "right"});
+		item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(first)), {"left", "right"});
 	}
 	
-	put_spec_item_in_dlog(item_dlg, item, which_item);
+	put_spec_item_in_dlog(item_dlg, item, first);
 	item_dlg["clear"].hide();
 	
 	item_dlg.run();
@@ -3174,7 +3174,6 @@ static bool edit_scenario_events_event_filter(cDialog& me, std::string item_hit,
 
 void edit_scenario_events() {
 	using namespace std::placeholders;
-	size_t first_item = 0;
 	size_t const num_items=9;
 	::cTimersState state(9);
 	state.timers.insert(state.timers.begin(), scenario.scenario_timers.begin(), scenario.scenario_timers.end());

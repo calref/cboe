@@ -585,7 +585,7 @@ void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 }
 
 void use_spec_item(short item) {
-	run_special(eSpecCtx::USE_SPEC_ITEM, eSpecCtxType::SCEN, univ.scenario.special_items[item].special, univ.party.get_loc());
+	run_special(eSpecCtx::USE_SPEC_ITEM, eSpecCtxType::SCEN, univ.get_special_item(item).special, univ.party.get_loc());
 }
 
 
