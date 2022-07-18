@@ -13,6 +13,7 @@
 #include <functional>
 #include <utility>
 
+#include "global.hpp"
 #include "dialog.hpp"
 #include "dialogxml/widgets/ledgroup.hpp"
 #include "dialogxml/widgets/pictypes.hpp"

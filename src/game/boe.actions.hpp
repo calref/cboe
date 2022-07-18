@@ -14,7 +14,7 @@ void handle_menu_spell(short spell_picked,short spell_type) ;
 void initiate_outdoor_combat(short i);
 bool handle_keystroke(const sf::Event& event);
 bool handle_scroll(const sf::Event& event);
-void do_load();
+void do_load(fs::path const &file_name=fs::path());
 void post_load();
 void do_save(short mode);
 void increase_age();

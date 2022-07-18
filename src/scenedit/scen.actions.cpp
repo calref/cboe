@@ -62,7 +62,6 @@ extern std::shared_ptr<cScrollbar> right_sbar, pal_sbar;
 extern cOutdoors* current_terrain;
 extern location cur_out;
 extern sf::RenderWindow mainPtr;
-bool small_any_drawn = false;
 extern bool change_made;
 
 rectangle left_buttons[NLS][2]; // 0 - whole, 1 - blue button
@@ -2303,7 +2302,6 @@ void set_up_main_screen() {
 
 void start_town_edit() {
 	std::ostringstream strb;
-	small_any_drawn = false;
 	cen_x = town->max_dim / 2;
 	cen_y = town->max_dim / 2;
 	reset_lb();
@@ -2333,7 +2331,6 @@ void start_town_edit() {
 
 void start_out_edit() {
 	std::ostringstream strb;
-	small_any_drawn = false;
 	cen_x = 24;
 	cen_y = 24;
 	reset_lb();

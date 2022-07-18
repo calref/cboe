@@ -12,6 +12,8 @@
 #include <string>
 #include <boost/filesystem/path.hpp>
 
+#include "global.hpp"
+
 enum cursor_type {
 	wand_curs = 0,
 	eyedropper_curs = 1,

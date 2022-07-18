@@ -82,9 +82,6 @@ rectangle terrain_rect = {0,0,340,272};
 std::string current_string[2];
 extern rectangle terrain_rects[256];
 
-unsigned char small_what_drawn[64][64];
-extern bool small_any_drawn;
-
 static short get_small_icon(ter_num_t ter){
 	short icon = -1;
 	auto const &ter_type=scenario.get_terrain(ter);
@@ -907,37 +904,50 @@ void draw_terrain(){
 		}
 		clip_rect(mainPtr, terrain_rect);
 		
-		small_any_drawn = false;
 		//if(cur_viewing_mode == 0)
 		//	draw_frames();
 	}
 	
 	else {
+		// fixme: the bounds are now correct and the scrolling must be fluid,
+		//        however, the procedure which displays is still bad
 		tileImage(mainPtr, terrain_rect,bg[17]);
 		frame_rect(mainPtr, terrain_rect, sf::Color::Black);
 		// Width available:  64 4x4 tiles, 42 6x6 tiles, or 21 12x12 tiles -- 256 pixels
 		// Height available: 81 4x4 tiles, 54 6x6 tiles, or 27 12x12 tiles -- 324 pixels
-		short size = mini_map_scales[cur_viewing_mode - 1];
-		int max_dim = get_current_area()->max_dim;
-		int xMin = 0, yMin = 0, xMax = max_dim, yMax = max_dim;
-		if(cen_x + 5 > 256 / size) {
-			xMin = cen_x + 5 - (256 / size);
-			xMax = cen_x + 5;
-		} else xMax = std::min(xMax, 256 / size);
-		if(cen_y + 5 > 324 / size) {
-			yMin = cen_y + 5 - (324 / size);
-			yMax = cen_y + 5;
-		} else yMax = std::min(yMax, 324 / size);
-		// std::cout << "Drawing map for x = " << xMin << "..." << xMax << " and y = " << yMin << "..." << yMax << std::endl;
+		short const size = cur_viewing_mode<3 ? mini_map_scales[cur_viewing_mode - 1] : 12;
+		int const max_dim = get_current_area()->max_dim;
+		int const xNumTiles=(256 / size);
+		int xMin = cen_x-(xNumTiles/2), xMax = xMin+xNumTiles;
+		if (xMin<0) {
+			xMin=0;
+			xMax=std::min(xNumTiles, max_dim);
+			cen_x=(xNumTiles/2);
+		}
+		else if (xMax>max_dim) {
+			xMax=max_dim;
+			xMin=std::max(0, xMax-xNumTiles);
+			cen_x=xMin+(xNumTiles/2);
+		}
+		int const yNumTiles=(324 / size);
+		int yMin = cen_y-(yNumTiles/2), yMax = yMin+yNumTiles;
+		if (yMin<0) {
+			yMin=0;
+			yMax=std::min(yNumTiles, max_dim);
+			cen_y=(yNumTiles/2);
+		}
+		else if (yMax>max_dim) {
+			yMax=max_dim;
+			yMin=std::max(0, yMax-yNumTiles);
+			cen_y=yMin+(yNumTiles/2);
+		}
 		for(short q = xMin; q < xMax; q++)
 			for(short r = yMin; r < yMax; r++) {
-				if(q - xMin < 0 || q - xMin >= max_dim || r - yMin < 0 || r - yMin >= max_dim)
+				if(q < 0 || q >= max_dim || r < 0 || r >= max_dim)
 					t_to_draw = 90;
 				else t_to_draw = get_current_area()->terrain(q,r);
 				draw_one_tiny_terrain_spot(q-xMin,r-yMin,t_to_draw,size,is_road(q,r));
-				small_what_drawn[q][r] = t_to_draw;
 			}
-		small_any_drawn = true;
 	}
 }
 

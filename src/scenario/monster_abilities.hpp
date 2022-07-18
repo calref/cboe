@@ -9,6 +9,8 @@
 #ifndef BoE_DATA_MONSTER_ABILITIES_HPP
 #define BoE_DATA_MONSTER_ABILITIES_HPP
 
+#include "global.hpp"
+
 #include "damage.hpp"
 #include "fields.hpp"
 #include "spell.hpp"

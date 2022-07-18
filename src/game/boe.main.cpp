@@ -106,12 +106,15 @@ cDrawableManager drawable_mgr;
 sf::Clock animTimer;
 extern long anim_ticks;
 
+fs::path pending_file_to_load=fs::path();
+
 static void init_boe(int, char*[]);
 static void showWelcome();
 
 #ifdef __APPLE__
 eMenuChoice menuChoice=eMenuChoice::MENU_CHOICE_NONE;
 short menuChoiceId=-1;
+bool pending_quit=false;
 #endif
 
 int main(int argc, char* argv[]) {
@@ -126,7 +129,7 @@ int main(int argc, char* argv[]) {
 		
 		if(!get_bool_pref("GameRunBefore"))
 			showWelcome();
-		else if(get_bool_pref("GiveIntroHint", true))
+		else if(!ae_loading && pending_file_to_load.empty() && get_bool_pref("GiveIntroHint", true))
 			tip_of_day();
 		set_pref("GameRunBefore", true);
 		finished_init = true;
@@ -215,7 +218,9 @@ static void init_ui() {
 }
 
 void init_boe(int argc, char* argv[]) {
+#ifdef __APPLE__
 	set_up_apple_events(argc, argv);
+#endif
 	init_directories(argv[0]);
 #ifdef __APPLE__
 	init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
@@ -271,6 +276,16 @@ void handle_events() {
 	while(!All_Done) {
 		bool need_redraw=false;
 #ifdef __APPLE__
+		if (pending_quit) {
+			pending_quit=false;
+			handle_menu_choice(eMenu::QUIT);
+			if (All_Done) break;
+		}
+		if (!pending_file_to_load.empty()) {
+			// TODO: What if they're already in a scenario? It should ask for confirmation, right?
+			do_load(pending_file_to_load);
+			pending_file_to_load.clear();
+		}
 		if (menuChoiceId>=0) {
 			eMenuChoice aMenuChoice=menuChoice;
 			menuChoice=eMenuChoice::MENU_CHOICE_NONE;

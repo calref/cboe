@@ -15,6 +15,8 @@
 #include <SFML/System/InputStream.hpp>
 #include <boost/filesystem/path.hpp>
 
+#include "global.hpp"
+
 class cScenario;
 class cUniverse;
 
