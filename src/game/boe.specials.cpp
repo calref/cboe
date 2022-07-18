@@ -175,7 +175,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			std::cout << "Note: Improper mode passed to check_special_terrain: " << int(mode) << std::endl;
 			return false;
 	}
-	cTerrain const &terrain=univ.scenario.ter_types[ter];
+	cTerrain const &terrain=univ.get_terrain(ter);
 	ter_special = terrain.special;
 	ter_flag1 = terrain.flag1;
 	ter_flag2 = terrain.flag2;
@@ -215,14 +215,14 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 		if (univ.scenario.is_legacy) {
 			// checkme in combat.c this is only called when is_combat() && ter_pic==406
 			//         (ie. ter_anim+6) due to a logical error
-			cPictNum pict=univ.scenario.ter_types[coord_to_ter(where_check.x,where_check.y)].get_picture_num();
+			cPictNum pict=univ.get_terrain(coord_to_ter(where_check.x,where_check.y)).get_picture_num();
 			if (pict.num==6 && pict.type==ePicType::PIC_TER_ANIM) {
 				ASB("Move: Can't trigger this special in combat.");
 				return true;
 			}
 		}
 		else {
-			if(univ.town.is_spot(where_check.x, where_check.y) || univ.scenario.ter_types[coord_to_ter(where_check.x,where_check.y)].trim_type == eTrimType::CITY) {
+			if(univ.town.is_spot(where_check.x, where_check.y) || univ.get_terrain(coord_to_ter(where_check.x,where_check.y)).trim_type == eTrimType::CITY) {
 				ASB("Move: Can't trigger this special in combat.");
 				return true; // TODO: Maybe replace eTrimType::CITY with a blockage == clear/special && is_special() check
 				// Note: The purpose of the above check is to avoid portals.
@@ -335,7 +335,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 				play_sound(-1 * ter_flag2);
 			}
 			give_help(47,65);
-			if(univ.scenario.ter_types[ter].blocksMove())
+			if(terrain.blocksMove())
 				can_enter = false;
 			break;
 		case eTerSpec::DAMAGING:
@@ -1024,7 +1024,7 @@ void use_item(short pc,short item) {
 						case ePartyStatus::DETECT_LIFE: ASB("  Your vision of life becomes blurry."); break;
 						case ePartyStatus::FLIGHT:
 							if(i <= str) {
-								if(univ.scenario.ter_types[univ.out[univ.party.out_loc.x][univ.party.out_loc.y]].blocksMove()) {
+								if(univ.get_terrain(univ.out[univ.party.out_loc.x][univ.party.out_loc.y]).blocksMove()) {
 									add_string_to_buf("  You plummet to your deaths.");
 									slay_party(eMainStatus::DEAD);
 									print_buf();
@@ -1206,10 +1206,9 @@ void use_item(short pc,short item) {
 
 // Returns true if an action is actually carried out. This can only be reached in town.
 bool use_space(location where) {
-	ter_num_t ter;
 	location from_loc,to_loc;
 	
-	ter = univ.town->terrain(where.x,where.y);
+	cTerrain const terrain = univ.get_terrain(univ.town->terrain(where.x,where.y));
 	from_loc = univ.party.town_loc;
 	
 	add_string_to_buf("Use...");
@@ -1258,23 +1257,23 @@ bool use_space(location where) {
 		univ.town.set_block(to_loc.x,to_loc.y,true);
 	}
 	
-	if(univ.scenario.ter_types[ter].special == eTerSpec::CHANGE_WHEN_USED) {
+	if(terrain.special == eTerSpec::CHANGE_WHEN_USED) {
 		if(where == from_loc) {
 			add_string_to_buf("  Not while on space.");
 			return false;
 		}
 		add_string_to_buf("  OK.");
-		alter_space(where.x,where.y,univ.scenario.ter_types[ter].flag1);
-		if(univ.scenario.ter_types[ter].flag2 >= 0)
-			play_sound(univ.scenario.ter_types[ter].flag2);
+		alter_space(where.x,where.y,terrain.flag1);
+		if(terrain.flag2 >= 0)
+			play_sound(terrain.flag2);
 		return true;
-	} else if(univ.scenario.ter_types[ter].special == eTerSpec::CALL_SPECIAL_WHEN_USED) {
+	} else if(terrain.special == eTerSpec::CALL_SPECIAL_WHEN_USED) {
 		eSpecCtxType spec_type = eSpecCtxType::SCEN;
-		if(univ.scenario.ter_types[ter].flag2 == 1){
+		if(terrain.flag2 == 1){
 			if(is_town() || (is_combat() && which_combat_type == 1)) spec_type = eSpecCtxType::TOWN;
 			else spec_type = eSpecCtxType::OUTDOOR;
 		}
-		run_special(eSpecCtx::USE_SPACE, spec_type, univ.scenario.ter_types[ter].flag1, where);
+		run_special(eSpecCtx::USE_SPACE, spec_type, terrain.flag1, where);
 		return true;
 	}
 	add_string_to_buf("  Nothing to use.");
@@ -1286,7 +1285,6 @@ bool use_space(location where) {
 // specials return false, can't get items inside. If true, can get items inside.
 // Can't get items out in combat.
 bool adj_town_look(location where) {
-	ter_num_t terrain;
 	bool can_open = true,item_there = false,got_special = false;
 	short s1 = 0;
 	
@@ -1295,7 +1293,6 @@ bool adj_town_look(location where) {
 		   (where == univ.town.items[i].item_loc))
 			item_there = true;
 	
-	terrain = univ.town->terrain(where.x,where.y);
 	if(univ.town.is_special(where.x,where.y)) {// && (get_blockage(terrain) > 0)) {
 		if(!adjacent(univ.party.town_loc,where))
 			add_string_to_buf("  Not close enough to search.");
@@ -1315,10 +1312,11 @@ bool adj_town_look(location where) {
 			put_item_screen(stat_window);
 		}
 	}
+	ter_num_t const terrain = univ.town->terrain(where.x,where.y);
 	if(is_container(where) && item_there && can_open) {
 		get_item(where,6,true);
-	}else if(univ.scenario.ter_types[terrain].special == eTerSpec::CHANGE_WHEN_USED ||
-			 univ.scenario.ter_types[terrain].special == eTerSpec::CALL_SPECIAL_WHEN_USED) {
+	}else if(univ.get_terrain(terrain).special == eTerSpec::CHANGE_WHEN_USED ||
+			 univ.get_terrain(terrain).special == eTerSpec::CALL_SPECIAL_WHEN_USED) {
 		add_string_to_buf("  (Use this space to do something with it.)", 2);
 	}else{
 		if(!got_special)
@@ -1678,8 +1676,8 @@ void push_things() {
 		if(univ.town.monst[i].active > 0) {
 			l = univ.town.monst[i].cur_loc;
 			ter = univ.town->terrain(l.x,l.y);
-			if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
-				switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+			if (univ.get_terrain(ter).special==eTerSpec::CONVEYOR) {
+				switch(univ.get_terrain(ter).flag1) { // TODO: Implement the other 4 possible directions
 					case DIR_N: l.y--; break;
 					case DIR_E: l.x++; break;
 					case DIR_S: l.y++; break;
@@ -1697,8 +1695,8 @@ void push_things() {
 		if(univ.town.items[i].variety != eItemType::NO_ITEM) {
 			l = univ.town.items[i].item_loc;
 			ter = univ.town->terrain(l.x,l.y);
-			if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
-				switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+			if (univ.get_terrain(ter).special==eTerSpec::CONVEYOR) {
+				switch(univ.get_terrain(ter).flag1) { // TODO: Implement the other 4 possible directions
 					case DIR_N: l.y--; break;
 					case DIR_E: l.x++; break;
 					case DIR_S: l.y++; break;
@@ -1716,8 +1714,8 @@ void push_things() {
 	if(is_town()) {
 		ter = univ.town->terrain(univ.party.town_loc.x,univ.party.town_loc.y);
 		l = univ.party.town_loc;
-		if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
-			switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+		if (univ.get_terrain(ter).special==eTerSpec::CONVEYOR) {
+			switch(univ.get_terrain(ter).flag1) { // TODO: Implement the other 4 possible directions
 				case DIR_N: l.y--; break;
 				case DIR_E: l.x++; break;
 				case DIR_S: l.y++; break;
@@ -1727,7 +1725,7 @@ void push_things() {
 		if(l != univ.party.town_loc) {
 			// TODO: Will this push you into a placed forcecage or barrier? Should it?
 			ASB("You get pushed.");
-			if(univ.scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
+			if(univ.get_terrain(ter).special == eTerSpec::CONVEYOR)
 				draw_terrain(0);
 			center = l;
 			univ.party.town_loc = l;
@@ -1757,8 +1755,8 @@ void push_things() {
 			if(univ.party[i].main_status == eMainStatus::ALIVE) {
 				ter = univ.town->terrain(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y);
 				l = univ.party[i].combat_pos;
-				if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
-					switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+				if (univ.get_terrain(ter).special==eTerSpec::CONVEYOR) {
+					switch(univ.get_terrain(ter).flag1) { // TODO: Implement the other 4 possible directions
 						case DIR_N: l.y--; break;
 						case DIR_E: l.x++; break;
 						case DIR_S: l.y++; break;
@@ -1768,7 +1766,7 @@ void push_things() {
 				if(l != univ.party[i].combat_pos) {
 					ASB("Someone gets pushed.");
 					ter = univ.town->terrain(l.x,l.y);
-					if(univ.scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
+					if(univ.get_terrain(ter).special == eTerSpec::CONVEYOR)
 						draw_terrain(0);
 					univ.party[i].combat_pos = l;
 					update_explored(l);
@@ -1895,6 +1893,7 @@ void special_increase_age(long length, bool queue) {
 	for(short i = 0; i < party_timers.size(); i++) {
 		if(party_timers[i].time <= length) {
 			univ.party.age = age_before + party_timers[i].time;
+			univ.party.age = long(age_before) + party_timers[i].time;
 			auto which_type = party_timers[i].node_type;
 			bool need_redraw = false;
 			if(queue)
@@ -2351,7 +2350,7 @@ void general_spec(const runtime_state& ctx) {
 			check_mess = true;
 			break;
 		case eSpecType::TRANS_TER:
-			alter_space(spec.ex1a,spec.ex1b,univ.scenario.ter_types[coord_to_ter(spec.ex1a,spec.ex1b)].trans_to_what);
+			alter_space(spec.ex1a,spec.ex1b,univ.get_terrain(coord_to_ter(spec.ex1a,spec.ex1b)).trans_to_what);
 			*ctx.redraw = true;
 			minimap::draw(true);
 			check_mess = true;
@@ -2400,7 +2399,7 @@ void general_spec(const runtime_state& ctx) {
 			break;
 		case eSpecType::APPEND_TER:
 			if(spec.pic) univ.get_buf() += ' ';
-			univ.get_buf() += univ.scenario.ter_types[spec.ex1a].name;
+			univ.get_buf() += univ.get_terrain(spec.ex1a).name;
 			break;
 		case eSpecType::SWAP_STR_BUF:
 			univ.swap_buf(spec.ex1a);
@@ -3782,14 +3781,14 @@ void townmode_spec(const runtime_state& ctx) {
 			break;
 		case eSpecType::TOWN_LOCK_SPACE:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
-			if(univ.scenario.ter_types[ter].special == eTerSpec::LOCKABLE)
-				alter_space(l.x,l.y,univ.scenario.ter_types[ter].flag1);
+			if(univ.get_terrain(ter).special == eTerSpec::LOCKABLE)
+				alter_space(l.x,l.y,univ.get_terrain(ter).flag1);
 			*ctx.redraw = true;
 			break;
 		case eSpecType::TOWN_UNLOCK_SPACE:
 			ter = coord_to_ter(spec.ex1a,spec.ex1b);
-			if(univ.scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE)
-				alter_space(l.x,l.y,univ.scenario.ter_types[ter].flag1);
+			if(univ.get_terrain(ter).special == eTerSpec::UNLOCKABLE)
+				alter_space(l.x,l.y,univ.get_terrain(ter).flag1);
 			*ctx.redraw = true;
 			break;
 		case eSpecType::TOWN_SFX_BURST:
@@ -3929,7 +3928,7 @@ void townmode_spec(const runtime_state& ctx) {
 				else {
 					int x = univ.party.get_ptr(10), y = univ.party.get_ptr(11);
 					ter = coord_to_ter(x, y);
-					alter_space(x,y,univ.scenario.ter_types[ter].trans_to_what);
+					alter_space(x,y,univ.get_terrain(ter).trans_to_what);
 					ctx.next_spec = spec.ex1b;
 				}
 			}
@@ -4423,20 +4422,20 @@ void rect_spec(const runtime_state& ctx){
 					break;
 				case eSpecType::RECT_TRANS_TER:
 					ter = coord_to_ter(i,j);
-					alter_space(l.x,l.y,univ.scenario.ter_types[ter].trans_to_what);
+					alter_space(l.x,l.y,univ.get_terrain(ter).trans_to_what);
 					*ctx.redraw = minimap_changed = true;
 					break;
 				case eSpecType::RECT_LOCK:
 					ter = coord_to_ter(i,j);
-					if(univ.scenario.ter_types[ter].special == eTerSpec::LOCKABLE){
-						alter_space(l.x,l.y,univ.scenario.ter_types[ter].flag1);
+					if(univ.get_terrain(ter).special == eTerSpec::LOCKABLE){
+						alter_space(l.x,l.y,univ.get_terrain(ter).flag1);
 						*ctx.redraw = minimap_changed = true;
 					}
 					break;
 				case eSpecType::RECT_UNLOCK:
 					ter = coord_to_ter(i,j);
-					if(univ.scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
-						alter_space(l.x,l.y,univ.scenario.ter_types[ter].flag1);
+					if(univ.get_terrain(ter).special == eTerSpec::UNLOCKABLE){
+						alter_space(l.x,l.y,univ.get_terrain(ter).flag1);
 						*ctx.redraw = minimap_changed = true;
 						break;
 					}

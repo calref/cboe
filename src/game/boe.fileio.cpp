@@ -109,7 +109,7 @@ void finish_load_party(){
 			for(int k = 0; k < univ.town->max_dim; k++) {
 				if(univ.town.is_quickfire(j,k))
 					univ.town.quickfire_present = true;
-				if(univ.scenario.ter_types[univ.town->terrain(j,k)].special == eTerSpec::CONVEYOR)
+				if(univ.get_terrain(univ.town->terrain(j,k)).special == eTerSpec::CONVEYOR)
 					univ.town.belt_present = true;
 			}
 		center = univ.party.town_loc;

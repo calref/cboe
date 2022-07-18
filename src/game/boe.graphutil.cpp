@@ -59,48 +59,23 @@ bool gave_no_g_error = false;
 // if terrain_to_draw is -1, do black
 // if terrain_to_draw >= 10000, force to draw graphic which is terrain_to_draw - 10000
 void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
-	rectangle where_draw;
-	rectangle source_rect;
-	Texture source_gworld;
-	location l;
-	
-	l.x = i; l.y = j;
+	location l={i,j};
 	if(supressing_some_spaces && (l != ok_space[0]) && (l != ok_space[1]) && (l != ok_space[2]) && (l != ok_space[3]))
 		return;
 	
-	where_draw = calc_rect(i,j);
+	rectangle where_draw = calc_rect(i,j);
  	where_draw.offset(13,13);
  	if(terrain_to_draw == -1) {
 		fill_rect(terrain_screen_gworld, where_draw, sf::Color::Black);
 		return;
 	}
- 	
-	if(terrain_to_draw >= 10000) { // force using a specific graphic
-		terrain_to_draw -= 10000;
-		int which_sheet = terrain_to_draw / 50;
-		source_gworld = *ResMgr::textures.get("ter" + std::to_string(1 + which_sheet));
-		terrain_to_draw %= 50;
-		source_rect = calc_rect(terrain_to_draw % 10, terrain_to_draw / 10);
+
+	rectangle source_rect;
+	Texture source_gworld;
+	if (!cPict::get_terrain_picture(univ.get_terrain(terrain_to_draw).get_picture_num(), source_gworld, source_rect, anim_ticks % 4)) {
+		fill_rect(terrain_screen_gworld, where_draw, sf::Color::Yellow);
+		return; // CHECKME better to draw an error image to indicate that there is a problem here
 	}
-	else if(univ.scenario.ter_types[terrain_to_draw].picture >= 2000) { // custom
-		std::tie(source_gworld,source_rect) = spec_scen_g.find_graphic(univ.scenario.ter_types[terrain_to_draw].picture - 2000 + (anim_ticks % 4));
-	}
-	else if(univ.scenario.ter_types[terrain_to_draw].picture >= 1000) { // custom
-		std::tie(source_gworld,source_rect) = spec_scen_g.find_graphic(univ.scenario.ter_types[terrain_to_draw].picture - 1000);
-	}
-	else if(univ.scenario.ter_types[terrain_to_draw].picture >= 960) { // animated
-		source_gworld = *ResMgr::textures.get("teranim");
-		terrain_to_draw = univ.scenario.ter_types[terrain_to_draw].picture;
-		source_rect = calc_rect(4 * ((terrain_to_draw - 960) / 5) + (anim_ticks % 4),(terrain_to_draw - 960) % 5);
-	}
-	else {
-		terrain_to_draw = univ.scenario.ter_types[terrain_to_draw].picture;
-		int which_sheet = terrain_to_draw / 50;
-		source_gworld = *ResMgr::textures.get("ter" + std::to_string(1 + which_sheet));
-		terrain_to_draw %= 50;
-		source_rect = calc_rect(terrain_to_draw % 10, terrain_to_draw / 10);
-	}
-	
 	rect_draw_some_item(source_gworld, source_rect, terrain_screen_gworld, where_draw);
 }
 
@@ -172,10 +147,10 @@ void draw_monsters() {
 						ter = univ.town->terrain(monst.cur_loc.x,monst.cur_loc.y);
 						// in bed?
 						if(store_loc.x >= 0 && store_loc.x < 9 && store_loc.y >= 0 && store_loc.y < 9 &&
-						   (univ.scenario.ter_types[ter].special == eTerSpec::BED) && isHumanoid(monst.m_type)
+						   (univ.get_terrain(ter).special == eTerSpec::BED) && isHumanoid(monst.m_type)
 						   && (monst.active == 1 || monst.target == 6) &&
 						   width == 1 && height == 1)
-							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.scenario.ter_types[ter].flag1);
+							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.get_terrain(ter).flag1);
 						else if(monst.picture_num >= 1000) {
 							bool isParty = monst.picture_num >= 10000;
 							pic_num_t need_pic = (monst.picture_num % 1000) + k;
@@ -476,8 +451,8 @@ void draw_party_symbol(location center) {
 		else if(is_town() || is_combat())
 			ter = univ.town->terrain(univ.party.town_loc.x,univ.party.town_loc.y);
 		// now wedge in bed graphic
-		if(is_town() && univ.scenario.ter_types[ter].special == eTerSpec::BED)
-			draw_one_terrain_spot((short) target.x,(short) target.y,10000 + univ.scenario.ter_types[ter].flag1);
+		if(is_town() && univ.scenario.get_terrain(ter).special == eTerSpec::BED)
+			draw_one_terrain_spot((short) target.x,(short) target.y,10000 + univ.get_terrain(ter).flag1);
 		else Draw_Some_Item(from_gw, source_rect, terrain_screen_gworld, target, 1, 0);
 	}
 	else if(univ.party.in_boat >= 0) {
@@ -507,51 +482,26 @@ rectangle get_monster_template_rect (pic_num_t picture_wanted,short mode,short w
 
 // Is this a fluid that gets shore plopped down on it?
 bool is_fluid(ter_num_t ter_type) {
-//	if(((ter_type >= 71) && (ter_type <= 76)) || (ter_type == 90))
-//		return true;
-//	return false;
-	return univ.scenario.ter_types[ter_type].trim_type == eTrimType::FRILLS;
+	// odd game true 71-76, 90
+	return univ.get_terrain(ter_type).trim_type == eTrimType::FRILLS;
 }
 
 // Is this a beach that gets shore plopped down next to it?
 bool is_shore(ter_num_t ter_type) {
 	if(is_fluid(ter_type))
 		return false;
-	if(univ.scenario.ter_types[ter_type].trim_type == eTrimType::WATERFALL)
-		return false;
-//	if(ter_type == 77)
-//		return false;
-//	if(ter_type == 90)
-//		return false;
-/*	if(ter_type == 240)
-		return false;
-	if((ter_type >= 117) && (ter_type <= 131))
-		return false;
-	if((ter_type >= 193) && (ter_type <= 207))
-		return false; */
-	return true;
+	// odd game false 77,90,240,117-131,193-207
+	return univ.get_terrain(ter_type).trim_type != eTrimType::WATERFALL;
 }
 
 // These two functions used to determine wall round-cornering
 bool is_wall(ter_num_t ter_type) {
-	return univ.scenario.ter_types[ter_type].trim_type == eTrimType::WALL;
-//	short pic;
-//
-//	pic = scenario.ter_types[ter_type].picture;
-//
-//	if((pic >= 88) && (pic <= 120))
-//		return true;
-//
-//	return false;
+	return univ.get_terrain(ter_type).trim_type == eTrimType::WALL;
 }
 bool is_ground(ter_num_t ter_type) {
-	if(univ.scenario.ter_types[ter_type].trim_type == eTrimType::WALL)
-		return false;
-	if(univ.scenario.ter_types[ter_type].block_horse)
-		return false;
-//	if(scenario.ter_types[ter_type].trim_type == eTrimType::WALKWAY)
-//		return false;
-	return true;
+	cTerrain const &terrain=univ.get_terrain(ter_type);
+	// test also for WALKWAY ?
+	return terrain.trim_type != eTrimType::WALL && !terrain.block_horse;
 }
 
 char get_fluid_trim(location where,ter_num_t ter_type) {

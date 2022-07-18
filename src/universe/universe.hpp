@@ -214,6 +214,10 @@ public:
 	short difficulty_adjust() const;
 	explicit cUniverse(ePartyPreset party_type = PARTY_DEFAULT);
 	~cUniverse();
+
+	cTerrain const &get_terrain(ter_num_t ter) const { return scenario.get_terrain(ter); }
+	cTerrain &get_terrain(ter_num_t ter) { return scenario.get_terrain(ter); }
+
 	// Copy-and-swap
 	void swap(cUniverse& other);
 	cUniverse(const cUniverse& other);

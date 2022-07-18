@@ -1149,7 +1149,7 @@ void do_sign(short town_num, short which_sign, short sign_type) {
 	cPict& pict = dynamic_cast<cPict&>(sign->getControl("ter"));
 	
 	store_sign_mode = sign_type;
-	pict.setPict(univ.scenario.ter_types[sign_type].picture);
+	pict.setPict(univ.get_terrain(sign_type).get_picture_num());
 	
 	if(town_num >= 200)
 		sign_text = univ.out->sign_locs[which_sign].text;
