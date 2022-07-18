@@ -27,7 +27,10 @@
 
 #ifdef __APPLE__
 short menuChoiceId=-1;
+bool pending_quit=false;
 #endif
+
+fs::path pending_file_to_load=fs::path();
 
 cUniverse univ;
 
@@ -188,6 +191,25 @@ void handle_events() {
 		}
 
 #ifdef __APPLE__
+		if (pending_quit) {
+			pending_quit=false;
+			handle_menu_choice(eMenu::QUIT);
+			if (All_Done)
+				break;
+		}
+		if (!pending_file_to_load.empty()) {
+			if (verify_restore_quit("save-open")) {
+				// FIXME: do not dupplicate this code
+				if (load_party(pending_file_to_load, univ)) {
+					file_in_mem = pending_file_to_load;
+					party_in_scen = !univ.party.scen_name.empty();
+					if(!party_in_scen) load_base_item_defs();
+					scen_items_loaded = true;
+				}
+				menu_activate();
+			}
+			pending_file_to_load.clear();
+		}
 		if (menuChoiceId>=0) {
 			need_redraw=true;
 			handle_menu_choice(eMenu(menuChoiceId));

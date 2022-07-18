@@ -35,7 +35,10 @@
 
 #ifdef __APPLE__
 short menuChoiceId=-1;
+bool pending_quit=false;
 #endif
+
+fs::path pending_file_to_load=fs::path();
 
 /* Globals */
 bool  All_Done = false;
@@ -247,6 +250,29 @@ void handle_events() {
 		}
 
 #ifdef __APPLE__
+		if (pending_quit) {
+			pending_quit=false;
+			handle_menu_choice(eMenu::QUIT);
+			if (All_Done)
+				break;
+		}
+		if (!pending_file_to_load.empty() && save_check("save-before-load")) {
+			// FIXME: do not dupplicate this code another time
+			if(load_scenario(pending_file_to_load, scenario)) {
+				cur_town = scenario.last_town_edited;
+				town = scenario.towns[cur_town];
+				cur_out = scenario.last_out_edited;
+				current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
+				overall_mode = MODE_MAIN_SCREEN;
+				change_made = false;
+				set_up_main_screen();
+			} else
+				set_up_start_screen(); // Failed to load file, dump to start
+			extern cUndoList undo_list;
+			undo_list.clear();
+			update_edit_menu();
+			pending_file_to_load.clear();
+		}
 		if (menuChoiceId>=0) {
 			need_redraw = true;
 			handle_menu_choice(eMenu(menuChoiceId));

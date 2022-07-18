@@ -12,6 +12,7 @@
 #include <string>
 #include <iosfwd>
 
+#include "global.hpp"
 #include "location.hpp"
 #include "item_abilities.hpp"
 #include "item_variety.hpp"

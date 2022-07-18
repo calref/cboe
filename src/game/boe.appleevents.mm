@@ -22,6 +22,8 @@ extern void post_load();
 extern bool ae_loading, All_Done, party_in_memory, finished_init;
 extern eGameMode overall_mode;
 extern cUniverse univ;
+extern bool pending_quit;
+extern fs::path pending_file_to_load;
 
 typedef NSAppleEventDescriptor AEDescr;
 
@@ -37,8 +39,6 @@ void set_up_apple_events(int, char*[]) {
 	[[NSApplication sharedApplication] setDelegate: aeHandler];
 }
 
-// TODO: What if they're already in a scenario? It should ask for confirmation, right?
-// (Need to figure out cChoiceDlog bug first, though, as it would crash here just like it does on the quit event.)
 @implementation AppleEventHandler
 -(BOOL)application:(NSApplication*) app openFile:(NSString*) file {
 	(void) app; // Suppress "unused parameter" warning
@@ -46,18 +46,7 @@ void set_up_apple_events(int, char*[]) {
 		std::cerr << "Error: filename was nil" << std::endl;
 		return NO;
 	}
-	
-	if(!load_party(file.fileSystemRepresentation, univ))
-		return NO;
-	
-	if(!finished_init) {
-		ae_loading = true;
-		overall_mode = MODE_STARTUP;
-	} else finish_load_party();
-	if(overall_mode != MODE_STARTUP)
-		end_startup();
-	if(overall_mode != MODE_STARTUP)
-		post_load();
+	pending_file_to_load=file.fileSystemRepresentation;
 	return YES;
 }
 
@@ -68,7 +57,13 @@ void set_up_apple_events(int, char*[]) {
 		All_Done = true;
 		return NSTerminateNow;
 	}
-	
+	// REMOVEME when we solve the causes of the crash
+	//    note: this is actually very bad because we will cancel a shutdown,
+	//          and this does not work if a dialog is opened, ...
+	//          but at least this does not lead to a crash
+	pending_quit=true;
+	return NSTerminateCancel;
+#if 0
 	if(overall_mode == MODE_TOWN || overall_mode == MODE_OUTDOORS || (overall_mode == MODE_STARTUP && party_in_memory)) {
 		std::string choice = cChoiceDlog("quit-confirm-save", {"save", "quit", "cancel"}).show();
 		if(choice == "cancel") return NSTerminateCancel;
@@ -81,5 +76,6 @@ void set_up_apple_events(int, char*[]) {
 	
 	All_Done = true;
 	return NSTerminateNow;
+#endif
 }
 @end
