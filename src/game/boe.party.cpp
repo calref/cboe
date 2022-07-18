@@ -2044,6 +2044,7 @@ static void display_alchemy_graphics(cDialog& me, short &pc_num);
 static bool alch_potion_event_filter(cDialog&me, short &pc_num, std::string item_hit, eKeyMod) {
 	int potion_id = boost::lexical_cast<int>(item_hit.substr(6))-1;
 	if(!univ.party[pc_num].has_space()) {
+		me["result"].setColour(sf::Color::Red);
 		me["result"].setText("Alchemy: Can't carry another item.");
 		return false;
 	}
@@ -2086,7 +2087,7 @@ static bool alch_potion_event_filter(cDialog&me, short &pc_num, std::string item
 			me["result"].setColour(sf::Color::Red);
 			me["result"].setText("No room in inventory.\nPotion placed on floor.");
 			place_item(store_i,univ.party.town_loc);
-			// checkme: redraw terrain here?
+			redraw_terrain();
 		}
 		else {
 			me["result"].setColour(sf::Color::White);
