@@ -229,7 +229,7 @@ cTownperson edit_placed_monst_adv(cTownperson initial, short which, cDialog& par
 
 static bool put_placed_item_in_dlog(cDialog& me, const cTown::cItem& item, const short which) {
 	std::ostringstream loc;
-	cItem base = scenario.scen_items[item.code];
+	cItem base = scenario.get_item(item.code);
 	if(item.ability >= 0 && item.ability <= int(eEnchant::BLESSED) && (base.variety == eItemType::ONE_HANDED || base.variety == eItemType::TWO_HANDED)) {
 		base.enchant_weapon(eEnchant(item.ability), 0);
 	}
@@ -284,7 +284,7 @@ static bool get_placed_item_in_dlog(cDialog& me, cTown::cItem& item, const short
 		return true;
 	}
 	
-	eItemType type = scenario.scen_items[item.code].variety;
+	eItemType type = scenario.get_item(item.code).variety;
 	if(item.charges == 0 && (type == eItemType::GOLD || type == eItemType::FOOD)) {
 		showError("You must assign gold or food an amount of at least 1.","",&me);
 		return false;
@@ -310,7 +310,7 @@ static bool edit_placed_item_type(cDialog& me, cTown::cItem& item, const short w
 
 static bool edit_placed_item_abil(cDialog& me, std::string item_hit, cTown::cItem& item, const short which) {
 	item.charges = me["charges"].getTextAsNum();
-	cItem& base = scenario.scen_items[item.code];
+	cItem& base = scenario.get_item(item.code);
 	short i = item.ability;
 	if(item_hit == "abil") { // User entered a number directly
 		i = me["abil"].getTextAsNum();

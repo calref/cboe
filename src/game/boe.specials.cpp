@@ -2208,7 +2208,7 @@ void general_spec(const runtime_state& ctx) {
 			check_mess = true;
 			if(spec.ex1a < 0 || spec.ex1a >= univ.scenario.scen_items.size())
 				break;
-			if(!univ.party.forced_give(univ.scenario.scen_items[spec.ex1a],eItemAbil::NONE) && spec.ex1b >= 0)
+			if(!univ.party.forced_give(univ.get_item(spec.ex1a),eItemAbil::NONE) && spec.ex1b >= 0)
 				ctx.next_spec = spec.ex1b;
 			break;
 		case eSpecType::BUY_ITEMS_OF_TYPE:
@@ -2392,10 +2392,10 @@ void general_spec(const runtime_state& ctx) {
 		case eSpecType::APPEND_ITEM:
 			if(spec.pic) univ.get_buf() += ' ';
 			if(spec.ex1b == 1)
-				univ.get_buf() += univ.scenario.scen_items[spec.ex1a].full_name;
+				univ.get_buf() += univ.get_item(spec.ex1a).full_name;
 			else if(spec.ex1b == 2)
-				univ.get_buf() += get_item_interesting_string(univ.scenario.scen_items[spec.ex1a]);
-			else univ.get_buf() += univ.scenario.scen_items[spec.ex1a].name;
+				univ.get_buf() += get_item_interesting_string(univ.get_item(spec.ex1a));
+			else univ.get_buf() += univ.get_item(spec.ex1a).name;
 			break;
 		case eSpecType::APPEND_TER:
 			if(spec.pic) univ.get_buf() += ' ';
@@ -2491,7 +2491,7 @@ void oneshot_spec(const runtime_state& ctx) {
 	switch(cur_node.type) {
 		case eSpecType::ONCE_GIVE_ITEM:
 			if(spec.ex1a >= 0 && spec.ex1a < univ.scenario.scen_items.size() &&
-					!univ.party.forced_give(univ.scenario.scen_items[spec.ex1a],eItemAbil::NONE)) {
+					!univ.party.forced_give(univ.get_item(spec.ex1a),eItemAbil::NONE)) {
 				set_sd = false;
 				if( spec.ex2b >= 0)
 					ctx.next_spec = spec.ex2b;
@@ -2565,7 +2565,7 @@ void oneshot_spec(const runtime_state& ctx) {
 			dlg_res = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
 			if(dlg_res == 1) {set_sd = false; ctx.next_spec = -1;}
 			else {
-				store_i = univ.scenario.get_stored_item(spec.ex1a);
+				store_i = univ.get_item(spec.ex1a);
 				if((spec.ex1a >= 0) && (!univ.party.give_item(store_i,true))) {
 					set_sd = false; ctx.next_spec = -1;
 				}
@@ -3215,7 +3215,7 @@ void affect_spec(const runtime_state& ctx) {
 		case eSpecType::GIVE_ITEM:
 			if(pc_num >= 100) break;
 			if(spec.ex1a >= 0 && spec.ex1a < univ.scenario.scen_items.size()) {
-				cItem to_give = univ.scenario.scen_items[spec.ex1a];
+				cItem to_give = univ.get_item(spec.ex1a);
 				if(spec.ex1b >= 0 && spec.ex1b <= 6) {
 					// TODO: This array and accompanying calculation is now duplicated here, in start_town_mode(), and in place_buy_button()
 					const short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
@@ -4021,7 +4021,7 @@ void townmode_spec(const runtime_state& ctx) {
 			position_party(spec.ex1a,spec.ex1b,spec.ex2a,spec.ex2b);
 			break;
 		case eSpecType::TOWN_PLACE_ITEM:
-			store_i = univ.scenario.get_stored_item(spec.ex2a);
+			store_i = univ.get_item(spec.ex2a);
 			place_item(store_i,l,spec.ex2b);
 			break;
 		case eSpecType::TOWN_SPLIT_PARTY:

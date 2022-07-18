@@ -363,13 +363,13 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						else if(j == size_before) {
 							scenario.scen_items.resize(size_before + 8);
 							for(; j < scenario.scen_items.size(); j++) {
-								scenario.scen_items[j].full_name = "New Item";
-								scenario.scen_items[j].name = "Item";
+								scenario.get_item(j).full_name = "New Item";
+								scenario.get_item(j).name = "Item";
 							}
 						} else {
-							scenario.scen_items[j] = cItem();
-							scenario.scen_items[j].full_name = "Unused Item";
-							scenario.scen_items[j].name = "Item";
+							scenario.get_item(j) = cItem();
+							scenario.get_item(j).full_name = "Unused Item";
+							scenario.get_item(j).name = "Item";
 						}
 					} else {
 						if(j == size_before) {
@@ -832,11 +832,11 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 						return item.code < 0;
 					});
 					if(iter != town->preset_items.end()) {
-						*iter = {spot_hit, mode_count, scenario.scen_items[mode_count]};
+						*iter = {spot_hit, mode_count, scenario.get_item(mode_count)};
 						if(container_there(spot_hit)) iter->contained = true;
 						store_place_item = *iter;
 					} else {
-						town->preset_items.push_back({spot_hit, mode_count, scenario.scen_items[mode_count]});
+						town->preset_items.push_back({spot_hit, mode_count, scenario.get_item(mode_count)});
 						if(container_there(spot_hit)) town->preset_items.back().contained = true;
 						store_place_item = town->preset_items.back();
 					}
@@ -1201,13 +1201,13 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 					case DRAW_ITEM:
 						if(k >= scenario.scen_items.size())
 							break;
-						if(scenario.scen_items[k].variety == eItemType::NO_ITEM) {
+						if(scenario.get_item(k).variety == eItemType::NO_ITEM) {
 							showError("This item has its Variety set to No Item. You can only place items with a Variety set to an actual item type.");
 							break;
 						}
 						overall_mode = MODE_PLACE_ITEM;
 						mode_count = k;
-						set_string("Place the item:",scenario.scen_items[mode_count].full_name);
+						set_string("Place the item:",scenario.get_item(mode_count).full_name);
 						break;
 					case DRAW_MONST:
 						if(k + 1 >= scenario.scen_monsters.size())
@@ -2116,19 +2116,19 @@ bool place_item(location spot_hit,short which_item,bool property,bool always,sho
 	// odds 0 - 100, with 100 always
 	if((which_item < 0) || (which_item >= scenario.scen_items.size()))
 		return true;
-	if(scenario.scen_items[which_item].variety == eItemType::NO_ITEM)
+	if(scenario.get_item(which_item).variety == eItemType::NO_ITEM)
 		return true;
 	if(get_ran(1,1,100) > odds)
 		return false;
 	for(short x = 0; x < town->preset_items.size(); x++)
 		if(town->preset_items[x].code < 0) {
-			town->preset_items[x] = {spot_hit, which_item, scenario.scen_items[which_item]};
+			town->preset_items[x] = {spot_hit, which_item, scenario.get_item(which_item)};
 			town->preset_items[x].contained = container_there(spot_hit);
 			town->preset_items[x].property = property;
 			town->preset_items[x].always_there = always;
 			return true;
 		}
-	town->preset_items.push_back({spot_hit, which_item, scenario.scen_items[which_item]});
+	town->preset_items.push_back({spot_hit, which_item, scenario.get_item(which_item)});
 	town->preset_items.back().contained = container_there(spot_hit);
 	town->preset_items.back().property = property;
 	town->preset_items.back().always_there = always;
@@ -2439,7 +2439,7 @@ void start_item_editing(bool just_redo_text) {
 		std::string title;
 		if(i == scenario.scen_items.size())
 			title = "Create New Item";
-		else title = scenario.scen_items[i].full_name;
+		else title = scenario.get_item(i).full_name;
 		title = std::to_string(i) + " - " + title;
 		set_rb(i,RB_ITEM, i, title);
 	}
