@@ -211,11 +211,22 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			}
 	}
 	
-	// checkme in combat.c this is only called when is_combat() && ter_pic==406
-	//         due to a logical error
-	if(is_combat() && ((!univ.scenario.is_legacy && univ.town.is_spot(where_check.x, where_check.y)) || terrain.trim_type == eTrimType::CITY)) {
-		ASB("Move: Can't trigger this special in combat.");
-		return false; // TODO: Maybe replace eTrimType::CITY check with a blockage == clear/special && is_special() check?
+	if (is_combat()) {
+		if (univ.scenario.is_legacy) {
+			// checkme in combat.c this is only called when is_combat() && ter_pic==406
+			//         (ie. ter_anim+6) due to a logical error
+			if (univ.scenario.ter_types[coord_to_ter(where_check.x,where_check.y)].picture==966) {
+				ASB("Move: Can't trigger this special in combat.");
+				return true;
+			}
+		}
+		else {
+			if(univ.town.is_spot(where_check.x, where_check.y) || univ.scenario.ter_types[coord_to_ter(where_check.x,where_check.y)].trim_type == eTrimType::CITY) {
+				ASB("Move: Can't trigger this special in combat.");
+				return true; // TODO: Maybe replace eTrimType::CITY with a blockage == clear/special && is_special() check
+				// Note: The purpose of the above check is to avoid portals.
+			}
+		}
 	}
 	
 	if(mode != eSpecCtx::OUT_MOVE && univ.town.is_force_barr(where_check.x,where_check.y)) {
