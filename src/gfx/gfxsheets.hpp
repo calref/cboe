@@ -13,6 +13,7 @@
 #include <vector>
 #include <memory>
 #include <SFML/Graphics/Texture.hpp>
+#include "global.hpp"
 #include "location.hpp"
 #include "texture.hpp"
 

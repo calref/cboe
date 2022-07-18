@@ -2193,8 +2193,9 @@ bool handle_scroll(const sf::Event& event) {
 	return true;
 }
 
-void do_load() {
-	fs::path file_to_load = nav_get_party();
+void do_load(fs::path const &file_name) {
+	fs::path file_to_load = file_name;
+	if (file_to_load.empty()) file_to_load=nav_get_party();
 	if(file_to_load.empty()) return;
 	if(!load_party(file_to_load, univ))
 		return;
