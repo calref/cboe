@@ -635,8 +635,6 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 	xpDlog.attachClickHandlers(std::bind(spend_xp_navigate_filter,_1,_2,std::ref(save)),{"keep","cancel","left","right","help"});
 	xpDlog.attachClickHandlers(spend_xp_filter,{"sp-m","sp-p","hp-m","hp-p"});
 	
-	give_help(10,11,xpDlog);
-	
 	xpDlog.run();
 	
 	return xpDlog.getResult<bool>();
