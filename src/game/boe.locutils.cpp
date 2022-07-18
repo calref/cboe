@@ -4,8 +4,10 @@
 
 #include "universe/universe.hpp"
 #include "boe.locutils.hpp"
-#include "boe.text.hpp"
+#include "boe.minimap.hpp"
 #include "boe.monster.hpp"
+#include "boe.text.hpp"
+#include "boe.town.hpp"
 #include "utility.hpp"
 
 bool combat_pt_in_light();
@@ -29,16 +31,20 @@ bool is_explored(short i,short j) {
 	else return univ.town.is_explored(i,j);
 }
 
-void make_explored(short i,short j) {
-	if(is_out())
-		univ.out.out_e[i][j] = 1;
-	else univ.town.set_explored(i,j,true);
-}
-
-void take_explored(short i,short j) {
-	if(is_out())
-		univ.out.out_e[i][j] = 0;
-	else univ.town.set_explored(i,j,false);
+void make_explored(short i,short j, short val) {
+	if(is_out()) {
+		if (univ.out.out_e[i][j] != val) {
+			minimap::add_pending_redraw();
+			univ.out.out_e[i][j] = val;
+		}
+	}
+	else {
+		bool bVal=bool(val);
+		if (bool(univ.town.is_explored(i,j)) != bVal) {
+			minimap::add_pending_redraw();
+			univ.town.set_explored(i,j,bVal);
+		}
+	}
 }
 
 bool is_out() {
@@ -236,27 +242,25 @@ bool is_container(location loc) {
 
 void update_explored(location dest) {
 	if(cartoon_happening) return;
-	location shortdest,look;
-	
-	location look2;
-	
-	shortdest.x = (short) dest.x;
-	shortdest.y = (short) dest.y;
-	
-	which_party_sec.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
-	which_party_sec.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 	
 	if(is_out()) {
-		univ.out.out_e[dest.x][dest.y] = 2;
+		location shortdest((short) dest.x,(short) dest.y);
+
+		which_party_sec.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
+		which_party_sec.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
+		make_explored(dest.x,dest.y,2);
+		
+		location look;
 		for(look.x = shortdest.x - 4; look.x < shortdest.x + 5; look.x++)
 			for(look.y = shortdest.y - 4; look.y < shortdest.y + 5; look.y++) {
 				if(look.x>=0 && look.y>=0 && look.x<96 && look.y<96 && univ.out.out_e[look.x][look.y] == 0) {
 					if(can_see_light(shortdest, look, sight_obscurity) < 5)
-						univ.out.out_e[look.x][look.y] = 1;
+						make_explored(look.x, look.y);
 				}
 			}
 	} else {
 		make_explored(dest.x,dest.y);
+		location look2;
 		for(look2.x = max(0,dest.x - 4); look2.x < min(univ.town->max_dim,dest.x + 5); look2.x++)
 			for(look2.y = max(0,dest.y - 4); look2.y < min(univ.town->max_dim,dest.y + 5); look2.y++)
 				if(!is_explored(look2.x,look2.y) && can_see_light(dest, look2,sight_obscurity) < 5 && pt_in_light(dest,look2))

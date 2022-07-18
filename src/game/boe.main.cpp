@@ -7,6 +7,7 @@
 #include <string>
 #include <memory>
 #include "boe.graphics.hpp"
+#include "boe.minimap.hpp"
 #include "boe.newgraph.hpp"
 #include "boe.fileio.hpp"
 #include "boe.actions.hpp"
@@ -59,7 +60,6 @@ long start_time;
 short on_spell_menu[2][62];
 short on_monst_menu[256];
 
-extern bool map_visible;
 extern sf::View mainView;
 
 extern rectangle shop_frame;
@@ -78,7 +78,6 @@ eItemWinMode stat_window = ITEM_WIN_PC1;
 bool monsters_going = false,boom_anim_active = false;
 bool finished_init = false;
 
-sf::RenderWindow mini_map;
 short which_item_page[6] = {0,0,0,0,0,0}; // Remembers which of the 2 item pages pc looked at
 short current_ground = 0;
 eStatMode stat_screen_mode;
@@ -248,7 +247,7 @@ void init_boe(int argc, char* argv[]) {
 	cPlayer::give_help = give_help;
 	init_fileio();
 	init_spell_menus();
-	init_mini_map();
+	minimap::init();
 	redraw_screen(REFRESH_NONE);
 	showMenuBar();
 }
@@ -290,24 +289,23 @@ void handle_events() {
 			menuChoiceId=-1;
 		}
 #endif
-		while(mainPtr.pollEvent(currentEvent)) {
+		while(!changed_display_mode && mainPtr.pollEvent(currentEvent)) {
 			need_redraw=true;
 			handle_one_event(currentEvent);
+			if(!changed_display_mode && minimap::need_redraw()) minimap::draw(true);
 		}
 
 		// It would be nice to have minimap inside the main game window (we have lots of screen space in fullscreen mode).
 		// Alternatively, minimap could live on its own thread.
 		// But for now we just handle events from both windows on this thread.
-		while(map_visible && mini_map.pollEvent(currentEvent)) {
-			need_redraw = true;
-			handle_one_minimap_event(currentEvent);
-		}
+		while(!changed_display_mode && minimap::pollEvent())
+			; // actually, we only check gain focus and close event
 
 		if(changed_display_mode) {
 			need_redraw = true;
 			changed_display_mode = false;
 			adjust_window_mode();
-			init_mini_map();
+			minimap::init();
 		}
 
 		// Still no idea what this does. It's possible that this does not work at all.
@@ -402,23 +400,6 @@ void handle_one_event(const sf::Event& event) {
 	}
 }
 
-void handle_one_minimap_event(const sf::Event& event) {
-	if(event.type == sf::Event::Closed) {
-		mini_map.setVisible(false);
-		map_visible = false;
-	} else if(event.type == sf::Event::GainedFocus) {
-		makeFrontWindow(mainPtr);
-	} else if(event.type == sf::Event::KeyPressed) {
-		switch(event.key.code) {
-			case sf::Keyboard::Escape:
-				mini_map.setVisible(false);
-				map_visible = false;
-				break;
-			default: break;
-		}
-	}
-}
-
 static bool update_terrain_animation() {
 	static const long fortyTicks = time_in_ticks(40).asMilliseconds();
 
@@ -449,7 +430,7 @@ bool update_everything() {
 
 void redraw_everything() {
 	redraw_screen(REFRESH_ALL);
-	if(map_visible) draw_map(false);
+	minimap::draw(false);
 }
 
 void Mouse_Pressed(const sf::Event& event) {
@@ -682,7 +663,8 @@ void handle_menu_choice(eMenu item_hit) {
 			if(!prime_time()) {
 				ASB("Finish what you're doing first.");
 				print_buf();
-			} else display_map();
+			} else
+				minimap::set_visible(true);
 			set_cursor(sword_curs);
 			break;
 		case eMenu::HELP_TOC:
