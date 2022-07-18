@@ -304,7 +304,8 @@ bool is_blocked(location to_check) {
 			if (univ.scenario.is_legacy) {
 				// checkme in combat.c this is only called when is_combat() && ter_pic==406
 				//         (ie. ter_anim+6) due to a logical error
-				if (univ.scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].picture==966)
+				cPictNum pict=univ.scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].get_picture_num();
+				if (pict.num==6 && pict.type==ePicType::PIC_TER_ANIM)
 					return true;
 			}
 			else {
