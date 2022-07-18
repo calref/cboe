@@ -227,6 +227,10 @@ public:
 	void generate_job_bank(int which, job_bank_t& bank);
 	short difficulty_adjust() const;
 	explicit cUniverse(ePartyPreset party_type = PARTY_DEFAULT);
+
+	cTerrain const &get_terrain(ter_num_t ter) const { return scenario.get_terrain(ter); }
+	cTerrain &get_terrain(ter_num_t ter) { return scenario.get_terrain(ter); }
+
 	// Copy-and-swap
 	friend void swap(cUniverse& lhs, cUniverse& rhs);
 	cUniverse(const cUniverse& other);

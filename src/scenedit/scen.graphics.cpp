@@ -318,58 +318,6 @@ static std::vector<short> get_small_icons(location at, ter_num_t t_to_draw) {
 	return icons;
 }
 
-static bool get_terrain_picture(cPictNum pict, Texture &source, rectangle &from_rect)
-try {
-	source=Texture();
-	ePicType type=pict.type;
-	if (pict.num<0)
-		type=ePicType::PIC_NONE;
-	switch (type) {
-		case ePicType::PIC_TER: {
-			source = *ResMgr::graphics.get("ter" + std::to_string(1 + pict.num / 50));
-			int picture_wanted = pict.num%50;
-			from_rect = calc_rect(picture_wanted % 10, picture_wanted / 10);
-			break;
-		}
-		case ePicType::PIC_TER_ANIM:
-			source = *ResMgr::graphics.get("teranim");
-			from_rect = calc_rect(4 * (pict.num / 5),pict.num % 5);
-			break;
-		case ePicType::PIC_TER_MAP:
-			source=*ResMgr::graphics.get("termap");
-			if (pict.num<960) {
-				from_rect.left = 12*(pict.num%20);
-				from_rect.top = 12*(pict.num/20);
-			}
-			else {
-				from_rect.left = 12*20;
-				from_rect.top = 12*(pict.num-960);
-			}
-			from_rect.right = from_rect.left+12;
-			from_rect.bottom = from_rect.top+12;
-			break;
-		case ePicType::PIC_CUSTOM_TER:
-		case ePicType::PIC_CUSTOM_TER_ANIM: // checkme
-			if (!spec_scen_g)
-				break;
-			std::tie(source,from_rect) = spec_scen_g.find_graphic(pict.num);
-			break;
-		default:
-			break;
-	}
-	if (!source)
-		throw "can not find image";
-	return true;
-}
-catch (...) {
-	if (pict.num==-1) // ok no picture
-		return false;
-	std::cerr << "Error[get_terrain_picture]: can not find picture id=" << pict.num << ", type=" << int(pict.type)<< "\n";
-	source = *ResMgr::graphics.get("errors");
-	from_rect={0,0,40,40};
-	return true;
-}
-
 void Set_up_win() {
 	terrain_rect.offset(TER_RECT_UL_X, TER_RECT_UL_Y);
 	terrain_buttons_rect.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y);
@@ -585,7 +533,7 @@ void set_up_terrain_buttons(bool reset) {
 					break;
 				}
 				Texture source_gworld;
-				if (get_terrain_picture(scenario.get_terrain(i).get_picture_num(), source_gworld, ter_from))
+				if (cPict::get_terrain_picture(scenario.get_terrain(i).get_picture_num(), source_gworld, ter_from))
 					rect_draw_some_item(source_gworld,ter_from, mainPtr, draw_rect);
 				small_i = get_small_icon(i);
 				tiny_from = base_small_button_from;
@@ -1124,7 +1072,7 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	
 	rectangle source_rect;
 	Texture source_gworld;
-	if (!get_terrain_picture(scenario.get_terrain(terrain_to_draw).get_picture_num(), source_gworld, source_rect))
+	if (!cPict::cPict::get_terrain_picture(scenario.get_terrain(terrain_to_draw).get_picture_num(), source_gworld, source_rect))
 		return;
 
 	location where_draw;
@@ -1145,7 +1093,7 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 	Texture source_gworld;
 	rectangle dest_rect = {0,0,size,size};
 	dest_rect.offset(8 + TER_RECT_UL_X + size * i, 8 + TER_RECT_UL_Y + size * j);
-	if (get_terrain_picture(scenario.get_terrain(terrain_to_draw).get_map_picture_num(), source_gworld, from_rect))
+	if (cPict::get_terrain_picture(scenario.get_terrain(terrain_to_draw).get_map_picture_num(), source_gworld, from_rect))
 		rect_draw_some_item(source_gworld, from_rect, mainPtr, dest_rect);
 	if(road) {
 		rectangle road_rect = dest_rect;
@@ -1230,7 +1178,7 @@ void draw_frames() {
 static void place_selected_terrain(ter_num_t ter, rectangle draw_rect) {
 	rectangle source_rect;
 	Texture source_gworld;
-	if (get_terrain_picture(scenario.get_terrain(ter).get_picture_num(), source_gworld, source_rect))
+	if (cPict::get_terrain_picture(scenario.get_terrain(ter).get_picture_num(), source_gworld, source_rect))
 		rect_draw_some_item(source_gworld,source_rect, mainPtr,draw_rect);
 
 	short small_i = get_small_icon(ter);

@@ -168,12 +168,8 @@ location get_cur_loc() {
 
 // TODO: Don't hardcode this!
 bool is_lava(short x,short y) {
-	ter_num_t ter;
-	
-	ter = coord_to_ter(x,y);
-	if(univ.scenario.ter_types[ter].picture == 964)
-		return true;
-	else return false;
+	cPictNum pic=univ.get_terrain(coord_to_ter(x,y)).get_picture_num();
+	return pic.num==4 && pic.type==ePicType::PIC_TER_ANIM;
 }
 
 short can_see_light(location p1, location p2, std::function<short(short,short)> get_obscurity) {
@@ -213,7 +209,7 @@ short sight_obscurity(short x,short y) {
 }
 
 short combat_obscurity(short x, short y) {
-	if(univ.scenario.ter_types[coord_to_ter(x,y)].blocksMove()) return 5;
+	if(univ.get_terrain(coord_to_ter(x,y)).blocksMove()) return 5;
 	if(is_lava(x,y)) return 5;
 	return sight_obscurity(x,y);
 }
@@ -232,10 +228,7 @@ bool is_container(location loc) {
 	if(loc.x < 0 || loc.y < 0) return false;
 	if((univ.town.is_barrel(loc.x,loc.y)) || (univ.town.is_crate(loc.x,loc.y)))
 		return true;
-	ter_num_t ter = coord_to_ter(loc.x,loc.y);
-	if(univ.scenario.ter_types[ter].special == eTerSpec::IS_A_CONTAINER)
-		return true;
-	return false;
+	return univ.get_terrain(coord_to_ter(loc.x,loc.y)).special == eTerSpec::IS_A_CONTAINER;
 }
 
 void update_explored(const location dest) {
@@ -298,12 +291,12 @@ bool is_blocked(location to_check) {
 			if (univ.scenario.is_legacy) {
 				// checkme in combat.c this is only called when is_combat() && ter_pic==406
 				//         (ie. ter_anim+6) due to a logical error
-				cPictNum pict=univ.scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].get_picture_num();
+				cPictNum pict=univ.get_terrain(coord_to_ter(to_check.x,to_check.y)).get_picture_num();
 				if (pict.num==6 && pict.type==ePicType::PIC_TER_ANIM)
 					return true;
 			}
 			else {
-				if(univ.town.is_spot(to_check.x, to_check.y) || univ.scenario.ter_types[coord_to_ter(to_check.x,to_check.y)].trim_type == eTrimType::CITY)
+				if(univ.town.is_spot(to_check.x, to_check.y) || univ.get_terrain(coord_to_ter(to_check.x,to_check.y)).trim_type == eTrimType::CITY)
 					return true; // TODO: Maybe replace eTrimType::CITY with a blockage == clear/special && is_special() check
 					// Note: The purpose of the above check is to avoid portals.
 			}
@@ -428,29 +421,18 @@ bool outd_is_blocked(location to_check) {
 
 // Checks if space is a special that prevents movement into or placement of a PC on
 bool is_special(location to_check) {
-	ter_num_t which_ter;
-	
-	which_ter = coord_to_ter(to_check.x,to_check.y);
-	if(univ.scenario.ter_types[which_ter].blockage == eTerObstruct::BLOCK_MONSTERS)
-		return true;
-	else return false;
+	return univ.get_terrain(coord_to_ter(to_check.x,to_check.y)).blockage == eTerObstruct::BLOCK_MONSTERS;
 }
 
 bool outd_is_special(location to_check) {
-	if(overall_mode == MODE_OUTDOORS) {
-		if(univ.scenario.ter_types[univ.out[to_check.x][to_check.y]].blockage == eTerObstruct::BLOCK_MONSTERS) {
-			return true;
-		}
-		else return false;
-	}
+	if(overall_mode == MODE_OUTDOORS)
+		return univ.get_terrain(univ.out[to_check.x][to_check.y]).blockage == eTerObstruct::BLOCK_MONSTERS;
 	return false;
 }
 
 bool impassable(ter_num_t terrain_to_check) {
 	if(terrain_to_check >= univ.scenario.ter_types.size()) return true;
-	if(univ.scenario.ter_types[terrain_to_check].blocksMove())
-		return true;
-	else return false;
+	return univ.get_terrain(terrain_to_check).blocksMove();
 }
 
 // TODO: What on earth is this and why does it mangle the blockage?
@@ -460,10 +442,10 @@ short get_blockage(ter_num_t terrain_type) {
 	// little kludgy in here for pits
 	if((terrain_type == 90) && (is_combat()) && (which_combat_type == 0))
 		return 5;
-	if(univ.scenario.ter_types[terrain_type].blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT ||
-	   univ.scenario.ter_types[terrain_type].blockage == eTerObstruct::BLOCK_SIGHT)
+	cTerrain const &terrain=univ.get_terrain(terrain_type);
+	if(terrain.blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT || terrain.blockage == eTerObstruct::BLOCK_SIGHT)
 		return 5;
-	else if(univ.scenario.ter_types[terrain_type].blockage == eTerObstruct::BLOCK_MOVE_AND_SHOOT)
+	else if(terrain.blockage == eTerObstruct::BLOCK_MOVE_AND_SHOOT)
 		return 1;
 	else {
 		return 0;
@@ -577,7 +559,7 @@ location push_loc(location from_where,location to_where) {
 		return loc_to_try;
 	}
 	if(sight_obscurity(loc_to_try.x,loc_to_try.y) > 0 ||
-	   univ.scenario.ter_types[univ.town->terrain(loc_to_try.x,loc_to_try.y)].blockage != eTerObstruct::CLEAR ||
+	   univ.get_terrain(univ.town->terrain(loc_to_try.x,loc_to_try.y)).blockage != eTerObstruct::CLEAR ||
 	   (loc_off_act_area(loc_to_try)) ||
 	   univ.target_there(loc_to_try))
 		return from_where;
@@ -587,12 +569,7 @@ location push_loc(location from_where,location to_where) {
 
 // TODO: This seems to be wrong; impassable implies "blocks movement", which two other blockages also do
 bool spot_impassable(short i,short  j) {
-	ter_num_t ter;
-	
-	ter = coord_to_ter(i,j);
-	if(univ.scenario.ter_types[ter].blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
-		return true;
-	else return false;
+	return univ.get_terrain(coord_to_ter(i,j)).blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT;
 }
 
 void swap_ter(short i,short j,ter_num_t ter1,ter_num_t ter2) {
@@ -617,9 +594,9 @@ void alter_space(short i,short j,ter_num_t ter) {
 			univ.town->terrain(i,j) = ter;
 			minimap::draw(true);
 		}
-		if(univ.scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
+		if(univ.get_terrain(ter).special == eTerSpec::CONVEYOR)
 			univ.town.belt_present = true;
-		if(univ.scenario.ter_types[former].light_radius != univ.scenario.ter_types[ter].light_radius)
+		if(univ.get_terrain(former).light_radius != univ.get_terrain(ter).light_radius)
 			univ.town->set_up_lights();
 	}
 }

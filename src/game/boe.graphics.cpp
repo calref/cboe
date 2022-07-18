@@ -685,10 +685,7 @@ void refresh_text_bar() {
 // this is used for determinign whether to round off walkway corners
 // right now, trying a restrictive rule (just cave floor and grass, mainly)
 bool is_nature(short x, short y, unsigned short ground_t) {
-	ter_num_t ter_type;
-	
-	ter_type = coord_to_ter((short) x,(short) y);
-	return ground_t == univ.scenario.ter_types[ter_type].ground_type;
+	return ground_t == univ.get_terrain(coord_to_ter((short) x,(short) y)).ground_type;
 }
 
 std::vector<location> forcecage_locs;
@@ -814,12 +811,12 @@ void draw_terrain(short	mode) {
 			if((can_draw != 0) && (overall_mode != MODE_RESTING)) { // if can see, not a pit, and not resting
 				if(is_combat()) anim_ticks = 0;
 				
-				eTrimType trim = univ.scenario.ter_types[spec_terrain].trim_type;
+				eTrimType trim = univ.get_terrain(spec_terrain).trim_type;
 				
 				// Finally, draw this terrain spot
 				if(trim == eTrimType::WALKWAY){
 					int trim = -1;
-					unsigned short ground_t = univ.scenario.ter_types[spec_terrain].trim_ter;
+					unsigned short ground_t = univ.get_terrain(spec_terrain).trim_ter;
 					ter_num_t ground_ter = univ.scenario.get_ter_from_ground(ground_t);
 					if(!loc_off_act_area(where_draw)) {
 						if(is_nature(where_draw.x - 1,where_draw.y,ground_t)){ // check left
@@ -946,9 +943,10 @@ void draw_terrain(short	mode) {
 
 
 static ter_num_t get_ground_for_shore(ter_num_t ter){
-	if(univ.scenario.ter_types[ter].block_horse) return current_ground;
-	else if(univ.scenario.ter_types[ter].blocksMove()) return current_ground;
-	else return ter;
+	if(univ.get_terrain(ter).block_horse || univ.get_terrain(ter).blocksMove())
+		return current_ground;
+	else
+		return ter;
 }
 
 void place_trim(short q,short r,location where,ter_num_t ter_type) {
@@ -1119,9 +1117,6 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 		{0,0,36,28},
 	};
 	static std::unique_ptr<sf::Texture> trim_masks[12], walkway_masks[9];
-	rectangle from_rect = {0,0,36,28},to_rect;
-	Texture from_gworld;
-	sf::Texture* mask;
 	static bool inited = false;
 	if(!inited){
 		inited = true;
@@ -1140,38 +1135,33 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 		for(short i = 0; i < 8 ; i++) walkway_rects[i].offset((i%4)*28,(i/4)*36);
 		walkway_rects[8].offset(196,0);
 	}
-	sf::Color test_color = {0,0,0}, store_color;
-	
 	if(!get_bool_pref("DrawTerrainShoreFrills", true))
 		return;
 	
-	unsigned short pic = univ.scenario.ter_types[ground_ter].picture;
-	if(pic < 960){
-		int which_sheet = pic / 50;
-		from_gworld = *ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet));
-		pic %= 50;
-		from_rect.offset(28 * (pic % 10), 36 * (pic / 10));
-	}else if(pic < 1000){
-		from_gworld = *ResMgr::graphics.get("teranim");
-		pic -= 960;
-		from_rect.offset(112 * (pic / 5),36 * (pic % 5));
-	}else{
-		pic %= 1000;
-		std::tie(from_gworld,from_rect) = spec_scen_g.find_graphic(pic);
+	rectangle from_rect;
+	Texture from_gworld;
+	rectangle to_rect = coord_to_rect(q,r);
+	if (!cPict::get_terrain_picture(univ.get_terrain(ground_ter).get_picture_num(), from_gworld, from_rect)) {
+		fill_rect(terrain_screen_gworld, to_rect, sf::Color::Yellow);
+		return; // CHECKME better to draw a bad image to indicate that there is a problem here
 	}
-	if(which_trim < 50) {
+	
+	sf::Texture* mask=nullptr;
+	if(which_trim>=0 && which_trim < 12) {
 		if(!trim_masks[which_trim])
 			init_trim_mask(trim_masks[which_trim], trim_rects[which_trim]);
 		mask = trim_masks[which_trim].get();
-	} else {
+	} else if (which_trim>=50 && which_trim<59){
 		int which = which_trim - 50;
 		if(!walkway_masks[which])
 			init_trim_mask(walkway_masks[which], walkway_rects[which]);
 		mask = walkway_masks[which].get();
 	}
-	to_rect = coord_to_rect(q,r);
 	
-	rect_draw_some_item(from_gworld, from_rect, *mask, terrain_screen_gworld, to_rect);
+	if (mask)
+		rect_draw_some_item(from_gworld, from_rect, *mask, terrain_screen_gworld, to_rect);
+	else
+		rect_draw_some_item(from_gworld, from_rect, terrain_screen_gworld, to_rect);
 }
 
 
@@ -1180,10 +1170,11 @@ static bool extend_road_terrain(int x, int y) {
 	   return true;
 	if(is_town() && univ.town.is_road(x,y))
 		return true;
-	ter_num_t ter = coord_to_ter(x,y);
-	eTrimType trim = univ.scenario.ter_types[ter].trim_type;
-	eTerSpec spec = univ.scenario.ter_types[ter].special;
-	ter_num_t flag = univ.scenario.ter_types[ter].flag1;
+	ter_num_t const ter = coord_to_ter(x,y);
+	cTerrain const &terrain=univ.get_terrain(ter);
+	eTrimType trim = terrain.trim_type;
+	eTerSpec spec = terrain.special;
+	ter_num_t flag = terrain.flag1;
 	if(trim == eTrimType::CITY || trim == eTrimType::WALKWAY)
 		return true;
 	if(spec == eTerSpec::BRIDGE)
@@ -1192,7 +1183,7 @@ static bool extend_road_terrain(int x, int y) {
 		return true; // cave entrance, most likely
 	if(spec == eTerSpec::UNLOCKABLE || spec == eTerSpec::CHANGE_WHEN_STEP_ON)
 		return true; // closed door, possibly locked; or closed portcullis
-	if(spec == eTerSpec::CHANGE_WHEN_USED && univ.scenario.ter_types[flag].special == eTerSpec::CHANGE_WHEN_STEP_ON && univ.scenario.ter_types[flag].flag1 == ter)
+	if(spec == eTerSpec::CHANGE_WHEN_USED && univ.get_terrain(flag).special == eTerSpec::CHANGE_WHEN_STEP_ON && univ.get_terrain(flag).flag1 == ter)
 		return true; // open door (I think) TODO: Verify this works
 	if(spec == eTerSpec::LOCKABLE)
 		return true; // open portcullis (most likely)
@@ -1201,14 +1192,14 @@ static bool extend_road_terrain(int x, int y) {
 
 static bool can_build_roads_on(ter_num_t ter) {
 	if(impassable(ter)) return false;
-	if(univ.scenario.ter_types[ter].special == eTerSpec::BRIDGE) return false;
+	if(univ.get_terrain(ter).special == eTerSpec::BRIDGE) return false;
 	return true;
 }
 
 static bool connect_roads(ter_num_t ter){
 	if(ter >= univ.scenario.ter_types.size()) return false;
-	eTrimType trim = univ.scenario.ter_types[ter].trim_type;
-	eTerSpec spec = univ.scenario.ter_types[ter].special;
+	eTrimType trim = univ.scenario.get_terrain(ter).trim_type;
+	eTerSpec spec = univ.scenario.get_terrain(ter).special;
 	if(trim == eTrimType::CITY)
 		return true;
 	if(spec == eTerSpec::TOWN_ENTRANCE && trim != eTrimType::NONE)
@@ -1274,10 +1265,10 @@ void place_road(short q,short r,location where,bool here) {
 		bool horz = false, vert = false;
 		eTrimType trim = eTrimType::NONE, vertTrim = eTrimType::NONE;
 		if(ref < univ.scenario.ter_types.size()) {
-			trim = univ.scenario.ter_types[ref].trim_type;
+			trim = univ.get_terrain(ref).trim_type;
 		}
 		if(ter < univ.scenario.ter_types.size()) {
-			vertTrim = univ.scenario.ter_types[ter].trim_type;
+			vertTrim = univ.get_terrain(ter).trim_type;
 		}
 		if(where.y > 0)
 			ter = coord_to_ter(where.x,where.y - 1);
@@ -1288,7 +1279,7 @@ void place_road(short q,short r,location where,bool here) {
 		
 		if(((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < univ.town->max_dim - 1)))
 			ter = coord_to_ter(where.x + 1,where.y);
-		eTrimType horzTrim = ter<univ.scenario.ter_types.size() ? univ.scenario.ter_types[ter].trim_type : eTrimType::NONE;
+		eTrimType horzTrim = univ.get_terrain(ter).trim_type;
 		if(((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim - 1))
 			|| connect_roads(ter))
 			horz = can_build_roads_on(ref);
@@ -1298,7 +1289,7 @@ void place_road(short q,short r,location where,bool here) {
 		if(vert){
 			if(((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < univ.town->max_dim - 1)))
 				ter = coord_to_ter(where.x,where.y + 1);
-			eTrimType vertTrim = ter<univ.scenario.ter_types.size() ? univ.scenario.ter_types[ter].trim_type : eTrimType::NONE;
+			eTrimType vertTrim = univ.get_terrain(ter).trim_type;
 			if(((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim - 1))
 				|| connect_roads(ter))
 				vert = can_build_roads_on(ref);
@@ -1310,7 +1301,7 @@ void place_road(short q,short r,location where,bool here) {
 		if(horz){
 			if(where.x > 0)
 				ter = coord_to_ter(where.x - 1,where.y);
-			eTrimType horzTrim = univ.scenario.ter_types[ter].trim_type;
+			eTrimType horzTrim = univ.get_terrain(ter).trim_type;
 			if((where.x == 0) || connect_roads(ter))
 				horz = can_build_roads_on(ref);
 			else if((horzTrim == eTrimType::W && trim == eTrimType::E) || (horzTrim == eTrimType::E && trim == eTrimType::W))

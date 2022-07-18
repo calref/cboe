@@ -710,6 +710,62 @@ void cPict::draw(){
 	drawFrame(2, frameStyle);
 }
 
+bool cPict::get_terrain_picture(cPictNum pict, Texture &source, rectangle &from_rect, int anim)
+try {
+	source=Texture();
+	ePicType type=pict.type;
+	if (pict.num<0)
+		type=ePicType::PIC_NONE;
+	switch (type) {
+		case ePicType::PIC_TER: {
+			source = *ResMgr::graphics.get("ter" + std::to_string(1 + pict.num / 50));
+			int picture_wanted = pict.num%50;
+			from_rect = calc_rect(picture_wanted % 10, picture_wanted / 10);
+			break;
+		}
+		case ePicType::PIC_TER_ANIM:
+			source = *ResMgr::graphics.get("teranim");
+			from_rect = calc_rect(4*(pict.num/5)+(anim%4),pict.num%5);
+			break;
+		case ePicType::PIC_TER_MAP:
+			source=*ResMgr::graphics.get("termap");
+			if (pict.num<960) {
+				from_rect.left = 12*(pict.num%20);
+				from_rect.top = 12*(pict.num/20);
+			}
+			else {
+				from_rect.left = 12*20;
+				from_rect.top = 12*(pict.num-960);
+			}
+			from_rect.right = from_rect.left+12;
+			from_rect.bottom = from_rect.top+12;
+			break;
+		case ePicType::PIC_CUSTOM_TER:
+			if (!spec_scen_g)
+				break;
+			std::tie(source,from_rect) = spec_scen_g.find_graphic(pict.num);
+			break;
+		case ePicType::PIC_CUSTOM_TER_ANIM:
+			if (!spec_scen_g)
+				break;
+			std::tie(source,from_rect) = spec_scen_g.find_graphic(pict.num+(anim%4));
+			break;
+		default:
+			break;
+	}
+	if (!source)
+		throw "can not find image";
+	return true;
+}
+catch (...) {
+	if (pict.num==-1) // ok no picture
+		return false;
+	std::cerr << "Error[get_terrain_picture]: can not find picture id=" << pict.num << ", type=" << int(pict.type)<< "\n";
+	source = *ResMgr::graphics.get("errors");
+	from_rect={0,0,40,40};
+	return true;
+}
+
 void cPict::drawPresetTer(short num, rectangle to_rect){
 	if(num >= 960) {
 		drawPresetTerAnim(num - 960, to_rect);

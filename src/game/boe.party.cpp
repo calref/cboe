@@ -1221,7 +1221,7 @@ void cast_town_spell(location where) {
 	}
 	
 	bool failed = town_spell == eSpell::NONE && adjust > 4;
-	
+	cTerrain const &terrain = univ.get_terrain(ter);
 	if(adjust > 4)
 		add_string_to_buf("  Can't see target.");
 	else switch(town_spell) {
@@ -1294,17 +1294,17 @@ void cast_town_spell(location where) {
 			
 		case eSpell::UNLOCK:
 			// TODO: Is the unlock spell supposed to have a max range?
-			if(univ.scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
-				if(univ.scenario.ter_types[ter].flag2 == 10)
+			if(terrain.special == eTerSpec::UNLOCKABLE){
+				if(terrain.flag2 == 10)
 					r1 = 10000;
 				else{
 					r1 = get_ran(1,1,100) - 5 * adj + 5 * univ.town->difficulty;
-					r1 += univ.scenario.ter_types[ter].flag2 * 7;
+					r1 += terrain.flag2 * 7;
 				}
 				if(r1 < (135 - combat_percent[min(19,level)])) {
 					add_string_to_buf("  Door unlocked.");
 					play_sound(9);
-					univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[ter].flag1;
+					univ.town->terrain(where.x,where.y) = terrain.flag1;
 				}
 				else {
 					play_sound(41);
@@ -1367,15 +1367,13 @@ bool cast_spell_on_space(location where, eSpell spell) {
 }
 
 void crumble_wall(location where) {
-	ter_num_t ter;
-	
 	if(loc_off_act_area(where))
 		return;
-	ter = univ.town->terrain(where.x,where.y);
-	if(univ.scenario.ter_types[ter].special == eTerSpec::CRUMBLING && univ.scenario.ter_types[ter].flag2 < 2) {
+	auto const &terrain =univ.get_terrain(univ.town->terrain(where.x,where.y));
+	if(terrain.special == eTerSpec::CRUMBLING && terrain.flag2 < 2) {
 		// TODO: This seems like the wrong sound
 		play_sound(60);
-		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[ter].flag1;
+		univ.town->terrain(where.x,where.y) = terrain.flag1;
 		add_string_to_buf("  Barrier crumbles.");
 	}
 	
@@ -2590,7 +2588,7 @@ short race_present(eRace which_race) {
 }
 
 short wilderness_lore_present(ter_num_t ter_type) {
-	cTerrain& ter = univ.scenario.ter_types[ter_type];
+	cTerrain const & ter = univ.get_terrain(ter_type);
 	if(ter.special == eTerSpec::WILDERNESS_CAVE || ter.special == eTerSpec::WATERFALL_CAVE)
 		return trait_present(eTrait::CAVE_LORE);
 	else if(ter.special == eTerSpec::WILDERNESS_SURFACE || ter.special == eTerSpec::WATERFALL_SURFACE)

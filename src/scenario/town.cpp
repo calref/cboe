@@ -193,7 +193,7 @@ void cTown::set_up_lights() {
 			ter_num_t ter = this->terrain(i,j);
 			short rad = 0;
 			if(ter < scenario->ter_types.size()) {
-				rad = scenario->ter_types[ter].light_radius;
+				rad = scenario->get_terrain(ter).light_radius;
 			}
 			if(rad > 0) {
 				location where;
@@ -212,7 +212,7 @@ void cTown::set_up_lights() {
 short cTown::light_obscurity(short x,short y) const {
 	if(!is_on_map(loc(x,y))) return 5;
 	ter_num_t what_terrain = this->terrain(x,y);
-	eTerObstruct store = scenario->ter_types[what_terrain].blockage;
+	eTerObstruct store = scenario->get_terrain(what_terrain).blockage;
 	
 	if(store == eTerObstruct::BLOCK_SIGHT || store == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
 		return 5;

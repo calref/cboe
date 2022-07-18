@@ -96,12 +96,10 @@ void cCurTown::import_reset_fields_legacy(){
 			fields[f.loc.x][f.loc.y]|=f.type;
 	}
 	auto const &terrain=record()->terrain;
-	auto const &maxTerrain=univ.scenario.ter_types.max_size();
 	for (auto const &spec : record()->special_locs) {
 		if (spec.spec<0 || spec.x<0 || spec.x>=terrain.width() ||
 			spec.y<0 || spec.y>=terrain.height()) continue;
-		ter_num_t id=terrain[spec.x][spec.y];
-		if (id>=0 && id<maxTerrain && univ.scenario.ter_types[id].i==3000)
+		if (univ.get_terrain(terrain[spec.x][spec.y]).i==3000)
 			fields[spec.x][spec.y]|=SPECIAL_SPOT;
 	}
 }
@@ -624,11 +622,11 @@ bool cCurTown::set_force_barr(short x, short y, bool b){
 bool cCurTown::set_quickfire(short x, short y, bool b){
 	if(!is_on_map(x, y)) return false;
 	if(b){ // If certain things are on space, there's no room for quickfire.
-		ter_num_t ter = record()->terrain(x,y);
-		if(univ.scenario.ter_types[ter].blockage == eTerObstruct::BLOCK_SIGHT)
+		cTerrain const &terrain=univ.get_terrain(record()->terrain(x,y));
+		if(terrain.blockage == eTerObstruct::BLOCK_SIGHT)
 			return false;
 		// TODO: Isn't it a little odd that BLOCK_MOVE_AND_SHOOT isn't included here?
-		if(univ.scenario.ter_types[ter].blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
+		if(terrain.blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
 			return false;
 		if(is_antimagic(x,y) && get_ran(1,0,1) == 0)
 			return false;
@@ -655,11 +653,8 @@ bool cCurTown::set_quickfire(short x, short y, bool b){
 
 bool cCurTown::free_for_sfx(short x, short y) {
 	if(!is_on_map(x, y)) return false;
-	ter_num_t ter;
-	ter = record()->terrain(x,y);
-	if(univ.scenario.ter_types[ter].blockage != eTerObstruct::CLEAR)
-		return false;
-	return true;
+	ter_num_t ter = record()->terrain(x,y);
+	return univ.scenario.get_terrain(ter).blockage == eTerObstruct::CLEAR;
 }
 
 bool cCurTown::set_sm_blood(short x, short y, bool b){
@@ -812,10 +807,8 @@ bool cCurTown::set_force_cage(short x, short y, bool b){
 // TODO: This seems to be wrong; impassable implies "blocks movement", which two other blockages also do
 bool cCurTown::is_impassable(short i,short  j) const {
 	if(!is_on_map(i, j)) return false;
-	ter_num_t ter;
-	
-	ter = record()->terrain(i,j);
-	if(univ.scenario.ter_types[ter].blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
+	ter_num_t ter = record()->terrain(i,j);
+	if(univ.scenario.get_terrain(ter).blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
 		return true;
 	else return false;
 }
@@ -909,7 +902,7 @@ void cCurTown::readFrom(const cTagFile& file){
 			for(size_t x = 0; x < record()->max_dim; x++) {
 				for(size_t y = 0; y < record()->max_dim; y++) {
 					auto ter_num = record()->terrain(x,y);
-					const auto ter_info = univ.scenario.ter_types[ter_num];
+					const auto ter_info = univ.scenario.get_terrain(ter_num);
 					if(ter_info.special == eTerSpec::CONVEYOR) {
 						belt_present = true;
 					}

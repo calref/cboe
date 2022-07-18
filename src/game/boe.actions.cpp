@@ -342,7 +342,7 @@ static void handle_toggle_active(bool& need_reprint) {
 static void handle_rest(bool& need_redraw, bool& need_reprint) {
 	sf::Event dummy_evt;
 	int i = 0;
-	ter_num_t ter = univ.out[univ.party.out_loc.x][univ.party.out_loc.y];
+	ter_num_t const ter = univ.out[univ.party.out_loc.x][univ.party.out_loc.y];
 	if(univ.party.in_boat >= 0)
 		add_string_to_buf("Rest:  Not in boat.");
 	else if(someone_poisoned())
@@ -351,7 +351,7 @@ static void handle_rest(bool& need_redraw, bool& need_reprint) {
 		add_string_to_buf("Rest: Not enough food.");
 	else if(nearest_monster() <= 3)
 		add_string_to_buf("Rest: Monster too close.");
-	else if(univ.scenario.ter_types[ter].special == eTerSpec::DAMAGING || univ.scenario.ter_types[ter].special == eTerSpec::DANGEROUS)
+	else if(univ.get_terrain(ter).special == eTerSpec::DAMAGING || univ.get_terrain(ter).special == eTerSpec::DANGEROUS)
 		add_string_to_buf("Rest: It's dangerous here.");
 	else if(flying())
 		add_string_to_buf("Rest: Not while flying.");
@@ -538,8 +538,8 @@ static void handle_move(location destination, bool& did_something, bool& need_re
 			menu_activate();
 		} else need_redraw = true;
 		
-		ter_num_t storage = univ.out[univ.party.out_loc.x][univ.party.out_loc.y];
-		if(univ.scenario.ter_types[storage].special == eTerSpec::TOWN_ENTRANCE) {
+		ter_num_t const storage = univ.out[univ.party.out_loc.x][univ.party.out_loc.y];
+		if(univ.get_terrain(storage).special == eTerSpec::TOWN_ENTRANCE) {
 			short find_direction_from;
 			if(univ.party.direction == 0) find_direction_from = 2;
 			else if(univ.party.direction == 4) find_direction_from = 0;
@@ -2365,7 +2365,7 @@ void increase_age() {
 	if(univ.party.status[ePartyStatus::FLIGHT] == 2)
 		add_string_to_buf("You are starting to descend.");
 	if(univ.party.status[ePartyStatus::FLIGHT] == 1) {
-		if(univ.scenario.ter_types[univ.out[univ.party.out_loc.x][univ.party.out_loc.y]].blocksMove()) {
+		if(univ.get_terrain(univ.out[univ.party.out_loc.x][univ.party.out_loc.y]).blocksMove()) {
 			add_string_to_buf("  You plummet to your deaths.");
 			slay_party(eMainStatus::DEAD);
 			print_buf();
@@ -2566,20 +2566,20 @@ void handle_hunting() {
 		return;
 	if(univ.out.is_road(univ.party.out_loc.x, univ.party.out_loc.y))
 		return;
-	ter_num_t ter = univ.out[univ.party.out_loc.x][univ.party.out_loc.y];
+	ter_num_t const ter = univ.out[univ.party.out_loc.x][univ.party.out_loc.y];
 	if(!wilderness_lore_present(ter))
 		return;
 	eTrait trait = eTrait::PACIFIST;
-	if(univ.scenario.ter_types[ter].special == eTerSpec::WILDERNESS_CAVE)
+	if(univ.get_terrain(ter).special == eTerSpec::WILDERNESS_CAVE)
 		trait = eTrait::CAVE_LORE;
-	else if(univ.scenario.ter_types[ter].special == eTerSpec::WILDERNESS_SURFACE)
+	else if(univ.get_terrain(ter).special == eTerSpec::WILDERNESS_SURFACE)
 		trait = eTrait::WOODSMAN;
 	if(trait == eTrait::PACIFIST)
 		return;
 	
 	for(cPlayer& pc : univ.party)
 		if(pc.is_alive() && pc.traits[trait] && get_ran(1,0,12) == 5) {
-			univ.party.food += get_ran(univ.scenario.ter_types[ter].flag1,1,6);
+			univ.party.food += get_ran(univ.get_terrain(ter).flag1,1,6);
 			add_string_to_buf(pc.name + " hunts.");
 			put_pc_screen();
 		}
@@ -2732,13 +2732,13 @@ static eDirection find_waterfall(short x, short y, short mode){
 	bool to_dir[8];
 	for(eDirection i = DIR_N; i < DIR_HERE; i++){
 		if(mode == 0){
-			eTerSpec spec = univ.scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].special;
+			eTerSpec spec = univ.get_terrain(univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])).special;
 			to_dir[i] = spec == eTerSpec::WATERFALL_CAVE || spec == eTerSpec::WATERFALL_SURFACE;
-			if(univ.scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].flag1 != i) to_dir[i] = false;
+			if(univ.get_terrain(univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])).flag1 != i) to_dir[i] = false;
 		}else{
-			eTerSpec spec = univ.scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].special;
+			eTerSpec spec = univ.get_terrain(univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]).special;
 			to_dir[i] = spec == eTerSpec::WATERFALL_CAVE || spec == eTerSpec::WATERFALL_SURFACE;
-			if(univ.scenario.ter_types[univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]].flag1 != i) to_dir[i] = false;
+			if(univ.get_terrain(univ.out[x + dir_x_dif[i]][y + dir_y_dif[i]]).flag1 != i) to_dir[i] = false;
 		}
 	}
 	short count = 0;
@@ -2787,7 +2787,7 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 		if(wilderness_lore_present(coord_to_ter(x - dir_x_dif[dir], y - dir_y_dif[dir]) > 0) && get_ran(1,0,1) == 0)
 			add_string_to_buf("  (No supplies lost.)");
 		else {
-			cTerrain& ter = univ.scenario.ter_types[coord_to_ter(x, y)];
+			cTerrain const & ter = univ.get_terrain(coord_to_ter(x, y));
 			int lost = percent(univ.party.food, ter.flag2);
 			if(lost >= ter.flag3) {
 				lost = ter.flag3;
@@ -2883,9 +2883,9 @@ bool outd_move_party(location destination,bool forced) {
 		if(univ.party.in_boat >= 0) {
 			if(!outd_is_blocked(real_dest) //&& !outd_is_special(real_dest)
 				// not in towns
-				&& (!univ.scenario.ter_types[ter].boat_over
+				&& (!univ.get_terrain(ter).boat_over
 					|| ((real_dest.x != univ.party.out_loc.x) && (real_dest.y != univ.party.out_loc.y)))
-				&& univ.scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
+				&& univ.get_terrain(ter).special != eTerSpec::TOWN_ENTRANCE) {
 				add_string_to_buf("You leave the boat.");
 				univ.party.in_boat = -1;
 			}
@@ -2893,8 +2893,8 @@ bool outd_move_party(location destination,bool forced) {
 					 || (!forced && out_boat_there(destination)))
 				return false;
 			else if(!outd_is_blocked(real_dest)
-					 && univ.scenario.ter_types[ter].boat_over
-					 && univ.scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
+					 && univ.get_terrain(ter).boat_over
+					 && univ.get_terrain(ter).special != eTerSpec::TOWN_ENTRANCE) {
 				// TODO: It kinda looks like there should be a check for eTerSpec::BRIDGE here?
 				// Note: Maybe not though, since this is where boating over lava was once hard-coded...?
 				if(cChoiceDlog("boat-bridge",{"under","land"}).show() == "under")
@@ -2904,7 +2904,7 @@ bool outd_move_party(location destination,bool forced) {
 					univ.party.in_boat = -1;
 				}
 			}
-			else if(univ.scenario.ter_types[ter].boat_over)
+			else if(univ.get_terrain(ter).boat_over)
 				forced = true;
 		}
 		
@@ -2926,7 +2926,7 @@ bool outd_move_party(location destination,bool forced) {
 			univ.party.loc_in_sec = global_to_local(univ.party.out_loc);
 			
 			if((store_corner.x != univ.party.outdoor_corner.x) || (store_corner.y != univ.party.outdoor_corner.y) ||
-				(store_iwc.x != univ.party.i_w_c.x) || (store_iwc.y != univ.party.i_w_c.y))
+				(store_iwc.x != univ.party.i_w_c.x) || (store_iwc.y != univ.party.i_w_c.y)) // OSNOLA: really need ?
 				minimap::add_pending_redraw();
 			
 			return true;
@@ -2948,27 +2948,27 @@ bool outd_move_party(location destination,bool forced) {
 			univ.party.loc_in_sec = global_to_local(univ.party.out_loc);
 			
 			if((store_corner.x != univ.party.outdoor_corner.x) || (store_corner.y != univ.party.outdoor_corner.y) ||
-				(store_iwc.x != univ.party.i_w_c.x) || (store_iwc.y != univ.party.i_w_c.y))
+				(store_iwc.x != univ.party.i_w_c.x) || (store_iwc.y != univ.party.i_w_c.y)) // OSNOLA
 				minimap::add_pending_redraw();
 			
 			return true;
 		}
 		else if(!outd_is_blocked(real_dest) || forced
 				 // Check if can fly over
-				 || (flying() && univ.scenario.ter_types[ter].fly_over)) {
+				 || (flying() && univ.get_terrain(ter).fly_over)) {
 			if(univ.party.in_horse >= 0) {
-				if(univ.scenario.ter_types[ter].special == eTerSpec::DAMAGING || univ.scenario.ter_types[ter].special == eTerSpec::DANGEROUS) {
+				if(univ.get_terrain(ter).special == eTerSpec::DAMAGING || univ.get_terrain(ter).special == eTerSpec::DANGEROUS) {
 					ASB("Your horses quite sensibly refuse.");
 					return false;
 				}
-				if(univ.scenario.ter_types[ter].block_horse) {
+				if(univ.get_terrain(ter).block_horse) {
 					ASB("You can't take horses there!");
 					return false;
 				}
 			}
 			
 			// TODO: But I though you automatically landed when entering?
-			if(flying() && univ.scenario.ter_types[ter].special == eTerSpec::TOWN_ENTRANCE) {
+			if(flying() && univ.get_terrain(ter).special == eTerSpec::TOWN_ENTRANCE) {
 				add_string_to_buf("Moved: You have to land first.");
 				return false;
 			}
@@ -2994,7 +2994,7 @@ bool outd_move_party(location destination,bool forced) {
 			}
 			
 			if((store_corner.x != univ.party.outdoor_corner.x) || (store_corner.y != univ.party.outdoor_corner.y) ||
-				(store_iwc.x != univ.party.i_w_c.x) || (store_iwc.y != univ.party.i_w_c.y))
+				(store_iwc.x != univ.party.i_w_c.x) || (store_iwc.y != univ.party.i_w_c.y)) // OSNOLA
 				minimap::add_pending_redraw();
 			
 			return true;
@@ -3030,7 +3030,7 @@ bool town_move_party(location destination,short forced) {
 		if(univ.party.in_boat >= 0) {
 			if((!is_blocked(destination)) && (!is_special(destination))
 				// If to bridge, exit if heading diagonal, keep going if heading horiz or vert
-				&& (!univ.scenario.ter_types[ter].boat_over
+				&& (!univ.get_terrain(ter).boat_over
 				|| ((destination.x != univ.party.town_loc.x) && (destination.y != univ.party.town_loc.y)))) {
 				add_string_to_buf("You leave the boat.");
 				univ.party.in_boat = -1;
@@ -3038,7 +3038,7 @@ bool town_move_party(location destination,short forced) {
 			else if((destination.x != univ.party.town_loc.x) && (destination.y != univ.party.town_loc.y))
 				return false;
 			// Crossing bridge: land or go through
-			else if(!is_blocked(destination) && univ.scenario.ter_types[ter].boat_over && univ.scenario.ter_types[ter].special == eTerSpec::BRIDGE) {
+			else if(!is_blocked(destination) && univ.get_terrain(ter).boat_over && univ.get_terrain(ter).special == eTerSpec::BRIDGE) {
 				if(cChoiceDlog("boat-bridge",{"under","land"}).show() == "under")
 					forced = true;
 				else if(!is_blocked(destination)) {
@@ -3052,7 +3052,7 @@ bool town_move_party(location destination,short forced) {
 				return false;
 			}
 			// water or lava
-			else if(univ.scenario.ter_types[ter].boat_over)
+			else if(univ.get_terrain(ter).boat_over)
 				forced = true;
 		}
 		
@@ -3090,11 +3090,11 @@ bool town_move_party(location destination,short forced) {
 		}
 		else if(!is_blocked(destination) || forced) {
 			if(univ.party.in_horse >= 0) {
-				if(univ.scenario.ter_types[ter].special == eTerSpec::DAMAGING || univ.scenario.ter_types[ter].special == eTerSpec::DANGEROUS) {
+				if(univ.get_terrain(ter).special == eTerSpec::DAMAGING || univ.get_terrain(ter).special == eTerSpec::DANGEROUS) {
 					ASB("Your horses quite sensibly refuse.");
 					return false;
 				}
-				if(univ.scenario.ter_types[ter].block_horse) {
+				if(univ.get_terrain(ter).block_horse) {
 					ASB("You can't take horses there!");
 					return false;
 				}
@@ -3176,10 +3176,7 @@ short count_walls(location loc) { // TODO: Generalize this function
 }
 
 bool is_sign(ter_num_t ter) {
-	
-	if(univ.scenario.ter_types[ter].special == eTerSpec::IS_A_SIGN)
-		return true;
-	return false;
+	return univ.scenario.get_terrain(ter).special == eTerSpec::IS_A_SIGN;
 }
 
 bool check_for_interrupt(){

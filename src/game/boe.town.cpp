@@ -129,7 +129,7 @@ void start_town_mode(short which_town, short entry_dir) {
 				current_ground = 0;
 			else if(univ.town->terrain(i,j) == 2)
 				current_ground = 2;
-			if(univ.scenario.ter_types[univ.town->terrain(i,j)].special == eTerSpec::CONVEYOR)
+			if(univ.get_terrain(univ.town->terrain(i,j)).special == eTerSpec::CONVEYOR)
 				univ.town.belt_present = true;
 		}
 	
@@ -808,7 +808,7 @@ void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
 	static const std::set<int> surface_arenas = {0,2,9,10,11,12};
 	location stuff_ul;
 	
-	arena = univ.scenario.ter_types[ter_type].combat_arena;
+	arena = univ.get_terrain(ter_type).combat_arena;
 	if(arena >= 1000) {
 		arena -= 1000;
 		// We take the terrain from the specified town, and nothing else.
@@ -1078,11 +1078,12 @@ void pick_lock(location where,short pc_num) {
 	if(univ.party[pc_num].has_abil_equip(eItemAbil::THIEVING))
 		r1 = r1 - 12;
 	
-	if(univ.scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {
+	auto const &terrain_type=univ.get_terrain(terrain);
+	if(terrain_type.special != eTerSpec::UNLOCKABLE) {
 		add_string_to_buf("  Wrong terrain type.");
 		return;
 	}
-	unlock_adjust = univ.scenario.ter_types[terrain].flag2;
+	unlock_adjust = terrain_type.flag2;
 	if((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 30))) {
 		add_string_to_buf("  Didn't work.");
 		if(will_break) {
@@ -1096,7 +1097,7 @@ void pick_lock(location where,short pc_num) {
 	else {
 		add_string_to_buf("  Door unlocked.");
 		play_sound(9);
-		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[terrain].flag1;
+		univ.town->terrain(where.x,where.y) = terrain_type.flag1;
 	}
 }
 
@@ -1107,20 +1108,21 @@ void bash_door(location where,short pc_num) {
 	terrain = univ.town->terrain(where.x,where.y);
 	r1 = get_ran(1,1,100) - 15 * univ.party[pc_num].stat_adj(eSkill::STRENGTH) + univ.town->difficulty * 4;
 	
-	if(univ.scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {
+	auto const &terrain_type=univ.get_terrain(terrain);
+	if(terrain_type.special != eTerSpec::UNLOCKABLE) {
 		add_string_to_buf("  Wrong terrain type.");
 		return;
 	}
 	
-	unlock_adjust = univ.scenario.ter_types[terrain].flag2;
-	if(unlock_adjust >= 5 || r1 > (unlock_adjust * 15 + 40) || univ.scenario.ter_types[terrain].flag3 != 1)  {
+	unlock_adjust = terrain_type.flag2;
+	if(unlock_adjust >= 5 || r1 > (unlock_adjust * 15 + 40) || terrain_type.flag3 != 1)  {
 		add_string_to_buf("  Didn't work.");
 		damage_pc(univ.party[pc_num],get_ran(1,1,4),eDamageType::SPECIAL,eRace::UNKNOWN,0);
 	}
 	else {
 		add_string_to_buf("  Lock breaks.");
 		play_sound(9);
-		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[terrain].flag1;
+		univ.town->terrain(where.x,where.y) = terrain_type.flag1;
 	}
 }
 
@@ -1165,7 +1167,7 @@ void erase_hidden_towns(cOutdoors& sector, int quadrant_x, int quadrant_y) {
 		auto spec_pos_y = sector.city_locs[tile_index].y;
 		auto area_index = sector.terrain[spec_pos_x][spec_pos_y];
 		if(!univ.scenario.towns[sector.city_locs[tile_index].spec]->can_find) {
-			univ.out[town_pos_x][town_pos_y] = univ.scenario.ter_types[area_index].flag1;
+			univ.out[town_pos_x][town_pos_y] = univ.get_terrain(area_index).flag1;
 		} else {
 			univ.out[town_pos_x][town_pos_y] = area_index;
 		}
@@ -1194,16 +1196,15 @@ void erase_completed_specials(cArea& sector, std::function<void(location)> clear
 }
 
 bool does_location_have_special(cOutdoors& sector, location loc, eTerSpec special) {
-	auto terrain_index = sector.terrain[loc.x][loc.y];
-	return univ.scenario.ter_types[terrain_index].special == special;
+	return sector.is_on_map(loc) && univ.get_terrain(sector.terrain[loc.x][loc.y]).special == special;
 }
 
 
 
 bool is_door(location destination) {
-	
-	if(univ.scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == eTerSpec::UNLOCKABLE ||
-	   univ.scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == eTerSpec::CHANGE_WHEN_STEP_ON)
+	auto terrain_index=univ.town->terrain(destination.x,destination.y);
+	if(univ.get_terrain(terrain_index).special == eTerSpec::UNLOCKABLE ||
+	   univ.get_terrain(terrain_index).special == eTerSpec::CHANGE_WHEN_STEP_ON)
 		return true;
 	return false;
 }

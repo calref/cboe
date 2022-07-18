@@ -170,49 +170,45 @@ void port_scenario(legacy::scenario_data_type* temp_scenario) {
 			flip_short(&temp_scenario->out_data_size[i][j]);
 	for(short i = 0; i < 3; i++)
 		flip_short(&temp_scenario->store_item_towns[i]);
-	for(short i = 0; i < 50; i++)
-		flip_short(&temp_scenario->special_items[i]);
-	for(short i = 0; i < 50; i++)
-		flip_short(&temp_scenario->special_item_special[i]);
+	for(auto &item : temp_scenario->special_items)
+		flip_short(&item);
+	for(auto &item : temp_scenario->special_item_special)
+		flip_short(&item);
 	flip_short(&temp_scenario->rating);
 	flip_short(&temp_scenario->uses_custom_graphics);
-	for(short i = 0; i < 256; i++) {
-		flip_short(&temp_scenario->scen_monsters[i].health);
-		flip_short(&temp_scenario->scen_monsters[i].m_health);
-		flip_short(&temp_scenario->scen_monsters[i].max_mp);
-		flip_short(&temp_scenario->scen_monsters[i].mp);
-		flip_short(&temp_scenario->scen_monsters[i].a[1]);
-		flip_short(&temp_scenario->scen_monsters[i].a[0]);
-		flip_short(&temp_scenario->scen_monsters[i].a[2]);
-		flip_short(&temp_scenario->scen_monsters[i].morale);
-		flip_short(&temp_scenario->scen_monsters[i].m_morale);
-		flip_short(&temp_scenario->scen_monsters[i].corpse_item);
-		flip_short(&temp_scenario->scen_monsters[i].corpse_item_chance);
-		flip_short(&temp_scenario->scen_monsters[i].picture_num);
+	for(auto &monster : temp_scenario->scen_monsters) {
+		flip_short(&monster.health);
+		flip_short(&monster.m_health);
+		flip_short(&monster.max_mp);
+		flip_short(&monster.mp);
+		flip_short(&monster.a[0]);
+		flip_short(&monster.a[1]);
+		flip_short(&monster.a[2]);
+		flip_short(&monster.morale);
+		flip_short(&monster.m_morale);
+		flip_short(&monster.corpse_item);
+		flip_short(&monster.corpse_item_chance);
+		flip_short(&monster.picture_num);
 	}
 	
-	for(short i = 0; i < 256; i++) {
-		flip_short(&temp_scenario->ter_types[i].picture);
-	}
-	for(short i = 0; i < 30; i++) {
-		flip_short(&temp_scenario->scen_boats[i].which_town);
-	}
-	for(short i = 0; i < 30; i++) {
-		flip_short(&temp_scenario->scen_horses[i].which_town);
-	}
-	for(short i = 0; i < 20; i++)
-		flip_short(&temp_scenario->scenario_timer_times[i]);
-	for(short i = 0; i < 20; i++)
-		flip_short(&temp_scenario->scenario_timer_specs[i]);
-	for(short i = 0; i < 256; i++) {
-		flip_spec_node(&temp_scenario->scen_specials[i]);
-	}
-	for(short i = 0; i < 10; i++)  {
-		flip_short(&temp_scenario->storage_shortcuts[i].ter_type);
-		flip_short(&temp_scenario->storage_shortcuts[i].property);
+	for (auto &terrain : temp_scenario->ter_types)
+		flip_short(&terrain.picture);
+	for(auto &boat : temp_scenario->scen_boats)
+		flip_short(&boat.which_town);
+	for(auto &horse : temp_scenario->scen_horses)
+		flip_short(&horse.which_town);
+	for(auto &timer : temp_scenario->scenario_timer_times)
+		flip_short(&timer);
+	for(auto &timer : temp_scenario->scenario_timer_specs)
+		flip_short(&timer);
+	for(auto &special : temp_scenario->scen_specials)
+		flip_spec_node(&special);
+	for(auto &shortcut : temp_scenario->storage_shortcuts) {
+		flip_short(&shortcut.ter_type);
+		flip_short(&shortcut.property);
 		for(short j = 0; j < 10; j++)  {
-			flip_short(&temp_scenario->storage_shortcuts[i].item_num[j]);
-			flip_short(&temp_scenario->storage_shortcuts[i].item_odds[j]);
+			flip_short(&shortcut.item_num[j]);
+			flip_short(&shortcut.item_odds[j]);
 		}
 	}
 	flip_short(&temp_scenario->last_town_edited);
