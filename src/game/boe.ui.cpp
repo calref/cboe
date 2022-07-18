@@ -16,6 +16,7 @@
 #include "gfx/render_shapes.hpp"
 #include "gfx/render_image.hpp"
 #include "fileio/resmgr/res_image.hpp"
+#include "tools/framerate_limiter.hpp"
 #include "mathutil.hpp"
 #include "sounds.hpp"
 
@@ -60,6 +61,7 @@ eToolbarButton cToolbar::button_hit(sf::RenderWindow& win, location click) {
 				bool done = false, clicked = false;
 				win.setActive();
 				active = i;
+				cFramerateLimiter fps_limiter;
 				while(!done){
 					redraw_screen(REFRESH_NONE);
 					while(win.pollEvent(e)) {
@@ -79,6 +81,8 @@ eToolbarButton cToolbar::button_hit(sf::RenderWindow& win, location click) {
 							active = toolbar[i].bounds.contains(toPos) ? i : -1;
 						}
 					}
+					if (!done)
+						fps_limiter.frame_finished();
 				}
 				play_sound(37, time_in_ticks(5));
 				redraw_screen(REFRESH_NONE);
