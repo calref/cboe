@@ -1068,17 +1068,17 @@ bool handle_action(const sf::Event& event) {
 		if(overall_mode != MODE_TALKING)
 			return false;
 	}
-	if(overall_mode == MODE_SHOPPING) {
+	else if(overall_mode == MODE_SHOPPING) {
 		handle_shop_event(the_point);
 		if(overall_mode != MODE_SHOPPING)
 			return false;
 	}
-
 	// Otherwise they're in a terrain view mode
-	location cur_loc = is_out() ? univ.party.out_loc : center;
-	auto button_hit = UI::toolbar.button_hit(mainPtr, the_point);
+	else {
+		location cur_loc = is_out() ? univ.party.out_loc : center;
+		auto button_hit = UI::toolbar.button_hit(mainPtr, the_point);
 
-	// MARK: Then, handle a button being hit.
+		// MARK: Then, handle a button being hit.
 		switch(button_hit) {
 			case TOOLBAR_NONE: break;
 			case TOOLBAR_MAGE: case TOOLBAR_PRIEST:
@@ -1155,122 +1155,123 @@ bool handle_action(const sf::Event& event) {
 				break;
 		}
 	
-	// MARK: Begin: click in terrain
-	if(the_point.in(world_screen) && (is_out() || is_town() || is_combat())){
-		int i = (the_point.x - 32) / 28;
-		int j = (the_point.y - 20) / 36;
-		location destination = cur_loc;
+		// MARK: Begin: click in terrain
+		if(the_point.in(world_screen) && (is_out() || is_town() || is_combat())){
+			int i = (the_point.x - 32) / 28;
+			int j = (the_point.y - 20) / 36;
+			location destination = cur_loc;
 		
-		// Check for quick look
-		if(right_button) {
-			previous_mode = overall_mode;
-			if(is_combat()) overall_mode = MODE_LOOK_COMBAT;
-			if(is_out()) overall_mode = MODE_LOOK_OUTDOORS;
-			if(is_town()) overall_mode = MODE_LOOK_TOWN;
-		}
-		
-		// Moving/pausing
-		if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
-			if((i == 4) & (j == 4)) handle_pause(did_something, need_redraw);
-			else {
-				cur_direction = get_cur_direction(the_point);
-				destination.x += cur_direction.x;
-				destination.y += cur_direction.y;
-				handle_move(destination, did_something, need_redraw, need_reprint);
+			// Check for quick look
+			if(right_button) {
+				previous_mode = overall_mode;
+				if(is_combat()) overall_mode = MODE_LOOK_COMBAT;
+				if(is_out()) overall_mode = MODE_LOOK_OUTDOORS;
+				if(is_town()) overall_mode = MODE_LOOK_TOWN;
 			}
-		}
 		
-		// Looking at something
-		else if(overall_mode == MODE_LOOK_OUTDOORS || overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_LOOK_COMBAT) {
-			if(overall_mode == MODE_LOOK_OUTDOORS) destination = univ.party.out_loc;
-			destination.x = destination.x + i - 4;
-			destination.y = destination.y + j - 4;
-			handle_look(destination, need_redraw, need_reprint);
-			// If option/ctrl not pressed, looking done, so restore center
-			bool look_done = true;
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)) look_done = false;
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::RAlt)) look_done = false;
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) look_done = false;
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)) look_done = false;
-			if(look_done) {
-				if(right_button) overall_mode = previous_mode;
-				else if(overall_mode == MODE_LOOK_COMBAT) {
-					overall_mode = MODE_COMBAT;
-					center = univ.current_pc().combat_pos;
-					pause(5);
-					need_redraw = true;
+			// Moving/pausing
+			if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
+				if((i == 4) & (j == 4)) handle_pause(did_something, need_redraw);
+				else {
+					cur_direction = get_cur_direction(the_point);
+					destination.x += cur_direction.x;
+					destination.y += cur_direction.y;
+					handle_move(destination, did_something, need_redraw, need_reprint);
 				}
-				else if(overall_mode == MODE_LOOK_TOWN) {
-					overall_mode = MODE_TOWN;
-					center = univ.party.town_loc;
-					need_redraw = true;
-				}
-				else if(overall_mode == MODE_LOOK_OUTDOORS)
-					overall_mode = MODE_OUTDOORS;
+			}
+		
+			// Looking at something
+			else if(overall_mode == MODE_LOOK_OUTDOORS || overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_LOOK_COMBAT) {
+				if(overall_mode == MODE_LOOK_OUTDOORS) destination = univ.party.out_loc;
+				destination.x = destination.x + i - 4;
+				destination.y = destination.y + j - 4;
+				handle_look(destination, need_redraw, need_reprint);
+				// If option/ctrl not pressed, looking done, so restore center
+				bool look_done = true;
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)) look_done = false;
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::RAlt)) look_done = false;
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) look_done = false;
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)) look_done = false;
+				if(look_done) {
+					if(right_button) overall_mode = previous_mode;
+					else if(overall_mode == MODE_LOOK_COMBAT) {
+						overall_mode = MODE_COMBAT;
+						center = univ.current_pc().combat_pos;
+						pause(5);
+						need_redraw = true;
+					}
+					else if(overall_mode == MODE_LOOK_TOWN) {
+						overall_mode = MODE_TOWN;
+						center = univ.party.town_loc;
+						need_redraw = true;
+					}
+					else if(overall_mode == MODE_LOOK_OUTDOORS)
+						overall_mode = MODE_OUTDOORS;
 				
+				}
+			}
+		
+			// Talking to someone
+			else if(overall_mode == MODE_TALK_TOWN) {
+				destination.x = destination.x + i - 4;
+				destination.y = destination.y + j - 4;
+				handle_talk(destination, did_something, need_redraw, need_reprint);
+			}
+
+			// Targeting a space
+			else if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FIRING || overall_mode == MODE_THROWING ||
+					overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET) {
+				destination = center;
+				destination.x += i - 4;
+				destination.y += j - 4;
+				handle_target_space(destination, did_something, need_redraw, need_reprint);
+			}
+		
+			// Dropping an item
+			else if(overall_mode == MODE_DROP_TOWN || overall_mode == MODE_DROP_COMBAT) {
+				destination.x += i - 4;
+				destination.y += j - 4;
+				handle_drop_item(destination, need_redraw);
+			}
+		
+			// Using a space
+			else if(overall_mode == MODE_USE_TOWN) {
+				destination.x += i - 4;
+				destination.y += j - 4;
+				handle_use_space(destination, did_something, need_redraw);
+			}
+		
+			// Bashing/lockpicking
+			else if(overall_mode == MODE_BASH_TOWN || overall_mode == MODE_PICK_TOWN) {
+				destination.x += i - 4;
+				destination.y += j - 4;
+				handle_bash_pick(destination, did_something, need_redraw, overall_mode == MODE_BASH_TOWN);
 			}
 		}
-		
-		// Talking to someone
-		else if(overall_mode == MODE_TALK_TOWN) {
-			destination.x = destination.x + i - 4;
-			destination.y = destination.y + j - 4;
-			handle_talk(destination, did_something, need_redraw, need_reprint);
-		}
-		
-		// Targeting a space
-		else if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FIRING || overall_mode == MODE_THROWING ||
-				overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET) {
-			destination = center;
-			destination.x += i - 4;
-			destination.y += j - 4;
-			handle_target_space(destination, did_something, need_redraw, need_reprint);
-		}
-		
-		// Dropping an item
-		else if(overall_mode == MODE_DROP_TOWN || overall_mode == MODE_DROP_COMBAT) {
-			destination.x += i - 4;
-			destination.y += j - 4;
-			handle_drop_item(destination, need_redraw);
-		}
-		
-		// Using a space
-		else if(overall_mode == MODE_USE_TOWN) {
-			destination.x += i - 4;
-			destination.y += j - 4;
-			handle_use_space(destination, did_something, need_redraw);
-		}
-		
-		// Bashing/lockpicking
-		else if(overall_mode == MODE_BASH_TOWN || overall_mode == MODE_PICK_TOWN) {
-			destination.x += i - 4;
-			destination.y += j - 4;
-			handle_bash_pick(destination, did_something, need_redraw, overall_mode == MODE_BASH_TOWN);
-		}
-	}
-	// MARK: End: click in terrain
+		// MARK: End: click in terrain
 	
-	// MARK: Begin: Screen shift
-	if(scrollableModes.count(overall_mode) && the_point.in(terrain_viewport) && !the_point.in(world_screen)) {
-		if(the_point.y < world_screen.top && center.y > univ.town->in_town_rect.top && center.y > 4) {
-			center.y--;
-			need_redraw = true;
+		// MARK: Begin: Screen shift
+		if(scrollableModes.count(overall_mode) && the_point.in(terrain_viewport) && !the_point.in(world_screen)) {
+			if(the_point.y < world_screen.top && center.y > univ.town->in_town_rect.top && center.y > 4) {
+				center.y--;
+				need_redraw = true;
+			}
+			if(the_point.x < world_screen.left && center.x > univ.town->in_town_rect.left && center.x > 4) {
+				center.x--;
+				need_redraw = true;
+			}
+			if(the_point.y > world_screen.bottom && center.y < univ.town->in_town_rect.bottom && center.y < univ.town->max_dim - 5) {
+				center.y++;
+				need_redraw = true;
+			}
+			if(the_point.x > world_screen.right && center.x < univ.town->in_town_rect.right && center.x < univ.town->max_dim - 5) {
+				center.x++;
+				need_redraw = true;
+			}
 		}
-		if(the_point.x < world_screen.left && center.x > univ.town->in_town_rect.left && center.x > 4) {
-			center.x--;
-			need_redraw = true;
-		}
-		if(the_point.y > world_screen.bottom && center.y < univ.town->in_town_rect.bottom && center.y < univ.town->max_dim - 5) {
-			center.y++;
-			need_redraw = true;
-		}
-		if(the_point.x > world_screen.right && center.x < univ.town->in_town_rect.right && center.x < univ.town->max_dim - 5) {
-			center.x++;
-			need_redraw = true;
-		}
+		// MARK: End: Screen shift
 	}
-	// MARK: End: Screen shift
-	
+
 	// MARK: Process clicks in PC stats area
 	if(the_point.in(win_to_rects[WINRECT_PCSTATS])) {
 		location pc_win_ul = win_to_rects[WINRECT_PCSTATS].topLeft();
