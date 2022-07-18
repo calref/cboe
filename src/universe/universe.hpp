@@ -232,6 +232,8 @@ public:
 	cItem &get_item(item_num_t item) { return scenario.get_item(item); }
 	cQuest const &get_quest(int quest) const { return scenario.get_quest(quest); }
 	cQuest &get_quest(int quest) { return scenario.get_quest(quest); }
+	cShop const &get_shop(int shop) const { return scenario.get_shop(shop); }
+	cShop &get_shop(int shop) { return scenario.get_shop(shop); }
 	cSpecItem const &get_special_item(item_num_t item) const { return scenario.get_special_item(item); }
 	cSpecItem &get_special_item(item_num_t item) { return scenario.get_special_item(item); }
 	cTerrain const &get_terrain(ter_num_t ter) const { return scenario.get_terrain(ter); }

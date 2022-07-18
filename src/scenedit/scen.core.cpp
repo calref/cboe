@@ -2221,7 +2221,7 @@ static bool save_shop_from_dlog(cDialog& me, cShop& shop, size_t which_shop, boo
 	shop.setFace(dynamic_cast<cPict&>(me["face"]).getPicNum());
 	// Items are filled in as they're added by the dialog, so that's all we need to do here
 	
-	scenario.shops[which_shop] = shop;
+	scenario.get_shop(which_shop) = shop;
 	if(!close) me.untoast();
 	return true;
 }
@@ -2240,7 +2240,7 @@ static bool change_shop_dlog_page(cDialog& me, std::string dir, cShop& shop, siz
 			which_shop = 0;
 	}
 	
-	shop = scenario.shops[which_shop];
+	shop = scenario.get_shop(which_shop);
 	put_shop_in_dlog(me, shop, which_shop);
 	return true;
 }
@@ -2471,7 +2471,7 @@ bool edit_shop(size_t which_shop, cDialog* parent) {
 	using namespace std::placeholders;
 	if(which_shop == scenario.shops.size())
 		scenario.shops.emplace_back("New Shop");
-	cShop shop = scenario.shops[which_shop];
+	cShop shop = scenario.get_shop(which_shop);
 	
 	cDialog shop_dlg(*ResMgr::dialogs.get("edit-shop"), parent);
 	shop_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));

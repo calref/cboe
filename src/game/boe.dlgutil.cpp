@@ -111,7 +111,7 @@ void start_shop_mode(short which,short cost_adj,std::string store_name) {
 	// This would be a place to hide the text box, if I add it.
 	
 	active_shop_num = which;
-	active_shop = univ.scenario.shops[which];
+	active_shop = univ.get_shop(which);
 	active_shop.setCostAdjust(cost_adj);
 	active_shop.setName(store_name);
 	
