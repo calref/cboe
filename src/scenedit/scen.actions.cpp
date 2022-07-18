@@ -661,9 +661,9 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 					if(option_hit) {
 						if(j == scenario.shops.size() - 1)
 							scenario.shops.pop_back();
-						else scenario.shops[j] = cShop("Unused Shop");
+						else scenario.get_shop(j) = cShop("Unused Shop");
 					} else {
-						if(!edit_shop(j) && j == size_before && scenario.shops[j].getName() == "New Shop")
+						if(!edit_shop(j) && j == size_before && scenario.get_shop(j).getName() == "New Shop")
 							scenario.shops.pop_back();
 					}
 					start_shops_editing(size_before == scenario.shops.size());
@@ -2518,7 +2518,7 @@ void start_shops_editing(bool just_redo_text) {
 		std::string title;
 		if(i == scenario.shops.size())
 			title = "Create New Shop";
-		else title = scenario.shops[i].getName();
+		else title = scenario.get_shop(i).getName();
 		title = std::to_string(i) + " - " + title;
 		set_rb(i, RB_SHOP, i, title);
 	}
@@ -2659,17 +2659,17 @@ void start_dialogue_editing(short restoring) {
 	right_sbar->show();
 	pal_sbar->hide();
 	
+	size_t n_nodes = town->talking.talk_nodes.size();
 	if(restoring == 0) {
 		right_sbar->setPosition(0);
 		reset_rb();
-		right_sbar->setMaximum(70 - NRSONPAGE);
+		right_sbar->setMaximum(10+n_nodes+1 - NRSONPAGE);
 	}
 	for(short i = 0; i < 10; i++) {
 		std::ostringstream strb;
 		strb << "Personality " << (i + cur_town * 10) << " - " << town->talking.people[i].title;
 		set_rb(i,RB_PERSONALITY, i, strb.str());
 	}
-	size_t n_nodes = town->talking.talk_nodes.size();
 	for(short i = 0; i < n_nodes; i++) {
 		for(short j = 0; j < 4; j++) {
 			s[j] = town->talking.talk_nodes[i].link1[j];

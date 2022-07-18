@@ -49,15 +49,18 @@ public:
 		cItemStorage& operator = (legacy::item_storage_shortcut_type const &old);
 	};
 	void destroy_terrain();
-	cTerrain const &get_terrain(ter_num_t ter) const;
-	cTerrain &get_terrain(ter_num_t ter);
+	
 	cItem const &get_item(item_num_t item) const;
 	cItem &get_item(item_num_t item);
 	cQuest const &get_quest(int quest) const;
 	cQuest &get_quest(int quest);
 	cSpecItem const &get_special_item(item_num_t item) const;
 	cSpecItem &get_special_item(item_num_t item);
-	
+	cShop const &get_shop(int shop) const;
+	cShop &get_shop(int shop);
+	cTerrain const &get_terrain(ter_num_t ter) const;
+	cTerrain &get_terrain(ter_num_t ter);
+
 public:
 	unsigned short difficulty,intro_pic,default_ground;
 	int bg_out, bg_fight, bg_town, bg_dungeon;
