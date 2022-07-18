@@ -164,7 +164,7 @@ static void port_special_text_response(cSpecial &special, cScenario& scenario)
 		auto &wh=step==0 ? special.ex1a : special.ex2a;
 		if (wh>=-100 && wh<0) { // (60-159)-160
 			int item=(wh+100)/2;
-			if (item < scenario.special_items.size()) {
+			if (item>=0 && item < scenario.special_items.size()) {
 				wh=scenario.spec_strs.size();
 				scenario.spec_strs.push_back((wh%2 == 0) ? scenario.special_items[item].name : scenario.special_items[item].descr);
 			}
@@ -832,7 +832,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 				"num-towns", "out-width", "out-height", "start-town", "town-start", "outdoor-start", "sector-start",
 			};
 			Iterator<Element> game;
-			int store_rects = 0, town_mods = 0, spec_items = 0, quests = 0, shops = 0, timers = 0, strnum;
+			int store_rects = 0, town_mods = 0, timers = 0, strnum;
 			for(game = game.begin(elem.Get()); game != game.end(); game++) {
 				game->GetValue(&type);
 				reqs.erase(type);
@@ -873,16 +873,13 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					town_mods++;
 				} else if(type == "special-item") {
 					scenario.special_items.emplace_back();
-					readSpecItemFromXml(*game, scenario.special_items[spec_items]);
-					spec_items++;
+					readSpecItemFromXml(*game, scenario.special_items.back());
 				} else if(type == "quest") {
 					scenario.quests.emplace_back();
-					readQuestFromXml(*game, scenario.quests[quests]);
-					quests++;
+					readQuestFromXml(*game, scenario.quests.back());
 				} else if(type == "shop") {
 					scenario.shops.emplace_back();
-					readShopFromXml(*game, scenario.shops[shops]);
-					shops++;
+					readShopFromXml(*game, scenario.shops.back());
 				} else if(type == "timer") {
 					if(timers >= 20)
 						throw xBadNode(type,game->Row(),game->Column(),fname);
@@ -890,12 +887,12 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					timers++;
 				} else if(type == "string") {
 					game->GetAttribute("id", &strnum);
-					if(strnum >= scenario.spec_strs.size())
+					if(strnum >= scenario.spec_strs.size()) // changeme: add a maximum and discard data if not in a range
 						scenario.spec_strs.resize(strnum + 1);
 					game->GetText(&scenario.spec_strs[strnum], false);
 				} else if(type == "journal") {
 					game->GetAttribute("id", &strnum);
-					if(strnum >= scenario.journal_strs.size())
+					if(strnum >= scenario.journal_strs.size()) // changeme: add a maximum and discard data if not in a range
 						scenario.journal_strs.resize(strnum + 1);
 					game->GetText(&scenario.journal_strs[strnum], false);
 				} else throw xBadNode(type, game->Row(), game->Column(), fname);

@@ -74,7 +74,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 	Texture source_gworld;
 	cPictNum pict;
 	if (terrain_to_draw>=10000) // force using a specific graphic
-		pict=cPictNum(terrain_to_draw-10000,ePicType::PIC_TER);
+		pict=cTerrain::get_picture_num_for_terrain(terrain_to_draw-10000);
 	else
 		pict=univ.get_terrain(terrain_to_draw).get_picture_num();
 	if (!cPict::get_picture(pict, source_gworld, source_rect, anim_ticks % 4)) {

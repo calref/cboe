@@ -680,8 +680,7 @@ void put_quest_info(short which_i) {
 }
 
 void put_spec_item_info (short which_i) {
-	cStrDlog display_strings(univ.scenario.special_items[which_i].descr,"",
-							 univ.scenario.special_items[which_i].name,univ.scenario.intro_pic,PIC_SCEN);
+	cStrDlog display_strings(univ.get_special_item(which_i).descr,"",univ.get_special_item(which_i).name,univ.scenario.intro_pic,PIC_SCEN);
 	display_strings.setSound(57);
 	display_strings.show();
 }

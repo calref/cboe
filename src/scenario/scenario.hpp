@@ -55,6 +55,9 @@ public:
 	cTerrain &get_terrain(ter_num_t ter);
 	cItem const &get_item(item_num_t item) const;
 	cItem &get_item(item_num_t item);
+	cSpecItem const &get_special_item(item_num_t item) const;
+	cSpecItem &get_special_item(item_num_t item);
+	
 public:
 	unsigned short difficulty,intro_pic,default_ground;
 	int bg_out, bg_fight, bg_town, bg_dungeon;
