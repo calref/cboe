@@ -412,7 +412,9 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 			me[name].setText(item.ident ? item.full_name : item.name);
 			// TODO: Party sheet items
 			cPict& pic = dynamic_cast<cPict&>(me[pict]);
-			if(item.graphic_num >= 1000)
+			if(item.graphic_num>=10000)
+				pic.setPict(item.graphic_num-10000, PIC_PARTY_ITEM);
+			else if(item.graphic_num >= 1000)
 				pic.setPict(item.graphic_num - 1000, PIC_CUSTOM_ITEM);
 			else pic.setPict(item.graphic_num, PIC_ITEM);
 			me[detail].setText(get_item_interesting_string(item));

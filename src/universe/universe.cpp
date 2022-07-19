@@ -484,7 +484,8 @@ bool cCurTown::set_block(short x, short y, bool b){ // currently unused
 
 bool cCurTown::set_spot(short x, short y, bool b){
 	if(!record()->is_on_map(x,y)) return false;
-	if(b) fields[x][y] |=  SPECIAL_SPOT;
+	if(b)
+		fields[x][y] |=  SPECIAL_SPOT;
 	else  fields[x][y] &= ~SPECIAL_SPOT;
 	return true;
 }
