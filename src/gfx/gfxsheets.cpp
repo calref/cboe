@@ -100,9 +100,9 @@ void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlot
 		std::tie(from_sheet,from_rect) = find_graphic(src + i);
 		std::tie(to_sheet,to_rect) = find_graphic(dest + i, true);
 		if(to_sheet.texture != last_src) {
-			if(last_src) *last_src=sf::Texture(temp.getTexture());
+			if(last_src) *last_src=sf::Texture(temp.getTexture()); // save the old picture
 			last_src = std::const_pointer_cast<sf::Texture>(to_sheet.texture);
-			temp.create(to_sheet->getSize().x, to_sheet->getSize().y);
+			temp.create(to_sheet->getSize().x, to_sheet->getSize().y); // recreate a new picture from the new sheet
 			rect_draw_some_item(to_sheet, rectangle(to_sheet), temp, rectangle(*to_sheet.texture));
 		}
 		rect_draw_some_item(from_sheet, from_rect, temp,

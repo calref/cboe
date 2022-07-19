@@ -1133,7 +1133,6 @@ void cPict::drawCustomTerAnim(short num, rectangle to_rect){
 		return;
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	num += animFrame % 4;
 	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
 }
 

@@ -701,12 +701,7 @@ static eSpecCat getNodeCategory(eSpecType node) {
 
 static std::map<eSpecType, node_properties_t> loadProps() {
 	std::map<eSpecType, node_properties_t> allNodeProps;
-	// There's really no need to check all the way to the max of the underlying type.
-	// It's unlikely we'd go above 255, so unsigned char would be fine, but just in case,
-	// let's use unsigned short.
-	// Could change the actual enum's underlying type instead though?
-	using underlying = unsigned short;//std::underlying_type<eSpecType>::type;
-	for(underlying i = 0; i < std::numeric_limits<underlying>::max(); i++) {
+	for(unsigned short i = 0; i <= int(eSpecType::MAX_SPEC_TYPE); i++) {
 		eSpecType check = (eSpecType) i;
 		eSpecCat category = getNodeCategory(check);
 		if(category == eSpecCat::INVALID) continue;

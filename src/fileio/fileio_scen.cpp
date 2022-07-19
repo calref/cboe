@@ -197,8 +197,6 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	bool file_ok = false;
 	long len;
 	char temp_str[256];
-	legacy::scenario_data_type temp_scenario;
-	legacy::scen_item_data_type item_data;
 	// TODO: Convert this (and all the others in this file) to use C++ streams
 	FILE* file_id = fopen(file_to_load.string().c_str(),"rb");
 	if(file_id == nullptr) {
@@ -234,6 +232,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	}
 	
 	len = (long) sizeof(legacy::scenario_data_type);
+	legacy::scenario_data_type temp_scenario;
 	if(fread(&temp_scenario, len, 1, file_id) < 1) {
 		showError(err_prefix + "Failed to read scenario data.", get_file_error());
 		fclose(file_id);
@@ -241,6 +240,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	}
 	porting::port_scenario(&temp_scenario);
 	len = sizeof(legacy::scen_item_data_type); // item data
+	legacy::scen_item_data_type item_data;
 	if(fread(&item_data, len, 1, file_id) < 1) {
 		showError(err_prefix + "Failed to read scenario items.", get_file_error());
 		fclose(file_id);
