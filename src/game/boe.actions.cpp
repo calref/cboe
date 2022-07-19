@@ -616,6 +616,10 @@ static void handle_target_space(location destination, bool& did_something, bool&
 		cast_town_spell(destination);
 	else if(overall_mode == MODE_FANCY_TARGET) {
 		place_target(destination);
+		// unsure why place_target does not check if the current pc has no ap
+		//   so we must call pick_next_pc to avoid casting summon monsters and
+		//      then cast a new spell with no ap
+		pick_next_pc();
 		need_reprint = true;
 	}
 	if(overall_mode != MODE_FANCY_TARGET) {
