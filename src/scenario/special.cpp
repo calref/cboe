@@ -364,7 +364,7 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 		case 4: // Secret passage
 			type = eSpecType::CANT_ENTER;
 			ex1a = 0;
-			ex2a = (old.type == 4);
+			ex2a = 1;
 			break;
 		case 11: // Can't enter
 			type = eSpecType::CANT_ENTER;
