@@ -249,6 +249,18 @@ effect_pat_type field[8] = {
 
 bool center_on_monst;
 
+std::set<eSpell> spell_missile_map =
+{
+    // magic spell
+    eSpell::DUMBFOUND, eSpell::FEAR,
+    eSpell::FLAME, eSpell::GOO,
+    eSpell::ICE_BOLT, eSpell::KILL, eSpell::POISON,
+    eSpell::POISON_MINOR, eSpell::SCARE, eSpell::SCRY_MONSTER,
+    eSpell::SLOW, eSpell::SPARK, eSpell::WRACK,
+    // priest spell
+    eSpell::CHARM_FOE, eSpell::CURSE, eSpell::DISPEL_UNDEAD, eSpell::HOLY_SCOURGE,
+    eSpell::STUMBLE, eSpell::TURN_UNDEAD, eSpell::WOUND,
+};
 
 void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short num_walls) {
 	short how_many,num_tries = 0;
@@ -544,8 +556,8 @@ void pc_attack(short who_att,iLiving* target) {
 	
 	// TODO: These don't stack?
 	if(cInvenSlot skill_item = attacker.has_abil_equip(eItemAbil::SKILL)) {
-		hit_adj += 5 * (skill_item->abil_data[0] / 2 + 1);
-		dam_adj += skill_item->abil_data[0] / 2;
+		hit_adj += 5 * (short(skill_item->abil_data[0]) / 2 + 1);
+		dam_adj += short(skill_item->abil_data[0]) / 2;
 	}
 	if(cInvenSlot skill_item = attacker.has_abil_equip(eItemAbil::GIANT_STRENGTH)) {
 		dam_adj += skill_item->abil_data[0];
@@ -1029,19 +1041,8 @@ void do_combat_cast(location target) {
 	cPlayer& caster = univ.current_pc();
 	// CHECKME: this make no sense, allow_antimagic is always false in this function
 	bool allow_obstructed = false, allow_antimagic = false;
-	static std::set<eSpell> const oneHitSpell =
-	{
-		// magic spell
-		eSpell::DUMBFOUND, eSpell::FEAR,
-		eSpell::FLAME, eSpell::GOO,
-		eSpell::ICE_BOLT, eSpell::KILL, eSpell::POISON,
-		eSpell::POISON_MINOR, eSpell::SCARE, eSpell::SCRY_MONSTER,
-		eSpell::SLOW, eSpell::SPARK, eSpell::WRACK,
-		// priest spell
-		eSpell::CHARM_FOE, eSpell::CURSE, eSpell::DISPEL_UNDEAD, eSpell::HOLY_SCOURGE,
-		eSpell::STUMBLE, eSpell::TURN_UNDEAD, eSpell::WOUND,
-	};
-	if(spell_being_cast==eSpell::DISPEL_BARRIER || oneHitSpell.count(spell_being_cast)!=0 || (spell_being_cast == eSpell::NONE && spec_target_options % 10 == 1))
+	if(spell_being_cast==eSpell::DISPEL_BARRIER || spell_missile_map.count(spell_being_cast)!=0 ||
+	   (spell_being_cast == eSpell::NONE && spec_target_options % 10 == 1))
 		allow_obstructed = true;
 	if(spell_being_cast == eSpell::NONE && spec_target_options / 10 == 2)
 		allow_antimagic = false;
@@ -4066,8 +4067,8 @@ short count_levels(location where,short radius) {
 	for(short i = 0; i < univ.town.monst.size(); i++)
 		if(monst_near(i,where,radius,0)) {
 			if(!univ.town.monst[i].is_friendly())
-				store = store - univ.town.monst[i].level;
-			else store = store + univ.town.monst[i].level;
+				store = store - int(univ.town.monst[i].level);
+			else store = store + int(univ.town.monst[i].level);
 		}
 	if(is_combat()) {
 		for(short i = 0; i < 6; i++)

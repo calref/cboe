@@ -5,6 +5,7 @@
 
 #include <array>
 #include <map>
+#include <set>
 
 #include "universe/universe.hpp"
 
@@ -1348,14 +1349,15 @@ void cast_town_spell(location where) {
 }
 
 // TODO: Currently, the node is called before any spell-specific behaviour (eg missiles) occurs.
+extern std::set<eSpell> spell_missile_map;
 bool cast_spell_on_space(location where, eSpell spell) {
 	short s1 = 0;
 	
 	for(auto const &spec_loc : univ.town->special_locs) {
 		if(where != spec_loc) continue;
 		bool need_redraw = false;
-		// TODO: Is there a way to skip this condition without breaking compatibility?
-		if(univ.town->get_special(spec_loc.spec).type == eSpecType::IF_CONTEXT)
+		eSpecType specType=univ.town->get_special(spec_loc.spec).type;
+		if (specType==eSpecType::IF_CONTEXT && (!univ.scenario.is_legacy || spell_missile_map.count(spell)==0))
 			run_special(eSpecCtx::TARGET, eSpecCtxType::TOWN, spec_loc.spec, where, &s1, nullptr, &need_redraw);
 		if(need_redraw) redraw_terrain();
 		return !s1;
