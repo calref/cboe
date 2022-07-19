@@ -35,7 +35,6 @@ short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
 extern std::map<eSkill,short> skill_cost;
 extern std::map<eSkill,short> skill_max;
 extern std::map<eSkill,short> skill_g_cost;
-extern short cur_town_talk_loaded;
 extern sf::RenderWindow mainPtr;
 extern short on_monst_menu[256];
 
