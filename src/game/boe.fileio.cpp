@@ -20,6 +20,7 @@
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "fileio/fileio.hpp"
 #include "tools/cursors.hpp"
+#include "tools/prefs.hpp"
 #include <boost/filesystem.hpp>
 
 #define	DONE_BUTTON_ITEM	1
@@ -31,7 +32,6 @@ extern location center;
 extern long register_flag;
 extern sf::RenderWindow mainPtr;
 extern short which_combat_type;
-extern short cur_town_talk_loaded;
 extern cUniverse univ;
 
 bool loaded_yet = false, got_nagged = false;
@@ -56,6 +56,10 @@ void finish_load_party(){
 	
 	party_in_memory = true;
 	
+	// use user's easy mode and less wandering mode
+	univ.party.easy_mode=get_bool_pref("EasyMode", false);
+	univ.party.less_wm=get_bool_pref("lesswm", false);
+
 	// now if not in scen, this is it.
 	if(!univ.party.is_in_scenario()) {
 		if(overall_mode != MODE_STARTUP) {
