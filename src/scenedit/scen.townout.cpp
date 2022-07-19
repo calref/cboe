@@ -42,7 +42,7 @@ const char *day_str_2[] = {"Unused","Event code (0 - no event)","Event code (0 -
 
 static void put_placed_monst_in_dlog(cDialog& me, cTownperson& monst, const short which) {
 	me["num"].setTextToNum(which);
-	me["type"].setText(scenario.scen_monsters[monst.number].m_name);
+	me["type"].setText(scenario.get_monster(monst.number).m_name);
 	// TODO: Make attitude an enum
 	dynamic_cast<cLedGroup&>(me["attitude"]).setSelected(boost::lexical_cast<std::string>(monst.start_attitude));
 	dynamic_cast<cLedGroup&>(me["mobility"]).setSelected("mob" + std::to_string(monst.mobility + 1));
@@ -50,7 +50,7 @@ static void put_placed_monst_in_dlog(cDialog& me, cTownperson& monst, const shor
 	me["picnum"].setTextToNum(monst.facial_pic);
 	// TODO: Use -1 instead of 0 for "no pic", since 0 is a valid talking picture
  	if(short(monst.facial_pic) < 0)
-		dynamic_cast<cPict&>(me["pic"]).setPict(scenario.scen_monsters[monst.number].picture_num, PIC_MONST);
+		dynamic_cast<cPict&>(me["pic"]).setPict(scenario.get_monster(monst.number).picture_num, PIC_MONST);
 	else if((monst.facial_pic >= 1000))
 		dynamic_cast<cPict&>(me["pic"]).setPict(monst.facial_pic - 1000,PIC_CUSTOM_TALK);
 	else dynamic_cast<cPict&>(me["pic"]).setPict(monst.facial_pic,PIC_TALK);
@@ -116,7 +116,7 @@ void edit_placed_monst(short which_m) {
 
 static void put_placed_monst_adv_in_dlog(cDialog& me, cTownperson& monst, const short which) {
 	me["num"].setTextToNum(which);
-	me["type"].setText(scenario.scen_monsters[monst.number].m_name);
+	me["type"].setText(scenario.get_monster(monst.number).m_name);
 	int iTime = 0;
 	switch(monst.time_flag) {
 		case eMonstTime::ALWAYS: iTime = 0; break;
@@ -520,14 +520,14 @@ static void put_out_wand_in_dlog(cDialog& me, short which, const cOutdoors::cWan
 		if(wand.monst[i] == 0)
 			me[id].setText("Empty");
 		// TODO: Wait a second, if 0 is no monster, does that mean it's impossible to use monster 0? Should 1 be subtracted here?
-		else me[id].setText(scenario.scen_monsters[wand.monst[i]].m_name);
+		else me[id].setText(scenario.get_monster(wand.monst[i]).m_name);
 	}
 	for(short i = 0; i < 3; i++) {
 		std::string id = "ally" + std::to_string(i + 1);
 		if(wand.friendly[i] == 0)
 			me[id].setText("Empty");
 		// TODO: Wait a second, if 0 is no monster, does that mean it's impossible to use monster 0? Should 1 be subtracted here?
-		else me[id].setText(scenario.scen_monsters[wand.friendly[i]].m_name);
+		else me[id].setText(scenario.get_monster(wand.friendly[i]).m_name);
 	}
 	dynamic_cast<cLed&>(me["no-flee"]).setState(wand.cant_flee ? led_red : led_off);
 	dynamic_cast<cLed&>(me["forced"]).setState(wand.forced ? led_red : led_off);
@@ -604,7 +604,7 @@ static bool edit_out_wand_monst(cDialog& me, std::string hit, short which, cOutd
 		i = choose_text(STRT_MONST,wand.friendly[fld[4] - '1']-1,&me,"Choose Which Monster:") + 1;
 		if(i >= 0) wand.friendly[fld[4] - '1'] = i;
 	}
-	me[fld].setText(scenario.scen_monsters[i].m_name);
+	me[fld].setText(scenario.get_monster(i).m_name);
 	return true;
 }
 

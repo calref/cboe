@@ -132,7 +132,7 @@ void edit_day() {
 	
 	dlog.run();
 	
-	long long dialog_answer = minmax(0,500,dlog.getResult<long long>());
+	long long dialog_answer = minmax(0,500,dlog.getResult<long long>()-1);
 	
 	univ.party.age = (long long) (3700) * (long long) (dialog_answer);
 }

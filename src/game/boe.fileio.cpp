@@ -71,22 +71,31 @@ void finish_load_party(){
 		return;
 	}
 	
-	// Saved creatures may not have had their monster attributes saved
+	// Saved creatures and town.monst may not have had their monster attributes saved
 	// Make sure that they know what they are!
 	// Cast to cMonster base class and assign, to avoid clobbering other attributes
-	for(auto& pop : univ.party.creature_save) {
+	bool found_some_bad_monster=false;
+	for (size_t j=0; j<=univ.party.creature_save.size(); ++j) {
+		auto &pop = j<univ.party.creature_save.size() ? univ.party.creature_save[j] : univ.town.monst;
+		std::vector<size_t> bad_monster;
 		for(size_t i = 0; i < pop.size(); i++) {
 			int number = pop[i].number;
+			if (number<0 || number>=univ.scenario.scen_monsters.size()) {
+				bad_monster.push_back(i);
+				continue;
+			}
 			cMonster& monst = pop[i];
 			monst = univ.scenario.scen_monsters[number];
 		}
+		if (bad_monster.empty()) continue;
+		// now remove the creatures that clearly are not from this scenario
+		found_some_bad_monster=true;
+		for (auto it=bad_monster.rbegin(); it!=bad_monster.rend(); ++it)
+			pop.removeCreature(*it);
 	}
-	for(size_t j = 0; j < univ.town.monst.size(); j++) {
-		int number = univ.town.monst[j].number;
-		cMonster& monst = univ.town.monst[j];
-		monst = univ.scenario.scen_monsters[number];
-	}
-	
+	if (found_some_bad_monster)
+		showWarning("Found some unexistent monsters in the saved game, I tried to repair the save (but it may be better to use another save).");
+
 	// if at this point, startup must be over, so make this call to make sure we're ready,
 	// graphics wise
 	end_startup();

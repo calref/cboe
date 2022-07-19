@@ -2392,7 +2392,7 @@ void general_spec(const runtime_state& ctx) {
 					univ.get_buf() += univ.party[pc].name;
 				else if(!is_out())
 					univ.get_buf() += univ.town.monst[pc - 100].m_name;
-			} else univ.get_buf() += univ.scenario.scen_monsters[spec.ex1a].m_name;
+			} else univ.get_buf() += univ.scenario.get_monster(spec.ex1a).m_name;
 			break;
 		case eSpecType::APPEND_ITEM:
 			if(spec.pic) univ.get_buf() += ' ';

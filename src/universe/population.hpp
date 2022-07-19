@@ -35,7 +35,8 @@ public:
 	void clear() {dudes.clear();}
 	cCreature& operator[](size_t n);
 	const cCreature& operator[](size_t n) const;
-	// ASAN hostile copied but unset
+	// remove the n^th creature from the list by swapping it with the last dude and then pop_back it
+	void removeCreature(size_t n);
 	cPopulation() : which_town(200), hostile(false) {}
 	iterator begin() {return iterator(dudes.begin());}
 	iterator end() {return iterator(dudes.end());}

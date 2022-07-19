@@ -63,7 +63,7 @@ void put_item_info(cDialog& me, const cItem& s_i, const cScenario& scen) {
 		} else {
 			std::string abil = s_i.getAbilName();
 			if(s_i.ability == eItemAbil::SUMMONING || s_i.ability == eItemAbil::MASS_SUMMONING)
-				abil.replace(abil.find("%s"), 2, scen.scen_monsters[s_i.abil_data[1]].m_name);
+				abil.replace(abil.find("%s"), 2, scen.get_monster(s_i.abil_data[1]).m_name);
 			me["abil"].setText(abil);
 		}
 	}
@@ -153,7 +153,7 @@ void put_monst_info(cDialog& me, const cMonster& store_m, const cScenario& scen)
 		std::string id = "abil" + std::to_string(i);
 		std::string name = abil.second.to_string(abil.first);
 		if(abil.first == eMonstAbil::SUMMON && abil.second.summon.type == eMonstSummon::TYPE)
-			name.replace(name.find("%s"), 2, scen.scen_monsters[abil.second.summon.what].m_name);
+			name.replace(name.find("%s"), 2, scen.get_monster(abil.second.summon.what).m_name);
 		me[id].setText(name);
 		i++;
 	}

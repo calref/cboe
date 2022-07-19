@@ -1134,7 +1134,7 @@ void cCustomUpdateState::check_monst(cUniverse &univers, cMonster & monst) {
 				break;
 			case eMonstAbilCat::SUMMON:
 				if(abil.second.summon.type == eMonstSummon::TYPE)
-					check_monst(univers, univers.scenario.scen_monsters[abil.second.summon.what]);
+					check_monst(univers, univers.scenario.get_monster(abil.second.summon.what));
 				break;
 			case eMonstAbilCat::RADIATE:
 			case eMonstAbilCat::SPECIAL:
@@ -1155,8 +1155,8 @@ void cCustomUpdateState::check_item(cUniverse &universe, cItem& item) {
 	if(item.ability == eItemAbil::SUMMONING || item.ability == eItemAbil::MASS_SUMMONING) {
 		mon_num_t monst = item.abil_data[1];
 		if(monst >= 10000)
-			check_monst(universe, universe.party.summons[monst - 10000]);
-		else check_monst(universe, universe.scenario.scen_monsters[monst]);
+			check_monst(universe, universe.party.get_summon(monst - 10000));
+		else check_monst(universe, universe.scenario.get_monster(monst));
 	}
 	if(item.variety == eItemType::ARROW || item.variety == eItemType::BOLTS || item.variety == eItemType::MISSILE_NO_AMMO || item.variety == eItemType::THROWN_MISSILE)
 		insert_missile_pict(item.missile);
@@ -1189,7 +1189,7 @@ void cUniverse::exportGraphics() {
 		if(monst > 0 && monst < scenario.scen_monsters.size())
 			state.check_monst(*this, scenario.scen_monsters[monst]);
 		else if(monst >= 10000 && monst - 10000 < party.summons.size())
-			state.check_monst(*this, party.summons[monst - 10000]);
+			state.check_monst(*this, party.get_summon(monst - 10000));
 	}
 	// And then, just add all the graphics, and update references to them
 	for(auto const &pic : state.pcs) {
@@ -1267,7 +1267,7 @@ void cUniverse::exportSummons() {
 	while(!last_check.empty()) {
 		mon_num_t monst = last_check.top();
 		last_check.pop();
-		cMonster& what = scenario.scen_monsters[monst];
+		cMonster& what = scenario.get_monster(monst);
 		if(what.abil[eMonstAbil::SUMMON].active && what.abil[eMonstAbil::SUMMON].summon.type == eMonstSummon::TYPE) {
 			mon_num_t summon = what.abil[eMonstAbil::SUMMON].summon.what;
 			if(summon >= 10000)
@@ -1290,8 +1290,8 @@ void cUniverse::exportSummons() {
 		while(used_monsters.count(++dest));
 		used_monsters.insert(dest);
 		if(dest < party.summons.size())
-			party.summons[dest] = scenario.scen_monsters[monst];
-		else party.summons.push_back(scenario.scen_monsters[monst]);
+			party.summons[dest] = scenario.get_monster(monst);
+		else party.summons.push_back(scenario.get_monster(monst));
 		for(auto& item : update_items[monst])
 			item->abil_data[1] = 10000 + dest;
 		for(mon_num_t& sc : party.imprisoned_monst)
@@ -1361,14 +1361,16 @@ void cUniverse::enter_scenario(const std::string& name) {
 	}
 	party.in_boat = -1;
 	party.in_horse = -1;
-	for(auto& pop : party.creature_save)
+	for(auto& pop : party.creature_save) {
+		pop.clear();
 		pop.which_town = 200;
+	}
 	for(short i = 0; i < 10; i++)
 		party.out_c[i].exists = false;
 	party.store_limited_stock.clear();
 	party.magic_store_items.clear();
-	// TODO: Now uncertain if the journal should really persist
-//	univ.party.journal.clear();
+	
+	party.journal.clear();
 	party.special_notes.clear();
 	party.talk_save.clear();
 	// reset the scried monster

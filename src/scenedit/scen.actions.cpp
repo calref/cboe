@@ -285,8 +285,8 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						for(; j < scenario.scen_monsters.size(); j++)
 							scenario.scen_monsters[j].m_name = "New Monster";
 					} else {
-						scenario.scen_monsters[j] = cMonster();
-						scenario.scen_monsters[j].m_name = "Unused Monster";
+						scenario.get_monster(j) = cMonster();
+						scenario.get_monster(j).m_name = "Unused Monster";
 					}
 				} else {
 					if(j == size_before) {
@@ -814,10 +814,10 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 						return who.number == 0;
 					});
 					if(iter != town->creatures.end()) {
-						*iter = {spot_hit, static_cast<mon_num_t>(mode_count), scenario.scen_monsters[mode_count]};
+						*iter = {spot_hit, static_cast<mon_num_t>(mode_count), scenario.get_monster(mode_count)};
 						last_placed_monst = *iter;
 					} else { // Placement failed
-						town->creatures.push_back({spot_hit, static_cast<mon_num_t>(mode_count), scenario.scen_monsters[mode_count]});
+						town->creatures.push_back({spot_hit, static_cast<mon_num_t>(mode_count), scenario.get_monster(mode_count)});
 						last_placed_monst = town->creatures.back();
 					}
 				}
@@ -1146,11 +1146,11 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 						set_string("Place the item:",scenario.get_item(mode_count).full_name);
 						break;
 					case DRAW_MONST:
-						if(k + 1 >= scenario.scen_monsters.size())
+						if(k + 1 < 0 || k + 1 >= scenario.scen_monsters.size())
 							break;
 						overall_mode = MODE_PLACE_CREATURE;
 						mode_count = k + 1;
-						set_string("Place the monster:",scenario.scen_monsters[mode_count].m_name);
+						set_string("Place the monster:",scenario.get_monster(mode_count).m_name);
 						break;
 				}
 			}
@@ -2575,9 +2575,9 @@ bool monst_on_space(location loc,short m_num) {
 	if(town->creatures[m_num].number == 0)
 		return false;
 	if((loc.x - town->creatures[m_num].start_loc.x >= 0) &&
-		(loc.x - town->creatures[m_num].start_loc.x <= scenario.scen_monsters[town->creatures[m_num].number].x_width - 1) &&
+		(loc.x - town->creatures[m_num].start_loc.x <= scenario.get_monster(town->creatures[m_num].number).x_width - 1) &&
 		(loc.y - town->creatures[m_num].start_loc.y >= 0) &&
-		(loc.y - town->creatures[m_num].start_loc.y <= scenario.scen_monsters[town->creatures[m_num].number].y_width - 1))
+		(loc.y - town->creatures[m_num].start_loc.y <= scenario.get_monster(town->creatures[m_num].number).y_width - 1))
 		return true;
 	return false;
 	

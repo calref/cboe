@@ -335,7 +335,7 @@ void set_town_attitude(short lo,short hi,eAttitude att) {
 				univ.town.monst.hostile = true;
 				univ.town.monst[i].mobility = 1;
 				// If a "guard", give a power boost
-				if(univ.scenario.scen_monsters[num].guard) {
+				if(univ.scenario.get_monster(num).guard) {
 					univ.town.monst[i].active = 2;
 					univ.town.monst[i].health *= 3;
 					univ.town.monst[i].status[eStatus::HASTE_SLOW] = 8;
@@ -681,8 +681,8 @@ void place_glands(location where,mon_num_t m_type) {
 	cMonster monst;
 	
 	if(m_type >= 10000)
-		monst = univ.party.summons[m_type - 10000];
-	else monst = univ.scenario.scen_monsters[m_type];
+		monst = univ.party.get_summon(m_type - 10000);
+	else monst = univ.scenario.get_monster(m_type);
 	
 	if(monst.corpse_item >= 0 && monst.corpse_item < univ.scenario.scen_items.size() && get_ran(1,1,100) < monst.corpse_item_chance)
 		place_item(univ.get_item(monst.corpse_item),where);

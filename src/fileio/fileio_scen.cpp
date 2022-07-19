@@ -1429,10 +1429,11 @@ void readMonstersFromXml(ticpp::Document&& data, cScenario& scenario) {
 		elem->GetAttribute("id", &which_monst);
 		if(which_monst == 0)
 			throw xBadVal(type, "id", "0", elem->Row(), elem->Column(), fname);
-		if(which_monst >= scenario.scen_monsters.size())
+		if(which_monst >= scenario.scen_monsters.size() && which_monst<5000)
 			scenario.scen_monsters.resize(which_monst + 1);
-		cMonster& the_mon = scenario.scen_monsters[which_monst];
+		cMonster& the_mon = scenario.get_monster(which_monst);
 		the_mon = cMonster();
+		the_mon.default_facial_pic = -1;
 		std::set<std::string> reqs = {
 			"name", "level", "armor", "skill", "hp", "speed",
 			"race", "attacks", "pic", "attitude", "immunity",
