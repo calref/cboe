@@ -61,7 +61,6 @@ extern short num_targets_left;
 extern location spell_targets[8];
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
-extern sf::Texture bg_gworld;
 extern const rectangle sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern rectangle startup_top;
 extern rectangle talk_area_rect, word_place_rect;

@@ -41,7 +41,6 @@ extern eScenMode overall_mode;
 eDrawMode draw_mode = DRAW_TERRAIN;
 extern bool editing_town;
 extern cScenario scenario;
-extern sf::Texture bg_gworld;
 
 short mini_map_scales[3] = {12, 6, 4};
 extern location cur_out, mouse_spot;
