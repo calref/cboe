@@ -8,6 +8,7 @@
 
 #include "scenario.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <string>
 #include <vector>
@@ -430,96 +431,26 @@ void cScenario::import_legacy(legacy::scen_item_data_type const &old){
 
 	scen_items.resize(400);
 	StringList strings = *ResMgr::strings.get("legacy-items-desc");
-	static eItemType const legacyTypes[399]={
-		eItemType::GOLD, eItemType::FOOD, eItemType::FOOD, eItemType::FOOD, eItemType::PANTS,
-		eItemType::PANTS, eItemType::ARMOR, eItemType::ARMOR, eItemType::ARMOR, eItemType::THROWN_MISSILE,
-		eItemType::THROWN_MISSILE, eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT,
-		eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT, eItemType::TOOL, eItemType::TOOL, eItemType::NON_USE_OBJECT,
-		eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT,
-		eItemType::TOOL, eItemType::TOOL, eItemType::SCROLL, eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT,
-		eItemType::ARMOR, eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED,
-		eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED,
-		eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED,
-		eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::TWO_HANDED, eItemType::TWO_HANDED,
-		eItemType::TWO_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED,
-		eItemType::TWO_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED,
-		eItemType::TWO_HANDED, eItemType::TWO_HANDED, eItemType::TWO_HANDED, eItemType::TWO_HANDED, eItemType::ONE_HANDED,
-		eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::ONE_HANDED,
-		eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::TWO_HANDED,
-		eItemType::TWO_HANDED, eItemType::TWO_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED,
-		eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED,
-		eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::TWO_HANDED, eItemType::TWO_HANDED, eItemType::TWO_HANDED,
-		eItemType::TWO_HANDED, eItemType::TWO_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED,
-		eItemType::ONE_HANDED, eItemType::THROWN_MISSILE, eItemType::THROWN_MISSILE, eItemType::THROWN_MISSILE, eItemType::THROWN_MISSILE,
-		eItemType::THROWN_MISSILE, eItemType::THROWN_MISSILE, eItemType::THROWN_MISSILE, eItemType::ARROW, eItemType::ARROW,
-		eItemType::ARROW, eItemType::THROWN_MISSILE, eItemType::THROWN_MISSILE, eItemType::BOW, eItemType::BOW,
-		eItemType::BOW, eItemType::BOW, eItemType::CROSSBOW, eItemType::CROSSBOW, eItemType::CROSSBOW,
-		eItemType::BOLTS, eItemType::BOLTS, eItemType::BOLTS, eItemType::MISSILE_NO_AMMO, eItemType::MISSILE_NO_AMMO,
-		eItemType::ARMOR, eItemType::ARMOR, eItemType::ARMOR, eItemType::ARMOR, eItemType::ARMOR,
-		eItemType::ARMOR, eItemType::ARMOR, eItemType::ARMOR, eItemType::ARMOR, eItemType::ARMOR,
-		eItemType::ARMOR, eItemType::ARMOR, eItemType::ARMOR, eItemType::ARMOR, eItemType::ARMOR,
-		eItemType::ARMOR, eItemType::ARMOR, eItemType::ARMOR, eItemType::ARMOR, eItemType::SHIELD,
-		eItemType::SHIELD, eItemType::SHIELD, eItemType::SHIELD, eItemType::SHIELD, eItemType::SHIELD,
-		eItemType::SHIELD, eItemType::SHIELD, eItemType::SHIELD, eItemType::SHIELD, eItemType::SHIELD,
-		eItemType::SHIELD, eItemType::SHIELD, eItemType::SHIELD, eItemType::SHIELD, eItemType::HELM,
-		eItemType::HELM, eItemType::HELM, eItemType::HELM, eItemType::HELM, eItemType::HELM,
-		eItemType::HELM, eItemType::HELM, eItemType::HELM, eItemType::HELM, eItemType::GLOVES,
-		eItemType::GLOVES, eItemType::GLOVES, eItemType::GLOVES, eItemType::GLOVES, eItemType::BOOTS,
-		eItemType::BOOTS, eItemType::TOOL, eItemType::WEAPON_POISON, eItemType::WEAPON_POISON, eItemType::WEAPON_POISON,
-		eItemType::WEAPON_POISON, eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT, eItemType::TOOL, eItemType::TOOL,
-		eItemType::SCROLL, eItemType::NON_USE_OBJECT, eItemType::POTION, eItemType::SCROLL, eItemType::SCROLL,
-		eItemType::SCROLL, eItemType::POTION, eItemType::SCROLL, eItemType::SCROLL, eItemType::POTION,
-		eItemType::POTION, eItemType::POTION, eItemType::SCROLL, eItemType::SCROLL, eItemType::SCROLL,
-		eItemType::POTION, eItemType::SCROLL, eItemType::SCROLL, eItemType::SCROLL, eItemType::SCROLL,
-		eItemType::SCROLL, eItemType::SCROLL, eItemType::SCROLL, eItemType::SCROLL, eItemType::SCROLL,
-		eItemType::SCROLL, eItemType::SCROLL, eItemType::SCROLL, eItemType::SCROLL, eItemType::WAND,
-		eItemType::WAND, eItemType::POTION, eItemType::POTION, eItemType::POTION, eItemType::POTION,
-		eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT, eItemType::HELM, eItemType::HELM, eItemType::HELM,
-		eItemType::HELM, eItemType::HELM, eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT,
-		eItemType::NON_USE_OBJECT, eItemType::GLOVES, eItemType::GLOVES, eItemType::GLOVES, eItemType::GLOVES,
-		eItemType::GLOVES, eItemType::GLOVES, eItemType::BOOTS, eItemType::BOOTS, eItemType::BOOTS,
-		eItemType::BOOTS, eItemType::BOOTS, eItemType::SHIELD, eItemType::SHIELD, eItemType::SHIELD,
-		eItemType::SHIELD, eItemType::SHIELD, eItemType::SHIELD, eItemType::SHIELD, eItemType::SHIELD,
-		eItemType::SHIELD, eItemType::POTION, eItemType::POTION, eItemType::POTION, eItemType::POTION,
-		eItemType::POTION, eItemType::POTION, eItemType::POTION, eItemType::POTION, eItemType::POTION,
-		eItemType::POTION, eItemType::POTION, eItemType::POTION, eItemType::POTION, eItemType::POTION,
-		eItemType::POTION, eItemType::POTION, eItemType::POTION, eItemType::POTION, eItemType::POTION,
-		eItemType::POTION, eItemType::POTION, eItemType::POTION, eItemType::POTION, eItemType::POTION,
-		eItemType::POTION, eItemType::POTION, eItemType::POTION, eItemType::THROWN_MISSILE, eItemType::THROWN_MISSILE,
-		eItemType::ARROW, eItemType::ARROW, eItemType::ARROW, eItemType::ARROW, eItemType::ARROW,
-		eItemType::BOW, eItemType::BOW, eItemType::THROWN_MISSILE, eItemType::WAND, eItemType::WAND,
-		eItemType::WAND, eItemType::WAND, eItemType::WAND, eItemType::WAND, eItemType::WAND,
-		eItemType::WAND, eItemType::WAND, eItemType::WAND, eItemType::RING, eItemType::RING,
-		eItemType::RING, eItemType::RING, eItemType::RING, eItemType::RING, eItemType::RING,
-		eItemType::RING, eItemType::RING, eItemType::RING, eItemType::RING, eItemType::RING,
-		eItemType::RING, eItemType::RING, eItemType::RING, eItemType::RING, eItemType::RING,
-		eItemType::RING, eItemType::RING, eItemType::RING, eItemType::RING, eItemType::RING,
-		eItemType::RING, eItemType::RING, eItemType::RING, eItemType::RING, eItemType::NECKLACE,
-		eItemType::NECKLACE, eItemType::NECKLACE, eItemType::NECKLACE, eItemType::NECKLACE, eItemType::NECKLACE,
-		eItemType::NECKLACE, eItemType::NECKLACE, eItemType::NECKLACE, eItemType::NECKLACE, eItemType::NECKLACE,
-		eItemType::NECKLACE, eItemType::NECKLACE, eItemType::NECKLACE, eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT,
-		eItemType::POTION, eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT, eItemType::SCROLL, eItemType::SCROLL,
-		eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::ONE_HANDED,
-		eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT,
-		eItemType::SCROLL, eItemType::SCROLL, eItemType::POTION, eItemType::RING, eItemType::RING,
-		eItemType::NECKLACE, eItemType::WAND, eItemType::WAND, eItemType::HELM, eItemType::SHIELD,
-		eItemType::ONE_HANDED, eItemType::SHIELD, eItemType::RING, eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT,
-		eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT,
-		eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT, eItemType::ONE_HANDED, eItemType::ONE_HANDED, eItemType::TWO_HANDED,
-		eItemType::ONE_HANDED, eItemType::SHIELD, eItemType::ONE_HANDED, eItemType::RING, eItemType::TWO_HANDED,
-		eItemType::NON_USE_OBJECT, eItemType::NON_USE_OBJECT, eItemType::ONE_HANDED, eItemType::ARMOR, eItemType::PANTS,
-		eItemType::FOOD, eItemType::FOOD, eItemType::SCROLL, eItemType::NON_USE_OBJECT,
-	};
+	std::map<std::string, std::string> fullNameToDesc;
+	for (auto const &str : strings) {
+		auto split = str.find('|');
+		if (split == std::string::npos)
+			continue;
+		std::string name=str.substr(0,split);
+		std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c){ return std::tolower(c); });
+		fullNameToDesc[name] = str.substr(split+1);
+	}
 	for(size_t i = 0; i < 400; i++) {
 		scen_items[i].import_legacy(old.scen_items[i]);
-		if (i>=399 || scen_items[i].variety!=legacyTypes[i]) // check with legacy type
-			continue;
-		if (i>=strings.size())
+		std::string name=scen_items[i].full_name+(scen_items[i].cursed ? "_cursed" : scen_items[i].magic ? "_magic" : "");
+		std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c){ return std::tolower(c); });
+		auto const &descIt=fullNameToDesc.find(name);
+		if (descIt==fullNameToDesc.end())
 			continue;
 		if (!scen_items[i].desc.empty())
-			scen_items[i].desc=strings[i]+" ("+scen_items[i].desc+")";
+			scen_items[i].desc=descIt->second+" ("+scen_items[i].desc+")";
 		else
-			scen_items[i].desc=strings[i];
+			scen_items[i].desc=descIt->second;
 	}
 	for(short i = 0; i < 256; i++) {
 		scen_monsters[i].m_name = old.monst_names[i];

@@ -1200,10 +1200,9 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		set_pref("RepeatRoomDescriptions", dynamic_cast<cLed&>(me["repeatdesc"]).getState() != led_off);
 		set_pref("ShowInstantHelp", dynamic_cast<cLed&>(me["nohelp"]).getState() == led_off);
 		
-		if(overall_mode == MODE_STARTUP && !party_in_memory) {
-			set_pref("EasyMode", dynamic_cast<cLed&>(me["easier"]).getState() != led_off);
-			set_pref("LessWanderingMonsters", dynamic_cast<cLed&>(me["lesswm"]).getState() != led_off);
-		} else {
+		set_pref("EasyMode", dynamic_cast<cLed&>(me["easier"]).getState() != led_off);
+		set_pref("LessWanderingMonsters", dynamic_cast<cLed&>(me["lesswm"]).getState() != led_off);
+		if (overall_mode != MODE_STARTUP && party_in_memory) {
 			univ.party.easy_mode = dynamic_cast<cLed&>(me["easier"]).getState() != led_off;
 			univ.party.less_wm = dynamic_cast<cLed&>(me["lesswm"]).getState() != led_off;
 		}
