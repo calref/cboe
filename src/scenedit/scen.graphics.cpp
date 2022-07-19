@@ -910,7 +910,7 @@ void draw_terrain(){
 	
 	else {
 		// fixme: the bounds are now correct and the scrolling must be fluid,
-		//        however, the procedure which displays is still bad
+		//        however, the select procedure is bad
 		tileImage(mainPtr, terrain_rect,bg[17]);
 		frame_rect(mainPtr, terrain_rect, sf::Color::Black);
 		// Width available:  64 4x4 tiles, 42 6x6 tiles, or 21 12x12 tiles -- 256 pixels
@@ -929,6 +929,8 @@ void draw_terrain(){
 			xMin=std::max(0, xMax-xNumTiles);
 			cen_x=xMin+(xNumTiles/2);
 		}
+		if (xMax-xMin!=xNumTiles)
+			cen_x=(xNumTiles/2)-xMin;
 		int const yNumTiles=(324 / size);
 		int yMin = cen_y-(yNumTiles/2), yMax = yMin+yNumTiles;
 		if (yMin<0) {
@@ -941,6 +943,8 @@ void draw_terrain(){
 			yMin=std::max(0, yMax-yNumTiles);
 			cen_y=yMin+(yNumTiles/2);
 		}
+		if (yMax-yMin!=yNumTiles)
+			cen_y=(yNumTiles/2);
 		for(short q = xMin; q < xMax; q++)
 			for(short r = yMin; r < yMax; r++) {
 				if(q < 0 || q >= max_dim || r < 0 || r >= max_dim)
@@ -1207,9 +1211,16 @@ void place_location() {
 					break;
 				}
 			}
-		} else if(mouse.in(terrain_rect) && mouse_spot.x >= 0)
-			sout << "Under mouse: x = " << (cen_x - 4 + mouse_spot.x)
-				<< ", y = " << (cen_y - 4 + mouse_spot.y);
+		} else if(mouse.in(terrain_rect) && mouse_spot.x >= 0) {
+			if(cur_viewing_mode <= 0 || cur_viewing_mode>=4)
+				sout << "Under mouse: x = " << (cen_x - 4 + mouse_spot.x)
+					<< ", y = " << (cen_y - 4 + mouse_spot.y);
+			else {
+				short const &scale = mini_map_scales[cur_viewing_mode - 1];
+				sout << "Under mouse: x = " << (cen_x-256/scale/2 + mouse_spot.x)
+					<< ", y = " << (cen_y-324/scale/2 + mouse_spot.y);
+			}
+		}
 		if(sout.str().empty())
 			sout << "Center: x = " << cen_x << ", y = " << cen_y;
 	} else {
