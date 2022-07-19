@@ -463,7 +463,8 @@ void cTownperson::import_legacy(legacy::creature_start_type const &old){
 	facial_pic = old.facial_pic;
 	if(facial_pic == 0)
 		facial_pic = NO_PIC;
-	else facial_pic--;
+	else if (facial_pic<1000) // facial_pic>=1000 corresponds to 2x1 custom graphic
+		facial_pic--;
 }
 
 std::ostream& operator<<(std::ostream& out, const cMonster::cAttack& att) {

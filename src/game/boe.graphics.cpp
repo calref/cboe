@@ -124,8 +124,6 @@ char spot_seen[9][9];
 char anim_str[60];
 location anim_str_loc;
 
-extern tessel_ref_t bw_pats[6];
-
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 bool supressing_some_spaces = false;
 location ok_space[4] = {loc(),loc(),loc(),loc()};
