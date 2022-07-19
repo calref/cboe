@@ -374,7 +374,7 @@ void draw_fields(location where){
 		Draw_Some_Item(fields_gworld,calc_rect(6,1),terrain_screen_gworld,where_draw,1,0);
 	if(univ.town.is_block(fields))
 		Draw_Some_Item(fields_gworld,calc_rect(3,0),terrain_screen_gworld,where_draw,1,0);
-	if(univ.town.is_spot(fields))
+	if(!is_combat() && univ.town.is_spot(fields))
 		Draw_Some_Item(fields_gworld,calc_rect(4,0),terrain_screen_gworld,where_draw,1,0);
 	if(univ.town.is_web(fields))
 		Draw_Some_Item(fields_gworld,calc_rect(5,0),terrain_screen_gworld,where_draw,1,0);

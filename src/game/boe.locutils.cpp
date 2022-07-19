@@ -144,6 +144,8 @@ bool loc_off_world(location p1) {
 }
 
 bool loc_off_act_area(location p1) {
+	if (is_out())
+		return p1.x < 0 || p1.x >= 48 || p1.y < 0 || p1.y >= 48;
 	if (!univ.town->is_on_map(p1)) return true;
 	if((p1.x > univ.town->in_town_rect.left) && (p1.x < univ.town->in_town_rect.right) &&
 		(p1.y > univ.town->in_town_rect.top) && (p1.y < univ.town->in_town_rect.bottom))
