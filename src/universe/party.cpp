@@ -640,10 +640,10 @@ bool cParty::forced_give(cItem item,eItemAbil abil,short dat) {
 		item.abil_strength = dat / 1000;
 		item.abil_data.value = dat % 1000;
 	}
-	// TODO: It's strange to check main_status in the inner loop here rather than the outer loop
-	for(cPlayer& pc : *this)
+	for(cPlayer& pc : *this) {
+		if(pc.main_status != eMainStatus::ALIVE) continue;
 		for(cItem& slot : pc.items)
-			if(pc.main_status == eMainStatus::ALIVE && slot.variety == eItemType::NO_ITEM) {
+			if(slot.variety == eItemType::NO_ITEM) {
 				slot = item;
 				
 				if(print_result) {
@@ -659,6 +659,7 @@ bool cParty::forced_give(cItem item,eItemAbil abil,short dat) {
 				pc.sort_items();
 				return true;
 			}
+	}
 	return false;
 }
 
