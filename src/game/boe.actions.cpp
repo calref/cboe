@@ -76,7 +76,6 @@ extern cShop active_shop;
 extern short cen_x, cen_y;//,pc_moves[6];
 extern eGameMode overall_mode;
 extern eItemWinMode stat_window;
-extern location	to_create;
 extern bool All_Done,spell_forced,monsters_going;
 extern bool party_in_memory;
 extern sf::View mainView;

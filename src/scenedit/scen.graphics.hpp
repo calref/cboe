@@ -3,15 +3,10 @@
 #include "fields.hpp"
 #include "location.hpp"
 
-void Set_up_win ();
 void run_startup_g();
 void load_graphics();
 void draw_main_screen();
 void redraw_screen();
-void draw_lb();
-void draw_lb_slot (short which,short mode) ;
-void draw_rb();
-void draw_rb_slot (short which,short mode) ;
 void set_up_terrain_buttons(bool reset);
 void draw_terrain();
 void draw_monsts();
