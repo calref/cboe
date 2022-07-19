@@ -68,7 +68,7 @@ void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlot
 		Texture sheet0;
 		std::tie(sheet0,std::ignore) = find_graphic(dest,true);
 		float scale[2]={float(sheet0->getSize().x)/sheet0.dimension.x, float(sheet0->getSize().y)/sheet0.dimension.y};
-		
+		// create an empty sheet 10 columns, 5 rows
 		sf::Image empty;
 		empty.create(int(280*scale[0]), int(180*scale[1]), sf::Color::Transparent);
 		sf::Texture sheet;
@@ -78,7 +78,7 @@ void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlot
 		party_sheet.dimension={280,180};
 		numSheets = 1;
 	}
-	size_t havePics = count();
+	size_t havePics = count(true);
 	if(havePics < dest + numSlots) {
 		int addRows = 1;
 		while(havePics + 10 * addRows < dest + numSlots)
