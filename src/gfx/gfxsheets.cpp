@@ -109,7 +109,11 @@ void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlot
 		rect_draw_some_item(from_sheet, from_rect, temp,
 							to_rect.rescale(to_sheet.dimension, to_sheet->getSize()));
 	}
-	if (last_src) *last_src=sf::Texture(temp.getTexture());
+	if (last_src) {
+		// checkme: adding a call to display() seems to resolve a upside down problem
+		temp.display();
+		*last_src=sf::Texture(temp.getTexture());
+	}
 }
 
 extern std::string scenario_temp_dir_name;
