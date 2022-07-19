@@ -49,11 +49,12 @@ size_t cCustomGraphics::count(bool party) {
 	else if(party && !party_sheet) return 0;
 	else if(is_old || party) {
 		rectangle bounds(party ? party_sheet : sheets[0]);
-		if(bounds.width() < 280) return bounds.width() / 28;
+		// let assume that each row have 10 element, even if(bounds.width() < 280)
 		return 10 * bounds.height() / 36;
 	} else {
 		size_t count = 100 * (numSheets - 1);
 		rectangle bounds(sheets[numSheets - 1]);
+		// CHECKME: we probably want to assume that each row have 10 elements
 		if(bounds.width() < 280) count += bounds.width() / 28;
 		else count += 10 * bounds.height() / 36;
 		return count;
@@ -125,9 +126,9 @@ void cCustomGraphics::convert_sheets() {
 	fs::path pic_dir = tempDir/scenario_temp_dir_name/"graphics";
 	for(size_t i = 0; i < numSheets; i++) {
 		sf::IntRect subrect;
-		subrect.top = i * 280;
-		subrect.width = 280;
-		subrect.height = 360;
+		subrect.top = i * 360;
+		subrect.width = std::min(280, int(old_graph.getSize().x));
+		subrect.height = std::min(360, int(old_graph.getSize().y-i*360));
 		
 		sf::Image sheet;
 		sheet.create(280, 360);
