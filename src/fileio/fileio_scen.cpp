@@ -2521,7 +2521,7 @@ void load_spec_graphics_v1(fs::path scen_file) {
 }
 
 void load_spec_graphics_v2(int num_sheets) {
-	spec_scen_g.clear();
+	spec_scen_g.sheets.clear(); // we must not clear the party sheet here
 	if(num_sheets > 0) {
 		spec_scen_g.sheets.resize(num_sheets);
 		spec_scen_g.numSheets = num_sheets;

@@ -399,7 +399,8 @@ bool cCurTown::set_force_wall(short x, short y, bool b){
 	if(b){ // If certain things are on space, there's no room for field.
 		if(is_impassable(x,y))
 			return false;
-		if(is_antimagic(x,y) || is_blade_wall(x,y) || is_quickfire(x,y))
+		// checkme: do we really want to change the comportement of quickfire in new game
+		if(is_antimagic(x,y) || is_blade_wall(x,y) || (!univ.scenario.is_legacy && is_quickfire(x,y)))
 			return false;
 		if(is_crate(x,y) || is_barrel(x,y) || is_fire_barr(x,y) || is_force_barr(x,y))
 			return false;
@@ -1196,7 +1197,7 @@ pic_num_t cUniverse::addGraphic(pic_num_t pic, ePicType type) {
 	// And finally, actually transfer the graphic over
 	spec_scen_g.copy_graphic(pos, pic, needSlots);
 	// Also mark these slots used so we don't overwrite them with the next copy
-	for(pic_num_t i = 1; i < needSlots; i++) {
+	for(pic_num_t i = 0; i < needSlots; i++) {
 		used_graphics.insert(pos + i);
 	}
 	return pos;
@@ -1219,15 +1220,12 @@ void cUniverse::exportGraphics() {
 				used_graphics.insert(party[i].which_graphic - 10000 + j);
 		} else if(party[i].which_graphic >= 1000)
 			update_pcs[party[i].which_graphic - 1000].insert(&party[i]);
-		for(size_t j = 0; j < party[i].items.size(); j++) {
-			check_item(party[i].items[j]);
-		}
+		for (auto &item : party[i].items)
+			check_item(item);
 	}
-	for(size_t i = 0; i < party.stored_items.size(); i++) {
-		for(size_t j = 0; j < party.stored_items[i].size(); j++) {
-			check_item(party.stored_items[i][j]);
-		}
-	}
+	for (auto &items : party.stored_items)
+		for (auto &item : items)
+			check_item(item);
 	for(mon_num_t monst : party.imprisoned_monst) {
 		if(monst > 0 && monst < scenario.scen_monsters.size())
 			check_monst(scenario.scen_monsters[monst]);
