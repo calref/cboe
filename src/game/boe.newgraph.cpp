@@ -1002,7 +1002,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	// Finally place processed graphics
 	mainPtr.setActive();
 	rect_draw_some_item(talk_gworld.getTexture(),oldRect,mainPtr,talk_area_rect);
-	// I have no idea what this check is for; I'm jsut preserving it in case it was important
+	// I have no idea what this check is for; I'm just preserving it in case it was important
 	if(c_rect.right == 0) place_talk_face();
 }
 
