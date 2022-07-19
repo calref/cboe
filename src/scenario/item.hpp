@@ -100,6 +100,7 @@ public:
 	static cItem bad() {
 		cItem badItem;
 		badItem.graphic_num = 9999;
+		badItem.name = badItem.full_name = "Bad Item";
 		return badItem;
 	}
 };

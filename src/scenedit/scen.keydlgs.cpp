@@ -25,10 +25,9 @@
 
 extern short cen_x, cen_y;
 extern short cur_viewing_mode;
-extern cTown* town;
-extern short mode_count,to_create;
-extern ter_num_t template_terrain[64][64];
 extern cScenario scenario;
+extern cTown* town;
+extern short mode_count;
 extern cOutdoors* current_terrain;
 extern cCustomGraphics spec_scen_g;
 

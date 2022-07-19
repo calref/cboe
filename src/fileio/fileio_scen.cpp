@@ -627,7 +627,7 @@ static void readShopFromXml(ticpp::Element& data, cShop& shop) {
 					entry->GetText(&num);
 					shop.addItem(num, dummy_item, amount, chance);
 				} else if(type == "special") {
-					int amount, node, cost = 0, icon;
+					int amount=0, node=-1, cost = 0, icon=-1;
 					std::string title, descr;
 					std::set<std::string> reqs = {"quantity", "node", "icon", "name", "description"};
 					Iterator<Element> attr;

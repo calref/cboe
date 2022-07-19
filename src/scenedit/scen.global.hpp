@@ -8,7 +8,6 @@ const int BITMAP_HEIGHT = 36;
 const int NUM_DLOG_B = 53;
 
 const int NLS = 26; // number of left slots for buttons
-#define	NRS	right_button_status.size() // number of right slots for scrolling list
 const int NRSONPAGE = 33; // number of right slots for scrolling list on page at 1 time
 
 const int RIGHT_AREA_UL_X = 287;

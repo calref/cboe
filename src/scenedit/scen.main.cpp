@@ -51,7 +51,6 @@ bool mouse_button_held = false,editing_town = false;
 short cur_viewing_mode = 0;
 short cen_x, cen_y;
 eScenMode overall_mode = MODE_INTRO_SCREEN;
-std::shared_ptr<cScrollbar> right_sbar, pal_sbar;
 short mode_count = 0;
 cOutdoors* current_terrain;
 
@@ -77,13 +76,10 @@ void pick_preferences();
 void save_prefs();
 
 cScenario scenario;
-rectangle right_sbar_rect;
-extern rectangle terrain_buttons_rect;
 
 extern void set_up_apple_events(int argc, char* argv[]);
 
 // TODO: these should be members of some global entity instead of being here
-std::unordered_map<std::string, std::shared_ptr <iEventListener>> event_listeners;
 cDrawableManager drawable_mgr;
 
 //Changed to ISO C specified argument and return type.
@@ -113,34 +109,6 @@ int main(int argc, char* argv[]) {
 		showFatalError("An unknown error occurred!");
 		throw;
 	}
-}
-
-static void init_sbar(std::shared_ptr<cScrollbar>& sbar, const std::string& name, rectangle rect, rectangle events_rect, int pgSz) {
-	sbar.reset(new cScrollbar(mainPtr));
-	sbar->setBounds(rect);
-	sbar->set_wheel_event_rect(events_rect);
-	sbar->setPageSize(pgSz);
-	sbar->hide();
-	
-	drawable_mgr.add_drawable(UI_LAYER_DEFAULT, name, sbar);
-	event_listeners[name] = std::dynamic_pointer_cast<iEventListener>(sbar);
-}
-
-static void init_scrollbars() {
-	right_sbar_rect.top = RIGHT_AREA_UL_Y - 1;
-	right_sbar_rect.left = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1 - 16;
-	right_sbar_rect.bottom = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT + 1;
-	right_sbar_rect.right = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1;
-	rectangle pal_sbar_rect = terrain_buttons_rect;
-	pal_sbar_rect.offset(RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
-	pal_sbar_rect.left = pal_sbar_rect.right - 16;
-	pal_sbar_rect.height() = 17 * 16;
-	
-	rectangle const right_sbar_event_rect { 5, 287, 405, 577 };
-	rectangle const pal_sbar_event_rect   { 5, 287, 279, 581 };
-		
-	init_sbar(right_sbar, "right_sbar", right_sbar_rect, right_sbar_event_rect, NRSONPAGE - 1);
-	init_sbar(pal_sbar, "pal_sbar", pal_sbar_rect, pal_sbar_event_rect, 16);
 }
 
 sf::FloatRect compute_viewport(const sf::RenderWindow & mainPtr, float ui_scale) {
@@ -219,13 +187,9 @@ void init_scened(int argc, char* argv[]) {
 		
 	cen_x = 18;
 	cen_y = 18;
-		
-	init_scrollbars();
-	init_lb();
-	init_rb();
 	
-	Set_up_win();
-	init_screen_locs();
+	scen_controls.init();
+	
 	load_graphics();
 	cDialog::init();
 	if(get_bool_pref("ShowStartupLogo", true))
@@ -297,11 +261,8 @@ void handle_events() {
 }
 
 void handle_one_event(const sf::Event& event) {
-	
-	// Check if any of the event listeners want this event.
-	for (auto& listener : event_listeners) {
-		if(listener.second->handle_event(event)) return;
-	}
+	if (scen_controls.handle_one_event(event))
+		return;
 	
 	switch(event.type) {
 		case sf::Event::KeyPressed:
@@ -350,6 +311,7 @@ void handle_menu_choice(eMenu item_hit) {
 	std::string helpDlog;
 	fs::path file_to_load;
 	cKey editKey = {true};
+	auto &controls=scen_controls;
 	switch(item_hit) {
 		case eMenu::NONE: return;
 		case eMenu::FILE_OPEN:
@@ -393,8 +355,8 @@ void handle_menu_choice(eMenu item_hit) {
 			if(!save_check("save-before-close"))
 				break;
 			overall_mode = MODE_INTRO_SCREEN;
-			right_sbar->hide();
-			pal_sbar->hide();
+			controls.show_right_bar(false);
+			controls.show_palette_bar(false);
 			shut_down_menus(0);
 			set_up_start_screen();
 			undo_list.clear();
@@ -475,15 +437,15 @@ void handle_menu_choice(eMenu item_hit) {
 			change_made = true;
 			break;
 		case eMenu::SCEN_SPECIALS:
-			right_sbar->setPosition(0);
+			controls.right_bar->setPosition(0);
 			start_special_editing(0,0);
 			break;
 		case eMenu::SCEN_TEXT:
-			right_sbar->setPosition(0);
+			controls.right_bar->setPosition(0);
 			start_string_editing(STRS_SCEN,0);
 			break;
 		case eMenu::SCEN_JOURNALS:
-			right_sbar->setPosition(0);
+			controls.right_bar->setPosition(0);
 			start_string_editing(STRS_JOURNAL,0);
 			break;
 		case eMenu::TOWN_IMPORT:
@@ -567,7 +529,7 @@ void handle_menu_choice(eMenu item_hit) {
 			change_made = true;
 			break;
 		case eMenu::TOWN_AREAS:
-			right_sbar->setPosition(0);
+			controls.right_bar->setPosition(0);
 			start_string_editing(STRS_TOWN_RECT,0);
 			break;
 		case eMenu::TOWN_ITEMS_RANDOM:
@@ -591,15 +553,15 @@ void handle_menu_choice(eMenu item_hit) {
 			change_made = true;
 			break;
 		case eMenu::TOWN_SPECIALS:
-			right_sbar->setPosition(0);
+			controls.right_bar->setPosition(0);
 			start_special_editing(2,0);
 			break;
 		case eMenu::TOWN_TEXT:
-			right_sbar->setPosition(0);
+			controls.right_bar->setPosition(0);
 			start_string_editing(STRS_TOWN,0);
 			break;
 		case eMenu::TOWN_SIGNS:
-			right_sbar->setPosition(0);
+			controls.right_bar->setPosition(0);
 			start_string_editing(STRS_TOWN_SIGN,0);
 			break;
 		case eMenu::TOWN_ADVANCED:
@@ -623,7 +585,7 @@ void handle_menu_choice(eMenu item_hit) {
 			change_made = true;
 			break;
 		case eMenu::OUT_AREAS:
-			right_sbar->setPosition(0);
+			controls.right_bar->setPosition(0);
 			start_string_editing(STRS_OUT_RECT,0);
 			break;
 		case eMenu::OUT_START:
@@ -631,15 +593,15 @@ void handle_menu_choice(eMenu item_hit) {
 			set_string("Select party starting location.","");
 			break;
 		case eMenu::OUT_SPECIALS:
-			right_sbar->setPosition(0);
+			controls.right_bar->setPosition(0);
 			start_special_editing(1,0);
 			break;
 		case eMenu::OUT_TEXT:
-			right_sbar->setPosition(0);
+			controls.right_bar->setPosition(0);
 			start_string_editing(STRS_OUT,0);
 			break;
 		case eMenu::OUT_SIGNS:
-			right_sbar->setPosition(0);
+			controls.right_bar->setPosition(0);
 			start_string_editing(STRS_OUT_SIGN,0);
 			break;
 		case eMenu::ABOUT:
