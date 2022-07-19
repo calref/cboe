@@ -1895,8 +1895,9 @@ void special_increase_age(long length, bool queue) {
 	univ.party.age = current_age;
 	auto party_timers = univ.party.party_event_timers;
 	for(short i = 0; i < party_timers.size(); i++) {
+		if(party_timers[i].time <= 0) continue; // empty timer
 		if(party_timers[i].time <= length) {
-			univ.party.age = long(age_before) + party_timers[i].time;
+			univ.party.age = age_before + party_timers[i].time;
 			auto which_type = party_timers[i].node_type;
 			bool need_redraw = false;
 			if(queue)
