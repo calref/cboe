@@ -381,13 +381,24 @@ static bool save_town_num(cDialog& me, std::string, eKeyMod) {
 	return true;
 }
 
+static bool check_range_and_update_town_name(cDialog& me,std::string id,bool losing,std::vector<cTown*> const &towns)
+{
+	if (!check_range_msg(me, id, losing, 0, long(towns.size())-1, "Town number", "")) {
+		me["name"].setText("");
+		return false;
+	}
+	int i = me["town"].getTextAsNum();
+	me["name"].setText((i>=0 && i<towns.size()) ? towns[i]->name : "");
+	return true;
+}
+
 short pick_town_num(std::string which_dlog,short def,cScenario& scenario) {
 	using namespace std::placeholders;
 	
 	cDialog town_dlg(which_dlog);
 	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
 	town_dlg["okay"].attachClickHandler(save_town_num);
-	town_dlg["town"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.towns.size() - 1, "Town number"));
+	town_dlg["town"].attachFocusHandler(std::bind(check_range_and_update_town_name, _1, _2, _3, scenario.towns));
 	town_dlg["choose"].attachClickHandler([&scenario](cDialog& me, std::string, eKeyMod) -> bool {
 		int i = me["town"].getTextAsNum();
 		if(&scenario != &::scenario)
@@ -396,10 +407,13 @@ short pick_town_num(std::string which_dlog,short def,cScenario& scenario) {
 		if(&scenario != &::scenario)
 			scenario.towns.swap(::scenario.towns);
 		me["town"].setTextToNum(i);
+		me["name"].setText((i>=0 && i<scenario.towns.size()) ? scenario.towns[i]->name : "");
 		return true;
 	});
 	
 	town_dlg["town"].setTextToNum(def);
+	if (def>=0 && def<scenario.towns.size())
+		town_dlg["name"].setText(scenario.towns[def]->name);
 	std::string prompt = town_dlg["prompt"].getText();
 	prompt += " (0 - " + std::to_string(scenario.towns.size() - 1) + ')';
 	town_dlg["prompt"].setText(prompt);
