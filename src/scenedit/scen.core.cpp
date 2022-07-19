@@ -3113,6 +3113,7 @@ static void put_scenario_events(cDialog& me, ::cTimersState const &state)
 		me["down"].show();
 	for(size_t i = 0; first_item+i < state.timers.size() && i < state.num_items; i++) {
 		std::string id = std::to_string(i + 1);
+		me["id" + id].setText(std::to_string(first_item+i));
 		me["time" + id].setTextToNum(state.timers[first_item+i].time);
 		me["node" + id].setTextToNum(state.timers[first_item+i].node);
 	}
@@ -3127,14 +3128,14 @@ static bool display_scenario_events(cDialog& me, ::cTimersState &state, std::str
 	if (item=="up") {
 		if (state.first_item<=0)
 			return false;
-		--state.first_item;
+		state.first_item=std::max(state.num_items,state.first_item)-state.num_items;
 		put_scenario_events(me, state);
 		return true;
 	}
 	if (item=="down") {
 		if (state.first_item+state.num_items>=state.timers.size())
 			return false;
-		++state.first_item;
+		state.first_item=std::min(state.timers.size()-state.num_items,state.first_item+state.num_items);
 		put_scenario_events(me, state);
 		return true;
 	}

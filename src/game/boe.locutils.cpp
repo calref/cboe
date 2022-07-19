@@ -263,7 +263,6 @@ void update_explored(location dest) {
 
 // All purpose function to check is spot is free for travel into.
 bool is_blocked(location to_check) {
-	short gr;
 	ter_num_t ter;
 	if (to_check.x<0 || to_check.y<0)
 		return true;
