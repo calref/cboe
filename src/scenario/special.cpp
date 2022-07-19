@@ -89,20 +89,54 @@ static cPictNum port_graphic_num(int pic) {
 	 */
 	if (pic<0)
 		return cPictNum(pic, PIC_NONE);
-	if (pic<400)
+	if (pic>3000) pic-=3000; // suppress drawing a frame around the graphic
+	if (pic<300) {
+		switch(pic) {
+			case 247: pic = 210; break;
+			case 248: pic = 211; break;
+			case 249: pic = 212; break;
+			case 250: pic = 213; break;
+			case 202: pic = 0; break;
+			case 203: pic = 2; break;
+			case 204: pic = 32; break;
+			case 207: pic = 0; break;
+			case 208: pic = 123; break;
+			case 209: pic = 210; break;
+			case 210: pic = 163; break;
+			case 211: pic = 2; break;
+			case 212: pic = 32; break;
+			case 218: case 219: case 220: case 221:
+			case 222: case 223: case 224: case 225:
+			case 215: pic = 216; break;
+			case 233: pic = 137; break;
+			case 213: pic = 214; break;
+			case 214: pic = 215; break;
+			case 246: pic = 209; break;
+			case 251: pic = 207; break;
+			case 252: pic = 208; break;
+		}
 		return cPictNum(pic, PIC_TER);
+	}
+	if (pic<400)
+		return cPictNum(pic-300, PIC_TER_ANIM);
 	if (pic<700)
 		return cPictNum(pic-400,PIC_MONST);
-	if (pic<900)
+	if (pic<800)
 		return cPictNum(pic-700, PIC_DLOG);
+	if (pic<900)
+		return cPictNum(pic-800, PIC_PC);
 	if (pic<1000)// ARGH: normally bwpats, force an error picture
 		return cPictNum(800, PIC_TER);
-	if (pic < 1100)
+	if (pic<1100)
 		return cPictNum(pic-1000, PIC_TALK);
-	if (pic < 1200)
-		return cPictNum(pic-1100, PIC_ITEM);
-	if (pic < 1300)
-		return cPictNum(pic-1200, PIC_PC);
+#if 0
+	if (pic == 1100 || pic==1200 || pic==1300 || (pic>=1400 && pic<=1402)) // maybe, but the picture's size will be bad and hide the message...
+		return cPictNum(pic, PIC_FULL);
+#endif
+	if (pic<2000)// ARGH: unsure 1600-? again terrain, force an error picture
+		return cPictNum(800, PIC_TER);
+	if (pic<2400)
+		return cPictNum(pic-2000, PIC_CUSTOM_TER);
 	// ARGH: not implemented, force an error picture
 	return cPictNum(800, PIC_TER);
 }
@@ -264,34 +298,12 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 				ex2a = 9;
 			break;
 		}
-		case 56: case 59: case 188: // Large dialogs with terrain graphics
-			pictype = PIC_TER;
+		case 56: case 59: case 188: { // Large dialogs with terrain graphics
+			cPictNum picTyp=port_graphic_num(pic);
+			pic=picTyp.num;
+			pictype=picTyp.type;
 			m3 = m2;
 			m2 = -1;
-			switch(pic) {
-				case 247: pic = 210; break;
-				case 248: pic = 211; break;
-				case 249: pic = 212; break;
-				case 250: pic = 213; break;
-				case 202: pic = 0; break;
-				case 203: pic = 2; break;
-				case 204: pic = 32; break;
-				case 207: pic = 0; break;
-				case 208: pic = 123; break;
-				case 209: pic = 210; break;
-				case 210: pic = 163; break;
-				case 211: pic = 2; break;
-				case 212: pic = 32; break;
-				case 218: case 219: case 220: case 221:
-				case 222: case 223: case 224: case 225:
-				case 215: pic = 216; break;
-				case 233: pic = 137; break;
-				case 213: pic = 214; break;
-				case 214: pic = 215; break;
-				case 246: pic = 209; break;
-				case 251: pic = 207; break;
-				case 252: pic = 208; break;
-			}
 			if(old.type == 56) type = eSpecType::ONCE_DIALOG;
 			else if(old.type == 59) type = eSpecType::ONCE_GIVE_ITEM_DIALOG;
 			else type = eSpecType::TOWN_LEVER;
@@ -302,6 +314,7 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 			if(old.ex2a == 20)
 				ex2a = 9;
 			break;
+		}
 			// TODO: Originally the block nodes supported messages; the new version doesn't.
 			// (Will probably need to make special nodes a dynamic vector before fixing this.)
 		case 7: case 8: case 9: case 10: // out, town, combat, look block

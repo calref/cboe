@@ -23,10 +23,15 @@ rectangle calc_rect(short i, short j){
 
 Texture_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 	bool valid = true;
-	if(party && !party_sheet) valid = false;
-	else if(!party && !is_old && (which_rect / 100) >= numSheets)
-		valid = false;
-	else if(numSheets == 0) valid = false;
+	if(party) {
+		valid = bool(party_sheet);
+	}
+	else {
+		if (!is_old && (which_rect / 100) >= numSheets)
+			valid = false;
+		else if(is_old && numSheets == 0)
+			valid = false;
+	}
 	if(!valid) {
 	INVALID:
 		auto const &error = *ResMgr::graphics.get("errors", true);
