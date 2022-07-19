@@ -1552,7 +1552,8 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 	}
 	
 	if(victim.health < 0) {
-		victim.killed_msg();
+		if(do_print)
+			victim.killed_msg();
 		kill_monst(victim,who_hit);
 	}
 	else {

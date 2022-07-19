@@ -831,6 +831,8 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 				inflicted_bonus_damage   = damage_monst(*monst, who_att, bonus_dam, dmg_tp, 0, false);
 			if(inflicted_weapon_damage || inflicted_special_damage || inflicted_bonus_damage)
 				monst->damaged_msg(inflicted_weapon_damage, inflicted_special_damage + inflicted_bonus_damage);
+			if(monst->health < 0)
+				monst->killed_msg();
 		} else if(cPlayer* who = dynamic_cast<cPlayer*>(&target)) {
 			eRace race = attacker.race;
 			if(dmg_snd != no_dmg)
@@ -1825,7 +1827,7 @@ void fire_missile(location target) {
 				//   resistances, so we need to store the actual amounts of damage done.
 				short inflicted_weapon_damage  = 0;
 				short inflicted_special_damage = 0;
-
+				bool victim_is_dead = false;
 				if(ammo.ability == eItemAbil::HEALING_WEAPON) {
 					ASB("  There is a flash of light.");
 					victim->heal(r2);
@@ -1835,6 +1837,10 @@ void fire_missile(location target) {
 						inflicted_special_damage = damage_monst(*monst, univ.cur_pc, spec_dam, dmg_tp, 0,false);
 					if(inflicted_weapon_damage || inflicted_special_damage)
 						monst->damaged_msg(inflicted_weapon_damage, inflicted_special_damage);
+					if(monst->health < 0) {
+						victim_is_dead=true;
+						monst->killed_msg();
+					}
 				} else if(cPlayer* who = dynamic_cast<cPlayer*>(victim)) {
 					// TODO: Should the race really be included here? Maybe it's meant for melee attacks only.
 					eRace race = missile_firer.race;
@@ -1848,7 +1854,7 @@ void fire_missile(location target) {
 					}
 				}
 				// poison
-				if(missile_firer.status[eStatus::POISONED_WEAPON] > 0 && missile_firer.weap_poisoned.slot == ammo_inv_slot) {
+				if(!victim_is_dead && missile_firer.status[eStatus::POISONED_WEAPON] > 0 && missile_firer.weap_poisoned.slot == ammo_inv_slot) {
 					poison_amt = missile_firer.status[eStatus::POISONED_WEAPON];
 					if(missile_firer.has_abil_equip(eItemAbil::POISON_AUGMENT))
 						poison_amt++;
@@ -1856,12 +1862,13 @@ void fire_missile(location target) {
 					if(dynamic_cast<cPlayer*>(victim))
 						put_pc_screen();
 				}
-				if((ammo.ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
-					apply_weapon_status(ammo.abil_data.status, ammo.abil_strength, r2 + spec_dam, *victim, "Missile");
+				if(!victim_is_dead && ammo.ability == eItemAbil::STATUS_WEAPON && get_ran(1,0,1) == 1) {
+					apply_weapon_status(eStatus(ammo.abil_data.status), ammo.abil_strength, r2 + spec_dam, *victim, "Missile");
 				} else if(ammo.ability == eItemAbil::SOULSUCKER && get_ran(1,0,1) == 1) {
+					// TODO: if we want to do this, we must call it before, now the monster can be dead
 					add_string_to_buf("  Missile drains life.");
 					missile_firer.heal(ammo.abil_strength / 2);
-				} else if(ammo.ability == eItemAbil::ANTIMAGIC_WEAPON) {
+				} else if(!victim_is_dead && ammo.ability == eItemAbil::ANTIMAGIC_WEAPON) {
 					short before = victim->get_magic();
 					int mage = 0, cleric = 0;
 					if(cCreature* check = dynamic_cast<cCreature*>(victim))
@@ -1875,6 +1882,7 @@ void fire_missile(location target) {
 						missile_firer.restore_sp((before - victim->get_magic()) / 3);
 					}
 				} else if(ammo.ability == eItemAbil::WEAPON_CALL_SPECIAL) {
+					// CHECKME: do we need to call this special if the monster is dead
 					// TODO: Should this be checked on the missile as well as on the ammo? (Provided they're different.)
 					short s1;
 					univ.party.force_ptr(21, victim->get_loc().x);
@@ -2862,6 +2870,10 @@ void monster_attack(short who_att,iLiving* target) {
 				if(m_target != nullptr) {
 					// TODO: Maybe this damage should be printed?
 					damaged = damage_monst(*m_target,7,r2,dam_type,sound_type,false);
+					if(damaged)
+						m_target->damaged_msg(damaged, 0);
+					if(m_target->health < 0)
+						m_target->killed_msg();
 				} else if(pc_target != nullptr) {
 					damaged = damage_pc(*pc_target,r2,dam_type,attacker->m_type,sound_type);
 					if(store_hp - target->get_health() <= 0)
