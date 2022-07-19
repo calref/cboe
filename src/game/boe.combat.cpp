@@ -4725,7 +4725,7 @@ bool combat_cast_mage_spell() {
 			store_sum_monst = pick_trapped_monst();
 			if(store_sum_monst == 0)
 				return false;
-			get_monst = univ.scenario.scen_monsters[store_sum_monst];
+			get_monst = univ.scenario.get_monster(store_sum_monst);
 			if(store_sp < get_monst.level) {
 				add_string_to_buf("Cast: Not enough spell points.");
 				return false;

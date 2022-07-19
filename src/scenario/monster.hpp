@@ -77,6 +77,12 @@ public:
 	cMonster();
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
+	
+	static cMonster bad() {
+		cMonster monster;
+		monster.m_name="BAD Monster";
+		return monster;
+	}
 };
 
 class cTownperson {

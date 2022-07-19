@@ -54,6 +54,8 @@ public:
 	cItem &get_item(item_num_t item);
 	std::string &get_journal_string(int id);
 	std::string const &get_journal_string(int id) const;
+	cMonster &get_monster(mon_num_t monst);
+	cMonster const &get_monster(mon_num_t monst) const;
 	cQuest const &get_quest(int quest) const;
 	cQuest &get_quest(int quest);
 	cShop const &get_shop(int shop) const;

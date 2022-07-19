@@ -996,7 +996,10 @@ static void handle_victory() {
 	overall_mode = MODE_STARTUP;
 	draw_startup(0);
 	menu_activate();
+	// clean a little the party
 	univ.party.scen_name = ""; // should be harmless...
+	for (auto &pop : univ.party.creature_save)
+		pop.clear();
 	if(cChoiceDlog("congrats-save",{"cancel","save"}).show() == "save"){
 		// TODO: Wait, this shouldn't be a "save as" action, should it? It should save without asking for a location.
 		fs::path file = nav_put_party();

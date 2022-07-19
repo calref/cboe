@@ -757,7 +757,7 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& m
 	
 	if(hit == "okay") {
 		if(save_monst_info(me,monst)) {
-			scenario.scen_monsters[which] = monst;
+			scenario.get_monster(which) = monst;
 			me.toast(true);
 		}
 	} else if(hit == "abils") {
@@ -768,17 +768,17 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& m
 		put_monst_info_in_dlog(me,monst,which);
 	} else if(hit == "left") {
 		if(!save_monst_info(me,monst)) return false;
-		scenario.scen_monsters[which] = monst;
+		scenario.get_monster(which) = monst;
 		which--;
 		if(which < 1) which = scenario.scen_monsters.size() - 1;
-		monst = scenario.scen_monsters[which];
+		monst = scenario.get_monster(which);
 		put_monst_info_in_dlog(me,monst,which);
 	} else if(hit == "right") {
 		if(!save_monst_info(me,monst)) return false;
-		scenario.scen_monsters[which] = monst;
+		scenario.get_monster(which) = monst;
 		which++;
 		if(which >= scenario.scen_monsters.size()) which = 1;
-		monst = scenario.scen_monsters[which];
+		monst = scenario.get_monster(which);
 		put_monst_info_in_dlog(me,monst,which);
 	} else if(hit == "picktype") {
 		if(!save_monst_info(me,monst)) return false;
@@ -836,7 +836,7 @@ static bool pick_monst_picture(cDialog& me) {
 bool edit_monst_type(short which) {
 	using namespace std::placeholders;
 	mon_num_t first = which;
-	cMonster monst = scenario.scen_monsters[which];
+	cMonster monst = scenario.get_monster(which);
 	
 	cDialog monst_dlg(*ResMgr::dialogs.get("edit-monster"));
 	monst_dlg["pickicon"].attachClickHandler(std::bind(pick_monst_picture,_1));
@@ -908,7 +908,7 @@ static void put_monst_abils_in_dlog(cDialog& me, cMonster& monst) {
 		} else if(i % 4 == 3) abils.addPage();
 		std::string name = abil.second.to_string(abil.first);
 		if(abil.first == eMonstAbil::SUMMON && abil.second.summon.type == eMonstSummon::TYPE)
-			name.replace(name.find("%s"), 2, scenario.scen_monsters[abil.second.summon.what].m_name);
+			name.replace(name.find("%s"), 2, scenario.get_monster(abil.second.summon.what).m_name);
 		me["abil-name" + id].setText(name);
 		me["abil-edit" + id].setText("Edit");
 		i++;
@@ -1001,7 +1001,7 @@ static void fill_monst_abil_detail(cDialog& me, cMonster& monst, eMonstAbil abil
 	me["monst"].setText(monst.m_name);
 	std::string name = detail.to_string(abil);
 	if(abil == eMonstAbil::SUMMON && detail.summon.type == eMonstSummon::TYPE)
-		name.replace(name.find("%s"), 2, scenario.scen_monsters[detail.summon.what].m_name);
+		name.replace(name.find("%s"), 2, scenario.get_monster(detail.summon.what).m_name);
 	me["name"].setText(detail.to_string(abil));
 	// These names start at line 80 in the strings file, but the first valid ability is ID 1, so add 79.
 	me["type"].setText(get_str("monster-abilities", 79 + int(abil)));
@@ -1099,7 +1099,7 @@ static void fill_monst_abil_detail(cDialog& me, cMonster& monst, eMonstAbil abil
 		else title.hide(), field.hide(), pick.hide();
 	} else if(cat == eMonstAbilCat::SUMMON) {
 		switch(detail.summon.type) {
-			case eMonstSummon::TYPE: me["summon"].setText(scenario.scen_monsters[detail.summon.what].m_name); break;
+			case eMonstSummon::TYPE: me["summon"].setText(scenario.get_monster(detail.summon.what).m_name); break;
 			case eMonstSummon::LEVEL: me["summon"].setTextToNum(detail.summon.what); break;
 			case eMonstSummon::SPECIES: me["summon"].setText(get_str("traits", detail.summon.what * 2 + 35)); break;
 		}
@@ -1527,7 +1527,7 @@ static void put_item_info_in_dlog(cDialog& me, cItem const &item, short which) {
 	
 	std::string abil = item.getAbilName();
 	if(item.ability == eItemAbil::SUMMONING || item.ability == eItemAbil::MASS_SUMMONING)
-		abil.replace(abil.find("%s"), 2, scenario.scen_monsters[item.abil_data.value].m_name);
+		abil.replace(abil.find("%s"), 2, scenario.get_monster(item.abil_data.value).m_name);
 	me["abilname"].setText(abil);
 }
 
