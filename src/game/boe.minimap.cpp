@@ -114,7 +114,6 @@ void draw(bool need_refresh) {
 		changed = false;
 	}
 	if(!visible) return;
-	pic_num_t pic;
 	rectangle the_rect;
 	location where;
 	location kludge;

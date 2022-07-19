@@ -47,8 +47,9 @@
 	<text top='81' left='50' width='439' height='14'>
 		For more information on how this works, see the documentation.
 	</text>
-	<text top='97' left='102' width='135' height='28'>Number of moves between each call.</text>
-	<text top='97' left='239' width='131' height='28'>Scenario special node to call.</text>
+	<text top='97' left='120' width='20' height='28'>Id</text>
+	<text top='97' left='145' width='120' height='28'>Number of moves between each call.</text>
+	<text top='97' left='259' width='131' height='28'>Scenario special node to call.</text>
 	<text top='246' left='2' width='119' height='106'>
 		Note: If you leave the time between calls at 0, no special node is called.
 		Don't have special nodes called too often ... it slows the game down.
