@@ -144,8 +144,6 @@ void start_town_mode(short which_town, short entry_dir) {
 		monsters_loaded = true;
 		
 		for(auto& monst : univ.town.monst) {
-			if(loc_off_act_area(monst.cur_loc))
-				monst.active = 0;
 			if(monst.active == 2)
 				monst.active = 1;
 			monst.cur_loc = monst.start_loc;
@@ -182,6 +180,8 @@ void start_town_mode(short which_town, short entry_dir) {
 		add_string_to_buf(univ.town->is_cleaned_out() ? "Area has been cleaned out." : "Area has been abandoned.");
 	for(size_t i=0; i<univ.town.monst.size(); ++i) {
 		auto &monst=univ.town.monst[i];
+		monst.targ_loc.x = 0;
+		monst.targ_loc.y = 0;
 		if (!monsters_loaded && monst.spec_enc_code>0)
 			monst.active = 0;
 		// Now, travelling NPCs might have arrived. Go through and put them in.
@@ -240,24 +240,26 @@ void start_town_mode(short which_town, short entry_dir) {
 			if (univ.town->is_cleaned_out() || monst.active>=10 || monst.is_friendly())
 				monst.active -= 10;
 		}
-		if(monst.active<=0) {
+		if(monst.active<=0 || loc_off_act_area(monst.cur_loc)) {
 			monst.active=0;
 			continue;
 		}
+		
+		// In forcecage? checkme all case ?
+		if(!monsters_loaded && univ.town.is_force_cage(monst.cur_loc.x, monst.cur_loc.y))
+			monst.status[eStatus::FORCECAGE] = 1000;
 		
 		// Flush excess doomguards and viscous goos
 		if(monst.abil[eMonstAbil::SPLITS].active &&
 			(i >= univ.town->creatures.size() || monst.number != univ.town->creatures[i].number))
 			monst.active = 0;
-
-		// In forcecage? checkme all case ?
-		if(!monsters_loaded && univ.town.is_force_cage(monst.cur_loc.x, monst.cur_loc.y))
-			monst.status[eStatus::FORCECAGE] = 1000;
-		
 		// Now munch all large monsters that are misplaced
 		// only large monsters, as some smaller monsters are intentionally placed
 		// where they cannot be
-		if((monst.x_width > 1 || monst.y_width > 1) && !monst_can_be_there(monst.cur_loc,i))
+		else if((monst.x_width > 1 || monst.y_width > 1) && !monst_can_be_there(monst.cur_loc,i))
+			monst.active = 0;
+		// Clean out unwanted monsters
+		else if(univ.party.sd_legit(monst.spec1, monst.spec2) && PSD[monst.spec1][monst.spec2] > 0)
 			monst.active = 0;
 	}
 
@@ -350,19 +352,9 @@ void start_town_mode(short which_town, short entry_dir) {
 		}
 	
 	
-	for(auto& monst : univ.town.monst)
-		if(loc_off_act_area(monst.cur_loc))
-			monst.active = 0;
 	for(auto& item : univ.town.items)
 		if(loc_off_act_area(item.item_loc))
 			item.variety = eItemType::NO_ITEM;
-	
-	// Clean out unwanted monsters
-	for(auto& monst : univ.town.monst)
-		if(univ.party.sd_legit(monst.spec1, monst.spec2)) {
-			if(PSD[monst.spec1][monst.spec2] > 0)
-				monst.active = 0;
-		}
 	
 	erase_town_specials();
 //	make_town_trim(0);
@@ -413,12 +405,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			}
 	}
 	
-	for(auto& monst : univ.town.monst) {
-		monst.targ_loc.x = 0;
-		monst.targ_loc.y = 0;
-	}
-	
-	// check horses
+	// check boats and horses
 	for(short i = 0; i < univ.party.boats.size(); i++) {
 		if(univ.scenario.boats[i].which_town >= 0 && univ.scenario.boats[i].loc.x >= 0) {
 			if(!univ.party.boats[i].exists) {
@@ -455,23 +442,19 @@ location end_town_mode(short switching_level,location destination) { // returns 
 	}
 	
 	if(overall_mode == MODE_TOWN) {
-		bool data_saved=false;
-		for(auto& pop : univ.party.creature_save)
-			if(pop.which_town == univ.party.town_num) {
-				data_saved=true;
-				pop = univ.town.monst;
-				// TODO: THIS IS A TEMPORARY HACK TO GET i VALUE
-				int i = std::find_if(univ.party.creature_save.begin(), univ.party.creature_save.end(), [&pop](cPopulation& p) {return &p == &pop;}) - univ.party.creature_save.begin();
-				univ.town.save_setup(univ.party.setup[i]);
-				data_saved = true;
+		auto slot=univ.party.at_which_save_slot;
+		bool newSlot=true;
+		for(size_t i=0; i<univ.party.creature_save.size() ; ++i) {
+			if(univ.party.creature_save[i].which_town == univ.party.town_num) {
+				slot=i;
+				newSlot=false;
 				break;
 			}
-		if(!data_saved) {
-			univ.party.creature_save[univ.party.at_which_save_slot] = univ.town.monst;
-			univ.town.save_setup(univ.party.setup[univ.party.at_which_save_slot]);
-			univ.party.at_which_save_slot = (univ.party.at_which_save_slot == 3) ? 0 : univ.party.at_which_save_slot + 1;
 		}
-		
+		univ.party.creature_save[slot] = univ.town.monst;
+		univ.town.save_setup(univ.party.setup[slot]);
+		if (newSlot)
+			univ.party.at_which_save_slot = (slot == 3) ? 0 : slot + 1;
 		// Store items, if necessary
 		for(short j = 0; j < 3; j++)
 			if(univ.scenario.store_item_towns[j] == univ.party.town_num) {
