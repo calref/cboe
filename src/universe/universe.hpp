@@ -68,6 +68,33 @@ public:
 	void save_setup(vector2d<unsigned short>& setup) const;
 	bool is_summon_safe(short x, short y) const;
 	
+	static bool is_explored(unsigned long allFields) { return allFields & SPECIAL_EXPLORED; }
+	static bool is_force_wall(unsigned long allFields) { return allFields & WALL_FORCE; }
+	static bool is_fire_wall(unsigned long allFields) { return allFields & WALL_FIRE; }
+	static bool is_antimagic(unsigned long allFields) { return allFields & FIELD_ANTIMAGIC; }
+	static bool is_scloud(unsigned long allFields) { return allFields & CLOUD_STINK; } // stinking cloud
+	static bool is_ice_wall(unsigned long allFields) { return allFields & WALL_ICE; }
+	static bool is_blade_wall(unsigned long allFields) { return allFields & WALL_BLADES; }
+	static bool is_sleep_cloud(unsigned long allFields) { return allFields & CLOUD_SLEEP; }
+	static bool is_block(unsigned long allFields) { return allFields & OBJECT_BLOCK; } // currently unused
+	static bool is_spot(unsigned long allFields) { return allFields & SPECIAL_SPOT; }
+	static bool is_web(unsigned long allFields) { return allFields & FIELD_WEB; }
+	static bool is_crate(unsigned long allFields) { return allFields & OBJECT_CRATE; }
+	static bool is_barrel(unsigned long allFields) { return allFields & OBJECT_BARREL; }
+	static bool is_fire_barr(unsigned long allFields) { return allFields & BARRIER_FIRE; }
+	static bool is_force_barr(unsigned long allFields) { return allFields & BARRIER_FORCE; }
+	static bool is_quickfire(unsigned long allFields) { return allFields & FIELD_QUICKFIRE; }
+	static bool is_sm_blood(unsigned long allFields) { return allFields & SFX_SMALL_BLOOD; }
+	static bool is_med_blood(unsigned long allFields) { return allFields & SFX_MEDIUM_BLOOD; }
+	static bool is_lg_blood(unsigned long allFields) { return allFields & SFX_LARGE_BLOOD; }
+	static bool is_sm_slime(unsigned long allFields) { return allFields & SFX_SMALL_SLIME; }
+	static bool is_lg_slime(unsigned long allFields) { return allFields & SFX_LARGE_SLIME; }
+	static bool is_ash(unsigned long allFields) { return allFields & SFX_ASH; }
+	static bool is_bones(unsigned long allFields) { return allFields & SFX_BONES; }
+	static bool is_rubble(unsigned long allFields) { return allFields & SFX_RUBBLE; }
+	static bool is_force_cage(unsigned long allFields) { return allFields & BARRIER_CAGE; }
+	static bool is_road(unsigned long allFields) { return allFields & SPECIAL_ROAD; }
+	unsigned long get_fields(short x, short y) const;
 	bool is_explored(short x, short y) const;
 	bool is_force_wall(short x, short y) const;
 	bool is_fire_wall(short x, short y) const;

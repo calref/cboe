@@ -386,6 +386,8 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 		else me.addLabelFor(id,"    ", LABEL_LEFT, 7, true);
 	}
 	
+	if (first_item_shown >= item_array.size())
+		first_item_shown=std::max(size_t(8),item_array.size())-8;
 	// darken arrows, as appropriate
 	if(first_item_shown == 0)
 		me["up"].hide();
