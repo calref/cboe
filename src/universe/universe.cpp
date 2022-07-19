@@ -999,71 +999,6 @@ void cCurTown::swap(cCurTown& other) {
 	memcpy(fields, temp, sizeof(fields));
 }
 
-void cUniverse::check_monst(cMonster& monst) {
-	if(monst.see_spec == -2) return; // Avoid infinite recursion
-	monst.see_spec = -2;
-	if(monst.picture_num >= 10000) {
-		int pic = monst.picture_num - 10000;
-		int sz = pic / 1000, base = pic % 1000;
-		int numGraph = 4;
-		if(sz > 1) numGraph *= 2;
-		if(sz == 4) numGraph *= 2;
-		for(int i = 0; i < numGraph; i++)
-			used_graphics.insert(base + i);
-	} else if(monst.picture_num >= 1000) {
-		update_monsters[monst.picture_num - 1000].insert(&monst);
-	}
-	for(auto& abil : monst.abil) {
-		switch(getMonstAbilCategory(abil.first)) {
-			case eMonstAbilCat::MISSILE:
-				if(abil.second.missile.pic >= 10000) {
-					for(int i = 0; i < 4; i++)
-						used_graphics.insert(abil.second.missile.pic - 10000 + i);
-				} else if(abil.second.missile.pic >= 1000) {
-					update_missiles[abil.second.missile.pic - 1000].insert(&abil.second.missile.pic);
-				}
-				break;
-			case eMonstAbilCat::GENERAL:
-				if(abil.second.gen.pic >= 10000) {
-					for(int i = 0; i < 4; i++)
-						used_graphics.insert(abil.second.gen.pic - 10000 + i);
-				} else if(abil.second.gen.pic >= 1000) {
-					update_missiles[abil.second.gen.pic - 1000].insert(&abil.second.gen.pic);
-				}
-				break;
-			case eMonstAbilCat::SUMMON:
-				if(abil.second.summon.type == eMonstSummon::TYPE)
-					check_monst(scenario.scen_monsters[abil.second.summon.what]);
-				break;
-			case eMonstAbilCat::RADIATE:
-			case eMonstAbilCat::SPECIAL:
-			case eMonstAbilCat::INVALID:
-				break;
-		}
-	}
-}
-
-void cUniverse::check_item(cItem& item) {
-	if(item.variety == eItemType::NO_ITEM) return;
-	if(item.graphic_num >= 10000)
-		used_graphics.insert(item.graphic_num - 10000);
-	else if(item.graphic_num >= 1000)
-		update_items[item.graphic_num - 1000].insert(&item);
-	if(item.ability == eItemAbil::SUMMONING || item.ability == eItemAbil::MASS_SUMMONING) {
-		mon_num_t monst = item.abil_data[1];
-		if(monst >= 10000)
-			check_monst(party.summons[monst - 10000]);
-		else check_monst(scenario.scen_monsters[monst]);
-	}
-	if(item.variety == eItemType::ARROW || item.variety == eItemType::BOLTS || item.variety == eItemType::MISSILE_NO_AMMO || item.variety == eItemType::THROWN_MISSILE) {
-		if(item.missile >= 10000)
-			for(int i = 0; i < 4; i++)
-				used_graphics.insert(item.missile - 10000 + i);
-		else if(item.missile >= 1000)
-			update_missiles[item.missile - 1000].insert(&item.missile);
-	}
-}
-
 // This attempts to find the index of a living entity in the party or town
 // Assuming success, the two get_target() calls are a round-trip
 // Returns maxint on failure (which could happen eg with a stored PC or a monster from a saved town)
@@ -1117,9 +1052,30 @@ unsigned char& cUniverse::cpn_flag(unsigned int x, unsigned int y, std::string i
 	return party.campaign_flags[id].idx[x][y];
 }
 
-extern cCustomGraphics spec_scen_g;
+struct cCustomUpdateState {
+	template<typename T> using update_info = std::set<T *>;
+	std::map<pic_num_t, update_info<cItem>> items;
+	std::map<pic_num_t, update_info<cMonster>> monsters;
+	std::map<pic_num_t, update_info<cPlayer>> pcs;
+	std::map<pic_num_t, update_info<miss_num_t>> missiles;
+	std::set<pic_num_t> graphics;
+	
+	std::set<cItem const *> seenItem;
+	std::set<cMonster const *> seenMonster;
+	void insert_missile_pict(miss_num_t &pict_id) {
+		if(pict_id >= 10000) {
+			for(int i = 0; i < 4; i++)
+				graphics.insert(pict_id - 10000 + i);
+		} else if(pict_id >= 1000)
+			missiles[pict_id - 1000].insert(&pict_id);
+	}
+	pic_num_t add_graphic(pic_num_t pic, ePicType type);
+	void check_monst(cUniverse &univers, cMonster & monst);
+	void check_item(cUniverse &univers, cItem& item);
+};
 
-pic_num_t cUniverse::addGraphic(pic_num_t pic, ePicType type) {
+extern cCustomGraphics spec_scen_g;
+pic_num_t cCustomUpdateState::add_graphic(pic_num_t pic, ePicType type) {
 	// Now find the first unused slot with sufficient space for the graphic we're adding
 	int needSlots = 0;
 	switch(type - PIC_PARTY) {
@@ -1136,20 +1092,72 @@ pic_num_t cUniverse::addGraphic(pic_num_t pic, ePicType type) {
 	bool foundSpace = false;
 	while(!foundSpace) {
 		// First find an empty slot.
-		while(used_graphics.count(++pos));
+		while(graphics.count(++pos));
 		// Then check if there's enough space.
 		foundSpace = true;
 		for(pic_num_t i = 1; i < needSlots; i++) {
-			if(used_graphics.count(pos + i)) foundSpace = false;
+			if(graphics.count(pos + i)) foundSpace = false;
 		}
 	}
 	// And finally, actually transfer the graphic over
 	spec_scen_g.copy_graphic(pos, pic, needSlots);
 	// Also mark these slots used so we don't overwrite them with the next copy
 	for(pic_num_t i = 0; i < needSlots; i++) {
-		used_graphics.insert(pos + i);
+		graphics.insert(pos + i);
 	}
 	return pos;
+}
+
+void cCustomUpdateState::check_monst(cUniverse &univers, cMonster & monst) {
+	if (seenMonster.count(&monst)) return; // Avoid infinite recursion
+	seenMonster.insert(&monst);
+	if(monst.picture_num >= 10000) {
+		int pic = monst.picture_num - 10000;
+		int sz = pic / 1000, base = pic % 1000;
+		int numGraph = 4;
+		if(sz > 1) numGraph *= 2;
+		if(sz == 4) numGraph *= 2;
+		for(int i = 0; i < numGraph; i++)
+			graphics.insert(base + i);
+	} else if(monst.picture_num >= 1000) {
+		monsters[monst.picture_num - 1000].insert(&monst);
+	}
+	for(auto& abil : monst.abil) {
+		switch(getMonstAbilCategory(abil.first)) {
+			case eMonstAbilCat::MISSILE:
+				insert_missile_pict(abil.second.missile.pic);
+				break;
+			case eMonstAbilCat::GENERAL:
+				insert_missile_pict(abil.second.gen.pic);
+				break;
+			case eMonstAbilCat::SUMMON:
+				if(abil.second.summon.type == eMonstSummon::TYPE)
+					check_monst(univers, univers.scenario.scen_monsters[abil.second.summon.what]);
+				break;
+			case eMonstAbilCat::RADIATE:
+			case eMonstAbilCat::SPECIAL:
+			case eMonstAbilCat::INVALID:
+				break;
+		}
+	}
+}
+
+void cCustomUpdateState::check_item(cUniverse &universe, cItem& item) {
+	if (seenItem.count(&item)) return;
+	seenItem.insert(&item);
+	if(item.variety == eItemType::NO_ITEM) return;
+	if(item.graphic_num >= 10000)
+		graphics.insert(item.graphic_num - 10000);
+	else if(item.graphic_num >= 1000)
+		items[item.graphic_num - 1000].insert(&item);
+	if(item.ability == eItemAbil::SUMMONING || item.ability == eItemAbil::MASS_SUMMONING) {
+		mon_num_t monst = item.abil_data[1];
+		if(monst >= 10000)
+			check_monst(universe, universe.party.summons[monst - 10000]);
+		else check_monst(universe, universe.scenario.scen_monsters[monst]);
+	}
+	if(item.variety == eItemType::ARROW || item.variety == eItemType::BOLTS || item.variety == eItemType::MISSILE_NO_AMMO || item.variety == eItemType::THROWN_MISSILE)
+		insert_missile_pict(item.missile);
 }
 
 void cUniverse::exportGraphics() {
@@ -1160,47 +1168,44 @@ void cUniverse::exportGraphics() {
 	// - Custom PC graphics
 	// TODO: Missile graphics for custom monsters
 	// So basically, almost all the graphics are linked to items.
-	used_graphics.clear();
+	cCustomUpdateState state;
 	for(int i = 0; i < 6; i++) {
 		if(party[i].main_status == eMainStatus::ABSENT)
 			continue;
 		if(party[i].which_graphic >= 10000) {
 			for(int j = 0; j < 4; j++)
-				used_graphics.insert(party[i].which_graphic - 10000 + j);
+				state.graphics.insert(party[i].which_graphic - 10000 + j);
 		} else if(party[i].which_graphic >= 1000)
-			update_pcs[party[i].which_graphic - 1000].insert(&party[i]);
+			state.pcs[party[i].which_graphic - 1000].insert(&party[i]);
 		for (auto &item : party[i].items)
-			check_item(item);
+			state.check_item(*this, item);
 	}
 	for (auto &items : party.stored_items)
 		for (auto &item : items)
-			check_item(item);
+			state.check_item(*this, item);
 	for(mon_num_t monst : party.imprisoned_monst) {
 		if(monst > 0 && monst < scenario.scen_monsters.size())
-			check_monst(scenario.scen_monsters[monst]);
+			state.check_monst(*this, scenario.scen_monsters[monst]);
 		else if(monst >= 10000 && monst - 10000 < party.summons.size())
-			check_monst(party.summons[monst - 10000]);
+			state.check_monst(*this, party.summons[monst - 10000]);
 	}
 	// And then, just add all the graphics, and update references to them
-	for(auto pic : update_pcs) {
-		pic_num_t pos = addGraphic(pic.first, PIC_PC);
+	for(auto const &pic : state.pcs) {
+		pic_num_t pos = state.add_graphic(pic.first, PIC_PC);
 		for(auto& pc : pic.second)
 			pc->which_graphic = 10000 + pos;
 	}
-	update_pcs.clear();
-	for(auto pic : update_items) {
-		pic_num_t pos = addGraphic(pic.first, PIC_ITEM);
+	for(auto const &pic : state.items) {
+		pic_num_t pos = state.add_graphic(pic.first, PIC_ITEM);
 		for(auto& item : pic.second)
 			item->graphic_num = 10000 + pos;
 	}
-	update_items.clear();
-	for(auto pic : update_missiles) {
-		pic_num_t pos = addGraphic(pic.first, PIC_MISSILE);
+	for(auto const &pic : state.missiles) {
+		pic_num_t pos = state.add_graphic(pic.first, PIC_MISSILE);
 		for(auto& missile : pic.second)
 			*missile = 10000 + pos;
 	}
-	update_missiles.clear();
-	for(auto pic : update_monsters) {
+	for(auto const &pic : state.monsters) {
 		int sz = pic.first / 1000, base = pic.first % 1000;
 		ePicType type;
 		switch(sz) {
@@ -1210,42 +1215,41 @@ void cUniverse::exportGraphics() {
 			case 4: type = PIC_MONST_LG; break;
 			default: continue;
 		}
-		pic_num_t pos = addGraphic(base, type);
+		pic_num_t pos = state.add_graphic(base, type);
 		for(auto& monst : pic.second)
 			monst->picture_num = 10000 + sz * 1000 + pos;
 	}
-	update_monsters.clear();
 }
 
 void cUniverse::exportSummons() {
 	std::set<mon_num_t> used_monsters, need_monsters;
-	std::map<mon_num_t, update_info<cItem>> update_items;
+	std::map<mon_num_t, std::set<cItem *>> update_items;
 	for(int i = 0; i < 6; i++) {
 		if(party[i].main_status == eMainStatus::ABSENT)
 			continue;
-		for(size_t j = 0; j < party[i].items.size(); j++) {
-			if(party[i].items[j].variety == eItemType::NO_ITEM) continue;
-			if(party[i].items[j].ability == eItemAbil::SUMMONING || party[i].items[j].ability == eItemAbil::MASS_SUMMONING) {
-				mon_num_t monst = party[i].items[j].abil_data[1];
+		for(auto &item : party[i].items) {
+			if(item.variety == eItemType::NO_ITEM) continue;
+			if(item.ability == eItemAbil::SUMMONING || item.ability == eItemAbil::MASS_SUMMONING) {
+				mon_num_t monst = item.abil_data[1];
 				if(monst >= 10000)
 					used_monsters.insert(monst - 10000);
 				else {
 					need_monsters.insert(monst);
-					update_items[monst].insert(&party[i].items[j]);
+					update_items[monst].insert(&item);
 				}
 			}
 		}
 	}
-	for(size_t i = 0; i < party.stored_items.size(); i++) {
-		for(size_t j = 0; j < party.stored_items[i].size(); j++) {
-			if(party.stored_items[i][j].variety == eItemType::NO_ITEM) continue;
-			if(party.stored_items[i][j].ability == eItemAbil::SUMMONING||party.stored_items[i][j].ability == eItemAbil::MASS_SUMMONING) {
-				mon_num_t monst = party.stored_items[i][j].abil_data[1];
+	for(auto &items : party.stored_items) {
+		for(auto &item : items) {
+			if(item.variety == eItemType::NO_ITEM) continue;
+			if(item.ability == eItemAbil::SUMMONING||item.ability == eItemAbil::MASS_SUMMONING) {
+				mon_num_t monst = item.abil_data[1];
 				if(monst >= 10000)
 					used_monsters.insert(monst - 10000);
 				else {
 					need_monsters.insert(monst);
-					update_items[monst].insert(&party.stored_items[i][j]);
+					update_items[monst].insert(&item);
 				}
 			}
 		}
