@@ -37,7 +37,6 @@
 #include "view_dialogs.hpp"
 
 extern short cen_x, cen_y,cur_town;
-extern bool mouse_button_held;
 extern bool editing_town;
 extern short cur_viewing_mode;
 extern cTown* town;

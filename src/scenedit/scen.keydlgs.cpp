@@ -23,7 +23,6 @@
 #include "gfx/render_shapes.hpp" // for colour constants
 
 extern short cen_x, cen_y;
-extern bool mouse_button_held;
 extern short cur_viewing_mode;
 extern cTown* town;
 extern short mode_count,to_create;
