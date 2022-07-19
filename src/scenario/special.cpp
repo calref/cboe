@@ -13,6 +13,7 @@
 #include <sstream>
 
 #include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/widgets/pict.hpp"
 #include "oldstructs.hpp"
 #include "utility.hpp"
 
@@ -52,6 +53,54 @@ void cSpecial::writeTo(std::ostream& file, int n) const {
 	file << "\tgoto " << jumpto << '\n';
 }
 
+static cPictNum port_graphic_num(int pic) {
+	// from dialog-converting.txt
+	/*
+	-1			solid black
+	0 + x		number of terrain graphic
+	300 + x		animated terrain graphic (grabs the first frame only)
+	400 + x		monster graphic num
+	700 + x		dlog graphic (large dlog graphics were done by using four of these arranged in the correct way)
+	800 + x		pc graphic
+	900 + x		B&W graphic - the PICT resource for this does not exist
+	950			null item
+	1000 + x	Talking face
+	1100		item info help
+	1200		pc screen help
+	1300		combat ap
+	1400-1402	button help
+	1410-1412	large scen graphics
+	1500		stat symbols help
+	1600 + x	scen graphics
+	1700 + x	anim graphic -- drawn from fields_gworld, so a boom or barrier icon?
+	1800 + x	items
+	2000 + x	custom graphics up to 2399
+	2400 + x	custom graphics up to 2799, BUT it's a split graphic ...
+	   it looks at the size of rect, and places a 32 x 32 or 36 x 36 graphic drawn
+	   from the custom gworld, depending on the size of rect. half of graphic is
+	   drawn from one custom slot, and half is drawn from next one.
+	+3000		suppress drawing a frame around the graphic
+	 */
+	if (pic<0)
+		return cPictNum(pic, PIC_NONE);
+	if (pic<400)
+		return cPictNum(pic, PIC_TER);
+	if (pic<700)
+		return cPictNum(pic-400,PIC_MONST);
+	if (pic<900)
+		return cPictNum(pic-700, PIC_DLOG);
+	if (pic<1000)// ARGH: normally bwpats, force an error picture
+		return cPictNum(900, PIC_TER);
+	if (pic < 1100)
+		return cPictNum(pic-1000, PIC_TALK);
+	if (pic < 1200)
+		return cPictNum(pic-1100, PIC_ITEM);
+	if (pic < 1300)
+		return cPictNum(pic-1200, PIC_PC);
+	// ARGH: not implemented, force an error picture
+	return cPictNum(900, PIC_TER);
+}
+	
 void cSpecial::import_legacy(legacy::special_node_type const &old){
 	sd1 = old.sd1;
 	sd2 = old.sd2;
@@ -170,10 +219,10 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 		case 228: type = eSpecType::OUT_MOVE_PARTY; break;
 			// 229 was outdoor shop
 			// 230-255 were undefined
-		case 55: case 58: case 189: case 190: // Large dialogs with 36x36 dialog graphics
-			if(pic >= 700 && pic < 1000)
-				pic -= 700;
-			pictype = PIC_DLOG;
+		case 55: case 58: case 189: case 190: {// Large dialogs with 36x36 dialog graphics
+			cPictNum picTyp=port_graphic_num(pic);
+			pic=picTyp.num;
+			pictype=picTyp.type;
 			m3 = m2;
 			m2 = -1;
 			if(old.type == 55) type = eSpecType::ONCE_DIALOG;
@@ -187,11 +236,11 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 			if(old.ex2a == 20)
 				ex2a = 9;
 			break;
-		case 57: case 60: // Large dialogs with monster graphics
-			if(pic >= 400 && pic < 1000)
-				pic -= 400;
-			if(pic == 122) pic = 119;
-			pictype = PIC_MONST;
+		}
+		case 57: case 60: { // Large dialogs with monster graphics
+			cPictNum picTyp=port_graphic_num(pic);
+			pic=picTyp.num;
+			pictype=picTyp.type;
 			m3 = m2;
 			m2 = -1;
 			if(old.type == 57) type = eSpecType::ONCE_DIALOG;
@@ -203,6 +252,7 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 			if(old.ex2a == 20)
 				ex2a = 9;
 			break;
+		}
 		case 56: case 59: case 188: // Large dialogs with terrain graphics
 			pictype = PIC_TER;
 			m3 = m2;
@@ -302,6 +352,7 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 			break;
 		case 154: // text response
 			type = eSpecType::IF_TEXT_RESPONSE;
+            		// id between 10 and 160 will be fixed later by port_special_text_response, ...
 			ex1a -= 160;
 			ex2a -= 160;
 			break;
