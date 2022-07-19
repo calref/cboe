@@ -26,7 +26,7 @@
 #include "fileio/resmgr/res_dialog.hpp"
 
 extern short cen_x, cen_y, overall_mode;
-extern bool mouse_button_held,editing_town,change_made;
+extern bool editing_town,change_made;
 extern short cur_viewing_mode;
 extern cTown* town;
 extern short mode_count,to_create,cur_town;
