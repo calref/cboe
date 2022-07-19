@@ -1703,7 +1703,7 @@ bool handle_keystroke(const sf::Event& event){
 				bool need_redraw=true;
 				if (i>=1 && i<=3 && center.y < univ.town->in_town_rect.bottom && center.y < univ.town->max_dim - 5)
 					center.y++;
-				else if (i>=6 && i<=9 && center.y > univ.town->in_town_rect.top && center.y > 4)
+				else if (i>=7 && i<=9 && center.y > univ.town->in_town_rect.top && center.y > 4)
 					center.y--;
 				if ((i%3)==1 && center.x > univ.town->in_town_rect.left && center.x > 4)
 					center.x--;

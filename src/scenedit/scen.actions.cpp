@@ -35,20 +35,16 @@ extern short mini_map_scales[3];
 extern rectangle terrain_rect;
 extern eDrawMode draw_mode;
 // border rects order: top, left, bottom, right //
-rectangle border_rect[4];
-short current_block_edited = 0;
+static rectangle border_rect[4];
 short current_terrain_type = 0;
-short safety = 0;
-location spot_hit,last_spot_hit(-1,-1),mouse_spot(-1,-1);
-short copied_spec = -1;
+location mouse_spot(-1,-1);
+static short copied_spec = -1;
 cUndoList undo_list;
 
-cTown::cItem store_place_item;
+static cTown::cItem store_place_item;
 
-short flood_count = 0;
-
-rectangle terrain_rects[256],terrain_rect_base = {0,0,16,16},command_rects[21];
-extern rectangle terrain_buttons_rect;
+rectangle terrain_rects[256];
+static rectangle terrain_rect_base = {0,0,16,16};
 
 extern short cen_x, cen_y, cur_town;
 extern eScenMode overall_mode;
@@ -69,7 +65,6 @@ std::array<lb_t,NLS> left_button_status;
 std::vector<rb_t> right_button_status;
 rectangle right_buttons[NRSONPAGE];
 rectangle palette_buttons[10][6];
-short current_rs_top = 0;
 
 ePalBtn out_buttons[6][10] = {
 	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_DROPPER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET},
@@ -89,14 +84,10 @@ ePalBtn town_buttons[6][10] = {
 	{PAL_SFX_SB, PAL_SFX_MB, PAL_SFX_LB, PAL_SFX_SS, PAL_SFX_LS, PAL_SFX_ASH, PAL_SFX_BONE, PAL_SFX_ROCK, PAL_BLANK, PAL_BLANK},
 };
 
-cTownperson last_placed_monst;
+static cTownperson last_placed_monst;
 
-rectangle working_rect;
-location last_space_hit;
-bool erasing_mode;
+static rectangle working_rect;
 ter_num_t current_ground = 0;
-
-short special_to_paste = -1;
 
 bool monst_on_space(location loc,short m_num);
 static bool terrain_matches(unsigned char x, unsigned char y, ter_num_t ter);
@@ -270,14 +261,15 @@ static bool handle_lb_action(location the_point) {
 					case LB_EDIT_SHOPS:
 						start_shops_editing(false);
 						break;
-					case LB_LOAD_OUT:
-						spot_hit = pick_out(cur_out, scenario);
-						if(spot_hit != cur_out) {
-							cur_out = spot_hit;
+					case LB_LOAD_OUT: {
+						location new_out = pick_out(cur_out, scenario);
+						if(new_out != cur_out) {
+							cur_out = new_out;
 							current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
 							set_up_main_screen();
 						}
 						break;
+					}
 					case LB_EDIT_OUT:
 						start_out_edit();
 						mouse_button_held = false;
@@ -682,6 +674,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 	cArea* cur_area = get_current_area();
 	if(mouse_spot.x >= 0 && mouse_spot.y >= 0) {
+		location spot_hit;
 		if(cur_viewing_mode == 0) {
 			spot_hit.x = cen_x + mouse_spot.x - 4;
 			spot_hit.y = cen_y + mouse_spot.y - 4;
@@ -690,24 +683,13 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 		}
 		else {
 			short scale = mini_map_scales[cur_viewing_mode - 1];
-			if(scale > 4) {
-				if(cen_x + 5 > 256 / scale)
-					spot_hit.x = cen_x + 5 - 256/scale + mouse_spot.x;
-				else spot_hit.x = mouse_spot.x;
-				if(cen_y + 5 > 324 / scale)
-					spot_hit.y = cen_y + 5 - 324/scale + mouse_spot.y;
-				else spot_hit.y = mouse_spot.y;
-			} else {
-				spot_hit.x = mouse_spot.x;
-				spot_hit.y = mouse_spot.y;
-			}
+			spot_hit.x = cen_x - 256/scale/2 + mouse_spot.x;
+			spot_hit.y = cen_y - 324/scale/2 + mouse_spot.y;
 		}
-		
-		if((mouse_button_held) && (spot_hit.x == last_spot_hit.x) &&
-		   (spot_hit.y == last_spot_hit.y))
+		static location last_spot_hit(-1,-1);
+		if(mouse_button_held && spot_hit== last_spot_hit)
 			return true;
-		else last_spot_hit = spot_hit;
-		if(!mouse_button_held)
+		else
 			last_spot_hit = spot_hit;
 		
 		eScenMode old_mode = overall_mode;
@@ -715,7 +697,8 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 		
 		if(!cur_area->is_on_map(spot_hit)) ;
 		else switch(overall_mode) {
-			case MODE_DRAWING:
+			case MODE_DRAWING: {
+				static bool erasing_mode = false;
 				if((!mouse_button_held && terrain_matches(spot_hit.x,spot_hit.y,current_terrain_type)) ||
 				   (mouse_button_held && erasing_mode)) {
 					set_terrain(spot_hit,current_ground);
@@ -728,6 +711,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					erasing_mode = false;
 				}
 				break;
+			}
 				
 			case MODE_ROOM_RECT: case MODE_SET_TOWN_RECT: case MODE_HOLLOW_RECT: case MODE_FILLED_RECT:
 				if(mouse_button_held)
@@ -1007,7 +991,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 			case MODE_COPY_SPECIAL: //copy special
 			{
 				auto& specials = cur_area->special_locs;
-				auto iter = std::find_if(town->special_locs.begin(), town->special_locs.end(), [](const spec_loc_t& loc) {
+				auto iter = std::find_if(town->special_locs.begin(), town->special_locs.end(), [spot_hit](const spec_loc_t& loc) {
 					return loc == spot_hit && loc.spec >= 0;
 				});
 				if(iter != specials.end())
@@ -1114,7 +1098,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				break;
 			case MODE_PLACE_BOAT: case MODE_PLACE_HORSE: {
 				auto& all = overall_mode == MODE_PLACE_BOAT ? scenario.boats : scenario.horses;
-				auto iter = std::find_if(all.begin(), all.end(), [](const cVehicle& what) {
+				auto iter = std::find_if(all.begin(), all.end(), [spot_hit](const cVehicle& what) {
 					if(editing_town && cur_town != what.which_town) return false;
 					else if(!editing_town && what.which_town != 200) return false;
 					return what.loc == spot_hit;
@@ -1149,36 +1133,28 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 		return true;
 	}
 	bool need_redraw = false;
-	if((the_point.in(border_rect[0])) & (cen_y > (editing_town ? 4 : 3))) {
+	short const minV=editing_town ? 4 : 3;
+	short const maxV=(editing_town ? town->max_dim - 1 : 48)-4;
+	if(the_point.in(border_rect[0]) && cen_y > minV) {
 		cen_y--;
-		if(ctrl_hit)
-			cen_y = ((editing_town) ? 4 : 3);
-		need_redraw = true;
-		mouse_button_held = true;
+		if(ctrl_hit) cen_y = minV;
+		mouse_button_held = need_redraw = true;
 	}
-	if((the_point.in(border_rect[1])) & (cen_x > (editing_town ? 4 : 3))) {
+	if(the_point.in(border_rect[1]) && cen_x > minV) {
 		cen_x--;
 		if(ctrl_hit)
-			cen_x = ((editing_town) ? 4 : 3);
-		need_redraw = true;
-		mouse_button_held = true;
+			cen_x = minV;
+		mouse_button_held = need_redraw = true;
 	}
-	auto max_dim = cur_area->max_dim - 5;
-	// This allows you to see a strip of terrain from the adjacent sector when editing outdoors
-	if(!editing_town) max_dim++;
-	if((the_point.in(border_rect[2])) && (cen_y < max_dim)) {
+	if(the_point.in(border_rect[2]) && cen_y < maxV) {
 		cen_y++;
-		if(ctrl_hit)
-			cen_y = max_dim;
-		need_redraw = true;
-		mouse_button_held = true;
+		if(ctrl_hit) cen_y = maxV;
+		mouse_button_held = need_redraw = true;
 	}
-	if((the_point.in(border_rect[3])) && (cen_x < max_dim)) {
+	if(the_point.in(border_rect[3]) && cen_x < maxV) {
 		cen_x++;
-		if(ctrl_hit)
-			cen_x = max_dim;
-		need_redraw = true;
-		mouse_button_held = true;
+		if(ctrl_hit) cen_x = maxV;
+		mouse_button_held = need_redraw = true;
 	}
 	if(need_redraw) {
 		draw_terrain();
@@ -1379,9 +1355,6 @@ static bool handle_toolpal_action(location cur_point2) {
 						overall_mode = MODE_COPY_SPECIAL;
 						break;
 					case PAL_PASTE_SPEC:
-						if(special_to_paste < 0) {
-							set_string("Can't paste special","No special to paste");
-						}
 						set_string("Paste special","Select location to paste");
 						overall_mode = MODE_PASTE_SPECIAL;
 						break;
@@ -1536,8 +1509,6 @@ void handle_action(location the_point,sf::Event /*event*/) {
 	std::string s2;
 	
 	bool option_hit = false,ctrl_hit = false;
-	location spot_hit;
-	location cur_point,cur_point2;
 	rectangle temp_rect;
 	if(kb.isAltPressed())
 		option_hit = true;
@@ -1555,13 +1526,13 @@ void handle_action(location the_point,sf::Event /*event*/) {
 		return;
 	
 	if(!mouse_button_held && ((overall_mode < MODE_MAIN_SCREEN) || (overall_mode == MODE_EDIT_TYPES))) {
-		cur_point = the_point;
+		location cur_point = the_point;
 		cur_point.x -= RIGHT_AREA_UL_X;
 		cur_point.y -= RIGHT_AREA_UL_Y;
 		if(handle_terpal_action(cur_point, option_hit))
 			return;
 
-		cur_point2 = the_point;
+		location cur_point2 = the_point;
 		cur_point2.x -= 5;
 		cur_point2.y -= terrain_rects[255].bottom + 5;
 		if(handle_toolpal_action(cur_point2))
@@ -1781,9 +1752,12 @@ void handle_scroll(const sf::Event& event) {
 	location pos { translate_mouse_coordinates({event.mouseMove.x,event.mouseMove.y}) };
 	int amount = event.mouseWheel.delta;
 	if(overall_mode < MODE_MAIN_SCREEN && pos.in(terrain_rect)) {
+		short const minV=editing_town ? 4 : 3;
+		short const maxV=(editing_town ? town->max_dim - 1 : 48)-4;
 		if(kb.isCtrlPressed())
-			cen_x = minmax(4, town->max_dim - 5, cen_x - amount);
-		else cen_y = minmax(4, town->max_dim - 5, cen_y - amount);
+			cen_x = minmax(minV, maxV, cen_x - amount);
+		else
+			cen_y = minmax(minV, maxV, cen_y - amount);
 	}
 }
 
