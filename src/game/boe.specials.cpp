@@ -243,14 +243,25 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 		for(auto const &spec_loc : univ.town->special_locs) {
 			if(where_check != spec_loc) continue;
 			spec_num = spec_loc.spec;
+			if (spec_num<0) continue;
+			
 			bool runSpecial = false;
 			if(!is_blocked(where_check)) runSpecial = true;
-			if(ter_special == eTerSpec::CHANGE_WHEN_STEP_ON) runSpecial = true;
-			if(ter_special == eTerSpec::CALL_SPECIAL) runSpecial = true;
-			if(univ.town->get_special(spec_num).type == eSpecType::CANT_ENTER)
+			else if(ter_special == eTerSpec::CHANGE_WHEN_STEP_ON) runSpecial = true;
+			else if(ter_special == eTerSpec::CALL_SPECIAL) runSpecial = true;
+			else if(!univ.scenario.is_legacy && univ.party.in_boat >= 0 && terrain.boat_over)
 				runSpecial = true;
-			if(!univ.scenario.is_legacy && univ.party.in_boat >= 0 && terrain.boat_over)
-				runSpecial = true;
+			else {
+				auto special=univ.town->get_special(spec_num);
+				// if eSpecType::IF_IN_BOAT special and not in boat, check also the following special
+				if (univ.party.in_boat<0 && special.type == eSpecType::IF_IN_BOAT) {
+					spec_num=special.jumpto;
+					if (spec_num<0) continue;
+					special=univ.town->get_special(spec_num);
+				}
+				if(special.type == eSpecType::CANT_ENTER)
+					runSpecial = true;
+			}
 			if(runSpecial) {
 				give_help(54,0);
 				run_special(mode, eSpecCtxType::TOWN, spec_num, where_check, &s1, &s2);
@@ -3687,30 +3698,49 @@ void ifthen_spec(const runtime_state& ctx) {
 			if(univ.party.active_quests[spec.ex1a].status == eQuestStatus(spec.ex1b))
 				ctx.next_spec = spec.ex1c;
 			break;
-		case eSpecType::IF_CONTEXT:
+		case eSpecType::IF_CONTEXT: {
 			// TODO: Test this. In particular, test that the legacy behaviour is correct.
 			if(univ.scenario.is_legacy) check_mess = true;
-			if(ctx.which_mode == eSpecCtx(spec.ex1a)) {
-				if(ctx.which_mode <= eSpecCtx::COMBAT_MOVE) {
-					*ctx.ret_a = bool(spec.ex1b); // Should block move? 1 = yes, 0 = no
-					if(*ctx.ret_a) {
-						if(ctx.which_mode == eSpecCtx::OUT_MOVE)
-							ASB("Can't go here while outdoors.");
-						else if(ctx.which_mode == eSpecCtx::TOWN_MOVE)
-							ASB("Can't go here while in town mode.");
-						else if(ctx.which_mode == eSpecCtx::COMBAT_MOVE)
-							ASB("Can't go here during combat.");
-					}
-				} else if(ctx.which_mode == eSpecCtx::TARGET && spec.ex1b >= 0) {
-					// TODO: I'm not quite sure if this covers every way of determining which spell was cast
-					if(is_town() && int(town_spell) != spec.ex1b)
-						break;
-					if(is_combat() && int(spell_being_cast) != spec.ex1b)
-						break;
+			eSpecCtx which_mode=ctx.which_mode;
+			if(which_mode != eSpecCtx(spec.ex1a)) {
+				// check for special cases: move check called by scenario/party timer
+				if (which_mode != eSpecCtx::SCEN_TIMER && which_mode != eSpecCtx::PARTY_TIMER)
+					break;
+				if (eSpecCtx(spec.ex1a)==eSpecCtx::OUT_MOVE) {
+					if (!is_out()) break;
+					which_mode=eSpecCtx::OUT_MOVE;
 				}
-				ctx.next_spec = spec.ex1c;
+				else if (eSpecCtx(spec.ex1a)==eSpecCtx::TOWN_MOVE) {
+					if (!is_town()) break;
+					which_mode=eSpecCtx::TOWN_MOVE;
+				}
+				else if (eSpecCtx(spec.ex1a)==eSpecCtx::COMBAT_MOVE) {
+					if (!is_combat()) break;
+					which_mode=eSpecCtx::COMBAT_MOVE;
+				}
+				else
+					break;
 			}
+			if(which_mode <= eSpecCtx::COMBAT_MOVE) {
+				*ctx.ret_a = bool(spec.ex1b); // Should block move? 1 = yes, 0 = no
+				if(*ctx.ret_a) {
+					if(ctx.which_mode == eSpecCtx::OUT_MOVE)
+						ASB("Can't go here while outdoors.");
+					else if(ctx.which_mode == eSpecCtx::TOWN_MOVE)
+						ASB("Can't go here while in town mode.");
+					else if(ctx.which_mode == eSpecCtx::COMBAT_MOVE)
+						ASB("Can't go here during combat.");
+				}
+			} else if(which_mode == eSpecCtx::TARGET && spec.ex1b >= 0) {
+				// TODO: I'm not quite sure if this covers every way of determining which spell was cast
+				if(is_town() && int(town_spell) != spec.ex1b)
+					break;
+				if(is_combat() && int(spell_being_cast) != spec.ex1b)
+					break;
+			}
+			ctx.next_spec = spec.ex1c;
 			break;
+		}
 		case eSpecType::IF_LOOKING:
 			if(ctx.which_mode == eSpecCtx::OUT_LOOK || ctx.which_mode == eSpecCtx::TOWN_LOOK)
 				ctx.next_spec = spec.ex1c;
