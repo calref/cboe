@@ -386,13 +386,13 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 		else me.addLabelFor(id,"    ", LABEL_LEFT, 7, true);
 	}
 	
+	if (first_item_shown >= item_array.size())
+		first_item_shown=std::max(size_t(8),item_array.size())-8;
 	// darken arrows, as appropriate
 	if(first_item_shown == 0)
 		me["up"].hide();
 	else me["up"].show();
-	// ASAN undefined behaviour, ie. item_array.size can be less than 7
-	if(first_item_shown+7 > item_array.size() ||
-	   item_array.size() <= 8)
+	if(first_item_shown+8 >= item_array.size())
 		me["down"].hide();
 	else me["down"].show();
 	
