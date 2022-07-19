@@ -411,7 +411,7 @@ void set_up_terrain_buttons(bool reset) {
 				break;
 			}
 			case DRAW_MONST:
-				pic = scenario.scen_monsters[i].picture_num;
+				pic = scenario.get_monster(i).picture_num;
 				tiny_to = draw_rect;
 				frame_rect(mainPtr, tiny_to, sf::Color::Black);
 				if(pic >= 4000) {
@@ -720,7 +720,7 @@ void draw_terrain(){
 						need_hilite = true;
 					else if(overall_mode == MODE_PLACE_CREATURE || overall_mode == MODE_PLACE_SAME_CREATURE) {
 						extern short mode_count;
-						cMonster& monst = scenario.scen_monsters[mode_count];
+						cMonster& monst = scenario.get_monster(mode_count);
 						for(int x = 0; x < monst.x_width; x++) {
 							for(int y = 0; y < monst.y_width; y++) {
 								location this_spot = {where_draw.x - x, where_draw.y - y};
@@ -833,48 +833,49 @@ void draw_monsts() {
 	rectangle source_rect;
 	location where_draw,store_loc;
 	
-	for(short i = 0; i < town->creatures.size(); i++)
-		if(town->creatures[i].number != 0) {
-			where_draw.x = town->creatures[i].start_loc.x - cen_x + 4;
-			where_draw.y = town->creatures[i].start_loc.y - cen_y + 4;
-			width = scenario.scen_monsters[town->creatures[i].number].x_width;
-			height = scenario.scen_monsters[town->creatures[i].number].y_width;
+	for(auto const &creature : town->creatures) {
+		if(creature.number == 0) continue;
+		where_draw.x = creature.start_loc.x - cen_x + 4;
+		where_draw.y = creature.start_loc.y - cen_y + 4;
+		auto const &monster=scenario.get_monster(creature.number);
+		width = monster.x_width;
+		height = monster.y_width;
 			
-			for(short k = 0; k < width * height; k++) {
-				store_loc = where_draw;
-				if((where_draw.x == minmax(0,8,where_draw.x)) &&
-					(where_draw.y == minmax(0,8,where_draw.y)) &&
-					(scenario.scen_monsters[town->creatures[i].number].picture_num >= 1000)) {
-					std::tie(from_gworld,source_rect) = spec_scen_g.find_graphic((scenario.scen_monsters[town->creatures[i].number].picture_num + k) % 1000);
-					store_loc.x += k % width;
-					store_loc.y += k / width;
-				}
-				else if(scenario.scen_monsters[town->creatures[i].number].picture_num < 1000) {
-					m_start_pic = m_pic_index[scenario.scen_monsters[town->creatures[i].number].picture_num].i + k;
-					int which_sheet = m_start_pic / 20;
-					from_gworld = *ResMgr::graphics.get("monst" + std::to_string(1 + which_sheet));
-					m_start_pic = m_start_pic % 20;
-					source_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);
-					store_loc.x += k % width;
-					store_loc.y += k / width;
-				}
-				
-				if(store_loc.x < 0 || store_loc.x > 8 || store_loc.y < 0 || store_loc.y > 8)
-					continue;
-				
-				rectangle destrec;
-				destrec.left = 8 + BITMAP_WIDTH * store_loc.x;
-				destrec.right = destrec.left + BITMAP_WIDTH;
-				destrec.top = 8 + BITMAP_HEIGHT * store_loc.y;
-				destrec.bottom = destrec.top + BITMAP_HEIGHT;
-				
-				destrec.left = destrec.right - (source_rect.right - source_rect.left);
-				destrec.top = destrec.bottom - (source_rect.bottom - source_rect.top);
-				destrec.offset(TER_RECT_UL_X,TER_RECT_UL_Y);
-				
-				rect_draw_some_item(from_gworld, source_rect, mainPtr, destrec, sf::BlendAlpha);
+		for(short k = 0; k < width * height; k++) {
+			store_loc = where_draw;
+			if(where_draw.x == minmax(0,8,where_draw.x) && where_draw.y == minmax(0,8,where_draw.y) && monster.picture_num >= 1000) {
+				std::tie(from_gworld,source_rect) = spec_scen_g.find_graphic((monster.picture_num + k) % 1000);
+				store_loc.x += k % width;
+				store_loc.y += k / width;
 			}
+			else if(monster.picture_num>=0 && monster.picture_num < 1000 && monster.picture_num<m_pic_index.size()) {
+				m_start_pic = m_pic_index[monster.picture_num].i + k;
+				int which_sheet = m_start_pic / 20;
+				from_gworld = *ResMgr::graphics.get("monst" + std::to_string(1 + which_sheet));
+				m_start_pic = m_start_pic % 20;
+				source_rect = calc_rect(2 * (m_start_pic / 10), m_start_pic % 10);
+				store_loc.x += k % width;
+				store_loc.y += k / width;
+			}
+			else
+				continue;
+				
+			if(store_loc.x < 0 || store_loc.x > 8 || store_loc.y < 0 || store_loc.y > 8)
+				continue;
+				
+			rectangle destrec;
+			destrec.left = 8 + BITMAP_WIDTH * store_loc.x;
+			destrec.right = destrec.left + BITMAP_WIDTH;
+			destrec.top = 8 + BITMAP_HEIGHT * store_loc.y;
+			destrec.bottom = destrec.top + BITMAP_HEIGHT;
+				
+			destrec.left = destrec.right - (source_rect.right - source_rect.left);
+			destrec.top = destrec.bottom - (source_rect.bottom - source_rect.top);
+			destrec.offset(TER_RECT_UL_X,TER_RECT_UL_Y);
+				
+			rect_draw_some_item(from_gworld, source_rect, mainPtr, destrec, sf::BlendAlpha);
 		}
+	}
 }
 
 static void update_item_rectangle(cPictNum const &pict, rectangle &rect)
@@ -1126,7 +1127,7 @@ void place_location() {
 		bool draw_field = false;
 		if(overall_mode == MODE_PLACE_CREATURE || overall_mode == MODE_PLACE_SAME_CREATURE) {
 			rectangle to_rect = draw_rect;
-			picture_wanted = scenario.scen_monsters[mode_count].picture_num;
+			picture_wanted = scenario.get_monster(mode_count).picture_num;
 			if(picture_wanted >= 4000) {
 				picture_wanted %= 1000;
 				to_rect.width() = to_rect.width() / 2;

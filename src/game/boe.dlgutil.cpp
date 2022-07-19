@@ -766,7 +766,7 @@ void handle_talk_event(location p) {
 		return;
 	if (which_talk_entry==TALK_BACK) {
 		if (talk_history_pos<2 || talk_history_pos>=talk_history_nodes.size()+2) {
-			beep();
+			play_sound(37); // checkme
 			return;
 		}
 		talk_history_pos-=2;
@@ -774,7 +774,7 @@ void handle_talk_event(location p) {
 	}
 	else if (which_talk_entry==TALK_FRONT) {
 		if (talk_history_pos>=talk_history_nodes.size()) {
-			beep();
+			play_sound(37); // checkme
 			return;
 		}
 		which_talk_entry=talk_history_nodes[talk_history_pos];
@@ -827,7 +827,7 @@ void handle_talk_event(location p) {
 			break;
 		case TALK_RECORD:
 			if(!can_save_talk) {
-				beep();
+				play_sound(37); // checkme
 				return;
 			}
 			if(univ.party.save_talk(univ.town->talking.people[store_personality%10].title, univ.town->name, save_talk_str1, save_talk_str2)) {

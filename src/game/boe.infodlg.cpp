@@ -247,7 +247,7 @@ static bool display_monst_event_filter(cDialog& me, std::string item_hit, cCreat
 		return true; // Means an immunity LED was hit
 	
 	if(roster[position % 60].number != on_monst_menu[position]) {
-		cMonster& monst = univ.scenario.scen_monsters[on_monst_menu[position]];
+		cMonster& monst = univ.scenario.get_monster(on_monst_menu[position]);
 		roster.assign(position % 60, cCreature(on_monst_menu[position]), monst, univ.party.easy_mode, univ.difficulty_adjust());
 	}
 	store_m = roster[position % 60];

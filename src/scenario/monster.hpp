@@ -78,6 +78,12 @@ public:
 	cMonster();
 	void writeTo(cTagFile_Page& page) const;
 	void readFrom(const cTagFile_Page& page);
+	
+	static cMonster bad() {
+		cMonster monster;
+		monster.m_name="BAD Monster";
+		return monster;
+	}
 };
 
 class cTownperson {

@@ -452,12 +452,13 @@ void cScenario::import_legacy(legacy::scen_item_data_type const &old){
 		else
 			scen_items[i].desc=descIt->second;
 	}
-	for(short i = 0; i < 256; i++) {
-		scen_monsters[i].m_name = old.monst_names[i];
-		if(scen_monsters[i].m_type == eRace::UNDEAD && scen_monsters[i].m_name.find("Skeleton") != std::string::npos)
-			scen_monsters[i].m_type = eRace::SKELETAL;
-		if(scen_monsters[i].m_type == eRace::HUMANOID && scen_monsters[i].m_name.find("Goblin") != std::string::npos)
-			scen_monsters[i].m_type = eRace::GOBLIN;
+	for(short i = 0; i < std::min<short>(256,scen_monsters.size()); i++) {
+		auto &monster=scen_monsters[i];
+		monster.m_name = old.monst_names[i];
+		if(monster.m_type == eRace::UNDEAD && monster.m_name.find("Skeleton") != std::string::npos)
+			monster.m_type = eRace::SKELETAL;
+		if(monster.m_type == eRace::HUMANOID && monster.m_name.find("Goblin") != std::string::npos)
+			monster.m_type = eRace::GOBLIN;
 	}
 	for(short i = 0; i < std::min<short>(256, ter_types.size()); i++)
 		ter_types[i].name = old.ter_names[i];
@@ -697,6 +698,23 @@ cItem cScenario::return_treasure(int loot, bool allow_junk) const {
 
 cOutdoors& cScenario::get_sector(int x, int y) {
 	return *outdoors[x][y];
+}
+
+cMonster &cScenario::get_monster(mon_num_t monst)
+{
+	if (monst<scen_monsters.size())
+		return scen_monsters[monst];
+	static cMonster badMonster;
+	badMonster=cMonster::bad();
+	return badMonster;
+}
+
+cMonster const &cScenario::get_monster(mon_num_t monst) const
+{
+	if (monst<scen_monsters.size())
+		return scen_monsters[monst];
+	static cMonster const badMonster=cMonster::bad();
+	return badMonster;
 }
 
 bool cScenario::is_town_entrance_valid(spec_loc_t loc) const {

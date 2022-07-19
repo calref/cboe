@@ -35,6 +35,8 @@ public:
 	void clear() {dudes.clear();}
 	cCreature& operator[](size_t n);
 	const cCreature& operator[](size_t n) const;
+	// remove the n^th creature from the list by swapping it with the last dude and then pop_back it
+	void removeCreature(size_t n);
 	cPopulation() : which_town(200), hostile(false) {}
 	std::deque<cCreature>::iterator begin() {return dudes.begin();}
 	std::deque<cCreature>::iterator end() {return dudes.end();}

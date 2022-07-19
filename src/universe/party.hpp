@@ -239,6 +239,8 @@ public:
 	cVehicle const &get_boat(int id) const;
 	cVehicle &get_horse(int id);
 	cVehicle const &get_horse(int id) const;
+	cMonster &get_summon(mon_num_t id);
+	cMonster const &get_summon(mon_num_t id) const;
 
 	cParty(ePartyPreset party_preset = PARTY_DEFAULT);
 	// Copy-and-swap

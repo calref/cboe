@@ -180,7 +180,7 @@ void draw_monsters() {
 }
 
 void play_see_monster_str(unsigned short m, location monst_loc) {
-	short spec = univ.scenario.scen_monsters[m].see_spec;
+	short spec = univ.scenario.get_monster(m).see_spec;
 	// Then run the special, if any
 	if(spec > -1){
 		queue_special(eSpecCtx::SEE_MONST, eSpecCtxType::SCEN, spec, monst_loc);
@@ -596,8 +596,8 @@ void check_if_monst_seen(unsigned short m_num, location at) {
 	// Make the monster vocalize if applicable
 	snd_num_t sound = -1;
 	if(m_num >= 10000)
-		sound = univ.party.summons[m_num - 10000].ambient_sound;
-	else sound = univ.scenario.scen_monsters[m_num].ambient_sound;
+		sound = univ.party.get_summon(m_num - 10000).ambient_sound;
+	else sound = univ.scenario.get_monster(m_num).ambient_sound;
 	if(sound > 0 && get_ran(1,1,100) < 10)
 		play_sound(-sound);
 }

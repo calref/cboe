@@ -13,7 +13,7 @@
 std::string get_str(std::string list, short j){
 	if(j == 0) return list;
 	const StringList& strings = *ResMgr::strings.get(list);
-	return strings[j - 1];
+	return (j<0 || j>strings.size()) ? "BAD String" : strings[j - 1];
 }
 
 short can_see(location p1,location p2,std::function<short(short,short)> get_obscurity) {
