@@ -810,12 +810,13 @@ void draw_terrain(short	mode) {
 			if((can_draw != 0) && (overall_mode != MODE_RESTING)) { // if can see, not a pit, and not resting
 				if(is_combat()) anim_ticks = 0;
 				
-				eTrimType trim = univ.get_terrain(spec_terrain).trim_type;
+				auto const &terrain=univ.get_terrain(spec_terrain);
+				eTrimType trim = terrain.trim_type;
 				
 				// Finally, draw this terrain spot
 				if(trim == eTrimType::WALKWAY){
 					int trim = -1;
-					unsigned short ground_t = univ.get_terrain(spec_terrain).trim_ter;
+					unsigned short ground_t = terrain.trim_ter;
 					ter_num_t ground_ter = univ.scenario.get_ter_from_ground(ground_t);
 					if(!loc_off_act_area(where_draw)) {
 						if(is_nature(where_draw.x - 1,where_draw.y,ground_t)){ // check left
