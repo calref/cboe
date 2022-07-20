@@ -15,7 +15,6 @@
 #include "boe.global.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 
-extern void finish_load_party();
 extern void end_startup();
 extern void post_load();
 
