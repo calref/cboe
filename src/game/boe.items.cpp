@@ -411,12 +411,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 			item = *item_array[i + first_item_shown];
 			me[name].setText(item.ident ? item.full_name : item.name);
 			// TODO: Party sheet items
-			cPict& pic = dynamic_cast<cPict&>(me[pict]);
-			if(item.graphic_num>=10000)
-				pic.setPict(item.graphic_num-10000, PIC_PARTY_ITEM);
-			else if(item.graphic_num >= 1000)
-				pic.setPict(item.graphic_num - 1000, PIC_CUSTOM_ITEM);
-			else pic.setPict(item.graphic_num, PIC_ITEM);
+			dynamic_cast<cPict&>(me[pict]).setPict(item.get_picture_num());
 			me[detail].setText(get_item_interesting_string(item));
 			me[weight].setText("Weight: " + std::to_string(item.item_weight()));
 			me[key].setText(key_stash);
@@ -440,10 +435,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 			std::ostringstream sout;
 			sout << "pc" << i + 1 << "-g";
-			pic_num_t pic = univ.party[i].which_graphic;
-			if(pic >= 100 && pic < 1000)
-				dynamic_cast<cPict&>(me[sout.str()]).setPict(pic - 100,PIC_MONST);
-			else dynamic_cast<cPict&>(me[sout.str()]).setPict(pic,PIC_PC);
+			dynamic_cast<cPict&>(me[sout.str()]).setPict(univ.party[i].get_picture_num());
 		}
 }
 

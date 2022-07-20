@@ -181,30 +181,8 @@ void draw_combat_pc(cPlayer& who, location center, bool attacking) {
 			location where_draw(who.combat_pos.x - center.x + 4, who.combat_pos.y - center.y + 4);
 			rectangle source_rect;
 			Texture from_gw;
-			pic_num_t pic = who.which_graphic;
-			if(pic >= 1000) {
-				bool isParty = pic >= 10000;
-				pic_num_t need_pic = pic % 1000;
-				if(who.direction >= 4)
-					need_pic++;
-				if(attacking)
-					need_pic += 2;
-				std::tie(from_gw,source_rect) = spec_scen_g.find_graphic(need_pic, isParty);
-			} else if(pic >= 100) {
-				// Note that we assume it's a 1x1 graphic.
-				// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
-				cPict::get_picture(cPictNum(pic - 100,PIC_MONST), from_gw, source_rect, (who.direction < 4 ? 0 : 2) + (attacking ? 1 : 0));
-			} else {
-				source_rect = calc_rect(2 * (pic / 8), pic % 8);
-				if(who.direction >= 4)
-					source_rect.offset(28,0);
-				if(attacking)
-					source_rect.offset(0,288);
-				from_gw = *ResMgr::textures.get("pcs");
-			}
-			
-			Draw_Some_Item(from_gw, source_rect, terrain_screen_gworld, where_draw, 1, 0);
-			
+			if (cPict::get_picture(who.get_picture_num(), from_gw, source_rect, (who.direction >= 4 ? 2 : 0) + (attacking ? 1 : 0)))
+				Draw_Some_Item(from_gw, source_rect, terrain_screen_gworld, where_draw, 1, 0);
 		}
 }
 
@@ -409,24 +387,6 @@ void draw_party_symbol(location center) {
 	
 	if((univ.party.in_boat < 0) && (univ.party.in_horse < 0)) {
 		i = first_active_pc();
-		Texture from_gw;
-		pic_num_t pic = univ.party[i].which_graphic;
-		if(pic >= 1000) {
-			bool isParty = pic >= 10000;
-			pic_num_t need_pic = pic % 1000;
-			if(univ.party.direction >= 4)
-				need_pic++;
-			std::tie(from_gw,source_rect) = spec_scen_g.find_graphic(need_pic, isParty);
-		} else if(pic >= 100) {
-			// Note that we assume it's a 1x1 graphic.
-			// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
-			cPict::get_picture(cPictNum(pic - 100,PIC_MONST), from_gw, source_rect, univ.party.direction < 4 ? 0 : 2);
-		} else {
-			source_rect = calc_rect(2 * (pic / 8), pic % 8);
-			if(univ.party.direction >= 4)
-				source_rect.offset(28,0);
-			from_gw = *ResMgr::textures.get("pcs");
-		}
 		ter_num_t ter = 0;
 		if(is_out())
 			ter = univ.out[univ.party.out_loc.x][univ.party.out_loc.y];
@@ -435,7 +395,11 @@ void draw_party_symbol(location center) {
 		// now wedge in bed graphic
 		if(is_town() && univ.scenario.get_terrain(ter).special == eTerSpec::BED)
 			draw_one_terrain_spot((short) target.x,(short) target.y,10000 + univ.get_terrain(ter).flag1);
-		else Draw_Some_Item(from_gw, source_rect, terrain_screen_gworld, target, 1, 0);
+		else {
+			Texture from_gw;
+			cPict::get_picture(univ.party[i].get_picture_num(), from_gw, source_rect, (univ.party.direction >= 4 ? 2 : 0));
+			Draw_Some_Item(from_gw, source_rect, terrain_screen_gworld, target, 1, 0);
+		}
 	}
 	else if(univ.party.in_boat >= 0) {
 		if(univ.party.direction == DIR_N) i = 2;

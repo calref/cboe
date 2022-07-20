@@ -32,7 +32,7 @@ void put_background();
 void draw_text_bar();
 void refresh_text_bar();
 void put_text_bar(std::string str);
-void draw_terrain(short	mode = 0);
+void draw_terrain(short mode = 0);
 void place_trim(short q,short r,location where,ter_num_t ter_type);
 void draw_trim(short q,short r,short which_trim,short which_mode);
 void place_road(short q,short r,location where,bool here);

@@ -14,6 +14,8 @@
 #include <array>
 #include <iosfwd>
 
+#include "dialogxml/widgets/pict.hpp"
+
 #include "monster_abilities.hpp"
 #include "race.hpp"
 #include "location.hpp"
@@ -72,7 +74,12 @@ public:
 	
 	std::map<eMonstAbil,uAbility>::iterator addAbil(eMonstAbilTemplate what, int param = 0);
 	int addAttack(unsigned short dice, unsigned short sides, eMonstMelee type = eMonstMelee::SWING);
-	
+	cPictNum get_picture_num() const {
+		return get_picture_num(picture_num);
+	}
+	static cPictNum get_picture_num(pic_num_t pic);
+	static pic_num_t get_num_for_picture(cPictNum const &pic);
+
 	void import_legacy(legacy::monster_record_type const &old);
 	cMonster();
 	void writeTo(std::ostream& file) const;
