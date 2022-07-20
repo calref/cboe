@@ -22,23 +22,25 @@
 		<led name='slow' relative='pos-in pos' anchor='spd-head' top='4' left='190' width='53'>Slow</led>
 		<led name='snail' relative='pos-in pos' anchor='spd-head' top='4' left='274' width='70'>Quite Slow</led>
 	</group>
+	<!-- older machine -->
 	<text size='large' relative='pos-in pos' anchor='spd-head' top='23' left='0' width='182' height='17'>For older machines:</text>
-	<led name='nofrills' relative='pos-in pos' rel-anchor='prev' top='6' left='0' width='335'>
-		No graphics frills (lose special effects)
-	</led>
+	<led name='nofrills' relative='pos-in pos' rel-anchor='prev' top='6' left='0' width='335'>No graphics frills (lose special effects)</led>
 	<led name='noanim' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='335'>Turn off terrain animation</led>
 	<led name='noshore' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='335'>Turn of frills on shore</led>
-	<led name='nomaps' relative='pos-in pos' rel-anchor='prev' top='15' left='0' width='120'>Don't Save Maps</led>
 	<led name='nosound' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='117'>No Sounds</led>
+	<led name='skipsplash' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='340'>Skip splash screen on startup</led>
+	<!-- help -->
 	<led name='repeatdesc' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='287'>Show room descriptions more than once</led>
 	<led name='nohelp' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='306'>Never show instant help</led>
 	<led name='resethelp' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='340'>
 		Reset instant help (all help windows will reappear)
 	</led>
+	<!-- make game easier -->
 	<led name='easier' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='352'>Make game easier (monsters much weaker)</led>
 	<led name='lesswm' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='340'>Fewer wandering monsters</led>
-	<led name='skipsplash' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='340'>Skip splash screen on startup</led>
-	<text name='scale-head' size='large' relative='neg pos' anchor='skipsplash' top='17' left='10' width='260' height='17'>Scale UI:</text>
+	<led name='junk' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='120'>Show the junk bag</led>
+	<!-- scaling -->
+	<text name='scale-head' size='large' relative='neg pos' anchor='junk' top='17' left='10' width='260' height='17'>Scale UI:</text>
 	<group name='scaleui'>
 		<led name='1' relative='pos-in pos' anchor='scale-head' top='4' left='15' width='33'>1</led>
 		<led name='1_5' relative='pos-in pos' anchor='scale-head' top='4' left='55' width='33'>1.5</led>

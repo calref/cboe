@@ -59,6 +59,7 @@ void finish_load_party(){
 	// use user's easy mode and less wandering mode
 	univ.party.easy_mode=get_bool_pref("EasyMode", false);
 	univ.party.less_wm=get_bool_pref("LessWanderingMonsters", false);
+	univ.party.show_junk_bag=get_bool_pref("ShowJunkBag", false);
 
 	// now if not in scen, this is it.
 	if(!univ.party.is_in_scenario()) {

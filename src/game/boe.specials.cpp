@@ -2230,9 +2230,19 @@ void general_spec(const runtime_state& ctx) {
 				ctx.next_spec = spec.ex1b;
 			break;
 		case eSpecType::BUY_ITEMS_OF_TYPE:
-			for(short i = 0; i < 144; i++)
-				if(univ.party.take_class(spec.ex1a))
+			for(short i = 0; i < 144; i++) {
+				if(!univ.party.check_class(spec.ex1a,true))
+					break;
+				store_val++;
+			}
+			if (univ.party.show_junk_bag && is_town() && !is_combat()) {
+				int check_town_id = is_town_hostile() ? univ.party.town_num : -1;
+				for(short i = 0; i < 144; i++) {
+					if(store_val>=144 || !univ.party.check_junk_class(spec.ex1a,true,check_town_id))
+						break;
 					store_val++;
+				}
+			}
 			if(store_val == 0) {
 				if(spec.ex1b >= 0)
 					ctx.next_spec = spec.ex1b;
@@ -3356,9 +3366,12 @@ void ifthen_spec(const runtime_state& ctx) {
 				}
 			break;
 		case eSpecType::IF_HAVE_ITEM_CLASS:
-			if(spec.ex2a > 0 && univ.party.take_class(spec.ex1a))
+			if(spec.ex2a > 0 && univ.party.check_class(spec.ex1a,true))
 				ctx.next_spec = spec.ex1b;
-			else if(spec.ex2a == 0 && univ.party.has_class(spec.ex1a))
+			else if(spec.ex2a == 0 && univ.party.check_class(spec.ex1a,false))
+				ctx.next_spec = spec.ex1b;
+			else if (univ.party.show_junk_bag && is_town() && !is_combat() &&
+					 univ.party.check_junk_class(spec.ex1a,spec.ex2a > 0, is_town_hostile() ? univ.party.town_num : -1))
 				ctx.next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_EQUIP_ITEM_CLASS:

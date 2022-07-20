@@ -602,6 +602,7 @@ void start_town_combat(eDirection direction) {
 	set_pc_moves();
 	pick_next_pc();
 	center = univ.current_pc().combat_pos;
+	UI::toolbar.reset_active_button();
 	UI::toolbar.draw(mainPtr);
 	put_pc_screen();
 	set_stat_window_for_pc(univ.cur_pc);

@@ -8,6 +8,7 @@ const int TEXT_BUF_LEN = 70;
 #include "boe.global.hpp"
 #include "boe.graphutil.hpp"
 #include "universe/universe.hpp"
+#include "boe.items.hpp"
 #include "boe.text.hpp"
 #include "boe.locutils.hpp"
 #include "boe.infodlg.hpp"
@@ -72,10 +73,10 @@ extern enum_map(eItemButton, rectangle) item_buttons[8];
 extern enum_map(ePlayerButton, rectangle) pc_buttons[6];
 extern enum_map(eItemButton, bool) item_area_button_active[8];
 extern enum_map(ePlayerButton, bool) pc_area_button_active[6];
-extern rectangle item_screen_button_rects[9];
+extern rectangle item_screen_button_rects[10];
 extern std::vector<int> spec_item_array;
 // combat globals
-extern short item_bottom_button_active[9];
+extern bool item_bottom_button_active[10];
 extern cUniverse univ;
 extern short shop_identify_cost;
 extern short store_selling_values[8];
@@ -243,7 +244,9 @@ void put_item_screen(eItemWinMode screen_num) {
 		case ITEM_WIN_QUESTS:
 			win_draw_string(item_stats_gworld,upper_frame_rect,"Quests/Jobs:",eTextMode::WRAP,style);
 			break;
-			
+		case ITEM_WIN_JUNK:
+			win_draw_string(item_stats_gworld,upper_frame_rect,"Junk Bag:",eTextMode::WRAP,style);
+			break;
 		default: // on an items page
 			pc = screen_num;
 			sout.str("");
@@ -291,7 +294,56 @@ void put_item_screen(eItemWinMode screen_num) {
 				}
 			}
 			break;
+		case ITEM_WIN_JUNK:
+			style.colour = Colours::BLACK;
 			
+			for(short i = 0; i < 8; i++) {
+				i_num = i + item_offset;
+				sout.str("");
+				sout << i_num + 1 << '.';
+				win_draw_string(item_stats_gworld,item_buttons[i][ITEMBTN_NAME],sout.str(),eTextMode::WRAP,style);
+				
+				dest_rect = item_buttons[i][ITEMBTN_NAME];
+				dest_rect.left += 36;
+				dest_rect.top -= 2;
+
+				const cItem& item = univ.party.get_junk_item(i_num);
+				if(item.variety != eItemType::NO_ITEM) {
+					style.font = FONT_PLAIN;
+					style.colour = Colours::BLACK;
+					
+					sout.str("");
+					if(!item.ident)
+						sout << item.name << "  ";
+					else { /// Don't place # of charges when Sell button up and space tight
+						sout << item.full_name << ' ';
+						if(item.charges > 0 && item.ability != eItemAbil::MESSAGE && (stat_screen_mode == MODE_INVEN || stat_screen_mode == MODE_SHOP))
+							sout << '(' << int(item.charges) << ')';
+					}
+					dest_rect.left -= 2;
+					win_draw_string(item_stats_gworld,dest_rect,sout.str(),eTextMode::WRAP,style);
+					style.italic = false;
+					style.colour = Colours::BLACK;
+					
+					place_item_graphic(i,item.graphic_num);
+					item_area_button_active[i][ITEMBTN_NAME] = item_area_button_active[i][ITEMBTN_ICON] = false;
+					place_item_button(3,i,ITEMBTN_INFO); // info button
+
+					if(stat_screen_mode == MODE_INVEN && !is_combat()) {
+						// check if we need to add give and drop
+						int townId=is_town() ? univ.party.town_num : 200;
+						if (univ.party.is_junk_item_compatible_with_town(i_num, townId) ||
+							(is_town() && !is_town_hostile())) {
+							place_item_button(1,i,ITEMBTN_GIVE);
+							if (is_town()) place_item_button(2,i,ITEMBTN_DROP);
+						}
+					}
+					// now add identify or sell button if in shop
+					if (stat_screen_mode==MODE_IDENTIFY || stat_screen_mode==MODE_SELL_WEAP  || stat_screen_mode==MODE_SELL_ARMOR || stat_screen_mode==MODE_SELL_ANY)
+						place_buy_button(i,7,i_num);
+				} // end of if item is there
+			} // end of for(short i = 0; i < 8; i++)
+			break;
 		default: // on an items page
 			style.colour = Colours::BLACK;
 			
@@ -364,18 +416,18 @@ void put_item_screen(eItemWinMode screen_num) {
 }
 
 void place_buy_button(short position,short pc_num,short item_num) {
+	if (pc_num<0 || pc_num>7) return;
 	rectangle dest_rect,source_rect;
 	rectangle button_sources[3] = {{24,0,36,30},{36,0,48,30},{48,0,60,30}};
 	short val_to_place;
 	// TODO: This is now duplicated here and in start_town_mode()
 	short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
 	
-	const cPlayer& pc = univ.party[pc_num];
-	const cItem& item = pc.items[item_num];
+	const cItem& item = pc_num<=6 ? univ.party[pc_num].items[item_num] : univ.party.get_junk_item(item_num);
 	
 	if(item.variety == eItemType::NO_ITEM)
 		return;
-	
+	bool const is_equipped = pc_num<=6 ? univ.party[pc_num].equip[item_num] : false;
 	dest_rect = item_buttons[position][ITEMBTN_SPEC];
 	
 	val_to_place = (item.charges > 0) ?
@@ -392,19 +444,19 @@ void place_buy_button(short position,short pc_num,short item_num) {
 			}
 			break;
 		case MODE_SELL_WEAP:
-			if((*item.variety).is_weapon && !pc.equip[item_num] && item.ident && val_to_place > 0 && !item.unsellable) {
+			if((*item.variety).is_weapon && !is_equipped && item.ident && val_to_place > 0 && !item.unsellable) {
 				item_area_button_active[position][ITEMBTN_SPEC] = true;
 				source_rect = button_sources[1];
 			}
 			break;
 		case MODE_SELL_ARMOR:
-			if((*item.variety).is_armour && !pc.equip[item_num] && item.ident && val_to_place > 0 && !item.unsellable) {
+			if((*item.variety).is_armour && !is_equipped && item.ident && val_to_place > 0 && !item.unsellable) {
 				item_area_button_active[position][ITEMBTN_SPEC] = true;
 				source_rect = button_sources[1];
 			}
 			break;
 		case MODE_SELL_ANY:
-			if(!pc.equip[item_num] && item.ident && val_to_place > 0 && !item.unsellable) {
+			if(!is_equipped && item.ident && val_to_place > 0 && !item.unsellable) {
 				item_area_button_active[position][ITEMBTN_SPEC] = true;
 				source_rect = button_sources[1];
 			}
@@ -490,7 +542,7 @@ void place_item_button(short button_position,short which_slot,eItemButton button
 
 void place_item_bottom_buttons() {
 	rectangle pc_from_rect = {0,0,36,28},but_from_rect = {30,60,46,78},to_rect;
-	rectangle spec_from_rect = {0,60,15,95}, job_from_rect = {15,60,30,95}, help_from_rect = {46,60,59,76};
+	rectangle spec_from_rect = {0,60,15,95}, job_from_rect = {15,60,30,95}, help_from_rect = {46,60,59,76}, bag_from_rect = {60,60,78,78};
 	// TODO: What about when the buttons are pressed?
 	TextStyle style;
 	style.lineHeight = 10;
@@ -523,6 +575,18 @@ void place_item_bottom_buttons() {
 	rect_draw_some_item(invenbtn_gworld, job_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 	to_rect = item_screen_button_rects[8];
 	rect_draw_some_item(invenbtn_gworld, help_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+	if (univ.party.show_junk_bag) {
+		to_rect = item_screen_button_rects[9];
+		item_bottom_button_active[9] = true;
+		rect_draw_some_item(invenbtn_gworld, bag_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+		to_rect.inset(2,2);
+		std::string numeral = "7";
+		short width = string_length(numeral, style);
+		to_rect.offset(-width - 5, 0);
+		win_draw_string(item_stats_gworld, to_rect, numeral, eTextMode::LEFT_TOP, style);
+	}
+	else
+		item_bottom_button_active[9] = false;
 }
 
 void set_stat_window_for_pc(int pc) {
@@ -568,6 +632,9 @@ void set_stat_window(eItemWinMode new_stat) {
 				}
 			array_pos = max(0,array_pos - 8);
 			item_sbar->setMaximum(array_pos);
+			break;
+		case ITEM_WIN_JUNK:
+			item_sbar->setMaximum(max(8,univ.party.junk_items.size())-8);
 			break;
 		default:
 			item_sbar->setMaximum(16);

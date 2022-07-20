@@ -58,6 +58,7 @@ cParty::cParty(const cParty& other)
 	, hostiles_present(other.hostiles_present)
 	, easy_mode(other.easy_mode)
 	, less_wm(other.less_wm)
+	, show_junk_bag(other.show_junk_bag)
 	, magic_ptrs(other.magic_ptrs)
 	, light_level(other.light_level)
 	, outdoor_corner(other.outdoor_corner)
@@ -101,6 +102,7 @@ cParty::cParty(const cParty& other)
 	, scen_won(other.scen_won)
 	, scen_played(other.scen_played)
 	, campaign_flags(other.campaign_flags)
+	, junk_items(other.junk_items)
 	, pointers(other.pointers)
 {
 	for(int i = 0; i < 6; i++) {
@@ -171,6 +173,7 @@ void swap(cParty& lhs, cParty& rhs) {
 	swap(lhs.scen_won, rhs.scen_won);
 	swap(lhs.scen_played, rhs.scen_played);
 	swap(lhs.campaign_flags, rhs.campaign_flags);
+	swap(lhs.junk_items, rhs.junk_items);
 	swap(lhs.pointers, rhs.pointers);
 	for(size_t i = 0; i < lhs.adven.size(); i++) {
 		swap(*lhs.adven[i], *rhs.adven[i]);
@@ -218,6 +221,102 @@ cMonster &cParty::get_summon(mon_num_t id) {
 	static cMonster bad_monster;
 	bad_monster=cMonster::bad();
 	return bad_monster;
+}
+
+cItem const &cParty::get_junk_item(item_num_t id) const
+{
+	if (id<junk_items.size())
+		return junk_items[id].first;
+	static cItem bad_item=cItem::bad();
+	return bad_item;
+}
+
+cItem &cParty::get_junk_item(item_num_t id)
+{
+	if (id<junk_items.size())
+		return junk_items[id].first;
+	static cItem bad_item;
+	bad_item=cItem::bad();
+	return bad_item;
+}
+
+bool cParty::is_junk_item_compatible_with_town(item_num_t id, int townId) const
+{
+	if (id<junk_items.size())
+		return junk_items[id].second.count(townId)>0;
+	return false;
+}
+
+static bool combine_items(cItem &item1, cItem const &item2)
+{
+	if (item1.can_be_combined_with(item2)) {
+		short test = item1.charges + item2.charges;
+		if(test > 125) {
+			item1.charges = 125;
+			if(cParty::print_result)
+				cParty::print_result("(Can have at most 125 of any item.");
+		}
+		else item1.charges += item2.charges;
+		return true;
+	}
+	return false;
+}
+
+bool cParty::give_junk_item(cItem const &item, int townId) {
+	if(item.variety == eItemType::NO_ITEM)
+		return true;
+	if(item.variety == eItemType::GOLD || item.variety == eItemType::FOOD || item.variety == eItemType::QUEST || item.variety == eItemType::SPECIAL) {
+		if(print_result)
+			print_result("Trying to add unexpected items in junk bag.");
+		return false;
+	}
+	cItem fItem(item);
+	fItem.property = false;
+	fItem.contained = false;
+	fItem.held = false;
+	if (fItem.charges<0) fItem.charges=1;
+	if(fItem.type_flag > 0 && fItem.ident) {
+		for(auto &jItemSet : junk_items) {
+			if(combine_items(jItemSet.first, fItem)) {
+				if (townId>=0) jItemSet.second.insert(townId);
+				return true;
+			}
+		}
+	}
+	std::set<int> listTowns;
+	if (townId>=0) listTowns.insert(townId);
+	junk_items.push_back(std::make_pair(fItem,listTowns));
+	return true;
+}
+
+void cParty::combine_junk_items()
+{
+	// FIXME: probably better to first construct a multimap of name => id, items for identify id
+	//        then for each item which shares the same names check if we combine them and keep a set
+	//        of item id to remove, then we can remove the item
+	for (size_t i=junk_items.size(); i>0; --i) {
+		auto const &item=junk_items[i-1].first;
+		if (!item.ident) continue;
+		for (size_t j=i-1; j>0; --j) {
+			if (!combine_items(junk_items[j-1].first, item))
+				continue;
+			if (i!=j)
+				junk_items[j-1].second.insert(junk_items[i-1].second.begin(), junk_items[i-1].second.end());
+			std::swap(junk_items[i-1],junk_items.back());
+			junk_items.pop_back();
+			break;
+		}
+	}
+}
+
+void cParty::take_junk_item(item_num_t id)
+{
+	if (id>=junk_items.size()) {
+		if(print_result)
+			print_result("Trying to remove unexistant item in junk bag.");
+		return;
+	}
+	junk_items.erase(junk_items.begin()+id);
 }
 
 void cParty::import_legacy(legacy::party_record_type const & old, cUniverse& univ){
@@ -757,28 +856,41 @@ bool cParty::take_abil(eItemAbil abil, short dat) {
 	return false;
 }
 
-bool cParty::has_class(unsigned int item_class) {
+bool cParty::check_class(unsigned int item_class,bool take) {
 	if(item_class == 0)
 		return false;
-	for(auto& pc : *this)
-		if(pc.main_status == eMainStatus::ALIVE)
-			if(cInvenSlot item = pc.has_class(item_class)) {
-				return true;
-			}
-	return false;
-}
-
-bool cParty::take_class(unsigned int item_class) const {
-	if(item_class == 0)
-		return false;
-	for(auto& pc : *this)
-		if(pc.main_status == eMainStatus::ALIVE)
-			if(cInvenSlot item = pc.has_class(item_class)) {
+	for(auto& pc : *this) {
+		if(pc.main_status != eMainStatus::ALIVE)
+			continue;
+		if(cInvenSlot item = pc.has_class(item_class)) {
+			if(take) {
 				if(item->charges > 1)
 					item->charges--;
 				else pc.take_item(item.slot);
-				return true;
 			}
+			return true;
+		}
+	}
+	return false;
+}
+
+bool cParty::check_junk_class(unsigned int item_class,bool take,int townId) {
+	if(!show_junk_bag || item_class == 0)
+		return false;
+	for (size_t i=0; i<junk_items.size(); ++i) {
+		auto &itemSet = junk_items[i];
+		if (itemSet.first.special_class!=item_class)
+			continue;
+		if (townId>=0 && itemSet.second.count(townId)==0)
+			continue;
+		if (take) {
+			if(itemSet.first.charges > 1)
+				--itemSet.first.charges;
+			else
+				take_junk_item(i);
+			return true;
+		}
+	}
 	return false;
 }
 
@@ -802,6 +914,7 @@ void cParty::writeTo(cTagFile& file) const {
 	main_page["HOSTILES"] << hostiles_present;
 	main_page["EASY"] << easy_mode;
 	main_page["LESSWM"] << less_wm;
+	main_page["JUNKBAG"] << show_junk_bag;
 	for(int i = 0; i < 310; i++) {
 		for(int j = 0; j < 50; j++) {
 			if(stuff_done[i][j] > 0) {
@@ -891,6 +1004,16 @@ void cParty::writeTo(cTagFile& file) const {
 			horse_page["HORSE"] << i;
 			horses[i].writeTo(horse_page);
 		}
+	}
+	for (auto const &junkTowns : junk_items) {
+		if (junkTowns.first.variety==eItemType::NO_ITEM)
+			continue;
+		auto& junk_page = file.add();
+		if (junkTowns.second.empty())
+			junk_page["JUNKITEM"] << -1;
+		else
+			junk_page["JUNKITEM"].encode(junkTowns.second);
+		junkTowns.first.writeTo(junk_page);
 	}
 	for(auto& p : magic_store_items) {
 		for(auto& p2 : p.second) {
@@ -998,6 +1121,7 @@ void cParty::readFrom(const cTagFile& file) {
 			page["HOSTILES"] >> hostiles_present;
 			page["EASY"] >> easy_mode;
 			page["LESSWM"] >> less_wm;
+			page["JUNKBAG"] >> show_junk_bag;
 			page["LIGHT"] >> light_level;
 			page["OUTCORNER"] >> outdoor_corner.x >> outdoor_corner.y;
 			page["INWHICHCORNER"] >> i_w_c.x >> i_w_c.y;
@@ -1117,6 +1241,14 @@ void cParty::readFrom(const cTagFile& file) {
 			if(i >= horses.size()) horses.resize(i + 1);
 			horses[i].exists = true;
 			horses[i].readFrom(page);
+		} else if (page.getFirstKey() == "JUNKITEM") {
+			junk_items.emplace_back();
+			auto &item = junk_items.back();
+			std::vector<int> towns;
+			page["JUNKITEM"].extract(towns);
+			if (towns.size()!=1 || towns[0]>=0)
+				item.second=std::set<int>(towns.begin(), towns.end());
+			item.first.readFrom(page);
 		} else if(page.getFirstKey() == "MAGICSTORE") {
 			size_t i, j;
 			page["MAGICSTORE"] >> i >> j;
@@ -1196,7 +1328,8 @@ void cParty::readFrom(const cTagFile& file) {
 }
 
 cPlayer& cParty::operator[](unsigned short n){
-	if(n > 6) throw std::out_of_range("Attempt to access a player that doesn't exist.");
+	if(n > 6)
+		throw std::out_of_range("Attempt to access a player that doesn't exist.");
 	else if(n == 6)
 		return *adven[0]; // TODO: PC #6 should never be accessed, but bounds checking is rarely done, so this is a quick fix.
 	return *adven[n];
