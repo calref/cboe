@@ -733,6 +733,7 @@ static void handle_switch_pc(short which_pc, bool& need_redraw, bool& need_repri
 		univ.cur_pc = which_pc;
 		set_stat_window_for_pc(which_pc);
 		add_string_to_buf("Now " + std::string(overall_mode == MODE_SHOPPING ? "shopping" : "active") + ": " + pc.name);
+		if (overall_mode==MODE_SHOPPING) set_up_shop_array(); // needed to be sure that healing corresponds to new pc
 		adjust_spell_menus();
 		need_redraw = true;
 	}
