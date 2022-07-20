@@ -34,6 +34,7 @@ extern sf::RenderWindow mainPtr;
 const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
 short cDialog::defaultBackground = cDialog::BG_DARK;
 cDialog* cDialog::topWindow = nullptr;
+bool cDialog::inDialog = false;
 
 std::string cDialog::generateRandomString(){
 	// Not bothering to seed, because it doesn't actually matter if it's truly random.
@@ -493,6 +494,8 @@ bool cDialog::sendInput(cKey key) {
 
 void cDialog::run(std::function<void(cDialog&)> onopen){
 	cDialog* formerTop = topWindow;
+	bool formerInDialog = inDialog;
+	inDialog = true;
 	// TODO: The introduction of the static topWindow means I may be able to use this instead of parent->win; do I still need parent?
 	sf::RenderWindow* parentWin = &(parent ? parent->win : mainPtr);
 	auto parentPos = parentWin->getPosition();
@@ -553,6 +556,7 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	set_cursor(former_curs);
 	topWindow = formerTop;
 	makeFrontWindow(*parentWin);
+	inDialog = formerInDialog;
 }
 
 // This method is a main event event loop of the dialog.

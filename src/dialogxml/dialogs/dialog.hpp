@@ -49,6 +49,7 @@ class cDialog {
 	template<typename Iter> void handleTabOrder(std::string& itemHit, Iter begin, Iter end);
 	std::vector<std::pair<std::string,cTextField*>> tabOrder;
 	static cDialog* topWindow; // Tracks the frontmost dialog.
+	static bool inDialog;
 public:
 	/// Performs essential startup initialization. Generally should not be called directly.
 	static void init();
@@ -210,6 +211,10 @@ public:
 			}while(controls.find(p.first) != controls.end());
 		}
 		return p;
+	}
+	/// checks if a dialog is actually running
+	static bool checkIfDialogIsRunning() {
+		return inDialog;
 	}
 	cDialog& operator=(cDialog& other) = delete;
 	cDialog(cDialog& other) = delete;
