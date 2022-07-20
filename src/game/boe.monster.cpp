@@ -686,26 +686,25 @@ bool combat_move_monster(short which,location destination) {
 // TODO: THIS MAKES NO ADJUSTMENTS FOR BIG MONSTERS!!!
 //mode; // 0 - normal  1 - prefer adjacent space
 location find_clear_spot(location from_where,short mode) {
-	location loc,store_loc;
-	short num_tries = 0,r1;
+	location loc, store_loc(0,0);
 	// Here 254 indicates the low byte of the town fields, minus explored spaces (which is lowest bit).
-	unsigned long blocking_fields = SPECIAL_SPOT | OBJECT_CRATE | OBJECT_BARREL | OBJECT_BLOCK | FIELD_QUICKFIRE | 254;
-	
-	while(num_tries < 75) {
-		num_tries++;
+	unsigned long const blocking_fields = SPECIAL_SPOT | OBJECT_CRATE | OBJECT_BARREL | OBJECT_BLOCK | FIELD_QUICKFIRE | 254;
+	int listPositions[25];
+	for (int i=0; i<25; ++i) listPositions[i]=i;
+	for (int step=0; step<25; ++step) {
+		short w=get_ran(1,step,24);
+		std::swap(listPositions[w],listPositions[step]);
 		loc = from_where;
-		r1 = get_ran(1,-2,2);
-		loc.x = loc.x + r1;
-		r1 = get_ran(1,-2,2);
-		loc.y = loc.y + r1;
+		loc.x += listPositions[step]/5-2;
+		loc.y += listPositions[step]%5-2;
 		if(!loc_off_act_area(loc) && !is_blocked(loc)
 			&& can_see_light(from_where,loc,combat_obscurity) == 0
 			&& (!is_combat() || univ.target_there(loc,TARG_PC) == nullptr)
 			&& (!is_town() || loc != univ.party.town_loc)
 			&& (!is_town() || !(univ.town.fields[loc.x][loc.y] & blocking_fields))) {
-			if((mode == 0) || ((mode == 1) && (adjacent(from_where,loc))))
+			if(mode == 0 || (mode == 1 && adjacent(from_where,loc)))
 				return loc;
-			else store_loc = loc;
+			store_loc = loc;
 		}
 	}
 	return store_loc;
@@ -758,7 +757,7 @@ bool monster_placid(short m_num) {
 }
 
 // This damages a monster by any fields it's in, and destroys any barrels or crates
-// it's stiing on.
+// it's siting on.
 void monst_inflict_fields(short which_monst) {
 	short r1;
 	location where_check;
