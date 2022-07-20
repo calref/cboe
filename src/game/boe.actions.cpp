@@ -833,6 +833,8 @@ static void handle_item_shop_action(short item_hit) {
 			play_sound(-39);
 			univ.party.gold += store_selling_values[i];
 			ASB("You sell your item.");
+			// gold is an unsigned short, so we must add a check here
+			dump_gold(1);
 			if (stat_window<=6)
 				univ.party[stat_window].take_item(item_hit);
 			else
