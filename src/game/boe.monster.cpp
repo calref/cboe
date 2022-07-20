@@ -126,6 +126,11 @@ location get_monst_head(short m_num) {
 	return l;
 }
 
+cPictNum get_monst_picture_num(mon_num_t monst) {
+	if(monst >= 10000) return univ.party.get_summon(monst - 10000).get_picture_num();
+	return univ.scenario.get_monster(monst).get_picture_num();
+}
+
 short get_monst_picnum(mon_num_t monst) {
 	if(monst >= 10000) return univ.party.get_summon(monst - 10000).picture_num;
 	return univ.scenario.get_monster(monst).picture_num;
@@ -682,7 +687,6 @@ bool combat_move_monster(short which,location destination) {
 
 // Looks at all spaces within 2, looking for a spot which is clear of nastiness and beings
 // returns {0,0} if none found
-// TODO: NO WAIT IT DOESN'T LOOK AT ALL SPACES!!!
 // TODO: THIS MAKES NO ADJUSTMENTS FOR BIG MONSTERS!!!
 //mode; // 0 - normal  1 - prefer adjacent space
 location find_clear_spot(location from_where,short mode) {
