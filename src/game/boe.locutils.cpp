@@ -47,36 +47,21 @@ void make_explored(short i,short j, short val) {
 	}
 }
 
+static bool is_out(eGameMode overall_mode) {
+	return overall_mode == MODE_OUTDOORS || overall_mode == MODE_LOOK_OUTDOORS;
+}
 bool is_out() {
-	if((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_LOOK_OUTDOORS))
-		return true;
-	else if(overall_mode == MODE_SHOPPING) {
-		std::swap(overall_mode, store_pre_shop_mode);
-		bool ret = is_out();
-		std::swap(overall_mode, store_pre_shop_mode);
-		return ret;
-	} else if(overall_mode == MODE_TALKING) {
-		std::swap(overall_mode, store_pre_talk_mode);
-		bool ret = is_out();
-		std::swap(overall_mode, store_pre_talk_mode);
-		return ret;
-	} else return false;
+	return is_out(overall_mode) || (overall_mode == MODE_SHOPPING && is_out(store_pre_shop_mode)) ||
+		(overall_mode == MODE_TALKING && is_out(store_pre_talk_mode));
 }
 
+static bool is_town(eGameMode overall_mode) {
+	return (overall_mode > MODE_OUTDOORS && overall_mode < MODE_COMBAT) || overall_mode == MODE_LOOK_TOWN;
+}
 bool is_town() {
-	if((overall_mode > MODE_OUTDOORS && overall_mode < MODE_COMBAT) || overall_mode == MODE_LOOK_TOWN || cartoon_happening)
-		return true;
-	else if(overall_mode == MODE_SHOPPING) {
-		std::swap(overall_mode, store_pre_shop_mode);
-		bool ret = is_town();
-		std::swap(overall_mode, store_pre_shop_mode);
-		return ret;
-	} else if(overall_mode == MODE_TALKING) {
-		std::swap(overall_mode, store_pre_talk_mode);
-		bool ret = is_town();
-		std::swap(overall_mode, store_pre_talk_mode);
-		return ret;
-	} else return false;
+	return is_town(overall_mode) || cartoon_happening ||
+		(overall_mode == MODE_SHOPPING && is_town(store_pre_shop_mode)) ||
+		(overall_mode == MODE_TALKING && is_town(store_pre_talk_mode));
 }
 
 bool is_combat() {

@@ -17,7 +17,7 @@
 		Once there, to equip (i.e. use) or unequip (take off) an item, click on its name.
 		Other buttons will appear enabling you do to other things:
 	</text>
-	<text top='274' left='63' width='429' height='50'>
+	<text top='254' left='63' width='429' height='50'>
 		Items from slain monsters normally appear unidentified.
 		To identify them, take them to a sage (such as Habecker in Fort Emergence).
 		Also, buying Item Lore skill sometimes makes monster's treasure appear already identified.
@@ -34,9 +34,11 @@
 		The Sell, ID, and Enchant buttons only appear when talking to a person who can do these things.
 		Many shopkeepers will buy your items, and certain sages can identify and even enchant them.
 	</text>
-	<text top='325' left='63' width='427' height='50'>
+	<text top='305' left='63' width='427' height='50'>
 		Finally, hitting the Jobs button (or typing '8') takes you to the jobs page,
 		where you can see what jobs you currently have.
 		Hitting the 'Spec' button (or typing '9') brings up whatever special items you have.
+		If "Show the junk bag" is enabled in the preferences, the 'Recycle Bin' button (or by typing '7')
+		shows you its items.
 	</text>
 </dialog>

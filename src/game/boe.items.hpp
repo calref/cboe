@@ -2,6 +2,11 @@
 #include "dialogxml/dialogs/dialog.hpp"
 #include "dialogxml/widgets/pict.hpp"
 
+#include "scenario/item.hpp"
+#include "scenario/monster.hpp"
+
+enum class eSpecCtxType;
+
 bool GTP(short item_num);
 bool silent_GTP(short item_num);
 void give_gold(short amount,bool print_result);
@@ -16,6 +21,7 @@ short dist_from_party(location where);
 void set_item_flag(cItem *item);
 short get_item(location place,short pc_num,bool check_container);
 
+bool is_town_hostile();
 void make_town_hostile();
 void set_town_attitude(short lo,short hi,eAttitude att);
 bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short pc_getting, bool overload = false);
