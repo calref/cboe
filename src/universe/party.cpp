@@ -417,12 +417,13 @@ void cParty::enter_scenario(cScenario const &scenario)
 	horses.clear();
 	std::copy_if(scenario.boats.begin(), scenario.boats.end(), std::back_inserter(boats), std::bind(&cVehicle::exists, _1));
 	std::copy_if(scenario.horses.begin(), scenario.horses.end(), std::back_inserter(horses), std::bind(&cVehicle::exists, _1));
-	for(auto &pc : *this) {
-		pc.status.clear();
-		if(isSplit(pc.main_status))
-			pc.main_status -= eMainStatus::SPLIT;
-		pc.cur_health = pc.max_health;
-		pc.cur_sp = pc.max_sp;
+	for(auto &pc : adven) {
+		if (!pc) continue;
+		pc->status.clear();
+		if(isSplit(pc->main_status))
+			pc->main_status -= eMainStatus::SPLIT;
+		pc->cur_health = pc->max_health;
+		pc->cur_sp = pc->max_sp;
 	}
 	in_boat = -1;
 	in_horse = -1;
@@ -580,56 +581,56 @@ int cParty::get_shared_dmg(int) const {
 
 int cParty::get_health() const {
 	int health = 0;
-	for(int i = 0; i < 6; i++)
-		if(adven[i]->is_alive())
-			health += adven[i]->cur_health;
+	for(auto &pc : adven)
+		if (pc && pc->is_alive())
+			health += pc->cur_health;
 	return health;
 }
 
 int cParty::get_magic() const {
 	int magic = 0;
-	for(int i = 0; i < 6; i++)
-		if(adven[i]->is_alive())
-			magic += adven[i]->cur_sp;
+	for(auto &pc : adven)
+		if (pc && pc->is_alive())
+			magic += pc->cur_sp;
 	return magic;
 }
 
 int cParty::get_level() const {
 	short j = 0;
-	for(int i = 0; i < 6; i++)
-		if(adven[i]->main_status == eMainStatus::ALIVE)
-			j += adven[i]->level;
+	for(auto &pc : adven)
+		if (pc && pc->main_status == eMainStatus::ALIVE)
+			j += pc->level;
 	return j;
 }
 
 void cParty::heal(int how_much) {
-	for(int i = 0; i < 6; i++)
-		adven[i]->heal(how_much);
+	for(auto &pc : adven)
+		if (pc) pc->heal(how_much);
 }
 
 void cParty::poison(int how_much) {
-	for(int i = 0; i < 6; i++)
-		adven[i]->poison(how_much);
+	for(auto &pc : adven)
+		if (pc) pc->poison(how_much);
 }
 
 void cParty::cure(int how_much) {
-	for(int i = 0; i < 6; i++)
-		adven[i]->cure(how_much);
+	for(auto &pc : adven)
+		if (pc) pc->cure(how_much);
 }
 
 void cParty::acid(int how_much) {
-	for(int i = 0; i < 6; i++)
-		adven[i]->acid(how_much);
+	for(auto &pc : adven)
+		if (pc) pc->acid(how_much);
 }
 
 void cParty::curse(int how_much) {
-	for(int i = 0; i < 6; i++)
-		adven[i]->curse(how_much);
+	for(auto &pc : adven)
+		if (pc) pc->curse(how_much);
 }
 
 void cParty::slow(int how_much) {
-	for(int i = 0; i < 6; i++)
-		adven[i]->slow(how_much);
+	for(auto &pc : adven)
+		if (pc) pc->slow(how_much);
 }
 
 void cParty::web(int how_much) {
