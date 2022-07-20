@@ -68,7 +68,6 @@ void start_town_mode(short which_town, short entry_dir) {
 	short former_town;
 	bool monsters_loaded = false;
 	location loc;
-	unsigned short temp;
 	bool play_town_sound = false;
 	
 	if(town_force < 200)
@@ -160,7 +159,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			
 		for(short j = 0; j < univ.town->max_dim; j++)
 			for(short k = 0; k < univ.town->max_dim; k++) { // now load in saved setup,
-				temp = univ.party.setup[i][j][k] << 8;
+				unsigned long temp = univ.party.setup[i][j][k] << 8;
 				temp &= ~(OBJECT_CRATE | OBJECT_BARREL | OBJECT_BLOCK);
 				univ.town.fields[j][k] |= temp;
 			}
