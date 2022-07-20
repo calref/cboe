@@ -2085,7 +2085,8 @@ bool handle_keystroke(const sf::Event& event){
 			break;
 			
 			// Spells (cast/cancel)
-		case 'M': spell_forced = true;
+		case 'M': spell_forced = true; // FIXME: check that the spell is allowed in current mode
+			// check also if we need to switch pc, ie. actually when a spell is not possible, we can end with ap=0
 		case 'm':
 			if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET || overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
 				handle_spellcast(eSkill::MAGE_SPELLS, did_something, need_redraw, need_reprint);
@@ -2093,7 +2094,8 @@ bool handle_keystroke(const sf::Event& event){
 			}
 			break;
 			
-		case 'P': spell_forced = true;
+		case 'P': spell_forced = true; // FIXME: check that the spell is allowed in current mode
+			// check also if we need to switch pc, ie. actually when a spell is not possible, we can end with ap=0
 		case 'p':
 			if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET || overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
 				handle_spellcast(eSkill::PRIEST_SPELLS, did_something, need_redraw, need_reprint);

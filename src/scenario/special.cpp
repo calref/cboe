@@ -121,17 +121,19 @@ static cPictNum port_graphic_num(int pic) {
 		return cPictNum(pic-800, PIC_PC);
 	if (pic<1000)// ARGH: normally bwpats, force an error picture
 		return cPictNum(800, PIC_TER);
-	if (pic<1100)
+	if (pic<1100) // can we really get some talk here?
 		return cPictNum(pic-1000, PIC_TALK);
 #if 0
 	if (pic == 1100 || pic==1200 || pic==1300 || (pic>=1400 && pic<=1402)) // maybe, but the picture's size will be bad and hide the message...
 		return cPictNum(pic, PIC_FULL);
 #endif
-	if (pic<2000)// ARGH: unsure 1600-? again terrain, force an error picture
+	if (pic<2000) // ARGH: unsure force an error picture
 		return cPictNum(800, PIC_TER);
 	if (pic<2400)
 		return cPictNum(pic-2000, PIC_CUSTOM_TER);
-	// ARGH: not implemented, force an error picture
+	if (pic<2800)
+		return cPictNum(pic-2400, PIC_CUSTOM_DLOG); // or pict custom monster large (in fact this one seems to depend on the dialog final size)
+	// ARGH: not expected, force an error picture
 	return cPictNum(800, PIC_TER);
 }
 	
@@ -253,49 +255,24 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 		case 228: type = eSpecType::OUT_MOVE_PARTY; break;
 			// 229 was outdoor shop
 			// 230-255 were undefined
-		case 55: case 58: case 189: case 190: {// Large dialogs with 36x36 dialog graphics
+		case 55: case 58:
+		case 56: case 59: case 188: // Large dialogs with terrain graphics
+		case 57: case 60: // Large dialogs with monster graphics
+		case 189: case 190: {// Large dialogs with 36x36 dialog graphics
+			if (pic>=1000) {
+				if (old.type>=55 && old.type<=60 ) pic=(pic%1000)+2000;
+				if (old.type==55 || old.type==58) pic+=400;
+			}
 			cPictNum picTyp=port_graphic_num(pic);
 			pic=picTyp.num;
 			pictype=picTyp.type;
 			m3 = m2;
 			m2 = -1;
-			if(old.type == 55) type = eSpecType::ONCE_DIALOG;
-			else if(old.type == 58) type = eSpecType::ONCE_GIVE_ITEM_DIALOG;
-			else if(old.type == 190) type = eSpecType::TOWN_STAIR;
-			else type = eSpecType::TOWN_PORTAL;
-			if(type != eSpecType::ONCE_DIALOG) break;
-			// Duplicate Leave button
-			if(old.ex1a == 20)
-				ex1a = 9;
-			if(old.ex2a == 20)
-				ex2a = 9;
-			break;
-		}
-		case 57: case 60: { // Large dialogs with monster graphics
-			cPictNum picTyp=port_graphic_num(pic);
-			pic=picTyp.num;
-			pictype=picTyp.type;
-			m3 = m2;
-			m2 = -1;
-			if(old.type == 57) type = eSpecType::ONCE_DIALOG;
-			else if(old.type == 60) type = eSpecType::ONCE_GIVE_ITEM_DIALOG;
-			if(type != eSpecType::ONCE_DIALOG) break;
-			// Duplicate Leave button
-			if(old.ex1a == 20)
-				ex1a = 9;
-			if(old.ex2a == 20)
-				ex2a = 9;
-			break;
-		}
-		case 56: case 59: case 188: { // Large dialogs with terrain graphics
-			cPictNum picTyp=port_graphic_num(pic);
-			pic=picTyp.num;
-			pictype=picTyp.type;
-			m3 = m2;
-			m2 = -1;
-			if(old.type == 56) type = eSpecType::ONCE_DIALOG;
-			else if(old.type == 59) type = eSpecType::ONCE_GIVE_ITEM_DIALOG;
-			else type = eSpecType::TOWN_LEVER;
+			if(old.type<=57) type = eSpecType::ONCE_DIALOG; // 55-57
+			else if(old.type<=60) type = eSpecType::ONCE_GIVE_ITEM_DIALOG; // 58-60
+			else if(old.type == 188) type = eSpecType::TOWN_LEVER;
+			else if(old.type == 189) type = eSpecType::TOWN_PORTAL;
+			else type = eSpecType::TOWN_STAIR; // 190
 			if(type != eSpecType::ONCE_DIALOG) break;
 			// Duplicate Leave button
 			if(old.ex1a == 20)
