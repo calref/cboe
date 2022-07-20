@@ -89,12 +89,6 @@ void draw_monsters() {
 	rectangle source_rect,to_rect;
 	location where_draw,store_loc;
 	ter_num_t ter;
-	rectangle monst_rects[4][4] = {
-		{{0,0,36,28}},
-		{{0,7,18,21},{18,7,36,21}},
-		{{9,0,27,14},{9,14,27,28}},
-		{{0,0,18,14},{0,14,18,28},{18,0,36,14},{18,14,36,28}}
-	};
 	
 	if(is_out())
 		for(auto& enc : univ.party.out_c)
@@ -113,6 +107,12 @@ void draw_monsters() {
 					}
 					
 					if(picture_wanted >= 0) {
+						static rectangle const monst_rects[4][4] = {
+							{{0,0,36,28}},
+							{{0,7,18,21},{18,7,36,21}},
+							{{9,0,27,14},{9,14,27,28}},
+							{{0,0,18,14},{0,14,18,28},{18,0,36,14},{18,14,36,28}}
+						};
 						for(short k = 0; k < width * height; k++) {
 							Texture src_gw;
 							if(picture_wanted >= 1000)
@@ -163,14 +163,6 @@ void draw_monsters() {
 					}
 				}
 		}
-	}
-}
-
-void play_see_monster_str(unsigned short m, location monst_loc) {
-	short spec = univ.scenario.get_monster(m).see_spec;
-	// Then run the special, if any
-	if(spec > -1){
-		queue_special(eSpecCtx::SEE_MONST, eSpecCtxType::SCEN, spec, monst_loc);
 	}
 }
 
@@ -507,6 +499,14 @@ char get_fluid_trim(location where,ter_num_t ter_type) {
 		to_return &= 95;
 	
 	return to_return;
+}
+
+static void play_see_monster_str(unsigned short m, location monst_loc) {
+	short spec = univ.scenario.get_monster(m).see_spec;
+	// Then run the special, if any
+	if(spec > -1){
+		queue_special(eSpecCtx::SEE_MONST, eSpecCtxType::SCEN, spec, monst_loc);
+	}
 }
 
 // Sees if party has seen a monster of this sort, gives special messages as necessary

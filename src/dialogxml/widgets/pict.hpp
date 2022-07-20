@@ -60,11 +60,17 @@ public:
 	/// - If num is 4 digits in decimal and type is not PIC_FULL, it automatically takes the remainder by 1000
 	/// and applies the custom modifier. (If type is PIC_TER_MAP, it does not take the remainder by 1000.)
 	/// - If num is 10000 or greater and type is PIC_TER_MAP, it automatically subtracts 10000 and applies the party modifier.
-	void setPict(pic_num_t num, ePicType type, bool updateResultType=true);
-	void setPict(cPictNum const &num, bool updateResultType=false) { setPict(num.num, num.type, updateResultType); }
-	/// Set the pict's icon.
-	/// @param num The new icon index.
-	void setPict(pic_num_t num);
+	void setPict(pic_num_t num, ePicType type, bool updateResType=true) {
+		setPict(cPictNum(num, type), updateResType);
+	}
+	void setPict(cPictNum const &num, bool updateResType=false) {
+		picture.num=num.num;
+		if (updateResType)
+			resultType=num.type;
+		else
+			picture.type=num.type;
+		updateResultType(num.type);
+	}
 	/// Automatically recalculate the icon's bounding rect based on its current picture.
 	void recalcRect() override;
 	/// Get the current icon.
@@ -114,56 +120,60 @@ private:
 	eSheetType sheetCachedType;
 	size_t sheetCachedNum;
 	static short animFrame;
-	pic_num_t picNum;
-	ePicType fromType, resultType;
+	cPictNum picture;
+	ePicType resultType;
 	bool drawScaled;
 	// Transient parse flags
 	bool wide = false, tall = false, tiny = false, custom = false, blank = false;
-	void drawPresetTer(short num, rectangle to_rect);
-	void drawPresetTerAnim(short num, rectangle to_rect);
-	void drawPresetMonstSm(short num, rectangle to_rect);
-	void drawPresetMonstWide(short num, rectangle to_rect);
-	void drawPresetMonstTall(short num, rectangle to_rect);
-	void drawPresetMonstLg(short num, rectangle to_rect);
-	void drawPresetDlog(short num, rectangle to_rect);
-	void drawPresetDlogLg(short num, rectangle to_rect);
-	void drawPresetTalk(short num, rectangle to_rect);
-	void drawPresetScen(short num, rectangle to_rect);
-	void drawPresetScenLg(short num, rectangle to_rect);
-	void drawPresetItem(short num, rectangle to_rect);
-	void drawPresetTinyItem(short num, rectangle to_rect);
-	void drawPresetPc(short num, rectangle to_rect);
-	void drawPresetField(short num, rectangle to_rect);
-	void drawPresetBoom(short num, rectangle to_rect);
-	void drawPresetMissile(short num, rectangle to_rect);
-	void drawPresetTerMap(short num, rectangle to_rect);
-	void drawStatusIcon(short num, rectangle to_rect);
-	void drawFullSheet(short num, rectangle to_rect);
-	void drawCustomTer(short num, rectangle to_rect);
-	void drawCustomTerAnim(short num, rectangle to_rect);
-	void drawCustomMonstSm(short num, rectangle to_rect);
-	void drawCustomMonstWide(short num, rectangle to_rect);
-	void drawCustomMonstTall(short num, rectangle to_rect);
-	void drawCustomMonstLg(short num, rectangle to_rect);
-	void drawCustomDlog(short num, rectangle to_rect);
-	void drawCustomDlogLg(short num, rectangle to_rect);
-	void drawCustomTalk(short num, rectangle to_rect);
-	void drawCustomItem(short num, rectangle to_rect);
-	void drawCustomTinyItem(short num, rectangle to_rect);
-	void drawCustomBoom(short num, rectangle to_rect);
-	void drawCustomMissile(short num, rectangle to_rect);
-	void drawCustomTerMap(short num, rectangle to_rect);
-	void drawPartyMonstSm(short num, rectangle to_rect);
-	void drawPartyMonstWide(short num, rectangle to_rect);
-	void drawPartyMonstTall(short num, rectangle to_rect);
-	void drawPartyMonstLg(short num, rectangle to_rect);
-	void drawPartyScen(short num, rectangle to_rect);
-	void drawPartyItem(short num, rectangle to_rect);
-	void drawPartyPc(short num, rectangle to_rect);
-	ePicType getSourceType(ePicType defaultType) const {
-		return fromType==ePicType::PIC_NONE ? defaultType : fromType;
+	void updateResultType(ePicType type);
+	void drawPresetTer(rectangle to_rect);
+	void drawPresetTerAnim(rectangle to_rect);
+	void drawPresetMonstSm(rectangle to_rect);
+	void drawPresetMonstWide(rectangle to_rect);
+	void drawPresetMonstTall(rectangle to_rect);
+	void drawPresetMonstLg(rectangle to_rect);
+	void drawPresetDlog(rectangle to_rect);
+	void drawPresetDlogLg(rectangle to_rect);
+	void drawPresetTalk(rectangle to_rect);
+	void drawPresetScen(rectangle to_rect);
+	void drawPresetScenLg(rectangle to_rect);
+	void drawPresetItem(rectangle to_rect);
+	void drawPresetTinyItem(rectangle to_rect);
+	void drawPresetPc(rectangle to_rect);
+	void drawPresetField(rectangle to_rect);
+	void drawPresetBoom(rectangle to_rect);
+	void drawPresetMissile(rectangle to_rect);
+	void drawPresetTerMap(rectangle to_rect);
+	void drawStatusIcon(rectangle to_rect);
+	void drawFullSheet(rectangle to_rect);
+	void drawCustomTer(rectangle to_rect);
+	void drawCustomTerAnim(rectangle to_rect);
+	void drawCustomMonstSm(rectangle to_rect);
+	void drawCustomMonstWide(rectangle to_rect);
+	void drawCustomMonstTall(rectangle to_rect);
+	void drawCustomMonstLg(rectangle to_rect);
+	void drawCustomDlog(int num, rectangle to_rect);
+	void drawCustomDlog(rectangle to_rect);
+	void drawCustomDlogLg(rectangle to_rect);
+	void drawCustomTalk(rectangle to_rect);
+	void drawCustomItem(rectangle to_rect);
+	void drawCustomTinyItem(rectangle to_rect);
+	void drawCustomBoom(rectangle to_rect);
+	void drawCustomMissile(rectangle to_rect);
+	void drawCustomTerMap(rectangle to_rect);
+	void drawPartyMonstSm(rectangle to_rect);
+	void drawPartyMonstWide(rectangle to_rect);
+	void drawPartyMonstTall(rectangle to_rect);
+	void drawPartyMonstLg(rectangle to_rect);
+	void drawPartyScen(rectangle to_rect);
+	void drawPartyItem(rectangle to_rect);
+	void drawPartyPc(rectangle to_rect);
+	cPictNum getSourcePicture(ePicType defaultType) const {
+		cPictNum res=picture;
+		if (res.type==ePicType::PIC_NONE) res.type=defaultType;
+		return res;
 	}
-	static std::map<ePicType,void(cPict::*)(short,rectangle)>& drawPict();
+	static std::map<ePicType,void(cPict::*)(rectangle)>& drawPict();
 };
 
 #endif
