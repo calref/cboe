@@ -219,8 +219,8 @@ void swap(cScenario& lhs, cScenario& rhs) {
 	swap(lhs.scen_file, rhs.scen_file);
 	swap(lhs.outdoors, rhs.outdoors);
 	swap(lhs.towns, rhs.towns);
-	for(auto& town : lhs.towns) town->reattach(lhs);
-	for(auto& town : rhs.towns) town->reattach(rhs);
+	for(auto& town : lhs.towns) if (town) town->reattach(lhs);
+	for(auto& town : rhs.towns) if (town) town->reattach(rhs);
 }
 
 cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {

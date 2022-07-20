@@ -990,10 +990,12 @@ void cPict::drawPresetTalk(rectangle to_rect){
 
 void cPict::drawScenario(rectangle to_rect, ePicType defType)
 {
-	int const w=(drawScaled && defType==ePicType::PIC_SCEN_LG) ? 64 : 32;
-	to_rect.right = to_rect.left + w;
-	to_rect.bottom = to_rect.top + w;
-	
+	if (!drawScaled || defType!=ePicType::PIC_SCEN_LG) {
+		int const w=defType==ePicType::PIC_SCEN_LG ? 64 : 32;
+		to_rect.right = to_rect.left + w;
+		to_rect.bottom = to_rect.top + w;
+	}
+
 	Texture source;
 	rectangle source_rect;
 	cPictNum pict=getSourcePicture(defType);
