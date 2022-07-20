@@ -18,6 +18,7 @@
 #include "boe.monster.hpp"
 #include "boe.main.hpp"
 #include "mathutil.hpp"
+#include "view_dialogs.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/3choice.hpp"
 #include "dialogxml/widgets/message.hpp"
@@ -401,6 +402,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 		std::string pict = sout.str() + "-g", name = sout.str() + "-name";
 		std::string detail = sout.str() + "-detail", weight = sout.str() + "-weight";
 		std::string key = sout.str() + "-key";
+		std::string info = sout.str() + "-info";
 		key_stash[0] = 'a' + i;
 		
 		// TODO: Rework this so that no exceptions are required
@@ -414,12 +416,14 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 			me[detail].setText(get_item_interesting_string(item));
 			me[weight].setText("Weight: " + std::to_string(item.item_weight()));
 			me[key].setText(key_stash);
+			me[info].show();
 		} else { // erase the spot
 			me[pict].hide();
 			me[name].setText("");
 			me[detail].setText("");
 			me[weight].setText("");
 			me[key].setText("");
+			me[info].hide();
 		}
 	}
 	
@@ -457,6 +461,17 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 	} else if(id.substr(0,2) == "pc") {
 		current_getting_pc = id[2] - '1';
 		put_item_graphics(me, first_item_shown, current_getting_pc, item_array);
+	} else if(id.substr(0,4) == "item" && id.length()==10 && id.substr(5,5)=="-info") {
+		size_t item_hit;
+		item_hit = id[4] - '1';
+		item_hit += first_item_shown;
+		if(item_hit >= item_array.size()) return true;
+		cDialog itemInfo("item-info",&me);
+		itemInfo.attachClickHandlers([](cDialog&me, std::string const &id,eKeyMod){if (id=="done") me.toast(true); return true;}, {"done","left","right","id","magic"});
+		itemInfo["left"].hide();
+		itemInfo["right"].hide();
+		put_item_info(itemInfo,*item_array[item_hit],univ.scenario);
+		itemInfo.run();
 	} else {
 		if(current_getting_pc == 6) return true;
 		size_t item_hit;
@@ -566,6 +581,9 @@ bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short 
 		std::ostringstream sout;
 		sout << "item" << i << "-key";
 		itemDialog[sout.str()].attachKey({false, static_cast<unsigned char>('`' + i), mod_none});
+		itemDialog[sout.str()].attachClickHandler(handler);
+		sout.str("");
+		sout << "item" << i << "-info";
 		itemDialog[sout.str()].attachClickHandler(handler);
 	}
 	put_item_graphics(itemDialog, first_item, pc_getting, itemRefs);
