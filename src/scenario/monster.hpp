@@ -77,6 +77,9 @@ public:
 	cPictNum get_picture_num() const {
 		return get_picture_num(picture_num);
 	}
+	pic_num_t get_num_for_picture() const {
+		return picture_num;
+	}
 	static cPictNum get_picture_num(pic_num_t pic);
 	static pic_num_t get_num_for_picture(cPictNum const &pic);
 

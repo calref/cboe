@@ -124,26 +124,8 @@ void put_monst_info(cDialog& me, const cMonster& store_m, const cScenario& scen)
 	cPict& pic = dynamic_cast<cPict&>(me["pic"]);
 	if(store_m.invisible)
 		pic.setPict(-1,PIC_MONST);
-	else if(store_m.picture_num < 1000)
-		pic.setPict(store_m.picture_num,PIC_MONST);
-	else {
-		ePicType type_g = PIC_CUSTOM_MONST;
-		short size_g = store_m.picture_num / 1000;
-		switch(size_g){
-			case 2:
-				type_g += PIC_WIDE;
-				break;
-			case 3:
-				type_g += PIC_TALL;
-				break;
-			case 4:
-				type_g += PIC_WIDE;
-				type_g += PIC_TALL;
-				break;
-		}
-		pic.setPict(store_m.picture_num % 1000, type_g);
-	}
-	
+	else
+		pic.setPict(store_m.get_picture_num(), true);	
 	me["name"].setText(store_m.m_name);
 	
 	i = 1;

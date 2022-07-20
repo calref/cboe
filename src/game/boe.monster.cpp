@@ -132,8 +132,8 @@ cPictNum get_monst_picture_num(mon_num_t monst) {
 }
 
 short get_monst_picnum(mon_num_t monst) {
-	if(monst >= 10000) return univ.party.get_summon(monst - 10000).picture_num;
-	return univ.scenario.get_monster(monst).picture_num;
+	if(monst >= 10000) return univ.party.get_summon(monst - 10000).get_num_for_picture();
+	return univ.scenario.get_monster(monst).get_num_for_picture();
 }
 
 std::pair<short,short> get_monst_dims(mon_num_t monst) {

@@ -96,7 +96,7 @@ public:
 	void draw() override;
 	// only implemented for major type
 	static bool get_picture(cPictNum const &pict, Texture &source, rectangle &from_rect, int anim=0, int which_part=0);
-	static void draw_monster(sf::RenderTarget &window, cPictNum const &pict, rectangle to_rect, int anim=0);
+	static void draw_monster(sf::RenderTarget &target, rectangle to_rect, cPictNum const &pict, int anim=0);
 
 	/// A utility function to draw an icon into an arbitrary window.
 	/// @param win The window to draw in.
@@ -125,37 +125,26 @@ private:
 	// Transient parse flags
 	bool wide = false, tall = false, tiny = false, custom = false, blank = false;
 	void updateResultType(ePicType type);
+	void drawItem(rectangle to_rect, ePicType defType, bool inTinyRect);
 	void drawMonster(rectangle to_rect, ePicType defType);
-	void drawPresetTer(rectangle to_rect);
-	void drawPresetTerAnim(rectangle to_rect);
+	void drawPc(rectangle to_rect, ePicType defType);
+	void drawScenario(rectangle to_rect, ePicType defType);
+	void drawTerrain(rectangle to_rect, ePicType defType);
 	void drawPresetDlog(rectangle to_rect);
 	void drawPresetDlogLg(rectangle to_rect);
 	void drawPresetTalk(rectangle to_rect);
-	void drawPresetScen(rectangle to_rect);
-	void drawPresetScenLg(rectangle to_rect);
-	void drawPresetItem(rectangle to_rect);
-	void drawPresetTinyItem(rectangle to_rect);
-	void drawPresetPc(rectangle to_rect);
 	void drawPresetField(rectangle to_rect);
 	void drawPresetBoom(rectangle to_rect);
 	void drawPresetMissile(rectangle to_rect);
-	void drawPresetTerMap(rectangle to_rect);
 	void drawStatusIcon(rectangle to_rect);
 	void drawFullSheet(rectangle to_rect);
-	void drawCustomTer(rectangle to_rect);
-	void drawCustomTerAnim(rectangle to_rect);
 	void drawCustomNumDlog(int num, rectangle to_rect);
 	void drawCustomDlog(rectangle to_rect);
 	void drawCustomDlogLg(rectangle to_rect);
 	void drawCustomTalk(rectangle to_rect);
-	void drawCustomItem(rectangle to_rect);
-	void drawCustomTinyItem(rectangle to_rect);
 	void drawCustomBoom(rectangle to_rect);
 	void drawCustomMissile(rectangle to_rect);
-	void drawCustomTerMap(rectangle to_rect);
 	void drawPartyScen(rectangle to_rect);
-	void drawPartyItem(rectangle to_rect);
-	void drawPartyPc(rectangle to_rect);
 	cPictNum getSourcePicture(ePicType defaultType) const {
 		cPictNum res=picture;
 		if (res.type==ePicType::PIC_NONE) res.type=defaultType;
