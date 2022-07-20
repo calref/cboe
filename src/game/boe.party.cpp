@@ -2186,7 +2186,7 @@ bool pick_pc_graphic(short pc_num,short mode,cDialog* parent) {
 	if(mode == 0 && !madeChoice && univ.party[pc_num].main_status < eMainStatus::ABSENT)
 		univ.party[pc_num].main_status = eMainStatus::ABSENT;
 	else if(madeChoice)
-		univ.party[pc_num].which_graphic = pcPic.getPicChosen();
+		univ.party[pc_num].which_graphic = pcPic.getPicChosen().num;
 	
 	return madeChoice;
 }
