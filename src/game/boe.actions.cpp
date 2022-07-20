@@ -983,6 +983,7 @@ static void handle_get_items(bool& did_something, bool& need_redraw, bool& need_
 	else {
 		j = get_item(univ.current_pc().combat_pos,univ.cur_pc,false);
 		take_ap(4);
+		pick_next_pc();
 	}
 	if(j > 0) {
 		put_item_screen(stat_window);
@@ -1010,7 +1011,8 @@ static void handle_victory() {
 	if(cChoiceDlog("congrats-save",{"cancel","save"}).show() == "save"){
 		// TODO: Wait, this shouldn't be a "save as" action, should it? It should save without asking for a location.
 		fs::path file = nav_put_party();
-		if(!file.empty()) save_party(file, univ);
+		if(!file.empty() && save_party(file, univ))
+			univ.file = file;
 	}
 }
 
@@ -2647,8 +2649,11 @@ void handle_death() {
 			fs::path file_to_load = nav_get_party();
 			if(!file_to_load.empty()) load_party(file_to_load, univ);
 			if(univ.party.is_alive()) {
-				if(overall_mode == MODE_STARTUP)
-					post_load(), finish_load_party();
+				if(overall_mode == MODE_STARTUP) {
+					post_load();
+					finish_load_party();
+					univ.file = file_to_load;
+				}
 				return;
 			}
 		}

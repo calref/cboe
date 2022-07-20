@@ -41,10 +41,6 @@ class cCurTown {
 	cTown*const record() const;
 	vector2d<unsigned long> fields;
 	
-	template<eFieldType Field> static bool test_field(unsigned long allFields)
-	{
-		return allFields & Field;
-	}
 	template<eFieldType Field> bool test_field(short x, short y) const
 	{
 		if(!is_on_map(x,y)) return false;
@@ -76,36 +72,10 @@ public:
 	void prep_arena(); // Set up for a combat arena
 	void place_preset_fields();
 	void update_fields(const vector2d<unsigned short>& setup);
+	unsigned long get_fields(short x, short y) const;
 	void save_setup(vector2d<unsigned short>& setup) const;
 	bool is_summon_safe(short x, short y) const;
 	
-	static bool is_explored(unsigned long allFields) { return test_field<SPECIAL_EXPLORED>(allFields); }
-	static bool is_force_wall(unsigned long allFields) { return test_field<WALL_FORCE>(allFields); }
-	static bool is_fire_wall(unsigned long allFields) { return test_field<WALL_FIRE>(allFields); }
-	static bool is_antimagic(unsigned long allFields) { return test_field<FIELD_ANTIMAGIC>(allFields); }
-	static bool is_scloud(unsigned long allFields) { return test_field<CLOUD_STINK>(allFields); } // stinking cloud
-	static bool is_ice_wall(unsigned long allFields) { return test_field<WALL_ICE>(allFields); }
-	static bool is_blade_wall(unsigned long allFields) { return test_field<WALL_BLADES>(allFields); }
-	static bool is_sleep_cloud(unsigned long allFields) { return test_field<CLOUD_SLEEP>(allFields); }
-	static bool is_block(unsigned long allFields) { return test_field<OBJECT_BLOCK>(allFields); } // currently unused
-	static bool is_spot(unsigned long allFields) { return test_field<SPECIAL_SPOT>(allFields); }
-	static bool is_web(unsigned long allFields) { return test_field<FIELD_WEB>(allFields); }
-	static bool is_crate(unsigned long allFields) { return test_field<OBJECT_CRATE>(allFields); }
-	static bool is_barrel(unsigned long allFields) { return test_field<OBJECT_BARREL>(allFields); }
-	static bool is_fire_barr(unsigned long allFields) { return test_field<BARRIER_FIRE>(allFields); }
-	static bool is_force_barr(unsigned long allFields) { return test_field<BARRIER_FORCE>(allFields); }
-	static bool is_quickfire(unsigned long allFields) { return test_field<FIELD_QUICKFIRE>(allFields); }
-	static bool is_sm_blood(unsigned long allFields) { return test_field<SFX_SMALL_BLOOD>(allFields); }
-	static bool is_med_blood(unsigned long allFields) { return test_field<SFX_MEDIUM_BLOOD>(allFields); }
-	static bool is_lg_blood(unsigned long allFields) { return test_field<SFX_LARGE_BLOOD>(allFields); }
-	static bool is_sm_slime(unsigned long allFields) { return test_field<SFX_SMALL_SLIME>(allFields); }
-	static bool is_lg_slime(unsigned long allFields) { return test_field<SFX_LARGE_SLIME>(allFields); }
-	static bool is_ash(unsigned long allFields) { return test_field<SFX_ASH>(allFields); }
-	static bool is_bones(unsigned long allFields) { return test_field<SFX_BONES>(allFields); }
-	static bool is_rubble(unsigned long allFields) { return test_field<SFX_RUBBLE>(allFields); }
-	static bool is_force_cage(unsigned long allFields) { return test_field<BARRIER_CAGE>(allFields); }
-	static bool is_road(unsigned long allFields) { return test_field<SPECIAL_ROAD>(allFields); }
-	unsigned long get_fields(short x, short y) const;
 	bool is_explored(short x, short y) const { return test_field<SPECIAL_EXPLORED>(x,y); }
 	bool is_force_wall(short x, short y) const { return test_field<WALL_FORCE>(x,y); }
 	bool is_fire_wall(short x, short y) const { return test_field<WALL_FIRE>(x,y); }

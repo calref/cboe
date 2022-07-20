@@ -30,7 +30,7 @@ extern eGameMode overall_mode;
 extern short which_combat_type;
 extern eItemWinMode stat_window;
 extern location center;
-extern short combat_active_pc;
+short combat_active_pc;
 extern bool monsters_going,spell_forced;
 extern bool flushingInput;
 extern sf::RenderWindow mainPtr;
@@ -393,8 +393,16 @@ bool pc_combat_move(location destination) {
 		return false;
 	}
 	
-	if(monst_hit == nullptr)
+	if(monst_hit == nullptr) {
+		short actual_pc=univ.cur_pc;
 		keep_going = check_special_terrain(destination,eSpecCtx::COMBAT_MOVE,univ.current_pc(),&check_f);
+		// check if current pc is still alive, has not change, ...
+		if (actual_pc!=univ.cur_pc ||
+			(univ.current_pc().main_status != eMainStatus::ALIVE && univ.current_pc().main_status != eMainStatus::SPLIT_ALIVE)) {
+			if(combat_active_pc == actual_pc) combat_active_pc = 6; // checkme: do we need also to check if actual_pc==univ.cur_pc
+			return true;
+		}
+	}
 	if(check_f)
 		forced = true;
 	
@@ -1119,9 +1127,9 @@ void do_combat_cast(location target) {
 			}
 			else if(dist(caster.combat_pos,target) > current_spell_range)
 				add_string_to_buf("  Target out of range.");
-			else if(sight_obscurity(target.x,target.y) == 5 && !allow_obstructed)
+			else if(!allow_obstructed && sight_obscurity(target.x,target.y) == 5)
 				add_string_to_buf("  Target space obstructed.");
-			else if(univ.town.is_antimagic(target.x,target.y) && !allow_antimagic)
+			else if(!allow_antimagic && univ.town.is_antimagic(target.x,target.y))
 				add_string_to_buf("  Target in antimagic field.");
 			else {
 				failed = false;
