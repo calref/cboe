@@ -154,11 +154,11 @@ void draw_monsters() {
 							if(combat_posing_monster == i + 100) need_pic += (2 * width * height);
 							Texture src_gw;
 							std::tie(src_gw,source_rect) = spec_scen_g.find_graphic(need_pic, isParty);
-							Draw_Some_Item(src_gw, source_rect, terrain_screen_gworld, store_loc, 1, 0);
+							Draw_Some_Item(src_gw, source_rect, terrain_screen_gworld, store_loc);
 						} else {
 							Texture src_gw;
 							cPict::get_picture(cPictNum(monst.picture_num,PIC_MONST), src_gw, source_rect, (monst.direction < 4 ? 0 : 2) + (combat_posing_monster == i + 100 ? 1 : 0), k);
-							Draw_Some_Item(src_gw, source_rect, terrain_screen_gworld, store_loc, 1, 0);
+							Draw_Some_Item(src_gw, source_rect, terrain_screen_gworld, store_loc);
 						}
 					}
 				}
@@ -182,7 +182,7 @@ void draw_combat_pc(cPlayer& who, location center, bool attacking) {
 			rectangle source_rect;
 			Texture from_gw;
 			if (cPict::get_picture(who.get_picture_num(), from_gw, source_rect, (who.direction >= 4 ? 2 : 0) + (attacking ? 1 : 0)))
-				Draw_Some_Item(from_gw, source_rect, terrain_screen_gworld, where_draw, 1, 0);
+				Draw_Some_Item(from_gw, source_rect, terrain_screen_gworld, where_draw);
 		}
 }
 
@@ -253,7 +253,7 @@ void draw_outd_boats(location center) {
 		if(point_onscreen(center, loc) && can_see_light(center, loc, sight_obscurity) < 5) {
 			where_draw.x = loc.x - center.x + 4;
 			where_draw.y = loc.y - center.y + 4;
-			Draw_Some_Item(vehicle_gworld, calc_rect(0,0), terrain_screen_gworld, where_draw, 1, 0);
+			Draw_Some_Item(vehicle_gworld, calc_rect(0,0), terrain_screen_gworld, where_draw);
 		}
 	}
 	for(auto& horse : univ.party.horses) {
@@ -267,7 +267,7 @@ void draw_outd_boats(location center) {
 		if(point_onscreen(center, loc) && can_see_light(center, loc, sight_obscurity) < 5) {
 			where_draw.x = loc.x - center.x + 4;
 			where_draw.y = loc.y - center.y + 4;
-			Draw_Some_Item(vehicle_gworld, calc_rect(0,1), terrain_screen_gworld, where_draw, 1, 0);
+			Draw_Some_Item(vehicle_gworld, calc_rect(0,1), terrain_screen_gworld, where_draw);
 		}
 	}
 }
@@ -284,7 +284,7 @@ void draw_town_boat(location center) {
 		if(point_onscreen(center, boat.loc) && can_see_light(center, boat.loc, sight_obscurity) < 5 && pt_in_light(center, boat.loc)) {
 			where_draw.x = boat.loc.x - center.x + 4;
 			where_draw.y = boat.loc.y - center.y + 4;
-			Draw_Some_Item(vehicle_gworld, calc_rect(1,0), terrain_screen_gworld, where_draw, 1, 0);
+			Draw_Some_Item(vehicle_gworld, calc_rect(1,0), terrain_screen_gworld, where_draw);
 		}
 	}
 	for(auto const &horse : univ.party.horses) {
@@ -294,7 +294,7 @@ void draw_town_boat(location center) {
 		if(point_onscreen(center, horse.loc) && can_see_light(center, horse.loc, sight_obscurity) < 5 && pt_in_light(center, horse.loc)) {
 			where_draw.x = horse.loc.x - center.x + 4;
 			where_draw.y = horse.loc.y - center.y + 4;
-			Draw_Some_Item(vehicle_gworld, calc_rect(1,1), terrain_screen_gworld, where_draw, 1, 0);
+			Draw_Some_Item(vehicle_gworld, calc_rect(1,1), terrain_screen_gworld, where_draw);
 		}
 	}
 }
@@ -308,7 +308,7 @@ void draw_fields(location where){
 	Texture const & fields_gworld = *ResMgr::graphics.get("fields");
 	if(is_out()){
 		if(univ.out.is_spot(where.x,where.y))
-			Draw_Some_Item(fields_gworld,calc_rect(4,0),terrain_screen_gworld,where_draw,1,0);
+			Draw_Some_Item(fields_gworld,calc_rect(4,0),terrain_screen_gworld,where_draw);
 		return;
 	}
 	if (!univ.town->is_on_map(where))
@@ -316,51 +316,51 @@ void draw_fields(location where){
 	auto const fields=univ.town.get_fields(where.x,where.y);
 	if ((fields&~(unsigned long)SPECIAL_EXPLORED)==0) return;
 	if(fields & WALL_FORCE)
-		Draw_Some_Item(fields_gworld,calc_rect(0,1),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(0,1),terrain_screen_gworld,where_draw,0xFFFFFF7F);
 	if(fields & WALL_FIRE)
-		Draw_Some_Item(fields_gworld,calc_rect(1,1),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(1,1),terrain_screen_gworld,where_draw);
 	if(fields & FIELD_ANTIMAGIC)
-		Draw_Some_Item(fields_gworld,calc_rect(2,1),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(2,1),terrain_screen_gworld,where_draw);
 	if(fields & CLOUD_STINK)
-		Draw_Some_Item(fields_gworld,calc_rect(3,1),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(3,1),terrain_screen_gworld,where_draw,0x7FFF7FFF);
 	if(fields & WALL_ICE)
-		Draw_Some_Item(fields_gworld,calc_rect(4,1),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(4,1),terrain_screen_gworld,where_draw);
 	if(fields & WALL_BLADES)
-		Draw_Some_Item(fields_gworld,calc_rect(5,1),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(5,1),terrain_screen_gworld,where_draw);
 	if(fields & CLOUD_SLEEP)
-		Draw_Some_Item(fields_gworld,calc_rect(6,1),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(6,1),terrain_screen_gworld,where_draw);
 	if(fields & OBJECT_BLOCK)
-		Draw_Some_Item(fields_gworld,calc_rect(3,0),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(3,0),terrain_screen_gworld,where_draw);
 	if(!is_combat() && (fields & SPECIAL_SPOT))
-		Draw_Some_Item(fields_gworld,calc_rect(4,0),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(4,0),terrain_screen_gworld,where_draw);
 	if(fields & FIELD_WEB)
-		Draw_Some_Item(fields_gworld,calc_rect(5,0),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(5,0),terrain_screen_gworld,where_draw);
 	if(fields & OBJECT_CRATE)
-		Draw_Some_Item(fields_gworld,calc_rect(6,0),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(6,0),terrain_screen_gworld,where_draw);
 	if(fields & OBJECT_BARREL)
-		Draw_Some_Item(fields_gworld,calc_rect(7,0),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(7,0),terrain_screen_gworld,where_draw);
 	if(fields & (BARRIER_FIRE | BARRIER_FORCE))
-		Draw_Some_Item(*ResMgr::graphics.get("teranim"),calc_rect(8+(anim_ticks%4),4),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(*ResMgr::graphics.get("teranim"),calc_rect(8+(anim_ticks%4),4),terrain_screen_gworld,where_draw);
 	if(fields & FIELD_QUICKFIRE)
-		Draw_Some_Item(fields_gworld,calc_rect(7,1),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(7,1),terrain_screen_gworld,where_draw);
 	if(fields & SFX_SMALL_BLOOD)
-		Draw_Some_Item(fields_gworld,calc_rect(0,3),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(0,3),terrain_screen_gworld,where_draw);
 	if(fields & SFX_MEDIUM_BLOOD)
-		Draw_Some_Item(fields_gworld,calc_rect(1,3),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(1,3),terrain_screen_gworld,where_draw);
 	if(fields & SFX_LARGE_BLOOD)
-		Draw_Some_Item(fields_gworld,calc_rect(2,3),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(2,3),terrain_screen_gworld,where_draw);
 	if(fields & SFX_SMALL_SLIME)
-		Draw_Some_Item(fields_gworld,calc_rect(3,3),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(3,3),terrain_screen_gworld,where_draw);
 	if(fields & SFX_LARGE_SLIME)
-		Draw_Some_Item(fields_gworld,calc_rect(4,3),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(4,3),terrain_screen_gworld,where_draw);
 	if(fields & SFX_ASH)
-		Draw_Some_Item(fields_gworld,calc_rect(5,3),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(5,3),terrain_screen_gworld,where_draw);
 	if(fields & SFX_BONES)
-		Draw_Some_Item(fields_gworld,calc_rect(6,3),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(6,3),terrain_screen_gworld,where_draw);
 	if(fields & SFX_RUBBLE)
-		Draw_Some_Item(fields_gworld,calc_rect(7,3),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(7,3),terrain_screen_gworld,where_draw);
 	if(fields & BARRIER_CAGE) {
-		Draw_Some_Item(fields_gworld,calc_rect(1,0),terrain_screen_gworld,where_draw,1,0);
+		Draw_Some_Item(fields_gworld,calc_rect(1,0),terrain_screen_gworld,where_draw);
 		forcecage_locs.push_back(where_draw);
 	}
 }
@@ -394,17 +394,17 @@ void draw_party_symbol(location center) {
 		else {
 			Texture from_gw;
 			cPict::get_picture(univ.party[i].get_picture_num(), from_gw, source_rect, (univ.party.direction >= 4 ? 2 : 0));
-			Draw_Some_Item(from_gw, source_rect, terrain_screen_gworld, target, 1, 0);
+			Draw_Some_Item(from_gw, source_rect, terrain_screen_gworld, target);
 		}
 	}
 	else if(univ.party.in_boat >= 0) {
 		if(univ.party.direction == DIR_N) i = 2;
 		else if(univ.party.direction == DIR_S) i = 3;
 		else i = univ.party.direction > DIR_S;
-		Draw_Some_Item(*ResMgr::graphics.get("vehicle"), calc_rect(i,0), terrain_screen_gworld, target, 1, 0);
+		Draw_Some_Item(*ResMgr::graphics.get("vehicle"), calc_rect(i,0), terrain_screen_gworld, target);
 	}else {
 		i = univ.party.direction > 3;
-		Draw_Some_Item(*ResMgr::graphics.get("vehicle"), calc_rect(i + 2, 1), terrain_screen_gworld, target, 1, 0);
+		Draw_Some_Item(*ResMgr::graphics.get("vehicle"), calc_rect(i + 2, 1), terrain_screen_gworld, target);
 	}
 }
 

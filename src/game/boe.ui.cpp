@@ -192,5 +192,5 @@ void cToolbar::draw(sf::RenderTarget& targ) {
 	}
 	
 	// Add the cached toolbar over the background
-	rect_draw_some_item(cache.getTexture(), rectangle(cache), targ, to, sf::BlendAdd);
+	rect_draw_some_item(Texture(cache.getTexture()), rectangle(cache), targ, to, sf::BlendAdd);
 }
