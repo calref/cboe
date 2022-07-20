@@ -108,7 +108,7 @@ void draw_monsters() {
 					if(picture.type!=ePicType::PIC_NONE) {
 						to_rect={0,0,36,28};
 						to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
-						cPict::draw_monster(terrain_screen_gworld, picture, to_rect, (enc.direction < 4 ? 0 : 2));
+						cPict::draw_monster(terrain_screen_gworld, to_rect, picture, (enc.direction < 4 ? 0 : 2));
 					} else enc.exists = false;
 				}
 			}

@@ -412,7 +412,7 @@ void set_up_terrain_buttons(bool reset) {
 			}
 			case DRAW_MONST:
 				frame_rect(mainPtr, draw_rect, sf::Color::Black);
-				cPict::draw_monster(mainPtr, scenario.get_monster(i).get_picture_num(), draw_rect);
+				cPict::draw_monster(mainPtr, draw_rect, scenario.get_monster(i).get_picture_num());
 				break;
 			case DRAW_ITEM:
 				Texture source_gworld;
@@ -1030,7 +1030,7 @@ void place_location() {
 		extern short mode_count;
 		bool draw_field = false;
 		if(overall_mode == MODE_PLACE_CREATURE || overall_mode == MODE_PLACE_SAME_CREATURE)
-			cPict::draw_monster(mainPtr, scenario.get_monster(mode_count).get_picture_num(), draw_rect);
+			cPict::draw_monster(mainPtr, draw_rect, scenario.get_monster(mode_count).get_picture_num());
 		else if(overall_mode == MODE_PLACE_ITEM || overall_mode == MODE_PLACE_SAME_ITEM) {
 			cPictNum pic=scenario.get_item(mode_count).get_picture_num(false);
 			Texture source_gworld;

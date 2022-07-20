@@ -27,46 +27,47 @@ const pic_num_t cPict::BLANK = -1;
 
 void cPict::init(){
 	using namespace std::placeholders;
-	drawPict()[PIC_TER] = &cPict::drawPresetTer;
-	drawPict()[PIC_TER_ANIM] = &cPict::drawPresetTerAnim;
 	
+	// item
+	for (auto type : { PIC_ITEM, PIC_TINY_ITEM, PIC_CUSTOM_ITEM, PIC_PARTY_ITEM, PIC_CUSTOM_TINY_ITEM})
+		drawPict()[type] = std::bind(&cPict::drawItem,_1,_2,type, type==PIC_TINY_ITEM || type==PIC_CUSTOM_TINY_ITEM);
+
 	// monster
 	for (auto type : { PIC_MONST, PIC_MONST_WIDE, PIC_MONST_TALL, PIC_MONST_LG,
 		PIC_CUSTOM_MONST, PIC_CUSTOM_MONST_WIDE, PIC_CUSTOM_MONST_TALL, PIC_CUSTOM_MONST_LG,
 		PIC_PARTY_MONST, PIC_PARTY_MONST_WIDE, PIC_PARTY_MONST_TALL, PIC_PARTY_MONST_LG,
 	})
 		drawPict()[type] = std::bind(&cPict::drawMonster,_1,_2,type);
-	drawPict()[PIC_CUSTOM_PC] = std::bind(&cPict::drawMonster,_1,_2,PIC_CUSTOM_MONST); // checkme, I am not sure that this can happen
+	
+	// pc
+	for (auto type : { PIC_PC, PIC_CUSTOM_PC, PIC_PARTY_PC})
+		drawPict()[type] = std::bind(&cPict::drawPc,_1,_2,type);
+
+	// scenario
+	for (auto type : { PIC_SCEN, PIC_SCEN_LG})
+		drawPict()[type] = std::bind(&cPict::drawScenario,_1,_2,type);
+	drawPict()[PIC_CUSTOM_SCEN] = &cPict::drawCustomTalk;
+	drawPict()[PIC_PARTY_SCEN] = &cPict::drawPartyScen; // checkme, I am not sure that this can happen
+
+	// terrain
+	for (auto type : { PIC_TER, PIC_TER_ANIM, PIC_TER_MAP, PIC_CUSTOM_TER, PIC_CUSTOM_TER_ANIM, PIC_CUSTOM_TER_MAP})
+		drawPict()[type] = std::bind(&cPict::drawTerrain,_1,_2,type);
+
 
 	drawPict()[PIC_DLOG] = &cPict::drawPresetDlog;
 	drawPict()[PIC_TALK] = &cPict::drawPresetTalk;
-	drawPict()[PIC_SCEN] = &cPict::drawPresetScen;
-	drawPict()[PIC_ITEM] = &cPict::drawPresetItem;
-	drawPict()[PIC_TINY_ITEM] = &cPict::drawPresetTinyItem;
-	drawPict()[PIC_PC] = &cPict::drawPresetPc;
 	drawPict()[PIC_FIELD] = &cPict::drawPresetField;
 	drawPict()[PIC_BOOM] = &cPict::drawPresetBoom;
 	drawPict()[PIC_FULL] = &cPict::drawFullSheet;
 	drawPict()[PIC_MISSILE] = &cPict::drawPresetMissile;
 	drawPict()[PIC_DLOG_LG] = &cPict::drawPresetDlogLg;
-	drawPict()[PIC_SCEN_LG] = &cPict::drawPresetScenLg;
-	drawPict()[PIC_TER_MAP] = &cPict::drawPresetTerMap;
 	drawPict()[PIC_STATUS] = &cPict::drawStatusIcon;
-	drawPict()[PIC_CUSTOM_TER] = &cPict::drawCustomTer;
-	drawPict()[PIC_CUSTOM_TER_ANIM] = &cPict::drawCustomTerAnim;
 	drawPict()[PIC_CUSTOM_DLOG] = &cPict::drawCustomDlog;
 	drawPict()[PIC_CUSTOM_TALK] = &cPict::drawCustomTalk;
-	drawPict()[PIC_CUSTOM_SCEN] = &cPict::drawCustomTalk;
-	drawPict()[PIC_CUSTOM_ITEM] = &cPict::drawCustomItem;
-	drawPict()[PIC_CUSTOM_TINY_ITEM] = &cPict::drawCustomTinyItem;
 	drawPict()[PIC_CUSTOM_FULL] = &cPict::drawFullSheet;
 	drawPict()[PIC_CUSTOM_BOOM] = &cPict::drawCustomBoom;
 	drawPict()[PIC_CUSTOM_MISSILE] = &cPict::drawCustomMissile;
 	drawPict()[PIC_CUSTOM_DLOG_LG] = &cPict::drawCustomDlogLg;
-	drawPict()[PIC_CUSTOM_TER_MAP] = &cPict::drawCustomTerMap;
-	drawPict()[PIC_PARTY_SCEN] = &cPict::drawPartyScen;
-	drawPict()[PIC_PARTY_ITEM] = &cPict::drawPartyItem;
-	drawPict()[PIC_PARTY_PC] = &cPict::drawPartyPc;
 }
 
 std::map<ePicType,std::function<void(cPict *, rectangle)>>& cPict::drawPict(){
@@ -761,7 +762,12 @@ try {
 				break;
 			std::tie(source,from_rect) = spec_scen_g.find_graphic(pict.num);
 			break;
-			
+		case ePicType::PIC_PARTY_ITEM:
+			if (!spec_scen_g)
+				break;
+			std::tie(source,from_rect) = spec_scen_g.find_graphic(pict.num, true);
+			break;
+
 		// TODO finish monster code
 		case ePicType::PIC_MONST:
 		case ePicType::PIC_MONST_LG:
@@ -865,29 +871,25 @@ catch (...) {
 	return true;
 }
 
-void cPict::drawPresetTer(rectangle to_rect){
+void cPict::drawTerrain(rectangle to_rect, ePicType defType)
+{
+	if (defType==PIC_TER_MAP || defType==PIC_CUSTOM_TER_MAP) {
+		to_rect.right = to_rect.left + 24;
+		to_rect.bottom = to_rect.top + 24;
+	}
+	else if(to_rect.right - to_rect.left > 28)
+		to_rect.inset(4,0);
 	Texture source;
 	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_TER), source, source_rect, animFrame))
+	cPictNum pict=getSourcePicture(defType);
+	if (!get_picture(pict, source, source_rect, animFrame)) {
+		fill_rect(*inWindow, to_rect, sf::Color::Black);
 		return;
-	if(to_rect.right - to_rect.left > 28)
-		to_rect.inset(4,0);
-	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
-}
-
-void cPict::drawPresetTerAnim(rectangle to_rect){
-	Texture source;
-	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_TER_ANIM), source, source_rect, animFrame))
-		return;
-	if(to_rect.right - to_rect.left > 28) {
-		to_rect.inset(4,0);
-		to_rect.right = to_rect.left + 28;
 	}
 	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
 }
 
-void cPict::draw_monster(sf::RenderTarget &window, cPictNum const &pict, rectangle to_rect, int anim)
+void cPict::draw_monster(sf::RenderTarget &target, rectangle to_rect, cPictNum const &pict, int anim)
 {
 	Texture source;
 	rectangle source_rect;
@@ -916,7 +918,7 @@ void cPict::draw_monster(sf::RenderTarget &window, cPictNum const &pict, rectang
 				continue;
 			small_monst_rect.left=to_rect.left+w*decal.w;
 			small_monst_rect.right=small_monst_rect.left+decal.w;
-			rect_draw_some_item(source, source_rect, window, small_monst_rect, sf::BlendAlpha);
+			rect_draw_some_item(source, source_rect, target, small_monst_rect, sf::BlendAlpha);
 		}
 	}
 }
@@ -927,7 +929,7 @@ void cPict::drawMonster(rectangle to_rect, ePicType defType)
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
-	draw_monster(*inWindow, getSourcePicture(defType), to_rect, animFrame);
+	draw_monster(*inWindow, to_rect, getSourcePicture(defType), animFrame);
 }
 
 void cPict::drawPresetDlog(rectangle to_rect){
@@ -936,7 +938,8 @@ void cPict::drawPresetDlog(rectangle to_rect){
 
 	Texture source;
 	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_DLOG), source, source_rect, animFrame))
+	cPictNum pict=getSourcePicture(ePicType::PIC_DLOG);
+	if (!get_picture(pict, source, source_rect, animFrame))
 		return;
 	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
 }
@@ -947,7 +950,8 @@ void cPict::drawPresetDlogLg(rectangle to_rect){
 	
 	Texture source;
 	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_DLOG_LG), source, source_rect, animFrame))
+	cPictNum pict=getSourcePicture(ePicType::PIC_DLOG_LG);
+	if (!get_picture(pict, source, source_rect, animFrame))
 		return;
 	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
 }
@@ -958,67 +962,70 @@ void cPict::drawPresetTalk(rectangle to_rect){
 	
 	Texture source;
 	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_TALK), source, source_rect, animFrame))
-		return;
-	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
-}
-
-void cPict::drawPresetScen(rectangle to_rect){
-	to_rect.right = to_rect.left + 32;
-	to_rect.bottom = to_rect.top + 32;
-	
-	Texture source;
-	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_SCEN), source, source_rect, animFrame))
-		return;
-	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
-}
-
-void cPict::drawPresetScenLg(rectangle to_rect){
-	to_rect.right = to_rect.left + (drawScaled ? getBounds().width() : 64);
-	to_rect.bottom = to_rect.top + (drawScaled ? getBounds().height() : 64);
-	Texture source;
-	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_SCEN_LG), source, source_rect, animFrame))
-		return;
-	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
-}
-
-void cPict::drawPresetItem(rectangle to_rect){
-	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	
-	Texture source;
-	rectangle source_rect;
-	auto pict=getSourcePicture(ePicType::PIC_ITEM);
+	cPictNum pict=getSourcePicture(ePicType::PIC_TALK);
 	if (!get_picture(pict, source, source_rect, animFrame))
 		return;
-	if (pict.type==ePicType::PIC_TINY_ITEM || (pict.type==ePicType::PIC_ITEM && pict.num>=55))
-		to_rect.inset(5,9);
-	rect_draw_some_item(source, source_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
 }
 
-void cPict::drawPresetTinyItem(rectangle to_rect){
-	to_rect.right = to_rect.left + 18;
-	to_rect.bottom = to_rect.top + 18;
+
+void cPict::drawScenario(rectangle to_rect, ePicType defType)
+{
+	int const w=(drawScaled && defType==ePicType::PIC_SCEN_LG) ? 64 : 32;
+	to_rect.right = to_rect.left + w;
+	to_rect.bottom = to_rect.top + w;
+	
+	Texture source;
+	rectangle source_rect;
+	cPictNum pict=getSourcePicture(defType);
+	if (!get_picture(pict, source, source_rect, animFrame))
+		return;
+	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
+}
+
+void cPict::drawPartyScen(rectangle to_rect){
+	auto from_gw = getSheet(SHEET_HEADER);
+	rectangle from_rect = {0,0,32,32};
+	from_rect.offset(32 * (picture.num % 5),32 * (picture.num / 5));
+	to_rect.right = to_rect.left + 32;
+	to_rect.bottom = to_rect.top + 32;
+	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
+}
+
+void cPict::drawItem(rectangle to_rect, ePicType defType, bool inTinyRect)
+{
+	if (inTinyRect) {
+		to_rect.right = to_rect.left + 18;
+		to_rect.bottom = to_rect.top + 18;
+	}
+	else {
+		to_rect.right = to_rect.left + 28;
+		to_rect.bottom = to_rect.top + 36;
+	}
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 
 	Texture source;
-	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_TINY_ITEM), source, source_rect, animFrame))
+	rectangle source_rect;	auto pict=getSourcePicture(defType);
+	if (!get_picture(pict, source, source_rect, animFrame))
 		return;
+	if (!inTinyRect) {
+		if (pict.type==ePicType::PIC_TINY_ITEM || pict.type==ePicType::PIC_CUSTOM_TINY_ITEM || (pict.type==ePicType::PIC_ITEM && pict.num>=55))
+			to_rect.inset(5,9);
+	}
 	rect_draw_some_item(source, source_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
-void cPict::drawPresetPc(rectangle to_rect){
-	Texture source;
-	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_PC), source, source_rect, animFrame))
-		return;
+void cPict::drawPc(rectangle to_rect, ePicType defType)
+{
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	
+	Texture source;
+	rectangle source_rect;
+	cPictNum pict=getSourcePicture(defType);
+	if (!get_picture(pict, source, source_rect, animFrame))
+		return;
 	rect_draw_some_item(source, source_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
@@ -1066,17 +1073,6 @@ void cPict::drawPresetMissile(rectangle to_rect){
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
-void cPict::drawPresetTerMap(rectangle to_rect){
-	Texture source;
-	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_TER_MAP), source, source_rect, animFrame))
-		return;
-	// TODO: Should probably fill black somewhere in here...?
-	to_rect.right = to_rect.left + 24;
-	to_rect.bottom = to_rect.top + 24;
-	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
-}
-
 void cPict::drawStatusIcon(rectangle to_rect){
 	rectangle from_rect = {0,0,12,12};
 	auto from_gw = getSheet(SHEET_STATUS);
@@ -1089,26 +1085,6 @@ void cPict::drawStatusIcon(rectangle to_rect){
 		tileImage(*inWindow, pat_rect, bg[6]);
 	}
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
-}
-
-void cPict::drawCustomTer(rectangle to_rect){
-	Texture source;
-	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_CUSTOM_TER), source, source_rect, animFrame))
-		return;
-	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 36;
-	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
-}
-
-void cPict::drawCustomTerAnim(rectangle to_rect){
-	Texture source;
-	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_CUSTOM_TER), source, source_rect, animFrame))
-		return;
-	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 36;
-	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
 }
 
 // This is a super-hacky way to wedge in scaled form, but at least it should work.
@@ -1178,30 +1154,6 @@ void cPict::drawCustomTalk(rectangle to_rect){
 	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect);
 }
 
-void cPict::drawCustomItem(rectangle to_rect){
-	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	
-	Texture source;
-	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_CUSTOM_ITEM), source, source_rect, animFrame))
-		return;
-	rect_draw_some_item(source, source_rect, *inWindow, to_rect, sf::BlendAlpha);
-}
-
-void cPict::drawCustomTinyItem(rectangle to_rect){
-	to_rect.right = to_rect.left + 18;
-	to_rect.bottom = to_rect.top + 18;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	
-	Texture source;
-	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_CUSTOM_TINY_ITEM), source, source_rect, animFrame))
-		return;
-	rect_draw_some_item(source, source_rect, *inWindow, to_rect, sf::BlendAlpha);
-}
-
 void cPict::drawCustomBoom(rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
@@ -1224,43 +1176,6 @@ void cPict::drawCustomMissile(rectangle to_rect){
 	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
-void cPict::drawCustomTerMap(rectangle to_rect){
-	Texture source;
-	rectangle source_rect;
-	if (!get_picture(getSourcePicture(ePicType::PIC_CUSTOM_TER_MAP), source, source_rect, animFrame))
-		return;
-	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
-}
-
-void cPict::drawPartyScen(rectangle to_rect){
-	auto from_gw = getSheet(SHEET_HEADER);
-	rectangle from_rect = {0,0,32,32};
-	from_rect.offset(32 * (picture.num % 5),32 * (picture.num / 5));
-	to_rect.right = to_rect.left + 32;
-	to_rect.bottom = to_rect.top + 32;
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect);
-}
-
-void cPict::drawPartyItem(rectangle to_rect){
-	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 36;
-	Texture from_gw;
-	rectangle from_rect;
-	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(picture.num, true);
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
-}
-
-void cPict::drawPartyPc(rectangle to_rect){
-	to_rect.right = to_rect.left + 28;
-	to_rect.bottom = to_rect.top + 36;
-	Texture from_gw;
-	rectangle from_rect;
-	std::tie(from_gw,from_rect) = spec_scen_g.find_graphic(picture.num, true);
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	rect_draw_some_item(from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
-}
-
 cPict::~cPict() {}
 
 void cPict::drawAt(sf::RenderWindow& win, rectangle dest, pic_num_t which_g, ePicType type_g, bool framed) {
@@ -1273,7 +1188,7 @@ void cPict::drawAt(sf::RenderWindow& win, rectangle dest, pic_num_t which_g, ePi
 
 cControl::storage_t cPict::store() {
 	storage_t storage = cControl::store();
-	storage["pic-num"] = picture.num;
+	storage["pic-num"] = picture;
 	storage["pic-type"] = resultType;
 	return storage;
 }
@@ -1281,7 +1196,7 @@ cControl::storage_t cPict::store() {
 void cPict::restore(storage_t to) {
 	cControl::restore(to);
 	if(to.find("pic-num") != to.end())
-		picture.num = boost::any_cast<pic_num_t>(to["pic-num"]);
+		picture = boost::any_cast<cPictNum>(to["pic-num"]);
 	if(to.find("pic-type") != to.end())
 		resultType = boost::any_cast<ePicType>(to["pic-type"]);
 }
