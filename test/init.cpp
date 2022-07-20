@@ -101,7 +101,7 @@ TEST_CASE("Initialization sanity test for monster") {
 		CHECK(dude.time_flag == eMonstTime::ALWAYS);
 		CHECK(dude.spec1 == -1);
 		CHECK(dude.spec2 == -1);
-		CHECK(dude.spec_enc_code == -1);
+		CHECK(dude.spec_enc_code == 0);
 		CHECK(dude.time_code == 0);
 		CHECK(dude.monster_time == 0);
 		CHECK(dude.personality == -1);
