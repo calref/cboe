@@ -23,7 +23,7 @@ though in some cases rearranged a little:
 - errors.png ( "Under Construction Grunge Sign" by Free Grunge Textures - www.freestock.ca is licensed under CC BY 2.0 )
 - edsplash.png (by James Ernest)
 - fighthelp.png
-- invenbtns.png (the coin was cropped from an item graphic)
+- invenbtns.png (the coin was cropped from an item graphic, the "trash" icon is licensed under CC BY-SA 2.5)
 - invenhelp.png
 - inventory.png
 - missiles.png
@@ -91,6 +91,8 @@ For item graphics, most are original BoE graphics, except for the following:
 
 - The last two rows of objects.png are by ADoS, as is graphic 17.
 - On tinyobj.png, graphics 17, 45-54, 69, and 134-138 are by ADoS.
+- On invenbtns.png, the "trash" picture is from the Tango! Desktop Project CC BY-SA 2.5.
+	https://commons.wikimedia.org/wiki/File:User-trash-full-4.svg
 
 startanim.png has been heavily modified by ADoS with new text, but the actual pictures
 in it are still all original BoE graphics.

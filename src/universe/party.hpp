@@ -9,11 +9,12 @@
 #ifndef BOE_DATA_PARTY_H
 #define BOE_DATA_PARTY_H
 
-#include <string>
-#include <vector>
 #include <array>
 #include <map>
 #include <set>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include <boost/iterator/indirect_iterator.hpp>
 
@@ -84,7 +85,7 @@ public:
 	unsigned char stuff_done[350][50];
 	// These used to be stored as magic SDFs
 	unsigned char hostiles_present;
-	bool easy_mode = false, less_wm = false;
+	bool easy_mode = false, less_wm = false, show_junk_bag=false;
 	// End former magic SDFs
 	std::array<unsigned char,90> magic_ptrs;
 	short light_level;
@@ -130,6 +131,7 @@ public:
 	std::vector<cMonster> summons; // an array of monsters which can be summoned by the party's items yet don't originate from this scenario
 	unsigned short scen_won, scen_played; // numbers of scenarios won and played respectively by this party
 	std::map<std::string,campaign_flag_type> campaign_flags;
+	std::vector<std::pair<cItem,std::set<int>>> junk_items;
 private:
 	std::map<unsigned short,std::pair<unsigned short,unsigned char>> pointers;
 	using sd_array = decltype(stuff_done);
@@ -198,7 +200,8 @@ public:
 	bool has_abil(eItemAbil abil, short dat = -1);
 	bool take_abil(eItemAbil abil, short dat = -1);
 	bool check_class(unsigned int item_class,bool take);
-	
+	bool check_junk_class(unsigned int item_class,bool take,int townId=-1);
+
 	bool start_split(short x, short y, snd_num_t noise, short who);
 	bool end_split(snd_num_t noise);
 	bool is_split() const;
@@ -228,6 +231,14 @@ public:
 	cVehicle const &get_horse(int id) const;
 	cMonster &get_summon(mon_num_t id);
 	cMonster const &get_summon(mon_num_t id) const;
+	
+	// junk item
+	cItem const &get_junk_item(item_num_t id) const;
+	cItem &get_junk_item(item_num_t id);
+	bool is_junk_item_compatible_with_town(item_num_t id, int townId) const;
+	bool give_junk_item(cItem const &item, int townId);
+	void take_junk_item(item_num_t id);
+	void combine_junk_items();
 
 	cParty(ePartyPreset party_preset = PARTY_DEFAULT);
 	~cParty();

@@ -1055,6 +1055,8 @@ void cUniverse::exportGraphics() {
 	for (auto &items : party.stored_items)
 		for (auto &item : items)
 			state.check_item(*this, item);
+	for (auto &junk : party.junk_items)
+		state.check_item(*this, junk.first);
 	for(mon_num_t monst : party.imprisoned_monst) {
 		if(monst > 0 && monst < scenario.scen_monsters.size())
 			state.check_monst(*this, scenario.scen_monsters[monst]);
@@ -1123,6 +1125,19 @@ void cUniverse::exportSummons() {
 					need_monsters.insert(monst);
 					update_items[monst].insert(&item);
 				}
+			}
+		}
+	}
+	for (auto &itemSet : party.junk_items) {
+		auto &item=itemSet.first;
+		if(item.variety == eItemType::NO_ITEM) continue;
+		if(item.ability == eItemAbil::SUMMONING||item.ability == eItemAbil::MASS_SUMMONING) {
+			mon_num_t monst = item.abil_data[1];
+			if(monst >= 10000)
+				used_monsters.insert(monst - 10000);
+			else {
+				need_monsters.insert(monst);
+				update_items[monst].insert(&item);
 			}
 		}
 	}

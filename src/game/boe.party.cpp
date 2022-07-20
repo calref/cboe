@@ -142,6 +142,20 @@ void put_party_in_scen(std::string scen_name) {
 			else
 				thisItem.special_class = 0;
 		}
+	for (size_t i = univ.party.junk_items.size(); i>0; i--) {
+		cItem & thisItem = univ.party.junk_items[i-1].first;
+		univ.party.junk_items[i-1].second.clear();
+		if (thisItem.variety == eItemType::NO_ITEM)
+			continue;
+		if (is_item_specific_to_scenario(thisItem)) {
+			if (i!=univ.party.junk_items.size())
+				std::swap(univ.party.junk_items[i-1], univ.party.junk_items.back());
+			univ.party.junk_items.pop_back();
+			item_took = true;
+		}
+		else
+			thisItem.special_class = 0;
+	}
 	if(item_took)
 		cChoiceDlog("removed-special-items").show();
 	
@@ -596,6 +610,29 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			for(cPlayer& pc : univ.party)
 				for(cItem& item : pc.items)
 					item.ident = true;
+			if (univ.party.show_junk_bag && is_town() && !is_combat() && !is_town_hostile()) {
+				// now try to identify items in the junk bag,
+				//   the junk bag is clearly a magic item so
+				//   it must interfer with this spell
+				short numDone=0, numFailed=0;
+				for (auto &itemSet : univ.party.junk_items) {
+					if (itemSet.first.ident) continue;
+					if (get_ran(1, 0, 1)) {
+						++numDone;
+						itemSet.first.ident=true;
+					}
+					else
+						++numFailed;
+				}
+				if (numDone || numFailed) {
+					ASB(std::string("Junk Bag: ")+std::to_string(numDone)+'/'+std::to_string(numDone+numFailed)
+						+" items identified.");
+				}
+				if (numDone) {
+					univ.party.combine_junk_items();
+					if (stat_window==ITEM_WIN_JUNK) set_stat_window(ITEM_WIN_JUNK);
+				}
+			}
 			break;
 			
 		case eSpell::TRUE_SIGHT:

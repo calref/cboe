@@ -39,11 +39,12 @@
 #include "gfx/render_shapes.hpp"
 #include "tools/enum_map.hpp"
 
-rectangle item_screen_button_rects[9] = {
-	{125,10,141,28},{125,40,141,58},{125,68,141,86},{125,98,141,116},{125,126,141,144},{125,156,141,174},
-	{126,176,141,211},
-	{126,213,141,248},
-	{127,251,140,267}
+rectangle item_screen_button_rects[10] = {
+	{125,9,141,27},{125,37,141,55},{125,64,141,82},{125,92,141,110},{125,119,141,137},{125,147,141,165}, // pc
+	{126,190,141,222}, // special
+	{126,221,141,254}, // quest
+	{127,254,140,270}, // help
+	{125,174,141,189} // junk bag
 };
 rectangle medium_buttons[4] = {
 	{383,190,401,225}, {402, 190, 420, 225},
@@ -61,7 +62,7 @@ rectangle startup_top;
 
 enum_map(eItemButton, bool) item_area_button_active[8];
 enum_map(ePlayerButton, bool) pc_area_button_active[6];
-short item_bottom_button_active[9] = {0,0,0,0,0, 0,1,1,1};
+bool item_bottom_button_active[10] = {false,false,false,false,false, false,true,true,true,false};
 
 rectangle pc_help_button;
 
@@ -189,19 +190,6 @@ void init_screen_locs() {
 			item_buttons[i][j] = item_buttons[0][j];
 			item_buttons[i][j].offset(0,13 * i);
 		}
-	
-/*	for(short i = 0; i < 8; i++) {
-		item_screen_button_rects[i] = bottom_base;
-		OffsetRect(&item_screen_button_rects[i],10 + i * 29,126);
-	}
-	item_screen_button_rects[6].left = 176;
-	item_screen_button_rects[6].right = 211;
-	item_screen_button_rects[7].left = 213;
-	item_screen_button_rects[7].right = 248;
-	item_screen_button_rects[8].top = 127;
-	item_screen_button_rects[8].bottom = 140;
-	item_screen_button_rects[8].left = 251;
-	item_screen_button_rects[8].right = 267; */
 	
 	// name, hp, sp, info, trade
 	pc_buttons[0][PCBTN_NAME].top = 18;
@@ -652,7 +640,7 @@ static void handle_drop_item(location destination, bool& need_redraw) {
 			add_string_to_buf("Drop: must be adjacent.");
 		else if(sight_obscurity(destination.x,destination.y) == 5)
 			ASB("Drop: Space is blocked.");
-		else drop_item(univ.cur_pc,store_drop_item,destination);
+		else drop_item(stat_window == ITEM_WIN_JUNK ? 7 : univ.cur_pc,store_drop_item,destination);
 		overall_mode = MODE_TOWN;
 	}
 	need_redraw = true;
@@ -797,7 +785,7 @@ static void handle_give_item(short item_hit, bool& did_something, bool& need_red
 		add_string_to_buf("Give item: Finish what you're doing first.");
 		return;
 	}
-	give_thing(stat_window, item_hit);
+	give_thing(stat_window!=ITEM_WIN_JUNK ? stat_window : 7, item_hit);
 	did_something = true;
 	need_redraw = true;
 	take_ap(1);
@@ -821,8 +809,7 @@ static void handle_drop_item(short item_hit, bool& need_redraw) {
 
 static void handle_item_shop_action(short item_hit) {
 	long i = item_hit - item_sbar->getPosition();
-	cPlayer& shopper = univ.party[stat_window];
-	cItem& target = shopper.items[item_hit];
+	cItem& target = stat_window<=6 ? univ.party[stat_window].items[item_hit] : univ.party.get_junk_item(item_hit);
 	switch(stat_screen_mode) {
 		case MODE_IDENTIFY:
 			if(!take_gold(shop_identify_cost,false))
@@ -831,14 +818,22 @@ static void handle_item_shop_action(short item_hit) {
 				play_sound(68);
 				ASB("Your item is identified.");
 				target.ident = true;
-				shopper.combine_things();
+				if (stat_window<=6)
+					univ.party[stat_window].combine_things();
+				else {
+					univ.party.combine_junk_items();
+					set_stat_window(ITEM_WIN_JUNK);
+				}
 			}
 			break;
 		case MODE_SELL_WEAP: case MODE_SELL_ARMOR: case MODE_SELL_ANY:
 			play_sound(-39);
 			univ.party.gold += store_selling_values[i];
 			ASB("You sell your item.");
-			shopper.take_item(item_hit);
+			if (stat_window<=6)
+				univ.party[stat_window].take_item(item_hit);
+			else
+				univ.party.take_junk_item(item_hit);
 			put_item_screen(stat_window);
 			break;
 		case MODE_ENCHANT:
@@ -1350,7 +1345,7 @@ bool handle_action(const sf::Event& event) {
 		point_in_area.x -= item_win_ul.x;
 		point_in_area.y -= item_win_ul.y;
 		
-		for(int i = 0; i < 9; i++)
+		for(int i = 0; i < 10; i++)
 			if(item_bottom_button_active[i] > 0 && point_in_area.in(item_screen_button_rects[i])) {
 				rectangle button_rect = item_screen_button_rects[i];
 				button_rect.offset(item_win_ul);
@@ -1365,12 +1360,15 @@ bool handle_action(const sf::Event& event) {
 					case 8: // help
 						cChoiceDlog("help-inventory").show();
 						break;
+					case 9:
+						set_stat_window(ITEM_WIN_JUNK);
+						break;
 					default:
 						handle_switch_pc_items(i, need_redraw);
 						break;
 				}
 			}
-		if(stat_window <= ITEM_WIN_QUESTS) {
+		if(stat_window <= ITEM_WIN_JUNK) {
 			for(int i = 0; i < 8; i++)
 				for(auto j : item_buttons[i].keys())
 					if(item_area_button_active[i][j] && point_in_area.in(item_buttons[i][j])) {
@@ -1402,7 +1400,10 @@ bool handle_action(const sf::Event& event) {
 									put_spec_item_info(spec_item_array[item_hit]);
 								else if(stat_window == ITEM_WIN_QUESTS)
 									put_quest_info(spec_item_array[item_hit]);
-								else display_pc_item(stat_window, item_hit,univ.party[stat_window].items[item_hit],0);
+								else if (stat_window == ITEM_WIN_JUNK)
+									display_pc_item(stat_window, item_hit,univ.party.get_junk_item(item_hit),0);
+								else
+									display_pc_item(stat_window, item_hit,univ.party[stat_window].items[item_hit],0);
 								break;
 							case ITEMBTN_SPEC: // sell? That this code was reached indicates that the item was sellable
 								// (Based on item_area_button_active)
@@ -1779,6 +1780,11 @@ bool handle_keystroke(const sf::Event& event){
 			
 		case '1': case '2': case '3': case '4': case '5': case '6':
 			handle_switch_pc(((short) chr) - 49, need_redraw, need_reprint);
+			break;
+
+		case '7': // Junk
+			if (univ.party.show_junk_bag)
+				set_stat_window(ITEM_WIN_JUNK);
 			break;
 			
 		case '9': // Special items
@@ -2720,6 +2726,7 @@ void start_new_game(bool force) {
 	// use user's easy mode and less wandering mode
 	univ.party.easy_mode=get_bool_pref("EasyMode", false);
 	univ.party.less_wm=get_bool_pref("LessWanderingMonsters", false);
+	univ.party.show_junk_bag=get_bool_pref("ShowJunkBag", false);
 	if(force) return;
 	fs::path file = nav_put_party();
 	if(!file.empty()) save_party(file, univ);

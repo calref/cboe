@@ -1204,17 +1204,13 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		if (overall_mode != MODE_STARTUP && party_in_memory) {
 			univ.party.easy_mode = dynamic_cast<cLed&>(me["easier"]).getState() != led_off;
 			univ.party.less_wm = dynamic_cast<cLed&>(me["lesswm"]).getState() != led_off;
+			univ.party.show_junk_bag = dynamic_cast<cLed&>(me["junk"]).getState() != led_off;
 		}
 		set_pref("DrawTerrainAnimation", dynamic_cast<cLed&>(me["noanim"]).getState() == led_off);
 		set_pref("DrawTerrainShoreFrills", dynamic_cast<cLed&>(me["noshore"]).getState() == led_off);
 		set_pref("ShowStartupSplash", dynamic_cast<cLed&>(me["skipsplash"]).getState() == led_off);
+		set_pref("ShowJunkBag", dynamic_cast<cLed&>(me["junk"]).getState() != led_off);
 		std::string speed = dynamic_cast<cLedGroup&>(me["speed"]).getSelected();
-		/* TODO: Should I add these additional preferences from Windows?
-		party.stuff_done[SDF_NO_TARGET_LINE] = cd_get_led(1099,50);
-		party.stuff_done[SDF_LESS_SOUND] = cd_get_led(1099,52);
-		party.stuff_done[SDF_FASTER_BOOM_SPACES] = cd_get_led(1099,56);
-		party.stuff_done[SDF_ASK_ABOUT_TEXT_BOX] = cd_get_led(1099,60);
-		*/
 		if(speed == "fast")
 			set_pref("GameSpeed", 0);
 		else if(speed == "med")
@@ -1288,9 +1284,11 @@ void pick_preferences() {
 	if(overall_mode == MODE_STARTUP && !party_in_memory) {
 		dynamic_cast<cLed&>(prefsDlog["easier"]).setState(get_bool_pref("EasyMode") ? led_red : led_off);
 		dynamic_cast<cLed&>(prefsDlog["lesswm"]).setState(get_bool_pref("LessWanderingMonsters") ? led_red : led_off);
+		dynamic_cast<cLed&>(prefsDlog["junk"]).setState(get_bool_pref("ShowJunkBag", false) ? led_red : led_off);
 	} else {
 		dynamic_cast<cLed&>(prefsDlog["easier"]).setState(univ.party.easy_mode ? led_red : led_off);
 		dynamic_cast<cLed&>(prefsDlog["lesswm"]).setState(univ.party.less_wm ? led_red : led_off);
+		dynamic_cast<cLed&>(prefsDlog["junk"]).setState(univ.party.show_junk_bag ? led_red : led_off);
 	}
 	dynamic_cast<cLed&>(prefsDlog["noanim"]).setState(get_bool_pref("DrawTerrainAnimations", true) ? led_off : led_red);
 	dynamic_cast<cLed&>(prefsDlog["noshore"]).setState(get_bool_pref("DrawTerrainShoreFrills", true) ? led_off : led_red);

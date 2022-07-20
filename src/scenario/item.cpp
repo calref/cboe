@@ -102,6 +102,26 @@ bool cItem::abil_group() const {
 	return false;
 }
 
+bool cItem::can_be_combined_with(cItem const &item) const
+{
+	if (!ident || !item.ident || variety==eItemType::NO_ITEM || item.variety==eItemType::NO_ITEM ||
+		type_flag==0 || item.type_flag==0)
+		return false;
+	if (name!=item.name || weight!=item.weight || graphic_num!=item.graphic_num ||
+		value!=item.value || special_class!=item.special_class) return false;
+	if (item_level != item.item_level || awkward!=item.awkward || bonus!=item.bonus || protection!=item.protection)
+		return false;
+	if (weap_type!=item.weap_type || magic_use_type!=item.magic_use_type || ability!=item.ability)
+		return false;
+	if (ability!=eItemAbil::NONE && (abil_data[0]!=item.abil_data[0] || abil_data[1]!=item.abil_data[1]))
+		return false;
+	if (missile!=item.missile || is_special!=item.is_special)
+		return false;
+	if (magic!=item.magic || cursed!=item.cursed || enchanted!=item.enchanted || unsellable!=item.unsellable)
+		return false;
+	return true;
+}
+
 cItem::cItem(){
 	variety = eItemType::NO_ITEM;
 	item_level = 0;
