@@ -407,6 +407,17 @@ int cPlayer::get_level() const {
 	return level;
 }
 
+cPictNum cPlayer::get_picture_num() const
+{
+	if (which_graphic<100)
+		return cPictNum(which_graphic, PIC_PC);
+	if (which_graphic<1000)
+		return cPictNum(which_graphic-100, PIC_MONST);
+	if (which_graphic>=10000)
+		return cPictNum(which_graphic-10000, PIC_PARTY_PC);
+	return cPictNum(which_graphic-1000, PIC_CUSTOM_PC);
+}
+
 void cPlayer::sort_items() {
 	using it = eItemType;
 	static std::map<eItemType, const short> item_priority = {

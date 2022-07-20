@@ -808,6 +808,12 @@ void refresh_shopping() {
 	rect_draw_some_item(talk_gworld.getTexture(),from_rect,mainPtr,talk_area_rect);
 }
 
+static ePicType get_monst_pictype(mon_num_t monst) {
+	if(monst >= 10000)
+		return univ.party.get_summon(monst - 10000).get_picture_num().type;
+	return univ.scenario.get_monster(monst).get_picture_num().type;
+}
+
 static void place_talk_face() {
 	rectangle face_rect = {6,6,38,38};
 	face_rect.offset(talk_area_rect.topLeft());

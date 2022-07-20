@@ -23,7 +23,7 @@
 
 class cPictNum {
 public:
-	explicit cPictNum(pic_num_t nNum=-1, ePicType nType=ePicType::PIC_NONE)
+	cPictNum(pic_num_t nNum=-1, ePicType nType=ePicType::PIC_NONE)
 		: num(nNum)
 		, type(nType)
 	{
@@ -57,7 +57,7 @@ public:
 	/// and applies the custom modifier. (If type is PIC_TER_MAP, it does not take the remainder by 1000.)
 	/// - If num is 10000 or greater and type is PIC_TER_MAP, it automatically subtracts 10000 and applies the party modifier.
 	void setPict(pic_num_t num, ePicType type, bool updateResultType=true);
-	void setPict(cPictNum const &num) { setPict(num.num, num.type, false); }
+	void setPict(cPictNum const &num, bool updateResultType=false) { setPict(num.num, num.type, updateResultType); }
 	/// Set the pict's icon.
 	/// @param num The new icon index.
 	void setPict(pic_num_t num);

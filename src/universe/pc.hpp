@@ -174,6 +174,8 @@ public:
 	short skill(eSkill skill) const;
 	short stat_adj(eSkill skill) const;
 	eBuyStatus ok_to_buy(short cost,cItem item) const;
+
+	cPictNum get_picture_num() const;
 	
 	void import_legacy(legacy::pc_record_type old);
 	cPlayer(no_party_t);

@@ -52,6 +52,7 @@ void cPict::init(){
 	drawPict()[PIC_CUSTOM_TALK] = &cPict::drawCustomTalk;
 	drawPict()[PIC_CUSTOM_SCEN] = &cPict::drawCustomTalk;
 	drawPict()[PIC_CUSTOM_ITEM] = &cPict::drawCustomItem;
+	drawPict()[PIC_CUSTOM_PC] = &cPict::drawCustomMonstSm; // checkme, I am not sure that this can happen
 	drawPict()[PIC_CUSTOM_TINY_ITEM] = &cPict::drawCustomTinyItem;
 	drawPict()[PIC_CUSTOM_FULL] = &cPict::drawFullSheet;
 	drawPict()[PIC_CUSTOM_BOOM] = &cPict::drawCustomBoom;
@@ -104,7 +105,7 @@ void cPict::setPict(pic_num_t num, ePicType type, bool updateResultType){
 		resultType = type;
 	else
 		fromType = type;
-	if(type == PIC_MONST && resultType == PIC_MONST && picNum < 1000) {
+	if(type == PIC_MONST && resultType == PIC_MONST && num < m_pic_index.size()) {
 		if(m_pic_index[num].x == 2) resultType += PIC_WIDE;
 		if(m_pic_index[num].y == 2) resultType += PIC_TALL;
 	}
@@ -542,7 +543,7 @@ void cPict::recalcRect() {
 		case PIC_MONST_TALL: case PIC_CUSTOM_MONST_TALL: case PIC_PARTY_MONST_TALL:
 		case PIC_MONST_LG: case PIC_CUSTOM_MONST_LG: case PIC_PARTY_MONST_LG:
 		case PIC_ITEM: case PIC_CUSTOM_ITEM: case PIC_PARTY_ITEM:
-		case PIC_PC: case PIC_PARTY_PC:
+		case PIC_PC: case PIC_CUSTOM_PC: case PIC_PARTY_PC:
 		case PIC_FIELD:
 		case PIC_BOOM: case PIC_CUSTOM_BOOM:
 			bounds.width() = 28;
@@ -799,6 +800,20 @@ try {
 			source = *ResMgr::graphics.get("monst"+std::to_string((pictId/20)+1));
 			break;
 		}
+		case ePicType::PIC_PC: {
+			if (pict.num>=100)
+				throw "bad index";
+			from_rect = calc_rect(2*(pict.num/8)+((anim&2) ? 1 : 0), (pict.num%8) + ((anim&1) ? 8 : 0));
+			source = *ResMgr::graphics.get("pcs");
+			break;
+		}
+		case ePicType::PIC_CUSTOM_PC:
+			std::tie(source,from_rect) = spec_scen_g.find_graphic(pict.num+(anim&2) ? 1 : 0, false);
+			break;
+		case ePicType::PIC_PARTY_PC:
+			std::tie(source,from_rect) = spec_scen_g.find_graphic(pict.num+(anim&2) ? 1 : 0, true);
+			break;
+
 		// dialog
 		case ePicType::PIC_DLOG:
 			from_rect = {0,0,36,36};
@@ -877,15 +892,14 @@ void cPict::drawPresetTerAnim(short num, rectangle to_rect){
 }
 
 void cPict::drawPresetMonstSm(short num, rectangle to_rect){
-	short m_start_pic = m_pic_index[num].i;
-	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
-	m_start_pic = m_start_pic % 20;
-	rectangle from_rect = calcDefMonstRect(m_start_pic, animFrame);
+	Texture source;
+	rectangle source_rect;
+	if (!get_picture(cPictNum(num, getSourceType(ePicType::PIC_MONST)), source, source_rect, animFrame))
+		return;
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(source, source_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPresetMonstWide(short num, rectangle to_rect){
@@ -893,19 +907,17 @@ void cPict::drawPresetMonstWide(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28; to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
-	short m_start_pic = m_pic_index[num].i;
-	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
-	rectangle from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
+	Texture source;
+	rectangle source_rect;
+	if (!get_picture(cPictNum(num, getSourceType(ePicType::PIC_MONST)), source, source_rect, animFrame))
+		return;
 	small_monst_rect.offset(to_rect.left,to_rect.top + 7);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
-	m_start_pic = m_pic_index[num].i + 1;
-	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
-	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
+	if (!get_picture(cPictNum(num, getSourceType(ePicType::PIC_MONST)), source, source_rect, animFrame, 1))
+		return;
 	small_monst_rect.offset(14,0);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPresetMonstTall(short num, rectangle to_rect){
@@ -914,19 +926,17 @@ void cPict::drawPresetMonstTall(short num, rectangle to_rect){
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
-	short m_start_pic = m_pic_index[num].i;
-	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
-	rectangle from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
+	Texture source;
+	rectangle source_rect;
+	if (!get_picture(cPictNum(num, getSourceType(ePicType::PIC_MONST)), source, source_rect, animFrame))
+		return;
 	small_monst_rect.offset(to_rect.left + 7,to_rect.top);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
-	m_start_pic = m_pic_index[num].i + 1;
-	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
-	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
+	if (!get_picture(cPictNum(num, getSourceType(ePicType::PIC_MONST)), source, source_rect, animFrame, 1))
+		return;
 	small_monst_rect.offset(0,18);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPresetMonstLg(short num, rectangle to_rect){
@@ -935,33 +945,27 @@ void cPict::drawPresetMonstLg(short num, rectangle to_rect){
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
-	short m_start_pic = m_pic_index[num].i;
-	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
-	rectangle from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
+	Texture source;
+	rectangle source_rect;
+	if (!get_picture(cPictNum(num, getSourceType(ePicType::PIC_MONST)), source, source_rect, animFrame))
+		return;
 	small_monst_rect.offset(to_rect.left,to_rect.top);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
-	m_start_pic = m_pic_index[num].i + 1;
-	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
-	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
+	if (!get_picture(cPictNum(num, getSourceType(ePicType::PIC_MONST)), source, source_rect, animFrame, 1))
+		return;
 	small_monst_rect.offset(14,0);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
-	m_start_pic = m_pic_index[num].i + 2;
-	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
-	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
+	if (!get_picture(cPictNum(num, getSourceType(ePicType::PIC_MONST)), source, source_rect, animFrame, 2))
+		return;
 	small_monst_rect.offset(-14,18);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 	
-	m_start_pic = m_pic_index[num].i + 3;
-	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
-	if(!from_gw) return;
-	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
+	if (!get_picture(cPictNum(num, getSourceType(ePicType::PIC_MONST)), source, source_rect, animFrame, 3))
+		return;
 	small_monst_rect.offset(14,0);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
+	rect_draw_some_item(source, source_rect, *inWindow, small_monst_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPresetDlog(short num, rectangle to_rect){
@@ -1028,7 +1032,7 @@ void cPict::drawPresetItem(short num, rectangle to_rect){
 	auto sourceType=getSourceType(ePicType::PIC_ITEM);
 	if (!get_picture(cPictNum(num, sourceType), source, source_rect, animFrame))
 		return;
-	if (sourceType==ePicType::PIC_ITEM && num>=55)
+	if (sourceType==ePicType::PIC_TINY_ITEM || (sourceType==ePicType::PIC_ITEM && num>=55))
 		to_rect.inset(5,9);
 	rect_draw_some_item(source, source_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
@@ -1046,12 +1050,14 @@ void cPict::drawPresetTinyItem(short num, rectangle to_rect){
 }
 
 void cPict::drawPresetPc(short num, rectangle to_rect){
-	auto from_gw = getSheet(SHEET_PC);
-	rectangle from_rect = calc_rect(2 * (num / 8), num % 8);
+	Texture source;
+	rectangle source_rect;
+	if (!get_picture(cPictNum(num, getSourceType(ePicType::PIC_PC)), source, source_rect, animFrame))
+		return;
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	fill_rect(*inWindow, to_rect, sf::Color::Black);
-	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(source, source_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPresetField(short num, rectangle to_rect){

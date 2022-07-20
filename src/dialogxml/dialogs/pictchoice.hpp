@@ -16,6 +16,7 @@
 #include "global.hpp"
 #include "dialog.hpp"
 #include "dialogxml/widgets/ledgroup.hpp"
+#include "dialogxml/widgets/pict.hpp"
 #include "dialogxml/widgets/pictypes.hpp"
 
 /// A dialog that presents a list of icons with LEDs and allows you to choose one.
@@ -31,7 +32,7 @@ class cPictChoice {
 	bool onOkay();
 	bool onSelect(bool losing);
 	void fillPage();
-	std::vector<std::pair<pic_num_t,ePicType>> picts;
+	std::vector<cPictNum> picts;
 	size_t page, cur;
 	cLedGroup* leds;
 	std::function<void(cPictChoice&,int)> select_handler;
@@ -44,7 +45,7 @@ public:
 	/// Initializes a dialog from a list of icons.
 	/// @param pics A list of all icons in the dialog as {num,type} pairs.
 	/// @param parent Optionally, a parent dialog.
-	cPictChoice(const std::vector<std::pair<pic_num_t,ePicType>>& pics, cDialog* parent = nullptr);
+	cPictChoice(const std::vector<cPictNum>& pics, cDialog* parent = nullptr);
 	/// Initializes a dialog from an iterator pair.
 	/// @param begin An iterator to the first icon in the dialog.
 	/// @param end An iterator to one past the last icon in the dialog.
@@ -68,11 +69,8 @@ public:
 	/// @return false if the user clicked Cancel, true otherwise.
 	bool show(size_t cur_sel);
 	/// Get the chosen icon.
-	/// @return The number of the chosen icon.
-	pic_num_t getPicChosen() const;
-	/// Get the chosen icon.
-	/// @return The type of the chosen icon.
-	ePicType getPicChosenType() const;
+	/// @return The number and the type of the chosen icon.
+	cPictNum getPicChosen();
 	/// Get the index of the selected icon in the original list.
 	/// @return The index
 	size_t getSelected() const;

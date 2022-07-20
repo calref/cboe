@@ -312,27 +312,13 @@ void draw_startup_stats() {
 			if(univ.party[i].main_status != eMainStatus::ABSENT) {
 				to_rect = party_to;
 				to_rect.offset(pc_rect.left,pc_rect.top);
-				pic_num_t pic = univ.party[i].which_graphic;
 				Texture gw;
-				if(pic >= 1000) {
-					std::tie(gw,from_rect) = spec_scen_g.find_graphic(pic % 1000, pic >= 10000);
+				if (cPict::get_picture(univ.party[i].get_picture_num(), gw, from_rect))
 					rect_draw_some_item(gw,from_rect,mainPtr,to_rect,sf::BlendAlpha);
-				} else if(pic >= 100) {
-					// Note that we assume it's a 1x1 graphic.
-					// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
-					if (cPict::get_picture(cPictNum(pic-100,PIC_MONST), gw, from_rect))
-						rect_draw_some_item(gw,from_rect,mainPtr,to_rect,sf::BlendAlpha);
-				} else {
-					from_rect = calc_rect(2 * (pic / 8), pic % 8);
-					auto const & pc_gworld = *ResMgr::graphics.get("pcs");
-					rect_draw_some_item(pc_gworld,from_rect,mainPtr,to_rect,sf::BlendAlpha);
-				}
-				
 				style.pointSize = 14;
 				pc_rect.offset(35,0);
 				win_draw_string(mainPtr,pc_rect,univ.party[i].name,eTextMode::WRAP,style);
-				to_rect.offset(pc_rect.left + 8,pc_rect.top + 8);
-				
+				to_rect.offset(pc_rect.left + 8,pc_rect.top + 8);				
 			}
 			style.pointSize = 12;
 			pc_rect.offset(12,16);
@@ -687,7 +673,7 @@ extern std::list<text_label_t> posted_labels;
 
 //mode ... if 1, don't place on screen after redoing
 // if 2, only redraw over active monst
-void draw_terrain(short	mode) {
+void draw_terrain(short mode) {
 	location where_draw;
 	location sector_p_in,view_loc;
 	char can_draw;

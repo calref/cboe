@@ -588,24 +588,7 @@ bool edit_ter_type(ter_num_t which) {
 static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which) {
 	std::ostringstream strb;
 	
-	if(monst.picture_num < 1000)
-		dynamic_cast<cPict&>(me["icon"]).setPict(monst.picture_num,PIC_MONST);
-	else {
-		ePicType type_g = PIC_CUSTOM_MONST;
-		short size_g = monst.picture_num / 1000;
-		switch(size_g){
-			case 2:
-				type_g += PIC_WIDE;
-				break;
-			case 3:
-				type_g += PIC_TALL;
-				break;
-			case 4:
-				type_g += PIC_LARGE;
-				break;
-		}
-		dynamic_cast<cPict&>(me["icon"]).setPict(monst.picture_num,type_g);
-	}
+	dynamic_cast<cPict&>(me["icon"]).setPict(monst.get_picture_num(), true);
 	dynamic_cast<cPict&>(me["talkpic"]).setPict(monst.default_facial_pic, PIC_TALK);
 	me["num"].setTextToNum(which);
 	me["name"].setText(monst.m_name);
@@ -695,29 +678,25 @@ static bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& 
 				if(cre(pic,0,max_preset,error,"",&me)) return false;
 				monst.x_width = m_pic_index[monst.picture_num].x;
 				monst.y_width = m_pic_index[monst.picture_num].y;
-				icon.setPict(pic, PIC_MONST);
 				break;
 			case 1:
 				monst.x_width = 1;
 				monst.y_width = 1;
-				icon.setPict(pic, PIC_MONST);
 				break;
 			case 2:
 				monst.x_width = 2;
 				monst.y_width = 1;
-				icon.setPict(pic, PIC_MONST_WIDE);
 				break;
 			case 3:
 				monst.x_width = 1;
 				monst.y_width = 2;
-				icon.setPict(pic, PIC_MONST_TALL);
 				break;
 			case 4:
 				monst.x_width = 2;
 				monst.y_width = 2;
-				icon.setPict(pic, PIC_MONST_LG);
 				break;
 		}
+		icon.setPict(cMonster::get_picture_num(pic), true);
 		std::ostringstream strb;
 		strb << "Width = " << int(monst.x_width);
 		me["w"].setText(strb.str());

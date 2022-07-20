@@ -415,6 +415,48 @@ cMonster::cMonster(){
 	m_type = eRace::HUMAN;
 }
 
+cPictNum cMonster::get_picture_num(pic_num_t pic)
+{
+	if (pic>=20000)
+		return cPictNum(pic, ePicType::PIC_NONE);
+	if (pic < m_pic_index.size()) {
+		ePicType resultType = PIC_MONST;
+		if(m_pic_index[pic].x == 2) resultType += PIC_WIDE;
+		if(m_pic_index[pic].y == 2) resultType += PIC_TALL;
+		return cPictNum(pic, resultType);
+	}
+	if (pic<1000)
+		return cPictNum(pic, ePicType::PIC_NONE);
+	ePicType resultType = pic>=10000 ? PIC_PARTY_MONST : PIC_CUSTOM_MONST;
+	short size_g = pic / 1000;
+	switch(size_g%10){
+		case 2:
+			resultType += PIC_WIDE;
+			break;
+		case 3:
+			resultType += PIC_TALL;
+			break;
+		case 4:
+			resultType += PIC_LARGE;
+			break;
+	}
+	return cPictNum(pic%1000, resultType);
+}
+
+
+pic_num_t cMonster::get_num_for_picture(cPictNum const &pic)
+{
+	if (pic.type<100)
+		return pic.num;
+	pic_num_t res=pic.num+1000;
+	if (pic.type>=200) res+=10000;
+	if (pic.type & PIC_WIDE)
+		res+=1000;
+	if (pic.type & PIC_TALL)
+		res+=1000;
+	return res;
+}
+
 cTownperson::cTownperson() {
 	start_loc = {80,80};
 	number = 0;

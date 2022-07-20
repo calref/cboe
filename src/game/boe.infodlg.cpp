@@ -354,10 +354,7 @@ static void display_pc_info(cDialog& me, const short pc_num) {
 	me["xp"].setTextToNum(pc.experience);
 	me["skp"].setTextToNum(pc.skill_pts);
 	me["progress"].setTextToNum(pc.level * pc.get_tnl());
-	pic_num_t pic = pc.which_graphic;
-	if(pic >= 100 && pic < 1000)
-		dynamic_cast<cPict&>(me["pic"]).setPict(pic - 100,PIC_MONST);
-	else dynamic_cast<cPict&>(me["pic"]).setPict(pic,PIC_PC);
+	dynamic_cast<cPict&>(me["pic"]).setPict(pc.get_picture_num());
 	
 	// Fight bonuses
 	auto weapons = pc.get_weapons();

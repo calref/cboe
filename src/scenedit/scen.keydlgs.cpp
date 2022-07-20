@@ -207,26 +207,18 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 			return NO_PIC;
 		case PIC_MONST: case PIC_MONST_WIDE:
 		case PIC_MONST_TALL: case PIC_MONST_LG:
-			std::vector<std::pair<pic_num_t,ePicType>> pics;
+			std::vector<cPictNum> pics;
 			for(m_pic_index_t m_pic : m_pic_index) {
 				// TODO: Put the added monster graphics in m_pic_index to allow picking them
 				ePicType type = PIC_MONST;
 				if(m_pic.x == 2) type += PIC_WIDE;
 				if(m_pic.y == 2) type += PIC_TALL;
-				pics.push_back({i++, type});
+				pics.push_back({pic_num_t(i++), type});
 			}
-			for(size_t i = 0; i < scenario.custom_graphics.size(); i++) {
-				if(scenario.custom_graphics[i] == PIC_MONST)
-					pics.push_back({1000 + i, PIC_CUSTOM_MONST});
-				else if(scenario.custom_graphics[i] == PIC_MONST_WIDE)
-					pics.push_back({2000 + i, PIC_CUSTOM_MONST_WIDE});
-				else if(scenario.custom_graphics[i] == PIC_MONST_TALL)
-					pics.push_back({3000 + i, PIC_CUSTOM_MONST_TALL});
-				else if(scenario.custom_graphics[i] == PIC_MONST_LG)
-					pics.push_back({4000 + i, PIC_CUSTOM_MONST_LG});
-				if(cur_choice == pics.back().first)
-					cur_choice = pics.size() - 1;
-			}
+			for(size_t i = 0; i < scenario.custom_graphics.size(); i++)
+				pics.push_back(cMonster::get_picture_num(scenario.custom_graphics[i]));
+			if(cur_choice >= pics.size())
+				cur_choice = pics.size() - 1;
 			pic_dlg = new cPictChoice(pics, parent);
 			break;
 	}
@@ -258,7 +250,9 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 		pic_dlg = new cPictChoice(all_pics, g_type, parent);
 	}
 	bool made_choice = pic_dlg->show(cur_choice);
-	pic_num_t item_hit = pic_dlg->getPicChosen();
+	pic_num_t item_hit = pic_dlg->getPicChosen().num;
+	if (g_type==PIC_MONST || g_type==PIC_MONST_WIDE || g_type==PIC_MONST_TALL || g_type==PIC_MONST_LG)
+		item_hit=cMonster::get_num_for_picture(pic_dlg->getPicChosen());
 	delete pic_dlg;
 	return made_choice ? item_hit : NO_PIC;
 }
@@ -690,7 +684,7 @@ short choose_field_type(short cur, cDialog* parent, bool includeSpec) {
 		"Small Blood", "Medium Blood", "Large Blood", "Small Slime", "Large Slime", "Ash", "Bones", "Rubble",
 		"Force Cage", "Cleanse Space", "Crumble Walls",
 	};
-	std::vector<std::pair<pic_num_t,ePicType>> pics = {
+	std::vector<cPictNum> pics = {
 		{8, PIC_FIELD}, {9, PIC_FIELD}, {10, PIC_FIELD}, {11, PIC_FIELD},
 		{12, PIC_FIELD}, {13, PIC_FIELD}, {14, PIC_FIELD},
 		{3, PIC_FIELD}, {5, PIC_FIELD}, {6, PIC_FIELD}, {7, PIC_FIELD},
@@ -763,8 +757,7 @@ static pic_num_t choose_boom_type(short cur, cDialog* parent) {
 		me->getControl("help").setText(boomNames[std::min<short>(n,preset_booms)]);
 	});
 	bool made_choice = pic_dlg.show(cur);
-	size_t item_hit = pic_dlg.getPicChosen();
-	return made_choice ? item_hit : prev;
+	return made_choice ? pic_dlg.getPicChosen().num : prev;
 }
 
 pic_num_t choose_status_effect(short cur, bool party, cDialog* parent) {

@@ -504,22 +504,10 @@ void place_item_bottom_buttons() {
 		 	item_bottom_button_active[i] = true;
 		 	to_rect = item_screen_button_rects[i];
 			rect_draw_some_item(invenbtn_gworld, but_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
-			pic_num_t pic = univ.party[i].which_graphic;
-			Texture from_gw;
-			if(pic >= 1000) {
-				bool isParty = pic >= 10000;
-				pic_num_t need_pic = pic % 1000;
-				std::tie(from_gw,pc_from_rect) = spec_scen_g.find_graphic(need_pic, isParty);
-			} else if(pic >= 100) {
-				// Note that we assume it's a 1x1 graphic.
-				// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
-				cPict::get_picture(cPictNum(pic - 100,PIC_MONST), from_gw, pc_from_rect);
-			} else {
-				pc_from_rect = calc_rect(2 * (pic / 8), pic % 8);
-				from_gw = *ResMgr::graphics.get("pcs");
-			}
 			to_rect.inset(2,2);
-			rect_draw_some_item(from_gw, pc_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+			Texture from_gw;
+			if (cPict::get_picture(univ.party[i].get_picture_num(), from_gw, pc_from_rect))
+				rect_draw_some_item(from_gw, pc_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 			std::string numeral = std::to_string(i + 1);
 			short width = string_length(numeral, style);
 			// Offset "6" down two pixels to make it line up, because it has an ascender in this font
