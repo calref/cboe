@@ -357,7 +357,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	to_rect.bottom -= 10; // Adjust for pointing buttons
 	rectangle oldBounds = to_rect;
 	to_rect.offset(current_terrain_ul);
-	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldBounds,mainPtr,to_rect);
+	rect_draw_some_item(Texture(terrain_screen_gworld.getTexture()),oldBounds,mainPtr,to_rect);
 	
 	mainPtr.setActive(false);
 	
@@ -457,7 +457,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	to_rect.bottom -= 10; // Adjust for pointing buttons
 	rectangle oldRect = to_rect;
 	to_rect.offset(current_terrain_ul);
-	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,mainPtr,to_rect);
+	rect_draw_some_item(Texture(terrain_screen_gworld.getTexture()),oldRect,mainPtr,to_rect);
 }
 
 short get_missile_direction(location origin_point,location the_point) {
@@ -521,7 +521,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 		to_rect.bottom -= 10; // Adjust for pointing buttons
 		rectangle oldRect = to_rect;
 		to_rect.offset(current_terrain_ul);
-		rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,mainPtr,to_rect);
+		rect_draw_some_item(Texture(terrain_screen_gworld.getTexture()),oldRect,mainPtr,to_rect);
 	}
 	
 	TextStyle style;
@@ -804,7 +804,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 
 void refresh_shopping() {
 	rectangle from_rect(talk_gworld);
-	rect_draw_some_item(talk_gworld.getTexture(),from_rect,mainPtr,talk_area_rect);
+	rect_draw_some_item(Texture(talk_gworld.getTexture()),from_rect,mainPtr,talk_area_rect);
 }
 
 static ePicType get_monst_pictype(mon_num_t monst) {
@@ -833,7 +833,7 @@ static void place_talk_face() {
 void click_talk_rect(word_rect_t word) {
 	rectangle talkRect(talk_gworld), wordRect(word.rect);
 	mainPtr.setActive();
-	rect_draw_some_item(talk_gworld.getTexture(),rectangle(talk_gworld),mainPtr,talk_area_rect);
+	rect_draw_some_item(Texture(talk_gworld.getTexture()),rectangle(talk_gworld),mainPtr,talk_area_rect);
 	wordRect.offset(talk_area_rect.topLeft());
 	TextStyle style;
 	style.font = FONT_DUNGEON;
@@ -844,7 +844,7 @@ void click_talk_rect(word_rect_t word) {
 	place_talk_face();
 	mainPtr.display();
 	play_sound(37, time_in_ticks(5));
-	rect_draw_some_item(talk_gworld.getTexture(),rectangle(talk_gworld),mainPtr,talk_area_rect);
+	rect_draw_some_item(Texture(talk_gworld.getTexture()),rectangle(talk_gworld),mainPtr,talk_area_rect);
 	place_talk_face();
 }
 
@@ -1005,14 +1005,14 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	
 	// Finally place processed graphics
 	mainPtr.setActive();
-	rect_draw_some_item(talk_gworld.getTexture(),oldRect,mainPtr,talk_area_rect);
+	rect_draw_some_item(Texture(talk_gworld.getTexture()),oldRect,mainPtr,talk_area_rect);
 	// I have no idea what this check is for; I'm just preserving it in case it was important
 	if(c_rect.right == 0) place_talk_face();
 }
 
 void refresh_talking() {
 	rectangle tempRect(talk_gworld);
-	rect_draw_some_item(talk_gworld.getTexture(),tempRect,mainPtr,talk_area_rect);
+	rect_draw_some_item(Texture(talk_gworld.getTexture()),tempRect,mainPtr,talk_area_rect);
 	place_talk_face();
 }
 

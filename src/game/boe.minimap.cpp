@@ -283,7 +283,7 @@ void draw(bool need_refresh) {
 	win_draw_string(windows, map_bar_rect,"(Hit Escape to close.)",eTextMode::WRAP,style);
 	
 	if(canMap) {
-		rect_draw_some_item(gworld.getTexture(),area_to_draw_from,windows,area_to_draw_on);
+		rect_draw_some_item(Texture(gworld.getTexture()),area_to_draw_from,windows,area_to_draw_on);
 		
 		// Now place PCs and monsters
 		if(draw_pcs) {
