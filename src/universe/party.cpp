@@ -178,21 +178,13 @@ void cParty::swap(cParty& other) {
 	std::swap(scen_played, other.scen_played);
 	std::swap(campaign_flags, other.campaign_flags);
 	std::swap(pointers, other.pointers);
-	unsigned char temp_sdf[350][50];
-	memcpy(temp_sdf, stuff_done, sizeof(stuff_done));
-	memcpy(stuff_done, other.stuff_done, sizeof(stuff_done));
-	memcpy(other.stuff_done, temp_sdf, sizeof(stuff_done));
-	unsigned short temp_setup[4][64][64];
-	memcpy(temp_setup, setup, sizeof(setup));
-	memcpy(setup, other.setup, sizeof(setup));
-	memcpy(other.setup, temp_setup, sizeof(setup));
+	std::swap(stuff_done, other.stuff_done);
+	std::swap(setup, other.setup);
 	// Fixup the references of PCs to their party
-	for(size_t i = 0; i < adven.size(); i++) {
-		adven[i]->join_party(*this);
-	}
-	for(size_t i = 0; i < other.adven.size(); i++) {
-		other.adven[i]->join_party(other);
-	}
+	for(auto pc : adven)
+		pc->join_party(*this);
+	for(auto pc : other.adven)
+		pc->join_party(other);
 }
 
 cVehicle &cParty::get_boat(int id) {
@@ -419,6 +411,64 @@ void cParty::import_legacy(legacy::pc_record_type const (& old)[6]) {
 		adven[i] = new cPlayer(*this);
 		adven[i]->import_legacy(old[i]);
 	}
+}
+
+void cParty::enter_scenario(cScenario const &scenario)
+{
+	using namespace std::placeholders;
+	
+	age = 0;
+	memset(stuff_done, 0, sizeof(stuff_done));
+	light_level = 0;
+	outdoor_corner = scenario.out_sec_start;
+	i_w_c = {0, 0};
+	loc_in_sec = scenario.out_start;
+	out_loc = scenario.out_start;
+	boats.clear();
+	horses.clear();
+	std::copy_if(scenario.boats.begin(), scenario.boats.end(), std::back_inserter(boats), std::bind(&cVehicle::exists, _1));
+	std::copy_if(scenario.horses.begin(), scenario.horses.end(), std::back_inserter(horses), std::bind(&cVehicle::exists, _1));
+	for(auto pc : adven) {
+		if (!pc) continue;
+		pc->status.clear();
+		if(isSplit(pc->main_status))
+			pc->main_status -= eMainStatus::SPLIT;
+		pc->cur_health = pc->max_health;
+		pc->cur_sp = pc->max_sp;
+	}
+	in_boat = -1;
+	in_horse = -1;
+	for(auto& pop : creature_save) {
+		pop.clear();
+		pop.which_town = 200;
+	}
+	for(auto &creat : out_c)
+		creat.exists = false;
+	store_limited_stock.clear();
+	magic_store_items.clear();
+	
+	journal.clear();
+	special_notes.clear();
+	talk_save.clear();
+	// reset the scried monster
+	m_noted.clear();
+	
+	direction = DIR_N;
+	at_which_save_slot = 0;
+	key_times.clear();
+	party_event_timers.clear();
+	spec_items.clear();
+	for(short i = 0; i < scenario.special_items.size(); i++) {
+		if(scenario.special_items[i].flags >= 10)
+			spec_items.insert(i);
+	}
+	for(short i = 0; i < scenario.quests.size(); i++) {
+		if(scenario.quests[i].flags >= 10) {
+			active_quests[i] = cJob(1);
+		}
+	}
+	for(auto &item : stored_items)
+		item.clear();
 }
 
 void cParty::new_pc(size_t spot) {
@@ -936,7 +986,7 @@ void cParty::readFrom(std::istream& file){
 			int i,j;
 			unsigned int n;
 			sin >> i >> j >> n;
-			stuff_done[i][j] = n;
+			sd_set(i,j,n);
 		} else if(cur == "HOSTILES") {
 			int n;
 			sin >> n;
@@ -1223,7 +1273,7 @@ unsigned char cParty::get_ptr(unsigned short p){
 		return magic_ptrs[p-10];
 	auto iter = pointers.find(p);
 	if(iter == pointers.end()) return 0;
-	return stuff_done[iter->second.first][iter->second.second];
+	return sd(iter->second.first,iter->second.second);
 }
 
 bool cParty::is_split() const {
@@ -1282,10 +1332,23 @@ iLiving& cParty::pc_present() const {
 }
 
 // stuff done legit, i.e. flags are within proper ranges for stuff done flag
-bool cParty::sd_legit(short a, short b) {
+bool cParty::sd_legit(short a, short b) const {
 	if((minmax(0,sdx_max,a) == a) && (minmax(0,sdy_max,b) == b))
 		return true;
 	return false;
+}
+
+unsigned char cParty::sd(short a, short b) const
+{
+	if (!sd_legit(a,b))
+		return 0;
+	return stuff_done[a][b];
+}
+
+void cParty::sd_set(short a, short b, unsigned char val)
+{
+	if (sd_legit(a,b))
+		stuff_done[a][b]=val;
 }
 
 bool operator==(const cParty::cConvers& one, const cParty::cConvers& two) {

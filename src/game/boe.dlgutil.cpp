@@ -548,7 +548,7 @@ void set_up_shop_array() {
 				}
 				break;
 			case eShopItemType::CALL_SPECIAL:
-				if(PSD[entry.item.abil_strength][entry.item.abil_data.value])
+				if(univ.party.sd(entry.item.abil_strength,entry.item.abil_data.value))
 					shop_array.push_back(j);
 				break;
 			case eShopItemType::OPT_ITEM:
@@ -873,13 +873,16 @@ void handle_talk_event(location p) {
 		case eTalkNode::REGULAR:
 			break;
 		case eTalkNode::DEP_ON_SDF:
-			if(PSD[a][b] > c) {
+			if(univ.party.sd(a,b) > c) {
 				save_talk_str1 = save_talk_str2;
 			}
 			save_talk_str2 = "";
 			break;
 		case eTalkNode::SET_SDF:
-			PSD[a][b] = c;
+			if (!univ.party.sd_legit(a,b))
+				showError("Invalid Stuff Done flag called in set_sdf.");
+			else
+				univ.party.sd_set(a,b,c);
 			break;
 		case eTalkNode::INN:
 			if(univ.party.gold < a) {
@@ -976,7 +979,7 @@ void handle_talk_event(location p) {
 			save_talk_str2 = "";
 			break;
 		case eTalkNode::BUY_SDF:
-			if((univ.party.sd_legit(b,c)) && (PSD[b][c] == d)) {
+			if(univ.party.sd_legit(b,c) && univ.party.sd(b,c) == d) {
 				save_talk_str1 = "You've already learned that.";
 				can_save_talk = false;
 			}
@@ -987,8 +990,9 @@ void handle_talk_event(location p) {
 				univ.party.gold -= a;
 				put_pc_screen();
 				if(univ.party.sd_legit(b,c))
-					PSD[b][c] = d;
-				else showError("Invalid Stuff Done flag called in conversation.");
+					univ.party.sd_set(b,c,d);
+				else
+					showError("Invalid Stuff Done flag called in conversation.");
 			}
 			save_talk_str2 = "";
 			break;
@@ -1107,7 +1111,7 @@ void handle_talk_event(location p) {
 				univ.town.monst[store_m_num].active = 0;
 				// Special killing effects
 				if(univ.party.sd_legit(univ.town.monst[store_m_num].spec1,univ.town.monst[store_m_num].spec2))
-					PSD[univ.town.monst[store_m_num].spec1][univ.town.monst[store_m_num].spec2] = 1;
+					univ.party.sd_set(univ.town.monst[store_m_num].spec1,univ.town.monst[store_m_num].spec2,1);
 			}
 			talk_end_forced = true;
 			break;
