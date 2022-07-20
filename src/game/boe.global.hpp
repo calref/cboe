@@ -11,7 +11,6 @@
 #include "boe.consts.hpp"
 
 #define ASB	add_string_to_buf
-#define	PSD	univ.party.stuff_done
 
 const int NUM_MONST_G = 173;
 const int NUM_TER_G = 251;

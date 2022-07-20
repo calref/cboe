@@ -185,6 +185,7 @@ public:
 	int get_level() const override;
 	int calc_day() const;
 	
+	void enter_scenario(cScenario const &scenario);
 	std::unique_ptr<cPlayer> remove_pc(size_t spot);
 	void new_pc(size_t spot);
 	void replace_pc(size_t spot, std::unique_ptr<cPlayer> with);
@@ -214,6 +215,8 @@ public:
 	void swap_pcs(size_t a, size_t b);
 	
 	bool sd_legit(short a, short b) const;
+	unsigned char sd(short a, short b) const;
+	void sd_set(short a, short b, unsigned char val);
 	void wipe_sdfs();
 	
 	auto begin() -> boost::indirect_iterator<decltype(adven)::iterator> {

@@ -652,7 +652,7 @@ void edit_stuff_done() {
 			me["feedback"].setText(strb.str());
 		} else {
 			me["feedback"].setText("");
-			me["val"].setTextToNum(univ.party.stuff_done[x][y]);
+			me["val"].setTextToNum(univ.party.sd(x,y));
 		}
 		return true;
 	}, {"x","y"});
@@ -665,7 +665,7 @@ void edit_stuff_done() {
 		} else {
 			strb << "You have set SDF (" << x << ',' << y << ") = " << val;
 			me["feedback"].setText(strb.str());
-			univ.party.stuff_done[x][y] = val;
+			univ.party.sd_set(x,y,val);
 		}
 		return true;
 	});
@@ -673,6 +673,6 @@ void edit_stuff_done() {
 	// Initialize fields with some default values
 	sdf_dlg["x"].setText("0");
 	sdf_dlg["y"].setText("0");
-	sdf_dlg["val"].setTextToNum(univ.party.stuff_done[0][0]);
+	sdf_dlg["val"].setTextToNum(univ.party.sd(0,0));
 	sdf_dlg.run();
 }

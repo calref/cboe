@@ -1390,43 +1390,9 @@ short cCurTown::countMonsters() const {
 void cUniverse::enter_scenario(const std::string& name) {
 	using namespace std::placeholders;
 	
-	party.age = 0;
-	party.wipe_sdfs();
-	party.light_level = 0;
-	party.outdoor_corner = scenario.out_sec_start;
-	party.i_w_c = {0, 0};
-	party.loc_in_sec = scenario.out_start;
-	party.out_loc = scenario.out_start;
-	party.boats.clear();
-	party.horses.clear();
-	std::copy_if(scenario.boats.begin(), scenario.boats.end(), std::back_inserter(party.boats), std::bind(&cVehicle::exists, _1));
-	std::copy_if(scenario.horses.begin(), scenario.horses.end(), std::back_inserter(party.horses), std::bind(&cVehicle::exists, _1));
-	for(auto& pc : party) {
-		pc.status.clear();
-		if(isSplit(pc.main_status))
-			pc.main_status -= eMainStatus::SPLIT;
-		pc.cur_health = pc.max_health;
-		pc.cur_sp = pc.max_sp;
-	}
-	party.in_boat = -1;
-	party.in_horse = -1;
-	for(auto& pop : party.creature_save) {
-		pop.clear();
-		pop.which_town = 200;
-	}
-	for(short i = 0; i < 10; i++)
-		party.out_c[i].exists = false;
-	party.store_limited_stock.clear();
-	party.magic_store_items.clear();
-	
-	party.journal.clear();
-	party.special_notes.clear();
-	party.talk_save.clear();
-	// reset the scried monster
-	party.m_noted.clear();
-	
-	party.direction = DIR_N;
-	party.at_which_save_slot = 0;
+	party.enter_scenario(scenario);
+	party.scen_name = name;
+
 	for(auto town : scenario.towns) {
 		town->can_find = !town->is_hidden;
 		town->m_killed = 0;
@@ -1434,32 +1400,15 @@ void cUniverse::enter_scenario(const std::string& name) {
 		for(auto& m : town->maps)
 			m.reset();
 	}
-	party.key_times.clear();
-	party.party_event_timers.clear();
-	party.spec_items.clear();
-	for(short i = 0; i < scenario.special_items.size(); i++) {
-		if(scenario.special_items[i].flags >= 10)
-			party.spec_items.insert(i);
-	}
-	for(short i = 0; i < scenario.quests.size(); i++) {
-		if(scenario.quests[i].auto_start) {
-			party.active_quests[i] = cJob(1);
-		}
-	}
-	
 	refresh_store_items();
 	
 	for(short i = 0; i < 96; i++)
 		for(short j = 0; j < 96; j++)
 			out.out_e[i][j] = 0;
-	for(short i = 0; i < 3; i++)
-		party.stored_items[i].clear();
 	
 	for(auto sector : scenario.outdoors)
 		for(auto& m : sector->maps)
 			m.reset();
-	
-	party.scen_name = name;
 }
 
 void cUniverse::generate_job_bank(int which, job_bank_t& bank) {

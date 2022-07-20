@@ -402,6 +402,63 @@ void cParty::import_legacy(legacy::pc_record_type const (& old)[6]) {
 	}
 }
 
+void cParty::enter_scenario(cScenario const &scenario)
+{
+	using namespace std::placeholders;
+	
+	age = 0;
+	wipe_sdfs();
+	light_level = 0;
+	outdoor_corner = scenario.out_sec_start;
+	i_w_c = {0, 0};
+	loc_in_sec = scenario.out_start;
+	out_loc = scenario.out_start;
+	boats.clear();
+	horses.clear();
+	std::copy_if(scenario.boats.begin(), scenario.boats.end(), std::back_inserter(boats), std::bind(&cVehicle::exists, _1));
+	std::copy_if(scenario.horses.begin(), scenario.horses.end(), std::back_inserter(horses), std::bind(&cVehicle::exists, _1));
+	for(auto &pc : *this) {
+		pc.status.clear();
+		if(isSplit(pc.main_status))
+			pc.main_status -= eMainStatus::SPLIT;
+		pc.cur_health = pc.max_health;
+		pc.cur_sp = pc.max_sp;
+	}
+	in_boat = -1;
+	in_horse = -1;
+	for(auto& pop : creature_save) {
+		pop.clear();
+		pop.which_town = 200;
+	}
+	for(auto &creat : out_c)
+		creat.exists = false;
+	store_limited_stock.clear();
+	magic_store_items.clear();
+	
+	journal.clear();
+	special_notes.clear();
+	talk_save.clear();
+	// reset the scried monster
+	m_noted.clear();
+	
+	direction = DIR_N;
+	at_which_save_slot = 0;
+	key_times.clear();
+	party_event_timers.clear();
+	spec_items.clear();
+	for(short i = 0; i < scenario.special_items.size(); i++) {
+		if(scenario.special_items[i].flags >= 10)
+			spec_items.insert(i);
+	}
+	for(short i = 0; i < scenario.quests.size(); i++) {
+		if(scenario.quests[i].auto_start) {
+			active_quests[i] = cJob(1);
+		}
+	}
+	for(auto &item : stored_items)
+		item.clear();
+}
+
 std::unique_ptr<cPlayer> cParty::remove_pc(size_t spot) {
 	if(spot >= 6) return nullptr;
 	adven[spot]->party = nullptr;
@@ -1181,7 +1238,7 @@ unsigned char cParty::get_ptr(unsigned short p) const {
 		return magic_ptrs[p-10];
 	auto iter = pointers.find(p);
 	if(iter == pointers.end()) return 0;
-	return stuff_done[iter->second.first][iter->second.second];
+	return sd(iter->second.first,iter->second.second);
 }
 
 bool cParty::is_split() const {
@@ -1244,6 +1301,19 @@ bool cParty::sd_legit(short a, short b) const {
 	if((minmax(0,sdx_max,a) == a) && (minmax(0,sdy_max,b) == b))
 		return true;
 	return false;
+}
+
+unsigned char cParty::sd(short a, short b) const
+{
+	if (!sd_legit(a,b))
+		return 0;
+	return stuff_done[a][b];
+}
+
+void cParty::sd_set(short a, short b, unsigned char val)
+{
+	if (sd_legit(a,b))
+		stuff_done[a][b]=val;
 }
 
 void cParty::wipe_sdfs() {
