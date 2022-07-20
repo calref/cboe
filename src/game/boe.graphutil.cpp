@@ -97,33 +97,18 @@ void draw_monsters() {
 					where_draw.x = enc.m_loc.x - univ.party.out_loc.x + 4;
 					where_draw.y = enc.m_loc.y - univ.party.out_loc.y + 4;
 					
-					short picture_wanted = -1;
+					cPictNum picture;
 					for(mon_num_t i : enc.what_monst.monst) {
 						if(i > 0) {
-							picture_wanted = get_monst_picnum(i);
-							std::tie(width, height) = get_monst_dims(i);
+							picture = get_monst_picture_num(i);
 							break;
 						}
 					}
 					
-					if(picture_wanted >= 0) {
-						static rectangle const monst_rects[4][4] = {
-							{{0,0,36,28}},
-							{{0,7,18,21},{18,7,36,21}},
-							{{9,0,27,14},{9,14,27,28}},
-							{{0,0,18,14},{0,14,18,28},{18,0,36,14},{18,14,36,28}}
-						};
-						for(short k = 0; k < width * height; k++) {
-							Texture src_gw;
-							if(picture_wanted >= 1000)
-								std::tie(src_gw,source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000 +
-																							 ((enc.direction < 4) ? 0 : (width * height)) + k);
-							else
-								cPict::get_picture(cPictNum(picture_wanted,PIC_MONST), src_gw, source_rect, (enc.direction < 4 ? 0 : 2), k);
-							to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
-							to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
-							rect_draw_some_item(src_gw, source_rect, terrain_screen_gworld,to_rect, sf::BlendAlpha);
-						}
+					if(picture.type!=ePicType::PIC_NONE) {
+						to_rect={0,0,36,28};
+						to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
+						cPict::draw_monster(terrain_screen_gworld, picture, to_rect, (enc.direction < 4 ? 0 : 2));
 					} else enc.exists = false;
 				}
 			}
@@ -135,19 +120,21 @@ void draw_monsters() {
 					where_draw.x = monst.cur_loc.x - center.x + 4;
 					where_draw.y = monst.cur_loc.y - center.y + 4;
 					std::tie(width, height) = get_monst_dims(monst.number);
+					if (width==1 && height==1) {
+						// check if in bed
+						ter = univ.town->terrain(monst.cur_loc.x,monst.cur_loc.y);
+						if (where_draw.x >= 0 && where_draw.x < 9 && where_draw.y >= 0 && where_draw.y < 9 &&
+							(univ.get_terrain(ter).special == eTerSpec::BED) && isHumanoid(monst.m_type) && (monst.active == 1 || monst.target == 6)) {
+							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.get_terrain(ter).flag1);
+							continue;
+						}
+					}
 					
 					for(short k = 0; k < width * height; k++) {
 						store_loc = where_draw;
 						store_loc.x += k % width;
 						store_loc.y += k / width;
-						ter = univ.town->terrain(monst.cur_loc.x,monst.cur_loc.y);
-						// in bed?
-						if(store_loc.x >= 0 && store_loc.x < 9 && store_loc.y >= 0 && store_loc.y < 9 &&
-						   (univ.get_terrain(ter).special == eTerSpec::BED) && isHumanoid(monst.m_type)
-						   && (monst.active == 1 || monst.target == 6) &&
-						   width == 1 && height == 1)
-							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.get_terrain(ter).flag1);
-						else if(monst.picture_num >= 1000) {
+						if(monst.picture_num >= 1000) {
 							bool isParty = monst.picture_num >= 10000;
 							pic_num_t need_pic = (monst.picture_num % 1000) + k;
 							if(monst.direction >= 4) need_pic += width * height;
