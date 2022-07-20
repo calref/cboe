@@ -464,7 +464,7 @@ cTownperson::cTownperson() {
 	time_flag = eMonstTime::ALWAYS;
 	spec1 = -1;
 	spec2 = -1;
-	spec_enc_code = -1;
+	spec_enc_code = 0;
 	time_code = 0;
 	monster_time = 0;
 	personality = -1;

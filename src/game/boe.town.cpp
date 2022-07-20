@@ -180,6 +180,10 @@ void start_town_mode(short which_town, short entry_dir) {
 		add_string_to_buf(univ.town->is_cleaned_out() ? "Area has been cleaned out." : "Area has been abandoned.");
 	for(size_t i=0; i<univ.town.monst.size(); ++i) {
 		auto &monst=univ.town.monst[i];
+		if (monst.number<=0) {
+			monst.active=0;
+			continue;
+		}
 		monst.targ_loc.x = 0;
 		monst.targ_loc.y = 0;
 		if (!monsters_loaded && monst.spec_enc_code>0)
