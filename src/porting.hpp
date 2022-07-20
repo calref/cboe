@@ -10,6 +10,8 @@
 #include "oldstructs.hpp"
 #include "location.hpp"
 
+struct cPictNum;
+
 namespace porting {
 void check_endian();
 bool is_small_endian();
@@ -36,4 +38,6 @@ void port_town(legacy::town_record_type* dummy_town_ptr);
 void port_party(legacy::party_record_type* old);
 void port_pc(legacy::pc_record_type* old);
 void port_c_town(legacy::current_town_type* old);
+
+cPictNum port_graphic_num(int pic);
 }

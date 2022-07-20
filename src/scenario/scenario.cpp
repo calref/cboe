@@ -17,6 +17,7 @@
 
 #include "mathutil.hpp"
 #include "oldstructs.hpp"
+#include "porting.hpp"
 #include "fileio/resmgr/res_strings.hpp"
 
 void cScenario::reset_version() {
@@ -73,7 +74,7 @@ cScenario::cScenario() {
 	out_start = where_start = loc(24,24);
 	rating = eContentRating::G;
 	difficulty = 0;
-	intro_pic = intro_mess_pic = 0;
+	intro_pic = intro_mess_pic= cPictNum(0, PIC_SCEN);
 	adjust_diff = true;
 	bg_out = 10;
 	bg_fight = 4;
@@ -354,9 +355,8 @@ cTerrain &cScenario::get_terrain(ter_num_t ter)
 void cScenario::import_legacy(legacy::scenario_data_type const &old){
 	is_legacy = true;
 	difficulty = old.difficulty;
-	intro_pic = old.intro_pic;
+	intro_mess_pic = intro_pic = porting::port_graphic_num(old.intro_pic+1600);
 	default_ground = old.default_ground * 2;
-	intro_mess_pic = old.intro_pic;
 	where_start.x = old.where_start.x;
 	where_start.y = old.where_start.y;
 	out_sec_start.x = old.out_sec_start.x;
