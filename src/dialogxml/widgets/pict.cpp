@@ -711,7 +711,23 @@ void cPict::draw(){
 	drawFrame(2, frameStyle);
 }
 
-bool cPict::get_picture(cPictNum pict, Texture& source, rectangle &from_rect, int anim)
+static rectangle calcDefMonstRect(short i, short animFrame){
+	rectangle r = calc_rect(2 * (i / 10), i % 10);
+	switch(animFrame % 4){ // Sequence is right-facing, attack, left-facing, attack
+		case 1:
+			r.offset(112,0);
+			break;
+		case 2:
+			r.offset(28,0);
+			break;
+		case 3:
+			r.offset(140,0);
+			break;
+	}
+	return r;
+}
+
+bool cPict::get_picture(cPictNum pict, Texture& source, rectangle &from_rect, int anim, int which_part)
 try {
 	source=Texture();
 	ePicType type=pict.type;
@@ -774,8 +790,15 @@ try {
 			std::tie(source,from_rect) = spec_scen_g.find_graphic(pict.num);
 			break;
 			
-		// TODO monster
-			
+		// TODO finish monster code
+		case ePicType::PIC_MONST: {
+			if (pict.num>=m_pic_index.size())
+				throw "bad index";
+			auto pictId=m_pic_index[pict.num].i+which_part;
+			from_rect = calcDefMonstRect((pictId%20), (anim%4));
+			source = *ResMgr::graphics.get("monst"+std::to_string((pictId/20)+1));
+			break;
+		}
 		// dialog
 		case ePicType::PIC_DLOG:
 			from_rect = {0,0,36,36};
@@ -851,22 +874,6 @@ void cPict::drawPresetTerAnim(short num, rectangle to_rect){
 		to_rect.right = to_rect.left + 28;
 	}
 	rect_draw_some_item(source, source_rect, *inWindow, to_rect);
-}
-
-static rectangle calcDefMonstRect(short i, short animFrame){
-	rectangle r = calc_rect(2 * (i / 10), i % 10);
-	switch(animFrame % 4){ // Sequence is right-facing, attack, left-facing, attack
-		case 1:
-			r.offset(112,0);
-			break;
-		case 2:
-			r.offset(28,0);
-			break;
-		case 3:
-			r.offset(140,0);
-			break;
-	}
-	return r;
 }
 
 void cPict::drawPresetMonstSm(short num, rectangle to_rect){

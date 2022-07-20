@@ -84,7 +84,7 @@ public:
 	virtual ~cPict();
 	void draw() override;
 	// only implemented for item and terrain pictures
-	static bool get_picture(cPictNum pict, Texture &source, rectangle &from_rect, int anim=0);
+	static bool get_picture(cPictNum pict, Texture &source, rectangle &from_rect, int anim=0, int which_part=0);
 	/// A utility function to draw an icon into an arbitrary window.
 	/// @param win The window to draw in.
 	/// @param dest The bounding rect to draw in (ignored for drawing the actual, but used for background fill and framing)

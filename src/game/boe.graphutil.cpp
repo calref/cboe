@@ -113,25 +113,16 @@ void draw_monsters() {
 					}
 					
 					if(picture_wanted >= 0) {
-						if(picture_wanted >= 1000) {
-							for(short k = 0; k < width * height; k++) {
-								Texture src_gw;
+						for(short k = 0; k < width * height; k++) {
+							Texture src_gw;
+							if(picture_wanted >= 1000)
 								std::tie(src_gw,source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000 +
 																							 ((enc.direction < 4) ? 0 : (width * height)) + k);
-								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
-								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
-								rect_draw_some_item(src_gw, source_rect, terrain_screen_gworld,to_rect, sf::BlendAlpha);
-							}
-						}
-						else {
-							for(short k = 0; k < width * height; k++) {
-								source_rect = get_monster_template_rect(picture_wanted,(enc.direction < 4) ? 0 : 1,k);
-								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
-								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
-								int which_sheet = (m_pic_index[picture_wanted].i+k) / 20;
-								Texture& monst_gworld = *ResMgr::graphics.get("monst" + std::to_string(1 + which_sheet));
-								rect_draw_some_item(monst_gworld, source_rect, terrain_screen_gworld,to_rect, sf::BlendAlpha);
-							}
+							else
+								cPict::get_picture(cPictNum(picture_wanted,PIC_MONST), src_gw, source_rect, (enc.direction < 4 ? 0 : 2), k);
+							to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
+							to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
+							rect_draw_some_item(src_gw, source_rect, terrain_screen_gworld,to_rect, sf::BlendAlpha);
 						}
 					} else enc.exists = false;
 				}
@@ -165,13 +156,9 @@ void draw_monsters() {
 							std::tie(src_gw,source_rect) = spec_scen_g.find_graphic(need_pic, isParty);
 							Draw_Some_Item(src_gw, source_rect, terrain_screen_gworld, store_loc, 1, 0);
 						} else {
-							pic_num_t this_monst = monst.picture_num;
-							int pic_mode = (monst.direction) < 4 ? 0 : 1;
-							pic_mode += (combat_posing_monster == i + 100) ? 10 : 0;
-							source_rect = get_monster_template_rect(this_monst, pic_mode, k);
-							int which_sheet = (m_pic_index[this_monst].i+k) / 20;
-							const Texture& monst_gworld = *ResMgr::graphics.get("monst" + std::to_string(1 + which_sheet));
-							Draw_Some_Item(monst_gworld, source_rect, terrain_screen_gworld, store_loc, 1, 0);
+							Texture src_gw;
+							cPict::get_picture(cPictNum(monst.picture_num,PIC_MONST), src_gw, source_rect, (monst.direction < 4 ? 0 : 2) + (combat_posing_monster == i + 100 ? 1 : 0), k);
+							Draw_Some_Item(src_gw, source_rect, terrain_screen_gworld, store_loc, 1, 0);
 						}
 					}
 				}
@@ -206,15 +193,7 @@ void draw_combat_pc(cPlayer& who, location center, bool attacking) {
 			} else if(pic >= 100) {
 				// Note that we assume it's a 1x1 graphic.
 				// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
-				pic_num_t need_pic = pic - 100;
-				int mode = 0;
-				if(who.direction >= 4)
-					mode++;
-				if(attacking)
-					mode += 10;
-				source_rect = get_monster_template_rect(need_pic, mode, 0);
-				int which_sheet = m_pic_index[need_pic].i / 20;
-				from_gw = *ResMgr::graphics.get("monst" + std::to_string(1 + which_sheet));
+				cPict::get_picture(cPictNum(pic - 100,PIC_MONST), from_gw, source_rect, (who.direction < 4 ? 0 : 2) + (attacking ? 1 : 0));
 			} else {
 				source_rect = calc_rect(2 * (pic / 8), pic % 8);
 				if(who.direction >= 4)
@@ -437,13 +416,7 @@ void draw_party_symbol(location center) {
 		} else if(pic >= 100) {
 			// Note that we assume it's a 1x1 graphic.
 			// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
-			pic_num_t need_pic = pic - 100;
-			int mode = 0;
-			if(univ.party.direction >= 4)
-				mode++;
-			source_rect = get_monster_template_rect(need_pic, mode, 0);
-			int which_sheet = m_pic_index[need_pic].i / 20;
-			from_gw = *ResMgr::graphics.get("monst" + std::to_string(1 + which_sheet));
+			cPict::get_picture(cPictNum(pic - 100,PIC_MONST), from_gw, source_rect, univ.party.direction < 4 ? 0 : 2);
 		} else {
 			source_rect = calc_rect(2 * (pic / 8), pic % 8);
 			if(univ.party.direction >= 4)
@@ -469,20 +442,6 @@ void draw_party_symbol(location center) {
 		i = univ.party.direction > 3;
 		Draw_Some_Item(*ResMgr::graphics.get("vehicle"), calc_rect(i + 2, 1), terrain_screen_gworld, target, 1, 0);
 	}
-}
-
-// Give the position of the monster graphic in the template in memory
-//mode; // 0 - left  1 - right  +10 - combat mode
-rectangle get_monster_template_rect (pic_num_t picture_wanted,short mode,short which_part) {
-	short adj = 0;
-	
-	if(mode >= 10) {
-		adj += 4;
-		mode -= 10;
-	}
-	if(mode == 0) adj++;
-	picture_wanted = (m_pic_index[picture_wanted].i + which_part) % 20;
-	return calc_rect(2 * (picture_wanted / 10) + adj, picture_wanted % 10);
 }
 
 // Is this a fluid that gets shore plopped down on it?
