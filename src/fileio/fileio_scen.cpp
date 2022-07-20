@@ -751,7 +751,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 		if(type == "title") {
 			elem->GetText(&scenario.scen_name, false);
 		} else if(type == "icon") {
-			// TODO: This element can have some attributes on it.
+			scenario.intro_pic.type=PIC_SCEN;
 			elem->GetText(&scenario.intro_pic);
 			scenario.intro_mess_pic = scenario.intro_pic;
 		} else if(type == "id") {
@@ -779,6 +779,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					info->GetText(&scenario.who_wrote[found_teasers], false);
 					found_teasers++;
 				} else if(type == "icon") {
+					scenario.intro_mess_pic.type=PIC_SCEN;
 					info->GetText(&scenario.intro_mess_pic);
 				} else if(type == "intro-msg") {
 					if(found_intro >= scenario.intro_strs.size())

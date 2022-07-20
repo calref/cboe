@@ -21,6 +21,7 @@
 #include "skills_traits.hpp"
 #include "damage.hpp"
 #include "fields.hpp"
+#include "porting.hpp"
 
 bool cTimer::is_valid() const {
 	if(time < 0) return false;
@@ -59,90 +60,6 @@ void cSpecial::writeTo(std::ostream& file, int n) const {
 	file << "\tgoto " << jumpto << '\n';
 }
 
-static cPictNum port_graphic_num(int pic) {
-	// from dialog-converting.txt
-	/*
-	-1			solid black
-	0 + x		number of terrain graphic
-	300 + x		animated terrain graphic (grabs the first frame only)
-	400 + x		monster graphic num
-	700 + x		dlog graphic (large dlog graphics were done by using four of these arranged in the correct way)
-	800 + x		pc graphic
-	900 + x		B&W graphic - the PICT resource for this does not exist
-	950			null item
-	1000 + x	Talking face
-	1100		item info help
-	1200		pc screen help
-	1300		combat ap
-	1400-1402	button help
-	1410-1412	large scen graphics
-	1500		stat symbols help
-	1600 + x	scen graphics
-	1700 + x	anim graphic -- drawn from fields_gworld, so a boom or barrier icon?
-	1800 + x	items
-	2000 + x	custom graphics up to 2399
-	2400 + x	custom graphics up to 2799, BUT it's a split graphic ...
-	   it looks at the size of rect, and places a 32 x 32 or 36 x 36 graphic drawn
-	   from the custom gworld, depending on the size of rect. half of graphic is
-	   drawn from one custom slot, and half is drawn from next one.
-	+3000		suppress drawing a frame around the graphic
-	 */
-	if (pic<0)
-		return cPictNum(pic, PIC_NONE);
-	if (pic>3000) pic-=3000; // suppress drawing a frame around the graphic
-	if (pic<300) {
-		switch(pic) {
-			case 247: pic = 210; break;
-			case 248: pic = 211; break;
-			case 249: pic = 212; break;
-			case 250: pic = 213; break;
-			case 202: pic = 0; break;
-			case 203: pic = 2; break;
-			case 204: pic = 32; break;
-			case 207: pic = 0; break;
-			case 208: pic = 123; break;
-			case 209: pic = 210; break;
-			case 210: pic = 163; break;
-			case 211: pic = 2; break;
-			case 212: pic = 32; break;
-			case 218: case 219: case 220: case 221:
-			case 222: case 223: case 224: case 225:
-			case 215: pic = 216; break;
-			case 233: pic = 137; break;
-			case 213: pic = 214; break;
-			case 214: pic = 215; break;
-			case 246: pic = 209; break;
-			case 251: pic = 207; break;
-			case 252: pic = 208; break;
-		}
-		return cPictNum(pic, PIC_TER);
-	}
-	if (pic<400)
-		return cPictNum(pic-300, PIC_TER_ANIM);
-	if (pic<700)
-		return cPictNum(pic-400,PIC_MONST);
-	if (pic<800)
-		return cPictNum(pic-700, PIC_DLOG);
-	if (pic<900)
-		return cPictNum(pic-800, PIC_PC);
-	if (pic<1000)// ARGH: normally bwpats, force an error picture
-		return cPictNum(800, PIC_TER);
-	if (pic<1100) // can we really get some talk here?
-		return cPictNum(pic-1000, PIC_TALK);
-#if 0
-	if (pic == 1100 || pic==1200 || pic==1300 || (pic>=1400 && pic<=1402)) // maybe, but the picture's size will be bad and hide the message...
-		return cPictNum(pic, PIC_FULL);
-#endif
-	if (pic<2000) // ARGH: unsure force an error picture
-		return cPictNum(800, PIC_TER);
-	if (pic<2400)
-		return cPictNum(pic-2000, PIC_CUSTOM_TER);
-	if (pic<2800)
-		return cPictNum(pic-2400, PIC_CUSTOM_DLOG); // or pict custom monster large (in fact this one seems to depend on the dialog final size)
-	// ARGH: not expected, force an error picture
-	return cPictNum(800, PIC_TER);
-}
-	
 void cSpecial::import_legacy(legacy::special_node_type const &old){
 	sd1 = old.sd1;
 	sd2 = old.sd2;
@@ -468,7 +385,7 @@ void cSpecial::import_legacy(legacy::special_node_type const &old){
 				if (old.type>=55 && old.type<=60 ) pic=(pic%1000)+2000;
 				if (old.type==55 || old.type==58) pic+=400;
 			}
-			cPictNum picTyp=port_graphic_num(pic);
+			cPictNum picTyp=porting::port_graphic_num(pic);
 			pic=picTyp.num;
 			pictype=picTyp.type;
 			m3 = m2;

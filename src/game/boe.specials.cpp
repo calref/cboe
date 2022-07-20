@@ -657,8 +657,7 @@ void use_item(short pc,short item) {
 		if(the_item.variety == eItemType::POTION)
 			play_sound(56);
 		
-		str = the_item.abil_strength;
-		store_item_spell_level = str;
+		store_item_spell_level = str = the_item.abil_strength;
 		type = the_item.magic_use_type;
 		
 		switch(abil) {
@@ -2561,7 +2560,7 @@ void oneshot_spec(const runtime_state& ctx) {
 				showError("Dialog box ended up with no buttons.");
 				break;
 			}
-			dlg_res = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
+			dlg_res = custom_choice_dialog(strs, cPictNum(spec.pic, ePicType(spec.pictype)), buttons);
 			if(spec.m3 > 0) {
 				if(dlg_res == 1) {
 					if((spec.ex1a >= 0) || (spec.ex2a >= 0)) {
@@ -2582,7 +2581,7 @@ void oneshot_spec(const runtime_state& ctx) {
 			for(short i = 0; i < 3; i++)
 				get_strs(strs[i * 2],strs[i * 2 + 1], ctx.cur_spec_type, spec.m1 + i * 2, spec.m1 + i * 2 + 1);
 			buttons[0] = 20; buttons[1] = 19;
-			dlg_res = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
+			dlg_res = custom_choice_dialog(strs, cPictNum(spec.pic, ePicType(spec.pictype)), buttons);
 			if(dlg_res == 1) {set_sd = false; ctx.next_spec = -1;}
 			else {
 				store_i = univ.get_item(spec.ex1a);
@@ -2622,7 +2621,7 @@ void oneshot_spec(const runtime_state& ctx) {
 			if((spec.m1 >= 0) || (spec.m2 >= 0)) {
 				get_strs(strs[0],strs[1], ctx.cur_spec_type, spec.m1, spec.m2);
 				buttons[0] = 3; buttons[1] = 2;
-				dlg_res = custom_choice_dialog(strs,spec.pic,ePicType(spec.pictype),buttons);
+				dlg_res = custom_choice_dialog(strs,cPictNum(spec.pic, ePicType(spec.pictype)),buttons);
 				// TODO: Make custom_choice_dialog return string?
 			}
 			else dlg_res = cChoiceDlog("basic-trap",{"yes","no"}).show() == "no";
@@ -3966,7 +3965,7 @@ void townmode_spec(const runtime_state& ctx) {
 				for(short i = 0; i < 3; i++)
 					get_strs(strs[i * 2],strs[i * 2 + 1],ctx.cur_spec_type, spec.m1 + i * 2 ,spec.m1 + i * 2 + 1);
 				buttons[0] = 9; buttons[1] = 35;
-				if(custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons) == 1)
+				if(custom_choice_dialog(strs, cPictNum(spec.pic, ePicType(spec.pictype)), buttons) == 1)
 					ctx.next_spec = -1;
 				else {
 					int x = univ.party.get_ptr(10), y = univ.party.get_ptr(11);
@@ -3998,7 +3997,7 @@ void townmode_spec(const runtime_state& ctx) {
 				for(short i = 0; i < 3; i++)
 					get_strs(strs[i * 2],strs[i * 2 + 1], ctx.cur_spec_type,spec.m1 + i * 2, spec.m1 + i * 2 + 1);
 				buttons[0] = 9; buttons[1] = 8;
-				if(custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons) == 1) {
+				if(custom_choice_dialog(strs, cPictNum(spec.pic, ePicType(spec.pictype)), buttons) == 1) {
 					ctx.next_spec = -1;
 					if(ctx.which_mode == eSpecCtx::OUT_MOVE || ctx.which_mode == eSpecCtx::TOWN_MOVE || ctx.which_mode == eSpecCtx::COMBAT_MOVE)
 						*ctx.ret_a = 1;
@@ -4031,7 +4030,7 @@ void townmode_spec(const runtime_state& ctx) {
 				for(short i = 0; i < 3; i++)
 					get_strs(strs[i * 2],strs[i * 2 + 1],ctx.cur_spec_type, spec.m1 + i * 2, spec.m1 + i * 2 + 1);
 				buttons[0] = 20; buttons[1] = 24;
-				int i = spec.ex2b == 1 ? 2 : custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
+				int i = spec.ex2b == 1 ? 2 : custom_choice_dialog(strs, cPictNum(spec.pic, ePicType(spec.pictype)), buttons);
 				*ctx.ret_a = 1;
 				if(i == 1) {
 					ctx.next_spec = -1;
@@ -4566,8 +4565,8 @@ void setsd(short a, short b, short val) {
 
 void handle_message(const runtime_state& ctx, const std::string& title, pic_num_t pic, ePicType pt) {
 	if(pic == -1) {
-		pic = univ.scenario.intro_pic;
-		pt = PIC_SCEN;
+		pic = univ.scenario.intro_pic.num;
+		pt = univ.scenario.intro_pic.type;
 	}
 	eEncNoteType note_type;
 	switch(ctx.cur_spec_type) {
