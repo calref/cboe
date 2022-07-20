@@ -68,8 +68,8 @@ TEST_CASE("Converting legacy scenario data") {
 		CHECK(scen.default_ground == 0);
 		CHECK(scen.difficulty == 1);
 		CHECK(scen.init_spec == -1);
-		CHECK(scen.intro_mess_pic == 27);
-		CHECK(scen.intro_pic == 27);
+		CHECK(scen.intro_mess_pic == cPictNum(27,PIC_SCEN));
+		CHECK(scen.intro_pic == cPictNum(27,PIC_SCEN));
 		CHECK(scen.is_legacy);
 		CHECK(scen.journal_strs.empty());
 		CHECK(scen.last_out_edited == loc(1,1));

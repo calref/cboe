@@ -203,7 +203,7 @@ void put_party_in_scen(std::string scen_name) {
 	for(short j = 0; j < univ.scenario.intro_strs.size(); j++)
 		if(!univ.scenario.intro_strs[j].empty()) {
 			std::array<short, 3> buttons = {0,-1,-1};
-			custom_choice_dialog(univ.scenario.intro_strs, univ.scenario.intro_mess_pic, PIC_SCEN, buttons);
+			custom_choice_dialog(univ.scenario.intro_strs, univ.scenario.intro_mess_pic, buttons);
 			j = 6;
 		}
 	run_special(eSpecCtx::STARTUP, eSpecCtxType::SCEN, univ.scenario.init_spec, loc(0,0));

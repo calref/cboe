@@ -227,7 +227,7 @@ bool pick_string(std::string from_file, cDialog& parent, std::string result_fld,
 
 static bool show_help(std::string from_file, cDialog& parent, pic_num_t pic){
 	StringList strings = *ResMgr::strings.get(from_file);
-	cThreeChoice help(strings,basic_buttons[1],pic,PIC_DLOG,&parent);
+	cThreeChoice help(strings,basic_buttons[1],cPictNum(pic,PIC_DLOG),&parent);
 	help.show();
 	return true;
 }

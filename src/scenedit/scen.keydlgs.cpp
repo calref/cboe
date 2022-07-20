@@ -1170,8 +1170,8 @@ short edit_special_num(short mode,short what_start) {
 
 static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	if(item_hit == "okay") {
-		scenario.intro_pic = me["picnum"].getTextAsNum();
-		if(scenario.intro_pic > 29) {
+		scenario.intro_pic.num = me["picnum"].getTextAsNum();
+		if(scenario.intro_pic.num > 29 && scenario.intro_pic.type==PIC_SCEN) { // CHANGEME
 			showError("Intro picture number is out of range.","",&me);
 			return true;
 		}
@@ -1197,7 +1197,7 @@ void edit_scen_intro() {
 	cDialog edit(*ResMgr::dialogs.get("edit-intro"));
 	edit.attachClickHandlers(edit_scen_intro_event_filter, {"okay", "cancel", "choose"});
 	
-	edit["picnum"].setTextToNum(scenario.intro_pic);
+	edit["picnum"].setTextToNum(scenario.intro_pic.num);
 	for(short i = 0; i < scenario.intro_strs.size(); i++) {
 		std::string id = "str" + std::to_string(i + 1);
 		edit[id].setText(scenario.intro_strs[i]);
