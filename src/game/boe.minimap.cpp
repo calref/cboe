@@ -11,6 +11,7 @@
 
 #include "sounds.hpp"
 
+#include "dialogxml/dialogs/dialog.hpp"
 #include "dialogxml/widgets/pict.hpp"
 #include "fileio/resmgr/res_image.hpp"
 #include "gfx/gfxsheets.hpp"
@@ -109,6 +110,11 @@ void set_visible(bool vis)
 }
 
 void draw(bool need_refresh) {
+#ifdef __APPLE__
+	// can not be updated when a dialog is running
+	if (cDialog::checkIfDialogIsRunning())
+		return;
+#endif
 	if (changed) {
 		need_refresh=true;
 		changed = false;

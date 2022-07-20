@@ -712,7 +712,9 @@ void cPlayer::combine_things() {
 	for(int i = 0; i < items.size(); i++) {
 		if(items[i].variety != eItemType::NO_ITEM && items[i].type_flag > 0 && items[i].ident) {
 			for(int j = i + 1; j < items.size(); j++)
-				if(items[j].variety != eItemType::NO_ITEM && items[j].type_flag == items[i].type_flag && items[j].ident) {
+				if(items[j].variety != eItemType::NO_ITEM && items[j].type_flag == items[i].type_flag &&
+				   items[j].name == items[i].name && items[j].special_class == items[i].special_class &&
+				   items[j].ident) {
 					if(print_result) print_result("(items combined)");
 					short test = items[i].charges + items[j].charges;
 					if(test > 125) {

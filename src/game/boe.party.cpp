@@ -111,40 +111,37 @@ short store_graphic_pc_num ;
 short store_graphic_mode ;
 short store_pc_graphic;
 
+static bool is_item_specific_to_scenario(cItem const &item)
+{
+	if(item.ability == eItemAbil::CALL_SPECIAL || item.ability == eItemAbil::WEAPON_CALL_SPECIAL ||
+	   item.ability == eItemAbil::HIT_CALL_SPECIAL || item.ability == eItemAbil::DROP_CALL_SPECIAL)
+		return true;
+	return (item.ability == eItemAbil::PROTECT_FROM_SPECIES || item.ability == eItemAbil::SLAYER_WEAPON) &&
+		item.abil_data.race == eRace::IMPORTANT;
+}
+
 // When the party is placed into a scen from the starting screen, this is called to put the game into game
 // mode and load in the scen and init the party info
 // party record already contains scen name
 void put_party_in_scen(std::string scen_name) {
-	bool item_took = false;
 	
 	// Drop debug mode
 	univ.debug_mode = false;
 	univ.ghost_mode = false;
 	univ.node_step_through = false;
 	
-	for(short j = 0; j < 6; j++)
-		for(short i = 23; i >= 0; i--) {
-			cItem& thisItem = univ.party[j].items[i];
-			thisItem.special_class = 0;
-			if(thisItem.ability == eItemAbil::CALL_SPECIAL) {
-				univ.party[j].take_item(i);
-				item_took = true;
-			} else if(thisItem.ability == eItemAbil::WEAPON_CALL_SPECIAL) {
-				univ.party[j].take_item(i);
-				item_took = true;
-			} else if(thisItem.ability == eItemAbil::HIT_CALL_SPECIAL) {
-				univ.party[j].take_item(i);
-				item_took = true;
-			} else if(thisItem.ability == eItemAbil::DROP_CALL_SPECIAL) {
-				univ.party[j].take_item(i);
-				item_took = true;
-			} else if(thisItem.ability == eItemAbil::PROTECT_FROM_SPECIES && thisItem.abil_data.race == eRace::IMPORTANT) {
-				univ.party[j].take_item(i);
-				item_took = true;
-			} else if(thisItem.ability == eItemAbil::SLAYER_WEAPON && thisItem.abil_data.race == eRace::IMPORTANT) {
-				univ.party[j].take_item(i);
+	bool item_took = false;
+	for(auto &pc : univ.party)
+		for(size_t i = pc.items.size(); i > 0; i--) {
+			cItem & thisItem = pc.items[i-1];
+			if (thisItem.variety == eItemType::NO_ITEM)
+				continue;
+			if (is_item_specific_to_scenario(thisItem)) {
+				pc.take_item(int(i-1));
 				item_took = true;
 			}
+			else
+				thisItem.special_class = 0;
 		}
 	if(item_took)
 		cChoiceDlog("removed-special-items").show();
@@ -159,17 +156,21 @@ void put_party_in_scen(std::string scen_name) {
 	if(!load_scenario(path, univ.scenario))
 		return;
 	bool stored_item = false;
-	for(auto& store : univ.party.stored_items)
+	for(auto const & store : univ.party.stored_items)
 		stored_item = stored_item || std::any_of(store.begin(), store.end(), [](const cItem& item) {
-			return item.variety != eItemType::NO_ITEM;
+			return item.variety != eItemType::NO_ITEM && !is_item_specific_to_scenario(item);
 		});
 	if(stored_item)
 		if(cChoiceDlog("keep-stored-items", {"yes", "no"}).show() == "yes") {
 			std::vector<cItem*> saved_item_refs;
-			for(short i = 0; i < 3;i++)
-				for(short j = 0; j < univ.party.stored_items[i].size(); j++)
-					if(univ.party.stored_items[i][j].variety != eItemType::NO_ITEM)
-						saved_item_refs.push_back(&univ.party.stored_items[i][j]);
+			for(auto& store : univ.party.stored_items) {
+				for(auto &item : store) {
+					if(item.variety == eItemType::NO_ITEM || is_item_specific_to_scenario(item))
+						continue;
+					item.special_class = 0;
+					saved_item_refs.push_back(&item);
+				}
+			}
 			short pc = 0;
 			while(univ.party[pc].main_status != eMainStatus::ALIVE && pc < 6) pc++;
 			show_get_items("Choose stored items to keep:", saved_item_refs, pc, true);
