@@ -235,7 +235,7 @@ void OpenBoEMenu::update_for_game_state(eGameMode overall_mode, bool party_in_me
 // Disconnect all spell menu items from signals and clear the menus
 void OpenBoEMenu::purge_spell_menus(tgui::MenuBar::Ptr& menubar) {
 	for(const auto& connection_id : this->spell_menus_connection_ids) {
-		if(!menubar->disconnect(connection_id))
+		if(!menubar->onMenuItemClick.disconnect(connection_id))
 			throw std::runtime_error { "BUG: attempted to disconnect menubar signal using invalid connection id" };
 	}
 

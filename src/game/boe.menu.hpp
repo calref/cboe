@@ -26,11 +26,11 @@ public:
 
 private:
 
-	using MenuHierarchy = std::vector<sf::String>;
+	using MenuHierarchy = std::vector<tgui::String>;
 
 	tgui::Gui tgui;
 	cUniverse& univ;
-	const sf::String internal_menubar_widget_name { "openboe-menu" };
+	const tgui::String internal_menubar_widget_name { "openboe-menu" };
 	std::vector<unsigned int> spell_menus_connection_ids;
 
 	tgui::MenuBar::Ptr build_menubar() const;
