@@ -22,10 +22,10 @@ public:
 	
 private:
 	
-	using MenuHierarchy = std::vector<sf::String>;
+	using MenuHierarchy = std::vector<tgui::String>;
 	
 	tgui::Gui tgui;
-	const sf::String internal_menubar_widget_name { "openboe-scenedit-menu" };
+	const tgui::String internal_menubar_widget_name { "openboe-scenedit-menu" };
 
 	tgui::MenuBar::Ptr build_menubar() const;
 	void add_menu_placeholders(tgui::MenuBar::Ptr&) const;

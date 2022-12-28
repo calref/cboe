@@ -12,6 +12,7 @@
 #include <boost/filesystem/path.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics/Image.hpp>
+#include <memory>
 
 char keyToChar(sf::Keyboard::Key key, bool isShift);
 
