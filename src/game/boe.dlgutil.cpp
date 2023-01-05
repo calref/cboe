@@ -1441,12 +1441,6 @@ public:
 		using namespace std::placeholders;
 		extern fs::path scenDir;
 		
-		if(scen_headers.empty()) { // TODO: Arrange this to be a check before calling run()
-			cChoiceDlog err("no-scenarios");
-			err->getControl("path").setText(scenDir.string());
-			err.show();
-			return scen_header_type();
-		}
 		set_cursor(sword_curs);
 		
 		me["cancel"].attachClickHandler(std::bind(&cChooseScenario::doCancel, this));
