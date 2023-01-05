@@ -284,24 +284,75 @@ as UTF-8.
 
 All indentation should be tabs. Assume four spaces per tab.
 
+Never put whitespace at the end of a line (unless there's nothing else
+on the line and the whitespace matches nearby indentation). Never have
+more than two consecutive blank lines.
+
+Do not put parentheses around return values. Do not put redundant
+parentheses around comparisons mixed in with logical operators.
+
+Do not put space after an open parenthesis or before a closing parenthesis.
+Do not put a space between a function name and the following open parenthesis.
+
+Control Statements
+------------------
+
 Braces go on the same line as the control statement or function
 declaration. The else keyword shares its line with the closing brace of
-the preceding if statement.
+the preceding if statement. The same goes for the catch keyword and the while of do..while.
 
-Do not put space after an open parenthesis or before a closing
-parenthesis. Do not put space between a keyword or function and the
-following open parenthesis.
+Do not put space between a keyword and the following open parenthesis.
+Do put a space before the opening brace.
+
+For control statements spanning more than one line, always use braces. For control statements that fit entirely on one line, never use braces. It is acceptable to bundle an if and else all onto one line as long as they are both _very_ short.
+
+If the sole content of an else block is another control statement such as try or for, it's acceptable to omit the braces on the else block and indent it as you would an else if.
+
+Examples:
+
+```
+if(some_value) {
+	thing1 = 2;
+	do_another_thing();
+} else while(some_value < 12) {
+	do_it_with(some_value++);
+}
+if(done) return result; else accum++;
+```
+
+Declarations
+------------
 
 In declarations of pointers and references, the pointer or reference
 operator should bind to the type, not the variable. Never declare
 another type in the same declaration as a pointer or reference.
 
-Do not put parentheses around return values. Do not put redundant
-parentheses around comparisons mixed in with logical operators.
+Place const before the type, not after.
 
-If a constructor initializer must be wrapped, put the colon on the first
-line and one variable per line thereafter.
+Okay:
+```
+int* thing;
+int* another_thing;
+int& ref;
+const std::string bar;
+```
 
-Never put whitespace at the end of a line (unless there's nothing else
-on the line and the whitespace matches nearby indentation). Never have
-more than two consecutive blank lines.
+Not okay:
+```
+int *thing, *another_thing;
+int * whatever;
+int &ref;
+std::string const bat;
+```
+
+Constructors
+------------
+
+If a constructor initializer must be wrapped, put each variable on one line, indented one level. The first variable is prefixed by a colon, and all other variables are prefixed by a comma. The opening brace goes on the next line. Don't default-initialize fields unless they're primitive types such as numbers or pointers.
+
+```
+Thing::Thing()
+	: stuff(12)
+	, more_stuff(22)
+{}
+```
