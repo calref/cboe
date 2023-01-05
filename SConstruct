@@ -44,6 +44,7 @@ print('C++ compiler:', env['CXX'])
 
 env.VariantDir('#build/obj', 'src')
 env.VariantDir('#build/obj/test', 'test')
+env.VariantDir('#build/obj/test/deps', 'deps')
 
 if env['debug']:
    env.Append(CCFLAGS=['-g','-o0'])

@@ -3,6 +3,9 @@ import subprocess
 
 Import("env platform party_classes common_sources")
 
+# Add path to scons
+env.Append(CPPPATH=['./deps/Catch2/single_include'])
+
 test_sources = Glob("""*.cpp""") + Split("""
 	#build/obj/scenedit/scen.fileio.cpp
 """)
