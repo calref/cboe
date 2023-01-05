@@ -35,6 +35,7 @@ extern sf::Texture bg_gworld;
 const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
 short cDialog::defaultBackground = cDialog::BG_DARK;
 cDialog* cDialog::topWindow = nullptr;
+void (*cDialog::redraw_everything)() = nullptr;
 
 std::string cDialog::generateRandomString(){
 	// Not bothering to seed, because it doesn't actually matter if it's truly random.
@@ -517,7 +518,9 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	win.create(sf::VideoMode(1,1),"");
 	win.close();
 	win.create(sf::VideoMode(winRect.width(), winRect.height()), "Dialog", sf::Style::Titlebar);
-	win.setPosition({parentPos.x + int(parentSz.x - winRect.width()) / 2, parentPos.y + int(parentSz.y - winRect.height()) / 2});
+	winLastX = parentPos.x + int(parentSz.x - winRect.width()) / 2;
+	winLastY = parentPos.y + int(parentSz.y - winRect.height()) / 2;
+	win.setPosition({winLastX, winLastY});
 	draw();
 	makeFrontWindow(parent ? parent-> win : mainPtr);
 	makeFrontWindow(win);
@@ -690,6 +693,15 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 			break;
 		case sf::Event::GainedFocus:
 		case sf::Event::MouseMoved:
+			// Did the window move, potentially dirtying the canvas below it?
+			auto winPosition = win.getPosition();
+			if (winLastX != winPosition.x || winLastY != winPosition.y) {
+				if (redraw_everything != NULL)
+					redraw_everything();
+			}
+			winLastX = winPosition.x;
+			winLastY = winPosition.y;
+
 			bool inField = false;
 			for(auto& ctrl : controls) {
 				if(ctrl.second->getType() == CTRL_FIELD && ctrl.second->getBounds().contains(currentEvent.mouseMove.x, currentEvent.mouseMove.y)) {

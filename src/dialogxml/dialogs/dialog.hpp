@@ -41,6 +41,8 @@ class cDialog {
 	short bg;
 	sf::Color defTextClr;
 	sf::RenderWindow win;
+	int winLastX=-1;
+	int winLastY=-1;
 	std::string currentFocus;
 	cDialog* parent;
 	std::string generateRandomString();
@@ -49,6 +51,7 @@ class cDialog {
 	std::vector<std::pair<std::string,cTextField*>> tabOrder;
 	static cDialog* topWindow; // Tracks the frontmost dialog.
 public:
+	static void (*redraw_everything)();
 	/// Performs essential startup initialization. Generally should not be called directly.
 	static void init();
 	/// The light background pattern used by the scenario editor dialogs.

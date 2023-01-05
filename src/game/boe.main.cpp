@@ -115,6 +115,8 @@ int main(int argc, char* argv[]) {
 	debug_oldstructs();
 #endif
 	try{
+		cDialog::redraw_everything = &redraw_everything;
+
 		init_boe(argc, argv);
 		
 		if(!get_bool_pref("GameRunBefore"))
