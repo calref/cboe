@@ -230,18 +230,8 @@ if path.exists('deps/include'):
 
 env.Append(CPPPATH=Split("""
 	#src/
-	#src/classes/
-	#src/tools/
-	#src/fileio/
 	#src/fileio/gzstream/
-	#src/fileio/resmgr/
 	#src/fileio/xml-parser/
-	#src/gfx/
-	#src/dialogxml/
-	#src/dialogxml/dialogs/
-	#src/dialogxml/widgets/
-	#src/scenario/
-	#src/universe/
 """))
 
 env['CONFIGUREDIR'] = '#build/conf'
