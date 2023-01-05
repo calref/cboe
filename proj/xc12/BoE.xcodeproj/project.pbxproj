@@ -201,6 +201,8 @@
 		919DDC0D19007517003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0E1900751C003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0F1900751F003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
+		919F2E7E287E529600F47750 /* tagfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919F2E71287E4E0500F47750 /* tagfile.cpp */; };
+		919F2E9A287E5BB700F47750 /* tagfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919F2E99287E5BB700F47750 /* tagfile.cpp */; };
 		919F2ECA287F023100F47750 /* SFML.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
 		919F2ECB287F023100F47750 /* sfml-audio.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
 		919F2ECC287F023100F47750 /* sfml-graphics.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
@@ -729,6 +731,10 @@
 		919DDBFA19006CC9003E7FED /* libboost_filesystem-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_filesystem-mt.dylib"; path = "/opt/local/libexec/boost/1.76/lib/libboost_filesystem-mt.dylib"; sourceTree = "<absolute>"; };
 		919DDBFB19006CC9003E7FED /* libboost_system-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_system-mt.dylib"; path = "/opt/local/libexec/boost/1.76/lib/libboost_system-mt.dylib"; sourceTree = "<absolute>"; };
 		919DDC091900750D003E7FED /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = /Library/Frameworks/freetype.framework; sourceTree = "<absolute>"; };
+		919F2E71287E4E0500F47750 /* tagfile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tagfile.cpp; sourceTree = "<group>"; };
+		919F2E72287E4E0500F47750 /* tagfile.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tagfile.hpp; sourceTree = "<group>"; };
+		919F2E99287E5BB700F47750 /* tagfile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tagfile.cpp; sourceTree = "<group>"; };
+		919F2EAF287F00B800F47750 /* boe_test.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = boe_test.entitlements; sourceTree = "<group>"; };
 		91A0B15A1900F73E00EF438F /* mask.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = mask.frag; sourceTree = "<group>"; };
 		91A32BD10FDB797B00C4E957 /* basicbtns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = basicbtns.cpp; sourceTree = "<group>"; };
 		91AC607E0FA26A3B00EEAE67 /* area.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = area.hpp; sourceTree = "<group>"; };
@@ -993,6 +999,7 @@
 		2BF04A9F0BF51845006C0831 = {
 			isa = PBXGroup;
 			children = (
+				919F2EAF287F00B800F47750 /* boe_test.entitlements */,
 				91279BAB0F9CFB18007B0D52 /* common */,
 				91B3EF380F969E4A00BF5B67 /* Game */,
 				91B3EEF90F969BBD00BF5B67 /* CharEd */,
@@ -1282,10 +1289,12 @@
 				91E5C7A60F9F615400C21460 /* fileio_scen.cpp */,
 				915E09081A316D89008BDF00 /* map_parse.cpp */,
 				915325181A2E37EE000A9A1C /* special_parse.cpp */,
+				919F2E71287E4E0500F47750 /* tagfile.cpp */,
 				91BFA3D81902AD78001686E4 /* tarball.cpp */,
 				91E5C7A50F9F615400C21460 /* fileio.hpp */,
 				915E09071A316D6A008BDF00 /* map_parse.hpp */,
 				91F06E8F1A2EBEE70038E902 /* special_parse.hpp */,
+				919F2E72287E4E0500F47750 /* tagfile.hpp */,
 				91BFA3D91902ADD5001686E4 /* tarball.hpp */,
 				91BFA3DC19033E00001686E4 /* gzstream */,
 				912DFE8718E24B0B00B00D75 /* resmgr */,
@@ -1507,6 +1516,7 @@
 				91CC173A1B421CA0003D9A69 /* scen_read.cpp */,
 				91CC173B1B421CA0003D9A69 /* scen_write.cpp */,
 				919B13A51BBDE985009905A4 /* spec_legacy.cpp */,
+				919F2E99287E5BB700F47750 /* tagfile.cpp */,
 				9176FEC41D550EFD006EF694 /* talk_legacy.cpp */,
 				91C2A6EE1B8FAA8E00346948 /* talk_read.cpp */,
 				91E381471B97675900F69B81 /* talk_write.cpp */,
@@ -1984,6 +1994,7 @@
 				919CC25E1B37736900273FDA /* universe.cpp in Sources */,
 				919CC2731B3773FD00273FDA /* fileio_party.cpp in Sources */,
 				919CC2801B37744800273FDA /* pc.editors.cpp in Sources */,
+				919F2E7E287E529600F47750 /* tagfile.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2110,6 +2121,7 @@
 				911A14031B8FAFC600900FD9 /* town_read.cpp in Sources */,
 				911A14041B8FB00300900FD9 /* talk_read.cpp in Sources */,
 				911A14051B8FB00600900FD9 /* out_read.cpp in Sources */,
+				919F2E9A287E5BB700F47750 /* tagfile.cpp in Sources */,
 				91E381461B97673700F69B81 /* town_write.cpp in Sources */,
 				91E381481B97677900F69B81 /* talk_write.cpp in Sources */,
 				91E3814A1B97679800F69B81 /* out_write.cpp in Sources */,
@@ -2639,6 +2651,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = boe_test.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2661,6 +2674,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = boe_test.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/TestFrameworks\"";
