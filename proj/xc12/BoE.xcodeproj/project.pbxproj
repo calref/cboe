@@ -2248,7 +2248,11 @@
 				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					/usr/local/Frameworks,
+					/opt/local/Library/Frameworks,
+				);
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_ENABLE_PASCAL_STRINGS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
@@ -2276,7 +2280,9 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					/usr/local/include,
 					/opt/local/include,
+					/usr/local/Cellar/include,
 					"$(PROJECT_DIR)/../../deps/Catch2/single_include",
 					"$(PROJECT_DIR)/../../src/fileio/gzstream",
 					"$(PROJECT_DIR)/../../src/fileio/xml-parser",
@@ -2284,6 +2290,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/lib/\"",
+					/usr/local/lib,
 					/opt/local/lib,
 				);
 				LINK_WITH_STANDARD_LIBRARIES = YES;
@@ -2351,7 +2358,11 @@
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					/usr/local/Frameworks,
+					/opt/local/Library/Frameworks,
+				);
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_ENABLE_PASCAL_STRINGS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
@@ -2378,7 +2389,9 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					/usr/local/include,
 					/opt/local/include,
+					/usr/local/Cellar/include,
 					"$(PROJECT_DIR)/../../deps/Catch2/single_include",
 					"$(PROJECT_DIR)/../../src/fileio/gzstream",
 					"$(PROJECT_DIR)/../../src/fileio/xml-parser",
@@ -2386,6 +2399,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/lib/\"",
+					/usr/local/lib,
 					/opt/local/lib,
 				);
 				LINK_WITH_STANDARD_LIBRARIES = YES;
