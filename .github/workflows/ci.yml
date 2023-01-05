@@ -73,7 +73,7 @@
 				},
 				{
 					name: build,
-					run: '.\.github\workflows\scripts\win\msvc-build.bat Win32'
+					run: '.\.github\workflows\scripts\win\msvc-build.bat x86'
 				},
 				{
 					name: unit tests,
