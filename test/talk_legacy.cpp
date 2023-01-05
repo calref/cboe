@@ -14,7 +14,7 @@
 
 TEST_CASE("Converting legacy talk data") {
 	cSpeech talk;
-	legacy::talking_record_type old_talk;
+	legacy::talking_record_type old_talk{};
 	std::vector<shop_info_t> shops;
 	old_talk.talk_nodes[0].personality = 12;
 	old_talk.talk_nodes[0].type = 0;
