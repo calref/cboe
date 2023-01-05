@@ -1255,8 +1255,7 @@ void cPlayer::readFrom(std::istream& file){
 	skills.clear();
 	cur_sp = max_sp = ap = 0;
 	
-	while(bin) { // continue as long as no error, such as eof, occurs
-		getline(bin, cur);
+	while(getline(bin, cur)) { // continue as long as no error, such as eof, occurs
 		sin.str(cur);
 		sin >> cur;
 		if(cur == "STATUS"){
@@ -1338,8 +1337,7 @@ void cPlayer::readFrom(std::istream& file){
 		sin.clear();
 	}
 	bin.clear();
-	while(file) {
-		getline(file, cur, '\f');
+	while(getline(file, cur, '\f')) {
 		bin.str(cur);
 		bin >> cur;
 		if(cur == "ITEM") {
