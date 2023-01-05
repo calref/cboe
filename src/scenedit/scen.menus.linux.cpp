@@ -5,9 +5,9 @@
 #include <unordered_map>
 #include <string>
 #include "scen.menu.hpp"
-#include "undo.hpp"
-#include "event_listener.hpp"
-#include "drawable_manager.hpp"
+#include "tools/undo.hpp"
+#include "tools/event_listener.hpp"
+#include "tools/drawable_manager.hpp"
 
 extern sf::RenderWindow mainPtr;
 extern cUndoList undo_list;

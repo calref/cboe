@@ -9,8 +9,8 @@
 #include "boe.menu.hpp"
 #include "boe.consts.hpp"
 
-#include "event_listener.hpp"
-#include "drawable_manager.hpp"
+#include "tools/event_listener.hpp"
+#include "tools/drawable_manager.hpp"
 
 extern sf::RenderWindow mainPtr;
 extern cUniverse univ;

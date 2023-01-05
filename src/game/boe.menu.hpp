@@ -6,12 +6,12 @@
 // NOTE: this also includes SFML for us
 #include <TGUI/TGUI.hpp>
 #include <vector>
-#include "universe.hpp"
+#include "universe/universe.hpp"
 #include "boe.consts.hpp"
 #include "spell.hpp"
 #include "skills_traits.hpp"
-#include "event_listener.hpp"
-#include "drawable.hpp"
+#include "tools/event_listener.hpp"
+#include "tools/drawable.hpp"
 
 class OpenBoEMenu : public iEventListener, public iDrawable {
 public:

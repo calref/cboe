@@ -6,9 +6,9 @@
 // NOTE: this also includes SFML for us
 #include <TGUI/TGUI.hpp>
 #include <vector>
-#include "undo.hpp"
-#include "event_listener.hpp"
-#include "drawable.hpp"
+#include "tools/undo.hpp"
+#include "tools/event_listener.hpp"
+#include "tools/drawable.hpp"
 
 class OpenBoESceneditMenu : public iEventListener, public iDrawable  {
 public:
