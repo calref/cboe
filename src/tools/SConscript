@@ -17,6 +17,7 @@ tools = Split("""
 	../fileio/map_parse.cpp
 	../fileio/special_parse.cpp
 	../fileio/tarball.cpp
+	../fileio/tagfile.cpp
 	../fileio/gzstream/gzstream.cpp
 """) + Glob("../fileio/resmgr/*.cpp") + Glob("../gfx/*.cpp") + Glob("../scenario/*.cpp")
 
