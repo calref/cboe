@@ -2672,7 +2672,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				LD_RUNPATH_SEARCH_PATHS = "@loader_path/TestFrameworks\"";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/TestFrameworks \"@exe_path/Blades of Exile.app/Contents/Frameworks\"";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lboost_system",
@@ -2691,7 +2691,7 @@
 				CODE_SIGN_ENTITLEMENTS = boe_test.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
-				LD_RUNPATH_SEARCH_PATHS = "@loader_path/TestFrameworks\"";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/TestFrameworks \"@exe_path/Blades of Exile.app/Contents/Frameworks\"";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
