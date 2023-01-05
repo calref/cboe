@@ -90,6 +90,11 @@ void cTextMsg::validatePostParse(ticpp::Element& who, std::string fname, const s
 	if(attrs.count("height")) fixedHeight = true;
 }
 
+void cTextMsg::setFixed(bool w, bool h) {
+	fixedWidth = w;
+	fixedHeight = h;
+}
+
 void cTextMsg::recalcRect() {
 	if(fixedWidth && fixedHeight) return;
 	TextStyle style;

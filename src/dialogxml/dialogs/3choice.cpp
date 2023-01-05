@@ -86,6 +86,7 @@ void cThreeChoice::init_strings(std::vector<std::string>& strings, unsigned shor
 		cur_text_rect.bottom = cur_text_rect.top + str_height;
 		cTextMsg* str = new cTextMsg(*me);
 		str->setText(strings[j]);
+		str->setFixed(true, false);
 		me->add(str, cur_text_rect, sout.str());
 		cur_text_rect.top = cur_text_rect.bottom + 8;
 	}

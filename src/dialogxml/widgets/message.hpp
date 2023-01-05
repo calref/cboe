@@ -36,6 +36,7 @@ public:
 	bool isClickable() override;
 	bool isFocusable() override;
 	bool isScrollable() override;
+	void setFixed(bool w, bool h);
 	virtual ~cTextMsg();
 	void draw() override;
 	void recalcRect() override;
