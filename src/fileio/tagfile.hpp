@@ -14,6 +14,7 @@
 #include <functional> // for reference_wrapper
 #include <istream>
 #include <ostream>
+#include <memory>
 #include <boost/optional.hpp>
 
 class cTagFile;
