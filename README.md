@@ -1,4 +1,4 @@
-[![CI status](https://github.com/calref/cboe/actions/workflows/ci.yml/badge.svg)](https://github.com/calref/cboe/actions/workflows/ci.yml?query=branch%3Aci)
+[![CI status](https://github.com/calref/cboe/actions/workflows/ci.yml/badge.svg)](https://github.com/calref/cboe/actions/workflows/ci.yml)
 
 Classic Blades of Exile
 =======================
