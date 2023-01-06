@@ -546,12 +546,12 @@ void pc_attack(short who_att,iLiving* target) {
 	
 	// TODO: These don't stack?
 	if(cInvenSlot skill_item = attacker.has_abil_equip(eItemAbil::SKILL)) {
-		hit_adj += 5 * (skill_item->abil_data[0] / 2 + 1);
-		dam_adj += skill_item->abil_data[0] / 2;
+		hit_adj += 5 * (skill_item->abil_strength / 2 + 1);
+		dam_adj += skill_item->abil_strength / 2;
 	}
 	if(cInvenSlot skill_item = attacker.has_abil_equip(eItemAbil::GIANT_STRENGTH)) {
-		dam_adj += skill_item->abil_data[0];
-		hit_adj += skill_item->abil_data[0] * 2;
+		dam_adj += skill_item->abil_strength;
+		hit_adj += skill_item->abil_strength * 2;
 	}
 	
 	attacker.void_sanctuary();
@@ -734,15 +734,15 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 	r2 = get_ran(1,1,weap.item_level) + dam_adj + weap.bonus;
 	if(primary) r2 += 2; else r2 -= 1;
 	if(weap.ability == eItemAbil::WEAK_WEAPON)
-		r2 = (r2 * (10 - weap.abil_data[0])) / 10;
+		r2 = (r2 * (10 - weap.abil_strength)) / 10;
 	if(weap.ability == eItemAbil::HP_DAMAGE)
 		r2 = std::max<short>(1, double(r2) * double(attacker.cur_health) / double(attacker.max_health));
 	if(weap.ability == eItemAbil::SP_DAMAGE)
 		r2 = std::max<short>(1, double(r2) * double(attacker.cur_sp) / double(attacker.max_sp));
 	if(weap.ability == eItemAbil::HP_DAMAGE_REVERSE)
-		r2 += double(weap.abil_data[0]) * (1.0 - double(attacker.cur_health) / double(attacker.max_health));
+		r2 += double(weap.abil_strength) * (1.0 - double(attacker.cur_health) / double(attacker.max_health));
 	if(weap.ability == eItemAbil::SP_DAMAGE_REVERSE)
-		r2 += double(weap.abil_data[0]) * (1.0 - double(attacker.cur_sp) / double(attacker.max_sp));
+		r2 += double(weap.abil_strength) * (1.0 - double(attacker.cur_sp) / double(attacker.max_sp));
 	
 	if(cPlayer* pc_target = dynamic_cast<cPlayer*>(&target)) {
 		// PCs get some additional defensive perks
@@ -760,13 +760,13 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 		else pause(5);
 		play_sound(5);
 		start_missile_anim();
-		place_spell_pattern(radius2, target.get_loc(), eDamageType(weap.abil_data[1]), weap.abil_data[0] * 2, who_att);
+		place_spell_pattern(radius2, target.get_loc(), weap.abil_data.damage, weap.abil_strength * 2, who_att);
 		do_explosion_anim(5,0);
 		end_missile_anim();
 		handle_marked_damage();
 	} else if(r1 <= hit_chance[skill]) {
 		eDamageType dmg_tp = eDamageType::SPECIAL;
-		short spec_dam = calc_spec_dam(weap.ability,weap.abil_data[0],weap.abil_data[1],target,dmg_tp);
+		short spec_dam = calc_spec_dam(weap.ability,weap.abil_strength,weap.abil_data.value,target,dmg_tp);
 		short bonus_dam = 0;
 		if(dmg_tp != eDamageType::SPECIAL)
 			std::swap(spec_dam, bonus_dam);
@@ -849,10 +849,10 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 			}
 		}
 		if((weap.ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
-			apply_weapon_status(eStatus(weap.abil_data[1]), weap.abil_data[0], r2 + spec_dam, target, "Blade");
+			apply_weapon_status(weap.abil_data.status, weap.abil_strength, r2 + spec_dam, target, "Blade");
 		} else if(weap.ability == eItemAbil::SOULSUCKER && get_ran(1,0,1) == 1) {
 			add_string_to_buf("  Blade drains life.");
-			attacker.heal(weap.abil_data[0] / 2);
+			attacker.heal(weap.abil_strength / 2);
 		} else if(weap.ability == eItemAbil::ANTIMAGIC_WEAPON) {
 			short before = target.get_magic();
 			int mage = 0, cleric = 0;
@@ -861,7 +861,7 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 			else if(cPlayer* check = dynamic_cast<cPlayer*>(&target))
 				mage = check->skill(eSkill::MAGE_SPELLS), cleric = check->skill(eSkill::PRIEST_SPELLS);
 			if(mage + cleric > 0 && get_ran(1,0,1) == 1)
-				target.drain_sp(weap.abil_data[0]);
+				target.drain_sp(weap.abil_strength);
 			if(before > target.get_magic()) {
 				add_string_to_buf("  Blade drains energy.");
 				attacker.restore_sp(before / 3);
@@ -871,7 +871,7 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 			univ.party.force_ptr(21, target.get_loc().x);
 			univ.party.force_ptr(22, target.get_loc().y);
 			univ.party.force_ptr(20, i_monst);
-			run_special(eSpecCtx::ATTACKING_MELEE, eSpecCtxType::SCEN, weap.abil_data[0], attacker.combat_pos, &s1);
+			run_special(eSpecCtx::ATTACKING_MELEE, eSpecCtxType::SCEN, weap.abil_strength, attacker.combat_pos, &s1);
 			if(s1 > 0)
 				attacker.ap += 4;
 		}
@@ -1642,7 +1642,7 @@ void load_missile() {
 		overall_mode = MODE_THROWING;
 		current_spell_range = 8;
 		if(thrown->ability == eItemAbil::DISTANCE_MISSILE)
-			current_spell_range += thrown->abil_data[0];
+			current_spell_range += thrown->abil_strength;
 		if(thrown->ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else current_pat = single;
@@ -1660,7 +1660,7 @@ void load_missile() {
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
 		if(arrow->ability == eItemAbil::DISTANCE_MISSILE)
-			current_spell_range += arrow->abil_data[0];
+			current_spell_range += arrow->abil_strength;
 		if(arrow->ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else current_pat = single;
@@ -1672,7 +1672,7 @@ void load_missile() {
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
 		if(bolts->ability == eItemAbil::DISTANCE_MISSILE)
-			current_spell_range += bolts->abil_data[0];
+			current_spell_range += bolts->abil_strength;
 		if(bolts->ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else current_pat = single;
@@ -1684,7 +1684,7 @@ void load_missile() {
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
 		if(no_ammo->ability == eItemAbil::DISTANCE_MISSILE)
-			current_spell_range += no_ammo->abil_data[0];
+			current_spell_range += no_ammo->abil_strength;
 		if(no_ammo->ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else current_pat = single;
@@ -1775,7 +1775,7 @@ void fire_missile(location target) {
 				pause(dist(missile_firer.combat_pos,target)*5);
 			run_a_missile(missile_firer.combat_pos,target,2,1,5,0,0,100);
 			start_missile_anim();
-			place_spell_pattern(radius2,target, eDamageType(ammo.abil_data[1]),ammo.abil_data[0] * 2, univ.cur_pc);
+			place_spell_pattern(radius2,target, ammo.abil_data.damage,ammo.abil_strength * 2, univ.cur_pc);
 			do_explosion_anim(5,0);
 			end_missile_anim();
 			handle_marked_damage();
@@ -1788,15 +1788,15 @@ void fire_missile(location target) {
 			r1 += 5 * (missile_firer.status[eStatus::WEBS] / 3);
 			r2 = get_ran(1,1,dam) + dam_bonus;
 			if(ammo.ability == eItemAbil::WEAK_WEAPON)
-				r2 = (r2 * (10 - ammo.abil_data[0])) / 10;
+				r2 = (r2 * (10 - ammo.abil_strength)) / 10;
 			if(ammo.ability == eItemAbil::HP_DAMAGE)
 				r2 = std::max<short>(1, double(r2) * double(missile_firer.cur_health) / double(missile_firer.max_health));
 			if(ammo.ability == eItemAbil::SP_DAMAGE)
 				r2 = std::max<short>(1, double(r2) * double(missile_firer.cur_sp) / double(missile_firer.max_sp));
 			if(ammo.ability == eItemAbil::HP_DAMAGE_REVERSE)
-				r2 += double(ammo.abil_data[0]) * (1.0 - double(missile_firer.cur_health) / double(missile_firer.max_health));
+				r2 += double(ammo.abil_strength) * (1.0 - double(missile_firer.cur_health) / double(missile_firer.max_health));
 			if(ammo.ability == eItemAbil::SP_DAMAGE_REVERSE)
-				r2 += double(ammo.abil_data[0]) * (1.0 - double(missile_firer.cur_sp) / double(missile_firer.max_sp));
+				r2 += double(ammo.abil_strength) * (1.0 - double(missile_firer.cur_sp) / double(missile_firer.max_sp));
 			std::string create_line = missile_firer.name + " fires.";
 			add_string_to_buf(create_line);
 			
@@ -1808,7 +1808,7 @@ void fire_missile(location target) {
 				add_string_to_buf("  Missed.");
 			else if((victim = univ.target_there(target))) {
 				eDamageType dmg_tp = eDamageType::SPECIAL;
-				spec_dam = calc_spec_dam(ammo.ability,ammo.abil_data[0],ammo.abil_data[1],*victim,dmg_tp);
+				spec_dam = calc_spec_dam(ammo.ability,ammo.abil_strength,ammo.abil_data.value,*victim,dmg_tp);
 
 				// Existing damage values r2, spec_dam will get adjusted for armor and
 				//   resistances, so we need to store the actual amounts of damage done.
@@ -1846,10 +1846,10 @@ void fire_missile(location target) {
 						put_pc_screen();
 				}
 				if((ammo.ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
-					apply_weapon_status(eStatus(ammo.abil_data[1]), ammo.abil_data[0], r2 + spec_dam, *victim, "Missile");
+					apply_weapon_status(ammo.abil_data.status, ammo.abil_strength, r2 + spec_dam, *victim, "Missile");
 				} else if(ammo.ability == eItemAbil::SOULSUCKER && get_ran(1,0,1) == 1) {
 					add_string_to_buf("  Missile drains life.");
-					missile_firer.heal(ammo.abil_data[0] / 2);
+					missile_firer.heal(ammo.abil_strength / 2);
 				} else if(ammo.ability == eItemAbil::ANTIMAGIC_WEAPON) {
 					short before = victim->get_magic();
 					int mage = 0, cleric = 0;
@@ -1858,7 +1858,7 @@ void fire_missile(location target) {
 					else if(cPlayer* check = dynamic_cast<cPlayer*>(victim))
 						mage = check->skill(eSkill::MAGE_SPELLS), cleric = check->skill(eSkill::PRIEST_SPELLS);
 					if(mage + cleric > 0 && get_ran(1,0,1) == 1)
-						victim->drain_sp(ammo.abil_data[0]);
+						victim->drain_sp(ammo.abil_strength);
 					if(before > victim->get_magic()) {
 						add_string_to_buf("  Missile drains energy.");
 						missile_firer.restore_sp((before - victim->get_magic()) / 3);
@@ -1869,7 +1869,7 @@ void fire_missile(location target) {
 					univ.party.force_ptr(21, victim->get_loc().x);
 					univ.party.force_ptr(22, victim->get_loc().y);
 					univ.party.force_ptr(20, univ.get_target_i(*victim));
-					run_special(eSpecCtx::ATTACKING_RANGE, eSpecCtxType::SCEN, missile.abil_data[0], missile_firer.combat_pos, &s1);
+					run_special(eSpecCtx::ATTACKING_RANGE, eSpecCtxType::SCEN, missile.abil_strength, missile_firer.combat_pos, &s1);
 					if(s1 > 0)
 						missile_firer.ap += (overall_mode == MODE_FIRING) ? 3 : 2;
 				}
@@ -1889,7 +1889,7 @@ void fire_missile(location target) {
 						univ.party.force_ptr(21, pc->combat_pos.x);
 						univ.party.force_ptr(22, pc->combat_pos.y);
 						univ.party.force_ptr(20, univ.get_target_i(*pc));
-						run_special(eSpecCtx::ATTACKED_RANGE, eSpecCtxType::SCEN, spec_item->abil_data[0], missile_firer.combat_pos, &s1);
+						run_special(eSpecCtx::ATTACKED_RANGE, eSpecCtxType::SCEN, spec_item->abil_strength, missile_firer.combat_pos, &s1);
 						if(s1 > 0)
 							missile_firer.ap += (overall_mode == MODE_FIRING) ? 3 : 2;
 					}
@@ -2098,9 +2098,9 @@ void combat_run_monst() {
 				if(item.ability != eItemAbil::OCCASIONAL_STATUS) continue;
 				if(item.abil_group()) continue; // Affects whole party, which is handled elsewhere
 				if(get_ran(1,0,10) != 5) continue;
-				int how_much = item.abil_data[0];
+				int how_much = item.abil_strength;
 				if(item.abil_harms()) how_much *= -1;
-				eStatus status = eStatus(item.abil_data[1]);
+				eStatus status = item.abil_data.status;
 				if(isStatusNegative(status))
 					how_much *= -1;
 				switch(status) {
@@ -2960,7 +2960,7 @@ void monster_attack(short who_att,iLiving* target) {
 							univ.party.force_ptr(21, target->get_loc().x);
 							univ.party.force_ptr(22, target->get_loc().y);
 							univ.party.force_ptr(20, i_monst);
-							run_special(eSpecCtx::ATTACKED_MELEE, eSpecCtxType::SCEN, spec_item->abil_data[0], attacker->cur_loc, &s1);
+							run_special(eSpecCtx::ATTACKED_MELEE, eSpecCtxType::SCEN, spec_item->abil_strength, attacker->cur_loc, &s1);
 							if(s1 > 0)
 								attacker->ap += 4;
 						}
@@ -3102,7 +3102,7 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 				univ.party.force_ptr(21, target->get_loc().x);
 				univ.party.force_ptr(22, target->get_loc().y);
 				univ.party.force_ptr(20, i_monst);
-				run_special(eSpecCtx::ATTACKED_RANGE, eSpecCtxType::SCEN, spec_item->abil_data[0], univ.town.monst[m_num].cur_loc, &s1);
+				run_special(eSpecCtx::ATTACKED_RANGE, eSpecCtxType::SCEN, spec_item->abil_strength, univ.town.monst[m_num].cur_loc, &s1);
 				if(s1 > 0)
 					univ.town.monst[m_num].ap += abil.second.get_ap_cost(abil.first);
 			}

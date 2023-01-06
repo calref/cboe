@@ -63,7 +63,7 @@ void put_item_info(cDialog& me, const cItem& s_i, const cScenario& scen) {
 		} else {
 			std::string abil = s_i.getAbilName();
 			if(s_i.ability == eItemAbil::SUMMONING || s_i.ability == eItemAbil::MASS_SUMMONING)
-				abil.replace(abil.find("%s"), 2, scen.scen_monsters[s_i.abil_data[1]].m_name);
+				abil.replace(abil.find("%s"), 2, scen.scen_monsters[s_i.abil_data.value].m_name);
 			me["abil"].setText(abil);
 		}
 	}

@@ -134,10 +134,10 @@ void put_party_in_scen(std::string scen_name) {
 			} else if(thisItem.ability == eItemAbil::DROP_CALL_SPECIAL) {
 				univ.party[j].take_item(i);
 				item_took = true;
-			} else if(thisItem.ability == eItemAbil::PROTECT_FROM_SPECIES && thisItem.abil_data[1] == int(eRace::IMPORTANT)) {
+			} else if(thisItem.ability == eItemAbil::PROTECT_FROM_SPECIES && thisItem.abil_data.race == eRace::IMPORTANT) {
 				univ.party[j].take_item(i);
 				item_took = true;
-			} else if(thisItem.ability == eItemAbil::SLAYER_WEAPON && thisItem.abil_data[1] == int(eRace::IMPORTANT)) {
+			} else if(thisItem.ability == eItemAbil::SLAYER_WEAPON && thisItem.abil_data.race == eRace::IMPORTANT) {
 				univ.party[j].take_item(i);
 				item_took = true;
 			}

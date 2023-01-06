@@ -526,7 +526,7 @@ void set_up_shop_array() {
 				}
 				break;
 			case eShopItemType::CALL_SPECIAL:
-				if(PSD[entry.item.abil_data[0]][entry.item.abil_data[1]])
+				if(PSD[entry.item.abil_strength][entry.item.abil_data.value])
 					shop_array.push_back(j);
 				break;
 			case eShopItemType::OPT_ITEM:

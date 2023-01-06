@@ -70,8 +70,8 @@ TEST_CASE("Saving item types") {
 		scen.scen_items[0].special_class = 400;
 		scen.scen_items[0].treas_class = 2;
 		scen.scen_items[0].ability = eItemAbil::POISON_AUGMENT;
-		scen.scen_items[0].abil_data[0] = 6;
-		scen.scen_items[0].abil_data[1] = 42;
+		scen.scen_items[0].abil_strength = 6;
+		scen.scen_items[0].abil_data.value = 42;
 		scen.scen_items[0].magic_use_type = eItemUse::HARM_ONE;
 		scen.scen_items[0].ident = true;
 		scen.scen_items[0].magic = true;
@@ -92,8 +92,8 @@ TEST_CASE("Saving item types") {
 		CHECK(scen.scen_items[0].special_class == 400);
 		CHECK(scen.scen_items[0].treas_class == 2);
 		CHECK(scen.scen_items[0].ability == eItemAbil::POISON_AUGMENT);
-		CHECK(scen.scen_items[0].abil_data[0] == 6);
-		CHECK(scen.scen_items[0].abil_data[1] == 42);
+		CHECK(scen.scen_items[0].abil_strength == 6);
+		CHECK(scen.scen_items[0].abil_data.value == 42);
 		CHECK(scen.scen_items[0].magic_use_type == eItemUse::HARM_ONE);
 		CHECK(scen.scen_items[0].ident);
 		CHECK(scen.scen_items[0].magic);

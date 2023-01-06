@@ -629,7 +629,7 @@ void use_item(short pc,short item) {
 		if(the_item.variety == eItemType::POTION)
 			play_sound(56);
 		
-		str = the_item.abil_data[0];
+		str = the_item.abil_strength;
 		store_item_spell_level = str;
 		type = the_item.magic_use_type;
 		
@@ -638,7 +638,7 @@ void use_item(short pc,short item) {
 				take_charge = poison_weapon(pc,str,false);
 				break;
 			case eItemAbil::AFFECT_STATUS: {
-				auto status = eStatus(the_item.abil_data[1]);
+				auto status = the_item.abil_data.status;
 				switch(status) {
 					case eStatus::MAIN: case eStatus::CHARM:
 						// These don't make any sense in this context.
@@ -1000,7 +1000,7 @@ void use_item(short pc,short item) {
 				break;
 			case eItemAbil::AFFECT_PARTY_STATUS:
 				if(the_item.abil_harms()) {
-					ePartyStatus status = ePartyStatus(the_item.abil_data[1]);
+					ePartyStatus status = the_item.abil_data.party;
 					int i = univ.party.status[status];
 					switch(status) {
 						case ePartyStatus::STEALTH: ASB("  Your footsteps become louder."); str *= 5; break;
@@ -1022,7 +1022,7 @@ void use_item(short pc,short item) {
 					}
 					if(str > i) str = i;
 					str *= -1;
-				} else switch(ePartyStatus(the_item.abil_data[1])) {
+				} else switch(the_item.abil_data.party) {
 					case ePartyStatus::STEALTH: ASB("  Your footsteps become quieter."); str *= 5; break;
 					case ePartyStatus::FIREWALK: ASB("  You feel chilly."); str *= 2; break;
 					case ePartyStatus::DETECT_LIFE: ASB("  You detect life."); break;
@@ -1039,7 +1039,7 @@ void use_item(short pc,short item) {
 						} else ASB("  You rise into the air!");
 						break;
 				}
-				if(take_charge) univ.party.status[ePartyStatus(the_item.abil_data[1])] += str;
+				if(take_charge) univ.party.status[the_item.abil_data.party] += str;
 				break;
 			case eItemAbil::HEALTH_POISON:
 				switch(type) {
@@ -1078,7 +1078,7 @@ void use_item(short pc,short item) {
 					take_charge = false;
 					break;
 				}
-				auto spell = eSpell(the_item.abil_data[1]);
+				auto spell = the_item.abil_data.spell;
 				switch(spell) {
 					case eSpell::FLAME: add_string_to_buf("  It fires a bolt of flame."); break;
 					case eSpell::FIREBALL: add_string_to_buf("  It shoots a fireball."); break;
@@ -1131,14 +1131,14 @@ void use_item(short pc,short item) {
 				else do_mage_spell(univ.cur_pc, spell, true);
 			} break;
 			case eItemAbil::SUMMONING:
-				if(!summon_monster(the_item.abil_data[1],user_loc,str,eAttitude::FRIENDLY,true))
+				if(!summon_monster(the_item.abil_data.value,user_loc,str,eAttitude::FRIENDLY,true))
 					add_string_to_buf("  Summon failed.");
 				break;
 			case eItemAbil::MASS_SUMMONING:
 				r1 = get_ran(str,1,4); // TODO: This value was never used, so why is it here?
 				r1 = get_ran(1,3,5);
 				for(short i = 0; i < r1; i++)
-					if(!summon_monster(the_item.abil_data[1],user_loc,r1,eAttitude::FRIENDLY,true))
+					if(!summon_monster(the_item.abil_data.value,user_loc,r1,eAttitude::FRIENDLY,true))
 						add_string_to_buf("  Summon failed.");
 				break;
 			case eItemAbil::QUICKFIRE:

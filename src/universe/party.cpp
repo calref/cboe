@@ -598,8 +598,8 @@ bool cParty::give_item(cItem item,int flags) {
 bool cParty::forced_give(cItem item,eItemAbil abil,short dat) {
 	if(abil > eItemAbil::NONE) {
 		item.ability = abil;
-		item.abil_data[0] = dat / 1000;
-		item.abil_data[1] = dat % 1000;
+		item.abil_strength = dat / 1000;
+		item.abil_data.value = dat % 1000;
 	}
 	// TODO: It's strange to check main_status in the inner loop here rather than the outer loop
 	for(cPlayer& pc : *this)

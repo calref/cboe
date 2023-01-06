@@ -1038,7 +1038,7 @@ void cUniverse::check_item(cItem& item) {
 	else if(item.graphic_num >= 1000)
 		update_items[item.graphic_num - 1000].insert(&item);
 	if(item.ability == eItemAbil::SUMMONING || item.ability == eItemAbil::MASS_SUMMONING) {
-		mon_num_t monst = item.abil_data[1];
+		mon_num_t monst = item.abil_data.value;
 		if(monst >= 10000)
 			check_monst(party.summons[monst - 10000]);
 		else check_monst(scenario.scen_monsters[monst]);
@@ -1217,7 +1217,7 @@ void cUniverse::exportSummons() {
 		for(size_t j = 0; j < party[i].items.size(); j++) {
 			if(party[i].items[j].variety == eItemType::NO_ITEM) continue;
 			if(party[i].items[j].ability == eItemAbil::SUMMONING || party[i].items[j].ability == eItemAbil::MASS_SUMMONING) {
-				mon_num_t monst = party[i].items[j].abil_data[1];
+				mon_num_t monst = party[i].items[j].abil_data.value;
 				if(monst >= 10000)
 					used_monsters.insert(monst - 10000);
 				else {
@@ -1231,7 +1231,7 @@ void cUniverse::exportSummons() {
 		for(size_t j = 0; j < party.stored_items[i].size(); j++) {
 			if(party.stored_items[i][j].variety == eItemType::NO_ITEM) continue;
 			if(party.stored_items[i][j].ability == eItemAbil::SUMMONING||party.stored_items[i][j].ability == eItemAbil::MASS_SUMMONING) {
-				mon_num_t monst = party.stored_items[i][j].abil_data[1];
+				mon_num_t monst = party.stored_items[i][j].abil_data.value;
 				if(monst >= 10000)
 					used_monsters.insert(monst - 10000);
 				else {
@@ -1278,7 +1278,7 @@ void cUniverse::exportSummons() {
 			party.summons[dest] = scenario.scen_monsters[monst];
 		else party.summons.push_back(scenario.scen_monsters[monst]);
 		for(auto& item : update_items[monst])
-			item->abil_data[1] = 10000 + dest;
+			item->abil_data.value = 10000 + dest;
 		for(mon_num_t& sc : party.imprisoned_monst)
 			if(sc == monst)
 				sc = dest + 10000;

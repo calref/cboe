@@ -196,108 +196,110 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 1;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::DAMAGING_WEAPON);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eDamageType::UNBLOCKABLE));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.damage == eDamageType::UNBLOCKABLE);
+			CHECK(new_item.abil_data.value == int(eDamageType::UNBLOCKABLE));
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Demon Slayer") {
 			old_item.ability = 2;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::SLAYER_WEAPON);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eRace::DEMON));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.race == eRace::DEMON);
+			CHECK(new_item.abil_data.value == int(eRace::DEMON));
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Undead Slayer") {
 			old_item.ability = 3;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::SLAYER_WEAPON);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eRace::UNDEAD));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.race == eRace::UNDEAD);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Lizard Slayer") {
 			old_item.ability = 4;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::SLAYER_WEAPON);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eRace::REPTILE));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.race == eRace::REPTILE);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Giant Slayer") {
 			old_item.ability = 5;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::SLAYER_WEAPON);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eRace::GIANT));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.race == eRace::GIANT);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Mage Slayer") {
 			old_item.ability = 6;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::SLAYER_WEAPON);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eRace::MAGE));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.race == eRace::MAGE);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Priest Slayer") {
 			old_item.ability = 7;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::SLAYER_WEAPON);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eRace::PRIEST));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.race == eRace::PRIEST);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Bug Slayer") {
 			old_item.ability = 8;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::SLAYER_WEAPON);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eRace::BUG));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.race == eRace::BUG);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Acidic Weapon") {
 			old_item.ability = 9;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::STATUS_WEAPON);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::ACID));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::ACID);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Soulsucker") {
 			old_item.ability = 10;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::SOULSUCKER);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Drain Missiles") {
 			old_item.ability = 11;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::DRAIN_MISSILES);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Weak Weapon") {
 			old_item.ability = 12;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::WEAK_WEAPON);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Causes Fear") {
 			old_item.ability = 13;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAUSES_FEAR);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Poisoned Weapon") {
 			old_item.ability = 14;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::STATUS_WEAPON);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::POISON));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::POISON);
 			CHECK_FALSE(new_item.can_use());
 		}
 		
@@ -306,71 +308,71 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 30;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::DAMAGE_PROTECTION);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eDamageType::WEAPON));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.damage == eDamageType::WEAPON);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Full Protection") {
 			old_item.ability = 31;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::FULL_PROTECTION);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Fire Protection") {
 			old_item.ability = 32;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::DAMAGE_PROTECTION);
-			CHECK(new_item.abil_data[0] == 60);
-			CHECK(new_item.abil_data[1] == int(eDamageType::FIRE));
+			CHECK(new_item.abil_strength == 60);
+			CHECK(new_item.abil_data.damage == eDamageType::FIRE);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Cold Protection") {
 			old_item.ability = 33;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::DAMAGE_PROTECTION);
-			CHECK(new_item.abil_data[0] == 60);
-			CHECK(new_item.abil_data[1] == int(eDamageType::COLD));
+			CHECK(new_item.abil_strength == 60);
+			CHECK(new_item.abil_data.damage == eDamageType::COLD);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Poison Protection") {
 			old_item.ability = 34;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::STATUS_PROTECTION);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::POISON));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::POISON);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Magic Protection") {
 			old_item.ability = 35;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::DAMAGE_PROTECTION);
-			CHECK(new_item.abil_data[0] == 60);
-			CHECK(new_item.abil_data[1] == int(eDamageType::MAGIC));
+			CHECK(new_item.abil_strength == 60);
+			CHECK(new_item.abil_data.damage == eDamageType::MAGIC);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Acid Protection") {
 			old_item.ability = 36;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::STATUS_PROTECTION);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::ACID));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::ACID);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Skill") {
 			old_item.ability = 37;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::SKILL);
-			CHECK(new_item.abil_data[0] == 7);
-			CHECK(new_item.abil_data[1] == 120);
+			CHECK(new_item.abil_strength == 7);
+			CHECK(new_item.abil_data.value == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Strength") {
 			old_item.ability = 38;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::BOOST_STAT);
-			CHECK(new_item.abil_data[0] == 1);
-			CHECK(new_item.abil_data[1] == int(eSkill::STRENGTH));
+			CHECK(new_item.abil_strength == 1);
+			CHECK(new_item.abil_data.skill == eSkill::STRENGTH);
 			CHECK(new_item.desc == "Original ability strength was 120");
 			CHECK_FALSE(new_item.can_use());
 		}
@@ -378,8 +380,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 39;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::BOOST_STAT);
-			CHECK(new_item.abil_data[0] == 1);
-			CHECK(new_item.abil_data[1] == int(eSkill::DEXTERITY));
+			CHECK(new_item.abil_strength == 1);
+			CHECK(new_item.abil_data.skill == eSkill::DEXTERITY);
 			CHECK(new_item.desc == "Original ability strength was 120");
 			CHECK_FALSE(new_item.can_use());
 		}
@@ -387,8 +389,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 40;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::BOOST_STAT);
-			CHECK(new_item.abil_data[0] == 1);
-			CHECK(new_item.abil_data[1] == int(eSkill::INTELLIGENCE));
+			CHECK(new_item.abil_strength == 1);
+			CHECK(new_item.abil_data.skill == eSkill::INTELLIGENCE);
 			CHECK(new_item.desc == "Original ability strength was 120");
 			CHECK_FALSE(new_item.can_use());
 		}
@@ -396,44 +398,44 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 41;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::ACCURACY);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Thieving") {
 			old_item.ability = 42;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::THIEVING);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Giant Strength") {
 			old_item.ability = 43;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::GIANT_STRENGTH);
-			CHECK(new_item.abil_data[0] == 7);
-			CHECK(new_item.abil_data[1] == 120);
+			CHECK(new_item.abil_strength == 7);
+			CHECK(new_item.abil_data.value == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Lighter Object") {
 			old_item.ability = 44;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::LIGHTER_OBJECT);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Heavier Object") {
 			old_item.ability = 45;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::HEAVIER_OBJECT);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Occasional Bless") {
 			old_item.ability = 46;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::OCCASIONAL_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::BLESS_CURSE));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::BLESS_CURSE);
 			CHECK(new_item.magic_use_type == eItemUse::HELP_ONE);
 			CHECK_FALSE(new_item.can_use());
 		}
@@ -441,8 +443,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 47;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::OCCASIONAL_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::HASTE_SLOW));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::HASTE_SLOW);
 			CHECK(new_item.magic_use_type == eItemUse::HELP_ONE);
 			CHECK_FALSE(new_item.can_use());
 		}
@@ -450,36 +452,36 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 48;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::LIFE_SAVING);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Protect from Petrify") {
 			old_item.ability = 49;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::PROTECT_FROM_PETRIFY);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Regenerate") {
 			old_item.ability = 50;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::REGENERATE);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Poison Augment") {
 			old_item.ability = 51;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::POISON_AUGMENT);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Disease Party") {
 			old_item.ability = 52;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::OCCASIONAL_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::DISEASE));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::DISEASE);
 			CHECK(new_item.magic_use_type == eItemUse::HARM_ALL);
 			CHECK_FALSE(new_item.can_use());
 		}
@@ -487,76 +489,76 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 53;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::WILL);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Free Action") {
 			old_item.ability = 54;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::FREE_ACTION);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Speed") {
 			old_item.ability = 55;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::SPEED);
-			CHECK(new_item.abil_data[0] == 18);
+			CHECK(new_item.abil_strength == 18);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Slow Wearer") {
 			old_item.ability = 56;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::SLOW_WEARER);
-			CHECK(new_item.abil_data[0] == 24);
+			CHECK(new_item.abil_strength == 24);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Protection from Undead") {
 			old_item.ability = 57;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::DAMAGE_PROTECTION);
-			CHECK(new_item.abil_data[0] == 60);
-			CHECK(new_item.abil_data[1] == int(eDamageType::UNDEAD));
+			CHECK(new_item.abil_strength == 60);
+			CHECK(new_item.abil_data.damage == eDamageType::UNDEAD);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Protection from Demons") {
 			old_item.ability = 58;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::DAMAGE_PROTECTION);
-			CHECK(new_item.abil_data[0] == 60);
-			CHECK(new_item.abil_data[1] == int(eDamageType::DEMON));
+			CHECK(new_item.abil_strength == 60);
+			CHECK(new_item.abil_data.damage == eDamageType::DEMON);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Protection from Humanoids") {
 			old_item.ability = 59;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::PROTECT_FROM_SPECIES);
-			CHECK(new_item.abil_data[0] == 60);
-			CHECK(new_item.abil_data[1] == int(eRace::HUMANOID));
+			CHECK(new_item.abil_strength == 60);
+			CHECK(new_item.abil_data.race == eRace::HUMANOID);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Protection from Reptiles") {
 			old_item.ability = 60;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::PROTECT_FROM_SPECIES);
-			CHECK(new_item.abil_data[0] == 60);
-			CHECK(new_item.abil_data[1] == int(eRace::REPTILE));
+			CHECK(new_item.abil_strength == 60);
+			CHECK(new_item.abil_data.race == eRace::REPTILE);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Protection from Giants") {
 			old_item.ability = 61;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::PROTECT_FROM_SPECIES);
-			CHECK(new_item.abil_data[0] == 60);
-			CHECK(new_item.abil_data[1] == int(eRace::GIANT));
+			CHECK(new_item.abil_strength == 60);
+			CHECK(new_item.abil_data.race == eRace::GIANT);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Protection from Disease") {
 			old_item.ability = 62;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::STATUS_PROTECTION);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::DISEASE));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::DISEASE);
 			CHECK_FALSE(new_item.can_use());
 		}
 		
@@ -565,7 +567,7 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 70;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::POISON_WEAPON);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -575,8 +577,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 71;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::BLESS_CURSE));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::BLESS_CURSE);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK(new_item.use_outdoors());
@@ -586,8 +588,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 72;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::POISON));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::POISON);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK(new_item.use_outdoors());
@@ -597,8 +599,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 73;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::HASTE_SLOW));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::HASTE_SLOW);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK(new_item.use_outdoors());
@@ -608,8 +610,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 74;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::INVULNERABLE));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::INVULNERABLE);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -619,8 +621,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 75;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::MAGIC_RESISTANCE));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::MAGIC_RESISTANCE);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -630,8 +632,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 76;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::WEBS));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::WEBS);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -641,8 +643,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 77;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::DISEASE));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::DISEASE);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK(new_item.use_outdoors());
@@ -652,8 +654,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 78;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::INVISIBLE));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::INVISIBLE);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -663,8 +665,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 79;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::DUMB));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::DUMB);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -674,8 +676,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 80;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::MARTYRS_SHIELD));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::MARTYRS_SHIELD);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -685,8 +687,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 81;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::ASLEEP));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::ASLEEP);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -696,8 +698,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 82;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::PARALYZED));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::PARALYZED);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -707,8 +709,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 83;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eStatus::ACID));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.status == eStatus::ACID);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -718,7 +720,7 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 84;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::BLISS_DOOM);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.abil_harms());
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
@@ -729,7 +731,7 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 85;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_EXPERIENCE);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK(new_item.use_outdoors());
@@ -739,7 +741,7 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 86;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_SKILL_POINTS);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK(new_item.use_outdoors());
@@ -749,7 +751,7 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 87;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_HEALTH);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK(new_item.use_outdoors());
@@ -759,7 +761,7 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 88;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_SPELL_POINTS);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK(new_item.use_outdoors());
@@ -769,7 +771,7 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 89;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::BLISS_DOOM);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -780,7 +782,7 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 90;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::LIGHT);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -791,8 +793,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 91;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_PARTY_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(ePartyStatus::STEALTH));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.party == ePartyStatus::STEALTH);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -803,8 +805,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 92;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_PARTY_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(ePartyStatus::FIREWALK));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.party == ePartyStatus::FIREWALK);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -815,8 +817,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 93;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::AFFECT_PARTY_STATUS);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(ePartyStatus::FLIGHT));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.party == ePartyStatus::FLIGHT);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK_FALSE(new_item.use_in_combat());
 			CHECK(new_item.use_outdoors());
@@ -827,7 +829,7 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 94;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::HEALTH_POISON);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK(new_item.use_outdoors());
@@ -840,8 +842,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 110;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::FLAME));
+			CHECK(new_item.abil_strength == 241);
+				CHECK(new_item.abil_data.spell == eSpell::FLAME);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -851,8 +853,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 111;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::FIREBALL));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::FIREBALL);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -862,8 +864,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 112;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::FIRESTORM));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::FIRESTORM);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -873,8 +875,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 113;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::KILL));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::KILL);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -884,8 +886,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 114;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::ICE_BOLT));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::ICE_BOLT);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -895,8 +897,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 115;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::SLOW));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::SLOW);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -906,8 +908,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 116;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::SHOCKWAVE));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::SHOCKWAVE);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -917,8 +919,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 117;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::DISPEL_UNDEAD));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::DISPEL_UNDEAD);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -928,8 +930,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 118;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::RAVAGE_SPIRIT));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::RAVAGE_SPIRIT);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -939,8 +941,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 119;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::SUMMONING);
-			CHECK(new_item.abil_data[0] == 50);
-			CHECK(new_item.abil_data[1] == 120);
+			CHECK(new_item.abil_strength == 50);
+			CHECK(new_item.abil_data.value == 120);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -950,8 +952,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 120;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::MASS_SUMMONING);
-			CHECK(new_item.abil_data[0] == 6);
-			CHECK(new_item.abil_data[1] == 120);
+			CHECK(new_item.abil_strength == 6);
+			CHECK(new_item.abil_data.value == 120);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -961,8 +963,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 121;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::ACID_SPRAY));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::ACID_SPRAY);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -972,8 +974,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 122;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::FOUL_VAPOR));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::FOUL_VAPOR);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -983,8 +985,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 123;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::CLOUD_SLEEP));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::CLOUD_SLEEP);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -994,8 +996,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 124;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::POISON));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::POISON);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -1005,8 +1007,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 125;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::SHOCKSTORM));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::SHOCKSTORM);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -1016,8 +1018,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 126;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::PARALYZE_BEAM));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::PARALYZE_BEAM);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -1027,8 +1029,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 127;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::GOO_BOMB));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::GOO_BOMB);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -1038,8 +1040,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 128;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::STRENGTHEN_TARGET));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::STRENGTHEN_TARGET);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -1049,7 +1051,7 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 129;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::QUICKFIRE);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -1059,8 +1061,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 130;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::CHARM_MASS));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::CHARM_MASS);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -1070,8 +1072,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 131;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::MAGIC_MAP));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::MAGIC_MAP);
 			CHECK(new_item.use_in_town());
 			CHECK_FALSE(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -1081,8 +1083,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 132;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::DISPEL_BARRIER));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::DISPEL_BARRIER);
 			CHECK(new_item.use_in_town());
 			CHECK_FALSE(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -1092,8 +1094,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 133;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::WALL_ICE_BALL));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::WALL_ICE_BALL);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -1103,8 +1105,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 134;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eSpell::CHARM_FOE));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.spell == eSpell::CHARM_FOE);
 			CHECK_FALSE(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -1114,8 +1116,8 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 135;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::CAST_SPELL);
-			CHECK(new_item.abil_data[0] == 241);
-			CHECK(new_item.abil_data[1] == int(eSpell::ANTIMAGIC));
+			CHECK(new_item.abil_strength == 241);
+			CHECK(new_item.abil_data.spell == eSpell::ANTIMAGIC);
 			CHECK(new_item.use_in_town());
 			CHECK(new_item.use_in_combat());
 			CHECK_FALSE(new_item.use_outdoors());
@@ -1193,7 +1195,7 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 161;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::LOCKPICKS);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 		
@@ -1208,47 +1210,47 @@ TEST_CASE("Converting items from legacy scenarios") {
 			old_item.ability = 171;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::DAMAGING_WEAPON);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eDamageType::FIRE));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.damage == eDamageType::FIRE);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Exploding Missile") {
 			old_item.ability = 172;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::EXPLODING_WEAPON);
-			CHECK(new_item.abil_data[0] == 120);
-			CHECK(new_item.abil_data[1] == int(eDamageType::FIRE));
+			CHECK(new_item.abil_strength == 120);
+			CHECK(new_item.abil_data.damage == eDamageType::FIRE);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Acid Missile") {
 			old_item.ability = 173;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::STATUS_WEAPON);
-			CHECK(new_item.abil_data[0] == 240);
-			CHECK(new_item.abil_data[1] == int(eStatus::ACID));
+			CHECK(new_item.abil_strength == 240);
+			CHECK(new_item.abil_data.status == eStatus::ACID);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Slay Undead") {
 			old_item.ability = 174;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::SLAYER_WEAPON);
-			CHECK(new_item.abil_data[0] == 123);
-			CHECK(new_item.abil_data[1] == int(eRace::UNDEAD));
+			CHECK(new_item.abil_strength == 123);
+			CHECK(new_item.abil_data.race == eRace::UNDEAD);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Slay Demon") {
 			old_item.ability = 175;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::SLAYER_WEAPON);
-			CHECK(new_item.abil_data[0] == 123);
-			CHECK(new_item.abil_data[1] == int(eRace::DEMON));
+			CHECK(new_item.abil_strength == 123);
+			CHECK(new_item.abil_data.race == eRace::DEMON);
 			CHECK_FALSE(new_item.can_use());
 		}
 		SECTION("Heal Target") {
 			old_item.ability = 176;
 			new_item.import_legacy(old_item);
 			CHECK(new_item.ability == eItemAbil::HEALING_WEAPON);
-			CHECK(new_item.abil_data[0] == 120);
+			CHECK(new_item.abil_strength == 120);
 			CHECK_FALSE(new_item.can_use());
 		}
 	}

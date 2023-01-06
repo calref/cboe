@@ -676,7 +676,7 @@ short cPlayer::total_encumbrance(const std::array<short, 51>& reduce_chance) con
 		if(equip[i]) {
 			short item_encumbrance = items[i].awkward;
 			if(items[i].ability == eItemAbil::ENCUMBERING)
-				item_encumbrance += items[i].abil_data[0];
+				item_encumbrance += items[i].abil_strength;
 			if(item_encumbrance == 1 && get_ran(1,0,130) < reduce_chance[skill(eSkill::DEFENSE)])
 				item_encumbrance--;
 			if(item_encumbrance > 1 && get_ran(1,0,70) < reduce_chance[skill(eSkill::DEFENSE)])
@@ -728,8 +728,8 @@ short cPlayer::get_prot_level(eItemAbil abil, short dat) const {
 		if(items[i].variety == eItemType::NO_ITEM) continue;
 		if(items[i].ability != abil) continue;
 		if(!equip[i]) continue;
-		if(dat >= 0 && dat != items[i].abil_data[1]) continue;
-		sum += items[i].abil_data[0];
+		if(dat >= 0 && dat != items[i].abil_data.value) continue;
+		sum += items[i].abil_strength;
 	}
 	return sum; // TODO: Should we return -1 if the sum is 0?
 }
@@ -747,7 +747,7 @@ cInvenSlot cPlayer::has_abil_equip(eItemAbil abil,short dat) {
 		if(item.variety == eItemType::NO_ITEM) return false;
 		if(item.ability != abil) return false;
 		if(!equip[i]) return false;
-		if(dat >= 0 && dat != item.abil_data[1]) return false;
+		if(dat >= 0 && dat != item.abil_data.value) return false;
 		return true;
 	});
 }
@@ -760,7 +760,7 @@ cInvenSlot cPlayer::has_abil(eItemAbil abil,short dat) {
 	return find_item_matching([this,abil,dat](int, const cItem& item) {
 		if(item.variety == eItemType::NO_ITEM) return false;
 		if(item.ability != abil) return false;
-		if(dat >= 0 && dat != item.abil_data[1]) return false;
+		if(dat >= 0 && dat != item.abil_data.value) return false;
 		return true;
 	});
 }

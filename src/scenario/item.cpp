@@ -112,8 +112,8 @@ cItem::cItem(){
 	magic_use_type = eItemUse::HELP_ONE;
 	graphic_num = 0;
 	ability = eItemAbil::NONE;
-	abil_data[0] = 0;
-	abil_data[1] = 0;
+	abil_strength = 0;
+	abil_data.value = 0;
 	missile = 0;
 	type_flag = 0;
 	is_special = 0;
@@ -245,79 +245,79 @@ cItem::cItem(eAlchemy recipe) : cItem(ITEM_POTION) {
 		case eAlchemy::CURE_WEAK:
 			value = 40;
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[0] = 2;
-			abil_data[1] = int(eStatus::POISON);
+			abil_strength = 2;
+			abil_data.status = eStatus::POISON;
 			break;
 		case eAlchemy::HEAL_WEAK:
 			value = 60;
 			ability = eItemAbil::AFFECT_HEALTH;
-			abil_data[0] = 2;
+			abil_strength = 2;
 			break;
 		case eAlchemy::POISON_WEAK:
 			value = 15;
 			ability = eItemAbil::POISON_WEAPON;
-			abil_data[0] = 2;
+			abil_strength = 2;
 			break;
 		case eAlchemy::SPEED_WEAK:
 			value = 50;
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[0] = 2;
-			abil_data[1] = int(eStatus::HASTE_SLOW);
+			abil_strength = 2;
+			abil_data.status = eStatus::HASTE_SLOW;
 			break;
 		case eAlchemy::POISON_MED:
 			value = 50;
 			ability = eItemAbil::POISON_WEAPON;
-			abil_data[0] = 4;
+			abil_strength = 4;
 			break;
 		case eAlchemy::HEAL_MED:
 			value = 180;
 			ability = eItemAbil::AFFECT_HEALTH;
-			abil_data[0] = 5;
+			abil_strength = 5;
 			break;
 		case eAlchemy::CURE_STRONG:
 			value = 200;
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[0] = 8;
-			abil_data[1] = int(eStatus::POISON);
+			abil_strength = 8;
+			abil_data.status = eStatus::POISON;
 			break;
 		case eAlchemy::SPEED_MED:
 			value = 100;
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[0] = 5;
-			abil_data[1] = int(eStatus::HASTE_SLOW);
+			abil_strength = 5;
+			abil_data.status = eStatus::HASTE_SLOW;
 			break;
 		case eAlchemy::GRAYMOLD:
 			value = 150;
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[0] = 4;
-			abil_data[1] = int(eStatus::DISEASE);
+			abil_strength = 4;
+			abil_data.status = eStatus::DISEASE;
 			magic_use_type = eItemUse::HELP_ALL;
 			break;
 		case eAlchemy::POWER_WEAK:
 			value = 100;
 			ability = eItemAbil::AFFECT_SPELL_POINTS;
-			abil_data[0] = 2;
+			abil_strength = 2;
 			break;
 		case eAlchemy::CLARITY:
 			value = 200;
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[0] = 8;
-			abil_data[1] = int(eStatus::DUMB);
+			abil_strength = 8;
+			abil_data.status = eStatus::DUMB;
 			break;
 		case eAlchemy::POISON_STRONG:
 			value = 150;
 			ability = eItemAbil::POISON_WEAPON;
-			abil_data[0] = 6;
+			abil_strength = 6;
 			break;
 		case eAlchemy::HEAL_STRONG:
 			value = 300;
 			ability = eItemAbil::AFFECT_HEALTH;
-			abil_data[0] = 8;
+			abil_strength = 8;
 			break;
 		case eAlchemy::POISON_KILL:
 			value = 400;
 			ability = eItemAbil::POISON_WEAPON;
-			abil_data[0] = 8;
+			abil_strength = 8;
 			break;
 		case eAlchemy::RESURRECT:
 			value = 100;
@@ -326,28 +326,28 @@ cItem::cItem(eAlchemy recipe) : cItem(ITEM_POTION) {
 		case eAlchemy::POWER_MED:
 			value = 300;
 			ability = eItemAbil::AFFECT_SPELL_POINTS;
-			abil_data[0] = 5;
+			abil_strength = 5;
 			break;
 		case eAlchemy::KNOWLEDGE:
 			value = 500;
 			ability = eItemAbil::AFFECT_SKILL_POINTS;
-			abil_data[0] = 2;
+			abil_strength = 2;
 			break;
 		case eAlchemy::STRENGTH:
 			value = 175;
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[0] = 8;
-			abil_data[1] = int(eStatus::BLESS_CURSE);
+			abil_strength = 8;
+			abil_data.status = eStatus::BLESS_CURSE;
 			break;
 		case eAlchemy::BLISS:
 			value = 250;
 			ability = eItemAbil::BLISS_DOOM;
-			abil_data[0] = 5;
+			abil_strength = 5;
 			break;
 		case eAlchemy::POWER_STRONG:
 			value = 500;
 			ability = eItemAbil::AFFECT_SKILL_POINTS;
-			abil_data[0] = 8;
+			abil_strength = 8;
 			break;
 	}
 }
@@ -379,16 +379,16 @@ void cItem::enchant_weapon(eEnchant enchant_type,short new_val) {
 		case eEnchant::SHOOT_FLAME:
 			store_name += " (F)";
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = 5;
-			abil_data[1] = int(eSpell::FLAME);
+			abil_strength = 5;
+			abil_data.spell = eSpell::FLAME;
 			charges = 8;
 			break;
 		case eEnchant::FLAMING:
 			store_name += " (F!)";
 			value = new_val;
 			ability = eItemAbil::DAMAGING_WEAPON;
-			abil_data[0] = 5;
-			abil_data[1] = int(eDamageType::FIRE);
+			abil_strength = 5;
+			abil_data.damage = eDamageType::FIRE;
 			break;
 		case eEnchant::PLUS_FIVE:
 			store_name += " (+5)";
@@ -399,8 +399,8 @@ void cItem::enchant_weapon(eEnchant enchant_type,short new_val) {
 			store_name += " (B)";
 			bonus++;
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[0] = 5;
-			abil_data[1] = int(eStatus::BLESS_CURSE);
+			abil_strength = 5;
+			abil_data.status = eStatus::BLESS_CURSE;
 			charges = 8;
 			break;
 	}
@@ -435,7 +435,7 @@ void cItem::import_legacy(legacy::item_record_type& old){
 		graphic_num = 133;
 	else if(graphic_num >= 45) // small graphics were moved up to make a bit more room for new large graphics
 		graphic_num += 10;
-	abil_data[0] = old.ability_strength;
+	abil_strength = old.ability_strength;
 	switch(old.ability) {
 		// Weapon abilities
 		case 0:
@@ -443,39 +443,39 @@ void cItem::import_legacy(legacy::item_record_type& old){
 			break;
 		case 1: // Flaming weapon
 			ability = eItemAbil::DAMAGING_WEAPON;
-			abil_data[1] = int(eDamageType::UNBLOCKABLE);
+			abil_data.damage = eDamageType::UNBLOCKABLE;
 			break;
 		case 2: // Demon slayer
 			ability = eItemAbil::SLAYER_WEAPON;
-			abil_data[1] = int(eRace::DEMON);
+			abil_data.race = eRace::DEMON;
 			break;
 		case 3: // Undead slayer
 			ability = eItemAbil::SLAYER_WEAPON;
-			abil_data[1] = int(eRace::UNDEAD);
+			abil_data.race = eRace::UNDEAD;
 			break;
 		case 4: // Lizard slayer
 			ability = eItemAbil::SLAYER_WEAPON;
-			abil_data[1] = int(eRace::REPTILE);
+			abil_data.race = eRace::REPTILE;
 			break;
 		case 5: // Giant slayer
 			ability = eItemAbil::SLAYER_WEAPON;
-			abil_data[1] = int(eRace::GIANT);
+			abil_data.race = eRace::GIANT;
 			break;
 		case 6: // Mage slayer
 			ability = eItemAbil::SLAYER_WEAPON;
-			abil_data[1] = int(eRace::MAGE);
+			abil_data.race = eRace::MAGE;
 			break;
 		case 7: // Priest slayer
 			ability = eItemAbil::SLAYER_WEAPON;
-			abil_data[1] = int(eRace::PRIEST);
+			abil_data.race = eRace::PRIEST;
 			break;
 		case 8: // Bug slayer
 			ability = eItemAbil::SLAYER_WEAPON;
-			abil_data[1] = int(eRace::BUG);
+			abil_data.race = eRace::BUG;
 			break;
 		case 9: // Acidic weapon
 			ability = eItemAbil::STATUS_WEAPON;
-			abil_data[1] = int(eStatus::ACID);
+			abil_data.status = eStatus::ACID;
 			break;
 		case 10:
 			ability = eItemAbil::SOULSUCKER;
@@ -491,61 +491,61 @@ void cItem::import_legacy(legacy::item_record_type& old){
 			break;
 		case 14: // Poisoned weapon
 			ability = eItemAbil::STATUS_WEAPON;
-			abil_data[1] = int(eStatus::POISON);
+			abil_data.status = eStatus::POISON;
 			break;
 		// General abilities
 		case 30: // Protection
 			ability = eItemAbil::DAMAGE_PROTECTION;
-			abil_data[1] = int(eDamageType::WEAPON);
+			abil_data.damage = eDamageType::WEAPON;
 			break;
 		case 31:
 			ability = eItemAbil::FULL_PROTECTION;
 			break;
 		case 32: // Fire protection
 			ability = eItemAbil::DAMAGE_PROTECTION;
-			abil_data[1] = int(eDamageType::FIRE);
-			if(abil_data[0] >= 7) abil_data[0] /= 2;
+			abil_data.damage = eDamageType::FIRE;
+			if(abil_strength >= 7) abil_strength /= 2;
 			break;
 		case 33: // Cold protection
 			ability = eItemAbil::DAMAGE_PROTECTION;
-			abil_data[1] = int(eDamageType::COLD);
-			if(abil_data[0] >= 7) abil_data[0] /= 2;
+			abil_data.damage = eDamageType::COLD;
+			if(abil_strength >= 7) abil_strength /= 2;
 			break;
 		case 34: // Poison protection
 			ability = eItemAbil::STATUS_PROTECTION;
-			abil_data[1] = int(eStatus::POISON);
+			abil_data.status = eStatus::POISON;
 			break;
 		case 35: // Magic protection
 			ability = eItemAbil::DAMAGE_PROTECTION;
-			abil_data[1] = int(eDamageType::MAGIC);
-			if(abil_data[0] >= 7) abil_data[0] /= 2;
+			abil_data.damage = eDamageType::MAGIC;
+			if(abil_strength >= 7) abil_strength /= 2;
 			break;
 		case 36: // Acid protection
 			ability = eItemAbil::STATUS_PROTECTION;
-			abil_data[1] = int(eStatus::ACID);
+			abil_data.status = eStatus::ACID;
 			break;
 		case 37:
 			ability = eItemAbil::SKILL;
-			abil_data[1] = abil_data[0]; // archive original ability strength (SKILL doesn't use abil_data[1] for anything)
-			abil_data[0] = item_level; // Put level into ability strength to preserve legacy behaviour
+			abil_data.value = abil_strength; // archive original ability strength (SKILL doesn't use abil_data[1] for anything)
+			abil_strength = item_level; // Put level into ability strength to preserve legacy behaviour
 			break;
 		case 38: // Strength
 			ability = eItemAbil::BOOST_STAT;
-			desc = "Original ability strength was " + std::to_string(abil_data[0]);
-			abil_data[0] = 1;
-			abil_data[1] = int(eSkill::STRENGTH);
+			desc = "Original ability strength was " + std::to_string(abil_strength);
+			abil_strength = 1;
+			abil_data.skill = eSkill::STRENGTH;
 			break;
 		case 39: // Dexterity
 			ability = eItemAbil::BOOST_STAT;
-			desc = "Original ability strength was " + std::to_string(abil_data[0]);
-			abil_data[0] = 1;
-			abil_data[1] = int(eSkill::DEXTERITY);
+			desc = "Original ability strength was " + std::to_string(abil_strength);
+			abil_strength = 1;
+			abil_data.skill = eSkill::DEXTERITY;
 			break;
 		case 40: // Intelligence
 			ability = eItemAbil::BOOST_STAT;
-			desc = "Original ability strength was " + std::to_string(abil_data[0]);
-			abil_data[0] = 1;
-			abil_data[1] = int(eSkill::INTELLIGENCE);
+			desc = "Original ability strength was " + std::to_string(abil_strength);
+			abil_strength = 1;
+			abil_data.skill = eSkill::INTELLIGENCE;
 			break;
 		case 41:
 			ability = eItemAbil::ACCURACY;
@@ -555,8 +555,8 @@ void cItem::import_legacy(legacy::item_record_type& old){
 			break;
 		case 43:
 			ability = eItemAbil::GIANT_STRENGTH;
-			abil_data[1] = abil_data[0]; // archive original ability strength (GIANT_STRENGTH doesn't use abil_data[1] for anything)
-			abil_data[0] = item_level; // Put level into ability strength to preserve legacy behaviour
+			abil_data.value = abil_strength; // archive original ability strength (GIANT_STRENGTH doesn't use abil_data[1] for anything)
+			abil_strength = item_level; // Put level into ability strength to preserve legacy behaviour
 			break;
 		case 44:
 			ability = eItemAbil::LIGHTER_OBJECT;
@@ -566,12 +566,12 @@ void cItem::import_legacy(legacy::item_record_type& old){
 			break;
 		case 46:
 			ability = eItemAbil::OCCASIONAL_STATUS;
-			abil_data[1] = int(eStatus::BLESS_CURSE);
+			abil_data.status = eStatus::BLESS_CURSE;
 			magic_use_type = eItemUse::HELP_ONE;
 			break;
 		case 47:
 			ability = eItemAbil::OCCASIONAL_STATUS;
-			abil_data[1] = int(eStatus::HASTE_SLOW);
+			abil_data.status = eStatus::HASTE_SLOW;
 			magic_use_type = eItemUse::HELP_ONE;
 			break;
 		case 48:
@@ -588,7 +588,7 @@ void cItem::import_legacy(legacy::item_record_type& old){
 			break;
 		case 52:
 			ability = eItemAbil::OCCASIONAL_STATUS;
-			abil_data[1] = int(eStatus::DISEASE);
+			abil_data.status = eStatus::DISEASE;
 			magic_use_type = eItemUse::HARM_ALL;
 			break;
 		case 53:
@@ -599,42 +599,42 @@ void cItem::import_legacy(legacy::item_record_type& old){
 			break;
 		case 55:
 			ability = eItemAbil::SPEED;
-			abil_data[1] = abil_data[0];
-			abil_data[0] = abil_data[0] / 7 + 1;
+			abil_data.value = abil_strength;
+			abil_strength = abil_strength / 7 + 1;
 			break;
 		case 56:
 			ability = eItemAbil::SLOW_WEARER;
-			abil_data[1] = abil_data[0];
-			abil_data[0] = abil_data[0] / 5;
+			abil_data.value = abil_strength;
+			abil_strength = abil_strength / 5;
 			break;
 		case 57: // Protect from undead
 			ability = eItemAbil::DAMAGE_PROTECTION;
-			abil_data[1] = int(eDamageType::UNDEAD);
-			if(abil_data[0] >= 7) abil_data[0] /= 2;
+			abil_data.damage = eDamageType::UNDEAD;
+			if(abil_strength >= 7) abil_strength /= 2;
 			break;
 		case 58: // Protect from demons
 			ability = eItemAbil::DAMAGE_PROTECTION;
-			abil_data[1] = int(eDamageType::DEMON);
-			if(abil_data[0] >= 7) abil_data[0] /= 2;
+			abil_data.damage = eDamageType::DEMON;
+			if(abil_strength >= 7) abil_strength /= 2;
 			break;
 		case 59: // Protect from humanoids
 			ability = eItemAbil::PROTECT_FROM_SPECIES;
-			abil_data[1] = int(eRace::HUMANOID);
-			if(abil_data[0] >= 7) abil_data[0] /= 2;
+			abil_data.race = eRace::HUMANOID;
+			if(abil_strength >= 7) abil_strength /= 2;
 			break;
 		case 60: // Protect from reptiles
 			ability = eItemAbil::PROTECT_FROM_SPECIES;
-			abil_data[1] = int(eRace::REPTILE);
-			if(abil_data[0] >= 7) abil_data[0] /= 2;
+			abil_data.race = eRace::REPTILE;
+			if(abil_strength >= 7) abil_strength /= 2;
 			break;
 		case 61: // Protect from giants
 			ability = eItemAbil::PROTECT_FROM_SPECIES;
-			abil_data[1] = int(eRace::GIANT);
-			if(abil_data[0] >= 7) abil_data[0] /= 2;
+			abil_data.race = eRace::GIANT;
+			if(abil_strength >= 7) abil_strength /= 2;
 			break;
 		case 62: // Protect from disease
 			ability = eItemAbil::STATUS_PROTECTION;
-			abil_data[1] = int(eStatus::DISEASE);
+			abil_data.status = eStatus::DISEASE;
 			break;
 		// Usable abilities
 		case 70:
@@ -642,55 +642,55 @@ void cItem::import_legacy(legacy::item_record_type& old){
 			break;
 		case 71:
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[1] = int(eStatus::BLESS_CURSE);
+			abil_data.status = eStatus::BLESS_CURSE;
 			break;
 		case 72:
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[1] = int(eStatus::POISON);
+			abil_data.status = eStatus::POISON;
 			break;
 		case 73:
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[1] = int(eStatus::HASTE_SLOW);
+			abil_data.status = eStatus::HASTE_SLOW;
 			break;
 		case 74:
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[1] = int(eStatus::INVULNERABLE);
+			abil_data.status = eStatus::INVULNERABLE;
 			break;
 		case 75:
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[1] = int(eStatus::MAGIC_RESISTANCE);
+			abil_data.status = eStatus::MAGIC_RESISTANCE;
 			break;
 		case 76:
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[1] = int(eStatus::WEBS);
+			abil_data.status = eStatus::WEBS;
 			break;
 		case 77:
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[1] = int(eStatus::DISEASE);
+			abil_data.status = eStatus::DISEASE;
 			break;
 		case 78:
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[1] = int(eStatus::INVISIBLE);
+			abil_data.status = eStatus::INVISIBLE;
 			break;
 		case 79:
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[1] = int(eStatus::DUMB);
+			abil_data.status = eStatus::DUMB;
 			break;
 		case 80:
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[1] = int(eStatus::MARTYRS_SHIELD);
+			abil_data.status = eStatus::MARTYRS_SHIELD;
 			break;
 		case 81:
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[1] = int(eStatus::ASLEEP);
+			abil_data.status = eStatus::ASLEEP;
 			break;
 		case 82:
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[1] = int(eStatus::PARALYZED);
+			abil_data.status = eStatus::PARALYZED;
 			break;
 		case 83:
 			ability = eItemAbil::AFFECT_STATUS;
-			abil_data[1] = int(eStatus::ACID);
+			abil_data.status = eStatus::ACID;
 			break;
 		case 84:
 			ability = eItemAbil::BLISS_DOOM;
@@ -724,17 +724,17 @@ void cItem::import_legacy(legacy::item_record_type& old){
 			break;
 		case 91:
 			ability = eItemAbil::AFFECT_PARTY_STATUS;
-			abil_data[1] = int(ePartyStatus::STEALTH);
+			abil_data.party = ePartyStatus::STEALTH;
 			magic_use_type = eItemUse::HELP_ALL;
 			break;
 		case 92:
 			ability = eItemAbil::AFFECT_PARTY_STATUS;
-			abil_data[1] = int(ePartyStatus::FIREWALK);
+			abil_data.party = ePartyStatus::FIREWALK;
 			magic_use_type = eItemUse::HELP_ALL;
 			break;
 		case 93:
 			ability = eItemAbil::AFFECT_PARTY_STATUS;
-			abil_data[1] = int(ePartyStatus::FLIGHT);
+			abil_data.party = ePartyStatus::FLIGHT;
 			magic_use_type = eItemUse::HELP_ALL;
 			break;
 		case 94:
@@ -750,130 +750,130 @@ void cItem::import_legacy(legacy::item_record_type& old){
 		// Spells
 		case 110:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::FLAME);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::FLAME;
 			break;
 		case 111:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::FIREBALL);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::FIREBALL;
 			break;
 		case 112:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::FIRESTORM);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::FIRESTORM;
 			break;
 		case 113:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::KILL);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::KILL;
 			break;
 		case 114:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::ICE_BOLT);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::ICE_BOLT;
 			break;
 		case 115:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::SLOW);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::SLOW;
 			break;
 		case 116:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::SHOCKWAVE);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::SHOCKWAVE;
 			break;
 		case 117:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::DISPEL_UNDEAD);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::DISPEL_UNDEAD;
 			break;
 		case 118:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::RAVAGE_SPIRIT);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::RAVAGE_SPIRIT;
 			break;
 		case 119:
 			ability = eItemAbil::SUMMONING;
-			abil_data[1] = abil_data[0];
-			abil_data[0] = 50;
+			abil_data.value = abil_strength;
+			abil_strength = 50;
 			break;
 		case 120:
 			ability = eItemAbil::MASS_SUMMONING;
-			abil_data[1] = abil_data[0];
-			abil_data[0] = 6;
+			abil_data.value = abil_strength;
+			abil_strength = 6;
 			break;
 		case 121:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::ACID_SPRAY);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::ACID_SPRAY;
 			break;
 		case 122:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::FOUL_VAPOR);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::FOUL_VAPOR;
 			break;
 		case 123:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::CLOUD_SLEEP);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::CLOUD_SLEEP;
 			break;
 		case 124:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::POISON);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::POISON;
 			break;
 		case 125:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::SHOCKSTORM);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::SHOCKSTORM;
 			break;
 		case 126:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::PARALYZE_BEAM);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::PARALYZE_BEAM;
 			break;
 		case 127:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::GOO_BOMB);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::GOO_BOMB;
 			break;
 		case 128:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::STRENGTHEN_TARGET);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::STRENGTHEN_TARGET;
 			break;
 		case 129:
 			ability = eItemAbil::QUICKFIRE;
 			break;
 		case 130:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::CHARM_MASS);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::CHARM_MASS;
 			break;
 		case 131:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::MAGIC_MAP);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::MAGIC_MAP;
 			break;
 		case 132:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::DISPEL_BARRIER);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::DISPEL_BARRIER;
 			break;
 		case 133:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::WALL_ICE_BALL);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::WALL_ICE_BALL;
 			break;
 		case 134:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[1] = int(eSpell::CHARM_FOE);
+			abil_data.spell = eSpell::CHARM_FOE;
 			break;
 		case 135:
 			ability = eItemAbil::CAST_SPELL;
-			abil_data[0] = abil_data[0] * 2 + 1;
-			abil_data[1] = int(eSpell::ANTIMAGIC);
+			abil_strength = abil_strength * 2 + 1;
+			abil_data.spell = eSpell::ANTIMAGIC;
 			break;
 		// Reagents
 		case 150:
@@ -918,26 +918,26 @@ void cItem::import_legacy(legacy::item_record_type& old){
 			break;
 		case 171:
 			ability = eItemAbil::DAMAGING_WEAPON;
-			abil_data[1] = int(eDamageType::FIRE);
+			abil_data.damage = eDamageType::FIRE;
 			break;
 		case 172:
 			ability = eItemAbil::EXPLODING_WEAPON;
-			abil_data[1] = int(eDamageType::FIRE);
+			abil_data.damage = eDamageType::FIRE;
 			break;
 		case 173:
 			ability = eItemAbil::STATUS_WEAPON;
-			abil_data[0] *= 2;
-			abil_data[1] = int(eStatus::ACID);
+			abil_strength *= 2;
+			abil_data.status = eStatus::ACID;
 			break;
 		case 174:
 			ability = eItemAbil::SLAYER_WEAPON;
-			abil_data[0] += 3;
-			abil_data[1] = int(eRace::UNDEAD);
+			abil_strength += 3;
+			abil_data.race = eRace::UNDEAD;
 			break;
 		case 175:
 			ability = eItemAbil::SLAYER_WEAPON;
-			abil_data[0] += 3;
-			abil_data[1] = int(eRace::DEMON);
+			abil_strength += 3;
+			abil_data.race = eRace::DEMON;
 			break;
 		case 176:
 			ability = eItemAbil::HEALING_WEAPON;
@@ -1048,7 +1048,7 @@ std::string cItem::getAbilName() const {
 		case eItemAbil::SMOKY_CRYSTAL: sout << "Smoky Crystal"; break;
 		case eItemAbil::RESURRECTION_BALM: sout << "Resurrection Balm"; break;
 		case eItemAbil::DAMAGING_WEAPON:
-			switch(eDamageType(abil_data[1])) {
+			switch(abil_data.damage) {
 				case eDamageType::FIRE: sout << "Flaming"; break;
 				case eDamageType::MAGIC: sout << "Shocking"; break;
 				case eDamageType::COLD: sout << "Frosty"; break;
@@ -1063,7 +1063,7 @@ std::string cItem::getAbilName() const {
 			sout << " Weapon";
 			break;
 		case eItemAbil::SLAYER_WEAPON:
-			switch(eRace(abil_data[1])) {
+			switch(abil_data.race) {
 				case eRace::UNKNOWN: break; // Invalid
 				case eRace::DEMON: sout << "Demon"; break;
 				case eRace::UNDEAD: sout << "Undead"; break;
@@ -1092,7 +1092,7 @@ std::string cItem::getAbilName() const {
 			break;
 		case eItemAbil::EXPLODING_WEAPON:
 			sout << "Explodes ";
-			switch(eDamageType(abil_data[1])) {
+			switch(abil_data.damage) {
 				case eDamageType::FIRE: sout << "in flames"; break;
 				case eDamageType::COLD: sout << "into frost"; break;
 				case eDamageType::MAGIC: sout << "in sparks"; break;
@@ -1106,7 +1106,7 @@ std::string cItem::getAbilName() const {
 			}
 			break;
 		case eItemAbil::STATUS_WEAPON:
-			switch(eStatus(abil_data[1])) {
+			switch(abil_data.status) {
 				case eStatus::MAIN: break; // Invalid
 				case eStatus::POISONED_WEAPON: sout << "Poison-draining"; break;
 				case eStatus::INVULNERABLE: sout << "Piercing"; break;
@@ -1128,7 +1128,7 @@ std::string cItem::getAbilName() const {
 			sout << " Weapon";
 			break;
 		case eItemAbil::DAMAGE_PROTECTION:
-			switch(eDamageType(abil_data[1])) {
+			switch(abil_data.damage) {
 				case eDamageType::WEAPON: break;
 				case eDamageType::FIRE: sout << "Fire"; break;
 				case eDamageType::COLD: sout << "Cold"; break;
@@ -1144,7 +1144,7 @@ std::string cItem::getAbilName() const {
 			break;
 		case eItemAbil::STATUS_PROTECTION:
 			sout << "Protect From ";
-			switch(eStatus(abil_data[1])) {
+			switch(abil_data.status) {
 				case eStatus::MAIN: break; // Invalid
 				case eStatus::POISONED_WEAPON:
 				case eStatus::INVULNERABLE:
@@ -1166,11 +1166,12 @@ std::string cItem::getAbilName() const {
 			}
 			break;
 		case eItemAbil::BOOST_STAT:
-			sout << get_str("skills", abil_data[1] * 2 + 1);
+			// TODO: Wrap this in a helper function somewhere that takes eSkill
+			sout << get_str("skills", abil_data.value * 2 + 1);
 			break;
 		case eItemAbil::OCCASIONAL_STATUS:
 			sout << "Occasional ";
-			switch(eStatus(abil_data[1])) {
+			switch(abil_data.status) {
 				case eStatus::MAIN: break; // Invalid
 				case eStatus::CHARM: // Doesn't affect PCs
 				case eStatus::FORCECAGE: sout << (harmful ? "Entrapment" : "Release"); break;
@@ -1193,7 +1194,7 @@ std::string cItem::getAbilName() const {
 			break;
 		case eItemAbil::PROTECT_FROM_SPECIES:
 			sout << "Protection from ";
-			switch(eRace(abil_data[1])) {
+			switch(abil_data.race) {
 				case eRace::UNKNOWN: break; // Invalid
 				case eRace::UNDEAD: sout << "Undead"; break;
 				case eRace::DEMON: sout << "Demons"; break;
@@ -1220,7 +1221,7 @@ std::string cItem::getAbilName() const {
 			}
 			break;
 		case eItemAbil::AFFECT_STATUS:
-			switch(eStatus(abil_data[1])) {
+			switch(abil_data.status) {
 				case eStatus::MAIN: break; // Invalid;
 				case eStatus::FORCECAGE: sout << (harmful ? "Entrapping" : "Cage Break"); break;
 				case eStatus::CHARM: break; // TODO: Not implemented
@@ -1241,7 +1242,7 @@ std::string cItem::getAbilName() const {
 			}
 			break;
 		case eItemAbil::CAST_SPELL:
-			sout << "Spell: " << (*cSpell::fromNum(abil_data[1])).name();
+			sout << "Spell: " << (*abil_data.spell).name();
 			break;
 		case eItemAbil::BLISS_DOOM:
 			if(party)
@@ -1265,7 +1266,7 @@ std::string cItem::getAbilName() const {
 			break;
 		case eItemAbil::AFFECT_PARTY_STATUS:
 			sout << (harmful ? "Lose " : "Gain ");
-			switch(ePartyStatus(abil_data[1])) {
+			switch(abil_data.party) {
 				case ePartyStatus::STEALTH: sout << "Stealth"; break;
 				case ePartyStatus::FLIGHT: sout << "Flight"; break;
 				case ePartyStatus::DETECT_LIFE: sout << "Life Detection"; break;
@@ -1300,7 +1301,7 @@ void cItem::writeTo(std::ostream& file, std::string prefix) const {
 	file << prefix << "USE " << magic_use_type << '\n';
 	file << prefix << "ICON " << graphic_num << '\n';
 	file << prefix << "ABILITY " << ability << '\n';
-	file << prefix << "ABILSTR " << abil_data[0] << '\t' << abil_data[1] << '\n';
+	file << prefix << "ABILSTR " << abil_strength << '\t' << abil_data.value << '\n';
 	file << prefix << "TYPE " << type_flag << '\n';
 	file << prefix << "ISSPEC " << is_special << '\n';
 	file << prefix << "VALUE " << value << '\n';
@@ -1339,7 +1340,7 @@ void cItem::readFrom(std::istream& sin){
 		else if(cur == "USE") sin >> magic_use_type;
 		else if(cur == "ICON") sin >> graphic_num;
 		else if(cur == "ABILITY") sin >> ability;
-		else if(cur == "ABILSTR") sin >> abil_data[0] >> abil_data[1];
+		else if(cur == "ABILSTR") sin >> abil_strength >> abil_data.value;
 		else if(cur == "TYPE") sin >> type_flag;
 		else if(cur == "ISSPEC") sin >> is_special;
 		else if(cur == "VALUE") sin >> value;
@@ -1386,33 +1387,33 @@ std::map<eItemAbil, short> abil_chart = {
 
 bool cItem::use_in_combat() const {
 	if(ability == eItemAbil::CAST_SPELL) {
-		auto spell = eSpell(abil_data[1]);
+		auto spell = abil_data.spell;
 		int when = (*spell).when_cast;
 		return when & WHEN_COMBAT;
-	} else if(ability == eItemAbil::AFFECT_PARTY_STATUS && abil_data[1] == int(ePartyStatus::FLIGHT))
+	} else if(ability == eItemAbil::AFFECT_PARTY_STATUS && abil_data.party == ePartyStatus::FLIGHT)
 		return false;
 	return abil_chart[ability] & USE_COMBAT;
 }
 
 bool cItem::use_in_town() const {
 	if(ability == eItemAbil::CAST_SPELL) {
-		auto spell = eSpell(abil_data[1]);
+		auto spell = abil_data.spell;
 		int when = (*spell).when_cast;
 		return when & WHEN_TOWN;
-	} else if(ability == eItemAbil::AFFECT_PARTY_STATUS && abil_data[1] == int(ePartyStatus::FLIGHT))
+	} else if(ability == eItemAbil::AFFECT_PARTY_STATUS && abil_data.party == ePartyStatus::FLIGHT)
 		return false;
 	return abil_chart[ability] & USE_TOWN;
 }
 
 bool cItem::use_outdoors() const {
 	if(ability == eItemAbil::CAST_SPELL) {
-		auto spell = eSpell(abil_data[1]);
+		auto spell = abil_data.spell;
 		int when = (*spell).when_cast;
 		return when & WHEN_OUTDOORS;
-	} else if(ability == eItemAbil::AFFECT_PARTY_STATUS && abil_data[1] == int(ePartyStatus::FLIGHT)) {
+	} else if(ability == eItemAbil::AFFECT_PARTY_STATUS && abil_data.party == ePartyStatus::FLIGHT) {
 		return true;
 	} else if(ability == eItemAbil::AFFECT_STATUS) {
-		auto status = eStatus(abil_data[1]);
+		auto status = abil_data.status;
 		if(status == eStatus::POISON || status == eStatus::DISEASE || status == eStatus::HASTE_SLOW || status == eStatus:: BLESS_CURSE)
 			return true;
 	}

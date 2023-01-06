@@ -1141,9 +1141,10 @@ void readItemsFromXml(ticpp::Document&& data, cScenario& scenario) {
 					if(type == "type") {
 						abil->GetText(&the_item.ability);
 					} else if(type == "strength") {
-						abil->GetText(&the_item.abil_data[0]);
+						abil->GetText(&the_item.abil_strength);
 					} else if(type == "data") {
-						abil->GetText(&the_item.abil_data[1]);
+						// TODO: Consider reading it as the appropriate type, depending on ability type
+						abil->GetText(&the_item.abil_data.value);
 					} else if(type == "use-flag") {
 						abil->GetText(&the_item.magic_use_type);
 					} else throw xBadNode(type, abil->Row(), abil->Column(), fname);

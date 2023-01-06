@@ -122,8 +122,8 @@ TEST_CASE("Loading an item type definition") {
 		CHECK(scen.scen_items[0].special_class == 400);
 		CHECK(scen.scen_items[0].treas_class == 2);
 		CHECK(scen.scen_items[0].ability == eItemAbil::POISON_AUGMENT);
-		CHECK(scen.scen_items[0].abil_data[0] == 6);
-		CHECK(scen.scen_items[0].abil_data[1] == 42);
+		CHECK(scen.scen_items[0].abil_strength == 6);
+		CHECK(scen.scen_items[0].abil_data.value == 42);
 		CHECK(scen.scen_items[0].magic_use_type == eItemUse::HARM_ONE);
 		CHECK(scen.scen_items[0].ident);
 		CHECK(scen.scen_items[0].magic);

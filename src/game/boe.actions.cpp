@@ -2231,14 +2231,14 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 		for(cPlayer& pc : univ.party)
 			for(const cItem& item : pc.items) {
 				if(item.ability != eItemAbil::OCCASIONAL_STATUS) continue;
-				if(item.abil_data[1] > 15) continue;
+				if(item.abil_data.value > 15) continue;
 				if(!item.abil_group()) continue;
 				if(get_ran(1,0,5) != 3) continue;
-				int how_much = item.abil_data[0];
+				int how_much = item.abil_strength;
 				if(item.abil_harms()) how_much *= -1;
-				if(isStatusNegative(eStatus(item.abil_data[1])))
+				if(isStatusNegative(item.abil_data.status))
 					how_much *= -1;
-				univ.party.apply_status(eStatus(item.abil_data[1]), how_much);
+				univ.party.apply_status(item.abil_data.status, how_much);
 			}
 	}
 	// Plants and magic shops
@@ -2258,8 +2258,8 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 			}
 			cInvenSlot item = pc.has_abil_equip(eItemAbil::REGENERATE);
 			if(item && pc.cur_health < pc.max_health && (overall_mode != MODE_OUTDOORS || get_ran(1,0,10) == 5)){
-				int j = get_ran(1,0,item->abil_data[0] / 3);
-				if(item->abil_data[0] / 3 == 0)
+				int j = get_ran(1,0,item->abil_strength / 3);
+				if(item->abil_strength / 3 == 0)
 					j = get_ran(1,0,1);
 				if(is_out()) j = j * 4;
 				pc.heal(j);
@@ -2349,12 +2349,12 @@ void increase_age() {
 		for(cPlayer& pc : univ.party)
 			for(const cItem& item : pc.items) {
 				if(item.ability != eItemAbil::OCCASIONAL_STATUS) continue;
-				if(item.abil_data[1] > 15) continue;
+				if(item.abil_data.value > 15) continue;
 				if(!item.abil_group()) continue;
 				if(get_ran(1,0,5) != 3) continue;
-				int how_much = item.abil_data[0];
+				int how_much = item.abil_strength;
 				if(item.abil_harms()) how_much *= -1;
-				eStatus status = eStatus(item.abil_data[1]);
+				eStatus status = item.abil_data.status;
 				if(isStatusNegative(status))
 					how_much *= -1;
 				univ.party.apply_status(status, how_much);
@@ -2481,8 +2481,8 @@ void increase_age() {
 			move_to_zero(pc.status[eStatus::HASTE_SLOW]);
 			if(cInvenSlot item = pc.has_abil_equip(eItemAbil::REGENERATE)) {
 				if(pc.cur_health < pc.max_health && (overall_mode != MODE_OUTDOORS || get_ran(1,0,10) == 5)) {
-					int j = get_ran(1,0,item->abil_data[0] / 3);
-					if(item->abil_data[0] / 3 == 0)
+					int j = get_ran(1,0,item->abil_strength / 3);
+					if(item->abil_strength / 3 == 0)
 						j = get_ran(1,0,1);
 					if(is_out()) j = j * 4;
 					pc.heal(j);

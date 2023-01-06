@@ -116,7 +116,7 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 	
 	item_store = univ.party[pc_num].items[item_num];
 	if(item_store.ability == eItemAbil::DROP_CALL_SPECIAL)
-		spec = item_store.abil_data[0];
+		spec = item_store.abil_strength;
 	
 	if(univ.party[pc_num].equip[item_num] && univ.party[pc_num].items[item_num].cursed)
 		add_string_to_buf("Drop: Item is cursed.");

@@ -372,12 +372,12 @@ static void display_pc_info(cDialog& me, const short pc_num) {
 	// TODO: Perhaps dam_adj and hit_adj calculation should be moved into a function somewhere?
 	dam_adj = pc.stat_adj(eSkill::STRENGTH) + minmax(-8,8,pc.status[eStatus::BLESS_CURSE]);
 	if(cInvenSlot skill_item = pc.has_abil_equip(eItemAbil::SKILL)) {
-		hit_adj += 5 * (skill_item->abil_data[0] / 2 + 1);
-		dam_adj += skill_item->abil_data[0] / 2;
+		hit_adj += 5 * (skill_item->abil_strength / 2 + 1);
+		dam_adj += skill_item->abil_strength / 2;
 	}
 	if(cInvenSlot skill_item = pc.has_abil_equip(eItemAbil::GIANT_STRENGTH)) {
-		dam_adj += skill_item->abil_data[0];
-		hit_adj += skill_item->abil_data[0] * 2;
+		dam_adj += skill_item->abil_strength;
+		hit_adj += skill_item->abil_strength * 2;
 	}
 	
 	me["weap1a"].setText("No weapon.");

@@ -468,8 +468,9 @@ void writeItemsToXml(ticpp::Printer&& data, cScenario& scenario) {
 		if(item.ability != eItemAbil::NONE) {
 			data.OpenElement("ability");
 			data.PushElement("type", item.ability);
-			data.PushElement("strength", item.abil_data[0]);
-			data.PushElement("data", item.abil_data[1]);
+			data.PushElement("strength", item.abil_strength);
+			// TODO: Push correct type based on the ability type
+			data.PushElement("data", item.abil_data.value);
 			data.PushElement("use-flag", item.magic_use_type);
 			data.CloseElement("ability");
 		}

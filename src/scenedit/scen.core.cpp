@@ -1542,7 +1542,7 @@ static void put_item_info_in_dlog(cDialog& me, cItem& item, short which) {
 	
 	std::string abil = item.getAbilName();
 	if(item.ability == eItemAbil::SUMMONING || item.ability == eItemAbil::MASS_SUMMONING)
-		abil.replace(abil.find("%s"), 2, scenario.scen_monsters[item.abil_data[1]].m_name);
+		abil.replace(abil.find("%s"), 2, scenario.scen_monsters[item.abil_data.value].m_name);
 	me["abilname"].setText(abil);
 }
 
@@ -1771,8 +1771,8 @@ static void put_item_abils_in_dlog(cDialog& me, cItem& item, short which) {
 	
 	dynamic_cast<cLedGroup&>(me["use-type"]).setSelected("use" + std::to_string(int(item.magic_use_type)));
 	dynamic_cast<cLedGroup&>(me["treasure"]).setSelected("type" + std::to_string(item.treas_class));
-	me["str1"].setTextToNum(item.abil_data[0]);
-	me["str2"].setTextToNum(item.abil_data[1]);
+	me["str1"].setTextToNum(item.abil_strength);
+	me["str2"].setTextToNum(item.abil_data.value);
 	
 	if(item.ability == eItemAbil::CALL_SPECIAL || item.ability == eItemAbil::WEAPON_CALL_SPECIAL || item.ability == eItemAbil::HIT_CALL_SPECIAL || item.ability == eItemAbil::DROP_CALL_SPECIAL) {
 		me["str1-choose"].show();
@@ -1840,8 +1840,8 @@ static void put_item_abils_in_dlog(cDialog& me, cItem& item, short which) {
 static void save_item_abils(cDialog& me, cItem& item) {
 	item.magic_use_type = boost::lexical_cast<eItemUse>(dynamic_cast<cLedGroup&>(me["use-type"]).getSelected().substr(3));
 	item.treas_class = boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["treasure"]).getSelected().substr(4));
-	item.abil_data[0] = me["str1"].getTextAsNum();
-	item.abil_data[1] = me["str2"].getTextAsNum();
+	item.abil_strength = me["str1"].getTextAsNum();
+	item.abil_data.value = me["str2"].getTextAsNum();
 	
 	item.property = item.enchanted = item.contained = false;
 	item.ident = dynamic_cast<cLed&>(me["always-id"]).getState() != led_off;
@@ -1867,12 +1867,12 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 		if(spec < 0)
 			spec = get_fresh_spec(0);
 		if(edit_spec_enc(spec,0,&me)) {
-			item.abil_data[0] = spec;
+			item.abil_strength = spec;
 			me["str1"].setTextToNum(spec);
 		}
 	} else if(hit == "str2-choose1") {
 		save_item_abils(me, item);
-		i = item.abil_data[1];
+		i = item.abil_data.value;
 		switch(item.ability) {
 			case eItemAbil::DAMAGING_WEAPON:
 			case eItemAbil::EXPLODING_WEAPON:
@@ -1903,13 +1903,13 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 				break;
 			default: return true;
 		}
-		item.abil_data[1] = i;
+		item.abil_data.value = i;
 		me["str2"].setTextToNum(i);
 	} else if(hit == "str2-choose2") {
 		save_item_abils(me, item);
-		i = 100 + choose_text_res("magic-names", 101, 168, item.abil_data[1] + 1, &me, "Which priest spell?");
+		i = 100 + choose_text_res("magic-names", 101, 168, item.abil_data.value + 1, &me, "Which priest spell?");
 		if(i < 100) return true;
-		item.abil_data[1] = i;
+		item.abil_data.value = i;
 		me["str2"].setTextToNum(i);
 	} else if(hit == "clear") {
 		save_item_abils(me, item);
