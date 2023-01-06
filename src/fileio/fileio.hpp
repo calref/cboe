@@ -44,7 +44,7 @@ template<typename T>
 void writeArray(std::ostream& to, const T& array, int width, int height) {
 	using int_type = decltype(typename array_value_type<T>::type() + 1);
 	for(int y = 0; y < height; y++) {
-		to << array[0][y];
+		to << int_type(array[0][y]);
 		for(int x = 1; x < width; x++)
 			to << '\t' << int_type(array[x][y]);
 		to << '\n';
