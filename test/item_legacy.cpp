@@ -678,6 +678,9 @@ TEST_CASE("Converting items from legacy scenarios") {
 			CHECK(new_item.ability == eItemAbil::AFFECT_PARTY_STATUS);
 			CHECK(new_item.abil_data[0] == 120);
 			CHECK(new_item.abil_data[1] == int(ePartyStatus::FLIGHT));
+			CHECK_FALSE(new_item.use_in_town());
+			CHECK_FALSE(new_item.use_in_combat());
+			CHECK(new_item.use_outdoors());
 			CHECK_FALSE(new_item.abil_harms());
 		}
 		SECTION("Major Healing") {
