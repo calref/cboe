@@ -160,7 +160,7 @@ static const std::set<eBtnType> labelledButtons{BTN_TINY, BTN_LED, BTN_PUSH};
 void cButton::validatePostParse(ticpp::Element& elem, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& elems) {
 	cControl::validatePostParse(elem, fname, attrs, elems);
 	if(getType() == CTRL_BTN && !attrs.count("type")) throw xMissingAttr(elem.Value(), "type", elem.Row(), elem.Column(), fname);
-	if(labelledButtons.count(type)) {
+	if(labelledButtons.count(type) && !lbl.empty()) {
 		if(!attrs.count("color") && !attrs.count("colour") && parent->getBg() == cDialog::BG_DARK)
 			setColour(sf::Color::White);
 		if(!attrs.count("width"))
