@@ -280,14 +280,14 @@ std::string cControl::getAttachedKeyDescription() {
 #endif
 		}
 		if(mod_contains(mod, mod_ctrl)) s += '^';
-		if(mod_contains(mod, mod_alt)) s = '#';
+		if(mod_contains(mod, mod_alt)) s += '#';
 		if(mod_contains(mod, mod_shift)) s += '$';
 	} else {
 		unsigned char c = key.c;
 		if(mod_contains(key.mod, mod_shift)) c = applyShift(c);
 		else c = removeShift(c);
 		if(mod_contains(key.mod, mod_ctrl)) s += '^';
-		if(mod_contains(key.mod, mod_alt)) s = '#';
+		if(mod_contains(key.mod, mod_alt)) s += '#';
 		if(c == ' ') s += "space";
 		else s += c;
 	}
