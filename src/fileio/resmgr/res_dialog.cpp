@@ -16,15 +16,7 @@ extern std::ostream& std_fmterr(std::ostream& out);
 class DialogLoader : public ResMgr::cLoader<DialogDefn> {
 	/// Load a dialog definition from an XML file.
 	DialogDefn* operator() (const fs::path& fpath) const override {
-		TiXmlBase::SetCondenseWhiteSpace(false);
-		ticpp::Document xml(fpath.string().c_str());
-		try {
-			xml.LoadFile();
-		} catch(ticpp::Exception& e) {
-			std::cerr << "Error reading XML file: " << e.what();
-			throw ResMgr::xError(ResMgr::ERR_LOAD, "Failed to load dialog: " + fpath.string());
-		}
-		return new DialogDefn{fpath.stem().string(), std::move(xml)};
+		return load_dialog_defn(fpath);
 	}
 
 	ResourceList expand(const std::string& name) const override {
@@ -35,6 +27,18 @@ class DialogLoader : public ResMgr::cLoader<DialogDefn> {
 		return "dialog definition";
 	}
 };
+
+DialogDefn* load_dialog_defn(const fs::path& fpath) {
+	TiXmlBase::SetCondenseWhiteSpace(false);
+	ticpp::Document xml(fpath.string().c_str());
+	try {
+		xml.LoadFile();
+	} catch(ticpp::Exception& e) {
+		std::cerr << "Error reading XML file: " << e.what();
+		throw ResMgr::xError(ResMgr::ERR_LOAD, "Failed to load dialog: " + fpath.string());
+	}
+	return new DialogDefn{fpath.stem().string(), std::move(xml)};
+}
 
 // TODO: What's a good max dialogs count?
 static DialogLoader loader;

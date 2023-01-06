@@ -19,6 +19,8 @@ struct DialogDefn {
 	/// The XML definition of the dialog.
 	ticpp::Document defn;
 };
+/// Load a dialog definition from an XML file.
+DialogDefn* load_dialog_defn(const fs::path& fpath);
 
 using DialogRsrc = ResMgr::cPointer<DialogDefn>;
 
