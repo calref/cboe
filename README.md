@@ -29,9 +29,8 @@ compile.
 Building
 --------
 
-There are currently four ways to build Blades of Exile:
+There are currently three ways to build Blades of Exile:
 
-- The build.sh shell-script, which builds and runs a Makefile.
 - XCode 4 or later
 - Microsoft Visual Studio 2013/2017
 - scons
