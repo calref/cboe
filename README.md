@@ -35,10 +35,18 @@ There are currently three ways to build Blades of Exile:
 - Microsoft Visual Studio 2013/2017
 - scons
 
-The officially supported method is scons. The script is currently a work-in-progress and
-as such may be a little fragile, but we're working on that. With luck, just running
-`scons` will simply do the right thing and build a working executable under _build/Blades
-of Exile_. If not, though, you may have to adjust a few things.
+The officially supported method is scons. It's set up to work on any platform
+with any toolset, but only the following have been tested:
+
+- Mac with Xcode tools
+- Windows with Microsoft Cl
+- Linux with clang or gcc
+
+The script is currently a work-in-progress and
+as such may be a little fragile, but we're working on that.
+With luck, just running `scons` will simply do the right thing and
+build a working executable under _build/Blades of Exile_.
+If not, though, you may have to adjust a few things.
 
 You can pass the following parameters to scons:
 
@@ -64,13 +72,14 @@ For Linux builds, the following additional dependencies are required:
 - [TGUI](https://tgui.eu/) - version 0.9 or later required
 - zenity command-line tools
 
-If you are using Visual Studio, we recommend installing [vcpkg](https://github.com/Microsoft/vcpkg) to manage these dependencies.
+If you are using the Visual Studio toolset, we recommend installing
+[vcpkg](https://github.com/Microsoft/vcpkg) to manage these dependencies.
 Use the following commands to install the required dependencies:
 For 32-bit builds:
 
     vcpkg install zlib:x86-windows sfml:x86-windows opengl:x86-windows boost-any:x86-windows boost-dynamic-bitset:x86-windows boost-ptr-container:x86-windows boost-core:x86-windows boost-filesystem:x86-windows boost-system:x86-windows boost-date-time:x86-windows boost-chrono:x86-windows boost-math:x86-windows
 
-For 64-bit builds (Not supported in Visual Studio projects, yet):
+For 64-bit builds:
 
     vcpkg install zlib:x64-windows sfml:x64-windows opengl:x64-windows boost-any:x64-windows boost-dynamic-bitset:x64-windows boost-ptr-container:x64-windows boost-core:x64-windows boost-filesystem:x64-windows boost-system:x64-windows boost-date-time:x64-windows boost-chrono:x64-windows boost-math:x64-windows
 
@@ -89,7 +98,7 @@ Again with Homebrew, you may also need to add the following to Apple LLVM Custom
 Compiler Flags -> Other C++ Flags:
 
     -isystem/usr/local/Cellar/boost/1.57.0/include
-    
+
 Notes and oddities:
 
 - The XCode build uses SFML frameworks, while the scons build on the Mac uses
