@@ -1080,3 +1080,38 @@ bool cDialog::hasControl(std::string id) {
 }
 
 const char*const xBadVal::CONTENT = "<content>";
+
+cDialogIterator::cDialogIterator() : parent(nullptr) {}
+
+cDialogIterator::cDialogIterator(cDialog* parent) : parent(parent), current(parent->controls.begin()) {}
+
+std::pair<std::string, cControl*>& cDialogIterator::dereference() const {
+	// Ugly fugly... especially the reinterpret_cast...
+	using value_type = std::pair<std::string, cControl*>;
+	if(children.empty()) return *reinterpret_cast<value_type*>(&*current);
+	return const_cast<value_type&>(children.front());
+}
+
+bool cDialogIterator::equal(const cDialogIterator& other) const {
+	if(parent == nullptr) return other.parent == nullptr;
+	return parent == other.parent && current == other.current && std::equal(children.begin(), children.end(), other.children.begin());
+}
+
+void cDialogIterator::increment() {
+	if(children.empty()) {
+		if(current->second->isContainer()) {
+			cContainer& box = dynamic_cast<cContainer&>(*current->second);
+			std::vector<std::pair<std::string, cControl*>> newChildren;
+			box.forEach([&newChildren](std::string id, cControl& ctrl) {
+				newChildren.emplace_back(id, &ctrl);
+			});
+			children.insert(children.begin(), newChildren.begin(), newChildren.end());
+		}
+		++current;
+	} else {
+		children.pop_front();
+	}
+	if(children.empty() && current == parent->controls.end()) {
+		parent = nullptr;
+	}
+}

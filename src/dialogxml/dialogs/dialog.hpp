@@ -25,6 +25,7 @@
 #include "dialogxml/dialogs/dlogevt.hpp"
 #include "location.hpp"
 #include <boost/any.hpp>
+#include <boost/iterator/iterator_facade.hpp>
 
 class cControl;
 class cTextField;
@@ -34,8 +35,23 @@ enum eLabelPos {
 	LABEL_LEFT, LABEL_ABOVE, LABEL_RIGHT, LABEL_BELOW,
 };
 
+class cDialogIterator : public boost::iterator_facade<cDialogIterator, std::pair<std::string, cControl*>, std::forward_iterator_tag> {
+	friend class boost::iterator_core_access;
+	cDialog* parent;
+	std::map<std::string,cControl*>::iterator current;
+	std::deque<std::pair<std::string, cControl*>> children;
+public:
+	cDialogIterator();
+	cDialogIterator(cDialog* parent);
+protected:
+	std::pair<std::string, cControl*>& dereference() const;
+	bool equal(const cDialogIterator& other) const;
+	void increment();
+};
+
 /// Defines a fancy dialog box with various controls.
 class cDialog {
+	friend class cDialogIterator;
 	typedef std::map<std::string,cControl*>::iterator ctrlIter;
 	std::map<std::string,cControl*> controls;
 	short bg;
@@ -212,6 +228,12 @@ public:
 			}while(controls.find(p.first) != controls.end());
 		}
 		return p;
+	}
+	cDialogIterator begin() {
+		return cDialogIterator(this);
+	}
+	cDialogIterator end() {
+		return cDialogIterator();
 	}
 	cDialog& operator=(cDialog& other) = delete;
 	cDialog(cDialog& other) = delete;
