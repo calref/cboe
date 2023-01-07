@@ -99,6 +99,21 @@ Notes and oddities:
   the dlls into the program directory. However, on the Mac, scons links dynamically with
   Boost.
 
+Contributing
+------------
+
+If you want to contribute code to the project, please open a pull request.
+Be sure to read the [style guide](StyleGuide.md) before coding.
+
+This project targets the subset of C++11 supported by both Xcode 4 and Visual Studio 2013.
+That means that generally you can use C++11, but the following features (at least) are not permitted:
+
+* Ref-qualifiers
+* Attributes
+* Inheriting constructors (via `using`)
+* Unicode string literals
+* User-defined literals
+
 Helpful Links
 -------------
 * [BoE Forum at Spiderweb Software](http://spiderwebforums.ipbhost.com/index.php?/forum/12-blades-of-exile/)

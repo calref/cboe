@@ -266,9 +266,12 @@ For organizing the function popup menu, use `MARK:` comments rather than
 To mark parameters as unused, omit the name or surround it in block
 comment syntax. Other unused entities should be removed or commented out
 if you want to avoid warnings, though if you think it might have a use
-in the future, it's reasonable to leave it in with a comment. Do not use
-any kind of attributes, including `__attribute__`, `__declspec`, and
-C++11 attributes.
+in the future, it's reasonable to leave it in with a comment.
+
+Do not use any kind of attributes, including `__attribute__`, `__declspec`.
+Do not even use C++11 attributes, as one of our target compilers does not support them.
+However, if attributes are absolutely required for something, they can be
+hidden behind a macro so that the code looks clean but still works on all compilers.
 
 Formatting
 ==========
