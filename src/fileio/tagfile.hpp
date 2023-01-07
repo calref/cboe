@@ -20,6 +20,13 @@
 class cTagFile;
 class cTagFile_Page;
 
+// Helper functions for inheriting constructors in tagfile classes
+// This is needed because Xcode 4 does not support inheriting constructors.
+// Note that both these macros set the access level to public!
+#define DEFINE_TAGFILE_PAGE(Class, Base) protected: Class() = default; public: Class(cTagFile& owner) : Base(owner) {}
+#define DEFINE_TAGFILE_MULTIPAGE(Class, Base) friend class pMultiPage<Class>; DEFINE_TAGFILE_PAGE(Class, Base)
+#define DEFINE_TAGFILE_TAG(Class, Base) public: Class(cTagFile_Page& owner, const std::string& key) : Base(owner, key) {}
+
 class cTagFile_Tag {
 protected:
 	void readValueFrom(std::istream& file, std::string& to);
@@ -113,13 +120,18 @@ public:
 template<typename Self>
 class pMultiPage : public cTagFile_Page {
 	std::shared_ptr<Self> next;
+	std::shared_ptr<Self> make_page() {
+		return std::shared_ptr<Self>(new Self);
+	}
+protected:
+	pMultiPage() : cTagFile_Page() {}
 public:
-	using cTagFile_Page::cTagFile_Page;
+	pMultiPage(cTagFile& owner) : cTagFile_Page(owner) {};
 	void readFrom(std::istream& file) override {
 		if(!hasBeenRead) {
 			cTagFile_Page::readFrom(file);
 		} else {
-			if(!next) next = std::make_shared<Self>();
+			if(!next) next = make_page();
 			next->readFrom(file);
 		}
 	}
@@ -143,12 +155,12 @@ public:
 	}
 	Self& operator[](size_t i) {
 		if(i == 0) return static_cast<Self&>(*this);
-		if(!next) next = std::make_shared<Self>();
+		if(!next) next = make_page();
 		return next->operator[](i - 1);
 	}
 	Self& add() {
 		if(next) return next->add();
-		next = std::make_shared<Self>();
+		next = make_page();
 		return *next;
 	}
 	size_t size() {
@@ -170,7 +182,7 @@ template<typename T>
 class tBasicTag : public cTagFile_Tag {
 	T value;
 public:
-	using cTagFile_Tag::cTagFile_Tag;
+	DEFINE_TAGFILE_TAG(tBasicTag, cTagFile_Tag);
 	void readFrom(const std::string&, std::istream& file) override {
 		readValueFrom(file, value);
 	}
@@ -193,7 +205,7 @@ template<typename T>
 class tHexTag : public cTagFile_Tag {
 	T value;
 public:
-	using cTagFile_Tag::cTagFile_Tag;
+	DEFINE_TAGFILE_TAG(tHexTag, cTagFile_Tag);
 	void readFrom(const std::string&, std::istream& file) override {
 		readValueFrom(file, value);
 	}
@@ -216,13 +228,13 @@ template<typename T>
 class tOptionalTag : public cTagFile_Tag {
 	boost::optional<T> value;
 public:
-	using cTagFile_Tag::cTagFile_Tag;
+	DEFINE_TAGFILE_TAG(tOptionalTag, cTagFile_Tag);
 	void readFrom(const std::string&, std::istream& file) override {
 		value.emplace();
 		readValueFrom(file, *value);
 	}
 	void writeTo(const std::string& key, std::ostream& file) override {
-		if(value.has_value()) {
+		if(value) {
 			file << key << ' ';
 			writeValueTo(file, *value);
 			file << '\n';
@@ -245,7 +257,7 @@ template<>
 class tOptionalTag<bool> : public cTagFile_Tag {
 	bool value = false;
 public:
-	using cTagFile_Tag::cTagFile_Tag;
+	DEFINE_TAGFILE_TAG(tOptionalTag, cTagFile_Tag);
 	void readFrom(const std::string&, std::istream&) override {
 		value = true;
 	}
@@ -268,7 +280,7 @@ template<typename T>
 class tArrayTag : public cTagFile_Tag {
 	std::vector<T> values;
 public:
-	using cTagFile_Tag::cTagFile_Tag;
+	DEFINE_TAGFILE_TAG(tArrayTag, cTagFile_Tag)
 	void readFrom(const std::string&, std::istream& file) override {
 		values.emplace_back();
 		readValueFrom(file, values.back());

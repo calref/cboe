@@ -17,13 +17,13 @@ std::ostream& operator<<(std::ostream& os, const tBasicTag<T>& tag) {
 
 class pSamplePage1 : public cTagFile_Page {
 public:
-	using cTagFile_Page::cTagFile_Page;
+	DEFINE_TAGFILE_PAGE(pSamplePage1, cTagFile_Page);
 	tBasicTag<int> a{*this, "A"}, b{*this, "B"}, c{*this, "C"};
 };
 
 class pSamplePage2 : public cTagFile_Page {
 public:
-	using cTagFile_Page::cTagFile_Page;
+	DEFINE_TAGFILE_PAGE(pSamplePage2, cTagFile_Page);
 	tBasicTag<std::string> x{*this, "X"}, y{*this, "Y"}, z{*this, "Z"};
 };
 
@@ -35,7 +35,7 @@ public:
 
 class pComplexPage : public cTagFile_Page {
 public:
-	using cTagFile_Page::cTagFile_Page;
+	DEFINE_TAGFILE_PAGE(pComplexPage, cTagFile_Page);
 	tBasicTag<int> id{*this, "ID"};
 	tArrayTag<std::string> strings{*this, "STRING"};
 	tArrayTag<std::pair<int, int>> locations{*this, "LOC"};
@@ -48,7 +48,7 @@ public:
 
 class pSampleMultiPage : public pMultiPage<pSampleMultiPage> {
 public:
-	using pMultiPage::pMultiPage;
+	DEFINE_TAGFILE_MULTIPAGE(pSampleMultiPage, pMultiPage);
 	tBasicTag<char> id{*this, "ID"};
 	tBasicTag<int> value{*this, "VALUE"};
 	tBasicTag<std::string> comment{*this, "COMMENT"};
