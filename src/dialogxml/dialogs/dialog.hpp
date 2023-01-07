@@ -19,6 +19,7 @@
 #include <vector>
 #include <exception>
 #include <functional>
+#include <deque>
 
 #include "ticpp.h"
 #include "dialogxml/keycodes.hpp"
