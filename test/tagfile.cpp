@@ -11,54 +11,54 @@
 #include "catch.hpp"
 
 template<typename T>
-std::ostream& operator<<(std::ostream& os, const cTagFile_BasicTag<T>& tag) {
+std::ostream& operator<<(std::ostream& os, const tBasicTag<T>& tag) {
 	return os << T(tag);
 }
 
-class cSampleTagFilePage1 : public cTagFile_Page {
+class pSamplePage1 : public cTagFile_Page {
 public:
 	using cTagFile_Page::cTagFile_Page;
-	cTagFile_BasicTag<int> a{*this, "A"}, b{*this, "B"}, c{*this, "C"};
+	tBasicTag<int> a{*this, "A"}, b{*this, "B"}, c{*this, "C"};
 };
 
-class cSampleTagFilePage2 : public cTagFile_Page {
+class pSamplePage2 : public cTagFile_Page {
 public:
 	using cTagFile_Page::cTagFile_Page;
-	cTagFile_BasicTag<std::string> x{*this, "X"}, y{*this, "Y"}, z{*this, "Z"};
+	tBasicTag<std::string> x{*this, "X"}, y{*this, "Y"}, z{*this, "Z"};
 };
 
-class cSampleTagFile : public cTagFile {
+class fSampleTagFile : public cTagFile {
 public:
-	cSampleTagFilePage1 p1{*this};
-	cSampleTagFilePage2 p2{*this};
+	pSamplePage1 p1{*this};
+	pSamplePage2 p2{*this};
 };
 
-class cComplexTagFilePage : public cTagFile_Page {
+class pComplexPage : public cTagFile_Page {
 public:
 	using cTagFile_Page::cTagFile_Page;
-	cTagFile_BasicTag<int> id{*this, "ID"};
-	cTagFile_ArrayTag<std::string> strings{*this, "STRING"};
-	cTagFile_ArrayTag<std::pair<int, int>> locations{*this, "LOC"};
-	cTagFile_OptionalTag<int> filter{*this, "FILTER"};
-	cTagFile_OptionalTag<int> count{*this, "COUNT"};
-	cTagFile_OptionalTag<bool> yes{*this, "YES"};
-	cTagFile_OptionalTag<bool> no{*this, "NO"};
-	cTagFile_BasicTag<bool> enable{*this, "ENABLE"};
+	tBasicTag<int> id{*this, "ID"};
+	tArrayTag<std::string> strings{*this, "STRING"};
+	tArrayTag<std::pair<int, int>> locations{*this, "LOC"};
+	tOptionalTag<int> filter{*this, "FILTER"};
+	tOptionalTag<int> count{*this, "COUNT"};
+	tOptionalTag<bool> yes{*this, "YES"};
+	tOptionalTag<bool> no{*this, "NO"};
+	tBasicTag<bool> enable{*this, "ENABLE"};
 };
 
-class cTagFileSampleMultiPage : public cTagFile_MultiPage<cTagFileSampleMultiPage> {
+class pSampleMultiPage : public pMultiPage<pSampleMultiPage> {
 public:
-	using cTagFile_MultiPage::cTagFile_MultiPage;
-	cTagFile_BasicTag<char> id{*this, "ID"};
-	cTagFile_BasicTag<int> value{*this, "VALUE"};
-	cTagFile_BasicTag<std::string> comment{*this, "COMMENT"};
+	using pMultiPage::pMultiPage;
+	tBasicTag<char> id{*this, "ID"};
+	tBasicTag<int> value{*this, "VALUE"};
+	tBasicTag<std::string> comment{*this, "COMMENT"};
 };
 
-class cComplexTagFile : public cTagFile {
+class fComplexTagFile : public cTagFile {
 public:
-	cSampleTagFilePage1 p1{*this};
-	cComplexTagFilePage p2{*this};
-	cTagFileSampleMultiPage p3{*this};
+	pSamplePage1 p1{*this};
+	pComplexPage p2{*this};
+	pSampleMultiPage p3{*this};
 };
 
 TEST_CASE("Simple tag file") {
@@ -71,7 +71,7 @@ TEST_CASE("Simple tag file") {
 	"Y foo\n"
 	"Z Blah!\n"
 	;
-	cSampleTagFile content;
+	fSampleTagFile content;
 	SECTION("output") {
 		std::ostringstream file;
 		content.p1.a = 12;
@@ -123,7 +123,7 @@ TEST_CASE("Complex tag file") {
 	"VALUE 90\n"
 	"COMMENT \"It's great!\"\n"
 	;
-	cComplexTagFile content;
+	fComplexTagFile content;
 	SECTION("output") {
 		std::ostringstream file;
 		content.p1.a = 12;

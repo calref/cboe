@@ -35,12 +35,12 @@ protected:
 
 	template<typename T>
 	static void readValueFrom(std::istream& file, T& to) {
-		file >> to;
+		file >> std::boolalpha >> to;
 	}
 	
 	template<typename T>
 	static void writeValueTo(std::ostream& file, const T& from) {
-		file << from;
+		file << std::boolalpha << from;
 	}
 	
 	template<typename A, typename B>
@@ -111,7 +111,7 @@ public:
 };
 
 template<typename Self>
-class cTagFile_MultiPage : public cTagFile_Page {
+class pMultiPage : public cTagFile_Page {
 	std::shared_ptr<Self> next;
 public:
 	using cTagFile_Page::cTagFile_Page;
@@ -164,10 +164,10 @@ public:
 	void writeTo(std::ostream& file);
 };
 
-template<typename T> class cTagFile_ArrayTag;
+template<typename T> class tArrayTag;
 
 template<typename T>
-class cTagFile_BasicTag : public cTagFile_Tag {
+class tBasicTag : public cTagFile_Tag {
 	T value;
 public:
 	using cTagFile_Tag::cTagFile_Tag;
@@ -180,7 +180,7 @@ public:
 		file << '\n';
 	}
 	operator T() const { return value; }
-	cTagFile_BasicTag operator=(const T& new_value) { value = new_value; return *this; }
+	tBasicTag operator=(const T& new_value) { value = new_value; return *this; }
 	T& operator*() { return value; }
 	const T& operator*() const { return value; }
 	T* operator->() { return &value; }
@@ -190,7 +190,30 @@ public:
 };
 
 template<typename T>
-class cTagFile_OptionalTag : public cTagFile_Tag {
+class tHexTag : public cTagFile_Tag {
+	T value;
+public:
+	using cTagFile_Tag::cTagFile_Tag;
+	void readFrom(const std::string&, std::istream& file) override {
+		readValueFrom(file, value);
+	}
+	void writeTo(const std::string& key, std::ostream& file) override {
+		file << key << ' ' << std::hex;
+		writeValueTo(file, value);
+		file << std::dec << '\n';
+	}
+	operator T() const { return value; }
+	tHexTag operator=(const T& new_value) { value = new_value; return *this; }
+	T& operator*() { return value; }
+	const T& operator*() const { return value; }
+	T* operator->() { return &value; }
+	const T* operator->() const { return &value; }
+	bool operator==(const T& other) { return value == other; }
+	bool operator!=(const T& other) { return value != other; }
+};
+
+template<typename T>
+class tOptionalTag : public cTagFile_Tag {
 	boost::optional<T> value;
 public:
 	using cTagFile_Tag::cTagFile_Tag;
@@ -206,8 +229,8 @@ public:
 		}
 	}
 	const T& get() const { return *value; }
-	cTagFile_OptionalTag operator=(const T& new_value) { value = new_value; return *this; }
-	cTagFile_OptionalTag operator=(boost::none_t) { value.reset(); return *this; }
+	tOptionalTag operator=(const T& new_value) { value = new_value; return *this; }
+	tOptionalTag operator=(boost::none_t) { value.reset(); return *this; }
 	T& operator*() { return value; }
 	const T& operator*() const { return value; }
 	T* operator->() { return &value; }
@@ -219,7 +242,7 @@ public:
 };
 
 template<>
-class cTagFile_OptionalTag<bool> : public cTagFile_Tag {
+class tOptionalTag<bool> : public cTagFile_Tag {
 	bool value = false;
 public:
 	using cTagFile_Tag::cTagFile_Tag;
@@ -232,7 +255,7 @@ public:
 		}
 	}
 	const bool& get() const { return value; }
-	cTagFile_OptionalTag operator=(const bool& new_value) { value = new_value; return *this; }
+	tOptionalTag operator=(const bool& new_value) { value = new_value; return *this; }
 	bool& operator*() { return value; }
 	const bool& operator*() const { return value; }
 	bool operator==(const bool& other) { return value == other; }
@@ -242,7 +265,7 @@ public:
 };
 
 template<typename T>
-class cTagFile_ArrayTag : public cTagFile_Tag {
+class tArrayTag : public cTagFile_Tag {
 	std::vector<T> values;
 public:
 	using cTagFile_Tag::cTagFile_Tag;
