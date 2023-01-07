@@ -73,7 +73,7 @@ xHandlerNotSupported::xHandlerNotSupported(eDlogEvt t){
 	this->evt = t;
 }
 const char* xHandlerNotSupported::what() const throw() {
-	assert("A handler not supported message is missing!" && evt < 4);
+	assert("A handler not supported message is missing!" && int(evt) < 4);
 	return msg[evt];
 }
 

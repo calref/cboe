@@ -1257,7 +1257,7 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 	});
 	
 	if(cat == eMonstAbilCat::MISSILE || cat == eMonstAbilCat::GENERAL || cat == eMonstAbilCat::SUMMON) {
-		int first, last;
+		int first = 0, last = 0;
 		if(cat == eMonstAbilCat::MISSILE) first = 110, last = 119;
 		else if(cat == eMonstAbilCat::GENERAL) first = 120, last = 124;
 		else if(cat == eMonstAbilCat::SUMMON) first = 150, last = 152;
@@ -2454,6 +2454,8 @@ static bool add_shop_entry(cDialog& me, std::string type, cShop& shop, size_t wh
 		} else if(type == "heal") {
 			list = STRT_HEALING;
 			prompt = "What kind of healing?";
+		} else {
+			return false;
 		}
 		int i = choose_text(list, -1, &me, prompt);
 		if(i == -1) return true;

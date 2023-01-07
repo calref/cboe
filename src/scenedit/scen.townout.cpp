@@ -587,7 +587,7 @@ static bool edit_out_wand_monst(cDialog& me, std::string hit, short which, cOutd
 	me.untoast();
 	save_out_wand(me, which, wand, 100);
 	std::string fld = hit.substr(7);
-	short i;
+	short i = 0;
 	if(fld[0] == 'f') {
 		i = choose_text(STRT_MONST,wand.monst[fld[3] - '1']-1,&me,"Choose Which Monster:") + 1;
 		if(i >= 0) wand.monst[fld[3] - '1'] = i;
@@ -1483,22 +1483,22 @@ bool resize_outdoors() {
 	if(mod.top > 0) {
 		int y = new_h - mod.top;
 		while(y--) {
-			scenario.outdoors.row(y + mod.top) = std::move(scenario.outdoors.row(y));
+			scenario.outdoors.row(y + mod.top) = scenario.outdoors.row(y);
 		}
 	} else if(mod.top < 0) {
 		for(int y = -mod.top; y < old_h; y++) {
-			scenario.outdoors.row(y + mod.top) = std::move(scenario.outdoors.row(y));
+			scenario.outdoors.row(y + mod.top) = scenario.outdoors.row(y);
 		}
 	}
 	
 	if(mod.left > 0) {
 		int x = new_w - mod.left;
 		while(x--) {
-			scenario.outdoors.col(x + mod.left) = std::move(scenario.outdoors.col(x));
+			scenario.outdoors.col(x + mod.left) = scenario.outdoors.col(x);
 		}
 	} else if(mod.left < 0) {
 		for(int x = -mod.left; x < old_w; x++) {
-			scenario.outdoors.col(x + mod.left) = std::move(scenario.outdoors.col(x));
+			scenario.outdoors.col(x + mod.left) = scenario.outdoors.col(x);
 		}
 	}
 	
