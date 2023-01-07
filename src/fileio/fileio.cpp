@@ -16,6 +16,7 @@
 
 #include "fileio/resmgr/res_image.hpp"
 #include "fileio/resmgr/res_cursor.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
 #include "fileio/resmgr/res_font.hpp"
 #include "fileio/resmgr/res_strings.hpp"
 #include "fileio/resmgr/res_sound.hpp"
@@ -38,6 +39,7 @@ static void add_resmgr_paths(const fs::path& basePath) {
 	ResMgr::fonts.pushPath(basePath/"fonts");
 	ResMgr::strings.pushPath(basePath/"strings");
 	ResMgr::sounds.pushPath(basePath/"sounds");
+	ResMgr::dialogs.pushPath(basePath/"dialogs");
 }
 
 void init_directories(const char* exec_path) {

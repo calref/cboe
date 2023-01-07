@@ -25,6 +25,7 @@
 #include <boost/lexical_cast.hpp>
 #include "tools/winutil.hpp"
 #include "tools/cursors.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
 
 extern short which_combat_type;
 extern eGameMode overall_mode;
@@ -556,7 +557,7 @@ bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short 
 	using namespace std::placeholders;
 	size_t first_item = 0;
 	
-	cDialog itemDialog("get-items");
+	cDialog itemDialog(*ResMgr::dialogs.get("get-items"));
 	auto handler = std::bind(display_item_event_filter, _1, _2, std::ref(first_item), std::ref(pc_getting), std::ref(itemRefs), overload);
 	itemDialog.attachClickHandlers(handler, {"done", "up", "down"});
 	itemDialog.attachClickHandlers(handler, {"pc1", "pc2", "pc3", "pc4", "pc5", "pc6"});
@@ -602,7 +603,7 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 }
 
 void custom_pic_dialog(std::string title, pic_num_t bigpic) {
-	cDialog pic_dlg("show-map");
+	cDialog pic_dlg(*ResMgr::dialogs.get("show-map"));
 	cControl& okay = pic_dlg["okay"];
 	cControl& text = pic_dlg["title"];
 	okay.attachClickHandler(std::bind(&cDialog::toast, &pic_dlg, false));
@@ -625,7 +626,7 @@ void custom_pic_dialog(std::string title, pic_num_t bigpic) {
 }
 
 void story_dialog(std::string title, str_num_t first, str_num_t last, eSpecCtxType which_str_type, pic_num_t pic, ePicType pt) {
-	cDialog story_dlg("many-str");
+	cDialog story_dlg(*ResMgr::dialogs.get("many-str"));
 	dynamic_cast<cPict&>(story_dlg["pict"]).setPict(pic, pt);
 	str_num_t cur = first;
 	story_dlg.attachClickHandlers([&cur,first,last,which_str_type](cDialog& me, std::string clicked, eKeyMod) -> bool {
@@ -661,7 +662,7 @@ static bool get_num_of_items_event_filter(cDialog& me, std::string, eKeyMod) {
 short get_num_of_items(short max_num) {
 	set_cursor(sword_curs);
 	
-	cDialog numPanel("get-num");
+	cDialog numPanel(*ResMgr::dialogs.get("get-num"));
 	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay"});
 	
 	numPanel["prompt"].setText("How many? (0-" + std::to_string(max_num) + ") ");
@@ -841,7 +842,7 @@ static bool get_text_response_event_filter(cDialog& me, std::string, eKeyMod) {
 std::string get_text_response(std::string prompt, pic_num_t pic) {
 	set_cursor(sword_curs);
 	
-	cDialog strPanel("get-response");
+	cDialog strPanel(*ResMgr::dialogs.get("get-response"));
 	strPanel.attachClickHandlers(get_text_response_event_filter, {"okay"});
 	if(!prompt.empty()) {
 		dynamic_cast<cPict&>(strPanel["pic"]).setPict(pic);
@@ -861,7 +862,7 @@ short get_num_response(short min, short max, std::string prompt) {
 	
 	set_cursor(sword_curs);
 	
-	cDialog numPanel("get-num");
+	cDialog numPanel(*ResMgr::dialogs.get("get-num"));
 	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay"});
 	
 	sout << " (" << min << '-' << max << ')';
@@ -898,7 +899,7 @@ short char_select_pc(short mode,const char *title) {
 	
 	set_cursor(sword_curs);
 	
-	cDialog selectPc("select-pc");
+	cDialog selectPc(*ResMgr::dialogs.get("select-pc"));
 	selectPc.attachClickHandlers(select_pc_event_filter, {"cancel", "pick1", "pick2", "pick3", "pick4", "pick5", "pick6"});
 	
 	selectPc["title"].setText(title);

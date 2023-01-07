@@ -719,6 +719,9 @@
     <ClCompile Include="..\..\..\src\fileio\resmgr\res_cursor.cpp">
       <Filter>FileIO\ResMgr</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_dialog.cpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\fileio\resmgr\res_font.cpp">
       <Filter>FileIO\ResMgr</Filter>
     </ClCompile>
@@ -1002,6 +1005,9 @@
       <Filter>Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\fileio\resmgr\res_cursor.hpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_dialog.hpp">
       <Filter>FileIO\ResMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\fileio\resmgr\res_font.hpp">

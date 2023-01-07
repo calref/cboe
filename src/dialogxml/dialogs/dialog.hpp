@@ -29,6 +29,7 @@
 
 class cControl;
 class cTextField;
+struct DialogDefn;
 
 /// Specifies the relative position of a control's labelling text.
 enum eLabelPos {
@@ -62,7 +63,7 @@ class cDialog {
 	std::string currentFocus;
 	cDialog* parent;
 	std::string generateRandomString();
-	void loadFromFile(std::string path);
+	void loadFromFile(const DialogDefn& file);
 	template<typename Iter> void handleTabOrder(std::string& itemHit, Iter begin, Iter end);
 	std::vector<std::pair<std::string,cTextField*>> tabOrder;
 	static cDialog* topWindow; // Tracks the frontmost dialog.
@@ -80,7 +81,7 @@ public:
 	/// Creates a new dialog, loading its definition from a file.
 	/// @param path The name of the file to load. It must be in the game's dialogs directory.
 	/// @param p Optionally, a parent dialog.
-	explicit cDialog(std::string path, cDialog* p = nullptr); // cd_create_dialog
+	explicit cDialog(const DialogDefn& file, cDialog* p = nullptr); // cd_create_dialog
 	~cDialog(); // cd_kill_dialog
 	/// Add a new control to the dialog.
 	/// @param what A pointer to the control, which should already be constructed.

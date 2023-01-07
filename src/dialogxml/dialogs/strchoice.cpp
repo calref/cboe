@@ -13,11 +13,17 @@
 
 #include <boost/lexical_cast.hpp>
 
+#include "fileio/resmgr/res_dialog.hpp"
+
+static DialogDefn& loadDefn() {
+	return *ResMgr::dialogs.get("choose-string");
+}
+
 cStringChoice::cStringChoice(
 		std::vector<std::string>& strs,
 		std::string title,
 		cDialog* parent
-	) : dlg("choose-string",parent) {
+	) : dlg(loadDefn(),parent) {
 	if(!title.empty()) dlg["title"].setText(title);
 	strings = strs;
 	attachHandlers();
@@ -28,7 +34,7 @@ cStringChoice::cStringChoice(
 		std::vector<std::string>::iterator end,
 		std::string title,
 		cDialog* parent
-	) : dlg("choose-string",parent) {
+	) : dlg(loadDefn(),parent) {
 	if(!title.empty()) dlg["title"].setText(title);
 	copy(begin,end,std::inserter(strings, strings.begin()));
 	attachHandlers();

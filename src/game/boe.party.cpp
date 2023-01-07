@@ -34,6 +34,7 @@
 #include "dialogxml/dialogs/pictchoice.hpp"
 #include "tools/winutil.hpp"
 #include "fileio/fileio.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
 #include "boe.menus.hpp"
 #include <boost/lexical_cast.hpp>
 #include "dialogxml/widgets/button.hpp"
@@ -1974,7 +1975,7 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	
 	set_cursor(sword_curs);
 	
-	cDialog castSpell("cast-spell");
+	cDialog castSpell(*ResMgr::dialogs.get("cast-spell"));
 	
 	castSpell.attachClickHandlers(std::bind(pick_spell_caster, _1, _2, type, std::ref(dark), std::ref(former_spell)), {"caster1","caster2","caster3","caster4","caster5","caster6"});
 	castSpell.attachClickHandlers(std::bind(pick_spell_target,_1,_2, type, dark, former_spell), {"target1","target2","target3","target4","target5","target6"});
@@ -2135,7 +2136,7 @@ eAlchemy alch_choice(short pc_num) {
 	
 	store_alchemy_pc = pc_num;
 	
-	cDialog chooseAlchemy("pick-potion");
+	cDialog chooseAlchemy(*ResMgr::dialogs.get("pick-potion"));
 	chooseAlchemy.attachClickHandlers(alch_choice_event_filter, {"cancel", "help"});
 	for(short i = 0; i < 20; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
@@ -2195,7 +2196,7 @@ bool pick_pc_name(short pc_num,cDialog* parent) {
 	using namespace std::placeholders;
 	set_cursor(sword_curs);
 	
-	cDialog pcPickName("pick-pc-name", parent);
+	cDialog pcPickName(*ResMgr::dialogs.get("pick-pc-name"), parent);
 	pcPickName["name"].setText(univ.party[pc_num].name);
 	pcPickName["okay"].attachClickHandler(std::bind(pc_name_event_filter, _1, pc_num));
 	

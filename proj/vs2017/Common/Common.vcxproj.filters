@@ -786,6 +786,9 @@
     <ClInclude Include="..\..\..\src\fileio\resmgr\res_cursor.hpp">
       <Filter>FileIO\ResMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_dialog.hpp">
+      <Filter>FileIO\ResMgr</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\fileio\resmgr\res_font.hpp">
       <Filter>FileIO\ResMgr</Filter>
     </ClInclude>

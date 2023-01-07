@@ -22,6 +22,7 @@
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/widgets/button.hpp"
 #include "fileio/fileio.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
 #include <boost/lexical_cast.hpp>
 #include "tools/prefs.hpp"
 #include "spell.hpp"
@@ -119,7 +120,7 @@ void display_spells(eSkill mode,short force_spell,cDialog* parent) {
 	
 	set_cursor(sword_curs);
 	
-	cDialog spellInfo("spell-info", parent);
+	cDialog spellInfo(*ResMgr::dialogs.get("spell-info"), parent);
 	spellInfo.attachClickHandlers(std::bind(display_spells_event_filter,_1,_2,mode), {"done","left","right"});
 	
 	dynamic_cast<cPict&>(spellInfo["icon"]).setPict(mode == eSkill::MAGE_SPELLS ? 14 : 15);
@@ -175,7 +176,7 @@ void display_skills(eSkill force_skill,cDialog* parent) {
 	
 	set_cursor(sword_curs);
 	
-	cDialog skillDlog("skill-info", parent);
+	cDialog skillDlog(*ResMgr::dialogs.get("skill-info"), parent);
 	skillDlog.attachClickHandlers(display_skills_event_filter,{"done", "left", "right"});
 	
 	put_skill_info(skillDlog);
@@ -211,7 +212,7 @@ void display_pc_item(short pc_num,short item,cItem si,cDialog* parent) {
 	else store_i = univ.party[pc_num].items[item];
 	set_cursor(sword_curs);
 	
-	cDialog itemInfo("item-info",parent);
+	cDialog itemInfo(*ResMgr::dialogs.get("item-info"),parent);
 	// By attaching the click handler to "id" and "magic", we suppress normal LED behaviour
 	itemInfo.attachClickHandlers(std::bind(display_pc_item_event_filter, _1, _2, std::ref(store_i), std::ref(item), pc_num), {"done","left","right","id","magic"});
 	
@@ -267,7 +268,7 @@ void display_monst(short array_pos,cCreature *which_m,short mode) {
 	
 	set_cursor(sword_curs);
 	
-	cDialog monstInfo("monster-info");
+	cDialog monstInfo(*ResMgr::dialogs.get("monster-info"));
 	auto event_filter = std::bind(display_monst_event_filter, _1, _2,std::ref(store_m));
 	monstInfo["done"].attachClickHandler(std::bind(&cDialog::toast, &monstInfo, true));
 	monstInfo.attachClickHandlers(event_filter, {"left", "right"});
@@ -310,7 +311,7 @@ void display_alchemy() {
 	
 	set_cursor(sword_curs);
 	
-	cDialog alchemy("many-str");
+	cDialog alchemy(*ResMgr::dialogs.get("many-str"));
 	alchemy.attachClickHandlers(display_alchemy_event_filter, {"done", "left", "right"});
 	
 	get_text = get_str("alchemy", 1);
@@ -445,7 +446,7 @@ void give_pc_info(short pc_num) {
 	
 	set_cursor(sword_curs);
 	
-	cDialog pcInfo("pc-info");
+	cDialog pcInfo(*ResMgr::dialogs.get("pc-info"));
 	pcInfo.attachClickHandlers(std::bind(give_pc_info_event_filter, _1, _2, std::ref(pc_num)), {"done", "left", "right"});
 	pcInfo.attachClickHandlers(std::bind(give_pc_extra_info, _1, _2, std::ref(pc_num)), {"seemage", "seepriest", "trait", "seealch"});
 	
@@ -511,7 +512,7 @@ void adventure_notes() {
 	
 	set_cursor(sword_curs);
 	
-	cDialog encNotes("adventure-notes");
+	cDialog encNotes(*ResMgr::dialogs.get("adventure-notes"));
 	encNotes.attachClickHandlers(adventure_notes_event_filter, {"done", "left", "right", "del1", "del2", "del3"});
 	
 	for(short i = 0; i < 3; i++) {
@@ -571,7 +572,7 @@ void talk_notes() {
 	
 	set_cursor(sword_curs);
 	
-	cDialog talkNotes("talk-notes");
+	cDialog talkNotes(*ResMgr::dialogs.get("talk-notes"));
 	talkNotes.attachClickHandlers(talk_notes_event_filter, {"done", "left", "right", "del"});
 	
 	put_talk(talkNotes);
@@ -624,7 +625,7 @@ void journal() {
 	
 	set_cursor(sword_curs);
 	
-	cDialog journal("event-journal");
+	cDialog journal(*ResMgr::dialogs.get("event-journal"));
 	journal.attachClickHandlers(journal_event_filter, {"done", "left", "right"});
 	
 	fill_journal(journal);
@@ -672,7 +673,7 @@ void give_help(short help1, short help2, cDialog& parent) {
 
 void put_quest_info(short which_i) {
 	cQuest& quest = univ.scenario.quests[which_i];
-	cDialog quest_dlg("quest-info");
+	cDialog quest_dlg(*ResMgr::dialogs.get("quest-info"));
 	quest_dlg["name"].setText(quest.name);
 	quest_dlg["descr"].setText(quest.descr);
 	int start = univ.party.active_quests[which_i].start;

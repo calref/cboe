@@ -10,6 +10,7 @@
 #include "dialogxml/widgets/pict.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
 #include "tools/winutil.hpp"
 #include "tools/cursors.hpp"
 #include "gfx/render_shapes.hpp" // for colour constants
@@ -103,7 +104,7 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 	
 	set_cursor(sword_curs);
 	
-	cDialog pcInfo("pc-spell-info", parent);
+	cDialog pcInfo(*ResMgr::dialogs.get("pc-spell-info"), parent);
 	pcInfo.attachClickHandlers(std::bind(display_pc_event_filter, _1, _2, mode),{"done","left","right"});
 	
 	for(short i = 0; i < 62; i++) {
@@ -199,7 +200,7 @@ void pick_race_abil(cPlayer *pc,short mode,cDialog* parent) {
 	store_pc = pc;
 	set_cursor(sword_curs);
 	
-	cDialog pickAbil("pick-race-abil",parent);
+	cDialog pickAbil(*ResMgr::dialogs.get("pick-race-abil"),parent);
 	pickAbil["done"].attachClickHandler(std::bind(&cDialog::toast, &pickAbil, true));
 	auto led_selector = std::bind(pick_race_select_led, _1, _2, _3, mode);
 	pickAbil.attachFocusHandlers(led_selector, {"race", "bad1", "bad2", "bad3", "bad4", "bad5", "bad6", "bad7"});
@@ -549,7 +550,7 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 	save.mode = mode;
 	save.skills = univ.party[pc_num].skills;
 	
-	cDialog xpDlog("spend-xp",parent);
+	cDialog xpDlog(*ResMgr::dialogs.get("spend-xp"),parent);
 	xpDlog.addLabelFor("hp","Health (1/10)",LABEL_LEFT,75,true);
 	xpDlog.addLabelFor("sp","Spell Pts. (1/15)",LABEL_LEFT,75,true);
 	auto spend_xp_filter = std::bind(spend_xp_event_filter,_1,_2,_3,std::ref(save));
@@ -577,7 +578,7 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 }
 
 void edit_stuff_done() {
-	cDialog sdf_dlg("set-sdf");
+	cDialog sdf_dlg(*ResMgr::dialogs.get("set-sdf"));
 	sdf_dlg.attachFocusHandlers([](cDialog& me, std::string, bool losing) -> bool {
 		if(!losing) return true;
 		int x = me["x"].getTextAsNum(), y = me["y"].getTextAsNum();

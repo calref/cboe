@@ -20,7 +20,7 @@ typedef std::function<void(cDialog&)> record_callback_t;
 
 /// A simple dialog with one or two long strings, an optional title, and an optional record button.
 class cStrDlog {
-	static std::string getFileName(short n_strs, ePicType type, bool hasTitle);
+	static struct DialogDefn& getDefn(short n_strs, ePicType type, bool hasTitle);
 	cDialog dlg;
 	short sound = -1;
 	record_callback_t rec_f;

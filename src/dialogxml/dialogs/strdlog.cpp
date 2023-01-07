@@ -11,18 +11,19 @@
 #include <sstream>
 #include "tools/winutil.hpp"
 #include "dialogxml/widgets/pict.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
 
-std::string cStrDlog::getFileName(short n_strs, ePicType type, bool hasTitle){
+DialogDefn& cStrDlog::getDefn(short n_strs, ePicType type, bool hasTitle){
 	std::ostringstream sout;
 	sout << n_strs << "str";
 	if(hasTitle) sout << "-title";
 	if(type == PIC_DLOG_LG || type == PIC_CUSTOM_DLOG_LG || type == PIC_SCEN_LG)
 		sout << "-lg";
-	return sout.str();
+	return *ResMgr::dialogs.get(sout.str());
 }
 
 cStrDlog::cStrDlog(std::string str1,std::string str2,std::string title,pic_num_t pic,ePicType t,cDialog* parent)
-	  : dlg(cStrDlog::getFileName((str1 != "") + (str2 != ""), t, title != ""), parent), type(t) {
+	  : dlg(cStrDlog::getDefn((str1 != "") + (str2 != ""), t, title != ""), parent), type(t) {
 	using namespace std::placeholders;
 	cPict& pic_ctrl = dynamic_cast<cPict&>(dlg["pict"]);
 	pic_ctrl.setPict(pic, type);

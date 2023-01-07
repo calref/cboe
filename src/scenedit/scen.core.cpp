@@ -26,6 +26,7 @@
 #include "dialogxml/dialogs/strchoice.hpp"
 #include "fileio/fileio.hpp"
 #include "dialogxml/widgets/field.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
 #include "fileio/resmgr/res_strings.hpp"
 #include "fileio/resmgr/res_image.hpp"
 #include "fileio/resmgr/res_sound.hpp"
@@ -460,7 +461,7 @@ static bool finish_editing_ter(cDialog& me, std::string id, ter_num_t& which) {
 static bool edit_ter_obj(cDialog& me, ter_num_t which_ter) {
 	cTerrain& ter = scenario.ter_types[which_ter];
 	const pic_num_t pic = ter.picture;
-	cDialog obj_dlg("edit-ter-obj", &me);
+	cDialog obj_dlg(*ResMgr::dialogs.get("edit-ter-obj"), &me);
 	obj_dlg.attachFocusHandlers([&pic](cDialog& me, std::string fld, bool losing) -> bool {
 		if(!losing) return true;
 		int id = me["id"].getTextAsNum();
@@ -558,7 +559,7 @@ static bool play_ter_step_sound(cDialog& me, std::string id, bool losing) {
 bool edit_ter_type(ter_num_t which) {
 	using namespace std::placeholders;
 	ter_num_t first = which;
-	cDialog ter_dlg("edit-terrain");
+	cDialog ter_dlg(*ResMgr::dialogs.get("edit-terrain"));
 	// Attach handlers
 	ter_dlg["pict"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,2999,"terrain graphic"));
 	ter_dlg["pickpict"].attachClickHandler(std::bind(pick_picture,PIC_TER,_1,"pict","graphic"));
@@ -822,7 +823,7 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& m
 			put_monst_info_in_dlog(me,monst,which);
 		}
 	} else if(hit == "preview") {
-		cDialog monstInfo("monster-info", &me);
+		cDialog monstInfo(*ResMgr::dialogs.get("monster-info"), &me);
 		monstInfo["left"].hide();
 		monstInfo["right"].hide();
 		monstInfo.attachClickHandlers([](cDialog&,std::string,eKeyMod){return false;}, {"guard","mindless","invuln"});
@@ -851,7 +852,7 @@ bool edit_monst_type(short which) {
 	mon_num_t first = which;
 	cMonster monst = scenario.scen_monsters[which];
 	
-	cDialog monst_dlg("edit-monster");
+	cDialog monst_dlg(*ResMgr::dialogs.get("edit-monster"));
 	monst_dlg["pickicon"].attachClickHandler(std::bind(pick_monst_picture,_1));
 	monst_dlg["picktalk"].attachClickHandler(std::bind(pick_picture,PIC_TALK,_1,"talk","talkpic"));
 	monst_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &monst_dlg, false));
@@ -997,7 +998,7 @@ static bool edit_monst_abil_event_filter(cDialog& me,std::string hit,cMonster& m
 }
 
 static short get_monst_abil_num(std::string prompt, int min, int max, cDialog& parent, int cur = -1) {
-	cDialog numPanel("get-mabil-num", &parent);
+	cDialog numPanel(*ResMgr::dialogs.get("get-mabil-num"), &parent);
 	numPanel["okay"].attachClickHandler(std::bind(&cDialog::toast, &numPanel, false));
 	numPanel["prompt"].setText(prompt + " (" + std::to_string(min) + "-" + std::to_string(max) + ") ");
 	numPanel["number"].setTextToNum(minmax(min,max,cur));
@@ -1238,7 +1239,7 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 		case eMonstAbilCat::SPECIAL: break;
 	}
 	using namespace std::placeholders;
-	cDialog abil_dlg("edit-mabil-" + which_dlg, &me);
+	cDialog abil_dlg(*ResMgr::dialogs.get("edit-mabil-" + which_dlg), &me);
 	abil_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, _1, true));
 	abil_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
 	abil_dlg["delete"].attachClickHandler([&monst,&iter](cDialog& me,std::string,eKeyMod){
@@ -1381,7 +1382,7 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 cMonster edit_monst_abil(cMonster initial,short which,cDialog& parent) {
 	using namespace std::placeholders;
 	
-	cDialog monst_dlg("edit-monster-abils",&parent);
+	cDialog monst_dlg(*ResMgr::dialogs.get("edit-monster-abils"),&parent);
 	monst_dlg["loot-item"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 399, "Item To Drop", "-1 for no item"));
 	monst_dlg["loot-chance"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 100, "Dropping Chance", "-1 for no item"));
 	monst_dlg.attachClickHandlers(std::bind(edit_monst_abil_detail, _1, _2, std::ref(initial)), {"abil-edit1", "abil-edit2", "abil-edit3", "abil-edit4"});
@@ -1653,7 +1654,7 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 		if(i < 0) return true;
 		item.missile = i;
 	} else if(hit == "desc") {
-		cDialog desc_dlg("edit-text", &me);
+		cDialog desc_dlg(*ResMgr::dialogs.get("edit-text"), &me);
 		desc_dlg["left"].hide();
 		desc_dlg["right"].hide();
 		desc_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, &desc_dlg, true));
@@ -1680,7 +1681,7 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 	} else if(hit == "preview") {
 		cItem temp_item = item;
 		temp_item.ident = true;
-		cDialog itemInfo("item-info", &me);
+		cDialog itemInfo(*ResMgr::dialogs.get("item-info"), &me);
 		itemInfo["left"].hide();
 		itemInfo["right"].hide();
 		itemInfo["done"].attachClickHandler(std::bind(&cDialog::toast, &itemInfo, false));
@@ -1734,7 +1735,7 @@ bool edit_item_type(short which) {
 		scenario.scen_items.resize(which + 1);
 	cItem item = scenario.scen_items[which];
 	
-	cDialog item_dlg("edit-item");
+	cDialog item_dlg(*ResMgr::dialogs.get("edit-item"));
 	item_dlg["level"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 50, "Item Level"));
 	item_dlg["awkward"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 20, "Awkward"));
 	item_dlg["bonus"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 60, "Bonus"));
@@ -1970,7 +1971,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 cItem edit_item_abil(cItem initial,short which_item,cDialog& parent) {
 	using namespace std::placeholders;
 	
-	cDialog item_dlg("edit-item-abils",&parent);
+	cDialog item_dlg(*ResMgr::dialogs.get("edit-item-abils"),&parent);
 	item_dlg.attachClickHandlers(std::bind(edit_item_abil_event_filter, _1, _2, std::ref(initial), which_item), {
 		"okay", "cancel",
 		"clear", "weapon", "general", "usable", "reagent",
@@ -2041,7 +2042,7 @@ bool edit_spec_item(short which_item) {
 	using namespace std::placeholders;
 	cSpecItem item = scenario.special_items[which_item];
 	
-	cDialog item_dlg("edit-special-item");
+	cDialog item_dlg(*ResMgr::dialogs.get("edit-special-item"));
 	item_dlg["spec"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, scenario.scen_specials.size(), "Scenario special node called", "-1 for no special"));
 	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(which_item)), {"okay", "cancel", "clear", "edit-spec"});
 	
@@ -2133,7 +2134,7 @@ bool edit_quest(size_t which_quest) {
 	}
 	cQuest quest = scenario.quests[which_quest];
 	
-	cDialog quest_dlg("edit-quest");
+	cDialog quest_dlg(*ResMgr::dialogs.get("edit-quest"));
 	quest_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
 	quest_dlg["okay"].attachClickHandler(std::bind(save_quest_from_dlog, _1, std::ref(quest), std::ref(which_quest), true));
 	quest_dlg["inbank"].attachFocusHandler([](cDialog& me, std::string, bool losing) -> bool {
@@ -2281,7 +2282,7 @@ static bool change_shop_dlog_items_page(cDialog& me, std::string dir, const cSho
 static void edit_shop_item(cDialog& parent, size_t& item, size_t& quantity, bool optional) {
 	using namespace std::placeholders;
 	int was_item = item;
-	cDialog item_dlg("edit-shop-item", &parent);
+	cDialog item_dlg(*ResMgr::dialogs.get("edit-shop-item"), &parent);
 	item_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
 	item_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, _1, true));
 	
@@ -2313,7 +2314,7 @@ static void edit_shop_item(cDialog& parent, size_t& item, size_t& quantity, bool
 
 static void edit_shop_special(cDialog& parent, cItem& item, size_t& quantity) {
 	using namespace std::placeholders;
-	cDialog spec_dlg("edit-shop-special", &parent);
+	cDialog spec_dlg(*ResMgr::dialogs.get("edit-shop-special"), &parent);
 	spec_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
 	spec_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, _1, true));
 	spec_dlg["cost"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 10000, "cost"));
@@ -2479,7 +2480,7 @@ bool edit_shop(size_t which_shop, cDialog* parent) {
 		scenario.shops.emplace_back("New Shop");
 	cShop shop = scenario.shops[which_shop];
 	
-	cDialog shop_dlg("edit-shop", parent);
+	cDialog shop_dlg(*ResMgr::dialogs.get("edit-shop"), parent);
 	shop_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
 	shop_dlg["okay"].attachClickHandler(std::bind(save_shop_from_dlog, _1, std::ref(shop), std::ref(which_shop), true));
 	shop_dlg["pickface"].attachClickHandler(std::bind(pick_picture, PIC_TALK, _1, "", "face"));
@@ -2558,7 +2559,7 @@ static bool edit_save_rects_event_filter(cDialog& me, std::string item_hit) {
 void edit_save_rects() {
 	using namespace std::placeholders;
 	
-	cDialog save_dlg("edit-save-rects");
+	cDialog save_dlg(*ResMgr::dialogs.get("edit-save-rects"));
 	save_dlg.attachClickHandlers(std::bind(edit_save_rects_event_filter, _1, _2), {"okay"});
 	
 	put_save_rects_in_dlog(save_dlg);
@@ -2578,7 +2579,7 @@ static void put_vehicle_area(cDialog& me, const cVehicle& what) {
 
 bool edit_vehicle(cVehicle& what, int num, bool is_boat) {
 	using namespace std::placeholders;
-	cDialog dlg("edit-vehicle");
+	cDialog dlg(*ResMgr::dialogs.get("edit-vehicle"));
 	dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, &dlg, true));
 	dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &dlg, false));
 	dlg["del"].attachClickHandler([](cDialog& me, std::string, eKeyMod) {
@@ -2642,7 +2643,7 @@ static bool edit_add_town_event_filter(cDialog& me, std::string hit) {
 void edit_add_town() {
 	using namespace std::placeholders;
 	
-	cDialog vary_dlg("edit-town-varying");
+	cDialog vary_dlg(*ResMgr::dialogs.get("edit-town-varying"));
 	vary_dlg.attachClickHandlers(std::bind(edit_add_town_event_filter, _1, _2), {"okay"});
 	
 	put_add_town_in_dlog(vary_dlg);
@@ -2726,7 +2727,7 @@ void edit_item_placement() {
 	cScenario::cItemStorage storage = scenario.storage_shortcuts[0];
 	short cur_shortcut = 0;
 	
-	cDialog shortcut_dlg("edit-item-shortcut");
+	cDialog shortcut_dlg(*ResMgr::dialogs.get("edit-item-shortcut"));
 	shortcut_dlg.attachClickHandlers(std::bind(edit_item_placement_event_filter, _1, _2, std::ref(storage), std::ref(cur_shortcut)), {"okay", "cancel", "left", "right", "choose-ter"});
 	for(int i = 0; i < 10; i++) {
 		std::string id = "choose-item" + std::to_string(i + 1);
@@ -2818,7 +2819,7 @@ static bool edit_scen_default_bgs(cDialog& me, std::string which, eKeyMod) {
 }
 
 void edit_scen_details() {
-	cDialog info_dlg("edit-scenario-details");
+	cDialog info_dlg(*ResMgr::dialogs.get("edit-scenario-details"));
 	info_dlg["okay"].attachClickHandler(save_scen_details);
 	info_dlg.attachClickHandlers(edit_scen_default_bgs, {"bg-out", "bg-town", "bg-dungeon", "bg-fight"});
 	info_dlg["pickinit"].attachClickHandler(edit_scen_init_spec);
@@ -2829,7 +2830,7 @@ void edit_scen_details() {
 }
 
 bool edit_make_scen_1(std::string& author,std::string& title,bool& grass) {
-	cDialog new_dlog("make-scenario1");
+	cDialog new_dlog(*ResMgr::dialogs.get("make-scenario1"));
 	new_dlog["okay"].attachClickHandler(std::bind(&cDialog::toast, &new_dlog, true));
 	new_dlog["cancel"].attachClickHandler(std::bind(&cDialog::toast, &new_dlog, false));
 	
@@ -2872,7 +2873,7 @@ static bool make_scen_check_towns(cDialog& me, std::string which, bool losing) {
 }
 
 bool edit_make_scen_2(short& out_w, short& out_h, short& town_l, short& town_m, short& town_s, bool& def_town) {
-	cDialog new_dlog("make-scenario2");
+	cDialog new_dlog(*ResMgr::dialogs.get("make-scenario2"));
 	new_dlog["okay"].attachClickHandler(std::bind(&cDialog::toast, &new_dlog, true));
 	new_dlog["cancel"].attachClickHandler(std::bind(&cDialog::toast, &new_dlog, false));
 	new_dlog.attachFocusHandlers(make_scen_check_towns, {"town-s", "town-m", "town-l"});
@@ -3137,7 +3138,7 @@ static bool edit_scenario_events_event_filter(cDialog& me, std::string item_hit,
 void edit_scenario_events() {
 	using namespace std::placeholders;
 	
-	cDialog evt_dlg("edit-scenario-events");
+	cDialog evt_dlg(*ResMgr::dialogs.get("edit-scenario-events"));
 	evt_dlg["okay"].attachClickHandler(save_scenario_events);
 	// TODO: There are 20 events, not 10; allow editing the rest?
 	for(int i = 0; i < scenario.scenario_timers.size() && i < 10; i++) {
@@ -3291,7 +3292,7 @@ void edit_custom_pics_types() {
 	std::vector<ePicType> pics = scenario.custom_graphics;
 	pic_num_t first_pic = 0;
 	
-	cDialog pic_dlg("graphic-types");
+	cDialog pic_dlg(*ResMgr::dialogs.get("graphic-types"));
 	for(int i = 0; i < 10; i++) {
 		std::string id = std::to_string(i + 1);
 		pic_dlg["type" + id].attachFocusHandler(std::bind(set_custom_pic_type, _1, _2, std::ref(pics), std::ref(first_pic)));
@@ -3372,7 +3373,7 @@ void edit_custom_sheets() {
 	
 	using namespace std::placeholders;
 	
-	cDialog pic_dlg("graphic-sheets");
+	cDialog pic_dlg(*ResMgr::dialogs.get("graphic-sheets"));
 	pic_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
 	pic_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, _1, true));
 	pic_dlg["copy"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog&, std::string, eKeyMod) -> bool {
@@ -3623,7 +3624,7 @@ static void get_sound_names_from_dlg(cDialog& me, std::vector<std::string>& snd_
 }
 
 void edit_custom_sounds() {
-	cDialog snd_dlg("edit-sounds");
+	cDialog snd_dlg(*ResMgr::dialogs.get("edit-sounds"));
 	snd_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &snd_dlg, false));
 	snd_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, &snd_dlg, true));
 	

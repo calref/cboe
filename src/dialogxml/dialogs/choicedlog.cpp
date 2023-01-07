@@ -10,8 +10,9 @@
 
 #include <functional>
 #include "dialogxml/widgets/control.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
 
-cChoiceDlog::cChoiceDlog(std::string file, std::vector<std::string> buttons, cDialog* p) : dlg(file, p) {
+cChoiceDlog::cChoiceDlog(std::string file, std::vector<std::string> buttons, cDialog* p) : dlg(*ResMgr::dialogs.get(file), p) {
 	using namespace std::placeholders;
 	std::vector<std::string>::iterator iter = buttons.begin();
 	while(iter != buttons.end()){

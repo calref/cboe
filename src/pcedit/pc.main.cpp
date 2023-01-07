@@ -20,6 +20,7 @@
 #include "pc.menus.hpp"
 #include "tools/winutil.hpp"
 #include "tools/cursors.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
 #include "fileio/resmgr/res_image.hpp"
 #include "tools/prefs.hpp"
 #include "tools/framerate_limiter.hpp"
@@ -462,7 +463,7 @@ void display_skills(eSkill skill,cDialog* parent) {
 	extern std::map<eSkill,short> skill_max;
 	extern std::map<eSkill,short> skill_g_cost;
 	int skill_pos = int(skill);
-	cDialog skillDlog("skill-info", parent);
+	cDialog skillDlog(*ResMgr::dialogs.get("skill-info"), parent);
 	skillDlog["done"].attachClickHandler(std::bind(&cDialog::toast, &skillDlog, true));
 	skillDlog["name"].setText(get_str("skills",skill_pos * 2 + 1));
 	skillDlog["skp"].setTextToNum(skill_cost[skill]);

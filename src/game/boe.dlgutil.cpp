@@ -27,6 +27,7 @@
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "tools/winutil.hpp"
 #include "fileio/fileio.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
 #include "fileio/resmgr/res_strings.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
 #include "dialogxml/widgets/button.hpp"
@@ -628,7 +629,7 @@ static void fill_job_bank(cDialog& me, job_bank_t& bank, std::string) {
 }
 
 static void show_job_bank(int which_bank, std::string title) {
-	cDialog job_dlg("job-bank");
+	cDialog job_dlg(*ResMgr::dialogs.get("job-bank"));
 	job_dlg.attachClickHandlers([&](cDialog& me, std::string hit, eKeyMod) -> bool {
 		int which = hit[4] - '1';
 		me["prompt"].setText("Job accepted.");
@@ -1153,7 +1154,7 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 void pick_preferences() {
 	set_cursor(sword_curs);
 	
-	cDialog prefsDlog("preferences");
+	cDialog prefsDlog(*ResMgr::dialogs.get("preferences"));
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 	
 	cLedGroup& displayMode = dynamic_cast<cLedGroup&>(prefsDlog["display"]);
@@ -1291,7 +1292,7 @@ static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod) 
 void edit_party() {
 	set_cursor(sword_curs);
 	
-	cDialog pcDialog("edit-party");
+	cDialog pcDialog(*ResMgr::dialogs.get("edit-party"));
 	std::vector<std::string> buttons = {"done", "help"};
 	for(int i = 1; i <= 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i);
@@ -1337,7 +1338,7 @@ void tip_of_day() {
 	
 	set_cursor(sword_curs);
 	
-	cDialog tips("tip-of-day");
+	cDialog tips(*ResMgr::dialogs.get("tip-of-day"));
 	tips.attachClickHandlers(std::bind(tip_of_day_event_filter, _1, _2, std::ref(page)),{"done","next"});
 	
 	tips["tip"].setText(get_str("tips",50 + page));
@@ -1352,7 +1353,7 @@ void tip_of_day() {
 }
 
 class cChooseScenario {
-	cDialog me{"pick-scenario"};
+	cDialog me{*ResMgr::dialogs.get("pick-scenario")};
 	std::vector<scen_header_type> scen_headers;
 	void put_scen_info() {
 		std::ostringstream sout;

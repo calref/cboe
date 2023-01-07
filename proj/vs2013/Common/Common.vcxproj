@@ -227,6 +227,7 @@
     <ClCompile Include="..\..\..\src\fileio\xml-parser\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\..\src\fileio\xml-parser\tinyxmlparser.cpp" />
     <ClCompile Include="..\..\..\src\fileio\resmgr\res_cursor.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_dialog.cpp" />
     <ClCompile Include="..\..\..\src\fileio\resmgr\res_font.cpp" />
     <ClCompile Include="..\..\..\src\fileio\resmgr\res_image.cpp" />
     <ClCompile Include="..\..\..\src\fileio\resmgr\res_sound.cpp" />
@@ -297,6 +298,7 @@
     <ClInclude Include="..\..\..\src\fileio\map_parse.hpp" />
     <ClInclude Include="..\..\..\src\fileio\resmgr\resmgr.hpp" />
     <ClInclude Include="..\..\..\src\fileio\resmgr\res_cursor.hpp" />
+    <ClInclude Include="..\..\..\src\fileio\resmgr\res_dialog.hpp" />
     <ClInclude Include="..\..\..\src\fileio\resmgr\res_font.hpp" />
     <ClInclude Include="..\..\..\src\fileio\resmgr\res_image.hpp" />
     <ClInclude Include="..\..\..\src\fileio\resmgr\res_sound.hpp" />

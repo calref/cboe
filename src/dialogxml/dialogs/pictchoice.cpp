@@ -11,10 +11,15 @@
 #include <sstream>
 #include <boost/lexical_cast.hpp>
 #include "dialogxml/widgets/pict.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
+
+static DialogDefn& loadDefn() {
+	return *ResMgr::dialogs.get("choose-pict");
+}
 
 cPictChoice::cPictChoice(const std::vector<pic_num_t>& pics,ePicType t,cDialog* parent) : cPictChoice(pics.begin(), pics.end(), t, parent) {}
 
-cPictChoice::cPictChoice(const std::vector<std::pair<pic_num_t,ePicType>>& pics,cDialog* parent) : dlg("choose-pict",parent) {
+cPictChoice::cPictChoice(const std::vector<std::pair<pic_num_t,ePicType>>& pics,cDialog* parent) : dlg(loadDefn(),parent) {
 	picts = pics;
 	attachHandlers();
 }
@@ -24,14 +29,14 @@ cPictChoice::cPictChoice(
 		std::vector<pic_num_t>::const_iterator end,
 		ePicType t,
 		cDialog* parent
-	) : dlg("choose-pict",parent) {
+	) : dlg(loadDefn(),parent) {
 	for(auto iter = begin; iter != end; iter++) {
 		picts.push_back({*iter,t});
 	}
 	attachHandlers();
 }
 
-cPictChoice::cPictChoice(pic_num_t first, pic_num_t last, ePicType t, cDialog* parent) : dlg("choose-pict",parent) {
+cPictChoice::cPictChoice(pic_num_t first, pic_num_t last, ePicType t, cDialog* parent) : dlg(loadDefn(),parent) {
 	for(pic_num_t i = first; i <= last; i++) {
 		picts.push_back({i,t});
 	}

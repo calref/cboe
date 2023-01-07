@@ -18,6 +18,7 @@
 #include "dialogxml/dialogs/3choice.hpp"
 #include "dialogxml/dialogs/strchoice.hpp"
 #include "dialogxml/dialogs/pictchoice.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
 #include "fileio/resmgr/res_strings.hpp"
 #include "spell.hpp"
 #include "gfx/render_shapes.hpp" // for colour constants
@@ -121,7 +122,7 @@ bool cre(short val,short min,short max,std::string text1,std::string text2,cDial
 }
 
 short choose_background(short cur_choice, cDialog* parent) {
-	cDialog bg_dlg("choose-bg",parent);
+	cDialog bg_dlg(*ResMgr::dialogs.get("choose-bg"),parent);
 	auto get_selected = [&]() -> short {
 		std::string sel = dynamic_cast<cLedGroup&>(bg_dlg["group"]).getSelected();
 		if(sel.empty()) return -1;
@@ -467,7 +468,7 @@ bool edit_text_str(short which_str,eStrMode mode) {
 	using namespace std::placeholders;
 	short first = which_str;
 	
-	cDialog dlog("edit-text");
+	cDialog dlog(*ResMgr::dialogs.get("edit-text"));
 	dlog.attachClickHandlers(std::bind(edit_text_event_filter, _1, _2, std::ref(which_str), mode), {"okay", "left", "right"});
 	dlog["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
 	
@@ -495,7 +496,7 @@ static bool edit_area_rect_event_filter(cDialog& me, std::string item_hit, info_
 bool edit_area_rect_str(info_rect_t& r) {
 	using namespace std::placeholders;
 	
-	cDialog dlog("set-area-desc");
+	cDialog dlog(*ResMgr::dialogs.get("set-area-desc"));
 	dlog.attachClickHandlers(std::bind(edit_area_rect_event_filter, _1, _2, std::ref(r)), {"okay", "cancel"});
 	
 	dlog["area"].setText(r.descr);
@@ -966,7 +967,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 		the_node = town->specials[which_node];
 	}
 
-	cDialog special("edit-special-node",parent);
+	cDialog special(*ResMgr::dialogs.get("edit-special-node"),parent);
 	special.attachClickHandlers(std::bind(commit_spec_enc, _1, _2, std::ref(edit_stack)), {"okay", "back"});
 	special.attachClickHandlers(std::bind(edit_spec_enc_type, _1, _2, std::ref(edit_stack)), {
 		"general", "oneshot", "affectpc", "ifthen", "town", "out", "rect"
@@ -1061,7 +1062,8 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, eStrM
 void edit_spec_text(eStrMode mode,short *str1,short *str2,cDialog* parent) {
 	using namespace std::placeholders;
 	
-	cDialog edit(str2 ? "edit-special-text" : "edit-special-text-sm", parent);
+	std::string dlog_id = str2 ? "edit-special-text" : "edit-special-text-sm";
+	cDialog edit(*ResMgr::dialogs.get(dlog_id), parent);
 	edit.attachClickHandlers(std::bind(edit_spec_text_event_filter, _1, _2, mode, str1, str2), {"okay", "cancel"});
 	
 	if(*str1 >= num_strs(mode))
@@ -1126,7 +1128,7 @@ void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent) {
 	}
 	
 	using namespace std::placeholders;
-	cDialog edit("edit-dialog-text",parent);
+	cDialog edit(*ResMgr::dialogs.get("edit-dialog-text"),parent);
 	edit.attachClickHandlers(std::bind(edit_dialog_text_event_filter, _1, _2, mode, str1), {"okay", "cancel"});
 	
 	if(*str1 >= 0) {
@@ -1165,7 +1167,7 @@ static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, sho
 short edit_special_num(short mode,short what_start) {
 	using namespace std::placeholders;
 	
-	cDialog edit("edit-special-assign");
+	cDialog edit(*ResMgr::dialogs.get("edit-special-assign"));
 	edit.attachClickHandlers(std::bind(edit_special_num_event_filter, _1, _2, mode), {"okay", "cancel"});
 	
 	edit["num"].setTextToNum(what_start);
@@ -1201,7 +1203,7 @@ static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKey
 }
 
 void edit_scen_intro() {
-	cDialog edit("edit-intro");
+	cDialog edit(*ResMgr::dialogs.get("edit-intro"));
 	edit.attachClickHandlers(edit_scen_intro_event_filter, {"okay", "cancel", "choose"});
 	
 	edit["picnum"].setTextToNum(scenario.intro_pic);

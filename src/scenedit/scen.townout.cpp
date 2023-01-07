@@ -23,6 +23,7 @@
 #include "dialogxml/widgets/stack.hpp"
 #include "dialogxml/widgets/scrollpane.hpp"
 #include "fileio/fileio.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
 
 extern short cen_x, cen_y, overall_mode;
 extern bool mouse_button_held,editing_town,change_made;
@@ -107,7 +108,7 @@ void edit_placed_monst(short which_m) {
 	using namespace std::placeholders;
 	cTownperson monst = town->creatures[which_m];
 	
-	cDialog edit("edit-townperson");
+	cDialog edit(*ResMgr::dialogs.get("edit-townperson"));
 	edit.attachClickHandlers(std::bind(edit_placed_monst_event_filter, _1, _2, std::ref(monst), which_m), {"type-edit", "pict-edit", "talk-edit", "okay", "cancel", "more", "del"});
 	
 	put_placed_monst_in_dlog(edit, monst, which_m);
@@ -213,7 +214,7 @@ static bool edit_placed_monst_adv_hail(cDialog& me) {
 cTownperson edit_placed_monst_adv(cTownperson initial, short which, cDialog& parent) {
 	using namespace std::placeholders;
 	
-	cDialog edit("edit-townperson-advanced", &parent);
+	cDialog edit(*ResMgr::dialogs.get("edit-townperson-advanced"), &parent);
 	edit["okay"].attachClickHandler(std::bind(edit_placed_monst_adv_event_filter, _1, _2, std::ref(initial)));
 	edit["cancel"].attachClickHandler(std::bind(edit_placed_monst_adv_event_filter, _1, _2, std::ref(initial)));
 	edit["editdeath"].attachClickHandler(std::bind(edit_placed_monst_adv_death, _1));
@@ -333,7 +334,7 @@ void edit_placed_item(short which_i) {
 	
 	cTown::cItem item = town->preset_items[which_i];
 	
-	cDialog item_dlg("edit-placed-item");
+	cDialog item_dlg(*ResMgr::dialogs.get("edit-placed-item"));
 	item_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &item_dlg, false));
 	item_dlg["okay"].attachClickHandler(std::bind(get_placed_item_in_dlog, _1, std::ref(item), which_i));
 	item_dlg["choose"].attachClickHandler(std::bind(edit_placed_item_type, _1, std::ref(item), which_i));
@@ -365,7 +366,7 @@ void edit_sign(sign_loc_t& which_sign,short num,short picture) {
 	using namespace std::placeholders;
 	location view_loc;
 	
-	cDialog sign_dlg("edit-sign");
+	cDialog sign_dlg(*ResMgr::dialogs.get("edit-sign"));
 	sign_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &sign_dlg, false));
 	sign_dlg["okay"].attachClickHandler(std::bind(edit_sign_event_filter, _1, std::ref(which_sign)));
 	cPict& icon = dynamic_cast<cPict&>(sign_dlg["pic"]);
@@ -389,7 +390,7 @@ static bool save_town_num(cDialog& me, std::string, eKeyMod) {
 short pick_town_num(std::string which_dlog,short def,cScenario& scenario) {
 	using namespace std::placeholders;
 	
-	cDialog town_dlg(which_dlog);
+	cDialog town_dlg(*ResMgr::dialogs.get(which_dlog));
 	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
 	town_dlg["okay"].attachClickHandler(save_town_num);
 	town_dlg["town"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.towns.size() - 1, "Town number"));
@@ -430,7 +431,7 @@ static bool save_ter_change(cDialog& me, std::string, eKeyMod) {
 
 bool change_ter(short& change_from,short& change_to,short& chance) {
 	using namespace std::placeholders;
-	cDialog chg_dlg("change-terrain");
+	cDialog chg_dlg(*ResMgr::dialogs.get("change-terrain"));
 	chg_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &chg_dlg, false));
 	chg_dlg["okay"].attachClickHandler(save_ter_change);
 	chg_dlg["chance"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 100, "The chance"));
@@ -458,7 +459,7 @@ static bool outdoor_details_event_filter(cDialog& me, std::string, eKeyMod) {
 }
 
 void outdoor_details() {
-	cDialog out_dlg("edit-outdoor-details");
+	cDialog out_dlg(*ResMgr::dialogs.get("edit-outdoor-details"));
 	out_dlg["okay"].attachClickHandler(outdoor_details_event_filter);
 	std::ostringstream str_out;
 	str_out << "X = " << cur_out.x << ", Y = " << cur_out.y;
@@ -606,7 +607,7 @@ void edit_out_wand(short mode) {
 	short which = 0;
 	cOutdoors::cWandering wand = (mode == 0) ? current_terrain->wandering[0] : current_terrain->special_enc[0];
 	
-	cDialog wand_dlg("edit-outdoor-encounter");
+	cDialog wand_dlg(*ResMgr::dialogs.get("edit-outdoor-encounter"));
 	wand_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &wand_dlg, false));
 	
 	wand_dlg["endx"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 299, "First part of Stuff Done flag", "-1 if not used"));
@@ -666,7 +667,7 @@ static void put_town_details_in_dlog(cDialog& me) {
 
 void edit_town_details() {
 	using namespace std::placeholders;
-	cDialog town_dlg("edit-town-details");
+	cDialog town_dlg(*ResMgr::dialogs.get("edit-town-details"));
 	town_dlg["okay"].attachClickHandler(save_town_details);
 	town_dlg["chop"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 10000, "The day the town becomes abandoned", "-1 if it doesn't"));
 	town_dlg["key"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 10, "The event which prevents the town from becoming abandoned", "-1 or 0 for none"));
@@ -714,7 +715,7 @@ static bool edit_town_events_event_filter(cDialog& me, std::string item_hit, eKe
 void edit_town_events() {
 	using namespace std::placeholders;
 	
-	cDialog evt_dlg("edit-town-events");
+	cDialog evt_dlg(*ResMgr::dialogs.get("edit-town-events"));
 	evt_dlg["okay"].attachClickHandler(save_town_events);
 	evt_dlg.attachClickHandlers(edit_town_events_event_filter, {"edit1", "edit2", "edit3", "edit4", "edit5", "edit6", "edit7", "edit8"});
 	evt_dlg.attachFocusHandlers(std::bind(check_range_msg, _1, _2, _3, -1, town->specials.size(), "The town special node", "-1 for no special"), {"spec1", "spec2", "spec3", "spec4", "spec5", "spec6", "spec7", "spec8"});
@@ -778,7 +779,7 @@ static bool edit_advanced_town_special(cDialog& me, std::string hit, eKeyMod) {
 void edit_advanced_town() {
 	using namespace std::placeholders;
 	
-	cDialog town_dlg("edit-town-advanced");
+	cDialog town_dlg(*ResMgr::dialogs.get("edit-town-advanced"));
 	town_dlg["okay"].attachClickHandler(save_advanced_town);
 	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
 	auto loc_check = std::bind(check_range_msg, _1, _2, _3, -1, 47, "The town exit coordinates", "-1 if you want them ignored");
@@ -849,7 +850,7 @@ static bool edit_town_wand_event_filter(cDialog& me, std::string item_hit, eKeyM
 void edit_town_wand() {
 	using namespace std::placeholders;
 	
-	cDialog wand_dlg("edit-town-wandering");
+	cDialog wand_dlg(*ResMgr::dialogs.get("edit-town-wandering"));
 	wand_dlg["okay"].attachClickHandler(save_town_wand);
 	auto check_monst = std::bind(check_range_msg, _1, _2, _3, 0, 255, "Wandering monsters", "0 means no monster");
 	// Just go through and attach the same focus handler to ALL text fields.
@@ -904,7 +905,7 @@ static bool edit_basic_dlog_event_filter(cDialog& me, std::string hit, short& wh
 void edit_basic_dlog(short personality) {
 	using namespace std::placeholders;
 	
-	cDialog person_dlg("edit-personality");
+	cDialog person_dlg(*ResMgr::dialogs.get("edit-personality"));
 	person_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &person_dlg, false));
 	person_dlg.attachClickHandlers(std::bind(edit_basic_dlog_event_filter, _1, _2, std::ref(personality)), {"left", "right", "okay"});
 	
@@ -1204,7 +1205,7 @@ short edit_talk_node(short which_node) {
 	std::stack<node_ref_t> talk_edit_stack;
 	talk_edit_stack.push({which_node, town->talking.talk_nodes[which_node]});
 	
-	cDialog talk_dlg("edit-talk-node");
+	cDialog talk_dlg(*ResMgr::dialogs.get("edit-talk-node"));
 	talk_dlg["okay"].attachClickHandler(std::bind(save_talk_node, _1, std::ref(talk_edit_stack), true, true));
 	talk_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &talk_dlg, false));
 	talk_dlg["back"].attachClickHandler(std::bind(talk_node_back, _1, std::ref(talk_edit_stack)));
@@ -1273,7 +1274,7 @@ location pick_out(location default_loc,cScenario& scenario) {
 	if(default_loc.y < 0)
 		default_loc.y = 0;
 	
-	cDialog out_dlg("select-sector");
+	cDialog out_dlg(*ResMgr::dialogs.get("select-sector"));
 	out_dlg["okay"].attachClickHandler(std::bind(finish_pick_out, _1, true, std::ref(default_loc), prev_loc));
 	out_dlg["cancel"].attachClickHandler(std::bind(finish_pick_out, _1, false, std::ref(default_loc), prev_loc));
 	out_dlg.attachClickHandlers(std::bind(pick_out_event_filter, _1, _2, std::ref(default_loc), std::ref(scenario)), {"xplus", "xminus", "yplus", "yminus", "choose"});
@@ -1453,7 +1454,7 @@ bool resize_outdoors() {
 	using namespace std::placeholders;
 	loc_set del;
 	rectangle mod;
-	cDialog size_dlg("resize-outdoors");
+	cDialog size_dlg(*ResMgr::dialogs.get("resize-outdoors"));
 	size_dlg["w-old"].setTextToNum(scenario.outdoors.width());
 	size_dlg["h-old"].setTextToNum(scenario.outdoors.height());
 	fill_resize_outdoors(size_dlg, mod.top, mod.left, mod.right, mod.bottom, del);

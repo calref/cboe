@@ -10,6 +10,7 @@
 #include "mathutil.hpp"
 #include "dialogxml/dialogs/dialog.hpp"
 #include "dialogxml/widgets/control.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
 #include "tools/cursors.hpp"
 #include <boost/lexical_cast.hpp>
 
@@ -104,7 +105,7 @@ void edit_gold_or_food(short which_to_edit) {
 	store_which_to_edit = which_to_edit;
 	
 	set_cursor(sword_curs);
-	cDialog dlog("get-num");
+	cDialog dlog(*ResMgr::dialogs.get("get-num"));
 	dlog["okay"].attachClickHandler(get_num_event_filter);
 	if(which_to_edit == 0)
 		dlog["prompt"].setText("How much gold do you want?");
@@ -126,7 +127,7 @@ void edit_day() {
 	
 	set_cursor(sword_curs);
 	
-	cDialog dlog("edit-day");
+	cDialog dlog(*ResMgr::dialogs.get("edit-day"));
 	dlog["okay"].attachClickHandler(get_num_event_filter);
 	
 	dlog["number"].setTextToNum(((univ.party.age) / 3700) + 1);
@@ -154,7 +155,7 @@ void edit_xp(cPlayer *pc) {
 	
 	set_cursor(sword_curs);
 	
-	cDialog dlog("edit-xp");
+	cDialog dlog(*ResMgr::dialogs.get("edit-xp"));
 	dlog["okay"].attachClickHandler(get_num_event_filter);
 	
 	dlog["number"].setTextToNum(pc->experience);

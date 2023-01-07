@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include "dialog.hpp"
 #include "gfx/tiling.hpp" // for bg
+#include "fileio/resmgr/res_dialog.hpp"
 #include "sounds.hpp"
 #include "dialogxml/widgets/pict.hpp"
 #include "dialogxml/widgets/button.hpp"
@@ -171,20 +172,17 @@ cKey cControl::parseKey(string what){
 
 cDialog::cDialog(cDialog* p) : parent(p) {}
 
-cDialog::cDialog(std::string path, cDialog* p) : parent(p) {
-	loadFromFile(path + ".xml");
+cDialog::cDialog(const DialogDefn& file, cDialog* p) : parent(p) {
+	loadFromFile(file);
 }
 
 extern fs::path progDir;
-void cDialog::loadFromFile(std::string path){
+void cDialog::loadFromFile(const DialogDefn& file){
 	static const cKey enterKey = {true, key_enter};
 	bg = defaultBackground;
-	fname = path;
-	fs::path cPath = progDir/"data"/"dialogs"/path;
+	fname = file.id;
 	try{
-		TiXmlBase::SetCondenseWhiteSpace(false);
-		Document xml(cPath.string().c_str());
-		xml.LoadFile();
+		const Document& xml = file.defn;
 		
 		Iterator<Attribute> attr;
 		Iterator<Element> node;
