@@ -161,12 +161,10 @@ static const std::set<eBtnType> labelledButtons{BTN_TINY, BTN_LED, BTN_PUSH};
 void cButton::validatePostParse(ticpp::Element& elem, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& elems) {
 	cControl::validatePostParse(elem, fname, attrs, elems);
 	if(getType() == CTRL_BTN && !attrs.count("type")) throw xMissingAttr(elem.Value(), "type", elem.Row(), elem.Column(), fname);
-	if(labelledButtons.count(type) && !lbl.empty()) {
+	if(labelledButtons.count(type)) {
 		if(!attrs.count("color") && !attrs.count("colour") && parent->getBg() == cDialog::BG_DARK)
 			setColour(sf::Color::White);
-		//  led and tiny with no width seems to work correctly,
-		//  does this test is needed for push button ?
-		if(type!=BTN_LED && type!=BTN_TINY && !attrs.count("width"))
+		if(!lbl.empty() && !attrs.count("width"))
 			throw xMissingAttr(elem.Value(), "width", elem.Row(), elem.Column(), fname);
 	}
 }
