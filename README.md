@@ -131,5 +131,4 @@ Helpful Links
   it all began. Warning: Terrifying code.
 * [Experimental Windows/Mac Builds](http://pentalithia.ca/oboe/?C=M;O=D) - will be put
   up whenever Celtic Minstrel feels like it.
-* [Official Web Site](https://openboe.com/) - A spot to quickly add
-  project files; mostly contains older binaries from the Google Code page.
+* [Official Web Site](https://openboe.com/) - The hub for all things OpenBoE. The documentation is also in viewable format, and there is an archive of all known scenarios that could be located.
