@@ -208,7 +208,7 @@ static std::string runFileDlog(OPENFILENAMEA& dlg, const std::string& file, bool
 	if(save) err = GetSaveFileNameA(&dlg);
 	else err = GetOpenFileNameA(&dlg);
 	if(err == 0) {
-#define CASE(x) case x: std::cerr << "File dialog failed: " #x << std::endl; return ""
+#define CASE(x) case x: std::cerr << "File dialog failed: " #x << std::endl; return "";
 		switch(CommDlgExtendedError()) {
 			// Code 0 means the user clicked 'Cancel'
 			case 0: std::cout << "File dialog cancelled:" #x << std::endl; return "";
