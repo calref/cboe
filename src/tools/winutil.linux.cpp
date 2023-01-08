@@ -145,12 +145,17 @@ static std::string runFileDialog(const std::string& file, bool save) {
         if (fgets(buffer, 128, hfile) != NULL)
             filename += buffer;
     }
+	
+	// When the dialogue is canceled, return empty string.
+    int result = pclose(hfile);
+    if (result != 0) {
+        return "";
+    }
 
     // Remove possible unwanted newline included from end of popen() output
     if (filename[filename.length()-1] == '\n')
         filename.erase(filename.length()-1);
 
-    pclose(hfile);
     return filename;
 }
 
