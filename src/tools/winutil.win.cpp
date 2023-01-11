@@ -208,6 +208,7 @@ static std::string runFileDlog(OPENFILENAMEA& dlg, const std::string& file, bool
 	if(save) err = GetSaveFileNameA(&dlg);
 	else err = GetOpenFileNameA(&dlg);
 	if(err == 0) {
+		dlg.lpstrFile[0] = '\0';
 #define CASE(x) case x: std::cerr << "File dialog failed: " #x << std::endl; break
 		switch(CommDlgExtendedError()) {
 			CASE(CDERR_DIALOGFAILURE);
