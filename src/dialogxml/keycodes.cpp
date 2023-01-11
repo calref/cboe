@@ -92,6 +92,7 @@ bool mod_contains(eKeyMod mods, eKeyMod mod) {
 }
 
 unsigned char applyShift(unsigned char c){
+	if(c < ' ' || c >= 0x7f) return c;
 	static const char afterShift[] = {
 		' ', '!', '"', '#', '$', '%', '&', '"', '(', ')', '*', '+', '<', '_', '>', '?',
 		')', '!', '@', '#', '$', '%', '^', '&', '*', '(', ':', ':', '<', '+', '>', '?',
@@ -104,6 +105,7 @@ unsigned char applyShift(unsigned char c){
 }
 
 unsigned char removeShift(unsigned char c){
+	if(c < ' ' || c >= 0x7f) return c;
 	static const char afterUnShift[] = {
 		' ', '1', '\'','3', '4', '5', '7', '\'','9', '0', '8', '=', ',', '-', '.', '/',
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ';', ';', ',', '=', '.', '/',
