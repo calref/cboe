@@ -160,8 +160,8 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	bool file_ok = false;
 	long len;
 	char temp_str[256];
-	legacy::scenario_data_type *temp_scenario = new legacy::scenario_data_type;
-	legacy::scen_item_data_type *item_data = new legacy::scen_item_data_type;
+	legacy::scenario_data_type temp_scenario;
+	legacy::scen_item_data_type item_data;
 	// TODO: Convert this (and all the others in this file) to use C++ streams
 	FILE* file_id = fopen(file_to_load.string().c_str(),"rb");
 	if(file_id == nullptr) {
@@ -197,28 +197,28 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	}
 	
 	len = (long) sizeof(legacy::scenario_data_type);
-	if(fread(temp_scenario, len, 1, file_id) < 1) {
+	if(fread(&temp_scenario, len, 1, file_id) < 1) {
 		showError(err_prefix + "Failed to read scenario data.", get_file_error());
 		fclose(file_id);
 		return false;
 	}
-	port_scenario(temp_scenario);
+	port_scenario(&temp_scenario);
 	len = sizeof(legacy::scen_item_data_type); // item data
-	if(fread(item_data, len, 1, file_id) < 1) {
+	if(fread(&item_data, len, 1, file_id) < 1) {
 		showError(err_prefix + "Failed to read scenario items.", get_file_error());
 		fclose(file_id);
 		return false;
 	}
-	port_item_list(item_data);
-	scenario.import_legacy(*temp_scenario);
-	scenario.import_legacy(*item_data);
+	port_item_list(&item_data);
+	scenario.import_legacy(temp_scenario);
+	scenario.import_legacy(item_data);
 	
 	// TODO: Consider skipping the fread and assignment when len is 0
 	scenario.special_items.resize(50);
 	scenario.journal_strs.resize(50);
 	scenario.spec_strs.resize(100);
 	for(short i = 0; i < 270; i++) {
-		len = (long) (temp_scenario->scen_str_len[i]);
+		len = (long) (temp_scenario.scen_str_len[i]);
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
 		if(i == 0) scenario.scen_name = temp_str;
@@ -246,11 +246,11 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	load_spec_graphics_v1(scenario.scen_file);
 	
 	// Now load all the outdoor sectors
-	scenario.outdoors.resize(temp_scenario->out_width, temp_scenario->out_height);
-	for(int x = 0; x < temp_scenario->out_width; x++) {
-		for(int y = 0; y < temp_scenario->out_height; y++) {
+	scenario.outdoors.resize(temp_scenario.out_width, temp_scenario.out_height);
+	for(int x = 0; x < temp_scenario.out_width; x++) {
+		for(int y = 0; y < temp_scenario.out_height; y++) {
 			scenario.outdoors[x][y] = new cOutdoors(scenario);
-			load_outdoors_v1(scenario.scen_file, loc(x,y), *scenario.outdoors[x][y], *temp_scenario);
+			load_outdoors_v1(scenario.scen_file, loc(x,y), *scenario.outdoors[x][y], temp_scenario);
 		}
 	}
 	
@@ -260,12 +260,12 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	// Then load all the towns
 	scenario.towns.resize(scenario.format.num_towns);
 	for(int i = 0; i < scenario.format.num_towns; i++) {
-		switch(temp_scenario->town_size[i]) {
+		switch(temp_scenario.town_size[i]) {
 			case 0: scenario.towns[i] = new cTown(scenario, AREA_LARGE); break;
 			case 1: scenario.towns[i] = new cTown(scenario, AREA_MEDIUM); break;
 			case 2: scenario.towns[i] = new cTown(scenario, AREA_SMALL); break;
 		}
-		load_town_v1(scenario.scen_file, i, *scenario.towns[i], *temp_scenario, shops);
+		load_town_v1(scenario.scen_file, i, *scenario.towns[i], temp_scenario, shops);
 	}
 	// Enable character creation in starting town
 	scenario.towns[scenario.which_town_start]->has_tavern = true;
@@ -329,8 +329,6 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 		scenario.shops.push_back(shop);
 	}
 	
-	delete temp_scenario;
-	delete item_data;
 	return true;
 }
 
