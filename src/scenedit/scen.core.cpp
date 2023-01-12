@@ -3105,11 +3105,14 @@ bool build_scenario() {
 
 static bool save_scenario_events(cDialog& me, std::string, eKeyMod) {
 	if(!me.toast(true)) return true;
-	
+	cStack& stk = dynamic_cast<cStack&>(me["list"]);
+
 	for(short i = 0; i < scenario.scenario_timers.size(); i++) {
-		std::string id = std::to_string(i + 1);
-		scenario.scenario_timers[i].time = me["time" + id].getTextAsNum();
-		scenario.scenario_timers[i].node = me["node" + id].getTextAsNum();
+		stk.setPage(i / 10);
+		short fieldId = i % 10;
+		std::string id = std::to_string(fieldId + 1);
+		scenario.scenario_timers[i].time = stk["time" + id].getTextAsNum();
+		scenario.scenario_timers[i].node = stk["node" + id].getTextAsNum();
 	}
 	return true;
 }
@@ -3139,17 +3142,24 @@ void edit_scenario_events() {
 	using namespace std::placeholders;
 	
 	cDialog evt_dlg(*ResMgr::dialogs.get("edit-scenario-events"));
+	cStack& stk = dynamic_cast<cStack&>(evt_dlg["list"]);
+	evt_dlg["prev"].attachClickHandler([&stk] (cDialog&, std::string, eKeyMod) { return stk.setPage(0); });
+	evt_dlg["next"].attachClickHandler([&stk] (cDialog&, std::string, eKeyMod) { return stk.setPage(1); });
 	evt_dlg["okay"].attachClickHandler(save_scenario_events);
-	// TODO: There are 20 events, not 10; allow editing the rest?
-	for(int i = 0; i < scenario.scenario_timers.size() && i < 10; i++) {
+	for(int i = 0; i < scenario.scenario_timers.size(); i++) {
+		stk.setPage(i / 10);
+		short fieldId = i % 10;
+		std::string id = std::to_string(fieldId + 1);
+		stk["time" + id].setTextToNum(scenario.scenario_timers[i].time);
+		stk["node" + id].setTextToNum(scenario.scenario_timers[i].node);
+	}
+	stk.setPage(0);
+	for(int i = 0; i < 10; i++) {
 		std::string id = std::to_string(i + 1);
 		evt_dlg["time" + id].attachFocusHandler(check_scenario_timer_time);
 		evt_dlg["node" + id].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, scenario.scen_specials.size(), "The scenario special node", "-1 for no special"));
 		evt_dlg["edit" + id].attachClickHandler(edit_scenario_events_event_filter);
-		evt_dlg["time" + id].setTextToNum(scenario.scenario_timers[i].time);
-		evt_dlg["node" + id].setTextToNum(scenario.scenario_timers[i].node);
 	}
-	
 	evt_dlg.run();
 }
 
