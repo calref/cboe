@@ -360,6 +360,12 @@ bool load_scenario_header(fs::path file,scen_header_type& scen_head){
 	int dot = fname.find_first_of('.');
 	if(dot == std::string::npos)
 		return false; // If it has no file extension, it's not a valid scenario.
+	
+	std::string basename = fname.substr(0,dot);
+	std::transform(basename.begin(), basename.end(), basename.begin(), tolower);
+	if(basename == "valleydy" || basename == "stealth" || basename == "zakhazi"/* || basename == "busywork" */)
+		return false;
+	
 	std::string file_ext = fname.substr(dot);
 	std::transform(file_ext.begin(), file_ext.end(), file_ext.begin(), tolower);
 	if(file_ext == ".exs") {
@@ -405,11 +411,5 @@ bool load_scenario_header(fs::path file,scen_header_type& scen_head){
 	std::copy(temp_scenario.format.ver, temp_scenario.format.ver + 3, scen_head.ver);
 	std::copy(temp_scenario.format.prog_make_ver, temp_scenario.format.prog_make_ver + 3, scen_head.prog_make_ver);
 
-	fname = fname.substr(0,dot);
-	std::transform(fname.begin(), fname.end(), fname.begin(), tolower);
-	
-	if(fname == "valleydy" || fname == "stealth" || fname == "zakhazi"/* || fname == "busywork" */)
-		return false;
-	
 	return true;
 }

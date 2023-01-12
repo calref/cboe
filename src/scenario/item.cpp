@@ -1038,7 +1038,7 @@ void cItem::import_legacy(legacy::item_record_type const & old){
 	magic = old.item_properties & 4;
 	contained = old.item_properties & 8;
 	cursed = old.item_properties & 16;
-	concealed = old.item_properties & 32;
+	concealed = old.item_properties & 32; // checkme: properties&32 does not seem to be used in original source
 	enchanted = held = false;
 	unsellable = old.item_properties & 16;
 	// Set missile, if needed

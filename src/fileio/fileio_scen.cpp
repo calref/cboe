@@ -182,6 +182,17 @@ static void port_special_text_response(cSpecial &special, cScenario& scenario)
 }
 
 static const std::string err_prefix = "Error loading Blades of Exile Scenario: ";
+static std::string right_trim(std::string const &str)
+{
+	const auto found = str.find_last_not_of(' ');
+	if (found==std::string::npos)
+		return "";
+	if (found+1==str.size())
+		return str;
+	std::string res=str;
+	res.erase(found+1);
+	return res;
+}
 bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_header){
 	bool file_ok = false;
 	long len;
@@ -247,20 +258,22 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 		len = (long) (temp_scenario.scen_str_len[i]);
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
-		if(i == 0) scenario.scen_name = temp_str;
+		
+		std::string tmp=right_trim(temp_str);
+		if(i == 0) scenario.scen_name = tmp;
 		else if(i == 1 || i == 2)
-			scenario.who_wrote[i-1] = temp_str;
+			scenario.who_wrote[i-1] = tmp;
 		else if(i == 3)
-			scenario.contact_info[1] = temp_str;
+			scenario.contact_info[1] = tmp;
 		else if(i >= 4 && i < 10)
-			scenario.intro_strs[i-4] = temp_str;
+			scenario.intro_strs[i-4] = tmp;
 		else if(i >= 10 && i < 60)
-			scenario.journal_strs[i-10] = temp_str;
+			scenario.journal_strs[i-10] = tmp;
 		else if(i >= 60 && i < 160) {
-			if(i % 2 == 0) scenario.special_items[(i-60)/2].name = temp_str;
-			else scenario.special_items[(i-60)/2].descr = temp_str;
+			if(i % 2 == 0) scenario.special_items[(i-60)/2].name = tmp;
+			else scenario.special_items[(i-60)/2].descr = tmp;
 		} else if(i >= 260) continue; // These were never ever used, for some reason.
-		else scenario.spec_strs[i-160] = temp_str;
+		else scenario.spec_strs[i-160] = tmp;
 	}
 	
 	fclose(file_id);
@@ -2332,15 +2345,17 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		len = (long) (store_town.strlens[i]);
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
-		if(i == 0) the_town.name = temp_str;
+		
+		std::string tmp=right_trim(temp_str);
+		if(i == 0) the_town.name = tmp;
 		else if(i >= 1 && i < 17)
-			the_town.area_desc[i-1].descr = temp_str;
+			the_town.area_desc[i-1].descr = tmp;
 		else if(i >= 17 && i < 20)
-			the_town.comment[i-17] = temp_str;
+			the_town.comment[i-17] = tmp;
 		else if(i >= 20 && i < 120)
-			the_town.spec_strs[i-20] = temp_str;
+			the_town.spec_strs[i-20] = tmp;
 		else if(i >= 120 && i < 140)
-			the_town.sign_locs[i-120].text = temp_str;
+			the_town.sign_locs[i-120].text = tmp;
 	}
 	
 	len = sizeof(legacy::talking_record_type);
@@ -2356,20 +2371,22 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		len = (long) (store_talk.strlens[i]);
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
+		
+		std::string tmp=right_trim(temp_str);
 		if(i >= 0 && i < 10)
-			the_town.talking.people[i].title = temp_str;
+			the_town.talking.people[i].title = tmp;
 		else if(i >= 10 && i < 20)
-			the_town.talking.people[i-10].look = temp_str;
+			the_town.talking.people[i-10].look = tmp;
 		else if(i >= 20 && i < 30)
-			the_town.talking.people[i-20].name = temp_str;
+			the_town.talking.people[i-20].name = tmp;
 		else if(i >= 30 && i < 40)
-			the_town.talking.people[i-30].job = temp_str;
+			the_town.talking.people[i-30].job = tmp;
 		else if(i >= 160)
-			the_town.talking.people[i-160].dunno = temp_str;
+			the_town.talking.people[i-160].dunno = tmp;
 		else {
 			if(i % 2 == 0)
-				the_town.talking.talk_nodes[(i-40)/2].str1 = temp_str;
-			else the_town.talking.talk_nodes[(i-40)/2].str2 = temp_str;
+				the_town.talking.talk_nodes[(i-40)/2].str1 = tmp;
+			else the_town.talking.talk_nodes[(i-40)/2].str2 = tmp;
 		}
 	}
 	
@@ -2443,13 +2460,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
 		
-		std::string tmp=temp_str; // remove trailing space
-		const auto found = tmp.find_last_not_of(' ');
-		if (found!=std::string::npos)
-			tmp.erase(found+1);
-		else
-			tmp.clear();
-		
+		std::string tmp=right_trim(temp_str);		
 		if(i == 0) the_out.name = tmp;
 		else if(i == 9) the_out.comment = tmp;
 		else if(i < 9) the_out.area_desc[i-1].descr = tmp;
