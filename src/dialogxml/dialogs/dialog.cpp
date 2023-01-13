@@ -412,8 +412,16 @@ void cDialog::loadFromFile(const DialogDefn& file){
 	currentFocus = "";
 	for(ctrlIter iter = controls.begin(); iter != controls.end(); iter++){
 		if(typeid(iter->second) == typeid(cTextField*)){
-			if(currentFocus.empty()) currentFocus = iter->first;
+			currentFocus = iter->first;
 			break;
+		}
+		if(iter->second->isContainer()){
+			cContainer* tmp = dynamic_cast<cContainer*>(iter->second);
+			tmp->forEach([this, iter](std::string key, cControl& child) {
+				if (typeid(&child) == typeid(cTextField*)) {
+					if (currentFocus.empty()) currentFocus = iter->first;
+				}
+			});
 		}
 	}
 }
@@ -485,7 +493,7 @@ bool cDialog::sendInput(cKey key) {
 	if(topWindow == nullptr) return false;
 	std::string field = topWindow->currentFocus;
 	if(field.empty()) return true;
-	dynamic_cast<cTextField*>(topWindow->controls[field])->handleInput(key);
+	dynamic_cast<cTextField&>(topWindow->getControl(field)).handleInput(key);
 	return true;
 }
 
@@ -656,7 +664,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 				// we have an upcoming TextEntered event which contains more information.
 				// Otherwise, handle it right away. But never handle enter or escape.
 				if((key.spec && key.k != key_enter && key.k != key_esc) || mod_contains(key.mod, mod_ctrl))
-					dynamic_cast<cTextField*>(controls[currentFocus])->handleInput(key);
+					dynamic_cast<cTextField&>(getControl(currentFocus)).handleInput(key);
 				pendingKey = key;
 				if(key.k != key_enter && key.k != key_esc) itemHit = "";
 			}
@@ -665,7 +673,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 			if(!pendingKey.spec && !currentFocus.empty()) {
 				pendingKey.c = currentEvent.text.unicode;
 				if(pendingKey.c != '\t')
-					dynamic_cast<cTextField*>(controls[currentFocus])->handleInput(pendingKey);
+					dynamic_cast<cTextField&>(getControl(currentFocus)).handleInput(pendingKey);
 			}
 			break;
 		case sf::Event::MouseButtonPressed:
@@ -771,19 +779,33 @@ bool cDialog::setFocus(cTextField* newFocus, bool force) {
 		currentFocus = "";
 		return true;
 	}
-	auto iter = find_if(controls.begin(), controls.end(), [newFocus](std::pair<const std::string, cControl*> p){
-		return p.second == newFocus;
-	});
-	if(iter == controls.end()) return false;
-	if(!force && !newFocus->triggerFocusHandler(*this, iter->first, false)) return false;
-	currentFocus = iter->first;
-	return true;
+	for(auto iter = controls.begin(); iter != controls.end(); iter++) {
+		if(iter->second == newFocus) {
+			if (!force && !newFocus->triggerFocusHandler(*this, iter->first, false)) return false;
+			currentFocus = iter->first;
+			return true;
+		}
+		if(iter->second->isContainer()) {
+			cContainer* tmp = dynamic_cast<cContainer*>(iter->second);
+			std::string foundKey = "";
+			tmp->forEach([newFocus, &foundKey](std::string key, cControl& child) {
+				if (&child == newFocus) {
+					foundKey = key;
+				}
+			});
+			if(!foundKey.empty()) {
+				if(!force && !newFocus->triggerFocusHandler(*this, foundKey, false)) return false;
+				currentFocus = foundKey;
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 cTextField* cDialog::getFocus() {
-	auto iter = controls.find(currentFocus);
-	if(iter == controls.end()) return nullptr;
-	return dynamic_cast<cTextField*>(iter->second);
+	if (currentFocus.empty()) return nullptr;
+	return dynamic_cast<cTextField*>(&getControl(currentFocus));
 }
 
 void cDialog::attachClickHandlers(std::function<bool(cDialog&,std::string,eKeyMod)> handler, std::vector<std::string> controls) {
