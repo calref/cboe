@@ -912,7 +912,6 @@ cUniverse::cUniverse(const cUniverse& other)
 	, cur_pc(other.cur_pc)
 	, scenario(other.scenario)
 	, party(other.party)
-	, stored_pcs(other.stored_pcs)
 	, town(*this)
 	, out(*this)
 	, file(other.file)
@@ -920,11 +919,12 @@ cUniverse::cUniverse(const cUniverse& other)
 	, ghost_mode(other.ghost_mode)
 	, node_step_through(other.node_step_through)
 {
-	for(auto& p : stored_pcs) {
-		p.second = new cPlayer(*p.second);
-	}
 	town.copy(other.town);
 	out.copy(other.out);
+	for(const auto& pc : other.stored_pcs) {
+		std::unique_ptr<cPlayer> clone(new cPlayer(no_party, *pc.second));
+		stored_pcs.emplace(pc.first, std::move(clone));
+	}
 }
 
 cUniverse::cUniverse(cUniverse&& other) : town(*this), out(*this) {
@@ -1305,13 +1305,7 @@ short cUniverse::difficulty_adjust() const {
 	return adj;
 }
 
-cUniverse::~cUniverse() {
-	clear_stored_pcs();
-}
-
 void cUniverse::clear_stored_pcs() {
-	for(auto& p : stored_pcs)
-		delete p.second;
 	stored_pcs.clear();
 }
 

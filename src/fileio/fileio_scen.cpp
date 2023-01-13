@@ -581,7 +581,7 @@ static void readShopFromXml(ticpp::Element& data, cShop& shop) {
 					entry->GetText(&num);
 					shop.addItem(num, dummy_item, amount, chance);
 				} else if(type == "special") {
-					int amount, node, cost = 0, icon;
+					int amount = 0, node = 0, cost = 0, icon = 0;
 					std::string title, descr;
 					std::set<std::string> reqs = {"quantity", "node", "icon", "name", "description"};
 					Iterator<Element> attr;
@@ -609,7 +609,7 @@ static void readShopFromXml(ticpp::Element& data, cShop& shop) {
 						throw xMissingElem("special", *reqs.begin(), entry->Row(), entry->Column(), fname);
 					shop.addSpecial(title, descr, icon, node, cost, amount);
 				} else {
-					eShopItemType itype;
+					eShopItemType itype{};
 					int n = 0;
 					if(type == "mage-spell") {
 						itype = eShopItemType::MAGE_SPELL;

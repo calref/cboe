@@ -943,7 +943,12 @@ void cPlayer::finish_create() {
 	}
 }
 
-cPlayer::cPlayer(cParty& party) : party(&party), weap_poisoned(*this) {
+cPlayer::cPlayer(cParty& party) : cPlayer(no_party) {
+	this->party = &party;
+	unique_id = party.next_pc_id++;
+}
+
+cPlayer::cPlayer(no_party_t) : weap_poisoned(*this) {
 	main_status = eMainStatus::ABSENT;
 	name = "\n";
 	
@@ -967,8 +972,6 @@ cPlayer::cPlayer(cParty& party) : party(&party), weap_poisoned(*this) {
 	race = eRace::HUMAN;
 	direction = DIR_N;
 	combat_pos = {-1,-1};
-	
-	unique_id = party.next_pc_id++;
 }
 
 cPlayer::cPlayer(cParty& party,ePartyPreset key,short slot) : cPlayer(party) {
@@ -1115,9 +1118,13 @@ cPlayer::cPlayer(cParty& party,ePartyPreset key,short slot) : cPlayer(party) {
 	}
 }
 
-cPlayer::cPlayer(const cPlayer& other)
+cPlayer::cPlayer(cParty& party, const cPlayer& other) : cPlayer(no_party, other) {
+	this->party = &party;
+	unique_id = party.next_pc_id++;
+}
+
+cPlayer::cPlayer(no_party_t, const cPlayer& other)
 	: iLiving(other)
-	, party(other.party)
 	, main_status(other.main_status)
 	, name(other.name)
 	, skills(other.skills)
@@ -1136,7 +1143,6 @@ cPlayer::cPlayer(const cPlayer& other)
 	, weap_poisoned(*this, other.weap_poisoned.slot)
 	, traits(other.traits)
 	, race(other.race)
-	, unique_id(party->next_pc_id++)
 	, last_cast(other.last_cast)
 	, combat_pos(other.combat_pos)
 	, parry(other.parry)
@@ -1148,7 +1154,7 @@ cPlayer::cPlayer(cPlayer&& other) : weap_poisoned(*this, other.weap_poisoned.slo
 }
 
 void cPlayer::swap(cPlayer& other) {
-	std::swap(party, other.party);
+	// Don't swap the party reference!
 	std::swap(main_status, other.main_status);
 	std::swap(name, other.name);
 	std::swap(skills, other.skills);

@@ -26,6 +26,8 @@
 
 namespace legacy { struct pc_record_type; };
 
+static struct no_party_t {} no_party;
+
 enum class eBuyStatus {OK, NO_SPACE, NEED_GOLD, TOO_HEAVY, HAVE_LOTS};
 
 enum ePartyPreset {PARTY_BLANK, PARTY_DEFAULT, PARTY_DEBUG};
@@ -67,9 +69,13 @@ inline bool operator!=(const cInvenSlot& a, const cInvenSlot& b) {
 }
 
 class cPlayer : public iLiving {
-	cParty* party;
+	cParty* party = nullptr;
 	template<typename Fcn>
 	cInvenSlot find_item_matching(Fcn fcn);
+	// Allow the party to overwrite the PC's party reference
+	// It only does this (and should ever do this) in remove_pc and replace_pc!
+	// Sadly there is no good way to friend just those two functions.
+	friend class cParty;
 	static const int INVENTORY_SIZE = 24;
 public:
 	// A nice convenient bitset with just the low 30 bits set, for initializing spells
@@ -166,19 +172,19 @@ public:
 	short stat_adj(eSkill skill) const;
 	eBuyStatus ok_to_buy(short cost,cItem item) const;
 	
-	void join_party(cParty& p) {party = &p;}
-	cPlayer* leave_party() {party = nullptr; return this;}
-	
 	void import_legacy(legacy::pc_record_type old);
+	cPlayer(no_party_t);
 	cPlayer(cParty& party);
 	cPlayer(cParty& party,ePartyPreset key,short slot);
+	cPlayer(no_party_t, const cPlayer& other);
+	cPlayer(cParty& party, const cPlayer& other);
 	short get_tnl();
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
 	virtual ~cPlayer() = default;
 	// Copy-and-swap
 	void swap(cPlayer& other);
-	cPlayer(const cPlayer& other);
+	cPlayer(const cPlayer& other) = delete;
 	cPlayer(cPlayer&& other);
 	// For now, not assignable because of an issue of how to handle the unique_id
 	cPlayer& operator=(cPlayer other) = delete;

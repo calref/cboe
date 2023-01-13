@@ -31,7 +31,7 @@ enum eFont {
 struct TextStyle {
 	bool italic = false, underline = false;
 	eFont font = FONT_BOLD;
-	int pointSize = 10, lineHeight;
+	int pointSize = 10, lineHeight = 10;
 	sf::Color colour;
 	TextStyle() : colour(sf::Color::Black) {}
 	void applyTo(sf::Text& text);

@@ -40,16 +40,9 @@ cParty::cParty(ePartyPreset party_preset) {
 	for(int i = 0; i < 10; i++)
 		out_c[i].exists = false;
 	for(int i = 0; i < 6; i++)
-		adven[i] = new cPlayer(*this, party_preset, i);
+		adven[i].reset(new cPlayer(*this, party_preset, i));
 	for(auto& monst : imprisoned_monst)
 		monst = 0;
-}
-
-cParty::~cParty() {
-	for(int i = 0; i < 6; i++) {
-		delete adven[i];
-		adven[i] = nullptr;
-	}
 }
 
 cParty::cParty(const cParty& other)
@@ -109,8 +102,7 @@ cParty::cParty(const cParty& other)
 	memcpy(stuff_done, other.stuff_done, sizeof(stuff_done));
 	memcpy(setup, other.setup, sizeof(setup));
 	for(int i = 0; i < 6; i++) {
-		adven[i] = new cPlayer(*other.adven[i]);
-		adven[i]->join_party(*this);
+		adven[i].reset(new cPlayer(*this, *other.adven[i]));
 	}
 }
 
@@ -184,12 +176,8 @@ void cParty::swap(cParty& other) {
 	memcpy(temp_setup, setup, sizeof(setup));
 	memcpy(setup, other.setup, sizeof(setup));
 	memcpy(other.setup, temp_setup, sizeof(setup));
-	// Fixup the references of PCs to their party
 	for(size_t i = 0; i < adven.size(); i++) {
-		adven[i]->join_party(*this);
-	}
-	for(size_t i = 0; i < other.adven.size(); i++) {
-		other.adven[i]->join_party(other);
+		std::swap(adven[i], other.adven[i]);
 	}
 }
 
@@ -351,22 +339,27 @@ void cParty::cEncNote::import_legacy(int16_t(& old)[2], const cScenario& scenari
 
 void cParty::import_legacy(legacy::pc_record_type(& old)[6]) {
 	for(int i = 0; i < 6; i++) {
-		delete adven[i];
-		adven[i] = new cPlayer(*this);
+		adven[i].reset(new cPlayer(*this));
 		adven[i]->import_legacy(old[i]);
 	}
 }
 
+std::unique_ptr<cPlayer> cParty::remove_pc(size_t spot) {
+	if(spot >= 6) return nullptr;
+	adven[spot]->party = nullptr;
+	return std::move(adven[spot]);
+}
+
 void cParty::new_pc(size_t spot) {
-	replace_pc(spot, new cPlayer(*this));
+	std::unique_ptr<cPlayer> new_pc{new cPlayer(*this)};
+	replace_pc(spot, std::move(new_pc));
 	adven[spot]->main_status = eMainStatus::ALIVE;
 }
 
-void cParty::replace_pc(size_t spot, cPlayer* with) {
+void cParty::replace_pc(size_t spot, std::unique_ptr<cPlayer> with) {
 	if(spot < 6 && with != nullptr) {
-		with->join_party(*this);
-		delete adven[spot];
-		adven[spot] = with;
+		with->party = this;
+		adven[spot] = std::move(with);
 	}
 }
 

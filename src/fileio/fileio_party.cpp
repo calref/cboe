@@ -299,8 +299,6 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 			return false;
 		}
 		univ.party[i].readFrom(fin);
-		// Do this to make sure the PC's internal party reference is correct
-		univ.party[i].join_party(univ.party);
 	}
 	
 	// Including stored PCs
@@ -309,9 +307,8 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 		long next_uid;
 		while(fin >> next_uid) {
 			std::string fname = "save/pc~" + std::to_string(next_uid) + ".txt";
-			cPlayer* stored_pc = new cPlayer(univ.party);
+			cPlayer* stored_pc = new cPlayer(no_party);
 			stored_pc->readFrom(partyIn.getFile(fname));
-			univ.stored_pcs[next_uid] = stored_pc->leave_party();
 		}
 	}
 	
@@ -427,7 +424,7 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 	// And stored PCs
 	if(univ.stored_pcs.size()) {
 		std::ostream& fout = partyOut.newFile("save/stored_pcs.txt");
-		for(auto p : univ.stored_pcs) {
+		for(const auto& p : univ.stored_pcs) {
 			std::string fname = "save/pc~" + std::to_string(p.first) + ".txt";
 			p.second->writeTo(partyOut.newFile(fname));
 			fout << p.first << '\n';

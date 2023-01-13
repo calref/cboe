@@ -166,6 +166,7 @@ static bool pick_race_select_led(cDialog& me, std::string item_hit, bool, const 
 			case 1: race = eRace::NEPHIL; break;
 			case 2: race = eRace::SLITH; break;
 			case 3: race = eRace::VAHNATAI; break;
+			default: return false;
 		}
 		if(store_trait_mode == 0)
 			pc->race = race;

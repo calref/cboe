@@ -2705,7 +2705,7 @@ void affect_spec(const runtime_state& ctx) {
 						for(auto& p : univ.stored_pcs) {
 							if(p.first == pc && p.second->unique_id == pc) {
 								can_pick = true;
-								found = p.second;
+								found = p.second.get();
 								break;
 							}
 						}
@@ -3174,7 +3174,7 @@ void affect_spec(const runtime_state& ctx) {
 					univ.party.stuff_done[spec.sd1][spec.sd2] = univ.party[pc_num].unique_id - 1000;
 				if(spec.ex1a == 1) break;
 				who->main_status += eMainStatus::SPLIT;
-				univ.stored_pcs[who->unique_id] = who->leave_party();
+				univ.stored_pcs[who->unique_id] = univ.party.remove_pc(pc_num);
 				univ.party.new_pc(pc_num);
 			}
 			break;
@@ -3191,7 +3191,7 @@ void affect_spec(const runtime_state& ctx) {
 				check_mess = false;
 				break;
 			}
-			univ.party.replace_pc(pc_num, univ.stored_pcs[spec.ex1a]);
+			univ.party.replace_pc(pc_num, std::move(univ.stored_pcs[spec.ex1a]));
 			ctx.cur_target = &univ.get_target(pc_num);
 			univ.party[pc_num].main_status -= eMainStatus::SPLIT;
 			univ.stored_pcs.erase(spec.ex1a);

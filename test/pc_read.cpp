@@ -16,9 +16,7 @@ using namespace std;
 TEST_CASE("Loading player character from file") {
 	ifstream fin;
 	fin.exceptions(ios::badbit);
-	cParty party;
-	cPlayer pc(party);
-	pc.leave_party();
+	cPlayer pc(no_party);
 	// Fill in some junk data
 	pc.cur_sp = 27;
 	pc.max_sp = 38;

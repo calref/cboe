@@ -198,7 +198,7 @@ public:
 	
 	cScenario scenario;
 	cParty party;
-	std::map<long,cPlayer*> stored_pcs;
+	std::map<long, std::unique_ptr<cPlayer>> stored_pcs;
 	cCurTown town;
 	cCurOut out;
 	fs::path file;
@@ -214,7 +214,6 @@ public:
 	void generate_job_bank(int which, job_bank_t& bank);
 	short difficulty_adjust() const;
 	explicit cUniverse(ePartyPreset party_type = PARTY_DEFAULT);
-	~cUniverse();
 	// Copy-and-swap
 	void swap(cUniverse& other);
 	cUniverse(const cUniverse& other);

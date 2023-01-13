@@ -123,7 +123,7 @@ public:
 	long long total_m_killed, total_dam_done, total_xp_gained, total_dam_taken;
 	std::string scen_name;
 private:
-	std::array<cPlayer*,6> adven;
+	std::array<std::unique_ptr<cPlayer>,6> adven;
 public:
 	unsigned short setup[4][64][64]; // formerly setup_save_type
 	std::array<std::vector<cItem>,3> stored_items; // formerly stored_items_list_type
@@ -178,8 +178,9 @@ public:
 	int get_level() const;
 	int calc_day() const;
 	
+	std::unique_ptr<cPlayer> remove_pc(size_t spot);
 	void new_pc(size_t spot);
-	void replace_pc(size_t spot, cPlayer* with);
+	void replace_pc(size_t spot, std::unique_ptr<cPlayer> with);
 	size_t free_space();
 	size_t count(eMainStatus type = eMainStatus::ALIVE);
 	void void_pcs();
@@ -219,7 +220,6 @@ public:
 	typedef std::vector<cJournal>::iterator journalIter;
 	typedef std::vector<cConvers>::iterator talkIter;
 	cParty(ePartyPreset party_preset = PARTY_DEFAULT);
-	~cParty();
 	// Copy-and-swap
 	void swap(cParty& other);
 	cParty(const cParty& other);
