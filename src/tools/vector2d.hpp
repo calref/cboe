@@ -10,7 +10,6 @@
 #define BoE_VECTOR_2D_HPP
 
 // Tried using boost::multi_array, but it kept causing weird issues, so I decided to make my own.
-// TODO: Fill out missing members (should have equivalents for most of the stuff in std::vector)
 
 #include <vector>
 
@@ -50,6 +49,15 @@ public:
 			}
 			return me;
 		}
+		row_ref operator=(std::initializer_list<Type> list) {
+			row_ref& me = *this;
+			int i = 0;
+			for(int n : list) {
+				if(i >= ref.width()) break;
+				me[i++] = n;
+			}
+			return me;
+		}
 		// Seems like defining a move assignment operator deletes the copy constructor. Don't want that.
 		row_ref(const row_ref&) = default;
 	};
@@ -77,6 +85,15 @@ public:
 			col_ref& me = *this;
 			for(int i = 0; i < ref.height(); i++) {
 				me[i] = other[i];
+			}
+			return me;
+		}
+		col_ref operator=(std::initializer_list<Type> list) {
+			col_ref& me = *this;
+			int i = 0;
+			for(int n : list) {
+				if(i >= ref.height()) break;
+				me[i++] = n;
 			}
 			return me;
 		}
@@ -146,18 +163,26 @@ public:
 		if(w > width) {
 			size_t dx = w - width;
 			for(int y = 1; y < h; y++) {
-				std::move(data.begin() + w * y, data.begin() + w * (y + 1) - dx, data.begin() + width * y);
+				size_t old_begin = w * y, old_end = w * (y + 1) - dx, new_begin = width * y;
+				std::move(data.begin() + old_begin, data.begin() + old_end, data.begin() + new_begin);
 			}
 		}
 		size_t old_w = w, old_h = h;
+		size_t old_sz = old_w * old_h, new_sz = width * height;
 		w = width; h = height;
-		data.resize(w * h);
+		if(new_sz > old_sz) {
+			data.resize(new_sz);
+		}
 		if(old_w < width) {
 			size_t dx = width - old_w;
 			for(size_t y = old_h; y > 1; y--) {
-				std::move_backward(data.begin() + old_w * y, data.begin() + old_w * y, data.begin() + w * y - dx);
-				std::fill_n(data.begin() + old_w + w * y, dx, Type());
+				size_t old_begin = old_w * (y - 1), old_end = old_w * y, new_end = w * y - dx;
+				std::move_backward(data.begin() + old_begin, data.begin() + old_end, data.begin() + new_end);
+				std::fill_n(data.begin() + old_begin, y - 1, Type());
 			}
+		}
+		if(old_sz > new_sz) {
+			data.resize(new_sz);
 		}
 	}
 	void swap(vector2d& other) {
@@ -169,7 +194,7 @@ public:
 		return data.empty();
 	}
 	vector2d() : w(0), h(0) {}
-	vector2d(size_t w, size_t h) : w(w), h(h) {
+	vector2d(size_t w, size_t h) : vector2d() {
 		resize(w,h);
 	}
 };

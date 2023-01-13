@@ -92,6 +92,9 @@
     <ClCompile Include="..\..\..\test\out_write.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\test\vector2d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\test\catch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

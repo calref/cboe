@@ -136,6 +136,7 @@
     <ClCompile Include="..\..\..\test\town_legacy.cpp" />
     <ClCompile Include="..\..\..\test\town_read.cpp" />
     <ClCompile Include="..\..\..\test\town_write.cpp" />
+    <ClCompile Include="..\..\..\test\vector2d.cpp" />
     <ClCompile Include="..\..\..\src\scenedit\scen.fileio.cpp" />
   </ItemGroup>
   <ItemGroup>
