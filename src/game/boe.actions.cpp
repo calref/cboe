@@ -30,6 +30,7 @@
 #include "dialogxml/dialogs/dialog.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
 #include "boe.menus.hpp"
+#include "tools/keymods.hpp"
 #include "tools/winutil.hpp"
 #include "tools/cursors.hpp"
 #include "spell.hpp"
@@ -1188,10 +1189,7 @@ bool handle_action(const sf::Event& event) {
 			handle_look(destination, need_redraw, need_reprint);
 			// If option/ctrl not pressed, looking done, so restore center
 			bool look_done = true;
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)) look_done = false;
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::RAlt)) look_done = false;
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) look_done = false;
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)) look_done = false;
+			if(kb.isAltPressed() || kb.isCtrlPressed()) look_done = false;
 			if(look_done) {
 				if(right_button) overall_mode = previous_mode;
 				else if(overall_mode == MODE_LOOK_COMBAT) {
@@ -1572,23 +1570,22 @@ bool handle_keystroke(const sf::Event& event){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
 	std::ostringstream sout;
-	using kb = sf::Keyboard;
 	using Key = sf::Keyboard::Key;
 	
 	Key keypad[10] = {
-		kb::Numpad0,kb::Numpad1,kb::Numpad2,kb::Numpad3,
-		kb::Numpad4,kb::Numpad5,kb::Numpad6,
-		kb::Numpad7,kb::Numpad8,kb::Numpad9
+		Key::Numpad0,Key::Numpad1,Key::Numpad2,Key::Numpad3,
+		Key::Numpad4,Key::Numpad5,Key::Numpad6,
+		Key::Numpad7,Key::Numpad8,Key::Numpad9
 	};
 	location terrain_click[10] = {
 		{150,185},{120,215},{150,215},{180,215},
 		{120,185},{150,185},{180,185},
 		{120,155},{150,155},{180,135}
 	};
-	Key talk_chars[9] = {kb::L,kb::N,kb::J,kb::B,kb::S,kb::R,kb::D,kb::G,kb::A};
-	Key shop_chars[8] = {kb::A,kb::B,kb::C,kb::D,kb::E,kb::F,kb::G,kb::H};
+	Key talk_chars[9] = {Key::L,Key::N,Key::J,Key::B,Key::S,Key::R,Key::D,Key::G,Key::A};
+	Key shop_chars[8] = {Key::A,Key::B,Key::C,Key::D,Key::E,Key::F,Key::G,Key::H};
 	
-	if(map_visible && event.key.code == kb::Escape
+	if(map_visible && event.key.code == Key::Escape
 	   && (overall_mode != MODE_TALKING) && (overall_mode != MODE_SHOPPING)) {
 		mini_map.setVisible(false);
 		map_visible = false;
@@ -1607,36 +1604,36 @@ bool handle_keystroke(const sf::Event& event){
 //	print_buf();
 	Key chr2 = event.key.code;
 	
-	if(chr2 == kb::LShift || chr2 == kb::LAlt || chr2 == kb::LControl || chr2 == kb::LSystem) return false;
-	if(chr2 == kb::RShift || chr2 == kb::RAlt || chr2 == kb::RControl || chr2 == kb::RSystem) return false;
+	if(chr2 == Key::LShift || chr2 == Key::LAlt || chr2 == Key::LControl || chr2 == Key::LSystem) return false;
+	if(chr2 == Key::RShift || chr2 == Key::RAlt || chr2 == Key::RControl || chr2 == Key::RSystem) return false;
 	
-	if(chr2 == kb::Up && !kb::isKeyPressed(kb::Down)) {
-		if(kb::isKeyPressed(kb::Left)) chr2 = kb::Numpad7;
-		else if(kb::isKeyPressed(kb::Right)) chr2 = kb::Numpad9;
-		else chr2 = kb::Numpad8;
-	} else if(chr2 == kb::Down && !kb::isKeyPressed(kb::Up)) {
-		if(kb::isKeyPressed(kb::Left)) chr2 = kb::Numpad1;
-		else if(kb::isKeyPressed(kb::Right)) chr2 = kb::Numpad3;
-		else chr2 = kb::Numpad2;
-	} else if(chr2 == kb::Left && !kb::isKeyPressed(kb::Right)) {
-		if(kb::isKeyPressed(kb::Up)) chr2 = kb::Numpad7;
-		else if(kb::isKeyPressed(kb::Down)) chr2 = kb::Numpad1;
-		else chr2 = kb::Numpad4;
-	} else if(chr2 == kb::Right && !kb::isKeyPressed(kb::Left)) {
-		if(kb::isKeyPressed(kb::Up)) chr2 = kb::Numpad9;
-		else if(kb::isKeyPressed(kb::Down)) chr2 = kb::Numpad3;
-		else chr2 = kb::Numpad6;
-	} else if(chr2 == kb::Home) chr2 = kb::Numpad7;
-	else if(chr2 == kb::End) chr2 = kb::Numpad1;
-	else if(chr2 == kb::PageUp) chr2 = kb::Numpad9;
-	else if(chr2 == kb::PageDown) chr2 = kb::Numpad3;
+	if(chr2 == Key::Up && !kb.isDownPressed()) {
+		if(kb.isLeftPressed()) chr2 = Key::Numpad7;
+		else if(kb.isRightPressed()) chr2 = Key::Numpad9;
+		else chr2 = Key::Numpad8;
+	} else if(chr2 == Key::Down && !kb.isUpPressed()) {
+		if(kb.isLeftPressed()) chr2 = Key::Numpad1;
+		else if(kb.isRightPressed()) chr2 = Key::Numpad3;
+		else chr2 = Key::Numpad2;
+	} else if(chr2 == Key::Left && !kb.isRightPressed()) {
+		if(kb.isUpPressed()) chr2 = Key::Numpad7;
+		else if(kb.isDownPressed()) chr2 = Key::Numpad1;
+		else chr2 = Key::Numpad4;
+	} else if(chr2 == Key::Right && !kb.isLeftPressed()) {
+		if(kb.isUpPressed()) chr2 = Key::Numpad9;
+		else if(kb.isDownPressed()) chr2 = Key::Numpad3;
+		else chr2 = Key::Numpad6;
+	} else if(chr2 == Key::Home) chr2 = Key::Numpad7;
+	else if(chr2 == Key::End) chr2 = Key::Numpad1;
+	else if(chr2 == Key::PageUp) chr2 = Key::Numpad9;
+	else if(chr2 == Key::PageDown) chr2 = Key::Numpad3;
 	
 	sf::Event pass_event = {sf::Event::MouseButtonPressed};
 	if(overall_mode == MODE_TALKING) {
-		if(chr2 == kb::Escape)
-			chr2 = kb::D;
-		if(chr2 == kb::Space)
-			chr2 = kb::G;
+		if(chr2 == Key::Escape)
+			chr2 = Key::D;
+		if(chr2 == Key::Space)
+			chr2 = Key::G;
 		for(short i = 0; i < 9; i++)
 			if(chr2 == talk_chars[i] && (!talk_end_forced || i == 6 || i == 5)) {
 				int j = talk_end_forced ? i - 5 : i;
@@ -1649,7 +1646,7 @@ bool handle_keystroke(const sf::Event& event){
 			}
 	}
 	else if(overall_mode == MODE_SHOPPING) { // shopping keystrokes
-		if(chr2 == kb::Escape) {
+		if(chr2 == Key::Escape) {
 			play_sound(37);
 			end_shop_mode();
 		}
@@ -1666,7 +1663,7 @@ bool handle_keystroke(const sf::Event& event){
 		for(short i = 0; i < 10; i++)
 			if(chr2 == keypad[i]) {
 				if(i == 0) {
-					chr2 = kb::Z;
+					chr2 = Key::Z;
 				}
 				else {
 					pass_point = mainPtr.mapCoordsToPixel(terrain_click[i], mainView);
@@ -1683,7 +1680,7 @@ bool handle_keystroke(const sf::Event& event){
 	char chr = keyToChar(chr2, event.key.shift);
 	// F1 should bring up help.
 	// TODO: So should the help key, if it exists (but SFML doesn't support the help key)
-	if(chr2 == kb::F1) chr = '?';
+	if(chr2 == Key::F1) chr = '?';
 	
 	switch(chr) {
 			
@@ -2134,7 +2131,7 @@ bool handle_scroll(const sf::Event& event) {
 	
 	int amount = event.mouseWheel.delta;
 	if(scrollableModes.count(overall_mode) && pos.in(world_screen)) {
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
+		if(kb.isCtrlPressed())
 			center.x = minmax(4, univ.town->max_dim - 5, center.x - amount);
 		else center.y = minmax(4, univ.town->max_dim - 5, center.y - amount);
 	}
@@ -2603,7 +2600,6 @@ void handle_death() {
 
 void start_new_game(bool force) {
 	std::string choice;
-	using kb = sf::Keyboard;
 	
 	if(!force)
 		choice = cChoiceDlog("new-party",{"okay","cancel"}).show();
@@ -2617,12 +2613,7 @@ void start_new_game(bool force) {
 	
 //	display_intro();
 	// If system key held down, create debug party
-#ifdef __APPLE__
-	if(kb::isKeyPressed(kb::LSystem) || kb::isKeyPressed(kb::RSystem))
-#else
-	if(kb::isKeyPressed(kb::LControl) || kb::isKeyPressed(kb::RControl))
-#endif
-		party_type = PARTY_DEBUG;
+	if(kb.isSystemPressed()) party_type = PARTY_DEBUG;
 	
 	// And now, reconstruct the universe.
 	new(&univ) cUniverse(party_type);

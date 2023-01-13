@@ -689,6 +689,9 @@
     <ClCompile Include="..\..\..\src\tools\undo.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\tools\keymods.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\tools\winutil.win.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
@@ -913,6 +916,9 @@
       <Filter>Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tools\vector2d.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tools\keymods.hpp">
       <Filter>Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tools\winutil.hpp">

@@ -15,6 +15,7 @@
 #include "sounds.hpp"
 #include "fileio/fileio.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
+#include "tools/keymods.hpp"
 #include "tools/winutil.hpp"
 #include "boe.menus.hpp"
 #include "mathutil.hpp"
@@ -38,7 +39,6 @@ enum_map(eStartButton, rectangle) startup_button;
 
 // TODO: Always returns false, so make it void
 bool handle_startup_press(location the_point) {
-	using kb = sf::Keyboard;
 	std::string scen_name;
 	bool force_party = false;
 	
@@ -75,7 +75,7 @@ bool handle_startup_press(location the_point) {
 					
 				case STARTBTN_JOIN:
 					if(!party_in_memory) {
-						if(kb::isKeyPressed(kb::LAlt) || kb::isKeyPressed(kb::RAlt)) {
+						if(kb.isAltPressed()) {
 							force_party = true;
 							start_new_game(true);
 						} else {

@@ -20,6 +20,7 @@
 #include "dialogxml/widgets/scrollbar.hpp"
 #include "dialogxml/widgets/scrollpane.hpp"
 #include "dialogxml/widgets/stack.hpp"
+#include "tools/keymods.hpp"
 #include "tools/winutil.hpp"
 #include "mathutil.hpp"
 #include "tools/cursors.hpp"
@@ -556,86 +557,79 @@ void cDialog::handle_events() {
 
 // This method handles one event received by the dialog.
 void cDialog::handle_one_event(const sf::Event& currentEvent) {
-	using kb = sf::Keyboard;
+	using Key = sf::Keyboard::Key;
 
 	cKey key;
 	// HACK: This needs to be stored between consecutive invocations of this function
 	static cKey pendingKey = {true};
 	std::string itemHit = "";
 	location where;
+	
+	if(kb.handleModifier(currentEvent)) return;
 
 	switch(currentEvent.type) {
 		case sf::Event::KeyPressed:
 			switch(currentEvent.key.code){
-				case kb::Up:
+				case Key::Up:
 					key.spec = true;
 					key.k = key_up;
 					break;
-				case kb::Right:
+				case Key::Right:
 					key.spec = true;
 					key.k = key_right;
 					break;
-				case kb::Left:
+				case Key::Left:
 					key.spec = true;
 					key.k = key_left;
 					break;
-				case kb::Down:
+				case Key::Down:
 					key.spec = true;
 					key.k = key_down;
 					break;
-				case kb::Escape:
+				case Key::Escape:
 					key.spec = true;
 					key.k = key_esc;
 					break;
-				case kb::Return: // TODO: Also enter (keypad)
+				case Key::Return: // TODO: Also enter (keypad)
 					key.spec = true;
 					key.k = key_enter;
 					break;
-				case kb::BackSpace:
+				case Key::BackSpace:
 					key.spec = true;
 					key.k = key_bsp;
 					break;
-				case kb::Delete:
+				case Key::Delete:
 					key.spec = true;
 					key.k = key_del;
 					break;
-				case kb::Tab:
+				case Key::Tab:
 					key.spec = true;
 					key.k = key_tab;
 					break;
-				case kb::Insert:
+				case Key::Insert:
 					key.spec = true;
 					key.k = key_insert;
 					break;
-				case kb::F1:
+				case Key::F1:
 					key.spec = true;
 					key.k = key_help;
 					break;
-				case kb::Home:
+				case Key::Home:
 					key.spec = true;
 					key.k = key_home;
 					break;
-				case kb::End:
+				case Key::End:
 					key.spec = true;
 					key.k = key_end;
 					break;
-				case kb::PageUp:
+				case Key::PageUp:
 					key.spec = true;
 					key.k = key_pgup;
 					break;
-				case kb::PageDown:
+				case Key::PageDown:
 					key.spec = true;
 					key.k = key_pgdn;
 					break;
-				case kb::LShift:
-				case kb::RShift:
-				case kb::LAlt:
-				case kb::RAlt:
-				case kb::LControl:
-				case kb::RControl:
-				case kb::LSystem:
-				case kb::RSystem:
-					return;
 				default:
 					key.spec = false;
 					key.c = keyToChar(currentEvent.key.code, false);
@@ -676,14 +670,10 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 			break;
 		case sf::Event::MouseButtonPressed:
 			key.mod = mod_none;
-			if(kb::isKeyPressed(kb::LControl)) key.mod += mod_ctrl;
-			if(kb::isKeyPressed(kb::RControl)) key.mod += mod_ctrl;
-			if(kb::isKeyPressed(kb::LSystem)) key.mod += mod_ctrl;
-			if(kb::isKeyPressed(kb::RSystem)) key.mod += mod_ctrl;
-			if(kb::isKeyPressed(kb::LAlt)) key.mod += mod_alt;
-			if(kb::isKeyPressed(kb::RAlt)) key.mod += mod_alt;
-			if(kb::isKeyPressed(kb::LShift)) key.mod += mod_shift;
-			if(kb::isKeyPressed(kb::RShift)) key.mod += mod_shift;
+			if(kb.isCtrlPressed()) key.mod += mod_ctrl;
+			if(kb.isMetaPressed()) key.mod += mod_ctrl;
+			if(kb.isAltPressed()) key.mod += mod_alt;
+			if(kb.isShiftPressed()) key.mod += mod_shift;
 			where = {currentEvent.mouseButton.x, currentEvent.mouseButton.y};
 			process_click(where, key.mod);
 			break;

@@ -608,6 +608,9 @@
     <ClCompile Include="..\..\..\src\universe\creature.cpp">
       <Filter>Universe</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\tools\keymods.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\tools\winutil.win.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
@@ -823,6 +826,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\universe\creature.hpp">
       <Filter>Universe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tools\keymods.hpp">
+      <Filter>Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tools\winutil.hpp">
       <Filter>Tools</Filter>

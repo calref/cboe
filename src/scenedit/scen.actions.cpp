@@ -18,6 +18,7 @@
 #include "scen.menus.hpp"
 #include "mathutil.hpp"
 #include "fileio/fileio.hpp"
+#include "tools/keymods.hpp"
 #include "tools/winutil.hpp"
 #include "tools/cursors.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
@@ -1532,16 +1533,15 @@ static bool handle_toolpal_action(location cur_point2) {
 }
 
 void handle_action(location the_point,sf::Event /*event*/) {
-	using kb = sf::Keyboard;
 	std::string s2;
 	
 	bool option_hit = false,ctrl_hit = false;
 	location spot_hit;
 	location cur_point,cur_point2;
 	rectangle temp_rect;
-	if(kb::isKeyPressed(kb::LAlt) || kb::isKeyPressed(kb::RAlt))
+	if(kb.isAltPressed())
 		option_hit = true;
-	if(kb::isKeyPressed(kb::LControl) || kb::isKeyPressed(kb::RControl))
+	if(kb.isCtrlPressed())
 		ctrl_hit = true;
 	
 	if(handle_lb_action(the_point))
@@ -1782,7 +1782,7 @@ void handle_scroll(const sf::Event& event) {
 	location pos { translate_mouse_coordinates({event.mouseMove.x,event.mouseMove.y}) };
 	int amount = event.mouseWheel.delta;
 	if(overall_mode < MODE_MAIN_SCREEN && pos.in(terrain_rect)) {
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
+		if(kb.isCtrlPressed())
 			cen_x = minmax(4, town->max_dim - 5, cen_x - amount);
 		else cen_y = minmax(4, town->max_dim - 5, cen_y - amount);
 	}

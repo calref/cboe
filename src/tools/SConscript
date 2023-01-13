@@ -5,6 +5,7 @@ tools = Split("""
 	undo.cpp
 	framerate_limiter.cpp
 	drawable_manager.cpp
+	keymods.cpp
 	../location.cpp
 	../mathutil.cpp
 	../porting.cpp

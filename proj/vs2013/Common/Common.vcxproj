@@ -258,6 +258,7 @@
     <ClCompile Include="..\..\..\src\tools\menu_accel.win.cpp" />
     <ClCompile Include="..\..\..\src\tools\prefs.win.cpp" />
     <ClCompile Include="..\..\..\src\tools\undo.cpp" />
+    <ClCompile Include="..\..\..\src\tools\keymods.cpp" />
     <ClCompile Include="..\..\..\src\tools\winutil.win.cpp" />
     <ClCompile Include="..\..\..\src\tools\framerate_limiter.cpp" />
     <ClCompile Include="..\..\..\src\universe\creature.cpp" />
@@ -350,6 +351,7 @@
     <ClInclude Include="..\..\..\src\tools\prefs.hpp" />
     <ClInclude Include="..\..\..\src\tools\undo.hpp" />
     <ClInclude Include="..\..\..\src\tools\vector2d.hpp" />
+    <ClInclude Include="..\..\..\src\tools\keymods.hpp" />
     <ClInclude Include="..\..\..\src\tools\winutil.hpp" />
     <ClInclude Include="..\..\..\src\tools\framerate_limiter.hpp" />
     <ClInclude Include="..\..\..\src\universe\creature.hpp" />

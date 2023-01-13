@@ -80,6 +80,8 @@
 		912DFE8F18E2872400B00D75 /* boe.menus.mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 912DFE8E18E2872300B00D75 /* boe.menus.mac.mm */; };
 		913D6C050FC57A8E00E12527 /* boeresources.icns in Resources */ = {isa = PBXBuildFile; fileRef = 913D6C040FC57A8E00E12527 /* boeresources.icns */; };
 		91430438296C0088003A3967 /* vector2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91430437296C0088003A3967 /* vector2d.cpp */; };
+		9143044A2970EDC1003A3967 /* keymods.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 914304482970EDC1003A3967 /* keymods.cpp */; };
+		9143044B2970EDC1003A3967 /* keymods.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 914304492970EDC1003A3967 /* keymods.hpp */; };
 		9149924B25913E3F00B5BE97 /* container.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9149924525913E3F00B5BE97 /* container.cpp */; };
 		9149924C25913E3F00B5BE97 /* container.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 9149924625913E3F00B5BE97 /* container.hpp */; };
 		9149924D25913E3F00B5BE97 /* led.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9149924725913E3F00B5BE97 /* led.cpp */; };
@@ -651,6 +653,8 @@
 		913D6C040FC57A8E00E12527 /* boeresources.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = boeresources.icns; path = icons/mac/boeresources.icns; sourceTree = "<group>"; };
 		913FB40A1A5C90840067B9D2 /* pictypes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = pictypes.hpp; sourceTree = "<group>"; };
 		91430437296C0088003A3967 /* vector2d.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = vector2d.cpp; sourceTree = "<group>"; };
+		914304482970EDC1003A3967 /* keymods.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = keymods.cpp; sourceTree = "<group>"; };
+		914304492970EDC1003A3967 /* keymods.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = keymods.hpp; sourceTree = "<group>"; };
 		914698FA1A7362C200F20F5E /* living.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = living.hpp; sourceTree = "<group>"; };
 		914698FB1A7362D900F20F5E /* living.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = living.cpp; sourceTree = "<group>"; };
 		914698FD1A747BED00F20F5E /* creature.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = creature.hpp; sourceTree = "<group>"; };
@@ -1261,6 +1265,8 @@
 				9179A4621A47D4E200FEF872 /* vector2d.hpp */,
 				919145FE18E63B41005CF3A4 /* winutil.hpp */,
 				91C2A6E11B823CCD00346948 /* gitrev.sh */,
+				914304482970EDC1003A3967 /* keymods.cpp */,
+				914304492970EDC1003A3967 /* keymods.hpp */,
 			);
 			name = tools;
 			path = ../../src/tools;
@@ -1639,6 +1645,7 @@
 				91F3205123E65EA3009650AF /* framerate_limiter.hpp in Headers */,
 				9149924C25913E3F00B5BE97 /* container.hpp in Headers */,
 				9149924E25913E3F00B5BE97 /* led.hpp in Headers */,
+				9143044B2970EDC1003A3967 /* keymods.hpp in Headers */,
 				9149925025913E3F00B5BE97 /* ledgroup.hpp in Headers */,
 				91499254259140FF00B5BE97 /* keycodes.hpp in Headers */,
 			);
@@ -2056,6 +2063,7 @@
 				91E128E71BC1E6DD00C8BE1D /* basicbtns.cpp in Sources */,
 				91E128ED1BC2076B00C8BE1D /* 3choice.cpp in Sources */,
 				91E128EE1BC2076B00C8BE1D /* choicedlog.cpp in Sources */,
+				9143044A2970EDC1003A3967 /* keymods.cpp in Sources */,
 				91E128EF1BC2076B00C8BE1D /* pictchoice.cpp in Sources */,
 				91E128F01BC2076B00C8BE1D /* strchoice.cpp in Sources */,
 				91E128F11BC2076B00C8BE1D /* strdlog.cpp in Sources */,

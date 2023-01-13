@@ -14,6 +14,7 @@
 #include "dialogxml/dialogs/dialog.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "gfx/render_shapes.hpp"
+#include "tools/keymods.hpp"
 #include "tools/winutil.hpp"
 #include "tools/cursors.hpp"
 
@@ -124,7 +125,7 @@ bool cTextField::handleClick(location clickLoc) {
 	bool hadSelection = selectionPoint != insertionPoint;
 	bool is_double = click_timer.getElapsedTime().asMilliseconds() < 500;
 	click_timer.restart();
-	bool is_shift = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
+	bool is_shift = kb.isShiftPressed();
 	set_ip(clickLoc, is_shift ? &cTextField::selectionPoint : &cTextField::insertionPoint);
 	if(!is_shift) selectionPoint = insertionPoint;
 	if(is_double && !is_shift && !hadSelection) {
