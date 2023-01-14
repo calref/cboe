@@ -76,16 +76,16 @@ bool keymods_t::handleModifier(const sf::Event& evt) {
 		
 		case Key::Left:
 			left = newState;
-			break;
+			return false;
 		case Key::Right:
 			right = newState;
-			break;
+			return false;
 		case Key::Up:
 			up = newState;
-			break;
+			return false;
 		case Key::Down:
 			down = newState;
-			break;
+			return false;
 			
 		default: return false;
 	}
