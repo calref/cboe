@@ -1361,6 +1361,7 @@ void delete_last_town() {
 cTown* pick_import_town() {
 	cScenario temp_scenario;
 	fs::path path = nav_get_scenario();
+	if(path.empty()) return nullptr;
 	load_scenario(path, temp_scenario);
 	short town_num = pick_town_num("select-import-town", 0, temp_scenario);
 	if(town_num < 0) return nullptr;
@@ -1526,6 +1527,7 @@ bool resize_outdoors() {
 cOutdoors* pick_import_out() {
 	cScenario temp_scenario;
 	fs::path path = nav_get_scenario();
+	if(path.empty()) return nullptr;
 	load_scenario(path, temp_scenario);
 	location sector = pick_out({-1,-1},temp_scenario);
 	if(sector.x < 0 && sector.y < 0)
