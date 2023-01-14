@@ -177,6 +177,7 @@ public:
 			size_t dx = width - old_w;
 			for(size_t y = old_h; y > 1; y--) {
 				size_t old_begin = old_w * (y - 1), old_end = old_w * y, new_end = w * y - dx;
+				if(new_end > new_sz) continue;
 				std::move_backward(data.begin() + old_begin, data.begin() + old_end, data.begin() + new_end);
 				std::fill_n(data.begin() + old_begin, y - 1, Type());
 			}
