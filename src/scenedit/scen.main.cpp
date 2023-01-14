@@ -29,6 +29,7 @@
 #include "tools/framerate_limiter.hpp"
 #include "tools/event_listener.hpp"
 #include "tools/drawable_manager.hpp"
+#include "tools/keymods.hpp"
 
 #ifdef __APPLE__
 short menuChoiceId=-1;
@@ -250,6 +251,9 @@ void handle_events() {
 }
 
 void handle_one_event(const sf::Event& event) {
+	
+	// If it's just a modifier key, update the state
+	if(kb.handleModifier(event)) return;
 	
 	// Check if any of the event listeners want this event.
 	for (auto& listener : event_listeners) {

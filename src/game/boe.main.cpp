@@ -31,6 +31,7 @@
 #include "dialogxml/widgets/scrollbar.hpp"
 #include "boe.menus.hpp"
 #include "tools/cursors.hpp"
+#include "tools/keymods.hpp"
 #include "tools/prefs.hpp"
 #include "dialogxml/widgets/button.hpp"
 #include "tools/enum_map.hpp"
@@ -323,6 +324,9 @@ void handle_one_event(const sf::Event& event) {
 
 	// What does this do and should it be here?
 	clear_sound_memory();
+	
+	// If it's just a modifier key, update the state
+	if(kb.handleModifier(event)) return;
 
 	// Check if any of the event listeners want this event.
 	for(auto & listener : event_listeners) {

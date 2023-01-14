@@ -18,6 +18,7 @@
 #include "dialogxml/dialogs/strchoice.hpp"
 #include "fileio/fileio.hpp"
 #include "pc.menus.hpp"
+#include "tools/keymods.hpp"
 #include "tools/winutil.hpp"
 #include "tools/cursors.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
@@ -189,6 +190,9 @@ void handle_events() {
 }
 
 void handle_one_event (const sf::Event& event) {
+	
+	// If it's just a modifier key, update the state
+	if(kb.handleModifier(event)) return;
 	
 	// Check if the menubar wants to handle this event.
 	if(menuBarProcessEvent(event)) return;
