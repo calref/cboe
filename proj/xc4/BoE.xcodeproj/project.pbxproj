@@ -220,6 +220,8 @@
 		91B375362969F548008B0324 /* tagfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B375352969F548008B0324 /* tagfile.cpp */; };
 		91B375372969F548008B0324 /* tagfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B375352969F548008B0324 /* tagfile.cpp */; };
 		91B3753A2969F57B008B0324 /* tagfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B375392969F57B008B0324 /* tagfile.cpp */; };
+		91B3753D29736417008B0324 /* keymods.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3753B29736417008B0324 /* keymods.cpp */; };
+		91B3753E29736417008B0324 /* keymods.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 91B3753C29736417008B0324 /* keymods.hpp */; };
 		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
 		91B3EF470F969F1700BF5B67 /* BoEScenEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDB0F969BA700BF5B67 /* BoEScenEd.icns */; };
 		91B3EF480F969F2300BF5B67 /* pc.main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF050F969BD300BF5B67 /* pc.main.cpp */; };
@@ -718,6 +720,8 @@
 		91B375352969F548008B0324 /* tagfile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tagfile.cpp; sourceTree = "<group>"; };
 		91B375382969F55B008B0324 /* tagfile.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tagfile.hpp; sourceTree = "<group>"; };
 		91B375392969F57B008B0324 /* tagfile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tagfile.cpp; sourceTree = "<group>"; };
+		91B3753B29736417008B0324 /* keymods.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = keymods.cpp; sourceTree = "<group>"; };
+		91B3753C29736417008B0324 /* keymods.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = keymods.hpp; sourceTree = "<group>"; };
 		91B3E8A50F938FFE00BF5B67 /* boe.consts.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.consts.hpp; sourceTree = "<group>"; };
 		91B3EED90F969BA700BF5B67 /* BoEScenEd-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoEScenEd-Info.plist"; path = "../../pkg/mac/BoEScenEd-Info.plist"; sourceTree = SOURCE_ROOT; };
 		91B3EEDB0F969BA700BF5B67 /* BoEScenEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BoEScenEd.icns; path = icons/mac/BoEScenEd.icns; sourceTree = "<group>"; };
@@ -1207,6 +1211,7 @@
 				91C688E70FD702B9000F6D01 /* cursors.mac.mm */,
 				91FE0E3523F084B70084CA6B /* drawable_manager.cpp */,
 				91F3204E23E65EA3009650AF /* framerate_limiter.cpp */,
+				91B3753B29736417008B0324 /* keymods.cpp */,
 				91EC481018FBABB100BB1E86 /* prefs.mac.mm */,
 				912283C80FD0E16C00B21642 /* undo.cpp */,
 				919145FF18E63B70005CF3A4 /* winutil.mac.mm */,
@@ -1217,6 +1222,7 @@
 				91FE0E3723F084B70084CA6B /* event_listener.hpp */,
 				91F3204F23E65EA3009650AF /* framerate_limiter.hpp */,
 				91C2A6E21B8244F700346948 /* gitrev.hpp */,
+				91B3753C29736417008B0324 /* keymods.hpp */,
 				91EC480E18FBAA8700BB1E86 /* prefs.hpp */,
 				917B573F100B956C0096C978 /* undo.hpp */,
 				9179A4621A47D4E200FEF872 /* vector2d.hpp */,
@@ -1601,6 +1607,7 @@
 				9149924E25913E3F00B5BE97 /* led.hpp in Headers */,
 				9149925025913E3F00B5BE97 /* ledgroup.hpp in Headers */,
 				91499254259140FF00B5BE97 /* keycodes.hpp in Headers */,
+				91B3753E29736417008B0324 /* keymods.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2009,6 +2016,7 @@
 				91499253259140FF00B5BE97 /* keycodes.cpp in Sources */,
 				91B375332969F529008B0324 /* res_dialog.cpp in Sources */,
 				91B375362969F548008B0324 /* tagfile.cpp in Sources */,
+				91B3753D29736417008B0324 /* keymods.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
