@@ -12,6 +12,7 @@
 // Tried using boost::multi_array, but it kept causing weird issues, so I decided to make my own.
 
 #include <vector>
+#include <cstddef>
 
 template<typename Type, typename Alloc = std::allocator<Type>> class vector2d {
 	friend class row_ref;
