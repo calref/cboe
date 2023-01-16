@@ -61,6 +61,9 @@ TEST_CASE("Complex tag file") {
 	"LOC 1 5\n"
 	"LOC 12 22\n"
 	"LOC 143 9\n"
+	"START 12 40\n"
+	"MODE 1 2 3 4\n"
+	"STATUS 10 20 30 40 50 60 70 80 90 100\n"
 	"COUNT 12\n"
 	"YES\n"
 	"ENABLE false\n"
@@ -90,8 +93,11 @@ TEST_CASE("Complex tag file") {
 		p2["STRING"] << "foo";
 		p2["STRING"] << "bar";
 		p2["LOC"] << 1 << 5;
-		p2["LOC"] << std::array<int,2>{{12,22}};
-		p2["LOC"] << std::pair<int,int>{143,9};
+		p2["LOC"] << 12 << 22;
+		p2["LOC"] << 143 << 9;
+		p2["START"] << std::make_pair(12, 40);
+		p2["MODE"] << std::make_tuple(1, 2, 3, 4);
+		p2["STATUS"] << std::array<int,10>{{10,20,30,40,50,60,70,80,90,100}};
 		p2["COUNT"] << 12;
 		p2.add("YES");
 		p2["ENABLE"] << false;
@@ -146,6 +152,28 @@ TEST_CASE("Complex tag file") {
 				CHECK(locations[1].second == 22);
 				CHECK(locations[2].first == 143);
 				CHECK(locations[2].second == 9);
+				std::pair<int, int> startloc;
+				page["START"] >> startloc;
+				CHECK(startloc.first == 12);
+				CHECK(startloc.second == 40);
+				std::tuple<int, int, int, int> mode;
+				page["MODE"] >> mode;
+				CHECK(std::get<0>(mode) == 1);
+				CHECK(std::get<1>(mode) == 2);
+				CHECK(std::get<2>(mode) == 3);
+				CHECK(std::get<3>(mode) == 4);
+				std::array<int,10> status;
+				page["STATUS"] >> status;
+				CHECK(status[0] == 10);
+				CHECK(status[1] == 20);
+				CHECK(status[2] == 30);
+				CHECK(status[3] == 40);
+				CHECK(status[4] == 50);
+				CHECK(status[5] == 60);
+				CHECK(status[6] == 70);
+				CHECK(status[7] == 80);
+				CHECK(status[8] == 90);
+				CHECK(status[9] == 100);
 				bool yes = page.contains("YES"), no = page.contains("NO"), enable = true;
 				page["ENABLE"] >> enable;
 				CHECK(yes == true);

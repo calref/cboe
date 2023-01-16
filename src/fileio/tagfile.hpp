@@ -71,14 +71,44 @@ public:
 		return encode(i, from.first) + encode(i + 1, from.second);
 	}
 	
-	template<size_t j = 0, typename... T>
+private:
+	template<typename... T>
+	struct handle_tuple {
+		template<size_t j = 0>
+		typename std::enable_if<j < sizeof...(T), size_t>::type
+		extract(const cTagFile_Tag& self, size_t i, std::tuple<T...>& to) {
+			if(j >= sizeof...(T)) return 0;
+			return self.extract(i, std::get<j>(to)) + extract<j + 1>(self, i + 1, to);
+		}
+		template<size_t j = 0>
+		typename std::enable_if<j >= sizeof...(T), size_t>::type
+		extract(const cTagFile_Tag&, size_t, std::tuple<T...>&) {
+			return 0;
+		}
+		template<size_t j = 0>
+		typename std::enable_if<j < sizeof...(T), size_t>::type
+		encode(cTagFile_Tag& self, size_t i, const std::tuple<T...>& from) {
+			if(j >= sizeof...(T)) return 0;
+			return self.encode(i, std::get<j>(from)) + encode<j + 1>(self, i + 1, from);
+		}
+		template<size_t j = 0>
+		typename std::enable_if<j >= sizeof...(T), size_t>::type
+		encode(cTagFile_Tag&, size_t, const std::tuple<T...>&) {
+			return 0;
+		}
+	};
+	
+public:
+	template<typename... T>
 	size_t extract(size_t i, std::tuple<T...>& to) const {
-		return extract(i, std::get<j>(to)) + extract<j + 1>(i + 1, to);
+		handle_tuple<T...> handle;
+		return handle.extract(*this, i, to);
 	}
 	
-	template<size_t j, typename... T>
+	template<typename... T>
 	size_t encode(size_t i, const std::tuple<T...>& from) {
-		return encode(i, std::get<j>(from)) + encode<j + 1>(i + 1, from);
+		handle_tuple<T...> handle;
+		return handle.encode(*this, i, from);
 	}
 	
 	template<typename T, size_t n>
