@@ -56,6 +56,7 @@ TEST_CASE("Complex tag file") {
 	"\f"
 	// Page 2, a complex page with some array-like values
 	"ID 123\n"
+	"HEX 3ad\n"
 	"STRING foo\n"
 	"STRING bar\n"
 	"LOC 1 5\n"
@@ -90,6 +91,7 @@ TEST_CASE("Complex tag file") {
 		p1["C"] << 45;
 		auto& p2 = content.add();
 		p2["ID"] << 123;
+		p2["HEX"] << as_hex<int>(0x3ad);
 		p2["STRING"] << "foo";
 		p2["STRING"] << "bar";
 		p2["LOC"] << 1 << 5;
@@ -134,7 +136,9 @@ TEST_CASE("Complex tag file") {
 			} else if(!p2) {
 				p2 = true;
 				int id = 0, count = 0;
+				as_hex<int> hex = 0;
 				page["ID"] >> id;
+				page["HEX"] >> hex;
 				page["COUNT"] >> count;
 				CHECK(id == 123);
 				CHECK(count == 12);

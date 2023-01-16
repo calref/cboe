@@ -272,4 +272,27 @@ public:
 	
 };
 
+template<typename Int, typename = typename std::enable_if<std::is_integral<Int>::value>::type>
+struct as_hex {
+	Int value;
+	as_hex(Int value) : value(value) {}
+	operator Int() { return value; }
+};
+
+template<typename Int>
+inline std::ostream& operator<<(std::ostream& os, const as_hex<Int>& value) {
+	auto f = os.flags();
+	os << std::hex << value.value;
+	os.flags(f);
+	return os;
+}
+
+template<typename Int>
+inline std::istream& operator>>(std::istream& is, as_hex<Int>& ref) {
+	auto f = is.flags();
+	is >> std::hex >> ref.value;
+	is.flags(f);
+	return is;
+}
+
 #endif
