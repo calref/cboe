@@ -68,7 +68,15 @@ TEST_CASE("Complex tag file") {
 	"COUNT 12\n"
 	"YES\n"
 	"ENABLE false\n"
-	// Page 3 and onward, a series of identical pages
+	"ARRAY 1\n"
+	"ARRAY 3\n"
+	"ARRAY 7\n"
+	"ARRAY 12\n"
+	"\f"
+	// Page 3, a complex page with some sparse array-like values
+	"RECORD 2 'Hello World'\n"
+	"RECORD 5 \"Isn't it cool?\"\n"
+	// Page 4 and onward, a series of identical pages
 	"\f"
 	"ID 12\n"
 	"VALUE 400\n"
@@ -103,6 +111,16 @@ TEST_CASE("Complex tag file") {
 		p2["COUNT"] << 12;
 		p2.add("YES");
 		p2["ENABLE"] << false;
+		std::vector<int> array{1,3,7,12};
+		p2["ARRAY"].encode(array);
+		auto& p3 = content.add();
+		std::vector<std::string> records{
+			"", "",
+			"Hello World",
+			"", "",
+			"Isn't it cool?",
+		};
+		p3["RECORD"].encodeSparse(records);
 		auto& p4a = content.add();
 		p4a["ID"] << '\x0c';
 		p4a["VALUE"] << 400;
@@ -116,13 +134,14 @@ TEST_CASE("Complex tag file") {
 		p4c["VALUE"] << 90;
 		p4c["COMMENT"] << "It's great!";
 		content.writeTo(file);
-		CHECK(file.str() == file_contents);
+		auto output = file.str();
+		CHECK(output == file_contents);
 	}
 	SECTION("input") {
 		std::istringstream file(file_contents);
 		content.readFrom(file);
-		bool p1 = false, p2 = false;
-		size_t p3 = 0;
+		bool p1 = false, p2 = false, p3 = false;
+		size_t p4 = 0;
 		for(const auto& page : content) {
 			if(!p1) {
 				p1 = true;
@@ -183,15 +202,33 @@ TEST_CASE("Complex tag file") {
 				CHECK(yes == true);
 				CHECK(no == false);
 				CHECK(enable == false);
+				std::vector<int> array;
+				page["ARRAY"].extract(array);
+				REQUIRE(array.size() == 4);
+				CHECK(array[0] == 1);
+				CHECK(array[1] == 3);
+				CHECK(array[2] == 7);
+				CHECK(array[3] == 12);
+			} else if(!p3) {
+				p3 = true;
+				std::vector<std::string> records;
+				page["RECORD"].extractSparse(records);
+				REQUIRE(records.size() == 6);
+				CHECK(records[0] == std::string(""));
+				CHECK(records[1] == std::string(""));
+				CHECK(records[2] == std::string("Hello World"));
+				CHECK(records[3] == std::string(""));
+				CHECK(records[4] == std::string(""));
+				CHECK(records[5] == std::string("Isn't it cool?"));
 			} else {
-				p3++;
+				p4++;
 				char id;
 				int value;
 				std::string comment;
 				page["ID"] >> id;
 				page["VALUE"] >> value;
 				page["COMMENT"] >> comment;
-				switch(p3) {
+				switch(p4) {
 					case 1:
 						CHECK(id == '\x0c');
 						CHECK(value == 400);
@@ -215,6 +252,6 @@ TEST_CASE("Complex tag file") {
 		CHECK(p1);
 		CHECK(p2);
 		CHECK(p3);
-		CHECK(p3 == 3);
+		CHECK(p4 == 3);
 	}
 }

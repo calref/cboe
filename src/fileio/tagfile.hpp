@@ -233,6 +233,28 @@ public:
 			*this << value;
 		}
 	}
+	template<typename Container>
+	void extractSparse(Container& values, typename Container::value_type def = typename Container::value_type()) const {
+		using T = typename Container::value_type;
+		values.clear();
+		for(size_t n = 0; n < tags.size(); n++) {
+			size_t i = 0;
+			T value;
+			*this >> i >> value;
+			if(i >= values.size()) values.resize(i + 1, def);
+			values[i] = value;
+		}
+	}
+	template<typename Container>
+	void encodeSparse(const Container& values, typename Container::value_type def = typename Container::value_type()) {
+		size_t i = 0;
+		for(const auto& value : values) {
+			if(value != def) {
+				*this << i << value;
+			}
+			i++;
+		}
+	}
 };
 
 class cTagFile_Page {
