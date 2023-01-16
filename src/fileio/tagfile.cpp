@@ -10,60 +10,61 @@
 #include "fileio.hpp"
 
 void cTagFile::readFrom(std::istream& file) {
-	for(auto& p : pages) p.get().reset();
 	std::istringstream page_in;
 	std::string cur_page;
-	size_t i = 0;
+	pages.clear();
 	while(getline(file, cur_page, '\f')) {
 		page_in.clear();
 		page_in.str(cur_page);
-		while(!pages[i].get().canReadFrom(page_in)) {
-			i++;
-		}
-		if(i >= pages.size()) break;
-		pages[i].get().readFrom(page_in);
+		add().readFrom(page_in);
 	}
 }
 
-void cTagFile::writeTo(std::ostream& file) {
+void cTagFile::writeTo(std::ostream& file) const {
 	bool first = true;
 	for(const auto& page : pages) {
 		if(!first) file << '\f';
 		first = false;
-		page.get().writeTo(file);
+		page.writeTo(file);
 	}
 }
 
-cTagFile_Page::cTagFile_Page(cTagFile& owner) {
-	owner.pages.push_back(*this);
+
+cTagFile_Page& cTagFile::add() {
+	pages.emplace_back();
+	return pages.back();
+}
+
+cTagFile_Page& cTagFile::operator[](unsigned long i) {
+	return pages.at(i);
+}
+
+const cTagFile_Page& cTagFile::operator[](unsigned long i) const {
+	return pages.at(i);
+}
+
+void cTagFile_Page::internal_add_page(const std::string &key) {
+	tag_map.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(std::ref(*this), key));
 }
 
 void cTagFile_Page::readFrom(std::istream& file) {
-	hasBeenRead = true;
 	std::istringstream tag_in;
 	for(std::string key; file >> key; ) {
-		if(tag_map.count(key) == 0) continue;
 		std::string line;
 		getline(file, line);
 		tag_in.clear();
 		tag_in.str(line);
-		tag_map.at(key).get().readFrom(key, tag_in);
-		tag_in.clear();
+		internal_add_page(key);
+		auto& tag = tag_map.at(key).add();
+		tag.readFrom(tag_in);
+		tag_list.push_back(tag);
 	}
 }
 
-void cTagFile_Page::writeTo(std::ostream& file) {
+void cTagFile_Page::writeTo(std::ostream& file) const {
 	for(const auto& tag : tag_list) {
-		tag.get().writeTo(tag.get().key, file);
+		tag.get().writeTo(file);
 	}
-}
-
-bool cTagFile_Page::canReadFrom(std::istream&) const {
-	return !hasBeenRead;
-}
-
-void cTagFile_Page::reset() {
-	hasBeenRead = false;
 }
 
 std::string cTagFile_Page::getFirstKey() const {
@@ -71,57 +72,142 @@ std::string cTagFile_Page::getFirstKey() const {
 	return tag_list.front().get().key;
 }
 
-cTagFile_Tag::cTagFile_Tag(cTagFile_Page& owner, const std::string& key) : key(key) {
-	owner.tag_map.emplace(key, *this);
-	owner.tag_list.push_back(*this);
+
+cTagFile_Tag& cTagFile_Page::add(const std::string& key) {
+	internal_add_page(key);
+	auto& tag = tag_map.at(key).add();
+	tag_list.emplace_back(tag);
+	return tag;
 }
 
-void cTagFile_Tag::readValueFrom(std::istream& file, std::string& to) {
-	to = read_maybe_quoted_string(file);
+cTagFile_TagList& cTagFile_Page::operator[](const std::string& key) {
+	internal_add_page(key);
+	return tag_map.at(key);
 }
 
-void cTagFile_Tag::writeValueTo(std::ostream& file, const std::string& from) {
-	file << maybe_quote_string(from);
+const cTagFile_TagList& cTagFile_Page::operator[](const std::string& key) const {
+	return tag_map.at(key);
 }
 
-void cTagFile_Tag::readValueFrom(std::istream& file, bool& to) {
-	auto f = file.flags();
-	file >> std::boolalpha >> to;
-	file.flags(f);
+cTagFile_Tag& cTagFile_TagList::add() {
+	tags.emplace_back(key);
+	return tags.back();
 }
 
-void cTagFile_Tag::writeValueTo(std::ostream& file, const bool& from) {
-	auto f = file.flags();
-	file << std::boolalpha << from;
-	file.flags(f);
+cTagFile_Tag& cTagFile_TagList::operator[](unsigned long i) {
+	return tags.at(i);
 }
 
-void cTagFile_Tag::readValueFrom(std::istream& file, char& to) {
-	int temp;
-	file >> temp;
-	to = char(temp);
+const cTagFile_Tag& cTagFile_TagList::operator[](unsigned long i) const {
+	return tags.at(i);
 }
 
-void cTagFile_Tag::writeValueTo(std::ostream& file, const char& from) {
-	file << int(from);
+bool cTagFile_TagList::empty() const {
+	return tags.empty();
 }
 
-void cTagFile_Tag::readValueFrom(std::istream& file, signed char& to) {
-	int temp;
-	file >> temp;
-	to = char(temp);
+void cTagFile_TagList::internal_add_tag() {
+	tags.emplace_back(key);
+	parent->tag_list.push_back(tags.back());
 }
 
-void cTagFile_Tag::writeValueTo(std::ostream& file, const signed char& from) {
-	file << int(from);
+bool cTagFile_Page::contains(const std::string& key) const {
+	return tag_map.count(key) > 0 && !tag_map.at(key).empty();
 }
 
-void cTagFile_Tag::readValueFrom(std::istream& file, unsigned char& to) {
-	int temp;
-	file >> temp;
-	to = char(temp);
+cTagFile_TagList::cTagFile_TagList(cTagFile_Page& parent, const std::string& key)
+	: parent(&parent)
+	, key(key)
+{}
+
+cTagFile_Tag::cTagFile_Tag(const std::string& key) : key(key) {}
+
+void cTagFile_Tag::readFrom(std::istream& file) {
+	while(file) {
+		values.push_back(read_maybe_quoted_string(file));
+	}
 }
 
-void cTagFile_Tag::writeValueTo(std::ostream& file, const unsigned char& from) {
-	file << int(from);
+void cTagFile_Tag::writeTo(std::ostream& file) {
+	file << key;
+	for(const std::string& val : values) {
+		file << ' ';
+		file << maybe_quote_string(val);
+	}
+	file << '\n';
+}
+
+size_t cTagFile_Tag::extract(size_t i, std::string& to) const {
+	if(i < values.size()) to = values[i];
+	return 1;
+}
+
+size_t cTagFile_Tag::encode(size_t i, const std::string& from) {
+	if(i >= values.size()) values.resize(i + 1);
+	values[i] = from;
+	return 1;
+}
+
+size_t cTagFile_Tag::extract(size_t i, bool& to) const {
+	if(i < values.size()) {
+		to = false;
+		if(values[i] == "true" || values[i] == "yes" || values[i] == "on" || values[i] == "1") {
+			to = true;
+		}
+	}
+	return 1;
+}
+
+size_t cTagFile_Tag::encode(size_t i, const bool& from) {
+	if(i >= values.size()) values.resize(i + 1);
+	if(from) values[i] = "true";
+	else values[i] = "false";
+	return 1;
+}
+
+size_t cTagFile_Tag::extract(size_t i, char& to) const {
+	if(i < values.size()) {
+		to = std::stoi(values[i]);
+	}
+	return 1;
+}
+
+size_t cTagFile_Tag::encode(size_t i, const char& from) {
+	if(i >= values.size()) values.resize(i + 1);
+	values[i] = std::to_string(from);
+	return 1;
+}
+
+size_t cTagFile_Tag::extract(size_t i, signed char& to) const {
+	if(i < values.size()) {
+		to = std::stoi(values[i]);
+	}
+	return 1;
+}
+
+size_t cTagFile_Tag::encode(size_t i, const signed char& from) {
+	if(i >= values.size()) values.resize(i + 1);
+	values[i] = std::to_string(from);
+	return 1;
+}
+
+size_t cTagFile_Tag::extract(size_t i, unsigned char& to) const {
+	if(i < values.size()) {
+		to = std::stoi(values[i]);
+	}
+	return 1;
+}
+
+size_t cTagFile_Tag::encode(size_t i, const unsigned char& from) {
+	if(i >= values.size()) values.resize(i + 1);
+	values[i] = std::to_string(from);
+	return 1;
+}
+
+size_t cTagFile_Tag::extract(size_t, std::tuple<>&) const {
+	return 0;
+}
+
+size_t cTagFile_Tag::encode(size_t, const std::tuple<>&) {
+	return 0;
 }
