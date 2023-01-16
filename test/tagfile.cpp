@@ -82,6 +82,10 @@ TEST_CASE("Complex tag file") {
 	"SDF 0 0 12\n"
 	"SDF 1 3 52\n"
 	"SDF 5 9 81\n"
+	"DICT 'a b' 'c d'\n"
+	"DICT abc def\n"
+	"DICT blah blah\n"
+	"DICT foo bar\n"
 	// Page 4 and onward, a series of identical pages
 	"\f"
 	"ID 12\n"
@@ -145,6 +149,13 @@ TEST_CASE("Complex tag file") {
 		sdf[1][3] = 52;
 		sdf[5][9] = 81;
 		p3["SDF"].encodeSparse(sdf);
+		std::map<std::string, std::string> dict{
+			{"foo", "bar"},
+			{"a b", "c d"},
+			{"abc", "def"},
+			{"blah", "blah"},
+		};
+		p3["DICT"].encodeSparse(dict);
 		auto& p4a = content.add();
 		p4a["ID"] << '\x0c';
 		p4a["VALUE"] << 400;
@@ -274,6 +285,17 @@ TEST_CASE("Complex tag file") {
 						CHECK(sdf[x][y] == 0);
 					}
 				}
+				std::map<std::string, std::string> dict;
+				page["DICT"].extractSparse(dict);
+				REQUIRE(dict.size() == 4);
+				CHECK(dict.count("foo") == 1);
+				CHECK(dict["foo"] == "bar");
+				CHECK(dict.count("a b") == 1);
+				CHECK(dict["a b"] == "c d");
+				CHECK(dict.count("abc") == 1);
+				CHECK(dict["abc"] == "def");
+				CHECK(dict.count("blah") == 1);
+				CHECK(dict["blah"] == "blah");
 			} else {
 				p4++;
 				char id;

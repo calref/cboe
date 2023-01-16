@@ -44,6 +44,12 @@ namespace detail {
 	
 	template<>
 	struct is_container<std::string> : std::false_type {};
+	
+	template<typename T>
+	struct is_pair : public std::false_type {};
+	
+	template<typename A, typename B>
+	struct is_pair<std::pair<A, B>> : public std::true_type {};
 }
 
 class cTagFile;
@@ -286,7 +292,8 @@ public:
 		}
 	}
 	template<typename Container>
-	void extractSparse(Container& values, typename Container::value_type def = typename Container::value_type()) const {
+	typename std::enable_if<!detail::is_pair<typename Container::value_type>::value>::type
+	extractSparse(Container& values, typename Container::value_type def = typename Container::value_type()) const {
 		using T = typename Container::value_type;
 		values.clear();
 		for(size_t n = 0; n < tags.size(); n++) {
@@ -298,13 +305,37 @@ public:
 		}
 	}
 	template<typename Container>
-	void encodeSparse(const Container& values, typename Container::value_type def = typename Container::value_type()) {
+	typename std::enable_if<!detail::is_pair<typename Container::value_type>::value>::type
+	encodeSparse(const Container& values, typename Container::value_type def = typename Container::value_type()) {
 		size_t i = 0;
 		for(const auto& value : values) {
 			if(value != def) {
 				*this << i << value;
 			}
 			i++;
+		}
+	}
+	template<typename Container>
+	typename std::enable_if<detail::is_pair<typename Container::value_type>::value>::type
+	extractSparse(Container& values) const {
+		using T = std::pair<
+			typename std::remove_cv<typename Container::value_type::first_type>::type,
+			typename Container::value_type::second_type
+		>;
+		values.clear();
+		for(size_t n = 0; n < tags.size(); n++) {
+			T value;
+			*this >> value.first >> value.second;
+			values.insert(value);
+		}
+	}
+	template<typename Container>
+	typename std::enable_if<detail::is_pair<typename Container::value_type>::value>::type
+	encodeSparse(const Container& values, typename Container::value_type::second_type def = typename Container::value_type::second_type()) {
+		for(const auto& value : values) {
+			if(value.second != def) {
+				*this << value.first << value.second;
+			}
 		}
 	}
 	template<typename T>
