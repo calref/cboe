@@ -16,6 +16,35 @@
 #include <ostream>
 #include <memory>
 #include <boost/optional.hpp>
+#include "tools/vector2d.hpp"
+
+namespace detail {
+	// To allow ADL with custom begin/end
+	using std::begin;
+	using std::end;
+
+	template <typename T>
+	auto is_iterable_impl(int)
+	-> decltype (
+		begin(std::declval<T&>()) != end(std::declval<T&>()), // begin/end and operator !=
+		void(), // Handle evil operator ,
+		++std::declval<decltype(begin(std::declval<T&>()))&>(), // operator ++
+		void(*begin(std::declval<T&>())), // operator*
+		std::true_type{}
+	);
+
+	template <typename T>
+	std::false_type is_iterable_impl(...);
+	
+	template<typename T>
+	struct is_container : decltype(detail::is_iterable_impl<T>(0)) {};
+	
+	template<typename T, size_t n>
+	struct is_container<T[n]> : std::false_type {};
+	
+	template<>
+	struct is_container<std::string> : std::false_type {};
+}
 
 class cTagFile;
 class cTagFile_Page;
@@ -41,7 +70,8 @@ public:
 	size_t encode(size_t i, const std::tuple<>& from);
 
 	template<typename T>
-	size_t extract(size_t i, T& to) const {
+	typename std::enable_if<!detail::is_container<T>::value, size_t>::type
+	extract(size_t i, T& to) const {
 		if(i >= values.size()) return 1;
 		// This bizarre construct simply allows us to not include <sstream> here
 		using stream = typename std::conditional<std::is_same<T, T>::value, std::istringstream, void>::type;
@@ -51,7 +81,8 @@ public:
 	}
 	
 	template<typename T>
-	size_t encode(size_t i, const T& from) {
+	typename std::enable_if<!detail::is_container<T>::value, size_t>::type
+	encode(size_t i, const T& from) {
 		if(i >= values.size()) values.resize(i + 1);
 		// This bizarre construct simply allows us to not include <sstream> here
 		using stream = typename std::conditional<std::is_same<T, T>::value, std::ostringstream, void>::type;
@@ -141,7 +172,29 @@ public:
 	size_t encode(size_t i, const boost::optional<T>& from) {
 		return from ? encode(i, *from) : 0;
 	}
-
+	
+	template<typename Container>
+	typename std::enable_if<detail::is_container<Container>::value, size_t>::type
+	extract(size_t i, Container& to) const {
+		using T = typename Container::value_type;
+		to.clear();
+		for(size_t n = i; n < values.size(); n++) {
+			T value;
+			extract(n, value);
+			to.push_back(value);
+		}
+		return to.size();
+	}
+	
+	template<typename Container>
+	typename std::enable_if<detail::is_container<Container>::value, size_t>::type
+	encode(size_t i, const Container& from) {
+		for(const auto& value : from) {
+			encode(i++, value);
+		}
+		return from.size();
+	}
+	
 	const std::string key;
 	cTagFile_Tag(const std::string& key);
 	void readFrom(std::istream& file);
@@ -224,7 +277,6 @@ public:
 			T value;
 			*this >> value;
 			values.push_back(value);
-			if(i == 0) break;
 		}
 	}
 	template<typename Container>
@@ -253,6 +305,54 @@ public:
 				*this << i << value;
 			}
 			i++;
+		}
+	}
+	template<typename T>
+	void extract(vector2d<T>& values) const {
+		values.resize(0, tags.size());
+		for(size_t n = 0; n < tags.size(); n++) {
+			std::vector<T> row;
+			tags[n].extract(0, row);
+			if(row.size() >= values.width()) {
+				values.resize(row.size(), tags.size());
+			}
+			values.row(n) = row;
+		}
+	}
+	template<typename T>
+	void encode(const vector2d<T>& values) {
+		for(size_t row = 0; row < values.height(); row++) {
+			std::vector<T> row_contents;
+			row_contents.reserve(values.width());
+			for(size_t col = 0; col < values.width(); col++) {
+				row_contents.push_back(values.row(row)[col]);
+			}
+			internal_add_tag();
+			tags.back().encode(0, row_contents);
+		}
+	}
+	template<typename T>
+	void extractSparse(vector2d<T>& values, T def = T()) const {
+		values.resize(0, 0);
+		for(size_t n = 0; n < tags.size(); n++) {
+			size_t x = 0, y = 0;
+			T value;
+			*this >> x >> y >> value;
+			if(x >= values.width() || y >= values.height()) {
+				values.resize(std::max(x + 1, values.width()), std::max(y + 1, values.height()), def);
+			}
+			values[x][y] = value;
+		}
+	}
+	template<typename T>
+	void encodeSparse(const vector2d<T>& values, T def = T()) {
+		for(size_t x = 0; x < values.width(); x++) {
+			for(size_t y = 0; y < values.height(); y++) {
+				const auto& value = values[x][y];
+				if(value != def) {
+					*this << x << y << value;
+				}
+			}
 		}
 	}
 };

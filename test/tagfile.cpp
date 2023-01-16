@@ -72,10 +72,16 @@ TEST_CASE("Complex tag file") {
 	"ARRAY 3\n"
 	"ARRAY 7\n"
 	"ARRAY 12\n"
+	"MAP a b c\n"
+	"MAP d e f\n"
+	"MAP g h i\n"
 	"\f"
 	// Page 3, a complex page with some sparse array-like values
 	"RECORD 2 'Hello World'\n"
 	"RECORD 5 \"Isn't it cool?\"\n"
+	"SDF 0 0 12\n"
+	"SDF 1 3 52\n"
+	"SDF 5 9 81\n"
 	// Page 4 and onward, a series of identical pages
 	"\f"
 	"ID 12\n"
@@ -113,6 +119,18 @@ TEST_CASE("Complex tag file") {
 		p2["ENABLE"] << false;
 		std::vector<int> array{1,3,7,12};
 		p2["ARRAY"].encode(array);
+		vector2d<std::string> map;
+		map.resize(3, 3);
+		map.row(0)[0] = "a";
+		map.row(0)[1] = "b";
+		map.row(0)[2] = "c";
+		map.row(1)[0] = "d";
+		map.row(1)[1] = "e";
+		map.row(1)[2] = "f";
+		map.row(2)[0] = "g";
+		map.row(2)[1] = "h";
+		map.row(2)[2] = "i";
+		p2["MAP"].encode(map);
 		auto& p3 = content.add();
 		std::vector<std::string> records{
 			"", "",
@@ -121,6 +139,12 @@ TEST_CASE("Complex tag file") {
 			"Isn't it cool?",
 		};
 		p3["RECORD"].encodeSparse(records);
+		vector2d<int> sdf;
+		sdf.resize(6, 10);
+		sdf[0][0] = 12;
+		sdf[1][3] = 52;
+		sdf[5][9] = 81;
+		p3["SDF"].encodeSparse(sdf);
 		auto& p4a = content.add();
 		p4a["ID"] << '\x0c';
 		p4a["VALUE"] << 400;
@@ -209,6 +233,19 @@ TEST_CASE("Complex tag file") {
 				CHECK(array[1] == 3);
 				CHECK(array[2] == 7);
 				CHECK(array[3] == 12);
+				vector2d<std::string> map;
+				page["MAP"].extract(map);
+				REQUIRE(map.width() == 3);
+				REQUIRE(map.height() == 3);
+				CHECK(map.row(0)[0] == std::string("a"));
+				CHECK(map.row(0)[1] == std::string("b"));
+				CHECK(map.row(0)[2] == std::string("c"));
+				CHECK(map.row(1)[0] == std::string("d"));
+				CHECK(map.row(1)[1] == std::string("e"));
+				CHECK(map.row(1)[2] == std::string("f"));
+				CHECK(map.row(2)[0] == std::string("g"));
+				CHECK(map.row(2)[1] == std::string("h"));
+				CHECK(map.row(2)[2] == std::string("i"));
 			} else if(!p3) {
 				p3 = true;
 				std::vector<std::string> records;
@@ -220,6 +257,23 @@ TEST_CASE("Complex tag file") {
 				CHECK(records[3] == std::string(""));
 				CHECK(records[4] == std::string(""));
 				CHECK(records[5] == std::string("Isn't it cool?"));
+				vector2d<int> sdf;
+				page["SDF"].extractSparse(sdf);
+				REQUIRE(sdf.width() == 6);
+				REQUIRE(sdf.height() == 10);
+				CHECK(sdf[0][0] == 12);
+				CHECK(sdf[1][3] == 52);
+				CHECK(sdf[5][9] == 81);
+				for(size_t x = 0; x <= 5; x++) {
+					for(size_t y = 0; y <= 9; y++) {
+						if(x == 0 && y == 0) continue;
+						if(x == 1 && y == 3) continue;
+						if(x == 5 && y == 9) continue;
+						CAPTURE(x);
+						CAPTURE(y);
+						CHECK(sdf[x][y] == 0);
+					}
+				}
 			} else {
 				p4++;
 				char id;

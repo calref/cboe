@@ -123,7 +123,7 @@ cTagFile_TagList::cTagFile_TagList(cTagFile_Page& parent, const std::string& key
 cTagFile_Tag::cTagFile_Tag(const std::string& key) : key(key) {}
 
 void cTagFile_Tag::readFrom(std::istream& file) {
-	while(file) {
+	while(!file.eof()) {
 		values.push_back(read_maybe_quoted_string(file));
 	}
 }
