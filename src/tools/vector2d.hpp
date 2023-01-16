@@ -28,6 +28,15 @@ public:
 		vector2d<Type, Alloc>& ref;
 		size_t y;
 		row_ref(vector2d<Type, Alloc>& ref, size_t row) : ref(ref), y(row) {}
+		template<typename Iterable>
+		void assign_from_container(const Iterable& list) {
+			row_ref& me = *this;
+			int i = 0;
+			for(Type n : list) {
+				if(i >= ref.width()) break;
+				me[i++] = n;
+			}
+		}
 	public:
 		Type& operator[](size_t x) {
 			return ref.data[ref.w * y + x];
@@ -51,13 +60,13 @@ public:
 			return me;
 		}
 		row_ref operator=(std::initializer_list<Type> list) {
-			row_ref& me = *this;
-			int i = 0;
-			for(int n : list) {
-				if(i >= ref.width()) break;
-				me[i++] = n;
-			}
-			return me;
+			assign_from_container(list);
+			return *this;
+		}
+		template<typename Iterable>
+		row_ref operator=(const Iterable& list) {
+			assign_from_container(list);
+			return *this;
 		}
 		// Seems like defining a move assignment operator deletes the copy constructor. Don't want that.
 		row_ref(const row_ref&) = default;
@@ -67,6 +76,15 @@ public:
 		vector2d<Type, Alloc>& ref;
 		size_t x;
 		col_ref(vector2d<Type, Alloc>& ref, size_t col) : ref(ref), x(col) {}
+		template<typename Iterable>
+		void assign_from_container(const Iterable& list) {
+			col_ref& me = *this;
+			int i = 0;
+			for(Type n : list) {
+				if(i >= ref.height()) break;
+				me[i++] = n;
+			}
+		}
 	public:
 		Type& operator[](size_t y) {
 			return ref.data[ref.w * y + x];
@@ -90,13 +108,13 @@ public:
 			return me;
 		}
 		col_ref operator=(std::initializer_list<Type> list) {
-			col_ref& me = *this;
-			int i = 0;
-			for(int n : list) {
-				if(i >= ref.height()) break;
-				me[i++] = n;
-			}
-			return me;
+			assign_from_container(list);
+			return *this;
+		}
+		template<typename Iterable>
+		col_ref operator=(const Iterable& list) {
+			assign_from_container(list);
+			return *this;
 		}
 		// Seems like defining a move assignment operator deletes the copy constructor. Don't want that.
 		col_ref(const col_ref&) = default;
@@ -160,7 +178,7 @@ public:
 	size_t size() const {
 		return data.size();
 	}
-	void resize(size_t width, size_t height) {
+	void resize(size_t width, size_t height, Type def = Type()) {
 		if(w > width) {
 			size_t dx = w - width;
 			for(int y = 1; y < h; y++) {
@@ -172,7 +190,7 @@ public:
 		size_t old_sz = old_w * old_h, new_sz = width * height;
 		w = width; h = height;
 		if(new_sz > old_sz) {
-			data.resize(new_sz);
+			data.resize(new_sz, def);
 		}
 		if(old_w < width) {
 			size_t dx = width - old_w;
@@ -184,7 +202,7 @@ public:
 			}
 		}
 		if(old_sz > new_sz) {
-			data.resize(new_sz);
+			data.resize(new_sz, def);
 		}
 	}
 	void swap(vector2d& other) {

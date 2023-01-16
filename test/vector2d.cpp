@@ -32,6 +32,22 @@ TEST_CASE("vector2d") {
 			test_vector.col(3)[4] = 12;
 			CHECK(test_vector(3,4) == 12);
 		}
+		SECTION("by row") {
+			test_vector.row(4) = {1, 2, 3, 4, 5};
+			CHECK(test_vector(0,4) == 1);
+			CHECK(test_vector(1,4) == 2);
+			CHECK(test_vector(2,4) == 3);
+			CHECK(test_vector(3,4) == 4);
+			CHECK(test_vector(4,4) == 5);
+		}
+		SECTION("by column") {
+			test_vector.col(4) = {1, 2, 3, 4, 5};
+			CHECK(test_vector(4,0) == 1);
+			CHECK(test_vector(4,1) == 2);
+			CHECK(test_vector(4,2) == 3);
+			CHECK(test_vector(4,3) == 4);
+			CHECK(test_vector(4,4) == 5);
+		}
 	}
 }
 
