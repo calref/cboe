@@ -150,6 +150,7 @@ std::string read_maybe_quoted_string(std::istream& from) {
 }
 
 std::string maybe_quote_string(std::string which) {
+	if(which.empty()) return "''";
 	if(which.find_first_of(' ') != std::string::npos || which[0] == '"' || which[0] == '\'') {
 		// The string contains spaces or starts with a quote, so quote it.
 		// We may have to escape quotes or backslashes.
