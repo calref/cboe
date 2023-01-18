@@ -299,13 +299,15 @@ bool is_blocked(location to_check) {
 		// Note: The purpose of the above check is to avoid portals.
 		
 		// Party there?
-		if(is_town())
-			if(to_check == univ.party.town_loc)
-				return true;
-		if(is_combat())
-			for(short i = 0; i < 6; i++)
-				if(univ.party[i].main_status == eMainStatus::ALIVE && to_check == univ.party[i].combat_pos)
+		if(is_town() && to_check == univ.party.town_loc)
+			return true;
+		if(is_combat()) {
+			for(short i = 0; i < 6; i++) {
+				if(univ.party[i].main_status == eMainStatus::ALIVE && to_check == univ.party[i].combat_pos) {
 					return true;
+				}
+			}
+		}
 		
 		// Monster there?
 		if(univ.target_there(to_check, TARG_MONST))
@@ -399,10 +401,13 @@ bool outd_is_blocked(location to_check) {
 		if(impassable(univ.out[to_check.x][to_check.y])) {
 			return true;
 		}
-		for(short i = 0; i < 10; i++)
-			if((univ.party.out_c[i].exists))
-				if(univ.party.out_c[i].m_loc == to_check)
+		for(short i = 0; i < 10; i++) {
+			if((univ.party.out_c[i].exists)) {
+				if(univ.party.out_c[i].m_loc == to_check) {
 					return true;
+				}
+			}
+		}
 		return false;
 	}
 	return false;
