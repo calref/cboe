@@ -13,8 +13,16 @@ TEST_CASE("vector2d") {
 	SECTION("default construct") {
 		CHECK(test_vector.width() == 0);
 		CHECK(test_vector.height() == 0);
+		CHECK(test_vector.size() == 0);
+		CHECK(test_vector.empty());
 	}
 	test_vector.resize(5, 5);
+	SECTION("resize changes size") {
+		CHECK(test_vector.width() == 5);
+		CHECK(test_vector.height() == 5);
+		CHECK(test_vector.size() == 25);
+		CHECK_FALSE(test_vector.empty());
+	}
 	SECTION("assignment") {
 		SECTION("by call") {
 			test_vector(3,4) = 12;
@@ -32,6 +40,18 @@ TEST_CASE("vector2d") {
 			test_vector.col(3)[4] = 12;
 			CHECK(test_vector(3,4) == 12);
 		}
+		SECTION("by name") {
+			test_vector.top_left() = 1;
+			test_vector.top_right() = 2;
+			test_vector.bottom_left() = 3;
+			test_vector.bottom_right() = 4;
+			test_vector.centre() = 5;
+			CHECK(test_vector(0,0) == 1);
+			CHECK(test_vector(0,4) == 2);
+			CHECK(test_vector(4,0) == 3);
+			CHECK(test_vector(4,4) == 4);
+			CHECK(test_vector(2,2) == 5);
+		}
 		SECTION("by row") {
 			test_vector.row(4) = {1, 2, 3, 4, 5};
 			CHECK(test_vector(0,4) == 1);
@@ -47,6 +67,26 @@ TEST_CASE("vector2d") {
 			CHECK(test_vector(4,2) == 3);
 			CHECK(test_vector(4,3) == 4);
 			CHECK(test_vector(4,4) == 5);
+		}
+	}
+	SECTION("access") {
+		test_vector(3,4) = 12;
+		test_vector(1,2) = 9;
+		SECTION("by call") {
+			CHECK(test_vector(3,4) == 12);
+			CHECK(test_vector(1,2) == 9);
+		}
+		SECTION("by index") {
+			CHECK(test_vector[3][4] == 12);
+			CHECK(test_vector[1][2] == 9);
+		}
+		SECTION("by row and colum") {
+			CHECK(test_vector.row(4)[3] == 12);
+			CHECK(test_vector.row(2)[1] == 9);
+		}
+		SECTION("by column and row") {
+			CHECK(test_vector.col(3)[4] == 12);
+			CHECK(test_vector.col(1)[2] == 9);
 		}
 	}
 }

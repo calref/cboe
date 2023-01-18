@@ -163,6 +163,36 @@ public:
 	const Type& operator()(size_t x, size_t y) const {
 		return (*this)[x][y];
 	}
+	Type& top_left() {
+		return (*this)[0][0];
+	}
+	const Type& top_left() const {
+		return (*this)[0][0];
+	}
+	Type& top_right() {
+		return (*this)[0][h - 1];
+	}
+	const Type& top_right() const {
+		return (*this)[0][h - 1];
+	}
+	Type& bottom_left() {
+		return (*this)[w - 1][0];
+	}
+	const Type& bottom_left() const {
+		return (*this)[h - 1][0];
+	}
+	Type& bottom_right() {
+		return (*this)[w - 1][w - 1];
+	}
+	const Type& bottom_right() const {
+		return (*this)[h - 1][w - 1];
+	}
+	Type& centre() {
+		return (*this)[w / 2][h / 2];
+	}
+	const Type& centre() const {
+		return (*this)[w / 2][h / 2];
+	}
 	size_t width() const {
 		return w;
 	}
