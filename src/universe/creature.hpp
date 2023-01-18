@@ -14,6 +14,8 @@
 #include "scenario/monster.hpp"
 #include "living.hpp"
 
+class cTagFile_Page;
+
 class cCreature : public cMonster, public cTownperson, public iLiving {
 public:
 	static const short charm_odds[21];
@@ -69,8 +71,8 @@ public:
 	bool on_space(location loc) const;
 	
 	void import_legacy(legacy::creature_data_type old);
-	void writeTo(std::ostream& file) const;
-	void readFrom(std::istream& file);
+	void writeTo(cTagFile_Page& file) const;
+	void readFrom(const cTagFile_Page& file);
 };
 
 #endif

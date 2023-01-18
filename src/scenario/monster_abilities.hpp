@@ -13,6 +13,8 @@
 #include "fields.hpp"
 #include "spell.hpp"
 
+class cTagFile_Page;
+
 enum class eMonstAbil {
 	NO_ABIL,
 	MISSILE,
@@ -113,7 +115,10 @@ union uAbility {
 	} special;
 	std::string to_string(eMonstAbil myKey) const;
 	int get_ap_cost(eMonstAbil key) const;
+	bool writeTo(eMonstAbil key, cTagFile_Page& page) const;
+	eMonstAbil readFrom(const cTagFile_Page& page);
 };
+
 
 std::ostream& operator << (std::ostream& out, eMonstAbil e);
 std::istream& operator >> (std::istream& in, eMonstAbil& e);

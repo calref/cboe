@@ -14,6 +14,7 @@
 #include "mathutil.hpp"
 #include "pc.hpp"
 #include "spell.hpp"
+#include "fileio/tagfile.hpp"
 
 const short cCreature::charm_odds[21] = {90,90,85,80,78, 75,73,60,40,30, 20,10,4,1,0, 0,0,0,0,0, 0};
 
@@ -331,94 +332,55 @@ bool cCreature::on_space(location loc) const {
 	return false;
 }
 
-void cCreature::writeTo(std::ostream& file) const {
-	file << "MONSTER " << number << '\n';
-	file << "ATTITUDE " << attitude << '\n';
-	file << "STARTATT " << start_attitude << '\n';
-	file << "STARTLOC " << start_loc.x << ' ' << start_loc.y << '\n';
-	file << "LOCATION " << cur_loc.x << ' ' << cur_loc.y << '\n';
-	file << "MOBILITY " << mobility << '\n';
-	file << "TIMEFLAG " << time_flag << '\n';
-	file << "SUMMONED " << summon_time << ' ' << party_summoned << '\n';
-	file << "SPEC " << spec1 << ' ' << spec2 << '\n';
-	file << "SPECCODE " << spec_enc_code << '\n';
-	file << "TIMECODE " << time_code << '\n';
-	file << "TIME " << monster_time << '\n';
-	file << "TALK " << personality << '\n';
-	file << "DEATH " << special_on_kill << '\n';
-	file << "FACE " << facial_pic << '\n';
-	file << "TARGET " << target << '\n';
-	file << "TARGLOC " << targ_loc.x << ' ' << targ_loc.y << '\n';
-	for(auto stat : status) {
-		if(stat.second != 0)
-			file << "STATUS " << stat.first << ' ' << stat.second << '\n';
-	}
-	file << "CURHP " << health << '\n';
-	file << "CURSP " << mp << '\n';
-	file << "MORALE " << morale << '\n';
-	file << "DIRECTION " << direction << '\n';
+void cCreature::writeTo(cTagFile_Page& page) const {
+	page["MONSTER"] << number;
+	page["ATTITUDE"] << attitude;
+	page["STARTATT"] << start_attitude;
+	page["STARTLOC"] << start_loc.x << start_loc.y;
+	page["LOCATION"] << cur_loc.x << cur_loc.y;
+	page["MOBILITY"] << mobility;
+	page["TIMEFLAG"] << time_flag;
+	page["SUMMONED"] << summon_time << party_summoned;
+	page["SPEC"] << spec1 << spec2;
+	page["SPECCODE"] << spec_enc_code;
+	page["TIMECODE"] << time_code;
+	page["TIME"] << monster_time;
+	page["TALK"] << personality;
+	page["DEATH"] << special_on_kill;
+	page["FACE"] << facial_pic;
+	page["TARGET"] << target;
+	page["TARGLOC"] << targ_loc.x << targ_loc.y;
+	page["STATUS"].encodeSparse(status);
+	page["CURHP"] << health << '\n';
+	page["CURSP"] << mp << '\n';
+	page["MORALE"] << morale << '\n';
+	page["DIRECTION"] << direction << '\n';
 	// TODO: Should we be saving "max_mp" and/or "m_morale"?
 }
 
-void cCreature::readFrom(std::istream& file) {
-	while(file) {
-		std::string cur;
-		getline(file, cur);
-		std::istringstream line(cur);
-		line >> cur;
-		if(cur == "MONSTER")
-			line >> number;
-		else if(cur == "ATTITUDE")
-			line >> attitude;
-		else if(cur == "STARTATT") {
-			line >> start_attitude;
-		} else if(cur == "STARTLOC")
-			line >> start_loc.x >> start_loc.y;
-		else if(cur == "LOCATION")
-			line >> cur_loc.x >> cur_loc.y;
-		else if(cur == "MOBILITY") {
-			unsigned int i;
-			line >> i;
-			mobility = i;
-		} else if(cur == "TIMEFLAG") {
-			line >> time_flag;
-		} else if(cur == "SUMMONED")
-			line >> summon_time >> party_summoned;
-		else if(cur == "SPEC")
-			line >> spec1 >> spec2;
-		else if(cur == "SPECCODE") {
-			int i;
-			line >> i;
-			spec_enc_code = i;
-		} else if(cur == "TIMECODE") {
-			int i;
-			line >> i;
-			time_code = i;
-		} else if(cur == "TIME")
-			line >> monster_time;
-		else if(cur == "TALK")
-			line >> personality;
-		else if(cur == "DEATH")
-			line >> special_on_kill;
-		else if(cur == "FACE")
-			line >> facial_pic;
-		else if(cur == "TARGET")
-			line >> target;
-		else if(cur == "TARGLOC")
-			line >> targ_loc.x >> targ_loc.y;
-		else if(cur == "CURHP")
-			line >> health;
-		else if(cur == "CURSP")
-			line >> mp;
-		else if(cur == "MORALE")
-			line >> morale;
-		else if(cur == "DIRECTION")
-			line >> direction;
-		else if(cur == "STATUS") {
-			eStatus i;
-			line >> i >> status[i];
-		}
-	}
+void cCreature::readFrom(const cTagFile_Page& page) {
+	page["MONSTER"] >> number;
+	page["ATTITUDE"] >> attitude;
+	page["STARTATT"] >> start_attitude;
+	page["STARTLOC"] >> start_loc.x >> start_loc.y;
+	page["LOCATION"] >> cur_loc.x >> cur_loc.y;
+	page["MOBILITY"] >> mobility;
+	page["TIMEFLAG"] >> time_flag;
+	page["SUMMONED"] >> summon_time >> party_summoned;
+	page["SPEC"] >> spec1 >> spec2;
+	page["SPECCODE"] >> spec_enc_code;
+	page["TIMECODE"] >> time_code;
+	page["TIME"] >> monster_time;
+	page["TALK"] >> personality;
+	page["DEATH"] >> special_on_kill;
+	page["FACE"] >> facial_pic;
+	page["TARGET"] >> target;
+	page["TARGLOC"] >> targ_loc.x >> targ_loc.y;
+	page["STATUS"].extractSparse(status);
+	page["CURHP"] >> health;
+	page["CURSP"] >> mp;
+	page["MORALE"] >> morale;
+	page["DIRECTION"] >> direction;
 }
 
 void cCreature::print_attacks(iLiving* target) {

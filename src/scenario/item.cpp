@@ -18,6 +18,7 @@
 #include "oldstructs.hpp"
 #include "utility.hpp"
 #include "fileio/fileio.hpp"
+#include "fileio/tagfile.hpp"
 
 #include "damage.hpp"
 #include "spell.hpp"
@@ -1290,78 +1291,72 @@ std::string cItem::getAbilName() const {
 	return sout.str();
 }
 
-void cItem::writeTo(std::ostream& file, std::string prefix) const {
-	file << prefix << "VARIETY " << variety << '\n';
-	file << prefix << "LEVEL " << item_level << '\n';
-	file << prefix << "AWKWARD " << awkward << '\n';
-	file << prefix << "BONUS " << bonus << '\n';
-	file << prefix << "PROT " << protection << '\n';
-	file << prefix << "CHARGES " << charges << '\n';
-	file << prefix << "WEAPON " << weap_type << '\n';
-	file << prefix << "USE " << magic_use_type << '\n';
-	file << prefix << "ICON " << graphic_num << '\n';
-	file << prefix << "ABILITY " << ability << '\n';
-	file << prefix << "ABILSTR " << abil_strength << '\t' << abil_data.value << '\n';
-	file << prefix << "TYPE " << type_flag << '\n';
-	file << prefix << "ISSPEC " << is_special << '\n';
-	file << prefix << "VALUE " << value << '\n';
-	file << prefix << "WEIGHT " << weight << '\n';
-	file << prefix << "SPEC " << special_class << '\n';
-	file << prefix << "MISSILE " << missile << '\n';
-	file << prefix << "AT " << item_loc.x << ' ' << item_loc.y << '\n';
-	file << prefix << "FULLNAME " << maybe_quote_string(full_name) << '\n';
-	file << prefix << "NAME " << maybe_quote_string(name) << '\n';
-	file << prefix << "DESCR " << maybe_quote_string(desc) << '\n';
-	file << prefix << "TREASURE " << treas_class << '\n';
-	if(ident) file << prefix << "IDENTIFIED\n";
-	if(property) file << prefix << "PROPERTY\n";
-	if(magic) file << prefix << "MAGIC\n";
-	if(contained) file << prefix << "CONTAINED\n";
-	if(held) file << prefix << "HELD\n";
-	if(cursed) file << prefix << "CURSED\n";
-	if(concealed) file << prefix << "CONCEALED\n";
-	if(enchanted) file << prefix << "ENCHANTED\n";
-	if(unsellable) file << prefix << "UNSELLABLE\n";
+void cItem::writeTo(cTagFile_Page& page) const {
+	page["VARIETY"] << variety;
+	page["LEVEL"] << item_level;
+	page["AWKWARD"] << awkward;
+	page["BONUS"] << bonus;
+	page["PROT"] << protection;
+	page["CHARGES"] << charges;
+	page["WEAPON"] << weap_type;
+	page["USE"] << magic_use_type;
+	page["ICON"] << graphic_num;
+	page["ABILITY"] << ability;
+	page["ABILSTR"] << abil_strength << abil_data.value;
+	page["TYPE"] << type_flag;
+	page["ISSPEC"] << is_special;
+	page["VALUE"] << value;
+	page["WEIGHT"] << weight;
+	page["SPEC"] << special_class;
+	page["MISSILE"] << missile;
+	page["AT"] << item_loc.x << item_loc.y;
+	page["FULLNAME"] << full_name;
+	page["NAME"] << name;
+	page["DESCR"] << desc;
+	page["TREASURE"] << treas_class;
+	if(ident) page.add("IDENTIFIED");
+	if(property) page.add("PROPERTY");
+	if(magic) page.add("MAGIC");
+	if(contained) page.add("CONTAINED");
+	if(held) page.add("HELD");
+	if(cursed) page.add("CURSED");
+	if(concealed) page.add("CONCEALED");
+	if(enchanted) page.add("ENCHANTED");
+	if(unsellable) page.add("UNSELLABLE");
 }
 
-void cItem::readFrom(std::istream& sin){
-	while(sin) {
-		std::string cur;
-		getline(sin, cur);
-		std::istringstream sin(cur);
-		sin >> cur;
-		if(cur == "VARIETY") sin >> variety;
-		else if(cur == "LEVEL") sin >> item_level;
-		else if(cur == "AWKWARD") sin >> awkward;
-		else if(cur == "BONUS") sin >> bonus;
-		else if(cur == "PROT") sin >> protection;
-		else if(cur == "CHARGES") sin >> charges;
-		else if(cur == "WEAPON") sin >> weap_type;
-		else if(cur == "USE") sin >> magic_use_type;
-		else if(cur == "ICON") sin >> graphic_num;
-		else if(cur == "ABILITY") sin >> ability;
-		else if(cur == "ABILSTR") sin >> abil_strength >> abil_data.value;
-		else if(cur == "TYPE") sin >> type_flag;
-		else if(cur == "ISSPEC") sin >> is_special;
-		else if(cur == "VALUE") sin >> value;
-		else if(cur == "WEIGHT") sin >> weight;
-		else if(cur == "SPEC") sin >> special_class;
-		else if(cur == "MISSILE") sin >> missile;
-		else if(cur == "AT") sin >> item_loc.x >> item_loc.y;
-		else if(cur == "FULLNAME") full_name = read_maybe_quoted_string(sin);
-		else if(cur == "NAME") name = read_maybe_quoted_string(sin);
-		else if(cur == "DESCR") desc = read_maybe_quoted_string(sin);
-		else if(cur == "TREASURE") sin >> treas_class;
-		else if(cur == "IDENTIFIED") ident = true;
-		else if(cur == "PROPERTY") property = true;
-		else if(cur == "MAGIC") magic = true;
-		else if(cur == "CONTAINED") contained = true;
-		else if(cur == "HELD") held = true;
-		else if(cur == "CURSED") cursed = true;
-		else if(cur == "CONCEALED") concealed = true;
-		else if(cur == "ENCHANTED") enchanted = true;
-		else if(cur == "UNSELLABLE") unsellable = true;
-	}
+void cItem::readFrom(const cTagFile_Page& page){
+	page["VARIETY"] >> variety;
+	page["LEVEL"] >> item_level;
+	page["AWKWARD"] >> awkward;
+	page["BONUS"] >> bonus;
+	page["PROT"] >> protection;
+	page["CHARGES"] >> charges;
+	page["WEAPON"] >> weap_type;
+	page["USE"] >> magic_use_type;
+	page["ICON"] >> graphic_num;
+	page["ABILITY"] >> ability;
+	page["ABILSTR"] >> abil_strength >> abil_data.value;
+	page["TYPE"] >> type_flag;
+	page["ISSPEC"] >> is_special;
+	page["VALUE"] >> value;
+	page["WEIGHT"] >> weight;
+	page["SPEC"] >> special_class;
+	page["MISSILE"] >> missile;
+	page["AT"] >> item_loc.x >> item_loc.y;
+	page["FULLNAME"] >> full_name;
+	page["NAME"] >> name;
+	page["DESCR"] >> desc;
+	page["TREASURE"] >> treas_class;
+	if(page.contains("IDENTIFIED")) ident = true;
+	else if(page.contains("PROPERTY")) property = true;
+	else if(page.contains("MAGIC")) magic = true;
+	else if(page.contains("CONTAINED")) contained = true;
+	else if(page.contains("HELD")) held = true;
+	else if(page.contains("CURSED")) cursed = true;
+	else if(page.contains("CONCEALED")) concealed = true;
+	else if(page.contains("ENCHANTED")) enchanted = true;
+	else if(page.contains("UNSELLABLE")) unsellable = true;
 }
 
 enum {USE_COMBAT = 1, USE_TOWN = 2, USE_OUTDOORS = 4, USE_MAGIC = 8};

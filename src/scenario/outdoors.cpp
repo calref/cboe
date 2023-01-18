@@ -14,6 +14,7 @@
 #include <sstream>
 
 #include "dialogxml/dialogs/strdlog.hpp"
+#include "fileio/tagfile.hpp"
 #include "oldstructs.hpp"
 #include "scenario/scenario.hpp"
 
@@ -150,43 +151,48 @@ void cOutdoors::cCreature::import_legacy(legacy::outdoor_creature_type old){
 	m_loc.y = old.m_loc.y;
 }
 
-void cOutdoors::cWandering::writeTo(std::ostream& file, std::string prefix) const {
-	for(int i = 0; i < 7; i++)
-		file << prefix << "HOSTILE " << i << ' ' << monst[i] << '\n';
-	for(int i = 0; i < 3; i++)
-		file << prefix << "FRIEND " << i << ' ' << friendly[i] << '\n';
-	file << prefix << "MEET " << spec_on_meet << '\n';
-	file << prefix << "WIN " << spec_on_win << '\n';
-	file << prefix << "FLEE " << spec_on_flee << '\n';
-	file << prefix << "FLAGS " << cant_flee << ' ' << forced << '\n';
-	file << prefix << "SDF " << end_spec1 << ' ' << end_spec2 << '\n';
+void cOutdoors::cCreature::writeTo(cTagFile_Page& page) const {
+	page["DIRECTION"] << direction;
+	page["SECTOR"] << which_sector.x << which_sector.y;
+	page["LOCINSECTOR"] << m_loc.x << m_loc.y;
+	page["HOME"] << home_sector.x << home_sector.y;
+	page.add("-"); // Not strictly needed, but adds a nice dividing line
+	what_monst.writeTo(page);
 }
 
-void cOutdoors::cWandering::readFrom(std::istream& file){
-	while(file) {
-		std::string cur;
-		getline(file, cur);
-		std::istringstream sin(cur);
-		sin >> cur;
-		if(cur == "HOSTILE"){
-			int i;
-			sin >> i;
-			sin >> monst[i];
-		}else if(cur == "FRIEND"){
-			int i;
-			sin >> i;
-			sin >> friendly[i];
-		}else if(cur == "MEET")
-			sin >> spec_on_meet;
-		else if(cur == "WIN")
-			sin >> spec_on_win;
-		else if(cur == "FLEE")
-			sin >> spec_on_flee;
-		else if(cur == "FLAGS")
-			sin >> cant_flee >> forced;
-		else if(cur == "SDF")
-			sin >> end_spec1 >> end_spec2;
-	}
+void cOutdoors::cCreature::readFrom(const cTagFile_Page& page) {
+	page["DIRECTION"] >> direction;
+	page["SECTOR"] >> which_sector.x >> which_sector.y;
+	page["LOCINSECTOR"] >> m_loc.x >> m_loc.y;
+	page["HOME"] >> home_sector.x >> home_sector.y;
+	what_monst.readFrom(page);
+}
+
+void cOutdoors::cWandering::writeTo(cTagFile_Page& page) const {
+	page["MEET"] << spec_on_meet;
+	page["WIN"] << spec_on_win;
+	page["FLEE"] << spec_on_flee;
+	page["FLAGS"] << cant_flee << forced;
+	page["SDF"] << end_spec1 << end_spec2;
+	for(int i = 0; i < 7; i++)
+		page["HOSTILE"] << i << monst[i];
+	for(int i = 0; i < 3; i++)
+		page["FRIEND"] << i << friendly[i];
+}
+
+void cOutdoors::cWandering::readFrom(const cTagFile_Page& page){
+	page["MEET"] >> spec_on_meet;
+	page["WIN"] >> spec_on_win;
+	page["FLEE"] >> spec_on_flee;
+	page["FLAGS"] >> cant_flee >> forced;
+	page["SDF"] >> end_spec1 >> end_spec2;
+	std::vector<mon_num_t> temp;
+	page["HOSTILE"].extractSparse(temp);
+	temp.resize(monst.size());
+	std::copy_n(temp.begin(), monst.size(), monst.begin());
+	page["FRIEND"].extractSparse(temp);
+	temp.resize(friendly.size());
+	std::copy_n(temp.begin(), friendly.size(), friendly.begin());
 }
 
 bool cOutdoors::cWandering::isNull(){

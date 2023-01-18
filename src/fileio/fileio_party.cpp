@@ -18,6 +18,7 @@
 #include "gfx/gfxsheets.hpp"
 
 #include "porting.hpp"
+#include "fileio/tagfile.hpp"
 #include "fileio/tarball.hpp"
 
 extern bool mac_is_intel;
@@ -279,6 +280,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 	zin.close();
 	
 	cUniverse univ;
+	cTagFile file;
 	
 	{ // Load main party data first
 		std::istream& fin = partyIn.getFile("save/party.txt");
@@ -286,7 +288,8 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 			showError("Loading Blades of Exile save file failed.");
 			return false;
 		}
-		univ.party.readFrom(fin);
+		file.readFrom(fin);
+		univ.party.readFrom(file);
 	}
 	
 	// Next load the PCs
@@ -298,7 +301,8 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 			showError("Loading Blades of Exile save file failed.");
 			return false;
 		}
-		univ.party[i].readFrom(fin);
+		file.readFrom(fin);
+		univ.party[i].readFrom(file);
 	}
 	
 	// Including stored PCs
@@ -308,7 +312,8 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 		while(fin >> next_uid) {
 			std::string fname = "save/pc~" + std::to_string(next_uid) + ".txt";
 			cPlayer* stored_pc = new cPlayer(no_party);
-			stored_pc->readFrom(partyIn.getFile(fname));
+			file.readFrom(partyIn.getFile(fname));
+			stored_pc->readFrom(file);
 		}
 	}
 	
@@ -332,7 +337,8 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 				showError("Loading Blades of Exile save file failed.");
 				return false;
 			}
-			univ.scenario.readFrom(fin);
+			file.readFrom(fin);
+			univ.scenario.readFrom(file);
 		}
 		
 		{ // Then the "setup" array
@@ -344,11 +350,15 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 			uint16_t magic;
 			fin.read((char*)&magic, 2);
 			fin.read((char*)&univ.party.setup, sizeof(univ.party.setup));
-			if(magic == 0x0E0B) // should be 0x0B0E!
-			for(auto& i : univ.party.setup)
-			for(auto& j : i)
-			for(auto& k : j)
-			flip_short(reinterpret_cast<int16_t*>(&k));
+			if(magic == 0x0E0B) { // should be 0x0B0E!
+				for(auto& i : univ.party.setup) {
+					for(auto& j : i) {
+						for(auto& k : j) {
+							flip_short(reinterpret_cast<int16_t*>(&k));
+						}
+					}
+				}
+			}
 		}
 		
 		if(partyIn.hasFile("save/town.txt")) {
@@ -358,15 +368,18 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 				showError("Loading Blades of Exile save file failed.");
 				return false;
 			}
-			univ.town.readFrom(fin);
+			file.readFrom(fin);
+			univ.town.readFrom(file);
 		} else univ.party.town_num = 200;
 
 		if (partyIn.hasFile("save/townmaps.dat")) {
 			// Read town maps
 			std::istream& fin2 = partyIn.getFile("save/townmaps.dat");
-			for(int i = 0; i < univ.scenario.towns.size(); i++)
-				for(int j = 0; j < univ.scenario.towns[i]->max_dim; j++)
+			for(int i = 0; i < univ.scenario.towns.size(); i++) {
+				for(int j = 0; j < univ.scenario.towns[i]->max_dim; j++) {
 					fin2 >> univ.scenario.towns[i]->maps[j];
+				}
+			}
 		}
 		// Load outdoors data
 		std::istream& fin = partyIn.getFile("save/out.txt");
@@ -378,10 +391,13 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 		
 		// Read outdoor maps
 		std::istream& fin2 = partyIn.getFile("save/outmaps.dat");
-		for(int i = 0; i < univ.scenario.outdoors.height(); i++)
-			for(int j = 0; j < 48; j++)
-				for(int k = 0; k < univ.scenario.outdoors.width(); k++)
+		for(int i = 0; i < univ.scenario.outdoors.height(); i++) {
+			for(int j = 0; j < 48; j++) {
+				for(int k = 0; k < univ.scenario.outdoors.width(); k++) {
 					fin2 >> univ.scenario.outdoors[k][i]->maps[j];
+				}
+			}
+		}
 	} else univ.party.scen_name = "";
 	
 	if(partyIn.hasFile("save/export.png")) {
@@ -410,15 +426,20 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 	dest_file = dest_file.parent_path()/fname;
 	
 	tarball partyOut;
+	cTagFile file;
 	
 	// First, write the main party data
-	univ.party.writeTo(partyOut.newFile("save/party.txt"));
+	univ.party.writeTo(file);
+	file.writeTo(partyOut.newFile("save/party.txt"));
+	file.clear();
 	
 	// Then write the data for each of the party members
 	for(int i = 0; i < 6; i++) {
 		static char fname[] = "save/pc1.txt";
 		fname[7] = i + '1';
-		univ.party[i].writeTo(partyOut.newFile(fname));
+		univ.party[i].writeTo(file);
+		file.writeTo(partyOut.newFile(fname));
+		file.clear();
 	}
 	
 	// And stored PCs
@@ -426,13 +447,17 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 		std::ostream& fout = partyOut.newFile("save/stored_pcs.txt");
 		for(const auto& p : univ.stored_pcs) {
 			std::string fname = "save/pc~" + std::to_string(p.first) + ".txt";
-			p.second->writeTo(partyOut.newFile(fname));
+			p.second->writeTo(file);
+			file.writeTo(partyOut.newFile(fname));
+			file.clear();
 			fout << p.first << '\n';
 		}
 	}
 	
 	if(!univ.party.scen_name.empty()) {
-		univ.scenario.writeTo(partyOut.newFile("save/scenario.txt"));
+		univ.scenario.writeTo(file);
+		file.writeTo(partyOut.newFile("save/scenario.txt"));
+		file.clear();
 
 		{
 			std::ostream& fout = partyOut.newFile("save/setup.dat");
@@ -443,7 +468,9 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 
 		if(univ.party.town_num < 200) {
 			// Write the current town data
-			univ.town.writeTo(partyOut.newFile("save/town.txt"));
+			univ.town.writeTo(file);
+			file.writeTo(partyOut.newFile("save/town.txt"));
+			file.clear();
 		}
 		
 		{	

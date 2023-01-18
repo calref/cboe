@@ -221,7 +221,7 @@ class cTagFile_TagExtractProxy {
 public:
 	cTagFile_TagExtractProxy() : tag(nullptr) {}
 	cTagFile_TagExtractProxy(const cTagFile_Tag& tag) : tag(&tag) {}
-	operator bool() const {
+	explicit operator bool() const {
 		return tag;
 	}
 	template<typename T>
@@ -229,6 +229,17 @@ public:
 		if(tag == nullptr) return *this;
 		size_t j = i;
 		j += tag->extract(i, value);
+		return cTagFile_TagExtractProxy(*tag, j);
+	}
+	template<typename T>
+	cTagFile_TagExtractProxy operator>>(T&& value) {
+		if(tag == nullptr) return *this;
+		size_t j = i;
+		T check = value;
+		j += tag->extract(i, value);
+		if(check != value) {
+			return cTagFile_TagExtractProxy();
+		}
 		return cTagFile_TagExtractProxy(*tag, j);
 	}
 };
@@ -249,11 +260,13 @@ public:
 };
 
 class cTagFile_TagList {
-	cTagFile_Page* parent;
+	friend class cTagFile_Page;
+	cTagFile_Page* parent = nullptr;
 	std::deque<cTagFile_Tag> tags;
 	mutable size_t i = 0;
 	cTagFile_TagList(const cTagFile_TagList&) = delete;
 	void internal_add_tag();
+	cTagFile_TagList() = default;
 public:
 	const std::string key;
 	cTagFile_TagList(cTagFile_Page& parent, const std::string& key);
@@ -261,24 +274,26 @@ public:
 	cTagFile_Tag& operator[](size_t n);
 	const cTagFile_Tag& operator[](size_t n) const;
 	bool empty() const;
+	size_t size() const;
 	template<typename T>
 	cTagFile_TagEncodeProxy operator<<(const T& value) {
 		internal_add_tag();
 		return cTagFile_TagEncodeProxy(tags.back()) << value;
 	}
 	template<typename T>
-	cTagFile_TagExtractProxy operator>>(T& value) const {
+	cTagFile_TagExtractProxy operator>>(T&& value) const {
 		if(i >= tags.size()) {
 			i = 0;
 			return cTagFile_TagExtractProxy() >> value;
 		} else {
-			return cTagFile_TagExtractProxy(tags[i++]) >> value;
+			return cTagFile_TagExtractProxy(tags[i++]) >> std::forward<T>(value);
 		}
 	}
 	template<typename Container>
 	void extract(Container& values) const {
 		using T = typename Container::value_type;
 		values.clear();
+		i = 0;
 		for(size_t n = 0; n < tags.size(); n++) {
 			T value;
 			*this >> value;
@@ -296,6 +311,7 @@ public:
 	extractSparse(Container& values, typename Container::value_type def = typename Container::value_type()) const {
 		using T = typename Container::value_type;
 		values.clear();
+		i = 0;
 		for(size_t n = 0; n < tags.size(); n++) {
 			size_t i = 0;
 			T value;
@@ -323,6 +339,7 @@ public:
 			typename Container::value_type::second_type
 		>;
 		values.clear();
+		i = 0;
 		for(size_t n = 0; n < tags.size(); n++) {
 			T value;
 			*this >> value.first >> value.second;
@@ -341,6 +358,7 @@ public:
 	template<typename T>
 	void extract(vector2d<T>& values) const {
 		values.resize(0, tags.size());
+		i = 0;
 		for(size_t n = 0; n < tags.size(); n++) {
 			std::vector<T> row;
 			tags[n].extract(0, row);
@@ -365,6 +383,7 @@ public:
 	template<typename T>
 	void extractSparse(vector2d<T>& values, T def = T()) const {
 		values.resize(0, 0);
+		i = 0;
 		for(size_t n = 0; n < tags.size(); n++) {
 			size_t x = 0, y = 0;
 			T value;
@@ -396,14 +415,16 @@ class cTagFile_Page {
 	std::deque<std::reference_wrapper<cTagFile_Tag>> tag_list;
 	cTagFile_Page(const cTagFile_Page&) = delete;
 	void internal_add_page(const std::string& key);
-protected:
-	std::string getFirstKey() const;
+	const size_t i;
 public:
-	cTagFile_Page() = default;
+	std::string getFirstKey() const;
+	cTagFile_Page(size_t index);
 	void readFrom(std::istream& file);
 	void writeTo(std::ostream& file) const;
+	void clear();
 	cTagFile_Tag& add(const std::string& key);
 	bool contains(const std::string& key) const;
+	size_t index() const;
 	cTagFile_TagList& operator[](const std::string& key);
 	const cTagFile_TagList& operator[](const std::string& key) const;
 };
@@ -415,6 +436,7 @@ class cTagFile {
 public:
 	void readFrom(std::istream& file);
 	void writeTo(std::ostream& file) const;
+	void clear();
 	cTagFile_Page& add();
 	cTagFile_Page& operator[](size_t n);
 	const cTagFile_Page& operator[](size_t n) const;
@@ -428,7 +450,8 @@ public:
 template<typename Int, typename = typename std::enable_if<std::is_integral<Int>::value>::type>
 struct as_hex {
 	Int value;
-	as_hex(Int value) : value(value) {}
+	as_hex(Int value = Int()) : value(value) {}
+	as_hex& operator= (Int newval) { value = newval; return *this; }
 	operator Int() { return value; }
 };
 

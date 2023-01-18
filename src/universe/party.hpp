@@ -38,6 +38,11 @@ namespace legacy {
 
 struct campaign_flag_type{
 	unsigned char idx[25][25];
+private:
+	using idx_array = decltype(idx);
+public:
+	static const int x_max = std::extent<idx_array, 0>::value - 1;
+	static const int y_max = std::extent<idx_array, 1>::value - 1;
 };
 
 struct job_bank_t {
@@ -54,6 +59,7 @@ enum eEncNoteType {
 
 class cUniverse;
 class cItem;
+class cTagFile;
 
 class cParty : public iLiving {
 public:
@@ -190,8 +196,8 @@ public:
 	bool start_timer(short time, spec_num_t node, eSpecCtxType type);
 	cPlayer& operator[](unsigned short n);
 	const cPlayer& operator[](unsigned short n) const;
-	void writeTo(std::ostream& file) const;
-	void readFrom(std::istream& file);
+	void writeTo(cTagFile& file) const;
+	void readFrom(const cTagFile& file);
 	
 	bool give_item(cItem item,int flags);
 	bool forced_give(cItem item,eItemAbil abil,short dat = -1);

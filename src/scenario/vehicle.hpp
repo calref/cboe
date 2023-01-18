@@ -17,6 +17,8 @@ namespace legacy {
 	struct boat_record_type;
 };
 
+class cTagFile_Page;
+
 class cVehicle {
 public:
 	// Both boats and horses use this type.
@@ -30,8 +32,8 @@ public:
 	cVehicle();
 	void import_legacy(legacy::horse_record_type& old);
 	void import_legacy(legacy::boat_record_type& old);
-	void writeTo(std::ostream& file) const;
-	void readFrom(std::istream& file);
+	void writeTo(cTagFile_Page& page) const;
+	void readFrom(const cTagFile_Page& page);
 };
 
 bool operator==(const cVehicle& a, const cVehicle& b);

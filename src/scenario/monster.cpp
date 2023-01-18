@@ -18,6 +18,7 @@
 
 #include "oldstructs.hpp"
 #include "fileio/fileio.hpp"
+#include "fileio/tagfile.hpp"
 #include "spell.hpp"
 #include "gfx/gfxsheets.hpp" // for NO_PIC
 
@@ -775,197 +776,140 @@ int uAbility::get_ap_cost(eMonstAbil key) const {
 	return -256;
 }
 
-void cMonster::writeTo(std::ostream& file) const {
-	file << "MONSTER " << maybe_quote_string(m_name) << '\n';
-	file << "LEVEL " << int(level) << '\n';
-	file << "ARMOR " << int(armor) << '\n';
-	file << "SKILL " << int(skill) << '\n';
-	for(int i = 0; i < a.size(); i++)
-		file << "ATTACK " << i + 1 << ' ' << a[i].dice << ' ' << a[i].sides << ' ' << a[i].type << '\n';
-	file << "HEALTH " << int(m_health) << '\n';
-	file << "SPEED " << int(speed) << '\n';
-	file << "MAGE " << int(mu) << '\n';
-	file << "PRIEST " << int(cl) << '\n';
-	file << "RACE " << m_type << '\n';
-	file << "TREASURE" << int(treasure) << '\n';
-	file << "CORPSEITEM " << corpse_item << ' ' << corpse_item_chance << '\n';
-	for(int i = 0; i < 8; i++) {
-		eDamageType dmg = eDamageType(i);
-		if(resist.at(dmg) != 100)
-			file << "IMMUNE " << dmg << '\t' << resist.at(dmg) << '\n';
+void cMonster::writeTo(cTagFile_Page& page) const {
+	page["MONSTER"] << m_name;
+	page["LEVEL"] << level;
+	page["ARMOR"] << armor;
+	page["SKILL"] << skill;
+	for(int i = 0; i < a.size(); i++) {
+		page["ATTACK"] << i + 1 << a[i].dice << a[i].sides << a[i].type;
 	}
-	file << "SIZE " << int(x_width) << ' ' << int(y_width) << '\n';
-	file << "ATTITUDE " << int(default_attitude) << '\n';
-	file << "SUMMON " << int(summon_type) << '\n';
-	file << "PORTRAIT " << default_facial_pic << '\n';
-	file << "PICTURE " << picture_num << '\n';
-	file << "SOUND " << ambient_sound << '\n';
-	file << '\f';
-	for(auto& abil_element : abil) {
-		if(!abil_element.second.active || abil_element.first == eMonstAbil::NO_ABIL) continue;
-		file << "ABIL " << abil_element.first << '\n';
-		switch(getMonstAbilCategory(abil_element.first)) {
-			case eMonstAbilCat::INVALID: continue;
-			case eMonstAbilCat::MISSILE:
-				file << "TYPE " << abil_element.second.missile.type << ' ' << abil_element.second.missile.pic << '\n';
-				file << "DAMAGE " << abil_element.second.missile.dice << ' ' << abil_element.second.missile.sides << '\n';
-				file << "SKILL " << abil_element.second.missile.skill << '\n';
-				file << "RANGE " << abil_element.second.missile.range << '\n';
-				file << "CHANCE " << abil_element.second.missile.odds << '\n';
-				break;
-			case eMonstAbilCat::GENERAL:
-				file << "TYPE " << abil_element.second.gen.type << ' ' << abil_element.second.gen.pic << '\n';
-				file << "DAMAGE " << abil_element.second.gen.strength << '\n';
-				file << "RANGE " << abil_element.second.gen.range << '\n';
-				file << "CHANCE " << abil_element.second.gen.odds << '\n';
-				if(abil_element.first == eMonstAbil::DAMAGE || abil_element.first == eMonstAbil::DAMAGE2)
-					file << "EXTRA " << abil_element.second.gen.dmg << '\n';
-				else if(abil_element.first == eMonstAbil::FIELD)
-					file << "EXTRA " << abil_element.second.gen.fld << '\n';
-				else if(abil_element.first == eMonstAbil::STATUS || abil_element.first == eMonstAbil::STATUS2 || abil_element.first == eMonstAbil::STUN)
-					file << "EXTRA " << abil_element.second.gen.stat;
-				break;
-			case eMonstAbilCat::RADIATE:
-				file << "TYPE " << abil_element.second.radiate.type << '\n';
-				file << "CHANCE " << abil_element.second.radiate.chance << '\n';
-				break;
-			case eMonstAbilCat::SUMMON:
-				file << "TYPE " << abil_element.second.summon.type << '\t' << abil_element.second.summon.what << '\n';
-				file << "HOWMANY " << abil_element.second.summon.min << ' ' << abil_element.second.summon.max << '\n';
-				file << "CHANCE " << abil_element.second.summon.chance << '\n';
-				break;
-			case eMonstAbilCat::SPECIAL:
-				file << "EXTRA " << abil_element.second.special.extra1 << ' ' << abil_element.second.special.extra2 << '\n';
-				break;
+	page["HEALTH"] << m_health;
+	page["SPEED"] << speed;
+	page["MAGE"] << mu;
+	page["PRIEST"] << cl;
+	page["RACE"] << m_type;
+	page["TREASURE"] << treasure;
+	page["CORPSEITEM"] << corpse_item << corpse_item_chance;
+	page["IMMUNE"].encodeSparse(resist, 100);
+	page["SIZE"] << x_width << y_width;
+	page["ATTITUDE"] << default_attitude;
+	page["SUMMON"] << summon_type;
+	page["PORTRAIT"] << default_facial_pic;
+	page["PICTURE"] << picture_num;
+	page["SOUND"] << ambient_sound;
+}
+
+bool uAbility::writeTo(eMonstAbil key, cTagFile_Page &page) const {
+	if(key == eMonstAbil::NO_ABIL || !active) return false;
+	page["ABIL"] << key;
+	switch(getMonstAbilCategory(key)) {
+		case eMonstAbilCat::INVALID: return false;
+		case eMonstAbilCat::MISSILE:
+			page["TYPE"] << missile.type << missile.pic;
+			page["DAMAGE"] << missile.dice << missile.sides;
+			page["SKILL"] << missile.skill;
+			page["RANGE"] << missile.range;
+			page["CHANCE"] << missile.odds;
+			break;
+		case eMonstAbilCat::GENERAL:
+			page["TYPE"] << gen.type << gen.pic;
+			page["DAMAGE"] << gen.strength;
+			page["RANGE"] << gen.range;
+			page["CHANCE"] << gen.odds;
+			if(key == eMonstAbil::DAMAGE || key == eMonstAbil::DAMAGE2)
+				page["EXTRA"] << gen.dmg;
+			else if(key == eMonstAbil::FIELD)
+				page["EXTRA"] << gen.fld;
+			else if(key == eMonstAbil::STATUS || key == eMonstAbil::STATUS2 || key == eMonstAbil::STUN)
+				page["EXTRA"] << gen.stat;
+			break;
+		case eMonstAbilCat::RADIATE:
+			page["TYPE"] << radiate.type;
+			page["CHANCE"] << radiate.chance;
+			break;
+		case eMonstAbilCat::SUMMON:
+			page["TYPE"] << summon.type << summon.what;
+			page["HOWMANY"] << summon.min << summon.max;
+			page["CHANCE"] << summon.chance;
+			break;
+		case eMonstAbilCat::SPECIAL:
+			page["EXTRA"] << special.extra1 << special.extra2;
+			break;
+	}
+	return true;
+}
+
+void cMonster::readFrom(const cTagFile_Page& page) {
+	// On-see event is not exported, so make sure the field ise not filled with garbage data
+	see_spec = -1;
+	page["MONSTER"] >> m_name;
+	page["SIZE"] >> x_width >> y_width;
+	// TODO: Isn't the default immunity supposed to be 100? Is that handled?
+	page["IMMUNE"].extractSparse(resist);
+	page["RACE"] >> m_type;
+	page["CORPSEITEM"] >> corpse_item >> corpse_item_chance;
+	page["PORTRAIT"] >> default_facial_pic;
+	page["PICTURE"] >> picture_num;
+	page["SOUND"] >> ambient_sound;
+	page["ATTITUDE"] >> default_attitude;
+	page["LEVEL"] >> level;
+	page["ARMOR"] >> armor;
+	page["SKILL"] >> skill;
+	page["HEALTH"] >> m_health;
+	page["SPEED"] >> speed;
+	page["MAGE"] >> mu;
+	page["PRIEST"] >> cl;
+	page["TREASURE"] >> treasure;
+	page["SUMMON"] >> summon_type;
+	for(int i = 0; i < page["ATTACK"].size(); i++) {
+		size_t which_atk;
+		auto tmp = page["ATTACK"] >> which_atk;
+		if(which_atk > 0 && which_atk <= a.size()) {
+			which_atk--;
+			tmp >> a[which_atk].dice >> a[which_atk].sides >> a[which_atk].type;
 		}
-		file << '\f';
 	}
 }
 
-void cMonster::readFrom(std::istream& file) {
-	// On-see event is not exported, so make sure the field ise not filled with garbage data
-	see_spec = -1;
-	std::istringstream bin;
-	std::string cur;
-	getline(file, cur, '\f');
-	bin.str(cur);
-	while(bin) {
-		int temp1, temp2;
-		getline(bin, cur);
-		std::istringstream line(cur);
-		line >> cur;
-		if(cur == "MONSTER") {
-			line >> std::ws;
-			m_name = read_maybe_quoted_string(line);
-		} else if(cur == "ATTACK") {
-			int which;
-			line >> which;
-			which--;
-			if(which < 0 || which >= a.size()) continue;
-			line >> a[which].dice >> a[which].sides >> a[which].type;
-		} else if(cur == "SIZE") {
-			line >> temp1 >> temp2;
-			x_width = temp1;
-			y_width = temp2;
-		} else if(cur == "IMMUNE") {
-			eDamageType dmg;
-			line >> dmg >> resist[dmg];
-		} else if(cur == "RACE")
-			line >> m_type;
-		else if(cur == "CORPSEITEM")
-			line >> corpse_item >> corpse_item_chance;
-		else if(cur == "PORTRAIT")
-			line >> default_facial_pic;
-		else if(cur == "PICTURE")
-			line >> picture_num;
-		else if(cur == "SOUND")
-			line >> ambient_sound;
-		else if(cur == "ATTITUDE")
-			line >> default_attitude;
-		else {
-			line >> temp1;
-			if(cur == "LEVEL")
-				level = temp1;
-			else if (cur == "ARMOR")
-				armor = temp1;
-			else if(cur == "SKILL")
-				skill = temp1;
-			else if(cur == "HEALTH")
-				m_health = temp1;
-			else if(cur == "SPEED")
-				speed = temp1;
-			else if(cur == "MAGE")
-				mu = temp1;
-			else if(cur == "PRIEST")
-				cl = temp1;
-			else if(cur == "TREASURE")
-				treasure = temp1;
-			else if(cur == "SUMMON")
-				summon_type = temp1;
-		}
+eMonstAbil uAbility::readFrom(const cTagFile_Page& page) {
+	eMonstAbil key;
+	page["ABIL"] >> key;
+	eMonstAbilCat cat = getMonstAbilCategory(key);
+	switch(cat) {
+		case eMonstAbilCat::INVALID: return eMonstAbil::NO_ABIL;
+		case eMonstAbilCat::MISSILE:
+			page["TYPE"] >> missile.type >> missile.pic;
+			page["DAMAGE"] >> missile.dice >> missile.sides;
+			page["SKILL"] >> missile.skill;
+			page["RANGE"] >> missile.range;
+			page["CHANCE"] >> missile.odds;
+			break;
+		case eMonstAbilCat::GENERAL:
+			page["TYPE"] >> gen.type >> gen.pic;
+			page["DAMAGE"] >> gen.strength;
+			page["RANGE"] >> gen.range;
+			page["CHANCE"] >> gen.odds;
+			if(key == eMonstAbil::DAMAGE || key == eMonstAbil::DAMAGE2)
+				page["EXTRA"] >> gen.dmg;
+			else if(key == eMonstAbil::FIELD)
+				page["EXTRA"] >> gen.fld;
+			else if(key == eMonstAbil::STATUS || key == eMonstAbil::STATUS2 || key == eMonstAbil::STUN)
+				page["EXTRA"] >> gen.stat;
+			break;
+		case eMonstAbilCat::RADIATE:
+			page["TYPE"] >> radiate.type;
+			page["CHANCE"] >> radiate.chance;
+			break;
+		case eMonstAbilCat::SUMMON:
+			page["TYPE"] >> summon.type >> summon.what;
+			page["HOWMANY"] >> summon.min >> summon.max;
+			page["CHANCE"] >> summon.chance;
+			break;
+		case eMonstAbilCat::SPECIAL:
+			page["EXTRA"] >> special.extra1 >> special.extra2;
+			break;
 	}
-	while(file) {
-		getline(file, cur, '\f');
-		bin.str(cur);
-		getline(bin, cur);
-		std::istringstream line(cur);
-		line >> cur;
-		if(cur == "ABIL") {
-			eMonstAbil key;
-			uAbility abil;
-			line >> key;
-			eMonstAbilCat cat = getMonstAbilCategory(key);
-			if(cat == eMonstAbilCat::INVALID) continue;
-			while(bin) {
-				getline(bin, cur);
-				line.str(cur);
-				line >> cur;
-				if(cur == "TYPE") {
-					if(cat == eMonstAbilCat::MISSILE)
-						line >> abil.missile.type >> abil.missile.pic;
-					else if(cat == eMonstAbilCat::GENERAL)
-						line >> abil.gen.type >> abil.gen.pic;
-					else if(cat == eMonstAbilCat::RADIATE)
-						line >> abil.radiate.type;
-					else if(cat == eMonstAbilCat::SUMMON)
-						line >> abil.summon.type >> abil.summon.what;
-				} else if(cur == "DAMAGE") {
-					if(cat == eMonstAbilCat::MISSILE)
-						line >> abil.missile.dice >> abil.missile.sides;
-					else if(cat == eMonstAbilCat::GENERAL)
-						line >> abil.gen.strength;
-				} else if(cur == "SKILL") {
-					if(cat == eMonstAbilCat::MISSILE)
-						line >> abil.missile.skill;
-				} else if(cur == "RANGE") {
-					if(cat == eMonstAbilCat::MISSILE)
-						line >> abil.missile.range;
-					else if(cat == eMonstAbilCat::GENERAL)
-						line >> abil.gen.range;
-				} else if(cur == "CHANCE") {
-					if(cat == eMonstAbilCat::MISSILE)
-						line >> abil.missile.odds;
-					else if(cat == eMonstAbilCat::GENERAL)
-						line >> abil.gen.odds;
-					else if(cat == eMonstAbilCat::RADIATE)
-						line >> abil.radiate.chance;
-					else if(cat == eMonstAbilCat::SUMMON)
-						line >> abil.summon.chance;
-				} else if(cur == "EXTRA") {
-					if(key == eMonstAbil::DAMAGE || key == eMonstAbil::DAMAGE2)
-						line >> abil.gen.dmg;
-					else if(key == eMonstAbil::FIELD)
-						line >> abil.gen.fld;
-					else if(key == eMonstAbil::STATUS || key == eMonstAbil::STATUS2 || key == eMonstAbil::STUN)
-						line >> abil.gen.stat;
-					else if(cat == eMonstAbilCat::SPECIAL)
-						line >> abil.special.extra1 >> abil.special.extra2;
-				} else if(cur == "HOWMANY") {
-					if(cat == eMonstAbilCat::SUMMON)
-						line >> abil.summon.min >> abil.summon.max;
-				}
-			}
-		}
-	}
+	return key;
 }
 

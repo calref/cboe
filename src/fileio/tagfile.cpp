@@ -29,9 +29,12 @@ void cTagFile::writeTo(std::ostream& file) const {
 	}
 }
 
+void cTagFile::clear() {
+	pages.clear();
+}
 
 cTagFile_Page& cTagFile::add() {
-	pages.emplace_back();
+	pages.emplace_back(pages.size());
 	return pages.back();
 }
 
@@ -42,6 +45,8 @@ cTagFile_Page& cTagFile::operator[](unsigned long i) {
 const cTagFile_Page& cTagFile::operator[](unsigned long i) const {
 	return pages.at(i);
 }
+
+cTagFile_Page::cTagFile_Page(size_t i) : i(i) {}
 
 void cTagFile_Page::internal_add_page(const std::string &key) {
 	tag_map.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(std::ref(*this), key));
@@ -72,6 +77,14 @@ std::string cTagFile_Page::getFirstKey() const {
 	return tag_list.front().get().key;
 }
 
+size_t cTagFile_Page::index() const {
+	return i;
+}
+
+void cTagFile_Page::clear() {
+	tag_list.clear();
+	tag_map.clear();
+}
 
 cTagFile_Tag& cTagFile_Page::add(const std::string& key) {
 	internal_add_page(key);
@@ -86,7 +99,9 @@ cTagFile_TagList& cTagFile_Page::operator[](const std::string& key) {
 }
 
 const cTagFile_TagList& cTagFile_Page::operator[](const std::string& key) const {
-	return tag_map.at(key);
+	if(tag_map.count(key) > 0) return tag_map.at(key);
+	static const cTagFile_TagList empty{};
+	return empty;
 }
 
 cTagFile_Tag& cTagFile_TagList::add() {
@@ -104,6 +119,10 @@ const cTagFile_Tag& cTagFile_TagList::operator[](unsigned long i) const {
 
 bool cTagFile_TagList::empty() const {
 	return tags.empty();
+}
+
+size_t cTagFile_TagList::size() const {
+	return tags.size();
 }
 
 void cTagFile_TagList::internal_add_tag() {

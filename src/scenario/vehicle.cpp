@@ -13,6 +13,7 @@
 #include <map>
 #include <sstream>
 
+#include "fileio/tagfile.hpp"
 #include "oldstructs.hpp"
 
 cVehicle::cVehicle() :
@@ -52,28 +53,18 @@ void cVehicle::import_legacy(legacy::boat_record_type& old){
 	sector.y = old.boat_sector.y;
 }
 
-void cVehicle::writeTo(std::ostream& file) const {
-	file << "LOCATION " << loc.x << ' ' << loc.y << '\n';
-	file << "SECTOR " << sector.x << ' ' << sector.y << '\n';
-	file << "IN " << which_town << '\n';
-	if(property) file << "OWNED\n";
+void cVehicle::writeTo(cTagFile_Page& page) const {
+	page["LOCATION"] << loc.x << loc.y;
+	page["SECTOR"] << sector.x << sector.y;
+	page["IN"] << which_town;
+	if(property) page.add("OWNED");
 }
 
-void cVehicle::readFrom(std::istream& file) {
-	while(file) {
-		std::string cur;
-		getline(file, cur);
-		std::istringstream lineIn(cur);
-		lineIn >> cur;
-		if(cur == "LOCATION")
-			lineIn >> loc.x >> loc.y;
-		else if(cur == "SECTOR")
-			lineIn >> sector.x >> sector.y;
-		else if(cur == "IN")
-			lineIn >> which_town;
-		else if(cur == "OWNED")
-			property = true;
-	}
+void cVehicle::readFrom(const cTagFile_Page& page) {
+	page["LOCATION"] >> loc.x >> loc.y;
+	page["SECTOR"] >> sector.x >> sector.y;
+	page["IN"] >> which_town;
+	property = page.contains("OWNED");
 }
 
 bool operator==(const cVehicle& a, const cVehicle& b) {

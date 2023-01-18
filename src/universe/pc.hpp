@@ -43,6 +43,7 @@ enum {
 
 class cParty;
 class cPlayer;
+class cTagFile;
 
 struct cInvenSlot {
 	unsigned int slot;
@@ -179,8 +180,8 @@ public:
 	cPlayer(no_party_t, const cPlayer& other);
 	cPlayer(cParty& party, const cPlayer& other);
 	short get_tnl();
-	void writeTo(std::ostream& file) const;
-	void readFrom(std::istream& file);
+	void writeTo(cTagFile& file) const;
+	void readFrom(const cTagFile& file);
 	virtual ~cPlayer() = default;
 	// Copy-and-swap
 	void swap(cPlayer& other);

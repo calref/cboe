@@ -19,6 +19,7 @@
 #include "oldstructs.hpp"
 #include "mathutil.hpp"
 #include "fileio/fileio.hpp"
+#include "fileio/tagfile.hpp"
 #include "sounds.hpp"
 
 extern short skill_bonus[21];
@@ -1194,164 +1195,136 @@ void operator -= (eMainStatus& stat, eMainStatus othr){
 		stat = (eMainStatus) (-10 + (int)othr);
 }
 
-void cPlayer::writeTo(std::ostream& file) const {
-	file << "UID " << unique_id << '\n';
-	file << "STATUS -1 " << main_status << '\n';
-	file << "NAME " << maybe_quote_string(name) << '\n';
-	file << "SKILL " << eSkill::MAX_HP << ' ' << max_health << '\n';
-	if(max_sp > 0)
-		file << "SKILL " << eSkill::MAX_SP << ' ' << max_sp << '\n';
-	for(auto p : skills) {
-		if(p.second > 0)
-			file << "SKILL " << int(p.first) << ' ' << p.second << '\n';
+void cPlayer::writeTo(cTagFile& file) const {
+	auto& page = file.add();
+	page["UID"] << unique_id;
+	page["STATUS"] << -1 << main_status;
+	page["NAME"] << name;
+	page["SKILL"] << eSkill::MAX_HP << max_health;
+	if(max_sp > 0) {
+		page["SKILL"] << eSkill::MAX_SP << max_sp;
 	}
-	file << "HEALTH " << cur_health << '\n';
-	file << "MANA " << cur_sp << '\n';
-	file << "EXPERIENCE " << experience << '\n';
-	file << "SKILLPTS " << skill_pts << '\n';
-	file << "LEVEL " << level << '\n';
-	auto status = this->status;
-	for(int i = 0; i < 15; i++) {
-		eStatus stat = (eStatus) i;
-		if(status[stat] != 0)
-			file << "STATUS " << i << ' ' << status.at(stat) << '\n';
+	page["SKILL"].encodeSparse(skills);
+	page["HEALTH"] << cur_health;
+	page["MANA"] << cur_sp;
+	page["EXPERIENCE"] << experience;
+	page["SKILLPTS"] << skill_pts;
+	page["LEVEL"] << level;
+	page["STATUS"].encodeSparse(status);
+	for(int i = 0; i < equip.size(); i++) {
+		if(equip[i]) {
+			page["EQUIP"] << i;
+		}
 	}
-	for(int i = 0; i < equip.size(); i++)
-		if(equip[i])
-			file << "EQUIP " << i << '\n';
-	for(int i = 0; i < 62; i++)
-		if(mage_spells[i])
-			file << "MAGE " << i << '\n';
-	for(int i = 0; i < 62; i++)
-		if(priest_spells[i])
-			file << "PRIEST " << i << '\n';
+	for(int i = 0; i < mage_spells.size(); i++) {
+		if(mage_spells[i]) {
+			page["MAGE"] << i;
+		}
+	}
+	for(int i = 0; i < priest_spells.size(); i++) {
+		if(priest_spells[i]) {
+			page["PRIEST"] << i;
+		}
+	}
 	auto traits = this->traits;
 	for(int i = 0; i < 62; i++) {
 		eTrait trait = eTrait(i);
-		if(traits[trait])
-			file << "TRAIT " << i << '\n';
-	}
-	file << "ICON " <<  which_graphic << '\n';
-	file << "RACE " << race << '\n';
-	file << "DIRECTION " << direction << '\n';
-	if(weap_poisoned)
-		file << "POISON " << weap_poisoned.slot << '\n';
-	file << '\f';
-	for(int i = 0; i < items.size(); i++)
-		if(items[i].variety != eItemType::NO_ITEM){
-			file << "ITEM " << i << '\n';
-			items[i].writeTo(file);
-			file << '\f';
+		if(traits[trait]) {
+			page["TRAIT"] << i;
 		}
+	}
+	page["ICON"] << which_graphic;
+	page["RACE"] << race;
+	page["DIRECTION"] << direction;
+	if(weap_poisoned) {
+		page["POISON"] << weap_poisoned.slot;
+	}
+	for(int i = 0; i < items.size(); i++) {
+		if(items[i].variety != eItemType::NO_ITEM) {
+			auto& item_page = file.add();
+			item_page["ITEM"] << i;
+			items[i].writeTo(item_page);
+		}
+	}
 }
 
-void cPlayer::readFrom(std::istream& file){
-	std::istringstream bin, sin;
-	std::string cur;
-	getline(file, cur, '\f');
-	bin.str(cur);
-	
-	// Clear some data that is not always present
-	equip.reset();
-	mage_spells.reset();
-	priest_spells.reset();
-	weap_poisoned.clear();
-	status.clear();
-	traits.clear();
-	skills.clear();
-	cur_sp = max_sp = ap = 0;
-	
-	while(getline(bin, cur)) { // continue as long as no error, such as eof, occurs
-		sin.str(cur);
-		sin >> cur;
-		if(cur == "STATUS"){
-			eStatus i;
-			sin >> i;
-			if(i == eStatus::MAIN) sin >> main_status;
-			else sin >> status[i];
-		}else if(cur == "NAME")
-			name = read_maybe_quoted_string(sin);
-		else if(cur == "SKILL"){
-			eSkill skill;
-			sin >> skill;
-			switch(skill) {
-				case eSkill::MAX_HP:
-					sin >> max_health;
-					break;
-				case eSkill::MAX_SP:
-					sin >> max_sp;
-					break;
-				case eSkill::CUR_HP:
-					sin >> cur_health;
-					break;
-				case eSkill::CUR_SP:
-					sin >> cur_sp;
-					break;
-				case eSkill::CUR_XP:
-					sin >> experience;
-					break;
-				case eSkill::CUR_SKILL:
-					break;
-				case eSkill::CUR_LEVEL:
-					sin >> level;
-					break;
-				default:
-					sin >> skills[skill];
+void cPlayer::readFrom(const cTagFile& file) {
+	for(const auto& page : file) {
+		if(page.index() == 0) {
+			status.clear();
+			page["STATUS"] >> eStatus::MAIN >> main_status;
+			page["STATUS"].extractSparse(status);
+			status.erase(eStatus::MAIN);
+			
+			cur_sp = max_sp = ap = 0;
+			page["NAME"] >> name;
+			page["UID"] >> unique_id;
+			page["HEALTH"] >> cur_health;
+			page["MANA"] >> cur_sp;
+			page["EXPERIENCE"] >> experience;
+			page["SKILLPTS"] >> skill_pts;
+			page["LEVEL"] >> level;
+			page["ICON"] >> which_graphic;
+			page["DIRECTION"] >> direction;
+			page["RACE"] >> race;
+			
+			skills.clear();
+			page["SKILL"].extractSparse(skills);
+			max_health = skills[eSkill::MAX_HP];
+			max_sp = skills[eSkill::MAX_SP];
+			skills.erase(eSkill::MAX_HP);
+			skills.erase(eSkill::MAX_SP);
+			skills.erase(eSkill::CUR_HP);
+			skills.erase(eSkill::CUR_SP);
+			skills.erase(eSkill::CUR_XP);
+			skills.erase(eSkill::CUR_LEVEL);
+			skills.erase(eSkill::CUR_SKILL);
+			skills.erase(eSkill::INVALID);
+			
+			
+			equip.reset();
+			for(size_t n = 0; n < page["EQUIP"].size(); n++) {
+				size_t i;
+				page["EQUIP"] >> i;
+				equip[i] = true;
 			}
-		}else if(cur == "HEALTH")
-			sin >> cur_health;
-		else if(cur == "MANA")
-			sin >> cur_sp;
-		else if(cur == "EXPERIENCE")
-			sin >> experience;
-		else if(cur == "SKILLPTS")
-			sin >> skill_pts;
-		else if(cur == "LEVEL")
-			sin >> level;
-		else if(cur == "STATUS"){
-			eStatus i;
-			sin >> i;
-			sin >> status[i];
-		} else if(cur == "UID") {
-			sin >> unique_id;
-			if(party)
+			
+			mage_spells.reset();
+			for(size_t n = 0; n < page["MAGE"].size(); n++) {
+				size_t i;
+				page["MAGE"] >> i;
+				mage_spells[i] = true;
+			}
+			
+			priest_spells.reset();
+			for(size_t n = 0; n < page["PRIEST"].size(); n++) {
+				size_t i;
+				page["PRIEST"] >> i;
+				priest_spells[i] = true;
+			}
+			
+			traits.clear();
+			for(size_t n = 0; n < page["TRAIT"].size(); n++) {
+				eTrait trait;
+				page["TRAIT"] >> trait;
+				traits[trait] = true;
+			}
+			
+			weap_poisoned.clear();
+			if(page.contains("POISON")) {
+				page["POISON"] >> weap_poisoned.slot;
+			}
+			
+			if(party) {
+				// TODO: This probably belongs somewhere other than here
 				party->next_pc_id = max(unique_id + 1, party->next_pc_id);
-		}else if(cur == "EQUIP"){
-			int i;
-			sin >> i;
-			equip[i] = true;
-		}else if(cur == "MAGE"){
-			int i;
-			sin >> i;
-			mage_spells[i] = true;
-		}else if(cur == "PRIEST"){
-			int i;
-			sin >> i;
-			priest_spells[i] = true;
-		}else if(cur == "TRAIT"){
-			eTrait trait;
-			sin >> trait;
-			traits[trait] = true;
-		}else if(cur == "ICON")
-			sin >> which_graphic;
-		else if(cur == "DIRECTION")
-			sin >> direction;
-		else if(cur == "RACE")
-			sin >> race;
-		else if(cur == "POISON")
-			sin >> weap_poisoned.slot;
-		sin.clear();
-	}
-	bin.clear();
-	while(getline(file, cur, '\f')) {
-		bin.str(cur);
-		bin >> cur;
-		if(cur == "ITEM") {
-			int i;
-			bin >> i;
-			items[i].readFrom(bin);
+			}
+		} else if(page.getFirstKey() == "ITEM") {
+			size_t i;
+			page["ITEM"] >> i;
+			if(i >= items.size()) continue;
+			items[i].readFrom(page);
 		}
-		bin.clear();
 	}
 }
 

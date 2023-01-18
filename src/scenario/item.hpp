@@ -23,6 +23,8 @@
 
 namespace legacy { struct item_record_type; };
 
+class cTagFile_Page;
+
 enum eItemPreset {
 	ITEM_KNIFE,
 	ITEM_BUCKLER,
@@ -91,8 +93,8 @@ public:
 	explicit cItem(eItemPreset preset);
 	explicit cItem(eAlchemy recipe);
 	void import_legacy(legacy::item_record_type& old);
-	void writeTo(std::ostream& file, std::string prefix = "") const;
-	void readFrom(std::istream& sin);
+	void writeTo(cTagFile_Page& file) const;
+	void readFrom(const cTagFile_Page& sin);
 };
 
 class cSpecItem {

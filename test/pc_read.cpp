@@ -10,12 +10,14 @@
 #include "catch.hpp"
 #include "universe/pc.hpp"
 #include "universe/party.hpp"
+#include "fileio/tagfile.hpp"
 
 using namespace std;
 
 TEST_CASE("Loading player character from file") {
 	ifstream fin;
 	fin.exceptions(ios::badbit);
+	cTagFile file;
 	cPlayer pc(no_party);
 	// Fill in some junk data
 	pc.cur_sp = 27;
@@ -30,7 +32,8 @@ TEST_CASE("Loading player character from file") {
 	
 	SECTION("Basic Info") {
 		fin.open("files/player/basic.txt");
-		pc.readFrom(fin);
+		file.readFrom(fin);
+		pc.readFrom(file);
 		CHECK(pc.unique_id == 3);
 		CHECK(pc.main_status == eMainStatus::ALIVE);
 		CHECK(pc.name == "Freddy O'Hara");
@@ -58,7 +61,8 @@ TEST_CASE("Loading player character from file") {
 	}
 	SECTION("Skills") {
 		fin.open("files/player/skills.txt");
-		pc.readFrom(fin);
+		file.readFrom(fin);
+		pc.readFrom(file);
 		CHECK(pc.skills.size() == 8);
 		CHECK(pc.skills[eSkill::STRENGTH] == 5);
 		CHECK(pc.skills[eSkill::DEXTERITY] == 6);
@@ -72,7 +76,8 @@ TEST_CASE("Loading player character from file") {
 	}
 	SECTION("Spells") {
 		fin.open("files/player/spells.txt");
-		pc.readFrom(fin);
+		file.readFrom(fin);
+		pc.readFrom(file);
 		// This has bits 3, 7, and 20 set
 		CHECK(pc.mage_spells == 0x100088);
 		// This has bits 2, 8, and 60 set

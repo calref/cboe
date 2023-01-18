@@ -24,6 +24,8 @@
 #include "shop.hpp"
 #include "quest.hpp"
 
+class cTagFile;
+
 namespace legacy{
 	struct scenario_data_type;
 	struct item_storage_shortcut_type;
@@ -96,8 +98,8 @@ public:
 	
 	void import_legacy(legacy::scenario_data_type& old);
 	void import_legacy(legacy::scen_item_data_type& old);
-	void writeTo(std::ostream& file) const;
-	void readFrom(std::istream& file);
+	void writeTo(cTagFile& file) const;
+	void readFrom(const cTagFile& file);
 	std::string format_scen_version();
 	std::string format_ed_version();
 	

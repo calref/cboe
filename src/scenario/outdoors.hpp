@@ -25,6 +25,7 @@ namespace legacy {
 };
 
 class cScenario;
+class cTagFile_Page;
 
 enum eAmbientSound {
 	AMBIENT_NONE,
@@ -46,8 +47,8 @@ public:
 		
 		bool isNull();
 		void import_legacy(legacy::out_wandering_type old);
-		void writeTo(std::ostream& file, std::string prefix = "") const;
-		void readFrom(std::istream& sin);
+		void writeTo(cTagFile_Page& page) const;
+		void readFrom(const cTagFile_Page& page);
 		cWandering();
 	};
 	class cCreature { // formerly outdoor_creature_type
@@ -58,6 +59,8 @@ public:
 		location which_sector,m_loc,home_sector; // home_sector is the sector it was spawned in
 		
 		void import_legacy(legacy::outdoor_creature_type old);
+		void writeTo(cTagFile_Page& page) const;
+		void readFrom(const cTagFile_Page& page);
 	};
 	short x,y; // Used while loading legacy scenarios.
 	std::vector<spec_loc_t> city_locs;

@@ -15,6 +15,7 @@
 
 #include "oldstructs.hpp"
 #include "mathutil.hpp"
+#include "fileio/tagfile.hpp"
 
 void cScenario::reset_version() {
 	format.prog_make_ver[0] = 2;
@@ -538,49 +539,39 @@ bool cScenario::is_town_entrance_valid(spec_loc_t loc) const {
 	return loc.spec >= 0 && loc.spec < towns_in_scenario;
 }
 
-void cScenario::writeTo(std::ostream& file) const {
+void cScenario::writeTo(cTagFile& file) const {
+	auto& page = file.add();
 	for(int i = 0; i < towns.size(); i++) {
 		if(towns[i]->item_taken.any())
-			file << "ITEMTAKEN " << i << ' ' << towns[i]->item_taken << '\n';
+			page["ITEMTAKEN"] << i << towns[i]->item_taken;
 		if(towns[i]->can_find)
-			file << "TOWNVISIBLE " << i << '\n';
-		else file << "TOWNHIDDEN " << i << '\n';
+			page["TOWNVISIBLE"] << i;
+		else page["TOWNHIDDEN"] << i;
 		if(towns[i]->m_killed > 0)
-			file << "TOWNSLAUGHTER " << i << ' ' << towns[i]->m_killed << '\n';
+			page["TOWNSLAUGHTER"] << i << towns[i]->m_killed;
 	}
 }
 
-void cScenario::readFrom(std::istream& file){
-	// TODO: Error-check input
-	// TODO: Don't call this sin, it's a trig function
-	std::istringstream bin;
-	std::string cur;
-	getline(file, cur, '\f');
-	bin.str(cur);
-	while(bin) { // continue as long as no error, such as eof, occurs
-		getline(bin, cur);
-		std::istringstream sin(cur);
-		sin >> cur;
-		if(cur == "ITEMTAKEN"){
-			int i;
-			sin >> i;
-			if(i >= 0 && i < towns.size())
-				sin >> towns[i]->item_taken;
-		} else if(cur == "TOWNVISIBLE") {
-			int i;
-			sin >> i;
-			if(i >= 0 && i < towns.size())
-				towns[i]->can_find = true;
-		} else if(cur == "TOWNHIDDEN") {
-			int i;
-			sin >> i;
-			if(i >= 0 && i < towns.size())
-				towns[i]->can_find = false;
-		} else if(cur == "TOWNSLAUGHTER"){
-			int i;
-			sin >> i;
-			if(i >= 0 && i < towns.size())
-				sin >> towns[i]->m_killed;
+void cScenario::readFrom(const cTagFile& file){
+	std::deque<boost::dynamic_bitset<>> taken;
+	std::vector<size_t> visible, hidden, slaughter;
+	auto& page = file[0];
+	page["ITEMTAKEN"].extract(taken);
+	page["TOWNVISIBLE"].extract(visible);
+	page["TOWNHIDDEN"].extract(hidden);
+	page["TOWNSLAUGHTER"].extractSparse(slaughter);
+	std::sort(visible.begin(), visible.end());
+	std::sort(hidden.begin(), hidden.end());
+	for(size_t i = 0; i < towns.size(); i++) {
+		if(i < taken.size()) towns[i]->item_taken = taken[i];
+		else towns[i]->item_taken.clear();
+		if(i < slaughter.size()) towns[i]->m_killed = slaughter[i];
+		else towns[i]->m_killed = 0;
+		if(std::binary_search(visible.begin(), visible.end(), i)) {
+			towns[i]->can_find = true;
+		}
+		if(std::binary_search(hidden.begin(), hidden.end(), i)) {
+			towns[i]->can_find = false;
 		}
 	}
 }

@@ -22,6 +22,8 @@
 #include "scenario/scenario.hpp"
 #include "dialogxml/widgets/pictypes.hpp"
 
+class cTagFile;
+
 namespace legacy {
 	struct out_info_type;
 	struct current_town_type;
@@ -115,8 +117,8 @@ public:
 	bool set_force_cage(short x, short y, bool b);
 	bool set_road(short x, short y, bool b);
 	bool is_impassable(short x, short y);
-	void writeTo(std::ostream& file) const;
-	void readFrom(std::istream& file);
+	void writeTo(cTagFile& file) const;
+	void readFrom(const cTagFile& file);
 	
 	~cCurTown();
 	// It's not directly copyable due to the cUniverse reference, which must always point to the cUniverse that contains it.

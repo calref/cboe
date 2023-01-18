@@ -26,6 +26,7 @@ namespace legacy {
 
 class cScenario;
 class cUniverse;
+class cTagFile_Page;
 
 enum class eAttitude {
 	DOCILE, HOSTILE_A, FRIENDLY, HOSTILE_B
@@ -75,8 +76,8 @@ public:
 	
 	void import_legacy(legacy::monster_record_type& old);
 	cMonster();
-	void writeTo(std::ostream& file) const;
-	void readFrom(std::istream& file);
+	void writeTo(cTagFile_Page& page) const;
+	void readFrom(const cTagFile_Page& page);
 };
 
 class cTownperson {

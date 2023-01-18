@@ -18,6 +18,7 @@
 #include "oldstructs.hpp"
 #include "mathutil.hpp"
 #include "fileio/fileio.hpp"
+#include "fileio/tagfile.hpp"
 #include "gfx/gfxsheets.hpp"
 
 void cCurOut::import_legacy(legacy::out_info_type& old){
@@ -795,79 +796,68 @@ void cCurOut::readFrom(std::istream& file) {
 	readArray(file, out_e, 96, 96);
 }
 
-void cCurTown::writeTo(std::ostream& file) const {
-	file << "TOWN " << univ.party.town_num << '\n';
-	file << "DIFFICULTY " << difficulty << '\n';
-	if(monst.hostile) file << "HOSTILE" << '\n';
-	file << "AT " << univ.party.town_loc.x << ' ' << univ.party.town_loc.y << '\n';
-	file << '\f';
-	for(size_t i = 0; i < items.size(); i++)
-		if(items[i].variety != eItemType::NO_ITEM){
-			file << "ITEM " << i << '\n';
-			items[i].writeTo(file);
-			file << '\f';
-		}
-	file << '\f';
-	for(int i = 0; i < monst.size(); i++) {
-		if(monst[i].active > 0) {
-			file << "CREATURE " << i << '\n';
-			monst[i].writeTo(file);
-			file << '\f';
+void cCurTown::writeTo(cTagFile& file) const {
+	auto& page = file.add();
+	page["TOWN"] << univ.party.town_num;
+	page["DIFFICULTY"] << difficulty;
+	if(monst.hostile) page.add("HOSTILE");
+	page["AT"] << univ.party.town_loc.x << univ.party.town_loc.y;
+	for(size_t i = 0; i < items.size(); i++) {
+		if(items[i].variety != eItemType::NO_ITEM) {
+			auto& item_page = file.add();
+			item_page["ITEM"] << i;
+			items[i].writeTo(item_page);
 		}
 	}
-	file << '\f';
-	file << "FIELDS\n";
-	file << std::hex;
-	writeArray(file, fields, record()->max_dim, record()->max_dim);
-	file << std::dec;
-	file << "TERRAIN\n";
-	record()->writeTerrainTo(file);
+	for(int i = 0; i < monst.size(); i++) {
+		if(monst[i].active > 0) {
+			auto& monst_page = file.add();
+			monst_page["CREATURE"] << i;
+			monst[i].writeTo(monst_page);
+		}
+	}
+	auto& fields_page = file.add();
+	vector2d<as_hex<unsigned long>> fields_tmp;
+	fields_tmp.resize(64, 64);
+	for(size_t x = 0; x < 64; x++) {
+		for(size_t y = 0; y < 64; y++) {
+			fields_tmp[x][y] = fields[x][y];
+		}
+	}
+	fields_page["FIELDS"].encode(fields_tmp);
+	fields_page["TERRAIN"].encode(record()->terrain);
 	// TODO: Do we need to save special_spot?
 }
 
-void cCurTown::readFrom(std::istream& file){
-	std::istringstream bin, sin;
-	std::string cur;
-	getline(file, cur, '\f');
-	bin.str(cur);
-	while(bin){
-		getline(bin, cur);
-		sin.str(cur);
-		sin >> cur;
-		if(cur == "TOWN")
-			sin >> univ.party.town_num;
-		else if(cur == "DIFFICULTY")
-			sin >> difficulty;
-		else if(cur == "HOSTILE")
-			monst.hostile = true;
-		else if(cur == "AT")
-			sin >> univ.party.town_loc.x >> univ.party.town_loc.y;
-		sin.clear();
-	}
-	bin.clear();
-	while(file) {
-		getline(file, cur, '\f');
-		bin.str(cur);
-		bin >> cur;
-		if(cur == "FIELDS") {
-			int num = univ.party.town_num;
-			bin >> std::hex;
-			readArray(bin, fields, univ.scenario.towns[num]->max_dim, univ.scenario.towns[num]->max_dim);
-			bin >> std::dec;
-		} else if(cur == "ITEM") {
-			int i;
-			bin >> i;
-			if(i >= items.size())
-				items.resize(i + 1);
-			items[i].readFrom(bin);
-		} else if(cur == "CREATURE") {
-			int i;
-			bin >> i;
-			monst.readFrom(bin, i);
+void cCurTown::readFrom(const cTagFile& file){
+	for(const auto& page : file) {
+		if(page.index() == 0) {
+			page["TOWN"] >> univ.party.town_num;
+			page["DIFFICULTY"] >> difficulty;
+			monst.hostile = page.contains("HOSTILE");
+			page["AT"] >> univ.party.town_loc.x >> univ.party.town_loc.y;
+		} else if(page.getFirstKey() == "FIELDS" || page.getFirstKey() == "TERRAIN") {
+			vector2d<as_hex<unsigned long>> fields_tmp;
+			page["FIELDS"].extract(fields_tmp);
+			page["TERRAIN"].extract(record()->terrain);
+			fields_tmp.resize(64, 64);
+			for(size_t x = 0; x < 64; x++) {
+				for(size_t y = 0; y < 64; y++) {
+					fields[x][y] = fields_tmp[x][y];
+				}
+			}
+		} else if(page.getFirstKey() == "ITEM") {
+			size_t i;
+			page["ITEM"] >> i;
+			if(i >= items.size()) items.resize(i + 1);
+			items[i].readFrom(page);
+		} else if(page.getFirstKey() == "CREATURE") {
+			size_t i;
+			page["CREATURE"] >> i;
+			monst.init(i);
+			monst[i].readFrom(page);
 			monst[i].active = true;
-		} else if(cur == "TERRAIN")
-			univ.scenario.towns[univ.party.town_num]->readTerrainFrom(bin);
-		bin.clear();
+		}
 	}
 }
 

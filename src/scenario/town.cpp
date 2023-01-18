@@ -238,14 +238,6 @@ void cTown::reattach(cScenario& scen) {
 	scenario = &scen;
 }
 
-void cTown::writeTerrainTo(std::ostream& file) {
-	writeArray(file, terrain, max_dim, max_dim);
-}
-
-void cTown::readTerrainFrom(std::istream& file) {
-	readArray(file, terrain, max_dim, max_dim);
-}
-
 bool cTown::is_item_taken(size_t i) const {
 	if(i >= item_taken.size()) return false;
 	return item_taken[i];

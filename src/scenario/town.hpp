@@ -113,8 +113,6 @@ public:
 	explicit cTown(cScenario& scenario, size_t dim);
 	void import_legacy(legacy::town_record_type& old);
 	void reattach(cScenario& to);
-	void writeTerrainTo(std::ostream& file);
-	void readTerrainFrom(std::istream& file);
 	// Work with the item_taken bitset
 	bool is_item_taken(size_t i) const;
 	void clear_items_taken();

@@ -72,8 +72,3 @@ void cPopulation::swap(cPopulation& other) {
 	std::swap(which_town, other.which_town);
 	std::swap(hostile, other.hostile);
 }
-
-void cPopulation::readFrom(std::istream& in, size_t n) {
-	if(n >= dudes.size()) dudes.resize(n + 1);
-	dudes[n].readFrom(in);
-}

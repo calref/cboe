@@ -19,6 +19,7 @@
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "oldstructs.hpp"
 #include "fileio/fileio.hpp"
+#include "fileio/tagfile.hpp"
 #include "mathutil.hpp"
 
 cParty::cParty(ePartyPreset party_preset) {
@@ -662,447 +663,406 @@ bool cParty::start_timer(short time, spec_num_t node, eSpecCtxType type){
 	return(true);
 }
 
-void cParty::writeTo(std::ostream& file) const {
-	file << "CREATEVERSION " << std::hex << OBOE_CURRENT_VERSION << std::dec << '\n';
-	file << "AGE " << age << '\n';
-	file << "GOLD " << gold << '\n';
-	file << "FOOD " << food << '\n';
-	file << "NEXTID " << next_pc_id << '\n';
-	file << "HOSTILES " << int(hostiles_present)  << '\n';
-	file << "EASY " << int(easy_mode) << '\n';
-	file << "LESSWM " << int(less_wm) << '\n';
-	for(int i = 0; i < 310; i++)
-		for(int j = 0; j < 50; j++)
-			if(stuff_done[i][j] > 0)
-				file << "SDF " << i << ' ' << j << ' ' << unsigned(stuff_done[i][j]) << '\n';
-	for(auto iter = pointers.begin(); iter != pointers.end(); iter++)
-		file << "POINTER " << iter->first << ' ' << iter->second.first << ' ' << iter->second.second << '\n';
-	for(int i = 0; i < magic_ptrs.size(); i++)
-		file << "POINTER " << i+10 << ' ' << int(magic_ptrs[i]) << '\n';
-	file << "LIGHT " << light_level << '\n';
-	file << "OUTCORNER " << outdoor_corner.x << ' ' << outdoor_corner.y << '\n';
-	file << "INWHICHCORNER " << i_w_c.x << ' ' << i_w_c.y << '\n';
-	file << "SECTOR " << out_loc.x << ' ' << out_loc.y << '\n';
-	file << "LOCINSECTOR " << loc_in_sec.x << ' ' << loc_in_sec.y << '\n';
-	file << "IN " << in_boat << ' ' << in_horse << '\n';
-	for(auto& kv : status) {
-		if(kv.second > 0)
-			file << "STATUS " << kv.first << ' ' << kv.second << '\n';
+void cParty::writeTo(cTagFile& file) const {
+	auto& main_page = file.add();
+	main_page["CREATEVERSION"] << as_hex<unsigned long long>(OBOE_CURRENT_VERSION);
+	main_page["AGE"] << age;
+	main_page["GOLD"] << gold;
+	main_page["FOOD"] << food;
+	main_page["NEXTID"] << next_pc_id;
+	main_page["HOSTILES"] << hostiles_present;
+	main_page["EASY"] << easy_mode;
+	main_page["LESSWM"] << less_wm;
+	for(int i = 0; i < 310; i++) {
+		for(int j = 0; j < 50; j++) {
+			if(stuff_done[i][j] > 0) {
+				main_page["SDF"] << i << j << stuff_done[i][j];
+			}
+		}
 	}
+	for(auto iter = pointers.begin(); iter != pointers.end(); iter++) {
+		main_page["POINTER"] << iter->first << iter->second.first << iter->second.second;
+	}
+	for(int i = 0; i < magic_ptrs.size(); i++) {
+		main_page["POINTER"] << i + 10 << magic_ptrs[i];
+	}
+	main_page["LIGHT"] << light_level;
+	main_page["OUTCORNER"] << outdoor_corner.x << outdoor_corner.y;
+	main_page["INWHICHCORNER"] << i_w_c.x << i_w_c.y;
+	main_page["SECTOR"] << out_loc.x << out_loc.y;
+	main_page["LOCINSECTOR"] << loc_in_sec.x << loc_in_sec.y;
+	main_page["IN"] << in_boat << in_horse;
+	main_page["STATUS"].encodeSparse(status);
 	if(is_split()) {
-		file << "SPLIT_LEFT_IN " << left_in << '\n';
-		file << "SPLIT_LEFT_AT " << left_at.x << ' ' << left_at.y << '\n';
+		main_page["SPLIT_LEFT_IN"] << left_in;
+		main_page["SPLIT_LEFT_AT"] << left_at.x << left_at.y;
 	}
-	for(int i : m_noted)
-		file << "ROSTER " << i << '\n';
-	for(int i : m_seen)
-		file << "SEEN " << i << '\n';
-	for(int i = 0; i < 4; i++)
-		if(imprisoned_monst[i] > 0)
-			file << "SOULCRYSTAL " << i << ' ' << imprisoned_monst[i] << '\n';
-	file << "DIRECTION " << direction << '\n';
-	file << "WHICHSLOT " << at_which_save_slot << '\n';
+	for(int i : m_noted) {
+		main_page["ROSTER"] << i;
+	}
+	for(int i : m_seen) {
+		main_page["SEEN"] << i;
+	}
+	for(int i = 0; i < 4; i++) {
+		if(imprisoned_monst[i] > 0) {
+			main_page["SOULCRYSTAL"] << i << imprisoned_monst[i];
+		}
+	}
+	main_page["DIRECTION"] << direction;
+	main_page["WHICHSLOT"] << at_which_save_slot;
 	for(int i = 0; i < creature_save.size(); i++) {
-		file << "TOWNSAVE " << i << ' ' << creature_save[i].which_town;
-		if(creature_save[i].hostile) file << " HOSTILE";
-		file << '\n';
+		auto tmp = main_page["TOWNSAVE"] << i << creature_save[i].which_town;
+		if(creature_save[i].hostile) tmp << "HOSTILE";
 	}
-	for(int i = 0; i < alchemy.size(); i++)
-		if(alchemy[i])
-			file << "ALCHEMY " << i << '\n';
-	for(auto key : key_times)
-		file << "EVENT " << key.first << ' ' << key.second << '\n';
-	for(int i : spec_items)
-		file << "ITEM " << i << '\n';
-	file << "KILLS " << total_m_killed << '\n';
-	file << "DAMAGE " << total_dam_done << '\n';
-	file << "WOUNDS " << total_dam_taken << '\n';
-	file << "EXPERIENCE " << total_xp_gained << '\n';
-	file << "SCENARIO " << scen_name << '\n';
-	file << "WON " << scen_won << '\n';
-	file << "PLAYED " << scen_played << '\n';
-	for(auto p : active_quests)
-		file << "QUEST " << p.first << ' ' << p.second.status << ' ' << p.second.start << ' ' << p.second.source << '\n';
+	for(int i = 0; i < alchemy.size(); i++) {
+		if(alchemy[i]) {
+			main_page["ALCHEMY"] << i;
+		}
+	}
+	main_page["EVENT"].encodeSparse(key_times);
+	for(int i : spec_items) {
+		main_page["ITEM"] << i;
+	}
+	main_page["KILLS"] << total_m_killed;
+	main_page["DAMAGE"] << total_dam_done;
+	main_page["WOUNDS"] << total_dam_taken;
+	main_page["EXPERIENCE"] << total_xp_gained;
+	main_page["SCENARIO"] << scen_name;
+	main_page["WON"] << scen_won;
+	main_page["PLAYED"] << scen_played;
+	for(auto p : active_quests) {
+		main_page["QUEST"] << p.first << p.second.status << p.second.start << p.second.source;
+	}
 	for(auto p : store_limited_stock) {
 		for(auto p2 : p.second) {
-			file << "SHOPSTOCK " << p.first << ' ' << p2.first << ' ' << p2.second << '\n';
+			main_page["SHOPSTOCK"] << p.first << p2.first << p2.second;
 		}
 	}
 	for(auto iter = campaign_flags.begin(); iter != campaign_flags.end(); iter++){
-		std::string campaign_id = maybe_quote_string(iter->first);
 		// Okay, we have the campaign ID in a state such that reading it back in will restore the original ID.
 		// Now output any flags that are set for this campaign.
-		for(unsigned int i = 0; i < 25; i++)
-			for(unsigned int j = 0; j < 20; j++)
-				if(iter->second.idx[i][j] > 0)
-					file << "CAMPAIGN " << campaign_id << ' ' << i << ' ' << j << ' ' << unsigned(iter->second.idx[i][j]) << '\n';
+		for(unsigned int i = 0; i < campaign_flag_type::x_max; i++) {
+			for(unsigned int j = 0; j < campaign_flag_type::y_max; j++) {
+				if(iter->second.idx[i][j] > 0) {
+					main_page["CAMPAIGN"] << iter->first << i << j << iter->second.idx[i][j];
+				}
+			}
+		}
 	}
-	file << '\f';
 	for(int i = 0; i < boats.size(); i++){
 		if(boats[i].exists) {
-			file << "BOAT " << i << '\n';
-			boats[i].writeTo(file);
-			file << '\f';
+			auto& boat_page = file.add();
+			boat_page["BOAT"] << i;
+			boats[i].writeTo(boat_page);
 		}
 	}
-	file << '\f';
 	for(int i = 0; i < horses.size(); i++){
 		if(horses[i].exists) {
-			file << "HORSE " << i << '\n';
-			horses[i].writeTo(file);
-			file << '\f';
+			auto& horse_page = file.add();
+			horse_page["HORSE"] << i;
+			horses[i].writeTo(horse_page);
 		}
 	}
-	file << '\f';
 	for(auto& p : magic_store_items) {
-		for(auto& p2 : p.second)
-			if(p2.second.variety != eItemType::NO_ITEM){
-				file << "MAGICSTORE " << p.first << ' ' << p2.first << '\n';
-				p2.second.writeTo(file);
-				file << '\f';
+		for(auto& p2 : p.second) {
+			if(p2.second.variety != eItemType::NO_ITEM) {
+				auto& store_page = file.add();
+				store_page["MAGICSTORE"] << p.first << p2.first;
+				p2.second.writeTo(store_page);
 			}
-	}
-	file << '\f';
-	for(int i = 0; i < job_banks.size(); i++) {
-		file << "JOBBANK " << i << ' ' << job_banks[i].anger << '\n';
-		if(!job_banks[i].inited) continue;
-		for(int j = 0; j < 6; j++)
-			file << "JOB " << j << ' ' << job_banks[i].jobs[j] << '\n';
-	}
-	file << '\f';
-	for(int i = 0; i < out_c.size(); i++)
-		if(out_c[i].exists){
-			file << "ENCOUNTER " << i << "\n";
-			file << "DIRECTION " << out_c[i].direction << '\n';
-			file << "SECTOR " << out_c[i].which_sector.x << ' ' << out_c[i].which_sector.y << '\n';
-			file << "LOCINSECTOR " << out_c[i].m_loc.x << ' ' << out_c[i].m_loc.y << '\n';
-			file << "HOME " << out_c[i].home_sector.x << ' ' << out_c[i].home_sector.y << '\n';
-			file << "-\n";
-			out_c[i].what_monst.writeTo(file);
-			file << '\f';
 		}
-	file << '\f';
-	file << '\f';
-	for(unsigned int i = 0; i < party_event_timers.size(); i++)
-		file << "TIMER " << ' ' << party_event_timers[i].time << ' ' << int(party_event_timers[i].node_type)
-			 << ' ' << party_event_timers[i].node << '\f';
-	file << '\f';
-	for(int i = 0; i < creature_save.size(); i++)
+	}
+	for(int i = 0; i < job_banks.size(); i++) {
+		auto& job_page = file.add();
+		job_page["JOBBANK"] << i << job_banks[i].anger;
+		if(!job_banks[i].inited) continue;
+		for(int j = 0; j < 6; j++){
+			job_page["JOB"] << j << job_banks[i].jobs[j];
+		}
+	}
+	for(int i = 0; i < out_c.size(); i++) {
+		if(out_c[i].exists) {
+			auto& enc_page = file.add();
+			enc_page["ENCOUNTER"] << i;
+			out_c[i].writeTo(enc_page);
+		}
+	}
+	// TODO: Why is each timer on its own page, anyway? It clearly doesn't need to be!
+	for(unsigned int i = 0; i < party_event_timers.size(); i++) {
+		auto& timer_page = file.add();
+		timer_page["TIMER"] << party_event_timers[i].time << int(party_event_timers[i].node_type) << party_event_timers[i].node;
+	}
+	for(int i = 0; i < creature_save.size(); i++) {
 		for(int j = 0; j < creature_save[i].size(); j++) {
 			if(creature_save[i][j].active > 0) {
-				file << "CREATURE " << i << ' ' << j << '\n';
-				creature_save[i][j].writeTo(file);
-				file << '\f';
+				auto& creature_page = file.add();
+				creature_page["CREATURE"] << i << j;
+				creature_save[i][j].writeTo(creature_page);
 			}
 		}
-	file << '\f';
-	for(int i = 0; i < stored_items.size(); i++)
-		for(size_t j = 0; j < stored_items[i].size(); j++)
-			if(stored_items[i][j].variety != eItemType::NO_ITEM){
-				file << "STORED " << i << ' ' << j << '\n';
-				stored_items[i][j].writeTo(file);
-				file << '\f';
+	}
+	for(int i = 0; i < stored_items.size(); i++) {
+		for(size_t j = 0; j < stored_items[i].size(); j++) {
+			if(stored_items[i][j].variety != eItemType::NO_ITEM) {
+				auto& item_page = file.add();
+				item_page["STORED"] << i << j;
+				stored_items[i][j].writeTo(item_page);
 			}
+		}
+	}
 	if(summons.size() > 0) {
-		file << '\f';
 		int i = 0;
 		for(const cMonster& monst : summons) {
-			file << "SUMMON " << i++ << '\n';
-			monst.writeTo(file);
-			file << '\f';
+			auto& monst_page = file.add();
+			monst_page["SUMMON"] << i++;
+			monst.writeTo(monst_page);
+			cTagFile_Page* abil_page = nullptr;
+			for(const auto& abil_elem : monst.abil) {
+				if(abil_page == nullptr) abil_page = &file.add();
+				if(abil_elem.second.writeTo(abil_elem.first, *abil_page)) {
+					abil_page = nullptr;
+				}
+			}
 		}
 	}
 	if(journal.size() > 0) {
-		file << '\f';
 		for(const cJournal& entry : journal) {
-			file << "JOURNAL " << entry.day << ' ' << maybe_quote_string(entry.in_scen) << '\n' << entry.the_str << '\n';
-			file << '\f';
+			auto& journal_page = file.add();
+			journal_page["JOURNAL"] << entry.day << entry.in_scen;
+			journal_page["STRING"] << entry.the_str;
 		}
 	}
 	if(special_notes.size() > 0) {
-		file << '\f';
 		for(const cEncNote& note : special_notes) {
-			file << "ENCNOTE " << note.type << ' ' << maybe_quote_string(note.where) << '\n' << note.the_str << '\n';
-			file << '\f';
+			auto& note_page = file.add();
+			note_page["ENCNOTE"] << note.type << note.where;
+			note_page["STRING"] << note.the_str;
 		}
 	}
 	if(talk_save.size() > 0) {
-		file << '\f';
 		for(const cConvers& note : talk_save) {
-			file << "TALKNOTE\n";
-			file << "WHO " << maybe_quote_string(note.who_said) << '\n';
-			file << "WHERE " << maybe_quote_string(note.in_town) << ' ' << maybe_quote_string(note.in_scen) << '\n';
-			file << "-\n" << note.the_str1 << '\n' << note.the_str2 << '\n';
-			file << '\f';
+			auto& note_page = file.add();
+			note_page.add("TALKNOTE");
+			note_page["WHO"] << note.who_said;
+			note_page["WHERE"] << note.in_town << note.in_scen;
+			note_page["STRING"] << note.the_str1;
+			note_page["STRING"] << note.the_str2;
 		}
 	}
 }
 
-void cParty::readFrom(std::istream& file){
-	// TODO: Error-check input
-	// TODO: Don't call this sin, it's a trig function
-	std::istringstream bin;
-	std::string cur;
-	getline(file, cur, '\f');
-	bin.str(cur);
-	while(bin) { // continue as long as no error, such as eof, occurs
-		getline(bin, cur);
-		std::istringstream sin(cur);
-		sin >> cur;
-		if(cur == "AGE")
-			sin >> age;
-		else if(cur == "GOLD")
-			sin >> gold;
-		else if(cur == "FOOD")
-			sin >> food;
-		else if(cur == "NEXTID")
-			sin >> next_pc_id;
-		else if(cur == "SDF"){
-			int i,j;
-			unsigned int n;
-			sin >> i >> j >> n;
-			stuff_done[i][j] = n;
-		} else if(cur == "HOSTILES") {
-			int n;
-			sin >> n;
-			hostiles_present = n;
-		} else if(cur == "EASY") {
-			int n;
-			sin >> n;
-			easy_mode = n;
-		} else if(cur == "LESSWM") {
-			int n;
-			sin >> n;
-			less_wm = n;
-		} else if(cur == "CREATEVERSION") {
-			unsigned long long version;
-			sin >> std::hex >> version >> std::dec;
+void cParty::readFrom(const cTagFile& file) {
+	size_t monst_i = 0;
+	for(const auto& page : file) {
+		if(page.index() == 0) {
+			as_hex<unsigned long long> version{0};
+			page["CREATEVERSION"] >> version;
 			if(version > OBOE_CURRENT_VERSION) {
 				showWarning("This game appears to have been created with a newer version of Blades of Exile than you are running. Exile will do its best to load the saved game anyway, but there may be loss of information.");
 			}
-		} else if(cur == "POINTER") {
-			int i,j,k;
-			sin >> i >> j;
-			if(i >= 10 && i < 100) {
-				magic_ptrs[i-10] = j;
-			} else if(i >= 100 && i < 200) {
-				sin >> k;
-				pointers[i] = std::make_pair(j,k);
+			
+			page["AGE"] >> age;
+			page["GOLD"] >> gold;
+			page["FOOD"] >> food;
+			page["NEXTID"] >> next_pc_id;
+			page["HOSTILES"] >> hostiles_present;
+			page["EASY"] >> easy_mode;
+			page["LESSWM"] >> less_wm;
+			page["LIGHT"] >> light_level;
+			page["OUTCORNER"] >> outdoor_corner.x >> outdoor_corner.y;
+			page["INWHICHCORNER"] >> i_w_c.x >> i_w_c.y;
+			page["SECTOR"] >> out_loc.x >> out_loc.y;
+			page["LOCINSECTOR"] >> loc_in_sec.x >> loc_in_sec.y;
+			page["IN"] >> in_boat >> in_horse;
+			page["DIRECTION"] >> direction;
+			page["WHICHSLOT"] >> at_which_save_slot;
+			page["KILLS"] >> total_m_killed;
+			page["DAMAGE"] >> total_dam_done;
+			page["WOUNDS"] >> total_dam_taken;
+			page["EXPERIENCE"] >> total_xp_gained;
+			page["SCENARIO"] >> scen_name;
+			page["WON"] >> scen_won;
+			page["PLAYED"] >> scen_played;
+			
+			page["STATUS"].extractSparse(status);
+			page["EVENT"].extractSparse(key_times);
+			
+			if(page.contains("SPLIT_LEFT_IN")) {
+				page["SPLIT_LEFT_IN"] >> left_in;
+				page["SPLIT_LEFT_AT"] >> left_at.x >> left_at.y;
+			} else {
+				left_in = -1;
 			}
-		} else if(cur == "STATUS") {
-			ePartyStatus stat;
-			int n;
-			sin >> stat >> n;
-			status[stat] = n;
-		}else if(cur == "LIGHT")
-			sin >> light_level;
-		else if(cur == "OUTCORNER")
-			sin >> outdoor_corner.x >> outdoor_corner.y;
-		else if(cur == "INWHICHCORNER")
-			sin >> i_w_c.x >> i_w_c.y;
-		else if(cur == "SECTOR")
-			sin >> out_loc.x >> out_loc.y;
-		else if(cur == "LOCINSECTOR")
-			sin >> loc_in_sec.x >> loc_in_sec.y;
-		else if(cur == "SPLIT_LEFT_IN")
-			sin >> left_in;
-		else if(cur == "SPLIT_LEFT_AT")
-			sin >> left_at.x >> left_at.y;
-		else if(cur == "IN")
-			sin >> in_boat >> in_horse;
-		else if(cur == "ROSTER"){
-			int i;
-			sin >> i;
-			m_noted.insert(i);
-		}else if(cur == "SEEN"){
-			int i;
-			sin >> i;
-			m_seen.insert(i);
-		}else if(cur == "SOULCRYSTAL"){
-			int i;
-			sin >> i;
-			if(i < 0 || i >= imprisoned_monst.size()) continue;
-			sin >> imprisoned_monst[i];
-		}else if(cur == "DIRECTION")
-			sin >> direction;
-		else if(cur == "WHICHSLOT")
-			sin >> at_which_save_slot;
-		else if(cur == "ALCHEMY"){
-			int i;
-			sin >> i;
-			if(i >= 0 && i < alchemy.size())
-				alchemy[i] = true;
-		} else if(cur == "TOWNSAVE") {
-			int i;
-			std::string str;
-			sin >> i;
-			if(i < 0 || i >= creature_save.size()) continue;
-			sin >> creature_save[i].which_town >> str;
-			creature_save[i].hostile = str == "HOSTILE";
-		}else if(cur == "EVENT"){
-			int i;
-			sin >> i;
-			sin >> key_times[i];
-		}else if(cur == "ITEM"){
-			int i;
-			sin >> i;
-			spec_items.insert(i);
-		} else if(cur == "QUEST") {
-			int i;
-			sin >> i;
-			sin >> active_quests[i].status >> active_quests[i].start >> active_quests[i].source;
-		} else if(cur == "SHOPSTOCK") {
-			int i, j;
-			sin >> i >> j >> store_limited_stock[i][j];
-		}else if(cur == "KILLS")
-			sin >> total_m_killed;
-		else if(cur == "DAMAGE")
-			sin >> total_dam_done;
-		else if(cur == "WOUNDS")
-			sin >> total_dam_taken;
-		else if(cur == "EXPERIENCE")
-			sin >> total_xp_gained;
-		else if(cur == "SCENARIO")
-			sin >> scen_name;
-		else if(cur == "WON")
-			sin >> scen_won;
-		else if(cur == "PLAYED")
-			sin >> scen_played;
-		sin.clear();
-	}
-	bin.clear();
-	while(file) {
-		getline(file, cur, '\f');
-		bin.str(cur);
-		bin >> cur;
-		if(cur == "BOAT") {
-			int i;
-			bin >> i;
-			if(i >= boats.size())
-				boats.resize(i + 1);
-			boats[i].exists = true;
-			boats[i].readFrom(bin);
-		} else if(cur == "HORSE") {
-			int i;
-			bin >> i;
-			if(i >= horses.size())
-				horses.resize(i + 1);
-			horses[i].exists = true;
-			horses[i].readFrom(bin);
-		} else if(cur == "MAGICSTORE") {
-			int i,j;
-			bin >> i >> j;
-			magic_store_items[i][j].readFrom(bin);
-		} else if(cur == "ENCOUNTER") {
-			int i;
-			bin >> i;
-			while(bin) {
-				getline(bin, cur);
-				std::istringstream sin(cur);
-				sin >> cur;
-				if(cur == "DIRECTION")
-					sin >> out_c[i].direction;
-				else if(cur == "SECTOR")
-					sin >> out_c[i].which_sector.x >> out_c[i].which_sector.y;
-				else if(cur == "LOCINSECTOR")
-					sin >> out_c[i].m_loc.x >> out_c[i].m_loc.y;
-				else if(cur == "HOME")
-					sin >> out_c[i].home_sector.x >> out_c[i].home_sector.y;
-				else if(cur == "-") break;
-			}
-			out_c[i].what_monst.readFrom(bin);
-			out_c[i].exists = true;
-		}else if(cur == "CAMPAIGN") {
-			unsigned int i, j;
-			int val;
-			cur = read_maybe_quoted_string(bin);
-			bin >> i >> j >> val;
-			if(i < 25 && j < 25)
-				campaign_flags[cur].idx[i][j] = val;
-		} else if(cur == "TIMER") {
-			int i, j;
-			bin >> i;
-			cTimer timer;
-			bin >> timer.time >> j >> timer.node;
-			timer.node_type = eSpecCtxType(j);
-			party_event_timers.push_back(timer);
-		} else if(cur == "CREATURE") {
-			int i, j;
-			bin >> i >> j;
-			if(i < 0 || i >= creature_save.size()) continue;
-			creature_save[i].init(j);
-			creature_save[i][j].readFrom(bin);
-		} else if(cur == "STORED") {
-			int i, j;
-			bin >> i >> j;
-			if(i < 0 || i >= 3 || j < 0) continue;
-			if(j >= stored_items[i].size())
-				stored_items[i].resize(j + 1);
-			stored_items[i][j].readFrom(bin);
-		} else if(cur == "SUMMON") {
-			size_t i;
-			bin >> i;
-			cMonster monst;
-			bin >> std::ws;
-			monst.readFrom(bin);
-			if(i >= summons.size())
-				summons.resize(i + 1);
-			summons[i] = monst;
-		} else if(cur == "JOURNAL") {
-			cJournal entry;
-			bin >> entry.day;
-			entry.in_scen = read_maybe_quoted_string(bin);
-			bin >> std::ws;
-			getline(bin, entry.the_str);
-			journal.push_back(entry);
-		} else if(cur == "ENCNOTE") {
-			cEncNote note;
-			bin >> note.type;
-			note.where = read_maybe_quoted_string(bin);
-			bin >> std::ws;
-			getline(bin, note.the_str);
-			special_notes.push_back(note);
-		} else if(cur == "TALKNOTE") {
-			cConvers note;
-			while(bin) {
-				getline(bin, cur);
-				std::istringstream sin(cur);
-				sin >> cur;
-				if(cur == "WHO")
-					note.who_said = read_maybe_quoted_string(sin);
-				else if(cur == "WHERE") {
-					note.in_town = read_maybe_quoted_string(sin);
-					note.in_scen = read_maybe_quoted_string(sin);
-				} else if(cur == "-") break;
-			}
-			bin >> std::ws;
-			getline(bin, note.the_str1);
-			getline(bin, note.the_str2);
-			note.filled = true;
-			talk_save.push_back(note);
-		} else if(cur == "JOB_BANK") {
-			int i;
-			bin >> i;
-			if(i < 0) continue;
-			if(i >= job_banks.size())
-				job_banks.resize(i + 1);
-			bin >> job_banks[i].anger;
-			job_banks[i].inited = false;
-			while(bin) {
-				getline(bin, cur);
-				std::istringstream sin(cur);
-				sin >> cur;
-				if(cur == "JOB") {
-					job_banks[i].inited = true;
-					int j;
-					sin >> j;
-					if(j < 0 || j >= 6)
-						continue;
-					sin >> job_banks[i].jobs[j];
+			
+			memset(stuff_done, 0, sizeof(stuff_done));
+			for(size_t i = 0; i < page["SDF"].size(); i++) {
+				size_t x, y, val;
+				page["SDF"] >> x >> y >> val;
+				if(x <= sdx_max && y <= sdy_max) {
+					stuff_done[x][y] = val;
 				}
 			}
+			
+			pointers.clear();
+			magic_ptrs.fill(0);
+			for(size_t n = 0; n < page["POINTER"].size(); n++) {
+				int i, j, k;
+				auto tmp = page["POINTER"] >> i >> j;
+				if(i >= 10 && i < 100) {
+					magic_ptrs[i - 10] = j;
+				} else {
+					tmp >> k;
+					pointers[i] = std::make_pair(j, k);
+				}
+			}
+			
+			m_noted.clear(); m_seen.clear();
+			std::vector<decltype(m_noted)::value_type> roster;
+			page["ROSTER"].extract(roster);
+			std::copy(roster.begin(), roster.end(), std::inserter(m_noted, m_noted.begin()));
+			page["SEEN"].extract(roster);
+			std::copy(roster.begin(), roster.end(), std::inserter(m_seen, m_seen.begin()));
+			
+			imprisoned_monst.fill(0);
+			std::vector<decltype(imprisoned_monst)::value_type> soul_crystal;
+			page["SOULCRYSTAL"].extract(soul_crystal);
+			std::copy_n(soul_crystal.begin(), std::min(soul_crystal.size(), imprisoned_monst.size()), imprisoned_monst.begin());
+			
+			alchemy.reset();
+			std::deque<bool> alch; // deque instead of vector to avoid the bitwise specialization
+			page["ALCHEMY"].extract(alch);
+			alch.resize(alchemy.size());
+			for(size_t i = 0; i < alchemy.size(); i++) {
+				alchemy[i] = alch[i];
+			}
+			
+			for(size_t n = 0; n < page["TOWNSAVE"].size(); n++) {
+				size_t i;
+				auto tmp = page["TOWNSAVE"] >> i;
+				if(i >= creature_save.size()) continue;
+				std::string hostile;
+				tmp >> creature_save[i].which_town >> hostile;
+				creature_save[i].hostile = hostile == "HOSTILE";
+			}
+			
+			spec_items.clear();
+			std::vector<decltype(spec_items)::value_type> items;
+			page["ITEM"].extract(items);
+			std::copy(items.begin(), items.end(), std::inserter(spec_items, spec_items.begin()));
+			
+			active_quests.clear();
+			std::map<int, std::tuple<eQuestStatus, int, int>> quests;
+			page["QUEST"].extractSparse(quests);
+			for(const auto& p : quests) {
+				cJob job(std::get<1>(p.second), std::get<2>(p.second));
+				job.status = std::get<0>(p.second);
+				active_quests.emplace(p.first, job);
+			}
+			
+			vector2d<int> shop_stock;
+			page["SHOPSTOCK"].extractSparse(shop_stock);
+			for(size_t x = 0; x < shop_stock.width(); x++) {
+				for(size_t y = 0; y < shop_stock.height(); y++) {
+					store_limited_stock[x][y] = shop_stock[x][y];
+				}
+			}
+			
+			std::string cur;
+			unsigned int i, j;
+			int val;
+			while(page["CAMPAIGN"] >> cur >> i >> j >> val) {
+				if(i <= campaign_flag_type::x_max && j <= campaign_flag_type::y_max) {
+					campaign_flags[cur].idx[i][j] = val;
+				}
+			}
+		} else if(page.getFirstKey() == "BOAT") {
+			size_t i;
+			page["BOAT"] >> i;
+			if(i >= boats.size()) boats.resize(i + 1);
+			boats[i].exists = true;
+			boats[i].readFrom(page);
+		} else if(page.getFirstKey() == "HORSE") {
+			size_t i;
+			page["HORSE"] >> i;
+			if(i >= horses.size()) horses.resize(i + 1);
+			horses[i].exists = true;
+			horses[i].readFrom(page);
+		} else if(page.getFirstKey() == "MAGICSTORE") {
+			size_t i, j;
+			page["MAGICSTORE"] >> i >> j;
+			magic_store_items[i][j].readFrom(page);
+		} else if(page.getFirstKey() == "ENCOUNTER") {
+			int i;
+			page["ENCOUNTER"] >> i;
+			out_c[i].exists = true;
+			out_c[i].readFrom(page);
+		} else if(page.getFirstKey() == "TIMER") {
+			size_t i, j;
+			cTimer timer;
+			while(page["TIMER"] >> i >> timer.time >> j >> timer.node) {
+				timer.node_type = eSpecCtxType(j);
+				if(i < party_event_timers.size()) party_event_timers.resize(i + 1);
+				party_event_timers[i] = timer;
+			}
+		} else if(page.getFirstKey() == "CREATURE") {
+			size_t i, j;
+			page["CREATURE"] >> i >> j;
+			if(i < 0 || i >= creature_save.size()) continue;
+			creature_save[i].init(j);
+			creature_save[i][j].readFrom(page);
+		} else if(page.getFirstKey() == "STORED") {
+			size_t i, j;
+			page["STORED"] >> i >> j;
+			if(i >= 3) continue;
+			if(j >= stored_items[i].size()) {
+				stored_items[i].resize(j + 1);
+			}
+			stored_items[i][j].readFrom(page);
+		} else if(page.getFirstKey() == "SUMMON") {
+			page["SUMMON"] >> monst_i;
+			if(monst_i >= summons.size()) {
+				summons.resize(monst_i + 1);
+			}
+			summons[monst_i].readFrom(page);
+		} else if(page.getFirstKey() == "ABIL") {
+			if(monst_i >= summons.size()) continue;
+			uAbility abil;
+			eMonstAbil key = abil.readFrom(page);
+			if(key != eMonstAbil::NO_ABIL) {
+				summons[monst_i].abil[key] = abil;
+			}
+		} else if(page.getFirstKey() == "JOURNAL") {
+			cJournal entry;
+			page["JOURNAL"] >> entry.day >> entry.in_scen;
+			page["STRING"] >> entry.the_str;
+			journal.push_back(entry);
+		} else if(page.getFirstKey() == "ENCNOTE") {
+			cEncNote note;
+			page["ENCNOTE"] >> note.type >> note.where;
+			page["STRING"] >> note.the_str;
+			special_notes.push_back(note);
+		} else if(page.getFirstKey() == "TALKNOTE") {
+			// TALKNOTE is an empty tag with no value that only serves to identify the page
+			cConvers note;
+			page["WHO"] >> note.who_said;
+			page["WHERE"] >> note.in_town >> note.in_scen;
+			page["STRING"] >> note.the_str1;
+			page["STRING"] >> note.the_str2;
+			note.filled = true;
+			talk_save.push_back(note);
+		} else if(page.getFirstKey() == "JOBBANK") {
+			size_t i;
+			job_bank_t bank;
+			page["JOBBANK"] >> i >> bank.anger;
+			if(i >= job_banks.size()) {
+				job_banks.resize(i + 1);
+			}
+			std::vector<int> jobs;
+			page["JOB"].extractSparse(jobs);
+			bank.inited = !jobs.empty();
+			std::copy_n(jobs.begin(), std::min(jobs.size(), bank.jobs.size()), bank.jobs.begin());
+			job_banks[i] = bank;
 		}
-		bin.clear();
 	}
 }
 
