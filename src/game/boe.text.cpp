@@ -979,9 +979,10 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 	int prev_pointer = buf_pointer - 1;
 	if(prev_pointer < 0) prev_pointer = TEXT_BUF_LEN - 1;
 	size_t last = 0, new_last = str.find_last_not_of(' ');
+	// Find the last non-space character that matches
 	while(last < str.length() && str[last] == text_buffer[prev_pointer].line[last])
 		last++;
-	while(text_buffer[prev_pointer].line[--last] == ' ');
+	while(last > 0 && text_buffer[prev_pointer].line[--last] == ' ');
 	bool is_dup = false;
 	if(last == new_last) {
 		size_t num_pos = 0;
