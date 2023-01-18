@@ -2707,13 +2707,14 @@ bool is_lava(short x,short y) {
 }
 
 ter_num_t coord_to_ter(short x,short y) {
-	ter_num_t what_terrain;
-	
-	if(editing_town)
-		what_terrain = town->terrain(x,y);
-	else what_terrain = current_terrain->terrain[x][y];
-	
-	return what_terrain;
+	if(x < 0 || y < 0) return 0;
+	if(editing_town) {
+		if(x >= town->max_dim || y >= town->max_dim) return 0;
+		return town->terrain(x,y);
+	} else {
+		if(x >= current_terrain->max_dim || y >= current_terrain->max_dim) return 0;
+		return current_terrain->terrain[x][y];
+	}
 }
 
 bool monst_on_space(location loc,short m_num) {
