@@ -38,11 +38,11 @@ cTagFile_Page& cTagFile::add() {
 	return pages.back();
 }
 
-cTagFile_Page& cTagFile::operator[](unsigned long i) {
+cTagFile_Page& cTagFile::operator[](size_t i) {
 	return pages.at(i);
 }
 
-const cTagFile_Page& cTagFile::operator[](unsigned long i) const {
+const cTagFile_Page& cTagFile::operator[](size_t i) const {
 	return pages.at(i);
 }
 
@@ -109,11 +109,11 @@ cTagFile_Tag& cTagFile_TagList::add() {
 	return tags.back();
 }
 
-cTagFile_Tag& cTagFile_TagList::operator[](unsigned long i) {
+cTagFile_Tag& cTagFile_TagList::operator[](size_t i) {
 	return tags.at(i);
 }
 
-const cTagFile_Tag& cTagFile_TagList::operator[](unsigned long i) const {
+const cTagFile_Tag& cTagFile_TagList::operator[](size_t i) const {
 	return tags.at(i);
 }
 
