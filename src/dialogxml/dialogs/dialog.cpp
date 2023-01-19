@@ -525,8 +525,8 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	win.create(sf::VideoMode(1,1),"");
 	win.close();
 	win.create(sf::VideoMode(winRect.width(), winRect.height()), "Dialog", sf::Style::Titlebar);
-	winLastX = parentPos.x + int(parentSz.x - winRect.width()) / 2;
-	winLastY = parentPos.y + int(parentSz.y - winRect.height()) / 2;
+	winLastX = parentPos.x + (int(parentSz.x) - winRect.width()) / 2;
+	winLastY = parentPos.y + (int(parentSz.y) - winRect.height()) / 2;
 	win.setPosition({winLastX, winLastY});
 	draw();
 	makeFrontWindow(parent ? parent-> win : mainPtr);
