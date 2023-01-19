@@ -215,16 +215,25 @@ short combat_obscurity(short x, short y) {
 }
 
 ter_num_t coord_to_ter(short x,short y) {
-	return is_out() ? univ.out[x][y] : univ.town->terrain(x,y);
+	if(x < 0 || y < 0) return 0;
+	if(is_out()) {
+		if(x >= univ.out.max_dim || y >= univ.out.max_dim) {
+			return 0;
+		}
+		return univ.out[x][y];
+	}
+	if(x >= univ.town->max_dim || y >= univ.town->max_dim) {
+		return 0;
+	}
+	return univ.town->terrain(x,y);
 }
 
 ////
 bool is_container(location loc) {
-	ter_num_t ter;
-	
+	if(loc.x < 0 || loc.y < 0) return false;
 	if((univ.town.is_barrel(loc.x,loc.y)) || (univ.town.is_crate(loc.x,loc.y)))
 		return true;
-	ter = coord_to_ter(loc.x,loc.y);
+	ter_num_t ter = coord_to_ter(loc.x,loc.y);
 	if(univ.scenario.ter_types[ter].special == eTerSpec::IS_A_CONTAINER)
 		return true;
 	return false;
@@ -266,10 +275,10 @@ void update_explored(location dest) {
 
 // All purpose function to check is spot is free for travel into.
 bool is_blocked(location to_check) {
-	short gr;
-	ter_num_t ter;
-	
+	if(to_check.x < 0 || to_check.y < 0) return true;
 	if(is_out()) {
+		if(to_check.x >= univ.out.max_dim || to_check.y >= univ.out.max_dim)
+			return true;
 		if(impassable(univ.out[to_check.x][to_check.y])) {
 			return true;
 		}
@@ -283,8 +292,9 @@ bool is_blocked(location to_check) {
 	}
 	
 	if((is_town()) || (is_combat())) {
-		ter = univ.town->terrain(to_check.x,to_check.y);
-		gr = univ.scenario.ter_types[ter].picture;
+		if(to_check.x >= univ.town->max_dim || to_check.y >= univ.town->max_dim)
+			return true;
+		ter_num_t ter = univ.town->terrain(to_check.x,to_check.y);
 		
 		// Terrain blocking?
 		if(impassable(ter)) {
@@ -398,6 +408,8 @@ bool can_see_monst(location l,short m_num) {
 
 bool outd_is_blocked(location to_check) {
 	if(overall_mode == MODE_OUTDOORS) {
+		if(to_check.x < 0 || to_check.y < 0 || to_check.x >= univ.out.max_dim || to_check.y >= univ.out.max_dim)
+			return true;
 		if(impassable(univ.out[to_check.x][to_check.y])) {
 			return true;
 		}

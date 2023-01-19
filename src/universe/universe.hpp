@@ -136,9 +136,11 @@ public:
 class cCurOut {
 	cUniverse& univ;
 public:
-	char expl[96][96]; // formerly out_info_type
-	ter_num_t out[96][96];
-	unsigned char out_e[96][96];
+	static const int max_dim = 96;
+	static const int half_dim = max_dim / 2;
+	char expl[max_dim][max_dim]; // formerly out_info_type
+	ter_num_t out[max_dim][max_dim];
+	unsigned char out_e[max_dim][max_dim];
 	
 	// These take global coords (ie 0..95)
 	bool is_spot(int x, int y);
@@ -146,7 +148,7 @@ public:
 	
 	void import_legacy(legacy::out_info_type& old);
 	
-	typedef ter_num_t arr_96[96];
+	typedef ter_num_t arr_96[max_dim];
 	arr_96& operator [] (size_t i);
 	ter_num_t& operator [] (location loc);
 	void writeTo(std::ostream& file) const;

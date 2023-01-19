@@ -1913,12 +1913,12 @@ bool handle_keystroke(const sf::Event& event){
 		case 'Q':
 			if(!univ.debug_mode) break;
 			if(overall_mode == MODE_OUTDOORS) {
-				for(short i = 0; i < 96; i++)
-					for(short j = 0; j < 96; j++)
+				for(short i = 0; i < univ.out.max_dim; i++)
+					for(short j = 0; j < univ.out.max_dim; j++)
 						make_explored(i,j);
 			} else {
-				for(short i = 0; i < 64; i++)
-					for(short j = 0; j < 64; j++)
+				for(short i = 0; i < univ.town->max_dim; i++)
+					for(short j = 0; j < univ.town->max_dim; j++)
 						make_explored(i,j);
 			}
 			clear_map();

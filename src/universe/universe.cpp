@@ -767,7 +767,7 @@ bool cCurTown::is_impassable(short i,short  j) {
 	else return false;
 }
 
-ter_num_t(& cCurOut::operator [] (size_t i))[96]{
+auto cCurOut::operator [] (size_t i) -> arr_96& {
 	return out[i];
 }
 
@@ -776,9 +776,9 @@ ter_num_t& cCurOut::operator [] (location loc) {
 }
 
 void cCurOut::writeTo(std::ostream& file) const {
-	writeArray(file, expl, 96, 96);
-	writeArray(file, out, 96, 96);
-	writeArray(file, out_e, 96, 96);
+	writeArray(file, expl, max_dim, max_dim);
+	writeArray(file, out, max_dim, max_dim);
+	writeArray(file, out_e, max_dim, max_dim);
 //	file << "OUTDOORS 0 0" << std::endl;
 //	outdoors[0][0].writeTo(file);
 //	file << "OUTDOORS 0 1" << std::endl;
@@ -791,9 +791,9 @@ void cCurOut::writeTo(std::ostream& file) const {
 }
 
 void cCurOut::readFrom(std::istream& file) {
-	readArray(file, expl, 96, 96);
-	readArray(file, out, 96, 96);
-	readArray(file, out_e, 96, 96);
+	readArray(file, expl, max_dim, max_dim);
+	readArray(file, out, max_dim, max_dim);
+	readArray(file, out_e, max_dim, max_dim);
 }
 
 void cCurTown::writeTo(cTagFile& file) const {
