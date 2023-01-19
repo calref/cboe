@@ -59,7 +59,6 @@ void do_explosion_anim(short sound_num,short expand,short snd = -1);
 void click_shop_rect(rectangle area_rect);
 void draw_shop_graphics(bool pressed,rectangle clip_area_rect);
 void refresh_shopping();
-std::string get_item_interesting_string(cItem item);
 void click_talk_rect(word_rect_t word);
 void place_talk_str(std::string str_to_place,std::string str_to_place2,short color,rectangle c_rect);
 short scan_for_response(const char *str);

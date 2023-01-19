@@ -411,7 +411,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 			if(item.graphic_num >= 1000)
 				pic.setPict(item.graphic_num - 1000, PIC_CUSTOM_ITEM);
 			else pic.setPict(item.graphic_num, PIC_ITEM);
-			me[detail].setText(get_item_interesting_string(item));
+			me[detail].setText(item.interesting_string());
 			me[weight].setText("Weight: " + std::to_string(item.item_weight()));
 			me[key].setText(key_stash);
 		} else { // erase the spot

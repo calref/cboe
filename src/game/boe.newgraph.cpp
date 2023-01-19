@@ -734,7 +734,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		switch(item.type) {
 			case eShopItemType::ITEM:
 				base_item.ident = true;
-				cur_info_str = get_item_interesting_string(base_item);
+				cur_info_str = base_item.interesting_string();
 				break;
 			case eShopItemType::ALCHEMY:
 				cur_info_str = get_str("item-abilities", int(alch_ingred1[base_item.item_level]) + 1);
@@ -839,66 +839,6 @@ void click_talk_rect(word_rect_t word) {
 	play_sound(37, time_in_ticks(5));
 	rect_draw_some_item(talk_gworld.getTexture(),talkRect,mainPtr,talk_area_rect);
 	place_talk_face();
-}
-
-std::string get_item_interesting_string(cItem item) {
-	if(item.property) {
-		return "Not yours.";
-	}
-	if(!item.ident) {
-		return "Not identified.";
-	}
-	if(item.cursed) {
-		return "Cursed item.";
-	}
-	bool got_string = true;
-	std::ostringstream sout;
-	switch(item.variety) {
-		case eItemType::ONE_HANDED:
-		case eItemType::TWO_HANDED:
-		case eItemType::ARROW:
-		case eItemType::THROWN_MISSILE:
-		case eItemType::BOLTS:
-		case eItemType::MISSILE_NO_AMMO:
-			if(item.bonus != 0)
-				sout << "Damage: 1-" << item.item_level << " + " << item.bonus;
-			else sout << "Damage: 1-" << item.item_level;
-			break;
-		case eItemType::SHIELD:
-		case eItemType::ARMOR:
-		case eItemType::HELM:
-		case eItemType::GLOVES:
-		case eItemType::SHIELD_2:
-		case eItemType::BOOTS: // TODO: Verify that this is displayed correctly
-			sout << "Blocks " << item.item_level + ((item.protection > 0) ? 1 : 0) << '-' << item.item_level + item.protection << " damage";
-			break;
-		case eItemType::BOW:
-		case eItemType::CROSSBOW:
-			sout << "Bonus: +" << item.bonus << " to hit";
-			break;
-		case eItemType::GOLD:
-			sout << item.item_level << " gold pieces";
-			break;
-		case eItemType::SPECIAL:
-		case eItemType::QUEST:
-			sout << "Special";
-			break;
-		case eItemType::FOOD:
-			sout << item.item_level << " food";
-			break;
-		case eItemType::WEAPON_POISON:
-			sout << "Poison: " << item.item_level << '-' << item.item_level * 6 << " damage";
-			break;
-		default:
-			got_string = false;
-			break;
-	}
-	if(item.charges > 0 && item.ability != eItemAbil::MESSAGE) {
-		if(got_string) sout << "; ";
-		sout << "Uses: " << item.charges;
-	}
-	sout << '.';
-	return sout.str();
 }
 
 // color 0 - regular  1 - darker

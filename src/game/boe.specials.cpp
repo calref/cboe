@@ -2388,7 +2388,7 @@ void general_spec(const runtime_state& ctx) {
 			if(spec.ex1b == 1)
 				univ.get_buf() += univ.scenario.scen_items[spec.ex1a].full_name;
 			else if(spec.ex1b == 2)
-				univ.get_buf() += get_item_interesting_string(univ.scenario.scen_items[spec.ex1a]);
+				univ.get_buf() += univ.scenario.scen_items[spec.ex1a].interesting_string();
 			else univ.get_buf() += univ.scenario.scen_items[spec.ex1a].name;
 			break;
 		case eSpecType::APPEND_TER:

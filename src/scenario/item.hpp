@@ -78,6 +78,7 @@ public:
 	std::string desc;
 	unsigned char rec_treas_class() const;
 	short item_weight() const;
+	std::string interesting_string() const;
 	
 	std::string getAbilName() const;
 	void enchant_weapon(eEnchant enchant_type, short new_val);

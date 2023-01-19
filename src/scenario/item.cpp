@@ -90,6 +90,66 @@ short cItem::item_weight() const {
 	return w;
 }
 
+std::string cItem::interesting_string() const {
+	if(property) {
+		return "Not yours.";
+	}
+	if(!ident) {
+		return "Not identified.";
+	}
+	if(cursed) {
+		return "Cursed item.";
+	}
+	bool got_string = true;
+	std::ostringstream sout;
+	switch(variety) {
+		case eItemType::ONE_HANDED:
+		case eItemType::TWO_HANDED:
+		case eItemType::ARROW:
+		case eItemType::THROWN_MISSILE:
+		case eItemType::BOLTS:
+		case eItemType::MISSILE_NO_AMMO:
+			if(bonus != 0)
+				sout << "Damage: 1-" << item_level << " + " << bonus;
+			else sout << "Damage: 1-" << item_level;
+			break;
+		case eItemType::SHIELD:
+		case eItemType::ARMOR:
+		case eItemType::HELM:
+		case eItemType::GLOVES:
+		case eItemType::SHIELD_2:
+		case eItemType::BOOTS: // TODO: Verify that this is displayed correctly
+			sout << "Blocks " << item_level + ((protection > 0) ? 1 : 0) << '-' << item_level + protection << " damage";
+			break;
+		case eItemType::BOW:
+		case eItemType::CROSSBOW:
+			sout << "Bonus: +" << bonus << " to hit";
+			break;
+		case eItemType::GOLD:
+			sout << item_level << " gold pieces";
+			break;
+		case eItemType::SPECIAL:
+		case eItemType::QUEST:
+			sout << "Special";
+			break;
+		case eItemType::FOOD:
+			sout << item_level << " food";
+			break;
+		case eItemType::WEAPON_POISON:
+			sout << "Poison: " << item_level << '-' << item_level * 6 << " damage";
+			break;
+		default:
+			got_string = false;
+			break;
+	}
+	if(charges > 0 && ability != eItemAbil::MESSAGE) {
+		if(got_string) sout << "; ";
+		sout << "Uses: " << charges;
+	}
+	sout << '.';
+	return sout.str();
+}
+
 bool cItem::abil_harms() const {
 	if(magic_use_type == eItemUse::HARM_ONE || magic_use_type == eItemUse::HARM_ALL)
 		return true;
