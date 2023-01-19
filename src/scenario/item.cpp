@@ -1348,15 +1348,15 @@ void cItem::readFrom(const cTagFile_Page& page){
 	page["NAME"] >> name;
 	page["DESCR"] >> desc;
 	page["TREASURE"] >> treas_class;
-	if(page.contains("IDENTIFIED")) ident = true;
-	else if(page.contains("PROPERTY")) property = true;
-	else if(page.contains("MAGIC")) magic = true;
-	else if(page.contains("CONTAINED")) contained = true;
-	else if(page.contains("HELD")) held = true;
-	else if(page.contains("CURSED")) cursed = true;
-	else if(page.contains("CONCEALED")) concealed = true;
-	else if(page.contains("ENCHANTED")) enchanted = true;
-	else if(page.contains("UNSELLABLE")) unsellable = true;
+	ident = page.contains("IDENTIFIED");
+	property = page.contains("PROPERTY");
+	magic = page.contains("MAGIC");
+	contained = page.contains("CONTAINED");
+	held = page.contains("HELD");
+	cursed = page.contains("CURSED");
+	concealed = page.contains("CONCEALED");
+	enchanted = page.contains("ENCHANTED");
+	unsellable = page.contains("UNSELLABLE");
 }
 
 enum {USE_COMBAT = 1, USE_TOWN = 2, USE_OUTDOORS = 4, USE_MAGIC = 8};
