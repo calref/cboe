@@ -239,25 +239,20 @@ bool is_container(location loc) {
 	return false;
 }
 
-void update_explored(location dest) {
+void update_explored(const location dest) {
 	if(cartoon_happening) return;
-	location shortdest,look;
-	
-	location look2;
-	
-	shortdest.x = (short) dest.x;
-	shortdest.y = (short) dest.y;
+	location look;
 	
 	which_party_sec.x = univ.party.outdoor_corner.x + univ.party.i_w_c.x;
 	which_party_sec.y = univ.party.outdoor_corner.y + univ.party.i_w_c.y;
 	
 	if(is_out()) {
 		univ.out.out_e[dest.x][dest.y] = 2;
-		for(look.x = shortdest.x - 4; look.x < shortdest.x + 5; look.x++)
-			for(look.y = shortdest.y - 4; look.y < shortdest.y + 5; look.y++) {
+		for(look.x = dest.x - 4; look.x < dest.x + 5; look.x++)
+			for(look.y = dest.y - 4; look.y < dest.y + 5; look.y++) {
 				if((look.x == minmax(0,univ.out.max_dim-1,(int)look.x)) && (look.y == minmax(0,univ.out.max_dim-1,(int)look.y))) {
 					if(univ.out.out_e[look.x][look.y] == 0) {
-						if(can_see_light(shortdest, look, sight_obscurity) < 5) {
+						if(can_see_light(dest, look, sight_obscurity) < 5) {
 							univ.out.out_e[look.x][look.y] = 1;
 						}
 					}
@@ -265,11 +260,11 @@ void update_explored(location dest) {
 			}
 	} else {
 		make_explored(dest.x,dest.y);
-		for(look2.x = max(0,dest.x - 4); look2.x < min(univ.town->max_dim,dest.x + 5); look2.x++)
-			for(look2.y = max(0,dest.y - 4); look2.y < min(univ.town->max_dim,dest.y + 5); look2.y++)
-				if(!is_explored(look2.x,look2.y))
-					if((can_see_light(dest, look2,sight_obscurity) < 5) && (pt_in_light(dest,look2)))
-						make_explored(look2.x,look2.y);
+		for(look.x = max(0,dest.x - 4); look.x < min(univ.town->max_dim,dest.x + 5); look.x++)
+			for(look.y = max(0,dest.y - 4); look.y < min(univ.town->max_dim,dest.y + 5); look.y++)
+				if(!is_explored(look.x,look.y))
+					if((can_see_light(dest, look,sight_obscurity) < 5) && (pt_in_light(dest,look)))
+						make_explored(look.x,look.y);
 	}
 }
 
