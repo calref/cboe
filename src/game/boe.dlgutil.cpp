@@ -548,7 +548,11 @@ void set_up_shop_array() {
 				break;
 		}
 	}
-	shop_sbar->setMaximum(shop_array.size() - 8);
+	if(shop_array.size() < 8) {
+		shop_sbar->setMaximum(0);
+	} else {
+		shop_sbar->setMaximum(shop_array.size() - 8);
+	}
 }
 
 void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short store_face_pic) {
