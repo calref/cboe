@@ -35,3 +35,8 @@ inline void move_to_zero(T& val){
 	if(val > 0)
 		val--;
 }
+
+template<typename T>
+inline T sgn(T val) {
+	return val == 0 ? 0 : std::copysign(1, val);
+}

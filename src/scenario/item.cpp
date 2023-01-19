@@ -19,6 +19,7 @@
 #include "utility.hpp"
 #include "fileio/fileio.hpp"
 #include "fileio/tagfile.hpp"
+#include "mathutil.hpp"
 
 #include "damage.hpp"
 #include "spell.hpp"
@@ -90,6 +91,18 @@ short cItem::item_weight() const {
 	return w;
 }
 
+static short min_defense_bonus(short bonus) {
+	if(bonus == 0) return 0;
+	if(bonus < 0) return bonus;
+	return 1 + bonus / 2;
+}
+
+static short max_defense_bonus(short bonus) {
+	if(bonus == 0) return 0;
+	if(bonus < 0) return bonus;
+	return bonus + bonus / 2;
+}
+
 std::string cItem::interesting_string() const {
 	if(property) {
 		return "Not yours.";
@@ -109,17 +122,22 @@ std::string cItem::interesting_string() const {
 		case eItemType::THROWN_MISSILE:
 		case eItemType::BOLTS:
 		case eItemType::MISSILE_NO_AMMO:
-			if(bonus != 0)
-				sout << "Damage: 1-" << item_level << " + " << bonus;
-			else sout << "Damage: 1-" << item_level;
+			sout << "Damage: 1-" << item_level;
+			if(bonus > 0) {
+				sout << " + " << bonus;
+			} else if(bonus < 0) {
+				sout << " - " << -bonus;
+			}
 			break;
 		case eItemType::SHIELD:
 		case eItemType::ARMOR:
 		case eItemType::HELM:
 		case eItemType::GLOVES:
 		case eItemType::SHIELD_2:
-		case eItemType::BOOTS: // TODO: Verify that this is displayed correctly
-			sout << "Blocks " << item_level + ((protection > 0) ? 1 : 0) << '-' << item_level + protection << " damage";
+		case eItemType::BOOTS:
+			sout << "Blocks " << 1 + min_defense_bonus(bonus) + sgn(protection);
+			sout << '-' << max(1,item_level) + max_defense_bonus(bonus) + protection;
+			sout << " damage";
 			break;
 		case eItemType::BOW:
 		case eItemType::CROSSBOW:
