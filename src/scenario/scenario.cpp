@@ -63,6 +63,7 @@ cScenario::cScenario() {
 	difficulty = 0;
 	intro_pic = intro_mess_pic = 0;
 	adjust_diff = true;
+	is_legacy = false;
 	bg_out = 10;
 	bg_fight = 4;
 	bg_town = 13;
