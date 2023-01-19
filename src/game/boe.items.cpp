@@ -388,8 +388,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 	if(first_item_shown == 0)
 		me["up"].hide();
 	else me["up"].show();
-	if(first_item_shown > item_array.size() - 7 ||
-	   item_array.size() <= 8)
+	if(item_array.size() <= 8 || first_item_shown > item_array.size() - 7)
 		me["down"].hide();
 	else me["down"].show();
 	
