@@ -201,6 +201,7 @@
     <ClCompile Include="..\..\..\test\scen_read.cpp" />
     <ClCompile Include="..\..\..\test\scen_write.cpp" />
     <ClCompile Include="..\..\..\test\spec_legacy.cpp" />
+    <ClCompile Include="..\..\..\test\tagfile.cpp" />
     <ClCompile Include="..\..\..\test\talk_legacy.cpp" />
     <ClCompile Include="..\..\..\test\talk_read.cpp" />
     <ClCompile Include="..\..\..\test\talk_write.cpp" />
@@ -212,7 +213,6 @@
     <ClCompile Include="..\..\..\test\town_write.cpp" />
     <ClCompile Include="..\..\..\test\vector2d.cpp" />
     <ClCompile Include="..\..\..\src\scenedit\scen.fileio.cpp" />
-    <ClCompile Include="..\..\..\src\fileio\tagfile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">

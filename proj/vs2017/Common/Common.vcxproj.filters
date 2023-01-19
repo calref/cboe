@@ -626,6 +626,9 @@
     <ClCompile Include="..\..\..\src\fileio\special_parse.cpp">
       <Filter>FileIO</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\fileio\tagfile.cpp">
+      <Filter>FileIO</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\fileio\tarball.cpp">
       <Filter>FileIO</Filter>
     </ClCompile>
@@ -832,6 +835,9 @@
       <Filter>FileIO</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\fileio\special_parse.hpp">
+      <Filter>FileIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fileio\tagfile.hpp">
       <Filter>FileIO</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\fileio\tarball.hpp">
