@@ -31,7 +31,7 @@ public:
 	void clear() {dudes.clear();}
 	cCreature& operator[](size_t n);
 	const cCreature& operator[](size_t n) const;
-	cPopulation() : which_town(200) {}
+	cPopulation() : which_town(200), hostile(false) {}
 	std::vector<cCreature>::iterator begin() {return dudes.begin();}
 	std::vector<cCreature>::iterator end() {return dudes.end();}
 	// Apparently Visual Studio needs this to work

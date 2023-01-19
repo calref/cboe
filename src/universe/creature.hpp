@@ -23,7 +23,7 @@ public:
 	eAttitude attitude;
 	location cur_loc;
 	short summon_time = 0;
-	bool party_summoned;
+	bool party_summoned = false;
 	short target = 6;
 	location targ_loc;
 	short health = 0;

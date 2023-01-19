@@ -14,6 +14,7 @@
 #include <vector>
 #include <cstddef>
 
+// TODO: insert_row, insert_col
 template<typename Type, typename Alloc = std::allocator<Type>> class vector2d {
 	friend class row_ref;
 	friend class col_ref;
