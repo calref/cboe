@@ -2258,7 +2258,6 @@ void slay_party(eMainStatus mode) {
 }
 
 short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace type_of_attacker, short sound_type,bool do_print) {
-	short r1,level;
 	
 	if(which_pc.main_status != eMainStatus::ALIVE)
 		return false;
@@ -2282,29 +2281,23 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 			const cItem& item = which_pc.items[i];
 			if(item.variety != eItemType::NO_ITEM && which_pc.equip[i]) {
 				if((*item.variety).is_armour) {
-					r1 = get_ran(1,1,item.item_level);
-					how_much -= r1;
+					short defense = get_ran(1,1,item.item_level);
 					
 					// bonus for magical items
 					if(item.bonus > 0) {
-						r1 = get_ran(1,1,item.bonus);
-						how_much -= r1;
-						how_much -= item.bonus / 2;
+						defense += get_ran(1,1,item.bonus) + item.bonus / 2;
+					} else if(item.bonus < 0) {
+						defense -= item.bonus;
 					}
-					if(item.bonus < 0) {
-						how_much = how_much - item.bonus;
-					}
-					r1 = get_ran(1,1,100);
-					if(r1 < hit_chance[which_pc.skill(eSkill::DEFENSE)] - 20)
+					how_much -= defense;
+					short roll = get_ran(1,1,100);
+					if(roll < hit_chance[which_pc.skill(eSkill::DEFENSE)] - 20)
 						how_much -= 1;
 				}
 				if(item.protection > 0) {
-					r1 = get_ran(1,1,item.protection);
-					how_much -= r1;
-				}
-				if(item.protection < 0) {
-					r1 = get_ran(1,1,-1 * item.protection);
-					how_much += r1;
+					how_much -= get_ran(1,1,item.protection);
+				} else if(item.protection < 0) {
+					how_much += get_ran(1,1,-item.protection);
 				}
 			}
 		}
@@ -2326,26 +2319,30 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 			how_much -= 1;
 	}
 	
-	if((level = which_pc.get_prot_level(eItemAbil::DAMAGE_PROTECTION,int(damage_type))) > 0) {
+	short prot_from_dmg = which_pc.get_prot_level(eItemAbil::DAMAGE_PROTECTION,int(damage_type));
+	if(prot_from_dmg > 0) {
 		// TODO: Why does this not depend on the ability strength if it's not weapon damage?
-		if(damage_type == eDamageType::WEAPON) how_much -= level;
+		if(damage_type == eDamageType::WEAPON) how_much -= prot_from_dmg;
 		else how_much = how_much / 2;
 	}
 	
 	// TODO: Do these perhaps depend on the ability strength less than they should?
-	if((level = which_pc.get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(type_of_attacker))) > 0)
+	short prot_from_race = which_pc.get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(type_of_attacker));
+	if(prot_from_race > 0)
 		how_much = how_much / 2;
 		
 	if(isHumanoid(type_of_attacker) && !isHuman(type_of_attacker) && type_of_attacker != eRace::HUMANOID) {
 		// If it's a slith, nephil, vahnatai, or goblin, Protection from Humanoids also helps
 		// Humanoid is explicitly excluded here because otherwise it would help twice.
-		if((level = which_pc.get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(eRace::HUMANOID))) > 0)
+		short prot_from_humanoid = which_pc.get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(eRace::HUMANOID));
+		if(prot_from_humanoid > 0)
 			how_much = how_much / 2;
 	}
 	
 	if(type_of_attacker == eRace::SKELETAL) {
 		// Protection from Undead helps with both types of undead
-		if((level = which_pc.get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(eRace::UNDEAD))) > 0)
+		short prot_from_undead = which_pc.get_prot_level(eItemAbil::PROTECT_FROM_SPECIES,int(eRace::UNDEAD));
+		if(prot_from_undead > 0)
 			how_much = how_much / 2;
 	}
 	
@@ -2364,15 +2361,15 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 	}
 	
 	// major resistance
+	short full_prot = which_pc.get_prot_level(eItemAbil::FULL_PROTECTION);
 	if((damage_type == eDamageType::FIRE || damage_type == eDamageType::POISON || damage_type == eDamageType::MAGIC || damage_type == eDamageType::COLD)
-	   && ((level = which_pc.get_prot_level(eItemAbil::FULL_PROTECTION)) > 0))
-		how_much = how_much / ((level >= 7) ? 4 : 2);
+	   && (full_prot > 0))
+		how_much = how_much / ((full_prot >= 7) ? 4 : 2);
 	
 	if(boom_anim_active) {
 		if(how_much < 0)
 			how_much = 0;
 		which_pc.marked_damage += how_much;
-		// It would also be nice to have a special boom type for cold.
 		short boom_type = 2;
 		if(damage_type == eDamageType::FIRE)
 			boom_type = 0;
