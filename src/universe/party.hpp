@@ -120,7 +120,6 @@ public:
 	std::map<int, cJob> active_quests;
 	location left_at;
 	size_t left_in;
-	eDirection direction;
 	short at_which_save_slot;
 	std::bitset<20> alchemy;
 	std::map<int,int> key_times;
