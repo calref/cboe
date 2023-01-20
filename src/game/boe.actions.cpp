@@ -2186,6 +2186,7 @@ void do_save(short mode) {
 		print_buf();
 		return;
 	}
+	if(univ.party.is_in_scenario()) save_outdoor_maps();
 	fs::path file = univ.file;
 	if(mode == 1 || file.empty())
 		file = nav_put_party(file);
