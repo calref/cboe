@@ -437,6 +437,10 @@ void cParty::clear_bad_status() {
 		adven[i]->clear_bad_status();
 }
 
+bool cParty::is_in_scenario() const {
+	return !scen_name.empty();
+}
+
 bool cParty::is_alive() const {
 	for(int i = 0; i < 6; i++)
 		if(adven[i]->is_alive())

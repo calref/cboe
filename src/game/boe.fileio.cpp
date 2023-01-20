@@ -57,12 +57,11 @@ cCustomGraphics spec_scen_g;
 
 void finish_load_party(){
 	bool town_restore = univ.party.town_num < 200;
-	bool in_scen = univ.party.scen_name.length() > 0;
 	
 	party_in_memory = true;
 	
 	// now if not in scen, this is it.
-	if(!in_scen) {
+	if(!univ.party.is_in_scenario()) {
 		if(overall_mode != MODE_STARTUP) {
 			reload_startup();
 			draw_startup(0);

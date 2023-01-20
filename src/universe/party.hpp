@@ -155,6 +155,7 @@ public:
 	void import_legacy(legacy::setup_save_type& old);
 	void import_legacy(legacy::pc_record_type(& old)[6]);
 	
+	bool is_in_scenario() const;
 	bool is_alive() const;
 	bool is_friendly() const;
 	bool is_friendly(const iLiving& other) const;
