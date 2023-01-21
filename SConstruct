@@ -91,10 +91,10 @@ if platform == "darwin":
 		/usr/include
 		/usr/local/include
 	"""), FRAMEWORKPATH=Split("""
-		/System/Library/Frameworks
-		/Library/Frameworks
-		%s/Library/Frameworks
-	""" % os.environ['HOME']))
+		{SDKROOT}/System/Library/Frameworks
+		{SDKROOT}/Library/Frameworks
+		{HOME}/Library/Frameworks
+	""".format(HOME = os.environ['HOME'], SDKROOT = os.environ['SDKROOT'])))
 	def build_app_package(env, source, build_dir, info):
 		source_name = source[0].name
 		pkg_path = path.join(build_dir, "%s.app/Contents/" % source_name)
