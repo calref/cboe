@@ -991,6 +991,7 @@ static void handle_get_items(bool& did_something, bool& need_redraw, bool& need_
 }
 
 static void handle_victory() {
+	end_scenario = false;
 	// This is the point at which we need to transfer any exported graphics over to the party sheet.
 	univ.exportGraphics();
 	univ.exportSummons();
