@@ -698,6 +698,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 		"language", "author", "text", "ratings",
 		"flags", "creator", "game", "editor"
 	};
+	TiXmlBase::SetCondenseWhiteSpace(true);
 	for(elem = elem.begin(data.FirstChildElement()); elem != elem.end(); elem++) {
 		elem->GetValue(&type);
 		reqs.erase(type);
