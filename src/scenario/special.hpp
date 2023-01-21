@@ -98,6 +98,7 @@ public:
 	long time = 0;
 	eSpecCtxType node_type = eSpecCtxType::SCEN;
 	short node = -1;
+	bool is_valid() const;
 };
 
 // HAIL means called when initiating conversation.

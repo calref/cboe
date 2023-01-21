@@ -790,6 +790,7 @@ void cParty::writeTo(cTagFile& file) const {
 	}
 	// TODO: Why is each timer on its own page, anyway? It clearly doesn't need to be!
 	for(unsigned int i = 0; i < party_event_timers.size(); i++) {
+		if(!party_event_timers[i].is_valid()) continue;
 		auto& timer_page = file.add();
 		timer_page["TIMER"] << party_event_timers[i].time << int(party_event_timers[i].node_type) << party_event_timers[i].node;
 	}

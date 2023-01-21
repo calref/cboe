@@ -22,6 +22,12 @@
 #include "damage.hpp"
 #include "fields.hpp"
 
+bool cTimer::is_valid() const {
+	if(time < 0) return false;
+	if(node < 0) return false;
+	return true;
+}
+
 cSpecial::cSpecial(){
 	type = eSpecType::NONE;
 	sd1 = -1;
