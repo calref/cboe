@@ -857,7 +857,7 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 			else if(cPlayer* check = dynamic_cast<cPlayer*>(&target))
 				mage = check->skill(eSkill::MAGE_SPELLS), cleric = check->skill(eSkill::PRIEST_SPELLS);
 			if(mage + cleric > 0 && get_ran(1,0,1) == 1)
-				target.drain_sp(weap.abil_strength);
+				target.drain_sp(weap.abil_strength, true);
 			if(before > target.get_magic()) {
 				add_string_to_buf("  Blade drains energy.");
 				attacker.restore_sp(before / 3);
@@ -1854,7 +1854,7 @@ void fire_missile(location target) {
 					else if(cPlayer* check = dynamic_cast<cPlayer*>(victim))
 						mage = check->skill(eSkill::MAGE_SPELLS), cleric = check->skill(eSkill::PRIEST_SPELLS);
 					if(mage + cleric > 0 && get_ran(1,0,1) == 1)
-						victim->drain_sp(ammo.abil_strength);
+						victim->drain_sp(ammo.abil_strength, true);
 					if(before > victim->get_magic()) {
 						add_string_to_buf("  Missile drains energy.");
 						missile_firer.restore_sp((before - victim->get_magic()) / 3);

@@ -2232,7 +2232,7 @@ void general_spec(const runtime_state& ctx) {
 			break;
 		case eSpecType::REST:
 			check_mess = true;
-			do_rest(spec.ex1a, spec.ex1b, spec.ex1b);
+			do_rest(max(spec.ex1a, 0), max(spec.ex1b, 0), max(spec.ex1b, 0));
 			break;
 		case eSpecType::END_SCENARIO:
 			end_scenario = true;
@@ -2789,7 +2789,7 @@ void affect_spec(const runtime_state& ctx) {
 		case eSpecType::AFFECT_SP:
 			if(spec.ex1b == 0)
 				pc.restore_sp(spec.ex1a);
-			else pc.restore_sp(-spec.ex1a);
+			else pc.drain_sp(spec.ex1a, spec.ex1c);
 			if(cCreature* who = dynamic_cast<cCreature*>(&pc)) {
 				if(spec.ex1b == 0)
 					who->spell_note(43);

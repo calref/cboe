@@ -46,7 +46,7 @@ public:
 	void scare(int how_much);
 	void sleep(eStatus type, int how_much, int adj);
 	void avatar();
-	void drain_sp(int how_much);
+	void drain_sp(int how_much, bool allow_resist);
 	void restore_sp(int how_much);
 	
 	int get_health() const;

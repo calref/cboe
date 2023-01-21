@@ -46,7 +46,7 @@ public:
 	virtual void scare(int how_much) = 0;
 	virtual void sleep(eStatus type, int how_much, int adj) = 0; // Also handles paralysis, charm, and forcecage
 	virtual void avatar() = 0;
-	virtual void drain_sp(int how_much) = 0;
+	virtual void drain_sp(int how_much, bool allow_resist) = 0;
 	virtual void restore_sp(int how_much) = 0;
 	
 	virtual int get_health() const = 0;

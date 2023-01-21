@@ -561,9 +561,9 @@ void cParty::avatar() {
 		adven[i]->avatar();
 }
 
-void cParty::drain_sp(int how_much) {
+void cParty::drain_sp(int how_much, bool allow_resist) {
 	for(int i = 0; i < 6; i++)
-		adven[i]->drain_sp(how_much);
+		adven[i]->drain_sp(how_much, allow_resist);
 }
 
 void cParty::restore_sp(int how_much) {

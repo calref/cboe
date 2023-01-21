@@ -175,7 +175,7 @@ public:
 	void sleep(eStatus type, int how_much, int adj);
 	void clear_bad_status();
 	void avatar();
-	void drain_sp(int how_much);
+	void drain_sp(int how_much, bool allow_resist);
 	void restore_sp(int how_much);
 	
 	int get_health() const;

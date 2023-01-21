@@ -105,6 +105,7 @@ void cCreature::cure(int amt) {
 
 void cCreature::restore_sp(int amt) {
 	if(!is_alive()) return;
+	if(amt <= 0) return;
 	if(mp >= max_mp) return;
 	mp += amt;
 	if(mp > max_mp)
@@ -112,16 +113,17 @@ void cCreature::restore_sp(int amt) {
 	if(mp < 0) mp = 0;
 }
 
-void cCreature::drain_sp(int drain) {
+void cCreature::drain_sp(int drain, bool allow_resist) {
 	drain = magic_adjust(drain);
-	if(drain > 0) {
+	if(drain <= 0) return;
+	if(allow_resist) {
 		if(mu > 0 && mp > 4)
 			drain = min(mp, drain / 3);
 		else if(cl > 0 && mp > 10)
 			drain = min(mp, drain / 2);
-		mp -= drain;
-		if(mp < 0) mp = 0;
 	}
+	mp -= drain;
+	if(mp < 0) mp = 0;
 }
 
 void cCreature::poison(int how_much) {

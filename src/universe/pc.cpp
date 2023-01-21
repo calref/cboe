@@ -97,17 +97,18 @@ void cPlayer::avatar() {
 	status[eStatus::MARTYRS_SHIELD] = 8;
 }
 
-void cPlayer::drain_sp(int drain) {
+void cPlayer::drain_sp(int drain, bool allow_resist) {
+	if(drain <= 0) return;
 	int mu = skills[eSkill::MAGE_SPELLS];
 	int cl = skills[eSkill::PRIEST_SPELLS];
-	if(drain > 0) {
+	if(allow_resist) {
 		if(mu > 0 && cur_sp > 4)
 			drain = min(cur_sp, drain / 3);
 		else if(cl > 0 && cur_sp > 10)
 			drain = min(cur_sp, drain / 2);
-		cur_sp -= drain;
-		if(cur_sp < 0) cur_sp = 0;
 	}
+	cur_sp -= drain;
+	if(cur_sp < 0) cur_sp = 0;
 }
 
 void cPlayer::scare(int) {
@@ -300,6 +301,7 @@ void cPlayer::acid(int how_much) {
 
 void cPlayer::restore_sp(int amt) {
 	if(!is_alive()) return;
+	if(amt <= 0) return;
 	if(cur_sp >= max_sp) return;
 	cur_sp += amt;
 	if(cur_sp > max_sp)
