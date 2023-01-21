@@ -2954,7 +2954,6 @@ bool outd_move_party(location destination,bool forced) {
 
 bool town_move_party(location destination,short forced) {
 	bool keep_going = true;
-	ter_num_t ter;
 	bool check_f = false;
 	
 	if(univ.town.is_force_cage(univ.party.town_loc.x, univ.party.town_loc.y)) {
@@ -2969,9 +2968,8 @@ bool town_move_party(location destination,short forced) {
 	if(univ.debug_mode && univ.ghost_mode)
 		forced = keep_going = true;
 	
-	ter = univ.town->terrain(destination.x,destination.y);
-	
 	if(keep_going) {
+		ter_num_t ter = univ.town->terrain(destination.x,destination.y);
 		if(univ.party.in_boat >= 0) {
 			if((!is_blocked(destination)) && (!is_special(destination))
 				// If to bridge, exit if heading diagonal, keep going if heading horiz or vert
