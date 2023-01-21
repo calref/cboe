@@ -838,7 +838,7 @@ void cParty::writeTo(cTagFile& file) const {
 	if(special_notes.size() > 0) {
 		for(const cEncNote& note : special_notes) {
 			auto& note_page = file.add();
-			note_page["ENCNOTE"] << note.type << note.where;
+			note_page["ENCNOTE"] << note.type << note.where << note.in_scen;
 			note_page["STRING"] << note.the_str;
 		}
 	}
@@ -887,7 +887,7 @@ void cParty::readFrom(const cTagFile& file) {
 			page["WON"] >> scen_won;
 			page["PLAYED"] >> scen_played;
 			
-			page["STATUS"].extractSparse(status);
+			page["STATUS"].extractSparse(status); // Does this do anything?
 			page["EVENT"].extractSparse(key_times);
 			
 			if(page.contains("SPLIT_LEFT_IN")) {
@@ -1041,7 +1041,7 @@ void cParty::readFrom(const cTagFile& file) {
 			journal.push_back(entry);
 		} else if(page.getFirstKey() == "ENCNOTE") {
 			cEncNote note;
-			page["ENCNOTE"] >> note.type >> note.where;
+			page["ENCNOTE"] >> note.type >> note.where >> note.in_scen;
 			page["STRING"] >> note.the_str;
 			special_notes.push_back(note);
 		} else if(page.getFirstKey() == "TALKNOTE") {

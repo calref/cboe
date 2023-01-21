@@ -844,6 +844,18 @@ void cCurTown::readFrom(const cTagFile& file){
 			for(size_t x = 0; x < 64; x++) {
 				for(size_t y = 0; y < 64; y++) {
 					fields[x][y] = fields_tmp[x][y];
+					if(is_quickfire(x, y)) {
+						quickfire_present = true;
+					}
+				}
+			}
+			for(size_t x = 0; x < record()->max_dim; x++) {
+				for(size_t y = 0; y < record()->max_dim; y++) {
+					auto ter_num = record()->terrain(x,y);
+					const auto ter_info = univ.scenario.ter_types[ter_num];
+					if(ter_info.special == eTerSpec::CONVEYOR) {
+						belt_present = true;
+					}
 				}
 			}
 		} else if(page.getFirstKey() == "ITEM") {

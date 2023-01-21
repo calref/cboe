@@ -347,18 +347,18 @@ void cCreature::writeTo(cTagFile_Page& page) const {
 	page["TIME"] << monster_time;
 	page["TALK"] << personality;
 	page["DEATH"] << special_on_kill;
+	page["TALK"] << special_on_talk;
 	page["FACE"] << facial_pic;
 	page["TARGET"] << target;
-	page["TARGLOC"] << targ_loc.x << targ_loc.y;
 	page["STATUS"].encodeSparse(status);
-	page["CURHP"] << health << '\n';
-	page["CURSP"] << mp << '\n';
-	page["MORALE"] << morale << '\n';
-	page["DIRECTION"] << direction << '\n';
-	// TODO: Should we be saving "max_mp" and/or "m_morale"?
+	page["HEALTH"] << health << m_health;
+	page["MANA"] << mp << max_mp;
+	page["MORALE"] << morale << m_morale;
+	page["DIRECTION"] << direction;
 }
 
 void cCreature::readFrom(const cTagFile_Page& page) {
+	targ_loc = location(0,0);
 	page["MONSTER"] >> number;
 	page["ATTITUDE"] >> attitude;
 	page["STARTATT"] >> start_attitude;
@@ -373,12 +373,12 @@ void cCreature::readFrom(const cTagFile_Page& page) {
 	page["TIME"] >> monster_time;
 	page["TALK"] >> personality;
 	page["DEATH"] >> special_on_kill;
+	page["TALK"] >> special_on_talk;
 	page["FACE"] >> facial_pic;
 	page["TARGET"] >> target;
-	page["TARGLOC"] >> targ_loc.x >> targ_loc.y;
 	page["STATUS"].extractSparse(status);
-	page["CURHP"] >> health;
-	page["CURSP"] >> mp;
+	page["HEALTH"] >> health >> m_health;
+	page["MANA"] >> mp >> max_mp;
 	page["MORALE"] >> morale;
 	page["DIRECTION"] >> direction;
 }

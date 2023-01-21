@@ -95,25 +95,7 @@ void finish_load_party(){
 	build_outdoors();
 	erase_out_specials();
 	
-	if(!town_restore) {
-		center = univ.party.out_loc;
-	}
-	else {
-		for(int i = 0; i < univ.town.monst.size(); i++){
-			univ.town.monst[i].targ_loc.x = 0;
-			univ.town.monst[i].targ_loc.y = 0;
-		}
-		
-		// Set up field booleans
-		for(int j = 0; j < univ.town->max_dim; j++)
-			for(int k = 0; k < univ.town->max_dim; k++) {
-				if(univ.town.is_quickfire(j,k))
-					univ.town.quickfire_present = true;
-				if(univ.scenario.ter_types[univ.town->terrain(j,k)].special == eTerSpec::CONVEYOR)
-					univ.town.belt_present = true;
-			}
-		center = univ.party.town_loc;
-	}
+	center = town_restore ? univ.party.town_loc :  univ.party.out_loc;
 	
 	redraw_screen(REFRESH_ALL);
 	univ.cur_pc = first_active_pc();

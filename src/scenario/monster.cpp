@@ -791,13 +791,18 @@ void cMonster::writeTo(cTagFile_Page& page) const {
 	page["RACE"] << m_type;
 	page["TREASURE"] << treasure;
 	page["CORPSEITEM"] << corpse_item << corpse_item_chance;
-	page["IMMUNE"].encodeSparse(resist, 100);
+	page["IMMUNE"].encodeSparse(resist);
 	page["SIZE"] << x_width << y_width;
 	page["ATTITUDE"] << default_attitude;
 	page["SUMMON"] << summon_type;
 	page["PORTRAIT"] << default_facial_pic;
 	page["PICTURE"] << picture_num;
 	page["SOUND"] << ambient_sound;
+	if(mindless) page.add("MINDLESS");
+	if(invuln) page.add("INVULNERABLE");
+	if(invisible) page.add("INVISIBLE");
+	if(guard) page.add("GUARD");
+	if(amorphous) page.add("AMORPHOUS");
 }
 
 bool uAbility::writeTo(eMonstAbil key, cTagFile_Page &page) const {
@@ -825,16 +830,17 @@ bool uAbility::writeTo(eMonstAbil key, cTagFile_Page &page) const {
 				page["EXTRA"] << gen.stat;
 			break;
 		case eMonstAbilCat::RADIATE:
-			page["TYPE"] << radiate.type;
+			page["TYPE"] << radiate.type << radiate.pat;
 			page["CHANCE"] << radiate.chance;
 			break;
 		case eMonstAbilCat::SUMMON:
 			page["TYPE"] << summon.type << summon.what;
 			page["HOWMANY"] << summon.min << summon.max;
+			page["DURATION"] << summon.len;
 			page["CHANCE"] << summon.chance;
 			break;
 		case eMonstAbilCat::SPECIAL:
-			page["EXTRA"] << special.extra1 << special.extra2;
+			page["EXTRA"] << special.extra1 << special.extra2 << special.extra3;
 			break;
 	}
 	return true;
@@ -845,7 +851,6 @@ void cMonster::readFrom(const cTagFile_Page& page) {
 	see_spec = -1;
 	page["MONSTER"] >> m_name;
 	page["SIZE"] >> x_width >> y_width;
-	// TODO: Isn't the default immunity supposed to be 100? Is that handled?
 	page["IMMUNE"].extractSparse(resist);
 	page["RACE"] >> m_type;
 	page["CORPSEITEM"] >> corpse_item >> corpse_item_chance;
@@ -862,6 +867,11 @@ void cMonster::readFrom(const cTagFile_Page& page) {
 	page["PRIEST"] >> cl;
 	page["TREASURE"] >> treasure;
 	page["SUMMON"] >> summon_type;
+	mindless = page.contains("MINDLESS");
+	invuln = page.contains("INVULNERABLE");
+	invisible = page.contains("INVISIBLE");
+	guard = page.contains("GUARD");
+	amorphous = page.contains("AMORPHOUS");
 	for(int i = 0; i < page["ATTACK"].size(); i++) {
 		size_t which_atk;
 		auto tmp = page["ATTACK"] >> which_atk;
@@ -898,16 +908,17 @@ eMonstAbil uAbility::readFrom(const cTagFile_Page& page) {
 				page["EXTRA"] >> gen.stat;
 			break;
 		case eMonstAbilCat::RADIATE:
-			page["TYPE"] >> radiate.type;
+			page["TYPE"] >> radiate.type >> radiate.pat;
 			page["CHANCE"] >> radiate.chance;
 			break;
 		case eMonstAbilCat::SUMMON:
 			page["TYPE"] >> summon.type >> summon.what;
 			page["HOWMANY"] >> summon.min >> summon.max;
+			page["DURATION"] >> summon.len;
 			page["CHANCE"] >> summon.chance;
 			break;
 		case eMonstAbilCat::SPECIAL:
-			page["EXTRA"] >> special.extra1 >> special.extra2;
+			page["EXTRA"] >> special.extra1 >> special.extra2 >> special.extra3;
 			break;
 	}
 	return key;

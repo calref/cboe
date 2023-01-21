@@ -97,7 +97,6 @@ public:
 	short light_level;
 	location outdoor_corner;
 	location i_w_c;
-	// TODO: Does this duplicate cCurTown::p_loc? If not, why not?
 	location out_loc, town_loc;
 	location loc_in_sec;
 	short town_num;
