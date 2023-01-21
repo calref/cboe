@@ -60,6 +60,7 @@
 		911A14041B8FB00300900FD9 /* talk_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C2A6EE1B8FAA8E00346948 /* talk_read.cpp */; };
 		911A14051B8FB00600900FD9 /* out_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C2A6ED1B8FA9FB00346948 /* out_read.cpp */; };
 		911DD995297C56F500205EBC /* string_quote.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 911DD994297C56F500205EBC /* string_quote.cpp */; };
+		911DD9D5297C909D00205EBC /* tagfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919F2E71287E4E0500F47750 /* tagfile.cpp */; };
 		911F2D991B98F43B00E3102E /* libCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911F2D981B98F43B00E3102E /* libCommon.a */; };
 		911F2D9A1B98F43C00E3102E /* libCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911F2D981B98F43B00E3102E /* libCommon.a */; };
 		911F2D9B1B98F43C00E3102E /* libCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911F2D981B98F43B00E3102E /* libCommon.a */; };
@@ -205,7 +206,6 @@
 		919DDC0D19007517003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0E1900751C003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0F1900751F003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
-		919F2E7E287E529600F47750 /* tagfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919F2E71287E4E0500F47750 /* tagfile.cpp */; };
 		919F2E9A287E5BB700F47750 /* tagfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919F2E99287E5BB700F47750 /* tagfile.cpp */; };
 		919F2ECA287F023100F47750 /* SFML.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
 		919F2ECB287F023100F47750 /* sfml-audio.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
@@ -2012,7 +2012,6 @@
 				919CC25E1B37736900273FDA /* universe.cpp in Sources */,
 				919CC2731B3773FD00273FDA /* fileio_party.cpp in Sources */,
 				919CC2801B37744800273FDA /* pc.editors.cpp in Sources */,
-				919F2E7E287E529600F47750 /* tagfile.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2028,6 +2027,7 @@
 				919CC2561B37733E00273FDA /* shop.cpp in Sources */,
 				919CC2571B37734000273FDA /* special.cpp in Sources */,
 				919CC2581B37734700273FDA /* spell.cpp in Sources */,
+				911DD9D5297C909D00205EBC /* tagfile.cpp in Sources */,
 				919CC2591B37734C00273FDA /* talking.cpp in Sources */,
 				919CC25A1B37735100273FDA /* terrain.cpp in Sources */,
 				919CC25C1B37735C00273FDA /* town.cpp in Sources */,
