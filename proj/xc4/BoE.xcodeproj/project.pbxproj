@@ -222,6 +222,9 @@
 		91B3753A2969F57B008B0324 /* tagfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B375392969F57B008B0324 /* tagfile.cpp */; };
 		91B3753D29736417008B0324 /* keymods.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3753B29736417008B0324 /* keymods.cpp */; };
 		91B3753E29736417008B0324 /* keymods.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 91B3753C29736417008B0324 /* keymods.hpp */; };
+		91B37545297C8ABC008B0324 /* dialogs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3753F297C8ABB008B0324 /* dialogs.cpp */; };
+		91B37549297C8ABC008B0324 /* string_quote.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B37543297C8ABC008B0324 /* string_quote.cpp */; };
+		91B3754A297C8ABC008B0324 /* vector2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B37544297C8ABC008B0324 /* vector2d.cpp */; };
 		91B3EF1F0F969C9C00BF5B67 /* BoECharEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EF110F969BD300BF5B67 /* BoECharEd.icns */; };
 		91B3EF470F969F1700BF5B67 /* BoEScenEd.icns in Resources */ = {isa = PBXBuildFile; fileRef = 91B3EEDB0F969BA700BF5B67 /* BoEScenEd.icns */; };
 		91B3EF480F969F2300BF5B67 /* pc.main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EF050F969BD300BF5B67 /* pc.main.cpp */; };
@@ -722,6 +725,9 @@
 		91B375392969F57B008B0324 /* tagfile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tagfile.cpp; sourceTree = "<group>"; };
 		91B3753B29736417008B0324 /* keymods.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = keymods.cpp; sourceTree = "<group>"; };
 		91B3753C29736417008B0324 /* keymods.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = keymods.hpp; sourceTree = "<group>"; };
+		91B3753F297C8ABB008B0324 /* dialogs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dialogs.cpp; sourceTree = "<group>"; };
+		91B37543297C8ABC008B0324 /* string_quote.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = string_quote.cpp; sourceTree = "<group>"; };
+		91B37544297C8ABC008B0324 /* vector2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vector2d.cpp; sourceTree = "<group>"; };
 		91B3E8A50F938FFE00BF5B67 /* boe.consts.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.consts.hpp; sourceTree = "<group>"; };
 		91B3EED90F969BA700BF5B67 /* BoEScenEd-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoEScenEd-Info.plist"; path = "../../pkg/mac/BoEScenEd-Info.plist"; sourceTree = SOURCE_ROOT; };
 		91B3EEDB0F969BA700BF5B67 /* BoEScenEd.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BoEScenEd.icns; path = icons/mac/BoEScenEd.icns; sourceTree = "<group>"; };
@@ -1472,6 +1478,7 @@
 			isa = PBXGroup;
 			children = (
 				91CC17391B421CA0003D9A69 /* catch.cpp */,
+				91B3753F297C8ABB008B0324 /* dialogs.cpp */,
 				91C763D81B4C4BB30086D879 /* enums.cpp */,
 				91E128E51BC19DA400C8BE1D /* init.cpp */,
 				919B13A31BBD8849009905A4 /* item_legacy.cpp */,
@@ -1490,6 +1497,7 @@
 				91CC173A1B421CA0003D9A69 /* scen_read.cpp */,
 				91CC173B1B421CA0003D9A69 /* scen_write.cpp */,
 				919B13A51BBDE985009905A4 /* spec_legacy.cpp */,
+				91B37543297C8ABC008B0324 /* string_quote.cpp */,
 				91B375392969F57B008B0324 /* tagfile.cpp */,
 				9176FEC41D550EFD006EF694 /* talk_legacy.cpp */,
 				91C2A6EE1B8FAA8E00346948 /* talk_read.cpp */,
@@ -1500,6 +1508,7 @@
 				9176FEC51D550EFE006EF694 /* town_legacy.cpp */,
 				91C2A6EC1B8FA91400346948 /* town_read.cpp */,
 				91E381451B97671E00F69B81 /* town_write.cpp */,
+				91B37544297C8ABC008B0324 /* vector2d.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -2087,6 +2096,9 @@
 				91C548F91D8B338700FE6A7B /* pc.cpp in Sources */,
 				91B375372969F548008B0324 /* tagfile.cpp in Sources */,
 				91B3753A2969F57B008B0324 /* tagfile.cpp in Sources */,
+				91B37545297C8ABC008B0324 /* dialogs.cpp in Sources */,
+				91B37549297C8ABC008B0324 /* string_quote.cpp in Sources */,
+				91B3754A297C8ABC008B0324 /* vector2d.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
