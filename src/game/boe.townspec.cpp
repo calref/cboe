@@ -57,7 +57,7 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 		int i = disarmer.stat_adj(eSkill::DEXTERITY);
 		i += disarmer.get_prot_level(eItemAbil::THIEVING) / 2;
 		skill = minmax(0,20,disarmer.skill(eSkill::DISARM_TRAPS) +
-					   + disarmer.skill(eSkill::LUCK) / 2 + 1 - univ.town.difficulty + 2 * i);
+					   + disarmer.skill(eSkill::LUCK) / 2 + 1 - univ.town->difficulty + 2 * i);
 		
 		r1 = get_ran(1,1,100) + diff;
 		// Nimble?
@@ -76,21 +76,21 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 		case TRAP_BLADE:
 			for(short i = 0; i < num_hits; i++) {
 				add_string_to_buf("  A knife flies out!");
-				r1 = get_ran(2 + univ.town.difficulty / 14,1,10);
+				r1 = get_ran(2 + univ.town->difficulty / 14,1,10);
 				damage_pc(disarmer,r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
 			}
 			break;
 			
 		case TRAP_DART:
 			add_string_to_buf("  A dart flies out.");
-			r1 = 3 + univ.town.difficulty / 14;
+			r1 = 3 + univ.town->difficulty / 14;
 			r1 = r1 + trap_level * 2;
 			disarmer.poison(r1);
 			break;
 			
 		case TRAP_GAS:
 			add_string_to_buf("  Poison gas pours out.");
-			r1 = 2 + univ.town.difficulty / 14;
+			r1 = 2 + univ.town->difficulty / 14;
 			r1 = r1 + trap_level * 2;
 			univ.party.poison(r1);
 			break;
@@ -98,14 +98,14 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 		case TRAP_EXPLOSION:
 			for(short i = 0; i < num_hits; i++) {
 				add_string_to_buf("  There is an explosion.");
-				r1 = get_ran(3 + univ.town.difficulty / 13,1,8);
+				r1 = get_ran(3 + univ.town->difficulty / 13,1,8);
 				hit_party(r1,eDamageType::FIRE);
 			}
 			break;
 			
 		case TRAP_SLEEP_RAY:
 			add_string_to_buf("  A purple ray flies out.");
-			r1 = 200 + univ.town.difficulty * 100;
+			r1 = 200 + univ.town->difficulty * 100;
 			r1 = r1 + trap_level * 400;
 			// TODO: It says sleep ray but is actually paralysis ray?
 			disarmer.sleep(eStatus::PARALYZED, r1, 50);
@@ -135,14 +135,14 @@ bool run_trap(short pc_num,eTrapType trap_type,short trap_level,short diff) {
 			
 		case TRAP_DISEASE:
 			add_string_to_buf("  You prick your finger.");
-			r1 = 3 + univ.town.difficulty / 14;
+			r1 = 3 + univ.town->difficulty / 14;
 			r1 = r1 + trap_level * 2;
 			disarmer.disease(r1);
 			break;
 			
 		case TRAP_DISEASE_ALL:
 			add_string_to_buf("  A foul substance sprays out.");
-			r1 = 2 + univ.town.difficulty / 14;
+			r1 = 2 + univ.town->difficulty / 14;
 			r1 = r1 + trap_level * 2;
 			univ.party.disease(r1);
 			break;

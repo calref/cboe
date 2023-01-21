@@ -887,7 +887,7 @@ static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 		increase_age();
 		do_monsters();
 		do_monster_turn();
-		int make_wand = get_ran(1,1,160 - univ.town.difficulty);
+		int make_wand = get_ran(1,1,160 - univ.town->difficulty);
 		if(make_wand == 10)
 			create_wand_monst();
 		for(int j = 0; j < 6; j++)
@@ -1491,7 +1491,7 @@ void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 					}
 		}
 		if(overall_mode == MODE_TOWN) {
-			if(get_ran(1,1,160 - univ.town.difficulty + univ.party.less_wm * 200) == 2)
+			if(get_ran(1,1,160 - univ.town->difficulty + univ.party.less_wm * 200) == 2)
 				create_wand_monst();
 		}
 	}

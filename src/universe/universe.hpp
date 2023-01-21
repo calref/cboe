@@ -43,7 +43,6 @@ class cCurTown {
 public:
 	bool quickfire_present = false, belt_present = false;
 	// formerly current_town_type
-	short difficulty;
 	cPopulation monst;
 	
 	std::vector<cItem> items; // formerly town_item_list type

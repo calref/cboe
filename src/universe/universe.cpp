@@ -29,8 +29,9 @@ void cCurOut::import_legacy(legacy::out_info_type& old){
 
 void cCurTown::import_legacy(legacy::current_town_type& old){
 	univ.party.town_num = old.town_num;
-	difficulty = old.difficulty;
 	record()->import_legacy(old.town);
+	// TODO: Is this right? Was current_town_type::difficulty just a mirror of town difficulty?
+	record()->difficulty = old.difficulty;
 	for(int i = 0; i < 64; i++)
 		for(int j = 0; j < 64; j++)
 			fields[i][j] = old.explored[i][j];
@@ -824,7 +825,7 @@ void cCurOut::readFrom(std::istream& file) {
 void cCurTown::writeTo(cTagFile& file) const {
 	auto& page = file.add();
 	page["TOWN"] << univ.party.town_num;
-	page["DIFFICULTY"] << difficulty;
+	page["DIFFICULTY"] << record()->difficulty;
 	if(monst.hostile) page.add("HOSTILE");
 	page["AT"] << univ.party.town_loc.x << univ.party.town_loc.y;
 	for(size_t i = 0; i < items.size(); i++) {
@@ -851,7 +852,7 @@ void cCurTown::readFrom(const cTagFile& file){
 	for(const auto& page : file) {
 		if(page.index() == 0) {
 			page["TOWN"] >> univ.party.town_num;
-			page["DIFFICULTY"] >> difficulty;
+			page["DIFFICULTY"] >> record()->difficulty;
 			monst.hostile = page.contains("HOSTILE");
 			page["AT"] >> univ.party.town_loc.x >> univ.party.town_loc.y;
 		} else if(page.getFirstKey() == "FIELDS" || page.getFirstKey() == "TERRAIN") {
@@ -982,7 +983,6 @@ void cCurTown::copy(const cCurTown& other) {
 	cur_talk_loaded = other.cur_talk_loaded;
 	quickfire_present = other.quickfire_present;
 	belt_present = other.belt_present;
-	difficulty = other.difficulty;
 	monst = other.monst;
 	items = other.items;
 	fields = other.fields;
@@ -992,7 +992,6 @@ void cCurTown::swap(cCurTown& other) {
 	std::swap(cur_talk_loaded, other.cur_talk_loaded);
 	std::swap(quickfire_present, other.quickfire_present);
 	std::swap(belt_present, other.belt_present);
-	std::swap(difficulty, other.difficulty);
 	monst.swap(other.monst);
 	std::swap(items, other.items);
 	fields.swap(other.fields);
