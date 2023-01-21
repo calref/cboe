@@ -77,6 +77,9 @@
     <ClCompile Include="..\..\..\test\spec_legacy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\test\string_quote.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\test\tagfile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

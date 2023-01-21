@@ -59,6 +59,7 @@
 		911A14031B8FAFC600900FD9 /* town_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C2A6EC1B8FA91400346948 /* town_read.cpp */; };
 		911A14041B8FB00300900FD9 /* talk_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C2A6EE1B8FAA8E00346948 /* talk_read.cpp */; };
 		911A14051B8FB00600900FD9 /* out_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C2A6ED1B8FA9FB00346948 /* out_read.cpp */; };
+		911DD995297C56F500205EBC /* string_quote.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 911DD994297C56F500205EBC /* string_quote.cpp */; };
 		911F2D991B98F43B00E3102E /* libCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911F2D981B98F43B00E3102E /* libCommon.a */; };
 		911F2D9A1B98F43C00E3102E /* libCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911F2D981B98F43B00E3102E /* libCommon.a */; };
 		911F2D9B1B98F43C00E3102E /* libCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911F2D981B98F43B00E3102E /* libCommon.a */; };
@@ -616,6 +617,7 @@
 		910BBAB50FB91A26001E34EA /* field.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = field.cpp; sourceTree = "<group>"; };
 		910BBAB80FB91ADB001E34EA /* message.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = message.hpp; sourceTree = "<group>"; };
 		910BBAB90FB91ADB001E34EA /* message.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = message.cpp; sourceTree = "<group>"; };
+		911DD994297C56F500205EBC /* string_quote.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = string_quote.cpp; sourceTree = "<group>"; };
 		911F2D981B98F43B00E3102E /* libCommon.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCommon.a; path = lib/libCommon.a; sourceTree = "<group>"; };
 		911F2D9D1B98F44700E3102E /* libCommon-Party.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libCommon-Party.a"; path = "lib/libCommon-Party.a"; sourceTree = "<group>"; };
 		911F2DA21B98FF2300E3102E /* cursors */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cursors; sourceTree = "<group>"; };
@@ -1540,6 +1542,7 @@
 				9176FEC51D550EFE006EF694 /* town_legacy.cpp */,
 				91C2A6EC1B8FA91400346948 /* town_read.cpp */,
 				91E381451B97671E00F69B81 /* town_write.cpp */,
+				911DD994297C56F500205EBC /* string_quote.cpp */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -2131,6 +2134,7 @@
 				91430438296C0088003A3967 /* vector2d.cpp in Sources */,
 				91C763DD1B4EE7950086D879 /* map_write.cpp in Sources */,
 				91EF27731B693D3900666469 /* ter_read.cpp in Sources */,
+				911DD995297C56F500205EBC /* string_quote.cpp in Sources */,
 				91EF27751B693D4800666469 /* ter_write.cpp in Sources */,
 				91EF27771B693D5500666469 /* item_read.cpp in Sources */,
 				91EF27791B693D5F00666469 /* item_write.cpp in Sources */,
