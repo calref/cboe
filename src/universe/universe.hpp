@@ -140,7 +140,6 @@ class cCurOut {
 public:
 	static const int max_dim = 96;
 	static const int half_dim = max_dim / 2;
-	char expl[max_dim][max_dim]; // formerly out_info_type
 	ter_num_t out[max_dim][max_dim];
 	unsigned char out_e[max_dim][max_dim];
 	

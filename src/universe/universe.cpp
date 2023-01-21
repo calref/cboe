@@ -24,7 +24,7 @@
 void cCurOut::import_legacy(legacy::out_info_type& old){
 	for(int i = 0; i < 96; i++)
 		for(int j = 0; j < 96; j++)
-			expl[i][j] = old.expl[i][j];
+			out_e[i][j] = old.expl[i][j];
 }
 
 void cCurTown::import_legacy(legacy::current_town_type& old){
@@ -803,7 +803,6 @@ ter_num_t& cCurOut::operator [] (location loc) {
 }
 
 void cCurOut::writeTo(std::ostream& file) const {
-	writeArray(file, expl, max_dim, max_dim);
 	writeArray(file, out, max_dim, max_dim);
 	writeArray(file, out_e, max_dim, max_dim);
 //	file << "OUTDOORS 0 0" << std::endl;
@@ -818,7 +817,6 @@ void cCurOut::writeTo(std::ostream& file) const {
 }
 
 void cCurOut::readFrom(std::istream& file) {
-	readArray(file, expl, max_dim, max_dim);
 	readArray(file, out, max_dim, max_dim);
 	readArray(file, out_e, max_dim, max_dim);
 }
@@ -969,7 +967,6 @@ void cUniverse::swap(cUniverse& other) {
 }
 
 void cCurOut::copy(const cCurOut& other) {
-	memcpy(expl, other.expl, sizeof(expl));
 	memcpy(out, other.out, sizeof(out));
 	memcpy(out_e, other.out_e, sizeof(out_e));
 }
