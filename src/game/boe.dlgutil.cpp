@@ -810,7 +810,7 @@ void handle_talk_event(location p) {
 				talk_end_forced = true;
 				univ.party.gold -= a;
 				put_pc_screen();
-				do_rest(700, 30 & b, 25 * b);
+				do_rest(700, 30 * b, 25 * b);
 				univ.party.town_loc.x = c;
 				univ.party.town_loc.y = d;
 				center = univ.party.town_loc;
