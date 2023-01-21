@@ -2,7 +2,7 @@
 Import("env platform")
 
 if str(platform) != "darwin":
-	print "Error: Building for", str(platform), "but trying to create a Mac install package"
+	print("Error: Building for", str(platform), "but trying to create a Mac install package")
 
 env.Command('OBoE.dmg', "#build/Blades of Exile", 
 	action='hdiutil create -fs HFS+ -volname "Blades of Exile" -srcfolder $SOURCE $TARGET')
