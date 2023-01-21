@@ -69,6 +69,12 @@ public:
 			assign_from_container(list);
 			return *this;
 		}
+		void fill(Type val) {
+			row_ref& me = *this;
+			for(int i = 0; i < ref.width(); i++) {
+				me[i] = val;
+			}
+		}
 		// Seems like defining a move assignment operator deletes the copy constructor. Don't want that.
 		row_ref(const row_ref&) = default;
 	};
@@ -116,6 +122,12 @@ public:
 		col_ref operator=(const Iterable& list) {
 			assign_from_container(list);
 			return *this;
+		}
+		void fill(Type val) {
+			col_ref& me = *this;
+			for(int i = 0; i < ref.width(); i++) {
+				me[i] = val;
+			}
 		}
 		// Seems like defining a move assignment operator deletes the copy constructor. Don't want that.
 		col_ref(const col_ref&) = default;
@@ -243,6 +255,13 @@ public:
 	}
 	bool empty() const {
 		return data.empty();
+	}
+	void fill(Type val) {
+		for(size_t x = 0; x < w; x++) {
+			for(size_t y = 0; y < h; y++) {
+				(*this)[x][y] = val;
+			}
+		}
 	}
 	vector2d() : w(0), h(0) {}
 	vector2d(size_t w, size_t h) : vector2d() {

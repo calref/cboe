@@ -39,6 +39,7 @@ class cCurTown {
 	cUniverse& univ;
 	cTown* arena;
 	cTown*const record() const;
+	vector2d<unsigned long> fields;
 public:
 	bool quickfire_present = false, belt_present = false;
 	// formerly current_town_type
@@ -46,8 +47,6 @@ public:
 	cPopulation monst;
 	
 	std::vector<cItem> items; // formerly town_item_list type
-	
-	unsigned long fields[64][64];
 	
 	void import_legacy(legacy::current_town_type& old);
 	void import_legacy(legacy::town_item_list& old);
@@ -62,6 +61,9 @@ public:
 	bool prep_talk(short which); // Prepare for loading specified speech, returning true if already loaded
 	void prep_arena(); // Set up for a combat arena
 	void place_preset_fields();
+	void update_fields(const vector2d<unsigned short>& setup);
+	void save_setup(vector2d<unsigned short>& setup) const;
+	bool is_summon_safe(short x, short y) const;
 	
 	bool is_explored(short x, short y) const;
 	bool is_force_wall(short x, short y) const;

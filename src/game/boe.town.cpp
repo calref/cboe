@@ -75,7 +75,6 @@ void start_town_mode(short which_town, short entry_dir) {
 	short at_which_save_slot,former_town;
 	bool monsters_loaded = false,town_toast = false;
 	location loc;
-	unsigned short temp;
 	bool play_town_sound = false;
 	
 	if(town_force < 200)
@@ -230,15 +229,9 @@ void start_town_mode(short which_town, short entry_dir) {
 				}
 			}
 			
-			for(short j = 0; j < univ.town->max_dim; j++)
-				for(short k = 0; k < univ.town->max_dim; k++) { // now load in saved setup,
-					// except that pushable things restore to orig locs
-					// TODO: THIS IS A TEMPORARY HACK TO GET i VALUE
-					int i = std::find_if(univ.party.creature_save.begin(), univ.party.creature_save.end(), [&pop](cPopulation& p) {return &p == &pop;}) - univ.party.creature_save.begin();
-					temp = univ.party.setup[i][j][k] << 8;
-					temp &= ~(OBJECT_CRATE | OBJECT_BARREL | OBJECT_BLOCK);
-					univ.town.fields[j][k] |= temp;
-				}
+			// TODO: THIS IS A TEMPORARY HACK TO GET i VALUE
+			int i = std::find_if(univ.party.creature_save.begin(), univ.party.creature_save.end(), [&pop](cPopulation& p) {return &p == &pop;}) - univ.party.creature_save.begin();
+			univ.town.update_fields(univ.party.setup[i]);
 		}
 	
 	if(!monsters_loaded) {
@@ -547,16 +540,13 @@ location end_town_mode(short switching_level,location destination) { // returns 
 				pop = univ.town.monst;
 				// TODO: THIS IS A TEMPORARY HACK TO GET i VALUE
 				int i = std::find_if(univ.party.creature_save.begin(), univ.party.creature_save.end(), [&pop](cPopulation& p) {return &p == &pop;}) - univ.party.creature_save.begin();
-				for(short j = 0; j < univ.town->max_dim; j++)
-					for(short k = 0; k < univ.town->max_dim; k++)
-						univ.party.setup[i][j][k] = (univ.town.fields[j][k] & 0xff00) >> 8;
+				univ.town.save_setup(univ.party.setup[i]);
 				data_saved = true;
+				break;
 			}
 		if(!data_saved) {
 			univ.party.creature_save[univ.party.at_which_save_slot] = univ.town.monst;
-			for(short j = 0; j < univ.town->max_dim; j++)
-				for(short k = 0; k < univ.town->max_dim; k++)
-					univ.party.setup[univ.party.at_which_save_slot][j][k] = (univ.town.fields[j][k] & 0xff00) >> 8;
+			univ.town.save_setup(univ.party.setup[univ.party.at_which_save_slot]);
 			univ.party.at_which_save_slot = (univ.party.at_which_save_slot == 3) ? 0 : univ.party.at_which_save_slot + 1;
 		}
 		
@@ -930,7 +920,6 @@ void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
 	
 	for(short i = 0; i < 48; i++)
 		for(short j = 0; j < 48; j++) {
-			univ.town.fields[i][j] = 0;
 			if((j <= 8) || (j >= 35) || (i <= 8) || (i >= 35))
 				univ.town->terrain(i,j) = 90;
 			else univ.town->terrain(i,j) = ter_base[arena];

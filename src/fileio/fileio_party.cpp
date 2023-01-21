@@ -347,17 +347,10 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 				showError("Loading Blades of Exile save file failed.");
 				return false;
 			}
-			uint16_t magic;
-			fin.read((char*)&magic, 2);
-			fin.read((char*)&univ.party.setup, sizeof(univ.party.setup));
-			if(magic == 0x0E0B) { // should be 0x0B0E!
-				for(auto& i : univ.party.setup) {
-					for(auto& j : i) {
-						for(auto& k : j) {
-							flip_short(reinterpret_cast<int16_t*>(&k));
-						}
-					}
-				}
+			file.readFrom(fin);
+			auto& page = file[0];
+			for(size_t i = 0; i < univ.party.setup.size(); i++) {
+				page[std::to_string(i)].extract(univ.party.setup[i]);
 			}
 		}
 		
@@ -461,9 +454,13 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 
 		{
 			std::ostream& fout = partyOut.newFile("save/setup.dat");
-			static uint16_t magic = 0x0B0E;
-			fout.write((char*)&magic, 2);
-			fout.write((char*)&univ.party.setup, sizeof(univ.party.setup));
+			auto& page = file.add();
+			page.add("OBOE");
+			for(size_t i = 0; i < univ.party.setup.size(); i++) {
+				page[std::to_string(i)].encode(univ.party.setup[i]);
+			}
+			file.writeTo(fout);
+			file.clear();
 		}
 
 		if(univ.party.town_num < 200) {

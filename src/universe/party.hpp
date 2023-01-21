@@ -129,7 +129,7 @@ public:
 private:
 	std::array<std::unique_ptr<cPlayer>,6> adven;
 public:
-	unsigned short setup[4][64][64]; // formerly setup_save_type
+	std::array<vector2d<unsigned short>, 4> setup; // formerly setup_save_type
 	std::array<std::vector<cItem>,3> stored_items; // formerly stored_items_list_type
 	
 	std::vector<cMonster> summons; // an array of monsters which can be summoned by the party's items yet don't originate from this scenario

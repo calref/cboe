@@ -108,10 +108,8 @@ cTown& cCurTown::operator * (){
 
 void cCurTown::place_preset_fields() {
 	// Initialize barriers, etc. Note non-sfx gets forgotten if this is a town recently visited.
-	for(int i = 0; i < 64; i++)
-		for(int j = 0; j < 64; j++) {
-			fields[i][j] = 0;
-		}
+	fields.resize(record()->max_dim, record()->max_dim);
+	fields.fill(0);
 	for(size_t i = 0; i < record()->preset_fields.size(); i++) {
 		switch(record()->preset_fields[i].type){
 			case OBJECT_BLOCK:
@@ -176,6 +174,26 @@ void cCurTown::place_preset_fields() {
 	}
 }
 
+void cCurTown::update_fields(const vector2d<unsigned short>& setup) {
+	for(short i = 0; i < record()->max_dim && i < setup.width(); i++) {
+		for(short j = 0; j < record()->max_dim && j < setup.height(); j++) {
+			// except that pushable things restore to orig locs
+			unsigned short temp = setup[i][j] << 8;
+			temp &= ~(OBJECT_CRATE | OBJECT_BARREL | OBJECT_BLOCK);
+			univ.town.fields[i][j] |= temp;
+		}
+	}
+}
+
+void cCurTown::save_setup(vector2d<unsigned short>& setup) const {
+	setup.resize(record()->max_dim, record()->max_dim);
+	for(short i = 0; i < record()->max_dim; i++) {
+		for(short j = 0; j < record()->max_dim; j++) {
+			setup[i][j] = fields[i][j] >> 8;
+		}
+	}
+}
+
 cSpeech& cCurTown::cur_talk() {
 	// Make sure we actually have a valid speech stored
 	return univ.scenario.towns[cur_talk_loaded]->talking;
@@ -190,6 +208,8 @@ bool cCurTown::prep_talk(short which) {
 void cCurTown::prep_arena() {
 	if(arena != nullptr) delete arena;
 	arena = new cTown(univ.scenario, AREA_MEDIUM);
+	fields.resize(AREA_MEDIUM, AREA_MEDIUM);
+	fields.fill(0);
 }
 
 cCurTown::~cCurTown() {
@@ -199,6 +219,13 @@ cCurTown::~cCurTown() {
 cTown*const cCurTown::record() const {
 	if(univ.party.town_num == 200) return arena;
 	return univ.scenario.towns[univ.party.town_num];
+}
+
+bool cCurTown::is_summon_safe(short x, short y) const {
+	if(x > record()->max_dim || y > record()->max_dim) return false;
+	// Here 254 indicates the low byte of the town fields, minus explored spaces (which is lowest bit).
+	static const unsigned long blocking_fields = SPECIAL_SPOT | OBJECT_CRATE | OBJECT_BARREL | OBJECT_BLOCK | FIELD_QUICKFIRE | 254;
+	return fields[x][y] & blocking_fields;
 }
 
 bool cCurTown::is_explored(short x, short y) const{
@@ -817,14 +844,7 @@ void cCurTown::writeTo(cTagFile& file) const {
 		}
 	}
 	auto& fields_page = file.add();
-	vector2d<as_hex<unsigned long>> fields_tmp;
-	fields_tmp.resize(64, 64);
-	for(size_t x = 0; x < 64; x++) {
-		for(size_t y = 0; y < 64; y++) {
-			fields_tmp[x][y] = fields[x][y];
-		}
-	}
-	fields_page["FIELDS"].encode(fields_tmp);
+	fields_page["FIELDS"].encode(fields);
 	fields_page["TERRAIN"].encode(record()->terrain);
 	// TODO: Do we need to save special_spot?
 }
@@ -837,13 +857,11 @@ void cCurTown::readFrom(const cTagFile& file){
 			monst.hostile = page.contains("HOSTILE");
 			page["AT"] >> univ.party.town_loc.x >> univ.party.town_loc.y;
 		} else if(page.getFirstKey() == "FIELDS" || page.getFirstKey() == "TERRAIN") {
-			vector2d<as_hex<unsigned long>> fields_tmp;
-			page["FIELDS"].extract(fields_tmp);
+			page["FIELDS"].extract(fields);
 			page["TERRAIN"].extract(record()->terrain);
-			fields_tmp.resize(64, 64);
-			for(size_t x = 0; x < 64; x++) {
-				for(size_t y = 0; y < 64; y++) {
-					fields[x][y] = fields_tmp[x][y];
+			fields.resize(record()->max_dim, record()->max_dim);
+			for(size_t x = 0; x < record()->max_dim; x++) {
+				for(size_t y = 0; y < record()->max_dim; y++) {
 					if(is_quickfire(x, y)) {
 						quickfire_present = true;
 					}
@@ -876,9 +894,6 @@ void cCurTown::readFrom(const cTagFile& file){
 cCurTown::cCurTown(cUniverse& univ) : univ(univ) {
 	arena = nullptr;
 	univ.party.town_num = 200;
-	for(int i = 0; i < 64; i++)
-		for(int j = 0; j < 64; j++)
-			fields[i][j] = 0L;
 }
 
 cCurOut::cCurOut(cUniverse& univ) : univ(univ) {}
@@ -973,7 +988,7 @@ void cCurTown::copy(const cCurTown& other) {
 	difficulty = other.difficulty;
 	monst = other.monst;
 	items = other.items;
-	memcpy(fields, other.fields, sizeof(fields));
+	fields = other.fields;
 }
 
 void cCurTown::swap(cCurTown& other) {
@@ -983,10 +998,7 @@ void cCurTown::swap(cCurTown& other) {
 	std::swap(difficulty, other.difficulty);
 	monst.swap(other.monst);
 	std::swap(items, other.items);
-	unsigned long temp[64][64];
-	memcpy(temp, other.fields, sizeof(fields));
-	memcpy(other.fields, fields, sizeof(fields));
-	memcpy(fields, temp, sizeof(fields));
+	fields.swap(other.fields);
 }
 
 void cUniverse::check_monst(cMonster& monst) {

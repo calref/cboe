@@ -274,10 +274,6 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short nu
 	
 	// Basically, in outdoor combat, we create kind of a 48x48 town for
 	// the combat to take place in
-	for(short i = 0; i < 48; i++)
-		for(short j = 0; j < 48; j++) {
-			univ.town.fields[i][j] = 0;
-		}
 	univ.town.prep_arena();
 	univ.town->in_town_rect = town_rect;
 	

@@ -92,6 +92,7 @@ cParty::cParty(const cParty& other)
 	, total_xp_gained(other.total_xp_gained)
 	, total_dam_taken(other.total_dam_taken)
 	, scen_name(other.scen_name)
+	, setup(other.setup)
 	, stored_items(other.stored_items)
 	, summons(other.summons)
 	, scen_won(other.scen_won)
@@ -100,7 +101,6 @@ cParty::cParty(const cParty& other)
 	, pointers(other.pointers)
 {
 	memcpy(stuff_done, other.stuff_done, sizeof(stuff_done));
-	memcpy(setup, other.setup, sizeof(setup));
 	for(int i = 0; i < 6; i++) {
 		adven[i].reset(new cPlayer(*this, *other.adven[i]));
 	}
@@ -162,6 +162,7 @@ void cParty::swap(cParty& other) {
 	std::swap(total_dam_taken, other.total_dam_taken);
 	std::swap(scen_name, other.scen_name);
 	std::swap(adven, other.adven);
+	std::swap(setup, other.setup);
 	std::swap(stored_items, other.stored_items);
 	std::swap(summons, other.summons);
 	std::swap(scen_won, other.scen_won);
@@ -173,9 +174,6 @@ void cParty::swap(cParty& other) {
 	memcpy(stuff_done, other.stuff_done, sizeof(stuff_done));
 	memcpy(other.stuff_done, temp_sdf, sizeof(stuff_done));
 	unsigned short temp_setup[4][64][64];
-	memcpy(temp_setup, setup, sizeof(setup));
-	memcpy(setup, other.setup, sizeof(setup));
-	memcpy(other.setup, temp_setup, sizeof(setup));
 	for(size_t i = 0; i < adven.size(); i++) {
 		std::swap(adven[i], other.adven[i]);
 	}
