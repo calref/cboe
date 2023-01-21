@@ -111,6 +111,7 @@ if platform == "darwin":
 		return all(not lib.startswith(x) for x in system_prefixes)
 	def get_deps_for(source):
 		deps = subprocess.check_output(['otool', '-L', source]).splitlines()[1:]
+		deps = map(lambda s: s.decode('utf-8'), deps)
 		deps = list(map(str.strip, deps))
 		deps = list(filter(is_user_lib, deps))
 		deps = [x.split()[0] for x in deps]
