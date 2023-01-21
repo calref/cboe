@@ -1429,8 +1429,7 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 	}
 	
 	if(dam_type < eDamageType::SPECIAL) {
-		how_much *= victim.resist[dam_type];
-		how_much /= 100;
+		how_much = percent(how_much, victim.resist[dam_type]);
 	}
 	
 	// Absorb damage?

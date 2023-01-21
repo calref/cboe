@@ -2736,7 +2736,7 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 			add_string_to_buf("  (No supplies lost.)");
 		else {
 			cTerrain& ter = univ.scenario.ter_types[coord_to_ter(x, y)];
-			int lost = univ.party.food * ter.flag2 / 100;
+			int lost = percent(univ.party.food, ter.flag2);
 			if(lost >= ter.flag3) {
 				lost = ter.flag3;
 				add_string_to_buf("  (Many supplies lost.)");

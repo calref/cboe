@@ -3265,7 +3265,7 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 			}
 			break;
 		case eMonstAbil::PETRIFY:
-			i = univ.town.monst[m_num].level * abil.second.gen.strength / 100;
+			i = percent(univ.town.monst[m_num].level, abil.second.gen.strength);
 			if(pc_target != nullptr)
 				petrify_pc(*pc_target, i);
 			else if(m_target != nullptr)
@@ -3274,20 +3274,18 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 		case eMonstAbil::DRAIN_SP:
 			if(pc_target != nullptr) {
 				add_string_to_buf("  Drains " + pc_target->name + '.');
-				pc_target->cur_sp *= abil.second.gen.strength;
-				pc_target->cur_sp /= 100;
+				pc_target->cur_sp = percent(pc_target->cur_sp, abil.second.gen.strength);
 			} else {
 				m_target->spell_note(11);
 				// TODO: If mp < 4 it used to set monster's skill to 1. Should that be restored?
-				m_target->mp *= abil.second.gen.strength;
-				m_target->mp /= 100;
+				m_target->mp = percent(m_target->mp, abil.second.gen.strength);
 			}
 			break;
 		case eMonstAbil::DRAIN_XP:
 			if(pc_target != nullptr) {
 				i = univ.get_target_i(*target);
 				if(pc_target->has_abil_equip(eItemAbil::LIFE_SAVING)) break;
-				drain_pc(*pc_target, univ.town.monst[m_num].level * abil.second.gen.strength / 100);
+				drain_pc(*pc_target, percent(univ.town.monst[m_num].level, abil.second.gen.strength));
 			}
 			break;
 		case eMonstAbil::KILL:

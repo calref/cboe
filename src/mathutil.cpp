@@ -43,6 +43,11 @@ short minmax(short min,short max,short k){
 	return k;
 }
 
+int percent(int value, int percentage) {
+	// TODO: Any need to protect from overflow?
+	return (value * percentage) / 100;
+}
+
 short gcd(short a, short b){ // Grabbed from Wikipedia and translated to C code
 	short t;
 	while(b != 0){

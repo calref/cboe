@@ -128,8 +128,7 @@ void cCreature::drain_sp(int drain, bool allow_resist) {
 
 void cCreature::poison(int how_much) {
 	if(how_much != 0) {
-		how_much *= resist[eDamageType::POISON];
-		how_much /= 100;
+		how_much = percent(how_much, resist[eDamageType::POISON]);
 	}
 	apply_status(eStatus::POISON, how_much);
 	if(how_much >= 0)
@@ -294,8 +293,7 @@ bool cCreature::is_shielded() const {
 
 int cCreature::get_shared_dmg(int base_dmg) const {
 	if(abil[eMonstAbil::MARTYRS_SHIELD].active) {
-		base_dmg *= abil[eMonstAbil::MARTYRS_SHIELD].special.extra2;
-		base_dmg /= 100;
+		base_dmg = percent(base_dmg, abil[eMonstAbil::MARTYRS_SHIELD].special.extra2);
 	}
 	return base_dmg;
 }
@@ -310,8 +308,7 @@ int cCreature::magic_adjust(int how_much) {
 		return 0;
 	}
 	// TODO: Magic resistance status effect?
-	how_much *= resist[eDamageType::MAGIC];
-	how_much /= 100;
+	how_much = percent(how_much, resist[eDamageType::MAGIC]);
 	return how_much;
 }
 

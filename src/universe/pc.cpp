@@ -61,7 +61,6 @@ void cPlayer::import_legacy(legacy::pc_record_type old){
 }
 
 short cPlayer::get_tnl(){
-	short tnl = 100,store_per = 100;
 	// Omitting a race from this list gives it a value of 0, thanks to the defaulting implementation of operator[]
 	static std::map<const eRace, const int> rp = {{eRace::NEPHIL,12},{eRace::SLITH,20},{eRace::VAHNATAI,18}};
 	static std::map<const eTrait, const short> ap = {
@@ -71,14 +70,14 @@ short cPlayer::get_tnl(){
 		{eTrait::PACIFIST,-40}, {eTrait::ANAMA,-10},
 	};
 	
-	tnl = (tnl * (100 + rp[race])) / 100;
+	short tnl = 100 + rp[race], store_per = 100;
 	for(int i = 0; i < 17; i++) {
 		eTrait trait = eTrait(i);
 		if(traits[trait])
-			store_per = store_per + ap[trait];
+			store_per += ap[trait];
 	}
 	
-	tnl = (tnl * store_per) / 100;
+	tnl = percent(tnl, store_per);
 	
 	return max(tnl, 10);
 }
