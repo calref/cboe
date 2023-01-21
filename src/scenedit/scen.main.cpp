@@ -165,7 +165,7 @@ void adjust_windows (sf::RenderWindow & mainPtr, sf::View & mainView) {
 	// TODO: things might still be broken when upscaled.
 	//   translate_mouse_coordinates has been applied in some places but more work might be needed.
 	//   In particular, the white area on the right side of the main menu needs fixing.
-	float ui_scale = get_float_pref("UIScale", 1.0);
+	float ui_scale = get_float_pref("UIScaleScenEd", 1.0);
 	
 	const int width  = ui_scale * 584;
 	const int height = ui_scale * 420
@@ -677,10 +677,10 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 	if(!did_cancel) {
 		cLed& ui_scale = dynamic_cast<cLed&>(me["scaleui"]);
 		if(ui_scale.getState() == led_off)
-			set_pref("UIScale", 1.0);
+			set_pref("UIScaleScenEd", 1.0);
 		else if(ui_scale.getState() == led_red)
-			set_pref("UIScale", 2.0);
-		set_pref("PlaySounds", dynamic_cast<cLed&>(me["nosound"]).getState() == led_off);
+			set_pref("UIScaleScenEd", 2.0);
+		set_pref("PlaySoundsScenEd", dynamic_cast<cLed&>(me["nosound"]).getState() == led_off);
 	}
 	save_prefs();
 	return true;
@@ -692,13 +692,13 @@ void pick_preferences() {
 	cDialog prefsDlog(*ResMgr::dialogs.get("pref-scenario"));
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 	
-	float ui_scale = get_float_pref("UIScale", 1.0);
+	float ui_scale = get_float_pref("UIScaleScenEd", 1.0);
 	dynamic_cast<cLed&>(prefsDlog["scaleui"]).setState(ui_scale == 1.0 ? led_off : (ui_scale == 2.0 ? led_red : led_green));
-	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySounds", true) ? led_off : led_red);
+	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySoundsScenEd", true) ? led_off : led_red);
 	
 	prefsDlog.run();
 	
-	if(get_float_pref("UIScale") != ui_scale)
+	if(get_float_pref("UIScaleScenEd") != ui_scale)
 		changed_display_mode = true;
 }
 

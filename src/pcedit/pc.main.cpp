@@ -145,7 +145,7 @@ sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, float ui_scale) 
 
 void adjust_window (sf::RenderWindow& mainPtr, sf::View& mainView) {
 
-	float ui_scale = get_float_pref("UIScale", 1.0);
+	float ui_scale = get_float_pref("UIScaleCharEd", 1.0);
 	
 	int const width  = ui_scale * 590;
 	int const height = ui_scale * 440
@@ -517,10 +517,10 @@ bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 	if(!did_cancel) {
 		cLed& ui_scale = dynamic_cast<cLed&>(me["scaleui"]);
 		if(ui_scale.getState() == led_off)
-			set_pref("UIScale", 1.0);
+			set_pref("UIScaleCharEd", 1.0);
 		else if(ui_scale.getState() == led_red)
-			set_pref("UIScale", 2.0);
-		set_pref("PlaySounds", dynamic_cast<cLed&>(me["nosound"]).getState() == led_off);
+			set_pref("UIScaleCharEd", 2.0);
+		set_pref("PlaySoundsCharEd", dynamic_cast<cLed&>(me["nosound"]).getState() == led_off);
 	}
 	save_prefs();
 	return true;
@@ -532,13 +532,13 @@ void pick_preferences() {
 	cDialog prefsDlog(*ResMgr::dialogs.get("pref-character"));
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 	
-	float ui_scale = get_float_pref("UIScale", 1.0);
+	float ui_scale = get_float_pref("UIScaleCharEd", 1.0);
 	dynamic_cast<cLed&>(prefsDlog["scaleui"]).setState(ui_scale == 1.0 ? led_off : (ui_scale == 2.0 ? led_red : led_green));
-	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySounds", true) ? led_off : led_red);
+	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySoundsCharEd", true) ? led_off : led_red);
 	
 	prefsDlog.run();
 	
-	if(get_float_pref("UIScale") != ui_scale)
+	if(get_float_pref("UIScaleCharEd") != ui_scale)
 		changed_display_mode = true;
 }
 
