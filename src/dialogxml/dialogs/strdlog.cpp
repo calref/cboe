@@ -12,10 +12,11 @@
 #include "tools/winutil.hpp"
 #include "dialogxml/widgets/pict.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
+#include "mathutil.hpp"
 
 DialogDefn& cStrDlog::getDefn(short n_strs, ePicType type, bool hasTitle){
 	std::ostringstream sout;
-	sout << n_strs << "str";
+	sout << minmax(1, 2, n_strs) << "str";
 	if(hasTitle) sout << "-title";
 	if(type == PIC_DLOG_LG || type == PIC_CUSTOM_DLOG_LG || type == PIC_SCEN_LG)
 		sout << "-lg";
