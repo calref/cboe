@@ -219,7 +219,7 @@
 		91B375332969F529008B0324 /* res_dialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B375322969F529008B0324 /* res_dialog.cpp */; };
 		91B375362969F548008B0324 /* tagfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B375352969F548008B0324 /* tagfile.cpp */; };
 		91B375372969F548008B0324 /* tagfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B375352969F548008B0324 /* tagfile.cpp */; };
-		91B3753A2969F57B008B0324 /* tagfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B375392969F57B008B0324 /* tagfile.cpp */; };
+		91B3753A2969F57B008B0324 /* tagfiles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B375392969F57B008B0324 /* tagfiles.cpp */; };
 		91B3753D29736417008B0324 /* keymods.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3753B29736417008B0324 /* keymods.cpp */; };
 		91B3753E29736417008B0324 /* keymods.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 91B3753C29736417008B0324 /* keymods.hpp */; };
 		91B37545297C8ABC008B0324 /* dialogs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3753F297C8ABB008B0324 /* dialogs.cpp */; };
@@ -722,7 +722,7 @@
 		91B375342969F533008B0324 /* res_dialog.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = res_dialog.hpp; sourceTree = "<group>"; };
 		91B375352969F548008B0324 /* tagfile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tagfile.cpp; sourceTree = "<group>"; };
 		91B375382969F55B008B0324 /* tagfile.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tagfile.hpp; sourceTree = "<group>"; };
-		91B375392969F57B008B0324 /* tagfile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tagfile.cpp; sourceTree = "<group>"; };
+		91B375392969F57B008B0324 /* tagfiles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tagfiles.cpp; sourceTree = "<group>"; };
 		91B3753B29736417008B0324 /* keymods.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = keymods.cpp; sourceTree = "<group>"; };
 		91B3753C29736417008B0324 /* keymods.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = keymods.hpp; sourceTree = "<group>"; };
 		91B3753F297C8ABB008B0324 /* dialogs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dialogs.cpp; sourceTree = "<group>"; };
@@ -1498,7 +1498,7 @@
 				91CC173B1B421CA0003D9A69 /* scen_write.cpp */,
 				919B13A51BBDE985009905A4 /* spec_legacy.cpp */,
 				91B37543297C8ABC008B0324 /* string_quote.cpp */,
-				91B375392969F57B008B0324 /* tagfile.cpp */,
+				91B375392969F57B008B0324 /* tagfiles.cpp */,
 				9176FEC41D550EFD006EF694 /* talk_legacy.cpp */,
 				91C2A6EE1B8FAA8E00346948 /* talk_read.cpp */,
 				91E381471B97675900F69B81 /* talk_write.cpp */,
@@ -2095,7 +2095,7 @@
 				91C548F81D8B2FE400FE6A7B /* pc_read.cpp in Sources */,
 				91C548F91D8B338700FE6A7B /* pc.cpp in Sources */,
 				91B375372969F548008B0324 /* tagfile.cpp in Sources */,
-				91B3753A2969F57B008B0324 /* tagfile.cpp in Sources */,
+				91B3753A2969F57B008B0324 /* tagfiles.cpp in Sources */,
 				91B37545297C8ABC008B0324 /* dialogs.cpp in Sources */,
 				91B37549297C8ABC008B0324 /* string_quote.cpp in Sources */,
 				91B3754A297C8ABC008B0324 /* vector2d.cpp in Sources */,

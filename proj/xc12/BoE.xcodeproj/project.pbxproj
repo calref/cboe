@@ -207,7 +207,7 @@
 		919DDC0D19007517003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0E1900751C003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
 		919DDC0F1900751F003E7FED /* freetype.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 919DDC091900750D003E7FED /* freetype.framework */; };
-		919F2E9A287E5BB700F47750 /* tagfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919F2E99287E5BB700F47750 /* tagfile.cpp */; };
+		919F2E9A287E5BB700F47750 /* tagfiles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919F2E99287E5BB700F47750 /* tagfiles.cpp */; };
 		919F2ECA287F023100F47750 /* SFML.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
 		919F2ECB287F023100F47750 /* sfml-audio.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DD18F87F3700E3EA15 /* sfml-audio.framework */; };
 		919F2ECC287F023100F47750 /* sfml-graphics.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8DE18F87F3700E3EA15 /* sfml-graphics.framework */; };
@@ -744,7 +744,7 @@
 		919DDC091900750D003E7FED /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = /Library/Frameworks/freetype.framework; sourceTree = "<absolute>"; };
 		919F2E71287E4E0500F47750 /* tagfile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tagfile.cpp; sourceTree = "<group>"; };
 		919F2E72287E4E0500F47750 /* tagfile.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tagfile.hpp; sourceTree = "<group>"; };
-		919F2E99287E5BB700F47750 /* tagfile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tagfile.cpp; sourceTree = "<group>"; };
+		919F2E99287E5BB700F47750 /* tagfiles.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tagfiles.cpp; sourceTree = "<group>"; };
 		919F2EAF287F00B800F47750 /* boe_test.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = boe_test.entitlements; sourceTree = "<group>"; };
 		91A0B15A1900F73E00EF438F /* mask.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = mask.frag; sourceTree = "<group>"; };
 		91A2480D2969CFD200B8D90F /* res_dialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = res_dialog.cpp; sourceTree = "<group>"; };
@@ -1535,7 +1535,7 @@
 				91CC173B1B421CA0003D9A69 /* scen_write.cpp */,
 				919B13A51BBDE985009905A4 /* spec_legacy.cpp */,
 				911DD994297C56F500205EBC /* string_quote.cpp */,
-				919F2E99287E5BB700F47750 /* tagfile.cpp */,
+				919F2E99287E5BB700F47750 /* tagfiles.cpp */,
 				9176FEC41D550EFD006EF694 /* talk_legacy.cpp */,
 				91C2A6EE1B8FAA8E00346948 /* talk_read.cpp */,
 				91E381471B97675900F69B81 /* talk_write.cpp */,
@@ -2146,7 +2146,7 @@
 				911A14031B8FAFC600900FD9 /* town_read.cpp in Sources */,
 				911A14041B8FB00300900FD9 /* talk_read.cpp in Sources */,
 				911A14051B8FB00600900FD9 /* out_read.cpp in Sources */,
-				919F2E9A287E5BB700F47750 /* tagfile.cpp in Sources */,
+				919F2E9A287E5BB700F47750 /* tagfiles.cpp in Sources */,
 				91E381461B97673700F69B81 /* town_write.cpp in Sources */,
 				91E381481B97677900F69B81 /* talk_write.cpp in Sources */,
 				911DD9BF297C8B2000205EBC /* dialogs.cpp in Sources */,

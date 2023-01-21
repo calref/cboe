@@ -80,7 +80,7 @@
     <ClCompile Include="..\..\..\test\string_quote.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\test\tagfile.cpp">
+    <ClCompile Include="..\..\..\test\tagfiles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\test\talk_legacy.cpp">
