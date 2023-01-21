@@ -93,6 +93,7 @@ public:
 	unsigned short experience;
 	short skill_pts;
 	short level;
+	short exp_adj;
 	std::array<cItem,INVENTORY_SIZE> items;
 	std::bitset<INVENTORY_SIZE> equip;
 	std::bitset<62> priest_spells;

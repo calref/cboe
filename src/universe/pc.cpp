@@ -40,7 +40,9 @@ void cPlayer::import_legacy(legacy::pc_record_type old){
 	experience = old.experience;
 	skill_pts = old.skill_pts;
 	level = old.level;
-	// TODO: Why are advan and exp_adj commented out?
+	// Note that advan and exp_adj are both unused in legacy BoE
+	// advan is always 15x false, and exp_adj is always 100
+	exp_adj = old.exp_adj;
 	for(short i = 0; i < 15; i++){
 		status[(eStatus) i] = old.status[i];
 		eTrait trait = eTrait(i);
@@ -964,6 +966,7 @@ cPlayer::cPlayer(no_party_t) : weap_poisoned(*this) {
 	experience = 0;
 	skill_pts = 65;
 	level = 1;
+	exp_adj = 100;
 	std::fill(items.begin(), items.end(), cItem());
 	equip.reset();
 	
@@ -1015,6 +1018,7 @@ cPlayer::cPlayer(cParty& party,ePartyPreset key,short slot) : cPlayer(party) {
 		experience = 0;
 		skill_pts = 60;
 		level = 1;
+		exp_adj = 50;
 		std::fill(items.begin(), items.end(), cItem());
 		equip.reset();
 		
@@ -1212,6 +1216,9 @@ void cPlayer::writeTo(cTagFile& file) const {
 	page["SKILLPTS"] << skill_pts;
 	page["LEVEL"] << level;
 	page["STATUS"].encodeSparse(status);
+	if(exp_adj != 100) {
+		page["EXPADJ"] << exp_adj;
+	}
 	for(int i = 0; i < equip.size(); i++) {
 		if(equip[i]) {
 			page["EQUIP"] << i;
@@ -1282,6 +1289,9 @@ void cPlayer::readFrom(const cTagFile& file) {
 			skills.erase(eSkill::CUR_SKILL);
 			skills.erase(eSkill::INVALID);
 			
+			if(page.contains("EXPADJ")) {
+				page["EXPADJ"] >> exp_adj;
+			} else exp_adj = 100;
 			
 			equip.reset();
 			for(size_t n = 0; n < page["EQUIP"].size(); n++) {

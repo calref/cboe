@@ -311,11 +311,11 @@ void award_xp(short pc_num,short amt,bool force) {
 	if(amt <= 0)
 		return;
 	
-	
-//	univ.party[pc_num].experience += (max(((amt * adjust) / 100), 0) * univ.party[pc_num].exp_adj) / 100;
-//	univ.party.total_xp_gained += (max(((amt * adjust) / 100), 0) * univ.party[pc_num].exp_adj) / 100;
-	univ.party[pc_num].experience += (max(((amt * adjust) / 100), 0) * 100) / 100;
-	univ.party.total_xp_gained += (max(((amt * adjust) / 100), 0) * 100) / 100;
+	amt = percent(amt, adjust);
+	amt = max(amt, 0);
+	amt = percent(amt, univ.party[pc_num].exp_adj);
+	univ.party[pc_num].experience += amt;
+	univ.party.total_xp_gained += amt;
 	
 	
 	
