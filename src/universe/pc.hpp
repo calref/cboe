@@ -144,6 +144,7 @@ public:
 	bool equip_item(int which_item, bool do_print);
 	bool unequip_item(int which_item, bool do_print);
 	std::pair<cInvenSlot, cInvenSlot> get_weapons();
+	const std::pair<cInvenSlot, cInvenSlot> get_weapons() const;
 	void take_item(int which_item);
 	void remove_charge(int which_item);
 	const cInvenSlot has_space() const;
@@ -180,7 +181,7 @@ public:
 	cPlayer(cParty& party,ePartyPreset key,short slot);
 	cPlayer(no_party_t, const cPlayer& other);
 	cPlayer(cParty& party, const cPlayer& other);
-	short get_tnl();
+	short get_tnl() const;
 	void writeTo(cTagFile& file) const;
 	void readFrom(const cTagFile& file);
 	virtual ~cPlayer() = default;

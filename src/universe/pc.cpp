@@ -62,7 +62,7 @@ void cPlayer::import_legacy(legacy::pc_record_type old){
 	direction = eDirection(old.direction);
 }
 
-short cPlayer::get_tnl(){
+short cPlayer::get_tnl() const {
 	// Omitting a race from this list gives it a value of 0, thanks to the defaulting implementation of operator[]
 	static std::map<const eRace, const int> rp = {{eRace::NEPHIL,12},{eRace::SLITH,20},{eRace::VAHNATAI,18}};
 	static std::map<const eTrait, const short> ap = {
@@ -617,6 +617,10 @@ bool cPlayer::unequip_item(int which_item, bool do_print) {
 		weap_poisoned.clear();
 	}
 	return true;
+}
+
+const std::pair<cInvenSlot, cInvenSlot> cPlayer::get_weapons() const {
+	return const_cast<cPlayer*>(this)->get_weapons();
 }
 
 std::pair<cInvenSlot, cInvenSlot> cPlayer::get_weapons() {

@@ -62,12 +62,12 @@ public:
 	
 	int magic_adjust(int base);
 	
-	void spell_note(int which);
-	void cast_spell_note(eSpell spell);
-	void print_attacks(iLiving* target);
-	void breathe_note();
-	void damaged_msg(int how_much, int extra);
-	void killed_msg();
+	void spell_note(int which) const;
+	void cast_spell_note(eSpell spell) const;
+	void print_attacks(iLiving* target) const;
+	void breathe_note() const;
+	void damaged_msg(int how_much, int extra) const;
+	void killed_msg() const;
 	bool on_space(location loc) const;
 	
 	void import_legacy(legacy::creature_data_type old);

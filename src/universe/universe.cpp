@@ -107,6 +107,14 @@ cTown& cCurTown::operator * (){
 	return *record();
 }
 
+const cTown* cCurTown::operator -> () const {
+	return record();
+}
+
+const cTown& cCurTown::operator * () const {
+	return *record();
+}
+
 void cCurTown::place_preset_fields() {
 	// Initialize barriers, etc. Note non-sfx gets forgotten if this is a town recently visited.
 	fields.resize(record()->max_dim, record()->max_dim);
@@ -196,7 +204,12 @@ void cCurTown::save_setup(vector2d<unsigned short>& setup) const {
 }
 
 cSpeech& cCurTown::cur_talk() {
-	// Make sure we actually have a valid speech stored
+	// TODO: Make sure we actually have a valid speech stored
+	return univ.scenario.towns[cur_talk_loaded]->talking;
+}
+
+const cSpeech& cCurTown::cur_talk() const {
+	// TODO: Make sure we actually have a valid speech stored
 	return univ.scenario.towns[cur_talk_loaded]->talking;
 }
 
@@ -790,7 +803,7 @@ bool cCurTown::set_force_cage(short x, short y, bool b){
 }
 
 // TODO: This seems to be wrong; impassable implies "blocks movement", which two other blockages also do
-bool cCurTown::is_impassable(short i,short  j) {
+bool cCurTown::is_impassable(short i,short  j) const {
 	if(!is_on_map(i, j)) return false;
 	ter_num_t ter;
 	
@@ -811,7 +824,15 @@ auto cCurOut::operator [] (size_t i) -> arr_96& {
 	return out[i];
 }
 
+auto cCurOut::operator [] (size_t i) const -> const arr_96& {
+	return out[i];
+}
+
 ter_num_t& cCurOut::operator [] (location loc) {
+	return out[loc.x][loc.y];
+}
+
+const ter_num_t& cCurOut::operator [] (location loc) const {
 	return out[loc.x][loc.y];
 }
 
@@ -914,7 +935,11 @@ cOutdoors* cCurOut::operator->() {
 	return univ.scenario.outdoors[x][y];
 }
 
-bool cCurOut::is_spot(int x, int y) {
+const cOutdoors* cCurOut::operator->() const {
+	return const_cast<cCurOut*>(this)->operator->();
+}
+
+bool cCurOut::is_spot(int x, int y) const {
 	int sector_x = 0, sector_y = 0;
 	if(x >= 48) sector_x++, x -= 48;
 	if(y >= 48) sector_y++, y -= 48;
@@ -926,7 +951,7 @@ bool cCurOut::is_spot(int x, int y) {
 	return univ.scenario.outdoors[sector_x][sector_y]->special_spot[x][y];
 }
 
-bool cCurOut::is_road(int x, int y) {
+bool cCurOut::is_road(int x, int y) const {
 	int sector_x = 0, sector_y = 0;
 	if(x >= 48) sector_x++, x -= 48;
 	if(y >= 48) sector_y++, y -= 48;
@@ -938,7 +963,7 @@ bool cCurOut::is_road(int x, int y) {
 	return univ.scenario.outdoors[sector_x][sector_y]->roads[x][y];
 }
 
-bool cCurOut::is_on_map(int x, int y) {
+bool cCurOut::is_on_map(int x, int y) const {
 	if(x < 0 || y < 0) return false;
 	if(x >= max_dim) return false;
 	if(y >= max_dim) return false;
@@ -1344,7 +1369,7 @@ void cUniverse::clear_stored_pcs() {
 	stored_pcs.clear();
 }
 
-short cCurTown::countMonsters(){
+short cCurTown::countMonsters() const {
 	short to_ret = 0;
 	for(short i = 0; i < monst.size(); i++)
 		if(monst[i].active > 0)

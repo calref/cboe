@@ -365,14 +365,14 @@ void cParty::replace_pc(size_t spot, std::unique_ptr<cPlayer> with) {
 	}
 }
 
-size_t cParty::free_space() {
+size_t cParty::free_space() const {
 	for(int i = 0; i < 6; i++)
 		if(adven[i]->main_status == eMainStatus::ABSENT)
 			return i;
 	return 6;
 }
 
-size_t cParty::count(eMainStatus type) {
+size_t cParty::count(eMainStatus type) const {
 	size_t sz = 0;
 	for(int i = 0; i < 6; i++)
 		if(adven[i]->main_status == type)
@@ -621,7 +621,7 @@ bool cParty::forced_give(cItem item,eItemAbil abil,short dat) {
 	return false;
 }
 
-bool cParty::has_abil(eItemAbil abil, short dat) {
+bool cParty::has_abil(eItemAbil abil, short dat) const {
 	for(int i = 0; i < 6; i++)
 		if(adven[i]->main_status == eMainStatus::ALIVE)
 			if(adven[i]->has_abil(abil,dat))
@@ -641,17 +641,26 @@ bool cParty::take_abil(eItemAbil abil, short dat) {
 	return false;
 }
 
-bool cParty::check_class(unsigned int item_class,bool take) {
+bool cParty::has_class(unsigned int item_class) {
 	if(item_class == 0)
 		return false;
 	for(auto& pc : *this)
 		if(pc.main_status == eMainStatus::ALIVE)
 			if(cInvenSlot item = pc.has_class(item_class)) {
-				if(take) {
-					if(item->charges > 1)
-						item->charges--;
-					else pc.take_item(item.slot);
-				}
+				return true;
+			}
+	return false;
+}
+
+bool cParty::take_class(unsigned int item_class) const {
+	if(item_class == 0)
+		return false;
+	for(auto& pc : *this)
+		if(pc.main_status == eMainStatus::ALIVE)
+			if(cInvenSlot item = pc.has_class(item_class)) {
+				if(item->charges > 1)
+					item->charges--;
+				else pc.take_item(item.slot);
 				return true;
 			}
 	return false;
@@ -1107,7 +1116,7 @@ void cParty::force_ptr(unsigned short p, unsigned short val){
 	magic_ptrs[p-10] = val;
 }
 
-unsigned char cParty::get_ptr(unsigned short p){
+unsigned char cParty::get_ptr(unsigned short p) const {
 	if(p < 10 || p >= 200)
 		throw std::range_error("Attempted to access a nonexistent pointer (10..199)");
 	if(p < 100)
@@ -1173,7 +1182,7 @@ iLiving& cParty::pc_present() const {
 }
 
 // stuff done legit, i.e. flags are within proper ranges for stuff done flag
-bool cParty::sd_legit(short a, short b) {
+bool cParty::sd_legit(short a, short b) const {
 	if((minmax(0,sdx_max,a) == a) && (minmax(0,sdy_max,b) == b))
 		return true;
 	return false;

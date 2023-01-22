@@ -382,7 +382,7 @@ void cCreature::readFrom(const cTagFile_Page& page) {
 	page["DIRECTION"] >> direction;
 }
 
-void cCreature::print_attacks(iLiving* target) {
+void cCreature::print_attacks(iLiving* target) const {
 	if(!print_result) return;
 	std::string msg = m_name;
 	msg += " attacks ";
@@ -394,7 +394,7 @@ void cCreature::print_attacks(iLiving* target) {
 	print_result(msg);
 }
 
-void cCreature::spell_note(int which_mess) {
+void cCreature::spell_note(int which_mess) const {
 	if(!print_result) return;
 	std::string msg = m_name;
 	switch(which_mess) {
@@ -590,18 +590,18 @@ void cCreature::spell_note(int which_mess) {
 		print_result((char *) msg.c_str());
 }
 
-void cCreature::cast_spell_note(eSpell spell) {
+void cCreature::cast_spell_note(eSpell spell) const {
 	if(!print_result) return;
 	print_result(m_name + " casts:");
 	print_result("  " + (*spell).name());
 }
 
-void cCreature::breathe_note() {
+void cCreature::breathe_note() const {
 	if(!print_result) return;
 	print_result(m_name + " breathes.");
 }
 
-void cCreature::damaged_msg(int how_much,int how_much_spec) {
+void cCreature::damaged_msg(int how_much,int how_much_spec) const {
 	if(!print_result) return;
 	std::ostringstream sout;
 	sout << "  " << m_name << " takes " << how_much;
@@ -610,7 +610,7 @@ void cCreature::damaged_msg(int how_much,int how_much_spec) {
 	print_result(sout.str());
 }
 
-void cCreature::killed_msg() {
+void cCreature::killed_msg() const {
 	if(!print_result) return;
 	print_result("  " + m_name + " dies.");
 }

@@ -144,7 +144,7 @@ public:
 	void set_ptr(unsigned short p, unsigned short sdfx, unsigned short sdfy);
 	void force_ptr(unsigned short p, unsigned short val);
 	void clear_ptr(unsigned short p);
-	unsigned char get_ptr(unsigned short p);
+	unsigned char get_ptr(unsigned short p) const;
 	
 	void import_legacy(legacy::party_record_type& old, cUniverse& univ);
 	void import_legacy(legacy::big_tr_type& old);
@@ -185,9 +185,8 @@ public:
 	std::unique_ptr<cPlayer> remove_pc(size_t spot);
 	void new_pc(size_t spot);
 	void replace_pc(size_t spot, std::unique_ptr<cPlayer> with);
-	size_t free_space();
-	size_t count(eMainStatus type = eMainStatus::ALIVE);
-	void void_pcs();
+	size_t free_space() const;
+	size_t count(eMainStatus type = eMainStatus::ALIVE) const;
 	bool save_talk(const std::string& who, const std::string& where, const std::string& str1, const std::string& str2);
 	bool add_to_journal(const std::string& event, short day);
 	bool record(eEncNoteType type, const std::string& what, const std::string& where);
@@ -199,9 +198,10 @@ public:
 	
 	bool give_item(cItem item,int flags);
 	bool forced_give(cItem item,eItemAbil abil,short dat = -1);
-	bool has_abil(eItemAbil abil, short dat = -1);
+	bool has_abil(eItemAbil abil, short dat = -1) const;
 	bool take_abil(eItemAbil abil, short dat = -1);
-	bool check_class(unsigned int item_class,bool take);
+	bool has_class(unsigned int item_class);
+	bool take_class(unsigned int item_class) const;
 	
 	bool start_split(short x, short y, snd_num_t noise, short who);
 	bool end_split(snd_num_t noise);
@@ -210,13 +210,21 @@ public:
 	iLiving& pc_present() const; // If only one pc is present, returns that pc. Otherwise returns party.
 	void swap_pcs(size_t a, size_t b);
 	
-	bool sd_legit(short a, short b);
+	bool sd_legit(short a, short b) const;
 	
 	auto begin() -> boost::indirect_iterator<decltype(adven)::iterator> {
 		return boost::make_indirect_iterator(adven.begin());
 	}
 	
 	auto end() -> boost::indirect_iterator<decltype(adven)::iterator> {
+		return boost::make_indirect_iterator(adven.end());
+	}
+	
+	auto begin() const -> boost::indirect_iterator<decltype(adven)::const_iterator> {
+		return boost::make_indirect_iterator(adven.begin());
+	}
+	
+	auto end() const -> boost::indirect_iterator<decltype(adven)::const_iterator> {
 		return boost::make_indirect_iterator(adven.end());
 	}
 	

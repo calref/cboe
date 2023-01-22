@@ -2211,7 +2211,7 @@ void general_spec(const runtime_state& ctx) {
 			break;
 		case eSpecType::BUY_ITEMS_OF_TYPE:
 			for(short i = 0; i < 144; i++)
-				if(univ.party.check_class(spec.ex1a,true))
+				if(univ.party.take_class(spec.ex1a))
 					store_val++;
 			if(store_val == 0) {
 				if(spec.ex1b >= 0)
@@ -3341,7 +3341,9 @@ void ifthen_spec(const runtime_state& ctx) {
 				}
 			break;
 		case eSpecType::IF_HAVE_ITEM_CLASS:
-			if(univ.party.check_class(spec.ex1a,spec.ex2a > 0))
+			if(spec.ex2a > 0 && univ.party.take_class(spec.ex1a))
+				ctx.next_spec = spec.ex1b;
+			else if(spec.ex2a == 0 && univ.party.has_class(spec.ex1a))
 				ctx.next_spec = spec.ex1b;
 			break;
 		case eSpecType::IF_EQUIP_ITEM_CLASS:

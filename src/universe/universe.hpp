@@ -54,9 +54,13 @@ public:
 	
 	cTown* operator -> ();
 	cTown& operator * ();
+	const cTown* operator -> () const;
+	const cTown& operator * () const;
 	explicit cCurTown(cUniverse& univ);
-	short countMonsters();
-	cSpeech& cur_talk(); // Get the currently loaded speech
+	short countMonsters() const;
+	// Get the currently loaded speech
+	cSpeech& cur_talk();
+	const cSpeech& cur_talk() const;
 	bool prep_talk(short which); // Prepare for loading specified speech, returning true if already loaded
 	void prep_arena(); // Set up for a combat arena
 	void place_preset_fields();
@@ -72,7 +76,7 @@ public:
 	bool is_ice_wall(short x, short y) const;
 	bool is_blade_wall(short x, short y) const;
 	bool is_sleep_cloud(short x, short y) const;
-	bool is_block(short x, short y) const; // currently unused
+	bool is_block(short x, short y) const; // pushable block
 	bool is_spot(short x, short y) const;
 	bool is_special(short x, short y) const;
 	bool is_web(short x, short y) const;
@@ -99,7 +103,7 @@ public:
 	bool set_ice_wall(short x, short y, bool b);
 	bool set_blade_wall(short x, short y, bool b);
 	bool set_sleep_cloud(short x, short y, bool b);
-	bool set_block(short x, short y, bool b); // currently unused
+	bool set_block(short x, short y, bool b); // pushable block
 	bool set_spot(short x, short y, bool b);
 	bool set_web(short x, short y, bool b);
 	bool set_crate(short x, short y, bool b);
@@ -117,7 +121,7 @@ public:
 	bool set_rubble(short x, short y, bool b);
 	bool set_force_cage(short x, short y, bool b);
 	bool set_road(short x, short y, bool b);
-	bool is_impassable(short x, short y);
+	bool is_impassable(short x, short y) const;
 	bool is_on_map(short x, short y) const;
 	void writeTo(cTagFile& file) const;
 	void readFrom(const cTagFile& file);
@@ -144,18 +148,21 @@ public:
 	unsigned char out_e[max_dim][max_dim];
 	
 	// These take global coords (ie 0..95)
-	bool is_spot(int x, int y);
-	bool is_road(int x, int y);
-	bool is_on_map(int x, int y);
+	bool is_spot(int x, int y) const;
+	bool is_road(int x, int y) const;
+	bool is_on_map(int x, int y) const;
 	
 	void import_legacy(legacy::out_info_type& old);
 	
 	typedef ter_num_t arr_96[max_dim];
 	arr_96& operator [] (size_t i);
+	const arr_96& operator [] (size_t i) const;
 	ter_num_t& operator [] (location loc);
+	const ter_num_t& operator [] (location loc) const;
 	void writeTo(std::ostream& file) const;
 	void readFrom(std::istream& file);
 	cOutdoors* operator->();
+	const cOutdoors* operator->() const;
 	explicit cCurOut(cUniverse& univ);
 	// It's not directly copyable due to the cUniverse reference, which must always point to the cUniverse that contains it.
 	// The cUniverse copy constructor is thus responsible for performing the copy.
