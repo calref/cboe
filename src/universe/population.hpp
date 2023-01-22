@@ -10,6 +10,7 @@
 #define BOE_DATA_CREATLIST_H
 
 #include "scenario/monster.hpp"
+#include <deque>
 #include <iosfwd>
 #include "creature.hpp"
 
@@ -19,7 +20,7 @@ namespace legacy {
 };
 
 class cPopulation {
-	std::vector<cCreature> dudes;
+	std::deque<cCreature> dudes;
 public:
 	short which_town;
 	bool hostile;
@@ -32,8 +33,8 @@ public:
 	cCreature& operator[](size_t n);
 	const cCreature& operator[](size_t n) const;
 	cPopulation() : which_town(200), hostile(false) {}
-	std::vector<cCreature>::iterator begin() {return dudes.begin();}
-	std::vector<cCreature>::iterator end() {return dudes.end();}
+	std::deque<cCreature>::iterator begin() {return dudes.begin();}
+	std::deque<cCreature>::iterator end() {return dudes.end();}
 	// Apparently Visual Studio needs this to work
 	cPopulation& operator=(const cPopulation& other) = default;
 	void swap(cPopulation& other);
