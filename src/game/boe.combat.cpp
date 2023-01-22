@@ -2916,6 +2916,7 @@ void monster_attack(short who_att,iLiving* target) {
 							case eMonstAbil::STATUS2:
 								// STATUS2 is active only on attack #1; STATUS is active on all attacks
 								if(i > 0) continue;
+								BOOST_FALLTHROUGH;
 							case eMonstAbil::STATUS:
 								switch(abil.second.gen.stat) {
 									case eStatus::MAIN: continue; // Invalid
@@ -3215,6 +3216,7 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 		case eMonstAbil::STUN:
 			if(pc_target != nullptr && pc_target->has_abil_equip(eItemAbil::LIFE_SAVING))
 				break;
+			BOOST_FALLTHROUGH;
 		case eMonstAbil::STATUS: case eMonstAbil::STATUS2:
 			switch(abil.second.gen.stat) {
 				case eStatus::PARALYZED:

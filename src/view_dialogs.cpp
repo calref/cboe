@@ -82,6 +82,7 @@ void put_item_info(cDialog& me, const cItem& s_i, const cScenario& scen) {
 		case eItemType::MISSILE_NO_AMMO:
 			if(s_i.ability == eItemAbil::NONE)
 				me["abil"].setText("Key skill: " + get_str("skills", int(s_i.weap_type) * 2 + 1));
+			BOOST_FALLTHROUGH;
 		case eItemType::ARROW:
 		case eItemType::BOLTS:
 			me["dmg"].setTextToNum(s_i.item_level);

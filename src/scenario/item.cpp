@@ -311,6 +311,7 @@ cItem::cItem(eItemPreset preset) : cItem() {
 		case ITEM_SPECIAL:
 			item_level = -1;
 			full_name = "Call Special Node";
+			BOOST_FALLTHROUGH;
 		case ITEM_SHOP:
 			graphic_num = 105; // The blank graphic
 			break;

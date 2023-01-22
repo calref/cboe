@@ -245,6 +245,7 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 				case eShopItemType::OPT_ITEM:
 					quantity %= 1000;
 					chance = entry.quantity / 1000;
+					BOOST_FALLTHROUGH;
 				case eShopItemType::ITEM:
 					data.OpenElement("item");
 					if(quantity == 0)

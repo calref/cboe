@@ -391,6 +391,7 @@ void handle_one_event(const sf::Event& event) {
 					break;
 			}
 			All_Done = true;
+			break;
 		default:
 			break; // There's several events we don't need to handle at all
 	}

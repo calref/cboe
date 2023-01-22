@@ -535,6 +535,7 @@ void set_up_shop_array() {
 				break;
 			case eShopItemType::OPT_ITEM:
 				entry.quantity %= 1000;
+				BOOST_FALLTHROUGH;
 			case eShopItemType::TREASURE:
 			case eShopItemType::CLASS:
 				entry.type = eShopItemType::ITEM;

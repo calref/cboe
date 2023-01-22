@@ -276,6 +276,7 @@ std::map<eMonstAbil,uAbility>::iterator cMonster::addAbil(eMonstAbilTemplate wha
 			abil[eMonstAbil::DAMAGE].gen.dmg = eDamageType::COLD;
 			if(what == eMonstAbilTemplate::TOUCH_ICY)
 				return abil.find(eMonstAbil::DAMAGE);
+			BOOST_FALLTHROUGH;
 		case eMonstAbilTemplate::TOUCH_XP_DRAIN:
 			abil[eMonstAbil::DRAIN_XP].gen = {true, eMonstGen::TOUCH, -1, 150};
 			return abil.find(eMonstAbil::DRAIN_XP);
@@ -613,7 +614,7 @@ std::string uAbility::to_string(eMonstAbil key) const {
 				sout << " (";
 				switch(eSpellPat(gen.strength)) {
 					case PAT_SINGLE: break;
-					case PAT_SMSQ: sout << "small ";
+					case PAT_SMSQ: sout << "small "; BOOST_FALLTHROUGH;
 					case PAT_SQ: sout << "square"; break;
 					case PAT_OPENSQ: sout << "open square"; break;
 					case PAT_PLUS: sout << "plus"; break;

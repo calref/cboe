@@ -87,6 +87,7 @@ static bool save_ter_info(cDialog& me, cTerrain& ter) {
 		if(false) // Prevent next line from executing if it's crumbling
 		case eTerSpec::UNLOCKABLE:
 			if(!check_range(me, "flag2", true, 0, 10, "Difficulty")) return false;
+			BOOST_FALLTHROUGH;
 		case eTerSpec::LOCKABLE:
 		case eTerSpec::TOWN_ENTRANCE:
 			if(!check_range(me, "flag1", true, 0, scenario.ter_types.size() - 1,
@@ -672,7 +673,7 @@ static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which
 	switch(which) {
 		case 85: summoned_by.push_back(eSpell::DEMON); break;
 		case 80: summoned_by.push_back(eSpell::SUMMON_RAT); break;
-		case 125: summoned_by.push_back(eSpell::SUMMON_SPIRIT); // deliberate fallthrough
+		case 125: summoned_by.push_back(eSpell::SUMMON_SPIRIT); BOOST_FALLTHROUGH;
 		case 126: summoned_by.push_back(eSpell::SUMMON_HOST); break;
 		case 99: case 100: summoned_by.push_back(eSpell::STICKS_TO_SNAKES); break;
 		case 122: summoned_by.push_back(eSpell::SUMMON_GUARDIAN); break;
@@ -3223,6 +3224,7 @@ static void fill_custom_pics_types(cDialog& me, std::vector<ePicType>& pics, pic
 				break;
 			default: // Fix any potential errors
 				pics[i] = PIC_NONE;
+				BOOST_FALLTHROUGH;
 			case PIC_NONE:
 				grp.setSelected("none" + id);
 				break;

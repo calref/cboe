@@ -921,7 +921,7 @@ short char_select_pc(short mode,const char *title) {
 			case 3:
 				if(!univ.party[i].has_space())
 					can_pick = false;
-				// Fallthrough intentional
+				BOOST_FALLTHROUGH;
 			case 0:
 				if(univ.party[i].main_status != eMainStatus::ALIVE)
 					can_pick = false;
