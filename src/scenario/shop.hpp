@@ -53,7 +53,7 @@ struct cShopItem {
 	eShopItemType type = eShopItemType::EMPTY;
 	size_t quantity, index;
 	cItem item{ITEM_SHOP};
-	int getCost(int adj);
+	int getCost(int adj) const;
 };
 
 enum eShopPreset {SHOP_HEALING, SHOP_JUNK};
@@ -65,7 +65,7 @@ class cShop {
 	eShopType type;
 	eShopPrompt prompt;
 	pic_num_t face;
-	size_t firstEmpty();
+	size_t firstEmpty() const;
 public:
 	static const size_t INFINITE = 0;
 	cShop();

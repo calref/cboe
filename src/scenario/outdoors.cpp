@@ -195,7 +195,7 @@ void cOutdoors::cWandering::readFrom(const cTagFile_Page& page){
 	std::copy_n(temp.begin(), friendly.size(), friendly.begin());
 }
 
-bool cOutdoors::cWandering::isNull(){
+bool cOutdoors::cWandering::isNull() const {
 	for(short i = 0; i < 7; i++)
 		if(monst[i] != 0)
 			return false;

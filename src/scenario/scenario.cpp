@@ -304,19 +304,19 @@ static std::string format_version(const unsigned char(& ver)[3]) {
 	return fmt.str();
 }
 
-std::string cScenario::format_ed_version() {
+std::string cScenario::format_ed_version() const {
 	return format_version(format.prog_make_ver);
 }
 
-std::string cScenario::format_scen_version() {
+std::string cScenario::format_scen_version() const {
 	return format_version(format.ver);
 }
 
-ter_num_t cScenario::get_ground_from_ter(ter_num_t ter){
+ter_num_t cScenario::get_ground_from_ter(ter_num_t ter) const {
 	return get_ter_from_ground(ter_types[ter].ground_type);
 }
 
-ter_num_t cScenario::get_ter_from_ground(unsigned short ground){
+ter_num_t cScenario::get_ter_from_ground(unsigned short ground) const {
 	ter_num_t archetype = -1;
 	for(int i = 0; i < ter_types.size(); i++)
 		if(ter_types[i].ground_type == ground) {
@@ -328,7 +328,7 @@ ter_num_t cScenario::get_ter_from_ground(unsigned short ground){
 	return std::max(archetype, ter_num_t());
 }
 
-ter_num_t cScenario::get_trim_terrain(unsigned short ground, unsigned short trim_g, eTrimType trim) {
+ter_num_t cScenario::get_trim_terrain(unsigned short ground, unsigned short trim_g, eTrimType trim) const {
 	for(int i = 0; i < ter_types.size(); i++) {
 		if(ter_types[i].ground_type != ground)
 			continue;
@@ -341,7 +341,7 @@ ter_num_t cScenario::get_trim_terrain(unsigned short ground, unsigned short trim
 	return 90;
 }
 
-bool cScenario::is_ter_used(ter_num_t ter) {
+bool cScenario::is_ter_used(ter_num_t ter) const {
 	if(ter >= ter_types.size()) return false;
 	if(ter <= 90) return true;
 	for(int sx = 0; sx < outdoors.width(); sx++) {
@@ -365,7 +365,7 @@ bool cScenario::is_ter_used(ter_num_t ter) {
 	return false;
 }
 
-bool cScenario::is_monst_used(mon_num_t monst) {
+bool cScenario::is_monst_used(mon_num_t monst) const {
 	if(monst >= scen_monsters.size()) return false;
 	for(int sx = 0; sx < outdoors.width(); sx++) {
 		for(int sy = 0; sy < outdoors.height(); sy++) {
@@ -400,7 +400,7 @@ bool cScenario::is_monst_used(mon_num_t monst) {
 	return false;
 }
 
-bool cScenario::is_item_used(item_num_t item) {
+bool cScenario::is_item_used(item_num_t item) const {
 	if(item >= scen_items.size()) return false;
 	for(int i = 0; i < towns.size(); i++) {
 		for(int j = 0; j < towns[i]->preset_items.size(); j++) {
@@ -411,7 +411,7 @@ bool cScenario::is_item_used(item_num_t item) {
 	return false;
 }
 
-cItem cScenario::get_stored_item(int loot) {
+cItem cScenario::get_stored_item(int loot) const {
 	if(loot >= 0 && loot < scen_items.size())
 		return scen_items[loot];
 	return cItem();
@@ -420,7 +420,7 @@ cItem cScenario::get_stored_item(int loot) {
 static const short loot_min[5] = {0,0,5,50,400};
 static const short loot_max[5] = {3,8,40,800,4000};
 
-cItem cScenario::pull_item_of_type(unsigned int loot_max,short min_val,short max_val, const std::vector<eItemType>& types,bool allow_junk_treasure) {
+cItem cScenario::pull_item_of_type(unsigned int loot_max,short min_val,short max_val, const std::vector<eItemType>& types,bool allow_junk_treasure) const {
 	// occasionally get nice item
 	if(get_ran(1,0,160) == 80) {
 		loot_max += 2;
@@ -444,7 +444,7 @@ enum eTreasureType {
 	SCROLL, WAND, RING, NECKLACE, POISON, GLOVES, BOOTS,
 };
 
-cItem cScenario::return_treasure(int loot, bool allow_junk) {
+cItem cScenario::return_treasure(int loot, bool allow_junk) const {
 	static const std::vector<eItemType>
 		weapon = {eItemType::ONE_HANDED,eItemType::TWO_HANDED},
 		armor = {eItemType::ARMOR}, shield = {eItemType::SHIELD}, helm = {eItemType::HELM},

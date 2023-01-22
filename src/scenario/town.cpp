@@ -166,14 +166,14 @@ void cTown::cField::import_legacy(legacy::preset_field_type old){
 	}
 }
 
-bool cTown::cWandering::isNull(){
+bool cTown::cWandering::isNull() const {
 	for(short i = 0;i < 4;i++)
 		if(monst[i] != 0)
 			return false;
 	return true;
 }
 
-bool cTown::is_cleaned_out() {
+bool cTown::is_cleaned_out() const {
 	if(max_num_monst < 0) return false;
 	return m_killed >= max_num_monst;
 }
@@ -209,7 +209,7 @@ void cTown::set_up_lights() {
 	}
 }
 
-short cTown::light_obscurity(short x,short y) {
+short cTown::light_obscurity(short x,short y) const {
 	if(!is_on_map(loc(x,y))) return 5;
 	ter_num_t what_terrain = this->terrain(x,y);
 	eTerObstruct store = scenario->ter_types[what_terrain].blockage;

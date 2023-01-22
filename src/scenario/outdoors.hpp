@@ -45,7 +45,7 @@ public:
 		short end_spec1,end_spec2;
 		bool cant_flee, forced;
 		
-		bool isNull();
+		bool isNull() const;
 		void import_legacy(legacy::out_wandering_type old);
 		void writeTo(cTagFile_Page& page) const;
 		void readFrom(const cTagFile_Page& page);

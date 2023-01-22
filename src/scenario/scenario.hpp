@@ -100,21 +100,21 @@ public:
 	void import_legacy(legacy::scen_item_data_type& old);
 	void writeTo(cTagFile& file) const;
 	void readFrom(const cTagFile& file);
-	std::string format_scen_version();
-	std::string format_ed_version();
+	std::string format_scen_version() const;
+	std::string format_ed_version() const;
 	
-	ter_num_t get_ground_from_ter(ter_num_t ter);
-	ter_num_t get_ter_from_ground(unsigned short ground);
-	ter_num_t get_trim_terrain(unsigned short ground, unsigned short trim_g, eTrimType trim);
+	ter_num_t get_ground_from_ter(ter_num_t ter) const;
+	ter_num_t get_ter_from_ground(unsigned short ground) const;
+	ter_num_t get_trim_terrain(unsigned short ground, unsigned short trim_g, eTrimType trim) const;
 	cOutdoors& get_sector(int x, int y);
 	bool is_town_entrance_valid(spec_loc_t loc) const;
 	
-	bool is_ter_used(ter_num_t ter);
-	bool is_monst_used(mon_num_t monst);
-	bool is_item_used(item_num_t item);
-	cItem get_stored_item(int loot);
-	cItem return_treasure(int loot, bool allow_junk_treasure = false);
-	cItem pull_item_of_type(unsigned int loot_max,short min_val,short max_val,const std::vector<eItemType>& types,bool allow_junk_treasure=false);
+	bool is_ter_used(ter_num_t ter) const;
+	bool is_monst_used(mon_num_t monst) const;
+	bool is_item_used(item_num_t item) const;
+	cItem get_stored_item(int loot) const;
+	cItem return_treasure(int loot, bool allow_junk_treasure = false) const;
+	cItem pull_item_of_type(unsigned int loot_max,short min_val,short max_val,const std::vector<eItemType>& types,bool allow_junk_treasure=false) const;
 	
 	void reset_version();
 	explicit cScenario();

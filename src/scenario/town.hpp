@@ -49,7 +49,7 @@ public:
 	public:
 		std::array<mon_num_t,4> monst;
 		
-		bool isNull();
+		bool isNull() const;
 		void import_legacy(legacy::wandering_type old);
 	};
 	class cItem { // formerly preset_item_type
@@ -107,8 +107,8 @@ public:
 	void import_legacy(T& old, int town_num);
 	void init_start();
 	void set_up_lights();
-	short light_obscurity(short x,short y); // Obscurity function used for calculating lighting
-	bool is_cleaned_out();
+	short light_obscurity(short x,short y) const; // Obscurity function used for calculating lighting
+	bool is_cleaned_out() const;
 	
 	explicit cTown(cScenario& scenario, size_t dim);
 	void import_legacy(legacy::town_record_type& old);

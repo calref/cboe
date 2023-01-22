@@ -85,7 +85,7 @@ cShop::cShop(eShopPreset preset) {
 	}
 }
 
-size_t cShop::firstEmpty() {
+size_t cShop::firstEmpty() const {
 	for(size_t i = 0; i < items.size(); i++) {
 		if(items[i].type == eShopItemType::EMPTY)
 			return i;
@@ -320,7 +320,7 @@ void cShop::clear() {
 	items.clear();
 }
 
-int cShopItem::getCost(int adj) {
+int cShopItem::getCost(int adj) const {
 	int cost = item.value;
 	if(item.charges > 0)
 		cost *= item.charges;
