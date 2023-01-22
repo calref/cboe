@@ -33,9 +33,9 @@ public:
 	/// Create a new text message without a parent dialog.
 	/// @param parent The parent window.
 	explicit cTextMsg(sf::RenderWindow& parent);
-	bool isClickable() override;
-	bool isFocusable() override;
-	bool isScrollable() override;
+	bool isClickable() const override;
+	bool isFocusable() const override;
+	bool isScrollable() const override;
 	void setFixed(bool w, bool h);
 	virtual ~cTextMsg();
 	void draw() override;
@@ -43,7 +43,7 @@ public:
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers
-	const std::set<eDlogEvt> getSupportedHandlers() const override {
+	std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_CLICK};
 	}
 	cTextMsg& operator=(cTextMsg& other) = delete;

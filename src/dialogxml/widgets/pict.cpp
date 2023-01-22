@@ -121,11 +121,11 @@ void cPict::setPict(pic_num_t num) {
 	else setPict(num, picType - PIC_CUSTOM);
 }
 
-pic_num_t cPict::getPicNum(){
+pic_num_t cPict::getPicNum() const {
 	return picNum;
 }
 
-ePicType cPict::getPicType(){
+ePicType cPict::getPicType() const {
 	return picType;
 }
 
@@ -139,15 +139,15 @@ cPict::cPict(sf::RenderWindow& parent) :
 	setFormat(TXT_FRAME, FRM_SOLID);
 }
 
-bool cPict::isClickable(){
+bool cPict::isClickable() const {
 	return haveHandler(EVT_CLICK);
 }
 
-bool cPict::isFocusable(){
+bool cPict::isFocusable() const {
 	return false;
 }
 
-bool cPict::isScrollable(){
+bool cPict::isScrollable() const {
 	return false;
 }
 
@@ -1282,7 +1282,7 @@ void cPict::drawAt(sf::RenderWindow& win, rectangle dest, pic_num_t which_g, ePi
 	pic.draw();
 }
 
-cControl::storage_t cPict::store() {
+cControl::storage_t cPict::store() const {
 	storage_t storage = cControl::store();
 	storage["pic-num"] = picNum;
 	storage["pic-type"] = picType;

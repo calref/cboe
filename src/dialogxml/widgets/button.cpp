@@ -36,15 +36,15 @@ cButton::cButton(cDialog& parent,eControlType t) :
 	fromList("none"),
 	wrapLabel(false) {/* This constructor is only called for LEDs. */}
 
-bool cButton::isClickable(){
+bool cButton::isClickable() const {
 	return true;
 }
 
-bool cButton::isFocusable(){
+bool cButton::isFocusable() const {
 	return false;
 }
 
-bool cButton::isScrollable(){
+bool cButton::isScrollable() const {
 	return false;
 }
 
@@ -169,7 +169,7 @@ void cButton::validatePostParse(ticpp::Element& elem, std::string fname, const s
 	}
 }
 
-location cButton::getPreferredSize() {
+location cButton::getPreferredSize() const {
 	return {btnRects[type][0].width(), btnRects[type][0].height()};
 }
 
@@ -285,6 +285,6 @@ void cButton::setBtnType(eBtnType newType){
 	}
 }
 
-eBtnType cButton::getBtnType(){
+eBtnType cButton::getBtnType() const {
 	return type;
 }

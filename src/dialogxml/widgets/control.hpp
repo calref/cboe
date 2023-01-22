@@ -155,14 +155,14 @@ public:
 	void detachKey();
 	/// Check if the control has an assigned keyboard shortcut.
 	/// @return true if a keyboard shortcut is assigned.
-	bool hasKey();
+	bool hasKey() const;
 	/// Retrieve the control's current keyboard shortcut.
 	/// @return the currently-assigned keyboard shortcut.
 	/// @note You should first check that a shortcut is assigned using hasKey().
-	cKey getAttachedKey();
+	cKey getAttachedKey() const;
 	/// Retrieve the control's current keyboard shortcut as a human-readable string.
 	/// @return the currently-assigned keyboard shortcut, or an empty string if none is assigned.
-	std::string getAttachedKeyDescription();
+	std::string getAttachedKeyDescription() const;
 	/// Attach an event handler to this control.
 	/// @tparam t The type of event to attach.
 	/// @param handler The event handler function or functor. Its signature depends on the event type.
@@ -214,48 +214,46 @@ public:
 	/// Check if a handler is assigned for a given event.
 	/// @param t The type of event to check for.
 	/// @return True if one is assigned, false otherwise.
-	bool haveHandler(eDlogEvt t) {
-		return !event_handlers[t].empty();
-	}
+	bool haveHandler(eDlogEvt t) const;
 	/// Trigger the click handler for this control.
 	/// @param me A reference to the current dialog.
 	/// @param id The unique key of this control.
 	/// @param mods The currently-held keyboard modifiers.
 	/// @return true if the event should continue, false if it should be cancelled.
-	virtual bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods) final;
+	bool triggerClickHandler(cDialog& me, std::string id, eKeyMod mods);
 	/// Trigger the focus handler for this control.
 	/// @param me A reference to the current dialog.
 	/// @param id The unique key of this control.
 	/// @param losingFocus true if this control is losing focus, false if it is gaining focus.
 	/// @return true if the event should continue, false if it should be cancelled.
-	virtual bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus) final;
+	bool triggerFocusHandler(cDialog& me, std::string id, bool losingFocus);
 	/// Make this control visible.
 	virtual void show(); // cd_activate_item true
 	/// Make this control invisible.
 	virtual void hide(); // cd_activate_item false
 	/// Check if this control is visible.
 	/// @return true if it's visible
-	bool isVisible(); // cd_get_active
+	bool isVisible() const; // cd_get_active
 	/// Check if this control is a container which contains other controls.
 	/// @return true if it's a container
 	/// @note Generally you shouldn't override this. If you need a container, then
 	/// extend @ref cContainer instead of cControl.
-	virtual bool isContainer() {return false;}
+	virtual bool isContainer() const {return false;}
 	/// Set if this control is active. A control is normally active when the mouse button is held down within its bounding rect.
 	/// @param active true if it should be active, false if not
 	void setActive(bool active); // "active" here means "selected", so if it's a button, draw it pressed
 	/// Get the type of this control
 	/// @return The type of control
-	eControlType getType();
+	eControlType getType() const;
 	/// Set the control's text.
 	/// @param l The new text.
 	virtual void setText(std::string l);
 	/// Fetch the control's text.
 	/// @return The control's current text.
-	virtual std::string getText();
+	virtual std::string getText() const;
 	/// Get the bounding rect of this control.
 	/// @return The control's bounding rect.
-	rectangle getBounds();
+	rectangle getBounds() const;
 	/// Set the bounding rect of this control.
 	/// @param newBounds The new bounding rect.
 	void setBounds(rectangle newBounds);
@@ -263,7 +261,7 @@ public:
 	/// This can specify an exact preferred size or just a preferred width or height.
 	/// The preferred size is only used if the size is not specified in the XML.
 	/// @return The preferred size, or (0,0) if there is no preferred size.
-	virtual location getPreferredSize() {return {0,0};}
+	virtual location getPreferredSize() const {return {0,0};}
 	/// Set the position of this control.
 	/// @param to The new position.
 	void relocate(location to);
@@ -276,7 +274,7 @@ public:
 	void relocateRelative(location to, cControl* anchor, ePosition horz, ePosition vert);
 	/// Get the control's text as an integer.
 	/// @return The control's text, coerced to an integer.
-	long long getTextAsNum();
+	long long getTextAsNum() const;
 	/// Set the control's text to an integer value.
 	/// @param what The desired value.
 	void setTextToNum(long long what);
@@ -289,11 +287,11 @@ public:
 	/// @param prop The parameter to retrieve.
 	/// @return The value of the parameter.
 	/// @throw xUnsupportedProp if this control doesn't support the given parameter.
-	short getFormat(eFormat prop);
+	short getFormat(eFormat prop) const;
 	/// Test if the control supports a given formatting parameter
 	/// @param prop The parameter to check.
 	/// @return true if supported, false if not.
-	bool canFormat(eFormat prop);
+	bool canFormat(eFormat prop) const;
 	/// Set the control's colour (usually text colour).
 	/// @param clr The desired colour.
 	/// @throw xUnsupportedProp if this control does not support colour.
@@ -301,24 +299,24 @@ public:
 	/// Get the control's colour.
 	/// @return The current colour.
 	/// @throw xUnsupportedProp if this control does not support colour.
-	sf::Color getColour();
+	sf::Color getColour() const;
 	/// Test if the control supports colour
 	/// @return true if supported, false if not.
-	bool canColour();
+	bool canColour() const;
 	/// Check if the control is clickable.
 	/// @return true if it's clickable.
 	/// @note This does not indicate whether the control supports click handlers.
 	/// In fact, some controls return true only if a click handler is assigned.
 	/// Others, like editable text fields, are clickable but do not support click handlers.
-	virtual bool isClickable() = 0;
+	virtual bool isClickable() const = 0;
 	/// Check if the control is focusable.
 	/// @return true if it's focusable.
 	/// @note This does not indicate whether the control supports focus and defocus handlers.
-	virtual bool isFocusable() = 0;
+	virtual bool isFocusable() const = 0;
 	/// Check if the control is scrollable.
 	/// @return true if it's scrollable.
 	/// @note This does not indicate whether the control supports scroll handlers.
-	virtual bool isScrollable() = 0;
+	virtual bool isScrollable() const = 0;
 	/// Handles the action of clicking this control.
 	/// @param where The exact location at which the mouse was pressed, relative to the dialog.
 	/// @return true if the click was successful; false if it was cancelled.
@@ -335,7 +333,7 @@ public:
 	void setLabelCtrl(cControl* label);
 	/// Get a view of the control's current state.
 	/// @return A map of string keys to boost::any values, representing the control's state.
-	virtual storage_t store();
+	virtual storage_t store() const;
 	/// Restore the control to a previous state.
 	/// @param to A state previously returned from store()
 	virtual void restore(storage_t to);
@@ -362,7 +360,7 @@ protected:
 	///
 	/// See the documentation of this method in subclasses for explanations of what handlers
 	/// each control supports and how those handlers work for that control.
-	virtual const std::set<eDlogEvt> getSupportedHandlers() const = 0;
+	virtual std::set<eDlogEvt> getSupportedHandlers() const = 0;
 	/// Called when a click event is triggered on this control. Override this to
 	/// customize the behaviour of clicks on the control. Note that, if you override it, you are
 	/// responsible for calling the passed handler, if it exists. (Test for existance with operator!.)

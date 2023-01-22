@@ -110,7 +110,7 @@ void cLed::draw(){
 	inWindow->setActive();
 }
 
-cControl::storage_t cLed::store() {
+cControl::storage_t cLed::store() const {
 	storage_t storage = cButton::store();
 	storage["led-state"] = getState();
 	return storage;
@@ -129,7 +129,7 @@ void cLed::setState(eLedState to){
 	state = to;
 }
 
-eLedState cLed::getState(){
+eLedState cLed::getState() const {
 	return state;
 }
 
@@ -151,6 +151,6 @@ bool cLed::parseContent(ticpp::Node& content, int n, std::string tagName, std::s
 	return cButton::parseContent(content, n, tagName, fname, text);
 }
 
-location cLed::getPreferredSize() {
+location cLed::getPreferredSize() const {
 	return {ledRects[0][0].width(), ledRects[0][0].height()};
 }

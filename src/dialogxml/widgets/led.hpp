@@ -32,8 +32,8 @@ public:
 	static bool noAction(cDialog&,std::string,eKeyMod) {return true;}
 	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
 	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;
-	location getPreferredSize() override;
-	storage_t store() override;
+	location getPreferredSize() const override;
+	storage_t store() const override;
 	void restore(storage_t to) override;
 	/// Create a new LED button.
 	/// @param parent The parent dialog.
@@ -44,12 +44,12 @@ public:
 	void setState(eLedState to);
 	/// Get the LED's current state.
 	/// @return The current state.
-	eLedState getState();
+	eLedState getState() const;
 	void draw() override;
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers
-	const std::set<eDlogEvt> getSupportedHandlers() const  override {
+	std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_CLICK, EVT_FOCUS, EVT_DEFOCUS};
 	}
 	cLed& operator=(cLed& other) = delete;

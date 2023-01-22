@@ -15,7 +15,7 @@
 #include "scrollbar.hpp"
 #include <climits>
 
-bool cStack::hasChild(std::string id) {
+bool cStack::hasChild(std::string id) const {
 	return controls.find(id) != controls.end();
 }
 
@@ -38,15 +38,15 @@ bool cStack::manageFormat(eFormat prop, bool set, boost::any* val) {
 	return true;
 }
 
-bool cStack::isClickable() {
+bool cStack::isClickable() const {
 	return true;
 }
 
-bool cStack::isFocusable() {
+bool cStack::isFocusable() const {
 	return false;
 }
 
-bool cStack::isScrollable() {
+bool cStack::isScrollable() const {
 	return false;
 }
 
@@ -84,7 +84,7 @@ bool cStack::setPage(size_t n) {
 	return !failed;
 }
 
-size_t cStack::getPage() {
+size_t cStack::getPage() const {
 	return curPage;
 }
 
@@ -109,7 +109,7 @@ void cStack::addPage() {
 	setPageCount(getPageCount() + 1);
 }
 
-size_t cStack::getPageCount() {
+size_t cStack::getPageCount() const {
 	return nPages;
 }
 

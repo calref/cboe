@@ -171,15 +171,15 @@ cTextMsg::cTextMsg(sf::RenderWindow& parent) :
 	setFormat(TXT_FRAME, FRM_NONE);
 }
 
-bool cTextMsg::isClickable(){
+bool cTextMsg::isClickable() const {
 	return haveHandler(EVT_CLICK);
 }
 
-bool cTextMsg::isFocusable(){
+bool cTextMsg::isFocusable() const {
 	return false;
 }
 
-bool cTextMsg::isScrollable(){
+bool cTextMsg::isScrollable() const {
 	return false;
 }
 

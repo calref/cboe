@@ -47,11 +47,11 @@ public:
 	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
 	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;
 	void validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) override;
-	bool isClickable() override;
-	bool isFocusable() override;
-	bool isScrollable() override;
+	bool isClickable() const override;
+	bool isFocusable() const override;
+	bool isScrollable() const override;
 	void draw() override;
-	bool hasChild(std::string id) override;
+	bool hasChild(std::string id) const override;
 	cControl& getChild(std::string id) override;
 	/// Switch the stack to a particular page.
 	/// You need to do this before retrieving data from that page.
@@ -60,7 +60,7 @@ public:
 	bool setPage(size_t n);
 	/// Get the current page the stack is displaying.
 	/// @return The current page number
-	size_t getPage();
+	size_t getPage() const;
 	/// Set the number of pages in the stack.
 	/// @param n The new number of pages
 	/// @note If you reduce the number of pages, some data will be destroyed.
@@ -74,7 +74,7 @@ public:
 	void applyTemplate(const std::string& name);
 	// Get the number of pages in the stack.
 	/// @return The number of pages
-	size_t getPageCount();
+	size_t getPageCount() const;
 	/// Recalculate the stack's bounding rect based on its contained controls.
 	void recalcRect() override;
 	/// Adds any fields in this stack to the tab order building arrays.
@@ -86,7 +86,7 @@ public:
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers
-	const std::set<eDlogEvt> getSupportedHandlers() const override {
+	std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_CLICK, EVT_FOCUS, EVT_DEFOCUS};
 	}
 	void forEach(std::function<void(std::string,cControl&)> callback) override;

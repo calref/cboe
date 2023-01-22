@@ -66,7 +66,7 @@ public:
 	static void init();
 	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
 	void validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) override;
-	location getPreferredSize() override;
+	location getPreferredSize() const override;
 	/// Create a new scrollbar without a parent dialog.
 	/// @param parent The parent window.
 	explicit cScrollbar(sf::RenderWindow& parent);
@@ -74,39 +74,35 @@ public:
 	/// @param parent The parent dialog.
 	explicit cScrollbar(cDialog& parent);
 	bool handleClick(location where) override;
-	void setFormat(eFormat prop, short val);
-	short getFormat(eFormat prop);
-	void setColour(sf::Color clr);
-	sf::Color getColour();
-	storage_t store() override;
+	storage_t store() const override;
 	void restore(storage_t to) override;
-	bool isClickable() override;
-	bool isFocusable() override;
-	bool isScrollable() override;
+	bool isClickable() const override;
+	bool isFocusable() const override;
+	bool isScrollable() const override;
 	/// Get the scrollbar thumb's current position.
 	/// @return The current position.
-	long getPosition();
+	long getPosition() const;
 	/// Get the scrollbar thumb's maximum value.
 	/// @return The maximum value.
-	long getMaximum();
+	long getMaximum() const;
 	/// Get the scrollbar thumb's page size.
 	/// @return The page size.
 	///
 	/// The page size is the number of steps scrolled when a click is received
 	/// in the area between the arrow buttons and the scrollbar thumb.
-	long getPageSize();
+	long getPageSize() const;
 	/// Check whether the scrollbar is vertical.
 	/// @return True if it is vertical, false if it is horizontal.
-	bool isVertical();
+	bool isVertical() const;
 	/// Get the linked control.
 	///
 	/// A linked control is one that always reflect's the scrollbar's current
 	/// value as its text.
 	/// @return The ID of the linked control, or an empty string if none.
-	std::string getLink();
+	std::string getLink() const;
 	/// Get the scrollbar style.
 	/// @return The style
-	eScrollStyle getStyle();
+	eScrollStyle getStyle() const;
 	/// Set the scrollbar thumb's current position.
 	/// @param to The new position.
 	void setPosition(long to);
@@ -137,7 +133,7 @@ public:
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers
-	const std::set<eDlogEvt> getSupportedHandlers() const override {
+	std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_CLICK, EVT_SCROLL};
 	}
 	cScrollbar& operator=(cScrollbar& other) = delete;

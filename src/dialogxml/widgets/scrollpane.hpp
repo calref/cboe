@@ -29,13 +29,13 @@ public:
 	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;
 	void validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) override;
 	bool handleClick(location where) override;
-	bool hasChild(std::string id) override;
+	bool hasChild(std::string id) const override;
 	cControl& getChild(std::string id) override;
-	storage_t store() override;
+	storage_t store() const override;
 	void restore(storage_t to) override;
-	bool isClickable() override;
-	bool isFocusable() override;
-	bool isScrollable() override;
+	bool isClickable() const override;
+	bool isFocusable() const override;
+	bool isScrollable() const override;
 	/// Add a new control to this pane.
 	/// @param ctrl A pointer to the control, which should already be constructed.
 	/// @param key A key to be used to look up the control later.
@@ -45,16 +45,16 @@ public:
 	void recalcRect() override;
 	/// Get the pane's current scroll position.
 	/// @return The current position.
-	long getPosition();
+	long getPosition() const;
 	/// Get the pane's maximum scroll position.
 	/// @return The maximum value.
-	long getMaximum();
+	long getMaximum() const;
 	/// Set the pane's current scroll position.
 	/// @param to The new position.
 	void setPosition(long to);
 	/// Get the scrollbar style.
 	/// @return The style
-	eScrollStyle getStyle();
+	eScrollStyle getStyle() const;
 	/// Set the scrollbar style.
 	/// @param newStyle The new style.
 	void setStyle(eScrollStyle newStyle);
@@ -62,7 +62,7 @@ public:
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers
-	const std::set<eDlogEvt> getSupportedHandlers() const override {
+	std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_CLICK, EVT_SCROLL, EVT_FOCUS, EVT_DEFOCUS};
 	}
 	void forEach(std::function<void(std::string,cControl&)> callback) override;

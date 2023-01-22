@@ -71,7 +71,7 @@ bool cScrollPane::manageFormat(eFormat prop, bool set, boost::any* val) {
 	return true;
 }
 
-cControl::storage_t cScrollPane::store() {
+cControl::storage_t cScrollPane::store() const {
 	// We don't call the superclass store() here like other controls do
 	storage_t storage;
 	storage[""] = scroll.store();
@@ -90,23 +90,23 @@ void cScrollPane::restore(storage_t to) {
 	}
 }
 
-bool cScrollPane::isClickable() {
+bool cScrollPane::isClickable() const {
 	return true;
 }
 
-bool cScrollPane::isFocusable() {
+bool cScrollPane::isFocusable() const {
 	return false;
 }
 
-bool cScrollPane::isScrollable() {
+bool cScrollPane::isScrollable() const {
 	return true;
 }
 
-long cScrollPane::getPosition() {
+long cScrollPane::getPosition() const {
 	return scroll.getPosition();
 }
 
-long cScrollPane::getMaximum() {
+long cScrollPane::getMaximum() const {
 	return scroll.getMaximum();
 }
 
@@ -114,7 +114,7 @@ void cScrollPane::setPosition(long to) {
 	scroll.setPosition(to);
 }
 
-eScrollStyle cScrollPane::getStyle() {
+eScrollStyle cScrollPane::getStyle() const {
 	return scroll.getStyle();
 }
 
@@ -122,7 +122,7 @@ void cScrollPane::setStyle(eScrollStyle style) {
 	scroll.setStyle(style);
 }
 
-bool cScrollPane::hasChild(std::string id) {
+bool cScrollPane::hasChild(std::string id) const {
 	return contents.find(id) != contents.end();
 }
 

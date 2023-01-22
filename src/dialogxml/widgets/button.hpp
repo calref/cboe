@@ -38,29 +38,29 @@ public:
 	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
 	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;
 	void validatePostParse(ticpp::Element& elem, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& elems) override;
-	location getPreferredSize() override;
+	location getPreferredSize() const override;
 	void recalcRect() override;
 	/// Set the type of this button.
 	/// @param newType The desired button type.
 	void setBtnType(eBtnType newType);
 	/// Get the type of this button.
 	/// @return The button type.
-	eBtnType getBtnType();
+	eBtnType getBtnType() const;
 	/// Create a new button.
 	/// @param parent The parent dialog.
 	explicit cButton(cDialog& parent);
 	/// Create a button outside of a dialog
 	/// @param parent The parent window
 	explicit cButton(sf::RenderWindow& parent);
-	bool isClickable() override;
-	bool isFocusable() override;
-	bool isScrollable() override;
+	bool isClickable() const override;
+	bool isFocusable() const override;
+	bool isScrollable() const override;
 	virtual ~cButton();
 	void draw() override;
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers
-	const std::set<eDlogEvt> getSupportedHandlers() const override {
+	std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_CLICK};
 	}
 	cButton& operator=(cButton& other) = delete;

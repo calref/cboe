@@ -131,19 +131,19 @@ void cLedGroup::hide(std::string id){
 	choices[id]->hide();
 }
 
-bool cLedGroup::isClickable(){
+bool cLedGroup::isClickable() const {
 	return true;
 }
 
-bool cLedGroup::isScrollable(){
+bool cLedGroup::isScrollable() const {
 	return false;
 }
 
-bool cLedGroup::isFocusable(){
+bool cLedGroup::isFocusable() const {
 	return false;
 }
 
-bool cLedGroup::hasChild(std::string id) {
+bool cLedGroup::hasChild(std::string id) const {
 	return choices.find(id) != choices.end();
 }
 
@@ -193,11 +193,11 @@ void cLedGroup::setSelected(std::string id){
 	}
 }
 
-std::string cLedGroup::getSelected(){
+std::string cLedGroup::getSelected() const {
 	return curSelect;
 }
 
-std::string cLedGroup::getPrevSelection(){
+std::string cLedGroup::getPrevSelection() const {
 	return prevSelect;
 }
 
@@ -211,7 +211,7 @@ void cLedGroup::draw(){
 	drawFrame(2, frameStyle);
 }
 
-cControl::storage_t cLedGroup::store() {
+cControl::storage_t cLedGroup::store() const {
 	storage_t storage = cControl::store();
 	storage["led-select"] = getSelected();
 	return storage;

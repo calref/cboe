@@ -187,19 +187,19 @@ void cTextField::setInputType(eFldType type) {
 	field_type = type;
 }
 
-bool cTextField::isClickable(){
+bool cTextField::isClickable() const {
 	return true;
 }
 
-bool cTextField::isFocusable(){
+bool cTextField::isFocusable() const {
 	return true;
 }
 
-bool cTextField::isScrollable(){
+bool cTextField::isScrollable() const {
 	return false;
 }
 
-bool cTextField::hasFocus() {
+bool cTextField::hasFocus() const {
 	return haveFocus;
 }
 
@@ -326,6 +326,7 @@ static cKey divineFunction(cKey key) {
 	 This is done to more closely emulate native Mac behaviour.
 	 The Insert and Shift-Delete combos are included to more closely emulate
 	 native Windows behaviour.
+	 For Linux, we provide the same behaviour as Windows.
 	 */
 	if(!key.spec) {
 		if(mod_contains(key.mod, mod_ctrl)) {
@@ -722,7 +723,7 @@ void aTextDelete::append_back(char c) {
 	end++;
 }
 
-cControl::storage_t cTextField::store() {
+cControl::storage_t cTextField::store() const {
 	storage_t storage = cControl::store();
 	storage["fld-ip"] = insertionPoint;
 	storage["fld-sp"] = selectionPoint;

@@ -53,10 +53,10 @@ public:
 	/// The third parameter is always false for an LED group's focus handler.
 	/// You can determine what changed using getPrevSelection() and getSelected(), and can do whatever post-processing
 	/// you want, including selecting a completely different option.
-	const std::set<eDlogEvt> getSupportedHandlers() const override {
+	std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_CLICK, EVT_FOCUS};
 	}
-	storage_t store() override;
+	storage_t store() const override;
 	void restore(storage_t to) override;
 	/// Add a new LED to this group.
 	/// @param ctrl A pointer to the LED, which should already be constructed.
@@ -80,9 +80,9 @@ public:
 	/// Create a new LED group.
 	/// @param parent The parent dialog.
 	explicit cLedGroup(cDialog& parent);
-	bool isClickable() override;
-	bool isFocusable() override;
-	bool isScrollable() override;
+	bool isClickable() const override;
+	bool isFocusable() const override;
+	bool isScrollable() const override;
 	bool handleClick(location where) override;
 	virtual ~cLedGroup();
 	/// Get one of the LEDs in this group.
@@ -90,20 +90,20 @@ public:
 	/// @return A reference to the LED object.
 	/// @throw std::invalid_argument if the choice does not exist in the group.
 	cLed& getChild(std::string id) override;
-	bool hasChild(std::string id) override;
+	bool hasChild(std::string id) const override;
 	/// Set the currently selected LED in this group.
 	/// @param id The unique key of the choice.
 	/// @throw std::invalid_argument if the choice does not exist in the group.
 	void setSelected(std::string id);
 	/// Get the currently selected choice.
 	/// @return id The unique key of the choice.
-	std::string getSelected();
+	std::string getSelected() const;
 	/// Get the previously selected choice.
 	/// @return id The unique key of the choice.
 	/// @note This is intended for use by focus handlers.
 	///
 	/// This refers to the element that was last selected before the selection changed to the current selection.
-	std::string getPrevSelection();
+	std::string getPrevSelection() const;
 	/// Recalculate the LED group's bounding rect.
 	/// Call this after adding choices to the group to ensure that the choice is within the bounding rect.
 	/// If a choice is not within the bounding rect, it will not respond to clicks.

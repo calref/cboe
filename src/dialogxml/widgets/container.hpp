@@ -34,7 +34,7 @@ public:
 	/// Check if a control exists with a given ID.
 	/// @param id The unique key of the control.
 	/// @return true if it exists.
-	virtual bool hasChild(std::string id) = 0;
+	virtual bool hasChild(std::string id) const = 0;
 	/// Get a reference to a child control.
 	/// @param id The unique key of the control.
 	/// @throw std::invalid_argument if the control does not exist.
@@ -46,7 +46,8 @@ public:
 	virtual void forEach(std::function<void(std::string,cControl&)> callback) = 0;
 	/// @copydoc getChild()
 	cControl& operator[](std::string id) {return getChild(id);}
-	bool isContainer() override {return true;}
+	const cControl& operator[](std::string id) const {return const_cast<cContainer&>(*this).getChild(id);}
+	bool isContainer() const override {return true;}
 	bool handleClick(location where) override;
 };
 

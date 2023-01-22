@@ -23,11 +23,11 @@ void cControl::setText(std::string l){
 	lbl = l;
 }
 
-std::string cControl::getText(){
+std::string cControl::getText() const {
 	return lbl;
 }
 
-rectangle cControl::getBounds() {
+rectangle cControl::getBounds() const {
 	return frame;
 }
 
@@ -120,7 +120,7 @@ void cControl::hide(){
 	if(labelCtrl) labelCtrl->hide();
 }
 
-bool cControl::isVisible(){
+bool cControl::isVisible() const {
 	if(!parent || parent->dialogNotToast)
 		return visible;
 	else return false;
@@ -130,7 +130,7 @@ void cControl::setLabelCtrl(cControl* label) {
 	labelCtrl = label;
 }
 
-cKey cControl::getAttachedKey() {
+cKey cControl::getAttachedKey() const {
 	return key;
 }
 
@@ -161,9 +161,9 @@ void cControl::setFormat(eFormat prop, short val) {
 		throw xUnsupportedProp(prop);
 }
 
-short cControl::getFormat(eFormat prop) {
+short cControl::getFormat(eFormat prop) const {
 	boost::any curVal;
-	if(!manageFormat(prop, false, &curVal))
+	if(!const_cast<cControl&>(*this).manageFormat(prop, false, &curVal))
 		throw xUnsupportedProp(prop);
 	switch(prop) {
 		case TXT_WRAP:
@@ -180,8 +180,8 @@ short cControl::getFormat(eFormat prop) {
 	return 0;
 }
 
-bool cControl::canFormat(eFormat prop) {
-	return manageFormat(prop, false, nullptr);
+bool cControl::canFormat(eFormat prop) const {
+	return const_cast<cControl&>(*this).manageFormat(prop, false, nullptr);
 }
 
 void cControl::setColour(sf::Color clr) {
@@ -190,9 +190,9 @@ void cControl::setColour(sf::Color clr) {
 		throw xUnsupportedProp(TXT_COLOUR);
 }
 
-sf::Color cControl::getColour() {
+sf::Color cControl::getColour() const {
 	boost::any curVal;
-	if(!manageFormat(TXT_COLOUR, false, &curVal))
+	if(!const_cast<cControl&>(*this).manageFormat(TXT_COLOUR, false, &curVal))
 		throw xUnsupportedProp(TXT_COLOUR);
 	return boost::any_cast<sf::Color>(curVal);
 }
@@ -238,7 +238,7 @@ bool cControl::handleClick(location){
 	return clicked;
 }
 
-std::string cControl::getAttachedKeyDescription() {
+std::string cControl::getAttachedKeyDescription() const {
 	std::string s;
 	if(key.spec) {
 		auto mod = key.mod;
@@ -329,6 +329,12 @@ void cControl::attachFocusHandler(std::function<bool(cDialog&,std::string,bool)>
 		f(me, id, false);
 	});
 	attachEventHandler<EVT_DEFOCUS>(std::bind(f, _1, _2, true));
+}
+
+bool cControl::haveHandler(eDlogEvt t) const {
+	auto iter = event_handlers.find(t);
+	if(iter == event_handlers.end()) return false;
+	return !iter->second.empty();
 }
 
 bool cControl::triggerClickHandler(cDialog& dlg, std::string id, eKeyMod mods){
@@ -548,7 +554,7 @@ void cControl::validatePostParse(ticpp::Element& elem, std::string fname, const 
 
 cControl::~cControl() {}
 
-eControlType cControl::getType(){
+eControlType cControl::getType() const {
 	return type;
 }
 
@@ -558,19 +564,19 @@ void cControl::setTextToNum(long long what){
 	setText(sout.str());
 }
 
-long long cControl::getTextAsNum(){
+long long cControl::getTextAsNum() const {
 	std::istringstream sin(getText());
 	long long n;
 	sin >> n;
 	return n;
 }
 
-bool cControl::hasKey(){
+bool cControl::hasKey() const {
 	if(key.spec) return true;
 	return key.c != 0;
 }
 
-cControl::storage_t cControl::store() {
+cControl::storage_t cControl::store() const {
 	storage_t storage;
 	storage["text"] = lbl;
 	storage["visible"] = visible;

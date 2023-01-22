@@ -39,12 +39,12 @@ public:
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers
-	const std::set<eDlogEvt> getSupportedHandlers() const override {
+	std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_FOCUS, EVT_DEFOCUS};
 	}
 	bool handleClick(location where) override;
 	void setText(std::string to) override;
-	storage_t store() override;
+	storage_t store() const override;
 	void restore(storage_t to) override;
 	/// Get the current input type of the field.
 	/// @return The input type.
@@ -55,14 +55,14 @@ public:
 	/// Create a new editable text field.
 	/// @param parent The parent dialog.
 	explicit cTextField(cDialog& parent);
-	bool isClickable() override;
-	bool isFocusable() override;
-	bool isScrollable() override;
+	bool isClickable() const override;
+	bool isFocusable() const override;
+	bool isScrollable() const override;
 	virtual ~cTextField();
 	void draw() override;
 	/// Check if this text field currently has input focus.
 	/// @return true if it it is currently focused.
-	bool hasFocus();
+	bool hasFocus() const;
 	/// Handle keyboard input.
 	/// @param key The keypress to handle.
 	void handleInput(cKey key);

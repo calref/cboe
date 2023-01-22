@@ -29,7 +29,7 @@ public:
 	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
 	void validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) override;
 	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
-	storage_t store() override;
+	storage_t store() const override;
 	void restore(storage_t to) override;
 	/// @copydoc setPict(pic_num_t)
 	/// @param type The type of the new icon
@@ -51,19 +51,19 @@ public:
 	void recalcRect() override;
 	/// Get the current icon.
 	/// @return The number of the current icon.
-	pic_num_t getPicNum();
+	pic_num_t getPicNum() const;
 	/// Get the current icon's type.
 	/// @return The type of the current icon.
-	ePicType getPicType();
+	ePicType getPicType() const;
 	/// Create a new icon.
 	/// @param parent The parent dialog.
 	explicit cPict(cDialog& parent);
 	/// Create a new icon without a parent dialog.
 	/// @param parent The parent window.
 	explicit cPict(sf::RenderWindow& parent);
-	bool isClickable() override;
-	bool isFocusable() override;
-	bool isScrollable() override;
+	bool isClickable() const override;
+	bool isFocusable() const override;
+	bool isScrollable() const override;
 	/// Advance the current animation frame.
 	/// Should be called at predictable intervals if the dialog might contain an animated graphic.
 	static void advanceAnim();
@@ -82,7 +82,7 @@ public:
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers
-	const std::set<eDlogEvt> getSupportedHandlers() const override {
+	std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_CLICK};
 	}
 	cPict& operator=(cPict& other) = delete;

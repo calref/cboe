@@ -26,15 +26,15 @@ cScrollbar::cScrollbar(sf::RenderWindow& parent) : cControl(CTRL_SCROLL, parent)
 void cScrollbar::init() {
 }
 
-bool cScrollbar::isClickable(){
+bool cScrollbar::isClickable() const {
 	return true;
 }
 
-bool cScrollbar::isFocusable(){
+bool cScrollbar::isFocusable() const {
 	return false;
 }
 
-bool cScrollbar::isScrollable(){
+bool cScrollbar::isScrollable() const {
 	return true;
 }
 
@@ -67,27 +67,27 @@ void cScrollbar::set_wheel_event_rect(rectangle rect) {
 	this->wheel_event_rect = rect;
 }
 
-long cScrollbar::getPosition() {
+long cScrollbar::getPosition() const {
 	return pos;
 }
 
-long cScrollbar::getMaximum() {
+long cScrollbar::getMaximum() const {
 	return max;
 }
 
-long cScrollbar::getPageSize() {
+long cScrollbar::getPageSize() const {
 	return pgsz;
 }
 
-bool cScrollbar::isVertical() {
+bool cScrollbar::isVertical() const {
 	return vert;
 }
 
-std::string cScrollbar::getLink() {
+std::string cScrollbar::getLink() const {
 	return link;
 }
 
-eScrollStyle cScrollbar::getStyle() {
+eScrollStyle cScrollbar::getStyle() const {
 	return style;
 }
 
@@ -354,23 +354,6 @@ bool cScrollbar::handleClick(location where) {
 	return clicked;
 }
 
-void cScrollbar::setFormat(eFormat prop, short) {
-	throw xUnsupportedProp(prop);
-}
-
-short cScrollbar::getFormat(eFormat prop) {
-	throw xUnsupportedProp(prop);
-}
-
-void cScrollbar::setColour(sf::Color) {
-	// TODO: Colour is unsupported
-}
-
-sf::Color cScrollbar::getColour() {
-	// TODO: Colour is unsupported
-	return sf::Color();
-}
-
 const rectangle cScrollbar::up_rect[NUM_STYLES][4] = {
 	{{0,0,16,16}, {16,0,32,16}, {32,0,48,16}, {48,0,64,16}},
 	{{0,0,10,14}, {10,0,20,14}, {20,0,34,10}, {34,0,48,10}},
@@ -583,12 +566,12 @@ void cScrollbar::validatePostParse(ticpp::Element& who, std::string fname, const
 		parent->getControl(link).setTextToNum(pos);
 }
 
-location cScrollbar::getPreferredSize() {
+location cScrollbar::getPreferredSize() const {
 	if(vert) return {up_rect[style][VERT].width(), 0};
 	else return {0, up_rect[style][HORZ].height()};
 }
 
-cControl::storage_t cScrollbar::store() {
+cControl::storage_t cScrollbar::store() const {
 	storage_t storage = cControl::store();
 	storage["scroll-pos"] = pos;
 	storage["scroll-max"] = max;
