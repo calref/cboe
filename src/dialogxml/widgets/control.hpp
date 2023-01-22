@@ -333,6 +333,8 @@ public:
 	/// The practical effect of this is that hiding or showing this control automatically hides or shows the label as well.
 	/// @param label A pointer to the control that acts as a label.
 	void setLabelCtrl(cControl* label);
+	/// Get the control that serves as a label for this one, if any.
+	cControl* getLabelCtrl();
 	/// Get a view of the control's current state.
 	/// @return A map of string keys to boost::any values, representing the control's state.
 	virtual storage_t store() const;

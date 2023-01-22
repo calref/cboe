@@ -130,6 +130,10 @@ void cControl::setLabelCtrl(cControl* label) {
 	labelCtrl = label;
 }
 
+cControl* cControl::getLabelCtrl() {
+	return labelCtrl;
+}
+
 cKey cControl::getAttachedKey() const {
 	return key;
 }
