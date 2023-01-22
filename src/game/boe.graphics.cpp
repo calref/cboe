@@ -738,8 +738,7 @@ void draw_terrain(short	mode) {
 			where_draw.y += j - 6;
 			if(!(is_out()))
 				light_area[i][j] = (is_town()) ? pt_in_light(view_loc,where_draw) : combat_pt_in_light(where_draw);
-			if(!(is_out()) && ((where_draw.x < 0) || (where_draw.x > univ.town->max_dim - 1)
-								|| (where_draw.y < 0) || (where_draw.y > univ.town->max_dim - 1)))
+			if(!is_out() && !univ.town.is_on_map(where_draw.x, where_draw.y))
 				unexplored_area[i][j] = 0;
 			else unexplored_area[i][j] = 1 - is_explored(where_draw.x,where_draw.y);
 		}
@@ -753,8 +752,7 @@ void draw_terrain(short	mode) {
 			off_terrain = false;
 			
 			draw_frills = true;
-			if(!(is_out()) && ((where_draw.x < 0) || (where_draw.x > univ.town->max_dim - 1)
-								|| (where_draw.y < 0) || (where_draw.y > univ.town->max_dim - 1))) {
+			if(!is_out() && !univ.town.is_on_map(where_draw.x, where_draw.y)) {
 				draw_frills = false;
 				// Warning - this section changes where_draw
 				if(where_draw.x < 0)
@@ -771,8 +769,7 @@ void draw_terrain(short	mode) {
 				spec_terrain = 0;
 			}
 			else if(is_out()) {
-				if((where_draw.x < 0) || (where_draw.x > 95)
-					|| (where_draw.y < 0) || (where_draw.y > 95))
+				if(!univ.out.is_on_map(where_draw.x, where_draw.y))
 					can_draw = 0;
 				else {
 					spec_terrain = univ.out[where_draw.x][where_draw.y];
@@ -962,6 +959,7 @@ void place_trim(short q,short r,location where,ter_num_t ter_type) {
 	}
 	else {
 		// TODO: Shouldn't we subtract one here?
+		// The outdoors case (above) does subtract 1, so one of them must be wrong...
 		if(where.x == univ.town->max_dim)
 			at_right = true;
 		if(where.y == univ.town->max_dim)

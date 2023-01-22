@@ -118,6 +118,7 @@ public:
 	bool set_force_cage(short x, short y, bool b);
 	bool set_road(short x, short y, bool b);
 	bool is_impassable(short x, short y);
+	bool is_on_map(short x, short y) const;
 	void writeTo(cTagFile& file) const;
 	void readFrom(const cTagFile& file);
 	
@@ -145,6 +146,7 @@ public:
 	// These take global coords (ie 0..95)
 	bool is_spot(int x, int y);
 	bool is_road(int x, int y);
+	bool is_on_map(int x, int y);
 	
 	void import_legacy(legacy::out_info_type& old);
 	

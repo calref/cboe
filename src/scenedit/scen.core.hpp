@@ -21,6 +21,7 @@ bool edit_make_scen_1(std::string& filename,std::string& title,bool& grass);
 void edit_scenario_events();
 bool build_scenario();
 bool edit_vehicle(class cVehicle& what, int num, bool is_boat);
+class cArea* get_current_area();
 
 bool check_range_msg(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name,std::string xtra);
 bool check_range(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name);

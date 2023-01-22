@@ -134,9 +134,7 @@ location local_to_global(location local) {
 	return global;
 }
 bool loc_off_world(location p1) {
-	if((p1.x < 0) || (p1.x > univ.town->max_dim) || (p1.y < 0) || (p1.y > univ.town->max_dim))
-		return true;
-	else return false;
+	return !univ.town.is_on_map(p1.x, p1.y);
 }
 
 bool loc_off_act_area(location p1) {
@@ -215,16 +213,11 @@ short combat_obscurity(short x, short y) {
 }
 
 ter_num_t coord_to_ter(short x,short y) {
-	if(x < 0 || y < 0) return 0;
 	if(is_out()) {
-		if(x >= univ.out.max_dim || y >= univ.out.max_dim) {
-			return 0;
-		}
+		if(!univ.out.is_on_map(x, y)) return 0;
 		return univ.out[x][y];
 	}
-	if(x >= univ.town->max_dim || y >= univ.town->max_dim) {
-		return 0;
-	}
+	if(!univ.town.is_on_map(x, y)) return 0;
 	return univ.town->terrain(x,y);
 }
 
@@ -250,7 +243,7 @@ void update_explored(const location dest) {
 		univ.out.out_e[dest.x][dest.y] = 2;
 		for(look.x = dest.x - 4; look.x < dest.x + 5; look.x++)
 			for(look.y = dest.y - 4; look.y < dest.y + 5; look.y++) {
-				if((look.x == minmax(0,univ.out.max_dim-1,(int)look.x)) && (look.y == minmax(0,univ.out.max_dim-1,(int)look.y))) {
+				if(univ.out.is_on_map(look.x, look.y)) {
 					if(univ.out.out_e[look.x][look.y] == 0) {
 						if(can_see_light(dest, look, sight_obscurity) < 5) {
 							univ.out.out_e[look.x][look.y] = 1;
@@ -271,9 +264,8 @@ void update_explored(const location dest) {
 
 // All purpose function to check is spot is free for travel into.
 bool is_blocked(location to_check) {
-	if(to_check.x < 0 || to_check.y < 0) return true;
 	if(is_out()) {
-		if(to_check.x >= univ.out.max_dim || to_check.y >= univ.out.max_dim)
+		if(!univ.out.is_on_map(to_check.x, to_check.y))
 			return true;
 		if(impassable(univ.out[to_check.x][to_check.y])) {
 			return true;
@@ -288,7 +280,7 @@ bool is_blocked(location to_check) {
 	}
 	
 	if((is_town()) || (is_combat())) {
-		if(to_check.x >= univ.town->max_dim || to_check.y >= univ.town->max_dim)
+		if(!univ.town.is_on_map(to_check.x, to_check.y))
 			return true;
 		ter_num_t ter = univ.town->terrain(to_check.x,to_check.y);
 		
@@ -404,7 +396,7 @@ bool can_see_monst(location l,short m_num) {
 
 bool outd_is_blocked(location to_check) {
 	if(overall_mode == MODE_OUTDOORS) {
-		if(to_check.x < 0 || to_check.y < 0 || to_check.x >= univ.out.max_dim || to_check.y >= univ.out.max_dim)
+		if(!univ.out.is_on_map(to_check.x, to_check.y))
 			return true;
 		if(impassable(univ.out[to_check.x][to_check.y])) {
 			return true;
@@ -484,8 +476,7 @@ bool pt_in_light(location from_where,location to_where) { // Assumes, of course,
 	
 	if(univ.town->lighting_type == 0)
 		return true;
-	if((to_where.x < 0) || (to_where.x >= univ.town->max_dim)
-		|| (to_where.y < 0) || (to_where.y >= univ.town->max_dim))
+	if(!univ.town.is_on_map(to_where.x, to_where.y))
 		return true;
 	if(univ.town->lighting[to_where.x][to_where.y])
 		return true;
@@ -501,8 +492,7 @@ bool combat_pt_in_light(location to_where) {
 	
 	if((univ.town->lighting_type == 0) || (which_combat_type == 0))
 		return true;
-	if((to_where.x < 0) || (to_where.x >= univ.town->max_dim)
-		|| (to_where.y < 0) || (to_where.y >= univ.town->max_dim))
+	if(!univ.town.is_on_map(to_where.x, to_where.y))
 		return true;
 	if(univ.town->lighting[to_where.x][to_where.y])
 		return true;

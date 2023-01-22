@@ -4248,7 +4248,7 @@ void townmode_spec(const runtime_state& ctx) {
 									if(x == 0 && y == 0)
 										continue;
 									location next(l.x+x,l.y+y);
-									if(next.x < 0 || next.y < 0 || next.x >= univ.town->max_dim || next.y >= univ.town->max_dim)
+									if(!univ.town.is_on_map(next.x, next.y))
 										continue;
 									if(!checked.count(next))
 										to_check.push(next);

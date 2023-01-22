@@ -966,7 +966,7 @@ void draw_terrain(){
 		// Width available:  64 4x4 tiles, 42 6x6 tiles, or 21 12x12 tiles -- 256 pixels
 		// Height available: 81 4x4 tiles, 54 6x6 tiles, or 27 12x12 tiles -- 324 pixels
 		short size = mini_map_scales[cur_viewing_mode - 1];
-		int max_dim = (editing_town ? town->max_dim : 48);
+		int max_dim = get_current_area()->max_dim;
 		int xMin = 0, yMin = 0, xMax = max_dim, yMax = max_dim;
 		if(cen_x + 5 > 256 / size) {
 			xMin = cen_x + 5 - (256 / size);

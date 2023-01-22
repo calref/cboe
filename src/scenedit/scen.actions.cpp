@@ -681,6 +681,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 }
 
 static bool handle_terrain_action(location the_point, bool ctrl_hit) {
+	cArea* cur_area = get_current_area();
 	if(mouse_spot.x >= 0 && mouse_spot.y >= 0) {
 		if(cur_viewing_mode == 0) {
 			spot_hit.x = cen_x + mouse_spot.x - 4;
@@ -713,8 +714,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 		eScenMode old_mode = overall_mode;
 		change_made = true;
 		
-		if((spot_hit.x < 0) || (spot_hit.x > ((editing_town) ? town->max_dim - 1 : 47)) ||
-		   (spot_hit.y < 0) || (spot_hit.y > ((editing_town) ? town->max_dim - 1 : 47))) ;
+		if(!cur_area->is_on_map(spot_hit)) ;
 		else switch(overall_mode) {
 			case MODE_DRAWING:
 				if((!mouse_button_held && terrain_matches(spot_hit.x,spot_hit.y,current_terrain_type)) ||
@@ -1167,17 +1167,19 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 		need_redraw = true;
 		mouse_button_held = true;
 	}
-	if((the_point.in(border_rect[2])) & (cen_y < (editing_town ? town->max_dim - 5 : 44))) {
+	auto max_dim = cur_area->max_dim - 5;
+	if(!editing_town) max_dim++;
+	if((the_point.in(border_rect[2])) && (cen_y < max_dim)) {
 		cen_y++;
 		if(ctrl_hit)
-			cen_y = (editing_town) ? town->max_dim - 5 : 44;
+			cen_y = max_dim;
 		need_redraw = true;
 		mouse_button_held = true;
 	}
-	if((the_point.in(border_rect[3])) & (cen_x < (editing_town ? town->max_dim - 5 : 44))) {
+	if((the_point.in(border_rect[3])) && (cen_x < max_dim)) {
 		cen_x++;
 		if(ctrl_hit)
-			cen_x = (editing_town) ? town->max_dim - 5 : 44;
+			cen_x = max_dim;
 		need_redraw = true;
 		mouse_button_held = true;
 	}
@@ -1587,14 +1589,13 @@ void swap_terrain() {
 	ter_num_t ter;
 	
 	if(!change_ter(a,b,c)) return;
+	cArea* cur_area = get_current_area();
 	
-	for(short i = 0; i < ((editing_town) ? town->max_dim : 48); i++)
-		for(short j = 0; j < ((editing_town) ? town->max_dim : 48); j++) {
-			ter = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
+	for(short i = 0; i < cur_area->max_dim; i++)
+		for(short j = 0; j < cur_area->max_dim; j++) {
+			ter = cur_area->terrain(i,j);
 			if((ter == a) && (get_ran(1,1,100) <= c)) {
-				if(editing_town)
-					town->terrain(i,j) = b;
-				else current_terrain->terrain[i][j] = b;
+				cur_area->terrain(i,j) = b;
 			}
 		}
 	
@@ -1791,9 +1792,10 @@ void handle_scroll(const sf::Event& event) {
 void change_circle_terrain(location center,short radius,ter_num_t terrain_type,short probability) {
 	// prob is 0 - 20, 0 no, 20 always
 	location l;
+	cArea* cur_area = get_current_area();
 	
-	for(short i = 0; i < ((editing_town) ? town->max_dim : 48); i++)
-		for(short j = 0; j < ((editing_town) ? town->max_dim : 48); j++) {
+	for(short i = 0; i < cur_area->max_dim; i++)
+		for(short j = 0; j < cur_area->max_dim; j++) {
 			l.x = i;
 			l.y = j;
 			if((dist(center,l) <= radius) && (get_ran(1,1,20) <= probability))
@@ -1804,9 +1806,10 @@ void change_circle_terrain(location center,short radius,ter_num_t terrain_type,s
 void change_rect_terrain(rectangle r,ter_num_t terrain_type,short probability,bool hollow) {
 	// prob is 0 - 20, 0 no, 20 always
 	location l;
+	cArea* cur_area = get_current_area();
 	
-	for(short i = 0; i < ((editing_town) ? town->max_dim : 48); i++)
-		for(short j = 0; j < ((editing_town) ? town->max_dim : 48); j++) {
+	for(short i = 0; i < cur_area->max_dim; i++)
+		for(short j = 0; j < cur_area->max_dim; j++) {
 			l.x = i;
 			l.y = j;
 			if((i >= r.left) && (i <= r.right) && (j >= r.top) && (j <= r.bottom)
@@ -1823,7 +1826,7 @@ void flood_fill_terrain(location start, ter_num_t terrain_type) {
 	std::stack<location> to_visit;
 	std::set<location, loc_compare> visited;
 	to_visit.push(start);
-	int max_dim = editing_town ? town->max_dim : current_terrain->max_dim;
+	cArea* cur_area = get_current_area();
 	
 	while(!to_visit.empty()) {
 		location this_loc = to_visit.top();
@@ -1833,24 +1836,23 @@ void flood_fill_terrain(location start, ter_num_t terrain_type) {
 			location adj_loc = this_loc;
 			adj_loc.x += dx[i];
 			adj_loc.y += dy[i];
-			if(adj_loc.x < 0 || adj_loc.x >= max_dim || adj_loc.y < 0 || adj_loc.y >= max_dim)
+			if(!cur_area->is_on_map(adj_loc))
 				continue;
-			ter_num_t check = editing_town ? town->terrain(adj_loc.x, adj_loc.y) : current_terrain->terrain[adj_loc.x][adj_loc.y];
+			ter_num_t check = cur_area->terrain(adj_loc.x, adj_loc.y);
 			if(check == to_replace && !visited.count(adj_loc))
 				to_visit.push(adj_loc);
 		}
-		if(editing_town)
-			town->terrain(this_loc.x, this_loc.y) = terrain_type;
-		else current_terrain->terrain[this_loc.x][this_loc.y] = terrain_type;
+		cur_area->terrain(this_loc.x, this_loc.y) = terrain_type;
 	}
 }
 
 void frill_up_terrain() {
 	ter_num_t terrain_type;
+	cArea* cur_area = get_current_area();
 	
-	for(short i = 0; i < ((editing_town) ? town->max_dim : 48); i++)
-		for(short j = 0; j < ((editing_town) ? town->max_dim : 48); j++) {
-			terrain_type = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
+	for(short i = 0; i < cur_area->max_dim; i++)
+		for(short j = 0; j < cur_area->max_dim; j++) {
+			terrain_type = cur_area->terrain(i,j);
 			
 			for(size_t k = 0; k < scenario.ter_types.size(); k++) {
 				if(terrain_type == k) continue;
@@ -1859,27 +1861,24 @@ void frill_up_terrain() {
 					terrain_type = k;
 			}
 			
-			if(editing_town)
-				town->terrain(i,j) = terrain_type;
-			else current_terrain->terrain[i][j] = terrain_type;
+			cur_area->terrain(i,j) = terrain_type;
 		}
 	draw_terrain();
 }
 
 void unfrill_terrain() {
 	ter_num_t terrain_type;
+	cArea* cur_area = get_current_area();
 	
-	for(short i = 0; i < ((editing_town) ? town->max_dim : 48); i++)
-		for(short j = 0; j < ((editing_town) ? town->max_dim : 48); j++) {
-			terrain_type = editing_town ? town->terrain(i,j) : current_terrain->terrain[i][j];
+	for(short i = 0; i < cur_area->max_dim; i++)
+		for(short j = 0; j < cur_area->max_dim; j++) {
+			terrain_type = cur_area->terrain(i,j);
 			cTerrain& ter = scenario.ter_types[terrain_type];
 			
 			if(ter.frill_for >= 0)
 				terrain_type = ter.frill_for;
 			
-			if(editing_town)
-				town->terrain(i,j) = terrain_type;
-			else current_terrain->terrain[i][j] = terrain_type;
+			cur_area->terrain(i,j) = terrain_type;
 		}
 	draw_terrain();
 }
@@ -1922,15 +1921,11 @@ static const std::array<location,5> trim_diffs = {{
 
 void set_terrain(location l,ter_num_t terrain_type) {
 	location l2;
+	cArea* cur_area = get_current_area();
 	
-	if((editing_town) && ((l.x < 0) || (l.x > town->max_dim - 1) || (l.y < 0) || (l.y > town->max_dim - 1)))
-		return ;
-	if(!editing_town && ((l.x < 0) || (l.x > 47) || (l.y < 0) || (l.y > 47)))
-		return ;
+	if(!cur_area->is_on_map(l)) return;
 	
-	if(editing_town)
-		town->terrain(l.x,l.y) = terrain_type;
-	else current_terrain->terrain[l.x][l.y] = terrain_type;
+	cur_area->terrain(l.x,l.y) = terrain_type;
 	l2 = l;
 	
 	// Large objects (eg rubble)
@@ -1942,9 +1937,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 		while(obj_loc.y > 0) l2.y-- , obj_loc.y--;
 		for(short i = 0; i < obj_dim.x; i++)
 			for(short j = 0; j < obj_dim.y; j++){
-				if(editing_town)
-					town->terrain(l2.x + i,l2.y + j) = find_object_part(q,i,j,terrain_type);
-				else current_terrain->terrain[l2.x + i][l2.y + j] = find_object_part(q,i,j,terrain_type);
+				cur_area->terrain(l2.x + i,l2.y + j) = find_object_part(q,i,j,terrain_type);
 			}
 	}
 	
@@ -1967,9 +1960,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 				// Otherwise it might overwrite important things, like buildings or forests.
 				if(ter_there != scenario.get_ter_from_ground(ter_type.trim_ter))
 					continue;
-				if(editing_town)
-					town->terrain(l3.x,l3.y) = new_ter;
-				else current_terrain->terrain[l3.x][l3.y] = new_ter;
+				cur_area->terrain(l3.x,l3.y) = new_ter;
 			}
 		}
 	}
@@ -1986,12 +1977,12 @@ void set_terrain(location l,ter_num_t terrain_type) {
 			mouse_button_held = false;
 			return;
 		}
-		auto& signs = editing_town ? town->sign_locs : current_terrain->sign_locs;
+		auto& signs = cur_area->sign_locs;
 		auto iter = std::find(signs.begin(), signs.end(), l);
 		if(iter == signs.end()) {
-			iter = std::find_if(signs.begin(), signs.end(), [](const sign_loc_t& sign) {
+			iter = std::find_if(signs.begin(), signs.end(), [cur_area](const sign_loc_t& sign) {
 				if(sign.x == 100) return true;
-				ter_num_t ter = editing_town ? town->terrain(sign.x,sign.y) : current_terrain->terrain[sign.x][sign.y];
+				ter_num_t ter = cur_area->terrain(sign.x,sign.y);
 				return scenario.ter_types[ter].special != eTerSpec::IS_A_SIGN;
 			});
 			if(iter == signs.end()) {
@@ -2000,7 +1991,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 			}
 		}
 		static_cast<location&>(*iter) = l;
-		ter_num_t terrain_type = editing_town ? town->terrain(iter->x,iter->y) : current_terrain->terrain[iter->x][iter->y];
+		ter_num_t terrain_type = cur_area->terrain(iter->x,iter->y);
 		edit_sign(*iter, iter - signs.begin(), scenario.ter_types[terrain_type].picture);
 		mouse_button_held = false;
 	}
@@ -2009,15 +2000,10 @@ void set_terrain(location l,ter_num_t terrain_type) {
 void adjust_space(location l) {
 	bool needed_change = false;
 	location l2;
-	short i,j;
+	cArea* cur_area = get_current_area();
 	
-	i = l.x;
-	j = l.y;
-	if((editing_town) && ((i < 0) || (i > town->max_dim - 1) || (j < 0) || (j > town->max_dim - 1)))
-		return ;
-	if(!editing_town && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
-		return ;
-	size_t size = editing_town ? town->max_dim : 48;
+	if(!cur_area->is_on_map(l)) return;
+	size_t size = cur_area->max_dim;
 	ter_num_t off_map = -1;
 	
 	ter_num_t store_ter[3][3];
@@ -2026,7 +2012,7 @@ void adjust_space(location l) {
 	eTrimType store_trim[3][3];
 	for(int dx = -1; dx <= 1; dx++) {
 		for(int dy = -1; dy <= 1; dy++) {
-			int x = i + dx, y = j + dy;
+			int x = l.x + dx, y = l.y + dy;
 			if(x < 0 || x >= size || y < 0 || y >= size) {
 				store_ter[dx+1][dy+1] = off_map;
 				continue;
@@ -2097,9 +2083,7 @@ void adjust_space(location l) {
 		ter_num_t replace = scenario.get_trim_terrain(main_ground, trim_ground, need_trim);
 		if(replace != 90) { // If we got 90 back, the required trim doesn't exist.
 			needed_change = true;
-			if(editing_town)
-				town->terrain(i,j) = replace;
-			else current_terrain->terrain[i][j] = replace;
+			cur_area->terrain(l.x,l.y) = replace;
 		}
 	}
 	
@@ -2707,14 +2691,8 @@ bool is_lava(short x,short y) {
 }
 
 ter_num_t coord_to_ter(short x,short y) {
-	if(x < 0 || y < 0) return 0;
-	if(editing_town) {
-		if(x >= town->max_dim || y >= town->max_dim) return 0;
-		return town->terrain(x,y);
-	} else {
-		if(x >= current_terrain->max_dim || y >= current_terrain->max_dim) return 0;
-		return current_terrain->terrain[x][y];
-	}
+	if(!get_current_area()->is_on_map(loc(x,y))) return 0;
+	return get_current_area()->terrain(x,y);
 }
 
 bool monst_on_space(location loc,short m_num) {

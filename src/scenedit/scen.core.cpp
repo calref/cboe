@@ -55,6 +55,11 @@ const std::set<eItemAbil> items_no_strength = {
 	eItemAbil::QUICKFIRE,
 };
 
+cArea* get_current_area() {
+	if(editing_town) return town;
+	else return current_terrain;
+}
+
 static bool save_ter_info(cDialog& me, cTerrain& ter) {
 	eTerSpec prop = eTerSpec(boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["prop"]).getSelected().substr(4)));
 	int spec_type = me["flag2"].getTextAsNum();
