@@ -1187,6 +1187,7 @@ static bool can_build_roads_on(ter_num_t ter) {
 }
 
 static bool connect_roads(ter_num_t ter){
+	if(ter >= univ.scenario.ter_types.size()) return false;
 	eTrimType trim = univ.scenario.ter_types[ter].trim_type;
 	eTerSpec spec = univ.scenario.ter_types[ter].special;
 	if(trim == eTrimType::CITY)
@@ -1252,10 +1253,15 @@ void place_road(short q,short r,location where,bool here) {
 		ter_num_t ter = coord_to_ter(where.x, where.y);
 		ter_num_t ref = coord_to_ter(where.x,where.y);
 		bool horz = false, vert = false;
-		eTrimType trim = univ.scenario.ter_types[ref].trim_type;
+		eTrimType trim = eTrimType::NONE, vertTrim = eTrimType::NONE;
+		if(ref < univ.scenario.ter_types.size()) {
+			trim = univ.scenario.ter_types[ref].trim_type;
+		}
+		if(ter < univ.scenario.ter_types.size()) {
+			vertTrim = univ.scenario.ter_types[ter].trim_type;
+		}
 		if(where.y > 0)
 			ter = coord_to_ter(where.x,where.y - 1);
-		eTrimType vertTrim = univ.scenario.ter_types[ter].trim_type;
 		if((where.y == 0) || connect_roads(ter))
 			vert = can_build_roads_on(ref);
 		else if((vertTrim == eTrimType::S && trim == eTrimType::N) || (vertTrim == eTrimType::N && trim == eTrimType::S))

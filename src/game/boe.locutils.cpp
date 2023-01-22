@@ -442,6 +442,7 @@ bool outd_is_special(location to_check) {
 }
 
 bool impassable(ter_num_t terrain_to_check) {
+	if(terrain_to_check >= univ.scenario.ter_types.size()) return true;
 	if(univ.scenario.ter_types[terrain_to_check].blocksMove())
 		return true;
 	else return false;
