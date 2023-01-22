@@ -515,11 +515,12 @@ bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 	}
 	
 	if(!did_cancel) {
-		cLed& ui_scale = dynamic_cast<cLed&>(me["scaleui"]);
-		if(ui_scale.getState() == led_off)
-			set_pref("UIScaleCharEd", 1.0);
-		else if(ui_scale.getState() == led_red)
-			set_pref("UIScaleCharEd", 2.0);
+		std::string scale = dynamic_cast<cLedGroup&>(me["scaleui"]).getSelected();
+		if(scale == "1") set_pref("UIScaleCharEd", 1.0);
+		else if(scale == "1_5") set_pref("UIScaleCharEd", 1.5);
+		else if(scale == "2") set_pref("UIScaleCharEd", 2.0);
+		else if(scale == "3") set_pref("UIScaleCharEd", 3.0);
+		else if(scale == "4") set_pref("UIScaleCharEd", 4.0);
 		set_pref("PlaySoundsCharEd", dynamic_cast<cLed&>(me["nosound"]).getState() == led_off);
 	}
 	save_prefs();
@@ -532,8 +533,28 @@ void pick_preferences() {
 	cDialog prefsDlog(*ResMgr::dialogs.get("pref-character"));
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 	
+	cLedGroup& uiScale = dynamic_cast<cLedGroup&>(prefsDlog["scaleui"]);
 	double ui_scale = get_float_pref("UIScaleCharEd", 1.0);
-	dynamic_cast<cLed&>(prefsDlog["scaleui"]).setState(ui_scale == 1.0 ? led_off : (ui_scale == 2.0 ? led_red : led_green));
+	if (ui_scale>0.95 && ui_scale<1.05) uiScale.setSelected("1");
+	else if (ui_scale>1.45 && ui_scale<1.55) uiScale.setSelected("1_5");
+	else if (ui_scale>1.95 && ui_scale<2.05) uiScale.setSelected("2");
+	else if (ui_scale>2.95 && ui_scale<3.05) uiScale.setSelected("3");
+	else if (ui_scale>3.95 && ui_scale<4.05) uiScale.setSelected("4");
+	else uiScale.setSelected("other");
+	
+	if(uiScale.getSelected() == "other") {
+		auto val = std::to_string(ui_scale);
+		while(val.length() > 2 && val[val.length() - 1] == val[val.length() - 2]) {
+			val.pop_back();
+		}
+		while(val.length() > 1 && (val.back() == '.' || val.back() == '0')) {
+			val.pop_back();
+		}
+		uiScale["other"].setText("Custom: " + val);
+	} else {
+		uiScale["other"].hide();
+	}
+	
 	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySoundsCharEd", true) ? led_off : led_red);
 	
 	prefsDlog.run();
