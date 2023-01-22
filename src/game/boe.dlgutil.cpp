@@ -1249,6 +1249,31 @@ void pick_preferences() {
 	else if (ui_map_scale>2.95 && ui_map_scale<3.05) uiMapScale.setSelected("3");
 	else if (ui_map_scale>3.95 && ui_map_scale<4.05) uiMapScale.setSelected("4");
 	else uiMapScale.setSelected("other");
+	
+	if(uiScale.getSelected() == "other") {
+		auto val = std::to_string(ui_scale);
+		while(val.length() > 2 && val[val.length() - 1] == val[val.length() - 2]) {
+			val.pop_back();
+		}
+		while(val.length() > 1 && (val.back() == '.' || val.back() == '0')) {
+			val.pop_back();
+		}
+		uiScale["other"].setText("Custom: " + val);
+	} else {
+		uiScale["other"].hide();
+	}
+	if(uiMapScale.getSelected() == "other") {
+		auto val = std::to_string(ui_map_scale);
+		while(val.length() > 2 && val[val.length() - 1] == val[val.length() - 2]) {
+			val.pop_back();
+		}
+		while(val.length() > 1 && (val.back() == '.' || val.back() == '0')) {
+			val.pop_back();
+		}
+		uiMapScale["other"].setText("Custom: " + val);
+	} else {
+		uiMapScale["other"].hide();
+	}
 
 	void (*give_help)(short,short,cDialog&) = ::give_help;
 	
