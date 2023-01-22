@@ -283,7 +283,7 @@ static std::vector<short> get_small_icons(location at, ter_num_t t_to_draw) {
 		icons.push_back(ter_small_i);
 	
 	if(is_special(at.x, at.y)) {
-		std::vector<spec_loc_t>& spec_list = editing_town ? town->special_locs : current_terrain->special_locs;
+		std::vector<spec_loc_t>& spec_list = get_current_area()->special_locs;
 		int num_spec = std::count_if(spec_list.begin(), spec_list.end(), [at](spec_loc_t which) {
 			return which.spec >= 0 && which.x == at.x && which.y == at.y;
 		});
@@ -764,9 +764,11 @@ void draw_terrain(){
 				which_pt.x = cen_x + q - 4;
 				which_pt.y =cen_y + r - 4;
 				
-				if(!editing_town) {
 					for(short i = 0; i < scenario.boats.size(); i++) {
-						if(scenario.boats[i].which_town == 200 &&
+						if(editing_town && scenario.boats[i].which_town == cur_town &&
+						   scenario.boats[i].loc == which_pt)
+							rect_draw_some_item(vehicle_gworld,boat_rect,mainPtr,destrec,sf::BlendAlpha);
+						if(!editing_town && scenario.boats[i].which_town == 200 &&
 						   scenario.boats[i].sector == cur_out &&
 						   scenario.boats[i].loc == which_pt)
 							rect_draw_some_item(vehicle_gworld,boat_rect,mainPtr,destrec,sf::BlendAlpha);
@@ -775,29 +777,17 @@ void draw_terrain(){
 					for(short i = 0; i < scenario.horses.size(); i++) {
 						source_rect = boat_rect;
 						source_rect.offset(0,36);
-						if(scenario.horses[i].which_town == 200 &&
+						if(editing_town && scenario.horses[i].which_town == cur_town &&
+						   scenario.horses[i].loc == which_pt)
+							rect_draw_some_item(vehicle_gworld,source_rect,mainPtr,destrec,sf::BlendAlpha);
+						if(!editing_town && scenario.horses[i].which_town == 200 &&
 						   scenario.horses[i].sector == cur_out &&
 						   scenario.horses[i].loc == which_pt)
 							rect_draw_some_item(vehicle_gworld,source_rect,mainPtr,destrec,sf::BlendAlpha);
 						
 					}
-				}
 				
 				if(editing_town) {
-					for(short i = 0; i < scenario.boats.size(); i++) {
-						if(scenario.boats[i].which_town == cur_town &&
-						   scenario.boats[i].loc == which_pt)
-							rect_draw_some_item(vehicle_gworld,boat_rect,mainPtr,destrec,sf::BlendAlpha);
-						
-					}
-					for(short i = 0; i < scenario.horses.size(); i++) {
-						source_rect = boat_rect;
-						source_rect.offset(0,36);
-						if(scenario.horses[i].which_town == cur_town &&
-						   scenario.horses[i].loc == which_pt)
-							rect_draw_some_item(vehicle_gworld,source_rect,mainPtr,destrec,sf::BlendAlpha);
-						
-					}
 					if(is_field_type(cen_x + q - 4,cen_y + r - 4, FIELD_WEB)) {
 						from_rect = calc_rect(5,0);
 						rect_draw_some_item(fields_gworld,from_rect,mainPtr,destrec,sf::BlendAlpha);
@@ -919,18 +909,18 @@ void draw_terrain(){
 		
 		clip_rect(mainPtr,clipping_rect);
 		
+		// draw info rects
+		   for(auto& area_desc : get_current_area()->area_desc)
+			   if(area_desc.left > 0) {
+				   draw_rect.left = 22 + 28 * (area_desc.left - cen_x + 4);
+				   draw_rect.right = 22 + 28 * (area_desc.right - cen_x + 4);
+				   draw_rect.top = 24 + 36 * (area_desc.top - cen_y + 4);
+				   draw_rect.bottom = 24 + 36 * (area_desc.bottom - cen_y + 4);
+				   draw_rect.inset(-10, -13);
+				   draw_rect.offset(TER_RECT_UL_X, TER_RECT_UL_Y);
+				   frame_rect(mainPtr, draw_rect, Colours::RED);
+			   }
 		if(editing_town) {
-			// draw info rects
-			for(short i = 0; i < town->area_desc.size(); i++)
-				if(town->area_desc[i].left > 0) {
-					draw_rect.left = 22 + 28 * (town->area_desc[i].left - cen_x + 4);
-					draw_rect.right = 22 + 28 * (town->area_desc[i].right - cen_x + 4);
-					draw_rect.top = 24 + 36 * (town->area_desc[i].top - cen_y + 4);
-					draw_rect.bottom = 24 + 36 * (town->area_desc[i].bottom - cen_y + 4);
-					draw_rect.inset(-10, -13);
-					draw_rect.offset(TER_RECT_UL_X,TER_RECT_UL_Y);
-					frame_rect(mainPtr, draw_rect, Colours::RED);
-				}
 			// draw border rect
 			draw_rect.left = 21 + 28 * (town->in_town_rect.left - cen_x + 4);
 			draw_rect.right = 21 + 28 * (town->in_town_rect.right - cen_x + 4);
@@ -939,19 +929,6 @@ void draw_terrain(){
 			draw_rect.inset(10, 13);
 			draw_rect.offset(TER_RECT_UL_X, TER_RECT_UL_Y);
 			frame_rect(mainPtr, draw_rect, sf::Color::White);
-		}
-		if(!editing_town) {
-			// draw info rects
-			for(short i = 0; i < current_terrain->area_desc.size(); i++)
-				if(current_terrain->area_desc[i].left > 0) {
-					draw_rect.left = 22 + 28 * (current_terrain->area_desc[i].left - cen_x + 4);
-					draw_rect.right = 22 + 28 * (current_terrain->area_desc[i].right - cen_x + 4);
-					draw_rect.top = 24 + 36 * (current_terrain->area_desc[i].top - cen_y + 4);
-					draw_rect.bottom = 24 + 36 * (current_terrain->area_desc[i].bottom - cen_y + 4);
-					draw_rect.inset(-10, -13);
-					draw_rect.offset(TER_RECT_UL_X, TER_RECT_UL_Y);
-					frame_rect(mainPtr, draw_rect, Colours::RED);
-				}
 		}
 		clip_rect(mainPtr, terrain_rect);
 		
@@ -981,7 +958,7 @@ void draw_terrain(){
 			for(short r = yMin; r < yMax; r++) {
 				if(q - xMin < 0 || q - xMin >= max_dim || r - yMin < 0 || r - yMin >= max_dim)
 					t_to_draw = 90;
-				else t_to_draw = editing_town ? town->terrain(q,r) : current_terrain->terrain[q][r];
+				else t_to_draw = get_current_area()->terrain(q,r);
 				draw_one_tiny_terrain_spot(q-xMin,r-yMin,t_to_draw,size,is_road(q,r));
 				small_what_drawn[q][r] = t_to_draw;
 			}
@@ -1547,14 +1524,9 @@ void set_string(std::string string,std::string string2) {
 bool is_special(short i,short j) {
 	location check(i,j);
 	
-	if(editing_town)
-		for(short k = 0; k < town->special_locs.size(); k++)
-			if(town->special_locs[k] == check && town->special_locs[k].spec >= 0)
-				return true;
-	if(!editing_town)
-		for(short k = 0; k < current_terrain->special_locs.size(); k++)
-			if(current_terrain->special_locs[k] == check && current_terrain->special_locs[k].spec >= 0)
-				return true;
+	for(auto loc : get_current_area()->special_locs)
+		if(loc == check && loc.spec >= 0)
+			return true;
 	
 	return false;
 }

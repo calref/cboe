@@ -755,7 +755,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					change_made = true;
 				}
 				else { // MODE_ROOM_RECT
-					auto& area_descs = editing_town ? town->area_desc : current_terrain->area_desc;
+					auto& area_descs = cur_area->area_desc;
 					auto iter = std::find_if(area_descs.begin(), area_descs.end(), [](const info_rect_t& r) {
 						return r.right == 0;
 					});
@@ -776,13 +776,12 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 			case MODE_SET_WANDER_POINTS:
 				if(mouse_button_held)
 					break;
-				if(!editing_town) {
-					current_terrain->wandering_locs[mode_count - 1].x = spot_hit.x;
-					current_terrain->wandering_locs[mode_count - 1].y = spot_hit.y;
-				}
 				if(editing_town) {
 					town->wandering_locs[mode_count - 1].x = spot_hit.x;
 					town->wandering_locs[mode_count - 1].y = spot_hit.y;
+				} else {
+					current_terrain->wandering_locs[mode_count - 1].x = spot_hit.x;
+					current_terrain->wandering_locs[mode_count - 1].y = spot_hit.y;
 				}
 				mode_count--;
 				switch(mode_count) {
@@ -927,26 +926,26 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				mouse_button_held = true;
 				break;
 			case MODE_TOGGLE_SPECIAL_DOT:
-				if(!editing_town){
+				if(editing_town){
+					make_field_type(spot_hit.x, spot_hit.y, SPECIAL_SPOT);
+					mouse_button_held = true;
+				} else {
 					if(!mouse_button_held)
 						mode_count = !current_terrain->special_spot[spot_hit.x][spot_hit.y];
 					current_terrain->special_spot[spot_hit.x][spot_hit.y] = mode_count;
 					mouse_button_held = true;
-					break;
 				}
-				make_field_type(spot_hit.x, spot_hit.y, SPECIAL_SPOT);
-				mouse_button_held = true;
 				break;
 			case MODE_TOGGLE_ROAD:
-				if(!editing_town){
+				if(editing_town){
+					make_field_type(spot_hit.x, spot_hit.y, SPECIAL_ROAD);
+					mouse_button_held = true;
+				} else {
 					if(!mouse_button_held)
 						mode_count = !current_terrain->roads[spot_hit.x][spot_hit.y];
 					current_terrain->roads[spot_hit.x][spot_hit.y] = mode_count;
 					mouse_button_held = true;
-					break;
 				}
-				make_field_type(spot_hit.x, spot_hit.y, SPECIAL_ROAD);
-				mouse_button_held = true;
 				break;
 			case MODE_CLEAR_FIELDS:
 				for(int i = 8; i <= SPECIAL_ROAD; i++)
@@ -958,9 +957,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				mouse_button_held = true;
 				break;
 			case MODE_EYEDROPPER:
-				if(editing_town)
-					set_new_terrain(town->terrain(spot_hit.x,spot_hit.y));
-				else set_new_terrain(current_terrain->terrain[spot_hit.x][spot_hit.y]);
+				set_new_terrain(cur_area->terrain(spot_hit.x,spot_hit.y));
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PLACE_SAME_ITEM:
@@ -984,9 +981,9 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				break;
 			case MODE_EDIT_SIGN: //edit sign
 			{
-				auto& signs = editing_town ? town->sign_locs : current_terrain->sign_locs;
+				auto& signs = cur_area->sign_locs;
 				auto iter = std::find(signs.begin(), signs.end(), spot_hit);
-				short picture = scenario.ter_types[editing_town ? town->terrain(spot_hit.x,spot_hit.y) : current_terrain->terrain[spot_hit.x][spot_hit.y]].picture;
+				short picture = scenario.ter_types[cur_area->terrain(spot_hit.x,spot_hit.y)].picture;
 				if(iter != signs.end()) {
 					edit_sign(*iter, iter - signs.begin(), picture);
 				} else {
@@ -1010,7 +1007,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				break;
 			case MODE_COPY_SPECIAL: //copy special
 			{
-				auto& specials = editing_town ? town->special_locs : current_terrain->special_locs;
+				auto& specials = cur_area->special_locs;
 				auto iter = std::find_if(town->special_locs.begin(), town->special_locs.end(), [](const spec_loc_t& loc) {
 					return loc == spot_hit && loc.spec >= 0;
 				});
@@ -1027,7 +1024,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					cChoiceDlog("not-at-edge").show();
 					break;
 				} else {
-					auto& specials = editing_town ? town->special_locs : current_terrain->special_locs;
+					auto& specials = cur_area->special_locs;
 					for(short x = 0; x <= specials.size(); x++) {
 						if(x == specials.size())
 							specials.emplace_back(-1,-1,-1);
@@ -1042,7 +1039,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				break;
 			case MODE_ERASE_SPECIAL: //erase special
 			{
-				auto& specials = editing_town ? town->special_locs : current_terrain->special_locs;
+				auto& specials = cur_area->special_locs;
 				for(short x = 0; x < specials.size(); x++)
 					if(specials[x] == spot_hit && specials[x].spec >= 0) {
 						specials[x] = {-1,-1};
@@ -1168,6 +1165,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 		mouse_button_held = true;
 	}
 	auto max_dim = cur_area->max_dim - 5;
+	// This allows you to see a strip of terrain from the adjacent sector when editing outdoors
 	if(!editing_town) max_dim++;
 	if((the_point.in(border_rect[2])) && (cen_y < max_dim)) {
 		cen_y++;
@@ -1822,11 +1820,11 @@ void change_rect_terrain(rectangle r,ter_num_t terrain_type,short probability,bo
 void flood_fill_terrain(location start, ter_num_t terrain_type) {
 	static const int dx[4] = {0, 1, 0, -1};
 	static const int dy[4] = {-1, 0, 1, 0};
-	ter_num_t to_replace = editing_town ? town->terrain(start.x, start.y) : current_terrain->terrain[start.x][start.y];
+	cArea* cur_area = get_current_area();
+	ter_num_t to_replace = cur_area->terrain(start.x, start.y);
 	std::stack<location> to_visit;
 	std::set<location, loc_compare> visited;
 	to_visit.push(start);
-	cArea* cur_area = get_current_area();
 	
 	while(!to_visit.empty()) {
 		location this_loc = to_visit.top();
@@ -1895,7 +1893,7 @@ static ter_num_t find_object_part(unsigned char num, short x, short y, ter_num_t
 
 bool terrain_matches(unsigned char x, unsigned char y, ter_num_t ter) {
 	ter_num_t ter2;
-	if(editing_town) ter2 = town->terrain(x,y); else ter2 = current_terrain->terrain[x][y];
+	ter2 = get_current_area()->terrain(x,y);
 	if(ter2 == ter) return true;
 	if(scenario.ter_types[ter2].ground_type != scenario.ter_types[ter].ground_type)
 		return false;
@@ -1948,7 +1946,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 	for(int x = -1; x <= 1; x++) {
 		for(int y = -1; y <= 1; y++) {
 			location l3(l.x+x,l.y+y);
-			ter_num_t ter_there = editing_town ? town->terrain(l3.x,l3.y) : current_terrain->terrain[l3.x][l3.y];
+			ter_num_t ter_there = cur_area->terrain(l3.x,l3.y);
 			unsigned int ground_there = scenario.ter_types[ter_there].ground_type;
 			if(ground_there != main_ground && ground_there != trim_ground) {
 				ter_num_t new_ter = scenario.get_ter_from_ground(trim_ground);
@@ -2017,7 +2015,7 @@ void adjust_space(location l) {
 				store_ter[dx+1][dy+1] = off_map;
 				continue;
 			}
-			store_ter[dx+1][dy+1] = editing_town ? town->terrain(x,y) : current_terrain->terrain[x][y];
+			store_ter[dx+1][dy+1] = cur_area->terrain(x,y);
 			cTerrain& ter_type = scenario.ter_types[store_ter[dx+1][dy+1]];
 			store_ter2[dx+1][dy+1] = ter_type.trim_ter;
 			store_ground[dx+1][dy+1] = ter_type.ground_type;
@@ -2143,7 +2141,7 @@ void place_edit_special(location loc) {
 		cChoiceDlog("not-at-edge").show();
 		return;
 	}
-	auto& specials = editing_town ? town->special_locs : current_terrain->special_locs;
+	auto& specials = get_current_area()->special_locs;
 	for(short i = 0; i < specials.size(); i++)
 		if(specials[i] == loc && specials[i].spec >= 0) {
 			edit_spec_enc(specials[i].spec, editing_town ? 2 : 1, nullptr);
@@ -2169,7 +2167,7 @@ void set_special(location spot_hit) {
 		cChoiceDlog("not-at-edge").show();
 		return;
 	}
-	auto& specials = editing_town ? town->special_locs : current_terrain->special_locs;
+	auto& specials = get_current_area()->special_locs;
 	for(short x = 0; x < specials.size(); x++)
 		if(specials[x] == spot_hit && specials[x].spec >= 0) {
 			int spec = edit_special_num(editing_town ? 2 : 1,specials[x].spec);
