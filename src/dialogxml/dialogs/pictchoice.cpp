@@ -146,14 +146,14 @@ bool cPictChoice::onSelect(bool losing) {
 	return true;
 }
 
-pic_num_t cPictChoice::getPicChosen() {
+pic_num_t cPictChoice::getPicChosen() const {
 	return dlg.getResult<std::pair<pic_num_t,ePicType>>().first;
 }
 
-ePicType cPictChoice::getPicChosenType() {
+ePicType cPictChoice::getPicChosenType() const {
 	return dlg.getResult<std::pair<pic_num_t,ePicType>>().second;
 }
 
-size_t cPictChoice::getSelected() {
+size_t cPictChoice::getSelected() const {
 	return cur;
 }

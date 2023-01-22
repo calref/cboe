@@ -740,7 +740,7 @@ void cDialog::setBg(short n){
 	bg = n;
 }
 
-short cDialog::getBg() {
+short cDialog::getBg() const {
 	return bg;
 }
 
@@ -748,7 +748,7 @@ void cDialog::setDefTextClr(sf::Color clr){
 	defTextClr = clr;
 }
 
-sf::Color cDialog::getDefTextClr() {
+sf::Color cDialog::getDefTextClr() const {
 	return defTextClr;
 }
 
@@ -767,7 +767,7 @@ void cDialog::untoast() {
 		this->getControl(currentFocus).triggerFocusHandler(*this, currentFocus, false);
 }
 
-bool cDialog::accepted() {
+bool cDialog::accepted() const {
 	return didAccept;
 }
 
@@ -1057,6 +1057,10 @@ cControl& cDialog::operator[](std::string id){
 	return getControl(id);
 }
 
+const cControl& cDialog::operator[](std::string id) const {
+	return const_cast<cDialog&>(*this).getControl(id);
+}
+
 cControl& cDialog::getControl(std::string id) {
 	ctrlIter iter = controls.find(id);
 	if(iter != controls.end()) return *(iter->second);
@@ -1073,8 +1077,8 @@ cControl& cDialog::getControl(std::string id) {
 	throw std::invalid_argument(id + " does not exist in dialog " + fname);
 }
 
-bool cDialog::hasControl(std::string id) {
-	ctrlIter iter = controls.find(id);
+bool cDialog::hasControl(std::string id) const {
+	auto iter = controls.find(id);
 	if(iter != controls.end()) return true;
 	
 	iter = controls.begin();

@@ -68,13 +68,13 @@ public:
 	bool show(size_t cur_sel);
 	/// Get the chosen icon.
 	/// @return The number of the chosen icon.
-	pic_num_t getPicChosen();
+	pic_num_t getPicChosen() const;
 	/// Get the chosen icon.
 	/// @return The type of the chosen icon.
-	ePicType getPicChosenType();
+	ePicType getPicChosenType() const;
 	/// Get the index of the selected icon in the original list.
 	/// @return The index
-	size_t getSelected();
+	size_t getSelected() const;
 };
 
 #endif

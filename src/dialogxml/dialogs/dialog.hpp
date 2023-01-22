@@ -111,7 +111,7 @@ public:
 	/// @tparam type The result type.
 	/// @throw boost::bad_any_cast if the provided result type is different from the type set by getResult().
 	/// @return The dialog's result.
-	template<typename type> type getResult(){
+	template<typename type> type getResult() const {
 		return boost::any_cast<type>(result);
 	}
 	/// Set the result of the dialog.
@@ -134,13 +134,13 @@ public:
 	void setBg(short n);
 	/// Get the background pattern of the dialog.
 	/// @return The numeric index of the background pattern.
-	short getBg();
+	short getBg() const;
 	/// Set the default text colour applied to new dialogs when loading from a file.
 	/// @param clr The text colour.
 	void setDefTextClr(sf::Color clr);
 	/// Get the default text colour applied to new dialogs when loading from a file.
 	/// @return The text colour.
-	sf::Color getDefTextClr();
+	sf::Color getDefTextClr() const;
 	/// Set the focused text field.
 	/// @param newFocus A pointer to the text field to receive focus.
 	/// @param force If true, the change will be forced.
@@ -168,11 +168,11 @@ public:
 	void untoast();
 	/// Determine how the dialog exited.
 	/// @return the argument passed to toast() when the dialog was closed
-	bool accepted();
+	bool accepted() const;
 	/// Check if a control exists with a given ID.
 	/// @param id The unique key of the control.
 	/// @return true if it exists.
-	bool hasControl(std::string id);
+	bool hasControl(std::string id) const;
 	/// Get a reference to a control.
 	/// @param id The unique key of the control.
 	/// @throw std::invalid_argument if the control does not exist.
@@ -180,6 +180,8 @@ public:
 	cControl& getControl(std::string id);
 	/// @copydoc getControl()
 	cControl& operator[](std::string id);
+	/// @copydoc getControl()
+	const cControl& operator[](std::string id) const;
 	/// Recalculate the dialog's bounding rect.
 	/// Call this after adding controls to the dialog to ensure that the control is within the bounding rect.
 	void recalcRect();
@@ -208,7 +210,7 @@ public:
 	void attachFocusHandlers(std::function<bool(cDialog&,std::string,bool)> handler, std::vector<std::string> controls);
 	/// Get the bounding rect of the dialog.
 	/// @return The dialog's bounding rect.
-	rectangle getBounds() {return winRect;}
+	rectangle getBounds() const {return winRect;}
 	/// Send keyboard input to the frontmost dialog.
 	/// Currently, only text edit fields will respond to this.
 	/// @return true if there was a dialog opened to send to.
