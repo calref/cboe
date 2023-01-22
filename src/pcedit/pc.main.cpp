@@ -145,7 +145,7 @@ sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, float ui_scale) 
 
 void adjust_window (sf::RenderWindow& mainPtr, sf::View& mainView) {
 
-	double ui_scale = get_float_pref("UIScaleCharEd", 1.0);
+	double ui_scale = get_float_pref("UIScale", 1.0);
 	
 	int const width  = ui_scale * 590;
 	int const height = ui_scale * 440
@@ -516,12 +516,12 @@ bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 	
 	if(!did_cancel) {
 		std::string scale = dynamic_cast<cLedGroup&>(me["scaleui"]).getSelected();
-		if(scale == "1") set_pref("UIScaleCharEd", 1.0);
-		else if(scale == "1_5") set_pref("UIScaleCharEd", 1.5);
-		else if(scale == "2") set_pref("UIScaleCharEd", 2.0);
-		else if(scale == "3") set_pref("UIScaleCharEd", 3.0);
-		else if(scale == "4") set_pref("UIScaleCharEd", 4.0);
-		set_pref("PlaySoundsCharEd", dynamic_cast<cLed&>(me["nosound"]).getState() == led_off);
+		if(scale == "1") set_pref("UIScale", 1.0);
+		else if(scale == "1_5") set_pref("UIScale", 1.5);
+		else if(scale == "2") set_pref("UIScale", 2.0);
+		else if(scale == "3") set_pref("UIScale", 3.0);
+		else if(scale == "4") set_pref("UIScale", 4.0);
+		set_pref("PlaySounds", dynamic_cast<cLed&>(me["nosound"]).getState() == led_off);
 	}
 	save_prefs();
 	return true;
@@ -534,7 +534,7 @@ void pick_preferences() {
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 	
 	cLedGroup& uiScale = dynamic_cast<cLedGroup&>(prefsDlog["scaleui"]);
-	double ui_scale = get_float_pref("UIScaleCharEd", 1.0);
+	double ui_scale = get_float_pref("UIScale", 1.0);
 	if (ui_scale>0.95 && ui_scale<1.05) uiScale.setSelected("1");
 	else if (ui_scale>1.45 && ui_scale<1.55) uiScale.setSelected("1_5");
 	else if (ui_scale>1.95 && ui_scale<2.05) uiScale.setSelected("2");
@@ -555,11 +555,11 @@ void pick_preferences() {
 		uiScale["other"].hide();
 	}
 	
-	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySoundsCharEd", true) ? led_off : led_red);
+	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySounds", true) ? led_off : led_red);
 	
 	prefsDlog.run();
 	
-	if(get_float_pref("UIScaleCharEd") != ui_scale)
+	if(get_float_pref("UIScale") != ui_scale)
 		changed_display_mode = true;
 }
 
