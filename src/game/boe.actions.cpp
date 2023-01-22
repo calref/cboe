@@ -2769,6 +2769,8 @@ bool outd_move_party(location destination,bool forced) {
 	location store_corner,store_iwc;
 	ter_num_t ter;
 	
+	if(!univ.out.is_on_map(destination.x, destination.y)) return false;
+	
 	keep_going = check_special_terrain(destination,eSpecCtx::OUT_MOVE,univ.party[0],&check_f);
 	if(check_f)
 		forced = true;
@@ -2966,6 +2968,8 @@ bool town_move_party(location destination,short forced) {
 		add_string_to_buf("Move: Can't escape.");
 		return false;
 	}
+	
+	if(!univ.town.is_on_map(destination.x, destination.y)) return false;
 	
 	if(univ.target_there(destination, TARG_MONST) == nullptr)
 		keep_going = check_special_terrain(destination,eSpecCtx::TOWN_MOVE,univ.party[0],&check_f);
