@@ -319,13 +319,13 @@ void award_xp(short pc_num,short amt,bool force) {
 	
 	
 	
-//	if(univ.party[pc_num].experience < 0) {
-//		SysBeep(50); SysBeep(50);
-//		ASB("Oops! Xp became negative somehow!");
-//		ASB("Report this!");
-//		univ.party[pc_num].experience = univ.party[pc_num].level * (univ.party[pc_num].get_tnl()) - 1;
-//		return;
-//		}
+	if(univ.party[pc_num].experience < 0) {
+		beep();
+		ASB("Oops! Xp became negative somehow!");
+		ASB("Report this!");
+		univ.party[pc_num].experience = univ.party[pc_num].level * (univ.party[pc_num].get_tnl()) - 1;
+		return;
+	}
 	if(univ.party[pc_num].experience > 15000) {
 		univ.party[pc_num].experience = 15000;
 		return;
