@@ -277,7 +277,9 @@ public:
 	long long getTextAsNum() const;
 	/// Set the control's text to an integer value.
 	/// @param what The desired value.
-	void setTextToNum(long long what);
+	/// @param label This label will be prefixed to the value.
+	/// @note If a label is used, then @a getTextAsNum will not work to retrieve the value.
+	void setTextToNum(long long what, const std::string& label = "");
 	/// Set one of the control's formatting parameters.
 	/// @param prop The parameter to set.
 	/// @param val The desired value of the parameter.

@@ -558,9 +558,9 @@ eControlType cControl::getType() const {
 	return type;
 }
 
-void cControl::setTextToNum(long long what){
+void cControl::setTextToNum(long long what, const std::string& label){
 	std::ostringstream sout;
-	sout << what;
+	sout << label << what;
 	setText(sout.str());
 }
 
