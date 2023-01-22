@@ -153,33 +153,33 @@ public:
 	void import_legacy(legacy::pc_record_type(& old)[6]);
 	
 	bool is_in_scenario() const;
-	bool is_alive() const;
-	bool is_friendly() const;
-	bool is_friendly(const iLiving& other) const;
-	bool is_shielded() const;
-	int get_shared_dmg(int base_dmg) const;
-	location get_loc() const;
+	bool is_alive() const override;
+	bool is_friendly() const override;
+	bool is_friendly(const iLiving& other) const override;
+	bool is_shielded() const override;
+	int get_shared_dmg(int base_dmg) const override;
+	location get_loc() const override;
 	
-	void apply_status(eStatus which, int how_much);
-	void heal(int how_much);
-	void poison(int how_much);
-	void cure(int how_much);
-	void acid(int how_much);
-	void curse(int how_much);
-	void slow(int how_much);
-	void web(int how_much);
-	void disease(int how_much);
-	void dumbfound(int how_much);
-	void scare(int how_much);
-	void sleep(eStatus type, int how_much, int adj);
-	void clear_bad_status();
-	void avatar();
-	void drain_sp(int how_much, bool allow_resist);
-	void restore_sp(int how_much);
+	void apply_status(eStatus which, int how_much) override;
+	void heal(int how_much) override;
+	void poison(int how_much) override;
+	void cure(int how_much) override;
+	void acid(int how_much) override;
+	void curse(int how_much) override;
+	void slow(int how_much) override;
+	void web(int how_much) override;
+	void disease(int how_much) override;
+	void dumbfound(int how_much) override;
+	void scare(int how_much) override;
+	void sleep(eStatus type, int how_much, int adj) override;
+	void clear_bad_status() override;
+	void avatar() override;
+	void drain_sp(int how_much, bool allow_resist) override;
+	void restore_sp(int how_much) override;
 	
-	int get_health() const;
-	int get_magic() const;
-	int get_level() const;
+	int get_health() const override;
+	int get_magic() const override;
+	int get_level() const override;
 	int calc_day() const;
 	
 	std::unique_ptr<cPlayer> remove_pc(size_t spot);
