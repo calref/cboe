@@ -165,7 +165,7 @@ void adjust_windows (sf::RenderWindow & mainPtr, sf::View & mainView) {
 	// TODO: things might still be broken when upscaled.
 	//   translate_mouse_coordinates has been applied in some places but more work might be needed.
 	//   In particular, the white area on the right side of the main menu needs fixing.
-	float ui_scale = get_float_pref("UIScaleScenEd", 1.0);
+	double ui_scale = get_float_pref("UIScaleScenEd", 1.0);
 	
 	const int width  = ui_scale * 584;
 	const int height = ui_scale * 420
@@ -692,7 +692,7 @@ void pick_preferences() {
 	cDialog prefsDlog(*ResMgr::dialogs.get("pref-scenario"));
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 	
-	float ui_scale = get_float_pref("UIScaleScenEd", 1.0);
+	double ui_scale = get_float_pref("UIScaleScenEd", 1.0);
 	dynamic_cast<cLed&>(prefsDlog["scaleui"]).setState(ui_scale == 1.0 ? led_off : (ui_scale == 2.0 ? led_red : led_green));
 	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySoundsScenEd", true) ? led_off : led_red);
 	

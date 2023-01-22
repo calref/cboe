@@ -145,7 +145,7 @@ sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, float ui_scale) 
 
 void adjust_window (sf::RenderWindow& mainPtr, sf::View& mainView) {
 
-	float ui_scale = get_float_pref("UIScaleCharEd", 1.0);
+	double ui_scale = get_float_pref("UIScaleCharEd", 1.0);
 	
 	int const width  = ui_scale * 590;
 	int const height = ui_scale * 440
@@ -532,7 +532,7 @@ void pick_preferences() {
 	cDialog prefsDlog(*ResMgr::dialogs.get("pref-character"));
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 	
-	float ui_scale = get_float_pref("UIScaleCharEd", 1.0);
+	double ui_scale = get_float_pref("UIScaleCharEd", 1.0);
 	dynamic_cast<cLed&>(prefsDlog["scaleui"]).setState(ui_scale == 1.0 ? led_off : (ui_scale == 2.0 ? led_red : led_green));
 	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySoundsCharEd", true) ? led_off : led_red);
 	

@@ -1233,7 +1233,7 @@ void pick_preferences() {
 	}
 	
 	cLedGroup& uiScale = dynamic_cast<cLedGroup&>(prefsDlog["scaleui"]);
-	float ui_scale = get_float_pref("UIScale", 1.0);
+	double ui_scale = get_float_pref("UIScale", 1.0);
 	if (ui_scale>0.95 && ui_scale<1.05) uiScale.setSelected("1");
 	else if (ui_scale>1.45 && ui_scale<1.55) uiScale.setSelected("1_5");
 	else if (ui_scale>1.95 && ui_scale<2.05) uiScale.setSelected("2");
@@ -1242,7 +1242,7 @@ void pick_preferences() {
 	else uiScale.setSelected("other");
 
 	cLedGroup& uiMapScale = dynamic_cast<cLedGroup&>(prefsDlog["scalemap"]);
-	float ui_map_scale = get_float_pref("UIScaleMap", 1.0);
+	double ui_map_scale = get_float_pref("UIScaleMap", 1.0);
 	if (ui_map_scale>0.95 && ui_map_scale<1.05) uiMapScale.setSelected("1");
 	else if (ui_map_scale>1.45 && ui_map_scale<1.55) uiMapScale.setSelected("1_5");
 	else if (ui_map_scale>1.95 && ui_map_scale<2.05) uiMapScale.setSelected("2");
