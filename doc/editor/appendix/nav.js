@@ -35,7 +35,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		nav.appendChild(links[i]);
 	document.querySelector('.navbar').appendChild(nav);
 	// Now check if one was requested in the query string
-	var dest = location.search.match(/^jumpto\=(\d)/, '');
-	if(dest && dest[1] >= 0 && dest[1] < elems.length)
+	var query = new URLSearchParams(location.search);
+	var dest = query.get('jumpto');
+	console.log(dest);
+	if(dest && dest >= 0 && dest < elems.length)
 		elems[dest].scrollIntoView();
 });
