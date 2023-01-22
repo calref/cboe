@@ -167,7 +167,7 @@ void cControl::setFormat(eFormat prop, short val) {
 
 short cControl::getFormat(eFormat prop) const {
 	boost::any curVal;
-	if(!const_cast<cControl&>(*this).manageFormat(prop, false, &curVal))
+	if(!const_cast<cControl&>(*this).canFormat(prop))
 		throw xUnsupportedProp(prop);
 	switch(prop) {
 		case TXT_WRAP:
@@ -196,7 +196,7 @@ void cControl::setColour(sf::Color clr) {
 
 sf::Color cControl::getColour() const {
 	boost::any curVal;
-	if(!const_cast<cControl&>(*this).manageFormat(TXT_COLOUR, false, &curVal))
+	if(!const_cast<cControl&>(*this).canFormat(TXT_COLOUR))
 		throw xUnsupportedProp(TXT_COLOUR);
 	return boost::any_cast<sf::Color>(curVal);
 }
