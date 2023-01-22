@@ -476,14 +476,14 @@ static void readQuestFromXml(ticpp::Element& data, cQuest& quest) {
 	std::string type, name, val, fname;
 	data.GetDocument()->GetValue(&fname);
 	data.GetValue(&type);
-	quest.flags = 0;
+	quest.deadline_is_relative = quest.auto_start = false;
 	Iterator<Attribute> attr;
 	for(attr = attr.begin(&data); attr != attr.end(); attr++) {
 		attr->GetName(&name);
 		if(name == "start-with") {
 			attr->GetValue(&val);
 			if(val == "true")
-				quest.flags += 10;
+				quest.auto_start = true;
 		} else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);
 	}
 	std::set<std::string> reqs = {"name", "description"};
@@ -498,7 +498,7 @@ static void readQuestFromXml(ticpp::Element& data, cQuest& quest) {
 				if(name == "relative") {
 					attr->GetValue(&val);
 					if(val == "true")
-						quest.flags += 1;
+						quest.deadline_is_relative = true;
 				} else if(name == "waive-if")
 					attr->GetValue(&quest.event);
 				else throw xBadAttr(type, name, attr->Row(), attr->Column(), fname);

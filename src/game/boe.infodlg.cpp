@@ -670,7 +670,7 @@ void put_quest_info(short which_i) {
 	int start = univ.party.active_quests[which_i].start;
 	quest_dlg["start"].setText("Day " + std::to_string(start));
 	if(quest.deadline > 0)
-		quest_dlg["chop"].setText("Day " + std::to_string(quest.deadline + (quest.flags % 10) * start));
+		quest_dlg["chop"].setText("Day " + std::to_string(quest.deadline + int(quest.deadline_is_relative) * start));
 	else quest_dlg["chop"].setText("None");
 	if(quest.gold > 0)
 		quest_dlg["pay"].setText(std::to_string(quest.gold) + " gold");

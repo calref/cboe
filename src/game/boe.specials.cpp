@@ -1814,7 +1814,7 @@ void special_increase_age(long length, bool queue) {
 		cQuest& quest = univ.scenario.quests[p.first];
 		if(quest.deadline <= 0)
 			continue;
-		bool is_relative = quest.flags % 10;
+		bool is_relative = quest.deadline_is_relative;
 		int deadline = quest.deadline + is_relative * p.second.start;
 		if(day_reached(deadline + 1, quest.event)) {
 			p.second.status = eQuestStatus::FAILED;
@@ -1824,7 +1824,7 @@ void special_increase_age(long length, bool queue) {
 				if(bank >= univ.party.job_banks.size())
 					univ.party.job_banks.resize(bank + 1);
 				int add_anger = 1;
-				if(quest.flags % 10 == 1) {
+				if(quest.deadline_is_relative) {
 					if(quest.deadline < 20)
 						add_anger++;
 					if(quest.deadline < 10)

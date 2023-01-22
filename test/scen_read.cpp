@@ -330,7 +330,8 @@ TEST_CASE("Loading a new-format scenario record") {
 			REQUIRE(scen.quests.size() == 1);
 			CHECK(scen.quests[0].name == "My Silly Quest");
 			CHECK(scen.quests[0].descr == " It is!   The best quest!   ");
-			CHECK(scen.quests[0].flags == 0);
+			CHECK_FALSE(scen.quests[0].deadline_is_relative);
+			CHECK_FALSE(scen.quests[0].auto_start);
 			CHECK(scen.quests[0].gold == 0);
 			CHECK(scen.quests[0].xp == 0);
 			CHECK(scen.quests[0].bank1 == -1);

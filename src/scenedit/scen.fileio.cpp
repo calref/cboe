@@ -203,10 +203,10 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 	for(size_t i = 0; i < scenario.quests.size(); i++) {
 		cQuest& quest = scenario.quests[i];
 		data.OpenElement("quest");
-		data.PushAttribute("start-with", boolstr(quest.flags / 10));
+		data.PushAttribute("start-with", boolstr(quest.auto_start));
 		if(quest.deadline >= 0) {
 			data.OpenElement("deadline");
-			data.PushAttribute("relative", boolstr(quest.flags % 10));
+			data.PushAttribute("relative", boolstr(quest.deadline_is_relative));
 			if(quest.event >= 0)
 				data.PushAttribute("waive-if", quest.event);
 			data.PushText(quest.deadline);

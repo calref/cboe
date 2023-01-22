@@ -13,7 +13,8 @@ enum class eQuestStatus {AVAILABLE, STARTED, COMPLETED, FAILED};
 
 class cQuest {
 public:
-	short flags = 0; // 0 - absolute deadline, 1 - relative to when quest started, +10 - start quest when scenario starts
+	bool deadline_is_relative = false;
+	bool auto_start = false;
 	short deadline = -1;
 	short event = -1; // if this event occurs before the deadline, then the deadline is waived
 	short xp = 0, gold = 0; // automatically award this much XP and gold to the party when the quest is marked complete

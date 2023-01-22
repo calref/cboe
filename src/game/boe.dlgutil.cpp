@@ -657,7 +657,7 @@ static void fill_job_bank(cDialog& me, job_bank_t& bank, std::string) {
 			cQuest& quest = univ.scenario.quests[bank.jobs[i]];
 			std::string description = quest.descr;
 			if(quest.deadline > 0) {
-				if(quest.flags % 10 == 1)
+				if(quest.deadline_is_relative)
 					description += " Must be completed in " + std::to_string(quest.deadline) + " days.";
 				else description += " Must be completed by day " + std::to_string(quest.deadline) + ".";
 			}

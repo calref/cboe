@@ -2078,8 +2078,8 @@ static void put_quest_in_dlog(cDialog& me, const cQuest& quest, size_t which_que
 	me["bank1"].setTextToNum(quest.bank1);
 	me["bank2"].setTextToNum(quest.bank2);
 	
-	dynamic_cast<cLed&>(me["rel"]).setState(quest.flags % 10 == 1 ? led_red : led_off);
-	dynamic_cast<cLed&>(me["start"]).setState(quest.flags >= 10 ? led_red : led_off);
+	dynamic_cast<cLed&>(me["rel"]).setState(quest.deadline_is_relative ? led_red : led_off);
+	dynamic_cast<cLed&>(me["start"]).setState(quest.auto_start ? led_red : led_off);
 	dynamic_cast<cLed&>(me["inbank"]).setState(quest.bank1 >= 0 || quest.bank2 >= 0 ? led_red : led_off);
 	if(quest.bank1 < 0 && quest.bank2 < 0) {
 		me["bank1"].hide();
@@ -2100,9 +2100,8 @@ static bool save_quest_from_dlog(cDialog& me, cQuest& quest, size_t which_quest,
 	quest.xp = me["xp"].getTextAsNum();
 	quest.gold = me["gold"].getTextAsNum();
 	
-	quest.flags = dynamic_cast<cLed&>(me["rel"]).getState() == led_red;
-	if(dynamic_cast<cLed&>(me["start"]).getState() == led_red)
-		quest.flags += 10;
+	quest.deadline_is_relative = dynamic_cast<cLed&>(me["rel"]).getState() == led_red;
+	quest.auto_start = dynamic_cast<cLed&>(me["start"]).getState() == led_red;
 	if(dynamic_cast<cLed&>(me["inbank"]).getState() == led_red) {
 		quest.bank1 = me["bank1"].getTextAsNum();
 		quest.bank2 = me["bank2"].getTextAsNum();

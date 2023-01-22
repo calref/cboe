@@ -132,34 +132,38 @@ TEST_CASE("Saving a scenario record") {
 	}
 	SECTION("With a quest") {
 		scen.quests.resize(3);
-		scen.quests[0].flags = 11;
+		scen.quests[0].deadline_is_relative = true;
+		scen.quests[0].auto_start = true;
 		scen.quests[0].bank1 = 2;
 		scen.quests[0].deadline = 12;
 		scen.quests[0].event = 3;
 		scen.quests[0].xp = 5200;
 		scen.quests[0].name = "Test Quest";
 		scen.quests[0].descr = "This is a quest description! It has an absolute deadline which is waived by an event, and an XP reward. It's also in a job bank.";
-		scen.quests[1].flags = 10;
+		scen.quests[1].auto_start = true;
 		scen.quests[1].gold = 220;
 		scen.quests[1].name = "Test Quest 2";
 		scen.quests[1].descr = "This is another quest description! It has no deadline, and a monetary reward.";
-		scen.quests[2].flags = 1;
+		scen.quests[2].deadline_is_relative = true;
 		scen.quests[2].deadline = 12;
 		scen.quests[2].bank2 = 4;
 		scen.quests[2].name = "Test Quest 3";
 		scen.quests[2].descr = "And now another quest description! This one has a relative deadline and no reward, but it's in a job bank.";
 		in_and_out("quest", scen);
 		REQUIRE(scen.quests.size() == 3);
-		CHECK(scen.quests[0].flags == 11);
+		CHECK(scen.quests[0].deadline_is_relative);
+		CHECK(scen.quests[0].auto_start);
 		CHECK(scen.quests[0].bank1 == 2);
 		CHECK(scen.quests[0].deadline == 12);
 		CHECK(scen.quests[0].event == 3);
 		CHECK(scen.quests[0].xp == 5200);
 		CHECK(scen.quests[0].name == "Test Quest");
-		CHECK(scen.quests[1].flags == 10);
+		CHECK_FALSE(scen.quests[1].deadline_is_relative);
+		CHECK(scen.quests[1].auto_start);
 		CHECK(scen.quests[1].gold == 220);
 		CHECK(scen.quests[1].name == "Test Quest 2");
-		CHECK(scen.quests[2].flags == 1);
+		CHECK(scen.quests[2].deadline_is_relative);
+		CHECK_FALSE(scen.quests[2].auto_start);
 		CHECK(scen.quests[2].deadline == 12);
 		CHECK(scen.quests[2].bank1 == 4); // bank2 moves into bank1
 		CHECK(scen.quests[2].bank2 == -1);

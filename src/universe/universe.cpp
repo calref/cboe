@@ -1430,7 +1430,7 @@ void cUniverse::enter_scenario(const std::string& name) {
 			party.spec_items.insert(i);
 	}
 	for(short i = 0; i < scenario.quests.size(); i++) {
-		if(scenario.quests[i].flags >= 10) {
+		if(scenario.quests[i].auto_start) {
 			party.active_quests[i] = cJob(1);
 		}
 	}
