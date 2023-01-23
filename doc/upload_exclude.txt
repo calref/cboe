@@ -1,0 +1,6 @@
+Notes from Jeff Vogel.txt
+SConscript
+documentation.lyx
+gpl-license.txt
+upload_exclude.txt
+upload.sh
