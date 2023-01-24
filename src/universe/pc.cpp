@@ -1239,7 +1239,7 @@ void cPlayer::writeTo(cTagFile& file) const {
 		}
 	}
 	auto traits = this->traits;
-	for(int i = 0; i < 62; i++) {
+	for(int i = 0; i <= int(eTrait::ANAMA); i++) {
 		eTrait trait = eTrait(i);
 		if(traits[trait]) {
 			page["TRAIT"] << i;
