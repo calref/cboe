@@ -40,6 +40,11 @@ struct array_value_type<T[D1][D2]> {
 	using type = T;
 };
 
+template<typename T, size_t D1, size_t D2>
+struct array_value_type<std::array<std::array<T, D2>, D1>> {
+	using type = T;
+};
+
 template<typename T>
 void writeArray(std::ostream& to, const T& array, int width, int height) {
 	using int_type = decltype(typename array_value_type<T>::type() + 1);

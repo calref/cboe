@@ -37,7 +37,7 @@ cParty::cParty(ePartyPreset party_preset) {
 	out_loc.y = 84;
 	in_boat = -1;
 	in_horse = -1;
-	memset(stuff_done, 0, sizeof(stuff_done));
+	wipe_sdfs();
 	std::fill(magic_ptrs.begin(), magic_ptrs.end(), 0);
 	for(int i = 0; i < 10; i++)
 		out_c[i].exists = false;
@@ -53,6 +53,7 @@ cParty::cParty(const cParty& other)
 	, age(other.age)
 	, gold(other.gold)
 	, food(other.food)
+	, stuff_done(other.stuff_done)
 	, hostiles_present(other.hostiles_present)
 	, easy_mode(other.easy_mode)
 	, less_wm(other.less_wm)
@@ -101,7 +102,6 @@ cParty::cParty(const cParty& other)
 	, campaign_flags(other.campaign_flags)
 	, pointers(other.pointers)
 {
-	memcpy(stuff_done, other.stuff_done, sizeof(stuff_done));
 	for(int i = 0; i < 6; i++) {
 		adven[i].reset(new cPlayer(*this, *other.adven[i]));
 	}
@@ -121,6 +121,7 @@ void cParty::swap(cParty& other) {
 	std::swap(age, other.age);
 	std::swap(gold, other.gold);
 	std::swap(food, other.food);
+	std::swap(stuff_done, other.stuff_done);
 	std::swap(hostiles_present, other.hostiles_present);
 	std::swap(easy_mode, other.easy_mode);
 	std::swap(less_wm, other.less_wm);
@@ -170,11 +171,6 @@ void cParty::swap(cParty& other) {
 	std::swap(scen_played, other.scen_played);
 	std::swap(campaign_flags, other.campaign_flags);
 	std::swap(pointers, other.pointers);
-	unsigned char temp_sdf[350][50];
-	memcpy(temp_sdf, stuff_done, sizeof(stuff_done));
-	memcpy(stuff_done, other.stuff_done, sizeof(stuff_done));
-	memcpy(other.stuff_done, temp_sdf, sizeof(stuff_done));
-	unsigned short temp_setup[4][64][64];
 	for(size_t i = 0; i < adven.size(); i++) {
 		std::swap(adven[i], other.adven[i]);
 	}
@@ -908,7 +904,7 @@ void cParty::readFrom(const cTagFile& file) {
 				left_in = -1;
 			}
 			
-			memset(stuff_done, 0, sizeof(stuff_done));
+			wipe_sdfs();
 			for(size_t i = 0; i < page["SDF"].size(); i++) {
 				size_t x, y, val;
 				page["SDF"] >> x >> y >> val;
@@ -1186,6 +1182,12 @@ bool cParty::sd_legit(short a, short b) const {
 	if((minmax(0,sdx_max,a) == a) && (minmax(0,sdy_max,b) == b))
 		return true;
 	return false;
+}
+
+void cParty::wipe_sdfs() {
+	for(auto& col : stuff_done) {
+		col.fill(0);
+	}
 }
 
 bool operator==(const cParty::cConvers& one, const cParty::cConvers& two) {

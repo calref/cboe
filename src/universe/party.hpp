@@ -36,13 +36,16 @@ namespace legacy {
 	struct setup_save_type;
 };
 
+template<typename T, size_t x, size_t y>
+using array2d = std::array<std::array<T, y>, x>;
+
 struct campaign_flag_type{
-	unsigned char idx[25][25];
+	array2d<unsigned char, 25, 25> idx{};
 private:
 	using idx_array = decltype(idx);
 public:
-	static const int x_max = std::extent<idx_array, 0>::value - 1;
-	static const int y_max = std::extent<idx_array, 1>::value - 1;
+	static const int x_max = std::tuple_size<idx_array>::value;
+	static const int y_max = std::tuple_size<idx_array::value_type>::value;
 };
 
 struct job_bank_t {
@@ -87,7 +90,7 @@ public:
 	unsigned long age;
 	unsigned short gold;
 	unsigned short food;
-	unsigned char stuff_done[350][50];
+	array2d<unsigned char, 350, 50> stuff_done;
 	// These used to be stored as magic SDFs
 	unsigned char hostiles_present;
 	bool easy_mode = false, less_wm = false;
@@ -138,8 +141,8 @@ private:
 	std::map<unsigned short,std::pair<unsigned short,unsigned char>> pointers;
 	using sd_array = decltype(stuff_done);
 public:
-	static const int sdx_max = std::extent<sd_array, 0>::value - 1;
-	static const int sdy_max = std::extent<sd_array, 1>::value - 1;
+	static const int sdx_max = std::tuple_size<sd_array>::value;
+	static const int sdy_max = std::tuple_size<sd_array::value_type>::value;
 	
 	void set_ptr(unsigned short p, unsigned short sdfx, unsigned short sdfy);
 	void force_ptr(unsigned short p, unsigned short val);
@@ -211,6 +214,7 @@ public:
 	void swap_pcs(size_t a, size_t b);
 	
 	bool sd_legit(short a, short b) const;
+	void wipe_sdfs();
 	
 	auto begin() -> boost::indirect_iterator<decltype(adven)::iterator> {
 		return boost::make_indirect_iterator(adven.begin());

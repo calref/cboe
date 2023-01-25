@@ -1018,8 +1018,8 @@ void cUniverse::swap(cUniverse& other) {
 }
 
 void cCurOut::copy(const cCurOut& other) {
-	memcpy(out, other.out, sizeof(out));
-	memcpy(out_e, other.out_e, sizeof(out_e));
+	out = other.out;
+	out_e = other.out_e;
 }
 
 void cCurOut::swap(cCurOut& other) {
@@ -1381,7 +1381,7 @@ void cUniverse::enter_scenario(const std::string& name) {
 	using namespace std::placeholders;
 	
 	party.age = 0;
-	memset(party.stuff_done, 0, sizeof(party.stuff_done));
+	party.wipe_sdfs();
 	party.light_level = 0;
 	party.outdoor_corner = scenario.out_sec_start;
 	party.i_w_c = {0, 0};

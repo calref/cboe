@@ -34,6 +34,9 @@ enum eAmbientSound {
 	AMBIENT_CUSTOM,
 };
 
+template<size_t x, size_t y>
+using bitmap = std::array<std::bitset<y>, x>;
+
 class cOutdoors : public cArea {
 	cScenario* scenario;
 public:
@@ -68,8 +71,8 @@ public:
 	std::array<location,4> wandering_locs;
 	std::string comment;
 	std::vector<std::string> spec_strs;
-	bool special_spot[48][48];
-	bool roads[48][48];
+	bitmap<48, 48> special_spot;
+	bitmap<48, 48> roads;
 	eAmbientSound ambient_sound = AMBIENT_NONE;
 	snd_num_t out_sound;
 	int bg_out, bg_fight, bg_town, bg_dungeon;

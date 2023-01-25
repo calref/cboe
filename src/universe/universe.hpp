@@ -144,8 +144,8 @@ class cCurOut {
 public:
 	static const int max_dim = 96;
 	static const int half_dim = max_dim / 2;
-	ter_num_t out[max_dim][max_dim];
-	unsigned char out_e[max_dim][max_dim];
+	array2d<ter_num_t, max_dim, max_dim> out;
+	array2d<unsigned char, max_dim, max_dim> out_e;
 	
 	// These take global coords (ie 0..95)
 	bool is_spot(int x, int y) const;
@@ -154,7 +154,7 @@ public:
 	
 	void import_legacy(legacy::out_info_type& old);
 	
-	typedef ter_num_t arr_96[max_dim];
+	using arr_96 = decltype(out)::value_type;
 	arr_96& operator [] (size_t i);
 	const arr_96& operator [] (size_t i) const;
 	ter_num_t& operator [] (location loc);
