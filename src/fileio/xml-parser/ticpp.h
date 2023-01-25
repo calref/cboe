@@ -44,7 +44,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * - added ticppapi.h include and TICPP_API dll-interface to support building DLL using VS200X
  */
- 
+
 #ifndef TIXML_USE_TICPP
 	#define TIXML_USE_TICPP
 #endif
@@ -52,13 +52,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef TICPP_INCLUDED
 #define TICPP_INCLUDED
 
-#include "ticppapi.h"
 #include "tinyxml.h"
-#include <sstream>
-#include <vector>
+
 #include <memory>
-#include <exception>
-#include <typeinfo>
 
 /**
 @subpage ticpp is a TinyXML wrapper that uses a lot more C++ ideals.
@@ -112,49 +108,6 @@ namespace ticpp
 	class TICPP_API Text;
 	class TICPP_API Comment;
 	class TICPP_API Attribute;
-
-	/** Wrapper around TiXmlVisitor */
-	class TICPP_API Visitor : public TiXmlVisitor
-	{
-	public:
-		// Overload the TiXmlVisitor functions, wrap objects, call ticpp::Visitor functions
-		/// @internal
-		virtual bool VisitEnter( const TiXmlDocument& doc );
-		/// @internal
-		virtual bool VisitExit( const TiXmlDocument& doc );
-		/// @internal
-		virtual bool VisitEnter( const TiXmlElement& element, const TiXmlAttribute* firstAttribute );
-		/// @internal
-		virtual bool VisitExit( const TiXmlElement& element );
-		/// @internal
-		virtual bool Visit( const TiXmlDeclaration& declaration );
-		/// @internal
-		virtual bool Visit( const TiXmlStylesheetReference& stylesheet );
-		/// @internal
-		virtual bool Visit( const TiXmlText& text );
-		/// @internal
-		virtual bool Visit( const TiXmlComment& comment );
-
-	public:
-		/// Visit a document.
-		virtual bool VisitEnter( const Document& /*doc*/ )			{ return true; }
-		/// Visit a document.
-		virtual bool VisitExit( const Document& /*doc*/ )			{ return true; }
-
-		/// Visit an element.
-		virtual bool VisitEnter( const Element& /*element*/, const Attribute* /*firstAttribute*/ )	{ return true; }
-		/// Visit an element.
-		virtual bool VisitExit( const Element& /*element*/ )		{ return true; }
-
-		/// Visit a declaration
-		virtual bool Visit( const Declaration& /*declaration*/ )	{ return true; }
-		/// Visit a stylesheet reference
-		virtual bool Visit( const StylesheetReference& /*stylesheet*/ )	{ return true; }
-		/// Visit a text node
-		virtual bool Visit( const Text& /*text*/ )					{ return true; }
-		/// Visit a comment node
-		virtual bool Visit( const Comment& /*comment*/ )			{ return true; }
-	};
 
 	/** Wrapper around TiXmlBase */
 	class TICPP_API Base
@@ -262,12 +215,6 @@ namespace ticpp
 										<< "\nFile: " << (strlen( doc->Value() ) > 0 ? doc->Value() : "<unnamed-file>")
 										<< "\nLine: " << doc->ErrorRow()
 										<< "\nColumn: " << doc->ErrorCol();
-					}
-					else
-					{
-						full_message 	<< "\nFile: " << (strlen( doc->Value() ) > 0 ? doc->Value() : "<unnamed-file>")
-										<< "\nLine: " << node->Row()
-										<< "\nColumn: " << node->Column();
 					}
 				}
 			}
@@ -422,11 +369,7 @@ namespace ticpp
 		*/
 		void operator=( const Attribute& copy );
 
-		/**
-		@internal
-		Updates the reference count for the old and new pointers.
-		*/
-		Attribute( const Attribute& copy );
+		Attribute( const Attribute& copy ) = delete;
 
 		/*
 		Decrements reference count.
@@ -981,13 +924,13 @@ namespace ticpp
 		/**
 		Create an exact duplicate of this node and return it.
 
-		@note Using auto_ptr to manage the memory declared on the heap by TiXmlNode::Clone.
+		@note Using unique_ptr to manage the memory declared on the heap by TiXmlNode::Clone.
 		@code
 		// Now using clone
 		ticpp::Document doc( "C:\\Test.xml" );
 		ticpp::Node* sectionToClone;
 		sectionToClone = doc.FirstChild( "settings" );
-		std::auto_ptr< ticpp::Node > clonedNode = sectionToClone->Clone();
+		std::unique_ptr< ticpp::Node > clonedNode = sectionToClone->Clone();
 		// Now you can use the clone.
 		ticpp::Node* node2 = clonedNode->FirstChildElement()->FirstChild();
 		...
@@ -995,7 +938,7 @@ namespace ticpp
 		@endcode
 		@return Pointer the duplicate node.
 		*/
-		std::auto_ptr< Node > Clone() const;
+		std::unique_ptr< Node > Clone() const;
 
 		/**
 		Accept a hierchical visit the nodes in the TinyXML DOM.
@@ -1361,7 +1304,7 @@ namespace ticpp
 		/**
 		Constructor.
 		*/
-		explicit Text(bool cdata = false);
+		Text();
 
 		/**
 		Constructor.
@@ -1373,7 +1316,7 @@ namespace ticpp
 		Constructor.
 		@overload
 		*/
-		Text( const std::string& value, bool cdata = false );
+		Text( const std::string& value );
 
 		/**
 		Streams value into a string and creates a Text with it.
@@ -1385,19 +1328,10 @@ namespace ticpp
 		@see TiXmlText
         */
 		template < class T >
-			Text( const T& value, bool cdata = false )
+			Text( const T& value )
 				: NodeImp< TiXmlText >( new TiXmlText( ToString( value ) ) )
 		{
 			m_impRC->InitRef();
-			if(cdata) m_tiXmlPointer->SetCDATA(true);
-		}
-		
-		void SetCdata(bool cdata) {
-			m_tiXmlPointer->SetCDATA(cdata);
-		}
-		
-		bool isCdata() const {
-			return m_tiXmlPointer->CDATA();
 		}
 	};
 

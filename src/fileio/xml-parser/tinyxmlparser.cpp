@@ -22,10 +22,9 @@ must not be misrepresented as being the original software.
 distribution.
 */
 
-#include <ctype.h>
-#include <stddef.h>
-
 #include "tinyxml.h"
+
+#include <cstddef>
 
 //#define DEBUG_PARSER
 #if defined( DEBUG_PARSER )
@@ -104,21 +103,23 @@ void TiXmlBase::ConvertUTF32ToUTF8( unsigned long input, char* output, int* leng
 
 	output += *length;
 
-	// Scary scary fall throughs.
 	switch (*length)
 	{
 		case 4:
 			--output;
 			*output = (char)((input | BYTE_MARK) & BYTE_MASK);
 			input >>= 6;
+			[[fallthrough]];
 		case 3:
 			--output;
 			*output = (char)((input | BYTE_MARK) & BYTE_MASK);
 			input >>= 6;
+			[[fallthrough]];
 		case 2:
 			--output;
 			*output = (char)((input | BYTE_MARK) & BYTE_MASK);
 			input >>= 6;
+			[[fallthrough]];
 		case 1:
 			--output;
 			*output = (char)(input | FIRST_BYTE_MARK[*length]);

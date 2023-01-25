@@ -16,7 +16,7 @@
 #include <ios>
 
 namespace ticpp {
-	class Printer : public Visitor {
+	class Printer : public TiXmlVisitor {
 		Document doc;
 		std::ostream& stream;
 		std::stack<Element*> openElements;
@@ -33,7 +33,9 @@ namespace ticpp {
 			openElements.top()->SetAttribute(attrName, boost::lexical_cast<std::string>(attrVal));
 		}
 		template<typename T> void PushText(T textVal, bool cdata = false) {
-			PushNode(new Text(boost::lexical_cast<std::string>(textVal), cdata));
+			TiXmlText* text = new TiXmlText(boost::lexical_cast<std::string>(textVal));
+			text->SetCDATA(cdata);
+			PushNode(new Text(text));
 		}
 		template<typename T> void PushElement(std::string tagName, T elemVal, bool cdata = false) {
 			OpenElement(tagName);
