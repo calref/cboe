@@ -23,7 +23,7 @@ distribution.
 */
 #include "tinyxml.h"
 
-#include <ctype.h>
+#include <cctype>
 
 #ifdef TIXML_USE_STL
 #include <sstream>
@@ -130,9 +130,7 @@ void TiXmlBase::EncodeString( const TIXML_STRING& str, TIXML_STRING* outString )
 	}
 }
 
-
-TiXmlNode::TiXmlNode( NodeType _type ) : TiXmlBase()
-{
+TiXmlNode::TiXmlNode(NodeType _type) {
 	parent = 0;
 	type = _type;
 	firstChild = 0;
@@ -1604,6 +1602,7 @@ void TiXmlAttributeSet::Add( TiXmlAttribute* addMe )
 
 void TiXmlAttributeSet::Remove( TiXmlAttribute* removeMe )
 {
+	assert(removeMe);
 	TiXmlAttribute* node;
 
 	for( node = sentinel.next; node != &sentinel; node = node->next )
@@ -1685,7 +1684,7 @@ std::istream& operator>> (std::istream & in, TiXmlNode & base)
 std::ostream& operator<< (std::ostream & out, const TiXmlNode & base)
 {
 	TiXmlPrinter printer;
-	//printer.SetStreamPrinting();
+	printer.SetStreamPrinting();
 	base.Accept( &printer );
 	out << printer.Str();
 

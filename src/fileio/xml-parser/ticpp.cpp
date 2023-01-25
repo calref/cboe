@@ -23,60 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifdef TIXML_USE_TICPP
 
 #include "ticpp.h"
-#include "ticpprc.h"
-#include "tinyxml.h"
-#include <sstream>
 
 using namespace ticpp;
-
-// In the following Visitor functions, casting away const should be safe, as the object can only be referred to by a const &
-bool Visitor::VisitEnter( const TiXmlDocument& doc )
-{
-	return VisitEnter( Document( const_cast< TiXmlDocument* >( &doc ) ) );
-}
-
-bool Visitor::VisitExit( const TiXmlDocument& doc )
-{
-	return VisitEnter( Document( const_cast< TiXmlDocument* >( &doc ) ) );
-}
-
-bool Visitor::VisitEnter( const TiXmlElement& element, const TiXmlAttribute* firstAttribute )
-{
-	if ( 0 != firstAttribute )
-	{
-		Attribute attribute( const_cast< TiXmlAttribute* >( firstAttribute ) );
-		return VisitEnter( Element( const_cast< TiXmlElement* >( &element ) ), &attribute );
-	}
-	else
-	{
-		return VisitEnter( Element( const_cast< TiXmlElement* >( &element ) ), 0 );
-	}
-}
-
-bool Visitor::VisitExit( const TiXmlElement& element )
-{
-	return VisitExit( Element( const_cast< TiXmlElement* >( &element ) ) );
-}
-
-bool Visitor::Visit( const TiXmlDeclaration& declaration )
-{
-	return Visit( Declaration( const_cast< TiXmlDeclaration* >( &declaration ) ) );
-}
-
-bool Visitor::Visit( const TiXmlStylesheetReference& stylesheet )
-{
-	return Visit( StylesheetReference( const_cast< TiXmlStylesheetReference* >( &stylesheet ) ) );
-}
-
-bool Visitor::Visit( const TiXmlText& text )
-{
-	return Visit( Text( const_cast< TiXmlText* >( &text ) ) );
-}
-
-bool Visitor::Visit( const TiXmlComment& comment )
-{
-	return Visit( Comment( const_cast< TiXmlComment* >( &comment ) ) );
-}
 
 Attribute::Attribute()
 {
@@ -97,18 +45,6 @@ Attribute::Attribute( const std::string& name, const std::string& value )
 }
 
 void Attribute::operator=( const Attribute& copy )
-{
-	// Dropping the reference to the old object
-	this->m_impRC->DecRef();
-
-	// Pointing to the new Object
-	SetTiXmlPointer( copy.m_tiXmlPointer );
-
-	// The internal tixml pointer changed in the above line
-	this->m_impRC->IncRef();
-}
-
-Attribute::Attribute( const Attribute& copy ) : Base()
 {
 	// Dropping the reference to the old object
 	this->m_impRC->DecRef();
@@ -716,14 +652,14 @@ StylesheetReference* Node::ToStylesheetReference() const
 	return temp;
 }
 
-std::auto_ptr< Node > Node::Clone() const
+std::unique_ptr< Node > Node::Clone() const
 {
 	TiXmlNode* node = GetTiXmlPointer()->Clone();
 	if ( 0 == node )
 	{
 		TICPPTHROW( "Node could not be cloned" );
 	}
-	std::auto_ptr< Node > temp( NodeFactory( node, false, false ) );
+	std::unique_ptr< Node > temp( NodeFactory( node, false, false ) );
 
 	// Take ownership of the memory from TiXml
 	temp->m_impRC->InitRef();
@@ -758,19 +694,17 @@ Comment::Comment( const std::string& comment )
 
 //*****************************************************************************
 
-Text::Text(bool cdata)
+Text::Text()
 : NodeImp< TiXmlText >( new TiXmlText("") )
 {
 	m_impRC->InitRef();
-	if(cdata) m_tiXmlPointer->SetCDATA(true);
 }
 
 
-Text::Text( const std::string& value, bool cdata )
+Text::Text( const std::string& value )
 : NodeImp< TiXmlText >( new TiXmlText( value ) )
 {
 	m_impRC->InitRef();
-	if(cdata) m_tiXmlPointer->SetCDATA(true);
 }
 
 Text::Text( TiXmlText* text )
@@ -812,8 +746,7 @@ void Document::LoadFile( TiXmlEncoding encoding )
 	}
 }
 
-void Document::SaveFile( void ) const
-{
+void Document::SaveFile() const {
 	if ( !m_tiXmlPointer->SaveFile() )
 	{
 		TICPPTHROW( "Couldn't save " << m_tiXmlPointer->Value() );
@@ -1095,11 +1028,11 @@ void TiCppRC::DeleteSpawnedWrappers()
 	}
 	m_spawnedWrappers.clear();
 }
-		
+
 TiCppRC::~TiCppRC()
-{	
+{
 	DeleteSpawnedWrappers();
-	
+
 	// Set pointer held by reference counter to NULL
 	this->m_tiRC->Nullify();
 

@@ -22,7 +22,7 @@ Introduction:
 Build Steps:
 	1) Download Premake from http://premake.sf.net/download
 	2) Checkout the source for TinyXML++ using Subversion.
-		- svn checkout https://ticpp.googlecode.com/svn/trunk/ ticpp
+		- svn checkout https://github.com/rjpcomputing/ticpp ticpp
 	3) Place the Premake executable in the root directory of TiCPP or somewhere in your
 	   path.
 	4) To create the needed build files navigate to the TinyXML++ directory (ticpp)
@@ -53,7 +53,8 @@ Build Steps:
 		  with gcc or MinGW)
 
 			* Release:
-				make CONFIG=Release
+				make CONFIG=Release         (if generated with premake)
+				make config=release         (if generated with premake4)
 
 			* Debug:
 				make
