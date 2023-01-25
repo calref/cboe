@@ -186,7 +186,7 @@ public:
 	void readFrom(const cTagFile& file);
 	virtual ~cPlayer() = default;
 	// Copy-and-swap
-	void swap(cPlayer& other);
+	friend void swap(cPlayer& lhs, cPlayer& rhs);
 	cPlayer(const cPlayer& other) = delete;
 	cPlayer(cPlayer&& other);
 	// For now, not assignable because of an issue of how to handle the unique_id

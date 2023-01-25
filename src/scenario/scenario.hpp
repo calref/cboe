@@ -120,7 +120,7 @@ public:
 	explicit cScenario();
 	~cScenario();
 	// Copy-and-swap
-	void swap(cScenario& other);
+	friend void swap(cScenario& lhs, cScenario& rhs);
 	cScenario(const cScenario& other);
 	cScenario(cScenario&& other);
 	cScenario& operator=(cScenario other);

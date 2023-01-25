@@ -237,7 +237,7 @@ public:
 	typedef std::vector<cConvers>::iterator talkIter;
 	cParty(ePartyPreset party_preset = PARTY_DEFAULT);
 	// Copy-and-swap
-	void swap(cParty& other);
+	friend void swap(cParty& lhs, cParty& rhs);
 	cParty(const cParty& other);
 	cParty(cParty&& other);
 	cParty& operator=(cParty other);

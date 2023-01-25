@@ -994,27 +994,28 @@ cUniverse::cUniverse(const cUniverse& other)
 }
 
 cUniverse::cUniverse(cUniverse&& other) : town(*this), out(*this) {
-	swap(other);
+	swap(*this, other);
 }
 
 cUniverse& cUniverse::operator=(cUniverse other) {
-	swap(other);
+	swap(*this, other);
 	return *this;
 }
 
-void cUniverse::swap(cUniverse& other) {
-	party.swap(other.party);
-	town.swap(other.town);
-	out.swap(other.out);
-	scenario.swap(other.scenario);
-	std::swap(stored_pcs, other.stored_pcs);
-	std::swap(file, other.file);
-	std::swap(debug_mode, other.debug_mode);
-	std::swap(ghost_mode, other.ghost_mode);
-	std::swap(node_step_through, other.node_step_through);
-	std::swap(cur_pc, other.cur_pc);
-	std::swap(strbuf, other.strbuf);
-	std::swap(extrabufs, other.extrabufs);
+void swap(cUniverse& lhs, cUniverse& rhs) {
+	using std::swap;
+	swap(lhs.party, rhs.party);
+	swap(lhs.town, rhs.town);
+	swap(lhs.out, rhs.out);
+	swap(lhs.scenario, rhs.scenario);
+	swap(lhs.stored_pcs, rhs.stored_pcs);
+	swap(lhs.file, rhs.file);
+	swap(lhs.debug_mode, rhs.debug_mode);
+	swap(lhs.ghost_mode, rhs.ghost_mode);
+	swap(lhs.node_step_through, rhs.node_step_through);
+	swap(lhs.cur_pc, rhs.cur_pc);
+	swap(lhs.strbuf, rhs.strbuf);
+	swap(lhs.extrabufs, rhs.extrabufs);
 }
 
 void cCurOut::copy(const cCurOut& other) {
@@ -1022,11 +1023,10 @@ void cCurOut::copy(const cCurOut& other) {
 	out_e = other.out_e;
 }
 
-void cCurOut::swap(cCurOut& other) {
-	cCurOut temp(univ);
-	temp.copy(other);
-	other.copy(*this);
-	copy(temp);
+void swap(cCurOut& lhs, cCurOut& rhs) {
+	using std::swap;
+	swap(lhs.out, rhs.out);
+	swap(lhs.out_e, rhs.out_e);
 }
 
 void cCurTown::copy(const cCurTown& other) {
@@ -1038,13 +1038,14 @@ void cCurTown::copy(const cCurTown& other) {
 	fields = other.fields;
 }
 
-void cCurTown::swap(cCurTown& other) {
-	std::swap(cur_talk_loaded, other.cur_talk_loaded);
-	std::swap(quickfire_present, other.quickfire_present);
-	std::swap(belt_present, other.belt_present);
-	monst.swap(other.monst);
-	std::swap(items, other.items);
-	fields.swap(other.fields);
+void swap(cCurTown& lhs, cCurTown& rhs) {
+	using std::swap;
+	swap(lhs.cur_talk_loaded, rhs.cur_talk_loaded);
+	swap(lhs.quickfire_present, rhs.quickfire_present);
+	swap(lhs.belt_present, rhs.belt_present);
+	swap(lhs.monst, rhs.monst);
+	swap(lhs.items, rhs.items);
+	swap(lhs.fields, rhs.fields);
 }
 
 void cUniverse::check_monst(cMonster& monst) {

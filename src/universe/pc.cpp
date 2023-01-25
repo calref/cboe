@@ -1160,34 +1160,35 @@ cPlayer::cPlayer(no_party_t, const cPlayer& other)
 {}
 
 cPlayer::cPlayer(cPlayer&& other) : weap_poisoned(*this, other.weap_poisoned.slot) {
-	swap(other);
+	swap(*this, other);
 }
 
-void cPlayer::swap(cPlayer& other) {
+void swap(cPlayer& lhs, cPlayer& rhs) {
+	using std::swap;
 	// Don't swap the party reference!
-	std::swap(main_status, other.main_status);
-	std::swap(name, other.name);
-	std::swap(skills, other.skills);
-	std::swap(max_health, other.max_health);
-	std::swap(cur_health, other.cur_health);
-	std::swap(max_sp, other.max_sp);
-	std::swap(cur_sp, other.cur_sp);
-	std::swap(experience, other.experience);
-	std::swap(skill_pts, other.skill_pts);
-	std::swap(level, other.level);
-	std::swap(items, other.items);
-	std::swap(equip, other.equip);
-	std::swap(priest_spells, other.priest_spells);
-	std::swap(mage_spells, other.mage_spells);
-	std::swap(which_graphic, other.which_graphic);
-	std::swap(weap_poisoned.slot, other.weap_poisoned.slot);
-	std::swap(traits, other.traits);
-	std::swap(race, other.race);
-	std::swap(unique_id, other.unique_id);
-	std::swap(last_cast, other.last_cast);
-	std::swap(combat_pos, other.combat_pos);
-	std::swap(parry, other.parry);
-	std::swap(last_attacked, other.last_attacked);
+	swap(lhs.main_status, rhs.main_status);
+	swap(lhs.name, rhs.name);
+	swap(lhs.skills, rhs.skills);
+	swap(lhs.max_health, rhs.max_health);
+	swap(lhs.cur_health, rhs.cur_health);
+	swap(lhs.max_sp, rhs.max_sp);
+	swap(lhs.cur_sp, rhs.cur_sp);
+	swap(lhs.experience, rhs.experience);
+	swap(lhs.skill_pts, rhs.skill_pts);
+	swap(lhs.level, rhs.level);
+	swap(lhs.items, rhs.items);
+	swap(lhs.equip, rhs.equip);
+	swap(lhs.priest_spells, rhs.priest_spells);
+	swap(lhs.mage_spells, rhs.mage_spells);
+	swap(lhs.which_graphic, rhs.which_graphic);
+	swap(lhs.weap_poisoned.slot, rhs.weap_poisoned.slot);
+	swap(lhs.traits, rhs.traits);
+	swap(lhs.race, rhs.race);
+	swap(lhs.unique_id, rhs.unique_id);
+	swap(lhs.last_cast, rhs.last_cast);
+	swap(lhs.combat_pos, rhs.combat_pos);
+	swap(lhs.parry, rhs.parry);
+	swap(lhs.last_attacked, rhs.last_attacked);
 }
 
 void operator += (eMainStatus& stat, eMainStatus othr){

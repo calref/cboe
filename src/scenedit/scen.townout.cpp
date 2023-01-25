@@ -1246,12 +1246,13 @@ static bool pick_out_event_filter(cDialog& me, std::string item_hit, location& c
 		if(cur_loc.y >= scenario.outdoors.height() - 1) beep();
 		else cur_loc.y++;
 	} else if(item_hit == "choose") {
+		using std::swap;
 		int i = cur_loc.x * scenario.outdoors.height() + cur_loc.y;
 		if(&scenario != &::scenario)
-			scenario.outdoors.swap(::scenario.outdoors);
+			swap(scenario.outdoors, ::scenario.outdoors);
 		i = choose_text(STRT_SECTOR, i, &me, "Which sector?");
 		if(&scenario != &::scenario)
-			scenario.outdoors.swap(::scenario.outdoors);
+			swap(scenario.outdoors, ::scenario.outdoors);
 		cur_loc.x = i / scenario.outdoors.height();
 		cur_loc.y = i % scenario.outdoors.height();
 	}

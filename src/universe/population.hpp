@@ -37,7 +37,7 @@ public:
 	std::deque<cCreature>::iterator end() {return dudes.end();}
 	// Apparently Visual Studio needs this to work
 	cPopulation& operator=(const cPopulation& other) = default;
-	void swap(cPopulation& other);
+	friend void swap(cPopulation& lhs, cPopulation& rhs);
 };
 
 #endif

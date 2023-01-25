@@ -248,10 +248,11 @@ public:
 			data.resize(new_sz, def);
 		}
 	}
-	void swap(vector2d& other) {
-		data.swap(other.data);
-		std::swap(w, other.w);
-		std::swap(h, other.h);
+	friend void swap(vector2d& lhs, vector2d& rhs) {
+		using std::swap;
+		swap(lhs.data, rhs.data);
+		swap(lhs.w, rhs.w);
+		swap(lhs.h, rhs.h);
 	}
 	bool empty() const {
 		return data.empty();

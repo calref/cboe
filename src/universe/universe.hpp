@@ -136,7 +136,7 @@ public:
 	cCurTown& operator=(const cCurTown&& other) = delete;
 	// This implements the actual copy/move.
 	void copy(const cCurTown& other);
-	void swap(cCurTown& other);
+	friend void swap(cCurTown& lhs, cCurTown& rhs);
 };
 
 class cCurOut {
@@ -173,7 +173,7 @@ public:
 	cCurOut& operator=(const cCurOut&& other) = delete;
 	// This implements the actual copy/move.
 	void copy(const cCurOut& other);
-	void swap(cCurOut& other);
+	friend void swap(cCurOut& lhs, cCurOut& rhs);
 };
 
 enum eTargetType {TARG_ANY, TARG_PC, TARG_MONST};
@@ -228,7 +228,7 @@ public:
 	short difficulty_adjust() const;
 	explicit cUniverse(ePartyPreset party_type = PARTY_DEFAULT);
 	// Copy-and-swap
-	void swap(cUniverse& other);
+	friend void swap(cUniverse& lhs, cUniverse& rhs);
 	cUniverse(const cUniverse& other);
 	cUniverse(cUniverse&& other);
 	cUniverse& operator=(cUniverse other);

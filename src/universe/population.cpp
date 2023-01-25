@@ -67,8 +67,9 @@ void cPopulation::assign(size_t n, const cTownperson& other, const cMonster& bas
 	dudes[n].summon_time = 0;
 }
 
-void cPopulation::swap(cPopulation& other) {
-	std::swap(dudes, other.dudes);
-	std::swap(which_town, other.which_town);
-	std::swap(hostile, other.hostile);
+void swap(cPopulation& lhs, cPopulation& rhs) {
+	using std::swap;
+	swap(lhs.dudes, rhs.dudes);
+	swap(lhs.which_town, rhs.which_town);
+	swap(lhs.hostile, rhs.hostile);
 }

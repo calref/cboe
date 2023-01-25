@@ -108,71 +108,72 @@ cParty::cParty(const cParty& other)
 }
 
 cParty::cParty(cParty&& other) : cParty() {
-	swap(other);
+	swap(*this, other);
 }
 
 cParty& cParty::operator=(cParty other) {
-	swap(other);
+	swap(*this, other);
 	return *this;
 }
 
-void cParty::swap(cParty& other) {
-	std::swap(next_pc_id, other.next_pc_id);
-	std::swap(age, other.age);
-	std::swap(gold, other.gold);
-	std::swap(food, other.food);
-	std::swap(stuff_done, other.stuff_done);
-	std::swap(hostiles_present, other.hostiles_present);
-	std::swap(easy_mode, other.easy_mode);
-	std::swap(less_wm, other.less_wm);
-	std::swap(magic_ptrs, other.magic_ptrs);
-	std::swap(light_level, other.light_level);
-	std::swap(outdoor_corner, other.outdoor_corner);
-	std::swap(i_w_c, other.i_w_c);
-	std::swap(out_loc, other.out_loc);
-	std::swap(town_loc, other.town_loc);
-	std::swap(loc_in_sec, other.loc_in_sec);
-	std::swap(town_num, other.town_num);
-	std::swap(boats, other.boats);
-	std::swap(horses, other.horses);
-	std::swap(creature_save, other.creature_save);
-	std::swap(in_boat, other.in_boat);
-	std::swap(in_horse, other.in_horse);
-	std::swap(out_c, other.out_c);
-	std::swap(magic_store_items, other.magic_store_items);
-	std::swap(store_limited_stock, other.store_limited_stock);
-	std::swap(job_banks, other.job_banks);
-	std::swap(imprisoned_monst, other.imprisoned_monst);
-	std::swap(m_noted, other.m_noted);
-	std::swap(m_seen, other.m_seen);
-	std::swap(journal, other.journal);
-	std::swap(special_notes, other.special_notes);
-	std::swap(talk_save, other.talk_save);
-	std::swap(status, other.status);
-	std::swap(active_quests, other.active_quests);
-	std::swap(left_at, other.left_at);
-	std::swap(left_in, other.left_in);
-	std::swap(direction, other.direction);
-	std::swap(at_which_save_slot, other.at_which_save_slot);
-	std::swap(alchemy, other.alchemy);
-	std::swap(key_times, other.key_times);
-	std::swap(party_event_timers, other.party_event_timers);
-	std::swap(spec_items, other.spec_items);
-	std::swap(total_m_killed, other.total_m_killed);
-	std::swap(total_dam_done, other.total_dam_done);
-	std::swap(total_xp_gained, other.total_xp_gained);
-	std::swap(total_dam_taken, other.total_dam_taken);
-	std::swap(scen_name, other.scen_name);
-	std::swap(adven, other.adven);
-	std::swap(setup, other.setup);
-	std::swap(stored_items, other.stored_items);
-	std::swap(summons, other.summons);
-	std::swap(scen_won, other.scen_won);
-	std::swap(scen_played, other.scen_played);
-	std::swap(campaign_flags, other.campaign_flags);
-	std::swap(pointers, other.pointers);
-	for(size_t i = 0; i < adven.size(); i++) {
-		std::swap(adven[i], other.adven[i]);
+void swap(cParty& lhs, cParty& rhs) {
+	using std::swap;
+	swap(lhs.next_pc_id, rhs.next_pc_id);
+	swap(lhs.age, rhs.age);
+	swap(lhs.gold, rhs.gold);
+	swap(lhs.food, rhs.food);
+	swap(lhs.stuff_done, rhs.stuff_done);
+	swap(lhs.hostiles_present, rhs.hostiles_present);
+	swap(lhs.easy_mode, rhs.easy_mode);
+	swap(lhs.less_wm, rhs.less_wm);
+	swap(lhs.magic_ptrs, rhs.magic_ptrs);
+	swap(lhs.light_level, rhs.light_level);
+	swap(lhs.outdoor_corner, rhs.outdoor_corner);
+	swap(lhs.i_w_c, rhs.i_w_c);
+	swap(lhs.out_loc, rhs.out_loc);
+	swap(lhs.town_loc, rhs.town_loc);
+	swap(lhs.loc_in_sec, rhs.loc_in_sec);
+	swap(lhs.town_num, rhs.town_num);
+	swap(lhs.boats, rhs.boats);
+	swap(lhs.horses, rhs.horses);
+	swap(lhs.creature_save, rhs.creature_save);
+	swap(lhs.in_boat, rhs.in_boat);
+	swap(lhs.in_horse, rhs.in_horse);
+	swap(lhs.out_c, rhs.out_c);
+	swap(lhs.magic_store_items, rhs.magic_store_items);
+	swap(lhs.store_limited_stock, rhs.store_limited_stock);
+	swap(lhs.job_banks, rhs.job_banks);
+	swap(lhs.imprisoned_monst, rhs.imprisoned_monst);
+	swap(lhs.m_noted, rhs.m_noted);
+	swap(lhs.m_seen, rhs.m_seen);
+	swap(lhs.journal, rhs.journal);
+	swap(lhs.special_notes, rhs.special_notes);
+	swap(lhs.talk_save, rhs.talk_save);
+	swap(lhs.status, rhs.status);
+	swap(lhs.active_quests, rhs.active_quests);
+	swap(lhs.left_at, rhs.left_at);
+	swap(lhs.left_in, rhs.left_in);
+	swap(lhs.direction, rhs.direction);
+	swap(lhs.at_which_save_slot, rhs.at_which_save_slot);
+	swap(lhs.alchemy, rhs.alchemy);
+	swap(lhs.key_times, rhs.key_times);
+	swap(lhs.party_event_timers, rhs.party_event_timers);
+	swap(lhs.spec_items, rhs.spec_items);
+	swap(lhs.total_m_killed, rhs.total_m_killed);
+	swap(lhs.total_dam_done, rhs.total_dam_done);
+	swap(lhs.total_xp_gained, rhs.total_xp_gained);
+	swap(lhs.total_dam_taken, rhs.total_dam_taken);
+	swap(lhs.scen_name, rhs.scen_name);
+	swap(lhs.adven, rhs.adven);
+	swap(lhs.setup, rhs.setup);
+	swap(lhs.stored_items, rhs.stored_items);
+	swap(lhs.summons, rhs.summons);
+	swap(lhs.scen_won, rhs.scen_won);
+	swap(lhs.scen_played, rhs.scen_played);
+	swap(lhs.campaign_flags, rhs.campaign_flags);
+	swap(lhs.pointers, rhs.pointers);
+	for(size_t i = 0; i < lhs.adven.size(); i++) {
+		swap(*lhs.adven[i], *rhs.adven[i]);
 	}
 }
 

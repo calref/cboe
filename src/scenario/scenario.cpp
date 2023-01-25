@@ -144,63 +144,64 @@ cScenario::cScenario(const cScenario& other)
 }
 
 cScenario::cScenario(cScenario&& other) {
-	swap(other);
+	swap(*this, other);
 }
 
 cScenario& cScenario::operator=(cScenario other) {
-	swap(other);
+	swap(*this, other);
 	return *this;
 }
 
-void cScenario::swap(cScenario& other) {
-	std::swap(difficulty, other.difficulty);
-	std::swap(intro_pic, other.intro_pic);
-	std::swap(default_ground, other.default_ground);
-	std::swap(bg_out, other.bg_out);
-	std::swap(bg_fight, other.bg_fight);
-	std::swap(bg_town, other.bg_town);
-	std::swap(bg_dungeon, other.bg_dungeon);
-	std::swap(intro_mess_pic, other.intro_mess_pic);
-	std::swap(where_start, other.where_start);
-	std::swap(out_sec_start, other.out_sec_start);
-	std::swap(out_start, other.out_start);
-	std::swap(which_town_start, other.which_town_start);
-	std::swap(init_spec, other.init_spec);
-	std::swap(town_mods, other.town_mods);
-	std::swap(store_item_rects, other.store_item_rects);
-	std::swap(store_item_towns, other.store_item_towns);
-	std::swap(special_items, other.special_items);
-	std::swap(quests, other.quests);
-	std::swap(shops, other.shops);
-	std::swap(uses_custom_graphics, other.uses_custom_graphics);
-	std::swap(rating, other.rating);
-	std::swap(custom_graphics, other.custom_graphics);
-	std::swap(scen_monsters, other.scen_monsters);
-	std::swap(boats, other.boats);
-	std::swap(horses, other.horses);
-	std::swap(ter_types, other.ter_types);
-	std::swap(scenario_timers, other.scenario_timers);
-	std::swap(scen_specials, other.scen_specials);
-	std::swap(storage_shortcuts, other.storage_shortcuts);
-	std::swap(last_out_edited, other.last_out_edited);
-	std::swap(last_town_edited, other.last_town_edited);
-	std::swap(format, other.format);
-	std::swap(campaign_id, other.campaign_id);
-	std::swap(scen_items, other.scen_items);
-	std::swap(scen_name, other.scen_name);
-	std::swap(who_wrote[0], other.who_wrote[0]);
-	std::swap(who_wrote[1], other.who_wrote[1]);
-	std::swap(contact_info[0], other.contact_info[0]);
-	std::swap(contact_info[1], other.contact_info[1]);
-	std::swap(intro_strs, other.intro_strs);
-	std::swap(journal_strs, other.journal_strs);
-	std::swap(spec_strs, other.spec_strs);
-	std::swap(snd_names, other.snd_names);
-	std::swap(adjust_diff, other.adjust_diff);
-	std::swap(is_legacy, other.is_legacy);
-	std::swap(scen_file, other.scen_file);
-	std::swap(outdoors, other.outdoors);
-	std::swap(towns, other.towns);
+void swap(cScenario& lhs, cScenario& rhs) {
+	using std::swap;
+	swap(lhs.difficulty, rhs.difficulty);
+	swap(lhs.intro_pic, rhs.intro_pic);
+	swap(lhs.default_ground, rhs.default_ground);
+	swap(lhs.bg_out, rhs.bg_out);
+	swap(lhs.bg_fight, rhs.bg_fight);
+	swap(lhs.bg_town, rhs.bg_town);
+	swap(lhs.bg_dungeon, rhs.bg_dungeon);
+	swap(lhs.intro_mess_pic, rhs.intro_mess_pic);
+	swap(lhs.where_start, rhs.where_start);
+	swap(lhs.out_sec_start, rhs.out_sec_start);
+	swap(lhs.out_start, rhs.out_start);
+	swap(lhs.which_town_start, rhs.which_town_start);
+	swap(lhs.init_spec, rhs.init_spec);
+	swap(lhs.town_mods, rhs.town_mods);
+	swap(lhs.store_item_rects, rhs.store_item_rects);
+	swap(lhs.store_item_towns, rhs.store_item_towns);
+	swap(lhs.special_items, rhs.special_items);
+	swap(lhs.quests, rhs.quests);
+	swap(lhs.shops, rhs.shops);
+	swap(lhs.uses_custom_graphics, rhs.uses_custom_graphics);
+	swap(lhs.rating, rhs.rating);
+	swap(lhs.custom_graphics, rhs.custom_graphics);
+	swap(lhs.scen_monsters, rhs.scen_monsters);
+	swap(lhs.boats, rhs.boats);
+	swap(lhs.horses, rhs.horses);
+	swap(lhs.ter_types, rhs.ter_types);
+	swap(lhs.scenario_timers, rhs.scenario_timers);
+	swap(lhs.scen_specials, rhs.scen_specials);
+	swap(lhs.storage_shortcuts, rhs.storage_shortcuts);
+	swap(lhs.last_out_edited, rhs.last_out_edited);
+	swap(lhs.last_town_edited, rhs.last_town_edited);
+	swap(lhs.format, rhs.format);
+	swap(lhs.campaign_id, rhs.campaign_id);
+	swap(lhs.scen_items, rhs.scen_items);
+	swap(lhs.scen_name, rhs.scen_name);
+	swap(lhs.who_wrote[0], rhs.who_wrote[0]);
+	swap(lhs.who_wrote[1], rhs.who_wrote[1]);
+	swap(lhs.contact_info[0], rhs.contact_info[0]);
+	swap(lhs.contact_info[1], rhs.contact_info[1]);
+	swap(lhs.intro_strs, rhs.intro_strs);
+	swap(lhs.journal_strs, rhs.journal_strs);
+	swap(lhs.spec_strs, rhs.spec_strs);
+	swap(lhs.snd_names, rhs.snd_names);
+	swap(lhs.adjust_diff, rhs.adjust_diff);
+	swap(lhs.is_legacy, rhs.is_legacy);
+	swap(lhs.scen_file, rhs.scen_file);
+	swap(lhs.outdoors, rhs.outdoors);
+	swap(lhs.towns, rhs.towns);
 }
 
 cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
