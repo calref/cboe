@@ -12,6 +12,7 @@
 #include <string>
 #include <iosfwd>
 #include <array>
+#include <bitset>
 
 #include "location.hpp"
 #include "special.hpp"
