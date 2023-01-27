@@ -15,11 +15,6 @@
 #include "item.hpp"
 #include "dialogxml/widgets/pictypes.hpp" // for pic_num_t
 
-// Windows headers are really annoying with their defined constants.
-#ifdef INFINITE
-#undef INFINITE
-#endif
-
 enum class eShopType {NORMAL, ALLOW_DEAD, RANDOM};
 
 enum class eShopPrompt {SHOPPING, HEALING, MAGE, PRIEST, SPELLS, ALCHEMY, TRAINING};
@@ -67,7 +62,7 @@ class cShop {
 	pic_num_t face;
 	size_t firstEmpty() const;
 public:
-	static const size_t INFINITE = 0;
+	static const size_t INFINITE_AMOUNT = 0;
 	cShop();
 	cShop(eShopType type, eShopPrompt prompt, pic_num_t pic, int adj, std::string name);
 	explicit cShop(std::string name);
