@@ -317,7 +317,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 		if(info.type == eShopItemType::ITEM) {
 			int end = info.first + info.count;
 			end = min(end, scenario.scen_items.size());
-			shop.addItems(info.first, scenario.scen_items.begin() + info.first, scenario.scen_items.begin() + end, cShop::INFINITE);
+			shop.addItems(info.first, scenario.scen_items.begin() + info.first, scenario.scen_items.begin() + end, cShop::INFINITE_AMOUNT);
 		} else {
 			int max = 62;
 			if(info.type == eShopItemType::ALCHEMY)
