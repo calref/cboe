@@ -148,7 +148,7 @@ TEST_CASE("Complex tag file") {
 		sdf[0][0] = 12;
 		sdf[1][3] = 52;
 		sdf[5][9] = 81;
-		p3["SDF"].encodeSparse(sdf);
+		p3["SDF"].encodeSparse<int>(sdf);
 		std::map<std::string, std::string> dict{
 			{"foo", "bar"},
 			{"a b", "c d"},
@@ -269,7 +269,7 @@ TEST_CASE("Complex tag file") {
 				CHECK(records[4] == std::string(""));
 				CHECK(records[5] == std::string("Isn't it cool?"));
 				vector2d<int> sdf;
-				page["SDF"].extractSparse(sdf);
+				page["SDF"].extractSparse<int>(sdf);
 				REQUIRE(sdf.width() == 6);
 				REQUIRE(sdf.height() == 10);
 				CHECK(sdf[0][0] == 12);
