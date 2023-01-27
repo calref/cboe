@@ -971,7 +971,7 @@ void cParty::readFrom(const cTagFile& file) {
 			}
 			
 			vector2d<int> shop_stock;
-			page["SHOPSTOCK"].extractSparse(shop_stock);
+			page["SHOPSTOCK"].extractSparse<int>(shop_stock);
 			for(size_t x = 0; x < shop_stock.width(); x++) {
 				for(size_t y = 0; y < shop_stock.height(); y++) {
 					store_limited_stock[x][y] = shop_stock[x][y];
