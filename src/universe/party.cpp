@@ -164,7 +164,6 @@ void swap(cParty& lhs, cParty& rhs) {
 	swap(lhs.total_xp_gained, rhs.total_xp_gained);
 	swap(lhs.total_dam_taken, rhs.total_dam_taken);
 	swap(lhs.scen_name, rhs.scen_name);
-	swap(lhs.adven, rhs.adven);
 	swap(lhs.setup, rhs.setup);
 	swap(lhs.stored_items, rhs.stored_items);
 	swap(lhs.summons, rhs.summons);
