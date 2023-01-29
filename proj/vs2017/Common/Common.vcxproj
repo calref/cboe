@@ -456,7 +456,7 @@
     <ClInclude Include="..\..\..\src\fileio\resmgr\res_sound.hpp" />
     <ClInclude Include="..\..\..\src\fileio\resmgr\res_strings.hpp" />
     <ClInclude Include="..\..\..\src\fileio\special_parse.hpp" />
-    <ClCompile Include="..\..\..\src\fileio\tagfile.hpp" />
+    <ClInclude Include="..\..\..\src\fileio\tagfile.hpp" />
     <ClInclude Include="..\..\..\src\fileio\tarball.hpp" />
     <ClInclude Include="..\..\..\src\fileio\xml-parser\ticpp.h" />
     <ClInclude Include="..\..\..\src\fileio\xml-parser\ticppapi.h" />
