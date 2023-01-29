@@ -539,53 +539,53 @@
   <Target Name="CopyFiles" AfterTargets="BuildScenarios">
     <!--CURSORS-->
     <Message Text="Copying data\cursors to output directory..." />
-    <Copy SkipUnchangedFiles="true" SourceFiles="@(cursors)" DestinationFiles="@(cursors->'$(SolutionDir)$(Configuration)\data\cursors\%(RecursiveDir)%(Filename)%(Extension)')">
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(cursors)" DestinationFiles="@(cursors->'$(SolutionDir)$(PlatformShortName)\$(Configuration)\data\cursors\%(RecursiveDir)%(Filename)%(Extension)')">
       <Output TaskParameter="CopiedFiles" ItemName="ChangedCursors" />
     </Copy>
     <Message Text="changed:@(Changed)" Importance="high" />
     <!--DIALOGS-->
     <Message Text="Copying data\dialogs to output directory..." />
-    <Copy SkipUnchangedFiles="true" SourceFiles="@(dialogs)" DestinationFiles="@(dialogs->'$(SolutionDir)$(Configuration)\data\dialogs\%(RecursiveDir)%(Filename)%(Extension)')">
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(dialogs)" DestinationFiles="@(dialogs->'$(SolutionDir)$(PlatformShortName)\$(Configuration)\data\dialogs\%(RecursiveDir)%(Filename)%(Extension)')">
       <Output TaskParameter="CopiedFiles" ItemName="ChangedDialogs" />
     </Copy>
     <Message Text="changed:@(ChangedDialogs)" Importance="high" />
     <!--FONTS-->
     <Message Text="Copying data\fonts to output directory..." />
-    <Copy SkipUnchangedFiles="true" SourceFiles="@(fonts)" DestinationFiles="@(fonts->'$(SolutionDir)$(Configuration)\data\fonts\%(RecursiveDir)%(Filename)%(Extension)')">
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(fonts)" DestinationFiles="@(fonts->'$(SolutionDir)$(PlatformShortName)\$(Configuration)\data\fonts\%(RecursiveDir)%(Filename)%(Extension)')">
       <Output TaskParameter="CopiedFiles" ItemName="ChangedFonts" />
     </Copy>
     <Message Text="changed:@(ChangedFonts)" Importance="high" />
     <!--GRAPHICS-->
     <Message Text="Copying data\graphics to output directory..." />
-    <Copy SkipUnchangedFiles="true" SourceFiles="@(graphics)" DestinationFiles="@(graphics->'$(SolutionDir)$(Configuration)\data\graphics\%(RecursiveDir)%(Filename)%(Extension)')">
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(graphics)" DestinationFiles="@(graphics->'$(SolutionDir)$(PlatformShortName)\$(Configuration)\data\graphics\%(RecursiveDir)%(Filename)%(Extension)')">
       <Output TaskParameter="CopiedFiles" ItemName="ChangedGraphics" />
     </Copy>
     <Message Text="changed:@(ChangedGraphics)" Importance="high" />
     <!--SHADERS-->
     <Message Text="Copying data\shaders to output directory..." />
-    <Copy SkipUnchangedFiles="true" SourceFiles="@(shaders)" DestinationFolder="$(SolutionDir)$(Configuration)\data\shaders">
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(shaders)" DestinationFolder="$(SolutionDir)$(PlatformShortName)\$(Configuration)\data\shaders">
       <Output TaskParameter="CopiedFiles" ItemName="ChangedShaders" />
     </Copy>
     <Message Text="changed:@(ChangedShaders)" Importance="high" />
     <!--SOUNDS-->
     <Message Text="Copying data\sounds to output directory..." />
-    <Copy SkipUnchangedFiles="true" SourceFiles="@(sounds)" DestinationFiles="@(sounds->'$(SolutionDir)$(Configuration)\data\sounds\%(RecursiveDir)%(Filename)%(Extension)')">
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(sounds)" DestinationFiles="@(sounds->'$(SolutionDir)$(PlatformShortName)\$(Configuration)\data\sounds\%(RecursiveDir)%(Filename)%(Extension)')">
       <Output TaskParameter="CopiedFiles" ItemName="ChangedSounds" />
     </Copy>
     <Message Text="changed:@(ChangedSounds)" Importance="high" />
     <!--STRINGS-->
     <Message Text="Copying data\strings to output directory..." />
-    <Copy SkipUnchangedFiles="true" SourceFiles="@(strings)" DestinationFiles="@(strings->'$(SolutionDir)$(Configuration)\data\strings\%(RecursiveDir)%(Filename)%(Extension)')">
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(strings)" DestinationFiles="@(strings->'$(SolutionDir)$(PlatformShortName)\$(Configuration)\data\strings\%(RecursiveDir)%(Filename)%(Extension)')">
       <Output TaskParameter="CopiedFiles" ItemName="ChangedStrings" />
     </Copy>
     <Message Text="changed:@(ChangedStrings)" Importance="high" />
     <!--SCENARIOS-->
     <Message Text="Copying scenarios to output directory..." />
-    <Copy SkipUnchangedFiles="true" SourceFiles="@(boe-base)" DestinationFolder="$(SolutionDir)$(Configuration)\Blades of Exile Base">
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(boe-base)" DestinationFolder="$(SolutionDir)$(PlatformShortName)\$(Configuration)\Blades of Exile Base">
       <Output TaskParameter="CopiedFiles" ItemName="ChangedBase" />
     </Copy>
     <Message Text="changed:@(ChangedBase)" Importance="high" />
-    <Copy SkipUnchangedFiles="true" SourceFiles="@(scenarios)" DestinationFiles="@(scenarios->'$(SolutionDir)$(Configuration)\Blades of Exile Scenarios\%(Filename)%(Extension)')">
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(scenarios)" DestinationFiles="@(scenarios->'$(SolutionDir)$(PlatformShortName)\$(Configuration)\Blades of Exile Scenarios\%(Filename)%(Extension)')">
       <Output TaskParameter="CopiedFiles" ItemName="ChangedScenarios" />
     </Copy>
     <Message Text="changed:@(ChangedScenarios)" Importance="high" />
