@@ -4397,14 +4397,16 @@ void rect_spec(const runtime_state& ctx){
 					if(is_out())
 						return;
 					bool isContainer = is_container(loc(spec.sd1,spec.sd2));
-					for(short k = 0; k < univ.town.items.size(); k++)
-						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].item_loc == l) {
-							univ.town.items[k].item_loc.x = spec.sd1;
-							univ.town.items[k].item_loc.y = spec.sd2;
-							if(isContainer && spec.m3) {
-								univ.town.items[k].contained = is_container(univ.town.items[k].item_loc);
+					bool moveContainer = spec.pictype > 0;
+					for(auto& item : univ.town.items)
+						if(item.variety != eItemType::NO_ITEM && item.item_loc == l) {
+							if(item.contained && !moveContainer) continue;
+							item.item_loc.x = spec.sd1;
+							item.item_loc.y = spec.sd2;
+							if(isContainer && spec.m3 > 0) {
+								item.contained = is_container(item.item_loc);
 								if(univ.town.is_crate(spec.sd1,spec.sd2) || univ.town.is_barrel(spec.sd1,spec.sd2))
-									univ.town.items[k].held = true;
+									item.held = true;
 							}
 						}
 					break;
