@@ -3512,33 +3512,35 @@ void ifthen_spec(const runtime_state& ctx) {
 			spec.pic = minmax(0,2,spec.pic);
 			switch(spec.pic) { // Comparison mode
 				case 0: // Is in range?
-					if(spec.ex1a < spec.ex1b && i == minmax(spec.ex1a,spec.ex1b,i)) j += 1;
-					if(spec.ex2a < spec.ex2b && i == minmax(spec.ex2a,spec.ex2b,i)) j += 2;
+					if(spec.ex1a >= 0 && spec.ex1a < spec.ex1b && i == minmax(spec.ex1a,spec.ex1b,i)) j += 1;
+					if(spec.ex2a >= 0 && spec.ex2a < spec.ex2b && i == minmax(spec.ex2a,spec.ex2b,i)) j += 2;
 					break;
 				case 1: // Not in range?
-					if(spec.ex1a < spec.ex1b && i != minmax(spec.ex1a,spec.ex1b,i)) j += 1;
-					if(spec.ex2a < spec.ex2b && i != minmax(spec.ex2a,spec.ex2b,i)) j += 2;
+					if(spec.ex1a >= 0 && spec.ex1a < spec.ex1b && i != minmax(spec.ex1a,spec.ex1b,i)) j += 1;
+					if(spec.ex2a >= 0 && spec.ex2a < spec.ex2b && i != minmax(spec.ex2a,spec.ex2b,i)) j += 2;
 					break;
 				case 2: // Simple comparison?
 					switch(spec.ex1b) {
-						case -2: if(i <= spec.ex1a) j += 1; break;
-						case -1: if(i < spec.ex1a) j += 1; break;
-						case 0: if(i == spec.ex1a) j += 1; break;
-						case 1: if(i > spec.ex1a) j += 1; break;
-						case 2: if(i >= spec.ex1a) j += 1; break;
+						case -2: if(spec.ex1a >= 0 && i <= spec.ex1a) j += 1; break;
+						case -1: if(spec.ex1a >= 0 && i < spec.ex1a) j += 1; break;
+						case 0: if(spec.ex1a >= 0 && i == spec.ex1a) j += 1; break;
+						case 1: if(spec.ex1a >= 0 && i > spec.ex1a) j += 1; break;
+						case 2: if(spec.ex1a >= 0 && i >= spec.ex1a) j += 1; break;
 					}
 					switch(spec.ex2b) {
-						case -2: if(i <= spec.ex2a) j += 1; break;
-						case -1: if(i < spec.ex2a) j += 1; break;
-						case 0: if(i == spec.ex2a) j += 1; break;
-						case 1: if(i > spec.ex2a) j += 1; break;
-						case 2: if(i >= spec.ex2a) j += 1; break;
+						case -2: if(spec.ex2a >= 0 && i <= spec.ex2a) j += 2; break;
+						case -1: if(spec.ex2a >= 0 && i < spec.ex2a) j += 2; break;
+						case 0: if(spec.ex2a >= 0 && i == spec.ex2a) j += 2; break;
+						case 1: if(spec.ex2a >= 0 && i > spec.ex2a) j += 2; break;
+						case 2: if(spec.ex2a >= 0 && i >= spec.ex2a) j += 2; break;
 					}
 					break;
 			}
-			if(j == 1) ctx.next_spec = spec.ex1c;
-			if(j == 2) ctx.next_spec = spec.ex2c;
-			if(j == 3) ctx.next_spec = spec.pictype;
+			switch(j) {
+				case 1: ctx.next_spec = spec.ex1c; break;
+				case 2: ctx.next_spec = spec.ex2c; break;
+				case 3: ctx.next_spec = spec.pictype; break;
+			}
 			break;
 		}
 		case eSpecType::IF_SDF_EQ:
