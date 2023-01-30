@@ -2775,7 +2775,7 @@ void affect_spec(const runtime_state& ctx) {
 		case eSpecType::DAMAGE: {
 			r1 = get_ran(spec.ex1a,1,spec.ex1b) + spec.ex2a;
 			eDamageType dam_type = (eDamageType) spec.ex2b;
-			int snd_type = spec.ex2c < 0 ? 0 : -spec.ex2c;
+			int snd_type = spec.ex2c <= 0 ? 0 : -spec.ex2c;
 			if(pc_num == 6) hit_party(r1, dam_type, snd_type);
 			else damage_target(pc_num, r1, dam_type, snd_type);
 			break;

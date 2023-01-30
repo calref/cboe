@@ -110,7 +110,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 		case 80: type = eSpecType::SELECT_TARGET; break;
 		case 81: type = eSpecType::DAMAGE; break;
 		case 82: type = eSpecType::AFFECT_HP; break;
-		case 83: type = eSpecType::AFFECT_SP; break;
+		case 83: type = eSpecType::AFFECT_SP; ex1c = 0; break;
 		case 84: type = eSpecType::AFFECT_XP; break;
 		case 85: type = eSpecType::AFFECT_SKILL_PTS; break;
 		case 86: type = eSpecType::AFFECT_DEADNESS; break;
@@ -165,7 +165,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 		case 195: type = eSpecType::TOWN_TIMER_START; break;
 			// 196-199 were undefined
 			// 200-211 were various rect place fields
-		case 212: type = eSpecType::RECT_MOVE_ITEMS; break;
+		case 212: type = eSpecType::RECT_MOVE_ITEMS; pictype = 1; break;
 		case 213: type = eSpecType::RECT_DESTROY_ITEMS; break;
 		case 214: type = eSpecType::RECT_CHANGE_TER; break;
 		case 215: type = eSpecType::RECT_SWAP_TER; break;
