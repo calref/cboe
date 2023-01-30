@@ -216,7 +216,9 @@ at No Special, nothing happens.</dd></dd>
 <dl>
 <dt>Extra 1a:</dt><dd>Which sound to play. For a list of sounds, read
 <a href="Sounds.html">Appendix A</a>. You can also click Choose to select
-the sound from a list, which allows you to hear the sounds while you choose.</dd></dd>
+the sound from a list, which allows you to hear the sounds while you choose.</dd>
+<dt>Extra 1b:</dt><dd>Whether to wait while the sound plays. If 0, the game will
+pause until the sound has finished playing. If 1, the game will not wait.</dd></dd>
 
 <dt>Type 15: Change Horse Possession</dt><dd>Makes a horse the party's property (or not).
 <dl>
@@ -1919,7 +1921,10 @@ space. Items inside containers are not moved. This only works in town.
 items to.</dd>
 <dt>Mess 3:</dt><dd>If 0, place items on the ground. If this is 1 and the target space has
 a container on it (including a movable container such as a barrel), the items are instead
-placed in the container.</dd></dd>
+placed in the container. If the space somehow contains both a static terrain container
+and a crate or barrel, the items are placed in the crate or barrel.</dd>
+<dt>Pict Type:</dt><dd>If 0, items in containers are not moved. If 1, even items in
+containers will be collected onto the target space.</dd></dd>
 
 <dt>Type 213: Destroy Items</dt><dd>Destroys all of the items in the rectangle. Be careful
 not to destroy something the party needs to finish the scenario. Only works in town.</dd>
