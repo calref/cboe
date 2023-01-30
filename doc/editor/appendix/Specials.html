@@ -1423,8 +1423,30 @@ as Wrack or Strengthen Target can also be tested for; just enter the same spell 
 would enter for the item ability.</dd></dd>
 
 <dt>Type 157: If Numeric Response?</dt><dd>Result depends on a number entered by the player.
-<!-- TODO: Document this. -->
-</dd>
+<dl>
+<dt>Mess 1:<dt><dd>The number of a scenario string giving a prompt to the user.</dd>
+<dt>Mess 2, Mess 3:<dt><dd>Specifies the minimum and maximum value the game will accept.
+If the player tries to enter a value outside this range, the dialog will not close.
+The dialog will display the expect range clearly to the player.</dd>
+<dt>Pict:<dt><dd>Specifies the comparison mode for the tests. If 0, the test passes
+when the number is in the specified range. If 1, the test passes when the number is
+<i>not</i> in the specified range. If 2, the test passes if the number compares
+favourably to the expected number.</dd>
+<dt>Pic Type:<dt><dd>Specifies a special node to call if both tests pass.</dd>
+<dt>Extra 1a:<dt><dd>If Pict is set to 0 or 1, this specifies the lower bound of the
+range. Otherwise, it specifies the number to compare to.</dd>
+<dt>Extra 1b:<dt><dd>If Pict is set to 0 or 1, this specifies the upper bound of the
+range. Otherwise, it specifies the comparison operator to use. Click Choose to select
+one.</dd>
+<dt>Extra 1c:<dt><dd>This special node is called if this test fails but the
+other test passes.</dd>
+<dt>Extra 2a, Extra 2b, Extra 2c:<dt><dd>As extra 1a, 1b, and 1c, defining a second
+test.</dd>
+<dt>JumpTo:<dt><dd>This special node is called if neither of the tests pass.</dd>
+<dt>Note:</dt><dd>If Extra 1a is set to -1, the first test is ignored and the special
+nodes in Extra 1c and Pic Type are never called. Similarly, if Extra 2a is set to
+-1, the second test is ignored and the special nodes in Extra 2c and Pic Type are
+never called.</dd></dd>
 
 <dt>Type 158: In Boat?</dt><dd>Result depends whether the player is in a boat.
 <dl>
