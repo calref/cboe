@@ -4,39 +4,48 @@ The navbar, to be included in all files.
 
 */
 
-document.write('\
-<ol>\
-<li><a href="About.html">About</a></li>\
-<li><a href="Building.html">Tutorial</a></li>\
-<li><a href="Editing.html">Making and Editing</a></li>\
-<li><a href="Outdoors.html">Outdoors</a></li>\
-<li><a href="Towns.html">Towns</a></li>\
-<li><a href="Terrain.html">Terrain Types</a></li>\
-<li><a href="Monsters.html">Monster Types</a></li>\
-<li><a href="Items.html">Items</a></li>\
-<li><a href="Advanced.html">Advanced</a></li>\
-<li><a href="Specials.html">Special Encounters</a></li>\
-<li><a href="Dialogue.html">Dialogue</a></li>\
-<li><a href="Graphics.html">Customizing Graphics</a></li>\
-<li><a href="Testing.html">Testing and Distributing</a></li>\
-</ol>\
-<h2>Appendices</h2>\
-<ol style="list-style-type:upper-alpha">\
-<li><a href="appendix/Specials.html">Special Encounter Node Types</a></li>\
-<li><a href="appendix/Items.html">Item Ability Types</a></li>\
-<li><a href="appendix/Monsters.html">Monster Ability Types</a></li>\
-<li><a href="appendix/Terrain.html">Starting Terrain Types</a></li>\
-<li><a href="appendix/Sounds.html">Blades Sound Effects</a></li>\
-<li><a href="appendix/Messages.html">Text Messages</a></li>\
-<li><a href="appendix/Magic.html">Spell and Alchemy Lists</a></li>\
-<li><a href="appendix/Examples.html">Special Encounter Examples</a></li>\
-</ol>\
-');
+var main_pages = [
+	{link:"About.html", text:"About"},
+	{link:"Building.html", text:"Tutorial"},
+	{link:"Editing.html", text:"Making and Editing"},
+	{link:"Outdoors.html", text:"Outdoors"},
+	{link:"Towns.html", text:"Towns"},
+	{link:"Terrain.html", text:"Terrain Types"},
+	{link:"Monsters.html", text:"Monster Types"},
+	{link:"Advanced.html", text:"Advanced"},
+	{link:"Specials.html", text:"Special Encounters"},
+	{link:"Dialogue.html", text:"Dialogue"},
+	{link:"Graphics.html", text:"Customizing Graphics"},
+	{link:"Testing.html", text:"Testing and Distributing"},
+];
 
-if(document.location.pathname.contains("appendix")) {
-	var links = document.querySelectorAll(".navbar a");
-	console.log(links);
-	for(var i = 0; i < links.length; i++) {
-		links[i].href = links[i].href.replace("appendix/","");
-	}
+var appendices = [
+	{link:"Specials.html", text:"Special Encounter Node Types"},
+	{link:"Items.html", text:"Item Ability Types"},
+	{link:"Monsters.html", text:"Monster Ability Types"},
+	{link:"Terrain.html", text:"Starting Terrain Types"},
+	{link:"Sounds.html", text:"Blades Sound Effects"},
+	{link:"Messages.html", text:"Text Messages"},
+	{link:"Magic.html", text:"Spell and Alchemy Lists"},
+	{link:"Examples.html", text:"Special Encounter Examples"},
+];
+
+var in_appendix = document.location.pathname.indexOf("appendix") >= 0;
+
+var main_prefix = in_appendix ? "../" : "./";;
+var appendix_prefix = in_appendix ? "./" : "appendix/";
+
+document.write('\n<ol>\n');
+
+for(var page of main_pages) {
+	document.write(`<li><a href="${main_prefix}${page.link}">${page.text}</a></li>\n`);
 }
+
+document.write('</ol>\n<h2>Appendices</h2>\n');
+document.write('<ol style=list-style-type:upper-alpha>\n');
+
+for(var page of appendices) {
+	document.write(`<li><a href="${appendix_prefix}${page.link}">${page.text}</a></li>\n`);
+}
+
+document.write('\n</ol>\n');
