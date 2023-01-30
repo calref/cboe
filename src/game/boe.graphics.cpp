@@ -641,7 +641,7 @@ void put_text_bar(std::string str) {
 		to_rect.width() = 12;
 		to_rect.height() = 12;
 		if(univ.party.status[ePartyStatus::STEALTH] > 0) {
-			rect_draw_some_item(status_gworld, get_stat_effect_rect(25), text_bar_gworld, to_rect, sf::BlendAlpha);
+			rect_draw_some_item(status_gworld, get_stat_effect_rect(26), text_bar_gworld, to_rect, sf::BlendAlpha);
 			to_rect.offset(-15, 0);
 		}
 		if(univ.party.status[ePartyStatus::FLIGHT] > 0) {
@@ -653,7 +653,7 @@ void put_text_bar(std::string str) {
 			to_rect.offset(-15, 0);
 		}
 		if(univ.party.status[ePartyStatus::FIREWALK] > 0) {
-			rect_draw_some_item(status_gworld, get_stat_effect_rect(26), text_bar_gworld, to_rect, sf::BlendAlpha);
+			rect_draw_some_item(status_gworld, get_stat_effect_rect(25), text_bar_gworld, to_rect, sf::BlendAlpha);
 			to_rect.offset(-15, 0);
 		}
 	}

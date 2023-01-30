@@ -777,7 +777,7 @@ pic_num_t choose_status_effect(short cur, bool party, cDialog* parent) {
 	};
 	static const char*const pstatus[] = {"Stealth", "Flight", "Detect Life", "Firewalk"};
 	static const std::vector<pic_num_t> status_pics = {4,2,0,6,5,9,10,11,12,13,14,15,16,17,20};
-	static const std::vector<pic_num_t> pstatus_pics = {25,23,24,26};
+	static const std::vector<pic_num_t> pstatus_pics = {26,23,24,25};
 	short prev = cur;
 	if(cur < 0 || cur >= (party ? pstatus_pics : status_pics).size()) cur = 0;
 	cPictChoice pic_dlg(party ? pstatus_pics : status_pics, PIC_STATUS, parent);
