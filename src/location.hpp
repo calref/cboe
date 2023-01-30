@@ -34,7 +34,7 @@ struct location {
 	location(int x, int y);
 	template<typename T>
 	location(sf::Vector2<T> other) : location(other.x, other.y) {}
-	bool in(rectangle r);
+	bool in(rectangle r) const;
 	template<typename T>
 	operator typename sf::template Vector2<T>() {
 		return sf::Vector2<T>(x,y);
@@ -81,13 +81,13 @@ struct rectangle {
 	rectangle_size_delegate height();
 	const rectangle_size_delegate width() const;
 	const rectangle_size_delegate height() const;
-	location centre();
-	location topLeft();
-	location topRight();
-	location bottomLeft();
-	location bottomRight();
-	bool contains(location p);
-	bool contains(int x, int y);
+	location centre() const;
+	location topLeft() const;
+	location topRight() const;
+	location bottomLeft() const;
+	location bottomRight() const;
+	bool contains(location p) const;
+	bool contains(int x, int y) const;
 	void offset(int h, int v);
 	void offset(location diff);
 	void move_to(int x, int y);

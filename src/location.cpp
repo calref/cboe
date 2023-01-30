@@ -54,7 +54,7 @@ bool loc_compare::operator()(location a, location b) const {
 	return false;
 }
 
-bool location::in(rectangle r){
+bool location::in(rectangle r) const {
 	if(y >= r.top && y <= r.bottom && x >= r.left && x <= r.right)
 		return true;
 	return false;
@@ -88,13 +88,13 @@ rectangle::rectangle(int t, int l, int b, int r) : top(t), left(l), right(r), bo
 rectangle::rectangle(const sf::Texture& texture) : top(0), left(0), right(texture.getSize().x), bottom(texture.getSize().y) {}
 rectangle::rectangle(const sf::RenderTarget& texture) : top(0), left(0), right(texture.getSize().x), bottom(texture.getSize().y) {}
 
-bool rectangle::contains(location p){
+bool rectangle::contains(location p) const {
 	if(p.y >= top && p.y <= bottom && p.x >= left && p.x <= right)
 		return true;
 	return false;
 }
 
-bool rectangle::contains(int x, int y) {
+bool rectangle::contains(int x, int y) const {
 	return contains(location(x,y));
 }
 
@@ -166,23 +166,23 @@ const rectangle_size_delegate rectangle::height() const {
 	return rectangle_size_delegate(*const_cast<rectangle*>(this), &rectangle::top, &rectangle::bottom);
 }
 
-location rectangle::centre() {
+location rectangle::centre() const {
 	return location((left + right) / 2, (top + bottom) / 2);
 }
 
-location rectangle::topLeft() {
+location rectangle::topLeft() const {
 	return location(left, top);
 }
 
-location rectangle::topRight() {
+location rectangle::topRight() const {
 	return location(right, top);
 }
 
-location rectangle::bottomLeft() {
+location rectangle::bottomLeft() const {
 	return location(left, bottom);
 }
 
-location rectangle::bottomRight() {
+location rectangle::bottomRight() const {
 	return location(right, bottom);
 }
 
