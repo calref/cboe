@@ -12,6 +12,7 @@ var main_pages = [
 	{link:"Towns.html", text:"Towns"},
 	{link:"Terrain.html", text:"Terrain Types"},
 	{link:"Monsters.html", text:"Monster Types"},
+	{link:"Items.html", text:"Items"},
 	{link:"Advanced.html", text:"Advanced"},
 	{link:"Specials.html", text:"Special Encounters"},
 	{link:"Dialogue.html", text:"Dialogue"},
