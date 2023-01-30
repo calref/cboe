@@ -26,7 +26,6 @@ var appendices = [
 	{link:"Monsters.html", text:"Monster Ability Types"},
 	{link:"Terrain.html", text:"Starting Terrain Types"},
 	{link:"Sounds.html", text:"Blades Sound Effects"},
-	{link:"Messages.html", text:"Text Messages"},
 	{link:"Magic.html", text:"Spell and Alchemy Lists"},
 	{link:"Examples.html", text:"Special Encounter Examples"},
 ];
