@@ -4134,7 +4134,7 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 		for(short j = minmax(0,univ.town->max_dim - 1,center.y - 4); j <= minmax(0,univ.town->max_dim - 1,center.y + 4); j++) {
 			effect = pat.pattern[i - center.x + 4][j - center.y + 4];
 			if(effect == FIELD_SMASH || sight_obscurity(i,j) < 5) {
-				switch(effect) {
+				switch(eFieldType(effect)) {
 					case FIELD_WEB:
 						web_space(i,j);
 						break;
@@ -4210,6 +4210,8 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 					case SFX_RUBBLE:
 						univ.town.set_rubble(i,j,true);
 						break;
+					case SPECIAL_EXPLORED: case SPECIAL_SPOT: case SPECIAL_ROAD:
+						break;
 				}
 			}
 		}
@@ -4227,7 +4229,43 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 					&& (((is_combat()) && (pc.combat_pos == spot_hit)) ||
 						((is_town()) && (univ.party.town_loc == spot_hit)))) {
 					effect = pat.pattern[i - center.x + 4][j - center.y + 4];
-					switch(effect) {
+					if(effect >= 50) {
+						eDamageType type = eDamageType::MARKED;
+						unsigned short dice;
+						if(effect > 50 && effect <= 80) {
+							type = eDamageType::FIRE;
+							dice = effect - 50;
+						} else if(effect > 90 && effect <= 120) {
+							type = eDamageType::COLD;
+							dice = effect - 90;
+						} else if(effect > 130 && effect <= 160) {
+							type = eDamageType::MAGIC;
+							dice = effect - 130;
+							// The rest of these are new, currently unused.
+						} else if(effect > 170 && effect <= 200) {
+							type = eDamageType::WEAPON;
+							dice = effect - 170;
+						} else if(effect > 210 && effect <= 240) {
+							type = eDamageType::POISON;
+							dice = effect - 210;
+						} else if(effect > 250 && effect <= 280) {
+							type = eDamageType::UNBLOCKABLE;
+							dice = effect - 250;
+						} else if(effect > 290 && effect <= 320) {
+							type = eDamageType::UNDEAD;
+							dice = effect - 290;
+						} else if(effect > 330 && effect <= 360) {
+							type = eDamageType::DEMON;
+							dice = effect - 330;
+						} else if(effect > 370 && effect <= 400) {
+							type = eDamageType::SPECIAL;
+							dice = effect - 370;
+						}
+						if(type != eDamageType::MARKED) {
+							r1 = get_ran(dice,1,6);
+							damage_pc(pc,r1,type,eRace::UNKNOWN,0);
+						}
+					} else switch(eFieldType(effect)) {
 						case WALL_FORCE:
 							r1 = get_ran(2,1,6);
 							damage_pc(pc,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
@@ -4248,7 +4286,42 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 							r1 = get_ran(6,1,8);
 							damage_pc(pc,r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
 							break;
-						default:
+						case SPECIAL_EXPLORED: case SPECIAL_SPOT: case SPECIAL_ROAD:
+						case BARRIER_FIRE: case BARRIER_FORCE: case BARRIER_CAGE:
+						case FIELD_ANTIMAGIC: case FIELD_WEB: case FIELD_QUICKFIRE:
+						case FIELD_DISPEL: case FIELD_SMASH:
+						case CLOUD_STINK: case CLOUD_SLEEP:
+						case OBJECT_CRATE: case OBJECT_BARREL:
+						case SFX_SMALL_BLOOD: case SFX_MEDIUM_BLOOD: case SFX_LARGE_BLOOD:
+						case SFX_SMALL_SLIME: case SFX_LARGE_SLIME:
+						case SFX_ASH: case SFX_BONES: case SFX_RUBBLE:
+							break;
+					}
+				}
+			}
+	put_pc_screen();
+	
+	fast_bang = 0;
+	
+	// Damage to monsters
+	for(short k = 0; k < univ.town.monst.size(); k++)
+		if((univ.town.monst[k].active > 0) && (dist(center,univ.town.monst[k].cur_loc) <= 5)) {
+			monster_hit = false;
+			// First actually make barriers, then draw them, then inflict damaging effects.
+			for(short i = minmax(0,univ.town->max_dim - 1,center.x - 4); i <= minmax(0,univ.town->max_dim - 1,center.x + 4); i++)
+				for(short j = minmax(0,univ.town->max_dim - 1,center.y - 4); j <= minmax(0,univ.town->max_dim - 1,center.y + 4); j++) {
+					spot_hit.x = i;
+					spot_hit.y = j;
+					
+					if(!monster_hit && sight_obscurity(i,j) < 5 && univ.town.monst[k].on_space(spot_hit)) {
+						
+						if(pat.pattern[i - center.x + 4][j - center.y + 4] > 0)
+							monster_hit = true;
+						effect = pat.pattern[i - center.x + 4][j - center.y + 4];
+						which_m = &univ.town.monst[k];
+						if(which_m->abil[eMonstAbil::RADIATE].active && effect == which_m->abil[eMonstAbil::RADIATE].radiate.type)
+							continue;
+						if(effect >= 50) {
 							eDamageType type = eDamageType::MARKED;
 							unsigned short dice;
 							if(effect > 50 && effect <= 80) {
@@ -4280,36 +4353,11 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 								type = eDamageType::SPECIAL;
 								dice = effect - 370;
 							}
-							if(type == eDamageType::MARKED) break;
-							r1 = get_ran(dice,1,6);
-							damage_pc(pc,r1,type,eRace::UNKNOWN,0);
-							break;
-					}
-				}
-			}
-	put_pc_screen();
-	
-	fast_bang = 0;
-	
-	// Damage to monsters
-	for(short k = 0; k < univ.town.monst.size(); k++)
-		if((univ.town.monst[k].active > 0) && (dist(center,univ.town.monst[k].cur_loc) <= 5)) {
-			monster_hit = false;
-			// First actually make barriers, then draw them, then inflict damaging effects.
-			for(short i = minmax(0,univ.town->max_dim - 1,center.x - 4); i <= minmax(0,univ.town->max_dim - 1,center.x + 4); i++)
-				for(short j = minmax(0,univ.town->max_dim - 1,center.y - 4); j <= minmax(0,univ.town->max_dim - 1,center.y + 4); j++) {
-					spot_hit.x = i;
-					spot_hit.y = j;
-					
-					if(!monster_hit && sight_obscurity(i,j) < 5 && univ.town.monst[k].on_space(spot_hit)) {
-						
-						if(pat.pattern[i - center.x + 4][j - center.y + 4] > 0)
-							monster_hit = true;
-						effect = pat.pattern[i - center.x + 4][j - center.y + 4];
-						which_m = &univ.town.monst[k];
-						if(which_m->abil[eMonstAbil::RADIATE].active && effect == which_m->abil[eMonstAbil::RADIATE].radiate.type)
-							continue;
-						switch(effect) {
+							if(type != eDamageType::MARKED) {
+								r1 = get_ran(dice,1,6);
+								damage_monst(univ.town.monst[k],who_hit,r1,type,0);
+							}
+						} else switch(eFieldType(effect)) {
 							case FIELD_WEB:
 								which_m->web(3);
 								break;
@@ -4342,41 +4390,14 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 							case BARRIER_CAGE:
 								univ.town.monst[k].status[eStatus::FORCECAGE] = max(8, univ.town.monst[k].status[eStatus::FORCECAGE]);
 								break;
-							default:
-								eDamageType type = eDamageType::MARKED;
-								unsigned short dice;
-								if(effect > 50 && effect <= 80) {
-									type = eDamageType::FIRE;
-									dice = effect - 50;
-								} else if(effect > 90 && effect <= 120) {
-									type = eDamageType::COLD;
-									dice = effect - 90;
-								} else if(effect > 130 && effect <= 160) {
-									type = eDamageType::MAGIC;
-									dice = effect - 130;
-									// The rest of these are new, currently unused.
-								} else if(effect > 170 && effect <= 200) {
-									type = eDamageType::WEAPON;
-									dice = effect - 170;
-								} else if(effect > 210 && effect <= 240) {
-									type = eDamageType::POISON;
-									dice = effect - 210;
-								} else if(effect > 250 && effect <= 280) {
-									type = eDamageType::UNBLOCKABLE;
-									dice = effect - 250;
-								} else if(effect > 290 && effect <= 320) {
-									type = eDamageType::UNDEAD;
-									dice = effect - 290;
-								} else if(effect > 330 && effect <= 360) {
-									type = eDamageType::DEMON;
-									dice = effect - 330;
-								} else if(effect > 370 && effect <= 400) {
-									type = eDamageType::SPECIAL;
-									dice = effect - 370;
-								}
-								if(type == eDamageType::MARKED) break;
-								r1 = get_ran(dice,1,6);
-								damage_monst(univ.town.monst[k],who_hit,r1,type,0);
+							case SPECIAL_EXPLORED: case SPECIAL_SPOT: case SPECIAL_ROAD:
+							case OBJECT_CRATE: case OBJECT_BARREL:
+							case BARRIER_FIRE: case BARRIER_FORCE:
+							case FIELD_ANTIMAGIC: case FIELD_QUICKFIRE:
+							case FIELD_DISPEL: case FIELD_SMASH:
+							case SFX_SMALL_BLOOD: case SFX_MEDIUM_BLOOD: case SFX_LARGE_BLOOD:
+							case SFX_SMALL_SLIME: case SFX_LARGE_SLIME:
+							case SFX_ASH: case SFX_BONES: case SFX_RUBBLE:
 								break;
 						}
 					}
