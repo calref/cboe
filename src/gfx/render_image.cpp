@@ -78,6 +78,10 @@ void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::Re
 }
 
 void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::RenderStates mode) {
+	rectangle src_gworld_rect(src_gworld), targ_gworld_rect(targ_gworld);
+	src_rect &= src_gworld_rect;
+	targ_rect &= targ_gworld_rect;
+	if(src_rect.empty() || targ_rect.empty()) return;
 	setActiveRenderTarget(targ_gworld);
 	sf::Sprite tile(src_gworld, src_rect);
 	tile.setPosition(targ_rect.left, targ_rect.top);

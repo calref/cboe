@@ -98,6 +98,10 @@ bool rectangle::contains(int x, int y) const {
 	return contains(location(x,y));
 }
 
+bool rectangle::empty() const {
+	return height() == 0 && width() == 0;
+}
+
 rectangle_size_delegate::rectangle_size_delegate(rectangle& rect, int rectangle::* first, int rectangle::* last) :
 	forRect(rect), b1(first), b2(last) {}
 

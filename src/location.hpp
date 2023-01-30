@@ -88,6 +88,7 @@ struct rectangle {
 	location bottomRight() const;
 	bool contains(location p) const;
 	bool contains(int x, int y) const;
+	bool empty() const;
 	void offset(int h, int v);
 	void offset(location diff);
 	void move_to(int x, int y);

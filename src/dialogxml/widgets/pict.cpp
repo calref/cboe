@@ -18,6 +18,7 @@
 #include "gfx/tiling.hpp"
 #include "location.hpp"
 #include "dialogxml/dialogs/dialog.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
 #include "fileio/resmgr/res_image.hpp"
 
 extern sf::Texture bg_gworld;
@@ -96,6 +97,8 @@ bool cPict::manageFormat(eFormat prop, bool set, boost::any* val) {
 }
 
 void cPict::setPict(pic_num_t num, ePicType type){
+	sheetCached.reset();
+	sheetCachedType = NUM_SHEET_TYPES;
 	picNum = num;
 	picType = type;
 	if(picType == PIC_MONST && picNum < 1000) {
@@ -108,6 +111,8 @@ void cPict::setPict(pic_num_t num, ePicType type){
 			picType += PIC_PARTY;
 		} else {
 			picType += PIC_CUSTOM;
+			if(picNum >= 2000 && picType == PIC_CUSTOM_TER)
+				picType = PIC_CUSTOM_TER_ANIM;
 			if(picType != PIC_CUSTOM_TER_MAP)
 				picNum %= 1000;
 		}
@@ -586,6 +591,16 @@ void cPict::recalcRect() {
 }
 
 std::shared_ptr<const sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
+	if(type == sheetCachedType && n == sheetCachedNum) {
+		return sheetCached;
+	}
+	sheetCachedType = type;
+	sheetCachedNum = n;
+	sheetCached = getSheetInternal(type, n);
+	return sheetCached;
+}
+
+std::shared_ptr<const sf::Texture> cPict::getSheetInternal(eSheetType type, size_t n) {
 	std::ostringstream sout;
 	bool purgeable = false;
 	switch(type) {
@@ -672,7 +687,13 @@ std::shared_ptr<const sf::Texture> cPict::getSheet(eSheetType type, size_t n) {
 					sout << "sheet" << n;
 			}
 	}
-	return &ResMgr::graphics.get(sout.str(), purgeable);
+	auto name = sout.str();
+	try {
+		return &ResMgr::graphics.get(name, purgeable);
+	} catch(ResMgr::xError& e) {
+		showError(e.what());
+		return nullptr;
+	}
 }
 
 void cPict::draw(){
@@ -690,6 +711,10 @@ void cPict::draw(){
 }
 
 void cPict::drawPresetTer(short num, rectangle to_rect){
+	if(num >= 960) {
+		drawPresetTerAnim(num - 960, to_rect);
+		return;
+	}
 	auto from_gw = getSheet(SHEET_TER, num / 50);
 	if(!from_gw) return;
 	num = num % 50;
@@ -702,6 +727,7 @@ void cPict::drawPresetTer(short num, rectangle to_rect){
 void cPict::drawPresetTerAnim(short num, rectangle to_rect){
 	rectangle from_rect = calc_rect(4 * (num / 5) + animFrame % 4, num % 5);
 	auto from_gw = getSheet(SHEET_TER_ANIM);
+	if(!from_gw) return;
 	if(to_rect.right - to_rect.left > 28) {
 		to_rect.inset(4,0);
 		to_rect.right = to_rect.left + 28;
