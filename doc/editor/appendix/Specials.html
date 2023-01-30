@@ -30,16 +30,17 @@ fields do.</p>
 
 <h2 id='gen'>General Use Specials</h2>
 <p>This is the class of special encounters which can be called at practically any time.
-Most of them can always be called. A few can't - these are noted in the encounter
+Most of them can always be called. A few can't be called in certain circumstances -
+these are noted in the encounter
 description.</p>
 
 <h3>General notes</h3>
 <dl>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>Some of these nodes change a Stuff Done flag. A
 Stuff Done flag is described by two values: Stuff done 1 and Stuff done 2. The legal range
-of the first flag is from 0 to 299, and the range for the second flag is 0 to 9. If a
+of the first flag is from 0 to 349, and the range for the second flag is 0 to 49. If a
 value is given outside the legal range, the special node does nothing and the Jump To node
-is called next (though often the editor will give you an error when you try to do
+is called next (though usually the editor will give you an error when you try to do
 this).</dd>
 <dt>Jump To:</dt><dd>After a special node is called and has its effect, this field
 specifies the next node to be called. If this value is negative, the special encounter
@@ -64,7 +65,7 @@ Jump To node.</dd></dd>
 <dt>Extra 1a:</dt><dd>This is the value to change it to.</dd>
 <dt>Example:</dt><dd>If Stuff done 1 is set to 90, Stuff done 2 is set to 4, and Extra 1a
 is set to 8, when this node is called Stuff Done (90,4) becomes 8. If, instead, Stuff done
-2 is set to 40, this value is out of range (0 ... 9) and you will get an error.</dd></dd>
+2 is set to 60, this value is out of range (0 ... 49) and you will get an error.</dd></dd>
 
 <dt>Type 2: Increment Flag</dt><dd>This node increases (or decreases) a Stuff Done flag by
 a specified amount.
@@ -213,7 +214,9 @@ at No Special, nothing happens.</dd></dd>
 
 <dt>Type 14: Play a sound</dt><dd>Plays one of the game's sounds.
 <dl>
-<dt>Extra1a:</dt><dd>Which sound to play. For a list of sounds, read Appendix A.</dd></dd>
+<dt>Extra 1a:</dt><dd>Which sound to play. For a list of sounds, read Appendix A.
+You can also click Choose to select the sound from a list, which allows you to hear
+the sounds while you choose.</dd></dd>
 
 <dt>Type 15: Change Horse Possession</dt><dd>Makes a horse the party's property (or not).
 <dl>
@@ -294,7 +297,7 @@ scenario specials once, and then just call it from the many places it's used.</d
 <dt>Type 22: Set Many Flags</dt><dd>This node sets 50 Stuff Done flags to a desired
 value.
 <dl>
-<dt>Stuff Done 1:</dt><dd>A number from 0 to 299. When this node is called, (Stuff Done 1,
+<dt>Stuff Done 1:</dt><dd>A number from 0 to 349. When this node is called, (Stuff Done 1,
 0), (Stuff Done 1, 1), ... (Stuff Done 1, 49) are all set to Extra 1a.</dd>
 <dt>Extra 1a:</dt><dd>This is the value to change it to.</dd>
 <dt>Example:</dt><dd>Suppose Stuff Done flag (200,4) is 35. This node is called with Stuff
@@ -516,7 +519,8 @@ the scenario's quests or jobs.
 <ol start='0'>
 <li>Marks the quest as not started. This might be useful if the quest is on a job board
 and you want it to be repeatable. Note however that marking a quest available does not
-grant automatic rewards.</li>
+grant automatic rewards. If you want the rewards you would need to first mark
+the quest as complete.</li>
 <li>Marks the quest as started. If it wasn't already started, the game automatically fills
 in the quest's start day, and if Extra 2a is non-negative, the quest is considered to have
 come from the job board with that number.</li>
@@ -562,7 +566,7 @@ dot.</p>
 <dl>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>All of these nodes change a Stuff Done flag. A
 Stuff Done flag is described by two values: Stuff done 1 and Stuff done 2. The legal range
-of the first flag is from 0 to 299, and the range for the second flag is 0 to 9. You can
+of the first flag is from 0 to 349, and the range for the second flag is 0 to 49. You can
 give a value outside the legal range (such as -1 for Stuff Done 1). If you do this, the
 special node does its job normally, and if this node is called again, it will do it again.
 This is sometimes a good idea.</dd>
@@ -666,7 +670,7 @@ ends immediately and the Stuff Done flag is not set.
 <dt>Mess 1:</dt><dd>The number of the first message to be displayed in the dialog box. The
 six messages starting with this message will be displayed in the dialog box (though the
 strings can, of course, be blank). Press the create/edit button to edit the text.</dd>
-<dt>Mess 3:</dt><dd>The number of special item to give (0 .. 49). If this is left at -1,
+<dt>Mess 3:</dt><dd>The number of special item to give. If this is left at -1,
 no special item is given.</dd>
 <dt>Pict:</dt><dd>This is the number of the picture to display. To select a picture, press
 the Choose button.</dd>
@@ -709,17 +713,29 @@ in town or combat (no traps outdoors). <!-- TODO: Check this -->
 <dt>Mess1, Mess2:</dt><dd>Standard usage. You can provide customized text saying the party
 sees what may be a trap. If both of these fields are left at -1, the game displays a
 generic You Found A Trap message.</dd>
-<dt>Extra 1a:</dt><dd>The type of trap: 0 - randomly selected, 1 - damage 1 character, 2 -
-poison 1 character, 3 - poison party, 4 - damage party, 5 - paralyze character, 6 - no
-trap after all, 7 - drain experience, 8 - make town hostile, 9 - fire damage 1 character,
-10 - dumbfound 1 character, 11 - disease 1 character, 12 - disease party, 13 - custom</dd>
+<dt>Extra 1a:</dt><dd>The type of trap:
+<ol start='0'>
+<li>randomly selected</li>
+<li>damage 1 character</li>
+<li>poison 1 character</li>
+<li>poison party</li>
+<li>damage party</li>
+<li>paralyze character</li>
+<li>no trap after all</li>
+<li>drain experience</li>
+<li>make town hostile</li>
+<li>fire damage 1 character</li>
+<li>dumbfound 1 character</li>
+<li>disease 1 character</li>
+<li>disease party</li>
+<li>custom</li></ol></dd>
 <dt>Extra 1b:</dt><dd>The severity of the trap. The higher the number, the deadlier the
 trap. A severity of three all but guarantees lethality. (Range 0 ... 3)</dd>
 <dt>Extra 2a:</dt><dd>The disarming penalty. The higher the number, the harder to disarm.
 (Range 0 ... 100)</dd>
 <dt>Extra 2b:</dt><dd>If trap type is 13 (custom), this scenario special node is called
 when the PC fails to disarm the trap. It is never called if the PC successfully disarms
-the trap.</dd>
+the trap. The JumpTo node will still be called after calling this node.</dd>
 <dt>Note:</dt><dd>If this special node is placed on a container (like a chest), the party
 must disarm the trap to be able to take any of the items in the chest.</dd></dd>
 </dl>
@@ -794,9 +810,6 @@ Select a PC node, followed by an Affect Statistic node.</dd></dd>
 It has no effect when called during a talking special. When called during combat, and a
 Select a PC node has not been called, it only affects the active character.
 <dl>
-<dt>Pict:</dt><dd>If this is 0, this node damages the whole party. If this is 1, and the
-node is called during combat, only the current pc is damaged. Otherwise, the whole party
-is damaged.</dd>
 <dt>Extra 1a:</dt><dd>This is the number of dice of damage that is rolled. (Maximum:
 256)</dd>
 <dt>Extra 1b:</dt><dd>This is the number of sides of the dice that are rolled. For
@@ -805,7 +818,7 @@ example, if Extra 1a is 5 and Extra 2b is 8, the game generates 5 random numbers
 <dt>Extra 2a:</dt><dd>This is the amount of extra damage to add. If this is 100, for
 example, 100 extra points of damage are inflicted.</dd>
 <dt>Extra 2b:</dt><dd>This is the type of damage inflicted (0 - weapon, 1 - fire, 2 -
-poison, 3 - general magic, 4 - unblockable, 5 - cold, 6 - demon,7 - undead)</dd>
+poison, 3 - general magic, 4 - unblockable, 5 - cold, 6 - demon, 7 - undead, 8 - assassination)</dd>
 <dt>Extra 2c:</dt><dd>If non-zero, this specifies which sound to play along with the
 damage. Leave it at 0 to use the default sound.</dd></dd>
 
@@ -1331,8 +1344,7 @@ specified trait compares favourably with the required number in Extra 2a.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd>
 <dt>Uses:</dt><dd>This is often used to check the Cave Lore or Woodsman traits.</dd></dd>
 
-<dt>Type 153: Has Enough of Statistic?</dt><dd>Result depends on whether the sum of the
-parties Mage Lore skill is high enough.
+<dt>Type 153: Has Enough of Statistic?</dt><dd>Result depends on whether a particular skill in the party is high enough.
 <dl>
 <dt>Extra 1a:</dt><dd>If the skill is at least this amount, the special in Extra 1b is
 called.</dd>
@@ -1345,7 +1357,8 @@ maximum level.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd>
 <dt>Note:</dt><dd>Don't make the required amount be much higher than 20. In fact, it's
 generally best to never make it higher than 20, since there's a possibility that the party
-will have only one PC.</dd>
+will have only one PC. For the same reason, if checking mage or priest spells skill, you generally
+shouldn't make the required amount higher than 7.</dd>
 <dt>Uses:</dt><dd>Checking if the party has enough mage lore to decipher an ancient scroll
 and learn a new spell.</dd></dd>
 
@@ -1494,7 +1507,7 @@ while talking.</dd></dd>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space to hit.</dd>
 <dt>Extra 2a:</dt><dd>The amount of damage to inflict. (Range 0 ... 1000)</dd>
 <dt>Extra 2b:</dt><dd>This is the type of damage inflicted (0 - weapon, 1 - fire, 2 -
-poison, 3 - general magic, 4 - unblockable, 5 - cold, 6 - demon,7 - undead)</dd>
+poison, 3 - general magic, 4 - unblockable, 5 - cold, 6 - demon, 7 - undead, 8 - assassination)</dd>
 <dt>Note:</dt><dd>Damage doing specials are ignored when called while Talking.</dd></dd>
 
 <dt>Type 176: Explosion on Space</dt><dd>Everything within a given radius of the specified
@@ -1504,7 +1517,7 @@ space takes damage. Only creatures who can be seen from the exploding space are 
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space to hit.</dd>
 <dt>Extra 2a:</dt><dd>The amount of damage to inflict. (Range 0 ... 1000)</dd>
 <dt>Extra 2b:</dt><dd>This is the type of damage inflicted (0 - weapon, 1 - fire, 2 -
-poison, 3 - general magic, 4 - unblockable, 5 - cold, 6 - demon,7 - undead)</dd>
+poison, 3 - general magic, 4 - unblockable, 5 - cold, 6 - demon, 7 - undead, 8 - assassination)</dd>
 <dt>Note:</dt><dd>Damage doing specials are ignored when called while Talking.</dd></dd>
 
 <dt>Type 177: Lock Space</dt><dd>If the terrain in a given space has Special Type
@@ -1523,7 +1536,7 @@ has no other affect.
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space for the explosion to
 appear on.</dd>
 <dt>Extra 2a:</dt><dd>The type of explosion. 0 - fire 1 - teleportation
-2 - electricity (blue) 3 - electricity (yellow)</dd>
+2 - electricity (blue) 3 - electricity (yellow) 4 - weird 5 - frost</dd>
 <dt>Extra 2b:</dt><dd>If left at 0, the burst is a simple explosion. If set to 1, a larger
 burst is used for an even flashier effect.</dd>
 <dt>Extra 2c:</dt><dd>Specifies the sound to play with the explosion. Leave at -1 to use
@@ -1568,7 +1581,7 @@ and the special encounter ends.
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the space the party is
 teleported to if the player pushes Enter.</dd>
 <dt>Note:</dt><dd>Like all party moving special nodes, if this is called any time besides
-when walking in town mode, the special encounter ends immediately, and, if moving, the
+when walking in town mode, the special encounter normally ends immediately, and, if moving, the
 party is not allowed to enter the space.</dd></dd>
 
 <dt>Type 186: Generic Button</dt><dd>A dialog box comes up saying the party has found a
@@ -1647,9 +1660,7 @@ sector (Range 0 ... 47, 0 ... 47)</dd>
 <dt>Uses:</dt><dd>If, when the party leaves at the north end of a dungeon, you want them
 to be in a different location in the outdoors from where they were when the entered, place
 a special node of this type just before the north exit (where they're forced to step on
-it).</dd>
-<dt>Note:</dt><dd>When this node is called, there is a delay while the new outdoors
-section is loaded into memory. Try not to call it too often.</dd></dd>
+it).</dd></dd>
 
 <dt>Type 192: Place Item</dt><dd>Places an item on a specified space.
 <dl>
@@ -1782,7 +1793,9 @@ intended to be magical. Set it to 0 to prevent the user from targeting spaces in
 antimagic field. If left at -1, the default is used, which is to allow it in town mode but
 not in combat. (This is probably a relic of the extremely limited selection of spells that
 can be targeted in town mode.)</dd>
-<dt>JumpTo:</dt><dd>This node is called once for every selected target.</dd></dd>
+<dt>JumpTo:</dt><dd>This node is called once for every selected target. Note that this
+does not mean it is called once for every space affected – if you target 3 crosses,
+the node is called once for each cross.</dd></dd>
 
 <dt>Type 201: Place Pattern (Fields/Objects)</dt><dd>Places fields according to a preset
 spell pattern relative to a specified space.
@@ -1798,7 +1811,9 @@ spell pattern relative to a specified space.
 5 - circle radius 3,
 6 - 5 spaces in a cross,
 7-13 - rotateable 2x8 wall in various orientation</dd>
-<dt>Extra 2a</dt><dd>The field type to place</dd></dd>
+<dt>Extra 2a</dt><dd>The field type to place. Two special values are supported – 32 removes
+any fields on the space, while 33 transforms any terrains of the Crumbling type into their
+transform to terrain.</dd></dd>
 
 <dt>Type 202: Place Pattern (Direct Damage)</dt><dd>Deals damage according to a preset
 spell pattern relative to a specified space.
@@ -1815,17 +1830,19 @@ what happens when casting spells such as Fireball or Divine Thud.</dd></dd>
 <dt>Type 203: Relocate Creature</dt><dd>This node forces a single creature to relocate to
 a different space. Useful for cutscenes. It can handle either absolute or relative
 movement.
-However, it does not currently check that it is legal for the creature to be on that
+However, it usually does not check that it is legal for the creature to be on that
 space.
 This can split the party into its individual members temporarily, similar to combat mode,
 but they return to the party's original location once the node sequence ends.
+However, if in combat mode, the PCs remain on the final location.
 <dl>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates or differentials.</dd>
 <dt>Extra 2a:</dt><dd>The creature to relocate - 0-5 for party members, 100+x for a
 specific monster, -1 for the currently selected target.</dd>
 <dt>Extra 2b:</dt><dd>If 0, Extra 1a and 1b are taken as absolute coordinates. If 1, they
 are added to the x and y coordinates, respectively. 2 or 3 means the x coordinate is
-instead subtracted, while 3 or 4 means the y coordinate is instead subtracted.</dd>
+instead subtracted, while 3 or 4 means the y coordinate is instead subtracted. Set to 5 to use
+absolute positioning but select a nearby space the monster can be on.</dd>
 <dt>Extra 2c:</dt><dd>If positive, this specifies a delay in milliseconds after the
 creature
 is repositioned.</dd></dd>
