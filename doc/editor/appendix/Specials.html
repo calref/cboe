@@ -201,7 +201,7 @@ usually won't even be called if the space is impassable.</dd></dd>
 <dt>Extra 1a:</dt><dd>This is the number of ticks to set the timer forward. A day is 3000
 ticks. The maximum this can be set to is 30000.</dd></dd>
 
-<dt>Type 13: Start Global Timer</dt><dd>One of the parties special encounter timers is
+<dt>Type 13: Start Global Timer</dt><dd>One of the party's special encounter timers is
 activated. Each move taken, the timer goes down by 1. When it runs out, a scenario special
 node is called (even if the party enters or leaves town). Also see Start Town Timer, under
 Town Special Nodes.
@@ -215,7 +215,7 @@ at No Special, nothing happens.</dd></dd>
 <dl>
 <dt>Extra1a:</dt><dd>Which sound to play. For a list of sounds, read Appendix A.</dd></dd>
 
-<dt>Type 15: Change Horse Possession</dt><dd>Makes a horse the parties property (or not).
+<dt>Type 15: Change Horse Possession</dt><dd>Makes a horse the party's property (or not).
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
 <dt>Extra1a:</dt><dd>The horse to change ownership of. (Range 0 ... 29)</dd>
@@ -263,7 +263,7 @@ the party's item slots are full). If No Special is given, the Jump To special is
 usual.</dd>
 <dt>Uses:</dt><dd>If you want the party to get an item after winning a combat outdoors,
 use a Forced Give. This makes sure that if it is at all possible, they get it.</dd>
-<dt>Uses 2:</dt><dd>Use this is the party is given an item during a talking special
+<dt>Uses 2:</dt><dd>Use this if the party is given an item during a talking special
 encounter. If the party inventory is full, jump to a special telling them that they can't
 carry the item and to come back later, and then end the special. This enables you to keep
 from setting a Stuff Done flag saying they got the item, when, in fact, they
@@ -279,7 +279,7 @@ some items are actually taken away.</dd>
 <dt>Extra 1b:</dt><dd>The special to jump to if no items are taken. If No Special is
 specified, the Jump To special is used as usual.</dd>
 <dt>Extra 2a:</dt><dd>The amount of gold to pay for each item (Range 0 ... 250)</dd>
-<dt>Uses:</dt><dd>This is a how you give a bounty for items. If you want someone to give
+<dt>Uses:</dt><dd>This is how you give a bounty for items. If you want someone to give
 the party 10 gold for each unicorn horn, give unicorn horns a special class of, say, 30,
 and call this special node with Extra 1a set to 30 and Extra 2a set to 10.</dd></dd>
 
@@ -354,7 +354,7 @@ to be multiple scenarios.)
 <dt>Stuff Done 1, Stuff Done 2:</dt><dd>The flag to store or change.</dd>
 <dt>Mess1:</dt><dd>If set to a positive number, this is the number of a string used to
 look up the campaign flag. If left at -1, the name of your scenario is used.</dd>
-<dt>Extra 1a, Extra 1b</dt><dd>The campaign flag to fetch or change. Each of thes must be
+<dt>Extra 1a, Extra 1b</dt><dd>The campaign flag to fetch or change. Each of these must be
 in the range 0..24.</dd>
 <dt>Extra 2a:</dt><dd>Set this to 0 to set the Campaign Flag equal to the value of the
 Stuff Done Flag. Set it to 1 to instead set the Stuff Done flag equal to the value of the
@@ -402,7 +402,7 @@ these two fields.</dd>
 by. Otherwise, the value to divide by is the value of the Stuff Done Flag specified by
 these two fields.</dd>
 <dt>Extra 1c, Extra 2c</dt><dd>This is the Stuff Done Flag to store the remainder of the
-division in. You can leave these are -1 if you don't care about the remainder. Similarly,
+division in. You can leave these at -1 if you don't care about the remainder. Similarly,
 you can leave Stuff Done 1 and 2 at -1 if you only care about the remainder.</dd></dd>
 
 <dt>Type 33: Exponentiation</dt><dd>Raises a number to a power and stores the result in a
@@ -551,8 +551,8 @@ items.</p>
 Done 1 and Stuff Done 2 fields. If you do, when the node is called, if that flag has a
 value of 250, the node does nothing and the special ends immediately. If the flag is not
 250, the node has the desired effect, and then that Stuff Done flag is set to 250 (so this
-node has no effect is called again).</p>
-<p>These nodes have one more special property. If you have a have a special encounter
+node has no effect if called again).</p>
+<p>These nodes have one more special property. If you have a special encounter
 marked by a white dot, the first node called from that special encounter is a One-Shot
 Special, and the specified Stuff Done flag in that node is 250, then the white dot
 disappears. Thus, specials that don't do anything anymore aren't marked by a special
@@ -589,13 +589,13 @@ the Choose button to select an item.</dd>
 tell them their inventory is full). If No Special is given, the Jump To special is called
 normally.</dd></dd>
 
-<dt>Type 51: Give Special Item</dt><dd>Gives the party one of the scenarios special items.
+<dt>Type 51: Give Special Item</dt><dd>Gives the party one of the scenario's special items.
 This can be accompanied by one or two messages, if you wish.
 <dl>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>As usual.</dd>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
 <dt>Extra 1a:</dt><dd>The number of the special item to give. (Range 0 ... 49)</dd>
-<dt>Extra 1b:</dt><dd>If 0 (the default), the special item is given. Otherwise, its taken
+<dt>Extra 1b:</dt><dd>If 0 (the default), the special item is given. Otherwise, it's taken
 away.</dd></dd>
 
 <dt>Type 52: One-Time Do Nothing</dt><dd>If the Stuff Done flag is set to 250, this node
@@ -622,7 +622,7 @@ a dialog box with up to six text messages and a dialog picture (which you choose
 upper left. The lower right hand corner can have 1 to 3 buttons. The player must press a
 button, at which point another special node will be called. You choose a special node to
 call for each button.<br>
-The first button is always labeled OK if its the only button or Leave if there are other
+The first button is always labeled OK if it's the only button or Leave if there are other
 buttons. If the first button is pressed, the Jump To special is called normally. Otherwise
 the special node in Extra 1b or 2b is called.
 <dl>
@@ -637,22 +637,22 @@ is 1, this button appears. Otherwise, it doesn't.</dd>
 the Choose button.</dd>
 <dt>Pictype:</dt><dd>This specifies the type of picture to display. To select a picture
 type, press the Choose button.</dd>
-<dt>Extra 1a:</dt><dd>Determines what the second button is labeled. If left -1, there is
+<dt>Extra 1a:</dt><dd>Determines what the second button is labeled. If left at -1, there is
 no second button. Press the Choose button to select a label.</dd>
-<dt>Extra 1b:</dt><dd>What special node to call is button 2 is pressed.</dd>
-<dt>Extra 2a:</dt><dd>Determines what the third button is labeled. If left -1, there is no
+<dt>Extra 1b:</dt><dd>What special node to call if button 2 is pressed.</dd>
+<dt>Extra 2a:</dt><dd>Determines what the third button is labeled. If left at -1, there is no
 third button. Press the Choose button to select a label.</dd>
-<dt>Extra 2b:</dt><dd>What special node to call is button 3 is pressed.</dd>
+<dt>Extra 2b:</dt><dd>What special node to call if button 3 is pressed.</dd>
 <dt>Example:</dt><dd>If Mess 1 is 30, and Mess 2 is 4, the dialog box that comes up
 contains messages 30 through 33.</dd>
 <dt>Note:</dt><dd>A dialog box can only contain consecutive text messages. You can't bring
 up a dialog box which contains message 24, followed by messages 1, 20, and 64.</dd>
-<dt>Example:</dt><dd>Suppose to want a dialog box to come up displaying messages 37
+<dt>Example:</dt><dd>Suppose you want a dialog box to come up displaying messages 37
 through 40.</dd>
 <dt>Uses:</dt><dd>This is one special node where you may often want to leave Stuff Done 1
-at -1 (so this node displays the dialog box every time its called). For example, if you
+at -1 (so this node displays the dialog box every time it's called). For example, if you
 want the text of a book to come up when the party looks at a certain bookshelf, you
-probably want the same text to keep coming up when the look at the bookshelf later
+probably want the same text to keep coming up when they look at the bookshelf later
 on.</dd></dd>
 
 <dt>Type 58: Give Item Dialog</dt><dd>Displays a dialog box with up to six text
@@ -741,8 +741,8 @@ spell, or as a result of using a space that happened to have a monster (or PC) o
 target is considered to be selected.</p>
 <p>Finally, the last few nodes in this section (like Party Status, Affect Gold, etc) only
 affect the whole party; they ignore the currently selected target.</p>
-<p>Note that when one of these specials does something bad (e.g. diseases or poisons) a
-character, all resistances (e.g. protection from poison rings) apply.</p>
+<p>Note that when one of these specials does something bad to a character
+(e.g. disease or poison), all resistances (e.g. protection from poison rings) apply.</p>
 
 <h3>General notes:</h3>
 <dt>Stuff done 1, Stuff done 2:</dt><dd> None of these special node types use these
@@ -750,8 +750,8 @@ fields.</dd>
 <dt>Mess 1, Mess 2:</dt><dd>All of these special node types (except Select a PC) can
 display one or two messages. If you don't want a message displayed, just leave these at
 -1.</dd>
-<dt>Extra 1b:</dt><dd>This field usually affects whether the node helps of hurts the
-party. In general, if its 0 (the default) it helps. Otherwise, it hurts.</dd>
+<dt>Extra 1b:</dt><dd>This field usually affects whether the node helps or hurts the
+party. In general, if it's 0 (the default) it helps. Otherwise, it hurts.</dd>
 <dt>Extra 2b:</dt><dd>When these nodes are called during combat, if this is 0, the node
 only affects the active PC. Otherwise, it affects the whole party. (Exception to this -
 the Do Damage node type)</dd>
@@ -814,14 +814,14 @@ maximum of 250 or a minimum of 0. This special cannot kill anybody, only reduce 
 health to 0.
 <dl>
 <dt>Extra 1a:</dt><dd>The amount to raise/lower health.</dd>
-<dt>Extra 1b:</dt><dd>If 0, health is raised. Otherwise, its lowered.</dd></dd>
+<dt>Extra 1b:</dt><dd>If 0, health is raised. Otherwise, it's lowered.</dd></dd>
 
 <dt>Type 83: Affect Spell Points</dt><dd>Increases/decreases spell points. Spell points
 can be changed to a maximum of 100 or a minimum of 0.
 <dl>
 <dt>Extra 1a:</dt><dd>The amount to raise/lower spell points.</dd>
-<dt>Extra 1b:</dt><dd>If 0, spell points are raised. Otherwise, they're lowered.</dd></dd>
-<dt>Extra 1c:</dt><dd>Only used when lowering spell points. If 0, the spell points are lowered by the exact amount specified. If 1, targets with Mage Spells or Priest Spells are allowed to partially resist the effect.</dd>
+<dt>Extra 1b:</dt><dd>If 0, spell points are raised. Otherwise, they're lowered.</dd>
+<dt>Extra 1c:</dt><dd>Only used when lowering spell points. If 0, the spell points are lowered by the exact amount specified. If 1, targets with Mage Spells or Priest Spells are allowed to partially resist the effect.</dd></dd>
 
 <dt>Type 84: Affect Experience</dt><dd>Adds/drains experience. If the target is a monster,
 this has no effect.
@@ -865,7 +865,7 @@ Note, if harming the party, all resistances apply. You don't need to worry about
 the chosen status effect is inherently helpful or harmful - the game knows this, so just
 set Extra 1b to 0 if you want to help the party or 1 if you want to harm them.
 <dl>
-<dt>Extra 1a:</dt><dd>The amount to change. (Usually ranges is 0 ... 8; Martyr's Shield is
+<dt>Extra 1a:</dt><dd>The amount to change. (Usual range is 0 ... 8; Martyr's Shield is
 0 ... 10, and paralysis is 0 ... 5000)</dd>
 <dt>Extra 1b:</dt><dd>If 0, helps. Otherwise, harms.</dd>
 <dt>Extra 1c:</dt><dd>Which status effect. Press the Choose button to select one.</dd>
@@ -904,7 +904,7 @@ change skill points or amount of experience.</dd>
 monster, this has no effect. Decreasing morale is the same as a Fear spell.
 <dl>
 <dt>Extra 1a:</dt><dd>The amount to increase/decrease morale.</dd>
-<dt>Extra 1b: If 0, increases. Otherwise, decreases.</dd></dd>
+<dt>Extra 1b:</dt><dd>If 0, increases. Otherwise, decreases.</dd></dd>
 
 <dt>Type 93: Affect Soul Crystal</dt><dd>Records the currently targeted monster in the
 party's soul crystal, or erases it if there is already a monster of the same kind recorded.
@@ -937,7 +937,7 @@ default. Leave at -1 to use the default. If the item doesn't normally have charg
 is ignored. (But keep in mind that certain enchantments give charges.)</dd>
 <dt>Extra 2a:</dt><dd>You can force whether the item is identified using this field. If
 left at -1, the default setting in the item properties is used. Set to 0 to force it to be
-unidentified, or 1 to force it to be unidentified. If you set it to 2, it will be fully
+unidentified, or 1 to force it to be identified. If you set it to 2, it will be fully
 identified, even revealing the concealed ability (if any).</dd>
 <dt>Extra 2b:</dt><dd>You can force whether the item is cursed using this field. Leave at
 -1 to use the default setting, or set to 0 to force uncursed, 1 to force cursed.</dd>
@@ -981,7 +981,7 @@ statistics. If the target is not a monster, this has no effect.
 Mage Spells, etc.)
 <dl>
 <dt>Pict:</dt><dd>This is a number from 1 to 100, which represents the percentage chance
-the statistic is affected. If 100 (the default) its always changes. If 0, it never
+the statistic is affected. If 100 (the default) it's always changed. If 0, it never
 is.</dd>
 <dt>Extra 1a:</dt><dd>The amount to increase/decrease (0 .. 10).</dd>
 <dt>Extra 1b:</dt><dd>If 0, increase. If 1, decrease.</dd>
@@ -1096,7 +1096,7 @@ Stuff Done flag. If the Stuff Done flag is greater than the value of Extra 1a, t
 in Extra 1b is called. Otherwise, if the Stuff Done flag is less than the value in Extra
 2a, the special in Extra 2b is called. If neither case applies, the Jump To special is
 called.
-<p>The default values for Extra 1a is -1. If it is left at -1, it isn't checked, and the
+<p>The default value for Extra 1a is -1. If it is left at -1, it isn't checked, and the
 special in Extra 1b won't be called. The same is true for Extra 2a.</p>
 <dl>
 <dt>Stuff done 1, Stuff done 2:</dt><dd>Specifies the Stuff Done flag to
@@ -1269,7 +1269,7 @@ Extra 1b is called.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd></dd>
 
 <dt>Type 148: If Fields/Objects? </dt><dd>Result depends on the presence of fields,
-barriers, or similar transient objects exist in the current town.
+barriers, or similar transient objects existing in the current town.
 <dl>
 <dt>Extra 1a, Extra 1b, Extra 2a, Extra 2b:</dt><dd>The rectangle to check. This works
 just like a Rectangle special; see that section for details.</dd>
@@ -1310,7 +1310,7 @@ will be called.</dd></dd>
 particular species.
 <dl>
 <dt>Extra 1a:</dt><dd>The species to check for.</dd>
-<dt>Extra 1b:</dt><dd>This special is called if there is the number of living PCs of the
+<dt>Extra 1b:</dt><dd>This special is called if the number of living PCs of the
 specified species compares favourably with the required number in Extra 2a.</dd>
 <dt>Extra 2a:</dt><dd>The number of PCs required of the specified species.</dd>
 <dt>Extra 2b:</dt><dd>Specifies how to compare the actual number with the required number.
@@ -1325,7 +1325,7 @@ this is undesirable, check the party size first.</dd></dd>
 trait. This works just like the above node, but checks for a trait instead of a species.
 <dl>
 <dt>Extra 1a:</dt><dd>The trait to check for.</dd>
-<dt>Extra 1b:</dt><dd>This special is called if there is the number of living PCs with the
+<dt>Extra 1b:</dt><dd>This special is called if the number of living PCs with the
 specified trait compares favourably with the required number in Extra 2a.</dd>
 <dt>Extra 2a, Extra 2b</dt><dd>As in the above node.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd>
@@ -1351,20 +1351,20 @@ and learn a new spell.</dd></dd>
 
 <dt>Type 154: Text response?</dt><dd>This is one of the most complicated and powerful
 special nodes. It brings up a dialog box asking the party to type in some text (such as
-the answer to a ridder, or a password). If the response matches one of two given text
+the answer to a riddle, or a password). If the response matches one of two given text
 messages, a specified special node is called.
 <dl>
 <dt>Pict:</dt><dd>This is a number from 1 to 10. It is the number of characters the
-players answer has to match the correct answer to be accepted. If it is 4, the first four
-characters of the players answer must match the first four characters of the correct
+player's answer has to match the correct answer to be accepted. If it is 4, the first four
+characters of the player's answer must match the first four characters of the correct
 answer.</dd>
-<dt>Extra 1a:</dt><dd>The number of a scenario special message (not</dt><dd>a town or
+<dt>Extra 1a:</dt><dd>The number of a scenario special message (not a town or
 outdoor special message).</dd>
-<dt>Extra 1b:</dt><dd>If the players answer matches the message in Extra 1a, this special
+<dt>Extra 1b:</dt><dd>If the player's answer matches the message in Extra 1a, this special
 is called.</dd>
-<dt>Extra 2a:</dt><dd>The number of a scenario special message (not</dt><dd>a town or
+<dt>Extra 2a:</dt><dd>The number of a scenario special message (not a town or
 outdoor special message).</dd>
-<dt>Extra 2b:</dt><dd>If the players answer matches the message in Extra 1a, this special
+<dt>Extra 2b:</dt><dd>If the player's answer matches the message in Extra 1a, this special
 is called.</dd>
 <dt>Jump To:</dt><dd>Otherwise, this special is called.</dd>
 <dt>Note:</dt><dd>To create the scenario message containing the correct answer, select
@@ -1374,13 +1374,13 @@ answer to the question there. The number of that message (160-259) is the number
 the Extra 1a/Extra 2a field.</dd>
 <dt>Example:</dt><dd>A pixie asks a riddle whose answer is cheese. Scenario message 185 is
 cheese. Message 1 says the pixie's riddle. Extra 1a is 185, Extra 1b is the special node
-with the result of correct answering of the riddle, and Jump To leads to the node with the
+with the result of correctly answering the riddle, and Jump To leads to the node with the
 result of an incorrect answer.
-<p>If pict is set to 4, only the first 4 characters of the players answer are looked at.
+<p>If pict is set to 4, only the first 4 characters of the player's answer are looked at.
 Thus, cheese, cheer, and cheep would count as right answers. Chew, however, would
 not.</dd>
 <dt>Note:</dt><dd>Letter case is ignored. ChEeSe would be counted as a correct answer,
-even is the correct answer was CHEese.</dd></dd>
+even if the correct answer was CHEese.</dd></dd>
 
 <dt>Type 155: Stuff done equal?</dt><dd>If the specified Stuff Done flag is equal to the
 value given in Extra 1a, the special in Extra 1b is called. Otherwise, the Jump To special
@@ -1589,7 +1589,7 @@ stairs down, 2 - path slopes up, 3 - path slopes down, 4 - slimy stairway up, 5 
 stairway down, 6 - dark passage up, 7 - dark passage down, 8+ - no dialog (stairway
 is forced).</dd>
 <dt>Extra 2c:</dt><dd>If left at 0, the party can only enter while walking in town mode
-(as described in the note for Generic Portal). If set to 1 or 2, the encounter can be
+(as described in the note for Generic Portal). If set to 1 or 3, the encounter can be
 activated in combat mode. If set to 2 or 3, the encounter can be activated by other
 actions, such as searching the space, using the space, targeting a spell on the space,
 etc.</dd></dd>
@@ -1691,7 +1691,7 @@ the party is split up, the lone character is moved back to where the party was w
 split up, the party is rejoined, and the special encounter ends.
 <dl>
 <dt>Extra 1a:</dt><dd>If 0, nothing else happens. If non-zero, a teleportation noise plays
-when the party is split up.</dd>
+when the party is reunited.</dd>
 <dt>Extra 2a:</dt><dd>If 0, the party is returned to where they split up at. Otherwise,
 the party remains at their current location.</dd></dd>
 
@@ -1807,7 +1807,7 @@ spell pattern relative to a specified space.
 <dt>Extra 2a:</dt><dd>The type of damage to deal</dd>
 <dt></dt><dd>The amount of damage to deal. This is the number of six-sided dice to roll to
 calculate the damage.</dd>
-<dt></dt><dd>If 0, it will animate each affected creature sequentially using simply booms,
+<dt></dt><dd>If 0, it will animate each affected creature sequentially using simple booms,
 similar to what happens when fields are placed and creatures take damage as a result. If
 1, all damage will be animated simultaneously using fully-animated explosions, similar to
 what happens when casting spells such as Fireball or Divine Thud.</dd></dd>

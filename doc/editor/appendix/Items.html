@@ -21,17 +21,17 @@ for alchemical recipes.</p>
 
 <ul>
 <li><b>Usable abilities:</b> Usable item abilities are only activated by pressing the
-items use button on the PC inventory screen. Otherwise, the ability has no effect.
+item's use button on the PC inventory screen. Otherwise, the ability has no effect.
 Examples are a wand that shoots fireballs or a healing potion.
-<p>Usable abilities are always linked to the items charges. Whenever an item with a usable
-ability is actually used, the items amount of charges goes down by 1. When the items
+<p>Usable abilities are always linked to the item's charges. Whenever an item with a usable
+ability is actually used, the item's amount of charges goes down by 1. When the item's
 charge level goes down to 0, the item disappears. An item with a usable ability must have
 at least 1 charge.</p>
 <p>The cash value of an item with a usable ability is calculated differently from normal
-items. The items actual cost is its value multiplied by the number of its charges.
+items. The item's actual cost is its value multiplied by the number of its charges.
 (Example: Suppose a Potion of Healing has a value of 100 and 2 charges. This potion would
 cost 200 gold and sell for half that.)</li>
-<li><b>Inherent Abilities:</b>Inherent abilities are abilities that are always present and
+<li><b>Inherent Abilities:</b> Inherent abilities are abilities that are always present and
 are activated automatically, as opposed to being activated by pressing the Use button on
 the PC Inventory screen. Examples are a shield with fire protection (which is activated
 automatically when the character takes fire damage) or comfrey root (whose ability it that
@@ -39,7 +39,7 @@ it can be used as an alchemical ingredient, and which is used automatically when
 tries to make a potion with it).
 <p>Some inherent abilities have charges (such as alchemical ingredients). When used, the
 amount of charges goes down by one. When there are no charges left, the item disappears.
-The name of inherent ability types that require charges have a (c) after them.The value of
+The name of inherent ability types that require charges have a (c) after them. The value of
 these items is calculated the same way as for Usable abilities.</p>
 <p></li>
 </ul>
@@ -69,8 +69,8 @@ ability of this type must have charges, and must be of variety Non-use Object.</
 
 <p>As mentioned before, each item type has two acompanying extra data fields as well as
 the Magic Item Adjust setting. For each ability, these two fields have different ranges
-and different affects (the first field is usually Ability Strength), and their values will
-modify the affects of the item abilities in different ways. What each ability does and how
+and different effects (the first field is usually Ability Strength), and their values will
+modify the effects of the item abilities in different ways. What each ability does and how
 the extra data fields and Magic Item Adjust affect it are described below.</p>
 
 <dl class='autolink'>
@@ -185,7 +185,7 @@ cannot boost max HP or max SP. The Ability Strength is how many extra levels the
 gets. This cannot raise the effective level above 20. It can however raise the effective
 level of Mage or Priest Spells above 7, though there's not much use in doing so - the only
 thing it affects is your chance of breaking a forcecage. If applied to one of the three
-basic stats (Strength, Dexterity, and Intelligence), this ability increases your bonus to
+basic stats (Strength, Dexterity, and Intelligence), this ability increases your bonus
 to that stat by one, but the bonuses are otherwise still based on your actual level in the
 stat. The Ability Strength is still relevant, however, because a few circumstances use the
 modified skill level instead of the stat bonus. These circumstances are: Amount you can carry
@@ -217,14 +217,14 @@ effect.</dd>
 <dd>Calls a special node when the wearer is hit in melee combat or by a non-magical
 missile.</dd>
 <dt>Ability 48 - Life Saving (c)</dt>
-<dd>When the wielder takes a death blow, he/she survives and is healed, and the item loses
+<dd>When the wielder takes a death blow, they survive and are healed, and the item loses
 a charge. This item must be given charges.</dd>
-<dt>Ability 49 - Prot. from petrify</dt>
+<dt>Ability 49 - Protect from petrify</dt>
 <dd>Reduces chance of being petrified.</dd>
 <dt>Ability 50 - Regenerate</dt>
 <dd>Heals wielder occasionally.</dd>
 <dt>Ability 51 - Poison Augment</dt>
-<dd>Wielder's weapon poison more effective. The wielder must poison their weapon first for
+<dd>Wielder's weapon poison is more effective. The wielder must poison their weapon first for
 this ability to have any effect.</dd>
 <dt>Ability 52 - Radiant</dt>
 <dd>When worn, this item sometimes increases the light level around you. This can even
@@ -278,7 +278,7 @@ of acid (which means the acid lasts about 5 turns).</p>
 <dt>Ability 70 - Poison Weapon</dt>
 <dd>This item is a weapon poison that can be applied to the user's weapon. The Magic Use
 Type is ignored, and the Ability Strength is the strength of the poison. When used, the
-user has a chance (based on the Poison skill) of poisoning him/herself.</dd>
+user has a chance (based on the Poison skill) of poisoning themself.</dd>
 <dt>Ability 71 - Affect Status</dt>
 <dd>Affects the level of a status effect on the user. Note that some pairs of status
 effects are considered opposites, so that curing one is the same as afflicting its
@@ -364,7 +364,7 @@ are the extra data fields..</dd>
 <dt>Ability 85 - Book</dt>
 <dd>The item is a book which gives some textual information when used. A book does not
 consume any charges when used. To set the contents of the book, edit the item description.
-At the end of the description, add three vertical bars (<pre>|</pre>) followed by the
+At the end of the description, add three vertical bars (<tt>|</tt>) followed by the
 content of the book. If you want, you can add another three vertical bars followed by a
 second string. Note that there is limited space for the strings in the dialog.</dd>
 </dl>
@@ -372,7 +372,7 @@ second string. Note that there is limited space for the strings in the dialog.</
 <h2 id='reagent'>Reagents (Inherent)</h2>
 
 <p>To perform alchemy or cast certain spells, the alchemist/caster must have items with
-certain abilities in his/her inventory. For example, to make a Weak Poison potion, the
+certain abilities in their inventory. For example, to make a Weak Poison potion, the
 maker must have an item with the Holly ability, or to cast a Magic Map spell, the caster
 must have an item with the Sapphire ability.</p>
 <p>These items must have charges, representing the number of times they can be used. The
