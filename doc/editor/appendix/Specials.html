@@ -90,7 +90,7 @@ town.</p>
 <dt>Mess1:</dt><dd>This message is the name of the store the party has found.</dd>
 <dt>Extra 1a:</dt><dd>The number of the shop.</dd>
 <dt>Extra 1b:</dt><dd>The item cost adjuster, a number from 0 (very cheap) to 6 (very
-expensive). See chapter 11 (Dialogue) for the complete list of cost adjustments.</dd></dd>
+expensive). See <a href='../Dialogue.html#nodes-shop'>chapter 11 (Dialogue)</a> for the complete list of cost adjustments.</dd></dd>
 
 <dt>Type 5: Display Small Message</dt><dd>A text message is displayed on one (or two)
 line(s) of the text area (in the lower right hand corner). Don't make the displayed
@@ -214,9 +214,9 @@ at No Special, nothing happens.</dd></dd>
 
 <dt>Type 14: Play a sound</dt><dd>Plays one of the game's sounds.
 <dl>
-<dt>Extra 1a:</dt><dd>Which sound to play. For a list of sounds, read Appendix A.
-You can also click Choose to select the sound from a list, which allows you to hear
-the sounds while you choose.</dd></dd>
+<dt>Extra 1a:</dt><dd>Which sound to play. For a list of sounds, read
+<a href="Sounds.html">Appendix A</a>. You can also click Choose to select
+the sound from a list, which allows you to hear the sounds while you choose.</dd></dd>
 
 <dt>Type 15: Change Horse Possession</dt><dd>Makes a horse the party's property (or not).
 <dl>
@@ -246,7 +246,7 @@ treasure map. When the map is read, call this special. Set Extra 1a to 14 and Ex
 1.</dd></dd>
 
 <dt>Type 18: Major Event Has Occurred</dt><dd>A major event is recorded as having
-occurred. See Passage of Time in the chapter on Special Encounters for a more detailed
+occurred. See <a href="../Specials.html#time">Passage of Time</a> in the chapter on <a href="../Specials.html">Special Encounters</a> for a more detailed
 explanation.
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
@@ -273,7 +273,7 @@ from setting a Stuff Done flag saying they got the item, when, in fact, they
 didn't.</dd></dd>
 
 <dt>Type 20: Buy Items of Type</dt><dd>All items that belong to the given special class
-(described in the chapter on items) are taken from the party. For each item taken, the
+(described in the chapter on <a href="../Items.html">items</a>) are taken from the party. For each item taken, the
 party gets some gold. This can be accompanied by one or two messages, if you wish.
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage. Note that the messages are only displayed if
@@ -316,8 +316,9 @@ is 8, then the value of Stuff Done flag (12,5) becomes the same as Stuff Done fl
 <dl>
 <dt>Mess1:</dt><dd>The number of a message containing a title string to show in the
 dialog.</dd>
-<dt>Extra 1a:</dt><dd>The number of the graphics sheet to show. See the chapter on custom
-graphics for details on what a graphics sheet is and how to get the game to see it. This
+<dt>Extra 1a:</dt><dd>The number of the graphics sheet to show. See the chapter on
+<a href="../Graphics.html">custom graphics</a>
+for details on what a graphics sheet is and how to get the game to see it. This
 special node displays the entire sheet in a dialog, so the sheet can be whatever size you
 want.</dd></dd>
 
@@ -694,7 +695,7 @@ open space near the party. This can be accompanied by one or two messages, if yo
 (Range 0 ... 3)</dd></dd>
 
 <dt>Type 62: One-Time Place Town Encounter</dt><dd>Activates all monsters in town in the
-specified Special Encounter Group (see the section on monsters in town for more
+specified Special Encounter Group (see the section on <a href="../Towns.html#monster">monsters in town</a> for more
 information). If no monsters in that group are left, the encounter has no effect. This can
 be accompanied by one or two messages, if you wish.
 <dl>
