@@ -88,9 +88,10 @@
     <sign id="1">
         <![CDATA[SELATHNI - 80 miles south]]>
     </sign>
-    <area top="32" left="36" bottom="35" right="39">Near Muck</area>
-    <area top="8" left="3" bottom="31" right="45">Morrow Marsh</area>
-    <area top="24" left="11" bottom="38" right="41">Morrow Marsh</area>
+    <sign id="7" />
+    <area top="32" left="36" bottom="35" right="39">Near Muck                    </area>
+    <area top="8" left="3" bottom="31" right="45">Morrow Marsh                 </area>
+    <area top="24" left="11" bottom="38" right="41">Morrow Marsh                 </area>
     <string id="0">
         <![CDATA[You notice some unusual plants growing at the base of this large boulder. You look closer. They're alchemical ingredients!]]>
     </string>
@@ -168,5 +169,107 @@
     </string>
     <string id="55">
         <![CDATA[You refuse to pay and turn away. The guard's harsh laughter follows you as you leave.]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*End of special strs]]>
     </string>
 </sector>

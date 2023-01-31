@@ -675,11 +675,11 @@
         <personality>-1</personality>
         <face>12</face>
     </creature>
-    <area top="43" left="29" bottom="62" right="41">Fortress Storage</area>
-    <area top="42" left="51" bottom="62" right="62">Prisons and Interrogation</area>
-    <area top="22" left="41" bottom="34" right="50">Destroyed Laboratory</area>
-    <area top="8" left="7" bottom="18" right="21">Stalker&apos;s Throne Room</area>
-    <area top="1" left="26" bottom="18" right="34">Dining Hall and Common Room</area>
+    <area top="43" left="29" bottom="62" right="41">Fortress Storage             </area>
+    <area top="42" left="51" bottom="62" right="62">Prisons and Interrogation    </area>
+    <area top="22" left="41" bottom="34" right="50">Destroyed Laboratory         </area>
+    <area top="8" left="7" bottom="18" right="21">Stalker&apos;s Throne Room        </area>
+    <area top="1" left="26" bottom="18" right="34">Dining Hall and Common Room  </area>
     <sign id="0">
         <![CDATA[HOLDING AND INTERROGATION]]>
     </sign>
@@ -719,6 +719,7 @@
     <sign id="12">
         <![CDATA[QUALITY STORAGE]]>
     </sign>
+    <sign id="19" />
     <string id="0">
         <![CDATA[Time breaks up for you for a while. You aren't sure what happened. You entered the fort. Rebels surrounded you and beat you senseless. The last thing you remember is a man in leather armor standing over you, debating over whether to kill you or not.]]>
     </string>
@@ -892,5 +893,56 @@
     </string>
     <string id="81">
         <![CDATA[Time to leave.]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
     </string>
 </town>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Icy Tunnels</name>
+    <name>Icy Tunnels                  </name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -120,6 +120,96 @@
     </item>
     <item id="33">
         <type>255</type>
+    </item>
+    <item id="34">
+        <type>-1</type>
+    </item>
+    <item id="35">
+        <type>-1</type>
+    </item>
+    <item id="36">
+        <type>-1</type>
+    </item>
+    <item id="37">
+        <type>-1</type>
+    </item>
+    <item id="38">
+        <type>-1</type>
+    </item>
+    <item id="39">
+        <type>-1</type>
+    </item>
+    <item id="40">
+        <type>-1</type>
+    </item>
+    <item id="41">
+        <type>-1</type>
+    </item>
+    <item id="42">
+        <type>-1</type>
+    </item>
+    <item id="43">
+        <type>-1</type>
+    </item>
+    <item id="44">
+        <type>-1</type>
+    </item>
+    <item id="45">
+        <type>-1</type>
+    </item>
+    <item id="46">
+        <type>-1</type>
+    </item>
+    <item id="47">
+        <type>-1</type>
+    </item>
+    <item id="48">
+        <type>-1</type>
+    </item>
+    <item id="49">
+        <type>-1</type>
+    </item>
+    <item id="50">
+        <type>-1</type>
+    </item>
+    <item id="51">
+        <type>-1</type>
+    </item>
+    <item id="52">
+        <type>-1</type>
+    </item>
+    <item id="53">
+        <type>-1</type>
+    </item>
+    <item id="54">
+        <type>-1</type>
+    </item>
+    <item id="55">
+        <type>-1</type>
+    </item>
+    <item id="56">
+        <type>-1</type>
+    </item>
+    <item id="57">
+        <type>-1</type>
+    </item>
+    <item id="58">
+        <type>-1</type>
+    </item>
+    <item id="59">
+        <type>-1</type>
+    </item>
+    <item id="60">
+        <type>-1</type>
+    </item>
+    <item id="61">
+        <type>-1</type>
+    </item>
+    <item id="62">
+        <type>-1</type>
+    </item>
+    <item id="63">
+        <type>-1</type>
     </item>
     <creature id="0">
         <type>74</type>
@@ -363,11 +453,66 @@
         <face>-1</face>
         <encounter>1</encounter>
     </creature>
-    <area top="34" left="40" bottom="42" right="46">Below Pit</area>
-    <area top="16" left="22" bottom="28" right="29">Hydra Cave</area>
-    <area top="30" left="28" bottom="46" right="38">Underground Lake</area>
-    <area top="4" left="5" bottom="13" right="17">Drake Lair</area>
-    <area top="11" left="1" bottom="15" right="7">Drake Treasure Chamber</area>
+    <creature id="34">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="35">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="36">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="37">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="38">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="39">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <area top="34" left="40" bottom="42" right="46">Below Pit                    </area>
+    <area top="16" left="22" bottom="28" right="29">Hydra Cave                   </area>
+    <area top="30" left="28" bottom="46" right="38">Underground Lake             </area>
+    <area top="4" left="5" bottom="13" right="17">Drake Lair                   </area>
+    <area top="11" left="1" bottom="15" right="7">Drake Treasure Chamber       </area>
+    <sign id="19" />
     <string id="0">
         <![CDATA[You enter a large chamber. In the ceiling, you see a shaft extending straight up about 30 or 40 feet to a brightly lit chamber. At the top, you see ogres peering down at you, laughing and pointing.]]>
     </string>
@@ -496,5 +641,101 @@
     </string>
     <string id="67">
         <![CDATA[As you start walking down the stairs, you hear a clang behind you. You look back, and see that the ogres have closed the huge portcullis behind you. With a sinking feeling, you realize you're trapped down here.]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
     </string>
 </town>

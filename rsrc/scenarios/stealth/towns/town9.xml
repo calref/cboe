@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>64</size>
-    <name>Zaskiva Sewers</name>
+    <name>Zaskiva Sewers               </name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -183,6 +183,66 @@
     <item id="43">
         <type>285</type>
         <contained>true</contained>
+    </item>
+    <item id="44">
+        <type>-1</type>
+    </item>
+    <item id="45">
+        <type>-1</type>
+    </item>
+    <item id="46">
+        <type>-1</type>
+    </item>
+    <item id="47">
+        <type>-1</type>
+    </item>
+    <item id="48">
+        <type>-1</type>
+    </item>
+    <item id="49">
+        <type>-1</type>
+    </item>
+    <item id="50">
+        <type>-1</type>
+    </item>
+    <item id="51">
+        <type>-1</type>
+    </item>
+    <item id="52">
+        <type>-1</type>
+    </item>
+    <item id="53">
+        <type>-1</type>
+    </item>
+    <item id="54">
+        <type>-1</type>
+    </item>
+    <item id="55">
+        <type>-1</type>
+    </item>
+    <item id="56">
+        <type>-1</type>
+    </item>
+    <item id="57">
+        <type>-1</type>
+    </item>
+    <item id="58">
+        <type>-1</type>
+    </item>
+    <item id="59">
+        <type>-1</type>
+    </item>
+    <item id="60">
+        <type>-1</type>
+    </item>
+    <item id="61">
+        <type>-1</type>
+    </item>
+    <item id="62">
+        <type>-1</type>
+    </item>
+    <item id="63">
+        <type>-1</type>
     </item>
     <creature id="0">
         <type>68</type>
@@ -585,12 +645,39 @@
         <personality>-1</personality>
         <face>-1</face>
     </creature>
-    <area top="18" left="17" bottom="28" right="30">Old Brigand&apos;s Lair</area>
-    <area top="51" left="25" bottom="56" right="30">Control Room C2</area>
-    <area top="1" left="1" bottom="7" right="6">Subterranean Dock</area>
-    <area top="1" left="20" bottom="6" right="24">Punishment Cells</area>
-    <area top="37" left="27" bottom="48" right="49">Roach Caves</area>
-    <area top="21" left="43" bottom="43" right="49">Roach Caves</area>
+    <creature id="57">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="58">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="59">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <area top="18" left="17" bottom="28" right="30">Old Brigand&apos;s Lair           </area>
+    <area top="51" left="25" bottom="56" right="30">Control Room C2              </area>
+    <area top="1" left="1" bottom="7" right="6">Subterranean Dock            </area>
+    <area top="1" left="20" bottom="6" right="24">Punishment Cells             </area>
+    <area top="37" left="27" bottom="48" right="49">Roach Caves                  </area>
+    <area top="21" left="43" bottom="43" right="49">Roach Caves                  </area>
     <sign id="0">
         <![CDATA[Control Room C2]]>
     </sign>
@@ -630,6 +717,7 @@
     <sign id="12">
         <![CDATA[PRESS IN CASE OF DISEASE]]>
     </sign>
+    <sign id="19" />
     <string id="0">
         <![CDATA[This chest was once filled with suits of leather armor. The harsh atmosphere of the sewers has rotted them all away. Of course, being adventurers, you search through it all anyway, looking for loot.]]>
     </string>
@@ -755,5 +843,104 @@
     </string>
     <string id="66">
         <![CDATA["It is done. Goodbye." The ghost fades away, smiling at the thought of its final rest.]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
     </string>
 </town>

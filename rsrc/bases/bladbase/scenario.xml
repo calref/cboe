@@ -10,7 +10,7 @@
         <email>Contact info</email>
     </author>
     <text>
-        <teaser>Who wrote 1</teaser>
+        <teaser>Who wrote 1 </teaser>
         <teaser>Who wrote 2</teaser>
     </text>
     <ratings>
@@ -25,7 +25,7 @@
     <creator>
         <type>oboe</type>
         <version>2.0.0</version>
-        <os>Microsoft Windows 7 Service Pack 1</os>
+        <os>Apple Mac OS X Version 10.15.7 (Build 19H2)</os>
     </creator>
     <game>
         <num-towns>1</num-towns>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>64</size>
-    <name>Morog&apos;s Castle</name>
+    <name>Morog&apos;s Castle               </name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -188,6 +188,48 @@
     <item id="49">
         <type>141</type>
         <property>true</property>
+    </item>
+    <item id="50">
+        <type>-1</type>
+    </item>
+    <item id="51">
+        <type>-1</type>
+    </item>
+    <item id="52">
+        <type>-1</type>
+    </item>
+    <item id="53">
+        <type>-1</type>
+    </item>
+    <item id="54">
+        <type>-1</type>
+    </item>
+    <item id="55">
+        <type>-1</type>
+    </item>
+    <item id="56">
+        <type>-1</type>
+    </item>
+    <item id="57">
+        <type>-1</type>
+    </item>
+    <item id="58">
+        <type>-1</type>
+    </item>
+    <item id="59">
+        <type>-1</type>
+    </item>
+    <item id="60">
+        <type>-1</type>
+    </item>
+    <item id="61">
+        <type>-1</type>
+    </item>
+    <item id="62">
+        <type>-1</type>
+    </item>
+    <item id="63">
+        <type>-1</type>
     </item>
     <creature id="0">
         <type>156</type>
@@ -524,14 +566,129 @@
         <personality>-1</personality>
         <face>-1</face>
     </creature>
-    <area top="36" left="5" bottom="58" right="20">Morog&apos;s Forge</area>
-    <area top="31" left="26" bottom="58" right="39">Morog&apos;s Throne Room</area>
-    <area top="4" left="4" bottom="25" right="16">Crypts</area>
-    <area top="24" left="9" bottom="29" right="16">Crypts</area>
-    <area top="5" left="18" bottom="29" right="29">Morogville</area>
-    <area top="5" left="36" bottom="29" right="45">Morog&apos;s Chamber</area>
-    <area top="11" left="47" bottom="25" right="58">Treacherous Maze</area>
-    <area top="36" left="45" bottom="58" right="58">Morog&apos;s Laboratories</area>
+    <creature id="47">
+        <type>0</type>
+        <attitude>hostile-a</attitude>
+        <mobility>1</mobility>
+        <personality>-1</personality>
+        <face>-1</face>
+    </creature>
+    <creature id="48">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="49">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="50">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="51">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="52">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="53">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="54">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="55">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="56">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="57">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="58">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="59">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <area top="36" left="5" bottom="58" right="20">Morog&apos;s Forge                </area>
+    <area top="31" left="26" bottom="58" right="39">Morog&apos;s Throne Room          </area>
+    <area top="4" left="4" bottom="25" right="16">Crypts                       </area>
+    <area top="24" left="9" bottom="29" right="16">Crypts                       </area>
+    <area top="5" left="18" bottom="29" right="29">Morogville                   </area>
+    <area top="5" left="36" bottom="29" right="45">Morog&apos;s Chamber              </area>
+    <area top="11" left="47" bottom="25" right="58">Treacherous Maze             </area>
+    <area top="36" left="45" bottom="58" right="58">Morog&apos;s Laboratories         </area>
     <sign id="0">
         <![CDATA[Portal to Deep Caverns]]>
     </sign>
@@ -544,6 +701,7 @@
     <sign id="3">
         <![CDATA[CRYPTS]]>
     </sign>
+    <sign id="19" />
     <string id="0">
         <![CDATA[Bolts of lightning arc across the passage in front of you! You jump back before you get baked.]]>
     </string>
@@ -642,5 +800,152 @@
     </string>
     <string id="50">
         <![CDATA[Instead, you fall out of another portal, into a pitch black cavern. It's icy cold, and you feel as if the air is pressing in upon you. It feels as if you've been sent far, far away, possibly straight down.]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
     </string>
 </town>

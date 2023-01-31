@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Wormy Hollow</name>
+    <name>Wormy Hollow                 </name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
     <bounds top="0" left="0" bottom="47" right="44" />
     <difficulty>4</difficulty>
     <lighting>lit</lighting>
-    <flags />
+    <flags>
+        <hidden>true</hidden>
+    </flags>
     <item id="0">
         <type>93</type>
         <property>true</property>
@@ -140,6 +142,111 @@
     </item>
     <item id="28">
         <type>17</type>
+    </item>
+    <item id="29">
+        <type>-1</type>
+    </item>
+    <item id="30">
+        <type>-1</type>
+    </item>
+    <item id="31">
+        <type>-1</type>
+    </item>
+    <item id="32">
+        <type>-1</type>
+    </item>
+    <item id="33">
+        <type>-1</type>
+    </item>
+    <item id="34">
+        <type>-1</type>
+    </item>
+    <item id="35">
+        <type>-1</type>
+    </item>
+    <item id="36">
+        <type>-1</type>
+    </item>
+    <item id="37">
+        <type>-1</type>
+    </item>
+    <item id="38">
+        <type>-1</type>
+    </item>
+    <item id="39">
+        <type>-1</type>
+    </item>
+    <item id="40">
+        <type>-1</type>
+    </item>
+    <item id="41">
+        <type>-1</type>
+    </item>
+    <item id="42">
+        <type>-1</type>
+    </item>
+    <item id="43">
+        <type>-1</type>
+    </item>
+    <item id="44">
+        <type>-1</type>
+    </item>
+    <item id="45">
+        <type>-1</type>
+    </item>
+    <item id="46">
+        <type>-1</type>
+    </item>
+    <item id="47">
+        <type>-1</type>
+    </item>
+    <item id="48">
+        <type>-1</type>
+    </item>
+    <item id="49">
+        <type>-1</type>
+    </item>
+    <item id="50">
+        <type>-1</type>
+    </item>
+    <item id="51">
+        <type>-1</type>
+    </item>
+    <item id="52">
+        <type>-1</type>
+    </item>
+    <item id="53">
+        <type>-1</type>
+    </item>
+    <item id="54">
+        <type>-1</type>
+    </item>
+    <item id="55">
+        <type>-1</type>
+    </item>
+    <item id="56">
+        <type>-1</type>
+    </item>
+    <item id="57">
+        <type>-1</type>
+    </item>
+    <item id="58">
+        <type>-1</type>
+    </item>
+    <item id="59">
+        <type>-1</type>
+    </item>
+    <item id="60">
+        <type>-1</type>
+    </item>
+    <item id="61">
+        <type>-1</type>
+    </item>
+    <item id="62">
+        <type>-1</type>
+    </item>
+    <item id="63">
+        <type>-1</type>
     </item>
     <creature id="0">
         <type>168</type>
@@ -365,12 +472,103 @@
         <face>25</face>
         <onkill>11</onkill>
     </creature>
-    <area top="39" left="16" bottom="45" right="21">Commander&apos;s Office</area>
-    <area top="37" left="29" bottom="43" right="35">Crystal Soul Chamber</area>
-    <area top="42" left="36" bottom="47" right="44">Chamber of Contemplation</area>
+    <creature id="30">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="31">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="32">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="33">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="34">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="35">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="36">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="37">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="38">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="39">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <area top="39" left="16" bottom="45" right="21">Commander&apos;s Office           </area>
+    <area top="37" left="29" bottom="43" right="35">Crystal Soul Chamber         </area>
+    <area top="42" left="36" bottom="47" right="44">Chamber of Contemplation      </area>
     <sign id="0">
         <![CDATA[(The carvings on this obelisk are in many languages, including yours.)|WORMY HOLLOW OUTPOST]]>
     </sign>
+    <sign id="19" />
     <string id="0">
         <![CDATA[One of the massive, pale worms blocking your entry into these tunnels has just fallen.]]>
     </string>
@@ -412,5 +610,224 @@
     </string>
     <string id="26">
         <![CDATA["I have given the word. The gate to the Crystal Soul has been opened. You may see Presso-Bok now."]]>
+    </string>
+    <string id="27">
+        <![CDATA[*]]>
+    </string>
+    <string id="28">
+        <![CDATA[*]]>
+    </string>
+    <string id="29">
+        <![CDATA[*]]>
+    </string>
+    <string id="30">
+        <![CDATA[*]]>
+    </string>
+    <string id="31">
+        <![CDATA[*]]>
+    </string>
+    <string id="32">
+        <![CDATA[*]]>
+    </string>
+    <string id="33">
+        <![CDATA[*]]>
+    </string>
+    <string id="34">
+        <![CDATA[*]]>
+    </string>
+    <string id="35">
+        <![CDATA[*]]>
+    </string>
+    <string id="36">
+        <![CDATA[*]]>
+    </string>
+    <string id="37">
+        <![CDATA[*]]>
+    </string>
+    <string id="38">
+        <![CDATA[*]]>
+    </string>
+    <string id="39">
+        <![CDATA[*]]>
+    </string>
+    <string id="40">
+        <![CDATA[*]]>
+    </string>
+    <string id="41">
+        <![CDATA[*]]>
+    </string>
+    <string id="42">
+        <![CDATA[*]]>
+    </string>
+    <string id="43">
+        <![CDATA[*]]>
+    </string>
+    <string id="44">
+        <![CDATA[*]]>
+    </string>
+    <string id="45">
+        <![CDATA[*]]>
+    </string>
+    <string id="46">
+        <![CDATA[*]]>
+    </string>
+    <string id="47">
+        <![CDATA[*]]>
+    </string>
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
     </string>
 </town>

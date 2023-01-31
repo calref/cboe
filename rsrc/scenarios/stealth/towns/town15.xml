@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Empire Outpost</name>
+    <name>Empire Outpost               </name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -10,7 +10,9 @@
     <lighting>lit</lighting>
     <onenter condition="alive">1</onenter>
     <onenter condition="dead">2</onenter>
-    <flags />
+    <flags>
+        <hidden>true</hidden>
+    </flags>
     <item id="0">
         <type>182</type>
     </item>
@@ -215,6 +217,33 @@
     </item>
     <item id="54">
         <type>168</type>
+    </item>
+    <item id="55">
+        <type>-1</type>
+    </item>
+    <item id="56">
+        <type>-1</type>
+    </item>
+    <item id="57">
+        <type>-1</type>
+    </item>
+    <item id="58">
+        <type>-1</type>
+    </item>
+    <item id="59">
+        <type>-1</type>
+    </item>
+    <item id="60">
+        <type>-1</type>
+    </item>
+    <item id="61">
+        <type>-1</type>
+    </item>
+    <item id="62">
+        <type>-1</type>
+    </item>
+    <item id="63">
+        <type>-1</type>
     </item>
     <creature id="0">
         <type>103</type>
@@ -503,10 +532,10 @@
         <personality>-1</personality>
         <face>10</face>
     </creature>
-    <area top="27" left="14" bottom="36" right="16">Guard Room</area>
-    <area top="31" left="6" bottom="36" right="12">Entry Chamber</area>
-    <area top="22" left="23" bottom="30" right="38">Barracks</area>
-    <area top="1" left="32" bottom="7" right="39">Hot Laboratory</area>
+    <area top="27" left="14" bottom="36" right="16">Guard Room                   </area>
+    <area top="31" left="6" bottom="36" right="12">Entry Chamber                </area>
+    <area top="22" left="23" bottom="30" right="38">Barracks                     </area>
+    <area top="1" left="32" bottom="7" right="39">Hot Laboratory               </area>
     <sign id="0">
         <![CDATA[EMPIRE LAB|CAUTION!|PROTECTIVE GEAR REQUIRED]]>
     </sign>
@@ -516,6 +545,7 @@
     <sign id="2">
         <![CDATA[LABORATORY]]>
     </sign>
+    <sign id="19" />
     <string id="0">
         <![CDATA[If the Hill Runners hadn't told you that this outpost would be here, you would never have known to look for it. Now that you know, however, the narrow path and soldier's tracks are readily apparent.]]>
     </string>
@@ -626,5 +656,95 @@
     </string>
     <string id="66">
         <![CDATA[Like it or not, you're stuck with the rebels now. They're the only ones who would possibly have you.]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
     </string>
 </town>

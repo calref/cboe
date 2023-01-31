@@ -75,12 +75,13 @@
     <sign id="2">
         <![CDATA[PRIMARY WASTE STORAGE|PROTECTIVE GEAR MUST BE WORN!]]>
     </sign>
-    <area top="34" left="24" bottom="41" right="40">By Filth Streams</area>
-    <area top="38" left="16" bottom="40" right="20">Near School Entrance</area>
-    <area top="31" left="22" bottom="32" right="25">Subterranean Bridge</area>
-    <area top="23" left="8" bottom="25" right="10">By Small Cavern</area>
-    <area top="3" left="12" bottom="8" right="14">Passage to School Entrance</area>
-    <area top="13" left="28" bottom="22" right="41">Dying Forest</area>
+    <sign id="7" />
+    <area top="34" left="24" bottom="41" right="40">By Filth Streams             </area>
+    <area top="38" left="16" bottom="40" right="20">Near School Entrance         </area>
+    <area top="31" left="22" bottom="32" right="25">Subterranean Bridge          </area>
+    <area top="23" left="8" bottom="25" right="10">By Small Cavern              </area>
+    <area top="3" left="12" bottom="8" right="14">Passage to School Entrance   </area>
+    <area top="13" left="28" bottom="22" right="41">Dying Forest                 </area>
     <string id="0">
         <![CDATA[You walk into an enormous cavern, and immediately run back out. The air inside is so bad, so viciously polluted, that it's a struggle merely to breathe. Your skin itches. Your eyes water and burn. You stagger out and spend a while gagging and choking.]]>
     </string>
@@ -149,5 +150,158 @@
     </string>
     <string id="38">
         <![CDATA[Under the vampire's chair, you find a bunch of old meat (which you leave) and gold (which you take). In addition, you get a long, slender ivory wand.]]>
+    </string>
+    <string id="39">
+        <![CDATA[*]]>
+    </string>
+    <string id="40">
+        <![CDATA[*]]>
+    </string>
+    <string id="41">
+        <![CDATA[*]]>
+    </string>
+    <string id="42">
+        <![CDATA[*]]>
+    </string>
+    <string id="43">
+        <![CDATA[*]]>
+    </string>
+    <string id="44">
+        <![CDATA[*]]>
+    </string>
+    <string id="45">
+        <![CDATA[*]]>
+    </string>
+    <string id="46">
+        <![CDATA[*]]>
+    </string>
+    <string id="47">
+        <![CDATA[*]]>
+    </string>
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*End of special strs]]>
     </string>
 </sector>

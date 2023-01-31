@@ -69,6 +69,7 @@
     <sign id="0">
         <![CDATA[(The obelisk looks like it was molded from rock after it was made soft by some sort of incredible heat. There are no markings on it.)]]>
     </sign>
+    <sign id="7" />
     <string id="0">
         <![CDATA[You see a small group of slithzerikai. They see you. As you size each other up, you wonder if these are friendly or hostile sliths. You aren't kept in suspense for long.]]>
     </string>
@@ -128,5 +129,176 @@
     </string>
     <string id="32">
         <![CDATA[You find a small patch of comfrey root!]]>
+    </string>
+    <string id="33">
+        <![CDATA[*]]>
+    </string>
+    <string id="34">
+        <![CDATA[*]]>
+    </string>
+    <string id="35">
+        <![CDATA[*]]>
+    </string>
+    <string id="36">
+        <![CDATA[*]]>
+    </string>
+    <string id="37">
+        <![CDATA[*]]>
+    </string>
+    <string id="38">
+        <![CDATA[*]]>
+    </string>
+    <string id="39">
+        <![CDATA[*]]>
+    </string>
+    <string id="40">
+        <![CDATA[*]]>
+    </string>
+    <string id="41">
+        <![CDATA[*]]>
+    </string>
+    <string id="42">
+        <![CDATA[*]]>
+    </string>
+    <string id="43">
+        <![CDATA[*]]>
+    </string>
+    <string id="44">
+        <![CDATA[*]]>
+    </string>
+    <string id="45">
+        <![CDATA[*]]>
+    </string>
+    <string id="46">
+        <![CDATA[*]]>
+    </string>
+    <string id="47">
+        <![CDATA[*]]>
+    </string>
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*End of special strs]]>
     </string>
 </sector>

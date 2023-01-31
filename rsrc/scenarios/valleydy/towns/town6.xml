@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Visitors&apos; Quarters</name>
+    <name>Visitors&apos; Quarters           </name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -181,6 +181,63 @@
         <type>0</type>
         <charges>250</charges>
         <contained>true</contained>
+    </item>
+    <item id="45">
+        <type>-1</type>
+    </item>
+    <item id="46">
+        <type>-1</type>
+    </item>
+    <item id="47">
+        <type>-1</type>
+    </item>
+    <item id="48">
+        <type>-1</type>
+    </item>
+    <item id="49">
+        <type>-1</type>
+    </item>
+    <item id="50">
+        <type>-1</type>
+    </item>
+    <item id="51">
+        <type>-1</type>
+    </item>
+    <item id="52">
+        <type>-1</type>
+    </item>
+    <item id="53">
+        <type>-1</type>
+    </item>
+    <item id="54">
+        <type>-1</type>
+    </item>
+    <item id="55">
+        <type>-1</type>
+    </item>
+    <item id="56">
+        <type>-1</type>
+    </item>
+    <item id="57">
+        <type>-1</type>
+    </item>
+    <item id="58">
+        <type>-1</type>
+    </item>
+    <item id="59">
+        <type>-1</type>
+    </item>
+    <item id="60">
+        <type>-1</type>
+    </item>
+    <item id="61">
+        <type>-1</type>
+    </item>
+    <item id="62">
+        <type>-1</type>
+    </item>
+    <item id="63">
+        <type>-1</type>
     </item>
     <creature id="0">
         <type>187</type>
@@ -463,13 +520,13 @@
         <personality>-1</personality>
         <face>44</face>
     </creature>
-    <area top="42" left="9" bottom="46" right="18">Goblin Meat Storage</area>
-    <area top="35" left="12" bottom="40" right="18">Goblin Mushroom Farm</area>
-    <area top="4" left="20" bottom="15" right="30">Goblin Temple</area>
-    <area top="17" left="38" bottom="25" right="44">Goblin Eater Lair</area>
-    <area top="17" left="20" bottom="23" right="30">Burial Chamber</area>
-    <area top="35" left="1" bottom="46" right="7">Goblin&apos;s Mess Hall</area>
-    <area top="35" left="20" bottom="46" right="30">Hall of Audience</area>
+    <area top="42" left="9" bottom="46" right="18">Goblin Meat Storage          </area>
+    <area top="35" left="12" bottom="40" right="18">Goblin Mushroom Farm         </area>
+    <area top="4" left="20" bottom="15" right="30">Goblin Temple                </area>
+    <area top="17" left="38" bottom="25" right="44">Goblin Eater Lair            </area>
+    <area top="17" left="20" bottom="23" right="30">Burial Chamber               </area>
+    <area top="35" left="1" bottom="46" right="7">Goblin&apos;s Mess Hall           </area>
+    <area top="35" left="20" bottom="46" right="30">Hall of Audience             </area>
     <sign id="0">
         <![CDATA[AND HEER WE MAKE SHRINE, AND DREEM OF DAY GATES OPEN AN WEE GO OUT TO BE ON SERFACE AGIN!]]>
     </sign>
@@ -506,6 +563,7 @@
     <sign id="11">
         <![CDATA[HALL OF AUDIENCE]]>
     </sign>
+    <sign id="19" />
     <string id="0">
         <![CDATA[You peek inside the dresser and find, much to your surprise, a small piece of paper. It looks like it was torn out of a book. A quick inspection reveals it to be a page from the journal of someone named Palhatis:]]>
     </string>
@@ -596,5 +654,160 @@
     <string id="46">
         <![CDATA[The shade disappears, and the throne loses its glow. The chamber is quiet once more.]]>
     </string>
-    <string id="47" />
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
+    </string>
 </town>

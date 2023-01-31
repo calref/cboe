@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Abandoned Fort</name>
+    <name>Abandoned Fort               </name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
     <bounds top="0" left="0" bottom="44" right="47" />
     <difficulty>5</difficulty>
     <lighting>dark</lighting>
-    <flags />
+    <flags>
+        <hidden>true</hidden>
+    </flags>
     <wandering>
         <monster>45</monster>
         <monster>45</monster>
@@ -149,6 +151,90 @@
     <item id="35">
         <type>224</type>
         <contained>true</contained>
+    </item>
+    <item id="36">
+        <type>-1</type>
+    </item>
+    <item id="37">
+        <type>-1</type>
+    </item>
+    <item id="38">
+        <type>-1</type>
+    </item>
+    <item id="39">
+        <type>-1</type>
+    </item>
+    <item id="40">
+        <type>-1</type>
+    </item>
+    <item id="41">
+        <type>-1</type>
+    </item>
+    <item id="42">
+        <type>-1</type>
+    </item>
+    <item id="43">
+        <type>-1</type>
+    </item>
+    <item id="44">
+        <type>-1</type>
+    </item>
+    <item id="45">
+        <type>-1</type>
+    </item>
+    <item id="46">
+        <type>-1</type>
+    </item>
+    <item id="47">
+        <type>-1</type>
+    </item>
+    <item id="48">
+        <type>-1</type>
+    </item>
+    <item id="49">
+        <type>-1</type>
+    </item>
+    <item id="50">
+        <type>-1</type>
+    </item>
+    <item id="51">
+        <type>-1</type>
+    </item>
+    <item id="52">
+        <type>-1</type>
+    </item>
+    <item id="53">
+        <type>-1</type>
+    </item>
+    <item id="54">
+        <type>-1</type>
+    </item>
+    <item id="55">
+        <type>-1</type>
+    </item>
+    <item id="56">
+        <type>-1</type>
+    </item>
+    <item id="57">
+        <type>-1</type>
+    </item>
+    <item id="58">
+        <type>-1</type>
+    </item>
+    <item id="59">
+        <type>-1</type>
+    </item>
+    <item id="60">
+        <type>-1</type>
+    </item>
+    <item id="61">
+        <type>-1</type>
+    </item>
+    <item id="62">
+        <type>-1</type>
+    </item>
+    <item id="63">
+        <type>-1</type>
     </item>
     <creature id="0">
         <type>117</type>
@@ -430,14 +516,14 @@
         <personality>-1</personality>
         <face>23</face>
     </creature>
-    <area top="25" left="43" bottom="31" right="46">Smelly, Gross Area</area>
-    <area top="3" left="43" bottom="9" right="46">Meat Locker</area>
-    <area top="5" left="35" bottom="13" right="39">Locked Barracks</area>
-    <area top="18" left="35" bottom="26" right="39">Abandoned Planning Room</area>
-    <area top="18" left="26" bottom="26" right="30">Dining Hall</area>
-    <area top="2" left="1" bottom="9" right="12">Sacrifice Area</area>
-    <area top="23" left="20" bottom="26" right="24">Commander&apos;s Office</area>
-    <area top="28" left="32" bottom="37" right="39">Training Room</area>
+    <area top="25" left="43" bottom="31" right="46">Smelly, Gross Area           </area>
+    <area top="3" left="43" bottom="9" right="46">Meat Locker                  </area>
+    <area top="5" left="35" bottom="13" right="39">Locked Barracks              </area>
+    <area top="18" left="35" bottom="26" right="39">Abandoned Planning Room      </area>
+    <area top="18" left="26" bottom="26" right="30">Dining Hall                  </area>
+    <area top="2" left="1" bottom="9" right="12">Sacrifice Area               </area>
+    <area top="23" left="20" bottom="26" right="24">Commander&apos;s Office           </area>
+    <area top="28" left="32" bottom="37" right="39">Training Room                </area>
     <sign id="0">
         <![CDATA[Empire Fort MI2]]>
     </sign>
@@ -447,6 +533,7 @@
     <sign id="2">
         <![CDATA[COMMANDER KHOTAN]]>
     </sign>
+    <sign id="19" />
     <string id="0">
         <![CDATA[You step, for the first time, into the ruins of an old, abandoned Empire outpost. It was quite a structure. These thick walled, reinforced stone tunnels looks like they burrow deep into the hillside.]]>
     </string>
@@ -521,5 +608,167 @@
     </string>
     <string id="45">
         <![CDATA[You return to the stairway down to the drake's lair. Unfortunately, the ogres have filled the stairway up with massive chunks of rubble. Looks like that area's blocked off.]]>
+    </string>
+    <string id="46">
+        <![CDATA[*]]>
+    </string>
+    <string id="47">
+        <![CDATA[*]]>
+    </string>
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
     </string>
 </town>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Storage Level</name>
+    <name>Storage Level                </name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -166,6 +166,57 @@
     </item>
     <item id="46">
         <type>177</type>
+    </item>
+    <item id="47">
+        <type>-1</type>
+    </item>
+    <item id="48">
+        <type>-1</type>
+    </item>
+    <item id="49">
+        <type>-1</type>
+    </item>
+    <item id="50">
+        <type>-1</type>
+    </item>
+    <item id="51">
+        <type>-1</type>
+    </item>
+    <item id="52">
+        <type>-1</type>
+    </item>
+    <item id="53">
+        <type>-1</type>
+    </item>
+    <item id="54">
+        <type>-1</type>
+    </item>
+    <item id="55">
+        <type>-1</type>
+    </item>
+    <item id="56">
+        <type>-1</type>
+    </item>
+    <item id="57">
+        <type>-1</type>
+    </item>
+    <item id="58">
+        <type>-1</type>
+    </item>
+    <item id="59">
+        <type>-1</type>
+    </item>
+    <item id="60">
+        <type>-1</type>
+    </item>
+    <item id="61">
+        <type>-1</type>
+    </item>
+    <item id="62">
+        <type>-1</type>
+    </item>
+    <item id="63">
+        <type>-1</type>
     </item>
     <creature id="0">
         <type>113</type>
@@ -452,16 +503,16 @@
         <face>-1</face>
         <encounter>1</encounter>
     </creature>
-    <area top="1" left="18" bottom="11" right="21">Larvae Chambers</area>
-    <area top="6" left="11" bottom="11" right="17">Larvae Chambers</area>
-    <area top="20" left="27" bottom="24" right="38">Meat Locker</area>
-    <area top="1" left="27" bottom="18" right="46">Artificial Outdoors</area>
-    <area top="20" left="40" bottom="24" right="46">Slaughtering Room</area>
-    <area top="34" left="6" bottom="41" right="15">Prison of Pythras</area>
-    <area top="29" left="1" bottom="46" right="20">Huge Holding Cell</area>
-    <area top="1" left="1" bottom="24" right="20">School Storage Rooms</area>
-    <area top="26" left="27" bottom="46" right="46">Halls of Records</area>
-    <area top="23" left="22" bottom="29" right="25">By Husks of Goblins</area>
+    <area top="1" left="18" bottom="11" right="21">Larvae Chambers              </area>
+    <area top="6" left="11" bottom="11" right="17">Larvae Chambers              </area>
+    <area top="20" left="27" bottom="24" right="38">Meat Locker                  </area>
+    <area top="1" left="27" bottom="18" right="46">Artificial Outdoors          </area>
+    <area top="20" left="40" bottom="24" right="46">Slaughtering Room            </area>
+    <area top="34" left="6" bottom="41" right="15">Prison of Pythras            </area>
+    <area top="29" left="1" bottom="46" right="20">Huge Holding Cell            </area>
+    <area top="1" left="1" bottom="24" right="20">School Storage Rooms         </area>
+    <area top="26" left="27" bottom="46" right="46">Halls of Records             </area>
+    <area top="23" left="22" bottom="29" right="25">By Husks of Goblins          </area>
     <sign id="0">
         <![CDATA[STOREROOMS]]>
     </sign>
@@ -498,6 +549,7 @@
     <sign id="11">
         <![CDATA[School Archives/Indexing]]>
     </sign>
+    <sign id="19" />
     <string id="0">
         <![CDATA[The words "Sign in before seeing specimen." are carved into the pedestal. The sign-in book, however, is long absent.]]>
     </string>
@@ -602,5 +654,158 @@
     </string>
     <string id="48">
         <![CDATA[This enormous holding area has grown cold and quiet since you were last here. Pythras obviously lost no time in escaping. She certainly didn't stay behind to give you any thanks.]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
     </string>
 </town>

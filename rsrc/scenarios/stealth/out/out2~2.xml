@@ -5,11 +5,12 @@
     <sign id="0">
         <![CDATA[Morrow Marshes - east]]>
     </sign>
-    <area top="26" left="0" bottom="31" right="4">Near Willow</area>
-    <area top="23" left="34" bottom="28" right="38">Near Liam</area>
-    <area top="26" left="1" bottom="31" right="4">Near Willow</area>
-    <area top="19" left="1" bottom="37" right="16">Farmlands</area>
-    <area top="20" left="28" bottom="34" right="42">Farmlands</area>
+    <sign id="7" />
+    <area top="26" left="0" bottom="31" right="4">Near Willow                  </area>
+    <area top="23" left="34" bottom="28" right="38">Near Liam                    </area>
+    <area top="26" left="1" bottom="31" right="4">Near Willow                  </area>
+    <area top="19" left="1" bottom="37" right="16">Farmlands                    </area>
+    <area top="20" left="28" bottom="34" right="42">Farmlands                    </area>
     <string id="0">
         <![CDATA[Although much of Morrow's Isle seems to be run feudally, these farmers, at least, own their own farms. They're arranged in a neat, tight clusters, and surrounded by a small number of moderately armed guards.]]>
     </string>
@@ -99,5 +100,89 @@
     </string>
     <string id="56">
         <![CDATA[Someone boating down this river had an unfortunate accident. You find his body by his gutted boat. His neck was broken. His clothes were torn, but his axe is still intact.]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*End of special strs]]>
     </string>
 </sector>
