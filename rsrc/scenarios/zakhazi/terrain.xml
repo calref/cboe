@@ -898,7 +898,7 @@
         <trim-for>1</trim-for>
         <arena>2</arena>
         <special>
-            <type>wild-wood</type>
+            <type>none</type>
             <flag>-1</flag>
             <flag>0</flag>
             <flag>0</flag>
@@ -924,7 +924,7 @@
         <trim-for>1</trim-for>
         <arena>2</arena>
         <special>
-            <type>wild-wood</type>
+            <type>none</type>
             <flag>-1</flag>
             <flag>0</flag>
             <flag>0</flag>
@@ -2284,7 +2284,7 @@
         <trim-for>-1</trim-for>
         <arena>6</arena>
         <special>
-            <type>wild-cave</type>
+            <type>none</type>
             <flag>-1</flag>
             <flag>0</flag>
             <flag>0</flag>
@@ -2310,7 +2310,7 @@
         <trim-for>-1</trim-for>
         <arena>7</arena>
         <special>
-            <type>wild-cave</type>
+            <type>none</type>
             <flag>-1</flag>
             <flag>0</flag>
             <flag>0</flag>
@@ -2336,7 +2336,7 @@
         <trim-for>-1</trim-for>
         <arena>7</arena>
         <special>
-            <type>wild-cave</type>
+            <type>none</type>
             <flag>-1</flag>
             <flag>0</flag>
             <flag>0</flag>
@@ -2436,7 +2436,7 @@
         <trim-for>-1</trim-for>
         <arena>13</arena>
         <special>
-            <type>wild-cave</type>
+            <type>none</type>
             <flag>-1</flag>
             <flag>0</flag>
             <flag>0</flag>
@@ -2826,7 +2826,7 @@
         <trim-for>-1</trim-for>
         <arena>11</arena>
         <special>
-            <type>wild-wood</type>
+            <type>none</type>
             <flag>-1</flag>
             <flag>0</flag>
             <flag>0</flag>
@@ -2852,7 +2852,7 @@
         <trim-for>-1</trim-for>
         <arena>12</arena>
         <special>
-            <type>wild-wood</type>
+            <type>none</type>
             <flag>-1</flag>
             <flag>0</flag>
             <flag>0</flag>
@@ -3289,7 +3289,7 @@
         <arena>1</arena>
         <special>
             <type>fragile</type>
-            <flag>84</flag>
+            <flag>0</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -3313,7 +3313,7 @@
         <arena>1</arena>
         <special>
             <type>fragile</type>
-            <flag>84</flag>
+            <flag>0</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -3337,7 +3337,7 @@
         <arena>1</arena>
         <special>
             <type>fragile</type>
-            <flag>84</flag>
+            <flag>0</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -3703,7 +3703,7 @@
         <arena>1</arena>
         <special>
             <type>fragile</type>
-            <flag>84</flag>
+            <flag>0</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -3727,7 +3727,7 @@
         <arena>1</arena>
         <special>
             <type>fragile</type>
-            <flag>84</flag>
+            <flag>0</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -4069,7 +4069,7 @@
         <arena>1</arena>
         <special>
             <type>fragile</type>
-            <flag>84</flag>
+            <flag>0</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -4093,7 +4093,7 @@
         <arena>1</arena>
         <special>
             <type>fragile</type>
-            <flag>84</flag>
+            <flag>0</flag>
             <flag>0</flag>
             <flag>0</flag>
         </special>
@@ -5663,8 +5663,8 @@
     </terrain>
     <terrain id="231">
         <name>Fire Pit</name>
-        <pic>987</pic>
-        <map>987</map>
+        <pic>177</pic>
+        <map>177</map>
         <blockage>move-and-shoot</blockage>
         <transform>0</transform>
         <fly>false</fly>

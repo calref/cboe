@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>48</size>
-    <name>Student Quarters</name>
+    <name>Student Quarters             </name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -189,6 +189,42 @@
         <type>0</type>
         <charges>180</charges>
         <contained>true</contained>
+    </item>
+    <item id="52">
+        <type>-1</type>
+    </item>
+    <item id="53">
+        <type>-1</type>
+    </item>
+    <item id="54">
+        <type>-1</type>
+    </item>
+    <item id="55">
+        <type>-1</type>
+    </item>
+    <item id="56">
+        <type>-1</type>
+    </item>
+    <item id="57">
+        <type>-1</type>
+    </item>
+    <item id="58">
+        <type>-1</type>
+    </item>
+    <item id="59">
+        <type>-1</type>
+    </item>
+    <item id="60">
+        <type>-1</type>
+    </item>
+    <item id="61">
+        <type>-1</type>
+    </item>
+    <item id="62">
+        <type>-1</type>
+    </item>
+    <item id="63">
+        <type>-1</type>
     </item>
     <creature id="0">
         <type>190</type>
@@ -471,18 +507,18 @@
         <personality>-1</personality>
         <face>-1</face>
     </creature>
-    <area top="29" left="33" bottom="35" right="46">Destroyed Chamber</area>
-    <area top="18" left="33" bottom="27" right="46">Ransacked Quarters</area>
-    <area top="16" left="1" bottom="21" right="16">Ransacked Quarters</area>
-    <area top="8" left="1" bottom="11" right="15">Apothecary</area>
-    <area top="4" left="1" bottom="6" right="10">Apothecary Storage</area>
-    <area top="8" left="34" bottom="16" right="46">Possession Check-In</area>
-    <area top="29" left="22" bottom="43" right="31">Dining Hall</area>
-    <area top="42" left="1" bottom="46" right="4">Small Office</area>
-    <area top="23" left="1" bottom="37" right="16">3rd Year Student Cells</area>
-    <area top="39" left="38" bottom="46" right="41">Old Storeroom</area>
-    <area top="39" left="33" bottom="46" right="36">Abandoned Kitchen</area>
-    <area top="39" left="43" bottom="46" right="46">Dusty Barracks</area>
+    <area top="29" left="33" bottom="35" right="46">Destroyed Chamber            </area>
+    <area top="18" left="33" bottom="27" right="46">Ransacked Quarters           </area>
+    <area top="16" left="1" bottom="21" right="16">Ransacked Quarters           </area>
+    <area top="8" left="1" bottom="11" right="15">Apothecary                   </area>
+    <area top="4" left="1" bottom="6" right="10">Apothecary Storage           </area>
+    <area top="8" left="34" bottom="16" right="46">Possession Check-In          </area>
+    <area top="29" left="22" bottom="43" right="31">Dining Hall                  </area>
+    <area top="42" left="1" bottom="46" right="4">Small Office                 </area>
+    <area top="23" left="1" bottom="37" right="16">3rd Year Student Cells       </area>
+    <area top="39" left="38" bottom="46" right="41">Old Storeroom                </area>
+    <area top="39" left="33" bottom="46" right="36">Abandoned Kitchen            </area>
+    <area top="39" left="43" bottom="46" right="46">Dusty Barracks               </area>
     <sign id="0">
         <![CDATA[PROVOST]]>
     </sign>
@@ -525,6 +561,7 @@
     <sign id="13">
         <![CDATA[COMMON HALL]]>
     </sign>
+    <sign id="19" />
     <string id="0">
         <![CDATA[You step through the open gates into the lower section of the School of Magery, where all the serious learning and research took place. The air is fresher here (if dustier) and it's a relief to leave the airborne poisons of the earlier caves behind.]]>
     </string>
@@ -608,5 +645,176 @@
     </string>
     <string id="42">
         <![CDATA[You find a locked door with a silver keyhole. You try the silver key you found nearby in the lock, and it fits. The door is now unlocked.]]>
+    </string>
+    <string id="43">
+        <![CDATA[*]]>
+    </string>
+    <string id="44">
+        <![CDATA[*]]>
+    </string>
+    <string id="45">
+        <![CDATA[*]]>
+    </string>
+    <string id="46">
+        <![CDATA[*]]>
+    </string>
+    <string id="47">
+        <![CDATA[*]]>
+    </string>
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
     </string>
 </town>

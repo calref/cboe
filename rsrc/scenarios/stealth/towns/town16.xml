@@ -149,6 +149,102 @@
         <charges>2</charges>
         <contained>true</contained>
     </item>
+    <item id="32">
+        <type>-1</type>
+    </item>
+    <item id="33">
+        <type>-1</type>
+    </item>
+    <item id="34">
+        <type>-1</type>
+    </item>
+    <item id="35">
+        <type>-1</type>
+    </item>
+    <item id="36">
+        <type>-1</type>
+    </item>
+    <item id="37">
+        <type>-1</type>
+    </item>
+    <item id="38">
+        <type>-1</type>
+    </item>
+    <item id="39">
+        <type>-1</type>
+    </item>
+    <item id="40">
+        <type>-1</type>
+    </item>
+    <item id="41">
+        <type>-1</type>
+    </item>
+    <item id="42">
+        <type>-1</type>
+    </item>
+    <item id="43">
+        <type>-1</type>
+    </item>
+    <item id="44">
+        <type>-1</type>
+    </item>
+    <item id="45">
+        <type>-1</type>
+    </item>
+    <item id="46">
+        <type>-1</type>
+    </item>
+    <item id="47">
+        <type>-1</type>
+    </item>
+    <item id="48">
+        <type>-1</type>
+    </item>
+    <item id="49">
+        <type>-1</type>
+    </item>
+    <item id="50">
+        <type>-1</type>
+    </item>
+    <item id="51">
+        <type>-1</type>
+    </item>
+    <item id="52">
+        <type>-1</type>
+    </item>
+    <item id="53">
+        <type>-1</type>
+    </item>
+    <item id="54">
+        <type>-1</type>
+    </item>
+    <item id="55">
+        <type>-1</type>
+    </item>
+    <item id="56">
+        <type>-1</type>
+    </item>
+    <item id="57">
+        <type>-1</type>
+    </item>
+    <item id="58">
+        <type>-1</type>
+    </item>
+    <item id="59">
+        <type>-1</type>
+    </item>
+    <item id="60">
+        <type>-1</type>
+    </item>
+    <item id="61">
+        <type>-1</type>
+    </item>
+    <item id="62">
+        <type>-1</type>
+    </item>
+    <item id="63">
+        <type>-1</type>
+    </item>
     <creature id="0">
         <type>140</type>
         <attitude>hostile-a</attitude>
@@ -434,12 +530,12 @@
         <personality>-1</personality>
         <face>-1</face>
     </creature>
-    <area top="1" left="15" bottom="2" right="18">Bomb Chamber</area>
-    <area top="6" left="27" bottom="9" right="35">Mage&apos;s Common Room</area>
-    <area top="1" left="26" bottom="4" right="29">Small Library</area>
-    <area top="3" left="19" bottom="5" right="24">Storeroom</area>
-    <area top="7" left="19" bottom="9" right="26">Lever Room</area>
-    <area top="38" left="10" bottom="46" right="14">Cave Filled With Bodies</area>
+    <area top="1" left="15" bottom="2" right="18">Bomb Chamber                 </area>
+    <area top="6" left="27" bottom="9" right="35">Mage&apos;s Common Room           </area>
+    <area top="1" left="26" bottom="4" right="29">Small Library                </area>
+    <area top="3" left="19" bottom="5" right="24">Storeroom                    </area>
+    <area top="7" left="19" bottom="9" right="26">Lever Room                   </area>
+    <area top="38" left="10" bottom="46" right="14">Cave Filled With Bodies      </area>
     <sign id="0">
         <![CDATA[GOO PITS A|WEST EXIT]]>
     </sign>
@@ -458,6 +554,7 @@
     <sign id="5">
         <![CDATA[WARNING - Magical Experimentation Taking Place! Do not proceed without protective amulet.]]>
     </sign>
+    <sign id="19" />
     <string id="0">
         <![CDATA[You find a metal strongbox. A small sign on it reads "PROTECTIVE AMULETS - DO NOT proceed through caves without wearing one."]]>
     </string>
@@ -601,5 +698,62 @@
     </string>
     <string id="80">
         <![CDATA[You still have the first box you found and decide to leave the other one behind. They're extremely bulky and heavy.]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
     </string>
 </town>

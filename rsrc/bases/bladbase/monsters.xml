@@ -219,7 +219,6 @@
             <cold>50</cold>
         </immunity>
         <abilities>
-            <guard />
             <missile type="missile">
                 <type>spear</type>
                 <missile>5</missile>
@@ -1770,7 +1769,7 @@
         </abilities>
     </monster>
     <monster id="78">
-        <name>Giant Rat</name>
+        <name>Cave Rat</name>
         <pic w="1" h="1">70</pic>
         <race>beast</race>
         <level>2</level>
@@ -2337,10 +2336,6 @@
             <attack type="bite">1d10</attack>
         </attacks>
         <immunity />
-        <loot>
-            <type>371</type>
-            <chance>60</chance>
-        </loot>
         <abilities>
             <general type="status2">
                 <type>touch</type>
@@ -2529,7 +2524,7 @@
     <monster id="108">
         <name>Lizard</name>
         <pic w="1" h="1">93</pic>
-        <race>reptile</race>
+        <race>beast</race>
         <level>1</level>
         <armor>1</armor>
         <skill>1</skill>
@@ -2654,7 +2649,7 @@
         <skill>5</skill>
         <hp>15</hp>
         <speed>4</speed>
-        <attitude>hostile-a</attitude>
+        <attitude>docile</attitude>
         <summon>1</summon>
         <treasure>0</treasure>
         <attacks>
@@ -2671,7 +2666,7 @@
         <skill>9</skill>
         <hp>35</hp>
         <speed>4</speed>
-        <attitude>hostile-a</attitude>
+        <attitude>docile</attitude>
         <summon>2</summon>
         <treasure>0</treasure>
         <attacks>
@@ -2688,7 +2683,7 @@
         <skill>12</skill>
         <hp>40</hp>
         <speed>4</speed>
-        <attitude>hostile-a</attitude>
+        <attitude>docile</attitude>
         <summon>0</summon>
         <treasure>0</treasure>
         <attacks>
@@ -2783,7 +2778,7 @@
     </monster>
     <monster id="121">
         <name>Black Shade</name>
-        <pic w="1" h="1">56</pic>
+        <pic w="1" h="1">149</pic>
         <race>beast</race>
         <level>12</level>
         <armor>6</armor>
@@ -2966,11 +2961,10 @@
                 <chance>37.5</chance>
                 <extra>fire</extra>
             </general>
-            <radiate type="radiate">
-                <type>wall-fire</type>
-                <pattern>square</pattern>
-                <chance>80</chance>
-            </radiate>
+            <special type="martyr">
+                <param>1000</param>
+                <param>100</param>
+            </special>
         </abilities>
     </monster>
     <monster id="128">
@@ -2996,6 +2990,14 @@
             <cold>0</cold>
         </immunity>
         <abilities>
+            <general type="status">
+                <type>ray</type>
+                <missile>-1</missile>
+                <range>6</range>
+                <strength>100</strength>
+                <chance>75.0</chance>
+                <extra>paralysis</extra>
+            </general>
             <general type="dmg2">
                 <type>breath</type>
                 <missile>6</missile>
@@ -3004,11 +3006,6 @@
                 <chance>37.5</chance>
                 <extra>cold</extra>
             </general>
-            <radiate type="radiate">
-                <type>wall-ice</type>
-                <pattern>square</pattern>
-                <chance>90</chance>
-            </radiate>
         </abilities>
     </monster>
     <monster id="129">
@@ -3030,11 +3027,14 @@
             <cold>0</cold>
         </immunity>
         <abilities>
-            <radiate type="radiate">
-                <type>wall-ice</type>
-                <pattern>square</pattern>
-                <chance>90</chance>
-            </radiate>
+            <general type="status">
+                <type>ray</type>
+                <missile>-1</missile>
+                <range>6</range>
+                <strength>100</strength>
+                <chance>75.0</chance>
+                <extra>paralysis</extra>
+            </general>
         </abilities>
     </monster>
     <monster id="130">
@@ -3102,17 +3102,18 @@
             <cold>50</cold>
         </immunity>
         <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>2</strength>
+                <chance>100.0</chance>
+                <extra>dumb-smart</extra>
+            </general>
             <general type="status2">
                 <type>touch</type>
                 <strength>4</strength>
                 <chance>100.0</chance>
                 <extra>poison</extra>
             </general>
-            <radiate type="radiate">
-                <type>field-antimagic</type>
-                <pattern>square</pattern>
-                <chance>90</chance>
-            </radiate>
         </abilities>
     </monster>
     <monster id="133">
@@ -3172,7 +3173,7 @@
     <monster id="135">
         <name>Rakshasa</name>
         <pic w="1" h="1">111</pic>
-        <race>humanoid</race>
+        <race>beast</race>
         <level>25</level>
         <armor>20</armor>
         <skill>4</skill>
@@ -3268,11 +3269,10 @@
                 <chance>37.5</chance>
                 <extra>fire</extra>
             </general>
-            <radiate type="radiate">
-                <type>wall-fire</type>
-                <pattern>square</pattern>
-                <chance>90</chance>
-            </radiate>
+            <special type="martyr">
+                <param>1000</param>
+                <param>100</param>
+            </special>
         </abilities>
     </monster>
     <monster id="138">
@@ -3366,7 +3366,7 @@
         <hp>10</hp>
         <speed>3</speed>
         <attitude>hostile-a</attitude>
-        <summon>1</summon>
+        <summon>3</summon>
         <treasure>0</treasure>
         <mage>1</mage>
         <priest>1</priest>
@@ -3425,11 +3425,10 @@
             <poison>50</poison>
         </immunity>
         <abilities>
-            <general type="status">
+            <general type="petrify">
                 <type>touch</type>
-                <strength>6</strength>
-                <chance>66.7</chance>
-                <extra>disease</extra>
+                <strength>25</strength>
+                <chance>0.0</chance>
             </general>
         </abilities>
     </monster>
@@ -3453,11 +3452,10 @@
             <poison>50</poison>
         </immunity>
         <abilities>
-            <general type="status">
+            <general type="petrify">
                 <type>touch</type>
-                <strength>6</strength>
-                <chance>66.7</chance>
-                <extra>disease</extra>
+                <strength>25</strength>
+                <chance>0.0</chance>
             </general>
         </abilities>
     </monster>
@@ -4029,7 +4027,7 @@
     </monster>
     <monster id="166">
         <name>Alien Beast</name>
-        <pic w="1" h="1">136</pic>
+        <pic w="1" h="1">137</pic>
         <race>beast</race>
         <level>20</level>
         <armor>20</armor>
@@ -4161,7 +4159,7 @@
     <monster id="171">
         <name>Spiny Worm</name>
         <pic w="2" h="1">141</pic>
-        <race>bug</race>
+        <race>beast</race>
         <level>15</level>
         <armor>6</armor>
         <skill>18</skill>
@@ -4209,7 +4207,7 @@
     <monster id="173">
         <name>Gorgon</name>
         <pic w="1" h="2">143</pic>
-        <race>giant</race>
+        <race>beast</race>
         <level>18</level>
         <armor>14</armor>
         <skill>17</skill>
@@ -4246,7 +4244,7 @@
     <monster id="174">
         <name>Unicorn</name>
         <pic w="1" h="1">144</pic>
-        <race>magic</race>
+        <race>reptile</race>
         <level>3</level>
         <armor>3</armor>
         <skill>6</skill>
@@ -4256,7 +4254,7 @@
         <summon>0</summon>
         <treasure>0</treasure>
         <attacks>
-            <attack type="stab">1d12</attack>
+            <attack type="swing">1d12</attack>
         </attacks>
         <immunity />
         <abilities>
@@ -4574,7 +4572,7 @@
         <name>Blood Beast</name>
         <pic w="1" h="1">171</pic>
         <race>demon</race>
-        <level>30</level>
+        <level>0</level>
         <armor>12</armor>
         <skill>18</skill>
         <hp>150</hp>
@@ -4602,5 +4600,1161 @@
                 <extra>acid</extra>
             </general>
         </abilities>
+    </monster>
+    <monster id="188">
+        <name>Unused</name>
+        <pic w="1" h="1">126</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="189">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="190">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="191">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="192">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="193">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="194">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="195">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="196">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="197">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="198">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="199">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="200">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="201">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="202">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="203">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="204">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="205">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="206">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="207">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="208">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="209">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="210">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="211">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="212">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="213">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="214">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="215">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="216">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="217">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="218">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="219">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="220">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="221">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="222">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="223">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="224">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="225">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="226">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="227">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="228">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="229">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="230">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="231">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="232">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="233">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="234">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="235">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="236">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="237">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="238">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="239">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="240">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="241">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="242">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="243">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="244">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="245">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="246">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="247">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="248">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="249">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="250">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="251">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="252">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="253">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="254">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="255">
+        <name>Unused</name>
+        <pic w="1" h="1">149</pic>
+        <race>human</race>
+        <level>0</level>
+        <armor>0</armor>
+        <skill>0</skill>
+        <hp>0</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity />
     </monster>
 </monsters>

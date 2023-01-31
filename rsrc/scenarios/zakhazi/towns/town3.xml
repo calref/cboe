@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <town boes="2.0.0">
     <size>64</size>
-    <name>Blood Glee Clan</name>
+    <name>Blood Glee Clan              </name>
     <comment>Comment 1</comment>
     <comment>Comment 2</comment>
     <comment>Comment 3</comment>
@@ -226,6 +226,27 @@
     </item>
     <item id="56">
         <type>63</type>
+    </item>
+    <item id="57">
+        <type>-1</type>
+    </item>
+    <item id="58">
+        <type>-1</type>
+    </item>
+    <item id="59">
+        <type>-1</type>
+    </item>
+    <item id="60">
+        <type>-1</type>
+    </item>
+    <item id="61">
+        <type>-1</type>
+    </item>
+    <item id="62">
+        <type>-1</type>
+    </item>
+    <item id="63">
+        <type>-1</type>
     </item>
     <creature id="0">
         <type>72</type>
@@ -616,15 +637,60 @@
         <personality>-1</personality>
         <face>-1</face>
     </creature>
-    <area top="50" left="3" bottom="61" right="61">The Test of Giants</area>
-    <area top="38" left="38" bottom="48" right="51">Common Room</area>
-    <area top="36" left="42" bottom="38" right="52">Common Room</area>
-    <area top="26" left="29" bottom="36" right="39">By Huge, Smelly Pit</area>
-    <area top="9" left="18" bottom="12" right="22">Chieftain&apos;s Quarters</area>
-    <area top="8" left="3" bottom="24" right="13">By Burial Mounds</area>
-    <area top="41" left="28" bottom="49" right="36">Food Storage</area>
-    <area top="13" left="47" bottom="25" right="56">Gross Food Storage</area>
-    <area top="20" left="24" bottom="24" right="32">Hall of Murals</area>
+    <creature id="55">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="56">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="57">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="58">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <creature id="59">
+        <type>0</type>
+        <attitude>docile</attitude>
+        <mobility>0</mobility>
+        <personality>0</personality>
+        <face>-1</face>
+        <sdf x="0" y="0" />
+        <onkill>0</onkill>
+    </creature>
+    <area top="50" left="3" bottom="61" right="61">The Test of Giants           </area>
+    <area top="38" left="38" bottom="48" right="51">Common Room                  </area>
+    <area top="36" left="42" bottom="38" right="52">Common Room                  </area>
+    <area top="26" left="29" bottom="36" right="39">By Huge, Smelly Pit          </area>
+    <area top="9" left="18" bottom="12" right="22">Chieftain&apos;s Quarters         </area>
+    <area top="8" left="3" bottom="24" right="13">By Burial Mounds             </area>
+    <area top="41" left="28" bottom="49" right="36">Food Storage                 </area>
+    <area top="13" left="47" bottom="25" right="56">Gross Food Storage           </area>
+    <area top="20" left="24" bottom="24" right="32">Hall of Murals               </area>
     <sign id="0">
         <![CDATA[(This obelisk is carved with some sort of giant art. The carvings are of gleeful giants, beating up a unicorn.)]]>
     </sign>
@@ -670,6 +736,7 @@
     <sign id="14">
         <![CDATA[CONGRATULATIONS ON NOT BEING DEAD!]]>
     </sign>
+    <sign id="19" />
     <string id="0">
         <![CDATA[At first, you think that these heaps of rotting vegetations, rigor stricken bodies, and moldy, unidentifiable dead things are compost piles or trash dumps.]]>
     </string>
@@ -771,5 +838,167 @@
     </string>
     <string id="45">
         <![CDATA[Looking at his body, you see that he had taken incredible amounts of punishment during his long life, in the process of becoming the leader of this tribe of joyful giant masochists. He will undoubtedly be buried with the highest honors.]]>
+    </string>
+    <string id="46">
+        <![CDATA[*]]>
+    </string>
+    <string id="47">
+        <![CDATA[*]]>
+    </string>
+    <string id="48">
+        <![CDATA[*]]>
+    </string>
+    <string id="49">
+        <![CDATA[*]]>
+    </string>
+    <string id="50">
+        <![CDATA[*]]>
+    </string>
+    <string id="51">
+        <![CDATA[*]]>
+    </string>
+    <string id="52">
+        <![CDATA[*]]>
+    </string>
+    <string id="53">
+        <![CDATA[*]]>
+    </string>
+    <string id="54">
+        <![CDATA[*]]>
+    </string>
+    <string id="55">
+        <![CDATA[*]]>
+    </string>
+    <string id="56">
+        <![CDATA[*]]>
+    </string>
+    <string id="57">
+        <![CDATA[*]]>
+    </string>
+    <string id="58">
+        <![CDATA[*]]>
+    </string>
+    <string id="59">
+        <![CDATA[*]]>
+    </string>
+    <string id="60">
+        <![CDATA[*]]>
+    </string>
+    <string id="61">
+        <![CDATA[*]]>
+    </string>
+    <string id="62">
+        <![CDATA[*]]>
+    </string>
+    <string id="63">
+        <![CDATA[*]]>
+    </string>
+    <string id="64">
+        <![CDATA[*]]>
+    </string>
+    <string id="65">
+        <![CDATA[*]]>
+    </string>
+    <string id="66">
+        <![CDATA[*]]>
+    </string>
+    <string id="67">
+        <![CDATA[*]]>
+    </string>
+    <string id="68">
+        <![CDATA[*]]>
+    </string>
+    <string id="69">
+        <![CDATA[*]]>
+    </string>
+    <string id="70">
+        <![CDATA[*]]>
+    </string>
+    <string id="71">
+        <![CDATA[*]]>
+    </string>
+    <string id="72">
+        <![CDATA[*]]>
+    </string>
+    <string id="73">
+        <![CDATA[*]]>
+    </string>
+    <string id="74">
+        <![CDATA[*]]>
+    </string>
+    <string id="75">
+        <![CDATA[*]]>
+    </string>
+    <string id="76">
+        <![CDATA[*]]>
+    </string>
+    <string id="77">
+        <![CDATA[*]]>
+    </string>
+    <string id="78">
+        <![CDATA[*]]>
+    </string>
+    <string id="79">
+        <![CDATA[*]]>
+    </string>
+    <string id="80">
+        <![CDATA[*]]>
+    </string>
+    <string id="81">
+        <![CDATA[*]]>
+    </string>
+    <string id="82">
+        <![CDATA[*]]>
+    </string>
+    <string id="83">
+        <![CDATA[*]]>
+    </string>
+    <string id="84">
+        <![CDATA[*]]>
+    </string>
+    <string id="85">
+        <![CDATA[*]]>
+    </string>
+    <string id="86">
+        <![CDATA[*]]>
+    </string>
+    <string id="87">
+        <![CDATA[*]]>
+    </string>
+    <string id="88">
+        <![CDATA[*]]>
+    </string>
+    <string id="89">
+        <![CDATA[*]]>
+    </string>
+    <string id="90">
+        <![CDATA[*]]>
+    </string>
+    <string id="91">
+        <![CDATA[*]]>
+    </string>
+    <string id="92">
+        <![CDATA[*]]>
+    </string>
+    <string id="93">
+        <![CDATA[*]]>
+    </string>
+    <string id="94">
+        <![CDATA[*]]>
+    </string>
+    <string id="95">
+        <![CDATA[*]]>
+    </string>
+    <string id="96">
+        <![CDATA[*]]>
+    </string>
+    <string id="97">
+        <![CDATA[*]]>
+    </string>
+    <string id="98">
+        <![CDATA[*]]>
+    </string>
+    <string id="99">
+        <![CDATA[*]]>
     </string>
 </town>

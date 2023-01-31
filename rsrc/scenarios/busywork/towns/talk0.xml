@@ -3,7 +3,7 @@
     <personality id="0">
         <title>Mayor Leonardo</title>
         <look>
-            <![CDATA[You meet Leonardo, the first and, so far, only mayor of Cavala. Recent months have been difficult for him. He's quite thin, and looks like he hasn't slept in weeks.]]>
+            <![CDATA[You meet Leonardo, the first, and, so far, only mayor of Cavala. Recent months have been difficult for him. He's quite thin, and looks like he hasn't slept in weeks.]]>
         </look>
         <name>
             <![CDATA[He nods to you. "I am Mayor Leonardo, leader of our tormented little village. It's good to see you."]]>
@@ -27,7 +27,7 @@
             <![CDATA["Well, I was a mage of great reknown. Then, well, then, well, then things went all funny."]]>
         </job>
         <unknown>
-            <![CDATA[She tugs nervously at the ends of her hair.]]>
+            <![CDATA[She tugs nervously tugs the ends of her hair.]]>
         </unknown>
     </personality>
     <personality id="2">
@@ -159,7 +159,7 @@
         <param>0</param>
         <param>0</param>
         <text>
-            <![CDATA["It takes two days for even a swift caravan to leave our valley. When it gets dark, and the caravan has to stop to rest, the bandits attack from all sides. First fireballs, then warriors. Then they return to their hidden lair.]]>
+            <![CDATA["It takes two days for even a swift caravan to leave our valley. When it gets dark, and the caravan has to stop to rest, the bandits attack from all sides. First fireballs, then warriors. Then they return to their hidden lair."]]>
         </text>
         <text>
             <![CDATA["In all of this, there is one thing that puzzles me."]]>
@@ -237,7 +237,7 @@
         <param>0</param>
         <param>0</param>
         <text>
-            <![CDATA["So many mayors in the Empire are cut-rate, more interested in lining their own pockets than leading well. I didn't want to be like that!" His whole body tenses with anger and frustration. "So instead, I got to preside over a dying village.]]>
+            <![CDATA["So many mayors in the Empire are cut-rate, more interested in lining their own pockets than leading well. I didn't want to be like that!" His whole body tenses with anger and frustration. "So instead, I got to preside over a dying village."]]>
         </text>
         <text>
             <![CDATA["Not what I wanted. Not what I wanted at all."]]>
@@ -264,7 +264,7 @@
         <param>0</param>
         <param>0</param>
         <text>
-            <![CDATA["Cameron is the blacksmith. He's been working day and night providing weapons for the guards. If the bandits ever attack here, they'll be sorry."]]>
+            <![CDATA["Cameron is the blacksmith. He's been working day and night providing weapons for the guards. In the bandits ever attack here, they'll be sorry."]]>
         </text>
         <text>
             <![CDATA["Curse him! How could he betray us so? So much loss, so many deaths! No punishment could ever be enough."]]>
@@ -291,7 +291,7 @@
         <param>0</param>
         <param>0</param>
         <text>
-            <![CDATA["Searching to no avail. Perhaps you will have more luck. If you ever find any evidence, present it to me. Perhaps I can help with it." He thinks. "That reminds me. The bandits' tactics were always the same, and their success was very puzzling."]]>
+            <![CDATA["Searching to no avail. Perhaps you will have more luck. if you ever find any evidence, present it to me. Perhaps I can help with it." He thinks. "That reminds me. The bandits tactics were always the same, and their success was very puzzling."]]>
         </text>
         <text>
             <![CDATA["I don't need to worry about bandits now, of course."]]>
@@ -318,7 +318,7 @@
         <param>0</param>
         <param>0</param>
         <text>
-            <![CDATA["Oh, you know. Bad experiment. Strange effects. Made my head get a little, little, you know, scattered. Now I just live out here and wander the woods and watch people."]]>
+            <![CDATA["Oh, you know. Bad expiriment. Strange effects. Made my head get a little, little, you know, scattered. Now I just live out here and wander the woods and watch people."]]>
         </text>
     </node>
     <node for="1">
@@ -381,7 +381,7 @@
         <param>0</param>
         <param>0</param>
         <text>
-            <![CDATA["He's very busy. I mean, first, he makes lots of weapons all the time to protect our town. Then, even then, he still has time to garden. He takes time to look after his plants."]]>
+            <![CDATA["He's very busy. I mean, First, he makes lots of weapons all the time to protect our town. Then, even then, he still has time to garden. He takes time to look after his plants."]]>
         </text>
         <text>
             <![CDATA["Well, now Cameron's gone. Saw him run into the woods. He was in a big hurry. He looked scared. I hear he's not a good person. Serves him right."]]>
@@ -454,7 +454,7 @@
         <param>0</param>
         <param>0</param>
         <text>
-            <![CDATA[She looks over your items, and, over a long period of time, she manages to figure out what they are. "Identification. Only 4 gold per item!"]]>
+            <![CDATA[She looks over your items, and, over a long period of time, she manages to figure out what they are. "Identification. Only 4 gold an item!"]]>
         </text>
     </node>
     <node for="1">
@@ -574,7 +574,7 @@
         <param>0</param>
         <param>0</param>
         <text>
-            <![CDATA["Thanks," he says. "We really need supplies of all sorts these days." He makes an offer for all of your identified items.]]>
+            <![CDATA["Thanks," he says. We really need supplies of all sorts these days. He makes an offer for all of your identified items. ]]>
         </text>
     </node>
     <node for="3">
@@ -709,7 +709,7 @@
         <param>0</param>
         <param>0</param>
         <text>
-            <![CDATA["He's trying his best. I just wish he was the least bit competent. And I wish he spent less time holed up in city hall."]]>
+            <![CDATA["He's trying his best. I just wish he was the least bit competent. And I wish he spend less time holed up in city hall."]]>
         </text>
     </node>
     <node for="3">

@@ -373,19 +373,19 @@
         </text>
     </node>
     <node for="12">
+        <keyword>purc</keyword>
         <keyword>disc</keyword>
-        <keyword>xxxx</keyword>
         <type>reg</type>
         <param>0</param>
         <param>0</param>
         <param>0</param>
         <param>0</param>
         <text>
-            <![CDATA["Times are hard, but I'll give you what discount I can. Just let me know when you're ready to purchase."]]>
+            <![CDATA["Times are hard, but I'll give you what discount I can. Do you want weapons or armor?"]]>
         </text>
     </node>
     <node for="12">
-        <keyword>purc</keyword>
+        <keyword>weap</keyword>
         <keyword>xxxx</keyword>
         <type>shop</type>
         <param>1</param>
@@ -393,7 +393,19 @@
         <param>0</param>
         <param>0</param>
         <text>
-            <![CDATA[Bristow's Smithy]]>
+            <![CDATA[Bristow's Weapons]]>
+        </text>
+    </node>
+    <node for="12">
+        <keyword>armo</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>1</param>
+        <param>8</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Bristow's Armor]]>
         </text>
     </node>
     <node for="12">
@@ -615,13 +627,37 @@
     <node for="15">
         <keyword>purc</keyword>
         <keyword>xxxx</keyword>
+        <type>reg</type>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Your denseness irritates her. "Be specific! Scrolls or potions?"]]>
+        </text>
+    </node>
+    <node for="15">
+        <keyword>scro</keyword>
+        <keyword>xxxx</keyword>
         <type>shop</type>
         <param>3</param>
         <param>9</param>
         <param>0</param>
         <param>0</param>
         <text>
-            <![CDATA[Karen's Arcana]]>
+            <![CDATA[Karen's Scrolls]]>
+        </text>
+    </node>
+    <node for="15">
+        <keyword>poti</keyword>
+        <keyword>xxxx</keyword>
+        <type>shop</type>
+        <param>4</param>
+        <param>10</param>
+        <param>0</param>
+        <param>0</param>
+        <text>
+            <![CDATA[Karen's Potions]]>
         </text>
     </node>
     <node for="15">
