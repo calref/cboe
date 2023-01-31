@@ -2,7 +2,6 @@
 <sector boes="2.0.0">
     <name>Unicorn Caves</name>
     <comment>Comment</comment>
-    <sign id="7" />
     <area top="37" left="4" bottom="45" right="11">Unicorn Grove</area>
     <string id="0">
         <![CDATA[When you walk into this huge cavern, you have to look twice to make sure your eyes aren't misleading you. So far, the caves of the Za-Khazi run have been your ordinary Exile caverns - rough, wild, filled with fungi and rubble.]]>

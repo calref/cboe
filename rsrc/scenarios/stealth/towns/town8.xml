@@ -368,7 +368,6 @@
     <area top="30" left="28" bottom="46" right="38">Underground Lake</area>
     <area top="4" left="5" bottom="13" right="17">Drake Lair</area>
     <area top="11" left="1" bottom="15" right="7">Drake Treasure Chamber</area>
-    <sign id="19" />
     <string id="0">
         <![CDATA[You enter a large chamber. In the ceiling, you see a shaft extending straight up about 30 or 40 feet to a brightly lit chamber. At the top, you see ogres peering down at you, laughing and pointing.]]>
     </string>

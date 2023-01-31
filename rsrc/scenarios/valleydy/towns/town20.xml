@@ -68,7 +68,6 @@
     </creature>
     <area top="14" left="9" bottom="26" right="20">Lava Cavern</area>
     <area top="19" left="1" bottom="25" right="2">Hall of Crystals</area>
-    <sign id="19" />
     <string id="0">
         <![CDATA[You stand at the far end of a long path, leading back down to the lowest depths of the School of Magery.]]>
     </string>

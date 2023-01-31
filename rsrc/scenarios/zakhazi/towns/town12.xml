@@ -420,7 +420,6 @@
     <area top="1" left="18" bottom="45" right="46">Opal Mines</area>
     <area top="4" left="1" bottom="19" right="13">Mushroom Farms</area>
     <area top="20" left="2" bottom="46" right="18">Mushroom Farms</area>
-    <sign id="19" />
     <string id="0">
         <![CDATA[You are at a stairway leading upward. The steps are large and clumsy, roughly hewn out of granite. Flecks of tiny gemstones in the rock reflect the light.]]>
     </string>

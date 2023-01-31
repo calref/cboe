@@ -85,7 +85,6 @@
     <sign id="0">
         <![CDATA[MAIN CONTROL - 3 mi. south]]>
     </sign>
-    <sign id="7" />
     <area top="32" left="41" bottom="34" right="45">Near Control Chamber</area>
     <area top="3" left="15" bottom="5" right="17">By School Entry</area>
     <string id="0">

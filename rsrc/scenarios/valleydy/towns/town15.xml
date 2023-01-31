@@ -205,7 +205,6 @@
     </creature>
     <area top="34" left="32" bottom="39" right="40">Vahnatai Cavern</area>
     <area top="18" left="40" bottom="27" right="45">Vahnatai Cavern</area>
-    <sign id="19" />
     <string id="0">
         <![CDATA[You see that someone has etched several glyphs in the cave floor just ahead. There's no dust or moss on them, and they're still pretty clean. If you didn't know better, you'd think they were etched here very recently.]]>
     </string>

@@ -34,7 +34,6 @@
         <onflee>-1</onflee>
         <sdf x="-1" y="-1" />
     </wandering>
-    <sign id="7" />
     <string id="0">
         <![CDATA[A group of seedy types have set up a small fort here, in order to do things of questionable legality. Adventurers are always welcome. They gladly welcome you in.]]>
     </string>

@@ -72,7 +72,6 @@
     <sign id="1">
         <![CDATA[FORTRESS OF MOROG]]>
     </sign>
-    <sign id="7" />
     <area top="21" left="19" bottom="31" right="31">On Plateau</area>
     <area top="16" left="15" bottom="35" right="35">Base of Plateau</area>
     <string id="0">

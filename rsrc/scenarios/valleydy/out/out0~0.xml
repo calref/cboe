@@ -107,7 +107,6 @@
     <sign id="2">
         <![CDATA[WARNING! GOBLIN INFESTATION!|Official Empire Notification GoblBISCK129]]>
     </sign>
-    <sign id="7" />
     <area top="4" left="6" bottom="18" right="22">Goblin Valley</area>
     <area top="33" left="30" bottom="36" right="33">Near Marralis</area>
     <string id="0">

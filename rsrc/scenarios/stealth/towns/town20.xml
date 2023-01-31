@@ -691,7 +691,6 @@
     <area top="58" left="23" bottom="62" right="37">Holding Cells</area>
     <area top="8" left="26" bottom="18" right="32">Common Room</area>
     <area top="20" left="41" bottom="31" right="44">Front Gates</area>
-    <sign id="19" />
     <string id="0">
         <![CDATA[When you get close to the door, a keyhole suddenly appears under the handle, surrounded by a circle of flames. On a hunch, you quickly insert Jaen's key into the hole and turn it. The flames disappear, and the door becomes unlocked.]]>
     </string>

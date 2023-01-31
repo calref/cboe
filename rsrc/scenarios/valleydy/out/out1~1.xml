@@ -66,7 +66,6 @@
         <onflee>-1</onflee>
         <sdf x="-1" y="-1" />
     </wandering>
-    <sign id="7" />
     <area top="10" left="16" bottom="16" right="23">Village Ruins</area>
     <area top="37" left="0" bottom="42" right="25">Remote Valley</area>
     <string id="0">

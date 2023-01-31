@@ -75,7 +75,6 @@
     <sign id="2">
         <![CDATA[BEWARE - This area is uncontrolled!|Travel with extreme caution!]]>
     </sign>
-    <sign id="7" />
     <area top="29" left="33" bottom="33" right="39">Gravel Valley</area>
     <string id="0">
         <![CDATA[You find the remains of a mage who crash landed while flying over these mountains. The wand at his side is still intact. Most everything else has been eaten by bears.]]>
