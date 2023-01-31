@@ -468,7 +468,6 @@
     </creature>
     <area top="4" left="1" bottom="19" right="21">Chamber of Khoth</area>
     <area top="21" left="1" bottom="29" right="17">Pillar Hall</area>
-    <sign id="19" />
     <string id="0">
         <![CDATA[When you walk around the corner, the massive iron gates blocking your exit from Khoth's fortress come into view. They're still closed. At first, you get the uncomfortable suspicion that Khoth won't meet his end of the bargain.]]>
     </string>

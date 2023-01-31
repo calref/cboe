@@ -18,7 +18,6 @@
         <onflee>-1</onflee>
         <sdf x="-1" y="-1" />
     </encounter>
-    <sign id="7" />
     <area top="10" left="8" bottom="20" right="12">Island of Shadows</area>
     <area top="36" left="5" bottom="39" right="8">Near Spiraling Crypt</area>
     <string id="0">

@@ -24,7 +24,6 @@
     <sign id="1">
         <![CDATA[GUARDED PASS|NO PASS WITHOUT PAYMENT TO ASSIKVAS]]>
     </sign>
-    <sign id="7" />
     <area top="26" left="13" bottom="33" right="21">Near Assikvas</area>
     <area top="3" left="22" bottom="8" right="35">Unicorn Cave</area>
     <string id="0">

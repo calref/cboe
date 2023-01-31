@@ -66,7 +66,6 @@
         <onflee>-1</onflee>
         <sdf x="-1" y="-1" />
     </wandering>
-    <sign id="7" />
     <area top="1" left="20" bottom="4" right="25">Below Khoth&apos;s Fortress</area>
     <area top="27" left="36" bottom="30" right="38">Near Broken Fang Clan</area>
     <area top="12" left="2" bottom="45" right="31">Slimy Tunnels</area>

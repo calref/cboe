@@ -34,7 +34,6 @@
         <onflee>-1</onflee>
         <sdf x="-1" y="-1" />
     </encounter>
-    <sign id="7" />
     <string id="0">
         <![CDATA[You reach another gate manned by Hill Runners. The guards here, however, aren't as friendly as at the earlier gate. While they're friendly and sociable, they make it clear that you aren't allowed to pass.]]>
     </string>

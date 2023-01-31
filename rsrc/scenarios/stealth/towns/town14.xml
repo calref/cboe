@@ -491,7 +491,6 @@
     <area top="36" left="4" bottom="43" right="8">Treasure Cave</area>
     <area top="41" left="35" bottom="43" right="43">Garbage Pit</area>
     <area top="6" left="8" bottom="11" right="13">Guard Room</area>
-    <sign id="19" />
     <string id="0">
         <![CDATA[The ogre's lair is a lot quieter now that the demon is gone and his slaves have fled. You still hear grunts and howls from deep inside, and they still sound dangerous. Just not as much.]]>
     </string>

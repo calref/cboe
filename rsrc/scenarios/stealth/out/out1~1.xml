@@ -126,7 +126,6 @@
     <sign id="3">
         <![CDATA[NOTE: Northwest Morrow's Isle is now SEALED territory (as per Empire decree DIP34A). Please be prepared to identify yourself upon departure.]]>
     </sign>
-    <sign id="7" />
     <area top="18" left="15" bottom="30" right="22">Ogre Hills</area>
     <area top="29" left="10" bottom="33" right="13">Abandoned Valley</area>
     <area top="2" left="30" bottom="15" right="46">Fields of Rubble</area>

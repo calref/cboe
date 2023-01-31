@@ -144,7 +144,6 @@
         <onkill>0</onkill>
     </creature>
     <area top="7" left="20" bottom="13" right="26">Kimzahn&apos;s Home</area>
-    <sign id="19" />
     <string id="0">
         <![CDATA[With his dying breath, Kimzahn shouts out "Please, my brethren! Avenge me!" As he passes away, many other efreeti appear to get revenge.]]>
     </string>
