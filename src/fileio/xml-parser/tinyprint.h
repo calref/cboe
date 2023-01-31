@@ -16,7 +16,7 @@
 #include <ios>
 
 namespace ticpp {
-	class Printer : public TiXmlVisitor {
+	class Printer : public TiXmlPrinter {
 		Document doc;
 		std::ostream& stream;
 		std::stack<Element*> openElements;
