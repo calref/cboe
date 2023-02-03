@@ -1556,7 +1556,7 @@ public:
 		
 		put_scen_info();
 		
-		if(scen_headers.size() <= 3) {
+		if(scen_headers.empty()) {
 			me["next"].hide();
 			me["prev"].hide();
 		}
