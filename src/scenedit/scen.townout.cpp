@@ -1324,9 +1324,9 @@ bool new_town() {
 	std::string size = dynamic_cast<cLedGroup&>(new_dlg->getControl("size")).getSelected();
 	std::string preset = dynamic_cast<cLedGroup&>(new_dlg->getControl("preset")).getSelected();
 	
-	if(size == "lg") scenario.towns.push_back(new cTown(scenario, AREA_LARGE));
-	else if(size == "med") scenario.towns.push_back(new cTown(scenario, AREA_MEDIUM));
-	else if(size == "sm") scenario.towns.push_back(new cTown(scenario, AREA_SMALL));
+	if(size == "lg") scenario.addTown(AREA_LARGE);
+	else if(size == "med") scenario.addTown(AREA_MEDIUM);
+	else if(size == "sm") scenario.addTown(AREA_SMALL);
 	
 	set_current_town(scenario.towns.size() - 1);
 	town->name = new_dlg->getControl("name").getText().substr(0,30);
