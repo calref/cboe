@@ -94,6 +94,7 @@ public:
 	std::vector<cTown*> towns;
 	void addTown(size_t dim) {
 		towns.push_back(new cTown(*this, dim));
+		towns.back()->init_start();
 	}
 	
 	void import_legacy(legacy::scenario_data_type& old);

@@ -81,10 +81,12 @@ cTown::cTown(cScenario& scenario, size_t dim) : cArea(dim), scenario(&scenario),
 	town_chop_key = -1;
 	for(short i = 0; i < wandering.size(); i++) {
 		wandering[i] = d_wan;
+		// x of 100 indicates an unset wandering monster location
 		wandering_locs[i].x = 100;
 	}
 	lighting_type = LIGHT_NORMAL;
 	for(short i = 0; i < 4; i++) {
+		// x of 100 indicates an unset starting location
 		start_locs[i].x = 100;
 		exits[i].spec = -1;
 		exits[i].x = -1;
