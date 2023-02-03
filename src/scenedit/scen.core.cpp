@@ -3079,7 +3079,7 @@ bool build_scenario() {
 	cur_out.x = 0;
 	cur_out.y = 0;
 	current_terrain = scenario.outdoors[0][0];
-	current_terrain->terrain[24][24] = grass ? 234 : 232;
+	current_terrain->terrain[24][24] = grass ? 234 : 247;
 	current_terrain->terrain[23][23] = grass ? 121 : 106;
 	current_terrain->city_locs.push_back({24, 24, 0});
 	
