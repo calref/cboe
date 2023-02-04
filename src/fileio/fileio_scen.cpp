@@ -20,7 +20,7 @@
 #include "special_parse.hpp"
 #include "gfx/gfxsheets.hpp"
 #include "mathutil.hpp"
-#include "gzstream.h"
+#include "gzstream/gzstream.h"
 #include "tarball.hpp"
 
 #include "porting.hpp"
@@ -31,7 +31,6 @@
 // Also, for some reason, it's not found in the include paths, so use a relative path
 #include "../scenario/town_import.tpp"
 
-bool cur_scen_is_mac = true;
 extern cCustomGraphics spec_scen_g;
 extern fs::path tempDir, scenDir, progDir;
 
@@ -155,13 +154,49 @@ template<typename Container> static void port_shop_spec_node(cSpecial& spec, std
 	spec.ex2a = spec.ex2b = -1;
 }
 
+static void port_special_text_response(cSpecial &special, cScenario& scenario)
+{
+	// 4-9: intro_strs : TODO
+	// 10-59: journal_strs : DONE
+	// 60-159: special_item name : DONE
+	// 160-259: special_strs : DONE
+	for (int step=0; step<2; ++step) {
+		auto &wh=step==0 ? special.ex1a : special.ex2a;
+		if (wh>=-100 && wh<0) { // (60-159)-160
+			int item=(wh+100)/2;
+			if (item>=0 && item < scenario.special_items.size()) {
+				wh=scenario.spec_strs.size();
+				scenario.spec_strs.push_back((wh%2 == 0) ? scenario.special_items[item].name : scenario.special_items[item].descr);
+			}
+		}
+		else if (wh>=-150 && wh<-100) { // (10-59) -160
+			int item=(wh+150);
+			if (item < scenario.journal_strs.size()) {
+				wh=scenario.spec_strs.size();
+				scenario.spec_strs.push_back(scenario.journal_strs[item]);
+			}
+		}
+		else if (wh==-161)
+			wh=-1;
+	}
+}
+
 static const std::string err_prefix = "Error loading Blades of Exile Scenario: ";
+static std::string right_trim(std::string const &str)
+{
+	const auto found = str.find_last_not_of(' ');
+	if (found==std::string::npos)
+		return "";
+	if (found+1==str.size())
+		return str;
+	std::string res=str;
+	res.erase(found+1);
+	return res;
+}
 bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_header){
 	bool file_ok = false;
 	long len;
 	char temp_str[256];
-	legacy::scenario_data_type temp_scenario;
-	legacy::scen_item_data_type item_data;
 	// TODO: Convert this (and all the others in this file) to use C++ streams
 	FILE* file_id = fopen(file_to_load.string().c_str(),"rb");
 	if(file_id == nullptr) {
@@ -179,12 +214,12 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	
 	if((scenario.format.flag1 == 10) && (scenario.format.flag2 == 20) &&
 	   (scenario.format.flag3 == 30) && (scenario.format.flag4 == 40)) {
-	  	cur_scen_is_mac = true;
+		porting::set_current_file_type(true);
 	  	file_ok = true;
 	}
 	else if((scenario.format.flag1 == 20) && (scenario.format.flag2 == 40) &&
 			(scenario.format.flag3 == 60) && (scenario.format.flag4 == 80)) {
-	  	cur_scen_is_mac = false;
+		porting::set_current_file_type(false);
 	  	file_ok = true;
 	} else if(scenario.format.flag1 == 'O' && scenario.format.flag2 == 'B' && scenario.format.flag3 == 'O' && scenario.format.flag4 == 'E') {
 		// This means we're looking at the scenario header file of an unpacked new-format scenario.
@@ -197,19 +232,21 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	}
 	
 	len = (long) sizeof(legacy::scenario_data_type);
+	legacy::scenario_data_type temp_scenario;
 	if(fread(&temp_scenario, len, 1, file_id) < 1) {
 		showError(err_prefix + "Failed to read scenario data.", get_file_error());
 		fclose(file_id);
 		return false;
 	}
-	port_scenario(&temp_scenario);
+	porting::port_scenario(&temp_scenario);
 	len = sizeof(legacy::scen_item_data_type); // item data
+	legacy::scen_item_data_type item_data;
 	if(fread(&item_data, len, 1, file_id) < 1) {
 		showError(err_prefix + "Failed to read scenario items.", get_file_error());
 		fclose(file_id);
 		return false;
 	}
-	port_item_list(&item_data);
+	porting::port_item_list(&item_data);
 	scenario.import_legacy(temp_scenario);
 	scenario.import_legacy(item_data);
 	
@@ -221,25 +258,28 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 		len = (long) (temp_scenario.scen_str_len[i]);
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
-		if(i == 0) scenario.scen_name = temp_str;
+		
+		std::string tmp=right_trim(temp_str);
+		if(i == 0) scenario.scen_name = tmp;
 		else if(i == 1 || i == 2)
-			scenario.who_wrote[i-1] = temp_str;
+			scenario.who_wrote[i-1] = tmp;
 		else if(i == 3)
-			scenario.contact_info[1] = temp_str;
+			scenario.contact_info[1] = tmp;
 		else if(i >= 4 && i < 10)
-			scenario.intro_strs[i-4] = temp_str;
+			scenario.intro_strs[i-4] = tmp;
 		else if(i >= 10 && i < 60)
-			scenario.journal_strs[i-10] = temp_str;
+			scenario.get_journal_string(i-10) = tmp;
 		else if(i >= 60 && i < 160) {
-			if(i % 2 == 0) scenario.special_items[(i-60)/2].name = temp_str;
-			else scenario.special_items[(i-60)/2].descr = temp_str;
+			if(i % 2 == 0) scenario.get_special_item((i-60)/2).name = tmp;
+			else scenario.get_special_item((i-60)/2).descr = tmp;
 		} else if(i >= 260) continue; // These were never ever used, for some reason.
-		else scenario.spec_strs[i-160] = temp_str;
+		else
+			scenario.get_special_string(i-160) = tmp;
 	}
 	
 	fclose(file_id);
 	
-	scenario.ter_types[23].fly_over = false;
+	scenario.get_terrain(23).fly_over = false;
 	
 	scenario.scen_file = file_to_load;
 	if(only_header) return true;
@@ -274,11 +314,15 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	for(cSpecial& spec : scenario.scen_specials) {
 		if(spec.type == eSpecType::ENTER_SHOP)
 			port_shop_spec_node(spec, shops, scenario.spec_strs);
+		if(spec.type == eSpecType::IF_TEXT_RESPONSE)
+			port_special_text_response(spec, scenario);
 	}
 	for(cOutdoors* out : scenario.outdoors) {
 		for(cSpecial& spec : out->specials) {
 			if(spec.type == eSpecType::ENTER_SHOP)
 				port_shop_spec_node(spec, shops, out->spec_strs);
+			if(spec.type == eSpecType::IF_TEXT_RESPONSE)
+				port_special_text_response(spec, scenario);
 		}
 	}
 	// We'll check town nodes too, just in case.
@@ -286,6 +330,8 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 		for(cSpecial& spec : town->specials) {
 			if(spec.type == eSpecType::ENTER_SHOP)
 				port_shop_spec_node(spec, shops, town->spec_strs);
+			if(spec.type == eSpecType::IF_TEXT_RESPONSE)
+				port_special_text_response(spec, scenario);
 		}
 	}
 	
@@ -297,7 +343,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 		else if(info.type == eShopItemType::ITEM) {
 			bool is_food_shop = true;
 			for(int i = info.first; i < info.first + info.count && i < scenario.scen_items.size(); i++) {
-				if(scenario.scen_items[i].variety != eItemType::FOOD)
+				if(scenario.get_item(i).variety != eItemType::FOOD)
 					is_food_shop = false;
 			}
 			if(is_food_shop)
@@ -705,7 +751,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 		if(type == "title") {
 			elem->GetText(&scenario.scen_name, false);
 		} else if(type == "icon") {
-			// TODO: This element can have some attributes on it.
+			scenario.intro_pic.type=PIC_SCEN;
 			elem->GetText(&scenario.intro_pic);
 			scenario.intro_mess_pic = scenario.intro_pic;
 		} else if(type == "id") {
@@ -733,6 +779,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					info->GetText(&scenario.who_wrote[found_teasers], false);
 					found_teasers++;
 				} else if(type == "icon") {
+					scenario.intro_mess_pic.type=PIC_SCEN;
 					info->GetText(&scenario.intro_mess_pic);
 				} else if(type == "intro-msg") {
 					if(found_intro >= scenario.intro_strs.size())
@@ -787,7 +834,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 				"num-towns", "out-width", "out-height", "start-town", "town-start", "outdoor-start", "sector-start",
 			};
 			Iterator<Element> game;
-			int store_rects = 0, town_mods = 0, spec_items = 0, quests = 0, shops = 0, timers = 0, strnum;
+			int store_rects = 0, town_mods = 0, timers = 0, strnum;
 			for(game = game.begin(elem.Get()); game != game.end(); game++) {
 				game->GetValue(&type);
 				reqs.erase(type);
@@ -828,16 +875,13 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					town_mods++;
 				} else if(type == "special-item") {
 					scenario.special_items.emplace_back();
-					readSpecItemFromXml(*game, scenario.special_items[spec_items]);
-					spec_items++;
+					readSpecItemFromXml(*game, scenario.special_items.back());
 				} else if(type == "quest") {
 					scenario.quests.emplace_back();
-					readQuestFromXml(*game, scenario.quests[quests]);
-					quests++;
+					readQuestFromXml(*game, scenario.quests.back());
 				} else if(type == "shop") {
 					scenario.shops.emplace_back();
-					readShopFromXml(*game, scenario.shops[shops]);
-					shops++;
+					readShopFromXml(*game, scenario.shops.back());
 				} else if(type == "timer") {
 					if(timers >= 20)
 						throw xBadNode(type,game->Row(),game->Column(),fname);
@@ -845,14 +889,14 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					timers++;
 				} else if(type == "string") {
 					game->GetAttribute("id", &strnum);
-					if(strnum >= scenario.spec_strs.size())
+					if(strnum >= scenario.spec_strs.size() && strnum<10000)
 						scenario.spec_strs.resize(strnum + 1);
-					game->GetText(&scenario.spec_strs[strnum], false);
+					game->GetText(&scenario.get_special_string(strnum), false);
 				} else if(type == "journal") {
 					game->GetAttribute("id", &strnum);
-					if(strnum >= scenario.journal_strs.size())
+					if(strnum >= scenario.journal_strs.size() && strnum<10000)
 						scenario.journal_strs.resize(strnum + 1);
-					game->GetText(&scenario.journal_strs[strnum], false);
+					game->GetText(&scenario.get_journal_string(strnum), false);
 				} else throw xBadNode(type, game->Row(), game->Column(), fname);
 			}
 			if(!reqs.empty())
@@ -1090,9 +1134,9 @@ void readItemsFromXml(ticpp::Document&& data, cScenario& scenario) {
 			throw xBadNode(type, elem->Row(), elem->Column(), fname);
 		int which_item;
 		elem->GetAttribute("id", &which_item);
-		if(which_item >= scenario.scen_items.size())
+		if(which_item >= scenario.scen_items.size() && which_item<5000) // checkme: what is a reasonable maximum for the item
 			scenario.scen_items.resize(which_item + 1);
-		cItem& the_item = scenario.scen_items[which_item];
+		cItem& the_item = scenario.get_item(which_item);
 		the_item = cItem();
 		std::set<std::string> reqs = {"variety", "level", "pic", "value", "weight", "name", "full-name"};
 		Iterator<Element> item;
@@ -1388,10 +1432,11 @@ void readMonstersFromXml(ticpp::Document&& data, cScenario& scenario) {
 		elem->GetAttribute("id", &which_monst);
 		if(which_monst == 0)
 			throw xBadVal(type, "id", "0", elem->Row(), elem->Column(), fname);
-		if(which_monst >= scenario.scen_monsters.size())
+		if(which_monst >= scenario.scen_monsters.size() && which_monst<5000)
 			scenario.scen_monsters.resize(which_monst + 1);
-		cMonster& the_mon = scenario.scen_monsters[which_monst];
+		cMonster& the_mon = scenario.get_monster(which_monst);
 		the_mon = cMonster();
+		the_mon.default_facial_pic = -1;
 		std::set<std::string> reqs = {
 			"name", "level", "armor", "skill", "hp", "speed",
 			"race", "attacks", "pic", "attitude", "immunity",
@@ -1600,21 +1645,21 @@ void readOutdoorsFromXml(ticpp::Document&& data, cOutdoors& out) {
 		} else if(type == "sign") {
 			int sign;
 			elem->GetAttribute("id", &sign);
-			if(sign >= out.sign_locs.size())
+			if(sign >= out.sign_locs.size() && sign<1000)
 				out.sign_locs.resize(sign + 1);
-			elem->GetText(&out.sign_locs[sign].text, false);
+			elem->GetText(&out.get_sign_loc(sign).text, false);
 		} else if(type == "area") {
-			if(num_rects >= out.area_desc.size())
+			if(num_rects >= out.area_desc.size() && num_rects<1000)
 				out.area_desc.resize(num_rects + 1);
-			static_cast<rectangle&>(out.area_desc[num_rects]) = readRectFromXml(*elem);
-			elem->GetText(&out.area_desc[num_rects].descr, false);
+			static_cast<rectangle&>(out.get_area_desc(num_rects)) = readRectFromXml(*elem);
+			elem->GetText(&out.get_area_desc(num_rects).descr, false);
 			num_rects++;
 		} else if(type == "string") {
 			int str;
 			elem->GetAttribute("id", &str);
-			if(str >= out.spec_strs.size())
+			if(str >= out.spec_strs.size() && str<10000) // CHECKME: 10000 is probably too big?
 				out.spec_strs.resize(str + 1);
-			elem->GetText(&out.spec_strs[str], false);
+			elem->GetText(&out.get_special_string(str), false);
 		} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
 	}
 	if(!found_name)
@@ -1733,15 +1778,15 @@ void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& scen) {
 		} else if(type == "sign") {
 			int sign;
 			elem->GetAttribute("id", &sign);
-			if(sign >= town->sign_locs.size())
+			if(sign >= town->sign_locs.size() && sign<10000)
 				town->sign_locs.resize(sign + 1);
-			elem->GetText(&town->sign_locs[sign].text, false);
+			elem->GetText(&town->get_sign_loc(sign).text, false);
 		} else if(type == "string") {
 			int str;
 			elem->GetAttribute("id", &str);
-			if(str >= town->spec_strs.size())
+			if(str >= town->spec_strs.size() && str<10000)
 				town->spec_strs.resize(str + 1);
-			elem->GetText(&town->spec_strs[str], false);
+			elem->GetText(&town->get_special_string(str), false);
 		} else if(type == "item") {
 			int which_item;
 			elem->GetAttribute("id", &which_item);
@@ -1817,10 +1862,10 @@ void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& scen) {
 			if(!reqs.empty())
 				throw xMissingElem("creature", *reqs.begin(), elem->Row(), elem->Column(), fname);
 		} else if(type == "area") {
-			if(num_rects >= town->area_desc.size())
+			if(num_rects >= town->area_desc.size() && num_rects<1000)
 				town->area_desc.resize(num_rects + 1);
-			static_cast<rectangle&>(town->area_desc[num_rects]) = readRectFromXml(*elem);
-			elem->GetText(&town->area_desc[num_rects].descr, false);
+			static_cast<rectangle&>(town->get_area_desc(num_rects)) = readRectFromXml(*elem);
+			elem->GetText(&town->get_area_desc(num_rects).descr, false);
 			num_rects++;
 		} else throw xBadNode(type, elem->Row(), elem->Column(), fname);
 	}
@@ -1846,19 +1891,20 @@ void readDialogueFromXml(ticpp::Document&& data, cSpeech& talk, int town_num) {
 			id %= 10;
 			std::set<std::string> reqs = {"title", "look", "name", "job"};
 			Iterator<Element> who;
+			cPersonality &people=talk.people[id];
 			for(who = who.begin(elem.Get()); who != who.end(); who++) {
 				who->GetValue(&type);
 				reqs.erase(type);
 				if(type == "title") {
-					who->GetText(&talk.people[id].title, false);
+					who->GetText(&people.title, false);
 				} else if(type == "look") {
-					who->GetText(&talk.people[id].look, false);
+					who->GetText(&people.look, false);
 				} else if(type == "name") {
-					who->GetText(&talk.people[id].name, false);
+					who->GetText(&people.name, false);
 				} else if(type == "job") {
-					who->GetText(&talk.people[id].job, false);
+					who->GetText(&people.job, false);
 				} else if(type == "unknown") {
-					who->GetText(&talk.people[id].dunno, false);
+					who->GetText(&people.dunno, false);
 				} else throw xBadNode(type, who->Row(), who->Column(), fname);
 			}
 			if(!reqs.empty())
@@ -1912,7 +1958,6 @@ void readDialogueFromXml(ticpp::Document&& data, cSpeech& talk, int town_num) {
 
 void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 	cOutdoors& out = *scen.outdoors[which.x][which.y];
-	int num_towns = 0;
 	for(int x = 0; x < 48; x++) {
 		for(int y = 0; y < 48; y++) {
 			out.terrain[x][y] = data.get(x,y);
@@ -1929,11 +1974,7 @@ void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 					case eMapFeature::ENTRANCE_WEST: case eMapFeature::ITEM: case eMapFeature::CREATURE:
 						break;
 					case eMapFeature::TOWN:
-						out.city_locs.emplace_back();
-						out.city_locs[num_towns].x = x;
-						out.city_locs[num_towns].y = y;
-						out.city_locs[num_towns].spec = feat.second;
-						num_towns++;
+						out.city_locs.push_back({x, y, feat.second});
 						break;
 					case eMapFeature::SPECIAL_NODE:
 						out.special_locs.push_back({x, y, feat.second});
@@ -1952,13 +1993,13 @@ void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 						break;
 					case eMapFeature::FIELD:
 						if(feat.second == SPECIAL_SPOT)
-							out.special_spot[x][y] = true;
+							out.set_special_spot(x,y,true);
 						else if(feat.second == SPECIAL_ROAD)
-							out.roads[x][y] = true;
+							out.set_road(x,y,true);
 						else throw xMapParseError(map_out_bad_field, feat.second, y, x, data.file);
 						break;
 					case eMapFeature::SIGN:
-						if(feat.second >= out.sign_locs.size())
+						if(feat.second<0 || feat.second >= out.sign_locs.size())
 							break;
 						static_cast<location&>(out.sign_locs[feat.second]) = loc(x,y);
 						break;
@@ -2000,7 +2041,7 @@ void loadTownMapData(map_data&& data, int which, cScenario& scen) {
 						what->exists = true;
 						break;
 					case eMapFeature::SIGN:
-						if(feat.second >= town.sign_locs.size())
+						if(feat.second<0 || feat.second >= town.sign_locs.size())
 							break;
 						static_cast<location&>(town.sign_locs[feat.second]) = loc(x,y);
 						break;
@@ -2264,13 +2305,13 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		fclose(file_id);
 		return false;
 	}
-	port_town(&store_town);
+	porting::port_town(&store_town);
 	
 	switch(scenario.town_size[which_town]) {
 		case 0:
 			len = sizeof(legacy::big_tr_type);
 			fread(&t_d, len, 1, file_id);
-			port_t_d(&t_d);
+			porting::port_t_d(&t_d);
 			the_town.import_legacy(store_town);
 			the_town.import_legacy(t_d, which_town);
 			break;
@@ -2278,7 +2319,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		case 1:
 			len = sizeof(legacy::ave_tr_type);
 			fread(&ave_t, len, 1, file_id);
-			port_ave_t(&ave_t);
+			porting::port_ave_t(&ave_t);
 			the_town.import_legacy(store_town);
 			the_town.import_legacy(ave_t, which_town);
 			break;
@@ -2286,7 +2327,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		case 2:
 			len = sizeof(legacy::tiny_tr_type);
 			fread(&tiny_t, len, 1, file_id);
-			port_tiny_t(&tiny_t);
+			porting::port_tiny_t(&tiny_t);
 			the_town.import_legacy(store_town);
 			the_town.import_legacy(tiny_t, which_town);
 			break;
@@ -2300,15 +2341,17 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		len = (long) (store_town.strlens[i]);
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
-		if(i == 0) the_town.name = temp_str;
+		
+		std::string tmp=right_trim(temp_str);
+		if(i == 0) the_town.name = tmp;
 		else if(i >= 1 && i < 17)
-			the_town.area_desc[i-1].descr = temp_str;
+			the_town.get_area_desc(i-1).descr = tmp;
 		else if(i >= 17 && i < 20)
-			the_town.comment[i-17] = temp_str;
+			the_town.comment[i-17] = tmp;
 		else if(i >= 20 && i < 120)
-			the_town.spec_strs[i-20] = temp_str;
+			the_town.get_special_string(i-20) = tmp;
 		else if(i >= 120 && i < 140)
-			the_town.sign_locs[i-120].text = temp_str;
+			the_town.get_sign_loc(i-120).text = tmp;
 	}
 	
 	len = sizeof(legacy::talking_record_type);
@@ -2317,27 +2360,29 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		fclose(file_id);
 		return false;
 	}
-	port_talk_nodes(&store_talk);
+	porting::port_talk_nodes(&store_talk);
 	
 	the_town.talking.talk_nodes.resize(60);
 	for(short i = 0; i < 170; i++) {
 		len = (long) (store_talk.strlens[i]);
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
+		
+		std::string tmp=right_trim(temp_str);
 		if(i >= 0 && i < 10)
-			the_town.talking.people[i].title = temp_str;
+			the_town.talking.people[i].title = tmp;
 		else if(i >= 10 && i < 20)
-			the_town.talking.people[i-10].look = temp_str;
+			the_town.talking.people[i-10].look = tmp;
 		else if(i >= 20 && i < 30)
-			the_town.talking.people[i-20].name = temp_str;
+			the_town.talking.people[i-20].name = tmp;
 		else if(i >= 30 && i < 40)
-			the_town.talking.people[i-30].job = temp_str;
+			the_town.talking.people[i-30].job = tmp;
 		else if(i >= 160)
-			the_town.talking.people[i-160].dunno = temp_str;
+			the_town.talking.people[i-160].dunno = tmp;
 		else {
 			if(i % 2 == 0)
-				the_town.talking.talk_nodes[(i-40)/2].str1 = temp_str;
-			else the_town.talking.talk_nodes[(i-40)/2].str2 = temp_str;
+				the_town.talking.talk_nodes[(i-40)/2].str1 = tmp;
+			else the_town.talking.talk_nodes[(i-40)/2].str2 = tmp;
 		}
 	}
 	
@@ -2401,7 +2446,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 	
 	the_out.x = which_out.x;
 	the_out.y = which_out.y;
-	port_out(&store_out);
+	porting::port_out(&store_out);
 	the_out.import_legacy(store_out);
 	the_out.spec_strs.resize(90);
 	the_out.sign_locs.resize(8);
@@ -2410,13 +2455,15 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 		len = (long) (store_out.strlens[i]);
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
-		if(i == 0) the_out.name = temp_str;
-		else if(i == 9) the_out.comment = temp_str;
-		else if(i < 9) the_out.area_desc[i-1].descr = temp_str;
+		
+		std::string tmp=right_trim(temp_str);		
+		if(i == 0) the_out.name = tmp;
+		else if(i == 9) the_out.comment = tmp;
+		else if(i < 9) the_out.get_area_desc(i-1).descr = tmp;
 		else if(i >= 10 && i < 100)
-			the_out.spec_strs[i-10] = temp_str;
+			the_out.get_special_string(i-10) = tmp;
 		else if(i >= 100 && i < 108)
-			the_out.sign_locs[i-100].text = temp_str;
+			the_out.get_sign_loc(i-100).text = tmp;
 	}
 	
 	if(fclose(file_id) != 0) {
@@ -2464,7 +2511,7 @@ void load_spec_graphics_v1(fs::path scen_file) {
 			spec_scen_g.numSheets = 1;
 			sf::Texture sheet;
 			if(sheet.loadFromImage(graphics_store)) {
-				spec_scen_g.sheets[0].reset(new sf::Texture(sheet));
+				spec_scen_g.sheets[0]=Texture(sheet);
 			} else {
 				showWarning("An error occurred while converting old-style graphics into the new format.",noGraphics);
 				spec_scen_g.is_old = false;
@@ -2476,7 +2523,7 @@ void load_spec_graphics_v1(fs::path scen_file) {
 }
 
 void load_spec_graphics_v2(int num_sheets) {
-	spec_scen_g.clear();
+	spec_scen_g.sheets.clear(); // we must not clear the party sheet here
 	if(num_sheets > 0) {
 		spec_scen_g.sheets.resize(num_sheets);
 		spec_scen_g.numSheets = num_sheets;
@@ -2484,6 +2531,6 @@ void load_spec_graphics_v2(int num_sheets) {
 	while(num_sheets-- > 0) {
 		std::string name = "sheet" + std::to_string(num_sheets);
 		ResMgr::graphics.free(name);
-		spec_scen_g.sheets[num_sheets] = &ResMgr::graphics.get(name);
+		spec_scen_g.sheets[num_sheets] = *ResMgr::graphics.get(name);
 	}
 }

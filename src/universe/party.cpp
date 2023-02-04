@@ -8,6 +8,7 @@
 
 #include "party.hpp"
 
+#include <cstring>
 #include <string>
 #include <vector>
 #include <map>
@@ -57,6 +58,7 @@ cParty::cParty(const cParty& other)
 	, hostiles_present(other.hostiles_present)
 	, easy_mode(other.easy_mode)
 	, less_wm(other.less_wm)
+	, show_junk_bag(other.show_junk_bag)
 	, magic_ptrs(other.magic_ptrs)
 	, light_level(other.light_level)
 	, outdoor_corner(other.outdoor_corner)
@@ -100,6 +102,7 @@ cParty::cParty(const cParty& other)
 	, scen_won(other.scen_won)
 	, scen_played(other.scen_played)
 	, campaign_flags(other.campaign_flags)
+	, junk_items(other.junk_items)
 	, pointers(other.pointers)
 {
 	for(int i = 0; i < 6; i++) {
@@ -170,13 +173,153 @@ void swap(cParty& lhs, cParty& rhs) {
 	swap(lhs.scen_won, rhs.scen_won);
 	swap(lhs.scen_played, rhs.scen_played);
 	swap(lhs.campaign_flags, rhs.campaign_flags);
+	swap(lhs.junk_items, rhs.junk_items);
 	swap(lhs.pointers, rhs.pointers);
 	for(size_t i = 0; i < lhs.adven.size(); i++) {
 		swap(*lhs.adven[i], *rhs.adven[i]);
 	}
 }
 
-void cParty::import_legacy(legacy::party_record_type& old, cUniverse& univ){
+cVehicle &cParty::get_boat(int id) {
+	if (id>=0 && id<boats.size())
+		return boats[id];
+	static cVehicle bad_vehicle;
+	bad_vehicle=cVehicle::bad();
+	return bad_vehicle;
+}
+cVehicle const &cParty::get_boat(int id) const {
+	if (id>=0 && id<boats.size())
+		return boats[id];
+	static cVehicle bad_vehicle=cVehicle::bad();
+	return bad_vehicle;
+}
+cVehicle &cParty::get_horse(int id) {
+	if (id>=0 && id<horses.size())
+		return horses[id];
+	static cVehicle bad_vehicle;
+	bad_vehicle=cVehicle::bad();
+	return bad_vehicle;
+}
+cVehicle const &cParty::get_horse(int id) const  {
+	if (id>=0 && id<horses.size())
+		return horses[id];
+	static cVehicle bad_vehicle=cVehicle::bad();
+	return bad_vehicle;
+}
+
+cMonster const &cParty::get_summon(mon_num_t id) const
+{
+	if (id<summons.size())
+		return summons[id];
+	static cMonster bad_monster=cMonster::bad();
+	return bad_monster;
+}
+
+cMonster &cParty::get_summon(mon_num_t id) {
+	if (id<summons.size())
+		return summons[id];
+	static cMonster bad_monster;
+	bad_monster=cMonster::bad();
+	return bad_monster;
+}
+
+cItem const &cParty::get_junk_item(item_num_t id) const
+{
+	if (id<junk_items.size())
+		return junk_items[id].first;
+	static cItem bad_item=cItem::bad();
+	return bad_item;
+}
+
+cItem &cParty::get_junk_item(item_num_t id)
+{
+	if (id<junk_items.size())
+		return junk_items[id].first;
+	static cItem bad_item;
+	bad_item=cItem::bad();
+	return bad_item;
+}
+
+bool cParty::is_junk_item_compatible_with_town(item_num_t id, int townId) const
+{
+	if (id<junk_items.size())
+		return junk_items[id].second.count(townId)>0;
+	return false;
+}
+
+static bool combine_items(cItem &item1, cItem const &item2)
+{
+	if (item1.can_be_combined_with(item2)) {
+		short test = item1.charges + item2.charges;
+		if(test > 125) {
+			item1.charges = 125;
+			if(cParty::print_result)
+				cParty::print_result("(Can have at most 125 of any item.");
+		}
+		else item1.charges += item2.charges;
+		return true;
+	}
+	return false;
+}
+
+bool cParty::give_junk_item(cItem const &item, int townId) {
+	if(item.variety == eItemType::NO_ITEM)
+		return true;
+	if(item.variety == eItemType::GOLD || item.variety == eItemType::FOOD || item.variety == eItemType::QUEST || item.variety == eItemType::SPECIAL) {
+		if(print_result)
+			print_result("Trying to add unexpected items in junk bag.");
+		return false;
+	}
+	cItem fItem(item);
+	fItem.property = false;
+	fItem.contained = false;
+	fItem.held = false;
+	if (fItem.charges<0) fItem.charges=1;
+	if(fItem.type_flag > 0 && fItem.ident) {
+		for(auto &jItemSet : junk_items) {
+			if(combine_items(jItemSet.first, fItem)) {
+				if (townId>=0) jItemSet.second.insert(townId);
+				return true;
+			}
+		}
+	}
+	std::set<int> listTowns;
+	if (townId>=0) listTowns.insert(townId);
+	junk_items.push_back(std::make_pair(fItem,listTowns));
+	return true;
+}
+
+void cParty::combine_junk_items()
+{
+	// FIXME: probably better to first construct a multimap of name => id, items for identify id
+	//        then for each item which shares the same names check if we combine them and keep a set
+	//        of item id to remove, then we can remove the item
+	for (size_t i=junk_items.size(); i>0; --i) {
+		auto const &item=junk_items[i-1].first;
+		if (!item.ident) continue;
+		for (size_t j=i-1; j>0; --j) {
+			if (!combine_items(junk_items[j-1].first, item))
+				continue;
+			if (i!=j)
+				junk_items[j-1].second.insert(junk_items[i-1].second.begin(), junk_items[i-1].second.end());
+			std::swap(junk_items[i-1],junk_items.back());
+			junk_items.pop_back();
+			break;
+		}
+	}
+}
+
+void cParty::take_junk_item(item_num_t id)
+{
+	if (id>=junk_items.size()) {
+		if(print_result)
+			print_result("Trying to remove unexistant item in junk bag.");
+		return;
+	}
+	junk_items.erase(junk_items.begin()+id);
+}
+
+void cParty::import_legacy(legacy::party_record_type const & old, cUniverse& univ){
 	scen_name = old.scen_name;
 	age = old.age;
 	gold = old.gold;
@@ -220,8 +363,15 @@ void cParty::import_legacy(legacy::party_record_type& old, cUniverse& univ){
 		t.node = old.node_to_call[i];
 		party_event_timers.push_back(t);
 	}
+	std::set<int> seen_towns;
 	for(short i = 0; i < 4; i++){
 		creature_save[i].import_legacy(old.creature_save[i]);
+		// check if the town has already been saved, if yes, sets it to unknown: 200
+		// ie. old save can have many towns 0, we want only to use the first one
+		if (seen_towns.find(creature_save[i].which_town)!=seen_towns.end())
+			creature_save[i].which_town=200;
+		else
+			seen_towns.insert(creature_save[i].which_town);
 		imprisoned_monst[i] = old.imprisoned_monst[i];
 	}
 	in_boat = old.in_boat;
@@ -253,6 +403,10 @@ void cParty::import_legacy(legacy::party_record_type& old, cUniverse& univ){
 	at_which_save_slot = old.at_which_save_slot;
 	for(short i = 0; i < 20 ; i++)
 		alchemy[i] = old.alchemy[i];
+	for (short i=0; i<50; i++) {
+		if (old.spec_items[i]>0)
+			spec_items.insert(i);
+	}
 	for(short i = 0; i < univ.scenario.towns.size(); i++){
 		univ.scenario.towns[i]->can_find = old.can_find_town[i];
 		univ.scenario.towns[i]->m_killed = old.m_killed[i];
@@ -267,25 +421,30 @@ void cParty::import_legacy(legacy::party_record_type& old, cUniverse& univ){
 	total_dam_taken = old.total_dam_taken;
 }
 
-void cParty::import_legacy(legacy::stored_items_list_type& old,short which_list){
+void cParty::import_legacy(legacy::stored_items_list_type const & old,short which_list){
 	stored_items[which_list].resize(115);
 	for(int i = 0; i < 115; i++)
 		stored_items[which_list][i].import_legacy(old.items[i]);
 }
 
-void cParty::import_legacy(legacy::setup_save_type& old){
+void cParty::import_legacy(legacy::setup_save_type const & old){
 	for(int n = 0; n < 4; n++)
 		for(int i = 0; i < 64; i++)
 			for(int j = 0; j < 64; j++)
-				setup[n][i][j] = old.setup[n][i][j];
+				// boe stored here misc_i, ...
+				// unsure maybe we want here (old&0xfe)<<8
+				setup[n][i][j] = (old.setup[n][i][j]<<8);
 }
 
-void cParty::cConvers::import_legacy(legacy::talk_save_type old, const cScenario& scenario){
-	who_said = scenario.towns[old.personality / 10]->talking.people[old.personality % 10].title;
+void cParty::cConvers::import_legacy(legacy::talk_save_type const &old, const cScenario& scenario){
+	if (old.personality<0) // fixme: add an error message here
+		return;
+	cTown const *town=scenario.towns[old.personality/10];
+	who_said = town->talking.people[old.personality%10].title;
 	in_town = scenario.towns[old.town_num]->name;
-	int strnums[2] = {old.str1, old.str2};
-	std::string* strs[2] = {&the_str1, &the_str2};
 	for(int i = 0; i < 2; i++) {
+		int num=i==0 ? old.str1 : old.str2;
+		std::string &str=i==0 ? the_str1 : the_str2;
 		// Okay, so there's a ton of different places where the actual strings might be found.
 		// 0 means no string
 		// 10 + n is the "look" string for the nth personality in the town (ie, n is personality % 10)
@@ -295,51 +454,109 @@ void cParty::cConvers::import_legacy(legacy::talk_save_type old, const cScenario
 		// 40 + 2n + 1 is the second string from the nth talk not in the town
 		// 2000 + n is the nth town special text
 		// 3000 + n is the nth scenario special text
-		if(strnums[i] == 0) continue;
-		if(strnums[i] >= 3000)
-			strs[i]->assign(scenario.spec_strs[strnums[i] - 3000]);
-		else if(strnums[i] >= 2000)
-			strs[i]->assign(scenario.towns[old.personality / 10]->spec_strs[strnums[i] - 2000]);
-		else if(strnums[i] >= 40 && strnums[i] % 2 == 0)
-			strs[i]->assign(scenario.towns[old.personality / 10]->talking.talk_nodes[(strnums[i] - 40) / 2].str1);
-		else if(strnums[i] >= 40 && strnums[i] % 2 == 1)
-			strs[i]->assign(scenario.towns[old.personality / 10]->talking.talk_nodes[(strnums[i] - 40) / 2].str2);
-		else if(strnums[i] >= 30)
-			strs[i]->assign(scenario.towns[old.personality / 10]->talking.people[old.personality % 10].job);
-		else if(strnums[i] >= 20)
-			strs[i]->assign(scenario.towns[old.personality / 10]->talking.people[old.personality % 10].name);
-		else if(strnums[i] >= 10)
-			strs[i]->assign(scenario.towns[old.personality / 10]->talking.people[old.personality % 10].look);
+		if(num == 0) continue;
+		if(num >= 3000)
+			str.assign(scenario.get_special_string(num - 3000));
+		else if(num >= 2000)
+			str.assign(town->get_special_string(num - 2000));
+		else if(num >= 40 && num % 2 == 0)
+			str.assign(town->talking.talk_nodes[(num - 40) / 2].str1);
+		else if(num >= 40 && num % 2 == 1)
+			str.assign(town->talking.talk_nodes[(num - 40) / 2].str2);
+		else if(num >= 30)
+			str.assign(town->talking.people[num-30].job);
+		else if(num >= 20)
+			str.assign(town->talking.people[num-20].name);
+		else if(num >= 10)
+			str.assign(town->talking.people[num-10].look);
 	}
 }
 
-void cParty::cEncNote::import_legacy(int16_t(& old)[2], const cScenario& scenario) {
+void cParty::cEncNote::import_legacy(int16_t const (& old)[2], const cScenario& scenario) {
 	in_scen = scenario.scen_name;
 	// TODO: Need to verify that I have the correct offsets here.
 	switch(old[0] / 1000) {
 		case 0:
-			the_str = scenario.spec_strs[old[0] - 160];
+			the_str = scenario.get_special_string(old[0] - 160);
 			where = scenario.scen_name; // Best we can do here; the actual location is long forgotten
 			type = NOTE_SCEN;
 			break;
 		case 1:
-			the_str = scenario.outdoors[old[1] % scenario.outdoors.width()][old[1] / scenario.outdoors.width()]->spec_strs[old[0] - 1010];
+			the_str = scenario.outdoors[old[1] % scenario.outdoors.width()][old[1] / scenario.outdoors.width()]->get_special_string(old[0] - 1010);
 			where = scenario.outdoors[old[1] % scenario.outdoors.width()][old[1] / scenario.outdoors.width()]->name;
 			type = NOTE_OUT;
 			break;
 		case 2:
-			the_str = scenario.towns[old[1]]->spec_strs[old[0] - 2020];
+			the_str = scenario.towns[old[1]]->get_special_string(old[0] - 2020);
 			where = scenario.towns[old[1]]->name;
 			type= NOTE_TOWN;
 			break;
 	}
 }
 
-void cParty::import_legacy(legacy::pc_record_type(& old)[6]) {
+void cParty::import_legacy(legacy::pc_record_type const (& old)[6]) {
 	for(int i = 0; i < 6; i++) {
 		adven[i].reset(new cPlayer(*this));
 		adven[i]->import_legacy(old[i]);
 	}
+}
+
+void cParty::enter_scenario(cScenario const &scenario)
+{
+	using namespace std::placeholders;
+	
+	age = 0;
+	wipe_sdfs();
+	light_level = 0;
+	outdoor_corner = scenario.out_sec_start;
+	i_w_c = {0, 0};
+	loc_in_sec = scenario.out_start;
+	out_loc = scenario.out_start;
+	boats.clear();
+	horses.clear();
+	std::copy_if(scenario.boats.begin(), scenario.boats.end(), std::back_inserter(boats), std::bind(&cVehicle::exists, _1));
+	std::copy_if(scenario.horses.begin(), scenario.horses.end(), std::back_inserter(horses), std::bind(&cVehicle::exists, _1));
+	for(auto &pc : adven) {
+		if (!pc) continue;
+		pc->status.clear();
+		if(isSplit(pc->main_status))
+			pc->main_status -= eMainStatus::SPLIT;
+		pc->cur_health = pc->max_health;
+		pc->cur_sp = pc->max_sp;
+	}
+	in_boat = -1;
+	in_horse = -1;
+	for(auto& pop : creature_save) {
+		pop.clear();
+		pop.which_town = 200;
+	}
+	for(auto &creat : out_c)
+		creat.exists = false;
+	store_limited_stock.clear();
+	magic_store_items.clear();
+	
+	journal.clear();
+	special_notes.clear();
+	talk_save.clear();
+	// reset the scried monster
+	m_noted.clear();
+	
+	direction = DIR_N;
+	at_which_save_slot = 0;
+	key_times.clear();
+	party_event_timers.clear();
+	spec_items.clear();
+	for(short i = 0; i < scenario.special_items.size(); i++) {
+		if(scenario.special_items[i].flags >= 10)
+			spec_items.insert(i);
+	}
+	for(short i = 0; i < scenario.quests.size(); i++) {
+		if(scenario.quests[i].auto_start) {
+			active_quests[i] = cJob(1);
+		}
+	}
+	for(auto &item : stored_items)
+		item.clear();
 }
 
 std::unique_ptr<cPlayer> cParty::remove_pc(size_t spot) {
@@ -351,7 +568,8 @@ std::unique_ptr<cPlayer> cParty::remove_pc(size_t spot) {
 void cParty::new_pc(size_t spot) {
 	std::unique_ptr<cPlayer> new_pc{new cPlayer(*this)};
 	replace_pc(spot, std::move(new_pc));
-	adven[spot]->main_status = eMainStatus::ALIVE;
+	if (spot < 6)
+		adven[spot]->main_status = eMainStatus::ALIVE;
 }
 
 void cParty::replace_pc(size_t spot, std::unique_ptr<cPlayer> with) {
@@ -462,56 +680,56 @@ int cParty::get_shared_dmg(int) const {
 
 int cParty::get_health() const {
 	int health = 0;
-	for(int i = 0; i < 6; i++)
-		if(adven[i]->is_alive())
-			health += adven[i]->cur_health;
+	for(auto &pc : adven)
+		if (pc && pc->is_alive())
+			health += pc->cur_health;
 	return health;
 }
 
 int cParty::get_magic() const {
 	int magic = 0;
-	for(int i = 0; i < 6; i++)
-		if(adven[i]->is_alive())
-			magic += adven[i]->cur_sp;
+	for(auto &pc : adven)
+		if (pc && pc->is_alive())
+			magic += pc->cur_sp;
 	return magic;
 }
 
 int cParty::get_level() const {
 	short j = 0;
-	for(int i = 0; i < 6; i++)
-		if(adven[i]->main_status == eMainStatus::ALIVE)
-			j += adven[i]->level;
+	for(auto &pc : adven)
+		if (pc && pc->main_status == eMainStatus::ALIVE)
+			j += pc->level;
 	return j;
 }
 
 void cParty::heal(int how_much) {
-	for(int i = 0; i < 6; i++)
-		adven[i]->heal(how_much);
+	for(auto &pc : adven)
+		if (pc) pc->heal(how_much);
 }
 
 void cParty::poison(int how_much) {
-	for(int i = 0; i < 6; i++)
-		adven[i]->poison(how_much);
+	for(auto &pc : adven)
+		if (pc) pc->poison(how_much);
 }
 
 void cParty::cure(int how_much) {
-	for(int i = 0; i < 6; i++)
-		adven[i]->cure(how_much);
+	for(auto &pc : adven)
+		if (pc) pc->cure(how_much);
 }
 
 void cParty::acid(int how_much) {
-	for(int i = 0; i < 6; i++)
-		adven[i]->acid(how_much);
+	for(auto &pc : adven)
+		if (pc) pc->acid(how_much);
 }
 
 void cParty::curse(int how_much) {
-	for(int i = 0; i < 6; i++)
-		adven[i]->curse(how_much);
+	for(auto &pc : adven)
+		if (pc) pc->curse(how_much);
 }
 
 void cParty::slow(int how_much) {
-	for(int i = 0; i < 6; i++)
-		adven[i]->slow(how_much);
+	for(auto &pc : adven)
+		if (pc) pc->slow(how_much);
 }
 
 void cParty::web(int how_much) {
@@ -576,7 +794,7 @@ location cParty::get_loc() const {
 }
 
 int cParty::calc_day() const {
-	return (age / 3700) + 1;
+	return int(age / 3700) + 1;
 }
 
 bool cParty::give_item(cItem item,int flags) {
@@ -595,10 +813,10 @@ bool cParty::forced_give(cItem item,eItemAbil abil,short dat) {
 		item.abil_strength = dat / 1000;
 		item.abil_data.value = dat % 1000;
 	}
-	// TODO: It's strange to check main_status in the inner loop here rather than the outer loop
-	for(cPlayer& pc : *this)
+	for(cPlayer& pc : *this) {
+		if(pc.main_status != eMainStatus::ALIVE) continue;
 		for(cItem& slot : pc.items)
-			if(pc.main_status == eMainStatus::ALIVE && slot.variety == eItemType::NO_ITEM) {
+			if(slot.variety == eItemType::NO_ITEM) {
 				slot = item;
 				
 				if(print_result) {
@@ -614,6 +832,7 @@ bool cParty::forced_give(cItem item,eItemAbil abil,short dat) {
 				pc.sort_items();
 				return true;
 			}
+	}
 	return false;
 }
 
@@ -637,28 +856,41 @@ bool cParty::take_abil(eItemAbil abil, short dat) {
 	return false;
 }
 
-bool cParty::has_class(unsigned int item_class) {
+bool cParty::check_class(unsigned int item_class,bool take) {
 	if(item_class == 0)
 		return false;
-	for(auto& pc : *this)
-		if(pc.main_status == eMainStatus::ALIVE)
-			if(cInvenSlot item = pc.has_class(item_class)) {
-				return true;
-			}
-	return false;
-}
-
-bool cParty::take_class(unsigned int item_class) const {
-	if(item_class == 0)
-		return false;
-	for(auto& pc : *this)
-		if(pc.main_status == eMainStatus::ALIVE)
-			if(cInvenSlot item = pc.has_class(item_class)) {
+	for(auto& pc : *this) {
+		if(pc.main_status != eMainStatus::ALIVE)
+			continue;
+		if(cInvenSlot item = pc.has_class(item_class)) {
+			if(take) {
 				if(item->charges > 1)
 					item->charges--;
 				else pc.take_item(item.slot);
-				return true;
 			}
+			return true;
+		}
+	}
+	return false;
+}
+
+bool cParty::check_junk_class(unsigned int item_class,bool take,int townId) {
+	if(!show_junk_bag || item_class == 0)
+		return false;
+	for (size_t i=0; i<junk_items.size(); ++i) {
+		auto &itemSet = junk_items[i];
+		if (itemSet.first.special_class!=item_class)
+			continue;
+		if (townId>=0 && itemSet.second.count(townId)==0)
+			continue;
+		if (take) {
+			if(itemSet.first.charges > 1)
+				--itemSet.first.charges;
+			else
+				take_junk_item(i);
+			return true;
+		}
+	}
 	return false;
 }
 
@@ -682,6 +914,7 @@ void cParty::writeTo(cTagFile& file) const {
 	main_page["HOSTILES"] << hostiles_present;
 	main_page["EASY"] << easy_mode;
 	main_page["LESSWM"] << less_wm;
+	main_page["JUNKBAG"] << show_junk_bag;
 	for(int i = 0; i < 310; i++) {
 		for(int j = 0; j < 50; j++) {
 			if(stuff_done[i][j] > 0) {
@@ -771,6 +1004,16 @@ void cParty::writeTo(cTagFile& file) const {
 			horse_page["HORSE"] << i;
 			horses[i].writeTo(horse_page);
 		}
+	}
+	for (auto const &junkTowns : junk_items) {
+		if (junkTowns.first.variety==eItemType::NO_ITEM)
+			continue;
+		auto& junk_page = file.add();
+		if (junkTowns.second.empty())
+			junk_page["JUNKITEM"] << -1;
+		else
+			junk_page["JUNKITEM"].encode(junkTowns.second);
+		junkTowns.first.writeTo(junk_page);
 	}
 	for(auto& p : magic_store_items) {
 		for(auto& p2 : p.second) {
@@ -878,6 +1121,7 @@ void cParty::readFrom(const cTagFile& file) {
 			page["HOSTILES"] >> hostiles_present;
 			page["EASY"] >> easy_mode;
 			page["LESSWM"] >> less_wm;
+			page["JUNKBAG"] >> show_junk_bag;
 			page["LIGHT"] >> light_level;
 			page["OUTCORNER"] >> outdoor_corner.x >> outdoor_corner.y;
 			page["INWHICHCORNER"] >> i_w_c.x >> i_w_c.y;
@@ -997,6 +1241,14 @@ void cParty::readFrom(const cTagFile& file) {
 			if(i >= horses.size()) horses.resize(i + 1);
 			horses[i].exists = true;
 			horses[i].readFrom(page);
+		} else if (page.getFirstKey() == "JUNKITEM") {
+			junk_items.emplace_back();
+			auto &item = junk_items.back();
+			std::vector<int> towns;
+			page["JUNKITEM"].extract(towns);
+			if (towns.size()!=1 || towns[0]>=0)
+				item.second=std::set<int>(towns.begin(), towns.end());
+			item.first.readFrom(page);
 		} else if(page.getFirstKey() == "MAGICSTORE") {
 			size_t i, j;
 			page["MAGICSTORE"] >> i >> j;
@@ -1076,7 +1328,8 @@ void cParty::readFrom(const cTagFile& file) {
 }
 
 cPlayer& cParty::operator[](unsigned short n){
-	if(n > 6) throw std::out_of_range("Attempt to access a player that doesn't exist.");
+	if(n > 6)
+		throw std::out_of_range("Attempt to access a player that doesn't exist.");
 	else if(n == 6)
 		return *adven[0]; // TODO: PC #6 should never be accessed, but bounds checking is rarely done, so this is a quick fix.
 	return *adven[n];
@@ -1119,7 +1372,7 @@ unsigned char cParty::get_ptr(unsigned short p) const {
 		return magic_ptrs[p-10];
 	auto iter = pointers.find(p);
 	if(iter == pointers.end()) return 0;
-	return stuff_done[iter->second.first][iter->second.second];
+	return sd(iter->second.first,iter->second.second);
 }
 
 bool cParty::is_split() const {
@@ -1182,6 +1435,19 @@ bool cParty::sd_legit(short a, short b) const {
 	if((minmax(0,sdx_max,a) == a) && (minmax(0,sdy_max,b) == b))
 		return true;
 	return false;
+}
+
+unsigned char cParty::sd(short a, short b) const
+{
+	if (!sd_legit(a,b))
+		return 0;
+	return stuff_done[a][b];
+}
+
+void cParty::sd_set(short a, short b, unsigned char val)
+{
+	if (sd_legit(a,b))
+		stuff_done[a][b]=val;
 }
 
 void cParty::wipe_sdfs() {

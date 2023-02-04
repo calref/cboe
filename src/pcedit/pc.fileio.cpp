@@ -25,6 +25,8 @@ void remove_party_from_scen() {
 	univ.exportGraphics();
 	univ.exportSummons();
 	univ.party.scen_name = "";
+	for (auto &pop : univ.party.creature_save)
+		pop.clear();
 	party_in_scen = false;
 	load_base_item_defs();
 }

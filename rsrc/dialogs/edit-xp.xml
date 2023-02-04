@@ -12,5 +12,6 @@
 	<text top='99' left='72' width='164' height='16'>Experience for each level:</text>
 	<text name='perlevel' framed='true' top='99' left='238' width='76' height='16'/>
 	<text top='127' left='72' width='138' height='14'>Amount of experience:</text>
+	<button name='cancel' type='regular' def-key='esc' top='154' left='200'>Cancel</button>
 	<button name='okay' type='regular' top='154' left='270'>OK</button>
 </dialog>

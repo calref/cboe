@@ -156,7 +156,7 @@ TEST_CASE("Loading a new-format scenario record") {
 		doc = xmlDocFromStream(fin, "minimal.xml");
 		REQUIRE_NOTHROW(readScenarioFromXml(move(doc), scen));
 		CHECK(scen.scen_name == "Test Scenario");
-		CHECK(scen.intro_pic == 7);
+		CHECK(scen.intro_pic == cPictNum(7,PIC_SCEN));
 		CHECK(scen.campaign_id == "campaign");
 		CHECK(scen.format.prog_make_ver[0] == 2);
 		CHECK(scen.format.prog_make_ver[1] == 5);
@@ -169,7 +169,7 @@ TEST_CASE("Loading a new-format scenario record") {
 		CHECK(scen.contact_info[1] == "nowhere@example.com");
 		CHECK(scen.who_wrote[0] == "Teaser 1");
 		CHECK(scen.who_wrote[1] == "Teaser 2");
-		CHECK(scen.intro_mess_pic == 7);
+		CHECK(scen.intro_mess_pic == cPictNum(7,PIC_SCEN));
 		CHECK(scen.intro_strs[0] == "Welcome!!!    To the test scenario!");
 		CHECK(scen.rating == eContentRating::R);
 		CHECK(scen.difficulty == 2); // Difficulty is 3, but it's stored as 2 (0-3 instead of 1-4)
@@ -192,8 +192,8 @@ TEST_CASE("Loading a new-format scenario record") {
 		fin.open("files/scenario/intro.xml");
 		doc = xmlDocFromStream(fin, "intro.xml");
 		REQUIRE_NOTHROW(readScenarioFromXml(move(doc), scen));
-		CHECK(scen.intro_pic == 7);
-		CHECK(scen.intro_mess_pic == 12);
+		CHECK(scen.intro_pic == cPictNum(7,PIC_SCEN));
+		CHECK(scen.intro_mess_pic == cPictNum(12,PIC_SCEN));
 	}
 	SECTION("With some optional game data") {
 		fin.open("files/scenario/optional.xml");

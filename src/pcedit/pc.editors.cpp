@@ -26,7 +26,7 @@
  * For the game's purposes, these are declared in
  * boe.infodlg.h and boe.party.h.
  */
-void display_pc(short pc_num,short mode,cDialog* parent);
+void display_pc(short pc_num,short mode,bool edit, cDialog* parent);
 void display_alchemy(bool allowEdit,cDialog* parent);
 bool spend_xp(short pc_num, short mode, cDialog* parent);
 // TODO: There's probably a more logical way of arranging this
@@ -46,118 +46,143 @@ extern short d_rect_index[80];
 extern bool current_file_has_maps;
 bool choice_active[6];
 
-extern short which_pc_displayed;
-cPlayer *store_pc;
 sf::Texture button_num_gworld;
 
 extern std::map<eSkill,short> skill_cost;
 extern std::map<eSkill,short> skill_max;
 extern std::map<eSkill,short> skill_g_cost;
 
-static void put_pc_spells(cDialog& me, short store_trait_mode) {
-	store_trait_mode %= 10;
-	
+// display pc spells
+static void put_pc_spells(cDialog& me, short pc_num, short mode) {
 	for(short i = 0; i < 62; i++) {
-		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+		std::string id = "spell" + std::to_string(i + 1);
 		cLed& cur = dynamic_cast<cLed&>(me[id]);
-		if(((store_trait_mode == 0) && univ.party[which_pc_displayed].mage_spells[i]) ||
-			((store_trait_mode == 1) && univ.party[which_pc_displayed].priest_spells[i]))
+		if((mode == 0 && univ.party[pc_num].mage_spells[i]) ||
+			(mode == 1 && univ.party[pc_num].priest_spells[i]))
 			cur.setState(led_red);
 		else cur.setState(led_off);
 	}
 	
-	me["who"].setText(univ.party[which_pc_displayed].name.c_str());
+	me["who"].setText(univ.party[pc_num].name.c_str());
 }
 
-static bool display_pc_event_filter(cDialog& me, std::string item_hit, const short trait_mode) {
-	short pc_num;
-	
-	pc_num = which_pc_displayed;
-	if(item_hit == "done") {
-		me.toast(true);
-	} else if(item_hit == "left") {
-		do {
-			pc_num = (pc_num == 0) ? 5 : pc_num - 1;
-		} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
-		which_pc_displayed = pc_num;
-		put_pc_spells(me, trait_mode);
-	} else if(item_hit == "right") {
-		do {
-			pc_num = (pc_num == 5) ? 0 : pc_num + 1;
-		} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
-		which_pc_displayed = pc_num;
-		put_pc_spells(me, trait_mode);
-	}
-	return true;
-}
-
-void display_pc(short pc_num,short mode, cDialog* parent) {
-	using namespace std::placeholders;
-	std::string label_str;
-	
-	if(univ.party[pc_num].main_status == eMainStatus::ABSENT) {
-		for(pc_num = 0; pc_num < 6; pc_num++)
-			if(univ.party[pc_num].main_status == eMainStatus::ALIVE)
-				break;
-	}
-	which_pc_displayed = pc_num;
-	
-	set_cursor(sword_curs);
-	
-	cDialog pcInfo(*ResMgr::dialogs.get("pc-spell-info"), parent);
-	pcInfo.attachClickHandlers(std::bind(display_pc_event_filter, _1, _2, mode),{"done","left","right"});
-	
-	for(short i = 0; i < 62; i++) {
-		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
-		label_str = get_str("magic-names", i + (mode % 10 == 0 ? 1 : 101));
-		pcInfo[id].setText(label_str);
-		if(mode < 10)
-			pcInfo[id].attachClickHandler(&cLed::noAction);
-	}
-	put_pc_spells(pcInfo, mode);
-	
-	dynamic_cast<cPict&>(pcInfo["pic"]).setPict(14 + mode,PIC_DLOG);
-	
-	pcInfo.run();
-	
-	if(mode >= 10) {
-		mode %= 10;
+static bool display_pc_event_filter(cDialog& me, std::string item_hit, short &pc_num, const short mode, bool edit) {
+	if (edit) {
 		for(short i = 0; i < 62; i++) {
-			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
-			bool set = dynamic_cast<cLed&>(pcInfo[id]).getState() != led_off;
+			std::string id = "spell" + std::to_string(i + 1);
+			bool set = dynamic_cast<cLed&>(me[id]).getState() != led_off;
 			if(mode == 0) univ.party[pc_num].mage_spells[i] = set;
 			else if(mode == 1) univ.party[pc_num].priest_spells[i] = set;
 		}
 	}
+	if(item_hit == "done")
+		me.toast(true);
+	else if(item_hit == "left") {
+		do {
+			pc_num = (pc_num == 0) ? 5 : pc_num - 1;
+		} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
+		put_pc_spells(me, pc_num, mode);
+	} else if(item_hit == "right") {
+		do {
+			pc_num = (pc_num == 5) ? 0 : pc_num + 1;
+		} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
+		put_pc_spells(me, pc_num, mode);
+	}
+	return true;
 }
 
-static void display_traits_graphics(cDialog& me) {
-	short store;
+void display_pc(short pc_num, short mode, bool edit, cDialog* parent) {
+	using namespace std::placeholders;
+	std::string label_str;
 	
-	if(store_pc->race <= eRace::VAHNATAI) {
-		std::string race = "race" + boost::lexical_cast<std::string>(int(store_pc->race) + 1);
+	short current_pc = pc_num;
+	if(current_pc<0 || current_pc>=6 || univ.party[current_pc].main_status == eMainStatus::ABSENT) {
+		for(current_pc = 0; current_pc < 6; current_pc++)
+			if(univ.party[current_pc].main_status == eMainStatus::ALIVE)
+				break;
+		if (current_pc>=6) {
+			beep();
+			return;
+		}
+	}
+	
+	set_cursor(sword_curs);
+	
+	cDialog pcInfo(*ResMgr::dialogs.get("pc-spell-info"), parent);
+	pcInfo.attachClickHandlers(std::bind(display_pc_event_filter, _1, _2, std::ref(current_pc), mode, edit),{"done","left","right"});
+	
+	for(short i = 0; i < 62; i++) {
+		std::string id = "spell" + std::to_string(i + 1);
+		label_str = get_str("magic-names", i + (mode == 0 ? 1 : 101));
+		pcInfo[id].setText(label_str);
+		if(!edit)
+			pcInfo[id].attachClickHandler(&cLed::noAction);
+	}
+	put_pc_spells(pcInfo, pc_num, mode);
+	
+	dynamic_cast<cPict&>(pcInfo["pic"]).setPict(14 + mode + (edit ? 10 : 0),PIC_DLOG);
+	
+	pcInfo.run();
+}
+
+// Start pick race dialog here
+struct sTraitsState {
+	sTraitsState(cUniverse const &univ) : pc_num(-1)
+	{
+		for (int i=0; i<6; ++i) {
+			auto const &pc=univ.party[i];
+			races[i]=pc.race;
+			for (int t=0; t<17; ++t) {
+				eTrait trait = eTrait(t);
+				if (pc.traits.find(trait)!=pc.traits.end())
+					traits[i][t]=pc.traits[trait];
+				else
+					traits[i][t]=false;
+			}
+		}
+	}
+	void save(cUniverse &univ) const {
+		for (short i=0; i<6; ++i)
+			save(i, univ.party[i]);
+	}
+	void save(short i, cPlayer &player) const {
+		player.race=races[i];
+		for (int t=0; t<17; ++t) {
+			eTrait trait = eTrait(t);
+			player.traits[trait]=traits[i][t];
+		}
+	}
+	short pc_num;
+	eRace races[6];
+	bool traits[6][17];
+};
+
+
+static void display_traits_graphics(cDialog& me, sTraitsState const &state) {
+	int const pc_num=state.pc_num;
+	auto const &pc=univ.party[pc_num];
+	me["name"].setText(pc.name);
+	if(pc.race <= eRace::VAHNATAI) {
+		std::string race = "race" + std::to_string(int(state.races[pc_num]) + 1);
 		dynamic_cast<cLedGroup&>(me["race"]).setSelected(race);
 	}
 	for(short i = 0; i < 10; i++) {
-		std::string id = "good" + boost::lexical_cast<std::string>(i + 1);
-		eTrait trait = eTrait(i);
-		dynamic_cast<cLed&>(me[id]).setState(store_pc->traits[trait] ? led_red : led_off);
+		std::string id = "good" + std::to_string(i + 1);
+		dynamic_cast<cLed&>(me[id]).setState(state.traits[pc_num][i] ? led_red : led_off);
 	}
 	for(short i = 0; i < 7; i++) {
-		std::string id = "bad" + boost::lexical_cast<std::string>(i + 1);
-		eTrait trait = eTrait(i + 10);
-		dynamic_cast<cLed&>(me[id]).setState(store_pc->traits[trait] ? led_red : led_off);
+		std::string id = "bad" + std::to_string(i + 1);
+		dynamic_cast<cLed&>(me[id]).setState(state.traits[pc_num][i+10] ? led_red : led_off);
 	}
-	
-	store = store_pc->get_tnl();
-	me["xp"].setTextToNum(store);
+	cPlayer dumpPlayer(no_party, pc);
+	state.save(pc_num, dumpPlayer);
+	me["xp"].setTextToNum(dumpPlayer.get_tnl());
 }
 
-static bool pick_race_select_led(cDialog& me, std::string item_hit, bool, const short store_trait_mode) {
+static bool pick_race_select_led(cDialog& me, sTraitsState &state, std::string item_hit, bool, const short store_trait_mode) {
 	int abil_str = 0;
-	cPlayer *pc;
-	
-	pc = store_pc;
+
+	int const pc_num=state.pc_num;
 	if(item_hit == "race") {
 		item_hit = dynamic_cast<cLedGroup&>(me["race"]).getSelected();
 		eRace race;
@@ -169,22 +194,20 @@ static bool pick_race_select_led(cDialog& me, std::string item_hit, bool, const 
 			default: return false;
 		}
 		if(store_trait_mode == 0)
-			pc->race = race;
-		display_traits_graphics(me);
+			state.races[pc_num] = race;
+		display_traits_graphics(me,state);
 		abil_str = 36 + int(race) * 2;
 	} else if(item_hit.substr(0,3) == "bad") {
 		int hit = item_hit[3] - '1';
-		eTrait trait = eTrait(hit + 10);
 		if(store_trait_mode != 1)
-			pc->traits[trait] = !pc->traits[trait];
-		display_traits_graphics(me);
+			state.traits[pc_num][hit+10] = !state.traits[pc_num][hit+10];
+		display_traits_graphics(me,state);
 		abil_str = 22 + hit * 2;
 	} else if(item_hit.substr(0,4) == "good") {
 		int hit = boost::lexical_cast<int>(item_hit.substr(4)) - 1;
-		eTrait trait = eTrait(hit);
 		if(store_trait_mode != 1)
-			pc->traits[trait] = !pc->traits[trait];
-		display_traits_graphics(me);
+			state.traits[pc_num][hit] = !state.traits[pc_num][hit];
+		display_traits_graphics(me,state);
 		abil_str = 2 + hit * 2;
 	}
 	if(abil_str > 0)
@@ -192,28 +215,58 @@ static bool pick_race_select_led(cDialog& me, std::string item_hit, bool, const 
 	return store_trait_mode == 0;
 }
 
+// OSNOLA2
+static bool give_pick_race_event_filter(cDialog& me, std::string item_hit, sTraitsState &state) {
+	short &pc_num=state.pc_num;
+	if (item_hit == "cancel") {
+		me.toast(false);
+		me.setResult(false);
+	}
+	else if(item_hit == "done") {
+		me.setResult(true);
+		me.toast(true);
+	}
+	else if(item_hit == "left") {
+		do {
+			pc_num = (pc_num + 5) % 6;
+		} while(univ.party[pc_num].main_status != eMainStatus::ALIVE);
+		display_traits_graphics(me, state);
+	} else if(item_hit == "right") {
+		do {
+			pc_num = (pc_num + 1) % 6;
+		} while(univ.party[pc_num].main_status != eMainStatus::ALIVE);
+		display_traits_graphics(me, state);
+	}
+	return true;
+}
+
 //mode; // 0 - edit  1 - just display  2 - can't change race
-void pick_race_abil(cPlayer *pc,short mode,cDialog* parent) {
+void pick_race_abil(short pc_num,short mode,cDialog* parent) {
 	using namespace std::placeholders;
 	static const char*const start_str1 = "Click on button by name for description.";
 	static const char*const start_str2 = "Click on advantage button to add/remove.";
-	
-	store_pc = pc;
+	sTraitsState state(univ);
+	state.pc_num = pc_num;
 	set_cursor(sword_curs);
 	
 	cDialog pickAbil(*ResMgr::dialogs.get("pick-race-abil"),parent);
-	pickAbil["done"].attachClickHandler(std::bind(&cDialog::toast, &pickAbil, true));
-	auto led_selector = std::bind(pick_race_select_led, _1, _2, _3, mode);
+	pickAbil.attachClickHandlers(std::bind(give_pick_race_event_filter, _1, _2, std::ref(state)), {"done", "cancel", "left", "right"});
+	auto led_selector = std::bind(pick_race_select_led, _1, std::ref(state), _2, _3, mode);
 	pickAbil.attachFocusHandlers(led_selector, {"race", "bad1", "bad2", "bad3", "bad4", "bad5", "bad6", "bad7"});
 	pickAbil.attachFocusHandlers(led_selector, {"good1", "good2", "good3", "good4", "good5"});
 	pickAbil.attachFocusHandlers(led_selector, {"good6", "good7", "good8", "good9", "good10"});
 	
-	display_traits_graphics(pickAbil);
-	if(mode == 1)
+	display_traits_graphics(pickAbil, state);
+	if(mode == 1) {
+		pickAbil["cancel"].hide();
 		pickAbil["info"].setText(start_str1);
-	else pickAbil["info"].setText(start_str2);
-	
+	}
+	else
+		pickAbil["info"].setText(start_str2);
 	pickAbil.run();
+	
+	if (pickAbil.getResult<bool>() && mode!=1)
+		state.save(univ);;
 }
 
 extern const short alch_difficulty[20] = {
@@ -235,34 +288,46 @@ extern const eItemAbil alch_ingred2[20] = {
 	eItemAbil::ASPTONGUE,eItemAbil::EMBERF,eItemAbil::EMBERF,eItemAbil::ASPTONGUE,eItemAbil::EMBERF,
 };
 
+static bool pick_alchemy_led(cDialog& me, std::string item_hit, bool, bool allowEdit) {
+	if(item_hit.substr(0,6) != "potion")
+		return false;
+	int hit = item_hit[6] - '0';
+	if (item_hit.size()==8)
+		hit=10*hit+(item_hit[7] - '0');
+	--hit;
+	if (hit<0 || hit>=20)
+		return false;
+	if (allowEdit) {
+		univ.party.alchemy[hit]=!univ.party.alchemy[hit];
+		cLed& led = dynamic_cast<cLed&>(me.getControl(item_hit));
+		led.setState(univ.party.alchemy[hit] ? led_red : led_off);
+	}
+	if (hit==0)
+		me["info"].setText("Weak Curing\n  Min. Skill - 1\nNeed holly. Cures poison somewhat.");
+	else
+		me["info"].setText(get_str("alchemy", hit+8));
+	return true;
+}
+
 void display_alchemy(bool allowEdit,cDialog* parent) {
+	using namespace std::placeholders;
 	set_cursor(sword_curs);
 	
 	cChoiceDlog showAlch("pc-alchemy-info", {"done"}, parent);
 	
+	auto led_selector = std::bind(pick_alchemy_led, _1, _2, _3, allowEdit);
 	for(short i = 0; i < 20; i++) {
-		std::string id = "potion" + boost::lexical_cast<std::string>(i + 1);
+		std::string id = "potion" + std::to_string(i + 1);
 		std::string name = get_str("magic-names", i + 200) + " (";
 		name += std::to_string(alch_difficulty[i]);
 		name += ')';
 		showAlch->addLabelFor(id, name, LABEL_LEFT, 83, true);
-		if(!allowEdit)
-			showAlch->getControl(id).attachClickHandler(&cLed::noAction);
 		cLed& led = dynamic_cast<cLed&>(showAlch->getControl(id));
-		if(univ.party.alchemy[i])
-			led.setState(led_red);
-		else led.setState(led_off);
+		led.attachClickHandler(led_selector);
+		led.setState(univ.party.alchemy[i] ? led_red : led_off);
 	}
 	
 	showAlch.show();
-	if(!allowEdit) return;
-	
-	for(short i = 0; i < 20; i++) {
-		std::string id = "potion" + boost::lexical_cast<std::string>(i + 1);
-		cLed& led = dynamic_cast<cLed&>(showAlch->getControl(id));
-		if(led.getState() == led_red) univ.party.alchemy[i] = true;
-		else univ.party.alchemy[i] = false;
-	}
 }
 
 // MARK: Start spend XP dialog
@@ -442,7 +507,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 					give_help(25,0,me);
 				else if(save.mode == 1 && save.g < 10)
 					give_help(24,0,me);
-				else beep();
+				else beep();// TODO: This is a game event, so it should have a game sound, not a system alert.
 			}
 		}
 		
@@ -477,7 +542,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 					give_help(25,0,me);
 				else if(save.mode == 1 && save.g < 15)
 					give_help(24,0,me);
-				else beep();
+				else beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
 			}
 		}
 		
@@ -571,8 +636,6 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 	xpDlog.attachClickHandlers(std::bind(spend_xp_navigate_filter,_1,_2,std::ref(save)),{"keep","cancel","left","right","help"});
 	xpDlog.attachClickHandlers(spend_xp_filter,{"sp-m","sp-p","hp-m","hp-p"});
 	
-	give_help(10,11,xpDlog);
-	
 	xpDlog.run();
 	
 	return xpDlog.getResult<bool>();
@@ -589,7 +652,7 @@ void edit_stuff_done() {
 			me["feedback"].setText(strb.str());
 		} else {
 			me["feedback"].setText("");
-			me["val"].setTextToNum(univ.party.stuff_done[x][y]);
+			me["val"].setTextToNum(univ.party.sd(x,y));
 		}
 		return true;
 	}, {"x","y"});
@@ -602,7 +665,7 @@ void edit_stuff_done() {
 		} else {
 			strb << "You have set SDF (" << x << ',' << y << ") = " << val;
 			me["feedback"].setText(strb.str());
-			univ.party.stuff_done[x][y] = val;
+			univ.party.sd_set(x,y,val);
 		}
 		return true;
 	});
@@ -610,6 +673,6 @@ void edit_stuff_done() {
 	// Initialize fields with some default values
 	sdf_dlg["x"].setText("0");
 	sdf_dlg["y"].setText("0");
-	sdf_dlg["val"].setTextToNum(univ.party.stuff_done[0][0]);
+	sdf_dlg["val"].setTextToNum(univ.party.sd(0,0));
 	sdf_dlg.run();
 }

@@ -18,7 +18,28 @@
 #include "oldstructs.hpp"
 #include "scenario/scenario.hpp"
 
-void cOutdoors::import_legacy(legacy::outdoor_record_type& old){
+std::string &cOutdoors::get_special_string(int id)
+{
+       if (id>=0 && id<spec_strs.size())
+               return spec_strs[id];
+       if (id>=0 && id<200) {
+               spec_strs.resize(id+1);
+               return spec_strs[id];
+       }
+       static std::string badString;
+       badString="Bad Special String";
+       return badString;
+}
+
+std::string const &cOutdoors::get_special_string(int id) const
+{
+       if (id>=0 && id<spec_strs.size())
+               return spec_strs[id];
+       static std::string badString="Bad Special String";
+       return badString;
+}
+ 
+void cOutdoors::import_legacy(legacy::outdoor_record_type const &old){
 	ambient_sound = AMBIENT_NONE;
 	// Collect a list of unused special nodes, to be used for fixing specials that could be triggered in a boat.
 	std::vector<int> unused_special_slots;
@@ -35,10 +56,10 @@ void cOutdoors::import_legacy(legacy::outdoor_record_type& old){
 	for(short i = 0; i < 48; i++)
 		for(short j = 0; j < 48; j++){
 			terrain[i][j] = old.terrain[i][j];
-			if(scenario->ter_types[terrain[i][j]].i == 3000) // marker to indicate it used to be a special spot
+			if(scenario->get_terrain(terrain[i][j]).i == 3000) // marker to indicate it used to be a special spot
 				special_spot[i][j] = true;
 			else special_spot[i][j] = false;
-			if(scenario->ter_types[terrain[i][j]].i == 3001) // marker to indicate it used to be a road
+			if(scenario->get_terrain(terrain[i][j]).i == 3001) // marker to indicate it used to be a road
 				roads[i][j] = true;
 			else roads[i][j] = false;
 			// Convert roads that crossed grass/hill boundaries
@@ -51,19 +72,19 @@ void cOutdoors::import_legacy(legacy::outdoor_record_type& old){
 			if(old.terrain[i][j] == 81 && i > 0 && i < 47 && j > 0 && j < 47) {
 				if(old.terrain[i+1][j] == 81) {
 					ter_num_t connect = old.terrain[i-1][j];
-					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+					if(connect == 80 || scenario->get_terrain(connect).trim_type == eTrimType::CITY)
 						terrain[i][j] = 44;
 				} else if(old.terrain[i-1][j] == 81) {
 					ter_num_t connect = old.terrain[i+1][j];
-					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+					if(connect == 80 || scenario->get_terrain(connect).trim_type == eTrimType::CITY)
 						terrain[i][j] = 40;
 				} else if(old.terrain[i][j+1] == 81) {
 					ter_num_t connect = old.terrain[i][j-1];
-					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+					if(connect == 80 || scenario->get_terrain(connect).trim_type == eTrimType::CITY)
 						terrain[i][j] = 42;
 				} else if(old.terrain[i][j-1] == 81) {
 					ter_num_t connect = old.terrain[i][j+1];
-					if(connect == 80 || scenario->ter_types[connect].trim_type == eTrimType::CITY)
+					if(connect == 80 || scenario->get_terrain(connect).trim_type == eTrimType::CITY)
 						terrain[i][j] = 38;
 				}
 			}
@@ -80,9 +101,7 @@ void cOutdoors::import_legacy(legacy::outdoor_record_type& old){
 	sign_locs.resize(8);
 	area_desc.resize(8);
 	for(short i = 0; i < 8; i++){
-		city_locs[i].x = old.exit_locs[i].x;
-		city_locs[i].y = old.exit_locs[i].y;
-		city_locs[i].spec = old.exit_dests[i];
+		city_locs[i] = {old.exit_locs[i].x, old.exit_locs[i].y, old.exit_dests[i]};
 		sign_locs[i].x = old.sign_locs[i].x;
 		sign_locs[i].y = old.sign_locs[i].y;
 		area_desc[i].top = old.info_rect[i].top;
@@ -127,7 +146,7 @@ cOutdoors::cOutdoors(cScenario& scenario) : cArea(AREA_MEDIUM), scenario(&scenar
 	comment = "Comment";
 }
 
-void cOutdoors::cWandering::import_legacy(legacy::out_wandering_type old){
+void cOutdoors::cWandering::import_legacy(legacy::out_wandering_type const &old){
 	for(int i = 0; i < 7; i++)
 		monst[i] = old.monst[i];
 	for(int j = 0; j < 3; j++)
@@ -141,7 +160,7 @@ void cOutdoors::cWandering::import_legacy(legacy::out_wandering_type old){
 	end_spec2 = old.end_spec2;
 }
 
-void cOutdoors::cCreature::import_legacy(legacy::outdoor_creature_type old){
+void cOutdoors::cCreature::import_legacy(legacy::outdoor_creature_type const &old){
 	exists = old.exists;
 	direction = old.direction;
 	what_monst.import_legacy(old.what_monst);

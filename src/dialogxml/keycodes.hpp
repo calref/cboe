@@ -91,4 +91,6 @@ unsigned char applyShift(unsigned char c);
 /// Removes the shift key from the given character (assumes US keyboard layout)
 unsigned char removeShift(unsigned char c);
 
+unsigned char applyShift(unsigned char c);
+unsigned char removeShift(unsigned char c);
 #endif

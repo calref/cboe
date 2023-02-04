@@ -8,12 +8,18 @@
 
 #include "res_image.hpp"
 
-class ImageLoader : public ResMgr::cLoader<sf::Texture> {
+#include "gfx/texture.hpp"
+
+class ImageLoader : public ResMgr::cLoader<Texture> {
 	/// Load an image from a PNG file.
-	sf::Texture* operator() (const fs::path& fpath) const override {
-		sf::Texture* img = new sf::Texture();
-		if(img->loadFromFile(fpath.string())) return img;
-		delete img;
+	Texture* operator() (const fs::path& fpath) const override {
+		auto img=std::make_shared<sf::Texture>();
+		if(img->loadFromFile(fpath.string())) {
+			Texture *texture=new Texture;
+			texture->texture=img;
+			texture->dimension=Texture::getApplicationDimension(fpath.filename().string(),sf::Vector2u(img->getSize()));
+			return texture;
+		}
 		throw ResMgr::xError(ResMgr::ERR_LOAD, "Failed to load PNG image: " + fpath.string());
 	}
 
@@ -27,5 +33,6 @@ class ImageLoader : public ResMgr::cLoader<sf::Texture> {
 };
 
 // TODO: What's a good max texture count?
-static ImageLoader loader;
-ResMgr::cPool<sf::Texture> ResMgr::graphics(loader, 50);
+static ImageLoader texturesLoader;
+ResMgr::cPool<Texture> ResMgr::graphics(texturesLoader, 50);
+

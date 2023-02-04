@@ -407,6 +407,17 @@ int cPlayer::get_level() const {
 	return level;
 }
 
+cPictNum cPlayer::get_picture_num() const
+{
+	if (which_graphic<100)
+		return cPictNum(which_graphic, PIC_PC);
+	if (which_graphic<1000)
+		return cPictNum(which_graphic-100, PIC_MONST);
+	if (which_graphic>=10000)
+		return cPictNum(which_graphic-10000, PIC_PARTY_PC);
+	return cPictNum(which_graphic-1000, PIC_CUSTOM_PC);
+}
+
 void cPlayer::sort_items() {
 	using it = eItemType;
 	static std::map<eItemType, const short> item_priority = {
@@ -710,7 +721,7 @@ void cPlayer::combine_things() {
 	for(int i = 0; i < items.size(); i++) {
 		if(items[i].variety != eItemType::NO_ITEM && items[i].type_flag > 0 && items[i].ident) {
 			for(int j = i + 1; j < items.size(); j++)
-				if(items[j].variety != eItemType::NO_ITEM && items[j].type_flag == items[i].type_flag && items[j].ident) {
+				if(items[j].can_be_combined_with(items[i])) {
 					if(print_result) print_result("(items combined)");
 					short test = items[i].charges + items[j].charges;
 					if(test > 125) {

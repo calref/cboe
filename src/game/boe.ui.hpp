@@ -40,6 +40,7 @@ class cToolbar {
 	void draw_buttons();
 	void init();
 public:
+	void reset_active_button() { active=-1; }
 	void draw(sf::RenderTarget& targ);
 	eToolbarButton button_hit(sf::RenderWindow& win, location click);
 };

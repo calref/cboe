@@ -8,17 +8,39 @@
 
 #include "porting.hpp"
 
-extern bool cur_scen_is_mac, mac_is_intel;
+#include "dialogxml/widgets/pict.hpp"
+
+namespace porting {
+// check endian with cur_file_is_mac and is_computer_small_endian
+// check cur_file_is_mac to see if we need to convert RECT in Rect
+static void port_rect(legacy::Rect* s);
+
+bool is_computer_small_endian=true;
+void check_endian() {
+	union {uint16_t x; uint8_t c;} endian;
+	endian.x = 1;
+	is_computer_small_endian = endian.c;
+}
+bool is_small_endian()
+{
+	return is_computer_small_endian;
+}
+
+bool cur_file_is_mac=true;
+void set_current_file_type(bool isMac)
+{
+	cur_file_is_mac = isMac;
+}
 
 void port_town(legacy::town_record_type* dummy_town_ptr){
-	if(cur_scen_is_mac != mac_is_intel)
+	port_rect(&dummy_town_ptr->in_town_rect);
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	flip_short(&dummy_town_ptr->town_chop_time);
 	flip_short(&dummy_town_ptr->town_chop_key);
 	flip_short(&dummy_town_ptr->lighting);
 	for(short i = 0; i < 4; i++)
 		flip_short(&dummy_town_ptr->exit_specs[i]);
-	flip_rect(&dummy_town_ptr->in_town_rect);
 	for(short i = 0; i < 64; i++) {
 		flip_short(&dummy_town_ptr->preset_items[i].item_code);
 		flip_short(&dummy_town_ptr->preset_items[i].ability);
@@ -40,7 +62,7 @@ void port_town(legacy::town_record_type* dummy_town_ptr){
 }
 
 void port_talk_nodes(legacy::talking_record_type* dummy_talk_ptr) {
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	for(short i = 0; i < 60; i++) {
 		flip_short(&dummy_talk_ptr->talk_nodes[i].personality);
@@ -53,11 +75,12 @@ void port_talk_nodes(legacy::talking_record_type* dummy_talk_ptr) {
 }
 
 void port_t_d(legacy::big_tr_type* old) {
-	if(cur_scen_is_mac != mac_is_intel)
+	for(short i = 0; i < 16; i++)
+		port_rect(&old->room_rect[i]);
+
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	
-	for(short i = 0; i < 16; i++)
-		flip_rect(&old->room_rect[i]);
 	for(short i = 0; i < 60; i++) {
 		flip_short(&old->creatures[i].spec1);
 		flip_short(&old->creatures[i].spec2);
@@ -68,12 +91,29 @@ void port_t_d(legacy::big_tr_type* old) {
 	}
 }
 
+void port_t_i(legacy::town_item_list* old)
+{
+	if(cur_file_is_mac != is_computer_small_endian)
+		return;
+	for(short i = 0; i < 115; i++)
+		port_item_record(&(old->items[i]));
+}
+
+void port_stored_items_list(legacy::stored_items_list_type *old)
+{
+	if(cur_file_is_mac != is_computer_small_endian)
+		return;
+	for(short i = 0; i < 115; i++)
+		port_item_record(&(old->items[i]));
+}
+
 void port_ave_t(legacy::ave_tr_type* old) {
-	if(cur_scen_is_mac != mac_is_intel)
+	for(short i = 0; i < 16; i++)
+		port_rect(&old->room_rect[i]);
+	
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	
-	for(short i = 0; i < 16; i++)
-		flip_rect(&old->room_rect[i]);
 	for(short i = 0; i < 40; i++) {
 		flip_short(&old->creatures[i].spec1);
 		flip_short(&old->creatures[i].spec2);
@@ -85,11 +125,12 @@ void port_ave_t(legacy::ave_tr_type* old) {
 }
 
 void port_tiny_t(legacy::tiny_tr_type* old) {
-	if(cur_scen_is_mac != mac_is_intel)
+	for(short i = 0; i < 16; i++)
+		port_rect(&old->room_rect[i]);
+	
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	
-	for(short i = 0; i < 16; i++)
-		flip_rect(&old->room_rect[i]);
 	for(short i = 0; i < 30; i++) {
 		flip_short(&old->creatures[i].spec1);
 		flip_short(&old->creatures[i].spec2);
@@ -101,7 +142,10 @@ void port_tiny_t(legacy::tiny_tr_type* old) {
 }
 
 void port_scenario(legacy::scenario_data_type* temp_scenario) {
-	if(cur_scen_is_mac != mac_is_intel)
+	for(short i = 0; i < 3; i++)
+		port_rect(&temp_scenario->store_item_rects[i]);
+
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	flip_short(&temp_scenario->flag_a);
 	flip_short(&temp_scenario->flag_b);
@@ -127,71 +171,73 @@ void port_scenario(legacy::scenario_data_type* temp_scenario) {
 		for(short j = 0; j < 2; j++)
 			flip_short(&temp_scenario->out_data_size[i][j]);
 	for(short i = 0; i < 3; i++)
-		flip_rect(&temp_scenario->store_item_rects[i]);
-	for(short i = 0; i < 3; i++)
 		flip_short(&temp_scenario->store_item_towns[i]);
-	for(short i = 0; i < 50; i++)
-		flip_short(&temp_scenario->special_items[i]);
-	for(short i = 0; i < 50; i++)
-		flip_short(&temp_scenario->special_item_special[i]);
+	for(auto &item : temp_scenario->special_items)
+		flip_short(&item);
+	for(auto &item : temp_scenario->special_item_special)
+		flip_short(&item);
 	flip_short(&temp_scenario->rating);
 	flip_short(&temp_scenario->uses_custom_graphics);
-	for(short i = 0; i < 256; i++) {
-		flip_short(&temp_scenario->scen_monsters[i].health);
-		flip_short(&temp_scenario->scen_monsters[i].m_health);
-		flip_short(&temp_scenario->scen_monsters[i].max_mp);
-		flip_short(&temp_scenario->scen_monsters[i].mp);
-		flip_short(&temp_scenario->scen_monsters[i].a[1]);
-		flip_short(&temp_scenario->scen_monsters[i].a[0]);
-		flip_short(&temp_scenario->scen_monsters[i].a[2]);
-		flip_short(&temp_scenario->scen_monsters[i].morale);
-		flip_short(&temp_scenario->scen_monsters[i].m_morale);
-		flip_short(&temp_scenario->scen_monsters[i].corpse_item);
-		flip_short(&temp_scenario->scen_monsters[i].corpse_item_chance);
-		flip_short(&temp_scenario->scen_monsters[i].picture_num);
+	for(auto &monster : temp_scenario->scen_monsters) {
+		flip_short(&monster.health);
+		flip_short(&monster.m_health);
+		flip_short(&monster.max_mp);
+		flip_short(&monster.mp);
+		flip_short(&monster.a[0]);
+		flip_short(&monster.a[1]);
+		flip_short(&monster.a[2]);
+		flip_short(&monster.morale);
+		flip_short(&monster.m_morale);
+		flip_short(&monster.corpse_item);
+		flip_short(&monster.corpse_item_chance);
+		flip_short(&monster.picture_num);
 	}
 	
-	for(short i = 0; i < 256; i++) {
-		flip_short(&temp_scenario->ter_types[i].picture);
-	}
-	for(short i = 0; i < 30; i++) {
-		flip_short(&temp_scenario->scen_boats[i].which_town);
-	}
-	for(short i = 0; i < 30; i++) {
-		flip_short(&temp_scenario->scen_horses[i].which_town);
-	}
-	for(short i = 0; i < 20; i++)
-		flip_short(&temp_scenario->scenario_timer_times[i]);
-	for(short i = 0; i < 20; i++)
-		flip_short(&temp_scenario->scenario_timer_specs[i]);
-	for(short i = 0; i < 256; i++) {
-		flip_spec_node(&temp_scenario->scen_specials[i]);
-	}
-	for(short i = 0; i < 10; i++)  {
-		flip_short(&temp_scenario->storage_shortcuts[i].ter_type);
-		flip_short(&temp_scenario->storage_shortcuts[i].property);
+	for (auto &terrain : temp_scenario->ter_types)
+		flip_short(&terrain.picture);
+	for(auto &boat : temp_scenario->scen_boats)
+		flip_short(&boat.which_town);
+	for(auto &horse : temp_scenario->scen_horses)
+		flip_short(&horse.which_town);
+	for(auto &timer : temp_scenario->scenario_timer_times)
+		flip_short(&timer);
+	for(auto &timer : temp_scenario->scenario_timer_specs)
+		flip_short(&timer);
+	for(auto &special : temp_scenario->scen_specials)
+		flip_spec_node(&special);
+	for(auto &shortcut : temp_scenario->storage_shortcuts) {
+		flip_short(&shortcut.ter_type);
+		flip_short(&shortcut.property);
 		for(short j = 0; j < 10; j++)  {
-			flip_short(&temp_scenario->storage_shortcuts[i].item_num[j]);
-			flip_short(&temp_scenario->storage_shortcuts[i].item_odds[j]);
+			flip_short(&shortcut.item_num[j]);
+			flip_short(&shortcut.item_odds[j]);
 		}
 	}
 	flip_short(&temp_scenario->last_town_edited);
 }
 
+void port_item_record(legacy::item_record_type *old) {
+	if(cur_file_is_mac != is_computer_small_endian)
+		return;
+
+	flip_short(&(old->variety));
+	flip_short(&(old->item_level));
+	flip_short(&(old->value));
+}
 
 void port_item_list(legacy::scen_item_data_type* old){
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	
-	for(short i = 0; i < 400; i++) {
-		flip_short(&(old->scen_items[i].variety));
-		flip_short(&(old->scen_items[i].item_level));
-		flip_short(&(old->scen_items[i].value));
-	}
+	for(auto &item : old->scen_items)
+		port_item_record(&item);
 }
 
 void port_out(legacy::outdoor_record_type *out) {
-	if(cur_scen_is_mac != mac_is_intel)
+	for(short i = 0; i < 8; i++)
+		port_rect(&(out->info_rect[i]));
+
+	if(cur_file_is_mac != is_computer_small_endian)
 		return;
 	
 	for(short i = 0; i < 4; i++) {
@@ -208,13 +254,14 @@ void port_out(legacy::outdoor_record_type *out) {
 		flip_short(&(out->special_enc[i].end_spec1));
 		flip_short(&(out->special_enc[i].end_spec2));
 	}
-	for(short i = 0; i < 8; i++)
-		flip_rect(&(out->info_rect[i]));
 	for(short i = 0; i < 60; i++)
 		flip_spec_node(&(out->specials[i]));
 }
 
 void port_party(legacy::party_record_type* old){
+	if(cur_file_is_mac != is_computer_small_endian)
+		return;
+
 	flip_long(&old->age);
 	flip_short(&old->gold);
 	flip_short(&old->food);
@@ -297,6 +344,9 @@ void port_party(legacy::party_record_type* old){
 }
 
 void port_pc(legacy::pc_record_type* old){
+	if(cur_file_is_mac != is_computer_small_endian)
+		return;
+
 	flip_short(&old->main_status);
 	for(short i = 0; i < 30; i++)
 		flip_short(&old->skills[i]);
@@ -322,9 +372,12 @@ void port_pc(legacy::pc_record_type* old){
 }
 
 void port_c_town(legacy::current_town_type* old){
+	port_town(&old->town);
+	if(cur_file_is_mac != is_computer_small_endian)
+		return;
+	
 	flip_short(&old->town_num);
 	flip_short(&old->difficulty);
-	port_town(&old->town);
 	flip_short(&old->monst.which_town);
 	flip_short(&old->monst.hostile);
 	for(short j = 0; j < 60; j++){
@@ -405,5 +458,113 @@ void flip_rect(legacy::Rect* s) {
 	flip_short((int16_t *) &(s->bottom));
 	flip_short((int16_t *) &(s->left));
 	flip_short((int16_t *) &(s->right));
-	if(!cur_scen_is_mac) alter_rect(s);
+}
+
+void port_rect(legacy::Rect* s) {
+	if(cur_file_is_mac == is_computer_small_endian) {
+		flip_short((int16_t *) &(s->top));
+		flip_short((int16_t *) &(s->bottom));
+		flip_short((int16_t *) &(s->left));
+		flip_short((int16_t *) &(s->right));
+	}
+	if(!cur_file_is_mac) alter_rect(s);
+}
+
+cPictNum port_graphic_num(int pic) {
+	// from dialog-converting.txt
+	/*
+	-1			solid black
+	0 + x		number of terrain graphic
+	300 + x		animated terrain graphic (grabs the first frame only)
+	400 + x		monster graphic num
+	700 + x		dlog graphic (large dlog graphics were done by using four of these arranged in the correct way)
+	800 + x		pc graphic
+	900 + x		B&W graphic - the PICT resource for this does not exist
+	950			null item
+	1000 + x	Talking face
+	1100		item info help
+	1200		pc screen help
+	1300		combat ap
+	1400-1402	button help
+	1410-1412	large scen graphics
+	1500		stat symbols help
+	1600 + x	scen graphics
+	1700 + x	anim graphic -- drawn from fields_gworld, so a boom or barrier icon?
+	1800 + x	items
+	2000 + x	custom graphics up to 2399
+	2400 + x	custom graphics up to 2799, BUT it's a split graphic ...
+	   it looks at the size of rect, and places a 32 x 32 or 36 x 36 graphic drawn
+	   from the custom gworld, depending on the size of rect. half of graphic is
+	   drawn from one custom slot, and half is drawn from next one.
+	+3000		suppress drawing a frame around the graphic
+	 */
+	if (pic<0)
+		return cPictNum(pic, PIC_NONE);
+	if (pic>3000) pic-=3000; // suppress drawing a frame around the graphic
+	if (pic<300) {
+		switch(pic) {
+			case 247: pic = 210; break;
+			case 248: pic = 211; break;
+			case 249: pic = 212; break;
+			case 250: pic = 213; break;
+			case 202: pic = 0; break;
+			case 203: pic = 2; break;
+			case 204: pic = 32; break;
+			case 207: pic = 0; break;
+			case 208: pic = 123; break;
+			case 209: pic = 210; break;
+			case 210: pic = 163; break;
+			case 211: pic = 2; break;
+			case 212: pic = 32; break;
+			case 218: case 219: case 220: case 221:
+			case 222: case 223: case 224: case 225:
+			case 215: pic = 216; break;
+			case 233: pic = 137; break;
+			case 213: pic = 214; break;
+			case 214: pic = 215; break;
+			case 246: pic = 209; break;
+			case 251: pic = 207; break;
+			case 252: pic = 208; break;
+		}
+		return cPictNum(pic, PIC_TER);
+	}
+	if (pic<400)
+		return cPictNum(pic-300, PIC_TER_ANIM);
+	if (pic<700)
+		return cPictNum(pic-400,PIC_MONST);
+	if (pic<800)
+		return cPictNum(pic-700, PIC_DLOG);
+	if (pic<900)
+		return cPictNum(pic-800, PIC_PC);
+	if (pic<1000)// ARGH: normally bwpats, force an error picture
+		return cPictNum(800, PIC_TER);
+	if (pic<1100) // can we really get some talk here?
+		return cPictNum(pic-1000, PIC_TALK);
+	if (pic<1200) // inventory help
+		return cPictNum(1100, PIC_FULL);
+	if (pic<1300) // stats help
+		return cPictNum(1200, PIC_FULL);
+	if (pic<1400) // stats help
+		return cPictNum(1300, PIC_FULL);
+	if (pic<1403) // button help
+		return cPictNum(pic, PIC_FULL);
+	// TOADD: 1410-1499: load_pict(910-999)
+	// TOADD: 15XX: stat symbol help, RSRC PICT 1400
+
+	if (pic<1600) // ARGH: unsure force an error picture
+		return cPictNum(800, PIC_TER);
+	if (pic<1700)
+		return cPictNum(pic-1600, PIC_SCEN);  // checkme
+	if (pic<1800) // ARGH: unsure force an error picture
+		return cPictNum(800, PIC_TER);
+	if (pic<2000)
+		return cPictNum(pic-1800, PIC_ITEM);  // checkme
+	if (pic<2400)
+		return cPictNum(pic-2000, PIC_CUSTOM_TER);
+	if (pic<2800)
+		return cPictNum(pic-2400, PIC_CUSTOM_DLOG); // or pict custom monster large (in fact this one seems to depend on the dialog final size)
+	// ARGH: not expected, force an error picture
+	return cPictNum(800, PIC_TER);
+}
+	
 }

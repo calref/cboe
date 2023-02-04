@@ -22,6 +22,7 @@
 #include "fileio/resmgr/res_image.hpp"
 #include "tools/prefs.hpp"
 #include "tools/cursors.hpp"
+#include "tools/framerate_limiter.hpp"
 #include "gfx/render_image.hpp"
 #include "tools/enum_map.hpp"
 
@@ -125,18 +126,22 @@ void show_logo() {
 	if(ui_scale < 1) ui_scale = 1;
 	rectangle logo_from = {0, 0, int(ui_scale *350), int(ui_scale * 350)};
 	logo_from.offset((whole_window.right - logo_from.right) / 2,(whole_window.bottom - logo_from.bottom) / 2);
-	sf::Texture& pict_to_draw = *ResMgr::graphics.get("spidlogo", true);
+	auto const &pict_to_draw = *ResMgr::graphics.get("spidlogo", true);
 	
 	play_sound(-95);
+	cFramerateLimiter fps_limiter;
 	while(sound_going(95)) {
 		draw_splash(pict_to_draw, mainPtr, logo_from);
 		handle_splash_events();
+		fps_limiter.frame_finished();
 	}
 	if(!get_int_pref("ShowStartupSplash", true)) {
 		sf::Time delay = time_in_ticks(60);
 		sf::Clock timer;
-		while(timer.getElapsedTime() < delay)
+		while(timer.getElapsedTime() < delay) {
 			handle_splash_events();
+			fps_limiter.frame_finished();
+		}
 	}
 }
 
@@ -148,14 +153,16 @@ void plop_fancy_startup() {
 	whole_window = rectangle(mainPtr);
 	sf::Time delay = time_in_ticks(220);
 	intro_from.offset((whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
-	sf::Texture& pict_to_draw = *ResMgr::graphics.get("startsplash", true);
+	auto const & pict_to_draw = *ResMgr::graphics.get("startsplash", true);
 	
 	play_sound(-22);
 	sf::Clock timer;
 	
+	cFramerateLimiter fps_limiter;
 	while(timer.getElapsedTime() < delay) {
 		draw_splash(pict_to_draw, mainPtr, intro_from);
 		handle_splash_events();
+		fps_limiter.frame_finished();
 	}
 }
 

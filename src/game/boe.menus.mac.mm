@@ -83,11 +83,11 @@ void adjust_monst_menu() {
 	}
 	for(short i = 0; i < 256; i++) {
 		if(on_monst_menu[i] >= 0) {
-			std::string monst_name = univ.scenario.scen_monsters[on_monst_menu[i]].m_name;
+			std::string monst_name = univ.scenario.get_monster(on_monst_menu[i]).m_name;
 			NSString* str = [NSString stringWithUTF8String: monst_name.c_str()];
 			NSMenuItem* newItem = [monst_menu addItemWithTitle: str action: @selector(monstMenu:) keyEquivalent: @""];
 			[newItem setTarget: targ];
-			[newItem setRepresentedObject: [MonsterWrapper withMonster: univ.scenario.scen_monsters[on_monst_menu[i]]]];
+			[newItem setRepresentedObject: [MonsterWrapper withMonster: univ.scenario.get_monster(on_monst_menu[i])]];
 		}
 	}
 }
@@ -95,7 +95,7 @@ void adjust_monst_menu() {
 static void setMenuCallback(NSMenuItem* item, id targ, SEL selector, int num) {
 	[item setTarget: targ];
 	[item setAction: selector];
-	[item setRepresentedObject: [[NSNumber numberWithInt: num] retain]];
+	[item setRepresentedObject: [NSNumber numberWithInt: num]];
 }
 
 void init_menubar() {
@@ -135,7 +135,7 @@ void init_menubar() {
 		eMenu::NONE, eMenu::HELP_HINTS, eMenu::HELP_SPELLS,
 	};
 	
-	MenuHandler* handler = [[[MenuHandler alloc] init] retain];
+	MenuHandler* handler = [[MenuHandler alloc] init];
 	setMenuCallback([apple_menu itemWithTitle: @"About Blades of Exile"], handler, @selector(menuChoice:), int(eMenu::ABOUT));
 	setMenuCallback([apple_menu itemWithTitle: @"Preferences…"], handler, @selector(menuChoice:), int(eMenu::PREFS));
 	setMenuCallback([apple_menu itemWithTitle: @"Quit Blades of Exile"], handler, @selector(menuChoice:), int(eMenu::QUIT));
@@ -155,7 +155,6 @@ void init_menubar() {
 	i = 0;
 	for(eMenu opt : help_choices)
 		setMenuCallback([help_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));
-	i = 0;
 	
 	setMenuCallback([mage_spells_menu itemAtIndex: 0], handler, @selector(menuChoice:), int(eMenu::ABOUT_MAGE));
 	setMenuCallback([priest_spells_menu itemAtIndex: 0], handler, @selector(menuChoice:), int(eMenu::ABOUT_PRIEST));

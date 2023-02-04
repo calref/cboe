@@ -48,13 +48,32 @@ public:
 		short item_odds[10];
 		short property;
 		cItemStorage();
-		cItemStorage& operator = (legacy::item_storage_shortcut_type& old);
+		cItemStorage& operator = (legacy::item_storage_shortcut_type const &old);
 	};
 	void destroy_terrain();
+	
+	cItem const &get_item(item_num_t item) const;
+	cItem &get_item(item_num_t item);
+	std::string &get_journal_string(int id);
+	std::string const &get_journal_string(int id) const;
+	cMonster &get_monster(mon_num_t monst);
+	cMonster const &get_monster(mon_num_t monst) const;
+	cQuest const &get_quest(int quest) const;
+	cQuest &get_quest(int quest);
+	cShop const &get_shop(int shop) const;
+	cShop &get_shop(int shop);
+	cSpecItem const &get_special_item(item_num_t item) const;
+	cSpecItem &get_special_item(item_num_t item);
+	std::string &get_special_string(int id);
+	std::string const &get_special_string(int id) const;
+	cTerrain const &get_terrain(ter_num_t ter) const;
+	cTerrain &get_terrain(ter_num_t ter);
+
 public:
-	unsigned short difficulty,intro_pic,default_ground;
+	unsigned short difficulty,default_ground;
+	cPictNum intro_pic;
 	int bg_out, bg_fight, bg_town, bg_dungeon;
-	short intro_mess_pic;
+	cPictNum intro_mess_pic;
 	location where_start,out_sec_start,out_start;
 	size_t which_town_start;
 	spec_num_t init_spec;
@@ -97,8 +116,8 @@ public:
 		towns.back()->init_start();
 	}
 	
-	void import_legacy(legacy::scenario_data_type& old);
-	void import_legacy(legacy::scen_item_data_type& old);
+	void import_legacy(legacy::scenario_data_type const &old);
+	void import_legacy(legacy::scen_item_data_type const &old);
 	void writeTo(cTagFile& file) const;
 	void readFrom(const cTagFile& file);
 	std::string format_scen_version() const;
@@ -113,13 +132,15 @@ public:
 	bool is_ter_used(ter_num_t ter) const;
 	bool is_monst_used(mon_num_t monst) const;
 	bool is_item_used(item_num_t item) const;
-	cItem get_stored_item(int loot) const;
 	cItem return_treasure(int loot, bool allow_junk_treasure = false) const;
 	cItem pull_item_of_type(unsigned int loot_max,short min_val,short max_val,const std::vector<eItemType>& types,bool allow_junk_treasure=false) const;
 	
 	void reset_version();
 	explicit cScenario();
 	~cScenario();
+	
+	cOutdoors *get_bad_outdoor();
+	
 	// Copy-and-swap
 	friend void swap(cScenario& lhs, cScenario& rhs);
 	cScenario(const cScenario& other);

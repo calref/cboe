@@ -3,8 +3,7 @@
 #include "location.hpp"
 
 bool is_explored(short i,short j);
-void make_explored(short i,short j);
-void take_explored(short i,short j);
+void make_explored(short i,short j, short val=1);
 bool is_out();
 bool is_town();
 bool is_combat();

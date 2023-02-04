@@ -368,7 +368,7 @@ TEST_CASE("When converting legacy special nodes (one-shot)") {
 		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::ONCE_DIALOG);
 		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
-		CHECK(newSpec.pictype == PIC_DLOG); CHECK(newSpec.pic == 42);
+		CHECK(newSpec.pictype == PIC_TER); CHECK(newSpec.pic == 42);
 		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == -1); CHECK(newSpec.m3 == 5);
 		CHECK(newSpec.ex1a == 9); CHECK(newSpec.ex1b == 18);
 		CHECK(newSpec.ex2a == 19); CHECK(newSpec.ex2b == 17);
@@ -396,7 +396,7 @@ TEST_CASE("When converting legacy special nodes (one-shot)") {
 		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::ONCE_DIALOG);
 		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
-		CHECK(newSpec.pictype == PIC_MONST); CHECK(newSpec.pic == 42);
+		CHECK(newSpec.pictype == PIC_TER); CHECK(newSpec.pic == 42);
 		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == -1); CHECK(newSpec.m3 == 5);
 		CHECK(newSpec.ex1a == 9); CHECK(newSpec.ex1b == 18);
 		CHECK(newSpec.ex2a == 19); CHECK(newSpec.ex2b == 17);
@@ -410,7 +410,7 @@ TEST_CASE("When converting legacy special nodes (one-shot)") {
 		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::ONCE_GIVE_ITEM_DIALOG);
 		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
-		CHECK(newSpec.pictype == PIC_DLOG); CHECK(newSpec.pic == 42);
+		CHECK(newSpec.pictype == PIC_TER); CHECK(newSpec.pic == 42);
 		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == -1); CHECK(newSpec.m3 == 5);
 		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 18);
 		CHECK(newSpec.ex2a == 19); CHECK(newSpec.ex2b == 17);
@@ -438,7 +438,7 @@ TEST_CASE("When converting legacy special nodes (one-shot)") {
 		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::ONCE_GIVE_ITEM_DIALOG);
 		CHECK(newSpec.sd1 == 8); CHECK(newSpec.sd2 == 7);
-		CHECK(newSpec.pictype == PIC_MONST); CHECK(newSpec.pic == 42);
+		CHECK(newSpec.pictype == PIC_TER); CHECK(newSpec.pic == 42);
 		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == -1); CHECK(newSpec.m3 == 5);
 		CHECK(newSpec.ex1a == 20); CHECK(newSpec.ex1b == 18);
 		CHECK(newSpec.ex2a == 19); CHECK(newSpec.ex2b == 17);
@@ -1240,7 +1240,7 @@ TEST_CASE("When converting legacy special nodes (town)") {
 		oldSpec.ex1a = 7; oldSpec.ex1b = 8;
 		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::TOWN_PORTAL);
-		CHECK(newSpec.pictype == PIC_DLOG); CHECK(newSpec.pic == 12);
+		CHECK(newSpec.pictype == PIC_TER); CHECK(newSpec.pic == 12);
 		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == -1); CHECK(newSpec.m3 == 5);
 		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
 		CHECK(newSpec.jumpto == 12);
@@ -1252,7 +1252,7 @@ TEST_CASE("When converting legacy special nodes (town)") {
 		oldSpec.ex2a = 15; oldSpec.ex2b = 1;
 		newSpec.import_legacy(oldSpec);
 		CHECK(newSpec.type == eSpecType::TOWN_STAIR);
-		CHECK(newSpec.pictype == PIC_DLOG); CHECK(newSpec.pic == 12);
+		CHECK(newSpec.pictype == PIC_TER); CHECK(newSpec.pic == 12);
 		CHECK(newSpec.m1 == 4); CHECK(newSpec.m2 == -1); CHECK(newSpec.m3 == 5);
 		CHECK(newSpec.ex1a == 7); CHECK(newSpec.ex1b == 8);
 		CHECK(newSpec.ex2a == 15); CHECK(newSpec.ex2b == 1);

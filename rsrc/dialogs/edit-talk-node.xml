@@ -11,6 +11,8 @@
 	<field name='extra4' top='183' left='344' width='64' height='16'/>
 	<field name='str1' top='223' left='72' width='430' height='80'/>
 	<field name='str2' top='328' left='72' width='434' height='80'/>
+	<button name='prev' type='left' def-key='left' top='415' left='255'/>
+	<button name='next' type='right' def-key='right' top='415' left='320'/>
 	<button name='okay' type='regular' top='415' left='445'>OK</button>
 	<button name='cancel' type='regular' def-key='esc' top='415' left='380'>Cancel</button>
 	<button name='back' type='large' top='415' left='49'>Go Back</button>

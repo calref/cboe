@@ -14,6 +14,8 @@
 #include <SFML/Graphics/Image.hpp>
 #include <memory>
 
+#include "global.hpp"
+
 char keyToChar(sf::Keyboard::Key key, bool isShift);
 
 void makeFrontWindow(sf::Window& win);

@@ -3,15 +3,10 @@
 #include "fields.hpp"
 #include "location.hpp"
 
-void Set_up_win ();
 void run_startup_g();
 void load_graphics();
 void draw_main_screen();
 void redraw_screen();
-void draw_lb();
-void draw_lb_slot (short which,short mode) ;
-void draw_rb();
-void draw_rb_slot (short which,short mode) ;
 void set_up_terrain_buttons(bool reset);
 void draw_terrain();
 void draw_monsts();
@@ -26,7 +21,6 @@ void set_string(std::string string,std::string string2);
 bool is_special(short i,short j);
 void take_special(short i,short j);
 void make_special(short i,short j);
-void sort_specials();
 bool is_field_type(short i,short j,eFieldType field_type);
 void make_field_type(short i,short j,eFieldType field_type);
 void take_field_type(short i,short j,eFieldType field_type);
@@ -36,5 +30,4 @@ bool is_road(short i,short j);
 short string_length(char *str);
 rectangle get_custom_rect (short which_rect);
 void init_dialogs();
-void record_display_strings();
 sf::Vector2f translate_mouse_coordinates(sf::Vector2i const point);

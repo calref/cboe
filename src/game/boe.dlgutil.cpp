@@ -53,8 +53,6 @@ extern long ed_flag,ed_key;
 extern location center;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
-extern bool map_visible;
-extern sf::RenderWindow mini_map;
 extern cUniverse univ;
 extern sf::Texture pc_gworld;
 extern std::map<eSkill,short> skill_max;
@@ -79,6 +77,8 @@ bool can_save_talk;
 short store_talk_face_pic;
 int current_talk_node;
 extern std::vector<word_rect_t> talk_words;
+static size_t talk_history_pos;
+static std::vector<int> talk_history_nodes;
 
 // Shopping vars
 
@@ -111,13 +111,19 @@ void start_shop_mode(short which,short cost_adj,std::string store_name) {
 	// This would be a place to hide the text box, if I add it.
 	
 	active_shop_num = which;
-	active_shop = univ.scenario.shops[which];
+	active_shop = univ.get_shop(which);
 	active_shop.setCostAdjust(cost_adj);
 	active_shop.setName(store_name);
 	
 	area_rect = talk_area_rect;
-	talk_gworld.create(area_rect.width(), area_rect.height());
-	
+	float ui_scale= get_float_pref("UIScale", 1.0);
+	if (ui_scale < 1) ui_scale = 1.0;
+	talk_gworld.create(int(ui_scale*area_rect.width()), int(ui_scale*area_rect.height()));
+	sf::View view;
+	view.reset(sf::FloatRect(0,0, int(ui_scale*area_rect.width()), int(ui_scale*area_rect.height())));
+	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
+	talk_gworld.setView(view);
+
 	store_pre_shop_mode = overall_mode;
 	overall_mode = MODE_SHOPPING;
 	stat_screen_mode = MODE_SHOP;
@@ -150,13 +156,16 @@ void start_shop_mode(short which,short cost_adj,std::string store_name) {
 }
 
 static void update_last_talk(int new_node) {
-	// Store last node in the Go Back button
-	for(word_rect_t& word : talk_words) {
-		if(word.word != "Go Back") continue;
-		word.node = current_talk_node;
-		current_talk_node = new_node;
-		break;
+	if (new_node==TALK_BUY || new_node==TALK_BUSINESS || new_node==TALK_SELL)
+		return;
+	// Store last node in the Go Back/Front button
+	if (talk_history_pos>=talk_history_nodes.size())
+		talk_history_nodes.push_back(new_node);
+	else if (new_node != talk_history_nodes[talk_history_pos]) {
+		talk_history_nodes[talk_history_pos]=new_node;
+		talk_history_nodes.resize(talk_history_pos+1);
 	}
+	++talk_history_pos;
 }
 
 void end_shop_mode() {
@@ -167,10 +176,6 @@ void end_shop_mode() {
 	shop_sbar->hide();
 	done_btn->hide();
 	help_btn->hide();
-	if(store_pre_shop_mode == MODE_TALKING) {
-		place_talk_str("You conclude your business.", "", 0, dummy_rect);
-		update_last_talk(TALK_BUSINESS);
-	}
 	
 	overall_mode = store_pre_shop_mode;
 	if(overall_mode == MODE_TALK_TOWN)
@@ -179,7 +184,15 @@ void end_shop_mode() {
 		center = univ.party.town_loc;
 		update_explored(center);
 	}
-	stat_screen_mode = MODE_INVEN;
+	
+	if (overall_mode == MODE_TALKING) {
+		// fixme: there must be a function to reset the talking state correctly
+		place_talk_str("You conclude your business.", "", 0, dummy_rect);
+		stat_screen_mode = MODE_SHOP;
+		help_btn->show();
+	}
+	else
+		stat_screen_mode = MODE_INVEN;
 	put_item_screen(stat_window);
 	put_pc_screen();
 	// TODO: I suspect REFRESH_NONE will suffice here
@@ -188,11 +201,15 @@ void end_shop_mode() {
 	// If it was a random shop, we need to update the stored list of items so that bought items don't reappear
 	if(active_shop.getType() == eShopType::RANDOM) {
 		auto& this_shop = univ.party.magic_store_items[active_shop_num];
-		this_shop.clear();
+		/* FIXME: actually, we expect that the item quantity can be only equal to 1
+		          as in start_shop_mode, store_limited_stock is checked before the
+				  item is loaded from the magic store magic_store_items
+		 */
 		for(int i = 0; i < active_shop.size(); i++) {
 			cShopItem item = active_shop.getItem(i);
-			if(item.type == eShopItemType::TREASURE || item.type == eShopItemType::CLASS || item.type == eShopItemType::OPT_ITEM)
-				this_shop[i] = item.item;
+			if(item.quantity>0 && item.type == eShopItemType::EMPTY &&
+			   this_shop.find(i)!=this_shop.end())
+				this_shop.find(i)->second.variety = eItemType::NO_ITEM;
 		}
 	}
 	// We also need to save any limited stock
@@ -530,7 +547,7 @@ void set_up_shop_array() {
 				}
 				break;
 			case eShopItemType::CALL_SPECIAL:
-				if(PSD[entry.item.abil_strength][entry.item.abil_data.value])
+				if(univ.party.sd(entry.item.abil_strength,entry.item.abil_data.value))
 					shop_array.push_back(j);
 				break;
 			case eShopItemType::OPT_ITEM:
@@ -566,7 +583,13 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	store_m_num = m_num;
 	store_talk_face_pic = store_face_pic; ////
 	area_rect = talk_area_rect;
-	talk_gworld.create(area_rect.width(), area_rect.height());
+	float ui_scale= get_float_pref("UIScale", 1.0);
+	if (ui_scale < 1) ui_scale = 1.0;
+	talk_gworld.create(int(ui_scale*area_rect.width()), int(ui_scale*area_rect.height()));
+	sf::View view;
+	view.reset(sf::FloatRect(0,0, talk_gworld.getSize().x, talk_gworld.getSize().y));
+	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
+	talk_gworld.setView(view);
 	help_btn->show();
 	
 	// This would be the place to show the text box, if I add it.
@@ -583,21 +606,21 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	
 	// first initialise talk_words here
 	talk_words.clear();
-	static const rectangle preset_rects[9] = {
+	static const rectangle preset_rects[10] = {
 		rectangle{366,4,386,54}, rectangle{366,70,386,130}, rectangle{366,136,386,186},
 		rectangle{389,4,409,54}, rectangle{389,70,409,120}, rectangle{389,121,409,186},
-		rectangle{389,210,409,270}, rectangle{366,190,386,270},
+		rectangle{389,210,409,270}, rectangle{366,190,386,270}, rectangle{1999,1999,2100,2100},
 		rectangle{343,4,363,134},
 	};
-	static const char*const preset_words[9] = {
+	static const char*const preset_words[10] = {
 		"Look", "Name", "Job",
 		"Buy", "Sell", "Record",
-		"Done", "Go Back",
+		"Done", "Go Back", "Go Front",
 		"Ask About...",
 	};
 	
 	// Place buttons at bottom.
-	for(short i = 0; i < 9; i++) {
+	for(short i = 0; i < 10; i++) {
 		word_rect_t preset_word(preset_words[i], preset_rects[i]);
 		preset_word.on = Colours::DARK_GREEN;
 		preset_word.off = Colours::LIGHT_GREEN;
@@ -610,7 +633,8 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 			case 5: preset_word.node = TALK_RECORD; break;
 			case 6: preset_word.node = TALK_DONE; break;
 			case 7: preset_word.node = TALK_BACK; break;
-			case 8: preset_word.node = TALK_ASK; break;
+			case 8: preset_word.node = TALK_FRONT; break;
+			case 9: preset_word.node = TALK_ASK; break;
 		}
 		talk_words.push_back(preset_word);
 	}
@@ -623,6 +647,9 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	save_talk_str2 = "";
 	can_save_talk = true;
 	
+	talk_history_nodes.clear();
+	talk_history_nodes.push_back(TALK_LOOK);
+	talk_history_pos=1;
 	place_talk_str(save_talk_str1, "", 0, dummy_rect);
 	
 	put_item_screen(stat_window);
@@ -730,13 +757,29 @@ void handle_talk_event(location p) {
 		wordRect.offset(talk_area_rect.topLeft());
 		wordRect.offset(-1, -10); // TODO: This corrects for the byzantine offsets that win_draw_string applies for some reason...
 		if(!p.in(wordRect)) continue;
-		click_talk_rect(word);
+		if (word.node != TALK_FRONT)
+			click_talk_rect(word);
 		which_talk_entry = word.node;
 		break;
 	}
 	if(which_talk_entry == TALK_DUNNO)
 		return;
-	
+	if (which_talk_entry==TALK_BACK) {
+		if (talk_history_pos<2 || talk_history_pos>=talk_history_nodes.size()+2) {
+			play_sound(37); // checkme
+			return;
+		}
+		talk_history_pos-=2;
+		which_talk_entry=talk_history_nodes[talk_history_pos];
+	}
+	else if (which_talk_entry==TALK_FRONT) {
+		if (talk_history_pos>=talk_history_nodes.size()) {
+			play_sound(37); // checkme
+			return;
+		}
+		which_talk_entry=talk_history_nodes[talk_history_pos];
+	}
+
 	switch(which_talk_entry) {
 		case TALK_DUNNO:
 		SPECIAL_DUNNO:
@@ -784,7 +827,7 @@ void handle_talk_event(location p) {
 			break;
 		case TALK_RECORD:
 			if(!can_save_talk) {
-				beep();
+				play_sound(37); // checkme
 				return;
 			}
 			if(univ.party.save_talk(univ.town->talking.people[store_personality%10].title, univ.town->name, save_talk_str1, save_talk_str2)) {
@@ -798,6 +841,8 @@ void handle_talk_event(location p) {
 		SPECIAL_DONE:
 			end_talk_mode();
 			return;
+		case TALK_FRONT:// only if there's nothing to go front to
+			return; // so, there's nothing to do here
 		case TALK_BACK: // only if there's nothing to go back to
 			return; // so, there's nothing to do here
 		case TALK_ASK: // ask about
@@ -826,18 +871,22 @@ void handle_talk_event(location p) {
 	save_talk_str2 = univ.town.cur_talk().talk_nodes[which_talk_entry].str2;
 	
 	can_save_talk = true;
-	
+	stat_screen_mode = MODE_SHOP;
+
 	switch(ttype) {
 		case eTalkNode::REGULAR:
 			break;
 		case eTalkNode::DEP_ON_SDF:
-			if(PSD[a][b] > c) {
+			if(univ.party.sd(a,b) > c) {
 				save_talk_str1 = save_talk_str2;
 			}
 			save_talk_str2 = "";
 			break;
 		case eTalkNode::SET_SDF:
-			PSD[a][b] = c;
+			if (!univ.party.sd_legit(a,b))
+				showError("Invalid Stuff Done flag called in set_sdf.");
+			else
+				univ.party.sd_set(a,b,c);
 			break;
 		case eTalkNode::INN:
 			if(univ.party.gold < a) {
@@ -934,7 +983,7 @@ void handle_talk_event(location p) {
 			save_talk_str2 = "";
 			break;
 		case eTalkNode::BUY_SDF:
-			if((univ.party.sd_legit(b,c)) && (PSD[b][c] == d)) {
+			if(univ.party.sd_legit(b,c) && univ.party.sd(b,c) == d) {
 				save_talk_str1 = "You've already learned that.";
 				can_save_talk = false;
 			}
@@ -945,8 +994,9 @@ void handle_talk_event(location p) {
 				univ.party.gold -= a;
 				put_pc_screen();
 				if(univ.party.sd_legit(b,c))
-					PSD[b][c] = d;
-				else showError("Invalid Stuff Done flag called in conversation.");
+					univ.party.sd_set(b,c,d);
+				else
+					showError("Invalid Stuff Done flag called in conversation.");
 			}
 			save_talk_str2 = "";
 			break;
@@ -1065,7 +1115,7 @@ void handle_talk_event(location p) {
 				univ.town.monst[store_m_num].active = 0;
 				// Special killing effects
 				if(univ.party.sd_legit(univ.town.monst[store_m_num].spec1,univ.town.monst[store_m_num].spec2))
-					PSD[univ.town.monst[store_m_num].spec1][univ.town.monst[store_m_num].spec2] = 1;
+					univ.party.sd_set(univ.town.monst[store_m_num].spec1,univ.town.monst[store_m_num].spec2,1);
 			}
 			talk_end_forced = true;
 			break;
@@ -1074,8 +1124,8 @@ void handle_talk_event(location p) {
 			run_special(eSpecCtx::TALK, eSpecCtxType::TOWN, a, univ.party.town_loc, &s1, &s2);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if((s1 >= 0) || (s2 >= 0)) {
-				save_talk_str1 = s1 >= 0 ? univ.town->spec_strs[s1] : "";
-				save_talk_str2 = s2 >= 0 ? univ.town->spec_strs[s2] : "";
+				save_talk_str1 = s1 >= 0 ? univ.town->get_special_string(s1) : "";
+				save_talk_str2 = s2 >= 0 ? univ.town->get_special_string(s2) : "";
 			}
 			get_strs(save_talk_str1, save_talk_str2, eSpecCtxType::TOWN, s1, s2);
 			put_pc_screen();
@@ -1085,8 +1135,8 @@ void handle_talk_event(location p) {
 			run_special(eSpecCtx::TALK, eSpecCtxType::SCEN, a, univ.party.town_loc, &s1, &s2);
 			// check s1 & s2 to see if we got diff str, and, if so, munch old strs
 			if((s1 >= 0) || (s2 >= 0)) {
-				save_talk_str1 = s1 >= 0 ? univ.scenario.spec_strs[s1] : "";
-				save_talk_str2 = s2 >= 0 ? univ.scenario.spec_strs[s2] : "";
+				save_talk_str1 = s1 >= 0 ? univ.scenario.get_special_string(s1) : "";
+				save_talk_str2 = s2 >= 0 ? univ.scenario.get_special_string(s2) : "";
 			}
 			get_strs(save_talk_str1, save_talk_str2, eSpecCtxType::SCEN, s1, s2);
 			put_pc_screen();
@@ -1108,15 +1158,13 @@ void do_sign(short town_num, short which_sign, short sign_type) {
 	cPict& pict = dynamic_cast<cPict&>(sign->getControl("ter"));
 	
 	store_sign_mode = sign_type;
-	pict.setPict(univ.scenario.ter_types[sign_type].picture);
+	pict.setPict(univ.get_terrain(sign_type).get_picture_num());
 	
-	if(town_num >= 200) {
-		town_num -= 200;
-		sign_text = univ.out->sign_locs[which_sign].text;
-	}
-	else {
-		sign_text = univ.town->sign_locs[which_sign].text;
-	}
+	if(town_num >= 200)
+		sign_text = univ.out->get_sign_loc(which_sign).text;
+	else
+		sign_text = univ.town->get_sign_loc(which_sign).text;
+
 	sign->getControl("sign").setText(sign_text);
 	
 	sign.show();
@@ -1156,23 +1204,18 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		set_pref("RepeatRoomDescriptions", dynamic_cast<cLed&>(me["repeatdesc"]).getState() != led_off);
 		set_pref("ShowInstantHelp", dynamic_cast<cLed&>(me["nohelp"]).getState() == led_off);
 		
-		if(overall_mode == MODE_STARTUP && !party_in_memory) {
-			set_pref("EasyMode", dynamic_cast<cLed&>(me["easier"]).getState() != led_off);
-			set_pref("LessWanderingMonsters", dynamic_cast<cLed&>(me["lesswm"]).getState() != led_off);
-		} else {
+		set_pref("EasyMode", dynamic_cast<cLed&>(me["easier"]).getState() != led_off);
+		set_pref("LessWanderingMonsters", dynamic_cast<cLed&>(me["lesswm"]).getState() != led_off);
+		if (overall_mode != MODE_STARTUP && party_in_memory) {
 			univ.party.easy_mode = dynamic_cast<cLed&>(me["easier"]).getState() != led_off;
 			univ.party.less_wm = dynamic_cast<cLed&>(me["lesswm"]).getState() != led_off;
+			univ.party.show_junk_bag = dynamic_cast<cLed&>(me["junk"]).getState() != led_off;
 		}
 		set_pref("DrawTerrainAnimation", dynamic_cast<cLed&>(me["noanim"]).getState() == led_off);
 		set_pref("DrawTerrainShoreFrills", dynamic_cast<cLed&>(me["noshore"]).getState() == led_off);
 		set_pref("ShowStartupSplash", dynamic_cast<cLed&>(me["skipsplash"]).getState() == led_off);
+		set_pref("ShowJunkBag", dynamic_cast<cLed&>(me["junk"]).getState() != led_off);
 		std::string speed = dynamic_cast<cLedGroup&>(me["speed"]).getSelected();
-		/* TODO: Should I add these additional preferences from Windows?
-		party.stuff_done[SDF_NO_TARGET_LINE] = cd_get_led(1099,50);
-		party.stuff_done[SDF_LESS_SOUND] = cd_get_led(1099,52);
-		party.stuff_done[SDF_FASTER_BOOM_SPACES] = cd_get_led(1099,56);
-		party.stuff_done[SDF_ASK_ABOUT_TEXT_BOX] = cd_get_led(1099,60);
-		*/
 		if(speed == "fast")
 			set_pref("GameSpeed", 0);
 		else if(speed == "med")
@@ -1246,9 +1289,11 @@ void pick_preferences() {
 	if(overall_mode == MODE_STARTUP && !party_in_memory) {
 		dynamic_cast<cLed&>(prefsDlog["easier"]).setState(get_bool_pref("EasyMode") ? led_red : led_off);
 		dynamic_cast<cLed&>(prefsDlog["lesswm"]).setState(get_bool_pref("LessWanderingMonsters") ? led_red : led_off);
+		dynamic_cast<cLed&>(prefsDlog["junk"]).setState(get_bool_pref("ShowJunkBag", false) ? led_red : led_off);
 	} else {
 		dynamic_cast<cLed&>(prefsDlog["easier"]).setState(univ.party.easy_mode ? led_red : led_off);
 		dynamic_cast<cLed&>(prefsDlog["lesswm"]).setState(univ.party.less_wm ? led_red : led_off);
+		dynamic_cast<cLed&>(prefsDlog["junk"]).setState(univ.party.show_junk_bag ? led_red : led_off);
 	}
 	dynamic_cast<cLed&>(prefsDlog["noanim"]).setState(get_bool_pref("DrawTerrainAnimations", true) ? led_off : led_red);
 	dynamic_cast<cLed&>(prefsDlog["noshore"]).setState(get_bool_pref("DrawTerrainShoreFrills", true) ? led_off : led_red);
@@ -1323,7 +1368,7 @@ void pick_preferences() {
 
 static void put_party_stats(cDialog& me) {
 	for(short i = 0; i < 6; i++) {
-		std::string n = boost::lexical_cast<std::string>(i + 1);
+		std::string n = std::to_string(i + 1);
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			me["name" + n].setText(univ.party[i].name);
 			me["trait" + n].show();
@@ -1331,7 +1376,7 @@ static void put_party_stats(cDialog& me) {
 			me["delete" + n].setText("Delete");
 			me["pic" + n].show();
 			me["pc" + n].show();
-			dynamic_cast<cPict&>(me["pc" + n]).setPict(univ.party[i].which_graphic);
+			dynamic_cast<cPict&>(me["pc" + n]).setPict(univ.party[i].get_picture_num());
 		}
 		else {
 			me["name" + n].setText("Empty.");
@@ -1363,7 +1408,7 @@ static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod) 
 			else pick_pc_name(which_pc,&me);
 			put_party_stats(me);
 		} else if(item_hit == "trait") {
-			pick_race_abil(&univ.party[which_pc],0,&me);
+			pick_race_abil(which_pc,0,&me);
 			put_party_stats(me);
 		} else if(item_hit == "train") {
 			spend_xp(which_pc,0,&me);
@@ -1395,7 +1440,7 @@ void edit_party() {
 	cDialog pcDialog(*ResMgr::dialogs.get("edit-party"));
 	std::vector<std::string> buttons = {"done", "help"};
 	for(int i = 1; i <= 6; i++) {
-		std::string n = boost::lexical_cast<std::string>(i);
+		std::string n = std::to_string(i);
 		buttons.push_back("name" + n);
 		buttons.push_back("delete" + n);
 		buttons.push_back("trait" + n);
@@ -1542,6 +1587,12 @@ public:
 		using namespace std::placeholders;
 		extern fs::path scenDir;
 		
+		if(scen_headers.empty()) { // this means only prefabs
+			cChoiceDlog err("no-scenarios");
+			err->getControl("path").setText(scenDir.string());
+			err.show();
+			//return scen_header_type();
+		}
 		set_cursor(sword_curs);
 		
 		me["cancel"].attachClickHandler(std::bind(&cChooseScenario::doCancel, this));
@@ -1556,7 +1607,7 @@ public:
 		
 		put_scen_info();
 		
-		if(scen_headers.size() <= 3) {
+		if(scen_headers.empty()) { // this means no custom scenario
 			me["next"].hide();
 			me["prev"].hide();
 		}

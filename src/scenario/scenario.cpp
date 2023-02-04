@@ -8,13 +8,18 @@
 
 #include "scenario.hpp"
 
+#include <algorithm>
+#include <cmath>
 #include <string>
 #include <vector>
 #include <map>
 #include <sstream>
 
-#include "oldstructs.hpp"
 #include "mathutil.hpp"
+#include "porting.hpp"
+#include "oldstructs.hpp"
+
+#include "fileio/resmgr/res_strings.hpp"
 #include "fileio/tagfile.hpp"
 
 void cScenario::reset_version() {
@@ -47,6 +52,16 @@ void cScenario::destroy_terrain() {
 	}
 }
 
+cOutdoors *cScenario::get_bad_outdoor()
+{
+	static std::shared_ptr<cOutdoors> badOutdoor;
+	if (!badOutdoor)
+		badOutdoor=std::make_shared<cOutdoors>(*this);
+	badOutdoor->reattach(*this);
+	badOutdoor->name="Bad Outdoor";
+	return badOutdoor.get();
+}
+
 cScenario::cScenario() {
 	std::string temp_str;
 	
@@ -61,13 +76,14 @@ cScenario::cScenario() {
 	out_start = where_start = loc(24,24);
 	rating = eContentRating::G;
 	difficulty = 0;
-	intro_pic = intro_mess_pic = 0;
+	intro_pic = intro_mess_pic= cPictNum(0, PIC_SCEN);
 	adjust_diff = true;
 	is_legacy = false;
 	bg_out = 10;
 	bg_fight = 4;
 	bg_town = 13;
 	bg_dungeon = 9;
+	outdoors.set_get_default_function([this](){return get_bad_outdoor();});
 	for(short i = 0; i < town_mods.size(); i++) {
 		town_mods[i].spec = -1;
 	}
@@ -141,6 +157,7 @@ cScenario::cScenario(const cScenario& other)
 	for(size_t i = 0; i < outdoors.width(); i++)
 		for(size_t j = 0; j < outdoors.height(); j++)
 			outdoors[i][j] = new cOutdoors(*other.outdoors[i][j]);
+	outdoors.set_get_default_function([this](){return get_bad_outdoor();});
 }
 
 cScenario::cScenario(cScenario&& other) {
@@ -202,6 +219,8 @@ void swap(cScenario& lhs, cScenario& rhs) {
 	swap(lhs.scen_file, rhs.scen_file);
 	swap(lhs.outdoors, rhs.outdoors);
 	swap(lhs.towns, rhs.towns);
+	for(auto& town : lhs.towns) if (town) town->reattach(lhs);
+	for(auto& town : rhs.towns) if (town) town->reattach(rhs);
 }
 
 cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
@@ -211,12 +230,137 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 		item_odds[i] = 0;
 }
 
-void cScenario::import_legacy(legacy::scenario_data_type& old){
+cItem const &cScenario::get_item(item_num_t item) const
+{
+	if (item>=0 && item<scen_items.size())
+		return scen_items[item];
+	static cItem badItem=cItem::bad();
+	return badItem;
+}
+
+cItem &cScenario::get_item(item_num_t item)
+{
+	if (item>=0 && item<scen_items.size())
+		return scen_items[item];
+	static cItem badItem;
+	badItem=cItem::bad();
+	return badItem;
+}
+
+std::string &cScenario::get_journal_string(int id)
+{
+	   if (id>=0 && id<journal_strs.size())
+			   return journal_strs[id];
+	   if (id>=0 && id<200) {
+		   journal_strs.resize(id+1);
+			   return journal_strs[id];
+	   }
+	   static std::string badString;
+	   badString="Bad Journal String";
+	   return badString;
+}
+
+std::string const &cScenario::get_journal_string(int id) const
+{
+	   if (id>=0 && id<journal_strs.size())
+			   return journal_strs[id];
+	   static std::string badString="Bad Journal String";
+	   return badString;
+}
+
+cQuest const &cScenario::get_quest(int quest) const
+{
+	if (quest>=0 && quest<quests.size())
+		return quests[quest];
+	static cQuest badQuest=cQuest::bad();
+	return badQuest;
+}
+
+cQuest &cScenario::get_quest(int quest)
+{
+	if (quest>=0 && quest<quests.size())
+		return quests[quest];
+	static cQuest badQuest;
+	badQuest=cQuest::bad();
+	return badQuest;
+}
+
+cSpecItem const &cScenario::get_special_item(item_num_t item) const
+{
+	if (item>=0 && item<special_items.size())
+		return special_items[item];
+	static cSpecItem badItem=cSpecItem::bad();
+	return badItem;
+}
+
+cSpecItem &cScenario::get_special_item(item_num_t item)
+{
+	if (item>=0 && item<special_items.size())
+		return special_items[item];
+	static cSpecItem badItem=cSpecItem::bad();
+	return badItem;
+}
+
+cShop const &cScenario::get_shop(int shop) const
+{
+	if (shop>=0 && shop<shops.size())
+		return shops[shop];
+	static cShop badShop=cShop::bad();
+	return badShop;
+
+}
+cShop &cScenario::get_shop(int shop)
+{
+	if (shop>=0 && shop<shops.size())
+		return shops[shop];
+	static cShop badShop;
+	badShop=cShop::bad();
+	return badShop;
+}
+
+std::string &cScenario::get_special_string(int id)
+{
+	   if (id>=0 && id<spec_strs.size())
+			   return spec_strs[id];
+	   if (id>=0 && id<200) {
+			   spec_strs.resize(id+1);
+			   return spec_strs[id];
+	   }
+	   static std::string badString;
+	   badString="Bad Special String";
+	   return badString;
+}
+
+std::string const &cScenario::get_special_string(int id) const
+{
+	   if (id>=0 && id<spec_strs.size())
+			   return spec_strs[id];
+	   static std::string badString="Bad Special String";
+	   return badString;
+}
+ 
+cTerrain const &cScenario::get_terrain(ter_num_t ter) const
+{
+	if (ter<ter_types.size())
+		return ter_types[ter];
+	static cTerrain badTerrain=cTerrain::bad();
+	return badTerrain;
+}
+
+cTerrain &cScenario::get_terrain(ter_num_t ter)
+{
+	if (ter<ter_types.size())
+		return ter_types[ter];
+	static cTerrain badTerrain;
+	badTerrain=cTerrain::bad();
+	return badTerrain;
+}
+
+void cScenario::import_legacy(legacy::scenario_data_type const &old){
 	is_legacy = true;
 	difficulty = old.difficulty;
-	intro_pic = old.intro_pic;
+	intro_mess_pic = intro_pic = porting::port_graphic_num(old.intro_pic+1600);
 	default_ground = old.default_ground * 2;
-	intro_mess_pic = old.intro_pic;
 	where_start.x = old.where_start.x;
 	where_start.y = old.where_start.y;
 	out_sec_start.x = old.out_sec_start.x;
@@ -250,7 +394,14 @@ void cScenario::import_legacy(legacy::scenario_data_type& old){
 	horses.resize(30);
 	for(short i = 0; i < 30; i++) {
 		boats[i].import_legacy(old.scen_boats[i]);
+		// in the .exs scenario, the boats in town seem to be defined with exists=false
+		//    I suppose that this is also true for outdoor's boat
+		if (boats[i].which_town>=0)
+			boats[i].exists = true;
 		horses[i].import_legacy(old.scen_horses[i]);
+		// I suppose that this is similar for horses
+		if (horses[i].which_town>=0)
+			horses[i].exists = true;
 	}
 	ter_types.resize(256);
 	scen_specials.resize(256);
@@ -271,7 +422,7 @@ void cScenario::import_legacy(legacy::scenario_data_type& old){
 	adjust_diff = true;
 }
 
-cScenario::cItemStorage& cScenario::cItemStorage::operator = (legacy::item_storage_shortcut_type& old){
+cScenario::cItemStorage& cScenario::cItemStorage::operator = (legacy::item_storage_shortcut_type const &old){
 	ter_type = old.ter_type;
 	for(int i = 0; i < 10; i++) item_num[i] = old.item_num[i];
 	for(int i = 0; i < 10; i++) item_odds[i] = old.item_odds[i];
@@ -279,18 +430,40 @@ cScenario::cItemStorage& cScenario::cItemStorage::operator = (legacy::item_stora
 	return *this;
 }
 
-void cScenario::import_legacy(legacy::scen_item_data_type& old){
+void cScenario::import_legacy(legacy::scen_item_data_type const &old){
+
 	scen_items.resize(400);
-	for(short i = 0; i < 400; i++)
-		scen_items[i].import_legacy(old.scen_items[i]);
-	for(short i = 0; i < 256; i++) {
-		scen_monsters[i].m_name = old.monst_names[i];
-		if(scen_monsters[i].m_type == eRace::UNDEAD && scen_monsters[i].m_name.find("Skeleton") != std::string::npos)
-			scen_monsters[i].m_type = eRace::SKELETAL;
-		if(scen_monsters[i].m_type == eRace::HUMANOID && scen_monsters[i].m_name.find("Goblin") != std::string::npos)
-			scen_monsters[i].m_type = eRace::GOBLIN;
+	StringList strings = *ResMgr::strings.get("legacy-items-desc");
+	std::map<std::string, std::string> fullNameToDesc;
+	for (auto const &str : strings) {
+		auto split = str.find('|');
+		if (split == std::string::npos)
+			continue;
+		std::string name=str.substr(0,split);
+		std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c){ return std::tolower(c); });
+		fullNameToDesc[name] = str.substr(split+1);
 	}
-	for(short i = 0; i < 256; i++)
+	for(size_t i = 0; i < 400; i++) {
+		scen_items[i].import_legacy(old.scen_items[i]);
+		std::string name=scen_items[i].full_name+(scen_items[i].cursed ? "_cursed" : scen_items[i].magic ? "_magic" : "");
+		std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c){ return std::tolower(c); });
+		auto const &descIt=fullNameToDesc.find(name);
+		if (descIt==fullNameToDesc.end())
+			continue;
+		if (!scen_items[i].desc.empty())
+			scen_items[i].desc=descIt->second+" ("+scen_items[i].desc+")";
+		else
+			scen_items[i].desc=descIt->second;
+	}
+	for(short i = 0; i < std::min<short>(256,scen_monsters.size()); i++) {
+		auto &monster=scen_monsters[i];
+		monster.m_name = old.monst_names[i];
+		if(monster.m_type == eRace::UNDEAD && monster.m_name.find("Skeleton") != std::string::npos)
+			monster.m_type = eRace::SKELETAL;
+		if(monster.m_type == eRace::HUMANOID && monster.m_name.find("Goblin") != std::string::npos)
+			monster.m_type = eRace::GOBLIN;
+	}
+	for(short i = 0; i < std::min<short>(256, ter_types.size()); i++)
 		ter_types[i].name = old.ter_names[i];
 	// Some default shops - the five magic shops and the healing shop.
 	cShop magic_shop(SHOP_JUNK);
@@ -314,7 +487,7 @@ std::string cScenario::format_scen_version() const {
 }
 
 ter_num_t cScenario::get_ground_from_ter(ter_num_t ter) const {
-	return get_ter_from_ground(ter_types[ter].ground_type);
+	return get_ter_from_ground(get_terrain(ter).ground_type);
 }
 
 ter_num_t cScenario::get_ter_from_ground(unsigned short ground) const {
@@ -326,7 +499,7 @@ ter_num_t cScenario::get_ter_from_ground(unsigned short ground) const {
 			else if(archetype < 0)
 				archetype = i;
 		}
-	return std::max(archetype, ter_num_t());
+	return archetype<0 ? ter_num_t() : archetype;
 }
 
 ter_num_t cScenario::get_trim_terrain(unsigned short ground, unsigned short trim_g, eTrimType trim) const {
@@ -412,12 +585,6 @@ bool cScenario::is_item_used(item_num_t item) const {
 	return false;
 }
 
-cItem cScenario::get_stored_item(int loot) const {
-	if(loot >= 0 && loot < scen_items.size())
-		return scen_items[loot];
-	return cItem();
-}
-
 static const short loot_min[5] = {0,0,5,50,400};
 static const short loot_max[5] = {3,8,40,800,4000};
 
@@ -429,7 +596,7 @@ cItem cScenario::pull_item_of_type(unsigned int loot_max,short min_val,short max
 	}
 	for(short i = 0; i < 80; i++) {
 		int j = get_ran(1,0,scen_items.size() - 1);
-		cItem temp_i = get_stored_item(j);
+		cItem const &temp_i = get_item(j);
 		if(temp_i.variety == eItemType::NO_ITEM) continue;
 		if(std::find(types.begin(), types.end(), temp_i.variety) != types.end()) {
 			short val = (temp_i.charges > 0) ? temp_i.charges * temp_i.value : temp_i.value;
@@ -536,9 +703,25 @@ cOutdoors& cScenario::get_sector(int x, int y) {
 	return *outdoors[x][y];
 }
 
+cMonster &cScenario::get_monster(mon_num_t monst)
+{
+	if (monst<scen_monsters.size())
+		return scen_monsters[monst];
+	static cMonster badMonster;
+	badMonster=cMonster::bad();
+	return badMonster;
+}
+
+cMonster const &cScenario::get_monster(mon_num_t monst) const
+{
+	if (monst<scen_monsters.size())
+		return scen_monsters[monst];
+	static cMonster const badMonster=cMonster::bad();
+	return badMonster;
+}
+
 bool cScenario::is_town_entrance_valid(spec_loc_t loc) const {
-	auto towns_in_scenario = towns.size();
-	return loc.spec >= 0 && loc.spec < towns_in_scenario;
+	return loc.spec >= 0 && loc.spec < towns.size();
 }
 
 void cScenario::writeTo(cTagFile& file) const {

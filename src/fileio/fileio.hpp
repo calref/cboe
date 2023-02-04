@@ -15,13 +15,15 @@
 #include <SFML/System/InputStream.hpp>
 #include <boost/filesystem/path.hpp>
 
+#include "global.hpp"
+
 class cScenario;
 class cUniverse;
 
 fs::path locate_scenario(std::string scen_name);
 bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header = false);
 
-bool load_party(fs::path file_to_load, cUniverse& univ);
+bool load_party(fs::path const &file_to_load, cUniverse& univ);
 bool save_party(fs::path dest_file, const cUniverse& univ);
 
 void init_directories(const char* exec_path);

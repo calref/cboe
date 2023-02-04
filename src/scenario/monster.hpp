@@ -14,6 +14,8 @@
 #include <array>
 #include <iosfwd>
 
+#include "dialogxml/widgets/pict.hpp"
+
 #include "monster_abilities.hpp"
 #include "race.hpp"
 #include "location.hpp"
@@ -73,11 +75,25 @@ public:
 	
 	std::map<eMonstAbil,uAbility>::iterator addAbil(eMonstAbilTemplate what, int param = 0);
 	int addAttack(unsigned short dice, unsigned short sides, eMonstMelee type = eMonstMelee::SWING);
-	
-	void import_legacy(legacy::monster_record_type& old);
+	cPictNum get_picture_num() const {
+		return get_picture_num(picture_num);
+	}
+	pic_num_t get_num_for_picture() const {
+		return picture_num;
+	}
+	static cPictNum get_picture_num(pic_num_t pic);
+	static pic_num_t get_num_for_picture(cPictNum const &pic);
+
+	void import_legacy(legacy::monster_record_type const &old);
 	cMonster();
 	void writeTo(cTagFile_Page& page) const;
 	void readFrom(const cTagFile_Page& page);
+	
+	static cMonster bad() {
+		cMonster monster;
+		monster.m_name="BAD Monster";
+		return monster;
+	}
 };
 
 class cTownperson {
@@ -93,7 +109,7 @@ public:
 	short special_on_kill, special_on_talk;
 	pic_num_t facial_pic;
 	
-	void import_legacy(legacy::creature_start_type old);
+	void import_legacy(legacy::creature_start_type const &old);
 	cTownperson();
 	cTownperson(location loc, mon_num_t num, const cMonster& monst);
 };

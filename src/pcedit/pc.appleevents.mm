@@ -8,15 +8,15 @@
 
 #include "universe/universe.hpp" // Include before Cocoa because the Cocoa header defines things that cause compilation errors in here
 #include <Cocoa/Cocoa.h>
+#include <iostream>
 #include <string>
 #include "fileio/fileio.hpp"
 #include "pc.menus.hpp"
 #include "pc.fileio.hpp"
 
-extern bool verify_restore_quit(std::string dlog);
-extern bool All_Done, party_in_scen, scen_items_loaded;
-extern cUniverse univ;
-extern fs::path file_in_mem;
+extern bool All_Done, party_in_scen;
+extern bool pending_quit;
+extern fs::path pending_file_to_load;
 
 @interface AppleEventHandler : NSObject<NSApplicationDelegate>
 -(BOOL)application:(NSApplication*) app openFile:(NSString*) file;
@@ -25,35 +25,38 @@ extern fs::path file_in_mem;
 
 void set_up_apple_events(int argc, char* argv[]); // Suppress "no prototype" warning
 void set_up_apple_events(int, char*[]) {
-	AppleEventHandler* aeHandler = [[AppleEventHandler alloc] init];
+	static AppleEventHandler* aeHandler;
+	aeHandler = [[AppleEventHandler alloc] init];
 	[[NSApplication sharedApplication] setDelegate: aeHandler];
 }
 
 @implementation AppleEventHandler
 -(BOOL)application:(NSApplication*) app openFile:(NSString*) file {
 	(void) app; // Suppress "unused parameter" warning
-	
-	unsigned long len = [file length], sz = len + 1;
-	auto msg = std::shared_ptr<unichar>(new unichar[sz], std::default_delete<unichar[]>());
-	std::fill(msg.get(), msg.get() + sz, 0);
-	[file getCharacters: msg.get() range: (NSRange){0, len}];
-	std::string fileName;
-	std::copy(msg.get(), msg.get() + len, std::inserter(fileName, fileName.begin()));
-	
-	if(load_party(fileName, univ)) {
-		file_in_mem = fileName;
-		party_in_scen = !univ.party.scen_name.empty();
-		if(!party_in_scen) load_base_item_defs();
-		scen_items_loaded = true;
-		menu_activate();
+	if(file == nil) {
+		std::cerr << "Error: filename was nil" << std::endl;
+		return NO;
 	}
-	return TRUE;
+	pending_file_to_load=file.fileSystemRepresentation;
+	return YES;
 }
 
 -(NSApplicationTerminateReply)applicationShouldTerminate: (NSApplication*)sender {
 	(void) sender; // Suppress "unused parameter" warning
+	// REMOVEME when we solve the causes of the crash
+	//    note: this is actually very bad because we will cancel a shutdown,
+	//          and this does not work if a dialog is opened, ...
+	//          but at least this does not lead to a crash
+	if (!party_in_scen) {
+		All_Done = true;
+		return NSTerminateNow;
+	}
+	pending_quit=true;
+	return NSTerminateCancel;
+#if 0
 	All_Done = verify_restore_quit("save-quit");
 	return All_Done ? NSTerminateNow : NSTerminateCancel;
+#endif
 }
 @end
 

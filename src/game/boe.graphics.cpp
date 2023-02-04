@@ -12,6 +12,7 @@
 #include "boe.graphics.hpp"
 #include "boe.newgraph.hpp"
 #include "boe.graphutil.hpp"
+#include "boe.minimap.hpp"
 #include "boe.monster.hpp"
 #include "boe.locutils.hpp"
 #include "boe.text.hpp"
@@ -60,7 +61,6 @@ extern short num_targets_left;
 extern location spell_targets[8];
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
-extern sf::Texture bg_gworld;
 extern const rectangle sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern rectangle startup_top;
 extern rectangle talk_area_rect, word_place_rect;
@@ -71,8 +71,6 @@ extern short fast_bang;
 extern tessel_ref_t bg[];
 extern cUniverse univ;
 extern cCustomGraphics spec_scen_g;
-extern sf::RenderWindow mini_map;
-bool map_visible = false;
 extern std::string save_talk_str1, save_talk_str2;
 extern cDrawableManager drawable_mgr;
 
@@ -85,7 +83,7 @@ long anim_ticks = 0;
 extern enum_map(eGuiArea, rectangle) win_to_rects;
 
 // 0 - title  1 - button  2 - credits  3 - base button
-rectangle startup_from[4] = {{0,0,274,602},{274,0,322,301},{0,301,67,579},{274,301,314,341}};
+rectangle const startup_from[4] = {{0,0,274,602},{274,0,322,301},{0,301,67,579},{274,301,314,341}};
 extern enum_map(eStartButton, rectangle) startup_button;
 
 rectangle	top_left_rec = {0,0,36,28};
@@ -97,13 +95,14 @@ short debug_nums[6] = {0,0,0,0,0,0};
 char light_area[13][13];
 char unexplored_area[13][13];
 
-// Declare the graphics
+// Declare the graphics and their dimension
 sf::RenderTexture pc_stats_gworld;
 sf::RenderTexture item_stats_gworld;
 sf::RenderTexture text_area_gworld;
 sf::RenderTexture terrain_screen_gworld;
 sf::RenderTexture text_bar_gworld;
-sf::RenderTexture map_gworld;
+rectangle terrain_screen_rect;
+rectangle text_area_rect;
 
 bool has_run_anim = false,currently_loading_graphics = false;
 
@@ -124,8 +123,6 @@ char spot_seen[9][9];
 
 char anim_str[60];
 location anim_str_loc;
-
-extern tessel_ref_t bw_pats[6];
 
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 bool supressing_some_spaces = false;
@@ -169,7 +166,7 @@ void adjust_window_mode() {
 	mainView.setViewport(mainPort);
 	
 #ifndef __APPLE__ // This overrides Dock icon on OSX, which isn't what we want at all
-	const ImageRsrc& icon = ResMgr::graphics.get("icon", true);
+	auto const & icon = *ResMgr::graphics.get("icon", true);
 	mainPtr.setIcon(icon->getSize().x, icon->getSize().y, icon->copyToImage().getPixelsPtr());
 #endif
 
@@ -249,7 +246,7 @@ void init_startup() {
 }
 
 void draw_startup(short but_type) {
-	sf::Texture& startup_gworld = *ResMgr::graphics.get("startup", true);
+	auto const &startup_gworld = *ResMgr::graphics.get("startup", true);
 	rect_draw_some_item(startup_gworld,startup_from[0],mainPtr,startup_top);
 	
 	for(auto btn : startup_button.keys()) {
@@ -269,9 +266,11 @@ void draw_startup_anim(bool advance) {
 	anim_from = anim_to;
 	anim_from.offset(-1,-4 + startup_anim_pos);
 	if(advance) startup_anim_pos = (startup_anim_pos + 1) % 542;
-	rect_draw_some_item(*ResMgr::graphics.get("startbut",true),anim_size,mainPtr,startup_button[STARTBTN_SCROLL]);
+	auto const &startbut=*ResMgr::graphics.get("startbut",true);
+	rect_draw_some_item(startbut,rectangle(startbut),mainPtr,startup_button[STARTBTN_SCROLL]);
 	anim_to.offset(startup_button[STARTBTN_SCROLL].left, startup_button[STARTBTN_SCROLL].top);
-	rect_draw_some_item(*ResMgr::graphics.get("startanim",true),anim_from,mainPtr,anim_to,sf::BlendAlpha);
+	auto const &startanim=*ResMgr::graphics.get("startanim",true);
+	rect_draw_some_item(startanim,anim_from,mainPtr,anim_to,sf::BlendAlpha);
 }
 
 void draw_startup_stats() {
@@ -313,30 +312,13 @@ void draw_startup_stats() {
 			if(univ.party[i].main_status != eMainStatus::ABSENT) {
 				to_rect = party_to;
 				to_rect.offset(pc_rect.left,pc_rect.top);
-				pic_num_t pic = univ.party[i].which_graphic;
-				if(pic >= 1000) {
-					std::shared_ptr<const sf::Texture> gw;
-					graf_pos_ref(gw, from_rect) = spec_scen_g.find_graphic(pic % 1000, pic >= 10000);
-					rect_draw_some_item(*gw,from_rect,mainPtr,to_rect,sf::BlendAlpha);
-				} else if(pic >= 100) {
-					pic -= 100;
-					// Note that we assume it's a 1x1 graphic.
-					// PCs can't be larger than that, but we leave it to the scenario designer to avoid assigning larger graphics.
-					from_rect = get_monster_template_rect(pic, 0, 0);
-					int which_sheet = m_pic_index[pic].i / 20;
-					sf::Texture& monst_gworld = *ResMgr::graphics.get("monst" + std::to_string(1 + which_sheet));
-					rect_draw_some_item(monst_gworld,from_rect,mainPtr,to_rect,sf::BlendAlpha);
-				} else {
-					from_rect = calc_rect(2 * (pic / 8), pic % 8);
-					sf::Texture& pc_gworld = *ResMgr::graphics.get("pcs");
-					rect_draw_some_item(pc_gworld,from_rect,mainPtr,to_rect,sf::BlendAlpha);
-				}
-				
+				Texture gw;
+				if (cPict::get_picture(univ.party[i].get_picture_num(), gw, from_rect))
+					rect_draw_some_item(gw,from_rect,mainPtr,to_rect,sf::BlendAlpha);
 				style.pointSize = 14;
 				pc_rect.offset(35,0);
 				win_draw_string(mainPtr,pc_rect,univ.party[i].name,eTextMode::WRAP,style);
-				to_rect.offset(pc_rect.left + 8,pc_rect.top + 8);
-				
+				to_rect.offset(pc_rect.left + 8,pc_rect.top + 8);				
 			}
 			style.pointSize = 12;
 			pc_rect.offset(12,16);
@@ -420,14 +402,14 @@ void draw_start_button(eStartButton which_position,short which_button) {
 		"Start Scenario","Custom Scenario","Quit"};
 	// The 0..65535 version of the blue component was 14472; the commented version was 43144431
 	sf::Color base_color = {0,0,57};
-	
+	auto const &startup_gworld = *ResMgr::graphics.get("startup",true);
 	from_rect = startup_from[3];
 	from_rect.offset((which_button > 0) ? 40 : 0,0);
 	to_rect = startup_button[which_position];
 	to_rect.left += 4; to_rect.top += 4;
 	to_rect.right = to_rect.left + 40;
 	to_rect.bottom = to_rect.top + 40;
-	rect_draw_some_item(*ResMgr::graphics.get("startup",true),from_rect,mainPtr,to_rect);
+	rect_draw_some_item(startup_gworld,from_rect,mainPtr,to_rect);
 	
 	TextStyle style;
 	style.font = FONT_DUNGEON;
@@ -458,8 +440,7 @@ void arrow_button_click(rectangle button_rect) {
 
 
 void reload_startup() {
-	mini_map.setVisible(false);
-	map_visible = false;
+	minimap::set_visible(false);
 	mainPtr.setActive();
 	init_startup();
 	
@@ -477,20 +458,33 @@ void end_startup() {
 	item_sbar->show();
 }
 
-static void loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName) {
-	sf::Texture& temp_gworld = *ResMgr::graphics.get(imgName);
-	rectangle texrect(temp_gworld);
-	tex.create(texrect.width(), texrect.height());
-	rect_draw_some_item(temp_gworld, texrect, tex, texrect, sf::BlendNone);
+/* FIXME: normally, the renderTexture needed to be destroyed and recreated if the user
+		  change the UI scaling. Let assume for now that he restarts the application */
+static rectangle loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName) {
+	auto const& temp_gworld = *ResMgr::graphics.get(imgName);
+	
+	float ui_scale = get_float_pref("UIScale", 1.0);
+	if(ui_scale < 1) ui_scale = 1.0;
+
+	rectangle texrect(*temp_gworld);
+	tex.create(int(ui_scale*temp_gworld.dimension.x), int(ui_scale*temp_gworld.dimension.y));
+	rect_draw_some_item(temp_gworld, rectangle(temp_gworld), tex, rectangle(tex), sf::BlendNone);
+
+	// now update the viewport so that a picture draw in 0,0,dim.y,dim.x fills the texture
+	sf::View view;
+	view.reset(sf::FloatRect(0, 0, rectangle(tex).width(), rectangle(tex).height()));
+	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
+	tex.setView(view);
+	return rectangle(0,0,temp_gworld.dimension.y,temp_gworld.dimension.x);
 }
 
 void load_main_screen() {
 	// Preload the main game interface images
 	ResMgr::graphics.get("invenbtns");
-	loadImageToRenderTexture(terrain_screen_gworld, "terscreen");
+	terrain_screen_rect=loadImageToRenderTexture(terrain_screen_gworld, "terscreen");
 	loadImageToRenderTexture(pc_stats_gworld, "statarea");
 	loadImageToRenderTexture(item_stats_gworld, "inventory");
-	loadImageToRenderTexture(text_area_gworld, "transcript");
+	text_area_rect=loadImageToRenderTexture(text_area_gworld, "transcript");
 	loadImageToRenderTexture(text_bar_gworld, "textbar");
 	ResMgr::graphics.get("buttons");
 }
@@ -622,7 +616,7 @@ void draw_text_bar() {
 
 void put_text_bar(std::string str) {
 	text_bar_gworld.setActive(false);
-	auto& bar_gw = *ResMgr::graphics.get("textbar");
+	auto const &bar_gw = *ResMgr::graphics.get("textbar");
 	rect_draw_some_item(bar_gw, rectangle(bar_gw), text_bar_gworld, rectangle(bar_gw));
 	TextStyle style;
 	style.colour = sf::Color::White;
@@ -635,7 +629,7 @@ void put_text_bar(std::string str) {
 	win_draw_string(text_bar_gworld, to_rect, str, eTextMode::LEFT_TOP, style);
 	
 	if(!monsters_going) {
-		sf::Texture& status_gworld = *ResMgr::graphics.get("staticons");
+		auto const & status_gworld = *ResMgr::graphics.get("staticons");
 		to_rect.top -= 2;
 		to_rect.left = to_rect.right - 15;
 		to_rect.width() = 12;
@@ -664,17 +658,14 @@ void put_text_bar(std::string str) {
 
 void refresh_text_bar() {
 	mainPtr.setActive(false);
-	rect_draw_some_item(text_bar_gworld.getTexture(), rectangle(text_bar_gworld), mainPtr, win_to_rects[WINRECT_STATUS]);
+	rect_draw_some_item(Texture(text_bar_gworld.getTexture()), rectangle(text_bar_gworld), mainPtr, win_to_rects[WINRECT_STATUS]);
 	mainPtr.setActive();
 }
 
 // this is used for determinign whether to round off walkway corners
 // right now, trying a restrictive rule (just cave floor and grass, mainly)
 bool is_nature(short x, short y, unsigned short ground_t) {
-	ter_num_t ter_type;
-	
-	ter_type = coord_to_ter((short) x,(short) y);
-	return ground_t == univ.scenario.ter_types[ter_type].ground_type;
+	return ground_t == univ.get_terrain(coord_to_ter((short) x,(short) y)).ground_type;
 }
 
 std::vector<location> forcecage_locs;
@@ -682,12 +673,12 @@ extern std::list<text_label_t> posted_labels;
 
 //mode ... if 1, don't place on screen after redoing
 // if 2, only redraw over active monst
-void draw_terrain(short	mode) {
+void draw_terrain(short mode) {
 	location where_draw;
 	location sector_p_in,view_loc;
 	char can_draw;
 	ter_num_t spec_terrain;
-	bool off_terrain = false,draw_frills = true;
+	bool draw_frills = true;
 	bool frills_on = get_bool_pref("DrawTerrainShoreFrills", true);
 	
 	if(overall_mode == MODE_TALKING || overall_mode == MODE_SHOPPING || overall_mode == MODE_STARTUP)
@@ -737,8 +728,9 @@ void draw_terrain(short	mode) {
 			where_draw.x += i - 6;
 			where_draw.y += j - 6;
 			if(!(is_out()))
-				light_area[i][j] = (is_town()) ? pt_in_light(view_loc,where_draw) : combat_pt_in_light(where_draw);
-			if(!is_out() && !univ.town.is_on_map(where_draw.x, where_draw.y))
+				light_area[i][j] = (is_town()) ? (can_see_light(view_loc,where_draw,sight_obscurity)<=4) : combat_pt_in_light(where_draw);
+			if((!is_out() && !univ.town.is_on_map(where_draw.x, where_draw.y)) ||
+			   (is_out() && !univ.out.is_on_map(where_draw.x, where_draw.y)))
 				unexplored_area[i][j] = 0;
 			else unexplored_area[i][j] = 1 - is_explored(where_draw.x,where_draw.y);
 		}
@@ -749,7 +741,6 @@ void draw_terrain(short	mode) {
 			where_draw = (is_out()) ? univ.party.out_loc : center;
 			where_draw.x += q - 4;
 			where_draw.y += r - 4;
-			off_terrain = false;
 			
 			draw_frills = true;
 			if(!is_out() && !univ.town.is_on_map(where_draw.x, where_draw.y)) {
@@ -800,12 +791,13 @@ void draw_terrain(short	mode) {
 			if((can_draw != 0) && (overall_mode != MODE_RESTING)) { // if can see, not a pit, and not resting
 				if(is_combat()) anim_ticks = 0;
 				
-				eTrimType trim = univ.scenario.ter_types[spec_terrain].trim_type;
+				auto const &terrain=univ.get_terrain(spec_terrain);
+				eTrimType trim = terrain.trim_type;
 				
 				// Finally, draw this terrain spot
 				if(trim == eTrimType::WALKWAY){
 					int trim = -1;
-					unsigned short ground_t = univ.scenario.ter_types[spec_terrain].trim_ter;
+					unsigned short ground_t = terrain.trim_ter;
 					ter_num_t ground_ter = univ.scenario.get_ter_from_ground(ground_t);
 					if(!loc_off_act_area(where_draw)) {
 						if(is_nature(where_draw.x - 1,where_draw.y,ground_t)){ // check left
@@ -850,12 +842,19 @@ void draw_terrain(short	mode) {
 			if((can_draw != 0) && (overall_mode != MODE_RESTING) && frills_on && draw_frills)
 				place_trim((short) q,(short) r,where_draw,spec_terrain);
 //			if((is_town() && univ.town.is_spot(where_draw.x,where_draw.y)) ||
-//			   (is_out() && univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_spot[where_draw.x][where_draw.y]))
-//				Draw_Some_Item(roads_gworld, calc_rect(6, 0), terrain_screen_gworld, loc(q,r), 1, 0);
+//			   (is_out() && univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].is_special_spot(where_draw.x,where_draw.y)))
+//				Draw_Some_Item(roads_gworld, calc_rect(6, 0), terrain_screen_gworld, loc(q,r));
 			// TODO: Move draw_sfx, draw_items, draw_fields, draw_spec_items, etc to here
 			
 			if(is_town() || is_combat())
 				draw_items(where_draw);
+			
+			int max_dim = is_town() ? int(univ.town->max_dim) : 96;
+			if (where_draw.x<0 || where_draw.x>=max_dim || where_draw.y<0 || where_draw.y>=max_dim) {
+				place_road(q,r,where_draw,false);
+				continue;
+			}
+
 			if(is_out() && univ.out.out_e[where_draw.x][where_draw.y] && univ.out.is_road(where_draw.x,where_draw.y))
 				place_road(q,r,where_draw,true);
 			else if(is_town() && univ.town.is_explored(where_draw.x,where_draw.y) && univ.town.is_road(where_draw.x, where_draw.y))
@@ -898,7 +897,7 @@ void draw_terrain(short	mode) {
 	// Draw top half of forcecages (this list is populated by draw_fields)
 	// TODO: Move into the above loop to eliminate global variable
 	for(location fc_loc : forcecage_locs)
-		Draw_Some_Item(*ResMgr::graphics.get("fields"),calc_rect(2,0),terrain_screen_gworld,fc_loc,1,0);
+		Draw_Some_Item(*ResMgr::graphics.get("fields"),calc_rect(2,0),terrain_screen_gworld,fc_loc);
 	// Draw any posted labels, then clear them out
 	clip_rect(terrain_screen_gworld, {13, 13, 337, 265});
 	for(text_label_t lbl : posted_labels)
@@ -925,9 +924,10 @@ void draw_terrain(short	mode) {
 
 
 static ter_num_t get_ground_for_shore(ter_num_t ter){
-	if(univ.scenario.ter_types[ter].block_horse) return current_ground;
-	else if(univ.scenario.ter_types[ter].blocksMove()) return current_ground;
-	else return ter;
+	if(univ.get_terrain(ter).block_horse || univ.get_terrain(ter).blocksMove())
+		return current_ground;
+	else
+		return ter;
 }
 
 void place_trim(short q,short r,location where,ter_num_t ter_type) {
@@ -1067,7 +1067,7 @@ static void init_trim_mask(std::unique_ptr<sf::Texture>& mask, rectangle src_rec
 	render.create(28, 36);
 	render.clear(sf::Color::White);
 	rect_draw_some_item(*ResMgr::graphics.get("trim"), src_rect, render, dest_rect);
-	render.display();
+	//render.display(); checkme: understand why this leads to up/down picture
 	mask.reset(new sf::Texture);
 	mask->create(28, 36);
 	mask->update(render.getTexture().copyToImage());
@@ -1098,9 +1098,6 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 		{0,0,36,28},
 	};
 	static std::unique_ptr<sf::Texture> trim_masks[12], walkway_masks[9];
-	rectangle from_rect = {0,0,36,28},to_rect;
-	std::shared_ptr<const sf::Texture> from_gworld;
-	sf::Texture* mask;
 	static bool inited = false;
 	if(!inited){
 		inited = true;
@@ -1119,38 +1116,31 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 		for(short i = 0; i < 8 ; i++) walkway_rects[i].offset((i%4)*28,(i/4)*36);
 		walkway_rects[8].offset(196,0);
 	}
-	sf::Color test_color = {0,0,0}, store_color;
-	
 	if(!get_bool_pref("DrawTerrainShoreFrills", true))
 		return;
 	
-	unsigned short pic = univ.scenario.ter_types[ground_ter].picture;
-	if(pic < 960){
-		int which_sheet = pic / 50;
-		from_gworld = &ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet));
-		pic %= 50;
-		from_rect.offset(28 * (pic % 10), 36 * (pic / 10));
-	}else if(pic < 1000){
-		from_gworld = &ResMgr::graphics.get("teranim");
-		pic -= 960;
-		from_rect.offset(112 * (pic / 5),36 * (pic % 5));
-	}else{
-		pic %= 1000;
-		graf_pos_ref(from_gworld, from_rect) = spec_scen_g.find_graphic(pic);
+	rectangle from_rect;
+	Texture from_gworld;
+	rectangle to_rect = coord_to_rect(q,r);
+	if (!cPict::get_picture(univ.get_terrain(ground_ter).get_picture_num(), from_gworld, from_rect)) {
+		fill_rect(terrain_screen_gworld, to_rect, sf::Color::Yellow);
+		return; // CHECKME better to draw a bad image to indicate that there is a problem here
 	}
-	if(which_trim < 50) {
+	
+	sf::Texture* mask=nullptr;
+	if(which_trim>=0 && which_trim < 12) {
 		if(!trim_masks[which_trim])
 			init_trim_mask(trim_masks[which_trim], trim_rects[which_trim]);
 		mask = trim_masks[which_trim].get();
-	} else {
+	} else if (which_trim>=50 && which_trim<59){
 		int which = which_trim - 50;
 		if(!walkway_masks[which])
 			init_trim_mask(walkway_masks[which], walkway_rects[which]);
 		mask = walkway_masks[which].get();
 	}
-	to_rect = coord_to_rect(q,r);
-	
-	rect_draw_some_item(*from_gworld, from_rect, *mask, terrain_screen_gworld, to_rect);
+	RenderState state;
+	if (mask) state.set_mask(*mask);
+	rect_draw_some_item(from_gworld, from_rect, terrain_screen_gworld, to_rect, state);
 }
 
 
@@ -1159,10 +1149,11 @@ static bool extend_road_terrain(int x, int y) {
 	   return true;
 	if(is_town() && univ.town.is_road(x,y))
 		return true;
-	ter_num_t ter = coord_to_ter(x,y);
-	eTrimType trim = univ.scenario.ter_types[ter].trim_type;
-	eTerSpec spec = univ.scenario.ter_types[ter].special;
-	ter_num_t flag = univ.scenario.ter_types[ter].flag1;
+	ter_num_t const ter = coord_to_ter(x,y);
+	cTerrain const &terrain=univ.get_terrain(ter);
+	eTrimType trim = terrain.trim_type;
+	eTerSpec spec = terrain.special;
+	ter_num_t flag = terrain.flag1;
 	if(trim == eTrimType::CITY || trim == eTrimType::WALKWAY)
 		return true;
 	if(spec == eTerSpec::BRIDGE)
@@ -1171,7 +1162,7 @@ static bool extend_road_terrain(int x, int y) {
 		return true; // cave entrance, most likely
 	if(spec == eTerSpec::UNLOCKABLE || spec == eTerSpec::CHANGE_WHEN_STEP_ON)
 		return true; // closed door, possibly locked; or closed portcullis
-	if(spec == eTerSpec::CHANGE_WHEN_USED && univ.scenario.ter_types[flag].special == eTerSpec::CHANGE_WHEN_STEP_ON && univ.scenario.ter_types[flag].flag1 == ter)
+	if(spec == eTerSpec::CHANGE_WHEN_USED && univ.get_terrain(flag).special == eTerSpec::CHANGE_WHEN_STEP_ON && univ.get_terrain(flag).flag1 == ter)
 		return true; // open door (I think) TODO: Verify this works
 	if(spec == eTerSpec::LOCKABLE)
 		return true; // open portcullis (most likely)
@@ -1180,14 +1171,14 @@ static bool extend_road_terrain(int x, int y) {
 
 static bool can_build_roads_on(ter_num_t ter) {
 	if(impassable(ter)) return false;
-	if(univ.scenario.ter_types[ter].special == eTerSpec::BRIDGE) return false;
+	if(univ.get_terrain(ter).special == eTerSpec::BRIDGE) return false;
 	return true;
 }
 
 static bool connect_roads(ter_num_t ter){
 	if(ter >= univ.scenario.ter_types.size()) return false;
-	eTrimType trim = univ.scenario.ter_types[ter].trim_type;
-	eTerSpec spec = univ.scenario.ter_types[ter].special;
+	eTrimType trim = univ.scenario.get_terrain(ter).trim_type;
+	eTerSpec spec = univ.scenario.get_terrain(ter).special;
 	if(trim == eTrimType::CITY)
 		return true;
 	if(spec == eTerSpec::TOWN_ENTRANCE && trim != eTrimType::NONE)
@@ -1214,7 +1205,7 @@ void place_road(short q,short r,location where,bool here) {
 		{16,12,20,16},	// central spot
 	};
 	
-	sf::Texture& roads_gworld = *ResMgr::graphics.get("fields");
+	auto const & roads_gworld = *ResMgr::graphics.get("fields");
 	
 	if(here){
 		to_rect = road_dest_rects[6];
@@ -1253,10 +1244,10 @@ void place_road(short q,short r,location where,bool here) {
 		bool horz = false, vert = false;
 		eTrimType trim = eTrimType::NONE, vertTrim = eTrimType::NONE;
 		if(ref < univ.scenario.ter_types.size()) {
-			trim = univ.scenario.ter_types[ref].trim_type;
+			trim = univ.get_terrain(ref).trim_type;
 		}
 		if(ter < univ.scenario.ter_types.size()) {
-			vertTrim = univ.scenario.ter_types[ter].trim_type;
+			vertTrim = univ.get_terrain(ter).trim_type;
 		}
 		if(where.y > 0)
 			ter = coord_to_ter(where.x,where.y - 1);
@@ -1267,7 +1258,7 @@ void place_road(short q,short r,location where,bool here) {
 		
 		if(((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < univ.town->max_dim - 1)))
 			ter = coord_to_ter(where.x + 1,where.y);
-		eTrimType horzTrim = univ.scenario.ter_types[ter].trim_type;
+		eTrimType horzTrim = univ.get_terrain(ter).trim_type;
 		if(((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim - 1))
 			|| connect_roads(ter))
 			horz = can_build_roads_on(ref);
@@ -1277,7 +1268,7 @@ void place_road(short q,short r,location where,bool here) {
 		if(vert){
 			if(((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < univ.town->max_dim - 1)))
 				ter = coord_to_ter(where.x,where.y + 1);
-			eTrimType vertTrim = univ.scenario.ter_types[ter].trim_type;
+			eTrimType vertTrim = univ.get_terrain(ter).trim_type;
 			if(((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim - 1))
 				|| connect_roads(ter))
 				vert = can_build_roads_on(ref);
@@ -1289,7 +1280,7 @@ void place_road(short q,short r,location where,bool here) {
 		if(horz){
 			if(where.x > 0)
 				ter = coord_to_ter(where.x - 1,where.y);
-			eTrimType horzTrim = univ.scenario.ter_types[ter].trim_type;
+			eTrimType horzTrim = univ.get_terrain(ter).trim_type;
 			if((where.x == 0) || connect_roads(ter))
 				horz = can_build_roads_on(ref);
 			else if((horzTrim == eTrimType::W && trim == eTrimType::E) || (horzTrim == eTrimType::E && trim == eTrimType::W))
@@ -1485,7 +1476,7 @@ void draw_pointing_arrows() {
 
 void redraw_terrain() {
 	rectangle to_rect = win_to_rects[WINRECT_TERVIEW], from_rect(terrain_screen_gworld);
-	rect_draw_some_item(terrain_screen_gworld.getTexture(), from_rect, mainPtr, to_rect);
+	rect_draw_some_item(Texture(terrain_screen_gworld.getTexture()), from_rect, mainPtr, to_rect);
 	apply_light_mask(true);
 	
 	
@@ -1501,7 +1492,7 @@ void draw_targets(location center) {
 		return;
 	const rectangle src_rect{0,46,12,58};
 	
-	sf::Texture& src_gworld = *ResMgr::graphics.get("invenbtns");
+	auto const & src_gworld = *ResMgr::graphics.get("invenbtns");
 	for(short i = 0; i < 8; i++)
 		if((spell_targets[i].x != -1) && (point_onscreen(center,spell_targets[i]))) {
 			rectangle dest_rect = coord_to_rect(spell_targets[i].x - center.x + 4,spell_targets[i].y - center.y + 4);
@@ -1623,7 +1614,7 @@ void redraw_partial_terrain(rectangle redraw_rect) {
 	// as rect_draw_some_item will shift redraw_rect before drawing, we need to compensate
 	redraw_rect.offset(5,5);
 	
-	rect_draw_some_item(terrain_screen_gworld.getTexture(),from_rect,mainPtr,redraw_rect);
+	rect_draw_some_item(Texture(terrain_screen_gworld.getTexture()),from_rect,mainPtr,redraw_rect);
 	
 }
 

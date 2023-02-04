@@ -18,7 +18,7 @@
 #include "gfx/gfxsheets.hpp" // for NO_PIC
 #include "damage.hpp"
 
-void cTerrain::import_legacy(legacy::terrain_type_type& old){
+void cTerrain::import_legacy(legacy::terrain_type_type const &old){
 	static const std::set<int> archetypes = {
 		// This lists graphics that represent the archetypal terrains for each ground type
 		// One line per graphics sheet; last line is the animated sheet
@@ -412,4 +412,32 @@ void cTerrain::import_legacy(legacy::terrain_type_type& old){
 bool cTerrain::blocksMove() const {
 	int code = (int) blockage;
 	return code > 2;
+}
+
+cPictNum cTerrain::get_picture_num_for_terrain(pic_num_t bigPicture)
+{
+	/* in old source num < 400   : PIC_TER
+				else num < 1000  : PIC_TER_ANIM
+				else             : PIC_CUSTOM_TER
+	 */
+	if(bigPicture < 0)
+		return cPictNum(bigPicture,PIC_NONE);
+	if(bigPicture < 960)
+		return cPictNum(bigPicture,PIC_TER);
+	if(bigPicture < 1000)
+		return cPictNum(bigPicture-960,PIC_TER_ANIM);
+	if(bigPicture < 2000)
+		return cPictNum(bigPicture-1000,PIC_CUSTOM_TER);
+	return cPictNum(bigPicture-2000,PIC_CUSTOM_TER_ANIM);
+}
+
+cPictNum cTerrain::get_map_picture_num() const
+{
+	if (map_pic<0)
+		return get_picture_num();
+	if (map_pic < 1000)
+		return cPictNum(map_pic,PIC_TER_MAP);
+	if(map_pic < 2000)
+		return cPictNum(map_pic-1000,PIC_CUSTOM_TER_MAP);
+	return cPictNum(map_pic-2000,PIC_CUSTOM_TER_MAP);
 }

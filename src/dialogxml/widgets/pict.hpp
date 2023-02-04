@@ -14,11 +14,29 @@
 
 #include <SFML/Graphics.hpp>
 
-#include <vector>
+#include <functional>
 #include <map>
 #include <memory>
+#include <vector>
 #include "control.hpp"
 #include "pictypes.hpp"
+#include "gfx/texture.hpp"
+
+class cPictNum {
+public:
+	cPictNum(pic_num_t nNum=-1, ePicType nType=ePicType::PIC_NONE)
+		: num(nNum)
+		, type(nType)
+	{
+	}
+	bool operator==(const cPictNum&pict) const { return num==pict.num && type == pict.type; }
+	bool operator!=(const cPictNum&pict) const { return !operator==(pict);}
+	pic_num_t num;
+	ePicType type;
+};
+
+std::ostream& operator<< (std::ostream& out, cPictNum pic);
+std::istream& operator>> (std::istream& in, cPictNum& pic);
 
 /// A simple icon.
 /// This control can also be made clickable.
@@ -43,10 +61,17 @@ public:
 	/// - If num is 4 digits in decimal and type is not PIC_FULL, it automatically takes the remainder by 1000
 	/// and applies the custom modifier. (If type is PIC_TER_MAP, it does not take the remainder by 1000.)
 	/// - If num is 10000 or greater and type is PIC_TER_MAP, it automatically subtracts 10000 and applies the party modifier.
-	void setPict(pic_num_t num, ePicType type);
-	/// Set the pict's icon.
-	/// @param num The new icon index.
-	void setPict(pic_num_t num);
+	void setPict(pic_num_t num, ePicType type, bool updateResType=true) {
+		setPict(cPictNum(num, type), updateResType);
+	}
+	void setPict(cPictNum const &num, bool updateResType=false) {
+		picture.num=num.num;
+		if (updateResType)
+			resultType=num.type;
+		else
+			picture.type=num.type;
+		updateResultType(num.type);
+	}
 	/// Automatically recalculate the icon's bounding rect based on its current picture.
 	void recalcRect() override;
 	/// Get the current icon.
@@ -69,6 +94,10 @@ public:
 	static void advanceAnim();
 	virtual ~cPict();
 	void draw() override;
+	// only implemented for major type
+	static bool get_picture(cPictNum const &pict, Texture &source, rectangle &from_rect, int anim=0, int which_part=0);
+	static void draw_monster(sf::RenderTarget &target, rectangle to_rect, cPictNum const &pict, int anim=0);
+
 	/// A utility function to draw an icon into an arbitrary window.
 	/// @param win The window to draw in.
 	/// @param dest The bounding rect to draw in (ignored for drawing the actual, but used for background fill and framing)
@@ -88,59 +117,44 @@ public:
 	cPict& operator=(cPict& other) = delete;
 	cPict(cPict& other) = delete;
 private:
-	static std::shared_ptr<const sf::Texture> getSheetInternal(eSheetType type, size_t n);
-	std::shared_ptr<const sf::Texture> getSheet(eSheetType type, size_t n = 0);
-	std::shared_ptr<const sf::Texture> sheetCached;
+	static std::shared_ptr<const Texture> getSheetInternal(eSheetType type, size_t n);
+	std::shared_ptr<const Texture> getSheet(eSheetType type, size_t n = 0);
+	std::shared_ptr<const Texture> sheetCached;
 	eSheetType sheetCachedType;
 	size_t sheetCachedNum;
 	static short animFrame;
-	pic_num_t picNum;
-	ePicType picType;
+	cPictNum picture;
+	ePicType resultType;
 	bool drawScaled;
 	// Transient parse flags
 	bool wide = false, tall = false, tiny = false, custom = false, blank = false;
-	void drawPresetTer(short num, rectangle to_rect);
-	void drawPresetTerAnim(short num, rectangle to_rect);
-	void drawPresetMonstSm(short num, rectangle to_rect);
-	void drawPresetMonstWide(short num, rectangle to_rect);
-	void drawPresetMonstTall(short num, rectangle to_rect);
-	void drawPresetMonstLg(short num, rectangle to_rect);
-	void drawPresetDlog(short num, rectangle to_rect);
-	void drawPresetDlogLg(short num, rectangle to_rect);
-	void drawPresetTalk(short num, rectangle to_rect);
-	void drawPresetScen(short num, rectangle to_rect);
-	void drawPresetScenLg(short num, rectangle to_rect);
-	void drawPresetItem(short num, rectangle to_rect);
-	void drawPresetTinyItem(short num, rectangle to_rect);
-	void drawPresetPc(short num, rectangle to_rect);
-	void drawPresetField(short num, rectangle to_rect);
-	void drawPresetBoom(short num, rectangle to_rect);
-	void drawPresetMissile(short num, rectangle to_rect);
-	void drawPresetTerMap(short num, rectangle to_rect);
-	void drawStatusIcon(short num, rectangle to_rect);
-	void drawFullSheet(short num, rectangle to_rect);
-	void drawCustomTer(short num, rectangle to_rect);
-	void drawCustomTerAnim(short num, rectangle to_rect);
-	void drawCustomMonstSm(short num, rectangle to_rect);
-	void drawCustomMonstWide(short num, rectangle to_rect);
-	void drawCustomMonstTall(short num, rectangle to_rect);
-	void drawCustomMonstLg(short num, rectangle to_rect);
-	void drawCustomDlog(short num, rectangle to_rect);
-	void drawCustomDlogLg(short num, rectangle to_rect);
-	void drawCustomTalk(short num, rectangle to_rect);
-	void drawCustomItem(short num, rectangle to_rect);
-	void drawCustomTinyItem(short num, rectangle to_rect);
-	void drawCustomBoom(short num, rectangle to_rect);
-	void drawCustomMissile(short num, rectangle to_rect);
-	void drawCustomTerMap(short num, rectangle to_rect);
-	void drawPartyMonstSm(short num, rectangle to_rect);
-	void drawPartyMonstWide(short num, rectangle to_rect);
-	void drawPartyMonstTall(short num, rectangle to_rect);
-	void drawPartyMonstLg(short num, rectangle to_rect);
-	void drawPartyScen(short num, rectangle to_rect);
-	void drawPartyItem(short num, rectangle to_rect);
-	void drawPartyPc(short num, rectangle to_rect);
-	static std::map<ePicType,void(cPict::*)(short,rectangle)>& drawPict();
+	void updateResultType(ePicType type);
+	void drawItem(rectangle to_rect, ePicType defType, bool inTinyRect);
+	void drawMonster(rectangle to_rect, ePicType defType);
+	void drawPc(rectangle to_rect, ePicType defType);
+	void drawScenario(rectangle to_rect, ePicType defType);
+	void drawTerrain(rectangle to_rect, ePicType defType);
+	void drawPresetDlog(rectangle to_rect);
+	void drawPresetDlogLg(rectangle to_rect);
+	void drawPresetTalk(rectangle to_rect);
+	void drawPresetField(rectangle to_rect);
+	void drawPresetBoom(rectangle to_rect);
+	void drawPresetMissile(rectangle to_rect);
+	void drawStatusIcon(rectangle to_rect);
+	void drawFullSheet(rectangle to_rect);
+	void drawCustomNumDlog(int num, rectangle to_rect);
+	void drawCustomDlog(rectangle to_rect);
+	void drawCustomDlogLg(rectangle to_rect);
+	void drawCustomTalk(rectangle to_rect);
+	void drawCustomBoom(rectangle to_rect);
+	void drawCustomMissile(rectangle to_rect);
+	void drawPartyScen(rectangle to_rect);
+	cPictNum getSourcePicture(ePicType defaultType) const {
+		cPictNum res=picture;
+		if (res.type==ePicType::PIC_NONE) res.type=defaultType;
+		return res;
+	}
+	static std::map<ePicType,std::function<void(cPict *, rectangle)> >& drawPict();
 };
 
 #endif

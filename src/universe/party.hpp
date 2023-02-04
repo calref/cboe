@@ -9,11 +9,12 @@
 #ifndef BOE_DATA_PARTY_H
 #define BOE_DATA_PARTY_H
 
-#include <string>
-#include <vector>
 #include <array>
 #include <map>
 #include <set>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include <boost/iterator/indirect_iterator.hpp>
 
@@ -70,7 +71,7 @@ public:
 	public:
 		std::string who_said, in_town, the_str1, the_str2, in_scen;
 		
-		void import_legacy(legacy::talk_save_type old, const cScenario& scenario);
+		void import_legacy(legacy::talk_save_type const &old, const cScenario& scenario);
 	};
 	class cJournal {
 	public:
@@ -82,7 +83,7 @@ public:
 		eEncNoteType type;
 		std::string the_str, where, in_scen;
 		
-		void import_legacy(int16_t(& old)[2], const cScenario& scenario);
+		void import_legacy(int16_t const (& old)[2], const cScenario& scenario);
 	};
 	// formerly party_record_type
 	// TODO: Should we make age a long long?
@@ -93,7 +94,7 @@ public:
 	array2d<unsigned char, 350, 50> stuff_done;
 	// These used to be stored as magic SDFs
 	unsigned char hostiles_present;
-	bool easy_mode = false, less_wm = false;
+	bool easy_mode = false, less_wm = false, show_junk_bag=false;
 	// End former magic SDFs
 	std::array<unsigned char,90> magic_ptrs;
 	short light_level;
@@ -137,6 +138,7 @@ public:
 	std::vector<cMonster> summons; // an array of monsters which can be summoned by the party's items yet don't originate from this scenario
 	unsigned short scen_won, scen_played; // numbers of scenarios won and played respectively by this party
 	std::map<std::string,campaign_flag_type> campaign_flags;
+	std::vector<std::pair<cItem,std::set<int>>> junk_items;
 private:
 	std::map<unsigned short,std::pair<unsigned short,unsigned char>> pointers;
 	using sd_array = decltype(stuff_done);
@@ -149,11 +151,11 @@ public:
 	void clear_ptr(unsigned short p);
 	unsigned char get_ptr(unsigned short p) const;
 	
-	void import_legacy(legacy::party_record_type& old, cUniverse& univ);
-	void import_legacy(legacy::big_tr_type& old);
-	void import_legacy(legacy::stored_items_list_type& old,short which_list);
-	void import_legacy(legacy::setup_save_type& old);
-	void import_legacy(legacy::pc_record_type(& old)[6]);
+	void import_legacy(legacy::party_record_type const & old, cUniverse& univ);
+	void import_legacy(legacy::big_tr_type const & old);
+	void import_legacy(legacy::stored_items_list_type const & old,short which_list);
+	void import_legacy(legacy::setup_save_type const & old);
+	void import_legacy(legacy::pc_record_type const (& old)[6]);
 	
 	bool is_in_scenario() const;
 	bool is_alive() const override;
@@ -185,6 +187,7 @@ public:
 	int get_level() const override;
 	int calc_day() const;
 	
+	void enter_scenario(cScenario const &scenario);
 	std::unique_ptr<cPlayer> remove_pc(size_t spot);
 	void new_pc(size_t spot);
 	void replace_pc(size_t spot, std::unique_ptr<cPlayer> with);
@@ -203,9 +206,9 @@ public:
 	bool forced_give(cItem item,eItemAbil abil,short dat = -1);
 	bool has_abil(eItemAbil abil, short dat = -1) const;
 	bool take_abil(eItemAbil abil, short dat = -1);
-	bool has_class(unsigned int item_class);
-	bool take_class(unsigned int item_class) const;
-	
+	bool check_class(unsigned int item_class,bool take);
+	bool check_junk_class(unsigned int item_class,bool take,int townId=-1);
+
 	bool start_split(short x, short y, snd_num_t noise, short who);
 	bool end_split(snd_num_t noise);
 	bool is_split() const;
@@ -214,6 +217,8 @@ public:
 	void swap_pcs(size_t a, size_t b);
 	
 	bool sd_legit(short a, short b) const;
+	unsigned char sd(short a, short b) const;
+	void sd_set(short a, short b, unsigned char val);
 	void wipe_sdfs();
 	
 	auto begin() -> boost::indirect_iterator<decltype(adven)::iterator> {
@@ -235,6 +240,21 @@ public:
 	typedef std::vector<cEncNote>::iterator encIter;
 	typedef std::vector<cJournal>::iterator journalIter;
 	typedef std::vector<cConvers>::iterator talkIter;
+	cVehicle &get_boat(int id);
+	cVehicle const &get_boat(int id) const;
+	cVehicle &get_horse(int id);
+	cVehicle const &get_horse(int id) const;
+	cMonster &get_summon(mon_num_t id);
+	cMonster const &get_summon(mon_num_t id) const;
+	
+	// junk item
+	cItem const &get_junk_item(item_num_t id) const;
+	cItem &get_junk_item(item_num_t id);
+	bool is_junk_item_compatible_with_town(item_num_t id, int townId) const;
+	bool give_junk_item(cItem const &item, int townId);
+	void take_junk_item(item_num_t id);
+	void combine_junk_items();
+
 	cParty(ePartyPreset party_preset = PARTY_DEFAULT);
 	// Copy-and-swap
 	friend void swap(cParty& lhs, cParty& rhs);

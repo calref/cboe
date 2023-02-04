@@ -12,6 +12,8 @@
 #include <iosfwd>
 #include <string>
 #include <functional>
+
+#include "global.hpp"
 #include "location.hpp"
 
 namespace legacy { struct special_node_type; };
@@ -64,6 +66,8 @@ enum class eSpecType {
 	RECT_SWAP_TER = 215, RECT_TRANS_TER = 216, RECT_LOCK = 217, RECT_UNLOCK = 218,
 	
 	OUT_MAKE_WANDER = 225, OUT_FORCE_TOWN = 226, OUT_PLACE_ENCOUNTER = 227, OUT_MOVE_PARTY = 228,
+	
+	MAX_SPEC_TYPE=OUT_MOVE_PARTY
 };
 
 class cSpecial {
@@ -85,8 +89,14 @@ public:
 	short jumpto;
 	
 	cSpecial();
-	void import_legacy(legacy::special_node_type& old);
+	void import_legacy(legacy::special_node_type const & old);
 	void writeTo(std::ostream& file, int n) const;
+	
+	static cSpecial bad() {
+		cSpecial bad_special;
+		bad_special.pic=-3;
+		return bad_special;
+	}
 };
 
 enum class eSpecCtxType {

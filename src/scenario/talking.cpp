@@ -15,7 +15,7 @@
 
 #include "oldstructs.hpp"
 
-void cSpeech::import_legacy(legacy::talking_record_type& old, std::vector<shop_info_t>& shops){
+void cSpeech::import_legacy(legacy::talking_record_type const &old, std::vector<shop_info_t>& shops){
 	talk_nodes.resize(60);
 	for(short i = 0; i < 60; i++){
 		talk_nodes[i].personality = old.talk_nodes[i].personality;

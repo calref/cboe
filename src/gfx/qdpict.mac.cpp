@@ -27,13 +27,15 @@
 
 static int16_t extract_word(char* ptr) {
 	int16_t s = *(int16_t*) ptr;
-	flip_short(&s);
+	if (porting::is_small_endian())
+		porting::flip_short(&s);
 	return s;
 }
 
 static int32_t extract_long(char* ptr) {
 	int32_t s = *(int32_t*) ptr;
-	flip_long(&s);
+	if (porting::is_small_endian())
+		porting::flip_long(&s);
 	return s;
 }
 
@@ -163,7 +165,8 @@ static legacy::Rect loadPixMapData(ptr_guard<char>& picData, ptr_guard<unsigned 
 	int rowBytes = extract_word(picData) & 0x7fff;
 	picData += 2; // Skip rowBytes; assume we have a v2 (colour) bitmap
 	legacy::Rect bounds = *(legacy::Rect*)picData;
-	flip_rect(&bounds);
+	if (porting::is_small_endian())
+		porting::flip_rect(&bounds);
 	picData += sizeof(legacy::Rect);
 	picData += 2 + 2 + 4; // Skip version, packType, and packSize
 	picData += 4 + 4; // Skip hRes and vRes
@@ -464,11 +467,11 @@ bool tryLoadPictFromResourceFile(fs::path& gpath, sf::Image& graphics_store) {
 	// TODO: There's no way around it; I'll have to read resource files for this section.
 	FSRef file;
 	ResFileRefNum custRef;
-	OSErr err = FSPathMakeRef((const UInt8*)gpath.c_str(), &file, nullptr);
-	err = FSOpenResourceFile(&file, 0, nullptr, fsRdPerm, &custRef);
+	FSPathMakeRef((const UInt8*)gpath.c_str(), &file, nullptr);
+	OSErr err = FSOpenResourceFile(&file, 0, nullptr, fsRdPerm, &custRef);
 	if(err != noErr) { // TODO: Is the error that would be returned if the resources were stored in the resource fork?
 		HFSUniStr255 rsrc;
-		err = FSGetResourceForkName(&rsrc);
+		FSGetResourceForkName(&rsrc);
 		err = FSOpenResourceFile(&file, rsrc.length, rsrc.unicode, fsRdPerm, &custRef);
 		if(err != noErr) {
 			showError("An old-style .meg graphics file was found, but neither data nor resource fork could be read.",noGraphics);

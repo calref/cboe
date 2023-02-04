@@ -16,6 +16,8 @@
 #include <memory>
 #include <sstream>
 
+#include "global.hpp"
+
 namespace ResMgr {
 	namespace fs = boost::filesystem;
 	

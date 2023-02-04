@@ -11,6 +11,7 @@
 #include <iostream>
 #include <memory>
 #include <queue>
+#include <string>
 #include <boost/optional.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/ptr_container/ptr_set.hpp>
@@ -726,5 +727,28 @@ std::ostream& operator<< (std::ostream& out, ePicType pic) {
 std::istream& operator>> (std::istream& in, ePicType& pic) {
 	if(!readEnum(in, pic, pic_type_strs, NUM_PIC_TYPES))
 		in.setstate(std::ios::failbit);
+	return in;
+}
+
+std::ostream& operator<< (std::ostream& out, cPictNum pic) {
+	out << pic.num;
+	std::string sType=pic_type_strs.find(int(pic.type),"");
+	if (sType.empty()) // ok, this type has no name, use int
+		out << " " << int(pic.type);
+	else
+		out << " " << sType;
+	return out;
+}
+std::istream& operator>> (std::istream& in, cPictNum& pic) {
+	in >> pic.num;
+	// ( a check just to be compatible to previous boe format )
+	if (!in.eof()) {
+		std::string sType;
+		in >> sType;
+		int fType=pic_type_strs.get(sType,-1);
+		if (fType==-1)
+			fType = boost::lexical_cast<int>(sType);
+		pic.type = ePicType(fType);
+	}
 	return in;
 }

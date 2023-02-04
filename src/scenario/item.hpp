@@ -13,6 +13,7 @@
 #include <iosfwd>
 
 #include "damage.hpp"
+#include "global.hpp"
 #include "location.hpp"
 #include "item_abilities.hpp"
 #include "item_variety.hpp"
@@ -49,6 +50,7 @@ union uItemAbilData {
 	eRace race;
 	eSkill skill;
 };
+class cPictNum;
 
 class cItem {
 public:
@@ -93,9 +95,18 @@ public:
 	cItem();
 	explicit cItem(eItemPreset preset);
 	explicit cItem(eAlchemy recipe);
-	void import_legacy(legacy::item_record_type& old);
+	bool can_be_combined_with(cItem const &item) const;
+
+	cPictNum get_picture_num(bool tiny=false) const;
+	void import_legacy(legacy::item_record_type const & old);
 	void writeTo(cTagFile_Page& file) const;
 	void readFrom(const cTagFile_Page& sin);
+	static cItem bad() {
+		cItem badItem;
+		badItem.graphic_num = 9999;
+		badItem.name = badItem.full_name = "Bad Item";
+		return badItem;
+	}
 };
 
 class cSpecItem {
@@ -104,6 +115,11 @@ public:
 	short special = -1;
 	std::string name;
 	std::string descr;
+	static cSpecItem bad() {
+		cSpecItem badItem;
+		badItem.name="Bad Special Item";
+		return badItem;
+	}
 };
 
 #endif

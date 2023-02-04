@@ -12,6 +12,8 @@
 #include <SFML/Audio.hpp>
 #include <string>
 
+#include "global.hpp"
+
 void init_snd_tool();
 bool sound_going(snd_num_t which_s);
 void play_sound(snd_num_t which, sf::Time delay = sf::Time());

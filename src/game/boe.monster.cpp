@@ -36,45 +36,47 @@ short out_enc_lev_tot(short which) {
 	
 	for(short i = 0; i < 7; i++)
 		if(univ.party.out_c[which].what_monst.monst[i] != 0)
-			count += univ.scenario.scen_monsters[univ.party.out_c[which].what_monst.monst[i]].level * num[i];
+			count += univ.scenario.get_monster(univ.party.out_c[which].what_monst.monst[i]).level * num[i];
 	return count;
 }
 
 void create_wand_monst() {
-	short r1,r2,r3,num_tries = 0;
+	short num_tries = 0;
 	location p_loc;
 	
-	r1 = get_ran(1,0,univ.out->wandering.size() - 1);
 	if(overall_mode == MODE_OUTDOORS) {
+		short r1 = get_ran(1,0,univ.out->wandering.size()- 1);
 		if(!univ.out->wandering[r1].isNull()) {
-			r2 = get_ran(1,0,univ.out->wandering_locs.size() - 1);
+			short r2 = get_ran(1,0,univ.out->wandering_locs.size() - 1);
 			while(point_onscreen(univ.out->wandering_locs[r2], global_to_local(univ.party.out_loc)) && num_tries++ < 100)
-				r2 = get_ran(1,0,3);
+				r2 = get_ran(1,0,univ.out->wandering_locs.size() - 1);
 			if(!is_blocked(univ.out->wandering_locs[r2]))
 				place_outd_wand_monst(univ.out->wandering_locs[r2], univ.out->wandering[r1],0);
 		}
-	} else if(!univ.town->wandering[r1].isNull() && univ.town.countMonsters() <= 50
+	} else {
+		short r1 = get_ran(1,0,univ.town->wandering.size()- 1);
+		if(!univ.town->wandering[r1].isNull() && univ.town.countMonsters() <= 50
 			  && !univ.town->is_cleaned_out()) {
-		// won't place wandering if more than 50 monsters
-		r2 = get_ran(1,0,univ.town->wandering.size() - 1);
-		while(point_onscreen(univ.town->wandering_locs[r2],univ.party.town_loc) &&
-			  !loc_off_act_area(univ.town->wandering_locs[r2]) && num_tries++ < 100)
-			r2 = get_ran(1,0,3);
-		for(short i = 0; i < 4; i++) {
-			if(univ.town->wandering[r1].monst[i] != 0) { // place a monster
-				p_loc = univ.town->wandering_locs[r2];
-				p_loc.x += get_ran(1,0,4) - 2;
-				p_loc.y += get_ran(1,0,4) - 2;
-				if(!is_blocked(p_loc))
-					place_monster(univ.town->wandering[r1].monst[i],p_loc);
+			// won't place wandering if more than 50 monsters
+			short r2 = get_ran(1,0,univ.town->wandering_locs.size() - 1);
+			while(point_onscreen(univ.town->wandering_locs[r2],univ.party.town_loc) &&
+				  !loc_off_act_area(univ.town->wandering_locs[r2]) && num_tries++ < 100)
+				r2 = get_ran(1,0,univ.town->wandering_locs.size() - 1);
+			for(size_t i=0; i<univ.town->wandering[r1].monst.size(); ++i) {
+				mon_num_t const &monst=univ.town->wandering[r1].monst[i];
+				if(monst == 0) continue;
+				// compute the number of monsters that we want to place
+				int numMonst=1;
+				if (r1>=2 && i==0) ++numMonst;
+				if (r1>=3 && i==1) ++numMonst;
+				for (int w=0; w<numMonst; ++w) {
+					p_loc = univ.town->wandering_locs[r2];
+					p_loc.x += get_ran(1,0,4) - 2;
+					p_loc.y += get_ran(1,0,4) - 2;
+					if(!is_blocked(p_loc))
+						place_monster(monst,p_loc);
+				}
 			}
-			p_loc = univ.town->wandering_locs[r2];
-			p_loc.x += get_ran(1,0,4) - 2;
-			p_loc.y += get_ran(1,0,4) - 2;
-			// TODO: This contradicts the documentation which says only 1-2 are placed of the last monster
-			r3 = get_ran(1,0,3);
-			if(r3 >= 2 && !is_blocked(p_loc)) // place extra monsters?
-				place_monster(univ.town->wandering[r1].monst[3],p_loc);
 		}
 	}
 }
@@ -86,7 +88,7 @@ void place_outd_wand_monst(location where,cOutdoors::cWandering group,short forc
 	
 	while(i < 10) {
 		if(!univ.party.out_c[i].exists || ((i == 9) && (forced > 0))) {
-			if((univ.party.sd_legit(group.end_spec1,group.end_spec2)) && (PSD[group.end_spec1][group.end_spec2] > 0))
+			if(univ.party.sd_legit(group.end_spec1,group.end_spec2) && univ.party.sd(group.end_spec1,group.end_spec2) > 0)
 				return;
 			univ.party.out_c[i].exists = true;
 			univ.party.out_c[i].direction = 0;
@@ -124,40 +126,18 @@ location get_monst_head(short m_num) {
 	return l;
 }
 
-short get_monst_picnum(mon_num_t monst) {
-	if(monst >= 10000) return univ.party.summons[monst - 10000].picture_num;
-	return univ.scenario.scen_monsters[monst].picture_num;
+cPictNum get_monst_picture_num(mon_num_t monst) {
+	if(monst >= 10000) return univ.party.get_summon(monst - 10000).get_picture_num();
+	return univ.scenario.get_monster(monst).get_picture_num();
 }
 
-ePicType get_monst_pictype(mon_num_t monst) {
-	ePicType type = PIC_MONST;
-	short n;
-	if(monst >= 10000)
-		n = univ.party.summons[monst - 10000].picture_num;
-	else n = univ.scenario.scen_monsters[monst].picture_num;
-	if(n >= 1000){
-		type += PIC_CUSTOM;
-		switch(n / 1000){
-			case 2:
-				type += PIC_WIDE;
-				break;
-			case 3:
-				type += PIC_TALL;
-				break;
-			case 4:
-				type += PIC_WIDE;
-				type += PIC_TALL;
-				break;
-		}
-	}else{
-		if(m_pic_index[n].x == 2) type += PIC_WIDE;
-		if(m_pic_index[n].y == 2) type += PIC_TALL;
-	}
-	return type;
+short get_monst_picnum(mon_num_t monst) {
+	if(monst >= 10000) return univ.party.get_summon(monst - 10000).get_num_for_picture();
+	return univ.scenario.get_monster(monst).get_num_for_picture();
 }
 
 std::pair<short,short> get_monst_dims(mon_num_t monst) {
-	cMonster& the_monst = monst >= 10000 ? univ.party.summons[monst - 10000] : univ.scenario.scen_monsters[monst];
+	cMonster& the_monst = monst >= 10000 ? univ.party.get_summon(monst - 10000) : univ.scenario.get_monster(monst);
 	return std::make_pair(the_monst.x_width, the_monst.y_width);
 }
 
@@ -165,7 +145,7 @@ std::pair<short,short> get_monst_dims(mon_num_t monst) {
 void set_up_monst(eAttitude mode,mon_num_t m_num) {
 	short which = univ.town.monst.size();
 	
-	cMonster& monst = m_num >= 10000 ? univ.party.summons[m_num - 10000] : univ.scenario.scen_monsters[m_num];
+	cMonster& monst = m_num >= 10000 ? univ.party.get_summon(m_num - 10000) : univ.scenario.get_monster(m_num);
 	univ.town.monst.assign(which, cCreature(m_num), monst, univ.party.easy_mode, univ.difficulty_adjust());
 	univ.town.monst[which].active = 2;
 	univ.town.monst[which].summon_time = 0;
@@ -176,7 +156,6 @@ void set_up_monst(eAttitude mode,mon_num_t m_num) {
 void do_monsters() {
 	short r1,target;
 	location l1,l2;
-	bool acted_yet = false;
 	
 	if(overall_mode == MODE_TOWN)
 		for(short i = 0; i < univ.town.monst.size(); i++)
@@ -202,15 +181,14 @@ void do_monsters() {
 				
 				if((univ.town.monst[i].active == 2)
 					|| (univ.town.monst[i].active != 0 && univ.town.monst[i].is_friendly())) {
-					acted_yet = false;
 					// TODO: I don't think this univ.town.hostile flag is ever actually set.
 					if((univ.town.monst[i].attitude == eAttitude::DOCILE || univ.town.monst[i].target == 6) && !univ.town.monst.hostile) {
 						if(univ.town.monst[i].mobility == 1) { // OK, it doesn't see the party or
 							// isn't nasty, and the town isn't totally hostile.
-							if(univ.town.monst[i].is_friendly() || get_ran(1,0,1) == 0) {
-								acted_yet = rand_move(i);
-							}
-							else acted_yet = seek_party(i,univ.town.monst[i].cur_loc,univ.party.town_loc);
+							if(univ.town.monst[i].is_friendly() || get_ran(1,0,1) == 0)
+								rand_move(i);
+							else
+								seek_party(i,univ.town.monst[i].cur_loc,univ.party.town_loc);
 						}
 					}
 					if(univ.town.monst[i].attitude != eAttitude::DOCILE || univ.town.monst.hostile) {
@@ -220,15 +198,15 @@ void do_monsters() {
 							
 							if(univ.town.monst[i].morale < 0 && !univ.town.monst[i].mindless
 							   && univ.town.monst[i].m_type != eRace::UNDEAD && univ.town.monst[i].m_type != eRace::SKELETAL)  {
-								acted_yet = flee_party(i,l1,l2);
+								flee_party(i,l1,l2);
 								if(get_ran(1,0,10) < 6)
 									univ.town.monst[i].morale++;
 							}
 							else if(monst_hate_spot(i,&l2))
-								acted_yet = seek_party(i,l1,l2);
+								seek_party(i,l1,l2);
 							else if(((univ.town.monst[i].mu == 0) && (univ.town.monst[i].mu == 0))
 									 || (can_see_light(l1,l2,sight_obscurity) > 3))
-								acted_yet = seek_party(i,l1,l2);
+								seek_party(i,l1,l2);
 						}
 					}
 				}
@@ -258,14 +236,14 @@ void do_monsters() {
 	if(overall_mode == MODE_OUTDOORS) {
 		for(short i = 0; i < 10; i++)
 			if(univ.party.out_c[i].exists) {
-				acted_yet = false;
 				l1 = univ.party.out_c[i].m_loc;
 				l2 = univ.party.out_loc;
 				
 				r1 = get_ran(1,1,6);
 				if(r1 == 3)
-					acted_yet = rand_move(i);
-				else acted_yet = seek_party(i,l1,l2);
+					rand_move(i);
+				else
+					seek_party(i,l1,l2);
 			}
 	}
 }
@@ -709,28 +687,27 @@ bool combat_move_monster(short which,location destination) {
 
 // Looks at all spaces within 2, looking for a spot which is clear of nastiness and beings
 // returns {0,0} if none found
-// TODO: NO WAIT IT DOESN'T LOOK AT ALL SPACES!!!
 // TODO: THIS MAKES NO ADJUSTMENTS FOR BIG MONSTERS!!!
 //mode; // 0 - normal  1 - prefer adjacent space
 location find_clear_spot(location from_where,short mode) {
-	location loc,store_loc;
-	short num_tries = 0,r1;
-	
-	while(num_tries < 75) {
-		num_tries++;
+	location loc, store_loc(0,0);
+	// Here 254 indicates the low byte of the town fields, minus explored spaces (which is lowest bit).
+	int listPositions[25];
+	for (int i=0; i<25; ++i) listPositions[i]=i;
+	for (int step=0; step<25; ++step) {
+		short w=get_ran(1,step,24);
+		std::swap(listPositions[w],listPositions[step]);
 		loc = from_where;
-		r1 = get_ran(1,-2,2);
-		loc.x = loc.x + r1;
-		r1 = get_ran(1,-2,2);
-		loc.y = loc.y + r1;
+		loc.x += listPositions[step]/5-2;
+		loc.y += listPositions[step]%5-2;
 		if(!loc_off_act_area(loc) && !is_blocked(loc)
 			&& can_see_light(from_where,loc,combat_obscurity) == 0
 			&& (!is_combat() || univ.target_there(loc,TARG_PC) == nullptr)
 			&& (!(is_town()) || (loc != univ.party.town_loc))
-			&& (!univ.town.is_summon_safe(loc.x, loc.y))) {
+			&& (!is_town() || !univ.town.is_summon_safe(loc.x, loc.y))) {
 			if((mode == 0) || ((mode == 1) && (adjacent(from_where,loc))))
 				return loc;
-			else store_loc = loc;
+			store_loc = loc;
 		}
 	}
 	return store_loc;
@@ -783,7 +760,7 @@ bool monster_placid(short m_num) {
 }
 
 // This damages a monster by any fields it's in, and destroys any barrels or crates
-// it's stiing on.
+// it's siting on.
 void monst_inflict_fields(short which_monst) {
 	short r1;
 	location where_check;
@@ -876,7 +853,6 @@ void monst_inflict_fields(short which_monst) {
 
 //mode; // 1 - town 2 - combat
 bool monst_check_special_terrain(location where_check,short mode,short which_monst) {
-	ter_num_t ter = 0;
 	short r1,guts = 0;
 	bool can_enter = true,mage = false;
 	location from_loc,to_loc;
@@ -886,11 +862,12 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	unsigned short ter_dir;
 	
 	from_loc = univ.town.monst[which_monst].cur_loc;
-	ter = univ.town->terrain(where_check.x,where_check.y);
 	////
 	which_m = &univ.town.monst[which_monst];
-	ter_abil = univ.scenario.ter_types[ter].special;
-	ter_dir = univ.scenario.ter_types[ter].flag1;
+	ter_num_t const ter_id=univ.town->terrain(where_check.x,where_check.y);
+	cTerrain const &terrain=univ.get_terrain(ter_id);
+	ter_abil = terrain.special;
+	ter_dir = terrain.flag1;
 	
 	if(mode > 0 && ter_abil == eTerSpec::CONVEYOR) {
 		if(
@@ -998,11 +975,11 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		}
 	}
 	if(monster_placid(which_monst) && // monsters don't hop into bed when things are calm
-		univ.scenario.ter_types[ter].special == eTerSpec::BED)
+		terrain.special == eTerSpec::BED)
 		can_enter = false;
 	if(mode == 1 && univ.town.is_spot(where_check.x, where_check.y))
 		can_enter = false;
-	if(ter == 90) {
+	if(ter_id == 90) {
 		if((is_combat()) && (which_combat_type == 0)) {
 			univ.town.monst[which_monst].active = 0;
 			add_string_to_buf("Monster escaped! ");
@@ -1016,10 +993,10 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		case eTerSpec::CHANGE_WHEN_STEP_ON:
 			can_enter = false;
 			if(!(monster_placid(which_monst))) {
-				univ.town->terrain(where_check.x,where_check.y) = univ.scenario.ter_types[ter].flag1;
+				univ.town->terrain(where_check.x,where_check.y) = terrain.flag1;
 				do_look = true;
 				if(point_onscreen(center,where_check))
-					play_sound(univ.scenario.ter_types[ter].flag2);
+					play_sound(terrain.flag2);
 			}
 			break;
 			
@@ -1031,7 +1008,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 			break;
 			
 		case eTerSpec::DAMAGING:
-			if(univ.town.monst[which_monst].resist[eDamageType(univ.scenario.ter_types[ter].flag3)] == 0)
+			if(univ.town.monst[which_monst].resist[eDamageType(terrain.flag3)] == 0)
 				return true;
 			else return univ.town.monst[which_monst].invuln;
 			// TODO: Should it check any other terrain specials?
@@ -1100,7 +1077,7 @@ short place_monster(mon_num_t which,location where,bool forced) {
 	}
 	
 	// 10000 or more means an exported summon saved with the party
-	cMonster& monst = which >= 10000 ? univ.party.summons[which - 10000] : univ.scenario.scen_monsters[which];
+	cMonster& monst = which >= 10000 ? univ.party.get_summon(which - 10000) : univ.scenario.get_monster(which);
 	univ.town.monst.assign(i, cCreature(which), monst, univ.party.easy_mode, univ.difficulty_adjust());
 	// TODO: Should this static_cast assignment be happening?
 	// One effect is resetting max health to ignore difficulty_adjust()
@@ -1166,21 +1143,21 @@ bool summon_monster(mon_num_t which,location where,short duration,eAttitude give
 }
 
 void activate_monsters(short code,short /*attitude*/) {
-	if(code == 0)
+	if(code <= 0)
 		return;
-	for(short i = 0; i < univ.town->creatures.size(); i++)
-		if(univ.town->creatures[i].spec_enc_code == code) {
-			cTownperson& monst = univ.town->creatures[i];
-			univ.town.monst.assign(i, monst, univ.scenario.scen_monsters[monst.number], univ.party.easy_mode, univ.difficulty_adjust());
-			univ.town.monst[i].spec_enc_code = 0;
-			univ.town.monst[i].active = 2;
+	for(short i = 0; i < univ.town->creatures.size(); i++) {
+		cTownperson& monst = univ.town->creatures[i];
+		if(univ.town->creatures[i].number == 0 || univ.town->creatures[i].spec_enc_code != code) continue;
+		univ.town.monst.assign(i, monst, univ.scenario.get_monster(monst.number), univ.party.easy_mode, univ.difficulty_adjust());
+		univ.town.monst[i].spec_enc_code = 0;
+		univ.town.monst[i].active = 2;
 			
-			univ.town.monst[i].summon_time = 0;
-			univ.town.monst[i].target = 6;
+		univ.town.monst[i].summon_time = 0;
+		univ.town.monst[i].target = 6;
 			
-			univ.town.set_crate(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y,false);
-			univ.town.set_barrel(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y,false);
-		}
+		univ.town.set_crate(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y,false);
+		univ.town.set_barrel(univ.town.monst[i].cur_loc.x,univ.town.monst[i].cur_loc.y,false);
+	}
 }
 
 mon_num_t get_summon_monster(short summon_class) {

@@ -30,7 +30,7 @@ extern eGameMode overall_mode;
 extern short which_combat_type;
 extern eItemWinMode stat_window;
 extern location center;
-extern short combat_active_pc;
+short combat_active_pc;
 extern bool monsters_going,spell_forced;
 extern bool flushingInput;
 extern sf::RenderWindow mainPtr;
@@ -249,9 +249,18 @@ effect_pat_type field[8] = {
 
 bool center_on_monst;
 
-
-
-
+std::set<eSpell> spell_missile_map =
+{
+    // magic spell
+    eSpell::DUMBFOUND, eSpell::FEAR,
+    eSpell::FLAME, eSpell::GOO,
+    eSpell::ICE_BOLT, eSpell::KILL, eSpell::POISON,
+    eSpell::POISON_MINOR, eSpell::SCARE, eSpell::SCRY_MONSTER,
+    eSpell::SLOW, eSpell::SPARK, eSpell::WRACK,
+    // priest spell
+    eSpell::CHARM_FOE, eSpell::CURSE, eSpell::DISPEL_UNDEAD, eSpell::HOLY_SCOURGE,
+    eSpell::STUMBLE, eSpell::TURN_UNDEAD, eSpell::WOUND,
+};
 
 void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short num_walls) {
 	short how_many,num_tries = 0;
@@ -384,8 +393,16 @@ bool pc_combat_move(location destination) {
 		return false;
 	}
 	
-	if(monst_hit == nullptr)
+	if(monst_hit == nullptr) {
+		short actual_pc=univ.cur_pc;
 		keep_going = check_special_terrain(destination,eSpecCtx::COMBAT_MOVE,univ.current_pc(),&check_f);
+		// check if current pc is still alive, has not change, ...
+		if (actual_pc!=univ.cur_pc ||
+			(univ.current_pc().main_status != eMainStatus::ALIVE && univ.current_pc().main_status != eMainStatus::SPLIT_ALIVE)) {
+			if(combat_active_pc == actual_pc) combat_active_pc = 6; // checkme: do we need also to check if actual_pc==univ.cur_pc
+			return true;
+		}
+	}
 	if(check_f)
 		forced = true;
 	
@@ -542,8 +559,8 @@ void pc_attack(short who_att,iLiving* target) {
 	
 	// TODO: These don't stack?
 	if(cInvenSlot skill_item = attacker.has_abil_equip(eItemAbil::SKILL)) {
-		hit_adj += 5 * (skill_item->abil_strength / 2 + 1);
-		dam_adj += skill_item->abil_strength / 2;
+		hit_adj += 5 * (short(skill_item->abil_strength) / 2 + 1);
+		dam_adj += short(skill_item->abil_strength) / 2;
 	}
 	if(cInvenSlot skill_item = attacker.has_abil_equip(eItemAbil::GIANT_STRENGTH)) {
 		dam_adj += skill_item->abil_strength;
@@ -817,6 +834,8 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 				inflicted_bonus_damage   = damage_monst(*monst, who_att, bonus_dam, dmg_tp, 0, false);
 			if(inflicted_weapon_damage || inflicted_special_damage || inflicted_bonus_damage)
 				monst->damaged_msg(inflicted_weapon_damage, inflicted_special_damage + inflicted_bonus_damage);
+			if(monst->health < 0)
+				monst->killed_msg();
 		} else if(cPlayer* who = dynamic_cast<cPlayer*>(&target)) {
 			eRace race = attacker.race;
 			if(dmg_snd != no_dmg)
@@ -1023,15 +1042,15 @@ void do_combat_cast(location target) {
 		CLOUD_STINK,CLOUD_STINK,
 		WALL_ICE,WALL_ICE,WALL_BLADES,
 	};
-	mon_num_t summon;
 	iLiving* victim;
 	cPlayer& caster = univ.current_pc();
+	// CHECKME: this make no sense, allow_antimagic is always false in this function
 	bool allow_obstructed = false, allow_antimagic = false;
-	if(spell_being_cast == eSpell::DISPEL_BARRIER || (spell_being_cast == eSpell::NONE && spec_target_options % 10 == 1))
+	if(spell_being_cast==eSpell::DISPEL_BARRIER || spell_missile_map.count(spell_being_cast)!=0 ||
+	   (spell_being_cast == eSpell::NONE && spec_target_options % 10 == 1))
 		allow_obstructed = true;
 	if(spell_being_cast == eSpell::NONE && spec_target_options / 10 == 2)
 		allow_antimagic = false;
-	
 	location ashes_loc;
 	
 	// to wedge in animations, have to kludge like crazy
@@ -1066,6 +1085,7 @@ void do_combat_cast(location target) {
 		spell_caster = univ.cur_pc;
 	
 	// assign monster summoned, if summoning
+	mon_num_t summon=0;
 	if(spell_being_cast == eSpell::SUMMON_BEAST || spell_being_cast == eSpell::SUMMON_WEAK) {
 		summon = get_summon_monster(1);
 	} else if(spell_being_cast == eSpell::SUMMON || spell_being_cast == eSpell::SUMMON_AID) {
@@ -1107,9 +1127,9 @@ void do_combat_cast(location target) {
 			}
 			else if(dist(caster.combat_pos,target) > current_spell_range)
 				add_string_to_buf("  Target out of range.");
-			else if(sight_obscurity(target.x,target.y) == 5 && !allow_obstructed)
+			else if(!allow_obstructed && sight_obscurity(target.x,target.y) == 5)
 				add_string_to_buf("  Target space obstructed.");
-			else if(univ.town.is_antimagic(target.x,target.y) && !allow_antimagic)
+			else if(!allow_antimagic && univ.town.is_antimagic(target.x,target.y))
 				add_string_to_buf("  Target in antimagic field.");
 			else {
 				failed = false;
@@ -1810,7 +1830,7 @@ void fire_missile(location target) {
 				//   resistances, so we need to store the actual amounts of damage done.
 				short inflicted_weapon_damage  = 0;
 				short inflicted_special_damage = 0;
-
+				bool victim_is_dead = false;
 				if(ammo.ability == eItemAbil::HEALING_WEAPON) {
 					ASB("  There is a flash of light.");
 					victim->heal(r2);
@@ -1820,6 +1840,10 @@ void fire_missile(location target) {
 						inflicted_special_damage = damage_monst(*monst, univ.cur_pc, spec_dam, dmg_tp, 0,false);
 					if(inflicted_weapon_damage || inflicted_special_damage)
 						monst->damaged_msg(inflicted_weapon_damage, inflicted_special_damage);
+					if(monst->health < 0) {
+						victim_is_dead=true;
+						monst->killed_msg();
+					}
 				} else if(cPlayer* who = dynamic_cast<cPlayer*>(victim)) {
 					// TODO: Should the race really be included here? Maybe it's meant for melee attacks only.
 					eRace race = missile_firer.race;
@@ -1833,7 +1857,7 @@ void fire_missile(location target) {
 					}
 				}
 				// poison
-				if(missile_firer.status[eStatus::POISONED_WEAPON] > 0 && missile_firer.weap_poisoned.slot == ammo_inv_slot) {
+				if(!victim_is_dead && missile_firer.status[eStatus::POISONED_WEAPON] > 0 && missile_firer.weap_poisoned.slot == ammo_inv_slot) {
 					poison_amt = missile_firer.status[eStatus::POISONED_WEAPON];
 					if(missile_firer.has_abil_equip(eItemAbil::POISON_AUGMENT))
 						poison_amt++;
@@ -1841,12 +1865,13 @@ void fire_missile(location target) {
 					if(dynamic_cast<cPlayer*>(victim))
 						put_pc_screen();
 				}
-				if((ammo.ability == eItemAbil::STATUS_WEAPON) && (get_ran(1,0,1) == 1)) {
-					apply_weapon_status(ammo.abil_data.status, ammo.abil_strength, r2 + spec_dam, *victim, "Missile");
+				if(!victim_is_dead && ammo.ability == eItemAbil::STATUS_WEAPON && get_ran(1,0,1) == 1) {
+					apply_weapon_status(eStatus(ammo.abil_data.status), ammo.abil_strength, r2 + spec_dam, *victim, "Missile");
 				} else if(ammo.ability == eItemAbil::SOULSUCKER && get_ran(1,0,1) == 1) {
+					// TODO: if we want to do this, we must call it before, now the monster can be dead
 					add_string_to_buf("  Missile drains life.");
 					missile_firer.heal(ammo.abil_strength / 2);
-				} else if(ammo.ability == eItemAbil::ANTIMAGIC_WEAPON) {
+				} else if(!victim_is_dead && ammo.ability == eItemAbil::ANTIMAGIC_WEAPON) {
 					short before = victim->get_magic();
 					int mage = 0, cleric = 0;
 					if(cCreature* check = dynamic_cast<cCreature*>(victim))
@@ -1860,6 +1885,7 @@ void fire_missile(location target) {
 						missile_firer.restore_sp((before - victim->get_magic()) / 3);
 					}
 				} else if(ammo.ability == eItemAbil::WEAPON_CALL_SPECIAL) {
+					// CHECKME: do we need to call this special if the monster is dead
 					// TODO: Should this be checked on the missile as well as on the ammo? (Provided they're different.)
 					short s1;
 					univ.party.force_ptr(21, victim->get_loc().x);
@@ -2403,9 +2429,8 @@ void do_monster_turn() {
 				if(cur_monst->abil[eMonstAbil::DAMAGE2].active && cur_monst->abil[eMonstAbil::DAMAGE2].gen.type == eMonstGen::BREATH
 					&& !acted_yet && get_ran(1,1,1000) < cur_monst->abil[eMonstAbil::DAMAGE2].gen.odds) {
 					if(target != 6  && dist(cur_monst->cur_loc,targ_space) <= cur_monst->abil[eMonstAbil::DAMAGE2].gen.range) {
-						acted_yet = monst_breathe(cur_monst,targ_space,cur_monst->abil[eMonstAbil::DAMAGE2]);
-						had_monst = true;
-						acted_yet = true;
+						monst_breathe(cur_monst,targ_space,cur_monst->abil[eMonstAbil::DAMAGE2]);
+						had_monst = acted_yet = true;
 						take_m_ap(4,cur_monst);
 					}
 				}
@@ -2415,9 +2440,8 @@ void do_monster_turn() {
 					if((!monst_adjacent(targ_space,i) || (get_ran(1,0,2) < 2) || (cur_monst->number >= 160)
 						 || (cur_monst->level > 9))
 						&& (dist(cur_monst->cur_loc,targ_space) <= 10)) {
-						acted_yet = monst_cast_mage(cur_monst,target);
-						had_monst = true;
-						acted_yet = true;
+						monst_cast_mage(cur_monst,target);
+						had_monst = acted_yet = true;
 						take_m_ap(5,cur_monst);
 					}
 				}
@@ -2425,9 +2449,8 @@ void do_monster_turn() {
 				if((cur_monst->cl > 0) && (get_ran(1,1,8) < 7) && !acted_yet) {
 					if((!monst_adjacent(targ_space,i) || (get_ran(1,0,2) < 2) || (cur_monst->level > 9))
 						&& (dist(cur_monst->cur_loc,targ_space) <= 10)) {
-						acted_yet = monst_cast_priest(cur_monst,target);
-						had_monst = true;
-						acted_yet = true;
+						monst_cast_priest(cur_monst,target);
+						had_monst = acted_yet = true;
 						take_m_ap(4,cur_monst);
 					}
 				}
@@ -2624,7 +2647,7 @@ void do_monster_turn() {
 							break;
 					}
 				}
-				if(cur_monst->abil[eMonstAbil::SUMMON].active && get_ran(1,1,100) < cur_monst->abil[eMonstAbil::SUMMON].summon.chance) {
+				if(cur_monst->abil[eMonstAbil::SUMMON].active && get_ran(1,1,1000) < cur_monst->abil[eMonstAbil::SUMMON].summon.chance) {
 					uAbility abil = cur_monst->abil[eMonstAbil::SUMMON];
 					mon_num_t what_summon = 0;
 					switch(abil.summon.type) {
@@ -2850,6 +2873,10 @@ void monster_attack(short who_att,iLiving* target) {
 				if(m_target != nullptr) {
 					// TODO: Maybe this damage should be printed?
 					damaged = damage_monst(*m_target,7,r2,dam_type,sound_type,false);
+					if(damaged)
+						m_target->damaged_msg(damaged, 0);
+					if(m_target->health < 0)
+						m_target->killed_msg();
 				} else if(pc_target != nullptr) {
 					damaged = damage_pc(*pc_target,r2,dam_type,attacker->m_type,sound_type);
 					if(store_hp - target->get_health() <= 0)
@@ -3285,7 +3312,6 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 			break;
 		case eMonstAbil::DRAIN_XP:
 			if(pc_target != nullptr) {
-				i = univ.get_target_i(*target);
 				if(pc_target->has_abil_equip(eItemAbil::LIFE_SAVING)) break;
 				drain_pc(*pc_target, percent(univ.town.monst[m_num].level, abil.second.gen.strength));
 			}
@@ -3667,7 +3693,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 					if((monst_near(i,caster->cur_loc,8,0)) &&
 						(caster->attitude == univ.town.monst[i].attitude)) {
 						affected = &univ.town.monst[i];
-						affected->health += get_ran(2,1,10);
+						affected->add_health(get_ran(2,1,10));
 						r1 = get_ran(3,1,4);
 						affected->curse(-r1);
 						affected->status[eStatus::WEBS] = 0;
@@ -3948,7 +3974,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 			case eSpell::BLESS_PARTY: case eSpell::REVIVE_ALL:
 				play_sound(24);
 				// TODO: What's r2 for here? Should it be used for Revive All?
-				r1 =  get_ran(2,1,4); r2 = get_ran(3,1,6);
+				r1 =  get_ran(2,1,4); //r2 = get_ran(3,1,6);
 				for(short i = 0; i < univ.town.monst.size(); i++)
 					if((monst_near(i,caster->cur_loc,8,0)) &&
 						(caster->attitude == univ.town.monst[i].attitude)) {
@@ -3956,7 +3982,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 						if(spell == eSpell::BLESS_PARTY)
 							affected->curse(-r1);
 						if(spell == eSpell::REVIVE_ALL)
-							affected->health += r1;
+							affected->add_health(r1);
 					}
 				play_sound(4);
 				break;
@@ -4056,8 +4082,8 @@ short count_levels(location where,short radius) {
 	for(short i = 0; i < univ.town.monst.size(); i++)
 		if(monst_near(i,where,radius,0)) {
 			if(!univ.town.monst[i].is_friendly())
-				store = store - univ.town.monst[i].level;
-			else store = store + univ.town.monst[i].level;
+				store = store - int(univ.town.monst[i].level);
+			else store = store + int(univ.town.monst[i].level);
 		}
 	if(is_combat()) {
 		for(short i = 0; i < 6; i++)
@@ -4736,7 +4762,7 @@ bool combat_cast_mage_spell() {
 			store_sum_monst = pick_trapped_monst();
 			if(store_sum_monst == 0)
 				return false;
-			get_monst = univ.scenario.scen_monsters[store_sum_monst];
+			get_monst = univ.scenario.get_monster(store_sum_monst);
 			if(store_sp < get_monst.level) {
 				add_string_to_buf("Cast: Not enough spell points.");
 				return false;
@@ -5333,11 +5359,11 @@ void process_fields() {
 			for(short i = r.left + 1; i < r.right ; i++)
 				for(short j = r.top + 1; j < r.bottom ; j++)
 					if(qf[i][j] > 0) {
-						ter_num_t ter = univ.town->terrain(i,j);
-						if(univ.scenario.ter_types[ter].special == eTerSpec::CRUMBLING && univ.scenario.ter_types[ter].flag2 > 0) {
+						cTerrain const &terrain=univ.get_terrain(univ.town->terrain(i,j));
+						if(terrain.special == eTerSpec::CRUMBLING && terrain.flag2 > 0) {
 							// TODO: This seems like the wrong sound
 							play_sound(60);
-							univ.town->terrain(i,j) = univ.scenario.ter_types[ter].flag1;
+							univ.town->terrain(i,j) = terrain.flag1;
 							add_string_to_buf("  Quickfire burns through barrier.");
 						}
 						univ.town.set_quickfire(i,j,true);

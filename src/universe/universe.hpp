@@ -13,7 +13,7 @@
 #include <memory>
 #include <set>
 #include <array>
-#include <boost/filesystem/path.hpp>
+#include "fields.hpp"
 #include "party.hpp"
 #include "population.hpp"
 #include "scenario/item.hpp"
@@ -40,6 +40,13 @@ class cCurTown {
 	cTown* arena;
 	cTown*const record() const;
 	vector2d<unsigned long> fields;
+	
+	template<eFieldType Field> bool test_field(short x, short y) const
+	{
+		if(!is_on_map(x,y)) return false;
+		return fields[x][y] & Field;
+	}
+
 public:
 	bool quickfire_present = false, belt_present = false;
 	// formerly current_town_type
@@ -47,10 +54,10 @@ public:
 	
 	std::vector<cItem> items; // formerly town_item_list type
 	
-	void import_legacy(legacy::current_town_type& old);
-	void import_legacy(legacy::town_item_list& old);
-	void import_legacy(unsigned char(& old_sfx)[64][64], unsigned char(& old_misc_i)[64][64]);
-	void import_legacy(legacy::big_tr_type& old);
+	void import_legacy(legacy::current_town_type const &old);
+	void import_legacy(legacy::town_item_list const &old);
+	void import_reset_fields_legacy();
+	void import_legacy(legacy::big_tr_type const &old);
 	
 	cTown* operator -> ();
 	cTown& operator * ();
@@ -65,36 +72,37 @@ public:
 	void prep_arena(); // Set up for a combat arena
 	void place_preset_fields();
 	void update_fields(const vector2d<unsigned short>& setup);
+	unsigned long get_fields(short x, short y) const;
 	void save_setup(vector2d<unsigned short>& setup) const;
 	bool is_summon_safe(short x, short y) const;
 	
-	bool is_explored(short x, short y) const;
-	bool is_force_wall(short x, short y) const;
-	bool is_fire_wall(short x, short y) const;
-	bool is_antimagic(short x, short y) const;
-	bool is_scloud(short x, short y) const; // stinking cloud
-	bool is_ice_wall(short x, short y) const;
-	bool is_blade_wall(short x, short y) const;
-	bool is_sleep_cloud(short x, short y) const;
-	bool is_block(short x, short y) const; // pushable block
-	bool is_spot(short x, short y) const;
+	bool is_explored(short x, short y) const { return test_field<SPECIAL_EXPLORED>(x,y); }
+	bool is_force_wall(short x, short y) const { return test_field<WALL_FORCE>(x,y); }
+	bool is_fire_wall(short x, short y) const { return test_field<WALL_FIRE>(x,y); }
+	bool is_antimagic(short x, short y) const { return test_field<FIELD_ANTIMAGIC>(x,y); }
+	bool is_scloud(short x, short y) const { return test_field<CLOUD_STINK>(x,y); } // stinking cloud
+	bool is_ice_wall(short x, short y) const { return test_field<WALL_ICE>(x,y); }
+	bool is_blade_wall(short x, short y) const { return test_field<WALL_BLADES>(x,y); }
+	bool is_sleep_cloud(short x, short y) const { return test_field<CLOUD_SLEEP>(x,y); }
+	bool is_block(short x, short y) const { return test_field<OBJECT_BLOCK>(x,y); } // currently unused
+	bool is_spot(short x, short y) const { return test_field<SPECIAL_SPOT>(x,y); }
 	bool is_special(short x, short y) const;
-	bool is_web(short x, short y) const;
-	bool is_crate(short x, short y) const;
-	bool is_barrel(short x, short y) const;
-	bool is_fire_barr(short x, short y) const;
-	bool is_force_barr(short x, short y) const;
-	bool is_quickfire(short x, short y) const;
-	bool is_sm_blood(short x, short y) const;
-	bool is_med_blood(short x, short y) const;
-	bool is_lg_blood(short x, short y) const;
-	bool is_sm_slime(short x, short y) const;
-	bool is_lg_slime(short x, short y) const;
-	bool is_ash(short x, short y) const;
-	bool is_bones(short x, short y) const;
-	bool is_rubble(short x, short y) const;
-	bool is_force_cage(short x, short y) const;
-	bool is_road(short x, short y) const;
+	bool is_web(short x, short y) const { return test_field<FIELD_WEB>(x,y); }
+	bool is_crate(short x, short y) const { return test_field<OBJECT_CRATE>(x,y); }
+	bool is_barrel(short x, short y) const { return test_field<OBJECT_BARREL>(x,y); }
+	bool is_fire_barr(short x, short y) const { return test_field<BARRIER_FIRE>(x,y); }
+	bool is_force_barr(short x, short y) const { return test_field<BARRIER_FORCE>(x,y); }
+	bool is_quickfire(short x, short y) const { return test_field<FIELD_QUICKFIRE>(x,y); }
+	bool is_sm_blood(short x, short y) const { return test_field<SFX_SMALL_BLOOD>(x,y); }
+	bool is_med_blood(short x, short y) const { return test_field<SFX_MEDIUM_BLOOD>(x,y); }
+	bool is_lg_blood(short x, short y) const { return test_field<SFX_LARGE_BLOOD>(x,y); }
+	bool is_sm_slime(short x, short y) const { return test_field<SFX_SMALL_SLIME>(x,y); }
+	bool is_lg_slime(short x, short y) const { return test_field<SFX_LARGE_SLIME>(x,y); }
+	bool is_ash(short x, short y) const { return test_field<SFX_ASH>(x,y); }
+	bool is_bones(short x, short y) const { return test_field<SFX_BONES>(x,y); }
+	bool is_rubble(short x, short y) const { return test_field<SFX_RUBBLE>(x,y); }
+	bool is_force_cage(short x, short y) const { return test_field<BARRIER_CAGE>(x,y); }
+	bool is_road(short x, short y) const { return test_field<SPECIAL_ROAD>(x,y); }
 	bool set_explored(short x, short y, bool b);
 	bool set_force_wall(short x, short y, bool b);
 	bool set_fire_wall(short x, short y, bool b);
@@ -152,7 +160,7 @@ public:
 	bool is_road(int x, int y) const;
 	bool is_on_map(int x, int y) const;
 	
-	void import_legacy(legacy::out_info_type& old);
+	void import_legacy(legacy::out_info_type const &old);
 	
 	using arr_96 = decltype(out)::value_type;
 	arr_96& operator [] (size_t i);
@@ -179,16 +187,6 @@ public:
 enum eTargetType {TARG_ANY, TARG_PC, TARG_MONST};
 
 class cUniverse{
-	template<typename T> using update_info = std::set<T*>;
-	// All these maps are transient data that doesn't need to be saved
-	std::map<pic_num_t, update_info<cItem>> update_items;
-	std::map<pic_num_t, update_info<cMonster>> update_monsters;
-	std::map<pic_num_t, update_info<cPlayer>> update_pcs;
-	std::map<pic_num_t, update_info<miss_num_t>> update_missiles;
-	std::set<pic_num_t> used_graphics;
-	pic_num_t addGraphic(pic_num_t pic, ePicType type);
-	void check_monst(cMonster& monst);
-	void check_item(cItem& item);
 	// The string buffer currently isn't saved
 	std::string strbuf;
 	std::map<int,std::string> extrabufs;
@@ -220,13 +218,25 @@ public:
 	bool node_step_through { false };
 	
 	void clear_stored_pcs();
-	void import_legacy(legacy::stored_town_maps_type& old);
-	void import_legacy(legacy::stored_outdoor_maps_type& old);
+	void import_legacy(legacy::stored_town_maps_type const &old);
+	void import_legacy(legacy::stored_outdoor_maps_type const &old);
 	void enter_scenario(const std::string& name);
 	void refresh_store_items();
 	void generate_job_bank(int which, job_bank_t& bank);
 	short difficulty_adjust() const;
 	explicit cUniverse(ePartyPreset party_type = PARTY_DEFAULT);
+
+	cItem const &get_item(item_num_t item) const { return scenario.get_item(item); }
+	cItem &get_item(item_num_t item) { return scenario.get_item(item); }
+	cQuest const &get_quest(int quest) const { return scenario.get_quest(quest); }
+	cQuest &get_quest(int quest) { return scenario.get_quest(quest); }
+	cShop const &get_shop(int shop) const { return scenario.get_shop(shop); }
+	cShop &get_shop(int shop) { return scenario.get_shop(shop); }
+	cSpecItem const &get_special_item(item_num_t item) const { return scenario.get_special_item(item); }
+	cSpecItem &get_special_item(item_num_t item) { return scenario.get_special_item(item); }
+	cTerrain const &get_terrain(ter_num_t ter) const { return scenario.get_terrain(ter); }
+	cTerrain &get_terrain(ter_num_t ter) { return scenario.get_terrain(ter); }
+
 	// Copy-and-swap
 	friend void swap(cUniverse& lhs, cUniverse& rhs);
 	cUniverse(const cUniverse& other);

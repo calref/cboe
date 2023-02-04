@@ -26,11 +26,10 @@
 #include "fileio/resmgr/res_dialog.hpp"
 
 extern short cen_x, cen_y, overall_mode;
-extern bool mouse_button_held,change_made;
+extern bool editing_town,change_made;
 extern short cur_viewing_mode;
 extern cTown* town;
-extern short mode_count,to_create,cur_town;
-extern ter_num_t template_terrain[64][64];
+extern short cur_town;
 extern cScenario scenario;
 extern cOutdoors* current_terrain;
 extern location cur_out;
@@ -44,7 +43,7 @@ const char *day_str_2[] = {"Unused","Event code (0 - no event)","Event code (0 -
 
 static void put_placed_monst_in_dlog(cDialog& me, cTownperson& monst, const short which) {
 	me["num"].setTextToNum(which);
-	me["type"].setText(scenario.scen_monsters[monst.number].m_name);
+	me["type"].setText(scenario.get_monster(monst.number).m_name);
 	// TODO: Make attitude an enum
 	dynamic_cast<cLedGroup&>(me["attitude"]).setSelected(boost::lexical_cast<std::string>(monst.start_attitude));
 	dynamic_cast<cLedGroup&>(me["mobility"]).setSelected("mob" + std::to_string(monst.mobility + 1));
@@ -52,7 +51,7 @@ static void put_placed_monst_in_dlog(cDialog& me, cTownperson& monst, const shor
 	me["picnum"].setTextToNum(monst.facial_pic);
 	// TODO: Use -1 instead of 0 for "no pic", since 0 is a valid talking picture
  	if(short(monst.facial_pic) < 0)
-		dynamic_cast<cPict&>(me["pic"]).setPict(scenario.scen_monsters[monst.number].picture_num, PIC_MONST);
+		dynamic_cast<cPict&>(me["pic"]).setPict(scenario.get_monster(monst.number).picture_num, PIC_MONST);
 	else if((monst.facial_pic >= 1000))
 		dynamic_cast<cPict&>(me["pic"]).setPict(monst.facial_pic - 1000,PIC_CUSTOM_TALK);
 	else dynamic_cast<cPict&>(me["pic"]).setPict(monst.facial_pic,PIC_TALK);
@@ -118,7 +117,7 @@ void edit_placed_monst(short which_m) {
 
 static void put_placed_monst_adv_in_dlog(cDialog& me, cTownperson& monst, const short which) {
 	me["num"].setTextToNum(which);
-	me["type"].setText(scenario.scen_monsters[monst.number].m_name);
+	me["type"].setText(scenario.get_monster(monst.number).m_name);
 	int iTime = 0;
 	switch(monst.time_flag) {
 		case eMonstTime::ALWAYS: iTime = 0; break;
@@ -230,7 +229,7 @@ cTownperson edit_placed_monst_adv(cTownperson initial, short which, cDialog& par
 
 static bool put_placed_item_in_dlog(cDialog& me, const cTown::cItem& item, const short which) {
 	std::ostringstream loc;
-	cItem base = scenario.scen_items[item.code];
+	cItem base = scenario.get_item(item.code);
 	if(item.ability >= 0 && item.ability <= int(eEnchant::BLESSED) && (base.variety == eItemType::ONE_HANDED || base.variety == eItemType::TWO_HANDED)) {
 		base.enchant_weapon(eEnchant(item.ability), 0);
 	}
@@ -248,7 +247,7 @@ static bool put_placed_item_in_dlog(cDialog& me, const cTown::cItem& item, const
 	if(item.contained)
 		dynamic_cast<cLed&>(me["contained"]).setState(led_red);
 	
-	dynamic_cast<cPict&>(me["pic"]).setPict(base.graphic_num, PIC_ITEM);
+	dynamic_cast<cPict&>(me["pic"]).setPict(base.get_picture_num(false));
 	
 	me["charges"].show();
 	me["charges-lbl"].show();
@@ -285,7 +284,7 @@ static bool get_placed_item_in_dlog(cDialog& me, cTown::cItem& item, const short
 		return true;
 	}
 	
-	eItemType type = scenario.scen_items[item.code].variety;
+	eItemType type = scenario.get_item(item.code).variety;
 	if(item.charges == 0 && (type == eItemType::GOLD || type == eItemType::FOOD)) {
 		showError("You must assign gold or food an amount of at least 1.","",&me);
 		return false;
@@ -311,7 +310,7 @@ static bool edit_placed_item_type(cDialog& me, cTown::cItem& item, const short w
 
 static bool edit_placed_item_abil(cDialog& me, std::string item_hit, cTown::cItem& item, const short which) {
 	item.charges = me["charges"].getTextAsNum();
-	cItem& base = scenario.scen_items[item.code];
+	cItem& base = scenario.get_item(item.code);
 	short i = item.ability;
 	if(item_hit == "abil") { // User entered a number directly
 		i = me["abil"].getTextAsNum();
@@ -369,12 +368,8 @@ void edit_sign(sign_loc_t& which_sign,short num,short picture) {
 	cDialog sign_dlg(*ResMgr::dialogs.get("edit-sign"));
 	sign_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &sign_dlg, false));
 	sign_dlg["okay"].attachClickHandler(std::bind(edit_sign_event_filter, _1, std::ref(which_sign)));
-	cPict& icon = dynamic_cast<cPict&>(sign_dlg["pic"]);
-	if(picture >= 960 && picture < 1000)
-		icon.setPict(picture, PIC_TER_ANIM);
-	else if(picture >= 2000)
-		icon.setPict(picture - 2000, PIC_CUSTOM_TER_ANIM);
-	else icon.setPict(picture, PIC_TER); // automatically adjusts for custom graphics
+	dynamic_cast<cPict&>(sign_dlg["pic"]).setPict(cTerrain::get_picture_num_for_terrain(picture)); // checkme: does this really need to be some terrain?
+
 	
 	sign_dlg["num"].setTextToNum(num);
 	sign_dlg["text"].setText(which_sign.text);
@@ -387,13 +382,24 @@ static bool save_town_num(cDialog& me, std::string, eKeyMod) {
 	return true;
 }
 
+static bool check_range_and_update_town_name(cDialog& me,std::string id,bool losing,std::vector<cTown*> const &towns)
+{
+	if (!check_range_msg(me, id, losing, 0, long(towns.size())-1, "Town number", "")) {
+		me["name"].setText("");
+		return false;
+	}
+	int i = me["town"].getTextAsNum();
+	me["name"].setText((i>=0 && i<towns.size()) ? towns[i]->name : "");
+	return true;
+}
+
 short pick_town_num(std::string which_dlog,short def,cScenario& scenario) {
 	using namespace std::placeholders;
 	
 	cDialog town_dlg(*ResMgr::dialogs.get(which_dlog));
 	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
 	town_dlg["okay"].attachClickHandler(save_town_num);
-	town_dlg["town"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.towns.size() - 1, "Town number"));
+	town_dlg["town"].attachFocusHandler(std::bind(check_range_and_update_town_name, _1, _2, _3, scenario.towns));
 	town_dlg["choose"].attachClickHandler([&scenario](cDialog& me, std::string, eKeyMod) -> bool {
 		int i = me["town"].getTextAsNum();
 		if(&scenario != &::scenario)
@@ -402,10 +408,13 @@ short pick_town_num(std::string which_dlog,short def,cScenario& scenario) {
 		if(&scenario != &::scenario)
 			scenario.towns.swap(::scenario.towns);
 		me["town"].setTextToNum(i);
+		me["name"].setText((i>=0 && i<scenario.towns.size()) ? scenario.towns[i]->name : "");
 		return true;
 	});
 	
 	town_dlg["town"].setTextToNum(def);
+	if (def>=0 && def<scenario.towns.size())
+		town_dlg["name"].setText(scenario.towns[def]->name);
 	std::string prompt = town_dlg["prompt"].getText();
 	prompt += " (0 - " + std::to_string(scenario.towns.size() - 1) + ')';
 	town_dlg["prompt"].setText(prompt);
@@ -512,14 +521,14 @@ static void put_out_wand_in_dlog(cDialog& me, short which, const cOutdoors::cWan
 		if(wand.monst[i] == 0)
 			me[id].setText("Empty");
 		// TODO: Wait a second, if 0 is no monster, does that mean it's impossible to use monster 0? Should 1 be subtracted here?
-		else me[id].setText(scenario.scen_monsters[wand.monst[i]].m_name);
+		else me[id].setText(scenario.get_monster(wand.monst[i]).m_name);
 	}
 	for(short i = 0; i < 3; i++) {
 		std::string id = "ally" + std::to_string(i + 1);
 		if(wand.friendly[i] == 0)
 			me[id].setText("Empty");
 		// TODO: Wait a second, if 0 is no monster, does that mean it's impossible to use monster 0? Should 1 be subtracted here?
-		else me[id].setText(scenario.scen_monsters[wand.friendly[i]].m_name);
+		else me[id].setText(scenario.get_monster(wand.friendly[i]).m_name);
 	}
 	dynamic_cast<cLed&>(me["no-flee"]).setState(wand.cant_flee ? led_red : led_off);
 	dynamic_cast<cLed&>(me["forced"]).setState(wand.forced ? led_red : led_off);
@@ -596,7 +605,7 @@ static bool edit_out_wand_monst(cDialog& me, std::string hit, short which, cOutd
 		i = choose_text(STRT_MONST,wand.friendly[fld[4] - '1']-1,&me,"Choose Which Monster:") + 1;
 		if(i >= 0) wand.friendly[fld[4] - '1'] = i;
 	}
-	me[fld].setText(scenario.scen_monsters[i].m_name);
+	me[fld].setText(scenario.get_monster(i).m_name);
 	return true;
 }
 
@@ -1111,6 +1120,7 @@ static bool save_talk_node(cDialog& me, std::stack<node_ref_t>& talk_edit_stack,
 }
 
 static void put_talk_node_in_dlog(cDialog& me, std::stack<node_ref_t>& talk_edit_stack) {
+	int talk_node_id=talk_edit_stack.top().first;
 	cSpeech::cNode& talk_node =talk_edit_stack.top().second;
 	
 	me["who"].setTextToNum(talk_node.personality);
@@ -1143,6 +1153,21 @@ static void put_talk_node_in_dlog(cDialog& me, std::stack<node_ref_t>& talk_edit
 	if(talk_edit_stack.size() > 1)
 		me["back"].show();
 	else me["back"].hide();
+
+	if (talk_edit_stack.size()!=1 || talk_node_id<0 || talk_node_id>=town->talking.talk_nodes.size()) {
+		me["next"].hide();
+		me["prev"].hide();
+	}
+	else {
+		if (talk_node_id==0)
+			me["prev"].hide();
+		else
+			me["prev"].show();
+		if (talk_node_id+1<town->talking.talk_nodes.size())
+			me["next"].show();
+		else
+			me["next"].hide();
+	}
 }
 
 static bool talk_node_back(cDialog& me, std::stack<node_ref_t>& talk_edit_stack) {
@@ -1198,6 +1223,23 @@ static bool select_talk_node_value(cDialog& me, std::string item_hit, const std:
 	return true;
 }
 
+static bool select_talk_node_next_prev(cDialog& me, std::string const &item_hit, std::stack<node_ref_t>& talk_edit_stack) {
+	short talk_node_id = talk_edit_stack.top().first;
+	if(item_hit == "next")
+		++talk_node_id;
+	else if(item_hit == "prev")
+		--talk_node_id;
+	else
+		return false;
+	if (talk_node_id<0 || talk_node_id>=town->talking.talk_nodes.size())
+		return false;
+	save_talk_node(me, talk_edit_stack, false, true);
+	talk_edit_stack.pop();
+	talk_edit_stack.push({talk_node_id, town->talking.talk_nodes[talk_node_id]});
+	put_talk_node_in_dlog(me, talk_edit_stack);
+	return true;
+}
+
 // Returns -1 if accepted, otherwise the node that was cancelled
 short edit_talk_node(short which_node) {
 	using namespace std::placeholders;
@@ -1213,6 +1255,7 @@ short edit_talk_node(short which_node) {
 	talk_dlg["choose-type"].attachClickHandler(std::bind(select_talk_node_type, _1, std::ref(talk_edit_stack)));
 	talk_dlg.attachClickHandlers(std::bind(select_talk_node_value, _1, _2, std::ref(talk_edit_stack)), {"chooseA", "chooseB"});
 	talk_dlg["who"].attachFocusHandler(check_talk_personality);
+	talk_dlg.attachClickHandlers(std::bind(select_talk_node_next_prev, _1, _2, std::ref(talk_edit_stack)), {"next", "prev"});
 	talk_dlg.attachFocusHandlers(check_talk_key, {"key1", "key2"});
 	talk_dlg.attachFocusHandlers(std::bind(check_talk_xtra, _1, std::ref(talk_edit_stack), _2, _3), {"extra1", "extra2", "extra3", "extra4"});
 	
@@ -1529,7 +1572,8 @@ cOutdoors* pick_import_out() {
 	cScenario temp_scenario;
 	fs::path path = nav_get_scenario();
 	if(path.empty()) return nullptr;
-	load_scenario(path, temp_scenario);
+	if (!load_scenario(path, temp_scenario))
+		return nullptr;
 	location sector = pick_out({-1,-1},temp_scenario);
 	if(sector.x < 0 && sector.y < 0)
 		return nullptr;

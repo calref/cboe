@@ -114,12 +114,7 @@ static void warn_missing_opcode(unsigned short i) {
 static void init_specials_parse() {
 	opcode.add((*eSpecType::NONE).opcode().c_str(), eSpecType::NONE);
 	// Fill in all the opcodes and check for missing types.
-	// There's really no need to check all the way to the max of the underlying type.
-	// It's unlikely we'd go above 255, so unsigned char would be fine, but just in case,
-	// let's use unsigned short.
-	// Could change the actual enum's underlying type instead though?
-	using underlying = unsigned short;
-	for(underlying i = 1; i < std::numeric_limits<underlying>::max(); i++) {
+	for(unsigned short i = 1; i <= int(eSpecType::MAX_SPEC_TYPE); i++) {
 		eSpecType check = (eSpecType) i;
 		eSpecCat category = (*check).cat;
 		if(category == eSpecCat::INVALID) continue;
@@ -167,21 +162,7 @@ void SpecialParser::next_line(Iter, Iter end) {
 void SpecialParser::init_block(Iter, Iter) {
 	cur_node++;
 	temp_symbol.clear();
-	curSpec.type = eSpecType::NONE;
-	curSpec.sd1 = -1;
-	curSpec.sd2 = -1;
-	curSpec.m1 = -1;
-	curSpec.m2 = -1;
-	curSpec.m3 = -1;
-	curSpec.pic = -1;
-	curSpec.pictype = 4; // PIC_DLOG
-	curSpec.ex1a = -1;
-	curSpec.ex1b = -1;
-	curSpec.ex1c = -1;
-	curSpec.ex2a = -1;
-	curSpec.ex2b = -1;
-	curSpec.ex2c = -1;
-	curSpec.jumpto = -1;
+	curSpec = cSpecial();
 }
 
 void SpecialParser::prep_add_symbol(Iter start, Iter end) {

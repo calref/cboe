@@ -5,6 +5,7 @@
 #include "boe.global.hpp"
 #include "universe/universe.hpp"
 #include "boe.fileio.hpp"
+#include "boe.minimap.hpp"
 #include "boe.text.hpp"
 #include "boe.town.hpp"
 #include "boe.items.hpp"
@@ -19,6 +20,7 @@
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "fileio/fileio.hpp"
 #include "tools/cursors.hpp"
+#include "tools/prefs.hpp"
 #include <boost/filesystem.hpp>
 
 #define	DONE_BUTTON_ITEM	1
@@ -29,20 +31,14 @@ extern bool party_in_memory;
 extern location center;
 extern long register_flag;
 extern sf::RenderWindow mainPtr;
-extern bool map_visible;
-extern sf::RenderWindow mini_map;
 extern short which_combat_type;
-extern short cur_town_talk_loaded;
 extern cUniverse univ;
-extern bool mac_is_intel;
 
 bool loaded_yet = false, got_nagged = false;
 std::string last_load_file = "Blades of Exile Save";
 fs::path file_to_load;
 fs::path store_file_reply;
 short jl;
-
-extern bool cur_scen_is_mac;
 
 void print_write_position ();
 void save_outdoor_maps();
@@ -60,6 +56,11 @@ void finish_load_party(){
 	
 	party_in_memory = true;
 	
+	// use user's easy mode and less wandering mode
+	univ.party.easy_mode=get_bool_pref("EasyMode", false);
+	univ.party.less_wm=get_bool_pref("LessWanderingMonsters", false);
+	univ.party.show_junk_bag=get_bool_pref("ShowJunkBag", false);
+
 	// now if not in scen, this is it.
 	if(!univ.party.is_in_scenario()) {
 		if(overall_mode != MODE_STARTUP) {
@@ -70,22 +71,31 @@ void finish_load_party(){
 		return;
 	}
 	
-	// Saved creatures may not have had their monster attributes saved
+	// Saved creatures and town.monst may not have had their monster attributes saved
 	// Make sure that they know what they are!
 	// Cast to cMonster base class and assign, to avoid clobbering other attributes
-	for(auto& pop : univ.party.creature_save) {
+	bool found_some_bad_monster=false;
+	for (size_t j=0; j<=univ.party.creature_save.size(); ++j) {
+		auto &pop = j<univ.party.creature_save.size() ? univ.party.creature_save[j] : univ.town.monst;
+		std::vector<size_t> bad_monster;
 		for(size_t i = 0; i < pop.size(); i++) {
 			int number = pop[i].number;
+			if (number<0 || number>=univ.scenario.scen_monsters.size()) {
+				bad_monster.push_back(i);
+				continue;
+			}
 			cMonster& monst = pop[i];
 			monst = univ.scenario.scen_monsters[number];
 		}
+		if (bad_monster.empty()) continue;
+		// now remove the creatures that clearly are not from this scenario
+		found_some_bad_monster=true;
+		for (auto it=bad_monster.rbegin(); it!=bad_monster.rend(); ++it)
+			pop.removeCreature(*it);
 	}
-	for(size_t j = 0; j < univ.town.monst.size(); j++) {
-		int number = univ.town.monst[j].number;
-		cMonster& monst = univ.town.monst[j];
-		monst = univ.scenario.scen_monsters[number];
-	}
-	
+	if (found_some_bad_monster)
+		showWarning("Found some unexistent monsters in the saved game, I tried to repair the save (but it may be better to use another save).");
+
 	// if at this point, startup must be over, so make this call to make sure we're ready,
 	// graphics wise
 	end_startup();
@@ -97,6 +107,7 @@ void finish_load_party(){
 	
 	center = town_restore ? univ.party.town_loc :  univ.party.out_loc;
 	
+	minimap::set_visible(false);
 	redraw_screen(REFRESH_ALL);
 	univ.cur_pc = first_active_pc();
 	loaded_yet = true;
@@ -363,6 +374,12 @@ bool load_scenario_header(fs::path file,scen_header_type& scen_head){
 	int dot = fname.find_first_of('.');
 	if(dot == std::string::npos)
 		return false; // If it has no file extension, it's not a valid scenario.
+	
+	std::string basename = fname.substr(0,dot);
+	std::transform(basename.begin(), basename.end(), basename.begin(), tolower);
+	if(basename == "valleydy" || basename == "stealth" || basename == "zakhazi"/* || basename == "busywork" */)
+		return false;
+	
 	std::string file_ext = fname.substr(dot);
 	std::transform(file_ext.begin(), file_ext.end(), file_ext.begin(), tolower);
 	if(file_ext == ".exs") {
@@ -408,11 +425,5 @@ bool load_scenario_header(fs::path file,scen_header_type& scen_head){
 	std::copy(temp_scenario.format.ver, temp_scenario.format.ver + 3, scen_head.ver);
 	std::copy(temp_scenario.format.prog_make_ver, temp_scenario.format.prog_make_ver + 3, scen_head.prog_make_ver);
 
-	fname = fname.substr(0,dot);
-	std::transform(fname.begin(), fname.end(), fname.begin(), tolower);
-	
-	if(fname == "valleydy" || fname == "stealth" || fname == "zakhazi"/* || fname == "busywork" */)
-		return false;
-	
 	return true;
 }

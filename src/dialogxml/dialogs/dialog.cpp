@@ -33,11 +33,11 @@ using namespace ticpp;
 // TODO: Would be nice if I could avoid depending on mainPtr
 extern sf::RenderWindow mainPtr;
 
-extern sf::Texture bg_gworld;
 const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
 short cDialog::defaultBackground = cDialog::BG_DARK;
 cDialog* cDialog::topWindow = nullptr;
 void (*cDialog::redraw_everything)() = nullptr;
+bool cDialog::inDialog = false;
 
 std::string cDialog::generateRandomString(){
 	// Not bothering to seed, because it doesn't actually matter if it's truly random.
@@ -171,9 +171,9 @@ cKey cControl::parseKey(string what){
 	return key;
 }
 
-cDialog::cDialog(cDialog* p) : parent(p) {}
+cDialog::cDialog(cDialog* p) : parent(p), ui_scale(-1) {}
 
-cDialog::cDialog(const DialogDefn& file, cDialog* p) : parent(p) {
+cDialog::cDialog(const DialogDefn& file, cDialog* p) : parent(p), ui_scale(-1) {
 	loadFromFile(file);
 }
 
@@ -432,7 +432,9 @@ void cDialog::recalcRect(){
 		using namespace std::placeholders;
 		if(auto container = dynamic_cast<cContainer*>(iter->second))
 			container->forEach(std::bind(&cControl::recalcRect, _2));
-		iter->second->recalcRect();
+		// fixme, in some dialogs, a long string can make the dialog very large (instead of be printed on many lines)
+		if (iter->second->getType() != eControlType::CTRL_TEXT)
+			iter->second->recalcRect();
 		rectangle frame = iter->second->getBounds();
 		haveRel = haveRel || iter->second->horz != POS_ABS || iter->second->vert != POS_ABS;
 		if(iter->second->horz != POS_REL_NEG && frame.right > winRect.right)
@@ -499,6 +501,8 @@ bool cDialog::sendInput(cKey key) {
 
 void cDialog::run(std::function<void(cDialog&)> onopen){
 	cDialog* formerTop = topWindow;
+	bool formerInDialog = inDialog;
+	inDialog = true;
 	// TODO: The introduction of the static topWindow means I may be able to use this instead of parent->win; do I still need parent?
 	sf::RenderWindow* parentWin = &(parent ? parent->win : mainPtr);
 	auto parentPos = parentWin->getPosition();
@@ -517,16 +521,31 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 			currentFocus = iter->first;
 		}
 	}
-	// Sometimes it seems like the Cocoa menu handling clobbers the active rendering context.
-	// For whatever reason, delaying 100 milliseconds appears to fix this.
-	sf::sleep(sf::milliseconds(100));
-	// So this little section of code is a real-life valley of dying things.
-	// Instantiating a window and then closing it seems to fix the update error, because magic.
-	win.create(sf::VideoMode(1,1),"");
-	win.close();
-	win.create(sf::VideoMode(winRect.width(), winRect.height()), "Dialog", sf::Style::Titlebar);
-	winLastX = parentPos.x + (int(parentSz.x) - winRect.width()) / 2;
-	winLastY = parentPos.y + (int(parentSz.y) - winRect.height()) / 2;
+	if (ui_scale<=0) {
+		ui_scale = get_float_pref("UIScale", 1.0);
+		if (ui_scale < 0.1) ui_scale = 1.0;
+	}
+
+	// check that the dialog can be displayed on the screen
+	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+	if (desktop.width< ui_scale*winRect.width())
+		ui_scale=float(desktop.width)/winRect.width();
+	// we need keep enough space for the mac menu and the dialog title
+	// and add more space on a retina mac
+	// checkme: we need probably to also add getMenuHeight at least on Linux
+	int const minFreeHeight=desktop.height>1500 ? 100 : 50;
+	if ((desktop.height-minFreeHeight)< ui_scale*winRect.height())
+		ui_scale=float(desktop.height-minFreeHeight)/winRect.height();
+
+	int wWidth=int(ui_scale*winRect.width()), wHeight=int(ui_scale*winRect.height());
+	win.create(sf::VideoMode(wWidth, wHeight), "Dialog", sf::Style::Titlebar);
+	sf::View view;
+	view.reset(sf::FloatRect(0, 0, wWidth, wHeight));
+	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
+	win.setView(view);
+
+	winLastX = parentPos.x + (int(parentSz.x) - wWidth) / 2;
+	winLastY = parentPos.y + (int(parentSz.y) - wHeight) / 2;
 	win.setPosition({winLastX, winLastY});
 	draw();
 	makeFrontWindow(parent ? parent-> win : mainPtr);
@@ -545,6 +564,7 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	set_cursor(former_curs);
 	topWindow = formerTop;
 	makeFrontWindow(*parentWin);
+	inDialog = formerInDialog;
 }
 
 // This method is a main event event loop of the dialog.
@@ -553,18 +573,26 @@ void cDialog::handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(dialogNotToast) {
-		while(win.pollEvent(currentEvent)) handle_one_event(currentEvent);
+		bool need_redraw=false;
+		while(win.pollEvent(currentEvent)) handle_one_event(currentEvent, need_redraw);
 
+		if(doAnimations && animTimer.getElapsedTime().asMilliseconds() >= 500) {
+			need_redraw = true;
+			cPict::advanceAnim();
+			animTimer.restart();
+		}
 		// Ideally, this should be the only draw call that is done in a cycle.
-		draw();
-
-		// Prevent the loop from executing too fast.
-		fps_limiter.frame_finished();
+		if (need_redraw)
+			draw();
+		else
+			// Prevent the loop from executing too fast
+			//  when the user does nothing
+			fps_limiter.frame_finished();
 	}
 }
 
 // This method handles one event received by the dialog.
-void cDialog::handle_one_event(const sf::Event& currentEvent) {
+void cDialog::handle_one_event(const sf::Event& currentEvent, bool &need_redraw) {
 	using Key = sf::Keyboard::Key;
 
 	cKey key;
@@ -574,7 +602,8 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 	location where;
 	
 	if(kb.handleModifier(currentEvent)) return;
-
+	bool prev_redraw=need_redraw;
+	need_redraw=true;
 	switch(currentEvent.type) {
 		case sf::Event::KeyPressed:
 			switch(currentEvent.key.code){
@@ -682,11 +711,12 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 			if(kb.isMetaPressed()) key.mod += mod_ctrl;
 			if(kb.isAltPressed()) key.mod += mod_alt;
 			if(kb.isShiftPressed()) key.mod += mod_shift;
-			where = {currentEvent.mouseButton.x, currentEvent.mouseButton.y};
+			where = {int(currentEvent.mouseButton.x/ui_scale), int(currentEvent.mouseButton.y/ui_scale)};
 			process_click(where, key.mod);
 			break;
 		default: // To silence warning of unhandled enum values
-			break;
+			need_redraw=prev_redraw;
+			return;
 		case sf::Event::GainedFocus:
 		case sf::Event::MouseMoved:
 			// Did the window move, potentially dirtying the canvas below it?
@@ -700,7 +730,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 
 			bool inField = false;
 			for(auto& ctrl : controls) {
-				if(ctrl.second->getType() == CTRL_FIELD && ctrl.second->getBounds().contains(currentEvent.mouseMove.x, currentEvent.mouseMove.y)) {
+				if(ctrl.second->getType() == CTRL_FIELD && ctrl.second->getBounds().contains(currentEvent.mouseMove.x/ui_scale, currentEvent.mouseMove.y/ui_scale)) {
 					set_cursor(text_curs);
 					inField = true;
 					break;
@@ -1038,10 +1068,6 @@ bool cDialog::doAnimations = false;
 void cDialog::draw(){
 	win.setActive(false);
 	tileImage(win,winRect,::bg[bg]);
-	if(doAnimations && animTimer.getElapsedTime().asMilliseconds() >= 500) {
-		cPict::advanceAnim();
-		animTimer.restart();
-	}
 	
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){

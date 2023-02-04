@@ -38,13 +38,10 @@
 #include "view_dialogs.hpp"
 
 extern short cen_x, cen_y,cur_town;
-extern bool mouse_button_held;
 extern bool editing_town;
 extern short cur_viewing_mode;
 extern cTown* town;
 extern cOutdoors* current_terrain;
-extern short mode_count,to_create;
-extern ter_num_t template_terrain[64][64];
 extern cScenario scenario;
 extern cCustomGraphics spec_scen_g;
 extern location cur_out;
@@ -236,7 +233,7 @@ bool pick_string(std::string from_file, cDialog& parent, std::string result_fld,
 
 static bool show_help(std::string from_file, cDialog& parent, pic_num_t pic){
 	StringList strings = *ResMgr::strings.get(from_file);
-	cThreeChoice help(strings,basic_buttons[1],pic,PIC_DLOG,&parent);
+	cThreeChoice help(strings,basic_buttons[1],cPictNum(pic,PIC_DLOG),&parent);
 	help.show();
 	return true;
 }
@@ -357,26 +354,15 @@ static bool fill_ter_flag_info(cDialog& me, std::string id, bool losing){
 }
 
 static void fill_ter_info(cDialog& me, short ter){
-	cTerrain& ter_type = scenario.ter_types[ter];
+	cTerrain const & ter_type = scenario.get_terrain(ter);
 	{
 		cPict& pic_ctrl = dynamic_cast<cPict&>(me["graphic"]);
-		pic_num_t pic = ter_type.picture;
-		if(pic < 960)
-			pic_ctrl.setPict(pic, PIC_TER);
-		else if(pic < 1000)
-			pic_ctrl.setPict(pic - 960, PIC_TER_ANIM);
-		else if(pic < 2000)
-			pic_ctrl.setPict(pic % 1000, PIC_CUSTOM_TER);
-		else
-			pic_ctrl.setPict(pic % 2000, PIC_CUSTOM_TER_ANIM);
-		me["pict"].setTextToNum(pic);
+		pic_ctrl.setPict(ter_type.get_picture_num());
+		me["pict"].setTextToNum(ter_type.picture);
 	}{
 		cPict& pic_ctrl = dynamic_cast<cPict&>(me["seemap"]);
-		pic_num_t pic = ter_type.map_pic;
-		if(pic < 1000)
-			pic_ctrl.setPict(pic, PIC_TER_MAP);
-		else pic_ctrl.setPict(pic, PIC_CUSTOM_TER_MAP);
-		me["map"].setTextToNum(pic);
+		pic_ctrl.setPict(ter_type.get_map_picture_num());
+		me["map"].setTextToNum(ter_type.map_pic);
 	}
 	me["number"].setTextToNum(ter);
 	me["name"].setText(ter_type.name);
@@ -445,7 +431,7 @@ static void fill_ter_info(cDialog& me, short ter){
 }
 
 static bool finish_editing_ter(cDialog& me, std::string id, ter_num_t& which) {
-	if(!save_ter_info(me, scenario.ter_types[which])) return true;
+	if(!save_ter_info(me, scenario.get_terrain(which))) return true;
 	
 	if(!me.toast(true)) return true;
 	if(id == "left") {
@@ -465,7 +451,7 @@ static bool finish_editing_ter(cDialog& me, std::string id, ter_num_t& which) {
 }
 
 static bool edit_ter_obj(cDialog& me, ter_num_t which_ter) {
-	cTerrain& ter = scenario.ter_types[which_ter];
+	cTerrain& ter = scenario.get_terrain(which_ter);
 	const pic_num_t pic = ter.picture;
 	cDialog obj_dlg(*ResMgr::dialogs.get("edit-ter-obj"), &me);
 	obj_dlg.attachFocusHandlers([&pic](cDialog& me, std::string fld, bool losing) -> bool {
@@ -499,7 +485,7 @@ static bool edit_ter_obj(cDialog& me, ter_num_t which_ter) {
 		for(int x = 0; x < 4; x++) {
 			for(int y = 0; y < 4; y++) {
 				std::string id = "x" + std::to_string(x) + "y" + std::to_string(y);
-				dynamic_cast<cPict&>(me[id]).setPict(obj[x][y]);
+				dynamic_cast<cPict&>(me[id]).setPict(cTerrain::get_picture_num_for_terrain(obj[x][y]));
 			}
 		}
 		return true;
@@ -602,24 +588,7 @@ bool edit_ter_type(ter_num_t which) {
 static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which) {
 	std::ostringstream strb;
 	
-	if(monst.picture_num < 1000)
-		dynamic_cast<cPict&>(me["icon"]).setPict(monst.picture_num,PIC_MONST);
-	else {
-		ePicType type_g = PIC_CUSTOM_MONST;
-		short size_g = monst.picture_num / 1000;
-		switch(size_g){
-			case 2:
-				type_g += PIC_WIDE;
-				break;
-			case 3:
-				type_g += PIC_TALL;
-				break;
-			case 4:
-				type_g += PIC_LARGE;
-				break;
-		}
-		dynamic_cast<cPict&>(me["icon"]).setPict(monst.picture_num,type_g);
-	}
+	dynamic_cast<cPict&>(me["icon"]).setPict(monst.get_picture_num(), true);
 	dynamic_cast<cPict&>(me["talkpic"]).setPict(monst.default_facial_pic, PIC_TALK);
 	me["num"].setTextToNum(which);
 	me["name"].setText(monst.m_name);
@@ -709,29 +678,25 @@ static bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& 
 				if(cre(pic,0,max_preset,error,"",&me)) return false;
 				monst.x_width = m_pic_index[monst.picture_num].x;
 				monst.y_width = m_pic_index[monst.picture_num].y;
-				icon.setPict(pic, PIC_MONST);
 				break;
 			case 1:
 				monst.x_width = 1;
 				monst.y_width = 1;
-				icon.setPict(pic, PIC_MONST);
 				break;
 			case 2:
 				monst.x_width = 2;
 				monst.y_width = 1;
-				icon.setPict(pic, PIC_MONST_WIDE);
 				break;
 			case 3:
 				monst.x_width = 1;
 				monst.y_width = 2;
-				icon.setPict(pic, PIC_MONST_TALL);
 				break;
 			case 4:
 				monst.x_width = 2;
 				monst.y_width = 2;
-				icon.setPict(pic, PIC_MONST_LG);
 				break;
 		}
+		icon.setPict(cMonster::get_picture_num(pic), true);
 		std::ostringstream strb;
 		strb << "Width = " << int(monst.x_width);
 		me["w"].setText(strb.str());
@@ -777,7 +742,7 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& m
 	
 	if(hit == "okay") {
 		if(save_monst_info(me,monst)) {
-			scenario.scen_monsters[which] = monst;
+			scenario.get_monster(which) = monst;
 			me.toast(true);
 		}
 	} else if(hit == "abils") {
@@ -788,17 +753,17 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& m
 		put_monst_info_in_dlog(me,monst,which);
 	} else if(hit == "left") {
 		if(!save_monst_info(me,monst)) return false;
-		scenario.scen_monsters[which] = monst;
+		scenario.get_monster(which) = monst;
 		which--;
 		if(which < 1) which = scenario.scen_monsters.size() - 1;
-		monst = scenario.scen_monsters[which];
+		monst = scenario.get_monster(which);
 		put_monst_info_in_dlog(me,monst,which);
 	} else if(hit == "right") {
 		if(!save_monst_info(me,monst)) return false;
-		scenario.scen_monsters[which] = monst;
+		scenario.get_monster(which) = monst;
 		which++;
 		if(which >= scenario.scen_monsters.size()) which = 1;
-		monst = scenario.scen_monsters[which];
+		monst = scenario.get_monster(which);
 		put_monst_info_in_dlog(me,monst,which);
 	} else if(hit == "picktype") {
 		if(!save_monst_info(me,monst)) return false;
@@ -856,7 +821,7 @@ static bool pick_monst_picture(cDialog& me) {
 bool edit_monst_type(short which) {
 	using namespace std::placeholders;
 	mon_num_t first = which;
-	cMonster monst = scenario.scen_monsters[which];
+	cMonster monst = scenario.get_monster(which);
 	
 	cDialog monst_dlg(*ResMgr::dialogs.get("edit-monster"));
 	monst_dlg["pickicon"].attachClickHandler(std::bind(pick_monst_picture,_1));
@@ -928,7 +893,7 @@ static void put_monst_abils_in_dlog(cDialog& me, cMonster& monst) {
 		} else if(i % 4 == 3) abils.addPage();
 		std::string name = abil.second.to_string(abil.first);
 		if(abil.first == eMonstAbil::SUMMON && abil.second.summon.type == eMonstSummon::TYPE)
-			name.replace(name.find("%s"), 2, scenario.scen_monsters[abil.second.summon.what].m_name);
+			name.replace(name.find("%s"), 2, scenario.get_monster(abil.second.summon.what).m_name);
 		me["abil-name" + id].setText(name);
 		me["abil-edit" + id].setText("Edit");
 		i++;
@@ -1021,7 +986,7 @@ static void fill_monst_abil_detail(cDialog& me, cMonster& monst, eMonstAbil abil
 	me["monst"].setText(monst.m_name);
 	std::string name = detail.to_string(abil);
 	if(abil == eMonstAbil::SUMMON && detail.summon.type == eMonstSummon::TYPE)
-		name.replace(name.find("%s"), 2, scenario.scen_monsters[detail.summon.what].m_name);
+		name.replace(name.find("%s"), 2, scenario.get_monster(detail.summon.what).m_name);
 	me["name"].setText(detail.to_string(abil));
 	// These names start at line 80 in the strings file, but the first valid ability is ID 1, so add 79.
 	me["type"].setText(get_str("monster-abilities", 79 + int(abil)));
@@ -1119,7 +1084,7 @@ static void fill_monst_abil_detail(cDialog& me, cMonster& monst, eMonstAbil abil
 		else title.hide(), field.hide(), pick.hide();
 	} else if(cat == eMonstAbilCat::SUMMON) {
 		switch(detail.summon.type) {
-			case eMonstSummon::TYPE: me["summon"].setText(scenario.scen_monsters[detail.summon.what].m_name); break;
+			case eMonstSummon::TYPE: me["summon"].setText(scenario.get_monster(detail.summon.what).m_name); break;
 			case eMonstSummon::LEVEL: me["summon"].setTextToNum(detail.summon.what); break;
 			case eMonstSummon::SPECIES: me["summon"].setText(get_str("traits", detail.summon.what * 2 + 35)); break;
 		}
@@ -1401,13 +1366,11 @@ cMonster edit_monst_abil(cMonster initial,short which,cDialog& parent) {
 	return initial;
 }
 
-static void put_item_info_in_dlog(cDialog& me, cItem& item, short which) {
+static void put_item_info_in_dlog(cDialog& me, cItem const &item, short which) {
 	me["num"].setTextToNum(which);
 	me["full"].setText(item.full_name);
 	me["short"].setText(item.name);
-	if(item.graphic_num >= 1000) // was 150
-		dynamic_cast<cPict&>(me["pic"]).setPict(item.graphic_num, PIC_CUSTOM_ITEM);
-	else dynamic_cast<cPict&>(me["pic"]).setPict(item.graphic_num, PIC_ITEM);
+	dynamic_cast<cPict&>(me["pic"]).setPict(item.get_picture_num(false));
 	me["picnum"].setTextToNum(item.graphic_num);
 	
 	bool missile = false, weapon = false;
@@ -1549,7 +1512,7 @@ static void put_item_info_in_dlog(cDialog& me, cItem& item, short which) {
 	
 	std::string abil = item.getAbilName();
 	if(item.ability == eItemAbil::SUMMONING || item.ability == eItemAbil::MASS_SUMMONING)
-		abil.replace(abil.find("%s"), 2, scenario.scen_monsters[item.abil_data.value].m_name);
+		abil.replace(abil.find("%s"), 2, scenario.get_monster(item.abil_data.value).m_name);
 	me["abilname"].setText(abil);
 }
 
@@ -1629,20 +1592,20 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 	} else if(hit == "okay") {
 		save_item_info(me, item);
 		if(!me.toast(true)) return true;
-		scenario.scen_items[which] = item;
+		scenario.get_item(which) = item;
 	} else if(hit == "prev") {
 		save_item_info(me, item);
-		scenario.scen_items[which] = item;
+		scenario.get_item(which) = item;
 		which--;
 		if(which < 0) which = scenario.scen_items.size() - 1;
-		item = scenario.scen_items[which];
+		item = scenario.get_item(which);
 		put_item_info_in_dlog(me, item, which);
 	} else if(hit == "next") {
 		save_item_info(me, item);
-		scenario.scen_items[which] = item;
+		scenario.get_item(which) = item;
 		which++;
 		if(which >= scenario.scen_items.size()) which = 0;
-		item = scenario.scen_items[which];
+		item = scenario.get_item(which);
 		put_item_info_in_dlog(me, item, which);
 	} else if(hit == "choosepic") {
 		save_item_info(me, item);
@@ -1739,7 +1702,7 @@ bool edit_item_type(short which) {
 	using namespace std::placeholders;
 	if(which == scenario.scen_items.size())
 		scenario.scen_items.resize(which + 1);
-	cItem item = scenario.scen_items[which];
+	cItem item = scenario.get_item(which);
 	
 	cDialog item_dlg(*ResMgr::dialogs.get("edit-item"));
 	item_dlg["level"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 50, "Item Level"));
@@ -1991,7 +1954,7 @@ cItem edit_item_abil(cItem initial,short which_item,cDialog& parent) {
 	return initial;
 }
 
-static void put_spec_item_in_dlog(cDialog& me, cSpecItem& item, short which) {
+static void put_spec_item_in_dlog(cDialog& me, cSpecItem const &item, short which) {
 	me["num"].setTextToNum(which);
 	me["name"].setText(item.name);
 	me["descr"].setText(item.descr);
@@ -2009,7 +1972,7 @@ static bool save_spec_item(cDialog& me, cSpecItem& item, short which) {
 		item.flags += 10;
 	if(dynamic_cast<cLed&>(me["usable"]).getState() != led_off)
 		item.flags += 1;
-	scenario.special_items[which] = item;
+	scenario.get_special_item(which) = item;
 	return true;
 }
 
@@ -2022,13 +1985,13 @@ static bool edit_spec_item_event_filter(cDialog& me, std::string hit, cSpecItem&
 		if(!save_spec_item(me, item, which)) return true;
 		which--;
 		if(which < 0) which = scenario.special_items.size() - 1;
-		item = scenario.special_items[which];
+		item = scenario.get_special_item(which);
 		put_spec_item_in_dlog(me, item, which);
 	} else if(hit == "right") {
 		if(!save_spec_item(me, item, which)) return true;
 		which++;
 		if(which >= scenario.special_items.size()) which = 0;
-		item = scenario.special_items[which];
+		item = scenario.get_special_item(which);
 		put_spec_item_in_dlog(me, item, which);
 	} else if(hit == "edit-spec") {
 		if(!save_spec_item(me, item, which)) return true;
@@ -2046,20 +2009,20 @@ static bool edit_spec_item_event_filter(cDialog& me, std::string hit, cSpecItem&
 bool edit_spec_item(short which_item) {
 	short first = which_item;
 	using namespace std::placeholders;
-	cSpecItem item = scenario.special_items[which_item];
+	cSpecItem &item = scenario.get_special_item(first);
 	
 	cDialog item_dlg(*ResMgr::dialogs.get("edit-special-item"));
 	item_dlg["spec"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, scenario.scen_specials.size(), "Scenario special node called", "-1 for no special"));
-	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(which_item)), {"okay", "cancel", "clear", "edit-spec"});
+	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(first)), {"okay", "cancel", "clear", "edit-spec"});
 	
 	if(scenario.special_items.size() == 1) {
 		item_dlg["left"].hide();
 		item_dlg["right"].hide();
 	} else {
-		item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(which_item)), {"left", "right"});
+		item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(first)), {"left", "right"});
 	}
 	
-	put_spec_item_in_dlog(item_dlg, item, which_item);
+	put_spec_item_in_dlog(item_dlg, item, first);
 	item_dlg["clear"].hide();
 	
 	item_dlg.run();
@@ -2107,7 +2070,7 @@ static bool save_quest_from_dlog(cDialog& me, cQuest& quest, size_t which_quest,
 		quest.bank2 = me["bank2"].getTextAsNum();
 	} else quest.bank1 = quest.bank2 = -1;
 	
-	scenario.quests[which_quest] = quest;
+	scenario.get_quest(which_quest) = quest;
 	if(!close) me.untoast();
 	return true;
 }
@@ -2126,7 +2089,7 @@ static bool change_quest_dlog_page(cDialog& me, std::string dir, cQuest& quest, 
 			which_quest = 0;
 	}
 	
-	quest = scenario.quests[which_quest];
+	quest = scenario.get_quest(which_quest);
 	put_quest_in_dlog(me, quest, which_quest);
 	return true;
 }
@@ -2137,7 +2100,7 @@ bool edit_quest(size_t which_quest) {
 		scenario.quests.resize(which_quest + 1);
 		scenario.quests[which_quest].name = "New Quest";
 	}
-	cQuest quest = scenario.quests[which_quest];
+	cQuest quest = scenario.get_quest(which_quest);
 	
 	cDialog quest_dlg(*ResMgr::dialogs.get("edit-quest"));
 	quest_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
@@ -2169,7 +2132,7 @@ bool edit_quest(size_t which_quest) {
 static bool put_shop_item_in_dlog(cPict& pic, cControl& num, cControl& title, const cShop& shop, int which) {
 	cShopItem entry = shop.getItem(which);
 	num.setTextToNum(which);
-	pic.setPict(entry.item.graphic_num);
+	pic.setPict(entry.item.get_picture_num(false));
 	if(entry.type == eShopItemType::EMPTY) {
 		title.setText("");
 		return false;
@@ -2234,7 +2197,7 @@ static bool save_shop_from_dlog(cDialog& me, cShop& shop, size_t which_shop, boo
 	shop.setFace(dynamic_cast<cPict&>(me["face"]).getPicNum());
 	// Items are filled in as they're added by the dialog, so that's all we need to do here
 	
-	scenario.shops[which_shop] = shop;
+	scenario.get_shop(which_shop) = shop;
 	if(!close) me.untoast();
 	return true;
 }
@@ -2253,7 +2216,7 @@ static bool change_shop_dlog_page(cDialog& me, std::string dir, cShop& shop, siz
 			which_shop = 0;
 	}
 	
-	shop = scenario.shops[which_shop];
+	shop = scenario.get_shop(which_shop);
 	put_shop_in_dlog(me, shop, which_shop);
 	return true;
 }
@@ -2302,10 +2265,10 @@ static void edit_shop_item(cDialog& parent, size_t& item, size_t& quantity, bool
 		item_dlg["chance-prompt"].hide();
 	}
 	
-	item_dlg["item"].setText(scenario.scen_items[item].full_name);
+	item_dlg["item"].setText(scenario.get_item(item).full_name);
 	item_dlg["choose"].attachClickHandler([&item](cDialog& me, std::string, eKeyMod) -> bool {
 		item = choose_text(STRT_ITEM, item, &me, "Which item?");
-		me["item"].setText(scenario.scen_items[item].full_name);
+		me["item"].setText(scenario.get_item(item).full_name);
 		return true;
 	});
 	
@@ -2363,7 +2326,7 @@ static bool edit_shop_entry(cDialog& me, std::string which, cShop& shop) {
 		case eShopItemType::ITEM:
 		case eShopItemType::OPT_ITEM:
 			edit_shop_item(me, entry.index, entry.quantity, entry.type == eShopItemType::OPT_ITEM);
-			entry.item = scenario.scen_items[entry.index];
+			entry.item = scenario.get_item(entry.index);
 			shop.replaceItem(i, entry);
 			need_string = false;
 			break;
@@ -2417,13 +2380,14 @@ static bool add_shop_entry(cDialog& me, std::string type, cShop& shop, size_t wh
 	if(type == "item" || type == "opt") {
 		size_t which_item = 0, amount = 0;
 		edit_shop_item(me, which_item, amount, type == "opt");
-		if(scenario.scen_items[which_item].variety == eItemType::NO_ITEM)
+		cItem const &item=scenario.get_item(which_item);
+		if(item.variety == eItemType::NO_ITEM)
 			return true;
-		if(scenario.scen_items[which_item].variety == eItemType::GOLD)
+		if(item.variety == eItemType::GOLD)
 			return true;
 		if(type == "item")
-			shop.addItem(which_item, scenario.scen_items[which_item], amount);
-		else shop.addItem(which_item, scenario.scen_items[which_item], amount % 1000, amount / 1000);
+			shop.addItem(which_item, item, amount);
+		else shop.addItem(which_item, item, amount % 1000, amount / 1000);
 	} else if(type == "spec") {
 		cItem item(ITEM_SPECIAL);
 		size_t amount = 0;
@@ -2483,7 +2447,7 @@ bool edit_shop(size_t which_shop, cDialog* parent) {
 	using namespace std::placeholders;
 	if(which_shop == scenario.shops.size())
 		scenario.shops.emplace_back("New Shop");
-	cShop shop = scenario.shops[which_shop];
+	cShop shop = scenario.get_shop(which_shop);
 	
 	cDialog shop_dlg(*ResMgr::dialogs.get("edit-shop"), parent);
 	shop_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));

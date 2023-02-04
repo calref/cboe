@@ -50,7 +50,7 @@ public:
 		bool cant_flee, forced;
 		
 		bool isNull() const;
-		void import_legacy(legacy::out_wandering_type old);
+		void import_legacy(legacy::out_wandering_type const &old);
 		void writeTo(cTagFile_Page& page) const;
 		void readFrom(const cTagFile_Page& page);
 		cWandering();
@@ -62,7 +62,7 @@ public:
 		cWandering what_monst;
 		location which_sector,m_loc,home_sector; // home_sector is the sector it was spawned in
 		
-		void import_legacy(legacy::outdoor_creature_type old);
+		void import_legacy(legacy::outdoor_creature_type const &old);
 		void writeTo(cTagFile_Page& page) const;
 		void readFrom(const cTagFile_Page& page);
 	};
@@ -79,8 +79,27 @@ public:
 	int bg_out, bg_fight, bg_town, bg_dungeon;
 	
 	explicit cOutdoors(cScenario& scenario);
-	void import_legacy(legacy::outdoor_record_type& old);
+	void import_legacy(legacy::outdoor_record_type const &old);
 	void reattach(cScenario& to);
+
+	std::string &get_special_string(int id);
+	std::string const &get_special_string(int id) const;
+	bool is_road(int x, int y) const {
+		if (x<0 || x>=48 || y<0 || y>=48) return false;
+		return roads[x][y];
+	}
+	void set_road(int x, int y, bool set) {
+		if (x<0 || x>=48 || y<0 || y>=48) return;
+		roads[x][y]=set;
+	}
+	bool is_special_spot(int x, int y) const {
+		if (x<0 || x>=48 || y<0 || y>=48) return false;
+		return special_spot[x][y];
+	}
+	void set_special_spot(int x, int y, bool set) {
+		if (x<0 || x>=48 || y<0 || y>=48) return;
+		special_spot[x][y]=set;
+	}
 };
 
 #endif

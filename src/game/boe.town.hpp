@@ -26,9 +26,7 @@ void erase_hidden_towns(cOutdoors& sector, int quadrant_x, int quadrant_y);
 void erase_completed_specials(cArea& sector, std::function<void(location)> clear_spot);
 void erase_out_specials();
 bool does_location_have_special(cOutdoors& sector, location loc, eTerSpec type);
-void clear_map();
-void draw_map(bool need_refresh);
 bool is_door(location destination);
-void display_map();
+
 void check_done();
 bool quadrant_legal(short i, short j) ;

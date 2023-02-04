@@ -11,11 +11,12 @@
 
 #include <SFML/Graphics.hpp>
 #include "resmgr.hpp"
+#include "gfx/texture.hpp"
 
-using ImageRsrc = ResMgr::cPointer<sf::Texture>;
+using TextureRsrc = ResMgr::cPointer<Texture>;
 
 namespace ResMgr {
-	extern cPool<sf::Texture> graphics;
+	extern cPool<Texture> graphics;
 }
 
 #endif

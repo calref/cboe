@@ -12,14 +12,13 @@
 #include "dialogxml/widgets/control.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
 #include "tools/cursors.hpp"
-#include <boost/lexical_cast.hpp>
 
 extern cUniverse univ;
 extern sf::RenderWindow mainPtr;
 extern fs::path file_in_mem;
 extern sf::Texture pc_gworld;
 
-short which_pc_displayed,store_pc_trait_mode,store_which_to_edit;
+short store_pc_trait_mode,store_which_to_edit;
 extern short current_active_pc;
 extern rectangle pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 extern rectangle item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
@@ -50,13 +49,13 @@ bool handle_action(const sf::Event & event) {
 			do_button_action(0,i + 10);
 			switch(i) {
 				case 0:
-					display_pc(current_active_pc,10,nullptr);
+					display_pc(current_active_pc,0,true,nullptr);
 					break;
 				case 1:
-			 		display_pc(current_active_pc,11,nullptr);
+					display_pc(current_active_pc,1,true,nullptr);
 					break;
 				case 2:
-					pick_race_abil(&univ.party[current_active_pc],0);
+					pick_race_abil(current_active_pc,0);
 					break;
 				case 3:
 					spend_xp(current_active_pc,2,nullptr);
@@ -134,7 +133,7 @@ void edit_day() {
 	
 	dlog.run();
 	
-	long long dialog_answer = minmax(0,500,dlog.getResult<long long>());
+	long long dialog_answer = minmax(0,500,dlog.getResult<long long>()-1);
 	
 	univ.party.age = (long long) (3700) * (long long) (dialog_answer);
 }
@@ -156,6 +155,7 @@ void edit_xp(cPlayer *pc) {
 	set_cursor(sword_curs);
 	
 	cDialog dlog(*ResMgr::dialogs.get("edit-xp"));
+	dlog.attachClickHandlers(get_num_event_filter, {"okay", "cancel"});
 	dlog["okay"].attachClickHandler(get_num_event_filter);
 	
 	dlog["number"].setTextToNum(pc->experience);
@@ -163,9 +163,8 @@ void edit_xp(cPlayer *pc) {
 	
 	dlog.run();
 	
-	int dialog_answer = minmax(0,10000,abs(dlog.getResult<long long>()));
-	
-	pc->experience = dialog_answer;
+	if (dlog.accepted())
+		pc->experience = minmax(0,10000,abs(dlog.getResult<long long>()));
 }
 
 

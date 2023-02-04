@@ -35,7 +35,6 @@ short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
 extern std::map<eSkill,short> skill_cost;
 extern std::map<eSkill,short> skill_max;
 extern std::map<eSkill,short> skill_g_cost;
-extern short cur_town_talk_loaded;
 extern sf::RenderWindow mainPtr;
 extern short on_monst_menu[256];
 
@@ -204,10 +203,10 @@ static bool display_pc_item_event_filter(cDialog& me, std::string item_hit, cIte
 	return true;
 }
 
-void display_pc_item(short pc_num,short item,cItem si,cDialog* parent) {
+void display_pc_item(short pc_num,short item,cItem const &si,cDialog* parent) {
 	using namespace std::placeholders;
 	cItem store_i;
-	if(pc_num == 6)
+	if(pc_num == 6 || pc_num == ITEM_WIN_JUNK)
 		store_i = si;
 	else store_i = univ.party[pc_num].items[item];
 	set_cursor(sword_curs);
@@ -248,7 +247,7 @@ static bool display_monst_event_filter(cDialog& me, std::string item_hit, cCreat
 		return true; // Means an immunity LED was hit
 	
 	if(roster[position % 60].number != on_monst_menu[position]) {
-		cMonster& monst = univ.scenario.scen_monsters[on_monst_menu[position]];
+		cMonster& monst = univ.scenario.get_monster(on_monst_menu[position]);
 		roster.assign(position % 60, cCreature(on_monst_menu[position]), monst, univ.party.easy_mode, univ.difficulty_adjust());
 	}
 	store_m = roster[position % 60];
@@ -355,10 +354,7 @@ static void display_pc_info(cDialog& me, const short pc_num) {
 	me["xp"].setTextToNum(pc.experience);
 	me["skp"].setTextToNum(pc.skill_pts);
 	me["progress"].setTextToNum(pc.level * pc.get_tnl());
-	pic_num_t pic = pc.which_graphic;
-	if(pic >= 100 && pic < 1000)
-		dynamic_cast<cPict&>(me["pic"]).setPict(pic - 100,PIC_MONST);
-	else dynamic_cast<cPict&>(me["pic"]).setPict(pic,PIC_PC);
+	dynamic_cast<cPict&>(me["pic"]).setPict(pc.get_picture_num());
 	
 	// Fight bonuses
 	auto weapons = pc.get_weapons();
@@ -433,9 +429,9 @@ static bool give_pc_info_event_filter(cDialog& me, std::string item_hit, short& 
 }
 
 static bool give_pc_extra_info(cDialog& me, std::string item_hit, const short pc) {
-	if(item_hit == "seemage") display_pc(pc,0,&me);
-	else if(item_hit == "seepriest") display_pc(pc,1,&me);
-	else if(item_hit == "trait") pick_race_abil(&univ.party[pc],1,&me);
+	if(item_hit == "seemage") display_pc(pc,0,false,&me);
+	else if(item_hit == "seepriest") display_pc(pc,1,false,&me);
+	else if(item_hit == "trait") pick_race_abil(pc,1,&me);
 	else if(item_hit == "seealch") display_alchemy(false,&me);
 	return true;
 }
@@ -451,7 +447,7 @@ void give_pc_info(short pc_num) {
 	pcInfo.attachClickHandlers(std::bind(give_pc_extra_info, _1, _2, std::ref(pc_num)), {"seemage", "seepriest", "trait", "seealch"});
 	
 	for(short i = 0; i < 19; i++) {
-		std::string lbl= "lbl" + boost::lexical_cast<std::string>(i + 1);
+		std::string lbl= "lbl" + std::to_string(i + 1);
 		str = get_str("skills",1 + i * 2);
 		pcInfo[lbl].setText(str);
 	}
@@ -478,7 +474,7 @@ static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKey
 		univ.party.special_notes.erase(iter);
 	}
 	for(short i = 0; i < 3; i++) {
-		std::string n = boost::lexical_cast<std::string>(i + 1);
+		std::string n = std::to_string(i + 1);
 		if(univ.party.special_notes.size() > store_page_on * 3+i) {
 			me["str" + n].setText(univ.party.special_notes[store_page_on * 3+i].the_str);
 			me["del" + n].show();
@@ -507,7 +503,7 @@ void adventure_notes() {
 	encNotes.attachClickHandlers(adventure_notes_event_filter, {"done", "left", "right", "del1", "del2", "del3"});
 	
 	for(short i = 0; i < 3; i++) {
-		std::string n = boost::lexical_cast<std::string>(i + 1);
+		std::string n = std::to_string(i + 1);
 		if(univ.party.special_notes.size() > i) {
 			encNotes["str" + n].setText(univ.party.special_notes[i].the_str);
 			encNotes["del" + n].show();
@@ -591,7 +587,7 @@ static bool journal_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 
 static void fill_journal(cDialog& me) {
 	for(int i = 0; i < 3; i++) {
-		std::string n = boost::lexical_cast<std::string>(i + 1);
+		std::string n = std::to_string(i + 1);
 		if((long)univ.party.journal.size() > i + (store_page_on * 3)) {
 			me["str" + n].setText(univ.party.journal[i].the_str);
 			me["day" + n].setText("Day: " + std::to_string(univ.party.journal[i].day));
@@ -629,7 +625,7 @@ void journal() {
 }
 
 void add_to_journal(short event) {
-	if(univ.party.add_to_journal(univ.scenario.journal_strs[event], univ.party.calc_day()))
+	if(univ.party.add_to_journal(univ.scenario.get_journal_string(event), univ.party.calc_day()))
 		ASB("Something was added to your journal.");
 }
 
@@ -680,8 +676,7 @@ void put_quest_info(short which_i) {
 }
 
 void put_spec_item_info (short which_i) {
-	cStrDlog display_strings(univ.scenario.special_items[which_i].descr,"",
-							 univ.scenario.special_items[which_i].name,univ.scenario.intro_pic,PIC_SCEN);
+	cStrDlog display_strings(univ.get_special_item(which_i).descr,"",univ.get_special_item(which_i).name,univ.scenario.intro_pic.num,univ.scenario.intro_pic.type);
 	display_strings.setSound(57);
 	display_strings.show();
 }
@@ -692,20 +687,24 @@ void cStringRecorder::operator()(cDialog& me) {
 	std::string str1, str2;
 	switch(type) {
 		case NOTE_SCEN:
-			str1 = univ.scenario.spec_strs[label1];
-			str2 = univ.scenario.spec_strs[label2];
+			str1 = univ.scenario.get_special_string(label1);
+			if (label2>=0 && label2<univ.scenario.spec_strs.size())
+				str2 = univ.scenario.spec_strs[label2];
 			break;
 		case NOTE_TOWN:
-			str1 = univ.town->spec_strs[label1];
-			str2 = univ.town->spec_strs[label2];
+			str1 = univ.town->get_special_string(label1);
+			if (label2>=0 && label2<univ.town->spec_strs.size())
+				str2 = univ.town->spec_strs[label2];
 			break;
 		case NOTE_OUT:
-			str1 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label1];
-			str2 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label2];
+			str1 = univ.scenario.outdoors[label1b][label2b]->get_special_string(label1);
+			if (label2>=0 && label2<univ.scenario.outdoors[label1b][label2b]->spec_strs.size())
+				str2 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label2];
 			break;
 	}
 	if(univ.party.record(type, str1, location))
 		give_help(58,0,&me);
-	univ.party.record(type, str2, location);
+	if (!str2.empty())
+		univ.party.record(type, str2, location);
 }
 

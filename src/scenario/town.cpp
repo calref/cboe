@@ -19,7 +19,7 @@
 #include "fileio/fileio.hpp"
 #include "utility.hpp"
 
-void cTown::import_legacy(legacy::town_record_type& old){
+void cTown::import_legacy(legacy::town_record_type const &old){
 	town_chop_time = old.town_chop_time;
 	town_chop_key = old.town_chop_key;
 	for(short i = 0; i < 4; i++){
@@ -130,14 +130,35 @@ void cTown::init_start() {
 	in_town_rect.right = s - 4;
 }
 
-void cTown::cWandering::import_legacy(legacy::wandering_type old){
+std::string &cTown::get_special_string(int id)
+{
+	if (id>=0 && id<spec_strs.size())
+		return spec_strs[id];
+	if (id>=0 && id<200) {
+		spec_strs.resize(id+1);
+		return spec_strs[id];
+	}
+	static std::string badString;
+	badString="Bad Special String";
+	return badString;
+}
+
+std::string const &cTown::get_special_string(int id) const
+{
+	if (id>=0 && id<spec_strs.size())
+		return spec_strs[id];
+	static std::string badString="Bad Special String";
+	return badString;
+}
+
+void cTown::cWandering::import_legacy(legacy::wandering_type const &old){
 	monst[0] = old.monst[0];
 	monst[1] = old.monst[1];
 	monst[2] = old.monst[2];
 	monst[3] = old.monst[3];
 }
 
-void cTown::cItem::import_legacy(legacy::preset_item_type old){
+void cTown::cItem::import_legacy(legacy::preset_item_type const &old){
 	loc.x = old.item_loc.x;
 	loc.y = old.item_loc.y;
 	code = old.item_code;
@@ -147,7 +168,7 @@ void cTown::cItem::import_legacy(legacy::preset_item_type old){
 	contained = old.contained;
 }
 
-void cTown::cField::import_legacy(legacy::preset_field_type old){
+void cTown::cField::import_legacy(legacy::preset_field_type const &old){
 	loc.x = old.field_loc.x;
 	loc.y = old.field_loc.y;
 	switch(old.field_type) {
@@ -195,7 +216,7 @@ void cTown::set_up_lights() {
 			ter_num_t ter = this->terrain(i,j);
 			short rad = 0;
 			if(ter < scenario->ter_types.size()) {
-				rad = scenario->ter_types[ter].light_radius;
+				rad = scenario->get_terrain(ter).light_radius;
 			}
 			if(rad > 0) {
 				location where;
@@ -214,7 +235,7 @@ void cTown::set_up_lights() {
 short cTown::light_obscurity(short x,short y) const {
 	if(!is_on_map(loc(x,y))) return 5;
 	ter_num_t what_terrain = this->terrain(x,y);
-	eTerObstruct store = scenario->ter_types[what_terrain].blockage;
+	eTerObstruct store = scenario->get_terrain(what_terrain).blockage;
 	
 	if(store == eTerObstruct::BLOCK_SIGHT || store == eTerObstruct::BLOCK_MOVE_AND_SIGHT)
 		return 5;

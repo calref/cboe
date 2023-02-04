@@ -7,6 +7,7 @@
 #include <string>
 #include <memory>
 #include "boe.graphics.hpp"
+#include "boe.minimap.hpp"
 #include "boe.newgraph.hpp"
 #include "boe.fileio.hpp"
 #include "boe.actions.hpp"
@@ -60,7 +61,6 @@ long start_time;
 short on_spell_menu[2][62];
 short on_monst_menu[256];
 
-extern bool map_visible;
 extern sf::View mainView;
 
 extern rectangle shop_frame;
@@ -79,7 +79,6 @@ eItemWinMode stat_window = ITEM_WIN_PC1;
 bool monsters_going = false,boom_anim_active = false;
 bool finished_init = false;
 
-sf::RenderWindow mini_map;
 short which_item_page[6] = {0,0,0,0,0,0}; // Remembers which of the 2 item pages pc looked at
 short current_ground = 0;
 eStatMode stat_screen_mode;
@@ -95,7 +94,6 @@ location spell_targets[8];
 /* Combat globals */
 short which_combat_type;
 location center;
-short combat_active_pc;
 effect_pat_type current_pat;
 short missile_firer,current_monst_tactic;
 short store_current_pc = 0;
@@ -107,12 +105,15 @@ cDrawableManager drawable_mgr;
 sf::Clock animTimer;
 extern long anim_ticks;
 
+fs::path pending_file_to_load=fs::path();
+
 static void init_boe(int, char*[]);
 static void showWelcome();
 
 #ifdef __APPLE__
 eMenuChoice menuChoice=eMenuChoice::MENU_CHOICE_NONE;
 short menuChoiceId=-1;
+bool pending_quit=false;
 #endif
 
 int main(int argc, char* argv[]) {
@@ -127,7 +128,7 @@ int main(int argc, char* argv[]) {
 		
 		if(!get_bool_pref("GameRunBefore"))
 			showWelcome();
-		else if(get_bool_pref("GiveIntroHint", true))
+		else if(!ae_loading && pending_file_to_load.empty() && get_bool_pref("GiveIntroHint", true))
 			tip_of_day();
 		set_pref("GameRunBefore", true);
 		finished_init = true;
@@ -216,7 +217,9 @@ static void init_ui() {
 }
 
 void init_boe(int argc, char* argv[]) {
+#ifdef __APPLE__
 	set_up_apple_events(argc, argv);
+#endif
 	init_directories(argv[0]);
 #ifdef __APPLE__
 	init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
@@ -251,7 +254,7 @@ void init_boe(int argc, char* argv[]) {
 	cPlayer::give_help = give_help;
 	init_fileio();
 	init_spell_menus();
-	init_mini_map();
+	minimap::init();
 	redraw_screen(REFRESH_NONE);
 	showMenuBar();
 }
@@ -270,10 +273,22 @@ void handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(!All_Done) {
+		bool need_redraw=false;
 #ifdef __APPLE__
+		if (pending_quit) {
+			pending_quit=false;
+			handle_menu_choice(eMenu::QUIT);
+			if (All_Done) break;
+		}
+		if (!pending_file_to_load.empty()) {
+			// TODO: What if they're already in a scenario? It should ask for confirmation, right?
+			do_load(pending_file_to_load);
+			pending_file_to_load.clear();
+		}
 		if (menuChoiceId>=0) {
 			eMenuChoice aMenuChoice=menuChoice;
 			menuChoice=eMenuChoice::MENU_CHOICE_NONE;
+			need_redraw=true;
 			switch(aMenuChoice) {
 				case eMenuChoice::MENU_CHOICE_GENERIC:
 					handle_menu_choice(eMenu(menuChoiceId));
@@ -285,22 +300,29 @@ void handle_events() {
 					handle_monster_info_menu(menuChoiceId);
 					break;
 				case eMenuChoice::MENU_CHOICE_NONE:
+					need_redraw=false;
 					break;
 			}
 			menuChoiceId=-1;
 		}
 #endif
-		while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent);
+		while(!changed_display_mode && mainPtr.pollEvent(currentEvent)) {
+			need_redraw=true;
+			handle_one_event(currentEvent);
+			if(!changed_display_mode && minimap::need_redraw()) minimap::draw(true);
+		}
 
 		// It would be nice to have minimap inside the main game window (we have lots of screen space in fullscreen mode).
 		// Alternatively, minimap could live on its own thread.
 		// But for now we just handle events from both windows on this thread.
-		while(map_visible && mini_map.pollEvent(currentEvent)) handle_one_minimap_event(currentEvent);
+		while(!changed_display_mode && minimap::pollEvent())
+			; // actually, we only check gain focus and close event
 
 		if(changed_display_mode) {
+			need_redraw = true;
 			changed_display_mode = false;
 			adjust_window_mode();
-			init_mini_map();
+			minimap::init();
 		}
 
 		// Still no idea what this does. It's possible that this does not work at all.
@@ -308,10 +330,12 @@ void handle_events() {
 
 		// Ideally this call should update all of the things that are happening in the world current tick.
 		// NOTE that update does not mean draw.
-		update_everything();
+		if (update_everything())
+			need_redraw=true;
 
 		// Ideally, this should be the only draw call that is done in a cycle.
-		redraw_everything();
+		if (need_redraw)
+			redraw_everything();
 
 		// Prevent the loop from executing too fast.
 		fps_limiter.frame_finished();
@@ -397,52 +421,37 @@ void handle_one_event(const sf::Event& event) {
 	}
 }
 
-void handle_one_minimap_event(const sf::Event& event) {
-	if(event.type == sf::Event::Closed) {
-		mini_map.setVisible(false);
-		map_visible = false;
-	} else if(event.type == sf::Event::GainedFocus) {
-		makeFrontWindow(mainPtr);
-	} else if(event.type == sf::Event::KeyPressed) {
-		switch(event.key.code) {
-			case sf::Keyboard::Escape:
-				mini_map.setVisible(false);
-				map_visible = false;
-				break;
-			default: break;
-		}
-	}
-}
-
-void update_terrain_animation() {
+static bool update_terrain_animation() {
 	static const long fortyTicks = time_in_ticks(40).asMilliseconds();
 
-	if(overall_mode == MODE_STARTUP) return;
-	if(!get_bool_pref("DrawTerrainAnimation", true)) return;
-	if(animTimer.getElapsedTime().asMilliseconds() < fortyTicks) return;
+	if(overall_mode == MODE_STARTUP) return false;
+	if(!get_bool_pref("DrawTerrainAnimation", true)) return false;
+	if(animTimer.getElapsedTime().asMilliseconds() < fortyTicks) return false;
 
 	anim_ticks++;
 	animTimer.restart();
+	return true;
 }
 
-void update_startup_animation() {
+static bool update_startup_animation() {
 	static const long twentyTicks = time_in_ticks(20).asMilliseconds();
 
-	if(overall_mode != MODE_STARTUP) return;
-	if(animTimer.getElapsedTime().asMilliseconds() < twentyTicks) return;
+	if(overall_mode != MODE_STARTUP) return false;
+	if(animTimer.getElapsedTime().asMilliseconds() < twentyTicks) return false;
 
 	draw_startup_anim(true);
 	animTimer.restart();
+	return true;
 }
 
-void update_everything() {
-	update_terrain_animation();
-	update_startup_animation();
+bool update_everything() {
+	return update_terrain_animation() ||
+		update_startup_animation();
 }
 
 void redraw_everything() {
 	redraw_screen(REFRESH_ALL);
-	if(map_visible) draw_map(false);
+	minimap::draw(false);
 }
 
 void Mouse_Pressed(const sf::Event& event) {
@@ -675,7 +684,8 @@ void handle_menu_choice(eMenu item_hit) {
 			if(!prime_time()) {
 				ASB("Finish what you're doing first.");
 				print_buf();
-			} else display_map();
+			} else
+				minimap::set_visible(true);
 			set_cursor(sword_curs);
 			break;
 		case eMenu::HELP_TOC:
@@ -755,12 +765,11 @@ void change_cursor(location where_curs) {
 
 void move_sound(ter_num_t ter,short step){
 	static bool on_swamp = false;
-	short pic;
 	eTerSpec spec;
 	
-	pic = univ.scenario.ter_types[ter].picture;
-	spec = univ.scenario.ter_types[ter].special;
-	eStepSnd snd = univ.scenario.ter_types[ter].step_sound;
+	auto const &terrain=univ.get_terrain(ter);
+	spec = terrain.special;
+	eStepSnd snd = terrain.step_sound;
 	
 	// if on swamp don't play squish sound : BoE legacy behavior, can be removed safely
 	if(snd == eStepSnd::SPLASH && !flying() && univ.party.in_boat < 0){
@@ -774,7 +783,7 @@ void move_sound(ter_num_t ter,short step){
 		play_sound(48); //play boat sound
 	} else if(!monsters_going && !is_combat() && (univ.party.in_horse >= 0)) {
 		play_sound(85); //so play horse sound
-	} else switch(univ.scenario.ter_types[ter].step_sound){
+	} else switch(terrain.step_sound){
 		case eStepSnd::SQUISH:
 			play_sound(55);
 			break;

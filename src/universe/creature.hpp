@@ -53,6 +53,8 @@ public:
 	int get_magic() const override;
 	int get_level() const override;
 	
+	void add_health(int how_much);
+	
 	bool is_alive() const override;
 	bool is_friendly() const override;
 	bool is_friendly(const iLiving& other) const override;

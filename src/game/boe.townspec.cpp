@@ -172,7 +172,7 @@ bool handle_lever(location w) {
 	if(cChoiceDlog("basic-lever",{"pull", "leave"}).show() == "leave")
 		return false;
 	play_sound(94);
-	alter_space(w.x,w.y,univ.scenario.ter_types[univ.town->terrain(w.x,w.y)].trans_to_what);
+	alter_space(w.x,w.y,univ.get_terrain(univ.town->terrain(w.x,w.y)).trans_to_what);
 	return true;
 }
 

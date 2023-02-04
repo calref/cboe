@@ -14,7 +14,6 @@
 #include <sstream>
 #include <iostream>
 #include <iomanip>
-#include <boost/lexical_cast.hpp>
 
 #include "oldstructs.hpp"
 #include "fileio/fileio.hpp"
@@ -22,7 +21,7 @@
 #include "spell.hpp"
 #include "gfx/gfxsheets.hpp" // for NO_PIC
 
-void cMonster::import_legacy(legacy::monster_record_type& old){
+void cMonster::import_legacy(legacy::monster_record_type const &old){
 	level = old.level;
 	m_name = std::string((char*) old.m_name, 26);
 	m_name.erase(m_name.begin() + m_name.find_first_of('\0'), m_name.end());
@@ -416,6 +415,48 @@ cMonster::cMonster(){
 	m_type = eRace::HUMAN;
 }
 
+cPictNum cMonster::get_picture_num(pic_num_t pic)
+{
+	if (pic>=20000)
+		return cPictNum(pic, ePicType::PIC_NONE);
+	if (pic < m_pic_index.size()) {
+		ePicType resultType = PIC_MONST;
+		if(m_pic_index[pic].x == 2) resultType += PIC_WIDE;
+		if(m_pic_index[pic].y == 2) resultType += PIC_TALL;
+		return cPictNum(pic, resultType);
+	}
+	if (pic<1000)
+		return cPictNum(pic, ePicType::PIC_NONE);
+	ePicType resultType = pic>=10000 ? PIC_PARTY_MONST : PIC_CUSTOM_MONST;
+	short size_g = pic / 1000;
+	switch(size_g%10){
+		case 2:
+			resultType += PIC_WIDE;
+			break;
+		case 3:
+			resultType += PIC_TALL;
+			break;
+		case 4:
+			resultType += PIC_LARGE;
+			break;
+	}
+	return cPictNum(pic%1000, resultType);
+}
+
+
+pic_num_t cMonster::get_num_for_picture(cPictNum const &pic)
+{
+	if (pic.type<100)
+		return pic.num;
+	pic_num_t res=pic.num+1000;
+	if (pic.type>=200) res+=10000;
+	if (pic.type & PIC_WIDE)
+		res+=1000;
+	if (pic.type & PIC_TALL)
+		res+=1000;
+	return res;
+}
+
 cTownperson::cTownperson() {
 	start_loc = {80,80};
 	number = 0;
@@ -440,7 +481,7 @@ cTownperson::cTownperson(location loc, mon_num_t num, const cMonster& monst) : c
 	facial_pic = monst.default_facial_pic;
 }
 
-void cTownperson::import_legacy(legacy::creature_start_type old){
+void cTownperson::import_legacy(legacy::creature_start_type const &old){
 	number = old.number;
 	start_attitude = eAttitude(old.start_attitude);
 	start_loc.x = old.start_loc.x;
@@ -464,9 +505,17 @@ void cTownperson::import_legacy(legacy::creature_start_type old){
 	personality = old.personality;
 	special_on_kill = old.special_on_kill;
 	facial_pic = old.facial_pic;
+	// a tentative to remove the do_frame=FALSE flag:
+	// in fact, it is more complex: num+3000 means do_frame=FALSE in draw dialog
+	// but when facial_pic>=1000, drawDialog was called with facial_pic+1400
+	// so this code will failed when 1600<=facial_pic<3000. Ie. if I understand
+	// the legacy code correctly, in this case, a not talking picture can be
+	// drawed
+	if (facial_pic>=3000) facial_pic-=3000;
 	if(facial_pic == 0)
 		facial_pic = NO_PIC;
-	else facial_pic--;
+	else if (facial_pic<1000) // facial_pic>=1000 corresponds to 2x1 custom graphic
+		facial_pic--;
 }
 
 std::ostream& operator<<(std::ostream& out, const cMonster::cAttack& att) {

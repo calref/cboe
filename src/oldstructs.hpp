@@ -346,8 +346,10 @@ namespace legacy {
 		town_record_type	town;
 		int8_t explored[64][64];
 		Boolean hostile;
+		pad_t pad1;
 		creature_list_type	monst;
 		Boolean in_boat;
+		pad_t pad2;
 		location p_loc;
 	};
 	

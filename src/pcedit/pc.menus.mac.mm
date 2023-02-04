@@ -32,7 +32,7 @@ MenuHandle apple_menu, file_menu, reg_menu, extra_menu;
 static void setMenuCallback(NSMenuItem* item, id targ, SEL selector, int num) {
 	[item setTarget: targ];
 	[item setAction: selector];
-	[item setRepresentedObject: [[NSNumber numberWithInt: num] retain]];
+	[item setRepresentedObject: [NSNumber numberWithInt: num]];
 }
 
 void init_menubar() {
@@ -63,7 +63,7 @@ void init_menubar() {
 		eMenu::NONE, eMenu::LEAVE_SCENARIO, eMenu::SET_SDF,
 	};
 	
-	MenuHandler* handler = [[[MenuHandler alloc] init] retain];
+	MenuHandler* handler = [[MenuHandler alloc] init];
 	setMenuCallback([apple_menu itemWithTitle: @"About BoE Character Editor"], handler, @selector(menuChoice:), int(eMenu::ABOUT));
 	setMenuCallback([apple_menu itemWithTitle: @"Preferences…"], handler, @selector(menuChoice:), int(eMenu::PREFS));
 	setMenuCallback([apple_menu itemWithTitle: @"Quit BoE Character Editor"], handler, @selector(menuChoice:), int(eMenu::QUIT));

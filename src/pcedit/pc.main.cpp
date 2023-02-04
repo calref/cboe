@@ -13,6 +13,7 @@
 #include "utility.hpp"
 #include "dialogxml/dialogs/dialog.hpp"
 #include "dialogxml/widgets/control.hpp"
+#include "dialogxml/widgets/ledgroup.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "dialogxml/dialogs/strchoice.hpp"
@@ -28,7 +29,10 @@
 
 #ifdef __APPLE__
 short menuChoiceId=-1;
+bool pending_quit=false;
 #endif
+
+fs::path pending_file_to_load=fs::path();
 
 cUniverse univ;
 
@@ -75,7 +79,6 @@ void pick_preferences();
 void save_prefs();
 bool prefs_event_filter (cDialog& me, std::string id, eKeyMod);
 
-extern bool cur_scen_is_mac;
 extern fs::path progDir;
 short specials_res_id;
 char start_name[256];
@@ -170,7 +173,7 @@ void adjust_window (sf::RenderWindow& mainPtr, sf::View& mainView) {
 	mainPtr.setView(mainView);
 
 #ifndef SFML_SYSTEM_MAC // This overrides Dock icon on OSX, which isn't what we want at all
-	const ImageRsrc& icon = ResMgr::graphics.get("icon", true);
+	auto const & icon = *ResMgr::graphics.get("icon", true);
 	mainPtr.setIcon(icon->getSize().x, icon->getSize().y, icon->copyToImage().getPixelsPtr());
 #endif
 	
@@ -182,20 +185,46 @@ void handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(!All_Done) {
+		bool need_redraw=false;
 		if(changed_display_mode) {
+			need_redraw=true;
 			changed_display_mode = false;
 			adjust_window(mainPtr, mainView);
 		}
 
 #ifdef __APPLE__
+		if (pending_quit) {
+			pending_quit=false;
+			handle_menu_choice(eMenu::QUIT);
+			if (All_Done)
+				break;
+		}
+		if (!pending_file_to_load.empty()) {
+			if (verify_restore_quit("save-open")) {
+				// FIXME: do not dupplicate this code
+				if (load_party(pending_file_to_load, univ)) {
+					file_in_mem = pending_file_to_load;
+					party_in_scen = !univ.party.scen_name.empty();
+					if(!party_in_scen) load_base_item_defs();
+					scen_items_loaded = true;
+				}
+				menu_activate();
+			}
+			pending_file_to_load.clear();
+		}
 		if (menuChoiceId>=0) {
+			need_redraw=true;
 			handle_menu_choice(eMenu(menuChoiceId));
 			menuChoiceId=-1;
 		}
 #endif
-		while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent);
-
-		redraw_everything();
+		while(mainPtr.pollEvent(currentEvent)) {
+			need_redraw=true;
+			handle_one_event(currentEvent);
+		}
+		
+		if (need_redraw)
+			redraw_everything();
 
 		// Prevent the loop from executing too fast.
 		fps_limiter.frame_finished();
@@ -385,16 +414,16 @@ void handle_menu_choice(eMenu item_hit) {
 					m.set();
 			break;
 		case eMenu::EDIT_MAGE:
-			display_pc(current_active_pc,10,0);
+			display_pc(current_active_pc,0,true,nullptr);
 			break;
 		case eMenu::EDIT_PRIEST:
-			display_pc(current_active_pc,11,0);
+			display_pc(current_active_pc,1,true,nullptr);
 			break;
 		case eMenu::EDIT_ITEM:
 			if(scen_items_loaded) {
-				auto& all_items = univ.scenario.scen_items;
+				auto const & all_items = univ.scenario.scen_items;
 				std::vector<std::string> strings;
-				for(cItem& item : all_items) {
+				for(cItem const & item : all_items) {
 					strings.push_back(item.full_name);
 				}
 				cStringChoice dlog(strings, "Add which item?");
@@ -409,7 +438,7 @@ void handle_menu_choice(eMenu item_hit) {
 			}
 			break;
 		case eMenu::EDIT_TRAITS:
-			pick_race_abil(&univ.party[current_active_pc],0);
+			pick_race_abil(current_active_pc,0);
 			break;
 		case eMenu::EDIT_SKILLS:
 			spend_xp(current_active_pc,2,0);
@@ -459,7 +488,7 @@ static void give_help(short help1,short help2,cDialog* parent) {
 	// This SDF is the "never show instant help" flag
 	// TODO: Expose preferences to the PC editor
 #if 0
-	if(univ.party.stuff_done[306][4] > 0 && !help_forced)
+	if(univ.party.sd(306,4) > 0 && !help_forced)
 		return;
 #endif
 	str1 = get_str("help",help1);
@@ -556,7 +585,7 @@ void pick_preferences() {
 	}
 	
 	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySounds", true) ? led_off : led_red);
-	
+
 	prefsDlog.run();
 	
 	if(get_float_pref("UIScale") != ui_scale)

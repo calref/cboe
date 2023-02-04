@@ -5,6 +5,7 @@
 
 #include <array>
 #include <map>
+#include <set>
 
 #include "universe/universe.hpp"
 
@@ -19,6 +20,7 @@
 #include <cstring>
 #include <queue>
 #include "boe.party.hpp"
+#include "boe.minimap.hpp"
 #include "boe.monster.hpp"
 #include "boe.town.hpp"
 #include "boe.combat.hpp"
@@ -51,13 +53,14 @@ short combat_percent[20] = {
 	150,120,100,90,80,80,80,70,70,70,
 	70,70,67,62,57,52,47,42,40,40};
 
-short who_cast,which_pc_displayed;
+short who_cast;
 eSpell town_spell;
 extern bool spell_freebie;
 extern eSpecCtxType spec_target_type;
 extern short spec_target_fail, spec_target_options;
 bool spell_button_active[90];
 
+extern bool end_scenario;
 extern short fast_bang;
 extern bool flushingInput;
 extern eItemWinMode stat_window;
@@ -108,41 +111,52 @@ short store_graphic_pc_num ;
 short store_graphic_mode ;
 short store_pc_graphic;
 
+static bool is_item_specific_to_scenario(cItem const &item)
+{
+	if(item.ability == eItemAbil::CALL_SPECIAL || item.ability == eItemAbil::WEAPON_CALL_SPECIAL ||
+	   item.ability == eItemAbil::HIT_CALL_SPECIAL || item.ability == eItemAbil::DROP_CALL_SPECIAL)
+		return true;
+	return (item.ability == eItemAbil::PROTECT_FROM_SPECIES || item.ability == eItemAbil::SLAYER_WEAPON) &&
+		item.abil_data.race == eRace::IMPORTANT;
+}
+
 // When the party is placed into a scen from the starting screen, this is called to put the game into game
 // mode and load in the scen and init the party info
 // party record already contains scen name
 void put_party_in_scen(std::string scen_name) {
-	bool item_took = false;
 	
 	// Drop debug mode
 	univ.debug_mode = false;
 	univ.ghost_mode = false;
 	univ.node_step_through = false;
 	
-	for(short j = 0; j < 6; j++)
-		for(short i = 23; i >= 0; i--) {
-			cItem& thisItem = univ.party[j].items[i];
-			thisItem.special_class = 0;
-			if(thisItem.ability == eItemAbil::CALL_SPECIAL) {
-				univ.party[j].take_item(i);
-				item_took = true;
-			} else if(thisItem.ability == eItemAbil::WEAPON_CALL_SPECIAL) {
-				univ.party[j].take_item(i);
-				item_took = true;
-			} else if(thisItem.ability == eItemAbil::HIT_CALL_SPECIAL) {
-				univ.party[j].take_item(i);
-				item_took = true;
-			} else if(thisItem.ability == eItemAbil::DROP_CALL_SPECIAL) {
-				univ.party[j].take_item(i);
-				item_took = true;
-			} else if(thisItem.ability == eItemAbil::PROTECT_FROM_SPECIES && thisItem.abil_data.race == eRace::IMPORTANT) {
-				univ.party[j].take_item(i);
-				item_took = true;
-			} else if(thisItem.ability == eItemAbil::SLAYER_WEAPON && thisItem.abil_data.race == eRace::IMPORTANT) {
-				univ.party[j].take_item(i);
+	bool item_took = false;
+	for(auto &pc : univ.party)
+		for(size_t i = pc.items.size(); i > 0; i--) {
+			cItem & thisItem = pc.items[i-1];
+			if (thisItem.variety == eItemType::NO_ITEM)
+				continue;
+			if (is_item_specific_to_scenario(thisItem)) {
+				pc.take_item(int(i-1));
 				item_took = true;
 			}
+			else
+				thisItem.special_class = 0;
 		}
+	for (size_t i = univ.party.junk_items.size(); i>0; i--) {
+		cItem & thisItem = univ.party.junk_items[i-1].first;
+		univ.party.junk_items[i-1].second.clear();
+		if (thisItem.variety == eItemType::NO_ITEM)
+			continue;
+		if (is_item_specific_to_scenario(thisItem)) {
+			if (i!=univ.party.junk_items.size())
+				std::swap(univ.party.junk_items[i-1], univ.party.junk_items.back());
+			univ.party.junk_items.pop_back();
+			item_took = true;
+		}
+		else
+			thisItem.special_class = 0;
+	}
 	if(item_took)
 		cChoiceDlog("removed-special-items").show();
 	
@@ -152,21 +166,25 @@ void put_party_in_scen(std::string scen_name) {
 		return;
 	}
 	set_cursor(watch_curs);
+	end_scenario=false;
 	if(!load_scenario(path, univ.scenario))
 		return;
-	
 	bool stored_item = false;
-	for(auto& store : univ.party.stored_items)
+	for(auto const & store : univ.party.stored_items)
 		stored_item = stored_item || std::any_of(store.begin(), store.end(), [](const cItem& item) {
-			return item.variety != eItemType::NO_ITEM;
+			return item.variety != eItemType::NO_ITEM && !is_item_specific_to_scenario(item);
 		});
 	if(stored_item)
 		if(cChoiceDlog("keep-stored-items", {"yes", "no"}).show() == "yes") {
 			std::vector<cItem*> saved_item_refs;
-			for(short i = 0; i < 3;i++)
-				for(short j = 0; j < univ.party.stored_items[i].size(); j++)
-					if(univ.party.stored_items[i][j].variety != eItemType::NO_ITEM)
-						saved_item_refs.push_back(&univ.party.stored_items[i][j]);
+			for(auto& store : univ.party.stored_items) {
+				for(auto &item : store) {
+					if(item.variety == eItemType::NO_ITEM || is_item_specific_to_scenario(item))
+						continue;
+					item.special_class = 0;
+					saved_item_refs.push_back(&item);
+				}
+			}
 			short pc = 0;
 			while(univ.party[pc].main_status != eMainStatus::ALIVE && pc < 6) pc++;
 			show_get_items("Choose stored items to keep:", saved_item_refs, pc, true);
@@ -199,7 +217,7 @@ void put_party_in_scen(std::string scen_name) {
 	for(short j = 0; j < univ.scenario.intro_strs.size(); j++)
 		if(!univ.scenario.intro_strs[j].empty()) {
 			std::array<short, 3> buttons = {0,-1,-1};
-			custom_choice_dialog(univ.scenario.intro_strs, univ.scenario.intro_mess_pic, PIC_SCEN, buttons);
+			custom_choice_dialog(univ.scenario.intro_strs, univ.scenario.intro_mess_pic, buttons);
 			j = 6;
 		}
 	run_special(eSpecCtx::STARTUP, eSpecCtxType::SCEN, univ.scenario.init_spec, loc(0,0));
@@ -219,7 +237,7 @@ bool create_pc(short spot,cDialog* parent) {
 	if(spot == 6) return false;
 	univ.party.new_pc(spot);
 	
-	pick_race_abil(&univ.party[spot],0,parent);
+	pick_race_abil(spot,0,parent);
 	
 	still_ok = spend_xp(spot,0,parent);
 	if(!still_ok)
@@ -593,6 +611,29 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			for(cPlayer& pc : univ.party)
 				for(cItem& item : pc.items)
 					item.ident = true;
+			if (univ.party.show_junk_bag && is_town() && !is_combat() && !is_town_hostile()) {
+				// now try to identify items in the junk bag,
+				//   the junk bag is clearly a magic item so
+				//   it must interfer with this spell
+				short numDone=0, numFailed=0;
+				for (auto &itemSet : univ.party.junk_items) {
+					if (itemSet.first.ident) continue;
+					if (get_ran(1, 0, 1)) {
+						++numDone;
+						itemSet.first.ident=true;
+					}
+					else
+						++numFailed;
+				}
+				if (numDone || numFailed) {
+					ASB(std::string("Junk Bag: ")+std::to_string(numDone)+'/'+std::to_string(numDone+numFailed)
+						+" items identified.");
+				}
+				if (numDone) {
+					univ.party.combine_junk_items();
+					if (stat_window==ITEM_WIN_JUNK) set_stat_window(ITEM_WIN_JUNK);
+				}
+			}
 			break;
 			
 		case eSpell::TRUE_SIGHT:
@@ -602,7 +643,6 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				for(where.y = 0; where.y < 64; where.y++)
 					if(dist(where,univ.party.town_loc) <= 2)
 						make_explored(where.x,where.y);
-			clear_map();
 			break;
 			
 		case eSpell::SUMMON_BEAST:
@@ -615,7 +655,6 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON_WEAK:
-			store = level / 5 + adj / 3 + get_ran(1,0,2);
 			r1 = get_summon_monster(1); ////
 			if(r1 < 0) break;
 			if(!freebie)
@@ -626,7 +665,6 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 					add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON:
-			store = level / 7 + adj / 3 + get_ran(1,0,1);
 			r1 = get_summon_monster(2); ////
 			if(r1 < 0) break;
 			if(!freebie)
@@ -644,7 +682,6 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				add_string_to_buf("  Summon failed.");
 			break;
 		case eSpell::SUMMON_MAJOR:
-			store = level / 10 + adj / 3 + get_ran(1,0,1);
 			r1 = get_summon_monster(3); ////
 			if(r1 < 0) break;
 			if(!freebie)
@@ -703,7 +740,6 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				for(short i = 0; i < 64; i++)
 					for(short j = 0; j < 64; j++)
 						make_explored(i,j);
-				clear_map();
 			}
 			break;
 		}
@@ -879,7 +915,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 		case eSpell::DETECT_LIFE:
 			add_string_to_buf("  Monsters now on map.");
 			univ.party.status[ePartyStatus::DETECT_LIFE] += 6 + get_ran(1,0,6);
-			clear_map();
+			minimap::draw(false);
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			break;
@@ -1177,14 +1213,15 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 			
 		default:
-			add_string_to_buf("  Error: Priest spell " + (*spell_num).name() + " not implemented for town mode.", 4);
+			add_string_to_buf("  Error: Priest spell " + (*spell_num).name() + " not implemented for "
+							  + (is_combat() ? "combat" : "town") +" mode.", 4);
 			break;
 	}
 }
 
 extern short spell_caster;
 void cast_town_spell(location where) {
-	short r1,store;
+	short r1;
 	bool need_redraw = false;
 	location loc;
 	ter_num_t ter;
@@ -1224,7 +1261,7 @@ void cast_town_spell(location where) {
 	}
 	
 	bool failed = town_spell == eSpell::NONE && adjust > 4;
-	
+	cTerrain const &terrain = univ.get_terrain(ter);
 	if(adjust > 4)
 		add_string_to_buf("  Can't see target.");
 	else switch(town_spell) {
@@ -1297,17 +1334,17 @@ void cast_town_spell(location where) {
 			
 		case eSpell::UNLOCK:
 			// TODO: Is the unlock spell supposed to have a max range?
-			if(univ.scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
-				if(univ.scenario.ter_types[ter].flag2 == 10)
+			if(terrain.special == eTerSpec::UNLOCKABLE){
+				if(terrain.flag2 == 10)
 					r1 = 10000;
 				else{
 					r1 = get_ran(1,1,100) - 5 * adj + 5 * univ.town->difficulty;
-					r1 += univ.scenario.ter_types[ter].flag2 * 7;
+					r1 += terrain.flag2 * 7;
 				}
 				if(r1 < (135 - combat_percent[min(19,level)])) {
 					add_string_to_buf("  Door unlocked.");
 					play_sound(9);
-					univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[ter].flag1;
+					univ.town->terrain(where.x,where.y) = terrain.flag1;
 				}
 				else {
 					play_sound(41);
@@ -1331,7 +1368,6 @@ void cast_town_spell(location where) {
 					update_explored(univ.party.town_loc);
 				}
 				else {
-					store = get_ran(1,0,1);
 					play_sound(41);
 					add_string_to_buf("  Didn't work.");
 				}
@@ -1353,33 +1389,32 @@ void cast_town_spell(location where) {
 }
 
 // TODO: Currently, the node is called before any spell-specific behaviour (eg missiles) occurs.
+extern std::set<eSpell> spell_missile_map;
 bool cast_spell_on_space(location where, eSpell spell) {
 	short s1 = 0;
 	
-	for(size_t i = 0; i < univ.town->special_locs.size(); i++)
-		if(where == univ.town->special_locs[i]) {
-			bool need_redraw = false;
-			// TODO: Is there a way to skip this condition without breaking compatibility?
-			if(univ.town->specials[univ.town->special_locs[i].spec].type == eSpecType::IF_CONTEXT)
-				run_special(eSpecCtx::TARGET, eSpecCtxType::TOWN, univ.town->special_locs[i].spec, where, &s1, nullptr, &need_redraw);
-			if(need_redraw) redraw_terrain();
-			return !s1;
-		}
+	for(auto const &spec_loc : univ.town->special_locs) {
+		if(where != spec_loc) continue;
+		bool need_redraw = false;
+		eSpecType specType=univ.town->get_special(spec_loc.spec).type;
+		if (specType==eSpecType::IF_CONTEXT && (!univ.scenario.is_legacy || spell_missile_map.count(spell)==0))
+			run_special(eSpecCtx::TARGET, eSpecCtxType::TOWN, spec_loc.spec, where, &s1, nullptr, &need_redraw);
+		if(need_redraw) redraw_terrain();
+		return !s1;
+	}
 	if(spell == eSpell::RITUAL_SANCTIFY)
 		add_string_to_buf("  Nothing happens.");
 	return true;
 }
 
 void crumble_wall(location where) {
-	ter_num_t ter;
-	
 	if(loc_off_act_area(where))
 		return;
-	ter = univ.town->terrain(where.x,where.y);
-	if(univ.scenario.ter_types[ter].special == eTerSpec::CRUMBLING && univ.scenario.ter_types[ter].flag2 < 2) {
+	auto const &terrain =univ.get_terrain(univ.town->terrain(where.x,where.y));
+	if(terrain.special == eTerSpec::CRUMBLING && terrain.flag2 < 2) {
 		// TODO: This seems like the wrong sound
 		play_sound(60);
-		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[ter].flag1;
+		univ.town->terrain(where.x,where.y) = terrain.flag1;
 		add_string_to_buf("  Barrier crumbles.");
 	}
 	
@@ -1552,7 +1587,7 @@ bool pc_can_cast_spell(const cPlayer& pc,eSpell spell_num) {
 
 static void draw_caster_buttons(cDialog& me, const eSkill store_situation) {
 	for(short i = 0; i < 6; i++) {
-		std::string id = "caster" + boost::lexical_cast<std::string>(i + 1);
+		std::string id = "caster" + std::to_string(i + 1);
 		if(!can_choose_caster) {
 			if(i == pc_casting) {
 				me[id].show();
@@ -1577,7 +1612,7 @@ static void draw_spell_info(cDialog& me, const eSkill store_situation, const sho
 	
 	if(store_spell == 70) { // No spell selected
 		for(int i = 0; i < 6; i++) {
-			std::string id = "target" + boost::lexical_cast<std::string>(i + 1);
+			std::string id = "target" + std::to_string(i + 1);
 			me[id].hide();
 		}
 		
@@ -1585,7 +1620,7 @@ static void draw_spell_info(cDialog& me, const eSkill store_situation, const sho
 	else { // Spell selected
 		
 		for(int i = 0; i < 6; i++) {
-			std::string id = "target" + boost::lexical_cast<std::string>(i + 1);
+			std::string id = "target" + std::to_string(i + 1);
 			switch((*cSpell::fromNum(store_situation,store_spell)).need_select) {
 				case SELECT_NO:
 					me[id].hide();
@@ -1644,7 +1679,7 @@ static void put_target_status_graphics(cDialog& me, short for_pc) {
 
 static void draw_spell_pc_info(cDialog& me) {
 	for(short i = 0; i < 6; i++) {
-		std::string n = boost::lexical_cast<std::string>(i + 1);
+		std::string n = std::to_string(i + 1);
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			me["pc" + n].setText(univ.party[i].name);
 			
@@ -1660,7 +1695,7 @@ static void draw_spell_pc_info(cDialog& me) {
 
 static void put_pc_caster_buttons(cDialog& me) {
 	for(short i = 0; i < 6; i++) {
-		std::string n = boost::lexical_cast<std::string>(i + 1);
+		std::string n = std::to_string(i + 1);
 		if(me["caster" + n].isVisible()) {
 			if(i == pc_casting)
 				me["pc" + n].setColour(Colours::RED);
@@ -1672,12 +1707,12 @@ static void put_pc_caster_buttons(cDialog& me) {
 static void put_pc_target_buttons(cDialog& me, short& store_last_target_darkened) {
 	
 	if(store_spell_target < 6) {
-		std::string n = boost::lexical_cast<std::string>(store_spell_target + 1);
+		std::string n = std::to_string(store_spell_target + 1);
 		me["hp" + n].setColour(Colours::RED);
 		me["sp" + n].setColour(Colours::RED);
 	}
 	if((store_last_target_darkened < 6) && (store_last_target_darkened != store_spell_target)) {
-		std::string n = boost::lexical_cast<std::string>(store_last_target_darkened + 1);
+		std::string n = std::to_string(store_last_target_darkened + 1);
 		me["hp" + n].setColour(me.getDefTextClr());
 		me["sp" + n].setColour(me.getDefTextClr());
 	}
@@ -1690,7 +1725,7 @@ static void put_spell_led_buttons(cDialog& me, const eSkill store_situation,cons
 	
 	for(short i = 0; i < 38; i++) {
 		spell_for_this_button = (on_which_spell_page == 0) ? i : spell_index[i];
-		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+		std::string id = "spell" + std::to_string(i + 1);
 		cLed& led = dynamic_cast<cLed&>(me[id]);
 		
 		if(spell_for_this_button < 90) {
@@ -1716,7 +1751,7 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 		me["col4"].setText("Level 4:");
 		for(short i = 0; i < 38; i++) {
 			std::ostringstream name;
-			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+			std::string id = "spell" + std::to_string(i + 1);
 			name << get_str("magic-names", i + (store_situation == eSkill::MAGE_SPELLS ? 1 : 101));
 			name << " (";
 			if((*cSpell::fromNum(store_situation,i)).cost < 0) { // Simulacrum, which has a variable cost
@@ -1735,7 +1770,7 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 		me["col4"].setText("");
 		for(short i = 0; i < 38; i++) {
 			std::ostringstream name;
-			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+			std::string id = "spell" + std::to_string(i + 1);
 			if(spell_index[i] < 90) {
 				name << get_str("magic-names", spell_index[i] + (store_situation == eSkill::MAGE_SPELLS ? 1 : 101));
 				name << " (";
@@ -1820,7 +1855,7 @@ static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods, con
 		put_spell_led_buttons(me, store_situation, store_spell);
 		
 		if(store_spell_target < 6) {
-			std::string targ = "target" + boost::lexical_cast<std::string>(store_spell_target + 1);
+			std::string targ = "target" + std::to_string(store_spell_target + 1);
 			if(!me[targ].isVisible()) {
 				store_spell_target = 6;
 				draw_spell_info(me, store_situation, store_spell);
@@ -1828,7 +1863,7 @@ static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods, con
 			}
 		}
 		// Cute trick now... if a target is needed, caster can always be picked
-		std::string targ = "target" + boost::lexical_cast<std::string>(pc_casting + 1);
+		std::string targ = "target" + std::to_string(pc_casting + 1);
 		if((store_spell_target == 6) && me[targ].isVisible()) {
 			me["feedback"].setText(choose_target);
 			draw_spell_info(me, store_situation, store_spell);
@@ -1985,7 +2020,7 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	
 	dynamic_cast<cPict&>(castSpell["pic"]).setPict(14 + (type == eSkill::PRIEST_SPELLS),PIC_DLOG);
 	for(int i = 0; i < 38; i++) {
-		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+		std::string id = "spell" + std::to_string(i + 1);
 		cKey key;
 		if(i > 25)
 			key = {false, static_cast<unsigned char>('a' + i - 26), mod_shift};
@@ -2038,123 +2073,140 @@ void start_town_targeting(eSpell s_num,short who_c,bool freebie,eSpellPat pat) {
 	}
 }
 
+//
+// do alchemy
+//
+
 extern const short alch_difficulty[20];
 extern const eItemAbil alch_ingred1[20];
 extern const eItemAbil alch_ingred2[20];
 
-void do_alchemy() {
+static void display_alchemy_graphics(cDialog& me, short &pc_num);
+
+static bool alch_potion_event_filter(cDialog&me, short &pc_num, std::string item_hit, eKeyMod) {
+	int potion_id = boost::lexical_cast<int>(item_hit.substr(6))-1;
+	if(!univ.party[pc_num].has_space()) {
+		me["result"].setColour(sf::Color::Red);
+		me["result"].setText("Alchemy: Can't carry another item.");
+		return false;
+	}
+	
+	cInvenSlot which_item = univ.party[pc_num].has_abil(alch_ingred1[potion_id]);
+	if(alch_ingred2[potion_id] != eItemAbil::NONE) {
+		cInvenSlot which_item2 = univ.party[pc_num].has_abil(alch_ingred2[potion_id]);
+		// Take care with the order of removal so that remove_charge does not change the index of the second item removed
+		if(which_item.slot < which_item2.slot) {
+			univ.party[pc_num].remove_charge(which_item2.slot);
+			univ.party[pc_num].remove_charge(which_item.slot);
+		} else {
+			univ.party[pc_num].remove_charge(which_item.slot);
+			univ.party[pc_num].remove_charge(which_item2.slot);
+		}
+	} else univ.party[pc_num].remove_charge(which_item.slot);
+	
+	play_sound(8);
+	
 	static const short fail_chance[20] = {
 		50,40,30,20,10,
 		8,6,4,2,0,
 		0,0,0,0,0,
 		0,0,0,0,0
 	};
-	short r1;
-	short pc_num;
-	
-	pc_num = select_pc(0);
-	if(pc_num == 6)
-		return;
-	
-	eAlchemy potion = alch_choice(pc_num);
-	// TODO: Remove need for this cast by changing the above data to either std::maps or an unary operator*
-	int which_p = int(potion);
-	if(potion != eAlchemy::NONE) {
-		if(!univ.party[pc_num].has_space()) {
-			add_string_to_buf("Alchemy: Can't carry another item.");
-			return;
-		}
-		
-		cInvenSlot which_item = univ.party[pc_num].has_abil(alch_ingred1[which_p]);
-		if(!which_item) {
-			add_string_to_buf("Alchemy: Don't have ingredients.");
-			return;
-		}
-		
-		if(alch_ingred2[which_p] != eItemAbil::NONE) {
-			cInvenSlot which_item2 = univ.party[pc_num].has_abil(alch_ingred2[which_p]);
-			if(!which_item2) {
-				add_string_to_buf("Alchemy: Don't have ingredients.");
-				return;
-			}
-			// Take care with the order of removal so that remove_charge does not change the index of the second item removed
-			if(which_item.slot < which_item2.slot) {
-				univ.party[pc_num].remove_charge(which_item2.slot);
-				univ.party[pc_num].remove_charge(which_item.slot);
-			} else {
-				univ.party[pc_num].remove_charge(which_item.slot);
-				univ.party[pc_num].remove_charge(which_item2.slot);
-			}
-		} else univ.party[pc_num].remove_charge(which_item.slot);
-		
-		play_sound(8);
-		
-		r1 = get_ran(1,1,100);
-		if(r1 < fail_chance[univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[which_p]]) {
-			add_string_to_buf("Alchemy: Failed.");
-			r1 = get_ran(1,0,1);
-			play_sound(41 );
+	int r1 = get_ran(1,1,100);
+	if(r1 < fail_chance[univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[potion_id]]) {
+		me["result"].setColour(sf::Color::Red);
+		me["result"].setText("Alchemy: Failed.");
+		play_sound(41 );
+	}
+	else {
+		cItem store_i((eAlchemy)potion_id);
+		if(univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[potion_id] >= 5)
+			store_i.charges++;
+		if(univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[potion_id] >= 11)
+			store_i.charges++;
+		store_i.graphic_num += get_ran(1,0,2);
+		if(!univ.party[pc_num].give_item(store_i,false)) {
+			me["result"].setColour(sf::Color::Red);
+			me["result"].setText("No room in inventory.\nPotion placed on floor.");
+			place_item(store_i,univ.party.town_loc);
+			redraw_terrain();
 		}
 		else {
-			cItem store_i(potion);
-			if(univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[which_p] >= 5)
-				store_i.charges++;
-			if(univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[which_p] >= 11)
-				store_i.charges++;
-			store_i.graphic_num += get_ran(1,0,2);
-			if(!univ.party[pc_num].give_item(store_i,false)) {
-				add_string_to_buf("No room in inventory. Potion placed on floor.", 2);
-				place_item(store_i,univ.party.town_loc);
-			}
-			else add_string_to_buf("Alchemy: Successful.");
+			me["result"].setColour(sf::Color::White);
+			me["result"].setText("Alchemy: Successful.");
 		}
-		put_item_screen(stat_window);
 	}
-	
-}
-
-static bool alch_choice_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
-	if(item_hit == "help") {
-		give_help(220,21,me);
-		return true;
-	}
-	if(item_hit == "cancel")
-		me.setResult<eAlchemy>(eAlchemy::NONE);
-	else {
-		int potion_id = boost::lexical_cast<int>(item_hit.substr(6));
-		me.setResult<eAlchemy>(eAlchemy(potion_id));
-	}
-	me.toast(true);
+	put_item_screen(stat_window);
+	display_alchemy_graphics(me, pc_num);
 	return true;
 }
 
-eAlchemy alch_choice(short pc_num) {
-	short difficulty[20] = {1,1,1,3,3, 4,5,5,7,9, 9,10,12,12,9, 14,19,10,16,20};
-	short store_alchemy_pc;
-	
-	set_cursor(sword_curs);
-	
-	store_alchemy_pc = pc_num;
-	
-	cDialog chooseAlchemy(*ResMgr::dialogs.get("pick-potion"));
-	chooseAlchemy.attachClickHandlers(alch_choice_event_filter, {"cancel", "help"});
+void display_alchemy_graphics(cDialog& me, short &pc_num) {
+	using namespace std::placeholders;
+	short const difficulty[20] = {1,1,1,3,3, 4,5,5,7,9, 9,10,12,12,9, 14,19,10,16,20};
 	for(short i = 0; i < 20; i++) {
-		std::string n = boost::lexical_cast<std::string>(i + 1);
-		chooseAlchemy["label" + n].setText(get_str("magic-names", i + 200));
-		chooseAlchemy["potion" + n].attachClickHandler(alch_choice_event_filter);
-		if(univ.party[pc_num].skill(eSkill::ALCHEMY) < difficulty[i] || !univ.party.alchemy[i])
-			chooseAlchemy["potion" + n].hide();
+		std::string n = std::to_string(i + 1);
+		me["label" + n].setText(get_str("magic-names", i + 200));
+		if(univ.party[pc_num].skill(eSkill::ALCHEMY) < difficulty[i] || !univ.party.alchemy[i] ||
+		   !univ.party[pc_num].has_abil(alch_ingred1[i]) ||
+		   (alch_ingred2[i] != eItemAbil::NONE && !univ.party[pc_num].has_abil(alch_ingred2[i])))
+			me["potion" + n].hide();
+		else {
+			me["potion" + n].attachClickHandler(std::bind(alch_potion_event_filter, _1, std::ref(pc_num), _2, _3));
+			me["potion" + n].show();
+		}
 	}
 	std::ostringstream sout;
 	sout << univ.party[pc_num].name;
 	sout << " (skill " << univ.party[pc_num].skill(eSkill::ALCHEMY) << ")";
-	chooseAlchemy["mixer"].setText(sout.str());
+	me["mixer"].setText(sout.str());
+}
+
+static bool alch_choice_event_filter(cDialog& me, short &pc_num, std::string item_hit, eKeyMod) {
+	if(item_hit == "help") {
+		give_help(220,21,me);
+		return true;
+	}
+	if (item_hit == "left") {
+		do {
+			pc_num = (pc_num + 5) % 6;
+		} while(univ.party[pc_num].main_status != eMainStatus::ALIVE);
+		display_alchemy_graphics(me, pc_num);
+		return true;
+	} else if (item_hit == "right") {
+		do {
+			pc_num = (pc_num + 1) % 6;
+		} while(univ.party[pc_num].main_status != eMainStatus::ALIVE);
+		display_alchemy_graphics(me, pc_num);
+		return true;
+	}
+	// cancel
+	me.toast(true);
+	return true;
+}
+
+void do_alchemy() {
+	using namespace std::placeholders;
+
+	if(univ.cur_pc == 6) {
+		add_string_to_buf("Alchemy: No pc selected.");
+		return;
+	}
+
+	set_cursor(sword_curs);
+	short pc_num = univ.cur_pc;
+	
+	cDialog chooseAlchemy(*ResMgr::dialogs.get("pick-potion"));
+	chooseAlchemy.attachClickHandlers(std::bind(alch_choice_event_filter, _1, std::ref(pc_num), _2, _3), {"cancel", "left", "right", "help"});
+	display_alchemy_graphics(chooseAlchemy, pc_num);
 	
 	void (*give_help)(short,short,cDialog&) = ::give_help;
-	
 	chooseAlchemy.run(std::bind(give_help, 20, 21, std::ref(chooseAlchemy)));
-	return chooseAlchemy.getResult<eAlchemy>();
 }
+
+//
+// pick pc, ...
+//
 
 // mode ... 0 - create  1 - created
 bool pick_pc_graphic(short pc_num,short mode,cDialog* parent) {
@@ -2173,7 +2225,7 @@ bool pick_pc_graphic(short pc_num,short mode,cDialog* parent) {
 	if(mode == 0 && !madeChoice && univ.party[pc_num].main_status < eMainStatus::ABSENT)
 		univ.party[pc_num].main_status = eMainStatus::ABSENT;
 	else if(madeChoice)
-		univ.party[pc_num].which_graphic = pcPic.getPicChosen();
+		univ.party[pc_num].which_graphic = pcPic.getPicChosen().num;
 	
 	return madeChoice;
 }
@@ -2206,7 +2258,6 @@ bool pick_pc_name(short pc_num,cDialog* parent) {
 }
 
 mon_num_t pick_trapped_monst() {
-	short i = 0;
 	std::string sp;
 	cMonster get_monst;
 	
@@ -2214,15 +2265,16 @@ mon_num_t pick_trapped_monst() {
 	
 	cChoiceDlog soulCrystal("soul-crystal",{"cancel","pick1","pick2","pick3","pick4"});
 	
+	short i = 0;
 	for(mon_num_t which : univ.party.imprisoned_monst) {
-		std::string n = boost::lexical_cast<std::string>(i + 1);
+		std::string n = std::to_string(++i);
 		if(which == 0) {
 			soulCrystal->getControl("pick" + n).hide();
 		}
 		else {
 			sp = get_m_name(which);
 			soulCrystal->getControl("slot" + n).setText(sp);
-			get_monst = which >= 10000 ? univ.party.summons[which - 10000] : univ.scenario.scen_monsters[which];
+			get_monst = which >= 10000 ? univ.party.get_summon(which - 10000) : univ.scenario.get_monster(which);
 			soulCrystal->getControl("lvl" + n).setTextToNum(get_monst.level);
 		}
 	}
@@ -2451,7 +2503,7 @@ void petrify_pc(cPlayer& which_pc,int strength) {
 }
 
 void kill_pc(cPlayer& which_pc,eMainStatus type) {
-	bool dummy,no_save = false;
+	bool no_save = false;
 	location item_loc;
 	
 	if(isSplit(type)) {
@@ -2505,7 +2557,7 @@ void kill_pc(cPlayer& which_pc,eMainStatus type) {
 		if(overall_mode != MODE_OUTDOORS)
 			for(cItem& item : which_pc.items)
 				if(item.variety != eItemType::NO_ITEM) {
-					dummy = place_item(item,item_loc);
+					place_item(item,item_loc);
 					item.variety = eItemType::NO_ITEM;
 				}
 		if(type == eMainStatus::DEAD || type == eMainStatus::DUST)
@@ -2578,7 +2630,7 @@ short race_present(eRace which_race) {
 }
 
 short wilderness_lore_present(ter_num_t ter_type) {
-	cTerrain& ter = univ.scenario.ter_types[ter_type];
+	cTerrain const & ter = univ.get_terrain(ter_type);
 	if(ter.special == eTerSpec::WILDERNESS_CAVE || ter.special == eTerSpec::WATERFALL_CAVE)
 		return trait_present(eTrait::CAVE_LORE);
 	else if(ter.special == eTerSpec::WILDERNESS_SURFACE || ter.special == eTerSpec::WATERFALL_SURFACE)

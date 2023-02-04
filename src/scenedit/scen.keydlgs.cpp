@@ -24,12 +24,10 @@
 #include "gfx/render_shapes.hpp" // for colour constants
 
 extern short cen_x, cen_y;
-extern bool mouse_button_held;
 extern short cur_viewing_mode;
-extern cTown* town;
-extern short mode_count,to_create;
-extern ter_num_t template_terrain[64][64];
 extern cScenario scenario;
+extern cTown* town;
+extern short mode_count;
 extern cOutdoors* current_terrain;
 extern cCustomGraphics spec_scen_g;
 
@@ -69,14 +67,14 @@ static void ensure_str(eStrMode str_mode, size_t which) {
 static std::string& fetch_str(eStrMode str_mode, size_t which) {
 	ensure_str(str_mode, which);
 	switch(str_mode) {
-		case 0: return scenario.spec_strs[which];
-		case 1: return current_terrain->spec_strs[which];
-		case 2: return town->spec_strs[which];
-		case 3: return scenario.journal_strs[which];
-		case 4: return current_terrain->sign_locs[which].text;
-		case 5: return town->sign_locs[which].text;
-		case 6: return current_terrain->area_desc[which].descr;
-		case 7: return town->area_desc[which].descr;
+		case 0: return scenario.get_special_string(which);
+		case 1: return current_terrain->get_special_string(which);
+		case 2: return town->get_special_string(which);
+		case 3: return scenario.get_journal_string(which);
+		case 4: return current_terrain->get_sign_loc(which).text;
+		case 5: return town->get_sign_loc(which).text;
+		case 6: return current_terrain->get_area_desc(which).descr;
+		case 7: return town->get_area_desc(which).descr;
 	}
 	throw "Invalid string mode " + std::to_string(str_mode) + " (valid are 0-5)";
 }
@@ -89,24 +87,24 @@ static std::string str_info(eStrMode str_mode, size_t which) {
 			sout << which;
 			break;
 		case 4:
-			sout << "(" << current_terrain->sign_locs[which].x;
-			sout << ", " << current_terrain->sign_locs[which].y << ")";
+			sout << "(" << current_terrain->get_sign_loc(which).x;
+			sout << ", " << current_terrain->get_sign_loc(which).y << ")";
 			break;
 		case 5:
-			sout << "(" << town->sign_locs[which].x;
-			sout << ", " << town->sign_locs[which].y << ")";
+			sout << "(" << town->get_sign_loc(which).x;
+			sout << ", " << town->get_sign_loc(which).y << ")";
 			break;
 		case 6:
-			sout << "(" << current_terrain->area_desc[which].left;
-			sout << ", " << current_terrain->area_desc[which].top;
-			sout << ")|(" << current_terrain->area_desc[which].right;
-			sout << ", " << current_terrain->area_desc[which].bottom << ")";
+			sout << "(" << current_terrain->get_area_desc(which).left;
+			sout << ", " << current_terrain->get_area_desc(which).top;
+			sout << ")|(" << current_terrain->get_area_desc(which).right;
+			sout << ", " << current_terrain->get_area_desc(which).bottom << ")";
 			break;
 		case 7:
-			sout << "(" << town->area_desc[which].left;
-			sout << ", " << town->area_desc[which].top;
-			sout << ")|(" << town->area_desc[which].right;
-			sout << ", " << town->area_desc[which].bottom << ")";
+			sout << "(" << town->get_area_desc(which).left;
+			sout << ", " << town->get_area_desc(which).top;
+			sout << ")|(" << town->get_area_desc(which).right;
+			sout << ", " << town->get_area_desc(which).bottom << ")";
 			break;
 	}
 	return sout.str();
@@ -209,26 +207,18 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 			return NO_PIC;
 		case PIC_MONST: case PIC_MONST_WIDE:
 		case PIC_MONST_TALL: case PIC_MONST_LG:
-			std::vector<std::pair<pic_num_t,ePicType>> pics;
+			std::vector<cPictNum> pics;
 			for(m_pic_index_t m_pic : m_pic_index) {
 				// TODO: Put the added monster graphics in m_pic_index to allow picking them
 				ePicType type = PIC_MONST;
 				if(m_pic.x == 2) type += PIC_WIDE;
 				if(m_pic.y == 2) type += PIC_TALL;
-				pics.push_back({i++, type});
+				pics.push_back({pic_num_t(i++), type});
 			}
-			for(size_t i = 0; i < scenario.custom_graphics.size(); i++) {
-				if(scenario.custom_graphics[i] == PIC_MONST)
-					pics.push_back({1000 + i, PIC_CUSTOM_MONST});
-				else if(scenario.custom_graphics[i] == PIC_MONST_WIDE)
-					pics.push_back({2000 + i, PIC_CUSTOM_MONST_WIDE});
-				else if(scenario.custom_graphics[i] == PIC_MONST_TALL)
-					pics.push_back({3000 + i, PIC_CUSTOM_MONST_TALL});
-				else if(scenario.custom_graphics[i] == PIC_MONST_LG)
-					pics.push_back({4000 + i, PIC_CUSTOM_MONST_LG});
-				if(cur_choice == pics.back().first)
-					cur_choice = pics.size() - 1;
-			}
+			for(size_t i = 0; i < scenario.custom_graphics.size(); i++)
+				pics.push_back(cMonster::get_picture_num(scenario.custom_graphics[i]));
+			if(cur_choice >= pics.size())
+				cur_choice = pics.size() - 1;
 			pic_dlg = new cPictChoice(pics, parent);
 			break;
 	}
@@ -260,7 +250,9 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 		pic_dlg = new cPictChoice(all_pics, g_type, parent);
 	}
 	bool made_choice = pic_dlg->show(cur_choice);
-	pic_num_t item_hit = pic_dlg->getPicChosen();
+	pic_num_t item_hit = pic_dlg->getPicChosen().num;
+	if (g_type==PIC_MONST || g_type==PIC_MONST_WIDE || g_type==PIC_MONST_TALL || g_type==PIC_MONST_LG)
+		item_hit=cMonster::get_num_for_picture(pic_dlg->getPicChosen());
 	delete pic_dlg;
 	return made_choice ? item_hit : NO_PIC;
 }
@@ -603,8 +595,8 @@ static bool commit_spec_enc(cDialog& me, std::string item_hit, node_stack_t& edi
 	int mode = edit_stack.top().mode, node = edit_stack.top().which;
 	switch(mode) {
 		case 0: scenario.scen_specials[node] = edit_stack.top().node; break;
-		case 1: current_terrain->specials[node] = edit_stack.top().node; break;
-		case 2: town->specials[node] = edit_stack.top().node; break;
+		case 1: current_terrain->get_special(node) = edit_stack.top().node; break;
+		case 2: town->get_special(node) = edit_stack.top().node; break;
 	}
 	edit_stack.pop();
 	if(item_hit == "okay") {
@@ -692,7 +684,7 @@ short choose_field_type(short cur, cDialog* parent, bool includeSpec) {
 		"Small Blood", "Medium Blood", "Large Blood", "Small Slime", "Large Slime", "Ash", "Bones", "Rubble",
 		"Force Cage", "Cleanse Space", "Crumble Walls",
 	};
-	std::vector<std::pair<pic_num_t,ePicType>> pics = {
+	std::vector<cPictNum> pics = {
 		{8, PIC_FIELD}, {9, PIC_FIELD}, {10, PIC_FIELD}, {11, PIC_FIELD},
 		{12, PIC_FIELD}, {13, PIC_FIELD}, {14, PIC_FIELD},
 		{3, PIC_FIELD}, {5, PIC_FIELD}, {6, PIC_FIELD}, {7, PIC_FIELD},
@@ -765,8 +757,7 @@ static pic_num_t choose_boom_type(short cur, cDialog* parent) {
 		me->getControl("help").setText(boomNames[std::min<short>(n,preset_booms)]);
 	});
 	bool made_choice = pic_dlg.show(cur);
-	size_t item_hit = pic_dlg.getPicChosen();
-	return made_choice ? item_hit : prev;
+	return made_choice ? pic_dlg.getPicChosen().num : prev;
 }
 
 pic_num_t choose_status_effect(short cur, bool party, cDialog* parent) {
@@ -861,9 +852,9 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			if(mode == 0)
 				node_to_change_to = &scenario.scen_specials[store];
 			else if(mode == 1)
-				node_to_change_to = &current_terrain->specials[store];
+				node_to_change_to = &current_terrain->get_special(store);
 			else if(mode == 2)
-				node_to_change_to = &town->specials[store];
+				node_to_change_to = &town->get_special(store);
 			if (node_to_change_to) {
 				if(node_to_change_to->pic < 0)
 					node_to_change_to->pic = 0;
@@ -942,7 +933,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 	node_stack_t edit_stack;
 	
 	if(mode == 0) {
-		if(which_node >= scenario.scen_specials.size()) {
+		if(which_node<0 || which_node >= scenario.scen_specials.size()) {
 			showError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
 			return false;
 		}
@@ -950,7 +941,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 			scenario.scen_specials[which_node].pic = 0;
 		the_node = scenario.scen_specials[which_node];
 	} else if(mode == 1) {
-		if(which_node >= current_terrain->specials.size()) {
+		if(which_node<0 || which_node >= current_terrain->specials.size()) {
 			showError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
 			return false;
 		}
@@ -958,7 +949,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 			current_terrain->specials[which_node].pic = 0;
 		the_node = current_terrain->specials[which_node];
 	} else if(mode == 2) {
-		if(which_node >= town->specials.size()) {
+		if(which_node<0 || which_node >= town->specials.size()) {
 			showError("That special node does not exist. You can create a new node by setting the field to -1 and trying again.", parent);
 			return false;
 		}
@@ -1179,8 +1170,8 @@ short edit_special_num(short mode,short what_start) {
 
 static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	if(item_hit == "okay") {
-		scenario.intro_pic = me["picnum"].getTextAsNum();
-		if(scenario.intro_pic > 29) {
+		scenario.intro_pic.num = me["picnum"].getTextAsNum();
+		if(scenario.intro_pic.num > 29 && scenario.intro_pic.type==PIC_SCEN) { // CHANGEME
 			showError("Intro picture number is out of range.","",&me);
 			return true;
 		}
@@ -1206,7 +1197,7 @@ void edit_scen_intro() {
 	cDialog edit(*ResMgr::dialogs.get("edit-intro"));
 	edit.attachClickHandlers(edit_scen_intro_event_filter, {"okay", "cancel", "choose"});
 	
-	edit["picnum"].setTextToNum(scenario.intro_pic);
+	edit["picnum"].setTextToNum(scenario.intro_pic.num);
 	for(short i = 0; i < scenario.intro_strs.size(); i++) {
 		std::string id = "str" + std::to_string(i + 1);
 		edit[id].setText(scenario.intro_strs[i]);

@@ -4,13 +4,14 @@
 
 #include "scenario/item.hpp"
 #include "scenario/monster.hpp"
+#include "universe/party.hpp"
 #include "universe/pc.hpp"
 #include "universe/creature.hpp"
 
 class cDialog;
 void display_spells(eSkill mode,short force_spell,cDialog* parent);
 void display_skills(eSkill force_skill,cDialog* parent);
-void display_pc_item(short pc_num,short item,class cItem si,cDialog* parent);
+void display_pc_item(short pc_num,short item, class cItem const &si,cDialog* parent);
 void display_monst(short array_pos,cCreature *which_m,short mode);
 void display_alchemy();
 void display_traits_graphics();
@@ -26,8 +27,8 @@ void put_spec_item_info (short which_i);
 void put_quest_info(short which_i);
 
 // These are defined in pc.editors.cpp since they are also used by the character editor
-void pick_race_abil(cPlayer *pc,short mode,cDialog* parent = nullptr);
-void display_pc(short pc_num,short mode,cDialog* parent_num);
+void pick_race_abil(short pc_num,short mode,cDialog* parent = nullptr);
+void display_pc(short pc_num,short mode,bool edit, cDialog* parent_num);
 void display_alchemy(bool allowEdit,cDialog* parent);
 
 // Callback for recording encounter strings

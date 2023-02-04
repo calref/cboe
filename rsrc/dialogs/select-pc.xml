@@ -17,4 +17,7 @@
 	<text name='pc6' framed='true' top='160' left='138' width='139' height='16'/>
 	<text name='title' size='large' top='10' left='49' width='228' height='16'>Select a PC:</text>
 	<button name='cancel' type='regular' top='187' left='214'>Cancel</button>
+	<!-- to make select-pc and select-pc-junk similar -->
+	<button name='junk' type='regular' def-key='7' top='181' left='69'></button>
+	<text name='junk-text' top='185' left='138' width='139' height='16'></text>
 </dialog>

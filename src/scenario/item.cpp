@@ -8,15 +8,16 @@
 
 #include "item.hpp"
 
+#include <array>
 #include <string>
 #include <vector>
 #include <map>
 #include <set>
 #include <sstream>
-#include <boost/lexical_cast.hpp>
 
 #include "oldstructs.hpp"
 #include "utility.hpp"
+#include "dialogxml/widgets/pict.hpp"
 #include "fileio/fileio.hpp"
 #include "fileio/tagfile.hpp"
 #include "mathutil.hpp"
@@ -180,6 +181,26 @@ bool cItem::abil_group() const {
 	return false;
 }
 
+bool cItem::can_be_combined_with(cItem const &item) const
+{
+	if (!ident || !item.ident || variety==eItemType::NO_ITEM || item.variety==eItemType::NO_ITEM ||
+		type_flag==0 || item.type_flag==0)
+		return false;
+	if (name!=item.name || weight!=item.weight || graphic_num!=item.graphic_num ||
+		value!=item.value || special_class!=item.special_class) return false;
+	if (item_level != item.item_level || awkward!=item.awkward || bonus!=item.bonus || protection!=item.protection)
+		return false;
+	if (weap_type!=item.weap_type || magic_use_type!=item.magic_use_type || ability!=item.ability)
+		return false;
+	if (ability!=eItemAbil::NONE && (abil_strength!=item.abil_strength || abil_data.value!=item.abil_data.value))
+		return false;
+	if (missile!=item.missile || is_special!=item.is_special)
+		return false;
+	if (magic!=item.magic || cursed!=item.cursed || enchanted!=item.enchanted || unsellable!=item.unsellable)
+		return false;
+	return true;
+}
+
 cItem::cItem(){
 	variety = eItemType::NO_ITEM;
 	item_level = 0;
@@ -316,6 +337,17 @@ cItem::cItem(eItemPreset preset) : cItem() {
 			graphic_num = 105; // The blank graphic
 			break;
 	}
+}
+
+cPictNum cItem::get_picture_num(bool tiny) const
+{
+	if (graphic_num<0)
+		return cPictNum(graphic_num, ePicType::PIC_NONE);
+	if (graphic_num>=1000)
+		return cPictNum(graphic_num-1000, tiny ? ePicType::PIC_CUSTOM_TINY_ITEM : ePicType::PIC_CUSTOM_ITEM);
+	if (graphic_num<55 && !tiny)
+		return cPictNum(graphic_num, ePicType::PIC_ITEM);
+	return cPictNum(graphic_num, ePicType::PIC_TINY_ITEM);
 }
 
 cItem::cItem(eAlchemy recipe) : cItem(ITEM_POTION) {
@@ -491,7 +523,7 @@ void cItem::enchant_weapon(eEnchant enchant_type,short new_val) {
 	full_name = store_name;
 }
 
-void cItem::import_legacy(legacy::item_record_type& old){
+void cItem::import_legacy(legacy::item_record_type const & old){
 	variety = (eItemType) old.variety;
 	item_level = old.item_level;
 	awkward = old.awkward;
@@ -1038,7 +1070,7 @@ void cItem::import_legacy(legacy::item_record_type& old){
 	magic = old.item_properties & 4;
 	contained = old.item_properties & 8;
 	cursed = old.item_properties & 16;
-	concealed = old.item_properties & 32;
+	concealed = old.item_properties & 32; // checkme: properties&32 does not seem to be used in original source
 	enchanted = held = false;
 	unsellable = old.item_properties & 16;
 	// Set missile, if needed

@@ -30,12 +30,10 @@ extern location cur_out;
 extern cOutdoors* current_terrain;
 extern bool change_made;
 extern cCustomGraphics spec_scen_g;
-extern bool mac_is_intel;
 
 fs::path temp_file_to_load;
 std::string last_load_file = "Blades of Exile Scenario";
 extern fs::path progDir, tempDir;
-extern bool cur_scen_is_mac;
 
 void print_write_position ();
 void load_spec_graphics();
@@ -201,7 +199,7 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.CloseElement("special-item");
 	}
 	for(size_t i = 0; i < scenario.quests.size(); i++) {
-		cQuest& quest = scenario.quests[i];
+		cQuest const &quest = scenario.quests[i];
 		data.OpenElement("quest");
 		data.PushAttribute("start-with", boolstr(quest.auto_start));
 		if(quest.deadline >= 0) {
@@ -229,7 +227,7 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.CloseElement("quest");
 	}
 	for(size_t i = 0; i < scenario.shops.size(); i++) {
-		cShop& shop = scenario.shops[i];
+		cShop const &shop = scenario.shops[i];
 		data.OpenElement("shop");
 		data.PushElement("name", shop.getName());
 		data.PushElement("type", shop.getType());
@@ -434,7 +432,7 @@ void writeItemsToXml(ticpp::Printer&& data, cScenario& scenario) {
 	for(size_t i = 0; i < scenario.scen_items.size(); i++) {
 		data.OpenElement("item");
 		data.PushAttribute("id", i);
-		cItem& item = scenario.scen_items[i];
+		cItem const &item = scenario.scen_items[i];
 		data.PushElement("variety", item.variety);
 		data.PushElement("level", item.item_level);
 		data.PushElement("awkward", item.awkward);
@@ -490,7 +488,7 @@ void writeMonstersToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.PushAttribute("id", i);
 		cMonster& monst = scenario.scen_monsters[i];
 		data.PushElement("name", monst.m_name);
-		if(monst.default_facial_pic > 0)
+		if(monst.default_facial_pic >= 0) // -1: means use monster pict
 			data.PushElement("default-face", monst.default_facial_pic);
 		
 		data.OpenElement("pic");
@@ -892,7 +890,7 @@ map_data buildOutMapData(location which, cScenario& scenario) {
 			terrain.set(x, y, sector.terrain[x][y]);
 			if(sector.special_spot[x][y])
 				terrain.addFeature(x, y, eMapFeature::FIELD, SPECIAL_SPOT);
-			if(sector.roads[x][y])
+			if(sector.is_road(x,y))
 				terrain.addFeature(x, y, eMapFeature::FIELD, SPECIAL_ROAD);
 		}
 	}

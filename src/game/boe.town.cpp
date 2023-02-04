@@ -12,6 +12,7 @@
 #include "boe.newgraph.hpp"
 #include "boe.fileio.hpp"
 #include "boe.items.hpp"
+#include "boe.minimap.hpp"
 #include "boe.monster.hpp"
 #include "boe.town.hpp"
 #include "boe.combat.hpp"
@@ -41,28 +42,20 @@ extern short store_current_pc,current_ground;
 extern eGameMode store_pre_shop_mode,store_pre_talk_mode;
 extern std::queue<pending_special_type> special_queue;
 
-extern bool map_visible;
-extern sf::RenderWindow mini_map;
-
 extern location hor_vert_place[14];
 extern location diag_place[14];
 extern location golem_m_locs[16];
 extern cUniverse univ;
 extern cCustomGraphics spec_scen_g;
-bool need_map_full_refresh = true,forcing_map_button_redraw = false;
-extern sf::RenderTexture map_gworld;
 // In the 0..65535 range, this colour was {65535,65535,52428}
 sf::Color parchment = {255,255,205};
 
 long pause_dummy;
 
-location town_map_adj;
 short town_force = 200,store_which_shop,store_min,store_max,store_shop,store_selling_pc;
 short sell_offset = 0;
 location town_force_loc;
 bool shop_button_active[12];
-rectangle map_title_rect = {3,50,15,300};
-rectangle map_bar_rect = {15,50,27,300};
 
 void force_town_enter(short which_town,location where_start) {
 	town_force = which_town;
@@ -72,8 +65,8 @@ void force_town_enter(short which_town,location where_start) {
 //short entry_dir; // if 9, go to forced
 void start_town_mode(short which_town, short entry_dir) {
 	short town_number;
-	short at_which_save_slot,former_town;
-	bool monsters_loaded = false,town_toast = false;
+	short former_town;
+	bool monsters_loaded = false;
 	location loc;
 	bool play_town_sound = false;
 	
@@ -93,7 +86,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	for(const auto& mod : univ.scenario.town_mods)
 		if(mod.spec >= 0 && mod.spec < 200 && town_number == mod.spec && univ.party.sd_legit(mod.x, mod.y)) {
 			former_town = town_number;
-			town_number += PSD[mod.x][mod.y];
+			town_number += univ.party.sd(mod.x,mod.y);
 			// Now update horses & boats
 			for(auto& horse : univ.party.horses)
 				if(horse.exists && horse.which_town == former_town)
@@ -136,206 +129,145 @@ void start_town_mode(short which_town, short entry_dir) {
 				current_ground = 0;
 			else if(univ.town->terrain(i,j) == 2)
 				current_ground = 2;
-			if(univ.scenario.ter_types[univ.town->terrain(i,j)].special == eTerSpec::CONVEYOR)
+			if(univ.get_terrain(univ.town->terrain(i,j)).special == eTerSpec::CONVEYOR)
 				univ.town.belt_present = true;
 		}
 	
 	univ.town.monst.which_town = town_number;
 	univ.town.monst.hostile = false;
 	
-	at_which_save_slot = univ.party.at_which_save_slot;
-	
-	for(auto& pop : univ.party.creature_save)
-		if(town_number == pop.which_town) {
-			univ.town.monst = pop;
-			monsters_loaded = true;
-			
-			for(auto& monst : univ.town.monst) {
-				if(loc_off_act_area(monst.cur_loc))
-					monst.active = 0;
-				if(monst.active == 2)
-					monst.active = 1;
-				monst.cur_loc = monst.start_loc;
-				monst.health = monst.m_health;
+	for(size_t i=0 ; i<univ.party.creature_save.size(); ++i) {
+		auto const &pop = univ.party.creature_save[i];
+		if(town_number != pop.which_town)
+			continue;
+		univ.town.monst = pop;
+		monsters_loaded = true;
+		
+		for(auto& monst : univ.town.monst) {
+			if(monst.active == 2)
+				monst.active = 1;
+			monst.cur_loc = monst.start_loc;
+			monst.health = monst.m_health;
+			monst.mp = monst.max_mp;
+			monst.morale = monst.m_morale;
+			monst.status.clear();
+			if(monst.summon_time > 0)
+				monst.active = 0;
+			monst.target = 6;
+			// Bonus SP and HP wear off
+			if(monst.mp > monst.max_mp)
 				monst.mp = monst.max_mp;
-				monst.morale = monst.m_morale;
-				monst.status.clear();
-				if(monst.summon_time > 0)
-					monst.active = 0;
-				monst.target = 6;
-				// Bonus SP and HP wear off
-				if(monst.mp > monst.max_mp)
-					monst.mp = monst.max_mp;
-				if(monst.health > monst.m_health)
-					monst.health = monst.m_health;
-			}
-			
-			// Now, travelling NPCs might have arrived. Go through and put them in.
-			// These should have protected status (i.e. spec1 >= 200, spec1 <= 204)
-			for(auto& monst : univ.town.monst) {
-				switch(monst.time_flag){
-					case eMonstTime::ALWAYS: break; // Nothing to do.
-					case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
-						if((univ.party.calc_day() % 3) + 3 != int(monst.time_flag))
-							monst.active = 0;
-						else {
-							monst.active = 1;
-							monst.spec_enc_code = 0;
-							monst.cur_loc = monst.start_loc;
-							monst.health = monst.m_health;
-						}
-						break ;
-						
-						// Now, appearing/disappearing monsters might have arrived/disappeared.
-					case eMonstTime::APPEAR_ON_DAY:
-						if(day_reached(monst.monster_time, monst.time_code)) {
-							monst.active = 1;
-							monst.time_flag = eMonstTime::ALWAYS;
-						}
-						break;
-					case eMonstTime::DISAPPEAR_ON_DAY:
-						if(day_reached(monst.monster_time, monst.time_code)) {
-							monst.active = 0;
-							monst.time_flag = eMonstTime::ALWAYS;
-						}
-						break;
-					case eMonstTime::APPEAR_WHEN_EVENT:
-						if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
-							break; // Event hasn't happened yet
-						if(univ.party.calc_day() >= univ.party.key_times[monst.time_code]){ //calc_day is used because of the "definition" of univ.party.key_times
-							monst.active = 1;
-							monst.time_flag = eMonstTime::ALWAYS;
-						}
-						break;
-						
-					case eMonstTime::DISAPPEAR_WHEN_EVENT:
-						if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
-							break; // Event hasn't happened yet
-						if(univ.party.calc_day() >= univ.party.key_times[monst.time_code]){
-							monst.active = 0;
-							monst.time_flag = eMonstTime::ALWAYS;
-						}
-						break;
-					case eMonstTime::APPEAR_AFTER_CHOP:
-						// TODO: Should these two cases be separated?
-						if(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
-							monst.active += 10;
-						else if(univ.town->is_cleaned_out())
-							monst.active += 10;
-						else monst.active = 0;
-						if(monst.active >= 10)
-							monst.time_flag = eMonstTime::ALWAYS;
-						break;
-				}
-			}
-			
-			// TODO: THIS IS A TEMPORARY HACK TO GET i VALUE
-			int i = std::find_if(univ.party.creature_save.begin(), univ.party.creature_save.end(), [&pop](cPopulation& p) {return &p == &pop;}) - univ.party.creature_save.begin();
-			univ.town.update_fields(univ.party.setup[i]);
+			if(monst.health > monst.m_health)
+				monst.health = monst.m_health;
 		}
-	
+						
+		univ.town.update_fields(univ.party.setup[i]);
+	}
 	if(!monsters_loaded) {
 		univ.town.monst.clear();
 		for(short i = 0; i < univ.town->creatures.size(); i++){
 			if(univ.town->creatures[i].number > 0) {
-				// First set up the values.
+				// recreate the lists.
 				const cTownperson& preset = univ.town->creatures[i];
-				univ.town.monst.assign(i, preset, univ.scenario.scen_monsters[preset.number], univ.party.easy_mode, univ.difficulty_adjust());
-				cCreature& monst = univ.town.monst[i];
-				
-				if(monst.spec_enc_code > 0)
-					monst.active = 0;
-				
-				// Now, if necessary, fry the monster.
-				switch(monst.time_flag) {
-					case eMonstTime::APPEAR_ON_DAY:
-						if(!day_reached(monst.monster_time, monst.time_code))
-							monst.active = 0;
-						break;
-					case eMonstTime::DISAPPEAR_ON_DAY:
-						if(day_reached(monst.monster_time, monst.time_code))
-							monst.active = 0;
-						break;
-					case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
-						if((univ.party.calc_day() % 3) + 3 != int(monst.time_flag)) {
-							monst.active = 0;
-						}
-						else {
-							monst.active = 1;
-						}
-						break;
-					case eMonstTime::APPEAR_WHEN_EVENT:
-						if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
-							monst.active = 0; // Event hasn't happened yet
-						else if(univ.party.calc_day() < univ.party.key_times[univ.town.monst[i].time_code])
-							monst.active = 0; // This would only be reached if the time was set back (or in a legacy save)
-						break;
-						
-					case eMonstTime::DISAPPEAR_WHEN_EVENT:
-						if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
-							break; // Event hasn't happened yet
-						if(univ.party.calc_day() >= univ.party.key_times[univ.town.monst[i].time_code])
-							monst.active = 0;
-						break;
-					case eMonstTime::APPEAR_AFTER_CHOP:
-						// TODO: Should these two cases be separated?
-						if(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
-							monst.active += 10;
-							else if(univ.town->is_cleaned_out())
-							monst.active += 10;
-						else monst.active = 0;
-						break;
-					case eMonstTime::ALWAYS:
-						break;
-				}
-				
-				if(monst.active) {
-					// In forcecage?
-					if(univ.town.is_force_cage(monst.cur_loc.x, monst.cur_loc.y))
-						monst.status[eStatus::FORCECAGE] = 1000;
-				}
+				univ.town.monst.assign(i, preset, univ.scenario.get_monster(preset.number), univ.party.easy_mode, univ.difficulty_adjust());
 			}
 		}
 	}
 	
-	// Now munch all large monsters that are misplaced
-	// only large monsters, as some smaller monsters are intentionally placed
-	// where they cannot be
-	for(short i = 0; i < univ.town.monst.size(); i++) {
-		if(univ.town.monst[i].active > 0)
-			if(((univ.town.monst[i].x_width > 1) || (univ.town.monst[i].y_width > 1)) &&
-				!monst_can_be_there(univ.town.monst[i].cur_loc,i))
-				univ.town.monst[i].active = 0;
-	}
-	
-	
-	// Thrash town?
-	if(univ.town->is_cleaned_out()) {
-		town_toast = true;
-		add_string_to_buf("Area has been cleaned out.");
-	}
-	if(univ.town->town_chop_time > 0) {
-		if(day_reached(univ.town->town_chop_time,univ.town->town_chop_key)) {
-			add_string_to_buf("Area has been abandoned.");
-			for(auto& monst : univ.town.monst)
-				if(monst.active > 0 && monst.active < 10 && !monst.is_friendly())
-					monst.active += 10;
-			town_toast = true;
+	bool const town_toast=(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key)) ||
+						univ.town->is_cleaned_out();
+	if (town_toast)
+		add_string_to_buf(univ.town->is_cleaned_out() ? "Area has been cleaned out." : "Area has been abandoned.");
+	for(size_t i=0; i<univ.town.monst.size(); ++i) {
+		auto &monst=univ.town.monst[i];
+		if (monst.number<=0) {
+			monst.active=0;
+			continue;
 		}
-	}
-	if(town_toast) {
-		for(auto& monst : univ.town.monst)
-			if(monst.active >= 10)
+		monst.targ_loc.x = 0;
+		monst.targ_loc.y = 0;
+		if (!monsters_loaded && monst.spec_enc_code>0)
+			monst.active = 0;
+		// Now, travelling NPCs might have arrived. Go through and put them in.
+		// These should have protected status (i.e. spec1 >= 200, spec1 <= 204)
+		switch(monst.time_flag){
+			case eMonstTime::ALWAYS: break; // Nothing to do.
+			case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
+				monst.active = ((univ.party.calc_day() % 3) + 3 == int(monst.time_flag)) ? 1 : 0;
+				if (monst.active) monst.spec_enc_code=0;
+				break ;
+				
+			// Now, appearing/disappearing monsters might have arrived/disappeared.
+			case eMonstTime::APPEAR_ON_DAY:
+				monst.active = day_reached(monst.monster_time, monst.time_code) ? 1 : 0;
+				if (monst.active) {
+					monst.spec_enc_code=0;
+					monst.time_flag = eMonstTime::ALWAYS;
+				}
+				break;
+			case eMonstTime::DISAPPEAR_ON_DAY:
+				if(day_reached(monst.monster_time, monst.time_code)) {
+					monst.active = 0;
+					monst.time_flag = eMonstTime::ALWAYS;
+				}
+				break;
+			case eMonstTime::APPEAR_WHEN_EVENT:
+				monst.active = 0;
+				if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
+					break; // Event hasn't happened yet
+				if(univ.party.calc_day() >= univ.party.key_times[monst.time_code]) {//calc_day is used because of the "definition" of univ.party.key_times
+					monst.active = 1;
+					monst.time_flag = eMonstTime::ALWAYS;
+				}
+				break;
+			case eMonstTime::DISAPPEAR_WHEN_EVENT:
+				if (!monst.active)
+					break;
+				if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
+					break; // Event hasn't happened yet
+				if(univ.party.calc_day() >= univ.party.key_times[monst.time_code]) {
+					monst.active = 0;
+					monst.time_flag = eMonstTime::ALWAYS;
+				}
+				break;
+			// toasting
+			case eMonstTime::APPEAR_AFTER_CHOP:
+				if(town_toast) {
+					monst.active += 10;
+					monst.time_flag = eMonstTime::ALWAYS;
+				}
+				else
+					monst.active = 0;
+				break;
+		}
+		if (town_toast) {
+			if (univ.town->is_cleaned_out() || monst.active>=10 || monst.is_friendly())
 				monst.active -= 10;
-			else monst.active = 0;
+		}
+		if(monst.active<=0 || loc_off_act_area(monst.cur_loc)) {
+			monst.active=0;
+			continue;
+		}
+		
+		// In forcecage? checkme all case ?
+		if(!monsters_loaded && univ.town.is_force_cage(monst.cur_loc.x, monst.cur_loc.y))
+			monst.status[eStatus::FORCECAGE] = 1000;
+		
+		// Flush excess doomguards and viscous goos
+		if(monst.abil[eMonstAbil::SPLITS].active &&
+			(i >= univ.town->creatures.size() || monst.number != univ.town->creatures[i].number))
+			monst.active = 0;
+		// Now munch all large monsters that are misplaced
+		// only large monsters, as some smaller monsters are intentionally placed
+		// where they cannot be
+		else if((monst.x_width > 1 || monst.y_width > 1) && !monst_can_be_there(monst.cur_loc,i))
+			monst.active = 0;
+		// Clean out unwanted monsters
+		else if(univ.party.sd_legit(monst.spec1, monst.spec2) && univ.party.sd(monst.spec1,monst.spec2) > 0)
+			monst.active = 0;
 	}
+
 	handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc);
-	
-	// Flush excess doomguards and viscous goos
-	for(short i = 0; i < univ.town.monst.size(); i++)
-		if((univ.town.monst[i].abil[eMonstAbil::SPLITS].active) &&
-			(i >= univ.town->creatures.size() || univ.town.monst[i].number != univ.town->creatures[i].number))
-			univ.town.monst[i].active = 0;
 	
 	// Set up field booleans, correct for doors
 	for(short j = 0; j < univ.town->max_dim; j++)
@@ -365,7 +297,7 @@ void start_town_mode(short which_town, short entry_dir) {
 		if(univ.town->preset_items[i].code >= 0) {
 			const cTown::cItem& preset = univ.town->preset_items[i];
 			// place the preset item, if party hasn't gotten it already
-			univ.town.items.push_back(univ.scenario.get_stored_item(preset.code));
+			univ.town.items.push_back(univ.get_item(preset.code));
 			cItem& item = univ.town.items.back();
 			item.item_loc = preset.loc;
 			
@@ -424,19 +356,9 @@ void start_town_mode(short which_town, short entry_dir) {
 		}
 	
 	
-	for(auto& monst : univ.town.monst)
-		if(loc_off_act_area(monst.cur_loc))
-			monst.active = 0;
 	for(auto& item : univ.town.items)
 		if(loc_off_act_area(item.item_loc))
 			item.variety = eItemType::NO_ITEM;
-	
-	// Clean out unwanted monsters
-	for(auto& monst : univ.town.monst)
-		if(univ.party.sd_legit(monst.spec1, monst.spec2)) {
-			if(PSD[monst.spec1][monst.spec2] > 0)
-				monst.active = 0;
-		}
 	
 	erase_town_specials();
 //	make_town_trim(0);
@@ -445,12 +367,12 @@ void start_town_mode(short which_town, short entry_dir) {
 	univ.party.town_loc = (entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc;
 	center = univ.party.town_loc;
 	if(univ.party.in_boat >= 0) {
-		univ.party.boats[univ.party.in_boat].which_town = which_town;
-		univ.party.boats[univ.party.in_boat].loc = univ.party.town_loc;
+		univ.party.get_boat(univ.party.in_boat).which_town = which_town;
+		univ.party.get_boat(univ.party.in_boat).loc = univ.party.town_loc;
 	}
 	if(univ.party.in_horse >= 0) {
-		univ.party.horses[univ.party.in_horse].which_town = which_town;
-		univ.party.horses[univ.party.in_horse].loc = univ.party.town_loc;
+		univ.party.get_horse(univ.party.in_horse).which_town = which_town;
+		univ.party.get_horse(univ.party.in_horse).loc = univ.party.town_loc;
 	}
 	
 	
@@ -487,12 +409,7 @@ void start_town_mode(short which_town, short entry_dir) {
 			}
 	}
 	
-	for(auto& monst : univ.town.monst) {
-		monst.targ_loc.x = 0;
-		monst.targ_loc.y = 0;
-	}
-	
-	// check horses
+	// check boats and horses
 	for(short i = 0; i < univ.party.boats.size(); i++) {
 		if(univ.scenario.boats[i].which_town >= 0 && univ.scenario.boats[i].loc.x >= 0) {
 			if(!univ.party.boats[i].exists) {
@@ -510,21 +427,15 @@ void start_town_mode(short which_town, short entry_dir) {
 		}
 	}
 	
-	clear_map();
 	reset_item_max();
 	town_force = 200;
-	// TODO: One problem with this - it paints the terrain after the town entry dialog is dismissed
-	// ... except it actually doesn't, because the town enter special is only queued, not run immediately.
 	draw_terrain(1);
+	minimap::add_pending_redraw();
 }
 
 
 location end_town_mode(short switching_level,location destination) { // returns new party location
 	location to_return;
-	bool data_saved = false,combat_end = false;
-	
-	if(is_combat())
-		combat_end = true;
 	
 	// Bonus SP and HP wear off
 	for(short i = 0; i < 6; i++) {
@@ -535,21 +446,19 @@ location end_town_mode(short switching_level,location destination) { // returns 
 	}
 	
 	if(overall_mode == MODE_TOWN) {
-		for(auto& pop : univ.party.creature_save)
-			if(pop.which_town == univ.party.town_num) {
-				pop = univ.town.monst;
-				// TODO: THIS IS A TEMPORARY HACK TO GET i VALUE
-				int i = std::find_if(univ.party.creature_save.begin(), univ.party.creature_save.end(), [&pop](cPopulation& p) {return &p == &pop;}) - univ.party.creature_save.begin();
-				univ.town.save_setup(univ.party.setup[i]);
-				data_saved = true;
+		auto slot=univ.party.at_which_save_slot;
+		bool newSlot=true;
+		for(size_t i=0; i<univ.party.creature_save.size() ; ++i) {
+			if(univ.party.creature_save[i].which_town == univ.party.town_num) {
+				slot=i;
+				newSlot=false;
 				break;
 			}
-		if(!data_saved) {
-			univ.party.creature_save[univ.party.at_which_save_slot] = univ.town.monst;
-			univ.town.save_setup(univ.party.setup[univ.party.at_which_save_slot]);
-			univ.party.at_which_save_slot = (univ.party.at_which_save_slot == 3) ? 0 : univ.party.at_which_save_slot + 1;
 		}
-		
+		univ.party.creature_save[slot] = univ.town.monst;
+		univ.town.save_setup(univ.party.setup[slot]);
+		if (newSlot)
+			univ.party.at_which_save_slot = (slot == 3) ? 0 : slot + 1;
 		// Store items, if necessary
 		for(short j = 0; j < 3; j++)
 			if(univ.scenario.store_item_towns[j] == univ.party.town_num) {
@@ -630,14 +539,11 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		
 		update_explored(to_return);
 		redraw_screen(REFRESH_TERRAIN | REFRESH_TEXT);
-		
 	}
 	
-	if(!combat_end)
-		clear_map();
-	
 	univ.party.town_num = 200; // should be harmless...
-	
+	minimap::add_pending_redraw();
+
 	return to_return;
 }
 
@@ -696,6 +602,7 @@ void start_town_combat(eDirection direction) {
 	set_pc_moves();
 	pick_next_pc();
 	center = univ.current_pc().combat_pos;
+	UI::toolbar.reset_active_button();
 	UI::toolbar.draw(mainPtr);
 	put_pc_screen();
 	set_stat_window_for_pc(univ.cur_pc);
@@ -889,7 +796,7 @@ void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
 	static const std::set<int> surface_arenas = {0,2,9,10,11,12};
 	location stuff_ul;
 	
-	arena = univ.scenario.ter_types[ter_type].combat_arena;
+	arena = univ.get_terrain(ter_type).combat_arena;
 	if(arena >= 1000) {
 		arena -= 1000;
 		// We take the terrain from the specified town, and nothing else.
@@ -922,15 +829,18 @@ void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
 		for(short j = 0; j < 48; j++) {
 			if((j <= 8) || (j >= 35) || (i <= 8) || (i >= 35))
 				univ.town->terrain(i,j) = 90;
-			else univ.town->terrain(i,j) = ter_base[arena];
-		}
-	for(short i = 0; i < 48; i++)
-		for(short j = 0; j < 48; j++)
-			for(short k = 0; k < 5; k++)
-				if((univ.town->terrain(i,j) != 90) && (get_ran(1,1,1000) < terrain_odds[arena][k * 2 + 1]))
+			else
+				univ.town->terrain(i,j) = ter_base[arena];
+			if (univ.town->terrain(i,j) == 90)
+				continue;
+			for(short k = 0; k < 5; k++) {
+				if(get_ran(1,1,1000) < terrain_odds[arena][k * 2 + 1]) {
 					univ.town->terrain(i,j) = terrain_odds[arena][k * 2];
-	
-	univ.town->terrain(0,0) = ter_base[arena];
+					break;
+				}
+			}
+		}
+	univ.town->terrain(0,0) = ter_base[arena]; // to force an exit position?
 	
 	bool is_bridge = (arena == 3 || arena == 4);
 	
@@ -1030,8 +940,8 @@ void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
 				univ.town->terrain(stuff_ul.x + j,stuff_ul.y + k) = surf_camp[k][j];
 	}
 	
-	
-	if(ter_base[ter_type] == 0) {
+	short final_ter_type=ter_type<20 ? ter_base[ter_type] : ter_type;
+	if(final_ter_type == 0) {
 		for(short i = 0; i < num_walls; i++) {
 			r1 = get_ran(1,0,3);
 			for(short j = 9; j < 35; j++)
@@ -1059,7 +969,7 @@ void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
 		if((univ.town->terrain(8,20) == 9) && (univ.town->terrain(17,35) == 12))
 			univ.town->terrain(8,35) = 20;
 	}
-	if(ter_base[ter_type] == 36) {
+	if(final_ter_type == 36) {
 		for(short i = 0; i < num_walls; i++) {
 			r1 = get_ran(1,0,3);
 			for(short j = 9; j < 35; j++)
@@ -1097,11 +1007,11 @@ void create_out_combat_terrain(short ter_type,short num_walls,bool is_road) {
 void elim_monst(unsigned short which,short spec_a,short spec_b) {
 	if(!univ.party.sd_legit(spec_a,spec_b))
 		return;
-	if(PSD[spec_a][spec_b] > 0) {
-		for(short i = 0; i < univ.town.monst.size(); i++)
-			if(univ.town.monst[i].number == which) {
-				univ.town.monst[i].active = 0;
-			}
+	if(univ.party.sd(spec_a,spec_b) > 0) {
+		for(auto &monster : univ.town.monst) {
+			if(monster.number == which)
+				monster.active = 0;
+		}
 	}
 	
 }
@@ -1159,11 +1069,12 @@ void pick_lock(location where,short pc_num) {
 	if(univ.party[pc_num].has_abil_equip(eItemAbil::THIEVING))
 		r1 = r1 - 12;
 	
-	if(univ.scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {
+	auto const &terrain_type=univ.get_terrain(terrain);
+	if(terrain_type.special != eTerSpec::UNLOCKABLE) {
 		add_string_to_buf("  Wrong terrain type.");
 		return;
 	}
-	unlock_adjust = univ.scenario.ter_types[terrain].flag2;
+	unlock_adjust = terrain_type.flag2;
 	if((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 30))) {
 		add_string_to_buf("  Didn't work.");
 		if(will_break) {
@@ -1177,7 +1088,7 @@ void pick_lock(location where,short pc_num) {
 	else {
 		add_string_to_buf("  Door unlocked.");
 		play_sound(9);
-		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[terrain].flag1;
+		univ.town->terrain(where.x,where.y) = terrain_type.flag1;
 	}
 }
 
@@ -1188,20 +1099,21 @@ void bash_door(location where,short pc_num) {
 	terrain = univ.town->terrain(where.x,where.y);
 	r1 = get_ran(1,1,100) - 15 * univ.party[pc_num].stat_adj(eSkill::STRENGTH) + univ.town->difficulty * 4;
 	
-	if(univ.scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {
+	auto const &terrain_type=univ.get_terrain(terrain);
+	if(terrain_type.special != eTerSpec::UNLOCKABLE) {
 		add_string_to_buf("  Wrong terrain type.");
 		return;
 	}
 	
-	unlock_adjust = univ.scenario.ter_types[terrain].flag2;
-	if(unlock_adjust >= 5 || r1 > (unlock_adjust * 15 + 40) || univ.scenario.ter_types[terrain].flag3 != 1)  {
+	unlock_adjust = terrain_type.flag2;
+	if(unlock_adjust >= 5 || r1 > (unlock_adjust * 15 + 40) || terrain_type.flag3 != 1)  {
 		add_string_to_buf("  Didn't work.");
 		damage_pc(univ.party[pc_num],get_ran(1,1,4),eDamageType::SPECIAL,eRace::UNKNOWN,0);
 	}
 	else {
 		add_string_to_buf("  Lock breaks.");
 		play_sound(9);
-		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[terrain].flag1;
+		univ.town->terrain(where.x,where.y) = terrain_type.flag1;
 	}
 }
 
@@ -1226,7 +1138,7 @@ void erase_out_specials() {
 			erase_hidden_towns(sector, i, j);
 
 			erase_completed_specials(sector, [&sector](location where){
-				sector.special_spot[where.x][where.y] = false;
+				sector.set_special_spot(where.x,where.y,false);
 			});
 		}
 	}
@@ -1234,19 +1146,16 @@ void erase_out_specials() {
 
 void erase_hidden_towns(cOutdoors& sector, int quadrant_x, int quadrant_y) {
 	for(short tile_index = 0; tile_index < sector.city_locs.size(); tile_index++) {
-		auto city_loc = sector.city_locs[tile_index];
-		if(!univ.scenario.is_town_entrance_valid(city_loc) ||
-			!does_location_have_special(sector, city_loc, eTerSpec::TOWN_ENTRANCE) ||
-			!sector.is_on_map(city_loc)) {
+		auto const &city_loc = sector.city_locs[tile_index];
+		if(!univ.scenario.is_town_entrance_valid(city_loc) || !does_location_have_special(sector, city_loc, eTerSpec::TOWN_ENTRANCE))
 			continue;
-		}
-		auto town_pos_x = AREA_MEDIUM * quadrant_x + sector.city_locs[tile_index].x;
-		auto town_pos_y = AREA_MEDIUM * quadrant_y + sector.city_locs[tile_index].y;
-		auto spec_pos_x = sector.city_locs[tile_index].x;
-		auto spec_pos_y = sector.city_locs[tile_index].y;
+		auto town_pos_x = AREA_MEDIUM * quadrant_x + city_loc.x;
+		auto town_pos_y = AREA_MEDIUM * quadrant_y + city_loc.y;
+		auto spec_pos_x = city_loc.x;
+		auto spec_pos_y = city_loc.y;
 		auto area_index = sector.terrain[spec_pos_x][spec_pos_y];
-		if(!univ.scenario.towns[sector.city_locs[tile_index].spec]->can_find) {
-			univ.out[town_pos_x][town_pos_y] = univ.scenario.ter_types[area_index].flag1;
+		if(!univ.scenario.towns[city_loc.spec]->can_find) {
+			univ.out[town_pos_x][town_pos_y] = univ.get_terrain(area_index).flag1;
 		} else {
 			univ.out[town_pos_x][town_pos_y] = area_index;
 		}
@@ -1255,310 +1164,36 @@ void erase_hidden_towns(cOutdoors& sector, int quadrant_x, int quadrant_y) {
 
 void erase_completed_specials(cArea& sector, std::function<void(location)> clear_spot) {
 	for(auto tile_index = 0; tile_index < sector.special_locs.size(); tile_index++) {
-		if(sector.special_locs[tile_index].spec < 0 ||
-			sector.special_locs[tile_index].spec >= sector.specials.size())
+		auto const &tile = sector.special_locs[tile_index];
+		if(tile.spec < 0 || tile.spec >= sector.specials.size())
 			continue;
 
-		auto sn = sector.specials[sector.special_locs[tile_index].spec];
-		if(univ.party.sd_legit(sn.sd1, sn.sd2) && PSD[sn.sd1][sn.sd2] == SDF_COMPLETE) {
-			auto completed_special = sector.special_locs[tile_index];
-			if(!sector.is_on_map(completed_special)) {
+		auto sn = sector.specials[tile.spec];
+		if(univ.party.sd_legit(sn.sd1, sn.sd2) && univ.party.sd(sn.sd1,sn.sd2) == SDF_COMPLETE) {
+			if(!sector.is_on_map(tile)) {
 				beep();
 				add_string_to_buf("Area corrupt. Problem fixed.");
-				print_nums(completed_special.x, completed_special.y, tile_index);
+				print_nums(tile.x, tile.y, tile_index);
 				sector.special_locs[tile_index].spec = -1;
 			}
 			
-			clear_spot(completed_special);
+			clear_spot(tile);
 		}
 	}
 }
 
 bool does_location_have_special(cOutdoors& sector, location loc, eTerSpec special) {
-	auto terrain_index = sector.terrain[loc.x][loc.y];
-	return univ.scenario.ter_types[terrain_index].special == special;
-}
-
-// TODO: I don't think we need this
-void clear_map() {
-	rectangle map_world_rect(map_gworld);
-	
-//	if(!map_visible) {
-//		return;
-//	}
-//	draw_map(mini_map,11);
-	
-	fill_rect(map_gworld, map_world_rect, sf::Color::Black);
-	
-}
-
-void draw_map(bool need_refresh) {
-	if(!map_visible) return;
-	pic_num_t pic;
-	rectangle the_rect,map_world_rect = {0,0,384,384};
-	location where;
-	location kludge;
-	rectangle draw_rect,orig_draw_rect = {0,0,6,6},ter_temp_from,base_source_rect = {0,0,12,12};
-	rectangle	dlogpicrect = {6,6,42,42};
-	bool draw_pcs = true,out_mode;
-	rectangle view_rect= {0,0,48,48},tiny_rect = {0,0,32,32},
-	redraw_rect = {0,0,48,48},big_rect = {0,0,64,64}; // Rectangle visible in view screen
-	
-	rectangle area_to_draw_from,area_to_draw_on = {29,47,269,287};
-	ter_num_t what_ter;
-	bool draw_surroundings = false,expl;
-	short total_size = 48; // if full redraw, use this to figure out everything
-	rectangle custom_from;
-	
-	draw_surroundings = true;
-	
-	town_map_adj.x = 0;
-	town_map_adj.y = 0;
-	
-	// view rect is rect that is visible, redraw rect is area to redraw now
-	// area_to_draw_from is final draw from rect
-	// area_to_draw_on is final draw to rect
-	// extern short store_pre_shop_mode,store_pre_talk_mode;
-	if((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == MODE_OUTDOORS)) ||
-		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == MODE_OUTDOORS))) {
-		view_rect.left = minmax(0,8,univ.party.loc_in_sec.x - 20);
-		view_rect.right = view_rect.left + 40;
-		view_rect.top = minmax(0,8,univ.party.loc_in_sec.y - 20);
-		view_rect.bottom = view_rect.top + 40;
-		redraw_rect = view_rect;
-	}
-	else {
-		total_size = univ.town->max_dim;
-		switch(total_size) {
-			case 64:
-				view_rect.left = minmax(0,24,univ.party.town_loc.x - 20);
-				view_rect.right = view_rect.left + 40;
-				view_rect.top = minmax(0,24,univ.party.town_loc.y - 20);
-				view_rect.bottom = view_rect.top + 40;
-				redraw_rect = big_rect;
-				break;
-			case 48:
-				view_rect.left = minmax(0,8,univ.party.town_loc.x - 20);
-				view_rect.right = view_rect.left + 40;
-				view_rect.top = minmax(0,8,univ.party.town_loc.y - 20);
-				view_rect.bottom = view_rect.top + 40;
-				redraw_rect = view_rect;
-				break;
-			case 32:
-				view_rect = tiny_rect;
-				redraw_rect = view_rect;
-				break;
-		}
-	}
-	if((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == MODE_OUTDOORS)) ||
-		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == MODE_OUTDOORS)) ||
-		is_town() || is_combat()) {
-		area_to_draw_from = view_rect;
-		area_to_draw_from.width() = 40;
-		area_to_draw_from.height() = 40;
-		area_to_draw_from.left *= 6;
-		area_to_draw_from.right *= 6;
-		area_to_draw_from.top *= 6;
-		area_to_draw_from.bottom *= 6;
-	}
-	
-	if(is_combat())
-		draw_pcs = false;
-	
-	const char* title_string = "Your map:";
-	bool canMap = true;
-	
-	if((is_combat()) && (which_combat_type == 0)) {
-		title_string = "No map in combat.";
-		canMap = false;
-	}else if((is_town() && univ.town->defy_mapping)) {
-		title_string = "This place defies mapping.";
-		canMap = false;
-	}
-	else if(need_refresh) {
-		// CHECKME: unsure, but on osx, if mainPtr.setActive() is not called,
-		// the following code does not update the gworld texture if we are
-		// called just after closing a dialog
-		mainPtr.setActive();
-
-		map_gworld.setActive();
-		
-		fill_rect(map_gworld, map_world_rect, sf::Color::Black);
-		
-		// Now, if shopping or talking, just don't touch anything.
-		if((overall_mode == MODE_SHOPPING) || (overall_mode == MODE_TALKING))
-			redraw_rect.right = -1;
-		
-		if((is_out()) ||
-			((is_combat()) && (which_combat_type == 0)) ||
-			((overall_mode == MODE_TALKING) && (store_pre_talk_mode == MODE_OUTDOORS)) ||
-			((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == MODE_OUTDOORS)))
-			out_mode = true;
-		else out_mode = false;
-		
-		// TODO: It could be possible to draw the entire map here and then only refresh if a spot actually changes terrain type
-		sf::Texture& small_ter_gworld = *ResMgr::graphics.get("termap");
-		for(where.x = redraw_rect.left; where.x < redraw_rect.right; where.x++)
-			for(where.y = redraw_rect.top; where.y < redraw_rect.bottom; where.y++) {
-				draw_rect = orig_draw_rect;
-				draw_rect.offset(6 * where.x, 6 * where.y);
-				
-				if(out_mode)
-					what_ter = univ.out[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
-				else what_ter = univ.town->terrain(where.x,where.y);
-				
-				ter_temp_from = base_source_rect;
-				
-				if(out_mode)
-					expl = univ.out.out_e[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
-				else expl = is_explored(where.x,where.y);
-				
-				if(expl != 0) {
-					pic = univ.scenario.ter_types[what_ter].map_pic;
-					bool drawLargeIcon = false;
-					if(pic == NO_PIC) {
-						pic = univ.scenario.ter_types[what_ter].picture;
-						drawLargeIcon = true;
-					}
-					if(pic >= 1000) {
-						if(spec_scen_g) {
-							//print_nums(0,99,pic);
-							std::shared_ptr<const sf::Texture> src_gw;
-							if(drawLargeIcon) {
-								pic = pic % 1000;
-								graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic);
-								rect_draw_some_item(*src_gw,custom_from,map_gworld,draw_rect);
-							} else {
-								graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic % 1000);
-								custom_from.right = custom_from.left + 12;
-								custom_from.bottom = custom_from.top + 12;
-								pic /= 1000; pic--;
-								custom_from.offset((pic / 3) * 12, (pic % 3) * 12);
-								rect_draw_some_item(*src_gw, custom_from, map_gworld, draw_rect);
-							}
-						}
-					} else if(drawLargeIcon) {
-						if(pic >= 960) {
-							custom_from = calc_rect(4 * ((pic - 960) / 5),(pic - 960) % 5);
-							rect_draw_some_item(*ResMgr::graphics.get("teranim"), custom_from, map_gworld, draw_rect);
-						} else {
-							int which_sheet = pic / 50;
-							auto src_gw = &ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet));
-							pic %= 50;
-							custom_from = calc_rect(pic % 10, pic / 10);
-							rect_draw_some_item(*src_gw, custom_from, map_gworld, draw_rect);
-						}
-					} else {
-						if(univ.scenario.ter_types[what_ter].picture < 960)
-							ter_temp_from.offset(12 * (univ.scenario.ter_types[what_ter].picture % 20),
-												 12 * (univ.scenario.ter_types[what_ter].picture / 20));
-						else ter_temp_from.offset(12 * 20,
-												  12 * (univ.scenario.ter_types[what_ter].picture - 960));
-						rect_draw_some_item(small_ter_gworld,ter_temp_from,map_gworld,draw_rect);
-					}
-					
-					if(is_out() ? univ.out->roads[where.x][where.y] : univ.town.is_road(where.x,where.y)) {
-						draw_rect.inset(1,1);
-						rect_draw_some_item(*ResMgr::graphics.get("trim"),{8,112,12,116},map_gworld,draw_rect);
-					}
-				}
-			}
-		
-		map_gworld.display();
-		// this stops flickering if the display time is too long
-		glFlush();
-	}
-	
-	mini_map.setActive(false);
-	
-	// Now place terrain map gworld
-	TextStyle style;
-	style.font = FONT_BOLD;
-	style.pointSize = 10;;
-	
-	the_rect = rectangle(mini_map);
-	tileImage(mini_map, the_rect,bg[4]);
-	cPict theGraphic(mini_map);
-	theGraphic.setBounds(dlogpicrect);
-	theGraphic.setPict(21, PIC_DLOG);
-	theGraphic.setFormat(TXT_FRAME, FRM_NONE);
-	theGraphic.draw();
-	style.colour = sf::Color::White;
-	style.lineHeight = 12;
-	win_draw_string(mini_map, map_title_rect,title_string,eTextMode::WRAP,style);
-	win_draw_string(mini_map, map_bar_rect,"(Hit Escape to close.)",eTextMode::WRAP,style);
-	
-	if(canMap) {
-		rect_draw_some_item(map_gworld.getTexture(),area_to_draw_from,mini_map,area_to_draw_on);
-		
-		// Now place PCs and monsters
-		if(draw_pcs) {
-			if((is_town()) && (univ.party.status[ePartyStatus::DETECT_LIFE] > 0))
-				for(short i = 0; i < univ.town.monst.size(); i++)
-					if(univ.town.monst[i].active > 0) {
-						where = univ.town.monst[i].cur_loc;
-						if((is_explored(where.x,where.y)) &&
-							((where.x >= view_rect.left) && (where.x < view_rect.right)
-							 && where.y >= view_rect.top && where.y < view_rect.bottom)){
-								
-								draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
-								draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-								draw_rect.right = draw_rect.left + 6;
-								draw_rect.bottom = draw_rect.top + 6;
-								
-								fill_rect(mini_map, draw_rect, Colours::GREEN);
-								frame_circle(mini_map, draw_rect, Colours::BLUE);
-							}
-					}
-			if((overall_mode != MODE_SHOPPING) && (overall_mode != MODE_TALKING)) {
-				where = (is_town()) ? univ.party.town_loc : global_to_local(univ.party.out_loc);
-				
-				draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
-				draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-				draw_rect.right = draw_rect.left + 6;
-				draw_rect.bottom = draw_rect.top + 6;
-				fill_rect(mini_map, draw_rect, Colours::RED);
-				frame_circle(mini_map, draw_rect, sf::Color::Black);
-				
-			}
-		}
-	}
-	
-	mini_map.setActive(false);
-	mini_map.display();
-	
-	// Now exit gracefully
-	mainPtr.setActive();
-	
+	return sector.is_on_map(loc) && univ.get_terrain(sector.terrain[loc.x][loc.y]).special == special;
 }
 
 
 
 bool is_door(location destination) {
-	
-	if(univ.scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == eTerSpec::UNLOCKABLE ||
-	   univ.scenario.ter_types[univ.town->terrain(destination.x,destination.y)].special == eTerSpec::CHANGE_WHEN_STEP_ON)
+	auto terrain_index=univ.town->terrain(destination.x,destination.y);
+	if(univ.get_terrain(terrain_index).special == eTerSpec::UNLOCKABLE ||
+	   univ.get_terrain(terrain_index).special == eTerSpec::CHANGE_WHEN_STEP_ON)
 		return true;
 	return false;
-}
-
-
-void display_map() {
-	// Show the automap if it's not already visible
-	if(map_visible) return;
-	give_help(62,0);
-	
-	rectangle the_rect;
-	rectangle	dlogpicrect = {6,6,42,42};
-	
-	mini_map.setVisible(true);
-	map_visible = true;
-	draw_map(true);
-	makeFrontWindow(mainPtr);
-	
-	set_cursor(sword_curs);
 }
 
 void check_done() {

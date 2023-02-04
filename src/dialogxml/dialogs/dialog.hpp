@@ -56,6 +56,7 @@ class cDialog {
 	friend class cDialogIterator;
 	typedef std::map<std::string,cControl*>::iterator ctrlIter;
 	std::map<std::string,cControl*> controls;
+	float ui_scale;
 	short bg;
 	sf::Color defTextClr;
 	sf::RenderWindow win;
@@ -68,6 +69,7 @@ class cDialog {
 	template<typename Iter> void handleTabOrder(std::string& itemHit, Iter begin, Iter end);
 	std::vector<std::pair<std::string,cTextField*>> tabOrder;
 	static cDialog* topWindow; // Tracks the frontmost dialog.
+	static bool inDialog;
 public:
 	static void (*redraw_everything)();
 	/// Performs essential startup initialization. Generally should not be called directly.
@@ -239,19 +241,23 @@ public:
 	cDialogIterator end() {
 		return cDialogIterator();
 	}
+	/// checks if a dialog is actually running
+	static bool checkIfDialogIsRunning() {
+		return inDialog;
+	}
 	cDialog& operator=(cDialog& other) = delete;
 	cDialog(cDialog& other) = delete;
 private:
 	void draw();
 	void handle_events();
-	void handle_one_event(const sf::Event&);
+	void handle_one_event(const sf::Event&, bool &need_redraw);
 	void process_keystroke(cKey keyHit);
 	void process_click(location where, eKeyMod mods);
 	bool dialogNotToast, didAccept;
 	rectangle winRect;
 	boost::any result;
 	std::string fname;
-	sf::Clock animTimer, paintTimer;
+	sf::Clock animTimer;
 	friend class cControl;
 	friend class cContainer;
 };

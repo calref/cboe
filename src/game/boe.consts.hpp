@@ -138,6 +138,7 @@ enum eItemWinMode {
 	ITEM_WIN_PC6 = 5,
 	ITEM_WIN_SPECIAL = 6,
 	ITEM_WIN_QUESTS = 7,
+	ITEM_WIN_JUNK = 8,
 };
 
 // Gobal window rects

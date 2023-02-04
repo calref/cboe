@@ -21,16 +21,21 @@ rectangle calc_rect(short i, short j){
 	return base_rect;
 }
 
-graf_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
+Texture_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 	bool valid = true;
-	if(party && !party_sheet) valid = false;
-	else if(!party && !is_old && (which_rect / 100) >= numSheets)
-		valid = false;
-	else if(numSheets == 0) valid = false;
+	if(party) {
+		valid = bool(party_sheet);
+	}
+	else {
+		if (!is_old && (which_rect / 100) >= numSheets)
+			valid = false;
+		else if(is_old && numSheets == 0)
+			valid = false;
+	}
 	if(!valid) {
 	INVALID:
-		std::shared_ptr<const sf::Texture> blank = &ResMgr::graphics.get("blank", true);
-		return {blank, {0,0,36,28}};
+		auto const &error = *ResMgr::graphics.get("errors", true);
+		return std::make_pair(error, rectangle(0,0,40,40));
 	}
 	short sheet = which_rect / 100;
 	if(is_old || party) sheet = 0;
@@ -38,22 +43,23 @@ graf_pos cCustomGraphics::find_graphic(pic_num_t which_rect, bool party) {
 	rectangle store_rect = {0,0,36,28};
 	
 	store_rect.offset(28 * (which_rect % 10),36 * (which_rect / 10));
-	std::shared_ptr<const sf::Texture> the_sheet = party ? party_sheet : sheets[sheet];
-	rectangle test(*the_sheet);
+	Texture const &the_sheet = party ? party_sheet : sheets[sheet];
+	rectangle test(the_sheet);
 	if((store_rect & test) != store_rect) goto INVALID; // FIXME: HACK
 	return std::make_pair(the_sheet,store_rect);
 }
 
 size_t cCustomGraphics::count(bool party) {
 	if(!party && sheets.empty()) return 0;
-	else if(party && party_sheet == nullptr) return 0;
+	else if(party && !party_sheet) return 0;
 	else if(is_old || party) {
-		rectangle bounds(party ? *party_sheet : *sheets[0]);
-		if(bounds.width() < 280) return bounds.width() / 28;
+		rectangle bounds(party ? party_sheet : sheets[0]);
+		// let assume that each row have 10 element, even if(bounds.width() < 280)
 		return 10 * bounds.height() / 36;
 	} else {
 		size_t count = 100 * (numSheets - 1);
-		rectangle bounds(*sheets[numSheets - 1]);
+		rectangle bounds(sheets[numSheets - 1]);
+		// CHECKME: we probably want to assume that each row have 10 elements
 		if(bounds.width() < 280) count += bounds.width() / 28;
 		else count += 10 * bounds.height() / 36;
 		return count;
@@ -63,42 +69,56 @@ size_t cCustomGraphics::count(bool party) {
 void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlots) {
 	if(numSlots < 1) return;
 	if(!party_sheet) {
+		// retrieve the first sheet, do determine a valid scaling
+		Texture sheet0;
+		std::tie(sheet0,std::ignore) = find_graphic(dest,true);
+		float scale[2]={float(sheet0->getSize().x)/sheet0.dimension.x, float(sheet0->getSize().y)/sheet0.dimension.y};
+		// create an empty sheet 10 columns, 5 rows
 		sf::Image empty;
-		empty.create(280, 180, sf::Color::Transparent);
+		empty.create(int(280*scale[0]), int(180*scale[1]), sf::Color::Transparent);
 		sf::Texture sheet;
-		sheet.create(280, 180);
+		sheet.create(int(280*scale[0]), int(180*scale[1]));
 		sheet.update(empty);
-		party_sheet.reset(new sf::Texture(sheet));
+		party_sheet=Texture(sheet);
+		party_sheet.dimension={280,180};
 		numSheets = 1;
 	}
-	size_t havePics = count();
+	size_t havePics = count(true);
 	if(havePics < dest + numSlots) {
 		int addRows = 1;
 		while(havePics + 10 * addRows < dest + numSlots)
 			addRows++;
+		float scale[2]={float(party_sheet->getSize().x)/party_sheet.dimension.x, float(party_sheet->getSize().y)/party_sheet.dimension.y};
 		sf::RenderTexture temp;
-		temp.create(280, party_sheet->getSize().y + 36 * addRows);
+		temp.create(int(280*scale[0]), party_sheet->getSize().y+int(36 * addRows*scale[1]));
 		temp.clear(sf::Color::Transparent);
-		rect_draw_some_item(*party_sheet, rectangle(*party_sheet), temp, rectangle(*party_sheet));
-		party_sheet.reset(new sf::Texture(temp.getTexture()));
+		rect_draw_some_item(party_sheet, rectangle(party_sheet), temp, rectangle(*party_sheet));
+		unsigned oldY=party_sheet.dimension.y;
+		party_sheet=Texture(temp.getTexture());
+		party_sheet.dimension={280,oldY + 36 * addRows};
 	}
-	std::shared_ptr<const sf::Texture> from_sheet;
-	std::shared_ptr<const sf::Texture> to_sheet;
-	std::shared_ptr<const sf::Texture> last_src = nullptr;
+	Texture from_sheet;
+	Texture to_sheet;
+	std::shared_ptr<sf::Texture> last_src;
 	sf::RenderTexture temp;
 	rectangle from_rect, to_rect;
 	for(size_t i = 0; i < numSlots; i++) {
-		graf_pos_ref(from_sheet, from_rect) = find_graphic(src + i);
-		graf_pos_ref(to_sheet, to_rect) = find_graphic(dest + i, true);
-		if(to_sheet != last_src) {
-			if(last_src) last_src.reset(new sf::Texture(temp.getTexture()));
-			last_src = to_sheet;
-			temp.create(to_sheet->getSize().x, to_sheet->getSize().y);
-			rect_draw_some_item(*to_sheet, rectangle(*to_sheet), temp, rectangle(*to_sheet));
+		std::tie(from_sheet,from_rect) = find_graphic(src + i);
+		std::tie(to_sheet,to_rect) = find_graphic(dest + i, true);
+		if(to_sheet.texture != last_src) {
+			if(last_src) *last_src=sf::Texture(temp.getTexture()); // save the old picture
+			last_src = std::const_pointer_cast<sf::Texture>(to_sheet.texture);
+			temp.create(to_sheet->getSize().x, to_sheet->getSize().y); // recreate a new picture from the new sheet
+			rect_draw_some_item(to_sheet, rectangle(to_sheet), temp, rectangle(*to_sheet.texture));
 		}
-		rect_draw_some_item(*from_sheet, from_rect, temp, to_rect);
+		rect_draw_some_item(from_sheet, from_rect, temp,
+							to_rect.rescale(to_sheet.dimension, to_sheet->getSize()));
 	}
-	last_src.reset(new sf::Texture(temp.getTexture()));
+	if (last_src) {
+		// checkme: adding a call to display() seems to resolve a upside down problem
+		temp.display();
+		*last_src=sf::Texture(temp.getTexture());
+	}
 }
 
 extern std::string scenario_temp_dir_name;
@@ -115,9 +135,9 @@ void cCustomGraphics::convert_sheets() {
 	fs::path pic_dir = tempDir/scenario_temp_dir_name/"graphics";
 	for(size_t i = 0; i < numSheets; i++) {
 		sf::IntRect subrect;
-		subrect.top = i * 280;
-		subrect.width = 280;
-		subrect.height = 360;
+		subrect.top = i * 360;
+		subrect.width = std::min(280, int(old_graph.getSize().x));
+		subrect.height = std::min(360, int(old_graph.getSize().y-i*360));
 		
 		sf::Image sheet;
 		sheet.create(280, 360);
@@ -126,7 +146,7 @@ void cCustomGraphics::convert_sheets() {
 		sf::Texture sheet_tex;
 		sheet_tex.create(280, 360);
 		sheet_tex.update(sheet);
-		sheets[i].reset(new sf::Texture(sheet_tex));
+		sheets[i]=Texture(sheet_tex);
 		
 		fs::path sheetPath = pic_dir/("sheet" + std::to_string(i) + ".png");
 		sheets[i]->copyToImage().saveToFile(sheetPath.string().c_str());
@@ -138,7 +158,7 @@ void cCustomGraphics::replace_sheet(size_t num, sf::Image& newSheet) {
 	if(num >= numSheets) return; // TODO: Fail silently? Is that a good idea?
 	sf::Texture replacement;
 	replacement.loadFromImage(newSheet);
-	sheets[num].reset(new sf::Texture(replacement));
+	sheets[num]=Texture(replacement);
 	// Then we need to do some extra stuff to ensure the dialog engine also sees the change
 	extern fs::path tempDir;
 	std::string sheetname = "sheet" + std::to_string(num);
@@ -162,7 +182,7 @@ void cCustomGraphics::init_sheet(size_t num) {
 			}
 		}
 	}
-	sheets[num].reset(new sf::Texture(placeholder));
+	sheets[num]=Texture(placeholder);
 }
 
 extern const std::vector<m_pic_index_t> m_pic_index = {

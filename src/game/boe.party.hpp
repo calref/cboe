@@ -30,7 +30,6 @@ bool pc_can_cast_spell(const cPlayer& pc,eSkill spell_num);
 eSpell pick_spell(short pc_num,eSkill type);
 void start_town_targeting(eSpell s_num,short who_c,bool freebie,eSpellPat pat = PAT_SINGLE);
 void do_alchemy();
-eAlchemy alch_choice(short pc_num);
 bool pick_pc_graphic(short pc_num,short mode,cDialog* parent_num);
 bool pick_pc_name(short pc_num,cDialog* parent)  ;
 mon_num_t pick_trapped_monst();
