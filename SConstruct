@@ -1,6 +1,7 @@
 import os.path as path
 import os
 import subprocess
+import atexit
 
 # Build options
 opts = Variables(None, ARGUMENTS)
@@ -414,4 +415,4 @@ elif platform == "win32" and subprocess.call(['where', '/Q', 'makensis']) == 0:
 # Cleanup
 
 env.Clean('.', 'build')
-env.Clean('.', Glob('.sconsign.*'))
+atexit.register(lambda: map(os.remove, Glob('.sconsign.*')))
