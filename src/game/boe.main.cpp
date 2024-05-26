@@ -3,9 +3,14 @@
 #include "universe/universe.hpp"
 
 #include <boost/filesystem/operations.hpp>
+#include <boost/lexical_cast.hpp>
 #include <unordered_map>
 #include <string>
 #include <memory>
+#include <iostream>
+#include <iomanip>
+#include <ctime>
+#include <sstream>
 #include "boe.graphics.hpp"
 #include "boe.newgraph.hpp"
 #include "boe.fileio.hpp"
@@ -215,12 +220,81 @@ static void init_ui() {
 	init_buttons();
 }
 
+static bool recording = false;
+static bool replaying = false;
+using namespace ticpp;
+static Document log_document;
+static std::string log_file;
+static bool init_action_log(std::string command, std::string file) {
+	if (command == "record") {
+		// Get a time stamp
+		std::time_t t = time(nullptr);
+		auto tm = *std::localtime(&t);
+		std::ostringstream stream;
+		stream << "BoE_" << std::put_time(&tm, "%d-%m-%Y_%H-%M-%S") << ".xml";
+		log_file = stream.str();
+		
+		try {
+			Element root_element("actions");
+			log_document.InsertEndChild(root_element);
+			log_document.SaveFile(log_file);
+			recording = true;
+			std::cout << "Recording this session: " << log_file << std::endl;
+		} catch(...) {
+			std::cout << "Failed to write to file " << log_file << std::endl;
+		}
+		return true;
+	}
+	else if (command == "replay") {
+		try {
+			log_document.LoadFile(file);
+			replaying = true;
+		} catch(...) {
+			std::cout << "Failed to load file " << file << std::endl;
+		}
+		return true;
+	}
+	return false;
+}
+
+static void record_action(std::string action_type, std::string inner_text) {
+	Element* root = log_document.FirstChildElement();
+	Element next_action(action_type);
+	Text action_text(inner_text);
+	next_action.InsertEndChild(action_text);
+	root->InsertEndChild(next_action);
+	log_document.SaveFile(log_file);
+}
+
+static Element* pop_next_action(std::string expected_action_type="") {
+	Element* root = log_document.FirstChildElement();
+	Element* next_action = root->FirstChildElement();
+	
+	if (expected_action_type != "" && next_action->Value() != expected_action_type) {
+		std::ostringstream stream;
+		stream << "Replay error! Expected '" << expected_action_type << "' action next";
+		throw stream.str();
+	}
+
+	Element* clone = next_action->Clone()->ToElement();
+	root->RemoveChild(next_action);
+	return clone;
+}
+
 void process_args(int argc, char* argv[]) {
 	// Command line usage:
 	//  "Blades of Exile"                               # basic launch
 	//  "Blades of Exile" <save file>                   # launch and load save file
-
+	// 	"Blades of Exile" record 	                    # record this session in a time-stamped xml file
+	//  "Blades of Exile" play <file>                   # replay a session from an xml file
 	if (argc > 1) {
+		std::string file = "";
+		if (argc > 2) {
+			file = argv[2];
+		}
+		if (init_action_log(argv[1], file))
+			return;
+		
 		if(!load_party(argv[1], univ)) {
 			std::cout << "Failed to load save file: " << argv[1] << std::endl;
 			return;
@@ -245,13 +319,15 @@ void init_boe(int argc, char* argv[]) {
 #ifdef __APPLE__
 	init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
 #endif
+
+	// TODO preferences need to be recorded in the action log for deterministic replay
 	sync_prefs();
 	init_shaders();
 	init_tiling();
 	init_snd_tool();
 	
 	init_ui();
-	
+
 	adjust_window_mode();
 	// If we don't do this now it'll flash white to start with
 	mainPtr.clear(sf::Color::Black);
@@ -259,7 +335,22 @@ void init_boe(int argc, char* argv[]) {
 	
 	set_cursor(watch_curs);
 	init_buf();
-	srand(time(nullptr));
+
+	// Seed the RNG
+	if (replaying) {
+		auto srand_element = pop_next_action("srand");
+		
+		std::string ts(srand_element->GetText());
+		srand(atoi(ts.c_str()));
+	} else {
+		auto t = time(nullptr);
+		if (recording) {
+			std::string ts = boost::lexical_cast<std::string>(t);
+			record_action("srand", ts);
+		}
+		srand(t);
+	}
+	std::cout << rand() << std::endl;
 	init_screen_locs();	
 	init_startup();
 	flushingInput = true;
