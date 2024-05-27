@@ -1,5 +1,6 @@
 
 #include "prefs.hpp"
+#include "game/boe.global.hpp"
 #include <map>
 #include <string>
 #include <vector>
@@ -99,10 +100,18 @@ static bool save_prefs(fs::path fpath) {
 static bool load_prefs(fs::path fpath) {
 	prefsDirty = false;
 	std::map<std::string,boost::any> temp_prefs;
-	std::ifstream fin(fpath.string().c_str());
+	std::istream* in;
+	if (replaying) {
+		Element* prefs_action = pop_next_action("load_prefs");
+		in = new std::istringstream(prefs_action->GetText());
+	} else {
+		in = new std::ifstream(fpath.c_str());
+	}
+	(fpath.string().c_str());
 	std::string line;
-	while(std::getline(fin, line)) {
-		if(!fin) {
+	std::ostringstream prefs_recording;
+	while(std::getline(*in, line)) {
+		if(!in) {
 			perror("Error reading preferences");
 			return false;
 		}
@@ -121,6 +130,10 @@ static bool load_prefs(fs::path fpath) {
 			printf("Error reading preferences: line is missing key:\n\t%s\n", line.c_str());
 			return false;
 		}
+		if (recording) {
+			prefs_recording << line << std::endl;
+		}
+
 		std::string key = line.substr(0, key_end + 1), val = line.substr(val_beg);
 		if(val == "true") temp_prefs[key] = true;
 		else if(val == "false") temp_prefs[key] = false;
@@ -138,6 +151,12 @@ static bool load_prefs(fs::path fpath) {
 		}
 	}
 	prefs.swap(temp_prefs);
+	delete in;
+
+	if (recording) {
+		record_action("load_prefs", prefs_recording.str());
+	}
+
 	return prefsLoaded = true;
 }
 
