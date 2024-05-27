@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include <boost/lexical_cast.hpp>
+#include <boost/filesystem.hpp>
 #include "scen.global.hpp"
 #include "scenario/scenario.hpp"
 #include "scenario/town.hpp"
@@ -3591,7 +3592,7 @@ static bool edit_custom_sound_action(cDialog& me, std::string action, std::vecto
 			beep();
 			return true;
 		}
-		fs::copy_file(fpath, sndfile, fs::copy_option::overwrite_if_exists);
+		fs::copy_file(fpath, sndfile, fs::copy_options::overwrite_existing);
 		ResMgr::sounds.free(sound_to_fname(which_snd));
 		if(which_snd > max_snd)
 			max_snd = which_snd;
@@ -3602,7 +3603,7 @@ static bool edit_custom_sound_action(cDialog& me, std::string action, std::vecto
 	} else if(action == "save") {
 		fs::path fpath = nav_put_rsrc({"wav"});
 		if(fpath.empty()) return true;
-		fs::copy_file(sndfile, fpath, fs::copy_option::overwrite_if_exists);
+		fs::copy_file(sndfile, fpath, fs::copy_options::overwrite_existing);
 	}
 	return true;
 }

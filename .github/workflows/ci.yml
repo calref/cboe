@@ -64,7 +64,17 @@
 		},
 		win-vs32: {
 			runs-on: windows-2019,
+			env: {
+				VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+			},
 			steps: [
+				{
+					name: Export GitHub Actions cache environment variables,
+					uses: actions/github-script@v7,
+					with: {
+						script: "core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || ''); core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');"
+					}
+				},
 				{
 					name: checkout,
 					uses: actions/checkout@v2,
@@ -72,7 +82,8 @@
 				},
 				{
 					name: install dependencies,
-					run: '.\.github\workflows\scripts\win\install-deps.bat x86'
+					run: '${{ github.workspace }}\.github\workflows\scripts\win\install-deps.bat x86',
+					working-directory: proj/vs2017
 				},
 				{
 					name: build,
@@ -82,7 +93,17 @@
 		},
 		win-vs64: {
 			runs-on: windows-2019,
+			env: {
+				VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+			},
 			steps: [
+				{
+					name: Export GitHub Actions cache environment variables,
+					uses: actions/github-script@v7,
+					with: {
+						script: "core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || ''); core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');"
+					}
+				},
 				{
 					name: checkout,
 					uses: actions/checkout@v2,
@@ -90,7 +111,8 @@
 				},
 				{
 					name: install dependencies,
-					run: '.\.github\workflows\scripts\win\install-deps.bat x64'
+					run: '${{ github.workspace }}\.github\workflows\scripts\win\install-deps.bat x64',
+					working-directory: proj/vs2017
 				},
 				{
 					name: build,
@@ -104,7 +126,17 @@
 		},
 		win-scons: {
 			runs-on: windows-2019,
+			env: {
+				VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+			},
 			steps: [
+				{
+					name: Export GitHub Actions cache environment variables,
+					uses: actions/github-script@v7,
+					with: {
+						script: "core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || ''); core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');"
+					}
+				},
 				{
 					name: checkout,
 					uses: actions/checkout@v2,
@@ -116,7 +148,8 @@
 				},
 				{
 					name: install dependencies,
-					run: '.\.github\workflows\scripts\win\install-deps.bat x64'
+					run: '${{ github.workspace }}\.github\workflows\scripts\win\install-deps.bat x64',
+					working-directory: proj/vs2017
 				},
 				{
 					name: build and unit test,
@@ -138,7 +171,8 @@
 		# 		},
 		# 		{
 		# 			name: install dependencies,
-		# 			run: '.\.github\workflows\scripts\win\install-deps.bat x64'
+		# 			run: 'vcpkg install',
+		# 			working-directory: proj/vs2017
 		# 		},
 		# 		{
 		# 			name: build and unit test,
