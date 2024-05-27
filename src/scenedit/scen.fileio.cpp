@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iomanip>
 #include <boost/filesystem/operations.hpp>
+#include <boost/filesystem.hpp>
 #include "scen.fileio.hpp"
 #include "scen.keydlgs.hpp"
 #include "gfx/gfxsheets.hpp"

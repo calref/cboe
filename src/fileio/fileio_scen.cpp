@@ -9,6 +9,7 @@
 #include "fileio.hpp"
 
 #include <fstream>
+#include <boost/filesystem.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/lexical_cast.hpp>
 
