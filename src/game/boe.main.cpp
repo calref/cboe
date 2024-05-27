@@ -8,7 +8,6 @@
 #include <string>
 #include <memory>
 #include <iostream>
-#include <iomanip>
 #include <ctime>
 #include <sstream>
 #include "boe.graphics.hpp"
@@ -220,12 +219,19 @@ static void init_ui() {
 	init_buttons();
 }
 
-static bool recording = false;
-static bool replaying = false;
+// Input recording system
+
+#include <ctime>
+#include <iomanip>
+
+bool recording = false;
+bool replaying = false;
+
 using namespace ticpp;
-static Document log_document;
-static std::string log_file;
-static bool init_action_log(std::string command, std::string file) {
+Document log_document;
+std::string log_file;
+
+bool init_action_log(std::string command, std::string file) {
 	if (command == "record") {
 		// Get a time stamp
 		std::time_t t = time(nullptr);
@@ -257,7 +263,7 @@ static bool init_action_log(std::string command, std::string file) {
 	return false;
 }
 
-static void record_action(std::string action_type, std::string inner_text) {
+void record_action(std::string action_type, std::string inner_text) {
 	Element* root = log_document.FirstChildElement();
 	Element next_action(action_type);
 	Text action_text(inner_text);
@@ -266,7 +272,7 @@ static void record_action(std::string action_type, std::string inner_text) {
 	log_document.SaveFile(log_file);
 }
 
-static Element* pop_next_action(std::string expected_action_type="") {
+Element* pop_next_action(std::string expected_action_type) {
 	Element* root = log_document.FirstChildElement();
 	Element* next_action = root->FirstChildElement();
 	
