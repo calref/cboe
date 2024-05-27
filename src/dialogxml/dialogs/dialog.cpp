@@ -407,7 +407,6 @@ void cDialog::loadFromFile(const DialogDefn& file){
 	dialogNotToast = true;
 	if(bg == BG_DARK) defTextClr = sf::Color::White;
 	// now calculate window rect
-	winRect = rectangle();
 	recalcRect();
 	currentFocus = "";
 	for(ctrlIter iter = controls.begin(); iter != controls.end(); iter++){
@@ -428,6 +427,7 @@ void cDialog::loadFromFile(const DialogDefn& file){
 
 void cDialog::recalcRect(){
 	bool haveRel = false;
+	winRect = rectangle();
 	for(ctrlIter iter = controls.begin(); iter != controls.end(); iter++) {
 		using namespace std::placeholders;
 		if(auto container = dynamic_cast<cContainer*>(iter->second))
@@ -442,18 +442,23 @@ void cDialog::recalcRect(){
 	}
 	winRect.right += 6;
 	winRect.bottom += 6;
-	if(!haveRel) return;
-	// Resolve any remaining relative positions
-	// Controls placed relative to the dialog's edges can go off the edge of the dialog
-	for(ctrlIter iter = controls.begin(); iter != controls.end(); iter++) {
-		location pos = iter->second->getBounds().topLeft();
-		if(iter->second->horz == POS_REL_NEG)
-			pos.x = winRect.right - pos.x;
-		if(iter->second->vert == POS_REL_NEG)
-			pos.y = winRect.bottom - pos.y;
-		iter->second->horz = iter->second->vert = POS_ABS;
-		iter->second->relocate(pos);
+	if(haveRel) {
+		// Resolve any remaining relative positions
+		// Controls placed relative to the dialog's edges can go off the edge of the dialog
+		for(ctrlIter iter = controls.begin(); iter != controls.end(); iter++) {
+			location pos = iter->second->getBounds().topLeft();
+			if(iter->second->horz == POS_REL_NEG)
+				pos.x = winRect.right - pos.x;
+			if(iter->second->vert == POS_REL_NEG)
+				pos.y = winRect.bottom - pos.y;
+			iter->second->horz = iter->second->vert = POS_ABS;
+			iter->second->relocate(pos);
+		}
 	}
+
+	double ui_scale = get_float_pref("UIScale", 1.0);
+	winRect.right *= ui_scale;
+	winRect.bottom *= ui_scale;
 }
 
 void cDialog::init(){
@@ -572,6 +577,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 	static cKey pendingKey = {true};
 	std::string itemHit = "";
 	location where;
+	double ui_scale = get_float_pref("UIScale", 1.0);
 	
 	if(kb.handleModifier(currentEvent)) return;
 
@@ -682,7 +688,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 			if(kb.isMetaPressed()) key.mod += mod_ctrl;
 			if(kb.isAltPressed()) key.mod += mod_alt;
 			if(kb.isShiftPressed()) key.mod += mod_shift;
-			where = {currentEvent.mouseButton.x, currentEvent.mouseButton.y};
+			where = {currentEvent.mouseButton.x / ui_scale, currentEvent.mouseButton.y / ui_scale};
 			process_click(where, key.mod);
 			break;
 		default: // To silence warning of unhandled enum values
@@ -1042,6 +1048,12 @@ void cDialog::draw(){
 		cPict::advanceAnim();
 		animTimer.restart();
 	}
+	
+	// Scale dialogs:
+	double ui_scale = get_float_pref("UIScale", 1.0);
+	sf::View view = win.getDefaultView();
+	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
+	win.setView(view);
 	
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
