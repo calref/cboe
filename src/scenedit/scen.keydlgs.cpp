@@ -4,6 +4,7 @@
 #include <map>
 #include <numeric>
 #include <boost/lexical_cast.hpp>
+#include <boost/filesystem.hpp>
 #include "scen.global.hpp"
 #include "scenario/scenario.hpp"
 #include "gfx/gfxsheets.hpp"

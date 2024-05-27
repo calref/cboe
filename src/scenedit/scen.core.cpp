@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include <boost/lexical_cast.hpp>
+#include <boost/filesystem.hpp>
 #include "scen.global.hpp"
 #include "scenario/scenario.hpp"
 #include "scenario/town.hpp"
