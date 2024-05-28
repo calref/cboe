@@ -1,18 +1,18 @@
 {
     "builtin-baseline": "cbf4a6641528cee6f172328984576f51698de726",
     "dependencies": [
-        "zlib",
-        "sfml",
-        "opengl",
-        "boost-any",
-        "boost-dynamic-bitset",
-        "boost-ptr-container",
-        "boost-core",
-        "boost-filesystem",
-        "boost-system",
-        "boost-date-time",
-        "boost-chrono",
-        "boost-math",
-        "boost-spirit"
+        "zlib:x86-windows",
+        "sfml:x86-windows",
+        "opengl:x86-windows",
+        "boost-any:x86-windows",
+        "boost-dynamic-bitset:x86-windows",
+        "boost-ptr-container:x86-windows",
+        "boost-core:x86-windows",
+        "boost-filesystem:x86-windows",
+        "boost-system:x86-windows",
+        "boost-date-time:x86-windows",
+        "boost-chrono:x86-windows",
+        "boost-math:x86-windows",
+        "boost-spirit:x86-windows"
     ]
 }
