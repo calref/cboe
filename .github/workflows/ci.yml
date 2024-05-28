@@ -63,7 +63,7 @@
 			]
 		},
 		win-vs32: {
-			runs-on: windows-2019,
+			runs-on: windows-2022,
 			steps: [
 				{
 					name: checkout,
@@ -81,7 +81,7 @@
 			]
 		},
 		win-vs64: {
-			runs-on: windows-2019,
+			runs-on: windows-2022,
 			steps: [
 				{
 					name: checkout,
@@ -103,7 +103,7 @@
 			]
 		},
 		win-scons: {
-			runs-on: windows-2019,
+			runs-on: windows-2022,
 			steps: [
 				{
 					name: checkout,
@@ -125,7 +125,7 @@
 			]
 		},
 		# win-mingw: {
-		# 	runs-on: windows-2019,
+		# 	runs-on: windows-2022,
 		# 	steps: [
 		# 		{
 		# 			name: checkout,
