@@ -1,4 +1,5 @@
 {
+    "builtin-baseline": "007aaced1a9d3245e28a2ba9395dca88ea890db1",
     "dependencies": [
         "zlib",
         "sfml",
@@ -15,15 +16,15 @@
         "boost-spirit"
     ],
     "overrides": [
-        { "name": "boost-any", "version": "1.76" },
-        { "name": "boost-dynamic-bitset", "version": "1.76" },
-        { "name": "boost-ptr-container", "version": "1.76" },
-        { "name": "boost-core", "version": "1.76" },
-        { "name": "boost-filesystem", "version": "1.76" },
-        { "name": "boost-system", "version": "1.76" },
-        { "name": "boost-date-time", "version": "1.76" },
-        { "name": "boost-chrono", "version": "1.76" },
-        { "name": "boost-math", "version": "1.76" },
-        { "name": "boost-spirit", "version": "1.76" }
+        { "name": "boost-any", "version": "1.76.0" },
+        { "name": "boost-dynamic-bitset", "version": "1.76.0" },
+        { "name": "boost-ptr-container", "version": "1.76.0" },
+        { "name": "boost-core", "version": "1.76.0" },
+        { "name": "boost-filesystem", "version": "1.76.0" },
+        { "name": "boost-system", "version": "1.76.0" },
+        { "name": "boost-date-time", "version": "1.76.0" },
+        { "name": "boost-chrono", "version": "1.76.0" },
+        { "name": "boost-math", "version": "1.76.0" },
+        { "name": "boost-spirit", "version": "1.76.0" }
     ]
 }
