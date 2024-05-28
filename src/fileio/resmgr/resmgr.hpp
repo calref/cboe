@@ -15,6 +15,7 @@
 #include <unordered_map>
 #include <memory>
 #include <sstream>
+#include <vector>
 
 namespace ResMgr {
 	namespace fs = boost::filesystem;
