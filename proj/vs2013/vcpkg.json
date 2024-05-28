@@ -1,0 +1,29 @@
+{
+    "dependencies": [
+        "zlib",
+        "sfml",
+        "opengl",
+        "boost-any",
+        "boost-dynamic-bitset",
+        "boost-ptr-container",
+        "boost-core",
+        "boost-filesystem",
+        "boost-system",
+        "boost-date-time",
+        "boost-chrono",
+        "boost-math",
+        "boost-spirit"
+    ],
+    "overrides": [
+        { "name": "boost-any", "version": "1.76" },
+        { "name": "boost-dynamic-bitset", "version": "1.76" },
+        { "name": "boost-ptr-container", "version": "1.76" },
+        { "name": "boost-core", "version": "1.76" },
+        { "name": "boost-filesystem", "version": "1.76" },
+        { "name": "boost-system", "version": "1.76" },
+        { "name": "boost-date-time", "version": "1.76" },
+        { "name": "boost-chrono", "version": "1.76" },
+        { "name": "boost-math", "version": "1.76" },
+        { "name": "boost-spirit", "version": "1.76" }
+    ]
+}
