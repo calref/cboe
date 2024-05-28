@@ -54,7 +54,7 @@
 				},
 				{
 					name: install dependencies,
-					run: brew install scons SFML Boost
+					run: brew install scons SFML Boost@1.76
 				},
 				{
 					name: build and unit test,
