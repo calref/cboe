@@ -24,7 +24,7 @@
 				},
 				{
 					name: install Boost,
-					run: brew install Boost
+					run: brew install Boost@1.76
 				},
 				{
 					name: install SFML,
