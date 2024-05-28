@@ -1,5 +1,5 @@
 {
-    "builtin-baseline": "cbf4a6641528cee6f172328984576f51698de726",
+    "builtin-baseline": "bcf3d00d2116056fda0ce47615f6074ffecb7524",
     "dependencies": [
         "zlib",
         "sfml",
