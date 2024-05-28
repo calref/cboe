@@ -24,7 +24,7 @@
 				},
 				{
 					name: install Boost,
-					run: brew install Boost@1.76
+					run: brew install Boost
 				},
 				{
 					name: install SFML,
@@ -54,7 +54,7 @@
 				},
 				{
 					name: install dependencies,
-					run: brew install scons SFML Boost@1.76
+					run: brew install scons SFML Boost
 				},
 				{
 					name: build and unit test,
@@ -72,8 +72,7 @@
 				},
 				{
 					name: install dependencies,
-					run: 'vcpkg install',
-					working-directory: 'proj/vs2013'
+					run: '.\.github\workflows\scripts\win\install-deps.bat x86'
 				},
 				{
 					name: build,
@@ -91,8 +90,7 @@
 				},
 				{
 					name: install dependencies,
-					run: 'vcpkg install',
-					working-directory: 'proj/vs2017'
+					run: '.\.github\workflows\scripts\win\install-deps.bat x64'
 				},
 				{
 					name: build,
@@ -118,7 +116,7 @@
 				},
 				{
 					name: install dependencies,
-					run: 'vcpkg install'
+					run: '.\.github\workflows\scripts\win\install-deps.bat x64'
 				},
 				{
 					name: build and unit test,
