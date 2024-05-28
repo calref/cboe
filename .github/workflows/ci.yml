@@ -18,6 +18,10 @@
 			},
 			steps: [
 				{
+					name: print Xcode version,
+					run: ls /Applications
+				},
+				{
 					name: checkout,
 					uses: actions/checkout@v2,
 					with: { submodules: true }
