@@ -181,7 +181,7 @@
 		# 	]
 		# },
 		linux: {
-			runs-on: ubuntu-20.04,
+			runs-on: ubuntu-22.04,
 			steps: [
 				{
 					name: checkout,
@@ -190,7 +190,7 @@
 				},
 				{
 					name: install dependencies,
-					run: 'sudo apt-get install scons libxml2-utils zlib1g libsfml-dev libboost-all-dev zenity'
+					run: 'sudo apt-get update && sudo apt-get install scons libxml2-utils zlib1g libsfml-dev libboost-all-dev zenity'
 				},
 				{
 					name: install TGUI,
