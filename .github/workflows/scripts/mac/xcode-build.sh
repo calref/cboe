@@ -2,7 +2,7 @@
 
 set -o pipefail
 
-xcodebuild ARCHS=x86_64 -project proj/xc12/BoE.xcodeproj -alltargets -configuration Release |
+xcodebuild ARCHS=x86_64 -project proj/xc$1/BoE.xcodeproj -alltargets -configuration Release |
     tee build.log |
     xcpretty --color
 
