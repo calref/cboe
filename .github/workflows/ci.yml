@@ -72,7 +72,7 @@
 				},
 				{
 					name: install dependencies,
-					run: 'vcpkg x-update-baseline --add-initial-baseline && vcpkg install',
+					run: 'vcpkg install',
 					working-directory: 'proj/vs2013'
 				},
 				{
@@ -91,7 +91,7 @@
 				},
 				{
 					name: install dependencies,
-					run: 'vcpkg x-update-baseline --add-initial-baseline && vcpkg install',
+					run: 'vcpkg install',
 					working-directory: 'proj/vs2017'
 				},
 				{
@@ -118,7 +118,7 @@
 				},
 				{
 					name: install dependencies,
-					run: 'vcpkg x-update-baseline --add-initial-baseline && vcpkg install'
+					run: 'vcpkg install'
 				},
 				{
 					name: build and unit test,
