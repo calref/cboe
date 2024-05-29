@@ -72,7 +72,7 @@
 				},
 				{
 					name: install dependencies,
-					run: '.\.github\workflows\scripts\win\install-deps.bat x86',
+					run: '${{ github.workspace }}\.github\workflows\scripts\win\install-deps.bat x86',
 					working-directory: proj/vs2017
 				},
 				{
@@ -91,7 +91,7 @@
 				},
 				{
 					name: install dependencies,
-					run: '.\.github\workflows\scripts\win\install-deps.bat x64',
+					run: '${{ github.workspace }}\.github\workflows\scripts\win\install-deps.bat x64',
 					working-directory: proj/vs2017
 				},
 				{
@@ -118,7 +118,7 @@
 				},
 				{
 					name: install dependencies,
-					run: '.\.github\workflows\scripts\win\install-deps.bat x64',
+					run: '${{ github.workspace }}\.github\workflows\scripts\win\install-deps.bat x64',
 					working-directory: proj/vs2017
 				},
 				{
