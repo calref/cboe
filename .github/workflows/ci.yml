@@ -124,12 +124,12 @@
 				{
 					name: debug print vcpkg root directory,
 					run: 'dir',
-					working-directory: C:/vcpkg
+					working-directory: 'C:/vcpkg'
 				},
 				{
 					name: debug print vcpkg manifest install directories,
 					run: 'dir',
-					working-directory: C:/vcpkg/vcpkg_installed
+					working-directory: 'C:/vcpkg/vcpkg_installed'
 				},
 				{
 					name: build and unit test,
