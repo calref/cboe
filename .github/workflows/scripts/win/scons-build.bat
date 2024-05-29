@@ -5,4 +5,4 @@ for /f "usebackq tokens=*" %%i in (`vswhere -latest -products * -requires Micros
   call "%%i" x86_amd64
 )
 
-scons
+scons -Q --debug=findlibs
