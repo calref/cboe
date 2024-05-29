@@ -211,7 +211,7 @@ if platform == 'darwin':
 
 	# pretty sketchy, but should point to your boost install
 	if subprocess.call(['which', '-s', 'brew']) == 0: # HomeBrew
-		brew_boost_version = '1.58.0'
+		brew_boost_version = '1.85.0'
 		env.Append(
 			LIBPATH=['/usr/local/Cellar/boost/'+brew_boost_version+'/lib'],
 			CPPPATH=['/usr/local/Cellar/boost/'+brew_boost_version+'/include'])
