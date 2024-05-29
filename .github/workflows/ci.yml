@@ -112,10 +112,10 @@
 					uses: actions/checkout@v2,
 					with: { submodules: true }
 				},
-				#{
-				#	name: install build dependencies,
-				#	run: 'vcpkg install libxml2 && pip install scons'
-				#},
+				{
+					name: install build dependencies,
+					run: 'vcpkg install libxml2 && pip install scons'
+				},
 				{
 					name: install dependencies,
 					run: '${{ github.workspace }}\.github\workflows\scripts\win\install-deps.bat x64',
