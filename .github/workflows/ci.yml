@@ -127,9 +127,9 @@
 					working-directory: 'C:/vcpkg'
 				},
 				{
-					name: debug print vcpkg manifest install directories,
+					name: debug print vcpkg package install directories,
 					run: 'dir',
-					working-directory: 'C:/vcpkg/installed'
+					working-directory: 'C:/vcpkg/packages'
 				},
 				{
 					name: debug print vcpkg manifest install directories,
