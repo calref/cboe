@@ -72,8 +72,8 @@
 				},
 				{
 					name: install dependencies,
-					run: 'vcpkg install',
-					working-directory: proj/vs2013
+					run: '.\.github\workflows\scripts\win\install-deps.bat x86',
+					working-directory: proj/vs2017
 				},
 				{
 					name: build,
@@ -91,7 +91,7 @@
 				},
 				{
 					name: install dependencies,
-					run: 'vcpkg install',
+					run: '.\.github\workflows\scripts\win\install-deps.bat x64',
 					working-directory: proj/vs2017
 				},
 				{
