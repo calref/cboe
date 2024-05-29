@@ -113,6 +113,10 @@
 					with: { submodules: true }
 				},
 				{
+					name: build and unit test,
+					run: '.\.github\workflows\scripts\win\scons-build.bat'
+				},
+				{
 					name: install build dependencies,
 					run: 'vcpkg install libxml2 && pip install scons'
 				},
@@ -120,10 +124,6 @@
 					name: install dependencies,
 					run: '${{ github.workspace }}\.github\workflows\scripts\win\install-deps.bat x64',
 					working-directory: proj/vs2017
-				},
-				{
-					name: build and unit test,
-					run: '.\.github\workflows\scripts\win\scons-build.bat'
 				}
 			]
 		},
