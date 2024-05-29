@@ -158,10 +158,13 @@ if platform == "darwin":
 					break
 elif platform == "win32":
 	if 'msvc' in env['TOOLS']:
+		print("C:/vcpkg/packages/**_x" + env['bits'] + "-windows")
+		libpath = [("C:\Program Files (x86)\Microsoft Visual Studio " + env['MSVC_VERSION'] + "\VC\lib")] + Glob("C:/vcpkg/packages/**_x" + env['bits'] + "-windows") + Glob(os.environ['HOME'] + "/vcpkg/packages/**_x" + env['bits'] + "-windows")
+		print(libpath)
 		env.Append(
 			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup','/MACHINE:X86'],
 			CXXFLAGS=['/EHsc','/MD','/FIglobal.hpp'],
-			LIBPATH=[("C:\Program Files (x86)\Microsoft Visual Studio " + env['MSVC_VERSION'] + "\VC\lib"), "C:/vcpkg/packages"],
+			LIBPATH=[("C:\Program Files (x86)\Microsoft Visual Studio " + env['MSVC_VERSION'] + "\VC\lib")] + Glob("C:/vcpkg/packages/**_x" + env['bits'] + "-windows") + Glob(os.environ['HOME'] + "/vcpkg/packages/**_x" + env['bits'] + "-windows"),
 			LIBS=Split("""
 				kernel32
 				user32
