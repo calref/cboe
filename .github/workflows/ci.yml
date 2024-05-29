@@ -122,6 +122,10 @@
 					working-directory: proj/vs2017
 				},
 				{
+					name: make sure scons can find dependencies,
+					run: vcpkg integrate install
+				},
+				{
 					name: build and unit test,
 					run: '.\.github\workflows\scripts\win\scons-build.bat'
 				}
