@@ -1,18 +1,6 @@
 {
     "builtin-baseline": "bcf3d00d2116056fda0ce47615f6074ffecb7524",
     "dependencies": [
-        "zlib",
-        "sfml",
-        "opengl",
-        "boost-any",
-        "boost-dynamic-bitset",
-        "boost-ptr-container",
-        "boost-core",
-        "boost-filesystem",
-        "boost-system",
-        "boost-date-time",
-        "boost-chrono",
-        "boost-math",
-        "boost-spirit"
+        "zlib"
     ]
 }

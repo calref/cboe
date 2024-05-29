@@ -11,99 +11,99 @@
 	},
 
 	jobs: {
-		macos-xcode: {
-			runs-on: macos-12,
-			env: {
-				DEVELOPER_DIR: /Applications/Xcode_13.4.app/Contents/Developer
-			},
-			steps: [
-				{
-					name: checkout,
-					uses: actions/checkout@v2,
-					with: { submodules: true }
-				},
-				{
-					name: install Boost,
-					run: brew install Boost
-				},
-				{
-					name: install SFML,
-					run: ./.github/workflows/scripts/mac/install-sfml.sh
-				},
-				{
-					name: patch Xcode project,
-					run: ./.github/workflows/scripts/mac/fix-xcode-proj.sh
-				},
-				{
-					name: build,
-					run: ./.github/workflows/scripts/mac/xcode-build.sh
-				},
-				{
-					name: unit tests,
-					run: ./.github/workflows/scripts/mac/run-tests.sh
-				}
-			]
-		},
-		macos-scons: {
-			runs-on: macos-12,
-			steps:  [
-				{
-					name: checkout,
-					uses: actions/checkout@v2,
-				with: { submodules: true }
-				},
-				{
-					name: install dependencies,
-					run: brew install scons SFML Boost
-				},
-				{
-					name: build and unit test,
-					run: ./.github/workflows/scripts/mac/scons-build.sh
-				}
-			]
-		},
-		win-vs32: {
-			runs-on: windows-2019,
-			steps: [
-				{
-					name: checkout,
-					uses: actions/checkout@v2,
-					with: { submodules: true }
-				},
-				{
-					name: install dependencies,
-					run: '${{ github.workspace }}\.github\workflows\scripts\win\install-deps.bat x86',
-					working-directory: proj/vs2017
-				},
-				{
-					name: build,
-					run: '.\.github\workflows\scripts\win\msvc-build.bat x86'
-				}
-			]
-		},
-		win-vs64: {
-			runs-on: windows-2019,
-			steps: [
-				{
-					name: checkout,
-					uses: actions/checkout@v2,
-					with: { submodules: true }
-				},
-				{
-					name: install dependencies,
-					run: '${{ github.workspace }}\.github\workflows\scripts\win\install-deps.bat x64',
-					working-directory: proj/vs2017
-				},
-				{
-					name: build,
-					run: '.\.github\workflows\scripts\win\msvc-build.bat x64'
-				},
-				{
-					name: unit tests,
-					run: '.\.github\workflows\scripts\win\run-tests.bat'
-				}
-			]
-		},
+#		macos-xcode: {
+#			runs-on: macos-12,
+#			env: {
+#				DEVELOPER_DIR: /Applications/Xcode_13.4.app/Contents/Developer
+#			},
+#			steps: [
+#				{
+#					name: checkout,
+#					uses: actions/checkout@v2,
+#					with: { submodules: true }
+#				},
+#				{
+#					name: install Boost,
+#					run: brew install Boost
+#				},
+#				{
+#					name: install SFML,
+#					run: ./.github/workflows/scripts/mac/install-sfml.sh
+#				},
+#				{
+#					name: patch Xcode project,
+#					run: ./.github/workflows/scripts/mac/fix-xcode-proj.sh
+#				},
+#				{
+#					name: build,
+#					run: ./.github/workflows/scripts/mac/xcode-build.sh
+#				},
+#				{
+#					name: unit tests,
+#					run: ./.github/workflows/scripts/mac/run-tests.sh
+#				}
+#			]
+#		},
+#		macos-scons: {
+#			runs-on: macos-12,
+#			steps:  [
+#				{
+#					name: checkout,
+#					uses: actions/checkout@v2,
+#				with: { submodules: true }
+#				},
+#				{
+#					name: install dependencies,
+#					run: brew install scons SFML Boost
+#				},
+#				{
+#					name: build and unit test,
+#					run: ./.github/workflows/scripts/mac/scons-build.sh
+#				}
+#			]
+#		},
+#		win-vs32: {
+#			runs-on: windows-2019,
+#			steps: [
+#				{
+#					name: checkout,
+#					uses: actions/checkout@v2,
+#					with: { submodules: true }
+#				},
+#				{
+#					name: install dependencies,
+#					run: '${{ github.workspace }}\.github\workflows\scripts\win\install-deps.bat x86',
+#					working-directory: proj/vs2017
+#				},
+#				{
+#					name: build,
+#					run: '.\.github\workflows\scripts\win\msvc-build.bat x86'
+#				}
+#			]
+#		},
+#		win-vs64: {
+#			runs-on: windows-2019,
+#			steps: [
+#				{
+#					name: checkout,
+#					uses: actions/checkout@v2,
+#					with: { submodules: true }
+#				},
+#				{
+#					name: install dependencies,
+#					run: '${{ github.workspace }}\.github\workflows\scripts\win\install-deps.bat x64',
+#					working-directory: proj/vs2017
+#				},
+#				{
+#					name: build,
+#					run: '.\.github\workflows\scripts\win\msvc-build.bat x64'
+#				},
+#				{
+#					name: unit tests,
+#					run: '.\.github\workflows\scripts\win\run-tests.bat'
+#				}
+#			]
+#		},
 		win-scons: {
 			runs-on: windows-2019,
 			steps: [
@@ -122,8 +122,14 @@
 					working-directory: proj/vs2017
 				},
 				{
-					name: make sure scons can find dependencies,
-					run: vcpkg integrate install
+					name: debug print vcpkg root directory,
+					run: 'dir',
+					working-directory: C:/vcpkg
+				},
+				{
+					name: debug print vcpkg manifest install directories,
+					run: 'dir',
+					working-directory: C:/vcpkg/vcpkg_installed
 				},
 				{
 					name: build and unit test,
@@ -154,27 +160,27 @@
 		# 		}
 		# 	]
 		# },
-		linux: {
-			runs-on: ubuntu-22.04,
-			steps: [
-				{
-					name: checkout,
-					uses: actions/checkout@v2,
-					with: { submodules: true }
-				},
-				{
-					name: install dependencies,
-					run: 'sudo apt-get install scons libxml2-utils zlib1g libsfml-dev libboost-all-dev zenity'
-				},
-				{
-					name: install TGUI,
-					run: 'sudo ./.github/workflows/scripts/linux/install-tgui.sh'
-				},
-				{
-					name: build and unit test,
-					run: CCFLAGS=-fdiagnostics-color=always scons
-				}
-			],
-		}
+#		linux: {
+#			runs-on: ubuntu-22.04,
+#			steps: [
+#				{
+#					name: checkout,
+#					uses: actions/checkout@v2,
+#					with: { submodules: true }
+#				},
+#				{
+#					name: install dependencies,
+#					run: 'sudo apt-get install scons libxml2-utils zlib1g libsfml-dev libboost-all-dev zenity'
+#				},
+#				{
+#					name: install TGUI,
+#					run: 'sudo ./.github/workflows/scripts/linux/install-tgui.sh'
+#				},
+#				{
+#					name: build and unit test,
+#					run: CCFLAGS=-fdiagnostics-color=always scons
+#				}
+#			],
+#		}
 	}
 }
