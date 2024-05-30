@@ -152,10 +152,7 @@
 					working-directory: proj/vs2017
 				},
 				{
-					run: "dir C:/vcpkg/installed/x64-windows/lib"
-				},
-				{
-					run: "dir C:/vcpkg/installed/x64-windows/include"
+					run: "dir C:/vcpkg/packages/boost-system_x64-windows/lib"
 				},
 				{
 					name: build and unit test,
