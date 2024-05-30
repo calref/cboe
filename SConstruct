@@ -158,12 +158,18 @@ if platform == "darwin":
 					break
 elif platform == "win32":
 	if 'msvc' in env['TOOLS']:
-		vcpkg_prefix = (os.environ['HOME'] if 'HOME' in os.environ else 'C:') + f'/vcpkg/installed/x{env["bits"]}-windows'
+		vcpkg_prefix = (os.environ['HOME'] if 'HOME' in os.environ else 'C:') + '/vcpkg/'
+		vcpkg_installed = vcpkg_prefix + 'installed/x{env["bits"]}-windows'
+		vcpkg_other_packages = Glob(vcpkg_prefix + f'packages/**x{env["bits"]}-windows')
+		vcpkg_other_includes = [d.get_abspath() + '\\include' for d in vcpkg_other_packages]
+		vcpkg_other_libs = [d.get_abspath() + '\\lib' for d in vcpkg_other_packages]
+		include_paths=[vcpkg_installed + '/include'] + vcpkg_other_includes
 		env.Append(
 			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup',f'/MACHINE:X{env["bits"]}'],
 			CXXFLAGS=['/EHsc','/MD','/FIglobal.hpp'],
-			INCLUDEPATH=vcpkg_prefix + '/include',
-			LIBPATH=vcpkg_prefix + '/lib',
+			CPPPATH=include_paths,
+			INCLUDEPATH=include_paths,
+			LIBPATH=[vcpkg_installed + '/lib'] + vcpkg_other_libs,
 			LIBS=Split("""
 				kernel32
 				user32
@@ -282,7 +288,7 @@ if not env.GetOption('clean'):
 			print("  If you're sure it's installed, try passing INCLUDEPATH=...")
 			Exit(1)
 
-	boost_versions = ['-1_54', '-1_55', '-1_56', '-1_57', '-1_58'] # This is a bit of a hack. :(
+	boost_versions = ['-1_84'] # This is a bit of a hack. :(
 	bundled_libs = []
 
 
