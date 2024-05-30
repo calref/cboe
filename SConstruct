@@ -321,6 +321,7 @@ if not env.GetOption('clean'):
 
 	boost_versions = ['-1_84'] # This is a bit of a hack. :(
 	msvc_versions = ['140', '141', '142', '143'] # This is a new bit of a hack. :(
+	suffixes = ['-mt', '-mt-x64', '-mt-x32']
 	bundled_libs = []
 
 
@@ -330,8 +331,8 @@ if not env.GetOption('clean'):
 	check_header('boost/any.hpp', 'Boost.Any')
 	check_header('boost/math_fwd.hpp', 'Boost.Math')
 	check_header('boost/spirit/include/classic.hpp', 'Boost.Spirit.Classic')
-	check_lib('boost_system', 'Boost.System', ['-mt'], boost_versions, msvc_versions)
-	check_lib('boost_filesystem', 'Boost.Filesystem', ['-mt'], boost_versions, msvc_versions)
+	check_lib('boost_system', 'Boost.System', suffixes, boost_versions, msvc_versions)
+	check_lib('boost_filesystem', 'Boost.Filesystem', suffixes, boost_versions, msvc_versions)
 	check_lib('sfml-system', 'SFML-system')
 	check_lib('sfml-window', 'SFML-window')
 	check_lib('sfml-audio', 'SFML-audio')
