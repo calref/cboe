@@ -152,6 +152,12 @@
 					working-directory: proj/vs2017
 				},
 				{
+					run: "dir C:/vcpkg/installed/x64-windows/lib"
+				},
+				{
+					run: "dir C:/vcpkg/installed/x64-windows/include"
+				},
+				{
 					name: build and unit test,
 					run: '.\.github\workflows\scripts\win\scons-build.bat'
 				}
