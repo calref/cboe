@@ -160,7 +160,7 @@ elif platform == "win32":
 	if 'msvc' in env['TOOLS']:
 		vcpkg_prefix = (os.environ['HOME'] if 'HOME' in os.environ else 'C:') + f'/vcpkg/installed/x{env["bits"]}-windows'
 		env.Append(
-			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup','/MACHINE:X86'],
+			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup',f'/MACHINE:X{env["bits"]}'],
 			CXXFLAGS=['/EHsc','/MD','/FIglobal.hpp'],
 			INCLUDEPATH=vcpkg_prefix + '/include',
 			LIBPATH=vcpkg_prefix + '/lib',
