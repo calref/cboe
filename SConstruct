@@ -299,6 +299,26 @@ if not env.GetOption('clean'):
 	check_lib('sfml-audio', 'SFML-audio')
 	check_lib('sfml-graphics', 'SFML-graphics')
 
+	# On Linux, build TGUI from the subtree if necessary
+	if platform == 'posix':
+		def check_tgui(conf, second_attempt=False):
+			if not conf.CheckLib('libtgui', language='C++'):
+				if second_attempt:
+					print('TGUI is missing, even after trying to build it!')
+					Exit(1)
+				else:
+					subprocess.call(["cmake", "-D", "TGUI_CXX_STANDARD=14", "-D", "CMAKE_INSTALL_PREFIX=../", "."], cwd="deps/TGUI")
+					subprocess.call(["make"], cwd="deps/TGUI")
+					print('make install')
+					subprocess.call(["make", "install"], cwd="deps/TGUI")
+
+					conf.Finish()
+					env.Append(CPPPATH='deps/include', LIBPATH=['deps/lib', 'deps/lib64'])
+					conf = Configure(env)
+					check_tgui(conf, True)
+		check_tgui(conf)
+
+
 	env = conf.Finish()
 
 env.Append(CPPDEFINES=["TIXML_USE_TICPP"])
