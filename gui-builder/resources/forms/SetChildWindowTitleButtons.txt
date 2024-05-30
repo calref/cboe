@@ -1,0 +1,49 @@
+Renderer.1 {
+    BackgroundColor = #F5F5F5;
+    BackgroundColorDisabled = #E6E6E6;
+    BackgroundColorHover = white;
+    BorderColor = #3C3C3C;
+    BorderColorDisabled = #7D7D7D;
+    BorderColorFocused = #1E1EB4;
+    BorderColorHover = black;
+    Borders = (1, 1, 1, 1);
+    CheckColor = #3C3C3C;
+    CheckColorDisabled = #7D7D7D;
+    CheckColorHover = black;
+    TextColor = #3C3C3C;
+    TextColorDisabled = #7D7D7D;
+    TextColorHover = black;
+    TextDistanceRatio = 0.2;
+    TextureChecked = None;
+    TextureCheckedDisabled = None;
+    TextureCheckedFocused = None;
+    TextureCheckedHover = None;
+    TextureUnchecked = None;
+    TextureUncheckedDisabled = None;
+    TextureUncheckedFocused = None;
+    TextureUncheckedHover = None;
+}
+
+CheckBox.CheckBoxClose {
+    Position = (20, 20);
+    Size = (18, 18);
+    Text = Close;
+    TextSize = 13;
+    Renderer = &1;
+}
+
+CheckBox.CheckBoxMaximize {
+    Position = (20, 50);
+    Size = (18, 18);
+    Text = Maximize;
+    TextSize = 13;
+    Renderer = &1;
+}
+
+CheckBox.CheckBoxMinimize {
+    Position = (20, 80);
+    Size = (18, 18);
+    Text = Minimize;
+    TextSize = 13;
+    Renderer = &1;
+}

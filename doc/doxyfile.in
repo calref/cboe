@@ -1,0 +1,53 @@
+# Doxyfile 1.9.1
+
+PROJECT_NAME           = "TGUI"
+PROJECT_NUMBER         = 0.9-dev
+
+OUTPUT_DIRECTORY       = "@DOXYGEN_OUTPUT_DIR@"
+STRIP_FROM_INC_PATH    = "@DOXYGEN_INPUT_DIR@/include/"
+
+HIDE_UNDOC_MEMBERS     = NO
+HIDE_UNDOC_CLASSES     = NO
+
+GENERATE_TODOLIST      = NO
+GENERATE_TESTLIST      = NO
+GENERATE_BUGLIST       = NO
+GENERATE_DEPRECATEDLIST= YES
+
+INPUT                  = "@DOXYGEN_INPUT_DIR@/include/TGUI" \
+                         "@DOXYGEN_INPUT_DIR@/include/TGUI/Loading" \
+                         "@DOXYGEN_INPUT_DIR@/include/TGUI/Widgets" \
+                         "@DOXYGEN_INPUT_DIR@/include/TGUI/Renderers" \
+                         "@DOXYGEN_INPUT_DIR@/include/TGUI/Backends/SFML/GuiSFML.hpp" \
+                         "@DOXYGEN_INPUT_DIR@/include/TGUI/Backends/SFML/BackendSFML.hpp" \
+                         "@DOXYGEN_INPUT_DIR@/include/TGUI/Backends/SDL/GuiSDL.hpp" \
+                         "@DOXYGEN_INPUT_DIR@/include/TGUI/Backends/SDL/BackendSDL.hpp" \
+                         "@DOXYGEN_INPUT_DIR@/doc/mainpage.hpp"
+
+EXCLUDE_SYMBOLS        = priv \
+                         DataIO \
+                         TextureData \
+                         TextureDataHolder \
+                         GuiContainer \
+                         GuiResources
+
+HTML_HEADER            = "@DOXYGEN_INPUT_DIR@/doc/header.html"
+HTML_FOOTER            = "@DOXYGEN_INPUT_DIR@/doc/footer.html"
+
+HTML_TIMESTAMP         = YES
+
+GENERATE_HTMLHELP      = @DOXYGEN_GENERATE_HTMLHELP@
+CHM_FILE               = ../TGUI.chm
+HHC_LOCATION           = "@DOXYGEN_HHC_PROGRAM@"
+
+GENERATE_LATEX         = NO
+
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = YES
+PREDEFINED             = TGUI_DEPRECATED(x)= \
+                         TGUI_COMPILED_WITH_CPP_VER=20 \
+                         TGUI_HAS_BACKEND_SFML=1 \
+                         TGUI_HAS_BACKEND_SDL=1
+
+HIDE_UNDOC_RELATIONS   = NO

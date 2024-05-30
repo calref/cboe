@@ -1,0 +1,11 @@
+comment: false
+coverage:
+  range: 60...100
+  status:
+    project: off
+    patch: off
+    changes: off
+ignore:
+- tests/.*
+- examples/.*
+- include/TGUI/extlibs/.*
