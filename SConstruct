@@ -225,6 +225,9 @@ if path.exists('deps/lib'):
 	if platform == 'darwin':
 		env.Append(FRAMEWORKPATH=['deps/lib'])
 
+if path.exists('deps/lib64'):
+	env.Append(LIBPATH=['deps/lib64'])
+
 if path.exists('deps/include'):
 	env.Append(CPPPATH=['deps/include'])
 
