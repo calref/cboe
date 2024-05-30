@@ -93,3 +93,6 @@ test/junk/*.map
 oldstructs.txt
 src/tools/gitrev.hpp
 rsrc/**/scenario
+
+# Dependency-generated files
+deps/**/
