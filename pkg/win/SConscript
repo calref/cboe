@@ -4,7 +4,7 @@ import os.path as path
 Import("env platform")
 
 if str(platform) != "win32":
-	print "Error: Building for", str(platform), "but trying to create a Windows installer package"
+	print(f"Error: Building for {platform}, but trying to create a Windows installer package")
 
 env.Depends("data.nsi", ["gen-data.py", "#build/Blades of Exile/data"])
 
