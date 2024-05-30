@@ -229,7 +229,7 @@ if path.exists('deps/lib64'):
 	env.Append(LIBPATH=['deps/lib64'])
 
 if path.exists('deps/include'):
-	env.Append(CPPPATH=['deps/include'])
+	env.Append(CPPPATH=[os.getcwd() + '/deps/include'])
 
 # Include directories
 
@@ -317,7 +317,7 @@ if not env.GetOption('clean'):
 					subprocess.call(["make", "install"], cwd="deps/TGUI")
 
 					env = conf.Finish()
-					env.Append(CPPPATH='deps/include', LIBPATH=['deps/lib', 'deps/lib64'])
+					env.Append(CPPPATH=[os.getcwd() + '/deps/include'], LIBPATH=['deps/lib', 'deps/lib64'])
 					conf = Configure(env)
 					return check_tgui(conf, True)
 		conf = check_tgui(conf)
