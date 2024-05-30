@@ -10,6 +10,14 @@ opts.Add('toolset', "Toolset to pass to the SCons builder", 'default')
 opts.Add(BoolVariable('debug', "Build with debug symbols and no optimization", False))
 opts.Add(EnumVariable('bits', "Build for 32-bit or 64-bit architectures", '32', ('32', '64')))
 
+# Partial build flags -- by default, all targets will be built,
+# but if at least one is specified, ONLY the specified targets will be built
+partial_options = ('true', 'false', 'default')
+opts.Add(EnumVariable('game', 'Build the game', 'default', partial_options))
+opts.Add(EnumVariable('pcedit', 'Build the character editor', 'default', partial_options))
+opts.Add(EnumVariable('scenedit', 'Build the scenario editor', 'default', partial_options))
+opts.Add(EnumVariable('test', 'Build the tests', 'default', partial_options))
+
 # Compiler configuration
 opts.Add("CXX", "C++ compiler")
 opts.Add("CC", "C compiler")
@@ -26,6 +34,21 @@ Help(opts.GenerateHelpText(env))
 platform = env['OS']
 toolset = env['toolset']
 arch = 'x86_64' if (env['bits'] == '64') else 'x86'
+
+# Some kinda gnarly logic required to figure out which targets to build
+possible_targets = ['game', 'pcedit', 'scenedit', 'test']
+# First, eliminate any which are specified NOT to build
+targets = [target for target in possible_targets if env[target] != 'false']
+
+# Then, we will assume the remaining targets should all build by default, UNLESS one
+# or more targets are specified TO build.
+any_specified_targets=False
+for target in targets:
+	if env[target] == 'true':
+		any_specified_targets = True
+
+if any_specified_targets:
+	targets = [target for target in possible_targets if env[target] != 'default']
 
 # Update env based on options
 env.Replace(TARGET_ARCH=arch)
@@ -370,12 +393,7 @@ Export("install_dir party_classes common_sources")
 
 # Programs
 
-SConscript([
-	"build/obj/game/SConscript",
-	"build/obj/pcedit/SConscript",
-	"build/obj/scenedit/SConscript",
-	"build/obj/test/SConscript"
-])
+SConscript([f"build/obj/{target}/SConscript" for target in targets])
 
 # Data files
 
