@@ -69,7 +69,8 @@ The following dependencies are required:
 - ZLib - This is included with the system on the Mac.
 
 For Linux builds, the following additional dependencies are required:
-- [TGUI](https://tgui.eu/) - version 0.9 or later required
+- [TGUI](https://tgui.eu/) - version 0.9, **built with C++14** as shown [here](./.github/workflows/scripts/linux/install-tgui.sh)
+  - or, if cmake is available when you call `scons`, TGUI will be built from source automatically
 - zenity command-line tools
 
 If you are using the Visual Studio toolset, we recommend installing

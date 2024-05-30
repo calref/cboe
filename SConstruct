@@ -221,12 +221,15 @@ if platform == 'darwin':
 # Sometimes it's easier just to copy the dependencies into the repo dir
 # We try to auto-detect this.
 if path.exists('deps/lib'):
-	env.Append(LIBPATH=['deps/lib'])
+	env.Append(LIBPATH=[os.getcwd() + '/deps/lib'])
 	if platform == 'darwin':
-		env.Append(FRAMEWORKPATH=['deps/lib'])
+		env.Append(FRAMEWORKPATH=[os.getcwd() + '/deps/lib'])
+
+if path.exists('deps/lib64'):
+	env.Append(LIBPATH=[os.getcwd() + '/deps/lib64'])
 
 if path.exists('deps/include'):
-	env.Append(CPPPATH=['deps/include'])
+	env.Append(CPPPATH=[os.getcwd() + '/deps/include'])
 
 # Include directories
 
@@ -298,6 +301,28 @@ if not env.GetOption('clean'):
 	check_lib('sfml-window', 'SFML-window')
 	check_lib('sfml-audio', 'SFML-audio')
 	check_lib('sfml-graphics', 'SFML-graphics')
+
+	# On Linux, build TGUI from the subtree if necessary
+	if platform == 'posix':
+		def check_tgui(conf, second_attempt=False):
+			if conf.CheckLib('libtgui', language='C++'):
+				return conf
+			else:
+				if second_attempt:
+					print('TGUI is missing, even after trying to build it!')
+					Exit(1)
+				else:
+					subprocess.call(["git", "submodule", "update", "--init", "deps/TGUI"])
+					subprocess.call(["cmake", "-D", "TGUI_CXX_STANDARD=14", "-D", "CMAKE_INSTALL_PREFIX=../", "."], cwd="deps/TGUI")
+					subprocess.call(["make"], cwd="deps/TGUI")
+					subprocess.call(["make", "install"], cwd="deps/TGUI")
+
+					env = conf.Finish()
+					env.Append(CPPPATH=[os.getcwd() + '/deps/include'], LIBPATH=[os.getcwd() + '/deps/lib', os.getcwd() + '/deps/lib64'])
+					conf = Configure(env)
+					return check_tgui(conf, True)
+		conf = check_tgui(conf)
+
 
 	env = conf.Finish()
 
