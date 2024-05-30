@@ -305,21 +305,22 @@ if not env.GetOption('clean'):
 	# On Linux, build TGUI from the subtree if necessary
 	if platform == 'posix':
 		def check_tgui(conf, second_attempt=False):
-			if not conf.CheckLib('libtgui', language='C++'):
+			if conf.CheckLib('libtgui', language='C++'):
+				return conf
+			else:
 				if second_attempt:
 					print('TGUI is missing, even after trying to build it!')
 					Exit(1)
 				else:
 					subprocess.call(["cmake", "-D", "TGUI_CXX_STANDARD=14", "-D", "CMAKE_INSTALL_PREFIX=../", "."], cwd="deps/TGUI")
 					subprocess.call(["make"], cwd="deps/TGUI")
-					print('make install')
 					subprocess.call(["make", "install"], cwd="deps/TGUI")
 
-					conf.Finish()
+					env = conf.Finish()
 					env.Append(CPPPATH='deps/include', LIBPATH=['deps/lib', 'deps/lib64'])
 					conf = Configure(env)
-					check_tgui(conf, True)
-		check_tgui(conf)
+					return check_tgui(conf, True)
+		conf = check_tgui(conf)
 
 
 	env = conf.Finish()
