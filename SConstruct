@@ -163,7 +163,8 @@ elif platform == "win32":
 		vcpkg_other_packages = Glob(vcpkg_prefix + f'packages/**x{env["bits"]}-windows')
 		vcpkg_other_includes = [d.get_abspath() + '\\include' for d in vcpkg_other_packages]
 		vcpkg_other_libs = [d.get_abspath() + '\\lib' for d in vcpkg_other_packages]
-		include_paths=[vcpkg_installed + '/include'] + vcpkg_other_includes
+		project_includes = ['src/' + dir for dir in filter(lambda dir: os.path.isdir('src/' + dir), os.listdir('src'))]
+		include_paths=[vcpkg_installed + '/include'] + vcpkg_other_includes + project_includes
 		env.Append(
 			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup',f'/MACHINE:X{env["bits"]}'],
 			CXXFLAGS=['/EHsc','/MD','/FIglobal.hpp'],
