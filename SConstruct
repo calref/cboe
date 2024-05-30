@@ -404,12 +404,12 @@ elif platform == "win32":
 					break
 	# Extra: Microsoft redistributable libraries installer
 	if 'msvc' in env["TOOLS"]:
-		if path.exists("dep/VCRedistInstall.exe"):
-			env.Install("build/Blades of Exile/", "dep/VCRedistInstall.exe")
+		if path.exists("deps/VCRedistInstall.exe"):
+			env.Install("build/Blades of Exile/", "deps/VCRedistInstall.exe")
 		else:
 			print("WARNING: Cannot find installer for the MSVC redistributable libraries for your version of Visual Studio.")
 			print("Please download it from Microsoft's website and place it at:")
-			print("      dep/VCRedistInstall.exe")
+			print("      deps/VCRedistInstall.exe")
 			# Create it so its lack doesn't cause makensis to break
 			# (Because the installer is an optional component.)
 			open("build/Blades of Exile/VCRedistInstall.exe", 'w').close()
