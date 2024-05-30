@@ -256,16 +256,17 @@ if not env.GetOption('clean'):
 		print('zlib must be installed!')
 		Exit(1)
 
-	def check_lib(lib, disp, suffixes=[], versions=[]):
-		if platform == "win32" and lib.startswith("boost"):
-			lib = "lib" + lib
+	def check_lib(lib, disp, suffixes=[], versions=[], msvc_versions=[]):
 		if "mingw" in env["TOOLS"] and lib.startswith("sfml"):
 			lib = "lib" + lib
 		possible_names = [lib]
 		if platform == "win32":
 			if 'msvc' in env['TOOLS']:
-				vc_suffix = '-vc' + env['MSVC_VERSION'].replace('.','')
-				possible_names.append(lib + vc_suffix)
+				msvc_versions.append(env['MSVC_VERSION'].replace('.',''))
+				msvc_versions = list(set(msvc_versions))
+				for version in msvc_versions:
+					vc_suffix = '-vc' + version
+					possible_names.append(lib + vc_suffix)
 		n = len(possible_names)
 		for i in range(n):
 			for suff in suffixes:
@@ -289,6 +290,7 @@ if not env.GetOption('clean'):
 			Exit(1)
 
 	boost_versions = ['-1_84'] # This is a bit of a hack. :(
+	msvc_versions = ['140', '141', '142', '143'] # This is a new bit of a hack. :(
 	bundled_libs = []
 
 
@@ -298,8 +300,8 @@ if not env.GetOption('clean'):
 	check_header('boost/any.hpp', 'Boost.Any')
 	check_header('boost/math_fwd.hpp', 'Boost.Math')
 	check_header('boost/spirit/include/classic.hpp', 'Boost.Spirit.Classic')
-	check_lib('boost_system', 'Boost.System', ['-mt'], boost_versions)
-	check_lib('boost_filesystem', 'Boost.Filesystem', ['-mt'], boost_versions)
+	check_lib('boost_system', 'Boost.System', ['-mt'], boost_versions, msvc_versions)
+	check_lib('boost_filesystem', 'Boost.Filesystem', ['-mt'], boost_versions, msvc_versions)
 	check_lib('sfml-system', 'SFML-system')
 	check_lib('sfml-window', 'SFML-window')
 	check_lib('sfml-audio', 'SFML-audio')
