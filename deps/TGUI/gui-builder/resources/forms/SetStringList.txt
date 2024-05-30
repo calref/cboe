@@ -1,0 +1,127 @@
+Renderer.1 {
+    BackgroundColor = #F5F5F5;
+    BackgroundColorDisabled = #E6E6E6;
+    BackgroundColorDown = #EBEBEB;
+    BackgroundColorHover = white;
+    BorderColor = #3C3C3C;
+    BorderColorDisabled = #7D7D7D;
+    BorderColorDown = black;
+    BorderColorFocused = #1E1EB4;
+    BorderColorHover = black;
+    Borders = (1, 1, 1, 1);
+    TextColor = #3C3C3C;
+    TextColorDisabled = #7D7D7D;
+    TextColorDown = black;
+    TextColorHover = black;
+    Texture = None;
+    TextureDisabled = None;
+    TextureDown = None;
+    TextureFocused = None;
+    TextureHover = None;
+}
+
+Renderer.2 {
+    BackgroundColor = #F5F5F5;
+    BackgroundColorDisabled = #E6E6E6;
+    BackgroundColorDown = #EBEBEB;
+    BackgroundColorHover = white;
+    BorderColor = #3C3C3C;
+    BorderColorDisabled = #7D7D7D;
+    BorderColorDown = black;
+    BorderColorFocused = #1E1EB4;
+    BorderColorHover = black;
+    Borders = (1, 1, 1, 1);
+    TextColor = #3C3C3C;
+    TextColorDisabled = #7D7D7D;
+    TextColorDown = black;
+    TextColorHover = black;
+    Texture = None;
+    TextureDisabled = None;
+    TextureDown = None;
+    TextureFocused = None;
+    TextureHover = None;
+}
+
+ListBox.ListBox {
+    ItemHeight = 20;
+    MaximumItems = 0;
+    Position = (10, 10);
+    Size = (300, 162);
+    TextSize = 13;
+
+    Renderer {
+        BackgroundColor = #F5F5F5;
+        BackgroundColorHover = white;
+        BorderColor = black;
+        Borders = (1, 1, 1, 1);
+        Padding = (0, 0, 0, 0);
+        SelectedBackgroundColor = #006EFF;
+        SelectedBackgroundColorHover = #1E96FF;
+        SelectedTextColor = white;
+        TextColor = #3C3C3C;
+        TextColorHover = black;
+        TextureBackground = None;
+    }
+}
+
+Button.BtnRemove {
+    Position = (320, 130);
+    Size = (23, 22);
+    Text = "-";
+    TextSize = 13;
+    Renderer = &2;
+}
+
+EditBox.EditBox {
+    Position = (10, 182);
+    Size = (280, 22);
+    TextSize = 13;
+
+    Renderer {
+        BackgroundColor = #F5F5F5;
+        BackgroundColorDisabled = #E6E6E6;
+        BackgroundColorHover = white;
+        BorderColor = #3C3C3C;
+        BorderColorDisabled = #7D7D7D;
+        BorderColorHover = black;
+        Borders = (1, 1, 1, 1);
+        CaretColor = black;
+        CaretWidth = 1;
+        DefaultTextColor = #A0A0A0;
+        Padding = (0, 0, 0, 0);
+        SelectedTextBackgroundColor = #006EFF;
+        SelectedTextColor = white;
+        TextColor = #3C3C3C;
+        TextColorDisabled = #7D7D7D;
+        Texture = None;
+        TextureDisabled = None;
+        TextureFocused = None;
+        TextureHover = None;
+    }
+}
+
+Button.BtnAdd {
+    Position = (300, 182);
+    Size = (43, 22);
+    Text = Add;
+    TextSize = 13;
+    Renderer = &2;
+}
+
+BitmapButton.BtnArrowUp {
+    Image = "../ArrowUp.png";
+    ImageScaling = 0;
+    Position = (320, 30);
+    Size = (23, 36);
+    TextSize = 13;
+    Renderer = &1;
+}
+
+BitmapButton.BtnArrowDown {
+    Image = "../ArrowDown.png";
+    ImageScaling = 0;
+    Position = (320, 71);
+    Size = (23, 36);
+    TextSize = 13;
+    Renderer = &1;
+}

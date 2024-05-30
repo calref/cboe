@@ -1,0 +1,21 @@
+TextArea.TextArea {
+    HorizontalScrollbarPolicy = Never;
+    MaximumCharacters = 0;
+    Position = (10, 10);
+    Size = (450, 200);
+    Text = "";
+    TextSize = 13;
+
+    Renderer {
+        BackgroundColor = white;
+        BorderColor = black;
+        Borders = (1, 1, 1, 1);
+        CaretColor = black;
+        CaretWidth = 1;
+        Padding = (0, 0, 0, 0);
+        SelectedTextBackgroundColor = #006EFF;
+        SelectedTextColor = white;
+        TextColor = #3C3C3C;
+        TextureBackground = None;
+    }
+}

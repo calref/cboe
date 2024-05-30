@@ -1,0 +1,95 @@
+Renderer.1 {
+    BackgroundColor = #F5F5F5;
+    BackgroundColorDisabled = #E6E6E6;
+    BackgroundColorHover = white;
+    BorderColor = #3C3C3C;
+    BorderColorDisabled = #7D7D7D;
+    BorderColorFocused = #1E1EB4;
+    BorderColorHover = black;
+    Borders = (1, 1, 1, 1);
+    CheckColor = #3C3C3C;
+    CheckColorDisabled = #7D7D7D;
+    CheckColorHover = black;
+    TextColor = #3C3C3C;
+    TextColorDisabled = #7D7D7D;
+    TextColorHover = black;
+    TextDistanceRatio = 0.2;
+    TextureChecked = None;
+    TextureCheckedDisabled = None;
+    TextureCheckedFocused = None;
+    TextureCheckedHover = None;
+    TextureUnchecked = None;
+    TextureUncheckedDisabled = None;
+    TextureUncheckedFocused = None;
+    TextureUncheckedHover = None;
+}
+
+RadioButton.CheckAny {
+    Checked = true;
+    Position = (20, 20);
+    Size = (18, 18);
+    Text = Anything;
+    TextSize = 13;
+    Renderer = &1;
+}
+
+RadioButton.CheckInt {
+    Position = (20, 50);
+    Size = (18, 18);
+    Text = Int;
+    TextSize = 13;
+    Renderer = &1;
+}
+
+RadioButton.CheckUInt {
+    Position = (20, 80);
+    Size = (18, 18);
+    Text = "Unsigned int";
+    TextSize = 13;
+    Renderer = &1;
+}
+
+RadioButton.CheckFloat {
+    Position = (20, 110);
+    Size = (18, 18);
+    Text = Float;
+    TextSize = 13;
+    Renderer = &1;
+}
+
+RadioButton.CheckCustom {
+    Position = (20, 140);
+    Size = (18, 18);
+    Text = Custom;
+    TextSize = 13;
+    Renderer = &1;
+}
+
+EditBox.EditValidator {
+    Position = (20, 170);
+    Size = (150, 22);
+    Text = ".*";
+    TextSize = 13;
+
+    Renderer {
+        BackgroundColor = #F5F5F5;
+        BackgroundColorDisabled = #E6E6E6;
+        BackgroundColorHover = white;
+        BorderColor = #3C3C3C;
+        BorderColorDisabled = #7D7D7D;
+        BorderColorHover = black;
+        Borders = (1, 1, 1, 1);
+        CaretColor = black;
+        CaretWidth = 1;
+        DefaultTextColor = #A0A0A0;
+        Padding = (0, 0, 0, 0);
+        SelectedTextBackgroundColor = #006EFF;
+        SelectedTextColor = white;
+        TextColor = #3C3C3C;
+        TextColorDisabled = #7D7D7D;
+        Texture = None;
+        TextureDisabled = None;
+        TextureFocused = None;
+        TextureHover = None;
+    }
+}

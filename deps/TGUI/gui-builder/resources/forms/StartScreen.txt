@@ -1,0 +1,225 @@
+Renderer.1 {
+    BackgroundColor = transparent;
+    BorderColor = #3C3C3C;
+    Borders = (0, 0, 0, 0);
+    TextColor = #3C3C3C;
+}
+
+Renderer.2 {
+    BackgroundColor = #D7D7D7;
+    BorderColor = black;
+    Borders = (1, 1, 1, 1);
+}
+
+Renderer.3 {
+    BackgroundColor = transparent;
+    BorderColor = #3C3C3C;
+    Borders = (0, 0, 0, 0);
+    TextColor = blue;
+    TextStyle = Underlined;
+}
+
+Panel.MainPanel {
+    Position = ((&.w - w) / 2, (&.h - h) / 2);
+    Size = (720, 500);
+
+    Renderer {
+        BackgroundColor = #E6E6E6;
+        BorderColor = black;
+        Borders = (1, 1, 1, 1);
+    }
+
+    Panel.PnlNewForm {
+        Position = (374, 80);
+        Size = (200, 124);
+        Renderer = &2;
+
+        Label.Widget17 {
+            AutoSize = true;
+            IgnoreMouseEvents = true;
+            Position = ((&.w - w) / 2, 80);
+            ScrollbarPolicy = Never;
+            Size = (161.4, 24);
+            Text = "Create new form";
+            TextSize = 18;
+            Renderer = &1;
+        }
+
+        Picture.Widget36 {
+            IgnoreMouseEvents = true;
+            Position = ((&.w - w) / 2, 22);
+            Size = (48, 48);
+
+            Renderer {
+                Texture = "../NewFile.png";
+                TransparentTexture = false;
+            }
+        }
+    }
+
+    Label.Widget21 {
+        AutoSize = true;
+        Position = (120, 230);
+        ScrollbarPolicy = Never;
+        Size = (102.2, 18);
+        Text = "Recent forms";
+        TextSize = 13;
+
+        Renderer {
+            BackgroundColor = transparent;
+            BorderColor = #3C3C3C;
+            Borders = (0, 0, 0, 0);
+            TextColor = #3C3C3C;
+            TextStyle = Bold;
+        }
+    }
+
+    Picture.BtnDeleteRecentForm1 {
+        Position = (150, 260);
+        Size = (16, 16);
+        Visible = false;
+
+        Renderer {
+            Texture = "../Trash.png";
+            TransparentTexture = false;
+        }
+    }
+
+    Label.LblRecentForm1 {
+        AutoSize = true;
+        Position = (171, 259);
+        ScrollbarPolicy = Never;
+        Size = (56.2, 18);
+        Text = "form.txt";
+        TextSize = 13;
+        Visible = false;
+        Renderer = &3;
+    }
+
+    Label.LblRecentForm2 {
+        AutoSize = true;
+        Position = (171, 289);
+        ScrollbarPolicy = Never;
+        Size = (56.2, 18);
+        Text = "form.txt";
+        TextSize = 13;
+        Visible = false;
+        Renderer = &3;
+    }
+
+    Label.LblRecentForm3 {
+        AutoSize = true;
+        Position = (171, 319);
+        ScrollbarPolicy = Never;
+        Size = (56.2, 18);
+        Text = "form.txt";
+        TextSize = 13;
+        Visible = false;
+        Renderer = &3;
+    }
+
+    Label.LblRecentForm5 {
+        AutoSize = true;
+        Position = (171, 379);
+        ScrollbarPolicy = Never;
+        Size = (56.2, 18);
+        Text = "form.txt";
+        TextSize = 13;
+        Visible = false;
+        Renderer = &3;
+    }
+
+    Label.LblRecentForm4 {
+        AutoSize = true;
+        Position = (171, 349);
+        ScrollbarPolicy = Never;
+        Size = (56.2, 18);
+        Text = "form.txt";
+        TextSize = 13;
+        Visible = false;
+        Renderer = &3;
+    }
+
+    Picture.BtnDeleteRecentForm2 {
+        Position = (150, 290);
+        Size = (16, 16);
+        Visible = false;
+
+        Renderer {
+            Texture = "../Trash.png";
+            TransparentTexture = false;
+        }
+    }
+
+    Picture.BtnDeleteRecentForm3 {
+        Position = (150, 320);
+        Size = (16, 16);
+        Visible = false;
+
+        Renderer {
+            Texture = "../Trash.png";
+            TransparentTexture = false;
+        }
+    }
+
+    Picture.BtnDeleteRecentForm4 {
+        Position = (150, 350);
+        Size = (16, 16);
+        Visible = false;
+
+        Renderer {
+            Texture = "../Trash.png";
+            TransparentTexture = false;
+        }
+    }
+
+    Picture.BtnDeleteRecentForm5 {
+        Position = (150, 380);
+        Size = (16, 16);
+        Visible = false;
+
+        Renderer {
+            Texture = "../Trash.png";
+            TransparentTexture = false;
+        }
+    }
+
+    Label.LblNoRecentFiles {
+        AutoSize = true;
+        Position = (150, 260);
+        ScrollbarPolicy = Never;
+        Size = (95.2, 18);
+        Text = "No recent files";
+        TextSize = 13;
+        Visible = false;
+        Renderer = &1;
+    }
+
+    Panel.PnlLoadForm {
+        Position = (144, 80);
+        Size = (200, 124);
+        Renderer = &2;
+
+        Picture.Widget34 {
+            IgnoreMouseEvents = true;
+            Position = ((&.w - w) / 2, 22);
+            Size = (48, 48);
+
+            Renderer {
+                Texture = "../LoadFile.png";
+                TransparentTexture = false;
+            }
+        }
+
+        Label.Widget35 {
+            AutoSize = true;
+            IgnoreMouseEvents = true;
+            Position = ((&.w - w) / 2, 80);
+            ScrollbarPolicy = Never;
+            Size = (177.4, 24);
+            Text = "Load existing form";
+            TextSize = 18;
+            Renderer = &1;
+        }
+    }
+}
