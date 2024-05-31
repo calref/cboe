@@ -27,6 +27,7 @@
 #include "location.hpp"
 #include <boost/any.hpp>
 #include <boost/iterator/iterator_facade.hpp>
+#include "tools/prefs.hpp"
 
 class cControl;
 class cTextField;
@@ -242,6 +243,7 @@ public:
 	cDialog& operator=(cDialog& other) = delete;
 	cDialog(cDialog& other) = delete;
 private:
+	inline double ui_scale() { return get_float_pref("UIScale", 1.0); };
 	void draw();
 	void handle_events();
 	void handle_one_event(const sf::Event&);
