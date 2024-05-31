@@ -1,6 +1,7 @@
 import os.path as path
 import os
 import subprocess
+import atexit
 
 # Build options
 opts = Variables(None, ARGUMENTS)
@@ -467,3 +468,5 @@ elif platform == "win32" and subprocess.call(['where', '/Q', 'makensis']) == 0:
 
 env.Clean('.', 'build')
 env.Clean('.', Glob('.sconsign.*'))
+if env.GetOption('clean'):
+	atexit.register(lambda: print('If the build fails immediately after cleaning, delete .sconsign.dblite manually and try again.'))
