@@ -248,15 +248,15 @@ if platform == 'darwin':
 # Sometimes it's easier just to copy the dependencies into the repo dir
 # We try to auto-detect this.
 if path.exists('deps/lib'):
-	env.Append(LIBPATH=[os.getcwd() + '/deps/lib'])
+	env.Append(LIBPATH=[path.join(os.getcwd(), 'deps/lib')])
 	if platform == 'darwin':
-		env.Append(FRAMEWORKPATH=[os.getcwd() + '/deps/lib'])
+		env.Append(FRAMEWORKPATH=[path.join(os.getcwd(), 'deps/lib')])
 
 if path.exists('deps/lib64'):
-	env.Append(LIBPATH=[os.getcwd() + '/deps/lib64'])
+	env.Append(LIBPATH=[path.join(os.getcwd(), 'deps/lib64')])
 
 if path.exists('deps/include'):
-	env.Append(CPPPATH=[os.getcwd() + '/deps/include'])
+	env.Append(CPPPATH=[path.join(os.getcwd(), '/deps/include')])
 
 # Include directories
 
@@ -349,7 +349,7 @@ if not env.GetOption('clean'):
 					subprocess.call(["make", "install"], cwd="deps/TGUI")
 
 					env = conf.Finish()
-					env.Append(CPPPATH=[os.getcwd() + '/deps/include'], LIBPATH=[os.getcwd() + '/deps/lib', os.getcwd() + '/deps/lib64'])
+					env.Append(CPPPATH=[path.join(os.getcwd(), 'deps/include')], LIBPATH=[path.join(os.getcwd(), 'deps/lib'), path.join(os.getcwd(), 'deps/lib64')])
 					conf = Configure(env)
 					return check_tgui(conf, True)
 		conf = check_tgui(conf)
