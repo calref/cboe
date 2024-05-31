@@ -1,3 +1,7 @@
 [submodule "deps/Catch2"]
 	path = deps/Catch2
 	url = https://github.com/catchorg/Catch2.git
+[submodule "deps/TGUI"]
+	path = deps/TGUI
+	url = https://github.com/texus/TGUI.git
+	branch = 0.9

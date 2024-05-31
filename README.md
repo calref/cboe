@@ -67,9 +67,11 @@ The following dependencies are required:
   libraries; if you're picky, you can run scons and see it enumerate exactly which
   libraries are needed
 - ZLib - This is included with the system on the Mac.
+- Catch2 - If you want to build the unit tests, make sure to call `git submodule update --init deps/Catch2`.
 
 For Linux builds, the following additional dependencies are required:
-- [TGUI](https://tgui.eu/) - version 0.9 or later required
+- [TGUI](https://tgui.eu/) - version 0.9, **built with C++14** as shown [here](./.github/workflows/scripts/linux/install-tgui.sh)
+  - or, if cmake is available when you call `scons`, TGUI will be built from source automatically
 - zenity command-line tools
 
 If you are using the Visual Studio toolset, we recommend installing

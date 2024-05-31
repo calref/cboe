@@ -1,6 +1,7 @@
 import os.path as path
 import os
 import subprocess
+import atexit
 
 # Build options
 opts = Variables(None, ARGUMENTS)
@@ -9,6 +10,14 @@ opts.Add(EnumVariable('OS', "Target platform", str(Platform()), ('darwin', 'win3
 opts.Add('toolset', "Toolset to pass to the SCons builder", 'default')
 opts.Add(BoolVariable('debug', "Build with debug symbols and no optimization", False))
 opts.Add(EnumVariable('bits', "Build for 32-bit or 64-bit architectures", '32', ('32', '64')))
+
+# Partial build flags -- by default, all targets will be built,
+# but if at least one is specified, ONLY the specified targets will be built
+partial_options = ('true', 'false', 'default')
+opts.Add(EnumVariable('game', 'Build the game', 'default', partial_options))
+opts.Add(EnumVariable('pcedit', 'Build the character editor', 'default', partial_options))
+opts.Add(EnumVariable('scenedit', 'Build the scenario editor', 'default', partial_options))
+opts.Add(EnumVariable('test', 'Build the tests', 'default', partial_options))
 
 # Compiler configuration
 opts.Add("CXX", "C++ compiler")
@@ -26,6 +35,21 @@ Help(opts.GenerateHelpText(env))
 platform = env['OS']
 toolset = env['toolset']
 arch = 'x86_64' if (env['bits'] == '64') else 'x86'
+
+# Some kinda gnarly logic required to figure out which targets to build
+possible_targets = ['game', 'pcedit', 'scenedit', 'test']
+# First, eliminate any which are specified NOT to build
+targets = [target for target in possible_targets if env[target] != 'false']
+
+# Then, we will assume the remaining targets should all build by default, UNLESS one
+# or more targets are specified TO build.
+any_specified_targets=False
+for target in targets:
+	if env[target] == 'true':
+		any_specified_targets = True
+
+if any_specified_targets:
+	targets = [target for target in possible_targets if env[target] != 'default']
 
 # Update env based on options
 env.Replace(TARGET_ARCH=arch)
@@ -47,7 +71,10 @@ env.VariantDir('#build/obj/test', 'test')
 env.VariantDir('#build/obj/test/deps', 'deps')
 
 if env['debug']:
-   env.Append(CCFLAGS=['-g','-o0'])
+	if platform in ['posix', 'darwin']:
+		env.Append(CCFLAGS=['-g','-O0'])
+	elif platform == 'win32':
+		env.Append(CCFLAGS=['/Zi', '/Od'])
 
 # This command generates the header with git revision information
 def gen_gitrev(env, target, source):
@@ -221,12 +248,15 @@ if platform == 'darwin':
 # Sometimes it's easier just to copy the dependencies into the repo dir
 # We try to auto-detect this.
 if path.exists('deps/lib'):
-	env.Append(LIBPATH=['deps/lib'])
+	env.Append(LIBPATH=[path.join(os.getcwd(), 'deps/lib')])
 	if platform == 'darwin':
-		env.Append(FRAMEWORKPATH=['deps/lib'])
+		env.Append(FRAMEWORKPATH=[path.join(os.getcwd(), 'deps/lib')])
+
+if path.exists('deps/lib64'):
+	env.Append(LIBPATH=[path.join(os.getcwd(), 'deps/lib64')])
 
 if path.exists('deps/include'):
-	env.Append(CPPPATH=['deps/include'])
+	env.Append(CPPPATH=[path.join(os.getcwd(), '/deps/include')])
 
 # Include directories
 
@@ -299,6 +329,32 @@ if not env.GetOption('clean'):
 	check_lib('sfml-audio', 'SFML-audio')
 	check_lib('sfml-graphics', 'SFML-graphics')
 
+	# If building the tests, make sure Catch2 is cloned
+	if 'test' in targets and not path.exists('deps/Catch2/README.md'):
+		subprocess.call(["git", "submodule", "update", "--init", "deps/Catch2"])
+
+	# On Linux, build TGUI from the subtree if necessary
+	if platform == 'posix':
+		def check_tgui(conf, second_attempt=False):
+			if conf.CheckLib('libtgui', language='C++'):
+				return conf
+			else:
+				if second_attempt:
+					print('TGUI is missing, even after trying to build it!')
+					Exit(1)
+				else:
+					subprocess.call(["git", "submodule", "update", "--init", "deps/TGUI"])
+					subprocess.call(["cmake", "-D", "TGUI_CXX_STANDARD=14", "-D", "CMAKE_INSTALL_PREFIX=../", "."], cwd="deps/TGUI")
+					subprocess.call(["make"], cwd="deps/TGUI")
+					subprocess.call(["make", "install"], cwd="deps/TGUI")
+
+					env = conf.Finish()
+					env.Append(CPPPATH=[path.join(os.getcwd(), 'deps/include')], LIBPATH=[path.join(os.getcwd(), 'deps/lib'), path.join(os.getcwd(), 'deps/lib64')])
+					conf = Configure(env)
+					return check_tgui(conf, True)
+		conf = check_tgui(conf)
+
+
 	env = conf.Finish()
 
 env.Append(CPPDEFINES=["TIXML_USE_TICPP"])
@@ -345,12 +401,7 @@ Export("install_dir party_classes common_sources")
 
 # Programs
 
-SConscript([
-	"build/obj/game/SConscript",
-	"build/obj/pcedit/SConscript",
-	"build/obj/scenedit/SConscript",
-	"build/obj/test/SConscript"
-])
+SConscript([f"build/obj/{target}/SConscript" for target in targets])
 
 # Data files
 
@@ -417,3 +468,5 @@ elif platform == "win32" and subprocess.call(['where', '/Q', 'makensis']) == 0:
 
 env.Clean('.', 'build')
 env.Clean('.', Glob('.sconsign.*'))
+if env.GetOption('clean'):
+	atexit.register(lambda: print('If the build fails immediately after cleaning, delete .sconsign.dblite manually and try again.'))
