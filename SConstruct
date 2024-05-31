@@ -70,7 +70,10 @@ env.VariantDir('#build/obj/test', 'test')
 env.VariantDir('#build/obj/test/deps', 'deps')
 
 if env['debug']:
-   env.Append(CCFLAGS=['-g','-o0'])
+	if platform in ['posix', 'darwin']:
+		env.Append(CCFLAGS=['-g','-O0'])
+	elif platform == 'win32':
+		env.Append(CCFLAGS=['/Zi', '/Od'])
 
 # This command generates the header with git revision information
 def gen_gitrev(env, target, source):
