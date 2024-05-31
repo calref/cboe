@@ -325,6 +325,10 @@ if not env.GetOption('clean'):
 	check_lib('sfml-audio', 'SFML-audio')
 	check_lib('sfml-graphics', 'SFML-graphics')
 
+	# If building the tests, make sure Catch2 is cloned
+	if 'test' in targets and not path.exists('deps/Catch2/README.md'):
+		subprocess.call(["git", "submodule", "update", "--init", "deps/Catch2"])
+
 	# On Linux, build TGUI from the subtree if necessary
 	if platform == 'posix':
 		def check_tgui(conf, second_attempt=False):
