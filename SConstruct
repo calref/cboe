@@ -372,6 +372,8 @@ env.Append(CPPDEFINES=["TIXML_USE_TICPP"])
 if platform == "win32":
 	# For the *resource.h headers
 	env.Append(CPPPATH=["#rsrc/menus"])
+	# Icons
+	env.Append(CPPPATH=["#rsrc/icons/win"])
 
 if platform == "darwin":
 	env.Append(LIBS=Split("""
