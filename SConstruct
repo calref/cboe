@@ -199,7 +199,7 @@ elif platform == "win32":
 			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup',f'/MACHINE:X{env["bits"]}'],
 			CXXFLAGS=['/EHsc','/MD','/FIglobal.hpp'],
 			CPPPATH=include_paths,
-			LIBPATH=[path.join(vcpkg_prefix, 'lib')] + vcpkg_other_libs,
+			LIBPATH=[path.join(vcpkg_installed, 'lib')],
 			LIBS=Split("""
 				kernel32
 				user32
