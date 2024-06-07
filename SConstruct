@@ -194,7 +194,6 @@ elif platform == "win32":
 		for (root, dirs, files) in os.walk('src'):
 			project_includes.append(path.join(os.getcwd(), root))
 
-		# project_includes = [path.join('src', dir) for dir in filter(lambda dir: os.path.isdir(path.join('src', dir)), os.listdir('src'))]
 		include_paths=[path.join(vcpkg_installed, 'include')] + vcpkg_other_includes + project_includes
 		env.Append(
 			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup',f'/MACHINE:X{env["bits"]}'],
