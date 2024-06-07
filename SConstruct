@@ -190,13 +190,16 @@ elif platform == "win32":
 		vcpkg_other_packages = Glob(path.join(vcpkg_prefix, 'packages', f'**x{env["bits"]}-windows'))
 		vcpkg_other_includes = [path.join(d.get_abspath(), 'include') for d in vcpkg_other_packages]
 		vcpkg_other_libs = [path.join(d.get_abspath(), 'lib') for d in vcpkg_other_packages]
-		project_includes = [path.join('src', dir) for dir in filter(lambda dir: os.path.isdir(path.join('src', dir)), os.listdir('src'))]
+		project_includes = []
+		for (root, dirs, files) in os.walk('src'):
+			project_includes.append(path.join(os.getcwd(), root))
+
+		# project_includes = [path.join('src', dir) for dir in filter(lambda dir: os.path.isdir(path.join('src', dir)), os.listdir('src'))]
 		include_paths=[path.join(vcpkg_installed, 'include')] + vcpkg_other_includes + project_includes
 		env.Append(
 			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup',f'/MACHINE:X{env["bits"]}'],
 			CXXFLAGS=['/EHsc','/MD','/FIglobal.hpp'],
-			CPPPATH=[path.join(vcpkg_installed, 'include')],
-			INCLUDEPATH=include_paths,
+			CPPPATH=include_paths,
 			LIBPATH=[path.join(vcpkg_prefix, 'lib')] + vcpkg_other_libs,
 			LIBS=Split("""
 				kernel32
