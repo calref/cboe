@@ -10,6 +10,7 @@
 #define BoE_DATA_SPELL_HPP
 
 #include <map>
+#include <string>
 #include "skills_traits.hpp"
 
 // This controls how a spell is cast in combat; YES means it's the same as in town, IMMED means it has a special implementation in town, and TARGET / FANCY both mean it requires target selection.
