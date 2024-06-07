@@ -186,12 +186,13 @@ if platform == "darwin":
 elif platform == "win32":
 	if 'msvc' in env['TOOLS']:
 		vcpkg_prefix = (os.environ['HOME'] if 'HOME' in os.environ else 'C:') + '/vcpkg/'
-		vcpkg_installed = vcpkg_prefix + 'installed/x{env["bits"]}-windows'
+		vcpkg_installed = vcpkg_prefix + f'installed/x{env["bits"]}-windows'
 		vcpkg_other_packages = Glob(vcpkg_prefix + f'packages/**x{env["bits"]}-windows')
 		vcpkg_other_includes = [d.get_abspath() + '\\include' for d in vcpkg_other_packages]
 		vcpkg_other_libs = [d.get_abspath() + '\\lib' for d in vcpkg_other_packages]
 		project_includes = ['src/' + dir for dir in filter(lambda dir: os.path.isdir('src/' + dir), os.listdir('src'))]
-		include_paths=[vcpkg_installed + '/include'] + vcpkg_other_includes + project_includes
+		include_paths=[vcpkg_installed + '/include'] + vcpkg_other_includes # + project_includes
+		print(include_paths)
 		env.Append(
 			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup',f'/MACHINE:X{env["bits"]}'],
 			CXXFLAGS=['/EHsc','/MD','/FIglobal.hpp'],
