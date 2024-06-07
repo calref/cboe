@@ -185,18 +185,18 @@ if platform == "darwin":
 					break
 elif platform == "win32":
 	if 'msvc' in env['TOOLS']:
-		vcpkg_prefix = (os.environ['HOME'] if 'HOME' in os.environ else 'C:') + '/vcpkg/'
-		vcpkg_installed = vcpkg_prefix + f'installed/x{env["bits"]}-windows'
-		vcpkg_other_packages = Glob(vcpkg_prefix + f'packages/**x{env["bits"]}-windows')
-		vcpkg_other_includes = [d.get_abspath() + '\\include' for d in vcpkg_other_packages]
-		vcpkg_other_libs = [d.get_abspath() + '\\lib' for d in vcpkg_other_packages]
-		project_includes = ['src/' + dir for dir in filter(lambda dir: os.path.isdir('src/' + dir), os.listdir('src'))]
-		include_paths=[vcpkg_installed + '/include'] + vcpkg_other_includes + project_includes
+		vcpkg_prefix = path.join((os.environ['HOME'] if 'HOME' in os.environ else 'C:'), 'vcpkg')
+		vcpkg_installed = path.join(vcpkg_prefix, f'installed/x{env["bits"]}-windows')
+		vcpkg_other_packages = Glob(path.join(vcpkg_prefix, f'packages/**x{env["bits"]}-windows'))
+		vcpkg_other_includes = [path.join(d.get_abspath(), 'include') for d in vcpkg_other_packages]
+		vcpkg_other_libs = [path.join(d.get_abspath(), 'lib') for d in vcpkg_other_packages]
+		project_includes = [path.join('src', dir) for dir in filter(lambda dir: os.path.isdir(path.join('src', dir)), os.listdir('src'))]
+		include_paths=[path.join(vcpkg_installed, 'include')] + vcpkg_other_includes + project_includes
 		env.Append(
 			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup',f'/MACHINE:X{env["bits"]}'],
 			CXXFLAGS=['/EHsc','/MD','/FIglobal.hpp'],
-			INCLUDEPATH=vcpkg_prefix + '/include',
-			LIBPATH=vcpkg_prefix + '/lib',
+			INCLUDEPATH=path.join(vcpkg_prefix, 'include'),
+			LIBPATH=path.join(vcpkg_prefix, 'lib'),
 			LIBS=Split("""
 				kernel32
 				user32
