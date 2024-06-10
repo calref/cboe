@@ -1,2 +1,2 @@
 
-vcpkg install --feature-flags=manifests --triplet %1-windows
+vcpkg install --feature-flags=manifests,binarycaching --triplet %1-windows
