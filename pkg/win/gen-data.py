@@ -24,11 +24,11 @@ files = {
 }
 
 for path, pattern in files.items():
-	print(f'SetOutPath "{makepath("$INSTDIR/" + path + '/')}"')
+	print 'SetOutPath', '"' + makepath("$INSTDIR/" + path + '/') + '"'
 	if type(pattern) == list:
 		check_files = [root + '/' + path + '/' + x for x in pattern]
 	else:
 		check_files = glob(makepath(root + '/' + path + '/' + pattern))
 	for fname in check_files:
-		print(f'File "{makepath(fname.replace(root, '${RELEASE_DIR}'))}"')
+		print 'File', '"' + makepath(fname.replace(root, '${RELEASE_DIR}')) + '"'
 
