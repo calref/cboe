@@ -185,7 +185,7 @@ if platform == "darwin":
 					break
 elif platform == "win32":
 	if 'msvc' in env['TOOLS']:
-		vcpkg_prefix = path.join((os.environ['HOME'] if 'HOME' in os.environ else 'C:/'), 'vcpkg')
+		vcpkg_prefix = path.join((os.environ['HOME'] if 'HOME' in os.environ else 'C:\\'), 'vcpkg')
 		vcpkg_installed = path.join(vcpkg_prefix, 'installed', f'x{env["bits"]}-windows')
 		vcpkg_other_packages = Glob(path.join(vcpkg_prefix, 'packages', f'**x{env["bits"]}-windows'))
 		vcpkg_other_includes = [path.join(d.get_abspath(), 'include') for d in vcpkg_other_packages]
