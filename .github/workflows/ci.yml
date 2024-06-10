@@ -157,7 +157,7 @@
 				},
 				{
 					name: debug lib locations,
-					run: 'dir C:/vcpkg/installed/x64-windows'
+					run: 'dir C:/vcpkg/installed/x64-windows/lib'
 				},
 				{
 					name: build and unit test,
