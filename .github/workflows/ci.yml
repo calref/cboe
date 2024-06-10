@@ -152,11 +152,6 @@
 					working-directory: proj/vs2017
 				},
 				{
-					name: debug lib locations,
-					run: 'ls "C:/vcpkg/packages/**/lib"',
-					shell: bash
-				},
-				{
 					name: build and unit test,
 					run: '.\.github\workflows\scripts\win\scons-build.bat'
 				},
