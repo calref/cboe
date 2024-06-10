@@ -278,6 +278,8 @@ env.Append(CPPPATH=Split("""
 
 env['CONFIGUREDIR'] = '#build/conf'
 env['CONFIGURELOG'] = '#build/conf/config.log'
+
+bundled_libs = []
 if not env.GetOption('clean'):
 	conf = Configure(env)
 
@@ -325,7 +327,6 @@ if not env.GetOption('clean'):
 	boost_versions = ['-1_84'] # This is a bit of a hack. :(
 	msvc_versions = ['140', '141', '142', '143'] # This is a new bit of a hack. :(
 	suffixes = ['-mt', '-mt-x64', '-mt-x32']
-	bundled_libs = []
 
 
 	check_header('boost/lexical_cast.hpp', 'Boost.LexicalCast')
@@ -436,7 +437,7 @@ if platform == "darwin":
 		binary = path.join(install_dir, targ + '.app', 'Contents/MacOS', targ)
 		env.Command(Dir(target_dir), binary, [Delete(target_dir), bundle_libraries_for])
 elif platform == "win32":
-	bundled_libs = Split("""
+	bundled_libs += Split("""
 		libsndfile-1
 		openal32
 		sfml-audio-2
@@ -444,6 +445,15 @@ elif platform == "win32":
 		sfml-system-2
 		sfml-window-2
 		zlib1
+		freetype
+		vorbis
+		vorbisfile
+		vorbisenc
+		ogg
+		FLAC
+		bz2
+		brotlidec
+		brotlicommon
 	""")
 	target_dirs = ["#build/Blades of Exile", "#build/test"]
 	for lib in bundled_libs:
