@@ -30,5 +30,5 @@ for path, pattern in files.items():
 	else:
 		check_files = glob(makepath(root + '/' + path + '/' + pattern))
 	for fname in check_files:
-		print(f'File "{makepath(fname.replace(root, '${RELEASE_DIR}'))}"')
+		print(f'File "{makepath(fname.replace(root, "${RELEASE_DIR}"))}"')
 
