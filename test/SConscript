@@ -2,6 +2,7 @@
 import subprocess
 
 Import("env platform party_classes common_sources")
+arch_short = '64' if (env['bits'] == '64') else '86'
 
 # Add path to scons
 env.Append(CPPPATH=['./deps/Catch2/single_include'])
@@ -11,7 +12,7 @@ test_sources = Glob("""*.cpp""") + Split("""
 """)
 
 if str(platform) == "win32" and 'msvc' in env["TOOLS"]:
-	test = env.Program("#build/bin/boe_test", party_classes + common_sources + test_sources, LINKFLAGS=f'/nologo /SUBSYSTEM:CONSOLE /MACHINE:X{env["bits"]}')
+	test = env.Program("#build/bin/boe_test", party_classes + common_sources + test_sources, LINKFLAGS=f'/nologo /SUBSYSTEM:CONSOLE /MACHINE:X{arch_short}')
 else:
 	test = env.Program("#build/bin/boe_test", test_sources + party_classes + common_sources)
 
