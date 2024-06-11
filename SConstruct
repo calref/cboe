@@ -35,6 +35,7 @@ Help(opts.GenerateHelpText(env))
 platform = env['OS']
 toolset = env['toolset']
 arch = 'x86_64' if (env['bits'] == '64') else 'x86'
+arch_short = '64' if (env['bits'] == '64') else '86'
 
 # Some kinda gnarly logic required to figure out which targets to build
 possible_targets = ['game', 'pcedit', 'scenedit', 'test']
@@ -186,8 +187,8 @@ if platform == "darwin":
 elif platform == "win32":
 	if 'msvc' in env['TOOLS']:
 		vcpkg_prefix = path.join((os.environ['HOME'] if 'HOME' in os.environ else 'C:\\'), 'vcpkg')
-		vcpkg_installed = path.join(vcpkg_prefix, 'installed', f'x{env["bits"]}-windows')
-		vcpkg_other_packages = Glob(path.join(vcpkg_prefix, 'packages', f'**x{env["bits"]}-windows'))
+		vcpkg_installed = path.join(vcpkg_prefix, 'installed', f'x{arch_short}-windows')
+		vcpkg_other_packages = Glob(path.join(vcpkg_prefix, 'packages', f'**x{arch_short}-windows'))
 		vcpkg_other_includes = [path.join(d.get_abspath(), 'include') for d in vcpkg_other_packages]
 		vcpkg_other_includes = list(filter(path.exists, vcpkg_other_includes))
 		vcpkg_other_libs = [path.join(d.get_abspath(), 'lib') for d in vcpkg_other_packages]
@@ -200,7 +201,7 @@ elif platform == "win32":
 
 		include_paths=[path.join(vcpkg_installed, 'include')] + vcpkg_other_includes + project_includes
 		env.Append(
-			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup',f'/MACHINE:X{env["bits"]}'],
+			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup',f'/MACHINE:X{arch_short}'],
 			CXXFLAGS=['/EHsc','/MD','/FIglobal.hpp'],
 			CPPPATH=include_paths,
 			LIBPATH=[path.join(vcpkg_installed, 'lib')] + vcpkg_other_libs + vcpkg_other_bins,
