@@ -4,13 +4,13 @@
 #include <sstream>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "boeresource.h"
-#include "../universe/universe.hpp"
+#include "universe.hpp"
 #include "boe.party.hpp"
 #include "boe.infodlg.hpp"
 #include "boe.consts.hpp"
 #include "spell.hpp"
-#include "../tools/winutil.hpp"
-#include "../tools/menu_accel.win.hpp"
+#include "winutil.hpp"
+#include "menu_accel.win.hpp"
 
 // Include this last because some #defines in the Windows headers cause compile errors in my headers.
 // Fortunately they're on symbols not used in this file, so this should work.
@@ -287,7 +287,7 @@ void showMenuBar() {
 	DrawMenuBar(mainPtr.getSystemHandle());
 }
 
-#include "../tools/cursors.hpp"
+#include "cursors.hpp"
 
 LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) {
 	MSG msg = {handle, message, wParam, lParam};
@@ -313,7 +313,7 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 	return CallWindowProc(reinterpret_cast<WNDPROC>(mainProc), handle, message, wParam, lParam);
 }
 
-#include "../fileio/fileio.hpp"
+#include "fileio.hpp"
 #include "boe.graphics.hpp"
 #include "boe.actions.hpp"
 #include "boe.fileio.hpp"
