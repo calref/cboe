@@ -238,9 +238,10 @@ void process_args(int argc, char* argv[]) {
 }
 
 void init_boe(int argc, char* argv[]) {
-	process_args(argc, argv);
 	set_up_apple_events(argc, argv);
 	init_directories(argv[0]);
+	check_for_intel();
+	process_args(argc, argv);
 #ifdef __APPLE__
 	init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
 #endif
@@ -258,7 +259,6 @@ void init_boe(int argc, char* argv[]) {
 	
 	set_cursor(watch_curs);
 	init_buf();
-	check_for_intel();
 	srand(time(nullptr));
 	init_screen_locs();	
 	init_startup();
