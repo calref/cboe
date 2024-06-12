@@ -215,7 +215,30 @@ static void init_ui() {
 	init_buttons();
 }
 
+void process_args(int argc, char* argv[]) {
+	// Command line usage:
+	//  "Blades of Exile"                               # basic launch
+	//  "Blades of Exile" <save file>                   # launch and load save file
+
+	if (argc > 1) {
+		if(!load_party(argv[1], univ)) {
+			std::cout << "Failed to load save file: " << argv[1] << std::endl;
+			return;
+		}
+
+		if(!finished_init) {
+			ae_loading = true;
+			overall_mode = MODE_STARTUP;
+		} else finish_load_party();
+		if(overall_mode != MODE_STARTUP)
+			end_startup();
+		if(overall_mode != MODE_STARTUP)
+			post_load();
+	}
+}
+
 void init_boe(int argc, char* argv[]) {
+	process_args(argc, argv);
 	set_up_apple_events(argc, argv);
 	init_directories(argv[0]);
 #ifdef __APPLE__
