@@ -9,7 +9,7 @@ opts = Variables(None, ARGUMENTS)
 opts.Add(EnumVariable('OS', "Target platform", str(Platform()), ('darwin', 'win32', 'posix')))
 opts.Add('toolset', "Toolset to pass to the SCons builder", 'default')
 opts.Add(BoolVariable('debug', "Build with debug symbols and no optimization", False))
-opts.Add(EnumVariable('bits', "Build for 32-bit or 64-bit architectures", '32', ('32', '64')))
+opts.Add(EnumVariable('bits', "Build for 32-bit or 64-bit architectures", '64', ('32', '64')))
 
 # Partial build flags -- by default, all targets will be built,
 # but if at least one is specified, ONLY the specified targets will be built
@@ -18,6 +18,10 @@ opts.Add(EnumVariable('game', 'Build the game', 'default', partial_options))
 opts.Add(EnumVariable('pcedit', 'Build the character editor', 'default', partial_options))
 opts.Add(EnumVariable('scenedit', 'Build the scenario editor', 'default', partial_options))
 opts.Add(EnumVariable('test', 'Build the tests', 'default', partial_options))
+
+# Package build flag -- when explicitly specified, Mac and Windows builds will also
+# try to build an installer.
+opts.Add(BoolVariable('package', "Build an installer", False))
 
 # Compiler configuration
 opts.Add("CXX", "C++ compiler")
@@ -35,6 +39,7 @@ Help(opts.GenerateHelpText(env))
 platform = env['OS']
 toolset = env['toolset']
 arch = 'x86_64' if (env['bits'] == '64') else 'x86'
+arch_short = '64' if (env['bits'] == '64') else '86'
 
 # Some kinda gnarly logic required to figure out which targets to build
 possible_targets = ['game', 'pcedit', 'scenedit', 'test']
@@ -185,12 +190,25 @@ if platform == "darwin":
 					break
 elif platform == "win32":
 	if 'msvc' in env['TOOLS']:
-		vcpkg_prefix = (os.environ['HOME'] if 'HOME' in os.environ else 'C:') + f'/vcpkg/installed/x{env["bits"]}-windows'
+		vcpkg_prefix = path.join((os.environ['HOME'] if 'HOME' in os.environ else 'C:\\'), 'vcpkg')
+		vcpkg_installed = path.join(vcpkg_prefix, 'installed', f'x{arch_short}-windows')
+		vcpkg_other_packages = Glob(path.join(vcpkg_prefix, 'packages', f'**x{arch_short}-windows'))
+		vcpkg_other_includes = [path.join(d.get_abspath(), 'include') for d in vcpkg_other_packages]
+		vcpkg_other_includes = list(filter(path.exists, vcpkg_other_includes))
+		vcpkg_other_libs = [path.join(d.get_abspath(), 'lib') for d in vcpkg_other_packages]
+		vcpkg_other_libs = list(filter(path.exists, vcpkg_other_libs))
+		vcpkg_other_bins = [path.join(d.get_abspath(), 'bin') for d in vcpkg_other_packages]
+		vcpkg_other_bins = list(filter(path.exists, vcpkg_other_bins))
+		project_includes = []
+		for (root, dirs, files) in os.walk('src'):
+			project_includes.append(path.join(os.getcwd(), root))
+
+		include_paths=[path.join(vcpkg_installed, 'include')] + vcpkg_other_includes + project_includes
 		env.Append(
-			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup','/MACHINE:X86'],
+			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup',f'/MACHINE:X{arch_short}'],
 			CXXFLAGS=['/EHsc','/MD','/FIglobal.hpp'],
-			INCLUDEPATH=vcpkg_prefix + '/include',
-			LIBPATH=vcpkg_prefix + '/lib',
+			CPPPATH=include_paths,
+			LIBPATH=[path.join(vcpkg_installed, 'lib')] + vcpkg_other_libs + vcpkg_other_bins,
 			LIBS=Split("""
 				kernel32
 				user32
@@ -269,6 +287,8 @@ env.Append(CPPPATH=Split("""
 
 env['CONFIGUREDIR'] = '#build/conf'
 env['CONFIGURELOG'] = '#build/conf/config.log'
+
+bundled_libs = []
 if not env.GetOption('clean'):
 	conf = Configure(env)
 
@@ -280,15 +300,14 @@ if not env.GetOption('clean'):
 		print('zlib must be installed!')
 		Exit(1)
 
-	def check_lib(lib, disp, suffixes=[], versions=[]):
-		if platform == "win32" and lib.startswith("boost"):
-			lib = "lib" + lib
+	def check_lib(lib, disp, suffixes=[], versions=[], msvc_versions=[]):
 		if "mingw" in env["TOOLS"] and lib.startswith("sfml"):
 			lib = "lib" + lib
 		possible_names = [lib]
 		if platform == "win32":
 			if 'msvc' in env['TOOLS']:
-				vc_suffix = '-vc' + env['MSVC_VERSION'].replace('.','')
+				msvc_version = env['MSVC_VERSION'].replace('.','')
+				vc_suffix = '-vc' + msvc_version
 				possible_names.append(lib + vc_suffix)
 		n = len(possible_names)
 		for i in range(n):
@@ -312,8 +331,8 @@ if not env.GetOption('clean'):
 			print("  If you're sure it's installed, try passing INCLUDEPATH=...")
 			Exit(1)
 
-	boost_versions = ['-1_54', '-1_55', '-1_56', '-1_57', '-1_58'] # This is a bit of a hack. :(
-	bundled_libs = []
+	boost_versions = ['-1_84'] # This is a bit of a hack. :(
+	suffixes = ['-mt', f'-mt-x{env["bits"]}']
 
 
 	check_header('boost/lexical_cast.hpp', 'Boost.LexicalCast')
@@ -322,8 +341,8 @@ if not env.GetOption('clean'):
 	check_header('boost/any.hpp', 'Boost.Any')
 	check_header('boost/math_fwd.hpp', 'Boost.Math')
 	check_header('boost/spirit/include/classic.hpp', 'Boost.Spirit.Classic')
-	check_lib('boost_system', 'Boost.System', ['-mt'], boost_versions)
-	check_lib('boost_filesystem', 'Boost.Filesystem', ['-mt'], boost_versions)
+	check_lib('boost_system', 'Boost.System', suffixes, boost_versions)
+	check_lib('boost_filesystem', 'Boost.Filesystem', suffixes, boost_versions)
 	check_lib('sfml-system', 'SFML-system')
 	check_lib('sfml-window', 'SFML-window')
 	check_lib('sfml-audio', 'SFML-audio')
@@ -362,6 +381,8 @@ env.Append(CPPDEFINES=["TIXML_USE_TICPP"])
 if platform == "win32":
 	# For the *resource.h headers
 	env.Append(CPPPATH=["#rsrc/menus"])
+	# Icons
+	env.Append(CPPPATH=["#rsrc/icons/win"])
 
 if platform == "darwin":
 	env.Append(LIBS=Split("""
@@ -422,7 +443,7 @@ if platform == "darwin":
 		binary = path.join(install_dir, targ + '.app', 'Contents/MacOS', targ)
 		env.Command(Dir(target_dir), binary, [Delete(target_dir), bundle_libraries_for])
 elif platform == "win32":
-	bundled_libs = Split("""
+	bundled_libs += Split("""
 		libsndfile-1
 		openal32
 		sfml-audio-2
@@ -430,6 +451,15 @@ elif platform == "win32":
 		sfml-system-2
 		sfml-window-2
 		zlib1
+		freetype
+		vorbis
+		vorbisfile
+		vorbisenc
+		ogg
+		FLAC
+		bz2
+		brotlidec
+		brotlicommon
 	""")
 	target_dirs = ["#build/Blades of Exile", "#build/test"]
 	for lib in bundled_libs:
@@ -447,22 +477,28 @@ elif platform == "win32":
 					break
 	# Extra: Microsoft redistributable libraries installer
 	if 'msvc' in env["TOOLS"]:
-		if path.exists("dep/VCRedistInstall.exe"):
+		if path.exists("deps/VCRedistInstall.exe"):
 			env.Install("build/Blades of Exile/", "dep/VCRedistInstall.exe")
 		else:
 			print("WARNING: Cannot find installer for the MSVC redistributable libraries for your version of Visual Studio.")
 			print("Please download it from Microsoft's website and place it at:")
-			print("      dep/VCRedistInstall.exe")
+			print("      deps/VCRedistInstall.exe")
 			# Create it so its lack doesn't cause makensis to break
 			# (Because the installer is an optional component.)
+			os.makedirs("build/Blades of Exile", exist_ok=True)
 			open("build/Blades of Exile/VCRedistInstall.exe", 'w').close()
 
-if platform == "darwin":
-	env.VariantDir("#build/pkg", "pkg/mac")
-	SConscript("build/pkg/SConscript")
-elif platform == "win32" and subprocess.call(['where', '/Q', 'makensis']) == 0:
-	env.VariantDir("#build/pkg", "pkg/win")
-	SConscript("build/pkg/SConscript")
+if env["package"]:
+	if platform == "darwin":
+		env.VariantDir("#build/pkg", "pkg/mac")
+		SConscript("build/pkg/SConscript")
+	elif platform == "win32":
+		if subprocess.call(['where', '/Q', 'makensis']) == 0:
+			env.VariantDir("#build/pkg", "pkg/win")
+			SConscript("build/pkg/SConscript")
+		else:
+			print('NSIS must be installed to generate an installer for Windows.')
+			Exit(1)
 
 # Cleanup
 
