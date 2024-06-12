@@ -75,7 +75,15 @@ void cStrDlog::show(){
 	dlg.run();
 }
 
+extern bool finished_init;
+
 static void giveError(pic_num_t pic, std::string title, std::string str1, std::string str2, cDialog* parent) {
+	// If giveError() is called before UI is initialized, print to console
+	if (!finished_init) {
+		std::cout << title << std::endl << str1 << std::endl << str2 << std::endl;
+		return;
+	}
+
 	cStrDlog error(str1,str2,title,pic,PIC_DLOG,parent);
 	error->getControl("record").setText("Copy");
 	error.setRecordHandler([](cDialog& me) {
