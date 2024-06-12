@@ -9,7 +9,7 @@ opts = Variables(None, ARGUMENTS)
 opts.Add(EnumVariable('OS', "Target platform", str(Platform()), ('darwin', 'win32', 'posix')))
 opts.Add('toolset', "Toolset to pass to the SCons builder", 'default')
 opts.Add(BoolVariable('debug', "Build with debug symbols and no optimization", False))
-opts.Add(EnumVariable('bits', "Build for 32-bit or 64-bit architectures", '32', ('32', '64')))
+opts.Add(EnumVariable('bits', "Build for 32-bit or 64-bit architectures", '64', ('32', '64')))
 
 # Partial build flags -- by default, all targets will be built,
 # but if at least one is specified, ONLY the specified targets will be built
