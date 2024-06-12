@@ -19,6 +19,10 @@ opts.Add(EnumVariable('pcedit', 'Build the character editor', 'default', partial
 opts.Add(EnumVariable('scenedit', 'Build the scenario editor', 'default', partial_options))
 opts.Add(EnumVariable('test', 'Build the tests', 'default', partial_options))
 
+# Package build flag -- when explicitly specified, Mac and Windows builds will also
+# try to build an installer.
+opts.Add(BoolVariable('package', "Build an installer", False))
+
 # Compiler configuration
 opts.Add("CXX", "C++ compiler")
 opts.Add("CC", "C compiler")
@@ -484,12 +488,17 @@ elif platform == "win32":
 			os.makedirs("build/Blades of Exile", exist_ok=True)
 			open("build/Blades of Exile/VCRedistInstall.exe", 'w').close()
 
-if platform == "darwin":
-	env.VariantDir("#build/pkg", "pkg/mac")
-	SConscript("build/pkg/SConscript")
-#elif platform == "win32" and subprocess.call(['where', '/Q', 'makensis']) == 0:
-#	env.VariantDir("#build/pkg", "pkg/win")
-#	SConscript("build/pkg/SConscript")
+if env["package"]:
+	if platform == "darwin":
+		env.VariantDir("#build/pkg", "pkg/mac")
+		SConscript("build/pkg/SConscript")
+	elif platform == "win32":
+		if subprocess.call(['where', '/Q', 'makensis']) == 0:
+			env.VariantDir("#build/pkg", "pkg/win")
+			SConscript("build/pkg/SConscript")
+		else:
+			print('NSIS must be installed to generate an installer for Windows.')
+			Exit(1)
 
 # Cleanup
 
