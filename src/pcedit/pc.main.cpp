@@ -80,6 +80,21 @@ extern fs::path progDir;
 short specials_res_id;
 char start_name[256];
 
+void process_args(int argc, char* argv[]) {
+	if(argc > 1) {
+		if(load_party(argv[1], univ)) {
+			file_in_mem = argv[1];
+			party_in_scen = !univ.party.scen_name.empty();
+			if(!party_in_scen) load_base_item_defs();
+			scen_items_loaded = true;
+			menu_activate();
+		} else {
+			std::cout << "Failed to load save file: " << argv[1] << std::endl;
+			return;
+		}
+	}
+}
+
 //MW specified return type was 'void', changed to ISO C style for Carbonisation -jmr
 int main(int argc, char* argv[]) {
 	try {
@@ -102,6 +117,7 @@ int main(int argc, char* argv[]) {
 		srand(time(nullptr));
 		
 		set_up_apple_events();
+		process_args(argc, argv);
 		
 		cDialog::init();
 		redraw_screen();

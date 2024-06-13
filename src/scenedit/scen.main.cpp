@@ -197,6 +197,21 @@ void adjust_windows (sf::RenderWindow & mainPtr, sf::View & mainView) {
 	init_menubar();
 }
 
+void process_args(int argc, char* argv[]) {
+	if(argc > 1) {
+		if(load_scenario(argv[1], scenario)) {
+			set_current_town(scenario.last_town_edited);
+			cur_out = scenario.last_out_edited;
+			current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
+			change_made = false;
+			ae_loading = true;
+			set_up_main_screen();
+		} else {
+			std::cout << "Failed to load scenario: " << argv[1] << std::endl;
+		}
+	}
+}
+
 void init_scened(int argc, char* argv[]) {
 	init_directories(argv[0]);
 	sync_prefs();
@@ -233,6 +248,7 @@ void init_scened(int argc, char* argv[]) {
 	cDialog::defaultBackground = cDialog::BG_LIGHT;
 	cDialog::doAnimations = true;
 	set_up_apple_events();
+	process_args(argc, argv);
 	init_fileio();
 }
 
