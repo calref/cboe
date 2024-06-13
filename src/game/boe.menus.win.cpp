@@ -313,24 +313,6 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 	return CallWindowProc(reinterpret_cast<WNDPROC>(mainProc), handle, message, wParam, lParam);
 }
 
-#include "fileio.hpp"
-#include "boe.graphics.hpp"
-#include "boe.actions.hpp"
-#include "boe.fileio.hpp"
+void set_up_apple_events() {
 
-extern bool ae_loading, finished_init;
-void set_up_apple_events(int argc, char* argv[]) {
-	if(argc > 1) {
-		if(!load_party(argv[1], univ))
-			return;
-
-		if(!finished_init) {
-			ae_loading = true;
-			overall_mode = MODE_STARTUP;
-		} else finish_load_party();
-		if(overall_mode != MODE_STARTUP)
-			end_startup();
-		if(overall_mode != MODE_STARTUP)
-			post_load();
-	}
 }

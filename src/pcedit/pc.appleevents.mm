@@ -23,8 +23,8 @@ extern fs::path file_in_mem;
 -(NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication*) sender;
 @end
 
-void set_up_apple_events(int argc, char* argv[]); // Suppress "no prototype" warning
-void set_up_apple_events(int, char*[]) {
+void set_up_apple_events(); // Suppress "no prototype" warning
+void set_up_apple_events() {
 	AppleEventHandler* aeHandler = [[AppleEventHandler alloc] init];
 	[[NSApplication sharedApplication] setDelegate: aeHandler];
 }

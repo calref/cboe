@@ -460,11 +460,14 @@ void cDialog::recalcRect(){
 	winRect.bottom *= ui_scale();
 }
 
+bool cDialog::initCalled = false;
+
 void cDialog::init(){
 	cButton::init();
 	cLed::init();
 	cPict::init();
 	cScrollbar::init();
+	initCalled = true;
 }
 
 cDialog::~cDialog(){

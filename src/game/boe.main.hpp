@@ -11,7 +11,7 @@ void redraw_everything();
 void Mouse_Pressed(const sf::Event&);
 void close_program();
 void change_cursor(location where_curs);
-void set_up_apple_events(int argc, char* argv[]);
+void set_up_apple_events();
 void move_sound(ter_num_t ter,short step);
 void incidental_noises(bool on_surface);
 void pause(short length);

@@ -69,7 +69,7 @@ void Mouse_Pressed(const sf::Event&);
 void adjust_window(sf::RenderWindow&, sf::View&);
 sf::FloatRect compute_viewport(const sf::RenderWindow&, float ui_scale);
 bool verify_restore_quit(std::string dlog);
-void set_up_apple_events(int argc, char* argv[]);
+void set_up_apple_events();
 
 void pick_preferences();
 void save_prefs();
@@ -79,6 +79,21 @@ extern bool cur_scen_is_mac;
 extern fs::path progDir;
 short specials_res_id;
 char start_name[256];
+
+void process_args(int argc, char* argv[]) {
+	if(argc > 1) {
+		if(load_party(argv[1], univ)) {
+			file_in_mem = argv[1];
+			party_in_scen = !univ.party.scen_name.empty();
+			if(!party_in_scen) load_base_item_defs();
+			scen_items_loaded = true;
+			menu_activate();
+		} else {
+			std::cout << "Failed to load save file: " << argv[1] << std::endl;
+			return;
+		}
+	}
+}
 
 //MW specified return type was 'void', changed to ISO C style for Carbonisation -jmr
 int main(int argc, char* argv[]) {
@@ -101,7 +116,8 @@ int main(int argc, char* argv[]) {
 		check_for_intel();
 		srand(time(nullptr));
 		
-		set_up_apple_events(argc, argv);
+		set_up_apple_events();
+		process_args(argc, argv);
 		
 		cDialog::init();
 		redraw_screen();

@@ -69,10 +69,12 @@ class cDialog {
 	template<typename Iter> void handleTabOrder(std::string& itemHit, Iter begin, Iter end);
 	std::vector<std::pair<std::string,cTextField*>> tabOrder;
 	static cDialog* topWindow; // Tracks the frontmost dialog.
+	static bool initCalled;
 public:
 	static void (*redraw_everything)();
 	/// Performs essential startup initialization. Generally should not be called directly.
 	static void init();
+	static bool wasInitCalled() { return initCalled; };
 	/// The light background pattern used by the scenario editor dialogs.
 	static const short BG_LIGHT, BG_DARK; ///< The dark background pattern used by the game dialogs.
 	/// The default background pattern for newly created dialogs.
