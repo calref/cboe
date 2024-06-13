@@ -325,6 +325,7 @@
 		91FCC8F418FF0866007026CE /* pc.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91FCC8F318FF069A007026CE /* pc.appleevents.mm */; };
 		91FD417423DFC9D4003D5B8A /* boe.ui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91FD417223DFC5C1003D5B8A /* boe.ui.cpp */; };
 		91FE0E3823F084B70084CA6B /* drawable_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91FE0E3523F084B70084CA6B /* drawable_manager.cpp */; };
+		D384F6A32C1B9D4000A806C3 /* replay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D384F6A22C1B9D4000A806C3 /* replay.cpp */; };
 		DCCA42001A8C467000E6A9A5 /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
 		DCCA42021A8C467800E6A9A5 /* libz.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.1.tbd */; };
 		DCCA42031A8C469400E6A9A5 /* libz.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.1.tbd */; };
@@ -895,6 +896,7 @@
 		91FE0E3623F084B70084CA6B /* drawable_manager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = drawable_manager.hpp; sourceTree = "<group>"; };
 		91FE0E3723F084B70084CA6B /* event_listener.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = event_listener.hpp; sourceTree = "<group>"; };
 		91FE0E3B23F084C60084CA6B /* drawable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = drawable.hpp; sourceTree = "<group>"; };
+		D384F6A22C1B9D4000A806C3 /* replay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = replay.cpp; sourceTree = "<group>"; };
 		DCCA42011A8C467800E6A9A5 /* libz.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.tbd; path = ../MacOSX.sdk/usr/lib/libz.1.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -1251,6 +1253,7 @@
 		9185BDA11EA041570027C346 /* tools */ = {
 			isa = PBXGroup;
 			children = (
+				D384F6A22C1B9D4000A806C3 /* replay.cpp */,
 				91C688E70FD702B9000F6D01 /* cursors.mac.mm */,
 				91FE0E3523F084B70084CA6B /* drawable_manager.cpp */,
 				91F3204E23E65EA3009650AF /* framerate_limiter.cpp */,
@@ -2065,6 +2068,7 @@
 				919CC27D1B37743700273FDA /* tarball.cpp in Sources */,
 				919CC27E1B37743B00273FDA /* undo.cpp in Sources */,
 				919CC27F1B37744000273FDA /* winutil.mac.mm in Sources */,
+				D384F6A32C1B9D4000A806C3 /* replay.cpp in Sources */,
 				915AF9E81BBF8B5C008AEF49 /* scrollpane.cpp in Sources */,
 				91E128E71BC1E6DD00C8BE1D /* basicbtns.cpp in Sources */,
 				91E128ED1BC2076B00C8BE1D /* 3choice.cpp in Sources */,
