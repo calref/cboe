@@ -1,6 +1,7 @@
 
 #include "prefs.hpp"
 #include "game/boe.global.hpp"
+#include "ticpp.h"
 #include <map>
 #include <string>
 #include <vector>
