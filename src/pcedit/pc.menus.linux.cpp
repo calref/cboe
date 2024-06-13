@@ -27,5 +27,5 @@ void drawMenuBar() {
 	menu_ptr->draw();
 }
 
-void set_up_apple_events(int argc, char* argv[]) {
+void set_up_apple_events() {
 }

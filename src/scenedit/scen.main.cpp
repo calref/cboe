@@ -78,7 +78,7 @@ cScenario scenario;
 rectangle right_sbar_rect;
 extern rectangle terrain_buttons_rect;
 
-extern void set_up_apple_events(int argc, char* argv[]);
+extern void set_up_apple_events();
 
 // TODO: these should be members of some global entity instead of being here
 std::unordered_map<std::string, std::shared_ptr <iEventListener>> event_listeners;
@@ -232,7 +232,7 @@ void init_scened(int argc, char* argv[]) {
 	
 	cDialog::defaultBackground = cDialog::BG_LIGHT;
 	cDialog::doAnimations = true;
-	set_up_apple_events(argc, argv);
+	set_up_apple_events();
 	init_fileio();
 }
 

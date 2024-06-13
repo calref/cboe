@@ -313,11 +313,6 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 	return CallWindowProc(reinterpret_cast<WNDPROC>(mainProc), handle, message, wParam, lParam);
 }
 
-#include "fileio.hpp"
-#include "boe.graphics.hpp"
-#include "boe.actions.hpp"
-#include "boe.fileio.hpp"
-
-void set_up_apple_events(int argc, char* argv[]) {
+void set_up_apple_events() {
 
 }

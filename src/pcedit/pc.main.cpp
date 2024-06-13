@@ -69,7 +69,7 @@ void Mouse_Pressed(const sf::Event&);
 void adjust_window(sf::RenderWindow&, sf::View&);
 sf::FloatRect compute_viewport(const sf::RenderWindow&, float ui_scale);
 bool verify_restore_quit(std::string dlog);
-void set_up_apple_events(int argc, char* argv[]);
+void set_up_apple_events();
 
 void pick_preferences();
 void save_prefs();
@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
 		check_for_intel();
 		srand(time(nullptr));
 		
-		set_up_apple_events(argc, argv);
+		set_up_apple_events();
 		
 		cDialog::init();
 		redraw_screen();

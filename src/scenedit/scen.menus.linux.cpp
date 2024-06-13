@@ -31,5 +31,5 @@ void update_edit_menu() {
 	menu_ptr->update_edit_menu(undo_list);
 }
 
-void set_up_apple_events(int argc, char* argv[]) {
+void set_up_apple_events() {
 }

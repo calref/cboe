@@ -234,22 +234,5 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 	return CallWindowProc(reinterpret_cast<WNDPROC>(mainProc), handle, message, wParam, lParam);
 }
 
-#include "fileio.hpp"
-#include "scen.actions.hpp"
-#include "scen.townout.hpp"
-
-extern location cur_out;
-extern cOutdoors* current_terrain;
-extern bool change_made, ae_loading;
-void set_up_apple_events(int argc, char* argv[]) {
-	if(argc > 1) {
-		if(load_scenario(argv[1], scenario)) {
-			set_current_town(scenario.last_town_edited);
-			cur_out = scenario.last_out_edited;
-			current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
-			change_made = false;
-			ae_loading = true;
-			set_up_main_screen();
-		}
-	}
+void set_up_apple_events() {
 }

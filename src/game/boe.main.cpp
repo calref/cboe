@@ -238,7 +238,7 @@ void process_args(int argc, char* argv[]) {
 }
 
 void init_boe(int argc, char* argv[]) {
-	set_up_apple_events(argc, argv);
+	set_up_apple_events();
 	init_directories(argv[0]);
 	check_for_intel();
 	process_args(argc, argv);
