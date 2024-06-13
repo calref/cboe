@@ -6,6 +6,7 @@ tools = Split("""
 	framerate_limiter.cpp
 	drawable_manager.cpp
 	keymods.cpp
+	replay.cpp
 	../location.cpp
 	../mathutil.cpp
 	../porting.cpp
@@ -20,6 +21,7 @@ tools = Split("""
 	../fileio/tarball.cpp
 	../fileio/tagfile.cpp
 	../fileio/gzstream/gzstream.cpp
+	../fileio/xml-parser/ticpp.cpp
 """) + Glob("../fileio/resmgr/*.cpp") + Glob("../gfx/*.cpp") + Glob("../scenario/*.cpp")
 
 if str(platform) == "darwin":
