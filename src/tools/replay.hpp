@@ -1,7 +1,8 @@
 #ifndef REPLAY_GLOBAL_H
 #define REPLAY_GLOBAL_H
 
-#include "boe.global.hpp"
+#include <string>
+#include <sstream>
 
 // Input recording system
 namespace ticpp { class Element; }
