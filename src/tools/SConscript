@@ -21,7 +21,6 @@ tools = Split("""
 	../fileio/tarball.cpp
 	../fileio/tagfile.cpp
 	../fileio/gzstream/gzstream.cpp
-	../fileio/xml-parser/ticpp.cpp
 """) + Glob("../fileio/resmgr/*.cpp") + Glob("../gfx/*.cpp") + Glob("../scenario/*.cpp")
 
 if str(platform) == "darwin":
