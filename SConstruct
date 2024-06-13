@@ -199,11 +199,8 @@ elif platform == "win32":
 		vcpkg_other_libs = list(filter(path.exists, vcpkg_other_libs))
 		vcpkg_other_bins = [path.join(d.get_abspath(), 'bin') for d in vcpkg_other_packages]
 		vcpkg_other_bins = list(filter(path.exists, vcpkg_other_bins))
-		project_includes = []
-		for (root, dirs, files) in os.walk('src'):
-			project_includes.append(path.join(os.getcwd(), root))
 
-		include_paths=[path.join(vcpkg_installed, 'include')] + vcpkg_other_includes + project_includes
+		include_paths=[path.join(vcpkg_installed, 'include')] + vcpkg_other_includes
 		env.Append(
 			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup',f'/MACHINE:X{arch_short}'],
 			CXXFLAGS=['/EHsc','/MD','/FIglobal.hpp'],
@@ -384,6 +381,12 @@ if not env.GetOption('clean'):
 	env = conf.Finish()
 
 env.Append(CPPDEFINES=["TIXML_USE_TICPP"])
+
+project_includes = []
+for (root, dirs, files) in os.walk('src'):
+	project_includes.append(path.join(os.getcwd(), root))
+
+env.Append(CPPPATH=project_includes)
 
 if platform == "win32":
 	# For the *resource.h headers
