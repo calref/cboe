@@ -2,6 +2,7 @@
 #include "boe.global.hpp"
 #include "universe/universe.hpp"
 
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/lexical_cast.hpp>
 #include <unordered_map>
@@ -233,11 +234,18 @@ std::string log_file;
 
 bool init_action_log(std::string command, std::string file) {
 	if (command == "record") {
+		// If a filename is given, use it as a base, but insert a timestamp for uniqueness.
+		if (file.empty())
+			file = "BoE";
+
+		if (boost::ends_with(file, ".xml"))
+			file = file.substr(0, file.length() - 4);
+
 		// Get a time stamp
 		std::time_t t = time(nullptr);
 		auto tm = *std::localtime(&t);
 		std::ostringstream stream;
-		stream << "BoE_" << std::put_time(&tm, "%d-%m-%Y_%H-%M-%S") << ".xml";
+		stream << file << std::put_time(&tm, "_%d-%m-%Y_%H-%M-%S") << ".xml";
 		log_file = stream.str();
 		
 		try {
@@ -291,7 +299,7 @@ void process_args(int argc, char* argv[]) {
 	// Command line usage:
 	//  "Blades of Exile"                               # basic launch
 	//  "Blades of Exile" <save file>                   # launch and load save file
-	// 	"Blades of Exile" record 	                    # record this session in a time-stamped xml file
+	// 	"Blades of Exile" record <optional file>	    # record this session in a time-stamped xml file
 	//  "Blades of Exile" play <file>                   # replay a session from an xml file
 	if (argc > 1) {
 		std::string file = "";
