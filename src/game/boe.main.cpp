@@ -257,6 +257,7 @@ void replay_next_action() {
 	if (t == "load_party") {
 		decode_file(next_action.GetText(), tempDir / "temp.exg");
 		load_party(tempDir / "temp.exg", univ);
+		finish_load_party();
 	}
 }
 
