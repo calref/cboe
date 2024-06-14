@@ -5,7 +5,10 @@
 #include "ticpp.h"
 #include <ctime>
 #include <iomanip>
+#include <fstream>
 #include <boost/algorithm/string/predicate.hpp>
+#include <cppcodec/base64_rfc4648.hpp>
+using base64 = cppcodec::base64_rfc4648;
 
 bool recording = false;
 bool replaying = false;
@@ -82,4 +85,23 @@ std::unique_ptr<Element> pop_next_action(std::string expected_action_type) {
 	
 	std::unique_ptr<Element> ptr { clone };
 	return ptr;
+}
+
+std::string encode_file(fs::path file) {
+	std::ifstream ifs(file.string(), std::ios::binary|std::ios::ate);
+    std::ifstream::pos_type pos = ifs.tellg();
+
+    std::vector<char> result(pos);
+
+    ifs.seekg(0, std::ios::beg);
+    ifs.read(result.data(), pos);
+
+    return base64::encode(result.data(), result.size() * sizeof(char));
+}
+
+void decode_file(std::string data, fs::path file) {
+	std::ofstream ofs(file.string(), std::ios::binary|std::ios::ate);
+	std::vector<uint8_t> bytes = base64::decode(data.c_str(), strlen(data.c_str()) * sizeof(char));
+	char* bytes_as_c_str = reinterpret_cast<char*>(bytes.data());
+	ofs.write(bytes_as_c_str, bytes.size() / sizeof(char));
 }
