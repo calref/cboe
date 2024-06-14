@@ -72,6 +72,7 @@ extern rectangle shop_frame;
 extern enum_map(eGuiArea, rectangle) win_to_rects;
 
 std::string scenario_temp_dir_name = "scenario";
+extern fs::path tempDir;
 
 /* Display globals */
 short combat_posing_monster = -1, current_working_monster = -1; // 0-5 PC 100 + x - monster x
@@ -254,8 +255,8 @@ void replay_next_action() {
 	auto next_action = pop_next_action();
 	std::string t = next_action->Value();
 	if (t == "load_party") {
-		decode_file(next_action->GetText(), "temp.exg");
-		load_party("temp.exg", univ);
+		decode_file(next_action->GetText(), tempDir / "temp.exg");
+		load_party(tempDir / "temp.exg", univ);
 	}
 }
 
