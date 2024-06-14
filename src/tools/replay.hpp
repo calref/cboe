@@ -3,6 +3,7 @@
 
 #include <string>
 #include <sstream>
+#include <memory>
 
 // Input recording system
 namespace ticpp { class Element; }
