@@ -353,6 +353,8 @@ if not env.GetOption('clean'):
 	if not path.exists('deps/cppcodec/README.md'):
 		subprocess.call(["git", "submodule", "update", "--init", "deps/cppcodec"])
 
+	env.Append(CPPPATH=[path.join(os.getcwd(), 'deps/cppcodec')])
+
 	# On Linux, build TGUI from the subtree if necessary
 	if platform == 'posix':
 		def check_tgui(conf, second_attempt=False):

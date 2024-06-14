@@ -250,6 +250,15 @@ void process_args(int argc, char* argv[]) {
 	}
 }
 
+void replay_next_action() {
+	auto next_action = pop_next_action();
+	std::string t = next_action->Value();
+	if (t == "load_party") {
+		decode_file(next_action->GetText(), "temp.exg");
+		load_party("temp.exg", univ);
+	}
+}
+
 void init_boe(int argc, char* argv[]) {
 	set_up_apple_events();
 	init_directories(argv[0]);
@@ -307,6 +316,12 @@ void init_boe(int argc, char* argv[]) {
 	init_mini_map();
 	redraw_screen(REFRESH_NONE);
 	showMenuBar();
+
+	if(replaying){
+		while(has_next_action()){
+			replay_next_action();
+		}
+	}
 }
 
 void showWelcome() {
