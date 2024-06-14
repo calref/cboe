@@ -62,6 +62,11 @@ void record_action(std::string action_type, std::string inner_text) {
 	log_document.SaveFile(log_file);
 }
 
+bool has_next_action() {
+	Element* root = log_document.FirstChildElement();
+	return root->FirstChildElement(false) != NULL;
+}
+
 std::unique_ptr<Element> pop_next_action(std::string expected_action_type) {
 	Element* root = log_document.FirstChildElement();
 	Element* next_action = root->FirstChildElement();
