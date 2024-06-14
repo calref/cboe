@@ -102,20 +102,12 @@ static bool save_prefs(fs::path fpath) {
 	return true;
 }
 
-static bool load_prefs(fs::path fpath) {
+static bool load_prefs(std::istream& in) {
 	prefsDirty = false;
 	std::map<std::string,boost::any> temp_prefs;
-	std::istream* in;
-	if (replaying) {
-		Element* prefs_action = pop_next_action("load_prefs");
-		in = new std::istringstream(prefs_action->GetText());
-	} else {
-		in = new std::ifstream(fpath.c_str());
-	}
-	(fpath.string().c_str());
 	std::string line;
 	std::ostringstream prefs_recording;
-	while(std::getline(*in, line)) {
+	while(std::getline(in, line)) {
 		if(!in) {
 			perror("Error reading preferences");
 			return false;
@@ -156,13 +148,25 @@ static bool load_prefs(fs::path fpath) {
 		}
 	}
 	prefs.swap(temp_prefs);
-	delete in;
 
 	if (recording) {
 		record_action("load_prefs", prefs_recording.str());
 	}
 
 	return prefsLoaded = true;
+}
+
+static bool load_prefs(fs::path fpath) {
+	// When replaying a BoE session, disregard the system settings and use the ones
+	// that were recorded
+	if (replaying) {
+		Element* prefs_action = pop_next_action("load_prefs");
+		std::istringstream in(prefs_action->GetText());
+		return load_prefs(in);
+	} else {
+		std::ifstream in(fpath.c_str());
+		return load_prefs(in);
+	}
 }
 
 extern fs::path tempDir;
