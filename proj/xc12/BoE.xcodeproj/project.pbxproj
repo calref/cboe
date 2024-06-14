@@ -2317,6 +2317,7 @@
 					"$(PROJECT_DIR)/../../deps/Catch2/single_include",
 					"$(PROJECT_DIR)/../../src/fileio/gzstream",
 					"$(PROJECT_DIR)/../../src/fileio/xml-parser",
+					"$(PROJECT_DIR)/../../src/tools"
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -2428,6 +2429,7 @@
 					"$(PROJECT_DIR)/../../deps/Catch2/single_include",
 					"$(PROJECT_DIR)/../../src/fileio/gzstream",
 					"$(PROJECT_DIR)/../../src/fileio/xml-parser",
+					"$(PROJECT_DIR)/../../src/tools"
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
