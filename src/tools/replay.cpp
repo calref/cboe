@@ -74,5 +74,6 @@ Element* pop_next_action(std::string expected_action_type) {
 
 	Element* clone = next_action->Clone()->ToElement();
 	root->RemoveChild(next_action);
+	
 	return clone;
 }
