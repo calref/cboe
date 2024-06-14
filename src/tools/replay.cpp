@@ -62,7 +62,7 @@ void record_action(std::string action_type, std::string inner_text) {
 	log_document.SaveFile(log_file);
 }
 
-Element* pop_next_action(std::string expected_action_type) {
+std::unique_ptr<Element> pop_next_action(std::string expected_action_type) {
 	Element* root = log_document.FirstChildElement();
 	Element* next_action = root->FirstChildElement();
 	
@@ -74,5 +74,7 @@ Element* pop_next_action(std::string expected_action_type) {
 
 	Element* clone = next_action->Clone()->ToElement();
 	root->RemoveChild(next_action);
-	return clone;
+	
+	std::unique_ptr<Element> ptr { clone };
+	return ptr;
 }
