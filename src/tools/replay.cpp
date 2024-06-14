@@ -70,7 +70,7 @@ bool has_next_action() {
 	return root->FirstChildElement(false) != NULL;
 }
 
-std::unique_ptr<Element> pop_next_action(std::string expected_action_type) {
+Element pop_next_action(std::string expected_action_type) {
 	Element* root = log_document.FirstChildElement();
 	Element* next_action = root->FirstChildElement();
 	
@@ -83,8 +83,7 @@ std::unique_ptr<Element> pop_next_action(std::string expected_action_type) {
 	Element* clone = next_action->Clone()->ToElement();
 	root->RemoveChild(next_action);
 	
-	std::unique_ptr<Element> ptr { clone };
-	return ptr;
+	return *clone;
 }
 
 std::string encode_file(fs::path file) {
