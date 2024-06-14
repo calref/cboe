@@ -355,6 +355,10 @@ if not env.GetOption('clean'):
 	# If building the tests, make sure Catch2 is cloned
 	if 'test' in targets and not path.exists('deps/Catch2/README.md'):
 		subprocess.call(["git", "submodule", "update", "--init", "deps/Catch2"])
+	
+	# Make sure cppcodec is cloned
+	if not path.exists('deps/cppcodec/README.md'):
+		subprocess.call(["git", "submodule", "update", "--init", "deps/cppcodec"])
 
 	# On Linux, build TGUI from the subtree if necessary
 	if platform == 'posix':
