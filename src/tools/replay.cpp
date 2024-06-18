@@ -70,7 +70,7 @@ bool has_next_action() {
 	return root->FirstChildElement(false) != NULL;
 }
 
-Element pop_next_action(std::string expected_action_type) {
+Element* pop_next_action(std::string expected_action_type) {
 	Element* root = log_document.FirstChildElement();
 	Element* next_action = root->FirstChildElement();
 	
@@ -81,9 +81,11 @@ Element pop_next_action(std::string expected_action_type) {
 	}
 
 	Element* clone = next_action->Clone()->ToElement();
+	
+	// This invalidates the pointer to next_action:
 	root->RemoveChild(next_action);
 	
-	return *clone;
+	return clone;
 }
 
 std::string encode_file(fs::path file) {

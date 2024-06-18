@@ -161,7 +161,7 @@ static bool load_prefs(fs::path fpath) {
 	// that were recorded
 	if (replaying) {
 		auto prefs_action = pop_next_action("load_prefs");
-		std::istringstream in(prefs_action.GetText());
+		std::istringstream in(prefs_action->GetText());
 		return load_prefs(in);
 	} else {
 		std::ifstream in(fpath.c_str());

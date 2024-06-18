@@ -253,9 +253,9 @@ void process_args(int argc, char* argv[]) {
 
 void replay_next_action() {
 	auto next_action = pop_next_action();
-	std::string t = next_action.Value();
+	std::string t = next_action->Value();
 	if (t == "load_party") {
-		decode_file(next_action.GetText(), tempDir / "temp.exg");
+		decode_file(next_action->GetText(), tempDir / "temp.exg");
 		load_party(tempDir / "temp.exg", univ);
 		finish_load_party();
 	}
@@ -290,7 +290,7 @@ void init_boe(int argc, char* argv[]) {
 	if (replaying) {
 		auto srand_element = pop_next_action("srand");
 		
-		std::string ts(srand_element.GetText());
+		std::string ts(srand_element->GetText());
 		srand(atoi(ts.c_str()));
 	} else {
 		auto t = time(nullptr);
