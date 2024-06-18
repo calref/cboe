@@ -145,12 +145,9 @@ void adjust_window_mode() {
 	// 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
 	int mode = get_int_pref("DisplayMode");
 	if(mode == 5) {
-		// Increase window height to make room for the menubar
+		// Increase window height to make room for the menubar on Linux
 		int winHeight = height;
-#ifndef _WIN32
-		// Not on Windows, for some reason
-		winHeight += getMenubarHeight();
-#endif
+		winHeight += os_specific_y_offset();
 
 		mainPtr.create(sf::VideoMode(width, winHeight, 32), "Blades of Exile", sf::Style::Titlebar | sf::Style::Close, winSettings);
 
@@ -185,16 +182,6 @@ sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, int mode, float 
 	// Dimensions of the OS window.
 	rectangle windRect { mainPtr };
 
-	// This is an additional offset between the "logical" top of the window an the UI.
-	// On Windows and Mac no offset is needed because the menubar is not a part of the mainPtr, but
-	// on Linux it is.
-	int os_specific_y_offset =
-#if defined(SFML_SYSTEM_WINDOWS) || defined(SFML_SYSTEM_MAC)
-		0;
-#else
-		getMenubarHeight();
-#endif
-
 	// Width and height: how large the viewport is. They seem to be calculated
 	// in terms of *source* dimensions, with values above 1 resulting in an upscale.
 	viewport.width  = ui_scale * width / windRect.width();
@@ -210,15 +197,15 @@ sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, int mode, float 
 	if(mode == 0) {
 		// Fullscreen centered
 		viewport.left = float((windRect.width() - width) / 2) / windRect.width();
-		viewport.top  = float((windRect.height() - height - os_specific_y_offset) / 2)/ windRect.height();
+		viewport.top  = float((windRect.height() - height - os_specific_y_offset()) / 2)/ windRect.height();
 	} else if(mode == 1) {
 		// Fullscreen top left
 		viewport.left = float(extra_horizontal_buffer) / windRect.width();
-		viewport.top  = float(os_specific_y_offset) / windRect.height();
+		viewport.top  = float(os_specific_y_offset()) / windRect.height();
 	} else if(mode == 2) {
 		// Fullscreen top right
 		viewport.left = float(windRect.right - width - extra_horizontal_buffer) / windRect.width();
-		viewport.top  = float(os_specific_y_offset) / windRect.height();
+		viewport.top  = float(os_specific_y_offset()) / windRect.height();
 	} else if(mode == 3) {
 		// Fullscreen bottom left
 		viewport.left = float(extra_horizontal_buffer) / windRect.width();
@@ -226,16 +213,16 @@ sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, int mode, float 
 		// there could be a windows taskbar / mac os dock / xfce taskbar / etc that consumes a part
 		// of that display, and that we do not know size of. So we need to account for that somehow,
 		// so we add 28 more pixels (this was the amount in the previous version of this code).
-		viewport.top  = float(windRect.bottom - height - os_specific_y_offset - 28) / windRect.height();
+		viewport.top  = float(windRect.bottom - height - os_specific_y_offset() - 28) / windRect.height();
 	} else if(mode == 4) {
 		// Fullscreen bottom right
 		viewport.left = float(windRect.right - width - extra_horizontal_buffer) / windRect.width();
 		// DIRTY HACK: same as for mode 3
-		viewport.top  = float(windRect.bottom - height - os_specific_y_offset - 28) / windRect.height();
+		viewport.top  = float(windRect.bottom - height - os_specific_y_offset() - 28) / windRect.height();
 	} else if(mode == 5) {
 		// Small windowed
 		viewport.left = 0;
-		viewport.top  = float(os_specific_y_offset) / windRect.height();
+		viewport.top  = float(os_specific_y_offset()) / windRect.height();
 	}
 
 	return viewport;

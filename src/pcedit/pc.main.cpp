@@ -142,16 +142,9 @@ int main(int argc, char* argv[]) {
 sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, float ui_scale) {
 
 	// See compute_viewport() in boe.graphics.cpp
-	int const os_specific_y_offset =
-#if defined(SFML_SYSTEM_WINDOWS) || defined(SFML_SYSTEM_MAC)
-		0;
-#else
-		getMenubarHeight();
-#endif
-
 	sf::FloatRect viewport;
 	
-	viewport.top    = float(os_specific_y_offset) / mainPtr.getSize().y;
+	viewport.top    = float(os_specific_y_offset()) / mainPtr.getSize().y;
 	viewport.left   = 0;
 	viewport.width  = ui_scale;
 	viewport.height = ui_scale;
@@ -164,11 +157,7 @@ void adjust_window (sf::RenderWindow& mainPtr, sf::View& mainView) {
 	double ui_scale = get_float_pref("UIScale", 1.0);
 	
 	int const width  = ui_scale * 590;
-	int const height = ui_scale * 440
-#ifndef SFML_SYSTEM_WINDOWS
-		+ getMenubarHeight()
-#endif
-	;
+	int const height = ui_scale * 440 + os_specific_y_offset();
 	
 	mainPtr.create(sf::VideoMode(width, height), "Blades of Exile Character Editor", sf::Style::Titlebar | sf::Style::Close);
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();

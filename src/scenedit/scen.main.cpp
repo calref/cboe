@@ -144,16 +144,9 @@ static void init_scrollbars() {
 sf::FloatRect compute_viewport(const sf::RenderWindow & mainPtr, float ui_scale) {
 
 	// See compute_viewport() in boe.graphics.cpp
-	const int os_specific_y_offset =
-#if defined(SFML_SYSTEM_WINDOWS) || defined(SFML_SYSTEM_MAC)
-		0;
-#else
-		getMenubarHeight();
-#endif
-
 	sf::FloatRect viewport;
 	
-	viewport.top    = float(os_specific_y_offset) / mainPtr.getSize().y;
+	viewport.top    = float(os_specific_y_offset()) / mainPtr.getSize().y;
 	viewport.left   = 0;
 	viewport.width  = ui_scale;
 	viewport.height = ui_scale;
@@ -169,11 +162,7 @@ void adjust_windows (sf::RenderWindow & mainPtr, sf::View & mainView) {
 	double ui_scale = get_float_pref("UIScale", 1.0);
 	
 	const int width  = ui_scale * 584;
-	const int height = ui_scale * 420
-#ifndef SFML_SYSTEM_WINDOWS
-		+ getMenubarHeight()
-#endif
-	;
+	const int height = ui_scale * 420 + os_specific_y_offset();
 	
 	mainPtr.create(sf::VideoMode(width, height), "Blades of Exile Scenario Editor", sf::Style::Titlebar | sf::Style::Close);
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
