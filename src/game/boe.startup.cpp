@@ -109,9 +109,10 @@ bool handle_startup_press(location the_point) {
 
 void handle_splash_events() {
 	sf::Event event;
-	if(!mainPtr.pollEvent(event)) return;
-	if(event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)
-		set_cursor(sword_curs);
+	while (mainPtr.pollEvent(event)) {
+		if (event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)
+			set_cursor(sword_curs);
+	}
 }
 
 void show_logo() {
