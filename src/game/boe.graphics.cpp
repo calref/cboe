@@ -171,6 +171,21 @@ void adjust_window_mode() {
 #endif
 
 	init_menubar();
+#ifdef SFML_SYSTEM_WINDOWS
+	if (mode == 5) {
+		// On Windows, the menubar DOES take up space in the window,
+		// but this is not handled with os_specific_y_offset() because
+		// y = 0 still refers to the bottom of the menubar on Windows.
+
+		// getMenuBarHeight() has to be called AFTER init_menubar() for this,
+		// because different combinations of OS and BOE scaling options can
+		// result in a menubar with more than one row, which can only be measured
+		// after it is placed in the window
+		int winHeight = height;
+		winHeight += getMenubarHeight();
+		mainPtr.setSize({ (unsigned int)width, (unsigned int)winHeight });
+	}
+#endif
 	showMenuBar();
 }
 
