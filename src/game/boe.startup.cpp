@@ -112,16 +112,24 @@ void handle_splash_events() {
 	while (mainPtr.pollEvent(event)) {
 		if (event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)
 			set_cursor(sword_curs);
+		if (event.type == sf::Event::Resized) {
+			std::cout << "new width: " << event.size.width << std::endl;
+			std::cout << "new height: " << event.size.height << std::endl;
+		}
 	}
 }
 
+rectangle view_rect() {
+	sf::Vector2f size = mainPtr.getView().getSize();
+	return rectangle(0, 0, size.y, size.x);
+}
+
 void show_logo() {
-	rectangle whole_window;
+	rectangle whole_window = view_rect();
 	
 	if(get_int_pref("DisplayMode") != 5)
 		hideMenuBar();
 	
-	whole_window = rectangle(mainPtr);
 	double ui_scale = get_float_pref("UIScale", 1.0);
 	if(ui_scale < 1) ui_scale = 1;
 	rectangle logo_from = {0, 0, int(ui_scale *350), int(ui_scale * 350)};
@@ -142,11 +150,12 @@ void show_logo() {
 }
 
 void plop_fancy_startup() {
+	rectangle whole_window = view_rect();
+
 	float ui_scale = get_float_pref("UIScale", 1.0);
 	if (ui_scale<1) ui_scale=1;
-	rectangle whole_window,from_rect;
+	rectangle from_rect;
 	rectangle intro_from = {0, 0, int(ui_scale * 480), int(ui_scale * 640)};
-	whole_window = rectangle(mainPtr);
 	sf::Time delay = time_in_ticks(220);
 	intro_from.offset((whole_window.right - intro_from.right) / 2,(whole_window.bottom - intro_from.bottom) / 2);
 	sf::Texture& pict_to_draw = *ResMgr::graphics.get("startsplash", true);
