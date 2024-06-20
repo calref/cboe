@@ -291,7 +291,7 @@ LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lPara
 	// resizing of the window, which we skip processing because it skews our
 	// viewport:
 	static bool menubarTriggeredResize = false;
-	if (message == WM_SIZE && !menubarTriggeredResize) {
+	if(message == WM_SIZE && !menubarTriggeredResize) {
 		menubarTriggeredResize = true;
 		return true;
 	}
