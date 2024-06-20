@@ -55,10 +55,10 @@ void init_menubar() {
 	if(winHandle == NULL) return;
 	if(menuHandle == NULL)
 		menuHandle = LoadMenu(GetModuleHandle(NULL), MAKEINTRESOURCE(IDR_MENU1));
-	SetMenu(winHandle, menuHandle);
 	// Now we have to do a little hack to handle menu messages.
 	// We replace SFML's window procedure with our own, which checks for menu events and then forwards to SFML's procedure.
 	mainProc = SetWindowLongPtr(winHandle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&menuProc));
+	SetMenu(winHandle, menuHandle);
 	
 	// And now initialize the mapping from Windows menu commands to eMenu constants
 	static bool inited = false;
@@ -124,6 +124,16 @@ void menu_activate() {
 
 LRESULT CALLBACK menuProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) {
 	MSG msg = {handle, message, wParam, lParam};
+	
+	// Adding the menubar to the window for the first time triggers an unwanted
+	// resizing of the window, which we skip processing because it skews our
+	// viewport:
+	static bool menubarTriggeredResize = false;
+	if(message == WM_SIZE && !menubarTriggeredResize) {
+		menubarTriggeredResize = true;
+		return true;
+	}
+
 	if(HIWORD(wParam) != 1 || message != WM_COMMAND) {
 		if(TranslateAccelerator(handle, accel.handle, &msg))
 			return 0;
