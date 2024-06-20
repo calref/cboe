@@ -256,12 +256,19 @@ if platform == 'darwin':
 			CPPPATH=['/sw/include']
 		)
 
-	# pretty sketchy, but should point to your boost install
+	# pretty sketchy, but should point to your brew installation directories
 	if subprocess.call(['which', '-s', 'brew']) == 0: # HomeBrew
-		brew_boost_version = '1.85.0'
-		env.Append(
-			LIBPATH=['/usr/local/Cellar/boost/'+brew_boost_version+'/lib'],
-			CPPPATH=['/usr/local/Cellar/boost/'+brew_boost_version+'/include'])
+		possible_brew_dirs = ['/usr/local', '/opt/homebrew']
+		brew_lib_versions = {
+			'boost': '1.85.0',
+			'sfml': '2.6.1'
+		}
+		for dir in possible_brew_dirs:
+			if path.exists(f'{dir}/Cellar'):
+				for lib, version in brew_lib_versions.items():
+					env.Append(
+						LIBPATH=[f'{dir}/Cellar/{lib}/{version}/lib'],
+						CPPPATH=[f'{dir}/Cellar/{lib}/{version}/include'])
 
 # Sometimes it's easier just to copy the dependencies into the repo dir
 # We try to auto-detect this.
