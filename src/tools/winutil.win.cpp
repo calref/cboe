@@ -446,9 +446,9 @@ ModalSession::~ModalSession() {
 int getMenubarHeight() {
 	MENUBARINFO info;
 	info.cbSize = sizeof(MENUBARINFO);
-	if (GetMenuBarInfo(mainPtr.getSystemHandle(), OBJID_MENU, 0, &info))
+	if(GetMenuBarInfo(mainPtr.getSystemHandle(), OBJID_MENU, 0, &info)) {
 		return info.rcBar.bottom - info.rcBar.top;
-	else {
+	} else {
 		return GetSystemMetrics(SM_CYMENU);
 	}
 }

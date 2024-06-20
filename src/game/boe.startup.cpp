@@ -109,13 +109,9 @@ bool handle_startup_press(location the_point) {
 
 void handle_splash_events() {
 	sf::Event event;
-	while (mainPtr.pollEvent(event)) {
-		if (event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)
+	while(mainPtr.pollEvent(event)) {
+		if(event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)
 			set_cursor(sword_curs);
-		if (event.type == sf::Event::Resized) {
-			std::cout << "new width: " << event.size.width << std::endl;
-			std::cout << "new height: " << event.size.height << std::endl;
-		}
 	}
 }
 
