@@ -71,5 +71,7 @@
 			</dict>
 		</dict>
 	</array>
+	<key>NSHighResolutionCapable</key>
+	<false/>
 </dict>
 </plist>
