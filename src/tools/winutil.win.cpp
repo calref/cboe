@@ -462,7 +462,7 @@ void adjust_window_for_menubar(int mode, unsigned int width, unsigned int height
 	// because different combinations of OS and BOE scaling options can
 	// result in a menubar with more than one row, which can only be measured
 	// after it is placed in the window
-	if (mode != 5) {
+	if(mode != 5) {
 		sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 		width = desktop.width;
 		height = desktop.height;
