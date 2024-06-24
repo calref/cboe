@@ -173,6 +173,11 @@ void adjust_window_mode() {
 	mainPtr.setIcon(icon->getSize().x, icon->getSize().y, icon->copyToImage().getPixelsPtr());
 #endif
 
+#ifdef SFML_SYSTEM_WINDOWS
+	// On windows, the file dialogs are constructed with mainPtr as a parent,
+	// so they need to be reconstructed after mainPtr is.
+	init_fileio();
+#endif
 	init_menubar();
 	showMenuBar();
 }
