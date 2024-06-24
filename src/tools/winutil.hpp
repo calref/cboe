@@ -58,6 +58,8 @@ inline int os_specific_y_offset() {
 #endif
 }
 
+void adjust_window_for_menubar(int mode, unsigned int width, unsigned int height);
+
 class ModalSession {
 	void* session;
 	sf::Window* parent;

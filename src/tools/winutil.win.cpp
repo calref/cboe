@@ -452,3 +452,22 @@ int getMenubarHeight() {
 		return GetSystemMetrics(SM_CYMENU);
 	}
 }
+
+void adjust_window_for_menubar(int mode, unsigned int width, unsigned int height) {
+	// On Windows, the menubar DOES take up space in the window,
+	// but this is not handled with os_specific_y_offset() because
+	// y = 0 still refers to the bottom of the menubar on Windows.
+
+	// getMenuBarHeight() has to be called again AFTER init_menubar() for this,
+	// because different combinations of OS and BOE scaling options can
+	// result in a menubar with more than one row, which can only be measured
+	// after it is placed in the window
+	if (mode != 5) {
+		sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+		width = desktop.width;
+		height = desktop.height;
+	}
+
+	height += getMenubarHeight();
+	mainPtr.setSize({ width, height });
+}

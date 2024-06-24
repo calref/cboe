@@ -180,12 +180,7 @@ void adjust_window (sf::RenderWindow& mainPtr, sf::View& mainView) {
 #endif
 	
 	init_menubar();
-#ifdef SFML_SYSTEM_WINDOWS
-	// see adjust_window_mode() in boe.graphics.cpp for an explanation of this:
-	int winHeight = height;
-	winHeight += getMenubarHeight();
-	mainPtr.setSize({ (unsigned int)width, (unsigned int)winHeight });
-#endif
+	adjust_window_for_menubar();
 }
 
 void handle_events() {
