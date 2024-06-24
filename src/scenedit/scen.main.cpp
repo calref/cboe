@@ -184,7 +184,7 @@ void adjust_windows (sf::RenderWindow & mainPtr, sf::View & mainView) {
 	mainPtr.setIcon(icon->getSize().x, icon->getSize().y, icon->copyToImage().getPixelsPtr());
 #endif
 	init_menubar();
-	adjust_window_for_menubar();
+	adjust_window_for_menubar(5, width, height);
 }
 
 void process_args(int argc, char* argv[]) {

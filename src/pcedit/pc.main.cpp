@@ -180,7 +180,7 @@ void adjust_window (sf::RenderWindow& mainPtr, sf::View& mainView) {
 #endif
 	
 	init_menubar();
-	adjust_window_for_menubar();
+	adjust_window_for_menubar(5, width, height);
 }
 
 void handle_events() {
