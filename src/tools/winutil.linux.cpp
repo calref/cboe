@@ -227,3 +227,6 @@ int getMenubarHeight() {
 	// return MENUBAR_HEIGHT;
 	return 20;
 }
+
+void adjust_window_for_menubar(int mode, unsigned int width, unsigned int height) {
+}

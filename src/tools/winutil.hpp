@@ -46,6 +46,20 @@ void beep();
 // Calculates how much of the window is occupied by the menubar
 int getMenubarHeight();
 
+// This is an additional offset between the "logical" top of the window an the UI.
+// On Windows and Mac no offset is needed because the menubar is not a part of the mainPtr, but
+// on Linux it is.
+inline int os_specific_y_offset() {
+	return
+#if defined(SFML_SYSTEM_WINDOWS) || defined(SFML_SYSTEM_MAC)
+		0;
+#else
+		getMenubarHeight();
+#endif
+}
+
+void adjust_window_for_menubar(int mode, unsigned int width, unsigned int height);
+
 class ModalSession {
 	void* session;
 	sf::Window* parent;
