@@ -69,8 +69,8 @@ static std::string get_file_error() {
 // Debug builds run from working directory "build/Blades of Exile"
 // should helpfully let you enter replay test scenarios.
 
-// Support for multiple scenario directories will also help with how I plan
-// to handle scenario packaging/distribution for my fork's release.
+// The Itch Edition finds scenarios in the Itch client's install path,
+// so scenarios can be distributed as Itch games.
 //  - Nat
 std::vector<fs::path> all_scen_dirs() {
 	std::vector<fs::path> scen_dirs = { scenDir };
@@ -86,6 +86,30 @@ std::vector<fs::path> all_scen_dirs() {
 		scen_dirs.push_back(replay_scenarios_dir);
 	}
 	#endif
+
+	// Itch Edition: Search Itch client apps.
+	// But not recursively, because the player could have tons of games installed
+	// and that would search ALL of the installed files.
+	// In fact, try to disqualify folders ASAP by only allowing .boes, .txt,
+	// and Itch meta files
+	// (designers might want to ship a README.txt)
+	fs::path itch_apps_path = scenDir/".."/".."/"itch"/"apps";
+	if(fs::is_directory(itch_apps_path)){
+		for(fs::directory_iterator app_iter(itch_apps_path); app_iter != fs::directory_iterator(); app_iter++){
+			fs::path app = *app_iter;
+			if(!fs::is_directory(app)) continue;
+			for(fs::directory_iterator file_iter(app); file_iter != fs::directory_iterator(); file_iter++){
+				fs::path file = *file_iter;
+				if(file.extension() == ".boes"){
+					scen_dirs.push_back(*app_iter);
+					break;
+				}else if(file.extension() == ".itch"){
+				}else if(file.extension() != ".txt"){
+					break;
+				}
+			}
+		}
+	}
 
 	return scen_dirs;
 }

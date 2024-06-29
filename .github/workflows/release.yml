@@ -1,0 +1,131 @@
+on:
+  push:
+    branches:
+      - 'itch-edition'
+    tags:
+      - "v*.*.*"
+  pull_request:
+    branches:
+      - itch-edition
+jobs:
+  release:
+    env:
+      ARCH: ${{ matrix.os.flag }}
+      MACOSX_DEPLOYMENT_TARGET: 10.15
+      BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+      PROD_MACOS_CERTIFICATE: '${{ secrets.PROD_MACOS_CERTIFICATE }}'
+      PROD_MACOS_CERTIFICATE_PWD: '${{ secrets.PROD_MACOS_CERTIFICATE_PWD }}'
+      PROD_MACOS_CERTIFICATE_NAME: '${{ secrets.PROD_MACOS_CERTIFICATE_NAME }}'
+      PROD_MACOS_CI_KEYCHAIN_PWD: '${{ secrets.PROD_MACOS_CI_KEYCHAIN_PWD }}'
+      PROD_MACOS_NOTARIZATION_APPLE_ID: '${{ secrets.PROD_MACOS_NOTARIZATION_APPLE_ID }}'
+      PROD_MACOS_NOTARIZATION_TEAM_ID: '${{ secrets.PROD_MACOS_NOTARIZATION_TEAM_ID }}'
+      PROD_MACOS_NOTARIZATION_PWD: '${{ secrets.PROD_MACOS_NOTARIZATION_PWD }}'
+      VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+      DEBUG_FLAG: ${{ matrix.configuration == 'Debug' && 'true' || 'false' }}
+      BUILD_OS: ${{ matrix.os.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+        - name: macos
+          suffix: '-intel'
+          flag: x86_64
+          deps: macos-universal
+          version: 13
+          scons-script: './.github/workflows/scripts/mac/scons-build.sh'
+        - name: macos
+          flag: arm64
+          suffix: '-silicon'
+          deps: macos-universal
+          version: 14
+          scons-script: './.github/workflows/scripts/mac/scons-build.sh'
+#        - name: ubuntu
+#          suffix: ''
+#          version: 22.04
+#          scons-script: scons
+        - name: windows
+          suffix: ''
+          version: 2019
+          scons-script: './.github/workflows/scripts/win/scons-build.bat'
+        configuration:
+        - Release
+        - Debug
+    runs-on: '${{ matrix.os.name }}-${{ matrix.os.version }}'
+    steps:
+      - name: Export GitHub Actions cache environment variables
+        uses: actions/github-script@v7
+        with:
+          script: "core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || ''); core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');"
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Download dependency build
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: NQNStudios/cboe-dependencies
+          latest: true
+          fileName: 'dependencies-${{ matrix.os.deps || matrix.os.name }}-${{ matrix.configuration }}.tar'
+          extract: true
+          out-file-path: 'deps'
+      - name: Windows build dependencies
+        run: 'vcpkg install libxml2 && pip install scons'
+        if: ${{ matrix.os.name == 'windows' }}
+      - name: Mac build dependencies
+        run: brew install scons
+        if: ${{ matrix.os.name == 'macos' }}
+      - name: Linux build dependencies
+        run: sudo apt-get update && sudo apt-get install scons libxml2-utils libgl-dev libopenal-dev
+        if: ${{ matrix.os.name == 'ubuntu' }}
+      - name: Install TGUI
+        run: 'sudo ./.github/workflows/scripts/linux/install-tgui.sh'
+        if: ${{ matrix.os.name == 'ubuntu' }}
+      - name: Build
+        run: '${{ matrix.os.scons-script }} test=false debug=$DEBUG_FLAG'
+        shell: bash
+
+      - name: Download fix-rpaths.py script
+        run: git clone https://gist.github.com/NQNStudios/7145bcf6621891f5176c8caa165d6b93
+        if: ${{ matrix.os.name == 'macos' }}
+      - name: Fix rpaths game
+        run: 'python 7145bcf6621891f5176c8caa165d6b93/fix-rpaths.py "build/Blades of Exile/Blades of Exile.app"'
+        if: ${{ matrix.os.name == 'macos' }}
+      - name: Fix rpaths scenario editor
+        run: 'python 7145bcf6621891f5176c8caa165d6b93/fix-rpaths.py "build/Blades of Exile/BoE Scenario Editor.app"'
+        if: ${{ matrix.os.name == 'macos' }}
+      - name: Fix rpaths character editor
+        run: 'python 7145bcf6621891f5176c8caa165d6b93/fix-rpaths.py "build/Blades of Exile/BoE Character Editor.app"'
+        if: ${{ matrix.os.name == 'macos' }}
+
+      - run: cp .itch.toml "build/Blades of Exile/"
+        shell: bash
+
+      - name: 'Tar unsigned files'
+        run: 'tar -cvf cboe-${{ matrix.os.name }}${{ matrix.os.suffix }}-${{ matrix.configuration }}-unsigned.tar "Blades of Exile"'
+        working-directory: '${{ github.workspace }}/build'
+      - name: upload pre-signing artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cboe-${{ matrix.os.name }}${{ matrix.os.suffix }}-${{ matrix.configuration }}-unsigned
+          path: '${{ github.workspace }}/build/cboe-${{ matrix.os.name }}${{ matrix.os.suffix }}-${{ matrix.configuration }}-unsigned.tar'
+      # Skipping this for now because of issue nqnstudios#13
+      - name: Codesign and notarize
+        run: 'SIGN="no" NOTARIZE="no" ./.github/workflows/scripts/mac/sign-apps.sh'
+        if: ${{ matrix.os.name == 'macos' }}
+      - name: 'Tar files'
+        run: 'tar -cvf cboe-${{ matrix.os.name }}${{ matrix.os.suffix }}-${{ matrix.configuration }}.tar "Blades of Exile"'
+        working-directory: '${{ github.workspace }}/build'
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cboe-${{ matrix.os.name }}${{ matrix.os.suffix }}-${{ matrix.configuration }}
+          path: '${{ github.workspace }}/build/cboe-${{ matrix.os.name }}${{ matrix.os.suffix }}-${{ matrix.configuration }}.tar'
+      - name: Github release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: '${{ github.workspace }}/build/cboe-${{ matrix.os.name }}${{ matrix.os.suffix }}-${{ matrix.configuration }}.tar'
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+      - name: 'Itch.io release'
+        run: './.github/workflows/scripts/butler_push.sh'
+        shell: bash
+        if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.configuration == 'Release' && matrix.os.name != 'macos' }}
