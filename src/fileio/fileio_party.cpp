@@ -20,6 +20,7 @@
 #include "porting.hpp"
 #include "fileio/tagfile.hpp"
 #include "fileio/tarball.hpp"
+#include "replay.hpp"
 
 extern bool mac_is_intel;
 extern fs::path progDir, tempDir;
@@ -117,19 +118,29 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 	}else format = unknown;
 	
 	fclose(file_id);
+	
+	bool result = false;
 	switch(format){
 		case old_mac:
-			return load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, mac_is_intel);
+			result = load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, mac_is_intel);
+			break;
 		case old_win:
-			return load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, !mac_is_intel);
+			result = load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, !mac_is_intel);
+			break;
 		case new_oboe:
-			return load_party_v2(file_to_load, univ);
+			result = load_party_v2(file_to_load, univ);
+			break;
 		case unknown:
 			showError("This is not a Blades of Exile save file.");
-			return false;
+			result = false;
+			break;
 	}
 	
-	return true;
+	if(recording && result){
+		record_action("load_party", encode_file(file_to_load));
+	}
+
+	return result;
 }
 
 bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restore, bool in_scen, bool maps_there, bool must_port){

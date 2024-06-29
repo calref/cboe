@@ -5,3 +5,6 @@
 	path = deps/TGUI
 	url = https://github.com/texus/TGUI.git
 	branch = 0.9
+[submodule "deps/cppcodec"]
+	path = deps/cppcodec
+	url = https://github.com/tplgy/cppcodec

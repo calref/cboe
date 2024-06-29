@@ -1,5 +1,8 @@
 
 #include "prefs.hpp"
+#include "game/boe.global.hpp"
+#include "tools/replay.hpp"
+#include "ticpp.h"
 #include <map>
 #include <string>
 #include <vector>
@@ -70,6 +73,9 @@ void clear_pref(std::string keypath) {
 }
 
 static bool save_prefs(fs::path fpath) {
+	// Don't save preferences when running a replay which might change them
+	if(replaying) return true;
+
 	if(!prefsDirty) return true;
 	fs::create_directories(fpath.parent_path());
 	std::ofstream fout(fpath.string().c_str());
@@ -96,13 +102,13 @@ static bool save_prefs(fs::path fpath) {
 	return true;
 }
 
-static bool load_prefs(fs::path fpath) {
+static bool load_prefs(std::istream& in) {
 	prefsDirty = false;
 	std::map<std::string,boost::any> temp_prefs;
-	std::ifstream fin(fpath.string().c_str());
 	std::string line;
-	while(std::getline(fin, line)) {
-		if(!fin) {
+	std::ostringstream prefs_recording;
+	while(std::getline(in, line)) {
+		if(!in) {
 			perror("Error reading preferences");
 			return false;
 		}
@@ -121,6 +127,10 @@ static bool load_prefs(fs::path fpath) {
 			printf("Error reading preferences: line is missing key:\n\t%s\n", line.c_str());
 			return false;
 		}
+		if (recording) {
+			prefs_recording << line << std::endl;
+		}
+
 		std::string key = line.substr(0, key_end + 1), val = line.substr(val_beg);
 		if(val == "true") temp_prefs[key] = true;
 		else if(val == "false") temp_prefs[key] = false;
@@ -138,7 +148,25 @@ static bool load_prefs(fs::path fpath) {
 		}
 	}
 	prefs.swap(temp_prefs);
+
+	if (recording) {
+		record_action("load_prefs", prefs_recording.str());
+	}
+
 	return prefsLoaded = true;
+}
+
+static bool load_prefs(fs::path fpath) {
+	// When replaying a BoE session, disregard the system settings and use the ones
+	// that were recorded
+	if (replaying) {
+		auto prefs_action = pop_next_action("load_prefs");
+		std::istringstream in(prefs_action.GetText());
+		return load_prefs(in);
+	} else {
+		std::ifstream in(fpath.c_str());
+		return load_prefs(in);
+	}
 }
 
 extern fs::path tempDir;

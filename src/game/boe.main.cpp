@@ -1,11 +1,16 @@
 
 #include "boe.global.hpp"
+#include "tools/replay.hpp"
 #include "universe/universe.hpp"
 
 #include <boost/filesystem/operations.hpp>
+#include <boost/lexical_cast.hpp>
 #include <unordered_map>
 #include <string>
 #include <memory>
+#include <iostream>
+#include <ctime>
+#include <sstream>
 #include "boe.graphics.hpp"
 #include "boe.newgraph.hpp"
 #include "boe.fileio.hpp"
@@ -67,6 +72,7 @@ extern rectangle shop_frame;
 extern enum_map(eGuiArea, rectangle) win_to_rects;
 
 std::string scenario_temp_dir_name = "scenario";
+extern fs::path tempDir;
 
 /* Display globals */
 short combat_posing_monster = -1, current_working_monster = -1; // 0-5 PC 100 + x - monster x
@@ -219,8 +225,16 @@ void process_args(int argc, char* argv[]) {
 	// Command line usage:
 	//  "Blades of Exile"                               # basic launch
 	//  "Blades of Exile" <save file>                   # launch and load save file
-
+	// 	"Blades of Exile" record <optional file>	    # record this session in a time-stamped xml file
+	//  "Blades of Exile" play <file>                   # replay a session from an xml file
 	if (argc > 1) {
+		std::string file = "";
+		if (argc > 2) {
+			file = argv[2];
+		}
+		if (init_action_log(argv[1], file))
+			return;
+		
 		if(!load_party(argv[1], univ)) {
 			std::cout << "Failed to load save file: " << argv[1] << std::endl;
 			return;
@@ -237,6 +251,16 @@ void process_args(int argc, char* argv[]) {
 	}
 }
 
+void replay_next_action() {
+	auto next_action = pop_next_action();
+	std::string t = next_action.Value();
+	if (t == "load_party") {
+		decode_file(next_action.GetText(), tempDir / "temp.exg");
+		load_party(tempDir / "temp.exg", univ);
+		finish_load_party();
+	}
+}
+
 void init_boe(int argc, char* argv[]) {
 	set_up_apple_events();
 	init_directories(argv[0]);
@@ -245,13 +269,15 @@ void init_boe(int argc, char* argv[]) {
 #ifdef __APPLE__
 	init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
 #endif
+
+	// TODO preferences need to be recorded in the action log for deterministic replay
 	sync_prefs();
 	init_shaders();
 	init_tiling();
 	init_snd_tool();
 	
 	init_ui();
-	
+
 	adjust_window_mode();
 	// If we don't do this now it'll flash white to start with
 	mainPtr.clear(sf::Color::Black);
@@ -259,7 +285,22 @@ void init_boe(int argc, char* argv[]) {
 	
 	set_cursor(watch_curs);
 	init_buf();
-	srand(time(nullptr));
+
+	// Seed the RNG
+	if (replaying) {
+		auto srand_element = pop_next_action("srand");
+		
+		std::string ts(srand_element.GetText());
+		srand(atoi(ts.c_str()));
+	} else {
+		auto t = time(nullptr);
+		if (recording) {
+			std::string ts = boost::lexical_cast<std::string>(t);
+			record_action("srand", ts);
+		}
+		srand(t);
+	}
+	std::cout << rand() << std::endl;
 	init_screen_locs();	
 	init_startup();
 	flushingInput = true;
@@ -277,6 +318,12 @@ void init_boe(int argc, char* argv[]) {
 	init_mini_map();
 	redraw_screen(REFRESH_NONE);
 	showMenuBar();
+
+	if(replaying){
+		while(has_next_action()){
+			replay_next_action();
+		}
+	}
 }
 
 void showWelcome() {

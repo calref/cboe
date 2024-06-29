@@ -859,6 +859,7 @@
 		91FE0E3623F084B70084CA6B /* drawable_manager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = drawable_manager.hpp; sourceTree = "<group>"; };
 		91FE0E3723F084B70084CA6B /* event_listener.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = event_listener.hpp; sourceTree = "<group>"; };
 		91FE0E3B23F084C60084CA6B /* drawable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = drawable.hpp; sourceTree = "<group>"; };
+		D384F6A12C1B9CE900A806C3 /* replay.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = replay.cpp; sourceTree = "<group>"; };
 		DCCA42011A8C467800E6A9A5 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -1214,6 +1215,7 @@
 		9185BDA11EA041570027C346 /* tools */ = {
 			isa = PBXGroup;
 			children = (
+				D384F6A12C1B9CE900A806C3 /* replay.cpp */,
 				91C688E70FD702B9000F6D01 /* cursors.mac.mm */,
 				91FE0E3523F084B70084CA6B /* drawable_manager.cpp */,
 				91F3204E23E65EA3009650AF /* framerate_limiter.cpp */,

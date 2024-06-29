@@ -6,6 +6,7 @@ tools = Split("""
 	framerate_limiter.cpp
 	drawable_manager.cpp
 	keymods.cpp
+	replay.cpp
 	../location.cpp
 	../mathutil.cpp
 	../porting.cpp
