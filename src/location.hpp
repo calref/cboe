@@ -165,6 +165,7 @@ rectangle rect(int top, int left, int bottom, int right);
 std::ostream& operator << (std::ostream& out, eDirection e);
 std::istream& operator >> (std::istream& in, eDirection& e);
 std::ostream& operator<< (std::ostream& out, location l);
+std::istream& operator>> (std::istream& in, location& l);
 std::ostream& operator<< (std::ostream& out, spec_loc_t l);
 std::ostream& operator<< (std::ostream& out, sign_loc_t l);
 std::ostream& operator<< (std::ostream& out, rectangle r);
