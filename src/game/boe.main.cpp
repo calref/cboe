@@ -227,12 +227,12 @@ void process_args(int argc, char* argv[]) {
 	//  "Blades of Exile" <save file>                   # launch and load save file
 	//  "Blades of Exile" record <optional file>	    # record this session in a time-stamped xml file
 	//  "Blades of Exile" replay <file>                 # replay a session from an xml file
-	if (argc > 1) {
+	if(argc > 1) {
 		std::string file = "";
-		if (argc > 2) {
+		if(argc > 2) {
 			file = argv[2];
 		}
-		if (init_action_log(argv[1], file))
+		if(init_action_log(argv[1], file))
 			return;
 		
 		if(!load_party(argv[1], univ)) {
@@ -287,7 +287,7 @@ void init_boe(int argc, char* argv[]) {
 	init_buf();
 
 	// Seed the RNG
-	if (replaying) {
+	if(replaying) {
 		auto srand_element = pop_next_action("srand");
 		
 		std::string ts(srand_element->GetText());
