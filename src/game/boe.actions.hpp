@@ -8,6 +8,8 @@
 void init_screen_locs();
 bool prime_time();
 bool handle_action(const sf::Event& event);
+void advance_time(bool did_something, bool need_redraw, bool need_reprint);
+void handle_move(location destination, bool& did_something, bool& need_redraw, bool& need_reprint);
 void handle_monster_actions(bool& need_redraw, bool& need_reprint);
 bool someone_awake();
 void handle_menu_spell(short spell_picked,short spell_type) ;
