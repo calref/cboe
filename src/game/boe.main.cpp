@@ -19,6 +19,7 @@
 #include "boe.party.hpp"
 #include "boe.items.hpp"
 #include "boe.locutils.hpp"
+#include "boe.actions.hpp"
 #include "boe.town.hpp"
 #include "boe.dlgutil.hpp"
 #include "boe.infodlg.hpp"
@@ -252,13 +253,22 @@ void process_args(int argc, char* argv[]) {
 }
 
 void replay_next_action() {
+	bool did_something = false, need_redraw = false, need_reprint = false;
+
 	auto next_action = pop_next_action();
 	std::string t = next_action->Value();
-	if (t == "load_party") {
+	if(t == "load_party") {
 		decode_file(next_action->GetText(), tempDir / "temp.exg");
 		load_party(tempDir / "temp.exg", univ);
 		finish_load_party();
+	} else if(t == "move") {
+		location l;
+		std::stringstream sstr(next_action->GetText());
+		sstr >> l;
+		handle_move(l, did_something, need_redraw, need_reprint);
 	}
+
+	advance_time(did_something, need_redraw, need_reprint);
 }
 
 void init_boe(int argc, char* argv[]) {

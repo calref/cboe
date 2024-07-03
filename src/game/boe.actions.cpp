@@ -119,8 +119,6 @@ enum_map(eShopArea, rectangle) shopping_rects[8];
 std::queue<pending_special_type> special_queue;
 bool end_scenario = false;
 
-static void advance_time(bool did_something, bool need_redraw, bool need_reprint);
-
 // This is defined in pc.editors.cpp since the PC editor also uses it
 extern void edit_stuff_done();
 
@@ -501,7 +499,7 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 	}
 }
 
-static void handle_move(location destination, bool& did_something, bool& need_redraw, bool& need_reprint) {
+void handle_move(location destination, bool& did_something, bool& need_redraw, bool& need_reprint) {
 	if(recording) {
 		// record the action
 		std::stringstream out;
@@ -1421,7 +1419,7 @@ bool handle_action(const sf::Event& event) {
 	return are_done;
 }
 
-static void advance_time(bool did_something, bool need_redraw, bool need_reprint) {
+void advance_time(bool did_something, bool need_redraw, bool need_reprint) {
  	// MARK: At this point, see if any specials have been queued up, and deal with them
 	// Note: We just check once here instead of looping because run_special also pulls from the queue.
 	if(!special_queue.empty()) {
