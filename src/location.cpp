@@ -9,6 +9,7 @@
 #include "location.hpp"
 #include "mathutil.hpp"
 #include <iostream>
+#include <sstream>
 
 eDirection& operator++ (eDirection& me, int) {
 	if(me == DIR_HERE) return me = DIR_N;
@@ -235,6 +236,19 @@ rectangle rect(int top, int left, int bottom, int right) {
 std::ostream& operator<< (std::ostream& out, location l) {
 	out << '(' << l.x << ',' << l.y << ')';
 	return out;
+}
+
+std::istream& operator>> (std::istream& in, location& l) {
+	in.get(); // (
+	std::stringbuf sstr;
+	in.get(sstr, ',');
+	l.x = atoi(sstr.str().c_str());
+	in.get(); // ,
+	sstr.str("");
+	in.get(sstr, ')');
+	l.y = atoi(sstr.str().c_str());
+	in.get(); // )
+	return in;
 }
 
 std::ostream& operator<< (std::ostream& out, spec_loc_t l) {
