@@ -225,8 +225,8 @@ void process_args(int argc, char* argv[]) {
 	// Command line usage:
 	//  "Blades of Exile"                               # basic launch
 	//  "Blades of Exile" <save file>                   # launch and load save file
-	// 	"Blades of Exile" record <optional file>	    # record this session in a time-stamped xml file
-	//  "Blades of Exile" play <file>                   # replay a session from an xml file
+	//  "Blades of Exile" record <optional file>	    # record this session in a time-stamped xml file
+	//  "Blades of Exile" replay <file>                 # replay a session from an xml file
 	if (argc > 1) {
 		std::string file = "";
 		if (argc > 2) {
