@@ -3,6 +3,8 @@
 #include <queue>
 
 #include "boe.global.hpp"
+#include "tools/replay.hpp"
+#include <sstream>
 
 #include "universe/universe.hpp"
 #include "boe.actions.hpp"
@@ -500,6 +502,11 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 }
 
 static void handle_move(location destination, bool& did_something, bool& need_redraw, bool& need_reprint) {
+	// record the action
+	std::stringstream out;
+	out << destination;
+	record_action("move", out.str());
+
 	bool town_move_done = false;
 	if(overall_mode == MODE_COMBAT) {
 		if(pc_combat_move(destination)) {
