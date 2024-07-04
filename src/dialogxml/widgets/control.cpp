@@ -18,6 +18,7 @@
 #include "mathutil.hpp"
 #include "tools/prefs.hpp"
 #include "tools/cursors.hpp"
+#include "replay.hpp"
 
 void cControl::setText(std::string l){
 	lbl = l;

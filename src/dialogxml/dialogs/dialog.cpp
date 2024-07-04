@@ -26,6 +26,7 @@
 #include "tools/cursors.hpp"
 #include "tools/prefs.hpp"
 #include "tools/framerate_limiter.hpp"
+#include "replay.hpp"
 
 using namespace std;
 using namespace ticpp;
@@ -560,7 +561,16 @@ void cDialog::handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(dialogNotToast) {
-		while(win.pollEvent(currentEvent)) handle_one_event(currentEvent);
+		if(replaying){
+			if(next_action_type() == "control_click"){
+				Element* next_action = pop_next_action();
+				auto info = info_from_action(next_action);
+				eKeyMod mods = static_cast<eKeyMod>(atoi(info["mods"].c_str()));
+				controls[info["id"]]->triggerClickHandler(*this, info["id"], mods);
+			}
+		}else{
+			while(win.pollEvent(currentEvent)) handle_one_event(currentEvent);
+		}
 
 		// Ideally, this should be the only draw call that is done in a cycle.
 		draw();
