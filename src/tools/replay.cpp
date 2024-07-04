@@ -83,6 +83,12 @@ bool has_next_action() {
 	return root->FirstChildElement(false) != NULL;
 }
 
+std::string next_action_type() {
+	Element* root = log_document.FirstChildElement();
+	Element* next_action = root->FirstChildElement();
+	return next_action->Value();
+}
+
 Element* pop_next_action(std::string expected_action_type) {
 	Element* root = log_document.FirstChildElement();
 	Element* next_action = root->FirstChildElement();
