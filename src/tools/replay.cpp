@@ -65,6 +65,19 @@ void record_action(std::string action_type, std::string inner_text) {
 	log_document.SaveFile(log_file);
 }
 
+void record_action(std::string action_type, std::map<std::string,std::string> info) {
+	Element* root = log_document.FirstChildElement();
+	Element next_action(action_type);
+	for(auto& p : info){
+		Element next_child(p.first);
+		Text child_text(p.second);
+		next_child.InsertEndChild(child_text);
+		next_action.InsertEndChild(next_child);
+	}
+	root->InsertEndChild(next_action);
+	log_document.SaveFile(log_file);
+}
+
 bool has_next_action() {
 	Element* root = log_document.FirstChildElement();
 	return root->FirstChildElement(false) != NULL;
