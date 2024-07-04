@@ -105,6 +105,16 @@ Element* pop_next_action(std::string expected_action_type) {
 	return clone;
 }
 
+std::map<std::string,std::string> info_from_action(Element* action) {
+	std::map<std::string,std::string> info = {};
+	Element* next_child = action->FirstChildElement(false);
+	while(next_child){
+		info[next_child->Value()] = next_child->GetText();
+		next_child = next_child->NextSiblingElement(false);
+	}
+	return info;
+}
+
 std::string encode_file(fs::path file) {
 	std::ifstream ifs(file.string(), std::ios::binary|std::ios::ate);
     std::ifstream::pos_type pos = ifs.tellg();
