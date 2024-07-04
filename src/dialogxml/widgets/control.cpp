@@ -342,6 +342,12 @@ bool cControl::haveHandler(eDlogEvt t) const {
 }
 
 bool cControl::triggerClickHandler(cDialog& dlg, std::string id, eKeyMod mods){
+	if(recording){
+		std::stringstream sstr;
+		sstr << mods;
+		std::map<std::string, std::string> action_info = {{"id", id}, {"mods", sstr.str()}};
+		record_action("control_click", action_info);
+	}
 	triggerEvent<EVT_CLICK>(dlg, id, mods);
 	return true;
 }
