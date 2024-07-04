@@ -877,13 +877,7 @@ void cDialog::process_keystroke(cKey keyHit){
 		if(iter->second->isVisible() && iter->second->isClickable() && iter->second->getAttachedKey() == keyHit){
 			iter->second->setActive(true);
 			draw();
-			if(get_bool_pref("PlaySounds", true)) {
-				if(typeid(iter->second) == typeid(cLed*))
-					play_sound(34);
-				else play_sound(37);
-				sf::sleep(time_in_ticks(6));
-			}
-			else sf::sleep(time_in_ticks(14));
+			iter->second->playClickSound();
 			iter->second->setActive(false);
 			draw();
 			sf::sleep(sf::milliseconds(8));

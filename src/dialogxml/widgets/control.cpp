@@ -210,6 +210,16 @@ void cControl::redraw() {
 	if(parent) parent->draw();
 }
 
+void cControl::playClickSound(){
+	if(get_bool_pref("PlaySounds", true)) {
+		if(typeid(this) == typeid(cLed*))
+			play_sound(34);
+		else play_sound(37);
+		sf::sleep(time_in_ticks(6));
+	}
+	else sf::sleep(time_in_ticks(14));
+}
+
 bool cControl::handleClick(location){
 	sf::Event e;
 	bool done = false, clicked = false;
@@ -231,13 +241,8 @@ bool cControl::handleClick(location){
 			depressed = frame.contains(toPos);
 		}
 	}
-	if(get_bool_pref("PlaySounds", true)) {
-		if(typeid(this) == typeid(cLed*))
-			play_sound(34);
-		else play_sound(37);
-		sf::sleep(time_in_ticks(6));
-	}
-	else sf::sleep(time_in_ticks(14));
+	playClickSound();
+	
 	redraw();
 	return clicked;
 }
