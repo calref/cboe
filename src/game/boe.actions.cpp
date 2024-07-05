@@ -1010,7 +1010,7 @@ static void handle_victory() {
 	univ.party.scen_name = ""; // should be harmless...
 	if(cChoiceDlog("congrats-save",{"cancel","save"}).show() == "save"){
 		// TODO: Wait, this shouldn't be a "save as" action, should it? It should save without asking for a location.
-		fs::path file = nav_put_party();
+		fs::path file = nav_put_or_temp_party();
 		if(!file.empty()) save_party(file, univ);
 	}
 }
@@ -2153,7 +2153,7 @@ bool handle_scroll(const sf::Event& event) {
 }
 
 void do_load() {
-	fs::path file_to_load = nav_get_party();
+	fs::path file_to_load = nav_get_or_decode_party();
 	if(file_to_load.empty()) return;
 	if(!load_party(file_to_load, univ))
 		return;
@@ -2203,7 +2203,7 @@ void do_save(short mode) {
 	if(univ.party.is_in_scenario()) save_outdoor_maps();
 	fs::path file = univ.file;
 	if(mode == 1 || file.empty())
-		file = nav_put_party(file);
+		file = nav_put_or_temp_party(file);
 	bool saved = false;
 	if(!file.empty()) {
 		univ.file = file;
@@ -2595,7 +2595,7 @@ void handle_death() {
 			return;
 		}
 		else if(choice == "load") {
-			fs::path file_to_load = nav_get_party();
+			fs::path file_to_load = nav_get_or_decode_party();
 			if(!file_to_load.empty()) load_party(file_to_load, univ);
 			if(univ.party.is_alive()) {
 				if(overall_mode != MODE_STARTUP)
@@ -2658,7 +2658,7 @@ void start_new_game(bool force) {
 	}
 	party_in_memory = true;
 	if(force) return;
-	fs::path file = nav_put_party();
+	fs::path file = nav_put_or_temp_party();
 	if(!file.empty()) save_party(file, univ);
 	univ.file = file;
 }
