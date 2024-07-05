@@ -54,9 +54,11 @@ bool cContainer::handleClick(location where) {
 	std::string which_clicked;
 	bool success = false;
 	forEach([&](std::string id, cControl& ctrl) {
-		if(ctrl.isClickable() && ctrl.getBounds().contains(where)) {
-			success = ctrl.handleClick(where);
-			which_clicked = id;
+		if(!success && ctrl.isClickable() && ctrl.getBounds().contains(where)) {
+			if(ctrl.handleClick(where)){
+				success = true;
+				which_clicked = id;
+			}
 		}
 	});
 	if(!which_clicked.empty())
