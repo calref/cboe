@@ -117,6 +117,8 @@ extern long anim_ticks;
 static void init_boe(int, char*[]);
 static void showWelcome();
 
+void handle_startup_button_click(eStartButton btn);
+
 #ifdef __APPLE__
 eMenuChoice menuChoice=eMenuChoice::MENU_CHOICE_NONE;
 short menuChoiceId=-1;
@@ -257,11 +259,15 @@ void replay_next_action() {
 
 	auto next_action = pop_next_action();
 	std::string t = next_action->Value();
-	if(t == "load_party") {
+	
+	if(overall_mode == MODE_STARTUP && t == "startup_button_click"){
+		eStartButton btn = static_cast<eStartButton>(atoi(next_action->GetText().c_str()));
+		handle_startup_button_click(btn);
+	}else if(t == "load_party"){
 		decode_file(next_action->GetText(), tempDir / "temp.exg");
 		load_party(tempDir / "temp.exg", univ);
 		finish_load_party();
-	} else if(t == "move") {
+	}else if(t == "move"){
 		location l;
 		std::stringstream sstr(next_action->GetText());
 		sstr >> l;
