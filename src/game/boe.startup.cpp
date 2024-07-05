@@ -24,9 +24,13 @@
 #include "tools/cursors.hpp"
 #include "gfx/render_image.hpp"
 #include "tools/enum_map.hpp"
+#include "replay.hpp"
 
 #include <vector>
 using std::vector;
+
+#include <sstream>
+using std::stringstream;
 
 extern bool party_in_memory;
 extern long register_flag;
@@ -37,71 +41,81 @@ extern sf::View mainView;
 
 enum_map(eStartButton, rectangle) startup_button;
 
-// TODO: Always returns false, so make it void
-bool handle_startup_press(location the_point) {
+void handle_startup_button_click(eStartButton btn) {
+	if(recording){
+		stringstream sstr;
+		sstr << btn;
+		record_action("startup_button_click", sstr.str());
+	}
+
 	std::string scen_name;
 	bool force_party = false;
-	
+
+	draw_start_button(btn,5);
+	mainPtr.display(); // TODO: I suspect this won't work
+	play_sound(37, time_in_ticks(5));
+	draw_start_button(btn,0);
+	switch(btn) {
+		case STARTBTN_LOAD:
+			do_load();
+			break;
+			
+		case STARTBTN_NEW:
+			draw_startup(0);
+			start_new_game();
+			set_cursor(sword_curs);
+			draw_startup(0);
+			break;
+			
+		case STARTBTN_ORDER:
+			pick_preferences();
+			break;
+		
+		case STARTBTN_CUSTOM: break; // Currently unused
+			
+		case STARTBTN_SCROLL: case MAX_eStartButton:
+			// These aren't buttons
+			break;
+			
+		case STARTBTN_JOIN:
+			if(!party_in_memory) {
+				if(kb.isAltPressed()) {
+					force_party = true;
+					start_new_game(true);
+				} else {
+					cChoiceDlog("need-party").show();
+					break;
+				}
+			}
+			
+			auto scen = pick_a_scen();
+			if(scen.file.empty()) {
+				if(force_party)
+					party_in_memory = false;
+				break;
+			}
+			if(scen.prog_make_ver[0] > 2 || scen.prog_make_ver[1] > 0) {
+				if(force_party)
+					party_in_memory = false;
+				cChoiceDlog("scen-version-mismatch").show();
+				break;
+			}
+			scen_name = scen.file;
+			put_party_in_scen(scen_name);
+			if(force_party && scen_name != univ.party.scen_name)
+				party_in_memory = false;
+			break;
+	}
+}
+
+// TODO: Always returns false, so make it void
+bool handle_startup_press(location the_point) {
 	the_point = mainPtr.mapPixelToCoords(the_point, mainView);
 	
 	for(auto btn : startup_button.keys()) {
 		if(btn == eStartButton::STARTBTN_SCROLL) continue;
 		if(the_point.in(startup_button[btn])) {
-			draw_start_button(btn,5);
-			mainPtr.display(); // TODO: I suspect this won't work
-			play_sound(37, time_in_ticks(5));
-			draw_start_button(btn,0);
-			switch(btn) {
-				case STARTBTN_LOAD:
-					do_load();
-					break;
-					
-				case STARTBTN_NEW:
-					draw_startup(0);
-					start_new_game();
-					set_cursor(sword_curs);
-					draw_startup(0);
-					break;
-					
-				case STARTBTN_ORDER:
-					pick_preferences();
-					break;
-				
-				case STARTBTN_CUSTOM: break; // Currently unused
-					
-				case STARTBTN_SCROLL: case MAX_eStartButton:
-					// These aren't buttons
-					break;
-					
-				case STARTBTN_JOIN:
-					if(!party_in_memory) {
-						if(kb.isAltPressed()) {
-							force_party = true;
-							start_new_game(true);
-						} else {
-							cChoiceDlog("need-party").show();
-							break;
-						}
-					}
-					
-					auto scen = pick_a_scen();
-					if(scen.file.empty()) {
-						if(force_party)
-							party_in_memory = false;
-						break;
-					}
-					if(scen.prog_make_ver[0] > 2 || scen.prog_make_ver[1] > 0) {
-						if(force_party)
-							party_in_memory = false;
-						cChoiceDlog("scen-version-mismatch").show();
-						break;
-					}
-					scen_name = scen.file;
-					put_party_in_scen(scen_name);
-					if(force_party && scen_name != univ.party.scen_name)
-						party_in_memory = false;
-					break;
-			}
+			handle_startup_button_click(btn);
 		}
 	}
 	return false;
