@@ -8,6 +8,7 @@
 
 #include <cmath>
 #include <stdexcept>
+#include <sstream>
 #include "dialog.hpp"
 #include "gfx/tiling.hpp" // for bg
 #include "fileio/resmgr/res_dialog.hpp"
@@ -567,6 +568,13 @@ void cDialog::handle_events() {
 				auto info = info_from_action(next_action);
 				eKeyMod mods = static_cast<eKeyMod>(atoi(info["mods"].c_str()));
 				controls[info["id"]]->triggerClickHandler(*this, info["id"], mods);
+			}else if(next_action_type() == "control_focus"){
+				Element* next_action = pop_next_action();
+				auto info = info_from_action(next_action);
+				bool losing;
+				istringstream sstr(info["losing"]);
+				sstr >> losing;
+				controls[info["id"]]->triggerFocusHandler(*this, info["id"], losing);
 			}
 		}else{
 			while(win.pollEvent(currentEvent)) handle_one_event(currentEvent);
