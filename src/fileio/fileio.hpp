@@ -21,6 +21,9 @@ class cUniverse;
 fs::path locate_scenario(std::string scen_name);
 bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header = false);
 
+fs::path nav_get_or_decode_party();
+fs::path nav_put_or_temp_party(fs::path def = "");
+
 bool load_party(fs::path file_to_load, cUniverse& univ);
 bool save_party(fs::path dest_file, const cUniverse& univ);
 

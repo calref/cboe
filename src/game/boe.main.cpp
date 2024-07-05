@@ -457,7 +457,7 @@ void handle_one_event(const sf::Event& event) {
 					std::string choice = cChoiceDlog("quit-confirm-save", {"save","quit","cancel"}).show();
 					if(choice == "cancel") break;
 					if(choice == "save") {
-						fs::path file = nav_put_party();
+						fs::path file = nav_put_or_temp_party();
 						if(!file.empty()) break;
 						save_party(file, univ);
 					}
@@ -609,7 +609,7 @@ void handle_menu_choice(eMenu item_hit) {
 					std::string choice = cChoiceDlog("quit-confirm-save", {"save","quit","cancel"}).show();
 					if(choice == "cancel") break;
 					if(choice == "save") {
-						fs::path file = nav_put_party();
+						fs::path file = nav_put_or_temp_party();
 						if(!file.empty()) break;
 						save_party(file, univ);
 					}
@@ -623,7 +623,7 @@ void handle_menu_choice(eMenu item_hit) {
 					break;
 				if(choice == "save") {
 					if(univ.file.empty()) {
-						univ.file = nav_put_party();
+						univ.file = nav_put_or_temp_party();
 						if(univ.file.empty()) break;
 					}
 					save_party(univ.file, univ);
