@@ -359,6 +359,12 @@ bool cControl::triggerClickHandler(cDialog& dlg, std::string id, eKeyMod mods){
 }
 
 bool cControl::triggerFocusHandler(cDialog& dlg, std::string id, bool losing){
+	if(recording){
+		std::stringstream sstr;
+		sstr << losing;
+		std::map<std::string, std::string> action_info = {{"id", id}, {"losing", sstr.str()}};
+		record_action("control_focus", action_info);
+	}
 	if(losing) return triggerEvent<EVT_DEFOCUS>(dlg, id);
 	triggerEvent<EVT_FOCUS>(dlg, id);
 	return true;
