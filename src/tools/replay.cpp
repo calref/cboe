@@ -16,6 +16,7 @@ bool replaying = false;
 using namespace ticpp;
 Document log_document;
 std::string log_file;
+Element* next_action;
 
 bool init_action_log(std::string command, std::string file) {
 	if (command == "record") {
@@ -47,6 +48,8 @@ bool init_action_log(std::string command, std::string file) {
 	else if (command == "replay") {
 		try {
 			log_document.LoadFile(file);
+			Element* root = log_document.FirstChildElement();
+			next_action = root->FirstChildElement();
 			replaying = true;
 		} catch(...) {
 			std::cout << "Failed to load file " << file << std::endl;
@@ -79,30 +82,25 @@ void record_action(std::string action_type, std::map<std::string,std::string> in
 }
 
 bool has_next_action() {
-	Element* root = log_document.FirstChildElement();
-	return root->FirstChildElement(false) != NULL;
+	return next_action != NULL;
 }
 
 std::string next_action_type() {
-	Element* root = log_document.FirstChildElement();
-	Element* next_action = root->FirstChildElement();
 	return next_action->Value();
 }
 
 Element* pop_next_action(std::string expected_action_type) {
-	Element* root = log_document.FirstChildElement();
-	Element* next_action = root->FirstChildElement();
-	
 	if (expected_action_type != "" && next_action->Value() != expected_action_type) {
 		std::ostringstream stream;
 		stream << "Replay error! Expected '" << expected_action_type << "' action next";
 		throw stream.str();
 	}
 
-	Element* clone = next_action->Clone()->ToElement();
-	root->RemoveChild(next_action);
+	Element* to_return = next_action;
 	
-	return clone;
+	next_action = next_action->NextSiblingElement(false);
+	
+	return to_return;
 }
 
 std::map<std::string,std::string> info_from_action(Element* action) {
