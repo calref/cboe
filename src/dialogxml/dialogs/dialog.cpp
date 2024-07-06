@@ -8,6 +8,7 @@
 
 #include <cmath>
 #include <stdexcept>
+#include <functional>
 #include "dialog.hpp"
 #include "gfx/tiling.hpp" // for bg
 #include "fileio/resmgr/res_dialog.hpp"
@@ -271,78 +272,51 @@ void cDialog::loadFromFile(const DialogDefn& file){
 		
 		// Resolve relative positioning
 		bool all_resolved = true;
+
+		std::function<void(const std::string&, cControl&)> process_ctrl;
+		process_ctrl = [this, &all_resolved, &process_ctrl](const std::string&, cControl& ctrl) {
+			if(!ctrl.anchor.empty()) {
+				auto anchor = controls[ctrl.anchor];
+				if(!anchor->anchor.empty()) {
+					// Make sure it's not a loop!
+					std::vector<std::string> refs{ctrl.anchor};
+					while(!anchor->anchor.empty()) {
+						refs.push_back(anchor->anchor);
+						anchor = controls[anchor->anchor];
+						if(std::find(refs.begin(), refs.end(), anchor->anchor) != refs.end()) {
+							std::string ctrlType;
+							switch(ctrl.getType()) {
+								case CTRL_UNKNOWN: ctrlType = "???"; break;
+								case CTRL_BTN: ctrlType = "button"; break;
+								case CTRL_LED: ctrlType = "led"; break;
+								case CTRL_PICT: ctrlType = "pict"; break;
+								case CTRL_FIELD: ctrlType = "field"; break;
+								case CTRL_TEXT: ctrlType = "text"; break;
+								case CTRL_GROUP: ctrlType = "group"; break;
+								case CTRL_STACK: ctrlType = "stack"; break;
+								case CTRL_SCROLL: ctrlType = "slider"; break;
+								case CTRL_PANE: ctrlType = "pane"; break;
+							}
+							throw xBadVal(ctrlType, "anchor", "<circular dependency>", 0, 0, fname);
+						}
+					}
+					all_resolved = false;
+					return;
+				}
+				ctrl.relocateRelative(ctrl.frame.topLeft(), anchor, ctrl.horz, ctrl.vert);
+				ctrl.anchor.clear();
+				ctrl.horz = ctrl.vert = POS_ABS;
+			} else if(auto pane = dynamic_cast<cContainer*>(&ctrl)) {
+				pane->forEach(process_ctrl);
+			}
+		};
+
 		do {
 			all_resolved = true;
 			for(auto& p : controls) {
 				auto ctrl = p.second;
-				if(!ctrl->anchor.empty()) {
-					auto anchor = controls[ctrl->anchor];
-					if(!anchor->anchor.empty()) {
-						// Make sure it's not a loop!
-						std::vector<std::string> refs{ctrl->anchor};
-						while(!anchor->anchor.empty()) {
-							refs.push_back(anchor->anchor);
-							anchor = controls[anchor->anchor];
-							if(std::find(refs.begin(), refs.end(), anchor->anchor) != refs.end()) {
-								std::string ctrlType;
-								switch(ctrl->getType()) {
-									case CTRL_UNKNOWN: ctrlType = "???"; break;
-									case CTRL_BTN: ctrlType = "button"; break;
-									case CTRL_LED: ctrlType = "led"; break;
-									case CTRL_PICT: ctrlType = "pict"; break;
-									case CTRL_FIELD: ctrlType = "field"; break;
-									case CTRL_TEXT: ctrlType = "text"; break;
-									case CTRL_GROUP: ctrlType = "group"; break;
-									case CTRL_STACK: ctrlType = "stack"; break;
-									case CTRL_SCROLL: ctrlType = "slider"; break;
-									case CTRL_PANE: ctrlType = "pane"; break;
-								}
-								throw xBadVal(ctrlType, "anchor", "<circular dependency>", 0, 0, fname);
-							}
-						}
-						all_resolved = false;
-						continue;
-					}
-					ctrl->relocateRelative(ctrl->frame.topLeft(), anchor, ctrl->horz, ctrl->vert);
-					ctrl->anchor.clear();
-					ctrl->horz = ctrl->vert = POS_ABS;
-				} else if(auto pane = dynamic_cast<cContainer*>(ctrl)) {
-					pane->forEach([this, &all_resolved](const std::string&, cControl& ctrl) {
-						// TODO: Deduplicate this code (it's functionally identical to the above non-container code)
-						if(!ctrl.anchor.empty()) {
-							auto anchor = controls[ctrl.anchor];
-							if(!anchor->anchor.empty()) {
-								// Make sure it's not a loop!
-								std::vector<std::string> refs{ctrl.anchor};
-								while(!anchor->anchor.empty()) {
-									refs.push_back(anchor->anchor);
-									anchor = controls[anchor->anchor];
-									if(std::find(refs.begin(), refs.end(), anchor->anchor) != refs.end()) {
-										std::string ctrlType;
-										switch(ctrl.getType()) {
-											case CTRL_UNKNOWN: ctrlType = "???"; break;
-											case CTRL_BTN: ctrlType = "button"; break;
-											case CTRL_LED: ctrlType = "led"; break;
-											case CTRL_PICT: ctrlType = "pict"; break;
-											case CTRL_FIELD: ctrlType = "field"; break;
-											case CTRL_TEXT: ctrlType = "text"; break;
-											case CTRL_GROUP: ctrlType = "group"; break;
-											case CTRL_STACK: ctrlType = "stack"; break;
-											case CTRL_SCROLL: ctrlType = "slider"; break;
-											case CTRL_PANE: ctrlType = "pane"; break;
-										}
-										throw xBadVal(ctrlType, "anchor", "<circular dependency>", 0, 0, fname);
-									}
-								}
-								all_resolved = false;
-								return;
-							}
-							ctrl.relocateRelative(ctrl.frame.topLeft(), anchor, ctrl.horz, ctrl.vert);
-							ctrl.anchor.clear();
-							ctrl.horz = ctrl.vert = POS_ABS;
-						}
-					});
-				}
+
+				process_ctrl(p.first, *ctrl);
 			}
 		} while(!all_resolved);
 		
@@ -877,13 +851,7 @@ void cDialog::process_keystroke(cKey keyHit){
 		if(iter->second->isVisible() && iter->second->isClickable() && iter->second->getAttachedKey() == keyHit){
 			iter->second->setActive(true);
 			draw();
-			if(get_bool_pref("PlaySounds", true)) {
-				if(typeid(iter->second) == typeid(cLed*))
-					play_sound(34);
-				else play_sound(37);
-				sf::sleep(time_in_ticks(6));
-			}
-			else sf::sleep(time_in_ticks(14));
+			iter->second->playClickSound();
 			iter->second->setActive(false);
 			draw();
 			sf::sleep(sf::milliseconds(8));

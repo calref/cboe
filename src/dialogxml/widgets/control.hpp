@@ -451,6 +451,8 @@ protected:
 	/// Redraws the parent dialog, if any.
 	/// Intended to be called from handleClick(), where there is usually a minor event loop happening.
 	void redraw();
+	/// Plays the proper sound for this control being clicked on
+	void playClickSound();
 private:
 	friend class cDialog; // TODO: This is only so it can access parseColour... hack!
 	eControlType type;
