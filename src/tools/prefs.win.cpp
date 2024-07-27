@@ -72,6 +72,9 @@ void clear_pref(std::string keypath) {
 }
 
 static bool save_prefs(fs::path fpath) {
+	// Don't save preferences when running a replay which might change them
+	if(replaying) return true;
+
 	if(!prefsDirty) return true;
 	fs::create_directories(fpath.parent_path());
 	std::ofstream fout(fpath.string().c_str());
