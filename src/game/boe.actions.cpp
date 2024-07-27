@@ -502,7 +502,7 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 void handle_move(location destination, bool& did_something, bool& need_redraw, bool& need_reprint) {
 	if(recording) {
 		// record the action
-		std::stringstream out;
+		std::ostringstream out;
 		out << destination;
 		record_action("move", out.str());
 	}
