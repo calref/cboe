@@ -30,7 +30,8 @@ extern cCustomGraphics spec_scen_g;
 static bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there, bool must_port);
 static bool load_party_v2(fs::path file_to_load, cUniverse& univ);
 
-fs::path nav_get_party();
+extern fs::path nav_get_party();
+extern fs::path nav_put_party(fs::path def);
 
 fs::path nav_get_or_decode_party() {
 	if(replaying){
@@ -41,8 +42,6 @@ fs::path nav_get_or_decode_party() {
 		return nav_get_party();
 	}
 }
-
-fs::path nav_put_party(fs::path def);
 
 fs::path nav_put_or_temp_party(fs::path def) {
 	if(replaying){
