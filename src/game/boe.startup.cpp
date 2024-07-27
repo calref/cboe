@@ -30,7 +30,6 @@
 using std::vector;
 
 #include <sstream>
-using std::stringstream;
 
 extern bool party_in_memory;
 extern long register_flag;
@@ -43,7 +42,7 @@ enum_map(eStartButton, rectangle) startup_button;
 
 void handle_startup_button_click(eStartButton btn) {
 	if(recording){
-		stringstream sstr;
+		std::ostringstream sstr;
 		sstr << btn;
 		record_action("startup_button_click", sstr.str());
 	}

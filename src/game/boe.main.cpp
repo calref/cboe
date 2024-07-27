@@ -269,7 +269,7 @@ void replay_next_action() {
 		finish_load_party();
 	}else if(t == "move"){
 		location l;
-		std::stringstream sstr(next_action->GetText());
+		std::istringstream sstr(next_action->GetText());
 		sstr >> l;
 		handle_move(l, did_something, need_redraw, need_reprint);
 	}
