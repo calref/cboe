@@ -82,7 +82,7 @@ void record_action(std::string action_type, std::map<std::string,std::string> in
 }
 
 bool has_next_action() {
-	return next_action != NULL;
+	return next_action != nullptr;
 }
 
 std::string next_action_type() {
