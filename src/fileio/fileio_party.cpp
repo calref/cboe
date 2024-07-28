@@ -35,8 +35,8 @@ extern fs::path nav_put_party(fs::path def);
 
 fs::path nav_get_or_decode_party() {
 	if(replaying){
-		Element* next_action = pop_next_action("load_party");
-		decode_file(next_action->GetText(), tempDir / "temp.exg");
+		Element& next_action = pop_next_action("load_party");
+		decode_file(next_action.GetText(), tempDir / "temp.exg");
 		return tempDir / "temp.exg";
 	}else{
 		return nav_get_party();

@@ -160,8 +160,8 @@ static bool load_prefs(fs::path fpath) {
 	// When replaying a BoE session, disregard the system settings and use the ones
 	// that were recorded
 	if (replaying) {
-		Element* prefs_action = pop_next_action("load_prefs");
-		std::istringstream in(prefs_action->GetText());
+		Element& prefs_action = pop_next_action("load_prefs");
+		std::istringstream in(prefs_action.GetText());
 		return load_prefs(in);
 	} else {
 		std::ifstream in(fpath.c_str());

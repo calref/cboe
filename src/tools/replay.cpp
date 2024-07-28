@@ -89,8 +89,11 @@ std::string next_action_type() {
 	return next_action->Value();
 }
 
-Element* pop_next_action(std::string expected_action_type) {
-	if (expected_action_type != "" && next_action->Value() != expected_action_type) {
+Element& pop_next_action(std::string expected_action_type) {
+	if(next_action == nullptr){
+		throw "Replay error! No action left to pop";
+	}
+	if(expected_action_type != "" && next_action->Value() != expected_action_type){
 		std::ostringstream stream;
 		stream << "Replay error! Expected '" << expected_action_type << "' action next";
 		throw stream.str();
@@ -100,12 +103,12 @@ Element* pop_next_action(std::string expected_action_type) {
 	
 	next_action = next_action->NextSiblingElement(false);
 	
-	return to_return;
+	return *to_return;
 }
 
-std::map<std::string,std::string> info_from_action(Element* action) {
+std::map<std::string,std::string> info_from_action(Element& action) {
 	std::map<std::string,std::string> info = {};
-	Element* next_child = action->FirstChildElement(false);
+	Element* next_child = action.FirstChildElement(false);
 	while(next_child){
 		info[next_child->Value()] = next_child->GetText();
 		next_child = next_child->NextSiblingElement(false);

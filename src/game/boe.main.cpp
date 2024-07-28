@@ -257,19 +257,19 @@ void process_args(int argc, char* argv[]) {
 void replay_next_action() {
 	bool did_something = false, need_redraw = false, need_reprint = false;
 
-	auto next_action = pop_next_action();
-	std::string t = next_action->Value();
+	Element& next_action = pop_next_action();
+	std::string t = next_action.Value();
 	
 	if(overall_mode == MODE_STARTUP && t == "startup_button_click"){
-		eStartButton btn = static_cast<eStartButton>(atoi(next_action->GetText().c_str()));
+		eStartButton btn = static_cast<eStartButton>(atoi(next_action.GetText().c_str()));
 		handle_startup_button_click(btn);
 	}else if(t == "load_party"){
-		decode_file(next_action->GetText(), tempDir / "temp.exg");
+		decode_file(next_action.GetText(), tempDir / "temp.exg");
 		load_party(tempDir / "temp.exg", univ);
 		finish_load_party();
 	}else if(t == "move"){
 		location l;
-		std::istringstream sstr(next_action->GetText());
+		std::istringstream sstr(next_action.GetText());
 		sstr >> l;
 		handle_move(l, did_something, need_redraw, need_reprint);
 	}
@@ -304,9 +304,9 @@ void init_boe(int argc, char* argv[]) {
 
 	// Seed the RNG
 	if(replaying) {
-		auto srand_element = pop_next_action("srand");
+		Element& srand_element = pop_next_action("srand");
 		
-		std::string ts(srand_element->GetText());
+		std::string ts(srand_element.GetText());
 		srand(atoi(ts.c_str()));
 	} else {
 		auto t = time(nullptr);
