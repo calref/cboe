@@ -87,14 +87,14 @@ bool has_next_action() {
 
 std::string next_action_type() {
 	if(next_action == nullptr){
-		throw "Replay error! No action left to check type";
+		throw std::string { "Replay error! No action left to check type" };
 	}
 	return next_action->Value();
 }
 
 Element& pop_next_action(std::string expected_action_type) {
 	if(next_action == nullptr){
-		throw "Replay error! No action left to pop";
+		throw std::string { "Replay error! No action left to pop" };
 	}
 	if(expected_action_type != "" && next_action->Value() != expected_action_type){
 		std::ostringstream stream;
