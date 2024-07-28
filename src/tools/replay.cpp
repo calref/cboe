@@ -86,6 +86,9 @@ bool has_next_action() {
 }
 
 std::string next_action_type() {
+	if(next_action == nullptr){
+		throw "Replay error! No action left to check type";
+	}
 	return next_action->Value();
 }
 
