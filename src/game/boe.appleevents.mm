@@ -14,6 +14,7 @@
 #include "fileio/fileio.hpp"
 #include "boe.global.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
+#include "replay.hpp"
 
 extern void finish_load_party();
 extern void end_startup();
@@ -53,6 +54,10 @@ void set_up_apple_events() {
 	std::string fileName;
 	std::copy(msg.get(), msg.get() + len, std::inserter(fileName, fileName.begin()));
 	
+	if(replaying || recording){
+		return FALSE;
+	}
+
 	if(!load_party(fileName, univ))
 		return FALSE;
 	
