@@ -286,7 +286,6 @@ void init_boe(int argc, char* argv[]) {
 	init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen
 #endif
 
-	// TODO preferences need to be recorded in the action log for deterministic replay
 	sync_prefs();
 	init_shaders();
 	init_tiling();
