@@ -113,7 +113,7 @@ std::map<std::string,std::string> info_from_action(Element& action) {
 	std::map<std::string,std::string> info = {};
 	Element* next_child = action.FirstChildElement(false);
 	while(next_child){
-		info[next_child->Value()] = next_child->GetText();
+		info[next_child->Value()] = next_child->GetTextOrDefault("");
 		next_child = next_child->NextSiblingElement(false);
 	}
 	return info;
