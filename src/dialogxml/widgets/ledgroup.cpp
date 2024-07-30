@@ -13,6 +13,8 @@
 
 #include "dialogxml/dialogs/dialog.hpp"
 
+#include "replay.hpp"
+
 cLedGroup::cLedGroup(cDialog& parent) :
 	cContainer(CTRL_GROUP,parent),
 	fromList("none") {}
@@ -69,6 +71,12 @@ bool cLedGroup::handleClick(location where) {
 }
 
 void cLedGroup::callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::string id, eKeyMod mods) {
+	// When replaying, a click event for the specifically clicked led comes next
+	if(replaying){
+		auto led_click_action = pop_next_action("control_click");
+		auto info = info_from_action(led_click_action);
+		clicking = info["id"];
+	}
 	std::string which_clicked = clicking;
 	clicking = "";
 	
