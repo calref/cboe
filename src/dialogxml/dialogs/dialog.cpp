@@ -540,11 +540,13 @@ void cDialog::handle_events() {
 			if(next_action_type() == "control_click"){
 				Element& next_action = pop_next_action();
 				auto info = info_from_action(next_action);
+				if(info["id"].empty()) continue;
 				eKeyMod mods = static_cast<eKeyMod>(atoi(info["mods"].c_str()));
 				controls[info["id"]]->triggerClickHandler(*this, info["id"], mods);
 			}else if(next_action_type() == "control_focus"){
 				Element& next_action = pop_next_action();
 				auto info = info_from_action(next_action);
+				if(info["id"].empty()) continue;
 				bool losing;
 				istringstream sstr(info["losing"]);
 				sstr >> losing;
