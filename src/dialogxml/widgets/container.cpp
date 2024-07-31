@@ -14,6 +14,7 @@
 #include "dialogxml/widgets/message.hpp"
 #include "dialogxml/widgets/pict.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
+#include "replay.hpp"
 
 bool cContainer::parseChildControl(ticpp::Element& elem, std::map<std::string,cControl*>& controls, std::string& id) {
 	std::string tag = elem.Value();
@@ -67,6 +68,12 @@ bool cContainer::handleClick(location where) {
 }
 
 void cContainer::callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::string id, eKeyMod mods) {
+	// When replaying, a click event for the specifically child control comes next
+	if(replaying){
+		auto child_click_action = pop_next_action("control_click");
+		auto info = info_from_action(child_click_action);
+		clicking = info["id"];
+	}
 	std::string which_clicked = clicking;
 	clicking = "";
 	
