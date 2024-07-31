@@ -750,7 +750,11 @@ void handle_switch_pc(short which_pc, bool& need_redraw, bool& need_reprint) {
 	need_reprint = true;
 }
 
-static void handle_switch_pc_items(short which_pc, bool& need_redraw) {
+void handle_switch_pc_items(short which_pc, bool& need_redraw) {
+	if(recording){
+		record_action("handle_switch_pc_items", std::to_string(which_pc));
+	}
+
 	cPlayer& pc = univ.party[which_pc];
 	if(!prime_time() && overall_mode != MODE_TALKING && overall_mode != MODE_SHOPPING)
 		add_string_to_buf("Set active: Finish what you're doing first.");
@@ -773,7 +777,11 @@ static void handle_switch_pc_items(short which_pc, bool& need_redraw) {
 	}
 }
 
-static void handle_equip_item(short item_hit, bool& need_redraw) {
+void handle_equip_item(short item_hit, bool& need_redraw) {
+	if(recording){
+		record_action("handle_equip_item", std::to_string(item_hit));
+	}
+
 	if(overall_mode == MODE_USE_TOWN) {
 		// TODO: Uh, this looks wrong somehow.
 		add_string_to_buf("Note: Clicking 'U' button by item uses the item.", 2);
@@ -790,7 +798,11 @@ static void handle_equip_item(short item_hit, bool& need_redraw) {
 	} else add_string_to_buf("Equip: Finish what you're doing first.");
 }
 
-static void handle_use_item(short item_hit, bool& did_something, bool& need_redraw) {
+void handle_use_item(short item_hit, bool& did_something, bool& need_redraw) {
+	if(recording){
+		record_action("handle_use_item", std::to_string(item_hit));
+	}
+
 	if(!prime_time()) {
 		add_string_to_buf("Use item: Finish what you're doing first.");
 		return;
@@ -829,7 +841,11 @@ static void handle_drop_item(short item_hit, bool& need_redraw) {
 	}
 }
 
-static void handle_item_shop_action(short item_hit) {
+void handle_item_shop_action(short item_hit) {
+	if(recording){
+		record_action("handle_item_shop_action", std::to_string(item_hit));
+	}
+
 	long i = item_hit - item_sbar->getPosition();
 	cPlayer& shopper = univ.party[stat_window];
 	cItem& target = shopper.items[item_hit];
@@ -867,7 +883,11 @@ static void handle_item_shop_action(short item_hit) {
 	}
 }
 
-static void handle_alchemy(bool& need_redraw, bool& need_reprint) {
+void handle_alchemy(bool& need_redraw, bool& need_reprint) {
+	if(recording){
+		record_action("handle_alchemy", "");
+	}
+
 	need_reprint = true;
 	need_redraw = true;
 	if(overall_mode == MODE_TOWN)
@@ -875,7 +895,11 @@ static void handle_alchemy(bool& need_redraw, bool& need_reprint) {
 	else add_string_to_buf("Alchemy: Only in town.");
 }
 
-static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
+void handle_town_wait(bool& need_redraw, bool& need_reprint) {
+	if(recording){
+		record_action("handle_town_wait", "");
+	}
+
 	std::vector<short> store_hp;
 	sf::Event dummy_evt;
 	need_reprint = true;
@@ -918,7 +942,11 @@ static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 	put_pc_screen();
 }
 
-static void handle_combat_switch(bool& did_something, bool& need_redraw, bool& need_reprint) {
+void handle_combat_switch(bool& did_something, bool& need_redraw, bool& need_reprint) {
+	if(recording){
+		record_action("handle_combat_switch", "");
+	}
+
 	if(overall_mode == MODE_TOWN) {
 		if(univ.party.in_boat >= 0) {
 			need_reprint = true;
@@ -969,7 +997,11 @@ static void handle_combat_switch(bool& did_something, bool& need_redraw, bool& n
 	}
 }
 
-static void handle_missile(bool& need_redraw, bool& need_reprint) {
+void handle_missile(bool& need_redraw, bool& need_reprint) {
+	if(recording){
+		record_action("handle_missile", "");
+	}
+
 	if(overall_mode == MODE_COMBAT) {
 		load_missile();
 		need_reprint = true;
@@ -983,7 +1015,11 @@ static void handle_missile(bool& need_redraw, bool& need_reprint) {
 	}
 }
 
-static void handle_get_items(bool& did_something, bool& need_redraw, bool& need_reprint) {
+void handle_get_items(bool& did_something, bool& need_redraw, bool& need_reprint) {
+	if(recording){
+		record_action("handle_get_items", "");
+	}
+
 	int j = 0;
 	if(univ.party.in_boat >= 0)
 		add_string_to_buf("Get: Not while in boat.");
