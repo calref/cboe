@@ -40,6 +40,7 @@
 #include "tools/prefs.hpp"
 #include "gfx/render_shapes.hpp"
 #include "tools/enum_map.hpp"
+#include <string>
 
 rectangle item_screen_button_rects[9] = {
 	{125,10,141,28},{125,40,141,58},{125,68,141,86},{125,98,141,116},{125,126,141,144},{125,156,141,174},
@@ -721,7 +722,11 @@ static void handle_bash_pick(location destination, bool& did_something, bool& ne
 	put_item_screen(stat_window);
 }
 
-static void handle_switch_pc(short which_pc, bool& need_redraw, bool& need_reprint) {
+void handle_switch_pc(short which_pc, bool& need_redraw, bool& need_reprint) {
+	if(recording){
+		record_action("handle_switch_pc", std::to_string(which_pc));
+	}
+
 	cPlayer& pc = univ.party[which_pc];
 	if(!prime_time() && overall_mode != MODE_SHOPPING && overall_mode != MODE_TALKING)
 		add_string_to_buf("Set active: Finish what you're doing first.");
