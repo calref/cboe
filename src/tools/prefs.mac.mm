@@ -49,7 +49,7 @@ static NSString* convertKey(std::string keypath) {
 	return key;
 }
 
-NSUserDefaults* getCurrentDefaults() {
+static NSUserDefaults* getCurrentDefaults() {
 	if(replaying){
 		return replayUserDefaults;
 	}else{
