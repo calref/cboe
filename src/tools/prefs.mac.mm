@@ -172,30 +172,24 @@ bool sync_prefs() {
 			if(object != nil){
 				prefs_recording << [pref UTF8String] << " = ";
 				NSInteger type = [prefsToRecord[pref] integerValue];
-				bool bvalue;
-				int ivalue;
-				double fvalue;
-				int count;
-				int c;
-				NSArray* arrayValue;
 				switch((int)type) {
-					case kBool:
-						bvalue = [standard boolForKey: pref];
+					case kBool: {
+						bool bvalue = [standard boolForKey: pref];
 						if(bvalue == true){
 							prefs_recording << "true";
 						}else{
 							prefs_recording << "false";
 						}
-						break;
-					case kInt:
-						ivalue = (int)[standard integerForKey: pref];
+					} break;
+					case kInt: {
+						int ivalue = (int)[standard integerForKey: pref];
 						prefs_recording << ivalue;
-						break;
-					case kIArray:
-						arrayValue = [standard arrayForKey: pref];
+					} break;
+					case kIArray: {
+						NSArray* arrayValue = [standard arrayForKey: pref];
 						prefs_recording << "[";
-						count = [arrayValue count];
-						c = 0;
+						int count = [arrayValue count];
+						int c = 0;
 						for(id num in arrayValue){
 							prefs_recording << [num integerValue];
 							if (c < count - 1)
@@ -203,11 +197,11 @@ bool sync_prefs() {
 							++c;
 						}
 						prefs_recording << "]";
-						break;
-					case kFloat:
-						fvalue = (double)[standard doubleForKey: pref];
+					} break;
+					case kFloat: {
+						double fvalue = (double)[standard doubleForKey: pref];
 						prefs_recording << fvalue;
-						break;
+					} break;
 				}
 				prefs_recording << std::endl;
 			}
