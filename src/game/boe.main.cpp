@@ -117,8 +117,19 @@ extern long anim_ticks;
 static void init_boe(int, char*[]);
 static void showWelcome();
 
+// TODO all these forward declarations of boe.actions.cpp functions might be less
+// than ideal. Maybe they could be moved to boe.actions.hpp and #included here instead
 void handle_startup_button_click(eStartButton btn);
 void handle_switch_pc(short which_pc, bool& need_redraw, bool& need_reprint);
+void handle_switch_pc_items(short which_pc, bool& need_redraw);
+void handle_equip_item(short item_hit, bool& need_redraw);
+void handle_use_item(short item_hit, bool& did_something, bool& need_redraw);
+void handle_item_shop_action(short item_hit);
+void handle_alchemy(bool& need_redraw, bool& need_reprint);
+void handle_town_wait(bool& need_redraw, bool& need_reprint);
+void handle_combat_switch(bool& did_something, bool& need_redraw, bool& need_reprint);
+void handle_missile(bool& need_redraw, bool& need_reprint);
+void handle_get_items(bool& did_something, bool& need_redraw, bool& need_reprint);
 
 #ifdef __APPLE__
 eMenuChoice menuChoice=eMenuChoice::MENU_CHOICE_NONE;
@@ -274,7 +285,30 @@ void replay_next_action() {
 	}else if(t == "handle_switch_pc"){
 		short which_pc = short_from_action(next_action);
 		handle_switch_pc(which_pc, need_redraw, need_reprint);
+	}else if(t == "handle_switch_pc_items"){
+		short which_pc = short_from_action(next_action);
+		handle_switch_pc_items(which_pc, need_redraw);
+	}else if(t == "handle_equip_item"){
+		short item_hit = short_from_action(next_action);
+		handle_equip_item(item_hit, need_redraw);
+	}else if(t == "handle_use_item"){
+		short item_hit = short_from_action(next_action);
+		handle_use_item(item_hit, did_something, need_redraw);
+	}else if(t == "handle_item_shop_action"){
+		short item_hit = short_from_action(next_action);
+		handle_item_shop_action(item_hit);
+	}else if(t == "handle_alchemy"){
+		handle_alchemy(need_redraw, need_reprint);
+	}else if(t == "handle_town_wait"){
+		handle_town_wait(need_redraw, need_reprint);
+	}else if(t == "handle_combat_switch"){
+		handle_combat_switch(did_something, need_redraw, need_reprint);
+	}else if(t == "handle_missile"){
+		handle_missile(need_redraw, need_reprint);
+	}else if(t == "handle_get_items"){
+		handle_get_items(did_something, need_redraw, need_reprint);
 	}
+	// void handle_drop_item(short item_hit, bool& need_redraw);
 
 	advance_time(did_something, need_redraw, need_reprint);
 }
