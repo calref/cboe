@@ -339,12 +339,6 @@ void init_boe(int argc, char* argv[]) {
 	init_mini_map();
 	redraw_screen(REFRESH_NONE);
 	showMenuBar();
-
-	if(replaying){
-		while(has_next_action()){
-			replay_next_action();
-		}
-	}
 }
 
 void showWelcome() {
@@ -361,32 +355,36 @@ void handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(!All_Done) {
+		if(replaying && has_next_action()){
+			replay_next_action();
+		}else{
 #ifdef __APPLE__
-		if (menuChoiceId>=0) {
-			eMenuChoice aMenuChoice=menuChoice;
-			menuChoice=eMenuChoice::MENU_CHOICE_NONE;
-			switch(aMenuChoice) {
-				case eMenuChoice::MENU_CHOICE_GENERIC:
-					handle_menu_choice(eMenu(menuChoiceId));
-					break;
-				case eMenuChoice::MENU_CHOICE_SPELL:
-					handle_menu_spell(eSpell(menuChoiceId));
-					break;
-				case eMenuChoice::MENU_CHOICE_MONSTER_INFO:
-					handle_monster_info_menu(menuChoiceId);
-					break;
-				case eMenuChoice::MENU_CHOICE_NONE:
-					break;
+			if (menuChoiceId>=0) {
+				eMenuChoice aMenuChoice=menuChoice;
+				menuChoice=eMenuChoice::MENU_CHOICE_NONE;
+				switch(aMenuChoice) {
+					case eMenuChoice::MENU_CHOICE_GENERIC:
+						handle_menu_choice(eMenu(menuChoiceId));
+						break;
+					case eMenuChoice::MENU_CHOICE_SPELL:
+						handle_menu_spell(eSpell(menuChoiceId));
+						break;
+					case eMenuChoice::MENU_CHOICE_MONSTER_INFO:
+						handle_monster_info_menu(menuChoiceId);
+						break;
+					case eMenuChoice::MENU_CHOICE_NONE:
+						break;
+				}
+				menuChoiceId=-1;
 			}
-			menuChoiceId=-1;
-		}
 #endif
-		while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent);
+			while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent);
 
-		// It would be nice to have minimap inside the main game window (we have lots of screen space in fullscreen mode).
-		// Alternatively, minimap could live on its own thread.
-		// But for now we just handle events from both windows on this thread.
-		while(map_visible && mini_map.pollEvent(currentEvent)) handle_one_minimap_event(currentEvent);
+			// It would be nice to have minimap inside the main game window (we have lots of screen space in fullscreen mode).
+			// Alternatively, minimap could live on its own thread.
+			// But for now we just handle events from both windows on this thread.
+			while(map_visible && mini_map.pollEvent(currentEvent)) handle_one_minimap_event(currentEvent);
+		}
 
 		if(changed_display_mode) {
 			changed_display_mode = false;
