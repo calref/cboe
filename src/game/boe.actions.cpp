@@ -820,7 +820,11 @@ void handle_use_item(short item_hit, bool& did_something, bool& need_redraw) {
 	need_redraw = true;
 }
 
-static void handle_give_item(short item_hit, bool& did_something, bool& need_redraw) {
+void handle_give_item(short item_hit, bool& did_something, bool& need_redraw) {
+	if(recording){
+		record_action("handle_give_item", std::to_string(item_hit));
+	}
+
 	if(!prime_time()) {
 		add_string_to_buf("Give item: Finish what you're doing first.");
 		return;
