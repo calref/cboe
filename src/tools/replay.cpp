@@ -6,6 +6,7 @@
 #include <ctime>
 #include <iomanip>
 #include <fstream>
+#include <sstream>
 #include <boost/algorithm/string/predicate.hpp>
 #include <cppcodec/base64_rfc4648.hpp>
 using base64 = cppcodec::base64_rfc4648;
@@ -136,4 +137,18 @@ void decode_file(std::string data, fs::path file) {
 	std::vector<uint8_t> bytes = base64::decode(data.c_str(), strlen(data.c_str()) * sizeof(char));
 	char* bytes_as_c_str = reinterpret_cast<char*>(bytes.data());
 	ofs.write(bytes_as_c_str, bytes.size() / sizeof(char));
+}
+
+location location_from_action(Element& action) {
+	location l;
+	std::istringstream sstr(action.GetText());
+	sstr >> l;
+	return l;
+}
+
+short short_from_action(Element& action) {
+	short s;
+	std::istringstream sstr(action.GetText());
+	sstr >> s;
+	return s;
 }
