@@ -118,6 +118,7 @@ static void init_boe(int, char*[]);
 static void showWelcome();
 
 void handle_startup_button_click(eStartButton btn);
+void handle_switch_pc(short which_pc, bool& need_redraw, bool& need_reprint);
 
 #ifdef __APPLE__
 eMenuChoice menuChoice=eMenuChoice::MENU_CHOICE_NONE;
@@ -272,6 +273,11 @@ void replay_next_action() {
 		std::istringstream sstr(next_action.GetText());
 		sstr >> l;
 		handle_move(l, did_something, need_redraw, need_reprint);
+	}else if(t == "handle_switch_pc"){
+		short which_pc;
+		std::istringstream sstr(next_action.GetText());
+		sstr >> which_pc;
+		handle_switch_pc(which_pc, need_redraw, need_reprint);
 	}
 
 	advance_time(did_something, need_redraw, need_reprint);
