@@ -269,14 +269,10 @@ void replay_next_action() {
 		load_party(tempDir / "temp.exg", univ);
 		finish_load_party();
 	}else if(t == "move"){
-		location l;
-		std::istringstream sstr(next_action.GetText());
-		sstr >> l;
+		location l = location_from_action(next_action);
 		handle_move(l, did_something, need_redraw, need_reprint);
 	}else if(t == "handle_switch_pc"){
-		short which_pc;
-		std::istringstream sstr(next_action.GetText());
-		sstr >> which_pc;
+		short which_pc = short_from_action(next_action);
 		handle_switch_pc(which_pc, need_redraw, need_reprint);
 	}
 

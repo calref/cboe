@@ -5,6 +5,7 @@
 #include <sstream>
 #include <map>
 #include <boost/filesystem.hpp>
+#include "location.hpp"
 
 // Input recording system
 namespace ticpp { class Element; }
@@ -22,5 +23,7 @@ extern Element& pop_next_action(std::string expected_action_type="");
 extern std::map<std::string,std::string> info_from_action(Element& action);
 extern std::string encode_file(fs::path file);
 extern void decode_file(std::string data, fs::path file);
+extern location location_from_action(Element& action);
+extern short short_from_action(Element& action);
 
 #endif
