@@ -644,7 +644,13 @@ static void handle_target_space(location destination, bool& did_something, bool&
 	put_item_screen(stat_window);
 }
 
-static void handle_drop_item(location destination, bool& need_redraw) {
+void handle_drop_item(location destination, bool& need_redraw) {
+	if(recording){
+		std::ostringstream sstr;
+		sstr << destination;
+		record_action("handle_drop_item_location", sstr.str());
+	}
+
 	if(overall_mode == MODE_DROP_COMBAT) {
 		if(!adjacent(univ.current_pc().combat_pos,destination))
 			add_string_to_buf("Drop: must be adjacent.");
@@ -825,7 +831,11 @@ static void handle_give_item(short item_hit, bool& did_something, bool& need_red
 	take_ap(1);
 }
 
-static void handle_drop_item(short item_hit, bool& need_redraw) {
+void handle_drop_item(short item_hit, bool& need_redraw) {
+	if(recording){
+		record_action("handle_drop_item_id", std::to_string(item_hit));
+	}
+
 	if(overall_mode == MODE_DROP_TOWN || overall_mode == MODE_DROP_COMBAT) {
 		add_string_to_buf("Drop item: Cancelled");
 		overall_mode = is_town() ? MODE_TOWN : MODE_COMBAT;

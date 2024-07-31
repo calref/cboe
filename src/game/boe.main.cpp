@@ -130,6 +130,8 @@ void handle_town_wait(bool& need_redraw, bool& need_reprint);
 void handle_combat_switch(bool& did_something, bool& need_redraw, bool& need_reprint);
 void handle_missile(bool& need_redraw, bool& need_reprint);
 void handle_get_items(bool& did_something, bool& need_redraw, bool& need_reprint);
+void handle_drop_item(short item_hit, bool& need_redraw);
+void handle_drop_item(location destination, bool& need_redraw);
 
 #ifdef __APPLE__
 eMenuChoice menuChoice=eMenuChoice::MENU_CHOICE_NONE;
@@ -307,8 +309,13 @@ void replay_next_action() {
 		handle_missile(need_redraw, need_reprint);
 	}else if(t == "handle_get_items"){
 		handle_get_items(did_something, need_redraw, need_reprint);
+	}else if(t == "handle_drop_item_id"){
+		short item_hit = short_from_action(next_action);
+		handle_drop_item(item_hit, need_redraw);
+	}else if(t == "handle_drop_item_location"){
+		location destination = location_from_action(next_action);
+		handle_drop_item(destination, need_redraw);
 	}
-	// void handle_drop_item(short item_hit, bool& need_redraw);
 
 	advance_time(did_something, need_redraw, need_reprint);
 }
