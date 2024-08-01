@@ -324,6 +324,8 @@ void replay_next_action() {
 	}else if(t == "handle_give_item"){
 		short item_hit = short_from_action(next_action);
 		handle_give_item(item_hit, did_something, need_redraw);
+	}else if(t == "close_window"){
+		handle_quit_event();
 	}
 
 	advance_time(did_something, need_redraw, need_reprint);
@@ -459,6 +461,9 @@ void handle_events() {
 }
 
 void handle_quit_event() {
+	if(recording){
+		record_action("close_window", "");
+	}
 	if(overall_mode == MODE_STARTUP) {
 		if(party_in_memory) {
 			std::string choice = cChoiceDlog("quit-confirm-save", {"save","quit","cancel"}).show();
