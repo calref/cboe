@@ -449,12 +449,14 @@ SConscript(["rsrc/SConscript", "doc/SConscript"])
 # Bundle required frameworks and libraries
 
 if platform == "darwin":
-	targets = [
-		"Blades of Exile",
-		"BoE Character Editor",
-		"BoE Scenario Editor",
-	]
-	for targ in targets:
+	app_targets = []
+	if 'game' in targets:
+		app_targets.append("Blades of Exile")
+	if 'pcedit' in targets:
+		app_targets.append("BoE Character Editor")
+	if 'scenedit' in targets:
+		app_targets.append("BoE Scenario Editor")
+	for targ in app_targets:
 		target_dir = path.join(install_dir, targ + '.app', 'Contents/Frameworks')
 		binary = path.join(install_dir, targ + '.app', 'Contents/MacOS', targ)
 		env.Command(Dir(target_dir), binary, [Delete(target_dir), bundle_libraries_for])
