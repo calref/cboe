@@ -64,7 +64,7 @@ cUniverse univ;
 bool flushingInput = false, ae_loading = false;
 long start_time;
 
-std::deque<const sf::Event> fake_event_queue;
+std::deque<sf::Event> fake_event_queue;
 
 short on_spell_menu[2][62];
 short on_monst_menu[256];
