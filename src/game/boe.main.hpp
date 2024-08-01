@@ -23,5 +23,6 @@ void update_terrain_animation();
 void update_startup_animation();
 void handle_events();
 void handle_one_event(const sf::Event&);
+void queue_fake_event(const sf::Event&);
 void handle_one_minimap_event(const sf::Event &);
 

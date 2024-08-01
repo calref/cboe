@@ -19,6 +19,7 @@
 extern void finish_load_party();
 extern void end_startup();
 extern void post_load();
+extern void queue_fake_event(const sf::Event&);
 
 extern bool ae_loading, All_Done, party_in_memory, finished_init;
 extern eGameMode overall_mode;
@@ -72,25 +73,16 @@ void set_up_apple_events() {
 	return TRUE;
 }
 
-// TODO: Something about the cChoiceDlog causes this to crash... AFTER returning.
 -(NSApplicationTerminateReply)applicationShouldTerminate: (NSApplication*)sender {
 	(void) sender; // Suppress "unused parameter" warning
-	if(overall_mode == MODE_STARTUP && !party_in_memory) {
-		All_Done = true;
-		return NSTerminateNow;
-	}
-	
-	if(overall_mode == MODE_TOWN || overall_mode == MODE_OUTDOORS || (overall_mode == MODE_STARTUP && party_in_memory)) {
-		std::string choice = cChoiceDlog("quit-confirm-save", {"save", "quit", "cancel"}).show();
-		if(choice == "cancel") return NSTerminateCancel;
-		if(choice == "save")
-			save_party(univ.file, univ);
-	} else {
-		std::string choice = cChoiceDlog("quit-confirm-nosave", {"quit", "cancel"}).show();
-		if(choice == "cancel") return NSTerminateCancel;
-	}
-	
-	All_Done = true;
-	return NSTerminateNow;
+
+	// To avoid code duplication and fix a weird crash, cancel Apple's
+	// termination event, but queue a fake sfml close event for
+	// boe.main.cpp to handle on the next frame
+	sf::Event event;
+	event.type = sf::Event::Closed;
+	queue_fake_event(event);
+
+	return NSTerminateCancel;
 }
 @end
