@@ -11,6 +11,7 @@
 #include <iostream>
 #include <ctime>
 #include <sstream>
+#include <deque>
 #include "boe.graphics.hpp"
 #include "boe.newgraph.hpp"
 #include "boe.fileio.hpp"
@@ -62,6 +63,8 @@ cUniverse univ;
 
 bool flushingInput = false, ae_loading = false;
 long start_time;
+
+std::deque<const sf::Event> fake_event_queue;
 
 short on_spell_menu[2][62];
 short on_monst_menu[256];
@@ -133,6 +136,8 @@ void handle_get_items(bool& did_something, bool& need_redraw, bool& need_reprint
 void handle_drop_item(short item_hit, bool& need_redraw);
 void handle_drop_item(location destination, bool& need_redraw);
 void handle_give_item(short item_hit, bool& did_something, bool& need_redraw);
+
+void handle_quit_event();
 
 #ifdef __APPLE__
 eMenuChoice menuChoice=eMenuChoice::MENU_CHOICE_NONE;
@@ -419,6 +424,11 @@ void handle_events() {
 				menuChoiceId=-1;
 			}
 #endif
+			while(!fake_event_queue.empty()){
+				const sf::Event& next_event = fake_event_queue.front();
+				fake_event_queue.pop_front();
+				handle_one_event(next_event);
+			}
 			while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent);
 
 			// It would be nice to have minimap inside the main game window (we have lots of screen space in fullscreen mode).
@@ -446,6 +456,33 @@ void handle_events() {
 		// Prevent the loop from executing too fast.
 		fps_limiter.frame_finished();
 	}
+}
+
+void handle_quit_event() {
+	if(overall_mode == MODE_STARTUP) {
+		if(party_in_memory) {
+			std::string choice = cChoiceDlog("quit-confirm-save", {"save","quit","cancel"}).show();
+			if(choice == "cancel") return;
+			if(choice == "save") {
+				fs::path file = nav_put_or_temp_party();
+				if(!file.empty()) return;
+				save_party(file, univ);
+			}
+		}
+		All_Done = true;
+	}
+	if(overall_mode == MODE_TOWN || overall_mode == MODE_OUTDOORS){
+		std::string choice = cChoiceDlog("quit-confirm-save", {"save", "quit", "cancel"}).show();
+		if(choice == "cancel")
+			return;
+		if(choice == "save")
+			save_party(univ.file, univ);
+	} else {
+		std::string choice = cChoiceDlog("quit-confirm-nosave", {"quit", "cancel"}).show();
+		if(choice == "cancel")
+			return;
+	}
+	All_Done = true;
 }
 
 void handle_one_event(const sf::Event& event) {
@@ -496,35 +533,15 @@ void handle_one_event(const sf::Event& event) {
 			break;
 			
 		case sf::Event::Closed:
-			if(overall_mode == MODE_STARTUP) {
-				if(party_in_memory) {
-					std::string choice = cChoiceDlog("quit-confirm-save", {"save","quit","cancel"}).show();
-					if(choice == "cancel") break;
-					if(choice == "save") {
-						fs::path file = nav_put_or_temp_party();
-						if(!file.empty()) break;
-						save_party(file, univ);
-					}
-				}
-				All_Done = true;
-				break;
-			}
-			if(overall_mode == MODE_TOWN || overall_mode == MODE_OUTDOORS){
-				std::string choice = cChoiceDlog("quit-confirm-save", {"save", "quit", "cancel"}).show();
-				if(choice == "cancel")
-					break;
-				if(choice == "save")
-					save_party(univ.file, univ);
-			} else {
-				std::string choice = cChoiceDlog("quit-confirm-nosave", {"quit", "cancel"}).show();
-				if(choice == "cancel")
-					break;
-			}
-			All_Done = true;
+			handle_quit_event();
 			break;
 		default:
 			break; // There's several events we don't need to handle at all
 	}
+}
+
+void queue_fake_event(const sf::Event& event) {
+	fake_event_queue.push_back(event);
 }
 
 void handle_one_minimap_event(const sf::Event& event) {
@@ -648,36 +665,7 @@ void handle_menu_choice(eMenu item_hit) {
 			pick_preferences();
 			break;
 		case eMenu::QUIT:
-			if(overall_mode == MODE_STARTUP) {
-				if(party_in_memory) {
-					std::string choice = cChoiceDlog("quit-confirm-save", {"save","quit","cancel"}).show();
-					if(choice == "cancel") break;
-					if(choice == "save") {
-						fs::path file = nav_put_or_temp_party();
-						if(!file.empty()) break;
-						save_party(file, univ);
-					}
-				}
-				All_Done = true;
-				break;
-			}
-			if(overall_mode == MODE_TOWN || overall_mode == MODE_OUTDOORS) {
-				std::string choice = cChoiceDlog("quit-confirm-save",{"quit","save","cancel"}).show();
-				if(choice == "cancel")
-					break;
-				if(choice == "save") {
-					if(univ.file.empty()) {
-						univ.file = nav_put_or_temp_party();
-						if(univ.file.empty()) break;
-					}
-					save_party(univ.file, univ);
-				}
-			} else {
-				std::string choice = cChoiceDlog("quit-confirm-nosave",{"quit","cancel"}).show();
-				if(choice == "cancel")
-					return;
-			}
-			All_Done = true;
+			handle_quit_event();
 			break;
 		case eMenu::OPTIONS_PC_GRAPHIC:
 			choice = char_select_pc(1,"New graphic for who?");
