@@ -36,4 +36,19 @@ short count_walls(location loc);
 bool is_sign(ter_num_t ter);
 bool check_for_interrupt();
 
+void handle_startup_button_click(eStartButton btn);
+void handle_switch_pc(short which_pc, bool& need_redraw, bool& need_reprint);
+void handle_switch_pc_items(short which_pc, bool& need_redraw);
+void handle_equip_item(short item_hit, bool& need_redraw);
+void handle_use_item(short item_hit, bool& did_something, bool& need_redraw);
+void handle_item_shop_action(short item_hit);
+void handle_alchemy(bool& need_redraw, bool& need_reprint);
+void handle_town_wait(bool& need_redraw, bool& need_reprint);
+void handle_combat_switch(bool& did_something, bool& need_redraw, bool& need_reprint);
+void handle_missile(bool& need_redraw, bool& need_reprint);
+void handle_get_items(bool& did_something, bool& need_redraw, bool& need_reprint);
+void handle_drop_item(short item_hit, bool& need_redraw);
+void handle_drop_item(location destination, bool& need_redraw);
+void handle_give_item(short item_hit, bool& did_something, bool& need_redraw);
+
 #endif
