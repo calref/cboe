@@ -42,6 +42,8 @@ extern sf::Texture pc_gworld;
 extern sf::RenderTexture map_gworld;
 extern cUniverse univ;
 
+extern void draw_map(bool need_refresh);
+
 short selected;
 
 bool GTP(short item_num) {
@@ -692,7 +694,7 @@ void init_mini_map() {
 		play_sound(2);
 		throw std::string("Failed to initialized automap!");
 	} else {
-		map_gworld.clear(sf::Color::White);
+		draw_map(true);
 	}
 }
 
