@@ -246,12 +246,22 @@ void build_outdoors() {
 	for(short i = 0; i < 48; i++)
 		for(short j = 0; j < 48; j++) {
 			univ.out[i][j] = univ.scenario.outdoors[x][y]->terrain[i][j];
+			// Even in a 1x1 outdoors, draw_terrain() will sometimes access the extra 3 quadrants
+			// when the party is close to going out-of-bounds. So those values can't be left as junk
 			if(x + 1 < univ.scenario.outdoors.width())
 				univ.out[48 + i][j] = univ.scenario.outdoors[x+1][y]->terrain[i][j];
+			else
+				univ.out[48 + i][j] = univ.scenario.outdoors[x][y]->terrain[47][j];
+
 			if(y + 1 < univ.scenario.outdoors.height())
 				univ.out[i][48 + j] = univ.scenario.outdoors[x][y+1]->terrain[i][j];
+			else
+				univ.out[i][48 + j] = univ.scenario.outdoors[x][y]->terrain[i][47];
+
 			if(x + 1 < univ.scenario.outdoors.width() && y + 1 < univ.scenario.outdoors.height())
 				univ.out[48 + i][48 + j] = univ.scenario.outdoors[x+1][y+1]->terrain[i][j];
+			else
+				univ.out[48 + i][48 + j] = univ.scenario.outdoors[x][y]->terrain[47][47];
 		}
 	
 	add_outdoor_maps();
