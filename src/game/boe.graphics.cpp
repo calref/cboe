@@ -709,6 +709,14 @@ void draw_terrain(short	mode) {
 	
 	mainPtr.setActive();
 	
+	int max_dim_x, max_dim_y;
+	if(is_out()){
+		max_dim_x = min(96, 48 * univ.scenario.outdoors.width());
+		max_dim_y = min(96, 48 * univ.scenario.outdoors.height());
+	}else {
+		max_dim_x = max_dim_y = univ.town->max_dim;
+	}
+
 	for(short i = 0; i < 13; i++)
 		for(short j = 0; j < 13; j++) {
 			light_area[i][j] = 0;
@@ -729,6 +737,8 @@ void draw_terrain(short	mode) {
 			where_draw =  (is_out()) ? univ.party.out_loc : center;
 			where_draw.x += i - 6;
 			where_draw.y += j - 6;
+			if (where_draw.x < 0 || where_draw.y < 0 || where_draw.x >= max_dim_x || where_draw.y >= max_dim_y)
+				continue;
 			if(!(is_out()))
 				light_area[i][j] = (is_town()) ? pt_in_light(view_loc,where_draw) : combat_pt_in_light(where_draw);
 			if(!is_out() && !univ.town.is_on_map(where_draw.x, where_draw.y))
@@ -743,7 +753,8 @@ void draw_terrain(short	mode) {
 			where_draw.x += q - 4;
 			where_draw.y += r - 4;
 			off_terrain = false;
-			
+			if (where_draw.x < 0 || where_draw.y < 0 || where_draw.x >= max_dim_x || where_draw.y >= max_dim_y)
+				continue;
 			draw_frills = true;
 			if(!is_out() && !univ.town.is_on_map(where_draw.x, where_draw.y)) {
 				draw_frills = false;
