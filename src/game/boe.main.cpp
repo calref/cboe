@@ -453,13 +453,12 @@ void handle_quit_event() {
 			if(choice == "cancel") return;
 			if(choice == "save") {
 				fs::path file = nav_put_or_temp_party();
-				if(!file.empty()) return;
+				if(file.empty()) return;
 				save_party(file, univ);
 			}
 		}
 		All_Done = true;
-	}
-	if(overall_mode == MODE_TOWN || overall_mode == MODE_OUTDOORS){
+	}else if(overall_mode == MODE_TOWN || overall_mode == MODE_OUTDOORS){
 		std::string choice = cChoiceDlog("quit-confirm-save", {"save", "quit", "cancel"}).show();
 		if(choice == "cancel")
 			return;
