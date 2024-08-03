@@ -536,14 +536,12 @@ void cDialog::handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(dialogNotToast) {
-		if(replaying){
-			if(next_action_type() == "control_click"){
-				Element& next_action = pop_next_action();
-				auto info = info_from_action(next_action);
-				if(info["id"].empty()) continue;
-				eKeyMod mods = static_cast<eKeyMod>(atoi(info["mods"].c_str()));
-				controls[info["id"]]->triggerClickHandler(*this, info["id"], mods);
-			}
+		if(replaying && has_next_action() && next_action_type() == "control_click"){
+			Element& next_action = pop_next_action();
+			auto info = info_from_action(next_action);
+			if(info["id"].empty()) continue;
+			eKeyMod mods = static_cast<eKeyMod>(atoi(info["mods"].c_str()));
+			controls[info["id"]]->triggerClickHandler(*this, info["id"], mods);
 		}else{
 			while(win.pollEvent(currentEvent)) handle_one_event(currentEvent);
 		}
