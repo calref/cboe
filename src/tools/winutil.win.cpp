@@ -198,6 +198,7 @@ static std::string runFileDlog(OPENFILENAMEA& dlg, const std::string& file, bool
 	std::fill(path + file.length(), path + sz, 0);
 
 	dlg.lpstrFile = path;
+	dlg.lpstrDefExt = "exg";
 	dlg.nMaxFile = sz - 1;
 	dlg.nFileOffset = file.find_last_of('\\');
 	dlg.nFileOffset++;
