@@ -55,6 +55,8 @@ else:
 
 if have_xmllint:
 	xmllint_command = ('xmllint', '--nonet', '--noout', '--schema', '../schemas/dialog.xsd')
+else:
+	print('xmllint not found! skipping xmllint step')
 
 if have_xmllint: # This is separate so that alternate xml validators could be used
 	def validate_dialog(target, source, env):
