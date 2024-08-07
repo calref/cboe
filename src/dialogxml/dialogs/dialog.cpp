@@ -44,11 +44,10 @@ void (*cDialog::redraw_everything)() = nullptr;
 
 std::string cDialog::generateRandomString(){
 	// Not bothering to seed, because it doesn't actually matter if it's truly random.
-	// Though, this will be called after srand() is called in main() anyway.
-	int n_chars = rand() % 100;
+	int n_chars = ui_rand() % 100;
 	std::string s = "$";
 	while(n_chars > 0){
-		s += char(rand() % 96) + ' '; // was 223 ...
+		s += char(ui_rand() % 96) + ' '; // was 223 ...
 		n_chars--;
 	}
 	return s;

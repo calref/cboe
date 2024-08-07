@@ -114,7 +114,7 @@ int main(int argc, char* argv[]) {
 #endif
 
 		check_for_intel();
-		srand(time(nullptr));
+		game_rand.seed(time(nullptr));
 		
 		set_up_apple_events();
 		process_args(argc, argv);
