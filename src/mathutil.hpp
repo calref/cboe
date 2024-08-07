@@ -10,6 +10,7 @@
 
 #include <cmath>
 #include <SFML/System/Time.hpp>
+#include <random>
 
 // Make sure min and max macros are not defined.
 // Some Windows headers may define these.
@@ -21,6 +22,10 @@
 #endif
 
 using std::abs;
+
+extern std::mt19937 game_rand;
+extern std::mt19937 ui_rand;
+
 short get_ran(short times, short min, short max);
 short max(short a,short b);
 short min(short a,short b);

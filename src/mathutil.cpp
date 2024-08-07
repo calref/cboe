@@ -9,6 +9,9 @@
 #include <cstdlib>
 #include "mathutil.hpp"
 
+std::mt19937 game_rand;
+std::mt19937 ui_rand;
+
 short get_ran (short times,short  min,short  max){
 	long int store;
 	short to_ret = 0;
@@ -17,7 +20,7 @@ short get_ran (short times,short  min,short  max){
 	if(max == min) return times * min;
 	
 	for(short i = 1; i < times + 1; i++) {
-		store = rand();
+		store = game_rand();
 		to_ret += min + (store % (max - min + 1));
 	}
 	return to_ret;

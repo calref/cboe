@@ -343,16 +343,16 @@ void init_boe(int argc, char* argv[]) {
 		Element& srand_element = pop_next_action("srand");
 		
 		std::string ts(srand_element.GetText());
-		srand(atoi(ts.c_str()));
+		game_rand.seed(atoi(ts.c_str()));
 	} else {
 		auto t = time(nullptr);
 		if (recording) {
 			std::string ts = boost::lexical_cast<std::string>(t);
 			record_action("srand", ts);
 		}
-		srand(t);
+		game_rand.seed(t);
 	}
-	std::cout << rand() << std::endl;
+	std::cout << game_rand() << std::endl;
 	init_screen_locs();	
 	init_startup();
 	flushingInput = true;

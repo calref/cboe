@@ -218,7 +218,7 @@ void init_scened(int argc, char* argv[]) {
 	
 	set_cursor(watch_curs);
 	check_for_intel();
-	srand(time(nullptr));
+	game_rand.seed(time(nullptr));
 		
 	cen_x = 18;
 	cen_y = 18;
