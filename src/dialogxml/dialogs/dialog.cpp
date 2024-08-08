@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <functional>
 #include <sstream>
+#include <string>
 #include "dialog.hpp"
 #include "gfx/tiling.hpp" // for bg
 #include "fileio/resmgr/res_dialog.hpp"
@@ -540,7 +541,7 @@ void cDialog::handle_events() {
 			Element& next_action = pop_next_action();
 			auto info = info_from_action(next_action);
 			if(info["id"].empty()) continue;
-			eKeyMod mods = static_cast<eKeyMod>(atoi(info["mods"].c_str()));
+			eKeyMod mods = static_cast<eKeyMod>(std::stoi(info["mods"]));
 			controls[info["id"]]->triggerClickHandler(*this, info["id"], mods);
 		}else{
 			while(win.pollEvent(currentEvent)) handle_one_event(currentEvent);

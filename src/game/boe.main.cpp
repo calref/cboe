@@ -264,7 +264,7 @@ void replay_next_action() {
 	std::string t = next_action.Value();
 	
 	if(overall_mode == MODE_STARTUP && t == "startup_button_click"){
-		eStartButton btn = static_cast<eStartButton>(atoi(next_action.GetText().c_str()));
+		eStartButton btn = static_cast<eStartButton>(std::stoi(next_action.GetText()));
 		handle_startup_button_click(btn);
 	}else if(t == "load_party"){
 		decode_file(next_action.GetText(), tempDir / "temp.exg");
@@ -343,7 +343,7 @@ void init_boe(int argc, char* argv[]) {
 		Element& srand_element = pop_next_action("srand");
 		
 		std::string ts(srand_element.GetText());
-		game_rand.seed(atoi(ts.c_str()));
+		game_rand.seed(std::stoi(ts));
 	} else {
 		auto t = time(nullptr);
 		if (recording) {
