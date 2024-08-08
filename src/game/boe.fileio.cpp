@@ -341,28 +341,49 @@ std::vector<scen_header_type> build_scen_headers() {
 	fs::recursive_directory_iterator iter(scenDir);
 	set_cursor(watch_curs);
 	
-	while(iter != fs::recursive_directory_iterator()) {
-		fs::file_status stat = iter->status();
-		if(stat.type() == fs::regular_file) {
+	if(replaying){
+		Element& scen_headers_action = pop_next_action("build_scen_headers");
+		std::istringstream in(scen_headers_action.GetText());
+		std::string scen_file;
+		while(std::getline(in, scen_file)){
 			scen_header_type scen_head;
-			if(load_scenario_header(iter->path(), scen_head))
+			fs::path full_path = scenDir / scen_file;
+			if(load_scenario_header(full_path, scen_head)){
 				scen_headers.push_back(scen_head);
+			}else{
+				scen_header_type missing_scen;
+				missing_scen.intro_pic = missing_scen.rating = missing_scen.difficulty = 0;
+				for(int i=0; i<3; ++i)
+					missing_scen.ver[i] = missing_scen.prog_make_ver[i] = 0;
+				missing_scen.name = scen_file;
+				missing_scen.who1 = missing_scen.who2 = missing_scen.file = "";
+				scen_headers.push_back(missing_scen);
+			}
 		}
-		iter++;
-	}
-	if(scen_headers.size() == 0) { // no scens present
-		// TODO: Should something be done here?
-	} else {
-		std::sort(scen_headers.begin(), scen_headers.end(), [](scen_header_type hdr_a, scen_header_type hdr_b) -> bool {
-			std::string a = hdr_a.name, b = hdr_b.name;
-			std::transform(a.begin(), a.end(), a.begin(), tolower);
-			std::transform(b.begin(), b.end(), b.begin(), tolower);
-			if(a.substr(0,2) == "a ") a.erase(a.begin(), a.begin() + 2);
-			else if(a.substr(0,4) == "the ") a.erase(a.begin(), a.begin() + 4);
-			if(b.substr(0,2) == "a ") b.erase(b.begin(), b.begin() + 2);
-			else if(b.substr(0,4) == "the ") b.erase(b.begin(), b.begin() + 4);
-			return a < b;
-		});
+	}else{
+		while(iter != fs::recursive_directory_iterator()) {
+			fs::file_status stat = iter->status();
+			if(stat.type() == fs::regular_file) {
+				scen_header_type scen_head;
+				if(load_scenario_header(iter->path(), scen_head))
+					scen_headers.push_back(scen_head);
+			}
+			iter++;
+		}
+		if(scen_headers.size() == 0) { // no scens present
+			// TODO: Should something be done here?
+		} else {
+			std::sort(scen_headers.begin(), scen_headers.end(), [](scen_header_type hdr_a, scen_header_type hdr_b) -> bool {
+				std::string a = hdr_a.name, b = hdr_b.name;
+				std::transform(a.begin(), a.end(), a.begin(), tolower);
+				std::transform(b.begin(), b.end(), b.begin(), tolower);
+				if(a.substr(0,2) == "a ") a.erase(a.begin(), a.begin() + 2);
+				else if(a.substr(0,4) == "the ") a.erase(a.begin(), a.begin() + 4);
+				if(b.substr(0,2) == "a ") b.erase(b.begin(), b.begin() + 2);
+				else if(b.substr(0,4) == "the ") b.erase(b.begin(), b.begin() + 4);
+				return a < b;
+			});
+		}
 	}
 	if(recording){
 		std::ostringstream scen_names;
