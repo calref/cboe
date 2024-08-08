@@ -37,7 +37,6 @@ extern sf::RenderWindow mainPtr;
 extern cUniverse univ;
 extern eGameMode overall_mode;
 extern sf::View mainView;
-extern eKeyMod current_key_mod();
 
 enum_map(eStartButton, rectangle) startup_button;
 

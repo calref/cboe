@@ -43,8 +43,6 @@ cDialog* cDialog::topWindow = nullptr;
 void (*cDialog::redraw_everything)() = nullptr;
 std::mt19937 cDialog::ui_rand;
 
-extern eKeyMod current_key_mod();
-
 std::string cDialog::generateRandomString(){
 	// Not bothering to seed, because it doesn't actually matter if it's truly random.
 	int n_chars = ui_rand() % 100;

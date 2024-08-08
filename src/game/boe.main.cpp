@@ -599,15 +599,6 @@ void Mouse_Pressed(const sf::Event& event) {
 	menu_activate();
 }
 
-eKeyMod current_key_mod() {
-	eKeyMod mod = mod_none;
-	if(kb.isCtrlPressed()) mod += mod_ctrl;
-	if(kb.isMetaPressed()) mod += mod_ctrl;
-	if(kb.isAltPressed()) mod += mod_alt;
-	if(kb.isShiftPressed()) mod += mod_shift;
-	return mod;
-}
-
 void close_program() {
 	// TODO: Ultimately we would like to have cleanup happen automatically, negating the need for this function
 	// On the Mac, prefs are synced automatically. However, doing it manually won't hurt.

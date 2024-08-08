@@ -16,6 +16,7 @@
 //#include "mathutil.hpp"
 //#include "prefs.hpp"
 //#include "cursors.hpp"
+#include "keymods.hpp"
 
 eKeyMod operator + (eKeyMod lhs, eKeyMod rhs){
 	if(lhs == rhs) return lhs;
@@ -115,4 +116,13 @@ unsigned char removeShift(unsigned char c){
 		'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', '\\',']', '`',
 	};
 	return afterUnShift[c - ' '];
+}
+
+eKeyMod current_key_mod() {
+	eKeyMod mod = mod_none;
+	if(kb.isCtrlPressed()) mod += mod_ctrl;
+	if(kb.isMetaPressed()) mod += mod_ctrl;
+	if(kb.isAltPressed()) mod += mod_alt;
+	if(kb.isShiftPressed()) mod += mod_shift;
+	return mod;
 }
