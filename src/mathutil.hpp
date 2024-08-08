@@ -24,7 +24,6 @@
 using std::abs;
 
 extern std::mt19937 game_rand;
-extern std::mt19937 ui_rand;
 
 short get_ran(short times, short min, short max);
 short max(short a,short b);

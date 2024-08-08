@@ -20,6 +20,7 @@
 #include <exception>
 #include <functional>
 #include <deque>
+#include <random>
 
 #include "ticpp.h"
 #include "dialogxml/keycodes.hpp"
@@ -70,6 +71,7 @@ class cDialog {
 	std::vector<std::pair<std::string,cTextField*>> tabOrder;
 	static cDialog* topWindow; // Tracks the frontmost dialog.
 	static bool initCalled;
+	static std::mt19937 ui_rand;
 public:
 	static void (*redraw_everything)();
 	/// Performs essential startup initialization. Generally should not be called directly.

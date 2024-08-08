@@ -10,7 +10,6 @@
 #include "mathutil.hpp"
 
 std::mt19937 game_rand;
-std::mt19937 ui_rand;
 
 short get_ran (short times,short  min,short  max){
 	long int store;
