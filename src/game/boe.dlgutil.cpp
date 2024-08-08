@@ -1562,7 +1562,13 @@ public:
 		}
 		
 		me.run();
-		return me.getResult<scen_header_type>();
+		scen_header_type scen = me.getResult<scen_header_type>();
+		if(scen.file.empty()){
+			std::ostringstream error;
+			error << "Scenario '" << scen.name << "' is missing!";
+			throw error.str();
+		}
+		return scen;
 	}
 };
 
