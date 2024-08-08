@@ -20,6 +20,8 @@
 #include "fileio/fileio.hpp"
 #include "tools/cursors.hpp"
 #include <boost/filesystem.hpp>
+#include "replay.hpp"
+#include <sstream>
 
 #define	DONE_BUTTON_ITEM	1
 
@@ -361,6 +363,13 @@ std::vector<scen_header_type> build_scen_headers() {
 			else if(b.substr(0,4) == "the ") b.erase(b.begin(), b.begin() + 4);
 			return a < b;
 		});
+	}
+	if(recording){
+		std::ostringstream scen_names;
+		for(scen_header_type header : scen_headers){
+			scen_names << header.file << std::endl;
+		}
+		record_action("build_scen_headers", scen_names.str());
 	}
 	return scen_headers;
 }
