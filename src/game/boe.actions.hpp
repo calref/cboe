@@ -4,6 +4,7 @@
 
 #include <SFML/Window/Event.hpp>
 #include "location.hpp"
+#include "dialogxml/keycodes.hpp"
 
 void init_screen_locs();
 bool prime_time();
@@ -36,7 +37,7 @@ short count_walls(location loc);
 bool is_sign(ter_num_t ter);
 bool check_for_interrupt();
 
-void handle_startup_button_click(eStartButton btn);
+void handle_startup_button_click(eStartButton btn, eKeyMod mods);
 void handle_switch_pc(short which_pc, bool& need_redraw, bool& need_reprint);
 void handle_switch_pc_items(short which_pc, bool& need_redraw);
 void handle_equip_item(short item_hit, bool& need_redraw);

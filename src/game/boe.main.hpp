@@ -9,6 +9,7 @@ int main(int argc, char* argv[]);
 void update_everything();
 void redraw_everything();
 void Mouse_Pressed(const sf::Event&);
+eKeyMod current_key_mod();
 void close_program();
 void change_cursor(location where_curs);
 void set_up_apple_events();
