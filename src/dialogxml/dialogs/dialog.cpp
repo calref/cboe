@@ -669,11 +669,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 			}
 			break;
 		case sf::Event::MouseButtonPressed:
-			key.mod = mod_none;
-			if(kb.isCtrlPressed()) key.mod += mod_ctrl;
-			if(kb.isMetaPressed()) key.mod += mod_ctrl;
-			if(kb.isAltPressed()) key.mod += mod_alt;
-			if(kb.isShiftPressed()) key.mod += mod_shift;
+			key.mod = current_key_mod();
 			where = {(int)(currentEvent.mouseButton.x / ui_scale()), (int)(currentEvent.mouseButton.y / ui_scale())};
 			process_click(where, key.mod);
 			break;

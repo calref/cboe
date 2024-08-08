@@ -40,11 +40,19 @@ extern sf::View mainView;
 
 enum_map(eStartButton, rectangle) startup_button;
 
-void handle_startup_button_click(eStartButton btn) {
+void handle_startup_button_click(eStartButton btn, eKeyMod mods) {
 	if(recording){
+		std::map<std::string, std::string> info;
+
 		std::ostringstream sstr;
 		sstr << btn;
-		record_action("startup_button_click", sstr.str());
+		info["btn"] = sstr.str();
+
+		sstr.str("");
+		sstr << mods;
+		info["mods"] = sstr.str();
+
+		record_action("startup_button_click", info);
 	}
 
 	std::string scen_name;
@@ -78,7 +86,7 @@ void handle_startup_button_click(eStartButton btn) {
 			
 		case STARTBTN_JOIN:
 			if(!party_in_memory) {
-				if(kb.isAltPressed()) {
+				if(mod_contains(mods, mod_alt)) {
 					force_party = true;
 					start_new_game(true);
 				} else {
@@ -114,7 +122,7 @@ bool handle_startup_press(location the_point) {
 	for(auto btn : startup_button.keys()) {
 		if(btn == eStartButton::STARTBTN_SCROLL) continue;
 		if(the_point.in(startup_button[btn])) {
-			handle_startup_button_click(btn);
+			handle_startup_button_click(btn, current_key_mod());
 		}
 	}
 	return false;

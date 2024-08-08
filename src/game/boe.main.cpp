@@ -264,8 +264,10 @@ void replay_next_action() {
 	std::string t = next_action.Value();
 	
 	if(overall_mode == MODE_STARTUP && t == "startup_button_click"){
-		eStartButton btn = static_cast<eStartButton>(std::stoi(next_action.GetText()));
-		handle_startup_button_click(btn);
+		auto info = info_from_action(next_action);
+		eStartButton btn = static_cast<eStartButton>(std::stoi(info["btn"]));
+		eKeyMod mods = static_cast<eKeyMod>(std::stoi(info["mods"]));
+		handle_startup_button_click(btn, mods);
 	}else if(t == "load_party"){
 		decode_file(next_action.GetText(), tempDir / "temp.exg");
 		load_party(tempDir / "temp.exg", univ);
