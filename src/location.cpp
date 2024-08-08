@@ -10,6 +10,7 @@
 #include "mathutil.hpp"
 #include <iostream>
 #include <sstream>
+#include <string>
 
 eDirection& operator++ (eDirection& me, int) {
 	if(me == DIR_HERE) return me = DIR_N;
@@ -242,11 +243,11 @@ std::istream& operator>> (std::istream& in, location& l) {
 	in.get(); // (
 	std::stringbuf sstr;
 	in.get(sstr, ',');
-	l.x = atoi(sstr.str().c_str());
+	l.x = std::stoi(sstr.str());
 	in.get(); // ,
 	sstr.str("");
 	in.get(sstr, ')');
-	l.y = atoi(sstr.str().c_str());
+	l.y = std::stoi(sstr.str());
 	in.get(); // )
 	return in;
 }
