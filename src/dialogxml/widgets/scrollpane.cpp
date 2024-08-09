@@ -20,11 +20,11 @@ cScrollPane::cScrollPane(cDialog& parent) : cContainer(CTRL_PANE, parent), scrol
 	recalcRect();
 }
 
-bool cScrollPane::handleClick(location where) {
+bool cScrollPane::handleClick(location where, cFramerateLimiter& fps_limiter) {
 	if(scroll.getBounds().contains(where))
-		return scroll.handleClick(where);
+		return scroll.handleClick(where, fps_limiter);
 	where.y += scroll.getPosition();
-	return cContainer::handleClick(where);
+	return cContainer::handleClick(where, fps_limiter);
 }
 
 void cScrollPane::recalcRect() {

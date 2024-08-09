@@ -275,7 +275,7 @@ bool cScrollbar::handle_mouse_released(const sf::Event&) {
 	return true;
 }
 
-bool cScrollbar::handleClick(location where) {
+bool cScrollbar::handleClick(location where, cFramerateLimiter& fps_limiter) {
 	if(max == 0) return false;
 	sf::Event e;
 	bool done = false, clicked = false;
@@ -299,56 +299,58 @@ bool cScrollbar::handleClick(location where) {
 	int diff = clickPos - thumbPos;
 	while(!done){
 		redraw();
-		if(!inWindow->pollEvent(e)) continue;
-		location mouseLoc = sf::Mouse::getPosition(*inWindow);
-		mouseLoc = inWindow->mapPixelToCoords(mouseLoc);
-		int mousePos = vert ? mouseLoc.y : mouseLoc.x;
-		if(e.type == sf::Event::MouseButtonReleased){
-			done = true;
-			location clickLoc(e.mouseButton.x, e.mouseButton.y);
-			clickLoc = inWindow->mapPixelToCoords(clickLoc);
-			clicked = frame.contains(clickLoc);
-			depressed = false;
-			switch(pressedPart) {
-				case PART_UP: pos--; break;
-				case PART_PGUP: pos -= pgsz; break;
-				case PART_PGDN: pos += pgsz; break;
-				case PART_DOWN: pos++; break;
-				case PART_THUMB: break;
+		while(inWindow->pollEvent(e)){
+			location mouseLoc = sf::Mouse::getPosition(*inWindow);
+			mouseLoc = inWindow->mapPixelToCoords(mouseLoc);
+			int mousePos = vert ? mouseLoc.y : mouseLoc.x;
+			if(e.type == sf::Event::MouseButtonReleased){
+				done = true;
+				location clickLoc(e.mouseButton.x, e.mouseButton.y);
+				clickLoc = inWindow->mapPixelToCoords(clickLoc);
+				clicked = frame.contains(clickLoc);
+				depressed = false;
+				switch(pressedPart) {
+					case PART_UP: pos--; break;
+					case PART_PGUP: pos -= pgsz; break;
+					case PART_PGDN: pos += pgsz; break;
+					case PART_DOWN: pos++; break;
+					case PART_THUMB: break;
+				}
+			} else if(e.type == sf::Event::MouseMoved){
+				restore_cursor();
+				switch(pressedPart) {
+					case PART_UP:
+						depressed = mousePos < bar_start + btn_size;
+						break;
+					case PART_PGUP:
+						depressed = mousePos >= bar_start + btn_size && mousePos < thumbPos;
+						break;
+					case PART_THUMB:
+						depressed = true;
+						// We want the pos that will make thumbPos = mousePos - diff
+						// In draw(), thumbPos is calculated as bar_start + bar_thickness + pos * (bar_size - bar_thickness) / max
+						// So solving for pos gives (mousePos - diff - bar_start - bar_thickness) * max / (bar_size - bar_thickness)
+						pos = (mousePos - diff - bar_start - btn_size) * max / (bar_size - btn_size);
+						break;
+					case PART_PGDN:
+						depressed = mousePos >= thumbPos + btn_size && mousePos < bar_end - btn_size;
+						break;
+					case PART_DOWN:
+						depressed = mousePos >= bar_end - btn_size;
+						break;
+				}
+				location toLoc(e.mouseMove.x, e.mouseMove.y);
+				toLoc = inWindow->mapPixelToCoords(toLoc);
+				if(pressedPart != PART_THUMB && !frame.contains(toLoc)) depressed = false;
 			}
-		} else if(e.type == sf::Event::MouseMoved){
-			restore_cursor();
-			switch(pressedPart) {
-				case PART_UP:
-					depressed = mousePos < bar_start + btn_size;
-					break;
-				case PART_PGUP:
-					depressed = mousePos >= bar_start + btn_size && mousePos < thumbPos;
-					break;
-				case PART_THUMB:
-					depressed = true;
-					// We want the pos that will make thumbPos = mousePos - diff
-					// In draw(), thumbPos is calculated as bar_start + bar_thickness + pos * (bar_size - bar_thickness) / max
-					// So solving for pos gives (mousePos - diff - bar_start - bar_thickness) * max / (bar_size - bar_thickness)
-					pos = (mousePos - diff - bar_start - btn_size) * max / (bar_size - btn_size);
-					break;
-				case PART_PGDN:
-					depressed = mousePos >= thumbPos + btn_size && mousePos < bar_end - btn_size;
-					break;
-				case PART_DOWN:
-					depressed = mousePos >= bar_end - btn_size;
-					break;
-			}
-			location toLoc(e.mouseMove.x, e.mouseMove.y);
-			toLoc = inWindow->mapPixelToCoords(toLoc);
-			if(pressedPart != PART_THUMB && !frame.contains(toLoc)) depressed = false;
+			pos = minmax(0,max,pos);
+			if(parent && !link.empty())
+				parent->getControl(link).setTextToNum(pos);
+			thumbPos = bar_start;
+			thumbPos += btn_size + pos * (bar_size - btn_size) / max;
+			thumbPos = minmax(mousePos,bar_end - btn_size * 2,thumbPos);
 		}
-		pos = minmax(0,max,pos);
-		if(parent && !link.empty())
-			parent->getControl(link).setTextToNum(pos);
-		thumbPos = bar_start;
-		thumbPos += btn_size + pos * (bar_size - btn_size) / max;
-		thumbPos = minmax(mousePos,bar_end - btn_size * 2,thumbPos);
+		fps_limiter.frame_finished();
 	}
 	redraw();
 	return clicked;

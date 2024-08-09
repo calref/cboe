@@ -51,12 +51,12 @@ void cLedGroup::addChoice(cLed* ctrl, std::string key) {
 		setSelected(key);
 }
 
-bool cLedGroup::handleClick(location where) {
+bool cLedGroup::handleClick(location where, cFramerateLimiter& fps_limiter) {
 	std::string which_clicked;
 	ledIter iter = choices.begin();
 	while(iter != choices.end()){
 		if(iter->second->isVisible() && where.in(iter->second->getBounds())){
-			if(iter->second->handleClick(where)) {
+			if(iter->second->handleClick(where, fps_limiter)) {
 				which_clicked = iter->first;
 				break;
 			}

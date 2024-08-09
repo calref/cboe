@@ -128,13 +128,13 @@ bool handle_startup_press(location the_point) {
 	return false;
 }
 
-void handle_splash_events(cFramerateLimiter& framerate_limiter) {
+void handle_splash_events(cFramerateLimiter& fps_limiter) {
 	sf::Event event;
 	while(mainPtr.pollEvent(event)) {
 		if(event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)
 			set_cursor(sword_curs);
 	}
-	framerate_limiter.frame_finished();
+	fps_limiter.frame_finished();
 }
 
 static rectangle view_rect() {
@@ -142,7 +142,7 @@ static rectangle view_rect() {
 	return rectangle(0, 0, size.y, size.x);
 }
 
-void show_logo(cFramerateLimiter& framerate_limiter) {
+void show_logo(cFramerateLimiter& fps_limiter) {
 	rectangle whole_window = view_rect();
 	
 	if(get_int_pref("DisplayMode") != 5)
@@ -157,17 +157,17 @@ void show_logo(cFramerateLimiter& framerate_limiter) {
 	play_sound(-95);
 	while(sound_going(95)) {
 		draw_splash(pict_to_draw, mainPtr, logo_from);
-		handle_splash_events(framerate_limiter);
+		handle_splash_events(fps_limiter);
 	}
 	if(!get_int_pref("ShowStartupSplash", true)) {
 		sf::Time delay = time_in_ticks(60);
 		sf::Clock timer;
 		while(timer.getElapsedTime() < delay)
-			handle_splash_events(framerate_limiter);
+			handle_splash_events(fps_limiter);
 	}
 }
 
-void plop_fancy_startup(cFramerateLimiter& framerate_limiter) {
+void plop_fancy_startup(cFramerateLimiter& fps_limiter) {
 	rectangle whole_window = view_rect();
 
 	float ui_scale = get_float_pref("UIScale", 1.0);
@@ -183,7 +183,7 @@ void plop_fancy_startup(cFramerateLimiter& framerate_limiter) {
 	
 	while(timer.getElapsedTime() < delay) {
 		draw_splash(pict_to_draw, mainPtr, intro_from);
-		handle_splash_events(framerate_limiter);
+		handle_splash_events(fps_limiter);
 	}
 }
 

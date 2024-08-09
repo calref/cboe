@@ -21,6 +21,7 @@
 #include <map>
 #include <boost/any.hpp>
 #include "dialogxml/dialogs/dlogevt.hpp"
+#include "tools/framerate_limiter.hpp"
 
 #include "location.hpp"
 
@@ -328,7 +329,7 @@ public:
 	/// The default implementation works for a simple clickable object such as a button that
 	/// should be hilited in some way while pressed and is cancelled by releasing the mouse
 	/// button outside the control's bounds.
-	virtual bool handleClick(location where);
+	virtual bool handleClick(location where, cFramerateLimiter& fps_limiter);
 	/// Specifies that another control acts as a label for this one.
 	/// The practical effect of this is that hiding or showing this control automatically hides or shows the label as well.
 	/// @param label A pointer to the control that acts as a label.

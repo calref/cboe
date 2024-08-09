@@ -48,7 +48,7 @@ public:
 	cControl& operator[](std::string id) {return getChild(id);}
 	const cControl& operator[](std::string id) const {return const_cast<cContainer&>(*this).getChild(id);}
 	bool isContainer() const override {return true;}
-	bool handleClick(location where) override;
+	bool handleClick(location where, cFramerateLimiter& fps_limiter) override;
 };
 
 #endif
