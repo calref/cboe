@@ -1,5 +1,6 @@
 
 #include <SFML/Graphics.hpp>
+#include "tools/framerate_limiter.hpp"
 
 #ifdef __APPLE__
 extern eMenuChoice menuChoice;
@@ -18,8 +19,8 @@ void incidental_noises(bool on_surface);
 void pause(short length);
 bool handle_startup_press(location the_point);
 void handle_splash_events();
-void show_logo();
-void plop_fancy_startup();
+void show_logo(cFramerateLimiter& framerate_limiter);
+void plop_fancy_startup(cFramerateLimiter& framerate_limiter);
 void update_terrain_animation();
 void update_startup_animation();
 void handle_events();
