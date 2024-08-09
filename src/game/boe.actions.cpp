@@ -1102,7 +1102,7 @@ static void handle_party_death() {
 	}
 }
 
-bool handle_action(const sf::Event& event) {
+bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	long item_hit;
 	bool are_done = false;
 	bool need_redraw = false, did_something = false, need_reprint = false;
@@ -1129,12 +1129,12 @@ bool handle_action(const sf::Event& event) {
 	
 	// Now split off the extra stuff, like talking and shopping.
 	if(overall_mode == MODE_TALKING) {
-		handle_talk_event(the_point);
+		handle_talk_event(the_point, fps_limiter);
 		if(overall_mode != MODE_TALKING)
 			return false;
 	}
 	if(overall_mode == MODE_SHOPPING) {
-		handle_shop_event(the_point);
+		handle_shop_event(the_point, fps_limiter);
 		if(overall_mode != MODE_SHOPPING)
 			return false;
 	}
@@ -1630,7 +1630,7 @@ void initiate_outdoor_combat(short i) {
 	draw_terrain();
 }
 
-bool handle_keystroke(const sf::Event& event){
+bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
 	std::ostringstream sout;
@@ -1708,7 +1708,7 @@ bool handle_keystroke(const sf::Event& event){
 				pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
 				pass_event.mouseButton.x = pass_point.x;
 				pass_event.mouseButton.y = pass_point.y;
-				are_done = handle_action(pass_event);
+				are_done = handle_action(pass_event, fps_limiter);
 			}
 	}
 	else if(overall_mode == MODE_SHOPPING) { // shopping keystrokes
@@ -1725,7 +1725,7 @@ bool handle_keystroke(const sf::Event& event){
 				pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
 				pass_event.mouseButton.x = pass_point.x;
 				pass_event.mouseButton.y = pass_point.y;
-				are_done = handle_action(pass_event);
+				are_done = handle_action(pass_event, fps_limiter);
 			}
 	} else {
 		for(short i = 0; i < 10; i++)
@@ -1737,7 +1737,7 @@ bool handle_keystroke(const sf::Event& event){
 					pass_point = mainPtr.mapCoordsToPixel(terrain_click[i], mainView);
 					pass_event.mouseButton.x = pass_point.x;
 					pass_event.mouseButton.y = pass_point.y;
-					are_done = handle_action(pass_event);
+					are_done = handle_action(pass_event, fps_limiter);
 					return are_done;
 				}
 			}

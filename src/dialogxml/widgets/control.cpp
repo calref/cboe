@@ -221,26 +221,28 @@ void cControl::playClickSound(){
 	else sf::sleep(time_in_ticks(14));
 }
 
-bool cControl::handleClick(location){
+bool cControl::handleClick(location, cFramerateLimiter& fps_limiter){
 	sf::Event e;
 	bool done = false, clicked = false;
 	inWindow->setActive();
 	depressed = true;
 	while(!done){
 		redraw();
-		if(!inWindow->pollEvent(e)) continue;
-		if(e.type == sf::Event::MouseButtonReleased){
-			done = true;
-			location clickPos(e.mouseButton.x, e.mouseButton.y);
-			clickPos = inWindow->mapPixelToCoords(clickPos);
-			clicked = frame.contains(clickPos);
-			depressed = false;
-		} else if(e.type == sf::Event::MouseMoved){
-			restore_cursor();
-			location toPos(e.mouseMove.x, e.mouseMove.y);
-			toPos = inWindow->mapPixelToCoords(toPos);
-			depressed = frame.contains(toPos);
+		while(inWindow->pollEvent(e)){
+			if(e.type == sf::Event::MouseButtonReleased){
+				done = true;
+				location clickPos(e.mouseButton.x, e.mouseButton.y);
+				clickPos = inWindow->mapPixelToCoords(clickPos);
+				clicked = frame.contains(clickPos);
+				depressed = false;
+			} else if(e.type == sf::Event::MouseMoved){
+				restore_cursor();
+				location toPos(e.mouseMove.x, e.mouseMove.y);
+				toPos = inWindow->mapPixelToCoords(toPos);
+				depressed = frame.contains(toPos);
+			}
 		}
+		fps_limiter.frame_finished();
 	}
 	playClickSound();
 	

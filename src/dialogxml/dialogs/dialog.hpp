@@ -29,6 +29,7 @@
 #include <boost/any.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 #include "tools/prefs.hpp"
+#include "tools/framerate_limiter.hpp"
 
 class cControl;
 class cTextField;
@@ -261,9 +262,9 @@ private:
 	inline double ui_scale() { return get_float_pref("UIScale", 1.0); };
 	void draw();
 	void handle_events();
-	void handle_one_event(const sf::Event&);
+	void handle_one_event(const sf::Event&, cFramerateLimiter& fps_limiter);
 	void process_keystroke(cKey keyHit);
-	void process_click(location where, eKeyMod mods);
+	void process_click(location where, eKeyMod mods, cFramerateLimiter& fps_limiter);
 	bool dialogNotToast, didAccept;
 	rectangle winRect;
 	boost::any result;

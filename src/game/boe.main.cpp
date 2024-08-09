@@ -414,9 +414,9 @@ void handle_events() {
 			while(!fake_event_queue.empty()){
 				const sf::Event& next_event = fake_event_queue.front();
 				fake_event_queue.pop_front();
-				handle_one_event(next_event);
+				handle_one_event(next_event, fps_limiter);
 			}
-			while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent);
+			while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent, fps_limiter);
 
 			// It would be nice to have minimap inside the main game window (we have lots of screen space in fullscreen mode).
 			// Alternatively, minimap could live on its own thread.
@@ -474,7 +474,7 @@ void handle_quit_event() {
 	All_Done = true;
 }
 
-void handle_one_event(const sf::Event& event) {
+void handle_one_event(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 
 	// What does this do and should it be here?
 	through_sending();
@@ -493,12 +493,12 @@ void handle_one_event(const sf::Event& event) {
 	switch(event.type) {
 		case sf::Event::KeyPressed:
 			if(flushingInput) return;
-			if(!(event.key.*systemKey)) handle_keystroke(event);
+			if(!(event.key.*systemKey)) handle_keystroke(event, fps_limiter);
 			break;
 			
 		case sf::Event::MouseButtonPressed:
 			if(flushingInput) return;
-			Mouse_Pressed(event);
+			Mouse_Pressed(event, fps_limiter);
 			break;
 			
 		case sf::Event::MouseLeft:
@@ -581,7 +581,7 @@ void redraw_everything() {
 	if(map_visible) draw_map(false);
 }
 
-void Mouse_Pressed(const sf::Event& event) {
+void Mouse_Pressed(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 
 	// What is this stuff? Why is it here?
 	if(had_text_freeze > 0) {
@@ -592,7 +592,7 @@ void Mouse_Pressed(const sf::Event& event) {
 	if(overall_mode == MODE_STARTUP) {
 		All_Done = handle_startup_press({event.mouseButton.x, event.mouseButton.y});
 	} else {
-		All_Done = handle_action(event);
+		All_Done = handle_action(event, fps_limiter);
 	}
 	
 	// Why does every mouse click activate a menu?
@@ -772,11 +772,11 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::ACTIONS_ALCHEMY:
 			dummyEvent.key.code = sf::Keyboard::A;
 			dummyEvent.key.shift = true;
-			handle_keystroke(dummyEvent);
+			queue_fake_event(dummyEvent);
 			break;
 		case eMenu::ACTIONS_WAIT:
 			dummyEvent.key.code = sf::Keyboard::W;
-			handle_keystroke(dummyEvent);
+			queue_fake_event(dummyEvent);
 			break;
 		case eMenu::ACTIONS_AUTOMAP:
 			if(!prime_time()) {

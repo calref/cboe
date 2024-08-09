@@ -28,7 +28,7 @@ public:
 	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
 	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;
 	void validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) override;
-	bool handleClick(location where) override;
+	bool handleClick(location where, cFramerateLimiter& fps_limiter) override;
 	bool hasChild(std::string id) const override;
 	cControl& getChild(std::string id) override;
 	storage_t store() const override;
