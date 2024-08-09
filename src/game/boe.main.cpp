@@ -42,7 +42,6 @@
 #include "tools/prefs.hpp"
 #include "dialogxml/widgets/button.hpp"
 #include "tools/enum_map.hpp"
-#include "tools/framerate_limiter.hpp"
 #include "tools/event_listener.hpp"
 #include "tools/drawable_manager.hpp"
 bool All_Done = false;
@@ -358,12 +357,13 @@ void init_boe(int argc, char* argv[]) {
 	init_screen_locs();	
 	init_startup();
 	flushingInput = true;
+	cFramerateLimiter fps_limiter;
 	// Hidden preference to hide the startup logo - should be kept hidden
 	if(get_bool_pref("ShowStartupLogo", true))
-		show_logo();
+		show_logo(fps_limiter);
 	// The preference to hide the startup splash is exposed however.
 	if(get_bool_pref("ShowStartupSplash", true))
-		plop_fancy_startup();
+		plop_fancy_startup(fps_limiter);
 	
 	cUniverse::print_result = iLiving::print_result = add_string_to_buf;
 	cPlayer::give_help = give_help;
