@@ -2346,7 +2346,7 @@
 					"$(OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1)",
 				);
 				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../../src/**";
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../../src";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wfloat-equal",
@@ -2456,7 +2456,7 @@
 					"-lboost_filesystem",
 					"$(OTHER_LDFLAGS_QUOTED_FOR_PROJECT_1)",
 				);
-				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../../src/**";
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../../src";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wfloat-equal",
