@@ -397,7 +397,7 @@ void handle_events() {
 				menuChoice=eMenuChoice::MENU_CHOICE_NONE;
 				switch(aMenuChoice) {
 					case eMenuChoice::MENU_CHOICE_GENERIC:
-						handle_menu_choice(eMenu(menuChoiceId), fps_limiter);
+						handle_menu_choice(eMenu(menuChoiceId));
 						break;
 					case eMenuChoice::MENU_CHOICE_SPELL:
 						handle_menu_spell(eSpell(menuChoiceId));
@@ -607,7 +607,7 @@ void close_program() {
 }
 
 extern fs::path progDir;
-void handle_menu_choice(eMenu item_hit, cFramerateLimiter& fps_limiter) {
+void handle_menu_choice(eMenu item_hit) {
 	std::string dialogToShow;
 	sf::Event dummyEvent = {sf::Event::KeyPressed};
 	short choice;
@@ -772,11 +772,11 @@ void handle_menu_choice(eMenu item_hit, cFramerateLimiter& fps_limiter) {
 		case eMenu::ACTIONS_ALCHEMY:
 			dummyEvent.key.code = sf::Keyboard::A;
 			dummyEvent.key.shift = true;
-			handle_keystroke(dummyEvent, fps_limiter);
+			queue_fake_event(dummyEvent);
 			break;
 		case eMenu::ACTIONS_WAIT:
 			dummyEvent.key.code = sf::Keyboard::W;
-			handle_keystroke(dummyEvent, fps_limiter);
+			queue_fake_event(dummyEvent);
 			break;
 		case eMenu::ACTIONS_AUTOMAP:
 			if(!prime_time()) {

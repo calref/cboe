@@ -38,7 +38,7 @@ enum class eMenu {
 
 enum class eSpell;
 
-void handle_menu_choice(eMenu item_hit, cFramerateLimiter& fps_limiter);
+void handle_menu_choice(eMenu item_hit);
 void handle_menu_spell(eSpell spell_picked);
 void handle_monster_info_menu(int item_hit);
 
