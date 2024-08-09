@@ -42,7 +42,7 @@ public:
 	std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_FOCUS, EVT_DEFOCUS};
 	}
-	bool handleClick(location where) override;
+	bool handleClick(location where, cFramerateLimiter& fps_limiter) override;
 	void setText(std::string to) override;
 	storage_t store() const override;
 	void restore(storage_t to) override;

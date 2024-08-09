@@ -206,16 +206,16 @@ void end_shop_mode() {
 	}
 }
 
-void handle_shop_event(location p) {
+void handle_shop_event(location p, cFramerateLimiter& fps_limiter) {
 	if(p.in(talk_help_rect)) {
-		if(!help_btn->handleClick(p))
+		if(!help_btn->handleClick(p, fps_limiter))
 			return;
 		give_help(226,27);
 		return;
 	}
 	
 	if(p.in(shop_done_rect)) {
-		if(done_btn->handleClick(p))
+		if(done_btn->handleClick(p, fps_limiter))
 			end_shop_mode();
 		return;
 	}
@@ -706,7 +706,7 @@ static void show_job_bank(int which_bank, std::string title) {
 	job_dlg.run();
 }
 
-void handle_talk_event(location p) {
+void handle_talk_event(location p, cFramerateLimiter& fps_limiter) {
 	short get_pc,s1 = -1,s2 = -1;
 	char asked[4];
 	
@@ -714,7 +714,7 @@ void handle_talk_event(location p) {
 	eTalkNode ttype;
 	
 	if(p.in(talk_help_rect)) {
-		if(!help_btn->handleClick(p))
+		if(!help_btn->handleClick(p, fps_limiter))
 			return;
 		give_help(205,6);
 		return;

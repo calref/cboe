@@ -51,12 +51,12 @@ bool cContainer::parseChildControl(ticpp::Element& elem, std::map<std::string,cC
 	return true;
 }
 
-bool cContainer::handleClick(location where) {
+bool cContainer::handleClick(location where, cFramerateLimiter& fps_limiter) {
 	std::string which_clicked;
 	bool success = false;
 	forEach([&](std::string id, cControl& ctrl) {
 		if(!success && ctrl.isClickable() && ctrl.getBounds().contains(where)) {
-			if(ctrl.handleClick(where)){
+			if(ctrl.handleClick(where, fps_limiter)){
 				success = true;
 				which_clicked = id;
 			}

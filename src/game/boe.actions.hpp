@@ -5,17 +5,18 @@
 #include <SFML/Window/Event.hpp>
 #include "location.hpp"
 #include "dialogxml/keycodes.hpp"
+#include "tools/framerate_limiter.hpp"
 
 void init_screen_locs();
 bool prime_time();
-bool handle_action(const sf::Event& event);
+bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter);
 void advance_time(bool did_something, bool need_redraw, bool need_reprint);
 void handle_move(location destination, bool& did_something, bool& need_redraw, bool& need_reprint);
 void handle_monster_actions(bool& need_redraw, bool& need_reprint);
 bool someone_awake();
 void handle_menu_spell(short spell_picked,short spell_type) ;
 void initiate_outdoor_combat(short i);
-bool handle_keystroke(const sf::Event& event);
+bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter);
 bool handle_scroll(const sf::Event& event);
 void do_load();
 void post_load();

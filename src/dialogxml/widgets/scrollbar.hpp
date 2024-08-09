@@ -73,7 +73,7 @@ public:
 	/// Create a new scrollbar.
 	/// @param parent The parent dialog.
 	explicit cScrollbar(cDialog& parent);
-	bool handleClick(location where) override;
+	bool handleClick(location where, cFramerateLimiter& fps_limiter) override;
 	storage_t store() const override;
 	void restore(storage_t to) override;
 	bool isClickable() const override;

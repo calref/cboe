@@ -6,6 +6,8 @@
 //
 //
 
+#include "tools/framerate_limiter.hpp"
+
 #ifndef BoE_boe_menus_h
 #define BoE_boe_menus_h
 

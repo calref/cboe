@@ -544,7 +544,7 @@ void cDialog::handle_events() {
 			eKeyMod mods = static_cast<eKeyMod>(std::stoi(info["mods"]));
 			controls[info["id"]]->triggerClickHandler(*this, info["id"], mods);
 		}else{
-			while(win.pollEvent(currentEvent)) handle_one_event(currentEvent);
+			while(win.pollEvent(currentEvent)) handle_one_event(currentEvent, fps_limiter);
 		}
 
 		// Ideally, this should be the only draw call that is done in a cycle.
@@ -556,7 +556,7 @@ void cDialog::handle_events() {
 }
 
 // This method handles one event received by the dialog.
-void cDialog::handle_one_event(const sf::Event& currentEvent) {
+void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter& fps_limiter) {
 	using Key = sf::Keyboard::Key;
 
 	cKey key;
@@ -671,7 +671,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent) {
 		case sf::Event::MouseButtonPressed:
 			key.mod = current_key_mod();
 			where = {(int)(currentEvent.mouseButton.x / ui_scale()), (int)(currentEvent.mouseButton.y / ui_scale())};
-			process_click(where, key.mod);
+			process_click(where, key.mod, fps_limiter);
 			break;
 		default: // To silence warning of unhandled enum values
 			break;
@@ -874,13 +874,13 @@ void cDialog::process_keystroke(cKey keyHit){
 	}
 }
 
-void cDialog::process_click(location where, eKeyMod mods){
+void cDialog::process_click(location where, eKeyMod mods, cFramerateLimiter& fps_limiter){
 	// TODO: Return list of all controls whose bounding rect contains the clicked point.
 	// Then the return value of the click handler can mean "Don't pass this event on to other things below me".
 	ctrlIter iter = controls.begin();
 	while(iter != controls.end()){
 		if(iter->second->isVisible() && iter->second->isClickable() && where.in(iter->second->getBounds())){
-			if(iter->second->handleClick(where))
+			if(iter->second->handleClick(where, fps_limiter))
 				break;
 			else return;
 		}

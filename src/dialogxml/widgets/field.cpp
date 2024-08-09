@@ -117,7 +117,7 @@ void cTextField::set_ip(location clickLoc, int cTextField::* insertionPoint) {
 	}
 }
 
-bool cTextField::handleClick(location clickLoc) {
+bool cTextField::handleClick(location clickLoc, cFramerateLimiter& fps_limiter) {
 	if(!haveFocus && parent && !parent->setFocus(this)) return true;
 	haveFocus = true;
 	redraw(); // This ensures the snippets array is populated.
@@ -141,26 +141,28 @@ bool cTextField::handleClick(location clickLoc) {
 	int initial_ip = insertionPoint, initial_sp = selectionPoint;
 	while(!done) {
 		redraw();
-		if(!inWindow->pollEvent(e)) continue;
-		if(e.type == sf::Event::MouseButtonReleased){
-			done = true;
-		} else if(e.type == sf::Event::MouseMoved){
-			restore_cursor();
-			location newLoc(e.mouseMove.x, e.mouseMove.y);
-			newLoc = inWindow->mapPixelToCoords(newLoc);
-			set_ip(newLoc, &cTextField::selectionPoint);
-			if(is_double) {
-				if(selectionPoint > initial_ip) {
-					insertionPoint = initial_sp;
-					while(selectionPoint < contents.length() && contents[selectionPoint] != ' ')
-						selectionPoint++;
-				} else {
-					insertionPoint = initial_ip;
-					while(selectionPoint > 0 && contents[selectionPoint - 1] != ' ')
-						selectionPoint--;
+		while(inWindow->pollEvent(e)){
+			if(e.type == sf::Event::MouseButtonReleased){
+				done = true;
+			} else if(e.type == sf::Event::MouseMoved){
+				restore_cursor();
+				location newLoc(e.mouseMove.x, e.mouseMove.y);
+				newLoc = inWindow->mapPixelToCoords(newLoc);
+				set_ip(newLoc, &cTextField::selectionPoint);
+				if(is_double) {
+					if(selectionPoint > initial_ip) {
+						insertionPoint = initial_sp;
+						while(selectionPoint < contents.length() && contents[selectionPoint] != ' ')
+							selectionPoint++;
+					} else {
+						insertionPoint = initial_ip;
+						while(selectionPoint > 0 && contents[selectionPoint - 1] != ' ')
+							selectionPoint--;
+					}
 				}
 			}
 		}
+		fps_limiter.frame_finished();
 	}
 	redraw();
 	return true;

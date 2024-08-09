@@ -83,7 +83,7 @@ public:
 	bool isClickable() const override;
 	bool isFocusable() const override;
 	bool isScrollable() const override;
-	bool handleClick(location where) override;
+	bool handleClick(location where, cFramerateLimiter& fps_limiter) override;
 	virtual ~cLedGroup();
 	/// Get one of the LEDs in this group.
 	/// @param id The unique key of the choice.
