@@ -4,7 +4,7 @@
 
 #include <SFML/Window/Event.hpp>
 #include "location.hpp"
-#include "keycodes.hpp"
+#include "dialogxml/keycodes.hpp"
 
 void init_screen_locs();
 bool prime_time();
