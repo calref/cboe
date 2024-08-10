@@ -210,6 +210,9 @@ void launchURL(std::string url) {
 	system((std::string { "xdg-open " } + url).c_str());
 }
 
+void preprocess_args(int& argc, char* argv[]) {
+}
+
 // TODO: Implement modal session.
 // It seems that Windows doesn't have anything similar to the Mac modal session, so I might have to somehow simulate it myself.
 void ModalSession::pumpEvents() {

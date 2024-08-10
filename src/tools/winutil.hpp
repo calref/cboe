@@ -22,6 +22,10 @@ void setWindowFloating(sf::Window& win, bool floating);
 void init_fileio();
 void launchURL(std::string url);
 
+// Optionally do some platform-specific preprocessing on the command-line arguments before parsing them.
+// If preprocessing is needed, the expectation is that they will be modified in-place.
+void preprocess_args(int& argc, char* argv[]);
+
 std::string get_os_version();
 
 fs::path nav_get_party();

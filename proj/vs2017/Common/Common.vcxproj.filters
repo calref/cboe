@@ -906,6 +906,9 @@
     <ClInclude Include="..\..\..\src\scenario\vehicle.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\tools\cli.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\tools\cursors.hpp">
       <Filter>Tools</Filter>
     </ClInclude>

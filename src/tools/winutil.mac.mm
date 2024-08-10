@@ -177,6 +177,28 @@ void launchURL(std::string url) {
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.c_str()]]];
 }
 
+void preprocess_args(int& argc, char* argv[]) {
+	// Remove parameters that Xcode or the Finder throw onto the end of the command-line.
+	int skip_args = 0;
+	for(int i = 1; i < argc; i++) {
+		if(strcmp(argv[i], "-ApplePersistenceIgnoreState") == 0) {
+			skip_args = 2;
+		} else if(strcmp(argv[i], "-NSDocumentRevisionsDebugMode") == 0) {
+			skip_args = 2;
+		} else if(strcmp(argv[i], "-psn") == 0) {
+			skip_args = 1;
+		}
+		if(skip_args > 0) {
+			for(int j = i + 1; j <= argc; j++) {
+				argv[j - 1] = argv[j];
+			}
+			i--;
+			skip_args--;
+			argc--;
+		}
+	}
+}
+
 int getMenubarHeight() {
 	// Mac menubar isn't in the window, so we return 0 here.
 	return 0;

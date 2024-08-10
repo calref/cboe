@@ -426,6 +426,9 @@ void launchURL(std::string url) {
 	ShellExecuteA(NULL, "open", url.c_str(), NULL, NULL, SW_SHOWNORMAL);
 }
 
+void preprocess_args(int& argc, char* argv[]) {
+}
+
 // TODO: Implement modal session.
 // It seems that Windows doesn't have anything similar to the Mac modal session, so I might have to somehow simulate it myself.
 void ModalSession::pumpEvents() {
