@@ -1640,6 +1640,7 @@ void handle_keystroke(sf::Event event) {
 		if(chr2 == keypad[i] || (i % 2 == 0 && i > 0 && chr2 == arrows[i / 2 - 1])) {
 			if(i == 0) {
 				chr = 'z';
+				(void) chr; // TODO: This seems like it was intended to make Numpad0 and Z equivalent.
 			}
 			else {
 				pass_point = terrain_click[i];
@@ -2403,13 +2404,10 @@ void start_monster_editing(bool just_redo_text) {
 
 void start_item_editing(bool just_redo_text) {
 	int num_options = scenario.scen_items.size() + 1;
-	bool draw_full = false;
 	
 	if(!just_redo_text) {
 		if(overall_mode < MODE_MAIN_SCREEN)
 			set_up_main_screen();
-		if(overall_mode == MODE_EDIT_TYPES)
-			draw_full = true;
 		overall_mode = MODE_MAIN_SCREEN;
 		right_sbar->show();
 		pal_sbar->hide();
@@ -2575,7 +2573,6 @@ void start_string_editing(eStrMode mode,short just_redo_text) {
 		case 7: set_rb(num_strs, RB_TOWN_RECT, num_strs, make_new); break;
 	}
 	
-	pos = right_sbar->getPosition();
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
 	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
 	redraw_screen();

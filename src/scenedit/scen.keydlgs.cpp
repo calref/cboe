@@ -854,7 +854,6 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			edit_dialog_text(eStrMode(mode), &store, &me);
 			break;
 		case 's': case 'S': {
-			choose_string = false;
 			store = val < 0 ? get_fresh_spec(mode) : val;
 			me[field].setTextToNum(store);
 			save_spec_enc(me, edit_stack);
