@@ -991,7 +991,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 
 short get_fresh_spec(short which_mode) {
 	cSpecial store_node;
-	size_t num_specs;
+	size_t num_specs = 0;
 	switch(which_mode) {
 		case 0: num_specs = scenario.scen_specials.size(); break;
 		case 1: num_specs = current_terrain->specials.size(); break;
@@ -1038,8 +1038,8 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, eStrM
 			}
 			fetch_str(str_mode, *str1) = str;
 		}
-		str = str2 == nullptr ? "" : me["str2"].getText();
-		if(!str.empty()) {
+		str = me["str2"].getText();
+		if(str2 != nullptr && !str.empty()) {
 			if(*str2 < 0) {
 				size_t n = num_strs(str_mode);
 				for(short i = 0; i < n; i++) {
@@ -1143,7 +1143,7 @@ void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent) {
 }
 
 static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, short spec_mode) {
-	size_t num_specs;
+	size_t num_specs = 0;
 	switch(spec_mode) {
 		case 0: num_specs = scenario.scen_specials.size(); break;
 		case 1: num_specs = current_terrain->specials.size(); break;
