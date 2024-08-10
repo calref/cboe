@@ -644,7 +644,6 @@ void draw_pc_effects(short pc) {
 		if(next.first == eStatus::POISON && next.second > 4) placedIcon = 1;
 		else if(next.second > 0) placedIcon = statIcons[next.first].first;
 		else if(next.second < 0) placedIcon = statIcons[next.first].second;
-		else if(next.first == eStatus::HASTE_SLOW) placedIcon = 7;
 		if(placedIcon >= 0) {
 			rect_draw_some_item(status_gworld, get_stat_effect_rect(placedIcon), pc_stats_gworld, dest_rect, sf::BlendAlpha);
 			dest_rect.offset(13, 0);
