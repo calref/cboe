@@ -2314,10 +2314,11 @@
 					/opt/local/include,
 					/usr/local/Cellar/include,
 					"$(PROJECT_DIR)/../../deps/cppcodec",
-					"$(PROJECT_DIR)/../../deps/Catch2/single_include",
+					"$(PROJECT_DIR)/../../deps/Catch2/single_include/catch2",
 					"$(PROJECT_DIR)/../../src/fileio/gzstream",
 					"$(PROJECT_DIR)/../../src/fileio/xml-parser",
-					"$(PROJECT_DIR)/../../src/tools"
+					"$(PROJECT_DIR)/../../src/tools",
+					"$(PROJECT_DIR)/../../deps/Catch2/include/external",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -2426,10 +2427,11 @@
 					/opt/local/include,
 					/usr/local/Cellar/include,
 					"$(PROJECT_DIR)/../../deps/cppcodec",
-					"$(PROJECT_DIR)/../../deps/Catch2/single_include",
+					"$(PROJECT_DIR)/../../deps/Catch2/single_include/catch2",
 					"$(PROJECT_DIR)/../../src/fileio/gzstream",
 					"$(PROJECT_DIR)/../../src/fileio/xml-parser",
-					"$(PROJECT_DIR)/../../src/tools"
+					"$(PROJECT_DIR)/../../src/tools",
+					"$(PROJECT_DIR)/../../deps/Catch2/include/external",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (

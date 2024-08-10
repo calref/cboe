@@ -7,6 +7,7 @@
 //
 
 #include <fstream>
+#include <set>
 #include "catch.hpp"
 #include "fileio/map_parse.hpp"
 #include "scenario/scenario.hpp"

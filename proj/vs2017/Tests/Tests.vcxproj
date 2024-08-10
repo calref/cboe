@@ -94,7 +94,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\single_include;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\single_include\catch2;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src</AdditionalIncludeDirectories>
       <UseFullPaths>true</UseFullPaths>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
@@ -114,7 +114,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\single_include;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\single_include\catch2;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src</AdditionalIncludeDirectories>
       <UseFullPaths>true</UseFullPaths>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
@@ -136,7 +136,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\single_include;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\single_include\catch2;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src</AdditionalIncludeDirectories>
       <UseFullPaths>true</UseFullPaths>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
@@ -161,7 +161,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\single_include;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\single_include\catch2;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
       <PrecompiledHeaderFile />

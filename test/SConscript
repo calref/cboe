@@ -5,7 +5,7 @@ Import("env platform party_classes common_sources")
 arch_short = '64' if (env['bits'] == '64') else '86'
 
 # Add path to scons
-env.Append(CPPPATH=['./deps/Catch2/single_include'])
+env.Append(CPPPATH=['./deps/Catch2/single_include/catch2'])
 
 test_sources = Glob("""*.cpp""") + Split("""
 	#build/obj/scenedit/scen.fileio.cpp

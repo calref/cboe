@@ -206,7 +206,7 @@ public:
 	void readFrom(std::istream& file);
 	void writeTo(std::ostream& file);
 	template<typename T>
-	bool operator==(const T& other) {
+	bool operator==(const T& other) const {
 		T self;
 		if(extract(0, self) == 0) return false;
 		return self == other;
