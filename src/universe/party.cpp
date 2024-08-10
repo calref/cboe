@@ -906,7 +906,7 @@ void cParty::readFrom(const cTagFile& file) {
 			
 			wipe_sdfs();
 			for(size_t i = 0; i < page["SDF"].size(); i++) {
-				size_t x, y, val;
+				size_t x = sdx_max, y = sdy_max, val = 0;
 				page["SDF"] >> x >> y >> val;
 				if(x <= sdx_max && y <= sdy_max) {
 					stuff_done[x][y] = val;
@@ -916,11 +916,11 @@ void cParty::readFrom(const cTagFile& file) {
 			pointers.clear();
 			magic_ptrs.fill(0);
 			for(size_t n = 0; n < page["POINTER"].size(); n++) {
-				int i, j, k;
+				int i = 0, j = 0, k = 0;
 				auto tmp = page["POINTER"] >> i >> j;
 				if(i >= 10 && i < 100) {
 					magic_ptrs[i - 10] = j;
-				} else {
+				} else if(i >= 100 && i < 200) {
 					tmp >> k;
 					pointers[i] = std::make_pair(j, k);
 				}
@@ -949,7 +949,7 @@ void cParty::readFrom(const cTagFile& file) {
 			for(size_t n = 0; n < page["TOWNSAVE"].size(); n++) {
 				size_t i;
 				auto tmp = page["TOWNSAVE"] >> i;
-				if(i >= creature_save.size()) continue;
+				if(!tmp || i >= creature_save.size()) continue;
 				std::string hostile;
 				tmp >> creature_save[i].which_town >> hostile;
 				creature_save[i].hostile = hostile == "HOSTILE";
@@ -987,25 +987,29 @@ void cParty::readFrom(const cTagFile& file) {
 			}
 		} else if(page.getFirstKey() == "BOAT") {
 			size_t i;
-			page["BOAT"] >> i;
-			if(i >= boats.size()) boats.resize(i + 1);
-			boats[i].exists = true;
-			boats[i].readFrom(page);
+			if(page["BOAT"] >> i) {
+				if(i >= boats.size()) boats.resize(i + 1);
+				boats[i].exists = true;
+				boats[i].readFrom(page);
+			}
 		} else if(page.getFirstKey() == "HORSE") {
 			size_t i;
-			page["HORSE"] >> i;
-			if(i >= horses.size()) horses.resize(i + 1);
-			horses[i].exists = true;
-			horses[i].readFrom(page);
+			if(page["HORSE"] >> i) {
+				if(i >= horses.size()) horses.resize(i + 1);
+				horses[i].exists = true;
+				horses[i].readFrom(page);
+			}
 		} else if(page.getFirstKey() == "MAGICSTORE") {
 			size_t i, j;
-			page["MAGICSTORE"] >> i >> j;
-			magic_store_items[i][j].readFrom(page);
+			if(page["MAGICSTORE"] >> i >> j) {
+				magic_store_items[i][j].readFrom(page);
+			}
 		} else if(page.getFirstKey() == "ENCOUNTER") {
 			int i;
-			page["ENCOUNTER"] >> i;
-			out_c[i].exists = true;
-			out_c[i].readFrom(page);
+			if(page["ENCOUNTER"] >> i) {
+				out_c[i].exists = true;
+				out_c[i].readFrom(page);
+			}
 		} else if(page.getFirstKey() == "TIMER") {
 			size_t i, j;
 			cTimer timer;
@@ -1016,18 +1020,20 @@ void cParty::readFrom(const cTagFile& file) {
 			}
 		} else if(page.getFirstKey() == "CREATURE") {
 			size_t i, j;
-			page["CREATURE"] >> i >> j;
-			if(i < 0 || i >= creature_save.size()) continue;
-			creature_save[i].init(j);
-			creature_save[i][j].readFrom(page);
+			if(page["CREATURE"] >> i >> j) {
+				if(i < 0 || i >= creature_save.size()) continue;
+				creature_save[i].init(j);
+				creature_save[i][j].readFrom(page);
+			}
 		} else if(page.getFirstKey() == "STORED") {
 			size_t i, j;
-			page["STORED"] >> i >> j;
-			if(i >= 3) continue;
-			if(j >= stored_items[i].size()) {
-				stored_items[i].resize(j + 1);
+			if(page["STORED"] >> i >> j) {
+				if(i >= 3) continue;
+				if(j >= stored_items[i].size()) {
+					stored_items[i].resize(j + 1);
+				}
+				stored_items[i][j].readFrom(page);
 			}
-			stored_items[i][j].readFrom(page);
 		} else if(page.getFirstKey() == "SUMMON") {
 			page["SUMMON"] >> monst_i;
 			if(monst_i >= summons.size()) {
@@ -1062,15 +1068,16 @@ void cParty::readFrom(const cTagFile& file) {
 		} else if(page.getFirstKey() == "JOBBANK") {
 			size_t i;
 			job_bank_t bank;
-			page["JOBBANK"] >> i >> bank.anger;
-			if(i >= job_banks.size()) {
-				job_banks.resize(i + 1);
+			if(page["JOBBANK"] >> i >> bank.anger) {
+				if(i >= job_banks.size()) {
+					job_banks.resize(i + 1);
+				}
+				std::vector<int> jobs;
+				page["JOB"].extractSparse(jobs);
+				bank.inited = !jobs.empty();
+				std::copy_n(jobs.begin(), std::min(jobs.size(), bank.jobs.size()), bank.jobs.begin());
+				job_banks[i] = bank;
 			}
-			std::vector<int> jobs;
-			page["JOB"].extractSparse(jobs);
-			bank.inited = !jobs.empty();
-			std::copy_n(jobs.begin(), std::min(jobs.size(), bank.jobs.size()), bank.jobs.begin());
-			job_banks[i] = bank;
 		}
 	}
 }

@@ -874,7 +874,7 @@ void cMonster::readFrom(const cTagFile_Page& page) {
 	guard = page.contains("GUARD");
 	amorphous = page.contains("AMORPHOUS");
 	for(int i = 0; i < page["ATTACK"].size(); i++) {
-		size_t which_atk;
+		size_t which_atk = 0;
 		auto tmp = page["ATTACK"] >> which_atk;
 		if(which_atk > 0 && which_atk <= a.size()) {
 			which_atk--;
@@ -884,7 +884,7 @@ void cMonster::readFrom(const cTagFile_Page& page) {
 }
 
 eMonstAbil uAbility::readFrom(const cTagFile_Page& page) {
-	eMonstAbil key;
+	eMonstAbil key = eMonstAbil::NO_ABIL;
 	page["ABIL"] >> key;
 	eMonstAbilCat cat = getMonstAbilCategory(key);
 	switch(cat) {

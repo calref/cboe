@@ -1300,23 +1300,23 @@ void cPlayer::readFrom(const cTagFile& file) {
 			
 			equip.reset();
 			for(size_t n = 0; n < page["EQUIP"].size(); n++) {
-				size_t i;
+				size_t i = equip.size();
 				page["EQUIP"] >> i;
-				equip[i] = true;
+				if(i < equip.size()) equip[i] = true;
 			}
 			
 			mage_spells.reset();
 			for(size_t n = 0; n < page["MAGE"].size(); n++) {
-				size_t i;
+				size_t i = mage_spells.size();
 				page["MAGE"] >> i;
-				mage_spells[i] = true;
+				if(i < mage_spells.size()) mage_spells[i] = true;
 			}
 			
 			priest_spells.reset();
 			for(size_t n = 0; n < page["PRIEST"].size(); n++) {
-				size_t i;
+				size_t i = priest_spells.size();
 				page["PRIEST"] >> i;
-				priest_spells[i] = true;
+				if(i < priest_spells.size()) priest_spells[i] = true;
 			}
 			
 			traits.clear();
@@ -1336,7 +1336,7 @@ void cPlayer::readFrom(const cTagFile& file) {
 				party->next_pc_id = max(unique_id + 1, party->next_pc_id);
 			}
 		} else if(page.getFirstKey() == "ITEM") {
-			size_t i;
+			size_t i = items.size();
 			page["ITEM"] >> i;
 			if(i >= items.size()) continue;
 			items[i].readFrom(page);

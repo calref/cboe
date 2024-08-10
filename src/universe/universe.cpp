@@ -910,15 +910,17 @@ void cCurTown::readFrom(const cTagFile& file){
 			}
 		} else if(page.getFirstKey() == "ITEM") {
 			size_t i;
-			page["ITEM"] >> i;
-			if(i >= items.size()) items.resize(i + 1);
-			items[i].readFrom(page);
+			if(page["ITEM"] >> i) {
+				if(i >= items.size()) items.resize(i + 1);
+				items[i].readFrom(page);
+			}
 		} else if(page.getFirstKey() == "CREATURE") {
 			size_t i;
-			page["CREATURE"] >> i;
-			monst.init(i);
-			monst[i].readFrom(page);
-			monst[i].active = true;
+			if(page["CREATURE"] >> i) {
+				monst.init(i);
+				monst[i].readFrom(page);
+				monst[i].active = true;
+			}
 		}
 	}
 }

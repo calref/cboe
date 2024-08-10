@@ -78,7 +78,7 @@ public:
 	template<typename T>
 	typename std::enable_if<!detail::is_container<T>::value, size_t>::type
 	extract(size_t i, T& to) const {
-		if(i >= values.size()) return 1;
+		if(i >= values.size()) return 0;
 		// This bizarre construct simply allows us to not include <sstream> here
 		using stream = typename std::conditional<std::is_same<T, T>::value, std::istringstream, void>::type;
 		stream file(values[i]);
@@ -229,14 +229,15 @@ public:
 		if(tag == nullptr) return *this;
 		size_t j = i;
 		j += tag->extract(i, value);
+		if(i == j) return cTagFile_TagExtractProxy();
 		return cTagFile_TagExtractProxy(*tag, j);
 	}
 	template<typename T>
-	cTagFile_TagExtractProxy operator>>(T&& value) {
+	cTagFile_TagExtractProxy operator>>(const T& value) {
 		if(tag == nullptr) return *this;
 		size_t j = i;
 		T check = value;
-		j += tag->extract(i, value);
+		j += tag->extract(i, check);
 		if(check != value) {
 			return cTagFile_TagExtractProxy();
 		}
@@ -284,7 +285,7 @@ public:
 	cTagFile_TagExtractProxy operator>>(T&& value) const {
 		if(i >= tags.size()) {
 			i = 0;
-			return cTagFile_TagExtractProxy() >> value;
+			return cTagFile_TagExtractProxy() >> std::forward<T>(value);
 		} else {
 			return cTagFile_TagExtractProxy(tags[i++]) >> std::forward<T>(value);
 		}
@@ -315,9 +316,10 @@ public:
 		for(size_t n = 0; n < tags.size(); n++) {
 			size_t i = 0;
 			T value;
-			*this >> i >> value;
-			if(i >= values.size()) values.resize(i + 1, def);
-			values[i] = value;
+			if(*this >> i >> value) {
+				if(i >= values.size()) values.resize(i + 1, def);
+				values[i] = value;
+			}
 		}
 	}
 	template<typename Container>
@@ -387,11 +389,12 @@ public:
 		for(size_t n = 0; n < tags.size(); n++) {
 			size_t x = 0, y = 0;
 			T value;
-			*this >> x >> y >> value;
-			if(x >= values.width() || y >= values.height()) {
-				values.resize(std::max(x + 1, values.width()), std::max(y + 1, values.height()), def);
+			if(*this >> x >> y >> value) {
+				if(x >= values.width() || y >= values.height()) {
+					values.resize(std::max(x + 1, values.width()), std::max(y + 1, values.height()), def);
+				}
+				values[x][y] = value;
 			}
-			values[x][y] = value;
 		}
 	}
 	template<typename T>
