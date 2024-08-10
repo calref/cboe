@@ -258,7 +258,6 @@ void do_monsters() {
 	if(overall_mode == MODE_OUTDOORS) {
 		for(short i = 0; i < 10; i++)
 			if(univ.party.out_c[i].exists) {
-				acted_yet = false;
 				l1 = univ.party.out_c[i].m_loc;
 				l2 = univ.party.out_loc;
 				
@@ -268,6 +267,7 @@ void do_monsters() {
 				else acted_yet = seek_party(i,l1,l2);
 			}
 	}
+	(void) acted_yet; // TODO: Why is acted_yet ignored?
 }
 
 bool monst_hate_spot(short which_m,location *good_loc) {

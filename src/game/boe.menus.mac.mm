@@ -155,7 +155,6 @@ void init_menubar() {
 	i = 0;
 	for(eMenu opt : help_choices)
 		setMenuCallback([help_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));
-	i = 0;
 	
 	setMenuCallback([mage_spells_menu itemAtIndex: 0], handler, @selector(menuChoice:), int(eMenu::ABOUT_MAGE));
 	setMenuCallback([priest_spells_menu itemAtIndex: 0], handler, @selector(menuChoice:), int(eMenu::ABOUT_PRIEST));

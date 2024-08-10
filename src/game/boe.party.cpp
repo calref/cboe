@@ -616,6 +616,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 		case eSpell::SUMMON_WEAK:
 			store = level / 5 + adj / 3 + get_ran(1,0,2);
+			(void) store; // TODO: Why is this calculation just discarded?
 			r1 = get_summon_monster(1); ////
 			if(r1 < 0) break;
 			if(!freebie)
@@ -627,6 +628,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 		case eSpell::SUMMON:
 			store = level / 7 + adj / 3 + get_ran(1,0,1);
+			(void) store; // TODO: Why is this calculation just discarded?
 			r1 = get_summon_monster(2); ////
 			if(r1 < 0) break;
 			if(!freebie)
@@ -645,6 +647,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 		case eSpell::SUMMON_MAJOR:
 			store = level / 10 + adj / 3 + get_ran(1,0,1);
+			(void) store; // TODO: Why is this calculation just discarded?
 			r1 = get_summon_monster(3); ////
 			if(r1 < 0) break;
 			if(!freebie)
@@ -1332,6 +1335,7 @@ void cast_town_spell(location where) {
 				}
 				else {
 					store = get_ran(1,0,1);
+					(void) store; // TODO: Why does it even do this?
 					play_sound(41);
 					add_string_to_buf("  Didn't work.");
 				}
@@ -2093,6 +2097,7 @@ void do_alchemy() {
 		if(r1 < fail_chance[univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[which_p]]) {
 			add_string_to_buf("Alchemy: Failed.");
 			r1 = get_ran(1,0,1);
+			(void) r1; // TODO: Why does it even do this?
 			play_sound(41 );
 		}
 		else {
@@ -2130,11 +2135,8 @@ static bool alch_choice_event_filter(cDialog& me, std::string item_hit, eKeyMod)
 
 eAlchemy alch_choice(short pc_num) {
 	short difficulty[20] = {1,1,1,3,3, 4,5,5,7,9, 9,10,12,12,9, 14,19,10,16,20};
-	short store_alchemy_pc;
 	
 	set_cursor(sword_curs);
-	
-	store_alchemy_pc = pc_num;
 	
 	cDialog chooseAlchemy(*ResMgr::dialogs.get("pick-potion"));
 	chooseAlchemy.attachClickHandlers(alch_choice_event_filter, {"cancel", "help"});
@@ -2506,6 +2508,7 @@ void kill_pc(cPlayer& which_pc,eMainStatus type) {
 			for(cItem& item : which_pc.items)
 				if(item.variety != eItemType::NO_ITEM) {
 					dummy = place_item(item,item_loc);
+					(void) dummy;
 					item.variety = eItemType::NO_ITEM;
 				}
 		if(type == eMainStatus::DEAD || type == eMainStatus::DUST)

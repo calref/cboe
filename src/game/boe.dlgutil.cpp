@@ -1110,6 +1110,10 @@ void do_sign(short town_num, short which_sign, short sign_type) {
 	store_sign_mode = sign_type;
 	pict.setPict(univ.scenario.ter_types[sign_type].picture);
 	
+	// TODO: Why is town_num unused?
+	// Seems like it could cause the wrong sign to show sometimes,
+	// like when you're in one outdoor section viewing a sign in
+	// an adjacent section
 	if(town_num >= 200) {
 		town_num -= 200;
 		sign_text = univ.out->sign_locs[which_sign].text;
@@ -1117,6 +1121,7 @@ void do_sign(short town_num, short which_sign, short sign_type) {
 	else {
 		sign_text = univ.town->sign_locs[which_sign].text;
 	}
+	(void) town_num;
 	sign->getControl("sign").setText(sign_text);
 	
 	sign.show();

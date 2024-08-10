@@ -2404,6 +2404,7 @@ void do_monster_turn() {
 					&& !acted_yet && get_ran(1,1,1000) < cur_monst->abil[eMonstAbil::DAMAGE2].gen.odds) {
 					if(target != 6  && dist(cur_monst->cur_loc,targ_space) <= cur_monst->abil[eMonstAbil::DAMAGE2].gen.range) {
 						acted_yet = monst_breathe(cur_monst,targ_space,cur_monst->abil[eMonstAbil::DAMAGE2]);
+						(void) acted_yet; // TODO: Is it correct to discard this and make it always true?
 						had_monst = true;
 						acted_yet = true;
 						take_m_ap(4,cur_monst);
@@ -2416,6 +2417,7 @@ void do_monster_turn() {
 						 || (cur_monst->level > 9))
 						&& (dist(cur_monst->cur_loc,targ_space) <= 10)) {
 						acted_yet = monst_cast_mage(cur_monst,target);
+						(void) acted_yet; // TODO: Is it correct to discard this and make it always true?
 						had_monst = true;
 						acted_yet = true;
 						take_m_ap(5,cur_monst);
@@ -2426,6 +2428,7 @@ void do_monster_turn() {
 					if((!monst_adjacent(targ_space,i) || (get_ran(1,0,2) < 2) || (cur_monst->level > 9))
 						&& (dist(cur_monst->cur_loc,targ_space) <= 10)) {
 						acted_yet = monst_cast_priest(cur_monst,target);
+						(void) acted_yet; // TODO: Is it correct to discard this and make it always true?
 						had_monst = true;
 						acted_yet = true;
 						take_m_ap(4,cur_monst);
@@ -3285,7 +3288,6 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 			break;
 		case eMonstAbil::DRAIN_XP:
 			if(pc_target != nullptr) {
-				i = univ.get_target_i(*target);
 				if(pc_target->has_abil_equip(eItemAbil::LIFE_SAVING)) break;
 				drain_pc(*pc_target, percent(univ.town.monst[m_num].level, abil.second.gen.strength));
 			}
@@ -3948,7 +3950,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 			case eSpell::BLESS_PARTY: case eSpell::REVIVE_ALL:
 				play_sound(24);
 				// TODO: What's r2 for here? Should it be used for Revive All?
-				r1 =  get_ran(2,1,4); r2 = get_ran(3,1,6);
+				r1 =  get_ran(2,1,4); r2 = get_ran(3,1,6); (void) r2;
 				for(short i = 0; i < univ.town.monst.size(); i++)
 					if((monst_near(i,caster->cur_loc,8,0)) &&
 						(caster->attitude == univ.town.monst[i].attitude)) {

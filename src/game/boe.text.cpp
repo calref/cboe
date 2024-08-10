@@ -1051,7 +1051,6 @@ void print_buf () {
 	long ctrl_val;
 	short line_to_print;
 	long start_print_point;
-	bool end_loop = false;
 	rectangle store_text_rect,dest_rect,erase_rect = {2,2,136,255};
 	
 	text_area_gworld.setActive(false);
@@ -1079,7 +1078,6 @@ void print_buf () {
 		}
 		
 		if((num_lines_printed == LINES_IN_TEXT_WIN - 1) && (printing_long)) {
-			end_loop = false;
 			line_to_print= buf_pointer;
 		}
 		

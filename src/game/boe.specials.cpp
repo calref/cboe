@@ -143,7 +143,7 @@ bool handle_wandering_specials(short mode) {
 // sets forced to true if definitely can enter
 bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,bool *forced) {
 	ter_num_t ter;
-	short r1,door_pc,pic_type = 0,ter_pic = 0;
+	short r1,door_pc,pic_type = 0;
 	eTerSpec ter_special;
 	std::string choice;
 	int ter_flag1,ter_flag2,ter_flag3;
@@ -178,7 +178,6 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	ter_flag1 = univ.scenario.ter_types[ter].flag1;
 	ter_flag2 = univ.scenario.ter_types[ter].flag2;
 	ter_flag3 = univ.scenario.ter_types[ter].flag3;
-	ter_pic = univ.scenario.ter_types[ter].picture;
 	
 	// TODO: Why not support conveyors outdoors, too?
 	if(mode != eSpecCtx::OUT_MOVE && ter_special == eTerSpec::CONVEYOR) {
@@ -584,6 +583,8 @@ void use_item(short pc,short item) {
 	eItemAbil abil = item_rec.ability;
 	bool inept_ok = !item_rec.use_magic();
 	level = univ.party[pc].items[item].item_level;
+	(void) level; // TODO: Is it correct to never use the level?
+	// Maybe it is, since abilities have their own level?
 	
 	if(is_out())
 		user_loc = univ.party.out_loc;
@@ -1136,7 +1137,7 @@ void use_item(short pc,short item) {
 					add_string_to_buf("  Summon failed.");
 				break;
 			case eItemAbil::MASS_SUMMONING:
-				r1 = get_ran(str,1,4); // TODO: This value was never used, so why is it here?
+				r1 = get_ran(str,1,4); (void) r1; // TODO: This value was never used, so why is it here?
 				r1 = get_ran(1,3,5);
 				for(short i = 0; i < r1; i++)
 					if(!summon_monster(the_item.abil_data.value,user_loc,r1,eAttitude::FRIENDLY,true))
@@ -1723,6 +1724,7 @@ void push_things() {
 			univ.party.town_loc = l;
 			update_explored(l);
 			ter = univ.town->terrain(univ.party.town_loc.x,univ.party.town_loc.y);
+			(void) ter; // Though it's never read currently, it at least keeps things consistent
 			draw_map(true);
 			if(univ.town.is_barrel(univ.party.town_loc.x,univ.party.town_loc.y)) {
 				univ.town.set_barrel(univ.party.town_loc.x,univ.party.town_loc.y,false);
