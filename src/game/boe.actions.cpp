@@ -2744,7 +2744,7 @@ location get_cur_direction(location the_point) {
 
 static eDirection find_waterfall(short x, short y, short mode){
 	// If more than one waterfall adjacent, randomly selects
-	bool to_dir[8];
+	std::bitset<8> to_dir;
 	for(eDirection i = DIR_N; i < DIR_HERE; i++){
 		if(mode == 0){
 			eTerSpec spec = univ.scenario.ter_types[univ.town->terrain(x + dir_x_dif[i],y + dir_y_dif[i])].special;
@@ -2757,7 +2757,7 @@ static eDirection find_waterfall(short x, short y, short mode){
 		}
 	}
 	short count = 0;
-	for(int i = 0; i < 8; i++)
+	for(int i = DIR_N; i < DIR_HERE; i++)
 		count += to_dir[i];
 	if(count > 0) count = get_ran(1,1,count);
 	else return DIR_HERE;

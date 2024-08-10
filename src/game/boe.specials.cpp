@@ -3554,7 +3554,7 @@ void ifthen_spec(const runtime_state& ctx) {
 				ctx.next_spec = spec.ex1b;
 			else if(dynamic_cast<cPlayer*>(&current_pc_picked_in_spec_enc(ctx))) {
 				int pc = univ.get_target_i(current_pc_picked_in_spec_enc(ctx));
-				eMainStatus stat;
+				eMainStatus stat = eMainStatus::ALIVE;
 				switch(spec.ex1a) {
 					case 0:
 						stat = eMainStatus::DEAD;
@@ -4570,7 +4570,7 @@ void handle_message(const runtime_state& ctx, const std::string& title, pic_num_
 }
 
 void get_strs(std::string& str1,std::string& str2,eSpecCtxType cur_type,short which_str1,short which_str2) {
-	size_t num_strs;
+	size_t num_strs = 0;
 	if(cur_type == eSpecCtxType::SCEN)
 		num_strs = univ.scenario.spec_strs.size();
 	else if(cur_type == eSpecCtxType::OUTDOOR)

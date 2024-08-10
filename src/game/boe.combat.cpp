@@ -1023,7 +1023,7 @@ void do_combat_cast(location target) {
 		CLOUD_STINK,CLOUD_STINK,
 		WALL_ICE,WALL_ICE,WALL_BLADES,
 	};
-	mon_num_t summon;
+	mon_num_t summon = 0;
 	iLiving* victim;
 	cPlayer& caster = univ.current_pc();
 	bool allow_obstructed = false, allow_antimagic = false;

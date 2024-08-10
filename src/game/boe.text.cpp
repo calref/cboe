@@ -915,7 +915,7 @@ void print_nums(short a,short b,short c) {
 }
 
 short print_terrain(location space) {
-	ter_num_t which_terrain;
+	ter_num_t which_terrain = 0;
 	
 	if(overall_mode == MODE_LOOK_OUTDOORS) {
 		which_terrain = univ.out[space.x][space.y];
