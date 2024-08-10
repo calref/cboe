@@ -2,6 +2,7 @@
 #include "boe.global.hpp"
 #include "tools/replay.hpp"
 #include "universe/universe.hpp"
+#include "cli.hpp"
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/lexical_cast.hpp>
@@ -227,19 +228,26 @@ static void init_ui() {
 }
 
 static void process_args(int argc, char* argv[]) {
-	// Command line usage:
-	//  "Blades of Exile"                               # basic launch
-	//  "Blades of Exile" <save file>                   # launch and load save file
-	//  "Blades of Exile" record <optional file>	    # record this session in a time-stamped xml file
-	//  "Blades of Exile" replay <file>                 # replay a session from an xml file
-	if(argc > 1) {
-		std::string file = "";
-		if(argc > 2) {
-			file = argv[2];
-		}
-		if(init_action_log(argv[1], file))
-			return;
-		
+	preprocess_args(argc, argv);
+	clara::Args args(argc, argv);
+	clara::Parser cli;
+	std::string record_to, replay, saved_game;
+	cli |= clara::Opt(record_to, "record")["--record"]("Records a replay of your session to the specified XML file.");
+	cli |= clara::Opt(replay, "replay-file")["--replay"]("Replays a previously-recorded session from the specified XML file.");
+	cli |= clara::Arg(saved_game, "save-file")("Launch and load a saved game file.");
+	bool show_help = false;
+	cli |= clara::Help(show_help);
+	if(auto result = cli.parse(args)); else {
+		std::cerr << "Error in command line: " << result.errorMessage() << std::endl;
+		exit(1);
+	}
+	if(show_help) {
+		cli.writeToStream(std::cout);
+		exit(0);
+	}
+	if(!record_to.empty() && init_action_log("record", record_to)) return;
+	if(!replay.empty() && init_action_log("replay", replay)) return;
+	if(!saved_game.empty()) {
 		if(!load_party(argv[1], univ)) {
 			std::cout << "Failed to load save file: " << argv[1] << std::endl;
 			return;

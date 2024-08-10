@@ -25,6 +25,7 @@
 #include "fileio/resmgr/res_image.hpp"
 #include "tools/prefs.hpp"
 #include "tools/framerate_limiter.hpp"
+#include "cli.hpp"
 
 #ifdef __APPLE__
 short menuChoiceId=-1;
@@ -81,15 +82,30 @@ short specials_res_id;
 char start_name[256];
 
 static void process_args(int argc, char* argv[]) {
-	if(argc > 1) {
-		if(load_party(argv[1], univ)) {
-			file_in_mem = argv[1];
+	preprocess_args(argc, argv);
+	clara::Args args(argc, argv);
+	clara::Parser cli;
+	std::string file;
+	cli |= clara::Arg(file, "file")("The scenario file to open");
+	bool show_help = false;
+	cli |= clara::Help(show_help);
+	if(auto result = cli.parse(args)); else {
+		std::cerr << "Error in command line: " << result.errorMessage() << std::endl;
+		exit(1);
+	}
+	if(show_help) {
+		cli.writeToStream(std::cout);
+		exit(0);
+	}
+	if(!file.empty()) {
+		if(load_party(file, univ)) {
+			file_in_mem = file;
 			party_in_scen = !univ.party.scen_name.empty();
 			if(!party_in_scen) load_base_item_defs();
 			scen_items_loaded = true;
 			menu_activate();
 		} else {
-			std::cout << "Failed to load save file: " << argv[1] << std::endl;
+			std::cout << "Failed to load save file: " << file << std::endl;
 			return;
 		}
 	}

@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <boost/filesystem/operations.hpp>
+#include "cli.hpp"
 
 #include "scen.global.hpp"
 #include "scenario/scenario.hpp"
@@ -188,8 +189,23 @@ void adjust_windows (sf::RenderWindow & mainPtr, sf::View & mainView) {
 }
 
 static void process_args(int argc, char* argv[]) {
-	if(argc > 1) {
-		if(load_scenario(argv[1], scenario)) {
+	preprocess_args(argc, argv);
+	clara::Args args(argc, argv);
+	clara::Parser cli;
+	std::string file;
+	cli |= clara::Arg(file, "file")("The scenario file to open");
+	bool show_help = false;
+	cli |= clara::Help(show_help);
+	if(auto result = cli.parse(args)); else {
+		std::cerr << "Error in command line: " << result.errorMessage() << std::endl;
+		exit(1);
+	}
+	if(show_help) {
+		cli.writeToStream(std::cout);
+		exit(0);
+	}
+	if(!file.empty()) {
+		if(load_scenario(file, scenario)) {
 			set_current_town(scenario.last_town_edited);
 			cur_out = scenario.last_out_edited;
 			current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
@@ -197,7 +213,7 @@ static void process_args(int argc, char* argv[]) {
 			ae_loading = true;
 			set_up_main_screen();
 		} else {
-			std::cout << "Failed to load scenario: " << argv[1] << std::endl;
+			std::cout << "Failed to load scenario: " << file << std::endl;
 		}
 	}
 }

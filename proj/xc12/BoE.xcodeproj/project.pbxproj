@@ -598,6 +598,7 @@
 		2BF04B090BF51924006C0831 /* boe.town.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boe.town.cpp; sourceTree = "<group>"; wrapsLines = 1; };
 		2BF04B0A0BF51924006C0831 /* boe.town.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.town.hpp; sourceTree = "<group>"; };
 		91034D201B225E49008F01C1 /* scen.appleevents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = scen.appleevents.mm; sourceTree = "<group>"; };
+		9103DC652C6A406600849E60 /* cli.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = cli.hpp; sourceTree = "<group>"; };
 		910BBA170FB8BECA001E34EA /* dialog.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dialog.hpp; sourceTree = "<group>"; };
 		910BBA180FB8BECA001E34EA /* dialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dialog.cpp; sourceTree = "<group>"; };
 		910BBA270FB8C459001E34EA /* ticpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ticpp.cpp; sourceTree = "<group>"; };
@@ -1253,6 +1254,7 @@
 		9185BDA11EA041570027C346 /* tools */ = {
 			isa = PBXGroup;
 			children = (
+				9103DC652C6A406600849E60 /* cli.hpp */,
 				D384F6A22C1B9D4000A806C3 /* replay.cpp */,
 				91C688E70FD702B9000F6D01 /* cursors.mac.mm */,
 				91FE0E3523F084B70084CA6B /* drawable_manager.cpp */,

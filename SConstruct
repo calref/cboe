@@ -352,9 +352,12 @@ if not env.GetOption('clean'):
 	check_lib('sfml-audio', 'SFML-audio')
 	check_lib('sfml-graphics', 'SFML-graphics')
 
-	# If building the tests, make sure Catch2 is cloned
-	if 'test' in targets and not path.exists('deps/Catch2/README.md'):
+	# Make sure Catch2 is cloned
+	if not path.exists('deps/Catch2/README.md'):
 		subprocess.call(["git", "submodule", "update", "--init", "deps/Catch2"])
+	
+	# We also use the Clara bundled with Catch in the main program
+	env.Append(CPPPATH=[path.join(os.getcwd(), 'deps/Catch2/include/external')])
 	
 	# Make sure cppcodec is cloned
 	if not path.exists('deps/cppcodec/README.md'):
