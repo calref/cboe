@@ -1329,15 +1329,13 @@ void teleport_party(short x,short y,short mode) {
 	// TODO: Teleport sound? (Sound 10)
 	location l;
 	bool fadeIn = false, fadeOut = false;
+	if(is_combat()) mode = 1;
 	if(mode == 0 || mode == 2) fadeOut = true;
 	if(mode == 0 || mode == 3) fadeIn = true;
 	
 	// Clear forcecage status
 	for(int i = 0; i < 6; i++)
 		univ.party[i].status[eStatus::FORCECAGE] = 0;
-	
-	if(is_combat())
-		mode = 1;
 	
 	l = univ.party.town_loc;
 	update_explored(l);
