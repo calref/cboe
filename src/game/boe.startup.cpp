@@ -136,7 +136,7 @@ void handle_splash_events() {
 	}
 }
 
-rectangle view_rect() {
+static rectangle view_rect() {
 	sf::Vector2f size = mainPtr.getView().getSize();
 	return rectangle(0, 0, size.y, size.x);
 }

@@ -227,7 +227,7 @@ static void init_ui() {
 	init_buttons();
 }
 
-void process_args(int argc, char* argv[]) {
+static void process_args(int argc, char* argv[]) {
 	// Command line usage:
 	//  "Blades of Exile"                               # basic launch
 	//  "Blades of Exile" <save file>                   # launch and load save file
@@ -257,7 +257,7 @@ void process_args(int argc, char* argv[]) {
 	}
 }
 
-void replay_next_action() {
+static void replay_next_action() {
 	bool did_something = false, need_redraw = false, need_reprint = false;
 
 	Element& next_action = pop_next_action();

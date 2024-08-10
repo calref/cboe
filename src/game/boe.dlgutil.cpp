@@ -1317,8 +1317,17 @@ void pick_preferences() {
 	int store_display_mode = get_int_pref("DisplayMode");
 	prefsDlog.run(std::bind(give_help, 55, 0, std::ref(prefsDlog)));
 	
+	// Suppress the float comparison warning.
+ 	// We know it's safe here - we're just comparing static values.
+	#ifdef __GNUC__
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Wfloat-equal"
+	#endif
 	if(get_int_pref("DisplayMode") != store_display_mode || get_float_pref("UIScale") != ui_scale || get_float_pref("UIScaleMap") != ui_map_scale)
 		changed_display_mode = true;
+	#ifdef __GNUC__
+	#pragma GCC diagnostic pop
+	#endif
 }
 
 static void put_party_stats(cDialog& me) {

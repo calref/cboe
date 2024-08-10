@@ -182,7 +182,7 @@ int getMenubarHeight() {
 	return 0;
 }
 
-void adjust_window_for_menubar(int mode, unsigned int width, unsigned int height) {
+void adjust_window_for_menubar(int, unsigned int, unsigned int) {
 }
 
 NSOpenPanel* dlg_get_scen;
