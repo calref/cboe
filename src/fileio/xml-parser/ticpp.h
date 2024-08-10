@@ -1333,6 +1333,11 @@ namespace ticpp
 		{
 			m_impRC->InitRef();
 		}
+		
+		/// Queries whether this represents text using a CDATA section.
+		bool CDATA() const				{ return m_tiXmlPointer->CDATA(); }
+		/// Turns on or off a CDATA representation of text.
+		void SetCDATA( bool _cdata )	{ m_tiXmlPointer->SetCDATA(_cdata); }
 	};
 
 	/** Wrapper around TiXmlDocument */

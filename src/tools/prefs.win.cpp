@@ -150,7 +150,7 @@ static bool load_prefs(std::istream& in) {
 	prefs.swap(temp_prefs);
 
 	if (recording) {
-		record_action("load_prefs", prefs_recording.str());
+		record_action("load_prefs", prefs_recording.str(), true);
 	}
 
 	return prefsLoaded = true;

@@ -60,10 +60,11 @@ bool init_action_log(std::string command, std::string file) {
 	return false;
 }
 
-void record_action(std::string action_type, std::string inner_text) {
+void record_action(std::string action_type, std::string inner_text, bool cdata) {
 	Element* root = log_document.FirstChildElement();
 	Element next_action(action_type);
 	Text action_text(inner_text);
+	action_text.SetCDATA(cdata);
 	next_action.InsertEndChild(action_text);
 	root->InsertEndChild(next_action);
 	log_document.SaveFile(log_file);

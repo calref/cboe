@@ -206,7 +206,7 @@ bool sync_prefs() {
 				prefs_recording << std::endl;
 			}
 		}
-		record_action("load_prefs", prefs_recording.str());
+		record_action("load_prefs", prefs_recording.str(), true);
 		prefsLoaded = true;
 	}else if(replaying && !prefsLoaded){
 		replayUserDefaults = [[NSUserDefaults alloc] init];
