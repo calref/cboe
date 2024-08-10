@@ -80,7 +80,7 @@ extern fs::path progDir;
 short specials_res_id;
 char start_name[256];
 
-void process_args(int argc, char* argv[]) {
+static void process_args(int argc, char* argv[]) {
 	if(argc > 1) {
 		if(load_party(argv[1], univ)) {
 			file_in_mem = argv[1];
@@ -563,7 +563,16 @@ void pick_preferences() {
 	
 	prefsDlog.run();
 	
+	// Suppress the float comparison warning.
+	// We know it's safe here - we're just comparing static values.
+	#ifdef __GNUC__
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Wfloat-equal"
+	#endif
 	if(get_float_pref("UIScale") != ui_scale)
 		changed_display_mode = true;
+	#ifdef __GNUC__
+	#pragma GCC diagnostic pop
+	#endif
 }
 

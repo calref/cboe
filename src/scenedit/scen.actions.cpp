@@ -2511,8 +2511,6 @@ extern size_t num_strs(short mode); // defined in scen.keydlgs.cpp
 // mode 0 - scen 1 - out 2 - town 3 - journal
 // if just_redo_text not 0, simply need to update text portions
 void start_string_editing(eStrMode mode,short just_redo_text) {
-	long pos;
-	
 	if(just_redo_text == 0) {
 		if(overall_mode < MODE_MAIN_SCREEN)
 			set_up_main_screen();

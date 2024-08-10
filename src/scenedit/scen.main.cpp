@@ -187,7 +187,7 @@ void adjust_windows (sf::RenderWindow & mainPtr, sf::View & mainView) {
 	adjust_window_for_menubar(5, width, height);
 }
 
-void process_args(int argc, char* argv[]) {
+static void process_args(int argc, char* argv[]) {
 	if(argc > 1) {
 		if(load_scenario(argv[1], scenario)) {
 			set_current_town(scenario.last_town_edited);
@@ -726,8 +726,17 @@ void pick_preferences() {
 	
 	prefsDlog.run();
 	
+	// Suppress the float comparison warning.
+	// We know it's safe here - we're just comparing static values.
+	#ifdef __GNUC__
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Wfloat-equal"
+	#endif
 	if(get_float_pref("UIScale") != ui_scale)
 		changed_display_mode = true;
+	#ifdef __GNUC__
+	#pragma GCC diagnostic pop
+	#endif
 }
 
 void Mouse_Pressed(const sf::Event & event) {
