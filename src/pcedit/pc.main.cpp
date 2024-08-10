@@ -462,12 +462,10 @@ static void give_help(short help1,short help2,cDialog* parent) {
 		help_forced = true;
 		help1 -= 200;
 	}
-	// This SDF is the "never show instant help" flag
-	// TODO: Expose preferences to the PC editor
-#if 0
-	if(univ.party.stuff_done[306][4] > 0 && !help_forced)
+	if(!help_forced && (!get_bool_pref("ShowInstantHelp", true) || get_iarray_pref_contains("ReceivedHelp", help1)))
 		return;
-#endif
+	append_iarray_pref("ReceivedHelp", help1);
+	append_iarray_pref("ReceivedHelp", help2);
 	str1 = get_str("help",help1);
 	if(help2 > 0)
 		str2 = get_str("help",help2);
