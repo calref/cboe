@@ -34,6 +34,6 @@ std::string get_str(std::string list, short j);
 // Any instance where sf::sleep() could be called for more than a few frames,
 // event_sleep() should be used instead.
 void event_sleep(sf::Time time);
-bool update_event_sleeping();
+void update_event_sleeping();
 
 #endif

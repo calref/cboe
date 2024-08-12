@@ -72,11 +72,9 @@ void event_sleep(sf::Time time) {
 	flushingInput = true;
 }
 
-bool update_event_sleeping() {
+void update_event_sleeping() {
 	if(event_sleep_clock.getElapsedTime().asMicroseconds() >= event_sleep_time.asMicroseconds()){
 		event_sleep_time = sf::microseconds(0);
 		flushingInput = false;
 	}	
-
-	return event_sleep_time.asMicroseconds() == 0;
 }
