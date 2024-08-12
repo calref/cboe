@@ -234,9 +234,11 @@ static void process_args(int argc, char* argv[]) {
 	clara::Parser cli;
 	bool record_unique = false;
 	boost::optional<std::string> record_to, replay, saved_game;
+	boost::optional<double> replay_speed;
 	cli |= clara::Opt(record_to, "record")["--record"]("Records a replay of your session to the specified XML file.");
 	cli |= clara::Opt(record_unique)["--unique"]("When recording, automatically insert a timestamp into the filename to guarantee uniqueness.");
 	cli |= clara::Opt(replay, "replay-file")["--replay"]("Replays a previously-recorded session from the specified XML file.");
+	cli |= clara::Opt(replay_speed, "fps")["--replay-speed"]("Specifies how quickly actions are processed while replaying");
 	cli |= clara::Arg(saved_game, "save-file")("Launch and load a saved game file.");
 	bool show_help = false;
 	cli |= clara::Help(show_help);
@@ -249,7 +251,13 @@ static void process_args(int argc, char* argv[]) {
 		exit(0);
 	}
 	if(record_to && init_action_log(record_unique || record_to->empty() ? "record-unique" : "record", *record_to)) return;
-	if(replay && init_action_log("replay", *replay)) return;
+	if(replay && init_action_log("replay", *replay)) {
+		if(replay_speed) {
+			extern boost::optional<cFramerateLimiter> replay_fps_limit;
+			replay_fps_limit.emplace(*replay_speed);
+		}
+		return;
+	}
 	if(saved_game) {
 		if(!load_party(*saved_game, univ)) {
 			std::cout << "Failed to load save file: " << *saved_game << std::endl;

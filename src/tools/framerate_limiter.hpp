@@ -6,8 +6,9 @@
 
 class cFramerateLimiter {
 public:
-	
-	cFramerateLimiter(int desired_fps = 60);
+	static const int DEFAULT_FPS = 60;
+	cFramerateLimiter(int desired_fps = DEFAULT_FPS);
+	cFramerateLimiter(double desired_fps);
 	
 	void frame_finished();
 	
