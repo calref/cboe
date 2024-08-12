@@ -11,6 +11,7 @@
 #include <iostream>
 #include "fileio/resmgr/res_font.hpp"
 #include "gfx/render_shapes.hpp"
+#include <utility>
 
 void TextStyle::applyTo(sf::Text& text) {
 	switch(font) {
@@ -46,6 +47,9 @@ struct text_params_t {
 	std::vector<rectangle> returnRects;
 	std::vector<snippet_t> snippets;
 };
+
+// last_line_break, last_word_break
+typedef std::vector<std::pair<unsigned short, unsigned short>> break_info_t;
 
 static void push_snippets(size_t start, size_t end, text_params_t& options, size_t& iHilite, const std::string& str, location loc) {
 	std::vector<hilite_t>& hilites = options.hilite_ranges;
@@ -123,6 +127,8 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	location moveTo;
 	line_height -= 2; // TODO: ...why are we arbitrarily reducing the line height from the requested value?
 	
+	break_info_t break_info;
+
 	if(mode == eTextMode::WRAP) {
 		moveTo = location(dest_rect.left + adjust_x, dest_rect.top + adjust_y);
 		short i;
@@ -134,18 +140,22 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 					last_word_break = i + 1;
 				} else if(last_line_break == last_word_break)
 					last_word_break = i;
-				push_snippets(last_line_break, last_word_break, options, iHilite, str, moveTo);
-				moveTo.y += line_height;
+				break_info.push_back(std::make_pair(last_line_break, last_word_break));
 				last_line_break = last_word_break;
 			}
 			if(str[i] == ' ')
 				last_word_break = i + 1;
 		}
-		
+
 		if(i - last_line_break > 0) {
 			std::string snippet = str.substr(last_line_break);
 			if(!snippet.empty())
-				push_snippets(last_line_break, str.length() + 1, options, iHilite, str, moveTo);
+				break_info.push_back(std::make_pair(last_line_break, str.length() + 1));
+		}
+
+		for(auto break_info_pair : break_info){
+			push_snippets(break_info_pair.first, break_info_pair.second, options, iHilite, str, moveTo);
+			moveTo.y += line_height;
 		}
 	} else {
 		switch(mode) {
