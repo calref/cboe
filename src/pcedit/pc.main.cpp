@@ -79,6 +79,7 @@ extern bool cur_scen_is_mac;
 extern fs::path progDir;
 short specials_res_id;
 char start_name[256];
+bool flushingInput = false;
 
 static void process_args(int argc, char* argv[]) {
 	if(argc > 1) {

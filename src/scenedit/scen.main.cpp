@@ -54,7 +54,7 @@ short mode_count = 0;
 cOutdoors* current_terrain;
 
 std::string scenario_temp_dir_name = "ed_scenario";
-bool change_made = false, ae_loading = false;
+bool change_made = false, ae_loading = false, flushingInput = false;
 
 // Numbers of current areas being edited
 short cur_town;
