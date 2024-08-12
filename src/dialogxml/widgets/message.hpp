@@ -61,5 +61,6 @@ private:
 	eTextMode text_mode;
 	std::string msg;
 	void calculate_layout();
+	bool calculated = false;
 };
 #endif

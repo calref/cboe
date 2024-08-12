@@ -115,6 +115,7 @@ void cTextMsg::calculate_layout() {
 		text_mode = eTextMode::WRAP;
 		break_info = calculate_line_wrapping(to_rect, msg, style);
 	}
+	calculated = true;
 }
 
 void cTextMsg::recalcRect() {
@@ -183,7 +184,6 @@ cTextMsg::cTextMsg(cDialog& parent) :
 	color(parent.getDefTextClr()),
 	fromList("none") {
 	setFormat(TXT_FRAME, FRM_NONE);
-	calculate_layout();
 }
 
 cTextMsg::cTextMsg(sf::RenderWindow& parent) :
@@ -193,7 +193,6 @@ cTextMsg::cTextMsg(sf::RenderWindow& parent) :
 	color(cDialog::defaultBackground == cDialog::BG_DARK ? sf::Color::White : sf::Color::Black),
 	fromList("none") {
 	setFormat(TXT_FRAME, FRM_NONE);
-	calculate_layout();
 }
 
 bool cTextMsg::isClickable() const {
@@ -222,6 +221,7 @@ void cTextMsg::draw(){
 			draw_color.b = 256 - draw_color.b;
 		}
 		style.colour = draw_color;
+		if (!calculated) calculate_layout();
 		win_draw_string(*inWindow,to_rect,msg,text_mode,style,break_info);
 	}
 }
