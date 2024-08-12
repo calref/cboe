@@ -76,7 +76,7 @@ bool cTextMsg::parseContent(ticpp::Node& content, int n, std::string tagName, st
 		if(elem.HasAttribute("ref"))
 			keyRefs.push_back(elem.GetAttribute("ref"));
 		else keyRefs.push_back(boost::none);
-		text += '\a';
+		text += KEY_PLACEHOLDER;
 		return true;
 	}
 	return cControl::parseContent(content, n, tagName, fname, text);
@@ -202,7 +202,7 @@ void cTextMsg::draw(){
 		}
 		std::string msg = lbl;
 		for(const auto& key : keyRefs) {
-			size_t pos = msg.find_first_of('\a');
+			size_t pos = msg.find_first_of(KEY_PLACEHOLDER);
 			if(pos == std::string::npos) break;
 			if(key && !parent->hasControl(*key)) continue;
 			cControl& ctrl = key ? parent->getControl(*key) : *this;

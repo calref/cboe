@@ -108,6 +108,7 @@ public:
 class cControl {
 public:
 	using storage_t = std::map<std::string, boost::any>;
+	static const char KEY_PLACEHOLDER = '\a';
 protected:
 	/// Parses the control from an XML element
 	/// Most controls probably don't need to override this. Override parseAttribute() and parseContent() instead.

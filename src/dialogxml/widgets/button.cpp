@@ -79,7 +79,7 @@ void cButton::draw(){
 			to_rect.inset((w - 30) / -2,0);
 		}
 		std::string label = lbl, keyDesc = getAttachedKeyDescription();
-		for(size_t key_pos = label.find_first_of('\a'); key_pos < label.size(); key_pos = label.find_first_of('\a')) {
+		for(size_t key_pos = label.find_first_of(KEY_PLACEHOLDER); key_pos < label.size(); key_pos = label.find_first_of(KEY_PLACEHOLDER)) {
 			label.replace(key_pos, 1, keyDesc);
 		}
 		win_draw_string(*inWindow,to_rect,label,textMode,style);
@@ -150,7 +150,7 @@ bool cButton::parseContent(ticpp::Node& content, int n, std::string tagName, std
 		text += dlogStringFilter(content.Value());
 		return true;
 	} else if(content.Value() == "key") {
-		text += '\a';
+		text += KEY_PLACEHOLDER;
 		return true;
 	}
 	return cControl::parseContent(content, n, tagName, fname, text);
