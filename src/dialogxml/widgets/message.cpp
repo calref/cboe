@@ -95,6 +95,29 @@ void cTextMsg::setFixed(bool w, bool h) {
 	fixedHeight = h;
 }
 
+void cTextMsg::calculate_layout() {
+	to_rect = frame;
+	msg = lbl;
+	for(const auto& key : keyRefs) {
+		size_t pos = msg.find_first_of(KEY_PLACEHOLDER);
+		if(pos == std::string::npos) break;
+		if(key && !parent->hasControl(*key)) continue;
+		cControl& ctrl = key ? parent->getControl(*key) : *this;
+		msg.replace(pos, 1, ctrl.getAttachedKeyDescription());
+	}
+	if(to_rect.bottom - to_rect.top < 20) { // essentially, it's a single line
+		style.lineHeight = 12;
+		to_rect.left += 3;
+		text_mode = eTextMode::LEFT_BOTTOM;
+	}else {
+		style.lineHeight = textSize + 2;
+		to_rect.inset(4,4);
+		text_mode = eTextMode::WRAP;
+		break_info = calculate_line_wrapping(to_rect, msg, style);
+	}
+	calculated = true;
+}
+
 void cTextMsg::recalcRect() {
 	if(fixedWidth && fixedHeight) return;
 	TextStyle style;
@@ -151,6 +174,7 @@ void cTextMsg::recalcRect() {
 		calc_rect.width() = combo.width() + 16;
 	}
 	frame = calc_rect;
+	calculate_layout();
 }
 
 cTextMsg::cTextMsg(cDialog& parent) :
@@ -189,10 +213,6 @@ void cTextMsg::draw(){
 	inWindow->setActive();
 	
 	if(visible){
-		TextStyle style;
-		style.font = textFont;
-		style.pointSize = textSize;
-		style.underline = underlined;
 		drawFrame(2, frameStyle);
 		sf::Color draw_color = color;
 		if(depressed){
@@ -200,24 +220,9 @@ void cTextMsg::draw(){
 			draw_color.g = 256 - draw_color.g;
 			draw_color.b = 256 - draw_color.b;
 		}
-		std::string msg = lbl;
-		for(const auto& key : keyRefs) {
-			size_t pos = msg.find_first_of(KEY_PLACEHOLDER);
-			if(pos == std::string::npos) break;
-			if(key && !parent->hasControl(*key)) continue;
-			cControl& ctrl = key ? parent->getControl(*key) : *this;
-			msg.replace(pos, 1, ctrl.getAttachedKeyDescription());
-		}
 		style.colour = draw_color;
-		if(to_rect.bottom - to_rect.top < 20) { // essentially, it's a single line
-			style.lineHeight = 12;
-			to_rect.left += 3;
-			win_draw_string(*inWindow,to_rect,msg,eTextMode::LEFT_BOTTOM,style);
-		}else {
-			style.lineHeight = textSize + 2;
-			to_rect.inset(4,4);
-			win_draw_string(*inWindow,to_rect,msg,eTextMode::WRAP,style);
-		}
+		if (!calculated) calculate_layout();
+		win_draw_string(*inWindow,to_rect,msg,text_mode,style,break_info);
 	}
 }
 
