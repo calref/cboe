@@ -19,3 +19,4 @@ short cur_town;
 cScenario scenario;
 bool change_made;
 cUndoList undo_list;
+bool flushingInput;
