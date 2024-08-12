@@ -55,5 +55,11 @@ private:
 	std::vector<boost::optional<std::string>> keyRefs;
 	std::string fromList;
 	bool underlined = false, fixedWidth = false, fixedHeight = false;
+	TextStyle style;
+	rectangle to_rect;
+	break_info_t break_info;
+	eTextMode text_mode;
+	std::string msg;
+	void calculate_layout();
 };
 #endif

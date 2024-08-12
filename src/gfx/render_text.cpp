@@ -46,10 +46,9 @@ struct text_params_t {
 	enum {RECTS, SNIPPETS} returnType;
 	std::vector<rectangle> returnRects;
 	std::vector<snippet_t> snippets;
+	// Pre-calculated line wrapping:
+	break_info_t break_info;
 };
-
-// last_line_break, last_word_break
-typedef std::vector<std::pair<unsigned short, unsigned short>> break_info_t;
 
 static void push_snippets(size_t start, size_t end, text_params_t& options, size_t& iHilite, const std::string& str, location loc) {
 	std::vector<hilite_t>& hilites = options.hilite_ranges;
@@ -90,14 +89,57 @@ static void push_snippets(size_t start, size_t end, text_params_t& options, size
 	} while(start < upper_bound);
 }
 
+break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextStyle style) {
+	break_info_t break_info;
+	if(str.empty()) return break_info; // Nothing to do!
+
+	short line_height = style.lineHeight;
+	sf::Text str_to_draw;
+	style.applyTo(str_to_draw);
+	short str_len = str.length();
+	unsigned short last_line_break = 0,last_word_break = 0;
+
+	str_to_draw.setString(str);
+	short total_width = str_to_draw.getLocalBounds().width;
+
+	if(total_width < dest_rect.width()){
+		// The text fits on one line, so break_info won't end up being used by win_draw_string anyway
+		return break_info;
+	}
+
+	auto text_len = [&str_to_draw](size_t i) -> int {
+		return str_to_draw.findCharacterPos(i).x;
+	};
+
+	short i;
+	for(i = 0; text_len(i) != text_len(i + 1) && i < str_len; i++) {
+		if(((text_len(i) - text_len(last_line_break) > (dest_rect.width() - 6))
+			&& (last_word_break >= last_line_break)) || (str[i] == '|')) {
+			if(str[i] == '|') {
+				last_word_break = i + 1;
+			} else if(last_line_break == last_word_break)
+				last_word_break = i;
+			break_info.push_back(std::make_pair(last_line_break, last_word_break));
+			last_line_break = last_word_break;
+		}
+		if(str[i] == ' ')
+			last_word_break = i + 1;
+	}
+
+	if(i - last_line_break > 0) {
+		std::string snippet = str.substr(last_line_break);
+		if(!snippet.empty())
+			break_info.push_back(std::make_pair(last_line_break, str.length() + 1));
+	}
+
+	return break_info;
+}
+
 static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,text_params_t& options) {
 	if(str.empty()) return; // Nothing to do!
 	short line_height = options.style.lineHeight;
 	sf::Text str_to_draw;
 	options.style.applyTo(str_to_draw);
-	short str_len;
-	unsigned short last_line_break = 0,last_word_break = 0;
-	short total_width = 0;
 	short adjust_x = 1, adjust_y = 10;
 	
 	str_to_draw.setString("fj"); // Something that has both an ascender and a descender
@@ -105,53 +147,36 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	adjust_y -= str_to_draw.getLocalBounds().height;
 	
 	str_to_draw.setString(str);
-	str_len = str.length();
-	if(str_len == 0) {
-		return;
-	}
+	short total_width = str_to_draw.getLocalBounds().width;
 	
 	eTextMode mode = options.mode;
-	total_width = str_to_draw.getLocalBounds().width;
 	if(mode == eTextMode::WRAP && total_width < dest_rect.width())
 		mode = eTextMode::LEFT_TOP;
 	if(mode == eTextMode::LEFT_TOP && str.find('|') != std::string::npos)
 		mode = eTextMode::WRAP;
-	
-	auto text_len = [&str_to_draw](size_t i) -> int {
-		return str_to_draw.findCharacterPos(i).x;
-	};
 	
 	// Special stuff
 	size_t iHilite = 0;
 	
 	location moveTo;
 	line_height -= 2; // TODO: ...why are we arbitrarily reducing the line height from the requested value?
-	
-	break_info_t break_info;
+
+	if(!options.showBreaks){
+		for(int i=0; i < str.length(); ++i){
+			if(str[i] == '|') str[i] = ' ';
+		}
+	}
 
 	if(mode == eTextMode::WRAP) {
-		moveTo = location(dest_rect.left + adjust_x, dest_rect.top + adjust_y);
-		short i;
-		for(i = 0; text_len(i) != text_len(i + 1) && i < str_len; i++) {
-			if(((text_len(i) - text_len(last_line_break) > (dest_rect.width() - 6))
-				&& (last_word_break >= last_line_break)) || (str[i] == '|')) {
-				if(str[i] == '|') {
-					if(!options.showBreaks) str[i] = ' ';
-					last_word_break = i + 1;
-				} else if(last_line_break == last_word_break)
-					last_word_break = i;
-				break_info.push_back(std::make_pair(last_line_break, last_word_break));
-				last_line_break = last_word_break;
-			}
-			if(str[i] == ' ')
-				last_word_break = i + 1;
+		break_info_t break_info = options.break_info;
+
+		// It is better to pre-calculate line-wrapping and pass it in the options,
+		// but if you don't, this will handle line-wrapping every frame:
+		if(break_info.empty()){
+			break_info = calculate_line_wrapping(dest_rect, str, options.style);
 		}
 
-		if(i - last_line_break > 0) {
-			std::string snippet = str.substr(last_line_break);
-			if(!snippet.empty())
-				break_info.push_back(std::make_pair(last_line_break, str.length() + 1));
-		}
+		moveTo = location(dest_rect.left + adjust_x, dest_rect.top + adjust_y);
 
 		for(auto break_info_pair : break_info){
 			push_snippets(break_info_pair.first, break_info_pair.second, options, iHilite, str, moveTo);
@@ -207,6 +232,14 @@ void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::stri
 	text_params_t params;
 	params.mode = mode;
 	params.style = style;
+	win_draw_string(dest_window, dest_rect, str, params);
+}
+
+void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style,break_info_t break_info) {
+	text_params_t params;
+	params.mode = mode;
+	params.style = style;
+	params.break_info = break_info;
 	win_draw_string(dest_window, dest_rect, str, params);
 }
 
