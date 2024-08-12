@@ -20,7 +20,7 @@ std::string log_file;
 Element* next_action;
 
 bool init_action_log(std::string command, std::string file) {
-	if (command == "record") {
+	if(command == "record-unique") {
 		// If a filename is given, use it as a base, but insert a timestamp for uniqueness.
 		if (file.empty())
 			file = "BoE";
@@ -33,8 +33,11 @@ bool init_action_log(std::string command, std::string file) {
 		auto tm = *std::localtime(&t);
 		std::ostringstream stream;
 		stream << file << std::put_time(&tm, "_%d-%m-%Y_%H-%M-%S") << ".xml";
-		log_file = stream.str();
-		
+		file = stream.str();
+		command = "record";
+	}
+	if(command == "record") {
+		log_file = file;
 		try {
 			Element root_element("actions");
 			log_document.InsertEndChild(root_element);

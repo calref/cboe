@@ -6,6 +6,7 @@
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/optional.hpp>
 #include <unordered_map>
 #include <string>
 #include <memory>
@@ -231,8 +232,10 @@ static void process_args(int argc, char* argv[]) {
 	preprocess_args(argc, argv);
 	clara::Args args(argc, argv);
 	clara::Parser cli;
-	std::string record_to, replay, saved_game;
+	bool record_unique = false;
+	boost::optional<std::string> record_to, replay, saved_game;
 	cli |= clara::Opt(record_to, "record")["--record"]("Records a replay of your session to the specified XML file.");
+	cli |= clara::Opt(record_unique)["--unique"]("When recording, automatically insert a timestamp into the filename to guarantee uniqueness.");
 	cli |= clara::Opt(replay, "replay-file")["--replay"]("Replays a previously-recorded session from the specified XML file.");
 	cli |= clara::Arg(saved_game, "save-file")("Launch and load a saved game file.");
 	bool show_help = false;
@@ -245,11 +248,11 @@ static void process_args(int argc, char* argv[]) {
 		cli.writeToStream(std::cout);
 		exit(0);
 	}
-	if(!record_to.empty() && init_action_log("record", record_to)) return;
-	if(!replay.empty() && init_action_log("replay", replay)) return;
-	if(!saved_game.empty()) {
-		if(!load_party(argv[1], univ)) {
-			std::cout << "Failed to load save file: " << argv[1] << std::endl;
+	if(record_to && init_action_log(record_unique || record_to->empty() ? "record-unique" : "record", *record_to)) return;
+	if(replay && init_action_log("replay", *replay)) return;
+	if(saved_game) {
+		if(!load_party(*saved_game, univ)) {
+			std::cout << "Failed to load save file: " << *saved_game << std::endl;
 			return;
 		}
 
