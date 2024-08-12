@@ -27,4 +27,13 @@ std::string get_str(std::string list, short j);
 #error Missing strnicmp / strncasecmp
 #endif
 
+// Various parts of the code, like play_sound(), have used sf::sleep() to pause
+// the game for long durations, but this causes the program to hang. event_sleep()
+// accomplishes the same purpose by ignoring input events for the given duration,
+// while allowing the game loop to continue through normal-length frames.
+// Any instance where sf::sleep() could be called for more than a few frames,
+// event_sleep() should be used instead.
+void event_sleep(sf::Time time);
+bool update_event_sleeping();
+
 #endif

@@ -2,6 +2,7 @@
 #include "boe.global.hpp"
 #include "tools/replay.hpp"
 #include "universe/universe.hpp"
+#include "utility.hpp"
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/lexical_cast.hpp>

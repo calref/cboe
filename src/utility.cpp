@@ -10,6 +10,8 @@
 
 #include "fileio/resmgr/res_strings.hpp"
 
+extern bool flushingInput;
+
 std::string get_str(std::string list, short j){
 	if(j == 0) return list;
 	const StringList& strings = *ResMgr::strings.get(list);
@@ -59,4 +61,22 @@ short can_see(location p1,location p2,std::function<short(short,short)> get_obsc
 		}
 	}
 	return storage;
+}
+
+sf::Clock event_sleep_clock;
+sf::Time event_sleep_time;
+
+void event_sleep(sf::Time time) {
+	event_sleep_time = time;
+	event_sleep_clock.restart();
+	flushingInput = true;
+}
+
+bool update_event_sleeping() {
+	if(event_sleep_clock.getElapsedTime().asMicroseconds() >= event_sleep_time.asMicroseconds()){
+		event_sleep_time = sf::microseconds(0);
+		flushingInput = false;
+	}	
+
+	return event_sleep_time.asMicroseconds() == 0;
 }

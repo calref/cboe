@@ -18,6 +18,7 @@
 #include "fileio/resmgr/res_sound.hpp"
 #include "mathutil.hpp"
 #include "tools/prefs.hpp"
+#include "utility.hpp"
 
 struct SoundChannel {
 	std::shared_ptr<sf::Sound> player;
@@ -86,7 +87,7 @@ void play_sound(snd_num_t which, sf::Time delay) { // if < 0, play asynch
 	std::shared_ptr<const sf::SoundBuffer> sndhandle;
 	if(!get_bool_pref("PlaySounds", true)) {
 		if(which >= 0)
-			sf::sleep(delay);
+			event_sleep(delay);
 		return;
 	}
 	
@@ -117,7 +118,7 @@ void play_sound(snd_num_t which, sf::Time delay) { // if < 0, play asynch
 		snd_played[channel] = abs(which);
 	}
 	if(which < 0)
-		sf::sleep(time_in_ticks(sound_delay[-1 * which]));
+		event_sleep(time_in_ticks(sound_delay[-1 * which]));
 }
 
 void one_sound(snd_num_t which) {
