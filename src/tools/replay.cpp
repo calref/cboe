@@ -8,7 +8,9 @@
 #include <fstream>
 #include <sstream>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/optional.hpp>
 #include <cppcodec/base64_rfc4648.hpp>
+#include "tools/framerate_limiter.hpp"
 using base64 = cppcodec::base64_rfc4648;
 
 bool recording = false;
@@ -18,6 +20,7 @@ using namespace ticpp;
 Document log_document;
 std::string log_file;
 Element* next_action;
+boost::optional<cFramerateLimiter> replay_fps_limit;
 
 bool init_action_log(std::string command, std::string file) {
 	if(command == "record-unique") {
@@ -108,8 +111,11 @@ Element& pop_next_action(std::string expected_action_type) {
 	}
 
 	Element* to_return = next_action;
-	
 	next_action = next_action->NextSiblingElement(false);
+	
+	if(replay_fps_limit.has_value()) {
+		replay_fps_limit->frame_finished();
+	}
 	
 	return *to_return;
 }
