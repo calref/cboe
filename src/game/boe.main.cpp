@@ -412,6 +412,8 @@ void handle_events() {
 				menuChoiceId=-1;
 			}
 #endif
+			update_event_sleeping();
+
 			while(!fake_event_queue.empty()){
 				const sf::Event& next_event = fake_event_queue.front();
 				fake_event_queue.pop_front();
