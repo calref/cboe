@@ -435,8 +435,6 @@ protected:
 	/// The parent window of the control.
 	/// This is for use in implementing draw().
 	sf::RenderWindow* inWindow;
-	/// The control's current text.
-	std::string lbl;
 	/// Whether the control is visible
 	bool visible, depressed = false; ///< Whether the control is depressed; only applicable for clickable controls
 	/// The control's bounding rect.
@@ -457,6 +455,8 @@ protected:
 	void playClickSound();
 private:
 	friend class cDialog; // TODO: This is only so it can access parseColour... hack!
+	/// The control's current text.
+	std::string lbl;
 	eControlType type;
 	std::map<eDlogEvt, boost::any> event_handlers;
 	// Transient values only used during parsing

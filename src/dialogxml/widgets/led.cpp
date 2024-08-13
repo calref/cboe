@@ -104,7 +104,7 @@ void cLed::draw(){
 		style.colour = textClr;
 		to_rect.right = frame.right;
 		to_rect.left = frame.left + 18; // Possibly could be 20
-		win_draw_string(*inWindow,to_rect,lbl,wrapLabel ? eTextMode::WRAP : eTextMode::LEFT_TOP,style);
+		win_draw_string(*inWindow,to_rect,getText(),wrapLabel ? eTextMode::WRAP : eTextMode::LEFT_TOP,style);
 	}
 
 	inWindow->setActive();

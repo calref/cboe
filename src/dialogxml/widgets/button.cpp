@@ -75,10 +75,10 @@ void cButton::draw(){
 		} else if(type == BTN_PUSH) {
 			to_rect.top += 42;
 			style.colour = textClr;
-			int w = string_length(lbl, style);
+			int w = string_length(getText(), style);
 			to_rect.inset((w - 30) / -2,0);
 		}
-		std::string label = lbl, keyDesc = getAttachedKeyDescription();
+		std::string label = getText(), keyDesc = getAttachedKeyDescription();
 		for(size_t key_pos = label.find_first_of(KEY_PLACEHOLDER); key_pos < label.size(); key_pos = label.find_first_of(KEY_PLACEHOLDER)) {
 			label.replace(key_pos, 1, keyDesc);
 		}
@@ -164,7 +164,7 @@ void cButton::validatePostParse(ticpp::Element& elem, std::string fname, const s
 	if(labelledButtons.count(type)) {
 		if(!attrs.count("color") && !attrs.count("colour") && parent->getBg() == cDialog::BG_DARK)
 			setColour(sf::Color::White);
-		if(!lbl.empty() && !attrs.count("width"))
+		if(!getText().empty() && !attrs.count("width"))
 			throw xMissingAttr(elem.Value(), "width", elem.Row(), elem.Column(), fname);
 	}
 }
