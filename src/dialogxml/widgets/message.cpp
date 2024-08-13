@@ -95,6 +95,11 @@ void cTextMsg::setFixed(bool w, bool h) {
 	fixedHeight = h;
 }
 
+void cTextMsg::setText(std::string text) {
+	cControl::setText(text);
+	calculate_layout();
+}
+
 void cTextMsg::calculate_layout() {
 	to_rect = frame;
 	msg = getText();
