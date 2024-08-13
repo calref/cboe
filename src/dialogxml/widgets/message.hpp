@@ -37,6 +37,7 @@ public:
 	bool isFocusable() const override;
 	bool isScrollable() const override;
 	void setFixed(bool w, bool h);
+	void setText(std::string text) override;
 	virtual ~cTextMsg();
 	void draw() override;
 	void recalcRect() override;
