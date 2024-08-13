@@ -603,8 +603,8 @@ cControl::storage_t cControl::store() const {
 
 void cControl::restore(storage_t to) {
 	if(to.find("text") != to.end())
-		lbl = boost::any_cast<std::string>(to["text"]);
-	else lbl = "";
+		setText(boost::any_cast<std::string>(to["text"]));
+	else setText("");
 	if(to.find("visible") != to.end())
 		boost::any_cast<bool>(to["visible"]) ? show() : hide();
 }

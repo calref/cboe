@@ -97,7 +97,7 @@ void cTextMsg::setFixed(bool w, bool h) {
 
 void cTextMsg::calculate_layout() {
 	to_rect = frame;
-	msg = lbl;
+	msg = getText();
 	for(const auto& key : keyRefs) {
 		size_t pos = msg.find_first_of(KEY_PLACEHOLDER);
 		if(pos == std::string::npos) break;
@@ -125,7 +125,7 @@ void cTextMsg::recalcRect() {
 	style.pointSize = textSize;
 	style.underline = underlined;
 	style.lineHeight = textSize + 2;
-	std::string test = lbl;
+	std::string test = getText();
 	size_t lines = 1, cur_line_chars = 0, max_line_chars = 0;
 	// Substitute | with newlines for measuring
 	for(auto& c : test) {
@@ -160,7 +160,7 @@ void cTextMsg::recalcRect() {
 	temp.create(frame.width(), frame.height());
 	rectangle test_rect = calc_rect;
 	test_rect.offset(-test_rect.left, -test_rect.top);
-	rects = draw_string_hilite(temp, test_rect, lbl, style, hilites, sf::Color::Black);
+	rects = draw_string_hilite(temp, test_rect, getText(), style, hilites, sf::Color::Black);
 	if(rects.empty()) return;
 	// Basically take the the union of the rects, and add 8 to its height or width
 	rectangle combo = rects.back();
