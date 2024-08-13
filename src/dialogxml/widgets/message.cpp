@@ -124,7 +124,10 @@ void cTextMsg::calculate_layout() {
 }
 
 void cTextMsg::recalcRect() {
-	if(fixedWidth && fixedHeight) return;
+	if(fixedWidth && fixedHeight){
+		calculate_layout();
+		return;
+	}
 	TextStyle style;
 	style.font = textFont;
 	style.pointSize = textSize;
@@ -166,7 +169,10 @@ void cTextMsg::recalcRect() {
 	rectangle test_rect = calc_rect;
 	test_rect.offset(-test_rect.left, -test_rect.top);
 	rects = draw_string_hilite(temp, test_rect, getText(), style, hilites, sf::Color::Black);
-	if(rects.empty()) return;
+	if(rects.empty()){
+		calculate_layout();
+		return;
+	}
 	// Basically take the the union of the rects, and add 8 to its height or width
 	rectangle combo = rects.back();
 	if(rects.size() > 1) {
