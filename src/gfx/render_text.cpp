@@ -229,10 +229,8 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 }
 
 void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style) {
-	text_params_t params;
-	params.mode = mode;
-	params.style = style;
-	win_draw_string(dest_window, dest_rect, str, params);
+	break_info_t break_info;
+	win_draw_string(dest_window, dest_rect, str, mode, style, break_info);
 }
 
 void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style,break_info_t break_info) {
