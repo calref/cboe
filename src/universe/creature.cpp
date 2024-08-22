@@ -28,7 +28,7 @@ cCreature::cCreature(int num) : cCreature() {
 }
 
 void cCreature::import_legacy(legacy::creature_data_type old){
-	active = old.active;
+	active = eCreatureStatus(old.active);
 	attitude = eAttitude(old.attitude);
 	number = old.number;
 	cur_loc.x = old.m_loc.x;
@@ -261,7 +261,7 @@ void cCreature::sleep(eStatus which_status,int amount,int penalty) {
 }
 
 bool cCreature::is_alive() const {
-	return active > 0;
+	return active != eCreatureStatus::DEAD;
 }
 
 bool cCreature::is_friendly() const {

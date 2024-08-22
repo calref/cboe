@@ -1401,7 +1401,7 @@ void do_mindduel(short pc_num,cCreature *monst) {
 	
 	std::ostringstream sout;
 	add_string_to_buf("Mindduel!");
-	while(univ.party[pc_num].main_status == eMainStatus::ALIVE && monst->active > 0 && i < 10) {
+	while(univ.party[pc_num].main_status == eMainStatus::ALIVE && monst->is_alive() && i < 10) {
 		play_sound(1);
 		r1 = get_ran(1,1,100) + adjust;
 		r1 += 5 * (monst->status[eStatus::DUMB] - univ.party[pc_num].status[eStatus::DUMB]);

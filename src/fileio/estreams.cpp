@@ -728,3 +728,18 @@ std::istream& operator>> (std::istream& in, ePicType& pic) {
 		in.setstate(std::ios::failbit);
 	return in;
 }
+
+// MARK: eCreatureStatus
+
+cEnumLookup creature_status_strs = {"dead", "idle", "alerted"};
+
+std::ostream& operator<< (std::ostream& out, eCreatureStatus status) {
+	writeEnum(out, status, creature_status_strs, "dead");
+	return out;
+}
+
+std::istream& operator>> (std::istream& in, eCreatureStatus& status) {
+	if(!readEnum(in, status, creature_status_strs, eCreatureStatus::DEAD))
+		in.setstate(std::ios::failbit);
+	return in;
+}

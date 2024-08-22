@@ -1415,7 +1415,7 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 	
 	//print_num(which_m,(short)univ.town.monst[which_m].m_loc.x,(short)univ.town.monst[which_m].m_loc.y);
 	
-	if(victim.active == 0) return false;
+	if(victim.active == eCreatureStatus::DEAD) return false;
 	
 	if(sound_type == 0) {
 		if(dam_type == eDamageType::FIRE || dam_type == eDamageType::UNBLOCKABLE)
@@ -1522,7 +1522,7 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 		univ.party.total_dam_done += how_much;
 	
 	// Monster damages. Make it hostile.
-	victim.active = 2;
+	victim.active = eCreatureStatus::ALERTED;
 	
 	if(dam_type != eDamageType::MARKED) {
 		if(party_can_see_monst(univ.get_target_i(victim) - 100)) {
@@ -1650,7 +1650,7 @@ void kill_monst(cCreature& which_m,short who_killed,eMainStatus type) {
 	
 	which_m.spec1 = 0; // make sure, if this is a spec. activated monster, it won't come back
 	
-	which_m.active = 0;
+	which_m.active = eCreatureStatus::DEAD;
 }
 
 // Pushes party and monsters around by moving walls and conveyor belts.
@@ -1666,7 +1666,7 @@ void push_things() {
 		return;
 	
 	for(short i = 0; i < univ.town.monst.size(); i++)
-		if(univ.town.monst[i].active > 0) {
+		if(univ.town.monst[i].is_alive()) {
 			l = univ.town.monst[i].cur_loc;
 			ter = univ.town->terrain(l.x,l.y);
 			if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
@@ -2700,9 +2700,9 @@ void affect_spec(const runtime_state& ctx) {
 				} else if(pc >= 100 && pc < univ.town.monst.size() + 100) {
 					short monst = pc - 100;
 					// Honour the request for alive only
-					if(spec.ex1a == 0 && univ.town.monst[monst].active == 0)
+					if(spec.ex1a == 0 && univ.town.monst[monst].active == eCreatureStatus::DEAD)
 						can_pick = false;
-					else if(spec.ex1a == 3 && univ.town.monst[monst].active > 0)
+					else if(spec.ex1a == 3 && univ.town.monst[monst].is_alive())
 						can_pick = false;
 				} else if(pc >= 1000 || pc == -1) { // Select PC by unique ID; might be a stored PC rather than a party member
 					if(pc == -1) pc = 1000 + spec.ex2c;
@@ -2864,7 +2864,7 @@ void affect_spec(const runtime_state& ctx) {
 			} else {
 				// Kill monster
 				cCreature& who = univ.town.monst[pc_num - 100];
-				if(who.active > 0 && spec.ex1b > 0) {
+				if(who.is_alive() && spec.ex1b > 0) {
 					switch(spec.ex1a) {
 						case 0:
 							who.spell_note(46);
@@ -2883,13 +2883,13 @@ void affect_spec(const runtime_state& ctx) {
 							}
 							break;
 						case 5:
-							who.active = 0;
+							who.active = eCreatureStatus::DEAD;
 							break;
 					}
 				}
 				// Bring back to life
-				else if(who.active == 0 && spec.ex1b == 0) {
-					who.active = 1;
+				else if(who.active == eCreatureStatus::DEAD && spec.ex1b == 0) {
+					who.active = eCreatureStatus::IDLE;
 					who.spell_note(45);
 				}
 			}
@@ -3817,17 +3817,17 @@ void townmode_spec(const runtime_state& ctx) {
 			if(spec.ex1a >= 0 && spec.ex1b >= 0) {
 				iLiving* monst = univ.target_there(l, TARG_MONST);
 				if(monst != nullptr)
-					dynamic_cast<cCreature*>(monst)->active = 0;
+					dynamic_cast<cCreature*>(monst)->active = eCreatureStatus::DEAD;
 			}
 			*ctx.redraw = true;
 			break;
 		case eSpecType::TOWN_NUKE_MONSTS:
 			for(short i = 0; i < univ.town.monst.size(); i++)
-				if(univ.town.monst[i].active > 0 &&
+				if(univ.town.monst[i].is_alive() &&
 					(univ.town.monst[i].number == spec.ex1a || spec.ex1a == 0 ||
 					(spec.ex1a == -1 && univ.town.monst[i].is_friendly()) ||
 					(spec.ex1a == -2 && !univ.town.monst[i].is_friendly()))) {
-					   univ.town.monst[i].active = 0;
+					   univ.town.monst[i].active = eCreatureStatus::DEAD;
 				   }
 			*ctx.redraw = true;
 			break;

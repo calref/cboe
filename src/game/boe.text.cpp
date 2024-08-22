@@ -688,7 +688,7 @@ short do_look(location space) {
 	
 	if((overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
 		for(short i = 0; i < univ.town.monst.size(); i++)
-			if((univ.town.monst[i].active != 0) && (is_lit)
+			if((univ.town.monst[i].is_alive()) && (is_lit)
 				&& univ.town.monst[i].on_space(space) &&
 				((overall_mode == MODE_LOOK_TOWN) || (can_see_light(univ.current_pc().combat_pos,space,sight_obscurity) < 5))
 				&& (univ.town.monst[i].picture_num != 0)) {

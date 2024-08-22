@@ -167,7 +167,7 @@ void set_up_monst(eAttitude mode,mon_num_t m_num) {
 	
 	cMonster& monst = m_num >= 10000 ? univ.party.summons[m_num - 10000] : univ.scenario.scen_monsters[m_num];
 	univ.town.monst.assign(which, cCreature(m_num), monst, univ.party.easy_mode, univ.difficulty_adjust());
-	univ.town.monst[which].active = 2;
+	univ.town.monst[which].active = eCreatureStatus::ALERTED;
 	univ.town.monst[which].summon_time = 0;
 	univ.town.monst[which].attitude = mode;
 	univ.town.monst[which].mobility = 1;
@@ -180,10 +180,10 @@ void do_monsters() {
 	
 	if(overall_mode == MODE_TOWN)
 		for(short i = 0; i < univ.town.monst.size(); i++)
-			if(univ.town.monst[i].active != 0 && univ.town.monst[i].status[eStatus::ASLEEP] <= 0
+			if(univ.town.monst[i].is_alive() && univ.town.monst[i].status[eStatus::ASLEEP] <= 0
 			   && univ.town.monst[i].status[eStatus::PARALYZED] <= 0) {
 				// have to pick targets
-				if(univ.town.monst[i].active == 1)
+				if(univ.town.monst[i].active == eCreatureStatus::IDLE)
 					target = 6;
 				else {
 					target = monst_pick_target(i); // will return 0 if target party
@@ -200,8 +200,8 @@ void do_monsters() {
 //				sprintf((char *)debug,"  t: %d targets %d.",i,monst_target[i]);
 //				add_string_to_buf((char *) debug);
 				
-				if((univ.town.monst[i].active == 2)
-					|| (univ.town.monst[i].active != 0 && univ.town.monst[i].is_friendly())) {
+				if((univ.town.monst[i].active == eCreatureStatus::ALERTED)
+					|| (univ.town.monst[i].is_alive() && univ.town.monst[i].is_friendly())) {
 					acted_yet = false;
 					// TODO: I don't think this univ.town.hostile flag is ever actually set.
 					if((univ.town.monst[i].attitude == eAttitude::DOCILE || univ.town.monst[i].target == 6) && !univ.town.monst.hostile) {
@@ -235,13 +235,13 @@ void do_monsters() {
 				
 				
 				// Make hostile monsters active
-				if(univ.town.monst[i].active == 1 && !univ.town.monst[i].is_friendly()
+				if(univ.town.monst[i].active == eCreatureStatus::IDLE && !univ.town.monst[i].is_friendly()
 					&& (dist(univ.town.monst[i].cur_loc,univ.party.town_loc) <= 8)) {
 					r1 = get_ran(1,1,100);
 					r1 += (univ.party.status[ePartyStatus::STEALTH] > 0) ? 46 : 0;
 					r1 += can_see_light(univ.town.monst[i].cur_loc,univ.party.town_loc,sight_obscurity) * 10;
 					if(r1 < 50) {
-						univ.town.monst[i].active = 2;
+						univ.town.monst[i].active = eCreatureStatus::ALERTED;
 						add_string_to_buf("Monster saw you!");
 						// play go active sound
 						if(isHumanoid(univ.town.monst[i].m_type) || univ.town.monst[i].m_type == eRace::GIANT)
@@ -249,9 +249,9 @@ void do_monsters() {
 						else play_sound(46);
 					}
 					for(short j = 0; j < univ.town.monst.size(); j++)
-						if((univ.town.monst[j].active == 2)
+						if((univ.town.monst[j].active == eCreatureStatus::ALERTED)
 							&& ((dist(univ.town.monst[i].cur_loc,univ.town.monst[j].cur_loc) <= 5)))
-							univ.town.monst[i].active = 2;
+							univ.town.monst[i].active = eCreatureStatus::ALERTED;
 				}
 				
 			}
@@ -346,7 +346,7 @@ short monst_pick_target(short which_m) {
 			(univ.town.monst[univ.town.monst[which_m].target - 100].attitude == cur_monst->attitude)) ||
 			(cur_monst->is_friendly() && univ.town.monst[univ.town.monst[which_m].target - 100].is_friendly()))
 			univ.town.monst[which_m].target = 6;
-		else if(univ.town.monst[univ.town.monst[which_m].target - 100].active == 0)
+		else if(univ.town.monst[univ.town.monst[which_m].target - 100].active == eCreatureStatus::DEAD)
 			univ.town.monst[which_m].target = 6;
 	}
 	if(univ.town.monst[which_m].target < 6)
@@ -411,7 +411,7 @@ short monst_pick_target_monst(cCreature *which_m) {
 	short min_dist = 1000,cur_targ = 6;
 	
 	for(short i = 0; i < univ.town.monst.size(); i++) {
-		if(univ.town.monst[i].active > 0 && !which_m->is_friendly(univ.town.monst[i]) && // allve + they hate each other
+		if(univ.town.monst[i].is_alive() && !which_m->is_friendly(univ.town.monst[i]) && // allve + they hate each other
 			((dist(which_m->cur_loc,univ.town.monst[i].cur_loc) < min_dist) ||
 			 ((dist(which_m->cur_loc,univ.town.monst[i].cur_loc) == min_dist) && (get_ran(1,0,7) < 4))) &&
 			(monst_can_see(i,univ.town.monst[i].cur_loc)) ) {
@@ -499,11 +499,11 @@ short switch_target_to_adjacent(short which_m,short orig_target) {
 	// First, take care of friendly monsters.
 	if(univ.town.monst[which_m].is_friendly()) {
 		if(orig_target >= 100)
-			if((univ.town.monst[orig_target - 100].active > 0) &&
+			if((univ.town.monst[orig_target - 100].is_alive()) &&
 				(monst_adjacent(univ.town.monst[orig_target - 100].cur_loc,which_m)))
 				return orig_target;
 		for(short i = 0; i < univ.town.monst.size(); i++)
-			if((univ.town.monst[i].active > 0) &&
+			if((univ.town.monst[i].is_alive()) &&
 				!univ.town.monst[i].is_friendly() &&
 				(monst_adjacent(univ.town.monst[i].cur_loc,which_m)))
 				return i + 100;
@@ -521,7 +521,7 @@ short switch_target_to_adjacent(short which_m,short orig_target) {
 		if(univ.party[orig_target].main_status == eMainStatus::ALIVE && monst_adjacent(univ.party[orig_target].combat_pos,which_m))
 			return orig_target;
 	if(orig_target >= 100)
-		if((univ.town.monst[orig_target - 100].active > 0) &&
+		if((univ.town.monst[orig_target - 100].is_alive()) &&
 			(monst_adjacent(univ.town.monst[orig_target - 100].cur_loc,which_m)))
 			return orig_target;
 	
@@ -534,7 +534,7 @@ short switch_target_to_adjacent(short which_m,short orig_target) {
 	
 	// Check for a nice, adjacent, friendly monster and maybe attack
 	for(short i = 0; i < univ.town.monst.size(); i++)
-		if((univ.town.monst[i].active > 0) &&
+		if((univ.town.monst[i].is_alive()) &&
 			univ.town.monst[i].is_friendly() &&
 			(monst_adjacent(univ.town.monst[i].cur_loc,which_m)) &&
 			(get_ran(1,0,2) < 2))
@@ -789,7 +789,7 @@ void monst_inflict_fields(short which_monst) {
 	location where_check;
 	cCreature *which_m;
 	
-	if(univ.town.monst[which_monst].active == 0)
+	if(univ.town.monst[which_monst].active == eCreatureStatus::DEAD)
 		return;
 	
 	which_m = &univ.town.monst[which_monst];
@@ -797,7 +797,7 @@ void monst_inflict_fields(short which_monst) {
 	eFieldType which_radiate = which_m->abil[eMonstAbil::RADIATE].radiate.type;
 	for(short i = 0; i < univ.town.monst[which_monst].x_width; i++)
 		for(short j = 0; j < univ.town.monst[which_monst].y_width; j++)
-			if(univ.town.monst[which_monst].active > 0) {
+			if(univ.town.monst[which_monst].is_alive()) {
 				where_check.x = univ.town.monst[which_monst].cur_loc.x + i;
 				where_check.y = univ.town.monst[which_monst].cur_loc.y + j;
 				// TODO: If the goal is to damage the monster by any fields it's on, why all the break statements?
@@ -851,7 +851,7 @@ void monst_inflict_fields(short which_monst) {
 				if(univ.town.is_force_cage(where_check.x,where_check.y))
 					process_force_cage(where_check, univ.get_target_i(*which_m));
 			}
-	if(univ.town.monst[which_monst].active > 0)
+	if(univ.town.monst[which_monst].is_alive())
 		for(short i = 0; i < univ.town.monst[which_monst].x_width; i++)
 			for(short j = 0; j < univ.town.monst[which_monst].y_width; j++) {
 				where_check.x = univ.town.monst[which_monst].cur_loc.x + i;
@@ -1004,7 +1004,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		can_enter = false;
 	if(ter == 90) {
 		if((is_combat()) && (which_combat_type == 0)) {
-			univ.town.monst[which_monst].active = 0;
+			univ.town.monst[which_monst].active = eCreatureStatus::DEAD;
 			add_string_to_buf("Monster escaped! ");
 		}
 		return false;
@@ -1095,7 +1095,7 @@ short place_monster(mon_num_t which,location where,bool forced) {
 		return univ.town.monst.size();
 	short i = 0;
 	
-	while(i < univ.town.monst.size() && (univ.town.monst[i].active != 0 || univ.town.monst[i].spec_enc_code > 0)) {
+	while(i < univ.town.monst.size() && (univ.town.monst[i].is_alive() || univ.town.monst[i].spec_enc_code > 0)) {
 		i++;
 	}
 	
@@ -1110,7 +1110,7 @@ short place_monster(mon_num_t which,location where,bool forced) {
 	if(univ.town.monst[i].is_friendly())
 		univ.town.monst[i].attitude = eAttitude::HOSTILE_A;
 	univ.town.monst[i].mobility = 1;
-	univ.town.monst[i].active = 2;
+	univ.town.monst[i].active = eCreatureStatus::ALERTED;
 	univ.town.monst[i].cur_loc = where;
 	univ.town.monst[i].summon_time = 0;
 	univ.town.monst[i].target = 6;
@@ -1173,7 +1173,7 @@ void activate_monsters(short code,short /*attitude*/) {
 			cTownperson& monst = univ.town->creatures[i];
 			univ.town.monst.assign(i, monst, univ.scenario.scen_monsters[monst.number], univ.party.easy_mode, univ.difficulty_adjust());
 			univ.town.monst[i].spec_enc_code = 0;
-			univ.town.monst[i].active = 2;
+			univ.town.monst[i].active = eCreatureStatus::ALERTED;
 			
 			univ.town.monst[i].summon_time = 0;
 			univ.town.monst[i].target = 6;

@@ -804,7 +804,7 @@ void cParty::writeTo(cTagFile& file) const {
 	}
 	for(int i = 0; i < creature_save.size(); i++) {
 		for(int j = 0; j < creature_save[i].size(); j++) {
-			if(creature_save[i][j].active > 0) {
+			if(creature_save[i][j].is_alive()) {
 				auto& creature_page = file.add();
 				creature_page["CREATURE"] << i << j;
 				creature_save[i][j].writeTo(creature_page);

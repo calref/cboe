@@ -261,7 +261,7 @@ short get_item(location place,short pc_num,bool check_container) {
 	short mass_get = 1;
 	
 	for(short i = 0; i < univ.town.monst.size(); i++)
-		if(univ.town.monst[i].active > 0 && !univ.town.monst[i].is_friendly()
+		if(univ.town.monst[i].is_alive() && !univ.town.monst[i].is_friendly()
 			&& (can_see_light(place,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
 			mass_get = 0;
 	
@@ -281,7 +281,7 @@ short get_item(location place,short pc_num,bool check_container) {
 	if(item_near)
 		if(display_item(place,pc_num,mass_get,check_container)) { // if true, there was a theft
 			for(short i = 0; i < univ.town.monst.size(); i++)
-				if(univ.town.monst[i].active > 0 && univ.town.monst[i].is_friendly()
+				if(univ.town.monst[i].is_alive() && univ.town.monst[i].is_friendly()
 					&& (can_see_light(place,univ.town.monst[i].cur_loc,sight_obscurity) < 5)) {
 					make_town_hostile();
 					add_string_to_buf("Your crime was seen!");
@@ -329,7 +329,7 @@ void set_town_attitude(short lo,short hi,eAttitude att) {
 		std::swap(lo, hi);
 	
 	for(short i = lo; i <= hi; i++) {
-		if(univ.town.monst[i].active > 0 && univ.town.monst[i].summon_time == 0){
+		if(univ.town.monst[i].is_alive() && univ.town.monst[i].summon_time == 0){
 			univ.town.monst[i].attitude = att;
 			num = univ.town.monst[i].number;
 			// If made hostile, make mobile
@@ -338,7 +338,7 @@ void set_town_attitude(short lo,short hi,eAttitude att) {
 				univ.town.monst[i].mobility = 1;
 				// If a "guard", give a power boost
 				if(univ.scenario.scen_monsters[num].guard) {
-					univ.town.monst[i].active = 2;
+					univ.town.monst[i].active = eCreatureStatus::ALERTED;
 					univ.town.monst[i].health *= 3;
 					univ.town.monst[i].status[eStatus::HASTE_SLOW] = 8;
 					univ.town.monst[i].status[eStatus::BLESS_CURSE] = 8;

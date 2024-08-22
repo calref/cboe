@@ -33,7 +33,7 @@ cCreature& cPopulation::operator[](size_t n){
 
 void cPopulation::init(size_t n) {
 	if(n >= dudes.size()) dudes.resize(n + 1);
-	dudes[n].active = 1;
+	dudes[n].active = eCreatureStatus::IDLE;
 }
 
 // This function combines a cTownperson from a scenario town record with a cMonster from the scenario record
@@ -46,7 +46,7 @@ void cPopulation::assign(size_t n, const cTownperson& other, const cMonster& bas
 	static_cast<cTownperson&>(dudes[n]) = other;
 	static_cast<cMonster&>(dudes[n]) = base;
 	// Now set up extra stuff
-	dudes[n].active = 1; // TODO: Is this right?
+	dudes[n].active = eCreatureStatus::IDLE; // TODO: Is this right?
 	if(dudes[n].invisible) dudes[n].picture_num = 0;
 	dudes[n].m_health /= easy ? 2 : 1;
 	dudes[n].m_health *= difficulty_adjust;

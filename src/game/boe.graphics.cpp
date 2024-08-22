@@ -607,7 +607,7 @@ void draw_text_bar() {
 	if((is_combat()) && (monsters_going))
 		// Print bar for 1st monster with >0 ap - that is monster that is going
 		for(short i = 0; i < univ.town.monst.size(); i++)
-			if((univ.town.monst[i].active > 0) && (univ.town.monst[i].ap > 0)) {
+			if((univ.town.monst[i].is_alive()) && (univ.town.monst[i].ap > 0)) {
 				put_text_bar(print_monster_going(univ.town.monst[i].number,univ.town.monst[i].ap));
 				i = 400;
 			}

@@ -16,10 +16,12 @@
 
 class cTagFile_Page;
 
+enum class eCreatureStatus { DEAD, IDLE, ALERTED };
+
 class cCreature : public cMonster, public cTownperson, public iLiving {
 public:
 	static const short charm_odds[21];
-	short active = 0;
+	eCreatureStatus active = eCreatureStatus::DEAD;
 	eAttitude attitude;
 	location cur_loc;
 	short summon_time = 0;
@@ -74,5 +76,8 @@ public:
 	void writeTo(cTagFile_Page& file) const;
 	void readFrom(const cTagFile_Page& file);
 };
+
+std::ostream& operator<< (std::ostream& out, eCreatureStatus status);
+std::istream& operator>> (std::istream& in, eCreatureStatus& status);
 
 #endif

@@ -315,7 +315,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short nu
 	
 	// place monsters, w. friendly monsts landing near PCs
 	for(short i = 0; i < univ.town.monst.size(); i++)
-		if(univ.town.monst[i].active > 0) {
+		if(univ.town.monst[i].is_alive()) {
 			univ.town.monst[i].target = 6;
 			
 			univ.town.monst[i].cur_loc.x  = get_ran(1,15,25);
@@ -371,7 +371,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short nu
 
 bool pc_combat_move(location destination) {
 	std::string create_line;
-	short s1,monst_exist;
+	short s1;
 	bool keep_going = true,forced = false,check_f = false;
 	location monst_loc,store_loc;
 	eDirection dir;
@@ -455,10 +455,10 @@ bool pc_combat_move(location destination) {
 			// monsters get back-shots
 			for(short i = 0; i < univ.town.monst.size(); i++) {
 				monst_loc = univ.town.monst[i].cur_loc;
-				monst_exist = univ.town.monst[i].active;
+				bool monst_exist = univ.town.monst[i].is_alive();
 				
 				s1 = univ.cur_pc;
-				if((monst_exist > 0) && (monst_adjacent(univ.current_pc().combat_pos,i))
+				if(monst_exist && (monst_adjacent(univ.current_pc().combat_pos,i))
 					&& !monst_adjacent(destination,i) &&
 					!univ.town.monst[i].is_friendly() &&
 					univ.town.monst[i].status[eStatus::ASLEEP] <= 0 &&
@@ -2214,45 +2214,45 @@ void do_monster_turn() {
 		cur_monst = &univ.town.monst[i];
 		
 		// See if hostile monster notices party, during combat
-		if(cur_monst->active == 1 && !cur_monst->is_friendly() && overall_mode == MODE_COMBAT) {
+		if(cur_monst->active == eCreatureStatus::IDLE && !cur_monst->is_friendly() && overall_mode == MODE_COMBAT) {
 			r1 = get_ran(1,1,100); // Check if see PCs first
 			// TODO: Hang on, isn't stealth supposed to get better as you level up?
 			r1 += (univ.party.status[ePartyStatus::STEALTH] > 0) ? 45 : 0;
 			r1 += can_see_light(cur_monst->cur_loc,closest_pc_loc(cur_monst->cur_loc),sight_obscurity) * 10;
 			if(r1 < 50)
-				cur_monst->active = 2;
+				cur_monst->active = eCreatureStatus::ALERTED;
 			
 			for(short j = 0; j < univ.town.monst.size(); j++)
 				if(monst_near(j,cur_monst->cur_loc,5,1)) {
-					cur_monst->active = 2;
+					cur_monst->active = eCreatureStatus::ALERTED;
 				}
 		}
-		if(cur_monst->active == 1 && !cur_monst->is_friendly()) {
+		if(cur_monst->active == eCreatureStatus::IDLE && !cur_monst->is_friendly()) {
 			// Now it looks for PC-friendly monsters
 			// dist check is for efficiency
 			for(short j = 0; j < univ.town.monst.size(); j++)
-				if((univ.town.monst[j].active > 0) &&
+				if((univ.town.monst[j].is_alive()) &&
 					univ.town.monst[j].is_friendly() &&
 					(dist(cur_monst->cur_loc,univ.town.monst[j].cur_loc) <= 6) &&
 					(can_see_light(cur_monst->cur_loc,univ.town.monst[j].cur_loc,sight_obscurity) < 5))
-					cur_monst->active = 2;
+					cur_monst->active = eCreatureStatus::ALERTED;
 		}
 		
 		// See if friendly, fighting monster see hostile monster. If so, make mobile
 		// dist check is for efficiency
-		if(cur_monst->active == 1 && cur_monst->attitude == eAttitude::FRIENDLY) {
+		if(cur_monst->active == eCreatureStatus::IDLE && cur_monst->attitude == eAttitude::FRIENDLY) {
 			for(short j = 0; j < univ.town.monst.size(); j++)
-				if(univ.town.monst[j].active > 0 && !univ.town.monst[j].is_friendly() &&
+				if(univ.town.monst[j].is_alive() && !univ.town.monst[j].is_friendly() &&
 					(dist(cur_monst->cur_loc,univ.town.monst[j].cur_loc) <= 6)
 					&& (can_see_light(cur_monst->cur_loc,univ.town.monst[j].cur_loc,sight_obscurity) < 5)) {
-					cur_monst->active = 2;
+					cur_monst->active = eCreatureStatus::ALERTED;
 					cur_monst->mobility = 1;
 				}
 		}
 		// End of seeing if monsters see others
 		
 		cur_monst->ap = 0;
-		if(cur_monst->active == 2) { // Begin action loop for angry, active monsters
+		if(cur_monst->active == eCreatureStatus::ALERTED) { // Begin action loop for angry, active monsters
 			// First note that hostile monsters are around.
 			if(!cur_monst->is_friendly())
 				univ.party.hostiles_present = 30;
@@ -2279,9 +2279,9 @@ void do_monster_turn() {
 		center_on_monst = false;
 		
 		// Now take care of summoned monsters
-		if(cur_monst->active > 0) {
+		if(cur_monst->is_alive()) {
 			if(cur_monst->summon_time == 1) {
-				cur_monst->active = 0;
+				cur_monst->active = eCreatureStatus::DEAD;
 				cur_monst->ap = 0;
 				cur_monst->spell_note(17);
 			}
@@ -2307,7 +2307,7 @@ void do_monster_turn() {
 		
 		
 		
-		while((cur_monst->ap > 0) && (cur_monst->active > 0)) {  // Spend each action point
+		while((cur_monst->ap > 0) && (cur_monst->is_alive())) {  // Spend each action point
 			
 			if(is_combat()) { // Pick target. If in town, target already picked
 				// in do_monsters
@@ -2549,18 +2549,18 @@ void do_monster_turn() {
 								seek_party (i,cur_monst->cur_loc,univ.party[move_target].combat_pos);
 								for(short k = 0; k < 6; k++)
 									if(univ.party[k].parry > 99 && monst_adjacent(univ.party[k].combat_pos,i)
-									   && (cur_monst->active > 0) && !univ.party[k].traits[eTrait::PACIFIST]) {
+									   && (cur_monst->is_alive()) && !univ.party[k].traits[eTrait::PACIFIST]) {
 										univ.party[k].parry = 0;
 										pc_attack(k,cur_monst);
 									}
 							}
 						
 						if(move_target >= 100) // Monsters seeking monsters do so
-							if(univ.town.monst[move_target - 100].active > 0) {
+							if(univ.town.monst[move_target - 100].is_alive()) {
 								seek_party (i,cur_monst->cur_loc,univ.town.monst[move_target - 100].cur_loc);
 								for(short k = 0; k < 6; k++)
 									if(univ.party[k].parry > 99 && monst_adjacent(univ.party[k].combat_pos,i)
-										&& cur_monst->active > 0 && !cur_monst->is_friendly()
+										&& cur_monst->is_alive() && !cur_monst->is_friendly()
 										&& !univ.party[k].traits[eTrait::PACIFIST]) {
 										univ.party[k].parry = 0;
 										pc_attack(k,cur_monst);
@@ -2588,7 +2588,7 @@ void do_monster_turn() {
 			if(is_combat())
 				for(short k = 0; k < 6; k++)
 					if(univ.party[k].main_status == eMainStatus::ALIVE && !monst_adjacent(univ.party[k].combat_pos,i)
-						&& pc_adj[k] && !cur_monst->is_friendly() && cur_monst->active > 0 &&
+						&& pc_adj[k] && !cur_monst->is_friendly() && cur_monst->is_alive() &&
 					   univ.party[k].status[eStatus::INVISIBLE] == 0 && !univ.party[k].traits[eTrait::PACIFIST]) {
 						combat_posing_monster = current_working_monster = k;
 						pc_attack(k,cur_monst);
@@ -2659,7 +2659,7 @@ void do_monster_turn() {
 			
 			combat_posing_monster = current_working_monster = -1;
 			// Redraw monster after it goes
-			if(cur_monst->attitude != eAttitude::DOCILE && cur_monst->active > 0 && cur_monst->ap == 0
+			if(cur_monst->attitude != eAttitude::DOCILE && cur_monst->is_alive() && cur_monst->ap == 0
 				&& (is_combat()) && (cur_monst->picture_num > 0) && (party_can_see_monst(i) )) {
 				center = cur_monst->cur_loc;
 				draw_terrain(0);
@@ -2667,7 +2667,7 @@ void do_monster_turn() {
 			}
 			
 			// If monster dead, take away actions
-			if(cur_monst->active == 0)
+			if(cur_monst->active == eCreatureStatus::DEAD)
 				cur_monst->ap = 0;
 			
 			if(futzing > 1) // If monster's just pissing around, give up
@@ -2684,9 +2684,7 @@ void do_monster_turn() {
 		
 		cur_monst = &univ.town.monst[i];
 		
-		if((cur_monst->active < 0) || (cur_monst->active > 2))
-			cur_monst->active = 0; // clean up
-		if(cur_monst->active != 0) { // Take care of monster effects
+		if(cur_monst->is_alive()) { // Take care of monster effects
 			if(cur_monst->status[eStatus::ACID] > 0) {  // Acid
 				if(!printed_acid) {
 					add_string_to_buf("Acid:");
@@ -3430,7 +3428,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 	// is target dead?
 	if(targ < 6 && univ.party[targ].main_status != eMainStatus::ALIVE)
 		return false;
-	if((targ >= 100) && (univ.town.monst[targ - 100].active == 0))
+	if((targ >= 100) && (univ.town.monst[targ - 100].active == eCreatureStatus::DEAD))
 		return false;
 	
 	eSpell spell;
@@ -3618,7 +3616,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 						if(pc_near(i,caster->cur_loc,8))
 							univ.party[i].slow(2 + caster->level / 4);
 				for(short i = 0; i < univ.town.monst.size(); i++) {
-					if(univ.town.monst[i].active != 0 && !caster->is_friendly(univ.town.monst[i])
+					if(univ.town.monst[i].is_alive() && !caster->is_friendly(univ.town.monst[i])
 						&& (dist(caster->cur_loc,univ.town.monst[i].cur_loc) <= 7))
 						univ.town.monst[i].slow(2 + caster->level / 4);
 				}
@@ -3749,7 +3747,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 	
 	if(targ < 6 && univ.party[targ].main_status != eMainStatus::ALIVE)
 		return false;
-	if((targ >= 100) && (univ.town.monst[targ - 100].active == 0))
+	if((targ >= 100) && (univ.town.monst[targ - 100].active == eCreatureStatus::DEAD))
 		return false;
 	if(univ.town.is_antimagic(caster->cur_loc.x,caster->cur_loc.y)) {
 		return false;
@@ -3924,7 +3922,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 								univ.party[i].disease(2 + r2);
 						}
 				for(short i = 0; i < univ.town.monst.size(); i++) {
-					if(univ.town.monst[i].active != 0 && !caster->is_friendly(univ.town.monst[i])
+					if(univ.town.monst[i].is_alive() && !caster->is_friendly(univ.town.monst[i])
 						&& (dist(caster->cur_loc,univ.town.monst[i].cur_loc) <= 7)) {
 						if(spell == eSpell::CURSE_ALL)
 							univ.town.monst[i].curse(2 + r1);
@@ -4088,8 +4086,8 @@ bool pc_near(short pc_num,location where,short radius) {
 
 //short active; // 0 - any monst 1 - monster need be active
 bool monst_near(short m_num,location where,short radius,short active) {
-	if((univ.town.monst[m_num].active != 0) && (vdist(univ.town.monst[m_num].cur_loc,where) <= radius)
-		&& ((active == 0) || (univ.town.monst[m_num].active == 2)) )
+	if((univ.town.monst[m_num].is_alive()) && (vdist(univ.town.monst[m_num].cur_loc,where) <= radius)
+		&& ((active == 0) || (univ.town.monst[m_num].active == eCreatureStatus::ALERTED)) )
 		return true;
 	else return false;
 }
@@ -4307,7 +4305,7 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 	
 	// Damage to monsters
 	for(short k = 0; k < univ.town.monst.size(); k++)
-		if((univ.town.monst[k].active > 0) && (dist(center,univ.town.monst[k].cur_loc) <= 5)) {
+		if((univ.town.monst[k].is_alive()) && (dist(center,univ.town.monst[k].cur_loc) <= 5)) {
 			monster_hit = false;
 			// First actually make barriers, then draw them, then inflict damaging effects.
 			for(short i = minmax(0,univ.town->max_dim - 1,center.x - 4); i <= minmax(0,univ.town->max_dim - 1,center.x + 4); i++)
@@ -4452,7 +4450,7 @@ void do_shockwave(location target) {
 			&& pc.main_status == eMainStatus::ALIVE)
 			damage_pc(pc, get_ran(2 + dist(target,pc.combat_pos) / 2, 1, 6), eDamageType::UNBLOCKABLE,eRace::UNKNOWN,0);
 	for(short i = 0; i < univ.town.monst.size(); i++)
-		if((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
+		if((univ.town.monst[i].is_alive()) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 			&& (dist(target,univ.town.monst[i].cur_loc) < 11)
 			&& (can_see_light(target,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
 			damage_monst(univ.town.monst[i],univ.cur_pc,get_ran(2 + dist(target,univ.town.monst[i].cur_loc) / 2,1,6),eDamageType::UNBLOCKABLE,0);
@@ -4469,7 +4467,7 @@ void radius_damage(location target,short radius, short dam, eDamageType type) {
 				&& pc.main_status == eMainStatus::ALIVE)
 				damage_pc(pc, dam, type,eRace::UNKNOWN,0);
 		for(short i = 0; i < univ.town.monst.size(); i++)
-			if((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
+			if((univ.town.monst[i].is_alive()) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 				&& (dist(target,univ.town.monst[i].cur_loc) <= radius)
 				&& (can_see_light(target,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
 				damage_monst(univ.town.monst[i], univ.cur_pc, dam, type,0);
@@ -4482,7 +4480,7 @@ void radius_damage(location target,short radius, short dam, eDamageType type) {
 			&& pc.main_status == eMainStatus::ALIVE)
 			damage_pc(pc, dam, type,eRace::UNKNOWN,0);
 	for(short i = 0; i < univ.town.monst.size(); i++)
-		if((univ.town.monst[i].active != 0) && (dist(target,univ.town.monst[i].cur_loc) > 0)
+		if((univ.town.monst[i].is_alive()) && (dist(target,univ.town.monst[i].cur_loc) > 0)
 			&& (dist(target,univ.town.monst[i].cur_loc) <= radius)
 			&& (can_see_light(target,univ.town.monst[i].cur_loc,sight_obscurity) < 5))
 			damage_monst(univ.town.monst[i], univ.cur_pc, dam, type,0);
@@ -4520,7 +4518,7 @@ void hit_space(location target,short dam,eDamageType type,short report,short hit
 	}
 	
 	for(short i = 0; i < univ.town.monst.size(); i++)
-		if((hit_monsters) && (univ.town.monst[i].active != 0) && !stop_hitting)
+		if((hit_monsters) && (univ.town.monst[i].is_alive()) && !stop_hitting)
 			if(univ.town.monst[i].on_space(target)) {
 				if(processing_fields)
 					damage_monst(univ.town.monst[i], 6, dam, type,0);
@@ -4664,7 +4662,7 @@ bool hit_end_c_button() {
 
 bool out_monst_all_dead() {
 	for(short i = 0; i < univ.town.monst.size(); i++)
-		if(univ.town.monst[i].active > 0 && !univ.town.monst[i].is_friendly()) {
+		if(univ.town.monst[i].is_alive() && !univ.town.monst[i].is_friendly()) {
 			//print_nums(5555,i,univ.town.monst[i].number);
 			//print_nums(5555,univ.town.monst[i].m_loc.x,univ.town.monst[i].m_loc.y);
 			return false;
@@ -4875,7 +4873,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 					break;
 			}
 			for(short i = 0; i < univ.town.monst.size(); i++) {
-				if(univ.town.monst[i].active != 0 && !univ.town.monst[i].is_friendly()
+				if(univ.town.monst[i].is_alive() && !univ.town.monst[i].is_friendly()
 					&& (dist(caster.combat_pos,univ.town.monst[i].cur_loc) <= (*spell_num).range)
 					&& (can_see_light(caster.combat_pos,univ.town.monst[i].cur_loc,sight_obscurity) < 5)) {
 					which_m = &univ.town.monst[i];
@@ -5043,7 +5041,7 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 				caster.cur_sp -= (*spell_num).cost;
 			store_sound = 24;
 			for(short i = 0; i < univ.town.monst.size(); i++) {
-				if(univ.town.monst[i].active != 0 && !univ.town.monst[i].is_friendly() &&
+				if(univ.town.monst[i].is_alive() && !univ.town.monst[i].is_friendly() &&
 					(dist(caster.combat_pos,univ.town.monst[i].cur_loc) <= (*spell_num).range)) {
 					// TODO: Should this ^ also check that you can see each target? ie can_see_light(...) < 5
 					// --> can_see_light(caster.combat_pos,univ.town.monst[i].cur_loc,sight_obscurity)
@@ -5348,7 +5346,7 @@ void process_fields() {
 	}
 	
 	for(short i = 0; i < univ.town.monst.size(); i++)
-		if(univ.town.monst[i].active > 0)
+		if(univ.town.monst[i].is_alive())
 			monst_inflict_fields(i);
 	
 	sync_force_cages();

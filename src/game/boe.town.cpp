@@ -142,6 +142,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	univ.town.monst.which_town = town_number;
 	univ.town.monst.hostile = false;
+	std::set<cCreature*> no_thrash;
 	
 	for(auto& pop : univ.party.creature_save)
 		if(town_number == pop.which_town) {
@@ -150,16 +151,16 @@ void start_town_mode(short which_town, short entry_dir) {
 			
 			for(auto& monst : univ.town.monst) {
 				if(loc_off_act_area(monst.cur_loc))
-					monst.active = 0;
-				if(monst.active == 2)
-					monst.active = 1;
+					monst.active = eCreatureStatus::DEAD;
+				if(monst.active == eCreatureStatus::ALERTED)
+					monst.active = eCreatureStatus::IDLE;
 				monst.cur_loc = monst.start_loc;
 				monst.health = monst.m_health;
 				monst.mp = monst.max_mp;
 				monst.morale = monst.m_morale;
 				monst.status.clear();
 				if(monst.summon_time > 0)
-					monst.active = 0;
+					monst.active = eCreatureStatus::DEAD;
 				monst.target = 6;
 				// Bonus SP and HP wear off
 				if(monst.mp > monst.max_mp)
@@ -175,9 +176,9 @@ void start_town_mode(short which_town, short entry_dir) {
 					case eMonstTime::ALWAYS: break; // Nothing to do.
 					case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
 						if((univ.party.calc_day() % 3) + 3 != int(monst.time_flag))
-							monst.active = 0;
+							monst.active = eCreatureStatus::DEAD;
 						else {
-							monst.active = 1;
+							monst.active = eCreatureStatus::IDLE;
 							monst.spec_enc_code = 0;
 							monst.cur_loc = monst.start_loc;
 							monst.health = monst.m_health;
@@ -187,13 +188,13 @@ void start_town_mode(short which_town, short entry_dir) {
 						// Now, appearing/disappearing monsters might have arrived/disappeared.
 					case eMonstTime::APPEAR_ON_DAY:
 						if(day_reached(monst.monster_time, monst.time_code)) {
-							monst.active = 1;
+							monst.active = eCreatureStatus::IDLE;
 							monst.time_flag = eMonstTime::ALWAYS;
 						}
 						break;
 					case eMonstTime::DISAPPEAR_ON_DAY:
 						if(day_reached(monst.monster_time, monst.time_code)) {
-							monst.active = 0;
+							monst.active = eCreatureStatus::DEAD;
 							monst.time_flag = eMonstTime::ALWAYS;
 						}
 						break;
@@ -201,7 +202,7 @@ void start_town_mode(short which_town, short entry_dir) {
 						if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
 							break; // Event hasn't happened yet
 						if(univ.party.calc_day() >= univ.party.key_times[monst.time_code]){ //calc_day is used because of the "definition" of univ.party.key_times
-							monst.active = 1;
+							monst.active = eCreatureStatus::IDLE;
 							monst.time_flag = eMonstTime::ALWAYS;
 						}
 						break;
@@ -210,18 +211,18 @@ void start_town_mode(short which_town, short entry_dir) {
 						if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
 							break; // Event hasn't happened yet
 						if(univ.party.calc_day() >= univ.party.key_times[monst.time_code]){
-							monst.active = 0;
+							monst.active = eCreatureStatus::DEAD;
 							monst.time_flag = eMonstTime::ALWAYS;
 						}
 						break;
 					case eMonstTime::APPEAR_AFTER_CHOP:
 						// TODO: Should these two cases be separated?
 						if(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
-							monst.active += 10;
+							no_thrash.insert(&monst);
 						else if(univ.town->is_cleaned_out())
-							monst.active += 10;
-						else monst.active = 0;
-						if(monst.active >= 10)
+							no_thrash.insert(&monst);
+						else monst.active = eCreatureStatus::DEAD;
+						if(no_thrash.count(&monst) > 0)
 							monst.time_flag = eMonstTime::ALWAYS;
 						break;
 				}
@@ -242,52 +243,52 @@ void start_town_mode(short which_town, short entry_dir) {
 				cCreature& monst = univ.town.monst[i];
 				
 				if(monst.spec_enc_code > 0)
-					monst.active = 0;
+					monst.active = eCreatureStatus::DEAD;
 				
 				// Now, if necessary, fry the monster.
 				switch(monst.time_flag) {
 					case eMonstTime::APPEAR_ON_DAY:
 						if(!day_reached(monst.monster_time, monst.time_code))
-							monst.active = 0;
+							monst.active = eCreatureStatus::DEAD;
 						break;
 					case eMonstTime::DISAPPEAR_ON_DAY:
 						if(day_reached(monst.monster_time, monst.time_code))
-							monst.active = 0;
+							monst.active = eCreatureStatus::DEAD;
 						break;
 					case eMonstTime::SOMETIMES_A: case eMonstTime::SOMETIMES_B: case eMonstTime::SOMETIMES_C:
 						if((univ.party.calc_day() % 3) + 3 != int(monst.time_flag)) {
-							monst.active = 0;
+							monst.active = eCreatureStatus::DEAD;
 						}
 						else {
-							monst.active = 1;
+							monst.active = eCreatureStatus::IDLE;
 						}
 						break;
 					case eMonstTime::APPEAR_WHEN_EVENT:
 						if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
-							monst.active = 0; // Event hasn't happened yet
+							monst.active = eCreatureStatus::DEAD; // Event hasn't happened yet
 						else if(univ.party.calc_day() < univ.party.key_times[univ.town.monst[i].time_code])
-							monst.active = 0; // This would only be reached if the time was set back (or in a legacy save)
+							monst.active = eCreatureStatus::DEAD; // This would only be reached if the time was set back (or in a legacy save) TODO: Is this right? Should they both set it to dead?
 						break;
 						
 					case eMonstTime::DISAPPEAR_WHEN_EVENT:
 						if(univ.party.key_times.find(monst.time_code) == univ.party.key_times.end())
 							break; // Event hasn't happened yet
 						if(univ.party.calc_day() >= univ.party.key_times[univ.town.monst[i].time_code])
-							monst.active = 0;
+							monst.active = eCreatureStatus::DEAD;
 						break;
 					case eMonstTime::APPEAR_AFTER_CHOP:
 						// TODO: Should these two cases be separated?
 						if(univ.town->town_chop_time > 0 && day_reached(univ.town->town_chop_time,univ.town->town_chop_key))
-							monst.active += 10;
-							else if(univ.town->is_cleaned_out())
-							monst.active += 10;
-						else monst.active = 0;
+							no_thrash.insert(&monst);
+						else if(univ.town->is_cleaned_out())
+							no_thrash.insert(&monst);
+						else monst.active = eCreatureStatus::DEAD;
 						break;
 					case eMonstTime::ALWAYS:
 						break;
 				}
 				
-				if(monst.active) {
+				if(monst.is_alive()) {
 					// In forcecage?
 					if(univ.town.is_force_cage(monst.cur_loc.x, monst.cur_loc.y))
 						monst.status[eStatus::FORCECAGE] = 1000;
@@ -300,10 +301,10 @@ void start_town_mode(short which_town, short entry_dir) {
 	// only large monsters, as some smaller monsters are intentionally placed
 	// where they cannot be
 	for(short i = 0; i < univ.town.monst.size(); i++) {
-		if(univ.town.monst[i].active > 0)
+		if(univ.town.monst[i].is_alive())
 			if(((univ.town.monst[i].x_width > 1) || (univ.town.monst[i].y_width > 1)) &&
 				!monst_can_be_there(univ.town.monst[i].cur_loc,i))
-				univ.town.monst[i].active = 0;
+				univ.town.monst[i].active = eCreatureStatus::DEAD;
 	}
 	
 	
@@ -316,16 +317,15 @@ void start_town_mode(short which_town, short entry_dir) {
 		if(day_reached(univ.town->town_chop_time,univ.town->town_chop_key)) {
 			add_string_to_buf("Area has been abandoned.");
 			for(auto& monst : univ.town.monst)
-				if(monst.active > 0 && monst.active < 10 && !monst.is_friendly())
-					monst.active += 10;
+				if(monst.is_alive() && no_thrash.count(&monst) == 0 && !monst.is_friendly())
+					no_thrash.insert(&monst);
 			town_toast = true;
 		}
 	}
 	if(town_toast) {
 		for(auto& monst : univ.town.monst)
-			if(monst.active >= 10)
-				monst.active -= 10;
-			else monst.active = 0;
+			if(no_thrash.count(&monst) == 0)
+				monst.active = eCreatureStatus::DEAD;
 	}
 	handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc);
 	
@@ -333,7 +333,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	for(short i = 0; i < univ.town.monst.size(); i++)
 		if((univ.town.monst[i].abil[eMonstAbil::SPLITS].active) &&
 			(i >= univ.town->creatures.size() || univ.town.monst[i].number != univ.town->creatures[i].number))
-			univ.town.monst[i].active = 0;
+			univ.town.monst[i].active = eCreatureStatus::DEAD;
 	
 	// Set up field booleans, correct for doors
 	for(short j = 0; j < univ.town->max_dim; j++)
@@ -424,7 +424,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	
 	for(auto& monst : univ.town.monst)
 		if(loc_off_act_area(monst.cur_loc))
-			monst.active = 0;
+			monst.active = eCreatureStatus::DEAD;
 	for(auto& item : univ.town.items)
 		if(loc_off_act_area(item.item_loc))
 			item.variety = eItemType::NO_ITEM;
@@ -433,7 +433,7 @@ void start_town_mode(short which_town, short entry_dir) {
 	for(auto& monst : univ.town.monst)
 		if(univ.party.sd_legit(monst.spec1, monst.spec2)) {
 			if(PSD[monst.spec1][monst.spec2] > 0)
-				monst.active = 0;
+				monst.active = eCreatureStatus::DEAD;
 		}
 	
 	erase_town_specials();
@@ -1098,7 +1098,7 @@ void elim_monst(unsigned short which,short spec_a,short spec_b) {
 	if(PSD[spec_a][spec_b] > 0) {
 		for(short i = 0; i < univ.town.monst.size(); i++)
 			if(univ.town.monst[i].number == which) {
-				univ.town.monst[i].active = 0;
+				univ.town.monst[i].active = eCreatureStatus::DEAD;
 			}
 	}
 	
@@ -1493,7 +1493,7 @@ void draw_map(bool need_refresh) {
 		if(draw_pcs) {
 			if((is_town()) && (univ.party.status[ePartyStatus::DETECT_LIFE] > 0))
 				for(short i = 0; i < univ.town.monst.size(); i++)
-					if(univ.town.monst[i].active > 0) {
+					if(univ.town.monst[i].is_alive()) {
 						where = univ.town.monst[i].cur_loc;
 						if((is_explored(where.x,where.y)) &&
 							((where.x >= view_rect.left) && (where.x < view_rect.right)

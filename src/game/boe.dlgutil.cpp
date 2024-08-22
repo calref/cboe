@@ -1062,7 +1062,7 @@ void handle_talk_event(location p) {
 		case eTalkNode::END_DIE:
 			if(store_m_num >= 0 && store_m_num < univ.town.monst.size()) {
 				// TODO: Any reason not to call something like kill_monst?
-				univ.town.monst[store_m_num].active = 0;
+				univ.town.monst[store_m_num].active = eCreatureStatus::DEAD;
 				// Special killing effects
 				if(univ.party.sd_legit(univ.town.monst[store_m_num].spec1,univ.town.monst[store_m_num].spec2))
 					PSD[univ.town.monst[store_m_num].spec1][univ.town.monst[store_m_num].spec2] = 1;

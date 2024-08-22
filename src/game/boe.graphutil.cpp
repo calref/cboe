@@ -159,7 +159,7 @@ void draw_monsters() {
 	if(is_town() || is_combat()) {
 		for(short i = 0; i < univ.town.monst.size(); i++) {
 			const cCreature& monst = univ.town.monst[i];
-			if(monst.active != 0 && !monst.invisible && monst.status[eStatus::INVISIBLE] <= 0)
+			if(monst.is_alive() && !monst.invisible && monst.status[eStatus::INVISIBLE] <= 0)
 				if(point_onscreen(center,monst.cur_loc) && party_can_see_monst(i)) {
 					where_draw.x = monst.cur_loc.x - center.x + 4;
 					where_draw.y = monst.cur_loc.y - center.y + 4;
@@ -173,7 +173,7 @@ void draw_monsters() {
 						// in bed?
 						if(store_loc.x >= 0 && store_loc.x < 9 && store_loc.y >= 0 && store_loc.y < 9 &&
 						   (univ.scenario.ter_types[ter].special == eTerSpec::BED) && isHumanoid(monst.m_type)
-						   && (monst.active == 1 || monst.target == 6) &&
+						   && (monst.active == eCreatureStatus::IDLE || monst.target == 6) &&
 						   width == 1 && height == 1)
 							draw_one_terrain_spot((short) where_draw.x,(short) where_draw.y,10000 + univ.scenario.ter_types[ter].flag1);
 						else if(monst.picture_num >= 1000) {

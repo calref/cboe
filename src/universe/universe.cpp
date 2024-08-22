@@ -869,7 +869,7 @@ void cCurTown::writeTo(cTagFile& file) const {
 		}
 	}
 	for(int i = 0; i < monst.size(); i++) {
-		if(monst[i].active > 0) {
+		if(monst[i].is_alive()) {
 			auto& monst_page = file.add();
 			monst_page["CREATURE"] << i;
 			monst[i].writeTo(monst_page);
@@ -919,7 +919,7 @@ void cCurTown::readFrom(const cTagFile& file){
 			if(page["CREATURE"] >> i) {
 				monst.init(i);
 				monst[i].readFrom(page);
-				monst[i].active = true;
+				monst[i].active = eCreatureStatus::IDLE;
 			}
 		}
 	}
@@ -1375,7 +1375,7 @@ void cUniverse::clear_stored_pcs() {
 short cCurTown::countMonsters() const {
 	short to_ret = 0;
 	for(short i = 0; i < monst.size(); i++)
-		if(monst[i].active > 0)
+		if(monst[i].is_alive())
 			to_ret++;
 	return to_ret;
 }

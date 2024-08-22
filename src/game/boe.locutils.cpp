@@ -509,7 +509,7 @@ bool combat_pt_in_light(location to_where) {
 
 bool party_sees_a_monst() { // Returns true is a hostile monster is in sight.
 	for(short i = 0; i < univ.town.monst.size(); i++) {
-		if(univ.town.monst[i].active > 0)
+		if(univ.town.monst[i].is_alive())
 			if(!univ.town.monst[i].is_friendly() &&
 				(party_can_see_monst(i)))
 				return true;
