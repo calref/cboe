@@ -117,7 +117,7 @@ TEST_CASE("Initialization sanity test for monster") {
 		CHECK(base.marked_damage == 0);
 	}
 	SECTION("Main creature class") {
-		CHECK(who.active == 0);
+		CHECK(who.active == eCreatureStatus::DEAD);
 		CHECK(who.attitude == eAttitude::DOCILE);
 		CHECK(who.cur_loc == loc(80,80));
 		CHECK(who.summon_time == 0);
@@ -173,7 +173,7 @@ TEST_CASE("Construction sanity test for monster") {
 	SECTION("Into population (normal mode)") {
 		pop.assign(0, dude, monst, false, 1);
 		REQUIRE(pop.size() == 1);
-		CHECK(pop[0].active == 1);
+		CHECK(pop[0].active == eCreatureStatus::IDLE);
 		CHECK(pop[0].picture_num == 0);
 		CHECK(pop[0].m_health == 32);
 		CHECK(pop[0].health == 32);

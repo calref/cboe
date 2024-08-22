@@ -741,7 +741,7 @@ TEST_CASE("Converting monsters from legacy saves") {
 		CHECK(new_monst.status[eStatus::POISON] == 5);
 		CHECK(new_monst.status[eStatus::WEBS] == 7);
 		CHECK(new_monst.number == 12);
-		CHECK(new_monst.active == 1);
+		CHECK(new_monst.active == eCreatureStatus::IDLE);
 		CHECK(new_monst.attitude == eAttitude::HOSTILE_B);
 		CHECK(new_monst.cur_loc == loc(7,8));
 		CHECK(new_monst.mobility == 1);
