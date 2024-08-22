@@ -1508,8 +1508,6 @@ class cChooseScenario {
 	}
 
 	bool doCancel() {
-		scen_header_type null;
-		me.setResult<scen_header_type>(null);
 		me.toast(false);
 		return true;
 	}
@@ -1576,6 +1574,7 @@ public:
 		}
 		
 		me.run();
+		if(!me.hasResult()) return scen_header_type{};
 		scen_header_type scen = me.getResult<scen_header_type>();
 		if(scen.file.empty()){
 			std::ostringstream error;

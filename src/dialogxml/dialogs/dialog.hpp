@@ -114,10 +114,21 @@ public:
 	void run(std::function<void(cDialog&)> onopen = nullptr); // cd_run_dialog
 	/// Get the result of the dialog.
 	/// @tparam type The result type.
-	/// @throw boost::bad_any_cast if the provided result type is different from the type set by getResult().
+	/// @throw boost::bad_any_cast if the provided result type is different from the type set by setResult().
 	/// @return The dialog's result.
 	template<typename type> type getResult() const {
 		return boost::any_cast<type>(result);
+	}
+	/// Check if the dialog has a result.
+	/// @return true if setResult() was called, otherwise false.
+	bool hasResult() const {
+		return !result.empty();
+	}
+	/// Query the type of the result.
+	/// @tparam type The result type to query.
+	/// @return true if the type matches that set by setResult().
+	template<typename type> bool resultIs() const {
+		return result.type() == typeid(type);
 	}
 	/// Set the result of the dialog.
 	/// @tparam type The result type.
