@@ -333,6 +333,7 @@ bool cCreature::on_space(location loc) const {
 
 void cCreature::writeTo(cTagFile_Page& page) const {
 	page["MONSTER"] << number;
+	page["ALERT"] << (active == eCreatureStatus::ALERTED);
 	page["ATTITUDE"] << attitude;
 	page["STARTATT"] << start_attitude;
 	page["STARTLOC"] << start_loc.x << start_loc.y;
@@ -358,7 +359,9 @@ void cCreature::writeTo(cTagFile_Page& page) const {
 
 void cCreature::readFrom(const cTagFile_Page& page) {
 	targ_loc = location(0,0);
+	bool alert;
 	page["MONSTER"] >> number;
+	page["ALERT"] >> alert;
 	page["ATTITUDE"] >> attitude;
 	page["STARTATT"] >> start_attitude;
 	page["STARTLOC"] >> start_loc.x >> start_loc.y;
@@ -380,6 +383,7 @@ void cCreature::readFrom(const cTagFile_Page& page) {
 	page["MANA"] >> mp >> max_mp;
 	page["MORALE"] >> morale;
 	page["DIRECTION"] >> direction;
+	active = alert ? eCreatureStatus::ALERTED : eCreatureStatus::IDLE;
 }
 
 void cCreature::print_attacks(iLiving* target) const {
