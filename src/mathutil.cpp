@@ -12,7 +12,7 @@
 std::mt19937 game_rand;
 
 short get_ran (short times,short  min,short  max){
-	long int store;
+	long unsigned int store;
 	short to_ret = 0;
 	
 	if(max < min) max = min;
