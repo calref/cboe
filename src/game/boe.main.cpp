@@ -383,9 +383,82 @@ void showWelcome() {
 	welcome.show();
 }
 
+using Key = sf::Keyboard::Key;
+std::map<Key,int> delayed_keys;
+const int ARROW_SIMUL_FRAMES = 3;
+
+void fire_delayed_key(Key code) {
+	bool isUpPressed = delayed_keys[Key::Up] > 0;
+	bool isDownPressed = delayed_keys[Key::Down] > 0;
+	bool isLeftPressed = delayed_keys[Key::Left] > 0;
+	bool isRightPressed = delayed_keys[Key::Right] > 0;
+	delayed_keys[Key::Up] = 0;
+	delayed_keys[Key::Down] = 0;
+	delayed_keys[Key::Left] = 0;
+	delayed_keys[Key::Right] = 0;
+
+	Key new_code;
+	bool diagonal = false;
+
+	if(code == Key::Up && !isDownPressed) {
+		if(isLeftPressed){ new_code = Key::Numpad7; diagonal = true; }
+		else if(isRightPressed){ new_code = Key::Numpad9; diagonal = true; }
+		else new_code = Key::Numpad8;
+	} else if(code == Key::Down && !isUpPressed) {
+		if(isLeftPressed){ new_code = Key::Numpad1; diagonal = true; }
+		else if(isRightPressed){ new_code = Key::Numpad3; diagonal = true; }
+		else new_code = Key::Numpad2;
+	} else if(code == Key::Left && !isRightPressed) {
+		if(isUpPressed){ new_code = Key::Numpad7; diagonal = true; }
+		else if(isDownPressed){ new_code = Key::Numpad1; diagonal = true; }
+		else new_code = Key::Numpad4;
+	} else if(code == Key::Right && !isLeftPressed) {
+		if(isUpPressed){ new_code = Key::Numpad9; diagonal = true; }
+		else if(isDownPressed){ new_code = Key::Numpad3; diagonal = true; }
+		else new_code = Key::Numpad6;
+	} else {
+		return;
+	}
+	if(diagonal){
+		mainPtr.setKeyRepeatEnabled(false);
+	}
+
+	sf::Event dummyEvent = {sf::Event::KeyPressed};
+	dummyEvent.key.code = new_code;
+	queue_fake_event(dummyEvent);
+}
+
+void handle_delayed_key(Key code) {
+	// a keypress of this code is already delayed, so push it through:
+	if(delayed_keys[code] > 0)
+		fire_delayed_key(code);
+
+	delayed_keys[code] = ARROW_SIMUL_FRAMES;
+}
+
+void update_delayed_keys() {
+	for(auto elem : delayed_keys){
+		Key code = elem.first;
+		int countdown = elem.second;
+
+		if(countdown > 0){
+			--countdown;
+			delayed_keys[code] = countdown;
+			if(countdown == 0){
+				fire_delayed_key(code);
+			}
+		}
+	}
+}
+
 void handle_events() {
 	sf::Event currentEvent;
 	cFramerateLimiter fps_limiter;
+
+	delayed_keys[Key::Left] = 0;
+	delayed_keys[Key::Right] = 0;
+	delayed_keys[Key::Up] = 0;
+	delayed_keys[Key::Down] = 0;
 
 	while(!All_Done) {
 		if(replaying && has_next_action()){
@@ -411,6 +484,7 @@ void handle_events() {
 				menuChoiceId=-1;
 			}
 #endif
+			update_delayed_keys();
 			while(!fake_event_queue.empty()){
 				const sf::Event& next_event = fake_event_queue.front();
 				fake_event_queue.pop_front();
@@ -493,7 +567,12 @@ void handle_one_event(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	switch(event.type) {
 		case sf::Event::KeyPressed:
 			if(flushingInput) return;
-			if(!(event.key.*systemKey)) handle_keystroke(event, fps_limiter);
+			if (delayed_keys.find(event.key.code) != delayed_keys.end()){
+				handle_delayed_key(event.key.code);
+			} else if(!(event.key.*systemKey)) {
+				mainPtr.setKeyRepeatEnabled(true);
+				handle_keystroke(event, fps_limiter);
+			}
 			break;
 			
 		case sf::Event::MouseButtonPressed:

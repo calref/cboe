@@ -1671,23 +1671,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	if(chr2 == Key::LShift || chr2 == Key::LAlt || chr2 == Key::LControl || chr2 == Key::LSystem) return false;
 	if(chr2 == Key::RShift || chr2 == Key::RAlt || chr2 == Key::RControl || chr2 == Key::RSystem) return false;
 	
-	if(chr2 == Key::Up && !kb.isDownPressed()) {
-		if(kb.isLeftPressed()) chr2 = Key::Numpad7;
-		else if(kb.isRightPressed()) chr2 = Key::Numpad9;
-		else chr2 = Key::Numpad8;
-	} else if(chr2 == Key::Down && !kb.isUpPressed()) {
-		if(kb.isLeftPressed()) chr2 = Key::Numpad1;
-		else if(kb.isRightPressed()) chr2 = Key::Numpad3;
-		else chr2 = Key::Numpad2;
-	} else if(chr2 == Key::Left && !kb.isRightPressed()) {
-		if(kb.isUpPressed()) chr2 = Key::Numpad7;
-		else if(kb.isDownPressed()) chr2 = Key::Numpad1;
-		else chr2 = Key::Numpad4;
-	} else if(chr2 == Key::Right && !kb.isLeftPressed()) {
-		if(kb.isUpPressed()) chr2 = Key::Numpad9;
-		else if(kb.isDownPressed()) chr2 = Key::Numpad3;
-		else chr2 = Key::Numpad6;
-	} else if(chr2 == Key::Home) chr2 = Key::Numpad7;
+	if(chr2 == Key::Home) chr2 = Key::Numpad7;
 	else if(chr2 == Key::End) chr2 = Key::Numpad1;
 	else if(chr2 == Key::PageUp) chr2 = Key::Numpad9;
 	else if(chr2 == Key::PageDown) chr2 = Key::Numpad3;
