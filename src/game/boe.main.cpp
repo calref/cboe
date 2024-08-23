@@ -329,9 +329,8 @@ void init_boe(int argc, char* argv[]) {
 	init_tiling();
 	init_snd_tool();
 	
-	init_ui();
-
 	adjust_window_mode();
+	init_ui();
 	// If we don't do this now it'll flash white to start with
 	mainPtr.clear(sf::Color::Black);
 	mainPtr.display();
