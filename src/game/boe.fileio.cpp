@@ -343,7 +343,7 @@ std::vector<scen_header_type> build_scen_headers() {
 	
 	if(replaying){
 		Element& scen_headers_action = pop_next_action("build_scen_headers");
-		std::istringstream in(scen_headers_action.GetText());
+		std::istringstream in(scen_headers_action.GetText(false));
 		std::string scen_file;
 		while(std::getline(in, scen_file)){
 			scen_header_type scen_head;
