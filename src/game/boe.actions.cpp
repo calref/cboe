@@ -3265,3 +3265,13 @@ bool check_for_interrupt(){
 	}
 	return false;
 }
+
+void handle_new_pc_graphic() {
+	if(recording){
+		record_action("handle_new_pc_graphic", "");
+	}
+	short choice = char_select_pc(1,"New graphic for who?");
+	if(choice < 6)
+		pick_pc_graphic(choice,1,nullptr);
+	draw_terrain();
+}
