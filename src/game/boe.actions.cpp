@@ -2627,21 +2627,24 @@ void switch_pc(short which) {
 	}
 }
 
-void drop_pc(short which) {
-	std::string choice;
-	
-	choice = cChoiceDlog("delete-pc-confirm",{"yes","no"}).show();
-	if(choice == "no") {
-		add_string_to_buf("Delete PC: Cancelled.");
-		return;
+void drop_pc() {
+	if(!prime_time()) {
+		ASB("Finish what you're doing first.");
+		print_buf();
 	}
-	add_string_to_buf("Delete PC: OK.");
-	kill_pc(univ.party[which],eMainStatus::ABSENT);
-	for(short i = which; i < 5; i++)
-		univ.party.swap_pcs(i, i + 1);
-	univ.party[5].main_status = eMainStatus::ABSENT;
-	set_stat_window(ITEM_WIN_PC1);
-	put_pc_screen();
+	else {
+		int choice = char_select_pc(1,"Delete who?");
+		if(choice < 6) {
+			std::string confirm = cChoiceDlog("delete-pc-confirm",{"yes","no"}).show();
+			if(confirm == "no"){
+				add_string_to_buf("Delete PC: Cancelled.");
+			}else if(confirm == "yes"){
+				add_string_to_buf("Delete PC: OK.");
+				kill_pc(univ.party[choice],eMainStatus::ABSENT);
+				draw_terrain();
+			}
+		}
+	}
 }
 
 void handle_death() {

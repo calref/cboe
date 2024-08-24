@@ -24,7 +24,7 @@ void do_save(short mode);
 void increase_age();
 void handle_hunting();
 void switch_pc(short which);
-void drop_pc(short which);
+void drop_pc();
 void handle_death();
 void start_new_game(bool force = false);
 location get_cur_direction(location the_point);

@@ -689,19 +689,7 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 			
 		case eMenu::OPTIONS_DELETE_PC:
-			if(!prime_time()) {
-				ASB("Finish what you're doing first.");
-				print_buf();
-			}
-			else {
-				choice = char_select_pc(1,"Delete who?");
-				if(choice < 6) {
-					std::string confirm = cChoiceDlog("delete-pc-confirm",{"yes","no"}).show();
-					if(confirm == "yes")
-						kill_pc(univ.party[choice],eMainStatus::ABSENT);
-				}
-				draw_terrain();
-			}
+			drop_pc();
 			break;
 			
 			
