@@ -41,6 +41,7 @@ extern sf::RenderWindow mainPtr;
 extern short store_current_pc,current_ground;
 extern eGameMode store_pre_shop_mode,store_pre_talk_mode;
 extern std::queue<pending_special_type> special_queue;
+extern bool prime_time();
 
 extern bool map_visible;
 extern sf::RenderWindow mini_map;
@@ -1542,9 +1543,15 @@ bool is_door(location destination) {
 }
 
 
-void display_map(bool record) {
-	if(record && recording){
+void display_map() {
+	if(recording){
 		record_action("display_map", "");
+	}
+
+	if(!prime_time()) {
+		ASB("Finish what you're doing first.");
+		print_buf();
+		return;
 	}
 
 	// Show the automap if it's not already visible

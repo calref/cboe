@@ -1178,8 +1178,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 				break;
 				
 			case TOOLBAR_SCROLL: case TOOLBAR_MAP:
-				if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN)
-					display_map();
+				display_map();
 				break;
 				
 			case TOOLBAR_BAG: case TOOLBAR_HAND:
@@ -2077,8 +2076,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			show_dialog_action("help-debug");
 			break;
 		case 'a': // Show automap
-			if(overall_mode == MODE_TOWN || overall_mode == MODE_OUTDOORS)
-				display_map();
+			display_map();
 			break;
 			
 		case 'u': // Use space
@@ -3310,15 +3308,4 @@ void handle_rename_pc() {
 		pick_pc_name(choice,nullptr);
 	put_pc_screen();
 	put_item_screen(stat_window);
-}
-
-void handle_menu_automap() {
-	if(recording){
-		record_action("handle_menu_automap", "");
-	}
-	if(!prime_time()) {
-		ASB("Finish what you're doing first.");
-		print_buf();
-	} else display_map(false);
-	set_cursor(sword_curs);
 }
