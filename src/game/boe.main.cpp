@@ -338,6 +338,8 @@ static void replay_next_action() {
 		show_dialog_action(next_action.GetText());
 	}else if(t == "drop_pc"){
 		drop_pc();
+	}else if(t == "new_party"){
+		new_party();
 	}
 
 	advance_time(did_something, need_redraw, need_reprint);
@@ -651,20 +653,7 @@ void handle_menu_choice(eMenu item_hit) {
 			do_save(1);
 			break;
 		case eMenu::FILE_NEW:
-			if(overall_mode != MODE_STARTUP) {
-				std::string choice = cChoiceDlog("restart-game",{"okay","cancel"}).show();
-				if(choice == "cancel")
-					return;
-				for(short i = 0; i < 6; i++)
-					univ.party[i].main_status = eMainStatus::ABSENT;
-				party_in_memory = false;
-				reload_startup();
-				overall_mode = MODE_STARTUP;
-				draw_startup(0);
-			}
-			start_new_game();
-			draw_startup(0);
-			menu_activate();
+			new_party();
 			break;
 		case eMenu::FILE_ABORT:
 			if(overall_mode != MODE_STARTUP) {

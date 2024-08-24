@@ -2650,6 +2650,26 @@ void drop_pc() {
 	}
 }
 
+void new_party() {
+	if(recording){
+		record_action("new_party", "");
+	}
+	if(overall_mode != MODE_STARTUP) {
+		std::string choice = cChoiceDlog("restart-game",{"okay","cancel"}).show();
+		if(choice == "cancel")
+			return;
+		for(short i = 0; i < 6; i++)
+			univ.party[i].main_status = eMainStatus::ABSENT;
+		party_in_memory = false;
+		reload_startup();
+		overall_mode = MODE_STARTUP;
+		draw_startup(0);
+	}
+	start_new_game();
+	draw_startup(0);
+	menu_activate();
+}
+
 void handle_death() {
 	std::string choice;
 	
