@@ -387,6 +387,21 @@ using Key = sf::Keyboard::Key;
 std::map<Key,int> delayed_keys;
 const int ARROW_SIMUL_FRAMES = 3;
 
+// Terrain map coordinates to simulate a click for 8-directional movement/waiting
+const int SOUTHWEST = 1;
+const int SOUTH = 2;
+const int SOUTHEAST = 3;
+const int WEST = 4;
+const int EAST = 6;
+const int NORTHWEST = 7;
+const int NORTH = 8;
+const int NORTHEAST = 9;
+location terrain_click[10] = {
+	{150,185},{120,215},{150,215},{180,215},
+	{120,185},{150,185},{180,185},
+	{120,155},{150,155},{180,135}
+};
+
 void fire_delayed_key(Key code) {
 	bool isUpPressed = delayed_keys[Key::Up] > 0;
 	bool isDownPressed = delayed_keys[Key::Down] > 0;
@@ -397,35 +412,41 @@ void fire_delayed_key(Key code) {
 	delayed_keys[Key::Left] = 0;
 	delayed_keys[Key::Right] = 0;
 
-	Key new_code;
 	bool diagonal = false;
+	int dir = -1;
 
 	if(code == Key::Up && !isDownPressed) {
-		if(isLeftPressed){ new_code = Key::Numpad7; diagonal = true; }
-		else if(isRightPressed){ new_code = Key::Numpad9; diagonal = true; }
-		else new_code = Key::Numpad8;
+		if(isLeftPressed){ dir = NORTHWEST; diagonal = true; }
+		else if(isRightPressed){ dir = NORTHEAST; diagonal = true; }
+		else dir = NORTH;
 	} else if(code == Key::Down && !isUpPressed) {
-		if(isLeftPressed){ new_code = Key::Numpad1; diagonal = true; }
-		else if(isRightPressed){ new_code = Key::Numpad3; diagonal = true; }
-		else new_code = Key::Numpad2;
+		if(isLeftPressed){ dir = SOUTHWEST; diagonal = true; }
+		else if(isRightPressed){ dir = SOUTHEAST; diagonal = true; }
+		else dir = SOUTH;
 	} else if(code == Key::Left && !isRightPressed) {
-		if(isUpPressed){ new_code = Key::Numpad7; diagonal = true; }
-		else if(isDownPressed){ new_code = Key::Numpad1; diagonal = true; }
-		else new_code = Key::Numpad4;
+		if(isUpPressed){ dir = NORTHWEST; diagonal = true; }
+		else if(isDownPressed){ dir = SOUTHWEST; diagonal = true; }
+		else dir = WEST;
 	} else if(code == Key::Right && !isLeftPressed) {
-		if(isUpPressed){ new_code = Key::Numpad9; diagonal = true; }
-		else if(isDownPressed){ new_code = Key::Numpad3; diagonal = true; }
-		else new_code = Key::Numpad6;
+		if(isUpPressed){ dir = NORTHEAST; diagonal = true; }
+		else if(isDownPressed){ dir = SOUTHEAST; diagonal = true; }
+		else dir = EAST;
 	} else {
 		return;
 	}
 	if(diagonal){
 		mainPtr.setKeyRepeatEnabled(false);
+	}else{
+		mainPtr.setKeyRepeatEnabled(true);
 	}
 
-	sf::Event dummyEvent = {sf::Event::KeyPressed};
-	dummyEvent.key.code = new_code;
-	queue_fake_event(dummyEvent);
+	if(dir != -1){
+		sf::Event pass_event = {sf::Event::MouseButtonPressed};
+		location pass_point = mainPtr.mapCoordsToPixel(terrain_click[dir], mainView);
+		pass_event.mouseButton.x = pass_point.x;
+		pass_event.mouseButton.y = pass_point.y;
+		queue_fake_event(pass_event);
+	}
 }
 
 void handle_delayed_key(Key code) {
