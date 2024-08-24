@@ -658,6 +658,7 @@ void handle_menu_choice(eMenu item_hit) {
 			new_party();
 			break;
 		case eMenu::FILE_ABORT:
+			// TODO record and replay
 			if(overall_mode != MODE_STARTUP) {
 				std::string choice = cChoiceDlog("abort-game",{"okay","cancel"}).show();
 				if (choice=="cancel") return;
@@ -675,6 +676,7 @@ void handle_menu_choice(eMenu item_hit) {
 			handle_quit_event();
 			break;
 		case eMenu::OPTIONS_PC_GRAPHIC:
+			// TODO record and replay
 			choice = char_select_pc(1,"New graphic for who?");
 			if(choice < 6)
 				pick_pc_graphic(choice,1,nullptr);
@@ -687,6 +689,7 @@ void handle_menu_choice(eMenu item_hit) {
 			
 			
 		case eMenu::OPTIONS_RENAME_PC:
+			// TODO record and replay
 			choice = char_select_pc(1,"Rename who?");
 			if(choice < 6)
 				pick_pc_name(choice,nullptr);
@@ -696,6 +699,7 @@ void handle_menu_choice(eMenu item_hit) {
 			
 			
 		case eMenu::OPTIONS_NEW_PC:
+			// TODO record and replay
 			if(!(is_town())) {
 				add_string_to_buf("Add PC: Town mode only.");
 				print_buf();
@@ -718,9 +722,11 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 			
 		case eMenu::OPTIONS_JOURNAL:
+			// TODO record and replay
 			journal();
 			break;
 		case eMenu::OPTIONS_TALK_NOTES:
+			// TODO record and replay
 			if(overall_mode == MODE_TALKING) {
 				ASB("Talking notes: Can't read while talking.");
 				print_buf();
@@ -729,9 +735,11 @@ void handle_menu_choice(eMenu item_hit) {
 			talk_notes();
 			break;
 		case eMenu::OPTIONS_ENCOUNTER_NOTES:
+			// TODO record and replay
 			adventure_notes();
 			break;
 		case eMenu::OPTIONS_STATS:
+			// TODO record and replay
 			if(overall_mode != MODE_STARTUP)
 				print_party_stats();
 			break;
@@ -757,34 +765,43 @@ void handle_menu_choice(eMenu item_hit) {
 			dialogToShow = "about-boe";
 			break;
 		case eMenu::LIBRARY_MAGE:
+			// TODO record and replay
 			display_spells(eSkill::MAGE_SPELLS,100,0);
 			break;
 		case eMenu::LIBRARY_PRIEST:
+			// TODO record and replay
 			display_spells(eSkill::PRIEST_SPELLS,100,0);
 			break;
 		case eMenu::LIBRARY_SKILLS:
+			// TODO record and replay
 			display_skills(eSkill::INVALID,0);
 			break;
 		case eMenu::LIBRARY_ALCHEMY:
+			// TODO record and replay
 			// TODO: Create a dedicated dialog for alchemy info
 			display_alchemy();
 			break;
 		case eMenu::LIBRARY_TIPS:
+			// TODO record and replay
 			tip_of_day();
 			break;
 		case eMenu::LIBRARY_INTRO:
+			// TODO record and replay
 			showWelcome();
 			break;
 		case eMenu::ACTIONS_ALCHEMY:
+			// TODO record and replay
 			dummyEvent.key.code = sf::Keyboard::A;
 			dummyEvent.key.shift = true;
 			queue_fake_event(dummyEvent);
 			break;
 		case eMenu::ACTIONS_WAIT:
+			// TODO record and replay
 			dummyEvent.key.code = sf::Keyboard::W;
 			queue_fake_event(dummyEvent);
 			break;
 		case eMenu::ACTIONS_AUTOMAP:
+			// TODO record and replay
 			if(!prime_time()) {
 				ASB("Finish what you're doing first.");
 				print_buf();
@@ -792,15 +809,18 @@ void handle_menu_choice(eMenu item_hit) {
 			set_cursor(sword_curs);
 			break;
 		case eMenu::HELP_TOC:
+			// TODO record and replay
 			if(fs::is_directory(progDir/"doc"))
 				launchURL("file://" + (progDir/"doc/game/Contents.html").string());
 			else launchURL("http://openboe.com/docs/game/Contents.html");
 			break;
+		// TODO record and replay
 		case eMenu::ABOUT_MAGE:
 		case eMenu::ABOUT_PRIEST:
 			give_help(209,0);
 			break;
 		case eMenu::ABOUT_MONSTERS:
+			// TODO record and replay
 			give_help(212,0);
 			break;
 	}
