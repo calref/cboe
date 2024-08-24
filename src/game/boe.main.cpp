@@ -329,6 +329,11 @@ static void replay_next_action() {
 		handle_give_item(item_hit, did_something, need_redraw);
 	}else if(t == "close_window"){
 		handle_quit_event();
+	}else if(t == "arrow_button_click"){
+		rectangle button_rect;
+		std::istringstream sstr(next_action.GetText());
+		sstr >> button_rect;
+		arrow_button_click(button_rect);
 	}
 
 	advance_time(did_something, need_redraw, need_reprint);
