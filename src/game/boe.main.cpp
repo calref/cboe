@@ -387,19 +387,17 @@ using Key = sf::Keyboard::Key;
 std::map<Key,int> delayed_keys;
 const int ARROW_SIMUL_FRAMES = 3;
 
-// Terrain map coordinates to simulate a click for 8-directional movement/waiting
-const int SOUTHWEST = 1;
-const int SOUTH = 2;
-const int SOUTHEAST = 3;
-const int WEST = 4;
-const int EAST = 6;
-const int NORTHWEST = 7;
-const int NORTH = 8;
-const int NORTHEAST = 9;
+// Terrain map coordinates to simulate a click for 8-directional movement/waiting,
+// ordered to correspond with eDirection
 location terrain_click[10] = {
-	{150,185},{120,215},{150,215},{180,215},
-	{120,185},{150,185},{180,185},
-	{120,155},{150,155},{180,135}
+	{150,155}, // north
+	{180,135}, // northeast
+	{180,185}, // east
+	{180,215}, // southeast
+	{150,215}, // south
+	{120,215}, // southwest
+	{120,185}, // west
+	{120,155}, // northwest
 };
 
 void fire_delayed_key(Key code) {
@@ -416,21 +414,21 @@ void fire_delayed_key(Key code) {
 	int dir = -1;
 
 	if(code == Key::Up && !isDownPressed) {
-		if(isLeftPressed){ dir = NORTHWEST; diagonal = true; }
-		else if(isRightPressed){ dir = NORTHEAST; diagonal = true; }
-		else dir = NORTH;
+		if(isLeftPressed){ dir = DIR_NW; diagonal = true; }
+		else if(isRightPressed){ dir = DIR_NE; diagonal = true; }
+		else dir = DIR_N;
 	} else if(code == Key::Down && !isUpPressed) {
-		if(isLeftPressed){ dir = SOUTHWEST; diagonal = true; }
-		else if(isRightPressed){ dir = SOUTHEAST; diagonal = true; }
-		else dir = SOUTH;
+		if(isLeftPressed){ dir = DIR_SW; diagonal = true; }
+		else if(isRightPressed){ dir = DIR_SE; diagonal = true; }
+		else dir = DIR_S;
 	} else if(code == Key::Left && !isRightPressed) {
-		if(isUpPressed){ dir = NORTHWEST; diagonal = true; }
-		else if(isDownPressed){ dir = SOUTHWEST; diagonal = true; }
-		else dir = WEST;
+		if(isUpPressed){ dir = DIR_NW; diagonal = true; }
+		else if(isDownPressed){ dir = DIR_SW; diagonal = true; }
+		else dir = DIR_W;
 	} else if(code == Key::Right && !isLeftPressed) {
-		if(isUpPressed){ dir = NORTHEAST; diagonal = true; }
-		else if(isDownPressed){ dir = SOUTHEAST; diagonal = true; }
-		else dir = EAST;
+		if(isUpPressed){ dir = DIR_NE; diagonal = true; }
+		else if(isDownPressed){ dir = DIR_SE; diagonal = true; }
+		else dir = DIR_E;
 	} else {
 		return;
 	}
