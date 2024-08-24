@@ -494,6 +494,9 @@ static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKey
 }
 
 void adventure_notes() {
+	if(recording){
+		record_action("adventure_notes", "");
+	}
 	store_num_i = 0;
 	store_num_i = univ.party.special_notes.size();
 	store_page_on = 0;
