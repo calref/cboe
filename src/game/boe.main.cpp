@@ -380,7 +380,7 @@ static void replay_next_action() {
 		sstr >> enum_v;
 
 		eSkill force_skill = static_cast<eSkill>(enum_v);
-		display_skills(force_skill, 0);
+		display_skills(force_skill, nullptr);
 	}else if(t == "tip_of_day"){
 		tip_of_day();
 	}else if(t == "showWelcome"){
@@ -711,7 +711,7 @@ void menu_give_help(short help1){
 		sstr << help1;
 		record_action("menu_give_help", sstr.str());
 	}
-	give_help(help1, 0);
+	give_help(help1, nullptr);
 }
 
 void handle_menu_choice(eMenu item_hit) {
@@ -794,13 +794,13 @@ void handle_menu_choice(eMenu item_hit) {
 			dialogToShow = "about-boe";
 			break;
 		case eMenu::LIBRARY_MAGE:
-			display_spells(eSkill::MAGE_SPELLS,100,0);
+			display_spells(eSkill::MAGE_SPELLS,100,nullptr);
 			break;
 		case eMenu::LIBRARY_PRIEST:
-			display_spells(eSkill::PRIEST_SPELLS,100,0);
+			display_spells(eSkill::PRIEST_SPELLS,100,nullptr);
 			break;
 		case eMenu::LIBRARY_SKILLS:
-			display_skills(eSkill::INVALID,0);
+			display_skills(eSkill::INVALID,nullptr);
 			break;
 		case eMenu::LIBRARY_ALCHEMY:
 			// TODO: Create a dedicated dialog for alchemy info
