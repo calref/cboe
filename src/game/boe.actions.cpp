@@ -2280,6 +2280,21 @@ void do_save(short mode) {
 	redraw_screen(REFRESH_TEXT);
 }
 
+void do_abort() {
+	if(recording){
+		record_action("do_abort", "");
+	}
+	if(overall_mode != MODE_STARTUP) {
+		std::string choice = cChoiceDlog("abort-game",{"okay","cancel"}).show();
+		if (choice=="cancel") return;
+		reload_startup();
+		overall_mode = MODE_STARTUP;
+	}
+	party_in_memory = false;
+	draw_startup(0);
+	menu_activate();
+}
+
 void do_rest(long length, int hp_restore, int mp_restore) {
 	unsigned long age_before = univ.party.age;
 	univ.party.age += length;

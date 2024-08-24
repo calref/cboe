@@ -21,6 +21,7 @@ bool handle_scroll(const sf::Event& event);
 void do_load();
 void post_load();
 void do_save(short mode);
+void do_abort();
 void increase_age();
 void handle_hunting();
 void switch_pc(short which);
