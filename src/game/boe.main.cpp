@@ -825,8 +825,7 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 	}
 	if(!dialogToShow.empty()) {
-		cChoiceDlog dlog(dialogToShow);
-		dlog.show();
+		show_dialog_action(dialogToShow);
 	}
 }
 
