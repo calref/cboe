@@ -342,8 +342,12 @@ static void replay_next_action() {
 		new_party();
 	}else if(t == "pick_preferences"){
 		pick_preferences();
+	}else if(t == "do_abort"){
+		do_abort();
 	}
 
+	// TODO some of these actions shouldn't call advance_time(). They should return
+	// from the function early
 	advance_time(did_something, need_redraw, need_reprint);
 }
 
@@ -658,16 +662,7 @@ void handle_menu_choice(eMenu item_hit) {
 			new_party();
 			break;
 		case eMenu::FILE_ABORT:
-			// TODO record and replay
-			if(overall_mode != MODE_STARTUP) {
-				std::string choice = cChoiceDlog("abort-game",{"okay","cancel"}).show();
-				if (choice=="cancel") return;
-				reload_startup();
-				overall_mode = MODE_STARTUP;
-			}
-			party_in_memory = false;
-			draw_startup(0);
-			menu_activate();
+			do_abort();
 			break;
 		case eMenu::PREFS:
 			pick_preferences();
