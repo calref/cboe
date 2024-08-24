@@ -29,6 +29,7 @@
 #include "view_dialogs.hpp"
 #include "tools/cursors.hpp"
 #include "utility.hpp"
+#include "replay.hpp"
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
 
@@ -604,6 +605,9 @@ static void fill_journal(cDialog& me) {
 }
 
 void journal() {
+	if(recording){
+		record_action("journal", "");
+	}
 	if(univ.party.journal.empty()) {
 		ASB("Nothing in your events journal.");
 		print_buf();
