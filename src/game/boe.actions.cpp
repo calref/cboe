@@ -2284,7 +2284,7 @@ void do_abort() {
 	if(recording){
 		record_action("do_abort", "");
 	}
-	if(overall_mode != MODE_STARTUP) {
+	if(party_in_memory) {
 		std::string choice = cChoiceDlog("abort-game",{"okay","cancel"}).show();
 		if (choice=="cancel") return;
 		reload_startup();
