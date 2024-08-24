@@ -381,6 +381,8 @@ static void replay_next_action() {
 		display_skills(force_skill, 0);
 	}else if(t == "tip_of_day"){
 		tip_of_day();
+	}else if(t == "showWelcome"){
+		showWelcome();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
@@ -447,6 +449,9 @@ void init_boe(int argc, char* argv[]) {
 }
 
 void showWelcome() {
+	if(recording){
+		record_action("showWelcome", "");
+	}
 	cChoiceDlog welcome("welcome");
 	welcome->attachClickHandlers([](cDialog& self, std::string clicked, eKeyMod) {
 		launchURL(self[clicked].getText());
@@ -775,7 +780,6 @@ void handle_menu_choice(eMenu item_hit) {
 			tip_of_day();
 			break;
 		case eMenu::LIBRARY_INTRO:
-			// TODO record and replay
 			showWelcome();
 			break;
 		case eMenu::ACTIONS_ALCHEMY:
