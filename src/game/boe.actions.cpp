@@ -2665,6 +2665,31 @@ void handle_drop_pc() {
 	}
 }
 
+void handle_new_pc() {
+	if(recording){
+		record_action("handle_new_pc", "");
+	}
+	if(!(is_town())) {
+		add_string_to_buf("Add PC: Town mode only.");
+		print_buf();
+		return;
+	}
+	if(univ.party.free_space() == 6) {
+		ASB("Add PC: You already have 6 PCs.");
+		print_buf();
+		return;
+	}
+	if(univ.town->has_tavern) {
+		give_help(56,0);
+		create_pc(6,nullptr);
+	} else {
+		add_string_to_buf("Add PC: You cannot add new characters in this town. Try in the town you started in.", 2);
+	}
+	print_buf();
+	put_pc_screen();
+	put_item_screen(stat_window);
+}
+
 void new_party() {
 	if(recording){
 		record_action("new_party", "");
