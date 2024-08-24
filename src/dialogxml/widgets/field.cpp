@@ -17,6 +17,7 @@
 #include "tools/keymods.hpp"
 #include "tools/winutil.hpp"
 #include "tools/cursors.hpp"
+#include "replay.hpp"
 
 bool cTextField::callHandler(event_fcn<EVT_DEFOCUS>::type onFocus, cDialog& me, std::string id) {
 	if(field_type != FLD_TEXT) {
@@ -396,6 +397,9 @@ static cKey divineFunction(cKey key) {
 }
 
 void cTextField::handleInput(cKey key) {
+	if(recording){
+		record_field_input(key);
+	}
 	changeMade = true;
 	bool select = mod_contains(key.mod, mod_shift);
 	bool haveSelection = insertionPoint != selectionPoint;

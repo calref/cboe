@@ -543,6 +543,10 @@ void cDialog::handle_events() {
 			if(info["id"].empty()) continue;
 			eKeyMod mods = static_cast<eKeyMod>(std::stoi(info["mods"]));
 			controls[info["id"]]->triggerClickHandler(*this, info["id"], mods);
+		}else if(replaying && has_next_action() && next_action_type() == "field_input"){
+			Element& next_action = pop_next_action();
+			cKey key = key_from_action(next_action);
+			dynamic_cast<cTextField&>(getControl(currentFocus)).handleInput(key);
 		}else{
 			while(win.pollEvent(currentEvent)) handle_one_event(currentEvent, fps_limiter);
 		}

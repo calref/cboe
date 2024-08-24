@@ -11,6 +11,10 @@
 #include <boost/optional.hpp>
 #include <cppcodec/base64_rfc4648.hpp>
 #include "tools/framerate_limiter.hpp"
+#include <locale>
+#include <codecvt>
+#include <string>
+
 using base64 = cppcodec::base64_rfc4648;
 
 bool recording = false;
@@ -89,6 +93,32 @@ void record_action(std::string action_type, std::map<std::string,std::string> in
 	log_document.SaveFile(log_file);
 }
 
+void record_field_input(cKey key) {
+	std::map<std::string,std::string> info;
+	std::ostringstream sstr;
+
+	sstr << key.spec;
+	info["spec"] = sstr.str();
+
+	sstr.str("");
+	if(key.spec){
+		sstr << key.k;
+		info["k"] = sstr.str();
+	}else{
+		std::wostringstream wstr;
+		wstr << key.c;
+		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+		std::string c = converter.to_bytes(wstr.str());
+		info["c"] = c;
+	}
+
+	sstr.str("");
+	sstr << key.mod;
+	info["mod"] = sstr.str();
+
+	record_action("field_input", info);
+}
+
 bool has_next_action() {
 	return next_action != nullptr;
 }
@@ -161,4 +191,30 @@ short short_from_action(Element& action) {
 	std::istringstream sstr(action.GetText());
 	sstr >> s;
 	return s;
+}
+
+cKey key_from_action(Element& action) {
+	auto info = info_from_action(action);
+	cKey key;
+	int enum_v;
+
+	std::istringstream sstr(info["spec"]);
+	sstr >> key.spec;
+
+	if(key.spec){
+		sstr.str(info["k"]);
+		sstr >> enum_v;
+		key.k = static_cast<eSpecKey>(enum_v);
+	}else{
+		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+		std::wstring wstr = converter.from_bytes(info["c"]);
+		std::wistringstream wsstr(wstr);
+		wsstr >> key.c;
+	}
+
+	sstr.str(info["mod"]);
+	sstr >> enum_v;
+	key.mod = static_cast<eKeyMod>(enum_v);
+
+	return key;
 }
