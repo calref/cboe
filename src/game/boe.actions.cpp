@@ -2644,7 +2644,7 @@ void switch_pc(short which) {
 
 void handle_drop_pc() {
 	if(recording){
-		record_action("drop_pc", "");
+		record_action("handle_drop_pc", "");
 	}
 	if(!prime_time()) {
 		ASB("Finish what you're doing first.");
