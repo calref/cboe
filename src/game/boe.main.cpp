@@ -383,6 +383,8 @@ static void replay_next_action() {
 		tip_of_day();
 	}else if(t == "showWelcome"){
 		showWelcome();
+	}else if(t == "handle_menu_automap"){
+		handle_menu_automap();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
@@ -794,12 +796,7 @@ void handle_menu_choice(eMenu item_hit) {
 			queue_fake_event(dummyEvent);
 			break;
 		case eMenu::ACTIONS_AUTOMAP:
-			// TODO record and replay
-			if(!prime_time()) {
-				ASB("Finish what you're doing first.");
-				print_buf();
-			} else display_map();
-			set_cursor(sword_curs);
+			handle_menu_automap();
 			break;
 		case eMenu::HELP_TOC:
 			// TODO record and replay
