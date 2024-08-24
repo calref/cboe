@@ -385,8 +385,8 @@ static void replay_next_action() {
 		tip_of_day();
 	}else if(t == "showWelcome"){
 		showWelcome();
-	}else if(t == "handle_menu_automap"){
-		handle_menu_automap();
+	}else if(t == "display_map"){
+		display_map();
 	}else if(t == "handle_help_toc"){
 		handle_help_toc();
 	}else if(t == "menu_give_help"){
@@ -824,7 +824,7 @@ void handle_menu_choice(eMenu item_hit) {
 			queue_fake_event(dummyEvent);
 			break;
 		case eMenu::ACTIONS_AUTOMAP:
-			handle_menu_automap();
+			display_map();
 			break;
 		case eMenu::HELP_TOC:
 			handle_help_toc();
