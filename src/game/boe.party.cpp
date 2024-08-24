@@ -225,7 +225,14 @@ bool create_pc(short spot,cDialog* parent) {
 	if(!still_ok)
 		return false;
 	
+	// TODO this can return false if the player cancels the choice.
+	// Currently doing so does not stop the PC from being created.
+	// Which it probably shouldn't, because the player will have
+	// already invested some time assigning race/abilities/skill points.
+	// Probably better to just remove the Cancel button from the PC
+	// graphic dialog in this case.
 	pick_pc_graphic(spot,0,parent);
+
 	pick_pc_name(spot,parent);
 	
 	univ.party[spot].main_status = eMainStatus::ALIVE;
