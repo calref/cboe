@@ -97,7 +97,7 @@ void record_field_input(cKey key) {
 	std::map<std::string,std::string> info;
 	std::ostringstream sstr;
 
-	sstr << key.spec;
+	sstr << std::boolalpha << key.spec;
 	info["spec"] = sstr.str();
 
 	sstr.str("");
@@ -199,7 +199,7 @@ cKey key_from_action(Element& action) {
 	int enum_v;
 
 	std::istringstream sstr(info["spec"]);
-	sstr >> key.spec;
+	sstr >> std::boolalpha >> key.spec;
 
 	if(key.spec){
 		sstr.str(info["k"]);
