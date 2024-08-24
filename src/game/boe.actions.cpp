@@ -237,6 +237,14 @@ void init_screen_locs() {
 	pc_help_button.right = 267;
 }
 
+// Some actions directly show a dialog. This handles that, and records it.
+void show_dialog_action(std::string xml_file) {
+	if(recording){
+		record_action("show_dialog_action", xml_file);
+	}
+	cChoiceDlog(xml_file).show();
+}
+
 bool prime_time() {
 	return overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT;
 }
@@ -1343,7 +1351,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 			rectangle help_button = pc_help_button;
 			help_button.offset(pc_win_ul);
 			arrow_button_click(help_button);
-			cChoiceDlog("help-party").show();
+			show_dialog_action("help-party");
 		}
 		for(int i = 0; i < 6; i++)
 			for(auto j : pc_buttons[i].keys())
@@ -1415,7 +1423,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 						set_stat_window(ITEM_WIN_QUESTS);
 						break;
 					case 8: // help
-						cChoiceDlog("help-inventory").show();
+						show_dialog_action("help-inventory");
 						break;
 					default:
 						handle_switch_pc_items(i, need_redraw);
@@ -1778,9 +1786,9 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 				give_help(205,6);
 				break;
 			}
-			if(is_out()) cChoiceDlog("help-outdoor").show();
-			if(is_town()) cChoiceDlog("help-town").show();
-			if(is_combat()) cChoiceDlog("help-combat").show();
+			if(is_out()) show_dialog_action("help-outdoor");
+			if(is_town()) show_dialog_action("help-town");
+			if(is_combat()) show_dialog_action("help-combat");
 			break;
 			
 		case '1': case '2': case '3': case '4': case '5': case '6':
@@ -2066,7 +2074,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			break;
 		case '/':
 			if(!univ.debug_mode) break;
-			cChoiceDlog("help-debug").show();
+			show_dialog_action("help-debug");
 			break;
 		case 'a': // Show automap
 			if(overall_mode == MODE_TOWN || overall_mode == MODE_OUTDOORS)
