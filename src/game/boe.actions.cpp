@@ -3319,6 +3319,6 @@ void handle_menu_automap() {
 	if(!prime_time()) {
 		ASB("Finish what you're doing first.");
 		print_buf();
-	} else display_map();
+	} else display_map(false);
 	set_cursor(sword_curs);
 }

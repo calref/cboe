@@ -31,6 +31,7 @@
 #include "tools/winutil.hpp"
 #include "fileio/resmgr/res_image.hpp"
 #include "tools/cursors.hpp"
+#include "replay.hpp"
 
 extern short store_spell_target,which_combat_type,combat_active_pc;
 extern eGameMode overall_mode;
@@ -1541,7 +1542,11 @@ bool is_door(location destination) {
 }
 
 
-void display_map() {
+void display_map(bool record) {
+	if(record && recording){
+		record_action("display_map", "");
+	}
+
 	// Show the automap if it's not already visible
 	if(map_visible) return;
 	give_help(62,0);

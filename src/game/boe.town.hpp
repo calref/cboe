@@ -29,6 +29,6 @@ bool does_location_have_special(cOutdoors& sector, location loc, eTerSpec type);
 void clear_map();
 void draw_map(bool need_refresh);
 bool is_door(location destination);
-void display_map();
+void display_map(bool record = true);
 void check_done();
 bool quadrant_legal(short i, short j) ;
