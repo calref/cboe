@@ -40,6 +40,7 @@
 #include "scenario/shop.hpp"
 #include "tools/cursors.hpp"
 #include "tools/enum_map.hpp"
+#include "replay.hpp"
 
 extern eItemWinMode stat_window;
 extern eGameMode overall_mode;
@@ -1216,7 +1217,11 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 	return true;
 }
 
-void pick_preferences() {
+void pick_preferences(bool record) {
+	if(record && recording){
+		record_action("pick_preferences", "");
+	}
+
 	set_cursor(sword_curs);
 	
 	cDialog prefsDlog(*ResMgr::dialogs.get("preferences"));
