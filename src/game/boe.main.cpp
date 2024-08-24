@@ -352,6 +352,8 @@ static void replay_next_action() {
 		handle_new_pc();
 	}else if(t == "journal"){
 		journal();
+	}else if(t == "talk_notes"){
+		talk_notes();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
@@ -700,12 +702,6 @@ void handle_menu_choice(eMenu item_hit) {
 			journal();
 			break;
 		case eMenu::OPTIONS_TALK_NOTES:
-			// TODO record and replay
-			if(overall_mode == MODE_TALKING) {
-				ASB("Talking notes: Can't read while talking.");
-				print_buf();
-				return;
-			}
 			talk_notes();
 			break;
 		case eMenu::OPTIONS_ENCOUNTER_NOTES:
