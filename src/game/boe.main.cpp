@@ -336,6 +336,8 @@ static void replay_next_action() {
 		arrow_button_click(button_rect);
 	}else if(t == "show_dialog_action"){
 		show_dialog_action(next_action.GetText());
+	}else if(t == "drop_pc"){
+		drop_pc();
 	}
 
 	advance_time(did_something, need_redraw, need_reprint);
