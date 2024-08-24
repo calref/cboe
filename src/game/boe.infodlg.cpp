@@ -50,6 +50,7 @@ location source_locs[6] = {loc(2,9),loc(0,6),loc(3,6),loc(3,4),loc(6,2),loc(0,0)
 extern location dest_locs[40] ;
 extern char *alch_names[];
 extern cUniverse univ;
+extern eGameMode overall_mode;
 
 // Displaying string vars
 short store_str1a;
@@ -554,6 +555,14 @@ static bool talk_notes_event_filter(cDialog& me, std::string item_hit, eKeyMod) 
 }
 
 void talk_notes() {
+	if(recording){
+		record_action("talk_notes", "");
+	}
+	if(overall_mode == MODE_TALKING) {
+		ASB("Talking notes: Can't read while talking.");
+		print_buf();
+		return;
+	}
 	store_num_i = univ.party.talk_save.size();
 	store_page_on = 0;
 	if(store_num_i == 0) {
