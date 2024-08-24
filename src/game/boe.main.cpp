@@ -489,7 +489,7 @@ location terrain_click[8] = {
 	{120,155}, // northwest
 };
 
-void fire_delayed_key(Key code) {
+static void fire_delayed_key(Key code) {
 	bool isUpPressed = delayed_keys[Key::Up] > 0;
 	bool isDownPressed = delayed_keys[Key::Down] > 0;
 	bool isLeftPressed = delayed_keys[Key::Left] > 0;
@@ -536,7 +536,7 @@ void fire_delayed_key(Key code) {
 	}
 }
 
-void handle_delayed_key(Key code) {
+static void handle_delayed_key(Key code) {
 	// a keypress of this code is already delayed, so push it through:
 	if(delayed_keys[code] > 0)
 		fire_delayed_key(code);
@@ -544,7 +544,7 @@ void handle_delayed_key(Key code) {
 	delayed_keys[code] = ARROW_SIMUL_FRAMES;
 }
 
-void update_delayed_keys() {
+static void update_delayed_keys() {
 	for(auto elem : delayed_keys){
 		Key code = elem.first;
 		int countdown = elem.second;
@@ -816,7 +816,6 @@ void menu_give_help(short help1){
 void handle_menu_choice(eMenu item_hit) {
 	std::string dialogToShow;
 	sf::Event dummyEvent = {sf::Event::KeyPressed};
-	short choice;
 	
 	switch(item_hit) {
 		case eMenu::NONE: break;

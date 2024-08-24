@@ -129,7 +129,7 @@ bool handle_startup_press(location the_point) {
 	return false;
 }
 
-void handle_splash_events(cFramerateLimiter& fps_limiter) {
+static void handle_splash_events(cFramerateLimiter& fps_limiter) {
 	sf::Event event;
 	while(mainPtr.pollEvent(event)) {
 		if(event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)

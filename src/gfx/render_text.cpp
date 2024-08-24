@@ -93,7 +93,6 @@ break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextS
 	break_info_t break_info;
 	if(str.empty()) return break_info; // Nothing to do!
 
-	short line_height = style.lineHeight;
 	sf::Text str_to_draw;
 	style.applyTo(str_to_draw);
 	short str_len = str.length();
