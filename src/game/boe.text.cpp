@@ -22,6 +22,7 @@ const int TEXT_BUF_LEN = 70;
 #include "fileio/resmgr/res_font.hpp"
 #include "spell.hpp"
 #include "tools/enum_map.hpp"
+#include "replay.hpp"
 
 typedef struct {
 	char line[50];
@@ -654,6 +655,10 @@ void draw_pc_effects(short pc) {
 
 
 void print_party_stats() {
+	if(recording){
+		record_action("print_party_stats", "");
+	}
+	if(overall_mode == MODE_STARTUP) return;
 	add_string_to_buf("PARTY STATS:");
 	add_string_to_buf("  Number of kills: " + std::to_string(univ.party.total_m_killed));
 	if((is_town()) || ((is_combat()) && (which_combat_type == 1))) {

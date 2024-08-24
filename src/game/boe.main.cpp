@@ -356,6 +356,8 @@ static void replay_next_action() {
 		talk_notes();
 	}else if(t == "adventure_notes"){
 		adventure_notes();
+	}else if(t == "print_party_stats"){
+		print_party_stats();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
@@ -710,9 +712,7 @@ void handle_menu_choice(eMenu item_hit) {
 			adventure_notes();
 			break;
 		case eMenu::OPTIONS_STATS:
-			// TODO record and replay
-			if(overall_mode != MODE_STARTUP)
-				print_party_stats();
+			print_party_stats();
 			break;
 		case eMenu::HELP_OUT:
 			dialogToShow = "help-outdoor";
