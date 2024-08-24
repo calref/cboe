@@ -1149,7 +1149,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 
 	// Otherwise they're in a terrain view mode
 	location cur_loc = is_out() ? univ.party.out_loc : center;
-	auto button_hit = UI::toolbar.button_hit(mainPtr, the_point);
+	auto button_hit = UI::toolbar.button_hit(mainPtr, the_point, fps_limiter);
 
 	// MARK: Then, handle a button being hit.
 		switch(button_hit) {

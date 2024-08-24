@@ -49,7 +49,7 @@ static const std::vector<eToolbarButton> fight_buttons = {TOOLBAR_MAGE, TOOLBAR_
 // Source rects for each button type in buttons.png.
 static const rectangle btn_src_rects[] = {{0,0,38,38}, {0,38,19,76}, {19,38,38,76}};
 
-eToolbarButton cToolbar::button_hit(sf::RenderWindow& win, location click) {
+eToolbarButton cToolbar::button_hit(sf::RenderWindow& win, location click, cFramerateLimiter& fps_limiter) {
 	rectangle dest_rect = win_to_rects[WINRECT_ACTBTNS];
 	click.x -= dest_rect.left;
 	click.y -= dest_rect.top;
@@ -79,6 +79,7 @@ eToolbarButton cToolbar::button_hit(sf::RenderWindow& win, location click) {
 							active = toolbar[i].bounds.contains(toPos) ? i : -1;
 						}
 					}
+					fps_limiter.frame_finished();
 				}
 				play_sound(37, time_in_ticks(5));
 				redraw_screen(REFRESH_NONE);
