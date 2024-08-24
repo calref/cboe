@@ -340,6 +340,8 @@ static void replay_next_action() {
 		drop_pc();
 	}else if(t == "new_party"){
 		new_party();
+	}else if(t == "pick_preferences"){
+		pick_preferences();
 	}
 
 	advance_time(did_something, need_redraw, need_reprint);
