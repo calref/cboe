@@ -1451,6 +1451,9 @@ static bool tip_of_day_event_filter(cDialog& me, std::string item_hit, short& pa
 }
 
 void tip_of_day() {
+	if(recording){
+		record_action("tip_of_day", "");
+	}
 	using namespace std::placeholders;
 	
 	short page = get_ran(1,0,ResMgr::strings.get("tips")->size() - 51);
