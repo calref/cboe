@@ -3311,3 +3311,14 @@ void handle_rename_pc() {
 	put_pc_screen();
 	put_item_screen(stat_window);
 }
+
+void handle_menu_automap() {
+	if(recording){
+		record_action("handle_menu_automap", "");
+	}
+	if(!prime_time()) {
+		ASB("Finish what you're doing first.");
+		print_buf();
+	} else display_map();
+	set_cursor(sword_curs);
+}
