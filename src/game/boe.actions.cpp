@@ -3275,3 +3275,14 @@ void handle_new_pc_graphic() {
 		pick_pc_graphic(choice,1,nullptr);
 	draw_terrain();
 }
+
+void handle_rename_pc() {
+	if(recording){
+		record_action("handle_rename_pc", "");
+	}
+	short choice = char_select_pc(1,"Rename who?");
+	if(choice < 6)
+		pick_pc_name(choice,nullptr);
+	put_pc_screen();
+	put_item_screen(stat_window);
+}
