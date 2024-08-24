@@ -374,7 +374,7 @@ static void replay_next_action() {
 		sstr.str(info["force_spell"]);
 		sstr >> force_spell;
 
-		display_spells(mode, force_spell, 0);
+		display_spells(mode, force_spell, nullptr);
 	}else if(t == "display_skills"){
 		std::istringstream sstr(next_action.GetText());
 		sstr >> enum_v;
