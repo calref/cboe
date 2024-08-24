@@ -348,6 +348,8 @@ static void replay_next_action() {
 		handle_new_pc_graphic();
 	}else if(t == "handle_rename_pc"){
 		handle_rename_pc();
+	}else if (t == "handle_new_pc"){
+		handle_new_pc();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
@@ -689,26 +691,7 @@ void handle_menu_choice(eMenu item_hit) {
 			
 			
 		case eMenu::OPTIONS_NEW_PC:
-			// TODO record and replay
-			if(!(is_town())) {
-				add_string_to_buf("Add PC: Town mode only.");
-				print_buf();
-				break;
-			}
-			if(univ.party.free_space() == 6) {
-				ASB("Add PC: You already have 6 PCs.");
-				print_buf();
-				break;
-			}
-			if(univ.town->has_tavern) {
-				give_help(56,0);
-				create_pc(6,nullptr);
-			} else {
-				add_string_to_buf("Add PC: You cannot add new characters in this town. Try in the town you started in.", 2);
-			}
-			print_buf();
-			put_pc_screen();
-			put_item_screen(stat_window);
+			handle_new_pc();
 			break;
 			
 		case eMenu::OPTIONS_JOURNAL:
