@@ -354,6 +354,8 @@ static void replay_next_action() {
 		journal();
 	}else if(t == "talk_notes"){
 		talk_notes();
+	}else if(t == "adventure_notes"){
+		adventure_notes();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
@@ -705,7 +707,6 @@ void handle_menu_choice(eMenu item_hit) {
 			talk_notes();
 			break;
 		case eMenu::OPTIONS_ENCOUNTER_NOTES:
-			// TODO record and replay
 			adventure_notes();
 			break;
 		case eMenu::OPTIONS_STATS:
