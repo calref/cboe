@@ -379,6 +379,8 @@ static void replay_next_action() {
 
 		eSkill force_skill = static_cast<eSkill>(enum_v);
 		display_skills(force_skill, 0);
+	}else if(t == "tip_of_day"){
+		tip_of_day();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
@@ -770,7 +772,6 @@ void handle_menu_choice(eMenu item_hit) {
 			display_alchemy();
 			break;
 		case eMenu::LIBRARY_TIPS:
-			// TODO record and replay
 			tip_of_day();
 			break;
 		case eMenu::LIBRARY_INTRO:
