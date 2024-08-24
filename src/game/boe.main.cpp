@@ -762,13 +762,13 @@ void handle_menu_choice(eMenu item_hit) {
 			showWelcome();
 			break;
 		case eMenu::ACTIONS_ALCHEMY:
-			// TODO record and replay
+			// This will be recorded when the fake event is processed
 			dummyEvent.key.code = sf::Keyboard::A;
 			dummyEvent.key.shift = true;
 			queue_fake_event(dummyEvent);
 			break;
 		case eMenu::ACTIONS_WAIT:
-			// TODO record and replay
+			// This will be recorded when the fake event is processed
 			dummyEvent.key.code = sf::Keyboard::W;
 			queue_fake_event(dummyEvent);
 			break;
