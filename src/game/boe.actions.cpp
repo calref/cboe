@@ -1641,6 +1641,8 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 		Key::Numpad4,Key::Numpad5,Key::Numpad6,
 		Key::Numpad7,Key::Numpad8,Key::Numpad9
 	};
+	// Terrain map coordinates to simulate a click for 8-directional movement/waiting
+	// ordered to correspond with keypad keys
 	location terrain_click[10] = {
 		{150,185},{120,215},{150,215},{180,215},
 		{120,185},{150,185},{180,185},

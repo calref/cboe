@@ -387,9 +387,10 @@ using Key = sf::Keyboard::Key;
 std::map<Key,int> delayed_keys;
 const int ARROW_SIMUL_FRAMES = 3;
 
-// Terrain map coordinates to simulate a click for 8-directional movement/waiting,
+// Terrain map coordinates to simulate a click for 8-directional movement
 // ordered to correspond with eDirection
-location terrain_click[10] = {
+// TODO terrain_click is duplicated (with different ordering) in boe.actions.cpp
+location terrain_click[8] = {
 	{150,155}, // north
 	{180,135}, // northeast
 	{180,185}, // east
