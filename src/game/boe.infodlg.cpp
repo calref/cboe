@@ -182,6 +182,12 @@ static bool display_skills_event_filter(cDialog& me, std::string item_hit, eKeyM
 }
 
 void display_skills(eSkill force_skill,cDialog* parent) {
+	if(recording){
+		std::ostringstream sstr;
+		sstr << force_skill;
+
+		record_action("display_skills", sstr.str());
+	}
 	if(force_skill != eSkill::INVALID)
 		skill_pos = int(force_skill);
 	if(skill_pos < 0)

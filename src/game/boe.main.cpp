@@ -280,6 +280,7 @@ static void replay_next_action() {
 
 	Element& next_action = pop_next_action();
 	std::string t = next_action.Value();
+	int enum_v;
 	
 	if(overall_mode == MODE_STARTUP && t == "startup_button_click"){
 		auto info = info_from_action(next_action);
@@ -363,7 +364,6 @@ static void replay_next_action() {
 	}else if(t == "display_spells"){
 		auto info = info_from_action(next_action);
 		std::istringstream sstr(info["mode"]);
-		int enum_v;
 		sstr >> enum_v;
 
 		eSkill mode = static_cast<eSkill>(enum_v);
@@ -373,6 +373,12 @@ static void replay_next_action() {
 		sstr >> force_spell;
 
 		display_spells(mode, force_spell, 0);
+	}else if(t == "display_skills"){
+		std::istringstream sstr(next_action.GetText());
+		sstr >> enum_v;
+
+		eSkill force_skill = static_cast<eSkill>(enum_v);
+		display_skills(force_skill, 0);
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
@@ -757,7 +763,6 @@ void handle_menu_choice(eMenu item_hit) {
 			display_spells(eSkill::PRIEST_SPELLS,100,0);
 			break;
 		case eMenu::LIBRARY_SKILLS:
-			// TODO record and replay
 			display_skills(eSkill::INVALID,0);
 			break;
 		case eMenu::LIBRARY_ALCHEMY:
