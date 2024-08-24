@@ -11,6 +11,7 @@
 
 #include <vector>
 #include "location.hpp"
+#include "tools/framerate_limiter.hpp"
 
 // These correspond to the icons in buttons.png
 enum eToolbarButton {
@@ -41,7 +42,7 @@ class cToolbar {
 	void init();
 public:
 	void draw(sf::RenderTarget& targ);
-	eToolbarButton button_hit(sf::RenderWindow& win, location click);
+	eToolbarButton button_hit(sf::RenderWindow& win, location click, cFramerateLimiter& fps_limiter);
 };
 
 namespace UI {
