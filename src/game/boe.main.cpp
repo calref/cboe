@@ -360,6 +360,19 @@ static void replay_next_action() {
 		print_party_stats();
 	}else if(t == "display_alchemy"){
 		display_alchemy();
+	}else if(t == "display_spells"){
+		auto info = info_from_action(next_action);
+		std::istringstream sstr(info["mode"]);
+		int enum_v;
+		sstr >> enum_v;
+
+		eSkill mode = static_cast<eSkill>(enum_v);
+
+		short force_spell;
+		sstr.str(info["force_spell"]);
+		sstr >> force_spell;
+
+		display_spells(mode, force_spell, 0);
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
@@ -738,11 +751,9 @@ void handle_menu_choice(eMenu item_hit) {
 			dialogToShow = "about-boe";
 			break;
 		case eMenu::LIBRARY_MAGE:
-			// TODO record and replay
 			display_spells(eSkill::MAGE_SPELLS,100,0);
 			break;
 		case eMenu::LIBRARY_PRIEST:
-			// TODO record and replay
 			display_spells(eSkill::PRIEST_SPELLS,100,0);
 			break;
 		case eMenu::LIBRARY_SKILLS:

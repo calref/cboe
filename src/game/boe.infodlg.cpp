@@ -113,6 +113,19 @@ static bool display_spells_event_filter(cDialog& me, std::string item_hit, eSkil
 }
 //short force_spell; // if 100, ignore
 void display_spells(eSkill mode,short force_spell,cDialog* parent) {
+	if(recording){
+		std::map<std::string,std::string> info;
+		std::ostringstream sstr;
+
+		sstr << mode;
+		info["mode"] = sstr.str();
+
+		sstr.str("");
+		sstr << force_spell;
+		info["force_spell"] = sstr.str();
+
+		record_action("display_spells", info);
+	}
 	using namespace std::placeholders;
 	if(force_spell < 100) {
 		if(mode == eSkill::MAGE_SPELLS)
