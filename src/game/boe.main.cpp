@@ -344,6 +344,8 @@ static void replay_next_action() {
 		pick_preferences();
 	}else if(t == "do_abort"){
 		do_abort();
+	}else if(t == "handle_new_pc_graphic"){
+		handle_new_pc_graphic();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
@@ -671,11 +673,7 @@ void handle_menu_choice(eMenu item_hit) {
 			handle_quit_event();
 			break;
 		case eMenu::OPTIONS_PC_GRAPHIC:
-			// TODO record and replay
-			choice = char_select_pc(1,"New graphic for who?");
-			if(choice < 6)
-				pick_pc_graphic(choice,1,nullptr);
-			draw_terrain();
+			handle_new_pc_graphic();
 			break;
 			
 		case eMenu::OPTIONS_DELETE_PC:
