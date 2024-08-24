@@ -336,8 +336,8 @@ static void replay_next_action() {
 		arrow_button_click(button_rect);
 	}else if(t == "show_dialog_action"){
 		show_dialog_action(next_action.GetText());
-	}else if(t == "drop_pc"){
-		drop_pc();
+	}else if(t == "handle_drop_pc"){
+		handle_drop_pc();
 	}else if(t == "new_party"){
 		new_party();
 	}else if(t == "pick_preferences"){
@@ -679,7 +679,7 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 			
 		case eMenu::OPTIONS_DELETE_PC:
-			drop_pc();
+			handle_drop_pc();
 			break;
 			
 			

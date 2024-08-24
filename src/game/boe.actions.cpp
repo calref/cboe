@@ -2642,7 +2642,7 @@ void switch_pc(short which) {
 	}
 }
 
-void drop_pc() {
+void handle_drop_pc() {
 	if(recording){
 		record_action("drop_pc", "");
 	}
