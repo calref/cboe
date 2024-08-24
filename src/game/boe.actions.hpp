@@ -25,7 +25,7 @@ void do_abort();
 void increase_age();
 void handle_hunting();
 void switch_pc(short which);
-void drop_pc();
+void handle_drop_pc();
 void new_party();
 void handle_death();
 void start_new_game(bool force = false);
