@@ -307,6 +307,9 @@ static bool display_alchemy_event_filter(cDialog& me, std::string item_hit, eKey
 }
 
 void display_alchemy() {
+	if(recording){
+		record_action("display_alchemy", "");
+	}
 	std::string get_text;
 	
 	cur_entry = 3;

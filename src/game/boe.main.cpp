@@ -358,6 +358,8 @@ static void replay_next_action() {
 		adventure_notes();
 	}else if(t == "print_party_stats"){
 		print_party_stats();
+	}else if(t == "display_alchemy"){
+		display_alchemy();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
@@ -748,7 +750,6 @@ void handle_menu_choice(eMenu item_hit) {
 			display_skills(eSkill::INVALID,0);
 			break;
 		case eMenu::LIBRARY_ALCHEMY:
-			// TODO record and replay
 			// TODO: Create a dedicated dialog for alchemy info
 			display_alchemy();
 			break;
