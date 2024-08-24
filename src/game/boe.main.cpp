@@ -346,6 +346,8 @@ static void replay_next_action() {
 		do_abort();
 	}else if(t == "handle_new_pc_graphic"){
 		handle_new_pc_graphic();
+	}else if(t == "handle_rename_pc"){
+		handle_rename_pc();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
@@ -682,12 +684,7 @@ void handle_menu_choice(eMenu item_hit) {
 			
 			
 		case eMenu::OPTIONS_RENAME_PC:
-			// TODO record and replay
-			choice = char_select_pc(1,"Rename who?");
-			if(choice < 6)
-				pick_pc_name(choice,nullptr);
-			put_pc_screen();
-			put_item_screen(stat_window);
+			handle_rename_pc();
 			break;
 			
 			
