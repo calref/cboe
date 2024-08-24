@@ -123,6 +123,7 @@ static void showWelcome();
 
 void handle_quit_event();
 void handle_help_toc();
+void menu_give_help(short help1);
 
 #ifdef __APPLE__
 eMenuChoice menuChoice=eMenuChoice::MENU_CHOICE_NONE;
@@ -388,6 +389,11 @@ static void replay_next_action() {
 		handle_menu_automap();
 	}else if(t == "handle_help_toc"){
 		handle_help_toc();
+	}else if(t == "menu_give_help"){
+		std::istringstream sstr(next_action.GetText());
+		short help1;
+		sstr >> help1;
+		menu_give_help(help1);
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
@@ -699,6 +705,15 @@ void handle_help_toc() {
 	else launchURL("http://openboe.com/docs/game/Contents.html");
 }
 
+void menu_give_help(short help1){
+	if(recording){
+		std::ostringstream sstr;
+		sstr << help1;
+		record_action("menu_give_help", sstr.str());
+	}
+	give_help(help1, 0);
+}
+
 void handle_menu_choice(eMenu item_hit) {
 	std::string dialogToShow;
 	sf::Event dummyEvent = {sf::Event::KeyPressed};
@@ -814,14 +829,12 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::HELP_TOC:
 			handle_help_toc();
 			break;
-		// TODO record and replay
 		case eMenu::ABOUT_MAGE:
 		case eMenu::ABOUT_PRIEST:
-			give_help(209,0);
+			menu_give_help(209);
 			break;
 		case eMenu::ABOUT_MONSTERS:
-			// TODO record and replay
-			give_help(212,0);
+			menu_give_help(212);
 			break;
 	}
 	if(!dialogToShow.empty()) {
