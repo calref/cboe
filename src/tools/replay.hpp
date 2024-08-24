@@ -6,7 +6,7 @@
 #include <map>
 #include <boost/filesystem.hpp>
 #include "location.hpp"
-#include "keycodes.hpp"
+#include "dialogxml/keycodes.hpp"
 
 // Input recording system
 namespace ticpp { class Element; }
