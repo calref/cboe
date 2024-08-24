@@ -169,6 +169,7 @@ std::istream& operator>> (std::istream& in, location& l);
 std::ostream& operator<< (std::ostream& out, spec_loc_t l);
 std::ostream& operator<< (std::ostream& out, sign_loc_t l);
 std::ostream& operator<< (std::ostream& out, rectangle r);
+std::istream& operator>> (std::istream& in, rectangle& r);
 std::ostream& operator<< (std::ostream& out, info_rect_t r);
 
 #endif

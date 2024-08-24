@@ -269,6 +269,23 @@ std::ostream& operator<< (std::ostream& out, rectangle r) {
 	return out;
 }
 
+std::istream& operator>> (std::istream& in, rectangle& r) {
+	location tl;
+	location br;
+	in.get(); // {
+	in >> tl;
+	in.get(); //  
+	in.get(); // -
+	in.get(); //  
+	in >> br;
+	in.get(); // }
+	r.top = tl.y;
+	r.left = tl.x;
+	r.bottom = br.y;
+	r.right = br.x;
+	return in;
+}
+
 std::ostream& operator<< (std::ostream& out, info_rect_t r) {
 	out << static_cast<rectangle&>(r);
 	out << " -- \"" << r.descr << '"';
