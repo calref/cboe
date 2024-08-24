@@ -2628,6 +2628,9 @@ void switch_pc(short which) {
 }
 
 void drop_pc() {
+	if(recording){
+		record_action("drop_pc", "");
+	}
 	if(!prime_time()) {
 		ASB("Finish what you're doing first.");
 		print_buf();
