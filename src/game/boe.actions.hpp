@@ -52,5 +52,6 @@ void handle_get_items(bool& did_something, bool& need_redraw, bool& need_reprint
 void handle_drop_item(short item_hit, bool& need_redraw);
 void handle_drop_item(location destination, bool& need_redraw);
 void handle_give_item(short item_hit, bool& did_something, bool& need_redraw);
+void show_dialog_action(std::string xml_file);
 
 #endif

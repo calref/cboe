@@ -334,6 +334,8 @@ static void replay_next_action() {
 		std::istringstream sstr(next_action.GetText());
 		sstr >> button_rect;
 		arrow_button_click(button_rect);
+	}else if(t == "show_dialog_action"){
+		show_dialog_action(next_action.GetText());
 	}
 
 	advance_time(did_something, need_redraw, need_reprint);
