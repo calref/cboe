@@ -122,6 +122,7 @@ static void init_boe(int, char*[]);
 static void showWelcome();
 
 void handle_quit_event();
+void handle_help_toc();
 
 #ifdef __APPLE__
 eMenuChoice menuChoice=eMenuChoice::MENU_CHOICE_NONE;
@@ -385,6 +386,8 @@ static void replay_next_action() {
 		showWelcome();
 	}else if(t == "handle_menu_automap"){
 		handle_menu_automap();
+	}else if(t == "handle_help_toc"){
+		handle_help_toc();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
@@ -686,6 +689,16 @@ void close_program() {
 }
 
 extern fs::path progDir;
+
+void handle_help_toc() {
+	if(recording){
+		record_action("handle_help_toc", "");
+	}
+	if(fs::is_directory(progDir/"doc"))
+		launchURL("file://" + (progDir/"doc/game/Contents.html").string());
+	else launchURL("http://openboe.com/docs/game/Contents.html");
+}
+
 void handle_menu_choice(eMenu item_hit) {
 	std::string dialogToShow;
 	sf::Event dummyEvent = {sf::Event::KeyPressed};
@@ -799,10 +812,7 @@ void handle_menu_choice(eMenu item_hit) {
 			handle_menu_automap();
 			break;
 		case eMenu::HELP_TOC:
-			// TODO record and replay
-			if(fs::is_directory(progDir/"doc"))
-				launchURL("file://" + (progDir/"doc/game/Contents.html").string());
-			else launchURL("http://openboe.com/docs/game/Contents.html");
+			handle_help_toc();
 			break;
 		// TODO record and replay
 		case eMenu::ABOUT_MAGE:
