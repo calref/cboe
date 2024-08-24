@@ -711,7 +711,7 @@ void menu_give_help(short help1){
 		sstr << help1;
 		record_action("menu_give_help", sstr.str());
 	}
-	give_help(help1, nullptr);
+	give_help(help1, 0);
 }
 
 void handle_menu_choice(eMenu item_hit) {
