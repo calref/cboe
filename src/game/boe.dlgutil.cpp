@@ -430,10 +430,10 @@ void handle_info_request(cShopItem item) {
 			display_alchemy();
 			break;
 		case eShopItemType::MAGE_SPELL:
-			display_spells(eSkill::MAGE_SPELLS,base_item.item_level,0);
+			display_spells(eSkill::MAGE_SPELLS,base_item.item_level,nullptr);
 			break;
 		case eShopItemType::PRIEST_SPELL:
-			display_spells(eSkill::PRIEST_SPELLS,base_item.item_level,0);
+			display_spells(eSkill::PRIEST_SPELLS,base_item.item_level,nullptr);
 			break;
 		case eShopItemType::SKILL:
 			display_skills(eSkill(base_item.item_level), nullptr);
