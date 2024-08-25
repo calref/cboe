@@ -165,7 +165,7 @@ void cTextMsg::recalcRect() {
 		calc_rect.width() = 100 * max_line_chars;
 	}
 	sf::RenderTexture temp;
-	temp.create(frame.width(), frame.height());
+	temp.create(calc_rect.width(), calc_rect.height());
 	rectangle test_rect = calc_rect;
 	test_rect.offset(-test_rect.left, -test_rect.top);
 	rects = draw_string_hilite(temp, test_rect, getText(), style, hilites, sf::Color::Black);
