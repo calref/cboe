@@ -471,9 +471,102 @@ void showWelcome() {
 	welcome.show();
 }
 
+using Key = sf::Keyboard::Key;
+std::map<Key,int> delayed_keys;
+const int ARROW_SIMUL_FRAMES = 3;
+
+// Terrain map coordinates to simulate a click for 8-directional movement
+// ordered to correspond with eDirection
+// TODO terrain_click is duplicated (with different ordering) in boe.actions.cpp
+location terrain_click[8] = {
+	{150,155}, // north
+	{180,135}, // northeast
+	{180,185}, // east
+	{180,215}, // southeast
+	{150,215}, // south
+	{120,215}, // southwest
+	{120,185}, // west
+	{120,155}, // northwest
+};
+
+void fire_delayed_key(Key code) {
+	bool isUpPressed = delayed_keys[Key::Up] > 0;
+	bool isDownPressed = delayed_keys[Key::Down] > 0;
+	bool isLeftPressed = delayed_keys[Key::Left] > 0;
+	bool isRightPressed = delayed_keys[Key::Right] > 0;
+	delayed_keys[Key::Up] = 0;
+	delayed_keys[Key::Down] = 0;
+	delayed_keys[Key::Left] = 0;
+	delayed_keys[Key::Right] = 0;
+
+	bool diagonal = false;
+	int dir = -1;
+
+	if(code == Key::Up && !isDownPressed) {
+		if(isLeftPressed){ dir = DIR_NW; diagonal = true; }
+		else if(isRightPressed){ dir = DIR_NE; diagonal = true; }
+		else dir = DIR_N;
+	} else if(code == Key::Down && !isUpPressed) {
+		if(isLeftPressed){ dir = DIR_SW; diagonal = true; }
+		else if(isRightPressed){ dir = DIR_SE; diagonal = true; }
+		else dir = DIR_S;
+	} else if(code == Key::Left && !isRightPressed) {
+		if(isUpPressed){ dir = DIR_NW; diagonal = true; }
+		else if(isDownPressed){ dir = DIR_SW; diagonal = true; }
+		else dir = DIR_W;
+	} else if(code == Key::Right && !isLeftPressed) {
+		if(isUpPressed){ dir = DIR_NE; diagonal = true; }
+		else if(isDownPressed){ dir = DIR_SE; diagonal = true; }
+		else dir = DIR_E;
+	} else {
+		return;
+	}
+	if(diagonal){
+		mainPtr.setKeyRepeatEnabled(false);
+	}else{
+		mainPtr.setKeyRepeatEnabled(true);
+	}
+
+	if(dir != -1){
+		sf::Event pass_event = {sf::Event::MouseButtonPressed};
+		location pass_point = mainPtr.mapCoordsToPixel(terrain_click[dir], mainView);
+		pass_event.mouseButton.x = pass_point.x;
+		pass_event.mouseButton.y = pass_point.y;
+		queue_fake_event(pass_event);
+	}
+}
+
+void handle_delayed_key(Key code) {
+	// a keypress of this code is already delayed, so push it through:
+	if(delayed_keys[code] > 0)
+		fire_delayed_key(code);
+
+	delayed_keys[code] = ARROW_SIMUL_FRAMES;
+}
+
+void update_delayed_keys() {
+	for(auto elem : delayed_keys){
+		Key code = elem.first;
+		int countdown = elem.second;
+
+		if(countdown > 0){
+			--countdown;
+			delayed_keys[code] = countdown;
+			if(countdown == 0){
+				fire_delayed_key(code);
+			}
+		}
+	}
+}
+
 void handle_events() {
 	sf::Event currentEvent;
 	cFramerateLimiter fps_limiter;
+
+	delayed_keys[Key::Left] = 0;
+	delayed_keys[Key::Right] = 0;
+	delayed_keys[Key::Up] = 0;
+	delayed_keys[Key::Down] = 0;
 
 	while(!All_Done) {
 		if(replaying && has_next_action()){
@@ -499,6 +592,7 @@ void handle_events() {
 				menuChoiceId=-1;
 			}
 #endif
+			update_delayed_keys();
 			while(!fake_event_queue.empty()){
 				const sf::Event& next_event = fake_event_queue.front();
 				fake_event_queue.pop_front();
@@ -581,7 +675,12 @@ void handle_one_event(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	switch(event.type) {
 		case sf::Event::KeyPressed:
 			if(flushingInput) return;
-			if(!(event.key.*systemKey)) handle_keystroke(event, fps_limiter);
+			if (delayed_keys.find(event.key.code) != delayed_keys.end()){
+				handle_delayed_key(event.key.code);
+			} else if(!(event.key.*systemKey)) {
+				mainPtr.setKeyRepeatEnabled(true);
+				handle_keystroke(event, fps_limiter);
+			}
 			break;
 			
 		case sf::Event::MouseButtonPressed:
