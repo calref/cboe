@@ -146,7 +146,7 @@ void set_clipboard_img(sf::Image& img) {
 			bytesPerRow: sz.x * 4 bitsPerPixel: 32
 		];
 	std::copy(img.getPixelsPtr(), img.getPixelsPtr() + data_sz, [bmp bitmapData]);
-	NSImage * image = [[NSImage alloc] initWithSize: NSMakeSize(sz.x, sz.y)];
+	NSImage* image = [[NSImage alloc] initWithSize: NSMakeSize(sz.x, sz.y)];
 	[image addRepresentation: bmp];
 	NSArray* contents = [NSArray arrayWithObject: image];
 	[image release];
@@ -156,7 +156,7 @@ void set_clipboard_img(sf::Image& img) {
 	[pb writeObjects: contents];
 }
 
-static sf::Image* sfImageFromNSImage(NSImage* inImage);
+static std::unique_ptr<sf::Image> sfImageFromNSImage(NSImage* inImage);
 
 std::unique_ptr<sf::Image> get_clipboard_img() {
 	std::unique_ptr<sf::Image> ret;
@@ -164,7 +164,7 @@ std::unique_ptr<sf::Image> get_clipboard_img() {
 	if(![NSImage canInitWithPasteboard: pb])
 		return ret; // a null pointer
 	NSImage* img = [[NSImage alloc] initWithPasteboard: pb];
-	ret.reset(sfImageFromNSImage(img));
+	ret = sfImageFromNSImage(img);
 	[img release];
 	return ret;
 }
@@ -331,7 +331,7 @@ fs::path nav_put_rsrc(std::initializer_list<std::string> extensions, fs::path de
 
 // Utility function for converting an NSImage into the RGBA format that SFML uses
 // Adapted from <https://mikeash.com/pyblog/friday-qa-2012-08-31-obtaining-and-interpreting-image-data.html>
-sf::Image* sfImageFromNSImage(NSImage *image) {
+std::unique_ptr<sf::Image> sfImageFromNSImage(NSImage *image) {
 	int width = [image size].width;
 	int height = [image size].height;
 	
@@ -360,7 +360,7 @@ sf::Image* sfImageFromNSImage(NSImage *image) {
 	[ctx flushGraphics];
 	[NSGraphicsContext restoreGraphicsState];
 	
-	sf::Image* sfi = new sf::Image;
+	std::unique_ptr<sf::Image> sfi{new sf::Image};
 	sfi->create(width, height, (UInt8*) [rep bitmapData]);
 	[rep release];
 	
