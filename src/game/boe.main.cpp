@@ -394,6 +394,11 @@ static void replay_next_action() {
 		short help1;
 		sstr >> help1;
 		menu_give_help(help1);
+	}else if(t == "handle_begin_look"){
+		std::istringstream sstr(next_action.GetText());
+		bool right_button;
+		sstr >> std::boolalpha >> right_button;
+		handle_begin_look(right_button, need_redraw);
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return

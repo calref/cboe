@@ -58,5 +58,6 @@ void handle_give_item(short item_hit, bool& did_something, bool& need_redraw);
 void show_dialog_action(std::string xml_file);
 void handle_new_pc_graphic();
 void handle_rename_pc();
+void handle_begin_look(bool right_button, bool& need_redraw);
 
 #endif
