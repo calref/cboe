@@ -305,11 +305,16 @@ static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_
 	put_item_screen(stat_window);
 }
 
-static void handle_begin_look(bool& need_redraw) {
+void handle_begin_look(bool right_button, bool& need_redraw) {
+	if(recording){
+		std::ostringstream sstr;
+		sstr << std::boolalpha << right_button;
+		record_action("handle_begin_look", sstr.str());
+	}
 	if(overall_mode == MODE_OUTDOORS) overall_mode = MODE_LOOK_OUTDOORS;
 	if(overall_mode == MODE_TOWN) overall_mode = MODE_LOOK_TOWN;
 	if(overall_mode == MODE_COMBAT) overall_mode = MODE_LOOK_COMBAT;
-	add_string_to_buf("Look: Select a space. You can also right click to look.", 2);
+	if(!right_button) add_string_to_buf("Look: Select a space. You can also right click to look.", 2);
 	need_redraw = true;
 }
 
@@ -1159,7 +1164,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 				break;
 				
 			case TOOLBAR_LOOK:
-				handle_begin_look(need_redraw);
+				handle_begin_look(false, need_redraw);
 				break;
 				
 			case TOOLBAR_SHIELD:
@@ -1235,10 +1240,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 		
 		// Check for quick look
 		if(right_button) {
-			previous_mode = overall_mode;
-			if(is_combat()) overall_mode = MODE_LOOK_COMBAT;
-			if(is_out()) overall_mode = MODE_LOOK_OUTDOORS;
-			if(is_town()) overall_mode = MODE_LOOK_TOWN;
+			handle_begin_look(right_button, need_redraw);
 		}
 		
 		// Moving/pausing
@@ -2103,7 +2105,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case 'l': // Look
 			if((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_TOWN) || (overall_mode == MODE_COMBAT)) {
-				handle_begin_look(need_redraw);
+				handle_begin_look(false, need_redraw);
 				advance_time(did_something, need_redraw, need_reprint);
 			}
 			break;
