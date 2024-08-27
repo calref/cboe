@@ -39,6 +39,16 @@ static std::array<item_variety_t, 28> load_item_type_info() {
 		eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::TWO_HANDED, eItemType::SHIELD, eItemType::SHIELD_2,
 	};
 	
+	std::set<eItemType> weapons_non_missile = {
+		eItemType::ONE_HANDED, eItemType::TWO_HANDED, eItemType::BOW, eItemType::CROSSBOW
+	};
+	std::set<eItemType> weapons_missile = {
+		eItemType::ARROW, eItemType::THROWN_MISSILE, eItemType::BOLTS, eItemType::MISSILE_NO_AMMO
+	};
+	std::set<eItemType> armour = {
+		eItemType::SHIELD, eItemType::ARMOR, eItemType::HELM, eItemType::GLOVES, eItemType::BOOTS, eItemType::SHIELD_2
+	};
+	
 	// For following, if an item of type n is equipped, no other items of type n can be equipped,
 	std::map<const eItemType, const eItemCat> excluding_types = {
 		{eItemType::BOW, eItemCat::MISSILE_WEAPON},
@@ -54,10 +64,9 @@ static std::array<item_variety_t, 28> load_item_type_info() {
 	for(auto& info : all_info) {
 		eItemType type = eItemType(++i);
 		info.self = type;
-		// TODO: Maybe don't base these on i?
-		info.is_armour = i >= 12 && i <= 17;
-		info.is_weapon = (i >= 1 && i <= 6 && i != 3) || (i >= 23 && i <= 25);
-		info.is_missile = i == 5 || i == 6 || i == 24 || i == 25;
+		info.is_armour = armour.count(type) > 0;
+		info.is_weapon = weapons_non_missile.count(type) > 0 || weapons_missile.count(type) > 0;
+		info.is_missile = weapons_missile.count(type) > 0;
 		info.equip_count = equippable.count(type);
 		info.num_hands = num_hands_to_use.count(type);
 		info.exclusion = info.num_hands ? eItemCat::HANDS : excluding_types[type];
