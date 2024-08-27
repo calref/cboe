@@ -72,5 +72,6 @@ void handle_use_space(location destination, bool& did_something, bool& need_redr
 void show_inventory();
 void toggle_debug_mode();
 void debug_give_item();
+void debug_print_location();
 
 #endif
