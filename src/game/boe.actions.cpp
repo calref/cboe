@@ -1789,10 +1789,31 @@ void debug_give_item() {
 	put_pc_screen(); // In case the item was food or gold
 }
 
+void debug_print_location() {
+	if(recording){
+		record_action("debug_print_location", "");
+	}
+	std::ostringstream sout;
+	if(is_town()) {
+		sout << "Debug:  You're at x " << (short) univ.party.town_loc.x << ", y " << (short) univ.party.town_loc.y
+		<< " in town " << univ.party.town_num << '.';
+	} else if(is_out()) {
+		short x = univ.party.out_loc.x;
+		short y = univ.party.out_loc.y;
+		x += 48 * univ.party.outdoor_corner.x;
+		y += 48 * univ.party.outdoor_corner.y;
+		sout << "Debug:  You're outside at x " << x << ", y " << y << '.';
+	} else if(is_combat()) {
+		location loc = univ.current_pc().combat_pos;
+		sout << "Debug:  You're in combat at x " << loc.x << ", y " << loc.y << '.';
+	}
+	add_string_to_buf(sout.str());
+	print_buf();
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
-	std::ostringstream sout;
 	using Key = sf::Keyboard::Key;
 	
 	Key keypad[10] = {
@@ -2080,21 +2101,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case 'O':
 			if(!univ.debug_mode) break;
-			if(is_town()) {
-				sout << "Debug:  You're at x " << (short) univ.party.town_loc.x << ", y " << (short) univ.party.town_loc.y
-				<< " in town " << univ.party.town_num << '.';
-			} else if(is_out()) {
-				short x = univ.party.out_loc.x;
-				short y = univ.party.out_loc.y;
-				x += 48 * univ.party.outdoor_corner.x;
-				y += 48 * univ.party.outdoor_corner.y;
-				sout << "Debug:  You're outside at x " << x << ", y " << y << '.';
-			} else if(is_combat()) {
-				location loc = univ.current_pc().combat_pos;
-				sout << "Debug:  You're in combat at x " << loc.x << ", y " << loc.y << '.';
-			}
-			add_string_to_buf(sout.str());
-			print_buf();
+			debug_print_location();
 			break;
 			
 		case 'I':
