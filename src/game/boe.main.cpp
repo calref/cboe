@@ -412,6 +412,17 @@ static void replay_next_action() {
 		eKeyMod mods = static_cast<eKeyMod>(std::stoi(info["mods"]));
 
 		handle_look(destination, right_button, mods, need_redraw, need_reprint);
+	}else if(t == "screen_shift"){
+		auto info = info_from_action(next_action);
+		std::istringstream sstr(info["dx"]);
+		int dx = 0;
+		sstr >> dx;
+
+		sstr.str(info["dy"]);
+		int dy = 0;
+		sstr >> dy;
+
+		screen_shift(dx, dy, need_redraw);
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return

@@ -1155,6 +1155,19 @@ static void handle_party_death() {
 }
 
 void screen_shift(int dx, int dy, bool& need_redraw) {
+	if(recording){
+		std::map<std::string,std::string> info;
+		std::ostringstream sstr;
+		sstr << dx;
+		info["dx"] = sstr.str();
+
+		sstr.str("");
+		sstr << dy;
+		info["dy"] = sstr.str();
+
+		record_action("screen_shift", info);
+	}
+
 	center.x += dx;
 	center.y += dy;
 
