@@ -1937,6 +1937,20 @@ void debug_fly() {
 	put_pc_screen();
 }
 
+void debug_ghost_mode() {
+	if(recording){
+		record_action("debug_ghost_mode", "");
+	}
+	if(univ.ghost_mode){
+		univ.ghost_mode = false;
+		ASB("Debug: Ghost mode OFF.");
+	}else{
+		univ.ghost_mode = true;
+		ASB("Debug:Ghost mode ON.");
+	}
+	print_buf();
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2152,14 +2166,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case 'G':
 			if(!univ.debug_mode) break;
-			if(univ.ghost_mode){
-				univ.ghost_mode = false;
-				ASB("Debug: Ghost mode OFF.");
-			}else{
-				univ.ghost_mode = true;
-				ASB("Debug:Ghost mode ON.");
-			}
-			print_buf();
+			debug_ghost_mode();
 			break;
 			
 		case 'H':

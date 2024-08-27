@@ -503,6 +503,8 @@ static void replay_next_action() {
 		debug_stealth_detect_life_firewalk();
 	}else if(t == "debug_fly"){
 		debug_fly();
+	}else if(t == "debug_ghost_mode"){
+		debug_ghost_mode();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
