@@ -1775,6 +1775,20 @@ void toggle_debug_mode() {
 	print_buf();
 }
 
+void debug_give_item() {
+	if(recording){
+		record_action("debug_give_item", "");
+	}
+	int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?");
+	int j = univ.scenario.scen_items[i].ident;
+	univ.scenario.scen_items[i].ident = true;
+	univ.party.give_item(univ.scenario.scen_items[i], true);
+	univ.scenario.scen_items[i].ident = j;
+	print_buf();
+	put_item_screen(stat_window);
+	put_pc_screen(); // In case the item was food or gold
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2085,14 +2099,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case 'I':
 			if(univ.debug_mode) {
-				int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?");
-				int j = univ.scenario.scen_items[i].ident;
-				univ.scenario.scen_items[i].ident = true;
-				univ.party.give_item(univ.scenario.scen_items[i], true);
-				univ.scenario.scen_items[i].ident = j;
-				print_buf();
-				put_item_screen(stat_window);
-				put_pc_screen(); // In case the item was food or gold
+				debug_give_item();
 			}
 			break;
 			

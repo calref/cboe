@@ -481,6 +481,8 @@ static void replay_next_action() {
 		give_help(help1, help2);
 	}else if(t == "toggle_debug_mode"){
 		toggle_debug_mode();
+	}else if(t == "debug_give_item"){
+		debug_give_item();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
