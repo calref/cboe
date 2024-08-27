@@ -457,24 +457,16 @@ static void replay_next_action() {
 		spell_cast_hit_return();
 	}else if(t == "handle_pause"){
 		handle_pause(did_something, need_redraw);
-	}else if(t == "handle_bash_pick_select"){
-		std::istringstream sstr(next_action.GetText());
-		bool isBash;
-		sstr >> std::boolalpha >> isBash;
-		handle_bash_pick_select(need_reprint, isBash);
-	}else if(t == "handle_bash_pick"){
-		auto info = info_from_action(next_action);
-
-		std::istringstream sstr(info["destination"]);
-		location destination;
-		sstr >> destination;
-
-		sstr.str(info["isBash"]);
-		sstr.seekg(0);
-		bool isBash;
-		sstr >> std::boolalpha >> isBash;
-
-		handle_bash_pick(destination, did_something, need_redraw, isBash);
+	}else if(t == "handle_bash_select"){
+		handle_bash_pick_select(need_reprint, true);
+	}else if(t == "handle_pick_select"){
+		handle_bash_pick_select(need_reprint, false);
+	}else if(t == "handle_bash"){
+		location destination = location_from_action(next_action);
+		handle_bash_pick(destination, did_something, need_redraw, true);
+	}else if(t == "handle_pick"){
+		location destination = location_from_action(next_action);
+		handle_bash_pick(destination, did_something, need_redraw, false);
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
