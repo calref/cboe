@@ -1923,6 +1923,20 @@ void debug_stealth_detect_life_firewalk() {
 	put_pc_screen();
 }
 
+void debug_fly() {
+	if(recording){
+		record_action("debug_fly", "");
+	}
+	if(overall_mode != MODE_OUTDOORS){
+		add_string_to_buf("Debug: Can only fly outdoors.");
+	}else{
+		univ.party.status[ePartyStatus::FLIGHT] += 10;
+		add_string_to_buf("Debug: You start flying!");
+	}
+	print_buf();
+	put_pc_screen();
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2133,14 +2147,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case 'F':
 			if(!univ.debug_mode) break;
-			if(overall_mode != MODE_OUTDOORS){
-				add_string_to_buf("Debug: Can only fly outdoors.");
-			}else{
-				univ.party.status[ePartyStatus::FLIGHT] += 10;
-				add_string_to_buf("Debug: You start flying!");
-			}
-			print_buf();
-			put_pc_screen();
+			debug_fly();
 			break;
 			
 		case 'G':
