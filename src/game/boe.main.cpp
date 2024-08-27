@@ -423,6 +423,8 @@ static void replay_next_action() {
 		sstr >> dy;
 
 		screen_shift(dx, dy, need_redraw);
+	}else if(t == "handle_rest"){
+		handle_rest(need_redraw, need_reprint);
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return

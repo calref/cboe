@@ -355,7 +355,10 @@ static void handle_toggle_active(bool& need_reprint) {
 	need_reprint = true;
 }
 
-static void handle_rest(bool& need_redraw, bool& need_reprint) {
+void handle_rest(bool& need_redraw, bool& need_reprint) {
+	if(recording){
+		record_action("handle_rest", "");
+	}
 	sf::Event dummy_evt;
 	int i = 0;
 	ter_num_t ter = univ.out[univ.party.out_loc.x][univ.party.out_loc.y];
