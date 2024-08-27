@@ -249,7 +249,12 @@ bool prime_time() {
 	return overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT;
 }
 
-static void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw, bool& need_reprint) {
+void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw, bool& need_reprint, bool record) {
+	if(record && recording){
+		std::ostringstream sstr;
+		sstr << which_type;
+		record_action("handle_spellcast", sstr.str());
+	}
 	short store_sp[6];
 	extern short spec_target_fail;
 	extern eSpecCtxType spec_target_type;
@@ -673,7 +678,12 @@ static void handle_talk(location destination, bool& did_something, bool& need_re
 	}
 }
 
-static void handle_target_space(location destination, bool& did_something, bool& need_redraw, bool& need_reprint) {
+void handle_target_space(location destination, bool& did_something, bool& need_redraw, bool& need_reprint) {
+	if(recording){
+		std::ostringstream sstr;
+		sstr << destination;
+		record_action("handle_target_space", sstr.str());
+	}
 	if(overall_mode == MODE_SPELL_TARGET)
 		do_combat_cast(destination);
 	else if(overall_mode == MODE_THROWING || overall_mode == MODE_FIRING)
@@ -1615,6 +1625,12 @@ bool someone_awake() {
 
 
 void handle_menu_spell(eSpell spell_picked) {
+	if(recording){
+		std::ostringstream sstr;
+		sstr << (int)spell_picked;
+		record_action("handle_menu_spell", sstr.str());
+	}
+
 	eSkill spell_type = (*spell_picked).type;
 	if(!prime_time()) {
 		ASB("Finish what you're doing first.");
@@ -1639,7 +1655,7 @@ void handle_menu_spell(eSpell spell_picked) {
 	}
 	
 	bool did_something = false, need_redraw = false, need_reprint = false;
-	handle_spellcast(spell_type, did_something, need_redraw, need_reprint);
+	handle_spellcast(spell_type, did_something, need_redraw, need_reprint, false);
 	advance_time(did_something, need_redraw, need_reprint);
 }
 

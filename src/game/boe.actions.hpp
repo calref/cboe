@@ -62,5 +62,7 @@ void handle_begin_look(bool right_button, bool& need_redraw);
 void handle_look(location destination, bool right_button, eKeyMod mods, bool& need_redraw, bool& need_reprint);
 void screen_shift(int dx, int dy, bool& need_redraw);
 void handle_rest(bool& need_redraw, bool& need_reprint);
+void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw, bool& need_reprint, bool record = true);
+void handle_target_space(location destination, bool& did_something, bool& need_redraw, bool& need_reprint);
 
 #endif
