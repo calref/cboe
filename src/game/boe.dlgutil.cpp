@@ -325,8 +325,8 @@ void handle_sale(cShopItem item, int i) {
 						univ.current_pc().main_status = eMainStatus::ALIVE;
 						break;
 					case eShopItemType::CURE_DUMBFOUNDING:
-						// TODO: Don't cure anti-dumbfounding!
-						univ.current_pc().status[eStatus::DUMB] = 0;
+						if(univ.current_pc().status[eStatus::DUMB] > 0)
+							univ.current_pc().status[eStatus::DUMB] = 0;
 						break;
 					default: break; // Silence compiler warning
 				}
