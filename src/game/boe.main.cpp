@@ -455,6 +455,8 @@ static void replay_next_action() {
 		handle_target_space(destination, did_something, need_redraw, need_reprint);
 	}else if(t == "spell_cast_hit_return"){
 		spell_cast_hit_return();
+	}else if(t == "handle_pause"){
+		handle_pause(did_something, need_redraw);
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
