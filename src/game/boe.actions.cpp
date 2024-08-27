@@ -688,9 +688,17 @@ static void handle_talk(location destination, bool& did_something, bool& need_re
 
 void handle_target_space(location destination, bool& did_something, bool& need_redraw, bool& need_reprint) {
 	if(recording){
+		std::map<std::string,std::string> info;
+
 		std::ostringstream sstr;
 		sstr << destination;
-		record_action("handle_target_space", sstr.str());
+		info["destination"] = sstr.str();
+
+		sstr.str("");
+		sstr << num_targets_left;
+		info["num_targets_left"] = sstr.str();
+
+		record_action("handle_target_space", info);
 	}
 	if(overall_mode == MODE_SPELL_TARGET)
 		do_combat_cast(destination);
