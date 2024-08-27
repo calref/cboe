@@ -420,7 +420,10 @@ void handle_rest(bool& need_redraw, bool& need_reprint) {
 	need_redraw = true;
 }
 
-static void handle_pause(bool& did_something, bool& need_redraw) {
+void handle_pause(bool& did_something, bool& need_redraw) {
+	if(recording){
+		record_action("handle_pause", "");
+	}
 	if(overall_mode == MODE_COMBAT) {
 		char_stand_ready();
 		add_string_to_buf("Stand ready.");

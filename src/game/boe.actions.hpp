@@ -64,5 +64,6 @@ void screen_shift(int dx, int dy, bool& need_redraw);
 void handle_rest(bool& need_redraw, bool& need_reprint);
 void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw, bool& need_reprint, bool record = true);
 void handle_target_space(location destination, bool& did_something, bool& need_redraw, bool& need_reprint);
+void handle_pause(bool& did_something, bool& need_redraw);
 
 #endif
