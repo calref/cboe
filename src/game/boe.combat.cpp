@@ -25,6 +25,7 @@
 #include "spell.hpp"
 #include "tools/prefs.hpp"
 #include "utility.hpp"
+#include "replay.hpp"
 
 extern eGameMode overall_mode;
 extern short which_combat_type;
@@ -5245,6 +5246,9 @@ void start_fancy_spell_targeting(eSpell num, bool freebie, int spell_range, eSpe
 }
 
 void spell_cast_hit_return() {
+	if(recording){
+		record_action("spell_cast_hit_return", "");
+	}
 	
 	if(force_wall_position < 10) {
 		force_wall_position = (force_wall_position + 1) % 8;
