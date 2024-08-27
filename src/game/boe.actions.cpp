@@ -1879,6 +1879,18 @@ void debug_magic_map() {
 	print_buf();
 }
 
+void debug_enter_town() {
+	if(recording){
+		record_action("debug_enter_town", "");
+	}
+	short find_direction_from;
+	if(univ.party.direction == 0) find_direction_from = 2;
+	else if(univ.party.direction == 4) find_direction_from = 0;
+	else if(univ.party.direction < 4) find_direction_from = 3;
+	else find_direction_from = 1;
+	start_town_mode(get_num_response(0, univ.scenario.towns.size() - 1, "Enter Town Number"), find_direction_from);
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2187,12 +2199,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case 'T':
 			if(!univ.debug_mode) break;
-			short find_direction_from;
-			if(univ.party.direction == 0) find_direction_from = 2;
-			else if(univ.party.direction == 4) find_direction_from = 0;
-			else if(univ.party.direction < 4) find_direction_from = 3;
-			else find_direction_from = 1;
-			start_town_mode(get_num_response(0, univ.scenario.towns.size() - 1, "Enter Town Number"), find_direction_from);
+			debug_enter_town();
 			break;
 			
 		case 'W':
