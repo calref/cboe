@@ -1910,6 +1910,19 @@ void debug_clean_up() {
 	put_pc_screen();
 }
 
+void debug_stealth_detect_life_firewalk() {
+	if(recording){
+		record_action("debug_stealth_detect_life_firewalk", "");
+	}
+	univ.party.status[ePartyStatus::STEALTH] += 10;
+	univ.party.status[ePartyStatus::DETECT_LIFE] += 10;
+	univ.party.status[ePartyStatus::FIREWALK] += 10;
+	add_string_to_buf("Debug: Stealth, Detect Life, Firewalk!");
+	draw_text_bar();
+	print_buf();
+	put_pc_screen();
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2115,13 +2128,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case 'E':
 			if(!univ.debug_mode) break;
-			univ.party.status[ePartyStatus::STEALTH] += 10;
-			univ.party.status[ePartyStatus::DETECT_LIFE] += 10;
-			univ.party.status[ePartyStatus::FIREWALK] += 10;
-			add_string_to_buf("Debug: Stealth, Detect Life, Firewalk!");
-			draw_text_bar();
-			print_buf();
-			put_pc_screen();
+			debug_stealth_detect_life_firewalk();
 			break;
 			
 		case 'F':

@@ -499,6 +499,8 @@ static void replay_next_action() {
 		debug_refresh_stores();
 	}else if(t == "debug_clean_up"){
 		debug_clean_up();
+	}else if(t == "debug_stealth_detect_life_firewalk"){
+		debug_stealth_detect_life_firewalk();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
