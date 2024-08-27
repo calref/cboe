@@ -2263,6 +2263,12 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case 'S':
 			if(!univ.debug_mode) break;
+			// edit_stuff_done() is used in the character editor which
+			// doesn't have replays, so its replay action is recorded
+			// external to the function definition unlike most actions.
+			if(recording){
+				record_action("edit_stuff_done", "");
+			}
 			edit_stuff_done();
 			break;
 			
