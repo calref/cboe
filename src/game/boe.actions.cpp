@@ -469,7 +469,23 @@ static void handle_pause(bool& did_something, bool& need_redraw) {
 	need_redraw = true;
 }
 
-static void handle_look(location destination, bool& need_redraw, bool& need_reprint) {
+void handle_look(location destination, bool right_button, eKeyMod mods, bool& need_redraw, bool& need_reprint) {
+	if(recording){
+		std::map<std::string,std::string> info;
+		std::ostringstream sstr;
+		sstr << destination;
+		info["destination"] = sstr.str();
+
+		sstr.str("");
+		sstr << std::boolalpha << right_button;
+		info["right_button"] = sstr.str();
+
+		sstr.str("");
+		sstr << mods;
+		info["mods"] = sstr.str();
+
+		record_action("handle_look", info);
+	}
 	need_reprint = true;
 	// TODO: I'm not sure what this check was for or if it would be needed for anything anymore.
 //	if(can_see(cur_loc,destination) >= 4 || (overall_mode != MODE_LOOK_OUTDOORS && loc_off_world(destination)))
@@ -510,6 +526,29 @@ static void handle_look(location destination, bool& need_redraw, bool& need_repr
 				}
 			}
 		}
+	}
+	// If option/ctrl not pressed, looking done, so restore center
+	// (Unless this was a quick look, which doesn't require re-centering)
+	bool look_done = true;
+	if(mod_contains(mods, mod_alt) || mod_contains(mods, mod_ctrl)) look_done = false;
+	if(look_done) {
+		if(overall_mode == MODE_LOOK_COMBAT) {
+			overall_mode = MODE_COMBAT;
+			if(!right_button){
+				center = univ.current_pc().combat_pos;
+				pause(5);
+				need_redraw = true;
+			}
+		}
+		else if(overall_mode == MODE_LOOK_TOWN) {
+			overall_mode = MODE_TOWN;
+			if(!right_button){
+				center = univ.party.town_loc;
+				need_redraw = true;
+			}
+		}
+		else if(overall_mode == MODE_LOOK_OUTDOORS)
+			overall_mode = MODE_OUTDOORS; // I'm not sure why need_redraw isn't set true in this case.
 	}
 }
 
@@ -1121,7 +1160,6 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	bool need_redraw = false, did_something = false, need_reprint = false;
 	location loc_in_sec,cur_direction;
 	bool right_button = event.mouseButton.button == sf::Mouse::Right;
-	eGameMode previous_mode;
 	rectangle world_screen = win_to_rects[WINRECT_TERVIEW];
 	rectangle terrain_viewport = world_screen;
 	world_screen.inset(13, 13);
@@ -1259,27 +1297,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 			if(overall_mode == MODE_LOOK_OUTDOORS) destination = univ.party.out_loc;
 			destination.x = destination.x + i - 4;
 			destination.y = destination.y + j - 4;
-			handle_look(destination, need_redraw, need_reprint);
-			// If option/ctrl not pressed, looking done, so restore center
-			bool look_done = true;
-			if(kb.isAltPressed() || kb.isCtrlPressed()) look_done = false;
-			if(look_done) {
-				if(right_button) overall_mode = previous_mode;
-				else if(overall_mode == MODE_LOOK_COMBAT) {
-					overall_mode = MODE_COMBAT;
-					center = univ.current_pc().combat_pos;
-					pause(5);
-					need_redraw = true;
-				}
-				else if(overall_mode == MODE_LOOK_TOWN) {
-					overall_mode = MODE_TOWN;
-					center = univ.party.town_loc;
-					need_redraw = true;
-				}
-				else if(overall_mode == MODE_LOOK_OUTDOORS)
-					overall_mode = MODE_OUTDOORS;
-				
-			}
+			handle_look(destination, right_button, current_key_mod(), need_redraw, need_reprint);
 		}
 		
 		// Talking to someone

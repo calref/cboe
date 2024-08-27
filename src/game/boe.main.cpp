@@ -399,6 +399,19 @@ static void replay_next_action() {
 		bool right_button;
 		sstr >> std::boolalpha >> right_button;
 		handle_begin_look(right_button, need_redraw);
+	}else if(t == "handle_look"){
+		auto info = info_from_action(next_action);
+		std::istringstream sstr(info["destination"]);
+		location destination;
+		sstr >> destination;
+
+		sstr.str(info["right_button"]);
+		bool right_button;
+		sstr >> std::boolalpha >> right_button;
+
+		eKeyMod mods = static_cast<eKeyMod>(std::stoi(info["mods"]));
+
+		handle_look(destination, right_button, mods, need_redraw, need_reprint);
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
