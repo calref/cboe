@@ -1825,6 +1825,24 @@ void debug_step_through() {
 	print_buf();
 }
 
+void debug_leave_town() {
+	if(recording){
+		record_action("debug_leave_town", "");
+	}
+	if(overall_mode == MODE_OUTDOORS){
+		add_string_to_buf("Debug - Leave Town: You're not in town!");
+		print_buf();
+		return;
+	}
+	univ.party.end_split(0);
+	overall_mode = MODE_OUTDOORS;
+	position_party(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y,univ.party.out_loc.x,univ.party.out_loc.y);
+	clear_map();
+	add_string_to_buf("Debug: Reunite party and leave town.");
+	print_buf();
+	redraw_screen(REFRESH_ALL);
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2020,18 +2038,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case 'B':
 			if(!univ.debug_mode) break;
-			if(overall_mode == MODE_OUTDOORS){
-				add_string_to_buf("Debug - Leave Town: You're not in town!");
-				print_buf();
-				break;
-			}
-			univ.party.end_split(0);
-			overall_mode = MODE_OUTDOORS;
-			position_party(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y,univ.party.out_loc.x,univ.party.out_loc.y);
-			clear_map();
-			add_string_to_buf("Debug: Reunite party and leave town.");
-			print_buf();
-			redraw_screen(REFRESH_ALL);
+			debug_leave_town();
 			break;
 			
 		case 'C':
