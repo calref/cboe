@@ -425,6 +425,18 @@ static void replay_next_action() {
 		screen_shift(dx, dy, need_redraw);
 	}else if(t == "handle_rest"){
 		handle_rest(need_redraw, need_reprint);
+	}else if(t == "handle_menu_spell"){
+		eSpell spell_picked = static_cast<eSpell>(std::stoi(next_action.GetText()));
+		handle_menu_spell(spell_picked);
+	}else if(t == "handle_spellcast"){
+		std::istringstream sstr(next_action.GetText());
+		eSkill which_type;
+		sstr >> which_type;
+
+		handle_spellcast(which_type, did_something, need_redraw, need_reprint);
+	}else if(t == "handle_target_space"){
+		location destination = location_from_action(next_action);
+		handle_target_space(destination, did_something, need_redraw, need_reprint);
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
