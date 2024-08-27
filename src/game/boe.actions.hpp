@@ -75,5 +75,6 @@ void debug_give_item();
 void debug_print_location();
 void debug_step_through();
 void debug_leave_town();
+void debug_kill();
 
 #endif
