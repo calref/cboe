@@ -46,7 +46,7 @@ void cPopulation::assign(size_t n, const cTownperson& other, const cMonster& bas
 	static_cast<cTownperson&>(dudes[n]) = other;
 	static_cast<cMonster&>(dudes[n]) = base;
 	// Now set up extra stuff
-	dudes[n].active = eCreatureStatus::IDLE; // TODO: Is this right?
+	dudes[n].active = eCreatureStatus::IDLE;
 	if(dudes[n].invisible) dudes[n].picture_num = 0;
 	dudes[n].m_health /= easy ? 2 : 1;
 	dudes[n].m_health *= difficulty_adjust;

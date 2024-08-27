@@ -797,7 +797,7 @@ void handle_equip_item(short item_hit, bool& need_redraw) {
 	}
 
 	if(overall_mode == MODE_USE_TOWN) {
-		// TODO: Uh, this looks wrong somehow.
+		// This handles someone pressing the "Use Space" button and then clicking on an item.
 		add_string_to_buf("Note: Clicking 'U' button by item uses the item.", 2);
 		use_item(stat_window, item_hit);
 		overall_mode = MODE_TOWN;
