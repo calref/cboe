@@ -78,5 +78,6 @@ void debug_leave_town();
 void debug_kill();
 void debug_magic_map();
 void debug_enter_town();
+void debug_refresh_stores();
 
 #endif

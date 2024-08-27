@@ -1891,6 +1891,15 @@ void debug_enter_town() {
 	start_town_mode(get_num_response(0, univ.scenario.towns.size() - 1, "Enter Town Number"), find_direction_from);
 }
 
+void debug_refresh_stores() {
+	if(recording){
+		record_action("debug_refresh_stores", "");
+	}
+	univ.refresh_store_items();
+	add_string_to_buf("Debug: Refreshed jobs/shops.");
+	print_buf();
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2204,9 +2213,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case 'W':
 			if(!univ.debug_mode) break;
-			univ.refresh_store_items();
-			add_string_to_buf("Debug: Refreshed jobs/shops.");
-			print_buf();
+			debug_refresh_stores();
 			break;
 			
 		case '<':
