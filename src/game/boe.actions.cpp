@@ -2133,9 +2133,8 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			break;
 			
 		case 'I':
-			if(univ.debug_mode) {
-				debug_give_item();
-			}
+			if(!univ.debug_mode) break;
+			debug_give_item();
 			break;
 			
 		case 'Q':
