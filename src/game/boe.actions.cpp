@@ -1900,6 +1900,16 @@ void debug_refresh_stores() {
 	print_buf();
 }
 
+void debug_clean_up() {
+	if(recording){
+		record_action("debug_clean_up", "");
+	}
+	univ.party.clear_bad_status();
+	add_string_to_buf("Debug: You get cleaned up!");
+	print_buf();
+	put_pc_screen();
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2100,10 +2110,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case 'C':
 			if(!univ.debug_mode) break;
-			univ.party.clear_bad_status();
-			add_string_to_buf("Debug: You get cleaned up!");
-			print_buf();
-			put_pc_screen();
+			debug_clean_up();
 			break;
 			
 		case 'E':

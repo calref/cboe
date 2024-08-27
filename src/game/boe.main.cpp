@@ -497,6 +497,8 @@ static void replay_next_action() {
 		debug_enter_town();
 	}else if(t == "debug_refresh_stores"){
 		debug_refresh_stores();
+	}else if(t == "debug_clean_up"){
+		debug_clean_up();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
