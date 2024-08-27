@@ -251,9 +251,17 @@ bool prime_time() {
 
 void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw, bool& need_reprint, bool record) {
 	if(record && recording){
+		std::map<std::string,std::string> info;
+
 		std::ostringstream sstr;
 		sstr << which_type;
-		record_action("handle_spellcast", sstr.str());
+		info["which_type"] = sstr.str();
+
+		sstr.str("");
+		sstr << std::boolalpha << spell_forced;
+		info["spell_forced"] = sstr.str();
+
+		record_action("handle_spellcast", info);
 	}
 	short store_sp[6];
 	extern short spec_target_fail;

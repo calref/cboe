@@ -429,9 +429,23 @@ static void replay_next_action() {
 		eSpell spell_picked = static_cast<eSpell>(std::stoi(next_action.GetText()));
 		handle_menu_spell(spell_picked);
 	}else if(t == "handle_spellcast"){
-		std::istringstream sstr(next_action.GetText());
+		auto info = info_from_action(next_action);
+		std::istringstream sstr(info["which_type"]);
 		eSkill which_type;
 		sstr >> which_type;
+
+		// Incredibly, this code isn't working despite being used as a pattern elsewhere:
+		// sstr.str(info["spell_forced"]);
+		// sstr >> std::boolalpha >> spell_forced;
+
+		// But this code is:
+		if(info["spell_forced"] == "true"){
+			spell_forced = true;
+		}else{
+			spell_forced = false;
+		}
+
+		// If I'm making an obvious error I just can't see it.
 
 		handle_spellcast(which_type, did_something, need_redraw, need_reprint);
 	}else if(t == "handle_target_space"){
