@@ -127,6 +127,8 @@ void handle_quit_event();
 void handle_help_toc();
 void menu_give_help(short help1);
 
+extern void edit_stuff_done();
+
 #ifdef __APPLE__
 eMenuChoice menuChoice=eMenuChoice::MENU_CHOICE_NONE;
 short menuChoiceId=-1;
@@ -513,6 +515,8 @@ static void replay_next_action() {
 		debug_increase_age();
 	}else if(t == "debug_towns_forget"){
 		debug_towns_forget();
+	}else if(t == "edit_stuff_done"){
+		edit_stuff_done();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
