@@ -434,18 +434,9 @@ static void replay_next_action() {
 		eSkill which_type;
 		sstr >> which_type;
 
-		// Incredibly, this code isn't working despite being used as a pattern elsewhere:
-		// sstr.str(info["spell_forced"]);
-		// sstr >> std::boolalpha >> spell_forced;
-
-		// But this code is:
-		if(info["spell_forced"] == "true"){
-			spell_forced = true;
-		}else{
-			spell_forced = false;
-		}
-
-		// If I'm making an obvious error I just can't see it.
+		sstr.str(info["spell_forced"]);
+		sstr.seekg(0);
+		sstr >> std::boolalpha >> spell_forced;
 
 		handle_spellcast(which_type, did_something, need_redraw, need_reprint);
 	}else if(t == "handle_target_space"){
