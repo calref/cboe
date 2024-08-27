@@ -1154,6 +1154,13 @@ static void handle_party_death() {
 	}
 }
 
+void screen_shift(int dx, int dy, bool& need_redraw) {
+	center.x += dx;
+	center.y += dy;
+
+	need_redraw = true;
+}
+
 bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	long item_hit;
 	bool are_done = false;
@@ -1342,20 +1349,16 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	// MARK: Begin: Screen shift
 	if(scrollableModes.count(overall_mode) && the_point.in(terrain_viewport) && !the_point.in(world_screen)) {
 		if(the_point.y < world_screen.top && center.y > univ.town->in_town_rect.top && center.y > 4) {
-			center.y--;
-			need_redraw = true;
+			screen_shift(0, -1, need_redraw);
 		}
 		if(the_point.x < world_screen.left && center.x > univ.town->in_town_rect.left && center.x > 4) {
-			center.x--;
-			need_redraw = true;
+			screen_shift(-1, 0, need_redraw);
 		}
 		if(the_point.y > world_screen.bottom && center.y < univ.town->in_town_rect.bottom && center.y < univ.town->max_dim - 5) {
-			center.y++;
-			need_redraw = true;
+			screen_shift(0, 1, need_redraw);
 		}
 		if(the_point.x > world_screen.right && center.x < univ.town->in_town_rect.right && center.x < univ.town->max_dim - 5) {
-			center.x++;
-			need_redraw = true;
+			screen_shift(1, 0, need_redraw);
 		}
 	}
 	// MARK: End: Screen shift

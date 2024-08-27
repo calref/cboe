@@ -60,5 +60,6 @@ void handle_new_pc_graphic();
 void handle_rename_pc();
 void handle_begin_look(bool right_button, bool& need_redraw);
 void handle_look(location destination, bool right_button, eKeyMod mods, bool& need_redraw, bool& need_reprint);
+void screen_shift(int dx, int dy, bool& need_redraw);
 
 #endif
