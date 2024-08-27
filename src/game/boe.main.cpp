@@ -103,6 +103,8 @@ short store_spell_target = 6,pc_casting;
 short num_targets_left = 0;
 location spell_targets[8];
 
+extern void spell_cast_hit_return();
+
 /* Combat globals */
 short which_combat_type;
 location center;
@@ -451,6 +453,8 @@ static void replay_next_action() {
 		sstr >> num_targets_left;
 
 		handle_target_space(destination, did_something, need_redraw, need_reprint);
+	}else if(t == "spell_cast_hit_return"){
+		spell_cast_hit_return();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
