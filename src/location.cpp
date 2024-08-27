@@ -239,16 +239,27 @@ std::ostream& operator<< (std::ostream& out, location l) {
 	return out;
 }
 
+struct match {
+	char c;
+};
+
+static std::istream& operator>> (std::istream& in, match m) {
+	if(in.get() != m.c) {
+		in.setstate(std::ios_base::failbit);
+	}
+	return in;
+}
+
 std::istream& operator>> (std::istream& in, location& l) {
-	in.get(); // (
+	in >> std::ws >> match{'('};
 	std::stringbuf sstr;
 	in.get(sstr, ',');
 	l.x = std::stoi(sstr.str());
-	in.get(); // ,
+	in >> match{','} >> std::ws;
 	sstr.str("");
 	in.get(sstr, ')');
 	l.y = std::stoi(sstr.str());
-	in.get(); // )
+	in >> match{')'};
 	return in;
 }
 
@@ -272,17 +283,9 @@ std::ostream& operator<< (std::ostream& out, rectangle r) {
 std::istream& operator>> (std::istream& in, rectangle& r) {
 	location tl;
 	location br;
-	in.get(); // {
-	in >> tl;
-	in.get(); //  
-	in.get(); // -
-	in.get(); //  
-	in >> br;
-	in.get(); // }
-	r.top = tl.y;
-	r.left = tl.x;
-	r.bottom = br.y;
-	r.right = br.x;
+	in >> std::ws >> match{'{'} >> std::ws >> tl;
+	in >> std::ws >> match{'-'} >> std::ws >> br >> std::ws >> match{'}'};
+	r = rectangle(tl, br);
 	return in;
 }
 
