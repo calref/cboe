@@ -1735,6 +1735,20 @@ void initiate_outdoor_combat(short i) {
 	draw_terrain();
 }
 
+void show_inventory() {
+	if(recording){
+		record_action("show_inventory", "");
+	}
+	if(is_combat()) {
+		// Show active PC's inventory
+		set_stat_window_for_pc(univ.cur_pc);
+		put_item_screen(stat_window);
+	} else {
+		// TODO ... or first PC's inventory... why?
+		set_stat_window(ITEM_WIN_PC1);
+		put_item_screen(stat_window);
+	}
+}
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -1912,15 +1926,8 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			}
 			print_buf();
 			break;
-		case 'z': // Show active PC's inventory
-			if(is_combat()) {
-				set_stat_window_for_pc(univ.cur_pc);
-				put_item_screen(stat_window);
-			} else {
-				// ... or first PC's inventory... why?
-				set_stat_window(ITEM_WIN_PC1);
-				put_item_screen(stat_window);
-			}
+		case 'z':
+			show_inventory();
 			break;
 			
 		case '=':

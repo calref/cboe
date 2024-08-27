@@ -472,6 +472,8 @@ static void replay_next_action() {
 	}else if(t == "handle_use_space"){
 		location destination = location_from_action(next_action);
 		handle_use_space(destination, did_something, need_redraw);
+	}else if(t == "show_inventory"){
+		show_inventory();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
