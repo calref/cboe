@@ -1843,6 +1843,24 @@ void debug_leave_town() {
 	redraw_screen(REFRESH_ALL);
 }
 
+void debug_kill() {
+	if(recording){
+		record_action("debug_kill", "");
+	}
+	for(short i = 0; i < univ.town.monst.size(); i++) {
+		if(is_combat() && univ.town.monst[i].is_alive() && !univ.town.monst[i].is_friendly())
+			univ.town.monst[i].active = eCreatureStatus::DEAD;
+		
+		if(univ.town.monst[i].is_alive() && !univ.town.monst[i].is_friendly()
+			&& (dist(univ.town.monst[i].cur_loc,univ.party.town_loc) <= 10) )
+			damage_monst(univ.town.monst[i], 7,1000,eDamageType::SPECIAL,0);
+	}
+	// kill_monst(&univ.town.monst[i],6);
+	draw_terrain();
+	add_string_to_buf("Debug: Kill things.");
+	print_buf();
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2101,18 +2119,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case 'K':
 			if(!univ.debug_mode) break;
-			for(short i = 0; i < univ.town.monst.size(); i++) {
-				if(is_combat() && univ.town.monst[i].is_alive() && !univ.town.monst[i].is_friendly())
-					univ.town.monst[i].active = eCreatureStatus::DEAD;
-				
-				if(univ.town.monst[i].is_alive() && !univ.town.monst[i].is_friendly()
-					&& (dist(univ.town.monst[i].cur_loc,univ.party.town_loc) <= 10) )
-					damage_monst(univ.town.monst[i], 7,1000,eDamageType::SPECIAL,0);
-			}
-			// kill_monst(&univ.town.monst[i],6);
-			draw_terrain();
-			add_string_to_buf("Debug: Kill things.");
-			print_buf();
+			debug_kill();
 			break;
 			
 		case 'N':
