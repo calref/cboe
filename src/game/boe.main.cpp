@@ -493,6 +493,8 @@ static void replay_next_action() {
 		debug_kill();
 	}else if(t == "debug_magic_map"){
 		debug_magic_map();
+	}else if(t == "debug_enter_town"){
+		debug_enter_town();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
