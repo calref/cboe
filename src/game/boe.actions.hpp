@@ -81,5 +81,6 @@ void debug_enter_town();
 void debug_refresh_stores();
 void debug_clean_up();
 void debug_stealth_detect_life_firewalk();
+void debug_fly();
 
 #endif
