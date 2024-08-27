@@ -485,6 +485,8 @@ static void replay_next_action() {
 		debug_give_item();
 	}else if(t == "debug_print_location"){
 		debug_print_location();
+	}else if(t == "debug_step_through"){
+		debug_step_through();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return

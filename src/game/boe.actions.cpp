@@ -1811,6 +1811,20 @@ void debug_print_location() {
 	print_buf();
 }
 
+void debug_step_through() {
+	if(recording){
+		record_action("debug_step_through", "");
+	}
+	if(univ.node_step_through) {
+		univ.node_step_through = false;
+		add_string_to_buf("Debug: Step-through disabled");
+	} else {
+		univ.node_step_through = true;
+		add_string_to_buf("Debug: Step-through enabled");
+	}
+	print_buf();
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2186,14 +2200,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			break;
 		case '!':
 			if(!univ.debug_mode) break;
-			if(univ.node_step_through) {
-				univ.node_step_through = false;
-				add_string_to_buf("Debug: Step-through disabled");
-			} else {
-				univ.node_step_through = true;
-				add_string_to_buf("Debug: Step-through enabled");
-			}
-			print_buf();
+			debug_step_through();
 			break;
 		case '/':
 			if(!univ.debug_mode) break;
