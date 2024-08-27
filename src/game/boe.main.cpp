@@ -467,6 +467,11 @@ static void replay_next_action() {
 	}else if(t == "handle_pick"){
 		location destination = location_from_action(next_action);
 		handle_bash_pick(destination, did_something, need_redraw, false);
+	}else if(t == "handle_use_space_select"){
+		handle_use_space_select(need_reprint);
+	}else if(t == "handle_use_space"){
+		location destination = location_from_action(next_action);
+		handle_use_space(destination, did_something, need_redraw);
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return

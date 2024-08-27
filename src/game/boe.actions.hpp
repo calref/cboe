@@ -67,5 +67,7 @@ void handle_target_space(location destination, bool& did_something, bool& need_r
 void handle_pause(bool& did_something, bool& need_redraw);
 void handle_bash_pick_select(bool& need_reprint, bool isBash);
 void handle_bash_pick(location destination, bool& did_something, bool& need_redraw, bool isBash);
+void handle_use_space_select(bool& need_reprint);
+void handle_use_space(location destination, bool& did_something, bool& need_redraw);
 
 #endif

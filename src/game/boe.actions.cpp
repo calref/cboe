@@ -757,7 +757,10 @@ void handle_drop_item(location destination, bool& need_redraw) {
 	put_item_screen(stat_window);
 }
 
-static void handle_use_space_select(bool& need_reprint) {
+void handle_use_space_select(bool& need_reprint) {
+	if(recording){
+		record_action("handle_use_space_select", "");
+	}
 	if(overall_mode == MODE_TOWN) {
 		add_string_to_buf("Use: Select a space or item.");
 		add_string_to_buf("  (Hit button again to cancel.)");
@@ -770,7 +773,12 @@ static void handle_use_space_select(bool& need_reprint) {
 	}
 }
 
-static void handle_use_space(location destination, bool& did_something, bool& need_redraw) {
+void handle_use_space(location destination, bool& did_something, bool& need_redraw) {
+	if(recording){
+		std::ostringstream sstr;
+		sstr << destination;
+		record_action("handle_use_space", sstr.str());
+	}
 	if(!adjacent(destination,univ.party.town_loc))
 		add_string_to_buf("  Must be adjacent.");
 	else did_something = use_space(destination);
