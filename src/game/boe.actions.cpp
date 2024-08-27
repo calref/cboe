@@ -1861,6 +1861,24 @@ void debug_kill() {
 	print_buf();
 }
 
+void debug_magic_map() {
+	if(recording){
+		record_action("debug_magic_map", "");
+	}
+	if(overall_mode == MODE_OUTDOORS) {
+		for(short i = 0; i < univ.out.max_dim; i++)
+			for(short j = 0; j < univ.out.max_dim; j++)
+				make_explored(i,j);
+	} else {
+		for(short i = 0; i < univ.town->max_dim; i++)
+			for(short j = 0; j < univ.town->max_dim; j++)
+				make_explored(i,j);
+	}
+	clear_map();
+	add_string_to_buf("Debug:  Magic Map.");
+	print_buf();
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2139,18 +2157,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case 'Q':
 			if(!univ.debug_mode) break;
-			if(overall_mode == MODE_OUTDOORS) {
-				for(short i = 0; i < univ.out.max_dim; i++)
-					for(short j = 0; j < univ.out.max_dim; j++)
-						make_explored(i,j);
-			} else {
-				for(short i = 0; i < univ.town->max_dim; i++)
-					for(short j = 0; j < univ.town->max_dim; j++)
-						make_explored(i,j);
-			}
-			clear_map();
-			add_string_to_buf("Debug:  Magic Map.");
-			print_buf();
+			debug_magic_map();
 			break;
 			
 		case 'R':

@@ -491,6 +491,8 @@ static void replay_next_action() {
 		debug_leave_town();
 	}else if(t == "debug_kill"){
 		debug_kill();
+	}else if(t == "debug_magic_map"){
+		debug_magic_map();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
