@@ -59,5 +59,6 @@ void show_dialog_action(std::string xml_file);
 void handle_new_pc_graphic();
 void handle_rename_pc();
 void handle_begin_look(bool right_button, bool& need_redraw);
+void handle_look(location destination, bool right_button, eKeyMod mods, bool& need_redraw, bool& need_reprint);
 
 #endif
