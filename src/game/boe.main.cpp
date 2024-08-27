@@ -440,7 +440,16 @@ static void replay_next_action() {
 
 		handle_spellcast(which_type, did_something, need_redraw, need_reprint);
 	}else if(t == "handle_target_space"){
-		location destination = location_from_action(next_action);
+		auto info = info_from_action(next_action);
+
+		std::istringstream sstr(info["destination"]);
+		location destination;
+		sstr >> destination;
+
+		sstr.str(info["num_targets_left"]);
+		sstr.seekg(0);
+		sstr >> num_targets_left;
+
 		handle_target_space(destination, did_something, need_redraw, need_reprint);
 	}
 
