@@ -479,6 +479,8 @@ static void replay_next_action() {
 		short help1 = boost::lexical_cast<short>(info["help1"]);
 		short help2 = boost::lexical_cast<short>(info["help2"]);
 		give_help(help1, help2);
+	}else if(t == "toggle_debug_mode"){
+		toggle_debug_mode();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return

@@ -1761,6 +1761,20 @@ static void give_help_and_record(short help1, short help2) {
 	give_help(help1, help2);
 }
 
+void toggle_debug_mode() {
+	if(recording){
+		record_action("toggle_debug_mode", "");
+	}
+	if(univ.debug_mode) {
+		univ.debug_mode = false;
+		ASB("Debug mode OFF.");
+	} else {
+		univ.debug_mode = true;
+		ASB("Debug mode ON.");
+	}
+	print_buf();
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -1929,14 +1943,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 			
 		case 'D':
-			if(univ.debug_mode) {
-				univ.debug_mode = false;
-				ASB("Debug mode OFF.");
-			} else {
-				univ.debug_mode = true;
-				ASB("Debug mode ON.");
-			}
-			print_buf();
+			toggle_debug_mode();
 			break;
 		case 'z':
 			show_inventory();
