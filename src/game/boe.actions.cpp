@@ -1744,6 +1744,23 @@ void show_inventory() {
 	put_item_screen(stat_window);
 }
 
+// Most give_help() calls don't need to be recorded, because
+// they are triggered incidentally by other recorded actions.
+static void give_help_and_record(short help1, short help2) {
+	if(recording){
+		std::map<std::string,std::string> info;
+		std::ostringstream sstr;
+		sstr << help1;
+		info["help1"] = sstr.str();
+
+		sstr.str("");
+		sstr << help2;
+		info["help2"] = sstr.str();
+		record_action("give_help", info);
+	}
+	give_help(help1, help2);
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -1871,11 +1888,11 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case '?':
 			if(overall_mode == MODE_SHOPPING) {
-				give_help(226,27);
+				give_help_and_record(226,27);
 				break;
 			}
 			if(overall_mode == MODE_TALKING) {
-				give_help(205,6);
+				give_help_and_record(205,6);
 				break;
 			}
 			if(is_out()) show_dialog_action("help-outdoor");

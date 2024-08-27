@@ -474,6 +474,11 @@ static void replay_next_action() {
 		handle_use_space(destination, did_something, need_redraw);
 	}else if(t == "show_inventory"){
 		show_inventory();
+	}else if(t == "give_help"){
+		auto info = info_from_action(next_action);
+		short help1 = boost::lexical_cast<short>(info["help1"]);
+		short help2 = boost::lexical_cast<short>(info["help2"]);
+		give_help(help1, help2);
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
