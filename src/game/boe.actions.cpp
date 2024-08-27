@@ -1976,6 +1976,17 @@ void debug_return_to_start() {
 	print_buf();
 }
 
+void debug_increase_age() {
+	if(recording){
+		record_action("debug_increase_age", "");
+	}
+	ASB("Debug: Increase age.");
+	ASB("  It is now 1 day later.");
+	print_buf();
+	univ.party.age += 3700;
+	put_pc_screen();
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2256,11 +2267,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case '<':
 			if(!univ.debug_mode) break;
-			ASB("Debug: Increase age.");
-			ASB("  It is now 1 day later.");
-			print_buf();
-			univ.party.age += 3700;
-			put_pc_screen();
+			debug_increase_age();
 			break;
 		case '>':
 			if(!univ.debug_mode) break;
