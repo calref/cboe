@@ -782,9 +782,10 @@ static void handle_use_space(location destination, bool& did_something, bool& ne
 
 void handle_bash_pick_select(bool& need_reprint, bool isBash) {
 	if(recording){
-		std::ostringstream sstr;
-		sstr << std::boolalpha << isBash;
-		record_action("handle_bash_pick_select", sstr.str());
+		if(isBash)
+			record_action("handle_bash_select", "");
+		else
+			record_action("handle_pick_select", "");
 	}
 	if(overall_mode == MODE_BASH_TOWN || overall_mode == MODE_PICK_TOWN) {
 		add_string_to_buf("  Cancelled.");
@@ -801,13 +802,11 @@ void handle_bash_pick(location destination, bool& did_something, bool& need_redr
 		std::map<std::string,std::string> info;
 		std::ostringstream sstr;
 		sstr << destination;
-		info["destination"] = sstr.str();
 
-		sstr.str("");
-		sstr << std::boolalpha << isBash;
-		info["isBash"] = sstr.str();
-
-		record_action("handle_bash_pick", info);
+		if(isBash)
+			record_action("handle_bash", sstr.str());
+		else
+			record_action("handle_pick", sstr.str());
 	}
 	if(!adjacent(destination,univ.party.town_loc))
 		add_string_to_buf("  Must be adjacent.");
