@@ -1951,6 +1951,28 @@ void debug_ghost_mode() {
 	print_buf();
 }
 
+void debug_return_to_start() {
+	if(recording){
+		record_action("debug_return_to_start", "");
+	}
+	if(univ.party.in_boat >= 0) {
+		add_string_to_buf("  Not while in boat.");
+		return;
+	}
+	if(univ.party.in_horse >= 0) {
+		add_string_to_buf("  Not while on horse.");
+		return;
+	}
+	force_town_enter(univ.scenario.which_town_start,univ.scenario.where_start);
+	start_town_mode(univ.scenario.which_town_start,9);
+	position_party(univ.scenario.out_sec_start.x,univ.scenario.out_sec_start.y,
+					univ.scenario.out_start.x,univ.scenario.out_start.y);
+	center = univ.party.town_loc = univ.scenario.where_start;
+	redraw_screen(REFRESH_ALL);
+	add_string_to_buf("Debug:  You return to the start.");
+	print_buf();
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2211,22 +2233,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case 'R':
 			if(!univ.debug_mode) break;
-			if(univ.party.in_boat >= 0) {
-				add_string_to_buf("  Not while in boat.");
-				break;
-			}
-			if(univ.party.in_horse >= 0) {
-				add_string_to_buf("  Not while on horse.");
-				break;
-			}
-			force_town_enter(univ.scenario.which_town_start,univ.scenario.where_start);
-			start_town_mode(univ.scenario.which_town_start,9);
-			position_party(univ.scenario.out_sec_start.x,univ.scenario.out_sec_start.y,
-						   univ.scenario.out_start.x,univ.scenario.out_start.y);
-			center = univ.party.town_loc = univ.scenario.where_start;
-			redraw_screen(REFRESH_ALL);
-			add_string_to_buf("Debug:  You return to the start.");
-			print_buf();
+			debug_return_to_start();
 			break;
 			
 		case 'S':

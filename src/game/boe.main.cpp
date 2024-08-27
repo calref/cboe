@@ -505,6 +505,8 @@ static void replay_next_action() {
 		debug_fly();
 	}else if(t == "debug_ghost_mode"){
 		debug_ghost_mode();
+	}else if(t == "debug_return_to_start"){
+		debug_return_to_start();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
