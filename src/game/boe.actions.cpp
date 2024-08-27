@@ -1987,6 +1987,17 @@ void debug_increase_age() {
 	put_pc_screen();
 }
 
+void debug_towns_forget() {
+	if(recording){
+		record_action("debug_towns_forget", "");
+	}
+	ASB("DEBUG: Towns have short memory.");
+	ASB("Your deeds have been forgotten.");
+	print_buf();
+	for(auto& pop : univ.party.creature_save)
+		pop.which_town = 200;
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2271,11 +2282,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			break;
 		case '>':
 			if(!univ.debug_mode) break;
-			ASB("DEBUG: Towns have short memory.");
-			ASB("Your deeds have been forgotten.");
-			print_buf();
-			for(auto& pop : univ.party.creature_save)
-				pop.which_town = 200;
+			debug_towns_forget();
 			break;
 		case '!':
 			if(!univ.debug_mode) break;

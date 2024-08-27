@@ -511,6 +511,8 @@ static void replay_next_action() {
 		handle_victory();
 	}else if(t == "debug_increase_age"){
 		debug_increase_age();
+	}else if(t == "debug_towns_forget"){
+		debug_towns_forget();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
