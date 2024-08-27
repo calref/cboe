@@ -1739,16 +1739,11 @@ void show_inventory() {
 	if(recording){
 		record_action("show_inventory", "");
 	}
-	if(is_combat()) {
-		// Show active PC's inventory
-		set_stat_window_for_pc(univ.cur_pc);
-		put_item_screen(stat_window);
-	} else {
-		// TODO ... or first PC's inventory... why?
-		set_stat_window(ITEM_WIN_PC1);
-		put_item_screen(stat_window);
-	}
+	// Show active PC's inventory
+	set_stat_window_for_pc(univ.cur_pc);
+	put_item_screen(stat_window);
 }
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
