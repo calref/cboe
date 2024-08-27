@@ -71,5 +71,6 @@ void handle_use_space_select(bool& need_reprint);
 void handle_use_space(location destination, bool& did_something, bool& need_redraw);
 void show_inventory();
 void toggle_debug_mode();
+void debug_give_item();
 
 #endif
