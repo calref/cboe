@@ -507,6 +507,8 @@ static void replay_next_action() {
 		debug_ghost_mode();
 	}else if(t == "debug_return_to_start"){
 		debug_return_to_start();
+	}else if(t == "handle_victory"){
+		handle_victory();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return

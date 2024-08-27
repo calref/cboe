@@ -1160,7 +1160,10 @@ void handle_get_items(bool& did_something, bool& need_redraw, bool& need_reprint
 	need_reprint = true;
 }
 
-static void handle_victory() {
+void handle_victory(bool record) {
+	if(record && recording){
+		record_action("handle_victory", "");
+	}
 	end_scenario = false;
 	// This is the point at which we need to transfer any exported graphics over to the party sheet.
 	univ.exportGraphics();
@@ -2213,7 +2216,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case 'N':
 			if(!univ.debug_mode) break;
-			handle_victory();
+			handle_victory(true);
 			break;
 			
 		case 'O':
