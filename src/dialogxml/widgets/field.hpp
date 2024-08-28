@@ -65,7 +65,7 @@ public:
 	bool hasFocus() const;
 	/// Handle keyboard input.
 	/// @param key The keypress to handle.
-	void handleInput(cKey key);
+	void handleInput(cKey key, bool record = true);
 	cTextField& operator=(cTextField& other) = delete;
 	cTextField(cTextField& other) = delete;
 	/// This field is only used by cDialog during the loading process. Changing it will have no effect.

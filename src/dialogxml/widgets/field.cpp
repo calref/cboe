@@ -132,10 +132,10 @@ bool cTextField::handleClick(location clickLoc, cFramerateLimiter& fps_limiter) 
 	if(is_double && !is_shift && !hadSelection) {
 		cKey key = {true, key_word_right, mod_none};
 		if(insertionPoint < contents.size() && contents[insertionPoint] != ' ')
-			handleInput(key);
+			handleInput(key, false);
 		key.k = key_word_left;
 		key.mod += mod_shift;
-		handleInput(key);
+		handleInput(key, false);
 	}
 	bool done = false;
 	sf::Event e;
@@ -396,8 +396,8 @@ static cKey divineFunction(cKey key) {
 	return key;
 }
 
-void cTextField::handleInput(cKey key) {
-	if(recording){
+void cTextField::handleInput(cKey key, bool record) {
+	if(record && recording){
 		record_field_input(key);
 	}
 	changeMade = true;
@@ -417,7 +417,7 @@ void cTextField::handleInput(cKey key) {
 			cKey deleteKey = key;
 			deleteKey.spec = true;
 			deleteKey.k = key_bsp;
-			handleInput(deleteKey);
+			handleInput(deleteKey, false);
 			contents = getText();
 		}
 		if(aTextInsert* ins = dynamic_cast<aTextInsert*>(current_action.get()))
@@ -472,7 +472,7 @@ void cTextField::handleInput(cKey key) {
 			if(snippets[ip_row].at.y == snippets[0].at.y) {
 				key.k = key_top;
 				if(select) key.mod += mod_shift;
-				handleInput(key);
+				handleInput(key, false);
 			} else {
 				int x = snippets[ip_row].at.x + ip_col, y = snippets[ip_row].at.y - 10;
 				set_ip(loc(x,y), select ? &cTextField::selectionPoint : &cTextField::insertionPoint);
@@ -486,7 +486,7 @@ void cTextField::handleInput(cKey key) {
 			if(snippets[ip_row].at.y == snippets.back().at.y) {
 				key.k = key_bottom;
 				if(select) key.mod += mod_shift;
-				handleInput(key);
+				handleInput(key, false);
 			} else {
 				int x = snippets[ip_row].at.x + ip_col, y = snippets[ip_row].at.y + 20;
 				set_ip(loc(x,y), select ? &cTextField::selectionPoint : &cTextField::insertionPoint);
@@ -497,9 +497,9 @@ void cTextField::handleInput(cKey key) {
 		case key_del: case key_word_del:
 			if(haveSelection) {
 				if(key.k == key_word_bsp)
-					handleInput({true, key_word_left, mod_shift});
+					handleInput({true, key_word_left, mod_shift}, false);
 				else if(key.k == key_word_del)
-					handleInput({true, key_word_right, mod_shift});
+					handleInput({true, key_word_right, mod_shift}, false);
 				auto begin = contents.begin() + std::min(selectionPoint, insertionPoint);
 				auto end = contents.begin() + std::max(selectionPoint, insertionPoint);
 				std::string removed(begin, end);
@@ -513,9 +513,9 @@ void cTextField::handleInput(cKey key) {
 				selectKey.k = key_word_left;
 				selectKey.mod = mod_shift;
 				key.k = key_bsp;
-				handleInput(selectKey);
+				handleInput(selectKey, false);
 				if(selectionPoint != insertionPoint)
-					handleInput(key);
+					handleInput(key, false);
 				return;
 			} else if(key.k == key_bsp) {
 				if(insertionPoint == 0) break;
@@ -535,9 +535,9 @@ void cTextField::handleInput(cKey key) {
 				selectKey.k = key_word_right;
 				selectKey.mod = mod_shift;
 				key.k = key_del;
-				handleInput(selectKey);
+				handleInput(selectKey, false);
 				if(selectionPoint != insertionPoint)
-					handleInput(key);
+					handleInput(key, false);
 				return;
 			} else if(key.k == key_del) {
 				if(insertionPoint == contents.length()) break;
@@ -597,7 +597,7 @@ void cTextField::handleInput(cKey key) {
 			if(key.k == key_cut) {
 				cKey deleteKey = key;
 				deleteKey.k = key_bsp;
-				handleInput(deleteKey);
+				handleInput(deleteKey, false);
 				contents = getText();
 			}
 			break;
@@ -606,7 +606,7 @@ void cTextField::handleInput(cKey key) {
 			if(!get_clipboard().empty()) {
 				if(haveSelection) {
 					cKey deleteKey = {true, key_bsp, mod_none};
-					handleInput(deleteKey);
+					handleInput(deleteKey, false);
 				}
 				contents = getText();
 				std::string toInsert = get_clipboard();
