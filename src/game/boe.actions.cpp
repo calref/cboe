@@ -1256,6 +1256,19 @@ void handle_print_pc_sp(int which_pc) {
 	add_string_to_buf(str.str());
 }
 
+void handle_trade_places(int which_pc) {
+	if(recording){
+		record_action("handle_trade_places", boost::lexical_cast<std::string>(which_pc));
+	}
+	if(!prime_time())
+		add_string_to_buf("Trade places: Finish what you're doing first.");
+	else if(is_combat())
+		add_string_to_buf("Trade places: Can't do this in combat.");
+	else {
+		switch_pc(which_pc);
+	}
+}
+
 bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	long item_hit;
 	bool are_done = false;
@@ -1492,13 +1505,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 							give_pc_info(i);
 							break;
 						case PCBTN_TRADE:
-							if(!prime_time())
-								add_string_to_buf("Trade places: Finish what you're doing first.");
-							else if(is_combat())
-								add_string_to_buf("Trade places: Can't do this in combat.");
-							else {
-								switch_pc(i);
-							}
+							handle_trade_places(i);
 							break;
 						case MAX_ePlayerButton:
 							break; // Not a button
