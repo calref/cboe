@@ -68,6 +68,7 @@ class cDialog {
 	cDialog* parent;
 	std::string generateRandomString();
 	void loadFromFile(const DialogDefn& file);
+	void handleTab(bool reverse);
 	template<typename Iter> void handleTabOrder(std::string& itemHit, Iter begin, Iter end);
 	std::vector<std::pair<std::string,cTextField*>> tabOrder;
 	static cDialog* topWindow; // Tracks the frontmost dialog.
