@@ -12,7 +12,9 @@ static status_info_t status_info[int(eStatus::CHARM) + 1] = {
 	{false, 4}, // POISONED_WEAPON
 	{false, 2, 3}, // BLESS_CURSE
 	{true, 0, -1, {1, 4}}, // POISON
-	{false, 6, 8, {7, 0, 0}}, // HASTE_SLOW
+	{false, 6, 8 // HASTE_SLOW
+		//, {7, 0, 0} // uncomment to enable the "normal speed" icon
+	},
 	{false, 5}, // INVULNERABLE
 	{false, 9, 19}, // MAGIC_RESISTANCE
 	{true, 10}, // WEBS
