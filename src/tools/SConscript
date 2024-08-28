@@ -7,6 +7,7 @@ tools = Split("""
 	drawable_manager.cpp
 	keymods.cpp
 	replay.cpp
+	../damage.cpp
 	../location.cpp
 	../mathutil.cpp
 	../porting.cpp

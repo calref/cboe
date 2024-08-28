@@ -2310,7 +2310,7 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 				if(get_ran(1,0,5) != 3) continue;
 				int how_much = item.abil_strength;
 				if(item.abil_harms()) how_much *= -1;
-				if(isStatusNegative(item.abil_data.status))
+				if((*item.abil_data.status).isNegative)
 					how_much *= -1;
 				univ.party.apply_status(item.abil_data.status, how_much);
 			}
@@ -2429,7 +2429,7 @@ void increase_age() {
 				int how_much = item.abil_strength;
 				if(item.abil_harms()) how_much *= -1;
 				eStatus status = item.abil_data.status;
-				if(isStatusNegative(status))
+				if((*status).isNegative)
 					how_much *= -1;
 				univ.party.apply_status(status, how_much);
 			}

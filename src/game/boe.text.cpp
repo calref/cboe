@@ -82,7 +82,6 @@ extern short store_selling_values[8];
 extern short combat_posing_monster, current_working_monster; // 0-5 PC 100 + x - monster x
 extern bool supressing_some_spaces;
 extern location ok_space[4];
-extern std::map<eStatus, std::pair<short, short>> statIcons;
 
 // Draws the pc area in upper right
 void put_pc_screen() {
@@ -642,9 +641,12 @@ void draw_pc_effects(short pc) {
 	sf::Texture& status_gworld = *ResMgr::graphics.get("staticons");
 	for(auto next : univ.party[pc].status) {
 		short placedIcon = -1;
-		if(next.first == eStatus::POISON && next.second > 4) placedIcon = 1;
-		else if(next.second > 0) placedIcon = statIcons[next.first].first;
-		else if(next.second < 0) placedIcon = statIcons[next.first].second;
+		const auto& statInfo = *next.first;
+		if(statInfo.special && next.second >= statInfo.special->lo && next.second <= statInfo.special->hi) {
+			placedIcon = statInfo.special->icon;
+		}
+		else if(next.second > 0) placedIcon = statInfo.icon;
+		else if(next.second < 0) placedIcon = statInfo.negIcon;
 		if(placedIcon >= 0) {
 			rect_draw_some_item(status_gworld, get_stat_effect_rect(placedIcon), pc_stats_gworld, dest_rect, sf::BlendAlpha);
 			dest_rect.offset(13, 0);

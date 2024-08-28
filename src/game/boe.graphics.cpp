@@ -643,21 +643,12 @@ void put_text_bar(std::string str) {
 		to_rect.left = to_rect.right - 15;
 		to_rect.width() = 12;
 		to_rect.height() = 12;
-		if(univ.party.status[ePartyStatus::STEALTH] > 0) {
-			rect_draw_some_item(status_gworld, get_stat_effect_rect(26), text_bar_gworld, to_rect, sf::BlendAlpha);
-			to_rect.offset(-15, 0);
-		}
-		if(univ.party.status[ePartyStatus::FLIGHT] > 0) {
-			rect_draw_some_item(status_gworld, get_stat_effect_rect(23), text_bar_gworld, to_rect, sf::BlendAlpha);
-			to_rect.offset(-15, 0);
-		}
-		if(univ.party.status[ePartyStatus::DETECT_LIFE] > 0) {
-			rect_draw_some_item(status_gworld, get_stat_effect_rect(24), text_bar_gworld, to_rect, sf::BlendAlpha);
-			to_rect.offset(-15, 0);
-		}
-		if(univ.party.status[ePartyStatus::FIREWALK] > 0) {
-			rect_draw_some_item(status_gworld, get_stat_effect_rect(25), text_bar_gworld, to_rect, sf::BlendAlpha);
-			to_rect.offset(-15, 0);
+		for(auto next : univ.party.status) {
+			const auto& statInfo = *next.first;
+			if(next.second > 0) {
+				rect_draw_some_item(status_gworld, get_stat_effect_rect(statInfo.icon), text_bar_gworld, to_rect, sf::BlendAlpha);
+				to_rect.offset(-15, 0);
+			}
 		}
 	}
 	

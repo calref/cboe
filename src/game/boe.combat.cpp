@@ -2097,7 +2097,7 @@ void combat_run_monst() {
 				int how_much = item.abil_strength;
 				if(item.abil_harms()) how_much *= -1;
 				eStatus status = item.abil_data.status;
-				if(isStatusNegative(status))
+				if((*status).isNegative)
 					how_much *= -1;
 				switch(status) {
 					case eStatus::MAIN: case eStatus::CHARM:

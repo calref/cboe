@@ -50,7 +50,7 @@ void iLiving::clear_bad_status() {
 	std::map<eStatus, short> old;
 	status.swap(old);
 	std::remove_copy_if(old.begin(), old.end(), std::inserter(status, status.begin()), [](std::pair<const eStatus, short> kv) {
-		return isStatusNegative(kv.first) ? kv.second > 0 : kv.second < 0;
+		return (*kv.first).isNegative ? kv.second > 0 : kv.second < 0;
 	});
 }
 

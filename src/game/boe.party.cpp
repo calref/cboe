@@ -83,16 +83,6 @@ extern cUniverse univ;
 extern sf::Texture pc_gworld;
 extern std::queue<pending_special_type> special_queue;
 
-// First icon is displayed for positive values, second for negative, if -1 no negative icon.
-// This omits two special cases - major poison, and normal speed; they are hard-coded.
-std::map<eStatus, std::pair<short, short>> statIcons = {
-	{eStatus::POISONED_WEAPON, {4,-1}}, {eStatus::BLESS_CURSE, {2,3}}, {eStatus::POISON, {0,-1}},
-	{eStatus::HASTE_SLOW, {6,8}}, {eStatus::INVULNERABLE, {5,-1}}, {eStatus::MAGIC_RESISTANCE, {9,19}},
-	{eStatus::WEBS, {10,-1}}, {eStatus::DISEASE, {11,-1}}, {eStatus::INVISIBLE, {12,-1}},
-	{eStatus::DUMB, {13,18}}, {eStatus::MARTYRS_SHIELD, {14,-1}}, {eStatus::ASLEEP, {15,21}},
-	{eStatus::PARALYZED, {16,-1}}, {eStatus::ACID, {17,-1}}, {eStatus::FORCECAGE, {20,-1}},
-};
-
 // Variables for spell selection
 short on_which_spell_page = 0;
 short store_last_cast_mage = 6,store_last_cast_priest = 6;
@@ -1635,10 +1625,12 @@ static void put_target_status_graphics(cDialog& me, short for_pc) {
 		pic.setFormat(TXT_FRAME, FRM_NONE);
 		if(isAlive) {
 			short placedIcon = -1;
-			if(next.first == eStatus::POISON && next.second > 4) placedIcon = 1;
-			else if(next.second > 0) placedIcon = statIcons[next.first].first;
-			else if(next.second < 0) placedIcon = statIcons[next.first].second;
-			else if(next.first == eStatus::HASTE_SLOW) placedIcon = 7;
+			const auto& statInfo = *next.first;
+			if(statInfo.special && next.second >= statInfo.special->lo && next.second <= statInfo.special->hi) {
+				placedIcon = statInfo.special->icon;
+			}
+			else if(next.second > 0) placedIcon = statInfo.icon;
+			else if(next.second < 0) placedIcon = statInfo.negIcon;
 			if(placedIcon >= 0) {
 				pic.show();
 				pic.setPict(placedIcon);

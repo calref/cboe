@@ -9,6 +9,9 @@
 #ifndef BoE_DATA_DAMAGE_HPP
 #define BoE_DATA_DAMAGE_HPP
 
+#include <limits>
+#include <boost/optional.hpp>
+
 enum class eDamageType {
 	WEAPON = 0,
 	FIRE = 1,
@@ -45,35 +48,28 @@ enum class eStatus {
 	CHARM = 15,
 };
 
-inline bool isStatusNegative(eStatus stat) {
-	switch(stat) {
-		case eStatus::MAIN: return false;
-		case eStatus::POISONED_WEAPON: return false;
-		case eStatus::BLESS_CURSE: return false;
-		case eStatus::POISON: return true;
-		case eStatus::HASTE_SLOW: return false;
-		case eStatus::INVULNERABLE: return false;
-		case eStatus::MAGIC_RESISTANCE: return false;
-		case eStatus::WEBS: return true;
-		case eStatus::DISEASE: return true;
-		case eStatus::INVISIBLE: return false;
-		case eStatus::DUMB: return true;
-		case eStatus::MARTYRS_SHIELD: return false;
-		case eStatus::ASLEEP: return true;
-		case eStatus::PARALYZED: return true;
-		case eStatus::ACID: return true;
-		case eStatus::FORCECAGE: return true;
-		case eStatus::CHARM: return true;
-	}
-	return false;
-}
-
 enum class ePartyStatus {
 	STEALTH,
 	FLIGHT,
 	DETECT_LIFE,
 	FIREWALK,
 };
+
+struct status_info_t {
+	bool isNegative = false;
+	int icon = -1, negIcon = -1;
+	struct special_icon_t {
+		int icon, lo, hi;
+		special_icon_t(int p, int m, int M = std::numeric_limits<int>::max()) : icon(p), lo(m), hi(M) {}
+	};
+	boost::optional<special_icon_t> special;
+	status_info_t() = default;
+	status_info_t(bool neg, int p1, int p2 = -1) : isNegative(neg), icon(p1), negIcon(p2) {}
+	status_info_t(bool neg, int p1, int p2, special_icon_t spec) : isNegative(neg), icon(p1), negIcon(p2), special(spec) {}
+};
+
+const status_info_t& operator* (eStatus status);
+const status_info_t& operator* (ePartyStatus status);
 
 enum class eMainStatus {
 	ABSENT = 0, // absent, empty slot

@@ -716,6 +716,7 @@
     <ClCompile Include="..\..\..\src\universe\universe.cpp">
       <Filter>Universe</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\damage.cpp" />
     <ClCompile Include="..\..\..\src\location.cpp" />
     <ClCompile Include="..\..\..\src\mathutil.cpp" />
     <ClCompile Include="..\..\..\src\oldstructs.cpp" />
