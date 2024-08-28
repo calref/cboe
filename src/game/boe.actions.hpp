@@ -89,5 +89,7 @@ void debug_increase_age();
 void debug_towns_forget();
 void debug_heal_plus_extra();
 void debug_heal();
+void handle_print_pc_hp(int which_pc);
+void handle_print_pc_sp(int which_pc);
 
 #endif
