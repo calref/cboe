@@ -1998,6 +1998,22 @@ void debug_towns_forget() {
 		pop.which_town = 200;
 }
 
+static void revive_all_dead(bool full_restore) {
+	for(cPlayer& pc : univ.party) {
+		if(isDead(pc.main_status))
+			pc.main_status = eMainStatus::ALIVE;
+
+		if(full_restore){
+			pc.cur_health = pc.max_health;
+			pc.cur_sp = 100;
+		}
+	}
+	if(!full_restore){
+		univ.party.heal(250);
+		univ.party.restore_sp(100);
+	}
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2175,11 +2191,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			if(!univ.debug_mode) break;
 			univ.party.gold += 100;
 			univ.party.food += 100;
-			for(cPlayer& pc : univ.party) {
-				pc.main_status = eMainStatus::ALIVE;
-				pc.cur_health = pc.max_health;
-				pc.cur_sp = 100;
-			}
+			revive_all_dead(true);
 			award_party_xp(25);
 			for(cPlayer& who : univ.party) {
 				who.priest_spells.set();
@@ -2220,12 +2232,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			if(!univ.debug_mode) break;
 			univ.party.gold += 100;
 			univ.party.food += 100;
-			for(cPlayer& pc : univ.party) {
-				if(isDead(pc.main_status))
-					pc.main_status = eMainStatus::ALIVE;
-			}
-			univ.party.heal(250);
-			univ.party.restore_sp(100);
+			revive_all_dead(false);
 			add_string_to_buf("Debug: Heal party.");
 			print_buf();
 			put_pc_screen();
