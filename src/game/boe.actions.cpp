@@ -3540,7 +3540,11 @@ bool check_for_interrupt(){
 	using kb = sf::Keyboard;
 	bool interrupt = false;
 	sf::Event evt;
-	if(mainPtr.pollEvent(evt) && evt.type == sf::Event::KeyPressed) {
+	if(replaying && has_next_action() && next_action_type() == "handle_interrupt"){
+		pop_next_action();
+		interrupt = true;
+	}
+	else if(mainPtr.pollEvent(evt) && evt.type == sf::Event::KeyPressed) {
 		// TODO: I wonder if there are other events we should handle here? Resize maybe?
 #ifdef __APPLE__
 		if(evt.key.code == kb::Period && evt.key.system)
@@ -3550,6 +3554,9 @@ bool check_for_interrupt(){
 			interrupt = true;
 	}
 	if(interrupt) {
+		if(recording){
+			record_action("handle_interrupt", "");
+		}
 		cChoiceDlog confirm("confirm-interrupt", {"quit","cancel"});
 		if(confirm.show() == "quit") return true;
 	}
