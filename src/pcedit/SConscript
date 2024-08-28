@@ -26,7 +26,7 @@ elif str(platform) == "posix":
 		pc.menu.cpp
 	"""))
 
-pced = env.Program("#build/bin/BoE Character Editor", pced_sources + common_sources + party_classes)
+pced = env.Program("#build/bin/BoE Character Editor", pced_sources + party_classes + common_sources)
 
 if str(platform) == "darwin":
 	pced_info = {
