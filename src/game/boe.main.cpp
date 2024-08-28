@@ -525,6 +525,8 @@ static void replay_next_action() {
 		handle_print_pc_hp(boost::lexical_cast<int>(next_action.GetText()));
 	}else if(t == "handle_print_pc_sp"){
 		handle_print_pc_sp(boost::lexical_cast<int>(next_action.GetText()));
+	}else if(t == "give_pc_info"){
+		give_pc_info(boost::lexical_cast<short>(next_action.GetText()));
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return

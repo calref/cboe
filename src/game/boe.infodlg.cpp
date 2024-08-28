@@ -465,6 +465,9 @@ static bool give_pc_extra_info(cDialog& me, std::string item_hit, const short pc
 }
 
 void give_pc_info(short pc_num) {
+	if(recording){
+		record_action("give_pc_info", boost::lexical_cast<std::string>(pc_num));
+	}
 	using namespace std::placeholders;
 	std::string str;
 	
