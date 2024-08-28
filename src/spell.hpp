@@ -72,7 +72,6 @@ class cSpell {
 	static std::map<eSpell,cSpell> dictionary;
 	friend const cSpell& operator*(eSpell spell_num);
 public:
-	cSpell() {} // This is just here because the map doesn't work without it
 	cSpell(eSpell id);
 	cSpell& withRefer(eSpellRefer r);
 	cSpell& withCost(int c);
