@@ -517,6 +517,10 @@ static void replay_next_action() {
 		debug_towns_forget();
 	}else if(t == "edit_stuff_done"){
 		edit_stuff_done();
+	}else if(t == "debug_heal"){
+		debug_heal();
+	}else if(t == "debug_heal_plus_extra"){
+		debug_heal_plus_extra();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return

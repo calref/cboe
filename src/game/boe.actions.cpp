@@ -2014,6 +2014,36 @@ static void revive_all_dead(bool full_restore) {
 	}
 }
 
+void debug_heal() {
+	if(recording){
+		record_action("debug_heal", "");
+	}
+	univ.party.gold += 100;
+	univ.party.food += 100;
+	revive_all_dead(false);
+	add_string_to_buf("Debug: Heal party.");
+	print_buf();
+	put_pc_screen();
+}
+
+void debug_heal_plus_extra() {
+	if(recording){
+		record_action("debug_heal_plus_extra", "");
+	}
+	univ.party.gold += 100;
+	univ.party.food += 100;
+	revive_all_dead(true);
+	award_party_xp(25);
+	for(cPlayer& who : univ.party) {
+		who.priest_spells.set();
+		who.mage_spells.set();
+	}
+	univ.refresh_store_items();
+	add_string_to_buf("Debug: Add stuff and heal.");
+	print_buf();
+	put_pc_screen();
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2189,18 +2219,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case '=':
 			if(!univ.debug_mode) break;
-			univ.party.gold += 100;
-			univ.party.food += 100;
-			revive_all_dead(true);
-			award_party_xp(25);
-			for(cPlayer& who : univ.party) {
-				who.priest_spells.set();
-				who.mage_spells.set();
-			}
-			univ.refresh_store_items();
-			add_string_to_buf("Debug: Add stuff and heal.");
-			print_buf();
-			put_pc_screen();
+			debug_heal_plus_extra();
 			break;
 			
 		case 'B':
@@ -2230,12 +2249,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case 'H':
 			if(!univ.debug_mode) break;
-			univ.party.gold += 100;
-			univ.party.food += 100;
-			revive_all_dead(false);
-			add_string_to_buf("Debug: Heal party.");
-			print_buf();
-			put_pc_screen();
+			debug_heal();
 			break;
 			
 		case 'K':

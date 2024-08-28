@@ -87,5 +87,7 @@ void debug_return_to_start();
 void handle_victory(bool record = false);
 void debug_increase_age();
 void debug_towns_forget();
+void debug_heal_plus_extra();
+void debug_heal();
 
 #endif
