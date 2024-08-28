@@ -531,6 +531,8 @@ static void replay_next_action() {
 		handle_trade_places(boost::lexical_cast<short>(next_action.GetText()));
 	}else if(t == "handle_begin_talk"){
 		handle_begin_talk(need_reprint);
+	}else if(t == "handle_talk"){
+		handle_talk(location_from_action(next_action), did_something, need_redraw, need_reprint);
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return

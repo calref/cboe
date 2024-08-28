@@ -648,7 +648,10 @@ void handle_move(location destination, bool& did_something, bool& need_redraw, b
 	}
 }
 
-static void handle_talk(location destination, bool& did_something, bool& need_redraw, bool& need_reprint) {
+void handle_talk(location destination, bool& did_something, bool& need_redraw, bool& need_reprint) {
+	if(recording){
+		record_action("handle_talk", boost::lexical_cast<std::string>(destination));
+	}
 	if(can_see_light(center,destination,sight_obscurity) >= 4 || loc_off_world(destination)) {
 		add_string_to_buf("  Can't see space.");
 		need_reprint = true;

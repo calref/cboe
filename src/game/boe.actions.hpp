@@ -93,5 +93,6 @@ void handle_print_pc_hp(int which_pc);
 void handle_print_pc_sp(int which_pc);
 void handle_trade_places(int which_pc);
 void handle_begin_talk(bool& need_reprint);
+void handle_talk(location destination, bool& did_something, bool& need_redraw, bool& need_reprint);
 
 #endif
