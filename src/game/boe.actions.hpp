@@ -91,5 +91,6 @@ void debug_heal_plus_extra();
 void debug_heal();
 void handle_print_pc_hp(int which_pc);
 void handle_print_pc_sp(int which_pc);
+void handle_trade_places(int which_pc);
 
 #endif
