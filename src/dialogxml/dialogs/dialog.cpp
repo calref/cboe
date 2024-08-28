@@ -30,6 +30,7 @@
 #include "tools/prefs.hpp"
 #include "tools/framerate_limiter.hpp"
 #include "replay.hpp"
+#include <boost/lexical_cast.hpp>
 
 using namespace std;
 using namespace ticpp;
@@ -547,6 +548,9 @@ void cDialog::handle_events() {
 			Element& next_action = pop_next_action();
 			cKey key = key_from_action(next_action);
 			dynamic_cast<cTextField&>(getControl(currentFocus)).handleInput(key);
+		}else if(replaying && has_next_action() && next_action_type() == "handleTab"){
+			Element& next_action = pop_next_action();
+			handleTab(boost::lexical_cast<bool>(next_action.GetText()));
 		}else{
 			while(win.pollEvent(currentEvent)) handle_one_event(currentEvent, fps_limiter);
 		}
@@ -556,6 +560,17 @@ void cDialog::handle_events() {
 
 		// Prevent the loop from executing too fast.
 		fps_limiter.frame_finished();
+	}
+}
+
+void cDialog::handleTab(bool reverse) {
+	if(recording){
+		record_action("handleTab", boost::lexical_cast<std::string>(reverse));
+	}
+	if(reverse) {
+		handleTabOrder(currentFocus, tabOrder.rbegin(), tabOrder.rend());
+	} else {
+		handleTabOrder(currentFocus, tabOrder.begin(), tabOrder.end());
 	}
 }
 
@@ -650,11 +665,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter&
 			// If it's a tab, handle tab order
 			if(key.spec && key.k == key_tab) {
 				// Could use key.mod, but this is slightly easier.
-				if(currentEvent.key.shift) {
-					handleTabOrder(currentFocus, tabOrder.rbegin(), tabOrder.rend());
-				} else {
-					handleTabOrder(currentFocus, tabOrder.begin(), tabOrder.end());
-				}
+				handleTab(currentEvent.key.shift);
 			} else {
 				// If it's a character key, and the system key (control/command) is not pressed,
 				// we have an upcoming TextEntered event which contains more information.
