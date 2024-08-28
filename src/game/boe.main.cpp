@@ -521,6 +521,10 @@ static void replay_next_action() {
 		debug_heal();
 	}else if(t == "debug_heal_plus_extra"){
 		debug_heal_plus_extra();
+	}else if(t == "handle_print_pc_hp"){
+		handle_print_pc_hp(boost::lexical_cast<int>(next_action.GetText()));
+	}else if(t == "handle_print_pc_sp"){
+		handle_print_pc_sp(boost::lexical_cast<int>(next_action.GetText()));
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return

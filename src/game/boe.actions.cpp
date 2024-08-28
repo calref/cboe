@@ -41,6 +41,7 @@
 #include "gfx/render_shapes.hpp"
 #include "tools/enum_map.hpp"
 #include <string>
+#include <boost/lexical_cast.hpp>
 
 rectangle item_screen_button_rects[9] = {
 	{125,10,141,28},{125,40,141,58},{125,68,141,86},{125,98,141,116},{125,126,141,144},{125,156,141,174},
@@ -1233,6 +1234,28 @@ void screen_shift(int dx, int dy, bool& need_redraw) {
 	need_redraw = true;
 }
 
+void handle_print_pc_hp(int which_pc) {
+	if(recording){
+		record_action("handle_print_pc_hp", boost::lexical_cast<std::string>(which_pc));
+	}
+	std::ostringstream str;
+	cPlayer& pc = univ.party[which_pc];
+	str << pc.name << " has ";
+	str << pc.cur_health << " health out of " << pc.max_health << '.';
+	add_string_to_buf(str.str());
+}
+
+void handle_print_pc_sp(int which_pc) {
+	if(recording){
+		record_action("handle_print_pc_sp", boost::lexical_cast<std::string>(which_pc));
+	}
+	std::ostringstream str;
+	cPlayer& pc = univ.party[which_pc];
+	str << pc.name << " has ";
+	str << pc.cur_sp << " spell pts. out of " << pc.max_sp << '.';
+	add_string_to_buf(str.str());
+}
+
 bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	long item_hit;
 	bool are_done = false;
@@ -1243,7 +1266,6 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	rectangle terrain_viewport = world_screen;
 	world_screen.inset(13, 13);
 	
-	std::ostringstream str;
 	location point_in_area;
 	
 	location the_point(event.mouseButton.x, event.mouseButton.y);
@@ -1461,16 +1483,10 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 							handle_switch_pc(i, need_redraw, need_reprint);
 							break;
 						case PCBTN_HP:
-							str.str("");
-							str << pc.name << " has ";
-							str << pc.cur_health << " health out of " << pc.max_health << '.';
-							add_string_to_buf(str.str());
+							handle_print_pc_hp(i);
 							break;
 						case PCBTN_SP:
-							str.str("");
-							str << pc.name << " has ";
-							str << pc.cur_health << " spell pts. out of " << pc.max_health << '.';
-							add_string_to_buf(str.str());
+							handle_print_pc_sp(i);
 							break;
 						case PCBTN_INFO:
 							give_pc_info(i);
