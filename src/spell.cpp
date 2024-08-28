@@ -58,7 +58,7 @@ cSpell& cSpell::when(eSpellWhen when) {
 }
 
 const cSpell& cSpell::finish() {
-	dictionary[num] = *this;
+	dictionary.emplace(num, *this);
 	return *this;
 }
 
@@ -73,7 +73,7 @@ bool cSpell::is_priest() const {
 }
 
 const cSpell& operator*(eSpell spell_num) {
-	return cSpell::dictionary[spell_num];
+	return cSpell::dictionary.at(spell_num);
 }
 
 eSpell cSpell::fromNum(eSkill type, int num) {
