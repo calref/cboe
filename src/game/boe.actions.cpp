@@ -332,7 +332,10 @@ void handle_begin_look(bool right_button, bool& need_redraw) {
 	need_redraw = true;
 }
 
-static void handle_begin_talk(bool& need_reprint) {
+void handle_begin_talk(bool& need_reprint) {
+	if(recording){
+		record_action("handle_begin_talk", "");
+	}
 	overall_mode = MODE_TALK_TOWN;
 	add_string_to_buf("Talk: Select someone.");
 	need_reprint = true;

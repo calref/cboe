@@ -529,6 +529,8 @@ static void replay_next_action() {
 		give_pc_info(boost::lexical_cast<short>(next_action.GetText()));
 	}else if(t == "handle_trade_places"){
 		handle_trade_places(boost::lexical_cast<short>(next_action.GetText()));
+	}else if(t == "handle_begin_talk"){
+		handle_begin_talk(need_reprint);
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
