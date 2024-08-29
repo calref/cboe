@@ -86,7 +86,7 @@ TEST_CASE("Converting legacy town data") {
 		CHECK(town.preset_items[0].loc == loc(7,8));
 		CHECK(town.preset_items[0].code == 3);
 		CHECK(town.preset_items[0].charges == 9);
-		CHECK(town.preset_items[0].ability == -1);
+		CHECK(town.preset_items[0].ability == eEnchant::NONE);
 		CHECK(town.preset_items[0].always_there);
 		CHECK(town.preset_items[0].property);
 		CHECK(town.preset_items[0].contained);

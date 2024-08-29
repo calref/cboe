@@ -389,6 +389,7 @@
     <ClCompile Include="..\..\..\src\gfx\tiling.cpp" />
     <ClCompile Include="..\..\..\src\alchemy.cpp" />
     <ClCompile Include="..\..\..\src\damage.cpp" />
+    <ClCompile Include="..\..\..\src\enchant.cpp" />
     <ClCompile Include="..\..\..\src\location.cpp" />
     <ClCompile Include="..\..\..\src\mathutil.cpp" />
     <ClCompile Include="..\..\..\src\oldstructs.cpp" />

@@ -231,8 +231,8 @@ cTownperson edit_placed_monst_adv(cTownperson initial, short which, cDialog& par
 static bool put_placed_item_in_dlog(cDialog& me, const cTown::cItem& item, const short which) {
 	std::ostringstream loc;
 	cItem base = scenario.scen_items[item.code];
-	if(item.ability >= 0 && item.ability <= int(eEnchant::BLESSED) && (base.variety == eItemType::ONE_HANDED || base.variety == eItemType::TWO_HANDED)) {
-		base.enchant_weapon(eEnchant(item.ability), 0);
+	if(item.ability != eEnchant::NONE && (base.variety == eItemType::ONE_HANDED || base.variety == eItemType::TWO_HANDED)) {
+		base.enchant_weapon(item.ability);
 	}
 	
 	me["num"].setTextToNum(which);
@@ -240,7 +240,7 @@ static bool put_placed_item_in_dlog(cDialog& me, const cTown::cItem& item, const
 	me["loc"].setText(loc.str());
 	me["name"].setText(base.full_name);
 	me["charges"].setTextToNum(item.charges);
-	me["abil"].setTextToNum(item.ability);
+	me["abil"].setTextToNum(int(item.ability));
 	if(item.always_there)
 		dynamic_cast<cLed&>(me["always"]).setState(led_red);
 	if(item.property)
@@ -258,7 +258,7 @@ static bool put_placed_item_in_dlog(cDialog& me, const cTown::cItem& item, const
 	
 	if(base.variety == eItemType::GOLD || base.variety == eItemType::FOOD) {
 		me["charges-lbl"].setText("Amount:");
-	} else if(base.charges == 0 && item.ability != 3) {
+	} else if(base.charges == 0 && (*item.ability).charges == 0) {
 		me["charges-lbl"].hide();
 		me["charges"].hide();
 	} else {
@@ -294,7 +294,8 @@ static bool get_placed_item_in_dlog(cDialog& me, cTown::cItem& item, const short
 	item.always_there = dynamic_cast<cLed&>(me["always"]).getState() != led_off;
 	item.property = dynamic_cast<cLed&>(me["owned"]).getState() != led_off;
 	item.contained = dynamic_cast<cLed&>(me["contained"]).getState() != led_off;
-	item.ability = me["abil"].getTextAsNum();
+	int ench = me["abil"].getTextAsNum();
+	if(ench >= 0 && ench <= cEnchant::MAX) item.ability = eEnchant(ench);
 	
 	town->preset_items[which] = item;
 	return true;
@@ -312,13 +313,13 @@ static bool edit_placed_item_type(cDialog& me, cTown::cItem& item, const short w
 static bool edit_placed_item_abil(cDialog& me, std::string item_hit, cTown::cItem& item, const short which) {
 	item.charges = me["charges"].getTextAsNum();
 	cItem& base = scenario.scen_items[item.code];
-	short i = item.ability;
+	short i = short(item.ability);
 	if(item_hit == "abil") { // User entered a number directly
 		i = me["abil"].getTextAsNum();
 	} else if(base.variety == eItemType::ONE_HANDED || base.variety == eItemType::TWO_HANDED) {
-		i = choose_text(STRT_ENCHANT, item.ability, &me, "Which enchantment?");
+		i = choose_text(STRT_ENCHANT, i, &me, "Which enchantment?");
 	}
-	if(i >= -1) item.ability = i;
+	if(i >= -1 && i <= cEnchant::MAX) item.ability = eEnchant(i);
 	put_placed_item_in_dlog(me, item, which);
 	return true;
 }
@@ -961,7 +962,7 @@ static bool check_talk_xtra(cDialog& me, std::stack<node_ref_t>& talk_edit_stack
 		"Cost adjustment must be from 0 (cheapest) to 6 (most expensive).",
 		"Which shop must refer to an existing shop (0 - {max}).",
 		"Quest must be an existing quest (0 - {max}).",
-		"Enchantment type must be from 0 to 6. See the documentation for a list of possible abilities.",
+		"Enchantment type must be from 0 to {max}. See the documentation for a list of possible abilities.",
 		// 10
 		"The first boat/horse must be in the legal range (0 - {max}).",
 		"The special item must be in the legal range (0 - {max}).",
@@ -1026,7 +1027,7 @@ static bool check_talk_xtra(cDialog& me, std::stack<node_ref_t>& talk_edit_stack
 			break;
 		case eTalkNode::ENCHANT:
 			if(which == 0) {
-				lo = 0; hi = 6;
+				lo = 0; hi = cEnchant::MAX;
 				msg = 9;
 			}
 			break;

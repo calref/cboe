@@ -169,7 +169,7 @@ TEST_CASE("Loading a town definition") {
 		CHECK(town->spec_strs[7] == "Here is a town string.");
 		REQUIRE(town->preset_items.size() >= 3);
 		CHECK(town->preset_items[2].code == 120);
-		CHECK(town->preset_items[2].ability == 2);
+		CHECK(town->preset_items[2].ability == eEnchant::PLUS_THREE);
 		CHECK(town->preset_items[2].charges == 17);
 		CHECK(town->preset_items[2].always_there);
 		CHECK(town->preset_items[2].property);

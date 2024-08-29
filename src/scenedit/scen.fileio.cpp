@@ -767,7 +767,7 @@ void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 		data.PushElement("type", town.preset_items[i].code);
 		if(town.preset_items[i].charges > 0)
 			data.PushElement("charges", town.preset_items[i].charges);
-		if(town.preset_items[i].ability >= 0)
+		if(town.preset_items[i].ability != eEnchant::NONE)
 			data.PushElement("mod", town.preset_items[i].ability);
 		if(town.preset_items[i].always_there)
 			data.PushElement("always", true);

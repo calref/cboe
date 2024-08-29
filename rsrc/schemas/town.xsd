@@ -17,6 +17,17 @@
 			<xs:enumeration value="hostile-b"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="enchantment">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="+1"/>
+			<xs:enumeration value="+2"/>
+			<xs:enumeration value="+3"/>
+			<xs:enumeration value="+5"/>
+			<xs:enumeration value="shoot-flame"/>
+			<xs:enumeration value="flaming"/>
+			<xs:enumeration value="blessed"/>
+		</xs:restriction>
+	</xs:simpleType>
 	
 	<xs:element name="town">
 		<xs:complexType>
@@ -129,7 +140,7 @@
 						<xs:complexType>
 							<xs:all>
 								<xs:element name="type" type="xs:integer"/>
-								<xs:element name="mod" type="xs:integer" minOccurs="0"/>
+								<xs:element name="mod" type="enchantment" minOccurs="0"/>
 								<xs:element name="charges" type="xs:integer" minOccurs="0"/>
 								<xs:element name="always" type="bool" minOccurs="0"/>
 								<xs:element name="property" type="bool" minOccurs="0"/>
