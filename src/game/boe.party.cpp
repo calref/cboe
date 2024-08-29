@@ -2041,17 +2041,7 @@ void start_town_targeting(eSpell s_num,short who_c,bool freebie,eSpellPat pat) {
 	}
 }
 
-extern const short alch_difficulty[20];
-extern const eItemAbil alch_ingred1[20];
-extern const eItemAbil alch_ingred2[20];
-
 void do_alchemy() {
-	static const short fail_chance[20] = {
-		50,40,30,20,10,
-		8,6,4,2,0,
-		0,0,0,0,0,
-		0,0,0,0,0
-	};
 	short r1;
 	short pc_num;
 	
@@ -2061,21 +2051,21 @@ void do_alchemy() {
 	
 	eAlchemy potion = alch_choice(pc_num);
 	// TODO: Remove need for this cast by changing the above data to either std::maps or an unary operator*
-	int which_p = int(potion);
 	if(potion != eAlchemy::NONE) {
 		if(!univ.party[pc_num].has_space()) {
 			add_string_to_buf("Alchemy: Can't carry another item.");
 			return;
 		}
+		const cAlchemy& info = *potion;
 		
-		cInvenSlot which_item = univ.party[pc_num].has_abil(alch_ingred1[which_p]);
+		cInvenSlot which_item = univ.party[pc_num].has_abil(info.ingred1);
 		if(!which_item) {
 			add_string_to_buf("Alchemy: Don't have ingredients.");
 			return;
 		}
 		
-		if(alch_ingred2[which_p] != eItemAbil::NONE) {
-			cInvenSlot which_item2 = univ.party[pc_num].has_abil(alch_ingred2[which_p]);
+		if(info.ingred2 != eItemAbil::NONE) {
+			cInvenSlot which_item2 = univ.party[pc_num].has_abil(info.ingred2);
 			if(!which_item2) {
 				add_string_to_buf("Alchemy: Don't have ingredients.");
 				return;
@@ -2093,7 +2083,8 @@ void do_alchemy() {
 		play_sound(8);
 		
 		r1 = get_ran(1,1,100);
-		if(r1 < fail_chance[univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[which_p]]) {
+		short skill = univ.party[pc_num].skill(eSkill::ALCHEMY);
+		if(r1 < info.fail_chance(skill)) {
 			add_string_to_buf("Alchemy: Failed.");
 			r1 = get_ran(1,0,1);
 			(void) r1; // TODO: Why does it even do this?
@@ -2101,10 +2092,7 @@ void do_alchemy() {
 		}
 		else {
 			cItem store_i(potion);
-			if(univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[which_p] >= 5)
-				store_i.charges++;
-			if(univ.party[pc_num].skill(eSkill::ALCHEMY) - alch_difficulty[which_p] >= 11)
-				store_i.charges++;
+			store_i.charges = info.charges(skill);
 			store_i.graphic_num += get_ran(1,0,2);
 			if(!univ.party[pc_num].give_item(store_i,false)) {
 				add_string_to_buf("No room in inventory. Potion placed on floor.", 2);
@@ -2133,7 +2121,6 @@ static bool alch_choice_event_filter(cDialog& me, std::string item_hit, eKeyMod)
 }
 
 eAlchemy alch_choice(short pc_num) {
-	short difficulty[20] = {1,1,1,3,3, 4,5,5,7,9, 9,10,12,12,9, 14,19,10,16,20};
 	
 	set_cursor(sword_curs);
 	
@@ -2143,7 +2130,7 @@ eAlchemy alch_choice(short pc_num) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		chooseAlchemy["label" + n].setText(get_str("magic-names", i + 200));
 		chooseAlchemy["potion" + n].attachClickHandler(alch_choice_event_filter);
-		if(univ.party[pc_num].skill(eSkill::ALCHEMY) < difficulty[i] || !univ.party.alchemy[i])
+		if(!univ.party.alchemy[i] || (*eAlchemy(i)).can_make(univ.party[pc_num].skill(eSkill::ALCHEMY)))
 			chooseAlchemy["potion" + n].hide();
 	}
 	std::ostringstream sout;

@@ -387,6 +387,7 @@
     <ClCompile Include="..\..\..\src\gfx\render_shapes.cpp" />
     <ClCompile Include="..\..\..\src\gfx\render_text.cpp" />
     <ClCompile Include="..\..\..\src\gfx\tiling.cpp" />
+    <ClCompile Include="..\..\..\src\alchemy.cpp" />
     <ClCompile Include="..\..\..\src\damage.cpp" />
     <ClCompile Include="..\..\..\src\location.cpp" />
     <ClCompile Include="..\..\..\src\mathutil.cpp" />
