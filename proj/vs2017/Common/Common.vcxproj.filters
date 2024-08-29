@@ -718,6 +718,7 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\alchemy.cpp" />
     <ClCompile Include="..\..\..\src\damage.cpp" />
+    <ClCompile Include="..\..\..\src\enchant.cpp" />
     <ClCompile Include="..\..\..\src\location.cpp" />
     <ClCompile Include="..\..\..\src\mathutil.cpp" />
     <ClCompile Include="..\..\..\src\oldstructs.cpp" />
@@ -955,6 +956,7 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\alchemy.hpp" />
     <ClInclude Include="..\..\..\src\damage.hpp" />
+    <ClInclude Include="..\..\..\src\enchant.hpp" />
     <ClInclude Include="..\..\..\src\fields.hpp" />
     <ClInclude Include="..\..\..\src\global.hpp" />
     <ClInclude Include="..\..\..\src\location.hpp" />

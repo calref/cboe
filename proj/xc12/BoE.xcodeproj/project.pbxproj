@@ -106,6 +106,8 @@
 		9153C7A01A994A1700D7F8A7 /* SFML.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6F8E218F87F3700E3EA15 /* SFML.framework */; };
 		915473BF2C7E11B900EB1C94 /* damage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915473BE2C7E11B900EB1C94 /* damage.cpp */; };
 		915473C62C7FCDBB00EB1C94 /* alchemy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915473C52C7FCDBB00EB1C94 /* alchemy.cpp */; };
+		915473CE2C800AB000EB1C94 /* enchant.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 915473CC2C800AB000EB1C94 /* enchant.hpp */; };
+		915473CF2C800AB000EB1C94 /* enchant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915473CD2C800AB000EB1C94 /* enchant.cpp */; };
 		915AF9E81BBF8B5C008AEF49 /* scrollpane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A81BBE2B54009905A4 /* scrollpane.cpp */; };
 		9176FEC71D550EFE006EF694 /* out_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9176FEC01D550EFC006EF694 /* out_legacy.cpp */; };
 		9176FEC81D550EFE006EF694 /* scen_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9176FEC11D550EFC006EF694 /* scen_legacy.cpp */; };
@@ -694,6 +696,8 @@
 		915325181A2E37EE000A9A1C /* special_parse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = special_parse.cpp; sourceTree = "<group>"; };
 		915473BE2C7E11B900EB1C94 /* damage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = damage.cpp; sourceTree = "<group>"; };
 		915473C52C7FCDBB00EB1C94 /* alchemy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = alchemy.cpp; sourceTree = "<group>"; };
+		915473CC2C800AB000EB1C94 /* enchant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = enchant.hpp; sourceTree = "<group>"; };
+		915473CD2C800AB000EB1C94 /* enchant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = enchant.cpp; sourceTree = "<group>"; };
 		91574CC323CB97C5004766F8 /* enum_map.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = enum_map.hpp; sourceTree = "<group>"; };
 		91597A6C1A3BED2D00BE7BF9 /* spell.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = spell.hpp; sourceTree = "<group>"; };
 		91597A6E1A3BEDC700BE7BF9 /* spell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spell.cpp; sourceTree = "<group>"; };
@@ -1335,6 +1339,7 @@
 			children = (
 				915473C52C7FCDBB00EB1C94 /* alchemy.cpp */,
 				915473BE2C7E11B900EB1C94 /* damage.cpp */,
+				915473CD2C800AB000EB1C94 /* enchant.cpp */,
 				91279BE10F9D0F73007B0D52 /* location.cpp */,
 				91B3F11E0F97801F00BF5B67 /* mathutil.cpp */,
 				915325161A2E1DA8000A9A1C /* oldstructs.cpp */,
@@ -1345,6 +1350,7 @@
 				91B0D5D01E34428E002BE4DA /* view_dialogs.cpp */,
 				9185BD9B1EA02B8F0027C346 /* alchemy.hpp */,
 				9185BD961EA0234A0027C346 /* damage.hpp */,
+				915473CC2C800AB000EB1C94 /* enchant.hpp */,
 				9185BD991EA027B80027C346 /* fields.hpp */,
 				9185BDA01EA02FF80027C346 /* global.hpp */,
 				91279BE00F9D0F73007B0D52 /* location.hpp */,
@@ -1664,6 +1670,7 @@
 				9149924E25913E3F00B5BE97 /* led.hpp in Headers */,
 				9143044B2970EDC1003A3967 /* keymods.hpp in Headers */,
 				9149925025913E3F00B5BE97 /* ledgroup.hpp in Headers */,
+				915473CE2C800AB000EB1C94 /* enchant.hpp in Headers */,
 				91499254259140FF00B5BE97 /* keycodes.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2078,6 +2085,7 @@
 				919CC27E1B37743B00273FDA /* undo.cpp in Sources */,
 				919CC27F1B37744000273FDA /* winutil.mac.mm in Sources */,
 				D384F6A32C1B9D4000A806C3 /* replay.cpp in Sources */,
+				915473CF2C800AB000EB1C94 /* enchant.cpp in Sources */,
 				915AF9E81BBF8B5C008AEF49 /* scrollpane.cpp in Sources */,
 				91E128E71BC1E6DD00C8BE1D /* basicbtns.cpp in Sources */,
 				91E128ED1BC2076B00C8BE1D /* 3choice.cpp in Sources */,

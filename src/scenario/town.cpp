@@ -226,7 +226,7 @@ short cTown::light_obscurity(short x,short y) const {
 cTown::cItem::cItem() {
 	loc = {80,80};
 	code = -1;
-	ability = -1;
+	ability = eEnchant::NONE;
 	charges = 0;
 	always_there = false;
 	property = false;

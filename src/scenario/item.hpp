@@ -17,6 +17,7 @@
 #include "item_variety.hpp"
 #include "skills_traits.hpp"
 #include "alchemy.hpp"
+#include "enchant.hpp"
 
 namespace legacy { struct item_record_type; };
 
@@ -69,7 +70,7 @@ public:
 	std::string interesting_string() const;
 	
 	std::string getAbilName() const;
-	void enchant_weapon(eEnchant enchant_type, short new_val);
+	void enchant_weapon(eEnchant enchant_type);
 	bool abil_harms() const;
 	bool abil_group() const;
 	bool can_use() const;

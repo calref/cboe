@@ -9,6 +9,7 @@ tools = Split("""
 	replay.cpp
 	../alchemy.cpp
 	../damage.cpp
+	../enchant.cpp
 	../location.cpp
 	../mathutil.cpp
 	../porting.cpp

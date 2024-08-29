@@ -3246,10 +3246,7 @@ void affect_spec(const runtime_state& ctx) {
 			if(spec.ex1a >= 0 && spec.ex1a < univ.scenario.scen_items.size()) {
 				cItem to_give = univ.scenario.scen_items[spec.ex1a];
 				if(spec.ex1b >= 0 && spec.ex1b <= 6) {
-					// TODO: This array and accompanying calculation is now duplicated here, in start_town_mode(), and in place_buy_button()
-					const short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
-					int val = max(aug_cost[spec.ex1b] * 100, to_give.value * (5 + aug_cost[spec.ex1b]));
-					to_give.enchant_weapon(eEnchant(spec.ex1b), val);
+					to_give.enchant_weapon(eEnchant(spec.ex1b));
 				}
 				if(to_give.charges > 0 && spec.ex1c >= 0)
 					to_give.charges = spec.ex1c;

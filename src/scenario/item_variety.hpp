@@ -59,8 +59,6 @@ const item_variety_t& operator*(eItemType type);
 
 enum class eItemUse {HELP_ONE, HARM_ONE, HELP_ALL, HARM_ALL};
 
-enum class eEnchant {PLUS_ONE, PLUS_TWO, PLUS_THREE, SHOOT_FLAME, FLAMING, PLUS_FIVE, BLESSED};
-
 std::ostream& operator << (std::ostream& out, eItemUse e);
 std::istream& operator >> (std::istream& in, eItemUse& e);
 std::ostream& operator << (std::ostream& out, eItemType e);

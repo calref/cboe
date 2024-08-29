@@ -979,7 +979,7 @@ void handle_item_shop_action(short item_hit) {
 				play_sound(51);
 				ASB("Your item is now enchanted.");
 				eEnchant ench = eEnchant(shop_identify_cost);
-				target.enchant_weapon(ench,store_selling_values[i]);
+				target.enchant_weapon(ench);
 			}
 			break;
 		case MODE_INVEN: case MODE_SHOP:

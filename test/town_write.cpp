@@ -108,7 +108,7 @@ TEST_CASE("Saving a town") {
 	SECTION("With a preset item") {
 		town->preset_items.emplace_back();
 		town->preset_items.back().code = 52;
-		town->preset_items.back().ability = 9;
+		town->preset_items.back().ability = eEnchant::BLESSED;
 		town->preset_items.back().charges = 102;
 		town->preset_items.back().always_there = true;
 		town->preset_items.back().property = true;
@@ -116,7 +116,7 @@ TEST_CASE("Saving a town") {
 		in_and_out("item", town, scen);
 		REQUIRE(town->preset_items.size() >= 1);
 		CHECK(town->preset_items[0].code == 52);
-		CHECK(town->preset_items[0].ability == 9);
+		CHECK(town->preset_items[0].ability == eEnchant::BLESSED);
 		CHECK(town->preset_items[0].charges == 102);
 		CHECK(town->preset_items[0].always_there);
 		CHECK(town->preset_items[0].property);

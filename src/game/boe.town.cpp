@@ -386,18 +386,12 @@ void start_town_mode(short which_town, short entry_dir) {
 			}
 			
 			// Not use the items data flags, starting with forcing an ability
-			if(preset.ability >= 0) {
+			if(preset.ability != eEnchant::NONE) {
 				// TODO: What other ways might there be to use this?
 				switch(item.variety) {
 					case eItemType::ONE_HANDED:
 					case eItemType::TWO_HANDED: {
-						if(preset.ability > int(eEnchant::BLESSED))
-							break;
-						// TODO: This array and accompanying calculation is now duplicated here and in place_buy_button()
-						const short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
-						int ench = preset.ability;
-						int val = max(aug_cost[ench] * 100, item.value * (5 + aug_cost[ench]));
-						item.enchant_weapon(eEnchant(ench), val);
+						item.enchant_weapon(preset.ability);
 						break;
 					}
 					default: break; // Silence compiler warning

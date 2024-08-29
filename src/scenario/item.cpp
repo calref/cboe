@@ -348,57 +348,25 @@ cItem::cItem(eAlchemy recipe) : cItem(ITEM_POTION) {
 	magic_use_type = info.magic_use_type;
 }
 
-void cItem::enchant_weapon(eEnchant enchant_type,short new_val) {
+void cItem::enchant_weapon(eEnchant enchant_type) {
 	if(magic || ability != eItemAbil::NONE)
 		return;
 	if(variety != eItemType::ONE_HANDED && variety != eItemType::TWO_HANDED)
 		return;
 	magic = true;
 	enchanted = true;
-	std::string store_name = full_name;
-	switch(enchant_type) {
-		case eEnchant::PLUS_ONE:
-			store_name += " (+1)";
-			bonus++;
-			value = new_val;
-			break;
-		case eEnchant::PLUS_TWO:
-			store_name += " (+2)";
-			bonus += 2;
-			value = new_val;
-			break;
-		case eEnchant::PLUS_THREE:
-			store_name += " (+3)";
-			bonus += 3;
-			value = new_val;
-			break;
-		case eEnchant::SHOOT_FLAME:
-			store_name += " (F)";
-			ability = eItemAbil::CAST_SPELL;
-			abil_strength = 5;
-			abil_data.spell = eSpell::FLAME;
-			charges = 8;
-			break;
-		case eEnchant::FLAMING:
-			store_name += " (F!)";
-			value = new_val;
-			ability = eItemAbil::DAMAGING_WEAPON;
-			abil_strength = 5;
-			abil_data.damage = eDamageType::FIRE;
-			break;
-		case eEnchant::PLUS_FIVE:
-			store_name += " (+5)";
-			value = new_val;
-			bonus += 5;
-			break;
-		case eEnchant::BLESSED:
-			store_name += " (B)";
-			bonus++;
-			ability = eItemAbil::AFFECT_STATUS;
-			abil_strength = 5;
-			abil_data.status = eStatus::BLESS_CURSE;
-			charges = 8;
-			break;
+	const cEnchant& info = *enchant_type;
+	std::string store_name = full_name + " (";
+	store_name += info.suffix + ")";
+	bonus += info.add_bonus;
+	value = info.adjust_value(value);
+	if(info.add_ability != eItemAbil::NONE) {
+		ability = info.add_ability;
+		abil_strength = info.abil_strength;
+		abil_data = info.abil_data;
+	}
+	if(info.charges > 0) {
+		charges = info.charges;
 	}
 	if(value > 15000)
 		value = 15000;

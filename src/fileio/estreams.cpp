@@ -743,3 +743,18 @@ std::istream& operator>> (std::istream& in, eCreatureStatus& status) {
 		in.setstate(std::ios::failbit);
 	return in;
 }
+
+// MARK: eEnchant
+
+cEnumLookup enchant_strs = {"+1", "+2", "+3", "shoot-flame", "flaming", "+5", "blessed"};
+
+std::ostream& operator<< (std::ostream& out, eEnchant ench) {
+	writeEnum(out, ench, enchant_strs, "+1");
+	return out;
+}
+
+std::istream& operator>> (std::istream& in, eEnchant& ench) {
+	if(!readEnum(in, ench, enchant_strs, eEnchant::NONE))
+		in.setstate(std::ios::failbit);
+	return in;
+}

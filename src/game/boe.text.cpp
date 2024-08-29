@@ -370,8 +370,6 @@ void place_buy_button(short position,short pc_num,short item_num) {
 	rectangle dest_rect,source_rect;
 	rectangle button_sources[3] = {{24,0,36,30},{36,0,48,30},{48,0,60,30}};
 	short val_to_place;
-	// TODO: This is now duplicated here and in start_town_mode()
-	short aug_cost[10] = {4,7,10,8, 15,15,10, 0,0,0};
 	
 	const cPlayer& pc = univ.party[pc_num];
 	const cItem& item = pc.items[item_num];
@@ -416,7 +414,7 @@ void place_buy_button(short position,short pc_num,short item_num) {
 			if((item.variety == eItemType::ONE_HANDED || item.variety == eItemType::TWO_HANDED) && item.ident && item.ability == eItemAbil::NONE && !item.magic) {
 				item_area_button_active[position][ITEMBTN_SPEC] = true;
 				source_rect = button_sources[2];
-				val_to_place = max(aug_cost[shop_identify_cost] * 100, item.value * (5 + aug_cost[shop_identify_cost]));
+				val_to_place = (*eEnchant(shop_identify_cost)).adjust_value(item.value);
 			}
 			break;
 		case MODE_INVEN: case MODE_SHOP:
