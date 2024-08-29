@@ -46,7 +46,7 @@ public:
 	int awkward;
 	int bonus;
 	int protection;
-	int charges;
+	int charges, max_charges;
 	eSkill weap_type;
 	eItemUse magic_use_type;
 	unsigned short graphic_num;
@@ -63,7 +63,7 @@ public:
 	std::string full_name;
 	std::string name;
 	unsigned int treas_class;
-	bool ident, property, magic, contained, held, cursed, concealed, enchanted, unsellable;
+	bool ident, property, magic, contained, held, cursed, concealed, enchanted, unsellable, rechargeable;
 	std::string desc;
 	unsigned char rec_treas_class() const;
 	short item_weight() const;

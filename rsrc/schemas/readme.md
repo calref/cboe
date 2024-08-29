@@ -391,8 +391,8 @@ arrows, bolts, thrown missiles, or missiles with no ammo).
 	`help-one`, `harm-all`, `help-all`.
 * `<properties>` - Contains several boolean subtags specifying properties of this item.
 Recognized subtags are `<identified>` (indicating it is _always_ identified), `<magic>`,
-`<cursed>`, `<concealed>`, `<enchanted>`, `<unsellable>`. Note that the editor UI gives no
-access to the `<enchanted>` flag.
+`<cursed>`, `<concealed>`, `<enchanted>`, `<unsellable>`, `<rechargeable>`.
+Note that the editor UI gives no access to the `<enchanted>` flag.
 * `<description>` - A description of the item. The scenario editor wraps the contents of
 this element in a `CDATA` declaration.
 

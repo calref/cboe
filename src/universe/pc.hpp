@@ -168,8 +168,8 @@ public:
 	cInvenSlot has_type(eItemType type);
 	const cInvenSlot has_class_equip(unsigned int item_class) const;
 	cInvenSlot has_class_equip(unsigned int item_class);
-	const cInvenSlot has_class(unsigned int item_class) const;
-	cInvenSlot has_class(unsigned int item_class);
+	const cInvenSlot has_class(unsigned int item_class, bool require_charges = false) const;
+	cInvenSlot has_class(unsigned int item_class, bool require_charges = false);
 	
 	short skill(eSkill skill) const;
 	short stat_adj(eSkill skill) const;

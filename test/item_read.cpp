@@ -116,6 +116,7 @@ TEST_CASE("Loading an item type definition") {
 		CHECK(scen.scen_items[0].bonus == 5);
 		CHECK(scen.scen_items[0].protection == 4);
 		CHECK(scen.scen_items[0].charges == 20);
+		CHECK(scen.scen_items[0].max_charges == 20);
 		CHECK(scen.scen_items[0].weap_type == eSkill::DEFENSE);
 		CHECK(scen.scen_items[0].missile == 3);
 		CHECK(scen.scen_items[0].type_flag == 9);
@@ -130,6 +131,7 @@ TEST_CASE("Loading an item type definition") {
 		CHECK(scen.scen_items[0].cursed);
 		CHECK(scen.scen_items[0].concealed);
 		CHECK(scen.scen_items[0].enchanted);
+		CHECK(scen.scen_items[0].rechargeable);
 		CHECK(scen.scen_items[0].unsellable);
 		CHECK(scen.scen_items[0].desc == "This is a silly, silly description.");
 	}

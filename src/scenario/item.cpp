@@ -195,7 +195,7 @@ cItem::cItem(){
 	awkward = 0;
 	bonus = 0;
 	protection = 0;
-	charges = 0;
+	charges = max_charges = 0;
 	weap_type = eSkill::INVALID;
 	magic_use_type = eItemUse::HELP_ONE;
 	graphic_num = 0;
@@ -212,7 +212,7 @@ cItem::cItem(){
 	item_loc.y = 0;
 	treas_class = 0;
 	ident = property = magic = contained = held = false;
-	cursed = concealed = enchanted = unsellable = false;
+	cursed = concealed = enchanted = rechargeable = unsellable = false;
 }
 
 cItem::cItem(eItemPreset preset) : cItem() {
@@ -336,6 +336,7 @@ cItem::cItem(eItemPreset preset) : cItem() {
 			graphic_num = 105; // The blank graphic
 			break;
 	}
+	max_charges = charges;
 }
 
 cItem::cItem(eAlchemy recipe) : cItem(ITEM_POTION) {
@@ -366,7 +367,8 @@ void cItem::enchant_weapon(eEnchant enchant_type) {
 		abil_data = info.abil_data;
 	}
 	if(info.charges > 0) {
-		charges = info.charges;
+		charges = max_charges = info.charges;
+		rechargeable =  true;
 	}
 	if(value > 15000)
 		value = 15000;
@@ -381,7 +383,7 @@ void cItem::import_legacy(legacy::item_record_type& old){
 	awkward = old.awkward;
 	bonus = old.bonus;
 	protection = old.protection;
-	charges = old.charges;
+	charges = max_charges = old.charges;
 	if(old.type >= 1 && old.type <= 3)
 		weap_type = eSkill(old.type + 2);
 	else weap_type = eSkill::INVALID;
@@ -923,7 +925,7 @@ void cItem::import_legacy(legacy::item_record_type& old){
 	contained = old.item_properties & 8;
 	cursed = old.item_properties & 16;
 	concealed = old.item_properties & 32;
-	enchanted = held = false;
+	enchanted = rechargeable = held = false;
 	unsellable = old.item_properties & 16;
 	// Set missile, if needed
 	if(variety == eItemType::ARROW || variety == eItemType::BOLTS) {
@@ -1260,7 +1262,7 @@ void cItem::writeTo(cTagFile_Page& page) const {
 	page["AWKWARD"] << awkward;
 	page["BONUS"] << bonus;
 	page["PROT"] << protection;
-	page["CHARGES"] << charges;
+	page["CHARGES"] << charges << max_charges;
 	page["WEAPON"] << weap_type;
 	page["USE"] << magic_use_type;
 	page["ICON"] << graphic_num;
@@ -1285,6 +1287,7 @@ void cItem::writeTo(cTagFile_Page& page) const {
 	if(cursed) page.add("CURSED");
 	if(concealed) page.add("CONCEALED");
 	if(enchanted) page.add("ENCHANTED");
+	if(rechargeable) page.add("RECHARGEABLE");
 	if(unsellable) page.add("UNSELLABLE");
 }
 
@@ -1294,7 +1297,7 @@ void cItem::readFrom(const cTagFile_Page& page){
 	page["AWKWARD"] >> awkward;
 	page["BONUS"] >> bonus;
 	page["PROT"] >> protection;
-	page["CHARGES"] >> charges;
+	page["CHARGES"] >> charges >> max_charges;
 	page["WEAPON"] >> weap_type;
 	page["USE"] >> magic_use_type;
 	page["ICON"] >> graphic_num;
@@ -1319,6 +1322,7 @@ void cItem::readFrom(const cTagFile_Page& page){
 	cursed = page.contains("CURSED");
 	concealed = page.contains("CONCEALED");
 	enchanted = page.contains("ENCHANTED");
+	rechargeable = page.contains("RECHARGEABLE");
 	unsellable = page.contains("UNSELLABLE");
 }
 

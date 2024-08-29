@@ -28,6 +28,7 @@
 			<cursed>true</cursed>
 			<concealed>true</concealed>
 			<enchanted>true</enchanted>
+			<rechargeable>true</rechargeable>
 			<unsellable>true</unsellable>
 		</properties>
 		<description>This is a silly, silly description.</description>

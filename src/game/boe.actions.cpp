@@ -971,7 +971,7 @@ void handle_item_shop_action(short item_hit) {
 			else {
 				play_sound(68);
 				ASB("Your item is recharged.");
-				target.charges += 5;
+				target.charges = target.max_charges;
 			}
 		   break;
 		case MODE_SELL_WEAP: case MODE_SELL_ARMOR: case MODE_SELL_ANY:

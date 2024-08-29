@@ -629,7 +629,7 @@ bool cParty::take_abil(eItemAbil abil, short dat) {
 	for(int i = 0; i < 6; i++)
 		if(adven[i]->main_status == eMainStatus::ALIVE)
 			if(cInvenSlot item = adven[i]->has_abil(abil,dat)) {
-				if(item->charges > 1)
+				if(item->charges > 1 || item->rechargeable)
 					item->charges--;
 				else adven[i]->take_item(item.slot);
 				return true;
@@ -637,12 +637,12 @@ bool cParty::take_abil(eItemAbil abil, short dat) {
 	return false;
 }
 
-bool cParty::has_class(unsigned int item_class) {
+bool cParty::has_class(unsigned int item_class, bool require_charges) {
 	if(item_class == 0)
 		return false;
 	for(auto& pc : *this)
 		if(pc.main_status == eMainStatus::ALIVE)
-			if(cInvenSlot item = pc.has_class(item_class)) {
+			if(cInvenSlot item = pc.has_class(item_class, require_charges)) {
 				return true;
 			}
 	return false;
@@ -653,8 +653,8 @@ bool cParty::take_class(unsigned int item_class) const {
 		return false;
 	for(auto& pc : *this)
 		if(pc.main_status == eMainStatus::ALIVE)
-			if(cInvenSlot item = pc.has_class(item_class)) {
-				if(item->charges > 1)
+			if(cInvenSlot item = pc.has_class(item_class, true)) {
+				if(item->charges > 1 || item->rechargeable)
 					item->charges--;
 				else pc.take_item(item.slot);
 				return true;
