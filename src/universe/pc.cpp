@@ -768,6 +768,7 @@ cInvenSlot cPlayer::has_abil(eItemAbil abil,short dat) {
 	return find_item_matching([this,abil,dat](int, const cItem& item) {
 		if(item.variety == eItemType::NO_ITEM) return false;
 		if(item.ability != abil) return false;
+		if(item.charges == 0) return false;
 		if(dat >= 0 && dat != item.abil_data.value) return false;
 		return true;
 	});
@@ -807,14 +808,14 @@ const cInvenSlot cPlayer::has_class_equip(unsigned int item_class) const {
 	return const_cast<cPlayer*>(this)->has_class_equip(item_class);
 }
 
-cInvenSlot cPlayer::has_class(unsigned int item_class) {
-	return find_item_matching([item_class](int, const cItem& item) {
-		return item.special_class == item_class;
+cInvenSlot cPlayer::has_class(unsigned int item_class, bool require_charges) {
+	return find_item_matching([item_class, require_charges](int, const cItem& item) {
+		return item.special_class == item_class && (!require_charges || item.charges > 0);
 	});
 }
 
-const cInvenSlot cPlayer::has_class(unsigned int item_class) const {
-	return const_cast<cPlayer*>(this)->has_class(item_class);
+const cInvenSlot cPlayer::has_class(unsigned int item_class, bool require_charges) const {
+	return const_cast<cPlayer*>(this)->has_class(item_class, require_charges);
 }
 
 cInvenSlot::operator bool() const {
@@ -894,7 +895,7 @@ void cPlayer::take_item(int which_item) {
 void cPlayer::remove_charge(int which_item) {
 	if(items[which_item].charges > 0) {
 		items[which_item].charges--;
-		if(items[which_item].charges == 0) {
+		if(items[which_item].charges == 0 && !items[which_item].rechargeable) {
 			take_item(which_item);
 		}
 	}

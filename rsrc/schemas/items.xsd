@@ -106,6 +106,7 @@
 						<xs:element name="cursed" type="bool" minOccurs="0"/>
 						<xs:element name="concealed" type="bool" minOccurs="0"/>
 						<xs:element name="enchanted" type="bool" minOccurs="0"/>
+						<xs:element name="rechargeable" type="bool" minOccurs="0"/>
 						<xs:element name="unsellable" type="bool" minOccurs="0"/>
 					</xs:all>
 				</xs:complexType>

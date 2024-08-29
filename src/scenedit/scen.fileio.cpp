@@ -464,6 +464,7 @@ void writeItemsToXml(ticpp::Printer&& data, cScenario& scenario) {
 		if(item.cursed) data.PushElement("cursed", "true");
 		if(item.concealed) data.PushElement("concealed", "true");
 		if(item.enchanted) data.PushElement("enchanted", "true");
+		if(item.rechargeable) data.PushElement("rechargeable", "true");
 		if(item.unsellable) data.PushElement("unsellable", "true");
 		data.CloseElement("properties");
 		

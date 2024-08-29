@@ -37,6 +37,7 @@ TEST_CASE("Converting items from legacy scenarios") {
 		CHECK(new_item.bonus == 1);
 		CHECK(new_item.protection == 3);
 		CHECK(new_item.charges == 10);
+		CHECK(new_item.max_charges == 10);
 		CHECK(new_item.graphic_num == 62);
 		CHECK(new_item.type_flag == 100);
 		CHECK(new_item.value == 500);

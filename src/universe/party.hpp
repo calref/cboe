@@ -203,7 +203,7 @@ public:
 	bool forced_give(cItem item,eItemAbil abil,short dat = -1);
 	bool has_abil(eItemAbil abil, short dat = -1) const;
 	bool take_abil(eItemAbil abil, short dat = -1);
-	bool has_class(unsigned int item_class);
+	bool has_class(unsigned int item_class, bool require_charges = false);
 	bool take_class(unsigned int item_class) const;
 	
 	bool start_split(short x, short y, snd_num_t noise, short who);

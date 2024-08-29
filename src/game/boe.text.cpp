@@ -335,7 +335,7 @@ void put_item_screen(eItemWinMode screen_num) {
 					if((stat_screen_mode == MODE_SHOP) &&
 						((is_town()) || (is_out()) || ((is_combat()) && (pc == univ.cur_pc)))) { // place give and drop and use
 						place_item_graphic(i,item.graphic_num);
-						if(item.can_use()) // place use if can
+						if(item.can_use() && (item.rechargeable ? item.charges > 0 : true)) // place use if can
 							place_item_button(ITEMBTN_NORM,i);
 						else place_item_button(ITEMBTN_ALL,i);
 					}
@@ -346,7 +346,7 @@ void put_item_screen(eItemWinMode screen_num) {
 							((is_town()) || (is_out()) || ((is_combat()) && (pc == univ.cur_pc)))) { // place give and drop and use
 							place_item_button(1,i,ITEMBTN_GIVE);
 							place_item_button(2,i,ITEMBTN_DROP);
-							if(item.can_use()) // place use if can
+							if(item.can_use() && (item.rechargeable ? item.charges > 0 : true)) // place use if can
 								place_item_button(0,i,ITEMBTN_USE);
 						}
 					}
@@ -393,7 +393,7 @@ void place_buy_button(short position,short pc_num,short item_num) {
 			}
 			break;
 		case MODE_RECHARGE:
-			if(item.charges == 0 && item.can_use()) {
+			if(item.rechargeable && item.charges == 0 && item.can_use()) {
 				item_area_button_active[position][ITEMBTN_SPEC] = true;
 				source_rect = button_sources[3];
 				val_to_place = shop_identify_cost;

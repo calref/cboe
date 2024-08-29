@@ -603,6 +603,10 @@ void use_item(short pc,short item) {
 		add_string_to_buf("Use: Can't use this item.");
 		take_charge = false;
 	}
+	if(item_rec.rechargeable && item_rec.charges == 0) {
+		add_string_to_buf("Use: No charges left.");
+		take_charge = false;
+	}
 	if(univ.party[pc].traits[eTrait::MAGICALLY_INEPT] && !inept_ok){
 		add_string_to_buf("Use: Can't - magically inept.");
 		take_charge = false;

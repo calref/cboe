@@ -1112,6 +1112,7 @@ void readItemsFromXml(ticpp::Document&& data, cScenario& scenario) {
 				item->GetText(&the_item.protection);
 			} else if(type == "charges") {
 				item->GetText(&the_item.charges);
+				the_item.max_charges = the_item.charges;
 			} else if(type == "weapon-type") {
 				item->GetText(&the_item.weap_type);
 			} else if(type == "missile-type") {
@@ -1169,6 +1170,8 @@ void readItemsFromXml(ticpp::Document&& data, cScenario& scenario) {
 						the_item.concealed = state();
 					} else if(type == "enchanted") {
 						the_item.enchanted = state();
+					} else if(type == "rechargeable") {
+						the_item.rechargeable = state();
 					} else if(type == "unsellable") {
 						the_item.unsellable = state();
 					} else throw xBadNode(type, prop->Row(), prop->Column(), fname);
