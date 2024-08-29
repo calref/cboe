@@ -75,9 +75,6 @@ extern short store_talk_face_pic;
 extern cUniverse univ;
 extern cCustomGraphics spec_scen_g;
 extern bool fog_lifted;
-extern const short alch_difficulty[20];
-extern const eItemAbil alch_ingred1[20];
-extern const eItemAbil alch_ingred2[20];
 extern enum_map(eGuiArea, rectangle) win_to_rects;
 
 // Talk vars
@@ -741,12 +738,13 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 				base_item.ident = true;
 				cur_info_str = base_item.interesting_string();
 				break;
-			case eShopItemType::ALCHEMY:
-				cur_info_str = get_str("item-abilities", int(alch_ingred1[base_item.item_level]) + 1);
-				if(alch_ingred2[base_item.item_level] != eItemAbil::NONE) {
-					cur_info_str += " and " + get_str("item-abilities", int(alch_ingred2[base_item.item_level]) + 1);
+			case eShopItemType::ALCHEMY: {
+				const cAlchemy& info = *(eAlchemy(base_item.item_level));
+				cur_info_str = get_str("item-abilities", int(info.ingred1) + 1);
+				if(info.ingred2 != eItemAbil::NONE) {
+					cur_info_str += " and " + get_str("item-abilities", int(info.ingred2) + 1);
 				}
-				break;
+			} break;
 			case eShopItemType::MAGE_SPELL:
 				spell = cSpell::fromNum(eSkill::MAGE_SPELLS, base_item.item_level);
 				cur_info_str = "Level: " + std::to_string((*spell).level) + "    SP: " + std::to_string((*spell).cost);

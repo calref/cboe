@@ -216,25 +216,6 @@ void pick_race_abil(cPlayer *pc,short mode,cDialog* parent) {
 	pickAbil.run();
 }
 
-extern const short alch_difficulty[20] = {
-	1,1,1,3,3,
-	4,5,5,7,9,
-	9,10,12,12,9,
-	14,19,10,16,20
-};
-extern const eItemAbil alch_ingred1[20] = {
-	eItemAbil::HOLLY,eItemAbil::COMFREY,eItemAbil::HOLLY,eItemAbil::COMFREY,eItemAbil::WORMGRASS,
-	eItemAbil::NETTLE,eItemAbil::NETTLE,eItemAbil::WORMGRASS,eItemAbil::GRAYMOLD,eItemAbil::WORMGRASS,
-	eItemAbil::GRAYMOLD,eItemAbil::ASPTONGUE,eItemAbil::GRAYMOLD,eItemAbil::MANDRAKE,eItemAbil::EMBERF,
-	eItemAbil::MANDRAKE,eItemAbil::MANDRAKE,eItemAbil::NETTLE,eItemAbil::GRAYMOLD,eItemAbil::MANDRAKE,
-};
-extern const eItemAbil alch_ingred2[20] = {
-	eItemAbil::NONE,eItemAbil::NONE,eItemAbil::NONE,eItemAbil::WORMGRASS,eItemAbil::NONE,
-	eItemAbil::NONE,eItemAbil::NONE,eItemAbil::NETTLE,eItemAbil::NONE,eItemAbil::ASPTONGUE,
-	eItemAbil::HOLLY,eItemAbil::NONE,eItemAbil::COMFREY,eItemAbil::NONE,eItemAbil::NONE,
-	eItemAbil::ASPTONGUE,eItemAbil::EMBERF,eItemAbil::EMBERF,eItemAbil::ASPTONGUE,eItemAbil::EMBERF,
-};
-
 void display_alchemy(bool allowEdit,cDialog* parent) {
 	set_cursor(sword_curs);
 	
@@ -243,7 +224,7 @@ void display_alchemy(bool allowEdit,cDialog* parent) {
 	for(short i = 0; i < 20; i++) {
 		std::string id = "potion" + boost::lexical_cast<std::string>(i + 1);
 		std::string name = get_str("magic-names", i + 200) + " (";
-		name += std::to_string(alch_difficulty[i]);
+		name += std::to_string((*eAlchemy(i)).difficulty);
 		name += ')';
 		showAlch->addLabelFor(id, name, LABEL_LEFT, 83, true);
 		if(!allowEdit)

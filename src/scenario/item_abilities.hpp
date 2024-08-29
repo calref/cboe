@@ -9,6 +9,11 @@
 #ifndef BoE_ITEM_ABILITIES_HPP
 #define BoE_ITEM_ABILITIES_HPP
 
+#include "damage.hpp"
+#include "race.hpp"
+#include "skills_traits.hpp"
+#include "spell.hpp"
+
 enum class eItemAbil {
 	// Weapon abilities
 	NONE = 0,
@@ -110,6 +115,16 @@ inline eItemAbilCat getItemAbilCategory(eItemAbil abil) {
 		return eItemAbilCat::REAGENT;
 	return eItemAbilCat::INVALID;
 }
+
+union uItemAbilData {
+	unsigned int value = 0;
+	eStatus status;
+	ePartyStatus party;
+	eSpell spell;
+	eDamageType damage;
+	eRace race;
+	eSkill skill;
+};
 
 std::ostream& operator << (std::ostream& out, eItemAbil e);
 std::istream& operator >> (std::istream& in, eItemAbil& e);

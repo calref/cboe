@@ -340,116 +340,12 @@ cItem::cItem(eItemPreset preset) : cItem() {
 
 cItem::cItem(eAlchemy recipe) : cItem(ITEM_POTION) {
 	full_name = get_str("magic-names", int(recipe) + 200);
-	switch(recipe) {
-		case eAlchemy::NONE: break;
-		case eAlchemy::CURE_WEAK:
-			value = 40;
-			ability = eItemAbil::AFFECT_STATUS;
-			abil_strength = 2;
-			abil_data.status = eStatus::POISON;
-			break;
-		case eAlchemy::HEAL_WEAK:
-			value = 60;
-			ability = eItemAbil::AFFECT_HEALTH;
-			abil_strength = 2;
-			break;
-		case eAlchemy::POISON_WEAK:
-			value = 15;
-			ability = eItemAbil::POISON_WEAPON;
-			abil_strength = 2;
-			break;
-		case eAlchemy::SPEED_WEAK:
-			value = 50;
-			ability = eItemAbil::AFFECT_STATUS;
-			abil_strength = 2;
-			abil_data.status = eStatus::HASTE_SLOW;
-			break;
-		case eAlchemy::POISON_MED:
-			value = 50;
-			ability = eItemAbil::POISON_WEAPON;
-			abil_strength = 4;
-			break;
-		case eAlchemy::HEAL_MED:
-			value = 180;
-			ability = eItemAbil::AFFECT_HEALTH;
-			abil_strength = 5;
-			break;
-		case eAlchemy::CURE_STRONG:
-			value = 200;
-			ability = eItemAbil::AFFECT_STATUS;
-			abil_strength = 8;
-			abil_data.status = eStatus::POISON;
-			break;
-		case eAlchemy::SPEED_MED:
-			value = 100;
-			ability = eItemAbil::AFFECT_STATUS;
-			abil_strength = 5;
-			abil_data.status = eStatus::HASTE_SLOW;
-			break;
-		case eAlchemy::GRAYMOLD:
-			value = 150;
-			ability = eItemAbil::AFFECT_STATUS;
-			abil_strength = 4;
-			abil_data.status = eStatus::DISEASE;
-			magic_use_type = eItemUse::HELP_ALL;
-			break;
-		case eAlchemy::POWER_WEAK:
-			value = 100;
-			ability = eItemAbil::AFFECT_SPELL_POINTS;
-			abil_strength = 2;
-			break;
-		case eAlchemy::CLARITY:
-			value = 200;
-			ability = eItemAbil::AFFECT_STATUS;
-			abil_strength = 8;
-			abil_data.status = eStatus::DUMB;
-			break;
-		case eAlchemy::POISON_STRONG:
-			value = 150;
-			ability = eItemAbil::POISON_WEAPON;
-			abil_strength = 6;
-			break;
-		case eAlchemy::HEAL_STRONG:
-			value = 300;
-			ability = eItemAbil::AFFECT_HEALTH;
-			abil_strength = 8;
-			break;
-		case eAlchemy::POISON_KILL:
-			value = 400;
-			ability = eItemAbil::POISON_WEAPON;
-			abil_strength = 8;
-			break;
-		case eAlchemy::RESURRECT:
-			value = 100;
-			ability = eItemAbil::RESURRECTION_BALM;
-			break;
-		case eAlchemy::POWER_MED:
-			value = 300;
-			ability = eItemAbil::AFFECT_SPELL_POINTS;
-			abil_strength = 5;
-			break;
-		case eAlchemy::KNOWLEDGE:
-			value = 500;
-			ability = eItemAbil::AFFECT_SKILL_POINTS;
-			abil_strength = 2;
-			break;
-		case eAlchemy::STRENGTH:
-			value = 175;
-			ability = eItemAbil::AFFECT_STATUS;
-			abil_strength = 8;
-			abil_data.status = eStatus::BLESS_CURSE;
-			break;
-		case eAlchemy::BLISS:
-			value = 250;
-			ability = eItemAbil::BLISS_DOOM;
-			abil_strength = 5;
-			break;
-		case eAlchemy::POWER_STRONG:
-			value = 500;
-			ability = eItemAbil::AFFECT_SKILL_POINTS;
-			abil_strength = 8;
-			break;
-	}
+	const cAlchemy& info = *recipe;
+	value = info.value;
+	ability = info.ability;
+	abil_strength = info.abil_strength;
+	abil_data = info.abil_data;
+	magic_use_type = info.magic_use_type;
 }
 
 void cItem::enchant_weapon(eEnchant enchant_type,short new_val) {

@@ -12,13 +12,10 @@
 #include <string>
 #include <iosfwd>
 
-#include "damage.hpp"
 #include "location.hpp"
 #include "item_abilities.hpp"
 #include "item_variety.hpp"
-#include "race.hpp"
 #include "skills_traits.hpp"
-#include "spell.hpp"
 #include "alchemy.hpp"
 
 namespace legacy { struct item_record_type; };
@@ -39,16 +36,6 @@ enum eItemPreset {
 	ITEM_POTION,
 	ITEM_SPECIAL,
 	ITEM_SHOP,
-};
-
-union uItemAbilData {
-	unsigned int value = 0;
-	eStatus status;
-	ePartyStatus party;
-	eSpell spell;
-	eDamageType damage;
-	eRace race;
-	eSkill skill;
 };
 
 class cItem {
