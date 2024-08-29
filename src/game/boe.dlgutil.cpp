@@ -918,12 +918,20 @@ void handle_talk_node(int which_talk_entry) {
 			put_item_screen(stat_window);
 			give_help(42,43);
 			break;
-		case eTalkNode::IDENTIFY: case eTalkNode::ENCHANT:
+		case eTalkNode::IDENTIFY:
+			stat_screen_mode = MODE_IDENTIFY,
+			give_help(44, 0);
+			if(false) // Skip first line of fallthrough
+		case eTalkNode::ENCHANT:
+			stat_screen_mode = MODE_ENCHANT,
+			give_help(45, 0);
+			if(false) // Skip first line of fallthrough
+		case eTalkNode::RECHARGE:
+			stat_screen_mode = MODE_RECHARGE,
+			give_help(66, 0);
 			can_save_talk = false;
-			stat_screen_mode = (ttype == eTalkNode::IDENTIFY) ? MODE_IDENTIFY : MODE_ENCHANT;
 			shop_identify_cost = a;
 			put_item_screen(stat_window);
-			give_help(ttype == eTalkNode::IDENTIFY ? 44 : 45,0);
 			break;
 		case eTalkNode::BUY_INFO:
 			if(univ.party.gold < a) {

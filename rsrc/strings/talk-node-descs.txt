@@ -82,8 +82,8 @@ Unused
 Unused
 Unused
 Unused
-Unused Node Type
-Unused
+Recharge Items
+Cost to recharge
 Unused
 Unused
 Unused

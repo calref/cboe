@@ -1437,7 +1437,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 // dir = 0 - down, 1 - left, 2 - right, 3 - up, 4 - down/left, 5 - up/left, 6 - up/right, 7 - down/right
 // pos = row or column to centre the arrow in, range 0..8, ignored for dir >= 4
 static void draw_one_pointing_arrow(int dir, int pos) {
-	rectangle from_rect = {62, 1, 70, 9};
+	rectangle from_rect = {62, 61, 70, 69};
 	from_rect.offset(9 * (dir % 4), 9 * (dir / 4));
 	
 	rectangle ter_view_rect = win_to_rects[WINRECT_TERVIEW];

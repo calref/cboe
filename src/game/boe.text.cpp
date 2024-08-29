@@ -368,7 +368,7 @@ void put_item_screen(eItemWinMode screen_num) {
 
 void place_buy_button(short position,short pc_num,short item_num) {
 	rectangle dest_rect,source_rect;
-	rectangle button_sources[3] = {{24,0,36,30},{36,0,48,30},{48,0,60,30}};
+	rectangle button_sources[4] = {{24,0,36,30},{36,0,48,30},{48,0,60,30},{60,0,72,30}};
 	short val_to_place;
 	
 	const cPlayer& pc = univ.party[pc_num];
@@ -392,6 +392,13 @@ void place_buy_button(short position,short pc_num,short item_num) {
 				val_to_place = shop_identify_cost;
 			}
 			break;
+		case MODE_RECHARGE:
+			if(item.charges == 0 && item.can_use()) {
+				item_area_button_active[position][ITEMBTN_SPEC] = true;
+				source_rect = button_sources[3];
+				val_to_place = shop_identify_cost;
+			}
+		   break;
 		case MODE_SELL_WEAP:
 			if((*item.variety).is_weapon && !pc.equip[item_num] && item.ident && val_to_place > 0 && !item.unsellable) {
 				item_area_button_active[position][ITEMBTN_SPEC] = true;

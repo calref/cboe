@@ -56,6 +56,7 @@ enum eStatMode {
 	MODE_SELL_ARMOR = 4,
 	MODE_SELL_ANY = 5,
 	MODE_ENCHANT = 6,
+	MODE_RECHARGE = 7,
 };
 
 static const signed char dir_x_dif[9] = {0,1,1,1,0,-1,-1,-1,0};

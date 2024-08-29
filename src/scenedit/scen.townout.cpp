@@ -1064,7 +1064,7 @@ static bool check_talk_xtra(cDialog& me, std::stack<node_ref_t>& talk_edit_stack
 		case eTalkNode::BUY_INFO: case eTalkNode::DEP_ON_TIME: case eTalkNode::DEP_ON_TIME_AND_EVENT: case eTalkNode::REGULAR:
 		case eTalkNode::END_ALARM: case eTalkNode::END_DIE: case eTalkNode::END_FIGHT: case eTalkNode::END_FORCE:
 		case eTalkNode::IDENTIFY: case eTalkNode::SELL_ARMOR: case eTalkNode::SELL_ITEMS: case eTalkNode::SELL_WEAPONS:
-		case eTalkNode::TRAINING: case eTalkNode::JOB_BANK:
+		case eTalkNode::TRAINING: case eTalkNode::JOB_BANK: case eTalkNode::RECHARGE:
 			break;
 	}
 	

@@ -63,7 +63,7 @@ This command bring up a map of the area you're in. Generally, maps of dungeons a
 Your health is a measure of how much punishment you can take before dying - the more the better. Whenever you get hit, you lose some health. Taking damage when your health is down to 0 will kill you.
 Your spell points are what you expend to cast spells. Each spell drains away some of your spell points. Time and rest restore them. When creating a character, you get 3 bonus spell points for every level of Mage and Priest Spells skill you buy.
 Some doors can't be opened no matter what you try. For example, portcullises can almost never be opened by picking locks or bashing.
-
+This character will, for a fee, recharge some of your items whose charges have been exhausted. Click on the 'Inc' button by the item to get it recharged.
 
 A special node just triggered, and since you previously enabled it, you are now in step-through mode. Take a look at the transcript - it gives you the node that is about to execute, together with the type and number (useful if you need to locate it in the editor).
 To execute that node, simply press any key (or click the mouse button). After the node has executed, if it calls another one, you will see it in the transcript. Keep pressing a key to step through the nodes. If you wish to exit step-through mode in the middle of a node sequence, simply press Escape.
