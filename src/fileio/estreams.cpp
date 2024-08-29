@@ -643,7 +643,7 @@ std::istream& operator>> (std::istream& in, eLighting& light) {
 
 cEnumLookup talk_nodes = {
 	"reg","if-sdf","set-sdf","inn","if-time","if-event","if-town","shop","train","jobs",
-	"","","","sell-weap","sell-prot","sell-any","id","ench","buy-info","buy-sdf",
+	"","","recharge","sell-weap","sell-prot","sell-any","id","ench","buy-info","buy-sdf",
 	"buy-ship","buy-horse","buy-spec-item","quest","buy-town","end-force","end-fight","end-alarm","end-die","call-local",
 	"call-global",
 };

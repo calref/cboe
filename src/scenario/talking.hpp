@@ -42,6 +42,7 @@ enum class eTalkNode {
 	SHOP = 7,
 	TRAINING = 8,
 	JOB_BANK = 9,
+	RECHARGE = 12,
 	SELL_WEAPONS = 13,
 	SELL_ARMOR = 14,
 	SELL_ITEMS = 15,

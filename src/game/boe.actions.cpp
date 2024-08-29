@@ -965,6 +965,15 @@ void handle_item_shop_action(short item_hit) {
 				shopper.combine_things();
 			}
 			break;
+		case MODE_RECHARGE:
+			if(!take_gold(shop_identify_cost,false))
+				ASB("Recharge: You don't have the gold.");
+			else {
+				play_sound(68);
+				ASB("Your item is recharged.");
+				target.charges += 5;
+			}
+		   break;
 		case MODE_SELL_WEAP: case MODE_SELL_ARMOR: case MODE_SELL_ANY:
 			play_sound(-39);
 			univ.party.gold += store_selling_values[i];
