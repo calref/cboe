@@ -563,30 +563,7 @@ void set_up_shop_array() {
 	}
 }
 
-void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short store_face_pic) {
-	rectangle area_rect;
-	
-	store_personality = personality;
-	
-	store_monst_type = monst_type;
-	store_m_num = m_num;
-	store_talk_face_pic = store_face_pic; ////
-	area_rect = talk_area_rect;
-	talk_gworld.create(area_rect.width(), area_rect.height());
-	help_btn->show();
-	
-	// This would be the place to show the text box, if I add it.
-	
-	// Set the current town for talk strings
-	univ.town.prep_talk(personality / 10);
-	
-	// Dredge up critter's name
-	title_string = std::string(univ.town.cur_talk().people[personality % 10].title) + ":";
-	
-	store_pre_talk_mode = overall_mode;
-	overall_mode = MODE_TALKING;
-	talk_end_forced = false;
-	
+static void reset_talk_words() {
 	// first initialise talk_words here
 	talk_words.clear();
 	static const rectangle preset_rects[9] = {
@@ -620,6 +597,33 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 		}
 		talk_words.push_back(preset_word);
 	}
+}
+
+void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short store_face_pic) {
+	rectangle area_rect;
+
+	store_personality = personality;
+
+	store_monst_type = monst_type;
+	store_m_num = m_num;
+	store_talk_face_pic = store_face_pic; ////
+	area_rect = talk_area_rect;
+	talk_gworld.create(area_rect.width(), area_rect.height());
+	help_btn->show();
+
+	// This would be the place to show the text box, if I add it.
+
+	// Set the current town for talk strings
+	univ.town.prep_talk(personality / 10);
+
+	// Dredge up critter's name
+	title_string = std::string(univ.town.cur_talk().people[personality % 10].title) + ":";
+
+	store_pre_talk_mode = overall_mode;
+	overall_mode = MODE_TALKING;
+	talk_end_forced = false;
+
+	reset_talk_words();
 	
 	stat_screen_mode = MODE_SHOP;
 	current_talk_node = TALK_LOOK;
@@ -715,6 +719,8 @@ static void show_job_bank(int which_bank, std::string title) {
 void handle_talk_node(int which_talk_entry) {
 	if(which_talk_entry == TALK_DUNNO)
 		return;
+
+	reset_talk_words();
 
 	short get_pc,s1 = -1,s2 = -1;
 	char asked[4];
