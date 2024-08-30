@@ -601,8 +601,8 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	// Place buttons at bottom.
 	for(short i = 0; i < 9; i++) {
 		word_rect_t preset_word(preset_words[i], preset_rects[i]);
-		preset_word.on = Colours::DARK_GREEN;
-		preset_word.off = Colours::LIGHT_GREEN;
+		preset_word.on = PRESET_WORD_ON;
+		preset_word.off = PRESET_WORD_OFF;
 		switch(i) {
 			case 0: preset_word.node = TALK_LOOK; break;
 			case 1: preset_word.node = TALK_NAME; break;

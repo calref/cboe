@@ -878,9 +878,9 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	
 	// Place buttons at bottom.
 	if(color == 0)
-		style.colour = Colours::DARK_GREEN; 
+		style.colour = PRESET_WORD_OFF;
 	else 
-		style.colour = Colours::LIGHT_GREEN; 
+		style.colour = PRESET_WORD_ON;
 	for(short i = 0; i < 9; i++) {
 		if(!talk_end_forced || i == 6 || i == 5)
 			win_draw_string(talk_gworld,talk_words[i].rect,talk_words[i].word,eTextMode::LEFT_TOP,style);
@@ -907,7 +907,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		}
 	}
 	
-	std::vector<rectangle> word_rects = draw_string_hilite(talk_gworld, word_place_rect, str, style, hilites, color ? Colours::DARK_BLUE : Colours::DARK_RED);
+	std::vector<rectangle> word_rects = draw_string_hilite(talk_gworld, word_place_rect, str, style, hilites, color ? CUSTOM_WORD_ON : CUSTOM_WORD_OFF);
 	
 	if(!talk_end_forced) {
 		// Now build the list of word rects
@@ -916,8 +916,8 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 			thisRect.word = str.substr(hilites[i].first, hilites[i].second - hilites[i].first);
 			thisRect.rect = word_rects[i];
 			thisRect.node = nodes[i];
-			thisRect.on = Colours::DARK_BLUE; 
-			thisRect.off = Colours::NAVY; // Note: "off" is never used
+			thisRect.on = CUSTOM_WORD_ON;
+			thisRect.off = CUSTOM_WORD_OFF; // Note: "off" is never used
 			talk_words.push_back(thisRect);
 		}
 	}

@@ -66,4 +66,11 @@ namespace Colours {
 	const sf::Color DARK_RED    { 0xa0, 0x00, 0x14}; // formerly c[7] (clickable text, new in OBoE)
 }
 
+const sf::Color PRESET_WORD_ON = Colours::DARK_GREEN;
+const sf::Color PRESET_WORD_OFF = Colours::LIGHT_GREEN;
+
+const sf::Color CUSTOM_WORD_ON = Colours::DARK_BLUE;
+const sf::Color CUSTOM_WORD_OFF = Colours::DARK_RED;
+
+
 #endif
