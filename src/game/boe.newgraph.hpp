@@ -5,6 +5,9 @@
 #include "scenario/item.hpp"
 #include "gfx/gfxsheets.hpp"
 
+#ifndef BOE_NEWGRAPH_H
+#define BOE_NEWGRAPH_H
+
 struct word_rect_t {
 	std::string word;
 	rectangle rect;
@@ -64,3 +67,5 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 short scan_for_response(const char *str);
 void refresh_talking();
 graf_pos calc_item_rect(int num,rectangle& to_rect);
+
+#endif /* defined(BOE_NEWGRAPH_H) */

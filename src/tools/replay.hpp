@@ -7,10 +7,13 @@
 #include <boost/filesystem.hpp>
 #include "location.hpp"
 #include "dialogxml/keycodes.hpp"
+#include "boe.newgraph.hpp"
 
 // Input recording system
 namespace ticpp { class Element; }
 using ticpp::Element;
+
+struct word_rect_t;
 
 extern bool recording;
 extern bool replaying;
@@ -28,5 +31,7 @@ extern void decode_file(std::string data, fs::path file);
 extern location location_from_action(Element& action);
 extern short short_from_action(Element& action);
 extern cKey key_from_action(Element& action);
+extern word_rect_t word_rect_from_action(Element& action);
+extern void record_click_talk_rect(word_rect_t word_rect, bool preset);
 
 #endif

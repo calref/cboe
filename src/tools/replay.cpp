@@ -14,6 +14,8 @@
 #include <locale>
 #include <codecvt>
 #include <string>
+#include <boost/lexical_cast.hpp>
+#include "render_shapes.hpp"
 
 using base64 = cppcodec::base64_rfc4648;
 
@@ -217,4 +219,31 @@ cKey key_from_action(Element& action) {
 	key.mod = static_cast<eKeyMod>(enum_v);
 
 	return key;
+}
+
+word_rect_t word_rect_from_action(Element& action) {
+	auto info = info_from_action(action);
+
+	std::string word = info["word"];
+	rectangle rect = boost::lexical_cast<rectangle>(info["rect"]);
+
+	word_rect_t word_rect(word, rect);
+
+	word_rect.node = boost::lexical_cast<int>(info["node"]);
+
+	bool preset = boost::lexical_cast<bool>(info["preset"]);
+	word_rect.on = preset ? PRESET_WORD_ON : CUSTOM_WORD_ON;
+	word_rect.off = preset ? PRESET_WORD_OFF : CUSTOM_WORD_OFF;
+	return word_rect;
+}
+
+void record_click_talk_rect(word_rect_t word_rect, bool preset) {
+	std::map<std::string,std::string> info;
+
+	info["word"] = word_rect.word;
+	info["rect"] = boost::lexical_cast<std::string>(word_rect.rect);
+	info["node"] = boost::lexical_cast<std::string>(word_rect.node);
+	info["preset"] = boost::lexical_cast<std::string>(preset);
+
+	record_action("click_talk_rect", info);
 }

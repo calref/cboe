@@ -533,6 +533,10 @@ static void replay_next_action() {
 		handle_begin_talk(need_reprint);
 	}else if(t == "handle_talk"){
 		handle_talk(location_from_action(next_action), did_something, need_redraw, need_reprint);
+	}else if(t == "click_talk_rect"){
+		word_rect_t word_rect = word_rect_from_action(next_action);
+		click_talk_rect(word_rect);
+		handle_talk_node(word_rect.node);
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
