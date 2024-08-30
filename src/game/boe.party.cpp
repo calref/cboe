@@ -600,6 +600,25 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				for(cItem& item : pc.items)
 					item.ident = true;
 			break;
+
+		case eSpell::RECHARGE:
+			if(!freebie)
+				univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(is_town()) {
+				ASB("Select items to recharge. Press Space when done.");
+				overall_mode = MODE_ITEM_TARGET;
+				stat_screen_mode = MODE_RECHARGE;
+				extern short shop_identify_cost;
+				shop_identify_cost = 0;
+				put_item_screen(stat_window);
+				break;
+			}
+			ASB("All of your items are recharged.");
+			for(cPlayer& pc : univ.party)
+				for(cItem& item : pc.items)
+					if(item.rechargeable && item.charges == 0)
+						item.charges = item.max_charges;
+			break;
 			
 		case eSpell::TRUE_SIGHT:
 			if(!freebie)

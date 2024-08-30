@@ -404,6 +404,8 @@ cSpell S_SUMMON_AID_MAJOR = cSpell(eSpell::SUMMON_AID_MAJOR)
 	.withRange(4).withRefer(REFER_TARGET).when(WHEN_COMBAT).when(WHEN_TOWN).finish();
 cSpell S_FLASH_STEP = cSpell(eSpell::FLASH_STEP)
 	.withRange(8).withRefer(REFER_TARGET).when(WHEN_COMBAT).asPeaceful().finish();
+cSpell M_RECHARGE = cSpell(eSpell::RECHARGE).asType(eSkill::MAGE_SPELLS).asLevel(7)
+	.withCost(50).when(WHEN_TOWN).when(WHEN_OUTDOORS).asPeaceful().finish();
 cSpell S_AUGMENTATION = cSpell(eSpell::AUGMENTATION)
 	.withRange(10).withRefer(REFER_IMMED).needsSelect().when(WHEN_COMBAT).finish();
 cSpell S_NIRVANA = cSpell(eSpell::NIRVANA)

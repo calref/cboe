@@ -1902,7 +1902,7 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 				i = choose_text(STRT_SKILL, i, &me, "Boost which skill?");
 				break;
 			case eItemAbil::CAST_SPELL:
-				i = choose_text_res("magic-names", 1, 78, i + 1, &me, "Which mage spell?");
+				i = choose_text_res("magic-names", 1, 79, i + 1, &me, "Which mage spell?");
 				if(i < 0) return true;
 				break;
 			case eItemAbil::SUMMONING:
