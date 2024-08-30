@@ -15,7 +15,7 @@
 #include <codecvt>
 #include <string>
 #include <boost/lexical_cast.hpp>
-#include "render_shapes.hpp"
+#include "gfx/render_shapes.hpp"
 
 using base64 = cppcodec::base64_rfc4648;
 
