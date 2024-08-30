@@ -18,6 +18,7 @@ enum eGameMode {
 	MODE_TOWN,
 	MODE_TALK_TOWN, // looking for someone to talk
 	MODE_TOWN_TARGET, // spell target, that is
+	MODE_ITEM_TARGET,
 	MODE_USE_TOWN,
 	MODE_DROP_TOWN,
 	MODE_BASH_TOWN, // Bashing down a door

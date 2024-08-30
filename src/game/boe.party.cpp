@@ -586,6 +586,15 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 		case eSpell::IDENTIFY:
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
+			if(!univ.scenario.is_legacy && is_town()) {
+				ASB("Select items to identify. Press Space when done.");
+				overall_mode = MODE_ITEM_TARGET;
+				stat_screen_mode = MODE_IDENTIFY;
+				extern short shop_identify_cost;
+				shop_identify_cost = 0;
+				put_item_screen(stat_window);
+				break;
+			}
 			ASB("All of your items are identified.");
 			for(cPlayer& pc : univ.party)
 				for(cItem& item : pc.items)

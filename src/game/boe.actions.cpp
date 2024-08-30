@@ -825,7 +825,7 @@ void handle_switch_pc(short which_pc, bool& need_redraw, bool& need_reprint) {
 	}
 
 	cPlayer& pc = univ.party[which_pc];
-	if(!prime_time() && overall_mode != MODE_SHOPPING && overall_mode != MODE_TALKING)
+	if(!prime_time() && overall_mode != MODE_SHOPPING && overall_mode != MODE_TALKING && overall_mode != MODE_ITEM_TARGET)
 		add_string_to_buf("Set active: Finish what you're doing first.");
 	else if(is_combat()) {
 		if(pc.ap > 0) {
@@ -963,6 +963,9 @@ void handle_item_shop_action(short item_hit) {
 				ASB("Your item is identified.");
 				target.ident = true;
 				shopper.combine_things();
+				if(overall_mode == MODE_ITEM_TARGET) {
+					// TODO: End if there are no unidentified items left
+				}
 			}
 			break;
 		case MODE_RECHARGE:
@@ -2228,7 +2231,12 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			} else if(overall_mode == MODE_SPELL_TARGET)
 				// Rotate a force wall
 				spell_cast_hit_return();
-			else if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT || overall_mode == MODE_OUTDOORS) {
+			else if(overall_mode == MODE_ITEM_TARGET) {
+				if(stat_screen_mode == MODE_IDENTIFY)
+					ASB("Identify: Finished");
+				overall_mode = MODE_TOWN;
+				stat_screen_mode = MODE_INVEN;
+			} else if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT || overall_mode == MODE_OUTDOORS) {
 				// Pause (skip turn)
 				handle_pause(did_something, need_redraw);
 				advance_time(did_something, need_redraw, need_reprint);
