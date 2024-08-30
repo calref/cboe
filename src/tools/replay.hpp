@@ -7,7 +7,7 @@
 #include <boost/filesystem.hpp>
 #include "location.hpp"
 #include "dialogxml/keycodes.hpp"
-#include "boe.newgraph.hpp"
+#include "game/boe.newgraph.hpp"
 
 // Input recording system
 namespace ticpp { class Element; }
