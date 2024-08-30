@@ -31,6 +31,7 @@
 #include "fileio/resmgr/res_image.hpp"
 #include "tools/prefs.hpp"
 #include "tools/enum_map.hpp"
+#include "replay.hpp"
 
 short monsters_faces[190] = {
 	0,1,2,3,4,5,6,7,8,9,
@@ -824,6 +825,10 @@ static void place_talk_face() {
 }
 
 void click_talk_rect(word_rect_t word) {
+	if(recording){
+		record_click_talk_rect(word, word.on == PRESET_WORD_ON);
+	}
+
 	rectangle talkRect(talk_gworld), wordRect(word.rect);
 	mainPtr.setActive();
 	rect_draw_some_item(talk_gworld.getTexture(),talkRect,mainPtr,talk_area_rect);

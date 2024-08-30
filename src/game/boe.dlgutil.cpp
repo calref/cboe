@@ -708,36 +708,15 @@ static void show_job_bank(int which_bank, std::string title) {
 	job_dlg.run();
 }
 
-void handle_talk_event(location p, cFramerateLimiter& fps_limiter) {
+void handle_talk_node(int which_talk_entry) {
+	if(which_talk_entry == TALK_DUNNO)
+		return;
+
 	short get_pc,s1 = -1,s2 = -1;
 	char asked[4];
 	
 	short a,b,c,d;
 	eTalkNode ttype;
-	
-	if(p.in(talk_help_rect)) {
-		if(!help_btn->handleClick(p, fps_limiter))
-			return;
-		give_help_and_record(205,6);
-		return;
-	}
-	
-	p.x -= 5;
-	p.y -= 5;
-	
-	int which_talk_entry = TALK_DUNNO;
-	for(word_rect_t& word : talk_words) {
-		if(word.node == -1) continue;
-		rectangle wordRect(word.rect);
-		wordRect.offset(talk_area_rect.topLeft());
-		wordRect.offset(-1, -10); // TODO: This corrects for the byzantine offsets that win_draw_string applies for some reason...
-		if(!p.in(wordRect)) continue;
-		click_talk_rect(word);
-		which_talk_entry = word.node;
-		break;
-	}
-	if(which_talk_entry == TALK_DUNNO)
-		return;
 	
 	switch(which_talk_entry) {
 		case TALK_DUNNO:
@@ -1097,6 +1076,31 @@ void handle_talk_event(location p, cFramerateLimiter& fps_limiter) {
 	}
 	
 	place_talk_str(save_talk_str1,save_talk_str2,0,dummy_rect);
+}
+
+void handle_talk_event(location p, cFramerateLimiter& fps_limiter) {
+	if(p.in(talk_help_rect)) {
+		if(!help_btn->handleClick(p, fps_limiter))
+			return;
+		give_help_and_record(205,6);
+		return;
+	}
+
+	p.x -= 5;
+	p.y -= 5;
+
+	int which_talk_entry = TALK_DUNNO;
+	for(word_rect_t& word : talk_words) {
+		if(word.node == -1) continue;
+		rectangle wordRect(word.rect);
+		wordRect.offset(talk_area_rect.topLeft());
+		wordRect.offset(-1, -10); // TODO: This corrects for the byzantine offsets that win_draw_string applies for some reason...
+		if(!p.in(wordRect)) continue;
+		click_talk_rect(word);
+		which_talk_entry = word.node;
+		break;
+	}
+	handle_talk_node(which_talk_entry);
 }
 
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
