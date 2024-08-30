@@ -169,7 +169,9 @@ void end_shop_mode() {
 	done_btn->hide();
 	help_btn->hide();
 	if(store_pre_shop_mode == MODE_TALKING) {
-		place_talk_str("You conclude your business.", "", 0, dummy_rect);
+		save_talk_str1 = "You conclude your business.";
+		save_talk_str2 = "";
+		place_talk_str(save_talk_str1, save_talk_str2, 0, dummy_rect);
 		update_last_talk(TALK_BUSINESS);
 	}
 	
