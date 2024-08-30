@@ -1,24 +1,14 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay'>
-	<button name='okay' type='regular' top='281' left='471'>OK</button>
-	<button name='cancel' type='regular' top='281' left='405' def-key='esc'>Cancel</button>
-	<text name='use-title' top='140' left='8' width='135' height='13'>Item use properties</text>
-	<group name='use-type'>
-		<led name='use0' state='off' top='143' left='164' width='100'>Help single PC</led>
-		<led name='use1' state='off' top='158' left='164' width='100'>Harm single PC</led>
-		<led name='use2' state='off' top='173' left='164' width='100'>Help whole party</led>
-		<led name='use3' state='off' top='188' left='164' width='100'>Harm whole party</led>
-	</group>
-	<led name='always-id' state='off' top='144' left='415' width='100'>Always identified</led>
-	<led name='magic' state='off' top='159' left='415' width='100'>Magical</led>
-	<led name='cursed' state='off' top='174' left='415' width='100'>Cursed</led>
-	<led name='conceal' state='off' top='189' left='415' width='100'>Conceal ability</led>
-	<led name='no-sell' state='off' top='204' left='415' width='100'>Shops won't buy</led>
 	<pict type='dlog' num='16' top='8' left='11'/>
 	<text size='large' top='6' left='50' width='158' height='16'>Edit Item Abilities</text>
 	<text top='8' left='222' width='111' height='14'>Item number:</text>
 	<text name='num' top='8' left='340' width='37' height='14'/>
+	<text top='25' left='50' width='145' height='14'>Current item name:</text>
+	<text name='name' top='25' left='198' width='196' height='14'/>
+	<text top='41' left='50' width='145' height='14'>Current item variety:</text>
+	<text name='variety' top='41' left='198' width='196' height='14'/>
 	<text size='large' top='63' left='8' width='142' height='13'>Item special ability:</text>
 	<text name='abilname' framed='true' top='63' left='161' width='250' height='13'/>
 	<text name='str1-title' framed='true' top='84' left='8' width='185' height='16'/>
@@ -28,11 +18,25 @@
 	<field name='str2' top='109' left='200' width='77' height='16'/>
 	<button name='str2-choose1' type='regular' top='107' left='290'>Choose</button>
 	<button name='str2-choose2' type='regular' top='107' left='358'>Priest</button>
+	<button name='clear' type='large' top='6' left='441'>Clear Abil.</button>
+	<button name='weapon' type='large' top='32' left='441'>Weapon Abil.</button>
+	<button name='general' type='large' top='58' left='441'>General Abil.</button>
+	<button name='usable' type='large' top='84' left='441'>Usable Abil.</button>
+	<button name='reagent' type='large' top='110' left='441'>Reagents</button>
+	<text name='use-title' top='140' left='8' width='135' height='13'>Item use properties</text>
+	<group name='use-type'>
+		<led name='use0' state='off' top='143' left='164' width='100'>Help single PC</led>
+		<led name='use1' state='off' top='158' left='164' width='100'>Harm single PC</led>
+		<led name='use2' state='off' top='173' left='164' width='100'>Help whole party</led>
+		<led name='use3' state='off' top='188' left='164' width='100'>Harm whole party</led>
+	</group>
 	<text top='140' left='292' width='121' height='13'>Other properties:</text>
+	<led name='always-id' state='off' top='144' left='415' width='100'>Always identified</led>
+	<led name='magic' state='off' top='159' left='415' width='100'>Magical</led>
+	<led name='cursed' state='off' top='174' left='415' width='100'>Cursed</led>
+	<led name='conceal' state='off' top='189' left='415' width='100'>Conceal ability</led>
+	<led name='no-sell' state='off' top='204' left='415' width='100'>Shops won't buy</led>
 	<text top='209' left='10' width='155' height='42'>Item treasure class: (0 is lowest level of treasure, 4 is highest)</text>
-	<!--
-	 NOTE: All these LEDs have been shifted 100 pixels left to account for the labels swapping sides
-	 -->
 	<group name='treasure'>
 		<led name='type0' state='off' top='213' left='208' width='140'>Type 0: Junk, Not left</led>
 		<led name='type1' state='off' top='228' left='208' width='140'>Type 1: Lousy, 1 - 20 gp</led>
@@ -41,13 +45,6 @@
 		<led name='type4' state='off' top='273' left='208' width='140'>Type 4: Great, 2500+ gp</led>
 		<led name='type5' state='off' top='288' left='208' width='140'>Type 5: Unique/Rare, Not left</led>
 	</group>
-	<text top='25' left='50' width='145' height='14'>Current item name:</text>
-	<text name='name' top='25' left='198' width='196' height='14'/>
-	<text top='41' left='50' width='145' height='14'>Current item variety:</text>
-	<text name='variety' top='41' left='198' width='196' height='14'/>
-	<button name='clear' type='large' top='6' left='441'>Clear Abil.</button>
-	<button name='weapon' type='large' top='32' left='441'>Weapon Abil.</button>
-	<button name='general' type='large' top='58' left='441'>General Abil.</button>
-	<button name='usable' type='large' top='84' left='441'>Usable Abil.</button>
-	<button name='reagent' type='large' top='110' left='441'>Reagents</button>
+	<button name='cancel' type='regular' top='281' left='405' def-key='esc'>Cancel</button>
+	<button name='okay' type='regular' top='281' left='471'>OK</button>
 </dialog>
