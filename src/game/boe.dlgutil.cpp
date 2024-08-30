@@ -162,6 +162,10 @@ static void update_last_talk(int new_node) {
 }
 
 void end_shop_mode() {
+	if(recording){
+		record_action("end_shop_mode", "");
+	}
+
 	rectangle dummy_rect = {0,0,0,0};
 	
 	// This would be a place to show the text box, if I add it (and if this is not an outdoor shop).
