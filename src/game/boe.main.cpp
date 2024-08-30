@@ -537,6 +537,8 @@ static void replay_next_action() {
 		word_rect_t word_rect = word_rect_from_action(next_action);
 		click_talk_rect(word_rect);
 		handle_talk_node(word_rect.node);
+	}else if(t == "end_shop_mode"){
+		end_shop_mode();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
