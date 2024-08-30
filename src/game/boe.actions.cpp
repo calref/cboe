@@ -2234,6 +2234,8 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			else if(overall_mode == MODE_ITEM_TARGET) {
 				if(stat_screen_mode == MODE_IDENTIFY)
 					ASB("Identify: Finished");
+				else if(stat_screen_mode == MODE_RECHARGE)
+					ASB("Recharge: Finished");
 				overall_mode = MODE_TOWN;
 				stat_screen_mode = MODE_INVEN;
 			} else if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT || overall_mode == MODE_OUTDOORS) {
