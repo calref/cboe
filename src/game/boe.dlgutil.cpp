@@ -59,6 +59,7 @@ extern sf::RenderWindow mini_map;
 extern cUniverse univ;
 extern sf::Texture pc_gworld;
 extern std::map<eSkill,short> skill_max;
+extern void give_help_and_record(short help1, short help2);
 
 short sign_mode,person_graphic,store_person_graphic,store_sign_mode;
 long num_talk_entries;
@@ -211,7 +212,7 @@ void handle_shop_event(location p, cFramerateLimiter& fps_limiter) {
 	if(p.in(talk_help_rect)) {
 		if(!help_btn->handleClick(p, fps_limiter))
 			return;
-		give_help(226,27);
+		give_help_and_record(226,27);
 		return;
 	}
 	
@@ -717,7 +718,7 @@ void handle_talk_event(location p, cFramerateLimiter& fps_limiter) {
 	if(p.in(talk_help_rect)) {
 		if(!help_btn->handleClick(p, fps_limiter))
 			return;
-		give_help(205,6);
+		give_help_and_record(205,6);
 		return;
 	}
 	

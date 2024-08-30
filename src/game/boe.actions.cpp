@@ -1778,7 +1778,7 @@ void show_inventory() {
 
 // Most give_help() calls don't need to be recorded, because
 // they are triggered incidentally by other recorded actions.
-static void give_help_and_record(short help1, short help2) {
+void give_help_and_record(short help1, short help2) {
 	if(recording){
 		std::map<std::string,std::string> info;
 		std::ostringstream sstr;
