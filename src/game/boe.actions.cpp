@@ -1275,6 +1275,17 @@ void handle_trade_places(int which_pc) {
 	}
 }
 
+void show_item_info(short item_hit) {
+	if(recording){
+		record_action("show_item_info", boost::lexical_cast<std::string>(item_hit));
+	}
+	if(stat_window == ITEM_WIN_SPECIAL)
+		put_spec_item_info(spec_item_array[item_hit]);
+	else if(stat_window == ITEM_WIN_QUESTS)
+		put_quest_info(spec_item_array[item_hit]);
+	else display_pc_item(stat_window, item_hit,univ.party[stat_window].items[item_hit],0);
+}
+
 bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	long item_hit;
 	bool are_done = false;
@@ -1578,11 +1589,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 								} else handle_drop_item(item_hit, need_redraw);
 								break;
 							case ITEMBTN_INFO:
-								if(stat_window == ITEM_WIN_SPECIAL)
-									put_spec_item_info(spec_item_array[item_hit]);
-								else if(stat_window == ITEM_WIN_QUESTS)
-									put_quest_info(spec_item_array[item_hit]);
-								else display_pc_item(stat_window, item_hit,univ.party[stat_window].items[item_hit],0);
+								show_item_info(item_hit);
 								break;
 							case ITEMBTN_SPEC: // sell? That this code was reached indicates that the item was sellable
 								// (Based on item_area_button_active)
