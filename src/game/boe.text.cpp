@@ -23,6 +23,7 @@ const int TEXT_BUF_LEN = 70;
 #include "spell.hpp"
 #include "tools/enum_map.hpp"
 #include "replay.hpp"
+#include <boost/lexical_cast.hpp>
 
 typedef struct {
 	char line[50];
@@ -550,6 +551,9 @@ void set_stat_window_for_pc(int pc) {
 }
 
 void set_stat_window(eItemWinMode new_stat) {
+	if(recording){
+		record_action("set_stat_window", boost::lexical_cast<std::string>((int)new_stat));
+	}
 	if(new_stat == ITEM_WIN_SPECIAL)
 		give_help(50,0);
 	
