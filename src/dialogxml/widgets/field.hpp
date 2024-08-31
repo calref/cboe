@@ -70,11 +70,13 @@ public:
 	cTextField(cTextField& other) = delete;
 	/// This field is only used by cDialog during the loading process. Changing it will have no effect.
 	long tabOrder = 0;
+	void replay_selection(ticpp::Element& next_action);
 private:
 	void callHandler(event_fcn<EVT_FOCUS>::type onFocus, cDialog& me, std::string id) override;
 	bool callHandler(event_fcn<EVT_DEFOCUS>::type onFocus, cDialog& me, std::string id) override;
 	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
 	void set_ip(location clickLoc, int cTextField::* insertionPoint);
+	void record_selection();
 	cUndoList history;
 	action_ptr current_action;
 	eFldType field_type;
