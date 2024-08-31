@@ -145,6 +145,7 @@
 				</xs:attribute>
 				<xs:attribute name="tab-order" type="xs:integer"/>
 				<xs:attributeGroup ref="rect-size"/>
+				<xs:attributeGroup ref="position"/>
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
