@@ -323,6 +323,16 @@ void cDialog::loadFromFile(const DialogDefn& file){
 					all_resolved = false;
 					return;
 				}
+				if(auto pane = dynamic_cast<cContainer*>(anchor)) {
+					// If the anchor is a container, make sure to resolve its contents first.
+					pane->forEach([&all_resolved](const std::string&, cControl& ctrl) {
+						if(!ctrl.anchor.empty()) {
+							all_resolved = false;
+						}
+					});
+					if(!all_resolved) return;
+					pane->recalcRect();
+				}
 				ctrl.relocateRelative(ctrl.frame.topLeft(), anchor, ctrl.horz, ctrl.vert);
 				ctrl.anchor.clear();
 				ctrl.horz = ctrl.vert = POS_ABS;
