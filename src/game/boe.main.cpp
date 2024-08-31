@@ -550,6 +550,8 @@ static void replay_next_action() {
 		sbar->setPosition(newPos);
 	}else if(t == "use_spec_item"){
 		use_spec_item(boost::lexical_cast<short>(next_action.GetText()), need_redraw);
+	}else if(t == "show_item_info"){
+		show_item_info(boost::lexical_cast<short>(next_action.GetText()));
 	}else{
 		std::ostringstream sstr;
 		sstr << "Couldn't replay action: " << next_action;
