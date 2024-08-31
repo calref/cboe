@@ -31,6 +31,8 @@
 #include <array>
 #include "spell.hpp"
 #include "boe.menus.hpp"
+#include "replay.hpp"
+#include <boost/lexical_cast.hpp>
 
 extern sf::RenderWindow mainPtr;
 extern eGameMode overall_mode;
@@ -567,8 +569,12 @@ void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 	put_pc_screen();
 }
 
-void use_spec_item(short item) {
+void use_spec_item(short item, bool& need_redraw) {
+	if(recording){
+		record_action("use_spec_item", boost::lexical_cast<std::string>(item));
+	}
 	run_special(eSpecCtx::USE_SPEC_ITEM, eSpecCtxType::SCEN, univ.scenario.special_items[item].special, univ.party.get_loc());
+	need_redraw = true;
 }
 
 

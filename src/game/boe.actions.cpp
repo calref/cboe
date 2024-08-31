@@ -1574,8 +1574,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 								break;
 							case ITEMBTN_DROP:
 								if(stat_window == ITEM_WIN_SPECIAL) {
-									use_spec_item(spec_item_array[item_hit]);
-									need_redraw = true;
+									use_spec_item(spec_item_array[item_hit], need_redraw);
 								} else handle_drop_item(item_hit, need_redraw);
 								break;
 							case ITEMBTN_INFO:

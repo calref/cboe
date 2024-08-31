@@ -4,7 +4,7 @@
 bool handle_wandering_specials(short mode);
 bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,bool *forced);
 void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc);
-void use_spec_item(short item);
+void use_spec_item(short item, bool& need_redraw);
 void use_item(short pc,short item);
 bool use_space(location where);
 bool adj_town_look(location where);
