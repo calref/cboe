@@ -25,13 +25,14 @@ enum class eEnchant {
 	FLAMING,
 	PLUS_FIVE,
 	BLESSED,
+	PLUS_FOUR,
 };
 
 class cEnchant {
 	static std::map<eEnchant, cEnchant> dictionary;
 	friend const cEnchant& operator* (eEnchant ench);
 public:
-	static const int MAX = int(eEnchant::BLESSED);
+	static const int MAX = int(eEnchant::PLUS_FOUR);
 	cEnchant(eEnchant id, std::string suf);
 	cEnchant& withCost(short cost);
 	cEnchant& withBonus(int bonus);
