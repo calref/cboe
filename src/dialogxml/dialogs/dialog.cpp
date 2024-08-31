@@ -551,6 +551,12 @@ void cDialog::handle_events() {
 		}else if(replaying && has_next_action("handleTab")){
 			Element& next_action = pop_next_action();
 			handleTab(boost::lexical_cast<bool>(next_action.GetText()));
+		}else if(replaying && has_next_action("field_focus")) {
+			Element& next_action = pop_next_action();
+			setFocus(&(dynamic_cast<cTextField&>(getControl(next_action.GetText()))));
+		}else if(replaying && has_next_action("field_selection")) {
+			cTextField& text_field = dynamic_cast<cTextField&>(getControl(currentFocus));
+			text_field.replay_selection(pop_next_action());
 		}else{
 			while(win.pollEvent(currentEvent)) handle_one_event(currentEvent, fps_limiter);
 		}

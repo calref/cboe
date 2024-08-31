@@ -54,6 +54,11 @@ bool cTextField::callHandler(event_fcn<EVT_DEFOCUS>::type onFocus, cDialog& me, 
 }
 
 void cTextField::callHandler(event_fcn<EVT_FOCUS>::type onFocus, cDialog& me, std::string id) {
+	// Focus events for text fields need to be recorded:
+	if(recording){
+		record_action("field_focus", id);
+	}
+
 	if(onFocus) onFocus(me,id);
 	haveFocus = true;
 	if(insertionPoint < 0)
@@ -118,6 +123,22 @@ void cTextField::set_ip(location clickLoc, int cTextField::* insertionPoint) {
 	}
 }
 
+void cTextField::record_selection() {
+	if(recording){
+		std::map<std::string,std::string> info;
+		info["insertionPoint"] = boost::lexical_cast<std::string>(insertionPoint);
+		info["selectionPoint"] = boost::lexical_cast<std::string>(selectionPoint);
+		record_action("field_selection", info);
+	}
+}
+
+void cTextField::replay_selection(ticpp::Element& next_action) {
+	auto info = info_from_action(next_action);
+	insertionPoint = boost::lexical_cast<int>(info["insertionPoint"]);
+	selectionPoint = boost::lexical_cast<int>(info["selectionPoint"]);
+	redraw();
+}
+
 bool cTextField::handleClick(location clickLoc, cFramerateLimiter& fps_limiter) {
 	if(!haveFocus && parent && !parent->setFocus(this)) return true;
 	haveFocus = true;
@@ -165,6 +186,7 @@ bool cTextField::handleClick(location clickLoc, cFramerateLimiter& fps_limiter) 
 		}
 		fps_limiter.frame_finished();
 	}
+	record_selection();
 	redraw();
 	return true;
 }
@@ -640,6 +662,7 @@ void cTextField::handleInput(cKey key, bool record) {
 	setText(contents);
 	insertionPoint = ip;
 	selectionPoint = sp;
+	record_selection();
 }
 
 bool cTextField::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) {
