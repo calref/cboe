@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -1891,6 +1891,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		914B2BB718E8BF99007B6799 /* Validate Dialog Definitions */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -1903,7 +1904,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "../../pkg/validate-dialogs.sh \"$SOURCE_ROOT/../../rsrc\"";
+			shellScript = "../../pkg/validate-dialogs.sh \"$SOURCE_ROOT/../../rsrc\"\n";
 			showEnvVarsInLog = 0;
 		};
 		91ACCE801900302D00FAEF8B /* Fix dylib install names */ = {
@@ -2728,7 +2729,10 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				LD_RUNPATH_SEARCH_PATHS = "@loader_path/TestFrameworks \"@loader_path/Blades of Exile.app/Contents/Frameworks\"";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@loader_path/TestFrameworks",
+					"\"@loader_path/Blades of Exile.app/Contents/Frameworks\"",
+				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lboost_system",
@@ -2747,7 +2751,10 @@
 				CODE_SIGN_ENTITLEMENTS = boe_test.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
-				LD_RUNPATH_SEARCH_PATHS = "@loader_path/TestFrameworks \"@loader_path/Blades of Exile.app/Contents/Frameworks\"";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@loader_path/TestFrameworks",
+					"\"@loader_path/Blades of Exile.app/Contents/Frameworks\"",
+				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
