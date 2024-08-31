@@ -13,6 +13,8 @@
 #include "gfx/render_shapes.hpp"
 #include "mathutil.hpp"
 #include "tools/cursors.hpp"
+#include "replay.hpp"
+#include <boost/lexical_cast.hpp>
 
 std::string cScrollbar::scroll_textures[NUM_STYLES] = {
 	"dlogscrollwh",
@@ -38,7 +40,19 @@ bool cScrollbar::isScrollable() const {
 	return true;
 }
 
-void cScrollbar::setPosition(long newPos) {
+void cScrollbar::setName(std::string name) {
+	this->name = name;
+}
+
+void cScrollbar::setPosition(long newPos, bool record) {
+	if(record && recording){
+		std::map<std::string,std::string> info;
+		info["name"] = name;
+		// Might as well record newPos before it gets clamped, so replays will verify that clamping
+		// still works.
+		info["newPos"] = boost::lexical_cast<std::string>(newPos);
+		record_action("scrollbar_setPosition", info);
+	}
 	pos = minmax(0,max,newPos);
 }
 
@@ -132,7 +146,7 @@ bool cScrollbar::handle_mouse_wheel_scrolled(const sf::Event& event) {
 	if(!(event_location.in(this->wheel_event_rect) || event_location.in(this->getBounds())))
 		return false;
 	
-	this->setPosition(this->getPosition() - event.mouseWheel.delta);
+	this->setPosition(this->getPosition() - event.mouseWheel.delta, true);
 	
 	return true;
 }
@@ -246,28 +260,34 @@ void cScrollbar::handle_thumb_drag(const location& event_location) {
 	// significantly large compared to the pixel size of the scrollbar).
 	int diff_in_steps = (current - start) * this->max / (thumb_max_position - thumb_min_position);
 
-	this->setPosition(this->drag_start_position + diff_in_steps);
+	this->setPosition(this->drag_start_position + diff_in_steps, true);
+}
+
+void cScrollbar::handlePressedPart(eScrollbarPart pressedPart) {
+	long newPos = -1;
+	switch(pressedPart) {
+		case PART_UP:   newPos = pos - 1; break;
+		case PART_DOWN: newPos = pos + 1; break;
+		
+		case PART_PGUP: newPos = pos - this->pgsz; break;
+		case PART_PGDN: newPos = pos + this->pgsz; break;
+		
+		case PART_THUMB: break;
+		
+		default: break;
+	}
+	if(newPos != -1){
+		setPosition(newPos, true);
+	}
+
 }
 
 bool cScrollbar::handle_mouse_released(const sf::Event&) {
 	// Mouse released while not pressed -> not interested
 	// NOTE: depressed actually means pressed
 	if(!this->depressed) return false;
-	
-	switch(this->pressedPart) {
-		case PART_UP:   this->pos--; break;
-		case PART_DOWN: this->pos++; break;
-		
-		case PART_PGUP: this->pos -= this->pgsz; break;
-		case PART_PGDN: this->pos += this->pgsz; break;
-		
-		case PART_THUMB: break;
-		
-		default: break;
-	}
 
-	// Normalize
-	this->pos = minmax(0, this->max, this->pos);
+	handlePressedPart(this->pressedPart);
 
 	// NOTE: depressed actually means pressed
 	this->depressed = false;
@@ -309,13 +329,7 @@ bool cScrollbar::handleClick(location where, cFramerateLimiter& fps_limiter) {
 				clickLoc = inWindow->mapPixelToCoords(clickLoc);
 				clicked = frame.contains(clickLoc);
 				depressed = false;
-				switch(pressedPart) {
-					case PART_UP: pos--; break;
-					case PART_PGUP: pos -= pgsz; break;
-					case PART_PGDN: pos += pgsz; break;
-					case PART_DOWN: pos++; break;
-					case PART_THUMB: break;
-				}
+				handlePressedPart(pressedPart);
 			} else if(e.type == sf::Event::MouseMoved){
 				restore_cursor();
 				switch(pressedPart) {
@@ -330,7 +344,7 @@ bool cScrollbar::handleClick(location where, cFramerateLimiter& fps_limiter) {
 						// We want the pos that will make thumbPos = mousePos - diff
 						// In draw(), thumbPos is calculated as bar_start + bar_thickness + pos * (bar_size - bar_thickness) / max
 						// So solving for pos gives (mousePos - diff - bar_start - bar_thickness) * max / (bar_size - bar_thickness)
-						pos = (mousePos - diff - bar_start - btn_size) * max / (bar_size - btn_size);
+						setPosition((mousePos - diff - bar_start - btn_size) * max / (bar_size - btn_size), true);
 						break;
 					case PART_PGDN:
 						depressed = mousePos >= thumbPos + btn_size && mousePos < bar_end - btn_size;
@@ -343,7 +357,6 @@ bool cScrollbar::handleClick(location where, cFramerateLimiter& fps_limiter) {
 				toLoc = inWindow->mapPixelToCoords(toLoc);
 				if(pressedPart != PART_THUMB && !frame.contains(toLoc)) depressed = false;
 			}
-			pos = minmax(0,max,pos);
 			if(parent && !link.empty())
 				parent->getControl(link).setTextToNum(pos);
 			thumbPos = bar_start;
