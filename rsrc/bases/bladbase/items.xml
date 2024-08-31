@@ -3844,6 +3844,7 @@
         <weight>1</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-summon-mass</type>
@@ -4208,6 +4209,7 @@
         <weight>1</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -4234,6 +4236,7 @@
         <weight>1</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -4414,6 +4417,7 @@
         <weight>14</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -4440,6 +4444,7 @@
         <weight>14</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -4771,6 +4776,7 @@
         <weight>8</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-status</type>
@@ -4893,6 +4899,7 @@
         <weight>30</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-hp</type>
@@ -4919,6 +4926,7 @@
         <weight>30</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-status</type>
@@ -4971,6 +4979,7 @@
         <weight>30</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>bliss-doom</type>
@@ -4997,6 +5006,7 @@
         <weight>30</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-status</type>
@@ -6035,6 +6045,7 @@
         <weight>8</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -6061,6 +6072,7 @@
         <weight>8</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -6087,6 +6099,7 @@
         <weight>8</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -6114,6 +6127,7 @@
         <properties>
             <magic>true</magic>
             <concealed>true</concealed>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -6140,6 +6154,7 @@
         <weight>8</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -6166,6 +6181,7 @@
         <weight>8</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -6192,6 +6208,7 @@
         <weight>8</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -6219,6 +6236,7 @@
         <properties>
             <magic>true</magic>
             <concealed>true</concealed>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -6246,6 +6264,7 @@
         <properties>
             <magic>true</magic>
             <concealed>true</concealed>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-hp</type>
@@ -6272,6 +6291,7 @@
         <weight>8</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-summon</type>
@@ -7813,6 +7833,7 @@
         <weight>6</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -7839,6 +7860,7 @@
         <weight>7</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -7890,6 +7912,7 @@
         <weight>40</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -7917,6 +7940,7 @@
         <weight>20</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -8827,6 +8851,7 @@
         <weight>1</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -8854,6 +8879,7 @@
         <weight>10</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -8881,6 +8907,7 @@
         <weight>2</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-summon-mass</type>
@@ -8934,6 +8961,7 @@
         <weight>20</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-summon-mass</type>
