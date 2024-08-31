@@ -280,13 +280,29 @@ void cDialog::loadFromFile(const DialogDefn& file){
 		std::function<void(const std::string&, cControl&)> process_ctrl;
 		process_ctrl = [this, &all_resolved, &process_ctrl](const std::string&, cControl& ctrl) {
 			if(!ctrl.anchor.empty()) {
-				auto anchor = controls[ctrl.anchor];
+				cControl* anchor = findControl(ctrl.anchor);
+				if(anchor == nullptr) {
+					std::string ctrlType;
+					switch(ctrl.getType()) {
+						case CTRL_UNKNOWN: ctrlType = "???"; break;
+						case CTRL_BTN: ctrlType = "button"; break;
+						case CTRL_LED: ctrlType = "led"; break;
+						case CTRL_PICT: ctrlType = "pict"; break;
+						case CTRL_FIELD: ctrlType = "field"; break;
+						case CTRL_TEXT: ctrlType = "text"; break;
+						case CTRL_GROUP: ctrlType = "group"; break;
+						case CTRL_STACK: ctrlType = "stack"; break;
+						case CTRL_SCROLL: ctrlType = "slider"; break;
+						case CTRL_PANE: ctrlType = "pane"; break;
+					}
+					throw xBadVal(ctrlType, "anchor", ctrl.anchor, 0, 0, fname);
+				}
 				if(!anchor->anchor.empty()) {
 					// Make sure it's not a loop!
 					std::vector<std::string> refs{ctrl.anchor};
 					while(!anchor->anchor.empty()) {
 						refs.push_back(anchor->anchor);
-						anchor = controls[anchor->anchor];
+						anchor = findControl(anchor->anchor);
 						if(std::find(refs.begin(), refs.end(), anchor->anchor) != refs.end()) {
 							std::string ctrlType;
 							switch(ctrl.getType()) {
@@ -1071,19 +1087,25 @@ const cControl& cDialog::operator[](std::string id) const {
 	return const_cast<cDialog&>(*this).getControl(id);
 }
 
-cControl& cDialog::getControl(std::string id) {
+cControl* cDialog::findControl(std::string id) {
 	ctrlIter iter = controls.find(id);
-	if(iter != controls.end()) return *(iter->second);
+	if(iter != controls.end()) return iter->second;
 	
 	iter = controls.begin();
 	while(iter != controls.end()){
 		if(iter->second->isContainer()){
 			cContainer* tmp = dynamic_cast<cContainer*>(iter->second);
 			if(tmp->hasChild(id))
-				return tmp->getChild(id);
+				return &tmp->getChild(id);
 		}
 		iter++;
 	}
+	return nullptr;
+}
+
+cControl& cDialog::getControl(std::string id) {
+	if(auto ctrl = findControl(id))
+		return *ctrl;
 	throw std::invalid_argument(id + " does not exist in dialog " + fname);
 }
 
