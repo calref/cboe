@@ -29,6 +29,7 @@
 #include "boe.main.hpp"
 #include "boe.consts.hpp"
 #include "boe.ui.hpp"
+#include "boe.specials.hpp"
 #include "tools/winutil.hpp"
 #include "sounds.hpp"
 #include "gfx/render_image.hpp"
@@ -547,6 +548,8 @@ static void replay_next_action() {
 
 		std::shared_ptr<cScrollbar> sbar = std::dynamic_pointer_cast<cScrollbar>(event_listeners[name]);
 		sbar->setPosition(newPos);
+	}else if(t == "use_spec_item"){
+		use_spec_item(boost::lexical_cast<short>(next_action.GetText()), need_redraw);
 	}else{
 		std::ostringstream sstr;
 		sstr << "Couldn't replay action: " << next_action;
