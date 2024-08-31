@@ -1551,10 +1551,10 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 				arrow_button_click(button_rect);
 				switch(i) {
 					case 6: // special screen
-						set_stat_window(ITEM_WIN_SPECIAL);
+						set_stat_window(ITEM_WIN_SPECIAL, true);
 						break;
 					case 7:
-						set_stat_window(ITEM_WIN_QUESTS);
+						set_stat_window(ITEM_WIN_QUESTS, true);
 						break;
 					case 8: // help
 						show_dialog_action("help-inventory");

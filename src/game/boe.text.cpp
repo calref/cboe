@@ -545,14 +545,14 @@ void place_item_bottom_buttons() {
 	rect_draw_some_item(invenbtn_gworld, help_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
 }
 
-void set_stat_window_for_pc(int pc) {
+void set_stat_window_for_pc(int pc, bool record) {
 	if(pc < 0) pc = 0;
 	if(pc > 5) pc = 5;
-	set_stat_window(eItemWinMode(pc));
+	set_stat_window(eItemWinMode(pc), record);
 }
 
-void set_stat_window(eItemWinMode new_stat) {
-	if(recording){
+void set_stat_window(eItemWinMode new_stat, bool record) {
+	if(record && recording){
 		record_action("set_stat_window", boost::lexical_cast<std::string>((int)new_stat));
 	}
 	if(new_stat == ITEM_WIN_SPECIAL)
