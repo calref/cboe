@@ -41,6 +41,7 @@
 	<led name='cursed' rel-anchor='prev' relative='pos-in pos' state='off' top='5' left='0' width='100'>Cursed</led>
 	<led name='conceal' rel-anchor='prev' relative='pos-in pos' state='off' top='5' left='0' width='100'>Conceal ability</led>
 	<led name='no-sell' rel-anchor='prev' relative='pos-in pos' state='off' top='5' left='0' width='100'>Shops won't buy</led>
+	<led name='recharge' rel-anchor='prev' relative='pos-in pos' state='off' top='5' left='0' width='100'>Rechargeable</led>
 	
 	<text name='type-title' anchor='use-title' relative='pos-in pos' top='56' left='2' width='155' height='42'>Item treasure class: (0 is lowest level of treasure, 4 is highest)</text>
 	<group name='treasure'>

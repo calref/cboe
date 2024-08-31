@@ -1838,11 +1838,17 @@ static void put_item_abils_in_dlog(cDialog& me, cItem& item, short which) {
 		me["use-type"].hide();
 	}
 	
+	if(item.charges <= 0 || item.type_flag != 0) {
+		// Only unstackable items with charges can be rechargeable.
+		me["recharge"].hide();
+	}
+	
 	dynamic_cast<cLed&>(me["always-id"]).setState(item.ident ? led_red : led_off);
 	dynamic_cast<cLed&>(me["magic"]).setState(item.magic ? led_red : led_off);
 	dynamic_cast<cLed&>(me["cursed"]).setState(item.cursed ? led_red : led_off);
 	dynamic_cast<cLed&>(me["conceal"]).setState(item.concealed ? led_red : led_off);
 	dynamic_cast<cLed&>(me["no-sell"]).setState(item.unsellable ? led_red : led_off);
+	dynamic_cast<cLed&>(me["recharge"]).setState(item.rechargeable ? led_red : led_off);
 }
 
 static void save_item_abils(cDialog& me, cItem& item) {
@@ -1857,6 +1863,7 @@ static void save_item_abils(cDialog& me, cItem& item) {
 	item.cursed = dynamic_cast<cLed&>(me["cursed"]).getState() != led_off;
 	item.unsellable = dynamic_cast<cLed&>(me["no-sell"]).getState() != led_off;
 	item.concealed = dynamic_cast<cLed&>(me["conceal"]).getState() != led_off;
+	item.rechargeable = dynamic_cast<cLed&>(me["recharge"]).getState() != led_off;
 }
 
 static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& item, short which) {
