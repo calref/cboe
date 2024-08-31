@@ -564,6 +564,12 @@ void cControl::validatePostParse(ticpp::Element& elem, std::string fname, const 
 		if((horz != POS_ABS && horz != POS_REL_NEG) || (vert != POS_ABS && vert != POS_REL_NEG))
 			throw xMissingAttr(elem.Value(), "anchor", elem.Row(), elem.Column(), fname);
 	}
+	if((attrs.count("anchor") || attrs.count("rel-anchor")) && horz == POS_ABS && vert == POS_ABS) {
+		// If an anchor is specified, "relative" must be set to something other than "abs".
+		if(attrs.count("relative"))
+			throw xBadVal(elem.Value(), "relative", "abs", elem.Row(), elem.Column(), fname);
+		else throw xMissingAttr(elem.Value(), "relative", elem.Row(), elem.Column(), fname);
+	}
 	if(attrs.count("anchor") && attrs.count("rel-anchor"))
 	   throw xBadAttr(elem.Value(), "(rel-)anchor", elem.Row(), elem.Column(), fname);
 }

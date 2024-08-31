@@ -66,6 +66,7 @@ class cDialog {
 	int winLastY=-1;
 	std::string currentFocus;
 	cDialog* parent;
+	cControl* findControl(std::string id);
 	std::string generateRandomString();
 	void loadFromFile(const DialogDefn& file);
 	void handleTab(bool reverse);
