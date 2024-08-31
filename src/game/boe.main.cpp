@@ -177,6 +177,7 @@ int main(int argc, char* argv[]) {
 
 static void init_sbar(std::shared_ptr<cScrollbar>& sbar, const std::string& name, rectangle rect, rectangle events_rect, int max, int pgSz, int start = 0) {
 	sbar.reset(new cScrollbar(mainPtr));
+	sbar->setName(name);
 	sbar->setBounds(rect);
 	sbar->setMaximum(max);
 	sbar->setPosition(start);
@@ -539,6 +540,13 @@ static void replay_next_action() {
 		handle_talk_node(word_rect.node);
 	}else if(t == "end_shop_mode"){
 		end_shop_mode();
+	}else if(t == "scrollbar_setPosition"){
+		auto info = info_from_action(next_action);
+		std::string name = info["name"];
+		long newPos = boost::lexical_cast<long>(info["newPos"]);
+
+		std::shared_ptr<cScrollbar> sbar = std::dynamic_pointer_cast<cScrollbar>(event_listeners[name]);
+		sbar->setPosition(newPos);
 	}else{
 		std::ostringstream sstr;
 		sstr << "Couldn't replay action: " << next_action;

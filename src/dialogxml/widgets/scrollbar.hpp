@@ -27,6 +27,7 @@ enum eScrollStyle {
 /// using the methods to get the scrollbar's position.
 /// Alternatively, it can be used as a slider control.
 class cScrollbar : public cControl, public iEventListener, public iDrawable {
+	std::string name;
 	int pos, max, pgsz;
 	std::string link;
 	// Make sure this is equal to the number of constants in eScrollStyle
@@ -43,6 +44,7 @@ class cScrollbar : public cControl, public iEventListener, public iDrawable {
 		PART_PGDN,
 		PART_DOWN,
 	} pressedPart;
+	void handlePressedPart(eScrollbarPart pressedPart);
 	eScrollStyle style = SCROLL_WHITE;
 	bool vert = true;
 	static std::string scroll_textures[NUM_STYLES];
@@ -103,9 +105,10 @@ public:
 	/// Get the scrollbar style.
 	/// @return The style
 	eScrollStyle getStyle() const;
+	void setName(std::string name);
 	/// Set the scrollbar thumb's current position.
 	/// @param to The new position.
-	void setPosition(long to);
+	void setPosition(long to, bool record = false);
 	/// Set the scrollbar thumb's maximum value.
 	/// @param to The maximum value.
 	void setMaximum(long to);
