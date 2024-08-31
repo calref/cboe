@@ -538,17 +538,17 @@ void cDialog::handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(dialogNotToast) {
-		if(replaying && has_next_action() && next_action_type() == "control_click"){
+		if(replaying && has_next_action("control_click")){
 			Element& next_action = pop_next_action();
 			auto info = info_from_action(next_action);
 			if(info["id"].empty()) continue;
 			eKeyMod mods = static_cast<eKeyMod>(std::stoi(info["mods"]));
 			controls[info["id"]]->triggerClickHandler(*this, info["id"], mods);
-		}else if(replaying && has_next_action() && next_action_type() == "field_input"){
+		}else if(replaying && has_next_action("field_input")){
 			Element& next_action = pop_next_action();
 			cKey key = key_from_action(next_action);
 			dynamic_cast<cTextField&>(getControl(currentFocus)).handleInput(key);
-		}else if(replaying && has_next_action() && next_action_type() == "handleTab"){
+		}else if(replaying && has_next_action("handleTab")){
 			Element& next_action = pop_next_action();
 			handleTab(boost::lexical_cast<bool>(next_action.GetText()));
 		}else{
