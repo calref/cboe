@@ -32,6 +32,7 @@
 #include "tools/prefs.hpp"
 #include "tools/enum_map.hpp"
 #include "replay.hpp"
+#include <boost/lexical_cast.hpp>
 
 short monsters_faces[190] = {
 	0,1,2,3,4,5,6,7,8,9,
@@ -600,6 +601,9 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 }
 
 void click_shop_rect(rectangle area_rect) {
+	if(recording){
+		record_action("click_shop_rect", boost::lexical_cast<std::string>(area_rect));
+	}
 
 	draw_shop_graphics(1,area_rect);
 	mainPtr.display();

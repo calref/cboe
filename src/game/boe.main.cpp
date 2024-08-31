@@ -539,6 +539,9 @@ static void replay_next_action() {
 		word_rect_t word_rect = word_rect_from_action(next_action);
 		click_talk_rect(word_rect);
 		handle_talk_node(word_rect.node);
+	}else if(t == "click_shop_rect"){
+		rectangle rect = boost::lexical_cast<rectangle>(next_action.GetText());
+		click_shop_rect(rect);
 	}else if(t == "end_shop_mode"){
 		end_shop_mode();
 	}else if(t == "scrollbar_setPosition"){
@@ -554,6 +557,10 @@ static void replay_next_action() {
 		show_item_info(boost::lexical_cast<short>(next_action.GetText()));
 	}else if(t == "set_stat_window"){
 		set_stat_window(static_cast<eItemWinMode>(boost::lexical_cast<int>(next_action.GetText())));
+	}else if(t == "handle_sale"){
+		handle_sale(boost::lexical_cast<int>(next_action.GetText()));
+	}else if(t == "handle_info_request"){
+		handle_info_request(boost::lexical_cast<int>(next_action.GetText()));
 	}else{
 		std::ostringstream sstr;
 		sstr << "Couldn't replay action: " << next_action;
