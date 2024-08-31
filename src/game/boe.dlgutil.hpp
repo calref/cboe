@@ -8,8 +8,8 @@
 void start_shop_mode(short which,short cost_adj,std::string store_name);
 void end_shop_mode();
 void handle_shop_event(location p, cFramerateLimiter& fps_limiter);
-void handle_sale(cShopItem item, int i);
-void handle_info_request(cShopItem item);
+void handle_sale(int i);
+void handle_info_request(int what_picked);
 void set_up_shop_array();
 void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short store_face_pic);
 void end_talk_mode();

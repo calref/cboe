@@ -246,17 +246,19 @@ void handle_shop_event(location p, cFramerateLimiter& fps_limiter) {
 
 		if(p.in(active_rect)) {
 			click_shop_rect(active_rect);
-			handle_sale(active_shop.getItem(what_picked), what_picked);
-			set_up_shop_array();
-			draw_shop_graphics(false, {});
+			handle_sale(what_picked);
 		} else if(p.in(item_help_rect)){
 			click_shop_rect(item_help_rect);
-			handle_info_request(active_shop.getItem(what_picked));
+			handle_info_request(what_picked);
 		}
 	}
 }
 
-void handle_sale(cShopItem item, int i) {
+void handle_sale(int i) {
+	if(recording){
+		record_action("handle_sale", boost::lexical_cast<std::string>(i));
+	}
+	cShopItem item = active_shop.getItem(i);
 	cItem base_item = item.item;
 	short cost = item.getCost(active_shop.getCostAdjust());
 	rectangle dummy_rect = {0,0,0,0};
@@ -418,10 +420,18 @@ void handle_sale(cShopItem item, int i) {
 	print_buf();
 	put_pc_screen();
 	put_item_screen(stat_window);
+
+	// This looks to be redundant, but I'm just preserving the previous behavior of the code.
+	set_up_shop_array();
+	draw_shop_graphics(false, {});
 }
 
 
-void handle_info_request(cShopItem item) {
+void handle_info_request(int what_picked) {
+	if(recording){
+		record_action("handle_info_request", boost::lexical_cast<std::string>(what_picked));
+	}
+	cShopItem item = active_shop.getItem(what_picked);
 	cItem base_item = item.item;
 	
 	switch(item.type) {
