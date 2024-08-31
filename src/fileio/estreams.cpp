@@ -746,7 +746,7 @@ std::istream& operator>> (std::istream& in, eCreatureStatus& status) {
 
 // MARK: eEnchant
 
-cEnumLookup enchant_strs = {"+1", "+2", "+3", "shoot-flame", "flaming", "+5", "blessed"};
+cEnumLookup enchant_strs = {"+1", "+2", "+3", "shoot-flame", "flaming", "+5", "blessed", "+4"};
 
 std::ostream& operator<< (std::ostream& out, eEnchant ench) {
 	writeEnum(out, ench, enchant_strs, "+1");

@@ -74,3 +74,4 @@ cEnchant E_SHOOT_FLAME = cEnchant(eEnchant::SHOOT_FLAME, "F").withCost(8).withAb
 cEnchant E_FLAMING = cEnchant(eEnchant::FLAMING, "F!").withCost(15).withAbility(eItemAbil::DAMAGING_WEAPON, 5, eDamageType::FIRE).finish();
 cEnchant E_PLUS_FIVE = cEnchant(eEnchant::PLUS_FIVE, "+5").withCost(15).withBonus(5).finish();
 cEnchant E_BLESSED = cEnchant(eEnchant::BLESSED, "B").withCost(10).withBonus(1).withAbility(eItemAbil::AFFECT_STATUS, 5, eStatus::BLESS_CURSE);
+cEnchant E_PLUS_FOUR = cEnchant(eEnchant::PLUS_FOUR, "+5").withCost(15).withBonus(4).finish();

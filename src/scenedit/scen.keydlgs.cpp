@@ -421,7 +421,7 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 			}
 			break;
 		case STRT_ENCHANT:
-			strings = {"+1", "+2", "+3", "Shoot Flames", "Flaming", "+5", "Blessed"};
+			strings = {"+1", "+2", "+3", "Shoot Flames", "Flaming", "+5", "Blessed", "+4"};
 			break;
 		case STRT_DIR:
 			strings = {"North", "Northease", "East", "Southeast", "South", "Southwest", "West", "Northwest", "None"};
