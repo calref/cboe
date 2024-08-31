@@ -121,8 +121,11 @@ void record_field_input(cKey key) {
 	record_action("field_input", info);
 }
 
-bool has_next_action() {
-	return next_action != nullptr;
+bool has_next_action(std::string type) {
+	if(type.empty())
+		return next_action != nullptr;
+	else
+		return has_next_action() && next_action_type() == type;
 }
 
 std::string next_action_type() {
