@@ -539,6 +539,10 @@ static void replay_next_action() {
 		handle_talk_node(word_rect.node);
 	}else if(t == "end_shop_mode"){
 		end_shop_mode();
+	}else{
+		std::ostringstream sstr;
+		sstr << "Couldn't replay action: " << next_action;
+		throw sstr.str();
 	}
 
 	// TODO some of these actions shouldn't call advance_time(). They should return
