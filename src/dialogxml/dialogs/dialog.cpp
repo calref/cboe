@@ -547,7 +547,7 @@ void cDialog::handle_events() {
 		}else if(replaying && has_next_action("field_input")){
 			Element& next_action = pop_next_action();
 			cKey key = key_from_action(next_action);
-			dynamic_cast<cTextField&>(getControl(currentFocus)).handleInput(key);
+			dynamic_cast<cTextField&>(getControl(currentFocus)).handleInput(key, true);
 		}else if(replaying && has_next_action("handleTab")){
 			Element& next_action = pop_next_action();
 			handleTab(boost::lexical_cast<bool>(next_action.GetText()));
@@ -677,7 +677,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter&
 				// we have an upcoming TextEntered event which contains more information.
 				// Otherwise, handle it right away. But never handle enter or escape.
 				if((key.spec && key.k != key_enter && key.k != key_esc) || mod_contains(key.mod, mod_ctrl))
-					dynamic_cast<cTextField&>(getControl(currentFocus)).handleInput(key);
+					dynamic_cast<cTextField&>(getControl(currentFocus)).handleInput(key, true);
 				pendingKey = key;
 				if(key.k != key_enter && key.k != key_esc) itemHit = "";
 			}
@@ -686,7 +686,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter&
 			if(!pendingKey.spec && !currentFocus.empty()) {
 				pendingKey.c = currentEvent.text.unicode;
 				if(pendingKey.c != '\t')
-					dynamic_cast<cTextField&>(getControl(currentFocus)).handleInput(pendingKey);
+					dynamic_cast<cTextField&>(getControl(currentFocus)).handleInput(pendingKey, true);
 			}
 			break;
 		case sf::Event::MouseButtonPressed:
