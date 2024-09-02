@@ -97,7 +97,7 @@ void record_action(std::string action_type, std::map<std::string,std::string> in
 
 void record_field_input(cKey key) {
 	std::map<std::string,std::string> info;
-	info["spec"] = boost::lexical_cast<std::string>(key.spec);
+	info["spec"] = bool_to_str(key.spec);
 
 	if(key.spec){
 		info["k"] = boost::lexical_cast<std::string>(key.k);
@@ -190,7 +190,7 @@ cKey key_from_action(Element& action) {
 	cKey key;
 	int enum_v;
 
-	key.spec = boost::lexical_cast<bool>(info["spec"]);
+	key.spec = str_to_bool(info["spec"]);
 
 	if(key.spec){
 		enum_v = boost::lexical_cast<int>(info["k"]);
@@ -218,7 +218,7 @@ word_rect_t word_rect_from_action(Element& action) {
 
 	word_rect.node = boost::lexical_cast<int>(info["node"]);
 
-	bool preset = boost::lexical_cast<bool>(info["preset"]);
+	bool preset = str_to_bool(info["preset"]);
 	word_rect.on = preset ? PRESET_WORD_ON : CUSTOM_WORD_ON;
 	word_rect.off = preset ? PRESET_WORD_OFF : CUSTOM_WORD_OFF;
 	return word_rect;
@@ -230,7 +230,7 @@ void record_click_talk_rect(word_rect_t word_rect, bool preset) {
 	info["word"] = word_rect.word;
 	info["rect"] = boost::lexical_cast<std::string>(word_rect.rect);
 	info["node"] = boost::lexical_cast<std::string>(word_rect.node);
-	info["preset"] = boost::lexical_cast<std::string>(preset);
+	info["preset"] = bool_to_str(preset);
 
 	record_action("click_talk_rect", info);
 }

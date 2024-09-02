@@ -550,7 +550,7 @@ void cDialog::handle_events() {
 			dynamic_cast<cTextField&>(getControl(currentFocus)).handleInput(key, true);
 		}else if(replaying && has_next_action("handleTab")){
 			Element& next_action = pop_next_action();
-			handleTab(boost::lexical_cast<bool>(next_action.GetText()));
+			handleTab(str_to_bool(next_action.GetText()));
 		}else if(replaying && has_next_action("field_focus")) {
 			Element& next_action = pop_next_action();
 			setFocus(&(dynamic_cast<cTextField&>(getControl(next_action.GetText()))));
@@ -573,7 +573,7 @@ void cDialog::handle_events() {
 
 void cDialog::handleTab(bool reverse) {
 	if(recording){
-		record_action("handleTab", boost::lexical_cast<std::string>(reverse));
+		record_action("handleTab", bool_to_str(reverse));
 	}
 	if(reverse) {
 		handleTabOrder(currentFocus, tabOrder.rbegin(), tabOrder.rend());
