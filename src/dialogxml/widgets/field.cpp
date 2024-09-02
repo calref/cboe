@@ -663,7 +663,6 @@ void cTextField::handleInput(cKey key, bool record) {
 	setText(contents);
 	insertionPoint = ip;
 	selectionPoint = sp;
-	record_selection();
 }
 
 bool cTextField::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) {
