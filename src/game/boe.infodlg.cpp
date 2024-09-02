@@ -115,15 +115,8 @@ static bool display_spells_event_filter(cDialog& me, std::string item_hit, eSkil
 void display_spells(eSkill mode,short force_spell,cDialog* parent) {
 	if(recording){
 		std::map<std::string,std::string> info;
-		std::ostringstream sstr;
-
-		sstr << mode;
-		info["mode"] = sstr.str();
-
-		sstr.str("");
-		sstr << force_spell;
-		info["force_spell"] = sstr.str();
-
+		info["mode"] = boost::lexical_cast<std::string>(mode);
+		info["force_spell"] = boost::lexical_cast<std::string>(force_spell);
 		record_action("display_spells", info);
 	}
 	using namespace std::placeholders;
@@ -183,10 +176,7 @@ static bool display_skills_event_filter(cDialog& me, std::string item_hit, eKeyM
 
 void display_skills(eSkill force_skill,cDialog* parent) {
 	if(recording){
-		std::ostringstream sstr;
-		sstr << force_skill;
-
-		record_action("display_skills", sstr.str());
+		record_action("display_skills", boost::lexical_cast<std::string>(force_skill));
 	}
 	if(force_skill != eSkill::INVALID)
 		skill_pos = int(force_skill);

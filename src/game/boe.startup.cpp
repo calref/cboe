@@ -25,11 +25,10 @@
 #include "gfx/render_image.hpp"
 #include "tools/enum_map.hpp"
 #include "replay.hpp"
+#include <boost/lexical_cast.hpp>
 
 #include <vector>
 using std::vector;
-
-#include <sstream>
 
 extern bool party_in_memory;
 extern long register_flag;
@@ -43,15 +42,8 @@ enum_map(eStartButton, rectangle) startup_button;
 void handle_startup_button_click(eStartButton btn, eKeyMod mods) {
 	if(recording){
 		std::map<std::string, std::string> info;
-
-		std::ostringstream sstr;
-		sstr << btn;
-		info["btn"] = sstr.str();
-
-		sstr.str("");
-		sstr << mods;
-		info["mods"] = sstr.str();
-
+		info["btn"] = boost::lexical_cast<std::string>(btn);
+		info["mods"] = boost::lexical_cast<std::string>(mods);
 		record_action("startup_button_click", info);
 	}
 

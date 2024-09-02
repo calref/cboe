@@ -4,7 +4,6 @@
 #include <list>
 #include <unordered_map>
 #include <string>
-#include <sstream>
 #include <memory>
 
 #include "boe.global.hpp"
@@ -40,6 +39,8 @@
 #include "tools/winutil.hpp"
 #include "tools/prefs.hpp"
 #include "replay.hpp"
+#include <boost/lexical_cast.hpp>
+
 
 #ifndef MSBUILD_GITREV
 #include "tools/gitrev.hpp"
@@ -444,9 +445,7 @@ void arrow_button_click(rectangle button_rect) {
 	if(recording){
 		// This action is purely cosmetic, for playing the animation and sound accompanying a click on a button whose real action
 		// is recorded afterward
-		std::ostringstream sstr;
-		sstr << button_rect;
-		record_action("arrow_button_click", sstr.str());
+		record_action("arrow_button_click", boost::lexical_cast<std::string>(button_rect));
 	}
 	mainPtr.setActive();
 	clip_rect(mainPtr, button_rect);

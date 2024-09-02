@@ -97,15 +97,10 @@ void record_action(std::string action_type, std::map<std::string,std::string> in
 
 void record_field_input(cKey key) {
 	std::map<std::string,std::string> info;
-	std::ostringstream sstr;
+	info["spec"] = boost::lexical_cast<std::string>(key.spec);
 
-	sstr << std::boolalpha << key.spec;
-	info["spec"] = sstr.str();
-
-	sstr.str("");
 	if(key.spec){
-		sstr << key.k;
-		info["k"] = sstr.str();
+		info["k"] = boost::lexical_cast<std::string>(key.k);
 	}else{
 		std::wostringstream wstr;
 		wstr << key.c;
@@ -114,9 +109,7 @@ void record_field_input(cKey key) {
 		info["c"] = c;
 	}
 
-	sstr.str("");
-	sstr << key.mod;
-	info["mod"] = sstr.str();
+	info["mod"] = boost::lexical_cast<std::string>(key.mod);
 
 	record_action("field_input", info);
 }
@@ -185,17 +178,11 @@ void decode_file(std::string data, fs::path file) {
 }
 
 location location_from_action(Element& action) {
-	location l;
-	std::istringstream sstr(action.GetText());
-	sstr >> l;
-	return l;
+	return boost::lexical_cast<location>(action.GetText());
 }
 
 short short_from_action(Element& action) {
-	short s;
-	std::istringstream sstr(action.GetText());
-	sstr >> s;
-	return s;
+	return boost::lexical_cast<short>(action.GetText());
 }
 
 cKey key_from_action(Element& action) {
@@ -203,12 +190,10 @@ cKey key_from_action(Element& action) {
 	cKey key;
 	int enum_v;
 
-	std::istringstream sstr(info["spec"]);
-	sstr >> std::boolalpha >> key.spec;
+	key.spec = boost::lexical_cast<bool>(info["spec"]);
 
 	if(key.spec){
-		sstr.str(info["k"]);
-		sstr >> enum_v;
+		enum_v = boost::lexical_cast<int>(info["k"]);
 		key.k = static_cast<eSpecKey>(enum_v);
 	}else{
 		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
@@ -217,8 +202,7 @@ cKey key_from_action(Element& action) {
 		wsstr >> key.c;
 	}
 
-	sstr.str(info["mod"]);
-	sstr >> enum_v;
+	enum_v = boost::lexical_cast<int>(info["mod"]);
 	key.mod = static_cast<eKeyMod>(enum_v);
 
 	return key;
