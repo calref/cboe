@@ -4,7 +4,6 @@
 
 #include "boe.global.hpp"
 #include "tools/replay.hpp"
-#include <sstream>
 
 #include "universe/universe.hpp"
 #include "boe.actions.hpp"
@@ -253,15 +252,8 @@ bool prime_time() {
 void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw, bool& need_reprint, bool record) {
 	if(record && recording){
 		std::map<std::string,std::string> info;
-
-		std::ostringstream sstr;
-		sstr << which_type;
-		info["which_type"] = sstr.str();
-
-		sstr.str("");
-		sstr << std::boolalpha << spell_forced;
-		info["spell_forced"] = sstr.str();
-
+		info["which_type"] = boost::lexical_cast<std::string>(which_type);
+		info["spell_forced"] = boost::lexical_cast<std::string>(spell_forced);
 		record_action("handle_spellcast", info);
 	}
 	short store_sp[6];
@@ -321,9 +313,7 @@ void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw,
 
 void handle_begin_look(bool right_button, bool& need_redraw) {
 	if(recording){
-		std::ostringstream sstr;
-		sstr << std::boolalpha << right_button;
-		record_action("handle_begin_look", sstr.str());
+		record_action("handle_begin_look", boost::lexical_cast<std::string>(right_button));
 	}
 	if(overall_mode == MODE_OUTDOORS) overall_mode = MODE_LOOK_OUTDOORS;
 	if(overall_mode == MODE_TOWN) overall_mode = MODE_LOOK_TOWN;
@@ -495,18 +485,9 @@ void handle_pause(bool& did_something, bool& need_redraw) {
 void handle_look(location destination, bool right_button, eKeyMod mods, bool& need_redraw, bool& need_reprint) {
 	if(recording){
 		std::map<std::string,std::string> info;
-		std::ostringstream sstr;
-		sstr << destination;
-		info["destination"] = sstr.str();
-
-		sstr.str("");
-		sstr << std::boolalpha << right_button;
-		info["right_button"] = sstr.str();
-
-		sstr.str("");
-		sstr << mods;
-		info["mods"] = sstr.str();
-
+		info["destination"] = boost::lexical_cast<std::string>(destination);
+		info["right_button"] = boost::lexical_cast<std::string>(right_button);
+		info["mods"] = boost::lexical_cast<std::string>(mods);
 		record_action("handle_look", info);
 	}
 	need_reprint = true;
@@ -699,15 +680,8 @@ void handle_talk(location destination, bool& did_something, bool& need_redraw, b
 void handle_target_space(location destination, bool& did_something, bool& need_redraw, bool& need_reprint) {
 	if(recording){
 		std::map<std::string,std::string> info;
-
-		std::ostringstream sstr;
-		sstr << destination;
-		info["destination"] = sstr.str();
-
-		sstr.str("");
-		sstr << num_targets_left;
-		info["num_targets_left"] = sstr.str();
-
+		info["destination"] = boost::lexical_cast<std::string>(destination);
+		info["num_targets_left"] = boost::lexical_cast<std::string>(num_targets_left);
 		record_action("handle_target_space", info);
 	}
 	if(overall_mode == MODE_SPELL_TARGET)
@@ -737,9 +711,7 @@ void handle_target_space(location destination, bool& did_something, bool& need_r
 
 void handle_drop_item(location destination, bool& need_redraw) {
 	if(recording){
-		std::ostringstream sstr;
-		sstr << destination;
-		record_action("handle_drop_item_location", sstr.str());
+		record_action("handle_drop_item_location", boost::lexical_cast<std::string>(destination));
 	}
 
 	if(overall_mode == MODE_DROP_COMBAT) {
@@ -782,9 +754,7 @@ void handle_use_space_select(bool& need_reprint) {
 
 void handle_use_space(location destination, bool& did_something, bool& need_redraw) {
 	if(recording){
-		std::ostringstream sstr;
-		sstr << destination;
-		record_action("handle_use_space", sstr.str());
+		record_action("handle_use_space", boost::lexical_cast<std::string>(destination));
 	}
 	if(!adjacent(destination,univ.party.town_loc))
 		add_string_to_buf("  Must be adjacent.");
@@ -815,13 +785,12 @@ void handle_bash_pick_select(bool& need_reprint, bool isBash) {
 void handle_bash_pick(location destination, bool& did_something, bool& need_redraw, bool isBash) {
 	if(recording){
 		std::map<std::string,std::string> info;
-		std::ostringstream sstr;
-		sstr << destination;
+		std::string destination_str = boost::lexical_cast<std::string>(destination);
 
 		if(isBash)
-			record_action("handle_bash", sstr.str());
+			record_action("handle_bash", destination_str);
 		else
-			record_action("handle_pick", sstr.str());
+			record_action("handle_pick", destination_str);
 	}
 	if(!adjacent(destination,univ.party.town_loc))
 		add_string_to_buf("  Must be adjacent.");
@@ -1223,14 +1192,8 @@ static void handle_party_death() {
 void screen_shift(int dx, int dy, bool& need_redraw) {
 	if(recording){
 		std::map<std::string,std::string> info;
-		std::ostringstream sstr;
-		sstr << dx;
-		info["dx"] = sstr.str();
-
-		sstr.str("");
-		sstr << dy;
-		info["dy"] = sstr.str();
-
+		info["dx"] = boost::lexical_cast<std::string>(dx);
+		info["dy"] = boost::lexical_cast<std::string>(dy);
 		record_action("screen_shift", info);
 	}
 
@@ -1707,9 +1670,7 @@ bool someone_awake() {
 
 void handle_menu_spell(eSpell spell_picked) {
 	if(recording){
-		std::ostringstream sstr;
-		sstr << (int)spell_picked;
-		record_action("handle_menu_spell", sstr.str());
+		record_action("handle_menu_spell", boost::lexical_cast<std::string>((int) spell_picked));
 	}
 
 	eSkill spell_type = (*spell_picked).type;
@@ -1787,13 +1748,8 @@ void show_inventory() {
 void give_help_and_record(short help1, short help2) {
 	if(recording){
 		std::map<std::string,std::string> info;
-		std::ostringstream sstr;
-		sstr << help1;
-		info["help1"] = sstr.str();
-
-		sstr.str("");
-		sstr << help2;
-		info["help2"] = sstr.str();
+		info["help1"] = boost::lexical_cast<std::string>(help1);
+		info["help2"] = boost::lexical_cast<std::string>(help2);
 		record_action("give_help", info);
 	}
 	give_help(help1, help2);

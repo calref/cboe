@@ -12,7 +12,6 @@
 #include <memory>
 #include <iostream>
 #include <ctime>
-#include <sstream>
 #include <deque>
 #include "boe.graphics.hpp"
 #include "boe.newgraph.hpp"
@@ -339,9 +338,7 @@ static void replay_next_action() {
 	}else if(t == "close_window"){
 		handle_quit_event();
 	}else if(t == "arrow_button_click"){
-		rectangle button_rect;
-		std::istringstream sstr(next_action.GetText());
-		sstr >> button_rect;
+		rectangle button_rect = boost::lexical_cast<rectangle>(next_action.GetText());
 		arrow_button_click(button_rect);
 	}else if(t == "show_dialog_action"){
 		show_dialog_action(next_action.GetText());
@@ -371,21 +368,15 @@ static void replay_next_action() {
 		display_alchemy();
 	}else if(t == "display_spells"){
 		auto info = info_from_action(next_action);
-		std::istringstream sstr(info["mode"]);
-		sstr >> enum_v;
-
+		enum_v = boost::lexical_cast<int>(info["mode"]);
 		eSkill mode = static_cast<eSkill>(enum_v);
-
-		short force_spell;
-		sstr.str(info["force_spell"]);
-		sstr >> force_spell;
+		short force_spell = boost::lexical_cast<short>(info["force_spell"]);
 
 		display_spells(mode, force_spell, nullptr);
 	}else if(t == "display_skills"){
-		std::istringstream sstr(next_action.GetText());
-		sstr >> enum_v;
-
+		enum_v = boost::lexical_cast<int>(next_action.GetText());
 		eSkill force_skill = static_cast<eSkill>(enum_v);
+
 		display_skills(force_skill, nullptr);
 	}else if(t == "tip_of_day"){
 		tip_of_day();
@@ -396,37 +387,22 @@ static void replay_next_action() {
 	}else if(t == "handle_help_toc"){
 		handle_help_toc();
 	}else if(t == "menu_give_help"){
-		std::istringstream sstr(next_action.GetText());
-		short help1;
-		sstr >> help1;
+		short help1 = short_from_action(next_action);
 		menu_give_help(help1);
 	}else if(t == "handle_begin_look"){
-		std::istringstream sstr(next_action.GetText());
-		bool right_button;
-		sstr >> std::boolalpha >> right_button;
+		bool right_button = boost::lexical_cast<bool>(next_action.GetText());
 		handle_begin_look(right_button, need_redraw);
 	}else if(t == "handle_look"){
 		auto info = info_from_action(next_action);
-		std::istringstream sstr(info["destination"]);
-		location destination;
-		sstr >> destination;
-
-		sstr.str(info["right_button"]);
-		bool right_button;
-		sstr >> std::boolalpha >> right_button;
-
+		location destination = boost::lexical_cast<location>(info["destination"]);
+		bool right_button = boost::lexical_cast<bool>(info["right_button"]);
 		eKeyMod mods = static_cast<eKeyMod>(std::stoi(info["mods"]));
 
 		handle_look(destination, right_button, mods, need_redraw, need_reprint);
 	}else if(t == "screen_shift"){
 		auto info = info_from_action(next_action);
-		std::istringstream sstr(info["dx"]);
-		int dx = 0;
-		sstr >> dx;
-
-		sstr.str(info["dy"]);
-		int dy = 0;
-		sstr >> dy;
+		int dx = std::stoi(info["dx"]);
+		int dy = std::stoi(info["dy"]);
 
 		screen_shift(dx, dy, need_redraw);
 	}else if(t == "handle_rest"){
@@ -436,25 +412,14 @@ static void replay_next_action() {
 		handle_menu_spell(spell_picked);
 	}else if(t == "handle_spellcast"){
 		auto info = info_from_action(next_action);
-		std::istringstream sstr(info["which_type"]);
-		eSkill which_type;
-		sstr >> which_type;
-
-		sstr.str(info["spell_forced"]);
-		sstr.seekg(0);
-		sstr >> std::boolalpha >> spell_forced;
+		eSkill which_type = boost::lexical_cast<eSkill>(info["which_type"]);
+		spell_forced = boost::lexical_cast<bool>(info["spell_forced"]);
 
 		handle_spellcast(which_type, did_something, need_redraw, need_reprint);
 	}else if(t == "handle_target_space"){
 		auto info = info_from_action(next_action);
-
-		std::istringstream sstr(info["destination"]);
-		location destination;
-		sstr >> destination;
-
-		sstr.str(info["num_targets_left"]);
-		sstr.seekg(0);
-		sstr >> num_targets_left;
+		location destination = boost::lexical_cast<location>(info["destination"]);
+		num_targets_left = boost::lexical_cast<short>(info["num_targets_left"]);
 
 		handle_target_space(destination, did_something, need_redraw, need_reprint);
 	}else if(t == "spell_cast_hit_return"){
@@ -977,9 +942,7 @@ void handle_help_toc() {
 
 void menu_give_help(short help1){
 	if(recording){
-		std::ostringstream sstr;
-		sstr << help1;
-		record_action("menu_give_help", sstr.str());
+		record_action("menu_give_help", boost::lexical_cast<std::string>(help1));
 	}
 	give_help(help1, 0);
 }
