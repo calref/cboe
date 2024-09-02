@@ -253,7 +253,7 @@ void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw,
 	if(record && recording){
 		std::map<std::string,std::string> info;
 		info["which_type"] = boost::lexical_cast<std::string>(which_type);
-		info["spell_forced"] = boost::lexical_cast<std::string>(spell_forced);
+		info["spell_forced"] = bool_to_str(spell_forced);
 		record_action("handle_spellcast", info);
 	}
 	short store_sp[6];
@@ -313,7 +313,7 @@ void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw,
 
 void handle_begin_look(bool right_button, bool& need_redraw) {
 	if(recording){
-		record_action("handle_begin_look", boost::lexical_cast<std::string>(right_button));
+		record_action("handle_begin_look", bool_to_str(right_button));
 	}
 	if(overall_mode == MODE_OUTDOORS) overall_mode = MODE_LOOK_OUTDOORS;
 	if(overall_mode == MODE_TOWN) overall_mode = MODE_LOOK_TOWN;
@@ -486,7 +486,7 @@ void handle_look(location destination, bool right_button, eKeyMod mods, bool& ne
 	if(recording){
 		std::map<std::string,std::string> info;
 		info["destination"] = boost::lexical_cast<std::string>(destination);
-		info["right_button"] = boost::lexical_cast<std::string>(right_button);
+		info["right_button"] = bool_to_str(right_button);
 		info["mods"] = boost::lexical_cast<std::string>(mods);
 		record_action("handle_look", info);
 	}

@@ -390,12 +390,12 @@ static void replay_next_action() {
 		short help1 = short_from_action(next_action);
 		menu_give_help(help1);
 	}else if(t == "handle_begin_look"){
-		bool right_button = boost::lexical_cast<bool>(next_action.GetText());
+		bool right_button = str_to_bool(next_action.GetText());
 		handle_begin_look(right_button, need_redraw);
 	}else if(t == "handle_look"){
 		auto info = info_from_action(next_action);
 		location destination = boost::lexical_cast<location>(info["destination"]);
-		bool right_button = boost::lexical_cast<bool>(info["right_button"]);
+		bool right_button = str_to_bool(info["right_button"]);
 		eKeyMod mods = static_cast<eKeyMod>(std::stoi(info["mods"]));
 
 		handle_look(destination, right_button, mods, need_redraw, need_reprint);
@@ -413,7 +413,7 @@ static void replay_next_action() {
 	}else if(t == "handle_spellcast"){
 		auto info = info_from_action(next_action);
 		eSkill which_type = boost::lexical_cast<eSkill>(info["which_type"]);
-		spell_forced = boost::lexical_cast<bool>(info["spell_forced"]);
+		spell_forced = str_to_bool(info["spell_forced"]);
 
 		handle_spellcast(which_type, did_something, need_redraw, need_reprint);
 	}else if(t == "handle_target_space"){
