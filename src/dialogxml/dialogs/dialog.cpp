@@ -558,7 +558,9 @@ void cDialog::handle_events() {
 			cTextField& text_field = dynamic_cast<cTextField&>(getControl(currentFocus));
 			text_field.replay_selection(pop_next_action());
 		}else{
-			while(win.pollEvent(currentEvent)) handle_one_event(currentEvent, fps_limiter);
+			while(win.pollEvent(currentEvent)){
+				handle_one_event(currentEvent, fps_limiter);
+			}
 		}
 
 		// Ideally, this should be the only draw call that is done in a cycle.
