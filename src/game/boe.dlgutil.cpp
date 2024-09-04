@@ -68,7 +68,7 @@ extern bool party_in_memory;
 
 // Talking vars
 eGameMode store_pre_talk_mode;
-short store_personality,store_personality_graphic,shop_identify_cost;
+short store_personality,store_personality_graphic,shop_identify_cost,shop_recharge_amount,shop_recharge_limit;
 std::string save_talk_str1, save_talk_str2;
 sf::RenderTexture talk_gworld;
 bool talk_end_forced;
@@ -931,6 +931,8 @@ void handle_talk_node(int which_talk_entry) {
 			give_help(66, 0);
 			can_save_talk = false;
 			shop_identify_cost = a;
+			shop_recharge_limit = b;
+			shop_recharge_amount = c;
 			put_item_screen(stat_window);
 			break;
 		case eTalkNode::BUY_INFO:

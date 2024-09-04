@@ -56,6 +56,7 @@ eSpell town_spell;
 extern bool spell_freebie;
 extern eSpecCtxType spec_target_type;
 extern short spec_target_fail, spec_target_options;
+extern short shop_identify_cost, shop_recharge_limit, shop_recharge_amount;
 bool spell_button_active[90];
 
 extern short fast_bang;
@@ -590,7 +591,6 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				ASB("Select items to identify. Press Space when done.");
 				overall_mode = MODE_ITEM_TARGET;
 				stat_screen_mode = MODE_IDENTIFY;
-				extern short shop_identify_cost;
 				shop_identify_cost = 0;
 				put_item_screen(stat_window);
 				break;
@@ -608,15 +608,16 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				ASB("Select items to recharge. Press Space when done.");
 				overall_mode = MODE_ITEM_TARGET;
 				stat_screen_mode = MODE_RECHARGE;
-				extern short shop_identify_cost;
 				shop_identify_cost = 0;
+				shop_recharge_limit = 0;
+				shop_recharge_amount = 1;
 				put_item_screen(stat_window);
 				break;
 			}
 			ASB("All of your items are recharged.");
 			for(cPlayer& pc : univ.party)
 				for(cItem& item : pc.items)
-					if(item.rechargeable && item.charges == 0)
+					if(item.rechargeable && item.charges < item.max_charges)
 						item.charges = item.max_charges;
 			break;
 			

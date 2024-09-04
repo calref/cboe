@@ -84,8 +84,8 @@ Unused
 Unused
 Recharge Items
 Cost to recharge
-Unused
-Unused
+Recharge Limit
+Max Charges Added
 Unused
 Unused
 Unused
