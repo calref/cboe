@@ -2115,9 +2115,7 @@ void do_alchemy() {
 		short skill = univ.party[pc_num].skill(eSkill::ALCHEMY);
 		if(r1 < info.fail_chance(skill)) {
 			add_string_to_buf("Alchemy: Failed.");
-			r1 = get_ran(1,0,1);
-			(void) r1; // TODO: Why does it even do this?
-			play_sound(41 );
+			play_sound(41);
 		}
 		else {
 			cItem store_i(potion);
