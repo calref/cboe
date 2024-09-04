@@ -78,7 +78,7 @@ extern std::vector<int> spec_item_array;
 // combat globals
 extern short item_bottom_button_active[9];
 extern cUniverse univ;
-extern short shop_identify_cost;
+extern short shop_identify_cost, shop_recharge_limit;
 extern short store_selling_values[8];
 extern short combat_posing_monster, current_working_monster; // 0-5 PC 100 + x - monster x
 extern bool supressing_some_spaces;
@@ -393,7 +393,7 @@ void place_buy_button(short position,short pc_num,short item_num) {
 			}
 			break;
 		case MODE_RECHARGE:
-			if(item.rechargeable && item.charges == 0 && item.can_use()) {
+			if(item.rechargeable && (shop_recharge_limit == 0 || item.charges < item.max_charges / shop_recharge_limit) && item.can_use()) {
 				item_area_button_active[position][ITEMBTN_SPEC] = true;
 				source_rect = button_sources[3];
 				val_to_place = shop_identify_cost;

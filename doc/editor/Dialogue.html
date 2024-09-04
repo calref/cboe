@@ -164,7 +164,7 @@ identify it. When two of these nodes are used in a row, the buttons created by t
 node replace the buttons created by the first.</p>
 
 <p><b>Node Type 12 - Recharge </b>The text in Text 1 is the response, and the party can
-recharge all their items. A is the cost to recharge.</p>
+recharge all their items. A is the cost to recharge. B is the recharge limit, and C is the number of charges added. The shop will only offer to recharge items whose current charges are less than initial charges divided by B. So, for example, setting B to 1 means the shop will offer to recharge a wand with 5/6 charges, but setting it to 2 means the shop won't offer to recharge until the wand has fewer than 3 charges. Charges added will be capped at the item's initial charges.</p>
 <p><b>Node Type 13 - Sell Weapons</b>The text in Text 1 is the response, and the party can
 sell all their identified weapons.</p>
 <p><b>Node Type 14 - Sell Armor </b>The text in Text 1 is the response, and the party can

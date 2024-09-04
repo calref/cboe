@@ -106,7 +106,7 @@ extern bool map_visible;
 extern sf::RenderWindow mini_map;
 
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
-extern short shop_identify_cost;
+extern short shop_identify_cost, shop_recharge_amount;
 
 
 const char *dir_string[] = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
@@ -972,9 +972,25 @@ void handle_item_shop_action(short item_hit) {
 			if(!take_gold(shop_identify_cost,false))
 				ASB("Recharge: You don't have the gold.");
 			else {
+				if(shop_identify_cost == 0) {
+					// Chance of melting
+					// This is tuned so that overcharging has an 80% melt chance,
+					// and charging an empty wand has a 0% melt chance.
+					static const short melt_chance[] = {0, 1, 1, 1, 3, 3, 5, 15, 30, 50, 80};
+					static const short n_melt = std::distance(std::begin(melt_chance), std::end(melt_chance));
+					int i = round(double(target.charges * (n_melt - 1))) / target.max_charges;
+					i = minmax(0, n_melt - 1, i);
+					short r1 = get_ran(1, 1, 100);
+					if(r1 < melt_chance[i]) {
+						play_sound(41);
+						ASB("Your item melted!");
+						shopper.take_item(item_hit);
+						break;
+					}
+				}
 				play_sound(68);
 				ASB("Your item is recharged.");
-				target.charges = target.max_charges;
+				target.charges += shop_recharge_amount;
 			}
 		   break;
 		case MODE_SELL_WEAP: case MODE_SELL_ARMOR: case MODE_SELL_ANY:
