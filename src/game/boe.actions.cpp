@@ -342,7 +342,10 @@ static void handle_stand_ready(bool& need_redraw, bool& need_reprint) {
 	put_pc_screen();
 }
 
-static void handle_parry(bool& did_something, bool& need_redraw, bool& need_reprint) {
+void handle_parry(bool& did_something, bool& need_redraw, bool& need_reprint) {
+	if(recording){
+		record_action("handle_parry", "");
+	}
 	add_string_to_buf("Parry.");
 	char_parry();
 	did_something = true;
