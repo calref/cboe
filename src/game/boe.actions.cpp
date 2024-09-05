@@ -350,7 +350,11 @@ static void handle_parry(bool& did_something, bool& need_redraw, bool& need_repr
 	need_redraw = true;
 }
 
-static void handle_toggle_active(bool& need_reprint) {
+void handle_toggle_active(bool& need_reprint) {
+	if(recording){
+		record_action("handle_toggle_active", "");
+	}
+
 	if(combat_active_pc == 6) {
 		add_string_to_buf("This PC now active.");
 		combat_active_pc = univ.cur_pc;

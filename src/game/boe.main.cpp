@@ -528,6 +528,8 @@ static void replay_next_action() {
 		handle_info_request(boost::lexical_cast<int>(next_action.GetText()));
 	}else if(t == "close_map"){
 		close_map(true);
+	}else if(t == "handle_toggle_active"){
+		handle_toggle_active(need_reprint);
 	}else{
 		std::ostringstream sstr;
 		sstr << "Couldn't replay action: " << next_action;
