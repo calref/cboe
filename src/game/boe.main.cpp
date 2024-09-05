@@ -532,6 +532,8 @@ static void replay_next_action() {
 		handle_toggle_active(need_reprint);
 	}else if(t == "handle_parry"){
 		handle_parry(did_something, need_redraw, need_reprint);
+	}else if(t == "handle_monster_info_menu"){
+		handle_monster_info_menu(boost::lexical_cast<int>(next_action.GetText()));
 	}else{
 		std::ostringstream sstr;
 		sstr << "Couldn't replay action: " << next_action;
@@ -1082,6 +1084,9 @@ void handle_menu_choice(eMenu item_hit) {
 
 //  TODO: Let this function take a cMonster* instead of the item_hit
 void handle_monster_info_menu(int item_hit) {
+	if(recording){
+		record_action("handle_monster_info_menu", boost::lexical_cast<std::string>(item_hit));
+	}
 	display_monst(item_hit - 1, nullptr,1);
 }
 
