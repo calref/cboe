@@ -530,6 +530,8 @@ static void replay_next_action() {
 		close_map(true);
 	}else if(t == "handle_toggle_active"){
 		handle_toggle_active(need_reprint);
+	}else if(t == "handle_parry"){
+		handle_parry(did_something, need_redraw, need_reprint);
 	}else{
 		std::ostringstream sstr;
 		sstr << "Couldn't replay action: " << next_action;
