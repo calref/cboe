@@ -2035,6 +2035,15 @@ void debug_heal_plus_extra() {
 	put_pc_screen();
 }
 
+void close_map(bool record) {
+	if(record && recording){
+		record_action("close_map", "");
+	}
+	mini_map.setVisible(false);
+	map_visible = false;
+	mainPtr.setActive();
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2057,9 +2066,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	
 	if(map_visible && event.key.code == Key::Escape
 	   && (overall_mode != MODE_TALKING) && (overall_mode != MODE_SHOPPING)) {
-		mini_map.setVisible(false);
-		map_visible = false;
-		mainPtr.setActive();
+		close_map();
 		return false;
 	}
 	

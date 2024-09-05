@@ -526,6 +526,8 @@ static void replay_next_action() {
 		handle_sale(boost::lexical_cast<int>(next_action.GetText()));
 	}else if(t == "handle_info_request"){
 		handle_info_request(boost::lexical_cast<int>(next_action.GetText()));
+	}else if(t == "close_map"){
+		close_map(true);
 	}else{
 		std::ostringstream sstr;
 		sstr << "Couldn't replay action: " << next_action;
@@ -856,17 +858,17 @@ void queue_fake_event(const sf::Event& event) {
 	fake_event_queue.push_back(event);
 }
 
+
+
 void handle_one_minimap_event(const sf::Event& event) {
 	if(event.type == sf::Event::Closed) {
-		mini_map.setVisible(false);
-		map_visible = false;
+		close_map(true);
 	} else if(event.type == sf::Event::GainedFocus) {
 		makeFrontWindow(mainPtr);
 	} else if(event.type == sf::Event::KeyPressed) {
 		switch(event.key.code) {
 			case sf::Keyboard::Escape:
-				mini_map.setVisible(false);
-				map_visible = false;
+				close_map(true);
 				break;
 			default: break;
 		}
