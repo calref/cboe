@@ -79,6 +79,7 @@ extern sf::RenderWindow mini_map;
 bool map_visible = false;
 extern std::string save_talk_str1, save_talk_str2;
 extern cDrawableManager drawable_mgr;
+extern void close_map(bool record = false);
 
 rectangle		menuBarRect;
 Region originalGrayRgn, newGrayRgn, underBarRgn;
@@ -460,9 +461,7 @@ void arrow_button_click(rectangle button_rect) {
 
 
 void reload_startup() {
-	mini_map.setVisible(false);
-	map_visible = false;
-	mainPtr.setActive();
+	close_map();
 	init_startup();
 	
 	text_sbar->hide();
