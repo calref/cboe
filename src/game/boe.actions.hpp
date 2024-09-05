@@ -48,7 +48,7 @@ void handle_equip_item(short item_hit, bool& need_redraw);
 void handle_use_item(short item_hit, bool& did_something, bool& need_redraw);
 void handle_item_shop_action(short item_hit);
 void handle_alchemy(bool& need_redraw, bool& need_reprint);
-void handle_town_wait(bool& need_redraw, bool& need_reprint);
+void handle_wait(bool& did_something, bool& need_redraw, bool& need_reprint);
 void handle_combat_switch(bool& did_something, bool& need_redraw, bool& need_reprint);
 void handle_missile(bool& need_redraw, bool& need_reprint);
 void handle_get_items(bool& did_something, bool& need_redraw, bool& need_reprint);

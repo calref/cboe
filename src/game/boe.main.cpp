@@ -318,8 +318,8 @@ static void replay_next_action() {
 		handle_item_shop_action(item_hit);
 	}else if(t == "handle_alchemy"){
 		handle_alchemy(need_redraw, need_reprint);
-	}else if(t == "handle_town_wait"){
-		handle_town_wait(need_redraw, need_reprint);
+	}else if(t == "handle_wait"){
+		handle_wait(did_something, need_redraw, need_reprint);
 	}else if(t == "handle_combat_switch"){
 		handle_combat_switch(did_something, need_redraw, need_reprint);
 	}else if(t == "handle_missile"){
