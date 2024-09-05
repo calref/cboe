@@ -993,11 +993,7 @@ void handle_alchemy(bool& need_redraw, bool& need_reprint) {
 	else add_string_to_buf("Alchemy: Only in town.");
 }
 
-void handle_town_wait(bool& need_redraw, bool& need_reprint) {
-	if(recording){
-		record_action("handle_town_wait", "");
-	}
-
+static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 	std::vector<short> store_hp;
 	sf::Event dummy_evt;
 	need_reprint = true;
@@ -1038,6 +1034,22 @@ void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 		redraw_screen(REFRESH_NONE);
 	}
 	put_pc_screen();
+}
+
+void handle_wait(bool& did_something, bool& need_redraw, bool& need_reprint) {
+	if(recording){
+		record_action("handle_wait", "");
+	}
+
+	if(overall_mode == MODE_TOWN) {
+		handle_town_wait(need_redraw, need_reprint);
+	} else if(overall_mode == MODE_COMBAT) {
+		handle_stand_ready(need_redraw, need_reprint);
+		advance_time(did_something, need_redraw, need_reprint);
+	} else if(overall_mode == MODE_OUTDOORS) {
+		add_string_to_buf("Wait: In town only.");
+		print_buf();
+	}
 }
 
 void handle_combat_switch(bool& did_something, bool& need_redraw, bool& need_reprint) {
@@ -2379,16 +2391,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			break;
 			
 		case 'w': // Wait / delay
-			if(overall_mode == MODE_TOWN) {
-				handle_town_wait(need_redraw, need_reprint);
-			} else if(overall_mode == MODE_COMBAT) {
-				handle_stand_ready(need_redraw, need_reprint);
-				advance_time(did_something, need_redraw, need_reprint);
-			} else if(overall_mode == MODE_OUTDOORS) {
-				add_string_to_buf("Wait: In town only.");
-				print_buf();
-				return false;
-			}
+			handle_wait(did_something, need_redraw, need_reprint);
 			break;
 			
 		case 'd': // Parry
