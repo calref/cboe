@@ -16,17 +16,17 @@
 	</text>
 	
 	<pict type='status' num='8' top='170' left='10'/>
-	<pict type='status' num='7' top='188' left='10'/>
-	<pict type='status' num='6' top='206' left='10'/>
-	<pict type='status' num='0' top='224' left='10'/>
-	<pict type='status' num='1' top='242' left='10'/>
+	<pict type='status' num='6' top='188' left='10'/>
+	<pict type='status' num='0' top='206' left='10'/>
+	<pict type='status' num='1' top='224' left='10'/>
+	<pict type='status' num='15' top='242' left='10'/>
 	<pict type='status' num='21' top='260' left='10'/>
 	<pict type='status' num='26' top='278' left='10'/>
 	<text font='plain' top='170' left='26' width='100' height='12'>Slowed</text>
-	<text font='plain' top='188' left='26' width='100' height='12'>Normal Speed</text>
-	<text font='plain' top='206' left='26' width='100' height='12'>Hasted</text>
-	<text font='plain' top='224' left='26' width='100' height='12'>Poisoned</text>
-	<text font='plain' top='242' left='26' width='100' height='12'>Very Poisoned</text>
+	<text font='plain' top='188' left='26' width='100' height='12'>Hasted</text>
+	<text font='plain' top='206' left='26' width='100' height='12'>Poisoned</text>
+	<text font='plain' top='224' left='26' width='100' height='12'>Very Poisoned</text>
+	<text font='plain' top='242' left='26' width='100' height='12'>Asleep</text>
 	<text font='plain' top='260' left='26' width='100' height='12'>Hyperactive</text>
 	<text font='plain' top='278' left='26' width='100' height='12'>Stealthy</text>
 	
@@ -58,16 +58,16 @@
 	<text font='plain' top='242' left='266' width='100' height='12'>Dumbfounded</text>
 	<text font='plain' top='260' left='266' width='100' height='12'>Flying</text>
 	
-	<pict type='status' num='15' top='170' left='370'/>
+	<pict type='status' num='19' top='170' left='370'/>
 	<pict type='status' num='16' top='188' left='370'/>
 	<pict type='status' num='17' top='206' left='370'/>
-	<pict type='status' num='19' top='224' left='370'/>
+	<pict type='status' num='27' top='224' left='370'/>
 	<pict type='status' num='18' top='242' left='370'/>
 	<pict type='status' num='24' top='260' left='370'/>
-	<text font='plain' top='170' left='386' width='100' height='12'>Asleep</text>
+	<text font='plain' top='170' left='386' width='100' height='12'>Magic Attractor</text>
 	<text font='plain' top='188' left='386' width='100' height='12'>Paralyzed</text>
 	<text font='plain' top='206' left='386' width='100' height='12'>Covered With Acid</text>
-	<text font='plain' top='224' left='386' width='100' height='12'>Magic Attractor</text>
+	<text font='plain' top='224' left='386' width='100' height='12'>Drunk</text>
 	<text font='plain' top='242' left='386' width='100' height='12'>Enlightened</text>
 	<text font='plain' top='260' left='386' width='100' height='12'>Detecting Life</text>
 	
