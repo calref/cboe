@@ -173,7 +173,7 @@ if platform == "darwin":
 		deps = check_deps(source[0].path)
 		for dep in deps:
 			if dep.endswith('.framework'):
-				paths = Split(env["FRAMEWORKPATH"])
+				paths = Split(env["FRAMEWORKPATH"]) + env["LIBPATH"]
 			else:
 				paths = env["LIBPATH"]
 			for search_path in paths:
