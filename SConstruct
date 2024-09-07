@@ -278,7 +278,7 @@ if path.exists('deps/lib64'):
 	env.Append(LIBPATH=[path.join(os.getcwd(), 'deps/lib64')])
 
 if path.exists('deps/include'):
-	env.Append(CPPPATH=[path.join(os.getcwd(), '/deps/include')])
+	env.Append(CPPPATH=[path.join(os.getcwd(), 'deps/include')])
 
 # Include directories
 
