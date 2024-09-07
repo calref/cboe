@@ -172,7 +172,7 @@ if platform == "darwin":
 			Execute(Mkdir(target))
 		deps = check_deps(source[0].path)
 		for dep in deps:
-			if 'framework' in dep:
+			if dep.endswith('.framework'):
 				paths = Split(env["FRAMEWORKPATH"])
 			else:
 				paths = env["LIBPATH"]
