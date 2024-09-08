@@ -2009,7 +2009,13 @@ void run_special(eSpecCtx which_mode, eSpecCtxType which_type, spec_num_t start_
 			extern boost::optional<cFramerateLimiter> replay_fps_limit;
 			cFramerateLimiter fps_limiter;
 			while(true) {
-				if(mainPtr.pollEvent(evt) && (evt.type == sf::Event::KeyPressed || evt.type == sf::Event::MouseButtonPressed)){
+				if(replaying && has_next_action("step_through_continue")){
+					pop_next_action();
+					break;
+				}else if(mainPtr.pollEvent(evt) && (evt.type == sf::Event::KeyPressed || evt.type == sf::Event::MouseButtonPressed)){
+					if(recording){
+						record_action("step_through_continue", "");
+					}
 					break;
 				}
 
@@ -2019,8 +2025,13 @@ void run_special(eSpecCtx which_mode, eSpecCtxType which_type, spec_num_t start_
 					fps_limiter.frame_finished();
 				}
 			}
-			if(evt.type == sf::Event::KeyPressed && evt.key.code == sf::Keyboard::Escape)
+			if(replaying && has_next_action("step_through_exit")){
+				pop_next_action();
 				univ.node_step_through = false;
+			}else if(evt.type == sf::Event::KeyPressed && evt.key.code == sf::Keyboard::Escape){
+				record_action("step_through_exit", "");
+				univ.node_step_through = false;
+			}
 		}
 		
 		// Convert pointer values to reference values
