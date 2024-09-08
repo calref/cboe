@@ -2006,9 +2006,18 @@ void run_special(eSpecCtx which_mode, eSpecCtxType which_type, spec_num_t start_
 			add_string_to_buf(debug);
 			redraw_screen(REFRESH_TRANS);
 			sf::Event evt;
+			extern boost::optional<cFramerateLimiter> replay_fps_limit;
+			cFramerateLimiter fps_limiter;
 			while(true) {
-				if(mainPtr.pollEvent(evt) && (evt.type == sf::Event::KeyPressed || evt.type == sf::Event::MouseButtonPressed))
+				if(mainPtr.pollEvent(evt) && (evt.type == sf::Event::KeyPressed || evt.type == sf::Event::MouseButtonPressed)){
 					break;
+				}
+
+				if(replaying && replay_fps_limit.has_value()){
+					replay_fps_limit->frame_finished();
+				}else{
+					fps_limiter.frame_finished();
+				}
 			}
 			if(evt.type == sf::Event::KeyPressed && evt.key.code == sf::Keyboard::Escape)
 				univ.node_step_through = false;
