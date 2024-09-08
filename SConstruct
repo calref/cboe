@@ -307,10 +307,6 @@ if not env.GetOption('clean'):
 		print("There's a problem with your compiler!")
 		Exit(1)
 
-	if not conf.CheckLib('zlib' if (platform == "win32" and 'mingw' not in env["TOOLS"]) else 'z'):
-		print('zlib must be installed!')
-		Exit(1)
-
 	def check_lib(lib, disp, suffixes=[], versions=[], msvc_versions=[]):
 		if "mingw" in env["TOOLS"] and lib.startswith("sfml"):
 			lib = "lib" + lib
@@ -345,6 +341,8 @@ if not env.GetOption('clean'):
 	boost_versions = ['-1_84'] # This is a bit of a hack. :(
 	suffixes = ['-mt', f'-mt-x{env["bits"]}']
 
+	zlib = 'zlib' if (platform == "win32" and 'mingw' not in env["TOOLS"]) else 'z'
+	check_lib(zlib, 'zlib', [], [])
 
 	check_header('boost/lexical_cast.hpp', 'Boost.LexicalCast')
 	check_header('boost/optional.hpp', 'Boost.Optional')
