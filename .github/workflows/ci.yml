@@ -50,7 +50,7 @@
 				{
 					name: checkout,
 					uses: actions/checkout@v2,
-				with: { submodules: true }
+					with: { submodules: true }
 				},
 				{
 					name: install dependencies,
