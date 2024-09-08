@@ -186,6 +186,7 @@ if platform == "darwin":
 					if path.exists(dest_path):
 						break
 					Execute(Copy(dest_path, src_path))
+					# Recursively bundle the dependencies of each dependency:
 					bundle_libraries_for(target, [File(check_path)], env)
 					break
 elif platform == "win32":
