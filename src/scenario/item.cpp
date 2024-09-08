@@ -284,6 +284,17 @@ cItem::cItem(eItemPreset preset) : cItem() {
 			name = "Helm";
 			ident = true;
 			break;
+		case ITEM_ROBE:
+			variety = eItemType::ARMOR;
+			item_level = 2;
+			weap_type = eSkill::INVALID;
+			graphic_num = 18;
+			value = 8;
+			weight = 10;
+			full_name = "Vahnatai Robes";
+			name = "Robes";
+			ident = true;
+			break;
 		case ITEM_RAZORDISK:
 			variety = eItemType::THROWN_MISSILE;
 			item_level = 9;
