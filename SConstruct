@@ -185,7 +185,13 @@ if platform == "darwin":
 					dest_path = path.join(target[0].path, basefile)
 					if path.exists(dest_path):
 						break
-					Execute(Copy(dest_path, src_path))
+					# Copying .frameworks needs to preserve symlinks by using cp -a.
+					# SCons provides Copy(symlinks=True) but that doesn't seem to work.
+					try:
+						print(subprocess.check_output(['cp', '-av', src_path, dest_path], text=True))
+					except:
+						print('cp -av failed')
+						Exit(1)
 					# Recursively bundle the dependencies of each dependency:
 					bundle_libraries_for(target, [File(check_path)], env)
 					break
