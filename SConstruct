@@ -352,10 +352,11 @@ if not env.GetOption('clean'):
 	check_header('boost/spirit/include/classic.hpp', 'Boost.Spirit.Classic')
 	check_lib('boost_system', 'Boost.System', suffixes, boost_versions)
 	check_lib('boost_filesystem', 'Boost.Filesystem', suffixes, boost_versions)
-	check_lib('sfml-system', 'SFML-system')
-	check_lib('sfml-window', 'SFML-window')
-	check_lib('sfml-audio', 'SFML-audio')
-	check_lib('sfml-graphics', 'SFML-graphics')
+	sfml_suffixes = ['-d']
+	check_lib('sfml-system', 'SFML-system', sfml_suffixes)
+	check_lib('sfml-window', 'SFML-window', sfml_suffixes)
+	check_lib('sfml-audio', 'SFML-audio', sfml_suffixes)
+	check_lib('sfml-graphics', 'SFML-graphics', sfml_suffixes)
 
 	# Make sure Catch2 is cloned
 	if not path.exists('deps/Catch2/README.md'):
