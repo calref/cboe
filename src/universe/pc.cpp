@@ -916,8 +916,7 @@ void cPlayer::finish_create() {
 			items[1] = cItem(ITEM_HELM);
 			break;
 		case eRace::VAHNATAI:
-			// TODO: Should they have a robe instead of a knife?
-			items[0] = cItem(ITEM_KNIFE);
+			items[0] = cItem(ITEM_ROBE);
 			items[1] = cItem(ITEM_RAZORDISK);
 			break;
 		default: break; // Silence compiler warning
