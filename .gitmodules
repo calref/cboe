@@ -8,3 +8,6 @@
 [submodule "deps/cppcodec"]
 	path = deps/cppcodec
 	url = https://github.com/tplgy/cppcodec
+[submodule "deps/fix-rpaths"]
+	path = deps/fix-rpaths
+	url = https://gist.github.com/NQNStudios/7145bcf6621891f5176c8caa165d6b93
