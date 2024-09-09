@@ -480,6 +480,13 @@ if platform == "darwin":
 		target_dir = path.join(install_dir, targ + '.app', 'Contents/Frameworks')
 		binary = path.join(install_dir, targ + '.app', 'Contents/MacOS', targ)
 		env.Command(Dir(target_dir), binary, [Delete(target_dir), bundle_libraries_for])
+		def fix_target_rpaths():
+			if not path.exists('deps/fix-rpaths/fix-rpaths.py'):
+				subprocess.call(["git", "submodule", "update", "--init", "deps/fix-rpaths"])
+			print(f'build/Blades of Exile/{targ}.app')
+			subprocess.call(["deps/fix-rpaths/fix-rpaths.py", f'build/Blades of Exile/{targ}.app'])
+		if not env.GetOption('clean'):
+			atexit.register(fix_target_rpaths)
 elif platform == "win32":
 	bundled_libs += Split("""
 		libsndfile-1
