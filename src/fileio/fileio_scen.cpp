@@ -100,20 +100,22 @@ fs::path locate_scenario(std::string scen_name) {
 	return scenPath;
 }
 
-bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header) {
+bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header, bool pop_paths) {
 	// Before loading a scenario, we may need to pop scenario resource paths.
-	fs::path graphics_path = ResMgr::graphics.popPath();
-	for(auto p : graphics_path) {
-		if(p.string() == "data") {
-			ResMgr::graphics.pushPath(graphics_path);
-			break;
+	if(pop_paths){
+		fs::path graphics_path = ResMgr::graphics.popPath();
+		for(auto p : graphics_path) {
+			if(p.string() == "data") {
+				ResMgr::graphics.pushPath(graphics_path);
+				break;
+			}
 		}
-	}
-	fs::path sounds_path = ResMgr::sounds.popPath();
-	for(auto p : sounds_path) {
-		if(p.string() == "data") {
-			ResMgr::sounds.pushPath(sounds_path);
-			break;
+		fs::path sounds_path = ResMgr::sounds.popPath();
+		for(auto p : sounds_path) {
+			if(p.string() == "data") {
+				ResMgr::sounds.pushPath(sounds_path);
+				break;
+			}
 		}
 	}
 	scenario = cScenario();

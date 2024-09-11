@@ -58,7 +58,7 @@
 				},
 				{
 					name: build and unit test,
-					run: ./.github/workflows/scripts/mac/scons-build.sh
+					run: ./.github/workflows/scripts/mac/scons-build.sh test=true
 				}
 			]
 		},
@@ -153,7 +153,7 @@
 				},
 				{
 					name: build and unit test,
-					run: '.\.github\workflows\scripts\win\scons-build.bat'
+					run: '.\.github\workflows\scripts\win\scons-build.bat test=true'
 				},
 				{
 					name: warn about failure to launch tests,

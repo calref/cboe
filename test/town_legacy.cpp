@@ -10,6 +10,12 @@
 #include "scenario/town.hpp"
 #include "scenario/scenario.hpp"
 #include "oldstructs.hpp"
+#include "fileio/fileio.hpp"
+#include <vector>
+#include "fileio/resmgr/res_image.hpp"
+#include "fileio/resmgr/res_sound.hpp"
+#include "fileio/resmgr/res_strings.hpp"
+
 
 TEST_CASE("Converting legacy town data") {
 	cScenario scen;
@@ -243,5 +249,29 @@ TEST_CASE("Converting legacy town data") {
 		REQUIRE(town.area_desc.size() >= 1);
 		CHECK(town.area_desc[0] == rect(12,13,14,15));
 		CHECK(town.creatures.size() == 30);
+	}
+	SECTION("Boundaries conversion") {
+		fs::path test_scenarios_dir = fs::current_path()/"files"/"town";
+		std::vector<fs::path> test_scenarios = {"townrectMac.exs", "townrectWindows.exs", fs::path("townrectUniversal")/"header.exs"};
+
+		ResMgr::strings.pushPath(fs::current_path()/".."/"rsrc"/"strings");
+		ResMgr::graphics.pushPath(fs::current_path()/".."/"rsrc"/"graphics");
+		ResMgr::sounds.pushPath(fs::current_path()/".."/"rsrc"/"sounds");
+
+		try{
+			for(fs::path test_scenario : test_scenarios){
+				cScenario scen;
+
+				load_scenario(test_scenarios_dir / test_scenario, scen, false, false);
+
+				CHECK(scen.towns[0]->in_town_rect.width() == 6);
+				CHECK(scen.towns[0]->in_town_rect.height() == 4);
+			}
+		} catch(...) {
+			ResMgr::sounds.popPath();
+			ResMgr::graphics.popPath();
+			throw;
+		}
+
 	}
 }

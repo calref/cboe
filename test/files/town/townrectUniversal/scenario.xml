@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<scenario boes="2.0.0">
+    <title>Rect Town Bounds</title>
+    <icon>0</icon>
+    <id></id>
+    <version>1.0.192</version>
+    <language>en-US</language>
+    <author>
+        <name>NQNStudios</name>
+        <email>Contact info</email>
+    </author>
+    <text>
+        <teaser>Who wrote 1</teaser>
+        <teaser>Who wrote 2</teaser>
+    </text>
+    <ratings>
+        <content>G</content>
+        <difficulty>1</difficulty>
+    </ratings>
+    <flags>
+        <adjust-difficulty>true</adjust-difficulty>
+        <legacy>false</legacy>
+        <custom-graphics>true</custom-graphics>
+    </flags>
+    <creator>
+        <type>oboe</type>
+        <version>2.0.0</version>
+        <os>Apple Mac OS X Version 14.5 (Build 23F79)</os>
+    </creator>
+    <game>
+        <num-towns>1</num-towns>
+        <out-width>1</out-width>
+        <out-height>1</out-height>
+        <start-town>0</start-town>
+        <town-start x="24" y="24" />
+        <outdoor-start x="0" y="0" />
+        <sector-start x="24" y="24" />
+        <shop>
+            <name>Healing</name>
+            <type>dead</type>
+            <prompt>heal</prompt>
+            <face>41</face>
+            <entries>
+                <heal>0</heal>
+                <heal>1</heal>
+                <heal>2</heal>
+                <heal>4</heal>
+                <heal>9</heal>
+                <heal>5</heal>
+                <heal>6</heal>
+                <heal>7</heal>
+                <heal>8</heal>
+            </entries>
+        </shop>
+    </game>
+    <editor>
+        <default-ground>0</default-ground>
+        <last-out-section x="0" y="0" />
+        <last-town>0</last-town>
+    </editor>
+</scenario>
