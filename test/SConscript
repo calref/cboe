@@ -42,6 +42,8 @@ env.AlwaysBuild(env.Install("#build/rsrc/", Dir("#rsrc/strings")))
 env.AlwaysBuild(env.Install("#build/rsrc/", Dir("#rsrc/dialogs")))
 env.AlwaysBuild(env.Install("#build/rsrc/", Dir("#rsrc/fonts")))
 env.AlwaysBuild(env.Install("#build/rsrc/", Dir("#rsrc/graphics")))
+# The town boundaries conversion test requires this:
+env.AlwaysBuild(env.Install("#build/rsrc/", Dir("#rsrc/sounds")))
 
 env.Command("#build/test/junk/", '', 'mkdir "' + Dir("#build/test/junk").path + '"')
 env.Command("#build/test/passed", test, run_tests, chdir=True)
