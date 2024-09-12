@@ -33,5 +33,10 @@ if debug_symbols is not None:
 	env.Install("#build/test/", debug_symbols)
 env.AlwaysBuild(env.Install("#build/test/", Dir("#test/files")))
 env.AlwaysBuild(env.Install("#build/rsrc/", Dir("#rsrc/strings")))
+# The dialog construction test case requires these:
+env.AlwaysBuild(env.Install("#build/rsrc/", Dir("#rsrc/dialogs")))
+env.AlwaysBuild(env.Install("#build/rsrc/", Dir("#rsrc/fonts")))
+env.AlwaysBuild(env.Install("#build/rsrc/", Dir("#rsrc/graphics")))
+
 env.Command("#build/test/junk/", '', 'mkdir "' + Dir("#build/test/junk").path + '"')
 env.Command("#build/test/passed", test, run_tests, chdir=True)
