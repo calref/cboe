@@ -1,0 +1,4 @@
+*.spec -linguist-detectable
+src/fileio/gzstream/ linguist-vendored
+src/fileio/xml-parser/ linguist-vendored
+src/fileio/xml-parser/tinyprint.* -linguist-vendored
