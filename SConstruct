@@ -82,6 +82,7 @@ if env['debug']:
 		env.Append(CCFLAGS=['/Zi', '/Od'])
 
 # This command generates the header with git revision information
+# NOTE: Changes made here must also be made in pkg/gitrev.sh!
 def gen_gitrev(env, target, source):
 	revid = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True);
 	fulltag = subprocess.check_output(["git", "tag", "--sort=v:refname"], text=True).split('\n')[-1]
