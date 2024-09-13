@@ -86,7 +86,10 @@ if env['debug']:
 def gen_gitrev(env, target, source):
 	revid = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True)
 	tag_array = subprocess.check_output(["git", "tag", "--sort=v:refname"], text=True).split('\n')
-	fulltag = list(filter(None, tag_array))[-1]
+	tag_array = list(filter(None, tag_array))
+	fulltag = ""
+	if len(tag_array) > 0:
+		fulltag = tag_array[-1]
 	tagrev = subprocess.check_output(["git", "rev-parse", fulltag], text=True) if fulltag else ""
 	status = "clean"
 	if subprocess.call(["git", "diff-index", "--quiet", "HEAD", "--"]) != 0:
