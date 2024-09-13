@@ -53,6 +53,7 @@ bool init_action_log(std::string command, std::string file) {
 			root_element.SetAttribute("SHA", GIT_REVISION);
 			root_element.SetAttribute("Tag", GIT_TAG);
 			root_element.SetAttribute("Status", GIT_STATUS);
+			root_element.SetAttribute("Repo", GIT_REPO);
 			log_document.InsertEndChild(root_element);
 			log_document.SaveFile(log_file);
 			recording = true;
