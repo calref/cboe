@@ -84,8 +84,9 @@ if env['debug']:
 # This command generates the header with git revision information
 # NOTE: Changes made here must also be made in pkg/gitrev.sh!
 def gen_gitrev(env, target, source):
-	revid = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True);
-	fulltag = subprocess.check_output(["git", "tag", "--sort=v:refname"], text=True).split('\n')[-1]
+	revid = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True)
+	tag_array = subprocess.check_output(["git", "tag", "--sort=v:refname"], text=True).split('\n')
+	fulltag = list(filter(None, tag_array))[-1]
 	tagrev = subprocess.check_output(["git", "rev-parse", fulltag], text=True) if fulltag else ""
 	status = "clean"
 	if subprocess.call(["git", "diff-index", "--quiet", "HEAD", "--"]) != 0:
