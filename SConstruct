@@ -87,11 +87,15 @@ def gen_gitrev(env, target, source):
 	revid = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True);
 	fulltag = subprocess.check_output(["git", "tag", "--sort=v:refname"], text=True).split('\n')[-1]
 	tagrev = subprocess.check_output(["git", "rev-parse", fulltag], text=True) if fulltag else ""
+	status = "clean"
+	if subprocess.call(["git", "diff-index", "--quiet", "HEAD", "--"]) != 0:
+		status = "modified"
 	with open(target[0].path, 'w') as gitrev_hpp:
 		print(file=gitrev_hpp)
 		print('#define GIT_REVISION "' + revid[0:7] + '"', file=gitrev_hpp)
 		print('#define GIT_TAG "' + fulltag + '"', file=gitrev_hpp)
 		print('#define GIT_TAG_REVISION "' + tagrev[0:7] + '"', file=gitrev_hpp)
+		print('#define GIT_STATUS "' + status + '"', file=gitrev_hpp)
 		print(file=gitrev_hpp)
 if path.exists(".git"):
 	git_refs = ['.git/HEAD']
