@@ -155,7 +155,6 @@
 					name: build and unit test,
 					run: '.\.github\workflows\scripts\win\scons-build.bat'
 				},
-
 			]
 		},
 		# win-mingw: {
@@ -198,10 +197,10 @@
 					run: 'sudo ./.github/workflows/scripts/linux/install-tgui.sh'
 				},
 				{
-					name: build and unit test,
-					run: CCFLAGS=-fdiagnostics-color=always scons
+					name: build and unit test headless,
+					run: 'xvfb-run ./.github/workflows/scripts/linux/scons-build.sh'
 				}
-			],
+			]
 		}
 	}
 }
