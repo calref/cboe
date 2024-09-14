@@ -15,8 +15,10 @@
 #include <codecvt>
 #include <string>
 #include <boost/lexical_cast.hpp>
-#include "tools/gitrev.hpp"
 #include "gfx/render_shapes.hpp"
+#ifndef MSBUILD_GITREV
+#include "tools/gitrev.hpp"
+#endif
 
 using base64 = cppcodec::base64_rfc4648;
 
@@ -50,10 +52,14 @@ bool init_action_log(std::string command, std::string file) {
 		log_file = file;
 		try {
 			Element root_element("actions");
+			#if defined(GIT_REVISION) && defined(GIT_TAG)
 			root_element.SetAttribute("SHA", GIT_REVISION);
 			root_element.SetAttribute("Tag", GIT_TAG);
+			#endif
+			#if defined(GIT_STATUS) && defined(GIT_REPO)
 			root_element.SetAttribute("Status", GIT_STATUS);
 			root_element.SetAttribute("Repo", GIT_REPO);
+			#endif
 			log_document.InsertEndChild(root_element);
 			log_document.SaveFile(log_file);
 			recording = true;
