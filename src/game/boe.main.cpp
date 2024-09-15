@@ -548,7 +548,6 @@ static void replay_next_action() {
 void init_boe(int argc, char* argv[]) {
 	set_up_apple_events();
 	init_directories(argv[0]);
-	check_for_intel();
 	process_args(argc, argv);
 #ifdef __APPLE__
 	init_menubar(); // Do this first of all because otherwise a default File and Window menu will be seen

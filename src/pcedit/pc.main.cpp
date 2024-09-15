@@ -129,7 +129,6 @@ int main(int argc, char* argv[]) {
 		init_menubar(); // This is called twice because Windows and Mac have different ordering requirements
 #endif
 
-		check_for_intel();
 		game_rand.seed(time(nullptr));
 		
 		set_up_apple_events();

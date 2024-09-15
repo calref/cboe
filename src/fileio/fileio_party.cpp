@@ -22,7 +22,7 @@
 #include "fileio/tarball.hpp"
 #include "replay.hpp"
 
-extern bool mac_is_intel;
+extern bool mac_is_intel();
 extern fs::path progDir, tempDir;
 extern cCustomGraphics spec_scen_g;
 
@@ -90,12 +90,12 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 		return false;
 	}
 	
-	if(mac_is_intel && flags.a == 0x8B1F){ // Gzip header (new format)
+	if(mac_is_intel() && flags.a == 0x8B1F){ // Gzip header (new format)
 		format = new_oboe;
-	}else if(!mac_is_intel && flags.a == 0x1F8B){ // Gzip header (new format)
+	}else if(!mac_is_intel() && flags.a == 0x1F8B){ // Gzip header (new format)
 		format = new_oboe;
 	}else if(flags.a == mac_flags[0][0] || flags.a == mac_flags[0][1]){ // old format
-		if(mac_is_intel){ // it's actually a windows save
+		if(mac_is_intel()){ // it's actually a windows save
 			flip_short((short*)&flags.a);
 			flip_short((short*)&flags.b);
 			flip_short((short*)&flags.c);
@@ -116,7 +116,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 			else if(flags.c != mac_flags[2][0]) format = unknown;
 		}
 	}else if(flags.a == win_flags[0][0] || flags.a == win_flags[0][1]){ // old format
-		if(mac_is_intel){ // it's actually a macintosh save
+		if(mac_is_intel()){ // it's actually a macintosh save
 			flip_short((short*)&flags.a);
 			flip_short((short*)&flags.b);
 			flip_short((short*)&flags.c);
@@ -143,10 +143,10 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 	bool result = false;
 	switch(format){
 		case old_mac:
-			result = load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, mac_is_intel);
+			result = load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, mac_is_intel());
 			break;
 		case old_win:
-			result = load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, !mac_is_intel);
+			result = load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, !mac_is_intel());
 			break;
 		case new_oboe:
 			result = load_party_v2(file_to_load, univ);
