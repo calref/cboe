@@ -114,7 +114,7 @@ else:
 	# Zipped source downloads from github do not include the repo (probably a good thing)
 	# TODO: This does not work on Windows
 	env.Command('src/tools/gitrev.hpp', '', r"""
-		echo -e "\n#define GIT_REVISION \"\"\n#define GIT_TAG \"\"\n#define GIT_TAG_REVISION \"\"\n" > #TARGET
+		echo -e "\n#define GIT_REVISION \"\"\n#define GIT_TAG \"\"\n#define GIT_TAG_REVISION \"\"\n#define GIT_STATUS \"\"\n#define GIT_REPO \"\"\n" > #TARGET
 	""")
 
 if platform == "darwin":
