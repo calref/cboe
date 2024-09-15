@@ -52,11 +52,9 @@ bool init_action_log(std::string command, std::string file) {
 		log_file = file;
 		try {
 			Element root_element("actions");
-			#if defined(GIT_REVISION) && defined(GIT_TAG)
+			#ifndef MSBUILD_GITREV
 			root_element.SetAttribute("SHA", GIT_REVISION);
 			root_element.SetAttribute("Tag", GIT_TAG);
-			#endif
-			#if defined(GIT_STATUS) && defined(GIT_REPO)
 			root_element.SetAttribute("Status", GIT_STATUS);
 			root_element.SetAttribute("Repo", GIT_REPO);
 			#endif
