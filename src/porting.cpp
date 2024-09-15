@@ -8,10 +8,10 @@
 
 #include "porting.hpp"
 
-extern bool cur_scen_is_mac, mac_is_intel;
+extern bool cur_scen_is_mac, mac_is_intel();
 
 void port_town(legacy::town_record_type* dummy_town_ptr){
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_scen_is_mac != mac_is_intel())
 		return;
 	flip_short(&dummy_town_ptr->town_chop_time);
 	flip_short(&dummy_town_ptr->town_chop_key);
@@ -40,7 +40,7 @@ void port_town(legacy::town_record_type* dummy_town_ptr){
 }
 
 void port_talk_nodes(legacy::talking_record_type* dummy_talk_ptr) {
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_scen_is_mac != mac_is_intel())
 		return;
 	for(short i = 0; i < 60; i++) {
 		flip_short(&dummy_talk_ptr->talk_nodes[i].personality);
@@ -53,7 +53,7 @@ void port_talk_nodes(legacy::talking_record_type* dummy_talk_ptr) {
 }
 
 void port_t_d(legacy::big_tr_type* old) {
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_scen_is_mac != mac_is_intel())
 		return;
 	
 	for(short i = 0; i < 16; i++)
@@ -69,7 +69,7 @@ void port_t_d(legacy::big_tr_type* old) {
 }
 
 void port_ave_t(legacy::ave_tr_type* old) {
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_scen_is_mac != mac_is_intel())
 		return;
 	
 	for(short i = 0; i < 16; i++)
@@ -85,7 +85,7 @@ void port_ave_t(legacy::ave_tr_type* old) {
 }
 
 void port_tiny_t(legacy::tiny_tr_type* old) {
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_scen_is_mac != mac_is_intel())
 		return;
 	
 	for(short i = 0; i < 16; i++)
@@ -101,7 +101,7 @@ void port_tiny_t(legacy::tiny_tr_type* old) {
 }
 
 void port_scenario(legacy::scenario_data_type* temp_scenario) {
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_scen_is_mac != mac_is_intel())
 		return;
 	flip_short(&temp_scenario->flag_a);
 	flip_short(&temp_scenario->flag_b);
@@ -180,7 +180,7 @@ void port_scenario(legacy::scenario_data_type* temp_scenario) {
 
 
 void port_item_list(legacy::scen_item_data_type* old){
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_scen_is_mac != mac_is_intel())
 		return;
 	
 	for(short i = 0; i < 400; i++) {
@@ -191,7 +191,7 @@ void port_item_list(legacy::scen_item_data_type* old){
 }
 
 void port_out(legacy::outdoor_record_type *out) {
-	if(cur_scen_is_mac != mac_is_intel)
+	if(cur_scen_is_mac != mac_is_intel())
 		return;
 	
 	for(short i = 0; i < 4; i++) {
