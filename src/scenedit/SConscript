@@ -31,6 +31,9 @@ elif str(platform) == "posix":
 	"""))
 
 scened = env.Program("#build/bin/BoE Scenario Editor", scened_sources + common_sources)
+debug_symbols = None
+if str(platform) == "win32" and 'msvc' in env["TOOLS"] and env['debug']:
+	debug_symbols = scened[0].abspath.replace('.exe', '.pdb')
 
 if str(platform) == "darwin":
 	scened_info = {
@@ -43,3 +46,5 @@ else:
 	scened_info = {}
 
 env.Package(scened, install_dir, scened_info)
+if debug_symbols is not None:
+	env.Install(install_dir, debug_symbols)

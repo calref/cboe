@@ -27,6 +27,9 @@ elif str(platform) == "posix":
 	"""))
 
 pced = env.Program("#build/bin/BoE Character Editor", pced_sources + party_classes + common_sources)
+debug_symbols = None
+if str(platform) == "win32" and 'msvc' in env["TOOLS"] and env['debug']:
+	debug_symbols = pced[0].abspath.replace('.exe', '.pdb')
 
 if str(platform) == "darwin":
 	pced_info = {
@@ -39,3 +42,5 @@ else:
 	pced_info = {}
 
 env.Package(pced, install_dir, pced_info)
+if debug_symbols is not None:
+	env.Install(install_dir, debug_symbols)

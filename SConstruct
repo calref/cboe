@@ -80,6 +80,7 @@ if env['debug']:
 		env.Append(CCFLAGS=['-g','-O0'])
 	elif platform == 'win32':
 		env.Append(CCFLAGS=['/Zi', '/Od'])
+		env.Append(LINKFLAGS=['/DEBUG'])
 
 # This command generates the header with git revision information
 # NOTE: Changes made here must also be made in pkg/gitrev.sh!

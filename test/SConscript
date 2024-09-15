@@ -11,8 +11,14 @@ test_sources = Glob("""*.cpp""") + Split("""
 	#build/obj/scenedit/scen.fileio.cpp
 """)
 
+debug_symbols = None
 if str(platform) == "win32" and 'msvc' in env["TOOLS"]:
-	test = env.Program("#build/bin/boe_test", party_classes + common_sources + test_sources, LINKFLAGS=f'/nologo /SUBSYSTEM:CONSOLE /MACHINE:X{arch_short}')
+	link_flags = f'/nologo /SUBSYSTEM:CONSOLE /MACHINE:X{arch_short}'
+	if env['debug']:
+		link_flags += ' /DEBUG'
+	test = env.Program("#build/bin/boe_test", party_classes + common_sources + test_sources, LINKFLAGS=link_flags)
+	if env['debug']:
+		debug_symbols = test[0].abspath.replace(".exe", ".pdb")
 else:
 	test = env.Program("#build/bin/boe_test", test_sources + party_classes + common_sources)
 
@@ -23,6 +29,8 @@ def run_tests(env,target,source):
       open(target[0].abspath,'w').write("PASSED\n")
 
 env.Install("#build/test/", test)
+if debug_symbols is not None:
+	env.Install("#build/test/", debug_symbols)
 env.AlwaysBuild(env.Install("#build/test/", Dir("#test/files")))
 env.AlwaysBuild(env.Install("#build/rsrc/", Dir("#rsrc/strings")))
 env.Command("#build/test/junk/", '', 'mkdir "' + Dir("#build/test/junk").path + '"')
