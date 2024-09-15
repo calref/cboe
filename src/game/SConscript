@@ -43,6 +43,9 @@ elif str(platform) == "posix":
 	"""))
 
 boe = env.Program("#build/bin/Blades of Exile", game_sources + party_classes + common_sources)
+debug_symbols = None
+if str(platform) == "win32" and 'msvc' in env["TOOLS"] and env['debug']:
+	debug_symbols = boe[0].abspath.replace('.exe', '.pdb')
 
 if str(platform) == "darwin":
 	boe_info = {
@@ -55,3 +58,5 @@ else:
 	boe_info = {}
 
 env.Package(boe, install_dir, boe_info)
+if debug_symbols is not None:
+	env.Install(install_dir, debug_symbols)
