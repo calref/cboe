@@ -8,7 +8,9 @@
     <bounds top="0" left="0" bottom="44" right="47" />
     <difficulty>5</difficulty>
     <lighting>dark</lighting>
-    <flags />
+    <flags>
+        <hidden>true</hidden>
+    </flags>
     <wandering>
         <monster>45</monster>
         <monster>45</monster>
