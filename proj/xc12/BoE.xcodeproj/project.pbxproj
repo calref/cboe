@@ -15,7 +15,6 @@
 				91B0D5CA1E331910002BE4DA /* Pack Scenarios */,
 				914B2BB718E8BF99007B6799 /* Validate Dialog Definitions */,
 				914B2B9518E8008A007B6799 /* Copy Data Files */,
-				91C2A6E01B823C7B00346948 /* Generate Git Revision Information */,
 			);
 			dependencies = (
 			);
@@ -401,6 +400,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 91CC172C1B421C0A003D9A69;
 			remoteInfo = boe_test;
+		};
+		919D74092C97CD07001856AA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2BF04AA10BF51845006C0831 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 919CC23A1B3772B700273FDA;
+			remoteInfo = Common;
 		};
 		91BC33931B4390E40008882C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1711,6 +1717,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				919D740A2C97CD07001856AA /* PBXTargetDependency */,
 			);
 			name = "Common-Party";
 			productName = "Common-Party";
@@ -1720,6 +1727,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 919CC23E1B3772B700273FDA /* Build configuration list for PBXNativeTarget "Common" */;
 			buildPhases = (
+				919D740B2C97CD11001856AA /* ShellScript */,
 				919CC2371B3772B700273FDA /* Sources */,
 				919CC2381B3772B700273FDA /* Frameworks */,
 				919CC2391B3772B700273FDA /* Headers */,
@@ -1907,6 +1915,25 @@
 			shellScript = "../../pkg/validate-dialogs.sh \"$SOURCE_ROOT/../../rsrc\"\n";
 			showEnvVarsInLog = 0;
 		};
+		919D740B2C97CD11001856AA /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "export PATH=/opt/local/bin:$PATH\n../../pkg/gitrev.sh \"$SOURCE_ROOT/../../src\"\n";
+			showEnvVarsInLog = 0;
+		};
 		91ACCE801900302D00FAEF8B /* Fix dylib install names */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1973,21 +2000,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "test $SCRIPT_INPUT_FILE_COUNT -eq $SCRIPT_OUTPUT_FILE_COUNT || exit 1\nfor((i = 0; i < $SCRIPT_INPUT_FILE_COUNT; i++)); do\n\teval in=\\$SCRIPT_INPUT_FILE_$i\n\teval out=\\$SCRIPT_OUTPUT_FILE_$i\n\t../../pkg/pack-scenario.sh \"$in\" \"$out\"\ndone";
-		};
-		91C2A6E01B823C7B00346948 /* Generate Git Revision Information */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Generate Git Revision Information";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "export PATH=/opt/local/bin:$PATH\n../../pkg/gitrev.sh \"$SOURCE_ROOT/../../src\"";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2235,6 +2247,11 @@
 			isa = PBXTargetDependency;
 			target = 91CC172C1B421C0A003D9A69 /* boe_test */;
 			targetProxy = 9185BDA91EA06A150027C346 /* PBXContainerItemProxy */;
+		};
+		919D740A2C97CD07001856AA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 919CC23A1B3772B700273FDA /* Common */;
+			targetProxy = 919D74092C97CD07001856AA /* PBXContainerItemProxy */;
 		};
 		91BC33941B4390E40008882C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
