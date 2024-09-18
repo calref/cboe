@@ -23,10 +23,13 @@ else:
 	test = env.Program("#build/bin/boe_test", test_sources + party_classes + common_sources)
 
 def run_tests(env,target,source):
-   import subprocess
-   app = str(source[0].abspath)
-   if not subprocess.call(app):
-      open(target[0].abspath,'w').write("PASSED\n")
+	app = str(source[0].abspath)
+	exit_code = subprocess.call(app)
+	if exit_code == 0:
+		open(target[0].abspath,'w').write("PASSED\n")
+	else:
+		print(f'Unit test failure! Exit code: {exit_code}')
+		exit(exit_code)
 
 env.Install("#build/test/", test)
 if debug_symbols is not None:
