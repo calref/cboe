@@ -1,3 +1,4 @@
 #!/bin/sh -ve
 
-CCFLAGS=-fdiagnostics-color=always scons
+export CCFLAGS=-fdiagnostics-color=always
+scons
