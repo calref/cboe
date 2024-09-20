@@ -159,7 +159,7 @@
 					name: warn about failure to launch tests,
 					run: 'echo "::warning title=UNIT-TESTS::unit tests failed for win-scons"',
 					shell: bash,
-					if: '${{ hashFiles("build/test/passed") == "" }}'
+					if: "${{ hashFiles('build/test/passed') == '' }}"
 				}
 			]
 		},
