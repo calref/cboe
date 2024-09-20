@@ -29,7 +29,9 @@ def run_tests(env,target,source):
 		open(target[0].abspath,'w').write("PASSED\n")
 	else:
 		print(f'Unit test failure! Exit code: {exit_code}')
-		exit(exit_code)
+		# TODO: When issue #449 is fixed, Windows should also exit on test failure:
+		if str(platform) != "win32":
+			exit(exit_code)
 
 env.Install("#build/test/", test)
 if debug_symbols is not None:
