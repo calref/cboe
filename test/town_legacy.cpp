@@ -6,12 +6,12 @@
 //
 //
 
+#include <vector>
 #include "catch.hpp"
 #include "scenario/town.hpp"
 #include "scenario/scenario.hpp"
 #include "oldstructs.hpp"
 #include "fileio/fileio.hpp"
-#include <vector>
 #include "fileio/resmgr/res_image.hpp"
 #include "fileio/resmgr/res_sound.hpp"
 #include "fileio/resmgr/res_strings.hpp"
