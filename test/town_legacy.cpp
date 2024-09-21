@@ -262,7 +262,7 @@ TEST_CASE("Converting legacy town data") {
 			for(fs::path test_scenario : test_scenarios){
 				cScenario scen;
 
-				load_scenario(test_scenarios_dir / test_scenario, scen, false, false);
+				load_scenario(test_scenarios_dir / test_scenario, scen, false);
 
 				CHECK(scen.towns[0]->in_town_rect.width() == 6);
 				CHECK(scen.towns[0]->in_town_rect.height() == 4);
