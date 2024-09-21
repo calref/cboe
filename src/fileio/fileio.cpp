@@ -21,11 +21,15 @@
 #include "fileio/resmgr/res_strings.hpp"
 #include "fileio/resmgr/res_sound.hpp"
 
-bool _mac_is_intel;
-bool _checked_for_intel = false;
 bool mac_is_intel(){
-	if(!_checked_for_intel)
-		check_for_intel();
+	static bool checked_for_intel = false;
+	static bool _mac_is_intel;
+	if(!checked_for_intel){
+		union {uint16_t x; uint8_t c;} endian;
+		endian.x = 1;
+		_mac_is_intel = endian.c;
+		checked_for_intel = true;
+	}
 	return _mac_is_intel;
 }
 fs::path progDir, tempDir, scenDir;
@@ -122,13 +126,6 @@ fs::path get_posix_tempdir() {
 	return tempdir;
 }
 #endif
-
-void check_for_intel() {
-	union {uint16_t x; uint8_t c;} endian;
-	endian.x = 1;
-	_mac_is_intel = endian.c;
-	_checked_for_intel = true;
-}
 
 std::string read_maybe_quoted_string(std::istream& from) {
 	std::string result;
