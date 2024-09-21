@@ -100,9 +100,12 @@ fs::path locate_scenario(std::string scen_name) {
 	return scenPath;
 }
 
-bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header, bool pop_paths) {
+bool cur_scen_pushed_paths = false;
+
+bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header) {
+
 	// Before loading a scenario, we may need to pop scenario resource paths.
-	if(pop_paths){
+	if(cur_scen_pushed_paths){
 		fs::path graphics_path = ResMgr::graphics.popPath();
 		for(auto p : graphics_path) {
 			if(p.string() == "data") {
@@ -118,6 +121,7 @@ bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header,
 			}
 		}
 	}
+	cur_scen_pushed_paths = false;
 	scenario = cScenario();
 	std::string fname = file_to_load.filename().string();
 	std::transform(fname.begin(), fname.end(), fname.begin(), tolower);
@@ -2207,13 +2211,18 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_head
 		// This is a bit of trickery to get it to only count the first consecutive range of sheets
 		while(have_pic[num_graphic_sheets])
 			num_graphic_sheets++;
+		cur_scen_pushed_paths = true;
 		ResMgr::graphics.pushPath(tempDir/scenario_temp_dir_name/"graphics");
 		ResMgr::sounds.pushPath(tempDir/scenario_temp_dir_name/"sounds");
 	} else {
-		if(fs::is_directory(file_to_load/"graphics"))
+		if(fs::is_directory(file_to_load/"graphics")){
+			cur_scen_pushed_paths = true;
 			ResMgr::graphics.pushPath(file_to_load/"graphics");
-		if(fs::is_directory(file_to_load/"sounds"))
+		}
+		if(fs::is_directory(file_to_load/"sounds")){
+			cur_scen_pushed_paths = true;
 			ResMgr::sounds.pushPath(file_to_load/"sounds");
+		}
 		std::string fname;
 		while(fname = "sheet" + std::to_string(num_graphic_sheets) + ".png", fs::exists(file_to_load/"graphics"/fname))
 			num_graphic_sheets++;
