@@ -28,7 +28,6 @@ bool load_party(fs::path file_to_load, cUniverse& univ);
 bool save_party(fs::path dest_file, const cUniverse& univ);
 
 void init_directories(const char* exec_path);
-void check_for_intel();
 
 std::string read_maybe_quoted_string(std::istream& from);
 std::string maybe_quote_string(std::string which);
