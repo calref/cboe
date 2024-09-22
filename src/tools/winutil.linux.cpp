@@ -174,7 +174,7 @@ fs::path nav_get_scenario() {
 }
 
 fs::path nav_put_scenario(fs::path def) {
-	return runFileDialog(def.string(), false);
+	return runFileDialog(def.string(), true);
 }
 
 
