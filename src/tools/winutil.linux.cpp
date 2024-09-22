@@ -9,8 +9,12 @@
 
 #include <sys/utsname.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+#include "dialogxml/dialogs/dialog.hpp"
 
 extern sf::RenderWindow mainPtr;
+extern void showError(std::string str1, std::string str2, cDialog* parent = nullptr);
 
 // TODO: I'm sure there's a better way to do this (maybe one that's keyboard layout agnostic)
 // The proper way would involve use of the TextEntered event
@@ -128,7 +132,24 @@ void setWindowFloating(sf::Window& win, bool floating) {
 	}
 }
 
-void init_fileio() {
+void init_fileio(){
+	// if init_fileio() is called more than once, only check once
+	static bool checked_zenity = false;
+	if(checked_zenity) return;
+
+	std::string command = "zenity --help";
+	FILE* hfile = popen(command.c_str(), "r");
+	// Without reading the output, pclose() returns non-zero
+    char buffer[128];
+    while (!feof(hfile)) {
+        fgets(buffer, 128, hfile);
+    }
+	int result = pclose(hfile);
+	if(result != 0){
+		showError("Open Blades of Exile for Linux requires zenity for file management.", "Please install zenity through your distribution's official package manager and try launching Blades of Exile again. Sorry!");
+		exit(result);
+	}
+	checked_zenity = true;
 }
 
 static std::string runFileDialog(const std::string& file, bool save) {
