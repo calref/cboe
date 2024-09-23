@@ -2091,6 +2091,18 @@ void close_map(bool record) {
 	mainPtr.setActive();
 }
 
+void cancel_item_target() {
+	if(recording){
+		record_action("cancel_item_target", "");
+	}
+	if(stat_screen_mode == MODE_IDENTIFY)
+		ASB("Identify: Finished");
+	else if(stat_screen_mode == MODE_RECHARGE)
+		ASB("Recharge: Finished");
+	overall_mode = MODE_TOWN;
+	stat_screen_mode = MODE_INVEN;
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2248,12 +2260,8 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 				// Rotate a force wall
 				spell_cast_hit_return();
 			else if(overall_mode == MODE_ITEM_TARGET) {
-				if(stat_screen_mode == MODE_IDENTIFY)
-					ASB("Identify: Finished");
-				else if(stat_screen_mode == MODE_RECHARGE)
-					ASB("Recharge: Finished");
-				overall_mode = MODE_TOWN;
-				stat_screen_mode = MODE_INVEN;
+				// Cancel choosing items
+				cancel_item_target();
 			} else if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT || overall_mode == MODE_OUTDOORS) {
 				// Pause (skip turn)
 				handle_pause(did_something, need_redraw);
