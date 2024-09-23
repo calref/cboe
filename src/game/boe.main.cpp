@@ -21,7 +21,6 @@
 #include "boe.party.hpp"
 #include "boe.items.hpp"
 #include "boe.locutils.hpp"
-#include "boe.actions.hpp"
 #include "boe.town.hpp"
 #include "boe.dlgutil.hpp"
 #include "boe.infodlg.hpp"
