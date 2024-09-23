@@ -533,6 +533,8 @@ static void replay_next_action() {
 		handle_parry(did_something, need_redraw, need_reprint);
 	}else if(t == "handle_monster_info_menu"){
 		handle_monster_info_menu(boost::lexical_cast<int>(next_action.GetText()));
+	}else if(t == "cancel_item_target"){
+		cancel_item_target();
 	}else{
 		std::ostringstream sstr;
 		sstr << "Couldn't replay action: " << next_action;
