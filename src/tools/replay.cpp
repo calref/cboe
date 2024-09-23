@@ -25,6 +25,8 @@ using base64 = cppcodec::base64_rfc4648;
 bool recording = false;
 bool replaying = false;
 
+std::string last_action_type;
+
 using namespace ticpp;
 Document log_document;
 std::string log_file;
@@ -154,6 +156,8 @@ Element& pop_next_action(std::string expected_action_type) {
 		replay_fps_limit->frame_finished();
 	}
 	
+	last_action_type = to_return->Value();
+
 	return *to_return;
 }
 

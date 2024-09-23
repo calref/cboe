@@ -41,6 +41,7 @@
 #include "tools/enum_map.hpp"
 #include <string>
 #include <boost/lexical_cast.hpp>
+#include <sstream>
 
 rectangle item_screen_button_rects[9] = {
 	{125,10,141,28},{125,40,141,58},{125,68,141,86},{125,98,141,116},{125,126,141,144},{125,156,141,174},
@@ -108,6 +109,7 @@ extern sf::RenderWindow mini_map;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern short shop_identify_cost, shop_recharge_amount;
 
+extern bool record_advance_time;
 
 const char *dir_string[] = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
 char get_new_terrain();
@@ -1622,6 +1624,40 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 }
 
 void advance_time(bool did_something, bool need_redraw, bool need_reprint) {
+	if(recording && record_advance_time){
+		std::map<std::string,std::string> info;
+		info["did_something"] = bool_to_str(did_something);
+		info["need_redraw"] = bool_to_str(need_redraw);
+		info["need_reprint"] = bool_to_str(need_reprint);
+		record_action("advance_time", info);
+	}
+	if(replaying && record_advance_time){
+		if(next_action_type() == "advance_time"){
+			Element& element = pop_next_action();
+			std::map<std::string,std::string> info = info_from_action(element);
+			std::ostringstream sstr;
+			sstr << std::boolalpha;
+			bool wrong_args = false;
+			if(did_something != str_to_bool(info["did_something"])){
+				wrong_args = true;
+				sstr << "did_something: expected " << !did_something << ", was " << did_something << ". ";
+			}
+			if(need_redraw != str_to_bool(info["need_redraw"])){
+				wrong_args = true;
+				sstr << "need_redraw: expected " << !need_redraw << ", was " << need_redraw << ". ";
+			}
+			if(need_reprint != str_to_bool(info["need_reprint"])){
+				wrong_args = true;
+				sstr << "need_reprint: expected " << !need_reprint << ", was " << need_reprint << ". ";
+			}
+			if(wrong_args){
+				throw std::string { "Replay system internal error! advance_time() was called with the wrong args. " } + sstr.str();
+			}
+		}else{
+			throw std::string { "Replay system internal error! advance_time() was called following an action which does not advance time: " } + last_action_type;
+		}
+	}
+
  	// MARK: At this point, see if any specials have been queued up, and deal with them
 	// Note: We just check once here instead of looping because run_special also pulls from the queue.
 	if(!special_queue.empty()) {

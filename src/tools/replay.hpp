@@ -18,6 +18,8 @@ struct word_rect_t;
 extern bool recording;
 extern bool replaying;
 
+extern std::string last_action_type;
+
 extern bool init_action_log(std::string command, std::string file);
 extern void record_action(std::string action_type, std::string inner_text, bool cdata = false);
 extern void record_action(std::string action_type, std::map<std::string,std::string> info);
