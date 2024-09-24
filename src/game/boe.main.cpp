@@ -296,10 +296,12 @@ static void replay_next_action() {
 		eStartButton btn = static_cast<eStartButton>(std::stoi(info["btn"]));
 		eKeyMod mods = static_cast<eKeyMod>(std::stoi(info["mods"]));
 		handle_startup_button_click(btn, mods);
+		return;
 	}else if(t == "load_party"){
 		decode_file(next_action.GetText(), tempDir / "temp.exg");
 		load_party(tempDir / "temp.exg", univ);
 		finish_load_party();
+		return;
 	}else if(t == "move"){
 		location l = location_from_action(next_action);
 		handle_move(l, did_something, need_redraw, need_reprint);
