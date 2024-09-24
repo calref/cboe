@@ -287,6 +287,7 @@ static void process_args(int argc, char* argv[]) {
 static void replay_next_action() {
 	bool did_something = false, need_redraw = false, need_reprint = false;
 
+	std::string _last_action_type = last_action_type;
 	Element& next_action = pop_next_action();
 	std::string t = next_action.Value();
 	int enum_v;
@@ -542,7 +543,7 @@ static void replay_next_action() {
 		cancel_item_target();
 	}else if(t == "advance_time"){
 		if(record_advance_time){
-			throw std::string { "Replay system internal error! advance_time() was supposed to be called by the last action, but wasn't." };
+			throw std::string { "Replay system internal error! advance_time() was supposed to be called by the last action, but wasn't: " } + _last_action_type;
 		}else{
 			throw std::string { "The action log you're replaying contains advance_time() recordings. The additional --advance-time flag is required to process it." };
 		}
