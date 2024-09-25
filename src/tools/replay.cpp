@@ -156,7 +156,10 @@ Element& pop_next_action(std::string expected_action_type) {
 		replay_fps_limit->frame_finished();
 	}
 	
-	last_action_type = to_return->Value();
+	// control_click actions are not meaningful for debugging
+	if (to_return->Value() != "control_click"){
+		last_action_type = to_return->Value();
+	}
 
 	return *to_return;
 }
