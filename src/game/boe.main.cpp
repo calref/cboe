@@ -234,7 +234,8 @@ static void init_ui() {
 	init_buttons();
 }
 
-bool record_advance_time = false;
+extern bool record_verbose;
+extern bool replay_verbose;
 
 static void process_args(int argc, char* argv[]) {
 	preprocess_args(argc, argv);
@@ -245,7 +246,7 @@ static void process_args(int argc, char* argv[]) {
 	boost::optional<double> replay_speed;
 	cli |= clara::Opt(record_to, "record")["--record"]("Records a replay of your session to the specified XML file.");
 	cli |= clara::Opt(record_unique)["--unique"]("When recording, automatically insert a timestamp into the filename to guarantee uniqueness.");
-	cli |= clara::Opt(record_advance_time)["--advance-time"]("Record and validate advance_time() calls for internal testing of the replay system.");
+	cli |= clara::Opt(record_verbose)["--verbose"]("Record extra information for internal testing of the replay system.");
 	cli |= clara::Opt(replay, "replay-file")["--replay"]("Replays a previously-recorded session from the specified XML file.");
 	cli |= clara::Opt(replay_speed, "fps")["--replay-speed"]("Specifies how quickly actions are processed while replaying");
 	cli |= clara::Arg(saved_game, "save-file")("Launch and load a saved game file.");
@@ -584,11 +585,7 @@ static void replay_next_action() {
 	}else if(t == "cancel_item_target"){
 		cancel_item_target();
 	}else if(t == "advance_time"){
-		if(record_advance_time){
-			throw std::string { "Replay system internal error! advance_time() was supposed to be called by the last action, but wasn't: " } + _last_action_type;
-		}else{
-			throw std::string { "The action log you're replaying contains advance_time() recordings. The additional --advance-time flag is required to process it." };
-		}
+		throw std::string { "Replay system internal error! advance_time() was supposed to be called by the last action, but wasn't: " } + _last_action_type;
 	}else{
 		std::ostringstream sstr;
 		sstr << "Couldn't replay action: " << next_action;
