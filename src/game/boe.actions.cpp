@@ -1253,7 +1253,7 @@ void screen_shift(int dx, int dy, bool& need_redraw) {
 	need_redraw = true;
 }
 
-void handle_print_pc_hp(int which_pc) {
+void handle_print_pc_hp(int which_pc, bool& need_reprint) {
 	if(recording){
 		record_action("handle_print_pc_hp", boost::lexical_cast<std::string>(which_pc));
 	}
@@ -1262,9 +1262,10 @@ void handle_print_pc_hp(int which_pc) {
 	str << pc.name << " has ";
 	str << pc.cur_health << " health out of " << pc.max_health << '.';
 	add_string_to_buf(str.str());
+	need_reprint = true;
 }
 
-void handle_print_pc_sp(int which_pc) {
+void handle_print_pc_sp(int which_pc, bool& need_reprint) {
 	if(recording){
 		record_action("handle_print_pc_sp", boost::lexical_cast<std::string>(which_pc));
 	}
@@ -1273,9 +1274,10 @@ void handle_print_pc_sp(int which_pc) {
 	str << pc.name << " has ";
 	str << pc.cur_sp << " spell pts. out of " << pc.max_sp << '.';
 	add_string_to_buf(str.str());
+	need_reprint = true;
 }
 
-void handle_trade_places(int which_pc) {
+void handle_trade_places(int which_pc, bool& need_reprint) {
 	if(recording){
 		record_action("handle_trade_places", boost::lexical_cast<std::string>(which_pc));
 	}
@@ -1286,6 +1288,7 @@ void handle_trade_places(int which_pc) {
 	else {
 		switch_pc(which_pc);
 	}
+	need_reprint = true;
 }
 
 void show_item_info(short item_hit) {
@@ -1533,22 +1536,22 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 							handle_switch_pc(i, need_redraw, need_reprint);
 							break;
 						case PCBTN_HP:
-							handle_print_pc_hp(i);
+							handle_print_pc_hp(i, need_reprint);
 							break;
 						case PCBTN_SP:
-							handle_print_pc_sp(i);
+							handle_print_pc_sp(i, need_reprint);
 							break;
 						case PCBTN_INFO:
 							give_pc_info(i);
-							break;
+							// don't call advance_time
+							return false;
 						case PCBTN_TRADE:
-							handle_trade_places(i);
+							handle_trade_places(i, need_reprint);
 							break;
 						case MAX_ePlayerButton:
 							break; // Not a button
 					}
 				}
-		need_reprint = true;
 		put_pc_screen();
 		put_item_screen(stat_window);
 		if(overall_mode == MODE_SHOPPING) {
