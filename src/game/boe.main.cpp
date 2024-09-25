@@ -424,6 +424,9 @@ static void replay_next_action() {
 	}else if(t == "handle_begin_look"){
 		bool right_button = str_to_bool(next_action.GetText());
 		handle_begin_look(right_button, need_redraw);
+		if (right_button){
+			return;
+		}
 	}else if(t == "handle_look"){
 		auto info = info_from_action(next_action);
 		location destination = boost::lexical_cast<location>(info["destination"]);
@@ -431,7 +434,6 @@ static void replay_next_action() {
 		eKeyMod mods = static_cast<eKeyMod>(std::stoi(info["mods"]));
 
 		handle_look(destination, right_button, mods, need_redraw, need_reprint);
-		return;
 	}else if(t == "screen_shift"){
 		auto info = info_from_action(next_action);
 		int dx = std::stoi(info["dx"]);
