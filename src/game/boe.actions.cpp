@@ -1372,7 +1372,8 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 				
 			case TOOLBAR_SCROLL: case TOOLBAR_MAP:
 				display_map();
-				break;
+				// do not call advance_time
+				return false;
 				
 			case TOOLBAR_BAG: case TOOLBAR_HAND:
 				if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT)
