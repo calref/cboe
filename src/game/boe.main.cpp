@@ -396,16 +396,16 @@ static void replay_next_action() {
 		return;
 	}else if(t == "display_spells"){
 		auto info = info_from_action(next_action);
-		enum_v = boost::lexical_cast<int>(info["mode"]);
-		eSkill mode = static_cast<eSkill>(enum_v);
+		eSkill mode = boost::lexical_cast<eSkill>(info["mode"]);
 		short force_spell = boost::lexical_cast<short>(info["force_spell"]);
 
 		display_spells(mode, force_spell, nullptr);
+		return;
 	}else if(t == "display_skills"){
-		enum_v = boost::lexical_cast<int>(next_action.GetText());
-		eSkill force_skill = static_cast<eSkill>(enum_v);
+		eSkill force_skill = boost::lexical_cast<eSkill>(next_action.GetText());
 
 		display_skills(force_skill, nullptr);
+		return;
 	}else if(t == "tip_of_day"){
 		tip_of_day();
 		return;
