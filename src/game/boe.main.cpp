@@ -408,8 +408,10 @@ static void replay_next_action() {
 		display_skills(force_skill, nullptr);
 	}else if(t == "tip_of_day"){
 		tip_of_day();
+		return;
 	}else if(t == "showWelcome"){
 		showWelcome();
+		return;
 	}else if(t == "display_map"){
 		display_map();
 	}else if(t == "handle_help_toc"){
@@ -418,6 +420,7 @@ static void replay_next_action() {
 	}else if(t == "menu_give_help"){
 		short help1 = short_from_action(next_action);
 		menu_give_help(help1);
+		return;
 	}else if(t == "handle_begin_look"){
 		bool right_button = str_to_bool(next_action.GetText());
 		handle_begin_look(right_button, need_redraw);
@@ -428,12 +431,14 @@ static void replay_next_action() {
 		eKeyMod mods = static_cast<eKeyMod>(std::stoi(info["mods"]));
 
 		handle_look(destination, right_button, mods, need_redraw, need_reprint);
+		return;
 	}else if(t == "screen_shift"){
 		auto info = info_from_action(next_action);
 		int dx = std::stoi(info["dx"]);
 		int dy = std::stoi(info["dy"]);
 
 		screen_shift(dx, dy, need_redraw);
+		return;
 	}else if(t == "handle_rest"){
 		handle_rest(need_redraw, need_reprint);
 	}else if(t == "handle_menu_spell"){
@@ -453,6 +458,7 @@ static void replay_next_action() {
 		handle_target_space(destination, did_something, need_redraw, need_reprint);
 	}else if(t == "spell_cast_hit_return"){
 		spell_cast_hit_return();
+		return;
 	}else if(t == "handle_pause"){
 		handle_pause(did_something, need_redraw);
 	}else if(t == "handle_bash_select"){
@@ -533,11 +539,14 @@ static void replay_next_action() {
 		word_rect_t word_rect = word_rect_from_action(next_action);
 		click_talk_rect(word_rect);
 		handle_talk_node(word_rect.node);
+		return;
 	}else if(t == "click_shop_rect"){
 		rectangle rect = boost::lexical_cast<rectangle>(next_action.GetText());
 		click_shop_rect(rect);
+		return;
 	}else if(t == "end_shop_mode"){
 		end_shop_mode();
+		return;
 	}else if(t == "scrollbar_setPosition"){
 		auto info = info_from_action(next_action);
 		std::string name = info["name"];
@@ -545,22 +554,27 @@ static void replay_next_action() {
 
 		std::shared_ptr<cScrollbar> sbar = std::dynamic_pointer_cast<cScrollbar>(event_listeners[name]);
 		sbar->setPosition(newPos);
+		return;
 	}else if(t == "use_spec_item"){
 		use_spec_item(boost::lexical_cast<short>(next_action.GetText()), need_redraw);
 		update_item_stats_area(need_reprint);
 	}else if(t == "show_item_info"){
 		show_item_info(boost::lexical_cast<short>(next_action.GetText()));
 		update_item_stats_area(need_reprint);
+		return;
 	}else if(t == "set_stat_window"){
 		set_stat_window(static_cast<eItemWinMode>(boost::lexical_cast<int>(next_action.GetText())));
+		return;
 	}else if(t == "handle_sale"){
 		handle_sale(boost::lexical_cast<int>(next_action.GetText()));
 	}else if(t == "handle_info_request"){
 		handle_info_request(boost::lexical_cast<int>(next_action.GetText()));
 	}else if(t == "close_map"){
 		close_map(true);
+		return;
 	}else if(t == "handle_toggle_active"){
 		handle_toggle_active(need_reprint);
+		return;
 	}else if(t == "handle_parry"){
 		handle_parry(did_something, need_redraw, need_reprint);
 	}else if(t == "handle_monster_info_menu"){
