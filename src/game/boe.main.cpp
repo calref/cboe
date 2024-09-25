@@ -358,6 +358,7 @@ static void replay_next_action() {
 		update_item_stats_area(need_reprint);
 	}else if(t == "close_window"){ // TODO do last
 		handle_quit_event();
+		return;
 	}else if(t == "arrow_button_click"){
 		rectangle button_rect = boost::lexical_cast<rectangle>(next_action.GetText());
 		arrow_button_click(button_rect);
