@@ -1633,6 +1633,7 @@ void advance_time(bool did_something, bool need_redraw, bool need_reprint) {
 	}
 	if(replaying && record_advance_time){
 		if(next_action_type() == "advance_time"){
+			std::string _last_action_type = last_action_type;
 			Element& element = pop_next_action();
 			std::map<std::string,std::string> info = info_from_action(element);
 			std::ostringstream sstr;
@@ -1650,6 +1651,7 @@ void advance_time(bool did_something, bool need_redraw, bool need_reprint) {
 				wrong_args = true;
 				sstr << "need_reprint: expected " << !need_reprint << ", was " << need_reprint << ". ";
 			}
+			sstr << "After " << _last_action_type;
 			if(wrong_args){
 				throw std::string { "Replay system internal error! advance_time() was called with the wrong args. " } + sstr.str();
 			}
