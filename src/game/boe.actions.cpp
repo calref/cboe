@@ -1641,7 +1641,7 @@ void advance_time(bool did_something, bool need_redraw, bool need_reprint) {
 		record_action("advance_time", info);
 	}
 	if(replaying && replay_verbose){
-		if(next_action_type() == "advance_time"){
+		if(has_next_action("advance_time")){
 			std::string _last_action_type = last_action_type;
 			Element& element = pop_next_action();
 			std::map<std::string,std::string> info = info_from_action(element);
