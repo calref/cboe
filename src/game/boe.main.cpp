@@ -340,11 +340,12 @@ static void replay_next_action() {
 	}else if(t == "handle_give_item"){
 		short item_hit = short_from_action(next_action);
 		handle_give_item(item_hit, did_something, need_redraw);
-	}else if(t == "close_window"){
+	}else if(t == "close_window"){ // TODO do last
 		handle_quit_event();
 	}else if(t == "arrow_button_click"){
 		rectangle button_rect = boost::lexical_cast<rectangle>(next_action.GetText());
 		arrow_button_click(button_rect);
+		return;
 	}else if(t == "show_dialog_action"){
 		show_dialog_action(next_action.GetText());
 	}else if(t == "handle_drop_pc"){
