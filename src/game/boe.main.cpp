@@ -359,17 +359,23 @@ static void replay_next_action() {
 		return;
 	}else if(t == "handle_drop_pc"){
 		handle_drop_pc();
+		return;
 	}else if(t == "new_party"){
 		new_party();
+		return;
 	}else if(t == "pick_preferences"){
 		pick_preferences();
+		return;
 	}else if(t == "do_abort"){
 		do_abort();
+		return;
 	}else if(t == "handle_new_pc_graphic"){
 		handle_new_pc_graphic();
+		return;
 	}else if(t == "handle_rename_pc"){
 		handle_rename_pc();
 	}else if(t == "handle_new_pc"){
+		return;
 		handle_new_pc();
 	}else if(t == "journal"){
 		journal();
@@ -401,6 +407,7 @@ static void replay_next_action() {
 		display_map();
 	}else if(t == "handle_help_toc"){
 		handle_help_toc();
+		return;
 	}else if(t == "menu_give_help"){
 		short help1 = short_from_action(next_action);
 		menu_give_help(help1);
