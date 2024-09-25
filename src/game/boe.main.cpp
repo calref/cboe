@@ -415,6 +415,7 @@ static void replay_next_action() {
 		return;
 	}else if(t == "display_map"){
 		display_map();
+		return;
 	}else if(t == "handle_help_toc"){
 		handle_help_toc();
 		return;
@@ -446,6 +447,7 @@ static void replay_next_action() {
 	}else if(t == "handle_menu_spell"){
 		eSpell spell_picked = static_cast<eSpell>(std::stoi(next_action.GetText()));
 		handle_menu_spell(spell_picked);
+		return;
 	}else if(t == "handle_spellcast"){
 		auto info = info_from_action(next_action);
 		eSkill which_type = boost::lexical_cast<eSkill>(info["which_type"]);
@@ -465,8 +467,10 @@ static void replay_next_action() {
 		handle_pause(did_something, need_redraw);
 	}else if(t == "handle_bash_select"){
 		handle_bash_pick_select(need_reprint, true);
+		return;
 	}else if(t == "handle_pick_select"){
 		handle_bash_pick_select(need_reprint, false);
+		return;
 	}else if(t == "handle_bash"){
 		location destination = location_from_action(next_action);
 		handle_bash_pick(destination, did_something, need_redraw, true);
@@ -480,6 +484,7 @@ static void replay_next_action() {
 		handle_use_space(destination, did_something, need_redraw);
 	}else if(t == "show_inventory"){
 		show_inventory();
+		return;
 	}else if(t == "give_help"){
 		auto info = info_from_action(next_action);
 		short help1 = boost::lexical_cast<short>(info["help1"]);
@@ -487,50 +492,71 @@ static void replay_next_action() {
 		give_help(help1, help2);
 	}else if(t == "toggle_debug_mode"){
 		toggle_debug_mode();
+		return;
 	}else if(t == "debug_give_item"){
 		debug_give_item();
+		return;
 	}else if(t == "debug_print_location"){
 		debug_print_location();
+		return;
 	}else if(t == "debug_step_through"){
 		debug_step_through();
+		return;
 	}else if(t == "debug_leave_town"){
 		debug_leave_town();
+		return;
 	}else if(t == "debug_kill"){
 		debug_kill();
+		return;
 	}else if(t == "debug_magic_map"){
 		debug_magic_map();
+		return;
 	}else if(t == "debug_enter_town"){
 		debug_enter_town();
+		return;
 	}else if(t == "debug_refresh_stores"){
 		debug_refresh_stores();
+		return;
 	}else if(t == "debug_clean_up"){
 		debug_clean_up();
+		return;
 	}else if(t == "debug_stealth_detect_life_firewalk"){
 		debug_stealth_detect_life_firewalk();
+		return;
 	}else if(t == "debug_fly"){
 		debug_fly();
+		return;
 	}else if(t == "debug_ghost_mode"){
 		debug_ghost_mode();
+		return;
 	}else if(t == "debug_return_to_start"){
 		debug_return_to_start();
+		return;
 	}else if(t == "handle_victory"){
 		handle_victory();
+		return;
 	}else if(t == "debug_increase_age"){
 		debug_increase_age();
+		return;
 	}else if(t == "debug_towns_forget"){
 		debug_towns_forget();
+		return;
 	}else if(t == "edit_stuff_done"){
 		edit_stuff_done();
+		return;
 	}else if(t == "debug_heal"){
 		debug_heal();
+		return;
 	}else if(t == "debug_heal_plus_extra"){
 		debug_heal_plus_extra();
+		return;
 	}else if(t == "handle_print_pc_hp"){
 		handle_print_pc_hp(boost::lexical_cast<int>(next_action.GetText()));
 	}else if(t == "handle_print_pc_sp"){
 		handle_print_pc_sp(boost::lexical_cast<int>(next_action.GetText()));
 	}else if(t == "give_pc_info"){
 		give_pc_info(boost::lexical_cast<short>(next_action.GetText()));
+		return;
 	}else if(t == "handle_trade_places"){
 		handle_trade_places(boost::lexical_cast<short>(next_action.GetText()));
 	}else if(t == "handle_begin_talk"){
@@ -566,7 +592,7 @@ static void replay_next_action() {
 		return;
 	}else if(t == "set_stat_window"){
 		set_stat_window(static_cast<eItemWinMode>(boost::lexical_cast<int>(next_action.GetText())));
-		return;
+		update_item_stats_area(need_reprint);
 	}else if(t == "handle_sale"){
 		handle_sale(boost::lexical_cast<int>(next_action.GetText()));
 	}else if(t == "handle_info_request"){
