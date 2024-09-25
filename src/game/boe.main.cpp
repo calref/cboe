@@ -551,14 +551,14 @@ static void replay_next_action() {
 		debug_heal_plus_extra();
 		return;
 	}else if(t == "handle_print_pc_hp"){
-		handle_print_pc_hp(boost::lexical_cast<int>(next_action.GetText()));
+		handle_print_pc_hp(boost::lexical_cast<int>(next_action.GetText()), need_reprint);
 	}else if(t == "handle_print_pc_sp"){
-		handle_print_pc_sp(boost::lexical_cast<int>(next_action.GetText()));
+		handle_print_pc_sp(boost::lexical_cast<int>(next_action.GetText()), need_reprint);
 	}else if(t == "give_pc_info"){
 		give_pc_info(boost::lexical_cast<short>(next_action.GetText()));
 		return;
 	}else if(t == "handle_trade_places"){
-		handle_trade_places(boost::lexical_cast<short>(next_action.GetText()));
+		handle_trade_places(boost::lexical_cast<short>(next_action.GetText()), need_reprint);
 	}else if(t == "handle_begin_talk"){
 		handle_begin_talk(need_reprint);
 	}else if(t == "handle_talk"){
