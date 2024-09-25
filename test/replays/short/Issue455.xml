@@ -1,0 +1,65 @@
+<actions SHA="47b4456" Tag="v0.0.4" Status="modified" Repo="git@github.com:NQNStudios/cboe.git">
+    <load_prefs>
+        <![CDATA[DisplayMode = 5
+DrawTerrainAnimation = true
+DrawTerrainFrills = false
+DrawTerrainShoreFrills = true
+EasyMode = false
+GameRunBefore = true
+GameSpeed = 0
+GiveIntroHint = false
+LessWanderingMonsters = false
+PlaySounds = true
+ReceivedHelp = [22 23 1 2 55 0 22 23 1 2 55 0 22 23 1 2 55 0 22 23 1 2 55 0 22 23 1 2 55 0 54 0 47 65 36 37 48 49 62 0 5 6 7 8 33 0 26 27 56 0 10 11 9 0 57 0 50 0 12 0 25 0 20 21 20 21 20 21 9 0 68 69 31 0]
+RepeatRoomDescriptions = false
+ShowInstantHelp = true
+UIScale = 1.5
+UIScaleMap = 1.5
+]]>
+</load_prefs>
+    <srand>1727292388</srand>
+    <startup_button_click>
+        <btn>3</btn>
+        <mods>1</mods>
+    </startup_button_click>
+    <build_scen_headers>AnimatedTile.boes&#x0A;Boundary Test.boes&#x0A;Boundary Test 2.boes&#x0A;Display Picture.boes&#x0A;myscenario.boes&#x0A;thrakos.exs&#x0A;recttown.exs&#x0A;</build_scen_headers>
+    <control_click>
+        <id>list</id>
+        <mods>1</mods>
+    </control_click>
+    <control_click>
+        <id>scen1</id>
+        <mods>1</mods>
+    </control_click>
+    <control_click>
+        <id>btn1</id>
+        <mods>0</mods>
+    </control_click>
+    <move>(8,8)</move>
+    <move>(9,7)</move>
+    <move>(10,7)</move>
+    <move>(11,7)</move>
+    <control_click>
+        <id>done</id>
+        <mods>0</mods>
+    </control_click>
+    <move>(11,7)</move>
+    <move>(12,8)</move>
+    <move>(12,9)</move>
+    <move>(12,10)</move>
+    <move>(11,11)</move>
+    <move>(11,11)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(9,11)</handle_talk>
+    <click_talk_rect>
+        <node>-16</node>
+        <preset>true</preset>
+        <rect>{(4,343) - (134,363)}</rect>
+        <word>Ask About...</word>
+    </click_talk_rect>
+    <field_focus>response</field_focus>
+    <control_click>
+        <id>okay</id>
+        <mods>0</mods>
+    </control_click>
+</actions>
