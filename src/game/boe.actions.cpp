@@ -109,7 +109,8 @@ extern sf::RenderWindow mini_map;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern short shop_identify_cost, shop_recharge_amount;
 
-extern bool record_advance_time;
+extern bool record_verbose;
+extern bool replay_verbose;
 
 const char *dir_string[] = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
 char get_new_terrain();
@@ -1628,14 +1629,14 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 }
 
 void advance_time(bool did_something, bool need_redraw, bool need_reprint) {
-	if(recording && record_advance_time){
+	if(recording && record_verbose){
 		std::map<std::string,std::string> info;
 		info["did_something"] = bool_to_str(did_something);
 		info["need_redraw"] = bool_to_str(need_redraw);
 		info["need_reprint"] = bool_to_str(need_reprint);
 		record_action("advance_time", info);
 	}
-	if(replaying && record_advance_time){
+	if(replaying && replay_verbose){
 		if(next_action_type() == "advance_time"){
 			std::string _last_action_type = last_action_type;
 			Element& element = pop_next_action();
