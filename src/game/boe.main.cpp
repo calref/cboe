@@ -292,6 +292,7 @@ static void replay_next_action() {
 	std::string t = next_action.Value();
 	int enum_v;
 	
+	// NOTE: Action replay blocks need to return early unless the action advances time
 	if(overall_mode == MODE_STARTUP && t == "startup_button_click"){
 		auto info = info_from_action(next_action);
 		eStartButton btn = static_cast<eStartButton>(std::stoi(info["btn"]));
@@ -374,19 +375,25 @@ static void replay_next_action() {
 		return;
 	}else if(t == "handle_rename_pc"){
 		handle_rename_pc();
-	}else if(t == "handle_new_pc"){
 		return;
+	}else if(t == "handle_new_pc"){
 		handle_new_pc();
+		return;
 	}else if(t == "journal"){
 		journal();
+		return;
 	}else if(t == "talk_notes"){
 		talk_notes();
+		return;
 	}else if(t == "adventure_notes"){
 		adventure_notes();
+		return;
 	}else if(t == "print_party_stats"){
 		print_party_stats();
+		return;
 	}else if(t == "display_alchemy"){
 		display_alchemy();
+		return;
 	}else if(t == "display_spells"){
 		auto info = info_from_action(next_action);
 		enum_v = boost::lexical_cast<int>(info["mode"]);
