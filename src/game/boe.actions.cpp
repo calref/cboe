@@ -1298,6 +1298,12 @@ void show_item_info(short item_hit) {
 	else display_pc_item(stat_window, item_hit,univ.party[stat_window].items[item_hit],0);
 }
 
+void update_item_stats_area(bool& need_reprint) {
+	put_pc_screen();
+	put_item_screen(stat_window);
+	need_reprint = true;
+}
+
 bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	long item_hit;
 	bool are_done = false;
@@ -1612,9 +1618,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 						}
 					}
 		}
-		put_pc_screen();
-		put_item_screen(stat_window);
-		need_reprint = true;
+		update_item_stats_area(need_reprint);
 	}
 	
 	advance_time(did_something, need_redraw, need_reprint);

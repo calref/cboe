@@ -312,15 +312,19 @@ static void replay_next_action() {
 	}else if(t == "handle_switch_pc_items"){
 		short which_pc = short_from_action(next_action);
 		handle_switch_pc_items(which_pc, need_redraw);
+		update_item_stats_area(need_reprint);
 	}else if(t == "handle_equip_item"){
 		short item_hit = short_from_action(next_action);
 		handle_equip_item(item_hit, need_redraw);
+		update_item_stats_area(need_reprint);
 	}else if(t == "handle_use_item"){
 		short item_hit = short_from_action(next_action);
 		handle_use_item(item_hit, did_something, need_redraw);
+		update_item_stats_area(need_reprint);
 	}else if(t == "handle_item_shop_action"){
 		short item_hit = short_from_action(next_action);
 		handle_item_shop_action(item_hit);
+		update_item_stats_area(need_reprint);
 	}else if(t == "handle_alchemy"){
 		handle_alchemy(need_redraw, need_reprint);
 	}else if(t == "handle_wait"){
@@ -334,12 +338,14 @@ static void replay_next_action() {
 	}else if(t == "handle_drop_item_id"){
 		short item_hit = short_from_action(next_action);
 		handle_drop_item(item_hit, need_redraw);
+		update_item_stats_area(need_reprint);
 	}else if(t == "handle_drop_item_location"){
 		location destination = location_from_action(next_action);
 		handle_drop_item(destination, need_redraw);
 	}else if(t == "handle_give_item"){
 		short item_hit = short_from_action(next_action);
 		handle_give_item(item_hit, did_something, need_redraw);
+		update_item_stats_area(need_reprint);
 	}else if(t == "close_window"){ // TODO do last
 		handle_quit_event();
 	}else if(t == "arrow_button_click"){
@@ -524,8 +530,10 @@ static void replay_next_action() {
 		sbar->setPosition(newPos);
 	}else if(t == "use_spec_item"){
 		use_spec_item(boost::lexical_cast<short>(next_action.GetText()), need_redraw);
+		update_item_stats_area(need_reprint);
 	}else if(t == "show_item_info"){
 		show_item_info(boost::lexical_cast<short>(next_action.GetText()));
+		update_item_stats_area(need_reprint);
 	}else if(t == "set_stat_window"){
 		set_stat_window(static_cast<eItemWinMode>(boost::lexical_cast<int>(next_action.GetText())));
 	}else if(t == "handle_sale"){
