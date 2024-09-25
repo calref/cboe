@@ -327,8 +327,10 @@ static void replay_next_action() {
 		update_item_stats_area(need_reprint);
 	}else if(t == "handle_alchemy"){
 		handle_alchemy(need_redraw, need_reprint);
+		return;
 	}else if(t == "handle_wait"){
 		handle_wait(did_something, need_redraw, need_reprint);
+		return;
 	}else if(t == "handle_combat_switch"){
 		handle_combat_switch(did_something, need_redraw, need_reprint);
 	}else if(t == "handle_missile"){
@@ -354,6 +356,7 @@ static void replay_next_action() {
 		return;
 	}else if(t == "show_dialog_action"){
 		show_dialog_action(next_action.GetText());
+		return;
 	}else if(t == "handle_drop_pc"){
 		handle_drop_pc();
 	}else if(t == "new_party"){
