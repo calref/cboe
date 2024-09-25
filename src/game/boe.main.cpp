@@ -303,7 +303,13 @@ static void replay_next_action() {
 	}else if(t == "load_party"){
 		decode_file(next_action.GetText(), tempDir / "temp.exg");
 		load_party(tempDir / "temp.exg", univ);
+
 		finish_load_party();
+
+		if(overall_mode != MODE_STARTUP)
+			post_load();
+
+		menu_activate();
 		return;
 	}else if(t == "move"){
 		location l = location_from_action(next_action);
