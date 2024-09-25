@@ -100,5 +100,6 @@ void give_help_and_record(short help1, short help2);
 void show_item_info(short item_hit);
 void close_map(bool record = false);
 void cancel_item_target();
+void update_item_stats_area(bool& need_reprint);
 
 #endif
