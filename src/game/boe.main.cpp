@@ -441,7 +441,6 @@ static void replay_next_action() {
 		int dy = std::stoi(info["dy"]);
 
 		screen_shift(dx, dy, need_redraw);
-		return;
 	}else if(t == "handle_rest"){
 		handle_rest(need_redraw, need_reprint);
 	}else if(t == "handle_menu_spell"){
