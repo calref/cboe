@@ -602,13 +602,14 @@ static void replay_next_action() {
 		return;
 	}else if(t == "handle_toggle_active"){
 		handle_toggle_active(need_reprint);
-		return;
 	}else if(t == "handle_parry"){
 		handle_parry(did_something, need_redraw, need_reprint);
 	}else if(t == "handle_monster_info_menu"){
 		handle_monster_info_menu(boost::lexical_cast<int>(next_action.GetText()));
+		return;
 	}else if(t == "cancel_item_target"){
 		cancel_item_target();
+		return;
 	}else if(t == "advance_time"){
 		throw std::string { "Replay system internal error! advance_time() was supposed to be called by the last action, but wasn't: " } + _last_action_type;
 	}else{
