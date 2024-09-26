@@ -17,6 +17,7 @@
 
 fail_fast="true"
 thoroughness=0
+flags=""
 if [ "$1" = "no_fail_fast" ]; then 
     fail_fast="false"
     thoroughness="${2:-1}"
@@ -51,7 +52,7 @@ function test_folder() {
     folder="$(pwd)/test/replays/$1"
     replays="$folder"/*.xml
     for replay in $replays; do
-        (cd "$EXE_DIR" && "./$EXE" --replay "$replay") || echo "Replay failed: $replay" && [ "$fail_fast" = "true" ] && exit 1
+        (cd "$EXE_DIR" && "./$EXE" --replay "$replay" $flags) || echo "Replay failed: $replay" && [ "$fail_fast" = "true" ] && exit 1
     done
 }
 
@@ -60,6 +61,11 @@ case $thoroughness in
         test_folder short
         ;;
     1)
+        test_folder short
+        test_folder long
+        ;;
+    2)
+        flags="--strict"
         test_folder short
         test_folder long
         ;;
