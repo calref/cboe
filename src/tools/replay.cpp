@@ -191,7 +191,7 @@ Element& pop_next_action(std::string expected_action_type) {
 		if(replay_verbose){
 			// Verbose replays are for internal testing, so this console output won't bother
 			// anyone and is very helpful:
-			std::cout << last_action_type << std::endl;
+			std::cout << "Replaying action: " << last_action_type << std::endl;
 		}
 	}
 
