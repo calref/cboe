@@ -29,8 +29,12 @@ bool replaying = false;
 
 bool record_verbose = false;
 bool replay_verbose = false;
+bool replay_strict = false;
 
 std::string last_action_type;
+
+const std::string replay_warning = "Replay warning: ";
+const std::string replay_error = "Replay system internal error! ";
 
 using namespace ticpp;
 Document log_document;

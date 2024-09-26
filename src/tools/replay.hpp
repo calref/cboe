@@ -18,6 +18,8 @@ struct word_rect_t;
 extern bool recording;
 extern bool replaying;
 
+extern bool replay_strict;
+
 extern std::string last_action_type;
 
 extern bool init_action_log(std::string command, std::string file);
@@ -35,5 +37,8 @@ extern short short_from_action(Element& action);
 extern cKey key_from_action(Element& action);
 extern word_rect_t word_rect_from_action(Element& action);
 extern void record_click_talk_rect(word_rect_t word_rect, bool preset);
+
+extern const std::string replay_warning;
+extern const std::string replay_error;
 
 #endif
