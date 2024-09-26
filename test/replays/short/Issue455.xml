@@ -23,26 +23,26 @@ UIScaleMap = 1.5
         <mods>1</mods>
     </startup_button_click>
     <build_scen_headers>AnimatedTile.boes&#x0A;Boundary Test.boes&#x0A;Boundary Test 2.boes&#x0A;Display Picture.boes&#x0A;myscenario.boes&#x0A;thrakos.exs&#x0A;recttown.exs&#x0A;</build_scen_headers>
-    <control_click>
+    <click_control>
         <id>list</id>
         <mods>1</mods>
-    </control_click>
-    <control_click>
+    </click_control>
+    <click_control>
         <id>scen1</id>
         <mods>1</mods>
-    </control_click>
-    <control_click>
+    </click_control>
+    <click_control>
         <id>btn1</id>
         <mods>0</mods>
-    </control_click>
+    </click_control>
     <move>(8,8)</move>
     <move>(9,7)</move>
     <move>(10,7)</move>
     <move>(11,7)</move>
-    <control_click>
+    <click_control>
         <id>done</id>
         <mods>0</mods>
-    </control_click>
+    </click_control>
     <move>(11,7)</move>
     <move>(12,8)</move>
     <move>(12,9)</move>
@@ -58,8 +58,8 @@ UIScaleMap = 1.5
         <word>Ask About...</word>
     </click_talk_rect>
     <field_focus>response</field_focus>
-    <control_click>
+    <click_control>
         <id>okay</id>
         <mods>0</mods>
-    </control_click>
+    </click_control>
 </actions>

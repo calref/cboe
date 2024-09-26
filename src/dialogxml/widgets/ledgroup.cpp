@@ -73,7 +73,7 @@ bool cLedGroup::handleClick(location where, cFramerateLimiter& fps_limiter) {
 void cLedGroup::callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::string id, eKeyMod mods) {
 	// When replaying, a click event for the specifically clicked led comes next
 	if(replaying){
-		auto led_click_action = pop_next_action("control_click");
+		auto led_click_action = pop_next_action("click_control");
 		auto info = info_from_action(led_click_action);
 		clicking = info["id"];
 	}
