@@ -99,7 +99,7 @@ void handle_talk(location destination, bool& did_something, bool& need_redraw, b
 void give_help_and_record(short help1, short help2);
 void show_item_info(short item_hit);
 void close_map(bool record = false);
-void cancel_item_target();
+void cancel_item_target(bool& did_something, bool& need_redraw, bool& need_reprint);
 void update_item_stats_area(bool& need_reprint);
 
 #endif

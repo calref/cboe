@@ -2138,7 +2138,7 @@ void close_map(bool record) {
 	mainPtr.setActive();
 }
 
-void cancel_item_target() {
+void cancel_item_target(bool& did_something, bool& need_redraw, bool& need_reprint) {
 	if(recording){
 		record_action("cancel_item_target", "");
 	}
@@ -2148,6 +2148,9 @@ void cancel_item_target() {
 		ASB("Recharge: Finished");
 	overall_mode = MODE_TOWN;
 	stat_screen_mode = MODE_INVEN;
+	// Time passes because a spell was cast. Redraw happens because item names
+	// in the inventory can change. Reprint happens because of the buffer print
+	did_something = need_redraw = need_reprint = true;
 }
 
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
@@ -2308,7 +2311,8 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 				spell_cast_hit_return();
 			else if(overall_mode == MODE_ITEM_TARGET) {
 				// Cancel choosing items
-				cancel_item_target();
+				cancel_item_target(did_something, need_redraw, need_reprint);
+				advance_time(did_something, need_redraw, need_reprint);
 			} else if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT || overall_mode == MODE_OUTDOORS) {
 				// Pause (skip turn)
 				handle_pause(did_something, need_redraw);
