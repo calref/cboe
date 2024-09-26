@@ -70,7 +70,7 @@ bool cContainer::handleClick(location where, cFramerateLimiter& fps_limiter) {
 void cContainer::callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::string id, eKeyMod mods) {
 	// When replaying, a click event for the specifically child control comes next
 	if(replaying){
-		auto child_click_action = pop_next_action("control_click");
+		auto child_click_action = pop_next_action("click_control");
 		auto info = info_from_action(child_click_action);
 		clicking = info["id"];
 	}
