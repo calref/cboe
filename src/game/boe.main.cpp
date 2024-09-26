@@ -356,7 +356,7 @@ static void replay_next_action() {
 		short item_hit = short_from_action(next_action);
 		handle_give_item(item_hit, did_something, need_redraw);
 		update_item_stats_area(need_reprint);
-	}else if(t == "close_window"){ // TODO do last
+	}else if(t == "close_window"){
 		handle_quit_event();
 		return;
 	}else if(t == "arrow_button_click"){
@@ -625,8 +625,7 @@ static void replay_next_action() {
 		throw sstr.str();
 	}
 
-	// TODO some of these actions shouldn't call advance_time(). They should return
-	// from the function early
+	// NOTE: commands that do not advance time must return early
 	advance_time(did_something, need_redraw, need_reprint);
 }
 
