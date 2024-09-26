@@ -236,6 +236,7 @@ static void init_ui() {
 
 extern bool record_verbose;
 extern bool replay_verbose;
+extern bool replay_strict;
 
 static void process_args(int argc, char* argv[]) {
 	preprocess_args(argc, argv);
@@ -248,6 +249,7 @@ static void process_args(int argc, char* argv[]) {
 	cli |= clara::Opt(record_unique)["--unique"]("When recording, automatically insert a timestamp into the filename to guarantee uniqueness.");
 	cli |= clara::Opt(record_verbose)["--verbose"]("Record extra information for internal testing of the replay system.");
 	cli |= clara::Opt(replay, "replay-file")["--replay"]("Replays a previously-recorded session from the specified XML file.");
+	cli |= clara::Opt(replay_strict)["--strict"]("Enforces strictly identical replay behavior, even where this is only cosmetic");
 	cli |= clara::Opt(replay_speed, "fps")["--replay-speed"]("Specifies how quickly actions are processed while replaying");
 	cli |= clara::Arg(saved_game, "save-file")("Launch and load a saved game file.");
 	bool show_help = false;
@@ -617,6 +619,7 @@ static void replay_next_action() {
 	}else if(t == "cancel_item_target"){
 		cancel_item_target(did_something, need_redraw, need_reprint);
 	}else if(t == "advance_time"){
+		// This is bad regardless of strictness, because visual changes may have occurred which won't get redrawn/reprinted
 		throw std::string { "Replay system internal error! advance_time() was supposed to be called by the last action, but wasn't: " } + _last_action_type;
 	}else{
 		std::ostringstream sstr;

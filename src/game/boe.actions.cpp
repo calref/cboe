@@ -1648,8 +1648,10 @@ void advance_time(bool did_something, bool need_redraw, bool need_reprint) {
 			std::ostringstream sstr;
 			sstr << std::boolalpha;
 			bool wrong_args = false;
+			bool divergent = false;
 			if(did_something != str_to_bool(info["did_something"])){
 				wrong_args = true;
+				divergent = true;
 				sstr << "did_something: expected " << !did_something << ", was " << did_something << ". ";
 			}
 			if(need_redraw != str_to_bool(info["need_redraw"])){
@@ -1662,10 +1664,29 @@ void advance_time(bool did_something, bool need_redraw, bool need_reprint) {
 			}
 			sstr << "After " << _last_action_type;
 			if(wrong_args){
-				throw std::string { "Replay system internal error! advance_time() was called with the wrong args. " } + sstr.str();
+				if(divergent){
+					throw replay_error + "advance_time() was called with the wrong args, diverging behavior. " + sstr.str();
+				}
+				else{
+					std::string message = "advance_time() was called with the wrong args, changing behavior cosmetically. " + sstr.str();
+					if(replay_strict){
+						throw replay_error + message;
+					}else{
+						std::cout << replay_warning << message << std::endl;
+					}
+				}
 			}
 		}else{
-			throw std::string { "Replay system internal error! advance_time() was called following an action which does not advance time: " } + last_action_type;
+			if(did_something){
+				throw replay_error + "advance_time() was called with divergent side effects following an action which does not advance time: " + last_action_type;
+			}else{
+				std::string message = "advance_time() was called with cosmetic side effects following an action which does not advance time: " + last_action_type;
+				if(replay_strict){
+					throw replay_error + message;
+				}else{
+					std::cout << replay_warning << message << std::endl;
+				}
+			}
 		}
 	}
 
