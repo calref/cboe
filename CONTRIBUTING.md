@@ -30,6 +30,8 @@ or won't obtain a GitHub account, email-style patches may also be acceptable.
 
 When submitting patches, there are some things to keep in mind:
 
+* Please be careful of what you check into the repository. Please do not commit any
+binaries, junk files, or anything that doesn't compile.
 * If your patch affects the dialog engine, be sure to update any relevant documentation
 or add new documentation as needed, using the Doxygen format. This also applies to
 any other components currently covered by Doxygen documentation, such as the resource
