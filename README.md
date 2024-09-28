@@ -17,14 +17,8 @@ secondary purpose is
 to generalize and extend its functionality while maintaining backwards
 compatibility.
 
-If you would like to be added to this project contact
-[Sylae](https://github.com/sylae)
-or one of the other people on the owners list. This is an open project,
-with no strong prerequisites
-for getting commit access. With that in mind, please be careful of what
-you check into the repository.
-Please do not commit any binaries, junk files, or anything that doesn't
-compile.
+Contributions are accepted primarily via pull request. See
+[CONTRIBUTING.md](./CONTRIBUTING.md) for more guidelines.
 
 Building
 --------
