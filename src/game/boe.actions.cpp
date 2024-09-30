@@ -41,6 +41,7 @@
 #include "tools/enum_map.hpp"
 #include <string>
 #include <boost/lexical_cast.hpp>
+#include <sstream>
 
 rectangle item_screen_button_rects[9] = {
 	{125,10,141,28},{125,40,141,58},{125,68,141,86},{125,98,141,116},{125,126,141,144},{125,156,141,174},
@@ -108,6 +109,8 @@ extern sf::RenderWindow mini_map;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern short shop_identify_cost, shop_recharge_amount;
 
+extern bool record_verbose;
+extern bool replay_verbose;
 
 const char *dir_string[] = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"};
 char get_new_terrain();
@@ -1250,7 +1253,7 @@ void screen_shift(int dx, int dy, bool& need_redraw) {
 	need_redraw = true;
 }
 
-void handle_print_pc_hp(int which_pc) {
+void handle_print_pc_hp(int which_pc, bool& need_reprint) {
 	if(recording){
 		record_action("handle_print_pc_hp", boost::lexical_cast<std::string>(which_pc));
 	}
@@ -1259,9 +1262,10 @@ void handle_print_pc_hp(int which_pc) {
 	str << pc.name << " has ";
 	str << pc.cur_health << " health out of " << pc.max_health << '.';
 	add_string_to_buf(str.str());
+	need_reprint = true;
 }
 
-void handle_print_pc_sp(int which_pc) {
+void handle_print_pc_sp(int which_pc, bool& need_reprint) {
 	if(recording){
 		record_action("handle_print_pc_sp", boost::lexical_cast<std::string>(which_pc));
 	}
@@ -1270,9 +1274,10 @@ void handle_print_pc_sp(int which_pc) {
 	str << pc.name << " has ";
 	str << pc.cur_sp << " spell pts. out of " << pc.max_sp << '.';
 	add_string_to_buf(str.str());
+	need_reprint = true;
 }
 
-void handle_trade_places(int which_pc) {
+void handle_trade_places(int which_pc, bool& need_reprint) {
 	if(recording){
 		record_action("handle_trade_places", boost::lexical_cast<std::string>(which_pc));
 	}
@@ -1283,6 +1288,7 @@ void handle_trade_places(int which_pc) {
 	else {
 		switch_pc(which_pc);
 	}
+	need_reprint = true;
 }
 
 void show_item_info(short item_hit) {
@@ -1294,6 +1300,12 @@ void show_item_info(short item_hit) {
 	else if(stat_window == ITEM_WIN_QUESTS)
 		put_quest_info(spec_item_array[item_hit]);
 	else display_pc_item(stat_window, item_hit,univ.party[stat_window].items[item_hit],0);
+}
+
+void update_item_stats_area(bool& need_reprint) {
+	put_pc_screen();
+	put_item_screen(stat_window);
+	need_reprint = true;
 }
 
 bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
@@ -1363,7 +1375,8 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 				
 			case TOOLBAR_SCROLL: case TOOLBAR_MAP:
 				display_map();
-				break;
+				// do not call advance_time
+				return false;
 				
 			case TOOLBAR_BAG: case TOOLBAR_HAND:
 				if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT)
@@ -1523,22 +1536,22 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 							handle_switch_pc(i, need_redraw, need_reprint);
 							break;
 						case PCBTN_HP:
-							handle_print_pc_hp(i);
+							handle_print_pc_hp(i, need_reprint);
 							break;
 						case PCBTN_SP:
-							handle_print_pc_sp(i);
+							handle_print_pc_sp(i, need_reprint);
 							break;
 						case PCBTN_INFO:
 							give_pc_info(i);
-							break;
+							// don't call advance_time
+							return false;
 						case PCBTN_TRADE:
-							handle_trade_places(i);
+							handle_trade_places(i, need_reprint);
 							break;
 						case MAX_ePlayerButton:
 							break; // Not a button
 					}
 				}
-		need_reprint = true;
 		put_pc_screen();
 		put_item_screen(stat_window);
 		if(overall_mode == MODE_SHOPPING) {
@@ -1610,9 +1623,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 						}
 					}
 		}
-		put_pc_screen();
-		put_item_screen(stat_window);
-		need_reprint = true;
+		update_item_stats_area(need_reprint);
 	}
 	
 	advance_time(did_something, need_redraw, need_reprint);
@@ -1622,6 +1633,63 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 }
 
 void advance_time(bool did_something, bool need_redraw, bool need_reprint) {
+	if(recording && record_verbose){
+		std::map<std::string,std::string> info;
+		info["did_something"] = bool_to_str(did_something);
+		info["need_redraw"] = bool_to_str(need_redraw);
+		info["need_reprint"] = bool_to_str(need_reprint);
+		record_action("advance_time", info);
+	}
+	if(replaying && replay_verbose){
+		if(has_next_action("advance_time")){
+			std::string _last_action_type = last_action_type;
+			Element& element = pop_next_action();
+			std::map<std::string,std::string> info = info_from_action(element);
+			std::ostringstream sstr;
+			sstr << std::boolalpha;
+			bool wrong_args = false;
+			bool divergent = false;
+			if(did_something != str_to_bool(info["did_something"])){
+				wrong_args = true;
+				divergent = true;
+				sstr << "did_something: expected " << !did_something << ", was " << did_something << ". ";
+			}
+			if(need_redraw != str_to_bool(info["need_redraw"])){
+				wrong_args = true;
+				sstr << "need_redraw: expected " << !need_redraw << ", was " << need_redraw << ". ";
+			}
+			if(need_reprint != str_to_bool(info["need_reprint"])){
+				wrong_args = true;
+				sstr << "need_reprint: expected " << !need_reprint << ", was " << need_reprint << ". ";
+			}
+			sstr << "After " << _last_action_type;
+			if(wrong_args){
+				if(divergent){
+					throw replay_error + "advance_time() was called with the wrong args, diverging behavior. " + sstr.str();
+				}
+				else{
+					std::string message = "advance_time() was called with the wrong args, changing behavior cosmetically. " + sstr.str();
+					if(replay_strict){
+						throw replay_error + message;
+					}else{
+						std::cout << replay_warning << message << std::endl;
+					}
+				}
+			}
+		}else{
+			if(did_something){
+				throw replay_error + "advance_time() was called with divergent side effects following an action which does not advance time: " + last_action_type;
+			}else{
+				std::string message = "advance_time() was called with cosmetic side effects following an action which does not advance time: " + last_action_type;
+				if(replay_strict){
+					throw replay_error + message;
+				}else{
+					std::cout << replay_warning << message << std::endl;
+				}
+			}
+		}
+	}
+
  	// MARK: At this point, see if any specials have been queued up, and deal with them
 	// Note: We just check once here instead of looping because run_special also pulls from the queue.
 	if(!special_queue.empty()) {
@@ -2091,6 +2159,21 @@ void close_map(bool record) {
 	mainPtr.setActive();
 }
 
+void cancel_item_target(bool& did_something, bool& need_redraw, bool& need_reprint) {
+	if(recording){
+		record_action("cancel_item_target", "");
+	}
+	if(stat_screen_mode == MODE_IDENTIFY)
+		ASB("Identify: Finished");
+	else if(stat_screen_mode == MODE_RECHARGE)
+		ASB("Recharge: Finished");
+	overall_mode = MODE_TOWN;
+	stat_screen_mode = MODE_INVEN;
+	// Time passes because a spell was cast. Redraw happens because item names
+	// in the inventory can change. Reprint happens because of the buffer print
+	did_something = need_redraw = need_reprint = true;
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2248,12 +2331,9 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 				// Rotate a force wall
 				spell_cast_hit_return();
 			else if(overall_mode == MODE_ITEM_TARGET) {
-				if(stat_screen_mode == MODE_IDENTIFY)
-					ASB("Identify: Finished");
-				else if(stat_screen_mode == MODE_RECHARGE)
-					ASB("Recharge: Finished");
-				overall_mode = MODE_TOWN;
-				stat_screen_mode = MODE_INVEN;
+				// Cancel choosing items
+				cancel_item_target(did_something, need_redraw, need_reprint);
+				advance_time(did_something, need_redraw, need_reprint);
 			} else if(overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT || overall_mode == MODE_OUTDOORS) {
 				// Pause (skip turn)
 				handle_pause(did_something, need_redraw);

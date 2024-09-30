@@ -21,7 +21,6 @@
 #include "boe.party.hpp"
 #include "boe.items.hpp"
 #include "boe.locutils.hpp"
-#include "boe.actions.hpp"
 #include "boe.town.hpp"
 #include "boe.dlgutil.hpp"
 #include "boe.infodlg.hpp"
@@ -235,6 +234,10 @@ static void init_ui() {
 	init_buttons();
 }
 
+extern bool record_verbose;
+extern bool replay_verbose;
+extern bool replay_strict;
+
 static void process_args(int argc, char* argv[]) {
 	preprocess_args(argc, argv);
 	clara::Args args(argc, argv);
@@ -244,7 +247,9 @@ static void process_args(int argc, char* argv[]) {
 	boost::optional<double> replay_speed;
 	cli |= clara::Opt(record_to, "record")["--record"]("Records a replay of your session to the specified XML file.");
 	cli |= clara::Opt(record_unique)["--unique"]("When recording, automatically insert a timestamp into the filename to guarantee uniqueness.");
+	cli |= clara::Opt(record_verbose)["--verbose"]("Record extra information for internal testing of the replay system.");
 	cli |= clara::Opt(replay, "replay-file")["--replay"]("Replays a previously-recorded session from the specified XML file.");
+	cli |= clara::Opt(replay_strict)["--strict"]("Enforces strictly identical replay behavior, even where this is only cosmetic");
 	cli |= clara::Opt(replay_speed, "fps")["--replay-speed"]("Specifies how quickly actions are processed while replaying");
 	cli |= clara::Arg(saved_game, "save-file")("Launch and load a saved game file.");
 	bool show_help = false;
@@ -285,19 +290,29 @@ static void process_args(int argc, char* argv[]) {
 static void replay_next_action() {
 	bool did_something = false, need_redraw = false, need_reprint = false;
 
+	std::string _last_action_type = last_action_type;
 	Element& next_action = pop_next_action();
 	std::string t = next_action.Value();
 	int enum_v;
 	
+	// NOTE: Action replay blocks need to return early unless the action advances time
 	if(overall_mode == MODE_STARTUP && t == "startup_button_click"){
 		auto info = info_from_action(next_action);
 		eStartButton btn = static_cast<eStartButton>(std::stoi(info["btn"]));
 		eKeyMod mods = static_cast<eKeyMod>(std::stoi(info["mods"]));
 		handle_startup_button_click(btn, mods);
+		return;
 	}else if(t == "load_party"){
 		decode_file(next_action.GetText(), tempDir / "temp.exg");
 		load_party(tempDir / "temp.exg", univ);
+
 		finish_load_party();
+
+		if(overall_mode != MODE_STARTUP)
+			post_load();
+
+		menu_activate();
+		return;
 	}else if(t == "move"){
 		location l = location_from_action(next_action);
 		handle_move(l, did_something, need_redraw, need_reprint);
@@ -307,19 +322,25 @@ static void replay_next_action() {
 	}else if(t == "handle_switch_pc_items"){
 		short which_pc = short_from_action(next_action);
 		handle_switch_pc_items(which_pc, need_redraw);
+		update_item_stats_area(need_reprint);
 	}else if(t == "handle_equip_item"){
 		short item_hit = short_from_action(next_action);
 		handle_equip_item(item_hit, need_redraw);
+		update_item_stats_area(need_reprint);
 	}else if(t == "handle_use_item"){
 		short item_hit = short_from_action(next_action);
 		handle_use_item(item_hit, did_something, need_redraw);
+		update_item_stats_area(need_reprint);
 	}else if(t == "handle_item_shop_action"){
 		short item_hit = short_from_action(next_action);
 		handle_item_shop_action(item_hit);
+		update_item_stats_area(need_reprint);
 	}else if(t == "handle_alchemy"){
 		handle_alchemy(need_redraw, need_reprint);
+		return;
 	}else if(t == "handle_wait"){
 		handle_wait(did_something, need_redraw, need_reprint);
+		return;
 	}else if(t == "handle_combat_switch"){
 		handle_combat_switch(did_something, need_redraw, need_reprint);
 	}else if(t == "handle_missile"){
@@ -329,69 +350,94 @@ static void replay_next_action() {
 	}else if(t == "handle_drop_item_id"){
 		short item_hit = short_from_action(next_action);
 		handle_drop_item(item_hit, need_redraw);
+		update_item_stats_area(need_reprint);
 	}else if(t == "handle_drop_item_location"){
 		location destination = location_from_action(next_action);
 		handle_drop_item(destination, need_redraw);
 	}else if(t == "handle_give_item"){
 		short item_hit = short_from_action(next_action);
 		handle_give_item(item_hit, did_something, need_redraw);
+		update_item_stats_area(need_reprint);
 	}else if(t == "close_window"){
 		handle_quit_event();
+		return;
 	}else if(t == "arrow_button_click"){
 		rectangle button_rect = boost::lexical_cast<rectangle>(next_action.GetText());
 		arrow_button_click(button_rect);
+		return;
 	}else if(t == "show_dialog_action"){
 		show_dialog_action(next_action.GetText());
+		return;
 	}else if(t == "handle_drop_pc"){
 		handle_drop_pc();
+		return;
 	}else if(t == "new_party"){
 		new_party();
+		return;
 	}else if(t == "pick_preferences"){
 		pick_preferences();
+		return;
 	}else if(t == "do_abort"){
 		do_abort();
+		return;
 	}else if(t == "handle_new_pc_graphic"){
 		handle_new_pc_graphic();
+		return;
 	}else if(t == "handle_rename_pc"){
 		handle_rename_pc();
+		return;
 	}else if(t == "handle_new_pc"){
 		handle_new_pc();
+		return;
 	}else if(t == "journal"){
 		journal();
+		return;
 	}else if(t == "talk_notes"){
 		talk_notes();
+		return;
 	}else if(t == "adventure_notes"){
 		adventure_notes();
+		return;
 	}else if(t == "print_party_stats"){
 		print_party_stats();
+		return;
 	}else if(t == "display_alchemy"){
 		display_alchemy();
+		return;
 	}else if(t == "display_spells"){
 		auto info = info_from_action(next_action);
-		enum_v = boost::lexical_cast<int>(info["mode"]);
-		eSkill mode = static_cast<eSkill>(enum_v);
+		eSkill mode = boost::lexical_cast<eSkill>(info["mode"]);
 		short force_spell = boost::lexical_cast<short>(info["force_spell"]);
 
 		display_spells(mode, force_spell, nullptr);
+		return;
 	}else if(t == "display_skills"){
-		enum_v = boost::lexical_cast<int>(next_action.GetText());
-		eSkill force_skill = static_cast<eSkill>(enum_v);
+		eSkill force_skill = boost::lexical_cast<eSkill>(next_action.GetText());
 
 		display_skills(force_skill, nullptr);
+		return;
 	}else if(t == "tip_of_day"){
 		tip_of_day();
+		return;
 	}else if(t == "showWelcome"){
 		showWelcome();
+		return;
 	}else if(t == "display_map"){
 		display_map();
+		return;
 	}else if(t == "handle_help_toc"){
 		handle_help_toc();
+		return;
 	}else if(t == "menu_give_help"){
 		short help1 = short_from_action(next_action);
 		menu_give_help(help1);
+		return;
 	}else if(t == "handle_begin_look"){
 		bool right_button = str_to_bool(next_action.GetText());
 		handle_begin_look(right_button, need_redraw);
+		if (right_button){
+			return;
+		}
 	}else if(t == "handle_look"){
 		auto info = info_from_action(next_action);
 		location destination = boost::lexical_cast<location>(info["destination"]);
@@ -410,6 +456,7 @@ static void replay_next_action() {
 	}else if(t == "handle_menu_spell"){
 		eSpell spell_picked = static_cast<eSpell>(std::stoi(next_action.GetText()));
 		handle_menu_spell(spell_picked);
+		return;
 	}else if(t == "handle_spellcast"){
 		auto info = info_from_action(next_action);
 		eSkill which_type = boost::lexical_cast<eSkill>(info["which_type"]);
@@ -424,12 +471,15 @@ static void replay_next_action() {
 		handle_target_space(destination, did_something, need_redraw, need_reprint);
 	}else if(t == "spell_cast_hit_return"){
 		spell_cast_hit_return();
+		return;
 	}else if(t == "handle_pause"){
 		handle_pause(did_something, need_redraw);
 	}else if(t == "handle_bash_select"){
 		handle_bash_pick_select(need_reprint, true);
+		return;
 	}else if(t == "handle_pick_select"){
 		handle_bash_pick_select(need_reprint, false);
+		return;
 	}else if(t == "handle_bash"){
 		location destination = location_from_action(next_action);
 		handle_bash_pick(destination, did_something, need_redraw, true);
@@ -443,6 +493,7 @@ static void replay_next_action() {
 		handle_use_space(destination, did_something, need_redraw);
 	}else if(t == "show_inventory"){
 		show_inventory();
+		return;
 	}else if(t == "give_help"){
 		auto info = info_from_action(next_action);
 		short help1 = boost::lexical_cast<short>(info["help1"]);
@@ -450,52 +501,73 @@ static void replay_next_action() {
 		give_help(help1, help2);
 	}else if(t == "toggle_debug_mode"){
 		toggle_debug_mode();
+		return;
 	}else if(t == "debug_give_item"){
 		debug_give_item();
+		return;
 	}else if(t == "debug_print_location"){
 		debug_print_location();
+		return;
 	}else if(t == "debug_step_through"){
 		debug_step_through();
+		return;
 	}else if(t == "debug_leave_town"){
 		debug_leave_town();
+		return;
 	}else if(t == "debug_kill"){
 		debug_kill();
+		return;
 	}else if(t == "debug_magic_map"){
 		debug_magic_map();
+		return;
 	}else if(t == "debug_enter_town"){
 		debug_enter_town();
+		return;
 	}else if(t == "debug_refresh_stores"){
 		debug_refresh_stores();
+		return;
 	}else if(t == "debug_clean_up"){
 		debug_clean_up();
+		return;
 	}else if(t == "debug_stealth_detect_life_firewalk"){
 		debug_stealth_detect_life_firewalk();
+		return;
 	}else if(t == "debug_fly"){
 		debug_fly();
+		return;
 	}else if(t == "debug_ghost_mode"){
 		debug_ghost_mode();
+		return;
 	}else if(t == "debug_return_to_start"){
 		debug_return_to_start();
+		return;
 	}else if(t == "handle_victory"){
 		handle_victory();
+		return;
 	}else if(t == "debug_increase_age"){
 		debug_increase_age();
+		return;
 	}else if(t == "debug_towns_forget"){
 		debug_towns_forget();
+		return;
 	}else if(t == "edit_stuff_done"){
 		edit_stuff_done();
+		return;
 	}else if(t == "debug_heal"){
 		debug_heal();
+		return;
 	}else if(t == "debug_heal_plus_extra"){
 		debug_heal_plus_extra();
+		return;
 	}else if(t == "handle_print_pc_hp"){
-		handle_print_pc_hp(boost::lexical_cast<int>(next_action.GetText()));
+		handle_print_pc_hp(boost::lexical_cast<int>(next_action.GetText()), need_reprint);
 	}else if(t == "handle_print_pc_sp"){
-		handle_print_pc_sp(boost::lexical_cast<int>(next_action.GetText()));
+		handle_print_pc_sp(boost::lexical_cast<int>(next_action.GetText()), need_reprint);
 	}else if(t == "give_pc_info"){
 		give_pc_info(boost::lexical_cast<short>(next_action.GetText()));
+		return;
 	}else if(t == "handle_trade_places"){
-		handle_trade_places(boost::lexical_cast<short>(next_action.GetText()));
+		handle_trade_places(boost::lexical_cast<short>(next_action.GetText()), need_reprint);
 	}else if(t == "handle_begin_talk"){
 		handle_begin_talk(need_reprint);
 	}else if(t == "handle_talk"){
@@ -504,11 +576,14 @@ static void replay_next_action() {
 		word_rect_t word_rect = word_rect_from_action(next_action);
 		click_talk_rect(word_rect);
 		handle_talk_node(word_rect.node);
+		return;
 	}else if(t == "click_shop_rect"){
 		rectangle rect = boost::lexical_cast<rectangle>(next_action.GetText());
 		click_shop_rect(rect);
+		return;
 	}else if(t == "end_shop_mode"){
 		end_shop_mode();
+		return;
 	}else if(t == "scrollbar_setPosition"){
 		auto info = info_from_action(next_action);
 		std::string name = info["name"];
@@ -516,32 +591,43 @@ static void replay_next_action() {
 
 		std::shared_ptr<cScrollbar> sbar = std::dynamic_pointer_cast<cScrollbar>(event_listeners[name]);
 		sbar->setPosition(newPos);
+		return;
 	}else if(t == "use_spec_item"){
 		use_spec_item(boost::lexical_cast<short>(next_action.GetText()), need_redraw);
+		update_item_stats_area(need_reprint);
 	}else if(t == "show_item_info"){
 		show_item_info(boost::lexical_cast<short>(next_action.GetText()));
+		update_item_stats_area(need_reprint);
+		return;
 	}else if(t == "set_stat_window"){
 		set_stat_window(static_cast<eItemWinMode>(boost::lexical_cast<int>(next_action.GetText())));
+		update_item_stats_area(need_reprint);
 	}else if(t == "handle_sale"){
 		handle_sale(boost::lexical_cast<int>(next_action.GetText()));
 	}else if(t == "handle_info_request"){
 		handle_info_request(boost::lexical_cast<int>(next_action.GetText()));
 	}else if(t == "close_map"){
 		close_map(true);
+		return;
 	}else if(t == "handle_toggle_active"){
 		handle_toggle_active(need_reprint);
 	}else if(t == "handle_parry"){
 		handle_parry(did_something, need_redraw, need_reprint);
 	}else if(t == "handle_monster_info_menu"){
 		handle_monster_info_menu(boost::lexical_cast<int>(next_action.GetText()));
+		return;
+	}else if(t == "cancel_item_target"){
+		cancel_item_target(did_something, need_redraw, need_reprint);
+	}else if(t == "advance_time"){
+		// This is bad regardless of strictness, because visual changes may have occurred which won't get redrawn/reprinted
+		throw std::string { "Replay system internal error! advance_time() was supposed to be called by the last action, but wasn't: " } + _last_action_type;
 	}else{
 		std::ostringstream sstr;
 		sstr << "Couldn't replay action: " << next_action;
 		throw sstr.str();
 	}
 
-	// TODO some of these actions shouldn't call advance_time(). They should return
-	// from the function early
+	// NOTE: commands that do not advance time must return early
 	advance_time(did_something, need_redraw, need_reprint);
 }
 

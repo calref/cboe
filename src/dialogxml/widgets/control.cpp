@@ -352,7 +352,7 @@ bool cControl::haveHandler(eDlogEvt t) const {
 bool cControl::triggerClickHandler(cDialog& dlg, std::string id, eKeyMod mods){
 	if(recording){
 		std::map<std::string, std::string> action_info = {{"id", id}, {"mods", boost::lexical_cast<std::string>(mods)}};
-		record_action("control_click", action_info);
+		record_action("click_control", action_info);
 	}
 	triggerEvent<EVT_CLICK>(dlg, id, mods);
 	return true;

@@ -564,7 +564,7 @@ void cDialog::handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(dialogNotToast) {
-		if(replaying && has_next_action("control_click")){
+		if(replaying && has_next_action("click_control")){
 			Element& next_action = pop_next_action();
 			auto info = info_from_action(next_action);
 			if(info["id"].empty()) continue;

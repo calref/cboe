@@ -2,7 +2,6 @@
 
 // Input recording system
 
-#include "ticpp.h"
 #include <ctime>
 #include <iomanip>
 #include <fstream>
@@ -10,12 +9,15 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/optional.hpp>
 #include <cppcodec/base64_rfc4648.hpp>
-#include "tools/framerate_limiter.hpp"
 #include <locale>
 #include <codecvt>
 #include <string>
+#include <algorithm>
 #include <boost/lexical_cast.hpp>
+
+#include "ticpp.h"
 #include "gfx/render_shapes.hpp"
+#include "tools/framerate_limiter.hpp"
 #ifndef MSBUILD_GITREV
 #include "tools/gitrev.hpp"
 #endif
@@ -24,6 +26,15 @@ using base64 = cppcodec::base64_rfc4648;
 
 bool recording = false;
 bool replaying = false;
+
+bool record_verbose = false;
+bool replay_verbose = false;
+bool replay_strict = false;
+
+std::string last_action_type;
+
+const std::string replay_warning = "Replay warning: ";
+const std::string replay_error = "Replay system internal error! ";
 
 using namespace ticpp;
 Document log_document;
@@ -70,8 +81,31 @@ bool init_action_log(std::string command, std::string file) {
 	else if (command == "replay") {
 		try {
 			log_document.LoadFile(file);
+
 			Element* root = log_document.FirstChildElement();
 			next_action = root->FirstChildElement();
+
+			// Set replay_verbose automatically if the log has verbose elements.
+			// This must be done before starting the replay, not when the first
+			// verbose element appears, because the *absence* of a verbose elements
+			// is meaningful in a verbose replay.
+
+			// This is an O(N) traversal, but it won't matter, because advance_time
+			// elements are the most common elements in verbose logs.
+
+			// Specifying replay_verbose manually and incorrectly would cause confusing
+			// errors.
+			std::vector<std::string> verbose_actions = { "advance_time" };
+
+			Element* checking_action = next_action;
+			do{
+				if(std::find(verbose_actions.begin(), verbose_actions.end(), checking_action->Value()) != verbose_actions.end()){
+					replay_verbose = true;
+					break;
+				}
+				checking_action = checking_action->NextSiblingElement(false);
+			}while(checking_action != nullptr);
+
 			replaying = true;
 		} catch(...) {
 			std::cout << "Failed to load file " << file << std::endl;
@@ -154,6 +188,17 @@ Element& pop_next_action(std::string expected_action_type) {
 		replay_fps_limit->frame_finished();
 	}
 	
+	// click_control actions are not meaningful for debugging
+	if (to_return->Value() != "click_control"){
+		last_action_type = to_return->Value();
+
+		if(replay_verbose){
+			// Verbose replays are for internal testing, so this console output won't bother
+			// anyone and is very helpful:
+			std::cout << "Replaying action: " << last_action_type << std::endl;
+		}
+	}
+
 	return *to_return;
 }
 

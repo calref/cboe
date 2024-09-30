@@ -1282,6 +1282,7 @@ bool use_space(location where) {
 // Note ... if this is a container, the code must first process any specials. If
 // specials return false, can't get items inside. If true, can get items inside.
 // Can't get items out in combat.
+// TODO this always returns false. Why?
 bool adj_town_look(location where) {
 	ter_num_t terrain;
 	bool can_open = true,item_there = false,got_special = false;

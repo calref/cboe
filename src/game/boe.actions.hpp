@@ -91,13 +91,15 @@ void debug_increase_age();
 void debug_towns_forget();
 void debug_heal_plus_extra();
 void debug_heal();
-void handle_print_pc_hp(int which_pc);
-void handle_print_pc_sp(int which_pc);
-void handle_trade_places(int which_pc);
+void handle_print_pc_hp(int which_pc, bool& need_reprint);
+void handle_print_pc_sp(int which_pc, bool& need_reprint);
+void handle_trade_places(int which_pc, bool& need_reprint);
 void handle_begin_talk(bool& need_reprint);
 void handle_talk(location destination, bool& did_something, bool& need_redraw, bool& need_reprint);
 void give_help_and_record(short help1, short help2);
 void show_item_info(short item_hit);
 void close_map(bool record = false);
+void cancel_item_target(bool& did_something, bool& need_redraw, bool& need_reprint);
+void update_item_stats_area(bool& need_reprint);
 
 #endif
