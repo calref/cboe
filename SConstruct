@@ -208,6 +208,9 @@ if platform == "darwin":
 					bundle_libraries_for(target, [File(check_path)], env)
 					break
 elif platform == "win32":
+	# Boost has a very obnoxious auto-link feature that breaks some local windows builds
+	env.Append(CPPDEFINES=['BOOST_ALL_NO_LIB'])
+
 	if 'msvc' in env['TOOLS']:
 		vcpkg_prefix = path.join((os.environ['HOME'] if 'HOME' in os.environ else 'C:\\'), 'vcpkg')
 		vcpkg_installed = path.join(vcpkg_prefix, 'installed', f'x{arch_short}-windows')
