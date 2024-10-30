@@ -354,7 +354,7 @@ if not env.GetOption('clean'):
 	suffixes = ['-mt', f'-mt-x{env["bits"]}']
 
 	zlib = 'zlib' if (platform == "win32" and 'mingw' not in env["TOOLS"]) else 'z'
-	check_lib(zlib, 'zlib', [], [])
+	check_lib(zlib, 'zlib', ['d'], [])
 
 	check_header('boost/lexical_cast.hpp', 'Boost.LexicalCast')
 	check_header('boost/optional.hpp', 'Boost.Optional')
