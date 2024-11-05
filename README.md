@@ -20,6 +20,19 @@ compatibility.
 Contributions are accepted primarily via pull request. See
 [CONTRIBUTING.md](./CONTRIBUTING.md) for more guidelines.
 
+Before Building
+---------------
+
+The most common error when building Open Blades of Exile is to try
+building without initializing the submodules first. When you are obtaining
+the source code, don't download the zip file directly from GitHub. The best way
+to get started is: `git clone --recursive https://github.com/calref/cboe`
+(replacing the URL with your fork's address if you forked the repo to make
+contributions).
+
+If you already cloned this repo without the `--recursive` flag, use this command:
+`git submodule update --init`. This will also fix the problem.
+
 Building
 --------
 
@@ -54,6 +67,11 @@ If you can't get that to work, you can copy the required dependencies into _deps
 dynamic libraries and frameworks) or _deps/include_ (for headers). That means that
 _deps/include_ would have two subfolders _boost/_ and _SFML/_.
 
+Some dependencies are supplied automatically as submodules. You can obtain them by cloning
+the repository with `git clone --recursive` or by calling `git submodule update --init`
+after making your clone. (**This notice is repeated because it is the MOST COMMON problem
+when building Open Blades of Exile.**)
+
 The following dependencies are required:
 
 - [SFML](http://www.sfml-dev.org/) - all components except sfml-net.
@@ -61,7 +79,6 @@ The following dependencies are required:
   libraries; if you're picky, you can run scons and see it enumerate exactly which
   libraries are needed
 - ZLib - This is included with the system on the Mac.
-- Catch2 - If you want to build the unit tests, make sure to call `git submodule update --init deps/Catch2`.
 
 For Linux builds, the following additional dependencies are required:
 - [TGUI](https://tgui.eu/) - version 0.9, **built with C++14** as shown [here](./.github/workflows/scripts/linux/install-tgui.sh)
