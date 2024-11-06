@@ -88,7 +88,8 @@ For Linux builds, the following additional dependencies are required:
 If you are using the Visual Studio toolset, we recommend installing
 [vcpkg](https://github.com/Microsoft/vcpkg) to manage these dependencies.
 
-Use the following command to install the required dependencies.
+Use the following command to install the required dependencies. Note: You must call it from one of
+the Visual Studio project directories, `cboe/proj/vs2013` or `cboe/proj/vs2017`.
 
 For 32-bit builds:
 
