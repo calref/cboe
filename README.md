@@ -87,18 +87,16 @@ For Linux builds, the following additional dependencies are required:
 
 If you are using the Visual Studio toolset, we recommend installing
 [vcpkg](https://github.com/Microsoft/vcpkg) to manage these dependencies.
-Use the following commands to install the required dependencies.
-**You can't use the vcpkg installation that comes with Visual Studio for
-these commands. Also make sure your working directory is the repository
-root, not the Visual Studio project folder.**
+
+Use the following command to install the required dependencies.
 
 For 32-bit builds:
 
-    vcpkg install --triplet=x86-windows zlib sfml opengl boost-any boost-dynamic-bitset boost-ptr-container boost-core boost-filesystem boost-system boost-date-time boost-chrono boost-math boost-spirit
+    vcpkg install --triplet=x86-windows
 
 For 64-bit builds:
 
-    vcpkg install --triplet=x64-windows zlib sfml opengl boost-any boost-dynamic-bitset boost-ptr-container boost-core boost-filesystem boost-system boost-date-time boost-chrono boost-math boost-spirit
+    vcpkg install --triplet=x64-windows
 
 If this is the first time installing packages with vcpkg since install you will need to run the `integrate` command:
 
