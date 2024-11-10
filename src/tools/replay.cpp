@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/erase.hpp>
 #include <boost/optional.hpp>
 #include <cppcodec/base64_rfc4648.hpp>
 #include <locale>
@@ -221,11 +222,18 @@ std::string encode_file(fs::path file) {
     ifs.seekg(0, std::ios::beg);
     ifs.read(result.data(), pos);
 
-    return base64::encode(result.data(), result.size() * sizeof(char));
+    std::string raw_base64 = base64::encode(result.data(), result.size() * sizeof(char));
+	std::ostringstream wrapped_base64;
+	const size_t cols = 76;
+	for(size_t start = 0; start < raw_base64.size(); start += cols){
+		wrapped_base64 << raw_base64.substr(start, cols) << std::endl;
+	}
+	return wrapped_base64.str();
 }
 
 void decode_file(std::string data, fs::path file) {
 	std::ofstream ofs(file.string(), std::ios::binary|std::ios::ate);
+	data = boost::algorithm::erase_all_copy(data, "\n");
 	std::vector<uint8_t> bytes = base64::decode(data.c_str(), strlen(data.c_str()) * sizeof(char));
 	char* bytes_as_c_str = reinterpret_cast<char*>(bytes.data());
 	ofs.write(bytes_as_c_str, bytes.size() / sizeof(char));
