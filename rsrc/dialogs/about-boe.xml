@@ -11,22 +11,27 @@
 	</text>
 	<pane top='42' left='50' width='400' height='67'>
 		<text size='large' top='42' left='150' width='300' height='17'>------      CREDITS      ------</text>
-		<!-- TODO: Get a proper right-aligned text setting so that I don't have to use this hack of weird numbers of spaces -->
 		<!-- The height of this text needs to be 10 times the number of lines. -->
 		<text top='52' left='50' width='400' height='240'>
-			ORIGINAL GAME: <br/>
-			   Concept, Design, Programming: <br/>
-			                                          Graphics: <br/>
-			                         Business Manager: <br/>
-			                     Title/Splash Screens: <br/>
+			ORIGINAL GAME: <br/><br/><br/><br/><br/><br/>
+			OPEN SOURCE CREDITS: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+			SCENARIO FIXES AND UPDATES: <br/><br/>
+		</text>
+		<!-- This text is right-aligned and fills out the above text with sub-headings -->
+		<!-- The height of this text needs to be 10 times the number of lines. -->
+		<text top='52' left='50' width='180' height='240' align='right'>
 			<br/>
-			OPEN SOURCE CREDITS: <br/>
-			                                   Programming: <br/><br/><br/><br/><br/><br/><br/>
-			                                          Graphics: <br/><br/><br/><br/><br/>
-			         Testing and Troubleshooting: <br/>
+			Concept, Design, Programming: <br/>
+			Graphics: <br/>
+			Business Manager: <br/>
+			Title/Splash Screens: <br/>
 			<br/>
-			SCENARIO FIXES AND UPDATES: <br/>
-			                              Bandit Busywork: <br/>
+			<br/>
+			Programming: <br/><br/><br/><br/><br/><br/><br/>
+			Graphics: <br/><br/><br/><br/><br/>
+			Testing and Troubleshooting: <br/>
+			<br/><br/>
+			Bandit Busywork: <br/>
 		</text>
 		<!-- The height of this text needs to be 10 times the number of lines. -->
 		<!-- Also make sure that it properly aligns with the previous text. -->

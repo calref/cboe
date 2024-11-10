@@ -164,6 +164,7 @@
 		<xs:attributeGroup ref="frame"/>
 		<xs:attributeGroup ref="font"/>
 		<xs:attribute name="underline" type="bool"/>
+		<xs:attribute name="align" type="xs:string"/>
 		<xs:attribute ref="def-key"/>
 		<xs:attribute name="fromlist" default="none" type="xs:string"/>
 		<xs:attributeGroup ref="rect-size"/>
