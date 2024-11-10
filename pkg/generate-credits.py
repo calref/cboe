@@ -9,6 +9,7 @@
 
 from glob import glob
 from os.path import basename, splitext
+from subprocess import run
 
 def get_confirmed_names(filename):
     with open(filename, 'r') as file:
@@ -80,6 +81,21 @@ def main():
 
         with open('rsrc/dialogs/about-boe.xml', 'w') as output_file:
             output_file.write(content)
+
+        # Generate startanim.png using ImageMagick
+        image_lines = ['* OPEN SOURCE CREDITS *', ' ', ' ']
+        def add_heading(heading):
+            image_lines.append(f'- {heading.upper()} -')
+            image_lines.extend(" ")
+            image_lines.extend(name_dict[heading])
+            image_lines.extend(" ")
+
+        add_heading('Programming')
+        add_heading('Graphics')
+        add_heading('Testing')
+        add_heading('Funding')
+
+        run(['pkg/generate-startanim.sh'] + image_lines, input='\n'.join(image_lines), encoding='ascii')
 
 if __name__ == "__main__":
     main()
