@@ -158,7 +158,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 	}
 	
 	if(recording && result){
-		record_action("load_party", encode_file(file_to_load));
+		record_action("load_party", encode_file(file_to_load), true);
 	}
 
 	return result;
