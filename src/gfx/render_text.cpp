@@ -101,10 +101,8 @@ break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextS
 	str_to_draw.setString(str);
 	short total_width = str_to_draw.getLocalBounds().width;
 
-	if(total_width < dest_rect.width()){
-		// The text fits on one line, so break_info won't end up being used by win_draw_string anyway
-		return break_info;
-	}
+	// Even if the text is only one line, break_info is required for calculating word boundaries.
+	// So we can't skip the rest of this.
 
 	auto text_len = [&str_to_draw](size_t i) -> int {
 		return str_to_draw.findCharacterPos(i).x;
