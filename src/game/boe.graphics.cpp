@@ -266,10 +266,11 @@ void draw_startup_anim(bool advance) {
 	
 	anim_from = anim_to;
 	anim_from.offset(-1,-4 + startup_anim_pos);
-	if(advance) startup_anim_pos = (startup_anim_pos + 1) % 542;
+	auto scroll_sprite = *ResMgr::graphics.get("startanim",true);
+	if(advance) startup_anim_pos = (startup_anim_pos + 1) % scroll_sprite.getSize().y;
 	rect_draw_some_item(*ResMgr::graphics.get("startbut",true),anim_size,mainPtr,startup_button[STARTBTN_SCROLL]);
 	anim_to.offset(startup_button[STARTBTN_SCROLL].left, startup_button[STARTBTN_SCROLL].top);
-	rect_draw_some_item(*ResMgr::graphics.get("startanim",true),anim_from,mainPtr,anim_to,sf::BlendAlpha);
+	rect_draw_some_item(scroll_sprite,anim_from,mainPtr,anim_to,sf::BlendAlpha);
 }
 
 void draw_startup_stats() {

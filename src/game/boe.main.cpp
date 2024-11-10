@@ -978,10 +978,10 @@ void update_terrain_animation() {
 }
 
 void update_startup_animation() {
-	static const long twentyTicks = time_in_ticks(20).asMilliseconds();
+	static const long interval = time_in_ticks(10).asMilliseconds();
 
 	if(overall_mode != MODE_STARTUP) return;
-	if(animTimer.getElapsedTime().asMilliseconds() < twentyTicks) return;
+	if(animTimer.getElapsedTime().asMilliseconds() < interval) return;
 
 	draw_startup_anim(true);
 	animTimer.restart();
