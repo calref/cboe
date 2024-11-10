@@ -390,7 +390,7 @@ std::vector<scen_header_type> build_scen_headers() {
 		for(scen_header_type header : scen_headers){
 			scen_names << header.file << std::endl;
 		}
-		record_action("build_scen_headers", scen_names.str());
+		record_action("build_scen_headers", scen_names.str(), true);
 	}
 	return scen_headers;
 }
