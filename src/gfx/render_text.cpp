@@ -160,6 +160,10 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	location moveTo;
 	line_height -= 2; // TODO: ...why are we arbitrarily reducing the line height from the requested value?
 
+	// Pipes need to be left in the string that gets passed
+	// to calculate_line_wrapping() or frame calculation is
+	// broken.
+	std::string str_with_pipes = str;
 	if(!options.showBreaks){
 		for(int i=0; i < str.length(); ++i){
 			if(str[i] == '|') str[i] = ' ';
@@ -172,7 +176,7 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 		// It is better to pre-calculate line-wrapping and pass it in the options,
 		// but if you don't, this will handle line-wrapping every frame:
 		if(break_info.empty()){
-			break_info = calculate_line_wrapping(dest_rect, str, options.style);
+			break_info = calculate_line_wrapping(dest_rect, str_with_pipes, options.style);
 		}
 
 		moveTo = location(dest_rect.left + adjust_x, dest_rect.top + adjust_y);
