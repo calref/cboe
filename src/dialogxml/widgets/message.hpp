@@ -63,5 +63,6 @@ private:
 	std::string msg;
 	void calculate_layout();
 	bool calculated = false;
+	bool right_align = false;
 };
 #endif

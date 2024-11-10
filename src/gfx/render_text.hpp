@@ -10,6 +10,7 @@
 #define BoE_RENDER_TEXT_HPP
 
 #include <utility>
+#include <tuple>
 #include <vector>
 #include <string>
 
@@ -37,8 +38,8 @@ struct TextStyle {
 	void applyTo(sf::Text& text);
 };
 
-// elements: std::make_pair(last_line_break, last_word_break)
-typedef std::vector<std::pair<unsigned short, unsigned short>> break_info_t;
+// elements: std::make_tuple(last_line_break, last_word_break, line_width)
+typedef std::vector<std::tuple<unsigned short, unsigned short, unsigned short>> break_info_t;
 
 struct snippet_t {
 	std::string text;
@@ -55,8 +56,8 @@ enum class eTextMode {
 
 std::vector<rectangle> draw_string_hilite(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr);
 std::vector<snippet_t> draw_string_sel(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr);
-void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style);
-void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style, break_info_t break_info);
+void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style,bool right_align = false);
+void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style, break_info_t break_info,bool right_align = false);
 break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextStyle style);
 size_t string_length(std::string str, TextStyle style, short* height = nullptr);
 
