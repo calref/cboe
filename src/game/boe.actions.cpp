@@ -245,7 +245,18 @@ void show_dialog_action(std::string xml_file) {
 	if(recording){
 		record_action("show_dialog_action", xml_file);
 	}
-	cChoiceDlog(xml_file).show();
+	
+	cChoiceDlog dlog(xml_file);
+	
+	// Dialogs with hyperlinks need special handling:
+	if(xml_file == "about-boe"){
+		dlog->attachClickHandlers([](cDialog& self, std::string clicked, eKeyMod) {
+			launchURL(self[clicked].getText());
+			return false;
+		}, {"src", "issues"});
+	}
+	
+	dlog.show();
 }
 
 bool prime_time() {

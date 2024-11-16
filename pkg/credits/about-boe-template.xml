@@ -51,21 +51,26 @@
 			<!-- Bandit Busywork -->The Almighty Doer of Stuff <br/>
 		</text>
 	</pane>
-	<text top='143' left='50' width='410' height='51'>
+	<text top='153' left='50' width='410' height='51'>
 		Blades of Exile is brought to you by Spiderweb Software - <br/>
 		   "Where our aberrations become your reality." <br/>
 		"Blades of Exile" and Spiderweb Software are trademarks of Spiderweb Software.
 	</text>
-	<text top='195' left='50' width='424' height='145'>
-		  Open Blades of Exile is brought to you from the hard work of volunteers who are passionate about this software.
+	<text relative='pos-in pos' rel-anchor='prev' top='0' left='-8' width='424'>
+		  Open Blades of Exile is sustained by the hard work of passionate volunteers.
 		We sincerely hope you enjoy, share, and discuss this game, and maybe even make and release your own scenario!<br/>
 		  Open Blades of Exile is a modification of Blades of Exile, created by Spiderweb Software, Inc. in 1997.
-		It is released under GNU GPL 2.0+. The source code can be found at https://github.com/calref/cboe/.
+		It is released under GNU GPL 2.0+. The source code can be found here:
 	</text>
-	<text top='273' left='60' width='353' height='66'>
-		Comments and questions? The creators and maintainers of Exile want to hear them.
-		Visit http://www.spidweb.com/, where you can find the official discussion forum and other great games!
-		<br/>Or open a ticket at https://github.com/calref/cboe/issues.
+	<text name=	'src' relative='pos-in pos' rel-anchor='prev' top='10' left='16' colour='link' underline='true'>
+		https://github.com/calref/cboe/
 	</text>
-	<button name='okay' type='regular' top='299' left='435'>OK</button>
+	<text relative='neg pos' rel-anchor='prev' top='0' left='16' width='353'>
+		Comments and questions? The maintainers of Open Blades of Exile want to hear them.<br/>
+		Open a ticket here:
+	</text>
+	<text name=	'issues' relative='pos-in pos' rel-anchor='prev' top='0' left='16' colour='link' underline='true'>
+		https://github.com/calref/cboe/issues
+	</text>
+	<button name='okay' relative='neg' type='regular' top='30' left='70'>OK</button>
 </dialog>
