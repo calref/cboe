@@ -13,7 +13,7 @@ height=$((actual_line_size * line_count))
 
 magick -size 280x$height xc:transparent \
     -stroke black -pointsize $font_size -interline-spacing $spacing \
-    -kerning 1 -font pix-Chicago -annotate +6+$first_line_offset "$text" \
+    -kerning 1 -font 'pkg/credits/pixChicago-edited.ttf' -annotate +6+$first_line_offset "$text" \
     pkg/credits/startanim2.png
 
 magick convert -append pkg/credits/startanim*.png rsrc/graphics/startanim.png
