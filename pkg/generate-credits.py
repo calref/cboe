@@ -3,7 +3,7 @@
 
 # Requires:
 # - ImageMagick
-# - Install font: pkg/credits/pixChicago-edited.ttf
+# - Git Bash (on Windows)
 
 # Usage: python pkg/generate-credits.py
 
@@ -95,7 +95,7 @@ def main():
         add_heading('Testing')
         add_heading('Funding')
 
-        run(['pkg/generate-startanim.sh'] + image_lines, input='\n'.join(image_lines), encoding='ascii')
+        run(['bash', 'pkg/generate-startanim.sh'], input='\n'.join(image_lines), encoding='ascii')
 
 if __name__ == "__main__":
     main()
