@@ -6,4 +6,5 @@ Confirmed:
 - Ben Scott
 - Sylae Corell
 - xq
+- Daerogami
 - NQNStudios
