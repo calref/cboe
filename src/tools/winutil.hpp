@@ -13,6 +13,10 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics/Image.hpp>
 #include <memory>
+#include <vector>
+
+#include "prefs.hpp"
+#include "mathutil.hpp"
 
 char keyToChar(sf::Keyboard::Key key, bool isShift);
 
@@ -51,8 +55,8 @@ void beep();
 int getMenubarHeight();
 
 // This is an additional offset between the "logical" top of the window an the UI.
-// On Windows and Mac no offset is needed because the menubar is not a part of the mainPtr, but
-// on Linux it is.
+// On Windows and Mac no offset is needed because the menubar is not a part of the mainPtr's
+// coordinate space, but on Linux it is.
 inline int os_specific_y_offset() {
 	return
 #if defined(SFML_SYSTEM_WINDOWS) || defined(SFML_SYSTEM_MAC)
@@ -60,6 +64,44 @@ inline int os_specific_y_offset() {
 #else
 		getMenubarHeight();
 #endif
+}
+
+// The default scale should be the largest that the user's screen can fit all three
+// BoE application windows (because they should probably default to match each other).
+inline float fallback_scale() {
+	static float _fallback_scale = 0;
+	if(_fallback_scale == 0){
+		sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+
+		short max_width = max(boe_width, max(pc_width, scen_width));
+		short max_height = max(boe_height, max(pc_height, scen_height)) + getMenubarHeight();
+
+		std::vector<float> scale_options = {1.0, 1.5, 2.0, 3.0, 4.0};
+		for(auto it = scale_options.rbegin(); it != scale_options.rend(); ++it){
+			short max_scaled_width = max_width * (*it);
+			short max_scaled_height = max_height * (*it);
+
+			if(max_scaled_width <= desktop.width && max_scaled_height <= desktop.height){
+				_fallback_scale = (*it);
+				break;
+			}
+		}
+	}
+	// Hopefully no one would ever have such a small monitor to not fit the default size.
+	// But just in case:
+	if(_fallback_scale == 0){
+		_fallback_scale = 1.0;
+	}
+
+	return _fallback_scale;
+}
+
+inline double get_ui_scale() {
+	return get_float_pref("UIScale", fallback_scale());
+}
+
+inline double get_ui_scale_map() {
+	return get_float_pref("UIScaleMap", fallback_scale());
 }
 
 void adjust_window_for_menubar(int mode, unsigned int width, unsigned int height);

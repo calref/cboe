@@ -141,7 +141,7 @@ void show_logo(cFramerateLimiter& fps_limiter) {
 	if(get_int_pref("DisplayMode") != 5)
 		hideMenuBar();
 	
-	double ui_scale = get_float_pref("UIScale", 1.0);
+	double ui_scale = get_ui_scale();
 	if(ui_scale < 1) ui_scale = 1;
 	rectangle logo_from = {0, 0, int(ui_scale *350), int(ui_scale * 350)};
 	logo_from.offset((whole_window.right - logo_from.right) / 2,(whole_window.bottom - logo_from.bottom) / 2);
@@ -163,7 +163,7 @@ void show_logo(cFramerateLimiter& fps_limiter) {
 void plop_fancy_startup(cFramerateLimiter& fps_limiter) {
 	rectangle whole_window = view_rect();
 
-	float ui_scale = get_float_pref("UIScale", 1.0);
+	float ui_scale = get_ui_scale();
 	if (ui_scale<1) ui_scale=1;
 	rectangle from_rect;
 	rectangle intro_from = {0, 0, int(ui_scale * 480), int(ui_scale * 640)};

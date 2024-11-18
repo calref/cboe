@@ -29,7 +29,8 @@ extern fs::path file_in_mem;
 extern short store_flags[3];
 extern short current_active_pc;
 
-rectangle whole_win_rect = {0,0,440,590};
+// TODO why are width and height switched here?
+rectangle whole_win_rect = {0,0,pc_height,pc_width};
 extern rectangle pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 extern rectangle item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
 extern rectangle pc_info_rect; // Frame that holds a pc's basic info and items

@@ -160,10 +160,10 @@ void adjust_windows (sf::RenderWindow & mainPtr, sf::View & mainView) {
 	// TODO: things might still be broken when upscaled.
 	//   translate_mouse_coordinates has been applied in some places but more work might be needed.
 	//   In particular, the white area on the right side of the main menu needs fixing.
-	double ui_scale = get_float_pref("UIScale", 1.0);
+	double ui_scale = get_ui_scale();
 	
-	const int width  = ui_scale * 584;
-	const int height = ui_scale * 420 + os_specific_y_offset();
+	const int width  = ui_scale * scen_width;
+	const int height = ui_scale * scen_height + os_specific_y_offset();
 	
 	mainPtr.create(sf::VideoMode(width, height), "Blades of Exile Scenario Editor", sf::Style::Titlebar | sf::Style::Close);
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
@@ -716,7 +716,7 @@ void pick_preferences() {
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 	
 	cLedGroup& uiScale = dynamic_cast<cLedGroup&>(prefsDlog["scaleui"]);
-	double ui_scale = get_float_pref("UIScale", 1.0);
+	double ui_scale = get_ui_scale();
 	if (ui_scale>0.95 && ui_scale<1.05) uiScale.setSelected("1");
 	else if (ui_scale>1.45 && ui_scale<1.55) uiScale.setSelected("1_5");
 	else if (ui_scale>1.95 && ui_scale<2.05) uiScale.setSelected("2");
@@ -747,7 +747,7 @@ void pick_preferences() {
 	#pragma GCC diagnostic push
 	#pragma GCC diagnostic ignored "-Wfloat-equal"
 	#endif
-	if(get_float_pref("UIScale") != ui_scale)
+	if(get_ui_scale() != ui_scale)
 		changed_display_mode = true;
 	#ifdef __GNUC__
 	#pragma GCC diagnostic pop

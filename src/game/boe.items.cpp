@@ -675,7 +675,7 @@ short get_num_of_items(short max_num) {
 }
 
 void init_mini_map() {
-	double ui_scale = get_float_pref("UIScaleMap", 1.0);
+	double ui_scale = get_ui_scale();
 	if (ui_scale < 0.1) ui_scale = 1.0;
 	if (mini_map.isOpen()) mini_map.close();
 	mini_map.create(sf::VideoMode(ui_scale*296,ui_scale*277), "Map", sf::Style::Titlebar | sf::Style::Close);
