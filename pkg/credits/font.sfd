@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1731889305
-ModificationTime: 1731896301
+ModificationTime: 1731937948
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -45,7 +45,7 @@ FitToEm: 0
 WidthSeparation: 1
 WinInfo: 0 19 7
 OnlyBitmaps: 1
-BeginChars: 256 64
+BeginChars: 256 65
 
 StartChar: A
 Encoding: 65 65 0
@@ -494,8 +494,15 @@ Width: 875
 Flags: W
 LayerCount: 2
 EndChar
+
+StartChar: colon
+Encoding: 58 58 64
+Width: 375
+Flags: W
+LayerCount: 2
+EndChar
 EndChars
-BitmapFont: 8 64 6 2 1
+BitmapFont: 8 65 6 2 1
 BDFChar: 0 65 7 0 5 0 7
 0JI`rbl#]/
 BDFChar: 1 66 7 0 5 0 7
@@ -624,5 +631,7 @@ BDFChar: 62 63 7 0 5 0 7
 Gg$R50JEJ\
 BDFChar: 63 48 7 0 5 0 7
 Gg+t@m**[u
+BDFChar: 64 58 3 0 1 0 4
+^]4?7^]4?7
 EndBitmapFont
 EndSplineFont
