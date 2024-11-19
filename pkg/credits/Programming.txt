@@ -9,3 +9,4 @@ Confirmed:
 - Daerogami
 - NQNStudios
 - Sei Satzparad
+- Brendan Miller

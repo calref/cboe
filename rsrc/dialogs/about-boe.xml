@@ -18,11 +18,11 @@
 		<!-- The height of this text needs to be 10 times the number of lines. -->
 		<text top='52' left='50' width='400' height='240'>
 			ORIGINAL GAME: <br/><br/><br/><br/><br/><br/>
-			OPEN SOURCE CREDITS: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+			OPEN SOURCE CREDITS: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 			SCENARIO FIXES AND UPDATES: <br/><br/>
 		</text>
 		<!-- This text is right-aligned and fills out the above text with sub-headings -->
-		<text top='52' left='50' width='180' height='650' align='right'>
+		<text top='52' left='50' width='180' height='660' align='right'>
 			<br/>
 			Concept, Design, Programming: <br/>
 			Graphics: <br/>
@@ -30,14 +30,14 @@
 			Title/Splash Screens: <br/>
 			<br/>
 			<br/>
-			Programming: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+			Programming: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 			Graphics: <br/><br/><br/><br/><br/><br/>
 			Testing and Troubleshooting: <br/><br/>
 			Funding: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 			<br/><br/>
 			Bandit Busywork: <br/>
 		</text>
-		<text top='52' left='250' width='230' height='650'>
+		<text top='52' left='250' width='230' height='660'>
 			<!-- ORIGINAL GAME --><br/>
 			<!-- Concept, Design, Programming -->Jeff Vogel <br/>
 			<!-- Graphics -->Andrew Hunter <br/>
@@ -54,6 +54,7 @@
 								Daerogami <br/>
 								NQNStudios <br/>
 								Sei Satzparad <br/>
+								Brendan Miller <br/>
 			<!-- Graphics -->The Almighty <br/>
 							  Doer of Stuff <br/>
 							Mistb0rn <br/>
