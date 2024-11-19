@@ -28,7 +28,6 @@
 	</led>
 	<led name='noanim' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='335'>Turn off terrain animation</led>
 	<led name='noshore' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='335'>Turn of frills on shore</led>
-	<led name='nomaps' relative='pos-in pos' rel-anchor='prev' top='15' left='0' width='120'>Don't Save Maps</led>
 	<led name='nosound' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='117'>No Sounds</led>
 	<led name='repeatdesc' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='287'>Show room descriptions more than once</led>
 	<led name='nohelp' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='306'>Never show instant help</led>
