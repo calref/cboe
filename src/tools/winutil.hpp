@@ -69,8 +69,8 @@ inline int os_specific_y_offset() {
 // The default scale should be the largest that the user's screen can fit all three
 // BoE application windows (because they should probably default to match each other).
 inline float fallback_scale() {
-	static float _fallback_scale = 0;
-	if(_fallback_scale == 0){
+	static float scale = 0;
+	if(scale == 0){
 		sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 
 		short max_width = max(boe_width, max(pc_width, scen_width));
@@ -82,18 +82,18 @@ inline float fallback_scale() {
 			short max_scaled_height = max_height * (*it);
 
 			if(max_scaled_width <= desktop.width && max_scaled_height <= desktop.height){
-				_fallback_scale = (*it);
+				scale = (*it);
 				break;
 			}
 		}
 	}
 	// Hopefully no one would ever have such a small monitor to not fit the default size.
 	// But just in case:
-	if(_fallback_scale == 0){
-		_fallback_scale = 1.0;
+	if(scale == 0){
+		scale = 1.0;
 	}
 
-	return _fallback_scale;
+	return scale;
 }
 
 inline double get_ui_scale() {
