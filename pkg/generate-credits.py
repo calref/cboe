@@ -19,7 +19,9 @@ def get_confirmed_names(filename):
         # After the confirmed names, there may be Not Confirmed: names.
         if 'Not Confirmed:' in lines:
             lines = lines[0:lines.index('Not Confirmed:')]
-        return [line.replace('- ', '') for line in lines if len(line) > 0]
+
+        # Lines should either start with "- " or "    " if continuing the previous name, wrapped and indented:
+        return [line[2:] for line in lines if len(line) > 0]
 
 def main():
     # Generate about-boe.xml from about-boe-template.xml:
@@ -83,19 +85,59 @@ def main():
             output_file.write(content)
 
         # Generate startanim.png using ImageMagick
-        image_lines = ['* OPEN SOURCE CREDITS *', ' ', ' ']
+
+        image_lines_col1 = []
+        image_lines_col2 = []
+
+        # Note: blank lines need to have a space in them for some reason
         def add_heading(heading):
-            image_lines.append(f'- {heading.upper()} -')
-            image_lines.extend(" ")
-            image_lines.extend(name_dict[heading])
-            image_lines.extend(" ")
+            image_lines_col1.append(f'- {heading.upper()} -')
+            image_lines_col1.append(' ')
+            image_lines_col2.extend([' ', ' '])
+            
+            # (Complicated)
+            # Split the names into two columns, still vertically alphabetized,
+            # while keeping multi-line names on the same column!
+            names = name_dict[heading]
+            left_column = True
+
+            idx = 0
+            while idx < len(names):
+                current_column = image_lines_col1 if left_column else image_lines_col2
+                current_column.append(names[idx])
+                multiline_idx = idx + 1
+                while multiline_idx < len(names) and names[multiline_idx].startswith(' '):
+                    current_column.append(names[multiline_idx])
+                    multiline_idx += 1
+                    idx += 1
+                left_column = len(image_lines_col1) <= len(image_lines_col2)
+                idx += 1
+
+            while len(image_lines_col1) != len(image_lines_col2):
+                current_column = image_lines_col1 if left_column else image_lines_col2
+                current_column.append(' ')
+
+            image_lines_col1.append(' ')
+            image_lines_col2.append(' ')
 
         add_heading('Programming')
         add_heading('Graphics')
         add_heading('Testing')
         add_heading('Funding')
 
-        run(['bash', 'pkg/generate-startanim.sh'], input='\n'.join(image_lines), encoding='ascii')
+        # when one column starts with blank lines, ImageMagick doesn't offset the top correctly.
+        # So we pass the number of lines to y-offset the right column image
+        col2_blank_lines_start = 0
+        for line in image_lines_col2:
+            if line == ' ':
+                col2_blank_lines_start += 1
+            else:
+                break
+
+        run(['bash', 'pkg/generate-startanim-col.sh', '1', '0'], input='\n'.join(image_lines_col1), encoding='ascii')
+        # print(col2_blank_lines_start)
+        run(['bash', 'pkg/generate-startanim-col.sh', '2', str(col2_blank_lines_start)], input='\n'.join(image_lines_col2), encoding='ascii')
+        run(['bash', 'pkg/generate-startanim.sh'])
 
 if __name__ == "__main__":
     main()
