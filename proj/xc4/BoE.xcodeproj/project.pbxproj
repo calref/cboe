@@ -561,6 +561,7 @@
 		2BF04B080BF51924006C0831 /* boe.text.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.text.hpp; sourceTree = "<group>"; };
 		2BF04B090BF51924006C0831 /* boe.town.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boe.town.cpp; sourceTree = "<group>"; wrapsLines = 1; };
 		2BF04B0A0BF51924006C0831 /* boe.town.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = boe.town.hpp; sourceTree = "<group>"; };
+		413FE08D2CECFAA4000D97DC /* winutil.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = winutil.cpp; sourceTree = "<group>"; };
 		91034D201B225E49008F01C1 /* scen.appleevents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = scen.appleevents.mm; sourceTree = "<group>"; };
 		910BBA170FB8BECA001E34EA /* dialog.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dialog.hpp; sourceTree = "<group>"; };
 		910BBA180FB8BECA001E34EA /* dialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dialog.cpp; sourceTree = "<group>"; };
@@ -1215,6 +1216,7 @@
 		9185BDA11EA041570027C346 /* tools */ = {
 			isa = PBXGroup;
 			children = (
+				413FE08D2CECFAA4000D97DC /* winutil.cpp */,
 				D384F6A12C1B9CE900A806C3 /* replay.cpp */,
 				91C688E70FD702B9000F6D01 /* cursors.mac.mm */,
 				91FE0E3523F084B70084CA6B /* drawable_manager.cpp */,
