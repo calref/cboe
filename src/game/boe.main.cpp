@@ -689,15 +689,7 @@ void init_boe(int argc, char* argv[]) {
 }
 
 void showWelcome() {
-	if(recording){
-		record_action("showWelcome", "");
-	}
-	cChoiceDlog welcome("welcome");
-	welcome->attachClickHandlers([](cDialog& self, std::string clicked, eKeyMod) {
-		launchURL(self[clicked].getText());
-		return false;
-	}, {"spidweb", "scen", "forum", "home", "src"});
-	welcome.show();
+	show_dialog_action("welcome");
 }
 
 using Key = sf::Keyboard::Key;
