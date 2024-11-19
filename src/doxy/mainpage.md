@@ -91,6 +91,7 @@ The `<text>` tag accepts the following attributes:
 * `framed` - See **Common Attributes** above. Defaults to `false`.
 * `outline` - See **Common Attributes** above.
 * `underline` - If true, the text will be underlined.
+* `align` - `right` or `left`. Defaults to `left`.
 * `fromlist`, `font`, `size`, `color`, `colour`, `def-key` -
 See **Common Attributes** above.
 
