@@ -414,6 +414,7 @@
     <ClCompile Include="..\..\..\src\tools\replay.cpp" />
     <ClCompile Include="..\..\..\src\tools\undo.cpp" />
     <ClCompile Include="..\..\..\src\tools\keymods.cpp" />
+    <ClCompile Include="..\..\..\src\tools\winutil.cpp" />
     <ClCompile Include="..\..\..\src\tools\winutil.win.cpp" />
     <ClCompile Include="..\..\..\src\universe\creature.cpp" />
     <ClCompile Include="..\..\..\src\universe\living.cpp" />
