@@ -8,3 +8,4 @@ Confirmed:
 - xq
 - Daerogami
 - NQNStudios
+- Sei Satzparad
