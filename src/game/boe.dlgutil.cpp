@@ -1317,7 +1317,7 @@ void pick_preferences(bool record) {
 	}
 	
 	cLedGroup& uiScale = dynamic_cast<cLedGroup&>(prefsDlog["scaleui"]);
-	double ui_scale = get_float_pref("UIScale", 1.0);
+	double ui_scale = get_ui_scale();
 	if (ui_scale>0.95 && ui_scale<1.05) uiScale.setSelected("1");
 	else if (ui_scale>1.45 && ui_scale<1.55) uiScale.setSelected("1_5");
 	else if (ui_scale>1.95 && ui_scale<2.05) uiScale.setSelected("2");
@@ -1326,7 +1326,7 @@ void pick_preferences(bool record) {
 	else uiScale.setSelected("other");
 
 	cLedGroup& uiMapScale = dynamic_cast<cLedGroup&>(prefsDlog["scalemap"]);
-	double ui_map_scale = get_float_pref("UIScaleMap", 1.0);
+	double ui_map_scale = get_ui_scale_map();
 	if (ui_map_scale>0.95 && ui_map_scale<1.05) uiMapScale.setSelected("1");
 	else if (ui_map_scale>1.45 && ui_map_scale<1.55) uiMapScale.setSelected("1_5");
 	else if (ui_map_scale>1.95 && ui_map_scale<2.05) uiMapScale.setSelected("2");
@@ -1370,7 +1370,7 @@ void pick_preferences(bool record) {
 	#pragma GCC diagnostic push
 	#pragma GCC diagnostic ignored "-Wfloat-equal"
 	#endif
-	if(get_int_pref("DisplayMode") != store_display_mode || get_float_pref("UIScale") != ui_scale || get_float_pref("UIScaleMap") != ui_map_scale)
+	if(get_int_pref("DisplayMode") != store_display_mode || get_ui_scale() != ui_scale || get_ui_scale_map() != ui_map_scale)
 		changed_display_mode = true;
 	#ifdef __GNUC__
 	#pragma GCC diagnostic pop

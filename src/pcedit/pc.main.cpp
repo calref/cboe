@@ -169,10 +169,10 @@ sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, float ui_scale) 
 
 void adjust_window (sf::RenderWindow& mainPtr, sf::View& mainView) {
 
-	double ui_scale = get_float_pref("UIScale", 1.0);
+	double ui_scale = get_ui_scale();
 	
-	int const width  = ui_scale * 590;
-	int const height = ui_scale * 440 + os_specific_y_offset();
+	int const width  = ui_scale * pc_width;
+	int const height = ui_scale * pc_height + os_specific_y_offset();
 	
 	mainPtr.create(sf::VideoMode(width, height), "Blades of Exile Character Editor", sf::Style::Titlebar | sf::Style::Close);
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
@@ -553,7 +553,7 @@ void pick_preferences() {
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 	
 	cLedGroup& uiScale = dynamic_cast<cLedGroup&>(prefsDlog["scaleui"]);
-	double ui_scale = get_float_pref("UIScale", 1.0);
+	double ui_scale = get_ui_scale();
 	if (ui_scale>0.95 && ui_scale<1.05) uiScale.setSelected("1");
 	else if (ui_scale>1.45 && ui_scale<1.55) uiScale.setSelected("1_5");
 	else if (ui_scale>1.95 && ui_scale<2.05) uiScale.setSelected("2");

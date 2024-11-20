@@ -24,6 +24,11 @@ typedef signed int snd_num_t;
 const unsigned long long OBOE_CURRENT_VERSION = 0x020000; // MMmmff; M - major, m - minor, f - bugfix
 const char* oboeVersionString();
 
+// Window Resolutions
+const short boe_width = 605, boe_height = 430;
+const short pc_width = 590, pc_height = 440;
+const short scen_width = 584, scen_height = 420;
+
 // A convenient alias
 namespace boost { namespace filesystem {}}
 namespace fs = boost::filesystem;

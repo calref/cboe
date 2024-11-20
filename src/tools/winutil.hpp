@@ -13,6 +13,10 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics/Image.hpp>
 #include <memory>
+#include <vector>
+
+#include "prefs.hpp"
+#include "mathutil.hpp"
 
 char keyToChar(sf::Keyboard::Key key, bool isShift);
 
@@ -51,8 +55,8 @@ void beep();
 int getMenubarHeight();
 
 // This is an additional offset between the "logical" top of the window an the UI.
-// On Windows and Mac no offset is needed because the menubar is not a part of the mainPtr, but
-// on Linux it is.
+// On Windows and Mac no offset is needed because the menubar is not a part of the mainPtr's
+// coordinate space, but on Linux it is.
 inline int os_specific_y_offset() {
 	return
 #if defined(SFML_SYSTEM_WINDOWS) || defined(SFML_SYSTEM_MAC)
@@ -60,6 +64,16 @@ inline int os_specific_y_offset() {
 #else
 		getMenubarHeight();
 #endif
+}
+
+double fallback_scale();
+
+inline double get_ui_scale() {
+	return get_float_pref("UIScale", fallback_scale());
+}
+
+inline double get_ui_scale_map() {
+	return get_float_pref("UIScaleMap", fallback_scale());
 }
 
 void adjust_window_for_menubar(int mode, unsigned int width, unsigned int height);

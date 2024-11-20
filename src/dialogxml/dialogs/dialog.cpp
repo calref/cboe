@@ -460,8 +460,8 @@ void cDialog::recalcRect(){
 		}
 	}
 
-	winRect.right *= ui_scale();
-	winRect.bottom *= ui_scale();
+	winRect.right *= get_ui_scale();
+	winRect.bottom *= get_ui_scale();
 }
 
 bool cDialog::initCalled = false;
@@ -719,7 +719,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter&
 			break;
 		case sf::Event::MouseButtonPressed:
 			key.mod = current_key_mod();
-			where = {(int)(currentEvent.mouseButton.x / ui_scale()), (int)(currentEvent.mouseButton.y / ui_scale())};
+			where = {(int)(currentEvent.mouseButton.x / get_ui_scale()), (int)(currentEvent.mouseButton.y / get_ui_scale())};
 			process_click(where, key.mod, fps_limiter);
 			break;
 		default: // To silence warning of unhandled enum values
@@ -1076,7 +1076,7 @@ void cDialog::draw(){
 	
 	// Scale dialogs:
 	sf::View view = win.getDefaultView();
-	view.setViewport(sf::FloatRect(0, 0, ui_scale(), ui_scale()));
+	view.setViewport(sf::FloatRect(0, 0, get_ui_scale(), get_ui_scale()));
 	win.setView(view);
 	
 	ctrlIter iter = controls.begin();
