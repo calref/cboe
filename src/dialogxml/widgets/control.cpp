@@ -20,6 +20,9 @@
 #include "replay.hpp"
 #include <boost/lexical_cast.hpp>
 
+// Hyperlink forward declaration
+extern void launchURL(std::string url);
+
 void cControl::setText(std::string l){
 	lbl = l;
 }

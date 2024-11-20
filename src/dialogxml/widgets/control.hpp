@@ -32,9 +32,6 @@ namespace ticpp {
 	class Node;
 }
 
-// Hyperlink forward declaration
-void launchURL(std::string url);
-
 /// Formatting properties
 enum eFormat {
 	TXT_FRAME,	///< The control's frame style. Should be an enum from @ref eFrameStyle.
