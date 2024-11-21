@@ -1756,8 +1756,12 @@ void handle_monster_actions(bool& need_redraw, bool& need_reprint) {
 					if((adjacent(univ.party.out_loc,univ.party.out_c[i].m_loc) || univ.party.out_c[i].what_monst.forced)
 					   && univ.party.in_boat < 0 && !flying()) {
 						store_wandering_special = univ.party.out_c[i].what_monst;
-						if(handle_wandering_specials(0))
+						if(handle_wandering_specials(0)){
+							// Render the frame where the monsters are next to the party!
+							redraw_everything();
+
 							initiate_outdoor_combat(i);
+						}
 						univ.party.out_c[i].exists = false;
 						
 						// Get rid of excess keyclicks
