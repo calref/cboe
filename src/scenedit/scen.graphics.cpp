@@ -16,6 +16,7 @@
 #include "mathutil.hpp"
 #include "tools/drawable_manager.hpp"
 #include "tools/cursors.hpp"
+#include "tools/winutil.hpp"
 
 #include "dialogxml/dialogs/dialog.hpp"
 
