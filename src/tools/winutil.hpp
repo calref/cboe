@@ -23,6 +23,10 @@ char keyToChar(sf::Keyboard::Key key, bool isShift);
 void makeFrontWindow(sf::Window& win);
 void setWindowFloating(sf::Window& win, bool floating);
 
+// Necessary wrapper for sf::Window.pollEvent()
+bool pollEvent(sf::Window& win, sf::Event& event);
+bool pollEvent(sf::Window* win, sf::Event& event);
+
 void init_fileio();
 void launchURL(std::string url);
 

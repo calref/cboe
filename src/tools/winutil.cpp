@@ -1,5 +1,7 @@
 #include "winutil.hpp"
 
+#include "keymods.hpp"
+
 // The default scale should be the largest that the user's screen can fit all three
 // BoE application windows (because they should probably default to match each other).
 double fallback_scale() {
@@ -28,4 +30,22 @@ double fallback_scale() {
 	}
 
 	return scale;
+}
+
+// We use many nested event loops in this codebase. Each one of them
+// calls pollEvent() and they each need to remember to call handleModifier()
+// or else modifier keys will claim to be held forever.
+// The best solution for this is to wrap pollEvent() so that it calls
+// handleModifier for us every time.
+bool pollEvent(sf::Window& win, sf::Event& event){
+    if (win.pollEvent(event)){
+        if(kb.handleModifier(event)) return false;
+        return true;
+    }
+
+    return false;
+}
+
+bool pollEvent(sf::Window* win, sf::Event& event){
+    return pollEvent(*win, event);
 }

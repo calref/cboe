@@ -552,7 +552,7 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	handle_events();
 
 	win.setVisible(false);
-	while(parentWin->pollEvent(currentEvent));
+	while(pollEvent(parentWin, currentEvent));
 	set_cursor(former_curs);
 	topWindow = formerTop;
 	makeFrontWindow(*parentWin);
@@ -584,7 +584,7 @@ void cDialog::handle_events() {
 			cTextField& text_field = dynamic_cast<cTextField&>(getControl(currentFocus));
 			text_field.replay_selection(pop_next_action());
 		}else{
-			while(win.pollEvent(currentEvent)){
+			while(pollEvent(win, currentEvent)){
 				handle_one_event(currentEvent, fps_limiter);
 			}
 		}
@@ -618,8 +618,6 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter&
 	std::string itemHit = "";
 	location where;
 	
-	if(kb.handleModifier(currentEvent)) return;
-
 	switch(currentEvent.type) {
 		case sf::Event::KeyPressed:
 			switch(currentEvent.key.code){

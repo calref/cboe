@@ -163,7 +163,7 @@ bool cTextField::handleClick(location clickLoc, cFramerateLimiter& fps_limiter) 
 	int initial_ip = insertionPoint, initial_sp = selectionPoint;
 	while(!done) {
 		redraw();
-		while(inWindow->pollEvent(e)){
+		while(pollEvent(inWindow, e)){
 			if(e.type == sf::Event::MouseButtonReleased){
 				done = true;
 			} else if(e.type == sf::Event::MouseMoved){

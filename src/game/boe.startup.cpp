@@ -123,7 +123,7 @@ bool handle_startup_press(location the_point) {
 
 static void handle_splash_events(cFramerateLimiter& fps_limiter) {
 	sf::Event event;
-	while(mainPtr.pollEvent(event)) {
+	while(pollEvent(mainPtr, event)) {
 		if(event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)
 			set_cursor(sword_curs);
 	}

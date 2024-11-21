@@ -273,7 +273,7 @@ void handle_events() {
 			menuChoiceId=-1;
 		}
 #endif
-		while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent);
+		while(pollEvent(mainPtr, currentEvent)) handle_one_event(currentEvent);
 
 		// Why do we have to set this to false after handling every event?
 		ae_loading = false;
@@ -286,9 +286,6 @@ void handle_events() {
 }
 
 void handle_one_event(const sf::Event& event) {
-	
-	// If it's just a modifier key, update the state
-	if(kb.handleModifier(event)) return;
 	
 	// Check if any of the event listeners want this event.
 	for (auto& listener : event_listeners) {

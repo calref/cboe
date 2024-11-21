@@ -366,7 +366,7 @@ void run_startup_g() {
 	sf::Clock timer;
 	while(sound_going(95) || timer.getElapsedTime() < delay) {
 		draw_splash(pict_to_draw, mainPtr, dest_rect);
-		if(!mainPtr.pollEvent(event)) continue;
+		if(!pollEvent(mainPtr, event)) continue;
 		if(event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)
 			set_cursor(watch_curs);
 		if(event.type == sf::Event::KeyPressed || event.type == sf::Event::MouseButtonPressed)

@@ -827,12 +827,12 @@ void handle_events() {
 				fake_event_queue.pop_front();
 				handle_one_event(next_event, fps_limiter);
 			}
-			while(mainPtr.pollEvent(currentEvent)) handle_one_event(currentEvent, fps_limiter);
+			while(pollEvent(mainPtr, currentEvent)) handle_one_event(currentEvent, fps_limiter);
 
 			// It would be nice to have minimap inside the main game window (we have lots of screen space in fullscreen mode).
 			// Alternatively, minimap could live on its own thread.
 			// But for now we just handle events from both windows on this thread.
-			while(map_visible && mini_map.pollEvent(currentEvent)) handle_one_minimap_event(currentEvent);
+			while(map_visible && pollEvent(mini_map, currentEvent)) handle_one_minimap_event(currentEvent);
 		}
 
 		if(changed_display_mode) {
@@ -893,9 +893,6 @@ void handle_one_event(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	// What does this do and should it be here?
 	clear_sound_memory();
 	
-	// If it's just a modifier key, update the state
-	if(kb.handleModifier(event)) return;
-
 	// Check if any of the event listeners want this event.
 	for(auto & listener : event_listeners) {
 		if(listener.second->handle_event(event)) return;

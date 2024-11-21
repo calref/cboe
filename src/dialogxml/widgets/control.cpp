@@ -19,6 +19,7 @@
 #include "tools/cursors.hpp"
 #include "replay.hpp"
 #include <boost/lexical_cast.hpp>
+#include "winutil.hpp"
 
 void cControl::setText(std::string l){
 	lbl = l;
@@ -228,7 +229,7 @@ bool cControl::handleClick(location, cFramerateLimiter& fps_limiter){
 	depressed = true;
 	while(!done){
 		redraw();
-		while(inWindow->pollEvent(e)){
+		while(pollEvent(inWindow, e)){
 			if(e.type == sf::Event::MouseButtonReleased){
 				done = true;
 				location clickPos(e.mouseButton.x, e.mouseButton.y);
