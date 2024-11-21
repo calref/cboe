@@ -91,3 +91,10 @@ bool keymods_t::handleModifier(const sf::Event& evt) {
 	}
 	return true;
 }
+
+void keymods_t::flushModifiers() {
+	alt = false;
+	ctrl = false,
+	shift = false,
+	meta = false;
+}

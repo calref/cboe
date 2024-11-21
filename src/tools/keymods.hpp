@@ -26,6 +26,7 @@ public:
 	bool isLeftPressed() const;
 	bool isRightPressed() const;
 	bool handleModifier(const sf::Event& evt);
+	void flushModifiers();
 };
 
 extern keymods_t kb;
