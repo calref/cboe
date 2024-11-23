@@ -1284,6 +1284,7 @@ void clear_map() {
 	
 	fill_rect(map_gworld, map_world_rect, sf::Color::Black);
 	
+	draw_map(true);
 }
 
 void draw_map(bool need_refresh) {
