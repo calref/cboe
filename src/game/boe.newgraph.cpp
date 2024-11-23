@@ -835,6 +835,7 @@ void click_talk_rect(word_rect_t word) {
 	mainPtr.setActive();
 	rect_draw_some_item(talk_gworld.getTexture(),talkRect,mainPtr,talk_area_rect);
 	wordRect.offset(talk_area_rect.topLeft());
+	wordRect.width() += 10; // Arbitrary extra space fixes #481 and shouldn't cause any problems
 	TextStyle style;
 	style.font = FONT_DUNGEON;
 	style.pointSize = 18;
