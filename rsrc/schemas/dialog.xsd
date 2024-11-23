@@ -164,7 +164,14 @@
 		<xs:attributeGroup ref="frame"/>
 		<xs:attributeGroup ref="font"/>
 		<xs:attribute name="underline" type="bool"/>
-		<xs:attribute name="align" type="xs:string"/>
+		<xs:attribute name="align">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="left"/>
+					<xs:enumeration value="right"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 		<xs:attribute ref="def-key"/>
 		<xs:attribute name="fromlist" default="none" type="xs:string"/>
 		<xs:attributeGroup ref="rect-size"/>
