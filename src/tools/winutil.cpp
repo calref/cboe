@@ -38,7 +38,7 @@ double fallback_scale() {
 // The best solution for this is to wrap pollEvent() so that it calls
 // handleModifier for us every time.
 bool pollEvent(sf::Window& win, sf::Event& event){
-    if (win.pollEvent(event)){
+    if(win.pollEvent(event)) {
         if(kb.handleModifier(event)) return false;
         return true;
     }
