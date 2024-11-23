@@ -52,7 +52,7 @@ def main():
         content = content.replace('{{0}}', '<br/>' * total_num)
 
         # {{1}}: '<br/>' * (# of programmers)
-        content = content.replace('{{1}}', '<br/>' * num_dict['Programming'])
+        content = content.replace('{{1}}', '<br/>' * num_dict['Code'])
 
         # {{2}}: '<br/>' * (# of artists)
         content = content.replace('{{2}}', '<br/>' * num_dict['Graphics'])
@@ -66,7 +66,7 @@ def main():
         list_break = ' <br/>\n'
 
         # {{5}}: Programmer name lines
-        name_lines = list_break.join(name_dict["Programming"]) + list_break
+        name_lines = list_break.join(name_dict["Code"]) + list_break
         content = replace_tabbed_lines('{{5}}', name_lines, 8)
 
         # {{6}}: Artist name lines
@@ -86,12 +86,13 @@ def main():
 
         # Generate startanim.png using ImageMagick
 
-        image_lines_col1 = []
-        image_lines_col2 = []
+        # These allow whitespace to come at the start of the real content, and will be cropped out.
+        image_lines_col1 = ["-"]
+        image_lines_col2 = ["-"]
 
         # Note: blank lines need to have a space in them for some reason
         def add_heading(heading):
-            image_lines_col1.append(f'- {heading.upper()} -')
+            image_lines_col1.append(f'                      - {heading.upper()} -')
             image_lines_col1.append(' ')
             image_lines_col2.extend([' ', ' '])
             
@@ -120,7 +121,7 @@ def main():
             image_lines_col1.append(' ')
             image_lines_col2.append(' ')
 
-        add_heading('Programming')
+        add_heading('Code')
         add_heading('Graphics')
         add_heading('Testing')
         add_heading('Funding')
