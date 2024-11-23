@@ -462,6 +462,7 @@ private:
 	// Transient values only used during parsing
 	ePosition horz = POS_ABS, vert = POS_ABS;
 	std::string anchor;
+	bool is_link = false;
 };
 
 #endif

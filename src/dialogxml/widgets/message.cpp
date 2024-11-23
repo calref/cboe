@@ -53,10 +53,16 @@ bool cTextMsg::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::
 			throw xBadVal(tagName, attr.Name(), val, attr.Row(), attr.Column(), fname);
 		}
 		return true;
-	} else if(attr.Name() == "underline") {
+	}else if(attr.Name() == "underline"){
 		std::string val = attr.Value();
 		if(val == "true") underlined = true;
 		else if(val == "false") underlined = false;
+		else throw xBadVal(tagName, attr.Name(), val, attr.Row(), attr.Column(), fname);
+		return true;
+	}else if(attr.Name() == "align"){
+		std::string val = attr.Value();
+		if(val == "right") right_align = true;
+		else if(val == "left") right_align = false;
 		else throw xBadVal(tagName, attr.Name(), val, attr.Row(), attr.Column(), fname);
 		return true;
 	}
@@ -233,7 +239,7 @@ void cTextMsg::draw(){
 		}
 		style.colour = draw_color;
 		if (!calculated) calculate_layout();
-		win_draw_string(*inWindow,to_rect,msg,text_mode,style,break_info);
+		win_draw_string(*inWindow,to_rect,msg,text_mode,style,break_info,right_align);
 	}
 }
 

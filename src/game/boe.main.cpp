@@ -689,15 +689,7 @@ void init_boe(int argc, char* argv[]) {
 }
 
 void showWelcome() {
-	if(recording){
-		record_action("showWelcome", "");
-	}
-	cChoiceDlog welcome("welcome");
-	welcome->attachClickHandlers([](cDialog& self, std::string clicked, eKeyMod) {
-		launchURL(self[clicked].getText());
-		return false;
-	}, {"spidweb", "scen", "forum", "home", "src"});
-	welcome.show();
+	show_dialog_action("welcome");
 }
 
 using Key = sf::Keyboard::Key;
@@ -975,10 +967,10 @@ void update_terrain_animation() {
 }
 
 void update_startup_animation() {
-	static const long twentyTicks = time_in_ticks(20).asMilliseconds();
+	static const long interval = time_in_ticks(10).asMilliseconds();
 
 	if(overall_mode != MODE_STARTUP) return;
-	if(animTimer.getElapsedTime().asMilliseconds() < twentyTicks) return;
+	if(animTimer.getElapsedTime().asMilliseconds() < interval) return;
 
 	draw_startup_anim(true);
 	animTimer.restart();

@@ -48,6 +48,7 @@ struct text_params_t {
 	std::vector<snippet_t> snippets;
 	// Pre-calculated line wrapping:
 	break_info_t break_info;
+	bool right_align = false;
 };
 
 static void push_snippets(size_t start, size_t end, text_params_t& options, size_t& iHilite, const std::string& str, location loc) {
@@ -110,13 +111,14 @@ break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextS
 
 	short i;
 	for(i = 0; text_len(i) != text_len(i + 1) && i < str_len; i++) {
-		if(((text_len(i) - text_len(last_line_break) > (dest_rect.width() - 6))
+		unsigned short line_width = text_len(i) - text_len(last_line_break);
+		if(((line_width > (dest_rect.width() - 6))
 			&& (last_word_break >= last_line_break)) || (str[i] == '|')) {
 			if(str[i] == '|') {
 				last_word_break = i + 1;
 			} else if(last_line_break == last_word_break)
 				last_word_break = i;
-			break_info.push_back(std::make_pair(last_line_break, last_word_break));
+			break_info.push_back(std::make_tuple(last_line_break, last_word_break, line_width));
 			last_line_break = last_word_break;
 		}
 		if(str[i] == ' ')
@@ -124,9 +126,10 @@ break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextS
 	}
 
 	if(i - last_line_break > 0) {
+		unsigned short line_width = text_len(i) - text_len(last_line_break);
 		std::string snippet = str.substr(last_line_break);
 		if(!snippet.empty())
-			break_info.push_back(std::make_pair(last_line_break, str.length() + 1));
+			break_info.push_back(std::make_tuple(last_line_break, str.length() + 1, line_width));
 	}
 
 	return break_info;
@@ -179,9 +182,13 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 
 		moveTo = location(dest_rect.left + adjust_x, dest_rect.top + adjust_y);
 
-		for(auto break_info_pair : break_info){
-			push_snippets(break_info_pair.first, break_info_pair.second, options, iHilite, str, moveTo);
+		for(auto break_info_tuple : break_info){
+			if(options.right_align){
+				moveTo.x += (dest_rect.width() - std::get<2>(break_info_tuple));
+			}
+			push_snippets(std::get<0>(break_info_tuple), std::get<1>(break_info_tuple), options, iHilite, str, moveTo);
 			moveTo.y += line_height;
+			moveTo.x = dest_rect.left;
 		}
 	} else {
 		switch(mode) {
@@ -229,16 +236,17 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	}
 }
 
-void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style) {
+void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style,bool right_align) {
 	break_info_t break_info;
-	win_draw_string(dest_window, dest_rect, str, mode, style, break_info);
+	win_draw_string(dest_window, dest_rect, str, mode, style, break_info, right_align);
 }
 
-void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style,break_info_t break_info) {
+void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style,break_info_t break_info,bool right_align) {
 	text_params_t params;
 	params.mode = mode;
 	params.style = style;
 	params.break_info = break_info;
+	params.right_align = right_align;
 	win_draw_string(dest_window, dest_rect, str, params);
 }
 

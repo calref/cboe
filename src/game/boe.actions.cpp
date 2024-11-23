@@ -245,6 +245,7 @@ void show_dialog_action(std::string xml_file) {
 	if(recording){
 		record_action("show_dialog_action", xml_file);
 	}
+	
 	cChoiceDlog(xml_file).show();
 }
 

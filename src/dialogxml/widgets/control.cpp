@@ -21,6 +21,9 @@
 #include <boost/lexical_cast.hpp>
 #include "winutil.hpp"
 
+// Hyperlink forward declaration
+extern void launchURL(std::string url);
+
 void cControl::setText(std::string l){
 	lbl = l;
 }
@@ -435,6 +438,16 @@ std::string cControl::parse(ticpp::Element& who, std::string fname) {
 	frame.height() = height > 0 ? height : bestSz.y;
 	setBounds(frame);
 	validatePostParse(who, fname, foundAttrs, foundNodes);
+
+	// Wire links to function:
+	// TODO links are identified only by having the color 'link', and can only link to their text value.
+	if(is_link){
+		attachClickHandler([](cDialog& self, std::string clicked, eKeyMod) {
+			launchURL(self[clicked].getText());
+			return false;
+		});
+	}
+
 	return id;
 }
 
@@ -541,6 +554,8 @@ bool cControl::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::
 				setColour({0x7f, 0xd7, 0xFF});
 			if(parent->getBg() == cDialog::BG_LIGHT)
 				setColour({0x00, 0x00, 0xFF});
+
+			is_link = true;
 		} else try {
 			sf::Color clr = parseColor(val);
 			setColour(clr);
