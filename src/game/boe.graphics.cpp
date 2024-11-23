@@ -674,7 +674,7 @@ extern std::list<text_label_t> posted_labels;
 
 //mode ... if 1, don't place on screen after redoing
 // if 2, only redraw over active monst
-void draw_terrain(short	mode) {
+void draw_terrain(short mode) {
 	location where_draw;
 	location sector_p_in,view_loc;
 	char can_draw;
@@ -751,8 +751,11 @@ void draw_terrain(short	mode) {
 			where_draw = (is_out()) ? univ.party.out_loc : center;
 			where_draw.x += q - 4;
 			where_draw.y += r - 4;
-			if (where_draw.x < 0 || where_draw.y < 0 || where_draw.x >= max_dim_x || where_draw.y >= max_dim_y)
+			if (where_draw.x < 0 || where_draw.y < 0 || where_draw.x >= max_dim_x || where_draw.y >= max_dim_y){
+				// Out of bounds. Draw darkness
+				draw_one_terrain_spot(q,r,-1);
 				continue;
+			}
 			draw_frills = true;
 			if(!is_out() && !univ.town.is_on_map(where_draw.x, where_draw.y)) {
 				draw_frills = false;
