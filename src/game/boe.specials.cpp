@@ -33,6 +33,7 @@
 #include "boe.menus.hpp"
 #include "replay.hpp"
 #include <boost/lexical_cast.hpp>
+#include "winutil.hpp"
 
 extern sf::RenderWindow mainPtr;
 extern eGameMode overall_mode;
@@ -2017,7 +2018,7 @@ void run_special(eSpecCtx which_mode, eSpecCtxType which_type, spec_num_t start_
 				if(replaying && has_next_action("step_through_continue")){
 					pop_next_action();
 					break;
-				}else if(mainPtr.pollEvent(evt) && (evt.type == sf::Event::KeyPressed || evt.type == sf::Event::MouseButtonPressed)){
+				}else if(pollEvent(mainPtr, evt) && (evt.type == sf::Event::KeyPressed || evt.type == sf::Event::MouseButtonPressed)){
 					if(recording){
 						record_action("step_through_continue", "");
 					}

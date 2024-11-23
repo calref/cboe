@@ -18,6 +18,7 @@
 #include "fileio/resmgr/res_image.hpp"
 #include "mathutil.hpp"
 #include "sounds.hpp"
+#include "winutil.hpp"
 
 namespace UI {
 	cToolbar toolbar;
@@ -62,7 +63,7 @@ eToolbarButton cToolbar::button_hit(sf::RenderWindow& win, location click, cFram
 				active = i;
 				while(!done){
 					redraw_screen(REFRESH_NONE);
-					while(win.pollEvent(e)) {
+					while(pollEvent(win, e)) {
 						if(e.type == sf::Event::MouseButtonReleased){
 							done = true;
 							location clickPos(e.mouseButton.x, e.mouseButton.y);

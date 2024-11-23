@@ -15,6 +15,7 @@
 #include "tools/cursors.hpp"
 #include "replay.hpp"
 #include <boost/lexical_cast.hpp>
+#include "winutil.hpp"
 
 std::string cScrollbar::scroll_textures[NUM_STYLES] = {
 	"dlogscrollwh",
@@ -319,7 +320,7 @@ bool cScrollbar::handleClick(location where, cFramerateLimiter& fps_limiter) {
 	int diff = clickPos - thumbPos;
 	while(!done){
 		redraw();
-		while(inWindow->pollEvent(e)){
+		while(pollEvent(inWindow, e)){
 			location mouseLoc = sf::Mouse::getPosition(*inWindow);
 			mouseLoc = inWindow->mapPixelToCoords(mouseLoc);
 			int mousePos = vert ? mouseLoc.y : mouseLoc.x;

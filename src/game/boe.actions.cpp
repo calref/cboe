@@ -408,7 +408,7 @@ void handle_rest(bool& need_redraw, bool& need_reprint) {
 				i = 200;
 				add_string_to_buf("  Monsters nearby.");
 			}
-			while(mainPtr.pollEvent(dummy_evt));
+			while(pollEvent(mainPtr, dummy_evt));
 			redraw_screen(REFRESH_NONE);
 			i++;
 		}
@@ -1068,7 +1068,7 @@ static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 			i = 200;
 			add_string_to_buf("  Monster sighted!");
 		}
-		while(mainPtr.pollEvent(dummy_evt));
+		while(pollEvent(mainPtr, dummy_evt));
 		redraw_screen(REFRESH_NONE);
 	}
 	put_pc_screen();
@@ -3648,7 +3648,7 @@ bool check_for_interrupt(){
 		pop_next_action();
 		interrupt = true;
 	}
-	else if(mainPtr.pollEvent(evt) && evt.type == sf::Event::KeyPressed) {
+	else if(pollEvent(mainPtr, evt) && evt.type == sf::Event::KeyPressed) {
 		// TODO: I wonder if there are other events we should handle here? Resize maybe?
 #ifdef __APPLE__
 		if(evt.key.code == kb::Period && evt.key.system)
