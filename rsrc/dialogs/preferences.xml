@@ -23,7 +23,7 @@
 		<led name='4' relative='pos-in pos' anchor='scalemap-head' top='4' left='175' width='33'>4</led>
 		<led name='other' relative='pos-in pos' anchor='scalemap-head' top='4' left='215' width='85'/>
 	</group>
-	<text size='large' relative='pos-in pos' rel-anchor='prev' top='3' left='0' width='182' height='17'>Display alignment:</text>
+	<text size='large' relative='pos-in pos' anchor='scalemap-head' top='30' left='0' width='182' height='17'>Display alignment:</text>
 	<text name='disp-frame' framed='true' relative='pos-in pos' rel-anchor='prev' top='6' left='0' width='277' height='102'/>
 	<group name='display'>
 		<led name='tl' relative='pos-in' anchor='disp-frame' top='7' left='8' width='54'>Top Left</led>
@@ -40,7 +40,8 @@
 		<led name='slow' relative='pos-in pos' anchor='spd-head' top='4' left='190' width='53'>Slow</led>
 		<led name='snail' relative='pos-in pos' anchor='spd-head' top='4' left='274' width='70'>Quite Slow</led>
 	</group>
-	<led name='nosound' relative='pos-in pos' anchor='spd-head' top='30' left='0' width='117'>No Sounds</led>
+	<text name='misc-head' size='large' relative='pos-in pos' anchor='spd-head' top='30' left='0' width='182' height='17'>Miscellaneous:</text>
+	<led name='nosound' relative='pos-in pos' anchor='misc-head' top='6' left='15' width='117'>No Sounds</led>
 	<led name='repeatdesc' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='287'>Show room descriptions more than once</led>
 	<led name='nohelp' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='306'>Never show instant help</led>
 	<led name='easier' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='352'>Make game easier (monsters much weaker)</led>
