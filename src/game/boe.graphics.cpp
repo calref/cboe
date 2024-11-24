@@ -681,7 +681,6 @@ void draw_terrain(short mode) {
 	char can_draw;
 	ter_num_t spec_terrain;
 	bool draw_frills = true;
-	bool frills_on = get_bool_pref("DrawTerrainShoreFrills", true);
 	
 	if(overall_mode == MODE_TALKING || overall_mode == MODE_SHOPPING || overall_mode == MODE_STARTUP)
 		return;
@@ -853,7 +852,7 @@ void draw_terrain(short mode) {
 				draw_one_terrain_spot(q,r,-1);
 			}
 			
-			if((can_draw != 0) && (overall_mode != MODE_RESTING) && frills_on && draw_frills)
+			if((can_draw != 0) && (overall_mode != MODE_RESTING) && draw_frills)
 				place_trim((short) q,(short) r,where_draw,spec_terrain);
 //			if((is_town() && univ.town.is_spot(where_draw.x,where_draw.y)) ||
 //			   (is_out() && univ.out.outdoors[univ.party.i_w_c.x][univ.party.i_w_c.y].special_spot[where_draw.x][where_draw.y]))
@@ -942,8 +941,6 @@ void place_trim(short q,short r,location where,ter_num_t ter_type) {
 	
 	// FIrst quick check ... if a pit or barrier in outdoor combat, no trim
 	if((is_combat()) && (which_combat_type == 0) && (ter_type == 90))
-		return;
-	if(!get_bool_pref("DrawTerrainShoreFrills", true))
 		return;
 	
 	targ.x = q;
@@ -1083,7 +1080,7 @@ static void init_trim_mask(std::unique_ptr<sf::Texture>& mask, rectangle src_rec
 //short which_mode;  // 0 top 1 bottom 2 left 3 right 4 up left 5 up right 6 down right 7 down left
 void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	/* TODO: Windows has a check for frills being enabled:
-	if(!frills_on || (((current_ground == 2) || (current_ground == 36)) && (PSD[SDF_COMPATIBILITY_FULL_TRIMS] == 0)))
+	if(((current_ground == 2) || (current_ground == 36)) && (PSD[SDF_COMPATIBILITY_FULL_TRIMS] == 0))
 	    return;
 	*/
 	// which_trim
@@ -1126,9 +1123,6 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 		walkway_rects[8].offset(196,0);
 	}
 	sf::Color test_color = {0,0,0}, store_color;
-	
-	if(!get_bool_pref("DrawTerrainShoreFrills", true))
-		return;
 	
 	unsigned short pic = univ.scenario.ter_types[ground_ter].picture;
 	if(pic < 960){
@@ -1359,7 +1353,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 		return;
 	if((boom_anim_active) && (type != 3))
 		return;
-	if(!get_bool_pref("DrawTerrainFrills", true) && fast_bang)
+	if(fast_bang)
 		return;
 	if(is_out())
 		return;

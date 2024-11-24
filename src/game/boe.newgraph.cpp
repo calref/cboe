@@ -124,7 +124,7 @@ void apply_unseen_mask() {
 	rectangle base_rect = {9,9,53,45},to_rect,big_to = {13,13,337,265};
 	bool need_bother = false;
 	
-	if(!get_bool_pref("DrawTerrainFrills", true) || fog_lifted)
+	if(fog_lifted)
 		return;
 	
 	if((is_combat()) && (which_combat_type == 0))
@@ -155,7 +155,7 @@ void apply_light_mask(bool onWindow) {
 	rectangle temp = {0,0,108,84},paint_rect,base_rect = {0,0,36,28};
 	rectangle big_to = {13,13,337,265};
 	bool same_mask = true;
-	if(!get_bool_pref("DrawTerrainFrills", true) || fog_lifted)
+	if(fog_lifted)
 		return;
 	if(is_out() || overall_mode == MODE_RESTING)
 		return;
@@ -257,8 +257,6 @@ void end_missile_anim() {
 void add_missile(location dest,miss_num_t missile_type,short path_type,short x_adj,short y_adj) {
 	if(!boom_anim_active)
 		return;
-	if(!get_bool_pref("DrawTerrainFrills", true))
-		return;
 	// lose redundant missiles
 	for(short i = 0; i < 30; i++)
 		if((store_missiles[i].missile_type >= 0) && (dest == store_missiles[i].dest))
@@ -301,8 +299,6 @@ void mondo_boom(location l,short type,short snd) {
 }
 
 void add_explosion(location dest,short val_to_place,short place_type,short boom_type,short x_adj,short y_adj) {
-	if(!get_bool_pref("DrawTerrainFrills", true))
-		return;
 	if(!boom_anim_active)
 		return;
 	// lose redundant explosions
