@@ -22,7 +22,7 @@ void do_talk(short personality, unsigned short m_num);
 void put_party_stats();
 void edit_party();
 void pick_preferences(bool record = true);
-void save_prefs(bool resetHelp = false);
+void save_prefs();
 void tip_of_day();
 struct scen_header_type pick_a_scen();
 

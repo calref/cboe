@@ -1165,10 +1165,7 @@ void do_sign(short town_num, short which_sign, short sign_type) {
 	sign.show();
 }
 
-void save_prefs(bool resetHelp){
-	
-	if(resetHelp) clear_pref("ReceivedHelp");
-	
+void save_prefs(){
 	bool success = sync_prefs();
 	if(!success){
 		showWarning("There was a problem writing to the preferences file. When the game is next run the preferences will revert to their previously set values.","Should you manage to resolve the problem without closing the program, simply open the preferences screen and click \"OK\" to try again.");
@@ -1176,7 +1173,7 @@ void save_prefs(bool resetHelp){
 }
 
 static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
-	bool did_cancel = false,reset_help = false;
+	bool did_cancel = false;
 	
 	if(id == "okay") {
 		me.toast(true);
@@ -1224,9 +1221,6 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 			set_pref("GameSpeed", 2);
 		else if(speed == "snail")
 			set_pref("GameSpeed", 3);
-		if(dynamic_cast<cLed&>(me["resethelp"]).getState() == led_red) {
-			reset_help = true;
-		}
 		std::string scale = dynamic_cast<cLedGroup&>(me["scaleui"]).getSelected();
 		if(scale == "1")
 			set_pref("UIScale", 1.0);
@@ -1250,8 +1244,13 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		else if(scale_map == "4")
 			set_pref("UIScaleMap", 4.0);
 	}
-	save_prefs(reset_help);
+	save_prefs();
 	return true;
+}
+
+static bool reset_help(cDialog& me, std::string id, eKeyMod) {
+	if(cChoiceDlog("confirm-reset-help", {"yes", "no"}, &me).show() == "yes")
+		clear_pref("ReceivedHelp");
 }
 
 void pick_preferences(bool record) {
@@ -1263,6 +1262,7 @@ void pick_preferences(bool record) {
 	
 	cDialog prefsDlog(*ResMgr::dialogs.get("preferences"));
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
+	prefsDlog.attachClickHandlers(&reset_help, {"resethelp"});
 	
 	cLedGroup& displayMode = dynamic_cast<cLedGroup&>(prefsDlog["display"]);
 	switch(get_int_pref("DisplayMode")) {
