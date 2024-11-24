@@ -993,7 +993,6 @@ void update_terrain_animation() {
 	static const long fortyTicks = time_in_ticks(40).asMilliseconds();
 
 	if(overall_mode == MODE_STARTUP) return;
-	if(!get_bool_pref("DrawTerrainAnimation", true)) return;
 	if(animTimer.getElapsedTime().asMilliseconds() < fortyTicks) return;
 
 	anim_ticks++;
@@ -1330,6 +1329,5 @@ void pause(short length) {
 	// Before pausing, make sure the screen is updated.
 	redraw_screen(REFRESH_NONE);
 	
-	if(get_bool_pref("DrawTerrainFrills", true))
-		sf::sleep(time_in_ticks(len));
+	sf::sleep(time_in_ticks(len));
 }

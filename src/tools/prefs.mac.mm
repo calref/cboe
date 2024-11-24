@@ -25,9 +25,6 @@ typedef NS_ENUM(NSInteger) {
 NSUserDefaults* replayUserDefaults = nil;
 NSDictionary* prefsToRecord = @{
 	@"DisplayMode": @(kInt),
-	@"DrawTerrainAnimation": @(kBool),
-	@"DrawTerrainFrills": @(kBool),
-	@"DrawTerrainShoreFrills": @(kBool),
 	@"EasyMode": @(kBool),
 	@"GameRunBefore": @(kBool),
 	@"GameSpeed": @(kInt),

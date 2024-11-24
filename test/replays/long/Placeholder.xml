@@ -1,9 +1,6 @@
 <actions SHA="47b4456" Tag="v0.0.4" Status="modified" Repo="git@github.com:NQNStudios/cboe.git">
     <load_prefs>
         <![CDATA[DisplayMode = 5
-DrawTerrainAnimation = true
-DrawTerrainFrills = false
-DrawTerrainShoreFrills = true
 EasyMode = false
 GameRunBefore = true
 GameSpeed = 0

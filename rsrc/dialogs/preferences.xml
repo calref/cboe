@@ -22,13 +22,7 @@
 		<led name='slow' relative='pos-in pos' anchor='spd-head' top='4' left='190' width='53'>Slow</led>
 		<led name='snail' relative='pos-in pos' anchor='spd-head' top='4' left='274' width='70'>Quite Slow</led>
 	</group>
-	<text size='large' relative='pos-in pos' anchor='spd-head' top='23' left='0' width='182' height='17'>For older machines:</text>
-	<led name='nofrills' relative='pos-in pos' rel-anchor='prev' top='6' left='0' width='335'>
-		No graphics frills (lose special effects)
-	</led>
-	<led name='noanim' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='335'>Turn off terrain animation</led>
-	<led name='noshore' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='335'>Turn of frills on shore</led>
-	<led name='nosound' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='117'>No Sounds</led>
+	<led name='nosound' relative='pos-in pos' anchor='spd-head' top='30' left='0' width='117'>No Sounds</led>
 	<led name='repeatdesc' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='287'>Show room descriptions more than once</led>
 	<led name='nohelp' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='306'>Never show instant help</led>
 	<led name='easier' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='352'>Make game easier (monsters much weaker)</led>

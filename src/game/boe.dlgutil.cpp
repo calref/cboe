@@ -1188,7 +1188,6 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		else if(cur_display_mode == "br") set_pref("DisplayMode", 4);
 		else if(cur_display_mode == "win") set_pref("DisplayMode", 5);
 		set_pref("PlaySounds", dynamic_cast<cLed&>(me["nosound"]).getState() == led_off);
-		set_pref("DrawTerrainFrills", dynamic_cast<cLed&>(me["nofrills"]).getState() == led_off);
 		set_pref("RepeatRoomDescriptions", dynamic_cast<cLed&>(me["repeatdesc"]).getState() != led_off);
 		set_pref("ShowInstantHelp", dynamic_cast<cLed&>(me["nohelp"]).getState() == led_off);
 		
@@ -1199,8 +1198,6 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 			univ.party.easy_mode = dynamic_cast<cLed&>(me["easier"]).getState() != led_off;
 			univ.party.less_wm = dynamic_cast<cLed&>(me["lesswm"]).getState() != led_off;
 		}
-		set_pref("DrawTerrainAnimation", dynamic_cast<cLed&>(me["noanim"]).getState() == led_off);
-		set_pref("DrawTerrainShoreFrills", dynamic_cast<cLed&>(me["noshore"]).getState() == led_off);
 		set_pref("ShowStartupSplash", dynamic_cast<cLed&>(me["skipsplash"]).getState() == led_off);
 		std::string speed = dynamic_cast<cLedGroup&>(me["speed"]).getSelected();
 		/* TODO: Should I add these additional preferences from Windows?
@@ -1283,7 +1280,6 @@ void pick_preferences(bool record) {
 	}
 	
 	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySounds", true) ? led_off : led_red);
-	dynamic_cast<cLed&>(prefsDlog["nofrills"]).setState(get_bool_pref("DrawTerrainFrills", true) ? led_off : led_red);
 	dynamic_cast<cLed&>(prefsDlog["repeatdesc"]).setState(get_bool_pref("RepeatRoomDescriptions") ? led_red : led_off);
 	dynamic_cast<cLed&>(prefsDlog["nohelp"]).setState(get_bool_pref("ShowInstantHelp", true) ? led_off : led_red);
 	if(overall_mode == MODE_STARTUP && !party_in_memory) {
@@ -1293,8 +1289,6 @@ void pick_preferences(bool record) {
 		dynamic_cast<cLed&>(prefsDlog["easier"]).setState(univ.party.easy_mode ? led_red : led_off);
 		dynamic_cast<cLed&>(prefsDlog["lesswm"]).setState(univ.party.less_wm ? led_red : led_off);
 	}
-	dynamic_cast<cLed&>(prefsDlog["noanim"]).setState(get_bool_pref("DrawTerrainAnimations", true) ? led_off : led_red);
-	dynamic_cast<cLed&>(prefsDlog["noshore"]).setState(get_bool_pref("DrawTerrainShoreFrills", true) ? led_off : led_red);
 	dynamic_cast<cLed&>(prefsDlog["skipsplash"]).setState(get_bool_pref("ShowStartupSplash", true) ? led_off : led_red);
 	cLedGroup& gameSpeed = dynamic_cast<cLedGroup&>(prefsDlog["speed"]);
 	switch(get_int_pref("GameSpeed")) {
