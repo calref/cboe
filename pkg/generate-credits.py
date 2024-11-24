@@ -57,6 +57,9 @@ def main():
         # {{2}}: '<br/>' * (# of artists)
         content = content.replace('{{2}}', '<br/>' * num_dict['Graphics'])
 
+        # {{9}}: '<br/>' * (# of consultants)
+        content = content.replace('{{9}}', '<br/>' * num_dict['Advice'])
+
         # {{3}}: '<br/>' * (# of testers)
         content = content.replace('{{3}}', '<br/>' * num_dict['Testing'])
         
@@ -72,6 +75,10 @@ def main():
         # {{6}}: Artist name lines
         name_lines = list_break.join(name_dict["Graphics"]) + list_break
         content = replace_tabbed_lines('{{6}}', name_lines, 7)
+
+        # {{10}}: Consulting name lines
+        name_lines = list_break.join(name_dict["Advice"]) + list_break
+        content = replace_tabbed_lines('{{10}}', name_lines, 8)
 
         # {{7}}: Tester name lines
         name_lines = list_break.join(name_dict["Testing"]) + list_break
@@ -123,6 +130,7 @@ def main():
 
         add_heading('Code')
         add_heading('Graphics')
+        add_heading('Advice')
         add_heading('Testing')
         add_heading('Funding')
 
