@@ -65,6 +65,7 @@ public:
 	}
 	cButton& operator=(cButton& other) = delete;
 	cButton(cButton& other) = delete;
+	void setTextSize(short size) { textSize = size; }
 protected:
 	/// The type of button.
 	eBtnType type;
@@ -74,9 +75,12 @@ protected:
 	cButton(cDialog& parent,eControlType t);
 private:
 	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
+	void defaultTextSize();
 	std::string fromList;
 	static rectangle btnRects[13][2];
 protected:
+	/// Size of the button's descriptive text
+	short textSize;
 	/// Determines whether the button's label should be word wrapped.
 	bool wrapLabel;
 	/// The button's text colour; only used by LED and tiny buttons

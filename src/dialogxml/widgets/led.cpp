@@ -28,8 +28,8 @@ void cLed::init(){
 cLed::cLed(cDialog& parent) :
 	cButton(parent,CTRL_LED),
 	state(led_off),
-	textFont(FONT_BOLD),
-	textSize(10) {
+	textFont(FONT_BOLD) {
+	textSize = 10;
 	type = BTN_LED;
 	using namespace std::placeholders;
 	attachEventHandler<EVT_CLICK>(std::bind(&cLed::defaultClickHandler, this, _1, _2, _3));
