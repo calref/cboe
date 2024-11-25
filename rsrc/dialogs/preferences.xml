@@ -31,7 +31,7 @@
 		<led name='mid' relative='pos-in' anchor='disp-frame' top='40' left='83' width='75'>Center</led>
 		<led name='bl' relative='pos-in neg-in' anchor='disp-frame' top='24' left='8' width='104'>Bottom Left</led>
 		<led name='br' relative='neg-in' anchor='disp-frame' top='24' left='128' width='104'>Bottom Right</led>
-		<led name='win' relative='pos-in pos' anchor='disp-frame' top='9' left='2' width='228'>Small Window (not full screen)</led>
+		<led name='win' relative='pos-in pos' anchor='disp-frame' top='9' left='8' width='228'>Small Window (not full screen)</led>
 	</group>
 	<text name='spd-head' size='large' relative='neg pos' anchor='disp-frame' top='31' left='0' width='182' height='17'>Game speed:</text>
 	<group name='speed'>
