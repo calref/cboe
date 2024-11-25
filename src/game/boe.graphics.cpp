@@ -1357,8 +1357,6 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 		return;
 	if((boom_anim_active) && (type != 3))
 		return;
-	if(fast_bang)
-		return;
 	if(is_out())
 		return;
 	
