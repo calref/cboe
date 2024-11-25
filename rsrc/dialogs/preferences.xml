@@ -33,12 +33,12 @@
 		<led name='br' relative='neg-in' anchor='disp-frame' top='24' left='128' width='104'>Bottom Right</led>
 		<led name='win' relative='pos-in pos' anchor='disp-frame' top='9' left='2' width='228'>Small Window (not full screen)</led>
 	</group>
-	<text name='spd-head' size='large' relative='neg pos' anchor='disp-frame' top='31' left='10' width='182' height='17'>Game speed:</text>
+	<text name='spd-head' size='large' relative='neg pos' anchor='disp-frame' top='31' left='0' width='182' height='17'>Game speed:</text>
 	<group name='speed'>
 		<led name='fast' relative='pos-in pos' anchor='spd-head' top='4' left='15' width='53'>Fast</led>
-		<led name='med' relative='pos-in pos' anchor='spd-head' top='4' left='97' width='53'>Medium</led>
-		<led name='slow' relative='pos-in pos' anchor='spd-head' top='4' left='190' width='53'>Slow</led>
-		<led name='snail' relative='pos-in pos' anchor='spd-head' top='4' left='274' width='70'>Quite Slow</led>
+		<led name='med' relative='pos-in pos' anchor='spd-head' top='4' left='85' width='53'>Medium</led>
+		<led name='slow' relative='pos-in pos' anchor='spd-head' top='4' left='155' width='53'>Slow</led>
+		<led name='snail' relative='pos-in pos' anchor='spd-head' top='4' left='225' width='70'>Quite Slow</led>
 	</group>
 	<text name='misc-head' size='large' relative='pos-in pos' anchor='spd-head' top='30' left='0' width='182' height='17'>Miscellaneous:</text>
 	<led name='nosound' relative='pos-in pos' anchor='misc-head' top='6' left='15' width='117'>No Sounds</led>
