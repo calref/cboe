@@ -1079,10 +1079,6 @@ static void init_trim_mask(std::unique_ptr<sf::Texture>& mask, rectangle src_rec
 //which_trim is 3 -> drawing wall trim -> might shift down if ground is grass
 //short which_mode;  // 0 top 1 bottom 2 left 3 right 4 up left 5 up right 6 down right 7 down left
 void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
-	/* TODO: Windows has a check for frills being enabled:
-	if(((current_ground == 2) || (current_ground == 36)) && (PSD[SDF_COMPATIBILITY_FULL_TRIMS] == 0))
-	    return;
-	*/
 	// which_trim
 	// 0 - left, 1 - right, 2 - top, 3 - bottom, 4 - tl, 5 - tr, 6 - bl, 7 - br
 	// 8 - wall tl, 9 - wall tr, 10 - wall bl, 11 - wall br
