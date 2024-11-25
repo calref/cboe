@@ -1322,6 +1322,21 @@ void pick_preferences(bool record) {
 	else if (ui_scale>3.95 && ui_scale<4.05) uiScale.setSelected("4");
 	else uiScale.setSelected("other");
 
+	// Disable buttons for scales that won't fit on player's screen:
+	double max_main_window_scale = fallback_scale();
+	if(max_main_window_scale < 4.0){
+		uiScale["4"].hide();
+	}
+	if(max_main_window_scale < 3.0){
+		uiScale["3"].hide();
+	}
+	if(max_main_window_scale < 2.0){
+		uiScale["2"].hide();
+	}
+	if(max_main_window_scale < 1.5){
+		uiScale["1_5"].hide();
+	}
+
 	cLedGroup& uiMapScale = dynamic_cast<cLedGroup&>(prefsDlog["scalemap"]);
 	double ui_map_scale = get_ui_scale_map();
 	if (ui_map_scale>0.95 && ui_map_scale<1.05) uiMapScale.setSelected("1");
@@ -1331,6 +1346,8 @@ void pick_preferences(bool record) {
 	else if (ui_map_scale>3.95 && ui_map_scale<4.05) uiMapScale.setSelected("4");
 	else uiMapScale.setSelected("other");
 	
+	// The map is smaller and it doesn't matter if the player makes it too big, so always show all options.
+
 	if(uiScale.getSelected() == "other") {
 		auto val = std::to_string(ui_scale);
 		while(val.length() > 2 && val[val.length() - 1] == val[val.length() - 2]) {
