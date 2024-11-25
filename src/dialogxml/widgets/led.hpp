@@ -60,7 +60,6 @@ private:
 	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
 	eLedState state;
 	eFont textFont;
-	short textSize;
 	static rectangle ledRects[3][2];
 };
 
