@@ -3987,7 +3987,8 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				if(r1 > 29) r1 = 29;
 				start_missile_anim();
 				place_spell_pattern(radius2,target,eDamageType::MAGIC,r1,7 );
-				ashes_loc = target;
+				// Note: This used to place ashes on the target square, but the spell description
+				// doesn't describe fire or combustion, only force.
 				break;
 			default:
 				add_string_to_buf("  Error: Priest spell " + (*spell).name() + " not implemented for monsters.", 4);
