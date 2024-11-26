@@ -37,7 +37,7 @@ mon_num_t pick_trapped_monst();
 bool flying() ;
 void hit_party(short how_much,eDamageType damage_type,short snd_type = 0);
 void slay_party(eMainStatus mode);
-short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace type_of_attacker, short sound_type,bool do_print = true);
+short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace type_of_attacker, short sound_type = -1,bool do_print = true);
 void petrify_pc(cPlayer& which_pc,int strength);
 void kill_pc(cPlayer& which_pc,eMainStatus type);
 void set_pc_moves();

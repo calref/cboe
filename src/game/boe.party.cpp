@@ -2277,18 +2277,10 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 	if(which_pc.main_status != eMainStatus::ALIVE)
 		return false;
 	
-	// TODO: I think there should be a way to force sound_type = 0 for UNBLOCKABLE
-	if(sound_type == 0) {
-		if(damage_type == eDamageType::FIRE || damage_type == eDamageType::UNBLOCKABLE)
-			sound_type = 5;
-		if(damage_type == eDamageType::MAGIC)
-			sound_type = 12;
-		if(damage_type == eDamageType::COLD)
-			sound_type = 7;
-		if(damage_type == eDamageType::POISON)
-			sound_type = 11;
-	}
-	
+	// Note: sound type 0 can now be forced for UNBLOCKABLE by passing sound_type 0,
+	// but -1 is the new value for "use default"
+	set_sound_type(damage_type, sound_type);
+
 	// armor
 	if(damage_type == eDamageType::WEAPON || damage_type == eDamageType::UNDEAD || damage_type == eDamageType::DEMON) {
 		how_much -= minmax(-5,5,which_pc.status[eStatus::BLESS_CURSE]);
