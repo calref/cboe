@@ -21,18 +21,18 @@ cButton::cButton(sf::RenderWindow& parent) :
 	cControl(CTRL_BTN,parent),
 	wrapLabel(false),
 	type(BTN_REG),
+	textSize(defaultTextSize(type)),
 	textClr(sf::Color::Black),
 	fromList("none") {
-	defaultTextSize();
 }
 
 cButton::cButton(cDialog& parent) :
 	cControl(CTRL_BTN,parent),
 	wrapLabel(false),
 	type(BTN_REG),
+	textSize(defaultTextSize(type)),
 	textClr(parent.getDefTextClr()),
 	fromList("none") {
-	defaultTextSize();
 }
 
 /* This constructor is only called for LEDs. */
@@ -40,15 +40,12 @@ cButton::cButton(cDialog& parent,eControlType t) :
 	cControl(t,parent),
 	fromList("none"),
 	wrapLabel(false) {
-	defaultTextSize();
 }
 
-void cButton::defaultTextSize() {
-	if(textSize != 0) return;
-
-	if(type == BTN_TINY) textSize = 9;
-	else if(type == BTN_PUSH) textSize = 10;
-	else textSize = 12;
+short cButton::defaultTextSize(eBtnType type) {
+	if(type == BTN_TINY) return 9;
+	else if(type == BTN_PUSH) return 10;
+	else return 12;
 }
 
 bool cButton::isClickable() const {
