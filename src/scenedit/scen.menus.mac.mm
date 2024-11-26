@@ -79,7 +79,7 @@ void init_menubar() {
 	
 	MenuHandler* handler = [[[MenuHandler alloc] init] retain];
 	setMenuCallback([app_menu itemWithTitle: @"About BoE Scenario Editor"], handler, @selector(menuChoice:), int(eMenu::ABOUT));
-	setMenuCallback([app_menu itemWithTitle: @"Settings…"], handler, @selector(menuChoice:), int(eMenu::PREFS));
+	setMenuCallback([app_menu itemWithTitle: @"Preferences…"], handler, @selector(menuChoice:), int(eMenu::PREFS));
 	setMenuCallback([app_menu itemWithTitle: @"Quit BoE Scenario Editor"], handler, @selector(menuChoice:), int(eMenu::QUIT));
 	
 	int i = 0;
