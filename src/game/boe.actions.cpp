@@ -1967,7 +1967,7 @@ void debug_kill() {
 		
 		if(univ.town.monst[i].is_alive() && !univ.town.monst[i].is_friendly()
 			&& (dist(univ.town.monst[i].cur_loc,univ.party.town_loc) <= 10) )
-			damage_monst(univ.town.monst[i], 7,1000,eDamageType::SPECIAL,0);
+			damage_monst(univ.town.monst[i], 7,1000,eDamageType::SPECIAL);
 	}
 	// kill_monst(&univ.town.monst[i],6);
 	draw_terrain();

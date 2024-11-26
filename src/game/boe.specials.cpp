@@ -381,7 +381,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 				hit_party(r1,dam_type);
 			fast_bang = 1;
 			if(mode == eSpecCtx::COMBAT_MOVE)
-				damage_pc(which_pc,r1,dam_type,eRace::UNKNOWN,0);
+				damage_pc(which_pc,r1,dam_type,eRace::UNKNOWN);
 			else
 				boom_space(univ.party.out_loc,overall_mode,pic_type,r1,12);
 			fast_bang = 0;
@@ -522,19 +522,19 @@ void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 		add_string_to_buf("  Fire wall!");
 		r1 = get_ran(1,1,6) + 1;
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::FIRE,eRace::UNKNOWN);
 	}
 	if(univ.town.is_force_wall(where_check.x,where_check.y)) {
 		add_string_to_buf("  Force wall!");
 		r1 = get_ran(2,1,6);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::MAGIC,eRace::UNKNOWN);
 	}
 	if(univ.town.is_ice_wall(where_check.x,where_check.y)) {
 		add_string_to_buf("  Ice wall!");
 		r1 = get_ran(2,1,6);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,eDamageType::COLD,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::COLD,eRace::UNKNOWN);
 		if(!is_combat())
 			boom_space(univ.party.town_loc,overall_mode,4,r1,7);
 	}
@@ -542,13 +542,13 @@ void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 		add_string_to_buf("  Blade wall!");
 		r1 = get_ran(4,1,8);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,eDamageType::WEAPON,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::WEAPON,eRace::UNKNOWN);
 	}
 	if(univ.town.is_quickfire(where_check.x,where_check.y)) {
 		add_string_to_buf("  Quickfire!");
 		r1 = get_ran(2,1,8);
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,eDamageType::FIRE,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::FIRE,eRace::UNKNOWN);
 	}
 	if(univ.town.is_scloud(where_check.x,where_check.y)) {
 		add_string_to_buf("  Stinking cloud!");
@@ -563,7 +563,7 @@ void check_fields(location where_check,eSpecCtx mode,cPlayer& which_pc) {
 		r1 = get_ran(2,1,10);
 		if(is_town()) fast_bang = 1;
 		if(mode == eSpecCtx::COMBAT_MOVE)
-			damage_pc(which_pc,r1,eDamageType::MAGIC,eRace::UNKNOWN,0);
+			damage_pc(which_pc,r1,eDamageType::MAGIC,eRace::UNKNOWN);
 		else hit_party(r1,eDamageType::MAGIC,0);
 		fast_bang = 0;
 	}
@@ -894,7 +894,7 @@ void use_item(short pc,short item) {
 					case eItemUse::HARM_ONE:
 						ASB("  You feel terrible.");
 						drain_pc(univ.party[pc],str * 5);
-						damage_pc(univ.party[pc],20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
+						damage_pc(univ.party[pc],20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN);
 						univ.party[pc].disease(2 * str);
 						univ.party[pc].dumbfound(2 * str);
 						break;
@@ -907,7 +907,7 @@ void use_item(short pc,short item) {
 						ASB("  You all feel terrible.");
 						for(short i = 0; i < 6; i++) {
 							drain_pc(univ.party[i],str * 5);
-							damage_pc(univ.party[i],20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
+							damage_pc(univ.party[i],20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN);
 							univ.party[i].disease(2 * str);
 							univ.party[i].dumbfound(2 * str);
 						}
@@ -969,7 +969,7 @@ void use_item(short pc,short item) {
 						break;
 					case eItemUse::HARM_ONE:
 						ASB("  You feel sick.");
-						damage_pc(univ.party[pc],20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN,0);
+						damage_pc(univ.party[pc],20 * str,eDamageType::UNBLOCKABLE,eRace::HUMAN);
 						break;
 					case eItemUse::HELP_ALL:
 						ASB("  You all feel better.");
@@ -1063,7 +1063,7 @@ void use_item(short pc,short item) {
 						break;
 					case eItemUse::HARM_ONE:
 						ASB("  You feel terrible.");
-						damage_pc(univ.party[pc], str*25, eDamageType::UNBLOCKABLE, eRace::UNKNOWN, 0);
+						damage_pc(univ.party[pc], str*25, eDamageType::UNBLOCKABLE, eRace::UNKNOWN);
 						univ.party[pc].poison(str);
 						break;
 					case eItemUse::HELP_ALL:
@@ -1419,6 +1419,19 @@ void change_level(short town_num,short x,short y) {
 	start_town_mode(town_num,9);
 }
 
+void set_sound_type(eDamageType dam_type, short& sound_type) {
+	if(sound_type == -1){
+		sound_type = 0;
+		if(dam_type == eDamageType::FIRE || dam_type == eDamageType::UNBLOCKABLE)
+			sound_type = 5;
+		else if(dam_type == eDamageType::COLD)
+			sound_type = 7;
+		else if(dam_type == eDamageType::MAGIC)
+			sound_type = 12;
+		else if(dam_type == eDamageType::POISON)
+			sound_type = 11;
+	}
+}
 
 // Damaging and killing monsters needs to be here because several have specials attached to them.
 short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType dam_type, short sound_type, bool do_print) {
@@ -1429,16 +1442,9 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 	
 	if(victim.active == eCreatureStatus::DEAD) return false;
 	
-	if(sound_type == 0) {
-		if(dam_type == eDamageType::FIRE || dam_type == eDamageType::UNBLOCKABLE)
-			sound_type = 5;
-		if(dam_type == eDamageType::COLD)
-			sound_type = 7;
-		if(dam_type == eDamageType::MAGIC)
-			sound_type = 12;
-		if(dam_type == eDamageType::POISON)
-			sound_type = 11;
-	}
+	// Note: sound type 0 can now be forced for UNBLOCKABLE by passing sound_type 0,
+	// but -1 is the new value for "use default"
+	set_sound_type(dam_type, sound_type);
 	
 	if(dam_type < eDamageType::SPECIAL) {
 		how_much = percent(how_much, victim.resist[dam_type]);
@@ -1788,7 +1794,7 @@ void push_things() {
 					}
 					if(univ.town.is_block(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y)) {
 						ASB("You crash into the block.");
-						damage_pc(univ.party[i],get_ran(1, 1, 6), eDamageType::WEAPON,eRace::UNKNOWN,0);
+						damage_pc(univ.party[i],get_ran(1, 1, 6), eDamageType::WEAPON,eRace::UNKNOWN);
 					}
 					for(short k = 0; k < univ.town.items.size(); k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].held
