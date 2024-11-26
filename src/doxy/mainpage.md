@@ -109,6 +109,7 @@ The `<button>` tag accepts the following attributes:
 * `name` - This attribute is required on the `<button>` tag. See
 **Common Attributes** above.
 * `type` - Specifies the type of button. This attribute is required.
+* `text-size` - Overrides the text size of the button's type
 * `wrap` - Specifies whether to wrap the text on the button. Can be
 either `true` or `false`; defaults to `false`.
 * `fromlist`, `def-key` - See **Common Attributes** above.
