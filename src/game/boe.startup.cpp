@@ -50,8 +50,13 @@ void handle_startup_button_click(eStartButton btn, eKeyMod mods) {
 	std::string scen_name;
 	bool force_party = false;
 
+	if(replaying){
+		// Show the whole menu, not just a black bg, before handling the button click lightning-fast
+		put_background();
+		draw_startup(0);
+	}
 	draw_start_button(btn,5);
-	mainPtr.display(); // TODO: I suspect this won't work
+	mainPtr.display();
 	play_sound(37, time_in_ticks(5));
 	draw_start_button(btn,0);
 	switch(btn) {
