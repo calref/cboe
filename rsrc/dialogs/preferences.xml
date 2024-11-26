@@ -7,12 +7,12 @@
 	</text>
 	<text name='scale-head' size='large' relative='pos-in pos' rel-anchor='prev' top='10' left='10' width='260' height='17'>Scale UI:</text>
 	<group name='scaleui'>
-		<led name='1' relative='pos-in pos' anchor='scale-head' top='4' left='15' width='33'>1</led>
-		<led name='1_5' relative='pos-in pos' anchor='scale-head' top='4' left='55' width='33'>1.5</led>
-		<led name='2' relative='pos-in pos' anchor='scale-head' top='4' left='95' width='33'>2</led>
-		<led name='3' relative='pos-in pos' anchor='scale-head' top='4' left='135' width='33'>3</led>
-		<led name='4' relative='pos-in pos' anchor='scale-head' top='4' left='175' width='33'>4</led>
-		<led name='other' relative='pos-in pos' anchor='scale-head' top='4' left='215' width='85'/>
+		<led name='1' relative='pos-in pos' anchor='scale-head' top='4' left='15'>1</led>
+		<led name='1_5' relative='pos-in pos' anchor='scale-head' top='4' left='55'>1.5</led>
+		<led name='2' relative='pos-in pos' anchor='scale-head' top='4' left='95'>2</led>
+		<led name='3' relative='pos-in pos' anchor='scale-head' top='4' left='135'>3</led>
+		<led name='4' relative='pos-in pos' anchor='scale-head' top='4' left='175'>4</led>
+		<led name='other' relative='pos-in pos' anchor='scale-head' top='4' left='215'/>
 	</group>
 	<text name='scalemap-head' size='large' relative='neg pos' anchor='scale-head' top='17' left='0' width='260' height='17'>Scale Map:</text>
 	<group name='scalemap'>
@@ -26,28 +26,28 @@
 	<text size='large' relative='pos-in pos' anchor='scalemap-head' top='30' left='0' width='182' height='17'>Display alignment:</text>
 	<text name='disp-frame' framed='true' relative='pos-in pos' rel-anchor='prev' top='6' left='0' width='277' height='102'/>
 	<group name='display'>
-		<led name='tl' relative='pos-in' anchor='disp-frame' top='7' left='8' width='54'>Top Left</led>
-		<led name='tr' relative='neg-in pos-in' anchor='disp-frame' top='7' left='128' width='62'>Top Right</led>
-		<led name='mid' relative='pos-in' anchor='disp-frame' top='40' left='83' width='75'>Center</led>
-		<led name='bl' relative='pos-in neg-in' anchor='disp-frame' top='24' left='8' width='104'>Bottom Left</led>
-		<led name='br' relative='neg-in' anchor='disp-frame' top='24' left='128' width='104'>Bottom Right</led>
-		<led name='win' relative='pos-in pos' anchor='disp-frame' top='9' left='8' width='228'>Small Window (not full screen)</led>
+		<led name='tl' relative='pos-in' anchor='disp-frame' top='7' left='8'>Top Left</led>
+		<led name='tr' relative='neg-in pos-in' anchor='disp-frame' top='7' left='128'>Top Right</led>
+		<led name='mid' relative='pos-in' anchor='disp-frame' top='40' left='83'>Center</led>
+		<led name='bl' relative='pos-in neg-in' anchor='disp-frame' top='24' left='8'>Bottom Left</led>
+		<led name='br' relative='neg-in' anchor='disp-frame' top='24' left='128'>Bottom Right</led>
+		<led name='win' relative='pos-in pos' anchor='disp-frame' top='9' left='8'>Small Window (not full screen)</led>
 	</group>
 	<text name='spd-head' size='large' relative='neg pos' anchor='disp-frame' top='31' left='0' width='182' height='17'>Game speed:</text>
 	<group name='speed'>
-		<led name='fast' relative='pos-in pos' anchor='spd-head' top='4' left='15' width='53'>Fast</led>
-		<led name='med' relative='pos-in pos' anchor='spd-head' top='4' left='85' width='53'>Medium</led>
-		<led name='slow' relative='pos-in pos' anchor='spd-head' top='4' left='155' width='53'>Slow</led>
-		<led name='snail' relative='pos-in pos' anchor='spd-head' top='4' left='225' width='70'>Quite Slow</led>
+		<led name='fast' relative='pos-in pos' anchor='spd-head' top='4' left='15'>Fast</led>
+		<led name='med' relative='pos pos-in' anchor='fast' top='0' left='15'>Medium</led>
+		<led name='slow' relative='pos pos-in' anchor='med' top='0' left='15'>Slow</led>
+		<led name='snail' relative='pos pos-in' anchor='slow' top='0' left='15'>Quite Slow</led>
 	</group>
 	<text name='misc-head' size='large' relative='pos-in pos' anchor='spd-head' top='30' left='0' width='182' height='17'>Miscellaneous:</text>
-	<led name='nosound' relative='pos-in pos' anchor='misc-head' top='6' left='15' width='117'>No Sounds</led>
-	<led name='repeatdesc' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='287'>Show room descriptions more than once</led>
-	<led name='easier' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='352'>Make game easier (monsters much weaker)</led>
-	<led name='lesswm' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='340'>Fewer wandering monsters</led>
-	<led name='skipsplash' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='340'>Skip splash screen on startup</led>
-	<led name='nohelp' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='306'>Never show instant help</led>
-	<button name='resethelp' type='tiny' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='340'>
+	<led name='nosound' relative='pos-in pos' anchor='misc-head' top='6' left='15'>No Sounds</led>
+	<led name='repeatdesc' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Show room descriptions more than once</led>
+	<led name='easier' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Make game easier (monsters much weaker)</led>
+	<led name='lesswm' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Fewer wandering monsters</led>
+	<led name='skipsplash' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Skip splash screen on startup</led>
+	<led name='nohelp' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Never show instant help</led>
+	<button name='resethelp' type='tiny' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>
 		Reset instant help (all help windows will reappear)
 	</button>
 	<button name='okay' relative='abs pos' rel-anchor='prev' type='regular' top='17' left='354'>OK</button>

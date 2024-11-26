@@ -61,6 +61,8 @@ bool cButton::isScrollable() const {
 	return false;
 }
 
+const int tiny_text_offset = 18;
+
 void cButton::draw(){
 	rectangle from_rect, to_rect;
 	
@@ -81,7 +83,7 @@ void cButton::draw(){
 		eTextMode textMode = eTextMode::CENTRE;
 		if(type == BTN_TINY) {
 			textMode = wrapLabel ? eTextMode::WRAP : eTextMode::LEFT_TOP;
-			to_rect.left += 18;
+			to_rect.left += tiny_text_offset;
 			style.colour = textClr;
 		} else if(type == BTN_PUSH) {
 			to_rect.top += 42;
@@ -175,13 +177,17 @@ void cButton::validatePostParse(ticpp::Element& elem, std::string fname, const s
 	if(labelledButtons.count(type)) {
 		if(!attrs.count("color") && !attrs.count("colour") && parent->getBg() == cDialog::BG_DARK)
 			setColour(sf::Color::White);
-		if(!getText().empty() && !attrs.count("width"))
-			throw xMissingAttr(elem.Value(), "width", elem.Row(), elem.Column(), fname);
 	}
 }
 
 location cButton::getPreferredSize() const {
-	return {btnRects[type][0].width(), btnRects[type][0].height()};
+	int width = btnRects[type][0].width();
+	if(type == BTN_TINY && !getText().empty()){
+		TextStyle style;
+		style.pointSize = textSize;
+		width = tiny_text_offset + string_length(getText(), style);
+	}
+	return {width, btnRects[type][0].height()};
 }
 
 void cButton::recalcRect() {

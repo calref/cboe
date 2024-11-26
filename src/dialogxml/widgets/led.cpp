@@ -86,6 +86,8 @@ bool cLed::manageFormat(eFormat prop, bool set, boost::any* val) {
 	return true;
 }
 
+const int text_offset = 18; // Possibly could be 20
+
 void cLed::draw(){
 	rectangle from_rect, to_rect;
 	
@@ -103,7 +105,7 @@ void cLed::draw(){
 		rect_draw_some_item(*ResMgr::graphics.get(buttons[btnGW[BTN_LED]]),from_rect,*inWindow,to_rect);
 		style.colour = textClr;
 		to_rect.right = frame.right;
-		to_rect.left = frame.left + 18; // Possibly could be 20
+		to_rect.left = frame.left + text_offset;
 		win_draw_string(*inWindow,to_rect,getText(),wrapLabel ? eTextMode::WRAP : eTextMode::LEFT_TOP,style);
 	}
 
@@ -152,5 +154,11 @@ bool cLed::parseContent(ticpp::Node& content, int n, std::string tagName, std::s
 }
 
 location cLed::getPreferredSize() const {
-	return {ledRects[0][0].width(), ledRects[0][0].height()};
+	int width = ledRects[0][0].width();
+	if(!getText().empty()){
+		TextStyle style;
+		style.pointSize = textSize;
+		width = text_offset + string_length(getText(), style);
+	}
+	return {width, ledRects[0][0].height()};
 }
