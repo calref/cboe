@@ -5,35 +5,36 @@
 	<text size='large' relative='pos pos-in' rel-anchor='prev' top='0' left='4' width='218' height='16'>
 		Blades of Exile Preferences
 	</text>
-	<text name='scale-head' size='large' relative='pos-in pos' rel-anchor='prev' top='10' left='10' width='260' height='17'>Scale UI:</text>
-	<group name='scaleui'>
-		<led name='1' relative='pos-in pos' anchor='scale-head' top='4' left='15'>1</led>
-		<led name='1_5' relative='pos-in pos' anchor='scale-head' top='4' left='55'>1.5</led>
-		<led name='2' relative='pos-in pos' anchor='scale-head' top='4' left='95'>2</led>
-		<led name='3' relative='pos-in pos' anchor='scale-head' top='4' left='135'>3</led>
-		<led name='4' relative='pos-in pos' anchor='scale-head' top='4' left='175'>4</led>
-		<led name='other' relative='pos-in pos' anchor='scale-head' top='4' left='215'/>
-	</group>
-	<text name='scalemap-head' size='large' relative='neg pos' anchor='scale-head' top='17' left='0' width='260' height='17'>Scale Map:</text>
-	<group name='scalemap'>
-		<led name='1' relative='pos-in pos' anchor='scalemap-head' top='4' left='15'>1</led>
-		<led name='1_5' relative='pos-in pos' anchor='scalemap-head' top='4' left='55'>1.5</led>
-		<led name='2' relative='pos-in pos' anchor='scalemap-head' top='4' left='95'>2</led>
-		<led name='3' relative='pos-in pos' anchor='scalemap-head' top='4' left='135'>3</led>
-		<led name='4' relative='pos-in pos' anchor='scalemap-head' top='4' left='175'>4</led>
-		<led name='other' relative='pos-in pos' anchor='scalemap-head' top='4' left='215'/>
-	</group>
-	<text size='large' relative='pos-in pos' anchor='scalemap-head' top='30' left='0' width='182' height='17'>Display alignment:</text>
-	<text name='disp-frame' framed='true' relative='pos-in pos' rel-anchor='prev' top='6' left='0' width='277' height='102'/>
+	<text name='disp-head' size='large' relative='pos-in pos' rel-anchor='prev' top='10' left='0' width='182' height='17'>Display alignment:</text>
+	<text name='disp-frame' framed='true' relative='pos-in pos' rel-anchor='prev' top='6' left='10' width='250' height='98'/>
 	<group name='display'>
 		<led name='tl' relative='pos-in' anchor='disp-frame' top='7' left='8'>Top Left</led>
-		<led name='tr' relative='neg-in pos-in' anchor='disp-frame' top='7' left='128'>Top Right</led>
+		<led name='tr' relative='neg-in pos-in' anchor='disp-frame' top='7' left='77' text-side='left'>Top Right</led>
 		<led name='mid' relative='pos-in' anchor='disp-frame' top='40' left='83'>Center</led>
-		<led name='bl' relative='pos-in neg-in' anchor='disp-frame' top='24' left='8'>Bottom Left</led>
-		<led name='br' relative='neg-in' anchor='disp-frame' top='24' left='128'>Bottom Right</led>
+		<led name='bl' relative='pos-in neg-in' anchor='disp-frame' top='16' left='8'>Bottom Left</led>
+		<led name='br' relative='neg-in' anchor='disp-frame' top='16' left='95' text-side='left'>Bottom Right</led>
 		<led name='win' relative='pos-in pos' anchor='disp-frame' top='9' left='8'>Small Window (not full screen)</led>
 	</group>
-	<text name='spd-head' size='large' relative='neg pos' anchor='disp-frame' top='31' left='0' width='182' height='17'>Game speed:</text>
+	<text name='scale-head' size='large' relative='pos-in neg' anchor='disp-head' top='0' left='300' width='40' height='17'>Scale:</text>
+	<text name='scaleui-head' size='large' relative='neg pos' anchor='scale-head' top='10' left='20' width='40' height='17'>UI</text>
+	<group name='scaleui'>
+		<led name='1' relative='neg pos' anchor='scaleui-head' top='4' left='3'>1</led>
+		<led name='1_5' relative='neg pos' anchor='scaleui-head' top='16' left='3'>1.5</led>
+		<led name='2' relative='neg pos' anchor='scaleui-head' top='28' left='3'>2</led>
+		<led name='3' relative='neg pos' anchor='scaleui-head' top='40' left='3'>3</led>
+		<led name='4' relative='neg pos' anchor='scaleui-head' top='52' left='3'>4</led>
+		<led name='other' relative='neg pos' anchor='scaleui-head' top='64' left='3'/>
+	</group>
+	<text name='scalemap-head' size='large' relative='pos pos' anchor='scale-head' top='10' left='2' width='60' height='17'>Minimap</text>
+	<group name='scalemap'>
+		<led name='1' relative='pos-in pos' anchor='scalemap-head' top='4' left='14'>1</led>
+		<led name='1_5' relative='pos-in pos' anchor='scalemap-head' top='16' left='14'>1.5</led>
+		<led name='2' relative='pos-in pos' anchor='scalemap-head' top='28' left='14'>2</led>
+		<led name='3' relative='pos-in pos' anchor='scalemap-head' top='40' left='14'>3</led>
+		<led name='4' relative='pos-in pos' anchor='scalemap-head' top='52' left='14'>4</led>
+		<led name='other' relative='pos-in pos' anchor='scalemap-head' top='64' left='14'/>
+	</group>
+	<text name='spd-head' size='large' relative='neg pos' anchor='disp-frame' top='31' left='10' width='182' height='17'>Game speed:</text>
 	<group name='speed'>
 		<led name='fast' relative='pos-in pos' anchor='spd-head' top='4' left='15'>Fast</led>
 		<led name='med' relative='pos pos-in' anchor='fast' top='0' left='15'>Medium</led>
