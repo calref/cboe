@@ -14,9 +14,9 @@
 	<field name='cold-res' top='215' left='320' width='80' height='16'/>
 	<text top='246' left='273' width='40' height='16'>Poison:</text>
 	<field name='poison-res' top='245' left='320' width='80' height='16'/>
-	<led name='mindless' top='215' left='415' width='70'>Mindless</led>
-	<led name='amorph' top='230' left='415' width='70'>Amorphous</led>
-	<led name='invuln' top='245' left='415' width='70'>Invulnerable</led>
+	<led name='mindless' top='215' left='415'>Mindless</led>
+	<led name='amorph' top='230' left='415'>Amorphous</led>
+	<led name='invuln' top='245' left='415'>Invulnerable</led>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='158' height='16'>Edit Monster Abilities</text>
 	<text framed='true' top='6' left='222' width='111' height='14'>Monster number:</text>
@@ -47,16 +47,16 @@
 	</text>
 	<text top='81' left='420' width='94' height='14'>Summon type:</text>
 	<group name='summon'>
-		<led name='s0' state='off' top='85' left='505' width='100'>Weak (no summon)</led>
-		<led name='s1' state='off' top='100' left='505' width='100'>Type 1</led>
-		<led name='s2' state='off' top='115' left='505' width='100'>Type 2</led>
-		<led name='s3' state='off' top='130' left='505' width='100'>Type 3</led>
-		<led name='s4' state='off' top='145' left='505' width='100'>Unique (no summon)</led>
+		<led name='s0' state='off' top='85' left='505'>Weak (no summon)</led>
+		<led name='s1' state='off' top='100' left='505'>Type 1</led>
+		<led name='s2' state='off' top='115' left='505'>Type 2</led>
+		<led name='s3' state='off' top='130' left='505'>Type 3</led>
+		<led name='s4' state='off' top='145' left='505'>Unique (no summon)</led>
 	</group>
-	<led name='invis' size='small' top='280' left='120' width='450'>
+	<led name='invis' size='small' top='280' left='120'>
 		This monster is naturally and permanently invisible.
 	</led>
-	<led name='guard' size='small' top='296' left='120' width='450'>
+	<led name='guard' size='small' top='296' left='120'>
 		This monster is a guard - when the town goes hostile, it will hunt the party down.
 	</led>
 	<text top='331' left='10' width='250' height='16'>Special node to call when monster first seen</text>

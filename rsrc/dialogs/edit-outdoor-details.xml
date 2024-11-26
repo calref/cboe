@@ -11,10 +11,10 @@
 	<text name='loc' top='29' left='142' width='127' height='14'/>
 	<text top='85' left='50' width='100' height='16'>Ambient Sound:</text>
 	<group name='ambient'>
-		<led name='snd1' top='85' left='150' width='40'>None</led>
-		<led name='snd2' top='85' left='210' width='40'>Drips</led>
-		<led name='snd3' top='85' left='270' width='60'>Birdsong</led>
-		<led name='snd4' top='85' left='350' width='50'>Custom</led>
+		<led name='snd1' top='85' left='150'>None</led>
+		<led name='snd2' top='85' left='210'>Drips</led>
+		<led name='snd3' top='85' left='270'>Birdsong</led>
+		<led name='snd4' top='85' left='350'>Custom</led>
 	</group>
 	<text top='106' left='50' width='190' height='16'>Background: (-1 = scenario default)</text>
 	<field name='bg-out' top='104' left='250' width='80' height='16'/>

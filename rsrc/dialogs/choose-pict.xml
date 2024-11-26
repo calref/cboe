@@ -4,42 +4,42 @@
 	<pict name='mainpic' type='dlog' num='16' top='6' left='6'/>
 	<text name='prompt' size='large' top='6' left='50' width='248' height='14'>Select a graphic:</text>
 	<group name='group'>
-		<led name='led1' state='off' top='29' left='55' width='16'/>
-		<led name='led2' state='off' top='74' left='55' width='16'/>
-		<led name='led3' state='off' top='119' left='55' width='16'/>
-		<led name='led4' state='off' top='164' left='55' width='16'/>
-		<led name='led5' state='off' top='209' left='55' width='16'/>
-		<led name='led6' state='off' top='254' left='55' width='16'/>
-		<led name='led7' state='off' top='29' left='119' width='16'/>
-		<led name='led8' state='off' top='74' left='119' width='16'/>
-		<led name='led9' state='off' top='119' left='119' width='16'/>
-		<led name='led10' state='off' top='164' left='119' width='16'/>
-		<led name='led11' state='off' top='209' left='119' width='16'/>
-		<led name='led12' state='off' top='254' left='119' width='16'/>
-		<led name='led13' state='off' top='29' left='183' width='16'/>
-		<led name='led14' state='off' top='74' left='183' width='16'/>
-		<led name='led15' state='off' top='119' left='183' width='16'/>
-		<led name='led16' state='off' top='164' left='183' width='16'/>
-		<led name='led17' state='off' top='209' left='183' width='16'/>
-		<led name='led18' state='off' top='254' left='183' width='16'/>
-		<led name='led19' state='off' top='29' left='251' width='16'/>
-		<led name='led20' state='off' top='74' left='251' width='16'/>
-		<led name='led21' state='off' top='119' left='251' width='16'/>
-		<led name='led22' state='off' top='164' left='251' width='16'/>
-		<led name='led23' state='off' top='209' left='251' width='16'/>
-		<led name='led24' state='off' top='254' left='251' width='16'/>
-		<led name='led25' state='off' top='29' left='320' width='16'/>
-		<led name='led26' state='off' top='74' left='320' width='16'/>
-		<led name='led27' state='off' top='119' left='320' width='16'/>
-		<led name='led28' state='off' top='164' left='320' width='16'/>
-		<led name='led29' state='off' top='209' left='320' width='16'/>
-		<led name='led30' state='off' top='254' left='320' width='16'/>
-		<led name='led31' state='off' top='29' left='388' width='16'/>
-		<led name='led32' state='off' top='74' left='388' width='16'/>
-		<led name='led33' state='off' top='119' left='388' width='16'/>
-		<led name='led34' state='off' top='164' left='388' width='16'/>
-		<led name='led35' state='off' top='209' left='388' width='16'/>
-		<led name='led36' state='off' top='254' left='388' width='16'/>
+		<led name='led1' state='off' top='29' left='55'>
+		<led name='led2' state='off' top='74' left='55'>
+		<led name='led3' state='off' top='119' left='55'>
+		<led name='led4' state='off' top='164' left='55'>
+		<led name='led5' state='off' top='209' left='55'>
+		<led name='led6' state='off' top='254' left='55'>
+		<led name='led7' state='off' top='29' left='119'>
+		<led name='led8' state='off' top='74' left='119'>
+		<led name='led9' state='off' top='119' left='119'>
+		<led name='led10' state='off' top='164' left='119'>
+		<led name='led11' state='off' top='209' left='119'>
+		<led name='led12' state='off' top='254' left='119'>
+		<led name='led13' state='off' top='29' left='183'>
+		<led name='led14' state='off' top='74' left='183'>
+		<led name='led15' state='off' top='119' left='183'>
+		<led name='led16' state='off' top='164' left='183'>
+		<led name='led17' state='off' top='209' left='183'>
+		<led name='led18' state='off' top='254' left='183'>
+		<led name='led19' state='off' top='29' left='251'>
+		<led name='led20' state='off' top='74' left='251'>
+		<led name='led21' state='off' top='119' left='251'>
+		<led name='led22' state='off' top='164' left='251'>
+		<led name='led23' state='off' top='209' left='251'>
+		<led name='led24' state='off' top='254' left='251'>
+		<led name='led25' state='off' top='29' left='320'>
+		<led name='led26' state='off' top='74' left='320'>
+		<led name='led27' state='off' top='119' left='320'>
+		<led name='led28' state='off' top='164' left='320'>
+		<led name='led29' state='off' top='209' left='320'>
+		<led name='led30' state='off' top='254' left='320'>
+		<led name='led31' state='off' top='29' left='388'>
+		<led name='led32' state='off' top='74' left='388'>
+		<led name='led33' state='off' top='119' left='388'>
+		<led name='led34' state='off' top='164' left='388'>
+		<led name='led35' state='off' top='209' left='388'>
+		<led name='led36' state='off' top='254' left='388'>
 	</group>
 	<pict name='pic1' type='ter' num='0' top='29' left='76'/>
 	<pict name='pic2' type='ter' num='1' top='74' left='76'/>

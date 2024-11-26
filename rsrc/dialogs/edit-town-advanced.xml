@@ -39,30 +39,30 @@
 		Exit town specials:
 		(These are the numbers of the town special nodes to call when the party tries to leave town in the given direction.)
 	</text>
-	<button name='edit-onenter' type='tiny' top='135' left='259' width='120' height='15'>Still alive</button>
-	<button name='edit-onenterdead' type='tiny' top='162' left='259' width='120' height='15'>Been abandoned</button>
-	<button name='edit-onhostile' type='tiny' top='189' left='259' width='120' height='15'>When Goes Hostile</button>
-	<button name='edit-onexit1' type='tiny' top='81' left='251' width='49' height='15'>Top</button>
-	<button name='edit-onexit2' type='tiny' top='109' left='251' width='49' height='15'>Left</button>
-	<button name='edit-onexit3' type='tiny' top='81' left='382' width='53' height='15'>Bottom</button>
-	<button name='edit-onexit4' type='tiny' top='109' left='382' width='49' height='15'>Right</button>
+	<button name='edit-onenter' type='tiny' top='135' left='259' height='15'>Still alive</button>
+	<button name='edit-onenterdead' type='tiny' top='162' left='259' height='15'>Been abandoned</button>
+	<button name='edit-onhostile' type='tiny' top='189' left='259' height='15'>When Goes Hostile</button>
+	<button name='edit-onexit1' type='tiny' top='81' left='251' height='15'>Top</button>
+	<button name='edit-onexit2' type='tiny' top='109' left='251' height='15'>Left</button>
+	<button name='edit-onexit3' type='tiny' top='81' left='382' height='15'>Bottom</button>
+	<button name='edit-onexit4' type='tiny' top='109' left='382' height='15'>Right</button>
 	<text top='232' left='257' width='49' height='15'>Top</text>
 	<text top='259' left='258' width='49' height='15'>Left</text>
 	<text top='285' left='258' width='53' height='15'>Bottom</text>
 	<text top='313' left='259' width='49' height='15'>Right</text>
 	<text top='212' left='331' width='35' height='15'>X</text>
 	<text top='212' left='379' width='40' height='15'>Y</text>
-	<button name='pick-town' type='tiny' top='276' left='30' width='120'>Town Background:</button>
+	<button name='pick-town' type='tiny' top='276' left='30'>Town Background:</button>
 	<field name='bg-town' top='274' left='160' width='80' height='16'/>
-	<button name='pick-fight' type='tiny' top='302' left='30' width='120'>Combat Background:</button>
+	<button name='pick-fight' type='tiny' top='302' left='30'>Combat Background:</button>
 	<field name='bg-fight' top='298' left='160' width='80' height='16'/>
 	<text top='319' left='30' width='100' height='16'>Town Properties:</text>
-	<led name='hidden' font='plain' top='336' left='30' width='450'>
+	<led name='hidden' font='plain' top='336' left='30'>
 		Town hidden?
 		(Can't be seen until it's made visible with a special encounter.)
 	</led>
-	<led name='nomap' font='plain' top='353' left='30' width='200'>No automap in this town</led>
-	<led name='noscry' font='plain' top='370' left='30' width='200'>Defy scrying (Magic Map doesn't work)</led>
-	<led name='barrier' font='plain' top='387' left='30' width='220'>Magical barriers are stronger in this town</led>
-	<led name='tavern' font='plain' top='404' left='30' width='220'>You can create new PCs in this town</led>
+	<led name='nomap' font='plain' top='353' left='30'>No automap in this town</led>
+	<led name='noscry' font='plain' top='370' left='30'>Defy scrying (Magic Map doesn't work)</led>
+	<led name='barrier' font='plain' top='387' left='30'>Magical barriers are stronger in this town</led>
+	<led name='tavern' font='plain' top='404' left='30'>You can create new PCs in this town</led>
 </dialog>

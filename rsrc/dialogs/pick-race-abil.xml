@@ -8,30 +8,30 @@
 	<text name='xp' framed='true' top='352' left='254' width='50' height='16'/>
 	<text name='info' framed='true' top='282' left='15' width='300' height='59'>Select species and traits.</text>
 	<group name='race'>
-		<led name='race1' top='53' left='55' width='90'>Human (0%)</led>
-		<led name='race2' top='53' left='170' width='90'>Nephilim (12%)</led>
-		<led name='race3' top='53' left='285' width='90'>Slithzerikai (20%)</led>
-		<led name='race4' top='53' left='400' width='90'>Vahnatai (18%)</led>
+		<led name='race1' top='53' left='55'>Human (0%)</led>
+		<led name='race2' top='53' left='170'>Nephilim (12%)</led>
+		<led name='race3' top='53' left='285'>Slithzerikai (20%)</led>
+		<led name='race4' top='53' left='400'>Vahnatai (18%)</led>
 	</group>
 	<text size='large' top='74' left='55' width='126' height='16'>Advantages:</text>
-	<led name='good1' top='95' left='55' width='126'>Toughness (10%)</led>
-	<led name='good2' top='110' left='55' width='126'>Magically Apt. (20%)</led>
-	<led name='good3' top='125' left='55' width='126'>Ambidextrous (8%)</led>
-	<led name='good4' top='140' left='55' width='126'>Nimble Fingers (10%)</led>
-	<led name='good5' top='155' left='55' width='126'>Cave Lore (4%)</led>
-	<led name='good6' top='95' left='236' width='126'>Woodsman (6%)</led>
-	<led name='good7' top='110' left='236' width='136'>Good Constitution (10%)</led>
-	<led name='good8' top='125' left='236' width='136'>Highly Alert (7%)</led>
-	<led name='good9' top='140' left='236' width='200'>Exceptional Strength (12%)</led>
-	<led name='good10' top='155' left='236' width='136'>Recuperation (15%)</led>
+	<led name='good1' top='95' left='55'>Toughness (10%)</led>
+	<led name='good2' top='110' left='55'>Magically Apt. (20%)</led>
+	<led name='good3' top='125' left='55'>Ambidextrous (8%)</led>
+	<led name='good4' top='140' left='55'>Nimble Fingers (10%)</led>
+	<led name='good5' top='155' left='55'>Cave Lore (4%)</led>
+	<led name='good6' top='95' left='236'>Woodsman (6%)</led>
+	<led name='good7' top='110' left='236'>Good Constitution (10%)</led>
+	<led name='good8' top='125' left='236'>Highly Alert (7%)</led>
+	<led name='good9' top='140' left='236'>Exceptional Strength (12%)</led>
+	<led name='good10' top='155' left='236'>Recuperation (15%)</led>
 	<text top='352' left='19' width='216' height='16'>Experience needed to gain each level:</text>
 	<text size='large' top='178' left='55' width='126' height='16'>Disadvantages</text>
-	<led name='bad1' top='197' left='55' width='126'>Sluggish (-10%)</led>
-	<led name='bad2' top='212' left='55' width='126'>Magically Inept (-8%)</led>
-	<led name='bad3' top='227' left='55' width='126'>Frail (-8%)</led>
-	<led name='bad4' top='242' left='55' width='126'>Chronic Disease (-20%)</led>
-	<led name='bad5' top='257' left='55' width='136'>Bad Back (-8%)</led>
-	<led name='bad6' top='197' left='236' width='136'>Pacifist (-40%)</led>
-	<led name='bad7' top='212' left='236' width='136'>Anama Member (-10%)</led>
+	<led name='bad1' top='197' left='55'>Sluggish (-10%)</led>
+	<led name='bad2' top='212' left='55'>Magically Inept (-8%)</led>
+	<led name='bad3' top='227' left='55'>Frail (-8%)</led>
+	<led name='bad4' top='242' left='55'>Chronic Disease (-20%)</led>
+	<led name='bad5' top='257' left='55'>Bad Back (-8%)</led>
+	<led name='bad6' top='197' left='236'>Pacifist (-40%)</led>
+	<led name='bad7' top='212' left='236'>Anama Member (-10%)</led>
 	<text top='230' left='289' width='204' height='43'>Number in () is how much having that trait affects the experience you need to gain a level.</text>
 </dialog>

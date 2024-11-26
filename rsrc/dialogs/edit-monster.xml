@@ -33,10 +33,10 @@
 	<button name='picktype3' type='regular' top='194' left='600'>Choose</button>
 	<button name='picktalk' type='regular' top='275' left='264'>Choose</button>
 	<group name='attitude'>
-		<led name='docile' top='304' left='358' width='100'>Friendly, Docile</led>
-		<led name='A' top='319' left='358' width='100'>Hostile, Type A</led>
-		<led name='friendly' top='304' left='490' width='100'>Friendly, Will Fight</led>
-		<led name='B' top='319' left='490' width='100'>Hostile, Type B</led>
+		<led name='docile' top='304' left='358'>Friendly, Docile</led>
+		<led name='A' top='319' left='358'>Hostile, Type A</led>
+		<led name='friendly' top='304' left='490'>Friendly, Will Fight</led>
+		<led name='B' top='319' left='490'>Hostile, Type B</led>
 	</group>
 	<text name='num' top='8' left='334' width='37' height='14'/>
 	<pict name='icon' type='monst' num='0' top='8' left='8'/>

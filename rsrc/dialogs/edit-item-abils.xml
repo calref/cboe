@@ -29,28 +29,28 @@
 	
 	<text name='use-title' anchor='str2-title' relative='pos-in pos' top='14' left='0' width='135' height='13'>Item use properties</text>
 	<group name='use-type'>
-		<led name='use0' anchor='use-title' relative='pos pos-in' state='off' top='0' left='21' width='100'>Help single PC</led>
-		<led name='use1' anchor='use0' relative='pos-in pos' state='off' top='5' left='0' width='100'>Harm single PC</led>
-		<led name='use2' anchor='use1' relative='pos-in pos' state='off' top='5' left='0' width='100'>Help whole party</led>
-		<led name='use3' anchor='use2' relative='pos-in pos' state='off' top='5' left='0' width='100'>Harm whole party</led>
+		<led name='use0' anchor='use-title' relative='pos pos-in' state='off' top='0' left='21'>Help single PC</led>
+		<led name='use1' anchor='use0' relative='pos-in pos' state='off' top='5' left='0'>Harm single PC</led>
+		<led name='use2' anchor='use1' relative='pos-in pos' state='off' top='5' left='0'>Help whole party</led>
+		<led name='use3' anchor='use2' relative='pos-in pos' state='off' top='5' left='0'>Harm whole party</led>
 	</group>
 	
 	<text anchor='use-type' relative='pos pos-in' top='6' left='22' width='121' height='13'>Other properties:</text>
-	<led name='always-id' rel-anchor='prev' relative='pos pos-in' state='off' top='0' left='2' width='100'>Always identified</led>
-	<led name='magic' rel-anchor='prev' relative='pos-in pos' state='off' top='5' left='0' width='100'>Magical</led>
-	<led name='cursed' rel-anchor='prev' relative='pos-in pos' state='off' top='5' left='0' width='100'>Cursed</led>
-	<led name='conceal' rel-anchor='prev' relative='pos-in pos' state='off' top='5' left='0' width='100'>Conceal ability</led>
-	<led name='no-sell' rel-anchor='prev' relative='pos-in pos' state='off' top='5' left='0' width='100'>Shops won't buy</led>
-	<led name='recharge' rel-anchor='prev' relative='pos-in pos' state='off' top='5' left='0' width='100'>Rechargeable</led>
+	<led name='always-id' rel-anchor='prev' relative='pos pos-in' state='off' top='0' left='2'>Always identified</led>
+	<led name='magic' rel-anchor='prev' relative='pos-in pos' state='off' top='5' left='0'>Magical</led>
+	<led name='cursed' rel-anchor='prev' relative='pos-in pos' state='off' top='5' left='0'>Cursed</led>
+	<led name='conceal' rel-anchor='prev' relative='pos-in pos' state='off' top='5' left='0'>Conceal ability</led>
+	<led name='no-sell' rel-anchor='prev' relative='pos-in pos' state='off' top='5' left='0'>Shops won't buy</led>
+	<led name='recharge' rel-anchor='prev' relative='pos-in pos' state='off' top='5' left='0'>Rechargeable</led>
 	
 	<text name='type-title' anchor='use-title' relative='pos-in pos' top='56' left='2' width='155' height='42'>Item treasure class: (0 is lowest level of treasure, 4 is highest)</text>
 	<group name='treasure'>
-		<led name='type0' anchor='type-title' relative='pos pos-in' state='off' top='0' left='43' width='140'>Type 0: Junk, Not left</led>
-		<led name='type1' anchor='type0' relative='pos-in pos' state='off' top='5' left='0' width='140'>Type 1: Lousy, 1 - 20 gp</led>
-		<led name='type2' anchor='type1' relative='pos-in pos' state='off' top='5' left='0' width='140'>Type 2: So-so, 20-200 gp</led>
-		<led name='type3' anchor='type2' relative='pos-in pos' state='off' top='5' left='0' width='140'>Type 3: Good, 200+ gp</led>
-		<led name='type4' anchor='type3' relative='pos-in pos' state='off' top='5' left='0' width='140'>Type 4: Great, 2500+ gp</led>
-		<led name='type5' anchor='type4' relative='pos-in pos' state='off' top='5' left='0' width='140'>Type 5: Unique/Rare, Not left</led>
+		<led name='type0' anchor='type-title' relative='pos pos-in' state='off' top='0' left='43'>Type 0: Junk, Not left</led>
+		<led name='type1' anchor='type0' relative='pos-in pos' state='off' top='5' left='0'>Type 1: Lousy, 1 - 20 gp</led>
+		<led name='type2' anchor='type1' relative='pos-in pos' state='off' top='5' left='0'>Type 2: So-so, 20-200 gp</led>
+		<led name='type3' anchor='type2' relative='pos-in pos' state='off' top='5' left='0'>Type 3: Good, 200+ gp</led>
+		<led name='type4' anchor='type3' relative='pos-in pos' state='off' top='5' left='0'>Type 4: Great, 2500+ gp</led>
+		<led name='type5' anchor='type4' relative='pos-in pos' state='off' top='5' left='0'>Type 5: Unique/Rare, Not left</led>
 	</group>
 	
 	<button name='cancel' relative='neg' type='regular' top='28' left='134' def-key='esc'>Cancel</button>

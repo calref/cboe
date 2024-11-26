@@ -24,37 +24,37 @@
 	 NOTE: All these LEDs have been shifted 100 pixels left to account for the labels swapping sides
 	 -->
 	<group name='variety'>
-		<led name='none' state='off' top='109' left='106' width='90'>No Item</led>
-		<led name='weap1' state='off' top='124' left='106' width='90'>1-Hand weapon</led>
-		<led name='weap2' state='off' top='139' left='106' width='90'>2-Hand weapon</led>
-		<led name='gold' state='off' top='154' left='106' width='90'>Gold</led>
-		<led name='bow' state='off' top='169' left='106' width='90'>Bow</led>
-		<led name='arrow' state='off' top='184' left='106' width='90'>Arrows</led>
-		<led name='thrown' state='off' top='199' left='106' width='90'>Thrown missile</led>
-		<led name='potion' state='off' top='109' left='218' width='90'>Potion/Magic Item</led>
-		<led name='scroll' state='off' top='124' left='218' width='90'>Scroll/Magic Item</led>
-		<led name='wand' state='off' top='139' left='218' width='90'>Wand</led>
-		<led name='tool' state='off' top='154' left='218' width='90'>Tool</led>
-		<led name='food' state='off' top='169' left='218' width='90'>Food</led>
-		<led name='shield' state='off' top='184' left='218' width='90'>Shield</led>
-		<led name='armor' state='off' top='199' left='218' width='90'>Armor</led>
-		<led name='helm' state='off' top='109' left='336' width='90'>Helm</led>
-		<led name='gloves' state='off' top='124' left='336' width='90'>Gloves</led>
+		<led name='none' state='off' top='109' left='106'>No Item</led>
+		<led name='weap1' state='off' top='124' left='106'>1-Hand weapon</led>
+		<led name='weap2' state='off' top='139' left='106'>2-Hand weapon</led>
+		<led name='gold' state='off' top='154' left='106'>Gold</led>
+		<led name='bow' state='off' top='169' left='106'>Bow</led>
+		<led name='arrow' state='off' top='184' left='106'>Arrows</led>
+		<led name='thrown' state='off' top='199' left='106'>Thrown missile</led>
+		<led name='potion' state='off' top='109' left='218'>Potion/Magic Item</led>
+		<led name='scroll' state='off' top='124' left='218'>Scroll/Magic Item</led>
+		<led name='wand' state='off' top='139' left='218'>Wand</led>
+		<led name='tool' state='off' top='154' left='218'>Tool</led>
+		<led name='food' state='off' top='169' left='218'>Food</led>
+		<led name='shield' state='off' top='184' left='218'>Shield</led>
+		<led name='armor' state='off' top='199' left='218'>Armor</led>
+		<led name='helm' state='off' top='109' left='336'>Helm</led>
+		<led name='gloves' state='off' top='124' left='336'>Gloves</led>
 		<!--
 		 TODO: Why are there two shields?
 		 -->
-		<led name='shield2' state='off' top='139' left='336' width='90'>Shield 2</led>
-		<led name='boots' state='off' top='154' left='336' width='90'>Boots</led>
-		<led name='ring' state='off' top='169' left='336' width='90'>Ring</led>
-		<led name='necklace' state='off' top='184' left='336' width='90'>Necklace</led>
-		<led name='poison' state='off' top='199' left='336' width='90'>Weapon Poison</led>
-		<led name='nonuse' state='off' top='109' left='448' width='90'>Non-Use Object</led>
-		<led name='pants' state='off' top='124' left='448' width='90'>Pants</led>
-		<led name='xbow' state='off' top='139' left='448' width='90'>Crossbow</led>
-		<led name='bolt' state='off' top='154' left='448' width='90'>Bolts</led>
-		<led name='missile' state='off' top='169' left='448' width='90'>Missile (no ammo)</led>
-		<led name='special' state='off' top='184' left='448' width='90'>Special Item</led>
-		<led name='quest' state='off' top='199' left='448' width='80'>Quest</led>
+		<led name='shield2' state='off' top='139' left='336'>Shield 2</led>
+		<led name='boots' state='off' top='154' left='336'>Boots</led>
+		<led name='ring' state='off' top='169' left='336'>Ring</led>
+		<led name='necklace' state='off' top='184' left='336'>Necklace</led>
+		<led name='poison' state='off' top='199' left='336'>Weapon Poison</led>
+		<led name='nonuse' state='off' top='109' left='448'>Non-Use Object</led>
+		<led name='pants' state='off' top='124' left='448'>Pants</led>
+		<led name='xbow' state='off' top='139' left='448'>Crossbow</led>
+		<led name='bolt' state='off' top='154' left='448'>Bolts</led>
+		<led name='missile' state='off' top='169' left='448'>Missile (no ammo)</led>
+		<led name='special' state='off' top='184' left='448'>Special Item</led>
+		<led name='quest' state='off' top='199' left='448'>Quest</led>
 	</group>
 	<pict name="pic" type='dlog' num='16' top='8' left='11'/>
 	<text size='large' top='6' left='50' width='158' height='16'>Edit an Item Type</text>

@@ -13,21 +13,21 @@
 	</text>
 	<text top='70' left='10' width='100' height='16'>Shop type:</text>
 	<group name='type'>
-		<led name='t1' top='70' left='110' width='180'>Standard shop (living only)</led>
-		<led name='t2' top='90' left='110' width='180'>Healing/Alchemy (dead can shop)</led>
-		<led name='t3' top='110' left='110' width='180'>Randomly generated</led>
+		<led name='t1' top='70' left='110'>Standard shop (living only)</led>
+		<led name='t2' top='90' left='110'>Healing/Alchemy (dead can shop)</led>
+		<led name='t3' top='110' left='110'>Randomly generated</led>
 	</group>
 	<text top='130' left='10' width='100' height='16'>Message to show:</text>
 	<group name='prompt'>
-		<led name='p1' top='130' left='110' width='80'>Shopping</led>
-		<led name='p2' top='150' left='110' width='80'>Healing</led>
-		<led name='p3' top='170' left='110' width='80'>Mage Spells</led>
-		<led name='p4' top='130' left='210' width='80'>Priest Spells</led>
-		<led name='p5' top='150' left='210' width='80'>Mixed Spells</led>
-		<led name='p6' top='170' left='210' width='80'>Alchemy</led>
-		<led name='p7' top='130' left='310' width='80'>Training</led>
+		<led name='p1' top='130' left='110'>Shopping</led>
+		<led name='p2' top='150' left='110'>Healing</led>
+		<led name='p3' top='170' left='110'>Mage Spells</led>
+		<led name='p4' top='130' left='210'>Priest Spells</led>
+		<led name='p5' top='150' left='210'>Mixed Spells</led>
+		<led name='p6' top='170' left='210'>Alchemy</led>
+		<led name='p7' top='130' left='310'>Training</led>
 	</group>
-	<button name='rand' type='tiny' top='190' left='10' width='440'>
+	<button name='rand' type='tiny' top='190' left='10'>
 		Click here to generate a standard random items shop.
 		(This will replace the entire shop definition.)
 	</button>
