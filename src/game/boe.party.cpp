@@ -1756,6 +1756,9 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 			} else name << (*cSpell::fromNum(store_situation,i)).cost;
 			name << ")";
 			me[id].setText(name.str());
+			rectangle bounds = me[id].getBounds();
+			bounds.width() = me[id].getPreferredSize().x;
+			me[id].setBounds(bounds);
 			if(spell_index[i] == 90)
 				me[id].show();
 		}
@@ -1776,6 +1779,9 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 				} else name << (*cSpell::fromNum(store_situation,spell_index[i])).cost;
 				name << ")";
 				me[id].setText(name.str());
+				rectangle bounds = me[id].getBounds();
+				bounds.width() = me[id].getPreferredSize().x;
+				me[id].setBounds(bounds);
 			}
 			else me[id].hide();
 		}

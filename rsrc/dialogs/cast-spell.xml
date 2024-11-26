@@ -36,44 +36,44 @@
 	<text name='sp5' top='181' left='304' width='32' height='16'/>
 	<text name='sp6' top='205' left='304' width='32' height='16'/>
 	<text name='feedback' framed='true' top='400' left='30' width='186' height='16'>Pick spell to cast.</text>
-	<led name='spell1' state='off' top='247' left='14' width='100'/>
-	<led name='spell2' state='off' top='261' left='14' width='100'/>
-	<led name='spell3' state='off' top='275' left='14' width='100'/>
-	<led name='spell4' state='off' top='289' left='14' width='100'/>
-	<led name='spell5' state='off' top='303' left='14' width='100'/>
-	<led name='spell6' state='off' top='317' left='14' width='100'/>
-	<led name='spell7' state='off' top='331' left='14' width='100'/>
-	<led name='spell8' state='off' top='345' left='14' width='100'/>
-	<led name='spell9' state='off' top='359' left='14' width='100'/>
-	<led name='spell10' state='off' top='373' left='14' width='100'/>
-	<led name='spell11' state='off' top='247' left='177' width='100'/>
-	<led name='spell12' state='off' top='261' left='177' width='100'/>
-	<led name='spell13' state='off' top='275' left='177' width='100'/>
-	<led name='spell14' state='off' top='289' left='177' width='100'/>
-	<led name='spell15' state='off' top='303' left='177' width='100'/>
-	<led name='spell16' state='off' top='317' left='177' width='100'/>
-	<led name='spell17' state='off' top='331' left='177' width='100'/>
-	<led name='spell18' state='off' top='345' left='177' width='100'/>
-	<led name='spell19' state='off' top='359' left='177' width='100'/>
-	<led name='spell20' state='off' top='373' left='177' width='100'/>
-	<led name='spell21' state='off' top='247' left='339' width='100'/>
-	<led name='spell22' state='off' top='261' left='339' width='100'/>
-	<led name='spell23' state='off' top='275' left='339' width='100'/>
-	<led name='spell24' state='off' top='289' left='339' width='100'/>
-	<led name='spell25' state='off' top='303' left='339' width='100'/>
-	<led name='spell26' state='off' top='317' left='339' width='100'/>
-	<led name='spell27' state='off' top='331' left='339' width='100'/>
-	<led name='spell28' state='off' top='345' left='339' width='100'/>
-	<led name='spell29' state='off' top='359' left='339' width='100'/>
-	<led name='spell30' state='off' top='373' left='339' width='100'/>
-	<led name='spell31' state='off' top='247' left='488' width='100'/>
-	<led name='spell32' state='off' top='261' left='488' width='100'/>
-	<led name='spell33' state='off' top='275' left='488' width='100'/>
-	<led name='spell34' state='off' top='289' left='488' width='100'/>
-	<led name='spell35' state='off' top='303' left='488' width='100'/>
-	<led name='spell36' state='off' top='317' left='488' width='100'/>
-	<led name='spell37' state='off' top='331' left='488' width='100'/>
-	<led name='spell38' state='off' top='345' left='488' width='100'/>
+	<led name='spell1' state='off' top='247' left='14'/>
+	<led name='spell2' state='off' top='261' left='14'/>
+	<led name='spell3' state='off' top='275' left='14'/>
+	<led name='spell4' state='off' top='289' left='14'/>
+	<led name='spell5' state='off' top='303' left='14'/>
+	<led name='spell6' state='off' top='317' left='14'/>
+	<led name='spell7' state='off' top='331' left='14'/>
+	<led name='spell8' state='off' top='345' left='14'/>
+	<led name='spell9' state='off' top='359' left='14'/>
+	<led name='spell10' state='off' top='373' left='14'/>
+	<led name='spell11' state='off' top='247' left='177'/>
+	<led name='spell12' state='off' top='261' left='177'/>
+	<led name='spell13' state='off' top='275' left='177'/>
+	<led name='spell14' state='off' top='289' left='177'/>
+	<led name='spell15' state='off' top='303' left='177'/>
+	<led name='spell16' state='off' top='317' left='177'/>
+	<led name='spell17' state='off' top='331' left='177'/>
+	<led name='spell18' state='off' top='345' left='177'/>
+	<led name='spell19' state='off' top='359' left='177'/>
+	<led name='spell20' state='off' top='373' left='177'/>
+	<led name='spell21' state='off' top='247' left='339'/>
+	<led name='spell22' state='off' top='261' left='339'/>
+	<led name='spell23' state='off' top='275' left='339'/>
+	<led name='spell24' state='off' top='289' left='339'/>
+	<led name='spell25' state='off' top='303' left='339'/>
+	<led name='spell26' state='off' top='317' left='339'/>
+	<led name='spell27' state='off' top='331' left='339'/>
+	<led name='spell28' state='off' top='345' left='339'/>
+	<led name='spell29' state='off' top='359' left='339'/>
+	<led name='spell30' state='off' top='373' left='339'/>
+	<led name='spell31' state='off' top='247' left='488'/>
+	<led name='spell32' state='off' top='261' left='488'/>
+	<led name='spell33' state='off' top='275' left='488'/>
+	<led name='spell34' state='off' top='289' left='488'/>
+	<led name='spell35' state='off' top='303' left='488'/>
+	<led name='spell36' state='off' top='317' left='488'/>
+	<led name='spell37' state='off' top='331' left='488'/>
+	<led name='spell38' state='off' top='345' left='488'/>
 	<button name='other' type='large' def-key='space' top='394' left='371'>Other Spells</button>
 	<text size='large' top='60' left='9' width='75' height='16'>Caster:</text>
 	<text size='large' top='60' left='209' width='223' height='16'>Target:  HP:   SP:    Status:</text>
