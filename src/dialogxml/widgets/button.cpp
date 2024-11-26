@@ -194,7 +194,7 @@ location cButton::getPreferredSize() const {
 	if(type == BTN_TINY && !getText().empty()){
 		TextStyle style;
 		style.pointSize = textSize;
-		width = tiny_text_offset + string_length(getText(), style);
+		width = TINY_TEXT_OFFSET + string_length(getText(), style);
 	}
 	return {width, btnRects[type][0].height()};
 }
