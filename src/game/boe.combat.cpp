@@ -1585,13 +1585,25 @@ void do_combat_cast(location target) {
 	
 	do_missile_anim((num_targets > 1) ? 35 : 60,caster.combat_pos,store_sound);
 	
+	bool hit_ashes_loc = false;
 	// process mass damage
-	for(short i = 0; i < 8; i++)
-		if(boom_dam[i] > 0)
+	for(short i = 0; i < 8; i++){
+		if(boom_dam[i] > 0){
 			hit_space(boom_targ[i],boom_dam[i],boom_type[i],1,0);
+			if(boom_targ[i] == ashes_loc){
+				hit_ashes_loc = true;
+			}
+		}
+	}
 	
-	if(ashes_loc.x > 0)
+	if(ashes_loc.x > 0){
+		// If ashes are going to appear, there'd better be a visible blast on the spot.
+		if(!hit_ashes_loc){
+			add_explosion(ashes_loc,0,0,get_boom_type(eDamageType::FIRE),1,0);
+		}
+
 		univ.town.set_ash(ashes_loc.x,ashes_loc.y,true);
+	}
 	
 	do_explosion_anim(5,0);
 	
