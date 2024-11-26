@@ -139,6 +139,11 @@ static rectangle view_rect() {
 }
 
 void show_logo(cFramerateLimiter& fps_limiter) {
+	// The spiderweb logo displays regardless of "show startup splash."
+	// However, when testing via replays this wastes a LOT of time
+	// cumulatively. So I've made it skippable in replay mode.
+	if(replaying && !get_int_pref("ShowStartupSplash", true)) return;
+
 	rectangle whole_window = view_rect();
 	
 	if(get_int_pref("DisplayMode") != 5)
