@@ -47,7 +47,7 @@
 	<led name='lesswm' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Fewer wandering monsters</led>
 	<led name='skipsplash' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Skip splash screen on startup</led>
 	<led name='nohelp' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Never show instant help</led>
-	<button name='resethelp' type='tiny' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>
+	<button name='resethelp' type='tiny' text-size='10' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>
 		Reset instant help (all help windows will reappear)
 	</button>
 	<button name='okay' relative='abs pos' rel-anchor='prev' type='regular' top='17' left='354'>OK</button>

@@ -44,6 +44,8 @@ cButton::cButton(cDialog& parent,eControlType t) :
 }
 
 void cButton::defaultTextSize() {
+	if(textSize != 0) return;
+
 	if(type == BTN_TINY) textSize = 9;
 	else if(type == BTN_PUSH) textSize = 10;
 	else textSize = 12;
@@ -129,7 +131,7 @@ bool cButton::manageFormat(eFormat prop, bool set, boost::any* val) {
 
 bool cButton::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) {
 	std::string name = attr.Name();
-	if(name == "type") {
+	if(name == "type"){
 		std::string val = attr.Value();
 		if(val == "small") setBtnType(BTN_SM);
 		else if(val == "regular") setBtnType(BTN_REG);
@@ -146,11 +148,16 @@ bool cButton::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::s
 		else if(val == "push") setBtnType(BTN_PUSH);
 		else throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
 		return true;
-	} else if(name == "def-key") {
+	}else if(name == "text-size"){
 		std::string val = attr.Value();
-		try {
+		short size = std::stoi(val);
+		textSize = size;
+		return true;
+	}else if(name == "def-key"){
+		std::string val = attr.Value();
+		try{
 			attachKey(parseKey(val));
-		} catch(int) {
+		}catch(int){
 			throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
 		}
 		return true;

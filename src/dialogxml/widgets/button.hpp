@@ -80,7 +80,7 @@ private:
 	static rectangle btnRects[13][2];
 protected:
 	/// Size of the button's descriptive text
-	short textSize;
+	short textSize = 0;
 	/// Determines whether the button's label should be word wrapped.
 	bool wrapLabel;
 	/// The button's text colour; only used by LED and tiny buttons
