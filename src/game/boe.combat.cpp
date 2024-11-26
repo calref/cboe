@@ -1250,10 +1250,10 @@ void do_combat_cast(location target) {
 								r1 = min(12,1 + (level * 2) / 3 + bonus) + 2;
 								if(r1 > 20)
 									r1 = (r1 * 8) / 10;
-								if(spell_being_cast == eSpell::FIRESTORM)
+								if(spell_being_cast == eSpell::FIRESTORM){
 									place_spell_pattern(radius2,target,eDamageType::FIRE,r1,univ.cur_pc);
-								else place_spell_pattern(radius2,target,eDamageType::COLD,r1,univ.cur_pc);
-								ashes_loc = target;
+									ashes_loc = target;
+								}else place_spell_pattern(radius2,target,eDamageType::COLD,r1,univ.cur_pc);
 								break;
 							case eSpell::KILL:
 								add_missile(target,9,1,0,0);
