@@ -177,6 +177,8 @@ void cButton::validatePostParse(ticpp::Element& elem, std::string fname, const s
 	if(labelledButtons.count(type)) {
 		if(!attrs.count("color") && !attrs.count("colour") && parent->getBg() == cDialog::BG_DARK)
 			setColour(sf::Color::White);
+		if(type != BTN_TINY && type != BTN_LED && !getText().empty() && !attrs.count("width"))
+			throw xMissingAttr(elem.Value(), "width", elem.Row(), elem.Column(), fname);
 	}
 }
 
