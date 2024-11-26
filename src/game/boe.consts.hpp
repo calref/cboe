@@ -84,13 +84,16 @@ enum eTrapType {
 
 // Startup buttons
 enum eStartButton {
-	STARTBTN_LOAD = 0,
-	STARTBTN_NEW = 1,
-	STARTBTN_ORDER = 2,
-	STARTBTN_JOIN = 3,
-	STARTBTN_CUSTOM = 4,
+	// Left Column
+	STARTBTN_TUTORIAL = 0,
+	STARTBTN_LOAD = 1,
+	STARTBTN_PREFS = 2,
+	// Right Column
+	STARTBTN_NEW = 3,
+	STARTBTN_JOIN = 4,
 	STARTBTN_SCROLL = 5,
-	MAX_eStartButton // keep last
+	// Keep last:
+	MAX_eStartButton = 6
 };
 
 // Shop rects

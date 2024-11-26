@@ -163,9 +163,9 @@ void init_screen_locs() {
 		startup_button[btn].offset(301 * (btn / 3), 48 * (btn % 3));
 	}
 	startup_top.top = 7;
-	startup_top.bottom = startup_button[STARTBTN_LOAD].top;
+	startup_top.bottom = startup_button[STARTBTN_TUTORIAL].top;
 	startup_top.left = startup_base.left;
-	startup_top.right = startup_button[STARTBTN_JOIN].right;
+	startup_top.right = startup_button[STARTBTN_NEW].right;
 	
 	// icon, name, use, give, drip, info, sell/id   each one 13 down
 	item_buttons[0][ITEMBTN_ICON].top = 15;
@@ -3160,6 +3160,12 @@ void start_new_game(bool force) {
 	fs::path file = nav_put_or_temp_party();
 	if(!file.empty()) save_party(file, univ);
 	univ.file = file;
+}
+
+void start_tutorial() {
+	// Start by using the default party
+	start_new_game(true);
+	// TODO start the tutorial scenario, which we need to design.
 }
 
 location get_cur_direction(location the_point) {
