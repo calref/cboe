@@ -1433,6 +1433,17 @@ void set_sound_type(eDamageType dam_type, short& sound_type) {
 	}
 }
 
+short get_boom_type(eDamageType dam_type){
+	short boom_type = 2;
+	if(dam_type == eDamageType::FIRE)
+		boom_type = 0;
+	else if(dam_type == eDamageType::UNBLOCKABLE)
+		boom_type = 4;
+	else if(dam_type == eDamageType::COLD)
+		boom_type = 5;
+	return boom_type;
+}
+
 // Damaging and killing monsters needs to be here because several have specials attached to them.
 short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType dam_type, short sound_type, bool do_print) {
 	short r1,which_spot;
@@ -1492,15 +1503,8 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 	if(boom_anim_active) {
 		if(how_much < 0)
 			how_much = 0;
-		short boom_type = 2;
-		if(dam_type == eDamageType::FIRE)
-			boom_type = 0;
-		else if(dam_type == eDamageType::UNBLOCKABLE)
-			boom_type = 4;
-		else if(dam_type == eDamageType::COLD)
-			boom_type = 5;
 		victim.marked_damage += how_much;
-		add_explosion(victim.cur_loc,how_much,0,boom_type,14 * (victim.x_width - 1),18 * (victim.y_width - 1));
+		add_explosion(victim.cur_loc,how_much,0,get_boom_type(dam_type),14 * (victim.x_width - 1),18 * (victim.y_width - 1));
 		// Note: Windows version printed an "undamaged" message here if applicable, but I don't think that's right.
 		if(how_much == 0)
 			return false;
