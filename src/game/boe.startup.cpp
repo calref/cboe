@@ -66,12 +66,14 @@ void handle_startup_button_click(eStartButton btn, eKeyMod mods) {
 			draw_startup(0);
 			break;
 			
-		case STARTBTN_ORDER:
+		case STARTBTN_PREFS:
 			// pass false so another action is not recorded (the start button action is enough)
 			pick_preferences(false);
 			break;
 		
-		case STARTBTN_CUSTOM: break; // Currently unused
+		case STARTBTN_TUTORIAL:
+			start_tutorial();
+			break;
 			
 		case STARTBTN_SCROLL: case MAX_eStartButton:
 			// These aren't buttons
