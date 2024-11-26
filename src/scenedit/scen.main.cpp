@@ -733,6 +733,21 @@ void pick_preferences() {
 	} else {
 		uiScale["other"].hide();
 	}
+
+	// Disable buttons for scales that won't fit on scenario designer's screen:
+	double max_main_window_scale = fallback_scale();
+	if(max_main_window_scale < 4.0){
+		uiScale["4"].hide();
+	}
+	if(max_main_window_scale < 3.0){
+		uiScale["3"].hide();
+	}
+	if(max_main_window_scale < 2.0){
+		uiScale["2"].hide();
+	}
+	if(max_main_window_scale < 1.5){
+		uiScale["1_5"].hide();
+	}
 	
 	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySounds", true) ? led_off : led_red);
 	
