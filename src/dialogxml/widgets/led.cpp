@@ -173,7 +173,7 @@ location cLed::getPreferredSize() const {
 	if(!getText().empty()){
 		TextStyle style;
 		style.pointSize = textSize;
-		width = LED_TEXT_SPACE + ledRects[state][depressed].width(); + string_length(getText(), style);
+		width = LED_TEXT_SPACE + ledRects[state][depressed].width() + string_length(getText(), style);
 	}
 	return {width, ledRects[0][0].height()};
 }
