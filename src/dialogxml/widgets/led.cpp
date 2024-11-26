@@ -86,7 +86,7 @@ bool cLed::manageFormat(eFormat prop, bool set, boost::any* val) {
 	return true;
 }
 
-const int LED_TEXT_OFFSET = 18; // Possibly could be 20
+const int LED_TEXT_SPACE = 4; // Possibly could be 6
 
 void cLed::draw(){
 	rectangle from_rect, to_rect;
@@ -98,15 +98,27 @@ void cLed::draw(){
 		style.pointSize = textSize;
 		style.lineHeight = textSize - 1;
 		style.font = textFont;
+		style.colour = textClr;
 		from_rect = ledRects[state][depressed];
 		to_rect = frame;
-		to_rect.right = to_rect.left + 14;
-		to_rect.bottom = to_rect.top + 10;
-		rect_draw_some_item(*ResMgr::graphics.get(buttons[btnGW[BTN_LED]]),from_rect,*inWindow,to_rect);
-		style.colour = textClr;
-		to_rect.right = frame.right;
-		to_rect.left = frame.left + LED_TEXT_OFFSET;
-		win_draw_string(*inWindow,to_rect,getText(),wrapLabel ? eTextMode::WRAP : eTextMode::LEFT_TOP,style);
+		int text_width = string_length(getText(), style);
+		if(textOnRight){
+			to_rect.right = to_rect.left + from_rect.width();
+			to_rect.bottom = to_rect.top + from_rect.height();
+			rect_draw_some_item(*ResMgr::graphics.get(buttons[btnGW[BTN_LED]]),from_rect,*inWindow,to_rect);
+		}else{
+			to_rect.right = text_width;
+			win_draw_string(*inWindow,to_rect,getText(),wrapLabel ? eTextMode::WRAP : eTextMode::LEFT_TOP,style);
+		}
+		if(textOnRight){
+			to_rect.left = frame.left + from_rect.width() + LED_TEXT_SPACE;
+			to_rect.right = frame.right;
+			win_draw_string(*inWindow,to_rect,getText(),wrapLabel ? eTextMode::WRAP : eTextMode::LEFT_TOP,style);
+		}else{
+			to_rect.left = frame.left + text_width + LED_TEXT_SPACE;
+			to_rect.right = to_rect.left + from_rect.width();
+			rect_draw_some_item(*ResMgr::graphics.get(buttons[btnGW[BTN_LED]]),from_rect,*inWindow,to_rect);
+		}
 	}
 
 	inWindow->setActive();
@@ -136,12 +148,15 @@ eLedState cLed::getState() const {
 }
 
 bool cLed::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) {
-	if(attr.Name() == "state") {
+	if(attr.Name() == "state"){
 		std::string val = attr.Value();
 		if(val == "red") setState(led_red);
 		else if(val == "green") setState(led_green);
 		else if(val == "off") setState(led_off);
 		else throw xBadVal(tagName, attr.Name(), val, attr.Row(), attr.Column(), fname);
+		return true;
+	}else if(attr.Name() == "text-side"){
+		textOnRight = (attr.Value() == "right");
 		return true;
 	}
 	return cButton::parseAttribute(attr, tagName, fname);
@@ -158,7 +173,7 @@ location cLed::getPreferredSize() const {
 	if(!getText().empty()){
 		TextStyle style;
 		style.pointSize = textSize;
-		width = LED_TEXT_OFFSET + string_length(getText(), style);
+		width = LED_TEXT_SPACE + ledRects[state][depressed].width(); + string_length(getText(), style);
 	}
 	return {width, ledRects[0][0].height()};
 }

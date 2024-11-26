@@ -152,6 +152,7 @@ Attributes** above.
 * `state` - Specifies the starting state of the LED. Can be one of
 `red`, `green`, or `off`; defaults to `off`.
 * `font`, `size`, `color`, `colour` - See **Common Attributes** above. Note that, for an LED, omitting the size attribute gives a different result than any of the possible values.
+* `text-side` - defaults to `right`, `left` switches the horizontal order of the LED and its text
 
 The `<group>` tag
 -----------------
