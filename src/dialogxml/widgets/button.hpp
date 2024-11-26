@@ -74,12 +74,12 @@ protected:
 	cButton(cDialog& parent,eControlType t);
 private:
 	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
-	void defaultTextSize();
+	static short defaultTextSize(eBtnType type);
 	std::string fromList;
 	static rectangle btnRects[13][2];
 protected:
 	/// Size of the button's descriptive text
-	short textSize = 0;
+	short textSize;
 	/// Determines whether the button's label should be word wrapped.
 	bool wrapLabel;
 	/// The button's text colour; only used by LED and tiny buttons
