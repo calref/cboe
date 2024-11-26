@@ -65,7 +65,6 @@ public:
 	}
 	cButton& operator=(cButton& other) = delete;
 	cButton(cButton& other) = delete;
-	void setTextSize(short size) { textSize = size; }
 protected:
 	/// The type of button.
 	eBtnType type;
