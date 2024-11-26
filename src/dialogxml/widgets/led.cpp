@@ -86,7 +86,7 @@ bool cLed::manageFormat(eFormat prop, bool set, boost::any* val) {
 	return true;
 }
 
-const int text_offset = 18; // Possibly could be 20
+const int LED_TEXT_OFFSET = 18; // Possibly could be 20
 
 void cLed::draw(){
 	rectangle from_rect, to_rect;

@@ -63,7 +63,7 @@ bool cButton::isScrollable() const {
 	return false;
 }
 
-const int tiny_text_offset = 18;
+const int TINY_TEXT_OFFSET = 18;
 
 void cButton::draw(){
 	rectangle from_rect, to_rect;
@@ -85,7 +85,7 @@ void cButton::draw(){
 		eTextMode textMode = eTextMode::CENTRE;
 		if(type == BTN_TINY) {
 			textMode = wrapLabel ? eTextMode::WRAP : eTextMode::LEFT_TOP;
-			to_rect.left += tiny_text_offset;
+			to_rect.left += TINY_TEXT_OFFSET;
 			style.colour = textClr;
 		} else if(type == BTN_PUSH) {
 			to_rect.top += 42;
