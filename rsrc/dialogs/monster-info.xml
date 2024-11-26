@@ -31,10 +31,10 @@
 	<text name='mage' framed='true' top='137' left='78' width='25' height='17'/>
 	<text top='139' left='118' width='50' height='16'>Priest L.</text>
 	<text name='priest' framed='true' top='137' left='178' width='25' height='17'/>
-	<led name='guard' top='139' left='224' width='64'>Town guard?</led>
+	<led name='guard' top='139' left='224'>Town guard?</led>
 	<text top='167' left='9' width='58' height='16'>Ability 1</text>
-	<led name='mindless' top='257' left='116' width='60'>Mindless</led>
-	<led name='invuln' top='257' left='216' width='70'>Invulnerable</led>
+	<led name='mindless' top='257' left='116'>Mindless</led>
+	<led name='invuln' top='257' left='216'>Invulnerable</led>
 	<text name='abil1' framed='true' top='165' left='67' width='238' height='16'/>
 	<text top='275' left='10' width='30' height='16'>Magic</text>
 	<text name='magic-res' framed='true' top='273' left='49' width='35' height='16'/>

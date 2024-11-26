@@ -16,24 +16,24 @@
 	<button name='pickanim' type='large' top='59' left='319'>Animated</button>
 	<text top='90' left='8' height='14' width='120'>Terrain blockage:</text>
 	<group name='blockage'>
-		<led name='clear' top='90' left='132' state='off' width='120'>Clear</led>
-		<led name='curtain' top='107' left='132' state='off' width='120'>Walk through, opaque</led>
-		<led name='special' top='124' left='132' state='off' width='120'>Clear, special</led>
-		<led name='window' top='90' left='293' state='off' width='120'>Clear, blocked</led>
-		<led name='obstructed' top='107' left='293' state='off' width='120'>Blocked, obstructed</led>
-		<led name='opaque' top='124' left='293' state='off' width='120'>Blocked, opaque</led>
+		<led name='clear' top='90' left='132' state='off'>Clear</led>
+		<led name='curtain' top='107' left='132' state='off'>Walk through, opaque</led>
+		<led name='special' top='124' left='132' state='off'>Clear, special</led>
+		<led name='window' top='90' left='293' state='off'>Clear, blocked</led>
+		<led name='obstructed' top='107' left='293' state='off'>Blocked, obstructed</led>
+		<led name='opaque' top='124' left='293' state='off'>Blocked, opaque</led>
 	</group>
-	<led name='flight' top='150' left='26' state='off' width='120' font='bold'>Can fly over?</led>
-	<led name='boat' top='150' left='154' state='off' width='120' font='bold'>Can boat over?</led>
-	<led name='horse' top='150' left='307' state='off' width='120' font='bold'>Blocked to horses?</led>
-	<led name='arch' top='150' left='447' state='off' width='120' font='bold'>Archetype?</led>
+	<led name='flight' top='150' left='26' state='off'>Can fly over?</led>
+	<led name='boat' top='150' left='154' state='off'>Can boat over?</led>
+	<led name='horse' top='150' left='307' state='off'>Blocked to horses?</led>
+	<led name='arch' top='150' left='447' state='off'>Archetype?</led>
 	<text top='165' left='8' height='14' width='91'>Step sound:</text>
 	<group name='sound'>
-		<led name="step" top='167' left='102' state='off' width='60'>Footstep</led>
-		<led name="squish" top='167' left='186' state='off' width='60'>Squish</led>
-		<led name="crunch" top='167' left='282' state='off' width='60'>Crunch</led>
-		<led name="nosound" top='167' left='386' state='off' width='60'>Silence</led>
-		<led name="splash" top='167' left='497' state='off' width='60'>Big Splash</led>
+		<led name="step" top='167' left='102' state='off'>Footstep</led>
+		<led name="squish" top='167' left='186' state='off'>Squish</led>
+		<led name="crunch" top='167' left='282' state='off'>Crunch</led>
+		<led name="nosound" top='167' left='386' state='off'>Silence</led>
+		<led name="splash" top='167' left='497' state='off'>Big Splash</led>
 	</group>
 	<text top='194' left='8' height='14' width='91'>Shortcut key:</text>
 	<field name='key' top='193' left='109' height='16' width='52' />
@@ -53,30 +53,30 @@
 	
 	<text size='large' top='238' left='8' height='14' width='175'>Special properties:</text>
 	<group name="prop">
-		<led name='prop0' top='254' left='8' state='off' width='124'>None</led>
-		<led name='prop1' top='269' left='8' state='off' width='124'>Change when step on</led>
-		<led name='prop2' top='284' left='8' state='off' width='124'>Damaging terrain</led>
-		<led name='prop3' top='299' left='8' state='off' width='124'>Is a bridge</led>
-		<led name='prop4' top='314' left='8' state='off' width='124'>Change while occupied</led>
-		<led name='prop5' top='329' left='8' state='off' width='124'>Dangerous terrain</led>
-		<led name='prop6' top='344' left='8' state='off' width='124'>Reserved</led>
-		<led name='prop7' top='359' left='8' state='off' width='124'>Crumbling terrain</led>
-		<led name='prop8' top='254' left='158' state='off' width='124'>Lockable terrain</led>
-		<led name='prop9' top='269' left='158' state='off' width='124'>Unlockable terrain</led>
-		<led name='prop10' top='284' left='158' state='off' width='124'>Reserved</led>
-		<led name='prop11' top='299' left='158' state='off' width='124'>Is a sign</led>
-		<led name='prop12' top='314' left='158' state='off' width='124'>Call special when step</led>
-		<led name='prop13' top='329' left='158' state='off' width='124'>Reserved</led>
-		<led name='prop14' top='344' left='158' state='off' width='124'>Is a container</led>
-		<led name='prop15' top='359' left='158' state='off' width='124'>Wilderness (Caves)</led>
-		<led name='prop16' top='254' left='308' state='off' width='124'>Wilderness (Surface)</led>
-		<led name='prop17' top='269' left='308' state='off' width='124'>Waterfall (Caves)</led>
-		<led name='prop18' top='284' left='308' state='off' width='124'>Waterfall (Surface)</led>
-		<led name='prop19' top='299' left='308' state='off' width='124'>Conveyor Belt</led>
-		<led name='prop20' top='314' left='308' state='off' width='124'>Blocked to monsters</led>
-		<led name='prop21' top='329' left='308' state='off' width='124'>Town entrance</led>
-		<led name='prop22' top='344' left='308' state='off' width='124'>Change when used</led>
-		<led name='prop23' top='359' left='308' state='off' width='124'>Call special when used</led>
+		<led name='prop0' top='254' left='8' state='off'>None</led>
+		<led name='prop1' top='269' left='8' state='off'>Change when step on</led>
+		<led name='prop2' top='284' left='8' state='off'>Damaging terrain</led>
+		<led name='prop3' top='299' left='8' state='off'>Is a bridge</led>
+		<led name='prop4' top='314' left='8' state='off'>Change while occupied</led>
+		<led name='prop5' top='329' left='8' state='off'>Dangerous terrain</led>
+		<led name='prop6' top='344' left='8' state='off'>Reserved</led>
+		<led name='prop7' top='359' left='8' state='off'>Crumbling terrain</led>
+		<led name='prop8' top='254' left='158' state='off'>Lockable terrain</led>
+		<led name='prop9' top='269' left='158' state='off'>Unlockable terrain</led>
+		<led name='prop10' top='284' left='158' state='off'>Reserved</led>
+		<led name='prop11' top='299' left='158' state='off'>Is a sign</led>
+		<led name='prop12' top='314' left='158' state='off'>Call special when step</led>
+		<led name='prop13' top='329' left='158' state='off'>Reserved</led>
+		<led name='prop14' top='344' left='158' state='off'>Is a container</led>
+		<led name='prop15' top='359' left='158' state='off'>Wilderness (Caves)</led>
+		<led name='prop16' top='254' left='308' state='off'>Wilderness (Surface)</led>
+		<led name='prop17' top='269' left='308' state='off'>Waterfall (Caves)</led>
+		<led name='prop18' top='284' left='308' state='off'>Waterfall (Surface)</led>
+		<led name='prop19' top='299' left='308' state='off'>Conveyor Belt</led>
+		<led name='prop20' top='314' left='308' state='off'>Blocked to monsters</led>
+		<led name='prop21' top='329' left='308' state='off'>Town entrance</led>
+		<led name='prop22' top='344' left='308' state='off'>Change when used</led>
+		<led name='prop23' top='359' left='308' state='off'>Call special when used</led>
 	</group>
 	<text top='385' left='9' height='14' width='91'>Extra values:</text>
 	<text name='flag1text' framed='true' top='385' left='109' height='14' width='209'>*flag1</text>

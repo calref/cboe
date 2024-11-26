@@ -13,7 +13,7 @@
 	<text top='75' left='50' width='76' height='25'>Location</text>
 	<text name='loc' top='75' left='152' width='40' height='16'/>
 	
-	<led name='owned' state='off' top='100' left='60' width='70'>Not Party Property</led>
+	<led name='owned' state='off' top='100' left='60'>Not Party Property</led>
 	
 	<button name='cancel' type='regular' def-key='esc' top='125' left='51'>Cancel</button>
 	<button name='del' type='regular' top='125' left='114'>Delete</button>

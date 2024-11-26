@@ -4,28 +4,28 @@
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text name='title' size='large' top='6' left='50' width='256' height='14'>Select background pattern:</text>
 	<group name='group'>
-		<led name='led1' top='54' left='8' width='180'>Dark grey stone</led>
-		<led name='led2' top='69' left='8' width='180'>Black texture</led>
-		<led name='led3' top='84' left='8' width='180'>Grey stone with blue veins</led>
-		<led name='led4' top='99' left='8' width='180'>Pink stone with white veins</led>
-		<led name='led5' top='114' left='8' width='180'>Rough dark grey stone</led>
-		<led name='led6' top='129' left='8' width='180'>Black stone / Basalt</led>
-		<led name='led7' top='144' left='8' width='180'>White stone / Chalk</led>
-		<led name='led8' top='159' left='8' width='180'>Light grey stone</led>
-		<led name='led9' top='174' left='8' width='180'>Wood mosaic / parquet floor</led>
-		<led name='led10' top='189' left='8' width='180'>Dark / petrified wood</led>
-		<led name='led11' top='204' left='8' width='180'>Medium stone / Granite</led>
+		<led name='led1' top='54' left='8'>Dark grey stone</led>
+		<led name='led2' top='69' left='8'>Black texture</led>
+		<led name='led3' top='84' left='8'>Grey stone with blue veins</led>
+		<led name='led4' top='99' left='8'>Pink stone with white veins</led>
+		<led name='led5' top='114' left='8'>Rough dark grey stone</led>
+		<led name='led6' top='129' left='8'>Black stone / Basalt</led>
+		<led name='led7' top='144' left='8'>White stone / Chalk</led>
+		<led name='led8' top='159' left='8'>Light grey stone</led>
+		<led name='led9' top='174' left='8'>Wood mosaic / parquet floor</led>
+		<led name='led10' top='189' left='8'>Dark / petrified wood</led>
+		<led name='led11' top='204' left='8'>Medium stone / Granite</led>
 		
-		<led name='led12' top='54' left='216' width='180'>Checkerboard</led>
-		<led name='led13' top='69' left='216' width='180'>Grey marble</led>
-		<led name='led14' top='84' left='216' width='180'>Mosaic tiles</led>
-		<led name='led15' top='99' left='216' width='180'>Veined rock / Marble</led>
-		<led name='led16' top='114' left='216' width='180'>Pitted / Cracked stone</led>
-		<led name='led17' top='129' left='216' width='180'>Light grey stone with highlights</led>
-		<led name='led18' top='144' left='216' width='180'>White marble</led>
-		<led name='led19' top='159' left='216' width='180'>Reddish-grey texture</led>
-		<led name='led20' top='174' left='216' width='180'>Light wood grain</led>
-		<led name='led21' top='189' left='216' width='180'>Sandstone</led>
+		<led name='led12' top='54' left='216'>Checkerboard</led>
+		<led name='led13' top='69' left='216'>Grey marble</led>
+		<led name='led14' top='84' left='216'>Mosaic tiles</led>
+		<led name='led15' top='99' left='216'>Veined rock / Marble</led>
+		<led name='led16' top='114' left='216'>Pitted / Cracked stone</led>
+		<led name='led17' top='129' left='216'>Light grey stone with highlights</led>
+		<led name='led18' top='144' left='216'>White marble</led>
+		<led name='led19' top='159' left='216'>Reddish-grey texture</led>
+		<led name='led20' top='174' left='216'>Light wood grain</led>
+		<led name='led21' top='189' left='216'>Sandstone</led>
 	</group>
 	<button name='done' type='regular' top='223' left='338'>OK</button>
 	<button name='cancel' type='regular' def-key='esc' top='223' left='272'>Cancel</button>

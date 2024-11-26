@@ -6,5 +6,5 @@
 	<text name='tip' framed='true' top='37' left='53' width='257' height='92'/>
 	<text size='large' top='9' left='53' width='257' height='19'>Tip of the Day:</text>
 	<button name='next' type='large' top='158' left='54'>Next Tip</button>
-	<led name='onstart' state='off' top='138' left='53' width='136'>See tips upon startup</led>
+	<led name='onstart' state='off' top='138' left='53'>See tips upon startup</led>
 </dialog>

@@ -26,8 +26,8 @@
 	<button name='done' type='done' top='307' left='228'/>
 	<button name='left' type='left' def-key='left' top='307' left='84'/>
 	<button name='right' type='right' def-key='right' top='307' left='153'/>
-	<led name='magic' font='bold' top='8' left='167' width='60'>Magic?</led>
-	<led name='id' font='bold' top='8' left='252' width='42'>ID?</led>
+	<led name='magic' font='bold' top='8' left='167'>Magic?</led>
+	<led name='id' font='bold' top='8' left='252'>ID?</led>
 	<text size='large' top='192' left='8' width='100' height='15'>Description:</text>
 	<text name='desc' framed='true' top='210' left='8' width='283' height='90'/>
 	<text top='142' left='4' width='54' height='16'>Weight</text>
