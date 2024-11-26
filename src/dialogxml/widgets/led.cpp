@@ -105,7 +105,7 @@ void cLed::draw(){
 		rect_draw_some_item(*ResMgr::graphics.get(buttons[btnGW[BTN_LED]]),from_rect,*inWindow,to_rect);
 		style.colour = textClr;
 		to_rect.right = frame.right;
-		to_rect.left = frame.left + text_offset;
+		to_rect.left = frame.left + LED_TEXT_OFFSET;
 		win_draw_string(*inWindow,to_rect,getText(),wrapLabel ? eTextMode::WRAP : eTextMode::LEFT_TOP,style);
 	}
 
@@ -158,7 +158,7 @@ location cLed::getPreferredSize() const {
 	if(!getText().empty()){
 		TextStyle style;
 		style.pointSize = textSize;
-		width = text_offset + string_length(getText(), style);
+		width = LED_TEXT_OFFSET + string_length(getText(), style);
 	}
 	return {width, ledRects[0][0].height()};
 }
