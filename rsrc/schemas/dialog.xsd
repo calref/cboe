@@ -207,6 +207,7 @@
 		</xs:sequence>
 		<xs:attribute name="name" use="required" type="xs:token"/>
 		<xs:attribute name="type" use="required" type="btntype"/>
+		<xs:attribute name="text-size" type="xs:integer"/>
 		<xs:attribute name="wrap" default="false" type="bool"/>
 		<xs:attribute ref="def-key"/>
 		<xs:attribute name="fromlist" default="none" type="xs:string"/>

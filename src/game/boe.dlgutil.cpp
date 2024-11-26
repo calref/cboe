@@ -1256,9 +1256,7 @@ void pick_preferences(bool record) {
 	
 	cDialog prefsDlog(*ResMgr::dialogs.get("preferences"));
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
-	
 	prefsDlog.attachClickHandlers(&reset_help, {"resethelp"});
-	dynamic_cast<cButton&>(prefsDlog["resethelp"]).setTextSize(10);
 
 	cLedGroup& displayMode = dynamic_cast<cLedGroup&>(prefsDlog["display"]);
 	switch(get_int_pref("DisplayMode")) {
