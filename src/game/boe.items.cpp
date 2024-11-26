@@ -675,14 +675,14 @@ short get_num_of_items(short max_num) {
 }
 
 void init_mini_map() {
-	double ui_scale = get_ui_scale();
-	if (ui_scale < 0.1) ui_scale = 1.0;
+	double map_scale = get_ui_scale_map();
+	if (map_scale < 0.1) map_scale = 1.0;
 	if (mini_map.isOpen()) mini_map.close();
-	mini_map.create(sf::VideoMode(ui_scale*296,ui_scale*277), "Map", sf::Style::Titlebar | sf::Style::Close);
+	mini_map.create(sf::VideoMode(map_scale*296,map_scale*277), "Map", sf::Style::Titlebar | sf::Style::Close);
 	mini_map.setPosition(sf::Vector2i(52,62));
 	sf::View view;
-	view.reset(sf::FloatRect(0, 0, ui_scale*296,ui_scale*277));
-	view.setViewport(sf::FloatRect(0, 0, ui_scale, ui_scale));
+	view.reset(sf::FloatRect(0, 0, map_scale*296,map_scale*277));
+	view.setViewport(sf::FloatRect(0, 0, map_scale, map_scale));
 	mini_map.setView(view);
 	mini_map.setVisible(false);
 	map_visible=false;
