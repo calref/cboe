@@ -443,6 +443,8 @@ void draw_lb() {
 		draw_lb_slot(i,0);
 }
 
+const int LEFT_BUTTON_SPACE = 2;
+
 // mode 0 normal 1 click
 void draw_lb_slot (short which,short mode)  {
 	rectangle text_rect,from_rect;
@@ -450,9 +452,12 @@ void draw_lb_slot (short which,short mode)  {
  	tileImage(mainPtr,left_buttons[which][0],bg[20]);
 	if(left_button_status[which].mode == LB_CLEAR)
 		return;
+
+	int button_width = blue_button_from.width();
+
 	text_rect = left_buttons[which][0];
 	if(left_button_status[which].action != LB_NO_ACTION) {
-		text_rect.left += 18;
+		text_rect.left += button_width + LEFT_BUTTON_SPACE;
 		from_rect = blue_button_from;
 		if(mode > 0)
 			from_rect.offset(0,from_rect.height());
@@ -468,6 +473,13 @@ void draw_lb_slot (short which,short mode)  {
 	if(mode > 0)
 		style.colour = Colours::BLUE;
 	style.lineHeight = 12;
+
+	// Arbitrary extra space on the right prevents labels from being forced to line wrap
+	text_rect.right += 10;
+
+	// Measure the button's clickable width including the label
+	left_buttons[which][0].width() = button_width + LEFT_BUTTON_SPACE + string_length(left_button_status[which].label, style);
+
 	win_draw_string(mainPtr,text_rect,left_button_status[which].label,eTextMode::WRAP,style);
 }
 
