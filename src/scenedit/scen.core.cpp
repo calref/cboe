@@ -111,7 +111,8 @@ static bool save_ter_info(cDialog& me, cTerrain& ter) {
 				showError("Special type must be either 0 or 1.", &me);
 				return false;
 			}
-			if(!check_range(me, "flag1", true, 0, (spec_type == 0 ? num_glob : num_loc) - 1, "Special to call")) return false;
+			if(!check_range_msg(me, "flag1", true, 0, (spec_type == 0 ? num_glob : num_loc) - 1, "Special to call", "ALL towns and outdoor sections must implement this node number"))
+				return false;
 			break;
 		case eTerSpec::BRIDGE: case eTerSpec::BED: case eTerSpec::IS_A_SIGN: case eTerSpec::IS_A_CONTAINER: case eTerSpec::BLOCKED_TO_MONSTERS:
 		case eTerSpec::WILDERNESS_CAVE: case eTerSpec::WILDERNESS_SURFACE: case eTerSpec::NONE:
@@ -169,14 +170,24 @@ bool check_range_msg(cDialog& me,std::string id,bool losing,long min_val,long ma
 	if(!losing) return true;
 	cTextField& fld_ctrl = dynamic_cast<cTextField&>(me[id]);
 	long n = fld_ctrl.getTextAsNum();
-	if(n < min_val || n > max_val){
-		std::ostringstream sout;
+	std::ostringstream sout;
+
+	if (n >= min_val && n <= max_val){
+		return true;
+	}else if(max_val < min_val){
+		// It can be very confusing to be told a number should be from 0 to -1.
+		// Explain what this really means, and hope that the extra message
+		// provides context on fixing the problem.
+		sout << fld_name << " currently has no range of acceptable values";
+		if(xtra.empty()){
+			xtra = "You can open an issue on GitHub asking for help and a better error message.";
+		}
+	}else{
 		sout << fld_name << " must be from " << min_val << " to " << max_val;
-		if(!xtra.empty()) sout << ' ' << '(' << xtra << ')';
-		showError(sout.str(), "", &me);
-		return false;
 	}
-	return true;
+	if(!xtra.empty()) sout << ' ' << '(' << xtra << ')';
+	showError(sout.str(), "", &me);
+	return false;
 }
 
 bool check_range(cDialog& me,std::string id,bool losing,long min_val,long max_val,std::string fld_name) {
