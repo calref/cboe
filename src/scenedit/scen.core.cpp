@@ -111,6 +111,8 @@ static bool save_ter_info(cDialog& me, cTerrain& ter) {
 				showError("Special type must be either 0 or 1.", &me);
 				return false;
 			}
+			// TODO If local, when creating a new town or outdoor section, we should now prompt the designer
+			// to implement this special node.
 			if(!check_range_msg(me, "flag1", true, 0, (spec_type == 0 ? num_glob : num_loc) - 1, "Special to call", "ALL towns and outdoor sections must implement this node number"))
 				return false;
 			break;
