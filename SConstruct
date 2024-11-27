@@ -87,9 +87,9 @@ env.VariantDir('#build/obj/test/deps', 'deps')
 
 if not env['release']:
 	if platform in ['posix', 'darwin']:
-		env.Append(CCFLAGS=['-g','-O0'])
+		env.Append(CCFLAGS=['-g','-O0', '-D' 'DEBUG=1'])
 	elif platform == 'win32':
-		env.Append(CCFLAGS=['/Zi', '/Od'])
+		env.Append(CCFLAGS=['/Zi', '/Od', '/D', 'DEBUG=1'])
 		env.Append(LINKFLAGS=['/DEBUG'])
 
 # This command generates the header with git revision information
