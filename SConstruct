@@ -8,7 +8,7 @@ opts = Variables(None, ARGUMENTS)
 
 opts.Add(EnumVariable('OS', "Target platform", str(Platform()), ('darwin', 'win32', 'posix')))
 opts.Add('toolset', "Toolset to pass to the SCons builder", 'default')
-opts.Add(BoolVariable('debug', "Build with debug symbols and no optimization", True))
+opts.Add(BoolVariable('release', "Build with optimization and no debug symbols", False))
 opts.Add(EnumVariable('bits', "Build for 32-bit or 64-bit architectures", '64', ('32', '64')))
 
 # Partial build flags -- by default, all targets will be built,
@@ -35,6 +35,16 @@ opts.Add("LINKFLAGS", "Custom flags for the linker")
 # Initialize environment with options and full user environment
 env = Environment(variables=opts, ENV=os.environ)
 Help(opts.GenerateHelpText(env))
+
+# Source: https://github.com/godotengine/godot-cpp/blob/a42b3634d20b4e7088be721792bba1199277362c/SConstruct#L36
+if opts.UnknownVariables():
+	unknown = opts.UnknownVariables()
+	if unknown:
+		print("WARNING: Unknown SCons variables were passed and will be ignored:")
+		for item in unknown.items():
+			print("    " + item[0] + "=" + item[1])
+			if item[0] == 'debug':
+				print('        NOTE: Debug builds are now the default. Pass `release=true` if you need a release build.')
 
 platform = env['OS']
 toolset = env['toolset']
@@ -75,7 +85,7 @@ env.VariantDir('#build/obj', 'src')
 env.VariantDir('#build/obj/test', 'test')
 env.VariantDir('#build/obj/test/deps', 'deps')
 
-if env['debug']:
+if not env['release']:
 	if platform in ['posix', 'darwin']:
 		env.Append(CCFLAGS=['-g','-O0'])
 	elif platform == 'win32':

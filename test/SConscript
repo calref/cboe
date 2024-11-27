@@ -14,10 +14,10 @@ test_sources = Glob("""*.cpp""") + Split("""
 debug_symbols = None
 if str(platform) == "win32" and 'msvc' in env["TOOLS"]:
 	link_flags = f'/nologo /SUBSYSTEM:CONSOLE /MACHINE:X{arch_short}'
-	if env['debug']:
+	if not env['release']:
 		link_flags += ' /DEBUG'
 	test = env.Program("#build/bin/boe_test", party_classes + common_sources + test_sources, LINKFLAGS=link_flags)
-	if env['debug']:
+	if not env['release']:
 		debug_symbols = test[0].abspath.replace(".exe", ".pdb")
 else:
 	test = env.Program("#build/bin/boe_test", test_sources + party_classes + common_sources)
