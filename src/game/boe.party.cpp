@@ -2279,7 +2279,7 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 	
 	// Note: sound type 0 can now be forced for UNBLOCKABLE by passing sound_type 0,
 	// but -1 is the new value for "use default"
-	set_sound_type(damage_type, sound_type);
+	sound_type = get_sound_type(damage_type, sound_type);
 
 	// armor
 	if(damage_type == eDamageType::WEAPON || damage_type == eDamageType::UNDEAD || damage_type == eDamageType::DEMON) {
