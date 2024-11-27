@@ -1419,7 +1419,8 @@ void change_level(short town_num,short x,short y) {
 	start_town_mode(town_num,9);
 }
 
-void set_sound_type(eDamageType dam_type, short& sound_type) {
+short get_sound_type(eDamageType dam_type, short forced_sound_type) {
+	short sound_type = forced_sound_type;
 	if(sound_type == -1){
 		sound_type = 0;
 		if(dam_type == eDamageType::FIRE || dam_type == eDamageType::UNBLOCKABLE)
@@ -1431,6 +1432,7 @@ void set_sound_type(eDamageType dam_type, short& sound_type) {
 		else if(dam_type == eDamageType::POISON)
 			sound_type = 11;
 	}
+	return sound_type;
 }
 
 short get_boom_type(eDamageType dam_type){
@@ -1455,7 +1457,7 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 	
 	// Note: sound type 0 can now be forced for UNBLOCKABLE by passing sound_type 0,
 	// but -1 is the new value for "use default"
-	set_sound_type(dam_type, sound_type);
+	sound_type = get_sound_type(dam_type, sound_type);
 	
 	if(dam_type < eDamageType::SPECIAL) {
 		how_much = percent(how_much, victim.resist[dam_type]);

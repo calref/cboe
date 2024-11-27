@@ -8,7 +8,7 @@ void use_spec_item(short item, bool& need_redraw);
 void use_item(short pc,short item);
 bool use_space(location where);
 bool adj_town_look(location where);
-void set_sound_type(eDamageType dam_type, short& sound_type);
+short get_sound_type(eDamageType dam_type, short forced_sound_type = -1);
 short get_boom_type(eDamageType dam_type);
 short damage_monst(cCreature& which_m, short who_hit, short how_much, eDamageType dam_type, short sound_type = -1, bool do_print = true);
 void petrify_monst(cCreature& which_m,int strength);
