@@ -336,9 +336,9 @@ void start_data_dump() {
 extern fs::path scenDir;
 std::vector<scen_header_type> build_scen_headers() {
 	fs::create_directories(scenDir);
-	std::cout << progDir << '\n' << scenDir << std::endl;
+
+	std::cout << progDir << std::endl;
 	std::vector<scen_header_type> scen_headers;
-	fs::recursive_directory_iterator iter(scenDir);
 	set_cursor(watch_curs);
 	
 	if(replaying){
@@ -361,18 +361,20 @@ std::vector<scen_header_type> build_scen_headers() {
 			}
 		}
 	}else{
-		while(iter != fs::recursive_directory_iterator()) {
-			fs::file_status stat = iter->status();
-			if(stat.type() == fs::regular_file) {
-				scen_header_type scen_head;
-				if(load_scenario_header(iter->path(), scen_head))
-					scen_headers.push_back(scen_head);
+		for(fs::path scenDir : all_scen_dirs()){
+			std::cout << scenDir << std::endl;
+			fs::recursive_directory_iterator iter(scenDir);
+			while(iter != fs::recursive_directory_iterator()) {
+				fs::file_status stat = iter->status();
+				if(stat.type() == fs::regular_file) {
+					scen_header_type scen_head;
+					if(load_scenario_header(iter->path(), scen_head))
+						scen_headers.push_back(scen_head);
+				}
+				iter++;
 			}
-			iter++;
 		}
-		if(scen_headers.size() == 0) { // no scens present
-			// TODO: Should something be done here?
-		} else {
+		if(!scen_headers.empty()){
 			std::sort(scen_headers.begin(), scen_headers.end(), [](scen_header_type hdr_a, scen_header_type hdr_b) -> bool {
 				std::string a = hdr_a.name, b = hdr_b.name;
 				std::transform(a.begin(), a.end(), a.begin(), tolower);

@@ -62,6 +62,26 @@ static std::string get_file_error() {
 	return sout.str();
 }
 
+// Debug builds run from working directory "build/Blades of Exile"
+// should helpfully let you enter replay test scenarios.
+
+// Support for multiple scenario directories will also help with how I plan
+// to handle scenario packaging/distribution for my fork's release.
+//  - Nat
+std::vector<fs::path> all_scen_dirs() {
+	std::vector<fs::path> scen_dirs = { scenDir };
+
+	#ifdef DEBUG
+	fs::path replay_scenarios_dir = boost::filesystem::current_path();
+	replay_scenarios_dir = replay_scenarios_dir/".."/".."/"test"/"replays"/"scenarios";
+	if(fs::is_directory(replay_scenarios_dir)){
+		scen_dirs.push_back(replay_scenarios_dir);
+	}
+	#endif
+
+	return scen_dirs;
+}
+
 fs::path locate_scenario(std::string scen_name) {
 	fs::create_directories(scenDir);
 	std::transform(scen_name.begin(), scen_name.end(), scen_name.begin(), tolower);
@@ -70,32 +90,38 @@ fs::path locate_scenario(std::string scen_name) {
 	if(base_name == "valleydy" || base_name == "stealth" || base_name == "zakhazi"/* || base_name == "busywork" */)
 		return progDir/"Blades of Exile Scenarios"/scen_name;
 	fs::path scenPath;
-	for(fs::recursive_directory_iterator iter(scenDir); iter != fs::recursive_directory_iterator(); iter++) {
-		fs::file_status stat = iter->status();
-		std::string fname = iter->path().filename().string().c_str();
-		std::transform(fname.begin(), fname.end(), fname.begin(), tolower);
-		if(fname == "header.exs") {
-			if(scen_name != "header.exs") continue;
-			// We want to support a scenario whose main filename is header.exs, just in case.
-			// However, any unpacked scenarios would have a header.exs.
-			// So, skip them if they're in a .boes folder.
-			fname = iter->path().parent_path().filename().string().c_str();
+
+	for(fs::path scenDir : all_scen_dirs()){
+		for(fs::recursive_directory_iterator iter(scenDir); iter != fs::recursive_directory_iterator(); iter++) {
+			fs::file_status stat = iter->status();
+			std::string fname = iter->path().filename().string().c_str();
 			std::transform(fname.begin(), fname.end(), fname.begin(), tolower);
+			if(fname == "header.exs") {
+				if(scen_name != "header.exs") continue;
+				// We want to support a scenario whose main filename is header.exs, just in case.
+				// However, any unpacked scenarios would have a header.exs.
+				// So, skip them if they're in a .boes folder.
+				fname = iter->path().parent_path().filename().string().c_str();
+				std::transform(fname.begin(), fname.end(), fname.begin(), tolower);
+				size_t dot = fname.find_first_of('.');
+				if(dot != std::string::npos && fname.substr(dot) == ".boes")
+					continue;
+			}
+			if(fname != scen_name) continue;
 			size_t dot = fname.find_first_of('.');
-			if(dot != std::string::npos && fname.substr(dot) == ".boes")
-				continue;
+			if(dot == std::string::npos) continue;
+			if(fname.substr(dot) == ".exs" && stat.type() == fs::regular_file) {
+				scenPath = iter->path();
+				break;
+			}
+			if(fname.substr(dot) == ".boes" && (stat.type() == fs::regular_file || stat.type() == fs::directory_file)) {
+				scenPath = iter->path();
+				break;
+			}
 		}
-		if(fname != scen_name) continue;
-		size_t dot = fname.find_first_of('.');
-		if(dot == std::string::npos) continue;
-		if(fname.substr(dot) == ".exs" && stat.type() == fs::regular_file) {
-			scenPath = iter->path();
+
+		if(!scenPath.empty())
 			break;
-		}
-		if(fname.substr(dot) == ".boes" && (stat.type() == fs::regular_file || stat.type() == fs::directory_file)) {
-			scenPath = iter->path();
-			break;
-		}
 	}
 	return scenPath;
 }
