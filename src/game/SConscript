@@ -44,7 +44,7 @@ elif str(platform) == "posix":
 
 boe = env.Program("#build/bin/Blades of Exile", game_sources + party_classes + common_sources)
 debug_symbols = None
-if str(platform) == "win32" and 'msvc' in env["TOOLS"] and env['debug']:
+if str(platform) == "win32" and 'msvc' in env["TOOLS"] and not env['release']:
 	debug_symbols = boe[0].abspath.replace('.exe', '.pdb')
 
 if str(platform) == "darwin":
