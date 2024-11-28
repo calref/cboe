@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Area name</name>
+    <comment>Comment</comment>
+    <string id="0">
+        <![CDATA[Use special terrain works in outdoor section 2!]]>
+    </string>
+</sector>
