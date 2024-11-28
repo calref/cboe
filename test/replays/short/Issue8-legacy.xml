@@ -1,0 +1,65 @@
+<actions SHA="c697cbd" Tag="v0.0.11" Status="modified" Repo="git@github.com:NQNStudios/cboe.git">
+    <load_prefs>
+        <![CDATA[DisplayMode = 5
+DrawTerrainAnimation = true
+DrawTerrainFrills = true
+DrawTerrainShoreFrills = true
+EasyMode = false
+GameRunBefore = true
+GameSpeed = 0
+GiveIntroHint = false
+LessWanderingMonsters = false
+PlaySounds = true
+ReceivedHelp = [55 0 48 49 7 8 62 0 1 2]
+RepeatRoomDescriptions = false
+ShowInstantHelp = true
+UIScale = 1.5
+UIScaleMap = 4
+]]>
+</load_prefs>
+    <srand>1732762036</srand>
+    <startup_button_click>
+        <btn>3</btn>
+        <mods>1</mods>
+    </startup_button_click>
+    <build_scen_headers>
+        <![CDATA[use-special-terrain.boes
+specterr.exs
+]]>
+</build_scen_headers>
+    <click_control>
+        <id>next</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>list</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>scen2</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_use_space_select></handle_use_space_select>
+    <handle_use_space>(25,23)</handle_use_space>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(25,24)</move>
+    <move>(26,24)</move>
+    <move>(27,24)</move>
+    <move>(26,24)</move>
+    <move>(5,16)</move>
+    <move>(6,16)</move>
+    <handle_use_space_select></handle_use_space_select>
+    <handle_use_space>(7,16)</handle_use_space>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <close_window></close_window>
+    <click_control>
+        <id>quit</id>
+        <mods>0</mods>
+    </click_control>
+</actions>
