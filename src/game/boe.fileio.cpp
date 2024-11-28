@@ -347,7 +347,12 @@ std::vector<scen_header_type> build_scen_headers() {
 		std::string scen_file;
 		while(std::getline(in, scen_file)){
 			scen_header_type scen_head;
-			fs::path full_path = scenDir / scen_file;
+			fs::path full_path;
+			for(fs::path scenDir : all_scen_dirs()){
+				full_path = scenDir / scen_file;
+				if (fs::exists(full_path))
+					break;
+			}
 			if(load_scenario_header(full_path, scen_head)){
 				scen_headers.push_back(scen_head);
 			}else{
