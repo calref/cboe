@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<town boes="2.0.0">
+    <size>32</size>
+    <name>Town 2</name>
+    <comment>Comment 1</comment>
+    <comment>Comment 2</comment>
+    <comment>Comment 3</comment>
+    <bounds top="3" left="3" bottom="28" right="28" />
+    <difficulty>0</difficulty>
+    <lighting>lit</lighting>
+    <flags />
+    <string id="0">
+        <![CDATA[Use special terrain with local node works in town 2!]]>
+    </string>
+</town>
