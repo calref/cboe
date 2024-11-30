@@ -392,7 +392,7 @@ void draw_startup_stats() {
 	}
 	
 	std::ostringstream sout;
-	sout << "Copyright 1997, All Rights Reserved, v" << oboeVersionString();
+	sout << "Created 1997, Free Open Source, v" << oboeVersionString();
 #if defined(GIT_REVISION) && defined(GIT_TAG_REVISION)
 	if(strcmp(GIT_REVISION, GIT_TAG_REVISION) != 0) {
 		sout << " [" << GIT_REVISION << "]";
