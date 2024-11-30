@@ -2257,7 +2257,7 @@ void set_up_start_screen() {
 	set_lb(NLS - 5,LB_TEXT,LB_NO_ACTION,"of Exile License. Using this");
 	set_lb(NLS - 4,LB_TEXT,LB_NO_ACTION,"program implies that you agree ");
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"with the terms of the license.");
-	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"Copyright 1997, All rights reserved.");
+	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"Created 1997, Free Open Source");
 	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,version());
 	change_made = false;
 	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
@@ -2292,7 +2292,7 @@ void set_up_main_screen() {
 	set_lb(-1,LB_TEXT,LB_LOAD_TOWN,"Load Another Town");
 	set_lb(-1,LB_TEXT,LB_EDIT_TOWN,"Edit Town Terrain");
 	set_lb(-1,LB_TEXT,LB_EDIT_TALK,"Edit Town Dialogue");
-	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"Copyright 1997, All rights reserved.");
+	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"Created 1997, Free Open Source");
 	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,version());
 	overall_mode = MODE_MAIN_SCREEN;
 	right_sbar->show();
