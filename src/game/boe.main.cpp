@@ -944,11 +944,21 @@ void handle_one_minimap_event(const sf::Event& event) {
 	} else if(event.type == sf::Event::GainedFocus) {
 		makeFrontWindow(mainPtr);
 	} else if(event.type == sf::Event::KeyPressed) {
-		switch(event.key.code) {
+		switch(event.key.code){
 			case sf::Keyboard::Escape:
 				close_map(true);
+				return;
 				break;
 			default: break;
+		}
+		char chr = keyToChar(event.key.code, event.key.shift);
+		switch(chr){
+			case 'a':
+				close_map(true);
+				return;
+				break;
+			default:
+				break;
 		}
 	}
 }
