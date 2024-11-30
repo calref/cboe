@@ -214,9 +214,7 @@ void apply_light_mask(bool onWindow) {
 	for(short i = 1; i < 12; i++)
 		for(short j = 1; j < 12; j++) {
 			if(light_area[i][j] == 2) {
-				// UNSURE WHY 28+...,18+... seems to gives better result that 13+...,13+...
 				int xOffset = 28 + 28 * (i - 3), yOffset = 18 + 36 * (j - 3);
-				//int xOffset = 13 + 28 * (i - 3), yOffset = 13 + 36 * (j - 3);
 				Region oval_region;
 				oval_region.addEllipse(temp);
 				oval_region.offset(xOffset, yOffset);
@@ -224,7 +222,8 @@ void apply_light_mask(bool onWindow) {
 			}
 			if(light_area[i][j] == 3) {
 				paint_rect = base_rect;
-				paint_rect.offset(13 + 28 * (i - 2),13 + 36 * (j - 2));
+				int xOffset = 13 + 28 * (i - 2), yOffset = 13 + 36 * (j - 2);
+				paint_rect.offset(xOffset, yOffset);
 				paint_rect.right += 28;
 				paint_rect.bottom += 36;
 				Region temp_rect_rgn;
