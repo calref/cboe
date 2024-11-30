@@ -938,8 +938,6 @@ void queue_fake_event(const sf::Event& event) {
 	fake_event_queue.push_back(event);
 }
 
-
-
 void handle_one_minimap_event(const sf::Event& event) {
 	if(event.type == sf::Event::Closed) {
 		close_map(true);
