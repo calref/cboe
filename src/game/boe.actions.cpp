@@ -376,8 +376,13 @@ void handle_begin_talk(bool& need_reprint) {
 	if(recording){
 		record_action("handle_begin_talk", "");
 	}
-	overall_mode = MODE_TALK_TOWN;
-	add_string_to_buf("Talk: Select someone.");
+	if(overall_mode == MODE_TALK_TOWN){
+		overall_mode = MODE_TOWN;
+		add_string_to_buf("  Cancelled.");
+	}else if(overall_mode == MODE_TOWN){
+		overall_mode = MODE_TALK_TOWN;
+		add_string_to_buf("Talk: Select someone.");
+	}
 	need_reprint = true;
 }
 
@@ -1395,7 +1400,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 				break;
 				
 			case TOOLBAR_TALK:
-				if(overall_mode == MODE_TOWN)
+				if(overall_mode == MODE_TOWN || overall_mode == MODE_TALK_TOWN)
 					handle_begin_talk(need_reprint);
 				break;
 				
@@ -2541,7 +2546,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			break;
 			
 		case 't': // Talk
-			if(overall_mode == MODE_TOWN) {
+			if(overall_mode == MODE_TOWN || overall_mode == MODE_TALK_TOWN) {
 				handle_begin_talk(need_reprint);
 				advance_time(did_something, need_redraw, need_reprint);
 			}
