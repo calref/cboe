@@ -315,13 +315,59 @@ void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw,
 	put_item_screen(stat_window);
 }
 
-void handle_begin_look(bool right_button, bool& need_redraw) {
+// Recenter the camera after look is finished or canceled:
+void end_look(bool right_button, bool& need_redraw) {
+	if(overall_mode == MODE_LOOK_COMBAT) {
+		overall_mode = MODE_COMBAT;
+		if(!right_button){
+			center = univ.current_pc().combat_pos;
+			pause(5);
+			need_redraw = true;
+		}
+	}
+	else if(overall_mode == MODE_LOOK_TOWN) {
+		overall_mode = MODE_TOWN;
+		if(!right_button){
+			center = univ.party.town_loc;
+			need_redraw = true;
+		}
+	}
+	else if(overall_mode == MODE_LOOK_OUTDOORS){
+		overall_mode = MODE_OUTDOORS;
+		need_redraw = true;
+	}
+}
+
+void handle_begin_look(bool right_button, bool& need_redraw, bool& need_reprint) {
 	if(recording){
 		record_action("handle_begin_look", bool_to_str(right_button));
 	}
-	if(overall_mode == MODE_OUTDOORS) overall_mode = MODE_LOOK_OUTDOORS;
-	if(overall_mode == MODE_TOWN) overall_mode = MODE_LOOK_TOWN;
-	if(overall_mode == MODE_COMBAT) overall_mode = MODE_LOOK_COMBAT;
+	switch(overall_mode){
+		// Cancel look:
+		case MODE_LOOK_OUTDOORS: BOOST_FALLTHROUGH;
+		case MODE_LOOK_TOWN: BOOST_FALLTHROUGH;
+		case MODE_LOOK_COMBAT:
+			need_reprint = true;
+			add_string_to_buf("  Cancelled.");
+			// right_button will never be true here:
+			end_look(false, need_redraw);
+			return;
+			break;
+
+		// Begin look target mode:
+		case MODE_OUTDOORS:
+			overall_mode = MODE_LOOK_OUTDOORS;
+			break;
+		case MODE_TOWN:
+			overall_mode = MODE_LOOK_TOWN;
+			break;
+		case MODE_COMBAT:
+			overall_mode = MODE_LOOK_COMBAT;
+			break;
+
+		default:
+			break;
+	}
 	if(!right_button) add_string_to_buf("Look: Select a space. You can also right click to look.", 2);
 	need_redraw = true;
 }
@@ -547,23 +593,7 @@ void handle_look(location destination, bool right_button, eKeyMod mods, bool& ne
 	bool look_done = true;
 	if(mod_contains(mods, mod_alt) || mod_contains(mods, mod_ctrl)) look_done = false;
 	if(look_done) {
-		if(overall_mode == MODE_LOOK_COMBAT) {
-			overall_mode = MODE_COMBAT;
-			if(!right_button){
-				center = univ.current_pc().combat_pos;
-				pause(5);
-				need_redraw = true;
-			}
-		}
-		else if(overall_mode == MODE_LOOK_TOWN) {
-			overall_mode = MODE_TOWN;
-			if(!right_button){
-				center = univ.party.town_loc;
-				need_redraw = true;
-			}
-		}
-		else if(overall_mode == MODE_LOOK_OUTDOORS)
-			overall_mode = MODE_OUTDOORS; // I'm not sure why need_redraw isn't set true in this case.
+		end_look(right_button, need_redraw);
 	}
 }
 
@@ -1356,7 +1386,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 				break;
 				
 			case TOOLBAR_LOOK:
-				handle_begin_look(false, need_redraw);
+				handle_begin_look(false, need_redraw, need_reprint);
 				break;
 				
 			case TOOLBAR_SHIELD:
@@ -1433,7 +1463,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 		
 		// Check for quick look
 		if(right_button) {
-			handle_begin_look(right_button, need_redraw);
+			handle_begin_look(right_button, need_redraw, need_reprint);
 		}
 		
 		// Moving/pausing
@@ -2497,8 +2527,8 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			break;
 			
 		case 'l': // Look
-			if((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_TOWN) || (overall_mode == MODE_COMBAT)) {
-				handle_begin_look(false, need_redraw);
+			if((overall_mode == MODE_OUTDOORS) || (overall_mode == MODE_TOWN) || (overall_mode == MODE_COMBAT) || (overall_mode == MODE_LOOK_OUTDOORS) || (overall_mode == MODE_LOOK_TOWN) || (overall_mode == MODE_LOOK_COMBAT)) {
+				handle_begin_look(false, need_redraw, need_reprint);
 				advance_time(did_something, need_redraw, need_reprint);
 			}
 			break;

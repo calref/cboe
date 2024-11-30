@@ -434,7 +434,7 @@ static void replay_next_action() {
 		return;
 	}else if(t == "handle_begin_look"){
 		bool right_button = str_to_bool(next_action.GetText());
-		handle_begin_look(right_button, need_redraw);
+		handle_begin_look(right_button, need_redraw, need_reprint);
 		if (right_button){
 			return;
 		}
