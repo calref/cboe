@@ -253,6 +253,8 @@ bool prime_time() {
 	return overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT;
 }
 
+eSkill last_spellcast_type = eSkill::MAGE_SPELLS;
+
 void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw, bool& need_reprint, bool record) {
 	if(record && recording){
 		std::map<std::string,std::string> info;
@@ -260,6 +262,7 @@ void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw,
 		info["spell_forced"] = bool_to_str(spell_forced);
 		record_action("handle_spellcast", info);
 	}
+	last_spellcast_type = which_type;
 	short store_sp[6];
 	extern short spec_target_fail;
 	extern eSpecCtxType spec_target_type;
@@ -2233,11 +2236,57 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	};
 	Key talk_chars[9] = {Key::L,Key::N,Key::J,Key::B,Key::S,Key::R,Key::D,Key::G,Key::A};
 	Key shop_chars[8] = {Key::A,Key::B,Key::C,Key::D,Key::E,Key::F,Key::G,Key::H};
+
+	bool did_something = false, need_redraw = false, need_reprint = false;
 	
-	if(map_visible && event.key.code == Key::Escape
-	   && (overall_mode != MODE_TALKING) && (overall_mode != MODE_SHOPPING)) {
-		close_map();
-		return false;
+	if(event.key.code == Key::Escape){
+		bool handled = true;
+		switch(overall_mode){
+			// These two cases are handled later:
+			case MODE_TALKING: break;
+			case MODE_SHOPPING: break;
+
+			// Cancel use action
+			case MODE_USE_TOWN:
+				handle_use_space_select(need_reprint);
+				break;
+			// Cancel bash
+			case MODE_BASH_TOWN:
+				handle_bash_pick_select(need_reprint, true);
+				break;
+			// Cancel lockpick
+			case MODE_PICK_TOWN:
+				handle_bash_pick_select(need_reprint, false);
+				break;
+			// Cancel mage or priest spell
+			case MODE_SPELL_TARGET: BOOST_FALLTHROUGH;
+			case MODE_FANCY_TARGET: BOOST_FALLTHROUGH;
+			case MODE_TOWN_TARGET:
+				handle_spellcast(last_spellcast_type, did_something, need_redraw, need_reprint);
+				break;
+			// Cancel look
+			case MODE_LOOK_TOWN:
+				handle_begin_look(false, need_redraw, need_reprint);
+				break;
+			// Cancel talk
+			case MODE_TALK_TOWN:
+				handle_begin_talk(need_reprint);
+				break;
+			// Cancel missile
+			case MODE_FIRING: BOOST_FALLTHROUGH;
+			case MODE_THROWING:
+				handle_missile(need_redraw, need_reprint);
+				break;
+
+			// Defer to closing the map:
+			default:
+				handled = false;
+				break;
+		}
+		if(!handled && map_visible){
+			close_map();
+			return false;
+		}
 	}
 	
 	if(overall_mode == MODE_STARTUP)
@@ -2309,8 +2358,6 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 				}
 			}
 	}
-	
-	bool did_something = false, need_redraw = false, need_reprint = false;
 	
 	char chr = keyToChar(chr2, event.key.shift);
 	// F1 should bring up help.
