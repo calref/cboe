@@ -1537,6 +1537,7 @@ bool is_door(location destination) {
 	return false;
 }
 
+extern void close_map(bool record);
 
 void display_map() {
 	if(recording){
@@ -1549,8 +1550,12 @@ void display_map() {
 		return;
 	}
 
-	// Show the automap if it's not already visible
-	if(map_visible) return;
+	// Hide the automap if it's already visible
+	if(map_visible){
+		close_map(false);
+		return;
+	}
+
 	give_help(62,0);
 	
 	rectangle the_rect;
