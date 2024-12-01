@@ -122,6 +122,8 @@ extern long anim_ticks;
 static void init_boe(int, char*[]);
 static void showWelcome();
 
+static void replay_next_action();
+
 void handle_quit_event();
 void handle_help_toc();
 void menu_give_help(short help1);
@@ -277,15 +279,20 @@ static void process_args(int argc, char* argv[]) {
 			extern boost::optional<cFramerateLimiter> replay_fps_limit;
 			replay_fps_limit.emplace(*replay_speed);
 		}
+		// Handle replays that loaded a savegame from the command line
+		if(has_next_action("load_party")){
+			replay_next_action();
+		}
 		return;
 	}
-	if(record_to){
+	else if(record_to){
 		if(!init_action_log(record_unique || record_to->empty() ? "record-unique" : "record", *record_to)){
 			std::cerr << "Failed to start recording: " << *record_to << std::endl;
 			exit(1);
 		}
-		return;
+		// Don't return, because we want to support recording a run that starts with a party from the CLI.
 	}
+
 	if(saved_game) {
 		if(!load_party(*saved_game, univ)) {
 			std::cout << "Failed to load save file: " << *saved_game << std::endl;
