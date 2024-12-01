@@ -2282,6 +2282,11 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			case MODE_THROWING:
 				handle_missile(need_redraw, need_reprint);
 				break;
+			// Cancel item target
+			case MODE_ITEM_TARGET:
+				cancel_item_target(did_something, need_redraw, need_reprint);
+				advance_time(did_something, need_redraw, need_reprint);
+				break;
 
 			// Defer to closing the map:
 			default:
