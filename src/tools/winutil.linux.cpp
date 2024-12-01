@@ -224,9 +224,6 @@ std::unique_ptr<sf::Image> get_clipboard_img() {
 	return nullptr;
 }
 
-void beep() {
-}
-
 void launchURL(std::string url) {
 	system((std::string { "xdg-open " } + url).c_str());
 }

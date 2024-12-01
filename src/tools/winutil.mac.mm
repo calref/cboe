@@ -169,10 +169,6 @@ std::unique_ptr<sf::Image> get_clipboard_img() {
 	return ret;
 }
 
-void beep() {
-	NSBeep();
-}
-
 void launchURL(std::string url) {
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.c_str()]]];
 }
