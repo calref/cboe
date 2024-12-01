@@ -477,7 +477,7 @@ bool cPlayer::give_item(cItem item, int flags) {
 	}
 	if(!allow_overload && item.item_weight() > free_weight()) {
 	  	if(do_print && print_result) {
-			//beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
+			play_sound(41);
 			print_result("Item too heavy to carry.");
 		}
 		return false;
