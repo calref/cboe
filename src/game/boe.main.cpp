@@ -262,11 +262,27 @@ static void process_args(int argc, char* argv[]) {
 		cli.writeToStream(std::cout);
 		exit(0);
 	}
-	if(record_to && init_action_log(record_unique || record_to->empty() ? "record-unique" : "record", *record_to)) return;
-	if(replay && init_action_log("replay", *replay)) {
+	if(replay){
+		if(record_to){
+			std::cout << "Warning: flag --record conflicts with --replay and will be ignored." << std::endl;
+		}
+		if(saved_game){
+			std::cout << "Warning: save file argument conflicts with --replay and will be ignored." << std::endl;
+		}
+		if(!init_action_log("replay", *replay)) {
+			std::cerr << "Failed to load replay: " << *replay << std::endl;
+			exit(1);
+		}
 		if(replay_speed) {
 			extern boost::optional<cFramerateLimiter> replay_fps_limit;
 			replay_fps_limit.emplace(*replay_speed);
+		}
+		return;
+	}
+	if(record_to){
+		if(!init_action_log(record_unique || record_to->empty() ? "record-unique" : "record", *record_to)){
+			std::cerr << "Failed to start recording: " << *record_to << std::endl;
+			exit(1);
 		}
 		return;
 	}
