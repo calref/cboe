@@ -67,10 +67,16 @@ static bool save_ter_info(cDialog& me, cTerrain& ter) {
 	int num_town = (**std::min_element(scenario.towns.begin(), scenario.towns.end(), [](cTown* a,cTown* b){
 		return a->specials.size() < b->specials.size();
 	})).specials.size();
-	int num_out = (**std::min_element(scenario.outdoors.begin(), scenario.outdoors.end(), [](cOutdoors* a,cOutdoors* b){
-		return a->specials.size() < b->specials.size();
-	})).specials.size();
-	int num_loc = std::min(num_town, num_out);
+	// NOTE: It seems it was planned to add 'Look' to outdoor mode.
+	// We're not planning to do that anymore, but if it ever is, this
+	// additional constraint will be needed here:
+
+	// int num_out = (**std::min_element(scenario.outdoors.begin(), scenario.outdoors.end(), [](cOutdoors* a,cOutdoors* b){
+	// 	return a->specials.size() < b->specials.size();
+	// })).specials.size();
+	// int num_loc = std::min(num_town, num_out);
+
+	int num_loc = num_town;
 	int num_glob = scenario.scen_specials.size();
 	switch(prop) {
 		case eTerSpec::CHANGE_WHEN_STEP_ON:
@@ -111,9 +117,10 @@ static bool save_ter_info(cDialog& me, cTerrain& ter) {
 				showError("Special type must be either 0 or 1.", &me);
 				return false;
 			}
-			// TODO If local, when creating a new town or outdoor section, we should now prompt the designer
+			// TODO If local, when creating a new town, we should now prompt the designer
 			// to implement this special node.
-			if(!check_range_msg(me, "flag1", true, 0, (spec_type == 0 ? num_glob : num_loc) - 1, "Special to call", "ALL towns and outdoor sections must implement this node number"))
+			// NOTE: If 'Look' is ever added to outdoor mode, this message needs to change
+			if(!check_range_msg(me, "flag1", true, 0, (spec_type == 0 ? num_glob : num_loc) - 1, "Special to call", "ALL towns must implement this node number"))
 				return false;
 			break;
 		case eTerSpec::BRIDGE: case eTerSpec::BED: case eTerSpec::IS_A_SIGN: case eTerSpec::IS_A_CONTAINER: case eTerSpec::BLOCKED_TO_MONSTERS:
