@@ -1468,14 +1468,22 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 		int i = (the_point.x - 32) / 28;
 		int j = (the_point.y - 20) / 36;
 		location destination = cur_loc;
-		
+		auto look_destination = [i, j, destination]() {
+			location look_dest = destination;
+			if (overall_mode == MODE_LOOK_OUTDOORS) look_dest = univ.party.out_loc;
+			look_dest.x = look_dest.x + i - 4;
+			look_dest.y = look_dest.y + j - 4;
+			return look_dest;
+		};
+
 		// Check for quick look
 		if(right_button) {
-			handle_begin_look(right_button, need_redraw, need_reprint);
+			handle_begin_look(true, need_redraw, need_reprint);
+			handle_look(look_destination(), true, current_key_mod(), need_redraw, need_reprint);
 		}
 		
 		// Moving/pausing
-		if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
+		else if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
 			if((i == 4) & (j == 4)) handle_pause(did_something, need_redraw);
 			else {
 				cur_direction = get_cur_direction(the_point);
@@ -1487,10 +1495,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 		
 		// Looking at something
 		else if(overall_mode == MODE_LOOK_OUTDOORS || overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_LOOK_COMBAT) {
-			if(overall_mode == MODE_LOOK_OUTDOORS) destination = univ.party.out_loc;
-			destination.x = destination.x + i - 4;
-			destination.y = destination.y + j - 4;
-			handle_look(destination, right_button, current_key_mod(), need_redraw, need_reprint);
+			handle_look(look_destination(), false, current_key_mod(), need_redraw, need_reprint);
 		}
 		
 		// Talking to someone
