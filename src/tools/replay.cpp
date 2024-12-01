@@ -110,6 +110,7 @@ bool init_action_log(std::string command, std::string file) {
 			replaying = true;
 		} catch(...) {
 			std::cout << "Failed to load file " << file << std::endl;
+			return false;
 		}
 		return true;
 	}
