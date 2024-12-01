@@ -579,6 +579,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 			
 		case eSpell::IDENTIFY:
+			// TODO: Cancel without spending points if there are no unidentified items
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			if(!univ.scenario.is_legacy && is_town()) {
