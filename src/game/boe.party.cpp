@@ -2025,6 +2025,9 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 		cLed& led = dynamic_cast<cLed&>(castSpell[id]);
 		led.attachKey(key);
 		castSpell.addLabelFor(id, {static_cast<char>(i > 25 ? toupper(key.c) : key.c)}, LABEL_LEFT, 8, true);
+		if(spell_index[i] == 90){
+			continue;
+		}
 		led.setState((pc_can_cast_spell(univ.party[pc_casting],cSpell::fromNum(type,on_which_spell_page == 0 ? i : spell_index[i])))
 					 ? led_red : led_green);
 		led.attachClickHandler(std::bind(pick_spell_select_led, _1, _2, _3, type, std::ref(dark), std::ref(former_spell)));
