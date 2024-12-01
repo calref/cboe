@@ -10,6 +10,7 @@
 #define BOE_PCH
 
 #include <string>
+#include <iostream>
 
 typedef unsigned short mon_num_t;
 typedef signed short miss_num_t;
@@ -40,5 +41,11 @@ inline bool str_to_bool(std::string str) {
 inline std::string bool_to_str(bool b) {
 	return b ? "true" : "false";
 }
+
+inline void LOG(std::string line) {
+	std::cout << line << std::endl;
+}
+
+#define LOG_VALUE(x) std::cout << #x << ": " << x << std::endl;
 
 #endif
