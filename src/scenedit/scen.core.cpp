@@ -67,7 +67,7 @@ static bool save_ter_info(cDialog& me, cTerrain& ter) {
 	int num_town = (**std::min_element(scenario.towns.begin(), scenario.towns.end(), [](cTown* a,cTown* b){
 		return a->specials.size() < b->specials.size();
 	})).specials.size();
-	// NOTE: It seems it was planned to add 'Look' to outdoor mode.
+	// NOTE: It seems it was planned to add 'Use' to outdoor mode.
 	// We're not planning to do that anymore, but if it ever is, this
 	// additional constraint will be needed here:
 
@@ -119,7 +119,7 @@ static bool save_ter_info(cDialog& me, cTerrain& ter) {
 			}
 			// TODO If local, when creating a new town, we should now prompt the designer
 			// to implement this special node.
-			// NOTE: If 'Look' is ever added to outdoor mode, this message needs to change
+			// NOTE: If 'Use' is ever added to outdoor mode, this message needs to change
 			if(!check_range_msg(me, "flag1", true, 0, (spec_type == 0 ? num_glob : num_loc) - 1, "Special to call", "ALL towns must implement this node number"))
 				return false;
 			break;
