@@ -9,10 +9,10 @@
 	<text name='disp-frame' framed='true' relative='pos-in pos' rel-anchor='prev' top='6' left='10' width='250' height='98'/>
 	<group name='display'>
 		<led name='tl' relative='pos-in' anchor='disp-frame' top='7' left='8'>Top Left</led>
-		<led name='tr' relative='neg-in pos-in' anchor='disp-frame' top='7' left='77' text-side='left'>Top Right</led>
+		<led name='tr' relative='neg-in pos-in' anchor='disp-frame' top='7' left='77' label-pos='left'>Top Right</led>
 		<led name='mid' relative='pos-in' anchor='disp-frame' top='40' left='83'>Center</led>
 		<led name='bl' relative='pos-in neg-in' anchor='disp-frame' top='16' left='8'>Bottom Left</led>
-		<led name='br' relative='neg-in' anchor='disp-frame' top='16' left='95' text-side='left'>Bottom Right</led>
+		<led name='br' relative='neg-in' anchor='disp-frame' top='16' left='95' label-pos='left'>Bottom Right</led>
 		<led name='win' relative='pos-in pos' anchor='disp-frame' top='9' left='8'>Small Window (not full screen)</led>
 	</group>
 	<text name='scale-head' size='large' relative='pos-in neg' anchor='disp-head' top='0' left='300' width='40' height='17'>Scale:</text>
