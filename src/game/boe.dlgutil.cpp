@@ -884,10 +884,6 @@ void handle_talk_node(int which_talk_entry) {
 			return;
 			
 		case eTalkNode::SHOP:
-			if(d < 0 || d > 11) {
-				showError("Invalid shop type!");
-				return;
-			}
 			start_shop_mode(b,a,save_talk_str1);
 			can_save_talk = false;
 			return;
