@@ -155,7 +155,7 @@ bool cLed::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::stri
 		else if(val == "off") setState(led_off);
 		else throw xBadVal(tagName, attr.Name(), val, attr.Row(), attr.Column(), fname);
 		return true;
-	}else if(attr.Name() == "text-side"){
+	}else if(attr.Name() == "label-pos"){
 		textOnRight = (attr.Value() == "right");
 		return true;
 	}
