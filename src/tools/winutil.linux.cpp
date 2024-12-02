@@ -16,6 +16,8 @@
 extern sf::RenderWindow mainPtr;
 extern void showError(std::string str1, std::string str2, cDialog* parent = nullptr);
 
+extern void play_sound(snd_num_t which, sf::Time delay = sf::Time());
+
 // TODO: I'm sure there's a better way to do this (maybe one that's keyboard layout agnostic)
 // The proper way would involve use of the TextEntered event
 char keyToChar(sf::Keyboard::Key key, bool isShift) {
@@ -225,6 +227,7 @@ std::unique_ptr<sf::Image> get_clipboard_img() {
 }
 
 void beep() {
+	play_sound(1);
 }
 
 void launchURL(std::string url) {
