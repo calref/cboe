@@ -335,8 +335,8 @@ void put_item_screen(eItemWinMode screen_num) {
 					// The info button is harmless and can be useful while shopping, so always show it
 					place_item_button(3,i,ITEMBTN_INFO);
 
-					if((stat_screen_mode == MODE_INVEN) &&
-						prime_time() && (pc == univ.cur_pc)) {
+					if(stat_screen_mode == MODE_INVEN &&
+						prime_time() && pc == univ.cur_pc) {
 						
 						// place give and drop and use
 						place_item_button(1,i,ITEMBTN_GIVE);
