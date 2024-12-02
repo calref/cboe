@@ -783,7 +783,8 @@ void handle_talk_node(int which_talk_entry) {
 			break;
 		case TALK_RECORD:
 			if(!can_save_talk) {
-				beep();
+				// TODO the button shouldn't be shown if it won't work, no?
+				play_sound(1);
 				return;
 			}
 			if(univ.party.save_talk(univ.town->talking.people[store_personality%10].title, univ.town->name, save_talk_str1, save_talk_str2)) {
