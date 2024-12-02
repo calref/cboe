@@ -418,6 +418,10 @@ CLEANUP:
 	return img;
 }
 
+void beep() {
+	MessageBeep(-1);
+}
+
 void launchURL(std::string url) {
 	ShellExecuteA(NULL, "open", url.c_str(), NULL, NULL, SW_SHOWNORMAL);
 }

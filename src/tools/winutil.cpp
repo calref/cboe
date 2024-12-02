@@ -2,8 +2,6 @@
 
 #include "keymods.hpp"
 
-void play_sound(snd_num_t which, sf::Time delay = sf::Time());
-
 // The default scale should be the largest that the user's screen can fit all three
 // BoE application windows (because they should probably default to match each other).
 double fallback_scale() {
@@ -50,8 +48,4 @@ bool pollEvent(sf::Window& win, sf::Event& event){
 
 bool pollEvent(sf::Window* win, sf::Event& event){
     return pollEvent(*win, event);
-}
-
-void beep() {
-	play_sound(1);
 }
