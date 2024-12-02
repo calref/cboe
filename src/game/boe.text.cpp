@@ -343,11 +343,13 @@ void put_item_screen(eItemWinMode screen_num) {
 						place_item_graphic(i,item.graphic_num); 
 						place_item_button(3,i,ITEMBTN_INFO); // info button
 						if((stat_screen_mode == MODE_INVEN) &&
-							((is_town()) || (is_out()) || ((is_combat()) && (pc == univ.cur_pc)))) { // place give and drop and use
+							((is_town()) || (is_out()) || ((is_combat()) && (pc == univ.cur_pc))) && overall_mode != MODE_SHOPPING) { // place give and drop and use
+
 							place_item_button(1,i,ITEMBTN_GIVE);
 							place_item_button(2,i,ITEMBTN_DROP);
 							if(item.can_use() && (item.rechargeable ? item.charges > 0 : true)) // place use if can
 								place_item_button(0,i,ITEMBTN_USE);
+
 						}
 					}
 					if(stat_screen_mode != MODE_INVEN && stat_screen_mode != MODE_SHOP) {
