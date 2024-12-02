@@ -75,6 +75,7 @@ extern enum_map(eItemButton, bool) item_area_button_active[8];
 extern enum_map(ePlayerButton, bool) pc_area_button_active[6];
 extern rectangle item_screen_button_rects[9];
 extern std::vector<int> spec_item_array;
+extern bool prime_time();
 // combat globals
 extern short item_bottom_button_active[9];
 extern cUniverse univ;
@@ -330,28 +331,20 @@ void put_item_screen(eItemWinMode screen_num) {
 					style.italic = false;
 					style.colour = Colours::BLACK;
 					
-					// this is kludgy, awkwark, and has redundant code. Done this way to
-					// make go faster, and I got lazy.
-					if((stat_screen_mode == MODE_SHOP) &&
-						((is_town()) || (is_out()) || ((is_combat()) && (pc == univ.cur_pc)))) { // place give and drop and use
-						place_item_graphic(i,item.graphic_num);
+					place_item_graphic(i,item.graphic_num); 
+					// The info button is harmless and can be useful while shopping, so always show it
+					place_item_button(3,i,ITEMBTN_INFO);
+
+					if((stat_screen_mode == MODE_INVEN) &&
+						prime_time() && (pc == univ.cur_pc)) {
+						
+						// place give and drop and use
+						place_item_button(1,i,ITEMBTN_GIVE);
+						place_item_button(2,i,ITEMBTN_DROP);
 						if(item.can_use() && (item.rechargeable ? item.charges > 0 : true)) // place use if can
-							place_item_button(ITEMBTN_NORM,i);
-						else place_item_button(ITEMBTN_ALL,i);
+							place_item_button(0,i,ITEMBTN_USE);
 					}
-					else {
-						place_item_graphic(i,item.graphic_num); 
-						place_item_button(3,i,ITEMBTN_INFO); // info button
-						if((stat_screen_mode == MODE_INVEN) &&
-							((is_town()) || (is_out()) || ((is_combat()) && (pc == univ.cur_pc))) && overall_mode != MODE_SHOPPING) { // place give and drop and use
 
-							place_item_button(1,i,ITEMBTN_GIVE);
-							place_item_button(2,i,ITEMBTN_DROP);
-							if(item.can_use() && (item.rechargeable ? item.charges > 0 : true)) // place use if can
-								place_item_button(0,i,ITEMBTN_USE);
-
-						}
-					}
 					if(stat_screen_mode != MODE_INVEN && stat_screen_mode != MODE_SHOP) {
 						place_buy_button(i,pc,i_num);
 						
