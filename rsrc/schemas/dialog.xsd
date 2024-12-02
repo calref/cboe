@@ -63,7 +63,7 @@
 			<xs:enumeration value="led"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="textSide">
+	<xs:simpleType name="labelPos">
 		<xs:restriction base="xs:token">
 			<xs:enumeration value="left"/>
 			<xs:enumeration value="right"/>
@@ -236,7 +236,7 @@
 				<xs:attributeGroup ref="rect-size"/>
 				<xs:attributeGroup ref="position"/>
 				<xs:attributeGroup ref="font"/>
-				<xs:attribute name="label-pos" default="right" type="textSide"/>
+				<xs:attribute name="label-pos" default="right" type="labelPos"/>
 				<xs:attribute name="wrap" default="false" type="bool"/>
 			</xs:extension>
 		</xs:simpleContent>
