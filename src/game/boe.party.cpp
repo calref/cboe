@@ -578,11 +578,12 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			increase_light(50);
 			break;
 			
-		case eSpell::IDENTIFY:
+		case eSpell::IDENTIFY:{
 			bool all_identified = true;
 			for(cPlayer& pc : univ.party)
 				for(cItem& item : pc.items)
-					all_identified &= item.ident;
+					if (item.variety != eItemType::NO_ITEM)
+						all_identified = all_identified && item.ident;
 
 			// Cancel without spending points if there are no unidentified items
 			if(!(freebie || all_identified))
@@ -596,18 +597,21 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				shop_identify_cost = 0;
 				put_item_screen(stat_window);
 				break;
+			}else{
+				std::ostringstream sstr;
+				sstr << "All of your items are ";
+				if(all_identified){
+					sstr << "already ";
+				}else{
+					for(cPlayer& pc : univ.party)
+						for(cItem& item : pc.items)
+							item.ident = true;
+				}
+				sstr << "identified.";
+				ASB(sstr.str());
 			}
-			std::ostringstream sstr;
-			sstr << "All of your items are ";
-			if(all_identified){
-				sstr << "already ";
-			}
-			sstr << "identified.";
-			ASB(sstr.str(););
-			for(cPlayer& pc : univ.party)
-				for(cItem& item : pc.items)
-					item.ident = true;
 			break;
+		}
 
 		case eSpell::RECHARGE:
 			if(!freebie)
