@@ -380,7 +380,7 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,xp_dlog_s
 			} while(univ.party[save.who].main_status != eMainStatus::ALIVE);
 			do_xp_draw(me,save);
 		} else
-			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
+			play_sound(1);
 	} else if(item_hit == "right") {
 		// TODO: If they don't work in mode 0, why are they visible?
 		if(save.mode != 0) {
@@ -390,7 +390,7 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,xp_dlog_s
 			} while(univ.party[save.who].main_status != eMainStatus::ALIVE);
 			do_xp_draw(me,save);
 		} else
-			beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
+			play_sound(1);
 	}
 	return true;
 }
@@ -409,7 +409,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 					if(save.mode == 1)
 						save.g += 10;
 				}
-			} else beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
+			} else play_sound(1);
 		} else if(item_hit[3] == 'p') {
 			if(can_change_skill(eSkill::MAX_SP, save, true)) {
 				save.hp += 2;
@@ -444,7 +444,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 					if(save.mode == 1)
 						save.g += 15;
 				}
-			} else beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
+			} else play_sound(1);
 		} else if(item_hit[3] == 'p') {
 			if(can_change_skill(eSkill::MAX_SP, save, true)) {
 				save.sp += 1;
@@ -492,7 +492,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 						if(save.mode == 1)
 							save.g += skill_g_cost[which_skill];
 					}
-				} else beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
+				} else play_sound(1);
 			} else if(dir == 'p') {
 				if(can_change_skill(which_skill, save, true)) {
 					save.skills[which_skill] += 1;
@@ -506,7 +506,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 						give_help(25,0,me);
 					else if(save.mode == 1 && save.g < skill_g_cost[which_skill])
 						give_help(24,0,me);
-					else beep(); // TODO: This is a game event, so it should have a game sound, not a system alert.
+					else play_sound(1);
 				}
 			}
 			
