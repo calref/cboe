@@ -585,11 +585,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 			
 		case eSpell::IDENTIFY:{
-			bool all_identified = true;
-			for(cPlayer& pc : univ.party)
-				for(cItem& item : pc.items)
-					if (item.variety != eItemType::NO_ITEM)
-						all_identified = all_identified && item.ident;
+			bool all_identified = all_items_identified();
 
 			// Cancel without spending points if there are no unidentified items
 			if(!(freebie || all_identified))
@@ -2623,4 +2619,13 @@ short party_size(bool only_living) {
 	
 	return num_pcs;
 	
+}
+
+bool all_items_identified() {
+	bool all_identified = true;
+	for(cPlayer& pc : univ.party)
+		for(cItem& item : pc.items)
+			if (item.variety != eItemType::NO_ITEM)
+				all_identified &= item.ident;
+	return all_identified;
 }

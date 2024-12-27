@@ -48,6 +48,7 @@ short wilderness_lore_present(ter_num_t ter);
 void print_spell_cast(eSpell spell,eSkill which);
 void put_party_in_scen(std::string scen_name);
 short party_size(bool only_living);
+bool all_items_identified();
 
 // This is defined in pc.editors.cpp since it is also used by the character editor
 bool spend_xp(short pc_num, short mode, cDialog* parent);
