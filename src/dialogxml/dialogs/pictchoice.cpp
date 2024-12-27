@@ -157,3 +157,7 @@ ePicType cPictChoice::getPicChosenType() const {
 size_t cPictChoice::getSelected() const {
 	return cur;
 }
+
+void cPictChoice::disableCancel() {
+	dlg["cancel"].hide();
+}

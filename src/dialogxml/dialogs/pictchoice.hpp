@@ -75,6 +75,8 @@ public:
 	/// Get the index of the selected icon in the original list.
 	/// @return The index
 	size_t getSelected() const;
+	/// Disallow the player from cancelling without making a choice
+	void disableCancel();
 };
 
 #endif

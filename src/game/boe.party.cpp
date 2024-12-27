@@ -216,12 +216,6 @@ bool create_pc(short spot,cDialog* parent) {
 	if(!still_ok)
 		return false;
 	
-	// TODO this can return false if the player cancels the choice.
-	// Currently doing so does not stop the PC from being created.
-	// Which it probably shouldn't, because the player will have
-	// already invested some time assigning race/abilities/skill points.
-	// Probably better to just remove the Cancel button from the PC
-	// graphic dialog in this case.
 	pick_pc_graphic(spot,0,parent);
 
 	pick_pc_name(spot,parent);
@@ -2180,7 +2174,7 @@ eAlchemy alch_choice(short pc_num) {
 	return chooseAlchemy.getResult<eAlchemy>();
 }
 
-// mode ... 0 - create  1 - created
+// mode ... 0 - create new pc  1 - change existing pc graphic
 bool pick_pc_graphic(short pc_num,short mode,cDialog* parent) {
 	store_graphic_pc_num = pc_num;
 	store_graphic_mode = mode;
@@ -2188,6 +2182,12 @@ bool pick_pc_graphic(short pc_num,short mode,cDialog* parent) {
 	set_cursor(sword_curs);
 	
 	cPictChoice pcPic(0,36,PIC_PC,parent);
+	// When creating a new PC, the player has already put time into stat selection, so they won't want to
+	// cancel and lose that work
+	if(mode == 0){
+		pcPic.disableCancel();
+	}
+
 	// Customize it for this special case of choosing a PC graphic
 	dynamic_cast<cPict&>(pcPic->getControl("mainpic")).setPict(7);
 	pcPic->getControl("prompt").setText("Select a graphic for your PC:");
