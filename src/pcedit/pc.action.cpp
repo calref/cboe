@@ -77,6 +77,7 @@ bool handle_action(const sf::Event & event) {
 		   univ.party[current_active_pc].items[i].variety != eItemType::NO_ITEM) {
 			flash_rect(item_string_rects[i][2]);
 			univ.party[current_active_pc].items[i].ident = true;
+			univ.party[current_active_pc].combine_things();
 		}
 	}
 	
