@@ -8,7 +8,7 @@ void put_item_screen(eItemWinMode screen_num);
 void place_item_bottom_buttons();
 void set_stat_window(eItemWinMode new_stat, bool record = false);
 void set_stat_window_for_pc(int pc, bool record = false);
-void place_item_button(short button_position,short which_slot,eItemButton button_type = ITEMBTN_USE);
+void place_item_button(short which_slot,eItemButton button_type = ITEMBTN_USE);
 void place_item_graphic(short which_slot,short graphic);
 short first_active_pc();
 void refresh_stat_areas(short mode);

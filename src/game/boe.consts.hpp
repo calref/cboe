@@ -120,9 +120,6 @@ enum eItemButton {
 	MAX_eItemButton // keep last
 };
 
-const int ITEMBTN_ALL = 10; // use, give, drop, info
-const int ITEMBTN_NORM = 11; // give, drop, info
-
 // PC buttons
 enum ePlayerButton {
 	PCBTN_NAME = 0,

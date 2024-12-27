@@ -260,10 +260,10 @@ void put_item_screen(eItemWinMode screen_num) {
 				if(i_num < spec_item_array.size()) {
 					win_draw_string(item_stats_gworld,item_buttons[i][ITEMBTN_NAME],univ.scenario.special_items[spec_item_array[i_num]].name,eTextMode::WRAP,style);
 					
-					place_item_button(3,i,ITEMBTN_INFO);
+					place_item_button(i,ITEMBTN_INFO);
 					if((univ.scenario.special_items[spec_item_array[i_num]].flags % 10 == 1)
 						&& (!(is_combat())))
-						place_item_button(0,i,ITEMBTN_DROP); // TODO: Shouldn't this be ITEMBTN_USE?
+						place_item_button(i,ITEMBTN_DROP); // TODO: Shouldn't this be ITEMBTN_USE?
 				}
 			}
 			break;
@@ -286,7 +286,7 @@ void put_item_screen(eItemWinMode screen_num) {
 						draw_line(item_stats_gworld, from, to, 1, Colours::GREEN);
 					}
 					
-					place_item_button(3,i,ITEMBTN_INFO);
+					place_item_button(i,ITEMBTN_INFO);
 				}
 			}
 			break;
@@ -333,16 +333,16 @@ void put_item_screen(eItemWinMode screen_num) {
 					
 					place_item_graphic(i,item.graphic_num); 
 					// The info button is harmless and can be useful while shopping, so always show it
-					place_item_button(3,i,ITEMBTN_INFO);
+					place_item_button(i,ITEMBTN_INFO);
 
 					if(stat_screen_mode == MODE_INVEN &&
 						prime_time() && pc == univ.cur_pc) {
 						
 						// place give and drop and use
-						place_item_button(1,i,ITEMBTN_GIVE);
-						place_item_button(2,i,ITEMBTN_DROP);
+						place_item_button(i,ITEMBTN_GIVE);
+						place_item_button(i,ITEMBTN_DROP);
 						if(item.can_use() && (item.rechargeable ? item.charges > 0 : true)) // place use if can
-							place_item_button(0,i,ITEMBTN_USE);
+							place_item_button(i,ITEMBTN_USE);
 					}
 
 					if(stat_screen_mode != MODE_INVEN && stat_screen_mode != MODE_SHOP) {
@@ -456,39 +456,12 @@ void place_item_graphic(short which_slot,short graphic) {
 }
 
 // name, use, give, drop, info, sell/id
-// shortcuts - if which_button_to_put is 10, all 4 buttons now
-//				if which_button_to_put is 11, just right 2
-void place_item_button(short button_position,short which_slot,eItemButton button_type) {
+void place_item_button(short which_slot,eItemButton button_type) {
 	rectangle from_rect = {0,0,18,18},to_rect;
 	
 	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
-	switch(button_position) {
-	default: // this means put a regular item button
-		item_area_button_active[which_slot][button_type] = true;
-		rect_draw_some_item(invenbtn_gworld, item_buttons_from[button_type - 2], item_stats_gworld, item_buttons[which_slot][button_type], sf::BlendAlpha);
-		break;
-	case ITEMBTN_ALL: // this means put all 4
-		item_area_button_active[which_slot][ITEMBTN_USE] = true;
-		item_area_button_active[which_slot][ITEMBTN_GIVE] = true;
-		item_area_button_active[which_slot][ITEMBTN_DROP] = true;
-		item_area_button_active[which_slot][ITEMBTN_INFO] = true;
-		from_rect = item_buttons_from[0];
-		from_rect.right = item_buttons_from[3].right;
-		to_rect = item_buttons[which_slot][ITEMBTN_USE];
-		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
-		rect_draw_some_item(invenbtn_gworld, from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
-		break;
-	case ITEMBTN_NORM: // this means put right 3
-		item_area_button_active[which_slot][ITEMBTN_GIVE] = true;
-		item_area_button_active[which_slot][ITEMBTN_DROP] = true;
-		item_area_button_active[which_slot][ITEMBTN_INFO] = true;
-		from_rect = item_buttons_from[1];
-		from_rect.right = item_buttons_from[3].right;
-		to_rect = item_buttons[which_slot][ITEMBTN_GIVE];
-		to_rect.right = to_rect.left + from_rect.right - from_rect.left;
-		rect_draw_some_item(invenbtn_gworld, from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
-		break;
-	}
+	item_area_button_active[which_slot][button_type] = true;
+	rect_draw_some_item(invenbtn_gworld, item_buttons_from[button_type - 2], item_stats_gworld, item_buttons[which_slot][button_type], sf::BlendAlpha);
 }
 
 void place_item_bottom_buttons() {
