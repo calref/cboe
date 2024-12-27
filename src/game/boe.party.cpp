@@ -585,18 +585,31 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 			
 		case eSpell::IDENTIFY:
-			// TODO: Cancel without spending points if there are no unidentified items
-			if(!freebie)
+			bool all_identified = true;
+			for(cPlayer& pc : univ.party)
+				for(cItem& item : pc.items)
+					all_identified &= item.ident;
+
+			// Cancel without spending points if there are no unidentified items
+			if(!(freebie || all_identified))
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
-			if(!univ.scenario.is_legacy && is_town()) {
-				ASB("Select items to identify. Press Space when done.");
+
+			if(!univ.scenario.is_legacy && is_town() && !all_identified) {
+				ASB("Select items to identify. Press Space");
+				ASB("   when done.");
 				overall_mode = MODE_ITEM_TARGET;
 				stat_screen_mode = MODE_IDENTIFY;
 				shop_identify_cost = 0;
 				put_item_screen(stat_window);
 				break;
 			}
-			ASB("All of your items are identified.");
+			std::ostringstream sstr;
+			sstr << "All of your items are ";
+			if(all_identified){
+				sstr << "already ";
+			}
+			sstr << "identified.";
+			ASB(sstr.str(););
 			for(cPlayer& pc : univ.party)
 				for(cItem& item : pc.items)
 					item.ident = true;
