@@ -1589,6 +1589,7 @@ class cChooseScenario {
 public:
 	cChooseScenario() {
 		// TODO: Add a button to jump to the scenarios folder
+		// Note: if the player jumps to the scenarios folder and adds scenarios, build_scen_headers() must be called again
 		scen_headers = build_scen_headers(); // TODO: Either make this local to this class, or make it take scen_headers by reference
 	}
 	scen_header_type run() {
