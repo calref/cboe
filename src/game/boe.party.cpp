@@ -615,7 +615,8 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			if(!freebie)
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			if(is_town()) {
-				ASB("Select items to recharge. Press Space when done.");
+				ASB("Select items to recharge. Press Space");
+				ASB("   when done.");
 				overall_mode = MODE_ITEM_TARGET;
 				stat_screen_mode = MODE_RECHARGE;
 				shop_identify_cost = 0;
