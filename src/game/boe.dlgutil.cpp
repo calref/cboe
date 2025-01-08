@@ -293,8 +293,7 @@ void handle_sale(int i) {
 			else if(!take_gold(cost,false))
 				ASB("Not enough gold.");
 			else {
-				// TODO: This seems like the wrong sound
-				play_sound(62);
+				play_sound(8);
 				ASB("You buy an alchemical recipe.");
 				univ.party.alchemy[base_item.item_level] = true;
 			}
@@ -352,8 +351,7 @@ void handle_sale(int i) {
 			else if(!take_gold(cost,false))
 				ASB("Not enough gold.");
 			else {
-				// TODO: This seems like the wrong sound
-				play_sound(62);
+				play_sound(25);
 				ASB("You buy a spell.");
 				univ.current_pc().mage_spells[base_item.item_level] = true;
 				give_help(41,0);
@@ -370,8 +368,7 @@ void handle_sale(int i) {
 			else if(!take_gold(cost,false))
 				ASB("Not enough gold.");
 			else {
-				// TODO: This seems like the wrong sound
-				play_sound(62);
+				play_sound(24);
 				ASB("You buy a spell.");
 				univ.current_pc().priest_spells[base_item.item_level] = true;
 				give_help(41,0);
@@ -401,8 +398,7 @@ void handle_sale(int i) {
 			else if(!take_gold(cost, false))
 				ASB("Not enough gold.");
 			else {
-				// TODO: No idea what's a good sound here.
-				play_sound(62);
+				play_sound(7);
 				ASB("You learn a little...");
 				active_shop.takeOne(i);
 				univ.current_pc().skills[skill]++;
@@ -787,7 +783,8 @@ void handle_talk_node(int which_talk_entry) {
 			break;
 		case TALK_RECORD:
 			if(!can_save_talk) {
-				beep();
+				// TODO the button shouldn't be shown if it won't work, no?
+				play_sound(1);
 				return;
 			}
 			if(univ.party.save_talk(univ.town->talking.people[store_personality%10].title, univ.town->name, save_talk_str1, save_talk_str2)) {

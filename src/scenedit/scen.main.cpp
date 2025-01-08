@@ -68,7 +68,6 @@ void handle_one_event(const sf::Event&);
 void redraw_everything();
 void Mouse_Pressed(const sf::Event&);
 void close_program();
-void ding();
 void adjust_windows(sf::RenderWindow&, sf::View&);
 sf::FloatRect compute_viewport(const sf::RenderWindow&, float ui_scale);
 
@@ -772,9 +771,4 @@ void Mouse_Pressed(const sf::Event & event) {
 }
 
 void close_program() {
-}
-
-// TODO: Remove this function and replace it with beep() or play_sound() everywhere.
-void ding() {
-	beep();
 }
