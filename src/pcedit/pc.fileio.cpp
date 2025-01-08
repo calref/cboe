@@ -16,6 +16,7 @@ extern void update_item_menu();
 void load_base_item_defs();
 
 extern fs::path progDir;
+std::string last_load_file = "Blades of Exile Save";
 
 void leave_town() {
 	univ.party.town_num = 200;

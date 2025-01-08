@@ -2,6 +2,8 @@
 #include <cstdio>
 #include <string>
 #include <memory>
+#include <stdlib.h>
+#include <unistd.h>
 #include <boost/filesystem/operations.hpp>
 #include "cli.hpp"
 
@@ -85,10 +87,17 @@ extern void set_up_apple_events();
 std::unordered_map<std::string, std::shared_ptr <iEventListener>> event_listeners;
 cDrawableManager drawable_mgr;
 
+fs::path scenedit_dir;
+fs::path game_dir;
+fs::path game_binary;
+
+void launch_scenario() {
+
+}
+
 //Changed to ISO C specified argument and return type.
 int main(int argc, char* argv[]) {
 	try {
-		
 		init_scened(argc, argv);
 		
 		if(ae_loading)
@@ -218,8 +227,24 @@ static void process_args(int argc, char* argv[]) {
 	}
 }
 
+void init_game_paths(std::string binary_path) {
+	fs::path path = binary_path;
+	scenedit_dir = path.parent_path();
+	game_dir = scenedit_dir;
+#ifdef SFML_SYSTEM_MACOS
+	// Get the directory containing the app bundle
+	game_dir = game_dir/".."/".."/"..";
+	game_binary = game_dir/"Blades of Exile.app"/"Contents"/"MacOS"/"Blades of Exile";
+#elif SFML_SYSTEM_WINDOWS
+	game_binary = game_dir/"Blades of Exile.exe";
+#elif SFML_SYSTEM_LINUX
+	game_binary = game_dir/"Blades of Exile";
+#endif
+}
+
 void init_scened(int argc, char* argv[]) {
 	init_directories(argv[0]);
+	init_game_paths(argv[0]);
 	sync_prefs();
 	adjust_windows(mainPtr, mainView);
 	//init_menubar();
@@ -424,6 +449,9 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::EDIT_SELECT_ALL:
 			editKey.k = key_selectall;
 			isEdit = true;
+			break;
+		case eMenu::LAUNCH:
+			launch_scenario();
 			break;
 		case eMenu::TOWN_CREATE:
 			if(scenario.towns.size() >= 200) {
