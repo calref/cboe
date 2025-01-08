@@ -617,6 +617,15 @@ bool cParty::forced_give(cItem item,eItemAbil abil,short dat) {
 	return false;
 }
 
+bool cParty::all_items_identified() {
+	bool all_identified = true;
+	for(cPlayer& pc : *this)
+		for(cItem& item : pc.items)
+			if (item.variety != eItemType::NO_ITEM)
+				all_identified &= item.ident;
+	return all_identified;
+}
+
 bool cParty::has_abil(eItemAbil abil, short dat) const {
 	for(int i = 0; i < 6; i++)
 		if(adven[i]->main_status == eMainStatus::ALIVE)

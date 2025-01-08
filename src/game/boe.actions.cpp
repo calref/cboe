@@ -1006,7 +1006,7 @@ void handle_item_shop_action(short item_hit) {
 				target.ident = true;
 				shopper.combine_things();
 				if(overall_mode == MODE_ITEM_TARGET) {
-					if(all_items_identified()){
+					if(univ.party.all_items_identified()){
 						overall_mode = MODE_TOWN;
 						stat_screen_mode = MODE_INVEN;
 						ASB("Identify: All of your items are identified.");
