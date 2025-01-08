@@ -1997,6 +1997,7 @@ void debug_leave_town() {
 	clear_map();
 	add_string_to_buf("Debug: Reunite party and leave town.");
 	print_buf();
+	update_explored(univ.party.out_loc);
 	redraw_screen(REFRESH_ALL);
 }
 
