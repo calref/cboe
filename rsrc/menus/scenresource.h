@@ -72,6 +72,7 @@
 #define IDM_SCEN_RESIZE_OUTDOORS        167
 #define IDM_SCEN_ADV_IMPORT_OUT         168
 #define IDM_GRAYED_LABEL                169
+#define IDM_SCEN_LAUNCH                 170
 
 // Next default values for new objects
 // 
@@ -80,6 +81,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        103
 #define _APS_NEXT_COMMAND_VALUE         40014
 #define _APS_NEXT_CONTROL_VALUE         1001
-#define _APS_NEXT_SYMED_VALUE           170
+#define _APS_NEXT_SYMED_VALUE           171
 #endif
 #endif

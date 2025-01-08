@@ -74,6 +74,7 @@ void OpenBoESceneditMenu::add_persistent_menu_items(tgui::MenuBar::Ptr& menubar)
 		// { { "Scenario", "Advanced", "Scenario Specials Dump"      }, eMenu::NONE                 },
 		// { { "Scenario", "Advanced", "Scenario Object Data Dump"   }, eMenu::NONE                 },
 	
+		{ { "Scenario", "Launch Scenario Here"       }, eMenu::LAUNCH  },
 		{ { "Scenario", "Create New Town"            }, eMenu::TOWN_CREATE  },
 		{ { "Scenario", "Resize Outdoors"            }, eMenu::OUT_RESIZE   },
 		{ { "Scenario", "Scenario Details"           }, eMenu::SCEN_DETAILS },
