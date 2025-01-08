@@ -78,7 +78,8 @@ extern enum_map(eGuiArea, rectangle) win_to_rects;
 std::string scenario_temp_dir_name = "scenario";
 extern fs::path tempDir;
 std::vector<fs::path> extra_scen_dirs;
-fs::path scen_arg_path;
+boost::optional<fs::path> scen_arg_path;
+boost::optional<short> scen_arg_town, scen_arg_out_x, scen_arg_out_y, scen_arg_x, scen_arg_y;
 
 /* Display globals */
 short combat_posing_monster = -1, current_working_monster = -1; // 0-5 PC 100 + x - monster x
@@ -250,7 +251,8 @@ static void process_args(int argc, char* argv[]) {
 	clara::Args args(argc, argv);
 	clara::Parser cli;
 	bool record_unique = false;
-	boost::optional<std::string> record_to, replay, saved_game, scen_file;
+	boost::optional<std::string> record_to, replay, scen_file;
+	boost::optional<fs::path> saved_game;
 	boost::optional<double> replay_speed;
 	cli |= clara::Opt(record_to, "record")["--record"]("Records a replay of your session to the specified XML file.");
 	cli |= clara::Opt(record_unique)["--unique"]("When recording, automatically insert a timestamp into the filename to guarantee uniqueness.");
@@ -258,8 +260,16 @@ static void process_args(int argc, char* argv[]) {
 	cli |= clara::Opt(replay, "replay-file")["--replay"]("Replays a previously-recorded session from the specified XML file.");
 	cli |= clara::Opt(replay_strict)["--strict"]("Enforces strictly identical replay behavior, even where this is only cosmetic");
 	cli |= clara::Opt(replay_speed, "fps")["--replay-speed"]("Specifies how quickly actions are processed while replaying");
-	cli |= clara::Opt(scen_file, "scen-file")["--scenario"]("Launch a scenario.");
 	cli |= clara::Arg(saved_game, "save-file")("Launch and load a saved game file.");
+	// Loading and entering a scenario has to happen after other initialization steps,
+	// so we just save the scenario arguments for later.
+	cli |= clara::Opt(scen_arg_path, "scen-path")["--scenario"]("Launch a scenario, with the default party if no party is loaded.");
+	cli |= clara::Opt(scen_arg_town, "town")["--town"]("Put the party in a town.");
+	cli |= clara::Opt(scen_arg_out_x, "x")["--out-x"]("Put the party in an outdoor section (x coordinate).");
+	cli |= clara::Opt(scen_arg_out_y, "y")["--out-y"]("Put the party in an outdoor section (y coordinate).");
+	cli |= clara::Opt(scen_arg_x, "x")["--x"]("Put the party at a location (x coordinate).");
+	cli |= clara::Opt(scen_arg_y, "y")["--y"]("Put the party at a location (y coordinate).");
+
 	bool show_help = false;
 	cli |= clara::Help(show_help);
 	if(auto result = cli.parse(args)); else {
@@ -315,19 +325,23 @@ static void process_args(int argc, char* argv[]) {
 			post_load();
 	}
 
-	if(scen_file){
-		// Loading and entering a scenario has to happen after other initialization steps,
-		// so we just save the scenario path for later.
-		scen_arg_path = *scen_file;
+	if(scen_arg_town && (scen_arg_out_x || scen_arg_out_y)){
+		std::cout << "Warning: --out-x and --out-y conflict with --town and will be ignored." << std::endl;
+	}
+	if((scen_arg_out_x || scen_arg_out_y) && !(scen_arg_out_x && scen_arg_out_y)){
+		std::cout << "Warning: --out-x and --out-y must both be supplied. Partial outdoor coordinate input will be ignored." << std::endl;
+	}
+	if((scen_arg_x || scen_arg_y) && !(scen_arg_x && scen_arg_y)){
+		std::cout << "Warning: --x and --y must both be supplied. Partial coordinate input will be ignored." << std::endl;
 	}
 }
 
 static void handle_scenario_args() {
-	if(!scen_arg_path.empty()){
-		extra_scen_dirs.push_back(scen_arg_path.parent_path());
+	if(scen_arg_path){
+		extra_scen_dirs.push_back(scen_arg_path->parent_path());
 
 		cScenario scenario;
-		if(load_scenario(scen_arg_path, scenario, false)){
+		if(load_scenario(*scen_arg_path, scenario, false)){
 			if(!party_in_memory){
 				start_new_game(true);
 			}
@@ -341,10 +355,10 @@ static void handle_scenario_args() {
 				}
 			}
 			if(!univ.party.is_in_scenario()){
-				put_party_in_scen(scen_arg_path.filename().string());
+				put_party_in_scen(scen_arg_path->filename().string());
 			}
 		}else{
-			std::cerr << "Failed to load scenario: " << scen_arg_path << std::endl;
+			std::cerr << "Failed to load scenario: " << *scen_arg_path << std::endl;
 			exit(1);
 		}
 	}
