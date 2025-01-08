@@ -86,6 +86,7 @@ BEGIN
     END
     POPUP "&Scenario"
     BEGIN
+        MENUITEM "Launch Scenario Here",        IDM_SCEN_LAUNCH
         MENUITEM "&Create New Town",            IDM_SCEN_NEW_TOWN
         MENUITEM "Resize Outdoors",             IDM_SCEN_RESIZE_OUTDOORS
         MENUITEM SEPARATOR

@@ -341,6 +341,14 @@
 						<object class="NSMenu" key="NSSubmenu" id="399390342">
 							<string key="NSTitle">Scenario</string>
 							<array class="NSMutableArray" key="NSMenuItems">
+								<object class="NSMenuItem" id="142725491">
+									<reference key="NSMenu" ref="399390342"/>
+									<string key="NSTitle">Launch Scenario Here</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="229763992"/>
+									<reference key="NSMixedImage" ref="909111550"/>
+								</object>
 								<object class="NSMenuItem" id="142725490">
 									<reference key="NSMenu" ref="399390342"/>
 									<string key="NSTitle">Create New Town</string>
