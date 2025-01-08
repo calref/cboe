@@ -78,6 +78,7 @@ extern enum_map(eGuiArea, rectangle) win_to_rects;
 std::string scenario_temp_dir_name = "scenario";
 extern fs::path tempDir;
 std::vector<fs::path> extra_scen_dirs;
+fs::path scen_arg_path;
 
 /* Display globals */
 short combat_posing_monster = -1, current_working_monster = -1; // 0-5 PC 100 + x - monster x
@@ -121,6 +122,7 @@ sf::Clock animTimer;
 extern long anim_ticks;
 
 static void init_boe(int, char*[]);
+static void handle_scenario_args();
 static void showWelcome();
 
 static void replay_next_action();
@@ -161,6 +163,7 @@ int main(int argc, char* argv[]) {
 		menu_activate();
 		restore_cursor();
 
+		handle_scenario_args();
 		handle_events();
 
 		close_program();
@@ -241,12 +244,13 @@ extern bool record_verbose;
 extern bool replay_verbose;
 extern bool replay_strict;
 
+
 static void process_args(int argc, char* argv[]) {
 	preprocess_args(argc, argv);
 	clara::Args args(argc, argv);
 	clara::Parser cli;
 	bool record_unique = false;
-	boost::optional<std::string> record_to, replay, saved_game;
+	boost::optional<std::string> record_to, replay, saved_game, scen_file;
 	boost::optional<double> replay_speed;
 	cli |= clara::Opt(record_to, "record")["--record"]("Records a replay of your session to the specified XML file.");
 	cli |= clara::Opt(record_unique)["--unique"]("When recording, automatically insert a timestamp into the filename to guarantee uniqueness.");
@@ -254,6 +258,7 @@ static void process_args(int argc, char* argv[]) {
 	cli |= clara::Opt(replay, "replay-file")["--replay"]("Replays a previously-recorded session from the specified XML file.");
 	cli |= clara::Opt(replay_strict)["--strict"]("Enforces strictly identical replay behavior, even where this is only cosmetic");
 	cli |= clara::Opt(replay_speed, "fps")["--replay-speed"]("Specifies how quickly actions are processed while replaying");
+	cli |= clara::Opt(scen_file, "scen-file")["--scenario"]("Launch a scenario.");
 	cli |= clara::Arg(saved_game, "save-file")("Launch and load a saved game file.");
 	bool show_help = false;
 	cli |= clara::Help(show_help);
@@ -294,7 +299,7 @@ static void process_args(int argc, char* argv[]) {
 		// Don't return, because we want to support recording a run that starts with a party from the CLI.
 	}
 
-	if(saved_game) {
+	if(saved_game){
 		if(!load_party(*saved_game, univ)) {
 			std::cout << "Failed to load save file: " << *saved_game << std::endl;
 			return;
@@ -308,6 +313,40 @@ static void process_args(int argc, char* argv[]) {
 			end_startup();
 		if(overall_mode != MODE_STARTUP)
 			post_load();
+	}
+
+	if(scen_file){
+		// Loading and entering a scenario has to happen after other initialization steps,
+		// so we just save the scenario path for later.
+		scen_arg_path = *scen_file;
+	}
+}
+
+static void handle_scenario_args() {
+	if(!scen_arg_path.empty()){
+		extra_scen_dirs.push_back(scen_arg_path.parent_path());
+
+		cScenario scenario;
+		if(load_scenario(scen_arg_path, scenario, false)){
+			if(!party_in_memory){
+				start_new_game(true);
+			}
+			if(univ.party.is_in_scenario()){
+				if(univ.scenario.scen_name == scenario.scen_name){
+					// The party is already in the correct scenario
+				}else{
+					// The party is in a different scenario.
+					// TODO maybe the player should be warned before they're removed from it?
+					handle_victory(true);
+				}
+			}
+			if(!univ.party.is_in_scenario()){
+				put_party_in_scen(scen_arg_path.filename().string());
+			}
+		}else{
+			std::cerr << "Failed to load scenario: " << scen_arg_path << std::endl;
+			exit(1);
+		}
 	}
 }
 
