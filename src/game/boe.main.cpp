@@ -253,21 +253,27 @@ static void process_args(int argc, char* argv[]) {
 	bool record_unique = false;
 	boost::optional<std::string> record_to, replay, scen_file, saved_game;
 	boost::optional<double> replay_speed;
+
+	// Replay system options:
 	cli |= clara::Opt(record_to, "record")["--record"]("Records a replay of your session to the specified XML file.");
 	cli |= clara::Opt(record_unique)["--unique"]("When recording, automatically insert a timestamp into the filename to guarantee uniqueness.");
 	cli |= clara::Opt(record_verbose)["--verbose"]("Record extra information for internal testing of the replay system.");
 	cli |= clara::Opt(replay, "replay-file")["--replay"]("Replays a previously-recorded session from the specified XML file.");
 	cli |= clara::Opt(replay_strict)["--strict"]("Enforces strictly identical replay behavior, even where this is only cosmetic");
 	cli |= clara::Opt(replay_speed, "fps")["--replay-speed"]("Specifies how quickly actions are processed while replaying");
-	cli |= clara::Arg(saved_game, "save-file")("Launch and load a saved game file.");
+
+	// Scenario options:
 	// Loading and entering a scenario has to happen after other initialization steps,
-	// so we just save the scenario arguments for later.
+	// so we just save these options for later.
 	cli |= clara::Opt(scen_arg_path, "scen-path")["--scenario"]("Launch a scenario, with the default party if no party is loaded.");
 	cli |= clara::Opt(scen_arg_town, "town")["--town"]("Put the party in a town.");
 	cli |= clara::Opt(scen_arg_out_x, "x")["--out-x"]("Put the party in an outdoor section (x coordinate).");
 	cli |= clara::Opt(scen_arg_out_y, "y")["--out-y"]("Put the party in an outdoor section (y coordinate).");
 	cli |= clara::Opt(scen_arg_x, "x")["--x"]("Put the party at a location (x coordinate).");
 	cli |= clara::Opt(scen_arg_y, "y")["--y"]("Put the party at a location (y coordinate).");
+
+	// Party option:
+	cli |= clara::Arg(saved_game, "save-file")("Launch and load a saved game file.");
 
 	bool show_help = false;
 	cli |= clara::Help(show_help);
