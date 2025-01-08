@@ -90,9 +90,33 @@ cDrawableManager drawable_mgr;
 fs::path scenedit_dir;
 fs::path game_dir;
 fs::path game_binary;
+extern std::string last_load_file;
 
 void launch_scenario() {
+	// Make sure scenario is loaded and currently editing the terrain of a town or outdoor section
+	if(overall_mode >= MODE_MAIN_SCREEN){
+		showError("Must be viewing the terrain of a town or outdoor section at the place where you want to put the debug party.");
+		return;
+	}
 
+	// TODO require save first?
+
+	std::string cwd = fs::current_path().string();
+	chdir(game_dir.string().c_str());
+
+	std::ostringstream command_stream;
+	command_stream << game_binary << " --scenario \"" << last_load_file << "\" ";
+	if(editing_town){
+		command_stream << "--town " << cur_town;
+	}else{
+		command_stream << "--out-x " << cur_out.x << " --out-y " << cur_out.y;
+	}
+	command_stream << " --x " << cen_x << " --y " << cen_y;
+	// TODO allow specifying a debug party path as an editor preference
+
+	system(command_stream.str().c_str());
+
+	chdir(cwd.c_str());
 }
 
 //Changed to ISO C specified argument and return type.
@@ -229,11 +253,10 @@ static void process_args(int argc, char* argv[]) {
 
 void init_game_paths(std::string binary_path) {
 	fs::path path = binary_path;
-	scenedit_dir = path.parent_path();
 	game_dir = scenedit_dir;
 #ifdef SFML_SYSTEM_MACOS
 	// Get the directory containing the app bundle
-	game_dir = game_dir/".."/".."/"..";
+	game_dir = game_dir.parent_path().parent_path().parent_path();
 	game_binary = game_dir/"Blades of Exile.app"/"Contents"/"MacOS"/"Blades of Exile";
 #elif SFML_SYSTEM_WINDOWS
 	game_binary = game_dir/"Blades of Exile.exe";
