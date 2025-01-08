@@ -48,6 +48,7 @@ rectangle pc_traits_rect[17]; //Holds pc traits
 rectangle pc_race_rect; //Holds current pc's race
 rectangle edit_rect[5]; //Buttons that bring up pc edit dialog boxs
 std::string scenario_temp_dir_name = "pc_scenario";
+std::vector<fs::path> extra_scen_dirs;
 
 short current_active_pc = 0;
 
