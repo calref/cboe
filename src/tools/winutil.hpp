@@ -63,7 +63,7 @@ int getMenubarHeight();
 // coordinate space, but on Linux it is.
 inline int os_specific_y_offset() {
 	return
-#if defined(SFML_SYSTEM_WINDOWS) || defined(SFML_SYSTEM_MAC)
+#if defined(SFML_SYSTEM_WINDOWS) || defined(SFML_SYSTEM_MACOS)
 		0;
 #else
 		getMenubarHeight();

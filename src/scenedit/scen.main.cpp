@@ -180,7 +180,7 @@ void adjust_windows (sf::RenderWindow & mainPtr, sf::View & mainView) {
 	// Apply view to the main window
 	mainPtr.setView(mainView);
 
-#ifndef SFML_SYSTEM_MAC // This overrides Dock icon on OSX, which isn't what we want at all
+#ifndef SFML_SYSTEM_MACOS // This overrides Dock icon on OSX, which isn't what we want at all
 	const ImageRsrc& icon = ResMgr::graphics.get("icon", true);
 	mainPtr.setIcon(icon->getSize().x, icon->getSize().y, icon->copyToImage().getPixelsPtr());
 #endif
@@ -226,7 +226,7 @@ void init_scened(int argc, char* argv[]) {
 	init_shaders();
 	init_tiling();
 	init_snd_tool();
-#ifdef SFML_SYSTEM_MAC
+#ifdef SFML_SYSTEM_MACOS
 	init_menubar(); // This is called twice because Windows and Mac have different ordering requirements
 #endif
 	mainPtr.clear(sf::Color::Black);
