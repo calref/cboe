@@ -201,6 +201,7 @@ public:
 	
 	bool give_item(cItem item,int flags);
 	bool forced_give(cItem item,eItemAbil abil,short dat = -1);
+	bool all_items_identified();
 	bool has_abil(eItemAbil abil, short dat = -1) const;
 	bool take_abil(eItemAbil abil, short dat = -1);
 	bool has_class(unsigned int item_class, bool require_charges = false);
