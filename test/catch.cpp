@@ -10,6 +10,7 @@ sf::RenderWindow mainPtr;
 std::string scenario_temp_dir_name = "test_scenario";
 cCustomGraphics spec_scen_g;
 cUniverse univ;
+std::vector<fs::path> extra_scen_dirs;
 
 // And these are referenced from the scenario code, though not used in test cases
 #include "scenario/scenario.hpp"

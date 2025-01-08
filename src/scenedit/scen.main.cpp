@@ -56,6 +56,7 @@ cOutdoors* current_terrain;
 
 std::string scenario_temp_dir_name = "ed_scenario";
 bool change_made = false, ae_loading = false;
+std::vector<fs::path> extra_scen_dirs;
 
 // Numbers of current areas being edited
 short cur_town;

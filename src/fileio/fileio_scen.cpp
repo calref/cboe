@@ -71,6 +71,10 @@ static std::string get_file_error() {
 std::vector<fs::path> all_scen_dirs() {
 	std::vector<fs::path> scen_dirs = { scenDir };
 
+	for(fs::path scen_dir : extra_scen_dirs){
+		scen_dirs.push_back(scen_dir);
+	}
+
 	#ifdef DEBUG
 	fs::path replay_scenarios_dir = boost::filesystem::current_path();
 	replay_scenarios_dir = replay_scenarios_dir/".."/".."/"test"/"replays"/"scenarios";

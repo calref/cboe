@@ -18,6 +18,8 @@
 class cScenario;
 class cUniverse;
 
+extern std::vector<fs::path> extra_scen_dirs;
+
 std::vector<fs::path> all_scen_dirs();
 fs::path locate_scenario(std::string scen_name);
 bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header = false);

@@ -77,6 +77,7 @@ extern enum_map(eGuiArea, rectangle) win_to_rects;
 
 std::string scenario_temp_dir_name = "scenario";
 extern fs::path tempDir;
+std::vector<fs::path> extra_scen_dirs;
 
 /* Display globals */
 short combat_posing_monster = -1, current_working_monster = -1; // 0-5 PC 100 + x - monster x
