@@ -388,6 +388,24 @@ static void handle_scenario_args() {
 		}
 		force_town_enter(*scen_arg_town, town_location);
 		start_town_mode(*scen_arg_town, town_entrance);
+	}else if(scen_arg_out_x && scen_arg_out_y){
+		if(!party_in_memory || !univ.party.is_in_scenario() ||
+				univ.scenario.outdoors.width() < (*scen_arg_out_x + 1) ||
+				univ.scenario.outdoors.height() < (*scen_arg_out_y + 1)){
+			std::cerr << "Expected a party loaded within a scenario with at least " << (*scen_arg_out_x + 1) << "x" << (*scen_arg_out_y +1) << " outdoor sections" << std::endl;
+			exit(1);
+		}
+
+		if(scen_arg_x && scen_arg_y){
+			overall_mode = MODE_OUTDOORS;
+			position_party(*scen_arg_out_x,*scen_arg_out_y,*scen_arg_x,*scen_arg_y);
+			clear_map();
+			update_explored(univ.party.out_loc);
+			redraw_screen(REFRESH_ALL);
+		}else{
+			std::cerr << "--x and --y are required when loading a scenario outdoors" << std::endl;
+			exit(1);
+		}
 	}
 }
 
