@@ -267,6 +267,7 @@ static void process_args(int argc, char* argv[]) {
 	// so we just save these options for later.
 	cli |= clara::Opt(scen_arg_path, "scen-path")["--scenario"]("Launch a scenario, with the default party if no party is loaded.");
 	cli |= clara::Opt(scen_arg_town, "town")["--town"]("Put the party in a town.");
+	cli |= clara::Opt(scen_arg_town_entrance, "entrance")["--entrance"]("Put the party at a town entrance point.");
 	cli |= clara::Opt(scen_arg_out_x, "x")["--out-x"]("Put the party in an outdoor section (x coordinate).");
 	cli |= clara::Opt(scen_arg_out_y, "y")["--out-y"]("Put the party in an outdoor section (y coordinate).");
 	cli |= clara::Opt(scen_arg_x, "x")["--x"]("Put the party at a location (x coordinate).");
@@ -336,6 +337,9 @@ static void process_args(int argc, char* argv[]) {
 	if((scen_arg_out_x || scen_arg_out_y) && !(scen_arg_out_x && scen_arg_out_y)){
 		std::cout << "Warning: --out-x and --out-y must both be supplied. Partial outdoor coordinate input will be ignored." << std::endl;
 	}
+	if(scen_arg_town_entrance && (scen_arg_x || scen_arg_y)){
+		std::cout << "Warning: --x and --y conflict with --entrance and will be ignored." << std::endl;
+	}
 	if((scen_arg_x || scen_arg_y) && !(scen_arg_x && scen_arg_y)){
 		std::cout << "Warning: --x and --y must both be supplied. Partial coordinate input will be ignored." << std::endl;
 	}
@@ -361,12 +365,29 @@ static void handle_scenario_args() {
 				}
 			}
 			if(!univ.party.is_in_scenario()){
-				put_party_in_scen(scen_arg_path->filename().string());
+				put_party_in_scen(path.filename().string());
 			}
 		}else{
 			std::cerr << "Failed to load scenario: " << *scen_arg_path << std::endl;
 			exit(1);
 		}
+	}
+
+	if(scen_arg_town){
+		if(!party_in_memory || !univ.party.is_in_scenario() || univ.scenario.towns.size() < (*scen_arg_town + 1)){
+			std::cerr << "Expected a party loaded within a scenario with at least " << (*scen_arg_town + 1) << " towns" << std::endl;
+			exit(1);
+		}
+		short town_entrance = 0;
+		location town_location;
+		if(scen_arg_town_entrance){
+			town_entrance = *scen_arg_town_entrance;
+		}else if(scen_arg_x && scen_arg_y){
+			town_location = location(*scen_arg_x, *scen_arg_y);
+			town_entrance = 9;
+		}
+		force_town_enter(*scen_arg_town, town_location);
+		start_town_mode(*scen_arg_town, town_entrance);
 	}
 }
 
