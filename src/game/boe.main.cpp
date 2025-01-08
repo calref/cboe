@@ -78,8 +78,8 @@ extern enum_map(eGuiArea, rectangle) win_to_rects;
 std::string scenario_temp_dir_name = "scenario";
 extern fs::path tempDir;
 std::vector<fs::path> extra_scen_dirs;
-boost::optional<fs::path> scen_arg_path;
-boost::optional<short> scen_arg_town, scen_arg_out_x, scen_arg_out_y, scen_arg_x, scen_arg_y;
+boost::optional<std::string> scen_arg_path;
+boost::optional<short> scen_arg_town, scen_arg_town_entrance, scen_arg_out_x, scen_arg_out_y, scen_arg_x, scen_arg_y;
 
 /* Display globals */
 short combat_posing_monster = -1, current_working_monster = -1; // 0-5 PC 100 + x - monster x
@@ -251,8 +251,7 @@ static void process_args(int argc, char* argv[]) {
 	clara::Args args(argc, argv);
 	clara::Parser cli;
 	bool record_unique = false;
-	boost::optional<std::string> record_to, replay, scen_file;
-	boost::optional<fs::path> saved_game;
+	boost::optional<std::string> record_to, replay, scen_file, saved_game;
 	boost::optional<double> replay_speed;
 	cli |= clara::Opt(record_to, "record")["--record"]("Records a replay of your session to the specified XML file.");
 	cli |= clara::Opt(record_unique)["--unique"]("When recording, automatically insert a timestamp into the filename to guarantee uniqueness.");
@@ -338,10 +337,11 @@ static void process_args(int argc, char* argv[]) {
 
 static void handle_scenario_args() {
 	if(scen_arg_path){
-		extra_scen_dirs.push_back(scen_arg_path->parent_path());
+		fs::path path = *scen_arg_path;
+		extra_scen_dirs.push_back(path.parent_path());
 
 		cScenario scenario;
-		if(load_scenario(*scen_arg_path, scenario, false)){
+		if(load_scenario(path, scenario, false)){
 			if(!party_in_memory){
 				start_new_game(true);
 			}
