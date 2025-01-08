@@ -35,6 +35,7 @@
 bool cur_scen_is_mac = true;
 extern cCustomGraphics spec_scen_g;
 extern fs::path tempDir, scenDir, progDir;
+extern std::string last_load_file;
 
 void load_spec_graphics_v1(fs::path scen_file);
 void load_spec_graphics_v2(int num_sheets);
@@ -160,10 +161,19 @@ bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header)
 		showError("That is not a Blades of Exile scenario.");
 		return false;
 	}  else try {
-		if(fname.substr(dot) == ".boes")
-			return load_scenario_v2(file_to_load, scenario, only_header);
-		else if(fname.substr(dot) == ".exs")
-			return load_scenario_v1(file_to_load, scenario, only_header);
+		if(fname.substr(dot) == ".boes"){
+			if(load_scenario_v2(file_to_load, scenario, only_header)){
+				last_load_file = file_to_load.string();
+				return true;
+			}
+			return false;
+		}else if(fname.substr(dot) == ".exs"){
+			if(load_scenario_v1(file_to_load, scenario, only_header)){
+				last_load_file = file_to_load.string();
+				return true;
+			}
+			return false;
+		}
 	} catch(std::exception& x) {
 		showError("There was an error loading the scenario. The details of the error are given below; you may be able to decompress the scenario package, fix the error, and repack it.", x.what());
 		return false;
