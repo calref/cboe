@@ -76,19 +76,22 @@ void cStringChoice::fillPage(){
 	cLedGroup& group = dynamic_cast<cLedGroup&>(dlg["strings"]);
 	group.setSelected(""); // unselect all LEDs, since the currently selected one may be on another page
 	for(unsigned int i = 0; i < per_page; i++){
+		short string_idx = page * per_page + i;
 		std::ostringstream sout;
 		sout << "led" << i + 1;
-		if(page * per_page + i >= strings.size()){
-			dlg[sout.str()].hide();
+		cLed& led = dynamic_cast<cLed&>(dlg[sout.str()]);
+		if(string_idx >= strings.size()){
+			led.hide();
 			continue;
-		}else
-			dlg[sout.str()].show();
-		if(page * per_page + i == cur)
-			group.setSelected(sout.str());
-		if(page * per_page + i < strings.size()){
-			dlg[sout.str()].setText(strings[per_page * page + i]);
+		}else{
+			led.setText(strings[string_idx]);
+			led.recalcRect();
+			led.show();
 		}
+		if(string_idx == cur)
+			group.setSelected(sout.str());
 	}
+	group.recalcRect();
 }
 
 bool cStringChoice::onLeft(){
