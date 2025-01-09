@@ -58,13 +58,9 @@
 		To place monsters in an encounter, press the Choose button by one of the slots.
 		For more information on how this works, see the documentation.
 	</text>
-	<!--
-	 TODO: Put these LED labels in the LED elements
-	 -->
-	<text top='102' left='349' width='154' height='14'>Monsters can't flee party</text>
-	<led name='no-flee' top='102' left='522'/>
-	<text top='117' left='350' width='170' height='27'>Encounter is forced<br/>(Party fights it right away)</text>
-	<led name='forced' top='117' left='522'/>
+	<led name='no-flee' top='102' left='349'>Monsters can't flee party</led>
+	<led name='forced' top='117' left='349'>Encounter is forced</led>
+	<text top='132' left='368' width='170' height='27'>(Party fights it right away)</text>
 	<text size='large' top='114' left='11' width='191' height='17'>Monsters in encounter:</text>
 	<text size='large' top='152' left='350' width='191' height='17'>Advanced encounter traits:</text>
 	<text top='197' left='352' width='194' height='14'>Special called when enc. starts</text>
