@@ -13,10 +13,8 @@
 	<button name='cancel' type='regular' top='288' left='332' def-key='esc'>Cancel</button>
 	<button name='clear' type='large' top='15' left='329'>Clear Special</button>
 	<button name='edit-spec' type='large' top='246' left='363'>Create/Edit</button>
-	<text top='199' left='50' width='179' height='14'>Party starts scen. with item</text>
-	<led name='start-with' state='off' top='198' left='233'/>
-	<text top='219' left='50' width='179' height='14'>Special item can be used</text>
-	<led name='usable' state='off' top='218' left='233'/>
+	<led name='start-with' state='off' top='198' left='50'>Party starts scen. with item</led>
+	<led name='usable' state='off' top='218' left='50'>Special item can be used</led>
 	<text top='29' left='50' width='136' height='14'>Editing special item:</text>
 	<text name='num' top='29' left='190' width='39' height='14'/>
 	<button name='left' type='left' top='288' left='9'/>
