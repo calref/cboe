@@ -46,8 +46,7 @@
 	<text top='154' left='159' width='119' height='26'>Chance of placing: (0-100%)</text>
 	<text top='154' left='286' width='99' height='36'>Number of item to place:</text>
 	<text top='154' left='395' width='119' height='26'>Chance of placing: (0-100%)</text>
-	<led name='owned' state='off' top='138' left='215'/>
-	<text top='134' left=' 50' width='155' height='14'>Items are always property:</text>
+	<led name='owned' state='off' top='134' left='50'>Items are always property</led>
 	<text top='134' left='277' width='297' height='14'>(Leave this at -1 for no shortcut.)</text>
 	<button name='choose-ter' type='regular' top='110' left='458'>Choose</button>
 	<button name='choose-item1' type='regular' top='185' left='118'>Choose</button>
