@@ -365,7 +365,7 @@ static void handle_scenario_args() {
 				}
 			}
 			if(!univ.party.is_in_scenario()){
-				put_party_in_scen(path.filename().string());
+				put_party_in_scen(path.filename().string(), scen_arg_town || scen_arg_out_x);
 			}
 		}else{
 			std::cerr << "Failed to load scenario: " << *scen_arg_path << std::endl;

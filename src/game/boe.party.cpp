@@ -102,7 +102,7 @@ short store_pc_graphic;
 // When the party is placed into a scen from the starting screen, this is called to put the game into game
 // mode and load in the scen and init the party info
 // party record already contains scen name
-void put_party_in_scen(std::string scen_name) {
+void put_party_in_scen(std::string scen_name, bool force) {
 	bool item_took = false;
 	
 	// Drop debug mode
@@ -186,15 +186,17 @@ void put_party_in_scen(std::string scen_name) {
 	adjust_spell_menus();
 	adjust_monst_menu();
 	
-	// Throw up intro dialog
-	for(short j = 0; j < univ.scenario.intro_strs.size(); j++)
-		if(!univ.scenario.intro_strs[j].empty()) {
-			std::array<short, 3> buttons = {0,-1,-1};
-			custom_choice_dialog(univ.scenario.intro_strs, univ.scenario.intro_mess_pic, PIC_SCEN, buttons);
-			j = 6;
-		}
-	run_special(eSpecCtx::STARTUP, eSpecCtxType::SCEN, univ.scenario.init_spec, loc(0,0));
-	give_help(1,2);
+	if(!force){
+		// Throw up intro dialog
+		for(short j = 0; j < univ.scenario.intro_strs.size(); j++)
+			if(!univ.scenario.intro_strs[j].empty()) {
+				std::array<short, 3> buttons = {0,-1,-1};
+				custom_choice_dialog(univ.scenario.intro_strs, univ.scenario.intro_mess_pic, PIC_SCEN, buttons);
+				j = 6;
+			}
+		run_special(eSpecCtx::STARTUP, eSpecCtxType::SCEN, univ.scenario.init_spec, loc(0,0));
+		give_help(1,2);
+	}
 	
 	// Compatibility flags
 	if(univ.scenario.format.prog_make_ver[0] < 2){
