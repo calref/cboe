@@ -36,6 +36,5 @@
 		If this option is selected, Town number 0 in your scenario is 'Warrior's Grove,' a predesigned town with shops, inns, etc. 
 		This is a GREAT place to start for beginner scenario designers, and lets you put off designing characters.
 	</text>
-	<text top='406' left='119' width='134' height='15'>Include starter town</text>
-	<led name='warrior-grove' state='off' top='409' left='257'/>
+	<led name='warrior-grove' state='off' top='409' left='119'>Include starter town</led>
 </dialog>
