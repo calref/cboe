@@ -226,10 +226,11 @@ void display_alchemy(bool allowEdit,cDialog* parent) {
 		std::string name = get_str("magic-names", i + 200) + " (";
 		name += std::to_string((*eAlchemy(i)).difficulty);
 		name += ')';
-		showAlch->addLabelFor(id, name, LABEL_LEFT, 83, true);
 		if(!allowEdit)
 			showAlch->getControl(id).attachClickHandler(&cLed::noAction);
 		cLed& led = dynamic_cast<cLed&>(showAlch->getControl(id));
+		led.setText(name);
+		led.recalcRect();
 		if(univ.party.alchemy[i])
 			led.setState(led_red);
 		else led.setState(led_off);
