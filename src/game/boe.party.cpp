@@ -605,11 +605,9 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 				if(all_identified){
 					sstr << "already ";
 				}else{
-					for(cPlayer& pc : univ.party){
+					for(cPlayer& pc : univ.party)
 						for(cItem& item : pc.items)
 							item.ident = true;
-						pc.combine_things();
-					}
 				}
 				sstr << "identified.";
 				ASB(sstr.str());
