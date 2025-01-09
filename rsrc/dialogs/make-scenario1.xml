@@ -16,10 +16,8 @@
 	</text>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<button name='cancel' type='regular' top='205' left='358' def-key='esc'>Cancel</button>
-	<text top='134' left='70' width='291' height='55'>
-		Is your outdoors going to be above ground? 
-		If so, the default outdoors will have grass instead of cave floor. 
-		(Click on the button to the left to have the outdoors be grass.)
+	<led name='surface' state='off' top='139' left='51'>Outdoors are above-ground</led>
+	<text top='154' left='70' width='291' height='55'>
+		(If enabled, the default outdoors will have grass instead of cave floor.)
 	</text>
-	<led name='surface' state='off' top='139' left='51'/>
 </dialog>
