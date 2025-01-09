@@ -378,6 +378,37 @@ static void handle_scenario_args() {
 			std::cerr << "Expected a party loaded within a scenario with at least " << (*scen_arg_town + 1) << " towns" << std::endl;
 			exit(1);
 		}
+		// Try to put the party in an outdoor section from which you can enter the town --
+		// so when you leave, you'll hopefully be in the right place.
+		bool found_entrance = false;
+		for(int x = 0; x < univ.scenario.outdoors.width(); ++x){
+			for(int y = 0; y < univ.scenario.outdoors.height(); ++y){
+				for(spec_loc_t& entrance : univ.scenario.outdoors[x][y]->city_locs){
+					if(entrance.spec == *scen_arg_town){
+						// Very janky but I don't know how else to make it properly load the right sections and set i_w_c
+						while(univ.party.outdoor_corner.x > x){
+							shift_universe_left();
+						}
+						while(univ.party.outdoor_corner.x < x){
+							shift_universe_right();
+						}
+						while(univ.party.outdoor_corner.y > y){
+							shift_universe_up();
+						}
+						while(univ.party.outdoor_corner.y < y){
+							shift_universe_down();
+						}
+						outd_move_party(local_to_global(entrance), true);
+
+						found_entrance = true;
+						break;
+					}
+				}
+				if(found_entrance) break;
+			}
+			if(found_entrance) break;
+		}
+
 		short town_entrance = 0;
 		location town_location;
 		if(scen_arg_town_entrance){
