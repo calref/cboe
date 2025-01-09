@@ -15,18 +15,11 @@
 	<text top='78' left='59' width='242' height='14'>Day when town dies: (if -1, it doesn't)</text>
 	<text top='98' left='59' width='261' height='41'>Number of event which prevents town death (if -1 or 0, none) - see chapter in documentation on time for more details.</text>
 	<text top='143' left='50' width='63' height='14'>Lighting:</text>
-	<!--
-	 TODO: Put these LED labels in the LED elements
-	 -->
-	<text top='143' left='122' width='164' height='14'>Fully Lit</text>
-	<text top='160' left='122' width='164' height='14'>Dark</text>
-	<text top='177' left='122' width='204' height='14'>Very dark (light used 10x as fast</text>
-	<text top='194' left='122' width='164' height='14'>Totally dark (no light)</text>
 	<group name='lighting'>
-		<led name='lit' top='143' left='329'/>
-		<led name='dark' top='160' left='329'/>
-		<led name='drains' top='177' left='329'/>
-		<led name='no-light' top='194' left='329'/>
+		<led name='lit' top='143' left='122'>Fully Lit</led>
+		<led name='dark' top='160' left='122'>Dark</led>
+		<led name='drains' top='177' left='122'>Very dark (light used 10x as fast)</led>
+		<led name='no-light' top='194' left='122'>Totally dark (no light)</led>
 	</group>
 	<text top='216' left='50' width='234' height='42'>
 		Maximum number of monsters:
