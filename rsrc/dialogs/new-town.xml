@@ -8,28 +8,19 @@
 	<text size='large' top='6' left='50' width='256' height='17'>Create New Town</text>
 	<text top='86' left='50' width='84' height='14'>Town name:</text>
 	<text top='111' left='50' width='77' height='14'>Town size:</text>
-	<!--
-	 TODO: Move these LED labels into the LED elements
-	 -->
-	<text top='111' left='145' width='139' height='14'>Large (64x64)</text>
-	<text top='128' left='145' width='139' height='14'>Medium (48x48)</text>
-	<text top='145' left='145' width='139' height='14'>Small (32x32)</text>
 	<group name='size'>
-		<led name='lg' top='114' left='301' state='red'/>
-		<led name='med' top='131' left='301'/>
-		<led name='sm' top='148' left='301'/>
+		<led name='lg' top='114' left='145' state='red'>Large (64x64)</led>
+		<led name='med' top='131' left='145'>Medium (48x48)</led>
+		<led name='sm' top='148' left='145'>Small (32x32)</led>
 	</group>
 	<text top='164' left='51' width='105' height='14'>Preset terrain:</text>
 	<!--
-	 TODO: Move these LED labels into the LED elements. Or better yet, put a field and a Choose button so they can pick any base terrain they want.
+	 TODO: Put a field and a Choose button so they can pick any base terrain they want.
 	 -->
-	<text top='164' left='168' width='100' height='15'>Just cave floor</text>
-	<text top='181' left='168' width='102' height='15'>Plain Grass</text>
-	<text top='198' left='168' width='127' height='15'>Grass with flowers</text>
 	<group name='preset'>
-		<led name='cave' top='167' left='301' state='red'/>
-		<led name='grass' top='184' left='301'/>
-		<led name='flowers' top='201' left='301'/>
+		<led name='cave' top='167' left='168' state='red'>Just cave floor</led>
+		<led name='grass' top='184' left='168'>Plain Grass</led>
+		<led name='flowers' top='201' left='168'>Grass with flowers</led>
 	</group>
 	<text top='28' left='50' width='147' height='14'>Creating town number:</text>
 	<text name='num' top='28' left='201' width='33' height='14'/>
