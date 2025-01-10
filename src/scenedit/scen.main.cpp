@@ -24,6 +24,7 @@
 #include "mathutil.hpp"
 #include "fileio/fileio.hpp"
 #include "dialogxml/widgets/button.hpp"
+#include "dialogxml/widgets/field.hpp"
 #include "dialogxml/widgets/led.hpp"
 #include "dialogxml/widgets/ledgroup.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
@@ -753,6 +754,9 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		else if(scale == "3") set_pref("UIScale", 3.0);
 		else if(scale == "4") set_pref("UIScale", 4.0);
 		set_pref("PlaySounds", dynamic_cast<cLed&>(me["nosound"]).getState() == led_off);
+		bool v = dynamic_cast<cLed&>(me["force-default-party"]).getState() == led_red;
+		set_pref("ForceDefaultParty", dynamic_cast<cLed&>(me["force-default-party"]).getState() == led_red);
+		set_pref("DefaultPartyPath", dynamic_cast<cTextField&>(me["party-path"]).getText());
 	}
 	save_prefs();
 	return true;
@@ -803,6 +807,11 @@ void pick_preferences() {
 	
 	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySounds", true) ? led_off : led_red);
 	
+	dynamic_cast<cLed&>(prefsDlog["force-default-party"]).setState(get_bool_pref("ForceDefaultParty", false) ? led_red : led_off);
+
+	cTextField& default_party_field = dynamic_cast<cTextField&>(prefsDlog["party-path"]);
+	default_party_field.setText(get_string_pref("DefaultPartyPath"));
+
 	prefsDlog.run();
 	
 	// Suppress the float comparison warning.
