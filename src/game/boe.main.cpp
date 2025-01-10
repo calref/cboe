@@ -45,6 +45,10 @@
 #include "tools/enum_map.hpp"
 #include "tools/event_listener.hpp"
 #include "tools/drawable_manager.hpp"
+
+using Catch::clara::ParserResult;
+using Catch::clara::ParseResultType;
+
 bool All_Done = false;
 sf::RenderWindow mainPtr;
 short had_text_freeze = 0,num_fonts;
@@ -80,6 +84,43 @@ extern fs::path tempDir;
 std::vector<fs::path> extra_scen_dirs;
 boost::optional<std::string> scen_arg_path;
 boost::optional<short> scen_arg_town, scen_arg_town_entrance, scen_arg_out_x, scen_arg_out_y, scen_arg_x, scen_arg_y;
+
+
+struct cParseEntrance {
+	boost::optional<short>& opt;
+	cParseEntrance(boost::optional<short>& opt) : opt(opt) {}
+	ParserResult operator()(std::string v) const {
+		ParserResult error = ParserResult::logicError( "Invalid entrance: '" + v + "'. Try N, S, E, or W.");
+		if(v.size() == 1){
+			switch(v.at(0)){
+				case 'N':
+				case 'n':
+				case '0':
+					opt = 0;
+					break;
+				case 'E':
+				case 'e':
+				case '1':
+					opt = 1;
+					break;
+				case 'S':
+				case 's':
+				case '2':
+					opt = 2;
+					break;
+				case 'W':
+				case 'w':
+				case '3':
+					opt = 3;
+					break;
+				default:
+					return error;
+			}
+			return ParserResult::ok( ParseResultType::Matched );
+		}
+		return error;
+	}
+};
 
 /* Display globals */
 short combat_posing_monster = -1, current_working_monster = -1; // 0-5 PC 100 + x - monster x
@@ -267,7 +308,7 @@ static void process_args(int argc, char* argv[]) {
 	// so we just save these options for later.
 	cli |= clara::Opt(scen_arg_path, "scen-path")["--scenario"]("Launch a scenario, with the default party if no party is loaded.");
 	cli |= clara::Opt(scen_arg_town, "town")["--town"]("Put the party in a town.");
-	cli |= clara::Opt(scen_arg_town_entrance, "entrance")["--entrance"]("Put the party at a town entrance point.");
+	cli |= clara::Opt(cParseEntrance(scen_arg_town_entrance), "entrance")["--entrance"]("Put the party at a town entrance point.");
 	cli |= clara::Opt(scen_arg_out_x, "x")["--out-x"]("Put the party in an outdoor section (x coordinate).");
 	cli |= clara::Opt(scen_arg_out_y, "y")["--out-y"]("Put the party in an outdoor section (y coordinate).");
 	cli |= clara::Opt(scen_arg_x, "x")["--x"]("Put the party at a location (x coordinate).");
