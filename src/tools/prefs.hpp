@@ -30,6 +30,9 @@ inline bool get_iarray_pref_contains(std::string keypath, int value) {
 	return std::find(val.begin(), val.end(), value) != val.end();
 }
 
+void set_pref(std::string keypath, std::string value);
+std::string get_string_pref(std::string keypath, std::string fallback = "");
+
 void clear_pref(std::string keypath);
 bool sync_prefs();
 
