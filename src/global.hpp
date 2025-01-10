@@ -31,8 +31,10 @@ const short pc_width = 590, pc_height = 440;
 const short scen_width = 584, scen_height = 420;
 
 // A convenient alias
-namespace boost { namespace filesystem {}}
+namespace boost { namespace filesystem {} namespace process {}}
 namespace fs = boost::filesystem;
+namespace bp = boost::process;
+
 
 inline bool str_to_bool(std::string str) {
 	return str == "true";
