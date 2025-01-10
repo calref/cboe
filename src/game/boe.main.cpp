@@ -348,7 +348,13 @@ static void process_args(int argc, char* argv[]) {
 static void handle_scenario_args() {
 	if(scen_arg_path){
 		fs::path path = *scen_arg_path;
-		extra_scen_dirs.push_back(path.parent_path());
+
+		if(!path.parent_path().empty()){
+			// Add the scenario's path to the search paths put_party_in_scen() uses
+			extra_scen_dirs.push_back(path.parent_path());
+		}else{
+			path = locate_scenario(*scen_arg_path);
+		}
 
 		cScenario scenario;
 		if(load_scenario(path, scenario, false)){
