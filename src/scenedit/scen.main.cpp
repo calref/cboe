@@ -117,9 +117,11 @@ void launch_scenario() {
 	if(editing_town){
 		command_stream << "--town " << cur_town;
 	}else{
-		command_stream << "--out-x " << cur_out.x << " --out-y " << cur_out.y;
+		command_stream << "--out-sec (" << cur_out.x << "," << cur_out.y << ")";
 	}
-	command_stream << " --x " << cen_x << " --y " << cen_y;
+	command_stream << " --loc (" << cen_x << "," << cen_y << ")";
+
+	LOG(command_stream.str());
 
 	// TODO allow specifying a debug party path as an editor preference
 
