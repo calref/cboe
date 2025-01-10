@@ -19,7 +19,8 @@ typedef NS_ENUM(NSInteger) {
 	kInt = 0,
 	kBool = 1,
 	kFloat = 2,
-	kIArray = 3
+	kIArray = 3,
+	kString = 4
 } PrefType;
 
 NSUserDefaults* replayUserDefaults = nil;
@@ -44,6 +45,10 @@ bool prefsLoaded = false;
 static NSString* convertKey(std::string keypath) {
 	NSString* key = [NSString stringWithCString: keypath.c_str() encoding: NSASCIIStringEncoding];
 	return key;
+}
+
+static std::string convertValue(NSString* value) {
+	return std::string([value cStringUsingEncoding : NSASCIIStringEncoding]);
 }
 
 static NSUserDefaults* getCurrentDefaults() {
@@ -102,6 +107,19 @@ std::vector<int> get_iarray_pref(std::string keypath) {
 	return result;
 }
 
+void set_pref(std::string keypath, std::string val) {
+	NSString* key = convertKey(keypath);
+	// Not a key, but convertKey() still works, don't it?
+	NSString* value = convertKey(val);
+	[getCurrentDefaults() setObject: value forKey: key];
+}
+
+std::string get_string_pref(std::string keypath, std::string fallback) {
+	NSString* val = [getCurrentDefaults() stringForKey: convertKey(keypath)];
+	if(val == nil) return fallback;
+	return convertValue(val);
+}
+
 void clear_pref(std::string keypath) {
 	[getCurrentDefaults() setValue: nil forKey: convertKey(keypath)];
 }
@@ -153,6 +171,9 @@ static bool load_prefs(std::istream& istream) {
 			case kInt:
 				set_pref(key, boost::lexical_cast<int>(val));
 				break;
+			// NOTE: The core game currently has no string preferences, so the recording system doesn't need to know
+			// about them for now.
+			case kString: break;
 		}
 	}
 
@@ -199,6 +220,9 @@ bool sync_prefs() {
 						double fvalue = (double)[standard doubleForKey: pref];
 						prefs_recording << fvalue;
 					} break;
+					// NOTE: The core game currently has no string preferences, so the recording system doesn't need to know
+					// about them for now.
+					case kString: break;
 				}
 				prefs_recording << std::endl;
 			}
