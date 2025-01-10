@@ -2,9 +2,10 @@
 #include <cstdio>
 #include <string>
 #include <memory>
-#include <stdlib.h>
-#include <unistd.h>
 #include <boost/filesystem/operations.hpp>
+#include <boost/process/child.hpp>
+#include <boost/process/io.hpp>
+#include <boost/process/search_path.hpp>
 #include "cli.hpp"
 
 #include "scen.global.hpp"
@@ -101,22 +102,28 @@ void launch_scenario() {
 
 	// TODO require save first?
 
-	std::string cwd = fs::current_path().string();
-	chdir(game_dir.string().c_str());
+	fs::path game_binary;
+#ifdef SFML_SYSTEM_MACOS
+	game_binary = "Blades of Exile.app/Contents/MacOS/Blades of Exile";
+#elif SFML_SYSTEM_WINDOWS
+	game_binary = "Blades of Exile.exe";
+#elif SFML_SYSTEM_LINUX
+	game_binary = "Blades of Exile";
+#endif
 
 	std::ostringstream command_stream;
-	command_stream << game_binary << " --scenario \"" << last_load_file << "\" ";
+	command_stream << bp::search_path(game_binary, {fs::current_path()}) << " --scenario \"" << last_load_file << "\" ";
 	if(editing_town){
 		command_stream << "--town " << cur_town;
 	}else{
 		command_stream << "--out-x " << cur_out.x << " --out-y " << cur_out.y;
 	}
 	command_stream << " --x " << cen_x << " --y " << cen_y;
+
 	// TODO allow specifying a debug party path as an editor preference
 
-	system(command_stream.str().c_str());
-
-	chdir(cwd.c_str());
+	bp::child ch(command_stream.str(), bp::std_out > stdout);
+	ch.detach();
 }
 
 //Changed to ISO C specified argument and return type.
@@ -251,23 +258,8 @@ static void process_args(int argc, char* argv[]) {
 	}
 }
 
-void init_game_paths(std::string binary_path) {
-	fs::path path = binary_path;
-	game_dir = scenedit_dir;
-#ifdef SFML_SYSTEM_MACOS
-	// Get the directory containing the app bundle
-	game_dir = game_dir.parent_path().parent_path().parent_path();
-	game_binary = game_dir/"Blades of Exile.app"/"Contents"/"MacOS"/"Blades of Exile";
-#elif SFML_SYSTEM_WINDOWS
-	game_binary = game_dir/"Blades of Exile.exe";
-#elif SFML_SYSTEM_LINUX
-	game_binary = game_dir/"Blades of Exile";
-#endif
-}
-
 void init_scened(int argc, char* argv[]) {
 	init_directories(argv[0]);
-	init_game_paths(argv[0]);
 	sync_prefs();
 	adjust_windows(mainPtr, mainView);
 	//init_menubar();
