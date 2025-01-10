@@ -16,6 +16,11 @@
 		<led name='other' relative='pos-in pos' anchor='scale-head' top='4' left='215'/>
 	</group>
 	
+	<text name='debug-party-head' size='large' relative='pos pos-in' anchor='nosound' top='0' left='50'>Debug Party:</text>
+	<field name='party-path' type='text' relative='neg-in neg' rel-anchor='prev' top='2' left='5' width='100' height='15'/>
+	<button name='choose-party' relative='pos neg' rel-anchor='prev' type='regular' top='3' left='2'>Choose</button>
+	<led name='force-default-party' relative='pos-in pos' anchor='debug-party-head' top='2' left='0'>Force default party (ignore above)</led>
+
 	<button name='okay' relative='abs pos' anchor='scale-head' type='regular' top='7' left='354'>OK</button>
 	<button name='cancel' relative='neg pos-in' anchor='okay' type='regular' def-key='esc' top='0' left='73'>Cancel</button>
 </dialog>
