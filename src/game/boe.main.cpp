@@ -83,8 +83,8 @@ std::string scenario_temp_dir_name = "scenario";
 extern fs::path tempDir;
 std::vector<fs::path> extra_scen_dirs;
 boost::optional<std::string> scen_arg_path;
-boost::optional<short> scen_arg_town, scen_arg_town_entrance, scen_arg_out_x, scen_arg_out_y, scen_arg_x, scen_arg_y;
-
+boost::optional<short> scen_arg_town, scen_arg_town_entrance;
+boost::optional<location> scen_arg_out_sec, scen_arg_loc;
 
 struct cParseEntrance {
 	boost::optional<short>& opt;
@@ -119,6 +119,20 @@ struct cParseEntrance {
 			return ParserResult::ok( ParseResultType::Matched );
 		}
 		return error;
+	}
+};
+
+struct cParseLocation {
+	boost::optional<location>& opt;
+	cParseLocation(boost::optional<location>& opt) : opt(opt) {}
+	ParserResult operator()(std::string v) const {
+		try{
+			opt = boost::lexical_cast<location>(v);
+			return ParserResult::ok( ParseResultType::Matched );
+		}
+		catch(boost::bad_lexical_cast){
+			return ParserResult::logicError( "Invalid location: '" + v + "'. Try '(x,y)' format.");
+		}
 	}
 };
 
@@ -309,10 +323,8 @@ static void process_args(int argc, char* argv[]) {
 	cli |= clara::Opt(scen_arg_path, "scen-path")["--scenario"]("Launch a scenario, with the default party if no party is loaded.");
 	cli |= clara::Opt(scen_arg_town, "town")["--town"]("Put the party in a town.");
 	cli |= clara::Opt(cParseEntrance(scen_arg_town_entrance), "entrance")["--entrance"]("Put the party at a town entrance point.");
-	cli |= clara::Opt(scen_arg_out_x, "x")["--out-x"]("Put the party in an outdoor section (x coordinate).");
-	cli |= clara::Opt(scen_arg_out_y, "y")["--out-y"]("Put the party in an outdoor section (y coordinate).");
-	cli |= clara::Opt(scen_arg_x, "x")["--x"]("Put the party at a location (x coordinate).");
-	cli |= clara::Opt(scen_arg_y, "y")["--y"]("Put the party at a location (y coordinate).");
+	cli |= clara::Opt(cParseLocation(scen_arg_out_sec), "(x,y)")["--out-sec"]("Put the party in an outdoor section.");
+	cli |= clara::Opt(cParseLocation(scen_arg_loc), "(x,y)")["--loc"]("Put the party at a location.");
 
 	// Party option:
 	cli |= clara::Arg(saved_game, "save-file")("Launch and load a saved game file.");
@@ -372,17 +384,11 @@ static void process_args(int argc, char* argv[]) {
 			post_load();
 	}
 
-	if(scen_arg_town && (scen_arg_out_x || scen_arg_out_y)){
-		std::cout << "Warning: --out-x and --out-y conflict with --town and will be ignored." << std::endl;
+	if(scen_arg_town && scen_arg_out_sec){
+		std::cout << "Warning: --out-sec conflicts with --town and will be ignored." << std::endl;
 	}
-	if((scen_arg_out_x || scen_arg_out_y) && !(scen_arg_out_x && scen_arg_out_y)){
-		std::cout << "Warning: --out-x and --out-y must both be supplied. Partial outdoor coordinate input will be ignored." << std::endl;
-	}
-	if(scen_arg_town_entrance && (scen_arg_x || scen_arg_y)){
-		std::cout << "Warning: --x and --y conflict with --entrance and will be ignored." << std::endl;
-	}
-	if((scen_arg_x || scen_arg_y) && !(scen_arg_x && scen_arg_y)){
-		std::cout << "Warning: --x and --y must both be supplied. Partial coordinate input will be ignored." << std::endl;
+	if(scen_arg_town_entrance && scen_arg_loc){
+		std::cout << "Warning: --loc conflicts with --entrance and will be ignored." << std::endl;
 	}
 }
 
@@ -412,7 +418,7 @@ static void handle_scenario_args() {
 				}
 			}
 			if(!univ.party.is_in_scenario()){
-				put_party_in_scen(path.filename().string(), scen_arg_town || scen_arg_out_x);
+				put_party_in_scen(path.filename().string(), scen_arg_town || scen_arg_out_sec);
 			}
 		}else{
 			std::cerr << "Failed to load scenario: " << *scen_arg_path << std::endl;
@@ -460,23 +466,22 @@ static void handle_scenario_args() {
 		location town_location;
 		if(scen_arg_town_entrance){
 			town_entrance = *scen_arg_town_entrance;
-		}else if(scen_arg_x && scen_arg_y){
-			town_location = location(*scen_arg_x, *scen_arg_y);
+		}else if(scen_arg_loc){
 			town_entrance = 9;
 		}
-		force_town_enter(*scen_arg_town, town_location);
+		force_town_enter(*scen_arg_town, *scen_arg_loc);
 		start_town_mode(*scen_arg_town, town_entrance);
-	}else if(scen_arg_out_x && scen_arg_out_y){
+	}else if(scen_arg_out_sec){
 		if(!party_in_memory || !univ.party.is_in_scenario() ||
-				univ.scenario.outdoors.width() < (*scen_arg_out_x + 1) ||
-				univ.scenario.outdoors.height() < (*scen_arg_out_y + 1)){
-			std::cerr << "Expected a party loaded within a scenario with at least " << (*scen_arg_out_x + 1) << "x" << (*scen_arg_out_y +1) << " outdoor sections" << std::endl;
+				univ.scenario.outdoors.width() < (scen_arg_out_sec->x + 1) ||
+				univ.scenario.outdoors.height() < (scen_arg_out_sec->y + 1)){
+			std::cerr << "Expected a party loaded within a scenario with at least " << (scen_arg_out_sec->x + 1) << "x" << (scen_arg_out_sec->y + 1) << " outdoor sections" << std::endl;
 			exit(1);
 		}
 
-		if(scen_arg_x && scen_arg_y){
+		if(scen_arg_loc){
 			overall_mode = MODE_OUTDOORS;
-			position_party(*scen_arg_out_x,*scen_arg_out_y,*scen_arg_x,*scen_arg_y);
+			position_party(scen_arg_out_sec->x,scen_arg_out_sec->y,scen_arg_loc->x,scen_arg_loc->y);
 			clear_map();
 			update_explored(univ.party.out_loc);
 			redraw_screen(REFRESH_ALL);
