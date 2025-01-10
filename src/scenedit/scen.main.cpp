@@ -6,6 +6,7 @@
 #include <boost/process/child.hpp>
 #include <boost/process/io.hpp>
 #include <boost/process/search_path.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include "cli.hpp"
 
 #include "scen.global.hpp"
@@ -94,6 +95,11 @@ fs::path game_binary;
 extern std::string last_load_file;
 
 void launch_scenario() {
+	if(boost::ends_with(last_load_file, ".exs")){
+		showError("The scenario editor cannot launch an unpacked scenario directly. You'll need to re-open the scenario from its .boes archive.");
+		return;
+	}
+
 	// Make sure scenario is loaded and currently editing the terrain of a town or outdoor section
 	if(overall_mode >= MODE_MAIN_SCREEN){
 		showError("Must be viewing the terrain of a town or outdoor section at the place where you want to put the debug party.");
