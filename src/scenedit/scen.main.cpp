@@ -160,9 +160,14 @@ void launch_scenario(eLaunchType type) {
 		}
 	}
 
+	// allow specifying a debug party path as an editor preference
+	std::string default_party = get_string_pref("DefaultPartyPath");
+	if(!(get_bool_pref("ForceDefaultParty", false) || default_party.empty())){
+		command_stream << " \"" << default_party << "\"";
+	}
+
 	LOG(command_stream.str());
 
-	// TODO allow specifying a debug party path as an editor preference
 
 	bp::child ch(command_stream.str(), bp::std_out > stdout);
 	ch.detach();
