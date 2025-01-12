@@ -92,7 +92,11 @@ static bool save_prefs(fs::path fpath) {
 			fout << kv.first << " = " << boost::any_cast<int>(kv.second) << std::endl;
 		else if(kv.second.type() == typeid(double))
 			fout << kv.first << " = " << std::fixed << boost::any_cast<double>(kv.second) << std::endl;
-		else printf("Warning: Unknown preference value type, skipping...\n");
+		else if(kv.second.type() == typeid(std::string)){
+			std::string encoded;
+			TiXmlBase::EncodeString(boost::any_cast<std::string>(kv.second), &encoded);
+			fout << kv.first << " = \"" << encoded << "\"" << std::endl;
+		}else printf("Warning: Unknown preference value type, skipping...\n");
 		if(!fout) {
 			perror("Error writing preferences");
 			return false;
@@ -134,7 +138,15 @@ static bool load_prefs(std::istream& in) {
 		std::string key = line.substr(0, key_end + 1), val = line.substr(val_beg);
 		if(val == "true") temp_prefs[key] = true;
 		else if(val == "false") temp_prefs[key] = false;
-		else if(val[0] == '[') {
+		else if(val[0] == '"') {
+			// Dastardly trick to make TinyXML encode and decode string preferences
+			std::ostringstream dummy_xml;
+			dummy_xml << "<dummy>" << val.substr(1, val.size() - 2) << "</dummy>";
+			TiXmlElement text_element("");
+			text_element.Parse(dummy_xml.str().c_str(), nullptr, TIXML_ENCODING_UTF8);
+			std::string decoded = text_element.GetText();
+			temp_prefs[key] = decoded;
+		} else if(val[0] == '[') {
 			int arr_end = val.find_first_of(']');
 			std::istringstream arr_vals(val.substr(1, arr_end - 1));
 			int i = 0;
