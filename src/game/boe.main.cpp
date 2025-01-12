@@ -460,8 +460,9 @@ static void handle_scenario_args() {
 			town_entrance = *scen_arg_town_entrance;
 		}else if(scen_arg_loc){
 			town_entrance = 9;
+			town_location = *scen_arg_loc;
 		}
-		force_town_enter(*scen_arg_town, *scen_arg_loc);
+		force_town_enter(*scen_arg_town, town_location);
 		start_town_mode(*scen_arg_town, town_entrance);
 	}else if(scen_arg_out_sec){
 		if(!party_in_memory || !univ.party.is_in_scenario() ||
