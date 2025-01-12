@@ -124,9 +124,9 @@ void launch_scenario(eLaunchType type) {
 	fs::path game_binary;
 #ifdef SFML_SYSTEM_MACOS
 	game_binary = "Blades of Exile.app/Contents/MacOS/Blades of Exile";
-#elif SFML_SYSTEM_WINDOWS
+#elif defined(SFML_SYSTEM_WINDOWS)
 	game_binary = "Blades of Exile.exe";
-#elif SFML_SYSTEM_LINUX
+#elif defined(SFML_SYSTEM_LINUX)
 	game_binary = "Blades of Exile";
 #endif
 
