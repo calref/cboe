@@ -71,6 +71,7 @@ BEGIN
         MENUITEM "Save &As\tCtrl+Shift+S",      IDM_FILE_SAVE_AS
         MENUITEM "&Revert to Saved",            IDM_FILE_REVERT
         MENUITEM SEPARATOR
+        MENUITEM "Preferences",                 ID_FILE_PREFERENCES
         MENUITEM "&Quit\tCtrl+Q",               IDM_FILE_QUIT
     END
     POPUP "Edit"
