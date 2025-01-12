@@ -241,25 +241,35 @@ std::ostream& operator<< (std::ostream& out, location l) {
 
 struct match {
 	char c;
+	bool optional = false;
 };
 
 static std::istream& operator>> (std::istream& in, match m) {
-	if(in.get() != m.c) {
-		in.setstate(std::ios_base::failbit);
+	if(in.eof()){
+		if(!m.optional){
+			in.setstate(std::ios_base::failbit);
+		}else{
+			in.clear();
+		}
+		return in;
+	}
+	char next = in.get();
+	if(next != m.c) {
+		if(m.optional){
+			in.putback(next);
+		}else{
+			in.setstate(std::ios_base::failbit);
+		}
 	}
 	return in;
 }
 
 std::istream& operator>> (std::istream& in, location& l) {
-	in >> std::ws >> match{'('};
-	std::stringbuf sstr;
-	in.get(sstr, ',');
-	l.x = std::stoi(sstr.str());
+	in >> std::ws >> match{'(', true};
+	in >> l.x;
 	in >> match{','} >> std::ws;
-	sstr.str("");
-	in.get(sstr, ')');
-	l.y = std::stoi(sstr.str());
-	in >> match{')'};
+	in >> l.y;
+	in >> match{')', true};
 	return in;
 }
 
