@@ -130,8 +130,14 @@ void launch_scenario(eLaunchType type) {
 	game_binary = "Blades of Exile";
 #endif
 
+	game_binary = bp::search_path(game_binary, {fs::current_path()});
+	if(game_binary.empty()){
+		showError("The current working directory does not contain Blades of Exile.");
+		return;
+	}
+
 	std::ostringstream command_stream;
-	command_stream << bp::search_path(game_binary, {fs::current_path()}) << " --scenario \"" << last_load_file << "\" ";
+	command_stream << game_binary << " --scenario \"" << last_load_file << "\" ";
 	if(type == LOC){
 		if(editing_town){
 			command_stream << "--town " << cur_town;
