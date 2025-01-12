@@ -75,6 +75,7 @@
 #define IDM_SCEN_LAUNCH_HERE            170
 #define IDM_SCEN_LAUNCH_START           171
 #define IDM_SCEN_LAUNCH_ENTRANCE        172
+#define ID_FILE_PREFERENCES             173
 
 // Next default values for new objects
 // 
@@ -83,6 +84,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        103
 #define _APS_NEXT_COMMAND_VALUE         40014
 #define _APS_NEXT_CONTROL_VALUE         1001
-#define _APS_NEXT_SYMED_VALUE           173
+#define _APS_NEXT_SYMED_VALUE           174
 #endif
 #endif
