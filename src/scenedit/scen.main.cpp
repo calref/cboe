@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <string>
 #include <memory>
+#include <vector>
 #include <boost/filesystem/operations.hpp>
 #include <boost/process/child.hpp>
 #include <boost/process/io.hpp>
@@ -31,6 +32,7 @@
 #include "tools/winutil.hpp"
 #include "tools/cursors.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/strchoice.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "scen.menus.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
@@ -95,15 +97,24 @@ fs::path game_dir;
 fs::path game_binary;
 extern std::string last_load_file;
 
-void launch_scenario() {
+enum eLaunchType {LOC,START,ENTRANCE};
+
+void launch_scenario(eLaunchType type) {
 	if(boost::ends_with(last_load_file, ".exs")){
 		showError("The scenario editor cannot launch an unpacked scenario directly. You'll need to re-open the scenario from its .boes archive.");
 		return;
 	}
 
 	// Make sure scenario is loaded and currently editing the terrain of a town or outdoor section
-	if(overall_mode >= MODE_MAIN_SCREEN){
-		showError("Must be viewing the terrain of a town or outdoor section at the place where you want to put the debug party.");
+	if(type == LOC){
+		if(overall_mode >= MODE_MAIN_SCREEN){
+			showError("Must be viewing the terrain of a town or outdoor section at the place where you want to put the debug party.");
+			return;
+		}
+	}
+	// Make sure scenario is loaded
+	else if(overall_mode == MODE_INTRO_SCREEN){
+		showError("Must have a scenario loaded.");
 		return;
 	}
 
@@ -121,12 +132,27 @@ void launch_scenario() {
 
 	std::ostringstream command_stream;
 	command_stream << bp::search_path(game_binary, {fs::current_path()}) << " --scenario \"" << last_load_file << "\" ";
-	if(editing_town){
+	if(type == LOC){
+		if(editing_town){
+			command_stream << "--town " << cur_town;
+		}else{
+			command_stream << "--out-sec (" << cur_out.x << "," << cur_out.y << ")";
+		}
+		command_stream << " --loc (" << cen_x << "," << cen_y << ")";
+	}else if(type == ENTRANCE){
 		command_stream << "--town " << cur_town;
-	}else{
-		command_stream << "--out-sec (" << cur_out.x << "," << cur_out.y << ")";
+		std::ostringstream prompt;
+		prompt << "Launch in " << scenario.towns[cur_town]->name << " at which entrance?";
+		std::vector<std::string> choices = {"North", "East", "South", "West"};
+		cStringChoice dlog(choices, prompt.str());
+		size_t choice = dlog.show(0);
+		if(dlog->accepted()){
+			command_stream << " --entrance " << choice;
+		}else{
+			// Cancel
+			return;
+		}
 	}
-	command_stream << " --loc (" << cen_x << "," << cen_y << ")";
 
 	LOG(command_stream.str());
 
@@ -475,8 +501,14 @@ void handle_menu_choice(eMenu item_hit) {
 			editKey.k = key_selectall;
 			isEdit = true;
 			break;
-		case eMenu::LAUNCH:
-			launch_scenario();
+		case eMenu::LAUNCH_HERE:
+			launch_scenario(LOC);
+			break;
+		case eMenu::LAUNCH_START:
+			launch_scenario(START);
+			break;
+		case eMenu::LAUNCH_ENTRANCE:
+			launch_scenario(ENTRANCE);
 			break;
 		case eMenu::TOWN_CREATE:
 			if(scenario.towns.size() >= 200) {
