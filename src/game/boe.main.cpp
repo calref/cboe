@@ -131,7 +131,7 @@ struct cParseLocation {
 			return ParserResult::ok( ParseResultType::Matched );
 		}
 		catch(boost::bad_lexical_cast){
-			return ParserResult::logicError( "Invalid location: '" + v + "'. Try '(x,y)' format.");
+			return ParserResult::logicError( "Invalid location: '" + v + "'. Try 'x,y' format.");
 		}
 	}
 };
@@ -323,8 +323,8 @@ static void process_args(int argc, char* argv[]) {
 	cli |= clara::Opt(scen_arg_path, "scen-path")["--scenario"]("Launch a scenario, with the default party if no party is loaded.");
 	cli |= clara::Opt(scen_arg_town, "town")["--town"]("Put the party in a town.");
 	cli |= clara::Opt(cParseEntrance(scen_arg_town_entrance), "entrance")["--entrance"]("Put the party at a town entrance point.");
-	cli |= clara::Opt(cParseLocation(scen_arg_out_sec), "(x,y)")["--out-sec"]("Put the party in an outdoor section.");
-	cli |= clara::Opt(cParseLocation(scen_arg_loc), "(x,y)")["--loc"]("Put the party at a location.");
+	cli |= clara::Opt(cParseLocation(scen_arg_out_sec), "x,y")["--out-sec"]("Put the party in an outdoor section.");
+	cli |= clara::Opt(cParseLocation(scen_arg_loc), "x,y")["--loc"]("Put the party at a location.");
 
 	// Party option:
 	cli |= clara::Arg(saved_game, "save-file")("Launch and load a saved game file.");
