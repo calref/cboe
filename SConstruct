@@ -287,23 +287,16 @@ if platform == 'darwin':
 
 	# pretty sketchy, but should point to your brew installation directories
 	if subprocess.call(['which', '-s', 'brew']) == 0: # HomeBrew
-		possible_brew_dirs = ['/usr/local', '/opt/homebrew', '/usr/local/opt']
+		# Keg-only pinned versions are found in a different directory structure than before
+		dir = '/usr/local/opt'
 		brew_lib_versions = {
-			'boost': '1.85.0',
+			'boost': '1.85',
+			'sfml': '2'
 		}
-		for dir in possible_brew_dirs:
-			if path.exists(f'{dir}/Cellar'):
-				for lib, version in brew_lib_versions.items():
-					env.Append(
-						LIBPATH=[f'{dir}/Cellar/{lib}/{version}/lib'],
-						CPPPATH=[f'{dir}/Cellar/{lib}/{version}/include'])
-			# SFML@2 installed in alternate path
-			elif path.exists(f'{dir}/sfml@2'):
-				env.Append(
-					LIBPATH=[f'{dir}/sfml@2/lib'],
-					CPPPATH=[f'{dir}/sfml@2/include'])
-
-
+		for lib, version in brew_lib_versions.items():
+			env.Append(
+				LIBPATH=[f'{dir}/{lib}@{version}/lib'],
+				CPPPATH=[f'{dir}/{lib}@{version}/include'])
 
 # Sometimes it's easier just to copy the dependencies into the repo dir
 # We try to auto-detect this.
