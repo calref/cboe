@@ -121,8 +121,7 @@ struct cParseLocation {
 		try{
 			opt = boost::lexical_cast<location>(v);
 			return ParserResult::ok( ParseResultType::Matched );
-		}
-		catch(boost::bad_lexical_cast){
+		}catch(boost::bad_lexical_cast){
 			return ParserResult::logicError( "Invalid location: '" + v + "'. Try 'x,y' format.");
 		}
 	}
