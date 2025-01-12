@@ -855,6 +855,15 @@ void pick_preferences() {
 	cTextField& default_party_field = dynamic_cast<cTextField&>(prefsDlog["party-path"]);
 	default_party_field.setText(get_string_pref("DefaultPartyPath"));
 
+	cButton& choose_button = dynamic_cast<cButton&>(prefsDlog["choose-party"]);
+	choose_button.attachClickHandler([&default_party_field](cDialog& me, std::string, eKeyMod) -> bool {
+		fs::path new_path = nav_get_party();
+		if(!new_path.empty()){
+			default_party_field.setText(new_path.string());
+		}
+		return true;
+	});
+
 	prefsDlog.run();
 	
 	// Suppress the float comparison warning.
