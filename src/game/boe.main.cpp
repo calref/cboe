@@ -46,8 +46,8 @@
 #include "tools/event_listener.hpp"
 #include "tools/drawable_manager.hpp"
 
-using Catch::clara::ParserResult;
-using Catch::clara::ParseResultType;
+using clara::ParserResult;
+using clara::ParseResultType;
 
 bool All_Done = false;
 sf::RenderWindow mainPtr;
