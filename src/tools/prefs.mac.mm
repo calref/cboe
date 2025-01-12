@@ -48,7 +48,12 @@ static NSString* convertKey(std::string keypath) {
 }
 
 static std::string convertValue(NSString* value) {
-	return std::string([value cStringUsingEncoding : NSASCIIStringEncoding]);
+	return std::string([value cStringUsingEncoding : NSUTF8StringEncoding]);
+}
+
+static NSString* convertValue(std::string value) {
+	NSString* key = [NSString stringWithCString: value.c_str() encoding: NSUTF8StringEncoding];
+	return key;
 }
 
 static NSUserDefaults* getCurrentDefaults() {
@@ -109,8 +114,7 @@ std::vector<int> get_iarray_pref(std::string keypath) {
 
 void set_pref(std::string keypath, std::string val) {
 	NSString* key = convertKey(keypath);
-	// Not a key, but convertKey() still works, don't it?
-	NSString* value = convertKey(val);
+	NSString* value = convertValue(val);
 	[getCurrentDefaults() setObject: value forKey: key];
 }
 
