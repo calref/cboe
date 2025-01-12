@@ -93,24 +93,16 @@ struct cParseEntrance {
 		ParserResult error = ParserResult::logicError( "Invalid entrance: '" + v + "'. Try N, S, E, or W.");
 		if(v.size() == 1){
 			switch(v.at(0)){
-				case 'N':
-				case 'n':
-				case '0':
+				case 'N': case 'n': case '0':
 					opt = 0;
 					break;
-				case 'E':
-				case 'e':
-				case '1':
+				case 'E': case 'e': case '1':
 					opt = 1;
 					break;
-				case 'S':
-				case 's':
-				case '2':
+				case 'S': case 's': case '2':
 					opt = 2;
 					break;
-				case 'W':
-				case 'w':
-				case '3':
+				case 'W': case 'w': case '3':
 					opt = 3;
 					break;
 				default:
