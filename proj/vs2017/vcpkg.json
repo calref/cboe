@@ -13,6 +13,7 @@
         "boost-date-time",
         "boost-chrono",
         "boost-math",
-        "boost-spirit"
+        "boost-spirit",
+        "boost-process"
     ]
 }
