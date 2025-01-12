@@ -66,6 +66,17 @@ std::vector<int> get_iarray_pref(std::string keypath) {
 	return {};
 }
 
+void set_pref(std::string keypath, std::string value) {
+	prefsDirty = true;
+	prefs[keypath] = value;
+}
+
+std::string get_string_pref(std::string keypath, std::string fallback) {
+	if(prefs.find(keypath) == prefs.end()) return fallback;
+	if(prefs[keypath].type() == typeid(std::string)) return boost::any_cast<std::string>(prefs[keypath]);
+	return fallback;
+}
+
 void clear_pref(std::string keypath) {
 	prefsDirty = true;
 	auto iter = prefs.find(keypath);
