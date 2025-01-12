@@ -74,8 +74,8 @@ when building Open Blades of Exile.**)
 
 The following dependencies are required:
 
-- [SFML](http://www.sfml-dev.org/) - all components except sfml-net.
-- [Boost](http://www.boost.org/) - Filesystem and System, plus several header-only
+- [SFML 2](http://www.sfml-dev.org/) - all components except sfml-net.
+- [Boost 1.85](http://www.boost.org/) - Filesystem and System, plus several header-only
   libraries; if you're picky, you can run scons and see it enumerate exactly which
   libraries are needed
 - ZLib - This is included with the system on the Mac.
