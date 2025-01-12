@@ -2661,12 +2661,16 @@ void start_dialogue_editing(short restoring) {
 	redraw_screen();
 }
 
-bool save_check(std::string which_dlog) {
+bool save_check(std::string which_dlog, bool allow_no) {
 	std::string choice;
 	
 	if(!change_made)
 		return true;
-	choice = cChoiceDlog(which_dlog, {"save","revert","cancel"}).show();
+	cChoiceDlog dlog(which_dlog, {"save","revert","cancel"});
+	if(!allow_no){
+		dlog->getControl("revert").hide();
+	}
+	choice = dlog.show();
 	if(choice == "revert")
 		return true;
 	else if(choice == "cancel")

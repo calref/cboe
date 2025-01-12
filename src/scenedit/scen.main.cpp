@@ -108,7 +108,7 @@ void launch_scenario() {
 	}
 
 	// Prompt to save first
-	if(!save_check("save-before-launch")) return;
+	if(!save_check("save-before-launch", false)) return;
 
 	fs::path game_binary;
 #ifdef SFML_SYSTEM_MACOS
