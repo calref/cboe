@@ -420,7 +420,7 @@ static void handle_scenario_args() {
 
 	if(scen_arg_town){
 		if(!party_in_memory || !univ.party.is_in_scenario() || univ.scenario.towns.size() < (*scen_arg_town + 1)){
-			std::cerr << "Expected a party loaded within a scenario with at least " << (*scen_arg_town + 1) << " towns" << std::endl;
+			std::cerr << "Expected a scenario with at least " << (*scen_arg_town + 1) << " towns" << std::endl;
 			exit(1);
 		}
 		// Try to put the party in an outdoor section from which you can enter the town --
@@ -467,7 +467,7 @@ static void handle_scenario_args() {
 		if(!party_in_memory || !univ.party.is_in_scenario() ||
 				univ.scenario.outdoors.width() < (scen_arg_out_sec->x + 1) ||
 				univ.scenario.outdoors.height() < (scen_arg_out_sec->y + 1)){
-			std::cerr << "Expected a party loaded within a scenario with at least " << (scen_arg_out_sec->x + 1) << "x" << (scen_arg_out_sec->y + 1) << " outdoor sections" << std::endl;
+			std::cerr << "Expected a scenario with at least " << (scen_arg_out_sec->x + 1) << "x" << (scen_arg_out_sec->y + 1) << " outdoor sections" << std::endl;
 			exit(1);
 		}
 
