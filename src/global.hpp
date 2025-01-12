@@ -48,6 +48,6 @@ inline void LOG(std::string line) {
 	std::cout << line << std::endl;
 }
 
-#define LOG_VALUE(x) std::cout << #x << ": " << x << std::endl;
+#define LOG_VALUE(x) std::cout << #x << ": " << (x) << std::endl;
 
 #endif
