@@ -24,7 +24,7 @@
 				},
 				{
 					name: install Boost,
-					run: brew install Boost
+					run: brew install Boost@1.85
 				},
 				{
 					name: install SFML,
@@ -54,7 +54,7 @@
 				},
 				{
 					name: install dependencies,
-					run: brew install scons SFML@2 Boost
+					run: brew install scons SFML@2 Boost@1.85
 				},
 				{
 					name: build and unit test,
