@@ -44,7 +44,7 @@ void update_mouse_spot(location the_point);
 bool monst_on_space(location loc,short m_num);
 void place_edit_special(location loc);
 void set_special(location spot_hit);
-bool save_check(std::string which_dlog);
+bool save_check(std::string which_dlog, bool allow_no = true);
 
 /// Represents the action of adding a new town to the end of the list
 class aNewTown : public cAction {
