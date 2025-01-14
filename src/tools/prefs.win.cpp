@@ -104,7 +104,7 @@ static bool save_prefs(fs::path fpath) {
 		else if(kv.second.type() == typeid(double))
 			fout << kv.first << " = " << std::fixed << boost::any_cast<double>(kv.second) << std::endl;
 		else if(kv.second.type() == typeid(std::string)){
-			std::string value = boost::any_cast<std::string(kv.second);
+			std::string value = boost::any_cast<std::string>(kv.second);
 			// Surround with quotes so maybe_quote_string() will always quote it
 			value.push_front('"');
 			value.push_back('"');
