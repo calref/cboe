@@ -2,6 +2,7 @@
 #include "prefs.hpp"
 #include "game/boe.global.hpp"
 #include "tools/replay.hpp"
+#include "fileio/fileio.hpp"
 #include "ticpp.h"
 #include <map>
 #include <string>
