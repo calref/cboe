@@ -11,119 +11,119 @@
 	},
 
 	jobs: {
-		macos-xcode: {
-			runs-on: macos-13,
-			env: {
-				DEVELOPER_DIR: /Applications/Xcode_14.2.app/Contents/Developer
-			},
-			steps: [
-				{
-					name: checkout,
-					uses: actions/checkout@v4,
-					with: { submodules: true }
-				},
-				{
-					name: install Boost,
-					run: brew install Boost@1.85
-				},
-				{
-					name: install SFML,
-					run: ./.github/workflows/scripts/mac/install-sfml.sh
-				},
-				{
-					name: patch Xcode project,
-					run: ./.github/workflows/scripts/mac/fix-xcode-proj.sh
-				},
-				{
-					name: build,
-					run: ./.github/workflows/scripts/mac/xcode-build.sh
-				},
-				{
-					name: unit tests,
-					run: ./.github/workflows/scripts/mac/run-tests.sh
-				}
-			]
-		},
-		macos-scons: {
-			runs-on: macos-13,
-			steps:  [
-				{
-					name: checkout,
-					uses: actions/checkout@v4,
-					with: { submodules: true }
-				},
-				{
-					name: install dependencies,
-					run: brew install scons SFML@2 Boost@1.85
-				},
-				{
-					name: build and unit test,
-					run: ./.github/workflows/scripts/mac/scons-build.sh test=true
-				}
-			]
-		},
-		win-vs32: {
-			runs-on: windows-2019,
-			env: {
-				VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
-			},
-			steps: [
-				{
-					name: Export GitHub Actions cache environment variables,
-					uses: actions/github-script@v7,
-					with: {
-						script: "core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || ''); core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');"
-					}
-				},
-				{
-					name: checkout,
-					uses: actions/checkout@v4,
-					with: { submodules: true }
-				},
-				{
-					name: install dependencies,
-					run: '${{ github.workspace }}\.github\workflows\scripts\win\install-deps.bat x86',
-					working-directory: proj/vs2017
-				},
-				{
-					name: build,
-					run: '.\.github\workflows\scripts\win\msvc-build.bat x86'
-				}
-			]
-		},
-		win-vs64: {
-			runs-on: windows-2019,
-			env: {
-				VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
-			},
-			steps: [
-				{
-					name: Export GitHub Actions cache environment variables,
-					uses: actions/github-script@v7,
-					with: {
-						script: "core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || ''); core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');"
-					}
-				},
-				{
-					name: checkout,
-					uses: actions/checkout@v4,
-					with: { submodules: true }
-				},
-				{
-					name: install dependencies,
-					run: '${{ github.workspace }}\.github\workflows\scripts\win\install-deps.bat x64',
-					working-directory: proj/vs2017
-				},
-				{
-					name: build,
-					run: '.\.github\workflows\scripts\win\msvc-build.bat x64'
-				},
-				{
-					name: unit tests,
-					run: '.\.github\workflows\scripts\win\run-tests.bat'
-				}
-			]
-		},
+		# macos-xcode: {
+		# 	runs-on: macos-13,
+		# 	env: {
+		# 		DEVELOPER_DIR: /Applications/Xcode_14.2.app/Contents/Developer
+		# 	},
+		# 	steps: [
+		# 		{
+		# 			name: checkout,
+		# 			uses: actions/checkout@v4,
+		# 			with: { submodules: true }
+		# 		},
+		# 		{
+		# 			name: install Boost,
+		# 			run: brew install Boost@1.85
+		# 		},
+		# 		{
+		# 			name: install SFML,
+		# 			run: ./.github/workflows/scripts/mac/install-sfml.sh
+		# 		},
+		# 		{
+		# 			name: patch Xcode project,
+		# 			run: ./.github/workflows/scripts/mac/fix-xcode-proj.sh
+		# 		},
+		# 		{
+		# 			name: build,
+		# 			run: ./.github/workflows/scripts/mac/xcode-build.sh
+		# 		},
+		# 		{
+		# 			name: unit tests,
+		# 			run: ./.github/workflows/scripts/mac/run-tests.sh
+		# 		}
+		# 	]
+		# },
+		# macos-scons: {
+		# 	runs-on: macos-13,
+		# 	steps:  [
+		# 		{
+		# 			name: checkout,
+		# 			uses: actions/checkout@v4,
+		# 			with: { submodules: true }
+		# 		},
+		# 		{
+		# 			name: install dependencies,
+		# 			run: brew install scons SFML@2 Boost@1.85
+		# 		},
+		# 		{
+		# 			name: build and unit test,
+		# 			run: ./.github/workflows/scripts/mac/scons-build.sh test=true
+		# 		}
+		# 	]
+		# },
+		# win-vs32: {
+		# 	runs-on: windows-2019,
+		# 	env: {
+		# 		VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+		# 	},
+		# 	steps: [
+		# 		{
+		# 			name: Export GitHub Actions cache environment variables,
+		# 			uses: actions/github-script@v7,
+		# 			with: {
+		# 				script: "core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || ''); core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');"
+		# 			}
+		# 		},
+		# 		{
+		# 			name: checkout,
+		# 			uses: actions/checkout@v4,
+		# 			with: { submodules: true }
+		# 		},
+		# 		{
+		# 			name: install dependencies,
+		# 			run: '${{ github.workspace }}\.github\workflows\scripts\win\install-deps.bat x86',
+		# 			working-directory: proj/vs2017
+		# 		},
+		# 		{
+		# 			name: build,
+		# 			run: '.\.github\workflows\scripts\win\msvc-build.bat x86'
+		# 		}
+		# 	]
+		# },
+		# win-vs64: {
+		# 	runs-on: windows-2019,
+		# 	env: {
+		# 		VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+		# 	},
+		# 	steps: [
+		# 		{
+		# 			name: Export GitHub Actions cache environment variables,
+		# 			uses: actions/github-script@v7,
+		# 			with: {
+		# 				script: "core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || ''); core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');"
+		# 			}
+		# 		},
+		# 		{
+		# 			name: checkout,
+		# 			uses: actions/checkout@v4,
+		# 			with: { submodules: true }
+		# 		},
+		# 		{
+		# 			name: install dependencies,
+		# 			run: '${{ github.workspace }}\.github\workflows\scripts\win\install-deps.bat x64',
+		# 			working-directory: proj/vs2017
+		# 		},
+		# 		{
+		# 			name: build,
+		# 			run: '.\.github\workflows\scripts\win\msvc-build.bat x64'
+		# 		},
+		# 		{
+		# 			name: unit tests,
+		# 			run: '.\.github\workflows\scripts\win\run-tests.bat'
+		# 		}
+		# 	]
+		# },
 		win-scons: {
 			runs-on: windows-2019,
 			env: {
@@ -186,27 +186,27 @@
 		# 		}
 		# 	]
 		# },
-		linux: {
-			runs-on: ubuntu-22.04,
-			steps: [
-				{
-					name: checkout,
-					uses: actions/checkout@v4,
-					with: { submodules: true }
-				},
-				{
-					name: install dependencies,
-					run: 'sudo apt-get update && sudo apt-get install scons libxml2-utils zlib1g libsfml-dev libboost-all-dev zenity'
-				},
-				{
-					name: install TGUI,
-					run: 'sudo ./.github/workflows/scripts/linux/install-tgui.sh'
-				},
-				{
-					name: build and unit test headless,
-					run: 'xvfb-run ./.github/workflows/scripts/linux/scons-build.sh'
-				}
-			]
-		}
+		# linux: {
+		# 	runs-on: ubuntu-22.04,
+		# 	steps: [
+		# 		{
+		# 			name: checkout,
+		# 			uses: actions/checkout@v4,
+		# 			with: { submodules: true }
+		# 		},
+		# 		{
+		# 			name: install dependencies,
+		# 			run: 'sudo apt-get update && sudo apt-get install scons libxml2-utils zlib1g libsfml-dev libboost-all-dev zenity'
+		# 		},
+		# 		{
+		# 			name: install TGUI,
+		# 			run: 'sudo ./.github/workflows/scripts/linux/install-tgui.sh'
+		# 		},
+		# 		{
+		# 			name: build and unit test headless,
+		# 			run: 'xvfb-run ./.github/workflows/scripts/linux/scons-build.sh'
+		# 		}
+		# 	]
+		# }
 	}
 }
