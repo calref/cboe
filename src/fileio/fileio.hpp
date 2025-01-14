@@ -33,7 +33,7 @@ bool save_party(fs::path dest_file, const cUniverse& univ);
 void init_directories(const char* exec_path);
 
 std::string read_maybe_quoted_string(std::istream& from);
-std::string maybe_quote_string(std::string which);
+std::string maybe_quote_string(std::string which, bool force = false);
 
 template<typename T>
 struct array_value_type{
