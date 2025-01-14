@@ -107,7 +107,7 @@ static bool save_prefs(fs::path fpath) {
 		else if(kv.second.type() == typeid(std::string)){
 			std::string value = boost::any_cast<std::string>(kv.second);
 			// Surround with quotes so maybe_quote_string() will always quote it
-			value.push_front('"');
+			value.insert(0, 1, '"');
 			value.push_back('"');
 			fout << kv.first << " = " << maybe_quote_string(value) << std::endl;
 		}else printf("Warning: Unknown preference value type, skipping...\n");
