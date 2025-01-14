@@ -106,10 +106,7 @@ static bool save_prefs(fs::path fpath) {
 			fout << kv.first << " = " << std::fixed << boost::any_cast<double>(kv.second) << std::endl;
 		else if(kv.second.type() == typeid(std::string)){
 			std::string value = boost::any_cast<std::string>(kv.second);
-			// Surround with quotes so maybe_quote_string() will always quote it
-			value.insert(0, 1, '"');
-			value.push_back('"');
-			fout << kv.first << " = " << maybe_quote_string(value) << std::endl;
+			fout << kv.first << " = " << maybe_quote_string(value, true) << std::endl;
 		}else printf("Warning: Unknown preference value type, skipping...\n");
 		if(!fout) {
 			perror("Error writing preferences");
