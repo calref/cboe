@@ -97,7 +97,7 @@ fs::path game_dir;
 fs::path game_binary;
 extern std::string last_load_file;
 
-enum eLaunchType {LOC,START,ENTRANCE};
+enum class eLaunchType {LOC,START,ENTRANCE};
 
 void launch_scenario(eLaunchType type) {
 	if(boost::ends_with(last_load_file, ".exs")){
@@ -106,7 +106,7 @@ void launch_scenario(eLaunchType type) {
 	}
 
 	// Make sure scenario is loaded and currently editing the terrain of a town or outdoor section
-	if(type == LOC){
+	if(type == eLaunchType::LOC){
 		if(overall_mode >= MODE_MAIN_SCREEN){
 			showError("Must be viewing the terrain of a town or outdoor section at the place where you want to put the debug party.");
 			return;
@@ -138,14 +138,14 @@ void launch_scenario(eLaunchType type) {
 
 	std::ostringstream command_stream;
 	command_stream << game_binary << " --scenario \"" << last_load_file << "\" ";
-	if(type == LOC){
+	if(type == eLaunchType::LOC){
 		if(editing_town){
 			command_stream << "--town " << cur_town;
 		}else{
 			command_stream << "--out-sec (" << cur_out.x << "," << cur_out.y << ")";
 		}
 		command_stream << " --loc (" << cen_x << "," << cen_y << ")";
-	}else if(type == ENTRANCE){
+	}else if(type == eLaunchType::ENTRANCE){
 		command_stream << "--town " << cur_town;
 		std::ostringstream prompt;
 		prompt << "Launch in " << scenario.towns[cur_town]->name << " at which entrance?";
@@ -513,13 +513,13 @@ void handle_menu_choice(eMenu item_hit) {
 			isEdit = true;
 			break;
 		case eMenu::LAUNCH_HERE:
-			launch_scenario(LOC);
+			launch_scenario(eLaunchType::LOC);
 			break;
 		case eMenu::LAUNCH_START:
-			launch_scenario(START);
+			launch_scenario(eLaunchType::START);
 			break;
 		case eMenu::LAUNCH_ENTRANCE:
-			launch_scenario(ENTRANCE);
+			launch_scenario(eLaunchType::ENTRANCE);
 			break;
 		case eMenu::TOWN_CREATE:
 			if(scenario.towns.size() >= 200) {
