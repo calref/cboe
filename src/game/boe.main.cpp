@@ -83,6 +83,7 @@ std::string scenario_temp_dir_name = "scenario";
 extern fs::path tempDir;
 std::vector<fs::path> extra_scen_dirs;
 boost::optional<std::string> scen_arg_path;
+bool scen_arg_restart = false;
 boost::optional<short> scen_arg_town, scen_arg_town_entrance;
 boost::optional<location> scen_arg_out_sec, scen_arg_loc;
 
@@ -312,6 +313,7 @@ static void process_args(int argc, char* argv[]) {
 	// Loading and entering a scenario has to happen after other initialization steps,
 	// so we just save these options for later.
 	cli |= clara::Opt(scen_arg_path, "scen-path")["--scenario"]("Launch a scenario, with the default party if no party is loaded.");
+	cli |= clara::Opt(scen_arg_restart)["--restart"]("Restart of the scenario if the party is already in it. (SDFs will be cleared.)");
 	cli |= clara::Opt(scen_arg_town, "town")["--town"]("Put the party in a town.");
 	cli |= clara::Opt(cParseEntrance(scen_arg_town_entrance), "entrance")["--entrance"]("Put the party at a town entrance point.");
 	cli |= clara::Opt(cParseLocation(scen_arg_out_sec), "x,y")["--out-sec"]("Put the party in an outdoor section.");
@@ -400,8 +402,8 @@ static void handle_scenario_args() {
 				start_new_game(true);
 			}
 			if(univ.party.is_in_scenario()){
-				if(univ.scenario.scen_name == scenario.scen_name){
-					// The party is already in the correct scenario
+				if(univ.scenario.scen_name == scenario.scen_name && !scen_arg_restart){
+					// The party is already in the correct scenario and doesn't need to restart
 				}else{
 					// The party is in a different scenario.
 					// TODO maybe the player should be warned before they're removed from it?
