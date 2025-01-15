@@ -1229,7 +1229,7 @@ void handle_get_items(bool& did_something, bool& need_redraw, bool& need_reprint
 	need_reprint = true;
 }
 
-void handle_victory(bool record) {
+void handle_victory(bool force, bool record) {
 	if(record && recording){
 		record_action("handle_victory", "");
 	}
@@ -1243,7 +1243,7 @@ void handle_victory(bool record) {
 	draw_startup(0);
 	menu_activate();
 	univ.party.scen_name = ""; // should be harmless...
-	if(cChoiceDlog("congrats-save",{"cancel","save"}).show() == "save"){
+	if(!force && cChoiceDlog("congrats-save",{"cancel","save"}).show() == "save"){
 		// TODO: Wait, this shouldn't be a "save as" action, should it? It should save without asking for a location.
 		fs::path file = nav_put_or_temp_party();
 		if(!file.empty()) save_party(file, univ);

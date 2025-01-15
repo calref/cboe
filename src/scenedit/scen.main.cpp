@@ -158,6 +158,8 @@ void launch_scenario(eLaunchType type) {
 			// Cancel
 			return;
 		}
+	}else if(type == eLaunchType::START){
+		command_stream << "--restart";
 	}
 
 	// allow specifying a debug party path as an editor preference

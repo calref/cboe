@@ -87,7 +87,7 @@ void debug_stealth_detect_life_firewalk();
 void debug_fly();
 void debug_ghost_mode();
 void debug_return_to_start();
-void handle_victory(bool record = false);
+void handle_victory(bool force = false, bool record = false);
 void debug_increase_age();
 void debug_towns_forget();
 void debug_heal_plus_extra();
