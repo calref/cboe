@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <boost/lexical_cast.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/process/child.hpp>
 #include <boost/process/io.hpp>
@@ -136,42 +137,48 @@ void launch_scenario(eLaunchType type) {
 		return;
 	}
 
-	std::ostringstream command_stream;
-	command_stream << game_binary << " --scenario \"" << last_load_file << "\" ";
+	std::vector<std::string> args;
+	args.push_back("--scenario");
+	args.push_back(last_load_file);
 	if(type == eLaunchType::LOC){
 		if(editing_town){
-			command_stream << "--town " << cur_town;
+			args.push_back("--town");
+			args.push_back(boost::lexical_cast<std::string>(cur_town));
 		}else{
-			command_stream << "--out-sec (" << cur_out.x << "," << cur_out.y << ")";
+			location out_sec = {cur_out.x, cur_out.y};
+			args.push_back("--out-sec");
+			args.push_back(boost::lexical_cast<std::string>(out_sec));
 		}
-		command_stream << " --loc (" << cen_x << "," << cen_y << ")";
+		location loc = {cen_x, cen_y};
+		args.push_back("--loc");
+		args.push_back(boost::lexical_cast<std::string>(loc));
 	}else if(type == eLaunchType::ENTRANCE){
-		command_stream << "--town " << cur_town;
+		args.push_back("--town");
+		args.push_back(boost::lexical_cast<std::string>(cur_town));
+
 		std::ostringstream prompt;
 		prompt << "Launch in " << scenario.towns[cur_town]->name << " at which entrance?";
 		std::vector<std::string> choices = {"North", "East", "South", "West"};
 		cStringChoice dlog(choices, prompt.str());
 		size_t choice = dlog.show(0);
 		if(dlog->accepted()){
-			command_stream << " --entrance " << choice;
+			args.push_back("--entrance");
+			args.push_back(boost::lexical_cast<std::string>(choice));
 		}else{
 			// Cancel
 			return;
 		}
 	}else if(type == eLaunchType::START){
-		command_stream << "--restart";
+		args.push_back("--restart");
 	}
 
 	// allow specifying a debug party path as an editor preference
 	std::string default_party = get_string_pref("DefaultPartyPath");
 	if(!(get_bool_pref("ForceDefaultParty", false) || default_party.empty())){
-		command_stream << " \"" << default_party << "\"";
+		args.push_back(default_party);
 	}
 
-	LOG(command_stream.str());
-
-
-	bp::child ch(command_stream.str(), bp::std_out > stdout);
+	bp::child ch(game_binary, args=args, bp::std_out > stdout);
 	ch.detach();
 }
 
