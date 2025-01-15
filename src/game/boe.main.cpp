@@ -324,6 +324,14 @@ void replay_action(Element& action) {
 		eKeyMod mods = static_cast<eKeyMod>(std::stoi(info["mods"]));
 		handle_startup_button_click(btn, mods);
 		return;
+	}else if(t == "change_fps"){
+		extern boost::optional<cFramerateLimiter> replay_fps_limit;
+		// default new fps: slow the replay down substantially
+		int new_fps = 2;
+		if(!action.GetText().empty()){
+			new_fps = boost::lexical_cast<int>(action.GetText());
+		}
+		replay_fps_limit.emplace(new_fps);
 	}else if(t == "load_party"){
 		decode_file(action.GetText(), tempDir / "temp.exg");
 		load_party(tempDir / "temp.exg", univ);
