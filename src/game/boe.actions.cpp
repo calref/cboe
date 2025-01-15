@@ -2226,6 +2226,24 @@ void cancel_item_target(bool& did_something, bool& need_redraw, bool& need_repri
 	did_something = need_redraw = need_reprint = true;
 }
 
+// I'm finally adding the easter egg to the replay system
+// because it allows forcing the text buffer into a specific state
+// which I'm debugging.
+std::vector<std::string> easter_egg_messages = {
+	"If Valorim ...",
+	"You want to save ...",
+	"Back up your save files ...",
+	"Burma Shave."
+};
+
+void easter_egg(int idx) {
+	if(recording){
+		record_action("easter_egg", boost::lexical_cast<std::string>(idx));
+	}
+	add_string_to_buf(easter_egg_messages[idx]);
+	print_buf();
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2381,20 +2399,16 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	switch(chr) {
 			
 		case '&':
-			add_string_to_buf("If Valorim ...");
-			print_buf();
+			easter_egg(0);
 			break;
 		case '*':
-			add_string_to_buf("You want to save ...");
-			print_buf();
+			easter_egg(1);
 			break;
 		case '(':
-			add_string_to_buf("Back up your save files ...");
-			print_buf();
+			easter_egg(2);
 			break;
 		case ')':
-			add_string_to_buf("Burma Shave.");
-			print_buf();
+			easter_egg(3);
 			break;
 			
 		case '?':

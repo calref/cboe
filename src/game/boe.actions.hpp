@@ -102,5 +102,6 @@ void show_item_info(short item_hit);
 void close_map(bool record = false);
 void cancel_item_target(bool& did_something, bool& need_redraw, bool& need_reprint);
 void update_item_stats_area(bool& need_reprint);
+void easter_egg(int idx);
 
 #endif
