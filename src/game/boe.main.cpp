@@ -648,6 +648,7 @@ void replay_action(Element& action) {
 	}else{
 		std::ostringstream sstr;
 		sstr << "Couldn't replay action: " << action;
+		replaying = false;
 		throw sstr.str();
 	}
 
