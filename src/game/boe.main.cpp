@@ -310,6 +310,29 @@ static void process_args(int argc, char* argv[]) {
 	}
 }
 
+std::map<std::string, int> startup_button_indices = {
+	// Button layout since 11/30/24
+	{"Tutorial", 0}, {"Make New Party", 3},
+	{"Load Game", 1}, {"Start Scenario", 4},
+	{"Preferences", 2},
+
+	// Buttons that don't exist anymore
+	{"Custom Scenario", -1},
+};
+
+std::map<int, std::string> startup_button_names = {
+	{0, "Tutorial"}, {3, "Make New Party"},
+	{1, "Load Game"}, {4, "Start Scenario"},
+	{2, "Preferences"}, {5, ""},
+};
+
+// Map legacy int indices onto new string-mapped layout
+std::map<int, std::string> startup_button_names_v1 = {
+	{0, "Load Game"}, {3, "Start Scenario"},
+	{1, "Make New Party"}, {4, "Custom Scenario"},
+	{2, "Preferences"},
+};
+
 void replay_action(Element& action) {
 	bool did_something = false, need_redraw = false, need_reprint = false;
 
@@ -320,7 +343,19 @@ void replay_action(Element& action) {
 	// NOTE: Action replay blocks need to return early unless the action advances time
 	if(overall_mode == MODE_STARTUP && t == "startup_button_click"){
 		auto info = info_from_action(action);
-		eStartButton btn = static_cast<eStartButton>(std::stoi(info["btn"]));
+		int btn_idx = -1;
+		try{
+			// Legacy replays use ints to encode startup buttons
+			btn_idx = std::stoi(info["btn"]);
+		}catch(std::invalid_argument& err){
+			// Newer replays use strings to encode startup buttons
+			btn_idx = startup_button_indices[info["btn"]];
+        }
+		// No-op button
+		if(btn_idx == -1){
+			return;
+		}
+		eStartButton btn = static_cast<eStartButton>(btn_idx);
 		eKeyMod mods = static_cast<eKeyMod>(std::stoi(info["mods"]));
 		handle_startup_button_click(btn, mods);
 		return;

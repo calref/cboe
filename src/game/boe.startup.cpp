@@ -42,7 +42,7 @@ enum_map(eStartButton, rectangle) startup_button;
 void handle_startup_button_click(eStartButton btn, eKeyMod mods) {
 	if(recording){
 		std::map<std::string, std::string> info;
-		info["btn"] = boost::lexical_cast<std::string>(btn);
+		info["btn"] = startup_button_names[btn];
 		info["mods"] = boost::lexical_cast<std::string>(mods);
 		record_action("startup_button_click", info);
 	}

@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <map>
 #include "boe.consts.hpp"
 
 #define ASB	add_string_to_buf
@@ -25,5 +26,9 @@ struct scen_header_type{
 struct effect_pat_type {
 	unsigned short pattern[9][9];
 };
+
+extern std::map<std::string, int> startup_button_indices;
+extern std::map<int, std::string> startup_button_names;
+extern std::map<int, std::string> startup_button_names_v1;
 
 #endif
