@@ -57,6 +57,10 @@
 		413AAF612D389F94002E9BF1 /* fileio_party.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E30F2A1A74819B0057C54A /* fileio_party.cpp */; };
 		413AAF622D38A076002E9BF1 /* universe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC61C50FA2729900EEAE67 /* universe.cpp */; };
 		413AAF632D38A1B8002E9BF1 /* party.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05B50FA1E9E300184C18 /* party.cpp */; };
+		413AAF642D38A47C002E9BF1 /* population.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC620A0FA2853700EEAE67 /* population.cpp */; };
+		413AAF652D38A48E002E9BF1 /* pc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D05BB0FA1EA0A00184C18 /* pc.cpp */; };
+		413AAF662D38A4A0002E9BF1 /* creature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 914698FE1A747C4500F20F5E /* creature.cpp */; };
+		413AAF672D38A4A5002E9BF1 /* living.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 914698FB1A7362D900F20F5E /* living.cpp */; };
 		413FE08F2CECFAFF000D97DC /* winutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 413FE08E2CECFAFF000D97DC /* winutil.cpp */; };
 		91034D211B225E4A008F01C1 /* scen.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91034D201B225E49008F01C1 /* scen.appleevents.mm */; };
 		911A14031B8FAFC600900FD9 /* town_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C2A6EC1B8FA91400346948 /* town_read.cpp */; };
@@ -2152,6 +2156,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				413AAF672D38A4A5002E9BF1 /* living.cpp in Sources */,
+				413AAF662D38A4A0002E9BF1 /* creature.cpp in Sources */,
+				413AAF652D38A48E002E9BF1 /* pc.cpp in Sources */,
+				413AAF642D38A47C002E9BF1 /* population.cpp in Sources */,
 				413AAF632D38A1B8002E9BF1 /* party.cpp in Sources */,
 				413AAF622D38A076002E9BF1 /* universe.cpp in Sources */,
 				413AAF612D389F94002E9BF1 /* fileio_party.cpp in Sources */,
