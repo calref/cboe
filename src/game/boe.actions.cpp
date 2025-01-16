@@ -3757,11 +3757,11 @@ bool is_sign(ter_num_t ter) {
 	return false;
 }
 
-bool check_for_interrupt(){
+bool check_for_interrupt(std::string confirm_dialog){
 	using kb = sf::Keyboard;
 	bool interrupt = false;
 	sf::Event evt;
-	if(replaying && has_next_action() && next_action_type() == "handle_interrupt"){
+	if(replaying && confirm_dialog == "confirm-interrupt-special" && has_next_action() && next_action_type() == "handle_interrupt"){
 		pop_next_action();
 		interrupt = true;
 	}
@@ -3778,7 +3778,7 @@ bool check_for_interrupt(){
 		if(recording){
 			record_action("handle_interrupt", "");
 		}
-		cChoiceDlog confirm("confirm-interrupt", {"quit","cancel"});
+		cChoiceDlog confirm(confirm_dialog, {"quit","cancel"});
 		if(confirm.show() == "quit") return true;
 	}
 	return false;

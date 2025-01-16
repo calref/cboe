@@ -863,6 +863,10 @@ void handle_events() {
 
 	while(!All_Done) {
 		if(replaying && has_next_action()){
+			if(check_for_interrupt("confirm-interrupt-replay")){
+				replaying = false;
+				continue;
+			}
 			replay_next_action();
 		}else{
 #ifdef __APPLE__

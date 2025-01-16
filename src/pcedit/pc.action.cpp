@@ -29,6 +29,8 @@ extern rectangle name_rect;
 extern rectangle pc_race_rect;
 extern rectangle edit_rect[5];
 
+bool check_for_interrupt(std::string) {}
+
 bool handle_action(const sf::Event & event) {
 	location the_point = translate_mouse_coordinates({event.mouseButton.x, event.mouseButton.y});
 	
