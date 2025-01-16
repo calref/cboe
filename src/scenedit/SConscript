@@ -1,5 +1,5 @@
 
-Import("env platform common_sources install_dir")
+Import("env platform common_sources party_classes install_dir")
 
 scened_sources = Split("""
 	scen.actions.cpp
@@ -11,6 +11,7 @@ scened_sources = Split("""
 	scen.main.cpp
 	scen.townout.cpp
 	../view_dialogs.cpp
+	../fileio/fileio_party.cpp
 """)
 
 if str(platform) == "darwin":
@@ -30,7 +31,7 @@ elif str(platform) == "posix":
 		scen.menu.cpp
 	"""))
 
-scened = env.Program("#build/bin/BoE Scenario Editor", scened_sources + common_sources)
+scened = env.Program("#build/bin/BoE Scenario Editor", scened_sources + common_sources + party_classes)
 debug_symbols = None
 if str(platform) == "win32" and 'msvc' in env["TOOLS"] and not env['release']:
 	debug_symbols = scened[0].abspath.replace('.exe', '.pdb')
