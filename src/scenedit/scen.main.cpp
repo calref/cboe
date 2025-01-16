@@ -43,6 +43,7 @@
 #include "tools/event_listener.hpp"
 #include "tools/drawable_manager.hpp"
 #include "tools/keymods.hpp"
+#include "universe/universe.hpp"
 
 #ifdef __APPLE__
 short menuChoiceId=-1;
@@ -863,6 +864,21 @@ void pick_preferences() {
 
 	cTextField& default_party_field = dynamic_cast<cTextField&>(prefsDlog["party-path"]);
 	default_party_field.setText(get_string_pref("DefaultPartyPath"));
+
+	default_party_field.attachFocusHandler([](cDialog& me, std::string id, bool losing) -> bool {
+		if(!losing) return true;
+		std::string debug_party = me[id].getText();
+		// Validate the debug party
+		if(!debug_party.empty()){
+			cUniverse univ;
+			if(!load_party(debug_party, univ)){
+				showError("Your chosen debug party could not be loaded.", "", &me);
+				me[id].setText(get_string_pref("DefaultPartyPath"));
+				return false;
+			}
+		}
+		return true;
+	});
 
 	cButton& choose_button = dynamic_cast<cButton&>(prefsDlog["choose-party"]);
 	choose_button.attachClickHandler([&default_party_field](cDialog& me, std::string, eKeyMod) -> bool {
