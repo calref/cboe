@@ -86,6 +86,7 @@ boost::optional<std::string> scen_arg_path;
 bool scen_arg_start = false;
 boost::optional<short> scen_arg_town, scen_arg_town_entrance;
 boost::optional<location> scen_arg_out_sec, scen_arg_loc;
+extern std::string last_load_file;
 
 struct cParseEntrance {
 	boost::optional<short>& opt;
@@ -388,6 +389,10 @@ static void process_args(int argc, char* argv[]) {
 static void handle_scenario_args() {
 	bool resetting = false;
 	if(scen_arg_path){
+		// When changing the command-line party's scenario status, clear last_load_file
+		// so the player will be prompted to Save As.
+		last_load_file = "Blades of Exile Save";
+
 		fs::path path = *scen_arg_path;
 
 		if(!path.parent_path().empty()){
