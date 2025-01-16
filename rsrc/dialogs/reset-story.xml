@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='reset'>
+	<button name='reset' type='regular' top='50' left='246'>Reset</button>
+	<button name='keep' type='regular' top='50' left='180'>Keep</button>
+	<pict type='dlog' num='19' top='8' left='8'/>
+	<text top='3' left='50' width='254' height='45'>
+		This party is already in the correct scenario. Reset story progress?
+	</text>
+</dialog>
