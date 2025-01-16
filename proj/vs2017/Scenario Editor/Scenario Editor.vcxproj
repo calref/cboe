@@ -163,6 +163,7 @@
     <ClCompile Include="..\..\..\src\scenedit\scen.townout.cpp" />
     <ClCompile Include="..\..\..\src\fileio\fileio_party.cpp" />
     <ClCompile Include="..\..\..\src\universe\universe.cpp" />
+    <ClCompile Include="..\..\..\src\universe\party.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\rsrc\menus\scenresource.h" />
