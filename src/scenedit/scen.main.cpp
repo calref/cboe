@@ -169,7 +169,7 @@ void launch_scenario(eLaunchType type) {
 			return;
 		}
 	}else if(type == eLaunchType::START){
-		args.push_back("--restart");
+		args.push_back("--start");
 	}
 
 	// allow specifying a debug party path as an editor preference
