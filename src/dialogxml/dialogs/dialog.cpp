@@ -566,7 +566,7 @@ void cDialog::handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(dialogNotToast) {
-		if(replaying && check_for_interrupt("confirm-interrupt-replay")){
+		if(replaying && fname != "confirm-interrupt-replay" && check_for_interrupt("confirm-interrupt-replay")){
 			replaying = false;
 			return;
 		}else if(replaying && has_next_action("click_control")){
