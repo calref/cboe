@@ -54,6 +54,7 @@
 		2BF04B2C0BF51924006C0831 /* boe.startup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B050BF51924006C0831 /* boe.startup.cpp */; };
 		2BF04B2D0BF51924006C0831 /* boe.text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B070BF51924006C0831 /* boe.text.cpp */; };
 		2BF04B2E0BF51924006C0831 /* boe.town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BF04B090BF51924006C0831 /* boe.town.cpp */; };
+		413AAF612D389F94002E9BF1 /* fileio_party.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91E30F2A1A74819B0057C54A /* fileio_party.cpp */; };
 		413FE08F2CECFAFF000D97DC /* winutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 413FE08E2CECFAFF000D97DC /* winutil.cpp */; };
 		91034D211B225E4A008F01C1 /* scen.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91034D201B225E49008F01C1 /* scen.appleevents.mm */; };
 		911A14031B8FAFC600900FD9 /* town_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C2A6EC1B8FA91400346948 /* town_read.cpp */; };
@@ -2149,6 +2150,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				413AAF612D389F94002E9BF1 /* fileio_party.cpp in Sources */,
 				91B3EF500F969F3000BF5B67 /* scen.main.cpp in Sources */,
 				91B3EF530F969F3000BF5B67 /* scen.keydlgs.cpp in Sources */,
 				91B3EF540F969F3000BF5B67 /* scen.core.cpp in Sources */,
