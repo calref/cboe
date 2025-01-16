@@ -12,6 +12,7 @@ scened_sources = Split("""
 	scen.townout.cpp
 	../view_dialogs.cpp
 	../fileio/fileio_party.cpp
+	../damage.cpp
 """)
 
 if str(platform) == "darwin":
