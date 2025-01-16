@@ -132,7 +132,12 @@ static bool load_prefs(std::istream& istream) {
 		}
 
 		std::string key = line.substr(0, key_end + 1), val = line.substr(val_beg);
-		NSInteger type = [prefsToRecord[[NSString stringWithUTF8String: key.c_str()]] integerValue];
+		NSString* pref_key = [NSString stringWithUTF8String: key.c_str()];
+		// Skip obsolete preferences from legacy replays
+		if([prefsToRecord valueForKey: pref_key] == nil){
+			continue;
+		}
+		NSInteger type = [prefsToRecord[pref_key] integerValue];
 		switch((int)type) {
 			case kBool:
 				if(val == "true") set_pref(key, true);
