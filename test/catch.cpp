@@ -11,6 +11,8 @@ std::string scenario_temp_dir_name = "test_scenario";
 cCustomGraphics spec_scen_g;
 cUniverse univ;
 
+bool check_for_interrupt(std::string) { return false; }
+
 // And these are referenced from the scenario code, though not used in test cases
 #include "scenario/scenario.hpp"
 #include "tools/undo.hpp"
