@@ -302,7 +302,9 @@ void mondo_boom(location l,short type,short snd) {
 	end_missile_anim();
 }
 
-void add_explosion(location dest,short val_to_place,short place_type,short boom_type,short x_adj,short y_adj) {
+void add_explosion(location dest,short val_to_place,short place_type,short boom_type,short x_adj,short y_adj, bool use_unique_ran) {
+	if(!get_bool_pref("DrawTerrainFrills", true))
+		return;
 	if(!boom_anim_active)
 		return;
 	// lose redundant explosions
@@ -316,7 +318,7 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 	for(short i = 0; i < 30; i++)
 		if(store_booms[i].boom_type < 0) {
 			have_boom = true;
-			store_booms[i].offset = (i == 0) ? 0 : -1 * get_ran(1,0,2);
+			store_booms[i].offset = (i == 0) ? 0 : -1 * get_ran(1,0,2,use_unique_ran);
 			store_booms[i].dest = dest;
 			store_booms[i].val_to_place = val_to_place;
 			store_booms[i].place_type = place_type;

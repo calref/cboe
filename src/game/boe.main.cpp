@@ -264,6 +264,9 @@ static void process_args(int argc, char* argv[]) {
 		cli.writeToStream(std::cout);
 		exit(0);
 	}
+	// This obsolete preference should always be true unless running an old replay
+	// (which will set it false after this line if it needs to)
+	set_pref("DrawTerrainFrills", true);
 	if(replay){
 		if(record_to){
 			std::cout << "Warning: flag --record conflicts with --replay and will be ignored." << std::endl;

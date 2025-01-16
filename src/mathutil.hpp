@@ -25,7 +25,8 @@ using std::abs;
 
 extern std::mt19937 game_rand;
 
-short get_ran(short times, short min, short max);
+// unique_ran: pass true for get_ran() calls that would break replay compatibility
+short get_ran(short times, short min, short max, bool use_unique_ran = false);
 short max(short a,short b);
 short min(short a,short b);
 short minmax(short min,short max,short k);
