@@ -3779,7 +3779,15 @@ bool check_for_interrupt(std::string confirm_dialog){
 			record_action("handle_interrupt", "");
 		}
 		cChoiceDlog confirm(confirm_dialog, {"quit","cancel"});
-		if(confirm.show() == "quit") return true;
+		bool was_replaying = replaying;
+		if(confirm_dialog == "confirm-interrupt-replay"){
+			// There's a slight chance the next action could be snatched up by the replay system to respond
+			// to the yes/no prompt, so suspend the replay loop
+			replaying = false;
+		}
+		std::string result = confirm.show();
+		replaying = was_replaying;
+		if(result == "quit") return true;
 	}
 	return false;
 }
