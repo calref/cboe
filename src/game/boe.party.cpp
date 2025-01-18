@@ -99,6 +99,9 @@ short spell_index[38] = {38,39,40,41,42,43,44,45,90,90,46,47,48,49,50,51,52,53,9
 // Says which buttons hit which spells on second spell page, 90 means no button
 bool can_choose_caster;
 
+const sf::Color SELECTED_COLOUR = Colours::LIGHT_GREEN;
+const sf::Color DISABLED_COLOUR = Colours::GREY;
+
 // Dialog vars
 short store_graphic_pc_num ;
 short store_graphic_mode ;
@@ -1718,7 +1721,7 @@ static void put_pc_caster_buttons(cDialog& me) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(me["caster" + n].isVisible()) {
 			if(i == pc_casting)
-				me["pc" + n].setColour(Colours::RED);
+				me["pc" + n].setColour(SELECTED_COLOUR);
 			else me["pc" + n].setColour(me.getDefTextClr());
 		}
 	}
@@ -1728,8 +1731,8 @@ static void put_pc_target_buttons(cDialog& me, short& store_last_target_darkened
 	
 	if(store_spell_target < 6) {
 		std::string n = boost::lexical_cast<std::string>(store_spell_target + 1);
-		me["hp" + n].setColour(Colours::RED);
-		me["sp" + n].setColour(Colours::RED);
+		me["hp" + n].setColour(SELECTED_COLOUR);
+		me["sp" + n].setColour(SELECTED_COLOUR);
 	}
 	if((store_last_target_darkened < 6) && (store_last_target_darkened != store_spell_target)) {
 		std::string n = boost::lexical_cast<std::string>(store_last_target_darkened + 1);
@@ -1752,12 +1755,16 @@ static void put_spell_led_buttons(cDialog& me, const eSkill store_situation,cons
 			eSpell spell = cSpell::fromNum(store_situation, spell_for_this_button);
 			if(store_spell == spell_for_this_button) {
 				led.setState(led_green);
+				// Text color:
+				led.setColour(SELECTED_COLOUR);
 			}
 			else if(pc_can_cast_spell(univ.party[pc_casting],spell)) {
 				led.setState(led_red);
+				led.setColour(me.getDefTextClr());
 			}
 			else {
 				led.setState(led_off);
+				led.setColour(DISABLED_COLOUR);
 			}
 		}
 	}

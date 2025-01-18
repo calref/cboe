@@ -48,6 +48,7 @@ void undo_clip(sf::RenderTarget& where);
 namespace Colours {
 	const sf::Color WHITE = sf::Color::White;
 	const sf::Color BLACK = sf::Color::Black;
+	const sf::Color GREY   { 0x80, 0x80, 0x80};
 	const sf::Color RED    { 0xdd, 0x00, 0x00};
 	const sf::Color GREEN  { 0x00, 0x88, 0x00};
 	const sf::Color BLUE   { 0x00, 0x00, 0xdd};
