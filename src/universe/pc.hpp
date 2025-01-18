@@ -105,7 +105,7 @@ public:
 	eRace race;
 	long unique_id;
 	// transient stuff
-	std::map<eSkill,eSpell> last_cast;
+	std::map<eSkill,eSpell> last_cast = {{ eSkill::MAGE_SPELLS, eSpell::NONE}, { eSkill::PRIEST_SPELLS, eSpell::NONE }};
 	location combat_pos;
 	short parry = 0;
 	iLiving* last_attacked = nullptr; // Note: Currently this is assigned but never read

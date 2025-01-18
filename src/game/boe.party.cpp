@@ -52,6 +52,11 @@ short combat_percent[20] = {
 	70,70,67,62,57,52,47,42,40,40};
 
 short who_cast,which_pc_displayed;
+// Light can be cast in or out of combat
+const eSpell DEFAULT_SELECTED_MAGE = eSpell::LIGHT;
+// Bless can only be cast in combat, so separate defaults are needed
+const eSpell DEFAULT_SELECTED_PRIEST = eSpell::HEAL_MINOR;
+const eSpell DEFAULT_SELECTED_PRIEST_COMBAT = eSpell::BLESS_MINOR;
 eSpell town_spell;
 extern bool spell_freebie;
 extern eSpecCtxType spec_target_type;
@@ -490,6 +495,13 @@ bool repeat_cast_ok(eSkill type) {
 		what_spell = univ.party[who_would_cast].last_cast[type];
 	else what_spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
 	
+	if(what_spell == eSpell::NONE){
+		std::ostringstream sout;
+		sout << "Repeat cast: No " << (type == eSkill::MAGE_SPELLS ? "mage" : "priest") << " spell stored.";
+		add_string_to_buf(sout.str());
+		return false;
+	}
+
 	if(!pc_can_cast_spell(univ.party[who_would_cast],what_spell)) {
 		add_string_to_buf("Repeat cast: Can't cast.");
 		return false;
@@ -1947,7 +1959,7 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 //short situation; // 0 - out  1 - town  2 - combat
 eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	using namespace std::placeholders;
-	eSpell store_spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
+	eSpell default_spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
 	short former_target = store_spell_target;
 	short dark = 6;
 	
@@ -1995,29 +2007,38 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	// If in combat, make the spell being cast this PCs most recent spell
 	if(is_combat()) {
 		if(type == eSkill::MAGE_SPELLS)
-			store_spell = univ.party[pc_casting].last_cast[eSkill::MAGE_SPELLS];
-		else store_spell = univ.party[pc_casting].last_cast[eSkill::PRIEST_SPELLS];
+			default_spell = univ.party[pc_casting].last_cast[eSkill::MAGE_SPELLS];
+		else{
+			default_spell = univ.party[pc_casting].last_cast[eSkill::PRIEST_SPELLS];
+			if(default_spell == eSpell::NONE){
+				default_spell = DEFAULT_SELECTED_PRIEST_COMBAT;
+			}
+		}
 	}
 	
+	if(default_spell == eSpell::NONE){
+		default_spell = type == eSkill::MAGE_SPELLS ? DEFAULT_SELECTED_MAGE : DEFAULT_SELECTED_PRIEST;
+	}
+
 	// Keep the stored spell, if it's still castable
-	if(!pc_can_cast_spell(univ.party[pc_casting],store_spell)) {
+	if(!pc_can_cast_spell(univ.party[pc_casting],default_spell)) {
 		if(type == eSkill::MAGE_SPELLS) {
-			store_spell = eSpell::LIGHT;
+			default_spell = DEFAULT_SELECTED_MAGE;
 		}
 		else {
-			store_spell = eSpell::HEAL_MINOR;
+			default_spell = DEFAULT_SELECTED_PRIEST;
 		}
 	}
 	
 	// If a target is needed, keep the same target if that PC still targetable
 	if(store_spell_target < 6) {
-		if((*store_spell).need_select != SELECT_NO) {
+		if((*default_spell).need_select != SELECT_NO) {
 			if(univ.party[store_spell_target].main_status != eMainStatus::ALIVE)
 				store_spell_target = 6;
 		} else store_spell_target = 6;
 	}
 	
-	short former_spell = int(store_spell) % 100;
+	short former_spell = int(default_spell) % 100;
 	// Set the spell page, based on starting spell
 	if(former_spell >= 38) on_which_spell_page = 1;
 	else on_which_spell_page = 0;
