@@ -1850,6 +1850,7 @@ void handle_menu_spell(eSpell spell_picked) {
 	spell_forced = true;
 	pc_casting = univ.cur_pc;
 	univ.current_pc().last_cast[spell_type] = spell_picked;
+	univ.current_pc().last_cast_type = spell_type;
 	if(spell_type == eSkill::MAGE_SPELLS)
 		store_mage = spell_picked;
 	else store_priest = spell_picked;

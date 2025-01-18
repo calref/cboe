@@ -1926,6 +1926,7 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 	if(store_situation == eSkill::MAGE_SPELLS && (*picked_spell).need_select == SELECT_NO) {
 		store_last_cast_mage = pc_casting;
 		univ.party[pc_casting].last_cast[store_situation] = picked_spell;
+		univ.party[pc_casting].last_cast_type = store_situation;
 		me.toast(false);
 		me.setResult<short>(store_spell);
 		return true;
@@ -1933,6 +1934,7 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 	if(store_situation == eSkill::PRIEST_SPELLS && (*picked_spell).need_select == SELECT_NO) {
 		store_last_cast_priest = pc_casting;
 		univ.party[pc_casting].last_cast[store_situation] = picked_spell;
+		univ.party[pc_casting].last_cast_type = store_situation;
 		me.toast(false);
 		me.setResult<short>(store_spell);
 		return true;
@@ -1950,6 +1952,7 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 		store_last_cast_mage = pc_casting;
 	else store_last_cast_priest = pc_casting;
 	univ.party[pc_casting].last_cast[store_situation] = picked_spell;
+	univ.party[pc_casting].last_cast_type = store_situation;
 	me.toast(true);
 	return true;
 }

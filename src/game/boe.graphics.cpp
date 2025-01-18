@@ -611,8 +611,38 @@ void draw_text_bar() {
 	}
 	if((is_combat()) && (univ.cur_pc < 6) && !monsters_going) {
 		std::ostringstream sout;
-		sout << univ.current_pc().name << " (ap: " << univ.current_pc().ap << ')';
-		put_text_bar(sout.str());
+
+		cPlayer& current_pc = univ.current_pc();
+		sout << current_pc.name << " (ap: " << current_pc.ap << ')';
+
+		// Spellcasters print a hint for recasting.
+		// There's not enough space to print 2 hints for dual-casters,
+		// so just handle the last type cast.
+		eSkill type = current_pc.last_cast_type;
+		std::string hint_prefix = "";
+		std::ostringstream hint_out;
+		switch(type){
+			case eSkill::MAGE_SPELLS:
+				hint_prefix = "M";
+				break;
+			case eSkill::PRIEST_SPELLS:
+				hint_prefix = "P";
+				break;
+			// The only other expected value is eSkill::INVALID
+			default:
+				break;
+		}
+		if(!hint_prefix.empty()){
+			hint_out << hint_prefix << ": ";
+			const cSpell& spell = (*current_pc.last_cast[type]);
+			if(pc_can_cast_spell(current_pc,type) && spell.cost <= current_pc.get_magic()) {
+				hint_out << "Recast " << spell.name();
+			}else{
+				hint_out << "Cannot recast";
+			}
+		}
+
+		put_text_bar(sout.str(), hint_out.str());
 	}
 	if((is_combat()) && (monsters_going))
 		// Print bar for 1st monster with >0 ap - that is monster that is going
@@ -623,7 +653,7 @@ void draw_text_bar() {
 			}
 }
 
-void put_text_bar(std::string str) {
+void put_text_bar(std::string str, std::string right_str) {
 	text_bar_gworld.setActive(false);
 	auto& bar_gw = *ResMgr::graphics.get("textbar");
 	rect_draw_some_item(bar_gw, rectangle(bar_gw), text_bar_gworld, rectangle(bar_gw));
@@ -635,7 +665,11 @@ void put_text_bar(std::string str) {
 	rectangle to_rect = rectangle(text_bar_gworld);
 	to_rect.top += 7;
 	to_rect.left += 5;
+	to_rect.right -= 5;
 	win_draw_string(text_bar_gworld, to_rect, str, eTextMode::LEFT_TOP, style);
+	// Style has to be wrap to get right-alignment
+	win_draw_string(text_bar_gworld, to_rect, right_str, eTextMode::WRAP, style, true);
+	to_rect.right -= string_length(right_str, style);
 	
 	if(!monsters_going) {
 		sf::Texture& status_gworld = *ResMgr::graphics.get("staticons");
