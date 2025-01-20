@@ -667,11 +667,11 @@ void put_text_bar(std::string str, std::string right_str) {
 	to_rect.left += 5;
 	to_rect.right -= 5;
 	win_draw_string(text_bar_gworld, to_rect, str, eTextMode::LEFT_TOP, style);
-	// Style has to be wrap to get right-alignment
-	win_draw_string(text_bar_gworld, to_rect, right_str, eTextMode::WRAP, style, true);
-	to_rect.right -= string_length(right_str, style);
-	
-	if(!monsters_going) {
+	// the recast hint will replace status icons:
+	if(!right_str.empty()){
+		// Style has to be wrap to get right-alignment
+		win_draw_string(text_bar_gworld, to_rect, right_str, eTextMode::WRAP, style, true);
+	}else if(!monsters_going) {
 		sf::Texture& status_gworld = *ResMgr::graphics.get("staticons");
 		to_rect.top -= 2;
 		to_rect.left = to_rect.right - 15;
