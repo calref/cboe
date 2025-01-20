@@ -41,9 +41,13 @@
 		<led name='slow' relative='pos pos-in' anchor='med' top='0' left='15'>Slow</led>
 		<led name='snail' relative='pos pos-in' anchor='slow' top='0' left='15'>Quite Slow</led>
 	</group>
-	<text name='misc-head' size='large' relative='pos-in pos' anchor='spd-head' top='30' left='0' width='182' height='17'>Miscellaneous:</text>
+	<text name='keyshift-head' size='large' relative='pos-in pos' anchor='spd-head' top='30' left='0' width='182' height='17'>When targeting, directional keys should:</text>
+	<group name='keyshift-options'>
+		<led name='screen-shift' relative='pos-in pos' anchor='keyshift-head' top='4' left='15'>Shift the screen</led>
+		<led name='target-adjacent' relative='pos pos-in' anchor='screen-shift' top='0' left='15'>Select adjacent squares</led>
+	</group>
+	<text name='misc-head' size='large' relative='pos-in pos' anchor='keyshift-head' top='30' left='0' width='182' height='17'>Miscellaneous:</text>
 	<led name='nosound' relative='pos-in pos' anchor='misc-head' top='6' left='15'>No Sounds</led>
-	<led name='keyshift' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Directional keys can shift the screen</led>
 	<led name='repeatdesc' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Show room descriptions more than once</led>
 	<led name='easier' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Make game easier (monsters much weaker)</led>
 	<led name='lesswm' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Fewer wandering monsters</led>
