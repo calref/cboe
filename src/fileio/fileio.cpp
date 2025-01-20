@@ -21,6 +21,7 @@
 #include "fileio/resmgr/res_strings.hpp"
 #include "fileio/resmgr/res_sound.hpp"
 
+bool mac_is_intel(); // to suppress "no prototype" warning
 bool mac_is_intel(){
 	static bool checked_for_intel = false;
 	static bool _mac_is_intel;

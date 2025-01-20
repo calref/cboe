@@ -1238,7 +1238,7 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 	return true;
 }
 
-static bool reset_help(cDialog& me, std::string id, eKeyMod) {
+static bool reset_help(cDialog& me, std::string, eKeyMod) {
 	if(cChoiceDlog("confirm-reset-help", {"yes", "no"}, &me).show() == "yes")
 		clear_pref("ReceivedHelp");
 	return true;

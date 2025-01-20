@@ -528,12 +528,11 @@ std::map<int, std::string> startup_button_names_v1 = {
 	{2, "Preferences"},
 };
 
-void replay_action(Element& action) {
+static void replay_action(Element& action) {
 	bool did_something = false, need_redraw = false, need_reprint = false;
 
 	std::string _last_action_type = last_action_type;
 	std::string t = action.Value();
-	int enum_v;
 	
 	// NOTE: Action replay blocks need to return early unless the action advances time
 	if(overall_mode == MODE_STARTUP && t == "startup_button_click"){

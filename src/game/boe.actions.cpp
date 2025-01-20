@@ -319,7 +319,7 @@ void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw,
 }
 
 // Recenter the camera after look is finished or canceled:
-void end_look(bool right_button, bool& need_redraw) {
+static void end_look(bool right_button, bool& need_redraw) {
 	if(overall_mode == MODE_LOOK_COMBAT) {
 		overall_mode = MODE_COMBAT;
 		if(!right_button){

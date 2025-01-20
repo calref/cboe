@@ -102,6 +102,7 @@ short special_to_paste = -1;
 bool monst_on_space(location loc,short m_num);
 static bool terrain_matches(unsigned char x, unsigned char y, ter_num_t ter);
 
+bool check_for_interrupt(std::string); // to suppress "missing prototype" warning
 bool check_for_interrupt(std::string) { return false; }
 
 void init_screen_locs() {

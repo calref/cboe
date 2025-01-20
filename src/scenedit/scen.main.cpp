@@ -101,7 +101,7 @@ extern std::string last_load_file;
 
 enum class eLaunchType {LOC,START,ENTRANCE};
 
-void launch_scenario(eLaunchType type) {
+static void launch_scenario(eLaunchType type) {
 	if(boost::ends_with(last_load_file, ".exs")){
 		showError("The scenario editor cannot launch an unpacked scenario directly. You'll need to re-open the scenario from its .boes archive.");
 		return;
@@ -807,7 +807,6 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		else if(scale == "3") set_pref("UIScale", 3.0);
 		else if(scale == "4") set_pref("UIScale", 4.0);
 		set_pref("PlaySounds", dynamic_cast<cLed&>(me["nosound"]).getState() == led_off);
-		bool v = dynamic_cast<cLed&>(me["force-default-party"]).getState() == led_red;
 		set_pref("ForceDefaultParty", dynamic_cast<cLed&>(me["force-default-party"]).getState() == led_red);
 		set_pref("DefaultPartyPath", dynamic_cast<cTextField&>(me["party-path"]).getText());
 	}
@@ -881,7 +880,7 @@ void pick_preferences() {
 	});
 
 	cButton& choose_button = dynamic_cast<cButton&>(prefsDlog["choose-party"]);
-	choose_button.attachClickHandler([&default_party_field](cDialog& me, std::string, eKeyMod) -> bool {
+	choose_button.attachClickHandler([&default_party_field](cDialog&, std::string, eKeyMod) -> bool {
 		fs::path new_path = nav_get_party();
 		if(!new_path.empty()){
 			default_party_field.setText(new_path.string());

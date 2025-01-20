@@ -100,7 +100,6 @@ break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextS
 	unsigned short last_line_break = 0,last_word_break = 0;
 
 	str_to_draw.setString(str);
-	short total_width = str_to_draw.getLocalBounds().width;
 
 	// Even if the text is only one line, break_info is required for calculating word boundaries.
 	// So we can't skip the rest of this.

@@ -29,6 +29,7 @@ extern rectangle name_rect;
 extern rectangle pc_race_rect;
 extern rectangle edit_rect[5];
 
+bool check_for_interrupt(std::string); // to suppress "missing prototype" warning
 bool check_for_interrupt(std::string) { return false; }
 
 bool handle_action(const sf::Event & event) {

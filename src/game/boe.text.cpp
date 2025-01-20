@@ -839,7 +839,7 @@ cVehicle* out_horse_there(location where) {
 	return nullptr;
 }
 
-void print_monster_count(std::string m_name, short num){
+static void print_monster_count(std::string m_name, short num){
 	if(num > 0){
 		std::ostringstream sout;
 		sout << "  ";
