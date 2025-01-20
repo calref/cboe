@@ -51,62 +51,113 @@
 	<text name='sp5' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light_blue'/>
 	<text name='sp6' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light_blue'/>
 	<!-- To the right of PC SP, Status icons -->
+	<!-- Whee... time for the status effects! 15 statuses x 6 PCs! -->
 	<text name='status-head' size='large' relative='pos-in pos-in' anchor='sp-head' top='0' left='24' width='223' height='16'>Status:</text>
 
-	<!-- Whee... time for the status effects! Fifteen per PC! -->
-	<pict name='pc1-stat1' type='status' num='0' top='84' left='334'/> <pict name='pc1-stat2' type='status' num='0' top='84' left='347'/>
-	<pict name='pc1-stat3' type='status' num='0' top='84' left='360'/> <pict name='pc1-stat4' type='status' num='0' top='84' left='373'/>
-	<pict name='pc1-stat5' type='status' num='0' top='84' left='386'/> <pict name='pc1-stat6' type='status' num='0' top='84' left='399'/>
-	<pict name='pc1-stat7' type='status' num='0' top='84' left='412'/> <pict name='pc1-stat8' type='status' num='0' top='84' left='425'/>
-	<pict name='pc1-stat9' type='status' num='0' top='84' left='438'/> <pict name='pc1-stat10' type='status' num='0' top='84' left='451'/>
-	<pict name='pc1-stat11' type='status' num='0' top='84' left='464'/><pict name='pc1-stat12' type='status' num='0' top='84' left='477'/>
-	<pict name='pc1-stat13' type='status' num='0' top='84' left='490'/><pict name='pc1-stat14' type='status' num='0' top='84' left='503'/>
-	<pict name='pc1-stat15' type='status' num='0' top='84' left='516'/>
+	<pict name='pc1-stat1' type='status' num='0' relative='pos-in pos-in' anchor='status-head' top='24' left='0'/>
+	<pict name='pc2-stat1' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc3-stat1' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc4-stat1' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc5-stat1' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc6-stat1' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
 
-	<pict name='pc2-stat1' type='status' num='0' top='109' left='334'/> <pict name='pc2-stat2' type='status' num='0' top='109' left='347'/>
-	<pict name='pc2-stat3' type='status' num='0' top='109' left='360'/> <pict name='pc2-stat4' type='status' num='0' top='109' left='373'/>
-	<pict name='pc2-stat5' type='status' num='0' top='109' left='386'/> <pict name='pc2-stat6' type='status' num='0' top='109' left='399'/>
-	<pict name='pc2-stat7' type='status' num='0' top='109' left='412'/> <pict name='pc2-stat8' type='status' num='0' top='109' left='425'/>
-	<pict name='pc2-stat9' type='status' num='0' top='109' left='438'/> <pict name='pc2-stat10' type='status' num='0' top='109' left='451'/>
-	<pict name='pc2-stat11' type='status' num='0' top='109' left='464'/><pict name='pc2-stat12' type='status' num='0' top='109' left='477'/>
-	<pict name='pc2-stat13' type='status' num='0' top='109' left='490'/><pict name='pc2-stat14' type='status' num='0' top='109' left='503'/>
-	<pict name='pc2-stat15' type='status' num='0' top='109' left='516'/>
+	<pict name='pc1-stat2' type='status' num='0' relative='pos-in pos-in' anchor='pc1-stat1' top='0' left='13'/>
+	<pict name='pc2-stat2' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc3-stat2' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc4-stat2' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc5-stat2' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc6-stat2' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
 
-	<pict name='pc3-stat1' type='status' num='0' top='134' left='334'/> <pict name='pc3-stat2' type='status' num='0' top='134' left='347'/>
-	<pict name='pc3-stat3' type='status' num='0' top='134' left='360'/> <pict name='pc3-stat4' type='status' num='0' top='134' left='373'/>
-	<pict name='pc3-stat5' type='status' num='0' top='134' left='386'/> <pict name='pc3-stat6' type='status' num='0' top='134' left='399'/>
-	<pict name='pc3-stat7' type='status' num='0' top='134' left='412'/> <pict name='pc3-stat8' type='status' num='0' top='134' left='425'/>
-	<pict name='pc3-stat9' type='status' num='0' top='134' left='438'/> <pict name='pc3-stat10' type='status' num='0' top='134' left='451'/>
-	<pict name='pc3-stat11' type='status' num='0' top='134' left='464'/><pict name='pc3-stat12' type='status' num='0' top='134' left='477'/>
-	<pict name='pc3-stat13' type='status' num='0' top='134' left='490'/><pict name='pc3-stat14' type='status' num='0' top='134' left='503'/>
-	<pict name='pc3-stat15' type='status' num='0' top='134' left='516'/>
+	<pict name='pc1-stat3' type='status' num='0' relative='pos-in pos-in' anchor='pc1-stat2' top='0' left='13'/>
+	<pict name='pc2-stat3' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc3-stat3' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc4-stat3' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc5-stat3' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc6-stat3' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
 
-	<pict name='pc4-stat1' type='status' num='0' top='159' left='334'/> <pict name='pc4-stat2' type='status' num='0' top='159' left='347'/>
-	<pict name='pc4-stat3' type='status' num='0' top='159' left='360'/> <pict name='pc4-stat4' type='status' num='0' top='159' left='373'/>
-	<pict name='pc4-stat5' type='status' num='0' top='159' left='386'/> <pict name='pc4-stat6' type='status' num='0' top='159' left='399'/>
-	<pict name='pc4-stat7' type='status' num='0' top='159' left='412'/> <pict name='pc4-stat8' type='status' num='0' top='159' left='425'/>
-	<pict name='pc4-stat9' type='status' num='0' top='159' left='438'/> <pict name='pc4-stat10' type='status' num='0' top='159' left='451'/>
-	<pict name='pc4-stat11' type='status' num='0' top='159' left='464'/><pict name='pc4-stat12' type='status' num='0' top='159' left='477'/>
-	<pict name='pc4-stat13' type='status' num='0' top='159' left='490'/><pict name='pc4-stat14' type='status' num='0' top='159' left='503'/>
-	<pict name='pc4-stat15' type='status' num='0' top='159' left='516'/>
+	<pict name='pc1-stat4' type='status' num='0' relative='pos-in pos-in' anchor='pc1-stat3' top='0' left='13'/>
+	<pict name='pc2-stat4' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc3-stat4' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc4-stat4' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc5-stat4' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc6-stat4' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
 
-	<pict name='pc5-stat1' type='status' num='0' top='184' left='334'/> <pict name='pc5-stat2' type='status' num='0' top='184' left='347'/>
-	<pict name='pc5-stat3' type='status' num='0' top='184' left='360'/> <pict name='pc5-stat4' type='status' num='0' top='184' left='373'/>
-	<pict name='pc5-stat5' type='status' num='0' top='184' left='386'/> <pict name='pc5-stat6' type='status' num='0' top='184' left='399'/>
-	<pict name='pc5-stat7' type='status' num='0' top='184' left='412'/> <pict name='pc5-stat8' type='status' num='0' top='184' left='425'/>
-	<pict name='pc5-stat9' type='status' num='0' top='184' left='438'/> <pict name='pc5-stat10' type='status' num='0' top='184' left='451'/>
-	<pict name='pc5-stat11' type='status' num='0' top='184' left='464'/><pict name='pc5-stat12' type='status' num='0' top='184' left='477'/>
-	<pict name='pc5-stat13' type='status' num='0' top='184' left='490'/><pict name='pc5-stat14' type='status' num='0' top='184' left='503'/>
-	<pict name='pc5-stat15' type='status' num='0' top='184' left='516'/>
+	<pict name='pc1-stat5' type='status' num='0' relative='pos-in pos-in' anchor='pc1-stat4' top='0' left='13'/>
+	<pict name='pc2-stat5' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc3-stat5' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc4-stat5' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc5-stat5' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc6-stat5' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
 
-	<pict name='pc6-stat1' type='status' num='0' top='209' left='334'/> <pict name='pc6-stat2' type='status' num='0' top='209' left='347'/>
-	<pict name='pc6-stat3' type='status' num='0' top='209' left='360'/> <pict name='pc6-stat4' type='status' num='0' top='209' left='373'/>
-	<pict name='pc6-stat5' type='status' num='0' top='209' left='386'/> <pict name='pc6-stat6' type='status' num='0' top='209' left='399'/>
-	<pict name='pc6-stat7' type='status' num='0' top='209' left='412'/> <pict name='pc6-stat8' type='status' num='0' top='209' left='425'/>
-	<pict name='pc6-stat9' type='status' num='0' top='209' left='438'/> <pict name='pc6-stat10' type='status' num='0' top='209' left='451'/>
-	<pict name='pc6-stat11' type='status' num='0' top='209' left='464'/><pict name='pc6-stat12' type='status' num='0' top='209' left='477'/>
-	<pict name='pc6-stat13' type='status' num='0' top='209' left='490'/><pict name='pc6-stat14' type='status' num='0' top='209' left='503'/>
-	<pict name='pc6-stat15' type='status' num='0' top='209' left='516'/>
+	<pict name='pc1-stat6' type='status' num='0' relative='pos-in pos-in' anchor='pc1-stat5' top='0' left='13'/>
+	<pict name='pc2-stat6' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc3-stat6' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc4-stat6' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc5-stat6' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc6-stat6' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+
+	<pict name='pc1-stat7' type='status' num='0' relative='pos-in pos-in' anchor='pc1-stat6' top='0' left='13'/>
+	<pict name='pc2-stat7' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc3-stat7' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc4-stat7' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc5-stat7' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc6-stat7' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+
+	<pict name='pc1-stat8' type='status' num='0' relative='pos-in pos-in' anchor='pc1-stat7' top='0' left='13'/>
+	<pict name='pc2-stat8' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc3-stat8' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc4-stat8' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc5-stat8' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc6-stat8' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+
+	<pict name='pc1-stat9' type='status' num='0' relative='pos-in pos-in' anchor='pc1-stat8' top='0' left='13'/>
+	<pict name='pc2-stat9' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc3-stat9' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc4-stat9' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc5-stat9' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc6-stat9' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+
+	<pict name='pc1-stat10' type='status' num='0' relative='pos-in pos-in' anchor='pc1-stat9' top='0' left='13'/>
+	<pict name='pc2-stat10' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc3-stat10' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc4-stat10' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc5-stat10' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc6-stat10' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+
+	<pict name='pc1-stat11' type='status' num='0' relative='pos-in pos-in' anchor='pc1-stat10' top='0' left='13'/>
+	<pict name='pc2-stat11' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc3-stat11' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc4-stat11' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc5-stat11' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc6-stat11' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+
+	<pict name='pc1-stat12' type='status' num='0' relative='pos-in pos-in' anchor='pc1-stat11' top='0' left='13'/>
+	<pict name='pc2-stat12' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc3-stat12' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc4-stat12' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc5-stat12' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc6-stat12' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+
+	<pict name='pc1-stat13' type='status' num='0' relative='pos-in pos-in' anchor='pc1-stat12' top='0' left='13'/>
+	<pict name='pc2-stat13' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc3-stat13' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc4-stat13' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc5-stat13' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc6-stat13' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+
+	<pict name='pc1-stat14' type='status' num='0' relative='pos-in pos-in' anchor='pc1-stat13' top='0' left='13'/>
+	<pict name='pc2-stat14' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc3-stat14' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc4-stat14' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc5-stat14' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc6-stat14' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+
+	<pict name='pc1-stat15' type='status' num='0' relative='pos-in pos-in' anchor='pc1-stat14' top='0' left='13'/>
+	<pict name='pc2-stat15' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc3-stat15' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc4-stat15' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc5-stat15' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
+	<pict name='pc6-stat15' type='status' num='0' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'/>
 
 	<!-- Spell columns -->
 	<text name='col1' top='227' left='10' width='100' height='16'/>
