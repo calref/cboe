@@ -4660,7 +4660,10 @@ bool hit_end_c_button() {
 	bool end_ok = true;
 	
 	if(which_combat_type == 0) {
-		end_ok = out_monst_all_dead();
+		auto out_monst_remaining = out_monst_alive();
+		if(!out_monst_remaining.empty()){
+			end_ok = false;
+		}
 	}
 	for(cPlayer& pc : univ.party) {
 		if(pc.status[eStatus::FORCECAGE] > 0) {
@@ -4674,14 +4677,23 @@ bool hit_end_c_button() {
 	return end_ok;
 }
 
-bool out_monst_all_dead() {
-	for(short i = 0; i < univ.town.monst.size(); i++)
-		if(univ.town.monst[i].is_alive() && !univ.town.monst[i].is_friendly()) {
+std::map<std::string,short> out_monst_alive() {
+	std::map<std::string,short> monst_alive;
+	for(short i = 0; i < univ.town.monst.size(); i++){
+		cCreature& m = univ.town.monst[i];
+		if(m.is_alive() && !m.is_friendly()) {
+			if(monst_alive.find(m.m_name) != monst_alive.end()){
+				// Would += work in this context?
+				monst_alive[m.m_name] = monst_alive[m.m_name] + 1;
+			}else{
+				monst_alive[m.m_name] = 1;
+			}
+
 			//print_nums(5555,i,univ.town.monst[i].number);
 			//print_nums(5555,univ.town.monst[i].m_loc.x,univ.town.monst[i].m_loc.y);
-			return false;
 		}
-	return true;
+	}
+	return monst_alive;
 }
 
 void end_combat() {

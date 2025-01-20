@@ -2,6 +2,7 @@
 #ifndef BOE_GAME_COMBAT_H
 #define BOE_GAME_COMBAT_H
 
+#include <map>
 #include "location.hpp"
 #include "scenario/monster.hpp"
 #include "scenario/outdoors.hpp"
@@ -49,7 +50,7 @@ void do_poison();
 void handle_disease();
 void handle_acid();
 bool hit_end_c_button();
-bool out_monst_all_dead();
+std::map<std::string,short> out_monst_alive();
 void end_combat();
 bool combat_cast_mage_spell();
 bool combat_cast_priest_spell();
