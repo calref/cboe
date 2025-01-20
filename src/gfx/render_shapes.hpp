@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <memory>
+#include <map>
 #include <SFML/Graphics/Shape.hpp>
 #include "location.hpp"
 

@@ -11,6 +11,7 @@
 #include <functional>
 #include <sstream>
 #include <string>
+#include <map>
 #include "dialog.hpp"
 #include "gfx/tiling.hpp" // for bg
 #include "fileio/resmgr/res_dialog.hpp"
@@ -44,6 +45,8 @@ short cDialog::defaultBackground = cDialog::BG_DARK;
 cDialog* cDialog::topWindow = nullptr;
 void (*cDialog::redraw_everything)() = nullptr;
 std::mt19937 cDialog::ui_rand;
+
+extern std::map<std::string,sf::Color> colour_map;
 
 extern bool check_for_interrupt(std::string);
 
@@ -86,39 +89,9 @@ sf::Color cControl::parseColor(string what){
 			}
 		}
 		clr.r = r, clr.g = g, clr.b = b;
-	}else if(what == "black")
-		clr.r = 0x00, clr.g = 0x00, clr.b = 0x00;
-	else if(what == "red")
-		clr.r = 0xFF, clr.g = 0x00, clr.b = 0x00;
-	else if(what == "lime")
-		clr.r = 0x00, clr.g = 0xFF, clr.b = 0x00;
-	else if(what == "blue")
-		clr.r = 0x00, clr.g = 0x00, clr.b = 0xFF;
-	else if(what == "yellow")
-		clr.r = 0xFF, clr.g = 0xFF, clr.b = 0x00;
-	else if(what == "aqua")
-		clr.r = 0x00, clr.g = 0xFF, clr.b = 0xFF;
-	else if(what == "fuchsia")
-		clr.r = 0xFF, clr.g = 0x00, clr.b = 0xFF;
-	else if(what == "white")
-		clr.r = 0xFF, clr.g = 0xFF, clr.b = 0xFF;
-	else if(what == "gray" || what == "grey")
-		clr.r = 0x80, clr.g = 0x80, clr.b = 0x80;
-	else if(what == "maroon")
-		clr.r = 0x80, clr.g = 0x00, clr.b = 0x00;
-	else if(what == "green")
-		clr.r = 0x00, clr.g = 0x80, clr.b = 0x00;
-	else if(what == "navy")
-		clr.r = 0x00, clr.g = 0x00, clr.b = 0x80;
-	else if(what == "olive")
-		clr.r = 0x80, clr.g = 0x80, clr.b = 0x00;
-	else if(what == "teal")
-		clr.r = 0x00, clr.g = 0x80, clr.b = 0x80;
-	else if(what == "purple")
-		clr.r = 0x80, clr.g = 0x00, clr.b = 0x80;
-	else if(what == "silver")
-		clr.r = 0xC0, clr.g = 0xC0, clr.b = 0xC0;
-	else throw -1;
+	}else if(colour_map.find(what) != colour_map.end()){
+		return colour_map[what];
+	}else throw -1;
 	return clr;
 }
 
