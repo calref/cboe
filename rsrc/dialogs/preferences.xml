@@ -43,8 +43,8 @@
 	</group>
 	<text name='keyshift-head' size='large' relative='pos-in pos' anchor='spd-head' top='30' left='0' width='182' height='17'>When targeting, directional keys should:</text>
 	<group name='keyshift-options'>
-		<led name='screen-shift' relative='pos-in pos' anchor='keyshift-head' top='4' left='15'>Shift the screen</led>
-		<led name='target-adjacent' relative='pos pos-in' anchor='screen-shift' top='0' left='15'>Select adjacent squares</led>
+		<led name='target-adjacent' relative='pos-in pos' anchor='keyshift-head' top='4' left='15'>Select adjacent tiles</led>
+		<led name='screen-shift' relative='pos pos-in' anchor='target-adjacent' top='0' left='15'>Shift the screen</led>
 	</group>
 	<text name='misc-head' size='large' relative='pos-in pos' anchor='keyshift-head' top='30' left='0' width='182' height='17'>Miscellaneous:</text>
 	<led name='nosound' relative='pos-in pos' anchor='misc-head' top='6' left='15'>No Sounds</led>
