@@ -10,6 +10,7 @@
 #define BOE_GAME_CONSTS_H
 
 #include <set>
+#include <map>
 
 /* overall mode; some seem to be missing */
 enum eGameMode {
@@ -84,14 +85,9 @@ enum eTrapType {
 
 // Startup buttons
 enum eStartButton {
-	// Left Column
-	STARTBTN_TUTORIAL = 0,
-	STARTBTN_LOAD = 1,
-	STARTBTN_PREFS = 2,
-	// Right Column
-	STARTBTN_NEW = 3,
-	STARTBTN_JOIN = 4,
-	STARTBTN_SCROLL = 5,
+	STARTBTN_TUTORIAL = 0, STARTBTN_NEW = 3,
+	STARTBTN_LOAD = 1, STARTBTN_JOIN = 4,
+	STARTBTN_PREFS = 2, STARTBTN_SCROLL = 5,
 	// Keep last:
 	MAX_eStartButton = 6
 };

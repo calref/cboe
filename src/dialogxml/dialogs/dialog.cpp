@@ -45,6 +45,8 @@ cDialog* cDialog::topWindow = nullptr;
 void (*cDialog::redraw_everything)() = nullptr;
 std::mt19937 cDialog::ui_rand;
 
+extern bool check_for_interrupt(std::string);
+
 std::string cDialog::generateRandomString(){
 	// Not bothering to seed, because it doesn't actually matter if it's truly random.
 	int n_chars = ui_rand() % 100;
@@ -564,7 +566,10 @@ void cDialog::handle_events() {
 	cFramerateLimiter fps_limiter;
 
 	while(dialogNotToast) {
-		if(replaying && has_next_action("click_control")){
+		if(replaying && fname != "confirm-interrupt-replay" && check_for_interrupt("confirm-interrupt-replay")){
+			replaying = false;
+			return;
+		}else if(replaying && has_next_action("click_control")){
 			Element& next_action = pop_next_action();
 			auto info = info_from_action(next_action);
 			if(info["id"].empty()) continue;

@@ -1599,7 +1599,8 @@ void do_combat_cast(location target) {
 	if(ashes_loc.x > 0){
 		// If ashes are going to appear, there'd better be a visible blast on the spot.
 		if(!hit_ashes_loc){
-			add_explosion(ashes_loc,0,0,get_boom_type(eDamageType::FIRE),1,0);
+			// the last argument is true so this doesn't break RNG of older replays:
+			add_explosion(ashes_loc,0,0,get_boom_type(eDamageType::FIRE),1,0,true);
 		}
 
 		univ.town.set_ash(ashes_loc.x,ashes_loc.y,true);

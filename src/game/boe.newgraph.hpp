@@ -56,7 +56,7 @@ void run_a_missile(location from,location fire_to,miss_num_t miss_type,short pat
 void run_a_boom(location boom_where,short type,short x_adj,short y_adj,short snd = -1);
 void mondo_boom(location l,short type,short snd = -1);
 void add_missile(location dest,miss_num_t missile_type,short path_type,short x_adj,short y_adj);
-void add_explosion(location dest,short val_to_place,short place_type,short boom_type,short x_adj,short y_adj);
+void add_explosion(location dest,short val_to_place,short place_type,short boom_type,short x_adj,short y_adj, bool use_unique_ran = false);
 void do_missile_anim(short num_steps,location missile_origin,short sound_num) ;
 void do_explosion_anim(short sound_num,short expand,short snd = -1);
 void click_shop_rect(rectangle area_rect);

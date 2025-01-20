@@ -236,7 +236,7 @@ TEST_CASE("Construction sanity test for player character") {
 	}
 	SECTION("Main player class") {
 		CHECK(pc.main_status == eMainStatus::ABSENT);
-		CHECK(pc.name == "\n");
+		CHECK(pc.name == "");
 		CHECK(pc.skills.size() == 3);
 		CHECK(pc.skills[eSkill::STRENGTH] == 1);
 		CHECK(pc.skills[eSkill::DEXTERITY] == 1);

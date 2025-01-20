@@ -2222,10 +2222,11 @@ bool pick_pc_graphic(short pc_num,short mode,cDialog* parent) {
 static bool pc_name_event_filter(cDialog& me, short store_train_pc) {
 	std::string pcName = me["name"].getText();
 	
-	if(!isalpha(pcName[0])) {
+	if(pcName.empty()){
+		me["error"].setText("Cannot be empty.");
+	}else if(!isalpha(pcName[0])){
 		me["error"].setText("Must begin with a letter.");
-	}
-	else {
+	}else{
 		// TODO: This was originally truncated to 18 characters; is that really necessary?
 		univ.party[store_train_pc].name = pcName;
 		me.toast(true);

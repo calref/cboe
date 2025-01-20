@@ -958,7 +958,10 @@ cPlayer::cPlayer(cParty& party) : cPlayer(no_party) {
 
 cPlayer::cPlayer(no_party_t) : weap_poisoned(*this) {
 	main_status = eMainStatus::ABSENT;
-	name = "\n";
+	// This newline caused a bug that took ~16 hours to figure out...
+	// So I'm leaving it in here, think of it as the bug's head on a spike.
+	// name = "\n";
+	name = "";
 	
 	skills[eSkill::STRENGTH] = 1;
 	skills[eSkill::DEXTERITY] = 1;

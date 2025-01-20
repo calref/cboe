@@ -2232,6 +2232,24 @@ void cancel_item_target(bool& did_something, bool& need_redraw, bool& need_repri
 	did_something = need_redraw = need_reprint = true;
 }
 
+// I'm finally adding the easter egg to the replay system
+// because it allows forcing the text buffer into a specific state
+// which I'm debugging.
+std::vector<std::string> easter_egg_messages = {
+	"If Valorim ...",
+	"You want to save ...",
+	"Back up your save files ...",
+	"Burma Shave."
+};
+
+void easter_egg(int idx) {
+	if(recording){
+		record_action("easter_egg", boost::lexical_cast<std::string>(idx));
+	}
+	add_string_to_buf(easter_egg_messages[idx]);
+	print_buf();
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2387,20 +2405,16 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	switch(chr) {
 			
 		case '&':
-			add_string_to_buf("If Valorim ...");
-			print_buf();
+			easter_egg(0);
 			break;
 		case '*':
-			add_string_to_buf("You want to save ...");
-			print_buf();
+			easter_egg(1);
 			break;
 		case '(':
-			add_string_to_buf("Back up your save files ...");
-			print_buf();
+			easter_egg(2);
 			break;
 		case ')':
-			add_string_to_buf("Burma Shave.");
-			print_buf();
+			easter_egg(3);
 			break;
 			
 		case '?':
@@ -3749,11 +3763,11 @@ bool is_sign(ter_num_t ter) {
 	return false;
 }
 
-bool check_for_interrupt(){
+bool check_for_interrupt(std::string confirm_dialog){
 	using kb = sf::Keyboard;
 	bool interrupt = false;
 	sf::Event evt;
-	if(replaying && has_next_action() && next_action_type() == "handle_interrupt"){
+	if(replaying && confirm_dialog == "confirm-interrupt-special" && has_next_action() && next_action_type() == "handle_interrupt"){
 		pop_next_action();
 		interrupt = true;
 	}
@@ -3770,8 +3784,16 @@ bool check_for_interrupt(){
 		if(recording){
 			record_action("handle_interrupt", "");
 		}
-		cChoiceDlog confirm("confirm-interrupt", {"quit","cancel"});
-		if(confirm.show() == "quit") return true;
+		cChoiceDlog confirm(confirm_dialog, {"quit","cancel"});
+		bool was_replaying = replaying;
+		if(confirm_dialog == "confirm-interrupt-replay"){
+			// There's a slight chance the next action could be snatched up by the replay system to respond
+			// to the yes/no prompt, so suspend the replay loop
+			replaying = false;
+		}
+		std::string result = confirm.show();
+		replaying = was_replaying;
+		if(result == "quit") return true;
 	}
 	return false;
 }

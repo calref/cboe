@@ -12,6 +12,8 @@ cCustomGraphics spec_scen_g;
 cUniverse univ;
 std::vector<fs::path> extra_scen_dirs;
 
+bool check_for_interrupt(std::string) { return false; }
+
 // And these are referenced from the scenario code, though not used in test cases
 #include "scenario/scenario.hpp"
 #include "tools/undo.hpp"

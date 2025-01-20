@@ -333,6 +333,9 @@ static void process_args(int argc, char* argv[]) {
 		cli.writeToStream(std::cout);
 		exit(0);
 	}
+	// This obsolete preference should always be true unless running an old replay
+	// (which will set it false after this line if it needs to)
+	set_pref("DrawTerrainFrills", true);
 	if(replay){
 		if(record_to){
 			std::cout << "Warning: flag --record conflicts with --replay and will be ignored." << std::endl;
@@ -502,6 +505,29 @@ static void handle_scenario_args() {
 	}
 }
 
+std::map<std::string, int> startup_button_indices = {
+	// Button layout since 11/30/24
+	{"Tutorial", 0}, {"Make New Party", 3},
+	{"Load Game", 1}, {"Start Scenario", 4},
+	{"Preferences", 2},
+
+	// Buttons that don't exist anymore
+	{"Custom Scenario", -1},
+};
+
+std::map<int, std::string> startup_button_names = {
+	{0, "Tutorial"}, {3, "Make New Party"},
+	{1, "Load Game"}, {4, "Start Scenario"},
+	{2, "Preferences"}, {5, ""},
+};
+
+// Map legacy int indices onto new string-mapped layout
+std::map<int, std::string> startup_button_names_v1 = {
+	{0, "Load Game"}, {3, "Start Scenario"},
+	{1, "Make New Party"}, {4, "Custom Scenario"},
+	{2, "Preferences"},
+};
+
 void replay_action(Element& action) {
 	bool did_something = false, need_redraw = false, need_reprint = false;
 
@@ -512,10 +538,30 @@ void replay_action(Element& action) {
 	// NOTE: Action replay blocks need to return early unless the action advances time
 	if(overall_mode == MODE_STARTUP && t == "startup_button_click"){
 		auto info = info_from_action(action);
-		eStartButton btn = static_cast<eStartButton>(std::stoi(info["btn"]));
+		int btn_idx = -1;
+		try{
+			// Legacy replays use ints to encode startup buttons
+			btn_idx = std::stoi(info["btn"]);
+		}catch(std::invalid_argument& err){
+			// Newer replays use strings to encode startup buttons
+			btn_idx = startup_button_indices[info["btn"]];
+        }
+		// No-op button
+		if(btn_idx == -1){
+			return;
+		}
+		eStartButton btn = static_cast<eStartButton>(btn_idx);
 		eKeyMod mods = static_cast<eKeyMod>(std::stoi(info["mods"]));
 		handle_startup_button_click(btn, mods);
 		return;
+	}else if(t == "change_fps"){
+		extern boost::optional<cFramerateLimiter> replay_fps_limit;
+		// default new fps: slow the replay down substantially
+		int new_fps = 2;
+		if(!action.GetText().empty()){
+			new_fps = boost::lexical_cast<int>(action.GetText());
+		}
+		replay_fps_limit.emplace(new_fps);
 	}else if(t == "load_party"){
 		decode_file(action.GetText(), tempDir / "temp.exg");
 		load_party(tempDir / "temp.exg", univ);
@@ -832,12 +878,15 @@ void replay_action(Element& action) {
 		return;
 	}else if(t == "cancel_item_target"){
 		cancel_item_target(did_something, need_redraw, need_reprint);
+	}else if(t == "easter_egg"){
+		easter_egg(boost::lexical_cast<int>(action.GetText()));
 	}else if(t == "advance_time"){
 		// This is bad regardless of strictness, because visual changes may have occurred which won't get redrawn/reprinted
 		throw std::string { "Replay system internal error! advance_time() was supposed to be called by the last action, but wasn't: " } + _last_action_type;
 	}else{
 		std::ostringstream sstr;
 		sstr << "Couldn't replay action: " << action;
+		replaying = false;
 		throw sstr.str();
 	}
 
@@ -1009,6 +1058,10 @@ void handle_events() {
 
 	while(!All_Done) {
 		if(replaying && has_next_action()){
+			if(check_for_interrupt("confirm-interrupt-replay")){
+				replaying = false;
+				continue;
+			}
 			replay_next_action();
 		}else{
 #ifdef __APPLE__
