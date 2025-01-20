@@ -1306,7 +1306,7 @@ void pick_preferences(bool record) {
 	}
 	
 	cLedGroup& keyshiftOptions = dynamic_cast<cLedGroup&>(prefsDlog["keyshift-options"]);
-	if(get_bool_pref("DirectionalKeyScrolling", true)){
+	if(get_bool_pref("DirectionalKeyScrolling", false)){
 		keyshiftOptions.setSelected("screen-shift");
 	}else{
 		keyshiftOptions.setSelected("target-adjacent");
