@@ -4688,15 +4688,7 @@ std::map<std::string,short> out_monst_alive() {
 	for(short i = 0; i < univ.town.monst.size(); i++){
 		cCreature& m = univ.town.monst[i];
 		if(m.is_alive() && !m.is_friendly()) {
-			if(monst_alive.find(m.m_name) != monst_alive.end()){
-				// Would += work in this context?
-				monst_alive[m.m_name] = monst_alive[m.m_name] + 1;
-			}else{
-				monst_alive[m.m_name] = 1;
-			}
-
-			//print_nums(5555,i,univ.town.monst[i].number);
-			//print_nums(5555,univ.town.monst[i].m_loc.x,univ.town.monst[i].m_loc.y);
+			monst_alive[m.m_name]++;
 		}
 	}
 	return monst_alive;
