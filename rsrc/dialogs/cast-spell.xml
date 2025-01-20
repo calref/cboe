@@ -53,47 +53,111 @@
 	<!-- To the right of PC SP, Status icons -->
 	<text name='status-head' size='large' relative='pos-in pos-in' anchor='sp-head' top='0' left='24' width='223' height='16'>Status:</text>
 
+	<!-- Whee... time for the status effects! Fifteen per PC! -->
+	<pict name='pc1-stat1' type='status' num='0' top='84' left='334'/> <pict name='pc1-stat2' type='status' num='0' top='84' left='347'/>
+	<pict name='pc1-stat3' type='status' num='0' top='84' left='360'/> <pict name='pc1-stat4' type='status' num='0' top='84' left='373'/>
+	<pict name='pc1-stat5' type='status' num='0' top='84' left='386'/> <pict name='pc1-stat6' type='status' num='0' top='84' left='399'/>
+	<pict name='pc1-stat7' type='status' num='0' top='84' left='412'/> <pict name='pc1-stat8' type='status' num='0' top='84' left='425'/>
+	<pict name='pc1-stat9' type='status' num='0' top='84' left='438'/> <pict name='pc1-stat10' type='status' num='0' top='84' left='451'/>
+	<pict name='pc1-stat11' type='status' num='0' top='84' left='464'/><pict name='pc1-stat12' type='status' num='0' top='84' left='477'/>
+	<pict name='pc1-stat13' type='status' num='0' top='84' left='490'/><pict name='pc1-stat14' type='status' num='0' top='84' left='503'/>
+	<pict name='pc1-stat15' type='status' num='0' top='84' left='516'/>
 
-	<text name='feedback' framed='true' top='400' left='30' width='186' height='16'>Pick spell to cast.</text>
-	<led name='spell1' state='off' top='247' left='14'/>
-	<led name='spell2' state='off' top='261' left='14'/>
-	<led name='spell3' state='off' top='275' left='14'/>
-	<led name='spell4' state='off' top='289' left='14'/>
-	<led name='spell5' state='off' top='303' left='14'/>
-	<led name='spell6' state='off' top='317' left='14'/>
-	<led name='spell7' state='off' top='331' left='14'/>
-	<led name='spell8' state='off' top='345' left='14'/>
-	<led name='spell9' state='off' top='359' left='14'/>
-	<led name='spell10' state='off' top='373' left='14'/>
-	<led name='spell11' state='off' top='247' left='177'/>
-	<led name='spell12' state='off' top='261' left='177'/>
-	<led name='spell13' state='off' top='275' left='177'/>
-	<led name='spell14' state='off' top='289' left='177'/>
-	<led name='spell15' state='off' top='303' left='177'/>
-	<led name='spell16' state='off' top='317' left='177'/>
-	<led name='spell17' state='off' top='331' left='177'/>
-	<led name='spell18' state='off' top='345' left='177'/>
-	<led name='spell19' state='off' top='359' left='177'/>
-	<led name='spell20' state='off' top='373' left='177'/>
-	<led name='spell21' state='off' top='247' left='339'/>
-	<led name='spell22' state='off' top='261' left='339'/>
-	<led name='spell23' state='off' top='275' left='339'/>
-	<led name='spell24' state='off' top='289' left='339'/>
-	<led name='spell25' state='off' top='303' left='339'/>
-	<led name='spell26' state='off' top='317' left='339'/>
-	<led name='spell27' state='off' top='331' left='339'/>
-	<led name='spell28' state='off' top='345' left='339'/>
-	<led name='spell29' state='off' top='359' left='339'/>
-	<led name='spell30' state='off' top='373' left='339'/>
-	<led name='spell31' state='off' top='247' left='488'/>
-	<led name='spell32' state='off' top='261' left='488'/>
-	<led name='spell33' state='off' top='275' left='488'/>
-	<led name='spell34' state='off' top='289' left='488'/>
-	<led name='spell35' state='off' top='303' left='488'/>
-	<led name='spell36' state='off' top='317' left='488'/>
-	<led name='spell37' state='off' top='331' left='488'/>
-	<led name='spell38' state='off' top='345' left='488'/>
+	<pict name='pc2-stat1' type='status' num='0' top='109' left='334'/> <pict name='pc2-stat2' type='status' num='0' top='109' left='347'/>
+	<pict name='pc2-stat3' type='status' num='0' top='109' left='360'/> <pict name='pc2-stat4' type='status' num='0' top='109' left='373'/>
+	<pict name='pc2-stat5' type='status' num='0' top='109' left='386'/> <pict name='pc2-stat6' type='status' num='0' top='109' left='399'/>
+	<pict name='pc2-stat7' type='status' num='0' top='109' left='412'/> <pict name='pc2-stat8' type='status' num='0' top='109' left='425'/>
+	<pict name='pc2-stat9' type='status' num='0' top='109' left='438'/> <pict name='pc2-stat10' type='status' num='0' top='109' left='451'/>
+	<pict name='pc2-stat11' type='status' num='0' top='109' left='464'/><pict name='pc2-stat12' type='status' num='0' top='109' left='477'/>
+	<pict name='pc2-stat13' type='status' num='0' top='109' left='490'/><pict name='pc2-stat14' type='status' num='0' top='109' left='503'/>
+	<pict name='pc2-stat15' type='status' num='0' top='109' left='516'/>
+
+	<pict name='pc3-stat1' type='status' num='0' top='134' left='334'/> <pict name='pc3-stat2' type='status' num='0' top='134' left='347'/>
+	<pict name='pc3-stat3' type='status' num='0' top='134' left='360'/> <pict name='pc3-stat4' type='status' num='0' top='134' left='373'/>
+	<pict name='pc3-stat5' type='status' num='0' top='134' left='386'/> <pict name='pc3-stat6' type='status' num='0' top='134' left='399'/>
+	<pict name='pc3-stat7' type='status' num='0' top='134' left='412'/> <pict name='pc3-stat8' type='status' num='0' top='134' left='425'/>
+	<pict name='pc3-stat9' type='status' num='0' top='134' left='438'/> <pict name='pc3-stat10' type='status' num='0' top='134' left='451'/>
+	<pict name='pc3-stat11' type='status' num='0' top='134' left='464'/><pict name='pc3-stat12' type='status' num='0' top='134' left='477'/>
+	<pict name='pc3-stat13' type='status' num='0' top='134' left='490'/><pict name='pc3-stat14' type='status' num='0' top='134' left='503'/>
+	<pict name='pc3-stat15' type='status' num='0' top='134' left='516'/>
+
+	<pict name='pc4-stat1' type='status' num='0' top='159' left='334'/> <pict name='pc4-stat2' type='status' num='0' top='159' left='347'/>
+	<pict name='pc4-stat3' type='status' num='0' top='159' left='360'/> <pict name='pc4-stat4' type='status' num='0' top='159' left='373'/>
+	<pict name='pc4-stat5' type='status' num='0' top='159' left='386'/> <pict name='pc4-stat6' type='status' num='0' top='159' left='399'/>
+	<pict name='pc4-stat7' type='status' num='0' top='159' left='412'/> <pict name='pc4-stat8' type='status' num='0' top='159' left='425'/>
+	<pict name='pc4-stat9' type='status' num='0' top='159' left='438'/> <pict name='pc4-stat10' type='status' num='0' top='159' left='451'/>
+	<pict name='pc4-stat11' type='status' num='0' top='159' left='464'/><pict name='pc4-stat12' type='status' num='0' top='159' left='477'/>
+	<pict name='pc4-stat13' type='status' num='0' top='159' left='490'/><pict name='pc4-stat14' type='status' num='0' top='159' left='503'/>
+	<pict name='pc4-stat15' type='status' num='0' top='159' left='516'/>
+
+	<pict name='pc5-stat1' type='status' num='0' top='184' left='334'/> <pict name='pc5-stat2' type='status' num='0' top='184' left='347'/>
+	<pict name='pc5-stat3' type='status' num='0' top='184' left='360'/> <pict name='pc5-stat4' type='status' num='0' top='184' left='373'/>
+	<pict name='pc5-stat5' type='status' num='0' top='184' left='386'/> <pict name='pc5-stat6' type='status' num='0' top='184' left='399'/>
+	<pict name='pc5-stat7' type='status' num='0' top='184' left='412'/> <pict name='pc5-stat8' type='status' num='0' top='184' left='425'/>
+	<pict name='pc5-stat9' type='status' num='0' top='184' left='438'/> <pict name='pc5-stat10' type='status' num='0' top='184' left='451'/>
+	<pict name='pc5-stat11' type='status' num='0' top='184' left='464'/><pict name='pc5-stat12' type='status' num='0' top='184' left='477'/>
+	<pict name='pc5-stat13' type='status' num='0' top='184' left='490'/><pict name='pc5-stat14' type='status' num='0' top='184' left='503'/>
+	<pict name='pc5-stat15' type='status' num='0' top='184' left='516'/>
+
+	<pict name='pc6-stat1' type='status' num='0' top='209' left='334'/> <pict name='pc6-stat2' type='status' num='0' top='209' left='347'/>
+	<pict name='pc6-stat3' type='status' num='0' top='209' left='360'/> <pict name='pc6-stat4' type='status' num='0' top='209' left='373'/>
+	<pict name='pc6-stat5' type='status' num='0' top='209' left='386'/> <pict name='pc6-stat6' type='status' num='0' top='209' left='399'/>
+	<pict name='pc6-stat7' type='status' num='0' top='209' left='412'/> <pict name='pc6-stat8' type='status' num='0' top='209' left='425'/>
+	<pict name='pc6-stat9' type='status' num='0' top='209' left='438'/> <pict name='pc6-stat10' type='status' num='0' top='209' left='451'/>
+	<pict name='pc6-stat11' type='status' num='0' top='209' left='464'/><pict name='pc6-stat12' type='status' num='0' top='209' left='477'/>
+	<pict name='pc6-stat13' type='status' num='0' top='209' left='490'/><pict name='pc6-stat14' type='status' num='0' top='209' left='503'/>
+	<pict name='pc6-stat15' type='status' num='0' top='209' left='516'/>
+
+	<!-- Spell columns -->
+	<text name='col1' top='227' left='10' width='100' height='16'/>
+	<led name='spell1' state='off' relative='pos-in pos-in' rel-anchor='prev' top='20' left='6'/>
+	<led name='spell2' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell3' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell4' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell5' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell6' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell7' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell8' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell9' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell10' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+
+	<text name='col2' relative='pos-in pos-in' anchor='col1' top='0' left='152' width='100' height='16'/>
+	<led name='spell11' state='off' relative='pos-in pos-in' rel-anchor='prev' top='20' left='4'/>
+	<led name='spell12' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell13' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell14' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell15' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell16' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell17' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell18' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell19' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell20' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+
+	<text name='col3' relative='pos-in pos-in' anchor='col2' top='0' left='164' width='100' height='16'/>
+	<led name='spell21' state='off' relative='pos-in pos-in' rel-anchor='prev' top='20' left='4'/>
+	<led name='spell22' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell23' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell24' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell25' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell26' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell27' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell28' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell29' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell30' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+
+	<text name='col4' relative='pos-in pos-in' anchor='col3' top='0' left='160' width='100' height='16'/>
+	<led name='spell31' state='off' relative='pos-in pos-in' rel-anchor='prev' top='20' left='4'/>
+	<led name='spell32' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell33' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell34' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell35' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell36' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell37' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+	<led name='spell38' state='off' relative='pos-in pos-in' rel-anchor='prev' top='14' left='0'/>
+
 	<button name='other' type='large' def-key='space' top='394' left='371'>Other Spells</button>
+
+	<!-- Help messages -->
 	<text top='0' left='202' width='290' height='57'>
 		Keyboard:
 		<key ref='caster1'/><key ref='caster2'/><key ref='caster3'/>
@@ -106,67 +170,10 @@
 		key by spell to cast spell.<br/>
 		Alt-click spell name for description.
 	</text>
+	<text name='feedback' framed='true' top='400' left='30' width='186' height='16'>Pick spell to cast.</text>
 	<button name='help' type='help' def-key='help' top='6' left='596'/>
-	<text name='col1' top='227' left='10' width='100' height='16'/>
-	<text name='col2' top='227' left='162' width='100' height='16'/>
-	<text name='col3' top='227' left='326' width='100' height='16'/>
-	<text name='col4' top='227' left='486' width='100' height='16'/>
-	<!-- Whee... time for the status effects! Fifteen per PC! -->
-<pict name='pc1-stat1' type='status' num='0' top='84' left='334'/> <pict name='pc1-stat2' type='status' num='0' top='84' left='347'/>
-<pict name='pc1-stat3' type='status' num='0' top='84' left='360'/> <pict name='pc1-stat4' type='status' num='0' top='84' left='373'/>
-<pict name='pc1-stat5' type='status' num='0' top='84' left='386'/> <pict name='pc1-stat6' type='status' num='0' top='84' left='399'/>
-<pict name='pc1-stat7' type='status' num='0' top='84' left='412'/> <pict name='pc1-stat8' type='status' num='0' top='84' left='425'/>
-<pict name='pc1-stat9' type='status' num='0' top='84' left='438'/> <pict name='pc1-stat10' type='status' num='0' top='84' left='451'/>
-<pict name='pc1-stat11' type='status' num='0' top='84' left='464'/><pict name='pc1-stat12' type='status' num='0' top='84' left='477'/>
-<pict name='pc1-stat13' type='status' num='0' top='84' left='490'/><pict name='pc1-stat14' type='status' num='0' top='84' left='503'/>
-<pict name='pc1-stat15' type='status' num='0' top='84' left='516'/>
 
-<pict name='pc2-stat1' type='status' num='0' top='109' left='334'/> <pict name='pc2-stat2' type='status' num='0' top='109' left='347'/>
-<pict name='pc2-stat3' type='status' num='0' top='109' left='360'/> <pict name='pc2-stat4' type='status' num='0' top='109' left='373'/>
-<pict name='pc2-stat5' type='status' num='0' top='109' left='386'/> <pict name='pc2-stat6' type='status' num='0' top='109' left='399'/>
-<pict name='pc2-stat7' type='status' num='0' top='109' left='412'/> <pict name='pc2-stat8' type='status' num='0' top='109' left='425'/>
-<pict name='pc2-stat9' type='status' num='0' top='109' left='438'/> <pict name='pc2-stat10' type='status' num='0' top='109' left='451'/>
-<pict name='pc2-stat11' type='status' num='0' top='109' left='464'/><pict name='pc2-stat12' type='status' num='0' top='109' left='477'/>
-<pict name='pc2-stat13' type='status' num='0' top='109' left='490'/><pict name='pc2-stat14' type='status' num='0' top='109' left='503'/>
-<pict name='pc2-stat15' type='status' num='0' top='109' left='516'/>
-
-<pict name='pc3-stat1' type='status' num='0' top='134' left='334'/> <pict name='pc3-stat2' type='status' num='0' top='134' left='347'/>
-<pict name='pc3-stat3' type='status' num='0' top='134' left='360'/> <pict name='pc3-stat4' type='status' num='0' top='134' left='373'/>
-<pict name='pc3-stat5' type='status' num='0' top='134' left='386'/> <pict name='pc3-stat6' type='status' num='0' top='134' left='399'/>
-<pict name='pc3-stat7' type='status' num='0' top='134' left='412'/> <pict name='pc3-stat8' type='status' num='0' top='134' left='425'/>
-<pict name='pc3-stat9' type='status' num='0' top='134' left='438'/> <pict name='pc3-stat10' type='status' num='0' top='134' left='451'/>
-<pict name='pc3-stat11' type='status' num='0' top='134' left='464'/><pict name='pc3-stat12' type='status' num='0' top='134' left='477'/>
-<pict name='pc3-stat13' type='status' num='0' top='134' left='490'/><pict name='pc3-stat14' type='status' num='0' top='134' left='503'/>
-<pict name='pc3-stat15' type='status' num='0' top='134' left='516'/>
-
-<pict name='pc4-stat1' type='status' num='0' top='159' left='334'/> <pict name='pc4-stat2' type='status' num='0' top='159' left='347'/>
-<pict name='pc4-stat3' type='status' num='0' top='159' left='360'/> <pict name='pc4-stat4' type='status' num='0' top='159' left='373'/>
-<pict name='pc4-stat5' type='status' num='0' top='159' left='386'/> <pict name='pc4-stat6' type='status' num='0' top='159' left='399'/>
-<pict name='pc4-stat7' type='status' num='0' top='159' left='412'/> <pict name='pc4-stat8' type='status' num='0' top='159' left='425'/>
-<pict name='pc4-stat9' type='status' num='0' top='159' left='438'/> <pict name='pc4-stat10' type='status' num='0' top='159' left='451'/>
-<pict name='pc4-stat11' type='status' num='0' top='159' left='464'/><pict name='pc4-stat12' type='status' num='0' top='159' left='477'/>
-<pict name='pc4-stat13' type='status' num='0' top='159' left='490'/><pict name='pc4-stat14' type='status' num='0' top='159' left='503'/>
-<pict name='pc4-stat15' type='status' num='0' top='159' left='516'/>
-
-<pict name='pc5-stat1' type='status' num='0' top='184' left='334'/> <pict name='pc5-stat2' type='status' num='0' top='184' left='347'/>
-<pict name='pc5-stat3' type='status' num='0' top='184' left='360'/> <pict name='pc5-stat4' type='status' num='0' top='184' left='373'/>
-<pict name='pc5-stat5' type='status' num='0' top='184' left='386'/> <pict name='pc5-stat6' type='status' num='0' top='184' left='399'/>
-<pict name='pc5-stat7' type='status' num='0' top='184' left='412'/> <pict name='pc5-stat8' type='status' num='0' top='184' left='425'/>
-<pict name='pc5-stat9' type='status' num='0' top='184' left='438'/> <pict name='pc5-stat10' type='status' num='0' top='184' left='451'/>
-<pict name='pc5-stat11' type='status' num='0' top='184' left='464'/><pict name='pc5-stat12' type='status' num='0' top='184' left='477'/>
-<pict name='pc5-stat13' type='status' num='0' top='184' left='490'/><pict name='pc5-stat14' type='status' num='0' top='184' left='503'/>
-<pict name='pc5-stat15' type='status' num='0' top='184' left='516'/>
-
-<pict name='pc6-stat1' type='status' num='0' top='209' left='334'/> <pict name='pc6-stat2' type='status' num='0' top='209' left='347'/>
-<pict name='pc6-stat3' type='status' num='0' top='209' left='360'/> <pict name='pc6-stat4' type='status' num='0' top='209' left='373'/>
-<pict name='pc6-stat5' type='status' num='0' top='209' left='386'/> <pict name='pc6-stat6' type='status' num='0' top='209' left='399'/>
-<pict name='pc6-stat7' type='status' num='0' top='209' left='412'/> <pict name='pc6-stat8' type='status' num='0' top='209' left='425'/>
-<pict name='pc6-stat9' type='status' num='0' top='209' left='438'/> <pict name='pc6-stat10' type='status' num='0' top='209' left='451'/>
-<pict name='pc6-stat11' type='status' num='0' top='209' left='464'/><pict name='pc6-stat12' type='status' num='0' top='209' left='477'/>
-<pict name='pc6-stat13' type='status' num='0' top='209' left='490'/><pict name='pc6-stat14' type='status' num='0' top='209' left='503'/>
-<pict name='pc6-stat15' type='status' num='0' top='209' left='516'/>
-
-
-<button name='cancel' type='regular' def-key='esc' top='394' left='479'>Cancel</button>
-<button name='cast' type='regular' top='394' left='549'>Cast</button>
+	<!-- Main buttons -->
+	<button name='cancel' type='regular' def-key='esc' top='394' left='479'>Cancel</button>
+	<button name='cast' type='regular' top='394' left='549'>Cast</button>
 </dialog>
