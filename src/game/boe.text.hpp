@@ -19,6 +19,8 @@ cVehicle* town_boat_there(location where);
 cVehicle* out_boat_there(location where);
 cVehicle* town_horse_there(location where);
 cVehicle* out_horse_there(location where);
+// Specify the alive map when combat is in progress so casualties and summons are reflected
+void print_encounter_monsters(cOutdoors::cWandering encounter, short* nums, std::map<std::string,short> alive = {});
 void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) ;
 std::string get_m_name(mon_num_t num);
 std::string get_ter_name(ter_num_t num);

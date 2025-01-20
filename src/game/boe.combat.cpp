@@ -45,6 +45,7 @@ extern short fast_bang;
 extern short store_current_pc;
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 extern short missile_firer,current_monst_tactic;
+extern cOutdoors::cWandering store_wandering_special;
 eSpell spell_being_cast;
 bool spell_freebie;
 short missile_inv_slot, ammo_inv_slot;
@@ -4663,6 +4664,10 @@ bool hit_end_c_button() {
 	if(which_combat_type == 0) {
 		auto out_monst_remaining = out_monst_alive();
 		if(!out_monst_remaining.empty()){
+			// Print remaining monsters.
+			add_string_to_buf("Enemies are still alive!");
+			print_encounter_monsters(store_wandering_special, nullptr, out_monst_remaining);
+
 			end_ok = false;
 		}
 	}
