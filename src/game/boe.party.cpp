@@ -1655,8 +1655,8 @@ static void draw_spell_info(cDialog& me, const eSkill store_situation, const sho
 					}
 					break;
 				case SELECT_ANY:
-					// TODO: Split off party members should probably be excluded too?
-					if(univ.party[i].main_status != eMainStatus::ABSENT) {
+					// Absent party members and split-off party members are excluded
+					if(univ.party[i].main_status != eMainStatus::ABSENT && univ.party[i].main_status < eMainStatus::SPLIT) {
 						me[id].show();
 					}
 					else {
