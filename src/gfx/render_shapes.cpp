@@ -29,6 +29,7 @@ std::map<std::string,sf::Color> colour_map = {
 	{"pink", Colours::PINK},
 	{"yellow", Colours::YELLOW},
 	{"orange", Colours::ORANGE},
+	{"light_blue", Colours::LIGHT_BLUE},
 	{"shadow", Colours::SHADOW},
 	{"title_blue", Colours::TITLE_BLUE},
 	{"navy", Colours::NAVY},
