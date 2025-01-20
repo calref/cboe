@@ -266,6 +266,14 @@ void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw,
 	short store_sp[6];
 	extern short spec_target_fail;
 	extern eSpecCtxType spec_target_type;
+	// Dual-caster recast hint toggle:
+	// Change the recast hint to mage if last spell wasn't mage
+	if(spell_forced && is_combat() && univ.current_pc().last_cast_type != which_type){
+		spell_forced = false;
+		univ.current_pc().last_cast_type = which_type;
+		need_redraw = true;
+		return;
+	}
 	if(!someone_awake()) {
 		ASB("Everyone's asleep/paralyzed.");
 		need_reprint = true;

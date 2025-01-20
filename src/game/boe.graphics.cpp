@@ -634,11 +634,15 @@ void draw_text_bar() {
 		}
 		if(!hint_prefix.empty()){
 			hint_out << hint_prefix << ": ";
-			const cSpell& spell = (*current_pc.last_cast[type]);
-			if(pc_can_cast_spell(current_pc,type) && spell.cost <= current_pc.get_magic()) {
-				hint_out << "Recast " << spell.name();
+			if(current_pc.last_cast[type] != eSpell::NONE){
+				const cSpell& spell = (*current_pc.last_cast[type]);
+				if(pc_can_cast_spell(current_pc,type) && spell.cost <= current_pc.get_magic()) {
+					hint_out << "Recast " << spell.name();
+				}else{
+					hint_out << "Cannot recast";
+				}
 			}else{
-				hint_out << "Cannot recast";
+				hint_out << "No spell to recast";
 			}
 		}
 
