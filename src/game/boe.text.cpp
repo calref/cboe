@@ -838,23 +838,52 @@ cVehicle* out_horse_there(location where) {
 			return &univ.party.horses[i];
 	return nullptr;
 }
-void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) {
-	std::string msg;
-	
-	add_string_to_buf("COMBAT!");
-	
-	for(short i = 0; i < 6; i++)
-		if(encounter.monst[i] != 0) {
-			msg = get_m_name(encounter.monst[i]);
-			std::ostringstream sout;
-			sout << "  " << nums[i] << " x " << msg;
-			msg = sout.str();
-			add_string_to_buf(msg);
+
+void print_monster_count(std::string m_name, short num){
+	if(num > 0){
+		std::ostringstream sout;
+		sout << "  ";
+		if(num > 1){
+			sout << num << " x ";
 		}
-	if(encounter.monst[6] != 0) {
-		msg = "  " +  get_m_name(encounter.monst[6]);
-		add_string_to_buf(msg);
+		sout << m_name;
+		add_string_to_buf(sout.str());
 	}
+}
+
+void print_encounter_monsters(cOutdoors::cWandering encounter, short* nums, std::map<std::string,short> alive) {
+	std::string m_name;
+	bool remaining_specified = !alive.empty();
+	// Still follow the predefined ordering when giving an updated total, and leave summons to the end.
+	for(short i = 0; i < 7; i++)
+		if(encounter.monst[i] != 0) {
+			m_name = get_m_name(encounter.monst[i]);
+			short num = 0;
+			// Combat is just starting, so print the predefined amount
+			if(!remaining_specified){
+				num = nums[i];
+			}
+			// Combat has started, so need to check how many are still alive
+			else{
+				auto iter = alive.find(m_name);
+				if(iter != alive.end()){
+					num = iter->second;
+					alive.erase(iter);
+				}
+			}
+			print_monster_count(m_name, num);
+		}
+	// Monsters still in the alive map must have been summoned
+	if(!alive.empty()){
+		for (auto iter = alive.begin(); iter != alive.end(); ++iter){
+			print_monster_count(iter->first, iter->second);
+		}
+	}
+}
+
+void notify_out_combat_began(cOutdoors::cWandering encounter,short *nums) {
+	add_string_to_buf("COMBAT!");
+	print_encounter_monsters(encounter, nums);
 }
 
 std::string get_m_name(mon_num_t num) {
