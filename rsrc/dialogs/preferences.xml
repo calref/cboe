@@ -44,9 +44,10 @@
 	<text name='keyshift-head' size='large' relative='pos-in pos' anchor='spd-head' top='30' left='0' width='182' height='17'>When targeting, directional keys should:</text>
 	<group name='keyshift-options'>
 		<led name='target-adjacent' relative='pos-in pos' anchor='keyshift-head' top='4' left='15'>Select adjacent tiles</led>
-		<led name='screen-shift' relative='pos pos-in' anchor='target-adjacent' top='0' left='15'>Shift the screen</led>
+		<led name='screen-shift' relative='pos pos-in' anchor='target-adjacent' top='0' left='15'>Move the screen</led>
 	</group>
-	<text name='misc-head' size='large' relative='pos-in pos' anchor='keyshift-head' top='30' left='0' width='182' height='17'>Miscellaneous:</text>
+	<text name='keyshift-note' size='large' relative='pos-in pos' anchor='keyshift-head' top='20' left='15' width='300' height='17'>(Holding Shift while using directional keys will do the opposite.)</text>
+	<text name='misc-head' size='large' relative='neg pos' anchor='keyshift-note' top='15' left='15' width='182' height='17'>Miscellaneous:</text>
 	<led name='nosound' relative='pos-in pos' anchor='misc-head' top='6' left='15'>No Sounds</led>
 	<led name='repeatdesc' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Show room descriptions more than once</led>
 	<led name='easier' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Make game easier (monsters much weaker)</led>
