@@ -1706,6 +1706,7 @@ static void draw_spell_pc_info(cDialog& me) {
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			me["pc" + n].setText(univ.party[i].name);
 			
+			me["arrow" + n].hide();
 			if(univ.party[i].main_status == eMainStatus::ALIVE) {
 				me["hp" + n].setTextToNum(univ.party[i].cur_health);
 				me["sp" + n].setTextToNum(univ.party[i].cur_sp);
@@ -1731,13 +1732,11 @@ static void put_pc_target_buttons(cDialog& me, short& store_last_target_darkened
 	
 	if(store_spell_target < 6) {
 		std::string n = boost::lexical_cast<std::string>(store_spell_target + 1);
-		me["hp" + n].setColour(SELECTED_COLOUR);
-		me["sp" + n].setColour(SELECTED_COLOUR);
+		me["arrow" + n].show();
 	}
 	if((store_last_target_darkened < 6) && (store_last_target_darkened != store_spell_target)) {
 		std::string n = boost::lexical_cast<std::string>(store_last_target_darkened + 1);
-		me["hp" + n].setColour(me.getDefTextClr());
-		me["sp" + n].setColour(me.getDefTextClr());
+		me["arrow" + n].hide();
 	}
 	store_last_target_darkened = store_spell_target;
 }
