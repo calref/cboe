@@ -2457,6 +2457,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 				// cast multi-target spell, set # targets to 0 so that space clicked doesn't matter
 				num_targets_left = 0;
 				handle_target_space(center, did_something, need_redraw, need_reprint);
+				advance_time(did_something, need_redraw, need_reprint);
 			} else if(overall_mode == MODE_SPELL_TARGET)
 				// Rotate a force wall
 				spell_cast_hit_return();
