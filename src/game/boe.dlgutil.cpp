@@ -103,11 +103,11 @@ std::vector<int> shop_array;
 cShop active_shop;
 short active_shop_num;
 
-void start_shop_mode(short which,short cost_adj,std::string store_name) {
+bool start_shop_mode(short which,short cost_adj,std::string store_name, bool cancel_when_empty) {
 	rectangle area_rect;
 	if(which < 0 || which >= univ.scenario.shops.size()) {
 		showError("The scenario tried to place you in a nonexistent shop!");
-		return;
+		return false;
 	}
 	
 	// This would be a place to hide the text box, if I add it.
@@ -116,14 +116,6 @@ void start_shop_mode(short which,short cost_adj,std::string store_name) {
 	active_shop = univ.scenario.shops[which];
 	active_shop.setCostAdjust(cost_adj);
 	active_shop.setName(store_name);
-	
-	area_rect = talk_area_rect;
-	talk_gworld.create(area_rect.width(), area_rect.height());
-	
-	store_pre_shop_mode = overall_mode;
-	overall_mode = MODE_SHOPPING;
-	stat_screen_mode = MODE_SHOP;
-	shop_sbar->setPosition(0);
 	
 	// Check if the shop's stock has been reduced yet
 	if(univ.party.store_limited_stock.find(active_shop_num) != univ.party.store_limited_stock.end()) {
@@ -143,12 +135,25 @@ void start_shop_mode(short which,short cost_adj,std::string store_name) {
 	}
 	
 	set_up_shop_array();
+	if(shop_array.empty() && cancel_when_empty){
+		return false;
+	}
+
+	area_rect = talk_area_rect;
+	talk_gworld.create(area_rect.width(), area_rect.height());
+
+	store_pre_shop_mode = overall_mode;
+	overall_mode = MODE_SHOPPING;
+	stat_screen_mode = MODE_SHOP;
+	shop_sbar->setPosition(0);
+
 	put_background();
 	
 	draw_shop_graphics(0,area_rect);
 	
 	put_item_screen(stat_window);
 	give_help(26,27);
+	return true;
 }
 
 static void update_last_talk(int new_node) {
@@ -881,8 +886,10 @@ void handle_talk_node(int which_talk_entry) {
 			return;
 			
 		case eTalkNode::SHOP:
-			start_shop_mode(b,a,save_talk_str1);
-			can_save_talk = false;
+			if(!start_shop_mode(b,a,save_talk_str1,true))
+				save_talk_str1 = "There is nothing to buy from " + save_talk_str1 + ".";
+			else
+				can_save_talk = false;
 			return;
 		case eTalkNode::JOB_BANK:
 			if(a < univ.party.job_banks.size() && univ.party.job_banks[a].anger >= 50) {
