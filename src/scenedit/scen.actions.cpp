@@ -5,6 +5,7 @@
 #include <array>
 #include <string>
 #include <stack>
+#include <boost/lexical_cast.hpp>
 #include "scen.global.hpp"
 #include "scenario/scenario.hpp"
 #include "gfx/render_shapes.hpp"
@@ -1148,34 +1149,38 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 		return true;
 	}
 	bool need_redraw = false;
-	if((the_point.in(border_rect[0])) & (cen_y > (editing_town ? 4 : 3))) {
-		cen_y--;
+	if((the_point.in(border_rect[0]))) {
 		if(ctrl_hit)
 			cen_y = ((editing_town) ? 4 : 3);
+		else
+			handle_editor_screen_shift(0, -1);
 		need_redraw = true;
 		mouse_button_held = true;
 	}
-	if((the_point.in(border_rect[1])) & (cen_x > (editing_town ? 4 : 3))) {
-		cen_x--;
+	if((the_point.in(border_rect[1]))) {
 		if(ctrl_hit)
 			cen_x = ((editing_town) ? 4 : 3);
+		else
+			handle_editor_screen_shift(-1, 0);
 		need_redraw = true;
 		mouse_button_held = true;
 	}
 	auto max_dim = cur_area->max_dim - 5;
 	// This allows you to see a strip of terrain from the adjacent sector when editing outdoors
 	if(!editing_town) max_dim++;
-	if((the_point.in(border_rect[2])) && (cen_y < max_dim)) {
-		cen_y++;
+	if((the_point.in(border_rect[2]))) {
 		if(ctrl_hit)
 			cen_y = max_dim;
+		else
+			handle_editor_screen_shift(0, 1);
 		need_redraw = true;
 		mouse_button_held = true;
 	}
-	if((the_point.in(border_rect[3])) && (cen_x < max_dim)) {
-		cen_x++;
+	if((the_point.in(border_rect[3]))) {
 		if(ctrl_hit)
 			cen_x = max_dim;
+		else
+			handle_editor_screen_shift(1, 0);
 		need_redraw = true;
 		mouse_button_held = true;
 	}
@@ -1776,13 +1781,68 @@ void handle_keystroke(sf::Event event) {
 	mouse_button_held = false;
 }
 
+bool handle_outdoor_sec_shift(int dx, int dy){
+	if(editing_town) return false;
+	int new_x = cur_out.x + dx;
+	int new_y = cur_out.y + dy;
+	if(new_x < 0) return true;
+	if(new_x >= scenario.outdoors.width()) return true;
+	if(new_y < 0) return true;
+	if(new_y >= scenario.outdoors.height()) return true;
+
+	cChoiceDlog shift_prompt("shift-outdoor-section", {"yes", "no"});
+	location new_out_sec = { new_x, new_y };
+	shift_prompt->getControl("out-sec").setText(boost::lexical_cast<std::string>(new_out_sec));
+
+	if(shift_prompt.show() == "yes"){
+		set_current_out(new_out_sec);
+		// TODO match the terrain view to where we were
+	}
+	return true;
+}
+
+void handle_editor_screen_shift(int dx, int dy) {
+	int min = (editing_town ? 4 : 3);
+	int max = get_current_area()->max_dim - 5;
+	if(!editing_town) max++;
+	bool out_of_bounds = false;
+	if(cen_x + dx < min){
+		// In outdoors, prompt whether to swap to the next section west
+		if(handle_outdoor_sec_shift(-1, 0)) return;
+		out_of_bounds = true;
+	}else if(cen_x + dx > max){
+		// In outdoors, prompt whether to swap to the next section east
+		if(handle_outdoor_sec_shift(1, 0)) return;
+		out_of_bounds = true;
+	}else if(cen_y + dy < min){
+		// In outdoors, prompt whether to swap to the next section north
+		if(handle_outdoor_sec_shift(0, -1)) return;
+		out_of_bounds = true;
+	}else if(cen_y + dy > max){
+		// In outdoors, prompt whether to swap to the next section south
+		if(handle_outdoor_sec_shift(0, 1)) return;
+		out_of_bounds = true;
+	}
+
+	if(out_of_bounds){
+		// In town, prompt whether to go back to outdoor entrance location
+
+	}
+
+	cen_x = minmax(min, max, cen_x + dx);
+	cen_y = minmax(min, max, cen_y + dy);
+}
+
 void handle_scroll(const sf::Event& event) {
 	location pos { translate_mouse_coordinates({event.mouseMove.x,event.mouseMove.y}) };
 	int amount = event.mouseWheel.delta;
 	if(overall_mode < MODE_MAIN_SCREEN && pos.in(terrain_rect)) {
 		if(kb.isCtrlPressed())
-			cen_x = minmax(4, town->max_dim - 5, cen_x - amount);
-		else cen_y = minmax(4, town->max_dim - 5, cen_y - amount);
+			handle_editor_screen_shift(-amount, 0);
+		else handle_editor_screen_shift(0, -amount);
+
+		draw_terrain();
+		place_location();
 	}
 }
 
