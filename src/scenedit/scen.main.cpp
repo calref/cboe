@@ -304,11 +304,9 @@ static void process_args(int argc, char* argv[]) {
 	if(!file.empty()) {
 		if(load_scenario(file, scenario)) {
 			set_current_town(scenario.last_town_edited);
-			cur_out = scenario.last_out_edited;
-			current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
 			change_made = false;
 			ae_loading = true;
-			set_up_main_screen();
+			set_current_out(scenario.last_out_edited);
 		} else {
 			std::cout << "Failed to load scenario: " << file << std::endl;
 		}
@@ -449,11 +447,8 @@ void handle_menu_choice(eMenu item_hit) {
 			if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
 				cur_town = scenario.last_town_edited;
 				town = scenario.towns[cur_town];
-				cur_out = scenario.last_out_edited;
-				current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
-				overall_mode = MODE_MAIN_SCREEN;
 				change_made = false;
-				set_up_main_screen();
+				set_current_out(scenario.last_out_edited);
 			} else if(!file_to_load.empty())
 				set_up_start_screen(); // Failed to load file, dump to start
 			undo_list.clear();

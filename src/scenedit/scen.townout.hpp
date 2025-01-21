@@ -23,3 +23,4 @@ void edit_placed_item(short which_i);
 void delete_last_town();
 void edit_town_wand();
 void set_current_town(int to);
+void set_current_out(location out_sec);

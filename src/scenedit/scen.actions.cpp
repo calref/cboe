@@ -236,10 +236,7 @@ static bool handle_lb_action(location the_point) {
 						file_to_load = nav_get_scenario();
 						if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
 							set_current_town(scenario.last_town_edited);
-							cur_out = scenario.last_out_edited;
-							current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
-							overall_mode = MODE_MAIN_SCREEN;
-							set_up_main_screen();
+							set_current_out(scenario.last_out_edited);
 						} else if(!file_to_load.empty())
 							// If we tried to load but failed, the scenario record is messed up, so boot to start screen.
 							set_up_start_screen();
@@ -277,9 +274,7 @@ static bool handle_lb_action(location the_point) {
 					case LB_LOAD_OUT:
 						spot_hit = pick_out(cur_out, scenario);
 						if(spot_hit != cur_out) {
-							cur_out = spot_hit;
-							current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
-							set_up_main_screen();
+							set_current_out(spot_hit);
 						}
 						break;
 					case LB_EDIT_OUT:
