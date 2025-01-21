@@ -1880,9 +1880,7 @@ static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods, con
 		me["feedback"].setText(bad_spell);
 	}
 	else {
-		if(store_situation == eSkill::MAGE_SPELLS)
-			store_spell = (on_which_spell_page == 0) ? item_hit : spell_index[item_hit];
-		else store_spell = (on_which_spell_page == 0) ? item_hit : spell_index[item_hit];
+		store_spell = (on_which_spell_page == 0) ? item_hit : spell_index[item_hit];
 		draw_spell_info(me, store_situation, store_spell);
 		put_spell_led_buttons(me, store_situation, store_spell);
 		
