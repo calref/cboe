@@ -1174,6 +1174,8 @@ void save_scenario(bool rename) {
 	}
 	toFile = toFile.parent_path()/fname;
 	scenario.scen_file = toFile;
+	// Creating a new scenario, or using Save As, needs to update last_load_file so the new file will be launched:
+	last_load_file = toFile.string();
 	
 	// Now write to zip file.
 	ogzstream zout(toFile.string().c_str());
