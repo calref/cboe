@@ -440,33 +440,28 @@ static void handle_scenario_args() {
 		}
 		// Try to put the party in an outdoor section from which you can enter the town --
 		// so when you leave, you'll hopefully be in the right place.
-		bool found_entrance = false;
-		for(int x = 0; x < univ.scenario.outdoors.width(); ++x){
-			for(int y = 0; y < univ.scenario.outdoors.height(); ++y){
-				for(spec_loc_t& entrance : univ.scenario.outdoors[x][y]->city_locs){
-					if(entrance.spec == *scen_arg_town){
-						// Very janky but I don't know how else to make it properly load the right sections and set i_w_c
-						while(univ.party.outdoor_corner.x > x){
-							shift_universe_left();
-						}
-						while(univ.party.outdoor_corner.x < x){
-							shift_universe_right();
-						}
-						while(univ.party.outdoor_corner.y > y){
-							shift_universe_up();
-						}
-						while(univ.party.outdoor_corner.y < y){
-							shift_universe_down();
-						}
-						outd_move_party(local_to_global(entrance), true);
-
-						found_entrance = true;
-						break;
-					}
-				}
-				if(found_entrance) break;
+		auto town_entrances = univ.scenario.find_town_entrances(*scen_arg_town);
+		if(!town_entrances.empty()){
+			// TODO a dialog could be shown to choose between multiple entrances,
+			// but maybe that would be janky, because this happens when you're trying to launch
+			// from INSIDE a town.
+			town_entrance_t first_entrance_found = town_entrances[0];
+			int x = first_entrance_found.out_sec.x;
+			int y = first_entrance_found.out_sec.y;
+			// Very janky but I don't know how else to make it properly load the right sections and set i_w_c
+			while(univ.party.outdoor_corner.x > x){
+				shift_universe_left();
 			}
-			if(found_entrance) break;
+			while(univ.party.outdoor_corner.x < x){
+				shift_universe_right();
+			}
+			while(univ.party.outdoor_corner.y > y){
+				shift_universe_up();
+			}
+			while(univ.party.outdoor_corner.y < y){
+				shift_universe_down();
+			}
+			outd_move_party(local_to_global(first_entrance_found.loc), true);
 		}
 
 		short town_entrance = 0;
