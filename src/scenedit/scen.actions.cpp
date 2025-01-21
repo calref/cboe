@@ -5,6 +5,7 @@
 #include <array>
 #include <string>
 #include <stack>
+#include <vector>
 #include <boost/lexical_cast.hpp>
 #include "scen.global.hpp"
 #include "scenario/scenario.hpp"
@@ -1844,7 +1845,23 @@ void handle_editor_screen_shift(int dx, int dy) {
 
 	if(out_of_bounds){
 		// In town, prompt whether to go back to outdoor entrance location
+		std::vector<town_entrance_t> town_entrances = scenario.find_town_entrances(cur_town);
+		if(town_entrances.size() == 1){
+			town_entrance_t only_entrance = town_entrances[0];
+			cChoiceDlog shift_prompt("shift-town-entrance", {"yes", "no"});
+			shift_prompt->getControl("out-sec").setText(boost::lexical_cast<std::string>(only_entrance.out_sec));
 
+			if(shift_prompt.show() == "yes"){
+				set_current_out(only_entrance.out_sec);
+				start_out_edit();
+				cen_x = only_entrance.loc.x;
+				cen_y = only_entrance.loc.y;
+				redraw_screen();
+				return;
+			}
+		}else if(town_entrances.size() > 1){
+
+		}
 	}
 
 	cen_x = minmax(min, max, cen_x + dx);
