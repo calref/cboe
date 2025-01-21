@@ -212,7 +212,7 @@ cSpell M_FLIGHT = cSpell(eSpell::FLIGHT).asType(eSkill::MAGE_SPELLS).asLevel(6)
 cSpell M_SHOCKWAVE = cSpell(eSpell::SHOCKWAVE).asType(eSkill::MAGE_SPELLS).asLevel(7)
 	.withCost(12).withRefer(REFER_IMMED).when(WHEN_COMBAT).finish();
 cSpell M_BLESS_MAJOR = cSpell(eSpell::BLESS_MAJOR).asType(eSkill::MAGE_SPELLS).asLevel(7)
-	.withCost(8).withRefer(REFER_IMMED).when(WHEN_COMBAT).when(WHEN_TOWN).asPeaceful().finish();
+	.withCost(8).withRefer(REFER_IMMED).when(WHEN_COMBAT).asPeaceful().finish();
 cSpell M_PARALYSIS_MASS = cSpell(eSpell::PARALYSIS_MASS).asType(eSkill::MAGE_SPELLS).asLevel(7)
 	.withRange(8).withCost(20).withRefer(REFER_IMMED).when(WHEN_COMBAT).finish();
 cSpell M_PROTECTION = cSpell(eSpell::PROTECTION).asType(eSkill::MAGE_SPELLS).asLevel(7)
