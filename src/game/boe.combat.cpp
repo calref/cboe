@@ -5185,9 +5185,8 @@ void start_spell_targeting(eSpell num, bool freebie, int spell_range, eSpellPat 
 			}
 			break;
 		default:
-			if((*num).refer == REFER_TARGET)
-				std::cout << "  Warning: Spell " << (*num).name() << " didn't assign target shape." << std::endl;
-			else add_string_to_buf("  Error: Entered targeting for non-targeted spell " + (*num).name(), 4);
+			if((*num).refer != REFER_TARGET)
+				add_string_to_buf("  Error: Entered targeting for non-targeted spell " + (*num).name(), 4);
 			break;
 	}
 }
