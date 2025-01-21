@@ -1795,8 +1795,26 @@ bool handle_outdoor_sec_shift(int dx, int dy){
 	shift_prompt->getControl("out-sec").setText(boost::lexical_cast<std::string>(new_out_sec));
 
 	if(shift_prompt.show() == "yes"){
+		int last_cen_x = cen_x;
+		int last_cen_y = cen_y;
 		set_current_out(new_out_sec);
-		// TODO match the terrain view to where we were
+		// match the terrain view to where we were
+		start_out_edit();
+		if(dx < 0) {
+			cen_x = get_current_area()->max_dim - 4;
+		}else if(dx > 0){
+			cen_x = 3;
+		}else{
+			cen_x = last_cen_x;
+		}
+		if(dy < 0){
+			cen_y = get_current_area()->max_dim - 4;
+		}else if(dy > 0){
+			cen_y = 3;
+		}else{
+			cen_y = last_cen_y;
+		}
+		redraw_screen();
 	}
 	return true;
 }
