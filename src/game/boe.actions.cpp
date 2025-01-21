@@ -1386,14 +1386,18 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	
 	// Now split off the extra stuff, like talking and shopping.
 	if(overall_mode == MODE_TALKING) {
-		handle_talk_event(the_point, fps_limiter);
-		if(overall_mode != MODE_TALKING)
-			return false;
+		if(handle_talk_event(the_point, fps_limiter)){
+			advance_time(did_something, need_redraw, need_reprint);
+			are_done = All_Done;
+			return are_done;
+		}
 	}
 	if(overall_mode == MODE_SHOPPING) {
-		handle_shop_event(the_point, fps_limiter);
-		if(overall_mode != MODE_SHOPPING)
-			return false;
+		if(handle_shop_event(the_point, fps_limiter)){
+			advance_time(did_something, need_redraw, need_reprint);
+			are_done = All_Done;
+			return are_done;
+		}
 	}
 
 	// Otherwise they're in a terrain view mode

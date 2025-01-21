@@ -219,18 +219,17 @@ void end_shop_mode() {
 	}
 }
 
-void handle_shop_event(location p, cFramerateLimiter& fps_limiter) {
+bool handle_shop_event(location p, cFramerateLimiter& fps_limiter) {
 	if(p.in(talk_help_rect)) {
-		if(!help_btn->handleClick(p, fps_limiter))
-			return;
-		give_help_and_record(226,27);
-		return;
+		if(help_btn->handleClick(p, fps_limiter))
+			give_help_and_record(226,27);
+		return true;
 	}
 	
 	if(p.in(shop_done_rect)) {
 		if(done_btn->handleClick(p, fps_limiter))
 			end_shop_mode();
-		return;
+		return true;
 	}
 
 	for(short i = 0; i < 8; i++) {
@@ -252,11 +251,14 @@ void handle_shop_event(location p, cFramerateLimiter& fps_limiter) {
 		if(p.in(active_rect)) {
 			click_shop_rect(active_rect);
 			handle_sale(what_picked);
+			return true;
 		} else if(p.in(item_help_rect)){
 			click_shop_rect(item_help_rect);
 			handle_info_request(what_picked);
+			return true;
 		}
 	}
+	return false;
 }
 
 void handle_sale(int i) {
@@ -1110,18 +1112,18 @@ void handle_talk_node(int which_talk_entry) {
 	place_talk_str(save_talk_str1,save_talk_str2,0,dummy_rect);
 }
 
-void handle_talk_event(location p, cFramerateLimiter& fps_limiter) {
+bool handle_talk_event(location p, cFramerateLimiter& fps_limiter) {
 	if(p.in(talk_help_rect)) {
-		if(!help_btn->handleClick(p, fps_limiter))
-			return;
-		give_help_and_record(205,6);
-		return;
+		if(help_btn->handleClick(p, fps_limiter))
+			give_help_and_record(205,6);
+		return true;
 	}
 
 	p.x -= 5;
 	p.y -= 5;
 
 	int which_talk_entry = TALK_DUNNO;
+	bool clicked_word = false;
 	for(word_rect_t& word : talk_words) {
 		if(word.node == -1) continue;
 		rectangle wordRect(word.rect);
@@ -1130,9 +1132,11 @@ void handle_talk_event(location p, cFramerateLimiter& fps_limiter) {
 		if(!p.in(wordRect)) continue;
 		click_talk_rect(word);
 		which_talk_entry = word.node;
+		clicked_word = true;
 		break;
 	}
 	handle_talk_node(which_talk_entry);
+	return clicked_word;
 }
 
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
