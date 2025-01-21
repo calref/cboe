@@ -5,7 +5,7 @@
 #include "dialogxml/dialogs/dialog.hpp"
 #include "scenario/shop.hpp"
 
-void start_shop_mode(short which,short cost_adj,std::string store_name);
+bool start_shop_mode(short which,short cost_adj,std::string store_name, bool cancel_when_empty = false);
 void end_shop_mode();
 void handle_shop_event(location p, cFramerateLimiter& fps_limiter);
 void handle_sale(int i);
