@@ -47,6 +47,7 @@ cSpell& cSpell::needsSelect(eSpellSelect sel) {
 	return *this;
 }
 
+// Mark a spell as castable by pacifist PCs
 cSpell& cSpell::asPeaceful() {
 	peaceful = true;
 	return *this;
