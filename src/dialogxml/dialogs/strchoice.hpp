@@ -52,7 +52,8 @@ public:
 	cDialog* operator->();
 	/// Show the dialog.
 	/// @param selectedIndex The index of the string that should be initially selected when the dialog is shown.
-	/// @return The index of the newly selected string; if the user cancelled, this will be equal to selectedIndex.
+	/// @return The index of the newly selected string; if the user cancelled, this will be equal to the initial
+	/// selectedIndex you provide. (So, pass -1 or something to signify that cancelling means the result is invalid.)
 	/// If initialized from an iterator range, this will be relative to begin.
 	size_t show(size_t selectedIndex);
 };
