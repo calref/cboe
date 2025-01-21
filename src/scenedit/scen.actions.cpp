@@ -25,6 +25,7 @@
 #include "tools/cursors.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/strchoice.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #ifndef MSBUILD_GITREV
 #include "tools/gitrev.hpp"
@@ -1860,7 +1861,24 @@ void handle_editor_screen_shift(int dx, int dy) {
 				return;
 			}
 		}else if(town_entrances.size() > 1){
+			std::vector<std::string> entrance_strings;
+			for(town_entrance_t entrance : town_entrances){
+				std::ostringstream sstr;
+				sstr << "Entrance in section " << entrance.out_sec << " at " <<  entrance.loc;
+				entrance_strings.push_back(sstr.str());
 
+			}
+			cStringChoice dlog(entrance_strings, "Shift to one of this town's entrances in the outdoors?");
+			size_t choice = dlog.show(-1);
+			if(choice >= 0 && choice < town_entrances.size()){
+				town_entrance_t entrance = town_entrances[choice];
+				set_current_out(entrance.out_sec);
+				start_out_edit();
+				cen_x = entrance.loc.x;
+				cen_y = entrance.loc.y;
+				redraw_screen();
+				return;
+			}
 		}
 	}
 
