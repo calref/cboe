@@ -53,7 +53,7 @@ Which shop
 Unused
 Unused
 Name of shop
-Unused
+Response if nothing for sale ...
 Receive Training
 Unused
 Unused
