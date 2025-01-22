@@ -29,14 +29,14 @@ std::map<std::string,sf::Color> colour_map = {
 	{"pink", Colours::PINK},
 	{"yellow", Colours::YELLOW},
 	{"orange", Colours::ORANGE},
-	{"light_blue", Colours::LIGHT_BLUE},
+	{"light-blue", Colours::LIGHT_BLUE},
 	{"shadow", Colours::SHADOW},
-	{"title_blue", Colours::TITLE_BLUE},
+	{"title-blue", Colours::TITLE_BLUE},
 	{"navy", Colours::NAVY},
 	{"dark_blue", Colours::DARK_BLUE},
-	{"dark_green", Colours::DARK_GREEN},
-	{"light_green", Colours::LIGHT_GREEN},
-	{"dark_red", Colours::DARK_RED}
+	{"dark-green", Colours::DARK_GREEN},
+	{"light-green", Colours::LIGHT_GREEN},
+	{"dark-red", Colours::DARK_RED}
 };
 
 // TODO: Put these classes in a header?

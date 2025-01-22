@@ -28,12 +28,12 @@
 	<button name='target5' type='small' def-key='shift 5' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'><key/></button>
 	<button name='target6' type='small' def-key='shift 6' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'><key/></button>
 	<!-- To the right of target buttons, green arrows to highlight choice -->
-	<text name='arrow1' relative='neg pos-in' anchor='hp1' top='0' left='20' width='32' height='16' colour='light_green'>-&gt;</text>
-	<text name='arrow2' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light_green'>-&gt;</text>
-	<text name='arrow3' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light_green'>-&gt;</text>
-	<text name='arrow4' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light_green'>-&gt;</text>
-	<text name='arrow5' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light_green'>-&gt;</text>
-	<text name='arrow6' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light_green'>-&gt;</text>
+	<text name='arrow1' relative='neg pos-in' anchor='hp1' top='0' left='20' width='32' height='16' colour='light-green'>-&gt;</text>
+	<text name='arrow2' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light-green'>-&gt;</text>
+	<text name='arrow3' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light-green'>-&gt;</text>
+	<text name='arrow4' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light-green'>-&gt;</text>
+	<text name='arrow5' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light-green'>-&gt;</text>
+	<text name='arrow6' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light-green'>-&gt;</text>
 	<!-- To the right of target buttons, PC HP -->
 	<text name='hp-head' size='large' relative='pos-in pos-in' anchor='target-head' top='0' left='55' width='223' height='16'>HP:</text>
 	<text name='hp1' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='red'/>
@@ -44,12 +44,12 @@
 	<text name='hp6' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='red'/>
 	<!-- To the right of PC HP, PC SP -->
 	<text name='sp-head' size='large' relative='pos-in pos-in' anchor='hp-head' top='0' left='24' width='223' height='16'>SP:</text>
-	<text name='sp1' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light_blue'/>
-	<text name='sp2' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light_blue'/>
-	<text name='sp3' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light_blue'/>
-	<text name='sp4' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light_blue'/>
-	<text name='sp5' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light_blue'/>
-	<text name='sp6' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light_blue'/>
+	<text name='sp1' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light-blue'/>
+	<text name='sp2' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light-blue'/>
+	<text name='sp3' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light-blue'/>
+	<text name='sp4' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light-blue'/>
+	<text name='sp5' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light-blue'/>
+	<text name='sp6' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='32' height='16' colour='light-blue'/>
 	<!-- To the right of PC SP, Status icons -->
 	<!-- Whee... time for the status effects! 15 statuses x 6 PCs! -->
 	<text name='status-head' size='large' relative='pos-in pos-in' anchor='sp-head' top='0' left='24' width='223' height='16'>Status:</text>
