@@ -442,9 +442,8 @@ static void handle_scenario_args() {
 		// so when you leave, you'll hopefully be in the right place.
 		auto town_entrances = univ.scenario.find_town_entrances(*scen_arg_town);
 		if(!town_entrances.empty()){
-			// TODO a dialog could be shown to choose between multiple entrances,
-			// but maybe that would be janky, because this happens when you're trying to launch
-			// from INSIDE a town.
+			// When there are multiple entrances, this part of the code shouldn't matter,
+			// but also won't hurt.
 			town_entrance_t first_entrance_found = town_entrances[0];
 			int x = first_entrance_found.out_sec.x;
 			int y = first_entrance_found.out_sec.y;
