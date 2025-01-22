@@ -44,7 +44,7 @@ std::map<std::string,sf::Color> colour_map = {
 	{"maroon", Colours::MAROON},
 	{"olive", Colours::OLIVE},
 	{"purple", Colours::PURPLE},
-	{"silvel", Colours::SILVER}
+	{"silver", Colours::SILVER}
 };
 
 // TODO: Put these classes in a header?
