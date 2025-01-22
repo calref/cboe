@@ -90,7 +90,7 @@ if not env['release']:
 	if platform in ['posix', 'darwin']:
 		env.Append(CCFLAGS=['-g','-O0', '-D' 'DEBUG=1'])
 	elif platform == 'win32':
-		env.Append(CCFLAGS=['/Zi', '/Od', '/D', 'DEBUG=1'])
+		env.Append(CCFLAGS=['/Zi', '/Od', '/DDEBUG'])
 		env.Append(LINKFLAGS=['/DEBUG'])
 
 # This command generates the header with git revision information
