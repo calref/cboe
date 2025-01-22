@@ -79,7 +79,8 @@ if platform not in ("darwin", "win32", "posix"):
 	Exit(1)
 print('Building for:', platform)
 print('Using toolchain:', toolset)
-print('C++ compiler:', env['CXX'])
+cxx = env.subst(env['CXX'])
+print('C++ compiler:', cxx)
 
 env.VariantDir('#build/obj', 'src')
 env.VariantDir('#build/obj/test', 'test')
@@ -89,7 +90,7 @@ if not env['release']:
 	if platform in ['posix', 'darwin']:
 		env.Append(CCFLAGS=['-g','-O0', '-D' 'DEBUG=1'])
 	elif platform == 'win32':
-		env.Append(CCFLAGS=['/Zi', '/Od', '/D', 'DEBUG=1'])
+		env.Append(CCFLAGS=['/Zi', '/Od', '/DDEBUG'])
 		env.Append(LINKFLAGS=['/DEBUG'])
 
 # This command generates the header with git revision information
@@ -327,8 +328,23 @@ bundled_libs = []
 if not env.GetOption('clean'):
 	conf = Configure(env)
 
-	if not conf.CheckCC() or not conf.CheckCXX():
+	if not conf.CheckCXX():
 		print("There's a problem with your compiler!")
+
+		test_command = env.subst(env['CXXCOM'])
+		print('Working directory:', os.getcwd())
+		print('Compiling test program: ' + test_command)
+
+		with open('test.cpp', 'w') as test_file:
+			test_file.writelines([
+				'int main(void)\n',
+				'{\n',
+				'return 0;\n',
+				'}\n',
+			])
+		import subprocess
+		for line in test_command.split('\n'):
+			subprocess.run(line.split(' ') + ['test.cpp'])
 		Exit(1)
 
 	def check_lib(lib, disp, suffixes=[], versions=[], msvc_versions=[]):

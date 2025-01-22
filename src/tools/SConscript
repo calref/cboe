@@ -31,6 +31,7 @@ if str(platform) == "darwin":
 	tools.extend(Glob("*.mac.*"))
 elif str(platform) == "win32":
 	tools.extend(Glob("*.win.cpp"))
+	tools.extend(Glob("../fileio/*.win.cpp"))
 elif str(platform) == "posix":
 	tools.extend(Glob("*.linux.cpp"))
 	tools.append("prefs.win.cpp")
