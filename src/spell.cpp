@@ -47,7 +47,6 @@ cSpell& cSpell::needsSelect(eSpellSelect sel) {
 	return *this;
 }
 
-// Mark a spell as castable by pacifist PCs
 cSpell& cSpell::asPeaceful() {
 	peaceful = true;
 	return *this;
@@ -92,6 +91,10 @@ eSpell cSpell::fromNum(int num) {
 		return eSpell::NONE;
 	return check;
 }
+
+// NOTE:
+// asPeaceful() marks a spell as castable by pacifist PCs. It doesn't mean "only in peace mode"
+// (which would make a lot of these contradictory/broken)
 
 // Mage Spells
 cSpell M_LIGHT = cSpell(eSpell::LIGHT).asType(eSkill::MAGE_SPELLS).asLevel(1)
