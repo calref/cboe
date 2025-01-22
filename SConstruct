@@ -330,7 +330,7 @@ bundled_libs = []
 if not env.GetOption('clean'):
 	conf = Configure(env)
 
-	if not conf.CheckCC() or not conf.CheckCXX():
+	if not conf.CheckCXX():
 		print("There's a problem with your compiler!")
 		Exit(1)
 
