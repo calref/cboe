@@ -343,7 +343,8 @@ if not env.GetOption('clean'):
 				'}\n',
 			])
 		import subprocess
-		subprocess.run(test_command.split(' ') + ['test.cpp'])
+		for line in test_command.split('\n'):
+			subprocess.run(line.split(' ') + ['test.cpp'])
 		Exit(1)
 
 	def check_lib(lib, disp, suffixes=[], versions=[], msvc_versions=[]):
