@@ -330,6 +330,11 @@ if not env.GetOption('clean'):
 
 	if not conf.CheckCXX():
 		print("There's a problem with your compiler!")
+
+		test_command = env.subst(env['CXXCOM'])
+		print('Working directory:', os.getcwd())
+		print('Compiling test program: ' + test_command)
+
 		with open('test.cpp', 'w') as test_file:
 			test_file.writelines([
 				'int main(void)\n',
@@ -338,7 +343,7 @@ if not env.GetOption('clean'):
 				'}\n',
 			])
 		import subprocess
-		subprocess.run([cxx, 'test.cpp'])
+		subprocess.run(test_command.split(' ') + ['test.cpp'])
 		Exit(1)
 
 	def check_lib(lib, disp, suffixes=[], versions=[], msvc_versions=[]):
