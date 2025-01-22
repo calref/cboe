@@ -888,10 +888,17 @@ void handle_talk_node(int which_talk_entry) {
 			return;
 			
 		case eTalkNode::SHOP:
-			if(!start_shop_mode(b,a,save_talk_str1,true))
-				save_talk_str1 = "There is nothing to buy from " + save_talk_str1 + ".";
-			else
+			if(!start_shop_mode(b,a,save_talk_str1,true)){
+				// Second string of shop talk node: Custom message for when shop is empty
+				if(!save_talk_str2.empty()){
+					save_talk_str1 = save_talk_str2;
+					save_talk_str2 = "";
+				}else{
+					save_talk_str1 = "There is nothing available to buy.";
+				}
+			}else{
 				can_save_talk = false;
+			}
 			return;
 		case eTalkNode::JOB_BANK:
 			if(a < univ.party.job_banks.size() && univ.party.job_banks[a].anger >= 50) {
