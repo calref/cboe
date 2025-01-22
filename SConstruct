@@ -79,7 +79,10 @@ if platform not in ("darwin", "win32", "posix"):
 	Exit(1)
 print('Building for:', platform)
 print('Using toolchain:', toolset)
-print('C++ compiler:', env['CXX'])
+cxx = env['CXX']
+if cxx.startswith('$'):
+	cxx = env[cxx[1:]]
+print('C++ compiler:', cxx)
 
 env.VariantDir('#build/obj', 'src')
 env.VariantDir('#build/obj/test', 'test')
