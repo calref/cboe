@@ -975,6 +975,18 @@ location terrain_click[8] = {
 	{120,185}, // west
 	{120,155}, // northwest
 };
+// Screen shift deltas ordered to correspond with eDirection
+// TODO screen_shift_delta is duplicated (with different ordering) in boe.actions.cpp
+location screen_shift_delta[8] = {
+	{0,-1}, // north
+	{1,-1}, // northeast
+	{1,0}, // east
+	{1,1}, // southeast
+	{0,1}, // south
+	{-1,1}, // southwest
+	{-1,0}, // west
+	{-1,-1}, // northwest
+};
 
 static void fire_delayed_key(Key code) {
 	bool isUpPressed = delayed_keys[Key::Up] > 0;
@@ -1015,11 +1027,18 @@ static void fire_delayed_key(Key code) {
 	}
 
 	if(dir != -1){
-		sf::Event pass_event = {sf::Event::MouseButtonPressed};
-		location pass_point = mainPtr.mapCoordsToPixel(terrain_click[dir], mainView);
-		pass_event.mouseButton.x = pass_point.x;
-		pass_event.mouseButton.y = pass_point.y;
-		queue_fake_event(pass_event);
+		bool need_redraw = false;
+		if(handle_screen_shift(screen_shift_delta[dir], need_redraw)){
+			if(need_redraw){
+				draw_terrain();
+			}
+		}else{
+			sf::Event pass_event = {sf::Event::MouseButtonPressed};
+			location pass_point = mainPtr.mapCoordsToPixel(terrain_click[dir], mainView);
+			pass_event.mouseButton.x = pass_point.x;
+			pass_event.mouseButton.y = pass_point.y;
+			queue_fake_event(pass_event);
+		}
 	}
 }
 

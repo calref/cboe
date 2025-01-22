@@ -1283,6 +1283,9 @@ static void handle_party_death() {
 }
 
 void screen_shift(int dx, int dy, bool& need_redraw) {
+	if(abs(dx) + abs(dy) == 0)
+		return;
+
 	if(recording){
 		std::map<std::string,std::string> info;
 		info["dx"] = boost::lexical_cast<std::string>(dx);
@@ -1292,8 +1295,15 @@ void screen_shift(int dx, int dy, bool& need_redraw) {
 
 	center.x += dx;
 	center.y += dy;
+}
 
-	need_redraw = true;
+// If configured to move the screen with arrow keys, do it and return true
+bool handle_screen_shift(location delta, bool& need_redraw) {
+	if(scrollableModes.count(overall_mode) && get_bool_pref("DirectionalKeyScrolling", false) != kb.isShiftPressed()){
+		screen_shift(delta.x, delta.y, need_redraw);
+		return true;
+	}
+	return false;
 }
 
 void handle_print_pc_hp(int which_pc, bool& need_reprint) {
@@ -2267,6 +2277,13 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 		{120,185},{150,185},{180,185},
 		{120,155},{150,155},{180,135}
 	};
+	// Screen shift deltas ordered to correspond with keypad keys
+	location screen_shift_delta[10] = {
+		{0,0},{-1,1},{0,1},{1,1},
+		{-1,0},{0,0},{1,0},
+		{-1,-1},{0,-1},{1,-1}
+	};
+
 	Key talk_chars[9] = {Key::L,Key::N,Key::J,Key::B,Key::S,Key::R,Key::D,Key::G,Key::A};
 	Key shop_chars[8] = {Key::A,Key::B,Key::C,Key::D,Key::E,Key::F,Key::G,Key::H};
 
@@ -2388,11 +2405,14 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 					chr2 = Key::Z;
 				}
 				else {
-					pass_point = mainPtr.mapCoordsToPixel(terrain_click[i], mainView);
-					pass_event.mouseButton.x = pass_point.x;
-					pass_event.mouseButton.y = pass_point.y;
-					are_done = handle_action(pass_event, fps_limiter);
-					return are_done;
+					if(!handle_screen_shift(screen_shift_delta[i], need_redraw)){
+						// Directional keys simulate directional click
+						pass_point = mainPtr.mapCoordsToPixel(terrain_click[i], mainView);
+						pass_event.mouseButton.x = pass_point.x;
+						pass_event.mouseButton.y = pass_point.y;
+						are_done = handle_action(pass_event, fps_limiter);
+						return are_done;
+					}
 				}
 			}
 	}

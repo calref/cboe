@@ -1185,6 +1185,7 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		else if(cur_display_mode == "br") set_pref("DisplayMode", 4);
 		else if(cur_display_mode == "win") set_pref("DisplayMode", 5);
 		set_pref("PlaySounds", dynamic_cast<cLed&>(me["nosound"]).getState() == led_off);
+		set_pref("DirectionalKeyScrolling", dynamic_cast<cLed&>(me["screen-shift"]).getState() != led_off);
 		set_pref("RepeatRoomDescriptions", dynamic_cast<cLed&>(me["repeatdesc"]).getState() != led_off);
 		set_pref("ShowInstantHelp", dynamic_cast<cLed&>(me["nohelp"]).getState() == led_off);
 		
@@ -1304,6 +1305,13 @@ void pick_preferences(bool record) {
 			break;
 	}
 	
+	cLedGroup& keyshiftOptions = dynamic_cast<cLedGroup&>(prefsDlog["keyshift-options"]);
+	if(get_bool_pref("DirectionalKeyScrolling", false)){
+		keyshiftOptions.setSelected("screen-shift");
+	}else{
+		keyshiftOptions.setSelected("target-adjacent");
+	}
+
 	cLedGroup& uiScale = dynamic_cast<cLedGroup&>(prefsDlog["scaleui"]);
 	double ui_scale = get_ui_scale();
 	if (ui_scale>0.95 && ui_scale<1.05) uiScale.setSelected("1");
