@@ -79,9 +79,7 @@ if platform not in ("darwin", "win32", "posix"):
 	Exit(1)
 print('Building for:', platform)
 print('Using toolchain:', toolset)
-cxx = env['CXX']
-if cxx.startswith('$'):
-	cxx = env[cxx[1:]]
+cxx = env.subst(env['CXX'])
 print('C++ compiler:', cxx)
 
 env.VariantDir('#build/obj', 'src')
@@ -332,6 +330,15 @@ if not env.GetOption('clean'):
 
 	if not conf.CheckCXX():
 		print("There's a problem with your compiler!")
+		with open('test.cpp', 'w') as test_file:
+			test_file.writelines([
+				'int main(void)\n',
+				'{\n',
+				'return 0;\n',
+				'}\n',
+			])
+		import subprocess
+		subprocess.run([cxx, 'test.cpp'])
 		Exit(1)
 
 	def check_lib(lib, disp, suffixes=[], versions=[], msvc_versions=[]):
