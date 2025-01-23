@@ -52,11 +52,9 @@ void set_up_apple_events() {
 	
 	if(load_scenario(fileName, scenario)) {
 		set_current_town(scenario.last_town_edited);
-		cur_out = scenario.last_out_edited;
-		current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
 		change_made = false;
 		ae_loading = true;
-		set_up_main_screen();
+		set_current_out(scenario.last_out_edited);
 	}
 	return TRUE;
 }

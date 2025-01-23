@@ -5,6 +5,8 @@
 #include <array>
 #include <string>
 #include <stack>
+#include <vector>
+#include <boost/lexical_cast.hpp>
 #include "scen.global.hpp"
 #include "scenario/scenario.hpp"
 #include "gfx/render_shapes.hpp"
@@ -23,6 +25,7 @@
 #include "tools/cursors.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/strchoice.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #ifndef MSBUILD_GITREV
 #include "tools/gitrev.hpp"
@@ -236,10 +239,7 @@ static bool handle_lb_action(location the_point) {
 						file_to_load = nav_get_scenario();
 						if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
 							set_current_town(scenario.last_town_edited);
-							cur_out = scenario.last_out_edited;
-							current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
-							overall_mode = MODE_MAIN_SCREEN;
-							set_up_main_screen();
+							set_current_out(scenario.last_out_edited);
 						} else if(!file_to_load.empty())
 							// If we tried to load but failed, the scenario record is messed up, so boot to start screen.
 							set_up_start_screen();
@@ -277,9 +277,7 @@ static bool handle_lb_action(location the_point) {
 					case LB_LOAD_OUT:
 						spot_hit = pick_out(cur_out, scenario);
 						if(spot_hit != cur_out) {
-							cur_out = spot_hit;
-							current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
-							set_up_main_screen();
+							set_current_out(spot_hit);
 						}
 						break;
 					case LB_EDIT_OUT:
@@ -1153,34 +1151,38 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 		return true;
 	}
 	bool need_redraw = false;
-	if((the_point.in(border_rect[0])) & (cen_y > (editing_town ? 4 : 3))) {
-		cen_y--;
+	if((the_point.in(border_rect[0]))) {
 		if(ctrl_hit)
 			cen_y = ((editing_town) ? 4 : 3);
+		else
+			handle_editor_screen_shift(0, -1);
 		need_redraw = true;
 		mouse_button_held = true;
 	}
-	if((the_point.in(border_rect[1])) & (cen_x > (editing_town ? 4 : 3))) {
-		cen_x--;
+	if((the_point.in(border_rect[1]))) {
 		if(ctrl_hit)
 			cen_x = ((editing_town) ? 4 : 3);
+		else
+			handle_editor_screen_shift(-1, 0);
 		need_redraw = true;
 		mouse_button_held = true;
 	}
 	auto max_dim = cur_area->max_dim - 5;
 	// This allows you to see a strip of terrain from the adjacent sector when editing outdoors
 	if(!editing_town) max_dim++;
-	if((the_point.in(border_rect[2])) && (cen_y < max_dim)) {
-		cen_y++;
+	if((the_point.in(border_rect[2]))) {
 		if(ctrl_hit)
 			cen_y = max_dim;
+		else
+			handle_editor_screen_shift(0, 1);
 		need_redraw = true;
 		mouse_button_held = true;
 	}
-	if((the_point.in(border_rect[3])) && (cen_x < max_dim)) {
-		cen_x++;
+	if((the_point.in(border_rect[3]))) {
 		if(ctrl_hit)
 			cen_x = max_dim;
+		else
+			handle_editor_screen_shift(1, 0);
 		need_redraw = true;
 		mouse_button_held = true;
 	}
@@ -1781,13 +1783,119 @@ void handle_keystroke(sf::Event event) {
 	mouse_button_held = false;
 }
 
+bool handle_outdoor_sec_shift(int dx, int dy){
+	if(editing_town) return false;
+	int new_x = cur_out.x + dx;
+	int new_y = cur_out.y + dy;
+	if(new_x < 0) return true;
+	if(new_x >= scenario.outdoors.width()) return true;
+	if(new_y < 0) return true;
+	if(new_y >= scenario.outdoors.height()) return true;
+
+	cChoiceDlog shift_prompt("shift-outdoor-section", {"yes", "no"});
+	location new_out_sec = { new_x, new_y };
+	shift_prompt->getControl("out-sec").setText(boost::lexical_cast<std::string>(new_out_sec));
+
+	if(shift_prompt.show() == "yes"){
+		int last_cen_x = cen_x;
+		int last_cen_y = cen_y;
+		set_current_out(new_out_sec);
+		// match the terrain view to where we were
+		start_out_edit();
+		if(dx < 0) {
+			cen_x = get_current_area()->max_dim - 4;
+		}else if(dx > 0){
+			cen_x = 3;
+		}else{
+			cen_x = last_cen_x;
+		}
+		if(dy < 0){
+			cen_y = get_current_area()->max_dim - 4;
+		}else if(dy > 0){
+			cen_y = 3;
+		}else{
+			cen_y = last_cen_y;
+		}
+		redraw_screen();
+	}
+	return true;
+}
+
+void handle_editor_screen_shift(int dx, int dy) {
+	int min = (editing_town ? 4 : 3);
+	int max = get_current_area()->max_dim - 5;
+	if(!editing_town) max++;
+	bool out_of_bounds = false;
+	if(cen_x + dx < min){
+		// In outdoors, prompt whether to swap to the next section west
+		if(handle_outdoor_sec_shift(-1, 0)) return;
+		out_of_bounds = true;
+	}else if(cen_x + dx > max){
+		// In outdoors, prompt whether to swap to the next section east
+		if(handle_outdoor_sec_shift(1, 0)) return;
+		out_of_bounds = true;
+	}else if(cen_y + dy < min){
+		// In outdoors, prompt whether to swap to the next section north
+		if(handle_outdoor_sec_shift(0, -1)) return;
+		out_of_bounds = true;
+	}else if(cen_y + dy > max){
+		// In outdoors, prompt whether to swap to the next section south
+		if(handle_outdoor_sec_shift(0, 1)) return;
+		out_of_bounds = true;
+	}
+
+	if(out_of_bounds){
+		// In town, prompt whether to go back to outdoor entrance location
+		std::vector<town_entrance_t> town_entrances = scenario.find_town_entrances(cur_town);
+		if(town_entrances.size() == 1){
+			town_entrance_t only_entrance = town_entrances[0];
+			cChoiceDlog shift_prompt("shift-town-entrance", {"yes", "no"});
+			shift_prompt->getControl("out-sec").setText(boost::lexical_cast<std::string>(only_entrance.out_sec));
+
+			if(shift_prompt.show() == "yes"){
+				set_current_out(only_entrance.out_sec);
+				start_out_edit();
+				cen_x = only_entrance.loc.x;
+				cen_y = only_entrance.loc.y;
+				redraw_screen();
+				return;
+			}
+		}else if(town_entrances.size() > 1){
+			std::vector<std::string> entrance_strings;
+			for(town_entrance_t entrance : town_entrances){
+				std::ostringstream sstr;
+				sstr << "Entrance in section " << entrance.out_sec << " at " <<  entrance.loc;
+				entrance_strings.push_back(sstr.str());
+
+			}
+			cStringChoice dlog(entrance_strings, "Shift to one of this town's entrances in the outdoors?");
+			size_t choice = dlog.show(-1);
+			if(choice >= 0 && choice < town_entrances.size()){
+				town_entrance_t entrance = town_entrances[choice];
+				set_current_out(entrance.out_sec);
+				start_out_edit();
+				cen_x = entrance.loc.x;
+				cen_y = entrance.loc.y;
+				redraw_screen();
+				return;
+			}
+		}
+	}
+
+	cen_x = minmax(min, max, cen_x + dx);
+	cen_y = minmax(min, max, cen_y + dy);
+}
+
 void handle_scroll(const sf::Event& event) {
 	location pos { translate_mouse_coordinates({event.mouseMove.x,event.mouseMove.y}) };
 	int amount = event.mouseWheel.delta;
 	if(overall_mode < MODE_MAIN_SCREEN && pos.in(terrain_rect)) {
 		if(kb.isCtrlPressed())
-			cen_x = minmax(4, town->max_dim - 5, cen_x - amount);
-		else cen_y = minmax(4, town->max_dim - 5, cen_y - amount);
+			handle_editor_screen_shift(-amount, 0);
+		else handle_editor_screen_shift(0, -amount);
+
+		draw_terrain();
+		place_location();
 	}
 }
 

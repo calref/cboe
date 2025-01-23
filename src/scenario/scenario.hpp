@@ -39,6 +39,13 @@ struct scenario_header_flags {
 
 enum eContentRating {G, PG, R, NC17};
 
+// Used for finding town entrances in the outdoors
+struct town_entrance_t {
+	location out_sec;
+	location loc;
+	int town;
+};
+
 class cScenario {
 public:
 	class cItemStorage {
@@ -117,6 +124,10 @@ public:
 	cItem return_treasure(int loot, bool allow_junk_treasure = false) const;
 	cItem pull_item_of_type(unsigned int loot_max,short min_val,short max_val,const std::vector<eItemType>& types,bool allow_junk_treasure=false) const;
 	
+	// Debugging/Editing helper: find town entrances in the outdoors. When town_num is specified, only return entrances
+	// to the town with that number
+	std::vector<town_entrance_t> find_town_entrances(int town_num = -1);
+
 	void reset_version();
 	explicit cScenario();
 	~cScenario();

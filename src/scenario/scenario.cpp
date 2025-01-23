@@ -577,3 +577,17 @@ void cScenario::readFrom(const cTagFile& file){
 		}
 	}
 }
+
+std::vector<town_entrance_t> cScenario::find_town_entrances(int town_num) {
+	std::vector<town_entrance_t> matching_entrances;
+	for(int x = 0; x < outdoors.width(); ++x){
+		for(int y = 0; y < outdoors.height(); ++y){
+			for(spec_loc_t& entrance : outdoors[x][y]->city_locs){
+				if(town_num == -1 || entrance.spec == town_num){
+					matching_entrances.push_back({{x, y}, {entrance.x, entrance.y}, static_cast<int>(entrance.spec)});
+				}
+			}
+		}
+	}
+	return matching_entrances;
+}

@@ -1296,6 +1296,13 @@ void set_current_town(int to) {
 	scenario.last_town_edited = cur_town;
 }
 
+void set_current_out(location out_sec) {
+	cur_out = out_sec;
+	scenario.last_out_edited = cur_out;
+	current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
+	set_up_main_screen();
+}
+
 aNewTown::aNewTown(cTown* t)
 	: cAction("add town")
 	, theTown(t)
