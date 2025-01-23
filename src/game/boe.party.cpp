@@ -52,6 +52,11 @@ short combat_percent[20] = {
 	70,70,67,62,57,52,47,42,40,40};
 
 short who_cast,which_pc_displayed;
+// Light can be cast in or out of combat
+const eSpell DEFAULT_SELECTED_MAGE = eSpell::LIGHT;
+// Bless can only be cast in combat, so separate defaults are needed
+const eSpell DEFAULT_SELECTED_PRIEST = eSpell::HEAL_MINOR;
+const eSpell DEFAULT_SELECTED_PRIEST_COMBAT = eSpell::BLESS_MINOR;
 eSpell town_spell;
 extern bool spell_freebie;
 extern eSpecCtxType spec_target_type;
@@ -93,6 +98,9 @@ short spell_index[38] = {38,39,40,41,42,43,44,45,90,90,46,47,48,49,50,51,52,53,9
 	54,55,56,57,58,59,60,61,90,90, 90,90,90,90,90,90,90,90};
 // Says which buttons hit which spells on second spell page, 90 means no button
 bool can_choose_caster;
+
+const sf::Color SELECTED_COLOUR = Colours::LIGHT_GREEN;
+const sf::Color DISABLED_COLOUR = Colours::GREY;
 
 // Dialog vars
 short store_graphic_pc_num ;
@@ -490,6 +498,13 @@ bool repeat_cast_ok(eSkill type) {
 		what_spell = univ.party[who_would_cast].last_cast[type];
 	else what_spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
 	
+	if(what_spell == eSpell::NONE){
+		std::ostringstream sout;
+		sout << "Repeat cast: No " << (type == eSkill::MAGE_SPELLS ? "mage" : "priest") << " spell stored.";
+		add_string_to_buf(sout.str());
+		return false;
+	}
+
 	if(!pc_can_cast_spell(univ.party[who_would_cast],what_spell)) {
 		add_string_to_buf("Repeat cast: Can't cast.");
 		return false;
@@ -1640,8 +1655,8 @@ static void draw_spell_info(cDialog& me, const eSkill store_situation, const sho
 					}
 					break;
 				case SELECT_ANY:
-					// TODO: Split off party members should probably be excluded too?
-					if(univ.party[i].main_status != eMainStatus::ABSENT) {
+					// Absent party members and split-off party members are excluded
+					if(univ.party[i].main_status != eMainStatus::ABSENT && univ.party[i].main_status < eMainStatus::SPLIT) {
 						me[id].show();
 					}
 					else {
@@ -1691,6 +1706,7 @@ static void draw_spell_pc_info(cDialog& me) {
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			me["pc" + n].setText(univ.party[i].name);
 			
+			me["arrow" + n].hide();
 			if(univ.party[i].main_status == eMainStatus::ALIVE) {
 				me["hp" + n].setTextToNum(univ.party[i].cur_health);
 				me["sp" + n].setTextToNum(univ.party[i].cur_sp);
@@ -1706,7 +1722,7 @@ static void put_pc_caster_buttons(cDialog& me) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(me["caster" + n].isVisible()) {
 			if(i == pc_casting)
-				me["pc" + n].setColour(Colours::RED);
+				me["pc" + n].setColour(SELECTED_COLOUR);
 			else me["pc" + n].setColour(me.getDefTextClr());
 		}
 	}
@@ -1716,13 +1732,11 @@ static void put_pc_target_buttons(cDialog& me, short& store_last_target_darkened
 	
 	if(store_spell_target < 6) {
 		std::string n = boost::lexical_cast<std::string>(store_spell_target + 1);
-		me["hp" + n].setColour(Colours::RED);
-		me["sp" + n].setColour(Colours::RED);
+		me["arrow" + n].show();
 	}
 	if((store_last_target_darkened < 6) && (store_last_target_darkened != store_spell_target)) {
 		std::string n = boost::lexical_cast<std::string>(store_last_target_darkened + 1);
-		me["hp" + n].setColour(me.getDefTextClr());
-		me["sp" + n].setColour(me.getDefTextClr());
+		me["arrow" + n].hide();
 	}
 	store_last_target_darkened = store_spell_target;
 }
@@ -1740,12 +1754,16 @@ static void put_spell_led_buttons(cDialog& me, const eSkill store_situation,cons
 			eSpell spell = cSpell::fromNum(store_situation, spell_for_this_button);
 			if(store_spell == spell_for_this_button) {
 				led.setState(led_green);
+				// Text color:
+				led.setColour(SELECTED_COLOUR);
 			}
 			else if(pc_can_cast_spell(univ.party[pc_casting],spell)) {
 				led.setState(led_red);
+				led.setColour(me.getDefTextClr());
 			}
 			else {
 				led.setState(led_off);
+				led.setColour(DISABLED_COLOUR);
 			}
 		}
 	}
@@ -1862,9 +1880,7 @@ static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods, con
 		me["feedback"].setText(bad_spell);
 	}
 	else {
-		if(store_situation == eSkill::MAGE_SPELLS)
-			store_spell = (on_which_spell_page == 0) ? item_hit : spell_index[item_hit];
-		else store_spell = (on_which_spell_page == 0) ? item_hit : spell_index[item_hit];
+		store_spell = (on_which_spell_page == 0) ? item_hit : spell_index[item_hit];
 		draw_spell_info(me, store_situation, store_spell);
 		put_spell_led_buttons(me, store_situation, store_spell);
 		
@@ -1914,6 +1930,7 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 	if(store_situation == eSkill::MAGE_SPELLS && (*picked_spell).need_select == SELECT_NO) {
 		store_last_cast_mage = pc_casting;
 		univ.party[pc_casting].last_cast[store_situation] = picked_spell;
+		univ.party[pc_casting].last_cast_type = store_situation;
 		me.toast(false);
 		me.setResult<short>(store_spell);
 		return true;
@@ -1921,6 +1938,7 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 	if(store_situation == eSkill::PRIEST_SPELLS && (*picked_spell).need_select == SELECT_NO) {
 		store_last_cast_priest = pc_casting;
 		univ.party[pc_casting].last_cast[store_situation] = picked_spell;
+		univ.party[pc_casting].last_cast_type = store_situation;
 		me.toast(false);
 		me.setResult<short>(store_spell);
 		return true;
@@ -1938,6 +1956,7 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 		store_last_cast_mage = pc_casting;
 	else store_last_cast_priest = pc_casting;
 	univ.party[pc_casting].last_cast[store_situation] = picked_spell;
+	univ.party[pc_casting].last_cast_type = store_situation;
 	me.toast(true);
 	return true;
 }
@@ -1947,7 +1966,7 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 //short situation; // 0 - out  1 - town  2 - combat
 eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	using namespace std::placeholders;
-	eSpell store_spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
+	eSpell default_spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
 	short former_target = store_spell_target;
 	short dark = 6;
 	
@@ -1995,29 +2014,38 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	// If in combat, make the spell being cast this PCs most recent spell
 	if(is_combat()) {
 		if(type == eSkill::MAGE_SPELLS)
-			store_spell = univ.party[pc_casting].last_cast[eSkill::MAGE_SPELLS];
-		else store_spell = univ.party[pc_casting].last_cast[eSkill::PRIEST_SPELLS];
+			default_spell = univ.party[pc_casting].last_cast[eSkill::MAGE_SPELLS];
+		else{
+			default_spell = univ.party[pc_casting].last_cast[eSkill::PRIEST_SPELLS];
+			if(default_spell == eSpell::NONE){
+				default_spell = DEFAULT_SELECTED_PRIEST_COMBAT;
+			}
+		}
 	}
 	
+	if(default_spell == eSpell::NONE){
+		default_spell = type == eSkill::MAGE_SPELLS ? DEFAULT_SELECTED_MAGE : DEFAULT_SELECTED_PRIEST;
+	}
+
 	// Keep the stored spell, if it's still castable
-	if(!pc_can_cast_spell(univ.party[pc_casting],store_spell)) {
+	if(!pc_can_cast_spell(univ.party[pc_casting],default_spell)) {
 		if(type == eSkill::MAGE_SPELLS) {
-			store_spell = eSpell::LIGHT;
+			default_spell = DEFAULT_SELECTED_MAGE;
 		}
 		else {
-			store_spell = eSpell::HEAL_MINOR;
+			default_spell = DEFAULT_SELECTED_PRIEST;
 		}
 	}
 	
 	// If a target is needed, keep the same target if that PC still targetable
 	if(store_spell_target < 6) {
-		if((*store_spell).need_select != SELECT_NO) {
+		if((*default_spell).need_select != SELECT_NO) {
 			if(univ.party[store_spell_target].main_status != eMainStatus::ALIVE)
 				store_spell_target = 6;
 		} else store_spell_target = 6;
 	}
 	
-	short former_spell = int(store_spell) % 100;
+	short former_spell = int(default_spell) % 100;
 	// Set the spell page, based on starting spell
 	if(former_spell >= 38) on_which_spell_page = 1;
 	else on_which_spell_page = 0;
@@ -2042,9 +2070,7 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 		cLed& led = dynamic_cast<cLed&>(castSpell[id]);
 		led.attachKey(key);
 		castSpell.addLabelFor(id, {static_cast<char>(i > 25 ? toupper(key.c) : key.c)}, LABEL_LEFT, 8, true);
-		if(spell_index[i] == 90){
-			continue;
-		}
+		// All LEDs should get the click handler and set state, because page 2 will hide them if necessary
 		led.setState((pc_can_cast_spell(univ.party[pc_casting],cSpell::fromNum(type,on_which_spell_page == 0 ? i : spell_index[i])))
 					 ? led_red : led_green);
 		led.attachClickHandler(std::bind(pick_spell_select_led, _1, _2, _3, type, std::ref(dark), std::ref(former_spell)));

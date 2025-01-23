@@ -258,7 +258,7 @@ TEST_CASE("Construction sanity test for player character") {
 		CHECK(pc.traits.empty());
 		CHECK(pc.race == eRace::HUMAN);
 		// Skip unique_id since it's non-deterministic
-		CHECK(pc.last_cast.empty());
+		CHECK(pc.last_cast.size() == 2);
 		CHECK(pc.combat_pos == loc(-1,-1));
 		CHECK(pc.parry == 0);
 		CHECK(pc.last_attacked == nullptr);

@@ -17,6 +17,36 @@
 using boost::math::constants::pi;
 using pt_idx_t = decltype(((sf::Shape*)nullptr)->getPointCount());
 
+std::map<std::string,sf::Color> colour_map = {
+	{"white", Colours::WHITE},
+	{"black", Colours::BLACK},
+	{"grey", Colours::GREY},
+	{"gray", Colours::GREY},
+	{"red", Colours::RED},
+	{"green", Colours::GREEN},
+	{"blue", Colours::BLUE},
+	{"teal", Colours::TEAL},
+	{"pink", Colours::PINK},
+	{"yellow", Colours::YELLOW},
+	{"orange", Colours::ORANGE},
+	{"light-blue", Colours::LIGHT_BLUE},
+	{"shadow", Colours::SHADOW},
+	{"title-blue", Colours::TITLE_BLUE},
+	{"navy", Colours::NAVY},
+	{"dark_blue", Colours::DARK_BLUE},
+	{"dark-green", Colours::DARK_GREEN},
+	{"light-green", Colours::LIGHT_GREEN},
+	{"dark-red", Colours::DARK_RED},
+	// Extra Colors
+	{"lime", Colours::LIME},
+	{"aqua", Colours::AQUA},
+	{"fuchsia", Colours::FUCHSIA},
+	{"maroon", Colours::MAROON},
+	{"olive", Colours::OLIVE},
+	{"purple", Colours::PURPLE},
+	{"silver", Colours::SILVER}
+};
+
 // TODO: Put these classes in a header?
 class EllipseShape : public sf::Shape {
 	float divSz;

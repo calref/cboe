@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <memory>
+#include <map>
 #include <SFML/Graphics/Shape.hpp>
 #include "location.hpp"
 
@@ -48,6 +49,7 @@ void undo_clip(sf::RenderTarget& where);
 namespace Colours {
 	const sf::Color WHITE = sf::Color::White;
 	const sf::Color BLACK = sf::Color::Black;
+	const sf::Color GREY   { 0x80, 0x80, 0x80};
 	const sf::Color RED    { 0xdd, 0x00, 0x00};
 	const sf::Color GREEN  { 0x00, 0x88, 0x00};
 	const sf::Color BLUE   { 0x00, 0x00, 0xdd};
@@ -55,6 +57,7 @@ namespace Colours {
 	const sf::Color PINK   { 0xff, 0x00, 0x99};
 	const sf::Color YELLOW { 0xff, 0xff, 0x31};
 	const sf::Color ORANGE { 0xff, 0x80, 0x00};
+	const sf::Color LIGHT_BLUE { 0xad, 0xd8, 0xe6 }; // Spell points on dark background
 	// Text colours for shopping / talking
 	// TODO: The Windows version appears to use completely different colours?
 	const sf::Color SHADOW      { 0x00, 0x00, 0x68}; // formerly c[3] QD colour = {0,0,26623} (shop/character name shadow, shop subtitle)
@@ -64,6 +67,14 @@ namespace Colours {
 	const sf::Color DARK_GREEN  { 0x00, 0x60, 0x00}; // formerly c[5] QD colour = {0,40959,0} (talking buttons)
 	const sf::Color LIGHT_GREEN { 0x00, 0xa0, 0x00}; // formerly c[6] QD colour = {0,24575,0} (talking buttons pressed)
 	const sf::Color DARK_RED    { 0xa0, 0x00, 0x14}; // formerly c[7] (clickable text, new in OBoE)
+	// Extra colors
+	const sf::Color LIME { 0x00, 0xFF, 0x00};
+	const sf::Color AQUA { 0x00, 0xFF, 0xFF};
+	const sf::Color FUCHSIA { 0xFF, 0x00, 0xFF};
+	const sf::Color MAROON { 0x80, 0x00, 0x00};
+	const sf::Color OLIVE { 0x80, 0x80, 0x00};
+	const sf::Color PURPLE { 0x80, 0x00, 0x80};
+	const sf::Color SILVER { 0xC0, 0xC0, 0xC0};
 }
 
 const sf::Color PRESET_WORD_ON = Colours::DARK_GREEN;

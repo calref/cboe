@@ -147,7 +147,7 @@ eStatMode stat_screen_mode;
 short anim_step = -1;
 
 // Spell casting globals
-eSpell store_mage = eSpell::LIGHT, store_priest = eSpell::BLESS_MINOR;
+eSpell store_mage = eSpell::NONE, store_priest = eSpell::NONE;
 short store_mage_lev = 0, store_priest_lev = 0;
 short store_spell_target = 6,pc_casting;
 short num_targets_left = 0;

@@ -149,7 +149,7 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	short total_width = str_to_draw.getLocalBounds().width;
 	
 	eTextMode mode = options.mode;
-	if(mode == eTextMode::WRAP && total_width < dest_rect.width())
+	if(mode == eTextMode::WRAP && total_width < dest_rect.width() && !options.right_align)
 		mode = eTextMode::LEFT_TOP;
 	if(mode == eTextMode::LEFT_TOP && str.find('|') != std::string::npos)
 		mode = eTextMode::WRAP;
