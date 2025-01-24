@@ -2364,10 +2364,6 @@ void set_up_start_screen() {
 	set_lb(7,LB_TEXT,LB_NO_ACTION,"To find out how to use the");
 	set_lb(8,LB_TEXT,LB_NO_ACTION,"editor, select Getting Started ");
 	set_lb(9,LB_TEXT,LB_NO_ACTION,"from the Help menu.");
-	set_lb(NLS - 6,LB_TEXT,LB_NO_ACTION,"Be sure to read the file Blades");
-	set_lb(NLS - 5,LB_TEXT,LB_NO_ACTION,"of Exile License. Using this");
-	set_lb(NLS - 4,LB_TEXT,LB_NO_ACTION,"program implies that you agree ");
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"with the terms of the license.");
 	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"Created 1997, Free Open Source");
 	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,version());
 	change_made = false;
