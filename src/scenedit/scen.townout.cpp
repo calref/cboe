@@ -1142,7 +1142,7 @@ static void put_talk_node_in_dlog(cDialog& me, std::stack<node_ref_t>& talk_edit
 		case eTalkNode::ENCHANT:
 			me["chooseA-regular"].show();
 			break;
-		case eTalkNode::CALL_TOWN_SPEC: case eTalkNode::CALL_SCEN_SPEC:
+		case eTalkNode::CALL_TOWN_SPEC: case eTalkNode::CALL_SCEN_SPEC: case eTalkNode::RECEIVE_QUEST:
 			me["chooseA"].show();
 			break;
 		default:
@@ -1209,11 +1209,22 @@ static bool select_talk_node_value(cDialog& me, std::string item_hit, const std:
 		me["extra2"].setTextToNum(i);
 	} else if(item_hit == "chooseA") {
 		int spec = me["extra1"].getTextAsNum();
-		int mode = talk_node.type == eTalkNode::CALL_TOWN_SPEC ? 2 : 0;
-		if(spec < 0)
-			spec = get_fresh_spec(mode);
-		if(edit_spec_enc(spec,mode,&me))
-			me["extra1"].setTextToNum(spec);
+		// Create/Edit a quest:
+		if(talk_node.type == eTalkNode::RECEIVE_QUEST){
+			if(spec == -1){
+				spec = scenario.quests.size();
+				me["extra1"].setTextToNum(spec);
+			}
+			edit_quest(spec);
+		}
+		// Create/Edit a special node:
+		else{
+			int mode = talk_node.type == eTalkNode::CALL_TOWN_SPEC ? 2 : 0;
+			if(spec < 0)
+				spec = get_fresh_spec(mode);
+			if(edit_spec_enc(spec,mode,&me))
+				me["extra1"].setTextToNum(spec);
+		}
 	} else if(item_hit == "chooseA-regular") {
 		int i = me["extra1"].getTextAsNum();
 		i = choose_text(STRT_ENCHANT,i,&me,"Which enchantment?");
