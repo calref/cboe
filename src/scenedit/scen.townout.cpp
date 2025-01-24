@@ -1137,9 +1137,18 @@ static void put_talk_node_in_dlog(cDialog& me, std::stack<node_ref_t>& talk_edit
 	if(talk_node.type == eTalkNode::SHOP)
 		me["chooseB"].show();
 	else me["chooseB"].hide();
-	if(talk_node.type != eTalkNode::CALL_TOWN_SPEC && talk_node.type != eTalkNode::CALL_SCEN_SPEC)
-		me["chooseA"].hide();
-	else me["chooseA"].show();
+	me["chooseA-regular"].hide();
+	switch(talk_node.type){
+		case eTalkNode::ENCHANT:
+			me["chooseA-regular"].show();
+			break;
+		case eTalkNode::CALL_TOWN_SPEC: case eTalkNode::CALL_SCEN_SPEC:
+			me["chooseA"].show();
+			break;
+		default:
+			me["chooseA"].hide();
+			break;
+	}
 	
 	if(talk_edit_stack.size() > 1)
 		me["back"].show();
@@ -1195,6 +1204,10 @@ static bool select_talk_node_value(cDialog& me, std::string item_hit, const std:
 			spec = get_fresh_spec(mode);
 		if(edit_spec_enc(spec,mode,&me))
 			me["extra1"].setTextToNum(spec);
+	} else if(item_hit == "chooseA-regular") {
+		int i = me["extra1"].getTextAsNum();
+		i = choose_text(STRT_ENCHANT,i,&me,"Which enchantment?");
+		me["extra1"].setTextToNum(i);
 	}
 	return true;
 }
@@ -1212,7 +1225,7 @@ short edit_talk_node(short which_node) {
 	talk_dlg["back"].attachClickHandler(std::bind(talk_node_back, _1, std::ref(talk_edit_stack)));
 	talk_dlg["new"].attachClickHandler(std::bind(talk_node_branch, _1, std::ref(talk_edit_stack)));
 	talk_dlg["choose-type"].attachClickHandler(std::bind(select_talk_node_type, _1, std::ref(talk_edit_stack)));
-	talk_dlg.attachClickHandlers(std::bind(select_talk_node_value, _1, _2, std::ref(talk_edit_stack)), {"chooseA", "chooseB"});
+	talk_dlg.attachClickHandlers(std::bind(select_talk_node_value, _1, _2, std::ref(talk_edit_stack)), {"chooseA","chooseA-regular","chooseB"});
 	talk_dlg["who"].attachFocusHandler(check_talk_personality);
 	talk_dlg.attachFocusHandlers(check_talk_key, {"key1", "key2"});
 	talk_dlg.attachFocusHandlers(std::bind(check_talk_xtra, _1, std::ref(talk_edit_stack), _2, _3), {"extra1", "extra2", "extra3", "extra4"});

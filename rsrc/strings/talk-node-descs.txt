@@ -118,7 +118,7 @@ Unused
 Person identifying items says:
 Unused
 Enchant Weapons
-Type of enchantment (See docs. for list)
+Type of enchantment
 Unused
 Unused
 Unused

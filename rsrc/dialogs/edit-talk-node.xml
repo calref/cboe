@@ -42,4 +42,5 @@
 	</text>
 	<button name='chooseB' type='regular' top='135' left='414'>Choose</button>
 	<button name='chooseA' type='large' top='112' left='414'>Create/Edit</button>
+	<button name='chooseA-regular' type='regular' top='112' left='414'>Choose</button>
 </dialog>
