@@ -945,6 +945,14 @@ static bool check_talk_key(cDialog& me, std::string item_hit, bool losing) {
 		}
 		return true;
 	}
+
+	// I'll always have trouble remembering that it should be 'purc'.
+	// So why not make it easy?
+	if(key == "buy"){
+		me[item_hit].setText("purc");
+		return true;
+	}
+
 	if(key.length() != 4) passes = false;
 	for(size_t i = 0; i < 4; i++) {
 		if(i < key.length() && !islower(key[i]))
