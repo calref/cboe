@@ -1191,6 +1191,16 @@ static bool select_talk_node_type(cDialog& me, std::stack<node_ref_t>& talk_edit
 	return true;
 }
 
+static bool select_talk_node_personality(cDialog& me, std::stack<node_ref_t>& talk_edit_stack) {
+	save_talk_node(me, talk_edit_stack, false, false);
+	short i = short(talk_edit_stack.top().second.personality);
+	// 2 negative possible values, so +2 and -2 to convert from selectedIndex
+	i = choose_text(STRT_TALK_NODE_PERSON, i + 2, &me, "Which personality(s)?") - 2;
+	talk_edit_stack.top().second.personality = i;
+	put_talk_node_in_dlog(me, talk_edit_stack);
+	return true;
+}
+
 static bool select_talk_node_value(cDialog& me, std::string item_hit, const std::stack<node_ref_t>& talk_edit_stack) {
 	const auto& talk_node = talk_edit_stack.top().second;
 	if(item_hit == "chooseB") {
@@ -1225,6 +1235,7 @@ short edit_talk_node(short which_node) {
 	talk_dlg["back"].attachClickHandler(std::bind(talk_node_back, _1, std::ref(talk_edit_stack)));
 	talk_dlg["new"].attachClickHandler(std::bind(talk_node_branch, _1, std::ref(talk_edit_stack)));
 	talk_dlg["choose-type"].attachClickHandler(std::bind(select_talk_node_type, _1, std::ref(talk_edit_stack)));
+	talk_dlg["choose-personality"].attachClickHandler(std::bind(select_talk_node_personality, _1, std::ref(talk_edit_stack)));
 	talk_dlg.attachClickHandlers(std::bind(select_talk_node_value, _1, _2, std::ref(talk_edit_stack)), {"chooseA","chooseA-regular","chooseB"});
 	talk_dlg["who"].attachFocusHandler(check_talk_personality);
 	talk_dlg.attachFocusHandlers(check_talk_key, {"key1", "key2"});

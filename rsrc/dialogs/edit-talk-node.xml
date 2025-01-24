@@ -36,10 +36,7 @@
 	<text top='184' left='77' width='24' height='14'>D</text>
 	<text size='large' top='203' left='49' width='83' height='15'>Message 1:</text>
 	<text size='large' top='309' left='49' width='80' height='14'>Message 2:</text>
-	<text top='21' left='256' width='207' height='29'>
-		If -1: Node is unused,
-		-2: All personalities use this response.
-	</text>
+	<button name='choose-personality' type='regular' top='24' left='256'>Choose</button>
 	<button name='chooseB' type='regular' top='135' left='414'>Choose</button>
 	<button name='chooseA' type='large' top='112' left='414'>Create/Edit</button>
 	<button name='chooseA-regular' type='regular' top='112' left='414'>Choose</button>
