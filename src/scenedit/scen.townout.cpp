@@ -3,6 +3,7 @@
 #include <cstring>
 #include <stack>
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include "scen.global.hpp"
 #include "scenario/scenario.hpp"
 #include "scenario/town.hpp"
@@ -24,6 +25,8 @@
 #include "dialogxml/widgets/scrollpane.hpp"
 #include "fileio/fileio.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
+
+using boost::algorithm::trim;
 
 extern short cen_x, cen_y, overall_mode;
 extern bool mouse_button_held,change_made;
@@ -932,6 +935,16 @@ static bool check_talk_key(cDialog& me, std::string item_hit, bool losing) {
 	if(!losing) return true;
 	std::string key = me[item_hit].getText();
 	bool passes = true;
+
+	// An empty string is fine, it just means there's only one key.
+	if(key.empty()){
+		// But there needs to be at least one.
+		if(me["key1"].getText() == me["key2"].getText()){
+			showError("At least one of the words in this node must be filled.");
+			return false;
+		}
+		return true;
+	}
 	if(key.length() != 4) passes = false;
 	for(size_t i = 0; i < 4; i++) {
 		if(i < key.length() && !islower(key[i]))
@@ -1088,8 +1101,10 @@ static bool save_talk_node(cDialog& me, std::stack<node_ref_t>& talk_edit_stack,
 	talk_node.personality = me["who"].getTextAsNum();
 	
 	std::string link = me["key1"].getText();
+	if(link.empty()) link = "    ";
 	std::copy(link.begin(), link.begin() + 4, talk_node.link1);
 	link = me["key2"].getText();
+	if(link.empty()) link = "    ";
 	std::copy(link.begin(), link.begin() + 4, talk_node.link2);
 	
 	for(int i = 0; i < 4; i++) {
@@ -1118,9 +1133,12 @@ static void put_talk_node_in_dlog(cDialog& me, std::stack<node_ref_t>& talk_edit
 	
 	std::string link = "";
 	for(int i = 0; i < 4; i++) link += talk_node.link1[i];
+	// I don't want 4 spaces in the text fields
+	trim(link);
 	me["key1"].setText(link);
 	link = "";
 	for(int i = 0; i < 4; i++) link += talk_node.link2[i];
+	trim(link);
 	me["key2"].setText(link);
 	
 	int iDescBase = int(talk_node.type) * 7;
