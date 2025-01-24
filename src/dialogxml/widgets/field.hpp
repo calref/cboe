@@ -90,6 +90,10 @@ private:
 	rectangle text_rect;
 	std::vector<snippet_t> snippets;
 	int ip_row, ip_col;
+	/// Setting maxChars AFTER the player has a chance to type in the field would be a bad idea.
+	/// So would calling setText() with a string longer than maxChars.
+	/// Really, it should probably only be set in xml, as the attribute "max-chars".
+	int maxChars = -1;
 	friend class aTextInsert;
 	friend class aTextDelete;
 };
