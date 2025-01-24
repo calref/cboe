@@ -4,6 +4,7 @@
 #include <stack>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string/case_conv.hpp>
 #include "scen.global.hpp"
 #include "scenario/scenario.hpp"
 #include "scenario/town.hpp"
@@ -27,6 +28,7 @@
 #include "fileio/resmgr/res_dialog.hpp"
 
 using boost::algorithm::trim;
+using boost::algorithm::to_lower;
 
 extern short cen_x, cen_y, overall_mode;
 extern bool mouse_button_held,change_made;
@@ -953,13 +955,17 @@ static bool check_talk_key(cDialog& me, std::string item_hit, bool losing) {
 		return true;
 	}
 
+	// We can convert upper-case letters
+	to_lower(key);
+	me[item_hit].setText(key);
 	if(key.length() != 4) passes = false;
 	for(size_t i = 0; i < 4; i++) {
-		if(i < key.length() && !islower(key[i]))
+		if(i < key.length() && !islower(key[i])){
 			passes = false;
+		}
 	}
 	if(!passes) {
-		showError("The words this node is the response to must be 4 characters long, and all characters must be lower case letters.", &me);
+		showError("The words this node is the response to must be 4 characters long, and all characters must be letters.", &me);
 		return false;
 	}
 	return true;
