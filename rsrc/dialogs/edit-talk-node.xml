@@ -5,6 +5,8 @@
 	<field name='who' top='26' left='186' width='64' height='16'/>
 	<field name='key1' top='54' left='165' width='52' height='16'/>
 	<field name='key2' top='54' left='285' width='52' height='16'/>
+	<text top='6' left='350' width='160' height='48'>The in-game "Buy" button checks for these response keys, in order: purc, sale, heal, iden, trai, ench</text>
+	<text relative='pos-in pos' rel-anchor='prev' top='0' left='0' width='160' height='50'>The "Sell" button checks for sell.</text>
 	<field name='extra1' top='114' left='344' width='64' height='16'/>
 	<field name='extra2' top='137' left='344' width='64' height='16'/>
 	<field name='extra3' top='160' left='344' width='64' height='16'/>
