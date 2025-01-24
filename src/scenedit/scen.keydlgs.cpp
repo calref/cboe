@@ -413,6 +413,10 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 		case STRT_SUMMON:
 			strings = {"0 - no summon (weak)", "1 - weak summoning", "2 - summoning", "3 - major summoning", "4 - no summon (unique/powerful"};
 			break;
+		case STRT_TALK_NODE_PERSON:
+			strings.push_back("All personalities use this response");
+			strings.push_back("Node is unused");
+			BOOST_FALLTHROUGH;
 		case STRT_TALK:
 			for(cTown* town : scenario.towns) {
 				for(cPersonality who : town->talking.people) {
