@@ -48,7 +48,7 @@ Unused
 Response if in this town ...
 Otherwise respond ...
 Shop
-Cost adjustment (0 .. 6)
+Cost adjustment, cheapest to highest (0 .. 6)
 Which shop
 Unused
 Unused
