@@ -2749,7 +2749,6 @@ void start_dialogue_editing(short restoring) {
 	if(restoring == 0) {
 		right_sbar->setPosition(0);
 		reset_rb();
-		right_sbar->setMaximum(70 - NRSONPAGE);
 	}
 	for(short i = 0; i < 10; i++) {
 		std::ostringstream strb;
@@ -2767,6 +2766,7 @@ void start_dialogue_editing(short restoring) {
 		set_rb(10 + i,RB_DIALOGUE, i, strb.str());
 	}
 	set_rb(10 + n_nodes, RB_DIALOGUE, n_nodes, "Create New Node");
+	right_sbar->setMaximum((11 + n_nodes) - NRSONPAGE);
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click node to delete",true);
 	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
 	redraw_screen();
