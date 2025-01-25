@@ -20,7 +20,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter);
 bool handle_scroll(const sf::Event& event);
 void do_load();
 void post_load();
-void do_save(short mode);
+void do_save(bool save_as = false);
 void do_abort();
 void increase_age();
 void handle_hunting();
