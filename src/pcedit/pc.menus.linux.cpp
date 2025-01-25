@@ -1,9 +1,10 @@
 
+#include <memory>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include "tools/winutil.hpp"
+#include "universe/universe.hpp"
 #include "pc.menus.hpp"
 #include "pc.menu.hpp"
-#include "tools/winutil.hpp"
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <memory>
 
 extern sf::RenderWindow mainPtr;
 extern bool party_in_scen;
