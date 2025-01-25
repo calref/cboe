@@ -2023,14 +2023,10 @@ void debug_leave_town() {
 		print_buf();
 		return;
 	}
-	univ.party.end_split(0);
-	overall_mode = MODE_OUTDOORS;
-	position_party(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y,univ.party.out_loc.x,univ.party.out_loc.y);
-	clear_map();
-	add_string_to_buf("Debug: Reunite party and leave town.");
+	ASB("Debug: Reunite party and leave town.");
 	print_buf();
-	update_explored(univ.party.out_loc);
-	redraw_screen(REFRESH_ALL);
+	univ.party.end_split(0);
+	end_town_mode(false, {0,0}, true);
 }
 
 void debug_kill() {

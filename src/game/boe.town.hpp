@@ -4,7 +4,7 @@
 
 void force_town_enter(short which_town,location where_start);
 void start_town_mode(short which_town, short entry_dir);
-location end_town_mode(short switching_level,location destination);  // returns new party location
+location end_town_mode(bool switching_level,location destination,bool debug_leave=false);  // returns new party location
 void handle_leave_town_specials(short town_number, short which_spec,location start_loc) ;
 void handle_town_specials(short town_number, bool town_dead,location start_loc) ;
 bool abil_exists(eItemAbil abil);
