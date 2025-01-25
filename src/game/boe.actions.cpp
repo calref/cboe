@@ -2781,8 +2781,7 @@ void do_save(bool save_as) {
 	if(save_party(univ, save_as)){
 		add_string_to_buf("Save: Game saved");
 	}else{
-		// Currently, nothing in save_party() can actually make this happen:
-		add_string_to_buf("Save: An error occurred");
+		add_string_to_buf("Save: Save not completed");
 	}
 
 	// Cancel switching PC order

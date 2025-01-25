@@ -548,5 +548,7 @@ bool save_party(cUniverse& univ, bool save_as) {
 	if(save_as || univ.file.empty()){
 		univ.file = nav_put_or_temp_party();
 	}
+	// A file wasn't chosen
+	if(univ.file.empty()) return false;
 	return save_party_const(univ, save_as);
 }
