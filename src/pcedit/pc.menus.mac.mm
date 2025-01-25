@@ -20,7 +20,6 @@ extern short menuChoiceId;
 using MenuHandle = NSMenu*;
 
 extern cUniverse univ;
-extern fs::path file_in_mem;
 extern bool scen_items_loaded, party_in_scen;
 MenuHandle menu_bar_handle;
 MenuHandle apple_menu, file_menu, reg_menu, extra_menu;
@@ -83,7 +82,7 @@ void init_menubar() {
 }
 
 void menu_activate() {
-	if(file_in_mem.empty()) {
+	if(univ.file.empty()) {
 		for(int i = 3; i < [file_menu numberOfItems]; i++)
 			[[file_menu itemAtIndex: i] setEnabled: NO];
 		[[menu_bar_handle itemWithTitle: @"Edit Party"] setEnabled: NO];

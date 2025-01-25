@@ -16,7 +16,6 @@
 
 extern cUniverse univ;
 extern sf::RenderWindow mainPtr;
-extern fs::path file_in_mem;
 extern sf::Texture pc_gworld;
 
 short which_pc_displayed,store_pc_trait_mode,store_which_to_edit;
@@ -37,7 +36,7 @@ bool handle_action(const sf::Event & event) {
 	
 	bool to_return = false;
 	
-	if(file_in_mem.empty())
+	if(univ.file.empty())
 		return false;
 	
 	for(short i = 0; i < 6; i++)

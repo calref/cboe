@@ -22,7 +22,6 @@ enum {
 extern sf::RenderWindow mainPtr;
 extern cUniverse univ;
 extern bool scen_items_loaded, party_in_scen;
-extern fs::path file_in_mem;
 LONG_PTR mainProc;
 HMENU menuHandle = NULL;
 accel_table_t accel;
@@ -106,7 +105,7 @@ void init_menubar() {
 void menu_activate() {
 	if(menuHandle == NULL) return;
 	HMENU file_menu = GetSubMenu(menuHandle, FILE_MENU_POS);
-	if(file_in_mem.empty()) {
+	if(univ.file.empty()) {
 		EnableMenuItem(menuHandle, PARTY_MENU_POS, MF_BYPOSITION | MF_GRAYED);
 		EnableMenuItem(menuHandle, SCEN_MENU_POS, MF_BYPOSITION | MF_GRAYED);
 		for(int i = 1; i < GetMenuItemCount(file_menu) - 1; i++)

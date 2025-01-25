@@ -7,7 +7,7 @@
 
 extern sf::RenderWindow mainPtr;
 extern bool party_in_scen;
-extern fs::path file_in_mem;
+extern cUniverse univ;
 
 std::shared_ptr<OpenBoEPCEditMenu> menu_ptr;
 
@@ -16,7 +16,7 @@ void init_menubar() {
 }
 
 void menu_activate() {
-	menu_ptr->update_for_editor_state(!file_in_mem.empty(), party_in_scen);
+	menu_ptr->update_for_editor_state(!univ.file.empty(), party_in_scen);
 }
 
 bool menuBarProcessEvent (sf::Event const & event) {

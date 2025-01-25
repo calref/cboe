@@ -57,7 +57,6 @@ bool All_Done = false;
 bool changed_display_mode = false;
 sf::RenderWindow mainPtr;
 sf::View mainView;
-fs::path file_in_mem;
 bool party_in_scen = false;
 bool scen_items_loaded = false;
 
@@ -100,7 +99,6 @@ static void process_args(int argc, char* argv[]) {
 	}
 	if(!file.empty()) {
 		if(load_party(file, univ)) {
-			file_in_mem = file;
 			party_in_scen = !univ.party.scen_name.empty();
 			if(!party_in_scen) load_base_item_defs();
 			scen_items_loaded = true;
@@ -277,11 +275,10 @@ void handle_menu_choice(eMenu item_hit) {
 			cChoiceDlog("about-pced").show();
 			break;
 		case eMenu::FILE_SAVE:
-			save_party(file_in_mem, univ);
+			save_party(univ);
 			break;
 		case eMenu::FILE_SAVE_AS:
-			file = nav_put_party();
-			if(!file.empty()) save_party(file, univ);
+			save_party(univ, true);
 			break;
 		case eMenu::FILE_OPEN:
 			result = verify_restore_quit("save-open");
@@ -289,10 +286,9 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::FILE_REVERT:
 			result = cChoiceDlog("save-revert", {"okay", "cancel"}).show() == "okay";
 			if(result) {
-				file = item_hit == eMenu::FILE_OPEN ? nav_get_party() : file_in_mem;
+				file = item_hit == eMenu::FILE_OPEN ? nav_get_party() : univ.file;
 				if(!file.empty()) {
 					if(load_party(file, univ)) {
-						file_in_mem = file;
 						party_in_scen = !univ.party.scen_name.empty();
 						if(!party_in_scen) load_base_item_defs();
 						scen_items_loaded = true;
@@ -303,7 +299,7 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::FILE_CLOSE:
 			if(verify_restore_quit("save-close"))
-				file_in_mem = "";
+				univ = cUniverse();
 			break;
 		case eMenu::PREFS:
 			pick_preferences();
@@ -450,7 +446,7 @@ void handle_menu_choice(eMenu item_hit) {
 bool verify_restore_quit(std::string dlog) {
 	std::string choice;
 	
-	if(file_in_mem.empty())
+	if(univ.file.empty())
 		return true;
 	cChoiceDlog verify(dlog, {"save", "quit", "cancel"});
 	choice = verify.show();
@@ -458,7 +454,7 @@ bool verify_restore_quit(std::string dlog) {
 		return false;
 	if(choice == "quit")
 		return true;
-	save_party(file_in_mem, univ);
+	save_party(univ);
 	return true;
 }
 
