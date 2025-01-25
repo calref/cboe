@@ -2273,6 +2273,8 @@ void easter_egg(int idx) {
 	print_buf();
 }
 
+// Non-comprehensive list of unused keys:
+// JUXYZ chijklnoqvy @#$%^-_+[]{},.'"`~/\|;:
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2500,6 +2502,8 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 		case 'D':
 			toggle_debug_mode();
 			break;
+
+		// 'z', Really? 'i' is not used
 		case 'z':
 			show_inventory();
 			break;
