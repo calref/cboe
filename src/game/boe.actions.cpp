@@ -1892,9 +1892,24 @@ void handle_menu_spell(eSpell spell_picked) {
 	advance_time(did_something, need_redraw, need_reprint);
 }
 
-void initiate_outdoor_combat(short i) {
+static void set_up_combat() {
 	location to_place;
-	
+	for(cPlayer& pc : univ.party)
+		if(pc.main_status == eMainStatus::ALIVE)
+			to_place = pc.combat_pos;
+		else for(cItem& item : pc.items)
+			if(item.variety != eItemType::NO_ITEM) {
+				place_item(item,to_place);
+				item.variety = eItemType::NO_ITEM;
+			}
+
+	overall_mode = MODE_COMBAT;
+	center = univ.current_pc().combat_pos;
+	draw_terrain();
+}
+
+void initiate_outdoor_combat(short i) {
+	// Make sure the player can see the monster they stepped next to
 	draw_terrain();
 	
 	// Is combat too easy?
@@ -1905,24 +1920,11 @@ void initiate_outdoor_combat(short i) {
 		return;
 	}
 	
-//	Delay((long) 100,&dummy);
-	
 	start_outdoor_combat(univ.party.out_c[i], univ.party.out_loc,count_walls(univ.party.out_loc));
 	
 	univ.party.out_c[i].exists = false;
 	
-	for(cPlayer& pc : univ.party)
-		if(pc.main_status == eMainStatus::ALIVE)
-			to_place = pc.combat_pos;
-		else for(cItem& item : pc.items)
-			if(item.variety != eItemType::NO_ITEM) {
-				place_item(item,to_place);
-				item.variety = eItemType::NO_ITEM;
-			}
-	
-	overall_mode = MODE_COMBAT;
-	center = univ.current_pc().combat_pos;
-	draw_terrain();
+	set_up_combat();
 }
 
 void show_inventory() {
@@ -1958,6 +1960,37 @@ void toggle_debug_mode() {
 		ASB("Debug mode ON.");
 	}
 	print_buf();
+}
+
+void debug_fight_encounter(bool wandering) {
+	if(recording){
+		record_action("debug_fight_encounter", bool_to_str(wandering));
+	}
+	if(!is_out()){
+		ASB("Debug outdoor encounter: You have to be");
+		ASB("outdoors!");
+		print_buf();
+		return;
+	}
+
+	std::string prompt = "Which ";
+	if(wandering){
+		prompt += "wandering encounter?";
+	}else{
+		prompt += "special encounter?";
+	}
+
+	int i = get_num_response(0, 3, prompt);
+
+	cOutdoors::cWandering encounter;
+	if(wandering){
+		encounter = univ.out->wandering[i];
+	}else{
+		encounter = univ.out->special_enc[i];
+	}
+	start_outdoor_combat(encounter, univ.party.out_loc, count_walls(univ.party.out_loc));
+
+	set_up_combat();
 }
 
 void debug_give_item() {
@@ -2331,7 +2364,7 @@ void show_debug_help() {
 }
 
 // Non-comprehensive list of unused keys:
-// JUXYZ chijklnoqvy @#$%^-_+[]{},.'"`~/\|;:
+// JUXYZ chijklnoqvy @#$-_+[]{},.'"`~/\|;:
 void init_debug_actions() {
 	add_debug_action({'B'}, "Leave town", debug_leave_town);
 	add_debug_action({'C'}, "Get cleaned up (lose negative status effects)", debug_clean_up);
@@ -2362,6 +2395,9 @@ void init_debug_actions() {
 	add_debug_action({'<'}, "Make one day pass", debug_increase_age);
 	add_debug_action({'>'}, "Reset towns (excludes the one you're in, if any)", debug_towns_forget);
 	add_debug_action({'!'}, "Toggle Special Node Step-through Mode", debug_step_through);
+	// std::bind won't work here for reasons
+	add_debug_action({'%'}, "Fight wandering encounter from this section", []() -> void {debug_fight_encounter(true);});
+	add_debug_action({'^'}, "Fight special encounter from this section", []() -> void {debug_fight_encounter(false);});
 	add_debug_action({'/', '?'}, "Bring up this window", show_debug_help);
 }
 

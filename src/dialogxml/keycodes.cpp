@@ -52,6 +52,16 @@ cKey charToKey(char ch) {
 			return {false, w('.'), mod_shift};
 		case '!':
 			return {false, w('1'), mod_shift};
+		case '@':
+			return {false, w('2'), mod_shift};
+		case '#':
+			return {false, w('3'), mod_shift};
+		case '$':
+			return {false, w('4'), mod_shift};
+		case '%':
+			return {false, w('5'), mod_shift};
+		case '^':
+			return {false, w('6'), mod_shift};
 		case '?':
 			return {false, w('/'), mod_shift};
 	}

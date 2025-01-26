@@ -875,6 +875,8 @@ static void replay_action(Element& action) {
 		easter_egg(boost::lexical_cast<int>(action.GetText()));
 	}else if(t == "show_debug_panel"){
 		show_debug_help();
+	}else if(t == "debug_fight_encounter"){
+		debug_fight_encounter(str_to_bool(action.GetText()));
 	}else if(t == "advance_time"){
 		// This is bad regardless of strictness, because visual changes may have occurred which won't get redrawn/reprinted
 		throw std::string { "Replay system internal error! advance_time() was supposed to be called by the last action, but wasn't: " } + _last_action_type;

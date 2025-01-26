@@ -84,6 +84,7 @@ void show_inventory();
 void toggle_debug_mode();
 void init_debug_actions();
 void show_debug_help();
+void debug_fight_encounter(bool wandering);
 void debug_give_item();
 void debug_print_location();
 void debug_step_through();
