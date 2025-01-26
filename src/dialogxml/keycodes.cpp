@@ -5,7 +5,9 @@
  *  Created by Celtic Minstrel on 11/05/09.
  *
  */
-
+#include <sstream>
+#include <codecvt>
+#include <locale>
 #include "keycodes.hpp"
 //#include <sstream>
 //#include "dialog.hpp"
@@ -18,26 +20,40 @@
 //#include "cursors.hpp"
 #include "keymods.hpp"
 
+// Windows won't compile if this conversion is not explicit.
+// (Wildly enough, it claims that char->wchar_t is a NARROWING conversion).
+static wchar_t w(char ch) {
+#ifdef SFML_SYSTEM_WINDOWS
+	std::ostringstream sstr;
+	sstr << ch;
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+	std::wstring wide_str = converter.from_bytes(sstr.str());
+	return wide_str[0];
+#else
+	return ch;
+#endif
+}
+
 // NOTE: This only supports a few characters including the ones
 // that are currently used for debug key shortcuts!
 // It is also very hard-coded to the key layout on my laptop (which may only be standard in the US!)
 cKey charToKey(char ch) {
 	if(ch >= 'a' && ch <= 'z'){
-		return {false, ch};
+		return {false, w(ch)};
 	}else if(ch >= 'A' && ch <= 'Z'){
-		return {false, tolower(ch), mod_shift};
+		return {false, w(tolower(ch)), mod_shift};
 	}
 	switch(ch){
 		case '=': case '/':
-			return {false, ch};
+			return {false, w(ch)};
 		case '<':
-			return {false, ',', mod_shift};
+			return {false, w(','), mod_shift};
 		case '>':
-			return {false, '.', mod_shift};
+			return {false, w('.'), mod_shift};
 		case '!':
-			return {false, '1', mod_shift};
+			return {false, w('1'), mod_shift};
 		case '?':
-			return {false, '/', mod_shift};
+			return {false, w('/'), mod_shift};
 	}
 	throw "Tried to convert unsupported char to cKey!";
 }
