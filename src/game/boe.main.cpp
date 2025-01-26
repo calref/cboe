@@ -873,6 +873,8 @@ static void replay_action(Element& action) {
 		cancel_item_target(did_something, need_redraw, need_reprint);
 	}else if(t == "easter_egg"){
 		easter_egg(boost::lexical_cast<int>(action.GetText()));
+	}else if(t == "show_debug_panel"){
+		show_debug_help();
 	}else if(t == "advance_time"){
 		// This is bad regardless of strictness, because visual changes may have occurred which won't get redrawn/reprinted
 		throw std::string { "Replay system internal error! advance_time() was supposed to be called by the last action, but wasn't: " } + _last_action_type;
@@ -942,6 +944,7 @@ void init_boe(int argc, char* argv[]) {
 	cUniverse::print_result = iLiving::print_result = add_string_to_buf;
 	cPlayer::give_help = give_help;
 	init_fileio();
+	init_debug_actions();
 	init_spell_menus();
 	init_mini_map();
 	redraw_screen(REFRESH_NONE);

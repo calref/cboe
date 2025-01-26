@@ -18,6 +18,30 @@
 //#include "cursors.hpp"
 #include "keymods.hpp"
 
+// NOTE: This only supports a few characters including the ones
+// that are currently used for debug key shortcuts!
+// It is also very hard-coded to the key layout on my laptop (which may only be standard in the US!)
+cKey charToKey(char ch) {
+	if(ch >= 'a' && ch <= 'z'){
+		return {false, ch};
+	}else if(ch >= 'A' && ch <= 'Z'){
+		return {false, tolower(ch), mod_shift};
+	}
+	switch(ch){
+		case '=': case '/':
+			return {false, ch};
+		case '<':
+			return {false, ',', mod_shift};
+		case '>':
+			return {false, '.', mod_shift};
+		case '!':
+			return {false, '1', mod_shift};
+		case '?':
+			return {false, '/', mod_shift};
+	}
+	throw "Tried to convert unsupported char to cKey!";
+}
+
 eKeyMod operator + (eKeyMod lhs, eKeyMod rhs){
 	if(lhs == rhs) return lhs;
 	else if(lhs == mod_none) return rhs;
