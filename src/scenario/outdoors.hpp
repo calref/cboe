@@ -44,7 +44,9 @@ public:
 	// Definition of an outdoor combat encounter
 	class cWandering { // formerly out_wandering_type
 	public:
+		// max 7 types of monster per encounter
 		std::array<mon_num_t,7> monst;
+		// max 3 types of friendly npc per encounter
 		std::array<mon_num_t,3> friendly;
 		short spec_on_meet,spec_on_win,spec_on_flee;
 		short end_spec1,end_spec2;
