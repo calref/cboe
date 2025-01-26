@@ -16,7 +16,6 @@
 extern bool verify_restore_quit(std::string dlog);
 extern bool All_Done, party_in_scen, scen_items_loaded;
 extern cUniverse univ;
-extern fs::path file_in_mem;
 
 @interface AppleEventHandler : NSObject<NSApplicationDelegate>
 -(BOOL)application:(NSApplication*) app openFile:(NSString*) file;
@@ -41,7 +40,6 @@ void set_up_apple_events() {
 	std::copy(msg.get(), msg.get() + len, std::inserter(fileName, fileName.begin()));
 	
 	if(load_party(fileName, univ)) {
-		file_in_mem = fileName;
 		party_in_scen = !univ.party.scen_name.empty();
 		if(!party_in_scen) load_base_item_defs();
 		scen_items_loaded = true;

@@ -24,7 +24,6 @@ extern cUniverse univ;
 extern sf::RenderWindow mainPtr;
 extern sf::View mainView;
 extern bool party_in_scen,scen_items_loaded;
-extern fs::path file_in_mem;
 
 extern short store_flags[3];
 extern short current_active_pc;
@@ -254,7 +253,7 @@ void draw_main_screen() {
 	
 	TextStyle style;
 	style.lineHeight = 10;
-	if(!file_in_mem.empty()) {
+	if(!univ.file.empty()) {
 		dest_rect = dest_rec;
 		dest_rect.left = 20;
 		dest_rect.top = dest_rect.bottom - 10;
@@ -273,21 +272,21 @@ void draw_main_screen() {
 	dest_rect.right = whole_win_rect.right - 30; //What is this for? Commenting it out has no effect.
 	dest_rect.left += 60;
 	dest_rect.offset(0,21);
-	if(!file_in_mem.empty())
+	if(!univ.file.empty())
 		win_draw_string(mainPtr,dest_rect,"Click on character to edit it.",eTextMode::WRAP,style);
 	else
 		win_draw_string(mainPtr,dest_rect,"Select Open from File menu.",eTextMode::WRAP,style);
-	if(!file_in_mem.empty() && party_in_scen && !scen_items_loaded){
+	if(!univ.file.empty() && party_in_scen && !scen_items_loaded){
 		dest_rect.offset(200,0);
 		win_draw_string(mainPtr,dest_rect,"Warning: Scenario item data could not be loaded.",eTextMode::WRAP,style);
 		dest_rect.offset(-200,0);
 	}
 	dest_rect.offset(0,14);
-	if(!file_in_mem.empty())
+	if(!univ.file.empty())
 		win_draw_string(mainPtr,dest_rect,"Press 'I' button to identify item, and 'D' button to drop item.",eTextMode::WRAP,style);
 	style.pointSize = 12;
 	dest_rect.offset(0,16);
-	if(!file_in_mem.empty())
+	if(!univ.file.empty())
 		win_draw_string(mainPtr,dest_rect,"Back up save file before editing it!",eTextMode::WRAP,style);
 	style.pointSize = 10;
 	style.font = FONT_PLAIN;
@@ -327,7 +326,7 @@ void do_button_action(short /*which_pc*/,short which_button) {
 void draw_items() {
 	rectangle d_from = {12,28,24,42},i_from = {12,42,24,56},dest_rect;
 	
-	if(file_in_mem.empty())  // save file loaded
+	if(univ.file.empty())  // save file loaded
 		return;
 	
 	dest_rect = item_string_rects[0][0];
@@ -380,7 +379,7 @@ void display_party() {
 	
 	TextStyle style;
 	style.lineHeight = 10;
-	if(file_in_mem.empty()) { // what if no party loaded?
+	if(univ.file.empty()) { // what if no party loaded?
 		no_party_rect=pc_info_rect;
 		no_party_rect.top+=5;
 		no_party_rect.left+=5;

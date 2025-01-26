@@ -437,18 +437,17 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 		} else showWarning("There was an error loading the party custom graphics.");
 	}
 	
+	univ.file = file_to_load;
 	real_univ = std::move(univ);
 	return true;
 }
 
-//mode;  // 0 - normal  1 - save as
-bool save_party(fs::path dest_file, const cUniverse& univ) {
+static bool save_party_const(const cUniverse& univ, bool save_as) {
 	// Make sure it has the proper file extension
-	std::string fname = dest_file.filename().string();
-	size_t dot = fname.find_last_of('.');
-	if(dot == std::string::npos || fname.substr(dot) != ".exg")
-		fname += ".exg";
-	dest_file = dest_file.parent_path()/fname;
+	fs::path dest_file = univ.file;
+	if(dest_file.extension() != ".exg"){
+		dest_file += ".exg";
+	}
 	
 	tarball partyOut;
 	cTagFile file;
@@ -543,3 +542,13 @@ bool save_party(fs::path dest_file, const cUniverse& univ) {
 	return true;
 }
 
+bool save_party(cUniverse& univ, bool save_as) {
+	// univ.file can be empty for prefab parties, so a file browser might be needed
+	// even for a regular save.
+	if(save_as || univ.file.empty()){
+		univ.file = nav_put_or_temp_party();
+	}
+	// A file wasn't chosen
+	if(univ.file.empty()) return false;
+	return save_party_const(univ, save_as);
+}

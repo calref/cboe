@@ -513,7 +513,7 @@ void start_town_mode(short which_town, short entry_dir) {
 }
 
 
-location end_town_mode(short switching_level,location destination) { // returns new party location
+location end_town_mode(bool switching_level,location destination, bool debug_leave) { // returns new party location
 	location to_return;
 	bool data_saved = false,combat_end = false;
 	
@@ -576,7 +576,7 @@ location end_town_mode(short switching_level,location destination) { // returns 
 	
 	
 	// Check for exit specials, if leaving town
-	if(switching_level == 0) {
+	if(!switching_level && !debug_leave) {
 		to_return = univ.party.out_loc;
 		
 		if(is_town()) {
@@ -612,7 +612,7 @@ location end_town_mode(short switching_level,location destination) { // returns 
 		}
 	}
 	
-	if(switching_level == 0) {
+	if(!switching_level) {
 		overall_mode = MODE_OUTDOORS;
 		
 		erase_out_specials();

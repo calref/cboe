@@ -1140,9 +1140,7 @@ void handle_quit_event() {
 			std::string choice = cChoiceDlog("quit-confirm-save", {"save","quit","cancel"}).show();
 			if(choice == "cancel") return;
 			if(choice == "save") {
-				fs::path file = nav_put_or_temp_party();
-				if(file.empty()) return;
-				save_party(file, univ);
+				do_save();
 			}
 		}
 		All_Done = true;
@@ -1151,7 +1149,7 @@ void handle_quit_event() {
 		if(choice == "cancel")
 			return;
 		if(choice == "save")
-			save_party(univ.file, univ);
+			do_save();
 	} else {
 		std::string choice = cChoiceDlog("quit-confirm-nosave", {"quit", "cancel"}).show();
 		if(choice == "cancel")
@@ -1329,10 +1327,10 @@ void handle_menu_choice(eMenu item_hit) {
 			do_load();
 			break;
 		case eMenu::FILE_SAVE:
-			do_save(0);
+			do_save();
 			break;
 		case eMenu::FILE_SAVE_AS:
-			do_save(1);
+			do_save(true);
 			break;
 		case eMenu::FILE_NEW:
 			new_party();

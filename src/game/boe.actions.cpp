@@ -1252,9 +1252,7 @@ void handle_victory(bool force, bool record) {
 	menu_activate();
 	univ.party.scen_name = ""; // should be harmless...
 	if(!force && cChoiceDlog("congrats-save",{"cancel","save"}).show() == "save"){
-		// TODO: Wait, this shouldn't be a "save as" action, should it? It should save without asking for a location.
-		fs::path file = nav_put_or_temp_party();
-		if(!file.empty()) save_party(file, univ);
+		do_save();
 	}
 }
 
@@ -1450,9 +1448,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 				
 			case TOOLBAR_SAVE:
 				if(overall_mode == MODE_OUTDOORS) {
-					save_party(univ.file, univ);
-					need_redraw = true;
-					current_switch = 6;
+					do_save();
 					break;
 				}
 				break;
@@ -2023,14 +2019,10 @@ void debug_leave_town() {
 		print_buf();
 		return;
 	}
-	univ.party.end_split(0);
-	overall_mode = MODE_OUTDOORS;
-	position_party(univ.party.outdoor_corner.x,univ.party.outdoor_corner.y,univ.party.out_loc.x,univ.party.out_loc.y);
-	clear_map();
-	add_string_to_buf("Debug: Reunite party and leave town.");
+	ASB("Debug: Reunite party and leave town.");
 	print_buf();
-	update_explored(univ.party.out_loc);
-	redraw_screen(REFRESH_ALL);
+	univ.party.end_split(0);
+	end_town_mode(false, {0,0}, true);
 }
 
 void debug_kill() {
@@ -2777,25 +2769,24 @@ void post_load() {
 }
 
 //mode; // 0 - normal  1 - save as
-void do_save(short mode) {
+void do_save(bool save_as) {
 	if(overall_mode != MODE_TOWN && overall_mode != MODE_OUTDOORS && overall_mode != MODE_STARTUP) {
 		add_string_to_buf("Save: Only while outdoors, or in town and not looking/casting.", 2);
 		print_buf();
 		return;
 	}
+	
 	if(univ.party.is_in_scenario()) save_outdoor_maps();
-	fs::path file = univ.file;
-	if(mode == 1 || file.empty())
-		file = nav_put_or_temp_party(file);
-	bool saved = false;
-	if(!file.empty()) {
-		univ.file = file;
-		saved = save_party(univ.file, univ);
-	}
 	
-	if(saved)
+	if(save_party(univ, save_as)){
 		add_string_to_buf("Save: Game saved");
-	
+	}else{
+		add_string_to_buf("Save: Save not completed");
+	}
+
+	// Cancel switching PC order
+	current_switch = 6;
+
 	pause(6);
 	redraw_screen(REFRESH_TEXT);
 }
@@ -3307,9 +3298,7 @@ void start_new_game(bool force) {
 	}
 	party_in_memory = true;
 	if(force) return;
-	fs::path file = nav_put_or_temp_party();
-	if(!file.empty()) save_party(file, univ);
-	univ.file = file;
+	do_save(true);
 }
 
 void start_tutorial() {
