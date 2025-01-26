@@ -41,6 +41,7 @@ using bitmap = std::array<std::bitset<y>, x>;
 class cOutdoors : public cArea {
 	cScenario* scenario;
 public:
+	// Definition of an outdoor combat encounter
 	class cWandering { // formerly out_wandering_type
 	public:
 		std::array<mon_num_t,7> monst;
@@ -55,6 +56,7 @@ public:
 		void readFrom(const cTagFile_Page& page);
 		cWandering();
 	};
+	// Instantiation of an outdoor wandering monster on the map
 	class cCreature { // formerly outdoor_creature_type
 	public:
 		bool exists = false;
