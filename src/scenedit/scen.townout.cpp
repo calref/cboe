@@ -803,6 +803,33 @@ void edit_advanced_town() {
 		me[fld].setTextToNum(bg_i);
 		return true;
 	}, {"pick-fight", "pick-town"});
+	static const std::vector<std::string> help_ids = {"exit-special-help", "special-help", "exit-help", "prop-help", "bg-help"};
+	town_dlg.attachClickHandlers([](cDialog& me, std::string which, eKeyMod) {
+		auto iter = std::find(help_ids.begin(), help_ids.end(), which);
+		if(iter == help_ids.end()) return true;
+		int n = iter - help_ids.begin();
+		std::string str = get_str("town-advanced-help",1 + n);
+		cStrDlog display_help(str,"","Instant Help",24,PIC_DLOG, &me);
+		display_help.setSound(57);
+		display_help.show();
+		return true;
+	}, help_ids);
+	// TODO: This should probably be a focus handler, but the focus handler doesn't receive the modifiers
+	static const std::vector<std::string> prop_ids = {"hidden", "nomap", "noscry", "barrier", "tavern"};
+	town_dlg.attachClickHandlers([](cDialog& me, std::string which, eKeyMod mod) {
+		if(mod & mod_alt) {
+			auto iter = std::find(prop_ids.begin(), prop_ids.end(), which);
+			if(iter == prop_ids.end()) return true;
+			int n = iter - prop_ids.begin();
+			std::string str = get_str("town-advanced-help",10 + n);
+			cStrDlog display_help(str,"","Instant Help",24,PIC_DLOG, &me);
+			display_help.setSound(57);
+			display_help.show();
+			return false;
+		}
+		dynamic_cast<cLed&>(me[which]).defaultClickHandler(me, which, mod);
+		return true;
+	}, prop_ids);
 	using namespace std::placeholders;
 	auto focus_handler = std::bind(check_range_msg, _1, _2, _3, -1, 21, _4, "-1 to use scenario default");
 	town_dlg["bg-fight"].attachFocusHandler(std::bind(focus_handler, _1, _2, _3, "Combat Background"));

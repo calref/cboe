@@ -2,71 +2,70 @@
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay'>
 	<pict type='dlog' num='16' top='8' left='8'/>
-	<text size='large' top='6' left='50' width='256' height='17'>Advanced town details</text>
-	<text top='25' left='50' width='439' height='40'>
+	<text size='large' relative='pos pos-in' rel-anchor='prev' top='-2' left='10' width='256' height='17'>Advanced town details</text>
+	<text relative='pos-in pos' rel-anchor='prev' top='2' left='0' width='439' height='40'>
 		You can use this window to edit some of the more esoteric details for each town,
 		such as specials called when entering or leaving town.
 		All of these options are decribed in the documentation chapter on town editing.
 	</text>
 	
-	<text top='68' left='50' width='197' height='64'>
-		Exit town specials:
-		(These are the numbers of the town special nodes to call when the party tries to leave town in the given direction.)
-	</text>
-	<button name='edit-onexit1' type='tiny' top='81' left='251' height='15'>Top</button>
-	<field name='onexit1' top='77' left='308' width='67' height='16'/>
-	<button name='edit-onexit3' type='tiny' top='81' left='382' height='15'>Bottom</button>
-	<field name='onexit3' top='77' left='440' width='67' height='16'/>
-	<button name='edit-onexit2' type='tiny' top='109' left='251' height='15'>Left</button>
-	<field name='onexit2' top='105' left='308' width='67' height='16'/>
-	<button name='edit-onexit4' type='tiny' top='109' left='382' height='15'>Right</button>
-	<field name='onexit4' top='105' left='440' width='67' height='16'/>
+	<text name='exit-specials' relative='pos-in pos' rel-anchor='prev' top='0' left='-2' width='302' height='64' framed='true'/>
+	<text relative='pos-in' anchor='exit-specials' top='3' left='3' width='197' height='15'>Exit town specials:</text>
+	<button name='edit-onexit1' relative='pos-in pos' rel-anchor='prev' type='tiny' top='6' left='0' height='15' text-size='10'>Top</button>
+	<field name='onexit1' relative='pos-in' rel-anchor='prev' top='-4' left='75' width='67' height='16'/>
+	<button relative='pos-in pos' anchor='edit-onexit1' name='edit-onexit2' type='tiny' top='8' left='0' height='15' text-size='10'>Left</button>
+	<field name='onexit2' relative='pos-in' rel-anchor='prev' top='-4' left='75' width='67' height='16'/>
+	<button name='edit-onexit3' relative='pos pos-in' anchor='onexit1' type='tiny' top='4' left='8' height='15' text-size='10'>Bottom</button>
+	<field name='onexit3' relative='pos-in' rel-anchor='prev' top='-4' left='75' width='67' height='16'/>
+	<button name='edit-onexit4' relative='pos-in pos' anchor='edit-onexit3' type='tiny' top='8' left='0' height='15' text-size='10'>Right</button>
+	<field name='onexit4' relative='pos-in' rel-anchor='prev' top='-4' left='75' width='67' height='16'/>
+	<button name='exit-special-help' type='help' relative='neg-in pos-in' anchor='exit-specials' top='2' left='18'/>
 	
-	<text top='134' left='50' width='202' height='66'>
-		Town entry special node:
-		(Enter the number of the town special node to call if the party enters the town when it's still alive, and/or when it's been abandoned.)
-	</text>
-	<button name='edit-onenter' type='tiny' top='135' left='259' height='15'>Still alive</button>
-	<field name='onenter' top='134' left='405' width='67' height='16'/>
-	<button name='edit-onenterdead' type='tiny' top='162' left='259' height='15'>Been abandoned</button>
-	<field name='onenterdead' top='162' left='405' width='67' height='16'/>
-	<button name='edit-onhostile' type='tiny' top='189' left='259' height='15'>When Goes Hostile</button>
-	<field name='onhostile' top='190' left='405' width='67' height='16'/>
+	<text name='specials' relative='pos-in pos' anchor='exit-specials' top='10' left='0' width='302' height='90' framed='true'/>
+	<text relative='pos-in' anchor='specials' top='3' left='3' width='202' height='15'>Town entry special node:</text>
+	<button name='edit-onenter' relative='pos-in pos' rel-anchor='prev' type='tiny' top='8' left='0' height='15' text-size='10'>Still alive</button>
+	<field name='onenter' relative='pos-in' rel-anchor='prev' top='-4' left='146' width='67' height='16'/>
+	<button name='edit-onenterdead' relative='pos-in pos' anchor='edit-onenter' type='tiny' top='8' left='0' height='15' text-size='10'>Been abandoned</button>
+	<field name='onenterdead' relative='pos-in' rel-anchor='prev' top='-4' left='146' width='67' height='16'/>
+	<button name='edit-onhostile' relative='pos-in pos' anchor='edit-onenterdead' type='tiny' top='8' left='0' height='15' text-size='10'>When Goes Hostile</button>
+	<field name='onhostile' relative='pos-in' rel-anchor='prev' top='-4' left='146' width='67' height='16'/>
+	<button name='special-help' type='help' relative='neg-in pos-in' anchor='specials' top='2' left='18'/>
 	
-	<text top='207' left='50' width='197' height='64'>
-		Exit town location:
-		(these are the locations the party ends up at outdoors if they leave in the given direction.
-		Leave at -1 for the regular location to be used.)
-	</text>
-	<text top='212' left='331' width='35' height='15'>X</text>
-	<text top='212' left='379' width='40' height='15'>Y</text>
-	<text top='232' left='257' width='49' height='15'>Top</text>
-	<field name='exit1-x' top='231' left='323' width='39' height='16'/>
-	<field name='exit1-y' top='231' left='371' width='39' height='16'/>
-	<text top='259' left='258' width='49' height='15'>Left</text>
-	<field name='exit2-x' top='258' left='323' width='39' height='16'/>
-	<field name='exit2-y' top='258' left='371' width='39' height='16'/>
-	<text top='285' left='258' width='53' height='15'>Bottom</text>
-	<field name='exit3-x' top='285' left='323' width='39' height='16'/>
-	<field name='exit3-y' top='285' left='371' width='39' height='16'/>
-	<text top='313' left='259' width='49' height='15'>Right</text>
-	<field name='exit4-x' top='312' left='323' width='39' height='16'/>
-	<field name='exit4-y' top='312' left='371' width='39' height='16'/>
+	<text name='exits' relative='pos pos-in' anchor='exit-specials' top='0' left='10' width='185' height='164' framed='true'/>
+	<text relative='pos-in' anchor='exits' top='3' left='3' width='197' height='15'>Exit town locations:</text>
+	<text name='exit-x' relative='pos-in pos' rel-anchor='prev' top='4' left='100' width='35' height='15'>X</text>
+	<text name='exit-y' relative='pos pos-in' rel-anchor='prev' top='0' left='12' width='35' height='15'>Y</text>
+	<text name='exit1' relative='pos-in pos' anchor='exit-x' top='4' left='-100' width='96' height='15'>Top</text>
+	<field name='exit1-x' relative='pos-in pos' anchor='exit-x' top='4' left='-8' width='39' height='16'/>
+	<field name='exit1-y' relative='pos-in pos' anchor='exit-y' top='4' left='-8' width='39' height='16'/>
+	<text name='exit2' relative='pos-in pos' anchor='exit1' top='9' left='0' width='96' height='15'>Left</text>
+	<field name='exit2-x' relative='pos-in pos' anchor='exit1-x' top='8' left='0' width='39' height='16'/>
+	<field name='exit2-y' relative='pos-in pos' anchor='exit1-y' top='8' left='0' width='39' height='16'/>
+	<text name='exit3' relative='pos-in pos' anchor='exit2' top='9' left='0' width='96' height='15'>Bottom</text>
+	<field name='exit3-x' relative='pos-in pos' anchor='exit2-x' top='8' left='0' width='39' height='16'/>
+	<field name='exit3-y' relative='pos-in pos' anchor='exit2-y' top='8' left='0' width='39' height='16'/>
+	<text name='exit4' relative='pos-in pos' anchor='exit3' top='9' left='0' width='96' height='15'>Right</text>
+	<field name='exit4-x' relative='pos-in pos' anchor='exit3-x' top='8' left='0' width='39' height='16'/>
+	<field name='exit4-y' relative='pos-in pos' anchor='exit3-y' top='8' left='0' width='39' height='16'/>
+	<button name='exit-help' type='help' relative='neg-in pos-in' anchor='exits' top='2' left='18'/>
 	
-	<button name='pick-town' type='tiny' top='276' left='30'>Town Background:</button>
-	<field name='bg-town' top='274' left='160' width='80' height='16'/>
-	<button name='pick-fight' type='tiny' top='302' left='30'>Combat Background:</button>
-	<field name='bg-fight' top='298' left='160' width='80' height='16'/>
+	<text name='bg' relative='pos pos-in' anchor='props' top='0' left='10' width='166' height='100' framed='true'/>
+	<text relative='pos-in' anchor='bg' top='3' left='3' width='100' height='15'>Backgrounds:</text>
+	<button name='pick-town' relative='pos-in pos' rel-anchor='prev' type='tiny' top='8' left='0' text-size='10'>Town:</button>
+	<field name='bg-town' relative='pos-in' rel-anchor='prev' top='-4' left='80' width='80' height='16'/>
+	<button name='pick-fight' relative='pos-in pos' anchor='pick-town' type='tiny' top='15' left='0' text-size='10'>Combat:</button>
+	<field name='bg-fight' relative='pos-in' rel-anchor='prev' top='-4' left='80' width='80' height='16'/>
+	<button name='bg-help' type='help' relative='neg-in pos-in' anchor='bg' top='2' left='18'/>
 	
-	<text top='319' left='30' width='100' height='16'>Town Properties:</text>
-	<led name='hidden' font='plain' top='336' left='30'>
-		Town hidden?
-		(Can't be seen until it's made visible with a special encounter.)
-	</led>
-	<led name='nomap' font='plain' top='353' left='30'>No automap in this town</led>
-	<led name='noscry' font='plain' top='370' left='30'>Defy scrying (Magic Map doesn't work)</led>
-	<led name='barrier' font='plain' top='387' left='30'>Magical barriers are stronger in this town</led>
-	<led name='tavern' font='plain' top='404' left='30'>You can create new PCs in this town</led>
-	<button name='okay' type='regular' top='397' left='452'>OK</button>
-	<button name='cancel' type='regular' def-key='esc' top='397' left='386'>Cancel</button>
+	<text name='props' relative='pos-in pos' anchor='specials' top='10' left='0' width='126' height='100' framed='true'/>
+	<text relative='pos-in' anchor='props' top='3' left='3' width='100' height='16'>Town Properties:</text>
+	<led name='hidden' relative='pos-in pos' rel-anchor='prev' font='plain' top='1' left='0'>Town hidden</led>
+	<led name='nomap' relative='pos-in pos' rel-anchor='prev' font='plain' top='7' left='0'>Unmappable</led>
+	<led name='noscry' relative='pos-in pos' rel-anchor='prev' font='plain' top='7' left='0'>Defy scrying</led>
+	<led name='barrier' relative='pos-in pos' rel-anchor='prev' font='plain' top='7' left='0'>Boost barriers</led>
+	<led name='tavern' relative='pos-in pos' rel-anchor='prev' font='plain' top='7' left='0'>Has a tavern</led>
+	<button name='prop-help' type='help' relative='neg-in pos-in' anchor='props' top='2' left='18'/>
+	
+	<button name='okay' relative='neg' type='regular' top='28' left='68'>OK</button>
+	<button name='cancel' relative='neg' type='regular' def-key='esc' top='28' left='136'>Cancel</button>
 </dialog>

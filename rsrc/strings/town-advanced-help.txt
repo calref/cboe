@@ -1,0 +1,14 @@
+These are the numbers of the town special nodes to call when the party tries to leave town in the given direction.
+Enter the number of the town special node to call if the party enters the town when it's still alive, and/or when it's been abandoned.
+These are the locations the party ends up at outdoors if they leave in the given direction. Leave at -1 for the regular location to be used.
+Miscellaneous advanced properties that can be set in a town. Alt-click an individual property for more information.
+Customize the backgrounds shown behind the UI for this town.
+
+
+
+
+A hidden town can't be seen until it's made visible with a special encounter.
+The automap won't function in this town.
+The Magic Map spell won't function in this town.
+Magical barriers in this town will be stronger than usual.
+You will be able to create new PCs while in this town.

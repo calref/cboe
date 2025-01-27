@@ -54,8 +54,8 @@ public:
 	}
 	cLed& operator=(cLed& other) = delete;
 	cLed(cLed& other) = delete;
-private:
 	void defaultClickHandler(cDialog&, std::string, eKeyMod);
+private:
 	void callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::string id, eKeyMod mods) override;
 	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
 	eLedState state;
