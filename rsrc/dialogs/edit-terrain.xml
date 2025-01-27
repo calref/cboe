@@ -4,16 +4,31 @@
 	<!--
 	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
 	 -->
-	<text size='large' top='6' left='50' height='17' width='138'>Edit Terrain Type</text>
 	<pict name='graphic' type='ter' num='0' top='8' left='8'/>
+	<text size='large' top='6' left='50' height='17' width='138'>Edit Terrain Type</text>
+	
 	<text top='8' left='222' height='14' width='111'>Terrain number:</text>
 	<text name='number' top='8' left='340' height='14' width='37'>*num</text>
+	
+	<button name='help' type='help' def-key='help' top='5' left='588'/>
+	<text top='7' left='431' height='50' width='157'>
+		Enter properties for this terrain type. For a detailed description of the fields, see the documentation.
+	</text>
+	
 	<text top='31' left='50' height='14' width='120'>Terrain type name:</text>
 	<field name='name' top='30'  left='186' height='16' width='186'/>
+	
 	<text top='63' left='9' height='14' width='120'>Terrain picture:</text>
 	<field name='pict' top='62'  left='141' height='16' width='52' />
 	<button name='pickpict' type='large' top='59' left='205'>Pick Picture</button>
 	<button name='pickanim' type='large' top='59' left='319'>Animated</button>
+	
+	<text top='63' left='430' width='60' height='14'>Map icon:</text>
+	<field name='map' top='62' left='495' width='80' height='16'/>
+	<pict name='seemap' top='86' left='465' type='map' num='0'/>
+	<button name='pickmap' type='regular' top='86' left='495'>Choose</button>
+	<text top='110' left='431' height='32' width='157'>(Enter -1 to scale down the large picture)</text>
+	
 	<text top='90' left='8' height='14' width='120'>Terrain blockage:</text>
 	<group name='blockage'>
 		<led name='clear' top='90' left='132' state='off'>Clear</led>
@@ -23,10 +38,12 @@
 		<led name='obstructed' top='107' left='293' state='off'>Blocked, obstructed</led>
 		<led name='opaque' top='124' left='293' state='off'>Blocked, opaque</led>
 	</group>
+	
 	<led name='flight' top='150' left='26' state='off'>Can fly over?</led>
 	<led name='boat' top='150' left='154' state='off'>Can boat over?</led>
 	<led name='horse' top='150' left='307' state='off'>Blocked to horses?</led>
 	<led name='arch' top='150' left='447' state='off'>Archetype?</led>
+	
 	<text top='165' left='8' height='14' width='91'>Step sound:</text>
 	<group name='sound'>
 		<led name="step" top='167' left='102' state='off'>Footstep</led>
@@ -35,6 +52,7 @@
 		<led name="nosound" top='167' left='386' state='off'>Silence</led>
 		<led name="splash" top='167' left='497' state='off'>Big Splash</led>
 	</group>
+	
 	<text top='194' left='8' height='14' width='91'>Shortcut key:</text>
 	<field name='key' top='193' left='109' height='16' width='52' />
 	<text top='194' left='171' height='14' width='91'>Light radius:</text>
@@ -78,6 +96,13 @@
 		<led name='prop22' top='344' left='308' state='off'>Change when used</led>
 		<led name='prop23' top='359' left='308' state='off'>Call special when used</led>
 	</group>
+	
+	<text top='254' left='467' height='14' width='100'>Combat Arena:</text>
+	<field name='arena' top='275' left='467' height='16' width='64'/>
+	<button name='pickarena' type='regular' top='299' left='467'>Choose</button>
+	<button name='picktown' type='regular' top='299' left='532'>Custom</button>
+	<button name='object' top='344' left='467' type='large'>Object Detail</button>
+	
 	<text top='385' left='9' height='14' width='91'>Extra values:</text>
 	<text name='flag1text' framed='true' top='385' left='109' height='14' width='209'>*flag1</text>
 	<field name='flag1' top='384' left='329' height='16' width='64' />
@@ -90,20 +115,8 @@
 	<field name='flag3' top='434' left='329' height='16' width='64' />
 	<button name='pickflag3' top='431' left='404' type='regular'>Choose</button>
 	
-	<text top='254' left='467' height='14' width='100'>Combat Arena:</text>
-	<field name='arena' top='275' left='467' height='16' width='64'/>
-	<button name='pickarena' type='regular' top='299' left='467'>Choose</button>
-	<button name='picktown' type='regular' top='299' left='532'>Custom</button>
-	<button name='object' top='344' left='467' type='large'>Object Detail</button>
-	<text top='63' left='430' width='60' height='14'>Map icon:</text>
-	<pict name='seemap' top='86' left='465' type='map' num='0'/>
-	<field name='map' top='62' left='495' width='80' height='16'/>
-	<button name='pickmap' type='regular' top='86' left='495'>Choose</button>
-	<text top='110' left='431' height='32' width='157'>(Enter -1 to scale down the large picture)</text>
 	<button name='done' type='regular' top='455' left='517'>OK</button>
 	<button name='cancel' type='regular' def-key='esc' top='455' left='451'>Cancel</button>
 	<button name='left' type='left' top='455' left='11'/>
 	<button name='right' type='right' top='455' left='74'/>
-	<text top='7' left='431' height='50' width='157'>Enter properties for this terrain type. For a detailed description of the fields, see the documentation.</text>
-	<button name='help' type='help' def-key='help' top='5' left='588'/>
 </dialog>
