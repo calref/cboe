@@ -251,11 +251,7 @@ effect_pat_type field[8] = {
 
 bool center_on_monst;
 
-
-
-
-
-void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short num_walls) {
+void start_outdoor_combat(cOutdoors::cWandering encounter,location where,short num_walls) {
 	short how_many,num_tries = 0;
 	short low[10] = {15,7,4,3,2,1,1,7,2,1};
 	short high[10] = {30,10,6,5,3,2,1,10,4,1};
@@ -266,7 +262,7 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short nu
 		nums[i] = get_ran(1,low[i],high[i]);
 	for(short i = 0; i < 3; i++)
 		nums[i + 7] = get_ran(1,low[i + 7],high[i + 7]);
-	notify_out_combat_began(encounter.what_monst,nums);
+	notify_out_combat_began(encounter,nums);
 	print_buf();
 	play_sound(23);
 	
@@ -286,15 +282,15 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short nu
 	
 	for(short i = 0; i < 7; i++) {
 		how_many = nums[i];
-		if(encounter.what_monst.monst[i] != 0)
+		if(encounter.monst[i] != 0)
 			for(short j = 0; j < how_many; j++)
-				set_up_monst(eAttitude::HOSTILE_A,encounter.what_monst.monst[i]);
+				set_up_monst(eAttitude::HOSTILE_A,encounter.monst[i]);
 	}
 	for(short i = 0; i < 3; i++) {
 		how_many = nums[i + 7];
-		if(encounter.what_monst.friendly[i] != 0)
+		if(encounter.friendly[i] != 0)
 			for(short j = 0; j < how_many; j++)
-				set_up_monst(eAttitude::FRIENDLY,encounter.what_monst.friendly[i]);
+				set_up_monst(eAttitude::FRIENDLY,encounter.friendly[i]);
 	}
 	
 	// place PCs
@@ -369,6 +365,10 @@ void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short nu
 	//clear_map();
 	give_help(48,49);
 	
+}
+
+void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short num_walls) {
+	start_outdoor_combat(encounter.what_monst, where, num_walls);
 }
 
 bool pc_combat_move(location destination) {

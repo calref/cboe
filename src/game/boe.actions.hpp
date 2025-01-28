@@ -2,10 +2,17 @@
 #ifndef BOE_GAME_ACTIONS_H
 #define BOE_GAME_ACTIONS_H
 
+#include <vector>
 #include <SFML/Window/Event.hpp>
 #include "location.hpp"
 #include "dialogxml/keycodes.hpp"
 #include "tools/framerate_limiter.hpp"
+
+struct key_action_t {
+    std::vector<char> keys;
+    std::string name;
+    void (*action)();
+};
 
 void init_screen_locs();
 bool prime_time();
@@ -75,6 +82,9 @@ void handle_use_space_select(bool& need_reprint);
 void handle_use_space(location destination, bool& did_something, bool& need_redraw);
 void show_inventory();
 void toggle_debug_mode();
+void init_debug_actions();
+void show_debug_help();
+void debug_fight_encounter(bool wandering);
 void debug_give_item();
 void debug_print_location();
 void debug_step_through();
