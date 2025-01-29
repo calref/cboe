@@ -55,6 +55,8 @@ proj/vs*/*/ipch/
 proj/vs*/.vs
 proj/vs*/.vs
 proj/vs*/packages/
+proj/vs*/vcpkg_installed/
+proj/vs*/*.nupkg
 
 # SCons junk files
 .sconsign.dblite
