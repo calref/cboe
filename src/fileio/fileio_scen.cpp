@@ -1960,12 +1960,29 @@ void readDialogueFromXml(ticpp::Document&& data, cSpeech& talk, int town_num) {
 	}
 }
 
+std::map<ter_num_t, ter_num_t> ter_swaps;
+
+static void init_ter_swaps() {
+	for (int i = 6; i <= 21; ++i){
+		ter_swaps[i] = 5;
+	}
+}
+
+static ter_num_t swap_ter(ter_num_t in) {
+	if(ter_swaps.find(in) != ter_swaps.end())
+		return ter_swaps[in];
+	return in;
+}
+
 void loadOutMapData(map_data&& data, location which, cScenario& scen) {
+	if(ter_swaps.empty())
+		init_ter_swaps();
+	
 	cOutdoors& out = *scen.outdoors[which.x][which.y];
 	int num_towns = 0;
 	for(int x = 0; x < 48; x++) {
 		for(int y = 0; y < 48; y++) {
-			out.terrain[x][y] = data.get(x,y);
+			out.terrain[x][y] = swap_ter(data.get(x,y));
 			auto features = data.getFeatures(x,y);
 			for(auto feat : features) {
 				bool is_boat = false;
@@ -2024,10 +2041,13 @@ void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 }
 
 void loadTownMapData(map_data&& data, int which, cScenario& scen) {
+	if(ter_swaps.empty())
+		init_ter_swaps();
+	
 	cTown& town = *scen.towns[which];
 	for(int x = 0; x < town.max_dim; x++) {
 		for(int y = 0; y < town.max_dim; y++) {
-			town.terrain(x,y) = data.get(x,y);
+			town.terrain(x,y) = swap_ter(data.get(x,y));
 			auto features = data.getFeatures(x,y);
 			for(auto feat : features) {
 				bool is_boat = false;

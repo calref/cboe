@@ -212,12 +212,12 @@ short combat_obscurity(short x, short y) {
 	return sight_obscurity(x,y);
 }
 
-ter_num_t coord_to_ter(short x,short y) {
+ter_num_t coord_to_ter(short x,short y,ter_num_t out_of_bounds) {
 	if(is_out()) {
-		if(!univ.out.is_on_map(x, y)) return 0;
+		if(!univ.out.is_on_map(x, y)) return out_of_bounds;
 		return univ.out[x][y];
 	}
-	if(!univ.town.is_on_map(x, y)) return 0;
+	if(!univ.town.is_on_map(x, y)) return out_of_bounds;
 	return univ.town->terrain(x,y);
 }
 

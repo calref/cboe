@@ -20,7 +20,7 @@ bool is_lava(short x,short y);
 short sight_obscurity(short x,short y);
 short can_see_light(location p1, location p2, std::function<short(short,short)> get_obscurity);
 short combat_obscurity(short x,short y);
-ter_num_t coord_to_ter(short x,short y);
+ter_num_t coord_to_ter(short x,short y,ter_num_t out_of_bounds=0);
 bool is_container(location loc);
 void update_explored(location dest);
 bool is_blocked(location to_check);

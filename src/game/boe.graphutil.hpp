@@ -6,7 +6,7 @@
 #include "location.hpp"
 #include "gfx/gfxsheets.hpp"
 
-void draw_one_terrain_spot (short i,short j,short terrain_to_draw);
+void draw_one_terrain_spot (short i,short j,short terrain_to_draw, int graphic_offset=0);
 void draw_monsters();
 void play_see_monster_str(unsigned short m, location monst_loc);
 void draw_combat_pc(class cPlayer& who, location center, bool attacking);

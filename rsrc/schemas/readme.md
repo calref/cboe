@@ -340,7 +340,7 @@ type.
 `crunch`, `squish`, `splash`, `none`.
 * `<trim>` - (required) The trim type of this terrain. Must be one of `none`, `wall`, `s`,
 `n`, `e`, `w`, `sw`, `ne`, `se`, `nw`, `sw-inner`, `ne-inner`, `se-inner`, `nw-inner`,
-`frills`, `road`, `walkway`, `waterfall`, `city`.
+`frills`, `road`, `walkway`, `waterfall`, `city`, `smart-border`.
 * `<arena>` - (required) The combat arena to use if outdoor combat is initiated while the
 party is on this space.
 * `<ground>` - The ground type of this terrain.
