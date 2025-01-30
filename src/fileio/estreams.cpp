@@ -580,7 +580,7 @@ std::istream& operator >> (std::istream& in, eTerSpec& e){
 
 cEnumLookup ter_trims = {
 	"none", "wall", "s", "se", "e", "ne", "n", "nw", "w", "sw",
-	"ne-inner", "se-inner", "sw-inner", "nw-inner", "frills", "road", "walkway", "waterfall", "city",
+	"ne-inner", "se-inner", "sw-inner", "nw-inner", "frills", "road", "walkway", "waterfall", "city", "smart-border"
 };
 
 std::ostream& operator << (std::ostream& out, eTrimType e){

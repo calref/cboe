@@ -68,6 +68,7 @@ enum class eTrimType {
 	WALKWAY = 16, // the game will draw walkway corners; trim_ter is base terrain to draw on
 	WATERFALL = 17, // special case for waterfalls
 	CITY = 18, // the game will join roads up to this space but not draw roads on the space
+	SMART_BORDER = 19 // the game will automatically transition this against adjacent terrains
 };
 
 enum class eTerObstruct {
