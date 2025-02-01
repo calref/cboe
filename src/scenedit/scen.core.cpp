@@ -2515,6 +2515,17 @@ bool edit_shop(size_t which_shop, cDialog* parent) {
 	if(which_shop == scenario.shops.size())
 		scenario.shops.emplace_back("New Shop");
 	cShop shop = scenario.shops[which_shop];
+	if(shop.size() == 0 && (shop.getName() == "New Shop" || shop.getName() == "Unused Shop")) {
+		cChoiceDlog new_shop_dlg("new-shop", {"magic", "heal", "custom", "cancel"});
+		std::string choice = new_shop_dlg.show();
+		if(choice == "magic") {
+			shop = cShop(SHOP_JUNK);
+		} else if(choice == "heal") {
+			shop = cShop(SHOP_HEALING);
+		} else if(choice == "cancel") {
+			return false;
+		}
+	}
 	
 	cDialog shop_dlg(*ResMgr::dialogs.get("edit-shop"), parent);
 	shop_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
@@ -2524,11 +2535,6 @@ bool edit_shop(size_t which_shop, cDialog* parent) {
 	shop_dlg.attachClickHandlers(std::bind(delete_shop_entry, _1, _2, std::ref(shop), std::ref(which_shop)), {"del1", "del2", "del3", "del4", "del5"});
 	shop_dlg.attachClickHandlers(std::bind(edit_shop_entry, _1, _2, std::ref(shop)), {"ed1", "ed2", "ed3", "ed4", "ed5"});
 	shop_dlg.attachClickHandlers(std::bind(add_shop_entry, _1, _2, std::ref(shop), std::ref(which_shop)), {"item", "opt", "spec", "mage", "priest", "alch", "skill", "treas", "heal", "class"});
-	shop_dlg["rand"].attachClickHandler([&shop,which_shop](cDialog& me, std::string, eKeyMod) -> bool {
-		shop = cShop(SHOP_JUNK);
-		put_shop_in_dlog(me, shop, which_shop);
-		return true;
-	});
 	
 	if(scenario.shops.size() == 1 || parent != nullptr) {
 		shop_dlg["left"].hide();

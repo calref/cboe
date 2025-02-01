@@ -27,11 +27,7 @@
 		<led name='p6' top='170' left='210'>Alchemy</led>
 		<led name='p7' top='130' left='310'>Training</led>
 	</group>
-	<button name='rand' type='tiny' top='190' left='10'>
-		Click here to generate a standard random items shop.
-		(This will replace the entire shop definition.)
-	</button>
-	<text top='210' left='28' width='300' height='16'>Or edit the shop item list below:</text>
+	<text top='210' left='28' width='300' height='16'>Shop item list:</text>
 	<stack name='items'>
 		<text name='n1' top='230' left='10' width='15' height='16'/>
 		<pict name='pict1' type='item' num='0' size='small' top='230' left='30'/>
