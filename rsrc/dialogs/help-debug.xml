@@ -3,31 +3,41 @@
 <dialog defbtn='okay'>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text top='8' left='50' width='400' height='16'>DEBUG MODE HELP</text>
-	<text top='22' left='50' width='400' height='250'>
+	<text top='22' left='50' width='400' height='50'>
 		Debug mode is intended to aid you in testing your scenario.
 		While in debug mode, monsters don't move in combat and are killed in one hit.
 		In addition, you have access to a lot of additional hotkeys.<br/><br/>
-		Debug hot keys<br/>
-		  B - Leave town<br/>
-		  C - Get cleaned up (lose negative status effects)<br/>
-		  D - Toggle Debug mode<br/>
-		  E - Stealth, Detect Life, Firewalk<br/>
-		  F - Flight<br/>
-		  G - Toggle Ghost mode (letting you pass through walls)<br/>
-		  H - Heal<br/>
-		  K - Kill everything<br/>
-		  N - End Scenario<br/>
-		  O - Location<br/>
-		  Q - Magic map<br/>
-		  R - Return to Start<br/>
-		  S - Set stuff done flags<br/>
-		  T - Enter Town<br/>
-		  W - Refresh jobs/shops<br/>
-		  = - Heal, increase magic skills<br/>
-		  &lt; - Make one day pass<br/>
-		  &gt; - Reset towns (excludes the one you're in, if any)<br/>
-		  ! - Toggle Special Node Step-through Mode<br/>
-		  / - Bring up this list<br/>
+		Debug hot keys:<br/>
 	</text>
-	<button name='okay' type='regular' top='280' left='387'>OK</button>
+	<button name='btn1' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='3'></button>
+	<button name='btn2' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn3' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn4' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn5' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn6' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn7' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn8' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn9' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn10' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn11' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn12' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn13' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn14' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn15' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn16' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn17' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn18' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn19' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn20' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn21' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn22' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn23' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn24' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn25' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn26' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn27' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn28' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn29' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn30' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='okay' type='regular' top='400' left='387'>OK</button>
 </dialog>

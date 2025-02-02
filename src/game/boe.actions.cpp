@@ -27,6 +27,7 @@
 #include "boe.ui.hpp"
 #include "mathutil.hpp"
 #include "fileio/fileio.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "dialogxml/dialogs/dialog.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
@@ -1887,9 +1888,24 @@ void handle_menu_spell(eSpell spell_picked) {
 	advance_time(did_something, need_redraw, need_reprint);
 }
 
-void initiate_outdoor_combat(short i) {
+static void set_up_combat() {
 	location to_place;
-	
+	for(cPlayer& pc : univ.party)
+		if(pc.main_status == eMainStatus::ALIVE)
+			to_place = pc.combat_pos;
+		else for(cItem& item : pc.items)
+			if(item.variety != eItemType::NO_ITEM) {
+				place_item(item,to_place);
+				item.variety = eItemType::NO_ITEM;
+			}
+
+	overall_mode = MODE_COMBAT;
+	center = univ.current_pc().combat_pos;
+	draw_terrain();
+}
+
+void initiate_outdoor_combat(short i) {
+	// Make sure the player can see the monster they stepped next to
 	draw_terrain();
 	
 	// Is combat too easy?
@@ -1900,24 +1916,11 @@ void initiate_outdoor_combat(short i) {
 		return;
 	}
 	
-//	Delay((long) 100,&dummy);
-	
 	start_outdoor_combat(univ.party.out_c[i], univ.party.out_loc,count_walls(univ.party.out_loc));
 	
 	univ.party.out_c[i].exists = false;
 	
-	for(cPlayer& pc : univ.party)
-		if(pc.main_status == eMainStatus::ALIVE)
-			to_place = pc.combat_pos;
-		else for(cItem& item : pc.items)
-			if(item.variety != eItemType::NO_ITEM) {
-				place_item(item,to_place);
-				item.variety = eItemType::NO_ITEM;
-			}
-	
-	overall_mode = MODE_COMBAT;
-	center = univ.current_pc().combat_pos;
-	draw_terrain();
+	set_up_combat();
 }
 
 void show_inventory() {
@@ -1953,6 +1956,37 @@ void toggle_debug_mode() {
 		ASB("Debug mode ON.");
 	}
 	print_buf();
+}
+
+void debug_fight_encounter(bool wandering) {
+	if(recording){
+		record_action("debug_fight_encounter", bool_to_str(wandering));
+	}
+	if(!is_out()){
+		ASB("Debug outdoor encounter: You have to be");
+		ASB("outdoors!");
+		print_buf();
+		return;
+	}
+
+	std::string prompt = "Which ";
+	if(wandering){
+		prompt += "wandering encounter?";
+	}else{
+		prompt += "special encounter?";
+	}
+
+	int i = get_num_response(0, 3, prompt);
+
+	cOutdoors::cWandering encounter;
+	if(wandering){
+		encounter = univ.out->wandering[i];
+	}else{
+		encounter = univ.out->special_enc[i];
+	}
+	start_outdoor_combat(encounter, univ.party.out_loc, count_walls(univ.party.out_loc));
+
+	set_up_combat();
 }
 
 void debug_give_item() {
@@ -2265,6 +2299,111 @@ void easter_egg(int idx) {
 	print_buf();
 }
 
+std::map<char,key_action_t> debug_actions;
+std::vector<std::vector<char>> debug_actions_help_order;
+
+void add_debug_action(std::vector<char> keys, std::string name, void (*action)()) {
+	key_action_t shortcut = {keys, name, action};
+	for(char ch: keys){
+		debug_actions[ch] = shortcut;
+	}
+	debug_actions_help_order.push_back(keys);
+}
+
+void show_debug_help() {
+	if(recording){
+		record_action("show_debug_help", "");
+	}
+	cDialog debug_panel(*ResMgr::dialogs.get("help-debug"));
+	int idx;
+	for(idx = 0; idx < debug_actions_help_order.size(); ++idx){
+		std::ostringstream btn_name;
+		btn_name << "btn" << (idx+1);
+		cControl& button = debug_panel[btn_name.str()];
+		key_action_t action = debug_actions[debug_actions_help_order[idx][0]];
+		std::ostringstream btn_text;
+		btn_text << action.keys[0];
+		for(int key_idx = 1; key_idx < action.keys.size(); ++key_idx){
+			btn_text << ", " << action.keys[key_idx];
+		}
+		btn_text << " - " << action.name;
+		button.setText(btn_text.str());
+		// TODO it's unfortunate that the button can only have one key if actions might have
+		// more than one
+		button.attachKey(charToKey(action.keys[0]));
+		// Don't recursively open the panel
+		if(action.action != &show_debug_help){
+			button.attachClickHandler([action](cDialog& me, std::string, eKeyMod) -> bool {
+				me.toast(false);
+				action.action();
+				return true;
+			});
+		}
+	}
+	for(; idx < 30; ++idx){
+		std::ostringstream btn_name;
+		btn_name << "btn" << (idx+1);
+		cControl& button = debug_panel[btn_name.str()];
+		button.hide();
+	}
+
+	debug_panel.attachClickHandlers([](cDialog& me, std::string, eKeyMod) -> bool {
+		me.toast(false);
+		return true;
+	}, {"okay"});
+
+	debug_panel.run();
+}
+
+// Non-comprehensive list of unused keys:
+// JUXYZ chijklnoqvy @#$-_+[]{},.'"`~/\|;:
+void init_debug_actions() {
+	add_debug_action({'B'}, "Leave town", debug_leave_town);
+	add_debug_action({'C'}, "Get cleaned up (lose negative status effects)", debug_clean_up);
+	add_debug_action({'D'}, "Toggle Debug mode", toggle_debug_mode);
+	add_debug_action({'E'}, "Stealth, Detect Life, Firewalk", debug_stealth_detect_life_firewalk);
+	add_debug_action({'F'}, "Flight", debug_fly);
+	add_debug_action({'G'}, "Toggle Ghost mode (letting you pass through walls)", debug_ghost_mode);
+	add_debug_action({'H'}, "Heal", debug_heal);
+	// This one was missing from the old help dialog:
+	add_debug_action({'I'}, "Give item", debug_give_item);
+	add_debug_action({'K'}, "Kill everything", debug_kill);
+	add_debug_action({'N'}, "End scenario", []() -> void {handle_victory(true);});
+	add_debug_action({'O'}, "Print your location", debug_print_location);
+	add_debug_action({'Q'}, "Magic map", debug_magic_map);
+	add_debug_action({'R'}, "Return to start", debug_return_to_start);
+	add_debug_action({'S'}, "Set stuff done flags", []() -> void {
+		// edit_stuff_done() is used in the character editor which
+		// doesn't have replays, so its replay action is recorded
+		// external to the function definition unlike most actions.
+		if(recording){
+			record_action("edit_stuff_done", "");
+		}
+		edit_stuff_done();
+	});
+	add_debug_action({'T'}, "Enter town", debug_enter_town);
+	add_debug_action({'W'}, "Refresh jobs/shops", debug_refresh_stores);
+	add_debug_action({'='}, "Heal, increase magic skills", debug_heal_plus_extra);
+	add_debug_action({'<'}, "Make one day pass", debug_increase_age);
+	add_debug_action({'>'}, "Reset towns (excludes the one you're in, if any)", debug_towns_forget);
+	add_debug_action({'!'}, "Toggle Special Node Step-through Mode", debug_step_through);
+	// std::bind won't work here for reasons
+	add_debug_action({'%'}, "Fight wandering encounter from this section", []() -> void {debug_fight_encounter(true);});
+	add_debug_action({'^'}, "Fight special encounter from this section", []() -> void {debug_fight_encounter(false);});
+	add_debug_action({'/', '?'}, "Bring up this window", show_debug_help);
+}
+
+// Later we might want to know whether the key is used or not
+bool handle_debug_key(char key) {
+	if(!univ.debug_mode)
+		return false;
+	if(debug_actions.find(key) != debug_actions.end()){
+		debug_actions[key].action();
+		return true;
+	}
+	return false;
+}
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2443,6 +2582,11 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			break;
 			
 		case '?':
+			// In debug mode, override basic help menus with a debug mode cheat-sheet
+			if(univ.debug_mode){
+				show_debug_help();
+				break;
+			}
 			if(overall_mode == MODE_SHOPPING) {
 				give_help_and_record(226,27);
 				break;
@@ -2488,116 +2632,15 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			}
 			break;
 			
-			
 		case 'D':
 			toggle_debug_mode();
 			break;
+
+		// 'z', Really? 'i' is not used
 		case 'z':
 			show_inventory();
 			break;
 			
-		case '=':
-			if(!univ.debug_mode) break;
-			debug_heal_plus_extra();
-			break;
-			
-		case 'B':
-			if(!univ.debug_mode) break;
-			debug_leave_town();
-			break;
-			
-		case 'C':
-			if(!univ.debug_mode) break;
-			debug_clean_up();
-			break;
-			
-		case 'E':
-			if(!univ.debug_mode) break;
-			debug_stealth_detect_life_firewalk();
-			break;
-			
-		case 'F':
-			if(!univ.debug_mode) break;
-			debug_fly();
-			break;
-			
-		case 'G':
-			if(!univ.debug_mode) break;
-			debug_ghost_mode();
-			break;
-			
-		case 'H':
-			if(!univ.debug_mode) break;
-			debug_heal();
-			break;
-			
-		case 'K':
-			if(!univ.debug_mode) break;
-			debug_kill();
-			break;
-			
-		case 'N':
-			if(!univ.debug_mode) break;
-			handle_victory(true);
-			break;
-			
-		case 'O':
-			if(!univ.debug_mode) break;
-			debug_print_location();
-			break;
-			
-		case 'I':
-			if(!univ.debug_mode) break;
-			debug_give_item();
-			break;
-			
-		case 'Q':
-			if(!univ.debug_mode) break;
-			debug_magic_map();
-			break;
-			
-		case 'R':
-			if(!univ.debug_mode) break;
-			debug_return_to_start();
-			break;
-			
-		case 'S':
-			if(!univ.debug_mode) break;
-			// edit_stuff_done() is used in the character editor which
-			// doesn't have replays, so its replay action is recorded
-			// external to the function definition unlike most actions.
-			if(recording){
-				record_action("edit_stuff_done", "");
-			}
-			edit_stuff_done();
-			break;
-			
-		case 'T':
-			if(!univ.debug_mode) break;
-			debug_enter_town();
-			break;
-			
-		case 'W':
-			if(!univ.debug_mode) break;
-			debug_refresh_stores();
-			break;
-			
-		case '<':
-			if(!univ.debug_mode) break;
-			debug_increase_age();
-			break;
-		case '>':
-			if(!univ.debug_mode) break;
-			debug_towns_forget();
-			break;
-		case '!':
-			if(!univ.debug_mode) break;
-			debug_step_through();
-			break;
-		case '/':
-			if(!univ.debug_mode) break;
-			show_dialog_action("help-debug");
-			break;
 		case 'a': // Show automap
 			display_map();
 			break;
@@ -2703,6 +2746,11 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 				handle_combat_switch(did_something, need_redraw, need_reprint);
 				advance_time(did_something, need_redraw, need_reprint);
 			}
+			break;
+
+		// Debug action keyboard shortcuts:
+		default:
+			handle_debug_key(chr);
 			break;
 	}
 	spell_forced = false;

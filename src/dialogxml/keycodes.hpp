@@ -57,6 +57,8 @@ struct cKey {
 	eKeyMod mod;
 };
 
+cKey charToKey(char ch);
+
 /// Combine two key modifiers.
 /// @param lhs @param rhs
 /// @return lhs + rhs

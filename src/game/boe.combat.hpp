@@ -9,6 +9,9 @@
 #include "boe.global.hpp"
 #include "spell.hpp"
 
+// For debug purposes, allow directly starting an outdoor encounter without
+// a wandering monster
+void start_outdoor_combat(cOutdoors::cWandering encounter,location where,short num_walls);
 void start_outdoor_combat(cOutdoors::cCreature encounter,location where,short num_walls);
 bool pc_combat_move(location destination);
 void char_parry();
