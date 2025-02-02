@@ -3230,7 +3230,7 @@ void handle_death() {
 	while(true) {
 		// Use death (or leave Exile) dialog
 		choice = cChoiceDlog("party-death",{"load","new","quit"}).show();
-
+		
 		if(choice == "quit") {
 			All_Done = true;
 			return;
