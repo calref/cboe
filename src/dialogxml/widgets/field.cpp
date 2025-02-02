@@ -442,16 +442,18 @@ void cTextField::handleInput(cKey key, bool record) {
 			handleInput(deleteKey);
 			contents = getText();
 		}
-		if(aTextInsert* ins = dynamic_cast<aTextInsert*>(current_action.get()))
-			ins->append(key.c);
-		else {
-			if(current_action) history.add(current_action);
-			aTextInsert* new_ins = new aTextInsert(*this, insertionPoint);
-			new_ins->append(key.c);
-			current_action.reset(new_ins);
+		if(maxChars < 0 || contents.size() < maxChars){
+			if(aTextInsert* ins = dynamic_cast<aTextInsert*>(current_action.get()))
+				ins->append(key.c);
+			else {
+				if(current_action) history.add(current_action);
+				aTextInsert* new_ins = new aTextInsert(*this, insertionPoint);
+				new_ins->append(key.c);
+				current_action.reset(new_ins);
+			}
+			contents.insert(contents.begin() + insertionPoint, char(key.c));
+			selectionPoint = ++insertionPoint;
 		}
-		contents.insert(contents.begin() + insertionPoint, char(key.c));
-		selectionPoint = ++insertionPoint;
 	} else switch(key.k) {
 		case key_enter: break; // Shouldn't be receiving this anyway
 		case key_left: case key_word_left:
@@ -680,6 +682,9 @@ bool cTextField::parseAttribute(ticpp::Attribute& attr, std::string tagName, std
 		return true;
 	} else if(name == "tab-order"){
 		attr.GetValue(&tabOrder);
+		return true;
+	} else if(name == "max-chars"){
+		attr.GetValue(&maxChars);
 		return true;
 	}
 	return cControl::parseAttribute(attr, tagName, fname);
