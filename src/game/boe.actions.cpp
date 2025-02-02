@@ -3225,6 +3225,7 @@ void handle_death() {
 	std::string choice;
 	
 	overall_mode = MODE_STARTUP;
+	reload_startup();
 	
 	while(true) {
 		// Use death (or leave Exile) dialog
@@ -3246,7 +3247,6 @@ void handle_death() {
 		else if(choice == "new") {
 			// TODO: Windows version dumps to main screen without creating a party; which is better?
 			start_new_game();
-			reload_startup();
 			return;
 		}
 	}
