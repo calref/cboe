@@ -2367,6 +2367,9 @@ void init_debug_actions() {
 	add_debug_action({'H'}, "Heal", debug_heal);
 	// This one was missing from the old help dialog:
 	add_debug_action({'I'}, "Give item", debug_give_item);
+	// TODO this is not recorded or replayed because the rsrc you pick might not even be packaged
+	// in the build
+	add_debug_action({'J'}, "Preview a dialog's layout", preview_dialog_xml);
 	add_debug_action({'K'}, "Kill everything", debug_kill);
 	add_debug_action({'N'}, "End scenario", []() -> void {handle_victory(true);});
 	add_debug_action({'O'}, "Print your location", debug_print_location);
