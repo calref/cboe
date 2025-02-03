@@ -2356,7 +2356,7 @@ void show_debug_help() {
 }
 
 // Non-comprehensive list of unused keys:
-// JUXYZ chijklnoqvy @#$-_+[]{},.'"`~/\|;:
+// UXYZ chijklnoqvy @#$-_+[]{},.'"`~/\|;:
 void init_debug_actions() {
 	add_debug_action({'B'}, "Leave town", debug_leave_town);
 	add_debug_action({'C'}, "Get cleaned up (lose negative status effects)", debug_clean_up);
