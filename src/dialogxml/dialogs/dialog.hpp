@@ -377,4 +377,7 @@ public:
 //	}
 //}
 
+// For development/debugging only.
+void preview_dialog_xml();
+
 #endif
