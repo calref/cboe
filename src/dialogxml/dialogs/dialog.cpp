@@ -1156,6 +1156,7 @@ void preview_dialog_xml() {
 	for (auto control : dialog){
 		control.second->attachClickHandler([](cDialog& me, std::string item_hit, eKeyMod mod) -> bool {
 			me.toast(false);
+			return true;
 		});
 	}
 	dialog.run();
