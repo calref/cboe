@@ -601,7 +601,8 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 
 void click_shop_rect(rectangle area_rect, bool item_help) {
 	if(recording){
-		record_action("click_shop_rect", boost::lexical_cast<std::string>(area_rect));
+		std::string action_name = item_help ? "click_shop_item_help" : "click_shop_item";
+		record_action(action_name, boost::lexical_cast<std::string>(area_rect));
 	}
 
 	draw_shop_graphics(!item_help,item_help,area_rect);
