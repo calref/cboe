@@ -243,17 +243,19 @@ bool handle_shop_event(location p, cFramerateLimiter& fps_limiter) {
 		// Since shop UI was drawn into the game window with offsets, we need to apply
 		// the same offsets to event catching areas.
 		rectangle active_rect { shopping_rects[i][SHOPRECT_ACTIVE_AREA] };
+		rectangle visual_rect { active_rect };
 		active_rect.offset(talk_gword_offset_x, talk_gword_offset_y);
 
 		rectangle item_help_rect { shopping_rects[i][SHOPRECT_ITEM_HELP] };
+		rectangle visual_item_help_rect { item_help_rect };
 		item_help_rect.offset(talk_gword_offset_x, talk_gword_offset_y);
 
 		if(p.in(active_rect)) {
-			click_shop_rect(active_rect);
+			click_shop_rect(visual_rect);
 			handle_sale(what_picked);
 			return true;
 		} else if(p.in(item_help_rect)){
-			click_shop_rect(item_help_rect);
+			click_shop_rect(visual_item_help_rect);
 			handle_info_request(what_picked);
 			return true;
 		}
