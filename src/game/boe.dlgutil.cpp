@@ -244,6 +244,7 @@ bool handle_shop_event(location p, cFramerateLimiter& fps_limiter) {
 		// the same offsets to event catching areas.
 		rectangle active_rect { shopping_rects[i][SHOPRECT_ACTIVE_AREA] };
 		rectangle visual_rect { active_rect };
+		visual_rect.right += 10;
 		active_rect.offset(talk_gword_offset_x, talk_gword_offset_y);
 
 		rectangle item_help_rect { shopping_rects[i][SHOPRECT_ITEM_HELP] };
