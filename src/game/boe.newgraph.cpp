@@ -805,6 +805,9 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 		shop_sbar->show();
 	else shop_sbar->hide();
 	done_btn->show();
+	done_btn->draw();
+	help_btn->show();
+	help_btn->draw();
 }
 
 void refresh_shopping() {
