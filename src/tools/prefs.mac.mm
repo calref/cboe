@@ -133,9 +133,58 @@ void clear_pref(std::string keypath) {
 	[getCurrentDefaults() setValue: nil forKey: convertKey(keypath)];
 }
 
-// When replaying, load the preferences from the action log into a
-// non-synchronized UserDefaults object
-static bool load_prefs(std::istream& istream) {
+// On Mac, when running a replay, the pre-existing preferences
+// need to be serialized before loading the replay's preferences,
+// and reinstated when the game closes
+std::ostringstream stored_prefs;
+
+static void record_prefs(std::ostringstream& prefs_recording) {
+	NSUserDefaults* standard = [NSUserDefaults standardUserDefaults];
+	for(id pref in prefsToRecord) {
+		id object = [standard objectForKey: pref];
+		if(object != nil){
+			prefs_recording << [pref UTF8String] << " = ";
+			NSInteger type = [prefsToRecord[pref] integerValue];
+			switch((int)type) {
+				case kBool: {
+					bool bvalue = [standard boolForKey: pref];
+					if(bvalue == true){
+						prefs_recording << "true";
+					}else{
+						prefs_recording << "false";
+					}
+				} break;
+				case kInt: {
+					int ivalue = (int)[standard integerForKey: pref];
+					prefs_recording << ivalue;
+				} break;
+				case kIArray: {
+					NSArray* arrayValue = [standard arrayForKey: pref];
+					prefs_recording << "[";
+					int count = [arrayValue count];
+					int c = 0;
+					for(id num in arrayValue){
+						prefs_recording << [num integerValue];
+						if (c < count - 1)
+							prefs_recording << " ";
+						++c;
+					}
+					prefs_recording << "]";
+				} break;
+				case kFloat: {
+					double fvalue = (double)[standard doubleForKey: pref];
+					prefs_recording << fvalue;
+				} break;
+				// NOTE: The core game currently has no string preferences, so the recording system doesn't need to know
+				// about them for now.
+				case kString: break;
+			}
+			prefs_recording << std::endl;
+		}
+	}
+}
+
+bool load_prefs(std::istream& istream) {
 	std::string line;
 	while(std::getline(istream, line)) {
 		if(!istream) {
@@ -204,55 +253,16 @@ static bool load_prefs(std::istream& istream) {
 bool sync_prefs() {
 	if(recording && !prefsLoaded){
 		std::ostringstream prefs_recording;
-		NSUserDefaults* standard = [NSUserDefaults standardUserDefaults];
-		for(id pref in prefsToRecord) {
-			id object = [standard objectForKey: pref];
-			if(object != nil){
-				prefs_recording << [pref UTF8String] << " = ";
-				NSInteger type = [prefsToRecord[pref] integerValue];
-				switch((int)type) {
-					case kBool: {
-						bool bvalue = [standard boolForKey: pref];
-						if(bvalue == true){
-							prefs_recording << "true";
-						}else{
-							prefs_recording << "false";
-						}
-					} break;
-					case kInt: {
-						int ivalue = (int)[standard integerForKey: pref];
-						prefs_recording << ivalue;
-					} break;
-					case kIArray: {
-						NSArray* arrayValue = [standard arrayForKey: pref];
-						prefs_recording << "[";
-						int count = [arrayValue count];
-						int c = 0;
-						for(id num in arrayValue){
-							prefs_recording << [num integerValue];
-							if (c < count - 1)
-								prefs_recording << " ";
-							++c;
-						}
-						prefs_recording << "]";
-					} break;
-					case kFloat: {
-						double fvalue = (double)[standard doubleForKey: pref];
-						prefs_recording << fvalue;
-					} break;
-					// NOTE: The core game currently has no string preferences, so the recording system doesn't need to know
-					// about them for now.
-					case kString: break;
-				}
-				prefs_recording << std::endl;
-			}
-		}
+		record_prefs(prefs_recording);
 		record_action("load_prefs", prefs_recording.str(), true);
 		prefsLoaded = true;
 	}else if(replaying && !prefsLoaded){
 		replayUserDefaults = [[NSUserDefaults alloc] init];
 		Element& prefs_action = pop_next_action("load_prefs");
 		std::istringstream istream(prefs_action.GetText());
+		// When replaying, store the user's preferences,
+		// then load the preferences from the action log
+		record_prefs(stored_prefs);
 		return load_prefs(istream);
 	}
 	return [[NSUserDefaults standardUserDefaults] synchronize];

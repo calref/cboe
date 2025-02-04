@@ -1298,10 +1298,19 @@ void Mouse_Pressed(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 }
 
 void close_program() {
-	// TODO: Ultimately we would like to have cleanup happen automatically, negating the need for this function
-	// On the Mac, prefs are synced automatically. However, doing it manually won't hurt.
-	// On other platforms, we need to do it manually.
-	sync_prefs();
+	// On the Mac, prefs are synced automatically.
+	#ifdef SFML_SYSTEM_MACOS
+		extern bool load_prefs(std::istream& in);
+		extern std::ostringstream stored_prefs;
+		if(replaying){
+			// When a replay session ends, we need to restore the user's preferences
+			std::istringstream stored_prefs_in(stored_prefs.str());
+			load_prefs(stored_prefs_in);
+		}
+	#else
+		// On other platforms, we need to do sync preferences manually.
+		sync_prefs();
+	#endif
 }
 
 extern fs::path progDir;
