@@ -650,17 +650,19 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	style.font = FONT_DUNGEON;
 	style.pointSize = 18;
 	
-	talk_gworld.setActive(false);
-	if(pressed) {
-		clip_rect(talk_gworld, clip_area_rect);
-	}
-	
 	area_rect = rectangle(talk_gworld);
-	frame_rect(talk_gworld, area_rect, Colours::BLACK); 
-	area_rect.inset(1,1);
-	tileImage(talk_gworld, area_rect,bg[12]);
-	
-	frame_rect(talk_gworld, shop_frame, Colours::BLACK); 
+	talk_gworld.setActive(false);
+	// Only re-render on top of the item that is clicked:
+	if(pressed) {
+		clip_area_rect.offset(-area_rect.left, -area_rect.top);
+		clip_rect(talk_gworld, clip_area_rect);
+	} else {
+		frame_rect(talk_gworld, area_rect, Colours::BLACK);
+		area_rect.inset(1,1);
+		tileImage(talk_gworld, area_rect,bg[12]);
+
+		frame_rect(talk_gworld, shop_frame, Colours::BLACK);
+	}
 	
 	// Place store icon
 	if(!pressed) {
