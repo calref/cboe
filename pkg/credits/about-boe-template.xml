@@ -31,6 +31,7 @@
 			<br/>
 			Programming: {{1}}
 			Graphics: {{2}}
+			Consulting: {{9}}
 			Testing and Troubleshooting: {{3}}
 			Funding: {{4}}
 			<br/><br/>
@@ -45,6 +46,7 @@
 			<br/><!-- OPEN SOURCE CREDITS --><br/>
 			<!-- Programming -->{{5}}
 			<!-- Graphics -->{{6}}
+			<!-- Consulting -->{{10}}
 			<!-- Testing and Troubleshooting -->{{7}}
 			<!-- Funding -->{{8}}
 			<br/><!-- SCENARIO FIXES AND UPDATES --><br/>
