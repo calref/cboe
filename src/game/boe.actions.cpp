@@ -920,7 +920,7 @@ void handle_switch_pc_items(short which_pc, bool& need_redraw) {
 		set_stat_window_for_pc(which_pc);
 		if(overall_mode == MODE_SHOPPING) {
 			set_up_shop_array();
-			draw_shop_graphics(0,item_screen_button_rects[which_pc]); // rect is dummy
+			draw_shop_graphics(false,false,item_screen_button_rects[which_pc]); // rect is dummy
 		}
 	}
 }
@@ -1623,7 +1623,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 		put_item_screen(stat_window);
 		if(overall_mode == MODE_SHOPPING) {
 			set_up_shop_array();
-			draw_shop_graphics(0,pc_buttons[0][PCBTN_NAME]);
+			draw_shop_graphics(false,false,pc_buttons[0][PCBTN_NAME]);
 		}
 	}
 	

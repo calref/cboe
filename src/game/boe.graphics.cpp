@@ -521,7 +521,7 @@ void redraw_screen(int refresh) {
 			refresh_talking();
 			break;
 		case MODE_SHOPPING:
-			if(refresh & REFRESH_DLOG) draw_shop_graphics(0,{0,0,0,0});
+			if(refresh & REFRESH_DLOG) draw_shop_graphics(false,false,{0,0,0,0});
 			refresh_shopping();
 			break;
 		default:

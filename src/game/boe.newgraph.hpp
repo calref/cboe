@@ -59,8 +59,8 @@ void add_missile(location dest,miss_num_t missile_type,short path_type,short x_a
 void add_explosion(location dest,short val_to_place,short place_type,short boom_type,short x_adj,short y_adj, bool use_unique_ran = false);
 void do_missile_anim(short num_steps,location missile_origin,short sound_num) ;
 void do_explosion_anim(short sound_num,short expand,short snd = -1);
-void click_shop_rect(rectangle area_rect);
-void draw_shop_graphics(bool pressed,rectangle clip_area_rect);
+void click_shop_rect(rectangle area_rect, bool item_help = false);
+void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle clip_area_rect);
 void refresh_shopping();
 void click_talk_rect(word_rect_t word);
 void place_talk_str(std::string str_to_place,std::string str_to_place2,short color,rectangle c_rect);

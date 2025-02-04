@@ -149,7 +149,7 @@ bool start_shop_mode(short which,short cost_adj,std::string store_name, bool can
 
 	put_background();
 	
-	draw_shop_graphics(0,area_rect);
+	draw_shop_graphics(false,false,area_rect);
 	
 	put_item_screen(stat_window);
 	give_help(26,27);
@@ -251,11 +251,11 @@ bool handle_shop_event(location p, cFramerateLimiter& fps_limiter) {
 		item_help_rect.offset(talk_gword_offset_x, talk_gword_offset_y);
 
 		if(p.in(active_rect)) {
-			click_shop_rect(visual_rect);
+			click_shop_rect(visual_rect, false);
 			handle_sale(what_picked);
 			return true;
 		} else if(p.in(item_help_rect)){
-			click_shop_rect(visual_item_help_rect);
+			click_shop_rect(visual_item_help_rect, true);
 			handle_info_request(what_picked);
 			return true;
 		}
@@ -421,14 +421,14 @@ void handle_sale(int i) {
 	}
 	// Maybe that was the last of that item, so re-init the shop array just in case.
 	set_up_shop_array();
-	draw_shop_graphics(0,dummy_rect);
+	draw_shop_graphics(false,false,dummy_rect);
 	print_buf();
 	put_pc_screen();
 	put_item_screen(stat_window);
 
 	// This looks to be redundant, but I'm just preserving the previous behavior of the code.
 	set_up_shop_array();
-	draw_shop_graphics(false, {});
+	draw_shop_graphics(false,false,{});
 }
 
 
