@@ -258,7 +258,7 @@ bool handle_shop_event(location p, cFramerateLimiter& fps_limiter) {
 			return true;
 		}
 	}
-	return false;
+	return p.in(rectangle(talk_gworld));
 }
 
 void handle_sale(int i) {
@@ -1153,7 +1153,7 @@ bool handle_talk_event(location p, cFramerateLimiter& fps_limiter) {
 		break;
 	}
 	handle_talk_node(which_talk_entry);
-	return clicked_word;
+	return clicked_word || p.in(rectangle(talk_gworld));
 }
 
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
