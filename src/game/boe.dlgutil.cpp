@@ -581,22 +581,32 @@ void set_up_shop_array() {
 static void reset_talk_words() {
 	// first initialise talk_words here
 	talk_words.clear();
-	static const rectangle preset_rects[9] = {
-		rectangle{366,4,386,54}, rectangle{366,70,386,130}, rectangle{366,136,386,186},
-		rectangle{389,4,409,54}, rectangle{389,70,409,120}, rectangle{389,121,409,186},
-		rectangle{389,210,409,270}, rectangle{366,190,386,270},
-		rectangle{343,4,363,134},
+	static const std::vector<location> preset_word_locs = {
+		{4, 366}, {70, 366}, {136, 366},
+		{4, 389}, {70, 389}, {121, 389},
+		{210, 389}, {190, 366},
+		{4, 343}
 	};
-	static const char*const preset_words[9] = {
+	static const std::vector<std::string> preset_words = {
 		"Look", "Name", "Job",
 		"Buy", "Sell", "Record",
 		"Done", "Go Back",
 		"Ask About...",
 	};
+	TextStyle style;
+	style.font = FONT_DUNGEON;
+	style.pointSize = TALK_WORD_SIZE;
 	
 	// Place buttons at bottom.
-	for(short i = 0; i < 9; i++) {
-		word_rect_t preset_word(preset_words[i], preset_rects[i]);
+	for(short i = 0; i < preset_words.size(); i++) {
+		std::string word = preset_words[i];
+		location tl = preset_word_locs[i];
+		location br = tl;
+		short h;
+		br.x += string_length(word, style, &h);
+		br.y += h;
+		rectangle rect {tl,br};
+		word_rect_t preset_word(word, rect);
 		preset_word.on = PRESET_WORD_ON;
 		preset_word.off = PRESET_WORD_OFF;
 		switch(i) {

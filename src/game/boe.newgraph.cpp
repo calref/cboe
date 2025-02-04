@@ -863,7 +863,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	
 	TextStyle style;
 	style.font = FONT_DUNGEON;
-	style.pointSize = 18;
+	style.pointSize = TALK_WORD_SIZE;
 	
 	if(c_rect.right > 0) {
 		mainPtr.setActive(false);
