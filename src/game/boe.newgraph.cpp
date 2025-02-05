@@ -921,7 +921,6 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	
 	rectangle title_rect = {19,48,42,260};
 	rectangle dest_rect,help_from = {46,60,59,76};
-	sf::Text str_to_draw;
 	
 	talk_gworld.setActive(false);
 	
