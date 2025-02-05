@@ -12,6 +12,7 @@
 #include "fileio/resmgr/res_font.hpp"
 #include "gfx/render_shapes.hpp"
 #include <utility>
+#include "winutil.hpp"
 
 void TextStyle::applyTo(sf::Text& text) {
 	switch(font) {
@@ -134,6 +135,21 @@ break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextS
 	return break_info;
 }
 
+void draw_scale_aware(sf::RenderTarget& dest_window, sf::Text str_to_draw) {
+	str_to_draw.setCharacterSize(str_to_draw.getCharacterSize() * get_ui_scale());
+
+	if(dynamic_cast<sf::RenderWindow*>(&dest_window) != nullptr){
+		str_to_draw.setPosition(str_to_draw.getPosition() * (float)get_ui_scale());
+		// Temporarily switch window to its unscaled view to draw scale-aware text
+		sf::View view = dest_window.getView();
+		dest_window.setView(dest_window.getDefaultView());
+		dest_window.draw(str_to_draw);
+		dest_window.setView(view);
+	}else if(dynamic_cast<sf::RenderTexture*>(&dest_window) != nullptr){
+		// TODO Onto a RenderTexture is trickier because the texture is locked at the smaller size.
+	}
+}
+
 static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,text_params_t& options) {
 	if(str.empty()) return; // Nothing to do!
 	short line_height = options.style.lineHeight;
@@ -227,11 +243,7 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 			bounds.inset(0,-4);
 			fill_rect(dest_window, bounds, options.hilite_bg);
 		} else str_to_draw.setColor(options.style.colour);
-		dest_window.draw(str_to_draw);
-		if(options.style.font == FONT_BOLD) {
-			str_to_draw.move(1, 0);
-			dest_window.draw(str_to_draw);
-		}
+		draw_scale_aware(dest_window, str_to_draw);
 	}
 }
 
