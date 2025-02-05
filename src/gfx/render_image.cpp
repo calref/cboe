@@ -14,6 +14,7 @@
 
 #include "fileio/fileio.hpp"
 #include "gfx/render_shapes.hpp"
+#include "winutil.hpp"
 
 sf::Shader maskShader;
 extern fs::path progDir;
@@ -119,6 +120,32 @@ void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,const 
 	maskShader.setParameter("texture", sf::Shader::CurrentTexture);
 	maskShader.setParameter("mask", mask_gworld);
 	rect_draw_some_item(src.getTexture(), dest_rect, targ_gworld, targ_rect, &maskShader);
+}
+
+std::map<sf::RenderTexture*,std::vector<sf::Text>> store_scale_aware_text;
+
+static void draw_stored_scale_aware_text(sf::RenderTexture& texture, sf::RenderTarget& dest_window, rectangle targ_rect) {
+	// Temporarily switch target window to its unscaled view to draw scale-aware text
+	sf::View view = dest_window.getView();
+	dest_window.setView(dest_window.getDefaultView());
+	std::vector<sf::Text> stored_text = store_scale_aware_text[&texture];
+	for(sf::Text str_to_draw : stored_text){
+		sf::Vector2f position = str_to_draw.getPosition();
+		position = position + sf::Vector2f {0.0f+targ_rect.left, 0.0f+targ_rect.top};
+		str_to_draw.setPosition(position * (float)get_ui_scale());
+		dest_window.draw(str_to_draw);
+	}
+	dest_window.setView(view);
+}
+
+void rect_draw_some_item(sf::RenderTexture& src_render_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::BlendMode mode) {
+	rect_draw_some_item(src_render_gworld.getTexture(), src_rect, targ_gworld, targ_rect, mode);
+	draw_stored_scale_aware_text(src_render_gworld, targ_gworld, targ_rect);
+}
+
+void rect_draw_some_item(sf::RenderTexture& src_render_gworld,rectangle src_rect,const sf::Texture& mask_gworld,sf::RenderTarget& targ_gworld,rectangle targ_rect) {
+	rect_draw_some_item(src_render_gworld.getTexture(), src_rect, mask_gworld, targ_gworld, targ_rect);
+	draw_stored_scale_aware_text(src_render_gworld, targ_gworld, targ_rect);
 }
 
 void setActiveRenderTarget(sf::RenderTarget& where) {

@@ -481,6 +481,9 @@ void end_startup() {
 }
 
 static void loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName) {
+	// Clear scale-aware text stored for the previous texture instance:
+	clear_scale_aware_text(tex);
+
 	sf::Texture& temp_gworld = *ResMgr::graphics.get(imgName);
 	rectangle texrect(temp_gworld);
 	tex.create(texrect.width(), texrect.height());
@@ -661,6 +664,7 @@ void put_text_bar(std::string str, std::string right_str) {
 	text_bar_gworld.setActive(false);
 	auto& bar_gw = *ResMgr::graphics.get("textbar");
 	rect_draw_some_item(bar_gw, rectangle(bar_gw), text_bar_gworld, rectangle(bar_gw));
+	clear_scale_aware_text(text_bar_gworld);
 	TextStyle style;
 	style.colour = sf::Color::White;
 	style.font = FONT_BOLD;
@@ -696,7 +700,7 @@ void put_text_bar(std::string str, std::string right_str) {
 
 void refresh_text_bar() {
 	mainPtr.setActive(false);
-	rect_draw_some_item(text_bar_gworld.getTexture(), rectangle(text_bar_gworld), mainPtr, win_to_rects[WINRECT_STATUS]);
+	rect_draw_some_item(text_bar_gworld, rectangle(text_bar_gworld), mainPtr, win_to_rects[WINRECT_STATUS]);
 	mainPtr.setActive();
 }
 

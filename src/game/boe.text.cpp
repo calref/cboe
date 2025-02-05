@@ -97,6 +97,7 @@ void put_pc_screen() {
 	rectangle info_from = {0,1,12,13}, switch_from = {0, 13, 12, 25};
 	
 	pc_stats_gworld.setActive(false);
+	clear_scale_aware_text(pc_stats_gworld);
 	
 	// First clean up gworld with pretty patterns
 	sf::Texture& orig = *ResMgr::graphics.get("statarea");
@@ -219,6 +220,7 @@ void put_item_screen(eItemWinMode screen_num) {
 	rectangle upper_frame_rect = {3,3,15,268};
 	
 	item_stats_gworld.setActive(false);
+	clear_scale_aware_text(item_stats_gworld);
 	
 	// First clean up gworld with pretty patterns
 	sf::Texture& orig = *ResMgr::graphics.get("inventory");
@@ -588,9 +590,9 @@ void refresh_stat_areas(short mode) {
 	
 	if(mode == 1) x = sf::BlendAdd;
 	else x = sf::BlendNone;
-	rect_draw_some_item(pc_stats_gworld.getTexture(), rectangle(pc_stats_gworld), mainPtr, win_to_rects[WINRECT_PCSTATS], x);
-	rect_draw_some_item(item_stats_gworld.getTexture(), rectangle(item_stats_gworld), mainPtr, win_to_rects[WINRECT_INVEN], x);
-	rect_draw_some_item(text_area_gworld.getTexture(), rectangle(text_area_gworld), mainPtr, win_to_rects[WINRECT_TRANSCRIPT], x);
+	rect_draw_some_item(pc_stats_gworld, rectangle(pc_stats_gworld), mainPtr, win_to_rects[WINRECT_PCSTATS], x);
+	rect_draw_some_item(item_stats_gworld, rectangle(item_stats_gworld), mainPtr, win_to_rects[WINRECT_INVEN], x);
+	rect_draw_some_item(text_area_gworld, rectangle(text_area_gworld), mainPtr, win_to_rects[WINRECT_TRANSCRIPT], x);
 }
 
 rectangle get_stat_effect_rect(int code) {
@@ -1068,6 +1070,7 @@ void print_buf () {
 	rectangle store_text_rect,dest_rect,erase_rect = {2,2,136,255};
 	
 	text_area_gworld.setActive(false);
+	clear_scale_aware_text(text_area_gworld);
 	
 	// First clean up gworld with pretty patterns
 	tileImage(text_area_gworld, erase_rect,bg[6]);
@@ -1084,7 +1087,7 @@ void print_buf () {
 		sf::Text text(text_buffer[line_to_print].line, *ResMgr::fonts.get("plain"), 12);
 		text.setColor(Colours::BLACK);
 		text.setPosition(moveTo);
-		text_area_gworld.draw(text);
+		draw_scale_aware_text(text_area_gworld, text);
 		num_lines_printed++;
 		line_to_print++;
 		if(line_to_print== TEXT_BUF_LEN) {

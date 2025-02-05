@@ -135,7 +135,14 @@ break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextS
 	return break_info;
 }
 
-void draw_scale_aware(sf::RenderTarget& dest_window, sf::Text str_to_draw) {
+// I don't know of a better way to do this than using pointers as keys.
+extern std::map<sf::RenderTexture*,std::vector<sf::Text>> store_scale_aware_text;
+
+void clear_scale_aware_text(sf::RenderTexture& texture) {
+	store_scale_aware_text.erase(&texture);
+}
+
+void draw_scale_aware_text(sf::RenderTarget& dest_window, sf::Text str_to_draw) {
 	str_to_draw.setCharacterSize(str_to_draw.getCharacterSize() * get_ui_scale());
 
 	if(dynamic_cast<sf::RenderWindow*>(&dest_window) != nullptr){
@@ -145,8 +152,14 @@ void draw_scale_aware(sf::RenderTarget& dest_window, sf::Text str_to_draw) {
 		dest_window.setView(dest_window.getDefaultView());
 		dest_window.draw(str_to_draw);
 		dest_window.setView(view);
-	}else if(dynamic_cast<sf::RenderTexture*>(&dest_window) != nullptr){
-		// TODO Onto a RenderTexture is trickier because the texture is locked at the smaller size.
+	}else if(sf::RenderTexture* p = dynamic_cast<sf::RenderTexture*>(&dest_window); p != nullptr){
+		// Onto a RenderTexture is trickier because the texture is locked at the smaller size.
+		// What we can do is save the sf::Text with its relative position and render
+		// it onto the RenderWindow that eventually draws the RenderTexture.
+		if(store_scale_aware_text.find(p) == store_scale_aware_text.end()){
+			store_scale_aware_text[p] = std::vector<sf::Text> {};
+		}
+		store_scale_aware_text[p].push_back(str_to_draw);
 	}
 }
 
@@ -243,7 +256,7 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 			bounds.inset(0,-4);
 			fill_rect(dest_window, bounds, options.hilite_bg);
 		} else str_to_draw.setColor(options.style.colour);
-		draw_scale_aware(dest_window, str_to_draw);
+		draw_scale_aware_text(dest_window, str_to_draw);
 	}
 }
 

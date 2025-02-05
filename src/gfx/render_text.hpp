@@ -57,7 +57,8 @@ enum class eTextMode {
 
 std::vector<rectangle> draw_string_hilite(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr);
 std::vector<snippet_t> draw_string_sel(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr);
-void draw_scale_aware(sf::RenderTarget& dest_window,sf::Text text);
+void draw_scale_aware_text(sf::RenderTarget& dest_window, sf::Text str_to_draw);
+void clear_scale_aware_text(sf::RenderTexture& texture);
 void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style,bool right_align = false);
 void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style, break_info_t break_info,bool right_align = false);
 break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextStyle style);
