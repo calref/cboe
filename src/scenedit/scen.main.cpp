@@ -427,9 +427,16 @@ void redraw_everything() {
 	restore_cursor();
 }
 
+void show_outdated_warning() {
+	std::string outdated_help1 = "The information in the following help window is extremely outdated! The most up-to-date documentation for OpenBoE is here:";
+	std::string outdated_help2 = "https://openboe.com/docs";
+
+	showWarning(outdated_help1, outdated_help2);
+}
+
 void handle_menu_choice(eMenu item_hit) {
 	extern cUndoList undo_list;
-	bool isEdit = false, isHelp = false;
+	bool isEdit = false, isHelp = false, isOutdated = false;
 	std::string helpDlog;
 	fs::path file_to_load;
 	cKey editKey = {true};
@@ -741,18 +748,22 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::HELP_START:
 			helpDlog = "help-editing";
 			isHelp = true;
+			isOutdated = true;
 			break;
 		case eMenu::HELP_TEST:
 			helpDlog = "help-testing";
 			isHelp = true;
+			isOutdated = true;
 			break;
 		case eMenu::HELP_DIST:
 			helpDlog = "help-distributing";
 			isHelp = true;
+			isOutdated = true;
 			break;
 		case eMenu::HELP_CONTEST:
 			helpDlog = "help-contest";
 			isHelp = true;
+			isOutdated = true;
 			break;
 	}
 	if(isEdit) {
@@ -769,8 +780,12 @@ void handle_menu_choice(eMenu item_hit) {
 			redraw_screen();
 		}
 	}
-	if(isHelp)
+	if(isHelp){
+		if(isOutdated){
+			show_outdated_warning();
+		}
 		cChoiceDlog(helpDlog).show();
+	}
 	redraw_screen();
 }
 
