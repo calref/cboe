@@ -27,6 +27,7 @@ using base64 = cppcodec::base64_rfc4648;
 
 bool recording = false;
 bool replaying = false;
+bool was_replaying = false;
 
 bool record_verbose = false;
 bool replay_verbose = false;
@@ -107,7 +108,7 @@ bool init_action_log(std::string command, std::string file) {
 				checking_action = checking_action->NextSiblingElement(false);
 			}while(checking_action != nullptr);
 
-			replaying = true;
+			was_replaying = replaying = true;
 		} catch(...) {
 			std::cout << "Failed to load file " << file << std::endl;
 			return false;

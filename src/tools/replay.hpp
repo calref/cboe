@@ -16,7 +16,12 @@ using ticpp::Element;
 struct word_rect_t;
 
 extern bool recording;
+// True if a replay is currently ongoing.
+// False after actions run out, Ctrl+C interrupts the replay,
+//   or an error occurs:
 extern bool replaying;
+// Always true if this session started as a replay:
+extern bool was_replaying;
 
 extern bool replay_strict;
 

@@ -1099,6 +1099,7 @@ void handle_events() {
 			}
 			replay_next_action();
 		}else{
+			replaying = false;
 #ifdef __APPLE__
 			if (menuChoiceId>=0) {
 				eMenuChoice aMenuChoice=menuChoice;
