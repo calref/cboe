@@ -3,9 +3,6 @@
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <!--DOCTYPE dialog SYSTEM	"dialog.dtd"-->
 <dialog defbtn='leave'>
-	<!--
-	 TODO: The defbtn value about should be 'leave'; I left it like this to see if xmllint could catch it.
-	 -->
 	<pict type='monst' num='12' top='6' left='6'/>
 	<text top='6' left='48' width='246' height='35'>
 		This item is clearly someone's property.
