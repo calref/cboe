@@ -3,7 +3,6 @@
 <dialog defbtn='okay'>
 	<!--
 	 TODO: This dialog is very disorganized; clean it up
-	 TODO: This dialog contains out-of-date information (the recommendation of a sage in Fort Emergence, and the jobs button, though the latter is likely to be reinstated)
 	 -->
 	<button name='okay' type='regular' top='384' left='435'>OK</button>
 	<pict type='dlog' num='24' top='9' left='9'/>
@@ -19,7 +18,7 @@
 	</text>
 	<text top='274' left='63' width='429' height='50'>
 		Items from slain monsters normally appear unidentified.
-		To identify them, take them to a sage (such as Habecker in Fort Emergence).
+		To identify them, take them to a sage.
 		Also, buying Item Lore skill sometimes makes monster's treasure appear already identified.
 	</text>
 	<text top='95' left='63' width='424' height='33'>
