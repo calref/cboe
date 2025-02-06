@@ -35,7 +35,7 @@ NSDictionary* prefsToRecord = @{
 	@"ReceivedHelp": @(kIArray),
 	@"RepeatRoomDescriptions": @(kBool),
 	@"ShowInstantHelp": @(kBool),
-	@"ShowStartupFlash": @(kBool),
+	@"ShowStartupSplash": @(kBool),
 	@"UIScale": @(kFloat),
 	@"UIScaleMap": @(kFloat)
 };
