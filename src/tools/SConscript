@@ -8,6 +8,7 @@ tools = Split("""
 	keymods.cpp
 	replay.cpp
 	winutil.cpp
+	prefs.cpp
 	../alchemy.cpp
 	../damage.cpp
 	../enchant.cpp
@@ -34,7 +35,6 @@ elif str(platform) == "win32":
 	tools.extend(Glob("../fileio/*.win.cpp"))
 elif str(platform) == "posix":
 	tools.extend(Glob("*.linux.cpp"))
-	tools.append("prefs.win.cpp")
 
 tools_obj = env.StaticLibrary("#build/lib/tools", tools)
 

@@ -410,7 +410,7 @@
     <ClCompile Include="..\..\..\src\tools\drawable_manager.cpp" />
     <ClCompile Include="..\..\..\src\tools\framerate_limiter.cpp" />
     <ClCompile Include="..\..\..\src\tools\menu_accel.win.cpp" />
-    <ClCompile Include="..\..\..\src\tools\prefs.win.cpp" />
+    <ClCompile Include="..\..\..\src\tools\prefs.cpp" />
     <ClCompile Include="..\..\..\src\tools\replay.cpp" />
     <ClCompile Include="..\..\..\src\tools\undo.cpp" />
     <ClCompile Include="..\..\..\src\tools\keymods.cpp" />
