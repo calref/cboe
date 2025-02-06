@@ -17,40 +17,61 @@ std::map<std::string,boost::any> prefs;
 using iarray = std::vector<int>;
 static bool prefsLoaded = false, prefsDirty = false;
 
+// These can make the use of platform-specific overloads DRY
+#ifdef SFML_SYSTEM_MACOS
+#define SET_PREF_MAC(type) void set_pref_mac(std::string keypath, type value); if(!was_replaying){ set_pref_mac(keypath, value); return; }
+#define GET_PREF_MAC(type) type get_##type##_pref_mac(std::string keypath, type fallback); if(!was_replaying){ return get_##type##_pref_mac(keypath, fallback); }
+#else
+#define SET_PREF_MAC(type)
+#define GET_PREF_MAC(type)
+#endif
+
 void set_pref(std::string keypath, bool value) {
+	SET_PREF_MAC(bool);
 	prefsDirty = true;
 	prefs[keypath] = value;
 }
 
 bool get_bool_pref(std::string keypath, bool fallback) {
+	GET_PREF_MAC(bool);
 	if(prefs.find(keypath) == prefs.end()) return fallback;
 	if(prefs[keypath].type() == typeid(bool)) return boost::any_cast<bool>(prefs[keypath]);
 	return fallback;
 }
 
 void set_pref(std::string keypath, int value) {
+	SET_PREF_MAC(int);
 	prefsDirty = true;
 	prefs[keypath] = value;
 }
 
 int get_int_pref(std::string keypath, int fallback) {
+	GET_PREF_MAC(int);
 	if(prefs.find(keypath) == prefs.end()) return fallback;
 	if(prefs[keypath].type() == typeid(int)) return boost::any_cast<int>(prefs[keypath]);
 	return fallback;
 }
 
 void set_pref(std::string keypath, double value) {
+	SET_PREF_MAC(double);
 	prefsDirty = true;
 	prefs[keypath] = value;
 }
 
 double get_float_pref(std::string keypath, double fallback) {
+	GET_PREF_MAC(double);
 	if(prefs.find(keypath) == prefs.end()) return fallback;
 	if(prefs[keypath].type() == typeid(double)) return boost::any_cast<double>(prefs[keypath]);
 	return fallback;
 }
 
 void append_iarray_pref(std::string keypath, int value) {
+	#ifdef SFML_SYSTEM_MACOS
+	void append_iarray_pref_mac(std::string keypath, int value);
+	if(!was_replaying){
+		append_iarray_pref_mac(keypath, value);
+	}
+	#endif
 	prefsDirty = true;
 	if(prefs.find(keypath) == prefs.end() || prefs[keypath].type() != typeid(iarray))
 		prefs[keypath] = iarray{value};
@@ -62,23 +83,39 @@ void append_iarray_pref(std::string keypath, int value) {
 }
 
 std::vector<int> get_iarray_pref(std::string keypath) {
+	#ifdef SFML_SYSTEM_MACOS
+	std::vector<int> get_iarray_pref_mac(std::string keypath);
+	if(!was_replaying){
+		return get_iarray_pref_mac(keypath);
+	}
+	#endif
 	if(prefs.find(keypath) == prefs.end()) return {};
 	if(prefs[keypath].type() == typeid(iarray)) return boost::any_cast<iarray&>(prefs[keypath]);
 	return {};
 }
 
 void set_pref(std::string keypath, std::string value) {
+	SET_PREF_MAC(std::string);
 	prefsDirty = true;
 	prefs[keypath] = value;
 }
 
 std::string get_string_pref(std::string keypath, std::string fallback) {
+	using std::string;
+	GET_PREF_MAC(string);
 	if(prefs.find(keypath) == prefs.end()) return fallback;
 	if(prefs[keypath].type() == typeid(std::string)) return boost::any_cast<std::string>(prefs[keypath]);
 	return fallback;
 }
 
 void clear_pref(std::string keypath) {
+	#ifdef SFML_SYSTEM_MACOS
+	void clear_pref_mac(std::string keypath);
+	if(!was_replaying){
+		clear_pref_mac(keypath);
+		return;
+	}
+	#endif
 	prefsDirty = true;
 	auto iter = prefs.find(keypath);
 	if(iter != prefs.end()) prefs.erase(iter);
@@ -190,6 +227,12 @@ static bool load_prefs(fs::path fpath) {
 
 extern fs::path tempDir;
 bool sync_prefs() {
+	#ifdef SFML_SYSTEM_MACOS
+	bool sync_prefs_mac();
+	if(!was_replaying){
+		return sync_prefs_mac();
+	}
+	#endif
 	fs::path prefsPath = tempDir.parent_path() / "bladesprefs.ini";
 	if(prefsLoaded) return save_prefs(prefsPath);
 	else return load_prefs(prefsPath);
