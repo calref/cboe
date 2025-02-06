@@ -3211,8 +3211,9 @@ void handle_drop_pc() {
 	if(!prime_time()) {
 		ASB("Finish what you're doing first.");
 		print_buf();
-	}
-	else {
+	}else if(is_combat()){
+		add_string_to_buf("Delete PC: Not in combat.");
+	}else{
 		int choice = char_select_pc(1,"Delete who?");
 		if(choice < 6) {
 			std::string confirm = cChoiceDlog("delete-pc-confirm",{"yes","no"}).show();
