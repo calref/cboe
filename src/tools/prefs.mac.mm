@@ -213,11 +213,7 @@ bool sync_prefs() {
 				switch((int)type) {
 					case kBool: {
 						bool bvalue = [standard boolForKey: pref];
-						if(bvalue == true){
-							prefs_recording << "true";
-						}else{
-							prefs_recording << "false";
-						}
+						prefs_recording << bool_to_str(bvalue);
 					} break;
 					case kInt: {
 						int ivalue = (int)[standard integerForKey: pref];
