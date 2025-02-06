@@ -853,6 +853,7 @@ void click_talk_rect(word_rect_t word) {
 	style.colour = word.on;
 	win_draw_string(mainPtr, wordRect, word.word, eTextMode::WRAP, style);
 	place_talk_face();
+	help_btn->draw();
 	mainPtr.display();
 	play_sound(37, time_in_ticks(5));
 	rect_draw_some_item(talk_gworld.getTexture(),talkRect,mainPtr,talk_area_rect);
