@@ -39,11 +39,6 @@ NSDictionary* prefsToRecord = @{
 	@"UIScale": @(kFloat),
 	@"UIScaleMap": @(kFloat)
 };
-// Some legacy preferences influenced RNG and must be
-// known by replays
-NSDictionary* prefsToReplay = @{
-	@"DrawTerrainFrills": @(kBool)
-};
 
 bool prefsLoaded = false;
 
@@ -62,44 +57,40 @@ static NSString* convertValue(std::string value) {
 }
 
 static NSUserDefaults* getCurrentDefaults() {
-	if(replaying){
-		return replayUserDefaults;
-	}else{
-		return [NSUserDefaults standardUserDefaults];
-	}
+	return [NSUserDefaults standardUserDefaults];
 }
 
-void set_pref(std::string keypath, bool value) {
+void set_pref_mac(std::string keypath, bool value) {
 	[getCurrentDefaults() setBool: value forKey: convertKey(keypath)];
 }
 
-bool get_bool_pref(std::string keypath, bool fallback) {
+bool get_bool_pref_mac(std::string keypath, bool fallback) {
 	id val = [getCurrentDefaults() objectForKey: convertKey(keypath)];
 	if([val isKindOfClass: [NSNumber class]]) return [val boolValue];
 	return fallback;
 }
 
-void set_pref(std::string keypath, int value) {
+void set_pref_mac(std::string keypath, int value) {
 	[getCurrentDefaults() setInteger: value forKey: convertKey(keypath)];
 }
 
-int get_int_pref(std::string keypath, int fallback) {
+int get_int_pref_mac(std::string keypath, int fallback) {
 	id val = [getCurrentDefaults() objectForKey: convertKey(keypath)];
 	if([val isKindOfClass: [NSNumber class]]) return [val intValue];
 	return fallback;
 }
 
-void set_pref(std::string keypath, double value) {
+void set_pref_mac(std::string keypath, double value) {
 	[getCurrentDefaults() setDouble: value forKey: convertKey(keypath)];
 }
 
-double get_float_pref(std::string keypath, double fallback) {
+double get_float_pref_mac(std::string keypath, double fallback) {
 	id val = [getCurrentDefaults() objectForKey: convertKey(keypath)];
 	if([val isKindOfClass: [NSNumber class]]) return [val doubleValue];
 	return fallback;
 }
 
-void append_iarray_pref(std::string keypath, int value) {
+void append_iarray_pref_mac(std::string keypath, int value) {
 	NSString* key = convertKey(keypath);
 	NSArray* list = [getCurrentDefaults() arrayForKey: key];
 	NSNumber* num = [NSNumber numberWithInt: value];
@@ -108,7 +99,7 @@ void append_iarray_pref(std::string keypath, int value) {
 	else [getCurrentDefaults() setObject: [list arrayByAddingObject: num] forKey: key];
 }
 
-std::vector<int> get_iarray_pref(std::string keypath) {
+std::vector<int> get_iarray_pref_mac(std::string keypath) {
 	NSArray* list = [getCurrentDefaults() arrayForKey: convertKey(keypath)];
 	if(list == nil) return {};
 	std::vector<int> result;
@@ -117,91 +108,23 @@ std::vector<int> get_iarray_pref(std::string keypath) {
 	return result;
 }
 
-void set_pref(std::string keypath, std::string val) {
+void set_pref_mac(std::string keypath, std::string val) {
 	NSString* key = convertKey(keypath);
 	NSString* value = convertValue(val);
 	[getCurrentDefaults() setObject: value forKey: key];
 }
 
-std::string get_string_pref(std::string keypath, std::string fallback) {
+std::string get_string_pref_mac(std::string keypath, std::string fallback) {
 	NSString* val = [getCurrentDefaults() stringForKey: convertKey(keypath)];
 	if(val == nil) return fallback;
 	return convertValue(val);
 }
 
-void clear_pref(std::string keypath) {
+void clear_pref_mac(std::string keypath) {
 	[getCurrentDefaults() setValue: nil forKey: convertKey(keypath)];
 }
 
-// When replaying, load the preferences from the action log into a
-// non-synchronized UserDefaults object
-static bool load_prefs(std::istream& istream) {
-	std::string line;
-	while(std::getline(istream, line)) {
-		if(!istream) {
-			perror("Error reading preferences");
-			return false;
-		}
-		if(line[0] == '#') continue;
-		int eq = line.find_first_of('=');
-		if(eq == std::string::npos) {
-			printf("Error reading preferences: line is not a comment and lacks an = sign:\n\t%s\n", line.c_str());
-			return false;
-		}
-		int key_end = line.find_last_not_of(' ', eq - 1), val_beg = line.find_first_not_of(' ', eq + 1);
-		if(val_beg == std::string::npos) {
-			printf("Error reading preferences: line is missing value:\n\t%s\n", line.c_str());
-			return false;
-		}
-		if(key_end == std::string::npos) {
-			printf("Error reading preferences: line is missing key:\n\t%s\n", line.c_str());
-			return false;
-		}
-
-		std::string key = line.substr(0, key_end + 1), val = line.substr(val_beg);
-		NSString* pref_key = [NSString stringWithUTF8String: key.c_str()];
-		NSInteger type;
-		// Skip obsolete preferences from legacy replays
-		if([prefsToRecord valueForKey: pref_key] == nil){
-			if([prefsToReplay valueForKey: pref_key] == nil){
-				continue;
-			}else{
-				type = [prefsToReplay[pref_key] integerValue];
-			}
-		}else{
-			type = [prefsToRecord[pref_key] integerValue];
-		}
-		switch((int)type) {
-			case kBool:
-				if(val == "true") set_pref(key, true);
-				else if(val == "false") set_pref(key, false);
-				break;
-			case kIArray:
-				if(val[0] == '[') {
-					int arr_end = val.find_first_of(']');
-					std::istringstream arr_vals(val.substr(1, arr_end - 1));
-					int i = 0;
-					clear_pref(key);
-					while(arr_vals >> i) append_iarray_pref(key, i);
-				}
-				break;
-			case kFloat:
-				set_pref(key, boost::lexical_cast<double>(val));
-				break;
-			case kInt:
-				set_pref(key, boost::lexical_cast<int>(val));
-				break;
-			// NOTE: The core game currently has no string preferences, so the recording system doesn't need to know
-			// about them for now.
-			case kString: break;
-		}
-	}
-
-	prefsLoaded = true;
-	return true;
-}
-
-bool sync_prefs() {
+bool sync_prefs_mac() {
 	if(recording && !prefsLoaded){
 		std::ostringstream prefs_recording;
 		NSUserDefaults* standard = [NSUserDefaults standardUserDefaults];
@@ -245,11 +168,6 @@ bool sync_prefs() {
 		}
 		record_action("load_prefs", prefs_recording.str(), true);
 		prefsLoaded = true;
-	}else if(replaying && !prefsLoaded){
-		replayUserDefaults = [[NSUserDefaults alloc] init];
-		Element& prefs_action = pop_next_action("load_prefs");
-		std::istringstream istream(prefs_action.GetText());
-		return load_prefs(istream);
 	}
 	return [[NSUserDefaults standardUserDefaults] synchronize];
 }
