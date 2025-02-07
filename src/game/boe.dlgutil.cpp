@@ -149,7 +149,7 @@ bool start_shop_mode(short which,short cost_adj,std::string store_name, bool can
 
 	put_background();
 	
-	draw_shop_graphics(0,area_rect);
+	draw_shop_graphics(false,false,area_rect);
 	
 	put_item_screen(stat_window);
 	give_help(26,27);
@@ -177,12 +177,13 @@ void end_shop_mode() {
 	
 	shop_sbar->hide();
 	done_btn->hide();
-	help_btn->hide();
 	if(store_pre_shop_mode == MODE_TALKING) {
 		save_talk_str1 = "You conclude your business.";
 		save_talk_str2 = "";
 		place_talk_str(save_talk_str1, save_talk_str2, 0, dummy_rect);
 		update_last_talk(TALK_BUSINESS);
+	}else{
+		help_btn->hide();
 	}
 	
 	overall_mode = store_pre_shop_mode;
@@ -243,22 +244,25 @@ bool handle_shop_event(location p, cFramerateLimiter& fps_limiter) {
 		// Since shop UI was drawn into the game window with offsets, we need to apply
 		// the same offsets to event catching areas.
 		rectangle active_rect { shopping_rects[i][SHOPRECT_ACTIVE_AREA] };
+		rectangle visual_rect { active_rect };
+		visual_rect.right += 10;
 		active_rect.offset(talk_gword_offset_x, talk_gword_offset_y);
 
 		rectangle item_help_rect { shopping_rects[i][SHOPRECT_ITEM_HELP] };
+		rectangle visual_item_help_rect { item_help_rect };
 		item_help_rect.offset(talk_gword_offset_x, talk_gword_offset_y);
 
 		if(p.in(active_rect)) {
-			click_shop_rect(active_rect);
+			click_shop_rect(visual_rect, false);
 			handle_sale(what_picked);
 			return true;
 		} else if(p.in(item_help_rect)){
-			click_shop_rect(item_help_rect);
+			click_shop_rect(visual_item_help_rect, true);
 			handle_info_request(what_picked);
 			return true;
 		}
 	}
-	return false;
+	return p.in(rectangle(talk_gworld));
 }
 
 void handle_sale(int i) {
@@ -419,14 +423,14 @@ void handle_sale(int i) {
 	}
 	// Maybe that was the last of that item, so re-init the shop array just in case.
 	set_up_shop_array();
-	draw_shop_graphics(0,dummy_rect);
+	draw_shop_graphics(false,false,dummy_rect);
 	print_buf();
 	put_pc_screen();
 	put_item_screen(stat_window);
 
 	// This looks to be redundant, but I'm just preserving the previous behavior of the code.
 	set_up_shop_array();
-	draw_shop_graphics(false, {});
+	draw_shop_graphics(false,false,{});
 }
 
 
@@ -581,22 +585,32 @@ void set_up_shop_array() {
 static void reset_talk_words() {
 	// first initialise talk_words here
 	talk_words.clear();
-	static const rectangle preset_rects[9] = {
-		rectangle{366,4,386,54}, rectangle{366,70,386,130}, rectangle{366,136,386,186},
-		rectangle{389,4,409,54}, rectangle{389,70,409,120}, rectangle{389,121,409,186},
-		rectangle{389,210,409,270}, rectangle{366,190,386,270},
-		rectangle{343,4,363,134},
+	static const std::vector<location> preset_word_locs = {
+		{4, 366}, {70, 366}, {136, 366},
+		{4, 389}, {70, 389}, {121, 389},
+		{210, 389}, {190, 366},
+		{4, 343}
 	};
-	static const char*const preset_words[9] = {
+	static const std::vector<std::string> preset_words = {
 		"Look", "Name", "Job",
 		"Buy", "Sell", "Record",
 		"Done", "Go Back",
 		"Ask About...",
 	};
+	TextStyle style;
+	style.font = FONT_DUNGEON;
+	style.pointSize = TALK_WORD_SIZE;
 	
 	// Place buttons at bottom.
-	for(short i = 0; i < 9; i++) {
-		word_rect_t preset_word(preset_words[i], preset_rects[i]);
+	for(short i = 0; i < preset_words.size(); i++) {
+		std::string word = preset_words[i];
+		location tl = preset_word_locs[i];
+		location br = tl;
+		short h;
+		br.x += string_length(word, style, &h);
+		br.y += h;
+		rectangle rect {tl,br};
+		word_rect_t preset_word(word, rect);
 		preset_word.on = PRESET_WORD_ON;
 		preset_word.off = PRESET_WORD_OFF;
 		switch(i) {
@@ -1143,7 +1157,7 @@ bool handle_talk_event(location p, cFramerateLimiter& fps_limiter) {
 		break;
 	}
 	handle_talk_node(which_talk_entry);
-	return clicked_word;
+	return clicked_word || p.in(rectangle(talk_gworld));
 }
 
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors

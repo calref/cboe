@@ -830,11 +830,25 @@ static void replay_action(Element& action) {
 		click_talk_rect(word_rect);
 		handle_talk_node(word_rect.node);
 		return;
-	}else if(t == "click_shop_rect"){
+	}
+
+	// Legacy action: clicking any shop button used to highlight both the info
+	// button and the item text (which was a bug)
+	else if(t == "click_shop_rect"){
 		rectangle rect = boost::lexical_cast<rectangle>(action.GetText());
 		click_shop_rect(rect);
 		return;
-	}else if(t == "end_shop_mode"){
+	}
+	// Fixed versions:
+	else if(t == "click_shop_item"){
+		rectangle rect = boost::lexical_cast<rectangle>(action.GetText());
+		click_shop_rect(rect, false);
+	}else if(t == "click_shop_item_help"){
+		rectangle rect = boost::lexical_cast<rectangle>(action.GetText());
+		click_shop_rect(rect, true);
+	}
+
+	else if(t == "end_shop_mode"){
 		end_shop_mode();
 		return;
 	}else if(t == "scrollbar_setPosition"){

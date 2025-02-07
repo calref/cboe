@@ -164,6 +164,8 @@ const int UI_LAYER_MENUBAR = 1200;
 const int talk_gword_offset_x = 19;
 const int talk_gword_offset_y = 7;
 
+const int TALK_WORD_SIZE = 18;
+
 #ifdef __APPLE__
 enum eMenuChoice {
 	MENU_CHOICE_NONE,

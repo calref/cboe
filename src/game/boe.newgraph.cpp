@@ -599,15 +599,16 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 			store_booms[i].boom_type = -1;
 }
 
-void click_shop_rect(rectangle area_rect) {
+void click_shop_rect(rectangle area_rect, bool item_help) {
 	if(recording){
-		record_action("click_shop_rect", boost::lexical_cast<std::string>(area_rect));
+		std::string action_name = item_help ? "click_shop_item_help" : "click_shop_item";
+		record_action(action_name, boost::lexical_cast<std::string>(area_rect));
 	}
 
-	draw_shop_graphics(1,area_rect);
+	draw_shop_graphics(!item_help,item_help,area_rect);
 	mainPtr.display();
 	play_sound(37, time_in_ticks(5));
-	draw_shop_graphics(0,area_rect);
+	draw_shop_graphics(false,false,area_rect);
 
 }
 
@@ -627,7 +628,7 @@ graf_pos calc_item_rect(int num,rectangle& to_rect) {
 }
 
 // mode 1 - drawing dark for button press
-void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
+void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle clip_area_rect) {
 	rectangle area_rect,item_info_from = {11,42,24,56};
 	
 	rectangle face_rect = {6,6,38,38};
@@ -650,20 +651,24 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	style.font = FONT_DUNGEON;
 	style.pointSize = 18;
 	
+	area_rect = rectangle(talk_gworld);
 	talk_gworld.setActive(false);
-	if(pressed) {
+	// Only re-render on top of the item that is clicked:
+	if(item_pressed || item_help_pressed) {
+		clip_area_rect.offset(-area_rect.left, -area_rect.top);
 		clip_rect(talk_gworld, clip_area_rect);
+	} else {
+		frame_rect(talk_gworld, area_rect, Colours::BLACK);
+		area_rect.inset(1,1);
+		tileImage(talk_gworld, area_rect,bg[12]);
+
+		frame_rect(talk_gworld, shop_frame, Colours::BLACK);
 	}
 	
-	area_rect = rectangle(talk_gworld);
-	frame_rect(talk_gworld, area_rect, Colours::BLACK); 
-	area_rect.inset(1,1);
-	tileImage(talk_gworld, area_rect,bg[12]);
-	
-	frame_rect(talk_gworld, shop_frame, Colours::BLACK); 
-	
-	// Place store icon
-	if(!pressed) {
+	// Place store icon:
+	// We can skip this when rendering for a button press, but it won't matter anyway
+	// because button press rendering is clipped anyway.
+	if(!item_pressed || item_help_pressed) {
 		rectangle from_rect = {0,0,32,32};
 		std::shared_ptr<const sf::Texture> from_gw;
 		int i = std::max<int>(0, active_shop.getFace());
@@ -717,7 +722,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 	}
 	win_draw_string(talk_gworld,shopper_name,title.str(),eTextMode::LEFT_TOP,style);
 	
-	if(pressed)
+	if(item_pressed)
 		style.colour = Colours::TITLE_BLUE; 
 	else 
 		style.colour = Colours::BLACK; 
@@ -779,7 +784,7 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		rect_draw_some_item(invenbtn_gworld, {0, 29, 7, 36}, talk_gworld, cost_rect, sf::BlendAlpha);
 		style.pointSize = 10;
 		win_draw_string(talk_gworld,shopping_rects[i][SHOPRECT_ITEM_EXTRA],cur_info_str,eTextMode::WRAP,style);
-		rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld,shopping_rects[i][SHOPRECT_ITEM_HELP],pressed ? sf::BlendNone : sf::BlendAlpha);
+		rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld,shopping_rects[i][SHOPRECT_ITEM_HELP],item_help_pressed ? sf::BlendNone : sf::BlendAlpha);
 	}
 	
 	// Finally, cost info and help strs
@@ -801,6 +806,9 @@ void draw_shop_graphics(bool pressed,rectangle clip_area_rect) {
 		shop_sbar->show();
 	else shop_sbar->hide();
 	done_btn->show();
+	done_btn->draw();
+	help_btn->show();
+	help_btn->draw();
 }
 
 void refresh_shopping() {
@@ -845,6 +853,7 @@ void click_talk_rect(word_rect_t word) {
 	style.colour = word.on;
 	win_draw_string(mainPtr, wordRect, word.word, eTextMode::WRAP, style);
 	place_talk_face();
+	help_btn->draw();
 	mainPtr.display();
 	play_sound(37, time_in_ticks(5));
 	rect_draw_some_item(talk_gworld.getTexture(),talkRect,mainPtr,talk_area_rect);
@@ -863,7 +872,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	
 	TextStyle style;
 	style.font = FONT_DUNGEON;
-	style.pointSize = 18;
+	style.pointSize = TALK_WORD_SIZE;
 	
 	if(c_rect.right > 0) {
 		mainPtr.setActive(false);
