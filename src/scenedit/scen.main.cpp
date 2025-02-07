@@ -427,7 +427,6 @@ void redraw_everything() {
 	restore_cursor();
 }
 
-extern fs::path progDir;
 void handle_menu_choice(eMenu item_hit) {
 	extern cUndoList undo_list;
 	bool isEdit = false, isHelp = false;
@@ -737,9 +736,7 @@ void handle_menu_choice(eMenu item_hit) {
 			isHelp = true;
 			break;
 		case eMenu::HELP_TOC:
-			if(fs::is_directory(progDir/"doc"))
-				launchURL("file://" + (progDir/"doc/editor/Contents.html").string());
-			else launchURL("http://openboe.com/docs/editor/Contents.html");
+			launchDocs("editor/Contents.html");
 			break;
 		case eMenu::HELP_START:
 			helpDlog = "help-editing";

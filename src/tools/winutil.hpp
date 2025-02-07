@@ -29,6 +29,9 @@ bool pollEvent(sf::Window* win, sf::Event& event);
 
 void init_fileio();
 void launchURL(std::string url);
+// Open a documentation page relative to packaged HTML if available,
+// or openboe.com if not
+void launchDocs(std::string relative_url);
 
 // Optionally do some platform-specific preprocessing on the command-line arguments before parsing them.
 // If preprocessing is needed, the expectation is that they will be modified in-place.

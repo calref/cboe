@@ -77,7 +77,6 @@ void save_prefs();
 bool prefs_event_filter (cDialog& me, std::string id, eKeyMod);
 
 extern bool cur_scen_is_mac;
-extern fs::path progDir;
 short specials_res_id;
 char start_name[256];
 
@@ -436,9 +435,7 @@ void handle_menu_choice(eMenu item_hit) {
 			edit_stuff_done();
 			break;
 		case eMenu::HELP_TOC:
-			if(fs::is_directory(progDir/"doc"))
-				launchURL("file://" + (progDir/"doc/game/Editor.html").string());
-			else launchURL("http://openboe.com/docs/game/Editor.html");
+			launchDocs("game/Editor.html");
 			break;
 	}
 }
