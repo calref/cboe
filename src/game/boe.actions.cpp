@@ -2780,8 +2780,9 @@ bool handle_scroll(const sf::Event& event) {
 
 void do_load() {
 	// Edge case: Replay can be cut off before a file is chosen,
-	// and this will cause a crash trying to decode a party
-	if(replaying && !has_next_action()){
+	// or party selection can be canceled, and this will cause
+	// a crash trying to decode a party
+	if(replaying && !has_next_action("load_party")){
 		return;
 	}
 
