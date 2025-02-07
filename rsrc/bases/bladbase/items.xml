@@ -2332,7 +2332,7 @@
         <bonus>0</bonus>
         <protection>0</protection>
         <pic>14</pic>
-        <name>Leather Baldri</name>
+        <name>Leather Baldric</name>
         <full-name>Leather Baldric</full-name>
         <treasure>0</treasure>
         <value>4</value>
@@ -7301,7 +7301,7 @@
         <charges>1</charges>
         <pic>61</pic>
         <name>Balm</name>
-        <full-name>Ressurection Balm</full-name>
+        <full-name>Resurrection Balm</full-name>
         <treasure>2</treasure>
         <value>200</value>
         <weight>3</weight>
