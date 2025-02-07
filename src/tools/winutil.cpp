@@ -1,5 +1,6 @@
 #include "winutil.hpp"
 
+#include <boost/filesystem/operations.hpp>
 #include "keymods.hpp"
 
 // The default scale should be the largest that the user's screen can fit all three
@@ -48,4 +49,14 @@ bool pollEvent(sf::Window& win, sf::Event& event){
 
 bool pollEvent(sf::Window* win, sf::Event& event){
     return pollEvent(*win, event);
+}
+
+extern fs::path progDir;
+
+void launchDocs(std::string relative_url) {
+	if(fs::is_directory(progDir/"doc")){
+		launchURL("file://" + (progDir/"doc"/relative_url).string());
+	}else{
+		launchURL("http://openboe.com/docs/" + relative_url);
+	}
 }

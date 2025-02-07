@@ -1304,15 +1304,11 @@ void close_program() {
 	sync_prefs();
 }
 
-extern fs::path progDir;
-
 void handle_help_toc() {
 	if(recording){
 		record_action("handle_help_toc", "");
 	}
-	if(fs::is_directory(progDir/"doc"))
-		launchURL("file://" + (progDir/"doc/game/Contents.html").string());
-	else launchURL("http://openboe.com/docs/game/Contents.html");
+	launchDocs("game/Contents.html");
 }
 
 void menu_give_help(short help1){
