@@ -605,7 +605,10 @@ bool edit_ter_type(ter_num_t which) {
 	ter_dlg.attachClickHandlers(std::bind(finish_editing_ter,_1,_2,std::ref(which)), {"left", "right", "done"});
 	ter_dlg["picktrim"].attachClickHandler(std::bind(pick_string,"trim-names", _1, "trim", ""));
 	ter_dlg["pickarena"].attachClickHandler(std::bind(pick_string,"arena-names", _1, "arena", ""));
-	ter_dlg["help"].attachClickHandler(std::bind(show_help, "ter-type-help", _1, 16));
+	ter_dlg["help"].attachClickHandler([](cDialog&, std::string, eKeyMod) -> bool {
+		launchDocs("editor/Terrain.html");
+		return true;
+	});
 	ter_dlg["sound"].attachFocusHandler(play_ter_step_sound);
 	ter_dlg.attachClickHandlers(pick_ter_flag, {"pickflag1", "pickflag2", "pickflag3", "editspec", "picktrans"});
 	ter_dlg["picktown"].attachClickHandler([](cDialog& me, std::string, eKeyMod) -> bool {
