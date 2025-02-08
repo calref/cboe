@@ -3,7 +3,7 @@ Increases the health of the selected PC a small amount, up to the PC's	maximum h
 Reduces the amount of poison running around in the veins of the	selected PC.
 When cast on an undead creature, it usually does a reasonable	amount of damage to it. It has no effect on non-undead.
 Displays the party's x-y location in the town.
-The target of this spell becomes magically shielded. For a time, monsters probably won't be able to attack him/her. The effects disappear when the PC attacks someone.
+The target of this spell becomes magically shielded. For a time, monsters probably won't be able to attack them. The effects disappear when the PC attacks someone.
 This spell has the caster absorb the damage taken by another character. The higher the level, the less damage the caster takes per health point healed.
 Casting this spell gives the party a little more food.
 When cast on a location filled with evil magic, the location receives a blessing. This might drive out the evil magic. Then again, it might not.
