@@ -6,8 +6,8 @@ Everyone responds to 'Look', 'Name', and 'Job' (use the buttons at the bottom). 
 Shortcuts: To get previous response, press the Back button (or hit space). You can press any of the bottom buttons by typing the first letter in the word. Hit Record to write notes in journal, and hit Bye (or type Escape) to stop talking.
 To cast a spell, first click on the number of the person to cast (to the upper left). Then click on the button by the spell to cast (hit Space to see other spells). Finally, if it's a spell cast on a party member, click on the correct Target button.
 Shortcut: Typing the letter after a spell picks the spell, and typing '1'-'6' picks a caster. Option clicking a spell button brings up a spell description. Finally, you can often cast spells faster using the Mage Spells and Priest spells menus.
-This menu always contains all the spells an active PC can cast. Click on the name of a PC to make him/her active. Then select a spell from this menu to cast. Then, if you need to pick someone to cast the spell on, a window will come up for you to do so.
-This is where you improve a character's skills when creating or training him/her. Press the '+' button to buy a skill, and the '-' button to undo the choice. The Cancel button undoes your work, and Keep keeps your choices.
+This menu always contains all the spells an active PC can cast. Click on the name of a PC to make them active. Then select a spell from this menu to cast. Then, if you need to pick someone to cast the spell on, a window will come up for you to do so.
+This is where you improve a character's skills when creating or training them. Press the '+' button to buy a skill, and the '-' button to undo the choice. The Cancel button undoes your work, and Keep keeps your choices.
 Option-click the buttons by a skill to get a description of the skill and advice on how much to buy. When training a character, you need both gold and skill points (which you get by killing things and getting experience).
 This menu contains the monsters you have magically obtained information about. To make a monster appear here, cast Scry Monster on it.
 

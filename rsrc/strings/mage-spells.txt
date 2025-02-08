@@ -27,7 +27,7 @@ This powerful spell creates a line of force walls, which are like fire walls but
 When cast, a group of monsters appears and attacks all enemies of the caster. The number of monsters depends on the level of the caster. After a time, they disappear.
 This spell is like flame, but the caster gets to select several targets. The number of missiles increases with the level of the caster. If you don't want to use all the missiles, hit the space bar to cast the spell.
 This spell covers a large circle with icky webs, slowing down everyone inside. The webs last until torn down.
-You can cast this spell on another PC to make him/her resistant to magical damage and effects. Note this does not help against damage from fire or cold.
+You can cast this spell on another PC to make them resistant to magical damage and effects. Note this does not help against damage from fire or cold.
 This makes poison run thick in the veins of the target. Repeated castings will have a devastating effect.
 Slams the target with a heavy, pointed bolt of ice. Effective against monsters who are resistant to fire. Damage increases as the level of the caster increases.
 Makes all monsters within a 12 space radius move at half speed for a time.

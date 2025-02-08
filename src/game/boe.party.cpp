@@ -1839,7 +1839,7 @@ static bool pick_spell_caster(cDialog& me, std::string id, const eSkill store_si
 
 static bool pick_spell_target(cDialog& me, std::string id, const eSkill store_situation, short& last_darkened, const short store_spell) {
 	static const char*const no_target = " No target needed.";
-	static const char*const bad_target = " Can't cast on him/her.";
+	static const char*const bad_target = " Can't cast on them.";
 	static const char*const got_target = " Target selected.";
 	short item_hit = id[id.length() - 1] - '1';
 	std::string casting = id;
