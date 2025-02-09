@@ -2954,6 +2954,8 @@ bool build_scenario() {
 	scenario.contact_info[0] = author;
 	scenario.default_ground = grass ? 2 : 0;
 	
+	scenario.feature_flags = {};
+
 	fs::path basePath = progDir/"Blades of Exile Base"/"bladbase.boes";
 	if(!fs::exists(basePath)) {
 		basePath = basePath.parent_path()/"bladbase.exs";

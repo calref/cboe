@@ -23,6 +23,7 @@
 #include "mathutil.hpp"
 #include "gzstream.h"
 #include "tarball.hpp"
+#include "replay.hpp"
 
 #include "porting.hpp"
 #include "fileio/resmgr/res_image.hpp"
@@ -769,6 +770,9 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 		} else if(type == "author") {
 			elem->FirstChildElement("name")->GetText(&scenario.contact_info[0], false);
 			elem->FirstChildElement("email")->GetText(&scenario.contact_info[1], false);
+		} else if(type == "feature-flags") {
+			// If the function fits, use it
+			scenario.feature_flags = info_from_action(*elem);
 		} else if(type == "text") {
 			Iterator<Element> info;
 			int found_teasers = 0, found_intro = 0;
