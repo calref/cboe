@@ -37,8 +37,9 @@ inline bool has_feature_flag(std::string flag) {
 	return feature_flags.find(flag) != feature_flags.end();
 }
 inline std::string get_feature_flag(std::string flag) {
-	if(!has_feature_flag(flag)) return "";
-	return feature_flags[flag];
+	std::map<std::string, std::string>::const_iterator iter = feature_flags.find(flag);
+	if(iter == feature_flags.end()) return "";
+	return iter->second;
 }
 
 #endif
