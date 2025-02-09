@@ -3078,7 +3078,7 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 		if(abil.second.missile.pic < 0) play_sound(snd);
 		else run_a_missile(source, targ_space, abil.second.missile.pic, 1, snd, 0, 0, 100);
 		if(target->status[eStatus::INVISIBLE] > 0 || (m_target != nullptr && m_target->invisible)) {
-			if(get_ran(1,1,100) > hit_chance[univ.town.monst[m_num].level]) {
+			if(get_ran(1,1,100) > hit_chance[univ.town.monst[m_num].level / 2]) {
 				add_string_to_buf("  Can't find target!");
 				return;
 			}
