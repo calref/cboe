@@ -597,6 +597,7 @@ bool cScenario::has_feature_flag(std::string flag) {
 }
 
 std::string cScenario::get_feature_flag(std::string flag) {
-	if(!has_feature_flag(flag)) return "";
-	return this->feature_flags[flag];
+	std::map<std::string, std::string>::const_iterator iter = this->feature_flags.find(flag);
+	if(iter == this->feature_flags.end()) return "";
+	return iter->second;
 }

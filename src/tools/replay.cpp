@@ -141,6 +141,12 @@ void record_action(std::string action_type, std::map<std::string,std::string> in
 	log_document.SaveFile(log_file);
 }
 
+void record_action(Element& action) {
+	Element* root = log_document.FirstChildElement();
+	root->InsertEndChild(action);
+	log_document.SaveFile(log_file);
+}
+
 void record_field_input(cKey key) {
 	std::map<std::string,std::string> info;
 	info["spec"] = bool_to_str(key.spec);
