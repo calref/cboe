@@ -14,7 +14,7 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="terrain"/>
 			<xs:enumeration value="terrain-anim"/>
-			<xs:enumeration value="terrain-map"/
+			<xs:enumeration value="terrain-map"/>
 			<xs:enumeration value="monster-small"/>
 			<xs:enumeration value="monster-wide"/>
 			<xs:enumeration value="monster-tall"/>
