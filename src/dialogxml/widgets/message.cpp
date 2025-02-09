@@ -130,14 +130,13 @@ void cTextMsg::calculate_layout() {
 }
 
 void cTextMsg::recalcRect() {
+	style.pointSize = textSize;
+	style.underline = underlined;
+	style.font = textFont;
 	if(fixedWidth && fixedHeight){
 		calculate_layout();
 		return;
 	}
-	TextStyle style;
-	style.font = textFont;
-	style.pointSize = textSize;
-	style.underline = underlined;
 	style.lineHeight = textSize + 2;
 	std::string test = getText();
 	size_t lines = 1, cur_line_chars = 0, max_line_chars = 0;
