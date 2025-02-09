@@ -32,7 +32,7 @@ void reset_item_max();
 short item_val(cItem item);
 void place_treasure(location where,short level,short loot,short mode);
 std::string get_text_response(std::string prompt = "", pic_num_t pic = 16);
-short get_num_response(short min, short max, std::string prompt);
+short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names = {});
 
 short char_select_pc(short mode,const char *title);
 short select_pc(short mode);

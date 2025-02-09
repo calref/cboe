@@ -19,6 +19,7 @@
 #include "boe.main.hpp"
 #include "mathutil.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/strchoice.hpp"
 #include "dialogxml/dialogs/3choice.hpp"
 #include "dialogxml/widgets/message.hpp"
 #include <array>
@@ -866,7 +867,7 @@ std::string get_text_response(std::string prompt, pic_num_t pic) {
 	return result;
 }
 
-short get_num_response(short min, short max, std::string prompt) {
+short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names) {
 	std::ostringstream sout;
 	sout << prompt;
 	
@@ -878,6 +879,15 @@ short get_num_response(short min, short max, std::string prompt) {
 	sout << " (" << min << '-' << max << ')';
 	numPanel["prompt"].setText(sout.str());
 	numPanel["number"].setTextToNum(0);
+	if(!choice_names.empty()){
+		numPanel["choose"].attachClickHandler([&choice_names, &prompt](cDialog& me,std::string,eKeyMod) -> bool {
+			cStringChoice choose_dlg(choice_names, prompt, &me);
+			me["number"].setTextToNum(choose_dlg.show(me["number"].getTextAsNum()));
+			return true;
+		});
+	}else{
+		numPanel["choose"].hide();
+	}
 	if(min < max)
 		numPanel["number"].attachFocusHandler([min,max](cDialog& me,std::string,bool losing) -> bool {
 			if(!losing) return true;
