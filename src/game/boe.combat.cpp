@@ -2801,9 +2801,11 @@ void monster_attack(short who_att,iLiving* target) {
 	cCreature* m_target = dynamic_cast<cCreature*>(target);
 	cPlayer* pc_target = dynamic_cast<cPlayer*>(target);
 	
-	// Check sanctuary
+	// Check sanctuary for melee
 	if(target->status[eStatus::INVISIBLE] > 0 || (m_target != nullptr && m_target->invisible)) {
 		r1 = get_ran(1,1,100);
+		// Usually hit_chance would be indexed by the weapon skill, not monster level.
+		// Indexing by monster level is usually a debuff, and half-level moreso.
 		if(r1 > hit_chance[attacker->level / 2]) {
 			add_string_to_buf("  Can't find target!");
 			return;
@@ -3077,7 +3079,10 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 			snd = 12;
 		if(abil.second.missile.pic < 0) play_sound(snd);
 		else run_a_missile(source, targ_space, abil.second.missile.pic, 1, snd, 0, 0, 100);
+		// Check sanctuary for missile attack
 		if(target->status[eStatus::INVISIBLE] > 0 || (m_target != nullptr && m_target->invisible)) {
+			// Usually hit_chance would be indexed by the weapon skill, not monster level.
+			// Indexing by monster level is usually a debuff.
 			if(get_ran(1,1,100) > hit_chance[univ.town.monst[m_num].level]) {
 				add_string_to_buf("  Can't find target!");
 				return;
