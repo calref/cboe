@@ -84,7 +84,7 @@ void set_pref_mac(std::string keypath, double value) {
 	[getCurrentDefaults() setDouble: value forKey: convertKey(keypath)];
 }
 
-double get_float_pref_mac(std::string keypath, double fallback) {
+double get_double_pref_mac(std::string keypath, double fallback) {
 	id val = [getCurrentDefaults() objectForKey: convertKey(keypath)];
 	if([val isKindOfClass: [NSNumber class]]) return [val doubleValue];
 	return fallback;
