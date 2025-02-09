@@ -2341,7 +2341,10 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 			const cItem& item = which_pc.items[i];
 			if(item.variety != eItemType::NO_ITEM && which_pc.equip[i]) {
 				if((*item.variety).is_armour) {
-					short defense = get_ran(1,1,item.item_level);
+					short defense = 0;
+					if(item.item_level > 0){
+						defense = get_ran(1,1,item.item_level);
+					}
 					
 					// bonus for magical items
 					if(item.bonus > 0) {
