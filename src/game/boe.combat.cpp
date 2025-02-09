@@ -2806,8 +2806,8 @@ void monster_attack(short who_att,iLiving* target) {
 		r1 = get_ran(1,1,100);
 		if(r1 > hit_chance[attacker->level / 2]) {
 			add_string_to_buf("  Can't find target!");
+			return;
 		}
-		return;
 	}
 	
 	for(short i = 0; i < attacker->a.size(); i++) {
