@@ -23,6 +23,7 @@
 #include "dialogxml/widgets/button.hpp"
 #include "tools/enum_map.hpp"
 #include "tools/drawable_manager.hpp"
+#include "location.hpp"
 
 #include "boe.party.hpp"
 #include "boe.town.hpp"
@@ -700,7 +701,7 @@ void refresh_text_bar() {
 	mainPtr.setActive();
 }
 
-// this is used for determinign whether to round off walkway corners
+// this is used for determining whether to round off walkway corners
 // right now, trying a restrictive rule (just cave floor and grass, mainly)
 bool is_nature(short x, short y, unsigned short ground_t) {
 	ter_num_t ter_type;
@@ -840,11 +841,11 @@ void draw_terrain(short mode) {
 			spot_seen[q][r] = can_draw;
 			
 			if(fog_lifted) can_draw = true;
-			
+
+			eTrimType trim = univ.scenario.ter_types[spec_terrain].trim_type;
+
 			if((can_draw != 0) && (overall_mode != MODE_RESTING)) { // if can see, not a pit, and not resting
 				if(is_combat()) anim_ticks = 0;
-				
-				eTrimType trim = univ.scenario.ter_types[spec_terrain].trim_type;
 				
 				// Finally, draw this terrain spot
 				if(trim == eTrimType::WALKWAY){
@@ -880,6 +881,102 @@ void draw_terrain(short mode) {
 					draw_one_terrain_spot(q,r,trim < 0 ? spec_terrain : ground_ter);
 					if(trim >= 0)
 						draw_trim(q,r,trim + 50,spec_terrain);
+				}else if(trim == eTrimType::SMART_BORDER) {
+					std::map<eDirection,ter_num_t> neighbor_terrains;
+					std::map<eDirection,ter_num_t> diag_neighbor_terrains;
+					std::map<ter_num_t,short> ground_candidates;
+					auto count_ground_candidate = [&ground_candidates](ter_num_t ter) {
+						if(ground_candidates.find(ter) == ground_candidates.end()){
+							ground_candidates[ter] = 0;
+						}
+						ground_candidates[ter]++;
+					};
+
+					neighbor_terrains[DIR_N] = coord_to_ter(where_draw.x, where_draw.y - 1, spec_terrain);
+					diag_neighbor_terrains[DIR_NE] = coord_to_ter(where_draw.x + 1, where_draw.y - 1, spec_terrain);
+					neighbor_terrains[DIR_E] = coord_to_ter(where_draw.x + 1, where_draw.y, spec_terrain);
+					diag_neighbor_terrains[DIR_SE] = coord_to_ter(where_draw.x + 1, where_draw.y + 1, spec_terrain);
+					neighbor_terrains[DIR_S] = coord_to_ter(where_draw.x, where_draw.y + 1, spec_terrain);
+					diag_neighbor_terrains[DIR_SW] = coord_to_ter(where_draw.x - 1, where_draw.y + 1, spec_terrain);
+					neighbor_terrains[DIR_W] = coord_to_ter(where_draw.x - 1, where_draw.y, spec_terrain);
+					diag_neighbor_terrains[DIR_NW] = coord_to_ter(where_draw.x - 1, where_draw.y - 1, spec_terrain);
+					
+					// Check that the given directions all match, and are the only cardinal directions that do
+					auto only_match = [&neighbor_terrains, &ground_candidates, &count_ground_candidate, spec_terrain](std::vector<eDirection> directions){
+						bool count_candidates = ground_candidates.empty();
+						for(auto dir_ter_pair : neighbor_terrains){
+							if(dir_ter_pair.second == spec_terrain){
+								if(std::find(directions.begin(), directions.end(), dir_ter_pair.first) == directions.end()){
+									return false;
+								}
+							}else{
+								// This is not the border terrain, so it could be what we transition to
+								if(count_candidates){
+									count_ground_candidate(dir_ter_pair.second);
+								}
+								if(std::find(directions.begin(), directions.end(), dir_ter_pair.first) != directions.end()){
+									return false;
+								}
+							}
+						}
+
+						return true;
+					};
+					// Check that only one corner does not match (making this an inner corner)
+					auto corner_no_match = [&diag_neighbor_terrains, &ground_candidates, &count_ground_candidate, spec_terrain](eDirection corner) {
+						bool count_candidates = ground_candidates.empty();
+						std::map<eDirection, ter_num_t> copy_diag_neighbors = diag_neighbor_terrains;
+						auto ter = copy_diag_neighbors[corner];
+						copy_diag_neighbors.erase(corner);
+						if(ter == spec_terrain){
+							return false;
+						}
+						if(count_candidates)
+							count_ground_candidate(ter);
+						for(auto dir_ter_pair : copy_diag_neighbors){
+							if(dir_ter_pair.second != spec_terrain){
+								return false;
+							}
+						}
+						return true;
+					};
+					
+					int offset = 0;
+					// 4 cardinal walls
+					if(only_match({DIR_N, DIR_W, DIR_S})){
+						offset = 3;
+					}else if(only_match({DIR_N, DIR_W, DIR_E})){
+						offset = 1;
+					}else if(only_match({DIR_S, DIR_W, DIR_E})){
+						offset = 5;
+					}else if(only_match({DIR_N, DIR_E, DIR_S})){
+						offset = 7;
+					}
+					// Outer corners
+					else if(only_match({DIR_N, DIR_W})){
+						offset = 2;
+					}else if(only_match({DIR_N, DIR_E})){
+						offset = 8;
+					}else if(only_match({DIR_S, DIR_W})){
+						offset = 4;
+					}else if(only_match({DIR_S, DIR_E})){
+						offset = 6;
+					}
+					// Inner corners
+					else if(corner_no_match(DIR_SE)){
+						offset = 12;
+					}else if(corner_no_match(DIR_NW)){
+						offset = 10;
+					}else if(corner_no_match(DIR_NE)){
+						offset = 11;
+					}else if(corner_no_match(DIR_SW)){
+						offset = 9;
+					}
+					if(!ground_candidates.empty()){
+						current_ground = univ.scenario.get_ground_from_ter(ground_candidates.begin()->first);
+						draw_one_terrain_spot(q,r,current_ground);
+					}
+					draw_one_terrain_spot(q,r,spec_terrain, offset);
 				}else if(spec_terrain == 65535) {
 					draw_one_terrain_spot(q,r,-1);
 				}else{

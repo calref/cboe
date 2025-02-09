@@ -145,7 +145,7 @@
         <archetype>true</archetype>
         <light>0</light>
         <step-sound>step</step-sound>
-        <trim>none</trim>
+        <trim>smart-border</trim>
         <ground>2</ground>
         <trim-for>0</trim-for>
         <arena>1</arena>

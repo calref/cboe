@@ -58,7 +58,7 @@ bool gave_no_g_error = false;
 //short dest; // 0 - terrain gworld   1 - screen
 // if terrain_to_draw is -1, do black
 // if terrain_to_draw >= 10000, force to draw graphic which is terrain_to_draw - 10000
-void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
+void draw_one_terrain_spot (short i,short j,short terrain_to_draw, int graphic_offset) {
 	rectangle where_draw;
 	rectangle source_rect;
 	std::shared_ptr<const sf::Texture> source_gworld;
@@ -86,7 +86,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(univ.scenario.ter_types[terrain_to_draw].picture - 2000 + (anim_ticks % 4));
 	}
 	else if(univ.scenario.ter_types[terrain_to_draw].picture >= 1000) { // custom
-		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(univ.scenario.ter_types[terrain_to_draw].picture - 1000);
+		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(univ.scenario.ter_types[terrain_to_draw].picture + graphic_offset - 1000);
 	}
 	else if(univ.scenario.ter_types[terrain_to_draw].picture >= 960) { // animated
 		source_gworld = &ResMgr::graphics.get("teranim");
@@ -94,14 +94,14 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 		source_rect = calc_rect(4 * ((terrain_to_draw - 960) / 5) + (anim_ticks % 4),(terrain_to_draw - 960) % 5);
 	}
 	else {
-		terrain_to_draw = univ.scenario.ter_types[terrain_to_draw].picture;
+		terrain_to_draw = univ.scenario.ter_types[terrain_to_draw].picture + graphic_offset;
 		int which_sheet = terrain_to_draw / 50;
 		source_gworld = &ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet));
 		terrain_to_draw %= 50;
 		source_rect = calc_rect(terrain_to_draw % 10, terrain_to_draw / 10);
 	}
 	
-	rect_draw_some_item(*source_gworld, source_rect, terrain_screen_gworld, where_draw);
+	rect_draw_some_item(*source_gworld, source_rect, terrain_screen_gworld, where_draw, sf::BlendAlpha);
 }
 
 void draw_monsters() {
