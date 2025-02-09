@@ -40,6 +40,11 @@
 			<xs:element name="email" type="xs:string"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="feature-flags">
+		<xs:sequence>
+			<xs:any minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="scenText">
 		<xs:sequence>
 			<xs:element name="teaser" minOccurs="0" maxOccurs="2" type="xs:string"/>
@@ -354,6 +359,7 @@
 				<xs:element name="version" type="xs:string"/>
 				<xs:element name="language" type="xs:language"/>
 				<xs:element name="author" type="author"/>
+				<xs:element name="feature-flags" type="feature-flags"/>
 				<xs:element name="text" type="scenText"/>
 				<xs:element name="ratings" type="ratings"/>
 				<xs:element name="flags" type="scenFlags"/>
