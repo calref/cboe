@@ -1993,7 +1993,11 @@ void debug_give_item() {
 	if(recording){
 		record_action("debug_give_item", "");
 	}
-	int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?");
+	std::vector<std::string> item_names;
+	for(cItem& item : univ.scenario.scen_items){
+		item_names.push_back(item.full_name);
+	}
+	int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?", item_names);
 	bool was_ident = univ.scenario.scen_items[i].ident;
 	univ.scenario.scen_items[i].ident = true;
 	univ.party.give_item(univ.scenario.scen_items[i], true);
@@ -2104,7 +2108,11 @@ void debug_enter_town() {
 	else if(univ.party.direction == 4) find_direction_from = 0;
 	else if(univ.party.direction < 4) find_direction_from = 3;
 	else find_direction_from = 1;
-	start_town_mode(get_num_response(0, univ.scenario.towns.size() - 1, "Enter Town Number"), find_direction_from);
+	std::vector<std::string> town_names;
+	for(cTown* town : univ.scenario.towns){
+		town_names.push_back(town->name);
+	}
+	start_town_mode(get_num_response(0, univ.scenario.towns.size() - 1, "Enter Town Number", town_names), find_direction_from);
 }
 
 void debug_refresh_stores() {
