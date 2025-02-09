@@ -143,11 +143,17 @@ std::string cItem::interesting_string() const {
 		case eItemType::HELM:
 		case eItemType::GLOVES:
 		case eItemType::SHIELD_2:
-		case eItemType::BOOTS:
-			sout << "Blocks " << 1 + min_defense_bonus(bonus) + sgn(protection);
-			sout << '-' << max(1,item_level) + max_defense_bonus(bonus) + protection;
+		case eItemType::BOOTS:{
+			short min_defense = 0;
+			if(item_level > 0) min_defense = 1;
+			min_defense += (min_defense_bonus(bonus) + sgn(protection));
+			short max_defense = item_level + max_defense_bonus(bonus) + protection;
+			sout << "Blocks " << min_defense;
+			if(max_defense != min_defense){
+				sout << '-' << max(min_defense,item_level);
+			}
 			sout << " damage";
-			break;
+		} break;
 		case eItemType::BOW:
 		case eItemType::CROSSBOW:
 			sout << "Bonus: +" << bonus << " to hit";
