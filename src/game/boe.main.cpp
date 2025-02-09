@@ -88,6 +88,8 @@ boost::optional<short> scen_arg_town, scen_arg_town_entrance;
 boost::optional<location> scen_arg_out_sec, scen_arg_loc;
 extern std::string last_load_file;
 
+std::map<std::string,std::string> feature_flags = {};
+
 struct cParseEntrance {
 	boost::optional<short>& opt;
 	cParseEntrance(boost::optional<short>& opt) : opt(opt) {}
@@ -930,6 +932,18 @@ void init_boe(int argc, char* argv[]) {
 	
 	set_cursor(watch_curs);
 	init_buf();
+
+	// Record feature flags
+	if(recording){
+		record_action("feature_flags", feature_flags);
+	}else if(replaying){
+		if(has_next_action("feature_flags")){
+			feature_flags = info_from_action(pop_next_action());
+		}else{
+			// Prior to the existence of the feature_flags action, there were no feature flags.
+			feature_flags = {};
+		}
+	}
 
 	// Seed the RNG
 	if(replaying) {
