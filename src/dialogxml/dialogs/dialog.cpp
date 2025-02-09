@@ -1152,12 +1152,14 @@ void preview_dialog_xml() {
 	fs::path dialog_xml = nav_get_rsrc({"xml"});
 	std::unique_ptr<DialogDefn> defn(load_dialog_defn(dialog_xml));
 	cDialog dialog(*defn);
-	// Make every control's click event close the dialog
+	// Make every clickable control's click event close the dialog
 	for (auto control : dialog){
-		control.second->attachClickHandler([](cDialog& me, std::string item_hit, eKeyMod mod) -> bool {
-			me.toast(false);
-			return true;
-		});
+		try{
+			control.second->attachClickHandler([](cDialog& me, std::string item_hit, eKeyMod mod) -> bool {
+				me.toast(false);
+				return true;
+			});
+		}catch(...){}
 	}
 	dialog.run();
 }
