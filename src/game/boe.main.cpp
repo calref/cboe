@@ -89,6 +89,15 @@ boost::optional<location> scen_arg_out_sec, scen_arg_loc;
 extern std::string last_load_file;
 std::string help_text_rsrc = "help";
 
+/*
+// Example feature flags:
+{
+	// A build which supports both V2 and V3 of the updated graphics sheet:
+	{"graphics-sheet", {"V2", "V3"}}
+}
+*/
+std::map<std::string,std::vector<std::string>> feature_flags = {};
+
 struct cParseEntrance {
 	boost::optional<short>& opt;
 	cParseEntrance(boost::optional<short>& opt) : opt(opt) {}
@@ -925,6 +934,50 @@ static void replay_next_action() {
 	replay_action(pop_next_action());
 }
 
+static void record_feature_flags() {
+	Element next_action("feature_flags");
+	for(auto& p : feature_flags){
+		Element next_flag(p.first);
+		std::vector<std::string> supported_versions = p.second;
+		for(std::string version : supported_versions){
+			Element next_version("version");
+			Text version_text(version);
+			next_version.InsertEndChild(version_text);
+			next_flag.InsertEndChild(next_version);
+		}
+		next_action.InsertEndChild(next_flag);
+	}
+	record_action(next_action);
+}
+
+static void replay_feature_flags() {
+	std::map<std::string,std::vector<std::string>> recorded_flags = {};
+	if(has_next_action("feature_flags")){
+		Element action = pop_next_action();
+		Element* next_flag = action.FirstChildElement(false);
+		while(next_flag){
+			std::string flag = next_flag->Value();
+			std::vector<std::string> supported_versions;
+			Element* next_version = next_flag->FirstChildElement(false);
+			while(next_version){
+				std::string version = next_version->GetText();
+				// The game build needs to support the feature version that the replay had
+				if(!has_feature_flag(flag, version)){
+					std::string error = "This replay requires a feature that is not supported in your version of Blades of Exile: " + flag + " should support '" + version + "'";
+					throw error;
+				}
+				supported_versions.push_back(version);
+				next_version = next_version->NextSiblingElement(false);
+			}
+			recorded_flags[flag] = supported_versions;
+			next_flag = next_flag->NextSiblingElement(false);
+		}
+	}
+
+	feature_flags = recorded_flags;
+}
+
+
 void init_boe(int argc, char* argv[]) {
 	set_up_apple_events();
 	init_directories(argv[0]);
@@ -946,6 +999,12 @@ void init_boe(int argc, char* argv[]) {
 	
 	set_cursor(watch_curs);
 	init_buf();
+
+	if(recording){
+		record_feature_flags();
+	}else if(replaying){
+		replay_feature_flags();
+	}
 
 	// Seed the RNG
 	if(replaying) {

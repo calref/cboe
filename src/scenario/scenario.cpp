@@ -591,3 +591,13 @@ std::vector<town_entrance_t> cScenario::find_town_entrances(int town_num) {
 	}
 	return matching_entrances;
 }
+
+bool cScenario::has_feature_flag(std::string flag) {
+	return this->feature_flags.find(flag) != this->feature_flags.end();
+}
+
+std::string cScenario::get_feature_flag(std::string flag) {
+	std::map<std::string, std::string>::const_iterator iter = this->feature_flags.find(flag);
+	if(iter == this->feature_flags.end()) return "";
+	return iter->second;
+}

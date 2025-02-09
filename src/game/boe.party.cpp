@@ -171,6 +171,14 @@ void put_party_in_scen(std::string scen_name, bool force) {
 			show_get_items("Choose stored items to keep:", saved_item_refs, pc, true);
 		}
 	
+	// Make sure the game build supports all the scenario's features
+	for(auto pair : univ.scenario.feature_flags){
+		if(!has_feature_flag(pair.first, pair.second)){
+			showError("This scenario requires a feature that is not supported in your version of Blades of Exile: " + pair.first + " should support '" + pair.second + "'");
+			return;
+		}
+	}
+
 	univ.enter_scenario(scen_name);
 	
 	// if at this point, startup must be over, so make this call to make sure we're ready,

@@ -10,8 +10,12 @@
 #include "game/boe.newgraph.hpp"
 
 // Input recording system
-namespace ticpp { class Element; }
+namespace ticpp {
+    class Element;
+    class Text;
+}
 using ticpp::Element;
+using ticpp::Text;
 
 struct word_rect_t;
 
@@ -30,6 +34,7 @@ extern std::string last_action_type;
 extern bool init_action_log(std::string command, std::string file);
 extern void record_action(std::string action_type, std::string inner_text, bool cdata = false);
 extern void record_action(std::string action_type, std::map<std::string,std::string> info);
+extern void record_action(Element& action);
 extern void record_field_input(cKey key);
 extern bool has_next_action(std::string type = "");
 extern std::string next_action_type();

@@ -65,6 +65,10 @@ public:
 	location where_start,out_sec_start,out_start;
 	size_t which_town_start;
 	spec_num_t init_spec;
+	std::map<std::string,std::string> feature_flags;
+	bool has_feature_flag(std::string flag);
+	std::string get_feature_flag(std::string flag);
+
 	std::array<spec_loc_t,10> town_mods;
 	std::array<rectangle,3> store_item_rects;
 	std::array<short,3> store_item_towns;
