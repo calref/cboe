@@ -11,6 +11,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <limits>
 
 eDirection& operator++ (eDirection& me, int) {
 	if(me == DIR_HERE) return me = DIR_N;
@@ -28,6 +29,10 @@ bool operator != (location p1,location p2){
 }
 
 short dist(location p1,location p2){
+	return hypot(p1.x - p2.x, p1.y - p2.y);
+}
+
+float fdist(location p1,location p2){
 	return hypot(p1.x - p2.x, p1.y - p2.y);
 }
 
@@ -305,4 +310,110 @@ std::ostream& operator<< (std::ostream& out, info_rect_t r) {
 	out << static_cast<rectangle&>(r);
 	out << " -- \"" << r.descr << '"';
 	return out;
+}
+
+bool is_on_screen(location loc, location view_center, int radius) {
+	return loc.x >= view_center.x - radius
+		&& loc.x <= view_center.x + radius
+		&& loc.y >= view_center.y - radius
+		&& loc.y <= view_center.y + radius;
+}
+
+location between_anchor_points(location anchor1, location anchor2, int padding){
+	// First check the point directly between anchor1 and anchor2 (rounding towards anchor1)
+	float center_x_f = (anchor1.x + anchor2.x) / 2.0;
+	float center_y_f = (anchor1.y + anchor2.y) / 2.0;
+	location point_between;
+	if(anchor1.x < anchor2.x){
+		point_between.x = floor(center_x_f);
+	}else{
+		point_between.x = ceil(center_x_f);
+	}
+	if(anchor1.y < anchor2.y){
+		point_between.y = floor(center_y_f);
+	}else{
+		point_between.y = ceil(center_y_f);
+	}
+
+	// Then if necessary, move back towards anchor1 until it is visible with the desired padding
+	int padded_radius = SCREEN_RADIUS - padding;
+	while(!is_on_screen(anchor1, point_between, padded_radius)){
+		if(anchor1.x < point_between.x - padded_radius){
+			--point_between.x;
+		}else if(anchor1.x > point_between.x + padded_radius){
+			++point_between.x;
+		}
+		if(anchor1.y < point_between.y - padded_radius){
+			--point_between.y;
+		}else if(anchor1.y > point_between.y + padded_radius){
+			++point_between.y;
+		}
+	}
+	return point_between;
+}
+
+std::vector<location> points_containing_most(std::vector<location> points, int padding) {
+	// Find the bounding box of the given points:
+	int min_x = std::numeric_limits<int>::max();
+	int min_y = min_x;
+	int max_x = std::numeric_limits<int>::min();
+	int max_y = max_x;
+
+	for(location p : points){
+		if(p.x < min_x) min_x = p.x;
+		if(p.y < min_y) min_y = p.y;
+		if(p.x > max_x) max_x = p.x;
+		if(p.y > max_y) max_y = p.y;
+	}
+
+	// Expand the bounds by the view radius:
+	int padded_radius = SCREEN_RADIUS - padding;
+	min_x -= padded_radius; min_y -= padded_radius;
+	max_x += padded_radius; max_y += padded_radius;
+	// This function's output may include out-of-bounds points, but those will be eliminated
+	// by calling closest_point() with an anchor point that is in-bounds.
+
+	// Calculate how many of the points can be seen from each point in the bounding box:
+	std::vector<std::pair<location, int>> points_seen_from;
+	location checking_point;
+	for(checking_point.x = min_x; checking_point.x <= max_x; ++checking_point.x){
+		for(checking_point.y = min_y; checking_point.y <= max_y; ++checking_point.y){
+			int can_see = 0;
+			for(location p : points){
+				if(is_on_screen(p, checking_point, padded_radius)) ++can_see;
+			}
+			points_seen_from.push_back(std::make_pair(checking_point, can_see));
+		}
+	}
+
+	// Sort candidates by how many of the points they see
+	std::sort(points_seen_from.begin(), points_seen_from.end(), [](std::pair<location,int> pair1, std::pair<location,int> pair2) -> bool {
+		return pair1.second > pair2.second;
+	});
+	int max_seen = points_seen_from[0].second;
+
+	// Return all of them that see the max number
+	std::vector<location> return_points;
+	for(auto pair : points_seen_from){
+		if(pair.second == max_seen) return_points.push_back(pair.first);
+	}
+
+	return return_points;
+}
+
+int closest_point_idx(std::vector<location> points, location anchor) {
+	float min_distance = std::numeric_limits<float>::max();
+	int min_idx = -1;
+	for(int idx = 0; idx < points.size(); ++idx){
+		float distance = fdist(points[idx], anchor);
+		if(distance < min_distance){
+			min_distance = distance;
+			min_idx = idx;
+		}
+	}
+	return min_idx;
+}
+
+location closest_point(std::vector<location> points, location anchor) {
+	return points[closest_point_idx(points, anchor)];
 }
