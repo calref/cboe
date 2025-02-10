@@ -7,7 +7,7 @@ All boats and horses are now your property.
 Any major NPCs you may have slain, such as Erika or the dragons, are now alive again. You should now use the Leave Town and then Reset Towns menu items to make sure the characters appear.
 You are now considered a member of the Anama church. You can no longer cast Mage spells. To get the full effect of this, add Anama Rings above.
 If you own Erika Amulets, they are now active.  To get the full effect of this, add Erika Amulets above.
-If a job dispatcher is angry at you for making a late delivery, he/she has just forgiven you.
+If a job dispatcher is angry at you for making a late delivery, they have just forgiven you.
 If you belong to the Anama, you are no longer a member. If you robbed the Anama temple in Shayder, the people there will no longer attack you on sight.
 If you slew the vampire Vahkohs but did not destroy the crystal containing his soul, he is now totally dead and will torment you no longer.
 Your party now has the complete maps for the outdoors of your current scenario.

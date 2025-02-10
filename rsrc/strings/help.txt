@@ -17,21 +17,21 @@ This menu contains the monsters you have magically obtained information about. T
 
 
 
-Sometimes, outdoors or in stores, you will find ingredients to make alchemical potions, using recipes you buy from sages in town. To make a potion, select an active PC by clicking on his/her name or typing '1'-'6'. Then access this window.
+Sometimes, outdoors or in stores, you will find ingredients to make alchemical potions, using recipes you buy from sages in town. To make a potion, select an active PC by clicking on their name or typing '1'-'6'. Then access this window.
 To make a potion, click the appropriate button. The character needs a high enough alchemy skill and the right ingredient. For a full description of all potions, select Alchemy & Poison from the Library menu.
 Here is where you edit your party before beginning the game. You start with 6 pre-fabricated characters. To replace them with characters of your own, hit the delete button and then click on the 'Hit here to Create' button. 
-Press a PCs name to rename it, the Race button to edit his/her race and advantages/disadvantages, the Graphic button to pick a new graphic, and the Train button to adjust the character's starting skills. When ready to start the game, Press Done.
+Press a PCs name to rename it, the Race button to edit their race and advantages/disadvantages, the Graphic button to pick a new graphic, and the Train button to adjust the character's starting skills. When ready to start the game, Press Done.
 You don't have enough gold on you to buy this skill. The cost to buy a level of a skill is the number after the slash in parentheses. Skills you can buy have the numbers given in red.
 You don't have enough skill points on you to buy this skill. The number of skill pts. to buy a level of a skill is the number before the slash in parentheses. To get skill points, kill enough monsters to gain a level.
 Here, you can spend your hard earned cash on miscellaneous goodies. To select a character to do the buying, click on the character's name (or type '1' - '6'). Click on the name of an item or type 'a'-'h' to buy something.
 To get info on an item (if available) click on the little 'I' button to the right of the item's name. Finally, when through shopping, hit Escape or click on the done button.
 One of your characters has just become dumbfounded. This takes your ability to cast spells. You lose higher level spells first, then lower level spells. To remove this, cast Restore Mind or visit a healer. Dumbfounding is permanent until cured.
 One of your characters has just become diseased. This slowly, gradually causes a wide variety of damaging effects. Healers and certain priest spells can cure disease, or it slowly fades over time.
-One of your characters has just magically made to fall asleep. He/she will eventually wake up, or an Awaken or Hyperactivity spell can hasten the process.
-One of your characters has just been covered with webs. This will slow the character down in combat and make his/her fighting much less effective. To clean off the webs, pause repeatedly (click on the PC or type '5' on the keypad).
-One of your characters has just been paralyzed. He/she will not be able to move for quite some time. This can be cured by the spell Cure Paralysis or by going to a healer. This is a pretty nasty effect.
+One of your characters has just magically made to fall asleep. They will eventually wake up, or an Awaken or Hyperactivity spell can hasten the process.
+One of your characters has just been covered with webs. This will slow the character down in combat and make their fighting much less effective. To clean off the webs, pause repeatedly (click on the PC or type '5' on the keypad).
+One of your characters has just been paralyzed. They will not be able to move for quite some time. This can be cured by the spell Cure Paralysis or by going to a healer. This is a pretty nasty effect.
 One of your characters has just been poisoned. This character will take damage every few moves until the poison wears off. Several priest spells cure poison.
-One of your characters has just been blessed. This PC will be better in combat, and he/she will be protected from the attacks of others. The effects of blessing are cumulative: blessing a PC twice is well over twice as affecting as blessing it once.
+One of your characters has just been blessed. This PC will be better in combat, and they will be protected from the attacks of others. The effects of blessing are cumulative: blessing a PC twice is well over twice as affecting as blessing it once.
 One of your characters has just been slowed/hasted. A slowed PC loses one out of every two turns in combat. A hasted PC gets twice the action points in combat. Both effects wear off fairly quickly.
 From here, you can select which nearby items to pick up. Click an item (or type 'a'-'h') to pick it up. To have someone else pick stuff up, click the appropriate button at the bottom (or type '1'-'6').
 If no hostile monsters are near, you can pick up everything nearby. Otherwise, you can only grab adjacent items. Some items are not yours ... taking them may make the townsfolk miffed at you.

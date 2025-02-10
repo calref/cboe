@@ -70,7 +70,7 @@ Make sure everyone has a strength of at least 3. Make sure mages have plenty of 
 Some dungeon trips are long, and require lots of healing and endurance. It is at these times that Alchemy can be very useful.
 If you get lost, be sure to use the automap. It can tell you where you have and haven't been.
 If you need a hint, look in the documentation. There's a full hint guide for Valley of Dying Things, A Small Rebellion, and Za-Khazi Run.
-To cast spells quickly, click on his/her name on the upper right, and select the spell from the Mage Spells or Priest Spells menu.
+To cast spells quickly, click on their name on the upper right, and select the spell from the Mage Spells or Priest Spells menu.
 To make a character active (and see its inventory) quickly, type '1'-'6'.
 Sometimes you'll find a place where you know there's a dungeon, but you can't see or enter it. That's because someone somewhere else needs to tell you where it is. Go talk to people in towns.
 One nice shortcut: typing capital 'M' has whoever cast your last mage spell cast it again. 'P' works the same way for priest spells.

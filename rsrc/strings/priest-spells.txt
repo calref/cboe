@@ -25,7 +25,7 @@ This spell causes all other living things to appear on your map for a short time
 This spell instantly removes the effects of paralysis.
 This spell magically creates a lot of food for the party.
 This spell fills an area with walls of force, which are fairly damaging and reasonably long lasting.
-Casting this spell on a PC cures all his/her disease.
+Casting this spell on a PC cures all their disease.
 This spell completely unfeebleminds the recipient.
 This spell fires a number of bolts of divinely inspired cold, the number of which increases with the level of the caster. To cast without using all of the targets, hit the space bar.
 Causes everyone to become less poisoned. Useful for dealing with those nasty swamps.
@@ -38,7 +38,7 @@ This spell purifies the recipient. The beneficiary is completely unwebbed, and a
 When cast, for a short time everyone in the party can walk across lava with no damage. The duration increases slowly with the level of the caster.
 Much like Bless, but affects everyone.
 Works like the Heal spell, but gives much more bang for the spell points.
-This spell returns a body to life. You need Resurrection Balm to cast this. There is a small chance (decreasing with level) that it turns the body to dust. A dusted character can only be raised with a Resurrect spell. Raising a PC reduces his/her stats.
+This spell returns a body to life. You need Resurrection Balm to cast this. There is a small chance (decreasing with level) that it turns the body to dust. A dusted character can only be raised with a Resurrect spell. Raising a PC reduces their stats.
 The first 'area of affect' offensive priest spell. It chars all beings adjacent	to the space you target. The damage done increases with level.
 This spell hides all PCs (like a sanctuary spell). As before, the effect for a PC is voided when that PC attacks.
 This powerful spell summons four spirits, and a magical being to lead them. They then fight on the side of the caster for a little while.
@@ -49,7 +49,7 @@ This spell heals all damage and cures all poison for one PC.
 This powerful spell instantly wakes up any sleeping characters in the party. What's more, it provides total resistance to magical sleep for a short time. Finally, it speeds back up any slowed character.
 Certain rare monsters can turn one of your characters to stone. This valuable spell undoes the damage.
 This spell summons a powerful, invisible being to fight on the side of the party. Be careful not to damage it by mistake!
-When cast, all creatures within eight spaces of the caster have a chance of coming under his/her control.
+When cast, all creatures within eight spaces of the caster have a chance of coming under their control.
 A very unusual and effective spell for a party on the defensive. The caster is surrounded by several layers of magical fields, which fend off anyone attacking.
 This spell afflicts everyone within eight spaces with an effective but slow-acting disease.
 When cast, the party receives a powerful healing (increasing with level of	the caster) and has poison cured as well.
