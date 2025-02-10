@@ -361,10 +361,37 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 		return;
 	}
 	
-	if(std::all_of(store_missiles, store_missiles + 30, [](const store_missile_type& m) {
-		return m.missile_type == 0;
-	})) return;
-	
+	// Eliminate missiles traveling 0 distance
+	for(short i = 0; i < 30; i++) {
+		if((store_missiles[i].missile_type >= 0) && (missile_origin == store_missiles[i].dest))
+			store_missiles[i].missile_type = -1;
+	}
+
+	std::vector<location> missile_targets;
+	std::vector<int> missile_indices;
+	int tracking_missile = -1;
+	location camera_dest;
+	for(short i = 0; i < 30; i++)
+		if(store_missiles[i].missile_type >= 0){
+			missile_indices.push_back(i);
+			missile_targets.push_back(store_missiles[i].dest);
+		}
+
+	if(missile_targets.empty()) return;
+
+	if(missile_targets.size() == 1){
+		tracking_missile = missile_indices[0];
+		camera_dest = between_anchor_points(missile_targets[0], missile_origin);
+	}else{
+		std::vector<location> dest_candidates = points_containing_most(missile_targets);
+		camera_dest = closest_point(dest_candidates, missile_origin);
+		tracking_missile = missile_indices[closest_point_idx(missile_targets, camera_dest)];
+	}
+
+	// Start the camera as close as possible to containing the origin and the camera destination
+	// on the same screen
+	center = between_anchor_points(missile_origin, camera_dest);
+
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
 	auto ter_rects = terrain_screen_rects();
@@ -372,12 +399,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	
 	mainPtr.setActive(false);
 	
-	
 	// init missile paths
-	for(short i = 0; i < 30; i++) {
-		if((store_missiles[i].missile_type >= 0) && (missile_origin == store_missiles[i].dest))
-			store_missiles[i].missile_type = -1;
-	}
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;
 	start_point.x = 13 + 14 + 28 * (short) (missile_origin.x - screen_ul.x);
 	start_point.y = 13 + 18 + 36 * (short) (missile_origin.y - screen_ul.y);
@@ -408,6 +430,9 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	play_sound(-1 * sound_num);
 	
 	sf::Texture& missiles_gworld = *ResMgr::graphics.get("missiles");
+	bool recentered = false;
+	int offset_x = 0;
+	int offset_y = 0;
 	// Now, at last, launch missile
 	for(short t = 0; t < num_steps; t++) {
 		draw_terrain();
@@ -418,6 +443,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 				temp_rect.offset(-8 + x2[i] + (x1[i] * t) / num_steps,
 								 -8 + y2[i] + (y1[i] * t) / num_steps);
 				temp_rect.offset(current_terrain_ul);
+				temp_rect.offset(offset_x, offset_y);
 				
 				// now adjust for different paths
 				if(store_missiles[i].path_type == 1)
@@ -425,6 +451,29 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 				
 				missile_place_rect[i] = temp_rect;
 				
+				// When the missile we're tracking goes off-screen, re-position the camera
+				if(tracking_missile == i && (missile_place_rect[i] & ter_rects.in_frame) != missile_place_rect[i] && !recentered){
+					location old_center = center;
+
+					center = camera_dest;
+
+					// TODO all blasts and missiles clip outside terrain window
+					// TODO why can't I make the text bar stay normal?
+
+					// Offset the missile trajectory for the new camera position
+					int dx = center.x - old_center.x;
+					int dy = center.y - old_center.y;
+					offset_x = -dx * 28;
+					offset_y = -dy * 36;
+					draw_terrain();
+
+					recentered = true;
+
+					// Redo this frame
+					i--;
+					continue;
+				}
+
 				// Now put in missile
 				if(store_missiles[i].missile_type < 1000) {
 					from_rect = missile_origin_rect[i];
@@ -455,6 +504,13 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 		mainPtr.setActive();
 		mainPtr.display();
 		sf::sleep(sf::milliseconds(2 + 5 * get_int_pref("GameSpeed")));
+	}
+
+	// If tracking missile never left the screen, still recenter on a better impact point
+	// before the blasts happen
+	if(!recentered){
+		center = camera_dest;
+		draw_terrain();
 	}
 	
 	// Exit gracefully, and clean up screen
