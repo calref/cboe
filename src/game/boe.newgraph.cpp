@@ -120,6 +120,22 @@ rectangle explode_place_rect[30];
 
 char last_light_mask[13][13];
 
+terrain_screen_rects_t terrain_screen_rects() {
+	rectangle from = rectangle(terrain_screen_gworld);
+
+	location current_terrain_ul = win_to_rects[WINRECT_TERVIEW].topLeft();
+	rectangle to = from;
+	to.offset(current_terrain_ul);
+
+	rectangle in_frame = to;
+	in_frame.top += 11;
+	in_frame.left += 11;
+	in_frame.bottom -= 11;
+	in_frame.right -= 11;
+
+	return {from, to, in_frame};
+}
+
 void apply_unseen_mask() {
 	rectangle base_rect = {9,9,53,45},to_rect,big_to = {13,13,337,265};
 	bool need_bother = false;
@@ -351,11 +367,8 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
-	to_rect = rectangle(terrain_screen_gworld);
-	to_rect.bottom -= 10; // Adjust for pointing buttons
-	rectangle oldBounds = to_rect;
-	to_rect.offset(current_terrain_ul);
-	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldBounds,mainPtr,to_rect);
+	auto ter_rects = terrain_screen_rects();
+	rect_draw_some_item(terrain_screen_gworld.getTexture(),ter_rects.from,mainPtr,ter_rects.to);
 	
 	mainPtr.setActive(false);
 	
@@ -448,11 +461,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	for(short i = 0; i < 30; i++)
 		store_missiles[i].missile_type = -1;
 	
-	to_rect = rectangle(terrain_screen_gworld);
-	to_rect.bottom -= 10; // Adjust for pointing buttons
-	rectangle oldRect = to_rect;
-	to_rect.offset(current_terrain_ul);
-	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,mainPtr,to_rect);
+	rect_draw_some_item(terrain_screen_gworld.getTexture(),ter_rects.from,mainPtr,ter_rects.to);
 }
 
 short get_missile_direction(location origin_point,location the_point) {
@@ -512,11 +521,8 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
 	if(special_draw != 2) {
-		to_rect = rectangle(terrain_screen_gworld);
-		to_rect.bottom -= 10; // Adjust for pointing buttons
-		rectangle oldRect = to_rect;
-		to_rect.offset(current_terrain_ul);
-		rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,mainPtr,to_rect);
+		auto ter_rects = terrain_screen_rects();
+		rect_draw_some_item(terrain_screen_gworld.getTexture(),ter_rects.from,mainPtr,ter_rects.to);
 	}
 	
 	TextStyle style;
