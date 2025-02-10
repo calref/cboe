@@ -206,7 +206,8 @@ int main(int argc, char* argv[]) {
 		
 		if(ae_loading) {
 			finish_load_party();
-			post_load();
+			if(overall_mode != MODE_STARTUP)
+				post_load();
 		}
 		
 		menu_activate();
