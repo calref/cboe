@@ -106,6 +106,7 @@ bool rectangle::contains(int x, int y) const {
 }
 
 bool rectangle::empty() const {
+	if(right < left || bottom < top) return true;
 	return height() == 0 && width() == 0;
 }
 
