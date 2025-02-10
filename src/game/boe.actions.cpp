@@ -2829,6 +2829,11 @@ void post_load() {
 
 //mode; // 0 - normal  1 - save as
 void do_save(bool save_as) {
+	if(is_combat()){
+		add_string_to_buf("Save: not in combat.", 2);
+		print_buf();
+		return;
+	}
 	if(overall_mode != MODE_TOWN && overall_mode != MODE_OUTDOORS && overall_mode != MODE_STARTUP) {
 		add_string_to_buf("Save: Only while outdoors, or in town and not looking/casting.", 2);
 		print_buf();
