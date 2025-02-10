@@ -3316,11 +3316,13 @@ void handle_death() {
 		}
 		else if(choice == "load") {
 			fs::path file_to_load = nav_get_or_decode_party();
-			if(!file_to_load.empty()) load_party(file_to_load, univ);
-			if(univ.party.is_alive()) {
-				if(overall_mode != MODE_STARTUP)
-					post_load(), finish_load_party();
-				return;
+			if(!file_to_load.empty()){
+				if(load_party(file_to_load, univ)){
+					finish_load_party();
+					if(overall_mode != MODE_STARTUP)
+						post_load();
+					return;
+				}
 			}
 		}
 		else if(choice == "new") {
