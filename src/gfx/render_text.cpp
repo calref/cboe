@@ -112,7 +112,7 @@ break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextS
 	for(i = 0; text_len(i) != text_len(i + 1) && i < str_len; i++) {
 		unsigned short line_width = text_len(i) - text_len(last_line_break);
 		if(((line_width > (dest_rect.width() - 6))
-			&& (last_word_break >= last_line_break)) || (str[i] == '|')) {
+			&& (last_word_break >= last_line_break)) || (str[i] == '|' && !style.showPipes)) {
 			if(str[i] == '|') {
 				last_word_break = i + 1;
 			} else if(last_line_break == last_word_break)
@@ -151,7 +151,7 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	eTextMode mode = options.mode;
 	if(mode == eTextMode::WRAP && total_width < dest_rect.width() && !options.right_align)
 		mode = eTextMode::LEFT_TOP;
-	if(mode == eTextMode::LEFT_TOP && str.find('|') != std::string::npos)
+	if(mode == eTextMode::LEFT_TOP && !options.style.showPipes && str.find('|') != std::string::npos)
 		mode = eTextMode::WRAP;
 	
 	// Special stuff
@@ -164,7 +164,7 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	// to calculate_line_wrapping() or frame calculation is
 	// broken.
 	std::string str_with_pipes = str;
-	if(!options.showBreaks){
+	if(!options.showBreaks && !options.style.showPipes){
 		for(int i=0; i < str.length(); ++i){
 			if(str[i] == '|') str[i] = ' ';
 		}
