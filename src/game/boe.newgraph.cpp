@@ -457,7 +457,6 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 
 					center = camera_dest;
 
-					// TODO all blasts and missiles clip outside terrain window
 					// TODO why can't I make the text bar stay normal?
 
 					// Offset the missile trajectory for the new camera position
@@ -614,6 +613,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	}
 	
 	sf::Texture& boom_gworld = *ResMgr::graphics.get("booms");
+	auto ter_rects = terrain_screen_rects();
 	// Now, at last, do explosion
 	for(short t = (special_draw == 2) ? 6 : 0; t < ((special_draw == 1) ? 6 : 11); t++) { // t goes up to 10 to make sure screen gets cleaned up
 		draw_terrain();
@@ -625,14 +625,14 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 					if(cur_boom_type >= 1000) {
 						std::shared_ptr<const sf::Texture> src_gworld;
 						graf_pos_ref(src_gworld, from_rect) = spec_scen_g.find_graphic(cur_boom_type - 1000 + t);
-						rect_draw_some_item(*src_gworld, from_rect, mainPtr, explode_place_rect[i], sf::BlendAlpha);
+						rect_draw_some_item(*src_gworld, from_rect, mainPtr, explode_place_rect[i], ter_rects.in_frame, sf::BlendAlpha);
 					} else {
 						from_rect = base_rect;
 						from_rect.offset(28 * (t + store_booms[i].offset),36 * (1 + store_booms[i].boom_type));
-						rect_draw_some_item(boom_gworld,from_rect,mainPtr,explode_place_rect[i],sf::BlendAlpha);
+						rect_draw_some_item(boom_gworld,from_rect,mainPtr,explode_place_rect[i], ter_rects.in_frame, sf::BlendAlpha);
 					}
 					
-					if(store_booms[i].val_to_place > 0) {
+					if(store_booms[i].val_to_place > 0 && (explode_place_rect[i] & ter_rects.in_frame) == explode_place_rect[i]) {
 						text_rect = explode_place_rect[i];
 						text_rect.top += 13;
 						text_rect.height() = 10;
