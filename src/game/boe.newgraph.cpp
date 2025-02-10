@@ -452,7 +452,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 				missile_place_rect[i] = temp_rect;
 				
 				// When the missile we're tracking goes off-screen, re-position the camera
-				if(tracking_missile == i && (missile_place_rect[i] & ter_rects.in_frame) != missile_place_rect[i] && !recentered){
+				if(tracking_missile == i && (missile_place_rect[i] & ter_rects.to) != missile_place_rect[i] && !recentered){
 					location old_center = center;
 
 					center = camera_dest;
@@ -479,7 +479,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 					from_rect = missile_origin_rect[i];
 					if(store_missiles[i].missile_type >= 7)
 						from_rect.offset(18 * (t % 8),0);
-					rect_draw_some_item(missiles_gworld,from_rect, mainPtr,temp_rect,sf::BlendAlpha);
+					rect_draw_some_item(missiles_gworld,from_rect, mainPtr,temp_rect,ter_rects.in_frame,sf::BlendAlpha);
 				} else {
 					// Custom missile graphics
 					// TODO: Test this!
@@ -498,7 +498,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 					from_rect.height() = 18;
 					if(step >= 4)
 						from_rect.offset(0,18);
-					rect_draw_some_item(*from_gw,from_rect, mainPtr,temp_rect,sf::BlendAlpha);
+					rect_draw_some_item(*from_gw,from_rect, mainPtr,temp_rect,ter_rects.in_frame,sf::BlendAlpha);
 				}
 			}
 		mainPtr.setActive();

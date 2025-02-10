@@ -77,6 +77,18 @@ void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::Re
 	rect_draw_some_item(src_gworld, src_rect, targ_gworld, targ_rect, sf::RenderStates(mode));
 }
 
+// I added this because I tried using clip_rect to fix missiles/booms and it didn't work.
+void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,rectangle in_frame,sf::BlendMode mode){
+	rectangle targ_clipped = targ_rect & in_frame;
+	if(targ_clipped.empty()) return;
+	rectangle src_clipped = src_rect;
+	src_clipped.top += (targ_clipped.top - targ_rect.top);
+	src_clipped.left += (targ_clipped.left - targ_rect.left);
+	src_clipped.bottom += (targ_clipped.bottom - targ_rect.bottom);
+	src_clipped.right += (targ_clipped.right - targ_rect.right);
+	rect_draw_some_item(src_gworld, src_rect, targ_gworld, targ_clipped, sf::RenderStates(mode));
+}
+
 void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::RenderStates mode) {
 	rectangle src_gworld_rect(src_gworld), targ_gworld_rect(targ_gworld);
 	src_rect &= src_gworld_rect;
