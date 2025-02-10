@@ -65,6 +65,9 @@ bool cTextMsg::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::
 		else if(val == "left") right_align = false;
 		else throw xBadVal(tagName, attr.Name(), val, attr.Row(), attr.Column(), fname);
 		return true;
+	}else if(attr.Name() == "show-pipes"){
+		style.showPipes = str_to_bool(attr.Value());
+		return true;
 	}
 	return cControl::parseAttribute(attr, tagName, fname);
 }
