@@ -771,6 +771,9 @@ static void replay_action(Element& action) {
 	}else if(t == "debug_kill"){
 		debug_kill();
 		return;
+	}else if(t == "debug_kill_party"){
+		debug_kill_party();
+		return;
 	}else if(t == "debug_magic_map"){
 		debug_magic_map();
 		return;
