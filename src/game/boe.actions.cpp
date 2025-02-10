@@ -2470,7 +2470,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 				handle_spellcast(last_spellcast_type, did_something, need_redraw, need_reprint);
 				break;
 			// Cancel look
-			case MODE_LOOK_TOWN:
+			case MODE_LOOK_TOWN: case MODE_LOOK_COMBAT: case MODE_LOOK_OUTDOORS:
 				handle_begin_look(false, need_redraw, need_reprint);
 				break;
 			// Cancel talk
