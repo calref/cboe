@@ -2081,6 +2081,19 @@ void debug_kill() {
 	print_buf();
 }
 
+void debug_kill_party() {
+	if(recording){
+		record_action("debug_kill_party", "");
+	}
+	for(short i = 0; i < 6; i++) {
+		if(univ.party[i].is_alive())
+			kill_pc(univ.party[i],eMainStatus::ABSENT);
+	}
+	draw_terrain();
+	add_string_to_buf("Debug: Kill the party.");
+	advance_time(false, true, true);
+}
+
 void debug_magic_map() {
 	if(recording){
 		record_action("debug_magic_map", "");
@@ -2364,7 +2377,7 @@ void show_debug_help() {
 }
 
 // Non-comprehensive list of unused keys:
-// UXYZ chijklnoqvy @#$-_+[]{},.'"`~/\|;:
+// UYZ chijklnoqvy @#$-_+[]{},.'"`~/\|;:
 void init_debug_actions() {
 	add_debug_action({'B'}, "Leave town", debug_leave_town);
 	add_debug_action({'C'}, "Get cleaned up (lose negative status effects)", debug_clean_up);
@@ -2394,6 +2407,7 @@ void init_debug_actions() {
 	});
 	add_debug_action({'T'}, "Enter town", debug_enter_town);
 	add_debug_action({'W'}, "Refresh jobs/shops", debug_refresh_stores);
+	add_debug_action({'X'}, "Kill party", debug_kill_party);
 	add_debug_action({'='}, "Heal, increase magic skills", debug_heal_plus_extra);
 	add_debug_action({'<'}, "Make one day pass", debug_increase_age);
 	add_debug_action({'>'}, "Reset towns (excludes the one you're in, if any)", debug_towns_forget);

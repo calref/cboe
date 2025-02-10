@@ -90,6 +90,7 @@ void debug_print_location();
 void debug_step_through();
 void debug_leave_town();
 void debug_kill();
+void debug_kill_party();
 void debug_magic_map();
 void debug_enter_town();
 void debug_refresh_stores();
