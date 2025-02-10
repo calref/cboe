@@ -535,7 +535,16 @@ bool cControl::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::
 		if(val == "small") setFormat(TXT_SIZE, 10);
 		else if(val == "large") setFormat(TXT_SIZE, 12);
 		else if(val == "title") setFormat(TXT_SIZE, 18);
-		else throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
+		else{
+			auto err = xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
+			try{
+				setFormat(TXT_SIZE, std::stoi(val));
+			}catch(std::invalid_argument& e){
+				throw err;
+			}catch(std::out_of_range& e){
+				throw err;
+			}
+		}
 		return true;
 	}
 	if(name == "wrap" && canFormat(TXT_WRAP)) {

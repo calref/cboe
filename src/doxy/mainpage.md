@@ -90,6 +90,7 @@ The `<text>` tag accepts the following attributes:
 
 * `framed` - See **Common Attributes** above. Defaults to `false`.
 * `outline` - See **Common Attributes** above.
+* `show-pipes` - If true the | character will appear literally.
 * `underline` - If true, the text will be underlined.
 * `align` - `right` or `left`. Defaults to `left`.
 * `fromlist`, `font`, `size`, `color`, `colour`, `def-key` -
@@ -343,9 +344,7 @@ values.
 `bold`, `dungeon`, `maidenword`. It defaults to `bold`. The latter two
 options are fantasy-style scripts such as that used for the conversation
 screen.
-* `size` - Although the dialog engine supports any font size, the XML
-specification simplifies it to three keywords: `small`, `large`, and
-`title`, representing 10pt, 12pt, and 18pt font, respectively.
+* `size` - The point size of the text. An integer, or one of three presets: `small` (10pt), `large` (12pt), and `title` (18pt).
 * `color` or `colour` - This is the only truly unrestricted attribute,
 accepting any HTML colour code. It understands three-digit hex codes (eg
 `#333`, which is equivalent to `#333333`), six-digit hex codes, and the

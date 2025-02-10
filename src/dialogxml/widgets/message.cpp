@@ -65,6 +65,9 @@ bool cTextMsg::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::
 		else if(val == "left") right_align = false;
 		else throw xBadVal(tagName, attr.Name(), val, attr.Row(), attr.Column(), fname);
 		return true;
+	}else if(attr.Name() == "show-pipes"){
+		style.showPipes = str_to_bool(attr.Value());
+		return true;
 	}
 	return cControl::parseAttribute(attr, tagName, fname);
 }
@@ -130,14 +133,13 @@ void cTextMsg::calculate_layout() {
 }
 
 void cTextMsg::recalcRect() {
+	style.pointSize = textSize;
+	style.underline = underlined;
+	style.font = textFont;
 	if(fixedWidth && fixedHeight){
 		calculate_layout();
 		return;
 	}
-	TextStyle style;
-	style.font = textFont;
-	style.pointSize = textSize;
-	style.underline = underlined;
 	style.lineHeight = textSize + 2;
 	std::string test = getText();
 	size_t lines = 1, cur_line_chars = 0, max_line_chars = 0;

@@ -125,11 +125,18 @@
 		</xs:attribute>
 		<xs:attribute name="size" default="small">
 			<xs:simpleType>
-				<xs:restriction base="xs:token">
-					<xs:enumeration value="small"/>
-					<xs:enumeration value="large"/>
-					<xs:enumeration value="title"/>
-				</xs:restriction>
+				<xs:union>
+					<xs:simpleType>
+						<xs:restriction base="xs:token">
+							<xs:enumeration value="small"/>
+							<xs:enumeration value="large"/>
+							<xs:enumeration value="title"/>
+						</xs:restriction>
+					</xs:simpleType>
+					<xs:simpleType>
+						<xs:restriction base="xs:integer"/>
+					</xs:simpleType>
+				</xs:union>
 			</xs:simpleType>
 		</xs:attribute>
 		<xs:attribute name="color"/>
@@ -179,6 +186,7 @@
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
+		<xs:attribute name="show-pipes" type="xs:boolean" default="false"/>
 		<xs:attribute ref="def-key"/>
 		<xs:attribute name="fromlist" default="none" type="xs:string"/>
 		<xs:attributeGroup ref="rect-size"/>
