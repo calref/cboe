@@ -251,6 +251,7 @@ void draw_combat_pc(cPlayer& who, location center, bool attacking) {
 
 void frame_active_pc(location center) {
 	if(monsters_going) return;
+	if(!is_on_screen(univ.current_pc().combat_pos)) return;
 	location where_draw(univ.current_pc().combat_pos.x - center.x + 4, univ.current_pc().combat_pos.y - center.y + 4);
 	rectangle active_pc_rect;
 	active_pc_rect.top = 18 + where_draw.y * 36;
