@@ -17,13 +17,6 @@ std::map<std::string,boost::any> prefs;
 using iarray = std::vector<int>;
 static bool prefsLoaded = false, prefsDirty = false;
 
-#ifdef SFML_SYSTEM_MACOS
-void append_iarray_pref_mac(std::string keypath, int value);
-std::vector<int> get_iarray_pref_mac(std::string keypath);
-void clear_pref_mac(std::string keypath);
-bool sync_prefs_mac();
-#endif
-
 // These can make the use of platform-specific overloads DRY
 #ifdef SFML_SYSTEM_MACOS
 #define SET_PREF_MAC(type) void set_pref_mac(std::string keypath, type value); if(!was_replaying){ set_pref_mac(keypath, value); return; }
@@ -74,6 +67,7 @@ double get_float_pref(std::string keypath, double fallback) {
 
 void append_iarray_pref(std::string keypath, int value) {
 	#ifdef SFML_SYSTEM_MACOS
+	void append_iarray_pref_mac(std::string keypath, int value);
 	if(!was_replaying){
 		append_iarray_pref_mac(keypath, value);
 	}
@@ -90,6 +84,7 @@ void append_iarray_pref(std::string keypath, int value) {
 
 std::vector<int> get_iarray_pref(std::string keypath) {
 	#ifdef SFML_SYSTEM_MACOS
+	std::vector<int> get_iarray_pref_mac(std::string keypath);
 	if(!was_replaying){
 		return get_iarray_pref_mac(keypath);
 	}
@@ -115,6 +110,7 @@ std::string get_string_pref(std::string keypath, std::string fallback) {
 
 void clear_pref(std::string keypath) {
 	#ifdef SFML_SYSTEM_MACOS
+	void clear_pref_mac(std::string keypath);
 	if(!was_replaying){
 		clear_pref_mac(keypath);
 		return;
@@ -232,6 +228,7 @@ static bool load_prefs(fs::path fpath) {
 extern fs::path tempDir;
 bool sync_prefs() {
 	#ifdef SFML_SYSTEM_MACOS
+	bool sync_prefs_mac();
 	if(!was_replaying){
 		return sync_prefs_mac();
 	}
