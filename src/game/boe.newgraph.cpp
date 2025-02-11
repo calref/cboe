@@ -451,8 +451,8 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 				
 				missile_place_rect[i] = temp_rect;
 				
-				// When the missile we're tracking goes off-screen, re-position the camera
-				if(tracking_missile == i && (missile_place_rect[i] & ter_rects.to) != missile_place_rect[i] && !recentered){
+				// Halfway through the missile's arc, or when the missile we're tracking goes off-screen, re-position the camera
+				if(((t == num_steps / 2) || (tracking_missile == i && (missile_place_rect[i] & ter_rects.to) != missile_place_rect[i])) && !recentered){
 					location old_center = center;
 
 					center = camera_dest;
@@ -505,13 +505,6 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 		sf::sleep(sf::milliseconds(2 + 5 * get_int_pref("GameSpeed")));
 	}
 
-	// If tracking missile never left the screen, still recenter on a better impact point
-	// before the blasts happen
-	if(!recentered){
-		center = camera_dest;
-		draw_terrain();
-	}
-	
 	// Exit gracefully, and clean up screen
 	for(short i = 0; i < 30; i++)
 		store_missiles[i].missile_type = -1;
