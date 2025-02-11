@@ -2085,13 +2085,16 @@ void debug_kill_party() {
 	if(recording){
 		record_action("debug_kill_party", "");
 	}
-	for(short i = 0; i < 6; i++) {
-		if(univ.party[i].is_alive())
-			kill_pc(univ.party[i],eMainStatus::ABSENT);
+	std::string confirm = cChoiceDlog("kill-party-confirm",{"yes","no"}).show();
+	if(confirm == "yes"){
+		for(short i = 0; i < 6; i++) {
+			if(univ.party[i].is_alive())
+				kill_pc(univ.party[i],eMainStatus::ABSENT);
+		}
+		draw_terrain();
+		add_string_to_buf("Debug: Kill the party.");
+		advance_time(false, true, true);
 	}
-	draw_terrain();
-	add_string_to_buf("Debug: Kill the party.");
-	advance_time(false, true, true);
 }
 
 void debug_magic_map() {
