@@ -115,6 +115,8 @@ public:
 	/// Show the dialog and start its event loop. All dialogs are modal.
 	/// @param onopen A function to be called after the dialog is displayed but before the event loop starts.
 	void run(std::function<void(cDialog&)> onopen = nullptr); // cd_run_dialog
+	/// Show this dialog. Before starting its event loop, show a help window if it hasn't been shown before.
+	void runWithHelp(short help1, short help2);
 	/// Get the result of the dialog.
 	/// @tparam type The result type.
 	/// @throw boost::bad_any_cast if the provided result type is different from the type set by setResult().
