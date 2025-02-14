@@ -152,7 +152,8 @@ void draw_scale_aware_text(sf::RenderTarget& dest_window, sf::Text str_to_draw) 
 		dest_window.setView(dest_window.getDefaultView());
 		dest_window.draw(str_to_draw);
 		dest_window.setView(view);
-	}else if(sf::RenderTexture* p = dynamic_cast<sf::RenderTexture*>(&dest_window); p != nullptr){
+	}else if(dynamic_cast<sf::RenderTexture*>(&dest_window) != nullptr){
+		sf::RenderTexture* p = dynamic_cast<sf::RenderTexture*>(&dest_window);
 		// Onto a RenderTexture is trickier because the texture is locked at the smaller size.
 		// What we can do is save the sf::Text with its relative position and render
 		// it onto the RenderWindow that eventually draws the RenderTexture.
