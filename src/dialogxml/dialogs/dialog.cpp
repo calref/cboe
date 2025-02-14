@@ -533,6 +533,13 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	makeFrontWindow(*parentWin);
 }
 
+void cDialog::runWithHelp(short help1, short help2) {
+	extern void give_help(short help1, short help2, cDialog& parent);
+	run([help1, help2](cDialog& me) -> void {
+		give_help(help1, help2, me);
+	});
+}
+
 // This method is a main event event loop of the dialog.
 void cDialog::handle_events() {
 	sf::Event currentEvent;
