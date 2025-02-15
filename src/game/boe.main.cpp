@@ -962,7 +962,7 @@ void init_boe(int argc, char* argv[]) {
 		plop_fancy_startup(fps_limiter);
 	
 	cUniverse::print_result = iLiving::print_result = add_string_to_buf;
-	cPlayer::give_help = give_help;
+	cPlayer::give_help_enabled = true;
 	init_fileio();
 	init_debug_actions();
 	init_spell_menus();

@@ -21,10 +21,13 @@
 #include "fileio/fileio.hpp"
 #include "fileio/tagfile.hpp"
 #include "sounds.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
 
 extern short skill_bonus[21];
 // A nice convenient bitset with just the low 30 bits set, for initializing spells
 const uint32_t cPlayer::basic_spells = std::numeric_limits<uint32_t>::max() >> 2;
+
+bool cPlayer::give_help_enabled = false;
 
 void cPlayer::import_legacy(legacy::pc_record_type old){
 	main_status = (eMainStatus) old.main_status;
@@ -152,7 +155,7 @@ void cPlayer::curse(int how_much) {
 		else if(how_much > 0)
 			print_result("  " + name + " cursed.");
 	}
-	if(give_help) {
+	if(give_help_enabled) {
 		if(how_much > 0)
 			give_help(59,0);
 		else if(how_much > 0)
@@ -180,7 +183,7 @@ void cPlayer::dumbfound(int how_much) {
 	if(print_result)
 		print_result("  " + name + " dumbfounded.");
 	one_sound(67);
-	if(give_help)
+	if(give_help_enabled)
 		give_help(28,0);
 }
 
@@ -203,7 +206,7 @@ void cPlayer::disease(int how_much) {
 	if(print_result)
 		print_result("  " + name + " diseased.");
 	one_sound(66);
-	if(give_help)
+	if(give_help_enabled)
 		give_help(29,0);
 }
 
@@ -250,7 +253,7 @@ void cPlayer::sleep(eStatus what_type,int how_much,int adjust) {
 	else play_sound(90);
 	if(what_type != eStatus::FORCECAGE)
 		ap = 0;
-	if(give_help) {
+	if(give_help_enabled) {
 		if(what_type == eStatus::ASLEEP)
 			give_help(30,0);
 		else if(what_type == eStatus::PARALYZED)
@@ -272,7 +275,7 @@ void cPlayer::slow(int how_much) {
 		else if(how_much > 0)
 			print_result("  " + name + " slowed.");
 	}
-	if(give_help)
+	if(give_help_enabled)
 		give_help(35,0);
 }
 
@@ -1346,5 +1349,3 @@ void cPlayer::readFrom(const cTagFile& file) {
 		}
 	}
 }
-
-void(* cPlayer::give_help)(short,short) = nullptr;
