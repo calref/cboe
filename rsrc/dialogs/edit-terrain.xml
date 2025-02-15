@@ -27,7 +27,7 @@
 	<field name='map' top='62' left='495' width='80' height='16'/>
 	<pict name='seemap' top='86' left='465' type='map' num='0'/>
 	<button name='pickmap' type='regular' top='86' left='495'>Choose</button>
-	<text top='110' left='431' height='32' width='157'>(Enter -1 to scale down the large picture)</text>
+	<text top='115' left='431' height='32' width='157'>(Enter -1 to scale down the large picture)</text>
 	
 	<text top='90' left='8' height='14' width='120'>Terrain blockage:</text>
 	<group name='blockage'>

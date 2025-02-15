@@ -49,19 +49,19 @@
 	<field name='dice1' top='149' left='350' width='52' height='16'/>
 	<field name='sides1' top='149' left='410' width='52' height='16'/>
 	<text name='type1' top='150' left='470' width='120' height='14'/>
-	<button name='picktype1' type='regular' top='146' left='600'>Choose</button>
+	<button name='picktype1' type='regular' top='146' left='525'>Choose</button>
 	
 	<text top='174' left='283' width='50' height='14'>Attack 2:</text>
 	<field name='dice2' top='173' left='350' width='52' height='16'/>
 	<field name='sides2' top='173' left='410' width='52' height='16'/>
 	<text name='type2' top='174' left='470' width='120' height='14'/>
-	<button name='picktype2' type='regular' top='170' left='600'>Choose</button>
+	<button name='picktype2' type='regular' top='170' left='525'>Choose</button>
 	
 	<text top='198' left='283' width='50' height='14'>Attack 3:</text>
 	<field name='dice3' top='197' left='350' width='52' height='16'/>
 	<field name='sides3' top='197' left='410' width='52' height='16'/>
 	<text name='type3' top='198' left='470' width='120' height='14'/>
-	<button name='picktype3' type='regular' top='194' left='600'>Choose</button>
+	<button name='picktype3' type='regular' top='194' left='525'>Choose</button>
 	
 	<text top='253' left='8' width='120' height='14'>Monster type:</text>
 	<text name='type' top='253' left='134' width='120' height='14'/>
@@ -72,11 +72,10 @@
 	<pict name='talkpic' type='talk' num='0' top='276' left='226'/>
 	<button name='picktalk' type='regular' top='275' left='264'>Choose</button>
 	
-	<text size='large' top='250' left='343' width='158' height='16'>Treasure:</text>
-	<text top='275' left='343' width='162' height='14'>Monster treasure: (0-4)</text>
-	<field name='treas' top='273' left='513' width='55' height='16'/>
+	<text top='250' left='343' width='162' height='14'>Monster treasure: (0-4)</text>
+	<field name='treas' top='248' left='513' width='55' height='16'/>
 	
-	<text top='310' left='8' width='302' height='14'>Default attitude:
+	<text top='275' left='343' width='302' height='14'>Default attitude:<br/>
 		(attitude creature has when you place it)
 	</text>
 	<group name='attitude'>
@@ -89,7 +88,7 @@
 	<text top='335' left='8' width='150' height='16'>Summoned by these spells:</text>
 	<text name='summons' font='plain' size='small' framed='true' top='337' left='160' width='340' height='14'/>
 	
-	<text top='353' left='4' width='320' height='40'>
+	<text top='358' left='8' width='320' height='40'>
 		Enter properties for this monster type.
 		For a detailed description of the fields, see the documentation.
 		To edit monster's special abilities, press the Edit Abilities button.
