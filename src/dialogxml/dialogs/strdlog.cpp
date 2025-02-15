@@ -127,11 +127,17 @@ void showFatalError(std::string str1, std::string str2, cDialog* parent) {
 static void give_help(short help1,short help2,cDialog* parent,bool help_forced) {
 	std::string str1,str2;
 	
-	if(!help_forced && (!get_bool_pref("ShowInstantHelp", true) || get_iarray_pref_contains("ReceivedHelp", help1)))
+	if(help_text_rsrc.empty()){
+		throw std::string {"Tried to call give_help() without setting help_text_rsrc!"};
+	}
+
+	if(!help_forced && help_text_rsrc == "help" &&
+		(!get_bool_pref("ShowInstantHelp", true) || get_iarray_pref_contains("ReceivedHelp", help1))){
 		return;
+	}
 	append_iarray_pref("ReceivedHelp", help1);
 	append_iarray_pref("ReceivedHelp", help2);
-	str1 = get_str("help",help1);
+	str1 = get_str(help_text_rsrc,help1);
 	if(help2 > 0)
 		str2 = get_str("help",help2);
 	cStrDlog display_strings(str1,str2,"Instant Help",24,PIC_DLOG, parent);
