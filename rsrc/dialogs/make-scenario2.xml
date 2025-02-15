@@ -19,6 +19,7 @@
 	<text top='52' left='70' width='377' height='39'>
 		The outdoors for your scenario can have as many 48x48 sections as you like.
 		Note, however, that more than 50 sections may be a bit too large.
+		More sections can be added later.
 	</text>
 	<text top='186' left='70' width='383' height='52'>
 		You can have large (64 x 64), medium (48 x 48) and small (32 x 32) towns. 
