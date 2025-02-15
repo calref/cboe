@@ -19,7 +19,7 @@
 
 TEST_CASE("Converting legacy town data") {
 	cScenario scen;
-	scen.ter_types.resize(5);
+	scen.ter_types.resize(16);
 	legacy::town_record_type old_town = {0};
 	
 	SECTION("With basic data") {

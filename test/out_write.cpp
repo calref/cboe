@@ -80,6 +80,8 @@ TEST_CASE("Saving an outdoors sector") {
 		wand.friendly[1] = 12;
 		wand.end_spec1 = 210;
 		wand.end_spec2 = 22;
+		wand.cant_flee = true;
+		wand.forced = true;
 		
 		REQUIRE(out.special_enc.size() >= 1);
 		out.special_enc[0] = spec;

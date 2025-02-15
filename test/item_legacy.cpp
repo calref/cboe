@@ -14,8 +14,13 @@
 #include "race.hpp"
 
 static void set_item_name(legacy::item_record_type& item, const std::string& full, const std::string& name) {
-	std::copy_n(full.begin(), std::min<size_t>(25, 1 + full.size()), item.full_name);
-	std::copy_n(name.begin(), std::min<size_t>(15, 1 + name.size()), item.name);
+	size_t full_size = std::min<size_t>(24, full.size());
+	std::copy_n(full.begin(), full_size, item.full_name);
+	item.full_name[full_size] = '\0';
+
+	size_t name_size = std::min<size_t>(14, name.size());
+	std::copy_n(name.begin(), name_size, item.name);
+	item.name[name_size] = '\0';
 }
 
 TEST_CASE("Converting items from legacy scenarios") {
