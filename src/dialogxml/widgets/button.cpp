@@ -9,6 +9,7 @@
 
 #include "button.hpp"
 
+#include <boost/algorithm/string.hpp>
 #include "dialogxml/dialogs/dialog.hpp"
 #include "gfx/render_image.hpp"
 #include "gfx/render_text.hpp"
@@ -94,7 +95,16 @@ void cButton::draw(){
 		for(size_t key_pos = label.find_first_of(KEY_PLACEHOLDER); key_pos < label.size(); key_pos = label.find_first_of(KEY_PLACEHOLDER)) {
 			label.replace(key_pos, 1, keyDesc);
 		}
-		win_draw_string(*inWindow,to_rect,label,textMode,style);
+		
+		std::vector<std::string> forced_lines;
+		boost::split(forced_lines, label, boost::is_any_of("|"));
+		if(forced_lines.size() > 1){
+			to_rect.offset(0, (-style.pointSize/2) * (forced_lines.size() - 1));
+		}
+		for(std::string line : forced_lines){
+			win_draw_string(*inWindow,to_rect,line,textMode,style);
+			to_rect.offset(0, style.pointSize);
+		}
 		// frame default button, to provide a visual cue that it's the default
 		if(key.spec && key.k == key_enter) drawFrame(2,frameStyle);
 	}
