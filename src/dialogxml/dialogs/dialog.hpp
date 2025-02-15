@@ -28,6 +28,7 @@
 #include "location.hpp"
 #include <boost/any.hpp>
 #include <boost/iterator/iterator_facade.hpp>
+#include <boost/filesystem/path.hpp>
 #include "tools/prefs.hpp"
 #include "tools/framerate_limiter.hpp"
 
@@ -380,6 +381,6 @@ public:
 //}
 
 // For development/debugging only.
-void preview_dialog_xml();
+void preview_dialog_xml(fs::path dialog_xml);
 
 #endif

@@ -1,6 +1,7 @@
 
 #include <cmath>
 #include <queue>
+#include <boost/algorithm/string/replace.hpp>
 
 #include "boe.global.hpp"
 #include "tools/replay.hpp"
@@ -2396,6 +2397,7 @@ void init_debug_actions() {
 	// TODO this is not recorded or replayed because the rsrc you pick might not even be packaged
 	// in the build
 	add_debug_action({'J'}, "Preview a dialog's layout", preview_dialog_xml);
+	add_debug_action({'U'}, "Preview EVERY dialog's layout", preview_every_dialog_xml);
 	add_debug_action({'K'}, "Kill everything", debug_kill);
 	add_debug_action({'N'}, "End scenario", []() -> void {handle_victory(true);});
 	add_debug_action({'O'}, "Print your location", debug_print_location);
@@ -3933,4 +3935,34 @@ void handle_rename_pc() {
 		pick_pc_name(choice,nullptr);
 	put_pc_screen();
 	put_item_screen(stat_window);
+}
+
+void preview_dialog_xml() {
+	fs::path dialog_xml = nav_get_rsrc({"xml"});
+	preview_dialog_xml(dialog_xml);
+}
+
+void preview_every_dialog_xml() {
+	if(recording){
+		record_action("preview_every_dialog_xml", "");
+	}
+	std::vector<fs::path> dialog_paths;
+	fs::path dialogs_path = "data/dialogs";
+	for(fs::directory_iterator it{dialogs_path}; it != fs::directory_iterator{}; ++it) {
+		fs::path path = it->path();
+		if(path.extension() != ".xml") continue;
+		dialog_paths.push_back(path);
+	}
+	cChoiceDlog dlog("preview-dialogs-confirm",{"yes","no"});
+	std::string text = dlog->getControl("msg").getText();
+	boost::replace_first(text, "{{num}}", boost::lexical_cast<std::string>(dialog_paths.size()));
+	dlog->getControl("msg").setText(text);
+	std::string confirm = dlog.show();
+	if(confirm == "yes"){
+		std::for_each(dialog_paths.begin(), dialog_paths.end(), [](fs::path path) -> void {
+			ASB("Previewing dialog: " + path.stem().string());
+			print_buf();
+			preview_dialog_xml(path);
+		});
+	}
 }

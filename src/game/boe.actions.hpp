@@ -115,5 +115,7 @@ void close_map(bool record = false);
 void cancel_item_target(bool& did_something, bool& need_redraw, bool& need_reprint);
 void update_item_stats_area(bool& need_reprint);
 void easter_egg(int idx);
+void preview_dialog_xml();
+void preview_every_dialog_xml();
 
 #endif
