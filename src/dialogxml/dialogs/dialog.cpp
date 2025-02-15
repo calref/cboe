@@ -16,6 +16,7 @@
 #include "gfx/tiling.hpp" // for bg
 #include "fileio/resmgr/res_dialog.hpp"
 #include "sounds.hpp"
+#include "dialogxml/dialogs/choicedlog.hpp"
 #include "dialogxml/widgets/pict.hpp"
 #include "dialogxml/widgets/button.hpp"
 #include "dialogxml/widgets/field.hpp"
@@ -1154,8 +1155,7 @@ void cDialogIterator::increment() {
 	}
 }
 
-void preview_dialog_xml() {
-	fs::path dialog_xml = nav_get_rsrc({"xml"});
+void preview_dialog_xml(fs::path dialog_xml) {
 	std::unique_ptr<DialogDefn> defn(load_dialog_defn(dialog_xml));
 	cDialog dialog(*defn);
 	// Make every clickable control's click event close the dialog
