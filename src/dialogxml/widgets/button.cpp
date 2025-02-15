@@ -190,6 +190,10 @@ void cButton::validatePostParse(ticpp::Element& elem, std::string fname, const s
 	if(getType() == CTRL_BTN && !attrs.count("type")) throw xMissingAttr(elem.Value(), "type", elem.Row(), elem.Column(), fname);
 	if(type == BTN_PUSH && !getText().empty() && !attrs.count("width"))
 		throw xMissingAttr(elem.Value(), "width", elem.Row(), elem.Column(), fname);
+
+	// This needs to happen again after parsing, which sets preset buttons' text to empty
+	initPreset();
+
 	if(labelledButtons.count(type)) {
 		if(!attrs.count("color") && !attrs.count("colour") && parent->getBg() == cDialog::BG_DARK)
 			setColour(sf::Color::White);
@@ -253,12 +257,12 @@ void cButton::init(){
 	btnRects[BTN_RIGHT][0] = {46,0,69,63};
 	btnRects[BTN_UP][0] = {69,0,92,63};
 	btnRects[BTN_DOWN][0] = {92,0,115,63};
-	btnRects[BTN_DONE][0] = {115,0,138,63};
+	btnRects[BTN_DONE][0] = {0,0,23,63};
 	btnRects[BTN_LG][0] = {0,0,23,102};
 	btnRects[BTN_HELP][0] = {0,0,13,16};
 	btnRects[BTN_TINY][0] = {0,42,10,56};
 	btnRects[BTN_TALL][0] = {0,0,40,63};
-	btnRects[BTN_TRAIT][0] = {40,0,80,63};
+	btnRects[BTN_TRAIT][0] = {0,0,40,63};
 	btnRects[BTN_PUSH][0] = {0,0,30,30};
 	for(int j = 0; j <= 12; j++)
 		btnRects[j][1] = btnRects[j][0];
@@ -316,8 +320,20 @@ void cButton::setBtnType(eBtnType newType){
 			frame.height() = std::min<int>(frame.height(), 10);
 			break;
 	}
+	initPreset();
 }
 
 eBtnType cButton::getBtnType() const {
 	return type;
+}
+
+void cButton::initPreset() {
+	switch(type){
+		case BTN_DONE:
+			setText("Done");
+			break;
+		case BTN_TRAIT:
+			setText("Race|& Traits");
+			break;
+	}
 }
