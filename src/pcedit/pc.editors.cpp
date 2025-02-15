@@ -365,7 +365,7 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,xp_dlog_s
 		me.setResult(false);
 		me.toast(false);
 	} else if(item_hit == "help") {
-		give_help(210,11,me);
+		give_help(10,11,me,true);
 	} else if(item_hit == "keep") {
 		do_xp_keep(save);
 		me.setResult(true);

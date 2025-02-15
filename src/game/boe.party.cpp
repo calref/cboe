@@ -1863,7 +1863,7 @@ static bool pick_spell_event_filter(cDialog& me, std::string item_hit, const eSk
 		put_spell_list(me, store_situation);
 		put_spell_led_buttons(me, store_situation, store_spell);
 	} else if(item_hit == "help") {
-		give_help(207,8,me);
+		give_help(7,8,me,true);
 	}
 	return true;
 }
@@ -2083,9 +2083,7 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	draw_caster_buttons(castSpell, type);
 	put_spell_led_buttons(castSpell, type, former_spell);
 	
-	void (*give_help)(short,short,cDialog&) = ::give_help;
-	
-	castSpell.run(std::bind(give_help, 7, 8, _1));
+	castSpell.runWithHelp(7, 8);
 	
 	return cSpell::fromNum(type, castSpell.getResult<short>());
 }
@@ -2180,7 +2178,7 @@ void do_alchemy() {
 
 static bool alch_choice_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	if(item_hit == "help") {
-		give_help(220,21,me);
+		give_help(20,21,me,true);
 		return true;
 	}
 	if(item_hit == "cancel")
@@ -2211,9 +2209,7 @@ eAlchemy alch_choice(short pc_num) {
 	sout << " (skill " << univ.party[pc_num].skill(eSkill::ALCHEMY) << ")";
 	chooseAlchemy["mixer"].setText(sout.str());
 	
-	void (*give_help)(short,short,cDialog&) = ::give_help;
-	
-	chooseAlchemy.run(std::bind(give_help, 20, 21, std::ref(chooseAlchemy)));
+	chooseAlchemy.runWithHelp(20, 21);
 	return chooseAlchemy.getResult<eAlchemy>();
 }
 

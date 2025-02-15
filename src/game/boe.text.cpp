@@ -18,6 +18,7 @@ const int TEXT_BUF_LEN = 70;
 #include "gfx/tiling.hpp"
 #include "utility.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
 #include "fileio/resmgr/res_image.hpp"
 #include "fileio/resmgr/res_font.hpp"
 #include "spell.hpp"

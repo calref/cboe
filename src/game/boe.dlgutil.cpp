@@ -59,7 +59,7 @@ extern sf::RenderWindow mini_map;
 extern cUniverse univ;
 extern sf::Texture pc_gworld;
 extern std::map<eSkill,short> skill_max;
-extern void give_help_and_record(short help1, short help2);
+extern void give_help_and_record(short help1, short help2, bool help_forced = false);
 
 short sign_mode,person_graphic,store_person_graphic,store_sign_mode;
 long num_talk_entries;
@@ -1136,7 +1136,7 @@ void handle_talk_node(int which_talk_entry) {
 bool handle_talk_event(location p, cFramerateLimiter& fps_limiter) {
 	if(p.in(talk_help_rect)) {
 		if(help_btn->handleClick(p, fps_limiter))
-			give_help_and_record(205,6);
+			give_help_and_record(5,6,true);
 		return true;
 	}
 
@@ -1403,11 +1403,9 @@ void pick_preferences(bool record) {
 	} else {
 		uiMapScale["other"].hide();
 	}
-
-	void (*give_help)(short,short,cDialog&) = ::give_help;
 	
 	int store_display_mode = get_int_pref("DisplayMode");
-	prefsDlog.run(std::bind(give_help, 55, 0, std::ref(prefsDlog)));
+	prefsDlog.runWithHelp(55, 0);
 	
 	// Suppress the float comparison warning.
  	// We know it's safe here - we're just comparing static values.
@@ -1451,7 +1449,7 @@ static bool edit_party_event_filter(cDialog& me, std::string item_hit, eKeyMod) 
 	if(item_hit == "done") {
 		me.toast(true);
 	} else if(item_hit == "help") {
-		give_help(222,23,me);
+		give_help(22,23,me,true);
 	} else {
 		short which_pc = item_hit[item_hit.length()-1] - '1';
 		item_hit = item_hit.substr(0, item_hit.length() - 1);
@@ -1507,9 +1505,8 @@ void edit_party() {
 	pcDialog.attachClickHandlers(edit_party_event_filter, buttons);
 	
 	put_party_stats(pcDialog);
-	void (*give_help)(short,short,cDialog&) = ::give_help;
 	
-	pcDialog.run(std::bind(give_help, 22, 23, std::ref(pcDialog)));
+	pcDialog.runWithHelp(22, 23);
 	
 	if(univ.current_pc().main_status != eMainStatus::ALIVE)
 		univ.cur_pc = first_active_pc();

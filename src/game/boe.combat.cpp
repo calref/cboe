@@ -21,6 +21,7 @@
 #include "boe.ui.hpp"
 #include "mathutil.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
 #include "boe.menus.hpp"
 #include "spell.hpp"
 #include "tools/prefs.hpp"
