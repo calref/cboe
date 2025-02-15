@@ -81,7 +81,9 @@ class cPlayer : public iLiving {
 public:
 	// A nice convenient bitset with just the low 30 bits set, for initializing spells
 	static const uint32_t basic_spells;
-	static void(* give_help)(short,short);
+	// This class is shared between the game and the editors, but it should only show help dialogs
+	// when being used in the game, which sets this flag to true on startup.
+	static bool give_help_enabled;
 	eMainStatus main_status;
 	std::string name;
 	// HACK: This is only really marked mutable so that I can use operator[] from const methods
