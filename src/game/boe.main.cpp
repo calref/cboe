@@ -87,6 +87,7 @@ bool scen_arg_start = false;
 boost::optional<short> scen_arg_town, scen_arg_town_entrance;
 boost::optional<location> scen_arg_out_sec, scen_arg_loc;
 extern std::string last_load_file;
+std::string help_text_rsrc = "help";
 
 struct cParseEntrance {
 	boost::optional<short>& opt;

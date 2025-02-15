@@ -11,6 +11,7 @@ std::string scenario_temp_dir_name = "test_scenario";
 cCustomGraphics spec_scen_g;
 cUniverse univ;
 std::vector<fs::path> extra_scen_dirs;
+std::string help_text_rsrc;
 
 bool check_for_interrupt(std::string) { return false; }
 

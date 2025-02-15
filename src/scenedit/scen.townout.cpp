@@ -40,6 +40,7 @@ extern cScenario scenario;
 extern cOutdoors* current_terrain;
 extern location cur_out;
 extern cUndoList undo_list;
+extern std::string help_text_rsrc;
 
 const char *day_str_1[] = {"Unused","Day creature appears","Day creature disappears",
 	"Unused","Unused","Unused","Unused","Unused","Unused"};
@@ -784,6 +785,7 @@ static bool edit_advanced_town_special(cDialog& me, std::string hit, eKeyMod) {
 
 void edit_advanced_town() {
 	using namespace std::placeholders;
+	help_text_rsrc = "town-advanced-help";
 	
 	cDialog town_dlg(*ResMgr::dialogs.get("edit-town-advanced"));
 	town_dlg["okay"].attachClickHandler(save_advanced_town);
@@ -808,10 +810,7 @@ void edit_advanced_town() {
 		auto iter = std::find(help_ids.begin(), help_ids.end(), which);
 		if(iter == help_ids.end()) return true;
 		int n = iter - help_ids.begin();
-		std::string str = get_str("town-advanced-help",1 + n);
-		cStrDlog display_help(str,"","Instant Help",24,PIC_DLOG, &me);
-		display_help.setSound(57);
-		display_help.show();
+		give_help(1 + n, 0, me, true);
 		return true;
 	}, help_ids);
 	// TODO: This should probably be a focus handler, but the focus handler doesn't receive the modifiers
@@ -821,10 +820,7 @@ void edit_advanced_town() {
 			auto iter = std::find(prop_ids.begin(), prop_ids.end(), which);
 			if(iter == prop_ids.end()) return true;
 			int n = iter - prop_ids.begin();
-			std::string str = get_str("town-advanced-help",10 + n);
-			cStrDlog display_help(str,"","Instant Help",24,PIC_DLOG, &me);
-			display_help.setSound(57);
-			display_help.show();
+			give_help(10 + n, 0, me, true);
 			return false;
 		}
 		dynamic_cast<cLed&>(me[which]).defaultClickHandler(me, which, mod);
