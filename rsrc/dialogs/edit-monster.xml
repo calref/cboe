@@ -42,8 +42,8 @@
 	<field name='priest' top='226' left='206' width='51' height='16'/>
 	
 	<text size='large' top='82' left='273' width='158' height='16'>Hand to hand combat:</text>
-	<text top='102' left='350' width='56' height='40'>Number of dice:<br/>(0 - 20)</text>
-	<text top='102' left='410' width='56' height='40'>Number of sides:<br/>(1-50)</text>
+	<text top='102' left='343' width='72' height='40'>Number of dice:<br/>(0 - 20)</text>
+	<text top='102' left='403' width='72' height='40'>Number of sides:<br/>(1-50)</text>
 	<text top='128' left='470' width='56' height='14'>Type</text>
 	
 	<text top='150' left='283' width='50' height='14'>Attack 1:</text>
