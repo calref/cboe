@@ -664,35 +664,6 @@ void add_to_journal(short event) {
 		ASB("Something was added to your journal.");
 }
 
-// Call call this anywhere, but don't forget parent!!!
-static void give_help(short help1,short help2,cDialog* parent) {
-	bool help_forced = false;
-	std::string str1,str2;
-	
-	if(help1 >= 200) {
-		help_forced = true;
-		help1 -= 200;
-	}
-	if(!help_forced && (!get_bool_pref("ShowInstantHelp", true) || get_iarray_pref_contains("ReceivedHelp", help1)))
-		return;
-	append_iarray_pref("ReceivedHelp", help1);
-	append_iarray_pref("ReceivedHelp", help2);
-	str1 = get_str("help",help1);
-	if(help2 > 0)
-		str2 = get_str("help",help2);
-	cStrDlog display_strings(str1,str2,"Instant Help",24,PIC_DLOG, parent);
-	display_strings.setSound(57);
-	display_strings.show();
-}
-
-void give_help(short help1, short help2) {
-	give_help(help1, help2, nullptr);
-}
-
-void give_help(short help1, short help2, cDialog& parent) {
-	give_help(help1, help2, &parent);
-}
-
 void put_quest_info(short which_i) {
 	cQuest& quest = univ.scenario.quests[which_i];
 	cDialog quest_dlg(*ResMgr::dialogs.get("quest-info"));
@@ -736,7 +707,7 @@ void cStringRecorder::operator()(cDialog& me) {
 			break;
 	}
 	if(univ.party.record(type, str1, location))
-		give_help(58,0,&me);
+		give_help(58,0,me);
 	univ.party.record(type, str2, location);
 }
 
