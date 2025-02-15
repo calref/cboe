@@ -120,6 +120,22 @@ rectangle explode_place_rect[30];
 
 char last_light_mask[13][13];
 
+terrain_screen_rects_t terrain_screen_rects() {
+	rectangle from = rectangle(terrain_screen_gworld);
+
+	location current_terrain_ul = win_to_rects[WINRECT_TERVIEW].topLeft();
+	rectangle to = from;
+	to.offset(current_terrain_ul);
+
+	rectangle in_frame = to;
+	in_frame.top += 11;
+	in_frame.left += 11;
+	in_frame.bottom -= 11;
+	in_frame.right -= 11;
+
+	return {from, to, in_frame};
+}
+
 void apply_unseen_mask() {
 	rectangle base_rect = {9,9,53,45},to_rect,big_to = {13,13,337,265};
 	bool need_bother = false;
@@ -345,26 +361,45 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 		return;
 	}
 	
-	if(std::all_of(store_missiles, store_missiles + 30, [](const store_missile_type& m) {
-		return m.missile_type == 0;
-	})) return;
-	
-	// make terrain_template contain current terrain all nicely
-	draw_terrain(1);
-	to_rect = rectangle(terrain_screen_gworld);
-	to_rect.bottom -= 10; // Adjust for pointing buttons
-	rectangle oldBounds = to_rect;
-	to_rect.offset(current_terrain_ul);
-	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldBounds,mainPtr,to_rect);
-	
-	mainPtr.setActive(false);
-	
-	
-	// init missile paths
+	// Eliminate missiles traveling 0 distance
 	for(short i = 0; i < 30; i++) {
 		if((store_missiles[i].missile_type >= 0) && (missile_origin == store_missiles[i].dest))
 			store_missiles[i].missile_type = -1;
 	}
+
+	std::vector<location> missile_targets;
+	std::vector<int> missile_indices;
+	int tracking_missile = -1;
+	location camera_dest;
+	for(short i = 0; i < 30; i++)
+		if(store_missiles[i].missile_type >= 0){
+			missile_indices.push_back(i);
+			missile_targets.push_back(store_missiles[i].dest);
+		}
+
+	if(missile_targets.empty()) return;
+
+	if(missile_targets.size() == 1){
+		tracking_missile = missile_indices[0];
+		camera_dest = between_anchor_points(missile_targets[0], missile_origin);
+	}else{
+		std::vector<location> dest_candidates = points_containing_most(missile_targets);
+		camera_dest = closest_point(dest_candidates, missile_origin);
+		tracking_missile = missile_indices[closest_point_idx(missile_targets, camera_dest)];
+	}
+
+	// Start the camera as close as possible to containing the origin and the camera destination
+	// on the same screen
+	center = between_anchor_points(missile_origin, camera_dest);
+
+	// make terrain_template contain current terrain all nicely
+	draw_terrain(1);
+	auto ter_rects = terrain_screen_rects();
+	rect_draw_some_item(terrain_screen_gworld.getTexture(),ter_rects.from,mainPtr,ter_rects.to);
+	
+	mainPtr.setActive(false);
+	
+	// init missile paths
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;
 	start_point.x = 13 + 14 + 28 * (short) (missile_origin.x - screen_ul.x);
 	start_point.y = 13 + 18 + 36 * (short) (missile_origin.y - screen_ul.y);
@@ -395,6 +430,9 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	play_sound(-1 * sound_num);
 	
 	sf::Texture& missiles_gworld = *ResMgr::graphics.get("missiles");
+	bool recentered = false;
+	int offset_x = 0;
+	int offset_y = 0;
 	// Now, at last, launch missile
 	for(short t = 0; t < num_steps; t++) {
 		draw_terrain();
@@ -405,6 +443,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 				temp_rect.offset(-8 + x2[i] + (x1[i] * t) / num_steps,
 								 -8 + y2[i] + (y1[i] * t) / num_steps);
 				temp_rect.offset(current_terrain_ul);
+				temp_rect.offset(offset_x, offset_y);
 				
 				// now adjust for different paths
 				if(store_missiles[i].path_type == 1)
@@ -412,12 +451,34 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 				
 				missile_place_rect[i] = temp_rect;
 				
+				// Halfway through the missile's arc, or when the missile we're tracking goes off-screen, re-position the camera
+				if(((t == num_steps / 2) || (tracking_missile == i && (missile_place_rect[i] & ter_rects.to) != missile_place_rect[i])) && !recentered){
+					location old_center = center;
+
+					center = camera_dest;
+
+					// TODO why can't I make the text bar stay normal?
+
+					// Offset the missile trajectory for the new camera position
+					int dx = center.x - old_center.x;
+					int dy = center.y - old_center.y;
+					offset_x = -dx * 28;
+					offset_y = -dy * 36;
+					draw_terrain();
+
+					recentered = true;
+
+					// Redo this frame
+					i--;
+					continue;
+				}
+
 				// Now put in missile
 				if(store_missiles[i].missile_type < 1000) {
 					from_rect = missile_origin_rect[i];
 					if(store_missiles[i].missile_type >= 7)
 						from_rect.offset(18 * (t % 8),0);
-					rect_draw_some_item(missiles_gworld,from_rect, mainPtr,temp_rect,sf::BlendAlpha);
+					rect_draw_some_item(missiles_gworld,from_rect, mainPtr,temp_rect,ter_rects.in_frame,sf::BlendAlpha);
 				} else {
 					// Custom missile graphics
 					// TODO: Test this!
@@ -436,23 +497,19 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 					from_rect.height() = 18;
 					if(step >= 4)
 						from_rect.offset(0,18);
-					rect_draw_some_item(*from_gw,from_rect, mainPtr,temp_rect,sf::BlendAlpha);
+					rect_draw_some_item(*from_gw,from_rect, mainPtr,temp_rect,ter_rects.in_frame,sf::BlendAlpha);
 				}
 			}
 		mainPtr.setActive();
 		mainPtr.display();
 		sf::sleep(sf::milliseconds(2 + 5 * get_int_pref("GameSpeed")));
 	}
-	
+
 	// Exit gracefully, and clean up screen
 	for(short i = 0; i < 30; i++)
 		store_missiles[i].missile_type = -1;
 	
-	to_rect = rectangle(terrain_screen_gworld);
-	to_rect.bottom -= 10; // Adjust for pointing buttons
-	rectangle oldRect = to_rect;
-	to_rect.offset(current_terrain_ul);
-	rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,mainPtr,to_rect);
+	rect_draw_some_item(terrain_screen_gworld.getTexture(),ter_rects.from,mainPtr,ter_rects.to);
 }
 
 short get_missile_direction(location origin_point,location the_point) {
@@ -512,11 +569,8 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
 	if(special_draw != 2) {
-		to_rect = rectangle(terrain_screen_gworld);
-		to_rect.bottom -= 10; // Adjust for pointing buttons
-		rectangle oldRect = to_rect;
-		to_rect.offset(current_terrain_ul);
-		rect_draw_some_item(terrain_screen_gworld.getTexture(),oldRect,mainPtr,to_rect);
+		auto ter_rects = terrain_screen_rects();
+		rect_draw_some_item(terrain_screen_gworld.getTexture(),ter_rects.from,mainPtr,ter_rects.to);
 	}
 	
 	TextStyle style;
@@ -552,6 +606,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	}
 	
 	sf::Texture& boom_gworld = *ResMgr::graphics.get("booms");
+	auto ter_rects = terrain_screen_rects();
 	// Now, at last, do explosion
 	for(short t = (special_draw == 2) ? 6 : 0; t < ((special_draw == 1) ? 6 : 11); t++) { // t goes up to 10 to make sure screen gets cleaned up
 		draw_terrain();
@@ -563,14 +618,14 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 					if(cur_boom_type >= 1000) {
 						std::shared_ptr<const sf::Texture> src_gworld;
 						graf_pos_ref(src_gworld, from_rect) = spec_scen_g.find_graphic(cur_boom_type - 1000 + t);
-						rect_draw_some_item(*src_gworld, from_rect, mainPtr, explode_place_rect[i], sf::BlendAlpha);
+						rect_draw_some_item(*src_gworld, from_rect, mainPtr, explode_place_rect[i], ter_rects.in_frame, sf::BlendAlpha);
 					} else {
 						from_rect = base_rect;
 						from_rect.offset(28 * (t + store_booms[i].offset),36 * (1 + store_booms[i].boom_type));
-						rect_draw_some_item(boom_gworld,from_rect,mainPtr,explode_place_rect[i],sf::BlendAlpha);
+						rect_draw_some_item(boom_gworld,from_rect,mainPtr,explode_place_rect[i], ter_rects.in_frame, sf::BlendAlpha);
 					}
 					
-					if(store_booms[i].val_to_place > 0) {
+					if(store_booms[i].val_to_place > 0 && (explode_place_rect[i] & ter_rects.in_frame) == explode_place_rect[i]) {
 						text_rect = explode_place_rect[i];
 						text_rect.top += 13;
 						text_rect.height() = 10;

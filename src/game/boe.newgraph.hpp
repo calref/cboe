@@ -17,6 +17,12 @@ struct word_rect_t {
 	word_rect_t() {}
 };
 
+struct terrain_screen_rects_t {
+	rectangle from;
+	rectangle to;
+	rectangle in_frame;
+};
+
 enum {
 	TALK_DUNNO = -1,
 	TALK_BUY = -2,
@@ -67,5 +73,6 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 short scan_for_response(const char *str);
 void refresh_talking();
 graf_pos calc_item_rect(int num,rectangle& to_rect);
+terrain_screen_rects_t terrain_screen_rects();
 
 #endif /* defined(BOE_NEWGRAPH_H) */

@@ -154,6 +154,7 @@ bool operator != (rectangle r1, rectangle r2);
 rectangle operator&(rectangle one, rectangle two);
 rectangle rectunion(rectangle one, rectangle two);
 short dist(location p1,location p2);
+float fdist(location p1,location p2);
 short vdist(location p1,location p2);
 
 location loc(int a, int b);
@@ -171,5 +172,31 @@ std::ostream& operator<< (std::ostream& out, sign_loc_t l);
 std::ostream& operator<< (std::ostream& out, rectangle r);
 std::istream& operator>> (std::istream& in, rectangle& r);
 std::ostream& operator<< (std::ostream& out, info_rect_t r);
+
+const int SCREEN_RADIUS=4;
+
+// CAMERA UTILITY FUNCTIONS
+
+// Whether a tile is within a radius of a given view center.
+// 4 is the actual tile radius of the terrain screen.
+bool is_on_screen(location loc, location view_center, int radius=SCREEN_RADIUS);
+
+// Default view center: the actual current view center
+extern location center;
+inline bool is_on_screen(location loc, int radius=SCREEN_RADIUS) {
+	return is_on_screen(loc, center, radius);
+}
+
+// Calculate the closest point to the center of two anchors that is
+// guaranteed to contain the first anchor with the given amount of padding
+location between_anchor_points(location anchor1, location anchor2, int padding=1);
+
+// Get all view center points which contain the greatest possible number of the given points
+// with the given amount of padding
+std::vector<location> points_containing_most(std::vector<location> points, int padding=1);
+
+// Find which of the given points is closest to the given anchor point.
+int closest_point_idx(std::vector<location> points, location anchor);
+location closest_point(std::vector<location> points, location anchor);
 
 #endif

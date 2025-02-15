@@ -80,6 +80,9 @@ extern bool cur_scen_is_mac;
 short specials_res_id;
 char start_name[256];
 
+// This is just to make location.hpp compile, and represents nothing:
+location center;
+
 static void process_args(int argc, char* argv[]) {
 	preprocess_args(argc, argv);
 	clara::Args args(argc, argv);
