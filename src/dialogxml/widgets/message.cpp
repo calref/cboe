@@ -119,7 +119,7 @@ void cTextMsg::calculate_layout() {
 		cControl& ctrl = key ? parent->getControl(*key) : *this;
 		msg.replace(pos, 1, ctrl.getAttachedKeyDescription());
 	}
-	if(to_rect.bottom - to_rect.top < 20) { // essentially, it's a single line
+	if(to_rect.bottom - to_rect.top < 20 && msg.find("|") == std::string::npos){
 		style.lineHeight = 12;
 		to_rect.left += 3;
 		text_mode = eTextMode::LEFT_BOTTOM;
@@ -136,12 +136,12 @@ void cTextMsg::recalcRect() {
 	style.pointSize = textSize;
 	style.underline = underlined;
 	style.font = textFont;
-	if(fixedWidth && fixedHeight){
+	std::string test = getText();
+	if(fixedWidth && fixedHeight && test.find("|") == std::string::npos){
 		calculate_layout();
 		return;
 	}
 	style.lineHeight = textSize + 2;
-	std::string test = getText();
 	size_t lines = 1, cur_line_chars = 0, max_line_chars = 0;
 	// Substitute | with newlines for measuring
 	for(auto& c : test) {
