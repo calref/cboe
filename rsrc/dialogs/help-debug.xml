@@ -3,7 +3,7 @@
 <dialog defbtn='okay'>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text top='8' left='50' width='400' height='16'>DEBUG MODE HELP</text>
-	<text top='22' left='50' width='400' height='50'>
+	<text top='22' left='50' width='400' height='64'>
 		Debug mode is intended to aid you in testing your scenario.
 		While in debug mode, monsters don't move in combat and are killed in one hit.
 		In addition, you have access to a lot of additional hotkeys.<br/><br/>
