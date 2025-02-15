@@ -13,6 +13,7 @@
 #include "dialogxml/widgets/pict.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
 #include "mathutil.hpp"
+#include "utility.hpp"
 
 DialogDefn& cStrDlog::getDefn(short n_strs, ePicType type, bool hasTitle){
 	std::ostringstream sout;
@@ -120,4 +121,33 @@ void showFatalError(std::string str1, cDialog* parent) {
 
 void showFatalError(std::string str1, std::string str2, cDialog* parent) {
 	giveError(25, "Error!!!", str1, str2, parent);
+}
+
+// Call this anywhere, but don't forget parent!!!
+static void give_help(short help1,short help2,cDialog* parent) {
+	bool help_forced = false;
+	std::string str1,str2;
+	
+	if(help1 >= 200) {
+		help_forced = true;
+		help1 -= 200;
+	}
+	if(!help_forced && (!get_bool_pref("ShowInstantHelp", true) || get_iarray_pref_contains("ReceivedHelp", help1)))
+		return;
+	append_iarray_pref("ReceivedHelp", help1);
+	append_iarray_pref("ReceivedHelp", help2);
+	str1 = get_str("help",help1);
+	if(help2 > 0)
+		str2 = get_str("help",help2);
+	cStrDlog display_strings(str1,str2,"Instant Help",24,PIC_DLOG, parent);
+	display_strings.setSound(57);
+	display_strings.show();
+}
+
+void give_help(short help1, short help2) {
+	give_help(help1, help2, nullptr);
+}
+
+void give_help(short help1, short help2, cDialog& parent) {
+	give_help(help1, help2, &parent);
 }

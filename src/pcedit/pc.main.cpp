@@ -455,39 +455,6 @@ bool verify_restore_quit(std::string dlog) {
 	return true;
 }
 
-// These functions are duplicated here because they're used in the training dialog.
-void give_help(short help1, short help2);
-void give_help(short help1, short help2, cDialog& parent);
-void display_skills(eSkill skill,cDialog* parent);
-
-static void give_help(short help1,short help2,cDialog* parent) {
-	bool help_forced = false;
-	std::string str1,str2;
-	
-	if(help1 >= 200) {
-		help_forced = true;
-		help1 -= 200;
-	}
-	if(!help_forced && (!get_bool_pref("ShowInstantHelp", true) || get_iarray_pref_contains("ReceivedHelp", help1)))
-		return;
-	append_iarray_pref("ReceivedHelp", help1);
-	append_iarray_pref("ReceivedHelp", help2);
-	str1 = get_str("help",help1);
-	if(help2 > 0)
-		str2 = get_str("help",help2);
-	cStrDlog display_strings(str1,str2,"Instant Help",24,PIC_DLOG, parent);
-	display_strings.setSound(57);
-	display_strings.show();
-}
-
-void give_help(short help1, short help2) {
-	give_help(help1, help2, nullptr);
-}
-
-void give_help(short help1, short help2, cDialog& parent) {
-	give_help(help1, help2, &parent);
-}
-
 void display_skills(eSkill skill,cDialog* parent) {
 	extern std::map<eSkill,short> skill_cost;
 	extern std::map<eSkill,short> skill_max;
