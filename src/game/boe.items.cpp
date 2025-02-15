@@ -576,11 +576,9 @@ bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short 
 		itemDialog[sout.str()].attachClickHandler(handler);
 	}
 	put_item_graphics(itemDialog, first_item, pc_getting, itemRefs);
-	
-	void (*give_help)(short,short,cDialog&) = ::give_help;
-	
+		
 	itemDialog.setResult(false); // The result is set to true if the player steals something
-	itemDialog.run(std::bind(give_help, 36, 37, _1));
+	itemDialog.runWithHelp(36, 37);
 	
 	return itemDialog.getResult<bool>();
 	

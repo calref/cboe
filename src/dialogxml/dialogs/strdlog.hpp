@@ -88,7 +88,7 @@ void showWarning(std::string str1, std::string str2, cDialog* parent = nullptr);
 void showWarning(std::string str1, cDialog* parent = nullptr);
 
 // Show a help window with the given messages from rsrc/strings/help.txt:
-void give_help(short help1, short help2);
-void give_help(short help1, short help2, cDialog& parent);
+void give_help(short help1, short help2, bool help_forced = false);
+void give_help(short help1, short help2, cDialog& parent, bool help_forced = false);
 
 #endif

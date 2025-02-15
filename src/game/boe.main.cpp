@@ -752,7 +752,16 @@ static void replay_action(Element& action) {
 		auto info = info_from_action(action);
 		short help1 = boost::lexical_cast<short>(info["help1"]);
 		short help2 = boost::lexical_cast<short>(info["help2"]);
-		give_help(help1, help2);
+		bool help_forced;
+		// Legacy replays may have the text indices offset by 200 to indicate
+		// help_forced true.
+		if(info.find("help_forced") == info.end()){
+			help_forced = help1 >= 200;
+			help1 -= 200;
+		}else{
+			help_forced = str_to_bool(info["help_forced"]);
+		}
+		give_help(help1, help2, help_forced);
 	}else if(t == "toggle_debug_mode"){
 		toggle_debug_mode();
 		return;
@@ -1334,7 +1343,7 @@ void menu_give_help(short help1){
 	if(recording){
 		record_action("menu_give_help", boost::lexical_cast<std::string>(help1));
 	}
-	give_help(help1, 0);
+	give_help(help1, 0, true);
 }
 
 void handle_menu_choice(eMenu item_hit) {
@@ -1453,10 +1462,10 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::ABOUT_MAGE:
 		case eMenu::ABOUT_PRIEST:
-			menu_give_help(209);
+			menu_give_help(9);
 			break;
 		case eMenu::ABOUT_MONSTERS:
-			menu_give_help(212);
+			menu_give_help(12);
 			break;
 	}
 	if(!dialogToShow.empty()) {

@@ -124,14 +124,9 @@ void showFatalError(std::string str1, std::string str2, cDialog* parent) {
 }
 
 // Call this anywhere, but don't forget parent!!!
-static void give_help(short help1,short help2,cDialog* parent) {
-	bool help_forced = false;
+static void give_help(short help1,short help2,cDialog* parent,bool help_forced) {
 	std::string str1,str2;
 	
-	if(help1 >= 200) {
-		help_forced = true;
-		help1 -= 200;
-	}
 	if(!help_forced && (!get_bool_pref("ShowInstantHelp", true) || get_iarray_pref_contains("ReceivedHelp", help1)))
 		return;
 	append_iarray_pref("ReceivedHelp", help1);
@@ -144,10 +139,10 @@ static void give_help(short help1,short help2,cDialog* parent) {
 	display_strings.show();
 }
 
-void give_help(short help1, short help2) {
-	give_help(help1, help2, nullptr);
+void give_help(short help1, short help2, bool help_forced) {
+	give_help(help1, help2, nullptr, help_forced);
 }
 
-void give_help(short help1, short help2, cDialog& parent) {
-	give_help(help1, help2, &parent);
+void give_help(short help1, short help2, cDialog& parent, bool help_forced) {
+	give_help(help1, help2, &parent, help_forced);
 }

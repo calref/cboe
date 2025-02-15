@@ -30,6 +30,7 @@
 #include "fileio/resmgr/res_dialog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "dialogxml/dialogs/dialog.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
 #include "boe.menus.hpp"
 #include "tools/keymods.hpp"
@@ -1934,14 +1935,15 @@ void show_inventory() {
 
 // Most give_help() calls don't need to be recorded, because
 // they are triggered incidentally by other recorded actions.
-void give_help_and_record(short help1, short help2) {
+void give_help_and_record(short help1, short help2, bool help_forced) {
 	if(recording){
 		std::map<std::string,std::string> info;
 		info["help1"] = boost::lexical_cast<std::string>(help1);
 		info["help2"] = boost::lexical_cast<std::string>(help2);
+		info["help_forced"] = bool_to_str(help_forced);
 		record_action("give_help", info);
 	}
-	give_help(help1, help2);
+	give_help(help1, help2, help_forced);
 }
 
 void toggle_debug_mode() {
