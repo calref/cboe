@@ -697,8 +697,15 @@ static eSpecCat getNodeCategory(eSpecType node) {
 	return eSpecCat::INVALID;
 }
 
-static std::map<eSpecType, node_properties_t> loadProps() {
-	std::map<eSpecType, node_properties_t> allNodeProps;
+static std::map<eSpecType, node_properties_t>& nodeProps() {
+	static std::map<eSpecType, node_properties_t> props;
+	return props;
+}
+
+void node_properties_t::load() {
+	std::map<eSpecType, node_properties_t>& allNodeProps = nodeProps();
+	// These are the node types that should not have a Create/Edit button on the JumpTo
+	static std::set<eSpecType> dead_ends = {eSpecType::ENTER_SHOP, eSpecType::START_TALK, eSpecType::TOWN_GENERIC_STAIR, eSpecType::TOWN_STAIR};
 	// There's really no need to check all the way to the max of the underlying type.
 	// It's unlikely we'd go above 255, so unsigned char would be fine, but just in case,
 	// let's use unsigned short.
@@ -712,35 +719,47 @@ static std::map<eSpecType, node_properties_t> loadProps() {
 		props.self = check;
 		props.cat = category;
 		int j = int(category), k = i - offsets[j];
-		props.m1_btn = button_dict[j][0][k];
-		props.m2_btn = button_dict[j][1][k];
-		props.m3_btn = button_dict[j][2][k];
-		props.p_btn = button_dict[j][3][k];
-		props.pt_btn = button_dict[j][4][k];
+		props.f_m1 = button_dict[j][0][k];
+		props.f_m2 = button_dict[j][1][k];
+		props.f_m3 = button_dict[j][2][k];
+		props.f_pic = button_dict[j][3][k];
+		props.f_pt = button_dict[j][4][k];
 		if(category != eSpecCat::RECT) {
-			props.sd1_btn = ' ';
-			props.x1a_btn = button_dict[j][5][k];
-			props.x1b_btn = button_dict[j][6][k];
-		} else props.sd1_btn = button_dict[j][5][k];
-		props.x1c_btn = button_dict[j][7][k];
+			props.f_sd1 = ' ';
+			props.f_x1a = button_dict[j][5][k];
+			props.f_x1b = button_dict[j][6][k];
+		} else props.f_sd1 = button_dict[j][5][k];
+		props.f_x1c = button_dict[j][7][k];
 		if(category != eSpecCat::RECT) {
-			props.sd2_btn = ' ';
-			props.x2a_btn = button_dict[j][8][k];
-			props.x2b_btn = button_dict[j][9][k];
-		} else props.sd2_btn = button_dict[j][8][k];
-		props.x2c_btn = button_dict[j][10][k];
+			props.f_sd2 = ' ';
+			props.f_x2a = button_dict[j][8][k];
+			props.f_x2b = button_dict[j][9][k];
+		} else props.f_sd2 = button_dict[j][8][k];
+		props.f_x2c = button_dict[j][10][k];
 		if(category == eSpecCat::RECT) {
-			props.x1a_btn = props.x2a_btn = ' ';
-			props.x1b_btn = props.x2b_btn = ' ';
+			props.f_x1a = props.f_x2a = ' ';
+			props.f_x1b = props.f_x2b = ' ';
 		}
+		if(dead_ends.count(check)) {
+			props.f_jmp = ' ';
+		} else {
+			props.f_jmp = check == eSpecType::CALL_GLOBAL ? 'S' : 's';
+		}
+		props.f_sd1.lbl_idx = 1; props.f_sd2.lbl_idx = 2;
+		props.f_m1.lbl_idx = 3; props.f_m2.lbl_idx = 4; props.f_m3.lbl_idx = 5;
+		props.f_pic.lbl_idx = 6; props.f_pt.lbl_idx = 7;
+		props.f_x1a.lbl_idx = 8; props.f_x1b.lbl_idx = 9; props.f_x1c.lbl_idx = 10;
+		props.f_x2a.lbl_idx = 11; props.f_x2b.lbl_idx = 12; props.f_x2c.lbl_idx = 13;
+		props.f_jmp.lbl_idx = 14;
+		props.f_sd1.self = props.f_sd2.self = props.f_m1.self = props.f_m2.self = props.f_m3.self = props.f_pic.self = props.f_pt.self = props.f_x1a.self = props.f_x1b.self = props.f_x1c.self = props.f_x2a.self = props.f_x2b.self = props.f_x2c.self = props.f_jmp.self = props.self;
 		allNodeProps[check] = props;
 	}
-	return allNodeProps;
 }
 
 const node_properties_t& operator* (eSpecType t) {
 	static node_properties_t invalid;
-	static std::map<eSpecType, node_properties_t> allNodeProps = loadProps();
+	std::map<eSpecType, node_properties_t>& allNodeProps = nodeProps();
+	if(allNodeProps.empty()) node_properties_t::load();
 	auto iter = allNodeProps.find(t);
 	return iter == allNodeProps.end() ? invalid : iter->second;
 }
@@ -779,58 +798,128 @@ std::string node_properties_t::name() const {
 	return get_node_string("specials-text", self, 0);
 }
 
-std::string node_properties_t::sdf1_lbl() const {
-	return get_node_string("specials-text", self, 1);
+node_function_t::node_function_t() {}
+
+node_function_t::node_function_t(char c) {
+	switch(c) {
+		case ' ': button = eSpecPicker::NONE; break;
+		case 'm': button = eSpecPicker::MSG_PAIR; force_global = false; break;
+		case 'M': button = eSpecPicker::MSG_SINGLE; force_global = false; break;
+		case '$': button = eSpecPicker::MSG_SINGLE; force_global = true; break;
+		case 'd': button = eSpecPicker::MSG_SEQUENCE; force_global = false; break;
+		case 'b': button = eSpecPicker::STRING; str_type = STRT_BUTTON; break;
+		case 'p': button = eSpecPicker::PICTURE; pic_type = PIC_NONE; break;
+		case '?': button = eSpecPicker::STRING; str_type = STRT_PICT; adjust = -1; break;
+		case 's': button = eSpecPicker::NODE; force_global = false; break;
+		case 'S': button = eSpecPicker::NODE; force_global = true; break;
+		case 'x': button = eSpecPicker::SOUND; break;
+		case 'X': button = eSpecPicker::STRING; str_type = STRT_TRAP; break;
+		case 't': button = eSpecPicker::STRING; str_type = STRT_TER; break;
+		case 'T': button = eSpecPicker::STRING; str_type = STRT_TOWN; break;
+		case 'i': button = eSpecPicker::STRING; str_type = STRT_ITEM; break;
+		case 'I': button = eSpecPicker::STRING; str_type = STRT_SPEC_ITEM; break;
+		case 'c': button = eSpecPicker::STRING; str_type = STRT_MONST; adjust = -1; break;
+		case 'C': button = eSpecPicker::STRING; str_type = STRT_MONST_STAT; break;
+		case 'a': button = eSpecPicker::STRING; str_type = STRT_ALCHEMY; break;
+		case 'A': button = eSpecPicker::STRING; str_type = STRT_MAGE; break;
+		case 'P': button = eSpecPicker::STRING; str_type = STRT_PRIEST; break;
+		case 'k': button = eSpecPicker::STRING; str_type = STRT_SKILL; augmented = false; break;
+		case 'K': button = eSpecPicker::STRING; str_type = STRT_SKILL; augmented = true; break;
+		case 'f': button = eSpecPicker::FIELD; augmented = false; break;
+		case 'F': button = eSpecPicker::FIELD; augmented = true; break;
+		case 'q': button = eSpecPicker::STRING; str_type = STRT_TRAIT; break;
+		case 'Q': button = eSpecPicker::STRING; str_type = STRT_RACE; break;
+		case '=': button = eSpecPicker::STRING; str_type = STRT_CMP; adjust = 2; break;
+		case '+': button = eSpecPicker::STRING; str_type = STRT_ACCUM; adjust = 1; break;
+		case '*': button = eSpecPicker::STRING; str_type = STRT_CONTEXT; break;
+		case '@': button = eSpecPicker::STRING; str_type = STRT_ATTITUDE; break;
+		case 'D': button = eSpecPicker::DAMAGE_TYPE; break;
+		case '!': button = eSpecPicker::EXPLOSION; break;
+		case '/': button = eSpecPicker::STRING; str_type = STRT_STAIR; break;
+		case ':': button = eSpecPicker::STRING; str_type = STRT_STAIR_MODE; break;
+		case 'L': button = eSpecPicker::STRING; str_type = STRT_LIGHT; break;
+		case '&': button = eSpecPicker::STRING; str_type = STRT_SHOP; break;
+		case '%': button = eSpecPicker::STRING; str_type = STRT_COST_ADJ; break;
+		case '{': button = eSpecPicker::STRING; str_type = STRT_SPELL_PAT; augmented = false; break;
+		case '}': button = eSpecPicker::STRING; str_type = STRT_SPELL_PAT; augmented = true; break;
+		case '^': button = eSpecPicker::STRING; str_type = STRT_POS_MODE; break;
+		case 'e': button = eSpecPicker::STATUS; break;
+		case 'E': button = eSpecPicker::STATUS_PARTY; break;
+		case 'w': button = eSpecPicker::STRING; str_type = STRT_STATUS; adjust = 1; break;
+		case 'j': button = eSpecPicker::STRING; str_type = STRT_QUEST; break;
+		case 'J': button = eSpecPicker::STRING; str_type = STRT_QUEST_STATUS; break;
+		case '<': button = eSpecPicker::STRING; str_type = STRT_DIR; break;
+		case '~': button = eSpecPicker::STRING; str_type = STRT_ENCHANT; break;
+		case '_': button = eSpecPicker::PICTURE; pic_type = PIC_FULL; break;
+		case '0': button = eSpecPicker::PICTURE; pic_type = PIC_TER; break;
+		case '1': button = eSpecPicker::PICTURE; pic_type = PIC_MONST; break;
+		case '2': button = eSpecPicker::PICTURE; pic_type = PIC_DLOG; break;
+		case '3': button = eSpecPicker::PICTURE; pic_type = PIC_TALK; break;
+		case '4': button = eSpecPicker::PICTURE; pic_type = PIC_ITEM; break;
+		case '5': button = eSpecPicker::PICTURE; pic_type = PIC_PC; break;
+		case '6': button = eSpecPicker::PICTURE; pic_type = PIC_FIELD; break;
+		case '7': button = eSpecPicker::PICTURE; pic_type = PIC_BOOM; break;
+		case '8': button = eSpecPicker::PICTURE; pic_type = PIC_MISSILE; break;
+		case '9': button = eSpecPicker::PICTURE; pic_type = PIC_STATUS; break;
+	}
 }
 
-std::string node_properties_t::sdf2_lbl() const {
-	return get_node_string("specials-text", self, 2);
+std::string node_function_t::label() const {
+	return get_node_string("specials-text", self, lbl_idx);
 }
 
-std::string node_properties_t::msg1_lbl() const {
-	return get_node_string("specials-text", self, 3);
+node_function_t node_properties_t::sdf1(const cSpecial&) const {
+	return f_sd1;
 }
 
-std::string node_properties_t::msg2_lbl() const {
-	return get_node_string("specials-text", self, 4);
+node_function_t node_properties_t::sdf2(const cSpecial&) const {
+	return f_sd2;
 }
 
-std::string node_properties_t::msg3_lbl() const {
-	return get_node_string("specials-text", self, 5);
+node_function_t node_properties_t::msg1(const cSpecial&) const {
+	return f_m1;
 }
 
-std::string node_properties_t::pic_lbl() const {
-	return get_node_string("specials-text", self, 6);
+node_function_t node_properties_t::msg2(const cSpecial&) const {
+	return f_m2;
 }
 
-std::string node_properties_t::pt_lbl() const {
-	return get_node_string("specials-text", self, 7);
+node_function_t node_properties_t::msg3(const cSpecial&) const {
+	return f_m3;
 }
 
-std::string node_properties_t::ex1a_lbl() const {
-	return get_node_string("specials-text", self, 8);
+node_function_t node_properties_t::pic(const cSpecial&) const {
+	return f_pic;
 }
 
-std::string node_properties_t::ex1b_lbl() const {
-	return get_node_string("specials-text", self, 9);
+node_function_t node_properties_t::pictype(const cSpecial&) const {
+	return f_pt;
 }
 
-std::string node_properties_t::ex1c_lbl() const {
-	return get_node_string("specials-text", self, 10);
+node_function_t node_properties_t::ex1a(const cSpecial&) const {
+	return f_x1a;
 }
 
-std::string node_properties_t::ex2a_lbl() const {
-	return get_node_string("specials-text", self, 11);
+node_function_t node_properties_t::ex1b(const cSpecial&) const {
+	return f_x1b;
 }
 
-std::string node_properties_t::ex2b_lbl() const {
-	return get_node_string("specials-text", self, 12);
+node_function_t node_properties_t::ex1c(const cSpecial&) const {
+	return f_x1c;
 }
 
-std::string node_properties_t::ex2c_lbl() const {
-	return get_node_string("specials-text", self, 13);
+node_function_t node_properties_t::ex2a(const cSpecial&) const {
+	return f_x2a;
 }
 
-std::string node_properties_t::jmp_lbl() const {
-	return get_node_string("specials-text", self, 14);
+node_function_t node_properties_t::ex2b(const cSpecial&) const {
+	return f_x2b;
+}
+
+node_function_t node_properties_t::ex2c(const cSpecial&) const {
+	return f_x2c;
+}
+
+node_function_t node_properties_t::jump(const cSpecial&) const {
+	return f_jmp;
 }
