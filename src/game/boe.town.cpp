@@ -1105,16 +1105,16 @@ void elim_monst(unsigned short which,short spec_a,short spec_b) {
 //short print_mes; // 0 - no 1 - yes
 void dump_gold(short print_mes) {
 	// Mildly kludgy gold check
-	if(univ.party.gold > 30000) {
-		univ.party.gold = 30000;
+	if(univ.party.gold > MAX_GOLD) {
+		univ.party.gold = MAX_GOLD;
 		if(print_mes == 1) {
 			put_pc_screen();
 			add_string_to_buf("Excess gold dropped.");
 			print_buf();
 		}
 	}
-	if(univ.party.food > 25000) {
-		univ.party.food = 25000;
+	if(univ.party.food > MAX_FOOD) {
+		univ.party.food = MAX_FOOD;
 		if(print_mes == 1) {
 			put_pc_screen();
 			add_string_to_buf("Excess food dropped.");

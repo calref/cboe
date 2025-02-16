@@ -115,7 +115,7 @@ void edit_gold_or_food(short which_to_edit) {
 	dlog["number"].setTextToNum((which_to_edit == 0) ? univ.party.gold : univ.party.food);
 	
 	dlog.run();
-	int dialog_answer = minmax(0,25000,dlog.getResult<long long>());
+	int dialog_answer = minmax(0,which_to_edit == 0 ? MAX_GOLD : MAX_FOOD,dlog.getResult<long long>());
 	if(which_to_edit == 0)
 		univ.party.gold = dialog_answer;
 	else
