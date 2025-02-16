@@ -1041,7 +1041,8 @@ static bool edit_spec_text_event_filter(cDialog& me, std::string item_hit, eStrM
 			}
 			fetch_str(str_mode, *str1) = str;
 		}
-		str = me["str2"].getText();
+		str = "";
+		if(me.hasControl("str2")) str = me["str2"].getText();
 		if(str2 != nullptr && !str.empty()) {
 			if(*str2 < 0) {
 				size_t n = num_strs(str_mode);
