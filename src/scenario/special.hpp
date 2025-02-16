@@ -13,6 +13,7 @@
 #include <string>
 #include <functional>
 #include "location.hpp"
+#include "dialogxml/widgets/pictypes.hpp"
 
 namespace legacy { struct special_node_type; };
 
@@ -125,21 +126,63 @@ enum class eSpecCat {
 	GENERAL, ONCE, AFFECT, IF_THEN, TOWN, RECT, OUTDOOR
 };
 
+enum eStrType {
+	STRT_MONST, STRT_ITEM, STRT_TER, STRT_BUTTON,
+	STRT_SPEC_ITEM, STRT_MAGE, STRT_PRIEST, STRT_ALCHEMY,
+	STRT_TOWN, STRT_SECTOR, STRT_SKILL, STRT_TRAIT, STRT_RACE,
+	STRT_PICT, STRT_CMP, STRT_ACCUM, STRT_TRAP,
+	STRT_ATTITUDE, STRT_STAIR, STRT_LIGHT, STRT_CONTEXT,
+	STRT_SHOP, STRT_COST_ADJ, STRT_STAIR_MODE, STRT_TALK_NODE,
+	STRT_STATUS, STRT_SPELL_PAT, STRT_SUMMON, STRT_TALK, STRT_TALK_NODE_PERSON,
+	STRT_ENCHANT, STRT_DIR, STRT_QUEST, STRT_QUEST_STATUS,
+	STRT_HEALING, STRT_TREASURE, STRT_MONST_STAT, STRT_POS_MODE,
+};
+
+enum class eSpecPicker {
+	NONE,
+	MSG_SINGLE, MSG_PAIR, MSG_SEQUENCE,
+	PICTURE, NODE, STRING, SOUND,
+	FIELD, DAMAGE_TYPE, EXPLOSION,
+	STATUS, STATUS_PARTY,
+};
+
+struct node_function_t {
+	eSpecPicker button;
+	union {
+		eStrType str_type; // for eSpecPicker::STRING only
+		ePicType pic_type; // for eSpecPicker::PICTURE only; PIC_NONE = use pictype field from node
+		bool force_global; // for eSpecPicker::NODE and eSpecPicker::MSG_*
+		// other pickers don't put anything in here
+	};
+	bool augmented = false; // only for eSpecPicker::FIELD and eSpecPicker::STRING with certain string types
+	int adjust = 0; // only for eSpecPicker::STRING
+	std::string label() const;
+	std::string help() const; // maybe we don't need this though? I guess it would be for a hypothetical help button next to each field to give addition info on how that one field works.
+	node_function_t();
+	node_function_t(char c);
+private:
+	eSpecType self = eSpecType::NONE;
+	std::string lbl;
+	int lbl_idx = 0, sub_idx = 0;
+	bool needs_split = false;
+	friend struct node_properties_t;
+};
+
 struct node_properties_t {
 	eSpecType self;
 	eSpecCat cat;
 	std::string opcode() const;
 	std::string name() const, descr() const;
-	std::string sdf1_lbl() const, sdf2_lbl() const, sdf1_hlp() const, sdf2_hlp() const;
-	std::string msg1_lbl() const, msg2_lbl() const, msg3_lbl() const, msg1_hlp() const, msg2_hlp() const, msg3_hlp() const;
-	std::string pic_lbl() const, pt_lbl() const, pic_hlp() const, pt_hlp() const;
-	std::string ex1a_lbl() const, ex1b_lbl() const, ex1c_lbl() const, ex1a_hlp() const, ex1b_hlp() const, ex1c_hlp() const;
-	std::string ex2a_lbl() const, ex2b_lbl() const, ex2c_lbl() const, ex2a_hlp() const, ex2b_hlp() const, ex2c_hlp() const;
-	std::string jmp_lbl() const, jmp_hlp() const;
-	char sd1_btn, sd2_btn, m1_btn, m2_btn, m3_btn, p_btn, pt_btn;
-	char x1a_btn, x1b_btn, x1c_btn, x2a_btn, x2b_btn, x2c_btn;
+	node_function_t sdf1(const cSpecial&) const, sdf2(const cSpecial&) const, jump(const cSpecial&) const;
+	node_function_t msg1(const cSpecial&) const, msg2(const cSpecial&) const, msg3(const cSpecial&) const;
+	node_function_t pic(const cSpecial&) const, pictype(const cSpecial&) const;
+	node_function_t ex1a(const cSpecial&) const, ex1b(const cSpecial&) const, ex1c(const cSpecial&) const;
+	node_function_t ex2a(const cSpecial&) const, ex2b(const cSpecial&) const, ex2c(const cSpecial&) const;
 	node_properties_t() : self(eSpecType::INVALID), cat(eSpecCat::INVALID) {}
 	node_properties_t(std::initializer_list<std::function<void(node_properties_t)>>);
+	static void load();
+private:
+	node_function_t f_sd1, f_sd2, f_jmp, f_m1, f_m2, f_m3, f_pic, f_pt, f_x1a, f_x1b, f_x1c, f_x2a, f_x2b, f_x2c;
 };
 
 const node_properties_t& operator* (eSpecType t);
