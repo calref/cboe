@@ -26,7 +26,6 @@
     <creator>
         <type>oboe</type>
         <version>2.5.3</version>
-        <os></os>
     </creator>
     <game>
         <town-flag town="1" add-x="16" add-y="21"/>

@@ -162,7 +162,6 @@ the following subtags:
 	format, you would use a different string here to let mainline OBoE know that it's
 	incompatible.
 	* `<version>` - The version of OBoE that the scenario was last edited with.
-	* `<os>` - The operating system on which the scenario was last edited.
 * `<game>` - Contains the bulk of global information about the scenario.
 * `<editor>` - Contains several details of the scenario that aren't relevant to gameplay,
 but are instead used by the scenario editor to enhance your editing experience.
