@@ -152,9 +152,9 @@ cKey cControl::parseKey(string what){
 	return key;
 }
 
-cDialog::cDialog(cDialog* p) : parent(p) {}
+cDialog::cDialog(cDialog* p) : parent(p), doAnimations(defaultDoAnimations) {}
 
-cDialog::cDialog(const DialogDefn& file, cDialog* p) : parent(p) {
+cDialog::cDialog(const DialogDefn& file, cDialog* p) : parent(p), doAnimations(defaultDoAnimations) {
 	loadFromFile(file);
 }
 
@@ -1050,12 +1050,12 @@ xBadVal::~xBadVal() throw(){
 	if(msg != nullptr) delete[] msg;
 }
 
-bool cDialog::doAnimations = false;
+bool cDialog::defaultDoAnimations = false;
 
 void cDialog::draw(){
 	win.setActive(false);
 	tileImage(win,winRect,::bg[bg]);
-	if(doAnimations && animTimer.getElapsedTime().asMilliseconds() >= 500) {
+	if(doAnimations && animTimer.getElapsedTime().asMilliseconds() >= (1000 / anim_pict_fps)) {
 		cPict::advanceAnim();
 		animTimer.restart();
 	}
