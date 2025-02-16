@@ -55,44 +55,38 @@ bool silent_GTP(short item_num) {
 	cItem item = univ.scenario.get_stored_item(item_num);
 	return univ.party.give_item(item,false);
 }
+
 void give_gold(short amount,bool print_result) {
 	if(amount < 0) return;
 	univ.party.gold += amount;
-	if(print_result)
-		put_pc_screen();
+	if(print_result) put_pc_screen();
 }
 
 bool take_gold(short amount,bool print_result) {
 	if(univ.party.gold < amount)
 		return false;
 	univ.party.gold -= amount;
-	if(print_result)
-		put_pc_screen();
+	if(print_result) put_pc_screen();
 	return true;
 }
 
 void give_food(short amount,bool print_result) {
 	if(amount < 0) return;
 	univ.party.food = univ.party.food + amount;
-	if(print_result)
-		put_pc_screen();
+	if(print_result) put_pc_screen();
 }
 
 short take_food(short amount,bool print_result) {
-	short diff;
-	
-	diff = amount - univ.party.food;
-	if(diff > 0) {
+	short shortfall = amount - univ.party.food;
+	if(shortfall > 0) {
 		univ.party.food = 0;
-		if(print_result)
-			put_pc_screen();
-		return diff;
+	}else{
+		univ.party.food -= amount;
+		shortfall = 0;
 	}
 	
-	univ.party.food = univ.party.food - amount;
-	if(print_result)
-		put_pc_screen();
-	return 0;
+	if(print_result) put_pc_screen();
+	return shortfall;
 }
 
 void equip_item(short pc_num,short item_num) {
