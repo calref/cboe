@@ -35,7 +35,7 @@ extern cOutdoors* current_terrain;
 extern cCustomGraphics spec_scen_g;
 
 std::vector<pic_num_t> field_pics = {0,3,5,6,7,8,9,10,11,12,13,14,15,24,25,26,27,28,29,30,31,4};
-std::vector<pic_num_t> boom_pics = {0,1,2,3,4,5};
+std::vector<pic_num_t> boom_pics = {0,1,2,3,4,5,8,9,10,11,12,13};
 std::vector<pic_num_t> lgdlog_pics = {0,32};
 
 size_t num_strs(eStrMode str_mode) {
@@ -243,7 +243,6 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 		} else return cur_choice;
 		// Now add the custom pics
 		for(size_t i = 0; i < scenario.custom_graphics.size(); i++) {
-			if(g_type == PIC_BOOM) break;
 			if(scenario.custom_graphics[i] == g_type) {
 				if(g_type == PIC_TER_MAP) {
 					for(int j = 1; j <= 6; j++)
