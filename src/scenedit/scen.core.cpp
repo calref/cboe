@@ -2995,6 +2995,7 @@ bool edit_make_scen_2(short& out_w, short& out_h, short& town_l, short& town_m, 
 
 extern fs::path progDir;
 extern eScenMode overall_mode;
+
 bool build_scenario() {
 	short width, height, lg, med, sm;
 	bool default_town, grass;
@@ -3092,7 +3093,6 @@ bool build_scenario() {
 	scenario.shops.push_back(cShop(SHOP_HEALING));
 	
 	overall_mode = MODE_MAIN_SCREEN;
-	
 	editing_town = false;
 	scenario.outdoors.resize(width, height);
 	for(int x = 0; x < width; x++) {

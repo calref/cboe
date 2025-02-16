@@ -579,7 +579,7 @@ bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short 
 	
 }
 
-short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons) {
+short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons,bool anim_pict,short anim_loops, int anim_fps) {
 	set_cursor(sword_curs);
 	
 	std::vector<std::string> vec(strs.begin(), strs.end());
@@ -587,6 +587,9 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 	while(!vec.empty() && vec.back().empty())
 		vec.pop_back();
 	cThreeChoice customDialog(vec, buttons, pic_num, pic_type);
+	if(anim_pict)
+		setup_dialog_pict_anim(*(customDialog.operator->()), "pict", anim_loops, anim_fps);
+
 	std::string item_hit = customDialog.show();
 	
 	for(int i = 0; i < 3; i++) {
@@ -620,9 +623,17 @@ void custom_pic_dialog(std::string title, pic_num_t bigpic) {
 	pic_dlg.run();
 }
 
-void story_dialog(std::string title, str_num_t first, str_num_t last, eSpecCtxType which_str_type, pic_num_t pic, ePicType pt) {
+void setup_dialog_pict_anim(cDialog& dialog, std::string pict_id, short anim_loops, short anim_fps) {
+	cPict& pict = dynamic_cast<cPict&>(dialog[pict_id]);
+	pict.setAnimLoops(anim_loops);
+	dialog.setAnimPictFPS(anim_fps);
+	dialog.setDoAnimations(true);
+}
+
+void story_dialog(std::string title, str_num_t first, str_num_t last, eSpecCtxType which_str_type, pic_num_t pic, ePicType pt, short anim_loops, int anim_fps) {
 	cDialog story_dlg(*ResMgr::dialogs.get("many-str"));
 	dynamic_cast<cPict&>(story_dlg["pict"]).setPict(pic, pt);
+	setup_dialog_pict_anim(story_dlg, "pict", anim_loops, anim_fps);
 	str_num_t cur = first;
 	story_dlg.attachClickHandlers([&cur,first,last,which_str_type](cDialog& me, std::string clicked, eKeyMod) -> bool {
 		if(clicked == "left") {
