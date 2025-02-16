@@ -708,11 +708,13 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 	
 	area_rect = rectangle(talk_gworld);
 	talk_gworld.setActive(false);
+
 	// Only re-render on top of the item that is clicked:
 	if(item_pressed || item_help_pressed) {
 		clip_area_rect.offset(-area_rect.left, -area_rect.top);
 		clip_rect(talk_gworld, clip_area_rect);
 	} else {
+		clear_scale_aware_text(talk_gworld);
 		frame_rect(talk_gworld, area_rect, Colours::BLACK);
 		area_rect.inset(1,1);
 		tileImage(talk_gworld, area_rect,bg[12]);
@@ -870,7 +872,7 @@ void refresh_shopping() {
 	rectangle from_rect(talk_gworld);
 	rectangle to_rect = from_rect;
 	to_rect.offset(talk_gword_offset_x, talk_gword_offset_y);
-	rect_draw_some_item(talk_gworld.getTexture(),from_rect,mainPtr,to_rect);
+	rect_draw_some_item(talk_gworld,from_rect,mainPtr,to_rect);
 }
 
 static void place_talk_face() {
@@ -898,7 +900,7 @@ void click_talk_rect(word_rect_t word) {
 
 	rectangle talkRect(talk_gworld), wordRect(word.rect);
 	mainPtr.setActive();
-	rect_draw_some_item(talk_gworld.getTexture(),talkRect,mainPtr,talk_area_rect);
+	rect_draw_some_item(talk_gworld,talkRect,mainPtr,talk_area_rect);
 	wordRect.offset(talk_area_rect.topLeft());
 	wordRect.width() += 10; // Arbitrary extra space fixes #481 and shouldn't cause any problems
 	TextStyle style;
@@ -911,7 +913,7 @@ void click_talk_rect(word_rect_t word) {
 	help_btn->draw();
 	mainPtr.display();
 	play_sound(37, time_in_ticks(5));
-	rect_draw_some_item(talk_gworld.getTexture(),talkRect,mainPtr,talk_area_rect);
+	rect_draw_some_item(talk_gworld,talkRect,mainPtr,talk_area_rect);
 	place_talk_face();
 }
 
@@ -921,7 +923,6 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	
 	rectangle title_rect = {19,48,42,260};
 	rectangle dest_rect,help_from = {46,60,59,76};
-	sf::Text str_to_draw;
 	
 	talk_gworld.setActive(false);
 	
@@ -936,6 +937,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	}
 	
 	area_rect = rectangle(talk_gworld);
+	clear_scale_aware_text(talk_gworld);
 	frame_rect(talk_gworld, area_rect, sf::Color::Black);
 	area_rect.inset(1,1);
 	tileImage(talk_gworld, area_rect,bg[12]);
@@ -1003,14 +1005,14 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	
 	// Finally place processed graphics
 	mainPtr.setActive();
-	rect_draw_some_item(talk_gworld.getTexture(),oldRect,mainPtr,talk_area_rect);
+	rect_draw_some_item(talk_gworld,oldRect,mainPtr,talk_area_rect);
 	// I have no idea what this check is for; I'm jsut preserving it in case it was important
 	if(c_rect.right == 0) place_talk_face();
 }
 
 void refresh_talking() {
 	rectangle tempRect(talk_gworld);
-	rect_draw_some_item(talk_gworld.getTexture(),tempRect,mainPtr,talk_area_rect);
+	rect_draw_some_item(talk_gworld,tempRect,mainPtr,talk_area_rect);
 	place_talk_face();
 }
 

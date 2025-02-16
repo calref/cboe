@@ -12,6 +12,7 @@
 #include "fileio/resmgr/res_font.hpp"
 #include "gfx/render_shapes.hpp"
 #include <utility>
+#include "winutil.hpp"
 
 void TextStyle::applyTo(sf::Text& text) {
 	switch(font) {
@@ -134,6 +135,35 @@ break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextS
 	return break_info;
 }
 
+// I don't know of a better way to do this than using pointers as keys.
+extern std::map<sf::RenderTexture*,std::vector<sf::Text>> store_scale_aware_text;
+
+void clear_scale_aware_text(sf::RenderTexture& texture) {
+	store_scale_aware_text.erase(&texture);
+}
+
+void draw_scale_aware_text(sf::RenderTarget& dest_window, sf::Text str_to_draw) {
+	str_to_draw.setCharacterSize(str_to_draw.getCharacterSize() * get_ui_scale());
+
+	if(dynamic_cast<sf::RenderWindow*>(&dest_window) != nullptr){
+		str_to_draw.setPosition(str_to_draw.getPosition() * (float)get_ui_scale());
+		// Temporarily switch window to its unscaled view to draw scale-aware text
+		sf::View view = dest_window.getView();
+		dest_window.setView(dest_window.getDefaultView());
+		dest_window.draw(str_to_draw);
+		dest_window.setView(view);
+	}else if(dynamic_cast<sf::RenderTexture*>(&dest_window) != nullptr){
+		sf::RenderTexture* p = dynamic_cast<sf::RenderTexture*>(&dest_window);
+		// Onto a RenderTexture is trickier because the texture is locked at the smaller size.
+		// What we can do is save the sf::Text with its relative position and render
+		// it onto the RenderWindow that eventually draws the RenderTexture.
+		if(store_scale_aware_text.find(p) == store_scale_aware_text.end()){
+			store_scale_aware_text[p] = std::vector<sf::Text> {};
+		}
+		store_scale_aware_text[p].push_back(str_to_draw);
+	}
+}
+
 static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,text_params_t& options) {
 	if(str.empty()) return; // Nothing to do!
 	short line_height = options.style.lineHeight;
@@ -227,11 +257,7 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 			bounds.inset(0,-4);
 			fill_rect(dest_window, bounds, options.hilite_bg);
 		} else str_to_draw.setColor(options.style.colour);
-		dest_window.draw(str_to_draw);
-		if(options.style.font == FONT_BOLD) {
-			str_to_draw.move(1, 0);
-			dest_window.draw(str_to_draw);
-		}
+		draw_scale_aware_text(dest_window, str_to_draw);
 	}
 }
 

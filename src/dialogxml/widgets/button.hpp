@@ -43,6 +43,8 @@ public:
 	/// Set the type of this button.
 	/// @param newType The desired button type.
 	void setBtnType(eBtnType newType);
+	/// Initialize types of buttons that used to use their own custom sprite with baked-in text.
+	void initPreset();
 	/// Get the type of this button.
 	/// @return The button type.
 	eBtnType getBtnType() const;
