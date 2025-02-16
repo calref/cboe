@@ -96,7 +96,9 @@ std::string help_text_rsrc = "help";
 	{"graphics-sheet", {"V2", "V3"}}
 }
 */
-std::map<std::string,std::vector<std::string>> feature_flags = {};
+std::map<std::string,std::vector<std::string>> feature_flags = {
+	{"dialog-pict-anim", {"enabled"}}
+};
 
 struct cParseEntrance {
 	boost::optional<short>& opt;
