@@ -4,10 +4,14 @@
 
 bool GTP(short item_num);
 bool silent_GTP(short item_num);
+
 void give_gold(short amount,bool print_result);
-bool take_gold(short amount,bool print_result);
 void give_food(short amount,bool print_result);
+// Try to take gold, but take none and return false if the party can't afford it.
+bool take_gold(short amount,bool print_result);
+// Take food until the party has 0, returning the amount of their deficiency
 short take_food(short amount,bool print_result);
+
 void equip_item(short pc_num,short item_num);
 void drop_item(short pc_num,short item_num,location where_drop);
 bool place_item(cItem item,location where,bool try_contained = false);

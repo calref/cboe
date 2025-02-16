@@ -141,17 +141,6 @@ void edit_day() {
 	univ.party.age = (long long) (3700) * (long long) (dialog_answer);
 }
 
-void give_gold(short amount,bool /*print_result*/) {
-	univ.party.gold = univ.party.gold + amount;
-}
-
-bool take_gold(short amount,bool /*print_result*/) {
-	if(univ.party.gold < amount)
-		return false;
-	univ.party.gold = univ.party.gold - amount;
-	return true;
-}
-
 void edit_xp(cPlayer *pc) {
 	location view_loc;
 	
