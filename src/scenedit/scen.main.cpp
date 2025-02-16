@@ -349,7 +349,7 @@ void init_scened(int argc, char* argv[]) {
 	set_cursor(sword_curs);
 	
 	cDialog::defaultBackground = cDialog::BG_LIGHT;
-	cDialog::doAnimations = true;
+	cDialog::defaultDoAnimations = true;
 	set_up_apple_events();
 	process_args(argc, argv);
 	init_fileio();
