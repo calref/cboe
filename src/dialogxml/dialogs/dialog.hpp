@@ -75,6 +75,8 @@ class cDialog : public iComponent, public iNameGiver {
 	std::vector<std::pair<std::string,cTextField*>> tabOrder;
 	static cDialog* topWindow; // Tracks the frontmost dialog.
 	static bool initCalled;
+	int anim_pict_fps = 2;
+	bool doAnimations;
 public:
 	static void (*redraw_everything)();
 	/// Performs essential startup initialization. Generally should not be called directly.
@@ -239,7 +241,7 @@ public:
 	/// @return true if there was a dialog opened to send to.
 	static bool sendInput(cKey key);
 	/// Sets whether to animate graphics in dialogs.
-	static bool doAnimations;
+	static bool defaultDoAnimations;
 	/// Adds a new control described by the passed XML element.
 	/// @tparam Ctrl The type of control to add.
 	/// @param who The XML element describing the control.
@@ -261,6 +263,8 @@ public:
 	}
 	cDialog& operator=(cDialog& other) = delete;
 	cDialog(cDialog& other) = delete;
+	inline void setAnimPictFPS(int fps) { if(fps == -1) fps = 2; anim_pict_fps = fps; }
+	inline void setDoAnimations(bool value) { doAnimations = value; }
 private:
 	void draw();
 	void handle_events();
