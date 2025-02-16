@@ -726,7 +726,7 @@ void cPict::drawPresetTer(short num, rectangle to_rect){
 }
 
 void cPict::drawPresetTerAnim(short num, rectangle to_rect){
-	rectangle from_rect = calc_rect(4 * (num / 5) + animFrame % 4, num % 5);
+	rectangle from_rect = calc_rect(4 * (num / 5) + (animLoops != 0 ? animFrame % 4 : 0), num % 5);
 	auto from_gw = getSheet(SHEET_TER_ANIM);
 	if(!from_gw) return;
 	if(to_rect.right - to_rect.left > 28) {
@@ -736,8 +736,9 @@ void cPict::drawPresetTerAnim(short num, rectangle to_rect){
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect);
 }
 
-static rectangle calcDefMonstRect(short i, short animFrame){
+static rectangle calcDefMonstRect(short i, short animFrame, short animLoops){
 	rectangle r = calc_rect(2 * (i / 10), i % 10);
+	if(animLoops == 0) animFrame = 0;
 	switch(animFrame % 4){ // Sequence is right-facing, attack, left-facing, attack
 		case 1:
 			r.offset(112,0);
@@ -757,7 +758,8 @@ void cPict::drawPresetMonstSm(short num, rectangle to_rect){
 	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
 	if(!from_gw) return;
 	m_start_pic = m_start_pic % 20;
-	rectangle from_rect = calcDefMonstRect(m_start_pic, animFrame);
+	updateAnim(4);
+	rectangle from_rect = calcDefMonstRect(m_start_pic, animFrame, animLoops);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
@@ -772,14 +774,15 @@ void cPict::drawPresetMonstWide(short num, rectangle to_rect){
 	short m_start_pic = m_pic_index[num].i;
 	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
 	if(!from_gw) return;
-	rectangle from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
+	updateAnim(4);
+	rectangle from_rect = calcDefMonstRect(m_start_pic % 20, animFrame, animLoops);
 	small_monst_rect.offset(to_rect.left,to_rect.top + 7);
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), small_monst_rect, sf::BlendAlpha);
 	
 	m_start_pic = m_pic_index[num].i + 1;
 	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
 	if(!from_gw) return;
-	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
+	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame, animLoops);
 	small_monst_rect.offset(14,0);
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), small_monst_rect, sf::BlendAlpha);
 }
@@ -793,14 +796,15 @@ void cPict::drawPresetMonstTall(short num, rectangle to_rect){
 	short m_start_pic = m_pic_index[num].i;
 	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
 	if(!from_gw) return;
-	rectangle from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
+	updateAnim(4);
+	rectangle from_rect = calcDefMonstRect(m_start_pic % 20, animFrame, animLoops);
 	small_monst_rect.offset(to_rect.left + 7,to_rect.top);
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), small_monst_rect, sf::BlendAlpha);
 	
 	m_start_pic = m_pic_index[num].i + 1;
 	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
 	if(!from_gw) return;
-	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
+	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame, animLoops);
 	small_monst_rect.offset(0,18);
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), small_monst_rect, sf::BlendAlpha);
 }
@@ -814,28 +818,29 @@ void cPict::drawPresetMonstLg(short num, rectangle to_rect){
 	short m_start_pic = m_pic_index[num].i;
 	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
 	if(!from_gw) return;
-	rectangle from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
+	updateAnim(4);
+	rectangle from_rect = calcDefMonstRect(m_start_pic % 20, animFrame, animLoops);
 	small_monst_rect.offset(to_rect.left,to_rect.top);
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), small_monst_rect, sf::BlendAlpha);
 	
 	m_start_pic = m_pic_index[num].i + 1;
 	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
 	if(!from_gw) return;
-	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
+	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame, animLoops);
 	small_monst_rect.offset(14,0);
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), small_monst_rect, sf::BlendAlpha);
 	
 	m_start_pic = m_pic_index[num].i + 2;
 	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
 	if(!from_gw) return;
-	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
+	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame, animLoops);
 	small_monst_rect.offset(-14,18);
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), small_monst_rect, sf::BlendAlpha);
 	
 	m_start_pic = m_pic_index[num].i + 3;
 	from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
 	if(!from_gw) return;
-	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame);
+	from_rect = calcDefMonstRect(m_start_pic % 20, animFrame, animLoops);
 	small_monst_rect.offset(14,0);
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), small_monst_rect, sf::BlendAlpha);
 }
@@ -930,16 +935,28 @@ void cPict::drawPresetField(short num, rectangle to_rect){
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
 }
 
+void cPict::updateAnim(short loop_frames) {
+	if(prevAnimFrame != animFrame){
+		if(animFrame % loop_frames == 0 && animLoops > 0)
+			--animLoops;
+		prevAnimFrame = animFrame;
+	}
+}
+
 void cPict::drawPresetBoom(short num, rectangle to_rect){
 	auto from_gw = getSheet(SHEET_BOOM);
-	if(num >= 8)
+	if(num >= 8){
 		num = 8 * (num - 7) + animFrame % 8;
+		updateAnim(8);
+	}
 	rectangle from_rect = calc_rect(num % 8, num / 8);
 	// TODO: Be smarter about this - we know the first row is static booms and subsequent rows are animated booms.
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
-	rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
+	// When missile loops are over, draw nothing
+	if(animLoops != 0)
+		rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawFullSheet(short num, rectangle to_rect){
@@ -959,9 +976,13 @@ void cPict::drawPresetMissile(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 18;
 	to_rect.bottom = to_rect.top + 18;
 	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
-	short i = animFrame % 8;
-	from_rect.offset(18 * i, 18 * num);
-	rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
+	updateAnim(8);
+	// When missile loops are over, draw nothing
+	if(animLoops != 0){
+		short i = animFrame % 8;
+		from_rect.offset(18 * i, 18 * num);
+		rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
+	}
 }
 
 void cPict::drawPresetTerMap(short num, rectangle to_rect){
@@ -1002,7 +1023,8 @@ void cPict::drawCustomTer(short num, rectangle to_rect){
 void cPict::drawCustomTerAnim(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	num += animFrame % 4;
+	updateAnim(4);
+	num += (animLoops != 0 ? animFrame % 4 : 0);
 	rectangle from_rect;
 	std::shared_ptr<const sf::Texture> from_gw;
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
@@ -1011,7 +1033,8 @@ void cPict::drawCustomTerAnim(short num, rectangle to_rect){
 
 void cPict::drawCustomMonstSm(short num, rectangle to_rect){
 	static const short adj[4] = {0, 2, 1, 3};
-	num += adj[animFrame % 4];
+	updateAnim(4);
+	num += adj[(animLoops != 0 ? animFrame % 4 : 0)];
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
@@ -1024,7 +1047,8 @@ void cPict::drawCustomMonstSm(short num, rectangle to_rect){
 
 void cPict::drawCustomMonstWide(short num, rectangle to_rect){
 	static const short adj[4] = {0, 4, 2, 6};
-	num += adj[animFrame % 4];
+	updateAnim(4);
+	num += adj[(animLoops != 0 ? animFrame % 4 : 0)];
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
@@ -1043,7 +1067,8 @@ void cPict::drawCustomMonstWide(short num, rectangle to_rect){
 
 void cPict::drawCustomMonstTall(short num, rectangle to_rect){
 	static const short adj[4] = {0, 4, 2, 6};
-	num += adj[animFrame % 4];
+	updateAnim(4);
+	num += adj[(animLoops != 0 ? animFrame % 4 : 0)];
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
@@ -1062,7 +1087,8 @@ void cPict::drawCustomMonstTall(short num, rectangle to_rect){
 
 void cPict::drawCustomMonstLg(short num, rectangle to_rect){
 	static const short adj[4] = {0, 8, 4, 12};
-	num += adj[animFrame % 4];
+	updateAnim(4);
+	num += adj[(animLoops != 0 ? animFrame % 4 : 0)];
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
@@ -1163,16 +1189,20 @@ void cPict::drawCustomTinyItem(short num, rectangle to_rect){
 }
 
 void cPict::drawCustomBoom(short num, rectangle to_rect){
+	updateAnim(8);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
 	rectangle from_rect;
 	std::shared_ptr<const sf::Texture> from_gw;
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num + animFrame % 8);
 	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
-	rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
+	// When boom loops are over, draw nothing
+	if(animLoops != 0)
+		rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawCustomMissile(short num, rectangle to_rect){
+	updateAnim(8);
 	num += animFrame % 8;
 	rectangle from_rect;
 	std::shared_ptr<const sf::Texture> from_gw;
@@ -1182,7 +1212,9 @@ void cPict::drawCustomMissile(short num, rectangle to_rect){
 	if(animFrame >= 4) from_rect.offset(0, 18);
 	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
 	to_rect.inset(5,9);
-	rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
+	// When missile loops are over, draw nothing
+	if(animLoops != 0)
+		rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawCustomTerMap(short num, rectangle to_rect){
