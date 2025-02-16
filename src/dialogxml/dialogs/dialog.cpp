@@ -484,6 +484,7 @@ bool cDialog::sendInput(cKey key) {
 }
 
 void cDialog::run(std::function<void(cDialog&)> onopen){
+	cPict::resetAnim();
 	cDialog* formerTop = topWindow;
 	// TODO: The introduction of the static topWindow means I may be able to use this instead of parent->win; do I still need parent?
 	sf::RenderWindow* parentWin = &(parent ? parent->win : mainPtr);

@@ -87,6 +87,8 @@ public:
 	}
 	cPict& operator=(cPict& other) = delete;
 	cPict(cPict& other) = delete;
+	inline static void resetAnim() { animFrame = 0; }
+	inline void setAnimLoops(short value) { animLoops = value; }
 private:
 	static std::shared_ptr<const sf::Texture> getSheetInternal(eSheetType type, size_t n);
 	std::shared_ptr<const sf::Texture> getSheet(eSheetType type, size_t n = 0);
@@ -94,6 +96,9 @@ private:
 	eSheetType sheetCachedType;
 	size_t sheetCachedNum;
 	static short animFrame;
+	short animLoops = -1;
+	short prevAnimFrame = 0;
+	void updateAnim(short loop_frames);
 	pic_num_t picNum;
 	ePicType picType;
 	bool drawScaled;
