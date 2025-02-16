@@ -590,7 +590,7 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 	
 	std::vector<std::string> vec(strs.begin(), strs.end());
 	// Strip off trailing empty strings
-	while(vec.back().empty())
+	while(!vec.empty() && vec.back().empty())
 		vec.pop_back();
 	cThreeChoice customDialog(vec, buttons, pic_num, pic_type);
 	std::string item_hit = customDialog.show();
