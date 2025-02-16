@@ -35,6 +35,9 @@ namespace boost { namespace filesystem {} namespace process {}}
 namespace fs = boost::filesystem;
 namespace bp = boost::process;
 
+// Limits
+const int MAX_GOLD = 30000;
+const int MAX_FOOD = 25000;
 
 inline bool str_to_bool(std::string str) {
 	return str == "true";
