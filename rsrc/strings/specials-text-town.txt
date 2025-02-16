@@ -314,10 +314,10 @@ Picture number
 Picture type
 Unused
 If Pulled, call this special ...
+Animation Loops (-1 for infinite)
 Unused
 Unused
-Unused
-Unused
+Animation FPS (-1 for default 2)
 Special to Jump To
 
 --------------------
@@ -331,10 +331,10 @@ Picture number
 Picture type
 X coordinate to telep. to
 Y coordinate to telep. to
+Animation Loops (-1 for infinite)
 Unused
 Unused
-Unused
-Unused
+Animation FPS (-1 for default 2)
 Special to Jump To
 
 --------------------
