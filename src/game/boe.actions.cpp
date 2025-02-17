@@ -883,6 +883,9 @@ void handle_switch_pc(short which_pc, bool& need_redraw, bool& need_reprint) {
 	if(!prime_time() && overall_mode != MODE_SHOPPING && overall_mode != MODE_TALKING && overall_mode != MODE_ITEM_TARGET)
 		add_string_to_buf("Set active: Finish what you're doing first.");
 	else if(is_combat()) {
+		if(univ.debug_mode && pc.ap <= 0){
+			pc.ap = 4;
+		}
 		if(pc.ap > 0) {
 			draw_terrain();
 			univ.cur_pc = which_pc;
