@@ -122,19 +122,34 @@ void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,const 
 	rect_draw_some_item(src.getTexture(), dest_rect, targ_gworld, targ_rect, &maskShader);
 }
 
-std::map<sf::RenderTexture*,std::vector<sf::Text>> store_scale_aware_text;
+std::map<sf::RenderTexture*,std::vector<ScaleAwareText>> store_scale_aware_text;
 std::map<sf::RenderTexture*,rectangle> store_clip_rects;
 
 static void draw_stored_scale_aware_text(sf::RenderTexture& texture, sf::RenderTarget& dest_window, rectangle targ_rect) {
 	// Temporarily switch target window to its unscaled view to draw scale-aware text
 	sf::View view = dest_window.getView();
 	dest_window.setView(dest_window.getDefaultView());
-	std::vector<sf::Text> stored_text = store_scale_aware_text[&texture];
-	for(sf::Text str_to_draw : stored_text){
+	std::vector<ScaleAwareText> stored_text = store_scale_aware_text[&texture];
+	for(ScaleAwareText text : stored_text){
+		sf::Text str_to_draw = text.text;
+		if(!text.clip_rect.empty()){
+			rectangle rect = text.clip_rect;
+			rect.offset(targ_rect.left, targ_rect.top);
+			rect.top *= get_ui_scale();
+			rect.left *= get_ui_scale();
+			rect.bottom *= get_ui_scale();
+			rect.right *= get_ui_scale();
+			// For debugging:
+			if(false)
+				frame_rect(dest_window, rect, Colours::RED);
+			clip_rect(dest_window, rect);
+		}
 		sf::Vector2f position = str_to_draw.getPosition();
 		position = position + sf::Vector2f {0.0f+targ_rect.left, 0.0f+targ_rect.top};
 		str_to_draw.setPosition(position * (float)get_ui_scale());
 		dest_window.draw(str_to_draw);
+		if(!text.clip_rect.empty())
+			undo_clip(dest_window);
 	}
 	dest_window.setView(view);
 }
