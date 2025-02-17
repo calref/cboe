@@ -1210,7 +1210,7 @@ void handle_one_event(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	switch(event.type) {
 		case sf::Event::KeyPressed:
 			if(flushingInput) return;
-			if (delayed_keys.find(event.key.code) != delayed_keys.end()){
+			if (!noDelayKeyModes.count(overall_mode) && delayed_keys.find(event.key.code) != delayed_keys.end()){
 				handle_delayed_key(event.key.code);
 			} else if(!(event.key.*systemKey)) {
 				mainPtr.setKeyRepeatEnabled(true);
