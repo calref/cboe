@@ -50,6 +50,18 @@ static const std::set<eGameMode> scrollableModes = {
 	MODE_LOOK_TOWN
 };
 
+// Arrow keys are handled with a special system that delays the handling
+// of their keystrokes to process them as 8-directional inputs.
+// In some modes where directional input is irrelevent, they should be
+// processed normally, which usually means being ignored,
+// to avoid buggy behavior.
+static const std::set<eGameMode> noDelayKeyModes = {
+	MODE_TALKING,
+	MODE_SHOPPING,
+	MODE_STARTUP,
+	MODE_RESTING
+};
+
 enum eStatMode {
 	MODE_INVEN = 0,
 	MODE_SHOP = 1,
