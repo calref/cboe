@@ -65,15 +65,16 @@ bool cTextMsg::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::
 		else if(val == "left") right_align = false;
 		else throw xBadVal(tagName, attr.Name(), val, attr.Row(), attr.Column(), fname);
 		return true;
-	}else if(attr.Name() == "show-pipes"){
-		style.showPipes = str_to_bool(attr.Value());
-		return true;
 	}
 	return cControl::parseAttribute(attr, tagName, fname);
 }
 
 bool cTextMsg::parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) {
 	if(content.Type() == TiXmlNode::TEXT) {
+		// If a literal '|' is in the XML text, render pipes literally and not as newlines
+		if(content.Value().find('|') != std::string::npos){
+			style.showPipes = true;
+		}
 		text += dlogStringFilter(content.Value());
 		return true;
 	} else if(content.Value() == "br") {
