@@ -809,7 +809,7 @@ void cParty::writeTo(cTagFile& file) const {
 	for(unsigned int i = 0; i < party_event_timers.size(); i++) {
 		if(!party_event_timers[i].is_valid()) continue;
 		auto& timer_page = file.add();
-		timer_page["TIMER"] << party_event_timers[i].time << int(party_event_timers[i].node_type) << party_event_timers[i].node;
+		timer_page["TIMER"] << i << party_event_timers[i].time << int(party_event_timers[i].node_type) << party_event_timers[i].node;
 	}
 	for(int i = 0; i < creature_save.size(); i++) {
 		for(int j = 0; j < creature_save[i].size(); j++) {
