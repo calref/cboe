@@ -13,6 +13,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Force Town Entry
 Unused
@@ -29,6 +30,7 @@ X coordinate to enter at (-1 default)
 Y coordinate to enter at (-1 default)
 Unused
 Special to Jump To
+
 --------------------
 Place Outdoor Encounter
 Unused
@@ -45,6 +47,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Outdoor Move Party
 Unused
@@ -61,5 +64,6 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 

@@ -13,6 +13,7 @@ New Attitude
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Do Missile Animation
 Unused
@@ -29,6 +30,7 @@ X coordinate of end space
 Y coordinate of end space
 Sound to play
 Special to Jump To
+
 --------------------
 Animate Monster Attack
 Unused
@@ -45,6 +47,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Animate Fake Damage
 Unused
@@ -61,6 +64,7 @@ Boom type
 Number to print (0 means print no number)
 Sound to play
 Special to Jump To
+
 --------------------
 Move Party
 Unused
@@ -77,6 +81,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Hit Space
 Unused
@@ -93,6 +98,7 @@ Damage to inflict (0 .. 1000)
 Type of damage (0..8)
 Unused
 Special to Jump To
+
 --------------------
 Explosion on Space
 Unused
@@ -109,6 +115,7 @@ Damage to inflict (0 .. 1000)
 Type of damage (0..8)
 Unused
 Special to Jump To
+
 --------------------
 Lock Space
 Unused
@@ -125,6 +132,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Unlock Space
 Unused
@@ -141,6 +149,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Do sfx Burst
 Unused
@@ -157,6 +166,7 @@ Type of explosion
 0 - normal, 1 - huge
 Sound to play (-1 = default)
 Special to Jump To
+
 --------------------
 Make Wandering Monster
 Unused
@@ -173,6 +183,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Place a Monster
 Unused
@@ -189,6 +200,7 @@ Number of creature to place
 1 - force placement
 Unused
 Special to Jump To
+
 --------------------
 Destroy Monster
 Unused
@@ -205,6 +217,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Destroy All Monsters
 Unused
@@ -221,6 +234,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Generic Lever
 Unused
@@ -237,6 +251,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Generic Portal
 Unused
@@ -253,6 +268,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Generic Button
 Unused
@@ -269,6 +285,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Generic Stairway
 Unused
@@ -285,6 +302,7 @@ Number of town to place party in
 What text? (0 - up, 1 - down)
 Trigger Limitations
 Special to Call in New Town
+
 --------------------
 Lever
 Unused
@@ -301,6 +319,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Portal
 Unused
@@ -317,6 +336,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Stairway
 Unused
@@ -333,6 +353,7 @@ Number of town to place party in
 If 1, always change level.
 Trigger Limitations
 Special to Call in New Town
+
 --------------------
 Relocate Outdoors
 Unused
@@ -349,6 +370,7 @@ X coordinate inside section
 Y coordinate inside section 
 Unused
 Special to Jump To
+
 --------------------
 Place Item
 Unused
@@ -365,6 +387,7 @@ Item to place
 Set to 1 to place in container, if present
 Unused
 Special to Jump To
+
 --------------------
 Split Party
 Unused
@@ -381,6 +404,7 @@ Sound to play (10 = teleport)
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Reunite Party
 Unused
@@ -397,6 +421,7 @@ If 1, don't change location
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Start Town Timer
 Unused
@@ -413,6 +438,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Change Lighting
 Unused
@@ -429,6 +455,7 @@ Party light level
 0 - increase, 1 - drain
 Unused
 Special to Jump To
+
 --------------------
 Set Monster Attitude
 Unused
@@ -445,6 +472,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Center View on Space
 Unused
@@ -461,6 +489,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Lift Fog
 Unused
@@ -477,6 +506,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Start Targeting
 Unused
@@ -493,6 +523,7 @@ Special Called if Targeting Fails
 if 1, allow obstructed spaces
 if 1, allow targeting in antimagic fields
 Special to Call for Each Target
+
 --------------------
 Place Fields in Spell Pattern
 Unused
@@ -509,6 +540,7 @@ Which field type?
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Deal Damage in Spell Pattern
 Unused
@@ -525,6 +557,7 @@ Which damage type? (0..8)
 How many dice? (calculated in d6's)
 0 - sequential simple booms, 1 - simultaneous animated booms
 Special to Jump To
+
 --------------------
 Relocate Creature
 Unused
@@ -541,6 +574,7 @@ Which creature
 Positioning mode
 Delay
 Special to Jump To
+
 --------------------
 Place Label
 Unused
@@ -557,4 +591,5 @@ Unused
 Delay
 Unused
 Special to Jump To
+
 --------------------

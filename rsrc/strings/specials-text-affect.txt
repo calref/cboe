@@ -13,6 +13,7 @@ Unused
 0..6 - PC, 100+ - monster (if above = 2)
 Unused
 Special to Jump To
+
 --------------------
 Do Damage
 Unused
@@ -29,6 +30,7 @@ Amount of extra damage
 Type of damage (0..8)
 Sound to play
 Special to Jump To
+
 --------------------
 Affect Health
 Unused
@@ -45,6 +47,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Affect Spell Points
 Unused
@@ -61,6 +64,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Affect Experience
 Unused
@@ -77,6 +81,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Affect Skill Points
 Unused
@@ -93,6 +98,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Kill/Raise Dead
 Unused
@@ -109,6 +115,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Affect Status Effect
 Unused
@@ -125,6 +132,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Affect Traits
 Unused
@@ -141,6 +149,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Affect Action Points
 Unused
@@ -157,6 +166,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Affect Name
 Unused
@@ -173,6 +183,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Affect Level
 Unused
@@ -189,6 +200,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Affect Morale
 Unused
@@ -205,6 +217,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Affect Soul Crystal
 Unused
@@ -221,6 +234,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Give Equipment
 Unused
@@ -237,6 +251,7 @@ ID? (-1 - normal, 0 - no, 1 - yes, 2 - full)
 Cursed? (-1 - default, 0 - no, 1 - yes)
 Equip? (-1 - no, 0 - soft, 1 - try, 2 - force)
 Special to Jump To
+
 --------------------
 Affect Monster Target
 Unused
@@ -253,6 +268,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Affect Monster Attack
 Unused
@@ -269,6 +285,7 @@ Amount to change sides
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Affect Monster Statistic
 Unused
@@ -285,6 +302,7 @@ Which stat (0 ... 10)
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Affect Statistic
 Unused
@@ -301,6 +319,7 @@ Statistic to adjust (0..20)
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Give Mage Spell
 Unused
@@ -317,6 +336,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Give Priest Spell
 Unused
@@ -333,6 +353,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Affect Gold
 Unused
@@ -349,6 +370,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Affect Food
 Unused
@@ -365,6 +387,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Affect Alchemy
 Unused
@@ -381,6 +404,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Affect Party Status Effect
 Unused
@@ -397,6 +421,7 @@ Which effect (0 .. 3)
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Create New PC
 Stuff Done Flag Part A
@@ -413,6 +438,7 @@ PC strength
 PC dexterity
 PC intelligence
 Special to Jump To
+
 --------------------
 Store PC
 Stuff Done Flag Part A
@@ -429,6 +455,7 @@ extra 2a
 extra 2b
 extra 2c
 Special to Jump To
+
 --------------------
 Unstore PC
 Unused
@@ -445,4 +472,5 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------

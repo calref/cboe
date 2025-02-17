@@ -13,6 +13,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+This special node does nothing but jump to the next in the sequence. It can be useful if you want to remove a node from a long sequence of nodes without needing to edit the jump to values.
 --------------------
 Set Flag
 Stuff Done Flag Part A
@@ -29,6 +30,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Increment Flag
 Stuff Done Flag Part A
@@ -45,6 +47,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Display Message
 Unused
@@ -61,6 +64,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Start Shopping
 Unused
@@ -77,6 +81,7 @@ Unused
 Unused
 Unused
 Unused
+
 --------------------
 Display Small Message
 Unused
@@ -93,6 +98,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Flip Flag
 Stuff Done Flag Part A
@@ -109,6 +115,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Set SDF to Random
 Stuff Done Flag Part A
@@ -125,6 +132,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Addition
 Result Stuff Done Flag Part A
@@ -141,6 +149,7 @@ Second SDF part A, or second number
 Second SDF part B, or -1 for literal number
 Unused
 Special to Jump To
+
 --------------------
 Subtraction
 Result Stuff Done Flag Part A
@@ -157,6 +166,7 @@ Second SDF part A, or second number
 Second SDF part B, or -1 for literal number
 Unused
 Special to Jump To
+
 --------------------
 Story Dialog
 Unused
@@ -173,6 +183,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Prevent Action
 Unused
@@ -189,6 +200,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Change Time
 Unused
@@ -205,6 +217,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Start General Timer
 Unused
@@ -221,6 +234,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Play a Sound
 Unused
@@ -237,6 +251,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Change Horse Possession
 Unused
@@ -253,6 +268,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Change Boat Possession
 Unused
@@ -269,6 +285,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Show/Hide Town
 Unused
@@ -285,6 +302,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Major Event Has Occurred
 Unused
@@ -301,6 +319,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Forced Give
 Unused
@@ -317,6 +336,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Buy Items of Type
 Unused
@@ -333,6 +353,7 @@ Amount to pay for each item
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Call Global Special
 Unused
@@ -349,6 +370,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Set Many Flags
 Stuff Done Flag Part A
@@ -365,6 +387,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Copy Flag
 Stuff Done Flag Part A
@@ -381,6 +404,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Display Picture
 Unused
@@ -397,6 +421,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Have a Rest
 Unused
@@ -413,6 +438,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Display Message with Title
 Unused
@@ -429,6 +455,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 End Scenario
 Unused
@@ -445,6 +472,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Set Pointer
 Stuff Done Flag Part A
@@ -461,6 +489,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Set/Retrieve Campaign Flag
 Stuff Done Flag Part A
@@ -477,6 +506,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Debug Print Numbers
 Stuff Done Flag Part A
@@ -493,6 +523,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Multiplication
 Result Stuff Done Flag Part A
@@ -509,6 +540,7 @@ Second SDF part A, or second number
 Second SDF part B, or -1 for literal number
 Unused
 Special to Jump To
+
 --------------------
 Division
 Result Stuff Done Flag Part A
@@ -525,6 +557,7 @@ Second SDF part A, or second number
 Second SDF part B, or -1 for literal number
 Remainder Stuff Done Flag Part B
 Special to Jump To
+
 --------------------
 Exponentiation
 Result Stuff Done Flag Part A
@@ -541,6 +574,7 @@ Second SDF part A, or second number
 Second SDF part B, or -1 for literal number
 Unused
 Special to Jump To
+
 --------------------
 Change Terrain
 Unused
@@ -557,6 +591,7 @@ Terrain to change to
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Swap Terrain
 Unused
@@ -573,6 +608,7 @@ Swap this terrain ...
 With this terrain ...
 Unused
 Special to Jump To
+
 --------------------
 Transform Terrain
 Unused
@@ -589,6 +625,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Clear String Buffer
 Unused
@@ -605,6 +642,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Append String to Buffer
 Unused
@@ -621,6 +659,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Append Number to Buffer
 Unused
@@ -637,6 +676,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Append Monster/PC Name to Buffer
 Unused
@@ -653,6 +693,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Append Item Name to Buffer
 Unused
@@ -669,6 +710,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Append Terrain Name to Buffer
 Unused
@@ -685,6 +727,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Pause
 Unused
@@ -701,6 +744,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Start Conversation
 Unused
@@ -717,6 +761,7 @@ Unused
 Unused
 Unused
 Unused
+
 --------------------
 Update Quest
 Unused
@@ -733,6 +778,7 @@ Job Board Source / Anger (see docs)
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Swap String Buffer
 Unused
@@ -749,6 +795,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Alter Sign Text
 Unused
@@ -765,6 +812,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Special Name
 sdf1
@@ -781,4 +829,5 @@ extra 2a
 extra 2b
 extra 2c
 Special to Jump To
+This is a template for adding new special node types. It will not appear in the editor.
 --------------------

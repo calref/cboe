@@ -13,6 +13,7 @@ If less than this ...
 Call this special ...
 Unused
 Otherwise call this special
+
 --------------------
 Town Number?
 Unused
@@ -29,6 +30,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
+
 --------------------
 Random Number?
 Unused
@@ -45,6 +47,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
+
 --------------------
 Have Special Item?
 Unused
@@ -61,6 +64,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
+
 --------------------
 Stuff Done Compare?
 Stuff Done Flag Part A
@@ -77,6 +81,7 @@ Unused
 Call this special if 2nd flag lower ...
 Unused
 Otherwise call this special
+
 --------------------
 Terrain this type?
 Unused
@@ -93,6 +98,7 @@ If space is this terrain type ...
 Call this special ...
 Unused
 Otherwise call this special
+
 --------------------
 Is Alive?
 Unused
@@ -109,6 +115,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
+
 --------------------
 Has gold?
 Unused
@@ -125,6 +132,7 @@ If 1, take gold
 Unused
 Unused
 Otherwise call this special
+
 --------------------
 Has food?
 Unused
@@ -141,6 +149,7 @@ If 1, take food
 Unused
 Unused
 Otherwise call this special
+
 --------------------
 Item Class on Space?
 Unused
@@ -157,6 +166,7 @@ If item of this class on space ...
 Call this special ...
 If 1, take item
 Otherwise call this special
+
 --------------------
 Have Item With Class?
 Unused
@@ -173,6 +183,7 @@ If 1, take item
 Unused
 Unused
 Otherwise call this special
+
 --------------------
 Equipped Item With Class?
 Unused
@@ -189,6 +200,7 @@ If 1, take item
 Unused
 Unused
 Otherwise call this special
+
 --------------------
 Has Mage Spell?
 Unused
@@ -205,6 +217,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
+
 --------------------
 Has Priest Spell?
 Unused
@@ -221,6 +234,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
+
 --------------------
 Has Alchemy?
 Unused
@@ -237,6 +251,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
+
 --------------------
 Has Status Effect?
 Unused
@@ -253,6 +268,7 @@ Value to compare to
 Cumulation mode (if whole party selected)
 Comparison mode
 Otherwise call this special
+
 --------------------
 If Looking?
 Unused
@@ -269,6 +285,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
+
 --------------------
 Day Reached?
 Unused
@@ -285,6 +302,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
+
 --------------------
 If Fields?
 Minimum # of fields
@@ -301,6 +319,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Otherwise call this special
+
 --------------------
 If Party Size?
 Unused
@@ -317,6 +336,7 @@ Unused
 Required size
 Unused
 Otherwise call this special
+
 --------------------
 Special Thing Happened?
 Unused
@@ -333,6 +353,7 @@ Unused
 Call this special ...
 Unused
 Otherwise call this special
+
 --------------------
 If Species Present?
 Unused
@@ -349,6 +370,7 @@ Required number of species
 Comparison method (-2 .. 2)
 Unused
 Otherwise call this special
+
 --------------------
 If Have Trait?
 Unused
@@ -365,6 +387,7 @@ Required number of trait
 Comparison method (-2 .. 2)
 Unused
 Otherwise call this special
+
 --------------------
 Has Enough of Statistic?
 Unused
@@ -381,6 +404,7 @@ Which statistic
 Check mode
 Unused
 Otherwise call this special
+
 --------------------
 Text Response?
 Unused
@@ -397,6 +421,7 @@ Number of a SCENARIO special message
 If answer matches, call this special ...
 Unused
 Otherwise call this special
+
 --------------------
 Stuff Done Equal?
 Stuff Done Flag Part A
@@ -413,6 +438,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
+
 --------------------
 If Context?
 Unused
@@ -429,6 +455,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
+
 --------------------
 If Numeric Response?
 Unused
@@ -445,6 +472,7 @@ Range lower bound (or value to compare to)
 Range upper bound (or comparison method -2 .. 2)
 If test 2 passes but test 1 fails, call this special ...
 Otherwise call this special
+
 --------------------
 If In Boat?
 Unused
@@ -461,6 +489,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
+
 --------------------
 If On Horse?
 Unused
@@ -477,6 +506,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
+
 --------------------
 If Quest?
 Unused
@@ -493,4 +523,5 @@ Unused
 Unused
 Unused
 Otherwise call this special
+
 --------------------
