@@ -772,7 +772,7 @@ std::string node_properties_t::opcode() const {
 static std::string get_node_string(std::string base, eSpecType type, int which) {
 	eSpecCat cat = getNodeCategory(type);
 	int i = int(cat), j = int(type);
-	int strnum = (j - offsets[i]) * 16 + which + 1;
+	int strnum = (j - offsets[i]) * 17 + which + 1;
 	switch(cat) {
 		case eSpecCat::GENERAL:
 			return get_str(base + "-general", strnum);
@@ -796,6 +796,10 @@ static std::string get_node_string(std::string base, eSpecType type, int which) 
 
 std::string node_properties_t::name() const {
 	return get_node_string("specials-text", self, 0);
+}
+
+std::string node_properties_t::descr() const {
+	return get_node_string("specials-text", self, 15);
 }
 
 node_function_t::node_function_t() {}
