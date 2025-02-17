@@ -969,6 +969,15 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 		"sdf1-edit", "sdf2-edit",
 	});
 	special["cancel"].attachClickHandler(std::bind(discard_spec_enc, _1, std::ref(edit_stack)));
+	special["node-help"].attachClickHandler([&edit_stack](cDialog& me, std::string item_hit, eKeyMod mods) {
+		eSpecType type = edit_stack.top().node.type;
+		const std::string& str = (*type).descr();
+		// TODO: This is the same dialog as give_help(), the only difference being that we don't have a string number!
+		cStrDlog display_help(str,"","Instant Help",24,PIC_DLOG, &me);
+		display_help.setSound(57);
+		display_help.show();
+		return true;
+	});
 	
 	special["back"].hide();
 	edit_stack.push({which_node,mode,the_node});

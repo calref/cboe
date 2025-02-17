@@ -13,6 +13,7 @@ Amount of food to give
 Special if item not given
 Unused
 Special to Jump To
+
 --------------------
 One-Time Give Special Item
 Stuff Done Flag Part A
@@ -29,6 +30,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 One-Time Do Nothing
 Stuff Done Flag Part A
@@ -45,6 +47,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 One-Time and Set
 Stuff Done Flag Part A
@@ -61,6 +64,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 One-Time Text Message
 Stuff Done Flag Part A
@@ -77,6 +81,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 One-Time Display Dialog
 Stuff Done Flag Part A
@@ -93,6 +98,7 @@ Label of 3rd button (-1 - no button)
 Special if button 3 pressed
 Unused
 Special if OK/Leave picked
+
 --------------------
 Unused Node
 Unused
@@ -109,6 +115,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Unused Node
 Unused
@@ -125,6 +132,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 One-Time Give Item Dialog
 Stuff Done Flag Part A
@@ -141,6 +149,7 @@ Amount of food to give
 Special if item IS taken
 Unused
 Special to Jump To
+
 --------------------
 Unused Node
 Unused
@@ -157,6 +166,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 Unused Node
 Unused
@@ -173,6 +183,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 One-Time Place Outdoor Enc.
 Stuff Done Flag Part A
@@ -189,6 +200,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 One-Time Place Town Enc.
 Stuff Done Flag Part A
@@ -205,6 +217,7 @@ Unused
 Unused
 Unused
 Special to Jump To
+
 --------------------
 One-Time Trap
 Stuff Done Flag Part A
@@ -221,4 +234,5 @@ Penalty (0 .. 100, higher is harder)
 (Custom only) Special node for effect
 Unused
 Special after trap finished
+
 --------------------

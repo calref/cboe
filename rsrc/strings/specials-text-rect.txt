@@ -13,6 +13,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
+
 --------------------
 Set Explored
 0 - clear, 1 - explore
@@ -29,6 +30,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
+
 --------------------
 Move Items
 X of space to move to
@@ -45,6 +47,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
+
 --------------------
 Destroy Items
 Unused
@@ -61,6 +64,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
+
 --------------------
 Change Rectange Terrain
 Terrain to change to
@@ -77,6 +81,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
+
 --------------------
 Swap Rectangle Terrain
 Switch this ter. type
@@ -93,6 +98,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
+
 --------------------
 Transform Rectangle Terrain
 Unused
@@ -109,6 +115,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
+
 --------------------
 Lock Rectangle
 Unused
@@ -125,6 +132,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
+
 --------------------
 Unlock Rectangle
 Unused
@@ -141,4 +149,5 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
+
 --------------------
