@@ -590,7 +590,7 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 	
 	std::vector<std::string> vec(strs.begin(), strs.end());
 	// Strip off trailing empty strings
-	while(vec.back().empty())
+	while(!vec.empty() && vec.back().empty())
 		vec.pop_back();
 	cThreeChoice customDialog(vec, buttons, pic_num, pic_type);
 	std::string item_hit = customDialog.show();
@@ -639,12 +639,9 @@ void story_dialog(std::string title, str_num_t first, str_num_t last, eSpecCtxTy
 		} else if(clicked == "right") {
 			cur++;
 		}
-		if(which_str_type == eSpecCtxType::SCEN)
-			me["str"].setText(univ.scenario.spec_strs[cur]);
-		else if(which_str_type == eSpecCtxType::OUTDOOR)
-			me["str"].setText(univ.out->spec_strs[cur]);
-		else if(which_str_type == eSpecCtxType::TOWN)
-			me["str"].setText(univ.town->spec_strs[cur]);
+		std::string text;
+		get_str(text, which_str_type, cur);
+		me["str"].setText(text);
 		return true;
 	}, {"left", "right", "done"});
 	story_dlg["left"].triggerClickHandler(story_dlg, "left", eKeyMod());

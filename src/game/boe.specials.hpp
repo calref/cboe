@@ -24,6 +24,11 @@ void push_things();
 void queue_special(eSpecCtx mode, eSpecCtxType which_type, spec_num_t spec, location spec_loc);
 void run_special(eSpecCtx which_mode, eSpecCtxType which_type, spec_num_t start_spec, location spec_loc, short* a = nullptr, short* b = nullptr, bool* redraw = nullptr);
 void run_special(pending_special_type spec, short* a, short* b, bool* redraw);
+
+const short BUFFER_STR = -8;
+// Assign a string with text from the current scenario, or the game's buffer by passing BUFFER_STR.
+bool get_str(std::string& str, eSpecCtxType cur_type,short which_str);
 void get_strs(std::string& str1, std::string& str2,eSpecCtxType cur_type,short which_str1,short which_str2);
+void get_strs(std::array<std::string,6>& strs,eSpecCtxType cur_type,short which_str1);
 
 void set_campaign_flag(short sdf_a, short sdf_b, short cpf_a, short cpf_b, short str, bool get_send);
