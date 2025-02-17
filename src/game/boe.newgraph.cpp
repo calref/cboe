@@ -794,7 +794,9 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 		eSpell spell;
 		cur_cost = item.getCost(active_shop.getCostAdjust());
 		base_item = item.item;
-		std::string cur_name = base_item.full_name, cur_info_str;
+		std::ostringstream name_str;
+		name_str << "(" << (char)('a' + i) << ") " << base_item.full_name;
+		std::string cur_name = name_str.str(), cur_info_str;
 		rectangle from_rect, to_rect = shopping_rects[i][SHOPRECT_GRAPHIC];
 		std::shared_ptr<const sf::Texture> from_gw;
 		switch(item.type) {
