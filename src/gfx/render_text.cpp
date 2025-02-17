@@ -137,6 +137,7 @@ break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextS
 
 // I don't know of a better way to do this than using pointers as keys.
 extern std::map<sf::RenderTexture*,std::vector<sf::Text>> store_scale_aware_text;
+extern std::map<sf::RenderTexture*,rectangle> store_clip_rects;
 
 void clear_scale_aware_text(sf::RenderTexture& texture) {
 	store_scale_aware_text.erase(&texture);

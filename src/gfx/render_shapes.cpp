@@ -242,8 +242,18 @@ void Region::setStencil(sf::RenderWindow& where) {
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 }
 
+extern std::map<sf::RenderTexture*,rectangle> store_clip_rects;
+
 void clip_rect(sf::RenderTarget& where, rectangle rect) {
 	rect &= rectangle(where); // Make sure we don't draw out of bounds
+
+	// Text isn't actually drawn onto Render Textures, so the render texture's clip rect
+	// needs to be stored externally to be applied to text later
+	if(dynamic_cast<sf::RenderTexture*>(&where) != nullptr){
+		sf::RenderTexture* p = dynamic_cast<sf::RenderTexture*>(&where);
+		store_clip_rects[p] = rect;
+	}
+
 	// TODO: Make sure this works for the scissor test...
 	setActiveRenderTarget(where);
 	auto viewport = where.getView().getViewport();
@@ -259,6 +269,11 @@ void clip_region(sf::RenderWindow& where, Region& region) {
 }
 
 void undo_clip(sf::RenderTarget& where) {
+	if(dynamic_cast<sf::RenderTexture*>(&where) != nullptr){
+		sf::RenderTexture* p = dynamic_cast<sf::RenderTexture*>(&where);
+		store_clip_rects.erase(p);
+	}
+
 	setActiveRenderTarget(where);
 	glDisable(GL_SCISSOR_TEST);
 	glDisable(GL_STENCIL_TEST);

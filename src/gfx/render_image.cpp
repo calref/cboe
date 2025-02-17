@@ -123,6 +123,7 @@ void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,const 
 }
 
 std::map<sf::RenderTexture*,std::vector<sf::Text>> store_scale_aware_text;
+std::map<sf::RenderTexture*,rectangle> store_clip_rects;
 
 static void draw_stored_scale_aware_text(sf::RenderTexture& texture, sf::RenderTarget& dest_window, rectangle targ_rect) {
 	// Temporarily switch target window to its unscaled view to draw scale-aware text
