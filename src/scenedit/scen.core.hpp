@@ -16,6 +16,7 @@ void edit_save_rects();
 void edit_add_town();
 void edit_item_placement();
 void edit_scen_details();
+void edit_scen_adv_details();
 bool edit_make_scen_2(short& out_w, short& out_h, short& town_l, short& town_m, short& town_s, bool& def_town);
 bool edit_make_scen_1(std::string& filename,std::string& title,bool& grass);
 void edit_scenario_events();

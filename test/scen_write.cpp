@@ -46,8 +46,8 @@ TEST_CASE("Saving a scenario record") {
 	scen.scen_name = "Test Scenario";
 	scen.intro_pic = 0;
 	scen.campaign_id = "campaign";
-	scen.who_wrote[0] = "Teaser 1";
-	scen.who_wrote[1] = "Teaser 2";
+	scen.teaser_text[0] = "Teaser 1";
+	scen.teaser_text[1] = "Teaser 2";
 	scen.contact_info[0] = "BoE Test Suite";
 	scen.contact_info[1] = "nowhere@example.com";
 	scen.intro_strs[0] = "Welcome to the test scenario!";
@@ -68,8 +68,8 @@ TEST_CASE("Saving a scenario record") {
 		CHECK(scen.scen_name == "Test Scenario");
 		CHECK(scen.intro_pic == 0);
 		CHECK(scen.campaign_id == "campaign");
-		CHECK(scen.who_wrote[0] == "Teaser 1");
-		CHECK(scen.who_wrote[1] == "Teaser 2");
+		CHECK(scen.teaser_text[0] == "Teaser 1");
+		CHECK(scen.teaser_text[1] == "Teaser 2");
 		CHECK(scen.contact_info[0] == "BoE Test Suite");
 		CHECK(scen.contact_info[1] == "nowhere@example.com");
 		CHECK(scen.intro_strs[0] == "Welcome to the test scenario!");
@@ -271,8 +271,8 @@ TEST_CASE("Saving a scenario record") {
 	}
 	SECTION("Whitespace is collapsed in short strings but not in long strings") {
 		scen.scen_name = "Test    Scenario   with extra spaces";
-		scen.who_wrote[0] = "Teaser   the      first!";
-		scen.who_wrote[1] = "   Teaser the        second  !    ";
+		scen.teaser_text[0] = "Teaser   the      first!";
+		scen.teaser_text[1] = "   Teaser the        second  !    ";
 		scen.spec_strs.push_back("      ");
 		scen.spec_strs.push_back("   What  is this...   ?");
 		scen.journal_strs.push_back("  Do not   collapse  this      journal.");
@@ -286,8 +286,8 @@ TEST_CASE("Saving a scenario record") {
 		scen.snd_names.push_back("A    sound    full of    spaces!");
 		in_and_out("whitespace", scen);
 		CHECK(scen.scen_name == "Test Scenario with extra spaces");
-		CHECK(scen.who_wrote[0] == "Teaser the first!");
-		CHECK(scen.who_wrote[1] == "Teaser the second !");
+		CHECK(scen.teaser_text[0] == "Teaser the first!");
+		CHECK(scen.teaser_text[1] == "Teaser the second !");
 		REQUIRE(scen.spec_strs.size() == 2);
 		CHECK(scen.spec_strs[0] == "      ");
 		CHECK(scen.spec_strs[1] == "   What  is this...   ?");

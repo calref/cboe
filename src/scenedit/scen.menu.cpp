@@ -59,6 +59,7 @@ void OpenBoESceneditMenu::add_persistent_menu_items(tgui::MenuBar::Ptr& menubar)
 		{ { "Scenario", "Advanced", "Edit Special Nodes"            }, eMenu::SCEN_SPECIALS        },
 		{ { "Scenario", "Advanced", "Edit Scenario Text"            }, eMenu::SCEN_TEXT            },
 		{ { "Scenario", "Advanced", "Edit Journal Entries"          }, eMenu::SCEN_JOURNALS        },
+		{ { "Scenario", "Advanced", "Advanced Scenario Details"     }, eMenu::SCEN_ADV_DETAILS     },
 		{ { "Scenario", "Advanced", "Import Town"                   }, eMenu::TOWN_IMPORT          },
 		{ { "Scenario", "Advanced", "Import Outdoor Sector"         }, eMenu::OUT_IMPORT           },
 		{ { "Scenario", "Advanced", "Edit Saved Item Rectangles"    }, eMenu::SCEN_SAVE_ITEM_RECTS },

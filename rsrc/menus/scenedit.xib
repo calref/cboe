@@ -484,6 +484,14 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 								</object>
+								<object class="NSMenuItem" id="788000513">
+									<reference key="NSMenu" ref="399390342"/>
+									<string key="NSTitle">  Advanced Scenario Details</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="229763992"/>
+									<reference key="NSMixedImage" ref="909111550"/>
+								</object>
 								<object class="NSMenuItem" id="800006778">
 									<reference key="NSMenu" ref="399390342"/>
 									<string key="NSTitle">  Import Town</string>
@@ -1289,6 +1297,7 @@
 							<reference ref="726312118"/>
 							<reference ref="926133930"/>
 							<reference ref="788000512"/>
+							<reference ref="788000513"/>
 							<reference ref="637087210"/>
 							<reference ref="878691898"/>
 							<reference ref="800006778"/>
@@ -1423,6 +1432,11 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">816</int>
 						<reference key="object" ref="788000512"/>
+						<reference key="parent" ref="399390342"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">893</int>
+						<reference key="object" ref="788000513"/>
 						<reference key="parent" ref="399390342"/>
 					</object>
 					<object class="IBObjectRecord">

@@ -271,7 +271,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 		temp_str[len] = 0;
 		if(i == 0) scenario.scen_name = temp_str;
 		else if(i == 1 || i == 2)
-			scenario.who_wrote[i-1] = temp_str;
+			scenario.teaser_text[i-1] = temp_str;
 		else if(i == 3)
 			scenario.contact_info[1] = temp_str;
 		else if(i >= 4 && i < 10)
@@ -781,7 +781,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 				if(type == "teaser") {
 					if(found_teasers >= 2)
 						throw xBadNode(type,info->Row(),info->Column(),fname);
-					info->GetText(&scenario.who_wrote[found_teasers], false);
+					info->GetText(&scenario.teaser_text[found_teasers], false);
 					found_teasers++;
 				} else if(type == "icon") {
 					info->GetText(&scenario.intro_mess_pic);
