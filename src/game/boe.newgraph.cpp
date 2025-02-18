@@ -830,8 +830,8 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 		rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 		
 		// Draw item key
-		style.pointSize = 9;
-		style.lineHeight = 9;
+		style.pointSize = 10;
+		style.lineHeight = 10;
 		std::string key(1, (char)('a' + i));
 		win_draw_string(talk_gworld,shopping_rects[i][SHOPRECT_KEY],key, eTextMode::WRAP,style);
 
