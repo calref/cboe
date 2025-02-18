@@ -136,7 +136,8 @@ break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextS
 }
 
 // I don't know of a better way to do this than using pointers as keys.
-extern std::map<sf::RenderTexture*,std::vector<sf::Text>> store_scale_aware_text;
+extern std::map<sf::RenderTexture*,std::vector<ScaleAwareText>> store_scale_aware_text;
+extern std::map<sf::RenderTexture*,rectangle> store_clip_rects;
 
 void clear_scale_aware_text(sf::RenderTexture& texture) {
 	store_scale_aware_text.erase(&texture);
@@ -158,9 +159,13 @@ void draw_scale_aware_text(sf::RenderTarget& dest_window, sf::Text str_to_draw) 
 		// What we can do is save the sf::Text with its relative position and render
 		// it onto the RenderWindow that eventually draws the RenderTexture.
 		if(store_scale_aware_text.find(p) == store_scale_aware_text.end()){
-			store_scale_aware_text[p] = std::vector<sf::Text> {};
+			store_scale_aware_text[p] = std::vector<ScaleAwareText> {};
 		}
-		store_scale_aware_text[p].push_back(str_to_draw);
+		ScaleAwareText text = { str_to_draw, {}};
+		if(store_clip_rects.find(p) != store_clip_rects.end()){
+			text.clip_rect = store_clip_rects[p];
+		}
+		store_scale_aware_text[p].push_back(text);
 	}
 }
 
