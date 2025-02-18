@@ -104,6 +104,7 @@ BEGIN
         MENUITEM "  Edit Special &Nodes",       IDM_SCEN_ADV_SPECIALS
         MENUITEM "  Edit Scenario &Text",       IDM_SCEN_ADV_TEXT
         MENUITEM "  Edit Journal Entries",      IDM_SCEN_ADV_JOURNAL
+        MENUITEM "  Advanced Scenario Details", IDM_SCEN_ADV_DETAILS
         MENUITEM "  &Import Town",              IDM_SCEN_ADV_IMPORT_TOWN
         MENUITEM "  Import Outdoor Sector",     IDM_SCEN_ADV_IMPORT_OUT
         MENUITEM "  Edit Saved Item &Rectangles", IDM_SCEN_ADV_SAVE_RECTS
