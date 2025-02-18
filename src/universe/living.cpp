@@ -40,7 +40,7 @@ void iLiving::apply_status(eStatus which, int how_much) {
 	if(which == eStatus::ASLEEP || which == eStatus::DUMB) {
 		// No "wrapping" allowed for these effects.
 		if(status[which] < 0) hi = 0;
-		else if(status[which] > 0) lo = 0;
+		else if(status[which] >= 0) lo = 0;
 	}
 	
 	status[which] = minmax(lo,hi,status[which] + how_much);
