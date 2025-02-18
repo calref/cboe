@@ -553,6 +553,10 @@ void handle_menu_choice(eMenu item_hit) {
 			edit_scen_details();
 			change_made = true;
 			break;
+		case eMenu::SCEN_ADV_DETAILS:
+			edit_scen_adv_details();
+			change_made = true;
+			break;
 		case eMenu::SCEN_INTRO:
 			edit_scen_intro();
 			change_made = true;

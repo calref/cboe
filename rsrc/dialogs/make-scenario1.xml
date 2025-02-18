@@ -10,7 +10,7 @@
 		   Examples: 'Hammer of Thor', 'Dragon's Quest'<br/>
 		   (max. length 30 characters)
 	</text>
-	<field name='name' top='34' left='351' width='125' height='32'>Scenario name</field>
+	<field name='name' top='34' left='351' width='125' height='32' max-chars='30'>Scenario name</field>
 
 	<text top='96' left='52' width='292' height='56'>
 		What is your name or handle, for crediting purposes?
