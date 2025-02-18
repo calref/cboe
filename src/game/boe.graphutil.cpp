@@ -436,7 +436,10 @@ void draw_party_symbol(location center) {
 		return;
 	if((is_town()) && (univ.party.town_loc.x > 70))
 		return;
-	if(overall_mode == MODE_LOOK_TOWN || cartoon_happening) {
+
+	if(center != univ.party.town_loc) {
+		if(!is_on_screen(univ.party.town_loc, center)) return;
+
 		target.x += univ.party.town_loc.x - center.x;
 		target.y += univ.party.town_loc.y - center.y;
 	}
