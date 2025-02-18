@@ -130,12 +130,14 @@ bool end_scenario = false;
 extern void edit_stuff_done();
 
 static void init_shopping_rects() {
-	rectangle shop_base = {63,12,99,267};
+	rectangle shop_base = {63,19,99,274};
 	
 	std::fill(shopping_rects[0].begin(), shopping_rects[0].end(), shop_base);
 
 	shopping_rects[0][SHOPRECT_ACTIVE_AREA].right -= 35;
 	shopping_rects[0][SHOPRECT_GRAPHIC].right = shopping_rects[0][SHOPRECT_GRAPHIC].left + 28;
+	shopping_rects[0][SHOPRECT_KEY].right = shopping_rects[0][SHOPRECT_GRAPHIC].left;
+	shopping_rects[0][SHOPRECT_KEY].left = shopping_rects[0][SHOPRECT_KEY].right - 6;
 	shopping_rects[0][SHOPRECT_ITEM_NAME].top += 4;
 	shopping_rects[0][SHOPRECT_ITEM_NAME].left += 28;
 	shopping_rects[0][SHOPRECT_ITEM_COST].top += 20;

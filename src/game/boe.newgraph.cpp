@@ -824,10 +824,18 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 				cur_info_str = "";
 				break;
 		}
+
+		// Now draw item
 		graf_pos_ref(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
 		rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
 		
-		// Now draw item
+		// Draw item key
+		style.pointSize = 9;
+		style.lineHeight = 9;
+		std::string key(1, (char)('a' + i));
+		win_draw_string(talk_gworld,shopping_rects[i][SHOPRECT_KEY],key, eTextMode::WRAP,style);
+
+		// Now draw item text
 		style.pointSize = 12;
 		style.lineHeight = 12;
 		win_draw_string(talk_gworld,shopping_rects[i][SHOPRECT_ITEM_NAME],cur_name,eTextMode::WRAP,style);
