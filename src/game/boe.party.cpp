@@ -1564,6 +1564,7 @@ bool pc_can_cast_spell(const cPlayer& pc,eSkill type) {
 }
 
 bool pc_can_cast_spell(const cPlayer& pc,eSpell spell_num) {
+	if(spell_num == eSpell::NONE) return false;
 	short level,store_w_cast;
 	eSkill type = (*spell_num).type;
 	
