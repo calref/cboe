@@ -334,6 +334,12 @@ cItem::cItem(eItemPreset preset) : cItem() {
 			name = "Potion";
 			magic = true;
 			break;
+		case ITEM_DEBUG_HEAVY:
+			variety = eItemType::NON_USE_OBJECT;
+			full_name = name = "Debug heavy item";
+			ident = true;
+			weight = 300;
+			break;
 		case ITEM_SPECIAL:
 			item_level = -1;
 			full_name = "Call Special Node";

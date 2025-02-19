@@ -2030,12 +2030,9 @@ void debug_overburden() {
 	}
 
 	cPlayer& pc = univ.current_pc();
-	cItem item;
-	item.name = "Debug item";
-	item.weight = 0;
-	item.variety = eItemType::NON_USE_OBJECT;
-	// Give the PC weightless objects that do nothing:
-	while(pc.give_item(item, true)){}
+	cItem item(ITEM_DEBUG_HEAVY);
+	// Give the PC very heavy objects that do nothing:
+	while(pc.give_item(item, GIVE_ALLOW_OVERLOAD)){}
 	if(pc.has_space()){
 		// I don't know why this would ever happen, since the weight is 0, but just in case:
 		ASB("Debug: failed to fill " + pc.name + "'s inventory.");
