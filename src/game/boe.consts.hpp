@@ -113,6 +113,7 @@ enum eShopArea {
 	SHOPRECT_ITEM_COST = 4,
 	SHOPRECT_ITEM_EXTRA = 5,
 	SHOPRECT_ITEM_HELP = 6,
+	SHOPRECT_KEY = 7,
 	MAX_eShopArea // keep last
 };
 
