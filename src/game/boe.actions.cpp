@@ -2014,6 +2014,27 @@ void debug_give_item() {
 	put_pc_screen(); // In case the item was food or gold
 }
 
+void debug_overburden() {
+	if(recording){
+		record_action("debug_overburden", "");
+	}
+
+	cPlayer& pc = univ.current_pc();
+	cItem item;
+	item.name = "Debug item";
+	item.weight = 0;
+	item.variety = eItemType::NON_USE_OBJECT;
+	// Give the PC weightless objects that do nothing:
+	while(pc.give_item(item, true)){}
+	if(pc.has_space()){
+		// I don't know why this would ever happen, since the weight is 0, but just in case:
+		ASB("Debug: failed to fill " + pc.name + "'s inventory.");
+	}else{
+		ASB("Debug: filled " + pc.name + "'s inventory.");
+	}
+	print_buf();
+}
+
 void debug_print_location() {
 	if(recording){
 		record_action("debug_print_location", "");
@@ -2387,7 +2408,7 @@ void show_debug_help() {
 }
 
 // Non-comprehensive list of unused keys:
-// UYZ chijklnoqvy @#$-_+[]{},.'"`~/\|;:
+// Z chijklnoqvy @#$-_+[]{},.'"`~/\|;:
 void init_debug_actions() {
 	add_debug_action({'B'}, "Leave town", debug_leave_town);
 	add_debug_action({'C'}, "Get cleaned up (lose negative status effects)", debug_clean_up);
@@ -2398,6 +2419,7 @@ void init_debug_actions() {
 	add_debug_action({'H'}, "Heal", debug_heal);
 	// This one was missing from the old help dialog:
 	add_debug_action({'I'}, "Give item", debug_give_item);
+	add_debug_action({'Y'}, "Fill PC's inventory", debug_overburden);
 	// TODO this is not recorded or replayed because the rsrc you pick might not even be packaged
 	// in the build
 	add_debug_action({'J'}, "Preview a dialog's layout", preview_dialog_xml);

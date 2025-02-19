@@ -781,6 +781,9 @@ static void replay_action(Element& action) {
 	}else if(t == "debug_give_item"){
 		debug_give_item();
 		return;
+	}else if(t == "debug_overburden"){
+		debug_overburden();
+		return;
 	}else if(t == "debug_print_location"){
 		debug_print_location();
 		return;
