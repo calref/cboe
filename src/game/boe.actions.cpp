@@ -2008,7 +2008,14 @@ void debug_give_item() {
 	int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?", item_names);
 	bool was_ident = univ.scenario.scen_items[i].ident;
 	univ.scenario.scen_items[i].ident = true;
-	univ.party.give_item(univ.scenario.scen_items[i], true);
+	bool given = univ.current_pc().give_item(univ.scenario.scen_items[i], true);
+	if(!given){
+		ASB("Debug: can't give to " + univ.current_pc().name);
+		given = univ.party.give_item(univ.scenario.scen_items[i], true);
+	}
+	if(!given)
+		ASB("Debug: can't give anyone " + univ.scenario.scen_items[i].full_name);
+
 	univ.scenario.scen_items[i].ident = was_ident;
 	print_buf();
 	put_item_screen(stat_window);
