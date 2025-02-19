@@ -98,7 +98,8 @@ std::string help_text_rsrc = "help";
 */
 std::map<std::string,std::vector<std::string>> feature_flags = {
 	{"dialog-pict-anim", {"enabled"}},
-	{"debug-infinite-turns", {"enabled"}}
+	{"debug-infinite-turns", {"enabled"}},
+	{"debug-give-item", {"active-pc"}}
 };
 
 struct cParseEntrance {
