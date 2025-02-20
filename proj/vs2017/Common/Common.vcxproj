@@ -403,6 +403,13 @@
     <ClCompile Include="..\..\..\src\scenario\scenario.cpp" />
     <ClCompile Include="..\..\..\src\scenario\shop.cpp" />
     <ClCompile Include="..\..\..\src\scenario\special.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\special-affect.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\special-condition.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\special-general.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\special-oneshot.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\special-outdoor.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\special-rect.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\special-town.cpp" />
     <ClCompile Include="..\..\..\src\scenario\talking.cpp" />
     <ClCompile Include="..\..\..\src\scenario\terrain.cpp" />
     <ClCompile Include="..\..\..\src\scenario\town.cpp" />

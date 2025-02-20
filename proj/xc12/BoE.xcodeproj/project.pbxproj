@@ -157,6 +157,13 @@
 		919B13A21BBCDF14009905A4 /* monst_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A11BBCDE18009905A4 /* monst_legacy.cpp */; };
 		919B13A41BBD8854009905A4 /* item_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A31BBD8849009905A4 /* item_legacy.cpp */; };
 		919B13A61BBDE986009905A4 /* spec_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A51BBDE985009905A4 /* spec_legacy.cpp */; };
+		919BE86B2D658BC6000C64C6 /* special-general.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919BE86A2D658BBC000C64C6 /* special-general.cpp */; };
+		919BE8722D66CD1C000C64C6 /* special-oneshot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919BE8712D66CD1C000C64C6 /* special-oneshot.cpp */; };
+		919BE88D2D66F6E3000C64C6 /* special-affect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919BE88C2D66F6E2000C64C6 /* special-affect.cpp */; };
+		919BE8942D676567000C64C6 /* special-condition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919BE8932D676567000C64C6 /* special-condition.cpp */; };
+		919BE8A02D676DDE000C64C6 /* special-town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919BE89F2D676DDE000C64C6 /* special-town.cpp */; };
+		919BE8AC2D677699000C64C6 /* special-rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919BE8AB2D677699000C64C6 /* special-rect.cpp */; };
+		919BE8B32D6776A8000C64C6 /* special-outdoor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919BE8B22D6776A8000C64C6 /* special-outdoor.cpp */; };
 		919CC2481B3772F300273FDA /* population.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC620A0FA2853700EEAE67 /* population.cpp */; };
 		919CC2491B3772FB00273FDA /* creature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 914698FE1A747C4500F20F5E /* creature.cpp */; };
 		919CC24B1B37730300273FDA /* item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279D3D0F9D1D6A007B0D52 /* item.cpp */; };
@@ -766,6 +773,13 @@
 		919B13A51BBDE985009905A4 /* spec_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spec_legacy.cpp; sourceTree = "<group>"; };
 		919B13A71BBE297B009905A4 /* scrollpane.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = scrollpane.hpp; sourceTree = "<group>"; };
 		919B13A81BBE2B54009905A4 /* scrollpane.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scrollpane.cpp; sourceTree = "<group>"; };
+		919BE86A2D658BBC000C64C6 /* special-general.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "special-general.cpp"; sourceTree = "<group>"; };
+		919BE8712D66CD1C000C64C6 /* special-oneshot.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "special-oneshot.cpp"; sourceTree = "<group>"; };
+		919BE88C2D66F6E2000C64C6 /* special-affect.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "special-affect.cpp"; sourceTree = "<group>"; wrapsLines = 1; };
+		919BE8932D676567000C64C6 /* special-condition.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "special-condition.cpp"; sourceTree = "<group>"; };
+		919BE89F2D676DDE000C64C6 /* special-town.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "special-town.cpp"; sourceTree = "<group>"; };
+		919BE8AB2D677699000C64C6 /* special-rect.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "special-rect.cpp"; sourceTree = "<group>"; };
+		919BE8B22D6776A8000C64C6 /* special-outdoor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "special-outdoor.cpp"; sourceTree = "<group>"; };
 		919DDBFA19006CC9003E7FED /* libboost_filesystem-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_filesystem-mt.dylib"; path = "/opt/local/libexec/boost/1.76/lib/libboost_filesystem-mt.dylib"; sourceTree = "<absolute>"; };
 		919DDBFB19006CC9003E7FED /* libboost_system-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_system-mt.dylib"; path = "/opt/local/libexec/boost/1.76/lib/libboost_system-mt.dylib"; sourceTree = "<absolute>"; };
 		919DDC091900750D003E7FED /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = /Library/Frameworks/freetype.framework; sourceTree = "<absolute>"; };
@@ -1248,6 +1262,13 @@
 				91279CC10F9D19DA007B0D52 /* monster.cpp */,
 				91E5C79D0F9F60FA00C21460 /* outdoors.cpp */,
 				91279C580F9D1253007B0D52 /* scenario.cpp */,
+				919BE88C2D66F6E2000C64C6 /* special-affect.cpp */,
+				919BE8932D676567000C64C6 /* special-condition.cpp */,
+				919BE86A2D658BBC000C64C6 /* special-general.cpp */,
+				919BE8712D66CD1C000C64C6 /* special-oneshot.cpp */,
+				919BE8B22D6776A8000C64C6 /* special-outdoor.cpp */,
+				919BE8AB2D677699000C64C6 /* special-rect.cpp */,
+				919BE89F2D676DDE000C64C6 /* special-town.cpp */,
 				91FDB5791A4E774E00DE5983 /* shop.cpp */,
 				91279CC60F9D1A02007B0D52 /* special.cpp */,
 				91E5C7B70F9F619D00C21460 /* talking.cpp */,
@@ -2068,6 +2089,7 @@
 			files = (
 				919CC24B1B37730300273FDA /* item.cpp in Sources */,
 				919CC24D1B37730E00273FDA /* location.cpp in Sources */,
+				919BE8722D66CD1C000C64C6 /* special-oneshot.cpp in Sources */,
 				919CC24E1B37731400273FDA /* monster.cpp in Sources */,
 				919CC24F1B37731800273FDA /* outdoors.cpp in Sources */,
 				919CC2531B37732C00273FDA /* scenario.cpp in Sources */,
@@ -2079,6 +2101,7 @@
 				919CC25A1B37735100273FDA /* terrain.cpp in Sources */,
 				919CC25C1B37735C00273FDA /* town.cpp in Sources */,
 				919CC25F1B37736E00273FDA /* vehicle.cpp in Sources */,
+				919BE88D2D66F6E3000C64C6 /* special-affect.cpp in Sources */,
 				919CC2601B37737200273FDA /* estreams.cpp in Sources */,
 				919CC2611B37738100273FDA /* gzstream.cpp in Sources */,
 				919CC2621B37738A00273FDA /* ticpp.cpp in Sources */,
@@ -2099,6 +2122,7 @@
 				415EEEB02D5534A500B47408 /* prefs.cpp in Sources */,
 				919CC2701B3773EC00273FDA /* scrollbar.cpp in Sources */,
 				919CC2711B3773F300273FDA /* cursors.mac.mm in Sources */,
+				919BE86B2D658BC6000C64C6 /* special-general.cpp in Sources */,
 				919CC2721B3773F800273FDA /* fileio.cpp in Sources */,
 				919CC2741B37740200273FDA /* fileio_scen.cpp in Sources */,
 				919CC2751B37740A00273FDA /* render_image.cpp in Sources */,
@@ -2108,6 +2132,7 @@
 				919CC2791B37742200273FDA /* prefs.mac.mm in Sources */,
 				919CC27A1B37742800273FDA /* qdpict.mac.cpp in Sources */,
 				919CC27B1B37742D00273FDA /* sounds.cpp in Sources */,
+				919BE8AC2D677699000C64C6 /* special-rect.cpp in Sources */,
 				919CC27C1B37743200273FDA /* special_parse.cpp in Sources */,
 				919CC27D1B37743700273FDA /* tarball.cpp in Sources */,
 				919CC27E1B37743B00273FDA /* undo.cpp in Sources */,
@@ -2116,9 +2141,11 @@
 				915473CF2C800AB000EB1C94 /* enchant.cpp in Sources */,
 				915AF9E81BBF8B5C008AEF49 /* scrollpane.cpp in Sources */,
 				91E128E71BC1E6DD00C8BE1D /* basicbtns.cpp in Sources */,
+				919BE8942D676567000C64C6 /* special-condition.cpp in Sources */,
 				91E128ED1BC2076B00C8BE1D /* 3choice.cpp in Sources */,
 				91E128EE1BC2076B00C8BE1D /* choicedlog.cpp in Sources */,
 				9143044A2970EDC1003A3967 /* keymods.cpp in Sources */,
+				919BE8B32D6776A8000C64C6 /* special-outdoor.cpp in Sources */,
 				91E128EF1BC2076B00C8BE1D /* pictchoice.cpp in Sources */,
 				91E128F01BC2076B00C8BE1D /* strchoice.cpp in Sources */,
 				91E128F11BC2076B00C8BE1D /* strdlog.cpp in Sources */,
@@ -2128,6 +2155,7 @@
 				91A2480E2969CFD200B8D90F /* res_dialog.cpp in Sources */,
 				91CE24921EA12ABD005BDCE4 /* gfxsheets.cpp in Sources */,
 				91CE24931EA12AC9005BDCE4 /* tiling.cpp in Sources */,
+				919BE8A02D676DDE000C64C6 /* special-town.cpp in Sources */,
 				91EC1F0423DDFF9D00271891 /* res_cursor.cpp in Sources */,
 				91EC1F0523DDFF9D00271891 /* res_font.cpp in Sources */,
 				91EC1F0623DDFF9D00271891 /* res_image.cpp in Sources */,

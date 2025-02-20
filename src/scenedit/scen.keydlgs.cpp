@@ -661,15 +661,8 @@ static bool edit_spec_enc_type(cDialog& me, std::string item_hit, node_stack_t& 
 	else if(item_hit == "town") category = eSpecCat::TOWN;
 	else if(item_hit == "out") category = eSpecCat::OUTDOOR;
 	else if(item_hit == "rect") category = eSpecCat::RECT;
-	int start = -1, finish = -1, current = int(edit_stack.top().node.type);
-	for(int i = 0; i < std::numeric_limits<unsigned short>::max(); i++) {
-		eSpecCat check = (*eSpecType(i)).cat;
-		if(start >= 0 && check == eSpecCat::INVALID) {
-			finish = i - 1;
-			break;
-		} else if(check == category && start < 0)
-			start = i;
-	}
+	auto bounds = *category;
+	int start = int(bounds.first), finish = int(bounds.last), current = int(edit_stack.top().node.type);
 	if(start < 0 || finish < 0) return true;
 	std::vector<std::string> choices;
 	for(int i = start; i <= finish; i++) {
