@@ -126,6 +126,13 @@ enum class eSpecCat {
 	GENERAL, ONCE, AFFECT, IF_THEN, TOWN, RECT, OUTDOOR
 };
 
+struct node_category_info_t {
+	eSpecType first = eSpecType::NONE, last = eSpecType::NONE;
+	node_category_info_t() = default;
+	node_category_info_t(eSpecType a, eSpecType b) : first(a), last(b) {}
+	bool contains(eSpecType spec) const;
+};
+
 enum eStrType {
 	STRT_MONST, STRT_ITEM, STRT_TER, STRT_BUTTON,
 	STRT_SPEC_ITEM, STRT_MAGE, STRT_PRIEST, STRT_ALCHEMY,
@@ -146,8 +153,10 @@ enum class eSpecPicker {
 	STATUS, STATUS_PARTY,
 };
 
+enum class eSpecField { SDF1, SDF2, MSG1, MSG2, MSG3, PICT, PTYP, EX1A, EX1B, EX1C, EX2A, EX2B, EX2C, JUMP };
+
 struct node_function_t {
-	eSpecPicker button;
+	eSpecPicker button = eSpecPicker::NONE;
 	union {
 		eStrType str_type; // for eSpecPicker::STRING only
 		ePicType pic_type; // for eSpecPicker::PICTURE only; PIC_NONE = use pictype field from node
@@ -159,14 +168,20 @@ struct node_function_t {
 	std::string label() const;
 	std::string help() const; // maybe we don't need this though? I guess it would be for a hypothetical help button next to each field to give addition info on how that one field works.
 	node_function_t();
-	node_function_t(char c);
+	node_function_t(eSpecPicker button);
+	node_function_t(eStrType str);
+	node_function_t(ePicType pic);
 private:
 	eSpecType self = eSpecType::NONE;
 	std::string lbl;
 	int lbl_idx = 0, sub_idx = 0;
 	bool needs_split = false;
+	friend struct node_builder_t;
 	friend struct node_properties_t;
 };
+
+node_function_t operator+(eSpecPicker);
+node_function_t operator+(eStrType);
 
 struct node_properties_t {
 	eSpecType self;
@@ -178,13 +193,75 @@ struct node_properties_t {
 	node_function_t pic(const cSpecial&) const, pictype(const cSpecial&) const;
 	node_function_t ex1a(const cSpecial&) const, ex1b(const cSpecial&) const, ex1c(const cSpecial&) const;
 	node_function_t ex2a(const cSpecial&) const, ex2b(const cSpecial&) const, ex2c(const cSpecial&) const;
-	node_properties_t() : self(eSpecType::INVALID), cat(eSpecCat::INVALID) {}
-	node_properties_t(std::initializer_list<std::function<void(node_properties_t)>>);
-	static void load();
+	node_properties_t() : self(eSpecType::INVALID), cat(eSpecCat::INVALID), f_jmp(eSpecPicker::NODE) {
+		set_label_indices();
+	}
 private:
+	node_properties_t(eSpecType type);
 	node_function_t f_sd1, f_sd2, f_jmp, f_m1, f_m2, f_m3, f_pic, f_pt, f_x1a, f_x1b, f_x1c, f_x2a, f_x2b, f_x2c;
+	void set_label_indices();
+	friend struct node_builder_t;
+	friend struct field_map;
 };
 
 const node_properties_t& operator* (eSpecType t);
+const node_category_info_t& operator* (eSpecCat t);
+
+// Builds the information needed to display the correct buttons when editing a special node.
+struct node_builder_t {
+	node_builder_t(eSpecType type) : node(type) {}
+	// Specifies that a particular field should use a specified picker.
+	node_builder_t& field(eSpecField field, node_function_t picker);
+	// Quick overloads for each possible field.
+	node_builder_t& sdf1(node_function_t picker);
+	node_builder_t& sdf2(node_function_t picker);
+	node_builder_t& jump(node_function_t picker);
+	node_builder_t& msg1(node_function_t picker);
+	node_builder_t& msg2(node_function_t picker);
+	node_builder_t& msg3(node_function_t picker);
+	node_builder_t& pict(node_function_t picker);
+	node_builder_t& ptyp(node_function_t picker);
+	node_builder_t& ex1a(node_function_t picker);
+	node_builder_t& ex1b(node_function_t picker);
+	node_builder_t& ex1c(node_function_t picker);
+	node_builder_t& ex2a(node_function_t picker);
+	node_builder_t& ex2b(node_function_t picker);
+	node_builder_t& ex2c(node_function_t picker);
+	// Specifies that sdf1 and sdf2 combine to define an SDF
+	node_builder_t& sdf();
+	// Specifies that msg1 and msg2 specify a pair of local strings
+	node_builder_t& msg();
+	// Specifies that pict and pictype have their typical meaning of defining a picture
+	node_builder_t& pic();
+	// Specifies that ex1a,ex1b and ex2a,ex2b define opposing corners of a rectangle.
+	// DO NOT use for other cases where there are two points, for example defining a path!
+	// Also DO NOT use for cases where an outdoor sector is identified by its coordinates.
+	node_builder_t& rect();
+	// Specifies that the indicated two fields combine to define an SDF.
+	node_builder_t& sdf(eSpecField a, eSpecField b);
+	// Specifies that the indicated two fields combine to define a location.
+	node_builder_t& loc(eSpecField a, eSpecField b);
+	operator node_properties_t();
+private:
+	node_properties_t node;
+};
+
+// An overview of how the builder works.
+// Most of the time, the node_function_t will be constructed implicitly using
+// either one of its implicit constructors or one of the overloaded unary + operators.
+
+// An eStrType implies a string picker, ie eSpecPicker::STRING.
+// However, passing eSpecPicker::STRING directly doesn't do anything useful.
+
+// An ePicType implies a graphic picker, ie eSpecPicker::PICTURE.
+// Passing eSpecPicker::PICTURE directly means that another field (usually pictype) will determine the type.
+
+// The prefix + has a useful meaning only in a few special cases:
+// +eSpecPicker::NODE means always edit a scenario node, even if the caller is a town or outdoor node.
+// +eSpecPicker::MSG_* is similar – always edit a scenario string, never a town or outdoor string.
+// +eSpecPicker::FIELD adds the pseudo-fields Move Mountains and Dispel to the list.
+// +STRT_SKILL adds read-only pseudo-skills such as "current HP" to the list
+// +STRT_SPELL_PAT expands the "rotateable wall" into all its possible orientations
+// More cases may be added.
 
 #endif
