@@ -1441,7 +1441,6 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 		text_rect = dest_rect;
 		text_rect.top += 13;
 		text_rect.height() = 10;
-		text_rect.offset(x_adj,y_adj);
 		std::string dam_str = std::to_string(damage);
 		style.colour = sf::Color::White;
 		text_rect.offset(-1,-1);
