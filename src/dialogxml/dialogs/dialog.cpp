@@ -887,8 +887,8 @@ void cDialog::process_keystroke(cKey keyHit){
 	ctrlIter iter = controls.begin();
 	bool enterKeyHit = keyHit.spec && keyHit.k == key_enter;
 	while(iter != controls.end()){
-		if(iter->second->isVisible() && iter->second->isClickable()
-			&& iter->second->getAttachedKey() == keyHit || (iter->second->isDefault() && enterKeyHit)){
+		if((iter->second->isVisible() && iter->second->isClickable())
+			&& (iter->second->getAttachedKey() == keyHit || (iter->second->isDefault() && enterKeyHit))){
 
 			iter->second->setActive(true);
 			draw();
