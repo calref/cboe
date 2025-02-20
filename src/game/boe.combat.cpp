@@ -510,6 +510,7 @@ void char_stand_ready() {
 	univ.current_pc().ap = 0;
 }
 
+// Melee attack a monster
 void pc_attack(short who_att,iLiving* target) {
 	short r1,r2;
 	short hit_adj, dam_adj;
@@ -586,11 +587,7 @@ void pc_attack(short who_att,iLiving* target) {
 				type = eDamageType::UNDEAD;
 			else if(attacker.race == eRace::DEMON)
 				type = eDamageType::DEMON;
-			// TODO: Change to damage_target()
-			if(cCreature* m_target = dynamic_cast<cCreature*>(target))
-				damage_monst(*m_target, who_att, r2, type,4);
-			else if(cPlayer* pc_target = dynamic_cast<cPlayer*>(target))
-				damage_pc(*pc_target, r2, type, attacker.race, 4);
+			damage_target(*target, r2, type, 4, true, who_att, attacker.race);
 		}
 		else {
 			draw_terrain(2);
@@ -810,25 +807,19 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 		short inflicted_weapon_damage  = 0;
 		short inflicted_special_damage = 0;
 		short inflicted_bonus_damage   = 0;
-		// TODO: Change these to damage_target()
-		if(cCreature* monst = dynamic_cast<cCreature*>(&target)) {
-			if(dmg_snd != no_dmg)
-				inflicted_weapon_damage  = damage_monst(*monst, who_att, r2, eDamageType::WEAPON, dmg_snd, false);
-			if(spec_dam)
-				inflicted_special_damage = damage_monst(*monst, who_att, spec_dam, eDamageType::SPECIAL, 5, false);
-			if(bonus_dam)
-				inflicted_bonus_damage   = damage_monst(*monst, who_att, bonus_dam, dmg_tp, 0, false);
-			if(inflicted_weapon_damage || inflicted_special_damage || inflicted_bonus_damage)
+
+		eRace race = attacker.race;
+		if(dmg_snd != no_dmg)
+			inflicted_weapon_damage  = damage_target(target, r2, eDamageType::WEAPON, dmg_snd, false, who_att, race);
+		if(spec_dam)
+			inflicted_special_damage = damage_target(target, spec_dam, eDamageType::SPECIAL, 5, false, who_att, race);
+		if(bonus_dam)
+			inflicted_bonus_damage   = damage_target(target, bonus_dam, dmg_tp, 0, false, who_att, race);
+
+		if(inflicted_weapon_damage || inflicted_special_damage || inflicted_bonus_damage){
+			if(cCreature* monst = dynamic_cast<cCreature*>(&target)) {
 				monst->damaged_msg(inflicted_weapon_damage, inflicted_special_damage + inflicted_bonus_damage);
-		} else if(cPlayer* who = dynamic_cast<cPlayer*>(&target)) {
-			eRace race = attacker.race;
-			if(dmg_snd != no_dmg)
-				inflicted_weapon_damage  = damage_pc(*who, r2, eDamageType::WEAPON, race, dmg_snd, false);
-			if(spec_dam)
-				inflicted_special_damage = damage_pc(*who, spec_dam, eDamageType::SPECIAL, race, dmg_snd, false);
-			if(bonus_dam)
-				inflicted_bonus_damage   = damage_pc(*who, bonus_dam, dmg_tp, race, dmg_snd, false);
-			if(inflicted_weapon_damage || inflicted_special_damage || inflicted_bonus_damage) {
+			} else if(cPlayer* who = dynamic_cast<cPlayer*>(&target)) {
 				std::string msg = "  " + who->name + " takes " + std::to_string(inflicted_weapon_damage);
 				if(inflicted_special_damage + inflicted_bonus_damage)
 					msg += '+' + std::to_string(inflicted_special_damage + inflicted_bonus_damage);
@@ -4030,13 +4021,16 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 	return acted;
 }
 
-void damage_target(short target,short dam,eDamageType type,short sound_type) {
-	if(target == 6) return;
+short damage_target(short target,short dam,eDamageType type,short sound_type, bool do_print, short who_hit, eRace race) {
+	if(target == 6) return 0;
 	if(target < 6)
-		damage_pc(univ.party[target],dam,type,eRace::UNKNOWN,sound_type);
-	else damage_monst(univ.town.monst[target - 100], 7, dam, type,sound_type);
+		return damage_pc(univ.party[target],dam,type,race,sound_type, do_print);
+	else return damage_monst(univ.town.monst[target - 100], who_hit, dam, type,sound_type, do_print);
 }
 
+short damage_target(iLiving& target,short dam,eDamageType type,short sound_type, bool do_print, short who_hit, eRace race) {
+	return damage_target(univ.get_target_i(target), dam, type, sound_type, do_print, who_hit, race);
+}
 
 //	target = find_fireball_loc(caster->m_loc,1,(caster->attitude == 1) ? 0 : 1,&target_levels);
 
