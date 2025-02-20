@@ -934,6 +934,12 @@ void cPict::drawPresetField(short num, rectangle to_rect){
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
+void cPict::setAnimLoops(short value) {
+	// -2 is infinite loops. Anything else <= 0 is no animation.
+	if(value >= 0 || value == -2) animLoops = value;
+	else animLoops = 0;
+}
+
 void cPict::updateAnim(short loop_frames) {
 	if(prevAnimFrame != animFrame){
 		if(animFrame % loop_frames == 0 && animLoops > 0)
