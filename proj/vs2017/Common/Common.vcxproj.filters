@@ -662,6 +662,27 @@
     <ClCompile Include="..\..\..\src\scenario\special.cpp">
       <Filter>Scenario</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\scenario\special-affect.cpp">
+      <Filter>Scenario</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\scenario\special-condition.cpp">
+      <Filter>Scenario</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\scenario\special-general.cpp">
+      <Filter>Scenario</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\scenario\special-oneshot.cpp">
+      <Filter>Scenario</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\scenario\special-outdoor.cpp">
+      <Filter>Scenario</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\scenario\special-rect.cpp">
+      <Filter>Scenario</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\scenario\special-town.cpp">
+      <Filter>Scenario</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\scenario\talking.cpp">
       <Filter>Scenario</Filter>
     </ClCompile>
