@@ -165,6 +165,8 @@ public:
 	/// Retrieve the control's current keyboard shortcut as a human-readable string.
 	/// @return the currently-assigned keyboard shortcut, or an empty string if none is assigned.
 	std::string getAttachedKeyDescription() const;
+	inline void setDefault(bool value) { isDefaultControl = value; }
+	inline bool isDefault() { return isDefaultControl; }
 	/// Attach an event handler to this control.
 	/// @tparam t The type of event to attach.
 	/// @param handler The event handler function or functor. Its signature depends on the event type.
@@ -443,6 +445,9 @@ protected:
 	eFrameStyle frameStyle;
 	/// The control's attached key.
 	cKey key;
+	/// Whether the control is the default control of its dialog.
+	bool isDefaultControl = false;
+
 	/// Draw a frame around the control.
 	/// @param amt How much to offset the frame from the control's bounding rect.
 	/// @param med_or_lt true to use a darker colour for the frame.
