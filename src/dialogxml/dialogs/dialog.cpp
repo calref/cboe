@@ -160,7 +160,6 @@ cDialog::cDialog(const DialogDefn& file, cDialog* p) : parent(p) {
 
 extern fs::path progDir;
 void cDialog::loadFromFile(const DialogDefn& file){
-	static const cKey enterKey = {true, key_enter};
 	bg = defaultBackground;
 	fname = file.id;
 	try{
@@ -328,7 +327,7 @@ void cDialog::loadFromFile(const DialogDefn& file){
 		
 		// Set the default button.
 		if(hasControl(defaultButton))
-			getControl(defaultButton).attachKey(enterKey);
+			getControl(defaultButton).setDefault(true);
 		
 		// Sort by tab order
 		// First, fill any gaps that might have been left, using ones that had no specific tab order
@@ -886,8 +885,11 @@ bool cDialog::addLabelFor(std::string key, std::string label, eLabelPos where, s
 
 void cDialog::process_keystroke(cKey keyHit){
 	ctrlIter iter = controls.begin();
+	bool enterKeyHit = keyHit.spec && keyHit.k == key_enter;
 	while(iter != controls.end()){
-		if(iter->second->isVisible() && iter->second->isClickable() && iter->second->getAttachedKey() == keyHit){
+		if(iter->second->isVisible() && iter->second->isClickable()
+			&& iter->second->getAttachedKey() == keyHit || (iter->second->isDefault() && enterKeyHit)){
+
 			iter->second->setActive(true);
 			draw();
 			iter->second->playClickSound();
