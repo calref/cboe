@@ -88,7 +88,8 @@ public:
 	cPict& operator=(cPict& other) = delete;
 	cPict(cPict& other) = delete;
 	inline static void resetAnim() { animFrame = 0; }
-	inline void setAnimLoops(short value) { animLoops = value; }
+	// -2 is infinite loops. Anything else <= 0 is no animation.
+	inline void setAnimLoops(short value) { animLoops = max(value, value != -2 ? 0 : value); }
 private:
 	static std::shared_ptr<const sf::Texture> getSheetInternal(eSheetType type, size_t n);
 	std::shared_ptr<const sf::Texture> getSheet(eSheetType type, size_t n = 0);

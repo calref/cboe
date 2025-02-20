@@ -296,7 +296,7 @@ Picture number
 Picture type
 Unused
 If Pulled, call this special ...
-Animation Loops (-1 for infinite)
+Animation Loops (-2 for infinite)
 Unused
 Unused
 Animation FPS (-1 for default 2)
@@ -312,7 +312,7 @@ Picture number
 Picture type
 X coordinate to telep. to
 Y coordinate to telep. to
-Animation Loops (-1 for infinite)
+Animation Loops (-2 for infinite)
 Unused
 Unused
 Animation FPS (-1 for default 2)
