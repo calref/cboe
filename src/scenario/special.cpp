@@ -579,7 +579,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 // ~ - Choose button to select a weapon enchantment
 // _ - Choose button to select a full sheet
 // 0..9 - Choose button to select a specific type of picture
-// (terrain, monster, dialog, talk, item, pc, field, boom, missile, status)
+// (terrain, monster, dialog, talk, item, pc, field, static boom, missile, status)
 static const char*const button_dict[7][11] = {
 	{ // general nodes
 		" mmmMmmmmmMmmm mmmmmm   Mmm  $ mmmmmm        mmm", // msg1
