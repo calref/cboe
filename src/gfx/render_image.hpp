@@ -27,6 +27,8 @@ void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,const 
 void rect_draw_some_item(sf::RenderTexture& src_render_gworld,rectangle src_rect,const sf::Texture& mask_gworld,sf::RenderTarget& targ_gworld,rectangle targ_rect);
 void draw_splash(const sf::Texture& splash, sf::RenderWindow& targ, rectangle dest_rect);
 
-void setActiveRenderTarget(sf::RenderTarget& where);
+// NEVER call setActive() directly.
+void enableGL(sf::RenderTarget& where);
+void disableGL(sf::RenderTarget& where);
 
 #endif

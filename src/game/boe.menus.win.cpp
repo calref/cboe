@@ -3,6 +3,7 @@
 #include <map>
 #include <sstream>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include "gfx/render_image.hpp"
 #include "boeresource.h"
 #include "universe.hpp"
 #include "boe.party.hpp"
@@ -74,7 +75,7 @@ void init_menubar() {
 	mainProc = SetWindowLongPtr(winHandle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&menuProc));
 	SetMenu(winHandle, menuHandle);
 
-	mainPtr.setActive();
+	enableGL(mainPtr);
 	
 	// And now initialize the mapping from Windows menu commands to eMenu constants
 	static bool inited = false;

@@ -1371,12 +1371,12 @@ void draw_map(bool need_refresh) {
 		canMap = false;
 	}
 	else if(need_refresh) {
-		// CHECKME: unsure, but on osx, if mainPtr.setActive() is not called,
+		// CHECKME: unsure, but on osx, if this is not called,
 		// the following code does not update the gworld texture if we are
 		// called just after closing a dialog
-		mainPtr.setActive();
+		enableGL(mainPtr);
 
-		map_gworld.setActive();
+		enableGL(map_gworld);
 		
 		fill_rect(map_gworld, map_world_rect, sf::Color::Black);
 		
@@ -1464,7 +1464,7 @@ void draw_map(bool need_refresh) {
 		glFlush();
 	}
 	
-	mini_map.setActive(false);
+	disableGL(mini_map);
 	
 	// Now place terrain map gworld
 	TextStyle style;
@@ -1519,12 +1519,11 @@ void draw_map(bool need_refresh) {
 		}
 	}
 	
-	mini_map.setActive(false);
+	disableGL(mini_map);
 	mini_map.display();
 	
 	// Now exit gracefully
-	mainPtr.setActive();
-	
+	enableGL(mainPtr);
 }
 
 

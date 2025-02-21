@@ -27,6 +27,7 @@
 #include "tools/prefs.hpp"
 #include "utility.hpp"
 #include "replay.hpp"
+#include "gfx/render_image.hpp"
 
 extern eGameMode overall_mode;
 extern short which_combat_type;
@@ -267,7 +268,7 @@ void start_outdoor_combat(cOutdoors::cWandering encounter,location where,short n
 	print_buf();
 	play_sound(23);
 	
-	mainPtr.setActive();
+	enableGL(mainPtr);
 	which_combat_type = 0;
 	overall_mode = MODE_COMBAT;
 	

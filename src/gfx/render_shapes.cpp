@@ -117,7 +117,7 @@ void draw_line(sf::RenderTarget& target, location from, location to, int thickne
 	line[0].color = colour;
 	line[1].position = to;
 	line[1].color = colour;
-	setActiveRenderTarget(target);
+	enableGL(target);
 	float saveThickness;
 	glGetFloatv(GL_LINE_WIDTH, &saveThickness);
 	glLineWidth(thickness);
@@ -128,7 +128,7 @@ void draw_line(sf::RenderTarget& target, location from, location to, int thickne
 static void fill_shape(sf::RenderTarget& target, sf::Shape& shape, int x, int y, sf::Color colour) {
 	shape.setPosition(x, y);
 	shape.setFillColor(colour);
-	setActiveRenderTarget(target);
+	enableGL(target);
 	target.draw(shape);
 	
 }
@@ -222,7 +222,7 @@ rectangle Region::getEnclosingRect() {
 // Could request it in dialogs, but currently don't
 // SFML does not appear to allow requesting it for render textures
 void Region::setStencil(sf::RenderWindow& where) {
-	where.setActive();
+	enableGL(where);
 	glClearStencil(0);
 	glClear(GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_STENCIL_TEST);
@@ -255,7 +255,7 @@ void clip_rect(sf::RenderTarget& where, rectangle rect) {
 	}
 
 	// TODO: Make sure this works for the scissor test...
-	setActiveRenderTarget(where);
+	enableGL(where);
 	auto viewport = where.getView().getViewport();
 	rectangle winRect(where);
 	location pivot = rect.bottomLeft();
@@ -274,7 +274,7 @@ void undo_clip(sf::RenderTarget& where) {
 		store_clip_rects.erase(p);
 	}
 
-	setActiveRenderTarget(where);
+	enableGL(where);
 	glDisable(GL_SCISSOR_TEST);
 	glDisable(GL_STENCIL_TEST);
 }

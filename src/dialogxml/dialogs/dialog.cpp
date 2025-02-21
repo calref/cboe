@@ -14,6 +14,7 @@
 #include <map>
 #include "dialog.hpp"
 #include "gfx/tiling.hpp" // for bg
+#include "gfx/render_image.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
 #include "sounds.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
@@ -1052,7 +1053,7 @@ xBadVal::~xBadVal() throw(){
 bool cDialog::doAnimations = false;
 
 void cDialog::draw(){
-	win.setActive(false);
+	disableGL(win);
 	tileImage(win,winRect,::bg[bg]);
 	if(doAnimations && animTimer.getElapsedTime().asMilliseconds() >= 500) {
 		cPict::advanceAnim();
@@ -1070,7 +1071,7 @@ void cDialog::draw(){
 		iter++;
 	}
 	
-	win.setActive();
+	enableGL(win);
 	win.display();
 }
 

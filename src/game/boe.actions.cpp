@@ -42,6 +42,7 @@
 #include "tools/prefs.hpp"
 #include "gfx/render_shapes.hpp"
 #include "tools/enum_map.hpp"
+#include "gfx/render_image.hpp"
 #include <string>
 #include <boost/lexical_cast.hpp>
 #include <sstream>
@@ -2292,7 +2293,7 @@ void close_map(bool record) {
 	}
 	mini_map.setVisible(false);
 	map_visible = false;
-	mainPtr.setActive();
+	enableGL(mainPtr);
 }
 
 void cancel_item_target(bool& did_something, bool& need_redraw, bool& need_reprint) {

@@ -182,9 +182,9 @@ void apply_light_mask(bool onWindow) {
 		return;
 	
 	if(onWindow) {
-		mainPtr.setActive(false);
+		disableGL(mainPtr);
 		fill_region(mainPtr, dark_mask_region, sf::Color::Black);
-		mainPtr.setActive();
+		enableGL(mainPtr);
 		return;
 	}
 	
@@ -397,7 +397,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	auto ter_rects = terrain_screen_rects();
 	rect_draw_some_item(terrain_screen_gworld.getTexture(),ter_rects.from,mainPtr,ter_rects.to);
 	
-	mainPtr.setActive(false);
+	disableGL(mainPtr);
 	
 	// init missile paths
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;
@@ -500,7 +500,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 					rect_draw_some_item(*from_gw,from_rect, mainPtr,temp_rect,ter_rects.in_frame,sf::BlendAlpha);
 				}
 			}
-		mainPtr.setActive();
+		enableGL(mainPtr);
 		mainPtr.display();
 		sf::sleep(sf::milliseconds(2 + 5 * get_int_pref("GameSpeed")));
 	}
@@ -577,7 +577,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	style.font = FONT_BOLD;
 	style.pointSize = 10;
 	style.lineHeight = 10;
-	mainPtr.setActive(false);
+	disableGL(mainPtr);
 	
 	// init missile paths
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;
@@ -638,12 +638,12 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 						style.colour = Colours::BLACK; 
 						text_rect.offset(-1,-1);
 						win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style);
-						mainPtr.setActive();
+						enableGL(mainPtr);
 					}
 				}
 			}
 		//if(((PSD[SDF_GAME_SPEED] == 1) && (t % 3 == 0)) || ((PSD[SDF_GAME_SPEED] == 2) && (t % 2 == 0)))
-		mainPtr.setActive();
+		enableGL(mainPtr);
 		mainPtr.display();
 		sf::sleep(time_in_ticks(2 * (1 + get_int_pref("GameSpeed"))));
 	}
@@ -707,7 +707,7 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 	style.pointSize = 18;
 	
 	area_rect = rectangle(talk_gworld);
-	talk_gworld.setActive(false);
+	disableGL(talk_gworld);
 
 	// Only re-render on top of the item that is clicked:
 	if(item_pressed || item_help_pressed) {
@@ -863,7 +863,7 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 	win_draw_string(talk_gworld,bottom_help_rects[3],"'I' button brings up description.",eTextMode::WRAP,style);
 	
 	undo_clip(talk_gworld);
-	talk_gworld.setActive();
+	enableGL(talk_gworld);
 	talk_gworld.display();
 	
 	refresh_shopping();
@@ -886,7 +886,7 @@ void refresh_shopping() {
 static void place_talk_face() {
 	rectangle face_rect = {6,6,38,38};
 	face_rect.offset(talk_area_rect.topLeft());
-	mainPtr.setActive();
+	enableGL(mainPtr);
 	short face_to_draw = univ.scenario.scen_monsters[store_monst_type].default_facial_pic;
 	if(store_talk_face_pic >= -1)
 		face_to_draw = store_talk_face_pic;
@@ -907,7 +907,7 @@ void click_talk_rect(word_rect_t word) {
 	}
 
 	rectangle talkRect(talk_gworld), wordRect(word.rect);
-	mainPtr.setActive();
+	enableGL(mainPtr);
 	rect_draw_some_item(talk_gworld,talkRect,mainPtr,talk_area_rect);
 	wordRect.offset(talk_area_rect.topLeft());
 	wordRect.width() += 10; // Arbitrary extra space fixes #481 and shouldn't cause any problems
@@ -932,14 +932,14 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	rectangle title_rect = {19,48,42,260};
 	rectangle dest_rect,help_from = {46,60,59,76};
 	
-	talk_gworld.setActive(false);
+	disableGL(talk_gworld);
 	
 	TextStyle style;
 	style.font = FONT_DUNGEON;
 	style.pointSize = TALK_WORD_SIZE;
 	
 	if(c_rect.right > 0) {
-		mainPtr.setActive(false);
+		disableGL(mainPtr);
 		c_rect.offset(talk_area_rect.topLeft());
 		clip_rect(mainPtr, c_rect);
 	}
@@ -1006,13 +1006,13 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		}
 	}
 	
-	talk_gworld.setActive();
+	enableGL(talk_gworld);
 	rectangle oldRect(talk_gworld);
 	undo_clip(talk_gworld);
 	talk_gworld.display();
 	
 	// Finally place processed graphics
-	mainPtr.setActive();
+	enableGL(mainPtr);
 	rect_draw_some_item(talk_gworld,oldRect,mainPtr,talk_area_rect);
 	// I have no idea what this check is for; I'm jsut preserving it in case it was important
 	if(c_rect.right == 0) place_talk_face();
