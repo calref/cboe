@@ -93,6 +93,7 @@ std::string get_os_version() {
 }
 
 void makeFrontWindow(sf::Window& win) {
+	win.requestFocus();
 }
 
 void setWindowFloating(sf::Window& win, bool floating) {
