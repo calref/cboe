@@ -437,7 +437,7 @@ void draw_party_symbol(location center) {
 	if((is_town()) && (univ.party.town_loc.x > 70))
 		return;
 
-	if(center != univ.party.town_loc) {
+	if(is_town() && center != univ.party.town_loc) {
 		if(!is_on_screen(univ.party.town_loc, center)) return;
 
 		target.x += univ.party.town_loc.x - center.x;
