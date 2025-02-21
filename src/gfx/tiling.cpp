@@ -68,7 +68,6 @@ void tileImage(sf::RenderTarget& target, rectangle area, tessel_ref_t tessel, sf
 	tesselShape.setTextureRect(area);
 	tesselShape.setPosition(area.left, area.top);
 	sf::RenderStates renderMode(mode);
-	ENABLEGL(target);
 	clip_rect(target, clipArea);
 	target.draw(tesselShape, renderMode);
 	undo_clip(target);

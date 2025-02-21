@@ -1371,13 +1371,6 @@ void draw_map(bool need_refresh) {
 		canMap = false;
 	}
 	else if(need_refresh) {
-		// CHECKME: unsure, but on osx, if this is not called,
-		// the following code does not update the gworld texture if we are
-		// called just after closing a dialog
-		ENABLEGL(mainPtr);
-
-		ENABLEGL(map_gworld);
-		
 		fill_rect(map_gworld, map_world_rect, sf::Color::Black);
 		
 		// Now, if shopping or talking, just don't touch anything.
@@ -1464,8 +1457,6 @@ void draw_map(bool need_refresh) {
 		glFlush();
 	}
 	
-	DISABLEGL(mini_map);
-	
 	// Now place terrain map gworld
 	TextStyle style;
 	style.font = FONT_BOLD;
@@ -1519,11 +1510,7 @@ void draw_map(bool need_refresh) {
 		}
 	}
 	
-	DISABLEGL(mini_map);
 	mini_map.display();
-	
-	// Now exit gracefully
-	ENABLEGL(mainPtr);
 }
 
 

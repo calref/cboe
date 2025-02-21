@@ -450,7 +450,6 @@ void arrow_button_click(rectangle button_rect) {
 		// is recorded afterward
 		record_action("arrow_button_click", boost::lexical_cast<std::string>(button_rect));
 	}
-	ENABLEGL(mainPtr);
 	clip_rect(mainPtr, button_rect);
 	// TODO: Mini-event loop so that the click doesn't happen until releasing the mouse button
 	
@@ -661,7 +660,6 @@ void draw_text_bar() {
 }
 
 void put_text_bar(std::string str, std::string right_str) {
-	DISABLEGL(text_bar_gworld);
 	auto& bar_gw = *ResMgr::graphics.get("textbar");
 	rect_draw_some_item(bar_gw, rectangle(bar_gw), text_bar_gworld, rectangle(bar_gw));
 	clear_scale_aware_text(text_bar_gworld);
@@ -694,14 +692,11 @@ void put_text_bar(std::string str, std::string right_str) {
 		}
 	}
 	
-	ENABLEGL(text_bar_gworld);
 	text_bar_gworld.display();
 }
 
 void refresh_text_bar() {
-	DISABLEGL(mainPtr);
 	rect_draw_some_item(text_bar_gworld, rectangle(text_bar_gworld), mainPtr, win_to_rects[WINRECT_STATUS]);
-	ENABLEGL(mainPtr);
 }
 
 // this is used for determinign whether to round off walkway corners
@@ -748,9 +743,7 @@ void draw_terrain(short mode) {
 		}
 		mode = 0;
 	}
-	
-	ENABLEGL(mainPtr);
-	
+
 	int max_dim_x, max_dim_y;
 	if(is_out()){
 		max_dim_x = min(96, 48 * univ.scenario.outdoors.width());
@@ -1604,7 +1597,6 @@ void draw_targeting_line(location where_curs) {
 			
 			if((can_see_light(from_loc,which_space,sight_obscurity) < 5)
 				&& (dist(from_loc,which_space) <= current_spell_range)) {
-				DISABLEGL(mainPtr);
 				clip_rect(mainPtr, on_screen_terrain_area);
 				draw_line(mainPtr, where_curs, location(xBound, yBound), 2, {128,128,128}, sf::BlendAdd);
 				redraw_rect.left = min(where_curs.x,xBound) - 4;
@@ -1645,7 +1637,6 @@ void draw_targeting_line(location where_curs) {
 					}
 				
 				redraw_rect2.inset(-5,-5);
-				ENABLEGL(mainPtr);
 				undo_clip(mainPtr);
 			}
 		}

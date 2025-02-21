@@ -74,8 +74,6 @@ void init_menubar() {
 	// We replace SFML's window procedure with our own, which checks for menu events and then forwards to SFML's procedure.
 	mainProc = SetWindowLongPtr(winHandle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&menuProc));
 	SetMenu(winHandle, menuHandle);
-
-	ENABLEGL(mainPtr);
 	
 	// And now initialize the mapping from Windows menu commands to eMenu constants
 	static bool inited = false;

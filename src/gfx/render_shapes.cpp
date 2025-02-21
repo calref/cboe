@@ -111,24 +111,24 @@ public:
 	// TODO: Additional functions?
 };
 
-void draw_line(sf::RenderTarget& target, location from, location to, int thickness, sf::Color colour, sf::BlendMode mode) {
+void draw_line(sf::RenderTarget& target, location from, location to, int thickness, sf::Color colour, sf::BlendMode mode, bool must_enable_gl) {
 	sf::VertexArray line(sf::LinesStrip, 2);
 	line[0].position = from;
 	line[0].color = colour;
 	line[1].position = to;
 	line[1].color = colour;
-	ENABLEGL(target);
+	if(must_enable_gl) ENABLEGL(target);
 	float saveThickness;
 	glGetFloatv(GL_LINE_WIDTH, &saveThickness);
 	glLineWidth(thickness);
 	target.draw(line, mode);
 	glLineWidth(saveThickness);
+	if(must_enable_gl) DISABLEGL(target);
 }
 
 static void fill_shape(sf::RenderTarget& target, sf::Shape& shape, int x, int y, sf::Color colour) {
 	shape.setPosition(x, y);
 	shape.setFillColor(colour);
-	ENABLEGL(target);
 	target.draw(shape);
 	
 }
@@ -222,7 +222,6 @@ rectangle Region::getEnclosingRect() {
 // Could request it in dialogs, but currently don't
 // SFML does not appear to allow requesting it for render textures
 void Region::setStencil(sf::RenderWindow& where) {
-	ENABLEGL(where);
 	glClearStencil(0);
 	glClear(GL_STENCIL_BUFFER_BIT);
 	glEnable(GL_STENCIL_TEST);
@@ -254,7 +253,6 @@ void clip_rect(sf::RenderTarget& where, rectangle rect) {
 		store_clip_rects[p] = rect;
 	}
 
-	// TODO: Make sure this works for the scissor test...
 	ENABLEGL(where);
 	auto viewport = where.getView().getViewport();
 	rectangle winRect(where);
@@ -265,6 +263,7 @@ void clip_rect(sf::RenderTarget& where, rectangle rect) {
 }
 
 void clip_region(sf::RenderWindow& where, Region& region) {
+	ENABLEGL(where);
 	region.setStencil(where);
 }
 
@@ -274,9 +273,9 @@ void undo_clip(sf::RenderTarget& where) {
 		store_clip_rects.erase(p);
 	}
 
-	ENABLEGL(where);
 	glDisable(GL_SCISSOR_TEST);
 	glDisable(GL_STENCIL_TEST);
+	DISABLEGL(where);
 }
 
 Region& Region::operator-=(Region& other) {

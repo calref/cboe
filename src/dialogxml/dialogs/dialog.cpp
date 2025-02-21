@@ -1053,7 +1053,6 @@ xBadVal::~xBadVal() throw(){
 bool cDialog::doAnimations = false;
 
 void cDialog::draw(){
-	DISABLEGL(win);
 	tileImage(win,winRect,::bg[bg]);
 	if(doAnimations && animTimer.getElapsedTime().asMilliseconds() >= 500) {
 		cPict::advanceAnim();
@@ -1071,7 +1070,6 @@ void cDialog::draw(){
 		iter++;
 	}
 	
-	ENABLEGL(win);
 	win.display();
 }
 
