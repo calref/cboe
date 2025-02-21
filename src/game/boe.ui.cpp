@@ -59,7 +59,7 @@ eToolbarButton cToolbar::button_hit(sf::RenderWindow& win, location click, cFram
 			if(click.in(toolbar[i].bounds)) {
 				sf::Event e;
 				bool done = false, clicked = false;
-				enableGL(win);
+				ENABLEGL(win);
 				active = i;
 				while(!done){
 					redraw_screen(REFRESH_NONE);

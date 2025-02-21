@@ -95,7 +95,7 @@ void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::Re
 	src_rect &= src_gworld_rect;
 	targ_rect &= targ_gworld_rect;
 	if(src_rect.empty() || targ_rect.empty()) return;
-	enableGL(targ_gworld);
+	ENABLEGL(targ_gworld);
 	sf::Sprite tile(src_gworld, src_rect);
 	tile.setPosition(targ_rect.left, targ_rect.top);
 	double xScale = targ_rect.width(), yScale = targ_rect.height();
@@ -164,15 +164,37 @@ void rect_draw_some_item(sf::RenderTexture& src_render_gworld,rectangle src_rect
 	draw_stored_scale_aware_text(src_render_gworld, targ_gworld, targ_rect);
 }
 
-void setActiveRenderTarget(sf::RenderTarget& where, bool active) {
-	if(!where.setActive(active))
-		throw std::string {"Failed to set RenderTarget active for OpenGL operations!"};
+sf::RenderTarget* only_active_target = nullptr;
+std::string active_targ_name = "";
+fs::path active_targ_set_file = "";
+int active_targ_set_line = -1;
+
+static void setActiveRenderTarget(sf::RenderTarget& targ, bool active, std::string name, fs::path file = "", int line = -1) {
+	if(active){
+		if(only_active_target != nullptr){
+			std::ostringstream error;
+			error << "Trying to activate RenderTarget '" << name << "' for OpenGL while '"
+					<< active_targ_name << "' is already active (" << active_targ_set_file.filename() << ":" << active_targ_set_line << ")!";
+			std::string msg = error.str();
+			throw msg;
+		}
+		only_active_target = &targ;
+		active_targ_name = name;
+		active_targ_set_file = file;
+		active_targ_set_line = line;
+	}else if(&targ == only_active_target){
+		only_active_target = nullptr;
+	}else{
+		throw std::string {"Trying to deactivate RenderTarget '"} + name + "' when it is not active!";
+	}
+	if(!targ.setActive(active))
+		throw std::string {"Failed to set RenderTarget '"} + name + "' active for OpenGL operations!";
 }
 
-void enableGL(sf::RenderTarget& where) {
-	setActiveRenderTarget(where, true);
+void enableGL(sf::RenderTarget& targ, std::string name, fs::path file, int line) {
+	setActiveRenderTarget(targ, true, name, file, line);
 }
 
-void disableGL(sf::RenderTarget& where) {
-	setActiveRenderTarget(where, false);
+void disableGL(sf::RenderTarget& targ, std::string name) {
+	setActiveRenderTarget(targ, false, name);
 }

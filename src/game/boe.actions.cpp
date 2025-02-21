@@ -2293,7 +2293,7 @@ void close_map(bool record) {
 	}
 	mini_map.setVisible(false);
 	map_visible = false;
-	enableGL(mainPtr);
+	ENABLEGL(mainPtr);
 }
 
 void cancel_item_target(bool& did_something, bool& need_redraw, bool& need_reprint) {

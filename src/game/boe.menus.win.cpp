@@ -75,7 +75,7 @@ void init_menubar() {
 	mainProc = SetWindowLongPtr(winHandle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&menuProc));
 	SetMenu(winHandle, menuHandle);
 
-	enableGL(mainPtr);
+	ENABLEGL(mainPtr);
 	
 	// And now initialize the mapping from Windows menu commands to eMenu constants
 	static bool inited = false;

@@ -268,7 +268,7 @@ void start_outdoor_combat(cOutdoors::cWandering encounter,location where,short n
 	print_buf();
 	play_sound(23);
 	
-	enableGL(mainPtr);
+	ENABLEGL(mainPtr);
 	which_combat_type = 0;
 	overall_mode = MODE_COMBAT;
 	

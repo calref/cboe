@@ -28,7 +28,10 @@ void rect_draw_some_item(sf::RenderTexture& src_render_gworld,rectangle src_rect
 void draw_splash(const sf::Texture& splash, sf::RenderWindow& targ, rectangle dest_rect);
 
 // NEVER call setActive() directly.
-void enableGL(sf::RenderTarget& where);
-void disableGL(sf::RenderTarget& where);
+void enableGL(sf::RenderTarget& targ, std::string name, fs::path file, int line);
+void disableGL(sf::RenderTarget& targ, std::string name);
+#define ENABLEGL(targ) enableGL(targ, #targ, __FILE__, __LINE__)
+#define DISABLEGL(targ) disableGL(targ, #targ)
 
 #endif
+
