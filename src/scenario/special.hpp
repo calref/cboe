@@ -143,14 +143,21 @@ enum eStrType {
 	STRT_STATUS, STRT_SPELL_PAT, STRT_SUMMON, STRT_TALK, STRT_TALK_NODE_PERSON,
 	STRT_ENCHANT, STRT_DIR, STRT_QUEST, STRT_QUEST_STATUS,
 	STRT_HEALING, STRT_TREASURE, STRT_MONST_STAT, STRT_POS_MODE,
+	STRT_DEBUG_PRINT, STRT_TARG_TYPE, STRT_TARG_MODE,
+	STRT_ID_MODE, STRT_CURSE_MODE, STRT_EQUIP_MODE,
+	STRT_CMP_MODE, STRT_PATH, STRT_SPELL_PAT_MODE,
+	STRT_LABEL_ALIGN,
 };
 
 enum class eSpecPicker {
 	NONE,
-	MSG_SINGLE, MSG_PAIR, MSG_SEQUENCE,
+	MSG_SINGLE, MSG_PAIR, MSG_SEQUENCE, MSG_SEQUENCE_VAR,
 	PICTURE, NODE, STRING, SOUND,
 	FIELD, DAMAGE_TYPE, EXPLOSION,
 	STATUS, STATUS_PARTY,
+	SDF, LOCATION, RECTANGLE, TOGGLE,
+	HORSE, BOAT, EVENT, ITEM_CLASS,
+	POINTER,
 };
 
 enum class eSpecField { SDF1, SDF2, MSG1, MSG2, MSG3, PICT, PTYP, EX1A, EX1B, EX1C, EX2A, EX2B, EX2C, JUMP };
@@ -212,6 +219,8 @@ struct node_builder_t {
 	node_builder_t(eSpecType type) : node(type) {}
 	// Specifies that a particular field should use a specified picker.
 	node_builder_t& field(eSpecField field, node_function_t picker);
+	// Specifies that a particular field should use a specified picker which fills two fields as a pair.
+	node_builder_t& field_pair(eSpecField main, eSpecField extra, node_function_t picker);
 	// Quick overloads for each possible field.
 	node_builder_t& sdf1(node_function_t picker);
 	node_builder_t& sdf2(node_function_t picker);
