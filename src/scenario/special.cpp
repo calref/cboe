@@ -765,7 +765,7 @@ node_builder_t& node_builder_t::msg() {
 node_builder_t& node_builder_t::rect() {
 	// The intent is to specify that ex1a,ex1b, and ex2a,ex2b are locations.
 	// But specifying that two fields are a location isn't implemented yet.
-	return loc(eSpecField::EX1A, eSpecField::EX1B).loc(eSpecField::EX2A, eSpecField::EX2B);
+	return loc(eSpecField::EX1A, eSpecField::EX1B).loc(eSpecField::EX2A, eSpecField::EX2B).pict(eSpecPicker::TOGGLE);
 };
 
 node_builder_t& node_builder_t::pic() {
@@ -834,14 +834,17 @@ node_builder_t& node_builder_t::field(eSpecField field, node_function_t picker) 
 	return *this;
 }
 
+node_builder_t& node_builder_t::field_pair(eSpecField main, eSpecField extra, node_function_t picker) {
+	// Not implemented yet, so just assign the picker to the main field and NONE to the extra field.
+	return field(main, picker).field(extra, eSpecPicker::NONE);
+}
+
 node_builder_t& node_builder_t::sdf(eSpecField a, eSpecField b) {
-	// A stuff done flag picker isn't implemented yet.
-	return *this;
+	return field_pair(a, b, eSpecPicker::SDF);
 }
 
 node_builder_t& node_builder_t::loc(eSpecField a, eSpecField b) {
-	// A location picker isn't implemented yet
-	return *this;
+	return field_pair(a, b, eSpecPicker::LOCATION);
 }
 
 node_builder_t::operator node_properties_t() {

@@ -35,16 +35,24 @@ namespace {
 		.ex1a(STRT_STATUS)
 		.ex1b(eSpecPicker::NODE);
 	node_properties_t S_GOLD = node_builder_t(eSpecType::IF_HAS_GOLD)
-		.ex1b(eSpecPicker::NODE);
+		.ex1b(eSpecPicker::NODE)
+		.ex2a(eSpecPicker::TOGGLE);
 	node_properties_t S_FOOD = node_builder_t(eSpecType::IF_HAS_FOOD)
-		.ex1b(eSpecPicker::NODE);
+		.ex1b(eSpecPicker::NODE)
+		.ex2a(eSpecPicker::TOGGLE);
 	node_properties_t S_ITEM_THERE = node_builder_t(eSpecType::IF_ITEM_CLASS_ON_SPACE)
 		.loc(eSpecField::EX1A, eSpecField::EX1B)
-		.ex2b(eSpecPicker::NODE);
+		.ex2a(eSpecPicker::ITEM_CLASS)
+		.ex2b(eSpecPicker::NODE)
+		.ex2c(eSpecPicker::TOGGLE);
 	node_properties_t S_ITEM_OWNED = node_builder_t(eSpecType::IF_HAVE_ITEM_CLASS)
-		.ex1b(eSpecPicker::NODE);
+		.ex1a(eSpecPicker::ITEM_CLASS)
+		.ex1b(eSpecPicker::NODE)
+		.ex2a(eSpecPicker::TOGGLE);
 	node_properties_t S_ITEM_EQUIP = node_builder_t(eSpecType::IF_EQUIP_ITEM_CLASS)
-		.ex1b(eSpecPicker::NODE);
+		.ex1a(eSpecPicker::ITEM_CLASS)
+		.ex1b(eSpecPicker::NODE)
+		.ex2a(eSpecPicker::TOGGLE);
 	node_properties_t S_MAGE = node_builder_t(eSpecType::IF_MAGE_SPELL)
 		.ex1a(STRT_MAGE)
 		.ex1b(eSpecPicker::NODE);
@@ -68,8 +76,11 @@ namespace {
 		.msg1(eSpecPicker::FIELD)
 		.msg2(eSpecPicker::NODE);
 	node_properties_t S_PARTY_SIZE = node_builder_t(eSpecType::IF_PARTY_SIZE)
-		.ex1b(eSpecPicker::NODE);
+		.ex1a(eSpecPicker::TOGGLE)
+		.ex1b(eSpecPicker::NODE)
+		.ex2a(eSpecPicker::TOGGLE);
 	node_properties_t S_EVENT = node_builder_t(eSpecType::IF_EVENT_OCCURRED)
+		.ex1b(eSpecPicker::EVENT)
 		.ex2b(eSpecPicker::NODE);
 	node_properties_t S_RACE = node_builder_t(eSpecType::IF_SPECIES)
 		.ex1a(STRT_RACE)
@@ -94,17 +105,21 @@ namespace {
 		.ex1b(eSpecPicker::NODE);
 	node_properties_t S_CONTEXT = node_builder_t(eSpecType::IF_CONTEXT)
 		.ex1a(STRT_CONTEXT)
+		.ex1b(eSpecPicker::TOGGLE)
 		.ex1c(eSpecPicker::NODE);
 	node_properties_t S_NUM = node_builder_t(eSpecType::IF_NUM_RESPONSE)
 		.msg1(+eSpecPicker::MSG_SINGLE)
+		.pict(STRT_CMP_MODE)
 		.ptyp(eSpecPicker::NODE)
 		.ex1b(STRT_CMP)
 		.ex1c(eSpecPicker::NODE)
 		.ex2b(STRT_CMP)
 		.ex2c(eSpecPicker::NODE);
 	node_properties_t S_BOAT = node_builder_t(eSpecType::IF_IN_BOAT)
+		.ex1b(eSpecPicker::BOAT)
 		.ex1c(eSpecPicker::NODE);
 	node_properties_t S_HORSE = node_builder_t(eSpecType::IF_ON_HORSE)
+		.ex1b(eSpecPicker::HORSE)
 		.ex1c(eSpecPicker::NODE);
 	node_properties_t S_QUEST = node_builder_t(eSpecType::IF_QUEST)
 		.ex1a(STRT_QUEST)

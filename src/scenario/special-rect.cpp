@@ -17,10 +17,12 @@ namespace {
 		.sdf2(+eSpecPicker::FIELD);
 	node_properties_t S_EXPLORE = node_builder_t(eSpecType::RECT_SET_EXPLORED)
 		.msg()
-		.rect();
+		.rect()
+		.sdf1(eSpecPicker::TOGGLE);
 	node_properties_t S_MOVE = node_builder_t(eSpecType::RECT_MOVE_ITEMS)
 		.msg()
 		.rect()
+		.msg3(eSpecPicker::TOGGLE)
 		.loc(eSpecField::SDF1, eSpecField::SDF2);
 	node_properties_t S_DESTROY = node_builder_t(eSpecType::RECT_DESTROY_ITEMS)
 		.msg()
