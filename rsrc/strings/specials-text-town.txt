@@ -77,7 +77,7 @@ Unused
 X coordinate of space
 Y coordinate of space
 Unused
-0 - Just move, 1 - Teleport
+Play teleport animation?
 Unused
 Unused
 Special to Jump To
@@ -197,7 +197,7 @@ X coordinate of space to place
 Y coordinate of space to place
 Unused
 Number of creature to place
-1 - force placement
+Force placement?
 Unused
 Special to Jump To
 
@@ -350,7 +350,7 @@ X coordinate to place at
 Y coordinate to place at
 Unused
 Number of town to place party in
-If 1, always change level.
+Skip dialog and always change level?
 Trigger Limitations
 Special to Call in New Town
 
@@ -384,7 +384,7 @@ X coordinate to place at
 Y coordinate to place at
 Unused
 Item to place
-Set to 1 to place in container, if present
+Place in container, if present?
 Unused
 Special to Jump To
 
@@ -417,7 +417,7 @@ Unused
 Sound to play (10 = teleport)
 Unused
 Unused
-If 1, don't change location
+0 - return to split point, 1 - don't change location
 Unused
 Unused
 Special to Jump To
@@ -520,8 +520,8 @@ Which spell pattern? (0 - single space)
 Max range? (ignored outside combat mode)
 Max targets? (>1 only in combat)
 Special Called if Targeting Fails
-if 1, allow obstructed spaces
-if 1, allow targeting in antimagic fields
+Allow obstructed spaces?
+Allow targeting in antimagic fields?
 Special to Call for Each Target
 
 --------------------
