@@ -37,7 +37,7 @@ X of space to move to
 Y of space to move to
 First part of message
 Second part of message
-Set to 1 to place in container, if present
+Place in container, if present?
 0 - entire rectangle, 1 - just borders
 Unused
 Top of rectangle

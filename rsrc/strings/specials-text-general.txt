@@ -196,7 +196,7 @@ Unused
 0 - allow, 1 - prevent
 Unused
 Unused
-0 - don't force, 1 - force if blocked
+Force allow if blocked?
 Unused
 Unused
 Special to Jump To
@@ -245,7 +245,7 @@ Unused
 Unused
 Unused
 Which sound
-0 - wait for sound to finish, 1 - don't wait
+Continue without waiting for sound to finish?
 Unused
 Unused
 Unused
@@ -264,7 +264,7 @@ Unused
 Horse to set (0 .. 29)
 Unused
 Unused
-0 - not property, 1 - becomes property
+Owned by party?
 Unused
 Unused
 Special to Jump To
@@ -281,7 +281,7 @@ Unused
 Boat to set (0 .. 29)
 Unused
 Unused
-0 - not property, 1 - becomes property
+Owned by party?
 Unused
 Unused
 Special to Jump To
@@ -298,7 +298,7 @@ Unused
 Town to show/hide
 Unused
 Unused
-0 - town hidden, 1 - town visible
+Town visible?
 Unused
 Unused
 Special to Jump To
@@ -650,7 +650,7 @@ Unused
 Unused
 Unused
 Unused
-If 1, put a space before it
+Put a space before it?
 Unused
 String to append
 Unused
@@ -667,7 +667,7 @@ Unused
 Unused
 Unused
 Unused
-If 1, put a space before it
+Put a space before it?
 Unused
 Number to append
 Unused
@@ -684,7 +684,7 @@ Unused
 Unused
 Unused
 Unused
-If 1, put a space before it
+Put a space before it?
 Unused
 Monster type, or 0 to used selected PC
 Unused
@@ -701,10 +701,10 @@ Unused
 Unused
 Unused
 Unused
-If 1, put a space before it
+Put a space before it?
 Unused
 Item type
-0 - unidentified, 1 - full identified name
+Use identified name?
 Unused
 Unused
 Unused
@@ -718,7 +718,7 @@ Unused
 Unused
 Unused
 Unused
-If 1, put a space before it
+Put a space before it?
 Unused
 Terrain type
 Unused
