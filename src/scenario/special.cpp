@@ -640,6 +640,9 @@ node_function_t::node_function_t(eStrType str)
 		case STRT_CMP: adjust = 2; break;
 		case STRT_ACCUM: adjust = 1; break;
 		case STRT_STATUS: adjust = 1; break;
+		case STRT_ID_MODE: adjust = 1; break;
+		case STRT_EQUIP_MODE: adjust = 1; break;
+		case STRT_CURSE_MODE: adjust = 1; break;
 		default: break;
 	}
 }
