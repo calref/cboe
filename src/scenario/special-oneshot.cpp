@@ -19,7 +19,8 @@ namespace {
 	node_properties_t S_GIVE_SPECITEM = node_builder_t(eSpecType::ONCE_GIVE_SPEC_ITEM)
 		.sdf()
 		.msg()
-		.ex1a(STRT_SPEC_ITEM);
+		.ex1a(STRT_SPEC_ITEM)
+		.ex1b(eSpecPicker::TOGGLE);
 	node_properties_t S_NONE = node_builder_t(eSpecType::ONCE_NULL)
 		.sdf();
 	node_properties_t S_SETSDF = node_builder_t(eSpecType::ONCE_SET_SDF)
@@ -30,6 +31,7 @@ namespace {
 	node_properties_t S_DIALOG = node_builder_t(eSpecType::ONCE_DIALOG)
 		.sdf()
 		.msg1(eSpecPicker::MSG_SEQUENCE)
+		.msg3(eSpecPicker::TOGGLE)
 		.pic()
 		.ex1a(STRT_BUTTON)
 		.ex2a(STRT_BUTTON)
