@@ -555,7 +555,7 @@ Y Coordinate of pattern center
 Which spell pattern? (-1 for targeted pattern)
 Which damage type? (0..8)
 How many dice? (calculated in d6's)
-0 - sequential simple booms, 1 - simultaneous animated booms
+Boom type
 Special to Jump To
 
 --------------------
@@ -587,7 +587,7 @@ Unused
 X coordinate, or which creature
 Y coordinate, or -1 for creature
 Unused
-0 - Align top, 1 - align centre
+Vertical Alignment
 Delay
 Unused
 Special to Jump To

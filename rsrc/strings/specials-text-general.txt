@@ -514,7 +514,7 @@ Stuff Done Flag Part B
 Unused
 Unused
 Unused
-0 - SDF, 1 - extra1 values, 2 - monster hp/mp
+Specify what to print
 Unused
 Number of monster, or value to print
 Value to print (could be a pointer)

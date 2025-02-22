@@ -463,7 +463,7 @@ Unused
 Scenario string containing prompt text
 Minimum allowed response
 Maximum allowed response
-Comparison Mode (0 - in range, 1 - not in range, 2 - simple)
+Comparison Mode
 If tests 1 and 2 both pass, call this special ...
 Range lower bound (or value to compare to)
 Range upper bound (or comparison method -2 .. 2)

@@ -6,10 +6,10 @@ Second part of message
 Unused
 Unused
 Unused
-0 - only living, 1 - any, 2 - all, 3 - dead, 4 - inv. space
+Restrictions
 Special if Cancel button pressed
 Unused
-0 - player choice, 1 - random, 2 - specific
+Selection Mode
 0..6 - PC, 100+ - monster (if above = 2)
 Unused
 Special to Jump To
@@ -247,9 +247,9 @@ Unused
 Which item
 Which enchantment (if weapon)
 Number of charges (-1 = default)
-ID? (-1 - normal, 0 - no, 1 - yes, 2 - full)
-Cursed? (-1 - default, 0 - no, 1 - yes)
-Equip? (-1 - no, 0 - soft, 1 - try, 2 - force)
+Identified?
+Cursed?
+Equip?
 Special to Jump To
 
 --------------------
