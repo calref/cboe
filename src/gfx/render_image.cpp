@@ -14,6 +14,7 @@
 
 #include "fileio/fileio.hpp"
 #include "gfx/render_shapes.hpp"
+#include "gfx/render_text.hpp"
 #include "winutil.hpp"
 
 sf::Shader maskShader;
@@ -127,7 +128,8 @@ std::map<sf::RenderTexture*,rectangle> store_clip_rects;
 
 static void draw_stored_scale_aware_text(sf::RenderTexture& texture, sf::RenderTarget& dest_window, rectangle targ_rect) {
 	// Temporarily switch target window to its unscaled view to draw scale-aware text
-	sf::View view = dest_window.getView();
+	sf::View scaled_view = dest_window.getView();
+	sf::Vector2f scaled_top_left = scaled_view_top_left(dest_window, scaled_view);
 	dest_window.setView(dest_window.getDefaultView());
 	std::vector<ScaleAwareText> stored_text = store_scale_aware_text[&texture];
 	for(ScaleAwareText text : stored_text){
@@ -139,6 +141,7 @@ static void draw_stored_scale_aware_text(sf::RenderTexture& texture, sf::RenderT
 			rect.left *= get_ui_scale();
 			rect.bottom *= get_ui_scale();
 			rect.right *= get_ui_scale();
+			rect.offset(scaled_top_left.x, scaled_top_left.y);
 			// For debugging:
 			if(false)
 				frame_rect(dest_window, rect, Colours::RED);
@@ -146,12 +149,13 @@ static void draw_stored_scale_aware_text(sf::RenderTexture& texture, sf::RenderT
 		}
 		sf::Vector2f position = str_to_draw.getPosition();
 		position = position + sf::Vector2f {0.0f+targ_rect.left, 0.0f+targ_rect.top};
-		str_to_draw.setPosition(position * (float)get_ui_scale());
+		position *= (float)get_ui_scale();
+		str_to_draw.setPosition(position + scaled_top_left);
 		dest_window.draw(str_to_draw);
 		if(!text.clip_rect.empty())
 			undo_clip(dest_window);
 	}
-	dest_window.setView(view);
+	dest_window.setView(scaled_view);
 }
 
 void rect_draw_some_item(sf::RenderTexture& src_render_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::BlendMode mode) {

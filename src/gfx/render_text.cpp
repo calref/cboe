@@ -143,16 +143,31 @@ void clear_scale_aware_text(sf::RenderTexture& texture) {
 	store_scale_aware_text.erase(&texture);
 }
 
+// Offset the scale-aware text by the viewport top-left corner of the current
+// window mode:
+sf::Vector2f scaled_view_top_left(sf::RenderTarget& dest_window, sf::View& scaled_view) {
+	sf::FloatRect viewport = scaled_view.getViewport();
+	rectangle windRect { dest_window };
+	sf::Vector2f top_left(viewport.left * windRect.width(), viewport.top * windRect.height());
+	return top_left;
+}
+
 void draw_scale_aware_text(sf::RenderTarget& dest_window, sf::Text str_to_draw) {
 	str_to_draw.setCharacterSize(str_to_draw.getCharacterSize() * get_ui_scale());
 
 	if(dynamic_cast<sf::RenderWindow*>(&dest_window) != nullptr){
-		str_to_draw.setPosition(str_to_draw.getPosition() * (float)get_ui_scale());
 		// Temporarily switch window to its unscaled view to draw scale-aware text
-		sf::View view = dest_window.getView();
+		sf::View scaled_view = dest_window.getView();
 		dest_window.setView(dest_window.getDefaultView());
+
+		sf::Vector2f text_position = str_to_draw.getPosition() * (float)get_ui_scale();
+		str_to_draw.setPosition(text_position + scaled_view_top_left(dest_window, scaled_view));
+
+		// Draw the text immediately
 		dest_window.draw(str_to_draw);
-		dest_window.setView(view);
+
+		// Restore the scaled view
+		dest_window.setView(scaled_view);
 	}else if(dynamic_cast<sf::RenderTexture*>(&dest_window) != nullptr){
 		sf::RenderTexture* p = dynamic_cast<sf::RenderTexture*>(&dest_window);
 		// Onto a RenderTexture is trickier because the texture is locked at the smaller size.
