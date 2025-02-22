@@ -2427,6 +2427,7 @@ void init_debug_actions() {
 	add_debug_action({'%'}, "Fight wandering encounter from this section", []() -> void {debug_fight_encounter(true);});
 	add_debug_action({'^'}, "Fight special encounter from this section", []() -> void {debug_fight_encounter(false);});
 	add_debug_action({'/', '?'}, "Bring up this window", show_debug_help);
+	add_debug_action({'Z'}, "Save the current action log for bug reporting", save_replay_log);
 }
 
 // Later we might want to know whether the key is used or not
@@ -3969,4 +3970,13 @@ void preview_every_dialog_xml() {
 			preview_dialog_xml(path);
 		});
 	}
+}
+
+void save_replay_log(){
+	// This doesn't need to be recorded or replayed.
+	if(replaying) return;
+
+	fs::path out_file = nav_put_rsrc({"xml"});
+
+	start_log_file(out_file.string());
 }
