@@ -304,6 +304,7 @@ extern bool record_verbose;
 extern bool replay_verbose;
 extern bool replay_strict;
 
+bool record_in_memory = true;
 
 static void process_args(int argc, char* argv[]) {
 	preprocess_args(argc, argv);
@@ -374,6 +375,11 @@ static void process_args(int argc, char* argv[]) {
 			exit(1);
 		}
 		// Don't return, because we want to support recording a run that starts with a party from the CLI.
+	}else if(record_in_memory){
+		if(!init_action_log("record", "")){
+			std::cerr << "Failed to start recording in memory." << std::endl;
+			exit(1);
+		}
 	}
 
 	if(saved_game){

@@ -44,6 +44,16 @@ std::string log_file;
 Element* next_action;
 boost::optional<cFramerateLimiter> replay_fps_limit;
 
+static void save_log() {
+	if(!log_file.empty()) log_document.SaveFile(log_file);
+}
+
+void start_log_file(std::string file) {
+	log_file = file;
+	std::cout << "Recording this session: " << log_file << std::endl;
+	save_log();
+}
+
 bool init_action_log(std::string command, std::string file) {
 	if(command == "record-unique") {
 		// If a filename is given, use it as a base, but insert a timestamp for uniqueness.
@@ -72,9 +82,12 @@ bool init_action_log(std::string command, std::string file) {
 			root_element.SetAttribute("Repo", GIT_REPO);
 			#endif
 			log_document.InsertEndChild(root_element);
-			log_document.SaveFile(log_file);
 			recording = true;
-			std::cout << "Recording this session: " << log_file << std::endl;
+			if(log_file.empty()){
+				std::cout << "Recording this session in memory." << std::endl;
+			}else{
+				start_log_file(log_file);
+			}
 		} catch(...) {
 			std::cout << "Failed to write to file " << log_file << std::endl;
 		}
@@ -125,7 +138,7 @@ void record_action(std::string action_type, std::string inner_text, bool cdata) 
 	action_text.SetCDATA(cdata);
 	next_action.InsertEndChild(action_text);
 	root->InsertEndChild(next_action);
-	log_document.SaveFile(log_file);
+	save_log();
 }
 
 void record_action(std::string action_type, std::map<std::string,std::string> info) {
@@ -138,13 +151,13 @@ void record_action(std::string action_type, std::map<std::string,std::string> in
 		next_action.InsertEndChild(next_child);
 	}
 	root->InsertEndChild(next_action);
-	log_document.SaveFile(log_file);
+	save_log();
 }
 
 void record_action(Element& action) {
 	Element* root = log_document.FirstChildElement();
 	root->InsertEndChild(action);
-	log_document.SaveFile(log_file);
+	save_log();
 }
 
 void record_field_input(cKey key) {
