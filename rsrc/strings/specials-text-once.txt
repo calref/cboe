@@ -88,7 +88,7 @@ Stuff Done Flag Part A
 Stuff Done Flag Part B
 Number of first message in dialog
 Unused
-1 - add 'Leave'/'OK' button, else no
+Add 'Leave'/'OK' button?
 Picture number
 Picture type
 Label of 2nd button (-1 - no button)

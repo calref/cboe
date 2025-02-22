@@ -448,7 +448,7 @@ Second part of message
 Unused
 Unused
 Unused
-If 1, just store ID in SDF and leave PC in party
+Just store ID in SDF and leave PC in party?
 extra 1b
 extra 1c
 extra 2a

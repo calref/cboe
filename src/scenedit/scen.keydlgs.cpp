@@ -555,19 +555,28 @@ static void setup_node_field(cDialog& me, std::string field, short value, const 
 	me[field].setTextToNum(value);
 	bool is_sdf = field.substr(0,3) == "sdf";
 	std::string button = field + "-edit";
+	std::string toggle = field + "-toggle";
 	switch(fcn.button) {
 		case eSpecPicker::NONE:
 			me[button].hide();
+			me[toggle].hide();
 			break;
 		case eSpecPicker::MSG_PAIR: case eSpecPicker::MSG_SINGLE:
 		case eSpecPicker::MSG_SEQUENCE: case eSpecPicker::NODE:
 			me[button].show();
+			me[toggle].hide();
 			if(is_sdf) break;
 			me[button].setText("Create/Edit");
 			dynamic_cast<cButton&>(me[button]).setBtnType(BTN_LG);
 			break;
+		case eSpecPicker::TOGGLE:
+			me[button].hide();
+			me[toggle].show();
+			dynamic_cast<cLed&>(me[toggle]).setState(value > 0 ? eLedState::led_red : eLedState::led_off);
+			break;
 		default:
 			me[button].show();
+			me[toggle].hide();
 			if(is_sdf) break;
 			me[button].setText("Choose");
 			dynamic_cast<cButton&>(me[button]).setBtnType(BTN_REG);
@@ -866,6 +875,17 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			store = val;
 			edit_dialog_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.top().mode), &store, &me);
 			break;
+		case eSpecPicker::TOGGLE: {
+			// TODO: We should also add a focus handler so that manually changing the field value updates the toggle...
+			cLed& toggle = dynamic_cast<cLed&>(me[item_hit]);
+			if(val > 0) {
+				store = 0;
+				toggle.setState(eLedState::led_off);
+			} else {
+				store = 1;
+				toggle.setState(eLedState::led_red);
+			}
+		} break;
 		case eSpecPicker::NODE: {
 			short mode = fcn.force_global ? 0 : edit_stack.top().mode;
 			store = val < 0 ? get_fresh_spec(mode) : val;
@@ -1000,6 +1020,9 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 		"msg1-edit", "msg2-edit", "msg3-edit", "pict-edit", "pictype-edit", "jump-edit",
 		"x1a-edit", "x1b-edit", "x1c-edit", "x2a-edit", "x2b-edit", "x2c-edit",
 		"sdf1-edit", "sdf2-edit",
+		"msg1-toggle", "msg2-toggle", "msg3-toggle", "pict-toggle", "pictype-toggle", "jump-toggle",
+		"x1a-toggle", "x1b-toggle", "x1c-toggle", "x2a-toggle", "x2b-toggle", "x2c-toggle",
+		"sdf1-toggle", "sdf2-toggle",
 	});
 	special["cancel"].attachClickHandler(std::bind(discard_spec_enc, _1, std::ref(edit_stack)));
 	special["node-help"].attachClickHandler([&edit_stack](cDialog& me, std::string item_hit, eKeyMod mods) {

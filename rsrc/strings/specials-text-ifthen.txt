@@ -128,7 +128,7 @@ Unused
 If party has this much gold ...
 Call this special ...
 Unused
-If 1, take gold
+Take gold?
 Unused
 Unused
 Otherwise call this special
@@ -145,7 +145,7 @@ Unused
 If party has this much food ...
 Call this special ...
 Unused
-If 1, take food
+Take food?
 Unused
 Unused
 Otherwise call this special
@@ -164,7 +164,7 @@ Y coordinate of space
 Unused
 If item of this class on space ...
 Call this special ...
-If 1, take item
+Take item?
 Otherwise call this special
 
 --------------------
@@ -179,7 +179,7 @@ Unused
 If has item of this special class ...
 Call this special ...
 Unused
-If 1, take item
+Take item?
 Unused
 Unused
 Otherwise call this special
@@ -196,7 +196,7 @@ Unused
 If has equipped item of this special ...
 Call this special ...
 Unused
-If 1, take item
+Take item?
 Unused
 Unused
 Otherwise call this special
@@ -329,7 +329,7 @@ Unused
 Unused
 Unused
 Unused
-1 - include dead characters, otherwise no
+Include dead characters?
 If party size sufficient, call this special ...
 Unused
 0 - Exact size, 1 - Minimum size
@@ -449,7 +449,7 @@ Unused
 Unused
 Unused
 Which context (0 .. 24)
-0 - can enter, 1 - no enter
+Prevent entry?
 If context matches, call this special ...
 Unused
 Unused
