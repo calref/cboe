@@ -445,6 +445,36 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 		case STRT_POS_MODE:
 			strings = {"Absolute Position", "Move Southeast", "Move Southwest", "Move Northwest", "Move Northeast", "Nearest"};
 			break;
+		case STRT_DEBUG_PRINT:
+			strings = {"Print SDF", "Print Extra1 Values", "Print Monster HP/MP"};
+			break;
+		case STRT_TARG_TYPE:
+			strings = {"Only living characters", "Any character", "All characters simultaneously", "Dead characters only", "Characters with inventory space"};
+			break;
+		case STRT_TARG_MODE:
+			strings = {"Player can choose", "Select at random", "Specific character specified in Extra 2b"};
+			break;
+		case STRT_ID_MODE:
+			strings = {"Based on Item Lore", "Never Identify", "Always Identify", "Always Identify (and also reveal concealed ability)"};
+			break;
+		case STRT_CURSE_MODE:
+			strings = {"Depends on item", "Force uncursed", "Force cursed"};
+			break;
+		case STRT_EQUIP_MODE:
+			strings = {"Do not equip", "Soft Equip (only if no conflicting items equipped)", "Try to equip (unequipping any conflicting items first if possible)", "Force equip (forcibly unequipping even conflicting cursed items)"};
+			break;
+		case STRT_CMP_MODE:
+			strings = {"Check value in range", "Check value outside range", "Compare to single value"};
+			break;
+		case STRT_PATH:
+			strings = {"Straight Line", "Parabolic Arc"};
+			break;
+		case STRT_SPELL_PAT_MODE:
+			strings = {"Sequential Simple Booms", "Simultaneous Animated Booms"};
+			break;
+		case STRT_LABEL_ALIGN:
+			strings = {"Align Top", "Align Centre"};
+			break;
 	}
 	if(cur_choice < 0 || cur_choice >= strings.size())
 		cur_choice = -1;
@@ -891,6 +921,16 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 				case STRT_QUEST: title = "Select a quest:"; break;
 				case STRT_QUEST_STATUS: title = "Select the quest's status:"; break;
 				case STRT_DIR: title = "Select the direction:"; break;
+				case STRT_DEBUG_PRINT: title = "Choose what to print:"; break;
+				case STRT_TARG_TYPE: title = "Select restrictions on chosen characters:"; break;
+				case STRT_TARG_MODE: title = "Choose how a target is selected:"; break;
+				case STRT_ID_MODE: title = "Choose how to identify the item:"; break;
+				case STRT_CURSE_MODE: title = "Choose whether the item should be cursed:"; break;
+				case STRT_EQUIP_MODE: title = "Choose whether and how to attempt to equip the item:"; break;
+				case STRT_CMP_MODE: title = "Choose the type of comparison to make:"; break;
+				case STRT_PATH: title = "What path shape?"; break;
+				case STRT_SPELL_PAT_MODE: title = "What kind of booms?"; break;
+				case STRT_LABEL_ALIGN: title = "Choose vertical alignment:"; break;
 				default: title = "Title not set for this string type!!!"; break;
 			}
 			store = choose_text(fcn.str_type, val + fcn.adjust, &me, title) - fcn.adjust;
