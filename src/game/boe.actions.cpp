@@ -2364,7 +2364,9 @@ void show_debug_help() {
 		if(action.action != &show_debug_help){
 			button.attachClickHandler([action](cDialog& me, std::string, eKeyMod) -> bool {
 				me.toast(false);
-				action.action();
+				// In a replay, the action will have been recorded next anyway, so the dialog doesn't need to trigger it.
+				if(!replaying)
+					action.action();
 				return true;
 			});
 		}

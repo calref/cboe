@@ -910,8 +910,9 @@ static void replay_action(Element& action) {
 		cancel_item_target(did_something, need_redraw, need_reprint);
 	}else if(t == "easter_egg"){
 		easter_egg(boost::lexical_cast<int>(action.GetText()));
-	}else if(t == "show_debug_panel"){
+	}else if(t == "show_debug_help"){
 		show_debug_help();
+		return;
 	}else if(t == "debug_fight_encounter"){
 		debug_fight_encounter(str_to_bool(action.GetText()));
 	}else if(t == "preview_every_dialog_xml"){
