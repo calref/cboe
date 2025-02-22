@@ -585,30 +585,31 @@ void put_background() {
 	tileImage(mainPtr, rectangle(mainPtr), bg_pict);
 }
 
-void draw_text_bar() {
-	location loc;
-	
-	loc = (is_out()) ? global_to_local(univ.party.out_loc) : univ.party.town_loc;
-	
+std::pair<std::string, std::string> text_bar_text() {
+	std::string text = "";
+	std::string right_text = "";
+
+	location loc = (is_out()) ? global_to_local(univ.party.out_loc) : univ.party.town_loc;
 	bool in_area = false;
+
 	if(is_out()) {
 		for(short i = 0; i < univ.out->area_desc.size(); i++)
 			if(loc.in(univ.out->area_desc[i])) {
-				put_text_bar(univ.out->area_desc[i].descr);
+				text = univ.out->area_desc[i].descr;
 				in_area = true;
 			}
 		if(!in_area) {
-			put_text_bar(univ.out->name);
+			text = univ.out->name;
 		}
 	}
 	if(is_town()) {
 		for(short i = 0; i < univ.town->area_desc.size(); i++)
 			if(loc.in(univ.town->area_desc[i])) {
-				put_text_bar(univ.town->area_desc[i].descr);
+				text = univ.town->area_desc[i].descr;
 				in_area = true;
 			}
 		if(!in_area) {
-			put_text_bar(univ.town->name);
+			text = univ.town->name;
 		}
 		
 	}
@@ -649,15 +650,26 @@ void draw_text_bar() {
 			}
 		}
 
-		put_text_bar(sout.str(), hint_out.str());
+		text = sout.str();
+		right_text = hint_out.str();
 	}
 	if((is_combat()) && (monsters_going))
 		// Print bar for 1st monster with >0 ap - that is monster that is going
 		for(short i = 0; i < univ.town.monst.size(); i++)
 			if((univ.town.monst[i].is_alive()) && (univ.town.monst[i].ap > 0)) {
-				put_text_bar(print_monster_going(univ.town.monst[i].number,univ.town.monst[i].ap));
+				text = print_monster_going(univ.town.monst[i].number,univ.town.monst[i].ap);
 				i = 400;
 			}
+
+	return std::make_pair(text, right_text);
+}
+
+void draw_text_bar() {
+	draw_text_bar(text_bar_text());
+}
+
+void draw_text_bar(std::pair<std::string,std::string> text) {
+	put_text_bar(text.first, text.second);
 }
 
 void put_text_bar(std::string str, std::string right_str) {
