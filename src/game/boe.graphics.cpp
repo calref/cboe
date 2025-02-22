@@ -669,7 +669,12 @@ void draw_text_bar() {
 }
 
 void draw_text_bar(std::pair<std::string,std::string> text) {
-	put_text_bar(text.first, text.second);
+	static std::pair<std::string,std::string> store_text = std::make_pair("", "");
+	if(text.first != store_text.first || text.second != store_text.second){
+		store_text = text;
+		put_text_bar(text.first, text.second);
+		refresh_text_bar();
+	}
 }
 
 void put_text_bar(std::string str, std::string right_str) {
