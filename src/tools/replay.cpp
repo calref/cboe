@@ -40,12 +40,12 @@ const std::string replay_error = "Replay system internal error! ";
 
 using namespace ticpp;
 Document log_document;
-std::string log_file;
+fs::path log_file;
 Element* next_action;
 boost::optional<cFramerateLimiter> replay_fps_limit;
 
 static void save_log() {
-	if(!log_file.empty()) log_document.SaveFile(log_file);
+	if(!log_file.empty()) log_document.SaveFile(log_file.string());
 }
 
 void start_log_file(std::string file) {
@@ -53,6 +53,8 @@ void start_log_file(std::string file) {
 	std::cout << "Recording this session: " << log_file << std::endl;
 	save_log();
 }
+
+extern fs::path replayDir;
 
 bool init_action_log(std::string command, std::string file) {
 	if(command == "record-unique") {
@@ -73,6 +75,9 @@ bool init_action_log(std::string command, std::string file) {
 	}
 	if(command == "record") {
 		log_file = file;
+		if(!log_file.empty() && log_file == log_file.filename()){
+			log_file = replayDir / log_file;
+		}
 		try {
 			Element root_element("actions");
 			#ifndef MSBUILD_GITREV
@@ -86,7 +91,7 @@ bool init_action_log(std::string command, std::string file) {
 			if(log_file.empty()){
 				std::cout << "Recording this session in memory." << std::endl;
 			}else{
-				start_log_file(log_file);
+				start_log_file(log_file.string());
 			}
 		} catch(...) {
 			std::cout << "Failed to write to file " << log_file << std::endl;
@@ -95,7 +100,11 @@ bool init_action_log(std::string command, std::string file) {
 	}
 	else if (command == "replay") {
 		try {
-			log_document.LoadFile(file);
+			fs::path file_path = file;
+			if(file_path == file_path.filename() && !fs::exists(file_path)){
+				file_path = replayDir / file_path;
+			}
+			log_document.LoadFile(file_path.string());
 
 			Element* root = log_document.FirstChildElement();
 			next_action = root->FirstChildElement();
