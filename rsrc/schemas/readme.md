@@ -311,6 +311,7 @@ subtags:
 * `<sound>` - (max unbounded) Gives a name for a custom sound (ID 100 or greater). These
 names are used when showing the Pick Sound dialog in various places. The required `id`
 attribute specifies which sound it applies to.
+* `<event>` - (max unbounded) Gives a name to a major event flag. These names are shown (and editable) when showing the Pick Event dialog in various places. The required `id` attribute specifies which event.
 
 Terrain Types
 -------------

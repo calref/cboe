@@ -947,6 +947,12 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					if(sndnum >= scenario.snd_names.size())
 						scenario.snd_names.resize(sndnum + 1);
 					edit->GetText(&scenario.snd_names[sndnum], false);
+				} else if(type == "event") {
+					int evtnum = 0;
+					edit->GetAttribute("id", &evtnum);
+					if(evtnum > scenario.evt_names.size())
+						scenario.evt_names.resize(evtnum);
+					edit->GetText(&scenario.evt_names[evtnum - 1], false);
 				} else if(type == "graphics") {
 					static const std::set<ePicType> valid_pictypes = {
 						PIC_TER, PIC_TER_ANIM, PIC_TER_MAP,

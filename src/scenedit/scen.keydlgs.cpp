@@ -501,6 +501,14 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 	return dlog.show(cur_choice);
 }
 
+short choose_text_editable(std::vector<std::string>& list, short cur_choice, cDialog* parent, std::string title) {
+	cStringChoice choice(list, title, parent, true);
+	auto new_choice = choice.show(cur_choice <= 0 ? 0 : cur_choice - 1);
+	list = choice.getStrings();
+	if(choice->accepted()) return new_choice + 1;
+	return cur_choice;
+}
+
 static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& which_str, eStrMode str_mode) {
 	std::string newVal = me["text"].getText();
 	fetch_str(str_mode, which_str) = newVal;
@@ -1033,6 +1041,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case eSpecPicker::STATUS: store = choose_status_effect(val, false, &me); break;
 		case eSpecPicker::STATUS_PARTY: store = choose_status_effect(val, true, &me); break;
 		case eSpecPicker::SOUND: store = choose_sound(val, &me); break;
+		case eSpecPicker::EVENT: store = choose_text_editable(scenario.evt_names, val, &me, "Select an event:"); break;
 		case eSpecPicker::NONE: return false;
 	}
 	me[field].setTextToNum(store);
