@@ -855,18 +855,44 @@ static node_function_t get_field_function(const cSpecial& spec, const std::strin
 	return node_function_t();
 }
 
+static std::string get_control_for_field(eSpecField field) {
+	switch(field) {
+		case eSpecField::SDF1: return "sdf1";
+		case eSpecField::SDF2: return "sdf2";
+		case eSpecField::MSG1: return "msg1";
+		case eSpecField::MSG2: return "msg2";
+		case eSpecField::MSG3: return "msg3";
+		case eSpecField::PICT: return "pict";
+		case eSpecField::PTYP: return "pictype";
+		case eSpecField::EX1A: return "x1a";
+		case eSpecField::EX1B: return "x1b";
+		case eSpecField::EX1C: return "x1c";
+		case eSpecField::EX2A: return "x2a";
+		case eSpecField::EX2B: return "x2b";
+		case eSpecField::EX2C: return "x2c";
+		case eSpecField::JUMP: return "jump";
+		case eSpecField::NONE: break;
+	}
+	return "num";
+}
+
 static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t& edit_stack) {
 	std::string field = item_hit.substr(0, item_hit.find_first_of('-'));
 	const cSpecial& spec = edit_stack.top().node;
 	node_function_t fcn = get_field_function(spec, field);
 	short val = me[field].getTextAsNum(), store;
 	switch(fcn.button) {
-		case eSpecPicker::MSG_PAIR:
-			store = me["msg2"].getTextAsNum();
+		case eSpecPicker::MSG_PAIR: {
+			if(fcn.continuation == eSpecField::NONE) {
+				store = val;
+				break;
+			}
+			auto otherField = get_control_for_field(fcn.continuation);
+			store = me[otherField].getTextAsNum();
 			edit_spec_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.top().mode), &val, &store, &me);
-			me["msg2"].setTextToNum(store);
+			me[otherField].setTextToNum(store);
 			store = val;
-			break;
+		} break;
 		case eSpecPicker::MSG_SINGLE:
 			edit_spec_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.top().mode), &val, nullptr, &me);
 			store = val;
@@ -958,9 +984,10 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case eSpecPicker::PICTURE: {
 			ePicType type = fcn.pic_type;
 			if(type == PIC_NONE) {
-				short pictype = me["pictype"].getTextAsNum();
+				auto otherField = get_control_for_field(fcn.continuation);
+				short pictype = me[otherField].getTextAsNum();
 				if(pictype < 0) {
-					me["pictype"].setTextToNum(PIC_DLOG);
+					me[otherField].setTextToNum(PIC_DLOG);
 					type = PIC_DLOG;
 				} else type = ePicType(pictype);
 			}
