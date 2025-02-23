@@ -15,23 +15,15 @@
 
 #include "fileio/resmgr/res_dialog.hpp"
 
-static DialogDefn& loadDefn() {
-	return *ResMgr::dialogs.get("choose-string");
-}
+cStringChoice::cStringChoice(cDialog* parent)
+	: dlg(*ResMgr::dialogs.get("choose-string"), parent)
+{}
 
 cStringChoice::cStringChoice(std::vector<std::string>& strs, std::string title, cDialog* parent)
-	: dlg(loadDefn(),parent)
+	: cStringChoice(parent)
 {
-	if(!title.empty()) dlg["title"].setText(title);
+	setTitle(title);
 	strings = strs;
-	attachHandlers();
-}
-
-cStringChoice::cStringChoice(std::vector<std::string>::iterator begin, std::vector<std::string>::iterator end, std::string title, cDialog* parent)
-	: dlg(loadDefn(),parent)
-{
-	if(!title.empty()) dlg["title"].setText(title);
-	copy(begin,end,std::inserter(strings, strings.begin()));
 	attachHandlers();
 }
 
@@ -121,4 +113,8 @@ bool cStringChoice::onSelect(bool losing) {
 	if(select_handler)
 		select_handler(*this, cur);
 	return true;
+}
+
+void cStringChoice::setTitle(const std::string &title) {
+	if(!title.empty()) dlg["title"].setText(title);
 }
