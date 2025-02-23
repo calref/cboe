@@ -880,6 +880,7 @@
         <item-typeflag id="17">Iron Bolts</item-typeflag>
         <item-typeflag id="18">Magic Bolts</item-typeflag>
         <item-typeflag id="19">Sapphires</item-typeflag>
+        <item-typeflag id="20">Rubies</item-typeflag>
         <item-typeflag id="21">Holly</item-typeflag>
         <item-typeflag id="22">Comfrey Root</item-typeflag>
         <item-typeflag id="23">Glowing Nettle</item-typeflag>
@@ -896,13 +897,23 @@
         <item-typeflag id="34">Killer Poison</item-typeflag>
         <item-typeflag id="35">Lightning Rods</item-typeflag>
         <item-typeflag id="36">Cleansing Powder</item-typeflag>
+        <item-typeflag id="37">Crystals</item-typeflag>
         <item-typeflag id="38">Candles</item-typeflag>
         <item-typeflag id="39">Diamonds</item-typeflag>
         <item-typeflag id="40">Emeralds</item-typeflag>
         <item-typeflag id="41">Basic Powder</item-typeflag>
         <item-typeflag id="42">Power of Lethe</item-typeflag>
+        <item-typeflag id="43">Dust of Hiding</item-typeflag>
+        <item-typeflag id="44">Dust of Choking</item-typeflag>
         <item-typeflag id="46">Silver Ore</item-typeflag>
         <item-typeflag id="47">Gold Ore</item-typeflag>
+        <item-typeflag id="48">Asp Fangs</item-typeflag>
+        <item-typeflag id="49">Rough Diamonds</item-typeflag>
         <item-typeflag id="50">Asptongue Mold</item-typeflag>
+        <item-typeflag id="51">Arrows of Light</item-typeflag>
+        <item-typeflag id="52">Arrows of Life</item-typeflag>
+        <item-typeflag id="53">Burning Arrows</item-typeflag>
+        <item-typeflag id="54">Exploding Arrows</item-typeflag>
+        <item-typeflag id="55">Poison Darts</item-typeflag>
     </editor>
 </scenario>
