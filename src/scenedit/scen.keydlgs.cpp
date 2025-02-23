@@ -1042,6 +1042,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case eSpecPicker::STATUS_PARTY: store = choose_status_effect(val, true, &me); break;
 		case eSpecPicker::SOUND: store = choose_sound(val, &me); break;
 		case eSpecPicker::EVENT: store = choose_text_editable(scenario.evt_names, val, &me, "Select an event:"); break;
+		case eSpecPicker::ITEM_CLASS: store = choose_text_editable(scenario.ic_names, val, &me, "Select item class:"); break;
 		case eSpecPicker::NONE: return false;
 	}
 	me[field].setTextToNum(store);
