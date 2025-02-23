@@ -261,7 +261,7 @@ Second part of message
 Unused
 Unused
 Unused
-Horse to set (0 .. 29)
+Horse to set
 Unused
 Unused
 Owned by party?
@@ -278,7 +278,7 @@ Second part of message
 Unused
 Unused
 Unused
-Boat to set (0 .. 29)
+Boat to set
 Unused
 Unused
 Owned by party?

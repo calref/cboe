@@ -58,11 +58,11 @@ namespace{
 		.ex1b(eSpecPicker::TOGGLE);
 	node_properties_t S_HORSE_OWN = node_builder_t(eSpecType::CHANGE_HORSE_OWNER)
 		.msg()
-		.ex1a(eSpecPicker::HORSE)
+		.ex1a(STRT_HORSE)
 		.ex2a(eSpecPicker::TOGGLE);
 	node_properties_t S_BOAT_OWN = node_builder_t(eSpecType::CHANGE_BOAT_OWNER)
 		.msg()
-		.ex1a(eSpecPicker::BOAT)
+		.ex1a(STRT_BOAT)
 		.ex2a(eSpecPicker::TOGGLE);
 	node_properties_t S_TOWN_VIS = node_builder_t(eSpecType::SET_TOWN_VISIBILITY)
 		.msg()
