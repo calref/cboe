@@ -1727,6 +1727,10 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 		int value = me["class"].getTextAsNum();
 		value = choose_text_editable(scenario.ic_names, value, &me, "Select item class:");
 		me["class"].setTextToNum(value);
+	} else if(hit == "edit-flag") {
+		int value = me["flag"].getTextAsNum();
+		value = choose_text_editable(scenario.itf_names, value, &me, "Select item type flag:");
+		me["flag"].setTextToNum(value);
 	}
 	return true;
 }
@@ -1780,7 +1784,7 @@ bool edit_item_type(short which) {
 	item_dlg["weight"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 250, "Weight"));
 	item_dlg["class"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 100, "Special Class"));
 	item_dlg["variety"].attachFocusHandler(std::bind(change_item_variety, _1, _2, std::ref(item)));
-	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(item), std::ref(which)), {"okay", "cancel", "abils", "choosepic", "choosetp", "choosemiss", "desc", "preview", "edit-ic"});
+	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(item), std::ref(which)), {"okay", "cancel", "abils", "choosepic", "choosetp", "choosemiss", "desc", "preview", "edit-ic", "edit-flag"});
 	
 	if(scenario.scen_items.size() == 1) {
 		item_dlg["prev"].hide();

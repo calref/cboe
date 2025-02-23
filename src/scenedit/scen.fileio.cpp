@@ -408,6 +408,13 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.PushText(scenario.ic_names[i]);
 		data.CloseElement("item-class");
 	}
+	for(int i = 0; i < scenario.itf_names.size(); i++) {
+		if(scenario.itf_names[i].empty()) continue;
+		data.OpenElement("item-typeflag");
+		data.PushAttribute("id", i + 1);
+		data.PushText(scenario.itf_names[i]);
+		data.CloseElement("item-typeflag");
+	}
 	data.CloseElement("editor");
 	data.CloseElement("scenario");
 }
