@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='done'>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text name='title' size='large' top='6' left='50' width='256' height='14'>Select:</text>
+	<text top='24' left='50'>Note: Edits to the names will be saved even if you click Cancel.</text>
+	<group name='strings'>
+		<led name='led1' state='off' top='56' left='8'/>
+		<led name='led2' state='off' top='86' left='8'/>
+		<led name='led3' state='off' top='116' left='8'/>
+		<led name='led4' state='off' top='146' left='8'/>
+		<led name='led5' state='off' top='176' left='8'/>
+		<led name='led6' state='off' top='206' left='8'/>
+		<led name='led7' state='off' top='236' left='8'/>
+		<led name='led8' state='off' top='266' left='8'/>
+		<led name='led9' state='off' top='296' left='8'/>
+		<led name='led10' state='off' top='326' left='8'/>
+		<led name='led11' state='off' top='56' left='216'/>
+		<led name='led12' state='off' top='86' left='216'/>
+		<led name='led13' state='off' top='116' left='216'/>
+		<led name='led14' state='off' top='146' left='216'/>
+		<led name='led15' state='off' top='176' left='216'/>
+		<led name='led16' state='off' top='206' left='216'/>
+		<led name='led17' state='off' top='236' left='216'/>
+		<led name='led18' state='off' top='266' left='216'/>
+		<led name='led19' state='off' top='296' left='216'/>
+		<led name='led20' state='off' top='326' left='216'/>
+	</group>
+	<field name='edit1' top='54' left='29' width='180' height='14'/>
+	<field name='edit2' top='84' left='29' width='180' height='14'/>
+	<field name='edit3' top='114' left='29' width='180' height='14'/>
+	<field name='edit4' top='144' left='29' width='180' height='14'/>
+	<field name='edit5' top='174' left='29' width='180' height='14'/>
+	<field name='edit6' top='204' left='29' width='180' height='14'/>
+	<field name='edit7' top='234' left='29' width='180' height='14'/>
+	<field name='edit8' top='264' left='29' width='180' height='14'/>
+	<field name='edit9' top='294' left='29' width='180' height='14'/>
+	<field name='edit10' top='324' left='29' width='180' height='14'/>
+	<field name='edit11' top='54' left='237' width='180' height='14'/>
+	<field name='edit12' top='84' left='237' width='180' height='14'/>
+	<field name='edit13' top='114' left='237' width='180' height='14'/>
+	<field name='edit14' top='144' left='237' width='180' height='14'/>
+	<field name='edit15' top='174' left='237' width='180' height='14'/>
+	<field name='edit16' top='204' left='237' width='180' height='14'/>
+	<field name='edit17' top='234' left='237' width='180' height='14'/>
+	<field name='edit18' top='264' left='237' width='180' height='14'/>
+	<field name='edit19' top='294' left='237' width='180' height='14'/>
+	<field name='edit20' top='324' left='237' width='180' height='14'/>
+	<button name='left' type='left' def-key='left' top='358' left='8'/>
+	<button name='right' type='right' def-key='right' top='358' left='71'/>
+	<button name='done' type='regular' top='358' left='338'>OK</button>
+	<button name='cancel' type='regular' def-key='esc' top='358' left='272'>Cancel</button>
+</dialog>

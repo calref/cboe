@@ -18,26 +18,30 @@
 /// A dialog that presents a list of strings with LEDs and allows you to choose one.
 /// The list may span several pages.
 class cStringChoice {
-	static const size_t per_page = 40;
+	const bool editable = false;
+	const size_t per_page = 40;
 	cDialog dlg;
 	bool onLeft();
 	bool onRight();
 	bool onCancel(cDialog& me);
 	bool onOkay(cDialog& me);
 	bool onSelect(bool losing);
+	bool onFocus(std::string which, bool losing);
 	void attachHandlers();
 	void fillPage();
+	void savePage();
+	size_t lastPage() const;
 	std::vector<std::string> strings;
 	size_t page, cur;
 	cLedGroup* leds;
 	std::function<void(cStringChoice&,int)> select_handler;
-	cStringChoice(cDialog* parent);
+	cStringChoice(cDialog* parent, bool editable = false);
 public:
 	/// Initializes a dialog from a list of strings.
 	/// @param strs A list of all strings in the dialog.
 	/// @param title The title to show in the dialog.
 	/// @param parent Optionally, a parent dialog.
-	explicit cStringChoice(std::vector<std::string>& strs, std::string title, cDialog* parent = nullptr);
+	explicit cStringChoice(std::vector<std::string>& strs, std::string title, cDialog* parent = nullptr, bool editable = false);
 	/// Initializes a dialog from an iterator pair.
 	/// @param begin An iterator to the first string in the dialog.
 	/// @param end An iterator to one past the last string in the dialog.
@@ -65,6 +69,8 @@ public:
 	/// Set the dialog's title.
 	/// @param title The new title.
 	void setTitle(const std::string& title);
+	/// Get the list of strings.
+	std::vector<std::string> getStrings() const { return strings; }
 };
 
 #endif
