@@ -475,6 +475,24 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 		case STRT_LABEL_ALIGN:
 			strings = {"Align Top", "Align Centre"};
 			break;
+		case STRT_BOAT:
+		case STRT_HORSE:
+			for(cVehicle& vehicle : (list == STRT_BOAT ? scenario.boats : scenario.horses)) {
+				if(!vehicle.name.empty()) strings.push_back(vehicle.name);
+				else {
+					std::string base = list == STRT_BOAT ? "Unnamed boat in " : "Unnamed horse in";
+					std::ostringstream sout;
+					sout << "Unnamed ";
+					if(list == STRT_BOAT) sout << "boat"; else sout << "horse";
+					if(vehicle.which_town == 200) {
+						sout << " outdoors @ " << vehicle.sector;
+					} else {
+						sout << " in town " << vehicle.which_town;
+					}
+					strings.push_back(sout.str());
+				}
+			}
+			break;
 	}
 	if(cur_choice < 0 || cur_choice >= strings.size())
 		cur_choice = -1;
@@ -978,6 +996,8 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 				case STRT_SPELL_PAT_MODE: title = "What kind of booms?"; break;
 				case STRT_LABEL_ALIGN: title = "Choose vertical alignment:"; break;
 				case STRT_SECTOR: title = "Which sector?"; break;
+				case STRT_BOAT: title = "Which boat?"; break;
+				case STRT_HORSE: title = "Which horse?"; break;
 				default: title = "Title not set for this string type!!!"; break;
 			}
 			if(fcn.str_type == STRT_SECTOR && fcn.continuation == eSpecField::NONE) {
