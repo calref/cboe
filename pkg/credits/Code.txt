@@ -13,3 +13,4 @@ Confirmed:
 - NQNStudios
 - Sei Satzparad
 - Brendan Miller
+- Nathan Rickey
