@@ -126,15 +126,16 @@ static void put_placed_monst_adv_in_dlog(cDialog& me, cTownperson& monst, const 
 	me["num"].setTextToNum(which);
 	me["type"].setText(scenario.scen_monsters[monst.number].m_name);
 	int iTime = 0;
+	bool need_event = false;
 	switch(monst.time_flag) {
 		case eMonstTime::ALWAYS: iTime = 0; break;
-		case eMonstTime::APPEAR_ON_DAY: iTime = 1; break;
-		case eMonstTime::DISAPPEAR_ON_DAY: iTime = 2; break;
+		case eMonstTime::APPEAR_ON_DAY: iTime = 1; need_event = true; break;
+		case eMonstTime::DISAPPEAR_ON_DAY: iTime = 2; need_event = true; break;
 		case eMonstTime::SOMETIMES_A: iTime = 3; break;
 		case eMonstTime::SOMETIMES_B: iTime = 4; break;
 		case eMonstTime::SOMETIMES_C: iTime = 5; break;
-		case eMonstTime::APPEAR_WHEN_EVENT: iTime = 6; break;
-		case eMonstTime::DISAPPEAR_WHEN_EVENT: iTime = 7; break;
+		case eMonstTime::APPEAR_WHEN_EVENT: iTime = 6; need_event = true; break;
+		case eMonstTime::DISAPPEAR_WHEN_EVENT: iTime = 7; need_event = true; break;
 		case eMonstTime::APPEAR_AFTER_CHOP: iTime = 8; break;
 	}
 	dynamic_cast<cLedGroup&>(me["time"]).setSelected("time" + std::to_string(iTime + 1));
@@ -147,6 +148,11 @@ static void put_placed_monst_adv_in_dlog(cDialog& me, cTownperson& monst, const 
 	me["hail"].setTextToNum(monst.special_on_talk);
 	me["sdfx"].setTextToNum(monst.spec1);
 	me["sdfy"].setTextToNum(monst.spec2);
+	if(need_event) {
+		me["choose-event"].show();
+	} else {
+		me["choose-event"].hide();
+	}
 }
 
 static bool get_placed_monst_adv_in_dlog(cDialog& me, cTownperson& monst) {
@@ -196,6 +202,11 @@ static bool edit_placed_monst_adv_time_flag(cDialog& me, std::string, bool losin
 	int item_hit = time.getSelected()[4] - '1';
 	me["extra1-lbl"].setText(day_str_1[item_hit]);
 	me["extra2-lbl"].setText(day_str_2[item_hit]);
+	if(item_hit == 1 || item_hit == 2 || item_hit == 6 || item_hit == 7) {
+		me["choose-event"].show();
+	} else {
+		me["choose-event"].hide();
+	}
 	return true;
 }
 
@@ -226,6 +237,12 @@ cTownperson edit_placed_monst_adv(cTownperson initial, short which, cDialog& par
 	edit["editdeath"].attachClickHandler(std::bind(edit_placed_monst_adv_death, _1));
 	edit["edithail"].attachClickHandler(std::bind(edit_placed_monst_adv_hail, _1));
 	edit["time"].attachFocusHandler(edit_placed_monst_adv_time_flag);
+	edit["choose-event"].attachClickHandler([](cDialog& me, std::string, eKeyMod) {
+		int value = me["extra2"].getTextAsNum();
+		value = choose_text_editable(scenario.evt_names, value, &me, "Select an event:");
+		me["extra2"].setTextToNum(value);
+		return true;
+	});
 	
 	put_placed_monst_adv_in_dlog(edit,initial,which);
 	
@@ -1189,7 +1206,7 @@ static void put_talk_node_in_dlog(cDialog& me, std::stack<node_ref_t>& talk_edit
 	me["str1"].setText(talk_node.str1);
 	me["str2"].setText(talk_node.str2);
 	
-	if(talk_node.type == eTalkNode::SHOP)
+	if(talk_node.type == eTalkNode::SHOP || talk_node.type == eTalkNode::DEP_ON_TIME_AND_EVENT)
 		me["chooseB"].show();
 	else me["chooseB"].hide();
 	me["chooseA-regular"].hide();
@@ -1259,9 +1276,15 @@ static bool select_talk_node_personality(cDialog& me, std::stack<node_ref_t>& ta
 static bool select_talk_node_value(cDialog& me, std::string item_hit, const std::stack<node_ref_t>& talk_edit_stack) {
 	const auto& talk_node = talk_edit_stack.top().second;
 	if(item_hit == "chooseB") {
-		int i = me["extra2"].getTextAsNum();
-		i = choose_text(STRT_SHOP,i,&me,"Which shop?");
-		me["extra2"].setTextToNum(i);
+		if(talk_node.type == eTalkNode::SHOP) {
+			int i = me["extra2"].getTextAsNum();
+			i = choose_text(STRT_SHOP,i,&me,"Which shop?");
+			me["extra2"].setTextToNum(i);
+		} else if(talk_node.type == eTalkNode::DEP_ON_TIME_AND_EVENT) {
+			int value = me["extra2"].getTextAsNum();
+			value = choose_text_editable(scenario.evt_names, value, &me, "Select an event:");
+			me["extra2"].setTextToNum(value);
+		}
 	} else if(item_hit == "chooseA") {
 		int spec = me["extra1"].getTextAsNum();
 		// Create/Edit a quest:
