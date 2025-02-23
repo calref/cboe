@@ -824,7 +824,7 @@ static void replay_action(Element& action) {
 		debug_return_to_start();
 		return;
 	}else if(t == "handle_victory"){
-		handle_victory();
+		handle_victory(true); // This is for the debug action which forces it.
 		return;
 	}else if(t == "debug_increase_age"){
 		debug_increase_age();
