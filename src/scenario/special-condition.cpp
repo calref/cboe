@@ -97,6 +97,7 @@ namespace {
 		.ex1c(eSpecPicker::NODE);
 	node_properties_t S_NUM = node_builder_t(eSpecType::IF_NUM_RESPONSE)
 		.msg1(+eSpecPicker::MSG_SINGLE)
+		.ptyp(eSpecPicker::NODE)
 		.ex1b(STRT_CMP)
 		.ex1c(eSpecPicker::NODE)
 		.ex2b(STRT_CMP)
