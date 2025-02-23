@@ -97,9 +97,11 @@ namespace {
 		.ex2a(STRT_ITEM);
 	node_properties_t S_SPLIT = node_builder_t(eSpecType::TOWN_SPLIT_PARTY)
 		.msg()
-		.loc(eSpecField::EX1A, eSpecField::EX1B);
+		.loc(eSpecField::EX1A, eSpecField::EX1B)
+		.ex2a(eSpecPicker::SOUND);
 	node_properties_t S_REUNITE = node_builder_t(eSpecType::TOWN_REUNITE_PARTY)
-		.msg();
+		.msg()
+		.ex1c(eSpecPicker::SOUND);
 	node_properties_t S_TIMER = node_builder_t(eSpecType::TOWN_TIMER_START)
 		.msg()
 		.ex1b(eSpecPicker::NODE);
@@ -115,7 +117,8 @@ namespace {
 		.msg();
 	node_properties_t S_TARGET = node_builder_t(eSpecType::TOWN_START_TARGETING)
 		.msg()
-		.ex1a(STRT_SPELL_PAT);
+		.ex1a(STRT_SPELL_PAT)
+		.ex2a(eSpecPicker::NODE);
 	node_properties_t S_FIELDS = node_builder_t(eSpecType::TOWN_SPELL_PAT_FIELD)
 		.msg()
 		.loc(eSpecField::EX1A, eSpecField::EX1B)

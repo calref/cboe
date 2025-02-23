@@ -12,7 +12,8 @@ node_category_info_t CAT_AFFECT{eSpecType::SELECT_TARGET, eSpecType::UNSTORE_PC}
 
 namespace {
 	node_properties_t S_SELECT = node_builder_t(eSpecType::SELECT_TARGET)
-		.msg();
+		.msg()
+		.ex1b(eSpecPicker::NODE);
 	node_properties_t S_DAMAGE = node_builder_t(eSpecType::DAMAGE)
 		.msg()
 		.ex2b(eSpecPicker::DAMAGE_TYPE)
