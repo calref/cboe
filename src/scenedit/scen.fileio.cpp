@@ -401,6 +401,13 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.PushText(scenario.evt_names[i]);
 		data.CloseElement("event");
 	}
+	for(int i = 0; i < scenario.ic_names.size(); i++) {
+		if(scenario.ic_names[i].empty()) continue;
+		data.OpenElement("item-class");
+		data.PushAttribute("id", i + 1);
+		data.PushText(scenario.ic_names[i]);
+		data.CloseElement("item-class");
+	}
 	data.CloseElement("editor");
 	data.CloseElement("scenario");
 }
