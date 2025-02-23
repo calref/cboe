@@ -13,7 +13,10 @@
 	<text name='loc-lbl' anchor='area-lbl' relative='pos-in pos' top='11' left='0' width='97' height='14'>Location</text>
 	<text name='loc' rel-anchor='prev' relative='pos pos-in' top='0' left='5' width='40' height='16'/>
 	
-	<led name='owned' anchor='loc-lbl' relative='pos-in pos' top='11' left='10'>Not Party Property</led>
+	<text name='name-lbl' anchor='loc-lbl' relative='pos-in pos' top='11' left='0' width='97' height='14'>Name</text>
+	<field name='name' rel-anchor='prev' relative='pos pos-in' top='0' left='5' width='100' height='14'/>
+
+	<led name='owned' anchor='name-lbl' relative='pos-in pos' top='11' left='10'>Not Party Property</led>
 	
 	<button name='cancel' rel-anchor='prev' relative='neg pos' type='regular' def-key='esc' top='15' left='10'>Cancel</button>
 	<button name='del' rel-anchor='prev' relative='pos pos-in' type='regular' top='0' left='0'>Delete</button>
