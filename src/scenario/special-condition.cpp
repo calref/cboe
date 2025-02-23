@@ -42,12 +42,15 @@ namespace {
 		.ex2a(eSpecPicker::TOGGLE);
 	node_properties_t S_ITEM_THERE = node_builder_t(eSpecType::IF_ITEM_CLASS_ON_SPACE)
 		.loc(eSpecField::EX1A, eSpecField::EX1B)
+		.ex2a(eSpecPicker::ITEM_CLASS)
 		.ex2b(eSpecPicker::NODE)
 		.ex2c(eSpecPicker::TOGGLE);
 	node_properties_t S_ITEM_OWNED = node_builder_t(eSpecType::IF_HAVE_ITEM_CLASS)
+		.ex1a(eSpecPicker::ITEM_CLASS)
 		.ex1b(eSpecPicker::NODE)
 		.ex2a(eSpecPicker::TOGGLE);
 	node_properties_t S_ITEM_EQUIP = node_builder_t(eSpecType::IF_EQUIP_ITEM_CLASS)
+		.ex1a(eSpecPicker::ITEM_CLASS)
 		.ex1b(eSpecPicker::NODE)
 		.ex2a(eSpecPicker::TOGGLE);
 	node_properties_t S_MAGE = node_builder_t(eSpecType::IF_MAGE_SPELL)
