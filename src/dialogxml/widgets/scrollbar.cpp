@@ -45,6 +45,9 @@ void cScrollbar::setPosition(long newPos, bool record) {
 	if(record && recording){
 		std::map<std::string,std::string> info;
 		info["name"] = name;
+		if(info["name"].empty() && pane != nullptr){
+			info["name"] = pane->getName();
+		}
 		// Might as well record newPos before it gets clamped, so replays will verify that clamping
 		// still works.
 		info["newPos"] = boost::lexical_cast<std::string>(newPos);
