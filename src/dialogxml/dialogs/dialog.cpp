@@ -569,6 +569,16 @@ void cDialog::handle_events() {
 		}else if(replaying && has_next_action("field_selection")) {
 			cTextField& text_field = dynamic_cast<cTextField&>(getControl(currentFocus));
 			text_field.replay_selection(pop_next_action());
+		}else if(replaying && has_next_action("scrollbar_setPosition")){
+			Element& next_action = pop_next_action();
+			auto info = info_from_action(next_action);
+			std::string name = info["name"];
+			long newPos = boost::lexical_cast<long>(info["newPos"]);
+
+			cScrollPane& pane = dynamic_cast<cScrollPane&>(getControl(name));
+			pane.getScroll().setPosition(newPos);
+		}else if(replaying && has_next_action()){
+			throw std::string { "Replaying a dialog, have the wrong replay action: " + next_action_type() };
 		}else{
 			while(pollEvent(win, currentEvent)){
 				handle_one_event(currentEvent, fps_limiter);
