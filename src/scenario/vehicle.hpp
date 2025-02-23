@@ -10,6 +10,7 @@
 #define BOE_DATA_VEHICLE_H
 
 #include <iosfwd>
+#include <string>
 #include "location.hpp"
 
 namespace legacy {
@@ -28,6 +29,8 @@ public:
 	short which_town;
 	bool exists;
 	bool property;
+	pic_num_t pic = 0;
+	std::string name; // For designer use; not stored in save files
 	
 	cVehicle();
 	void import_legacy(legacy::horse_record_type& old);
