@@ -116,10 +116,10 @@ namespace {
 		.ex2b(STRT_CMP)
 		.ex2c(eSpecPicker::NODE);
 	node_properties_t S_BOAT = node_builder_t(eSpecType::IF_IN_BOAT)
-		.ex1b(eSpecPicker::BOAT)
+		.ex1b(STRT_BOAT)
 		.ex1c(eSpecPicker::NODE);
 	node_properties_t S_HORSE = node_builder_t(eSpecType::IF_ON_HORSE)
-		.ex1b(eSpecPicker::HORSE)
+		.ex1b(STRT_HORSE)
 		.ex1c(eSpecPicker::NODE);
 	node_properties_t S_QUEST = node_builder_t(eSpecType::IF_QUEST)
 		.ex1a(STRT_QUEST)
