@@ -2403,7 +2403,7 @@ void init_debug_actions() {
 	add_debug_action({'J'}, "Preview a dialog's layout", preview_dialog_xml);
 	add_debug_action({'U'}, "Preview EVERY dialog's layout", preview_every_dialog_xml);
 	add_debug_action({'K'}, "Kill everything", debug_kill);
-	add_debug_action({'N'}, "End scenario", []() -> void {handle_victory(true);});
+	add_debug_action({'N'}, "End scenario", []() -> void {handle_victory(true, true);});
 	add_debug_action({'O'}, "Print your location", debug_print_location);
 	add_debug_action({'Q'}, "Magic map", debug_magic_map);
 	add_debug_action({'R'}, "Return to start", debug_return_to_start);
