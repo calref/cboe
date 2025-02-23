@@ -620,7 +620,14 @@ node_function_t::node_function_t() {}
 
 node_function_t::node_function_t(eSpecPicker button)
 	: button(button)
-{}
+{
+	if(button == eSpecPicker::PICTURE) {
+		pic_type = PIC_NONE;
+	}
+	if(button == eSpecPicker::NODE || button == eSpecPicker::MSG_PAIR || button == eSpecPicker::MSG_SINGLE || button == eSpecPicker::MSG_SEQUENCE) {
+		force_global = false;
+	}
+}
 
 node_function_t::node_function_t(eStrType str)
 	: button(eSpecPicker::STRING)
