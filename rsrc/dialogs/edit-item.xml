@@ -73,7 +73,7 @@
 	<text top='268' left='8' width='148' height='14'>Bonus: (0-10)</text>
 	<text top='292' left='8' width='148' height='14'>Protection: (-10 - 20)</text>
 	<text top='316' left='8' width='148' height='14'>Charges: (0-100)</text>
-	<text top='220' left='220' width='137' height='13'>Type flag: (0-1000)</text>
+	<button name='edit-flag' type='tiny' text-size='10' top='220' left='220' width='137' height='13'>Type flag:</button>
 	<text top='244' left='220' width='141' height='13'>Value: (0-10000)</text>
 	<text top='268' left='220' width='141' height='13'>Weight: (0-250)</text>
 	<button name='edit-ic' type='tiny' text-size='10' top='292' left='220' width='141' height='13'>Special class:</button>
