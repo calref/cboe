@@ -500,6 +500,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 					rect_draw_some_item(*from_gw,from_rect, mainPtr,temp_rect,ter_rects.in_frame,sf::BlendAlpha);
 				}
 			}
+		refresh_text_bar();
 		mainPtr.setActive();
 		mainPtr.display();
 		sf::sleep(sf::milliseconds(2 + 5 * get_int_pref("GameSpeed")));
