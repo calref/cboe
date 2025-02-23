@@ -160,7 +160,7 @@ enum class eSpecPicker {
 	POINTER,
 };
 
-enum class eSpecField { SDF1, SDF2, MSG1, MSG2, MSG3, PICT, PTYP, EX1A, EX1B, EX1C, EX2A, EX2B, EX2C, JUMP };
+enum class eSpecField { NONE, SDF1, SDF2, MSG1, MSG2, MSG3, PICT, PTYP, EX1A, EX1B, EX1C, EX2A, EX2B, EX2C, JUMP };
 
 struct node_function_t {
 	eSpecPicker button = eSpecPicker::NONE;
@@ -172,6 +172,7 @@ struct node_function_t {
 	};
 	bool augmented = false; // only for eSpecPicker::FIELD and eSpecPicker::STRING with certain string types
 	int adjust = 0; // only for eSpecPicker::STRING
+	eSpecField continuation = eSpecField::NONE;
 	std::string label() const;
 	std::string help() const; // maybe we don't need this though? I guess it would be for a hypothetical help button next to each field to give addition info on how that one field works.
 	node_function_t();

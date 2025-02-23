@@ -755,7 +755,7 @@ node_builder_t& node_builder_t::sdf() {
 }
 
 node_builder_t& node_builder_t::msg() {
-	return msg1(eSpecPicker::MSG_PAIR).msg2(eSpecPicker::NONE);
+	return field_pair(eSpecField::MSG1, eSpecField::MSG2, eSpecPicker::MSG_PAIR);
 };
 
 node_builder_t& node_builder_t::rect() {
@@ -831,8 +831,9 @@ node_builder_t& node_builder_t::field(eSpecField field, node_function_t picker) 
 }
 
 node_builder_t& node_builder_t::field_pair(eSpecField main, eSpecField extra, node_function_t picker) {
-	// Not implemented yet, so just assign the picker to the main field and NONE to the extra field.
-	return field(main, picker).field(extra, eSpecPicker::NONE);
+	field(main, picker).field(extra, eSpecPicker::NONE);
+	(node.*fields().map[main]).continuation = extra;
+	return *this;
 }
 
 node_builder_t& node_builder_t::sdf(eSpecField a, eSpecField b) {
