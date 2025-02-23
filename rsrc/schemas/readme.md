@@ -312,6 +312,7 @@ subtags:
 names are used when showing the Pick Sound dialog in various places. The required `id`
 attribute specifies which sound it applies to.
 * `<event>` - (max unbounded) Gives a name to a major event flag. These names are shown (and editable) when showing the Pick Event dialog in various places. The required `id` attribute specifies which event.
+* `<item-class>` - (max unbounded) Gives a name to an item special class. These names are shown (and editable) when showing the Pick Item Class dialog in various places. The required `id` attribute specifies which class.
 
 Terrain Types
 -------------

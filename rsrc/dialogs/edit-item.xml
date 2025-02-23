@@ -76,7 +76,7 @@
 	<text top='220' left='220' width='137' height='13'>Type flag: (0-1000)</text>
 	<text top='244' left='220' width='141' height='13'>Value: (0-10000)</text>
 	<text top='268' left='220' width='141' height='13'>Weight: (0-250)</text>
-	<text top='292' left='220' width='141' height='13'>Special class: (0-100)</text>
+	<button name='edit-ic' type='tiny' text-size='10' top='292' left='220' width='141' height='13'>Special class:</button>
 	<text name='missile-title' top='220' left='440' width='140' height='16'>Missile type:</text>
 	<field name='missile' top='243' left='463' width='50' height='16'/>
 	<pict name='missile-pic' type='missile' num='3' top='243' left='440'/>
