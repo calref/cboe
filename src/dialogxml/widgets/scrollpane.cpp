@@ -17,6 +17,7 @@
 #include <climits>
 
 cScrollPane::cScrollPane(cDialog& parent) : cContainer(CTRL_PANE, parent), scroll(parent) {
+	scroll.setPane(this);
 	recalcRect();
 }
 
