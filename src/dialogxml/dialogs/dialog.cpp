@@ -245,6 +245,7 @@ void cDialog::loadFromFile(const DialogDefn& file){
 				}
 			}
 			prevCtrl = *inserted;
+			prevCtrl.second->setName(prevCtrl.first);
 			// Needed to correctly resolve relative positioning
 			inserted->second->recalcRect();
 		}
@@ -464,6 +465,7 @@ bool cDialog::add(cControl* what, rectangle ctrl_frame, std::string key){
 	if(controls.find(key) != controls.end()) return false;
 	what->setBounds(ctrl_frame);
 	controls.insert(std::make_pair(key,what));
+	what->setName(key);
 	return true;
 }
 
