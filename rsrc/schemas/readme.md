@@ -264,6 +264,11 @@ shop ID 0. Shops require the following subtags:
 of this element in a `CDATA` declaration.
 * `<journal>` - (max unbounded) A journal string. The scenario editor wraps the contents
 of this element in a `CDATA` declaration.
+* `<vehicle>` - (max unbounded) Contains additional data for a placed boat or horse. Only present if the additional data is used.
+	* `type=` - Must be either `boat` or `horse`.
+	* `id=` - The horse or boat ID, as written into the map data - a one-based index into the global list of horses or boats.
+	* `<name>` - A designer-visible name for the boat or horse. Used by the scenario editor to present a list of boats or horses.
+	* `<pic>` - The graphic to use for the boat or horse.
 
 The `<editor>` element can have the following child tags:
 

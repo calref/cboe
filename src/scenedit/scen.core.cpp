@@ -2633,6 +2633,7 @@ bool edit_vehicle(cVehicle& what, int num, bool is_boat) {
 	dlg["loc"].setText(boost::lexical_cast<std::string>(what.loc));
 	dlg["num"].setTextToNum(num);
 	dlg["title"].setText(is_boat ? "Edit Boat" : "Edit Horse");
+	dlg["name"].setText(what.name);
 	
 	cLed& prop = dynamic_cast<cLed&>(dlg["owned"]);
 	prop.setState(what.property ? led_red : led_off);
@@ -2645,6 +2646,7 @@ bool edit_vehicle(cVehicle& what, int num, bool is_boat) {
 	if(dlg.accepted()) {
 		what.property = prop.getState() != led_off;
 		what.exists = true;
+		what.name = dlg["name"].getText();
 	}
 	return what.exists;
 }

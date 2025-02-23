@@ -336,6 +336,24 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.PushAttribute("id", scenario.journal_strs.size() - 1);
 		data.CloseElement("journal");
 	}
+	for(size_t i = 0; i < scenario.boats.size(); i++) {
+		if(scenario.boats[i].name.empty() && scenario.boats[i].pic == 0) continue;
+		data.OpenElement("vehicle");
+		data.PushAttribute("type", "boat");
+		data.PushAttribute("id", i + 1);
+		if(!scenario.boats[i].name.empty()) data.PushElement("name", scenario.boats[i].name);
+		if(scenario.boats[i].pic > 0) data.PushElement("pic", scenario.boats[i].pic);
+		data.CloseElement("vehicle");
+	}
+	for(size_t i = 0; i < scenario.horses.size(); i++) {
+		if(scenario.horses[i].name.empty() && scenario.horses[i].pic == 0) continue;
+		data.OpenElement("vehicle");
+		data.PushAttribute("type", "horse");
+		data.PushAttribute("id", i + 1);
+		if(!scenario.horses[i].name.empty()) data.PushElement("name", scenario.horses[i].name);
+		if(scenario.horses[i].pic > 0) data.PushElement("pic", scenario.horses[i].pic);
+		data.CloseElement("vehicle");
+	}
 	data.CloseElement("game");
 	data.OpenElement("editor");
 	data.PushElement("default-ground", scenario.default_ground);

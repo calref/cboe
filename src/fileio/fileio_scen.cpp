@@ -904,6 +904,23 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					if(strnum >= scenario.journal_strs.size())
 						scenario.journal_strs.resize(strnum + 1);
 					game->GetText(&scenario.journal_strs[strnum], false);
+				} else if(type == "vehicle") {
+					std::string vtype = game->GetAttribute("type");
+					if(vtype != "boat" && vtype != "horse")
+						throw xBadVal(type, "type", vtype, game->Row(), game->Column(), fname);
+					auto& list = (vtype == "boat" ? scenario.boats : scenario.horses);
+					game->GetAttribute("id", &strnum);
+					list.resize(strnum);
+					int i = strnum - 1;
+					Iterator<Element> vehicle;
+					for(vehicle = vehicle.begin(game.Get()); vehicle != vehicle.end(); vehicle++) {
+						vehicle->GetValue(&type);
+						if(type == "name") {
+							vehicle->GetText(&list[i].name);
+						} else if(type == "pic") {
+							vehicle->GetText(&list[i].pic);
+						} else throw xBadNode(type, vehicle->Row(), vehicle->Column(), fname);
+					}
 				} else throw xBadNode(type, game->Row(), game->Column(), fname);
 			}
 			if(!reqs.empty())
