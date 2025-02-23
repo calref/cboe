@@ -111,8 +111,7 @@ namespace{
 		.ex2b(STRT_TER);
 	node_properties_t S_TERTRANS = node_builder_t(eSpecType::TRANS_TER)
 		.msg()
-		.loc(eSpecField::EX1A, eSpecField::EX1B)
-		.ex2a(STRT_TER);
+		.loc(eSpecField::EX1A, eSpecField::EX1B);
 	node_properties_t S_BUF_CLEAR = node_builder_t(eSpecType::CLEAR_BUF);
 	node_properties_t S_BUF_ADDSTR = node_builder_t(eSpecType::APPEND_STRING)
 		.ex1a(eSpecPicker::MSG_SINGLE);
