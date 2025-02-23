@@ -18,11 +18,11 @@
 		<!-- The height of this text needs to be 10 times the number of lines. -->
 		<text top='52' left='50' width='400' height='240'>
 			ORIGINAL GAME: <br/><br/><br/><br/><br/><br/>
-			OPEN SOURCE CREDITS: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+			OPEN SOURCE CREDITS: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 			SCENARIO FIXES AND UPDATES: <br/><br/>
 		</text>
 		<!-- This text is right-aligned and fills out the above text with sub-headings -->
-		<text top='52' left='50' width='180' height='730' align='right'>
+		<text top='52' left='50' width='180' height='800' align='right'>
 			<br/>
 			Concept, Design, Programming: <br/>
 			Graphics: <br/>
@@ -30,15 +30,15 @@
 			Title/Splash Screens: <br/>
 			<br/>
 			<br/>
-			Programming: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+			Programming: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 			Graphics: <br/><br/><br/><br/><br/><br/>
 			Consulting: <br/><br/><br/><br/>
 			Testing and Troubleshooting: <br/><br/>
-			Funding: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+			Funding: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 			<br/><br/>
 			Bandit Busywork: <br/>
 		</text>
-		<text top='52' left='250' width='230' height='730'>
+		<text top='52' left='250' width='230' height='800'>
 			<!-- ORIGINAL GAME --><br/>
 			<!-- Concept, Design, Programming -->Jeff Vogel <br/>
 			<!-- Graphics -->Andrew Hunter <br/>
@@ -59,6 +59,7 @@
 								NQNStudios <br/>
 								Sei Satzparad <br/>
 								Brendan Miller <br/>
+								Nathan Rickey <br/>
 			<!-- Graphics -->The Almighty <br/>
 							    Doer of Stuff <br/>
 							Mistb0rn <br/>
@@ -76,6 +77,7 @@
 							Amanda Klecker <br/>
 							Andrew Flicker <br/>
 							Anonymous <br/>
+							anya hope <br/>
 							Baste Nesse Buanes <br/>
 							Bret Rodabaugh <br/>
 							Dylan Nugent <br/>
@@ -85,6 +87,7 @@
 							Jeff Potter <br/>
 							Jeff Vogel <br/>
 							Jeremy Bracegirdle <br/>
+							Joe Ardent <br/>
 							Joel Joslin <br/>
 							Joshua Murphy <br/>
 							Juan Dionicio Becerra <br/>
@@ -94,6 +97,7 @@
 							Laura Nelson <br/>
 							Mariann Krizsan <br/>
 							Mike Lapinsky <br/>
+							Nathan Rickey <br/>
 							Nick Chaimov <br/>
 							Nick Fisher <br/>
 							Nicole Tietz-Sokolskaya <br/>
@@ -101,6 +105,8 @@
 							Noah Nelson <br/>
 							Ruby Paterson <br/>
 							Samael <br/>
+							Sam M <br/>
+							Sareena Razak <br/>
 							Sean Hayden <br/>
 							Souren Papazian <br/>
 							Tony Martyn <br/>
@@ -108,6 +114,7 @@
 							Trent Nelson <br/>
 							Vida Krevs <br/>
 							William Hensley <br/>
+							yomimono <br/>
 			<br/><!-- SCENARIO FIXES AND UPDATES --><br/>
 			<!-- Bandit Busywork -->The Almighty Doer of Stuff <br/>
 		</text>
