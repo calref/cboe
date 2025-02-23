@@ -312,7 +312,7 @@ Second part of message
 Unused
 Unused
 Unused
-Number of Special Event (0 .. 9)
+Number of Special Event
 Unused
 Unused
 Unused

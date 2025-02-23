@@ -2173,6 +2173,12 @@ bool edit_quest(size_t which_quest) {
 	cDialog quest_dlg(*ResMgr::dialogs.get("edit-quest"));
 	quest_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
 	quest_dlg["okay"].attachClickHandler(std::bind(save_quest_from_dlog, _1, std::ref(quest), std::ref(which_quest), true));
+	quest_dlg["choose-evt"].attachClickHandler([](cDialog& me, std::string, eKeyMod) {
+		int value = me["evt"].getTextAsNum();
+		value = choose_text_editable(scenario.evt_names, value, &me, "Select an event:");
+		me["evt"].setTextToNum(value);
+		return true;
+	});
 	quest_dlg["inbank"].attachFocusHandler([](cDialog& me, std::string, bool losing) -> bool {
 		if(losing) {
 			me["bank1"].hide();
