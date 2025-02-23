@@ -977,9 +977,22 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 				case STRT_PATH: title = "What path shape?"; break;
 				case STRT_SPELL_PAT_MODE: title = "What kind of booms?"; break;
 				case STRT_LABEL_ALIGN: title = "Choose vertical alignment:"; break;
+				case STRT_SECTOR: title = "Which sector?"; break;
 				default: title = "Title not set for this string type!!!"; break;
 			}
+			if(fcn.str_type == STRT_SECTOR && fcn.continuation == eSpecField::NONE) {
+				store = val;
+				break;
+			}
+			auto otherField = get_control_for_field(fcn.continuation);
+			if(fcn.str_type == STRT_SECTOR) {
+				val = val * scenario.outdoors.height() + me[otherField].getTextAsNum();
+			}
 			store = choose_text(fcn.str_type, val + fcn.adjust, &me, title) - fcn.adjust;
+			if(fcn.str_type == STRT_SECTOR) {
+				me[otherField].setTextToNum(store % scenario.outdoors.height());
+				store /= scenario.outdoors.height();
+			}
 		} break;
 		case eSpecPicker::PICTURE: {
 			ePicType type = fcn.pic_type;
