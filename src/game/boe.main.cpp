@@ -1494,13 +1494,13 @@ void handle_menu_choice(eMenu item_hit) {
 			dialogToShow = "about-boe";
 			break;
 		case eMenu::LIBRARY_MAGE:
-			display_spells(eSkill::MAGE_SPELLS,100,nullptr);
+			display_spells(eSkill::MAGE_SPELLS,100,nullptr,true);
 			break;
 		case eMenu::LIBRARY_PRIEST:
-			display_spells(eSkill::PRIEST_SPELLS,100,nullptr);
+			display_spells(eSkill::PRIEST_SPELLS,100,nullptr,true);
 			break;
 		case eMenu::LIBRARY_SKILLS:
-			display_skills(eSkill::INVALID,nullptr);
+			display_skills(eSkill::INVALID,nullptr,true);
 			break;
 		case eMenu::LIBRARY_ALCHEMY:
 			// TODO: Create a dedicated dialog for alchemy info
