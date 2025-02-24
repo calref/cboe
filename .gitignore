@@ -41,6 +41,7 @@ proj/xc*/*.xcodeproj/*.pbxuser
 
 # Visual Studio Junk Files
 proj/vs*/*sdf
+proj/vs*/*.user
 proj/vs*/*/*.user
 proj/vs*/*.suo
 proj/vs*/*.aps
@@ -56,6 +57,8 @@ proj/vs*/.vs
 proj/vs*/.vs
 proj/vs*/packages/
 proj/vs*/vcpkg_installed/
+# Windows debugging symbols
+*.pdb
 
 # SCons junk files
 .sconsign.dblite
