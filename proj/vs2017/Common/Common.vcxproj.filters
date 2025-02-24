@@ -584,9 +584,6 @@
     <ClCompile Include="..\..\..\src\fileio\gzstream\gzstream.cpp">
       <Filter>FileIO\GZStream</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\fileio\resmgr\restypes.cpp">
-      <Filter>FileIO\ResMgr</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\fileio\xml-parser\ticpp.cpp">
       <Filter>FileIO\TinyXML</Filter>
     </ClCompile>
@@ -633,9 +630,6 @@
       <Filter>FileIO</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\gfx\gfxsheets.cpp">
-      <Filter>Gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gfx\qdpict.mac.cpp">
       <Filter>Gfx</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\gfx\render_image.cpp">
@@ -787,6 +781,15 @@
     <ClCompile Include="..\..\..\src\dialogxml\widgets\stack.cpp">
       <Filter>DialogXML\Widgets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_cursor.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_dialog.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_font.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_image.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_sound.cpp" />
+    <ClCompile Include="..\..\..\src\fileio\resmgr\res_strings.cpp" />
+    <ClCompile Include="..\..\..\src\tools\drawable_manager.cpp" />
+    <ClCompile Include="..\..\..\src\tools\framerate_limiter.cpp" />
+    <ClCompile Include="..\..\..\src\tools\replay.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\scenario\town_import.tpp">
@@ -912,9 +915,6 @@
     <ClInclude Include="..\..\..\src\scenario\vehicle.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\tools\cli.hpp">
-      <Filter>Tools</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\tools\cursors.hpp">
       <Filter>Tools</Filter>
     </ClInclude>
@@ -959,7 +959,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\alchemy.hpp" />
     <ClInclude Include="..\..\..\src\damage.hpp" />
-    <ClInclude Include="..\..\..\src\enchant.hpp" />
     <ClInclude Include="..\..\..\src\fields.hpp" />
     <ClInclude Include="..\..\..\src\global.hpp" />
     <ClInclude Include="..\..\..\src\location.hpp" />
@@ -1032,5 +1031,6 @@
     <ClInclude Include="..\..\..\src\dialogxml\widgets\stack.hpp">
       <Filter>DialogXML\Widgets</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\tools\replay.hpp" />
   </ItemGroup>
 </Project>
