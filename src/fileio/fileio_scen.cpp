@@ -904,6 +904,23 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					if(strnum >= scenario.journal_strs.size())
 						scenario.journal_strs.resize(strnum + 1);
 					game->GetText(&scenario.journal_strs[strnum], false);
+				} else if(type == "vehicle") {
+					std::string vtype = game->GetAttribute("type");
+					if(vtype != "boat" && vtype != "horse")
+						throw xBadVal(type, "type", vtype, game->Row(), game->Column(), fname);
+					auto& list = (vtype == "boat" ? scenario.boats : scenario.horses);
+					game->GetAttribute("id", &strnum);
+					list.resize(strnum);
+					int i = strnum - 1;
+					Iterator<Element> vehicle;
+					for(vehicle = vehicle.begin(game.Get()); vehicle != vehicle.end(); vehicle++) {
+						vehicle->GetValue(&type);
+						if(type == "name") {
+							vehicle->GetText(&list[i].name);
+						} else if(type == "pic") {
+							vehicle->GetText(&list[i].pic);
+						} else throw xBadNode(type, vehicle->Row(), vehicle->Column(), fname);
+					}
 				} else throw xBadNode(type, game->Row(), game->Column(), fname);
 			}
 			if(!reqs.empty())
@@ -930,6 +947,24 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					if(sndnum >= scenario.snd_names.size())
 						scenario.snd_names.resize(sndnum + 1);
 					edit->GetText(&scenario.snd_names[sndnum], false);
+				} else if(type == "event") {
+					int evtnum = 0;
+					edit->GetAttribute("id", &evtnum);
+					if(evtnum > scenario.evt_names.size())
+						scenario.evt_names.resize(evtnum);
+					edit->GetText(&scenario.evt_names[evtnum - 1], false);
+				} else if(type == "item-class") {
+					int icnum = 0;
+					edit->GetAttribute("id", &icnum);
+					if(icnum > scenario.ic_names.size())
+						scenario.ic_names.resize(icnum);
+					edit->GetText(&scenario.ic_names[icnum - 1], false);
+				} else if(type == "item-typeflag") {
+					int itfnum = 0;
+					edit->GetAttribute("id", &itfnum);
+					if(itfnum > scenario.itf_names.size())
+						scenario.itf_names.resize(itfnum);
+					edit->GetText(&scenario.itf_names[itfnum - 1], false);
 				} else if(type == "graphics") {
 					static const std::set<ePicType> valid_pictypes = {
 						PIC_TER, PIC_TER_ANIM, PIC_TER_MAP,

@@ -1723,6 +1723,14 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 		});
 		put_item_info(itemInfo, temp_item, scenario);
 		itemInfo.run();
+	} else if(hit == "edit-ic") {
+		int value = me["class"].getTextAsNum();
+		value = choose_text_editable(scenario.ic_names, value, &me, "Select item class:");
+		me["class"].setTextToNum(value);
+	} else if(hit == "edit-flag") {
+		int value = me["flag"].getTextAsNum();
+		value = choose_text_editable(scenario.itf_names, value, &me, "Select item type flag:");
+		me["flag"].setTextToNum(value);
 	}
 	return true;
 }
@@ -1776,7 +1784,7 @@ bool edit_item_type(short which) {
 	item_dlg["weight"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 250, "Weight"));
 	item_dlg["class"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 100, "Special Class"));
 	item_dlg["variety"].attachFocusHandler(std::bind(change_item_variety, _1, _2, std::ref(item)));
-	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(item), std::ref(which)), {"okay", "cancel", "abils", "choosepic", "choosetp", "choosemiss", "desc", "preview"});
+	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(item), std::ref(which)), {"okay", "cancel", "abils", "choosepic", "choosetp", "choosemiss", "desc", "preview", "edit-ic", "edit-flag"});
 	
 	if(scenario.scen_items.size() == 1) {
 		item_dlg["prev"].hide();
@@ -2173,6 +2181,12 @@ bool edit_quest(size_t which_quest) {
 	cDialog quest_dlg(*ResMgr::dialogs.get("edit-quest"));
 	quest_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
 	quest_dlg["okay"].attachClickHandler(std::bind(save_quest_from_dlog, _1, std::ref(quest), std::ref(which_quest), true));
+	quest_dlg["choose-evt"].attachClickHandler([](cDialog& me, std::string, eKeyMod) {
+		int value = me["evt"].getTextAsNum();
+		value = choose_text_editable(scenario.evt_names, value, &me, "Select an event:");
+		me["evt"].setTextToNum(value);
+		return true;
+	});
 	quest_dlg["inbank"].attachFocusHandler([](cDialog& me, std::string, bool losing) -> bool {
 		if(losing) {
 			me["bank1"].hide();
@@ -2633,6 +2647,7 @@ bool edit_vehicle(cVehicle& what, int num, bool is_boat) {
 	dlg["loc"].setText(boost::lexical_cast<std::string>(what.loc));
 	dlg["num"].setTextToNum(num);
 	dlg["title"].setText(is_boat ? "Edit Boat" : "Edit Horse");
+	dlg["name"].setText(what.name);
 	
 	cLed& prop = dynamic_cast<cLed&>(dlg["owned"]);
 	prop.setState(what.property ? led_red : led_off);
@@ -2645,6 +2660,7 @@ bool edit_vehicle(cVehicle& what, int num, bool is_boat) {
 	if(dlg.accepted()) {
 		what.property = prop.getState() != led_off;
 		what.exists = true;
+		what.name = dlg["name"].getText();
 	}
 	return what.exists;
 }

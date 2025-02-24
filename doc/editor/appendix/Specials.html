@@ -252,7 +252,7 @@ occurred. See <a href="../Specials.html#time">Passage of Time</a> in the chapter
 explanation.
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage.</dd>
-<dt>Extra 1a:</dt><dd>The number of the special event. (Range 1 ... 20)</dd>
+<dt>Extra 1a:</dt><dd>The number of the special event.</dd>
 <dt>Example:</dt><dd>If the slaying of the goblin king is event 4, when it is killed, call
 this special node with Extra 1a set to 4.</dd></dd>
 
@@ -280,7 +280,7 @@ party gets some gold. This can be accompanied by one or two messages, if you wis
 <dl>
 <dt>Mess1, Mess2:</dt><dd>Standard usage. Note that the messages are only displayed if
 some items are actually taken away.</dd>
-<dt>Extra 1a:</dt><dd>The item class to take away. (Range 1 ... 100)</dd>
+<dt>Extra 1a:</dt><dd>The item class to take away.</dd>
 <dt>Extra 1b:</dt><dd>The special to jump to if no items are taken. If No Special is
 specified, the Jump To special is used as usual.</dd>
 <dt>Extra 2a:</dt><dd>The amount of gold to pay for each item (Range 0 ... 250)</dd>
@@ -1249,9 +1249,6 @@ Extra 1b is called.</dd>
 alchemical recipe.
 <dl>
 <dt>Extra 1a, Extra 1b:</dt><dd>The x and y coordinates of the desired spot.</dd>
-<dt>Extra 2a:</dt><dd>The number of a special item class. If an item with this special
-item class is sitting on the given space, the special in Extra 2b is called and that item
-is removed from the game.</dd>
 <dt>Jump To:</dt><dd>Otherwise (or if the party is outdoors) this special is
 called.</dd></dd>
 
@@ -1310,7 +1307,7 @@ reached before a given event happened (see the chapter on the passage of time fo
 explanation).
 <dl>
 <dt>Extra 1a:</dt><dd>The day some special thing is supposed to happen.</dd>
-<dt>Extra 1b:</dt><dd>The number of an event (0 .. 20). This is the event that would
+<dt>Extra 1b:</dt><dd>The number of an event. This is the event that would
 prevent the special thing from happening (leave at 0 for no event). If the day in 1a has
 been reached, and this special event did not occur before the day in 1a, then the special
 in Extra 2b is called.</dd>

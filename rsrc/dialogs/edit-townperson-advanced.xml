@@ -57,8 +57,9 @@
 		A creature which is part of a special group does not exist until it's created by a special encounter
 		(like special node type One-Time Place Town Encounter).
 	</text>
-	<text top='133' left='301' width='222' height='44'>
+	<text top='133' left='366' width='222' height='44'>
 		For an explanation on how event codes work,
 		see the chapter in the instructions on the passing of time.
 	</text>
+	<button name='choose-event' type='regular' top='150' left='296'>Choose</button>
 </dialog>

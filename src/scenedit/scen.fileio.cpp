@@ -336,6 +336,24 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.PushAttribute("id", scenario.journal_strs.size() - 1);
 		data.CloseElement("journal");
 	}
+	for(size_t i = 0; i < scenario.boats.size(); i++) {
+		if(scenario.boats[i].name.empty() && scenario.boats[i].pic == 0) continue;
+		data.OpenElement("vehicle");
+		data.PushAttribute("type", "boat");
+		data.PushAttribute("id", i + 1);
+		if(!scenario.boats[i].name.empty()) data.PushElement("name", scenario.boats[i].name);
+		if(scenario.boats[i].pic > 0) data.PushElement("pic", scenario.boats[i].pic);
+		data.CloseElement("vehicle");
+	}
+	for(size_t i = 0; i < scenario.horses.size(); i++) {
+		if(scenario.horses[i].name.empty() && scenario.horses[i].pic == 0) continue;
+		data.OpenElement("vehicle");
+		data.PushAttribute("type", "horse");
+		data.PushAttribute("id", i + 1);
+		if(!scenario.horses[i].name.empty()) data.PushElement("name", scenario.horses[i].name);
+		if(scenario.horses[i].pic > 0) data.PushElement("pic", scenario.horses[i].pic);
+		data.CloseElement("vehicle");
+	}
 	data.CloseElement("game");
 	data.OpenElement("editor");
 	data.PushElement("default-ground", scenario.default_ground);
@@ -375,6 +393,27 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.PushAttribute("id", i + 100);
 		data.PushText(scenario.snd_names[i]);
 		data.CloseElement("sound");
+	}
+	for(int i = 0; i < scenario.evt_names.size(); i++) {
+		if(scenario.evt_names[i].empty()) continue;
+		data.OpenElement("event");
+		data.PushAttribute("id", i + 1);
+		data.PushText(scenario.evt_names[i]);
+		data.CloseElement("event");
+	}
+	for(int i = 0; i < scenario.ic_names.size(); i++) {
+		if(scenario.ic_names[i].empty()) continue;
+		data.OpenElement("item-class");
+		data.PushAttribute("id", i + 1);
+		data.PushText(scenario.ic_names[i]);
+		data.CloseElement("item-class");
+	}
+	for(int i = 0; i < scenario.itf_names.size(); i++) {
+		if(scenario.itf_names[i].empty()) continue;
+		data.OpenElement("item-typeflag");
+		data.PushAttribute("id", i + 1);
+		data.PushText(scenario.itf_names[i]);
+		data.CloseElement("item-typeflag");
 	}
 	data.CloseElement("editor");
 	data.CloseElement("scenario");

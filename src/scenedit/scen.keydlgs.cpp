@@ -445,12 +445,68 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 		case STRT_POS_MODE:
 			strings = {"Absolute Position", "Move Southeast", "Move Southwest", "Move Northwest", "Move Northeast", "Nearest"};
 			break;
+		case STRT_DEBUG_PRINT:
+			strings = {"Print SDF", "Print Extra1 Values", "Print Monster HP/MP"};
+			break;
+		case STRT_TARG_TYPE:
+			strings = {"Only living characters", "Any character", "All characters simultaneously", "Dead characters only", "Characters with inventory space"};
+			break;
+		case STRT_TARG_MODE:
+			strings = {"Player can choose", "Select at random", "Specific character specified in Extra 2b"};
+			break;
+		case STRT_ID_MODE:
+			strings = {"Based on Item Lore", "Never Identify", "Always Identify", "Always Identify (and also reveal concealed ability)"};
+			break;
+		case STRT_CURSE_MODE:
+			strings = {"Depends on item", "Force uncursed", "Force cursed"};
+			break;
+		case STRT_EQUIP_MODE:
+			strings = {"Do not equip", "Soft Equip (only if no conflicting items equipped)", "Try to equip (unequipping any conflicting items first if possible)", "Force equip (forcibly unequipping even conflicting cursed items)"};
+			break;
+		case STRT_CMP_MODE:
+			strings = {"Check value in range", "Check value outside range", "Compare to single value"};
+			break;
+		case STRT_PATH:
+			strings = {"Straight Line", "Parabolic Arc"};
+			break;
+		case STRT_SPELL_PAT_MODE:
+			strings = {"Sequential Simple Booms", "Simultaneous Animated Booms"};
+			break;
+		case STRT_LABEL_ALIGN:
+			strings = {"Align Top", "Align Centre"};
+			break;
+		case STRT_BOAT:
+		case STRT_HORSE:
+			for(cVehicle& vehicle : (list == STRT_BOAT ? scenario.boats : scenario.horses)) {
+				if(!vehicle.name.empty()) strings.push_back(vehicle.name);
+				else {
+					std::string base = list == STRT_BOAT ? "Unnamed boat in " : "Unnamed horse in";
+					std::ostringstream sout;
+					sout << "Unnamed ";
+					if(list == STRT_BOAT) sout << "boat"; else sout << "horse";
+					if(vehicle.which_town == 200) {
+						sout << " outdoors @ " << vehicle.sector;
+					} else {
+						sout << " in town " << vehicle.which_town;
+					}
+					strings.push_back(sout.str());
+				}
+			}
+			break;
 	}
 	if(cur_choice < 0 || cur_choice >= strings.size())
 		cur_choice = -1;
 	cStringChoice dlog(strings, title, parent);
 	
 	return dlog.show(cur_choice);
+}
+
+short choose_text_editable(std::vector<std::string>& list, short cur_choice, cDialog* parent, std::string title) {
+	cStringChoice choice(list, title, parent, true);
+	auto new_choice = choice.show(cur_choice <= 0 ? 0 : cur_choice - 1);
+	list = choice.getStrings();
+	if(choice->accepted()) return new_choice + 1;
+	return cur_choice;
 }
 
 static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& which_str, eStrMode str_mode) {
@@ -520,24 +576,33 @@ struct editing_node_t {
 
 typedef std::stack<editing_node_t> node_stack_t;
 
-static void setup_node_field(cDialog& me, std::string field, short value, std::string label, char buttonType) {
-	me[field + "-lbl"].setText(label);
+static void setup_node_field(cDialog& me, std::string field, short value, const node_function_t& fcn) {
+	me[field + "-lbl"].setText(fcn.label());
 	me[field].setTextToNum(value);
 	bool is_sdf = field.substr(0,3) == "sdf";
 	std::string button = field + "-edit";
-	switch(buttonType) {
-		case ' ':
+	std::string toggle = field + "-toggle";
+	switch(fcn.button) {
+		case eSpecPicker::NONE:
 			me[button].hide();
+			me[toggle].hide();
 			break;
-		case 'm': case 'M': case '$': case 'd': // messages
-		case 's': case 'S': // specials
+		case eSpecPicker::MSG_PAIR: case eSpecPicker::MSG_SINGLE:
+		case eSpecPicker::MSG_SEQUENCE: case eSpecPicker::NODE:
 			me[button].show();
+			me[toggle].hide();
 			if(is_sdf) break;
 			me[button].setText("Create/Edit");
 			dynamic_cast<cButton&>(me[button]).setBtnType(BTN_LG);
 			break;
+		case eSpecPicker::TOGGLE:
+			me[button].hide();
+			me[toggle].show();
+			dynamic_cast<cLed&>(me[toggle]).setState(value > 0 ? eLedState::led_red : eLedState::led_off);
+			break;
 		default:
 			me[button].show();
+			me[toggle].hide();
 			if(is_sdf) break;
 			me[button].setText("Choose");
 			dynamic_cast<cButton&>(me[button]).setBtnType(BTN_REG);
@@ -546,8 +611,6 @@ static void setup_node_field(cDialog& me, std::string field, short value, std::s
 }
 
 static void put_spec_enc_in_dlog(cDialog& me, node_stack_t& edit_stack) {
-	// These are the node types that should not have a Create/Edit button on the JumpTo
-	static std::set<eSpecType> dead_ends = {eSpecType::ENTER_SHOP, eSpecType::START_TALK, eSpecType::TOWN_GENERIC_STAIR, eSpecType::TOWN_STAIR};
 	cSpecial& spec = edit_stack.top().node;
 	
 	// Show which node is being edited and what type of node it is
@@ -563,25 +626,25 @@ static void put_spec_enc_in_dlog(cDialog& me, node_stack_t& edit_stack) {
 	
 	node_properties_t info = *spec.type;
 	// Set up the labels, fields, and buttons
-	setup_node_field(me, "sdf1", spec.sd1, info.sdf1_lbl(), info.sd1_btn);
-	setup_node_field(me, "sdf2", spec.sd2, info.sdf2_lbl(), info.sd2_btn);
+	setup_node_field(me, "sdf1", spec.sd1, info.sdf1(spec));
+	setup_node_field(me, "sdf2", spec.sd2, info.sdf2(spec));
 	
-	setup_node_field(me, "msg1", spec.m1, info.msg1_lbl(), info.m1_btn);
-	setup_node_field(me, "msg2", spec.m2, info.msg2_lbl(), info.m2_btn);
-	setup_node_field(me, "msg3", spec.m3, info.msg3_lbl(), info.m3_btn);
+	setup_node_field(me, "msg1", spec.m1, info.msg1(spec));
+	setup_node_field(me, "msg2", spec.m2, info.msg2(spec));
+	setup_node_field(me, "msg3", spec.m3, info.msg3(spec));
 	
-	setup_node_field(me, "pict", spec.pic, info.pic_lbl(), info.p_btn);
-	setup_node_field(me, "pictype", spec.pictype, info.pt_lbl(), info.pt_btn);
+	setup_node_field(me, "pict", spec.pic, info.pic(spec));
+	setup_node_field(me, "pictype", spec.pictype, info.pictype(spec));
 	
-	setup_node_field(me, "x1a", spec.ex1a, info.ex1a_lbl(), info.x1a_btn);
-	setup_node_field(me, "x1b", spec.ex1b, info.ex1b_lbl(), info.x1b_btn);
-	setup_node_field(me, "x1c", spec.ex1c, info.ex1c_lbl(), info.x1c_btn);
+	setup_node_field(me, "x1a", spec.ex1a, info.ex1a(spec));
+	setup_node_field(me, "x1b", spec.ex1b, info.ex1b(spec));
+	setup_node_field(me, "x1c", spec.ex1c, info.ex1c(spec));
 	
-	setup_node_field(me, "x2a", spec.ex2a, info.ex2a_lbl(), info.x2a_btn);
-	setup_node_field(me, "x2b", spec.ex2b, info.ex2b_lbl(), info.x2b_btn);
-	setup_node_field(me, "x2c", spec.ex2c, info.ex2c_lbl(), info.x2c_btn);
+	setup_node_field(me, "x2a", spec.ex2a, info.ex2a(spec));
+	setup_node_field(me, "x2b", spec.ex2b, info.ex2b(spec));
+	setup_node_field(me, "x2c", spec.ex2c, info.ex2c(spec));
 	
-	setup_node_field(me, "jump", spec.jumpto, info.jmp_lbl(), dead_ends.count(spec.type) ? ' ' : 's');
+	setup_node_field(me, "jump", spec.jumpto, info.jump(spec));
 }
 
 static void save_spec_enc(cDialog& me, node_stack_t& edit_stack) {
@@ -663,15 +726,8 @@ static bool edit_spec_enc_type(cDialog& me, std::string item_hit, node_stack_t& 
 	else if(item_hit == "town") category = eSpecCat::TOWN;
 	else if(item_hit == "out") category = eSpecCat::OUTDOOR;
 	else if(item_hit == "rect") category = eSpecCat::RECT;
-	int start = -1, finish = -1, current = int(edit_stack.top().node.type);
-	for(int i = 0; i < std::numeric_limits<unsigned short>::max(); i++) {
-		eSpecCat check = (*eSpecType(i)).cat;
-		if(start >= 0 && check == eSpecCat::INVALID) {
-			finish = i - 1;
-			break;
-		} else if(check == category && start < 0)
-			start = i;
-	}
+	auto bounds = *category;
+	int start = int(bounds.first), finish = int(bounds.last), current = int(edit_stack.top().node.type);
 	if(start < 0 || finish < 0) return true;
 	std::vector<std::string> choices;
 	for(int i = start; i <= finish; i++) {
@@ -807,57 +863,83 @@ snd_num_t choose_sound(short cur, cDialog* parent, std::string title) {
 	return snd_dlg.show(cur);
 }
 
-static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t& edit_stack) {
-	static const ePicType pics[11] = {
-		PIC_TER, PIC_MONST, PIC_DLOG, PIC_TALK, PIC_ITEM,
-		PIC_PC, PIC_FIELD, PIC_BOOM, PIC_MISSILE, PIC_STATUS,
-		PIC_FULL
-	};
-	std::string field = item_hit.substr(0, item_hit.find_first_of('-'));
-	char btn = '\0';
-	eSpecType type = edit_stack.top().node.type;
-	if(field == "sdf1") btn = (*type).sd1_btn;
-	else if(field == "sdf2") btn = (*type).sd2_btn;
-	else if(field == "msg1") btn = (*type).m1_btn;
-	else if(field == "msg2") btn = (*type).m2_btn;
-	else if(field == "msg3") btn = (*type).m3_btn;
-	else if(field == "pict") btn = (*type).p_btn;
-	else if(field == "pictype") btn = (*type).pt_btn;
-	else if(field == "x1a") btn = (*type).x1a_btn;
-	else if(field == "x1b") btn = (*type).x1b_btn;
-	else if(field == "x1c") btn = (*type).x1c_btn;
-	else if(field == "x2a") btn = (*type).x2a_btn;
-	else if(field == "x2b") btn = (*type).x2b_btn;
-	else if(field == "x2c") btn = (*type).x2c_btn;
-	else if(field == "jump") {
-		if(type == eSpecType::CALL_GLOBAL) btn = 'S';
-		else btn = 's';
+static node_function_t get_field_function(const cSpecial& spec, const std::string& field) {
+	if(field == "sdf1") return (*spec.type).sdf1(spec);
+	else if(field == "sdf2") return (*spec.type).sdf2(spec);
+	else if(field == "msg1") return (*spec.type).msg1(spec);
+	else if(field == "msg2") return (*spec.type).msg2(spec);
+	else if(field == "msg3") return (*spec.type).msg3(spec);
+	else if(field == "pict") return (*spec.type).pic(spec);
+	else if(field == "pictype") return (*spec.type).pictype(spec);
+	else if(field == "x1a") return (*spec.type).ex1a(spec);
+	else if(field == "x1b") return (*spec.type).ex1b(spec);
+	else if(field == "x1c") return (*spec.type).ex1c(spec);
+	else if(field == "x2a") return (*spec.type).ex2a(spec);
+	else if(field == "x2b") return (*spec.type).ex2b(spec);
+	else if(field == "x2c") return (*spec.type).ex2c(spec);
+	else if(field == "jump") return (*spec.type).jump(spec);
+	return node_function_t();
+}
+
+static std::string get_control_for_field(eSpecField field) {
+	switch(field) {
+		case eSpecField::SDF1: return "sdf1";
+		case eSpecField::SDF2: return "sdf2";
+		case eSpecField::MSG1: return "msg1";
+		case eSpecField::MSG2: return "msg2";
+		case eSpecField::MSG3: return "msg3";
+		case eSpecField::PICT: return "pict";
+		case eSpecField::PTYP: return "pictype";
+		case eSpecField::EX1A: return "x1a";
+		case eSpecField::EX1B: return "x1b";
+		case eSpecField::EX1C: return "x1c";
+		case eSpecField::EX2A: return "x2a";
+		case eSpecField::EX2B: return "x2b";
+		case eSpecField::EX2C: return "x2c";
+		case eSpecField::JUMP: return "jump";
+		case eSpecField::NONE: break;
 	}
-	short val = me[field].getTextAsNum(), mode = (btn == 'S' || btn == '$') ? 0 : edit_stack.top().mode, store;
-	short pictype = me["pictype"].getTextAsNum();
-	bool choose_string = true;
-	eStrType strt;
-	short str_adj = 0;
-	const char* title = "";
-	switch(btn) {
-		case 'm':
-			choose_string = false;
-			store = me["msg2"].getTextAsNum();
-			edit_spec_text(eStrMode(mode), &val, &store, &me);
-			me["msg2"].setTextToNum(store);
+	return "num";
+}
+
+static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t& edit_stack) {
+	std::string field = item_hit.substr(0, item_hit.find_first_of('-'));
+	const cSpecial& spec = edit_stack.top().node;
+	node_function_t fcn = get_field_function(spec, field);
+	short val = me[field].getTextAsNum(), store;
+	switch(fcn.button) {
+		case eSpecPicker::MSG_PAIR: {
+			if(fcn.continuation == eSpecField::NONE) {
+				store = val;
+				break;
+			}
+			auto otherField = get_control_for_field(fcn.continuation);
+			store = me[otherField].getTextAsNum();
+			edit_spec_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.top().mode), &val, &store, &me);
+			me[otherField].setTextToNum(store);
+			store = val;
+		} break;
+		case eSpecPicker::MSG_SINGLE:
+			edit_spec_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.top().mode), &val, nullptr, &me);
 			store = val;
 			break;
-		case 'M': case '$':
-			choose_string = false;
-			edit_spec_text(eStrMode(mode), &val, nullptr, &me);
+		case eSpecPicker::MSG_SEQUENCE:
 			store = val;
+			edit_dialog_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.top().mode), &store, &me);
 			break;
-		case 'd':
-			choose_string = false;
-			store = val;
-			edit_dialog_text(eStrMode(mode), &store, &me);
-			break;
-		case 's': case 'S': {
+		case eSpecPicker::TOGGLE: {
+			// TODO: We should also add a focus handler so that manually changing the field value updates the toggle...
+			cLed& toggle = dynamic_cast<cLed&>(me[item_hit]);
+			if(val > 0) {
+				store = 0;
+				toggle.setState(eLedState::led_off);
+			} else {
+				store = 1;
+				toggle.setState(eLedState::led_red);
+			}
+		} break;
+		case eSpecPicker::NODE: {
+			short mode = fcn.force_global ? 0 : edit_stack.top().mode;
 			store = val < 0 ? get_fresh_spec(mode) : val;
 			me[field].setTextToNum(store);
 			save_spec_enc(me, edit_stack);
@@ -877,64 +959,91 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			me["back"].show();
 			return true;
 		}
-		case 'p':
-			choose_string = false;
-			if(pictype < 0) me["pictype"].setTextToNum(PIC_DLOG);
-			store = choose_graphic(val, pictype < 0 ? PIC_DLOG : ePicType(pictype), &me);
+		case eSpecPicker::STRING: {
+			std::string title;
+			switch(fcn.str_type) {
+				case STRT_SPELL_PAT: title = "Which spell pattern?"; break;
+				case STRT_ITEM: title = "Which item?"; break;
+				case STRT_SPEC_ITEM: title = "Which special item?"; break;
+				case STRT_TER: title = "Which terrain?"; break;
+				case STRT_MONST: title = "Which monster?"; break;
+				case STRT_MONST_STAT: title = "Which statistic?"; break;
+				case STRT_ALCHEMY: title = "Which recipe?"; break;
+				case STRT_MAGE: title = "Which spell?"; break;
+				case STRT_PRIEST: title = "Which spell?"; break;
+				case STRT_SKILL: title = "Which statistic?"; break;
+				case STRT_TRAIT: title = "Which trait?"; break;
+				case STRT_RACE: title = "Which species?"; break;
+				case STRT_TOWN: title = "Which town?"; break;
+				case STRT_BUTTON: title = "Which button?"; break;
+				case STRT_PICT: title = "Which picture type?"; break;
+				case STRT_TRAP: title = "What trap type?"; break;
+				case STRT_CMP: title = "What comparison method?"; break;
+				case STRT_ACCUM: title = "What accumulation method?"; break;
+				case STRT_ATTITUDE: title = "What attitude?"; break;
+				case STRT_STAIR: title = "Which stairway text?"; break;
+				case STRT_LIGHT: title = "What lighting type?"; break;
+				case STRT_SHOP: title = "Which shop?"; break;
+				case STRT_COST_ADJ: title = "What cost adjust?"; break;
+				case STRT_CONTEXT: title = "What context?"; break;
+				case STRT_ENCHANT: title = "Which enchantment?"; break;
+				case STRT_POS_MODE: title = "Select positioning mode:"; break;
+				case STRT_STAIR_MODE: title = "Select trigger limitations:"; break;
+				case STRT_STATUS: title = "Select status:"; break;
+				case STRT_QUEST: title = "Select a quest:"; break;
+				case STRT_QUEST_STATUS: title = "Select the quest's status:"; break;
+				case STRT_DIR: title = "Select the direction:"; break;
+				case STRT_DEBUG_PRINT: title = "Choose what to print:"; break;
+				case STRT_TARG_TYPE: title = "Select restrictions on chosen characters:"; break;
+				case STRT_TARG_MODE: title = "Choose how a target is selected:"; break;
+				case STRT_ID_MODE: title = "Choose how to identify the item:"; break;
+				case STRT_CURSE_MODE: title = "Choose whether the item should be cursed:"; break;
+				case STRT_EQUIP_MODE: title = "Choose whether and how to attempt to equip the item:"; break;
+				case STRT_CMP_MODE: title = "Choose the type of comparison to make:"; break;
+				case STRT_PATH: title = "What path shape?"; break;
+				case STRT_SPELL_PAT_MODE: title = "What kind of booms?"; break;
+				case STRT_LABEL_ALIGN: title = "Choose vertical alignment:"; break;
+				case STRT_SECTOR: title = "Which sector?"; break;
+				case STRT_BOAT: title = "Which boat?"; break;
+				case STRT_HORSE: title = "Which horse?"; break;
+				default: title = "Title not set for this string type!!!"; break;
+			}
+			if(fcn.str_type == STRT_SECTOR && fcn.continuation == eSpecField::NONE) {
+				store = val;
+				break;
+			}
+			auto otherField = get_control_for_field(fcn.continuation);
+			if(fcn.str_type == STRT_SECTOR) {
+				val = val * scenario.outdoors.height() + me[otherField].getTextAsNum();
+			}
+			store = choose_text(fcn.str_type, val + fcn.adjust, &me, title) - fcn.adjust;
+			if(fcn.str_type == STRT_SECTOR) {
+				me[otherField].setTextToNum(store % scenario.outdoors.height());
+				store /= scenario.outdoors.height();
+			}
+		} break;
+		case eSpecPicker::PICTURE: {
+			ePicType type = fcn.pic_type;
+			if(type == PIC_NONE) {
+				short pictype = me["pictype"].getTextAsNum();
+				if(pictype < 0) {
+					me["pictype"].setTextToNum(PIC_DLOG);
+					type = PIC_DLOG;
+				} else type = ePicType(pictype);
+			}
+			store = choose_graphic(val, type, &me);
 			if(store < 0) store = val;
-			break;
-		case 'f': case 'F': choose_string = false; store = choose_field_type(val, &me, btn == 'F'); break;
-		case 'D': choose_string = false; store = choose_damage_type(val, &me, true); break;
-		case '!': choose_string = false; store = choose_boom_type(val, &me); break;
-		case 'e': choose_string = false; store = choose_status_effect(val, false, &me); break;
-		case 'E': choose_string = false; store = choose_status_effect(val, true, &me); break;
-		case '{': case '}': strt = STRT_SPELL_PAT; title = "Which spell pattern?"; break;
-		case 'i': strt = STRT_ITEM; title = "Which item?"; break;
-		case 'I': strt = STRT_SPEC_ITEM; title = "Which special item?"; break;
-		case 't': strt = STRT_TER; title = "Which terrain?"; break;
-		case 'c': strt = STRT_MONST; title = "Which monster?"; str_adj = -1; break;
-		case 'C': strt = STRT_MONST_STAT; title = "Which statistic?"; break;
-		case 'a': strt = STRT_ALCHEMY; title = "Which recipe?"; break;
-		case 'A': strt = STRT_MAGE; title = "Which spell?"; break;
-		case 'P': strt = STRT_PRIEST; title = "Which spell?"; break;
-		case 'k': case 'K': strt = STRT_SKILL; title = "Which statistic?"; break;
-		case 'q': strt = STRT_TRAIT; title = "Which trait?"; break;
-		case 'Q': strt = STRT_RACE; title = "Which species?"; break;
-		case 'T': strt = STRT_TOWN; title = "Which town?"; break;
-		case 'b': strt = STRT_BUTTON; title = "Which button?"; break;
-		case '?': strt = STRT_PICT; title = "Which picture type?"; str_adj = -1; break;
-		case 'x': choose_string = false; store = choose_sound(val, &me); break;
-		case 'X': strt = STRT_TRAP; title = "What trap type?"; break;
-		case '=': strt = STRT_CMP; title = "What comparison method?"; str_adj = 2; break;
-		case '+': strt = STRT_ACCUM; title = "What accumulation method?"; str_adj = 1; break;
-		case '@': strt = STRT_ATTITUDE; title = "What attitude?"; break;
-		case '/': strt = STRT_STAIR; title = "Which stairway text?"; break;
-		case 'L': strt = STRT_LIGHT; title = "What lighting type?"; break;
-		case '&': strt = STRT_SHOP; title = "Which shop?"; break;
-		case '%': strt = STRT_COST_ADJ; title = "What cost adjust?"; break;
-		case '*': strt = STRT_CONTEXT; title = "What context?"; break;
-		case '~': strt = STRT_ENCHANT; title = "Which enchantment?"; break;
-		case '^': strt = STRT_POS_MODE; title = "Select positioning mode:"; break;
-		case ':': strt = STRT_STAIR_MODE; title = "Select trigger limitations:"; break;
-		case 'w': strt = STRT_STATUS; title = "Select status:"; str_adj = 1; break;
-		case 'j': strt = STRT_QUEST; title = "Select a quest:"; break;
-		case 'J': strt = STRT_QUEST_STATUS; title = "Select the quest's status:"; break;
-		case '<': strt = STRT_DIR; title = "Select the direction:"; break;
-		case '0': case '1': case '2': case '3': case '4':
-		case '5': case '6': case '7': case '8': case '9':
-		case '_':
-			choose_string = false;
-			store = choose_graphic(val, pics[btn == '_' ? 10 : btn - '0'], &me);
-			if(store < 0) store = val;
-			break;
-		default:
-			choose_string = false;
-			store = val;
-			showError("Whoops! Unknown edit type! (" + (btn + std::string(")")), "", &me);
-			break;
+		} break;
+		case eSpecPicker::FIELD: store = choose_field_type(val, &me, fcn.augmented); break;
+		case eSpecPicker::DAMAGE_TYPE: store = choose_damage_type(val, &me, true); break;
+		case eSpecPicker::EXPLOSION: store = choose_boom_type(val, &me); break;
+		case eSpecPicker::STATUS: store = choose_status_effect(val, false, &me); break;
+		case eSpecPicker::STATUS_PARTY: store = choose_status_effect(val, true, &me); break;
+		case eSpecPicker::SOUND: store = choose_sound(val, &me); break;
+		case eSpecPicker::EVENT: store = choose_text_editable(scenario.evt_names, val, &me, "Select an event:"); break;
+		case eSpecPicker::ITEM_CLASS: store = choose_text_editable(scenario.ic_names, val, &me, "Select item class:"); break;
+		case eSpecPicker::NONE: return false;
 	}
-	if(choose_string)
-		store = choose_text(strt, val + str_adj, &me, title) - str_adj;
 	me[field].setTextToNum(store);
 	return true;
 }
@@ -980,8 +1089,20 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 		"msg1-edit", "msg2-edit", "msg3-edit", "pict-edit", "pictype-edit", "jump-edit",
 		"x1a-edit", "x1b-edit", "x1c-edit", "x2a-edit", "x2b-edit", "x2c-edit",
 		"sdf1-edit", "sdf2-edit",
+		"msg1-toggle", "msg2-toggle", "msg3-toggle", "pict-toggle", "pictype-toggle", "jump-toggle",
+		"x1a-toggle", "x1b-toggle", "x1c-toggle", "x2a-toggle", "x2b-toggle", "x2c-toggle",
+		"sdf1-toggle", "sdf2-toggle",
 	});
 	special["cancel"].attachClickHandler(std::bind(discard_spec_enc, _1, std::ref(edit_stack)));
+	special["node-help"].attachClickHandler([&edit_stack](cDialog& me, std::string item_hit, eKeyMod mods) {
+		eSpecType type = edit_stack.top().node.type;
+		const std::string& str = (*type).descr();
+		// TODO: This is the same dialog as give_help(), the only difference being that we don't have a string number!
+		cStrDlog display_help(str,"","Instant Help",24,PIC_DLOG, &me);
+		display_help.setSound(57);
+		display_help.show();
+		return true;
+	});
 	
 	special["back"].hide();
 	edit_stack.push({which_node,mode,the_node});

@@ -528,222 +528,55 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 	}
 }
 
-// Key:
-// space - no button
-// m - Create/Edit button to edit message pair (covers msg1 and msg2 together)
-// M - Create/Edit button to edit single message
-// $ - As above, but always a scenario message
-// d - Create/Edit button to edit dialog message sequence (covers msg1 and msg2 together)
-// b - Choose button to select a button label
-// p - Choose button to select a picture (uses pictype for type)
-// ? - Choose button to select a picture type
-// s - Create/Edit button to edit special node
-// S - As above, but always a scenario node
-// x - Choose button to select a sound
-// X - Choose button to select a trap type
-// T - Choose button to select a town
-// i - Choose button to select an item
-// I - Choose button to select a special item
-// t - Choose button to select a terrain type
-// c - Choose button to select a monster type
-// C - Choose button to select a monster statistic
-// a - Choose button to select an alchemy recipe
-// A - Choose button to select a mage spell
-// P - Choose button to select a priest spell
-// k - Choose button to select a skill
-// K - As above, but add the special pseudo-skills for the if-statistic node
-// f - Choose button to select a field type
-// F - As above, but also include Dispel and Smash
-// q - Choose button to select a trait
-// Q - Choose button to select a species
-// = - Choose button to select a comparison method (<=, <, =, >, >=)
-// + - Choose button to select stat cumulation mode
-// * - Choose button to select a special node context
-// @ - Choose button to select a monster attitude
-// D - Choose button to select a damage type
-// ! - Choose button to select an explosion animation type
-// / - Choose button to select generic stairway text
-// : - Choose stairway trigger conditions
-// L - Choose button to select a town lighting type
-// & - Choose button to select a shop
-// % - Choose button to select shop cost adjustment
-// { - Choose button to select a spell pattern
-// } - As above, but allows you to select which version of the rotateable field
-// ^ - Choose button to select a positioning mode
-// e - Choose button to select a status effect
-// E - Choose button to select a party status effect
-// w - Choose button to select main party status effect
-// j - Choose button to select a quest
-// J - Choose button to select a quest status
-// < - Choose button to select a cardinal direction
-// ~ - Choose button to select a weapon enchantment
-// _ - Choose button to select a full sheet
-// 0..9 - Choose button to select a specific type of picture
-// (terrain, monster, dialog, talk, item, pc, field, boom, missile, status)
-static const char*const button_dict[7][11] = {
-	{ // general nodes
-		" mmmMmmmmmMmmm mmmmmm   Mmm  $ mmmmmm        mmm", // msg1
-		"                                                ", // msg2
-		"                          M                     ", // msg3
-		"          p               p                 3   ", // pic
-		"          ?               ?                     ", // pictype
-		"    &         x  T i    _             M cit  j  ", // ex1a
-		"    %        S     ss                       cJ  ", // ex1b
-		"                                                ", // ex1c
-		"                                  tt            ", // ex2a
-		"                                   t            ", // ex2b
-		"                                                ", // ex2c
-	}, { // one-shot nodes
-		"mm  md  d  mmm", // msg1
-		"              ", // msg2
-		"        III   ", // msg3
-		"     p  p    p", // pic
-		"     ?  ?    ?", // pictype
-		"iI   b  i    X", // ex1a
-		"     s        ", // ex1b
-		"              ", // ex1c
-		"     b        ", // ex2a
-		"s    s  s    S", // ex2b
-		"              ", // ex2c
-	}, { // affect pc nodes
-		"mmmmmmmmmmmmmmmmmmmmmmmmmmmm", // msg1
-		"                            ", // msg2
-		"          M              M  ", // msg3
-		"              s          5  ", // pic
-		"                         s  ", // pictype
-		"      w q     i    AP  a    ", // ex1a
-		"              ~            s", // ex1b
-		"       e                 Q  ", // ex1c
-		"                 CK     E   ", // ex2a
-		" D                          ", // ex2b
-		" x                          ", // ex2c
-	}, { // if-then nodes
-		"                  f     $  $   ", // msg1
-		"                  s            ", // msg2
-		"                               ", // msg3
-		"                               ", // pic
-		"                               ", // pictype
-		" T I  w     APae     Qq $ *   j", // ex1a
-		"ssss  sss ssssss s s sssss =  J", // ex1b
-		"                s         sssss", // ex1c
-		"     t                 K$      ", // ex2a
-		"s   ss   s     +    s==+s  =   ", // ex2b
-		"               =           s   ", // ex2c
-	}, { // town nodes
-		"mmmmmmmmmmmmmm    dddmmmmmmmmmmmmmM", // msg1
-		"                                   ", // msg2
-		"                                   ", // msg3
-		" 8                ppp              ", // pic
-		"                  ???              ", // pictype
-		"             c            L   {    ", // ex1a
-		"              s s s      s @       ", // ex1b
-		"                               }}  ", // ex1c
-		"@  7     ! c     T  T i        FD  ", // ex2a
-		"     DD          /               ^ ", // ex2b
-		" x x     x       :  :              ", // ex2c
-	}, { // rectangle nodes
-		"mmmmmmmmm", // msg1
-		"         ", // msg2
-		"         ", // msg3
-		"         ", // pic
-		"         ", // pictype
-		"    tt   ", // sdf1
-		"         ", // unused
-		"         ", // ex1c
-		"F    t   ", // sdf2
-		"         ", // unused
-		"         ", // ex2c
-	}, { // outdoors nodes
-		" mmm", // msg1
-		"    ", // msg2
-		"    ", // msg3
-		"    ", // pic
-		"    ", // pictype
-		" T  ", // ex1a
-		" <  ", // ex1b
-		"    ", // ex1c
-		"    ", // ex2a
-		"    ", // ex2b
-		"    ", // ex2c
-	}
-};
-
-static int offsets[] = {
-	int(eSpecType::NONE),
-	int(eSpecType::ONCE_GIVE_ITEM),
-	int(eSpecType::SELECT_TARGET),
-	int(eSpecType::IF_SDF),
-	int(eSpecType::MAKE_TOWN_HOSTILE),
-	int(eSpecType::RECT_PLACE_FIELD),
-	int(eSpecType::OUT_MAKE_WANDER),
-};
-
 static eSpecCat getNodeCategory(eSpecType node) {
-	int code = (int) node;
-	if(code >= 0 && code <= 47)
-		return eSpecCat::GENERAL;
-	if(code >= 50 && code <= 63)
-		return eSpecCat::ONCE;
-	if(code >= 80 && code <= 107)
-		return eSpecCat::AFFECT;
-	if(code >= 130 && code <= 160)
-		return eSpecCat::IF_THEN;
-	if(code >= 170 && code <= 204)
-		return eSpecCat::TOWN;
-	if(code >= 210 && code <= 218)
-		return eSpecCat::RECT;
-	if(code >= 225 && code <= 228)
-		return eSpecCat::OUTDOOR;
+	for(int i = 0; i <= int(eSpecCat::OUTDOOR); i++) {
+		eSpecCat cat = eSpecCat(i);
+		if((*cat).contains(node)) return cat;
+	}
 	return eSpecCat::INVALID;
 }
 
-static std::map<eSpecType, node_properties_t> loadProps() {
-	std::map<eSpecType, node_properties_t> allNodeProps;
-	// There's really no need to check all the way to the max of the underlying type.
-	// It's unlikely we'd go above 255, so unsigned char would be fine, but just in case,
-	// let's use unsigned short.
-	// Could change the actual enum's underlying type instead though?
-	using underlying = unsigned short;//std::underlying_type<eSpecType>::type;
-	for(underlying i = 0; i < std::numeric_limits<underlying>::max(); i++) {
-		eSpecType check = (eSpecType) i;
-		eSpecCat category = getNodeCategory(check);
-		if(category == eSpecCat::INVALID) continue;
-		node_properties_t props;
-		props.self = check;
-		props.cat = category;
-		int j = int(category), k = i - offsets[j];
-		props.m1_btn = button_dict[j][0][k];
-		props.m2_btn = button_dict[j][1][k];
-		props.m3_btn = button_dict[j][2][k];
-		props.p_btn = button_dict[j][3][k];
-		props.pt_btn = button_dict[j][4][k];
-		if(category != eSpecCat::RECT) {
-			props.sd1_btn = ' ';
-			props.x1a_btn = button_dict[j][5][k];
-			props.x1b_btn = button_dict[j][6][k];
-		} else props.sd1_btn = button_dict[j][5][k];
-		props.x1c_btn = button_dict[j][7][k];
-		if(category != eSpecCat::RECT) {
-			props.sd2_btn = ' ';
-			props.x2a_btn = button_dict[j][8][k];
-			props.x2b_btn = button_dict[j][9][k];
-		} else props.sd2_btn = button_dict[j][8][k];
-		props.x2c_btn = button_dict[j][10][k];
-		if(category == eSpecCat::RECT) {
-			props.x1a_btn = props.x2a_btn = ' ';
-			props.x1b_btn = props.x2b_btn = ' ';
-		}
-		allNodeProps[check] = props;
-	}
-	return allNodeProps;
+static std::map<eSpecType, node_properties_t>& nodeProps() {
+	static std::map<eSpecType, node_properties_t> props;
+	return props;
 }
 
 const node_properties_t& operator* (eSpecType t) {
 	static node_properties_t invalid;
-	static std::map<eSpecType, node_properties_t> allNodeProps = loadProps();
+	std::map<eSpecType, node_properties_t>& allNodeProps = nodeProps();
 	auto iter = allNodeProps.find(t);
 	return iter == allNodeProps.end() ? invalid : iter->second;
 }
+
+// Note: While it might seem like it would be simpler to define these in a map,
+// having each one as a separate extern variable serves an important purpose:
+// it prevents the special node definitions from being optimized away by the linker.
+const node_category_info_t& operator* (eSpecCat t) {
+	extern node_category_info_t CAT_GENERAL, CAT_ONCE, CAT_AFFECT, CAT_COND, CAT_TOWN, CAT_RECT, CAT_OUTD;
+	static node_category_info_t CAT_INVALID;
+	switch(t) {
+		case eSpecCat::GENERAL: return CAT_GENERAL;
+		case eSpecCat::ONCE: return CAT_ONCE;
+		case eSpecCat::AFFECT: return CAT_AFFECT;
+		case eSpecCat::IF_THEN: return CAT_COND;
+		case eSpecCat::TOWN: return CAT_TOWN;
+		case eSpecCat::RECT: return CAT_RECT;
+		case eSpecCat::OUTDOOR: return CAT_OUTD;
+		case eSpecCat::INVALID: return CAT_INVALID;
+	}
+	return CAT_INVALID;
+}
+
+bool node_category_info_t::contains(eSpecType spec) const {
+	int code = (int) spec;
+	return code >= int(first) && code <= int(last);
+}
+
+node_properties_t::node_properties_t(eSpecType type)
+	: self(type)
+	, cat(getNodeCategory(type))
+	, f_jmp(eSpecPicker::NODE)
+{}
 
 std::string node_properties_t::opcode() const {
 	if(self == eSpecType::NONE) return "nop";
@@ -752,8 +585,8 @@ std::string node_properties_t::opcode() const {
 
 static std::string get_node_string(std::string base, eSpecType type, int which) {
 	eSpecCat cat = getNodeCategory(type);
-	int i = int(cat), j = int(type);
-	int strnum = (j - offsets[i]) * 16 + which + 1;
+	int offset = int((*cat).first), i = int(type);
+	int strnum = (i - offset) * 17 + which + 1;
 	switch(cat) {
 		case eSpecCat::GENERAL:
 			return get_str(base + "-general", strnum);
@@ -779,58 +612,266 @@ std::string node_properties_t::name() const {
 	return get_node_string("specials-text", self, 0);
 }
 
-std::string node_properties_t::sdf1_lbl() const {
-	return get_node_string("specials-text", self, 1);
+std::string node_properties_t::descr() const {
+	return get_node_string("specials-text", self, 15);
 }
 
-std::string node_properties_t::sdf2_lbl() const {
-	return get_node_string("specials-text", self, 2);
+node_function_t::node_function_t() {}
+
+node_function_t::node_function_t(eSpecPicker button)
+	: button(button)
+{
+	if(button == eSpecPicker::PICTURE) {
+		pic_type = PIC_NONE;
+	}
+	if(button == eSpecPicker::NODE || button == eSpecPicker::MSG_PAIR || button == eSpecPicker::MSG_SINGLE || button == eSpecPicker::MSG_SEQUENCE) {
+		force_global = false;
+	}
 }
 
-std::string node_properties_t::msg1_lbl() const {
-	return get_node_string("specials-text", self, 3);
+node_function_t::node_function_t(eStrType str)
+	: button(eSpecPicker::STRING)
+	, str_type(str)
+{
+	// Some string types require an adjustment to the index.
+	switch(str) {
+		case STRT_PICT: adjust = -1; break;
+		case STRT_MONST: adjust = -1; break;
+		case STRT_CMP: adjust = 2; break;
+		case STRT_ACCUM: adjust = 1; break;
+		case STRT_STATUS: adjust = 1; break;
+		case STRT_ID_MODE: adjust = 1; break;
+		case STRT_EQUIP_MODE: adjust = 1; break;
+		case STRT_CURSE_MODE: adjust = 1; break;
+		default: break;
+	}
 }
 
-std::string node_properties_t::msg2_lbl() const {
-	return get_node_string("specials-text", self, 4);
+node_function_t::node_function_t(ePicType pic)
+	: button(eSpecPicker::PICTURE)
+	, pic_type(pic)
+{}
+
+node_function_t operator+(eSpecPicker picker) {
+	node_function_t n(picker);
+	if(picker == eSpecPicker::NODE || picker == eSpecPicker::MSG_PAIR || picker == eSpecPicker::MSG_SINGLE || picker == eSpecPicker::MSG_SEQUENCE) {
+		n.force_global = true;
+	}
+	if(picker == eSpecPicker::FIELD) {
+		n.augmented = true;
+	}
+	return n;
 }
 
-std::string node_properties_t::msg3_lbl() const {
-	return get_node_string("specials-text", self, 5);
+node_function_t operator+(eStrType str) {
+	node_function_t n(str);
+	if(str == STRT_SPELL_PAT || str == STRT_SKILL) {
+		n.augmented = true;
+	}
+	return n;
 }
 
-std::string node_properties_t::pic_lbl() const {
-	return get_node_string("specials-text", self, 6);
+std::string node_function_t::label() const {
+	return get_node_string("specials-text", self, lbl_idx);
 }
 
-std::string node_properties_t::pt_lbl() const {
-	return get_node_string("specials-text", self, 7);
+node_function_t node_properties_t::sdf1(const cSpecial&) const {
+	return f_sd1;
 }
 
-std::string node_properties_t::ex1a_lbl() const {
-	return get_node_string("specials-text", self, 8);
+node_function_t node_properties_t::sdf2(const cSpecial&) const {
+	return f_sd2;
 }
 
-std::string node_properties_t::ex1b_lbl() const {
-	return get_node_string("specials-text", self, 9);
+node_function_t node_properties_t::msg1(const cSpecial&) const {
+	return f_m1;
 }
 
-std::string node_properties_t::ex1c_lbl() const {
-	return get_node_string("specials-text", self, 10);
+node_function_t node_properties_t::msg2(const cSpecial&) const {
+	return f_m2;
 }
 
-std::string node_properties_t::ex2a_lbl() const {
-	return get_node_string("specials-text", self, 11);
+node_function_t node_properties_t::msg3(const cSpecial&) const {
+	return f_m3;
 }
 
-std::string node_properties_t::ex2b_lbl() const {
-	return get_node_string("specials-text", self, 12);
+node_function_t node_properties_t::pic(const cSpecial&) const {
+	return f_pic;
 }
 
-std::string node_properties_t::ex2c_lbl() const {
-	return get_node_string("specials-text", self, 13);
+node_function_t node_properties_t::pictype(const cSpecial&) const {
+	return f_pt;
 }
 
-std::string node_properties_t::jmp_lbl() const {
-	return get_node_string("specials-text", self, 14);
+node_function_t node_properties_t::ex1a(const cSpecial&) const {
+	return f_x1a;
+}
+
+node_function_t node_properties_t::ex1b(const cSpecial&) const {
+	return f_x1b;
+}
+
+node_function_t node_properties_t::ex1c(const cSpecial&) const {
+	return f_x1c;
+}
+
+node_function_t node_properties_t::ex2a(const cSpecial&) const {
+	return f_x2a;
+}
+
+node_function_t node_properties_t::ex2b(const cSpecial&) const {
+	return f_x2b;
+}
+
+node_function_t node_properties_t::ex2c(const cSpecial&) const {
+	return f_x2c;
+}
+
+node_function_t node_properties_t::jump(const cSpecial&) const {
+	return f_jmp;
+}
+
+struct field_map {
+	std::map<eSpecField, node_function_t(node_properties_t::*)> map = {
+		{eSpecField::SDF1, &node_properties_t::f_sd1},
+		{eSpecField::SDF2, &node_properties_t::f_sd2},
+		{eSpecField::MSG1, &node_properties_t::f_m1},
+		{eSpecField::MSG2, &node_properties_t::f_m2},
+		{eSpecField::MSG3, &node_properties_t::f_m3},
+		{eSpecField::PICT, &node_properties_t::f_pic},
+		{eSpecField::PTYP, &node_properties_t::f_pt},
+		{eSpecField::EX1A, &node_properties_t::f_x1a},
+		{eSpecField::EX1B, &node_properties_t::f_x1b},
+		{eSpecField::EX1C, &node_properties_t::f_x1c},
+		{eSpecField::EX2A, &node_properties_t::f_x2a},
+		{eSpecField::EX2B, &node_properties_t::f_x2b},
+		{eSpecField::EX2C, &node_properties_t::f_x2c},
+		{eSpecField::JUMP, &node_properties_t::f_jmp},
+	};
+};
+
+static field_map& fields() {
+	static field_map map;
+	return map;
+}
+
+node_builder_t& node_builder_t::sdf() {
+	// The intent is to specify that sdf1,sdf2 is a stuff done flag.
+	// But specifying that two fields are a stuff done flag isn't implemented yet.
+	return sdf(eSpecField::SDF1, eSpecField::SDF2);
+}
+
+node_builder_t& node_builder_t::msg() {
+	return field_pair(eSpecField::MSG1, eSpecField::MSG2, eSpecPicker::MSG_PAIR);
+};
+
+node_builder_t& node_builder_t::rect() {
+	// The intent is to specify that ex1a,ex1b, and ex2a,ex2b are locations.
+	// But specifying that two fields are a location isn't implemented yet.
+	return loc(eSpecField::EX1A, eSpecField::EX1B).loc(eSpecField::EX2A, eSpecField::EX2B).pict(eSpecPicker::TOGGLE);
+};
+
+node_builder_t& node_builder_t::pic() {
+	return pict(eSpecPicker::PICTURE).ptyp(STRT_PICT);
+}
+
+node_builder_t& node_builder_t::sdf1(node_function_t picker) {
+	return field(eSpecField::SDF1, picker);
+}
+
+node_builder_t& node_builder_t::sdf2(node_function_t picker) {
+	return field(eSpecField::SDF2, picker);
+}
+
+node_builder_t& node_builder_t::jump(node_function_t picker) {
+	return field(eSpecField::JUMP, picker);
+}
+
+node_builder_t& node_builder_t::msg1(node_function_t picker) {
+	return field(eSpecField::MSG1, picker);
+}
+
+node_builder_t& node_builder_t::msg2(node_function_t picker) {
+	return field(eSpecField::MSG2, picker);
+}
+
+node_builder_t& node_builder_t::msg3(node_function_t picker) {
+	return field(eSpecField::MSG3, picker);
+}
+
+node_builder_t& node_builder_t::pict(node_function_t picker) {
+	return field(eSpecField::PICT, picker);
+}
+
+node_builder_t& node_builder_t::ptyp(node_function_t picker) {
+	return field(eSpecField::PTYP, picker);
+}
+
+node_builder_t& node_builder_t::ex1a(node_function_t picker) {
+	return field(eSpecField::EX1A, picker);
+}
+
+node_builder_t& node_builder_t::ex1b(node_function_t picker) {
+	return field(eSpecField::EX1B, picker);
+}
+
+node_builder_t& node_builder_t::ex1c(node_function_t picker) {
+	return field(eSpecField::EX1C, picker);
+}
+
+node_builder_t& node_builder_t::ex2a(node_function_t picker) {
+	return field(eSpecField::EX2A, picker);
+}
+
+node_builder_t& node_builder_t::ex2b(node_function_t picker) {
+	return field(eSpecField::EX2B, picker);
+}
+
+node_builder_t& node_builder_t::ex2c(node_function_t picker) {
+	return field(eSpecField::EX2C, picker);
+}
+
+node_builder_t& node_builder_t::field(eSpecField field, node_function_t picker) {
+	picker.self = node.self;
+	node.*fields().map[field] = picker;
+	return *this;
+}
+
+node_builder_t& node_builder_t::field_pair(eSpecField main, eSpecField extra, node_function_t picker) {
+	field(main, picker).field(extra, eSpecPicker::NONE);
+	(node.*fields().map[main]).continuation = extra;
+	return *this;
+}
+
+node_builder_t& node_builder_t::sdf(eSpecField a, eSpecField b) {
+	return field_pair(a, b, eSpecPicker::SDF);
+}
+
+node_builder_t& node_builder_t::loc(eSpecField a, eSpecField b) {
+	return field_pair(a, b, eSpecPicker::LOCATION);
+}
+
+node_builder_t::operator node_properties_t() {
+	node.set_label_indices();
+	std::map<eSpecType, node_properties_t>& allNodeProps = nodeProps();
+	allNodeProps.emplace(node.self, node);
+	return node;
+}
+
+void node_properties_t::set_label_indices() {
+	f_sd1.lbl_idx = 1;
+	f_sd2.lbl_idx = 2;
+	f_m1.lbl_idx = 3;
+	f_m2.lbl_idx = 4;
+	f_m3.lbl_idx = 5;
+	f_pic.lbl_idx = 6;
+	f_pt.lbl_idx = 7;
+	f_x1a.lbl_idx = 8;
+	f_x1b.lbl_idx = 9;
+	f_x1c.lbl_idx = 10;
+	f_x2a.lbl_idx = 11;
+	f_x2b.lbl_idx = 12;
+	f_x2c.lbl_idx = 13;
+	f_jmp.lbl_idx = 14;
+	f_sd1.self = f_sd2.self = f_jmp.self = f_m1.self = f_m2.self = f_m3.self = f_pic.self = f_pt.self = f_x1a.self = f_x1b.self = f_x1c.self = f_x2a.self = f_x2b.self = f_x2c.self = self;
 }

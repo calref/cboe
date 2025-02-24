@@ -202,6 +202,9 @@ void swap(cScenario& lhs, cScenario& rhs) {
 	swap(lhs.scen_file, rhs.scen_file);
 	swap(lhs.outdoors, rhs.outdoors);
 	swap(lhs.towns, rhs.towns);
+	swap(lhs.evt_names, rhs.evt_names);
+	swap(lhs.ic_names, rhs.ic_names);
+	swap(lhs.itf_names, rhs.itf_names);
 }
 
 cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
