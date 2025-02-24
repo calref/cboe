@@ -2943,6 +2943,10 @@ bool edit_make_scen_2(short& out_w, short& out_h, short& town_l, short& town_m, 
 
 extern fs::path progDir;
 extern eScenMode overall_mode;
+
+// Default, up-to-date feature flag values:
+std::map<std::string,std::string> default_feature_flags = {};
+
 bool build_scenario() {
 	short width, height, lg, med, sm;
 	bool default_town, grass;
@@ -2960,7 +2964,7 @@ bool build_scenario() {
 	scenario.contact_info[0] = author;
 	scenario.default_ground = grass ? 2 : 0;
 	
-	scenario.feature_flags = {};
+	scenario.feature_flags = default_feature_flags;
 
 	fs::path basePath = progDir/"Blades of Exile Base"/"bladbase.boes";
 	if(!fs::exists(basePath)) {

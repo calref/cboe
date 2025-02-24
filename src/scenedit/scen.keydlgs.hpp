@@ -20,7 +20,7 @@ bool cre(short val,short min,short max,std::string text1,std::string text2,cDial
 void display_strings(char *text1, char *text2,
 	char *title,short sound_num,short graphic_num,short graphic_type,cDialog* parent);
 void put_choice_pics(short g_type);
-pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent);
+pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent, bool static_only = false);
 short choose_background(short cur_choice, cDialog* parent);
 short choose_text_res(std::string res_list,short first_t,short last_t,unsigned short cur_choice,cDialog* parent,const char *title);
 short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent,std::string title);
