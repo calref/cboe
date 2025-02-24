@@ -31,7 +31,7 @@ void display_alchemy(bool allowEdit,cDialog* parent);
 bool spend_xp(short pc_num, short mode, cDialog* parent);
 // TODO: There's probably a more logical way of arranging this
 
-void display_skills(eSkill skill,cDialog* parent);
+void display_skills(eSkill skill,cDialog* parent, bool record = false);
 
 extern cUniverse univ;
 extern short store_flags[3];

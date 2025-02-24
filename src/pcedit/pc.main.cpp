@@ -459,7 +459,7 @@ bool verify_restore_quit(std::string dlog) {
 	return true;
 }
 
-void display_skills(eSkill skill,cDialog* parent) {
+void display_skills(eSkill skill,cDialog* parent, bool record) {
 	extern std::map<eSkill,short> skill_cost;
 	extern std::map<eSkill,short> skill_max;
 	extern std::map<eSkill,short> skill_g_cost;

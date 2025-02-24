@@ -304,6 +304,7 @@ extern bool record_verbose;
 extern bool replay_verbose;
 extern bool replay_strict;
 
+bool record_in_memory = true;
 
 static void process_args(int argc, char* argv[]) {
 	preprocess_args(argc, argv);
@@ -374,6 +375,11 @@ static void process_args(int argc, char* argv[]) {
 			exit(1);
 		}
 		// Don't return, because we want to support recording a run that starts with a party from the CLI.
+	}else if(record_in_memory){
+		if(!init_action_log("record", "")){
+			std::cerr << "Failed to start recording in memory." << std::endl;
+			exit(1);
+		}
 	}
 
 	if(saved_game){
@@ -818,7 +824,7 @@ static void replay_action(Element& action) {
 		debug_return_to_start();
 		return;
 	}else if(t == "handle_victory"){
-		handle_victory();
+		handle_victory(true); // This is for the debug action which forces it.
 		return;
 	}else if(t == "debug_increase_age"){
 		debug_increase_age();
@@ -910,8 +916,9 @@ static void replay_action(Element& action) {
 		cancel_item_target(did_something, need_redraw, need_reprint);
 	}else if(t == "easter_egg"){
 		easter_egg(boost::lexical_cast<int>(action.GetText()));
-	}else if(t == "show_debug_panel"){
+	}else if(t == "show_debug_help"){
 		show_debug_help();
+		return;
 	}else if(t == "debug_fight_encounter"){
 		debug_fight_encounter(str_to_bool(action.GetText()));
 	}else if(t == "preview_every_dialog_xml"){
@@ -1487,13 +1494,13 @@ void handle_menu_choice(eMenu item_hit) {
 			dialogToShow = "about-boe";
 			break;
 		case eMenu::LIBRARY_MAGE:
-			display_spells(eSkill::MAGE_SPELLS,100,nullptr);
+			display_spells(eSkill::MAGE_SPELLS,100,nullptr,true);
 			break;
 		case eMenu::LIBRARY_PRIEST:
-			display_spells(eSkill::PRIEST_SPELLS,100,nullptr);
+			display_spells(eSkill::PRIEST_SPELLS,100,nullptr,true);
 			break;
 		case eMenu::LIBRARY_SKILLS:
-			display_skills(eSkill::INVALID,nullptr);
+			display_skills(eSkill::INVALID,nullptr,true);
 			break;
 		case eMenu::LIBRARY_ALCHEMY:
 			// TODO: Create a dedicated dialog for alchemy info

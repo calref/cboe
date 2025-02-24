@@ -2364,7 +2364,9 @@ void show_debug_help() {
 		if(action.action != &show_debug_help){
 			button.attachClickHandler([action](cDialog& me, std::string, eKeyMod) -> bool {
 				me.toast(false);
-				action.action();
+				// In a replay, the action will have been recorded next anyway, so the dialog doesn't need to trigger it.
+				if(!replaying)
+					action.action();
 				return true;
 			});
 		}
@@ -2385,7 +2387,7 @@ void show_debug_help() {
 }
 
 // Non-comprehensive list of unused keys:
-// UYZ chijklnoqvy @#$-_+[]{},.'"`~/\|;:
+// Y chijklnoqvy @#$-_+[]{},.'"`~/\|;:
 void init_debug_actions() {
 	add_debug_action({'B'}, "Leave town", debug_leave_town);
 	add_debug_action({'C'}, "Get cleaned up (lose negative status effects)", debug_clean_up);
@@ -2401,7 +2403,7 @@ void init_debug_actions() {
 	add_debug_action({'J'}, "Preview a dialog's layout", preview_dialog_xml);
 	add_debug_action({'U'}, "Preview EVERY dialog's layout", preview_every_dialog_xml);
 	add_debug_action({'K'}, "Kill everything", debug_kill);
-	add_debug_action({'N'}, "End scenario", []() -> void {handle_victory(true);});
+	add_debug_action({'N'}, "End scenario", []() -> void {handle_victory(true, true);});
 	add_debug_action({'O'}, "Print your location", debug_print_location);
 	add_debug_action({'Q'}, "Magic map", debug_magic_map);
 	add_debug_action({'R'}, "Return to start", debug_return_to_start);
@@ -2425,6 +2427,7 @@ void init_debug_actions() {
 	add_debug_action({'%'}, "Fight wandering encounter from this section", []() -> void {debug_fight_encounter(true);});
 	add_debug_action({'^'}, "Fight special encounter from this section", []() -> void {debug_fight_encounter(false);});
 	add_debug_action({'/', '?'}, "Bring up this window", show_debug_help);
+	add_debug_action({'Z'}, "Save the current action log for bug reporting", save_replay_log);
 }
 
 // Later we might want to know whether the key is used or not
@@ -3967,4 +3970,13 @@ void preview_every_dialog_xml() {
 			preview_dialog_xml(path);
 		});
 	}
+}
+
+void save_replay_log(){
+	// This doesn't need to be recorded or replayed.
+	if(replaying) return;
+
+	fs::path out_file = nav_put_rsrc({"xml"});
+
+	start_log_file(out_file.string());
 }

@@ -112,8 +112,8 @@ static bool display_spells_event_filter(cDialog& me, std::string item_hit, eSkil
 	return true;
 }
 //short force_spell; // if 100, ignore
-void display_spells(eSkill mode,short force_spell,cDialog* parent) {
-	if(recording){
+void display_spells(eSkill mode,short force_spell,cDialog* parent, bool record) {
+	if(recording && record){
 		std::map<std::string,std::string> info;
 		info["mode"] = boost::lexical_cast<std::string>(mode);
 		info["force_spell"] = boost::lexical_cast<std::string>(force_spell);
@@ -174,8 +174,8 @@ static bool display_skills_event_filter(cDialog& me, std::string item_hit, eKeyM
 	return true;
 }
 
-void display_skills(eSkill force_skill,cDialog* parent) {
-	if(recording){
+void display_skills(eSkill force_skill,cDialog* parent, bool record) {
+	if(recording && record){
 		record_action("display_skills", boost::lexical_cast<std::string>(force_skill));
 	}
 	if(force_skill != eSkill::INVALID)

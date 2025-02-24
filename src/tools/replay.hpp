@@ -47,6 +47,7 @@ extern short short_from_action(Element& action);
 extern cKey key_from_action(Element& action);
 extern word_rect_t word_rect_from_action(Element& action);
 extern void record_click_talk_rect(word_rect_t word_rect, bool preset);
+extern void start_log_file(std::string file);
 
 extern const std::string replay_warning;
 extern const std::string replay_error;

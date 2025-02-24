@@ -2046,7 +2046,7 @@ void run_special(eSpecCtx which_mode, eSpecCtxType which_type, spec_num_t start_
 			if(replaying && has_next_action("step_through_exit")){
 				pop_next_action();
 				univ.node_step_through = false;
-			}else if(evt.type == sf::Event::KeyPressed && evt.key.code == sf::Keyboard::Escape){
+			}else if(!replaying && evt.type == sf::Event::KeyPressed && evt.key.code == sf::Keyboard::Escape){
 				record_action("step_through_exit", "");
 				univ.node_step_through = false;
 			}

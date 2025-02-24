@@ -117,5 +117,6 @@ void update_item_stats_area(bool& need_reprint);
 void easter_egg(int idx);
 void preview_dialog_xml();
 void preview_every_dialog_xml();
+void save_replay_log();
 
 #endif
