@@ -265,8 +265,11 @@ void put_item_screen(eItemWinMode screen_num) {
 					
 					place_item_button(i,ITEMBTN_INFO);
 					if((univ.scenario.special_items[spec_item_array[i_num]].flags % 10 == 1)
-						&& (!(is_combat())))
-						place_item_button(i,ITEMBTN_DROP); // TODO: Shouldn't this be ITEMBTN_USE?
+						&& (!(is_combat()))){
+						// Put a Use button where the Drop button normally goes,
+						// so there's no gap between Use and Info:
+						place_item_button(i,ITEMBTN_USE, ITEMBTN_DROP);
+					}
 				}
 			}
 			break;
@@ -459,12 +462,16 @@ void place_item_graphic(short which_slot,short graphic) {
 }
 
 // name, use, give, drop, info, sell/id
-void place_item_button(short which_slot,eItemButton button_type) {
+void place_item_button(short which_slot,eItemButton button_type, eItemButton button_pos) {
+	if(button_pos == MAX_eItemButton){
+		button_pos = button_type;
+	}
+
 	rectangle from_rect = {0,0,18,18},to_rect;
-	
+
 	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
 	item_area_button_active[which_slot][button_type] = true;
-	rect_draw_some_item(invenbtn_gworld, item_buttons_from[button_type - 2], item_stats_gworld, item_buttons[which_slot][button_type], sf::BlendAlpha);
+	rect_draw_some_item(invenbtn_gworld, item_buttons_from[button_type - 2], item_stats_gworld, item_buttons[which_slot][button_pos], sf::BlendAlpha);
 }
 
 void place_item_bottom_buttons() {
