@@ -4022,10 +4022,14 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 }
 
 short damage_target(short target,short dam,eDamageType type,short sound_type, bool do_print, short who_hit, eRace race) {
-	if(target == 6) return 0;
-	if(target < 6)
-		return damage_pc(univ.party[target],dam,type,race,sound_type, do_print);
-	else return damage_monst(univ.town.monst[target - 100], who_hit, dam, type,sound_type, do_print);
+	if(target >= 6 && target < 100) return 0;
+	if(target < 6){
+		return damage_pc(univ.party[target], dam, type, race, sound_type, do_print);
+	}else{
+		int monst_idx = target - 100;
+		if(monst_idx >= univ.town.monst.size()) return 0;
+		return damage_monst(univ.town.monst[monst_idx], who_hit, dam, type, sound_type, do_print);
+	}
 }
 
 short damage_target(iLiving& target,short dam,eDamageType type,short sound_type, bool do_print, short who_hit, eRace race) {
