@@ -149,7 +149,6 @@ protected:
 	/// @throw xMissingAttr if a required attribute is missing
 	/// @throw xMissingElem if a required attribute is either missing or present in insufficient quantity
 	virtual void validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes);
-	std::string name;
 public:
 	/// Attach a keyboard shortcut to a control. Pressing the keyboard shortcut is equivalent to clicking the control.
 	/// @param key The desired keyboard shortcut.
@@ -450,6 +449,8 @@ protected:
 	cKey key;
 	/// Whether the control is the default control of its dialog.
 	bool isDefaultControl = false;
+	/// The control's id in its dialog/container
+	std::string name;
 
 	/// Draw a frame around the control.
 	/// @param amt How much to offset the frame from the control's bounding rect.
