@@ -10,21 +10,21 @@
 		The meanings of all these fields are given in the documentation.
 	</text>
 
-	<text name='title-text' top='65' left='50' width='120' height='14'>Title:</text>
+	<text name='title-label' top='65' left='50' width='120' height='14'>Title:</text>
 	<field name='title' relative='pos-in pos-in' rel-anchor='prev' top='0' left='131' width='243' height='16' max-chars='30'/>
 
-	<text name='version-text' relative='pos-in pos-in' anchor='title-text' top='20' left='0' width='120' height='14'>Version number:</text>
+	<text name='version-label' relative='pos-in pos-in' anchor='title-label' top='20' left='0' width='120' height='14'>Version number:</text>
 	<field name='ver1' relative='pos-in neg' rel-anchor='prev' type='uint' top='1' left='131' width='43' height='16'/>
 	<field name='ver2' relative='pos-in' rel-anchor='prev' type='uint' top='0' left='53' width='43' height='16'/>
 	<field name='ver3' relative='pos-in' rel-anchor='prev' type='uint' top='0' left='53' width='43' height='16'/>
 
-	<text name='teaser1-text' top='102' left='50' width='120' height='14'>Teaser:</text>
+	<text name='teaser1-label' top='102' left='50' width='120' height='14'>Teaser:</text>
 	<field name='teaser1' top='104' left='181' width='243' height='47'/>
-	<text name='teaser2-text' top='150' left='50' width='120' height='14'></text>
+	<text name='teaser2-label' top='150' left='50' width='120' height='14'></text>
 	<field name='teaser2' top='159' left='181' width='243' height='47'/>
-	<text name='author-text' top='212' left='50' width='160' height='14'>Author:</text>
+	<text name='author-label' top='212' left='50' width='160' height='14'>Author:</text>
 	<field name='author' top='214' left='181' width='243' height='16'/>
-	<text name='contact-text' top='233' left='50' width='160' height='14'>Contact Information<br/>(optional):</text>
+	<text name='contact-label' top='233' left='50' width='160' height='14'>Contact Information<br/>(optional):</text>
 	<field name='contact' top='234' left='181' width='243' height='35'/>
 
 	<text top='285' left='50' width='50' height='14'>Rating:</text>
