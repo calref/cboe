@@ -76,6 +76,7 @@
 #define IDM_SCEN_LAUNCH_START           171
 #define IDM_SCEN_LAUNCH_ENTRANCE        172
 #define ID_FILE_PREFERENCES             173
+#define IDM_SCEN_ADV_DETAILS            174
 
 // Next default values for new objects
 // 

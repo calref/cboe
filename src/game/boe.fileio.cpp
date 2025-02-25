@@ -357,11 +357,12 @@ std::vector<scen_header_type> build_scen_headers() {
 				scen_headers.push_back(scen_head);
 			}else{
 				scen_header_type missing_scen;
-				missing_scen.intro_pic = missing_scen.rating = missing_scen.difficulty = 0;
+				missing_scen.intro_pic = missing_scen.difficulty = 0;
+				missing_scen.rating = eContentRating::G;
 				for(int i=0; i<3; ++i)
 					missing_scen.ver[i] = missing_scen.prog_make_ver[i] = 0;
 				missing_scen.name = scen_file;
-				missing_scen.who1 = missing_scen.who2 = missing_scen.file = "";
+				missing_scen.teaser1 = missing_scen.teaser2 = missing_scen.file = "";
 				scen_headers.push_back(missing_scen);
 			}
 		}
@@ -446,8 +447,26 @@ bool load_scenario_header(fs::path file,scen_header_type& scen_head){
 		return false;
 	
 	scen_head.name = temp_scenario.scen_name;
-	scen_head.who1 = temp_scenario.who_wrote[0];
-	scen_head.who2 = temp_scenario.who_wrote[1];
+	// Legacy scenario meta display: Teaser 1/2 are mixed with credits, other fields hidden.
+	if(!temp_scenario.has_feature_flag("scenario-meta-format")){
+		scen_head.teaser1 = temp_scenario.teaser_text[0];
+		scen_head.teaser2 = temp_scenario.teaser_text[1];
+	}
+	// V2 meta display: By {Author}, Contact: {Contact}|{Teaser!}
+	else{
+		if(!temp_scenario.contact_info[0].empty()){
+			scen_head.teaser1 = "By " + temp_scenario.contact_info[0];
+		}
+		if(!temp_scenario.contact_info[1].empty()){
+			if(!scen_head.teaser1.empty()) scen_head.teaser1 += ", ";
+
+			scen_head.teaser1 += "Contact: " + temp_scenario.contact_info[1];
+		}
+		if(scen_head.teaser1.empty())
+			scen_head.teaser1 = temp_scenario.teaser_text[0];
+		else
+			scen_head.teaser2 = temp_scenario.teaser_text[0];
+	}
 	scen_head.file = fname == "header.exs" ? file.parent_path().filename().string() : fname;
 	scen_head.intro_pic = temp_scenario.intro_pic;
 	scen_head.rating = temp_scenario.rating;

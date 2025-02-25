@@ -167,8 +167,8 @@ TEST_CASE("Loading a new-format scenario record") {
 		// TODO: Check language
 		CHECK(scen.contact_info[0] == "BoE Test Suite");
 		CHECK(scen.contact_info[1] == "nowhere@example.com");
-		CHECK(scen.who_wrote[0] == "Teaser 1");
-		CHECK(scen.who_wrote[1] == "Teaser 2");
+		CHECK(scen.teaser_text[0] == "Teaser 1");
+		CHECK(scen.teaser_text[1] == "Teaser 2");
 		CHECK(scen.intro_mess_pic == 7);
 		CHECK(scen.intro_strs[0] == "Welcome!!!    To the test scenario!");
 		CHECK(scen.rating == eContentRating::R);

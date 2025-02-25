@@ -1580,8 +1580,8 @@ class cChooseScenario {
 					sout << '.' << int(scen_headers[page * 3 + i].ver[2]);
 					sout << " - |  Difficulty: " << difficulty[scen_headers[page * 3 + i].difficulty];
 					sout << ", Rating: " << scen_headers[page * 3 + i].rating;
-					sout << " |" << scen_headers[page * 3 + i].who1;
-					sout << " |" << scen_headers[page * 3 + i].who2;
+					sout << " |" << scen_headers[page * 3 + i].teaser1;
+					sout << " |" << scen_headers[page * 3 + i].teaser2;
 					me["desc" + n].setText(sout.str());
 					me["start" + n].show();
 				} else {

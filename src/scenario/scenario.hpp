@@ -92,8 +92,10 @@ public:
 	std::string campaign_id; // A hopefully unique identifier to specify the campaign this scenario is a part of.
 	std::vector<cItem> scen_items;
 	std::string scen_name;
-	std::string who_wrote[2];
+
+	std::string teaser_text[2];
 	std::string contact_info[2];
+
 	std::array<std::string, 6> intro_strs;
 	std::vector<std::string> journal_strs;
 	std::vector<std::string> spec_strs;

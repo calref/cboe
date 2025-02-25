@@ -139,8 +139,8 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 	}
 	data.CloseElement("feature-flags");
 	data.OpenElement("text");
-	data.PushElement("teaser", scenario.who_wrote[0]);
-	data.PushElement("teaser", scenario.who_wrote[1]);
+	data.PushElement("teaser", scenario.teaser_text[0]);
+	data.PushElement("teaser", scenario.teaser_text[1]);
 	if(scenario.intro_pic != scenario.intro_mess_pic)
 		data.PushElement("icon", scenario.intro_mess_pic);
 	{
@@ -1209,8 +1209,8 @@ void scen_text_dump(){
 	std::ofstream fout((scenario.scen_file.parent_path()/(scenario.scen_name + " Text.txt")).string().c_str());
 	fout << "Scenario text for " << scenario.scen_name << ':' << endl << endl;
 	fout << "Scenario Text:" << endl;
-	fout << "Who Wrote 1: " << scenario.who_wrote[0] << endl;
-	fout << "Who Wrote 2: " << scenario.who_wrote[1] << endl;
+	fout << "Teaser 1: " << scenario.teaser_text[0] << endl;
+	fout << "Teaser 2: " << scenario.teaser_text[1] << endl;
 	fout << "Contact Info: " << scenario.contact_info[0] << "    " << scenario.contact_info[1] << endl;
 	for(short i = 0; i < scenario.intro_strs.size(); i++)
 		if(scenario.intro_strs[i][0] != '*')

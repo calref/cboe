@@ -78,10 +78,10 @@ cScenario::cScenario() {
 		scenario_timers[i].node = -1;
 	}
 	scen_name = "Scen name";
-	who_wrote[0] = "Who wrote 1";
-	who_wrote[1] = "Who wrote 2";
-	contact_info[0] = "Name not given";
-	contact_info[1] = "Contact info";
+	teaser_text[0] = "An exciting adventure!";
+	teaser_text[1] = "";
+	contact_info[0] = "Author";
+	contact_info[1] = "";
 }
 
 cScenario::cScenario(const cScenario& other)
@@ -131,8 +131,8 @@ cScenario::cScenario(const cScenario& other)
 	, outdoors(other.outdoors.width(), other.outdoors.height())
 {
 	// MSVC 12 doesn't like arrays in the initializer list. :(
-	who_wrote[0] = other.who_wrote[0];
-	who_wrote[1] = other.who_wrote[1];
+	teaser_text[0] = other.teaser_text[0];
+	teaser_text[1] = other.teaser_text[1];
 	contact_info[0] = other.contact_info[0];
 	contact_info[1] = other.contact_info[1];
 	// Copy towns and sectors
@@ -189,8 +189,8 @@ void swap(cScenario& lhs, cScenario& rhs) {
 	swap(lhs.campaign_id, rhs.campaign_id);
 	swap(lhs.scen_items, rhs.scen_items);
 	swap(lhs.scen_name, rhs.scen_name);
-	swap(lhs.who_wrote[0], rhs.who_wrote[0]);
-	swap(lhs.who_wrote[1], rhs.who_wrote[1]);
+	swap(lhs.teaser_text[0], rhs.teaser_text[0]);
+	swap(lhs.teaser_text[1], rhs.teaser_text[1]);
 	swap(lhs.contact_info[0], rhs.contact_info[0]);
 	swap(lhs.contact_info[1], rhs.contact_info[1]);
 	swap(lhs.intro_strs, rhs.intro_strs);
