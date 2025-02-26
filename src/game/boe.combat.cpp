@@ -4761,6 +4761,11 @@ bool combat_cast_mage_spell() {
 		}
 		
 		if(spell_num == eSpell::SIMULACRUM) {
+			if(!has_trapped_monst()){
+				add_string_to_buf("Simulacrum: You need to cast Capture\n");
+				add_string_to_buf("  Soul on a creature first.");
+				return false;
+			}
 			store_sum_monst = pick_trapped_monst();
 			if(store_sum_monst == 0)
 				return false;
