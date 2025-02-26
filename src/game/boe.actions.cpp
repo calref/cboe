@@ -1087,7 +1087,8 @@ void handle_alchemy(bool& need_redraw, bool& need_reprint) {
 	need_redraw = true;
 	if(overall_mode == MODE_TOWN)
 		do_alchemy();
-	else add_string_to_buf("Alchemy: Only in town.");
+	else if(!is_town()) add_string_to_buf("Alchemy: Only in town.");
+	else add_string_to_buf("Alchemy: " + FINISH_FIRST);
 }
 
 static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
