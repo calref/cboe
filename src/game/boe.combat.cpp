@@ -4761,10 +4761,18 @@ bool combat_cast_mage_spell() {
 		}
 		
 		if(spell_num == eSpell::SIMULACRUM) {
+			if(!has_trapped_monst()){
+				add_string_to_buf("Simulacrum: You need to cast Capture\n");
+				add_string_to_buf("  Soul on a creature first.");
+				return false;
+			}
 			store_sum_monst = pick_trapped_monst();
 			if(store_sum_monst == 0)
 				return false;
-			get_monst = univ.scenario.scen_monsters[store_sum_monst];
+			if(store_sum_monst >= 10000)
+				get_monst = univ.party.summons[store_sum_monst-10000];
+			else
+				get_monst = univ.scenario.scen_monsters[store_sum_monst];
 			if(store_sp < get_monst.level) {
 				add_string_to_buf("Cast: Not enough spell points.");
 				return false;

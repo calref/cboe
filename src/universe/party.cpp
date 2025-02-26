@@ -943,9 +943,12 @@ void cParty::readFrom(const cTagFile& file) {
 			std::copy(roster.begin(), roster.end(), std::inserter(m_seen, m_seen.begin()));
 			
 			imprisoned_monst.fill(0);
-			std::vector<decltype(imprisoned_monst)::value_type> soul_crystal;
-			page["SOULCRYSTAL"].extract(soul_crystal);
-			std::copy_n(soul_crystal.begin(), std::min(soul_crystal.size(), imprisoned_monst.size()), imprisoned_monst.begin());
+			for(size_t n = 0; n < page["SOULCRYSTAL"].size(); n++){
+				size_t slot;
+				mon_num_t monster;
+				auto tmp = page["SOULCRYSTAL"] >> slot >> monster;
+				imprisoned_monst[n] = monster;
+			}
 			
 			alchemy.reset();
 			std::deque<bool> alch; // deque instead of vector to avoid the bitwise specialization

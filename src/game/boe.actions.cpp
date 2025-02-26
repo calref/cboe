@@ -2415,7 +2415,7 @@ void show_debug_help() {
 }
 
 // Non-comprehensive list of unused keys:
-// chijklnoqvy @#$-_+[]{},.'"`~/\|;:
+// hijklnoqvy @#$-_+[]{},.'"`~/\|;:
 void init_debug_actions() {
 	add_debug_action({'B'}, "Leave town", debug_leave_town);
 	add_debug_action({'C'}, "Get cleaned up (lose negative status effects)", debug_clean_up);
@@ -2448,6 +2448,7 @@ void init_debug_actions() {
 	add_debug_action({'T'}, "Enter town", debug_enter_town);
 	add_debug_action({'W'}, "Refresh jobs/shops", debug_refresh_stores);
 	add_debug_action({'X'}, "Kill party", debug_kill_party);
+	add_debug_action({'c'}, "Clear captured souls", clear_trapped_monst);
 	add_debug_action({'='}, "Heal, increase magic skills", debug_heal_plus_extra);
 	add_debug_action({'<'}, "Make one day pass", debug_increase_age);
 	add_debug_action({'>'}, "Reset towns (excludes the one you're in, if any)", debug_towns_forget);
@@ -4008,4 +4009,13 @@ void save_replay_log(){
 	fs::path out_file = nav_put_rsrc({"xml"});
 
 	start_log_file(out_file.string());
+}
+
+void clear_trapped_monst() {
+	if(recording){
+		record_action("clear_trapped_monst", "");
+	}
+	univ.party.imprisoned_monst.fill(0);
+	ASB("Debug: Captures souls cleared.");
+	print_buf();
 }

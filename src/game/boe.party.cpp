@@ -2278,6 +2278,13 @@ bool pick_pc_name(short pc_num,cDialog* parent) {
 	return 1;
 }
 
+bool has_trapped_monst() {
+	for(mon_num_t which : univ.party.imprisoned_monst) {
+		if(which != 0) return true;
+	}
+	return false;
+}
+
 mon_num_t pick_trapped_monst() {
 	short i = 0;
 	std::string sp;
@@ -2298,6 +2305,7 @@ mon_num_t pick_trapped_monst() {
 			get_monst = which >= 10000 ? univ.party.summons[which - 10000] : univ.scenario.scen_monsters[which];
 			soulCrystal->getControl("lvl" + n).setTextToNum(get_monst.level);
 		}
+		i++;
 	}
 	
 	
