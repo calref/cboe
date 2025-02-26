@@ -33,6 +33,7 @@ void do_alchemy();
 eAlchemy alch_choice(short pc_num);
 bool pick_pc_graphic(short pc_num,short mode,cDialog* parent_num);
 bool pick_pc_name(short pc_num,cDialog* parent)  ;
+bool has_trapped_monst();
 mon_num_t pick_trapped_monst();
 bool flying() ;
 void hit_party(short how_much,eDamageType damage_type,short snd_type = 0);
