@@ -1468,6 +1468,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 		text_rect.offset(-1,-1);
 		win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style);
 	}
+	item_sbar->draw();
 	mainPtr.display();
 	bool skip_boom_delay = get_bool_pref("SkipBoomDelay");
 	play_sound((skip_boom_delay?-1:1)*sound_to_play);
