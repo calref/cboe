@@ -181,6 +181,8 @@ public:
 		if(old_handler.empty()) return nullptr;
 		return boost::any_cast<typename event_fcn<t>::type>(old_handler);
 	}
+	inline std::string getName() { return name; }
+	inline void setName(std::string value) { name = value; }
 	/// Attach a click handler to this control.
 	/// @param f The click handler to attach.
 	/// @throw xHandlerNotSupported if this control does not support click handlers. Most controls do support click handlers.
@@ -447,6 +449,8 @@ protected:
 	cKey key;
 	/// Whether the control is the default control of its dialog.
 	bool isDefaultControl = false;
+	/// The control's id in its dialog/container
+	std::string name;
 
 	/// Draw a frame around the control.
 	/// @param amt How much to offset the frame from the control's bounding rect.
