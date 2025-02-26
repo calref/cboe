@@ -1545,7 +1545,7 @@ void display_map() {
 	}
 
 	if(!prime_time()) {
-		ASB("Finish what you're doing first.");
+		ASB("Map: " + FINISH_FIRST);
 		print_buf();
 		return;
 	}

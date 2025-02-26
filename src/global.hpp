@@ -53,4 +53,6 @@ inline void LOG(std::string line) {
 
 #define LOG_VALUE(x) std::cout << #x << ": " << (x) << std::endl;
 
+const std::string FINISH_FIRST = "Finish what you're doing first.";
+
 #endif
