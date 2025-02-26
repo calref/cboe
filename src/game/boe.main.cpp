@@ -1422,7 +1422,6 @@ void menu_give_help(short help1){
 
 void handle_menu_choice(eMenu item_hit) {
 	std::string dialogToShow;
-	sf::Event dummyEvent = {sf::Event::KeyPressed};
 	bool did_something = false, need_redraw = false, need_reprint = false;
 	
 	switch(item_hit) {
@@ -1522,9 +1521,7 @@ void handle_menu_choice(eMenu item_hit) {
 			handle_alchemy(need_redraw, need_reprint);
 			break;
 		case eMenu::ACTIONS_WAIT:
-			// This will be recorded when the fake event is processed
-			dummyEvent.key.code = sf::Keyboard::W;
-			queue_fake_event(dummyEvent);
+			handle_wait(did_something, need_redraw, need_reprint);
 			break;
 		case eMenu::ACTIONS_AUTOMAP:
 			display_map();
