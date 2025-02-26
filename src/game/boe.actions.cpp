@@ -881,7 +881,7 @@ void handle_switch_pc(short which_pc, bool& need_redraw, bool& need_reprint) {
 
 	cPlayer& pc = univ.party[which_pc];
 	if(!prime_time() && overall_mode != MODE_SHOPPING && overall_mode != MODE_TALKING && overall_mode != MODE_ITEM_TARGET)
-		add_string_to_buf("Set active: Finish what you're doing first.");
+		add_string_to_buf("Set active: " + FINISH_FIRST);
 	else if(is_combat()) {
 		if(univ.debug_mode && pc.ap <= 0){
 			pc.ap = 4;
@@ -912,7 +912,7 @@ void handle_switch_pc_items(short which_pc, bool& need_redraw) {
 
 	cPlayer& pc = univ.party[which_pc];
 	if(!prime_time() && overall_mode != MODE_TALKING && overall_mode != MODE_SHOPPING)
-		add_string_to_buf("Set active: Finish what you're doing first.");
+		add_string_to_buf("Set active: " + FINISH_FIRST);
 	else {
 		if(!is_combat()) {
 			if(pc.main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::ALLOW_DEAD))
@@ -950,7 +950,7 @@ void handle_equip_item(short item_hit, bool& need_redraw) {
 	} else if(stat_screen_mode > MODE_SHOP) {
 		// TODO: For some reason, the game didn't do anything at all in this case.
 		// I'm not sure why; maybe it intended to forward to the sell button?
-	} else add_string_to_buf("Equip: Finish what you're doing first.");
+	} else add_string_to_buf("Equip: " + FINISH_FIRST);
 }
 
 void handle_use_item(short item_hit, bool& did_something, bool& need_redraw) {
@@ -959,7 +959,7 @@ void handle_use_item(short item_hit, bool& did_something, bool& need_redraw) {
 	}
 
 	if(!prime_time()) {
-		add_string_to_buf("Use item: Finish what you're doing first.");
+		add_string_to_buf("Use item: " + FINISH_FIRST);
 		return;
 	}
 	use_item(stat_window, item_hit);
@@ -975,7 +975,7 @@ void handle_give_item(short item_hit, bool& did_something, bool& need_redraw) {
 	}
 
 	if(!prime_time()) {
-		add_string_to_buf("Give item: Finish what you're doing first.");
+		add_string_to_buf("Give item: " + FINISH_FIRST);
 		return;
 	}
 	give_thing(stat_window, item_hit);
@@ -993,7 +993,7 @@ void handle_drop_item(short item_hit, bool& need_redraw) {
 		add_string_to_buf("Drop item: Cancelled");
 		overall_mode = is_town() ? MODE_TOWN : MODE_COMBAT;
 	} else if(!prime_time())
-		add_string_to_buf("Drop item: Finish what you're doing first.");
+		add_string_to_buf("Drop item: " + FINISH_FIRST);
 	else if(is_out())
 		drop_item(stat_window,item_hit,univ.party.out_loc);
 	else {
@@ -1349,7 +1349,7 @@ void handle_trade_places(int which_pc, bool& need_reprint) {
 		record_action("handle_trade_places", boost::lexical_cast<std::string>(which_pc));
 	}
 	if(!prime_time())
-		add_string_to_buf("Trade places: Finish what you're doing first.");
+		add_string_to_buf("Trade places: " + FINISH_FIRST);
 	else if(is_combat())
 		add_string_to_buf("Trade places: Can't do this in combat.");
 	else {
@@ -1868,7 +1868,7 @@ void handle_menu_spell(eSpell spell_picked) {
 
 	eSkill spell_type = (*spell_picked).type;
 	if(!prime_time()) {
-		ASB("Finish what you're doing first.");
+		ASB("Cast: " + FINISH_FIRST);
 		print_buf();
 		return;
 	}
@@ -3287,7 +3287,7 @@ void handle_drop_pc() {
 		record_action("handle_drop_pc", "");
 	}
 	if(!prime_time()) {
-		ASB("Finish what you're doing first.");
+		ASB("Delete PC: " + FINISH_FIRST);
 		print_buf();
 	}else if(is_combat()){
 		add_string_to_buf("Delete PC: Not in combat.");
