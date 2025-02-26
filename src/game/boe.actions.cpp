@@ -1141,11 +1141,14 @@ void handle_wait(bool& did_something, bool& need_redraw, bool& need_reprint) {
 
 	if(overall_mode == MODE_TOWN) {
 		handle_town_wait(need_redraw, need_reprint);
-	} else if(overall_mode == MODE_COMBAT) {
+	} else if(!is_town()){
+		add_string_to_buf("Wait: In town only.");
+		print_buf();
+	}else if(overall_mode == MODE_COMBAT) {
 		handle_stand_ready(need_redraw, need_reprint);
 		advance_time(did_something, need_redraw, need_reprint);
-	} else if(overall_mode == MODE_OUTDOORS) {
-		add_string_to_buf("Wait: In town only.");
+	} else {
+		add_string_to_buf("Wait: " + FINISH_FIRST);
 		print_buf();
 	}
 }
