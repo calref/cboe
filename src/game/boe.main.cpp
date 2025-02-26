@@ -1423,6 +1423,7 @@ void menu_give_help(short help1){
 void handle_menu_choice(eMenu item_hit) {
 	std::string dialogToShow;
 	sf::Event dummyEvent = {sf::Event::KeyPressed};
+	bool did_something = false, need_redraw = false, need_reprint = false;
 	
 	switch(item_hit) {
 		case eMenu::NONE: break;
@@ -1518,10 +1519,7 @@ void handle_menu_choice(eMenu item_hit) {
 			showWelcome();
 			break;
 		case eMenu::ACTIONS_ALCHEMY:
-			// This will be recorded when the fake event is processed
-			dummyEvent.key.code = sf::Keyboard::A;
-			dummyEvent.key.shift = true;
-			queue_fake_event(dummyEvent);
+			handle_alchemy(need_redraw, need_reprint);
 			break;
 		case eMenu::ACTIONS_WAIT:
 			// This will be recorded when the fake event is processed
@@ -1544,6 +1542,9 @@ void handle_menu_choice(eMenu item_hit) {
 	}
 	if(!dialogToShow.empty()) {
 		show_dialog_action(dialogToShow);
+	}
+	if(did_something || need_redraw || need_reprint){
+		advance_time(did_something, need_redraw, need_reprint);
 	}
 }
 
