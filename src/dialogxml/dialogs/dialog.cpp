@@ -1132,7 +1132,7 @@ bool cDialog::hasControl(std::string id) const {
 	return false;
 }
 
-const char*const xBadVal::CONTENT = "<content>";
+const char*const xBadVal::CONTENT = "$content$";
 
 cDialogIterator::cDialogIterator() : parent(nullptr) {}
 

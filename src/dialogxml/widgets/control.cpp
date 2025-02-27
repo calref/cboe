@@ -443,7 +443,7 @@ std::string cControl::parse(ticpp::Element& who, std::string fname) {
 			nodeTag = node->Value();
 		if(type == TiXmlNode::COMMENT) continue;
 		else if(!parseContent(*node, foundNodes.count(nodeTag), tagName, fname, text)) {
-			std::string val = nodeTag.empty() ? nodeTag : xBadVal::CONTENT;
+			std::string val = nodeTag.empty() ? xBadVal::CONTENT : nodeTag;
 			throw xBadVal(tagName, xBadVal::CONTENT, val, node->Row(), node->Column(), fname);
 		}
 		foundNodes.insert(nodeTag);
