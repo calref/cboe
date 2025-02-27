@@ -173,7 +173,7 @@ bool cScrollPane::parseAttribute(ticpp::Attribute& attr, std::string tagName, st
 bool cScrollPane::parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) {
 	if(content.Type() == TiXmlNode::ELEMENT) {
 		std::string id;
-		return parseChildControl(dynamic_cast<ticpp::Element&>(content), contents, id);
+		return parseChildControl(dynamic_cast<ticpp::Element&>(content), contents, id, fname);
 	}
 	return cContainer::parseContent(content, n, tagName, fname, text);
 }
