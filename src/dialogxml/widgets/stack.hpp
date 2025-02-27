@@ -37,7 +37,6 @@ class cStack : public cContainer {
 	std::string clicking;
 	std::vector<std::map<std::string,storage_t>> storage;
 	std::map<std::string,cControl*> controls;
-	bool drawFramed = false;
 	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
 	std::vector<std::vector<std::string>> templates;
 	std::map<std::string, size_t> templateNames;
