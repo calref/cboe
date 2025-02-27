@@ -50,6 +50,7 @@ std::mt19937 cDialog::ui_rand;
 extern std::map<std::string,sf::Color> colour_map;
 
 extern bool check_for_interrupt(std::string);
+extern void showError(std::string str1, cDialog* parent = nullptr);
 
 std::string cDialog::generateRandomString(){
 	// Not bothering to seed, because it doesn't actually matter if it's truly random.
@@ -1170,16 +1171,23 @@ void cDialogIterator::increment() {
 }
 
 void preview_dialog_xml(fs::path dialog_xml) {
-	std::unique_ptr<DialogDefn> defn(load_dialog_defn(dialog_xml));
-	cDialog dialog(*defn);
-	// Make every clickable control's click event close the dialog
-	for (auto control : dialog){
-		try{
-			control.second->attachClickHandler([](cDialog& me, std::string item_hit, eKeyMod mod) -> bool {
-				me.toast(false);
-				return true;
-			});
-		}catch(...){}
+	try{
+		std::unique_ptr<DialogDefn> defn(load_dialog_defn(dialog_xml));
+		cDialog dialog(*defn);
+
+		// Make every clickable control's click event close the dialog
+		for (auto control : dialog){
+			try{
+				control.second->attachClickHandler([](cDialog& me, std::string item_hit, eKeyMod mod) -> bool {
+					me.toast(false);
+					return true;
+				});
+			}catch(...){}
+		}
+		dialog.run();
+	}catch(std::exception& x) {
+		showError(x.what());
+	}catch(std::string& x){
+		showError(x);
 	}
-	dialog.run();
 }
