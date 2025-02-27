@@ -301,12 +301,13 @@ void cDialog::loadFromFile(const DialogDefn& file){
 				}
 				if(auto pane = dynamic_cast<cContainer*>(anchor)) {
 					// If the anchor is a container, make sure to resolve its contents first.
-					pane->forEach([&all_resolved](const std::string&, cControl& ctrl) {
+					bool all_children_resolved = true;
+					pane->forEach([&all_children_resolved](const std::string&, cControl& ctrl) {
 						if(!ctrl.anchor.empty()) {
-							all_resolved = false;
+							all_children_resolved = false;
 						}
 					});
-					if(!all_resolved) return;
+					if(!all_children_resolved) return;
 					pane->recalcRect();
 				}
 				ctrl.relocateRelative(ctrl.frame.topLeft(), anchor, ctrl.horz, ctrl.vert);
