@@ -149,6 +149,7 @@ protected:
 	/// @throw xMissingAttr if a required attribute is missing
 	/// @throw xMissingElem if a required attribute is either missing or present in insufficient quantity
 	virtual void validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes);
+	std::string name;
 public:
 	/// Attach a keyboard shortcut to a control. Pressing the keyboard shortcut is equivalent to clicking the control.
 	/// @param key The desired keyboard shortcut.
@@ -181,6 +182,8 @@ public:
 		if(old_handler.empty()) return nullptr;
 		return boost::any_cast<typename event_fcn<t>::type>(old_handler);
 	}
+	inline std::string getName() { return name; }
+	inline void setName(std::string value) { name = value; }
 	/// Attach a click handler to this control.
 	/// @param f The click handler to attach.
 	/// @throw xHandlerNotSupported if this control does not support click handlers. Most controls do support click handlers.

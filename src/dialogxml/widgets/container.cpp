@@ -59,6 +59,7 @@ bool cContainer::parseChildControl(ticpp::Element& elem, std::map<std::string,cC
 		}
 	}
 	prevCtrl = *inserted;
+	prevCtrl.second->setName(prevCtrl.first);
 	return true;
 }
 
