@@ -459,7 +459,8 @@ protected:
 	/// Plays the proper sound for this control being clicked on
 	void playClickSound();
 private:
-	friend class cDialog; // TODO: This is only so it can access parseColour... hack!
+	friend class cDialog; // This is so it can access parseColour and anchor
+	friend class cContainer; // This is so it can access anchor
 	/// The control's current text.
 	std::string lbl;
 	eControlType type;

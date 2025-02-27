@@ -177,7 +177,7 @@ bool cStack::parseContent(ticpp::Node& content, int n, std::string tagName, std:
 			Iterator<Element> iter;
 			for(iter = iter.begin(&elem); iter != iter.end(); iter++) {
 				if(iter->Type() == TiXmlNode::ELEMENT) {
-					if(!parseChildControl(*iter, controls, id)) return false;
+					if(!parseChildControl(*iter, controls, id, fname)) return false;
 					templates.back().push_back(id);
 				}
 			}
@@ -206,7 +206,7 @@ bool cStack::parseContent(ticpp::Node& content, int n, std::string tagName, std:
 				} else throw xBadAttr("page", name, attr->Row(), attr->Column(), fname);
 			}
 			return true;
-		} else return parseChildControl(elem, controls, id);
+		} else return parseChildControl(elem, controls, id, fname);
 	}
 	return cContainer::parseContent(content, n, tagName, fname, text);
 }

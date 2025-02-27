@@ -16,38 +16,49 @@
 #include "dialogxml/widgets/scrollbar.hpp"
 #include "replay.hpp"
 
-bool cContainer::parseChildControl(ticpp::Element& elem, std::map<std::string,cControl*>& controls, std::string& id) {
+bool cContainer::parseChildControl(ticpp::Element& elem, std::map<std::string,cControl*>& controls, std::string& id, std::string fname) {
+	ctrlIter inserted;
 	std::string tag = elem.Value();
 	if(tag == "field") {
 		auto field = parent->parse<cTextField>(elem);
-		controls.insert(field);
+		inserted = controls.insert(field).first;
 		parent->tabOrder.push_back(field);
 		id = field.first;
 	} else if(tag == "text") {
 		auto text = parent->parse<cTextMsg>(elem);
-		controls.insert(text);
+		inserted = controls.insert(text).first;
 		id = text.first;
 	} else if(tag == "pict") {
 		auto pict = parent->parse<cPict>(elem);
-		controls.insert(pict);
+		inserted = controls.insert(pict).first;
 		id = pict.first;
 	} else if(tag == "slider") {
 		auto slide = parent->parse<cScrollbar>(elem);
-		controls.insert(slide);
+		inserted = controls.insert(slide).first;
 		id = slide.first;
 	} else if(tag == "button") {
 		auto button = parent->parse<cButton>(elem);
-		controls.insert(button);
+		inserted = controls.insert(button).first;
 		id = button.first;
 	} else if(tag == "led") {
 		auto led = parent->parse<cLed>(elem);
-		controls.insert(led);
+		inserted = controls.insert(led).first;
 		id = led.first;
 	} else if(tag == "group") {
 		auto group = parent->parse<cLedGroup>(elem);
-		controls.insert(group);
+		inserted = controls.insert(group).first;
 		id = group.first;
 	} else return false;
+	if(prevCtrl.second) {
+		if(inserted->second->anchor == "$$prev$$" && prevCtrl.second->anchor == "$$next$$") {
+			throw xBadVal(tag, "anchor", "<circular dependency>", elem.Row(), elem.Column(), fname);
+		} else if(inserted->second->anchor == "$$prev$$") {
+			inserted->second->anchor = prevCtrl.first;
+		} else if(prevCtrl.second->anchor == "$$next$$") {
+			prevCtrl.second->anchor = inserted->first;
+		}
+	}
+	prevCtrl = *inserted;
 	return true;
 }
 

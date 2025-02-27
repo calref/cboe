@@ -11,6 +11,8 @@
 
 #include "control.hpp"
 
+typedef std::map<std::string,cControl*>::iterator ctrlIter;
+
 /// A superclass to represent a control that contains other controls.
 class cContainer : public cControl {
 	void callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::string id, eKeyMod mods) override;
@@ -21,7 +23,7 @@ protected:
 	/// @param controls The map into which the control will be inserted.
 	/// @param[out] The ID of the new control.
 	/// @return true if the element was a valid control, false otherwise.
-	bool parseChildControl(ticpp::Element& elem, std::map<std::string,cControl*>& controls, std::string& id);
+	bool parseChildControl(ticpp::Element& elem, std::map<std::string,cControl*>& controls, std::string& id, std::string fname);
 public:
 	/// Create a new container control attached to an arbitrary window, rather than a dialog.
 	/// @param t The type of the control.
@@ -49,6 +51,8 @@ public:
 	const cControl& operator[](std::string id) const {return const_cast<cContainer&>(*this).getChild(id);}
 	bool isContainer() const override {return true;}
 	bool handleClick(location where, cFramerateLimiter& fps_limiter) override;
+private:
+	std::pair<std::string,cControl*> prevCtrl{"", nullptr};
 };
 
 #endif
