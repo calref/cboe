@@ -500,6 +500,12 @@ bool cPict::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::str
 		else if(val == "false") setFormat(TXT_WRAP, true);
 		else throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
 		return true;
+	} else if(name == "filled") {
+		std::string val = attr.Value();
+		if(val == "true") filled = true;
+		else if(val == "false") filled = false;
+		else throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
+		return true;
 	} else if(name == "def-key") {
 		try {
 			attachKey(parseKey(attr.Value()));
@@ -759,14 +765,14 @@ void cPict::drawPresetMonstSm(short num, rectangle to_rect){
 	rectangle from_rect = calcDefMonstRect(m_start_pic, animFrame);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPresetMonstWide(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28; to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
 	short m_start_pic = m_pic_index[num].i;
 	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
@@ -787,7 +793,7 @@ void cPict::drawPresetMonstTall(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
 	short m_start_pic = m_pic_index[num].i;
 	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
@@ -808,7 +814,7 @@ void cPict::drawPresetMonstLg(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
 	short m_start_pic = m_pic_index[num].i;
 	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
@@ -887,7 +893,7 @@ void cPict::drawPresetScenLg(short num, rectangle to_rect){
 void cPict::drawPresetItem(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	std::shared_ptr<const sf::Texture> from_gw;
 	rectangle from_rect = {0,0,18,18};
 	if(num < 55) {
@@ -904,7 +910,7 @@ void cPict::drawPresetItem(short num, rectangle to_rect){
 void cPict::drawPresetTinyItem(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 18;
 	to_rect.bottom = to_rect.top + 18;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	rectangle from_rect = {0,0,18,18};
 	auto from_gw = getSheet(SHEET_TINY_ITEM);
 	from_rect.offset(18 * (num % 10), 18 * (num / 10));
@@ -916,7 +922,7 @@ void cPict::drawPresetPc(short num, rectangle to_rect){
 	rectangle from_rect = calc_rect(2 * (num / 8), num % 8);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
@@ -925,7 +931,7 @@ void cPict::drawPresetField(short num, rectangle to_rect){
 	rectangle from_rect = calc_rect(num % 8, num / 8);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
@@ -937,7 +943,7 @@ void cPict::drawPresetBoom(short num, rectangle to_rect){
 	// TODO: Be smarter about this - we know the first row is static booms and subsequent rows are animated booms.
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
@@ -957,7 +963,7 @@ void cPict::drawPresetMissile(short num, rectangle to_rect){
 	auto from_gw = getSheet(SHEET_MISSILE);
 	to_rect.right = to_rect.left + 18;
 	to_rect.bottom = to_rect.top + 18;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	short i = animFrame % 8;
 	from_rect.offset(18 * i, 18 * num);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
@@ -1013,7 +1019,7 @@ void cPict::drawCustomMonstSm(short num, rectangle to_rect){
 	num += adj[animFrame % 4];
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
 	rectangle from_rect;
 	std::shared_ptr<const sf::Texture> from_gw;
@@ -1027,7 +1033,7 @@ void cPict::drawCustomMonstWide(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
 	rectangle from_rect;
 	std::shared_ptr<const sf::Texture> from_gw;
@@ -1046,7 +1052,7 @@ void cPict::drawCustomMonstTall(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
 	rectangle from_rect;
 	std::shared_ptr<const sf::Texture> from_gw;
@@ -1065,7 +1071,7 @@ void cPict::drawCustomMonstLg(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	
 	rectangle from_rect;
 	std::shared_ptr<const sf::Texture> from_gw;
@@ -1147,7 +1153,7 @@ void cPict::drawCustomItem(short num, rectangle to_rect){
 	rectangle from_rect;
 	std::shared_ptr<const sf::Texture> from_gw;
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
@@ -1157,7 +1163,7 @@ void cPict::drawCustomTinyItem(short num, rectangle to_rect){
 	rectangle from_rect;
 	std::shared_ptr<const sf::Texture> from_gw;
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
@@ -1167,7 +1173,7 @@ void cPict::drawCustomBoom(short num, rectangle to_rect){
 	rectangle from_rect;
 	std::shared_ptr<const sf::Texture> from_gw;
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num + animFrame % 8);
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
@@ -1179,7 +1185,7 @@ void cPict::drawCustomMissile(short num, rectangle to_rect){
 	from_rect.right = from_rect.left + 18;
 	from_rect.bottom = from_rect.top + 18;
 	if(animFrame >= 4) from_rect.offset(0, 18);
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	to_rect.inset(5,9);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
@@ -1204,7 +1210,7 @@ void cPict::drawPartyMonstSm(short num, rectangle to_rect){
 	rectangle from_rect;
 	
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
@@ -1212,7 +1218,7 @@ void cPict::drawPartyMonstWide(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	std::shared_ptr<const sf::Texture> from_gw;
 	rectangle from_rect;
 	
@@ -1229,7 +1235,7 @@ void cPict::drawPartyMonstTall(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	std::shared_ptr<const sf::Texture> from_gw;
 	rectangle from_rect;
 	
@@ -1246,7 +1252,7 @@ void cPict::drawPartyMonstLg(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	std::shared_ptr<const sf::Texture> from_gw;
 	rectangle from_rect;
 	
@@ -1283,7 +1289,7 @@ void cPict::drawPartyItem(short num, rectangle to_rect){
 	rectangle from_rect;
 	
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 
@@ -1294,7 +1300,7 @@ void cPict::drawPartyPc(short num, rectangle to_rect){
 	rectangle from_rect;
 	
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
-	fill_rect(*inWindow, to_rect, sf::Color::Black);
+	if(filled) fill_rect(*inWindow, to_rect, sf::Color::Black);
 	rect_draw_some_item(*from_gw, from_rect, *inWindow, to_rect, sf::BlendAlpha);
 }
 

@@ -98,7 +98,7 @@ private:
 	ePicType picType;
 	bool drawScaled;
 	// Transient parse flags
-	bool wide = false, tall = false, tiny = false, custom = false, blank = false;
+	bool wide = false, tall = false, tiny = false, custom = false, blank = false, filled = true;
 	void drawPresetTer(short num, rectangle to_rect);
 	void drawPresetTerAnim(short num, rectangle to_rect);
 	void drawPresetMonstSm(short num, rectangle to_rect);
