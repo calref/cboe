@@ -55,7 +55,7 @@ void cStack::draw() {
 	for(auto& p : controls) {
 		p.second->draw();
 	}
-	if(drawFramed) drawFrame(2, frameStyle);
+	drawFrame(2, frameStyle);
 }
 
 bool cStack::setPage(size_t n) {
