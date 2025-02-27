@@ -764,6 +764,9 @@
     <ClCompile Include="..\..\..\src\dialogxml\keycodes.cpp">
       <Filter>DialogXML</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\tilemap.cpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\dialogxml\widgets\stack.cpp">
       <Filter>DialogXML\Widgets</Filter>
     </ClCompile>
@@ -973,6 +976,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\fileio\gzstream\gzstream.h">
       <Filter>FileIO\GZStream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\tilemap.hpp">
+      <Filter>DialogXML\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\dialogxml\widgets\stack.hpp">
       <Filter>DialogXML\Widgets</Filter>

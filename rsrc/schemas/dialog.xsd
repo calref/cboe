@@ -298,6 +298,24 @@
 		<xs:attributeGroup ref="frame"/>
 		<xs:attribute name="pages" type="xs:integer"/>
 	</xs:complexType>
+	<xs:complexType name="tilemap">
+		<xs:choice minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="field" type="field"/>
+			<xs:element name="text" type="message"/>
+			<xs:element name="pict" type="pict"/>
+			<xs:element name="button" type="button"/>
+			<xs:element name="led" type="led"/>
+			<xs:element name="group" type="ledGroup"/>
+			<xs:element name="slider" type="slider"/>
+		</xs:choice>
+		<xs:attribute name="name" type="xs:token"/>
+		<xs:attributeGroup ref="frame"/>
+		<xs:attribute name="rows" use="required" type="xs:integer"/>
+		<xs:attribute name="cols" use="required" type="xs:integer"/>
+		<xs:attribute name="cellspacing" type="xs:integer"/>
+		<xs:attributeGroup ref="rect-size"/>
+		<xs:attributeGroup ref="position"/>
+	</xs:complexType>
 	<xs:complexType name="scrollPane">
 		<xs:choice minOccurs="0" maxOccurs="unbounded">
 			<xs:element name="field" type="field"/>
@@ -334,6 +352,7 @@
 						<xs:field xpath="@default"/>
 					</xs:unique>
 				</xs:element>
+				<xs:element name="tilemap" type="tilemap"/>
 				<xs:element name="pane" type="scrollPane"/>
 			</xs:choice>
 			<xs:attribute name="skin" default="dark">

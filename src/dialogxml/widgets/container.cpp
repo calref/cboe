@@ -20,32 +20,32 @@ bool cContainer::parseChildControl(ticpp::Element& elem, std::map<std::string,cC
 	ctrlIter inserted;
 	std::string tag = elem.Value();
 	if(tag == "field") {
-		auto field = parent->parse<cTextField>(elem);
+		auto field = parent->parse<cTextField>(elem, this);
 		inserted = controls.insert(field).first;
 		parent->tabOrder.push_back(field);
 		id = field.first;
 	} else if(tag == "text") {
-		auto text = parent->parse<cTextMsg>(elem);
+		auto text = parent->parse<cTextMsg>(elem, this);
 		inserted = controls.insert(text).first;
 		id = text.first;
 	} else if(tag == "pict") {
-		auto pict = parent->parse<cPict>(elem);
+		auto pict = parent->parse<cPict>(elem, this);
 		inserted = controls.insert(pict).first;
 		id = pict.first;
 	} else if(tag == "slider") {
-		auto slide = parent->parse<cScrollbar>(elem);
+		auto slide = parent->parse<cScrollbar>(elem, this);
 		inserted = controls.insert(slide).first;
 		id = slide.first;
 	} else if(tag == "button") {
-		auto button = parent->parse<cButton>(elem);
+		auto button = parent->parse<cButton>(elem, this);
 		inserted = controls.insert(button).first;
 		id = button.first;
 	} else if(tag == "led") {
-		auto led = parent->parse<cLed>(elem);
+		auto led = parent->parse<cLed>(elem, this);
 		inserted = controls.insert(led).first;
 		id = led.first;
 	} else if(tag == "group") {
-		auto group = parent->parse<cLedGroup>(elem);
+		auto group = parent->parse<cLedGroup>(elem, this);
 		inserted = controls.insert(group).first;
 		id = group.first;
 	} else return false;

@@ -259,7 +259,7 @@ The `<stack>` tag
 -----------------
 
 The `<stack>` tag groups elements that represent a single entry in an array.
-It can contain any elements except for nested `<stack>` or `<pane>` elements.
+It can contain any elements except for nested `<stack>`, `<pane>`, or `<tilemap>` elements.
 
 The `<stack>` tag accepts the following attributes:
 
@@ -287,13 +287,27 @@ The `<pane>` tag
 ----------------
 
 The `<pane>` tag groups elements into a scrollable subpane.
-It can contain any elements except for nested `<stack>` or `<pane>` elements.
+It can contain any elements except for nested `<stack>`, `<pane>`, or `<tilemap>` elements.
 
 The `<pane>` tag accepts the following attributes:
 
 * `framed` - See **Common Attributes** above. Defaults to `false`.
 * `outline` - See **Common Attributes** above.
 * `style` - Same as for `<slider>`, see above. Applies to the pane's scrollbar.
+
+The `<tilemap>` tag
+-------------------
+
+The `<tilemap>` tag represents a grid of identical elements based off the provided template.
+It can contain any elements except for nested `<stack>`, `<pane>`, or `<tilemap>` elements.
+
+The `<tilemap>` tag accepts the following attributes:
+
+* `framed` - See **Common Attributes** above. Defaults to `false`.
+* `outline` - See **Common Attributes** above.
+* `rows` - The number of rows to generate. Required.
+* `cols` - The number of columns to generate. Required.
+* `cellspacing` - If specified, adds a buffer of this size between each cell.
 
 Keyboard Shortcuts
 ------------------

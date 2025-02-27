@@ -211,6 +211,7 @@
     <ClCompile Include="..\..\..\src\dialogxml\widgets\scrollbar.cpp" />
     <ClCompile Include="..\..\..\src\dialogxml\widgets\scrollpane.cpp" />
     <ClCompile Include="..\..\..\src\dialogxml\widgets\stack.cpp" />
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\tilemap.cpp" />
     <ClCompile Include="..\..\..\src\fileio\debugout.win.cpp" />
     <ClCompile Include="..\..\..\src\fileio\estreams.cpp" />
     <ClCompile Include="..\..\..\src\fileio\fileio.cpp" />
@@ -302,6 +303,7 @@
     <ClInclude Include="..\..\..\src\dialogxml\widgets\scrollbar.hpp" />
     <ClInclude Include="..\..\..\src\dialogxml\widgets\scrollpane.hpp" />
     <ClInclude Include="..\..\..\src\dialogxml\widgets\stack.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\tilemap.hpp" />
     <ClInclude Include="..\..\..\src\fields.hpp" />
     <ClInclude Include="..\..\..\src\fileio\fileio.hpp" />
     <ClInclude Include="..\..\..\src\fileio\gzstream\gzstream.h" />

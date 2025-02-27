@@ -20,7 +20,6 @@
 #include <exception>
 #include <functional>
 #include <deque>
-#include <random>
 
 #include "ticpp.h"
 #include "dialogxml/keycodes.hpp"
@@ -68,14 +67,13 @@ class cDialog {
 	std::string currentFocus;
 	cDialog* parent;
 	cControl* findControl(std::string id);
-	std::string generateRandomString();
+	std::string generateId(const std::string& explicitId) const;
 	void loadFromFile(const DialogDefn& file);
 	void handleTab(bool reverse);
 	template<typename Iter> void handleTabOrder(std::string& itemHit, Iter begin, Iter end);
 	std::vector<std::pair<std::string,cTextField*>> tabOrder;
 	static cDialog* topWindow; // Tracks the frontmost dialog.
 	static bool initCalled;
-	static std::mt19937 ui_rand;
 public:
 	static void (*redraw_everything)();
 	/// Performs essential startup initialization. Generally should not be called directly.
@@ -242,18 +240,20 @@ public:
 	/// Adds a new control described by the passed XML element.
 	/// @tparam Ctrl The type of control to add.
 	/// @param who The XML element describing the control.
+	/// @param parent The parent control, if any. Omit if there is no parent.
 	/// @note It is up to the caller to ensure that that the element
 	/// passed describes the type of control being requested.
-	template<class Ctrl> std::pair<std::string,Ctrl*> parse(ticpp::Element& who) {
+	template<class Ctrl, class Container> std::pair<std::string,Ctrl*> parse(ticpp::Element& who, Container* parent) {
 		std::pair<std::string,Ctrl*> p;
 		p.second = new Ctrl(*this);
 		p.first = p.second->parse(who, fname);
-		if(p.first == ""){
-			do{
-				p.first = generateRandomString();
-			}while(controls.find(p.first) != controls.end());
-		}
+		do{
+			p.first = parent->generateId(p.first);
+		}while(controls.find(p.first) != controls.end());
 		return p;
+	}
+	template<class Ctrl> std::pair<std::string,Ctrl*> parse(ticpp::Element& who) {
+		return parse<Ctrl, cDialog>(who, this);
 	}
 	cDialogIterator begin() {
 		return cDialogIterator(this);
