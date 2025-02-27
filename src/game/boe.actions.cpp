@@ -2415,7 +2415,7 @@ void show_debug_help() {
 }
 
 // Non-comprehensive list of unused keys:
-// chijklnoqvy @#$-_+[]{},.'"`\|;:
+// chjklnoqvy @#$-_+[]{},.'"`\|;:
 // We want to keep lower-case for normal gameplay.
 void init_debug_actions() {
 	add_debug_action({'B'}, "Leave town", debug_leave_town);
@@ -2704,8 +2704,9 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			toggle_debug_mode();
 			break;
 
-		// 'z', Really? 'i' is not used
+		// 'z', Really?
 		case 'z':
+		case 'i':
 			show_inventory();
 			break;
 			
