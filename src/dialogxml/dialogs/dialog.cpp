@@ -25,6 +25,7 @@
 #include "dialogxml/widgets/scrollbar.hpp"
 #include "dialogxml/widgets/scrollpane.hpp"
 #include "dialogxml/widgets/stack.hpp"
+#include "dialogxml/widgets/tilemap.hpp"
 #include "tools/keymods.hpp"
 #include "tools/winutil.hpp"
 #include "mathutil.hpp"
@@ -45,22 +46,14 @@ const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
 short cDialog::defaultBackground = cDialog::BG_DARK;
 cDialog* cDialog::topWindow = nullptr;
 void (*cDialog::redraw_everything)() = nullptr;
-std::mt19937 cDialog::ui_rand;
 
 extern std::map<std::string,sf::Color> colour_map;
 
 extern bool check_for_interrupt(std::string);
 extern void showError(std::string str1, cDialog* parent = nullptr);
 
-std::string cDialog::generateRandomString(){
-	// Not bothering to seed, because it doesn't actually matter if it's truly random.
-	int n_chars = ui_rand() % 100;
-	std::string s = "$";
-	while(n_chars > 0){
-		s += char(ui_rand() % 96) + ' '; // was 223 ...
-		n_chars--;
-	}
-	return s;
+std::string cDialog::generateId(const std::string& explicitId) const {
+	return explicitId.empty() ? cControl::generateRandomString() : explicitId;
 }
 
 string cControl::dlogStringFilter(string toFilter) {
@@ -235,6 +228,10 @@ void cDialog::loadFromFile(const DialogDefn& file){
 				inserted = controls.insert(parsed).first;
 				// TODO: Now, if it contains any fields, their tab order must be accounted for
 				//parsed.second->fillTabOrder(specificTabs, reverseTabs);
+			} else if(type == "tilemap") {
+				auto parsed = parse<cTilemap>(*node);
+				inserted = controls.insert(parsed).first;
+				parsed.second->fillTabOrder(specificTabs, reverseTabs);
 			} else throw xBadNode(type,node->Row(),node->Column(),fname);
 			if(prevCtrl.second) {
 				if(inserted->second->anchor == "$$prev$$" && prevCtrl.second->anchor == "$$next$$") {
@@ -271,6 +268,7 @@ void cDialog::loadFromFile(const DialogDefn& file){
 						case CTRL_STACK: ctrlType = "stack"; break;
 						case CTRL_SCROLL: ctrlType = "slider"; break;
 						case CTRL_PANE: ctrlType = "pane"; break;
+						case CTRL_MAP: ctrlType = "tilemap"; break;
 					}
 					throw xBadVal(ctrlType, "anchor", ctrl.anchor, 0, 0, fname);
 				}
@@ -293,6 +291,7 @@ void cDialog::loadFromFile(const DialogDefn& file){
 								case CTRL_STACK: ctrlType = "stack"; break;
 								case CTRL_SCROLL: ctrlType = "slider"; break;
 								case CTRL_PANE: ctrlType = "pane"; break;
+								case CTRL_MAP: ctrlType = "tilemap"; break;
 							}
 							throw xBadVal(ctrlType, "anchor", "<circular dependency>", 0, 0, fname);
 						}

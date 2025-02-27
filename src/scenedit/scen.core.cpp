@@ -22,6 +22,7 @@
 #include "dialogxml/dialogs/dialog.hpp"
 #include "dialogxml/widgets/control.hpp"
 #include "dialogxml/widgets/button.hpp"
+#include "dialogxml/widgets/tilemap.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/3choice.hpp"
 #include "dialogxml/dialogs/strchoice.hpp"
@@ -517,10 +518,10 @@ static bool edit_ter_obj(cDialog& me, ter_num_t which_ter) {
 			obj[check.obj_pos.x][check.obj_pos.y] = check.picture;
 		}
 		obj[me["x"].getTextAsNum()][me["y"].getTextAsNum()] = pic;
+		cTilemap& map = dynamic_cast<cTilemap&>(me["map"]);
 		for(int x = 0; x < 4; x++) {
 			for(int y = 0; y < 4; y++) {
-				std::string id = "x" + std::to_string(x) + "y" + std::to_string(y);
-				dynamic_cast<cPict&>(me[id]).setPict(obj[x][y]);
+				dynamic_cast<cPict&>(map.getChild(x,y)).setPict(obj[x][y]);
 			}
 		}
 		return true;

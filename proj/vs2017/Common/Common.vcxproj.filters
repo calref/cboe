@@ -802,6 +802,9 @@
     <ClCompile Include="..\..\..\src\dialogxml\widgets\stack.cpp">
       <Filter>DialogXML\Widgets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\tilemap.cpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\fileio\resmgr\res_cursor.cpp" />
     <ClCompile Include="..\..\..\src\fileio\resmgr\res_dialog.cpp" />
     <ClCompile Include="..\..\..\src\fileio\resmgr\res_font.cpp" />
@@ -1050,6 +1053,9 @@
       <Filter>DialogXML\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\dialogxml\widgets\stack.hpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\tilemap.hpp">
       <Filter>DialogXML\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tools\replay.hpp" />

@@ -19,6 +19,7 @@
 #include <functional>
 #include <set>
 #include <map>
+#include <random>
 #include <boost/any.hpp>
 #include "dialogxml/dialogs/dlogevt.hpp"
 #include "tools/framerate_limiter.hpp"
@@ -62,6 +63,7 @@ enum eControlType {
 	CTRL_STACK,	///< A group of controls that represents one element in an array
 	CTRL_SCROLL,///< A scrollbar
 	CTRL_PANE,	///< A scroll pane
+	CTRL_MAP,   ///< A 2-dimensional grid of identical controls
 };
 
 enum ePosition {
@@ -461,6 +463,11 @@ protected:
 	void redraw();
 	/// Plays the proper sound for this control being clicked on
 	void playClickSound();
+	/// Generate a unique ID for a control. The explicitId is the ID specified in the XML, if any.
+	/// This may be called more than once, so it should not return the same value twice in a row,
+	/// unless it can guarantee the value is not already assigned to another control.
+	virtual std::string generateId(const std::string& explicitId) const;
+	static std::string generateRandomString();
 private:
 	friend class cDialog; // This is so it can access parseColour and anchor
 	friend class cContainer; // This is so it can access anchor
@@ -472,6 +479,7 @@ private:
 	ePosition horz = POS_ABS, vert = POS_ABS;
 	std::string anchor;
 	bool is_link = false;
+	static std::mt19937 ui_rand;
 };
 
 #endif

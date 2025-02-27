@@ -23,6 +23,22 @@
 
 // Hyperlink forward declaration
 extern void launchURL(std::string url);
+std::mt19937 cControl::ui_rand;
+
+std::string cControl::generateId(const std::string& explicitId) const {
+	return explicitId.empty() ? generateRandomString() : explicitId;
+}
+
+std::string cControl::generateRandomString() {
+	// Not bothering to seed, because it doesn't actually matter if it's truly random.
+	int n_chars = ui_rand() % 100;
+	std::string s = "$";
+	while(n_chars > 0){
+		s += char(ui_rand() % 96) + ' '; // was 223 ...
+		n_chars--;
+	}
+	return s;
+}
 
 void cControl::setText(std::string l){
 	lbl = l;

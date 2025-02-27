@@ -164,6 +164,7 @@
 		919BE8A02D676DDE000C64C6 /* special-town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919BE89F2D676DDE000C64C6 /* special-town.cpp */; };
 		919BE8AC2D677699000C64C6 /* special-rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919BE8AB2D677699000C64C6 /* special-rect.cpp */; };
 		919BE8B32D6776A8000C64C6 /* special-outdoor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919BE8B22D6776A8000C64C6 /* special-outdoor.cpp */; };
+		919BE9162D6F5813000C64C6 /* tilemap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 913D1E3F2D4E97E4007D46B2 /* tilemap.cpp */; };
 		919CC2481B3772F300273FDA /* population.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AC620A0FA2853700EEAE67 /* population.cpp */; };
 		919CC2491B3772FB00273FDA /* creature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 914698FE1A747C4500F20F5E /* creature.cpp */; };
 		919CC24B1B37730300273FDA /* item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91279D3D0F9D1D6A007B0D52 /* item.cpp */; };
@@ -684,6 +685,8 @@
 		913D05B50FA1E9E300184C18 /* party.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = party.cpp; sourceTree = "<group>"; };
 		913D05BA0FA1EA0A00184C18 /* pc.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pc.hpp; sourceTree = "<group>"; };
 		913D05BB0FA1EA0A00184C18 /* pc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pc.cpp; sourceTree = "<group>"; };
+		913D1E3F2D4E97E4007D46B2 /* tilemap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tilemap.cpp; sourceTree = "<group>"; };
+		913D1E402D4E97E4007D46B2 /* tilemap.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tilemap.hpp; sourceTree = "<group>"; };
 		913D6C040FC57A8E00E12527 /* boeresources.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = boeresources.icns; path = icons/mac/boeresources.icns; sourceTree = "<group>"; };
 		913FB40A1A5C90840067B9D2 /* pictypes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = pictypes.hpp; sourceTree = "<group>"; };
 		91430437296C0088003A3967 /* vector2d.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = vector2d.cpp; sourceTree = "<group>"; };
@@ -1093,6 +1096,7 @@
 				9191460018E63D8E005CF3A4 /* scrollbar.cpp */,
 				919B13A81BBE2B54009905A4 /* scrollpane.cpp */,
 				9179A4641A48681800FEF872 /* stack.cpp */,
+				913D1E3F2D4E97E4007D46B2 /* tilemap.cpp */,
 				910BBA880FB8EC57001E34EA /* button.hpp */,
 				9149924625913E3F00B5BE97 /* container.hpp */,
 				910BBA3B0FB8DA8E001E34EA /* control.hpp */,
@@ -1105,6 +1109,7 @@
 				919145FD18E3C750005CF3A4 /* scrollbar.hpp */,
 				919B13A71BBE297B009905A4 /* scrollpane.hpp */,
 				9179A4631A4867E200FEF872 /* stack.hpp */,
+				913D1E402D4E97E4007D46B2 /* tilemap.hpp */,
 			);
 			path = widgets;
 			sourceTree = "<group>";
@@ -2107,6 +2112,7 @@
 				919CC2621B37738A00273FDA /* ticpp.cpp in Sources */,
 				919CC2631B37739000273FDA /* tinystr.cpp in Sources */,
 				919CC2641B37739300273FDA /* tinyxml.cpp in Sources */,
+				919BE9162D6F5813000C64C6 /* tilemap.cpp in Sources */,
 				919CC2651B37739800273FDA /* tinyxmlerror.cpp in Sources */,
 				919CC2661B37739E00273FDA /* tinyxmlparser.cpp in Sources */,
 				413FE08F2CECFAFF000D97DC /* winutil.cpp in Sources */,
