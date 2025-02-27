@@ -190,6 +190,8 @@ whether it should be scaled to fit within the provided bounds. It only
 has an effect for types `full`, `dlog`, and `scen`, and the latter two
 only if `size` is `large`. Can be either `true` or `false`, defaults to
 `false`.
+* `filled` - For transparent graphics, specifies whether to draw a solid
+black fill behind the icon
 * `def-key` - See **Common Attributes** above.
 
 The possible values for the `type` attribute are:

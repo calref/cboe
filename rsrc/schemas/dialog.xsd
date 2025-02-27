@@ -197,6 +197,7 @@
 		<xs:attribute name="custom" default="false" type="bool"/>
 		<xs:attribute name="scaled" default="false" type="bool"/>
 		<xs:attribute name="framed" default="true" type="bool"/>
+		<xs:attribute name="filled" default="true" type="bool"/>
 		<xs:attribute name="outline" default="inset" type="frameStyle"/>
 		<xs:attribute name="size">
 			<xs:simpleType>
