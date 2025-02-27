@@ -105,7 +105,6 @@ public:
 	/// Get the scrollbar style.
 	/// @return The style
 	eScrollStyle getStyle() const;
-	void setName(std::string name);
 	/// Set the scrollbar thumb's current position.
 	/// @param to The new position.
 	void setPosition(long to, bool record = false);

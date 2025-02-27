@@ -41,10 +41,6 @@ bool cScrollbar::isScrollable() const {
 	return true;
 }
 
-void cScrollbar::setName(std::string name) {
-	this->name = name;
-}
-
 void cScrollbar::setPosition(long newPos, bool record) {
 	if(record && recording){
 		std::map<std::string,std::string> info;
