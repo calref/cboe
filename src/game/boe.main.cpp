@@ -790,6 +790,9 @@ static void replay_action(Element& action) {
 	}else if(t == "toggle_debug_mode"){
 		toggle_debug_mode();
 		return;
+	}else if(t == "debug_launch_scen"){
+		debug_launch_scen(action.GetText());
+		return;
 	}else if(t == "debug_give_item"){
 		debug_give_item();
 		return;
