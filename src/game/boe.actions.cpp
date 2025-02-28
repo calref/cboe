@@ -2148,20 +2148,30 @@ void debug_magic_map() {
 	print_buf();
 }
 
+extern void outd_move_to_first_town_entrance(int town);
+
 void debug_enter_town() {
 	if(recording){
 		record_action("debug_enter_town", "");
 	}
+
+	std::vector<std::string> town_names;
+	for(cTown* town : univ.scenario.towns){
+		town_names.push_back(town->name);
+	}
+	int town = get_num_response(0, univ.scenario.towns.size() - 1, "Enter Town Number", town_names);
+
+	if(has_feature_flag("debug-enter-town", "move-outdoors")){
+		end_town_mode(false, {0,0}, true);
+		outd_move_to_first_town_entrance(town);
+	}
+
 	short find_direction_from;
 	if(univ.party.direction == 0) find_direction_from = 2;
 	else if(univ.party.direction == 4) find_direction_from = 0;
 	else if(univ.party.direction < 4) find_direction_from = 3;
 	else find_direction_from = 1;
-	std::vector<std::string> town_names;
-	for(cTown* town : univ.scenario.towns){
-		town_names.push_back(town->name);
-	}
-	start_town_mode(get_num_response(0, univ.scenario.towns.size() - 1, "Enter Town Number", town_names), find_direction_from);
+	start_town_mode(town, find_direction_from);
 }
 
 void debug_refresh_stores() {
