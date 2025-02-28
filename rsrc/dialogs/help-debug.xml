@@ -39,5 +39,10 @@
 	<button name='btn28' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
 	<button name='btn29' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
 	<button name='btn30' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
-	<button name='okay' type='regular' top='400' left='387'>OK</button>
+	<button name='btn31' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn32' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn33' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn34' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='btn35' type='tiny' relative='pos-in pos' rel-anchor='prev' left='0' top='1'></button>
+	<button name='okay' relative='pos-in neg' rel-anchor='prev' type='regular' top='5' left='337'>OK</button>
 </dialog>
