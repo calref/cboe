@@ -13,11 +13,13 @@
 #include "scen.graphics.hpp"
 #include "scen.townout.hpp"
 #include "scen.keydlgs.hpp"
+#include "scen.locpicker.hpp"
 #include "scen.fileio.hpp"
 #include "scen.core.hpp"
 #include "mathutil.hpp"
 #include "dialogxml/widgets/button.hpp"
 #include "dialogxml/widgets/field.hpp"
+#include "dialogxml/dialogs/strchoice.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "tools/winutil.hpp"
@@ -815,6 +817,49 @@ void edit_advanced_town() {
 	town_dlg.attachFocusHandlers(loc_check, {"exit1-x", "exit2-x", "exit3-x", "exit4-x"});
 	town_dlg.attachFocusHandlers(loc_check, {"exit1-y", "exit2-y", "exit3-y", "exit4-y"});
 	town_dlg.attachClickHandlers(edit_advanced_town_special, {"edit-onexit1", "edit-onexit2", "edit-onexit3", "edit-onexit4", "edit-onenter", "edit-onenterdead", "edit-onhostile"});
+	town_dlg.attachClickHandlers([](cDialog& me, std::string which, eKeyMod) {
+		auto entrances = scenario.find_town_entrances(cur_town);
+		std::vector<location> sectors;
+		for(const auto& entrance : entrances) {
+			if(std::find(sectors.begin(), sectors.end(), entrance.out_sec) == sectors.end()) {
+				sectors.push_back(entrance.out_sec);
+			}
+		}
+		int which_sector = 0;
+		if(sectors.size() == 0) {
+			int sec =  -1;
+			sec = choose_text(STRT_SECTOR, 0, &me, "Exit to which sector?");
+			if(sec == -1) return true; // cancelled
+			sectors.emplace_back(sec / scenario.outdoors.height(), sec % scenario.outdoors.height());
+		}
+		location loc(me[which + "-x"].getTextAsNum(), me[which + "-y"].getTextAsNum());
+		if((loc.x < 0 || loc.y < 0 || loc.x >= 48 || loc.y >= 48) && !entrances.empty()) {
+			loc = entrances[0].loc;
+		}
+		static const std::string directions[4]{"top", "left", "bottom", "right"};
+		std::string title = "Select outdoor location when exiting from the " + directions[which.back() - '1'] + ":";
+		cLocationPicker picker(loc, *scenario.outdoors[sectors[which_sector].x][sectors[which_sector].y], title, &me);
+		if(sectors.size() > 1) {
+			std::vector<std::string> out_names;
+			for(const auto& sec : sectors) {
+				out_names.push_back(scenario.outdoors[sec.x][sec.y]->name);
+			}
+			cControl& switchBtn = picker->getControl("switch");
+			switchBtn.show();
+			switchBtn.attachClickHandler([out_names, &sectors, &which_sector, &picker](cDialog& me, std::string, eKeyMod) {
+				cStringChoice pickstr(out_names, "Exit to which sector?", &me);
+				which_sector = pickstr.show(which_sector);
+				picker.setArea(*scenario.outdoors[sectors[which_sector].x][sectors[which_sector].y]);
+				return true;
+			});
+		}
+		loc = picker.run();
+		if(picker->accepted()) {
+			me[which + "-x"].setTextToNum(loc.x);
+			me[which + "-y"].setTextToNum(loc.y);
+		}
+		return true;
+	}, {"exit1", "exit2", "exit3", "exit4"});
 	town_dlg.attachClickHandlers([](cDialog& me, std::string which, eKeyMod) -> bool {
 		std::string fld = which.replace(0, 4, "bg");
 		int bg_i = me[fld].getTextAsNum();

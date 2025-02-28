@@ -23,7 +23,7 @@ cStringChoice::cStringChoice(cDialog* parent, bool editable)
 	, dlg(*ResMgr::dialogs.get(editable ? "choose-edit-string" : "choose-string"), parent)
 {}
 
-cStringChoice::cStringChoice(std::vector<std::string>& strs, std::string title, cDialog* parent, bool editable)
+cStringChoice::cStringChoice(const std::vector<std::string>& strs, std::string title, cDialog* parent, bool editable)
 	: cStringChoice(parent, editable)
 {
 	setTitle(title);

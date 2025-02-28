@@ -19,6 +19,7 @@ class cTilemap : public cContainer {
 	static std::string buildId(const std::string& base, size_t x, size_t y);
 	std::string current_cell;
 	mutable int id_tries = 0;
+	bool isHandlingClick = false;
 public:
 	std::string generateId(const std::string& baseId) const override;
 	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
@@ -34,6 +35,17 @@ public:
 	cControl& getChild(std::string id, size_t x, size_t y);
 	bool hasChild(size_t x, size_t y) const;
 	cControl& getChild(size_t x, size_t y);
+	location getCellPos(size_t x, size_t y) const;
+	location getCellPos(cControl& child) const;
+	/// Attach the same click handler to every instance of a child control.
+	/// @param handler The handler to attach.
+	/// @param prefix The unique ID of the control template.
+	/// @throw xHandlerNotSupported if any of the controls do not support click handlers.
+	/// @throw std::invalid_argument if any of the controls do not exist.
+	/// @see cControl::attachClickHandler()
+	/// @deprecated in favour of @ref attachEventHandlers
+	void attachClickHandlers(std::function<bool(cDialog&,std::string,eKeyMod)> handler, std::string prefix);
+	bool handleClick(location where, cFramerateLimiter& fps_limiter) override;
 	/// Recalculate the tilemap's bounding rect based on its contained controls.
 	void recalcRect() override;
 	/// Adds any fields in this tilemap to the tab order building arrays.

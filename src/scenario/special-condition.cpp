@@ -28,7 +28,7 @@ namespace {
 		.sdf(eSpecField::EX1A, eSpecField::EX1B)
 		.ex2b(eSpecPicker::NODE);
 	node_properties_t S_TERRAIN = node_builder_t(eSpecType::IF_TER_TYPE)
-		.loc(eSpecField::EX1A, eSpecField::EX1B)
+		.loc(eSpecField::EX1A, eSpecField::EX1B, eLocType::ACTIVE_AUTO)
 		.ex2a(STRT_TER)
 		.ex2b(eSpecPicker::NODE);
 	node_properties_t S_ALIVE = node_builder_t(eSpecType::IF_ALIVE)
@@ -41,7 +41,7 @@ namespace {
 		.ex1b(eSpecPicker::NODE)
 		.ex2a(eSpecPicker::TOGGLE);
 	node_properties_t S_ITEM_THERE = node_builder_t(eSpecType::IF_ITEM_CLASS_ON_SPACE)
-		.loc(eSpecField::EX1A, eSpecField::EX1B)
+		.loc(eSpecField::EX1A, eSpecField::EX1B, eLocType::ACTIVE_TOWN)
 		.ex2a(eSpecPicker::ITEM_CLASS)
 		.ex2b(eSpecPicker::NODE)
 		.ex2c(eSpecPicker::TOGGLE);
@@ -72,7 +72,7 @@ namespace {
 	node_properties_t S_DAY = node_builder_t(eSpecType::IF_DAY_REACHED)
 		.ex1b(eSpecPicker::NODE);
 	node_properties_t S_FIELDS = node_builder_t(eSpecType::IF_FIELDS)
-		.rect()
+		.rect(eLocType::ACTIVE_TOWN)
 		.msg1(eSpecPicker::FIELD)
 		.msg2(eSpecPicker::NODE);
 	node_properties_t S_PARTY_SIZE = node_builder_t(eSpecType::IF_PARTY_SIZE)

@@ -117,6 +117,8 @@
 		915473CE2C800AB000EB1C94 /* enchant.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 915473CC2C800AB000EB1C94 /* enchant.hpp */; };
 		915473CF2C800AB000EB1C94 /* enchant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 915473CD2C800AB000EB1C94 /* enchant.cpp */; };
 		915AF9E81BBF8B5C008AEF49 /* scrollpane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A81BBE2B54009905A4 /* scrollpane.cpp */; };
+		9170C50F2D717F24009B6E7C /* scen.locpicker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9170C50C2D717F24009B6E7C /* scen.locpicker.cpp */; };
+		9170C5102D717F24009B6E7C /* scen.locpicker.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 9170C50D2D717F24009B6E7C /* scen.locpicker.hpp */; };
 		9176FEC71D550EFE006EF694 /* out_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9176FEC01D550EFC006EF694 /* out_legacy.cpp */; };
 		9176FEC81D550EFE006EF694 /* scen_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9176FEC11D550EFC006EF694 /* scen_legacy.cpp */; };
 		9176FECB1D550EFE006EF694 /* talk_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9176FEC41D550EFD006EF694 /* talk_legacy.cpp */; };
@@ -734,6 +736,8 @@
 		9169C31B1B37A5D50041002B /* Blades of Exile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blades of Exile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9169C31D1B37A5D50041002B /* BoE Character Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BoE Character Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9169C31F1B37A5D50041002B /* BoE Scenario Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BoE Scenario Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9170C50C2D717F24009B6E7C /* scen.locpicker.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = scen.locpicker.cpp; sourceTree = "<group>"; };
+		9170C50D2D717F24009B6E7C /* scen.locpicker.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = scen.locpicker.hpp; sourceTree = "<group>"; };
 		9176FEC01D550EFC006EF694 /* out_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = out_legacy.cpp; sourceTree = "<group>"; };
 		9176FEC11D550EFC006EF694 /* scen_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen_legacy.cpp; sourceTree = "<group>"; };
 		9176FEC41D550EFD006EF694 /* talk_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = talk_legacy.cpp; sourceTree = "<group>"; };
@@ -1446,6 +1450,7 @@
 				91B3EEDE0F969BA700BF5B67 /* scen.global.hpp */,
 				91B3EEE50F969BA700BF5B67 /* scen.graphics.hpp */,
 				91B3EEE00F969BA700BF5B67 /* scen.keydlgs.hpp */,
+				9170C50D2D717F24009B6E7C /* scen.locpicker.hpp */,
 				914CA4641909B00100B6ADD1 /* scen.menus.hpp */,
 				91B3EEE60F969BA700BF5B67 /* scen.townout.hpp */,
 			);
@@ -1463,6 +1468,7 @@
 				91B3EEF30F969BA700BF5B67 /* scen.graphics.cpp */,
 				91B3EEEE0F969BA700BF5B67 /* scen.keydlgs.cpp */,
 				91B3EEEB0F969BA700BF5B67 /* scen.main.cpp */,
+				9170C50C2D717F24009B6E7C /* scen.locpicker.cpp */,
 				914CA45719074D0A00B6ADD1 /* scen.menus.mac.mm */,
 				91B3EEF40F969BA700BF5B67 /* scen.townout.cpp */,
 			);
@@ -1713,6 +1719,7 @@
 				91F3205123E65EA3009650AF /* framerate_limiter.hpp in Headers */,
 				9149924C25913E3F00B5BE97 /* container.hpp in Headers */,
 				9149924E25913E3F00B5BE97 /* led.hpp in Headers */,
+				9170C5102D717F24009B6E7C /* scen.locpicker.hpp in Headers */,
 				9143044B2970EDC1003A3967 /* keymods.hpp in Headers */,
 				9149925025913E3F00B5BE97 /* ledgroup.hpp in Headers */,
 				915473CE2C800AB000EB1C94 /* enchant.hpp in Headers */,
@@ -2198,6 +2205,7 @@
 				413AAF662D38A4A0002E9BF1 /* creature.cpp in Sources */,
 				413AAF652D38A48E002E9BF1 /* pc.cpp in Sources */,
 				413AAF642D38A47C002E9BF1 /* population.cpp in Sources */,
+				9170C50F2D717F24009B6E7C /* scen.locpicker.cpp in Sources */,
 				413AAF632D38A1B8002E9BF1 /* party.cpp in Sources */,
 				413AAF622D38A076002E9BF1 /* universe.cpp in Sources */,
 				413AAF612D389F94002E9BF1 /* fileio_party.cpp in Sources */,

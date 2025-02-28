@@ -8,6 +8,7 @@ scened_sources = Split("""
 	scen.fileio.cpp
 	scen.graphics.cpp
 	scen.keydlgs.cpp
+	scen.locpicker.cpp
 	scen.main.cpp
 	scen.townout.cpp
 	../view_dialogs.cpp

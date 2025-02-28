@@ -35,16 +35,16 @@
 	<text relative='pos-in' anchor='exits' top='3' left='3' width='197' height='15'>Exit town locations:</text>
 	<text name='exit-x' relative='pos-in pos' rel-anchor='prev' top='4' left='100' width='35' height='15'>X</text>
 	<text name='exit-y' relative='pos pos-in' rel-anchor='prev' top='0' left='12' width='35' height='15'>Y</text>
-	<text name='exit1' relative='pos-in pos' anchor='exit-x' top='4' left='-100' width='96' height='15'>Top</text>
+	<button name='exit1' relative='pos-in pos' anchor='exit-x' type='tiny' top='4' left='-100' width='96' height='15' text-size='10'>Top</button>
 	<field name='exit1-x' relative='pos-in pos' anchor='exit-x' top='4' left='-8' width='39' height='16'/>
 	<field name='exit1-y' relative='pos-in pos' anchor='exit-y' top='4' left='-8' width='39' height='16'/>
-	<text name='exit2' relative='pos-in pos' anchor='exit1' top='9' left='0' width='96' height='15'>Left</text>
+	<button name='exit2' relative='pos-in pos' anchor='exit1' type='tiny' top='9' left='0' width='96' height='15' text-size='10'>Left</button>
 	<field name='exit2-x' relative='pos-in pos' anchor='exit1-x' top='8' left='0' width='39' height='16'/>
 	<field name='exit2-y' relative='pos-in pos' anchor='exit1-y' top='8' left='0' width='39' height='16'/>
-	<text name='exit3' relative='pos-in pos' anchor='exit2' top='9' left='0' width='96' height='15'>Bottom</text>
+	<button name='exit3' relative='pos-in pos' anchor='exit2' type='tiny' top='9' left='0' width='96' height='15' text-size='10'>Bottom</button>
 	<field name='exit3-x' relative='pos-in pos' anchor='exit2-x' top='8' left='0' width='39' height='16'/>
 	<field name='exit3-y' relative='pos-in pos' anchor='exit2-y' top='8' left='0' width='39' height='16'/>
-	<text name='exit4' relative='pos-in pos' anchor='exit3' top='9' left='0' width='96' height='15'>Right</text>
+	<button name='exit4' relative='pos-in pos' anchor='exit3' type='tiny' top='9' left='0' width='96' height='15' text-size='10'>Right</button>
 	<field name='exit4-x' relative='pos-in pos' anchor='exit3-x' top='8' left='0' width='39' height='16'/>
 	<field name='exit4-y' relative='pos-in pos' anchor='exit3-y' top='8' left='0' width='39' height='16'/>
 	<button name='exit-help' type='help' relative='neg-in pos-in' anchor='exits' top='2' left='18'/>

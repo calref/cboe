@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='done'>
+	<pict name='mainpic' type='dlog' num='16' top='6' left='6'/>
+	<text name='prompt' anchor='mainpic' relative='pos pos-in' size='large' top='0' left='12' width='248' height='14'>Select a location:</text>
+	<tilemap name='map' anchor='mainpic' relative='pos-in pos' framed='true' top='8' left='0' rows='18' cols='18'>
+		<pict framed='false' type='map' num='0' top='0' left='0'/>
+	</tilemap>
+	<!-- The name begins with Z to ensure it's drawn on top of the map picts, whose auto-generated names begin with X -->
+	<pict name='zpointer' type='item' anchor='map' relative='pos-in' size='small' outline='double' filled='false' num='131' top='3' left='3'/>
+	<text name='help' anchor='left' relative='pos-in pos' top='0' left='6' width='422' height='16'>Click on a space to select.<br/>Use arrows to change pages.</text>
+	<button name='left' anchor='map' relative='pos-in pos' type='left' top='10' left='0' def-key='left'/>
+	<button name='down' anchor='left' relative='pos pos-in' type='down' top='0' left='121' def-key='down'/>
+	<button name='right' anchor='down' relative='pos pos-in' type='right' top='0' left='121' def-key='right'/>
+	<button name='cancel' anchor='done' relative='neg pos-in' type='regular' top='0' left='67' def-key='esc'>Cancel</button>
+	<button name='done' anchor='right' relative='pos-in pos' type='done' top='4' left='0'/>
+	<button name='up' anchor='down' relative='pos-in neg' type='up' top='473' left='0' def-key='up'/>
+	<button name='switch' anchor='right' relative='pos-in neg' type='regular' top='473' left='0'>Switch</button>
+</dialog>

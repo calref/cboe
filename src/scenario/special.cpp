@@ -652,6 +652,11 @@ node_function_t::node_function_t(ePicType pic)
 	, pic_type(pic)
 {}
 
+node_function_t::node_function_t(eLocType loc)
+	: button(eSpecPicker::LOCATION)
+	, loc_type(loc)
+{}
+
 node_function_t operator+(eSpecPicker picker) {
 	node_function_t n(picker);
 	if(picker == eSpecPicker::NODE || picker == eSpecPicker::MSG_PAIR || picker == eSpecPicker::MSG_SINGLE || picker == eSpecPicker::MSG_SEQUENCE) {
@@ -765,10 +770,8 @@ node_builder_t& node_builder_t::msg() {
 	return field_pair(eSpecField::MSG1, eSpecField::MSG2, eSpecPicker::MSG_PAIR);
 };
 
-node_builder_t& node_builder_t::rect() {
-	// The intent is to specify that ex1a,ex1b, and ex2a,ex2b are locations.
-	// But specifying that two fields are a location isn't implemented yet.
-	return loc(eSpecField::EX1A, eSpecField::EX1B).loc(eSpecField::EX2A, eSpecField::EX2B).pict(eSpecPicker::TOGGLE);
+node_builder_t& node_builder_t::rect(eLocType type) {
+	return loc(eSpecField::EX1A, eSpecField::EX1B, type).loc(eSpecField::EX2A, eSpecField::EX2B, type).pict(eSpecPicker::TOGGLE);
 };
 
 node_builder_t& node_builder_t::pic() {
@@ -847,8 +850,14 @@ node_builder_t& node_builder_t::sdf(eSpecField a, eSpecField b) {
 	return field_pair(a, b, eSpecPicker::SDF);
 }
 
-node_builder_t& node_builder_t::loc(eSpecField a, eSpecField b) {
-	return field_pair(a, b, eSpecPicker::LOCATION);
+node_builder_t& node_builder_t::loc(eSpecField a, eSpecField b, eLocType type) {
+	return field_pair(a, b, type);
+}
+
+node_builder_t& node_builder_t::loc(eSpecField a, eSpecField b, eLocType type, eSpecField where) {
+	loc(a, b, type);
+	(node.*fields().map[b]).continuation = where;
+	return *this;
 }
 
 node_builder_t::operator node_properties_t() {

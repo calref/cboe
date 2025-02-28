@@ -117,16 +117,16 @@ namespace{
 		.msg();
 	node_properties_t S_TERCHANGE = node_builder_t(eSpecType::CHANGE_TER)
 		.msg()
-		.loc(eSpecField::EX1A, eSpecField::EX1B)
+		.loc(eSpecField::EX1A, eSpecField::EX1B, eLocType::ACTIVE_AUTO)
 		.ex2a(STRT_TER);
 	node_properties_t S_TERSWAP = node_builder_t(eSpecType::SWAP_TER)
 		.msg()
-		.loc(eSpecField::EX1A, eSpecField::EX1B)
+		.loc(eSpecField::EX1A, eSpecField::EX1B, eLocType::ACTIVE_AUTO)
 		.ex2a(STRT_TER)
 		.ex2b(STRT_TER);
 	node_properties_t S_TERTRANS = node_builder_t(eSpecType::TRANS_TER)
 		.msg()
-		.loc(eSpecField::EX1A, eSpecField::EX1B);
+		.loc(eSpecField::EX1A, eSpecField::EX1B, eLocType::ACTIVE_AUTO);
 	node_properties_t S_BUF_CLEAR = node_builder_t(eSpecType::CLEAR_BUF);
 	node_properties_t S_BUF_ADDSTR = node_builder_t(eSpecType::APPEND_STRING)
 		.ex1a(eSpecPicker::MSG_SINGLE)
