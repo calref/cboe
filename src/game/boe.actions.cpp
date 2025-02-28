@@ -2421,9 +2421,11 @@ void show_debug_help() {
 			});
 		}
 	}
-	for(; idx < 30; ++idx){
+	for(; ; ++idx){
 		std::ostringstream btn_name;
 		btn_name << "btn" << (idx+1);
+		if(!debug_panel.hasControl(btn_name.str()))
+			break;
 		cControl& button = debug_panel[btn_name.str()];
 		button.hide();
 	}
