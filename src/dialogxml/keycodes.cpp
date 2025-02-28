@@ -65,7 +65,7 @@ cKey charToKey(char ch) {
 		case '?':
 			return {false, w('/'), mod_shift};
 	}
-	throw "Tried to convert unsupported char to cKey!";
+	throw std::string {"Tried to convert unsupported char '"} + ch + "' to cKey!";
 }
 
 eKeyMod operator + (eKeyMod lhs, eKeyMod rhs){
