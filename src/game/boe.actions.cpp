@@ -2357,12 +2357,15 @@ void easter_egg(int idx) {
 }
 
 std::map<char,key_action_t> debug_actions;
+std::map<char,key_action_t> startup_debug_actions;
 std::vector<std::vector<char>> debug_actions_help_order;
 
-void add_debug_action(std::vector<char> keys, std::string name, void (*action)()) {
+void add_debug_action(std::vector<char> keys, std::string name, void (*action)(), bool startup_safe = false) {
 	key_action_t shortcut = {keys, name, action};
 	for(char ch: keys){
 		debug_actions[ch] = shortcut;
+		if(startup_safe)
+			startup_debug_actions[ch] = shortcut;
 	}
 	debug_actions_help_order.push_back(keys);
 }
@@ -2377,7 +2380,12 @@ void show_debug_help() {
 		std::ostringstream btn_name;
 		btn_name << "btn" << (idx+1);
 		cControl& button = debug_panel[btn_name.str()];
-		key_action_t action = debug_actions[debug_actions_help_order[idx][0]];
+		char key = debug_actions_help_order[idx][0];
+		if(overall_mode == MODE_STARTUP && startup_debug_actions.find(key) == startup_debug_actions.end()){
+			button.hide();
+			continue;
+		}
+		key_action_t action = debug_actions[key];
 		std::ostringstream btn_text;
 		btn_text << action.keys[0];
 		for(int key_idx = 1; key_idx < action.keys.size(); ++key_idx){
@@ -2418,9 +2426,10 @@ void show_debug_help() {
 // chjklnoqvy @#$-_+[]{},.'"`\|;:
 // We want to keep lower-case for normal gameplay.
 void init_debug_actions() {
+	// optional `true` argument means you can use this action in the startup menu.
 	add_debug_action({'B'}, "Leave town", debug_leave_town);
 	add_debug_action({'C'}, "Get cleaned up (lose negative status effects)", debug_clean_up);
-	add_debug_action({'D'}, "Toggle Debug mode", toggle_debug_mode);
+	add_debug_action({'D'}, "Toggle Debug mode", toggle_debug_mode, true);
 	add_debug_action({'E'}, "Stealth, Detect Life, Firewalk", debug_stealth_detect_life_firewalk);
 	add_debug_action({'F'}, "Flight", debug_fly);
 	add_debug_action({'G'}, "Toggle Ghost mode (letting you pass through walls)", debug_ghost_mode);
@@ -2430,8 +2439,8 @@ void init_debug_actions() {
 	add_debug_action({'Y'}, "Fill PC's inventory", debug_overburden);
 	// TODO this is not recorded or replayed because the rsrc you pick might not even be packaged
 	// in the build
-	add_debug_action({'J'}, "Preview a dialog's layout", preview_dialog_xml);
-	add_debug_action({'U'}, "Preview EVERY dialog's layout", preview_every_dialog_xml);
+	add_debug_action({'J'}, "Preview a dialog's layout", preview_dialog_xml, true);
+	add_debug_action({'U'}, "Preview EVERY dialog's layout", preview_every_dialog_xml, true);
 	add_debug_action({'K'}, "Kill everything", debug_kill);
 	add_debug_action({'N'}, "End scenario", []() -> void {handle_victory(true, true);});
 	add_debug_action({'O'}, "Print your location", debug_print_location);
@@ -2457,15 +2466,20 @@ void init_debug_actions() {
 	// std::bind won't work here for reasons
 	add_debug_action({'%'}, "Fight wandering encounter from this section", []() -> void {debug_fight_encounter(true);});
 	add_debug_action({'^'}, "Fight special encounter from this section", []() -> void {debug_fight_encounter(false);});
-	add_debug_action({'/', '?'}, "Bring up this window", show_debug_help);
-	add_debug_action({'Z'}, "Save the current action log for bug reporting", save_replay_log);
+	add_debug_action({'/', '?'}, "Bring up this window", show_debug_help, true);
+	add_debug_action({'Z'}, "Save the current action log for bug reporting", save_replay_log, true);
 }
 
 // Later we might want to know whether the key is used or not
 bool handle_debug_key(char key) {
-	if(!univ.debug_mode)
+	if(!univ.debug_mode && key != 'D')
 		return false;
-	if(debug_actions.find(key) != debug_actions.end()){
+	if(overall_mode == MODE_STARTUP){
+		if(startup_debug_actions.find(key) != startup_debug_actions.end()){
+			startup_debug_actions[key].action();
+			return true;
+		}
+	}else if(debug_actions.find(key) != debug_actions.end()){
 		debug_actions[key].action();
 		return true;
 	}
@@ -2556,10 +2570,8 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 		}
 	}
 	
-	if(overall_mode == MODE_STARTUP)
-		return false;
-	
-	obscureCursor();
+	if(overall_mode != MODE_STARTUP)
+		obscureCursor();
 	
 	// DEBUG
 //	sprintf((char *) debug, "%d    ",(short) chr2);
@@ -2575,6 +2587,12 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	else if(chr2 == Key::PageUp) chr2 = Key::Numpad9;
 	else if(chr2 == Key::PageDown) chr2 = Key::Numpad3;
 	
+	// Startup menu can handle some debug actions:
+	if(overall_mode == MODE_STARTUP){
+		char chr = keyToChar(chr2, event.key.shift);
+		return handle_debug_key(chr);
+	}
+
 	sf::Event pass_event = {sf::Event::MouseButtonPressed};
 	extern rectangle talk_area_rect;
 	if(overall_mode == MODE_TALKING) {
@@ -2700,10 +2718,6 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			}
 			break;
 			
-		case 'D':
-			toggle_debug_mode();
-			break;
-
 		// 'z', Really?
 		case 'z':
 		case 'i':

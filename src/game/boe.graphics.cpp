@@ -404,9 +404,16 @@ void draw_startup_stats() {
 	pc_rect.offset(5,5);
 	pc_rect.top = pc_rect.bottom - 30;
 	pc_rect.left = pc_rect.right - string_length(copyright, style) - 32;
-	// TODO: Should replace this with a more appropriate copyright string
 	// Windows replaced it with "That is not dead which can eternally lie..." - I don't think that's quite appropriate though.
 	win_draw_string(mainPtr, pc_rect, copyright, eTextMode::WRAP, style);
+
+	if(univ.debug_mode){
+		pc_rect = startup_top;
+		pc_rect.offset(5,5);
+		pc_rect.top = pc_rect.bottom - 30;
+		pc_rect.left = pc_rect.left + 32;
+		win_draw_string(mainPtr, pc_rect, "Debug Mode: On", eTextMode::WRAP, style);
+	}
 }
 
 
