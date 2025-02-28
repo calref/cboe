@@ -3976,7 +3976,7 @@ void handle_rename_pc() {
 
 void preview_dialog_xml() {
 	fs::path dialog_xml = nav_get_rsrc({"xml"});
-	preview_dialog_xml(dialog_xml);
+	if(!dialog_xml.empty()) preview_dialog_xml(dialog_xml);
 }
 
 void preview_every_dialog_xml() {
