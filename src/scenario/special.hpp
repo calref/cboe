@@ -160,6 +160,11 @@ enum class eSpecPicker {
 	POINTER,
 };
 
+enum class eLocType {
+	ACTIVE_AUTO, ACTIVE_TOWN, ACTIVE_OUT,
+	SPECIFIED_TOWN, SPECIFIED_OUT
+};
+
 enum class eSpecField { NONE, SDF1, SDF2, MSG1, MSG2, MSG3, PICT, PTYP, EX1A, EX1B, EX1C, EX2A, EX2B, EX2C, JUMP };
 
 struct node_function_t {
@@ -167,6 +172,7 @@ struct node_function_t {
 	union {
 		eStrType str_type; // for eSpecPicker::STRING only
 		ePicType pic_type; // for eSpecPicker::PICTURE only; PIC_NONE = use pictype field from node
+		eLocType loc_type; // for eSpecPicker::LOCATION only
 		bool force_global; // for eSpecPicker::NODE and eSpecPicker::MSG_*
 		// other pickers don't put anything in here
 	};
@@ -179,6 +185,7 @@ struct node_function_t {
 	node_function_t(eSpecPicker button);
 	node_function_t(eStrType str);
 	node_function_t(ePicType pic);
+	node_function_t(eLocType loc);
 private:
 	eSpecType self = eSpecType::NONE;
 	std::string lbl;
@@ -246,11 +253,13 @@ struct node_builder_t {
 	// Specifies that ex1a,ex1b and ex2a,ex2b define opposing corners of a rectangle.
 	// DO NOT use for other cases where there are two points, for example defining a path!
 	// Also DO NOT use for cases where an outdoor sector is identified by its coordinates.
-	node_builder_t& rect();
+	node_builder_t& rect(eLocType type);
 	// Specifies that the indicated two fields combine to define an SDF.
 	node_builder_t& sdf(eSpecField a, eSpecField b);
 	// Specifies that the indicated two fields combine to define a location.
-	node_builder_t& loc(eSpecField a, eSpecField b);
+	node_builder_t& loc(eSpecField a, eSpecField b, eLocType type);
+	// As above, but also notes that the area the location is in will be specified by the indicated field.
+	node_builder_t& loc(eSpecField a, eSpecField b, eLocType type, eSpecField where);
 	operator node_properties_t();
 private:
 	node_properties_t node;

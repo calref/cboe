@@ -11,6 +11,7 @@
 #include "utility.hpp"
 #include "scen.graphics.hpp"
 #include "scen.keydlgs.hpp"
+#include "scen.locpicker.hpp"
 #include "scen.core.hpp"
 #include "dialogxml/dialogs/dialog.hpp"
 #include "dialogxml/widgets/control.hpp"
@@ -1034,6 +1035,88 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			}
 			store = choose_graphic(val, type, &me);
 			if(store < 0) store = val;
+		} break;
+		case eSpecPicker::LOCATION: {
+			auto otherField = get_control_for_field(fcn.continuation);
+			location loc;
+			loc.x = val;
+			loc.y = me[otherField].getTextAsNum();
+			static const std::string townStr = "Select a location in the current town:";
+			static const std::string outStr = "Select a location in the current outdoors:";
+			static const std::string specStr = "Select a location in ";
+			switch(fcn.loc_type) {
+				case eLocType::ACTIVE_OUT: loc = cLocationPicker(loc, *current_terrain, outStr, &me).run(); break;
+				case eLocType::ACTIVE_TOWN: loc = cLocationPicker(loc, *town, townStr, &me).run(); break;
+				case eLocType::ACTIVE_AUTO: {
+					switch(edit_stack.top().mode) {
+						case 1: loc = cLocationPicker(loc, *current_terrain, outStr, &me).run(); break;
+						case 2: loc = cLocationPicker(loc, *town, townStr, &me).run(); break;
+						case 0: {
+							bool is_town = true;
+							cLocationPicker picker(loc, *town, townStr, &me);
+							auto& switchBtn = picker->getControl("switch");
+							switchBtn.show();
+							switchBtn.attachClickHandler([&picker, &is_town](cDialog&, std::string, eKeyMod) {
+								if(is_town) {
+									is_town = false;
+									picker.setArea(*current_terrain);
+									picker.setTitle(outStr);
+								} else {
+									is_town = true;
+									picker.setArea(*town);
+									picker.setTitle(townStr);
+								}
+								return true;
+							});
+							loc = picker.run();
+						} break;
+					}
+				} break;
+				case eLocType::SPECIFIED_TOWN: {
+					node_function_t y_fcn = get_field_function(spec, otherField);
+					auto townField = get_control_for_field(y_fcn.continuation);
+					int townNum = me[townField].getTextAsNum();
+					townNum = minmax(0, scenario.towns.size() - 1, townNum);
+					cLocationPicker picker(loc, *scenario.towns[townNum], specStr + scenario.towns[townNum]->name + ":", &me);
+					auto& switchBtn = picker->getControl("switch");
+					switchBtn.show();
+					switchBtn.attachClickHandler([&picker, &townNum](cDialog& me, std::string, eKeyMod) {
+						townNum = choose_text(STRT_TOWN, townNum, &me, "Which town?");
+						picker.setArea(*scenario.towns[townNum]);
+						picker.setTitle(specStr + scenario.towns[townNum]->name + ":");
+						return true;
+					});
+					loc = picker.run();
+					me[townField].setTextToNum(townNum);
+				} break;
+				case eLocType::SPECIFIED_OUT: {
+					node_function_t y_fcn = get_field_function(spec, otherField);
+					auto sectorXField = get_control_for_field(y_fcn.continuation);
+					int sectorX = me[sectorXField].getTextAsNum();
+					sectorX = minmax(0, scenario.outdoors.width() - 1, sectorX);
+					node_function_t sec_fcn = get_field_function(spec, sectorXField);
+					auto sectorYField = get_control_for_field(sec_fcn.continuation);
+					int sectorY = me[sectorYField].getTextAsNum();
+					sectorY = minmax(0, scenario.outdoors.height() - 1, sectorY);
+					cLocationPicker picker(loc, *scenario.outdoors[sectorX][sectorY], specStr + scenario.outdoors[sectorX][sectorY]->name + ":", &me);
+					auto& switchBtn = picker->getControl("switch");
+					switchBtn.show();
+					switchBtn.attachClickHandler([&picker, &sectorX, &sectorY](cDialog& me, std::string, eKeyMod) {
+						int val = sectorX * scenario.outdoors.height() + sectorY;
+						val = choose_text(STRT_SECTOR, val, &me, "Which sector?");
+						sectorY = val % scenario.outdoors.height();
+						sectorX = val / scenario.outdoors.height();
+						picker.setArea(*scenario.outdoors[sectorX][sectorY]);
+						picker.setTitle(specStr + scenario.outdoors[sectorX][sectorY]->name + ":");
+						return true;
+					});
+					loc = picker.run();
+					me[sectorXField].setTextToNum(sectorX);
+					me[sectorYField].setTextToNum(sectorY);
+				} break;
+			}
+			store = loc.x;
+			me[otherField].setTextToNum(loc.y);
 		} break;
 		case eSpecPicker::FIELD: store = choose_field_type(val, &me, fcn.augmented); break;
 		case eSpecPicker::DAMAGE_TYPE: store = choose_damage_type(val, &me, true); break;

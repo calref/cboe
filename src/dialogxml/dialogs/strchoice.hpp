@@ -41,7 +41,7 @@ public:
 	/// @param strs A list of all strings in the dialog.
 	/// @param title The title to show in the dialog.
 	/// @param parent Optionally, a parent dialog.
-	explicit cStringChoice(std::vector<std::string>& strs, std::string title, cDialog* parent = nullptr, bool editable = false);
+	explicit cStringChoice(const std::vector<std::string>& strs, std::string title, cDialog* parent = nullptr, bool editable = false);
 	/// Initializes a dialog from an iterator pair.
 	/// @param begin An iterator to the first string in the dialog.
 	/// @param end An iterator to one past the last string in the dialog.

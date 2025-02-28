@@ -32,6 +32,18 @@ location cTilemap::getCell(const std::string& id) const {
 	return location(std::stoi(x_str) * cellWidth, std::stoi(y_str) * cellHeight);
 }
 
+location cTilemap::getCellPos(size_t x, size_t y) const {
+	rectangle bounds = getBounds();
+	bounds.offset(x * cellWidth, y * cellHeight);
+	return bounds.topLeft();
+}
+
+location cTilemap::getCellPos(cControl& child) const {
+	// If it's not ours, return origin.
+	if(!hasChild(child.getName())) return location();
+	return getCell(child.getName());
+}
+
 std::string cTilemap::buildId(const std::string& base, size_t x, size_t y) {
 	std::ostringstream sout;
 	if(!base.empty()) {
@@ -92,14 +104,37 @@ bool cTilemap::isScrollable() const {
 	return false;
 }
 
+bool cTilemap::handleClick(location where, cFramerateLimiter& fps_limiter) {
+	bool success = false;
+	isHandlingClick = true;
+	forEach([&](std::string id, cControl& ctrl) {
+		rectangle bounds = ctrl.getBounds();
+		bounds.offset(getBounds().topLeft());
+		bounds.offset(getCell(id));
+		if(!success && ctrl.isClickable() && bounds.contains(where)) {
+			rectangle localBounds = ctrl.getBounds();
+			ctrl.setBounds(bounds);
+			clicking = id;
+			if(ctrl.handleClick(where, fps_limiter)){
+				success = true;
+			} else clicking.clear();
+			ctrl.setBounds(localBounds);
+		}
+	});
+	isHandlingClick = false;
+	return success;
+}
+
 void cTilemap::draw() {
 	if(!isVisible()) return;
 	for(auto& ctrl : controls) {
 		rectangle localBounds = ctrl.second->getBounds();
 		rectangle globalBounds = localBounds;
-		globalBounds.offset(getBounds().topLeft());
-		globalBounds.offset(getCell(ctrl.first));
-		ctrl.second->setBounds(globalBounds);
+		if(isHandlingClick ? ctrl.first != clicking : true) {
+			globalBounds.offset(getBounds().topLeft());
+			globalBounds.offset(getCell(ctrl.first));
+			ctrl.second->setBounds(globalBounds);
+		}
 		ctrl.second->draw();
 		ctrl.second->setBounds(localBounds);
 	}
@@ -132,6 +167,25 @@ void cTilemap::recalcRect() {
 	frame.height() *= rows;
 	frame.right -= spacing;
 	frame.bottom -= spacing;
+}
+
+void cTilemap::attachClickHandlers(std::function<bool(cDialog&,std::string,eKeyMod)> handler, std::string prefix) {
+	for(auto& ctrl : controls) {
+		bool matches = false;
+		if(prefix.empty()) {
+			size_t first_x = ctrl.first.find_first_of("x"), last_x = ctrl.first.find_last_of("x"), first_y = ctrl.first.find_first_of("y"), last_y = ctrl.first.find_last_of("y");
+			if(first_x == 0 && last_x == 0 && first_y != std::string::npos && first_y == last_y) {
+				matches = true;
+			}
+		} else {
+			if(ctrl.first.compare(0, prefix.size(), prefix)) {
+				matches = true;
+			}
+		}
+		if(matches) {
+			ctrl.second->attachClickHandler(handler);
+		}
+	}
 }
 
 void cTilemap::fillTabOrder(std::vector<int>& specificTabs, std::vector<int>& reverseTabs) {

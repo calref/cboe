@@ -16,8 +16,8 @@ typedef std::map<std::string,cControl*>::iterator ctrlIter;
 /// A superclass to represent a control that contains other controls.
 class cContainer : public cControl {
 	void callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::string id, eKeyMod mods) override;
-	std::string clicking;
 protected:
+	std::string clicking;
 	/// Parses a child control.
 	/// @param elem The element defining the control.
 	/// @param controls The map into which the control will be inserted.

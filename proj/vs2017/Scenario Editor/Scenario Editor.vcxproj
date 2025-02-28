@@ -161,6 +161,7 @@
     <ClCompile Include="..\..\..\src\scenedit\scen.fileio.cpp" />
     <ClCompile Include="..\..\..\src\scenedit\scen.graphics.cpp" />
     <ClCompile Include="..\..\..\src\scenedit\scen.keydlgs.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.locpicker.cpp" />
     <ClCompile Include="..\..\..\src\scenedit\scen.main.cpp" />
     <ClCompile Include="..\..\..\src\scenedit\scen.menus.win.cpp" />
     <ClCompile Include="..\..\..\src\scenedit\scen.townout.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="..\..\..\src\scenedit\scen.global.hpp" />
     <ClInclude Include="..\..\..\src\scenedit\scen.graphics.hpp" />
     <ClInclude Include="..\..\..\src\scenedit\scen.keydlgs.hpp" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.locpicker.hpp" />
     <ClInclude Include="..\..\..\src\scenedit\scen.menus.hpp" />
     <ClInclude Include="..\..\..\src\scenedit\scen.townout.hpp" />
   </ItemGroup>
