@@ -2445,7 +2445,8 @@ void debug_launch_scen(std::string scen_name) {
 	}
 	// Take party out of scenario they're in
 	if(univ.party.is_in_scenario()){
-		// TODO: Confirm
+		if(cChoiceDlog("leave-scenario",{"okay","cancel"}).show() != "okay")
+			return;
 		handle_victory(true);
 	}
 	// Force party into the scenario, skipping the intro:
