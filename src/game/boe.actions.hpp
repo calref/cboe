@@ -105,6 +105,7 @@ void debug_increase_age();
 void debug_towns_forget();
 void debug_heal_plus_extra();
 void debug_heal();
+void debug_launch_scen(std::string scen_name);
 void handle_print_pc_hp(int which_pc, bool& need_reprint);
 void handle_print_pc_sp(int which_pc, bool& need_reprint);
 void handle_trade_places(int which_pc, bool& need_reprint);

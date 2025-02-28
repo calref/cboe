@@ -2438,8 +2438,26 @@ void show_debug_help() {
 	debug_panel.run();
 }
 
+void debug_launch_scen(std::string scen_name) {
+	if(recording){
+		record_action("debug_launch_scen", scen_name);
+	}
+	// Start by using the default party
+	if(!party_in_memory){
+		// TODO: Could add a debug party preference like the scenario editor has
+		start_new_game(true);
+	}
+	// Take party out of scenario they're in
+	if(univ.party.is_in_scenario()){
+		// TODO: Confirm
+		handle_victory(true);
+	}
+	// Force party into the scenario, skipping the intro:
+	put_party_in_scen(scen_name, true);
+}
+
 // Non-comprehensive list of unused keys:
-// chjklnoqvy @#$-_+[]{},.'"`\|;:
+// chjklnoqvy -_+[]{},.'"`\|;:
 // We want to keep lower-case for normal gameplay.
 void init_debug_actions() {
 	// optional `true` argument means you can use this action in the startup menu.
@@ -2479,6 +2497,12 @@ void init_debug_actions() {
 	add_debug_action({'<'}, "Make one day pass", debug_increase_age);
 	add_debug_action({'>'}, "Reset towns (excludes the one you're in, if any)", debug_towns_forget);
 	add_debug_action({'!'}, "Toggle Special Node Step-through Mode", debug_step_through);
+
+	// Enter core scenarios, skipping intro:
+	add_debug_action({'@'}, "Quick-launch The Valley of Dying Things", []() -> void {debug_launch_scen("valleydy.boes");}, true);
+	add_debug_action({'#'}, "Quick-launch A Small Rebellion", []() -> void {debug_launch_scen("stealth.boes");}, true);
+	add_debug_action({'$'}, "Quick-launch The Za-Khazi Run", []() -> void {debug_launch_scen("zakhazi.boes");}, true);
+
 	// std::bind won't work here for reasons
 	add_debug_action({'%'}, "Fight wandering encounter from this section", []() -> void {debug_fight_encounter(true);});
 	add_debug_action({'^'}, "Fight special encounter from this section", []() -> void {debug_fight_encounter(false);});
