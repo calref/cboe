@@ -2907,6 +2907,7 @@ bool handle_scroll(const sf::Event& event) {
 }
 
 void do_load() {
+	// TODO this needs to be changed/moved because a picker dialog opens now!!!
 	// Edge case: Replay can be cut off before a file is chosen,
 	// or party selection can be canceled, and this will cause
 	// a crash trying to decode a party
@@ -2914,7 +2915,7 @@ void do_load() {
 		return;
 	}
 
-	fs::path file_to_load = nav_get_or_decode_party();
+	fs::path file_to_load = run_file_picker(false);
 	if(file_to_load.empty()) return;
 	if(!load_party(file_to_load, univ))
 		return;
@@ -3428,7 +3429,7 @@ void handle_death() {
 			return;
 		}
 		else if(choice == "load") {
-			fs::path file_to_load = nav_get_or_decode_party();
+			fs::path file_to_load = run_file_picker(false);
 			if(!file_to_load.empty()){
 				if(load_party(file_to_load, univ)){
 					finish_load_party();

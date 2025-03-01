@@ -133,6 +133,7 @@ void setWindowFloating(sf::Window& win, bool floating) {
 	}
 }
 
+// TODO this check is only required when trying nav_get_* specifically, now that there's a save file picker
 void init_fileio(){
 	// if init_fileio() is called more than once, only check once
 	static bool checked_zenity = false;

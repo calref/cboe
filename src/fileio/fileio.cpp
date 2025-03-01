@@ -33,7 +33,7 @@ bool mac_is_intel(){
 	}
 	return _mac_is_intel;
 }
-fs::path progDir, tempDir, scenDir, replayDir;
+fs::path progDir, tempDir, scenDir, replayDir, saveDir;
 
 // This is here to avoid unnecessarily duplicating it in platform-specific files.
 cursor_type Cursor::current = sword_curs;
@@ -80,6 +80,9 @@ void init_directories(const char* exec_path) {
 
 	replayDir = tempDir/"Replays";
 	fs::create_directories(replayDir);
+
+	saveDir = tempDir/"Saves";
+	fs::create_directories(saveDir);
 
 	add_resmgr_paths(tempDir/"data");
 	tempDir /= "Temporary Files";

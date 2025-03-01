@@ -99,7 +99,9 @@ std::map<std::string,std::vector<std::string>> feature_flags = {
 	// Legacy behavior of the T debug action (used by some replays)
 	// does not change the party's outdoors location
 	{"debug-enter-town", {"move-outdoors"}},
-	{"target-lock", {"V1"}}
+	{"target-lock", {"V1"}},
+	// New in-game save file picker
+	{"file-picker-dialog", {"V1"}}
 };
 
 struct cParseEntrance {
