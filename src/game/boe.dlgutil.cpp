@@ -1645,11 +1645,7 @@ class cChooseScenario {
 	
 	bool doSelectPage(int dir) {
 		auto& stk = dynamic_cast<cStack&>(me["list"]);
-		int curPage = stk.getPage(), nPages = stk.getPageCount();
-		curPage += dir;
-		if(curPage < 0) curPage += nPages;
-		else if(curPage >= nPages) curPage -= nPages;
-		stk.setPage(curPage);
+		stk.doSelectPage(dir, true);
 		return true;
 	}
 	
