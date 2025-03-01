@@ -2473,11 +2473,11 @@ void init_debug_actions() {
 	add_debug_action({'J'}, "Preview a dialog's layout", preview_dialog_xml, true);
 	add_debug_action({'U'}, "Preview EVERY dialog's layout", preview_every_dialog_xml, true);
 	add_debug_action({'K'}, "Kill everything", debug_kill);
-	add_debug_action({'N'}, "End scenario", []() -> void {handle_victory(true, true);});
+	add_debug_action({'N'}, "End scenario", []() {handle_victory(true, true);});
 	add_debug_action({'O'}, "Print your location", debug_print_location);
 	add_debug_action({'Q'}, "Magic map", debug_magic_map);
 	add_debug_action({'R'}, "Return to start", debug_return_to_start);
-	add_debug_action({'S'}, "Set stuff done flags", []() -> void {
+	add_debug_action({'S'}, "Set stuff done flags", []() {
 		// edit_stuff_done() is used in the character editor which
 		// doesn't have replays, so its replay action is recorded
 		// external to the function definition unlike most actions.
@@ -2496,13 +2496,13 @@ void init_debug_actions() {
 	add_debug_action({'!'}, "Toggle Special Node Step-through Mode", debug_step_through);
 
 	// Enter core scenarios, skipping intro:
-	add_debug_action({'@'}, "Quick-launch The Valley of Dying Things", []() -> void {debug_launch_scen("valleydy.boes");}, true);
-	add_debug_action({'#'}, "Quick-launch A Small Rebellion", []() -> void {debug_launch_scen("stealth.boes");}, true);
-	add_debug_action({'$'}, "Quick-launch The Za-Khazi Run", []() -> void {debug_launch_scen("zakhazi.boes");}, true);
+	add_debug_action({'@'}, "Quick-launch The Valley of Dying Things", []() {debug_launch_scen("valleydy.boes");}, true);
+	add_debug_action({'#'}, "Quick-launch A Small Rebellion", []() {debug_launch_scen("stealth.boes");}, true);
+	add_debug_action({'$'}, "Quick-launch The Za-Khazi Run", []() {debug_launch_scen("zakhazi.boes");}, true);
 
 	// std::bind won't work here for reasons
-	add_debug_action({'%'}, "Fight wandering encounter from this section", []() -> void {debug_fight_encounter(true);});
-	add_debug_action({'^'}, "Fight special encounter from this section", []() -> void {debug_fight_encounter(false);});
+	add_debug_action({'%'}, "Fight wandering encounter from this section", []() {debug_fight_encounter(true);});
+	add_debug_action({'^'}, "Fight special encounter from this section", []() {debug_fight_encounter(false);});
 	add_debug_action({'/', '?'}, "Bring up this window", show_debug_help, true);
 	add_debug_action({'Z'}, "Save the current action log for bug reporting", save_replay_log, true);
 }
@@ -4047,7 +4047,7 @@ void preview_every_dialog_xml() {
 	dlog->getControl("msg").setText(text);
 	std::string confirm = dlog.show();
 	if(confirm == "yes"){
-		std::for_each(dialog_paths.begin(), dialog_paths.end(), [](fs::path path) -> void {
+		std::for_each(dialog_paths.begin(), dialog_paths.end(), [](fs::path path) {
 			ASB("Previewing dialog: " + path.stem().string());
 			print_buf();
 			preview_dialog_xml(path);
