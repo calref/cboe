@@ -12,7 +12,7 @@
 #include "tools/event_listener.hpp"
 #include "tools/drawable_manager.hpp"
 
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 extern cUniverse univ;
 extern bool party_in_memory;
 extern eGameMode overall_mode;
@@ -22,6 +22,7 @@ extern cDrawableManager drawable_mgr;
 std::shared_ptr<OpenBoEMenu> menu_ptr;
 
 void init_menubar() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	menu_ptr.reset(new OpenBoEMenu(mainPtr, univ));
 	
 	event_listeners["menubar"] = std::dynamic_pointer_cast<iEventListener>(menu_ptr); 

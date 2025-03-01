@@ -21,7 +21,7 @@
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "fileio/resmgr/res_image.hpp"
 
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 extern rectangle	windRect;
 extern short stat_window;
 extern bool cartoon_happening;
@@ -29,10 +29,10 @@ extern eGameMode overall_mode;
 extern short current_spell_range;
 extern cUniverse univ;
 extern effect_pat_type current_pat;
-extern sf::RenderWindow mini_map;
+//extern sf::RenderWindow mini_map;
 extern short combat_posing_monster , current_working_monster ; // 0-5 PC 100 + x - monster x
 
-extern sf::RenderTexture terrain_screen_gworld;
+//extern sf::RenderTexture terrain_screen_gworld;
 extern std::queue<pending_special_type> special_queue;
 
 extern location center;
@@ -59,6 +59,7 @@ bool gave_no_g_error = false;
 // if terrain_to_draw is -1, do black
 // if terrain_to_draw >= 10000, force to draw graphic which is terrain_to_draw - 10000
 void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	rectangle where_draw;
 	rectangle source_rect;
 	std::shared_ptr<const sf::Texture> source_gworld;
@@ -105,6 +106,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 }
 
 void draw_monsters() {
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	short width,height;
 	rectangle source_rect,to_rect;
 	location where_draw,store_loc;
@@ -208,6 +210,7 @@ void play_see_monster_str(unsigned short m, location monst_loc) {
 }
 
 void draw_combat_pc(cPlayer& who, location center, bool attacking) {
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	rectangle active_pc_rect;
 	if(who.main_status == eMainStatus::ALIVE)
 		if(point_onscreen(center, who.combat_pos) && (cartoon_happening || party_can_see(who.combat_pos) < 6)) {
@@ -250,6 +253,7 @@ void draw_combat_pc(cPlayer& who, location center, bool attacking) {
 }
 
 void frame_active_pc(location center) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(monsters_going) return;
 	if(!is_on_screen(univ.current_pc().combat_pos)) return;
 	location where_draw(univ.current_pc().combat_pos.x - center.x + 4, univ.current_pc().combat_pos.y - center.y + 4);
@@ -280,6 +284,7 @@ void draw_pcs(location center) {
 }
 
 void draw_items(location where){
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	if(!point_onscreen(center,where)) return;
 	location where_draw(4 + where.x - center.x, 4 + where.y - center.y);
 	rectangle from_rect, to_rect;
@@ -302,6 +307,7 @@ void draw_items(location where){
 }
 
 void draw_outd_boats(location center) {
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	location where_draw;
 	rectangle source_rect;
 	sf::Texture& vehicle_gworld = *ResMgr::graphics.get("vehicle");
@@ -337,6 +343,7 @@ void draw_outd_boats(location center) {
 }
 
 void draw_town_boat(location center) {
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	location where_draw;
 	rectangle source_rect;
 	sf::Texture& vehicle_gworld = *ResMgr::graphics.get("vehicle");
@@ -366,6 +373,7 @@ void draw_town_boat(location center) {
 extern std::vector<location> forcecage_locs;
 
 void draw_fields(location where){
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	if(!point_onscreen(center,where)) return;
 	if(party_can_see(where) >= 6) return;
 	location where_draw(4 + where.x - center.x, 4 + where.y - center.y);
@@ -426,6 +434,7 @@ void draw_fields(location where){
 }
 
 void draw_party_symbol(location center) {
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	rectangle source_rect;
 	location target(4,4);
 	short i = 0;
@@ -676,5 +685,4 @@ void play_ambient_sound(){ // TODO: Maybe add a system for in-town ambient sound
 			break; // obviously, do nothing
 	}
 }
-
 

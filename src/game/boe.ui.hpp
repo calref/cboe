@@ -31,7 +31,7 @@ class cToolbar {
 		rectangle bounds;
 	};
 	
-	sf::RenderTexture cache;
+	sf::RenderTexture* cache;
 	std::vector<cButton> toolbar;
 	rectangle total_rect;
 	enum eMode {UNKNOWN, OUTDOORS, TOWN, COMBAT};

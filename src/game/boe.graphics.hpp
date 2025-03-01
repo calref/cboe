@@ -53,6 +53,15 @@ void draw_startup_stats();
 void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter);
 sf::FloatRect compute_viewport(const sf::RenderWindow&, int mode, float ui_scale, float width, float height);
 
+sf::RenderWindow& get_main_window();
+sf::RenderWindow& get_mini_map_window();
+sf::RenderTexture& get_pc_stats_texture();
+sf::RenderTexture& get_item_stats_texture();
+sf::RenderTexture& get_text_area_texture();
+sf::RenderTexture& get_terrain_screen_texture();
+sf::RenderTexture& get_text_bar_texture();
+sf::RenderTexture& get_map_texture();
+sf::RenderTexture& get_talk_texture();
 
 void draw_startup_anim(bool advance);
 

@@ -38,7 +38,7 @@ bool is_s_d();
 void sort_specials();
 
 extern cOutdoors* current_terrain;
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 extern sf::View mainView;
 extern cDrawableManager drawable_mgr;
 extern cTown* current_town;
@@ -50,7 +50,7 @@ eDrawMode draw_mode = DRAW_TERRAIN;
 extern short available_dlog_buttons[NUM_DLOG_B];
 extern bool editing_town;
 extern cScenario scenario;
-extern sf::Texture bg_gworld;
+//extern sf::Texture bg_gworld;
 extern rectangle right_buttons[NRSONPAGE];
 extern rectangle right_scrollbar_rect;
 extern std::shared_ptr<cScrollbar> right_sbar, pal_sbar;
@@ -358,6 +358,7 @@ void Set_up_win() {
 }
 
 void run_startup_g() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	sf::Event event;
 	sf::Texture& pict_to_draw = *ResMgr::graphics.get("edsplash", true);
 	rectangle dest_rect = rectangle(pict_to_draw);
@@ -389,6 +390,7 @@ void load_graphics(){
 }
 
 void redraw_screen() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	rectangle windRect(mainPtr);
 	
 	// Switch back to the default view while drawing the background tiles
@@ -411,6 +413,7 @@ void redraw_screen() {
 }
 
 void draw_main_screen() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	rectangle draw_rect;
 	
 	draw_lb();
@@ -447,6 +450,7 @@ const int LEFT_BUTTON_SPACE = 2;
 
 // mode 0 normal 1 click
 void draw_lb_slot (short which,short mode)  {
+	sf::RenderWindow& mainPtr = get_main_window();
 	rectangle text_rect,from_rect;
 	
  	tileImage(mainPtr,left_buttons[which][0],bg[20]);
@@ -491,6 +495,7 @@ void draw_rb() {
 
 // mode 0 normal 1 pressed
 void draw_rb_slot (short which,short mode)  {
+	sf::RenderWindow& mainPtr = get_main_window();
 	rectangle text_rect;
  	long pos;
  	
@@ -511,6 +516,7 @@ void draw_rb_slot (short which,short mode)  {
 }
 
 void set_up_terrain_buttons(bool reset) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	short pic,small_i;
 	rectangle ter_from,ter_from_base = {0,0,36,28}, ter_plus_from = {148,235,164,251};
 	rectangle tiny_from,tiny_to;
@@ -713,6 +719,7 @@ void set_up_terrain_buttons(bool reset) {
 }
 
 void draw_terrain(){
+	sf::RenderWindow& mainPtr = get_main_window();
 	location which_pt,where_draw;
 	rectangle draw_rect,clipping_rect = {8,8,332,260};
 	ter_num_t t_to_draw;
@@ -980,6 +987,7 @@ void draw_terrain(){
 }
 
 void draw_monsts() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	short width,height,m_start_pic;
 	std::shared_ptr<const sf::Texture> from_gworld = nullptr;
 	rectangle source_rect;
@@ -1051,6 +1059,7 @@ static rectangle get_item_template_rect (short type_wanted) {
 }
 
 void draw_items() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	rectangle source_rect,dest_rect;
 	location where_draw;
 	short pic_num;
@@ -1097,6 +1106,7 @@ void force_tiny_redraw() {
 }
 
 void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	location where_draw;
 	rectangle source_rect;
 	short picture_wanted;
@@ -1138,6 +1148,7 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 }
 
 void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short size,bool road) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	rectangle dest_rect = {0,0,size,size},from_rect = {0,0,12,12};
 	short picture_wanted;
 	bool drawLargeIcon = false;
@@ -1232,6 +1243,7 @@ rectangle get_template_rect (unsigned short type_wanted) {
 }
 
 void draw_frames() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	location which_pt;
 	rectangle draw_rect;
 	
@@ -1263,6 +1275,7 @@ void draw_frames() {
 }
 
 static void place_selected_terrain(ter_num_t ter, rectangle draw_rect) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	pic_num_t picture_wanted = scenario.ter_types[ter].picture;
 	rectangle source_rect;
 	if(picture_wanted >= 1000)	{
@@ -1296,6 +1309,7 @@ static void place_selected_terrain(ter_num_t ter, rectangle draw_rect) {
 }
 
 void place_location() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	std::ostringstream sout;
 	rectangle draw_rect,source_rect;
 	rectangle text_rect = {0,0,12,100};
@@ -1616,5 +1630,12 @@ void record_display_strings(){}
 
 // Translate mouse event coordinates based on the global view and viewport
 sf::Vector2f translate_mouse_coordinates(sf::Vector2i const point) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	return mainPtr.mapPixelToCoords(point, mainView);
+}
+
+sf::RenderWindow& get_main_window()
+{
+	static sf::RenderWindow instance;
+	return instance;
 }

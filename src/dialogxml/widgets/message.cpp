@@ -11,7 +11,7 @@
 #include "dialogxml/dialogs/dialog.hpp"
 #include <numeric>
 
-extern sf::Texture bg_gworld;
+//extern sf::Texture bg_gworld;
 
 bool cTextMsg::manageFormat(eFormat prop, bool set, boost::any* val) {
 	switch(prop) {

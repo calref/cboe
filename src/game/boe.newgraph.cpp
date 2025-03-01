@@ -57,11 +57,11 @@ short monsters_faces[190] = {
 extern rectangle	windRect;
 extern long anim_ticks;
 extern tessel_ref_t bg[];
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 extern short which_combat_type;
 extern eGameMode overall_mode;
 extern bool boom_anim_active;
-extern sf::RenderTexture terrain_screen_gworld;
+//extern sf::RenderTexture terrain_screen_gworld;
 extern rectangle sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
@@ -80,7 +80,7 @@ extern enum_map(eGuiArea, rectangle) win_to_rects;
 // Talk vars
 extern eGameMode store_pre_talk_mode;
 extern short store_personality,store_personality_graphic;
-extern sf::RenderTexture talk_gworld;
+//extern sf::RenderTexture talk_gworld;
 extern bool talk_end_forced;
 extern std::string old_str1,old_str2,one_back1,one_back2;
 extern rectangle talk_area_rect, word_place_rect;
@@ -121,6 +121,7 @@ rectangle explode_place_rect[30];
 char last_light_mask[13][13];
 
 terrain_screen_rects_t terrain_screen_rects() {
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	rectangle from = rectangle(terrain_screen_gworld);
 
 	location current_terrain_ul = win_to_rects[WINRECT_TERVIEW].topLeft();
@@ -137,6 +138,7 @@ terrain_screen_rects_t terrain_screen_rects() {
 }
 
 void apply_unseen_mask() {
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	rectangle base_rect = {9,9,53,45},to_rect,big_to = {13,13,337,265};
 	bool need_bother = false;
 	
@@ -167,6 +169,7 @@ void apply_unseen_mask() {
 }
 
 void apply_light_mask(bool onWindow) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	static Region dark_mask_region;
 	rectangle base_ellipse = {0,0,106,84},paint_rect,base_rect = {0,0,36,28};
 	// I correct the values to make the display ok
@@ -346,6 +349,8 @@ void add_explosion(location dest,short val_to_place,short place_type,short boom_
 }
 
 void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
+	sf::RenderWindow& mainPtr = get_main_window();
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	// TODO: Get rid of temp_rect, at least
 	rectangle temp_rect, missile_origin_base = {1,1,17,17},to_rect,from_rect;
 	short store_missile_dir;
@@ -549,6 +554,8 @@ short get_missile_direction(location origin_point,location the_point) {
 // sound_num currently ignored
 // special_draw - 0 normal 1 - first half 2 - second half
 void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
+	sf::RenderWindow& mainPtr = get_main_window();
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	rectangle active_area_rect,to_rect,from_rect;
 	rectangle base_rect = {0,0,36,28},text_rect;
 	short temp_val,temp_val2;
@@ -656,6 +663,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 }
 
 void click_shop_rect(rectangle area_rect, bool item_help) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(recording){
 		std::string action_name = item_help ? "click_shop_item_help" : "click_shop_item";
 		record_action(action_name, boost::lexical_cast<std::string>(area_rect));
@@ -685,6 +693,7 @@ graf_pos calc_item_rect(int num,rectangle& to_rect) {
 
 // mode 1 - drawing dark for button press
 void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle clip_area_rect) {
+	sf::RenderTexture& talk_gworld = get_talk_texture();
 	rectangle area_rect,item_info_from = {11,42,24,56};
 	
 	rectangle face_rect = {6,6,38,38};
@@ -878,6 +887,8 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 }
 
 void refresh_shopping() {
+	sf::RenderWindow& mainPtr = get_main_window();
+	sf::RenderTexture& talk_gworld = get_talk_texture();
 	rectangle from_rect(talk_gworld);
 	rectangle to_rect = from_rect;
 	to_rect.offset(talk_gword_offset_x, talk_gword_offset_y);
@@ -885,6 +896,7 @@ void refresh_shopping() {
 }
 
 static void place_talk_face() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	rectangle face_rect = {6,6,38,38};
 	face_rect.offset(talk_area_rect.topLeft());
 	mainPtr.setActive();
@@ -903,6 +915,8 @@ static void place_talk_face() {
 }
 
 void click_talk_rect(word_rect_t word) {
+	sf::RenderWindow& mainPtr = get_main_window();
+	sf::RenderTexture& talk_gworld = get_talk_texture();
 	if(recording){
 		record_click_talk_rect(word, word.on == PRESET_WORD_ON);
 	}
@@ -928,6 +942,8 @@ void click_talk_rect(word_rect_t word) {
 
 // color 0 - regular  1 - darker
 void place_talk_str(std::string str_to_place,std::string str_to_place2,short color,rectangle c_rect) {
+	sf::RenderWindow& mainPtr = get_main_window();
+	sf::RenderTexture& talk_gworld = get_talk_texture();
 	rectangle area_rect;
 	
 	rectangle title_rect = {19,48,42,260};
@@ -1020,6 +1036,8 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 }
 
 void refresh_talking() {
+	sf::RenderWindow& mainPtr = get_main_window();
+	sf::RenderTexture& talk_gworld = get_talk_texture();
 	rectangle tempRect(talk_gworld);
 	rect_draw_some_item(talk_gworld,tempRect,mainPtr,talk_area_rect);
 	place_talk_face();

@@ -7,7 +7,7 @@
 #include <sstream>
 #include <cmath>
 
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 OPENFILENAMEA getParty, getScen, getRsrc, putParty, putScen, putRsrc;
 
 // TODO: I'm sure there's a better way to do this (maybe one that's keyboard layout agnostic)
@@ -158,12 +158,12 @@ void setWindowFloating(sf::Window& win, bool floating) {
 	SetWindowPos(win_handle, newPos, 0, 0, 0, 0, flags);
 }
 
-void init_fileio() {
+void init_fileio(HWND window) {
 	OPENFILENAMEA base_dlg;
 	memset(&base_dlg, 0, sizeof(OPENFILENAMEA));
 	// Common values
 	base_dlg.lStructSize = sizeof(OPENFILENAMEA);
-	base_dlg.hwndOwner = mainPtr.getSystemHandle();
+	base_dlg.hwndOwner = window;
 	base_dlg.nFilterIndex = 1;
 	base_dlg.Flags = OFN_DONTADDTORECENT | OFN_ENABLESIZING | OFN_EXPLORER | OFN_HIDEREADONLY | OFN_NOCHANGEDIR;
 	getParty = getScen = getRsrc = putParty = putScen = putRsrc = base_dlg;
@@ -295,6 +295,7 @@ fs::path nav_put_rsrc(std::initializer_list<std::string> extensions, fs::path de
 }
 
 void set_clipboard(std::string text) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(text.empty()) return;
 	if(!OpenClipboard(mainPtr.getSystemHandle())) return;
 	HGLOBAL hData = (char*) GlobalAlloc(GMEM_MOVEABLE, text.length() + 1);
@@ -325,6 +326,7 @@ static void printErr(std::string msg) {
 }
 
 void set_clipboard_img(sf::Image& img) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(img.getSize().x == 0 && img.getSize().y == 0) return;
 	size_t pxSize = img.getSize().x * img.getSize().y * 4;
 	HGLOBAL data = GlobalAlloc(GMEM_MOVEABLE | GMEM_ZEROINIT, sizeof(BITMAPV5HEADER) + pxSize);
@@ -448,6 +450,7 @@ ModalSession::~ModalSession() {
 }
 
 int getMenubarHeight() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	MENUBARINFO info;
 	info.cbSize = sizeof(MENUBARINFO);
 	if(GetMenuBarInfo(mainPtr.getSystemHandle(), OBJID_MENU, 0, &info)) {
@@ -458,6 +461,7 @@ int getMenubarHeight() {
 }
 
 void adjust_window_for_menubar(int mode, unsigned int width, unsigned int height) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	// On Windows, the menubar DOES take up space in the window,
 	// but this is not handled with os_specific_y_offset() because
 	// y = 0 still refers to the bottom of the menubar on Windows.

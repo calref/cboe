@@ -14,7 +14,7 @@ namespace x11 {
 x11::Cursor ibeam; // = XCreateFontCursor(NULL, XC_xterm);
 
 // extern cursor_type current_cursor;
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 
 Cursor::Cursor(fs::path imgPath, float hotSpotX, float hotSpotY)
     : ptr(nullptr) {

@@ -37,7 +37,7 @@ extern cUniverse univ;
 extern short store_flags[3];
 extern short current_active_pc;
 
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
 
@@ -46,7 +46,7 @@ bool choice_active[6];
 
 extern short which_pc_displayed;
 cPlayer *store_pc;
-sf::Texture button_num_gworld;
+//sf::Texture button_num_gworld;
 
 extern std::map<eSkill,short> skill_cost;
 extern std::map<eSkill,short> skill_max;

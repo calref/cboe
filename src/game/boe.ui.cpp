@@ -154,8 +154,9 @@ void cToolbar::draw_buttons() {
 	if(!inited) {
 		inited = true;
 		// TODO: Possibly this should be based on total_rect instead of hard-coded?
-		cache.create(266,38);
-		cache.clear(sf::Color::Black);
+		cache = new sf::RenderTexture();
+		cache->create(266,38);
+		cache->clear(sf::Color::Black);
 	}
 	sf::Texture& buttons_gworld = *ResMgr::graphics.get("buttons");
 	for(const auto& btn : toolbar) {
@@ -165,13 +166,13 @@ void cToolbar::draw_buttons() {
 		if(btn.type != BTN_LG) icon_rect.bottom /= 2;
 		// buttons.png consists of 1 row of 38x38 buttons, two rows of 32x32 icons, and one row of 32x16 icons.
 		icon_rect.offset(32 * slot.x, 38 + 32 * slot.y);
-		rect_draw_some_item(buttons_gworld, btn_src_rects[btn.type], cache, to_rect);
+		rect_draw_some_item(buttons_gworld, btn_src_rects[btn.type], *cache, to_rect);
 		to_rect.inset(3,3);
 		// Insetting the small rect overcompensates, so correct for that.
 		if(btn.type != BTN_LG) to_rect.bottom += 3;
-		rect_draw_some_item(buttons_gworld, icon_rect, cache, to_rect, sf::BlendAlpha);
+		rect_draw_some_item(buttons_gworld, icon_rect, *cache, to_rect, sf::BlendAlpha);
 	}
-	cache.display();
+	cache->display();
 }
 
 void cToolbar::draw(sf::RenderTarget& targ) {
@@ -190,5 +191,5 @@ void cToolbar::draw(sf::RenderTarget& targ) {
 	}
 	
 	// Add the cached toolbar over the background
-	rect_draw_some_item(cache.getTexture(), rectangle(cache), targ, to, sf::BlendAdd);
+	rect_draw_some_item(cache->getTexture(), rectangle(*cache), targ, to, sf::BlendAdd);
 }

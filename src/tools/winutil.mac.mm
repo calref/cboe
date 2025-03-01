@@ -213,7 +213,7 @@ NSOpenPanel* dlg_get_rsrc;
 NSSavePanel* dlg_put_scen;
 NSSavePanel* dlg_put_game;
 NSSavePanel* dlg_put_rsrc;
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 
 void init_fileio(){
 	dlg_get_scen = [NSOpenPanel openPanel];
@@ -255,6 +255,7 @@ void init_fileio(){
 }
 
 fs::path nav_get_scenario() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	bool gotFile = [dlg_get_scen runModal] != NSFileHandlingPanelCancelButton;
 	makeFrontWindow(mainPtr);
 	if(gotFile) {

@@ -52,7 +52,7 @@ short menuChoiceId=-1;
 /* Globals */
 bool  All_Done = false;
 bool changed_display_mode = false;
-sf::RenderWindow mainPtr;
+//sf::RenderWindow mainPtr;
 sf::View mainView;
 cTown* town = nullptr;
 bool mouse_button_held = false,editing_town = false;
@@ -215,6 +215,7 @@ int main(int argc, char* argv[]) {
 }
 
 static void init_sbar(std::shared_ptr<cScrollbar>& sbar, const std::string& name, rectangle rect, rectangle events_rect, int pgSz) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	sbar.reset(new cScrollbar(mainPtr));
 	sbar->setBounds(rect);
 	sbar->set_wheel_event_rect(events_rect);
@@ -317,6 +318,7 @@ static void process_args(int argc, char* argv[]) {
 }
 
 void init_scened(int argc, char* argv[]) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	init_directories(argv[0]);
 	sync_prefs();
 	adjust_windows(mainPtr, mainView);
@@ -352,10 +354,15 @@ void init_scened(int argc, char* argv[]) {
 	cDialog::doAnimations = true;
 	set_up_apple_events();
 	process_args(argc, argv);
+#ifdef SFML_SYSTEM_WINDOWS
+	init_fileio(mainPtr.getSystemHandle());
+#else // 
 	init_fileio();
+#endif // 
 }
 
 void handle_events() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	sf::Event currentEvent;
 	cFramerateLimiter fps_limiter;
 

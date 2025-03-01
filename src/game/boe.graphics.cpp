@@ -45,7 +45,7 @@
 #include "tools/gitrev.hpp"
 #endif
 
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 extern eItemWinMode stat_window;
 extern eGameMode overall_mode;
 extern short current_spell_range;
@@ -63,7 +63,7 @@ extern short num_targets_left;
 extern location spell_targets[8];
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
-extern sf::Texture bg_gworld;
+//extern sf::Texture bg_gworld;
 extern const rectangle sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern rectangle startup_top;
 extern rectangle talk_area_rect, word_place_rect;
@@ -74,7 +74,7 @@ extern short fast_bang;
 extern tessel_ref_t bg[];
 extern cUniverse univ;
 extern cCustomGraphics spec_scen_g;
-extern sf::RenderWindow mini_map;
+//extern sf::RenderWindow mini_map;
 bool map_visible = false;
 extern std::string save_talk_str1, save_talk_str2;
 extern cDrawableManager drawable_mgr;
@@ -101,13 +101,7 @@ short debug_nums[6] = {0,0,0,0,0,0};
 char light_area[13][13];
 char unexplored_area[13][13];
 
-// Declare the graphics
-sf::RenderTexture pc_stats_gworld;
-sf::RenderTexture item_stats_gworld;
-sf::RenderTexture text_area_gworld;
-sf::RenderTexture terrain_screen_gworld;
-sf::RenderTexture text_bar_gworld;
-sf::RenderTexture map_gworld;
+// Declare the graphics as functions
 
 bool has_run_anim = false,currently_loading_graphics = false;
 
@@ -137,6 +131,7 @@ location ok_space[4] = {loc(),loc(),loc(),loc()};
 sf::Image hold_pict;
 
 void adjust_window_mode() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	sf::ContextSettings winSettings;
 	winSettings.stencilBits = 1;
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
@@ -177,7 +172,7 @@ void adjust_window_mode() {
 #ifdef SFML_SYSTEM_WINDOWS
 	// On windows, the file dialogs are constructed with mainPtr as a parent,
 	// so they need to be reconstructed after mainPtr is.
-	init_fileio();
+	init_fileio(mainPtr.getSystemHandle());
 #endif
 	init_menubar();
 	adjust_window_for_menubar(mode, width, height);
@@ -246,6 +241,7 @@ void init_startup() {
 }
 
 void draw_startup(short but_type) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	sf::Texture& startup_gworld = *ResMgr::graphics.get("startup", true);
 	rect_draw_some_item(startup_gworld,startup_from[0],mainPtr,startup_top);
 	
@@ -259,6 +255,7 @@ void draw_startup(short but_type) {
 }
 
 void draw_startup_anim(bool advance) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	static short startup_anim_pos = 43; // was a global variable, but since it's only used in this function I moved it here
 	rectangle anim_to = {4,1,44,276},anim_from;
 	rectangle anim_size = {0,0,48,301};
@@ -273,6 +270,7 @@ void draw_startup_anim(bool advance) {
 }
 
 void draw_startup_stats() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	rectangle from_rect,to_rect,party_to = {0,0,36,28},pc_rect,frame_rect;
 	
 	TextStyle style;
@@ -412,6 +410,7 @@ void draw_startup_stats() {
 
 
 void draw_start_button(eStartButton which_position,short which_button) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	rectangle from_rect,to_rect;
 	const char *button_labels[MAX_eStartButton];
 	for(int i = 0; i < MAX_eStartButton; ++i){
@@ -445,6 +444,7 @@ void draw_start_button(eStartButton which_position,short which_button) {
 }
 
 void arrow_button_click(rectangle button_rect) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(recording){
 		// This action is purely cosmetic, for playing the animation and sound accompanying a click on a button whose real action
 		// is recorded afterward
@@ -491,6 +491,12 @@ static void loadImageToRenderTexture(sf::RenderTexture& tex, std::string imgName
 }
 
 void load_main_screen() {
+	sf::RenderTexture& pc_stats_gworld = get_pc_stats_texture();
+	sf::RenderTexture& item_stats_gworld = get_item_stats_texture();
+	sf::RenderTexture& text_area_gworld = get_text_area_texture();
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
+	sf::RenderTexture& text_bar_gworld = get_text_bar_texture();
+
 	// Preload the main game interface images
 	ResMgr::graphics.get("invenbtns");
 	loadImageToRenderTexture(terrain_screen_gworld, "terscreen");
@@ -502,6 +508,7 @@ void load_main_screen() {
 }
 
 void redraw_screen(int refresh) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	// We may need to update some of the offscreen textures
 	if(overall_mode != MODE_STARTUP) {
 		if(refresh & REFRESH_TERRAIN) draw_terrain(1);
@@ -553,6 +560,7 @@ void redraw_screen(int refresh) {
 }
 
 void put_background() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	tessel_ref_t bg_pict;
 	
 	if(overall_mode == MODE_STARTUP)
@@ -678,6 +686,7 @@ void draw_text_bar(std::pair<std::string,std::string> text) {
 }
 
 void put_text_bar(std::string str, std::string right_str) {
+	sf::RenderTexture& text_bar_gworld = get_text_bar_texture();
 	text_bar_gworld.setActive(false);
 	auto& bar_gw = *ResMgr::graphics.get("textbar");
 	rect_draw_some_item(bar_gw, rectangle(bar_gw), text_bar_gworld, rectangle(bar_gw));
@@ -716,6 +725,8 @@ void put_text_bar(std::string str, std::string right_str) {
 }
 
 void refresh_text_bar() {
+	sf::RenderWindow& mainPtr = get_main_window();
+	sf::RenderTexture& text_bar_gworld = get_text_bar_texture();
 	mainPtr.setActive(false);
 	rect_draw_some_item(text_bar_gworld, rectangle(text_bar_gworld), mainPtr, win_to_rects[WINRECT_STATUS]);
 	mainPtr.setActive();
@@ -736,6 +747,8 @@ extern std::list<text_label_t> posted_labels;
 //mode ... if 1, don't place on screen after redoing
 // if 2, only redraw over active monst
 void draw_terrain(short mode) {
+	sf::RenderWindow& mainPtr = get_main_window();
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	location where_draw;
 	location sector_p_in,view_loc;
 	char can_draw;
@@ -1139,6 +1152,7 @@ static void init_trim_mask(std::unique_ptr<sf::Texture>& mask, rectangle src_rec
 //which_trim is 3 -> drawing wall trim -> might shift down if ground is grass
 //short which_mode;  // 0 top 1 bottom 2 left 3 right 4 up left 5 up right 6 down right 7 down left
 void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	// which_trim
 	// 0 - left, 1 - right, 2 - top, 3 - bottom, 4 - tl, 5 - tr, 6 - bl, 7 - br
 	// 8 - wall tl, 9 - wall tr, 10 - wall bl, 11 - wall br
@@ -1252,6 +1266,7 @@ static bool connect_roads(ter_num_t ter){
 }
 
 void place_road(short q,short r,location where,bool here) {
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	rectangle to_rect;
 	static const rectangle road_rects[5] = {
 		{76,28,80,41},	// horizontal partial
@@ -1367,6 +1382,7 @@ void place_road(short q,short r,location where,bool here) {
 }
 
 void draw_rest_screen() {
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	eGameMode store_mode;
 	
 	store_mode = overall_mode;
@@ -1389,6 +1405,7 @@ void draw_rest_screen() {
 // 3 - pole  4 - club  5 - fireball hit  6 - squish  7 - cold
 // 8 - acid  9 - claw  10 - bite  11 - slime  12 - zap  13 - missile hit
 void boom_space(location where,short mode,short type,short damage,short sound) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	location where_draw(4,4);
 	rectangle source_rect = {0,0,36,28},text_rect,dest_rect = {13,13,49,41},big_to = {13,13,337,265},store_rect;
 	short del_len;
@@ -1488,6 +1505,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 // dir = 0 - down, 1 - left, 2 - right, 3 - up, 4 - down/left, 5 - up/left, 6 - up/right, 7 - down/right
 // pos = row or column to centre the arrow in, range 0..8, ignored for dir >= 4
 static void draw_one_pointing_arrow(int dir, int pos) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	rectangle from_rect = {62, 61, 70, 69};
 	from_rect.offset(9 * (dir % 4), 9 * (dir / 4));
 	
@@ -1537,6 +1555,8 @@ void draw_pointing_arrows() {
 }
 
 void redraw_terrain() {
+	sf::RenderWindow& mainPtr = get_main_window();
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	rectangle to_rect = win_to_rects[WINRECT_TERVIEW], from_rect(terrain_screen_gworld);
 	rect_draw_some_item(terrain_screen_gworld.getTexture(), from_rect, mainPtr, to_rect);
 	apply_light_mask(true);
@@ -1550,6 +1570,7 @@ void redraw_terrain() {
 
 
 void draw_targets(location center) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(!univ.party.is_alive())
 		return;
 	const rectangle src_rect{0,46,12,58};
@@ -1566,6 +1587,7 @@ void draw_targets(location center) {
 
 //mode;  // 0 - red   1 - green
 void frame_space(location where,short mode,short width,short height) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	location where_put;
 	rectangle to_frame;
 	
@@ -1586,6 +1608,7 @@ void frame_space(location where,short mode,short width,short height) {
 
 
 void erase_spot(short i,short j) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	rectangle to_erase;
 	
 	to_erase = coord_to_rect(i,j);
@@ -1594,6 +1617,7 @@ void erase_spot(short i,short j) {
 }
 
 void draw_targeting_line(location where_curs) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	location which_space,store_loc;
 	rectangle redraw_rect,redraw_rect2,target_rect;
 	location from_loc;
@@ -1669,6 +1693,8 @@ void draw_targeting_line(location where_curs) {
 }
 
 void redraw_partial_terrain(rectangle redraw_rect) {
+	sf::RenderWindow& mainPtr = get_main_window();
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	rectangle from_rect;
 	
 	from_rect = redraw_rect;
@@ -1707,3 +1733,107 @@ void HideShowMenuBar( ) {
 }
 
 */
+
+#if 0
+// This is the original design. However, there is a race condition when
+//  using file scoped globals for GL objects on Windows and possibly
+//  other platforms. Wrapping the static object in a function explicitly
+//  controls the lifetime instead of undefined global initialization.
+//
+sf::RenderWindow  mainPtr;
+sf::RenderWindow  mini_map_gworld;
+sf::RenderTexture pc_stats_gworld;
+sf::RenderTexture item_stats_gworld;
+sf::RenderTexture text_area_gworld;
+sf::RenderTexture terrain_screen_gworld;
+sf::RenderTexture text_bar_gworld;
+sf::RenderTexture map_gworld;
+sf::RenderTexture talk_gworld;
+
+sf::RenderWindow& get_main_window()
+{
+	return mainPtr;
+}
+sf::RenderWindow& get_mini_map_window()
+{
+	return mini_map_gworld;
+}
+sf::RenderTexture& get_pc_stats_texture()
+{
+	return pc_stats_gworld;
+}
+sf::RenderTexture& get_item_stats_texture()
+{
+	return item_stats_gworld;
+}
+sf::RenderTexture& get_text_area_texture()
+{
+	return text_area_gworld;
+}
+sf::RenderTexture& get_terrain_screen_texture()
+{
+	return terrain_screen_gworld;
+}
+sf::RenderTexture& get_text_bar_texture()
+{
+	return text_bar_gworld;
+}
+sf::RenderTexture& get_map_texture()
+{
+	return map_gworld;
+}
+sf::RenderTexture& get_talk_texture()
+{
+	return talk_gworld;
+}
+#endif // 0
+
+// Declare the RenderWindows
+sf::RenderWindow& get_main_window()
+{
+	static sf::RenderWindow instance;
+	return instance;
+}
+sf::RenderWindow& get_mini_map_window()
+{
+	static sf::RenderWindow instance;
+	return instance;
+}
+
+// Declare the RenderTextures
+sf::RenderTexture& get_pc_stats_texture()
+{
+	static sf::RenderTexture instance;
+	return instance;
+}
+sf::RenderTexture& get_item_stats_texture()
+{
+	static sf::RenderTexture instance;
+	return instance;
+}
+sf::RenderTexture& get_text_area_texture()
+{
+	static sf::RenderTexture instance;
+	return instance;
+}
+sf::RenderTexture& get_terrain_screen_texture()
+{
+	static sf::RenderTexture instance;
+	return instance;
+}
+sf::RenderTexture& get_text_bar_texture()
+{
+	static sf::RenderTexture instance;
+	return instance;
+}
+sf::RenderTexture& get_map_texture()
+{
+	static sf::RenderTexture instance;
+	return instance;
+}
+sf::RenderTexture& get_talk_texture()
+{
+	static sf::RenderTexture instance;
+	return instance;
+}
+

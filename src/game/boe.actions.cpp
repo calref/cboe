@@ -89,7 +89,7 @@ extern bool party_in_memory;
 extern sf::View mainView;
 
 // game info globals
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 extern short which_item_page[6];
 extern short store_spell_target,pc_casting;
 extern eSpell store_mage, store_priest;
@@ -107,7 +107,7 @@ extern short combat_active_pc;
 extern eStatMode stat_screen_mode;
 
 extern bool map_visible;
-extern sf::RenderWindow mini_map;
+//extern sf::RenderWindow mini_map;
 
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern short shop_identify_cost, shop_recharge_amount;
@@ -441,6 +441,7 @@ void handle_toggle_active(bool& need_reprint) {
 }
 
 void handle_rest(bool& need_redraw, bool& need_reprint) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(recording){
 		record_action("handle_rest", "");
 	}
@@ -1091,6 +1092,7 @@ void handle_alchemy(bool& need_redraw, bool& need_reprint) {
 }
 
 static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	std::vector<short> store_hp;
 	sf::Event dummy_evt;
 	need_reprint = true;
@@ -1376,6 +1378,7 @@ void update_item_stats_area(bool& need_reprint) {
 }
 
 bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	long item_hit;
 	bool are_done = false;
 	bool need_redraw = false, did_something = false, need_reprint = false;
@@ -2315,6 +2318,8 @@ void debug_heal_plus_extra() {
 }
 
 void close_map(bool record) {
+	sf::RenderWindow& mainPtr = get_main_window();
+	sf::RenderWindow& mini_map = get_mini_map_window();
 	if(record && recording){
 		record_action("close_map", "");
 	}
@@ -2473,6 +2478,7 @@ bool handle_debug_key(char key) {
 }
 
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
+	sf::RenderWindow& mainPtr = get_main_window();
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
 	using Key = sf::Keyboard::Key;
@@ -2827,6 +2833,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 }
 
 bool handle_scroll(const sf::Event& event) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	rectangle world_screen = win_to_rects[WINRECT_TERVIEW];
 	world_screen.inset(13, 13);
 	fill_rect(mainPtr, world_screen, sf::Color::Magenta);
@@ -2864,6 +2871,7 @@ void do_load() {
 }
 
 void post_load() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	current_switch = 6;
 	
 	if(!is_out())
@@ -3919,6 +3927,7 @@ bool is_sign(ter_num_t ter) {
 }
 
 bool check_for_interrupt(std::string confirm_dialog){
+	sf::RenderWindow& mainPtr = get_main_window();
 	using kb = sf::Keyboard;
 	bool interrupt = false;
 	sf::Event evt;

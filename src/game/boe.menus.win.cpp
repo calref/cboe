@@ -5,6 +5,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "boeresource.h"
 #include "universe.hpp"
+#include "boe.global.hpp"
 #include "boe.party.hpp"
 #include "boe.infodlg.hpp"
 #include "boe.consts.hpp"
@@ -36,7 +37,7 @@ extern short on_monst_menu[256];
 extern bool party_in_memory;
 extern cUniverse univ;
 extern eGameMode overall_mode;
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 LONG_PTR mainProc;
 HMENU menuHandle = NULL;
 accel_table_t accel;
@@ -65,6 +66,7 @@ void setMenuCommand(HMENU& menu, int i, eMenu cmd) {
 }
 
 void init_menubar() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	HWND winHandle = mainPtr.getSystemHandle();
 	if(winHandle == NULL) return;
 	if(menuHandle == NULL)
@@ -130,6 +132,7 @@ void init_menubar() {
 }
 
 void adjust_monst_menu() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(menuHandle == NULL) return;
 	short i, monst_pos = 0;
 	HMENU monst_menu;
@@ -168,6 +171,7 @@ void init_spell_menus() {
 }
 
 void adjust_spell_menus() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(menuHandle == NULL) return;
 	short i, j, spell_pos = 0;
 	HMENU spell_menu;
@@ -242,6 +246,7 @@ void adjust_spell_menus() {
 }
 
 void menu_activate() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(menuHandle == NULL) return;
 	HMENU file_menu = GetSubMenu(menuHandle, FILE_MENU_POS);
 	if(overall_mode == MODE_STARTUP) {
@@ -271,12 +276,14 @@ void menu_activate() {
 }
 
 void hideMenuBar() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(menuHandle == NULL) return;
 	SetMenu(mainPtr.getSystemHandle(), NULL);
 	DrawMenuBar(mainPtr.getSystemHandle());
 }
 
 void showMenuBar() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(menuHandle == NULL) return;
 	SetMenu(mainPtr.getSystemHandle(), menuHandle);
 	DrawMenuBar(mainPtr.getSystemHandle());

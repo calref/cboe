@@ -64,7 +64,7 @@ extern cScenario scenario;
 extern std::shared_ptr<cScrollbar> right_sbar, pal_sbar;
 extern cOutdoors* current_terrain;
 extern location cur_out;
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 bool small_any_drawn = false;
 extern bool change_made;
 
@@ -210,6 +210,7 @@ void update_mouse_spot(location the_point) {
 }
 
 static bool handle_lb_action(location the_point) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	fs::path file_to_load;
 	int x;
 	for(int i = 0; i < NLS; i++)
@@ -313,6 +314,7 @@ static bool handle_lb_action(location the_point) {
 }
 
 static bool handle_rb_action(location the_point, bool option_hit) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	long right_top = right_sbar->getPosition();
 	for(int i = 0; i < NRSONPAGE && i + right_top < NRS; i++)
 		if(!mouse_button_held && (the_point.in(right_buttons[i]) )
@@ -2355,6 +2357,7 @@ static std::string version() {
 // is slot >= 0, force that slot
 // if -1, use 1st free slot
 void set_up_start_screen() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	reset_lb();
 	reset_rb();
 	set_lb(0,LB_TITLE,LB_NO_ACTION,"Blades of Exile");
@@ -2371,6 +2374,7 @@ void set_up_start_screen() {
 }
 
 void set_up_main_screen() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	std::ostringstream strb;
 	
 	reset_lb();
@@ -2411,6 +2415,7 @@ void set_up_main_screen() {
 }
 
 void start_town_edit() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	std::ostringstream strb;
 	small_any_drawn = false;
 	cen_x = town->max_dim / 2;
@@ -2441,6 +2446,7 @@ void start_town_edit() {
 }
 
 void start_out_edit() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	std::ostringstream strb;
 	small_any_drawn = false;
 	cen_x = 24;
@@ -2473,6 +2479,7 @@ void start_out_edit() {
 }
 
 void start_terrain_editing() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	right_sbar->hide();
 	pal_sbar->show();
 	overall_mode = MODE_EDIT_TYPES;
@@ -2485,6 +2492,7 @@ void start_terrain_editing() {
 }
 
 void start_monster_editing(bool just_redo_text) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	int num_options = scenario.scen_monsters.size() + 1;
 	
 	if(!just_redo_text) {
@@ -2510,6 +2518,7 @@ void start_monster_editing(bool just_redo_text) {
 }
 
 void start_item_editing(bool just_redo_text) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	int num_options = scenario.scen_items.size() + 1;
 	
 	if(!just_redo_text) {
@@ -2537,6 +2546,7 @@ void start_item_editing(bool just_redo_text) {
 }
 
 void start_special_item_editing(bool just_redo_text) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	int num_options = scenario.special_items.size() + 1;
 	
 	if(!just_redo_text) {
@@ -2564,6 +2574,7 @@ void start_special_item_editing(bool just_redo_text) {
 }
 
 void start_quest_editing(bool just_redo_text) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	int num_options = scenario.quests.size() + 1;
 	if(!just_redo_text) {
 		if(overall_mode < MODE_MAIN_SCREEN)
@@ -2589,6 +2600,7 @@ void start_quest_editing(bool just_redo_text) {
 }
 
 void start_shops_editing(bool just_redo_text) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	int num_options = scenario.shops.size() + 1;
 	if(!just_redo_text) {
 		if(overall_mode < MODE_MAIN_SCREEN)
@@ -2618,6 +2630,7 @@ extern size_t num_strs(short mode); // defined in scen.keydlgs.cpp
 // mode 0 - scen 1 - out 2 - town 3 - journal
 // if just_redo_text not 0, simply need to update text portions
 void start_string_editing(eStrMode mode,short just_redo_text) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(just_redo_text == 0) {
 		if(overall_mode < MODE_MAIN_SCREEN)
 			set_up_main_screen();
@@ -2686,6 +2699,7 @@ void start_string_editing(eStrMode mode,short just_redo_text) {
 // mode 0 - scen 1 - out 2 - town
 // if just_redo_text not 0, simply need to update text portions
 void start_special_editing(short mode,short just_redo_text) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	size_t num_specs;
 	switch(mode) {
 		case 0: num_specs = scenario.scen_specials.size(); break;
@@ -2734,6 +2748,7 @@ void start_special_editing(short mode,short just_redo_text) {
 
 // if restoring is 1, this is just a redraw, so don't move scroll bar position
 void start_dialogue_editing(short restoring) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	char s[15] = "    ,      ";
 	
 	if(overall_mode < MODE_MAIN_SCREEN)

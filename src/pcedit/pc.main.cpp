@@ -56,7 +56,7 @@ short current_active_pc = 0;
 /* Mac stuff globals */
 bool All_Done = false;
 bool changed_display_mode = false;
-sf::RenderWindow mainPtr;
+//sf::RenderWindow mainPtr;
 sf::View mainView;
 bool party_in_scen = false;
 bool scen_items_loaded = false;
@@ -115,12 +115,17 @@ static void process_args(int argc, char* argv[]) {
 
 //MW specified return type was 'void', changed to ISO C style for Carbonisation -jmr
 int main(int argc, char* argv[]) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	try {
 		init_directories(argv[0]);
 		sync_prefs();
 		adjust_window(mainPtr, mainView);
 		//init_menubar();
+#ifdef SFML_SYSTEM_WINDOWS
+		init_fileio(mainPtr.getSystemHandle());
+#else  // SFML_SYSTEM_WINDOWS
 		init_fileio();
+#endif // SFML_SYSTEM_WINDOWS
 		init_main_buttons();
 		Set_up_win();
 		init_shaders();
@@ -201,6 +206,7 @@ void adjust_window (sf::RenderWindow& mainPtr, sf::View& mainView) {
 }
 
 void handle_events() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	sf::Event currentEvent;
 	cFramerateLimiter fps_limiter;
 

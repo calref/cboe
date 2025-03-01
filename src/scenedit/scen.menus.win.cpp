@@ -23,7 +23,7 @@ enum {
 	HELP_MENU_POS = 6,
 };
 
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 extern cScenario scenario;
 extern cUndoList undo_list;
 LONG_PTR mainProc;
@@ -54,6 +54,7 @@ void setMenuCommand(HMENU& menu, int i, eMenu cmd) {
 }
 
 void init_menubar() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	HWND winHandle = mainPtr.getSystemHandle();
 	if(winHandle == NULL) return;
 	if(menuHandle == NULL)
@@ -128,6 +129,7 @@ void init_menubar() {
 }
 
 void shut_down_menus(short mode) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(menuHandle == NULL) return;
 	HMENU file_menu = GetSubMenu(menuHandle, FILE_MENU_POS);
 	if(mode == 0) {
@@ -188,6 +190,7 @@ void shut_down_menus(short mode) {
 }
 
 void update_edit_menu() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(menuHandle == NULL) return;
 	HMENU edit_menu = GetSubMenu(menuHandle, EDIT_MENU_POS);
 	if(undo_list.noUndo()) {

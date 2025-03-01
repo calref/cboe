@@ -49,8 +49,9 @@
 using clara::ParserResult;
 using clara::ParseResultType;
 
+
 bool All_Done = false;
-sf::RenderWindow mainPtr;
+
 short had_text_freeze = 0,num_fonts;
 bool first_startup_update = true;
 bool first_sound_played = false,spell_forced = false;
@@ -89,6 +90,10 @@ boost::optional<location> scen_arg_out_sec, scen_arg_loc;
 extern std::string last_load_file;
 std::string help_text_rsrc = "help";
 
+//sf::RenderWindow mainPtr;
+//sf::RenderTexture pc_stats_gworld;
+
+//
 /*
 // Example feature flags:
 {
@@ -150,7 +155,7 @@ eItemWinMode stat_window = ITEM_WIN_PC1;
 bool monsters_going = false,boom_anim_active = false;
 bool finished_init = false;
 
-sf::RenderWindow mini_map;
+//sf::RenderWindow mini_map;
 short which_item_page[6] = {0,0,0,0,0,0}; // Remembers which of the 2 item pages pc looked at
 short current_ground = 0;
 eStatMode stat_screen_mode;
@@ -241,6 +246,7 @@ int main(int argc, char* argv[]) {
 }
 
 static void init_sbar(std::shared_ptr<cScrollbar>& sbar, const std::string& name, rectangle rect, rectangle events_rect, int max, int pgSz, int start = 0) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	sbar.reset(new cScrollbar(mainPtr));
 	sbar->setName(name);
 	sbar->setBounds(rect);
@@ -279,6 +285,7 @@ static void init_scrollbars() {
 }
 
 static void init_btn(std::shared_ptr<cButton>& btn, eBtnType type, location loc) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	btn.reset(new cButton(mainPtr));
 	btn->setBtnType(type);
 	btn->relocate(loc);
@@ -991,6 +998,7 @@ static void replay_feature_flags() {
 
 
 void init_boe(int argc, char* argv[]) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	set_up_apple_events();
 	init_directories(argv[0]);
 	process_args(argc, argv);
@@ -1046,7 +1054,11 @@ void init_boe(int argc, char* argv[]) {
 	
 	cUniverse::print_result = iLiving::print_result = add_string_to_buf;
 	cPlayer::give_help_enabled = true;
+#ifdef SFML_SYSTEM_WINDOWS
+	init_fileio(mainPtr.getSystemHandle());
+#else // SFML_SYSTEM_WINDOWS
 	init_fileio();
+#endif // 
 	init_debug_actions();
 	init_spell_menus();
 	init_mini_map();
@@ -1089,6 +1101,7 @@ location screen_shift_delta[8] = {
 };
 
 static void fire_delayed_key(Key code) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	bool isUpPressed = delayed_keys[Key::Up] > 0;
 	bool isDownPressed = delayed_keys[Key::Down] > 0;
 	bool isLeftPressed = delayed_keys[Key::Left] > 0;
@@ -1166,6 +1179,8 @@ static void update_delayed_keys() {
 }
 
 void handle_events() {
+	sf::RenderWindow& mainPtr = get_main_window();
+	sf::RenderWindow& mini_map = get_mini_map_window();
 	sf::Event currentEvent;
 	cFramerateLimiter fps_limiter;
 
@@ -1266,6 +1281,7 @@ void handle_quit_event() {
 }
 
 void handle_one_event(const sf::Event& event, cFramerateLimiter& fps_limiter) {
+	sf::RenderWindow& mainPtr = get_main_window();
 
 	// What does this do and should it be here?
 	through_sending();
@@ -1327,6 +1343,7 @@ void queue_fake_event(const sf::Event& event) {
 }
 
 void handle_one_minimap_event(const sf::Event& event) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(event.type == sf::Event::Closed) {
 		close_map(true);
 	} else if(event.type == sf::Event::GainedFocus) {
@@ -1585,6 +1602,7 @@ static cursor_type get_mode_cursor(){
 }
 
 void change_cursor(location where_curs) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	cursor_type cursor_needed;
 	location cursor_direction;
 	extern enum_map(eGuiArea, rectangle) win_to_rects;

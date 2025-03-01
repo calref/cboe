@@ -32,15 +32,15 @@
 extern short which_combat_type;
 extern eGameMode overall_mode;
 extern eItemWinMode stat_window;
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 extern bool boom_anim_active;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
 
 extern bool map_visible;
-extern sf::RenderWindow mini_map;
-extern sf::Texture pc_gworld;
-extern sf::RenderTexture map_gworld;
+//extern sf::RenderWindow mini_map;
+//extern sf::Texture pc_gworld;
+//extern sf::RenderTexture map_gworld;
 extern cUniverse univ;
 
 extern void draw_map(bool need_refresh);
@@ -665,6 +665,9 @@ short get_num_of_items(short max_num) {
 }
 
 void init_mini_map() {
+	sf::RenderWindow& mainPtr = get_main_window();
+	sf::RenderWindow& mini_map = get_mini_map_window();
+	sf::RenderTexture& map_gworld = get_map_texture();
 	double map_scale = get_ui_scale_map();
 	if (map_scale < 0.1) map_scale = 1.0;
 	if (mini_map.isOpen()) mini_map.close();

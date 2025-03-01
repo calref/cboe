@@ -35,7 +35,7 @@ extern location center;
 extern short combat_active_pc;
 extern bool monsters_going,spell_forced;
 extern bool flushingInput;
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 extern eSpell store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev,store_item_spell_level;
 extern short store_spell_target,pc_casting,current_spell_range;
@@ -253,6 +253,7 @@ effect_pat_type field[8] = {
 bool center_on_monst;
 
 void start_outdoor_combat(cOutdoors::cWandering encounter,location where,short num_walls) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	short how_many,num_tries = 0;
 	short low[10] = {15,7,4,3,2,1,1,7,2,1};
 	short high[10] = {30,10,6,5,3,2,1,10,4,1};
@@ -4699,6 +4700,7 @@ std::map<std::string,short> out_monst_alive() {
 }
 
 void end_combat() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	for(cPlayer& pc : univ.party) {
 		if(pc.main_status == eMainStatus::FLED)
 			pc.main_status = eMainStatus::ALIVE;

@@ -9,9 +9,11 @@
 #ifndef BoE_boe_windows_h
 #define BoE_boe_windows_h
 
+#include <wtypes.h>
 #include <boost/filesystem/path.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <memory>
 #include <vector>
 
@@ -27,7 +29,7 @@ void setWindowFloating(sf::Window& win, bool floating);
 bool pollEvent(sf::Window& win, sf::Event& event);
 bool pollEvent(sf::Window* win, sf::Event& event);
 
-void init_fileio();
+void init_fileio(HWND window);
 void launchURL(std::string url);
 // Open a documentation page relative to packaged HTML if available,
 // or openboe.com if not
@@ -100,5 +102,8 @@ bool sf::Event::KeyEvent::*const systemKey = &sf::Event::KeyEvent::system;
 #else
 bool sf::Event::KeyEvent::*const systemKey = &sf::Event::KeyEvent::control;
 #endif
+
+sf::RenderWindow& get_main_window();
+sf::RenderWindow& get_mini_map_window();
 
 #endif

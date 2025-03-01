@@ -19,7 +19,7 @@ enum {
 	HELP_MENU_POS = 3,
 };
 
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 extern cUniverse univ;
 extern bool scen_items_loaded, party_in_scen;
 LONG_PTR mainProc;
@@ -50,6 +50,7 @@ void setMenuCommand(HMENU& menu, int i, eMenu cmd) {
 }
 
 void init_menubar() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	HWND winHandle = mainPtr.getSystemHandle();
 	if(winHandle == NULL) return;
 	if(menuHandle == NULL)
@@ -103,6 +104,7 @@ void init_menubar() {
 }
 
 void menu_activate() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(menuHandle == NULL) return;
 	HMENU file_menu = GetSubMenu(menuHandle, FILE_MENU_POS);
 	if(univ.file.empty()) {

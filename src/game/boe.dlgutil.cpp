@@ -45,7 +45,6 @@
 extern eItemWinMode stat_window;
 extern eGameMode overall_mode;
 extern bool changed_display_mode;
-extern sf::RenderWindow mainPtr;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
 extern eStatMode stat_screen_mode;
@@ -55,9 +54,9 @@ extern location center;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
 extern bool map_visible;
-extern sf::RenderWindow mini_map;
+//extern sf::RenderWindow mini_map;
 extern cUniverse univ;
-extern sf::Texture pc_gworld;
+//extern sf::Texture pc_gworld;
 extern std::map<eSkill,short> skill_max;
 extern void give_help_and_record(short help1, short help2, bool help_forced = false);
 
@@ -70,7 +69,7 @@ extern bool party_in_memory;
 eGameMode store_pre_talk_mode;
 short store_personality,store_personality_graphic,shop_identify_cost,shop_recharge_amount,shop_recharge_limit;
 std::string save_talk_str1, save_talk_str2;
-sf::RenderTexture talk_gworld;
+//sf::RenderTexture talk_gworld;
 bool talk_end_forced;
 rectangle talk_area_rect = {7,19,422,298}, word_place_rect = {44,7,372,257},talk_help_rect = {7,268,23,286};
 std::string title_string;
@@ -104,6 +103,7 @@ cShop active_shop;
 short active_shop_num;
 
 bool start_shop_mode(short which,short cost_adj,std::string store_name, bool cancel_when_empty) {
+	sf::RenderTexture& talk_gworld = get_talk_texture();
 	rectangle area_rect;
 	if(which < 0 || which >= univ.scenario.shops.size()) {
 		showError("The scenario tried to place you in a nonexistent shop!");
@@ -221,6 +221,7 @@ void end_shop_mode() {
 }
 
 bool handle_shop_event(location p, cFramerateLimiter& fps_limiter) {
+	sf::RenderTexture& talk_gworld = get_talk_texture();
 	if(p.in(talk_help_rect)) {
 		if(help_btn->handleClick(p, fps_limiter))
 			give_help_and_record(226,27);
@@ -629,6 +630,7 @@ static void reset_talk_words() {
 }
 
 void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short store_face_pic) {
+	sf::RenderTexture& talk_gworld = get_talk_texture();
 	rectangle area_rect;
 
 	store_personality = personality;
@@ -1134,6 +1136,7 @@ void handle_talk_node(int which_talk_entry) {
 }
 
 bool handle_talk_event(location p, cFramerateLimiter& fps_limiter) {
+	sf::RenderTexture& talk_gworld = get_talk_texture();
 	if(p.in(talk_help_rect)) {
 		if(help_btn->handleClick(p, fps_limiter))
 			give_help_and_record(5,6,true);

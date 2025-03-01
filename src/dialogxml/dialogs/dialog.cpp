@@ -38,9 +38,9 @@ using namespace std;
 using namespace ticpp;
 
 // TODO: Would be nice if I could avoid depending on mainPtr
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 
-extern sf::Texture bg_gworld;
+//extern sf::Texture bg_gworld;
 const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
 short cDialog::defaultBackground = cDialog::BG_DARK;
 cDialog* cDialog::topWindow = nullptr;
@@ -486,6 +486,7 @@ bool cDialog::sendInput(cKey key) {
 }
 
 void cDialog::run(std::function<void(cDialog&)> onopen){
+	sf::RenderWindow& mainPtr = get_main_window();
 	cDialog* formerTop = topWindow;
 	// TODO: The introduction of the static topWindow means I may be able to use this instead of parent->win; do I still need parent?
 	sf::RenderWindow* parentWin = &(parent ? parent->win : mainPtr);

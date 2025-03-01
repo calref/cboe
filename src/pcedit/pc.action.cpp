@@ -15,8 +15,8 @@
 #include <boost/lexical_cast.hpp>
 
 extern cUniverse univ;
-extern sf::RenderWindow mainPtr;
-extern sf::Texture pc_gworld;
+//extern sf::RenderWindow mainPtr;
+//extern sf::Texture pc_gworld;
 
 short which_pc_displayed,store_pc_trait_mode,store_which_to_edit;
 extern short current_active_pc;

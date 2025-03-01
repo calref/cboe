@@ -7,6 +7,7 @@ const int TEXT_BUF_LEN = 70;
 
 #include "boe.global.hpp"
 #include "boe.graphutil.hpp"
+#include "boe.graphics.hpp"
 #include "universe/universe.hpp"
 #include "boe.text.hpp"
 #include "boe.locutils.hpp"
@@ -54,7 +55,7 @@ extern eStatMode stat_screen_mode;
 extern short which_combat_type;
 extern eGameMode overall_mode;
 extern eItemWinMode stat_window;
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 extern rectangle more_info_button;
 extern short which_item_page[6];
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar;
@@ -66,8 +67,8 @@ extern location dest_locs[40] ;
 extern location center;
 
 extern cCustomGraphics spec_scen_g;
-extern sf::RenderTexture pc_stats_gworld, item_stats_gworld, text_area_gworld;
-extern sf::RenderTexture terrain_screen_gworld;
+//extern sf::RenderTexture pc_stats_gworld, item_stats_gworld, text_area_gworld;
+//extern sf::RenderTexture terrain_screen_gworld;
 
 // game globals
 extern enum_map(eItemButton, rectangle) item_buttons[8];
@@ -88,6 +89,7 @@ extern location ok_space[4];
 
 // Draws the pc area in upper right
 void put_pc_screen() {
+	sf::RenderTexture& pc_stats_gworld = get_pc_stats_texture();
 	rectangle erase_rect = {17,2,98,269},to_draw_rect,from_rect;
 	rectangle food_rect[2] = {{103,34,114,76}, {103,3,114,40}};
 	rectangle gold_rect[2] = {{103,106,114,147}, {103,75,114,104}};
@@ -212,6 +214,8 @@ void put_pc_screen() {
 // Draws item area in middle right
 // Screen_num is what page is visible in the item menu.
 void put_item_screen(eItemWinMode screen_num) {
+	sf::RenderTexture& pc_stats_gworld = get_pc_stats_texture();
+	sf::RenderTexture& item_stats_gworld = get_item_stats_texture();
 	std::ostringstream sout;
 	long i_num;
 	long item_offset;
@@ -368,6 +372,7 @@ void put_item_screen(eItemWinMode screen_num) {
 }
 
 void place_buy_button(short position,short pc_num,short item_num) {
+	sf::RenderTexture& item_stats_gworld = get_item_stats_texture();
 	rectangle dest_rect,source_rect;
 	rectangle button_sources[4] = {{24,0,36,30},{36,0,48,30},{48,0,60,30},{60,0,72,30}};
 	short val_to_place;
@@ -445,6 +450,7 @@ void place_buy_button(short position,short pc_num,short item_num) {
 }
 
 void place_item_graphic(short which_slot,short graphic) {
+	sf::RenderTexture& item_stats_gworld = get_item_stats_texture();
 	rectangle from_rect = {0,0,18,18},to_rect;
 	
 	item_area_button_active[which_slot][ITEMBTN_NAME] = item_area_button_active[which_slot][ITEMBTN_ICON] = true;
@@ -463,6 +469,7 @@ void place_item_graphic(short which_slot,short graphic) {
 
 // name, use, give, drop, info, sell/id
 void place_item_button(short which_slot,eItemButton button_type, eItemButton button_pos) {
+	sf::RenderTexture& item_stats_gworld = get_item_stats_texture();
 	if(button_pos == MAX_eItemButton){
 		button_pos = button_type;
 	}
@@ -475,6 +482,7 @@ void place_item_button(short which_slot,eItemButton button_type, eItemButton but
 }
 
 void place_item_bottom_buttons() {
+	sf::RenderTexture& item_stats_gworld = get_item_stats_texture();
 	rectangle pc_from_rect = {0,0,36,28},but_from_rect = {30,60,46,78},to_rect;
 	rectangle spec_from_rect = {0,60,15,95}, job_from_rect = {15,60,30,95}, help_from_rect = {46,60,59,76};
 	// TODO: What about when the buttons are pressed?
@@ -592,6 +600,10 @@ short first_active_pc() {
 
 
 void refresh_stat_areas(short mode) {
+	sf::RenderWindow& mainPtr = get_main_window();
+	sf::RenderTexture& pc_stats_gworld = get_pc_stats_texture();
+	sf::RenderTexture& item_stats_gworld = get_item_stats_texture();
+	sf::RenderTexture& text_area_gworld = get_text_area_texture();
 	sf::BlendMode x;
 	extern enum_map(eGuiArea, rectangle) win_to_rects;
 	
@@ -609,6 +621,7 @@ rectangle get_stat_effect_rect(int code) {
 }
 
 void draw_pc_effects(short pc) {
+	sf::RenderTexture& pc_stats_gworld = get_pc_stats_texture();
 	rectangle dest_rect = {18,15,30,27};
 	short right_limit = 250;
 	short name_width;
@@ -959,6 +972,7 @@ void add_string_to_buf(std::string str) {
 }
 
 void add_string_to_buf(std::string str, unsigned short indent) {
+	sf::RenderTexture& text_area_gworld = get_text_area_texture();
 	static bool inited;
 	static size_t width;
 	static TextStyle buf_style;
@@ -1070,6 +1084,7 @@ void init_buf() {
 }
 
 void print_buf () {
+	sf::RenderTexture& text_area_gworld = get_text_area_texture();
 	short num_lines_printed = 0;
 	long ctrl_val;
 	short line_to_print;
@@ -1178,6 +1193,7 @@ void place_text_label(std::string string, location at, bool centred) {
 }
 
 void draw_text_label(const text_label_t& label) {
+	sf::RenderTexture& terrain_screen_gworld = get_terrain_screen_texture();
 	sf::Color back_clr = {64, 64, 64, 42};
 	TextStyle style;
 	style.font = FONT_PLAIN;

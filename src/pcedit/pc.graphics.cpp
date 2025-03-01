@@ -19,9 +19,15 @@
 #include "gfx/tiling.hpp" // for bg
 #include "utility.hpp"
 
+sf::RenderWindow& get_main_window()
+{
+	static sf::RenderWindow instance;
+	return instance;
+}
+
 extern cUniverse univ;
 
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 extern sf::View mainView;
 extern bool party_in_scen,scen_items_loaded;
 
@@ -204,6 +210,7 @@ static void display_party();
 static void draw_items();
 
 void redraw_screen() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	draw_main_screen();
 	display_party();
 	draw_items();
@@ -230,6 +237,7 @@ static void frame_dlog_rect(sf::RenderWindow& target, rectangle rect) {
 }
 
 void draw_main_screen() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	rectangle source_rect,dest_rec,dest_rect;
 	rectangle reg_rect;
 	
@@ -324,6 +332,7 @@ void do_button_action(short /*which_pc*/,short which_button) {
 
 //short clear_first; // 0 - redraw over, 1 - don't redraw over
 void draw_items() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	rectangle d_from = {12,28,24,42},i_from = {12,42,24,56},dest_rect;
 	
 	if(univ.file.empty())  // save file loaded
@@ -374,6 +383,7 @@ void draw_items() {
 //short mode; // 0 - 5 this pc, 6 - all
 //short clear_first; // 1 - redraw over what's already there, 0 - don't redraw over
 void display_party() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	short string_num, cur_rect=0;
 	rectangle from_rect,no_party_rect,temp_rect;
 	
@@ -808,5 +818,6 @@ void display_party() {
 
 // Translate mouse event coordinates based on the global view and viewport
 sf::Vector2f translate_mouse_coordinates(sf::Vector2i const point) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	return mainPtr.mapPixelToCoords(point, mainView);
 }

@@ -32,7 +32,7 @@ using std::vector;
 
 extern bool party_in_memory;
 extern long register_flag;
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 extern cUniverse univ;
 extern eGameMode overall_mode;
 extern sf::View mainView;
@@ -40,6 +40,7 @@ extern sf::View mainView;
 enum_map(eStartButton, rectangle) startup_button;
 
 void handle_startup_button_click(eStartButton btn, eKeyMod mods) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	if(recording){
 		std::map<std::string, std::string> info;
 		info["btn"] = startup_button_names[btn];
@@ -120,6 +121,7 @@ void handle_startup_button_click(eStartButton btn, eKeyMod mods) {
 
 // TODO: Always returns false, so make it void
 bool handle_startup_press(location the_point) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	the_point = mainPtr.mapPixelToCoords(the_point, mainView);
 	
 	for(auto btn : startup_button.keys()) {
@@ -132,6 +134,7 @@ bool handle_startup_press(location the_point) {
 }
 
 static void handle_splash_events(cFramerateLimiter& fps_limiter) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	sf::Event event;
 	while(pollEvent(mainPtr, event)) {
 		if(event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)
@@ -141,11 +144,13 @@ static void handle_splash_events(cFramerateLimiter& fps_limiter) {
 }
 
 static rectangle view_rect() {
+	sf::RenderWindow& mainPtr = get_main_window();
 	sf::Vector2f size = mainPtr.getView().getSize();
 	return rectangle(0, 0, size.y, size.x);
 }
 
 void show_logo(cFramerateLimiter& fps_limiter) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	// The spiderweb logo displays regardless of "show startup splash."
 	// However, when testing via replays this wastes a LOT of time
 	// cumulatively. So I've made it skippable in replay mode.
@@ -176,6 +181,7 @@ void show_logo(cFramerateLimiter& fps_limiter) {
 }
 
 void plop_fancy_startup(cFramerateLimiter& fps_limiter) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	rectangle whole_window = view_rect();
 
 	float ui_scale = get_ui_scale();

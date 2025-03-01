@@ -13,7 +13,7 @@
 
 #include "dialogxml/dialogs/dialog.hpp"
 
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 extern void showError(std::string str1, std::string str2, cDialog* parent = nullptr);
 
 extern void play_sound(snd_num_t which, sf::Time delay = sf::Time());

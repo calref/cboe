@@ -37,14 +37,14 @@ extern short store_spell_target,which_combat_type,combat_active_pc;
 extern eGameMode overall_mode;
 extern eItemWinMode stat_window;
 extern location center;
-extern sf::RenderWindow mainPtr;
+//extern sf::RenderWindow mainPtr;
 extern short store_current_pc,current_ground;
 extern eGameMode store_pre_shop_mode,store_pre_talk_mode;
 extern std::queue<pending_special_type> special_queue;
 extern bool prime_time();
 
 extern bool map_visible;
-extern sf::RenderWindow mini_map;
+//extern sf::RenderWindow mini_map;
 
 extern location hor_vert_place[14];
 extern location diag_place[14];
@@ -52,7 +52,7 @@ extern location golem_m_locs[16];
 extern cUniverse univ;
 extern cCustomGraphics spec_scen_g;
 bool need_map_full_refresh = true,forcing_map_button_redraw = false;
-extern sf::RenderTexture map_gworld;
+//extern sf::RenderTexture map_gworld;
 // In the 0..65535 range, this colour was {65535,65535,52428}
 sf::Color parchment = {255,255,205};
 
@@ -660,6 +660,7 @@ bool abil_exists(eItemAbil abil) { // use when outdoors
 
 
 void start_town_combat(eDirection direction) {
+	sf::RenderWindow& mainPtr = get_main_window();
 	place_party(direction);
 	if(univ.cur_pc == 6)
 		for(short i = 0; i < 6; i++)
@@ -1275,6 +1276,7 @@ bool does_location_have_special(cOutdoors& sector, location loc, eTerSpec specia
 
 // TODO: I don't think we need this
 void clear_map() {
+	sf::RenderTexture& map_gworld = get_map_texture();
 	rectangle map_world_rect(map_gworld);
 	
 //	if(!map_visible) {
@@ -1288,6 +1290,9 @@ void clear_map() {
 }
 
 void draw_map(bool need_refresh) {
+	sf::RenderWindow& mainPtr = get_main_window();
+	sf::RenderWindow& mini_map = get_mini_map_window();
+	sf::RenderTexture& map_gworld = get_map_texture();
 	if(!map_visible) return;
 	pic_num_t pic;
 	rectangle the_rect,map_world_rect = {0,0,384,384};
@@ -1540,6 +1545,8 @@ bool is_door(location destination) {
 extern void close_map(bool record);
 
 void display_map() {
+	sf::RenderWindow& mainPtr = get_main_window();
+	sf::RenderWindow& mini_map = get_mini_map_window();
 	if(recording){
 		record_action("display_map", "");
 	}
