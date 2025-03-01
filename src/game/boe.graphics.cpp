@@ -312,6 +312,8 @@ void draw_startup_stats() {
 				to_rect = party_to;
 				to_rect.offset(pc_rect.left,pc_rect.top);
 				pic_num_t pic = univ.party[i].which_graphic;
+				// TODO This doesn't make sense. If we're in the startup menu, there are no scenario custom graphics.
+				// Doesn't this need to find it saved in the party?
 				if(pic >= 1000) {
 					std::shared_ptr<const sf::Texture> gw;
 					graf_pos_ref(gw, from_rect) = spec_scen_g.find_graphic(pic % 1000, pic >= 10000);

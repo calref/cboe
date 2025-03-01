@@ -1,5 +1,9 @@
 
 #include <cstring>
+#include <algorithm>
+#include <iomanip>
+#include <string>
+#include <boost/algorithm/string/replace.hpp>
 
 #include "boe.global.hpp"
 
@@ -1672,3 +1676,280 @@ public:
 scen_header_type pick_a_scen() {
 	return cChooseScenario().run();
 }
+
+extern fs::path saveDir;
+
+class cFilePicker {
+	const int SLOTS_PER_PAGE = 4;
+	int parties_per_page;
+
+	fs::path save_folder;
+	bool picking_auto;
+	bool saving;
+	cDialog me{*ResMgr::dialogs.get("pick-save")};
+	cStack& get_stack() { return dynamic_cast<cStack&>(me["list"]); }
+	std::string template_info_str;
+
+	std::vector<std::pair<fs::path, std::time_t>> save_file_mtimes;
+	// We have to load the parties to get PC graphics, average level, location, etc.
+	// But we shouldn't load them all at once, because the amount is unlimited.
+	std::vector<cUniverse> save_files;
+	int pages_populated = 0;
+	int saves_loaded = 0;
+
+	void init_pages() {
+		save_file_mtimes = sorted_file_mtimes(save_folder);
+		save_files.resize(save_file_mtimes.size());
+
+		cStack& stk = get_stack();
+		int num_pages = ceil((float)save_file_mtimes.size() / parties_per_page);
+		stk.setPageCount(num_pages);
+	}
+
+	void empty_slot(int idx) {
+		std::string suffix = std::to_string(idx+1);
+		me["file" + suffix].setText("");
+		me["pc" + suffix + "a"].hide();
+		me["pc" + suffix + "b"].hide();
+		me["pc" + suffix + "c"].hide();
+		me["pc" + suffix + "d"].hide();
+		me["pc" + suffix + "e"].hide();
+		me["pc" + suffix + "f"].hide();
+		me["info" + suffix].hide();
+		me["load" + suffix].hide();
+		me["auto" + suffix].hide();
+		me["auto" + suffix + "-more-recent"].hide();
+	}
+
+	void populate_slot(int idx, fs::path file, std::time_t mtime, cUniverse& party_univ) {
+		std::string suffix = std::to_string(idx+1);
+		me["file" + suffix].setText(file.filename().string());
+
+		// Populate PC graphics
+		for(int i = 0; i < 6; ++i){
+			std::string key = "pc" + suffix;
+			key.push_back((char)('a' + i));
+			cPict& pict = dynamic_cast<cPict&>(me[key]);
+			if(party_univ.party[i].main_status != eMainStatus::ABSENT) {
+				pic_num_t pic = party_univ.party[i].which_graphic;
+				// TODO Apparently PCs are supposed to be able to have custom graphics and monster graphics,
+				// but the special node to Create PC only allows choosing preset PC pictures, so I don't
+				// think it's even possible to get a non-preset-PC graphic into a party without directly
+				// editing the tagfile. For now, I'm only rendering preset PCs.
+				if(pic >= 1000){
+				}else if(pic >= 100){
+				}else{
+					pict.setPict(pic, PIC_PC);
+				}
+				pict.show();
+			}else{
+				pict.hide();
+			}
+		}
+
+		// Populate party info
+		std::string party_info = template_info_str;
+
+		short level_sum = 0;
+		short num_pc = 0;
+		for(int i = 0; i < 6; ++i){
+			if(party_univ.party[i].main_status != eMainStatus::ABSENT) {
+				level_sum += party_univ.party[i].level;
+				++num_pc;
+			}
+		}
+		short avg_level = round((float)(level_sum / num_pc));
+		boost::replace_first(party_info, "{Lv}", std::to_string(avg_level));
+		if(num_pc == 1){
+			boost::replace_first(party_info, "Avg. ", "");
+		}
+
+		auto local_time = *std::localtime(&mtime);
+		std::stringstream last_modified;
+		last_modified << std::put_time(&local_time, "%h %d, %Y %I:%M %p");
+		boost::replace_first(party_info, "{LastSaved}", last_modified.str());
+
+		if(!party_univ.party.scen_name.empty()){
+			boost::replace_first(party_info, "{Scenario}", party_univ.scenario.scen_name);
+			boost::replace_first(party_info, "{Location}", get_location(&party_univ));
+		}else{
+			boost::replace_first(party_info, "{Scenario}||{Location}", "");
+		}
+
+		me["info" + suffix].setText(party_info);
+
+		// Set up buttons
+		if(saving){
+			me["file1"].setText(""); // Keep the frame
+			me["auto" + suffix].hide();
+			me["auto" + suffix + "-more-recent"].hide();
+			me["save" + suffix].attachClickHandler(std::bind(&cFilePicker::doSave, this, file));
+		}else{
+			me["load" + suffix].attachClickHandler(std::bind(&cFilePicker::doLoad, this, file));
+			// TODO check if a newer autosave exists
+			me["auto" + suffix + "-more-recent"].hide();
+		}
+	}
+
+	void populate_page(int page) {
+		int parties_needed = min(save_file_mtimes.size(), (page+1) * parties_per_page);
+		while(saves_loaded < parties_needed){
+			fs::path next_file = save_file_mtimes[saves_loaded].first;
+			cUniverse party_univ;
+			if(!load_party(next_file, save_files[saves_loaded])){
+				// TODO show error, fatal? Show corrupted party?
+			}
+			saves_loaded++;
+		}
+
+		if(saving){
+			time_t now;
+			std::time(&now);
+			// Populate the first slot with the actual current party
+			populate_slot(0, "", now, univ);
+		}
+
+		int start_idx = page * parties_per_page;
+		for(int party_idx = start_idx; party_idx < start_idx + parties_per_page; ++party_idx){
+			int slot_idx = party_idx - start_idx;
+			if(saving) slot_idx++;
+			if(party_idx < parties_needed)
+				populate_slot(slot_idx, save_file_mtimes[party_idx].first, save_file_mtimes[party_idx].second, save_files[party_idx]);
+			else
+				empty_slot(party_idx - start_idx);
+		}
+
+		++pages_populated;
+	}
+
+	bool doLoad(fs::path selected_file) {
+		me.setResult(selected_file);
+		me.toast(false);
+		return true;
+	}
+
+	bool confirm_overwrite(fs::path selected_file) {
+		cChoiceDlog dlog("confirm-overwrite", {"save","cancel"}, &me);
+		cDialog& inner = *(dlog.operator->());
+		std::string prompt = inner["prompt"].getText();
+		boost::replace_first(prompt, "{File}", selected_file.filename().string());
+		inner["prompt"].setText(prompt);
+		std::string choice = dlog.show();
+		return choice == "save";
+	}
+
+	bool doSave(fs::path selected_file) {
+		if(selected_file.empty()){
+			selected_file = save_folder / me["file1-field"].getText();
+			selected_file += ".exg";
+		}
+		if(!fs::exists(selected_file) || confirm_overwrite(selected_file)){
+			me.setResult(selected_file);
+			me.toast(false);
+		}
+		return true;
+	}
+
+	bool doCancel() {
+		me.toast(false);
+		return true;
+	}
+
+	bool doSelectPage(int dir) {
+		auto& stk = dynamic_cast<cStack&>(me["list"]);
+		// This stack doesn't loop. It's easier to implement loading the files one page at a time
+		// if I know we're not gonna jump from page 0 to the last page, leaving a gap in the vector.
+		stk.doSelectPage(dir);
+		me["prev"].show();
+		me["next"].show();
+		if(stk.getPage() == 0){
+			me["prev"].hide();
+		}
+		if(stk.getPage() == stk.getPageCount() - 1){
+			me["next"].hide();
+		}
+
+		populate_page(stk.getPage());
+		return true;
+	}
+
+	bool doFileBrowser() {
+		fs::path from_browser = nav_get_party();
+		if(!from_browser.empty()){
+			me.setResult(from_browser);
+			me.toast(false);
+		}
+		return true;
+	}
+
+public:
+	cFilePicker(fs::path save_folder, bool saving, bool picking_auto = false) :
+		save_folder(save_folder),
+		picking_auto(picking_auto),
+		saving(saving),
+		parties_per_page(saving ? SLOTS_PER_PAGE - 1 : SLOTS_PER_PAGE) {}
+
+	fs::path run() {
+		template_info_str = me["info1"].getText();
+
+		if(saving){
+			me["title-load"].hide();
+			me["file1"].setText(""); // Keep the frame
+			for(int i = 0; i < SLOTS_PER_PAGE; ++i){
+				me["load" + std::to_string(i+1)].hide();
+			}
+		}else{
+			me["title-save"].hide();
+			me["file1-field"].hide();
+			me["file1-extension-label"].hide();
+			for(int i = 0; i < SLOTS_PER_PAGE; ++i){
+				me["save" + std::to_string(i+1)].hide();
+			}
+		}
+
+		me["cancel"].attachClickHandler(std::bind(&cFilePicker::doCancel, this));
+		// Since it would be crazy to record and replay the metadata shown on a player's save picker
+		// dialog (which is what we do for the scenario picker),
+		// when replaying, basically make every part of the picker no-op except cancel and view autosaves.
+		// Load buttons should do the same thing as cancel.
+		if(!replaying){
+			me["next"].attachClickHandler(std::bind(&cFilePicker::doSelectPage, this, 1));
+			me["prev"].attachClickHandler(std::bind(&cFilePicker::doSelectPage, this, -1));
+			init_pages();
+			me["find"].attachClickHandler(std::bind(&cFilePicker::doFileBrowser, this));
+		}else{
+			me["load"].attachClickHandler(std::bind(&cFilePicker::doCancel, this));
+		}
+
+		// Hide the prev button and populate the first page
+		doSelectPage(0);
+
+		me.run();
+		if(!me.hasResult()) return "";
+		fs::path file = me.getResult<fs::path>();
+		return file;
+	}
+};
+
+static fs::path run_file_picker(fs::path save_folder, bool saving) {
+	return cFilePicker(save_folder, saving).run();
+}
+
+fs::path run_autosave_picker(fs::path save_file) {
+	return "";
+}
+
+fs::path run_file_picker(bool saving) {
+	if(!has_feature_flag("file-picker-dialog", "V1") /* TODO check file picker preference */){
+		if(saving)
+			return nav_put_or_temp_party();
+		else
+			return nav_get_or_decode_party();
+	}
+
+	// TODO this is set up to be configurable, but not yet exposed in preferences.
+	fs::path save_folder = get_string_pref("SaveFolder", saveDir.string());
+
+	return run_file_picker(save_folder, saving);
+}
+
