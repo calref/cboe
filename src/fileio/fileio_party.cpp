@@ -21,6 +21,7 @@
 #include "fileio/tagfile.hpp"
 #include "fileio/tarball.hpp"
 #include "replay.hpp"
+#include "game/boe.dlgutil.hpp"
 
 extern bool mac_is_intel();
 extern fs::path progDir, tempDir;
@@ -39,6 +40,8 @@ fs::path nav_get_or_decode_party() {
 		decode_file(next_action.GetText(), tempDir / "temp.exg");
 		return tempDir / "temp.exg";
 	}else{
+		// TODO if the save is not in the saves folder, prompt about moving it in,
+		// and return the moved path?
 		return nav_get_party();
 	}
 }
@@ -304,7 +307,6 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 	return true;
 }
 
-extern fs::path scenDir;
 bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 	igzstream zin(file_to_load.string().c_str());
 	tarball partyIn;
@@ -546,7 +548,7 @@ bool save_party(cUniverse& univ, bool save_as) {
 	// univ.file can be empty for prefab parties, so a file browser might be needed
 	// even for a regular save.
 	if(save_as || univ.file.empty()){
-		univ.file = nav_put_or_temp_party();
+		univ.file = run_file_picker(true);
 	}
 	// A file wasn't chosen
 	if(univ.file.empty()) return false;
