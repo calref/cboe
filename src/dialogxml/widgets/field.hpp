@@ -53,8 +53,8 @@ public:
 	/// @param newType The new input type.
 	void setInputType(eFldType newType);
 	/// Create a new editable text field.
-	/// @param parent The parent dialog.
-	explicit cTextField(cDialog& parent);
+	/// @param parent The parent.
+	explicit cTextField(iComponent& parent);
 	bool isClickable() const override;
 	bool isFocusable() const override;
 	bool isScrollable() const override;

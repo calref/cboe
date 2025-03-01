@@ -94,7 +94,7 @@ bool cTextMsg::parseContent(ticpp::Node& content, int n, std::string tagName, st
 
 void cTextMsg::validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) {
 	cControl::validatePostParse(who, fname, attrs, nodes);
-	if(!attrs.count("color") && !attrs.count("colour") && parent->getBg() == cDialog::BG_DARK)
+	if(!attrs.count("color") && !attrs.count("colour") && getDialog()->getBg() == cDialog::BG_DARK)
 		setColour(sf::Color::White);
 	if(attrs.count("width")) fixedWidth = true;
 	if(attrs.count("height")) fixedHeight = true;
@@ -116,8 +116,8 @@ void cTextMsg::calculate_layout() {
 	for(const auto& key : keyRefs) {
 		size_t pos = msg.find_first_of(KEY_PLACEHOLDER);
 		if(pos == std::string::npos) break;
-		if(key && !parent->hasControl(*key)) continue;
-		cControl& ctrl = key ? parent->getControl(*key) : *this;
+		if(key && !getDialog()->hasControl(*key)) continue;
+		cControl& ctrl = key ? getDialog()->getControl(*key) : *this;
 		msg.replace(pos, 1, ctrl.getAttachedKeyDescription());
 	}
 	if(to_rect.bottom - to_rect.top < 20 && msg.find("|") == std::string::npos){
@@ -197,20 +197,11 @@ void cTextMsg::recalcRect() {
 	calculate_layout();
 }
 
-cTextMsg::cTextMsg(cDialog& parent) :
+cTextMsg::cTextMsg(iComponent& parent) :
 	cControl(CTRL_TEXT,parent),
 	textFont(FONT_BOLD),
 	textSize(10),
 	color(parent.getDefTextClr()),
-	fromList("none") {
-	setFormat(TXT_FRAME, FRM_NONE);
-}
-
-cTextMsg::cTextMsg(sf::RenderWindow& parent) :
-	cControl(CTRL_TEXT,parent),
-	textFont(FONT_BOLD),
-	textSize(10),
-	color(cDialog::defaultBackground == cDialog::BG_DARK ? sf::Color::White : sf::Color::Black),
 	fromList("none") {
 	setFormat(TXT_FRAME, FRM_NONE);
 }
@@ -230,7 +221,7 @@ bool cTextMsg::isScrollable() const {
 void cTextMsg::draw(){
 	rectangle to_rect = frame;
 	
-	inWindow->setActive();
+	getWindow().setActive();
 	
 	if(visible){
 		drawFrame(2, frameStyle);
@@ -242,7 +233,7 @@ void cTextMsg::draw(){
 		}
 		style.colour = draw_color;
 		if (!calculated) calculate_layout();
-		win_draw_string(*inWindow,to_rect,msg,text_mode,style,break_info,right_align);
+		win_draw_string(getWindow(),to_rect,msg,text_mode,style,break_info,right_align);
 	}
 }
 

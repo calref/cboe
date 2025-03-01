@@ -25,10 +25,11 @@ void cLed::init(){
 		}
 }
 
-cLed::cLed(cDialog& parent) :
-	cButton(parent,CTRL_LED),
-	state(led_off),
-	textFont(FONT_BOLD) {
+cLed::cLed(iComponent& parent)
+	: cButton(parent,CTRL_LED)
+	, state(led_off)
+	, textFont(FONT_BOLD)
+{
 	textSize = 10;
 	type = BTN_LED;
 	using namespace std::placeholders;
@@ -91,7 +92,7 @@ const int LED_TEXT_SPACE = 4; // Possibly could be 6
 void cLed::draw(){
 	rectangle from_rect, to_rect;
 	
-	inWindow->setActive(false);
+	getWindow().setActive(false);
 	
 	if(visible){
 		TextStyle style;
@@ -105,23 +106,23 @@ void cLed::draw(){
 		if(textOnRight){
 			to_rect.right = to_rect.left + from_rect.width();
 			to_rect.bottom = to_rect.top + from_rect.height();
-			rect_draw_some_item(*ResMgr::graphics.get(buttons[btnGW[BTN_LED]]),from_rect,*inWindow,to_rect);
+			rect_draw_some_item(*ResMgr::graphics.get(buttons[btnGW[BTN_LED]]),from_rect,getWindow(),to_rect);
 		}else{
 			to_rect.right = text_width;
-			win_draw_string(*inWindow,to_rect,getText(),wrapLabel ? eTextMode::WRAP : eTextMode::LEFT_TOP,style);
+			win_draw_string(getWindow(),to_rect,getText(),wrapLabel ? eTextMode::WRAP : eTextMode::LEFT_TOP,style);
 		}
 		if(textOnRight){
 			to_rect.left = frame.left + from_rect.width() + LED_TEXT_SPACE;
 			to_rect.right = frame.right;
-			win_draw_string(*inWindow,to_rect,getText(),wrapLabel ? eTextMode::WRAP : eTextMode::LEFT_TOP,style);
+			win_draw_string(getWindow(),to_rect,getText(),wrapLabel ? eTextMode::WRAP : eTextMode::LEFT_TOP,style);
 		}else{
 			to_rect.left = frame.left + text_width + LED_TEXT_SPACE;
 			to_rect.right = to_rect.left + from_rect.width();
-			rect_draw_some_item(*ResMgr::graphics.get(buttons[btnGW[BTN_LED]]),from_rect,*inWindow,to_rect);
+			rect_draw_some_item(*ResMgr::graphics.get(buttons[btnGW[BTN_LED]]),from_rect,getWindow(),to_rect);
 		}
 	}
 
-	inWindow->setActive();
+	getWindow().setActive();
 }
 
 cControl::storage_t cLed::store() const {

@@ -49,11 +49,8 @@ public:
 	/// @return The button type.
 	eBtnType getBtnType() const;
 	/// Create a new button.
-	/// @param parent The parent dialog.
-	explicit cButton(cDialog& parent);
-	/// Create a button outside of a dialog
-	/// @param parent The parent window
-	explicit cButton(sf::RenderWindow& parent);
+	/// @param parent The parent.
+	explicit cButton(iComponent& parent);
 	bool isClickable() const override;
 	bool isFocusable() const override;
 	bool isScrollable() const override;
@@ -73,7 +70,7 @@ protected:
 	/// Construct a new button.
 	/// @param parent The parent dialog.
 	/// @param t The type of control. Should be either CTRL_LED or CTRL_BTN.
-	cButton(cDialog& parent,eControlType t);
+	cButton(iComponent& parent,eControlType t);
 private:
 	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
 	static short defaultTextSize(eBtnType type);

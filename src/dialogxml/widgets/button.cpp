@@ -18,16 +18,7 @@
 
 extern sf::Texture bg_gworld;
 
-cButton::cButton(sf::RenderWindow& parent) :
-	cControl(CTRL_BTN,parent),
-	wrapLabel(false),
-	type(BTN_REG),
-	textSize(defaultTextSize(type)),
-	textClr(sf::Color::Black),
-	fromList("none") {
-}
-
-cButton::cButton(cDialog& parent) :
+cButton::cButton(iComponent& parent) :
 	cControl(CTRL_BTN,parent),
 	wrapLabel(false),
 	type(BTN_REG),
@@ -37,7 +28,7 @@ cButton::cButton(cDialog& parent) :
 }
 
 /* This constructor is only called for LEDs. */
-cButton::cButton(cDialog& parent,eControlType t) :
+cButton::cButton(iComponent& parent,eControlType t) :
 	cControl(t,parent),
 	fromList("none"),
 	wrapLabel(false) {
@@ -66,7 +57,7 @@ const int TINY_TEXT_OFFSET = 18;
 void cButton::draw(){
 	rectangle from_rect, to_rect;
 	
-	inWindow->setActive(false);
+	getWindow().setActive(false);
 	
 	if(visible){
 		TextStyle style;
@@ -77,7 +68,7 @@ void cButton::draw(){
 			to_rect.right = to_rect.left + 14;
 			to_rect.bottom = to_rect.top + 10;
 		}
-		rect_draw_some_item(*ResMgr::graphics.get(buttons[btnGW[type]]),from_rect,*inWindow,to_rect,sf::BlendAlpha);
+		rect_draw_some_item(*ResMgr::graphics.get(buttons[btnGW[type]]),from_rect,getWindow(),to_rect,sf::BlendAlpha);
 		style.colour = sf::Color::Black;
 		style.lineHeight = 8;
 		eTextMode textMode = eTextMode::CENTRE;
@@ -102,13 +93,13 @@ void cButton::draw(){
 			to_rect.offset(0, (-style.pointSize/2) * (forced_lines.size() - 1));
 		}
 		for(std::string line : forced_lines){
-			win_draw_string(*inWindow,to_rect,line,textMode,style);
+			win_draw_string(getWindow(),to_rect,line,textMode,style);
 			to_rect.offset(0, style.pointSize);
 		}
 		// frame default button, to provide a visual cue that it's the default
 		if(key.spec && key.k == key_enter) drawFrame(2,frameStyle);
 	}
-	inWindow->setActive();
+	getWindow().setActive();
 }
 
 bool cButton::manageFormat(eFormat prop, bool set, boost::any* val) {
@@ -195,7 +186,7 @@ void cButton::validatePostParse(ticpp::Element& elem, std::string fname, const s
 	initPreset();
 
 	if(labelledButtons.count(type)) {
-		if(!attrs.count("color") && !attrs.count("colour") && parent->getBg() == cDialog::BG_DARK)
+		if(!attrs.count("color") && !attrs.count("colour") && getDialog()->getBg() == cDialog::BG_DARK)
 			setColour(sf::Color::White);
 	}
 }

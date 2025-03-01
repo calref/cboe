@@ -56,11 +56,8 @@ public:
 	/// @return The type of the current icon.
 	ePicType getPicType() const;
 	/// Create a new icon.
-	/// @param parent The parent dialog.
-	explicit cPict(cDialog& parent);
-	/// Create a new icon without a parent dialog.
-	/// @param parent The parent window.
-	explicit cPict(sf::RenderWindow& parent);
+	/// @param parent The parent.
+	explicit cPict(iComponent& parent);
 	bool isClickable() const override;
 	bool isFocusable() const override;
 	bool isScrollable() const override;

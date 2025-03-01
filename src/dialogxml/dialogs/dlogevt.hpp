@@ -68,4 +68,23 @@ template<> struct event_fcn<EVT_SCROLL> {
 	using type = std::function<bool(cDialog&, std::string, int)>;
 };
 
+struct iNameGiver {
+	virtual std::string generateId(const std::string& base) const = 0;
+	virtual ~iNameGiver() {}
+};
+
+struct iComponent {
+	virtual sf::RenderWindow& getWindow() = 0;
+	virtual sf::Color getDefTextClr() const = 0;
+	virtual ~iComponent() {}
+};
+
+class cParentless : public iComponent {
+	sf::RenderWindow* win;
+public:
+	cParentless(sf::RenderWindow& win) : win(&win) {}
+	sf::RenderWindow& getWindow() override { return *win; }
+	sf::Color getDefTextClr() const override; // Defined in dialog.cpp
+};
+
 #endif

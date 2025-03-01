@@ -41,7 +41,7 @@ bool cTextField::callHandler(event_fcn<EVT_DEFOCUS>::type onFocus, cDialog& me, 
 				{FLD_UINT, "a non-negative integer"},
 				{FLD_REAL, "a number"},
 			};
-			showError("You need to enter " + typeNames.at(field_type) + "!","",parent);
+			showError("You need to enter " + typeNames.at(field_type) + "!","",getDialog());
 			return false;
 		}
 	}
@@ -140,7 +140,7 @@ void cTextField::replay_selection(ticpp::Element& next_action) {
 }
 
 bool cTextField::handleClick(location clickLoc, cFramerateLimiter& fps_limiter) {
-	if(!haveFocus && parent && !parent->setFocus(this)) return true;
+	if(!haveFocus && getDialog() && !getDialog()->setFocus(this)) return true;
 	haveFocus = true;
 	redraw(); // This ensures the snippets array is populated.
 	std::string contents = getText();
@@ -163,13 +163,13 @@ bool cTextField::handleClick(location clickLoc, cFramerateLimiter& fps_limiter) 
 	int initial_ip = insertionPoint, initial_sp = selectionPoint;
 	while(!done) {
 		redraw();
-		while(pollEvent(inWindow, e)){
+		while(pollEvent(getWindow(), e)){
 			if(e.type == sf::Event::MouseButtonReleased){
 				done = true;
 			} else if(e.type == sf::Event::MouseMoved){
 				restore_cursor();
 				location newLoc(e.mouseMove.x, e.mouseMove.y);
-				newLoc = inWindow->mapPixelToCoords(newLoc);
+				newLoc = getWindow().mapPixelToCoords(newLoc);
 				set_ip(newLoc, &cTextField::selectionPoint);
 				if(is_double) {
 					if(selectionPoint > initial_ip) {
@@ -228,7 +228,7 @@ bool cTextField::hasFocus() const {
 	return haveFocus;
 }
 
-cTextField::cTextField(cDialog& parent) :
+cTextField::cTextField(iComponent& parent) :
 		cControl(CTRL_FIELD,parent),
 		color(sf::Color::Black),
 		insertionPoint(-1),
@@ -241,11 +241,11 @@ cTextField::~cTextField(){}
 void cTextField::draw(){
 	if(!visible) return;
 	static const sf::Color hiliteClr = {127,127,127}, ipClr = {92, 92, 92};
-	inWindow->setActive();
+	getWindow().setActive();
 	rectangle outline = frame;
 	outline.inset(-2,-2);
-	fill_rect(*inWindow, outline, sf::Color::White);
-	frame_rect(*inWindow, outline, sf::Color::Black);
+	fill_rect(getWindow(), outline, sf::Color::White);
+	frame_rect(getWindow(), outline, sf::Color::Black);
 	std::string contents = getText();
 	TextStyle style;
 	style.font = FONT_PLAIN;
@@ -259,13 +259,13 @@ void cTextField::draw(){
 		text_rect = frame;
 		text_rect.inset(2,2);
 		// Determine which line the insertion and selection points are on
-		clip_rect(*inWindow, {0,0,0,0}); // To prevent drawing
+		clip_rect(getWindow(), {0,0,0,0}); // To prevent drawing
 		hilite_t tmp_hilite = hilite;
 		// Manipulate this to ensure that there is a hilited area
 		std::string dummy_str = contents + "  ";
 		if(tmp_hilite.first >= tmp_hilite.second)
 			tmp_hilite.second = tmp_hilite.first + 1;
-		std::vector<rectangle> rects = draw_string_hilite(*inWindow, text_rect, dummy_str, style, {tmp_hilite}, {0,0,0});
+		std::vector<rectangle> rects = draw_string_hilite(getWindow(), text_rect, dummy_str, style, {tmp_hilite}, {0,0,0});
 		if(!rects.empty()) {
 			// We only care about the first and last rects. Furthermore, we only really need one point
 			location ip_pos = rects[0].centre(), sp_pos = rects[rects.size() - 1].centre();
@@ -285,13 +285,13 @@ void cTextField::draw(){
 				sp_pos.y += shift;
 			}
 		}
-		undo_clip(*inWindow);
+		undo_clip(getWindow());
 		changeMade = false;
 	}
-	clip_rect(*inWindow, frame);
+	clip_rect(getWindow(), frame);
 	ip_col = ip_row = -1;
 	if(haveFocus) {
-		snippets = draw_string_sel(*inWindow, text_rect, contents, style, {hilite}, hiliteClr);
+		snippets = draw_string_sel(getWindow(), text_rect, contents, style, {hilite}, hiliteClr);
 		int iSnippet = -1, sum = 0;
 		ip_offset = insertionPoint;
 		for(size_t i = 0; i < snippets.size(); i++) {
@@ -311,7 +311,7 @@ void cTextField::draw(){
 			if(iSnippet >= 0)
 				ipRect.offset(snippets[iSnippet].at.x + ip_offset, snippets[iSnippet].at.y + 1);
 			else ipRect.offset(frame.topLeft()), ipRect.offset(3,2);
-			fill_rect(*inWindow, ipRect, ipClr);
+			fill_rect(getWindow(), ipRect, ipClr);
 		} else if(ip_timer.getElapsedTime().asMilliseconds() > 1000) {
 //			printf("Blink off (%d); ", ip_timer.getElapsedTime().asMilliseconds());
 			ip_timer.restart();
@@ -322,9 +322,9 @@ void cTextField::draw(){
 	} else {
 		rectangle text_rect = frame;
 		text_rect.inset(2,2);
-		win_draw_string(*inWindow, text_rect, contents, eTextMode::WRAP, style);
+		win_draw_string(getWindow(), text_rect, contents, eTextMode::WRAP, style);
 	}
-	undo_clip(*inWindow);
+	undo_clip(getWindow());
 }
 
 static cKey divineFunction(cKey key) {

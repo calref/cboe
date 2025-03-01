@@ -24,7 +24,7 @@ class cScrollPane : public cContainer {
 	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
 public:
 	/// Create a new scroll pane
-	explicit cScrollPane(cDialog& parent);
+	explicit cScrollPane(iComponent& parent);
 	inline cScrollbar& getScroll() { return scroll; }
 	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
 	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;

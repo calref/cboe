@@ -26,6 +26,8 @@
 
 #include "location.hpp"
 
+class cContainer;
+
 // TinyXML forward declarations
 namespace ticpp {
 	class Attribute;
@@ -106,9 +108,9 @@ public:
 /// triggerClickHandler() if a click occurs, either because handleClick() returns true or because
 /// a keyboard event is received that should trigger the control.
 ///
-/// All control subclasses must have a constructor that takes a single cDialog& parameter,
+/// All control subclasses must have a constructor that takes a single iComponent* parameter,
 /// in order for the parsing template to work.
-class cControl {
+class cControl : public iComponent {
 public:
 	using storage_t = std::map<std::string, boost::any>;
 	static const char KEY_PLACEHOLDER = '\a';
@@ -117,9 +119,8 @@ protected:
 	/// Most controls probably don't need to override this. Override parseAttribute() and parseContent() instead.
 	/// @param who A reference to the XML element being parsed.
 	/// @param fname The file being parsed, for error messages.
-	/// @return The unique ID of the widget.
 	/// @throw xBadNode if an unsupported sub-element is detected, or if text is found in an element that does not support it
-	virtual std::string parse(ticpp::Element& who, std::string fname);
+	virtual void parse(ticpp::Element& who, std::string fname);
 	/// Parses an attribute on the XML element representing this control.
 	/// All controls should defer to cControl::parseAttribute if they don't recognize the attribute.
 	/// @param attr A reference to the XML attribute being parsed.
@@ -350,20 +351,20 @@ public:
 	/// Restore the control to a previous state.
 	/// @param to A state previously returned from store()
 	virtual void restore(storage_t to);
-	/// Create a new control attached to an arbitrary window, rather than a dialog.
+	/// Create a new control.
 	/// @param t The type of the control.
-	/// @param p The parent window.
-	cControl(eControlType t, sf::RenderWindow& p);
-	/// Create a new control attached to a dialog.
-	/// @param t The type of the control.
-	/// @param p The parent dialog.
-	cControl(eControlType t, cDialog& p);
+	/// @param p The parent dialog, container control, or window.
+	cControl(eControlType t, iComponent& parent);
 	virtual ~cControl();
 	/// Draw the control into its parent window.
 	virtual void draw() = 0;
 	cControl& operator=(cControl& other) = delete;
 	cControl(cControl& other) = delete;
 protected:
+	/// Create a new control attached to a dialog.
+	/// @param t The type of the control.
+	/// @param p The parent container.
+	cControl(eControlType t, iComponent* p);
 	/// If the control automatically determines its rect based on certain criteria, override this.
 	/// It will automatically be called during parsing.
 	/// When overridden, it should normally be public.
@@ -436,12 +437,17 @@ protected:
 	static std::string dlogStringFilter(std::string toFilter);
 	/// The parent dialog of the control.
 	/// May be null, if the control was created via cControl(eControlType,sf::RenderWindow&).
-	cDialog* parent;
+	cDialog* getDialog() const;
+	/// The direct parent of this control.
+	iComponent& getParent() const;
 	/// This control's labelling control.
 	cControl* labelCtrl = nullptr;
 	/// The parent window of the control.
 	/// This is for use in implementing draw().
-	sf::RenderWindow* inWindow;
+	sf::RenderWindow& getWindow() override;
+	/// Get the default text colour applied to new dialogs when loading from a file.
+	/// @return The text colour.
+	sf::Color getDefTextClr() const override;
 	/// Whether the control is visible
 	bool visible, depressed = false; ///< Whether the control is depressed; only applicable for clickable controls
 	/// The control's bounding rect.
@@ -463,10 +469,6 @@ protected:
 	void redraw();
 	/// Plays the proper sound for this control being clicked on
 	void playClickSound();
-	/// Generate a unique ID for a control. The explicitId is the ID specified in the XML, if any.
-	/// This may be called more than once, so it should not return the same value twice in a row,
-	/// unless it can guarantee the value is not already assigned to another control.
-	virtual std::string generateId(const std::string& explicitId) const;
 	static std::string generateRandomString();
 private:
 	friend class cDialog; // This is so it can access parseColour and anchor
@@ -475,6 +477,7 @@ private:
 	std::string lbl;
 	eControlType type;
 	std::map<eDlogEvt, boost::any> event_handlers;
+	iComponent* parent;
 	// Transient values only used during parsing
 	ePosition horz = POS_ABS, vert = POS_ABS;
 	std::string anchor;

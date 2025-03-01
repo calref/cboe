@@ -52,8 +52,8 @@ public:
 	/// Meant for internal use.
 	void fillTabOrder(std::vector<int>& specificTabs, std::vector<int>& reverseTabs);
 	/// Create a new tilemap
-	/// @param parent The parent dialog.
-	cTilemap(cDialog& parent);
+	/// @param parent The parent.
+	cTilemap(iComponent& parent);
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers

@@ -8,6 +8,7 @@
 
 #include "control.hpp"
 #include "dialogxml/dialogs/dialog.hpp"
+#include "dialogxml/widgets/container.hpp"
 #include "sounds.hpp"
 #include "button.hpp"
 #include "led.hpp"
@@ -24,10 +25,6 @@
 // Hyperlink forward declaration
 extern void launchURL(std::string url);
 std::mt19937 cControl::ui_rand;
-
-std::string cControl::generateId(const std::string& explicitId) const {
-	return explicitId.empty() ? generateRandomString() : explicitId;
-}
 
 std::string cControl::generateRandomString() {
 	// Not bothering to seed, because it doesn't actually matter if it's truly random.
@@ -141,8 +138,29 @@ void cControl::hide(){
 	if(labelCtrl) labelCtrl->hide();
 }
 
+cDialog* cControl::getDialog() const {
+	if(auto container = dynamic_cast<cContainer*>(parent)) {
+		return container->getDialog();
+	} else if(auto dlog = dynamic_cast<cDialog*>(parent)) {
+		return dlog;
+	}
+	return nullptr;
+}
+
+sf::RenderWindow& cControl::getWindow() {
+	return parent->getWindow();
+}
+
+iComponent& cControl::getParent() const {
+	return *parent;
+}
+
+sf::Color cControl::getDefTextClr() const {
+	return parent ? parent->getDefTextClr() : sf::Color::Black;
+}
+
 bool cControl::isVisible() const {
-	if(!parent || parent->dialogNotToast)
+	if(!getDialog() || getDialog()->dialogNotToast)
 		return visible;
 	else return false;
 }
@@ -228,7 +246,7 @@ bool cControl::manageFormat(eFormat, bool, boost::any*) {
 
 void cControl::redraw() {
 	// If there's no parent dialog, we're not responsible for redrawing
-	if(parent) parent->draw();
+	if(getDialog()) getDialog()->draw();
 }
 
 void cControl::playClickSound(){
@@ -244,21 +262,21 @@ void cControl::playClickSound(){
 bool cControl::handleClick(location, cFramerateLimiter& fps_limiter){
 	sf::Event e;
 	bool done = false, clicked = false;
-	inWindow->setActive();
+	getWindow().setActive();
 	depressed = true;
 	while(!done){
 		redraw();
-		while(pollEvent(inWindow, e)){
+		while(pollEvent(getWindow(), e)){
 			if(e.type == sf::Event::MouseButtonReleased){
 				done = true;
 				location clickPos(e.mouseButton.x, e.mouseButton.y);
-				clickPos = inWindow->mapPixelToCoords(clickPos);
+				clickPos = getWindow().mapPixelToCoords(clickPos);
 				clicked = frame.contains(clickPos);
 				depressed = false;
 			} else if(e.type == sf::Event::MouseMoved){
 				restore_cursor();
 				location toPos(e.mouseMove.x, e.mouseMove.y);
-				toPos = inWindow->mapPixelToCoords(toPos);
+				toPos = getWindow().mapPixelToCoords(toPos);
 				depressed = frame.contains(toPos);
 			}
 		}
@@ -335,10 +353,13 @@ void cControl::detachKey(){
 	this->key.c = 0;
 }
 
-cControl::cControl(eControlType t, cDialog& p) : parent(&p), inWindow(&p.win), type(t), visible(true), key({false, 0, mod_none}), frameStyle(FRM_INSET) {}
-
-cControl::cControl(eControlType t, sf::RenderWindow& p) : parent(nullptr), inWindow(&p), type(t), visible(true), key({false, 0, mod_none}), frameStyle(FRM_INSET) {}
-
+cControl::cControl(eControlType t, iComponent& p)
+	: parent(&p)
+	, type(t)
+	, visible(true)
+	, key({false, 0, mod_none})
+	, frameStyle(FRM_INSET)
+{}
 
 void cControl::attachClickHandler(std::function<bool(cDialog&,std::string,eKeyMod)> f) {
 	if(!f) {
@@ -390,7 +411,7 @@ void cControl::drawFrame(short amt, eFrameStyle frameStyle){
 	static sf::Color lt_gray = {224,224,224},dk_gray = {48,48,48};
 	rectangle rect = frame, ul_rect;
 	
-	inWindow->setActive();
+	getWindow().setActive();
 	
 	rect.inset(-amt,-amt);
 	ul_rect = rect;
@@ -403,20 +424,20 @@ void cControl::drawFrame(short amt, eFrameStyle frameStyle){
 		ul_rect.left += 1;
 	}
 	
-	frame_rect(*inWindow, rect, dk_gray);
+	frame_rect(getWindow(), rect, dk_gray);
 	if(frameStyle == FRM_OUTSET || frameStyle == FRM_INSET) {
-		clip_rect(*inWindow, ul_rect);
-		frame_rect(*inWindow, rect, lt_gray);
-		undo_clip(*inWindow);
+		clip_rect(getWindow(), ul_rect);
+		frame_rect(getWindow(), rect, lt_gray);
+		undo_clip(getWindow());
 	} else if(frameStyle == FRM_DOUBLE) {
 		rect.inset(-amt, -amt);
-		frame_rect(*inWindow, rect, dk_gray);
+		frame_rect(getWindow(), rect, dk_gray);
 	}
 }
 
-std::string cControl::parse(ticpp::Element& who, std::string fname) {
+void cControl::parse(ticpp::Element& who, std::string fname) {
 	using namespace ticpp;
-	std::string tagName, id;
+	std::string tagName;
 	who.GetValue(&tagName);
 	Iterator<Attribute> attr;
 	Iterator<Node> node;
@@ -427,13 +448,16 @@ std::string cControl::parse(ticpp::Element& who, std::string fname) {
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
 		std::string attrName = attr->Name();
 		foundAttrs.insert(attrName);
-		if(attrName == "name") attr->GetValue(&id);
+		if(attrName == "name") attr->GetValue(&name);
 		else if(attrName == "top") attr->GetValue(&frame.top);
 		else if(attrName == "left") attr->GetValue(&frame.left);
 		else if(attrName == "width") attr->GetValue(&width);
 		else if(attrName == "height") attr->GetValue(&height);
 		else if(!parseAttribute(*attr, tagName, fname))
 			throw xBadAttr(tagName, attrName, attr->Row(), attr->Column(), fname);
+	}
+	if(auto namer = dynamic_cast<iNameGiver*>(&getParent())) {
+		name = namer->generateId(name);
 	}
 	std::string text;
 	for(node = node.begin(&who); node != node.end(); node++){
@@ -463,8 +487,6 @@ std::string cControl::parse(ticpp::Element& who, std::string fname) {
 			return false;
 		});
 	}
-
-	return id;
 }
 
 bool cControl::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) {
@@ -575,9 +597,9 @@ bool cControl::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::
 		std::string val = attr.Value();
 		if(val == "link") {
 			// TODO: Would be nice if it could work for other backgrounds too...
-			if(parent->getBg() == cDialog::BG_DARK)
+			if(getDialog()->getBg() == cDialog::BG_DARK)
 				setColour({0x7f, 0xd7, 0xFF});
-			if(parent->getBg() == cDialog::BG_LIGHT)
+			if(getDialog()->getBg() == cDialog::BG_LIGHT)
 				setColour({0x00, 0x00, 0xFF});
 
 			is_link = true;

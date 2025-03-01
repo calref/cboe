@@ -36,8 +36,8 @@ public:
 	storage_t store() const override;
 	void restore(storage_t to) override;
 	/// Create a new LED button.
-	/// @param parent The parent dialog.
-	explicit cLed(cDialog& parent);
+	/// @param parent The parent.
+	explicit cLed(iComponent& parent);
 	virtual ~cLed();
 	/// Set the LED's current state,.
 	/// @param to The new state.

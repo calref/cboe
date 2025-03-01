@@ -245,7 +245,8 @@ int main(int argc, char* argv[]) {
 }
 
 static void init_sbar(std::shared_ptr<cScrollbar>& sbar, const std::string& name, rectangle rect, rectangle events_rect, int max, int pgSz, int start = 0) {
-	sbar.reset(new cScrollbar(mainPtr));
+	static cParentless mainWin(mainPtr);
+	sbar.reset(new cScrollbar(mainWin));
 	sbar->setName(name);
 	sbar->setBounds(rect);
 	sbar->setMaximum(max);
@@ -283,7 +284,8 @@ static void init_scrollbars() {
 }
 
 static void init_btn(std::shared_ptr<cButton>& btn, eBtnType type, location loc) {
-	btn.reset(new cButton(mainPtr));
+	static cParentless mainWin(mainPtr);
+	btn.reset(new cButton(mainWin));
 	btn->setBtnType(type);
 	btn->relocate(loc);
 	btn->hide();

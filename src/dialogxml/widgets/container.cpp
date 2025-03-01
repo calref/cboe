@@ -16,36 +16,40 @@
 #include "dialogxml/widgets/scrollbar.hpp"
 #include "replay.hpp"
 
+std::string cContainer::generateId(const std::string& explicitId) const {
+	return explicitId.empty() ? generateRandomString() : explicitId;
+}
+
 bool cContainer::parseChildControl(ticpp::Element& elem, std::map<std::string,cControl*>& controls, std::string& id, std::string fname) {
 	ctrlIter inserted;
 	std::string tag = elem.Value();
 	if(tag == "field") {
-		auto field = parent->parse<cTextField>(elem, this);
+		auto field = getDialog()->parse<cTextField>(elem, *this);
 		inserted = controls.insert(field).first;
-		parent->tabOrder.push_back(field);
+		getDialog()->tabOrder.push_back(field);
 		id = field.first;
 	} else if(tag == "text") {
-		auto text = parent->parse<cTextMsg>(elem, this);
+		auto text = getDialog()->parse<cTextMsg>(elem, *this);
 		inserted = controls.insert(text).first;
 		id = text.first;
 	} else if(tag == "pict") {
-		auto pict = parent->parse<cPict>(elem, this);
+		auto pict = getDialog()->parse<cPict>(elem, *this);
 		inserted = controls.insert(pict).first;
 		id = pict.first;
 	} else if(tag == "slider") {
-		auto slide = parent->parse<cScrollbar>(elem, this);
+		auto slide = getDialog()->parse<cScrollbar>(elem, *this);
 		inserted = controls.insert(slide).first;
 		id = slide.first;
 	} else if(tag == "button") {
-		auto button = parent->parse<cButton>(elem, this);
+		auto button = getDialog()->parse<cButton>(elem, *this);
 		inserted = controls.insert(button).first;
 		id = button.first;
 	} else if(tag == "led") {
-		auto led = parent->parse<cLed>(elem, this);
+		auto led = getDialog()->parse<cLed>(elem, *this);
 		inserted = controls.insert(led).first;
 		id = led.first;
 	} else if(tag == "group") {
-		auto group = parent->parse<cLedGroup>(elem, this);
+		auto group = getDialog()->parse<cLedGroup>(elem, *this);
 		inserted = controls.insert(group).first;
 		id = group.first;
 	} else return false;
@@ -59,7 +63,6 @@ bool cContainer::parseChildControl(ticpp::Element& elem, std::map<std::string,cC
 		}
 	}
 	prevCtrl = *inserted;
-	prevCtrl.second->setName(prevCtrl.first);
 	return true;
 }
 
