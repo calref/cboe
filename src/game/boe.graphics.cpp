@@ -596,30 +596,8 @@ std::pair<std::string, std::string> text_bar_text() {
 	std::string text = "";
 	std::string right_text = "";
 
-	location loc = (is_out()) ? global_to_local(univ.party.out_loc) : univ.party.town_loc;
-	bool in_area = false;
+	text = get_location();
 
-	if(is_out()) {
-		for(short i = 0; i < univ.out->area_desc.size(); i++)
-			if(loc.in(univ.out->area_desc[i])) {
-				text = univ.out->area_desc[i].descr;
-				in_area = true;
-			}
-		if(!in_area) {
-			text = univ.out->name;
-		}
-	}
-	if(is_town()) {
-		for(short i = 0; i < univ.town->area_desc.size(); i++)
-			if(loc.in(univ.town->area_desc[i])) {
-				text = univ.town->area_desc[i].descr;
-				in_area = true;
-			}
-		if(!in_area) {
-			text = univ.town->name;
-		}
-		
-	}
 	if((is_combat()) && (univ.cur_pc < 6) && !monsters_going) {
 		std::ostringstream sout;
 
