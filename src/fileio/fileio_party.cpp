@@ -552,3 +552,20 @@ bool save_party(cUniverse& univ, bool save_as) {
 	if(univ.file.empty()) return false;
 	return save_party_const(univ, save_as);
 }
+
+static bool compare_mtime(std::pair<fs::path, std::time_t> a, std::pair<fs::path, std::time_t> b) {
+	return std::difftime(a.second, b.second) > 0;
+}
+
+std::vector<std::pair<fs::path, std::time_t>> sorted_file_mtimes(fs::path dir, std::set<fs::path> valid_extensions){
+	std::vector<std::pair<fs::path, std::time_t>> files;
+	for(fs::directory_iterator it{dir}; it != fs::directory_iterator{}; ++it) {
+		fs::path file = *it;
+		if(valid_extensions.count(file.extension())){
+			files.push_back(std::make_pair(file, last_write_time(file)));
+		}
+	}
+
+	std::sort(files.begin(), files.end(), compare_mtime);
+	return files;
+}
