@@ -1473,7 +1473,8 @@ void draw_map(bool need_refresh) {
 	
 	the_rect = rectangle(mini_map);
 	tileImage(mini_map, the_rect,bg[4]);
-	cPict theGraphic(mini_map);
+	cParentless mapWin(mini_map);
+	cPict theGraphic(mapWin);
 	theGraphic.setBounds(dlogpicrect);
 	theGraphic.setPict(21, PIC_DLOG);
 	theGraphic.setFormat(TXT_FRAME, FRM_NONE);

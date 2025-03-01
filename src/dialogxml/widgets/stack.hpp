@@ -80,8 +80,8 @@ public:
 	/// Meant for internal use.
 	void fillTabOrder(std::vector<int>& specificTabs, std::vector<int>& reverseTabs);
 	/// Create a new stack
-	/// @param parent The parent dialog.
-	cStack(cDialog& parent);
+	/// @param parent The parent.
+	cStack(iComponent& parent);
 	/// @copydoc cControl::getSupportedHandlers
 	///
 	/// @todo Document possible handlers

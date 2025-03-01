@@ -19,7 +19,7 @@
 std::string cTilemap::generateId(const std::string& baseId) const {
 	if(baseId.empty()) {
 		if(id_tries++ == 0) return current_cell;
-		return cControl::generateId(baseId) + "-" + current_cell;
+		return cContainer::generateId(baseId) + "-" + current_cell;
 	}
 	return baseId + "-" + current_cell;
 }
@@ -201,7 +201,9 @@ void cTilemap::fillTabOrder(std::vector<int>& specificTabs, std::vector<int>& re
 	}
 }
 
-cTilemap::cTilemap(cDialog& parent) : cContainer(CTRL_MAP, parent) {}
+cTilemap::cTilemap(iComponent& parent)
+	: cContainer(CTRL_MAP, parent)
+{}
 
 void cTilemap::forEach(std::function<void(std::string,cControl&)> callback) {
 	for(auto ctrl : controls)

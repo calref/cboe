@@ -55,7 +55,7 @@ protected:
 };
 
 /// Defines a fancy dialog box with various controls.
-class cDialog {
+class cDialog : public iComponent, public iNameGiver {
 	friend class cDialogIterator;
 	typedef std::map<std::string,cControl*>::iterator ctrlIter;
 	std::map<std::string,cControl*> controls;
@@ -67,7 +67,7 @@ class cDialog {
 	std::string currentFocus;
 	cDialog* parent;
 	cControl* findControl(std::string id);
-	std::string generateId(const std::string& explicitId) const;
+	std::string generateId(const std::string& explicitId) const override;
 	void loadFromFile(const DialogDefn& file);
 	void handleTab(bool reverse);
 	template<typename Iter> void handleTabOrder(std::string& itemHit, Iter begin, Iter end);
@@ -160,7 +160,9 @@ public:
 	void setDefTextClr(sf::Color clr);
 	/// Get the default text colour applied to new dialogs when loading from a file.
 	/// @return The text colour.
-	sf::Color getDefTextClr() const;
+	sf::Color getDefTextClr() const override;
+	/// Get the window the dialog occupies;
+	sf::RenderWindow& getWindow() override { return win; }
 	/// Set the focused text field.
 	/// @param newFocus A pointer to the text field to receive focus.
 	/// @param force If true, the change will be forced.
@@ -240,20 +242,15 @@ public:
 	/// Adds a new control described by the passed XML element.
 	/// @tparam Ctrl The type of control to add.
 	/// @param who The XML element describing the control.
-	/// @param parent The parent control, if any. Omit if there is no parent.
+	/// @param parent The parent control or dialog.
 	/// @note It is up to the caller to ensure that that the element
 	/// passed describes the type of control being requested.
-	template<class Ctrl, class Container> std::pair<std::string,Ctrl*> parse(ticpp::Element& who, Container* parent) {
+	template<class Ctrl> std::pair<std::string,Ctrl*> parse(ticpp::Element& who, iComponent& parent) {
 		std::pair<std::string,Ctrl*> p;
-		p.second = new Ctrl(*this);
-		p.first = p.second->parse(who, fname);
-		do{
-			p.first = parent->generateId(p.first);
-		}while(controls.find(p.first) != controls.end());
+		p.second = new Ctrl(parent);
+		p.second->parse(who, fname);
+		p.first = p.second->getName();
 		return p;
-	}
-	template<class Ctrl> std::pair<std::string,Ctrl*> parse(ticpp::Element& who) {
-		return parse<Ctrl, cDialog>(who, this);
 	}
 	cDialogIterator begin() {
 		return cDialogIterator(this);

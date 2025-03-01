@@ -14,7 +14,7 @@
 typedef std::map<std::string,cControl*>::iterator ctrlIter;
 
 /// A superclass to represent a control that contains other controls.
-class cContainer : public cControl {
+class cContainer : public cControl, public iNameGiver {
 	void callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std::string id, eKeyMod mods) override;
 protected:
 	std::string clicking;
@@ -25,14 +25,10 @@ protected:
 	/// @return true if the element was a valid control, false otherwise.
 	bool parseChildControl(ticpp::Element& elem, std::map<std::string,cControl*>& controls, std::string& id, std::string fname);
 public:
-	/// Create a new container control attached to an arbitrary window, rather than a dialog.
+	/// Create a new container control.
 	/// @param t The type of the control.
-	/// @param p The parent window.
-	cContainer(eControlType t, sf::RenderWindow& p) : cControl(t, p) {}
-	/// Create a new container control attached to a dialog.
-	/// @param t The type of the control.
-	/// @param p The parent dialog.
-	cContainer(eControlType t, cDialog& p) : cControl(t, p) {}
+	/// @param p The parent.
+	cContainer(eControlType t, iComponent& p) : cControl(t, p) {}
 	/// Check if a control exists with a given ID.
 	/// @param id The unique key of the control.
 	/// @return true if it exists.
@@ -46,6 +42,10 @@ public:
 	/// @param callback A function taking a string as its first argument
 	/// and a control reference as its second argument.
 	virtual void forEach(std::function<void(std::string,cControl&)> callback) = 0;
+	/// Generate a unique ID for a child control. The explicitId is the ID specified in the XML, if any.
+	/// This may be called more than once, so it should not return the same value twice in a row,
+	/// unless it can guarantee the value is not already assigned to another control.
+	virtual std::string generateId(const std::string& explicitId) const override;
 	/// @copydoc getChild()
 	cControl& operator[](std::string id) {return getChild(id);}
 	const cControl& operator[](std::string id) const {return const_cast<cContainer&>(*this).getChild(id);}

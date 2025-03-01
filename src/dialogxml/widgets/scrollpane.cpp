@@ -16,8 +16,7 @@
 #include "gfx/render_shapes.hpp"
 #include <climits>
 
-cScrollPane::cScrollPane(cDialog& parent) : cContainer(CTRL_PANE, parent), scroll(parent) {
-	scroll.setPane(this);
+cScrollPane::cScrollPane(iComponent& parent) : cContainer(CTRL_PANE, parent), scroll(*this) {
 	recalcRect();
 }
 
@@ -139,8 +138,8 @@ void cScrollPane::addChild(cControl* ctrl, std::string key) {
 
 void cScrollPane::draw() {
 	if(!visible) return;
-	inWindow->setActive();
-	clip_rect(*inWindow, getBounds());
+	getWindow().setActive();
+	clip_rect(getWindow(), getBounds());
 	for(auto& ctrl : contents) {
 		rectangle localBounds = ctrl.second->getBounds();
 		rectangle globalBounds = localBounds;
@@ -149,7 +148,7 @@ void cScrollPane::draw() {
 		ctrl.second->draw();
 		ctrl.second->setBounds(localBounds);
 	}
-	undo_clip(*inWindow);
+	undo_clip(getWindow());
 	scroll.draw();
 	if(framed)
 		drawFrame(4, frameStyle);

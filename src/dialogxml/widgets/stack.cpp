@@ -61,7 +61,7 @@ void cStack::draw() {
 bool cStack::setPage(size_t n) {
 	if(n >= nPages) return false;
 	if(n == curPage) return true;
-	cTextField* focus = parent->getFocus();
+	cTextField* focus = getDialog()->getFocus();
 	bool failed = false;
 	for(auto p : controls) {
 		const std::string& id = p.first;
@@ -69,11 +69,11 @@ bool cStack::setPage(size_t n) {
 		// Only trigger focus handlers if the current page still exists.
 		if(curPage < nPages) {
 			storage[curPage][id] = ctrl.store();
-			if(!ctrl.triggerFocusHandler(*parent, id, true))
+			if(!ctrl.triggerFocusHandler(*getDialog(), id, true))
 				failed = true;
 			if(!failed) {
 				ctrl.restore(storage[n][id]);
-				if(focus == &ctrl && !ctrl.triggerFocusHandler(*parent, id, false)) {
+				if(focus == &ctrl && !ctrl.triggerFocusHandler(*getDialog(), id, false)) {
 					failed = true;
 					ctrl.restore(storage[curPage][id]);
 				}
@@ -145,7 +145,11 @@ void cStack::fillTabOrder(std::vector<int>& specificTabs, std::vector<int>& reve
 	}
 }
 
-cStack::cStack(cDialog& parent) : cContainer(CTRL_STACK, parent), curPage(0), nPages(0) {}
+cStack::cStack(iComponent& parent)
+	: cContainer(CTRL_STACK, parent)
+	, curPage(0)
+	, nPages(0)
+{}
 
 void cStack::forEach(std::function<void(std::string,cControl&)> callback) {
 	for(auto ctrl : controls)

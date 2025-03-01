@@ -8,6 +8,7 @@
 
 #include "scrollbar.hpp"
 #include "dialogxml/dialogs/dialog.hpp"
+#include "dialogxml/widgets/container.hpp"
 #include "fileio/resmgr/res_image.hpp"
 #include "gfx/render_image.hpp"
 #include "gfx/render_shapes.hpp"
@@ -22,9 +23,12 @@ std::string cScrollbar::scroll_textures[NUM_STYLES] = {
 	"dlogscrollled",
 };
 
-cScrollbar::cScrollbar(cDialog& parent) : cControl(CTRL_SCROLL, parent), pos(0), max(0), pgsz(10) {}
-
-cScrollbar::cScrollbar(sf::RenderWindow& parent) : cControl(CTRL_SCROLL, parent), pos(0), max(0), pgsz(10) {}
+cScrollbar::cScrollbar(iComponent& parent)
+	: cControl(CTRL_SCROLL, parent)
+	, pos(0)
+	, max(0)
+	, pgsz(10)
+{}
 
 void cScrollbar::init() {
 }
@@ -45,8 +49,10 @@ void cScrollbar::setPosition(long newPos, bool record) {
 	if(record && recording){
 		std::map<std::string,std::string> info;
 		info["name"] = name;
-		if(info["name"].empty() && pane != nullptr){
-			info["name"] = pane->getName();
+		if(info["name"].empty()) {
+			if(auto pane = dynamic_cast<cContainer*>(&getParent())){
+				info["name"] = pane->getName();
+			}
 		}
 		// Might as well record newPos before it gets clamped, so replays will verify that clamping
 		// still works.
@@ -108,7 +114,7 @@ eScrollStyle cScrollbar::getStyle() const {
 // TODO: centralize this translation somewhere
 // Translate raw x/y position using the view of the current rendering target
 location cScrollbar::translated_location(const sf::Vector2i point) const {
-	return location { this->inWindow->mapPixelToCoords(point) };
+	return location { const_cast<cScrollbar*>(this)->getWindow().mapPixelToCoords(point) };
 }
 
 bool cScrollbar::handle_event(const sf::Event& event) {
@@ -319,14 +325,14 @@ bool cScrollbar::handleClick(location where, cFramerateLimiter& fps_limiter) {
 	int diff = clickPos - thumbPos;
 	while(!done){
 		redraw();
-		while(pollEvent(inWindow, e)){
-			location mouseLoc = sf::Mouse::getPosition(*inWindow);
-			mouseLoc = inWindow->mapPixelToCoords(mouseLoc);
+		while(pollEvent(getWindow(), e)){
+			location mouseLoc = sf::Mouse::getPosition(getWindow());
+			mouseLoc = getWindow().mapPixelToCoords(mouseLoc);
 			int mousePos = vert ? mouseLoc.y : mouseLoc.x;
 			if(e.type == sf::Event::MouseButtonReleased){
 				done = true;
 				location clickLoc(e.mouseButton.x, e.mouseButton.y);
-				clickLoc = inWindow->mapPixelToCoords(clickLoc);
+				clickLoc = getWindow().mapPixelToCoords(clickLoc);
 				clicked = frame.contains(clickLoc);
 				depressed = false;
 				handlePressedPart(pressedPart);
@@ -354,11 +360,11 @@ bool cScrollbar::handleClick(location where, cFramerateLimiter& fps_limiter) {
 						break;
 				}
 				location toLoc(e.mouseMove.x, e.mouseMove.y);
-				toLoc = inWindow->mapPixelToCoords(toLoc);
+				toLoc = getWindow().mapPixelToCoords(toLoc);
 				if(pressedPart != PART_THUMB && !frame.contains(toLoc)) depressed = false;
 			}
-			if(parent && !link.empty())
-				parent->getControl(link).setTextToNum(pos);
+			if(getDialog() && !link.empty())
+				getDialog()->getControl(link).setTextToNum(pos);
 			thumbPos = bar_start;
 			thumbPos += btn_size + pos * (bar_size - btn_size) / max;
 			thumbPos = minmax(mousePos,bar_end - btn_size * 2,thumbPos);
@@ -389,13 +395,13 @@ const rectangle cScrollbar::bar_rect[NUM_STYLES][4] = {
 void cScrollbar::draw_horizontal() {
 	int btn_size = up_rect[style][HORZ].width();
 	int bar_width = frame.width() - btn_size * 2;
-	inWindow->setActive();
+	getWindow().setActive();
 	rectangle draw_rect = frame, from_rect = up_rect[style][HORZ];
 	draw_rect.width() = btn_size;
 	if(depressed && pressedPart == PART_UP)
 		from_rect = up_rect[style][HORZ_PRESSED];
 	sf::Texture scroll_gw = *ResMgr::graphics.get(scroll_textures[style]);
-	rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
+	rect_draw_some_item(scroll_gw, from_rect, getWindow(), draw_rect);
 	if(pos > 0) {
 		from_rect = bar_rect[style][HORZ];
 		int left = draw_rect.right, width = pos * (bar_width - btn_size) / max;
@@ -404,7 +410,7 @@ void cScrollbar::draw_horizontal() {
 		draw_rect.left = left;
 		while(draw_rect.left - left < width) {
 			draw_rect.right = draw_rect.left + btn_size;
-			rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
+			rect_draw_some_item(scroll_gw, from_rect, getWindow(), draw_rect);
 			draw_rect.left = draw_rect.right;
 		}
 		draw_rect.right = left + width;
@@ -415,7 +421,7 @@ void cScrollbar::draw_horizontal() {
 		from_rect = thumb_rect[style][HORZ];
 		if(depressed && pressedPart == PART_THUMB)
 			from_rect = thumb_rect[style][HORZ_PRESSED];
-		rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
+		rect_draw_some_item(scroll_gw, from_rect, getWindow(), draw_rect);
 	}
 	if(pos < max || max == 0) {
 		from_rect = bar_rect[style][HORZ];
@@ -430,13 +436,13 @@ void cScrollbar::draw_horizontal() {
 		rectangle clip_rec = frame;
 		clip_rec.left = left;
 		clip_rec.right = draw_rect.right;
-		clip_rect(*inWindow, clip_rec);
-		rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
-		undo_clip(*inWindow);
+		clip_rect(getWindow(), clip_rec);
+		rect_draw_some_item(scroll_gw, from_rect, getWindow(), draw_rect);
+		undo_clip(getWindow());
 		draw_rect.left += btn_size;
 		while(draw_rect.left < right) {
 			draw_rect.right = draw_rect.left + btn_size;
-			rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
+			rect_draw_some_item(scroll_gw, from_rect, getWindow(), draw_rect);
 			draw_rect.left = draw_rect.right;
 		}
 		draw_rect.right = right;
@@ -446,19 +452,19 @@ void cScrollbar::draw_horizontal() {
 	from_rect = down_rect[style][HORZ];
 	if(depressed && pressedPart == PART_DOWN)
 		from_rect = down_rect[style][HORZ_PRESSED];
-	rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
+	rect_draw_some_item(scroll_gw, from_rect, getWindow(), draw_rect);
 }
 
 void cScrollbar::draw_vertical() {
 	int btn_size = up_rect[style][VERT].height();
 	int bar_height = frame.height() - btn_size * 2;
-	inWindow->setActive();
+	getWindow().setActive();
 	rectangle draw_rect = frame, from_rect = up_rect[style][VERT];
 	draw_rect.height() = btn_size;
 	if(depressed && pressedPart == PART_UP)
 		from_rect = up_rect[style][VERT_PRESSED];
 	sf::Texture scroll_gw = *ResMgr::graphics.get(scroll_textures[style]);
-	rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
+	rect_draw_some_item(scroll_gw, from_rect, getWindow(), draw_rect);
 	if(pos > 0) {
 		from_rect = bar_rect[style][VERT];
 		int top = draw_rect.bottom, height = pos * (bar_height - btn_size) / max;
@@ -467,7 +473,7 @@ void cScrollbar::draw_vertical() {
 		draw_rect.top = top;
 		while(draw_rect.top - top < height) {
 			draw_rect.bottom = draw_rect.top + btn_size;
-			rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
+			rect_draw_some_item(scroll_gw, from_rect, getWindow(), draw_rect);
 			draw_rect.top = draw_rect.bottom;
 		}
 		draw_rect.bottom = top + height;
@@ -478,7 +484,7 @@ void cScrollbar::draw_vertical() {
 		from_rect = thumb_rect[style][VERT];
 		if(depressed && pressedPart == PART_THUMB)
 			from_rect = thumb_rect[style][VERT_PRESSED];
-		rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
+		rect_draw_some_item(scroll_gw, from_rect, getWindow(), draw_rect);
 	}
 	if(pos < max || max == 0) {
 		from_rect = bar_rect[style][VERT];
@@ -493,13 +499,13 @@ void cScrollbar::draw_vertical() {
 		rectangle clip_rec = frame;
 		clip_rec.top = top;
 		clip_rec.bottom = draw_rect.bottom;
-		clip_rect(*inWindow, clip_rec);
-		rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
-		undo_clip(*inWindow);
+		clip_rect(getWindow(), clip_rec);
+		rect_draw_some_item(scroll_gw, from_rect, getWindow(), draw_rect);
+		undo_clip(getWindow());
 		draw_rect.top += btn_size;
 		while(draw_rect.top < bottom) {
 			draw_rect.bottom = draw_rect.top + btn_size;
-			rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
+			rect_draw_some_item(scroll_gw, from_rect, getWindow(), draw_rect);
 			draw_rect.top = draw_rect.bottom;
 		}
 		draw_rect.bottom = bottom;
@@ -509,7 +515,7 @@ void cScrollbar::draw_vertical() {
 	from_rect = down_rect[style][VERT];
 	if(depressed && pressedPart == PART_DOWN)
 		from_rect = down_rect[style][VERT_PRESSED];
-	rect_draw_some_item(scroll_gw, from_rect, *inWindow, draw_rect);
+	rect_draw_some_item(scroll_gw, from_rect, getWindow(), draw_rect);
 }
 
 void cScrollbar::draw() {
@@ -577,8 +583,8 @@ void cScrollbar::validatePostParse(ticpp::Element& who, std::string fname, const
 		else frame.height() = thickness;
 	}
 	*/
-	if(parent->hasControl(link))
-		parent->getControl(link).setTextToNum(pos);
+	if(getDialog()->hasControl(link))
+		getDialog()->getControl(link).setTextToNum(pos);
 }
 
 location cScrollbar::getPreferredSize() const {

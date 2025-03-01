@@ -27,7 +27,6 @@ enum eScrollStyle {
 /// using the methods to get the scrollbar's position.
 /// Alternatively, it can be used as a slider control.
 class cScrollbar : public cControl, public iEventListener, public iDrawable {
-	cControl* pane;
 	int pos, max, pgsz;
 	std::string link;
 	// Make sure this is equal to the number of constants in eScrollStyle
@@ -66,16 +65,12 @@ class cScrollbar : public cControl, public iEventListener, public iDrawable {
 public:
 	/// @copydoc cDialog::init()
 	static void init();
-	inline void setPane(cControl* pane) { this->pane = pane; }
 	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
 	void validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) override;
 	location getPreferredSize() const override;
-	/// Create a new scrollbar without a parent dialog.
-	/// @param parent The parent window.
-	explicit cScrollbar(sf::RenderWindow& parent);
 	/// Create a new scrollbar.
-	/// @param parent The parent dialog.
-	explicit cScrollbar(cDialog& parent);
+	/// @param parent The parent.
+	explicit cScrollbar(iComponent& parent);
 	bool handleClick(location where, cFramerateLimiter& fps_limiter) override;
 	storage_t store() const override;
 	void restore(storage_t to) override;

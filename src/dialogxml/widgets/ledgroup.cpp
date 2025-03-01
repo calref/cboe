@@ -15,9 +15,10 @@
 
 #include "replay.hpp"
 
-cLedGroup::cLedGroup(cDialog& parent) :
-	cContainer(CTRL_GROUP,parent),
-	fromList("none") {}
+cLedGroup::cLedGroup(iComponent& parent)
+	: cContainer(CTRL_GROUP,parent)
+	, fromList("none")
+{}
 
 cLedGroup::~cLedGroup(){
 	ledIter iter = choices.begin();
@@ -166,7 +167,7 @@ void cLedGroup::setSelected(std::string id){
 		if(curSelect == "") return;
 		eLedState was = choices[curSelect]->getState();
 		choices[curSelect]->setState(led_off);
-		if(choices[curSelect]->triggerFocusHandler(*parent,curSelect,true))
+		if(choices[curSelect]->triggerFocusHandler(*getDialog(),curSelect,true))
 			curSelect = "";
 		else
 			choices[curSelect]->setState(was);
@@ -177,7 +178,7 @@ void cLedGroup::setSelected(std::string id){
 	if(iter == choices.end()) throw std::invalid_argument(id + " does not exist in the ledgroup.");
 	
 	if(curSelect == ""){
-		if(iter->second->triggerFocusHandler(*parent,curSelect,false)){
+		if(iter->second->triggerFocusHandler(*getDialog(),curSelect,false)){
 			iter->second->setState(led_red);
 			curSelect = iter->first;
 		}
@@ -187,12 +188,12 @@ void cLedGroup::setSelected(std::string id){
 		b = iter->second->getState();
 		choices[curSelect]->setState(led_off);
 		iter->second->setState(led_red);
-		if(!choices[curSelect]->triggerFocusHandler(*parent,curSelect,true)){
+		if(!choices[curSelect]->triggerFocusHandler(*getDialog(),curSelect,true)){
 			choices[curSelect]->setState(a);
 			iter->second->setState(b);
 			return;
 		}
-		if(!iter->second->triggerFocusHandler(*parent,curSelect,false)){
+		if(!iter->second->triggerFocusHandler(*getDialog(),curSelect,false)){
 			choices[curSelect]->setState(a);
 			iter->second->setState(b);
 			return;
@@ -241,7 +242,7 @@ bool cLedGroup::parseContent(ticpp::Node& content, int n, std::string tagName, s
 	std::string val = content.Value();
 	int type = content.Type();
 	if(type == TiXmlNode::ELEMENT && val == "led"){
-		auto led = parent->parse<cLed>(dynamic_cast<ticpp::Element&>(content));
+		auto led = getDialog()->parse<cLed>(dynamic_cast<ticpp::Element&>(content), *this);
 		addChoice(led.second, led.first);
 		return true;
 	} else if(type == TiXmlNode::TEXT) {

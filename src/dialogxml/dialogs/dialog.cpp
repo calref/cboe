@@ -199,7 +199,7 @@ void cDialog::loadFromFile(const DialogDefn& file){
 			// In this situation, it's actually easier that way; the reason being, the
 			// map key is obtained from the name attribute of each element.
 			if(type == "field") {
-				auto field = parse<cTextField>(*node);
+				auto field = parse<cTextField>(*node, *this);
 				inserted = controls.insert(field).first;
 				tabOrder.push_back(field);
 				if(field.second->tabOrder > 0)
@@ -207,29 +207,29 @@ void cDialog::loadFromFile(const DialogDefn& file){
 				else if(field.second->tabOrder < 0)
 					reverseTabs.push_back(field.second->tabOrder);
 			} else if(type == "text")
-				inserted = controls.insert(parse<cTextMsg>(*node)).first;
+				inserted = controls.insert(parse<cTextMsg>(*node, *this)).first;
 			else if(type == "pict")
-				inserted = controls.insert(parse<cPict>(*node)).first;
+				inserted = controls.insert(parse<cPict>(*node, *this)).first;
 			else if(type == "slider")
-				inserted = controls.insert(parse<cScrollbar>(*node)).first;
+				inserted = controls.insert(parse<cScrollbar>(*node, *this)).first;
 			else if(type == "button")
-				inserted = controls.insert(parse<cButton>(*node)).first;
+				inserted = controls.insert(parse<cButton>(*node, *this)).first;
 			else if(type == "led")
-				inserted = controls.insert(parse<cLed>(*node)).first;
+				inserted = controls.insert(parse<cLed>(*node, *this)).first;
 			else if(type == "group")
-				inserted = controls.insert(parse<cLedGroup>(*node)).first;
+				inserted = controls.insert(parse<cLedGroup>(*node, *this)).first;
 			else if(type == "stack") {
-				auto parsed = parse<cStack>(*node);
+				auto parsed = parse<cStack>(*node, *this);
 				inserted = controls.insert(parsed).first;
 				// Now, if it contains any fields, their tab order must be accounted for
 				parsed.second->fillTabOrder(specificTabs, reverseTabs);
 			} else if(type == "pane") {
-				auto parsed = parse<cScrollPane>(*node);
+				auto parsed = parse<cScrollPane>(*node, *this);
 				inserted = controls.insert(parsed).first;
 				// TODO: Now, if it contains any fields, their tab order must be accounted for
 				//parsed.second->fillTabOrder(specificTabs, reverseTabs);
 			} else if(type == "tilemap") {
-				auto parsed = parse<cTilemap>(*node);
+				auto parsed = parse<cTilemap>(*node, *this);
 				inserted = controls.insert(parsed).first;
 				parsed.second->fillTabOrder(specificTabs, reverseTabs);
 			} else throw xBadNode(type,node->Row(),node->Column(),fname);
@@ -243,7 +243,6 @@ void cDialog::loadFromFile(const DialogDefn& file){
 				}
 			}
 			prevCtrl = *inserted;
-			prevCtrl.second->setName(prevCtrl.first);
 			// Needed to correctly resolve relative positioning
 			inserted->second->recalcRect();
 		}
@@ -1190,4 +1189,8 @@ void preview_dialog_xml(fs::path dialog_xml) {
 	}catch(std::string& x){
 		showError(x);
 	}
+}
+
+sf::Color cParentless::getDefTextClr() const {
+	return cDialog::defaultBackground == cDialog::BG_DARK ? sf::Color::White : sf::Color::Black;
 }

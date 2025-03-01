@@ -78,8 +78,8 @@ public:
 	/// @param id The unique key of the choice.
 	void show(std::string id);
 	/// Create a new LED group.
-	/// @param parent The parent dialog.
-	explicit cLedGroup(cDialog& parent);
+	/// @param parent The parent.
+	explicit cLedGroup(iComponent& parent);
 	bool isClickable() const override;
 	bool isFocusable() const override;
 	bool isScrollable() const override;

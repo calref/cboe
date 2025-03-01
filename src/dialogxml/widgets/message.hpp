@@ -29,10 +29,7 @@ public:
 	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
 	/// Create a new text message.
 	/// @param parent The parent dialog.
-	explicit cTextMsg(cDialog& parent);
-	/// Create a new text message without a parent dialog.
-	/// @param parent The parent window.
-	explicit cTextMsg(sf::RenderWindow& parent);
+	explicit cTextMsg(iComponent& parent);
 	bool isClickable() const override;
 	bool isFocusable() const override;
 	bool isScrollable() const override;
