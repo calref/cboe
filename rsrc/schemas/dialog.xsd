@@ -386,7 +386,7 @@
 			<xs:field xpath="@link"/>
 		</xs:keyref>
 		<xs:keyref name="anchorLink" refer="uniqueID">
-			<xs:selector xpath="*"/>
+			<xs:selector xpath="."/>
 			<xs:field xpath="@anchor"/>
 		</xs:keyref>
 		<xs:keyref name="keyRef" refer="uniqueID">
