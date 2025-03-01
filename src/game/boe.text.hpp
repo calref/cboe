@@ -48,3 +48,5 @@ struct text_label_t {
 
 void place_text_label(std::string string, location at, bool centred);
 void draw_text_label(const text_label_t& label);
+
+std::string get_location(cUniverse* specific_univ = nullptr);

@@ -1219,3 +1219,37 @@ bool day_reached(unsigned short which_day, unsigned short which_event) {
 		return true;
 	else return false;
 }
+
+std::string get_location(cUniverse* specific_univ) {
+	// This function is used to determine text bar text, which may be intended to be blank
+	// even if the party is technically outdoors, depending on the active game mode.
+	// I'm just trying to keep the old behavior the same.
+	bool outdoors = is_out();
+	bool town = is_town();
+	// For checking a save file's location, it can only be one or the other.
+	if(specific_univ != nullptr){
+		outdoors = specific_univ->party.town_num >= 200;
+		town = !outdoors;
+	}else{
+		specific_univ = &univ;
+	}
+
+	std::string loc_str = "";
+
+	location loc = outdoors ? global_to_local(specific_univ->party.out_loc) : specific_univ->party.town_loc;
+	if(outdoors) {
+		loc_str = specific_univ->out->name;
+		for(short i = 0; i < specific_univ->out->area_desc.size(); i++)
+			if(loc.in(specific_univ->out->area_desc[i])) {
+				loc_str = specific_univ->out->area_desc[i].descr;
+			}
+	}
+	if(town){
+		loc_str = specific_univ->town->name;
+		for(short i = 0; i < specific_univ->town->area_desc.size(); i++)
+			if(loc.in(specific_univ->town->area_desc[i])) {
+				loc_str = specific_univ->town->area_desc[i].descr;
+			}
+	}
+	return loc_str;
+}
