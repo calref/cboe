@@ -13,6 +13,7 @@
 #include "message.hpp"
 #include "pict.hpp"
 #include "scrollbar.hpp"
+#include "mathutil.hpp"
 #include <climits>
 
 bool cStack::hasChild(std::string id) const {
@@ -82,6 +83,17 @@ bool cStack::setPage(size_t n) {
 	}
 	if(!failed) curPage = n;
 	return !failed;
+}
+
+void cStack::doSelectPage(int dir, bool loop) {
+	curPage += dir;
+	if(loop){
+		if(curPage < 0) curPage += nPages;
+		else if(curPage >= nPages) curPage -= nPages;
+	}else{
+		curPage = minmax(0, nPages - 1, curPage);
+	}
+	setPage(curPage);
 }
 
 size_t cStack::getPage() const {
