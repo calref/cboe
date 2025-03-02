@@ -27,6 +27,6 @@ void tip_of_day();
 struct scen_header_type pick_a_scen();
 fs::path run_file_picker(bool saving);
 // Pick from the autosaves made while playing in a given save file
-fs::path run_autosave_picker(fs::path save_file);
+fs::path run_autosave_picker(fs::path save_file, cDialog* parent = nullptr);
 
 #endif
