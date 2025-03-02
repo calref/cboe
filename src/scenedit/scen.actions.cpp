@@ -87,7 +87,7 @@ ePalBtn town_buttons[6][10] = {
 	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_DROPPER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET},
 	{PAL_ENTER_N, PAL_ENTER_W, PAL_ENTER_S, PAL_ENTER_E, PAL_EDIT_SIGN, PAL_TEXT_AREA, PAL_WANDER, PAL_CHANGE, PAL_ZOOM, PAL_TERRAIN},
 	{PAL_SPEC, PAL_COPY_SPEC, PAL_PASTE_SPEC, PAL_ERASE_SPEC, PAL_EDIT_SPEC, PAL_SPEC_SPOT, PAL_EDIT_ITEM, PAL_SAME_ITEM, PAL_ERASE_ITEM, PAL_ITEM},
-	{PAL_BOAT, PAL_HORSE, PAL_ROAD, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_EDIT_MONST, PAL_SAME_MONST, PAL_ERASE_MONST, PAL_MONST},
+	{PAL_BOAT, PAL_HORSE, PAL_ROAD, PAL_BLANK, PAL_BLANK, PAL_EDIT_STORAGE, PAL_EDIT_MONST, PAL_SAME_MONST, PAL_ERASE_MONST, PAL_MONST},
 	{PAL_WEB, PAL_CRATE, PAL_BARREL, PAL_BLOCK, PAL_FIRE_BARR, PAL_FORCE_BARR, PAL_QUICKFIRE, PAL_FORCECAGE, PAL_ERASE_FIELD, PAL_BLANK},
 	{PAL_SFX_SB, PAL_SFX_MB, PAL_SFX_LB, PAL_SFX_SS, PAL_SFX_LS, PAL_SFX_ASH, PAL_SFX_BONE, PAL_SFX_ROCK, PAL_BLANK, PAL_BLANK},
 };
@@ -152,6 +152,7 @@ static cursor_type get_edit_cursor() {
 			
 		case MODE_ROOM_RECT: case MODE_SET_TOWN_RECT:
 		case MODE_HOLLOW_RECT: case MODE_FILLED_RECT:
+		case MODE_STORAGE_RECT:
 			return mode_count == 2 ? topleft_curs : bottomright_curs;
 			
 		case MODE_ERASE_CREATURE: case MODE_ERASE_ITEM:
@@ -731,6 +732,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				break;
 				
 			case MODE_ROOM_RECT: case MODE_SET_TOWN_RECT: case MODE_HOLLOW_RECT: case MODE_FILLED_RECT:
+			case MODE_STORAGE_RECT:
 				if(mouse_button_held)
 					break;
 				if(mode_count == 2) {
@@ -754,7 +756,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					town->in_town_rect = working_rect;
 					change_made = true;
 				}
-				else { // MODE_ROOM_RECT
+				else if(overall_mode == MODE_ROOM_RECT) {
 					auto& area_descs = cur_area->area_desc;
 					auto iter = std::find_if(area_descs.begin(), area_descs.end(), [](const info_rect_t& r) {
 						return r.right == 0;
@@ -769,6 +771,10 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 						if(!edit_area_rect_str(area_descs.back()))
 							area_descs.pop_back();
 					}
+					change_made = true;
+				}
+				else if(overall_mode == MODE_STORAGE_RECT) {
+					scenario.store_item_rects[cur_town] = working_rect;
 					change_made = true;
 				}
 				overall_mode = MODE_DRAWING;
@@ -1326,6 +1332,11 @@ static bool handle_toolpal_action(location cur_point2) {
 						overall_mode = MODE_ROOM_RECT;
 						mode_count = 2;
 						set_string("Create room rectangle","Select upper left corner");
+						break;
+					case PAL_EDIT_STORAGE:
+						overall_mode = MODE_STORAGE_RECT;
+						mode_count = 2;
+						set_string("Create saved item rect","Select upper left corner");
 						break;
 					case PAL_WANDER:
 						overall_mode = MODE_SET_WANDER_POINTS;

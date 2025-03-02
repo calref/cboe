@@ -133,7 +133,7 @@ private:
 	std::array<std::unique_ptr<cPlayer>,6> adven;
 public:
 	std::array<vector2d<unsigned short>, 4> setup; // formerly setup_save_type
-	std::array<std::vector<cItem>,3> stored_items; // formerly stored_items_list_type
+	std::map<short, std::vector<cItem>> stored_items; // formerly stored_items_list_type
 	
 	std::vector<cMonster> summons; // an array of monsters which can be summoned by the party's items yet don't originate from this scenario
 	unsigned short scen_won, scen_played; // numbers of scenarios won and played respectively by this party

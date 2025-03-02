@@ -941,6 +941,17 @@ void draw_terrain(){
 			draw_rect.inset(10, 13);
 			draw_rect.offset(TER_RECT_UL_X, TER_RECT_UL_Y);
 			frame_rect(mainPtr(), draw_rect, sf::Color::White);
+			// draw stored item rect
+			auto iter = scenario.store_item_rects.find(cur_town);
+			if(iter != scenario.store_item_rects.end()) {
+				draw_rect.left = 22 + 28 * (iter->second.left - cen_x + 4);
+				draw_rect.right = 22 + 28 * (iter->second.right - cen_x + 4);
+				draw_rect.top = 24 + 36 * (iter->second.top - cen_y + 4);
+				draw_rect.bottom = 24 + 36 * (iter->second.bottom - cen_y + 4);
+				draw_rect.inset(-8, -11);
+				draw_rect.offset(TER_RECT_UL_X, TER_RECT_UL_Y);
+				frame_rect(mainPtr(), draw_rect, sf::Color::Cyan);
+			}
 		}
 		clip_rect(mainPtr(), terrain_rect);
 		

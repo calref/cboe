@@ -820,12 +820,12 @@ void cParty::writeTo(cTagFile& file) const {
 			}
 		}
 	}
-	for(int i = 0; i < stored_items.size(); i++) {
-		for(size_t j = 0; j < stored_items[i].size(); j++) {
-			if(stored_items[i][j].variety != eItemType::NO_ITEM) {
+	for(const auto& p : stored_items) {
+		for(size_t j = 0; j < p.second.size(); j++) {
+			if(p.second[j].variety != eItemType::NO_ITEM) {
 				auto& item_page = file.add();
-				item_page["STORED"] << i << j;
-				stored_items[i][j].writeTo(item_page);
+				item_page["STORED"] << p.first << j;
+				p.second[j].writeTo(item_page);
 			}
 		}
 	}
@@ -1040,7 +1040,6 @@ void cParty::readFrom(const cTagFile& file) {
 		} else if(page.getFirstKey() == "STORED") {
 			size_t i, j;
 			if(page["STORED"] >> i >> j) {
-				if(i >= 3) continue;
 				if(j >= stored_items[i].size()) {
 					stored_items[i].resize(j + 1);
 				}

@@ -180,7 +180,7 @@ in, as a point.
 sector.
 * `<on-init>` - Indicates the number of a scenario special node to call when the scenario
 first starts.
-* `<store-items>` - (max 3) Specifies a rectangle from which the player can retrieve items
+* `<store-items>` - (max unbounded) Specifies a rectangle from which the player can retrieve items
 after completing the scenario, as a rectangle with an extra `town` attribute that
 specifies which town the area
 * `<town-flag>` - (max 10) Specifies a rule to add the value of an SDF to a town upon

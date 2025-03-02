@@ -3,7 +3,7 @@ Enter the number of the town special node to call if the party enters the town w
 These are the locations the party ends up at outdoors if they leave in the given direction. Leave at -1 for the regular location to be used.
 Miscellaneous advanced properties that can be set in a town. Alt-click an individual property for more information.
 Customize the backgrounds shown behind the UI for this town.
-
+There can be areas in towns where items left there are remembered, even after the party leaves town. Such areas are added with the Set Saved Item Rectangle tool. There can be at most one such rectangle per town.
 
 
 

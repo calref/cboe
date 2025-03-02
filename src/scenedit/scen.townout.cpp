@@ -789,6 +789,14 @@ static void put_advanced_town_in_dlog(cDialog& me) {
 	dynamic_cast<cLed&>(me["noscry"]).setState(town->defy_scrying ? led_red : led_off);
 	dynamic_cast<cLed&>(me["barrier"]).setState(town->strong_barriers ? led_red : led_off);
 	dynamic_cast<cLed&>(me["tavern"]).setState(town->has_tavern ? led_red : led_off);
+	auto iter = scenario.store_item_rects.find(cur_town);
+	if(iter == scenario.store_item_rects.end())
+		me["saved-item-delete"].hide();
+	else {
+		std::ostringstream sout;
+		sout << "(" << iter->second.left << "," << iter->second.top << ") to (" << iter->second.right << "," << iter->second.bottom << ")";
+		me["saved-item-rect"].setText(sout.str());
+	}
 }
 
 static bool edit_advanced_town_special(cDialog& me, std::string hit, eKeyMod) {
@@ -867,7 +875,7 @@ void edit_advanced_town() {
 		me[fld].setTextToNum(bg_i);
 		return true;
 	}, {"pick-fight", "pick-town"});
-	static const std::vector<std::string> help_ids = {"exit-special-help", "special-help", "exit-help", "prop-help", "bg-help"};
+	static const std::vector<std::string> help_ids = {"exit-special-help", "special-help", "exit-help", "prop-help", "bg-help", "saved-help"};
 	town_dlg.attachClickHandlers([](cDialog& me, std::string which, eKeyMod) {
 		auto iter = std::find(help_ids.begin(), help_ids.end(), which);
 		if(iter == help_ids.end()) return true;
@@ -888,6 +896,13 @@ void edit_advanced_town() {
 		dynamic_cast<cLed&>(me[which]).defaultClickHandler(me, which, mod);
 		return true;
 	}, prop_ids);
+	bool delete_rect = false;
+	town_dlg["saved-item-delete"].attachClickHandler([&delete_rect](cDialog& me, std::string, eKeyMod) {
+		delete_rect = true;
+		me["saved-item-delete"].hide();
+		me["saved-item-rect"].setText("(none)");
+		return true;
+	});
 	using namespace std::placeholders;
 	auto focus_handler = std::bind(check_range_msg, _1, _2, _3, -1, 21, _4, "-1 to use scenario default");
 	town_dlg["bg-fight"].attachFocusHandler(std::bind(focus_handler, _1, _2, _3, "Combat Background"));
@@ -896,6 +911,8 @@ void edit_advanced_town() {
 	put_advanced_town_in_dlog(town_dlg);
 	
 	town_dlg.run();
+	if(town_dlg.accepted() && delete_rect)
+		scenario.store_item_rects.erase(cur_town);
 }
 
 static bool save_town_wand(cDialog& me, std::string, eKeyMod) {

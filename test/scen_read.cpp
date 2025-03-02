@@ -203,7 +203,6 @@ TEST_CASE("Loading a new-format scenario record") {
 		REQUIRE(scen.store_item_rects.size() >= 1);
 		REQUIRE(scen.store_item_rects.size() >= 1);
 		CHECK(scen.store_item_rects[0] == rectangle(12,13,20,36));
-		CHECK(scen.store_item_towns[0] == 0);
 		REQUIRE(scen.town_mods.size() >= 1);
 		CHECK(scen.town_mods[0] == loc(16,21));
 		CHECK(scen.town_mods[0].spec == 1);
@@ -275,7 +274,7 @@ TEST_CASE("Loading a new-format scenario record") {
 		SECTION("Too many") {
 			fin.open("files/scenario/too_many_rects.xml");
 			doc = xmlDocFromStream(fin, "too_many_rects.xml");
-			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadNode);
+			REQUIRE_THROWS_AS(readScenarioFromXml(move(doc), scen), xBadVal);
 		}
 	}
 	SECTION("With an invalid timer") {

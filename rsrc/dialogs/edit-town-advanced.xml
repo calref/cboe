@@ -66,6 +66,12 @@
 	<led name='tavern' relative='pos-in pos' rel-anchor='prev' font='plain' top='7' left='0'>Has a tavern</led>
 	<button name='prop-help' type='help' relative='neg-in pos-in' anchor='props' top='2' left='18'/>
 	
+	<text name='saved-items' relative='pos-in pos' anchor='exits' top='10' left='0' width='185' height='72' framed='true'/>
+	<text relative='pos-in' anchor='saved-items' top='3' left='3' width='100' height='16'>Saved Item Rectangle:</text>
+	<text name='saved-item-rect' relative='pos-in pos' rel-anchor='prev' top='3' left='10' height='14'>(none)</text>
+	<button name='saved-item-delete' type='regular' relative='pos-in pos' rel-anchor='prev' top='3' left='0'>Delete</button>
+	<button name='saved-help' type='help' relative='neg-in pos-in' anchor='saved-items' top='2' left='18'/>
+	
 	<button name='okay' relative='neg' type='regular' top='28' left='68'>OK</button>
 	<button name='cancel' relative='neg' type='regular' def-key='esc' top='28' left='136'>Cancel</button>
 </dialog>

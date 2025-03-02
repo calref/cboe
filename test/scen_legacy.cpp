@@ -100,14 +100,9 @@ TEST_CASE("Converting legacy scenario data") {
 		CHECK(scen.special_items[1].special == -1);
 	}
 	SECTION("With item storage rects") {
-		REQUIRE(scen.store_item_rects.size() >= 3);
-		REQUIRE(scen.store_item_towns.size() >= 3);
 		CHECK(scen.store_item_rects[0] == rect(1,2,3,4));
-		CHECK(scen.store_item_towns[0] == 0);
 		CHECK(scen.store_item_rects[1] == rect(2,4,6,8));
-		CHECK(scen.store_item_towns[1] == 1);
 		CHECK(scen.store_item_rects[2] == rect(1,8,2,9));
-		CHECK(scen.store_item_towns[2] == 2);
 	}
 	SECTION("With item storage shortcuts") {
 		REQUIRE(scen.storage_shortcuts.size() >= 1);

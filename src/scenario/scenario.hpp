@@ -70,8 +70,7 @@ public:
 	std::string get_feature_flag(std::string flag);
 
 	std::array<spec_loc_t,10> town_mods;
-	std::array<rectangle,3> store_item_rects;
-	std::array<short,3> store_item_towns;
+	std::map<short, rectangle> store_item_rects;
 	std::vector<cSpecItem> special_items;
 	std::vector<cQuest> quests;
 	std::vector<cShop> shops;

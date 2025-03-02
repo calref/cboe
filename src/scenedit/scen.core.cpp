@@ -2563,67 +2563,6 @@ bool edit_shop(size_t which_shop, cDialog* parent) {
 	return shop_dlg.accepted();
 }
 
-static void put_save_rects_in_dlog(cDialog& me) {
-	for(short i = 0; i < 3; i++) {
-		std::string id = std::to_string(i + 1);
-		me["top" + id].setTextToNum(scenario.store_item_rects[i].top);
-		me["left" + id].setTextToNum(scenario.store_item_rects[i].left);
-		me["bottom" + id].setTextToNum(scenario.store_item_rects[i].bottom);
-		me["right" + id].setTextToNum(scenario.store_item_rects[i].right);
-		me["town" + id].setTextToNum(scenario.store_item_towns[i]);
-		
-	}
-}
-
-static bool save_save_rects(cDialog& me) {
-	for(short i = 0; i < 3; i++) {
-		std::string id = std::to_string(i + 1);
-		scenario.store_item_rects[i].top = me["top" + id].getTextAsNum();
-		scenario.store_item_rects[i].left = me["left" + id].getTextAsNum();
-		scenario.store_item_rects[i].bottom = me["bottom" + id].getTextAsNum();
-		scenario.store_item_rects[i].right = me["right" + id].getTextAsNum();
-		scenario.store_item_towns[i] = me["town" + id].getTextAsNum();
-		if((scenario.store_item_towns[i] < -1) || (scenario.store_item_towns[i] >= 200)) {
-			showError("Towns must be in 0 to 200 range (or -1 for no save items rectangle).","",&me);
-			return false;
-		}
-	}
-	if(((scenario.store_item_towns[0] == scenario.store_item_towns[1]) &&
-		 (scenario.store_item_towns[0] >= 0) && (scenario.store_item_towns[1] >= 0))
-		||
-		((scenario.store_item_towns[2] == scenario.store_item_towns[1]) &&
-		 (scenario.store_item_towns[2] >= 0) && (scenario.store_item_towns[1] >= 0))
-		||
-		((scenario.store_item_towns[2] == scenario.store_item_towns[0]) &&
-		 (scenario.store_item_towns[2] >= 0) && (scenario.store_item_towns[0] >= 0))
-		) {
-		showError("The three towns towns with saved item rectangles must be different.","",&me);
-		return false;
-	}
-	return true;
-}
-
-static bool edit_save_rects_event_filter(cDialog& me, std::string item_hit) {
-	if(item_hit == "cancel") {
-		me.toast(false);
-	} else if(item_hit == "okay") {
-		if(save_save_rects(me))
-			me.toast(true);
-	}
-	return true;
-}
-
-void edit_save_rects() {
-	using namespace std::placeholders;
-	
-	cDialog save_dlg(*ResMgr::dialogs.get("edit-save-rects"));
-	save_dlg.attachClickHandlers(std::bind(edit_save_rects_event_filter, _1, _2), {"okay"});
-	
-	put_save_rects_in_dlog(save_dlg);
-	
-	save_dlg.run();
-}
-
 static void put_vehicle_area(cDialog& me, const cVehicle& what) {
 	std::ostringstream sout;
 	if(what.which_town == 200) {

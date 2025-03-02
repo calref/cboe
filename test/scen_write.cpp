@@ -94,10 +94,7 @@ TEST_CASE("Saving a scenario record") {
 		REQUIRE(scen.town_mods.size() >= 1); // A safety valve for if I ever make this array dynamic
 		scen.town_mods[0] = loc(12,9);
 		scen.town_mods[0].spec = 4;
-		REQUIRE(scen.store_item_towns.size() >= 1); // A safety valve for if I ever make this array dynamic
-		REQUIRE(scen.store_item_rects.size() >= 1); // A safety valve for if I ever make this array dynamic
-		scen.store_item_rects[0] = rect(1,2,3,4);
-		scen.store_item_towns[0] = 5;
+		scen.store_item_rects[5] = rect(1,2,3,4);
 		REQUIRE(scen.scenario_timers.size() >= 1); // A safety valve for if I ever make this array dynamic
 		scen.scenario_timers[0].node = 3;
 		scen.scenario_timers[0].node_type = eSpecCtxType::OUTDOOR;
@@ -107,8 +104,7 @@ TEST_CASE("Saving a scenario record") {
 		in_and_out("optional", scen);
 		CHECK(scen.town_mods[0] == loc(12,9));
 		CHECK(scen.town_mods[0].spec == 4);
-		CHECK(scen.store_item_rects[0] == rect(1,2,3,4));
-		CHECK(scen.store_item_towns[0] == 5);
+		CHECK(scen.store_item_rects[5] == rect(1,2,3,4));
 		CHECK(scen.scenario_timers[0].node == 3);
 		CHECK(scen.scenario_timers[0].node_type == eSpecCtxType::SCEN); // This is inferred by the fact that it's in the scenario file
 		CHECK(scen.scenario_timers[0].time == 30000);
