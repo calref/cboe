@@ -1730,7 +1730,7 @@ class cFilePicker {
 	fs::path save_folder;
 	bool picking_auto;
 	bool saving;
-	cDialog me{*ResMgr::dialogs.get("pick-save")};
+	cDialog me;
 	cStack& get_stack() { return dynamic_cast<cStack&>(me["list"]); }
 	std::string template_info_str;
 
@@ -1830,8 +1830,23 @@ class cFilePicker {
 			me["save" + suffix].attachClickHandler(std::bind(&cFilePicker::doSave, this, file));
 		}else{
 			me["load" + suffix].attachClickHandler(std::bind(&cFilePicker::doLoad, this, file));
-			// TODO check if a newer autosave exists
-			me["auto" + suffix + "-more-recent"].hide();
+
+			std::vector<std::pair<fs::path, std::time_t>> auto_mtimes;
+			fs::path auto_folder = file;
+			if(!picking_auto){
+				auto_folder.replace_extension(".auto");
+				if(fs::is_directory(auto_folder)) auto_mtimes = sorted_file_mtimes(auto_folder);
+			}
+			if(auto_mtimes.empty()){
+				me["auto" + suffix].hide();
+				me["auto" + suffix + "-more-recent"].hide();
+			}else{
+				// If an autosave is newer than the main save, show an indicator
+				if(std::difftime(mtime, auto_mtimes.front().second) > 0)
+					me["auto" + suffix + "-more-recent"].show();
+
+				me["auto" + suffix].attachClickHandler(std::bind(&cFilePicker::showAuto, this, auto_folder));
+			}
 		}
 	}
 
@@ -1864,6 +1879,13 @@ class cFilePicker {
 		}
 
 		++pages_populated;
+	}
+
+	bool showAuto(fs::path auto_folder) {
+		fs::path autosave = run_autosave_picker(auto_folder, &me);
+		if(!autosave.empty())
+			doLoad(autosave);
+		return true;
 	}
 
 	bool doLoad(fs::path selected_file) {
@@ -1927,7 +1949,8 @@ class cFilePicker {
 	}
 
 public:
-	cFilePicker(fs::path save_folder, bool saving, bool picking_auto = false) :
+	cFilePicker(fs::path save_folder, bool saving, cDialog* parent = nullptr, bool picking_auto = false) :
+		me(*ResMgr::dialogs.get("pick-save"), parent),
 		save_folder(save_folder),
 		picking_auto(picking_auto),
 		saving(saving),
@@ -1938,11 +1961,22 @@ public:
 
 		if(saving){
 			me["title-load"].hide();
+			me["title-auto"].hide();
 			me["file1"].setText(""); // Keep the frame
 			for(int i = 0; i < SLOTS_PER_PAGE; ++i){
 				me["load" + std::to_string(i+1)].hide();
 			}
 		}else{
+			if(picking_auto){
+				me["title-load"].hide();
+				std::string title = me["title-auto"].getText();
+				fs::path party_name = save_folder.filename();
+				party_name.replace_extension();
+				boost::replace_first(title, "{Folder}", party_name.string());
+				me["title-auto"].setText(title);
+			}else{
+				me["title-auto"].hide();
+			}
 			me["title-save"].hide();
 			me["file1-field"].hide();
 			me["file1-extension-label"].hide();
@@ -1979,8 +2013,8 @@ static fs::path run_file_picker(fs::path save_folder, bool saving) {
 	return cFilePicker(save_folder, saving).run();
 }
 
-fs::path run_autosave_picker(fs::path save_file) {
-	return "";
+fs::path run_autosave_picker(fs::path auto_folder, cDialog* parent) {
+	return cFilePicker(auto_folder, false, parent, true).run();
 }
 
 fs::path run_file_picker(bool saving) {
