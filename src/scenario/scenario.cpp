@@ -71,9 +71,6 @@ cScenario::cScenario() {
 	for(short i = 0; i < town_mods.size(); i++) {
 		town_mods[i].spec = -1;
 	}
-	for(short i = 0; i < 3; i++) {
-		store_item_towns[i] = -1;
-	}
 	for(short i = 0; i < scenario_timers.size(); i++) {
 		scenario_timers[i].node = -1;
 	}
@@ -100,7 +97,6 @@ cScenario::cScenario(const cScenario& other)
 	, init_spec(other.init_spec)
 	, town_mods(other.town_mods)
 	, store_item_rects(other.store_item_rects)
-	, store_item_towns(other.store_item_towns)
 	, special_items(other.special_items)
 	, quests(other.quests)
 	, shops(other.shops)
@@ -169,7 +165,6 @@ void swap(cScenario& lhs, cScenario& rhs) {
 	swap(lhs.init_spec, rhs.init_spec);
 	swap(lhs.town_mods, rhs.town_mods);
 	swap(lhs.store_item_rects, rhs.store_item_rects);
-	swap(lhs.store_item_towns, rhs.store_item_towns);
 	swap(lhs.special_items, rhs.special_items);
 	swap(lhs.quests, rhs.quests);
 	swap(lhs.shops, rhs.shops);
@@ -234,13 +229,12 @@ void cScenario::import_legacy(legacy::scenario_data_type& old){
 		town_mods[i].y = old.flag_to_add_to_town[i][1];
 		storage_shortcuts[i] = old.storage_shortcuts[i];
 	}
-	// TODO: Combine store_item_rects and store_item_towns into a structure
 	for(short i = 0; i < 3; i++) {
-		store_item_rects[i].top = old.store_item_rects[i].top;
-		store_item_rects[i].left = old.store_item_rects[i].left;
-		store_item_rects[i].bottom = old.store_item_rects[i].bottom;
-		store_item_rects[i].right = old.store_item_rects[i].right;
-		store_item_towns[i] = old.store_item_towns[i];
+		auto& rect = store_item_rects[old.store_item_towns[i]];
+		rect.top = old.store_item_rects[i].top;
+		rect.left = old.store_item_rects[i].left;
+		rect.bottom = old.store_item_rects[i].bottom;
+		rect.right = old.store_item_rects[i].right;
 	}
 	special_items.resize(50);
 	for(short i = 0; i < 50; i++) {

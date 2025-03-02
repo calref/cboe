@@ -353,10 +353,10 @@ void start_town_mode(short which_town, short entry_dir) {
 	// Set up items, maybe place items already there
 	univ.town.items.clear();
 	
-	for(short j = 0; j < 3; j++)
-		if(univ.scenario.store_item_towns[j] == town_number) {
-			univ.town.items = univ.party.stored_items[j];
-		}
+	auto storage_iter = univ.scenario.store_item_rects.find(town_number);
+	if(storage_iter != univ.scenario.store_item_rects.end()) {
+		univ.town.items = univ.party.stored_items[town_number];
+	}
 	
 	for(short i = 0; i < univ.town->preset_items.size(); i++)
 		if(univ.town->preset_items[i].code >= 0) {
@@ -544,18 +544,19 @@ location end_town_mode(bool switching_level,location destination, bool debug_lea
 		}
 		
 		// Store items, if necessary
-		for(short j = 0; j < 3; j++)
-			if(univ.scenario.store_item_towns[j] == univ.party.town_num) {
-				univ.party.stored_items[j].clear();
-				for(short i = 0; i < univ.town.items.size(); i++)
-					if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].is_special == 0 &&
-							univ.town.items[i].item_loc.x >= univ.scenario.store_item_rects[j].left &&
-							univ.town.items[i].item_loc.x <= univ.scenario.store_item_rects[j].right &&
-							univ.town.items[i].item_loc.y >= univ.scenario.store_item_rects[j].top &&
-							univ.town.items[i].item_loc.y <= univ.scenario.store_item_rects[j].bottom) {
-						univ.party.stored_items[j].push_back(univ.town.items[i]);
-					}
-			}
+		auto storage_iter = univ.scenario.store_item_rects.find(univ.party.town_num);
+		if(storage_iter != univ.scenario.store_item_rects.end()) {
+			auto& stored_items = univ.party.stored_items[univ.party.town_num];
+			stored_items.clear();
+			for(short i = 0; i < univ.town.items.size(); i++)
+				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].is_special == 0 &&
+						univ.town.items[i].item_loc.x >= storage_iter->second.left &&
+						univ.town.items[i].item_loc.x <= storage_iter->second.right &&
+						univ.town.items[i].item_loc.y >= storage_iter->second.top &&
+						univ.town.items[i].item_loc.y <= storage_iter->second.bottom) {
+					stored_items.push_back(univ.town.items[i]);
+				}
+		}
 		
 		// Now store map
 		for(short i = 0; i < univ.town->max_dim; i++)

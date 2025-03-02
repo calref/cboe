@@ -838,7 +838,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 				"num-towns", "out-width", "out-height", "start-town", "town-start", "outdoor-start", "sector-start",
 			};
 			Iterator<Element> game;
-			int store_rects = 0, town_mods = 0, spec_items = 0, quests = 0, shops = 0, timers = 0, strnum;
+			int town_mods = 0, spec_items = 0, quests = 0, shops = 0, timers = 0, strnum;
 			for(game = game.begin(elem.Get()); game != game.end(); game++) {
 				game->GetValue(&type);
 				reqs.erase(type);
@@ -865,11 +865,11 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 				} else if(type == "sector-start") {
 					scenario.out_start = readLocFromXml(*game);
 				} else if(type == "store-items") {
-					if(store_rects >= 3)
-						throw xBadNode(type,game->Row(),game->Column(),fname);
-					auto town_p = &scenario.store_item_towns[store_rects];
-					scenario.store_item_rects[store_rects] = readRectFromXml(*game, "", "town", town_p);
-					store_rects++;
+					short town = 0;
+					rectangle rect = readRectFromXml(*game, "", "town", &town);
+					if(scenario.store_item_rects.find(town) != scenario.store_item_rects.end())
+						throw xBadVal(type, "town", std::to_string(town), game->Row(), game->Column(), fname);
+					scenario.store_item_rects[town] = rect;
 				} else if(type == "town-flag") {
 					if(town_mods >= 10)
 						throw xBadNode(type,game->Row(),game->Column(),fname);

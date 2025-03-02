@@ -12,7 +12,6 @@ cItem edit_item_abil(cItem starting_record,short which_item,cDialog& parent);
 bool edit_spec_item(short which_item);
 bool edit_quest(size_t which_quest);
 bool edit_shop(size_t which_shop, cDialog* parent = nullptr);
-void edit_save_rects();
 void edit_add_town();
 void edit_item_placement();
 void edit_scen_details();

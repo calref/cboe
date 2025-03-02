@@ -154,7 +154,7 @@ void put_party_in_scen(std::string scen_name, bool force) {
 	
 	bool stored_item = false;
 	for(auto& store : univ.party.stored_items)
-		stored_item = stored_item || std::any_of(store.begin(), store.end(), [](const cItem& item) {
+		stored_item = stored_item || std::any_of(store.second.begin(), store.second.end(), [](const cItem& item) {
 			return item.variety != eItemType::NO_ITEM;
 		});
 	if(stored_item)

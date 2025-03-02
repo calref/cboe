@@ -609,10 +609,6 @@ void handle_menu_choice(eMenu item_hit) {
 				redraw_screen();
 			}
 			break;
-		case eMenu::SCEN_SAVE_ITEM_RECTS:
-			edit_save_rects();
-			change_made = true;
-			break;
 		case eMenu::TOWN_VARYING:
 			edit_add_town();
 			change_made = true;

@@ -508,14 +508,6 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 								</object>
-								<object class="NSMenuItem" id="580939217">
-									<reference key="NSMenu" ref="399390342"/>
-									<string key="NSTitle">  Edit Saved Item Rectangles</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="229763992"/>
-									<reference key="NSMixedImage" ref="909111550"/>
-								</object>
 								<object class="NSMenuItem" id="949025402">
 									<reference key="NSMenu" ref="399390342"/>
 									<string key="NSTitle">  Set Variable Town Entry</string>
@@ -1302,7 +1294,6 @@
 							<reference ref="878691898"/>
 							<reference ref="800006778"/>
 							<reference ref="344591363"/>
-							<reference ref="580939217"/>
 							<reference ref="949025402"/>
 							<reference ref="72958416"/>
 							<reference ref="963208893"/>
@@ -1457,11 +1448,6 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">821</int>
 						<reference key="object" ref="344591363"/>
-						<reference key="parent" ref="399390342"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">822</int>
-						<reference key="object" ref="580939217"/>
 						<reference key="parent" ref="399390342"/>
 					</object>
 					<object class="IBObjectRecord">

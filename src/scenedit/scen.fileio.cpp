@@ -176,16 +176,14 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 	data.PushElement("town-start", scenario.where_start);
 	data.PushElement("outdoor-start", scenario.out_sec_start);
 	data.PushElement("sector-start", scenario.out_start);
-	for(int i = 0; i < 3; i++) {
-		if(scenario.store_item_towns[i] >= 0) {
-			data.OpenElement("store-items");
-			data.PushAttribute("top", scenario.store_item_rects[i].top);
-			data.PushAttribute("left", scenario.store_item_rects[i].left);
-			data.PushAttribute("bottom", scenario.store_item_rects[i].bottom);
-			data.PushAttribute("right", scenario.store_item_rects[i].right);
-			data.PushAttribute("town", scenario.store_item_towns[i]);
-			data.CloseElement("store-items");
-		}
+	for(auto p : scenario.store_item_rects) {
+		data.OpenElement("store-items");
+		data.PushAttribute("top", p.second.top);
+		data.PushAttribute("left", p.second.left);
+		data.PushAttribute("bottom", p.second.bottom);
+		data.PushAttribute("right", p.second.right);
+		data.PushAttribute("town", p.first);
+		data.CloseElement("store-items");
 	}
 	for(int i = 0; i < scenario.town_mods.size(); i++) {
 		if(scenario.town_mods[i].spec >= 0) {

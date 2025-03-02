@@ -189,7 +189,7 @@
 					<xs:attributeGroup ref="point"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="store-items" minOccurs="0" maxOccurs="3">
+			<xs:element name="store-items" minOccurs="0" maxOccurs="unbounded">
 				<xs:complexType>
 					<xs:attributeGroup ref="rect"/>
 					<xs:attribute name="town" type="xs:integer" use="required"/>
