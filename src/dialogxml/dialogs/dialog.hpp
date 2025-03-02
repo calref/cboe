@@ -32,6 +32,7 @@
 #include "tools/framerate_limiter.hpp"
 
 class cControl;
+class cContainer;
 class cTextField;
 struct DialogDefn;
 
@@ -66,7 +67,7 @@ class cDialog : public iComponent, public iNameGiver {
 	int winLastY=-1;
 	std::string currentFocus;
 	cDialog* parent;
-	cControl* findControl(std::string id);
+	cControl* findControl(std::string id, cContainer* parent = nullptr);
 	std::string generateId(const std::string& explicitId) const override;
 	void loadFromFile(const DialogDefn& file);
 	void handleTab(bool reverse);
