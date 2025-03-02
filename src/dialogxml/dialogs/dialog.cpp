@@ -307,13 +307,21 @@ void cDialog::loadFromFile(const DialogDefn& file){
 						}
 					});
 					if(!all_children_resolved) return;
-					pane->recalcRect();
+					pane->postChildrenResolve();
 				}
 				ctrl.relocateRelative(ctrl.frame.topLeft(), anchor, ctrl.horz, ctrl.vert);
 				ctrl.anchor.clear();
 				ctrl.horz = ctrl.vert = POS_ABS;
 			} else if(auto pane = dynamic_cast<cContainer*>(&ctrl)) {
-				pane->forEach(process_ctrl);
+				bool all_children_resolved = true;
+				pane->forEach([&process_ctrl, &all_children_resolved](std::string id, cControl& ctrl) {
+					if(!ctrl.anchor.empty()) {
+						all_children_resolved = false;
+					}
+					process_ctrl(id, ctrl);
+				});
+				if(!all_children_resolved) return;
+				pane->postChildrenResolve();
 			}
 		};
 

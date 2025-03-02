@@ -110,8 +110,8 @@ bool cLocationPicker::handle_scroll(std::string item_hit) {
 }
 
 bool cLocationPicker::handle_select(std::string item_hit) {
-	location clickedLoc = map->getCellPos(dlog[item_hit]);
-	location check{viewport.x + clickedLoc.x / 24, viewport.y + clickedLoc.y / 24};
+	location clickedLoc = map->getCellIdx(dlog[item_hit]);
+	location check{viewport.x + clickedLoc.x, viewport.y + clickedLoc.y};
 	if(check.x < area->max_dim && check.y < area->max_dim) {
 		chosen_loc = check;
 		place_pointer();

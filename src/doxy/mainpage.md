@@ -302,6 +302,8 @@ The `<tilemap>` tag
 
 The `<tilemap>` tag represents a grid of identical elements based off the provided template.
 It can contain any elements except for nested `<stack>`, `<pane>`, or `<tilemap>` elements.
+Every child element of the tilemap will be instanced for each cell of the tilemap,
+unless it is a `<mapgroup>` element (see below).
 
 The `<tilemap>` tag accepts the following attributes:
 
@@ -310,6 +312,7 @@ The `<tilemap>` tag accepts the following attributes:
 * `rows` - The number of rows to generate. Required.
 * `cols` - The number of columns to generate. Required.
 * `cellspacing` - If specified, adds a buffer of this size between each cell.
+* `<mapgroup>` - Defines a combined LED group that will contain every instance of the LEDs it defines. which will be instanced for _each_ cell of the tilemap.
 
 Keyboard Shortcuts
 ------------------

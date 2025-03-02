@@ -12,6 +12,7 @@
 #include "scen.graphics.hpp"
 #include "scen.keydlgs.hpp"
 #include "scen.locpicker.hpp"
+#include "scen.sdfpicker.hpp"
 #include "scen.core.hpp"
 #include "dialogxml/dialogs/dialog.hpp"
 #include "dialogxml/widgets/control.hpp"
@@ -1117,6 +1118,16 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			}
 			store = loc.x;
 			me[otherField].setTextToNum(loc.y);
+		} break;
+		case eSpecPicker::SDF: {
+			// NOTE: Yes, it's correct that the main field has y and the "other field" has x.
+			auto otherField = get_control_for_field(fcn.continuation);
+			location sdf;
+			sdf.y = val;
+			sdf.x = me[otherField].getTextAsNum();
+			sdf = cStuffDonePicker(sdf).run();
+			store = sdf.y;
+			me[otherField].setTextToNum(sdf.x);
 		} break;
 		case eSpecPicker::FIELD: store = choose_field_type(val, &me, fcn.augmented); break;
 		case eSpecPicker::DAMAGE_TYPE: store = choose_damage_type(val, &me, true); break;

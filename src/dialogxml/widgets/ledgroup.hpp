@@ -33,6 +33,7 @@
 /// However, when the focus handler of the LED group is called, the selection _has_ been updated.,
 /// so getSelected() will return the new selection. (This is the reason for the getPreviousSelection() method.)
 class cLedGroup : public cContainer {
+	friend class cTilemap; // So it can call parseAttribute
 	std::map<std::string,cLed*> choices;
 	std::string fromList;
 	std::string curSelect, prevSelect;

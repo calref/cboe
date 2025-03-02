@@ -39,6 +39,10 @@ struct scenario_header_flags {
 
 enum eContentRating {G, PG, R, NC17};
 
+// TODO: Duplicated in party.hpp
+template<typename T, size_t x, size_t y>
+using array2d = std::array<std::array<T, y>, x>;
+
 // Used for finding town entrances in the outdoors
 struct town_entrance_t {
 	location out_sec;
@@ -103,6 +107,7 @@ public:
 	std::vector<std::string> evt_names;
 	std::vector<std::string> ic_names;
 	std::vector<std::string> itf_names;
+	array2d<std::string, 350, 50> sdf_names;
 	bool adjust_diff;
 	bool is_legacy;
 	fs::path scen_file; // transient
