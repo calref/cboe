@@ -6,6 +6,7 @@
 #include "universe/universe.hpp"
 #include "boe.monster.hpp"
 #include "boe.graphics.hpp"
+#include "boe.fileio.hpp"
 #include "boe.locutils.hpp"
 #include "boe.newgraph.hpp"
 #include "boe.infodlg.hpp"
@@ -4681,8 +4682,10 @@ bool hit_end_c_button() {
 		}
 	}
 	
-	if(end_ok)
+	if(end_ok){
 		end_combat();
+		if(which_combat_type == 0) try_auto_save("EndOutdoorCombat");
+	}
 	return end_ok;
 }
 

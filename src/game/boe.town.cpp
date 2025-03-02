@@ -507,6 +507,8 @@ void start_town_mode(short which_town, short entry_dir) {
 	// TODO: One problem with this - it paints the terrain after the town entry dialog is dismissed
 	// ... except it actually doesn't, because the town enter special is only queued, not run immediately.
 	draw_terrain(1);
+
+	try_auto_save("EnterTown");
 }
 
 
@@ -629,6 +631,10 @@ location end_town_mode(bool switching_level,location destination, bool debug_lea
 	
 	univ.party.town_num = 200; // should be harmless...
 	
+	if(!switching_level){
+		try_auto_save("ExitTown");
+	}
+
 	return to_return;
 }
 

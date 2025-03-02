@@ -30,4 +30,8 @@ fs::path locate_scenario(std::string scen_name);
 
 void alter_rect(rectangle *r);
 
+// The player can configure autosaves on/off globally, or individually
+// for a variety of different trigger reasons
+void try_auto_save(std::string reason);
+
 #endif

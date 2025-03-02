@@ -480,3 +480,37 @@ bool load_scenario_header(fs::path file,scen_header_type& scen_head){
 	
 	return true;
 }
+
+const int MAX_AUTOSAVE_DEFAULT = 5;
+void try_auto_save(std::string reason) {
+	if(!get_bool_pref("Autosave", true)) return;
+	if(!get_bool_pref("Autosave_" + reason, true)) return;
+	if(univ.file.empty()){
+		ASB("Autosave: Make a manual save first.");
+		print_buf();
+		return;
+	}
+
+	fs::path auto_folder = univ.file;
+	auto_folder.replace_extension(".auto");
+	fs::create_directories(auto_folder);
+	std::vector<std::pair<fs::path, std::time_t>> auto_mtimes = sorted_file_mtimes(auto_folder);
+
+	int max_autosaves = get_int_pref("Autosave_Max", MAX_AUTOSAVE_DEFAULT);
+	fs::path target_path;
+	if(auto_mtimes.size() < max_autosaves){
+		target_path = auto_folder / std::to_string(auto_mtimes.size() + 1);
+		target_path += ".exg";
+	}
+	// Save file buffer is full, so overwrite the oldest autosave
+	else{
+		target_path = auto_mtimes.back().first;
+	}
+
+	if(save_party_force(univ, target_path)){
+		ASB("Autosave: Game saved");
+	}else{
+		ASB("Autosave: Save not completed");
+	}
+	print_buf();
+}
