@@ -360,6 +360,19 @@ public:
 	virtual void draw() = 0;
 	cControl& operator=(cControl& other) = delete;
 	cControl(cControl& other) = delete;
+	/// Sets the positioning method of this control.
+	/// Note: this only has an effect when called from another control's parse function.
+	void setPositioning(const std::string& anchor_id, ePosition h, ePosition v) {
+		anchor = anchor_id;
+		horz = h;
+		vert = v;
+	}
+	/// Get the positioning method of this control.
+	/// Note: After the parse stage, this information is lost and replaced with (ABS,ABS).
+	std::pair<ePosition, ePosition> getPositioning(std::string* anchor_id = nullptr) {
+		if(anchor_id) *anchor_id = anchor;
+		return {horz, vert};
+	}
 protected:
 	/// Create a new control attached to a dialog.
 	/// @param t The type of the control.

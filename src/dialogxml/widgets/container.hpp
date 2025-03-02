@@ -46,11 +46,15 @@ public:
 	/// This may be called more than once, so it should not return the same value twice in a row,
 	/// unless it can guarantee the value is not already assigned to another control.
 	virtual std::string generateId(const std::string& explicitId) const override;
+	virtual void postChildrenResolve() {
+		recalcRect();
+	}
 	/// @copydoc getChild()
 	cControl& operator[](std::string id) {return getChild(id);}
 	const cControl& operator[](std::string id) const {return const_cast<cContainer&>(*this).getChild(id);}
 	bool isContainer() const override {return true;}
 	bool handleClick(location where, cFramerateLimiter& fps_limiter) override;
+	void validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) override;
 private:
 	std::pair<std::string,cControl*> prevCtrl{"", nullptr};
 };

@@ -391,6 +391,28 @@
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="sdf" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="row" use="required">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:maxExclusive value="350"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+							<xs:attribute name="row" use="required">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:maxExclusive value="50"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:element name="scenario">

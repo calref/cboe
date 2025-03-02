@@ -36,6 +36,7 @@ namespace legacy {
 	struct setup_save_type;
 };
 
+// TODO: Duplicated in scenario.hpp
 template<typename T, size_t x, size_t y>
 using array2d = std::array<std::array<T, y>, x>;
 

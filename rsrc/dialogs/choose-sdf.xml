@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='done'>
+	<pict name='mainpic' type='dlog' num='16' top='6' left='6'/>
+	<text name='prompt' anchor='mainpic' relative='pos pos-in' size='large' top='0' left='12' width='248' height='14'>Select a Stuff Done Flag:</text>
+	<tilemap name='cols' anchor='mainpic' relative='pos' top='8' left='0' rows='1' cols='5' cellspacing='10'>
+		<text name='col' size='large' left='0' top='0' width='120' height='14' framed='false'>A</text>
+	</tilemap>
+	<tilemap name='rows' anchor='mainpic' relative='pos-in pos' top='24' left='0' rows='10' cols='1' cellspacing='10'>
+		<text name='row' size='large' left='0' top='0' width='35' height='14' framed='false'>1</text>
+	</tilemap>
+	<tilemap name='map' anchor='mainpic' relative='pos' framed='true' top='24' left='0' rows='10' cols='5' cellspacing='10'>
+		<mapgroup name='choice'>
+			<led name='select' left='0' top='2'/>
+		</mapgroup>
+		<field name='name' anchor='select' relative='pos neg' left='6' top='2' height='14' width='100'/>
+	</tilemap>
+	<text name='help' anchor='left' relative='pos-in pos' top='0' left='6' width='422' height='16'>Click button to left of graphic to select.<br/>Use arrows to change pages.</text>
+	<button name='left' anchor='map' relative='pos-in pos' type='left' top='10' left='0' def-key='left'/>
+	<button name='down' anchor='left' relative='pos pos-in' type='down' top='0' left='228' def-key='down'/>
+	<button name='right' anchor='down' relative='pos pos-in' type='right' top='0' left='228' def-key='right'/>
+	<button name='cancel' anchor='done' relative='neg pos-in' type='regular' top='0' left='67' def-key='esc'>Cancel</button>
+	<button name='done' anchor='right' relative='pos-in pos' type='done' top='4' left='0'/>
+	<button name='up' anchor='down' relative='pos-in neg' type='up' top='284' left='0' def-key='up'/>
+</dialog>

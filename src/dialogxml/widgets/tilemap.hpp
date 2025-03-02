@@ -14,12 +14,15 @@
 class cTilemap : public cContainer {
 	std::map<std::string,cControl*> controls;
 	size_t rows, cols, spacing = 0, cellWidth, cellHeight;
+	bool childrenPositioned = false;
 	bool manageFormat(eFormat prop, bool set, boost::any* val) override;
 	location getCell(const std::string& id) const;
+	location getCellIdx(const std::string& id) const;
 	static std::string buildId(const std::string& base, size_t x, size_t y);
 	std::string current_cell;
 	mutable int id_tries = 0;
-	bool isHandlingClick = false;
+	template<typename Fcn>
+	bool parseInstances(Fcn parse);
 public:
 	std::string generateId(const std::string& baseId) const override;
 	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
@@ -37,6 +40,7 @@ public:
 	cControl& getChild(size_t x, size_t y);
 	location getCellPos(size_t x, size_t y) const;
 	location getCellPos(cControl& child) const;
+	location getCellIdx(cControl& child) const;
 	/// Attach the same click handler to every instance of a child control.
 	/// @param handler The handler to attach.
 	/// @param prefix The unique ID of the control template.
@@ -45,7 +49,14 @@ public:
 	/// @see cControl::attachClickHandler()
 	/// @deprecated in favour of @ref attachEventHandlers
 	void attachClickHandlers(std::function<bool(cDialog&,std::string,eKeyMod)> handler, std::string prefix);
-	bool handleClick(location where, cFramerateLimiter& fps_limiter) override;
+	/// Attach the same focus handler to every instance of a child control.
+	/// @param handler The handler to attach.
+	/// @param prefix The unique ID of the control template.
+	/// @throw xHandlerNotSupported if any of the controls do not support focus handlers.
+	/// @throw std::invalid_argument if any of the controls do not exist.
+	/// @see cControl::attachFocusHandler()
+	/// @deprecated in favour of @ref attachEventHandlers
+	void attachFocusHandlers(std::function<bool(cDialog&,std::string,bool)> handler, std::string prefix);
 	/// Recalculate the tilemap's bounding rect based on its contained controls.
 	void recalcRect() override;
 	/// Adds any fields in this tilemap to the tab order building arrays.
@@ -60,7 +71,10 @@ public:
 	std::set<eDlogEvt> getSupportedHandlers() const override {
 		return {EVT_CLICK, EVT_FOCUS, EVT_DEFOCUS};
 	}
+	void postChildrenResolve() override;
 	void forEach(std::function<void(std::string,cControl&)> callback) override;
+	size_t getNumRows() const { return rows; }
+	size_t getNumCols() const { return cols; }
 };
 
 #endif

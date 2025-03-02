@@ -96,3 +96,13 @@ void cContainer::callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, st
 	if(!which_clicked.empty())
 		getChild(which_clicked).triggerClickHandler(me, which_clicked, mods);
 }
+
+void cContainer::validatePostParse(ticpp::Element& who, std::string fname, const std::set<std::string>& attrs, const std::multiset<std::string>& nodes) {
+	cControl::validatePostParse(who, fname, attrs, nodes);
+	if(!anchor.empty()) return;
+	bool allResolved = true;
+	forEach([&allResolved](std::string, cControl& ctrl) {
+		if(!ctrl.anchor.empty()) allResolved = false;
+	});
+	if(allResolved) postChildrenResolve();
+}
