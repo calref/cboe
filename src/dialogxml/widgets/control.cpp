@@ -260,6 +260,7 @@ void cControl::playClickSound(){
 }
 
 bool cControl::handleClick(location, cFramerateLimiter& fps_limiter){
+	if(!visible) return false;
 	sf::Event e;
 	bool done = false, clicked = false;
 	getWindow().setActive();
