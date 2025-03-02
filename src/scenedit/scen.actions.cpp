@@ -2676,16 +2676,19 @@ void start_string_editing(eStrMode mode,short just_redo_text) {
 				break;
 		}
 	}
-	std::string make_new = std::to_string(num_strs) + " - Create New String";
-	switch(mode) {
-		case 0: set_rb(num_strs, RB_SCEN_STR, num_strs, make_new); break;
-		case 1: set_rb(num_strs, RB_OUT_STR, num_strs, make_new); break;
-		case 2: set_rb(num_strs, RB_TOWN_STR, num_strs, make_new); break;
-		case 3: set_rb(num_strs, RB_JOURNAL, num_strs, make_new); break;
-		case 4: set_rb(num_strs, RB_OUT_SIGN, num_strs, make_new); break;
-		case 5: set_rb(num_strs, RB_TOWN_SIGN, num_strs, make_new); break;
-		case 6: set_rb(num_strs, RB_OUT_RECT, num_strs, make_new); break;
-		case 7: set_rb(num_strs, RB_TOWN_RECT, num_strs, make_new); break;
+	if(mode <= STRS_JOURNAL) {
+		// Signs and area rects don't get a Create New option – you create a new one on the map.
+		std::string make_new = std::to_string(num_strs) + " - Create New String";
+		switch(mode) {
+			case 0: set_rb(num_strs, RB_SCEN_STR, num_strs, make_new); break;
+			case 1: set_rb(num_strs, RB_OUT_STR, num_strs, make_new); break;
+			case 2: set_rb(num_strs, RB_TOWN_STR, num_strs, make_new); break;
+			case 3: set_rb(num_strs, RB_JOURNAL, num_strs, make_new); break;
+			case 4: set_rb(num_strs, RB_OUT_SIGN, num_strs, make_new); break;
+			case 5: set_rb(num_strs, RB_TOWN_SIGN, num_strs, make_new); break;
+			case 6: set_rb(num_strs, RB_OUT_RECT, num_strs, make_new); break;
+			case 7: set_rb(num_strs, RB_TOWN_RECT, num_strs, make_new); break;
+		}
 	}
 	
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
