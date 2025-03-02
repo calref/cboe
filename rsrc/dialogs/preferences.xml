@@ -51,6 +51,7 @@
 	<text name='keyshift-note' relative='pos-in pos-in' anchor='keyshift-head' top='14' left='40' width='300' height='17'>(Holding Shift while using directional keys will do the opposite.)</text>
 	<text name='misc-head' size='large' relative='pos-in pos' anchor='targeting-head' top='60' left='0' width='182' height='17'>Miscellaneous:</text>
 	<led name='nosound' relative='pos-in pos' anchor='misc-head' top='6' left='15'>No Sounds</led>
+	<led name='fancypicker' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Use in-game save file browser</led>
 	<led name='repeatdesc' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Show room descriptions more than once</led>
 	<led name='easier' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Make game easier (monsters much weaker)</led>
 	<led name='lesswm' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Fewer wandering monsters</led>
