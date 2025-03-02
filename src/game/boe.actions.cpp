@@ -485,6 +485,7 @@ void handle_rest(bool& need_redraw, bool& need_reprint) {
 	if(i == 50) {
 		do_rest(1200, get_ran(5,1,10), 50);
 		add_string_to_buf("  Rest successful.");
+		try_auto_save("RestComplete");
 		put_pc_screen();
 		pause(25);
 	}
@@ -1132,6 +1133,9 @@ static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 		redraw_screen(REFRESH_NONE);
 	}
 	put_pc_screen();
+	if(!party_sees_a_monst()){
+		try_auto_save("TownWaitComplete");
+	}
 }
 
 void handle_wait(bool& did_something, bool& need_redraw, bool& need_reprint) {
@@ -3189,6 +3193,7 @@ void increase_age() {
 		else {
 			play_sound(6);
 			add_string_to_buf("You eat.");
+			try_auto_save("Eat");
 		}
 	}
 	

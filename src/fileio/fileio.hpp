@@ -35,6 +35,7 @@ std::vector<std::pair<fs::path, std::time_t>> sorted_file_mtimes(fs::path dir, s
 
 bool load_party(fs::path file_to_load, cUniverse& univ);
 bool save_party(cUniverse& univ, bool save_as = false);
+bool save_party_force(cUniverse& univ, fs::path file);
 
 void init_directories(const char* exec_path);
 
