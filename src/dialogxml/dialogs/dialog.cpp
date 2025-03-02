@@ -1099,20 +1099,18 @@ const cControl& cDialog::operator[](std::string id) const {
 	return const_cast<cDialog&>(*this).getControl(id);
 }
 
-cControl* cDialog::findControl(std::string id) {
-	ctrlIter iter = controls.find(id);
-	if(iter != controls.end()) return iter->second;
-	
-	iter = controls.begin();
-	while(iter != controls.end()){
-		if(iter->second->isContainer()){
-			cContainer* tmp = dynamic_cast<cContainer*>(iter->second);
-			if(tmp->hasChild(id))
-				return &tmp->getChild(id);
+cControl* cDialog::findControl(std::string id, cContainer* parent) {
+	cControl* found = nullptr;
+	auto fcn = [this, &found, id](std::string check_id, cControl& ctrl) {
+		if(found) return;
+		if(id == check_id) found = &ctrl;
+		else if(ctrl.isContainer()) {
+			found = findControl(id, dynamic_cast<cContainer*>(&ctrl));
 		}
-		iter++;
-	}
-	return nullptr;
+	};
+	if(parent) parent->forEach(fcn);
+	else forEach(fcn);
+	return found;
 }
 
 cControl& cDialog::getControl(std::string id) {
