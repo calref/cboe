@@ -1221,7 +1221,9 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		else if(cur_display_mode == "br") set_pref("DisplayMode", 4);
 		else if(cur_display_mode == "win") set_pref("DisplayMode", 5);
 		set_pref("PlaySounds", dynamic_cast<cLed&>(me["nosound"]).getState() == led_off);
+
 		set_pref("DirectionalKeyScrolling", dynamic_cast<cLed&>(me["screen-shift"]).getState() != led_off);
+		set_pref("FancyFilePicker", dynamic_cast<cLed&>(me["fancypicker"]).getState() != led_off);
 		set_pref("RepeatRoomDescriptions", dynamic_cast<cLed&>(me["repeatdesc"]).getState() != led_off);
 		set_pref("ShowInstantHelp", dynamic_cast<cLed&>(me["nohelp"]).getState() == led_off);
 		
@@ -1315,6 +1317,7 @@ void pick_preferences(bool record) {
 	}
 	
 	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySounds", true) ? led_off : led_red);
+	dynamic_cast<cLed&>(prefsDlog["fancypicker"]).setState(get_bool_pref("FancyFilePicker", true) ? led_red : led_off);
 	dynamic_cast<cLed&>(prefsDlog["repeatdesc"]).setState(get_bool_pref("RepeatRoomDescriptions") ? led_red : led_off);
 	dynamic_cast<cLed&>(prefsDlog["nohelp"]).setState(get_bool_pref("ShowInstantHelp", true) ? led_off : led_red);
 	if(overall_mode == MODE_STARTUP && !party_in_memory) {
