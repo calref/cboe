@@ -480,6 +480,7 @@ private:
 	iComponent* parent;
 	// Transient values only used during parsing
 	ePosition horz = POS_ABS, vert = POS_ABS;
+	int width = 0, height = 0;
 	std::string anchor;
 	bool is_link = false;
 	static std::mt19937 ui_rand;

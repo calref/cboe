@@ -443,18 +443,10 @@ void cControl::parse(ticpp::Element& who, std::string fname) {
 	Iterator<Node> node;
 	std::set<std::string> foundAttrs;
 	std::multiset<std::string> foundNodes;
-	int width = 0, height = 0;
-	rectangle frame;
 	for(attr = attr.begin(&who); attr != attr.end(); attr++){
-		std::string attrName = attr->Name();
-		foundAttrs.insert(attrName);
-		if(attrName == "name") attr->GetValue(&name);
-		else if(attrName == "top") attr->GetValue(&frame.top);
-		else if(attrName == "left") attr->GetValue(&frame.left);
-		else if(attrName == "width") attr->GetValue(&width);
-		else if(attrName == "height") attr->GetValue(&height);
-		else if(!parseAttribute(*attr, tagName, fname))
-			throw xBadAttr(tagName, attrName, attr->Row(), attr->Column(), fname);
+		foundAttrs.insert(attr->Name());
+		if(!parseAttribute(*attr, tagName, fname))
+			throw xBadAttr(tagName, attr->Name(), attr->Row(), attr->Column(), fname);
 	}
 	if(auto namer = dynamic_cast<iNameGiver*>(&getParent())) {
 		name = namer->generateId(name);
@@ -476,7 +468,6 @@ void cControl::parse(ticpp::Element& who, std::string fname) {
 	location bestSz = getPreferredSize();
 	frame.width() = width > 0 ? width : bestSz.x;
 	frame.height() = height > 0 ? height : bestSz.y;
-	setBounds(frame);
 	validatePostParse(who, fname, foundAttrs, foundNodes);
 
 	// Wire links to function:
@@ -492,6 +483,28 @@ void cControl::parse(ticpp::Element& who, std::string fname) {
 bool cControl::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) {
 	std::string name;
 	attr.GetName(&name);
+	// Unique identifier
+	if(name == "name") {
+		attr.GetValue(&this->name);
+		return true;
+	}
+	// Position and size
+	if(name == "top") {
+		attr.GetValue(&frame.top);
+		return true;
+	}
+	if(name == "left") {
+		attr.GetValue(&frame.left);
+		return true;
+	}
+	if(name == "width") {
+		attr.GetValue(&width);
+		return true;
+	}
+	if(name == "height") {
+		attr.GetValue(&height);
+		return true;
+	}
 	// Relative positioning
 	if(name == "relative") {
 		static auto space = " \t";
