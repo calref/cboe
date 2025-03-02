@@ -2017,17 +2017,17 @@ fs::path run_autosave_picker(fs::path auto_folder, cDialog* parent) {
 	return cFilePicker(auto_folder, false, parent, true).run();
 }
 
-fs::path run_file_picker(bool saving) {
-	if(!has_feature_flag("file-picker-dialog", "V1") /* TODO check file picker preference */){
-		if(saving)
-			return nav_put_or_temp_party();
-		else
-			return nav_get_or_decode_party();
-	}
-
+fs::path fancy_file_picker(bool saving) {
 	// TODO this is set up to be configurable, but not yet exposed in preferences.
 	fs::path save_folder = get_string_pref("SaveFolder", saveDir.string());
 
 	return run_file_picker(save_folder, saving);
 }
 
+fs::path run_file_picker(bool saving){
+	if(has_feature_flag("file-picker-dialog", "V1") && get_bool_pref("FancyFilePicker", true)){
+		return fancy_file_picker(saving);
+	}
+
+	return os_file_picker(saving);
+}
