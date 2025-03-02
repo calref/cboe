@@ -3759,3 +3759,7 @@ void edit_custom_sounds() {
 		snd_names.swap(scenario.snd_names);
 	}
 }
+
+fs::path run_file_picker(bool saving){
+	return os_file_picker(saving);
+}

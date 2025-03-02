@@ -54,6 +54,13 @@ fs::path nav_put_or_temp_party(fs::path def) {
 	}
 }
 
+fs::path os_file_picker(bool saving) {
+	if(saving)
+		return nav_put_or_temp_party();
+	else
+		return nav_get_or_decode_party();
+}
+
 bool load_party(fs::path file_to_load, cUniverse& univ){
 	bool town_restore = false;
 	bool maps_there = false;

@@ -29,6 +29,10 @@ bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header 
 fs::path nav_get_or_decode_party();
 fs::path nav_put_or_temp_party(fs::path def = "");
 
+fs::path os_file_picker(bool saving);
+// The game implements a fancy file picker, the editors just call the OS picker.
+extern fs::path run_file_picker(bool saving);
+
 const std::set<fs::path> save_extensions = {".exg", ".boe", ".SAV", ".mac"};
 // Return a directory's files sorted by last modified time
 std::vector<std::pair<fs::path, std::time_t>> sorted_file_mtimes(fs::path dir, std::set<fs::path> valid_extensions = save_extensions);
