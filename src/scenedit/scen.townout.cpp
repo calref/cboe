@@ -1251,6 +1251,7 @@ static std::map<eTalkNode, std::array<node_function_t, 4>> node_map = {
 	{eTalkNode::DEP_ON_TIME_AND_EVENT, {eSpecPicker::NONE, eSpecPicker::EVENT}},
 	{eTalkNode::DEP_ON_TOWN, {STRT_TOWN}},
 	{eTalkNode::SHOP, {STRT_COST_ADJ, STRT_SHOP}},
+	{eTalkNode::JOB_BANK, {eSpecPicker::JOB_BOARD}},
 	{eTalkNode::ENCHANT, {STRT_ENCHANT}},
 	{eTalkNode::BUY_SDF, {eSpecPicker::NONE, eSpecPicker::SDF}},
 	{eTalkNode::BUY_SHIP, {eSpecPicker::NONE, STRT_BOAT}},
@@ -1382,6 +1383,10 @@ static bool select_talk_node_value(cDialog& me, std::string item_hit, const std:
 	} else if(fcn.button == eSpecPicker::EVENT) {
 		int value = me[field_id].getTextAsNum();
 		value = choose_text_editable(scenario.evt_names, value, &me, "Select an event:");
+		me[field_id].setTextToNum(value);
+	} else if(fcn.button == eSpecPicker::JOB_BOARD) {
+		int value = me[field_id].getTextAsNum();
+		value = choose_text_editable(scenario.qb_names, value, &me, "Select a job board:");
 		me[field_id].setTextToNum(value);
 	} else if(fcn.button == eSpecPicker::LOCATION) {
 		location loc(me[field_id].getTextAsNum(), me[second_field_id].getTextAsNum());

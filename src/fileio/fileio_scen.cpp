@@ -965,6 +965,12 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 					if(itfnum > scenario.itf_names.size())
 						scenario.itf_names.resize(itfnum);
 					edit->GetText(&scenario.itf_names[itfnum - 1], false);
+				} else if(type == "job-board") {
+					int qbnum = 0;
+					edit->GetAttribute("id", &qbnum);
+					if(qbnum > scenario.qb_names.size())
+						scenario.qb_names.resize(qbnum);
+					edit->GetText(&scenario.qb_names[qbnum - 1], false);
 				} else if(type == "sdf") {
 					int row, col;
 					edit->GetAttribute("row", &row);

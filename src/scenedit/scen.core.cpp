@@ -2124,9 +2124,13 @@ static void put_quest_in_dlog(cDialog& me, const cQuest& quest, size_t which_que
 	if(quest.bank1 < 0 && quest.bank2 < 0) {
 		me["bank1"].hide();
 		me["bank2"].hide();
+		me["choose-bank1"].hide();
+		me["choose-bank2"].hide();
 	} else {
 		me["bank1"].show();
 		me["bank2"].show();
+		me["choose-bank1"].show();
+		me["choose-bank2"].show();
 	}
 }
 
@@ -2182,19 +2186,26 @@ bool edit_quest(size_t which_quest) {
 	cDialog quest_dlg(*ResMgr::dialogs.get("edit-quest"));
 	quest_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
 	quest_dlg["okay"].attachClickHandler(std::bind(save_quest_from_dlog, _1, std::ref(quest), std::ref(which_quest), true));
-	quest_dlg["choose-evt"].attachClickHandler([](cDialog& me, std::string, eKeyMod) {
-		int value = me["evt"].getTextAsNum();
-		value = choose_text_editable(scenario.evt_names, value, &me, "Select an event:");
-		me["evt"].setTextToNum(value);
+	quest_dlg.attachClickHandlers([](cDialog& me, std::string item_hit, eKeyMod) {
+		std::string field_id = item_hit.substr(7);
+		std::string title = field_id == "evt" ? "Select an event:" : "Select a job board:";
+		auto strings = field_id == "evt" ? scenario.evt_names : scenario.qb_names;
+		int value = me[field_id].getTextAsNum();
+		value = choose_text_editable(strings, value, &me, title);
+		me[field_id].setTextToNum(value);
 		return true;
-	});
+	}, {"choose-evt", "choose-bank1", "choose-bank2"});
 	quest_dlg["inbank"].attachFocusHandler([](cDialog& me, std::string, bool losing) -> bool {
 		if(losing) {
 			me["bank1"].hide();
 			me["bank2"].hide();
+			me["choose-bank1"].hide();
+			me["choose-bank2"].hide();
 		} else {
 			me["bank1"].show();
 			me["bank2"].show();
+			me["choose-bank1"].show();
+			me["choose-bank2"].show();
 		}
 		return true;
 	});

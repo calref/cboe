@@ -100,6 +100,7 @@ public:
 	std::vector<std::string> spec_strs;
 	std::vector<std::string> snd_names;
 	std::vector<std::string> evt_names;
+	std::vector<std::string> qb_names;
 	std::vector<std::string> ic_names;
 	std::vector<std::string> itf_names;
 	std::map<int, std::map<int, std::string>> sdf_names;
