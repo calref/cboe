@@ -14,6 +14,7 @@
 #include "scen.townout.hpp"
 #include "scen.keydlgs.hpp"
 #include "scen.locpicker.hpp"
+#include "scen.sdfpicker.hpp"
 #include "scen.fileio.hpp"
 #include "scen.core.hpp"
 #include "mathutil.hpp"
@@ -1242,6 +1243,25 @@ static bool save_talk_node(cDialog& me, std::stack<node_ref_t>& talk_edit_stack,
 	return true;
 }
 
+// TODO: Maybe I shouldn't reuse node_function_t here? It has some irrelevant data too.
+static std::map<eTalkNode, std::array<node_function_t, 4>> node_map = {
+	{eTalkNode::DEP_ON_SDF, {eSpecPicker::SDF}},
+	{eTalkNode::SET_SDF, {eSpecPicker::SDF}},
+	{eTalkNode::INN, {eSpecPicker::NONE, eSpecPicker::NONE, eSpecPicker::LOCATION}},
+	{eTalkNode::DEP_ON_TIME_AND_EVENT, {eSpecPicker::NONE, eSpecPicker::EVENT}},
+	{eTalkNode::DEP_ON_TOWN, {STRT_TOWN}},
+	{eTalkNode::SHOP, {STRT_COST_ADJ, STRT_SHOP}},
+	{eTalkNode::ENCHANT, {STRT_ENCHANT}},
+	{eTalkNode::BUY_SDF, {eSpecPicker::NONE, eSpecPicker::SDF}},
+	{eTalkNode::BUY_SHIP, {eSpecPicker::NONE, STRT_BOAT}},
+	{eTalkNode::BUY_HORSE, {eSpecPicker::NONE, STRT_HORSE}},
+	{eTalkNode::BUY_SPEC_ITEM, {STRT_SPEC_ITEM}},
+	{eTalkNode::RECEIVE_QUEST, {eSpecPicker::QUEST}},
+	{eTalkNode::BUY_TOWN_LOC, {STRT_TOWN}},
+	{eTalkNode::CALL_TOWN_SPEC, {eSpecPicker::NODE}},
+	{eTalkNode::CALL_SCEN_SPEC, {+eSpecPicker::NODE}},
+};
+
 static void put_talk_node_in_dlog(cDialog& me, std::stack<node_ref_t>& talk_edit_stack) {
 	cSpeech::cNode& talk_node =talk_edit_stack.top().second;
 	
@@ -1268,20 +1288,23 @@ static void put_talk_node_in_dlog(cDialog& me, std::stack<node_ref_t>& talk_edit
 	me["str1"].setText(talk_node.str1);
 	me["str2"].setText(talk_node.str2);
 	
-	if(talk_node.type == eTalkNode::SHOP || talk_node.type == eTalkNode::DEP_ON_TIME_AND_EVENT)
-		me["chooseB"].show();
-	else me["chooseB"].hide();
-	me["chooseA-regular"].hide();
-	switch(talk_node.type){
-		case eTalkNode::ENCHANT:
-			me["chooseA-regular"].show();
-			break;
-		case eTalkNode::CALL_TOWN_SPEC: case eTalkNode::CALL_SCEN_SPEC: case eTalkNode::RECEIVE_QUEST:
-			me["chooseA"].show();
-			break;
-		default:
-			me["chooseA"].hide();
-			break;
+	const auto fcns = node_map[talk_node.type];
+	for(int i = 0; i < fcns.size(); i++) {
+		std::ostringstream sout;
+		sout << "choose" << char('A' + i);;
+		auto& btn = dynamic_cast<cButton&>(me[sout.str()]);
+		if(fcns[i].button == eSpecPicker::NONE) {
+			btn.hide();
+			continue;
+		}
+		btn.show();
+		if(fcns[i].button == eSpecPicker::NODE || fcns[i].button == eSpecPicker::QUEST) {
+			btn.setText("Create/Edit");
+			btn.setBtnType(BTN_LG);
+		} else {
+			btn.setText("Choose");
+			btn.setBtnType(BTN_REG);
+		}
 	}
 	
 	if(talk_edit_stack.size() > 1)
@@ -1337,38 +1360,57 @@ static bool select_talk_node_personality(cDialog& me, std::stack<node_ref_t>& ta
 
 static bool select_talk_node_value(cDialog& me, std::string item_hit, const std::stack<node_ref_t>& talk_edit_stack) {
 	const auto& talk_node = talk_edit_stack.top().second;
-	if(item_hit == "chooseB") {
-		if(talk_node.type == eTalkNode::SHOP) {
-			int i = me["extra2"].getTextAsNum();
-			i = choose_text(STRT_SHOP,i,&me,"Which shop?");
-			me["extra2"].setTextToNum(i);
-		} else if(talk_node.type == eTalkNode::DEP_ON_TIME_AND_EVENT) {
-			int value = me["extra2"].getTextAsNum();
-			value = choose_text_editable(scenario.evt_names, value, &me, "Select an event:");
-			me["extra2"].setTextToNum(value);
+	int which_field = item_hit.back() - 'A';
+	std::string field_id = "extra" + std::to_string(which_field + 1);
+	std::string second_field_id = "extra" + std::to_string(which_field + 2);
+	const auto& fcn = node_map[talk_node.type][which_field];
+	if(fcn.button == eSpecPicker::STRING) {
+		int i = me[field_id].getTextAsNum();
+		std::string title;
+		switch(fcn.str_type) {
+			case STRT_TOWN: title = "Which town?"; break;
+			case STRT_COST_ADJ: title = "What cost adjust?"; break;
+			case STRT_SHOP: title = "Which shop?"; break;
+			case STRT_ENCHANT: title = "Which enchantment?"; break;
+			case STRT_BOAT: title = "Which boat?"; break;
+			case STRT_HORSE: title = "Which horse?"; break;
+			case STRT_SPEC_ITEM: title = "Which special item?"; break;
+			default: title = "Title not set for this string type!!!"; break;
 		}
-	} else if(item_hit == "chooseA") {
-		int spec = me["extra1"].getTextAsNum();
-		// Create/Edit a quest:
-		if(talk_node.type == eTalkNode::RECEIVE_QUEST){
-			if(spec == -1){
-				spec = scenario.quests.size();
-				me["extra1"].setTextToNum(spec);
-			}
-			edit_quest(spec);
+		i = choose_text(fcn.str_type, i, &me, title);
+		me[field_id].setTextToNum(i);
+	} else if(fcn.button == eSpecPicker::EVENT) {
+		int value = me[field_id].getTextAsNum();
+		value = choose_text_editable(scenario.evt_names, value, &me, "Select an event:");
+		me[field_id].setTextToNum(value);
+	} else if(fcn.button == eSpecPicker::LOCATION) {
+		location loc(me[field_id].getTextAsNum(), me[second_field_id].getTextAsNum());
+		cLocationPicker picker(loc, *town, "Choose a location:", &me);
+		loc = picker.run();
+		if(picker->accepted()) {
+			me[field_id].setTextToNum(loc.x);
+			me[second_field_id].setTextToNum(loc.y);
 		}
-		// Create/Edit a special node:
-		else{
-			int mode = talk_node.type == eTalkNode::CALL_TOWN_SPEC ? 2 : 0;
-			if(spec < 0)
-				spec = get_fresh_spec(mode);
-			if(edit_spec_enc(spec,mode,&me))
-				me["extra1"].setTextToNum(spec);
+	} else if(fcn.button == eSpecPicker::SDF) {
+		location sdf(me[second_field_id].getTextAsNum(), me[field_id].getTextAsNum());
+		cStuffDonePicker picker(sdf);
+		sdf = picker.run();
+		me[second_field_id].setTextToNum(sdf.x);
+		me[field_id].setTextToNum(sdf.y);
+	} else if(fcn.button == eSpecPicker::QUEST) {
+		int quest = me[field_id].getTextAsNum();
+		if(quest < 0 || quest >= scenario.quests.size()){
+			quest = scenario.quests.size();
+			me[field_id].setTextToNum(quest);
 		}
-	} else if(item_hit == "chooseA-regular") {
-		int i = me["extra1"].getTextAsNum();
-		i = choose_text(STRT_ENCHANT,i,&me,"Which enchantment?");
-		me["extra1"].setTextToNum(i);
+		edit_quest(quest);
+	} else if(fcn.button == eSpecPicker::NODE) {
+		int spec = me[field_id].getTextAsNum();
+		int mode = fcn.force_global ? 0 : 2;
+		if(spec < 0)
+			spec = get_fresh_spec(mode);
+		if(edit_spec_enc(spec,mode,&me))
+			me[field_id].setTextToNum(spec);
 	}
 	return true;
 }
@@ -1387,7 +1429,7 @@ short edit_talk_node(short which_node) {
 	talk_dlg["new"].attachClickHandler(std::bind(talk_node_branch, _1, std::ref(talk_edit_stack)));
 	talk_dlg["choose-type"].attachClickHandler(std::bind(select_talk_node_type, _1, std::ref(talk_edit_stack)));
 	talk_dlg["choose-personality"].attachClickHandler(std::bind(select_talk_node_personality, _1, std::ref(talk_edit_stack)));
-	talk_dlg.attachClickHandlers(std::bind(select_talk_node_value, _1, _2, std::ref(talk_edit_stack)), {"chooseA","chooseA-regular","chooseB"});
+	talk_dlg.attachClickHandlers(std::bind(select_talk_node_value, _1, _2, std::ref(talk_edit_stack)), {"chooseA","chooseC","chooseB"});
 	talk_dlg["who"].attachFocusHandler(check_talk_personality);
 	talk_dlg.attachFocusHandlers(check_talk_key, {"key1", "key2"});
 	talk_dlg.attachFocusHandlers(std::bind(check_talk_xtra, _1, std::ref(talk_edit_stack), _2, _3), {"extra1", "extra2", "extra3", "extra4"});

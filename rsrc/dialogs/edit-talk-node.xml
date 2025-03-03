@@ -40,7 +40,8 @@
 	<text size='large' top='203' left='49' width='83' height='15'>Message 1:</text>
 	<text size='large' top='309' left='49' width='80' height='14'>Message 2:</text>
 	<button name='choose-personality' type='regular' top='24' left='256'>Choose</button>
+	<button name='chooseD' type='regular' top='181' left='414'>Choose</button>
+	<button name='chooseC' type='regular' top='158' left='414'>Choose</button>
 	<button name='chooseB' type='regular' top='135' left='414'>Choose</button>
-	<button name='chooseA' type='large' top='112' left='414'>Create/Edit</button>
-	<button name='chooseA-regular' type='regular' top='112' left='414'>Choose</button>
+	<button name='chooseA' type='regular' top='112' left='414'>Choose</button>
 </dialog>
