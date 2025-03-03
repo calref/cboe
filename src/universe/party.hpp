@@ -91,7 +91,7 @@ public:
 	unsigned long age;
 	unsigned short gold;
 	unsigned short food;
-	array2d<unsigned char, 350, 50> stuff_done;
+	array2d<unsigned char, SDF_COLUMNS, SDF_ROWS> stuff_done;
 	// These used to be stored as magic SDFs
 	unsigned char hostiles_present;
 	bool easy_mode = false, less_wm = false;

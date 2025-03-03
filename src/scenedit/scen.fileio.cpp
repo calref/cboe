@@ -415,8 +415,8 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.PushText(scenario.itf_names[i]);
 		data.CloseElement("item-typeflag");
 	}
-	for(int x = 0; x < scenario.sdf_names.size(); x++) {
-		for(int y = 0; y < scenario.sdf_names[x].size(); y++) {
+	for(int x = 0; x < SDF_COLUMNS; x++) {
+		for(int y = 0; y < SDF_ROWS; y++) {
 			if(scenario.sdf_names[x][y].empty()) continue;
 			data.OpenElement("sdf");
 			data.PushAttribute("row", x);
