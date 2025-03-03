@@ -19,6 +19,8 @@ const int NUM_ITEM_G = 120;
 const int NUM_FACE_G = 80;
 const int NUM_DLOG_G = 28;
 
+const int MAX_AUTOSAVE_DEFAULT = 5;
+
 struct scen_header_type{
 	int intro_pic;
 	eContentRating rating;
