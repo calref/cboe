@@ -585,6 +585,9 @@ static void replay_action(Element& action) {
 			new_fps = boost::lexical_cast<int>(action.GetText());
 		}
 		replay_fps_limit.emplace(new_fps);
+	}else if(t == "fancy_file_picker"){
+		bool saving = str_to_bool(action.GetText());
+		fancy_file_picker(saving);
 	}else if(t == "load_party"){
 		decode_file(action.GetText(), tempDir / "temp.exg");
 		load_party(tempDir / "temp.exg", univ);
