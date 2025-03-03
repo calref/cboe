@@ -24,7 +24,9 @@
 	<led name='start' wrap='true' top='246' left='345'>Player is given quest when scenario starts</led>
 	<led name='inbank' top='285' left='345'>Include in a job bank:</led>
 	<field name='bank1' top='306' left='359' width='110' height='16'/>
+	<button name='choose-bank1' type='regular' anchor='bank1' relative='pos pos-in' top='-4' left='8'>Choose</button>
 	<field name='bank2' top='332' left='359' width='110' height='16'/>
+	<button name='choose-bank2' type='regular' anchor='bank2' relative='pos pos-in' top='-4' left='8'>Choose</button>
 	<button name='left' type='left' def-key='left' top='358' left='50'/>
 	<button name='right' type='right' def-key='right' top='358' left='115'/>
 	<button name='cancel' type='regular' def-key='esc' top='358' left='322'>Cancel</button>

@@ -391,6 +391,15 @@
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="job-board" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="id" use="required" type="xs:integer"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="sdf" minOccurs="0" maxOccurs="unbounded">
 				<xs:complexType>
 					<xs:simpleContent>
