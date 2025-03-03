@@ -37,6 +37,7 @@ extern cOutdoors* current_terrain;
 extern cCustomGraphics spec_scen_g;
 
 std::vector<pic_num_t> field_pics = {0,3,5,6,7,8,9,10,11,12,13,14,15,24,25,26,27,28,29,30,31,4};
+std::vector<pic_num_t> static_boom_pics = {0,1,2,3,4,5};
 std::vector<pic_num_t> boom_pics = {0,1,2,3,4,5,8,9,10,11,12,13};
 std::vector<pic_num_t> lgdlog_pics = {0,32};
 
@@ -166,7 +167,7 @@ short choose_background(short cur_choice, cDialog* parent) {
 
 // TODO: I have two functions that do this. (The other one is pick_picture.)
 extern std::string scenario_temp_dir_name;
-pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
+pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent, bool static_only) {
 	extern fs::path tempDir;
 	int i = 0;
 	std::vector<pic_num_t> all_pics;
@@ -182,7 +183,7 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent) {
 		// TODO: Include small monster graphics in the PC pic picker
 		case PIC_PC: total_pics = 37; break;
 		case PIC_FIELD: all_pics = field_pics; break;
-		case PIC_BOOM: all_pics = boom_pics; break;
+		case PIC_BOOM: all_pics = static_only ? static_boom_pics : boom_pics; break;
 		case PIC_DLOG_LG: all_pics = lgdlog_pics; break;
 		case PIC_MISSILE: total_pics = 16; break;
 		case PIC_STATUS: total_pics = 27; break;
@@ -1033,7 +1034,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 					type = PIC_DLOG;
 				} else type = ePicType(pictype);
 			}
-			store = choose_graphic(val, type, &me);
+			store = choose_graphic(val, type, &me, spec.type == eSpecType::TOWN_BOOM_SPACE);
 			if(store < 0) store = val;
 		} break;
 		case eSpecPicker::LOCATION: {
