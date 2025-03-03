@@ -41,13 +41,15 @@
 		<led name='slow' relative='pos pos-in' anchor='med' top='0' left='15'>Slow</led>
 		<led name='snail' relative='pos pos-in' anchor='slow' top='0' left='15'>Quite Slow</led>
 	</group>
-	<text name='keyshift-head' size='large' relative='pos-in pos' anchor='spd-head' top='30' left='0' width='182' height='17'>When targeting, directional keys should:</text>
+	<text name='targeting-head' size='large' relative='pos-in pos' anchor='spd-head' top='30' left='0' width='182' height='17'>Targeting mode:</text>
+	<led name='target-lock' relative='pos-in pos' rel-anchor='prev' top='4' left='15'>Shift screen to show enemies in range</led>
+	<text name="keyshift-head" relative='neg pos' rel-anchor='prev' top='8' left='3'>Directional keys:</text>
 	<group name='keyshift-options'>
-		<led name='target-adjacent' relative='pos-in pos' anchor='keyshift-head' top='4' left='15'>Select adjacent tiles</led>
+		<led name='target-adjacent' relative='pos pos-in' anchor='keyshift-head' top='0' left='15'>Select adjacent tiles</led>
 		<led name='screen-shift' relative='pos pos-in' anchor='target-adjacent' top='0' left='15'>Move the screen</led>
 	</group>
-	<text name='keyshift-note' relative='pos-in pos' anchor='keyshift-head' top='20' left='15' width='300' height='17'>(Holding Shift while using directional keys will do the opposite.)</text>
-	<text name='misc-head' size='large' relative='neg pos' anchor='keyshift-note' top='15' left='15' width='182' height='17'>Miscellaneous:</text>
+	<text name='keyshift-note' relative='pos-in pos-in' anchor='keyshift-head' top='14' left='40' width='300' height='17'>(Holding Shift while using directional keys will do the opposite.)</text>
+	<text name='misc-head' size='large' relative='pos-in pos' anchor='targeting-head' top='60' left='0' width='182' height='17'>Miscellaneous:</text>
 	<led name='nosound' relative='pos-in pos' anchor='misc-head' top='6' left='15'>No Sounds</led>
 	<led name='repeatdesc' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Show room descriptions more than once</led>
 	<led name='easier' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Make game easier (monsters much weaker)</led>
