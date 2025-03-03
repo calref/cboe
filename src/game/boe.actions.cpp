@@ -467,7 +467,7 @@ void handle_rest(bool& need_redraw, bool& need_reprint) {
 		pause(25);
 		univ.party.food -= 6;
 		while(i < 50) {
-			increase_age();
+			increase_age(false);
 			if(get_ran(1,1,2) == 2)
 				do_monsters();
 			if(get_ran(1,1,70) == 10)
@@ -3065,7 +3065,7 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 	adjust_spell_menus();
 }
 
-void increase_age() {
+void increase_age(bool eating_trigger_autosave) {
 	short how_many_short = 0,r1;
 	
 	
@@ -3193,7 +3193,7 @@ void increase_age() {
 		else {
 			play_sound(6);
 			add_string_to_buf("You eat.");
-			try_auto_save("Eat");
+			if(eating_trigger_autosave) try_auto_save("Eat");
 		}
 	}
 	

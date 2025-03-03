@@ -29,7 +29,7 @@ void do_load();
 void post_load();
 void do_save(bool save_as = false);
 void do_abort();
-void increase_age();
+void increase_age(bool eating_trigger_autosave = true);
 void handle_hunting();
 void switch_pc(short which);
 void handle_drop_pc();
