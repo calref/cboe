@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='okay'>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' relative='pos pos-in' rel-anchor='prev' top='0' left='4' width='218' height='16'>
+		Autosave Preferences
+	</text>
+	<text name='max-files-head' size='large' relative='pos-in pos' rel-anchor='prev' top='17' left='0'>Max autosave files:</text>
+	<field name='max-files' type='uint' relative='neg-in neg' rel-anchor='prev' top='2' left='5' width='40' height='15'/>
+	<text name='triggers-head' size='large' relative='neg pos' anchor='max-files-head' top='17' left='0' width='260' height='17'>Autosave when:</text>
+    <led name='RestComplete' relative='pos-in pos' anchor='triggers-head' top='4' left='4'>The party finishes resting</led>
+    <led name='Eat' relative='pos-in pos' rel-anchor='prev' top='6' left='0'>The party eats a full meal (while wandering, not resting)</led>
+    <led name='TownWaitComplete' relative='pos-in pos' rel-anchor='prev' top='6' left='0'>The party spends a long time waiting in town/a dungeon</led>
+    <led name='EnterTown' relative='pos-in pos' rel-anchor='prev' top='6' left='0'>The party enters town/a dungeon</led>
+    <led name='ExitTown' relative='pos-in pos' rel-anchor='prev' top='6' left='0'>The party exits town/a dungeon</led>
+    <led name='EndOutdoorCombat' relative='pos-in pos' rel-anchor='prev' top='6' left='0'>The party finishes combat outdoors</led>
+	
+	<button name='okay' relative='abs pos' rel-anchor='prev' type='regular' top='7' left='354'>OK</button>
+	<button name='cancel' relative='neg pos-in' anchor='okay' type='regular' def-key='esc' top='0' left='73'>Cancel</button>
+</dialog>

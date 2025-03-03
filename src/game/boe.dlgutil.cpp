@@ -34,6 +34,7 @@
 #include "fileio/fileio.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
 #include "fileio/resmgr/res_strings.hpp"
+#include "dialogxml/widgets/field.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
 #include "dialogxml/widgets/button.hpp"
 #include "dialogxml/widgets/ledgroup.hpp"
@@ -1241,6 +1242,69 @@ void save_prefs(){
 	}
 }
 
+void autosave_preferences(cDialog* parent);
+
+static bool prefs_autosave_event_filter(cDialog& me, std::string id, eKeyMod mod) {
+	if(id == "autosave-toggle"){
+		dynamic_cast<cLed&>(me["autosave-toggle"]).defaultClickHandler(me, id, mod);
+		if(dynamic_cast<cLed&>(me["autosave-toggle"]).getState() != led_off){
+			me["autosave-details"].show();
+		}
+		else{
+			me["autosave-details"].hide();
+		}
+	}else if(id == "autosave-details"){
+		autosave_preferences(&me);
+	}
+	// Messy: Using the same handler for the autosave buttons in the main preferences,
+	// and the buttons in the autosave details window.
+	else{
+		bool did_cancel = false;
+		bool save_ok = false;
+
+		if(id == "okay") {
+			save_ok = me.toast(true);
+		} else if(id == "cancel") {
+			me.toast(false);
+			did_cancel = true;
+		}
+
+		if(!did_cancel && save_ok) {
+			set_pref("Autosave_Max", std::stoi(dynamic_cast<cTextField&>(me["max-files"]).getText()));
+			for(cDialogIterator iter = me.begin(); iter != me.end(); ++iter){
+				std::string id = iter->first;
+				cControl* ctrl = iter->second;
+				cLed* led = dynamic_cast<cLed*>(ctrl);
+				if(led != nullptr){
+					set_pref("Autosave_" + id, led->getState() != led_off);
+				}
+			}
+			save_prefs();
+		}
+	}
+	return true;
+}
+
+void autosave_preferences(cDialog* parent) {
+	cDialog prefsDlog(*ResMgr::dialogs.get("pref-autosave"), parent);
+
+	int max_autosaves = get_int_pref("Autosave_Max", MAX_AUTOSAVE_DEFAULT);
+	cTextField& max_files = dynamic_cast<cTextField&>(prefsDlog["max-files"]);
+	max_files.setText(std::to_string(max_autosaves));
+
+	for(cDialogIterator iter = prefsDlog.begin(); iter != prefsDlog.end(); ++iter){
+		std::string id = iter->first;
+		cControl* ctrl = iter->second;
+		cLed* led = dynamic_cast<cLed*>(ctrl);
+		if(led != nullptr){
+			led->setState(get_bool_pref("Autosave_" + id, true) ? led_red : led_off);
+		}
+	}
+	prefsDlog.attachClickHandlers(&prefs_autosave_event_filter, {"okay", "cancel"});
+	prefsDlog.run();
+}
+
+
 static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 	bool did_cancel = false;
 	
@@ -1264,6 +1328,7 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 
 		set_pref("DirectionalKeyScrolling", dynamic_cast<cLed&>(me["screen-shift"]).getState() != led_off);
 		set_pref("FancyFilePicker", dynamic_cast<cLed&>(me["fancypicker"]).getState() != led_off);
+		set_pref("Autosave", dynamic_cast<cLed&>(me["autosave-toggle"]).getState() != led_off);
 		set_pref("RepeatRoomDescriptions", dynamic_cast<cLed&>(me["repeatdesc"]).getState() != led_off);
 		set_pref("ShowInstantHelp", dynamic_cast<cLed&>(me["nohelp"]).getState() == led_off);
 		
@@ -1333,6 +1398,7 @@ void pick_preferences(bool record) {
 	set_cursor(sword_curs);
 	
 	cDialog prefsDlog(*ResMgr::dialogs.get("preferences"));
+	prefsDlog.attachClickHandlers(&prefs_autosave_event_filter, {"autosave-toggle", "autosave-details"});
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 	prefsDlog.attachClickHandlers(&reset_help, {"resethelp"});
 
@@ -1360,6 +1426,10 @@ void pick_preferences(bool record) {
 	
 	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySounds", true) ? led_off : led_red);
 	dynamic_cast<cLed&>(prefsDlog["fancypicker"]).setState(get_bool_pref("FancyFilePicker", true) ? led_red : led_off);
+	bool autosave_on = get_bool_pref("Autosave", true);
+	dynamic_cast<cLed&>(prefsDlog["autosave-toggle"]).setState(autosave_on ? led_red : led_off);
+	if(!autosave_on)
+		prefsDlog["autosave-details"].hide();
 	dynamic_cast<cLed&>(prefsDlog["repeatdesc"]).setState(get_bool_pref("RepeatRoomDescriptions") ? led_red : led_off);
 	dynamic_cast<cLed&>(prefsDlog["nohelp"]).setState(get_bool_pref("ShowInstantHelp", true) ? led_off : led_red);
 	if(overall_mode == MODE_STARTUP && !party_in_memory) {

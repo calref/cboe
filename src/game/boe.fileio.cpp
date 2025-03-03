@@ -481,7 +481,6 @@ bool load_scenario_header(fs::path file,scen_header_type& scen_head){
 	return true;
 }
 
-const int MAX_AUTOSAVE_DEFAULT = 5;
 void try_auto_save(std::string reason) {
 	if(!get_bool_pref("Autosave", true)) return;
 	if(!get_bool_pref("Autosave_" + reason, true)) return;
