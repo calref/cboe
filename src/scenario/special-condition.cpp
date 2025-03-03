@@ -92,7 +92,7 @@ namespace {
 		.ex2b(STRT_CMP);
 	node_properties_t S_STAT = node_builder_t(eSpecType::IF_STATISTIC)
 		.ex1b(eSpecPicker::NODE)
-		.ex2a(+STRT_SKILL)
+		.ex2a(STRT_SKILL_CHECK)
 		.ex2b(STRT_ACCUM);
 	node_properties_t S_TEXT = node_builder_t(eSpecType::IF_TEXT_RESPONSE)
 		.msg1(+eSpecPicker::MSG_SINGLE)

@@ -670,7 +670,7 @@ node_function_t operator+(eSpecPicker picker) {
 
 node_function_t operator+(eStrType str) {
 	node_function_t n(str);
-	if(str == STRT_SPELL_PAT || str == STRT_SKILL) {
+	if(str == STRT_SPELL_PAT) {
 		n.augmented = true;
 	}
 	return n;
