@@ -61,7 +61,7 @@ fs::path os_file_picker(bool saving) {
 		return nav_get_or_decode_party();
 }
 
-bool load_party(fs::path file_to_load, cUniverse& univ){
+bool load_party(fs::path file_to_load, cUniverse& univ, bool record){
 	bool town_restore = false;
 	bool maps_there = false;
 	bool in_scen = false;
@@ -167,7 +167,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 			break;
 	}
 	
-	if(recording && result){
+	if(recording && record && result){
 		record_action("load_party", encode_file(file_to_load), true);
 	}
 

@@ -1794,7 +1794,24 @@ class cFilePicker {
 		me["auto" + suffix + "-more-recent"].hide();
 	}
 
+	void dummy_slot(int idx) {
+		std::string suffix = std::to_string(idx+1);
+		me["file" + suffix].setText("<Replay placeholder>");
+		me["pc" + suffix + "a"].hide();
+		me["pc" + suffix + "b"].hide();
+		me["pc" + suffix + "c"].hide();
+		me["pc" + suffix + "d"].hide();
+		me["pc" + suffix + "e"].hide();
+		me["pc" + suffix + "f"].hide();
+		me["info" + suffix].hide();
+		me["auto" + suffix + "-more-recent"].hide();
+	}
+
 	void populate_slot(int idx, fs::path file, std::time_t mtime, cUniverse& party_univ) {
+		if(replaying){
+			dummy_slot(idx);
+			return;
+		}
 		std::string suffix = std::to_string(idx+1);
 		me["file" + suffix].setText(file.filename().string());
 
@@ -1884,7 +1901,7 @@ class cFilePicker {
 		while(saves_loaded < parties_needed){
 			fs::path next_file = save_file_mtimes[saves_loaded].first;
 			cUniverse party_univ;
-			if(!load_party(next_file, save_files[saves_loaded])){
+			if(!load_party(next_file, save_files[saves_loaded], false)){
 				// TODO show error, fatal? Show corrupted party?
 			}
 			saves_loaded++;
@@ -1969,7 +1986,14 @@ class cFilePicker {
 	}
 
 	bool doFileBrowser() {
-		fs::path from_browser = nav_get_party();
+		fs::path from_browser = "";
+		if(replaying){
+			if(has_next_action("load_party")){
+				from_browser = "DUMMY";
+			}
+		}else{
+			from_browser = nav_get_party();
+		}
 		if(!from_browser.empty()){
 			me.setResult(from_browser);
 			me.toast(false);
@@ -2015,17 +2039,24 @@ public:
 		}
 
 		me["cancel"].attachClickHandler(std::bind(&cFilePicker::doCancel, this));
+		me["find"].attachClickHandler(std::bind(&cFilePicker::doFileBrowser, this));
 		// Since it would be crazy to record and replay the metadata shown on a player's save picker
 		// dialog (which is what we do for the scenario picker),
-		// when replaying, basically make every part of the picker no-op except cancel and view autosaves.
-		// Load buttons should do the same thing as cancel.
+		// when replaying, basically make Left/Right buttons no-op.
+		// Load/Save buttons should send a dummy result.
 		if(!replaying){
 			me["next"].attachClickHandler(std::bind(&cFilePicker::doSelectPage, this, 1));
 			me["prev"].attachClickHandler(std::bind(&cFilePicker::doSelectPage, this, -1));
 			init_pages();
-			me["find"].attachClickHandler(std::bind(&cFilePicker::doFileBrowser, this));
 		}else{
-			me["load"].attachClickHandler(std::bind(&cFilePicker::doCancel, this));
+			for(int i = 0; i < SLOTS_PER_PAGE; ++i){
+				std::string suffix = std::to_string(i+1);
+				// When replaying, a click on a load or save button means the dummy file picker can go away:
+				me["load" + suffix].attachClickHandler(std::bind(&cFilePicker::doLoad, this, "DUMMY"));
+				me["save" + suffix].attachClickHandler(std::bind(&cFilePicker::doSave, this, "DUMMY"));
+				// A click on an autosave button means another dummy file picker should open:
+				me["auto" + suffix].attachClickHandler(std::bind(&cFilePicker::showAuto, this, ""));
+			}
 		}
 
 		// Hide the prev button and populate the first page
@@ -2047,6 +2078,9 @@ fs::path run_autosave_picker(fs::path auto_folder, cDialog* parent) {
 }
 
 fs::path fancy_file_picker(bool saving) {
+	if(recording){
+		record_action("fancy_file_picker", bool_to_str(saving));
+	}
 	// TODO this is set up to be configurable, but not yet exposed in preferences.
 	fs::path save_folder = get_string_pref("SaveFolder", saveDir.string());
 
