@@ -1043,7 +1043,7 @@ short scan_for_response(const char *str) {
 void handle_target_mode(eGameMode target_mode, int range) {
 	overall_mode = target_mode;
 	// Lock on to enemies in range: 
-	if(get_bool_pref("TargetLock", true)){
+	if(has_feature_flag("target-lock", "V1") && get_bool_pref("TargetLock", true)){
 		location loc = univ.current_pc().combat_pos;
 
 		std::vector<location> enemy_locs_in_range;
