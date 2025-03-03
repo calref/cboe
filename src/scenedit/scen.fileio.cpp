@@ -417,7 +417,7 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 	}
 	for(int x = 0; x < SDF_COLUMNS; x++) {
 		for(int y = 0; y < SDF_ROWS; y++) {
-			if(scenario.sdf_names[x][y].empty()) continue;
+			if(scenario.get_sdf_name(x, y).empty()) continue;
 			data.OpenElement("sdf");
 			data.PushAttribute("row", x);
 			data.PushAttribute("col", y);

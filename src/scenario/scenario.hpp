@@ -104,6 +104,8 @@ public:
 	std::vector<std::string> ic_names;
 	std::vector<std::string> itf_names;
 	std::map<int, std::map<int, std::string>> sdf_names;
+	std::string get_sdf_name(int col, int row);
+
 	bool adjust_diff;
 	bool is_legacy;
 	fs::path scen_file; // transient

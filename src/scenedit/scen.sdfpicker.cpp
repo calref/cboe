@@ -119,7 +119,7 @@ void cStuffDonePicker::fill_names() {
 			location sdf = viewport;
 			sdf.x += x;
 			sdf.y += y;
-			field.setText(scenario.sdf_names[sdf.x][sdf.y]);
+			field.setText(scenario.get_sdf_name(sdf.x, sdf.y));
 			if(x == 0) {
 				// Add row labels
 				row_labels->getChild("row", 0, y).setTextToNum(sdf.y);
@@ -139,7 +139,8 @@ void cStuffDonePicker::save_names() {
 			location sdf = viewport;
 			sdf.x += x;
 			sdf.y += y;
-			scenario.sdf_names[sdf.x][sdf.y] = field.getText();
+			if(!field.getText().empty())
+				scenario.sdf_names[sdf.x][sdf.y] = field.getText();
 		}
 	}
 }
