@@ -1040,3 +1040,27 @@ short scan_for_response(const char *str) {
 	return -1;
 }
 
+void handle_target_mode(eGameMode target_mode, int range) {
+	overall_mode = target_mode;
+	// Lock on to enemies in range: 
+	if(get_bool_pref("TargetLock", true)){
+		location loc = univ.current_pc().combat_pos;
+
+		std::vector<location> enemy_locs_in_range;
+		for(short i = 0; i < univ.town.monst.size(); i++){
+			auto& monst = univ.town.monst[i];
+			if(monst.is_alive()) {
+				eAttitude att = monst.attitude;
+				if((att == eAttitude::HOSTILE_A || att == eAttitude::HOSTILE_B)
+					&& dist(loc, monst.cur_loc) <= range){
+					enemy_locs_in_range.push_back(monst.cur_loc);
+				}
+			}
+		}
+		if(!enemy_locs_in_range.empty()){
+			std::vector<location> dest_candidates = points_containing_most(enemy_locs_in_range);
+			center = closest_point(dest_candidates, loc);
+			draw_terrain();
+		}
+	}
+}

@@ -4,6 +4,7 @@
 #include "location.hpp"
 #include "scenario/item.hpp"
 #include "gfx/gfxsheets.hpp"
+#include "boe.consts.hpp"
 
 #ifndef BOE_NEWGRAPH_H
 #define BOE_NEWGRAPH_H
@@ -70,6 +71,7 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 void refresh_shopping();
 void click_talk_rect(word_rect_t word);
 void place_talk_str(std::string str_to_place,std::string str_to_place2,short color,rectangle c_rect);
+void handle_target_mode(eGameMode target_mode, int range);
 short scan_for_response(const char *str);
 void refresh_talking();
 graf_pos calc_item_rect(int num,rectangle& to_rect);
