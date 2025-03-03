@@ -341,12 +341,18 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 				strings.push_back(get_str("magic-names", i + 200));
 			}
 			break;
-		case STRT_SKILL:
+		case STRT_SKILL: case STRT_SKILL_CHECK:
 			for(int i = 0; i < 19; i++) {
 				strings.push_back(get_str("skills", i * 2 + 1));
 			}
 			strings.push_back("Maximum Health");
 			strings.push_back("Maximum Spell Points");
+			if(list == STRT_SKILL) break;
+			strings.push_back("Current Health");
+			strings.push_back("Current Spell Points");
+			strings.push_back("Current Experience Points");
+			strings.push_back("Current Skill");
+			strings.push_back("Current Level");
 			break;
 		case STRT_TRAIT:
 			for(int i = 0; i < 17; i++) {
@@ -974,6 +980,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 				case STRT_MAGE: title = "Which spell?"; break;
 				case STRT_PRIEST: title = "Which spell?"; break;
 				case STRT_SKILL: title = "Which statistic?"; break;
+				case STRT_SKILL_CHECK: title = "Which statistic?"; break;
 				case STRT_TRAIT: title = "Which trait?"; break;
 				case STRT_RACE: title = "Which species?"; break;
 				case STRT_TOWN: title = "Which town?"; break;
@@ -1017,11 +1024,15 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			auto otherField = get_control_for_field(fcn.continuation);
 			if(fcn.str_type == STRT_SECTOR) {
 				val = val * scenario.outdoors.height() + me[otherField].getTextAsNum();
+			} else if(fcn.str_type == STRT_SKILL_CHECK && val >= 100) {
+				val -= 79;
 			}
 			store = choose_text(fcn.str_type, val + fcn.adjust, &me, title) - fcn.adjust;
 			if(fcn.str_type == STRT_SECTOR) {
 				me[otherField].setTextToNum(store % scenario.outdoors.height());
 				store /= scenario.outdoors.height();
+			} else if(fcn.str_type == STRT_SKILL_CHECK && store > 20) {
+				store += 79;
 			}
 		} break;
 		case eSpecPicker::PICTURE: {
