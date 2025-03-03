@@ -312,6 +312,8 @@ void draw_startup_stats() {
 				to_rect = party_to;
 				to_rect.offset(pc_rect.left,pc_rect.top);
 				pic_num_t pic = univ.party[i].which_graphic;
+				// TODO This doesn't make sense. If we're in the startup menu, there are no scenario custom graphics.
+				// Doesn't this need to find it saved in the party?
 				if(pic >= 1000) {
 					std::shared_ptr<const sf::Texture> gw;
 					graf_pos_ref(gw, from_rect) = spec_scen_g.find_graphic(pic % 1000, pic >= 10000);
@@ -596,30 +598,8 @@ std::pair<std::string, std::string> text_bar_text() {
 	std::string text = "";
 	std::string right_text = "";
 
-	location loc = (is_out()) ? global_to_local(univ.party.out_loc) : univ.party.town_loc;
-	bool in_area = false;
+	text = get_location();
 
-	if(is_out()) {
-		for(short i = 0; i < univ.out->area_desc.size(); i++)
-			if(loc.in(univ.out->area_desc[i])) {
-				text = univ.out->area_desc[i].descr;
-				in_area = true;
-			}
-		if(!in_area) {
-			text = univ.out->name;
-		}
-	}
-	if(is_town()) {
-		for(short i = 0; i < univ.town->area_desc.size(); i++)
-			if(loc.in(univ.town->area_desc[i])) {
-				text = univ.town->area_desc[i].descr;
-				in_area = true;
-			}
-		if(!in_area) {
-			text = univ.town->name;
-		}
-		
-	}
 	if((is_combat()) && (univ.cur_pc < 6) && !monsters_going) {
 		std::ostringstream sout;
 

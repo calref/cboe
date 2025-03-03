@@ -1,5 +1,9 @@
 
 #include <cstring>
+#include <algorithm>
+#include <iomanip>
+#include <string>
+#include <boost/algorithm/string/replace.hpp>
 
 #include "boe.global.hpp"
 
@@ -30,6 +34,7 @@
 #include "fileio/fileio.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
 #include "fileio/resmgr/res_strings.hpp"
+#include "dialogxml/widgets/field.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
 #include "dialogxml/widgets/button.hpp"
 #include "dialogxml/widgets/ledgroup.hpp"
@@ -1197,6 +1202,69 @@ void save_prefs(){
 	}
 }
 
+void autosave_preferences(cDialog* parent);
+
+static bool prefs_autosave_event_filter(cDialog& me, std::string id, eKeyMod mod) {
+	if(id == "autosave-toggle"){
+		dynamic_cast<cLed&>(me["autosave-toggle"]).defaultClickHandler(me, id, mod);
+		if(dynamic_cast<cLed&>(me["autosave-toggle"]).getState() != led_off){
+			me["autosave-details"].show();
+		}
+		else{
+			me["autosave-details"].hide();
+		}
+	}else if(id == "autosave-details"){
+		autosave_preferences(&me);
+	}
+	// Messy: Using the same handler for the autosave buttons in the main preferences,
+	// and the buttons in the autosave details window.
+	else{
+		bool did_cancel = false;
+		bool save_ok = false;
+
+		if(id == "okay") {
+			save_ok = me.toast(true);
+		} else if(id == "cancel") {
+			me.toast(false);
+			did_cancel = true;
+		}
+
+		if(!did_cancel && save_ok) {
+			set_pref("Autosave_Max", std::stoi(dynamic_cast<cTextField&>(me["max-files"]).getText()));
+			for(cDialogIterator iter = me.begin(); iter != me.end(); ++iter){
+				std::string id = iter->first;
+				cControl* ctrl = iter->second;
+				cLed* led = dynamic_cast<cLed*>(ctrl);
+				if(led != nullptr){
+					set_pref("Autosave_" + id, led->getState() != led_off);
+				}
+			}
+			save_prefs();
+		}
+	}
+	return true;
+}
+
+void autosave_preferences(cDialog* parent) {
+	cDialog prefsDlog(*ResMgr::dialogs.get("pref-autosave"), parent);
+
+	int max_autosaves = get_int_pref("Autosave_Max", MAX_AUTOSAVE_DEFAULT);
+	cTextField& max_files = dynamic_cast<cTextField&>(prefsDlog["max-files"]);
+	max_files.setText(std::to_string(max_autosaves));
+
+	for(cDialogIterator iter = prefsDlog.begin(); iter != prefsDlog.end(); ++iter){
+		std::string id = iter->first;
+		cControl* ctrl = iter->second;
+		cLed* led = dynamic_cast<cLed*>(ctrl);
+		if(led != nullptr){
+			led->setState(get_bool_pref("Autosave_" + id, true) ? led_red : led_off);
+		}
+	}
+	prefsDlog.attachClickHandlers(&prefs_autosave_event_filter, {"okay", "cancel"});
+	prefsDlog.run();
+}
+
+
 static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 	bool did_cancel = false;
 	
@@ -1217,7 +1285,10 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		else if(cur_display_mode == "br") set_pref("DisplayMode", 4);
 		else if(cur_display_mode == "win") set_pref("DisplayMode", 5);
 		set_pref("PlaySounds", dynamic_cast<cLed&>(me["nosound"]).getState() == led_off);
+
 		set_pref("DirectionalKeyScrolling", dynamic_cast<cLed&>(me["screen-shift"]).getState() != led_off);
+		set_pref("FancyFilePicker", dynamic_cast<cLed&>(me["fancypicker"]).getState() != led_off);
+		set_pref("Autosave", dynamic_cast<cLed&>(me["autosave-toggle"]).getState() != led_off);
 		set_pref("RepeatRoomDescriptions", dynamic_cast<cLed&>(me["repeatdesc"]).getState() != led_off);
 		set_pref("ShowInstantHelp", dynamic_cast<cLed&>(me["nohelp"]).getState() == led_off);
 		
@@ -1285,6 +1356,7 @@ void pick_preferences(bool record) {
 	set_cursor(sword_curs);
 	
 	cDialog prefsDlog(*ResMgr::dialogs.get("preferences"));
+	prefsDlog.attachClickHandlers(&prefs_autosave_event_filter, {"autosave-toggle", "autosave-details"});
 	prefsDlog.attachClickHandlers(&prefs_event_filter, {"okay", "cancel"});
 	prefsDlog.attachClickHandlers(&reset_help, {"resethelp"});
 
@@ -1311,6 +1383,11 @@ void pick_preferences(bool record) {
 	}
 	
 	dynamic_cast<cLed&>(prefsDlog["nosound"]).setState(get_bool_pref("PlaySounds", true) ? led_off : led_red);
+	dynamic_cast<cLed&>(prefsDlog["fancypicker"]).setState(get_bool_pref("FancyFilePicker", true) ? led_red : led_off);
+	bool autosave_on = get_bool_pref("Autosave", true);
+	dynamic_cast<cLed&>(prefsDlog["autosave-toggle"]).setState(autosave_on ? led_red : led_off);
+	if(!autosave_on)
+		prefsDlog["autosave-details"].hide();
 	dynamic_cast<cLed&>(prefsDlog["repeatdesc"]).setState(get_bool_pref("RepeatRoomDescriptions") ? led_red : led_off);
 	dynamic_cast<cLed&>(prefsDlog["nohelp"]).setState(get_bool_pref("ShowInstantHelp", true) ? led_off : led_red);
 	if(overall_mode == MODE_STARTUP && !party_in_memory) {
@@ -1601,11 +1678,7 @@ class cChooseScenario {
 	
 	bool doSelectPage(int dir) {
 		auto& stk = dynamic_cast<cStack&>(me["list"]);
-		int curPage = stk.getPage(), nPages = stk.getPageCount();
-		curPage += dir;
-		if(curPage < 0) curPage += nPages;
-		else if(curPage >= nPages) curPage -= nPages;
-		stk.setPage(curPage);
+		stk.doSelectPage(dir, true);
 		return true;
 	}
 	
@@ -1675,4 +1748,349 @@ public:
 
 scen_header_type pick_a_scen() {
 	return cChooseScenario().run();
+}
+
+extern fs::path saveDir;
+
+class cFilePicker {
+	const int SLOTS_PER_PAGE = 4;
+	int parties_per_page;
+
+	fs::path save_folder;
+	bool picking_auto;
+	bool saving;
+	cDialog me;
+	cStack& get_stack() { return dynamic_cast<cStack&>(me["list"]); }
+	std::string template_info_str;
+
+	std::vector<std::pair<fs::path, std::time_t>> save_file_mtimes;
+	// We have to load the parties to get PC graphics, average level, location, etc.
+	// But we shouldn't load them all at once, because the amount is unlimited.
+	std::vector<cUniverse> save_files;
+	int pages_populated = 0;
+	int saves_loaded = 0;
+
+	void init_pages() {
+		save_file_mtimes = sorted_file_mtimes(save_folder);
+		save_files.resize(save_file_mtimes.size());
+
+		cStack& stk = get_stack();
+		int num_pages = ceil((float)save_file_mtimes.size() / parties_per_page);
+		stk.setPageCount(num_pages);
+	}
+
+	void empty_slot(int idx) {
+		std::string suffix = std::to_string(idx+1);
+		me["file" + suffix].setText("");
+		me["pc" + suffix + "a"].hide();
+		me["pc" + suffix + "b"].hide();
+		me["pc" + suffix + "c"].hide();
+		me["pc" + suffix + "d"].hide();
+		me["pc" + suffix + "e"].hide();
+		me["pc" + suffix + "f"].hide();
+		me["info" + suffix].hide();
+		me["load" + suffix].hide();
+		me["auto" + suffix].hide();
+		me["auto" + suffix + "-more-recent"].hide();
+	}
+
+	void dummy_slot(int idx) {
+		std::string suffix = std::to_string(idx+1);
+		me["file" + suffix].setText("<Replay placeholder>");
+		me["pc" + suffix + "a"].hide();
+		me["pc" + suffix + "b"].hide();
+		me["pc" + suffix + "c"].hide();
+		me["pc" + suffix + "d"].hide();
+		me["pc" + suffix + "e"].hide();
+		me["pc" + suffix + "f"].hide();
+		me["info" + suffix].hide();
+		me["auto" + suffix + "-more-recent"].hide();
+	}
+
+	void populate_slot(int idx, fs::path file, std::time_t mtime, cUniverse& party_univ) {
+		if(replaying){
+			dummy_slot(idx);
+			return;
+		}
+		std::string suffix = std::to_string(idx+1);
+		me["file" + suffix].setText(file.filename().string());
+
+		// Populate PC graphics
+		for(int i = 0; i < 6; ++i){
+			std::string key = "pc" + suffix;
+			key.push_back((char)('a' + i));
+			cPict& pict = dynamic_cast<cPict&>(me[key]);
+			if(party_univ.party[i].main_status != eMainStatus::ABSENT) {
+				pic_num_t pic = party_univ.party[i].which_graphic;
+				// TODO Apparently PCs are supposed to be able to have custom graphics and monster graphics,
+				// but the special node to Create PC only allows choosing preset PC pictures, so I don't
+				// think it's even possible to get a non-preset-PC graphic into a party without directly
+				// editing the tagfile. For now, I'm only rendering preset PCs.
+				if(pic >= 1000){
+				}else if(pic >= 100){
+				}else{
+					pict.setPict(pic, PIC_PC);
+				}
+				pict.show();
+			}else{
+				pict.hide();
+			}
+		}
+
+		// Populate party info
+		std::string party_info = template_info_str;
+
+		short level_sum = 0;
+		short num_pc = 0;
+		for(int i = 0; i < 6; ++i){
+			if(party_univ.party[i].main_status != eMainStatus::ABSENT) {
+				level_sum += party_univ.party[i].level;
+				++num_pc;
+			}
+		}
+		short avg_level = round((float)(level_sum / num_pc));
+		boost::replace_first(party_info, "{Lv}", std::to_string(avg_level));
+		if(num_pc == 1){
+			boost::replace_first(party_info, "Avg. ", "");
+		}
+
+		auto local_time = *std::localtime(&mtime);
+		std::stringstream last_modified;
+		last_modified << std::put_time(&local_time, "%h %d, %Y %I:%M %p");
+		boost::replace_first(party_info, "{LastSaved}", last_modified.str());
+
+		if(!party_univ.party.scen_name.empty()){
+			boost::replace_first(party_info, "{Scenario}", party_univ.scenario.scen_name);
+			boost::replace_first(party_info, "{Location}", get_location(&party_univ));
+		}else{
+			boost::replace_first(party_info, "{Scenario}||{Location}", "");
+		}
+
+		me["info" + suffix].setText(party_info);
+
+		// Set up buttons
+		if(saving){
+			me["file1"].setText(""); // Keep the frame
+			me["auto" + suffix].hide();
+			me["auto" + suffix + "-more-recent"].hide();
+			me["save" + suffix].attachClickHandler(std::bind(&cFilePicker::doSave, this, file));
+		}else{
+			me["load" + suffix].attachClickHandler(std::bind(&cFilePicker::doLoad, this, file));
+
+			std::vector<std::pair<fs::path, std::time_t>> auto_mtimes;
+			fs::path auto_folder = file;
+			if(!picking_auto){
+				auto_folder.replace_extension(".auto");
+				if(fs::is_directory(auto_folder)) auto_mtimes = sorted_file_mtimes(auto_folder);
+			}
+			if(auto_mtimes.empty()){
+				me["auto" + suffix].hide();
+				me["auto" + suffix + "-more-recent"].hide();
+			}else{
+				// If an autosave is newer than the main save, show an indicator
+				if(std::difftime(mtime, auto_mtimes.front().second) > 0)
+					me["auto" + suffix + "-more-recent"].show();
+
+				me["auto" + suffix].attachClickHandler(std::bind(&cFilePicker::showAuto, this, auto_folder));
+			}
+		}
+	}
+
+	void populate_page(int page) {
+		int parties_needed = min(save_file_mtimes.size(), (page+1) * parties_per_page);
+		while(saves_loaded < parties_needed){
+			fs::path next_file = save_file_mtimes[saves_loaded].first;
+			cUniverse party_univ;
+			if(!load_party(next_file, save_files[saves_loaded], false)){
+				// TODO show error, fatal? Show corrupted party?
+			}
+			saves_loaded++;
+		}
+
+		if(saving){
+			time_t now;
+			std::time(&now);
+			// Populate the first slot with the actual current party
+			populate_slot(0, "", now, univ);
+		}
+
+		int start_idx = page * parties_per_page;
+		for(int party_idx = start_idx; party_idx < start_idx + parties_per_page; ++party_idx){
+			int slot_idx = party_idx - start_idx;
+			if(saving) slot_idx++;
+			if(party_idx < parties_needed)
+				populate_slot(slot_idx, save_file_mtimes[party_idx].first, save_file_mtimes[party_idx].second, save_files[party_idx]);
+			else
+				empty_slot(party_idx - start_idx);
+		}
+
+		++pages_populated;
+	}
+
+	bool showAuto(fs::path auto_folder) {
+		fs::path autosave = run_autosave_picker(auto_folder, &me);
+		if(!autosave.empty())
+			doLoad(autosave);
+		return true;
+	}
+
+	bool doLoad(fs::path selected_file) {
+		me.setResult(selected_file);
+		me.toast(false);
+		return true;
+	}
+
+	bool confirm_overwrite(fs::path selected_file) {
+		cChoiceDlog dlog("confirm-overwrite", {"save","cancel"}, &me);
+		cDialog& inner = *(dlog.operator->());
+		std::string prompt = inner["prompt"].getText();
+		boost::replace_first(prompt, "{File}", selected_file.filename().string());
+		inner["prompt"].setText(prompt);
+		std::string choice = dlog.show();
+		return choice == "save";
+	}
+
+	bool doSave(fs::path selected_file) {
+		if(selected_file.empty()){
+			selected_file = save_folder / me["file1-field"].getText();
+			selected_file += ".exg";
+		}
+		if(!fs::exists(selected_file) || confirm_overwrite(selected_file)){
+			me.setResult(selected_file);
+			me.toast(false);
+		}
+		return true;
+	}
+
+	bool doCancel() {
+		me.toast(false);
+		return true;
+	}
+
+	bool doSelectPage(int dir) {
+		auto& stk = dynamic_cast<cStack&>(me["list"]);
+		// This stack doesn't loop. It's easier to implement loading the files one page at a time
+		// if I know we're not gonna jump from page 0 to the last page, leaving a gap in the vector.
+		stk.doSelectPage(dir);
+		me["prev"].show();
+		me["next"].show();
+		if(stk.getPage() == 0){
+			me["prev"].hide();
+		}
+		if(stk.getPage() == stk.getPageCount() - 1){
+			me["next"].hide();
+		}
+
+		populate_page(stk.getPage());
+		return true;
+	}
+
+	bool doFileBrowser() {
+		fs::path from_browser = "";
+		if(replaying){
+			if(has_next_action("load_party")){
+				from_browser = "DUMMY";
+			}
+		}else{
+			from_browser = nav_get_party();
+		}
+		if(!from_browser.empty()){
+			me.setResult(from_browser);
+			me.toast(false);
+		}
+		return true;
+	}
+
+public:
+	cFilePicker(fs::path save_folder, bool saving, cDialog* parent = nullptr, bool picking_auto = false) :
+		me(*ResMgr::dialogs.get("pick-save"), parent),
+		save_folder(save_folder),
+		picking_auto(picking_auto),
+		saving(saving),
+		parties_per_page(saving ? SLOTS_PER_PAGE - 1 : SLOTS_PER_PAGE) {}
+
+	fs::path run() {
+		template_info_str = me["info1"].getText();
+
+		if(saving){
+			me["title-load"].hide();
+			me["title-auto"].hide();
+			me["file1"].setText(""); // Keep the frame
+			for(int i = 0; i < SLOTS_PER_PAGE; ++i){
+				me["load" + std::to_string(i+1)].hide();
+			}
+		}else{
+			if(picking_auto){
+				me["title-load"].hide();
+				std::string title = me["title-auto"].getText();
+				fs::path party_name = save_folder.filename();
+				party_name.replace_extension();
+				boost::replace_first(title, "{Folder}", party_name.string());
+				me["title-auto"].setText(title);
+			}else{
+				me["title-auto"].hide();
+			}
+			me["title-save"].hide();
+			me["file1-field"].hide();
+			me["file1-extension-label"].hide();
+			for(int i = 0; i < SLOTS_PER_PAGE; ++i){
+				me["save" + std::to_string(i+1)].hide();
+			}
+		}
+
+		me["cancel"].attachClickHandler(std::bind(&cFilePicker::doCancel, this));
+		me["find"].attachClickHandler(std::bind(&cFilePicker::doFileBrowser, this));
+		// Since it would be crazy to record and replay the metadata shown on a player's save picker
+		// dialog (which is what we do for the scenario picker),
+		// when replaying, basically make Left/Right buttons no-op.
+		// Load/Save buttons should send a dummy result.
+		if(!replaying){
+			me["next"].attachClickHandler(std::bind(&cFilePicker::doSelectPage, this, 1));
+			me["prev"].attachClickHandler(std::bind(&cFilePicker::doSelectPage, this, -1));
+			init_pages();
+		}else{
+			for(int i = 0; i < SLOTS_PER_PAGE; ++i){
+				std::string suffix = std::to_string(i+1);
+				// When replaying, a click on a load or save button means the dummy file picker can go away:
+				me["load" + suffix].attachClickHandler(std::bind(&cFilePicker::doLoad, this, "DUMMY"));
+				me["save" + suffix].attachClickHandler(std::bind(&cFilePicker::doSave, this, "DUMMY"));
+				// A click on an autosave button means another dummy file picker should open:
+				me["auto" + suffix].attachClickHandler(std::bind(&cFilePicker::showAuto, this, ""));
+			}
+		}
+
+		// Hide the prev button and populate the first page
+		doSelectPage(0);
+
+		me.run();
+		if(!me.hasResult()) return "";
+		fs::path file = me.getResult<fs::path>();
+		return file;
+	}
+};
+
+static fs::path run_file_picker(fs::path save_folder, bool saving) {
+	return cFilePicker(save_folder, saving).run();
+}
+
+fs::path run_autosave_picker(fs::path auto_folder, cDialog* parent) {
+	return cFilePicker(auto_folder, false, parent, true).run();
+}
+
+fs::path fancy_file_picker(bool saving) {
+	if(recording){
+		record_action("fancy_file_picker", bool_to_str(saving));
+	}
+	// TODO this is set up to be configurable, but not yet exposed in preferences.
+	fs::path save_folder = get_string_pref("SaveFolder", saveDir.string());
+
+	return run_file_picker(save_folder, saving);
+}
+
+fs::path run_file_picker(bool saving){
+	if(has_feature_flag("file-picker-dialog", "V1") && get_bool_pref("FancyFilePicker", true)){
+		return fancy_file_picker(saving);
+	}
+
+	return os_file_picker(saving);
 }

@@ -9,8 +9,10 @@
 #ifndef BOE_FILEIO_HPP
 #define BOE_FILEIO_HPP
 
+#include <ctime>
 #include <string>
 #include <vector>
+#include <set>
 #include <sstream>
 #include <SFML/System/InputStream.hpp>
 #include <boost/filesystem/path.hpp>
@@ -27,8 +29,17 @@ bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header 
 fs::path nav_get_or_decode_party();
 fs::path nav_put_or_temp_party(fs::path def = "");
 
-bool load_party(fs::path file_to_load, cUniverse& univ);
+fs::path os_file_picker(bool saving);
+// The game implements a fancy file picker, the editors just call the OS picker.
+extern fs::path run_file_picker(bool saving);
+
+const std::set<fs::path> save_extensions = {".exg", ".boe", ".SAV", ".mac"};
+// Return a directory's files sorted by last modified time
+std::vector<std::pair<fs::path, std::time_t>> sorted_file_mtimes(fs::path dir, std::set<fs::path> valid_extensions = save_extensions);
+
+bool load_party(fs::path file_to_load, cUniverse& univ, bool record = true);
 bool save_party(cUniverse& univ, bool save_as = false);
+bool save_party_force(cUniverse& univ, fs::path file);
 
 void init_directories(const char* exec_path);
 

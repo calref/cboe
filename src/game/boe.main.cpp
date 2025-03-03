@@ -99,7 +99,9 @@ std::string help_text_rsrc = "help";
 std::map<std::string,std::vector<std::string>> feature_flags = {
 	// Legacy behavior of the T debug action (used by some replays)
 	// does not change the party's outdoors location
-	{"debug-enter-town", {"move-outdoors"}}
+	{"debug-enter-town", {"move-outdoors"}},
+	// New in-game save file picker
+	{"file-picker-dialog", {"V1"}}
 };
 
 struct cParseEntrance {
@@ -583,6 +585,9 @@ static void replay_action(Element& action) {
 			new_fps = boost::lexical_cast<int>(action.GetText());
 		}
 		replay_fps_limit.emplace(new_fps);
+	}else if(t == "fancy_file_picker"){
+		bool saving = str_to_bool(action.GetText());
+		fancy_file_picker(saving);
 	}else if(t == "load_party"){
 		decode_file(action.GetText(), tempDir / "temp.exg");
 		load_party(tempDir / "temp.exg", univ);

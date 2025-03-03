@@ -467,7 +467,7 @@ void handle_rest(bool& need_redraw, bool& need_reprint) {
 		pause(25);
 		univ.party.food -= 6;
 		while(i < 50) {
-			increase_age();
+			increase_age(false);
 			if(get_ran(1,1,2) == 2)
 				do_monsters();
 			if(get_ran(1,1,70) == 10)
@@ -485,6 +485,7 @@ void handle_rest(bool& need_redraw, bool& need_reprint) {
 	if(i == 50) {
 		do_rest(1200, get_ran(5,1,10), 50);
 		add_string_to_buf("  Rest successful.");
+		try_auto_save("RestComplete");
 		put_pc_screen();
 		pause(25);
 	}
@@ -1132,6 +1133,9 @@ static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 		redraw_screen(REFRESH_NONE);
 	}
 	put_pc_screen();
+	if(!party_sees_a_monst()){
+		try_auto_save("TownWaitComplete");
+	}
 }
 
 void handle_wait(bool& did_something, bool& need_redraw, bool& need_reprint) {
@@ -2900,6 +2904,7 @@ bool handle_scroll(const sf::Event& event) {
 }
 
 void do_load() {
+	// TODO this needs to be changed/moved because a picker dialog opens now!!!
 	// Edge case: Replay can be cut off before a file is chosen,
 	// or party selection can be canceled, and this will cause
 	// a crash trying to decode a party
@@ -2907,7 +2912,7 @@ void do_load() {
 		return;
 	}
 
-	fs::path file_to_load = nav_get_or_decode_party();
+	fs::path file_to_load = run_file_picker(false);
 	if(file_to_load.empty()) return;
 	if(!load_party(file_to_load, univ))
 		return;
@@ -3060,7 +3065,7 @@ void do_rest(long length, int hp_restore, int mp_restore) {
 	adjust_spell_menus();
 }
 
-void increase_age() {
+void increase_age(bool eating_trigger_autosave) {
 	short how_many_short = 0,r1;
 	
 	
@@ -3188,6 +3193,7 @@ void increase_age() {
 		else {
 			play_sound(6);
 			add_string_to_buf("You eat.");
+			if(eating_trigger_autosave) try_auto_save("Eat");
 		}
 	}
 	
@@ -3421,7 +3427,7 @@ void handle_death() {
 			return;
 		}
 		else if(choice == "load") {
-			fs::path file_to_load = nav_get_or_decode_party();
+			fs::path file_to_load = run_file_picker(false);
 			if(!file_to_load.empty()){
 				if(load_party(file_to_load, univ)){
 					finish_load_party();

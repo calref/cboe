@@ -21,6 +21,7 @@
 #include "fileio/tagfile.hpp"
 #include "fileio/tarball.hpp"
 #include "replay.hpp"
+#include "game/boe.dlgutil.hpp"
 
 extern bool mac_is_intel();
 extern fs::path progDir, tempDir;
@@ -39,6 +40,8 @@ fs::path nav_get_or_decode_party() {
 		decode_file(next_action.GetText(), tempDir / "temp.exg");
 		return tempDir / "temp.exg";
 	}else{
+		// TODO if the save is not in the saves folder, prompt about moving it in,
+		// and return the moved path?
 		return nav_get_party();
 	}
 }
@@ -51,7 +54,14 @@ fs::path nav_put_or_temp_party(fs::path def) {
 	}
 }
 
-bool load_party(fs::path file_to_load, cUniverse& univ){
+fs::path os_file_picker(bool saving) {
+	if(saving)
+		return nav_put_or_temp_party();
+	else
+		return nav_get_or_decode_party();
+}
+
+bool load_party(fs::path file_to_load, cUniverse& univ, bool record){
 	bool town_restore = false;
 	bool maps_there = false;
 	bool in_scen = false;
@@ -157,7 +167,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ){
 			break;
 	}
 	
-	if(recording && result){
+	if(recording && record && result){
 		record_action("load_party", encode_file(file_to_load), true);
 	}
 
@@ -304,7 +314,6 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 	return true;
 }
 
-extern fs::path scenDir;
 bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 	igzstream zin(file_to_load.string().c_str());
 	tarball partyIn;
@@ -442,9 +451,12 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ){
 	return true;
 }
 
-static bool save_party_const(const cUniverse& univ, bool save_as) {
+static bool save_party_const(const cUniverse& univ, bool save_as, fs::path dest_file = "") {
 	// Make sure it has the proper file extension
-	fs::path dest_file = univ.file;
+	if(dest_file.empty()){
+		dest_file = univ.file;
+	}
+
 	if(dest_file.extension() != ".exg"){
 		dest_file += ".exg";
 	}
@@ -546,9 +558,30 @@ bool save_party(cUniverse& univ, bool save_as) {
 	// univ.file can be empty for prefab parties, so a file browser might be needed
 	// even for a regular save.
 	if(save_as || univ.file.empty()){
-		univ.file = nav_put_or_temp_party();
+		univ.file = run_file_picker(true);
 	}
 	// A file wasn't chosen
 	if(univ.file.empty()) return false;
 	return save_party_const(univ, save_as);
+}
+
+bool save_party_force(cUniverse& univ, fs::path file) {
+	return save_party_const(univ, false, file);
+}
+
+static bool compare_mtime(std::pair<fs::path, std::time_t> a, std::pair<fs::path, std::time_t> b) {
+	return std::difftime(a.second, b.second) > 0;
+}
+
+std::vector<std::pair<fs::path, std::time_t>> sorted_file_mtimes(fs::path dir, std::set<fs::path> valid_extensions){
+	std::vector<std::pair<fs::path, std::time_t>> files;
+	for(fs::directory_iterator it{dir}; it != fs::directory_iterator{}; ++it) {
+		fs::path file = *it;
+		if(valid_extensions.count(file.extension())){
+			files.push_back(std::make_pair(file, last_write_time(file)));
+		}
+	}
+
+	std::sort(files.begin(), files.end(), compare_mtime);
+	return files;
 }
