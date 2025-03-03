@@ -46,19 +46,19 @@ bool cStuffDonePicker::handle_scroll(std::string item_hit) {
 	if(item_hit == "up") {
 		if(viewport.y > 0) viewport.y -= rows;
 	} else if(item_hit == "down") {
-		if(viewport.y < scenario.sdf_names[0].size() - rows) viewport.y += rows;
+		if(viewport.y < SDF_ROWS - rows) viewport.y += rows;
 	} else if(item_hit == "left") {
 		if(viewport.x > 0) viewport.x -= cols;
 	} else if(item_hit == "right") {
-		if(viewport.x < scenario.sdf_names.size() - cols) viewport.x += cols;
+		if(viewport.x < SDF_COLUMNS - cols) viewport.x += cols;
 	}
 	if(viewport.x == 0) dlog["left"].hide();
 	else dlog["left"].show();
 	if(viewport.y == 0) dlog["up"].hide();
 	else dlog["up"].show();
-	if(viewport.x >= scenario.sdf_names.size() - cols) dlog["right"].hide();
+	if(viewport.x >= SDF_COLUMNS - cols) dlog["right"].hide();
 	else dlog["right"].show();
-	if(viewport.y >= scenario.sdf_names[0].size() - rows) dlog["down"].hide();
+	if(viewport.y >= SDF_ROWS - rows) dlog["down"].hide();
 	else dlog["down"].show();
 	fill_names();
 	if(!item_hit.empty()) select_active();
@@ -106,8 +106,8 @@ location cStuffDonePicker::run() {
 }
 
 void cStuffDonePicker::clamp_sdf() {
-	chosen_sdf.x = minmax(0, scenario.sdf_names.size() - 1, chosen_sdf.x);
-	chosen_sdf.y = minmax(0, scenario.sdf_names[0].size() - 1, chosen_sdf.y);
+	chosen_sdf.x = minmax(0, SDF_COLUMNS - 1, chosen_sdf.x);
+	chosen_sdf.y = minmax(0, SDF_ROWS - 1, chosen_sdf.y);
 	viewport.x = cols * floor(chosen_sdf.x / float(cols));
 	viewport.y = rows * floor(chosen_sdf.y / float(rows));
 }
@@ -119,7 +119,7 @@ void cStuffDonePicker::fill_names() {
 			location sdf = viewport;
 			sdf.x += x;
 			sdf.y += y;
-			field.setText(scenario.sdf_names[sdf.x][sdf.y]);
+			field.setText(scenario.get_sdf_name(sdf.x, sdf.y));
 			if(x == 0) {
 				// Add row labels
 				row_labels->getChild("row", 0, y).setTextToNum(sdf.y);
@@ -139,7 +139,8 @@ void cStuffDonePicker::save_names() {
 			location sdf = viewport;
 			sdf.x += x;
 			sdf.y += y;
-			scenario.sdf_names[sdf.x][sdf.y] = field.getText();
+			if(!field.getText().empty())
+				scenario.sdf_names[sdf.x][sdf.y] = field.getText();
 		}
 	}
 }
