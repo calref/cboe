@@ -1269,6 +1269,8 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 			univ.party.less_wm = dynamic_cast<cLed&>(me["lesswm"]).getState() != led_off;
 		}
 		set_pref("ShowStartupSplash", dynamic_cast<cLed&>(me["skipsplash"]).getState() == led_off);
+		set_pref("TargetLock", dynamic_cast<cLed&>(me["target-lock"]).getState() != led_off);
+
 		std::string speed = dynamic_cast<cLedGroup&>(me["speed"]).getSelected();
 		/* TODO: Should I add these additional preferences from Windows?
 		party.stuff_done[SDF_NO_TARGET_LINE] = cd_get_led(1099,50);
@@ -1376,7 +1378,9 @@ void pick_preferences(bool record) {
 			gameSpeed.setSelected("snail");
 			break;
 	}
-	
+
+	dynamic_cast<cLed&>(prefsDlog["target-lock"]).setState(get_bool_pref("TargetLock", true) ? led_red : led_off);	
+
 	cLedGroup& keyshiftOptions = dynamic_cast<cLedGroup&>(prefsDlog["keyshift-options"]);
 	if(get_bool_pref("DirectionalKeyScrolling", false)){
 		keyshiftOptions.setSelected("screen-shift");
