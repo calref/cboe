@@ -57,11 +57,9 @@ short monsters_faces[190] = {
 extern rectangle	windRect;
 extern long anim_ticks;
 extern tessel_ref_t bg[];
-extern sf::RenderWindow mainPtr;
 extern short which_combat_type;
 extern eGameMode overall_mode;
 extern bool boom_anim_active;
-extern sf::RenderTexture terrain_screen_gworld;
 extern rectangle sbar_rect,item_sbar_rect,shop_sbar_rect;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
@@ -80,7 +78,6 @@ extern enum_map(eGuiArea, rectangle) win_to_rects;
 // Talk vars
 extern eGameMode store_pre_talk_mode;
 extern short store_personality,store_personality_graphic;
-extern sf::RenderTexture talk_gworld;
 extern bool talk_end_forced;
 extern std::string old_str1,old_str2,one_back1,one_back2;
 extern rectangle talk_area_rect, word_place_rect;
@@ -121,7 +118,7 @@ rectangle explode_place_rect[30];
 char last_light_mask[13][13];
 
 terrain_screen_rects_t terrain_screen_rects() {
-	rectangle from = rectangle(terrain_screen_gworld);
+	rectangle from = rectangle(terrain_screen_gworld());
 
 	location current_terrain_ul = win_to_rects[WINRECT_TERVIEW].topLeft();
 	rectangle to = from;
@@ -162,7 +159,7 @@ void apply_unseen_mask() {
 				to_rect = base_rect;
 				to_rect.offset(-28 + i * 28,-36 + 36 * j);
 				to_rect &= big_to;
-				tileImage(terrain_screen_gworld, to_rect, bw_pats[3], sf::BlendAlpha);
+				tileImage(terrain_screen_gworld(), to_rect, bw_pats[3], sf::BlendAlpha);
 			}
 }
 
@@ -182,9 +179,9 @@ void apply_light_mask(bool onWindow) {
 		return;
 	
 	if(onWindow) {
-		mainPtr.setActive(false);
-		fill_region(mainPtr, dark_mask_region, sf::Color::Black);
-		mainPtr.setActive();
+		mainPtr().setActive(false);
+		fill_region(mainPtr(), dark_mask_region, sf::Color::Black);
+		mainPtr().setActive();
 		return;
 	}
 	
@@ -395,9 +392,9 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
 	auto ter_rects = terrain_screen_rects();
-	rect_draw_some_item(terrain_screen_gworld.getTexture(),ter_rects.from,mainPtr,ter_rects.to);
+	rect_draw_some_item(terrain_screen_gworld().getTexture(),ter_rects.from,mainPtr(),ter_rects.to);
 	
-	mainPtr.setActive(false);
+	mainPtr().setActive(false);
 	
 	// init missile paths
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;
@@ -478,7 +475,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 					from_rect = missile_origin_rect[i];
 					if(store_missiles[i].missile_type >= 7)
 						from_rect.offset(18 * (t % 8),0);
-					rect_draw_some_item(missiles_gworld,from_rect, mainPtr,temp_rect,ter_rects.in_frame,sf::BlendAlpha);
+					rect_draw_some_item(missiles_gworld,from_rect, mainPtr(),temp_rect,ter_rects.in_frame,sf::BlendAlpha);
 				} else {
 					// Custom missile graphics
 					// TODO: Test this!
@@ -497,12 +494,12 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 					from_rect.height() = 18;
 					if(step >= 4)
 						from_rect.offset(0,18);
-					rect_draw_some_item(*from_gw,from_rect, mainPtr,temp_rect,ter_rects.in_frame,sf::BlendAlpha);
+					rect_draw_some_item(*from_gw,from_rect, mainPtr(),temp_rect,ter_rects.in_frame,sf::BlendAlpha);
 				}
 			}
 		refresh_text_bar();
-		mainPtr.setActive();
-		mainPtr.display();
+		mainPtr().setActive();
+		mainPtr().display();
 		sf::sleep(sf::milliseconds(2 + 5 * get_int_pref("GameSpeed")));
 	}
 
@@ -510,7 +507,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	for(short i = 0; i < 30; i++)
 		store_missiles[i].missile_type = -1;
 	
-	rect_draw_some_item(terrain_screen_gworld.getTexture(),ter_rects.from,mainPtr,ter_rects.to);
+	rect_draw_some_item(terrain_screen_gworld().getTexture(),ter_rects.from,mainPtr(),ter_rects.to);
 }
 
 short get_missile_direction(location origin_point,location the_point) {
@@ -571,14 +568,14 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	draw_terrain(1);
 	if(special_draw != 2) {
 		auto ter_rects = terrain_screen_rects();
-		rect_draw_some_item(terrain_screen_gworld.getTexture(),ter_rects.from,mainPtr,ter_rects.to);
+		rect_draw_some_item(terrain_screen_gworld().getTexture(),ter_rects.from,mainPtr(),ter_rects.to);
 	}
 	
 	TextStyle style;
 	style.font = FONT_BOLD;
 	style.pointSize = 10;
 	style.lineHeight = 10;
-	mainPtr.setActive(false);
+	mainPtr().setActive(false);
 	
 	// init missile paths
 	screen_ul.x = center.x - 4; screen_ul.y = center.y - 4;
@@ -619,11 +616,11 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 					if(cur_boom_type >= 1000) {
 						std::shared_ptr<const sf::Texture> src_gworld;
 						graf_pos_ref(src_gworld, from_rect) = spec_scen_g.find_graphic(cur_boom_type - 1000 + t);
-						rect_draw_some_item(*src_gworld, from_rect, mainPtr, explode_place_rect[i], ter_rects.in_frame, sf::BlendAlpha);
+						rect_draw_some_item(*src_gworld, from_rect, mainPtr(), explode_place_rect[i], ter_rects.in_frame, sf::BlendAlpha);
 					} else {
 						from_rect = base_rect;
 						from_rect.offset(28 * (t + store_booms[i].offset),36 * (1 + store_booms[i].boom_type));
-						rect_draw_some_item(boom_gworld,from_rect,mainPtr,explode_place_rect[i], ter_rects.in_frame, sf::BlendAlpha);
+						rect_draw_some_item(boom_gworld,from_rect,mainPtr(),explode_place_rect[i], ter_rects.in_frame, sf::BlendAlpha);
 					}
 					
 					if(store_booms[i].val_to_place > 0 && (explode_place_rect[i] & ter_rects.in_frame) == explode_place_rect[i]) {
@@ -633,19 +630,19 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 						std::string dam_str = std::to_string(store_booms[i].val_to_place);
 						style.colour = Colours::WHITE; 
 						text_rect.offset(-1,-1);
-						win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style);
+						win_draw_string(mainPtr(),text_rect,dam_str,eTextMode::CENTRE,style);
 						text_rect.offset(2,2);
-						win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style);
+						win_draw_string(mainPtr(),text_rect,dam_str,eTextMode::CENTRE,style);
 						style.colour = Colours::BLACK; 
 						text_rect.offset(-1,-1);
-						win_draw_string(mainPtr,text_rect,dam_str,eTextMode::CENTRE,style);
-						mainPtr.setActive();
+						win_draw_string(mainPtr(),text_rect,dam_str,eTextMode::CENTRE,style);
+						mainPtr().setActive();
 					}
 				}
 			}
 		//if(((PSD[SDF_GAME_SPEED] == 1) && (t % 3 == 0)) || ((PSD[SDF_GAME_SPEED] == 2) && (t % 2 == 0)))
-		mainPtr.setActive();
-		mainPtr.display();
+		mainPtr().setActive();
+		mainPtr().display();
 		sf::sleep(time_in_ticks(2 * (1 + get_int_pref("GameSpeed"))));
 	}
 	
@@ -662,7 +659,7 @@ void click_shop_rect(rectangle area_rect, bool item_help) {
 	}
 
 	draw_shop_graphics(!item_help,item_help,area_rect);
-	mainPtr.display();
+	mainPtr().display();
 	play_sound(37, time_in_ticks(5));
 	draw_shop_graphics(false,false,area_rect);
 
@@ -707,20 +704,20 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 	style.font = FONT_DUNGEON;
 	style.pointSize = 18;
 	
-	area_rect = rectangle(talk_gworld);
-	talk_gworld.setActive(false);
+	area_rect = rectangle(talk_gworld());
+	talk_gworld().setActive(false);
 
 	// Only re-render on top of the item that is clicked:
 	if(item_pressed || item_help_pressed) {
 		clip_area_rect.offset(-area_rect.left, -area_rect.top);
-		clip_rect(talk_gworld, clip_area_rect);
+		clip_rect(talk_gworld(), clip_area_rect);
 	} else {
-		clear_scale_aware_text(talk_gworld);
-		frame_rect(talk_gworld, area_rect, Colours::BLACK);
+		clear_scale_aware_text(talk_gworld());
+		frame_rect(talk_gworld(), area_rect, Colours::BLACK);
 		area_rect.inset(1,1);
-		tileImage(talk_gworld, area_rect,bg[12]);
+		tileImage(talk_gworld(), area_rect,bg[12]);
 
-		frame_rect(talk_gworld, shop_frame, Colours::BLACK);
+		frame_rect(talk_gworld(), shop_frame, Colours::BLACK);
 	}
 	
 	// Place store icon:
@@ -736,7 +733,7 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 			from_rect.offset(32 * (i % 10),32 * (i / 10));
 			from_gw = &ResMgr::graphics.get("talkportraits");
 		}
-		rect_draw_some_item(*from_gw, from_rect, talk_gworld, face_rect);
+		rect_draw_some_item(*from_gw, from_rect, talk_gworld(), face_rect);
 	}
 	
 	
@@ -745,10 +742,10 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 	style.lineHeight = 18;
 	dest_rect = title_rect;
 	dest_rect.offset(1,1);
-	win_draw_string(talk_gworld,dest_rect,active_shop.getName(),eTextMode::LEFT_TOP,style);
+	win_draw_string(talk_gworld(),dest_rect,active_shop.getName(),eTextMode::LEFT_TOP,style);
 	dest_rect.offset(-1,-1);
 	style.colour = Colours::TITLE_BLUE; 
-	win_draw_string(talk_gworld,dest_rect,active_shop.getName(),eTextMode::LEFT_TOP,style);
+	win_draw_string(talk_gworld(),dest_rect,active_shop.getName(),eTextMode::LEFT_TOP,style);
 	
 	style.font = FONT_BOLD;
 	style.pointSize = 12;
@@ -778,7 +775,7 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 			title << "Shopping for " << univ.current_pc().name << '.';
 			break;
 	}
-	win_draw_string(talk_gworld,shopper_name,title.str(),eTextMode::LEFT_TOP,style);
+	win_draw_string(talk_gworld(),shopper_name,title.str(),eTextMode::LEFT_TOP,style);
 	
 	if(item_pressed)
 		style.colour = Colours::TITLE_BLUE; 
@@ -828,29 +825,29 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 
 		// Now draw item
 		graf_pos_ref(from_gw, from_rect) = calc_item_rect(base_item.graphic_num,to_rect);
-		rect_draw_some_item(*from_gw, from_rect, talk_gworld, to_rect, sf::BlendAlpha);
+		rect_draw_some_item(*from_gw, from_rect, talk_gworld(), to_rect, sf::BlendAlpha);
 		
 		// Draw item key
 		style.pointSize = 10;
 		style.lineHeight = 10;
 		std::string key(1, (char)('a' + i));
-		win_draw_string(talk_gworld,shopping_rects[i][SHOPRECT_KEY],key, eTextMode::WRAP,style);
+		win_draw_string(talk_gworld(),shopping_rects[i][SHOPRECT_KEY],key, eTextMode::WRAP,style);
 
 		// Now draw item text
 		style.pointSize = 12;
 		style.lineHeight = 12;
-		win_draw_string(talk_gworld,shopping_rects[i][SHOPRECT_ITEM_NAME],cur_name,eTextMode::WRAP,style);
+		win_draw_string(talk_gworld(),shopping_rects[i][SHOPRECT_ITEM_NAME],cur_name,eTextMode::WRAP,style);
 		cur_name = std::to_string(cur_cost);
 		rectangle cost_rect = shopping_rects[i][SHOPRECT_ITEM_COST];
 		cost_rect.left = cost_rect.right - string_length(cur_name, style) - 10;
-		win_draw_string(talk_gworld,cost_rect,cur_name,eTextMode::WRAP,style);
+		win_draw_string(talk_gworld(),cost_rect,cur_name,eTextMode::WRAP,style);
 		cost_rect.left = cost_rect.right - 7;
 		cost_rect.top += 3;
 		cost_rect.height() = 7;
-		rect_draw_some_item(invenbtn_gworld, {0, 29, 7, 36}, talk_gworld, cost_rect, sf::BlendAlpha);
+		rect_draw_some_item(invenbtn_gworld, {0, 29, 7, 36}, talk_gworld(), cost_rect, sf::BlendAlpha);
 		style.pointSize = 10;
-		win_draw_string(talk_gworld,shopping_rects[i][SHOPRECT_ITEM_EXTRA],cur_info_str,eTextMode::WRAP,style);
-		rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld,shopping_rects[i][SHOPRECT_ITEM_HELP],item_help_pressed ? sf::BlendNone : sf::BlendAlpha);
+		win_draw_string(talk_gworld(),shopping_rects[i][SHOPRECT_ITEM_EXTRA],cur_info_str,eTextMode::WRAP,style);
+		rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld(),shopping_rects[i][SHOPRECT_ITEM_HELP],item_help_pressed ? sf::BlendNone : sf::BlendAlpha);
 	}
 	
 	// Finally, cost info and help strs
@@ -858,14 +855,14 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 	title << "Prices here are " << cost_strs[active_shop.getCostAdjust()] << '.';
 	style.pointSize = 10;
 	style.lineHeight = 12;
-	win_draw_string(talk_gworld,bottom_help_rects[0],title.str(),eTextMode::WRAP,style);
-	win_draw_string(talk_gworld,bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",eTextMode::WRAP,style);
-	win_draw_string(talk_gworld,bottom_help_rects[2],"Hit done button (or Esc.) to quit.",eTextMode::WRAP,style);
-	win_draw_string(talk_gworld,bottom_help_rects[3],"'I' button brings up description.",eTextMode::WRAP,style);
+	win_draw_string(talk_gworld(),bottom_help_rects[0],title.str(),eTextMode::WRAP,style);
+	win_draw_string(talk_gworld(),bottom_help_rects[1],"Click on item name (or type 'a'-'h') to buy.",eTextMode::WRAP,style);
+	win_draw_string(talk_gworld(),bottom_help_rects[2],"Hit done button (or Esc.) to quit.",eTextMode::WRAP,style);
+	win_draw_string(talk_gworld(),bottom_help_rects[3],"'I' button brings up description.",eTextMode::WRAP,style);
 	
-	undo_clip(talk_gworld);
-	talk_gworld.setActive();
-	talk_gworld.display();
+	undo_clip(talk_gworld());
+	talk_gworld().setActive();
+	talk_gworld().display();
 	
 	refresh_shopping();
 	if(shop_sbar->getMaximum() > 0)
@@ -878,27 +875,27 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 }
 
 void refresh_shopping() {
-	rectangle from_rect(talk_gworld);
+	rectangle from_rect(talk_gworld());
 	rectangle to_rect = from_rect;
 	to_rect.offset(talk_gword_offset_x, talk_gword_offset_y);
-	rect_draw_some_item(talk_gworld,from_rect,mainPtr,to_rect);
+	rect_draw_some_item(talk_gworld(),from_rect,mainPtr(),to_rect);
 }
 
 static void place_talk_face() {
 	rectangle face_rect = {6,6,38,38};
 	face_rect.offset(talk_area_rect.topLeft());
-	mainPtr.setActive();
+	mainPtr().setActive();
 	short face_to_draw = univ.scenario.scen_monsters[store_monst_type].default_facial_pic;
 	if(store_talk_face_pic >= -1)
 		face_to_draw = store_talk_face_pic;
 	if(store_talk_face_pic >= 1000) {
-		cPict::drawAt(mainPtr, face_rect, store_talk_face_pic, PIC_CUSTOM_TALK, false);
+		cPict::drawAt(mainPtr(), face_rect, store_talk_face_pic, PIC_CUSTOM_TALK, false);
 	}
 	else {
 		if(face_to_draw == NO_PIC) {
 			short i = get_monst_picnum(store_monst_type);
-			cPict::drawAt(mainPtr, face_rect, i, get_monst_pictype(store_monst_type), false);
-		} else cPict::drawAt(mainPtr, face_rect, face_to_draw, PIC_TALK, false);
+			cPict::drawAt(mainPtr(), face_rect, i, get_monst_pictype(store_monst_type), false);
+		} else cPict::drawAt(mainPtr(), face_rect, face_to_draw, PIC_TALK, false);
 	}
 }
 
@@ -907,9 +904,9 @@ void click_talk_rect(word_rect_t word) {
 		record_click_talk_rect(word, word.on == PRESET_WORD_ON);
 	}
 
-	rectangle talkRect(talk_gworld), wordRect(word.rect);
-	mainPtr.setActive();
-	rect_draw_some_item(talk_gworld,talkRect,mainPtr,talk_area_rect);
+	rectangle talkRect(talk_gworld()), wordRect(word.rect);
+	mainPtr().setActive();
+	rect_draw_some_item(talk_gworld(),talkRect,mainPtr(),talk_area_rect);
 	wordRect.offset(talk_area_rect.topLeft());
 	wordRect.width() += 10; // Arbitrary extra space fixes #481 and shouldn't cause any problems
 	TextStyle style;
@@ -917,12 +914,12 @@ void click_talk_rect(word_rect_t word) {
 	style.pointSize = 18;
 	style.lineHeight = 18;
 	style.colour = word.on;
-	win_draw_string(mainPtr, wordRect, word.word, eTextMode::WRAP, style);
+	win_draw_string(mainPtr(), wordRect, word.word, eTextMode::WRAP, style);
 	place_talk_face();
 	help_btn->draw();
-	mainPtr.display();
+	mainPtr().display();
 	play_sound(37, time_in_ticks(5));
-	rect_draw_some_item(talk_gworld,talkRect,mainPtr,talk_area_rect);
+	rect_draw_some_item(talk_gworld(),talkRect,mainPtr(),talk_area_rect);
 	place_talk_face();
 }
 
@@ -933,33 +930,33 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	rectangle title_rect = {19,48,42,260};
 	rectangle dest_rect,help_from = {46,60,59,76};
 	
-	talk_gworld.setActive(false);
+	talk_gworld().setActive(false);
 	
 	TextStyle style;
 	style.font = FONT_DUNGEON;
 	style.pointSize = TALK_WORD_SIZE;
 	
 	if(c_rect.right > 0) {
-		mainPtr.setActive(false);
+		mainPtr().setActive(false);
 		c_rect.offset(talk_area_rect.topLeft());
-		clip_rect(mainPtr, c_rect);
+		clip_rect(mainPtr(), c_rect);
 	}
 	
-	area_rect = rectangle(talk_gworld);
-	clear_scale_aware_text(talk_gworld);
-	frame_rect(talk_gworld, area_rect, sf::Color::Black);
+	area_rect = rectangle(talk_gworld());
+	clear_scale_aware_text(talk_gworld());
+	frame_rect(talk_gworld(), area_rect, sf::Color::Black);
 	area_rect.inset(1,1);
-	tileImage(talk_gworld, area_rect,bg[12]);
+	tileImage(talk_gworld(), area_rect,bg[12]);
 	
 	// Place name oftalkee
 	style.colour = Colours::SHADOW; 
 	style.lineHeight = 18;
 	dest_rect = title_rect;
 	dest_rect.offset(1,1);
-	win_draw_string(talk_gworld,dest_rect,title_string,eTextMode::LEFT_TOP,style);
+	win_draw_string(talk_gworld(),dest_rect,title_string,eTextMode::LEFT_TOP,style);
 	dest_rect.offset(-1,-1);
 	style.colour = Colours::TITLE_BLUE; 
-	win_draw_string(talk_gworld,dest_rect,title_string,eTextMode::LEFT_TOP,style);
+	win_draw_string(talk_gworld(),dest_rect,title_string,eTextMode::LEFT_TOP,style);
 	
 	// Place buttons at bottom.
 	if(color == 0)
@@ -968,7 +965,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		style.colour = PRESET_WORD_ON;
 	for(short i = 0; i < 9; i++) {
 		if(!talk_end_forced || i == 6 || i == 5)
-			win_draw_string(talk_gworld,talk_words[i].rect,talk_words[i].word,eTextMode::LEFT_TOP,style);
+			win_draw_string(talk_gworld(),talk_words[i].rect,talk_words[i].word,eTextMode::LEFT_TOP,style);
 	}
 	
 	style.colour = Colours::NAVY; 
@@ -992,7 +989,7 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		}
 	}
 	
-	std::vector<rectangle> word_rects = draw_string_hilite(talk_gworld, word_place_rect, str, style, hilites, color ? CUSTOM_WORD_ON : CUSTOM_WORD_OFF);
+	std::vector<rectangle> word_rects = draw_string_hilite(talk_gworld(), word_place_rect, str, style, hilites, color ? CUSTOM_WORD_ON : CUSTOM_WORD_OFF);
 	
 	if(!talk_end_forced) {
 		// Now build the list of word rects
@@ -1007,21 +1004,21 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		}
 	}
 	
-	talk_gworld.setActive();
-	rectangle oldRect(talk_gworld);
-	undo_clip(talk_gworld);
-	talk_gworld.display();
+	talk_gworld().setActive();
+	rectangle oldRect(talk_gworld());
+	undo_clip(talk_gworld());
+	talk_gworld().display();
 	
 	// Finally place processed graphics
-	mainPtr.setActive();
-	rect_draw_some_item(talk_gworld,oldRect,mainPtr,talk_area_rect);
+	mainPtr().setActive();
+	rect_draw_some_item(talk_gworld(),oldRect,mainPtr(),talk_area_rect);
 	// I have no idea what this check is for; I'm jsut preserving it in case it was important
 	if(c_rect.right == 0) place_talk_face();
 }
 
 void refresh_talking() {
-	rectangle tempRect(talk_gworld);
-	rect_draw_some_item(talk_gworld,tempRect,mainPtr,talk_area_rect);
+	rectangle tempRect(talk_gworld());
+	rect_draw_some_item(talk_gworld(),tempRect,mainPtr(),talk_area_rect);
 	place_talk_face();
 }
 
