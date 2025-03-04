@@ -35,7 +35,6 @@ extern location center;
 extern short combat_active_pc;
 extern bool monsters_going,spell_forced;
 extern bool flushingInput;
-extern sf::RenderWindow mainPtr;
 extern eSpell store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev,store_item_spell_level;
 extern short store_spell_target,pc_casting,current_spell_range;
@@ -267,7 +266,7 @@ void start_outdoor_combat(cOutdoors::cWandering encounter,location where,short n
 	print_buf();
 	play_sound(23);
 	
-	mainPtr.setActive();
+	mainPtr().setActive();
 	which_combat_type = 0;
 	overall_mode = MODE_COMBAT;
 	
@@ -357,7 +356,7 @@ void start_outdoor_combat(cOutdoors::cWandering encounter,location where,short n
 	set_pc_moves();
 	pick_next_pc();
 	center = univ.current_pc().combat_pos;
-	UI::toolbar.draw(mainPtr);
+	UI::toolbar.draw(mainPtr());
 	put_pc_screen();
 	set_stat_window_for_pc(univ.cur_pc);
 	
@@ -4715,7 +4714,7 @@ void end_combat() {
 	if(univ.current_pc().main_status != eMainStatus::ALIVE)
 		univ.cur_pc = first_active_pc();
 	put_item_screen(stat_window);
-	UI::toolbar.draw(mainPtr);
+	UI::toolbar.draw(mainPtr());
 }
 
 

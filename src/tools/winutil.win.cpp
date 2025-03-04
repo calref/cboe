@@ -7,7 +7,6 @@
 #include <sstream>
 #include <cmath>
 
-extern sf::RenderWindow mainPtr;
 OPENFILENAMEA getParty, getScen, getRsrc, putParty, putScen, putRsrc;
 
 // TODO: I'm sure there's a better way to do this (maybe one that's keyboard layout agnostic)
@@ -163,7 +162,7 @@ void init_fileio() {
 	memset(&base_dlg, 0, sizeof(OPENFILENAMEA));
 	// Common values
 	base_dlg.lStructSize = sizeof(OPENFILENAMEA);
-	base_dlg.hwndOwner = mainPtr.getSystemHandle();
+	base_dlg.hwndOwner = mainPtr().getSystemHandle();
 	base_dlg.nFilterIndex = 1;
 	base_dlg.Flags = OFN_DONTADDTORECENT | OFN_ENABLESIZING | OFN_EXPLORER | OFN_HIDEREADONLY | OFN_NOCHANGEDIR;
 	getParty = getScen = getRsrc = putParty = putScen = putRsrc = base_dlg;
@@ -296,7 +295,7 @@ fs::path nav_put_rsrc(std::initializer_list<std::string> extensions, fs::path de
 
 void set_clipboard(std::string text) {
 	if(text.empty()) return;
-	if(!OpenClipboard(mainPtr.getSystemHandle())) return;
+	if(!OpenClipboard(mainPtr().getSystemHandle())) return;
 	HGLOBAL hData = (char*) GlobalAlloc(GMEM_MOVEABLE, text.length() + 1);
 	char* data = (char*)GlobalLock(hData);
 	std::copy(text.c_str(), text.c_str() + text.length(), data);
@@ -351,7 +350,7 @@ void set_clipboard_img(sf::Image& img) {
 	info->bV5BlueMask  = 0x00ff0000;
 	info->bV5AlphaMask = 0xff000000;
 	std::copy_n(img.getPixelsPtr(), pxSize, reinterpret_cast<sf::Uint8*>(info + 1));
-	if(!OpenClipboard(mainPtr.getSystemHandle())) {
+	if(!OpenClipboard(mainPtr().getSystemHandle())) {
 		printErr("Error opening clipboard");
 		GlobalFree(data);
 		return;
@@ -450,7 +449,7 @@ ModalSession::~ModalSession() {
 int getMenubarHeight() {
 	MENUBARINFO info;
 	info.cbSize = sizeof(MENUBARINFO);
-	if(GetMenuBarInfo(mainPtr.getSystemHandle(), OBJID_MENU, 0, &info)) {
+	if(GetMenuBarInfo(mainPtr().getSystemHandle(), OBJID_MENU, 0, &info)) {
 		return info.rcBar.bottom - info.rcBar.top;
 	} else {
 		return GetSystemMetrics(SM_CYMENU);
@@ -473,5 +472,5 @@ void adjust_window_for_menubar(int mode, unsigned int width, unsigned int height
 	}
 
 	height += getMenubarHeight();
-	mainPtr.setSize({ width, height });
+	mainPtr().setSize({ width, height });
 }

@@ -9,7 +9,6 @@
 #include "tools/event_listener.hpp"
 #include "tools/drawable_manager.hpp"
 
-extern sf::RenderWindow mainPtr;
 extern cUndoList undo_list;
 extern std::unordered_map <std::string, std::shared_ptr <iEventListener>> event_listeners;
 extern cDrawableManager drawable_mgr;
@@ -17,7 +16,7 @@ extern cDrawableManager drawable_mgr;
 std::shared_ptr <OpenBoESceneditMenu> menu_ptr;
 
 void init_menubar() {
-	menu_ptr.reset(new OpenBoESceneditMenu(mainPtr));
+	menu_ptr.reset(new OpenBoESceneditMenu(mainPtr()));
 	
 	event_listeners["menubar"] = std::dynamic_pointer_cast <iEventListener> (menu_ptr); 
 	drawable_mgr.add_drawable(UI_LAYER_MENUBAR, "menubar", menu_ptr); 

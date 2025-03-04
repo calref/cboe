@@ -17,6 +17,15 @@ enum {
 	REFRESH_ALL = 0x3f
 };
 
+sf::RenderWindow& mainPtr();
+sf::RenderWindow& mini_map();
+sf::RenderTexture& pc_stats_gworld();
+sf::RenderTexture& item_stats_gworld();
+sf::RenderTexture& text_area_gworld();
+sf::RenderTexture& terrain_screen_gworld();
+sf::RenderTexture& text_bar_gworld();
+sf::RenderTexture& map_gworld();
+sf::RenderTexture& talk_gworld();
 void adjust_window_mode();
 void init_startup();
 void reload_startup();

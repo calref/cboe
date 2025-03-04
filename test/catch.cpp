@@ -6,7 +6,12 @@
 // After this are some globals that are referenced from common code but not defined, and not used in the test cases
 #include "gfx/gfxsheets.hpp"
 #include "universe/universe.hpp"
-sf::RenderWindow mainPtr;
+
+sf::RenderWindow& mainPtr()
+{
+	static sf::RenderWindow instance;
+	return instance;
+}
 std::string scenario_temp_dir_name = "test_scenario";
 cCustomGraphics spec_scen_g;
 cUniverse univ;

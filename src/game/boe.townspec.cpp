@@ -22,7 +22,6 @@
 extern eGameMode overall_mode;
 extern eItemWinMode stat_window;
 extern location center;
-extern sf::RenderWindow mainPtr;
 extern cUniverse univ;
 char answer[256];
 

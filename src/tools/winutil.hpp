@@ -12,11 +12,14 @@
 #include <boost/filesystem/path.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <memory>
 #include <vector>
 
 #include "prefs.hpp"
 #include "mathutil.hpp"
+
+sf::RenderWindow& mainPtr();
 
 char keyToChar(sf::Keyboard::Key key, bool isShift);
 

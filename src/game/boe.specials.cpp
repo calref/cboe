@@ -35,7 +35,6 @@
 #include <boost/lexical_cast.hpp>
 #include "winutil.hpp"
 
-extern sf::RenderWindow mainPtr;
 extern eGameMode overall_mode;
 extern eItemWinMode stat_window;
 extern short which_combat_type;
@@ -47,7 +46,6 @@ extern cOutdoors::cWandering store_wandering_special;
 extern eSpell spell_being_cast, town_spell;
 extern eSpecCtxType spec_target_type;
 extern short spell_caster, spec_target_fail, spec_target_options;
-extern sf::RenderWindow mini_map;
 extern short fast_bang;
 extern bool end_scenario;
 extern cUniverse univ;
@@ -2030,7 +2028,7 @@ void run_special(eSpecCtx which_mode, eSpecCtxType which_type, spec_num_t start_
 				if(replaying && has_next_action("step_through_continue")){
 					pop_next_action();
 					break;
-				}else if(pollEvent(mainPtr, evt) && (evt.type == sf::Event::KeyPressed || evt.type == sf::Event::MouseButtonPressed)){
+				}else if(pollEvent(mainPtr(), evt) && (evt.type == sf::Event::KeyPressed || evt.type == sf::Event::MouseButtonPressed)){
 					if(recording){
 						record_action("step_through_continue", "");
 					}

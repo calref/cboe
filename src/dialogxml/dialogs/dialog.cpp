@@ -39,9 +39,7 @@ using namespace std;
 using namespace ticpp;
 
 // TODO: Would be nice if I could avoid depending on mainPtr
-extern sf::RenderWindow mainPtr;
 
-extern sf::Texture bg_gworld;
 const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
 short cDialog::defaultBackground = cDialog::BG_DARK;
 cDialog* cDialog::topWindow = nullptr;
@@ -496,7 +494,7 @@ bool cDialog::sendInput(cKey key) {
 void cDialog::run(std::function<void(cDialog&)> onopen){
 	cDialog* formerTop = topWindow;
 	// TODO: The introduction of the static topWindow means I may be able to use this instead of parent->win; do I still need parent?
-	sf::RenderWindow* parentWin = &(parent ? parent->win : mainPtr);
+	sf::RenderWindow* parentWin = &(parent ? parent->win : mainPtr());
 	auto parentPos = parentWin->getPosition();
 	auto parentSz = parentWin->getSize();
 	cursor_type former_curs = Cursor::current;
@@ -530,7 +528,7 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	winLastY = parentPos.y + (int(parentSz.y) - winRect.height()) / 2;
 	win.setPosition({winLastX, winLastY});
 	draw();
-	makeFrontWindow(parent ? parent-> win : mainPtr);
+	makeFrontWindow(parent ? parent-> win : mainPtr());
 	makeFrontWindow(win);
 	// This is a loose modal session, as it doesn't prevent you from clicking away,
 	// but it does prevent editing other dialogs, and it also keeps this window on top

@@ -23,7 +23,6 @@ enum {
 	HELP_MENU_POS = 6,
 };
 
-extern sf::RenderWindow mainPtr;
 extern cScenario scenario;
 extern cUndoList undo_list;
 LONG_PTR mainProc;
@@ -54,7 +53,7 @@ void setMenuCommand(HMENU& menu, int i, eMenu cmd) {
 }
 
 void init_menubar() {
-	HWND winHandle = mainPtr.getSystemHandle();
+	HWND winHandle = mainPtr().getSystemHandle();
 	if(winHandle == NULL) return;
 	if(menuHandle == NULL)
 		menuHandle = LoadMenu(GetModuleHandle(NULL), MAKEINTRESOURCE(IDR_MENU1));
@@ -185,7 +184,7 @@ void shut_down_menus(short mode) {
 			EnableMenuItem(out_menu, i, MF_GRAYED | MF_BYPOSITION);
 		}
 	}
-	DrawMenuBar(mainPtr.getSystemHandle());
+	DrawMenuBar(mainPtr().getSystemHandle());
 }
 
 void update_edit_menu() {
@@ -207,7 +206,7 @@ void update_edit_menu() {
 		ModifyMenuA(edit_menu, IDM_EDIT_REDO, MF_BYCOMMAND, IDM_EDIT_REDO, title.c_str());
 		EnableMenuItem(edit_menu, IDM_EDIT_REDO, MF_BYCOMMAND | MF_ENABLED);
 	}
-	DrawMenuBar(mainPtr.getSystemHandle());
+	DrawMenuBar(mainPtr().getSystemHandle());
 }
 
 #include "cursors.hpp"
