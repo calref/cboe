@@ -64,7 +64,6 @@ extern cScenario scenario;
 extern std::shared_ptr<cScrollbar> right_sbar, pal_sbar;
 extern cOutdoors* current_terrain;
 extern location cur_out;
-extern sf::RenderWindow mainPtr;
 bool small_any_drawn = false;
 extern bool change_made;
 
@@ -217,11 +216,11 @@ static bool handle_lb_action(location the_point) {
 		   && (left_button_status[i].action != LB_NO_ACTION))  {
 			draw_lb_slot(i,1);
 			play_sound(37);
-			mainPtr.display();
+			mainPtr().display();
 			// TODO: Proper button handling
 			sf::sleep(time_in_ticks(10));
 			draw_lb_slot(i,0);
-			mainPtr.display();
+			mainPtr().display();
 			if(overall_mode == MODE_INTRO_SCREEN || overall_mode == MODE_MAIN_SCREEN || overall_mode == MODE_EDIT_TYPES) {
 				switch(left_button_status[i].action) {
 					case LB_NO_ACTION:
@@ -321,12 +320,12 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 			int j = right_button_status[i + right_top].i;
 			//flash_rect(left_buttons[i][0]);
 			draw_rb_slot(i + right_top,1);
-			mainPtr.display();
+			mainPtr().display();
 			// TODO: Proper button handling
 			play_sound(37);
 			sf::sleep(time_in_ticks(10));
 			draw_rb_slot(i + right_top,0);
-			mainPtr.display();
+			mainPtr().display();
 			change_made = true;
 			size_t size_before;
 			size_t pos_before = right_sbar->getPosition();
@@ -2367,7 +2366,7 @@ void set_up_start_screen() {
 	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"Created 1997, Free Open Source");
 	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,version());
 	change_made = false;
-	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 }
 
 void set_up_main_screen() {
@@ -2407,7 +2406,7 @@ void set_up_main_screen() {
 	shut_down_menus(4);
 	shut_down_menus(3);
 	redraw_screen();
-	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 }
 
 void start_town_edit() {
@@ -2437,7 +2436,7 @@ void start_town_edit() {
 				current_ground = 0;
 			else if(town->terrain(i,j) == 2)
 				current_ground = 2;
-	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 }
 
 void start_out_edit() {
@@ -2468,7 +2467,7 @@ void start_out_edit() {
 				current_ground = 0;
 			else if(current_terrain->terrain[i][j] == 2)
 				current_ground = 2;
-	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 	redraw_screen();
 }
 
@@ -2481,7 +2480,7 @@ void start_terrain_editing() {
 	place_location();
 	
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete/clear",true);
-	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 }
 
 void start_monster_editing(bool just_redo_text) {
@@ -2505,7 +2504,7 @@ void start_monster_editing(bool just_redo_text) {
 		set_rb(i - 1,RB_MONST, i, title);
 	}
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 	redraw_screen();
 }
 
@@ -2532,7 +2531,7 @@ void start_item_editing(bool just_redo_text) {
 		set_rb(i,RB_ITEM, i, title);
 	}
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 	redraw_screen();
 }
 
@@ -2559,7 +2558,7 @@ void start_special_item_editing(bool just_redo_text) {
 		set_rb(i,RB_SPEC_ITEM, i, title);
 	}
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 	redraw_screen();
 }
 
@@ -2584,7 +2583,7 @@ void start_quest_editing(bool just_redo_text) {
 		set_rb(i, RB_QUEST, i, title);
 	}
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 	redraw_screen();
 }
 
@@ -2609,7 +2608,7 @@ void start_shops_editing(bool just_redo_text) {
 		set_rb(i, RB_SHOP, i, title);
 	}
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 	redraw_screen();
 }
 
@@ -2679,7 +2678,7 @@ void start_string_editing(eStrMode mode,short just_redo_text) {
 	}
 	
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 	redraw_screen();
 }
 
@@ -2728,7 +2727,7 @@ void start_special_editing(short mode,short just_redo_text) {
 		case 2: set_rb(num_specs, RB_TOWN_SPEC, num_specs, make_new); break;
 	}
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 	redraw_screen();
 }
 
@@ -2764,7 +2763,7 @@ void start_dialogue_editing(short restoring) {
 	set_rb(10 + n_nodes, RB_DIALOGUE, n_nodes, "Create New Node");
 	right_sbar->setMaximum((11 + n_nodes) - NRSONPAGE);
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click node to delete",true);
-	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr)));
+	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 	redraw_screen();
 }
 

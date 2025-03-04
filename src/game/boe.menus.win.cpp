@@ -36,7 +36,6 @@ extern short on_monst_menu[256];
 extern bool party_in_memory;
 extern cUniverse univ;
 extern eGameMode overall_mode;
-extern sf::RenderWindow mainPtr;
 LONG_PTR mainProc;
 HMENU menuHandle = NULL;
 accel_table_t accel;
@@ -65,7 +64,7 @@ void setMenuCommand(HMENU& menu, int i, eMenu cmd) {
 }
 
 void init_menubar() {
-	HWND winHandle = mainPtr.getSystemHandle();
+	HWND winHandle = mainPtr().getSystemHandle();
 	if(winHandle == NULL) return;
 	if(menuHandle == NULL)
 		menuHandle = LoadMenu(GetModuleHandle(NULL), MAKEINTRESOURCE(IDC_BLADESOFEXILE));
@@ -74,7 +73,7 @@ void init_menubar() {
 	mainProc = SetWindowLongPtr(winHandle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&menuProc));
 	SetMenu(winHandle, menuHandle);
 
-	mainPtr.setActive();
+	mainPtr().setActive();
 	
 	// And now initialize the mapping from Windows menu commands to eMenu constants
 	static bool inited = false;
@@ -156,7 +155,7 @@ void adjust_monst_menu() {
 			AppendMenuA(monst_menu, MF_STRING | MF_ENABLED, 1000 + i, monst_name.c_str());
 		}
 	}
-	DrawMenuBar(mainPtr.getSystemHandle());
+	DrawMenuBar(mainPtr().getSystemHandle());
 }
 
 void init_spell_menus() {
@@ -267,19 +266,19 @@ void menu_activate() {
 		EnableMenuItem(file_menu, IDM_FILE_SAVE, MF_ENABLED | MF_BYCOMMAND);
 		EnableMenuItem(file_menu, IDM_FILE_SAVE_AS, MF_ENABLED | MF_BYCOMMAND);
 	}
-	DrawMenuBar(mainPtr.getSystemHandle());
+	DrawMenuBar(mainPtr().getSystemHandle());
 }
 
 void hideMenuBar() {
 	if(menuHandle == NULL) return;
-	SetMenu(mainPtr.getSystemHandle(), NULL);
-	DrawMenuBar(mainPtr.getSystemHandle());
+	SetMenu(mainPtr().getSystemHandle(), NULL);
+	DrawMenuBar(mainPtr().getSystemHandle());
 }
 
 void showMenuBar() {
 	if(menuHandle == NULL) return;
-	SetMenu(mainPtr.getSystemHandle(), menuHandle);
-	DrawMenuBar(mainPtr.getSystemHandle());
+	SetMenu(mainPtr().getSystemHandle(), menuHandle);
+	DrawMenuBar(mainPtr().getSystemHandle());
 }
 
 #include "cursors.hpp"

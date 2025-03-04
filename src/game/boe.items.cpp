@@ -32,15 +32,11 @@
 extern short which_combat_type;
 extern eGameMode overall_mode;
 extern eItemWinMode stat_window;
-extern sf::RenderWindow mainPtr;
 extern bool boom_anim_active;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
 
 extern bool map_visible;
-extern sf::RenderWindow mini_map;
-extern sf::Texture pc_gworld;
-extern sf::RenderTexture map_gworld;
 extern cUniverse univ;
 
 extern void draw_map(bool need_refresh);
@@ -678,20 +674,20 @@ short get_num_of_items(short max_num) {
 void init_mini_map() {
 	double map_scale = get_ui_scale_map();
 	if (map_scale < 0.1) map_scale = 1.0;
-	if (mini_map.isOpen()) mini_map.close();
-	mini_map.create(sf::VideoMode(map_scale*296,map_scale*277), "Map", sf::Style::Titlebar | sf::Style::Close);
-	mini_map.setPosition(sf::Vector2i(52,62));
+	if (mini_map().isOpen()) mini_map().close();
+	mini_map().create(sf::VideoMode(map_scale*296,map_scale*277), "Map", sf::Style::Titlebar | sf::Style::Close);
+	mini_map().setPosition(sf::Vector2i(52,62));
 	sf::View view;
 	view.reset(sf::FloatRect(0, 0, map_scale*296,map_scale*277));
 	view.setViewport(sf::FloatRect(0, 0, map_scale, map_scale));
-	mini_map.setView(view);
-	mini_map.setVisible(false);
+	mini_map().setView(view);
+	mini_map().setVisible(false);
 	map_visible=false;
-	setWindowFloating(mini_map, true);
-	makeFrontWindow(mainPtr);
+	setWindowFloating(mini_map(), true);
+	makeFrontWindow(mainPtr());
 	
 	// Create and initialize map gworld
-	if(!map_gworld.create(384, 384)) {
+	if(!map_gworld().create(384, 384)) {
 		play_sound(2);
 		throw std::string("Failed to initialized automap!");
 	} else {

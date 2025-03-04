@@ -19,7 +19,6 @@ enum {
 	HELP_MENU_POS = 3,
 };
 
-extern sf::RenderWindow mainPtr;
 extern cUniverse univ;
 extern bool scen_items_loaded, party_in_scen;
 LONG_PTR mainProc;
@@ -50,7 +49,7 @@ void setMenuCommand(HMENU& menu, int i, eMenu cmd) {
 }
 
 void init_menubar() {
-	HWND winHandle = mainPtr.getSystemHandle();
+	HWND winHandle = mainPtr().getSystemHandle();
 	if(winHandle == NULL) return;
 	if(menuHandle == NULL)
 		menuHandle = LoadMenu(GetModuleHandle(NULL), MAKEINTRESOURCE(IDR_MENU1));
@@ -116,7 +115,7 @@ void menu_activate() {
 		for(int i = 1; i < GetMenuItemCount(file_menu) - 1; i++)
 			EnableMenuItem(file_menu, i, MF_BYPOSITION | MF_ENABLED);
 	}
-	DrawMenuBar(mainPtr.getSystemHandle());
+	DrawMenuBar(mainPtr().getSystemHandle());
 }
 
 #include "cursors.hpp"

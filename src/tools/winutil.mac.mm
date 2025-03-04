@@ -213,7 +213,6 @@ NSOpenPanel* dlg_get_rsrc;
 NSSavePanel* dlg_put_scen;
 NSSavePanel* dlg_put_game;
 NSSavePanel* dlg_put_rsrc;
-extern sf::RenderWindow mainPtr;
 
 void init_fileio(){
 	dlg_get_scen = [NSOpenPanel openPanel];
@@ -256,7 +255,7 @@ void init_fileio(){
 
 fs::path nav_get_scenario() {
 	bool gotFile = [dlg_get_scen runModal] != NSFileHandlingPanelCancelButton;
-	makeFrontWindow(mainPtr);
+	makeFrontWindow(mainPtr());
 	if(gotFile) {
 		return fs::path([[[dlg_get_scen URL] path] fileSystemRepresentation]);
 	}
@@ -270,7 +269,7 @@ fs::path nav_put_scenario(fs::path def) {
 		[dlg_put_scen setDirectoryURL:[NSURL fileURLWithPath:[NSString stringWithUTF8String: def.parent_path().c_str()]]];
 	}
 	bool gotFile = [dlg_put_scen runModal] != NSFileHandlingPanelCancelButton;
-	makeFrontWindow(mainPtr);
+	makeFrontWindow(mainPtr());
 	if(gotFile)
 		return fs::path([[[dlg_put_scen URL] path] fileSystemRepresentation]);
 	return "";
@@ -278,7 +277,7 @@ fs::path nav_put_scenario(fs::path def) {
 
 fs::path nav_get_party() {
 	bool gotFile = [dlg_get_game runModal] != NSFileHandlingPanelCancelButton;
-	makeFrontWindow(mainPtr);
+	makeFrontWindow(mainPtr());
 	if(gotFile)
 		return fs::path([[[dlg_get_game URL] path] fileSystemRepresentation]);
 	return "";
@@ -291,7 +290,7 @@ fs::path nav_put_party(fs::path def) {
 		[dlg_put_game setDirectoryURL:[NSURL fileURLWithPath:[NSString stringWithUTF8String: def.parent_path().c_str()]]];
 	}
 	bool gotFile = [dlg_put_game runModal] != NSFileHandlingPanelCancelButton;
-	makeFrontWindow(mainPtr);
+	makeFrontWindow(mainPtr());
 	if(gotFile)
 		return fs::path([[[dlg_put_game URL] path] fileSystemRepresentation]);
 	return "";
