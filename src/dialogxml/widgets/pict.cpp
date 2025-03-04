@@ -89,7 +89,12 @@ bool cPict::manageFormat(eFormat prop, bool set, boost::any* val) {
 				else *val = !drawScaled;
 			}
 			break;
-		// TODO: Color is not supported
+		case TXT_COLOUR:
+			if(val) {
+				if(set) fillClr = boost::any_cast<sf::Color>(*val);
+				else *val = fillClr;
+			}
+			break;
 		default: return false;
 	}
 	return true;
@@ -500,6 +505,14 @@ bool cPict::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::str
 		else if(val == "false") filled = false;
 		else throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
 		return true;
+	} else if(name == "fill-colour" || name == "fill-color") {
+		std::string val = attr.Value();
+		try {
+			sf::Color clr = parseColor(val);
+			setColour(clr);
+		} catch(int) {
+			throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
+		}
 	} else if(name == "def-key") {
 		try {
 			attachKey(parseKey(attr.Value()));
@@ -517,8 +530,10 @@ void cPict::validatePostParse(ticpp::Element& who, std::string fname, const std:
 	if(!attrs.count("type")) throw xMissingAttr(who.Value(), "type", who.Row(), who.Column(), fname);
 	if(blank && attrs.count("num")) throw xBadAttr(who.Value(), "num", who.Row(), who.Column(), fname);
 	else if(!blank && !attrs.count("num")) throw xMissingAttr(who.Value(), "num", who.Row(), who.Column(), fname);
+	if(blank && !attrs.count("width")) throw xMissingAttr(who.Value(), "width", who.Row(), who.Column(), fname);
+	if(blank && !attrs.count("height")) throw xMissingAttr(who.Value(), "height", who.Row(), who.Column(), fname);
 	
-	if(blank) picType = PIC_MONST, picNum = BLANK;
+	if(blank) picType = PIC_NONE, picNum = BLANK;
 	else if(tiny && picType == PIC_ITEM) picType = PIC_TINY_ITEM;
 	else if(custom) picType += PIC_CUSTOM;
 	
@@ -703,8 +718,8 @@ void cPict::draw(){
 	
 	if(!visible) return;
 	
-	if(picNum == BLANK) // Just fill with black
-		fill_rect(getWindow(), rect, sf::Color::Black);
+	if(picNum == BLANK || picType == PIC_NONE) // Just a solid fill
+		fill_rect(getWindow(), rect, fillClr);
 	else (this->*drawPict()[picType])(picNum,rect);
 	
 	drawFrame(2, frameStyle);
@@ -761,14 +776,14 @@ void cPict::drawPresetMonstSm(short num, rectangle to_rect){
 	rectangle from_rect = calcDefMonstRect(m_start_pic, animFrame, animLoops);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
 }
 
 void cPict::drawPresetMonstWide(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28; to_rect.bottom = to_rect.top + 36;
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	
 	short m_start_pic = m_pic_index[num].i;
 	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
@@ -790,7 +805,7 @@ void cPict::drawPresetMonstTall(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	
 	short m_start_pic = m_pic_index[num].i;
 	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
@@ -812,7 +827,7 @@ void cPict::drawPresetMonstLg(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	
 	short m_start_pic = m_pic_index[num].i;
 	auto from_gw = getSheet(SHEET_MONST, m_start_pic / 20);
@@ -892,7 +907,7 @@ void cPict::drawPresetScenLg(short num, rectangle to_rect){
 void cPict::drawPresetItem(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	std::shared_ptr<const sf::Texture> from_gw;
 	rectangle from_rect = {0,0,18,18};
 	if(num < 55) {
@@ -909,7 +924,7 @@ void cPict::drawPresetItem(short num, rectangle to_rect){
 void cPict::drawPresetTinyItem(short num, rectangle to_rect){
 	to_rect.right = to_rect.left + 18;
 	to_rect.bottom = to_rect.top + 18;
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	rectangle from_rect = {0,0,18,18};
 	auto from_gw = getSheet(SHEET_TINY_ITEM);
 	from_rect.offset(18 * (num % 10), 18 * (num / 10));
@@ -921,7 +936,7 @@ void cPict::drawPresetPc(short num, rectangle to_rect){
 	rectangle from_rect = calc_rect(2 * (num / 8), num % 8);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
 }
 
@@ -930,7 +945,7 @@ void cPict::drawPresetField(short num, rectangle to_rect){
 	rectangle from_rect = calc_rect(num % 8, num / 8);
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
 }
 
@@ -958,7 +973,7 @@ void cPict::drawPresetBoom(short num, rectangle to_rect){
 	// TODO: Be smarter about this - we know the first row is static booms and subsequent rows are animated booms.
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	// When missile loops are over, draw nothing
 	if(animLoops != 0)
 		rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
@@ -980,7 +995,7 @@ void cPict::drawPresetMissile(short num, rectangle to_rect){
 	auto from_gw = getSheet(SHEET_MISSILE);
 	to_rect.right = to_rect.left + 18;
 	to_rect.bottom = to_rect.top + 18;
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	updateAnim(8);
 	// When missile loops are over, draw nothing
 	if(animLoops != 0){
@@ -1042,7 +1057,7 @@ void cPict::drawCustomMonstSm(short num, rectangle to_rect){
 	num += adj[(animLoops != 0 ? animFrame % 4 : 0)];
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	
 	rectangle from_rect;
 	std::shared_ptr<const sf::Texture> from_gw;
@@ -1057,7 +1072,7 @@ void cPict::drawCustomMonstWide(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	
 	rectangle from_rect;
 	std::shared_ptr<const sf::Texture> from_gw;
@@ -1077,7 +1092,7 @@ void cPict::drawCustomMonstTall(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	
 	rectangle from_rect;
 	std::shared_ptr<const sf::Texture> from_gw;
@@ -1097,7 +1112,7 @@ void cPict::drawCustomMonstLg(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	
 	rectangle from_rect;
 	std::shared_ptr<const sf::Texture> from_gw;
@@ -1179,7 +1194,7 @@ void cPict::drawCustomItem(short num, rectangle to_rect){
 	rectangle from_rect;
 	std::shared_ptr<const sf::Texture> from_gw;
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
 }
 
@@ -1189,7 +1204,7 @@ void cPict::drawCustomTinyItem(short num, rectangle to_rect){
 	rectangle from_rect;
 	std::shared_ptr<const sf::Texture> from_gw;
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num);
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
 }
 
@@ -1200,7 +1215,7 @@ void cPict::drawCustomBoom(short num, rectangle to_rect){
 	rectangle from_rect;
 	std::shared_ptr<const sf::Texture> from_gw;
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num + animFrame % 8);
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	// When boom loops are over, draw nothing
 	if(animLoops != 0)
 		rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
@@ -1215,7 +1230,7 @@ void cPict::drawCustomMissile(short num, rectangle to_rect){
 	from_rect.right = from_rect.left + 18;
 	from_rect.bottom = from_rect.top + 18;
 	if(animFrame >= 4) from_rect.offset(0, 18);
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	to_rect.inset(5,9);
 	// When missile loops are over, draw nothing
 	if(animLoops != 0)
@@ -1242,7 +1257,7 @@ void cPict::drawPartyMonstSm(short num, rectangle to_rect){
 	rectangle from_rect;
 	
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
 }
 
@@ -1250,7 +1265,7 @@ void cPict::drawPartyMonstWide(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	std::shared_ptr<const sf::Texture> from_gw;
 	rectangle from_rect;
 	
@@ -1267,7 +1282,7 @@ void cPict::drawPartyMonstTall(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	std::shared_ptr<const sf::Texture> from_gw;
 	rectangle from_rect;
 	
@@ -1284,7 +1299,7 @@ void cPict::drawPartyMonstLg(short num, rectangle to_rect){
 	rectangle small_monst_rect = {0,0,18,14};
 	to_rect.right = to_rect.left + 28;
 	to_rect.bottom = to_rect.top + 36;
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	std::shared_ptr<const sf::Texture> from_gw;
 	rectangle from_rect;
 	
@@ -1321,7 +1336,7 @@ void cPict::drawPartyItem(short num, rectangle to_rect){
 	rectangle from_rect;
 	
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
 }
 
@@ -1332,7 +1347,7 @@ void cPict::drawPartyPc(short num, rectangle to_rect){
 	rectangle from_rect;
 	
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
-	if(filled) fill_rect(getWindow(), to_rect, sf::Color::Black);
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
 }
 

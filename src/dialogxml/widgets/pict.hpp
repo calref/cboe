@@ -99,6 +99,7 @@ private:
 	pic_num_t picNum;
 	ePicType picType;
 	bool drawScaled;
+	sf::Color fillClr = sf::Color::Black;
 	// Transient parse flags
 	bool wide = false, tall = false, tiny = false, custom = false, blank = false, filled = true;
 	void drawPresetTer(short num, rectangle to_rect);

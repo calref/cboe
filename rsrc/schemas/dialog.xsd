@@ -210,9 +210,11 @@
 			</xs:simpleType>
 		</xs:attribute>
 		<xs:attribute ref="def-key"/>
-		<xs:attribute name="num" use="required" type="xs:integer"/>
+		<xs:attribute name="num" type="xs:integer"/>
 		<xs:attributeGroup ref="rect-size"/>
 		<xs:attributeGroup ref="position"/>
+		<xs:attribute name="fill-color"/>
+		<xs:attribute name="fill-colour"/>
 	</xs:complexType>
 	<xs:complexType mixed="true" name="button">
 		<xs:sequence>
