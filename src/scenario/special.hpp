@@ -208,13 +208,12 @@ struct node_properties_t {
 	node_function_t pic(const cSpecial&) const, pictype(const cSpecial&) const;
 	node_function_t ex1a(const cSpecial&) const, ex1b(const cSpecial&) const, ex1c(const cSpecial&) const;
 	node_function_t ex2a(const cSpecial&) const, ex2b(const cSpecial&) const, ex2c(const cSpecial&) const;
-	node_properties_t() : self(eSpecType::INVALID), cat(eSpecCat::INVALID), f_jmp(eSpecPicker::NODE) {
-		set_label_indices();
-	}
+	node_properties_t() : node_properties_t(eSpecType::INVALID) {}
 private:
 	node_properties_t(eSpecType type);
-	node_function_t f_sd1, f_sd2, f_jmp, f_m1, f_m2, f_m3, f_pic, f_pt, f_x1a, f_x1b, f_x1c, f_x2a, f_x2b, f_x2c;
-	void set_label_indices();
+	node_function_t get(eSpecField fld) const;
+	void set(eSpecField fld, node_function_t fcn);
+	std::map<eSpecField, node_function_t> fields;
 	friend struct node_builder_t;
 	friend struct field_map;
 };

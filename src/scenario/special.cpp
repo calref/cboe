@@ -575,8 +575,9 @@ bool node_category_info_t::contains(eSpecType spec) const {
 node_properties_t::node_properties_t(eSpecType type)
 	: self(type)
 	, cat(getNodeCategory(type))
-	, f_jmp(eSpecPicker::NODE)
-{}
+{
+	set(eSpecField::JUMP, eSpecPicker::NODE);
+}
 
 std::string node_properties_t::opcode() const {
 	if(self == eSpecType::NONE) return "nop";
@@ -672,78 +673,93 @@ std::string node_function_t::label() const {
 	return get_node_string("specials-text", self, lbl_idx);
 }
 
+node_function_t node_properties_t::get(eSpecField fld) const {
+	auto iter = fields.find(fld);
+	if(iter != fields.end()) return iter->second;
+	static node_function_t nil_fcn;
+	nil_fcn.self = self;
+	nil_fcn.lbl_idx = int(fld);
+	return nil_fcn;
+}
+
+void node_properties_t::set(eSpecField fld, node_function_t fcn) {
+	fcn.self = self;
+	fcn.lbl_idx = int(fld);
+	fields[fld] = fcn;
+}
+
 node_function_t node_properties_t::sdf1(const cSpecial&) const {
-	return f_sd1;
+	return get(eSpecField::SDF1);
 }
 
 node_function_t node_properties_t::sdf2(const cSpecial&) const {
-	return f_sd2;
+	return get(eSpecField::SDF2);
 }
 
 node_function_t node_properties_t::msg1(const cSpecial&) const {
-	return f_m1;
+	return get(eSpecField::MSG1);
 }
 
 node_function_t node_properties_t::msg2(const cSpecial&) const {
-	return f_m2;
+	return get(eSpecField::MSG2);
 }
 
 node_function_t node_properties_t::msg3(const cSpecial&) const {
-	return f_m3;
+	return get(eSpecField::MSG3);
 }
 
 node_function_t node_properties_t::pic(const cSpecial&) const {
-	return f_pic;
+	return get(eSpecField::PICT);
 }
 
 node_function_t node_properties_t::pictype(const cSpecial&) const {
-	return f_pt;
+	return get(eSpecField::PTYP);
 }
 
 node_function_t node_properties_t::ex1a(const cSpecial&) const {
-	return f_x1a;
+	return get(eSpecField::EX1A);
 }
 
 node_function_t node_properties_t::ex1b(const cSpecial&) const {
-	return f_x1b;
+	return get(eSpecField::EX1B);
 }
 
 node_function_t node_properties_t::ex1c(const cSpecial&) const {
-	return f_x1c;
+	return get(eSpecField::EX1C);
 }
 
 node_function_t node_properties_t::ex2a(const cSpecial&) const {
-	return f_x2a;
+	return get(eSpecField::EX2A);
 }
 
 node_function_t node_properties_t::ex2b(const cSpecial&) const {
-	return f_x2b;
+	return get(eSpecField::EX2B);
 }
 
 node_function_t node_properties_t::ex2c(const cSpecial&) const {
-	return f_x2c;
+	return get(eSpecField::EX2C);
 }
 
 node_function_t node_properties_t::jump(const cSpecial&) const {
-	return f_jmp;
+	return get(eSpecField::JUMP);
 }
 
 struct field_map {
-	std::map<eSpecField, node_function_t(node_properties_t::*)> map = {
-		{eSpecField::SDF1, &node_properties_t::f_sd1},
-		{eSpecField::SDF2, &node_properties_t::f_sd2},
-		{eSpecField::MSG1, &node_properties_t::f_m1},
-		{eSpecField::MSG2, &node_properties_t::f_m2},
-		{eSpecField::MSG3, &node_properties_t::f_m3},
-		{eSpecField::PICT, &node_properties_t::f_pic},
-		{eSpecField::PTYP, &node_properties_t::f_pt},
-		{eSpecField::EX1A, &node_properties_t::f_x1a},
-		{eSpecField::EX1B, &node_properties_t::f_x1b},
-		{eSpecField::EX1C, &node_properties_t::f_x1c},
-		{eSpecField::EX2A, &node_properties_t::f_x2a},
-		{eSpecField::EX2B, &node_properties_t::f_x2b},
-		{eSpecField::EX2C, &node_properties_t::f_x2c},
-		{eSpecField::JUMP, &node_properties_t::f_jmp},
+	std::map<eSpecField, short(cSpecial::*)> map = {
+		{eSpecField::SDF1, &cSpecial::sd1},
+		{eSpecField::SDF2, &cSpecial::sd2},
+		{eSpecField::MSG1, &cSpecial::m1},
+		{eSpecField::MSG2, &cSpecial::m2},
+		{eSpecField::MSG3, &cSpecial::m3},
+		{eSpecField::PICT, &cSpecial::pic},
+		{eSpecField::PTYP, &cSpecial::pictype},
+		{eSpecField::EX1A, &cSpecial::ex1a},
+		{eSpecField::EX1B, &cSpecial::ex1b},
+		{eSpecField::EX1C, &cSpecial::ex1c},
+		{eSpecField::EX2A, &cSpecial::ex2a},
+		{eSpecField::EX2B, &cSpecial::ex2b},
+		{eSpecField::EX2C, &cSpecial::ex2c},
+		{eSpecField::JUMP, &cSpecial::jumpto},
 	};
 };
 
@@ -827,14 +843,13 @@ node_builder_t& node_builder_t::ex2c(node_function_t picker) {
 }
 
 node_builder_t& node_builder_t::field(eSpecField field, node_function_t picker) {
-	picker.self = node.self;
-	node.*fields().map[field] = picker;
+	node.set(field, picker);
 	return *this;
 }
 
 node_builder_t& node_builder_t::field_pair(eSpecField main, eSpecField extra, node_function_t picker) {
 	field(main, picker).field(extra, eSpecPicker::NONE);
-	(node.*fields().map[main]).continuation = extra;
+	node.fields[main].continuation = extra;
 	return *this;
 }
 
@@ -848,31 +863,12 @@ node_builder_t& node_builder_t::loc(eSpecField a, eSpecField b, eLocType type) {
 
 node_builder_t& node_builder_t::loc(eSpecField a, eSpecField b, eLocType type, eSpecField where) {
 	loc(a, b, type);
-	(node.*fields().map[b]).continuation = where;
+	node.fields[b].continuation = where;
 	return *this;
 }
 
 node_builder_t::operator node_properties_t() {
-	node.set_label_indices();
 	std::map<eSpecType, node_properties_t>& allNodeProps = nodeProps();
 	allNodeProps.emplace(node.self, node);
 	return node;
-}
-
-void node_properties_t::set_label_indices() {
-	f_sd1.lbl_idx = 1;
-	f_sd2.lbl_idx = 2;
-	f_m1.lbl_idx = 3;
-	f_m2.lbl_idx = 4;
-	f_m3.lbl_idx = 5;
-	f_pic.lbl_idx = 6;
-	f_pt.lbl_idx = 7;
-	f_x1a.lbl_idx = 8;
-	f_x1b.lbl_idx = 9;
-	f_x1c.lbl_idx = 10;
-	f_x2a.lbl_idx = 11;
-	f_x2b.lbl_idx = 12;
-	f_x2c.lbl_idx = 13;
-	f_jmp.lbl_idx = 14;
-	f_sd1.self = f_sd2.self = f_jmp.self = f_m1.self = f_m2.self = f_m3.self = f_pic.self = f_pt.self = f_x1a.self = f_x1b.self = f_x1c.self = f_x2a.self = f_x2b.self = f_x2c.self = self;
 }
