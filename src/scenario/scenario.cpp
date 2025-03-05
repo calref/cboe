@@ -605,3 +605,11 @@ std::string cScenario::get_feature_flag(std::string flag) {
 	if(iter == this->feature_flags.end()) return "";
 	return iter->second;
 }
+
+std::string cScenario::get_sdf_name(int row, int col) {
+	if(sdf_names.find(row) == sdf_names.end())
+		return "";
+	if(sdf_names[row].find(col) == sdf_names[row].end())
+		return "";
+	return sdf_names[row][col];
+}

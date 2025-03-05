@@ -415,13 +415,13 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.PushText(scenario.itf_names[i]);
 		data.CloseElement("item-typeflag");
 	}
-	for(int x = 0; x < scenario.sdf_names.size(); x++) {
-		for(int y = 0; y < scenario.sdf_names[x].size(); y++) {
-			if(scenario.sdf_names[x][y].empty()) continue;
+	for(int r = 0; r < SDF_ROWS; r++) {
+		for(int c = 0; c < SDF_COLUMNS; c++) {
+			if(scenario.get_sdf_name(r, c).empty()) continue;
 			data.OpenElement("sdf");
-			data.PushAttribute("row", x);
-			data.PushAttribute("col", y);
-			data.PushText(scenario.sdf_names[x][y]);
+			data.PushAttribute("row", r);
+			data.PushAttribute("col", c);
+			data.PushText(scenario.sdf_names[r][c]);
 			data.CloseElement("sdf");
 		}
 	}

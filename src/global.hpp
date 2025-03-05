@@ -39,6 +39,9 @@ namespace bp = boost::process;
 const int MAX_GOLD = 30000;
 const int MAX_FOOD = 25000;
 
+const int SDF_ROWS = 350;
+const int SDF_COLUMNS = 50;
+
 inline bool str_to_bool(std::string str) {
 	return str == "true";
 }
