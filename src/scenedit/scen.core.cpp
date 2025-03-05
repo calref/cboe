@@ -1336,7 +1336,7 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 			abil_dlg["pick-strength"].attachClickHandler([&](cDialog& me,std::string,eKeyMod) -> bool {
 				save_monst_abil_detail(me, abil, abil_params);
 				int i = abil_params.gen.strength;
-				i = choose_text(STRT_SPELL_PAT, i, &me, "Which spell pattern?");
+				i = choose_pattern(i, &me, false);
 				abil_params.gen.strength = i;
 				fill_monst_abil_detail(me, monst, abil, abil_params);
 				return true;
@@ -1354,7 +1354,7 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 		abil_dlg["pick-pat"].attachClickHandler([&](cDialog& me,std::string,eKeyMod) -> bool {
 			save_monst_abil_detail(me, abil, abil_params);
 			int i = abil_params.radiate.pat;
-			i = choose_text(STRT_SPELL_PAT, i, &me, "Which spell pattern?");
+			i = choose_pattern(i, &me, false);
 			abil_params.radiate.pat = eSpellPat(i);
 			fill_monst_abil_detail(me, monst, abil, abil_params);
 			return true;

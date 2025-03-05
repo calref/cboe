@@ -11,6 +11,7 @@
 
 #include "damage.hpp"
 #include "fields.hpp"
+#include "pattern.hpp"
 #include "spell.hpp"
 
 class cTagFile_Page;

@@ -21,6 +21,7 @@
 #include "dialogxml/dialogs/3choice.hpp"
 #include "dialogxml/dialogs/strchoice.hpp"
 #include "dialogxml/dialogs/pictchoice.hpp"
+#include "dialogxml/widgets/tilemap.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
 #include "fileio/resmgr/res_strings.hpp"
 #include "spell.hpp"
@@ -162,6 +163,129 @@ short choose_background(short cur_choice, cDialog* parent) {
 	bg_dlg.run();
 	if(bg_dlg.accepted())
 		return get_selected();
+	return cur_choice;
+}
+
+static void set_pattern(cTilemap& map, const effect_pat_type& pat) {
+	std::string id;
+	map.forEach([&id](std::string ctrl_id, cControl&) {
+		if(ctrl_id.size() > 4)
+		id = ctrl_id.substr(0, ctrl_id.size() - 5);
+	});
+	for(int x = 0; x < 9; x++) {
+		for(int y = 0; y < 9; y++) {
+			auto& pic = map.getChild(id, x, y);
+			int effect = pat[y][x];
+			sf::Color clr = sf::Color::Black;
+			if(effect == 0xffff) {
+				clr = sf::Color::White;
+			} else if(effect >= 50) {
+				eDamageType type = eDamageType::MARKED;
+				unsigned short dice = (effect - 50) % 40;
+				if(dice <= 30 && effect <= 400) {
+					type = eDamageType((effect - 50) / 40);
+				}
+				switch(type) {
+					case eDamageType::WEAPON: clr = Colours::MAROON; break;
+					case eDamageType::FIRE: clr = Colours::RED; break;
+					case eDamageType::POISON: clr = Colours::GREEN; break;
+					case eDamageType::MAGIC: clr = Colours::PURPLE; break;
+					case eDamageType::UNBLOCKABLE: clr = Colours::LIGHT_BLUE; break;
+					case eDamageType::COLD: clr = Colours::BLUE; break;
+					case eDamageType::UNDEAD: clr = Colours::GREY; break;
+					case eDamageType::DEMON: clr = Colours::ORANGE; break;
+					case eDamageType::SPECIAL: clr = Colours::FUCHSIA; break;
+					case eDamageType::MARKED: break;
+				}
+			} else if(effect > 0) {
+				auto type = eFieldType(effect);
+				switch(type) {
+					case SPECIAL_EXPLORED: case SPECIAL_ROAD: case SPECIAL_SPOT:
+					case SFX_SMALL_BLOOD: case SFX_MEDIUM_BLOOD: case SFX_LARGE_BLOOD:
+					case SFX_SMALL_SLIME: case SFX_LARGE_SLIME: case SFX_ASH:
+					case SFX_BONES: case SFX_RUBBLE: break;
+					case WALL_FORCE: clr = Colours::BLUE; break;
+					case WALL_FIRE: clr = Colours::RED; break;
+					case FIELD_ANTIMAGIC: clr = Colours::GREEN; break;
+					case CLOUD_STINK: clr = Colours::OLIVE; break;
+					case WALL_ICE: clr = Colours::AQUA; break;
+					case WALL_BLADES: clr = Colours::GREY; break;
+					case CLOUD_SLEEP: clr = Colours::LIGHT_BLUE; break;
+					case OBJECT_BLOCK: clr = Colours::MAROON; break;
+					case FIELD_WEB: clr = Colours::WHITE; break;
+					case OBJECT_CRATE: clr = Colours::MAROON; break;
+					case OBJECT_BARREL: clr = Colours::MAROON; break;
+					case BARRIER_FIRE: clr = Colours::DARK_RED; break;
+					case BARRIER_FORCE: clr = Colours::DARK_BLUE; break;
+					case FIELD_QUICKFIRE: clr = Colours::ORANGE; break;
+					case BARRIER_CAGE: clr = Colours::LIGHT_GREEN; break;
+					case FIELD_DISPEL: clr = Colours::PINK; break;
+					case FIELD_SMASH: clr = Colours::YELLOW; break;
+				}
+			}
+			pic.setColour(clr);
+		}
+	}
+}
+
+short choose_pattern(short cur_choice, cDialog* parent, bool expandRotatable) {
+	cDialog pat_dlg(*ResMgr::dialogs.get("choose-pattern"), parent);
+	pat_dlg.attachClickHandlers([](cDialog& me, std::string item_hit, eKeyMod) {
+		me.toast(item_hit == "done");
+		return true;
+	}, {"done", "cancel"});
+	static std::vector<int> all_pats;
+	if(all_pats.empty()) {
+		all_pats.resize(PAT_WALL + 1);
+		std::iota(all_pats.begin(), all_pats.end(), 0);
+		all_pats.push_back(PAT_PROT);
+	}
+	std::vector<int> choices;
+	int i = 1;
+	for(auto pat_id : all_pats) {
+		std::string id = "pic" + std::to_string(i++);
+		auto& pat = cPattern::get_builtin(eSpellPat(pat_id));
+		std::string id2 = id;
+		id2.replace(0, 3, "name");
+		pat_dlg[id2].setText(pat.name);
+		if(pat.rotatable) {
+			if(!expandRotatable) {
+				choices.push_back(pat_id);
+				set_pattern(dynamic_cast<cTilemap&>(pat_dlg[id]), pat.patterns[0]);
+			} else for(int j = 0; j < pat.patterns.size(); j++) {
+				choices.push_back(pat_id + j);
+				if(j > 0) id = "pic" + std::to_string(i++);
+				set_pattern(dynamic_cast<cTilemap&>(pat_dlg[id]), pat.patterns[j]);
+			}
+		} else {
+			choices.push_back(pat_id);
+			set_pattern(dynamic_cast<cTilemap&>(pat_dlg[id]), pat.pattern);
+		}
+	}
+	while(i <= 18) {
+		std::string id = "pic" + std::to_string(i++);
+		pat_dlg[id].hide();
+		id.replace(0, 3, "led");
+		pat_dlg[id].hide();
+		id.replace(0, 3, "name");
+		pat_dlg[id].hide();
+	}
+	pat_dlg["left"].hide();
+	pat_dlg["right"].hide();
+	auto& group = dynamic_cast<cLedGroup&>(pat_dlg["group"]);
+	auto iter = std::lower_bound(choices.rbegin(), choices.rend(), cur_choice, std::greater<int>());
+	if(iter == choices.rend()) {
+		group.setSelected("led1");
+	} else {
+		int idx = std::distance(choices.rbegin(), iter);
+		std::string id = "led" + std::to_string(9 - idx);
+		group.setSelected(id);
+	}
+	pat_dlg.run();
+	if(pat_dlg.accepted()) {
+		auto selected = group.getSelected();
+		return choices[std::stoi(selected.substr(3)) - 1];
+	}
 	return cur_choice;
 }
 
@@ -414,9 +538,6 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 			break;
 		case STRT_STATUS:
 			strings = {"Alive", "Dead", "Dust", "Petrified", "Fled Outdoor Combat", "Absent", "Deleted"};
-			break;
-		case STRT_SPELL_PAT:
-			strings = {"Single Space", "3x3 Square", "2x2 Square", "3x3 Open Square", "Radius 2 Circle", "Radius 3 Circle", "Cross", "Rotateable 2x8 Wall"};
 			break;
 		case STRT_SUMMON:
 			strings = {"0 - no summon (weak)", "1 - weak summoning", "2 - summoning", "3 - major summoning", "4 - no summon (unique/powerful"};
@@ -970,7 +1091,6 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case eSpecPicker::STRING: {
 			std::string title;
 			switch(fcn.str_type) {
-				case STRT_SPELL_PAT: title = "Which spell pattern?"; break;
 				case STRT_ITEM: title = "Which item?"; break;
 				case STRT_SPEC_ITEM: title = "Which special item?"; break;
 				case STRT_TER: title = "Which terrain?"; break;
@@ -1140,6 +1260,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			store = sdf.y;
 			me[otherField].setTextToNum(sdf.x);
 		} break;
+		case eSpecPicker::SPELL_PATTERN: store = choose_pattern(val, &me, fcn.augmented); break;
 		case eSpecPicker::FIELD: store = choose_field_type(val, &me, fcn.augmented); break;
 		case eSpecPicker::DAMAGE_TYPE: store = choose_damage_type(val, &me, true); break;
 		case eSpecPicker::EXPLOSION: store = choose_boom_type(val, &me); break;

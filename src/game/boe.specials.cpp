@@ -40,7 +40,6 @@ extern eItemWinMode stat_window;
 extern short which_combat_type;
 extern location center;
 extern bool processing_fields,monsters_going,boom_anim_active;
-extern effect_pat_type single,t,square,radius2,radius3,small_square,open_square,field[8];
 extern effect_pat_type current_pat;
 extern cOutdoors::cWandering store_wandering_special;
 extern eSpell spell_being_cast, town_spell;
@@ -4225,45 +4224,47 @@ void townmode_spec(const runtime_state& ctx) {
 				showError("Invalid spell pattern (-1 - 14).");
 				break;
 			}
-			if((spec.ex2a < 1 || spec.ex2a == 9 || spec.ex2a > 24) && spec.ex2a != 32 && spec.ex2a != 33) {
+			if(spec.ex2a == -1 && (spec.ex1c == PAT_PROT || (spec.ex1c == PAT_CURRENT && current_pat == cPattern::get_builtin(PAT_PROT).pattern)))
+				; // This means to use the default effect of Protective Circle
+			else if((spec.ex2a < 1 || spec.ex2a == 9 || spec.ex2a > 24) && spec.ex2a != 32 && spec.ex2a != 33) {
 				showError("Invalid field type (see docs).");
 				break;
 			}
-			switch(spec.ex1c) {
-				case -1: pat = current_pat; break;
-				case PAT_SINGLE: pat = single; break;
-				case PAT_SQ: pat = square; break;
-				case PAT_SMSQ: pat = small_square; break;
-				case PAT_OPENSQ: pat = open_square; break;
-				case PAT_PLUS: pat = t; break;
-				case PAT_RAD2: pat = radius2; break;
-				case PAT_RAD3: pat = radius3; break;
-				default: pat = field[spec.ex1c - 7];
+			if(spec.ex1c == -1) {
+				pat = current_pat;
+			} else if(spec.ex1c < PAT_WALL) {
+				pat = cPattern::get_builtin(eSpellPat(spec.ex1c)).pattern;
+			} else if(spec.ex1c < PAT_PROT) {
+				pat = cPattern::get_builtin(PAT_WALL).patterns[spec.ex1c - PAT_WALL];
+			} else if(spec.ex1c == PAT_PROT) {
+				pat = cPattern::get_builtin(PAT_PROT).pattern;
 			}
-			place_spell_pattern(pat, l, eFieldType(spec.ex2a), 6);
+			if(spec.ex2a == -1) place_spell_pattern(pat, l, 6);
+			else place_spell_pattern(pat, l, eFieldType(spec.ex2a), 6);
 			break;
 		case eSpecType::TOWN_SPELL_PAT_BOOM:
 			if(spec.ex1c < -1 || spec.ex1c > 14) {
 				showError("Invalid spell pattern (-1 - 14).");
 				break;
 			}
-			if(spec.ex2a < 0 || spec.ex2a > 7) {
+			if(spec.ex2a == -1 && (spec.ex1c == PAT_PROT || (spec.ex1c == PAT_CURRENT && current_pat == cPattern::get_builtin(PAT_PROT).pattern)))
+				; // This means to use the default effect of Protective Circle
+			else if(spec.ex2a < 0 || spec.ex2a > 7) {
 				showError("Invalid damage type (0 - 7).");
 				break;
 			}
-			switch(spec.ex1c) {
-				case -1: pat = current_pat; break;
-				case PAT_SINGLE: pat = single; break;
-				case PAT_SQ: pat = square; break;
-				case PAT_SMSQ: pat = small_square; break;
-				case PAT_OPENSQ: pat = open_square; break;
-				case PAT_PLUS: pat = t; break;
-				case PAT_RAD2: pat = radius2; break;
-				case PAT_RAD3: pat = radius3; break;
-				default: pat = field[spec.ex1c - 7];
+			if(spec.ex1c == -1) {
+				pat = current_pat;
+			} else if(spec.ex1c < PAT_WALL) {
+				pat = cPattern::get_builtin(eSpellPat(spec.ex1c)).pattern;
+			} else if(spec.ex1c < PAT_PROT) {
+				pat = cPattern::get_builtin(PAT_WALL).patterns[spec.ex1c - PAT_WALL];
+			} else if(spec.ex1c == PAT_PROT) {
+				pat = cPattern::get_builtin(PAT_PROT).pattern;
 			}
 			if(spec.ex2c) start_missile_anim();
-			place_spell_pattern(pat, l, eDamageType(spec.ex2a), spec.ex2b, 6);
+			if(spec.ex2a == -1) place_spell_pattern(pat, l, 6);
+			else place_spell_pattern(pat, l, eDamageType(spec.ex2a), spec.ex2b, 6);
 			if(spec.ex2c) {
 				do_explosion_anim(0, 0);
 				end_missile_anim();

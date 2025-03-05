@@ -76,7 +76,6 @@ extern short store_mage_lev, store_priest_lev;
 extern short store_spell_target,pc_casting;
 extern short store_item_spell_level;
 extern eStatMode stat_screen_mode;
-extern effect_pat_type null_pat,single,t,square,radius2,radius3,small_square,open_square;
 extern effect_pat_type current_pat;
 extern short current_spell_range;
 extern std::array<short, 51> hit_chance;
@@ -2109,16 +2108,12 @@ void start_town_targeting(eSpell s_num,short who_c,bool freebie,eSpellPat pat) {
 	town_spell = s_num;
 	who_cast = who_c;
 	spell_freebie = freebie;
-	switch(pat) {
-		case PAT_SINGLE: current_pat = single; break;
-		case PAT_SQ: current_pat = square; break;
-		case PAT_SMSQ: current_pat = small_square; break;
-		case PAT_OPENSQ: current_pat = open_square; break;
-		case PAT_PLUS: current_pat = t; break;
-		case PAT_RAD2: current_pat = radius2; break;
-		case PAT_RAD3: current_pat = radius3; break;
-		case PAT_WALL: current_pat = single; break; // Rotateable wall not supported by town targeting
-	}
+	auto pattern = cPattern::get_builtin(pat);
+	if(pattern.rotatable) {
+		// Town targeting doesn't support rotatable walls
+		// TODO: Some sort of error message instead of silently substituting SINGLE
+		current_pat = cPattern::get_builtin(PAT_SINGLE).pattern;
+	} else current_pat = pattern.pattern;
 }
 
 void do_alchemy() {

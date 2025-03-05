@@ -24,6 +24,7 @@
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "boe.menus.hpp"
+#include "pattern.hpp"
 #include "spell.hpp"
 #include "tools/prefs.hpp"
 #include "utility.hpp"
@@ -79,176 +80,6 @@ location diag_place[14] = {
 	loc(0,0),loc(-1,0),loc(0,1),loc(-1,1),loc(-2,0),
 	loc(0,2),loc(-2,1),loc(-1,2),loc(-2,2),loc(-3,2),
 	loc(-2,3),loc(-3,3),loc(-4,3),loc(-3,4)};
-
-
-effect_pat_type null_pat = {{
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0}}};
-effect_pat_type single = {{
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,1,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0}}};
-effect_pat_type t = {{
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,1,0,0,0,0},
-	{0,0,0,1,1,1,0,0,0},
-	{0,0,0,0,1,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0}}};
-effect_pat_type small_square = {{
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,1,1,0,0,0},
-	{0,0,0,0,1,1,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0}}};
-effect_pat_type square = {{
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,1,1,1,0,0,0},
-	{0,0,0,1,1,1,0,0,0},
-	{0,0,0,1,1,1,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0}}};
-effect_pat_type open_square = {{
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,1,1,1,0,0,0},
-	{0,0,0,1,0,1,0,0,0},
-	{0,0,0,1,1,1,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0}}};
-effect_pat_type radius2 = {{
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,1,1,1,0,0,0},
-	{0,0,1,1,1,1,1,0,0},
-	{0,0,1,1,1,1,1,0,0},
-	{0,0,1,1,1,1,1,0,0},
-	{0,0,0,1,1,1,0,0,0},
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0}}};
-effect_pat_type radius3 = {{
-	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,1,1,1,0,0,0},
-	{0,0,1,1,1,1,1,0,0},
-	{0,1,1,1,1,1,1,1,0},
-	{0,1,1,1,1,1,1,1,0},
-	{0,1,1,1,1,1,1,1,0},
-	{0,0,1,1,1,1,1,0,0},
-	{0,0,0,1,1,1,0,0,0},
-	{0,0,0,0,0,0,0,0,0}}};
-effect_pat_type field[8] = {
-	{{
-		{0,0,0,0,1,1,0,0,0},
-		{0,0,0,0,1,1,0,0,0},
-		{0,0,0,0,1,1,0,0,0},
-		{0,0,0,0,1,1,0,0,0},
-		{0,0,0,0,1,1,0,0,0},
-		{0,0,0,0,1,1,0,0,0},
-		{0,0,0,0,1,1,0,0,0},
-		{0,0,0,0,1,1,0,0,0},
-		{0,0,0,0,1,1,0,0,0}}},
-	
-	{{
-		{0,0,0,0,0,0,0,0,1},
-		{0,0,0,0,0,0,0,1,1},
-		{0,0,0,0,0,0,1,1,0},
-		{0,0,0,0,0,1,1,0,0},
-		{0,0,0,0,1,1,0,0,0},
-		{0,0,0,1,1,0,0,0,0},
-		{0,0,1,1,0,0,0,0,0},
-		{0,1,1,0,0,0,0,0,0},
-		{1,1,0,0,0,0,0,0,0}}},
-	
-	{{
-		{0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0},
-		{1,1,1,1,1,1,1,1,1},
-		{1,1,1,1,1,1,1,1,1},
-		{0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0}}},
-	
-	{{
-		{1,0,0,0,0,0,0,0,0},
-		{1,1,0,0,0,0,0,0,0},
-		{0,1,1,0,0,0,0,0,0},
-		{0,0,1,1,0,0,0,0,0},
-		{0,0,0,1,1,0,0,0,0},
-		{0,0,0,0,1,1,0,0,0},
-		{0,0,0,0,0,1,1,0,0},
-		{0,0,0,0,0,0,1,1,0},
-		{0,0,0,0,0,0,0,1,1}}},
-	
-	{{
-		{0,0,0,1,1,0,0,0,0},
-		{0,0,0,1,1,0,0,0,0},
-		{0,0,0,1,1,0,0,0,0},
-		{0,0,0,1,1,0,0,0,0},
-		{0,0,0,1,1,0,0,0,0},
-		{0,0,0,1,1,0,0,0,0},
-		{0,0,0,1,1,0,0,0,0},
-		{0,0,0,1,1,0,0,0,0},
-		{0,0,0,1,1,0,0,0,0}}},
-	
-	{{
-		{0,0,0,0,0,0,0,1,1},
-		{0,0,0,0,0,0,1,1,0},
-		{0,0,0,0,0,1,1,0,0},
-		{0,0,0,0,1,1,0,0,0},
-		{0,0,0,1,1,0,0,0,0},
-		{0,0,1,1,0,0,0,0,0},
-		{0,1,1,0,0,0,0,0,0},
-		{1,1,0,0,0,0,0,0,0},
-		{1,0,0,0,0,0,0,0,0}}},
-	
-	{{
-		{0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0},
-		{1,1,1,1,1,1,1,1,1},
-		{1,1,1,1,1,1,1,1,1},
-		{0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0}}},
-	
-	{{
-		{1,1,0,0,0,0,0,0,0},
-		{0,1,1,0,0,0,0,0,0},
-		{0,0,1,1,0,0,0,0,0},
-		{0,0,0,1,1,0,0,0,0},
-		{0,0,0,0,1,1,0,0,0},
-		{0,0,0,0,0,1,1,0,0},
-		{0,0,0,0,0,0,1,1,0},
-		{0,0,0,0,0,0,0,1,1},
-		{0,0,0,0,0,0,0,0,1}}}};
 
 bool center_on_monst;
 
@@ -756,7 +587,7 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 		else pause(5);
 		play_sound(5);
 		start_missile_anim();
-		place_spell_pattern(radius2, target.get_loc(), weap.abil_data.damage, weap.abil_strength * 2, who_att);
+		place_spell_pattern(PAT_RAD2, target.get_loc(), weap.abil_data.damage, weap.abil_strength * 2, who_att);
 		do_explosion_anim(5,0);
 		end_missile_anim();
 		handle_marked_damage();
@@ -1183,7 +1014,7 @@ void do_combat_cast(location target) {
 								add_missile(target,9,1,0,0);
 								store_sound = 11;
 								r1 = min(18,(level * 7) / 10 + 2 * bonus);
-								place_spell_pattern(radius2,target,eDamageType::MAGIC,r1,univ.cur_pc);
+								place_spell_pattern(PAT_RAD2,target,eDamageType::MAGIC,r1,univ.cur_pc);
 								ashes_loc = target;
 								break;
 								
@@ -1231,7 +1062,7 @@ void do_combat_cast(location target) {
 									r1 = (r1 * 14) / 10;
 								else if(r1 > 10) r1 = (r1 * 8) / 10;
 								if(r1 <= 0) r1 = 1;
-								place_spell_pattern(square,target,eDamageType::FIRE,r1,univ.cur_pc);
+								place_spell_pattern(PAT_SQ,target,eDamageType::FIRE,r1,univ.cur_pc);
 								ashes_loc = target;
 								break;
 							case eSpell::FIRESTORM: case eSpell::ICY_RAIN:
@@ -1244,9 +1075,9 @@ void do_combat_cast(location target) {
 								if(r1 > 20)
 									r1 = (r1 * 8) / 10;
 								if(spell_being_cast == eSpell::FIRESTORM){
-									place_spell_pattern(radius2,target,eDamageType::FIRE,r1,univ.cur_pc);
+									place_spell_pattern(PAT_RAD2,target,eDamageType::FIRE,r1,univ.cur_pc);
 									ashes_loc = target;
-								}else place_spell_pattern(radius2,target,eDamageType::COLD,r1,univ.cur_pc);
+								}else place_spell_pattern(PAT_RAD2,target,eDamageType::COLD,r1,univ.cur_pc);
 								break;
 							case eSpell::KILL:
 								add_missile(target,9,1,0,0);
@@ -1647,8 +1478,8 @@ void load_missile() {
 			current_spell_range += thrown->abil_strength;
 		handle_target_mode(MODE_THROWING, current_spell_range);
 		if(thrown->ability == eItemAbil::EXPLODING_WEAPON)
-			current_pat = radius2;
-		else current_pat = single;
+			current_pat = cPattern::get_builtin(PAT_RAD2).pattern;
+		else current_pat = cPattern::get_builtin(PAT_SINGLE).pattern;
 	} else if((bow && bolts) || (crossbow && arrow))  {
 		add_string_to_buf("Fire: Wrong ammunition.");
 	} else if(bow && !arrow) {
@@ -1665,8 +1496,8 @@ void load_missile() {
 		add_string_to_buf("Fire: Select a target.");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		if(arrow->ability == eItemAbil::EXPLODING_WEAPON)
-			current_pat = radius2;
-		else current_pat = single;
+			current_pat = cPattern::get_builtin(PAT_RAD2).pattern;
+		else current_pat = cPattern::get_builtin(PAT_SINGLE).pattern;
 	} else if(crossbow && bolts) {
 		missile_inv_slot = crossbow.slot;
 		ammo_inv_slot = bolts.slot;
@@ -1677,8 +1508,8 @@ void load_missile() {
 		add_string_to_buf("Fire: Select a target.");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		if(bolts->ability == eItemAbil::EXPLODING_WEAPON)
-			current_pat = radius2;
-		else current_pat = single;
+			current_pat = cPattern::get_builtin(PAT_RAD2).pattern;
+		else current_pat = cPattern::get_builtin(PAT_SINGLE).pattern;
 	} else if(no_ammo) {
 		missile_inv_slot = no_ammo.slot;
 		ammo_inv_slot = no_ammo.slot;
@@ -1689,8 +1520,8 @@ void load_missile() {
 		add_string_to_buf("Fire: Select a target.");
 		add_string_to_buf("  (Hit 's' to cancel.)");
 		if(no_ammo->ability == eItemAbil::EXPLODING_WEAPON)
-			current_pat = radius2;
-		else current_pat = single;
+			current_pat = cPattern::get_builtin(PAT_RAD2).pattern;
+		else current_pat = cPattern::get_builtin(PAT_SINGLE).pattern;
 	}
 	else add_string_to_buf("Fire: Equip a missile.");
 }
@@ -1778,7 +1609,7 @@ void fire_missile(location target) {
 				pause(dist(missile_firer.combat_pos,target)*5);
 			run_a_missile(missile_firer.combat_pos,target,2,1,5,0,0,100);
 			start_missile_anim();
-			place_spell_pattern(radius2,target, ammo.abil_data.damage,ammo.abil_strength * 2, univ.cur_pc);
+			place_spell_pattern(PAT_RAD2,target, ammo.abil_data.damage,ammo.abil_strength * 2, univ.cur_pc);
 			do_explosion_anim(5,0);
 			end_missile_anim();
 			handle_marked_damage();
@@ -2606,33 +2437,7 @@ void do_monster_turn() {
 			// Place fields for monsters that create them. Only done when monst sees foe
 			if(target != 6 && can_see_light(cur_monst->cur_loc,targ_space,sight_obscurity) < 5) {
 				if(cur_monst->abil[eMonstAbil::RADIATE].active && get_ran(1,1,100) < cur_monst->abil[eMonstAbil::RADIATE].radiate.chance) {
-					switch(cur_monst->abil[eMonstAbil::RADIATE].radiate.pat) {
-						case PAT_SINGLE:
-							place_spell_pattern(single, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
-							break;
-						case PAT_SMSQ:
-							place_spell_pattern(small_square, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
-							break;
-						case PAT_SQ:
-							place_spell_pattern(square, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
-							break;
-						case PAT_OPENSQ:
-							place_spell_pattern(open_square, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
-							break;
-						case PAT_RAD2:
-							place_spell_pattern(radius2, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
-							break;
-						case PAT_RAD3:
-							place_spell_pattern(radius3, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
-							break;
-						case PAT_PLUS:
-							place_spell_pattern(t, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
-							break;
-						case PAT_WALL:
-							int dir = (cur_monst->direction + 6) % 8;
-							place_spell_pattern(field[dir], cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
-							break;
-					}
+					place_spell_pattern(cur_monst->abil[eMonstAbil::RADIATE].radiate.pat, cur_monst->direction + 6, cur_monst->cur_loc, cur_monst->abil[eMonstAbil::RADIATE].radiate.type, 7);
 				}
 				if(cur_monst->abil[eMonstAbil::SUMMON].active && get_ran(1,1,100) < cur_monst->abil[eMonstAbil::SUMMON].summon.chance) {
 					uAbility abil = cur_monst->abil[eMonstAbil::SUMMON];
@@ -3316,20 +3121,7 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 			univ.party.gold = std::max(0, univ.party.gold - get_ran(1,0,abil.second.gen.strength) - abil.second.gen.strength);
 			break;
 		case eMonstAbil::FIELD:
-			effect_pat_type pat;
-			switch(eSpellPat(abil.second.gen.strength)) {
-				case PAT_SINGLE: pat = single; break;
-				case PAT_SQ: pat = small_square; break;
-				case PAT_OPENSQ: pat = open_square; break;
-				case PAT_SMSQ: pat = square; break;
-				case PAT_PLUS: pat = t; break;
-				case PAT_RAD2: pat = radius2; break;
-				case PAT_RAD3: pat = radius3; break;
-				default: // either PAT_WALL or not a valid eSpellPat
-					pat = field[abil.second.gen.strength / 10];
-					break;
-			}
-			place_spell_pattern(pat, targ_space, abil.second.gen.fld, 7);
+			place_spell_pattern(eSpellPat(abil.second.gen.strength), m_target->direction + 6, targ_space, abil.second.gen.fld, 7);
 			break;
 			// Non-basic abilities
 		case eMonstAbil::MISSILE: case eMonstAbil::MISSILE_WEB: case eMonstAbil::RAY_HEAT:
@@ -3531,7 +3323,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				break;
 			case eSpell::CLOUD_FLAME:
 				run_a_missile(l,vict_loc,2,1,11,0,0,80);
-				place_spell_pattern(single,vict_loc,WALL_FIRE,7);
+				place_spell_pattern(PAT_SINGLE,vict_loc,WALL_FIRE,7);
 				break;
 			case eSpell::FLAME:
 				run_a_missile(l,vict_loc,2,1,11,0,0,80);
@@ -3553,7 +3345,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				break;
 			case eSpell::CLOUD_STINK:
 				run_a_missile(l,target,0,0,25,0,0,80);
-				place_spell_pattern(square,target,CLOUD_STINK,7);
+				place_spell_pattern(PAT_SQ,target,CLOUD_STINK,7);
 				break;
 			case eSpell::SUMMON_BEAST:
 				r1 = get_summon_monster(1);
@@ -3566,14 +3358,14 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				break;
 			case eSpell::CONFLAGRATION:
 				run_a_missile(l,target,13,1,25,0,0,80);
-				place_spell_pattern(radius2,target,WALL_FIRE,7);
+				place_spell_pattern(PAT_RAD2,target,WALL_FIRE,7);
 				break;
 			case eSpell::FIREBALL:
 				r1 = 1 + (caster->level * 3) / 4;
 				if(r1 > 29) r1 = 29;
 				run_a_missile(l,target,2,1,11,0,0,80);
 				start_missile_anim();
-				place_spell_pattern(square,target,eDamageType::FIRE,r1,7);
+				place_spell_pattern(PAT_SQ,target,eDamageType::FIRE,r1,7);
 				ashes_loc = target;
 				break;
 			case eSpell::SUMMON_WEAK: case eSpell::SUMMON: case eSpell::SUMMON_MAJOR: {
@@ -3608,7 +3400,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 			}
 			case eSpell::WEB:
 				play_sound(25);
-				place_spell_pattern(radius2,target,FIELD_WEB,7);
+				place_spell_pattern(PAT_RAD2,target,FIELD_WEB,7);
 				break;
 			case eSpell::POISON:
 				run_a_missile(l,vict_loc,11,0,25,0,0,80);
@@ -3648,12 +3440,12 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				r1 = 1 + (caster->level * 3) / 4 + 3;
 				if(r1 > 29) r1 = 29;
 				start_missile_anim();
-				place_spell_pattern(radius2,target,eDamageType::FIRE,r1,7);
+				place_spell_pattern(PAT_RAD2,target,eDamageType::FIRE,r1,7);
 				ashes_loc = target;
 				break;
 			case eSpell::SHOCKSTORM:
 				run_a_missile(l,target,6,1,11,0,0,80);
-				place_spell_pattern(radius2,target,WALL_FORCE,7);
+				place_spell_pattern(PAT_RAD2,target,WALL_FORCE,7);
 				break;
 			case eSpell::POISON_MAJOR:
 				run_a_missile(l,vict_loc,11,1,11,0,0,80);
@@ -3844,7 +3636,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				break;
 			case eSpell::GOO:
 				play_sound(24);
-				place_spell_pattern(single,vict_loc,FIELD_WEB,7);
+				place_spell_pattern(PAT_SINGLE,vict_loc,FIELD_WEB,7);
 				break;
 			case eSpell::BLESS_MINOR: case eSpell::BLESS:
 				play_sound(24);
@@ -3976,7 +3768,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				run_a_missile(l,target,2,0,11,0,0,80);
 				r1 = 2 + caster->level / 2 + 2;
 				start_missile_anim();
-				place_spell_pattern(square,target,eDamageType::FIRE,r1,7);
+				place_spell_pattern(PAT_SQ,target,eDamageType::FIRE,r1,7);
 				ashes_loc = target;
 				break;
 			case eSpell::UNHOLY_RAVAGING:
@@ -3997,7 +3789,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				r1 = (caster->level * 3) / 4 + 5;
 				if(r1 > 29) r1 = 29;
 				start_missile_anim();
-				place_spell_pattern(radius2,target,eDamageType::MAGIC,r1,7 );
+				place_spell_pattern(PAT_RAD2,target,eDamageType::MAGIC,r1,7 );
 				// Note: This used to place ashes on the target square, but the spell description
 				// doesn't describe fire or combustion, only force.
 				break;
@@ -4113,15 +3905,13 @@ bool monst_near(short m_num,location where,short radius,short active) {
 }
 
 void fireball_space(location loc,short dam) {
-	place_spell_pattern(square,loc,eDamageType::FIRE,dam,7);
+	place_spell_pattern(PAT_SQ,loc,eDamageType::FIRE,dam,7);
 }
 
-//type;  // 0 - take codes in pattern, OW make all nonzero this type
-// Types  0 - Null  1 - web  2 - fire barrier  3 - force barrier  4 - force wall  5 - fire wall
-//   6 - anti-magic field  7 - stink cloud  8 - ice wall  9 - blade wall  10 - quickfire
-//   11 - dispel  12 - sleep field
-//  50 + i - 80 :  id6 fire damage  90 + i - 120 : id6 cold damage 	130 + i - 160 : id6 magic dam.
-// if prep for anim is true, supporess look checks and go fast
+// Type:
+// 0 - take codes in pattern (otherwise make all nonzero this type)
+// 1-33 - a field type (see eFieldType)
+// 50-400 - a specific damage type - 50 + type * 40 + dice (see eDamageType)
 static void place_spell_pattern(effect_pat_type pat,location center,unsigned short type,short who_hit) {
 	short r1 = 0;
 	unsigned short effect;
@@ -4133,7 +3923,7 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 	
 	
 	if(type != 0)
-		modify_pattern(&pat,type);
+		modify_pattern(pat,type);
 	
 	
 	
@@ -4145,14 +3935,14 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 			 j <= minmax(active.top + 1,active.bottom - 1,center.y + 4); j++) {
 			s_loc.x = i; s_loc.y = j;
 			if(can_see_light(center,s_loc,sight_obscurity) == 5)
-				pat.pattern[i - center.x + 4][j - center.y + 4] = 0;
+				pat[i - center.x + 4][j - center.y + 4] = 0;
 		}
 	
 	
 	// First actually make barriers, then draw them, then inflict damaging effects.
 	for(short i = minmax(0,univ.town->max_dim - 1,center.x - 4); i <= minmax(0,univ.town->max_dim - 1,center.x + 4); i++)
 		for(short j = minmax(0,univ.town->max_dim - 1,center.y - 4); j <= minmax(0,univ.town->max_dim - 1,center.y + 4); j++) {
-			effect = pat.pattern[i - center.x + 4][j - center.y + 4];
+			effect = pat[i - center.x + 4][j - center.y + 4];
 			if(effect == FIELD_SMASH || sight_obscurity(i,j) < 5) {
 				switch(eFieldType(effect)) {
 					case FIELD_WEB:
@@ -4248,38 +4038,12 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 				if(sight_obscurity(i,j) < 5 && pc.main_status == eMainStatus::ALIVE
 					&& (((is_combat()) && (pc.combat_pos == spot_hit)) ||
 						((is_town()) && (univ.party.town_loc == spot_hit)))) {
-					effect = pat.pattern[i - center.x + 4][j - center.y + 4];
+					effect = pat[i - center.x + 4][j - center.y + 4];
 					if(effect >= 50) {
 						eDamageType type = eDamageType::MARKED;
-						unsigned short dice;
-						if(effect > 50 && effect <= 80) {
-							type = eDamageType::FIRE;
-							dice = effect - 50;
-						} else if(effect > 90 && effect <= 120) {
-							type = eDamageType::COLD;
-							dice = effect - 90;
-						} else if(effect > 130 && effect <= 160) {
-							type = eDamageType::MAGIC;
-							dice = effect - 130;
-							// The rest of these are new, currently unused.
-						} else if(effect > 170 && effect <= 200) {
-							type = eDamageType::WEAPON;
-							dice = effect - 170;
-						} else if(effect > 210 && effect <= 240) {
-							type = eDamageType::POISON;
-							dice = effect - 210;
-						} else if(effect > 250 && effect <= 280) {
-							type = eDamageType::UNBLOCKABLE;
-							dice = effect - 250;
-						} else if(effect > 290 && effect <= 320) {
-							type = eDamageType::UNDEAD;
-							dice = effect - 290;
-						} else if(effect > 330 && effect <= 360) {
-							type = eDamageType::DEMON;
-							dice = effect - 330;
-						} else if(effect > 370 && effect <= 400) {
-							type = eDamageType::SPECIAL;
-							dice = effect - 370;
+						unsigned short dice = (effect - 50) % 40;
+						if(dice <= 30 && effect <= 400) {
+							type = eDamageType((effect - 50) / 40);
 						}
 						if(type != eDamageType::MARKED) {
 							r1 = get_ran(dice,1,6);
@@ -4335,43 +4099,17 @@ static void place_spell_pattern(effect_pat_type pat,location center,unsigned sho
 					
 					if(!monster_hit && sight_obscurity(i,j) < 5 && univ.town.monst[k].on_space(spot_hit)) {
 						
-						if(pat.pattern[i - center.x + 4][j - center.y + 4] > 0)
+						if(pat[i - center.x + 4][j - center.y + 4] > 0)
 							monster_hit = true;
-						effect = pat.pattern[i - center.x + 4][j - center.y + 4];
+						effect = pat[i - center.x + 4][j - center.y + 4];
 						which_m = &univ.town.monst[k];
 						if(which_m->abil[eMonstAbil::RADIATE].active && effect == which_m->abil[eMonstAbil::RADIATE].radiate.type)
 							continue;
 						if(effect >= 50) {
 							eDamageType type = eDamageType::MARKED;
-							unsigned short dice;
-							if(effect > 50 && effect <= 80) {
-								type = eDamageType::FIRE;
-								dice = effect - 50;
-							} else if(effect > 90 && effect <= 120) {
-								type = eDamageType::COLD;
-								dice = effect - 90;
-							} else if(effect > 130 && effect <= 160) {
-								type = eDamageType::MAGIC;
-								dice = effect - 130;
-								// The rest of these are new, currently unused.
-							} else if(effect > 170 && effect <= 200) {
-								type = eDamageType::WEAPON;
-								dice = effect - 170;
-							} else if(effect > 210 && effect <= 240) {
-								type = eDamageType::POISON;
-								dice = effect - 210;
-							} else if(effect > 250 && effect <= 280) {
-								type = eDamageType::UNBLOCKABLE;
-								dice = effect - 250;
-							} else if(effect > 290 && effect <= 320) {
-								type = eDamageType::UNDEAD;
-								dice = effect - 290;
-							} else if(effect > 330 && effect <= 360) {
-								type = eDamageType::DEMON;
-								dice = effect - 330;
-							} else if(effect > 370 && effect <= 400) {
-								type = eDamageType::SPECIAL;
-								dice = effect - 370;
+							unsigned short dice = (effect - 50) % 40;
+							if(dice <= 30 && effect <= 400) {
+								type = eDamageType((effect - 50) / 40);
 							}
 							if(type != eDamageType::MARKED) {
 								r1 = get_ran(dice,1,6);
@@ -4434,33 +4172,49 @@ void place_spell_pattern(effect_pat_type pat,location center,eFieldType type,sho
 	place_spell_pattern(pat, center, code, who_hit);
 }
 
+void place_spell_pattern(eSpellPat pat,location center,short who_hit) {
+	place_spell_pattern(pat, 0, center, who_hit);
+}
+
+void place_spell_pattern(eSpellPat pat,location center,eFieldType type,short who_hit) {
+	place_spell_pattern(pat, 0, center, type, who_hit);
+}
+
+void place_spell_pattern(eSpellPat pat,short rot,location center,short who_hit) {
+	const cPattern& pat_info = cPattern::get_builtin(pat);
+	if(pat_info.rotatable) place_spell_pattern(pat_info.patterns[rot % pat_info.patterns.size()], center, 0, who_hit);
+	else place_spell_pattern(pat_info.pattern, center, 0, who_hit);
+}
+
+void place_spell_pattern(eSpellPat pat,short rot,location center,eFieldType type,short who_hit) {
+	const cPattern& pat_info = cPattern::get_builtin(pat);
+	if(pat_info.rotatable) place_spell_pattern(pat_info.patterns[rot % pat_info.patterns.size()], center, type, who_hit);
+	else place_spell_pattern(pat_info.pattern, center, type, who_hit);
+}
+
 // Copied from place_spell_pattern comment above:
-//  50 + i - 80 :  id6 fire damage  90 + i - 120 : id6 cold damage 	130 + i - 160 : id6 magic dam.
 void place_spell_pattern(effect_pat_type pat,location center,eDamageType type,short dice,short who_hit) {
-	unsigned short code;
+	if(type == eDamageType::MARKED) return; // Not valid; do nothing.
+	unsigned short code = 50 + int(type) * 40;
 	dice = minmax(1, 30, dice);
-	switch(type) {
-		case eDamageType::FIRE: code = 50; break;
-		case eDamageType::COLD: code = 90; break;
-		case eDamageType::MAGIC: code = 130; break;
-		case eDamageType::WEAPON: code = 170; break;
-		case eDamageType::POISON: code = 210; break;
-		case eDamageType::UNBLOCKABLE: code = 250; break;
-		case eDamageType::UNDEAD: code = 290; break;
-		case eDamageType::DEMON: code = 330; break;
-		case eDamageType::SPECIAL: code = 370; break;
-		case eDamageType::MARKED:
-			// Not valid; do nothing.
-			return;
-	}
 	place_spell_pattern(pat, center, code + dice, who_hit);
 }
 
-void modify_pattern(effect_pat_type *pat,unsigned short type) {
+void place_spell_pattern(eSpellPat pat, location center, eDamageType type, short dice, short who_hit) {
+	place_spell_pattern(pat, 0, center, type, dice, who_hit);
+}
+
+void place_spell_pattern(eSpellPat pat, short rot, location center, eDamageType type, short dice, short who_hit) {
+	const cPattern& pat_info = cPattern::get_builtin(pat);
+	if(pat_info.rotatable) place_spell_pattern(pat_info.patterns[rot % pat_info.patterns.size()], center, type, dice, who_hit);
+	else place_spell_pattern(pat_info.pattern, center, type, dice, who_hit);
+}
+
+void modify_pattern(effect_pat_type& pat,unsigned short type) {
 	for(short i = 0; i < 9; i++)
 		for(short j = 0; j < 9; j++)
-			if(pat->pattern[i][j] > 0)
-				pat->pattern[i][j] = type;
+			if(pat[i][j] > 0)
+				pat[i][j] = type;
 }
 
 void do_shockwave(location target) {
@@ -4946,10 +4700,10 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 			break;
 			
 		case eSpell::BLADE_AURA: // Pyhrrus effect
-			place_spell_pattern(radius2,caster.combat_pos,WALL_BLADES,6);
+			place_spell_pattern(PAT_RAD2,caster.combat_pos,WALL_BLADES,6);
 			break;
 		case eSpell::FLAME_AURA:
-			place_spell_pattern(open_square, caster.combat_pos, eDamageType::FIRE, 6, current_pc);
+			place_spell_pattern(PAT_OPENSQ, caster.combat_pos, eDamageType::FIRE, 6, current_pc);
 			break;
 		default:
 			add_string_to_buf("  Error: Mage spell " + (*spell_num).name() + " not implemented for combat mode.", 4);
@@ -5033,17 +4787,6 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 	if(!freebie && caster.traits[eTrait::ANAMA])
 		level++;
 	cCreature *which_m;
-	effect_pat_type protect_pat = {{
-		{0,1,1,1,1,1,1,1,0},
-		{1,5,5,5,5,5,5,5,1},
-		{1,5,6,6,6,6,6,5,1},
-		{1,5,6,3,3,3,6,5,1},
-		{1,5,6,3,3,3,6,5,1},
-		{1,5,6,3,3,3,6,5,1},
-		{1,5,6,6,6,6,6,5,1},
-		{1,5,5,5,5,5,5,5,1},
-		{0,1,1,1,1,1,1,1,0}
-	}};
 	start_missile_anim();
 	switch(spell_num) {
 		case eSpell::BLESS_MINOR: case eSpell::BLESS:
@@ -5118,7 +4861,7 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 				caster.cur_sp -= (*spell_num).cost;
 			play_sound(24);
 			add_string_to_buf("  Protective field created.");
-			place_spell_pattern(protect_pat,caster.combat_pos,6);
+			place_spell_pattern(PAT_PROT,caster.combat_pos,6);
 			break;
 		case eSpell::AUGMENTATION:
 			if(target < 6) {
@@ -5159,50 +4902,42 @@ void start_spell_targeting(eSpell num, bool freebie, int spell_range, eSpellPat 
 	else add_string_to_buf("  (Hit 'p' to cancel.)");
 	current_spell_range = num == eSpell::NONE ? spell_range : (*num).range;
 	handle_target_mode(MODE_SPELL_TARGET, current_spell_range);
-	current_pat = single;
 	
 	switch(num) {  // Different spells have different messages and diff. target shapes
 		case eSpell::CLOUD_SLEEP:
-			current_pat = small_square;
+			pat = PAT_SMSQ;
 			break;
 		case eSpell::DISPEL_SQUARE: case eSpell::FIREBALL: case eSpell::CLOUD_STINK:
 		case eSpell::FLAMESTRIKE: case eSpell::FORCEFIELD:
-			current_pat = square;
+			pat = PAT_SQ;
 			break;
 		case eSpell::CONFLAGRATION: case eSpell::FIRESTORM: case eSpell::SHOCKSTORM: case eSpell::WEB:
 		case eSpell::ANTIMAGIC: case eSpell::WALL_ICE_BALL: case eSpell::CLOUD_SLEEP_LARGE:
 		case eSpell::DIVINE_THUD: case eSpell::DISPEL_SPHERE:
-			current_pat = radius2;
+			pat = PAT_RAD2;
 			break;
 		case eSpell::PESTILENCE: case eSpell::GOO_BOMB: case eSpell::FOUL_VAPOR:
-			current_pat = radius3;
+			pat = PAT_RAD3;
 			break;
 		case eSpell::WALL_FORCE: case eSpell::WALL_ICE: case eSpell::WALL_BLADES:
-			add_string_to_buf("  (Hit space to rotate.)");
-			force_wall_position = 0;
-			current_pat = field[0];
+			pat = PAT_WALL;
 			break;
 		case eSpell::NONE:
-			switch(pat) {
-				case PAT_SINGLE: current_pat = single; break;
-				case PAT_SQ: current_pat = square; break;
-				case PAT_SMSQ: current_pat = small_square; break;
-				case PAT_OPENSQ: current_pat = open_square; break;
-				case PAT_PLUS: current_pat = t; break;
-				case PAT_RAD2: current_pat = radius2; break;
-				case PAT_RAD3: current_pat = radius3; break;
-				case PAT_WALL:
-					add_string_to_buf("  (Hit space to rotate.)");
-					force_wall_position = 0;
-					current_pat = field[0];
-					break;
-			}
+			// Do nothing - use the pat passed in
 			break;
 		default:
+			pat = PAT_SINGLE;
 			if((*num).refer != REFER_TARGET)
 				add_string_to_buf("  Error: Entered targeting for non-targeted spell " + (*num).name(), 4);
 			break;
 	}
+	
+	auto pattern = cPattern::get_builtin(pat);
+	if(pattern.rotatable) {
+		add_string_to_buf("  (Hit space to rotate.)");
+		force_wall_position = 0;
+		current_pat = pattern.patterns[0];
+	} else current_pat = pattern.pattern;
 }
 
 void start_fancy_spell_targeting(eSpell num, bool freebie, int spell_range, eSpellPat pat, int targets) {
@@ -5222,7 +4957,6 @@ void start_fancy_spell_targeting(eSpell num, bool freebie, int spell_range, eSpe
 	add_string_to_buf("  (Hit space to cast.)");
 	current_spell_range = num == eSpell::NONE ? spell_range : (*num).range;
 	handle_target_mode(MODE_FANCY_TARGET, current_spell_range);
-	current_pat = single;
 	short bonus = univ.current_pc().stat_adj(eSkill::INTELLIGENCE);
 	short level = freebie ? store_item_spell_level : univ.current_pc().level;
 	
@@ -5247,7 +4981,7 @@ void start_fancy_spell_targeting(eSpell num, bool freebie, int spell_range, eSpe
 			break;
 		case eSpell::SPRAY_FIELDS:
 			num_targets_left = level / 5 + bonus / 2;
-			current_pat = t;
+			pat = PAT_PLUS;
 			break;
 		case eSpell::SUMMON_WEAK:
 			num_targets_left = minmax(1,7,level / 4 + bonus / 2);
@@ -5260,23 +4994,21 @@ void start_fancy_spell_targeting(eSpell num, bool freebie, int spell_range, eSpe
 			break;
 		case eSpell::NONE:
 			num_targets_left = minmax(1,8,targets);
-			switch(pat) {
-				case PAT_SINGLE: current_pat = single; break;
-				case PAT_SQ: current_pat = square; break;
-				case PAT_SMSQ: current_pat = small_square; break;
-				case PAT_OPENSQ: current_pat = open_square; break;
-				case PAT_PLUS: current_pat = t; break;
-				case PAT_RAD2: current_pat = radius2; break;
-				case PAT_RAD3: current_pat = radius3; break;
-				case PAT_WALL: current_pat = single; break; // Fancy targeting doesn't support the rotateable pattern
-			}
 			break;
 		default:
 			if((*num).refer == REFER_FANCY)
 				std::cout << "  Warning: Spell " << (*num).name() << " didn't assign target shape and count." << std::endl;
 			else add_string_to_buf("  Error: Entered fancy targeting for non-fancy-targeted spell " + (*num).name(), 4);
+			pat = PAT_SINGLE;
 			break;
 	}
+	
+	auto pattern = cPattern::get_builtin(pat);
+	if(pattern.rotatable) {
+		// Fancy targeting doesn't support rotatable walls
+		// TODO: Some sort of error message instead of silently substituting SINGLE
+		current_pat = cPattern::get_builtin(PAT_SINGLE).pattern;
+	} else current_pat = pattern.pattern;
 	
 	num_targets_left = minmax(1,8,num_targets_left);
 }
@@ -5287,8 +5019,10 @@ void spell_cast_hit_return() {
 	}
 	
 	if(force_wall_position < 10) {
-		force_wall_position = (force_wall_position + 1) % 8;
-		current_pat = field[force_wall_position];
+		// TODO: Make this work with custom rotatable patterns. Need to store the cPattern somewhere probably?
+		auto& pat = cPattern::get_builtin(PAT_WALL);
+		force_wall_position = (force_wall_position + 1) % pat.patterns.size();
+		current_pat = pat.patterns[force_wall_position];
 	}
 }
 

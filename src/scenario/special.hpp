@@ -141,7 +141,7 @@ enum eStrType {
 	STRT_PICT, STRT_CMP, STRT_ACCUM, STRT_TRAP,
 	STRT_ATTITUDE, STRT_STAIR, STRT_LIGHT, STRT_CONTEXT,
 	STRT_SHOP, STRT_COST_ADJ, STRT_STAIR_MODE, STRT_TALK_NODE,
-	STRT_STATUS, STRT_SPELL_PAT, STRT_SUMMON, STRT_TALK, STRT_TALK_NODE_PERSON,
+	STRT_STATUS, STRT_SUMMON, STRT_TALK, STRT_TALK_NODE_PERSON,
 	STRT_ENCHANT, STRT_DIR, STRT_QUEST, STRT_QUEST_STATUS,
 	STRT_HEALING, STRT_TREASURE, STRT_MONST_STAT, STRT_POS_MODE,
 	STRT_DEBUG_PRINT, STRT_TARG_TYPE, STRT_TARG_MODE,
@@ -158,7 +158,7 @@ enum class eSpecPicker {
 	STATUS, STATUS_PARTY,
 	SDF, LOCATION, RECTANGLE, TOGGLE,
 	EVENT, ITEM_CLASS, QUEST, JOB_BOARD,
-	POINTER,
+	POINTER, SPELL_PATTERN,
 };
 
 enum class eLocType {
@@ -177,7 +177,7 @@ struct node_function_t {
 		bool force_global; // for eSpecPicker::NODE and eSpecPicker::MSG_*
 		// other pickers don't put anything in here
 	};
-	bool augmented = false; // only for eSpecPicker::FIELD and eSpecPicker::STRING with certain string types
+	bool augmented = false; // only for eSpecPicker::FIELD and eSpecPicker::SPELL_PATTERN
 	int adjust = 0; // only for eSpecPicker::STRING
 	eSpecField continuation = eSpecField::NONE;
 	std::string label() const;
@@ -197,7 +197,6 @@ private:
 };
 
 node_function_t operator+(eSpecPicker);
-node_function_t operator+(eStrType);
 
 struct node_properties_t {
 	eSpecType self;
@@ -280,8 +279,7 @@ private:
 // +eSpecPicker::NODE means always edit a scenario node, even if the caller is a town or outdoor node.
 // +eSpecPicker::MSG_* is similar – always edit a scenario string, never a town or outdoor string.
 // +eSpecPicker::FIELD adds the pseudo-fields Move Mountains and Dispel to the list.
-// +STRT_SKILL adds read-only pseudo-skills such as "current HP" to the list
-// +STRT_SPELL_PAT expands the "rotateable wall" into all its possible orientations
+// +eSpecPicker::SPELL_PATTERN expands the "rotateable wall" into all its possible orientations
 // More cases may be added.
 
 #endif

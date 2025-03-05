@@ -613,7 +613,7 @@ std::string uAbility::to_string(eMonstAbil key) const {
 			} else if(key == eMonstAbil::FIELD && gen.strength != PAT_SINGLE) {
 				sout << " (";
 				switch(eSpellPat(gen.strength)) {
-					case PAT_SINGLE: break;
+					case PAT_CURRENT: case PAT_SINGLE: break;
 					case PAT_SMSQ: sout << "small "; BOOST_FALLTHROUGH;
 					case PAT_SQ: sout << "square"; break;
 					case PAT_OPENSQ: sout << "open square"; break;
@@ -621,6 +621,7 @@ std::string uAbility::to_string(eMonstAbil key) const {
 					case PAT_RAD2: sout << "small circle"; break;
 					case PAT_RAD3: sout << "big circle"; break;
 					case PAT_WALL: sout << "line"; break;
+					case PAT_PROT: sout << "protective circle"; break;
 				}
 				sout << ")";
 			} else if(key == eMonstAbil::KILL) {

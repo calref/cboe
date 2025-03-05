@@ -13,6 +13,7 @@ short choose_background(short cur_choice, cDialog* parent);
 short choose_text_res(std::string res_list,short first_t,short last_t,unsigned short cur_choice,cDialog* parent,const char *title);
 short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent,std::string title);
 short choose_text_editable(std::vector<std::string>& list, short cur_choice, cDialog* parent, std::string title);
+short choose_pattern(short cur_choice, cDialog* parent, bool expandRotatable);
 bool edit_text_str(short which_str,eStrMode mode);
 bool edit_spec_enc(short which_node,short mode,cDialog* parent);
 short get_fresh_spec(short which_mode);

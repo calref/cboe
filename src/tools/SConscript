@@ -15,6 +15,7 @@ tools = Split("""
 	../location.cpp
 	../mathutil.cpp
 	../porting.cpp
+	../pattern.cpp
 	../sounds.cpp
 	../spell.cpp
 	../utility.cpp

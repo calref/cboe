@@ -587,6 +587,7 @@
     <ClCompile Include="..\..\..\src\spell.cpp" />
     <ClCompile Include="..\..\..\src\sounds.cpp" />
     <ClCompile Include="..\..\..\src\porting.cpp" />
+    <ClCompile Include="..\..\..\src\pattern.cpp" />
     <ClCompile Include="..\..\..\src\oldstructs.cpp" />
     <ClCompile Include="..\..\..\src\mathutil.cpp" />
     <ClCompile Include="..\..\..\src\location.cpp" />
@@ -829,6 +830,7 @@
     <ClInclude Include="..\..\..\src\skills_traits.hpp" />
     <ClInclude Include="..\..\..\src\race.hpp" />
     <ClInclude Include="..\..\..\src\porting.hpp" />
+    <ClInclude Include="..\..\..\src\pattern.hpp" />
     <ClInclude Include="..\..\..\src\oldstructs.hpp" />
     <ClInclude Include="..\..\..\src\mathutil.hpp" />
     <ClInclude Include="..\..\..\src\location.hpp" />

@@ -1623,7 +1623,7 @@ void draw_targeting_line(location where_curs) {
 		from_loc = univ.current_pc().combat_pos;
 	else from_loc = univ.party.town_loc;
 	if((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
-		|| ((overall_mode == MODE_TOWN_TARGET) && (current_pat.pattern[4][4] != 0))) {
+		|| ((overall_mode == MODE_TOWN_TARGET) && (current_pat[4][4] != 0))) {
 		
 		if(where_curs.in(on_screen_terrain_area)) {
 			// && (point_onscreen(center,univ.party[current_pc].combat_pos))){
@@ -1653,7 +1653,7 @@ void draw_targeting_line(location where_curs) {
 						store_loc.y = center.y + j - 4;
 						if((abs(store_loc.x - which_space.x) <= 4) &&
 							(abs(store_loc.y - which_space.y) <= 4) &&
-							(current_pat.pattern[store_loc.x - which_space.x + 4][store_loc.y - which_space.y + 4] != 0)) {
+							(current_pat[store_loc.x - which_space.x + 4][store_loc.y - which_space.y + 4] != 0)) {
 							target_rect.left = 13 + 28 * i + 19;
 							target_rect.right = target_rect.left + 28;
 							target_rect.top = 13 + 36 * j + 7;
