@@ -968,10 +968,10 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 				} else if(type == "sdf") {
 					int row, col;
 					edit->GetAttribute("row", &row);
-					if(row < 0 || row >= scenario.sdf_names.size())
+					if(row < 0 || row >= SDF_ROWS)
 						throw xBadVal(type, "row", std::to_string(row), edit->Row(), edit->Column(), fname);
 					edit->GetAttribute("col", &col);
-					if(col < 0 || col >= scenario.sdf_names[0].size())
+					if(col < 0 || col >= SDF_COLUMNS)
 						throw xBadVal(type, "col", std::to_string(col), edit->Row(), edit->Column(), fname);
 					edit->GetText(&scenario.sdf_names[row][col]);
 				} else if(type == "graphics") {
