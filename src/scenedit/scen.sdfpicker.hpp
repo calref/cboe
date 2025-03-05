@@ -16,8 +16,8 @@ class cTilemap;
 
 class cStuffDonePicker {
 	cDialog dlog;
-	// Note: x and y in initial_sdf and chosen_sdf are actually (c, r) and must be flipped when
-	// indexing SDFs or their names in the scenario
+	// Note: x and y in initial_sdf and chosen_sdf are (c, r), but the flag array and name map
+	// are indexed by [r][c]. Remember to flip the order when necessary.
 	location initial_sdf, chosen_sdf, viewport;
 	cTilemap* grid;
 	cTilemap* row_labels;
