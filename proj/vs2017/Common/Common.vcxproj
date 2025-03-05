@@ -397,6 +397,7 @@
     <ClCompile Include="..\..\..\src\location.cpp" />
     <ClCompile Include="..\..\..\src\mathutil.cpp" />
     <ClCompile Include="..\..\..\src\oldstructs.cpp" />
+    <ClCompile Include="..\..\..\src\pattern.cpp" />
     <ClCompile Include="..\..\..\src\porting.cpp" />
     <ClCompile Include="..\..\..\src\scenario\item.cpp" />
     <ClCompile Include="..\..\..\src\scenario\monster.cpp" />
@@ -490,6 +491,7 @@
     <ClInclude Include="..\..\..\src\location.hpp" />
     <ClInclude Include="..\..\..\src\mathutil.hpp" />
     <ClInclude Include="..\..\..\src\oldstructs.hpp" />
+    <ClInclude Include="..\..\..\src\pattern.hpp" />
     <ClInclude Include="..\..\..\src\porting.hpp" />
     <ClInclude Include="..\..\..\src\race.hpp" />
     <ClInclude Include="..\..\..\src\scenario\area.hpp" />

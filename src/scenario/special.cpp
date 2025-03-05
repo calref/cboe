@@ -662,15 +662,7 @@ node_function_t operator+(eSpecPicker picker) {
 	if(picker == eSpecPicker::NODE || picker == eSpecPicker::MSG_PAIR || picker == eSpecPicker::MSG_SINGLE || picker == eSpecPicker::MSG_SEQUENCE) {
 		n.force_global = true;
 	}
-	if(picker == eSpecPicker::FIELD) {
-		n.augmented = true;
-	}
-	return n;
-}
-
-node_function_t operator+(eStrType str) {
-	node_function_t n(str);
-	if(str == STRT_SPELL_PAT) {
+	if(picker == eSpecPicker::FIELD || picker == eSpecPicker::SPELL_PATTERN) {
 		n.augmented = true;
 	}
 	return n;

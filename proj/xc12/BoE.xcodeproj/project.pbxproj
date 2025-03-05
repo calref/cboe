@@ -120,6 +120,7 @@
 		9170C50F2D717F24009B6E7C /* scen.locpicker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9170C50C2D717F24009B6E7C /* scen.locpicker.cpp */; };
 		9170C5102D717F24009B6E7C /* scen.locpicker.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 9170C50D2D717F24009B6E7C /* scen.locpicker.hpp */; };
 		9170C5272D74237A009B6E7C /* scen.sdfpicker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9170C5252D74237A009B6E7C /* scen.sdfpicker.cpp */; };
+		9170C59D2D75F498009B6E7C /* pattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9170C5962D75EE42009B6E7C /* pattern.cpp */; };
 		9176FEC71D550EFE006EF694 /* out_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9176FEC01D550EFC006EF694 /* out_legacy.cpp */; };
 		9176FEC81D550EFE006EF694 /* scen_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9176FEC11D550EFC006EF694 /* scen_legacy.cpp */; };
 		9176FECB1D550EFE006EF694 /* talk_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9176FEC41D550EFD006EF694 /* talk_legacy.cpp */; };
@@ -741,6 +742,8 @@
 		9170C50D2D717F24009B6E7C /* scen.locpicker.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = scen.locpicker.hpp; sourceTree = "<group>"; };
 		9170C5252D74237A009B6E7C /* scen.sdfpicker.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = scen.sdfpicker.cpp; sourceTree = "<group>"; };
 		9170C5262D74237A009B6E7C /* scen.sdfpicker.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = scen.sdfpicker.hpp; sourceTree = "<group>"; };
+		9170C5962D75EE42009B6E7C /* pattern.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pattern.cpp; sourceTree = "<group>"; };
+		9170C5972D75EE42009B6E7C /* pattern.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = pattern.hpp; sourceTree = "<group>"; };
 		9176FEC01D550EFC006EF694 /* out_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = out_legacy.cpp; sourceTree = "<group>"; };
 		9176FEC11D550EFC006EF694 /* scen_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen_legacy.cpp; sourceTree = "<group>"; };
 		9176FEC41D550EFD006EF694 /* talk_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = talk_legacy.cpp; sourceTree = "<group>"; };
@@ -1395,6 +1398,7 @@
 				91279BE10F9D0F73007B0D52 /* location.cpp */,
 				91B3F11E0F97801F00BF5B67 /* mathutil.cpp */,
 				915325161A2E1DA8000A9A1C /* oldstructs.cpp */,
+				9170C5962D75EE42009B6E7C /* pattern.cpp */,
 				913D005A0F9FEEC200184C18 /* porting.cpp */,
 				91B3F10F0F9779D000BF5B67 /* sounds.cpp */,
 				91597A6E1A3BEDC700BE7BF9 /* spell.cpp */,
@@ -1408,6 +1412,7 @@
 				91279BE00F9D0F73007B0D52 /* location.hpp */,
 				91B3F11D0F97801F00BF5B67 /* mathutil.hpp */,
 				91E5C5A10F9EACE200C21460 /* oldstructs.hpp */,
+				9170C5972D75EE42009B6E7C /* pattern.hpp */,
 				913D00590F9FEEC200184C18 /* porting.hpp */,
 				9185BD971EA025720027C346 /* race.hpp */,
 				9185BD9A1EA02B840027C346 /* skills_traits.hpp */,
@@ -2136,6 +2141,7 @@
 				919CC26D1B3773DB00273FDA /* message.cpp in Sources */,
 				919CC26E1B3773E000273FDA /* pict.cpp in Sources */,
 				919CC26F1B3773E700273FDA /* stack.cpp in Sources */,
+				9170C59D2D75F498009B6E7C /* pattern.cpp in Sources */,
 				915473C62C7FCDBB00EB1C94 /* alchemy.cpp in Sources */,
 				415EEEB02D5534A500B47408 /* prefs.cpp in Sources */,
 				919CC2701B3773EC00273FDA /* scrollbar.cpp in Sources */,

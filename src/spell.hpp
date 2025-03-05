@@ -20,8 +20,6 @@ enum eSpellSelect {SELECT_NO, SELECT_ACTIVE, SELECT_ANY};
 // This one is meant for indexing a bit field
 enum eSpellWhen {WHEN_COMBAT = 1, WHEN_TOWN = 2, WHEN_OUTDOORS = 4};
 
-enum eSpellPat {PAT_SINGLE, PAT_SQ, PAT_SMSQ, PAT_OPENSQ, PAT_RAD2, PAT_RAD3, PAT_PLUS, PAT_WALL};
-
 enum class eSpell {
 	NONE = -1,
 	// Mage spells
@@ -97,8 +95,5 @@ public:
 
 // Need to declare this a second time in order for it to be in scope where it's needed
 const cSpell& operator*(eSpell spell_num);
-
-std::ostream& operator<< (std::ostream& out, eSpellPat pat);
-std::istream& operator>> (std::istream& in, eSpellPat& pat);
 
 #endif

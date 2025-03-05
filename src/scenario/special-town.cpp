@@ -128,19 +128,19 @@ namespace {
 		.ex1a(eSpecPicker::TOGGLE);
 	node_properties_t S_TARGET = node_builder_t(eSpecType::TOWN_START_TARGETING)
 		.msg()
-		.ex1a(STRT_SPELL_PAT)
+		.ex1a(eSpecPicker::SPELL_PATTERN)
 		.ex2a(eSpecPicker::NODE)
 		.ex2b(eSpecPicker::TOGGLE)
 		.ex2c(eSpecPicker::TOGGLE);
 	node_properties_t S_FIELDS = node_builder_t(eSpecType::TOWN_SPELL_PAT_FIELD)
 		.msg()
 		.loc(eSpecField::EX1A, eSpecField::EX1B, eLocType::ACTIVE_TOWN)
-		.ex1c(+STRT_SPELL_PAT)
+		.ex1c(+eSpecPicker::SPELL_PATTERN)
 		.ex2a(+eSpecPicker::FIELD);
 	node_properties_t S_PATTERN = node_builder_t(eSpecType::TOWN_SPELL_PAT_BOOM)
 		.msg()
 		.loc(eSpecField::EX1A, eSpecField::EX1B, eLocType::ACTIVE_TOWN)
-		.ex1c(+STRT_SPELL_PAT)
+		.ex1c(+eSpecPicker::SPELL_PATTERN)
 		.ex2a(eSpecPicker::DAMAGE_TYPE)
 		.ex2c(STRT_SPELL_PAT_MODE);
 	node_properties_t S_WARP = node_builder_t(eSpecType::TOWN_RELOCATE_CREATURE)

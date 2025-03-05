@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='done'>
+	<pict name='mainpic' type='dlog' num='16' top='6' left='6'/>
+	<text name='prompt' size='large' top='6' left='50' width='248' height='14'>Which spell pattern?</text>
+	<group name='group'>
+		<led name='led1' state='off' top='29' left='55'/>
+		<led name='led2' state='off' top='74' left='55'/>
+		<led name='led3' state='off' top='119' left='55'/>
+		<led name='led4' state='off' top='164' left='55'/>
+		<led name='led5' state='off' top='209' left='55'/>
+		<led name='led6' state='off' top='254' left='55'/>
+		<led name='led7' state='off' top='29' left='183'/>
+		<led name='led8' state='off' top='74' left='183'/>
+		<led name='led9' state='off' top='119' left='183'/>
+		<led name='led10' state='off' top='164' left='183'/>
+		<led name='led11' state='off' top='209' left='183'/>
+		<led name='led12' state='off' top='254' left='183'/>
+		<led name='led13' state='off' top='29' left='320'/>
+		<led name='led14' state='off' top='74' left='320'/>
+		<led name='led15' state='off' top='119' left='320'/>
+		<led name='led16' state='off' top='164' left='320'/>
+		<led name='led17' state='off' top='209' left='320'/>
+		<led name='led18' state='off' top='254' left='320'/>
+	</group>
+	<tilemap name='pic1' top='29' left='76' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<tilemap name='pic2' top='74' left='76' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<tilemap name='pic3' top='119' left='76' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<tilemap name='pic4' top='164' left='76' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<tilemap name='pic5' top='209' left='76' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<tilemap name='pic6' top='254' left='76' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<tilemap name='pic7' top='29' left='204' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<tilemap name='pic8' top='74' left='204' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<tilemap name='pic9' top='119' left='204' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<tilemap name='pic10' top='164' left='204' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<tilemap name='pic11' top='209' left='204' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<tilemap name='pic12' top='254' left='204' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<tilemap name='pic13' top='29' left='341' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<tilemap name='pic14' top='74' left='341' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<tilemap name='pic15' top='119' left='341' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<tilemap name='pic16' top='164' left='341' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<tilemap name='pic17' top='209' left='341' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<tilemap name='pic18' top='254' left='341' rows='9' cols='9'>
+		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
+	</tilemap>
+	<text name='name1' top='29' left='108' width='70'/>
+	<text name='name2' top='74' left='108' width='70'/>
+	<text name='name3' top='119' left='108' width='70'/>
+	<text name='name4' top='164' left='108' width='70'/>
+	<text name='name5' top='209' left='108' width='70'/>
+	<text name='name6' top='254' left='108' width='70'/>
+	<text name='name7' top='29' left='236' width='70'/>
+	<text name='name8' top='74' left='236' width='70'/>
+	<text name='name9' top='119' left='236' width='70'/>
+	<text name='name10' top='164' left='236' width='70'/>
+	<text name='name11' top='209' left='236' width='70'/>
+	<text name='name12' top='254' left='236' width='70'/>
+	<text name='name13' top='29' left='373' width='70'/>
+	<text name='name14' top='74' left='373' width='70'/>
+	<text name='name15' top='119' left='373' width='70'/>
+	<text name='name16' top='164' left='373' width='70'/>
+	<text name='name17' top='209' left='373' width='70'/>
+	<text name='name18' top='254' left='373' width='70'/>
+	<text name='help' top='294' left='6' width='422' height='16'>Click button to left of graphic to select. Use arrows to change pages.</text>
+	<button name='left' type='left' top='314' left='6' def-key='left'/>
+	<button name='right' type='right' top='314' left='69' def-key='right'/>
+	<button name='done' type='done' top='314' left='393'/>
+	<button name='cancel' type='regular' top='314' left='322' def-key='esc'>Cancel</button>
+</dialog>
