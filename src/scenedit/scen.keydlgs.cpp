@@ -1135,6 +1135,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 				case STRT_SECTOR: title = "Which sector?"; break;
 				case STRT_BOAT: title = "Which boat?"; break;
 				case STRT_HORSE: title = "Which horse?"; break;
+				case STRT_TALK: title = "Which personality?"; break;
 				default: title = "Title not set for this string type!!!"; break;
 			}
 			if(fcn.str_type == STRT_SECTOR && fcn.continuation == eSpecField::NONE) {
