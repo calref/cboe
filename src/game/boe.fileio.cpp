@@ -483,9 +483,22 @@ bool load_scenario_header(fs::path file,scen_header_type& scen_head){
 	return true;
 }
 
+// Some autosave triggers are more dangerous than others:
+std::map<std::string, bool> autosave_trigger_defaults = {
+	{"EnterTown", true},
+	{"ExitTown", true},
+	{"RestComplete", true},
+	{"TownWaitComplete", true},
+	{"EndOutdoorCombat", true},
+	{"Eat", false}
+};
+
 void try_auto_save(std::string reason) {
 	if(!get_bool_pref("Autosave", true)) return;
-	if(!get_bool_pref("Autosave_" + reason, true)) return;
+	bool reason_default_on = false;
+	if(autosave_trigger_defaults.find(reason) != autosave_trigger_defaults.end())
+		reason_default_on = autosave_trigger_defaults[reason];
+	if(!get_bool_pref("Autosave_" + reason, reason_default_on)) return;
 	if(univ.file.empty()){
 		ASB("Autosave: Make a manual save first.");
 		print_buf();
