@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='no'>
+	<pict type='dlog' num='7' top='6' left='6'/>
+	<text top='6' left='48' width='249'>
+		Want to help improve OpenBoE? 
+		You can save and send a log of your session to help the developers solve this error.
+		Click below to start your bug report (making a GitHub account if you don't have one),
+		then save and upload your error log in a zip file.
+	</text>
+	<text colour='link' relative='pos-in pos' rel-anchor='prev' top='4' left='0' width='249'>
+		https://github.com/calref/cboe/issues/new/
+	</text>
+	<text relative='pos-in pos' rel-anchor='prev' top='4' left='0' width='249'>
+		Save a replay log?
+	</text>
+	<button name='no' relative='abs pos' rel-anchor='prev' type='regular' def-key='n' top='4' left='239'>No</button>
+	<button name='yes' relative='abs pos-in' rel-anchor='prev' type='regular' def-key='y' top='0' left='172'>Yes</button>
+</dialog>
