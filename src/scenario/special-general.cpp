@@ -37,9 +37,13 @@ namespace{
 		.msg();
 	node_properties_t S_ADDFLAG = node_builder_t(eSpecType::SDF_ADD)
 		.sdf()
+		.sdf(eSpecField::EX1A, eSpecField::EX1B)
+		.sdf(eSpecField::EX2A, eSpecField::EX2B)
 		.msg();
 	node_properties_t S_SUBFLAG = node_builder_t(eSpecType::SDF_DIFF)
 		.sdf()
+		.sdf(eSpecField::EX1A, eSpecField::EX1B)
+		.sdf(eSpecField::EX2A, eSpecField::EX2B)
 		.msg();
 	node_properties_t S_STORY = node_builder_t(eSpecType::STORY_DIALOG)
 		.msg1(eSpecPicker::MSG_SINGLE)
@@ -120,13 +124,19 @@ namespace{
 		.end();
 	node_properties_t S_MULFLAG = node_builder_t(eSpecType::SDF_TIMES)
 		.sdf()
+		.sdf(eSpecField::EX1A, eSpecField::EX1B)
+		.sdf(eSpecField::EX2A, eSpecField::EX2B)
 		.msg();
 	node_properties_t S_DIVFLAG = node_builder_t(eSpecType::SDF_DIVIDE)
 		.sdf()
+		.sdf(eSpecField::EX1A, eSpecField::EX1B)
+		.sdf(eSpecField::EX2A, eSpecField::EX2B)
 		.sdf(eSpecField::EX1C, eSpecField::EX2C)
 		.msg();
 	node_properties_t S_EXPFLAG = node_builder_t(eSpecType::SDF_POWER)
 		.sdf()
+		.sdf(eSpecField::EX1A, eSpecField::EX1B)
+		.sdf(eSpecField::EX2A, eSpecField::EX2B)
 		.msg();
 	node_properties_t S_TERCHANGE = node_builder_t(eSpecType::CHANGE_TER)
 		.msg()

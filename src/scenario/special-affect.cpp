@@ -106,7 +106,7 @@ namespace {
 	node_properties_t S_STATUS_PARTY = node_builder_t(eSpecType::AFFECT_PARTY_STATUS)
 		.msg()
 		.ex1b(eSpecPicker::TOGGLE)
-		.ex1c(eSpecPicker::STATUS_PARTY);
+		.ex2a(eSpecPicker::STATUS_PARTY);
 	node_properties_t S_NEWPC = node_builder_t(eSpecType::CREATE_NEW_PC)
 		.sdf()
 		.msg()
