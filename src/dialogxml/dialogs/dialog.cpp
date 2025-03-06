@@ -38,8 +38,6 @@
 using namespace std;
 using namespace ticpp;
 
-// TODO: Would be nice if I could avoid depending on mainPtr
-
 const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
 short cDialog::defaultBackground = cDialog::BG_DARK;
 cDialog* cDialog::topWindow = nullptr;
