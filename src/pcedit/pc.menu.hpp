@@ -10,7 +10,7 @@
 class OpenBoEPCEditMenu {
 public:
 
-	OpenBoEPCEditMenu(sf::RenderWindow&);
+	OpenBoEPCEditMenu();
 	bool handle_event(const sf::Event&);
 	void draw();
 	void update_for_editor_state(bool party_in_memory, bool party_in_scenario);

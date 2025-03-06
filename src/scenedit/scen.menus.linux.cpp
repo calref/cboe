@@ -1,5 +1,6 @@
 #include "scen.global.hpp"
 #include "scen.menus.hpp"
+#include "scen.graphics.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <memory>
 #include <unordered_map>
@@ -16,7 +17,7 @@ extern cDrawableManager drawable_mgr;
 std::shared_ptr <OpenBoESceneditMenu> menu_ptr;
 
 void init_menubar() {
-	menu_ptr.reset(new OpenBoESceneditMenu(mainPtr()));
+	menu_ptr.reset(new OpenBoESceneditMenu());
 	
 	event_listeners["menubar"] = std::dynamic_pointer_cast <iEventListener> (menu_ptr); 
 	drawable_mgr.add_drawable(UI_LAYER_MENUBAR, "menubar", menu_ptr); 

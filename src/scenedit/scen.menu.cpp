@@ -2,11 +2,12 @@
 
 #include "scen.menu.hpp"
 #include "scen.menus.hpp"
+#include "scen.graphics.hpp"
 
 #include <stdexcept>
 
-OpenBoESceneditMenu::OpenBoESceneditMenu(sf::RenderWindow& window)
-	: tgui { window } {
+OpenBoESceneditMenu::OpenBoESceneditMenu()
+	: tgui { mainPtr() } {
 	// Build a menubar and store it in tgui with a known name
 	this->tgui.add(this->build_menubar(), this->internal_menubar_widget_name);
 }

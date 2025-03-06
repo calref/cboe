@@ -38,3 +38,4 @@ rectangle get_custom_rect (short which_rect);
 void init_dialogs();
 void record_display_strings();
 sf::Vector2f translate_mouse_coordinates(sf::Vector2i const point);
+sf::RenderWindow& mainPtr();

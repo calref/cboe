@@ -16,7 +16,7 @@
 class OpenBoEMenu : public iEventListener, public iDrawable {
 public:
 
-	OpenBoEMenu(sf::RenderWindow&, cUniverse&);
+	OpenBoEMenu(cUniverse&);
 
 	virtual bool handle_event(const sf::Event&) override;
 	virtual void draw() override;

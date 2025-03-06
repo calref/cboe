@@ -3,6 +3,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "tools/winutil.hpp"
 #include "universe/universe.hpp"
+#include "pc.graphics.hpp"
 #include "pc.menus.hpp"
 #include "pc.menu.hpp"
 
@@ -12,7 +13,7 @@ extern cUniverse univ;
 std::shared_ptr<OpenBoEPCEditMenu> menu_ptr;
 
 void init_menubar() {
-	menu_ptr.reset(new OpenBoEPCEditMenu(mainPtr()));
+	menu_ptr.reset(new OpenBoEPCEditMenu());
 }
 
 void menu_activate() {

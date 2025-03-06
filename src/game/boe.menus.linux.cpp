@@ -1,5 +1,6 @@
 #include "boe.menus.hpp"
 #include "boe.consts.hpp"
+#include "boe.graphics.hpp"
 
 #include <unordered_map>
 #include <string>
@@ -21,7 +22,7 @@ extern cDrawableManager drawable_mgr;
 std::shared_ptr<OpenBoEMenu> menu_ptr;
 
 void init_menubar() {
-	menu_ptr.reset(new OpenBoEMenu(mainPtr(), univ));
+	menu_ptr.reset(new OpenBoEMenu(univ));
 	
 	event_listeners["menubar"] = std::dynamic_pointer_cast<iEventListener>(menu_ptr); 
 	drawable_mgr.add_drawable(UI_LAYER_MENUBAR, "menubar", menu_ptr); 
