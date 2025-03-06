@@ -74,6 +74,7 @@ namespace {
 		.ex1b(eSpecPicker::NODE);
 	node_properties_t S_FIELDS = node_builder_t(eSpecType::IF_FIELDS)
 		.rect(eLocType::ACTIVE_TOWN)
+		.pict(eSpecPicker::TOGGLE)
 		.msg1(eSpecPicker::FIELD)
 		.msg2(eSpecPicker::NODE);
 	node_properties_t S_PARTY_SIZE = node_builder_t(eSpecType::IF_PARTY_SIZE)
