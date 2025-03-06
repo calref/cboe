@@ -27,7 +27,7 @@ Number of dice
 Number of 'sides' on dice
 Unused
 Amount of extra damage
-Type of damage (0..8)
+Type of damage
 Sound to play
 Special to Jump To
 
@@ -108,7 +108,7 @@ Second part of message
 Unused
 Unused
 Unused
-0 - dead, 1 - dust,  2- stoned
+PC Status
 0 - raise dead, 1 - hurt
 Unused
 Unused
@@ -127,7 +127,7 @@ Unused
 Unused
 Amount (usually 0 .. 8)
 0 - help, 1 - harm
-Which effect (0 .. 14)
+Which effect
 Unused
 Unused
 Unused
@@ -160,7 +160,7 @@ Unused
 Unused
 Unused
 How many AP
-0 - give, 1 = take
+0 - give, 1 - take
 Unused
 Unused
 Unused
@@ -298,7 +298,7 @@ Unused
 Amount to change
 0 - increase, 1 - decrease
 Unused
-Which stat (0 ... 10)
+Which stat
 Unused
 Unused
 Special to Jump To
@@ -315,7 +315,7 @@ Unused
 Amount (0 .. 10)
 0 - increase, 1 - decrease
 Unused
-Statistic to adjust (0..20)
+Statistic to adjust
 Unused
 Unused
 Special to Jump To
@@ -329,7 +329,7 @@ Second part of message
 Unused
 Unused
 Unused
-Which Spell (0 .. 61)
+Which Spell
 1 - remove, 0 - give
 Unused
 Unused
@@ -346,7 +346,7 @@ Second part of message
 Unused
 Unused
 Unused
-Which Spell (0 .. 61)
+Which Spell
 1 - remove, 0 - give
 Unused
 Unused
@@ -397,7 +397,7 @@ Second part of message
 Unused
 Unused
 Unused
-Which Recipe (0 .. 19)
+Which Recipe
 Unused
 Unused
 Unused
@@ -417,7 +417,7 @@ Unused
 Amount (0 .. 250)
 0 - increase, 1 - decrease
 Unused
-Which effect (0 .. 3)
+Which effect
 Unused
 Unused
 Special to Jump To

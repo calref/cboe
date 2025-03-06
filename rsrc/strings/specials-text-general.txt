@@ -75,7 +75,7 @@ Unused
 Unused
 Unused
 Which Shop
-Cost adjust (0 .. 6, lower = cheaper)
+Cost adjust (lower = cheaper)
 Unused
 Unused
 Unused
@@ -143,7 +143,7 @@ Unused
 Unused
 Unused
 First SDF part A, or first number
-First SDF part B, or -1 to for literal number
+First SDF part B, or -1 for literal number
 Unused
 Second SDF part A, or second number
 Second SDF part B, or -1 for literal number
@@ -160,7 +160,7 @@ Unused
 Unused
 Unused
 First SDF part A, or first number
-First SDF part B, or -1 to for literal number
+First SDF part B, or -1 for literal number
 Unused
 Second SDF part A, or second number
 Second SDF part B, or -1 for literal number
@@ -178,10 +178,10 @@ Picture number
 Picture type
 Unused
 Unused
-Animation Loops (-2 for infinite)
+Picture animation loops (-2 for infinite)
 Unused
 Unused
-Animation FPS (-1 for default 2)
+Picture animation FPS (-1 for default 2)
 Special to Jump To
 
 --------------------
@@ -245,7 +245,7 @@ Unused
 Unused
 Unused
 Which sound
-Continue without waiting for sound to finish?
+Play in background and continue?
 Unused
 Unused
 Unused
@@ -380,7 +380,7 @@ Unused
 Unused
 Unused
 Unused
-Value to change the 10 flags to
+Value to change the 50 flags to
 Unused
 Unused
 Unused
@@ -534,7 +534,7 @@ Unused
 Unused
 Unused
 First SDF part A, or first number
-First SDF part B, or -1 to for literal number
+First SDF part B, or -1 for literal number
 Unused
 Second SDF part A, or second number
 Second SDF part B, or -1 for literal number
@@ -551,7 +551,7 @@ Unused
 Unused
 Unused
 First SDF part A, or first number
-First SDF part B, or -1 to for literal number
+First SDF part B, or -1 for literal number
 Remainder Stuff Done Flag Part A
 Second SDF part A, or second number
 Second SDF part B, or -1 for literal number
@@ -568,7 +568,7 @@ Unused
 Unused
 Unused
 First SDF part A, or first number
-First SDF part B, or -1 to for literal number
+First SDF part B, or -1 for literal number
 Unused
 Second SDF part A, or second number
 Second SDF part B, or -1 for literal number
@@ -755,7 +755,7 @@ Unused
 Facial Picture
 Unused
 Personality
-Unused
+Unused|Monster Type (for picture)
 Unused
 Unused
 Unused
