@@ -60,7 +60,7 @@ public:
 	/// Page forward or backward in the stack
 	/// @param dir Usually -1 or 1
 	/// @param loop Beyond the first and last page, loop to the other side
-	void doSelectPage(int dir, bool loop = true);
+	void changeSelectedPage(int dir, bool loop = true);
 	/// Get the current page the stack is displaying.
 	/// @return The current page number
 	size_t getPage() const;

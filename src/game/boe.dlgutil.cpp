@@ -1676,9 +1676,9 @@ class cChooseScenario {
 		return true;
 	}
 	
-	bool doSelectPage(int dir) {
+	bool changeSelectedPage(int dir) {
 		auto& stk = dynamic_cast<cStack&>(me["list"]);
-		stk.doSelectPage(dir, true);
+		stk.changeSelectedPage(dir, true);
 		return true;
 	}
 	
@@ -1718,8 +1718,8 @@ public:
 		set_cursor(sword_curs);
 		
 		me["cancel"].attachClickHandler(std::bind(&cChooseScenario::doCancel, this));
-		me["next"].attachClickHandler(std::bind(&cChooseScenario::doSelectPage, this, 1));
-		me["prev"].attachClickHandler(std::bind(&cChooseScenario::doSelectPage, this, -1));
+		me["next"].attachClickHandler(std::bind(&cChooseScenario::changeSelectedPage, this, 1));
+		me["prev"].attachClickHandler(std::bind(&cChooseScenario::changeSelectedPage, this, -1));
 		me["start1"].attachClickHandler(std::bind(&cChooseScenario::doSelectScenario, this, 0));
 		me["start2"].attachClickHandler(std::bind(&cChooseScenario::doSelectScenario, this, 1));
 		me["start3"].attachClickHandler(std::bind(&cChooseScenario::doSelectScenario, this, 2));
@@ -1967,11 +1967,11 @@ class cFilePicker {
 		return true;
 	}
 
-	bool doSelectPage(int dir) {
+	bool changeSelectedPage(int dir) {
 		auto& stk = dynamic_cast<cStack&>(me["list"]);
 		// This stack doesn't loop. It's easier to implement loading the files one page at a time
 		// if I know we're not gonna jump from page 0 to the last page, leaving a gap in the vector.
-		stk.doSelectPage(dir);
+		stk.changeSelectedPage(dir);
 		me["prev"].show();
 		me["next"].show();
 		if(stk.getPage() == 0){
@@ -2045,8 +2045,8 @@ public:
 		// when replaying, basically make Left/Right buttons no-op.
 		// Load/Save buttons should send a dummy result.
 		if(!replaying){
-			me["next"].attachClickHandler(std::bind(&cFilePicker::doSelectPage, this, 1));
-			me["prev"].attachClickHandler(std::bind(&cFilePicker::doSelectPage, this, -1));
+			me["next"].attachClickHandler(std::bind(&cFilePicker::changeSelectedPage, this, 1));
+			me["prev"].attachClickHandler(std::bind(&cFilePicker::changeSelectedPage, this, -1));
 			init_pages();
 		}else{
 			for(int i = 0; i < SLOTS_PER_PAGE; ++i){
@@ -2060,7 +2060,7 @@ public:
 		}
 
 		// Hide the prev button and populate the first page
-		doSelectPage(0);
+		changeSelectedPage(0);
 
 		me.run();
 		if(!me.hasResult()) return "";
