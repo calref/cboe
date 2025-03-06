@@ -21,16 +21,12 @@
 #include "winutil.hpp"
 
 namespace UI {
-	sf::RenderTexture& toolbar_gworld()
-	{
-		static sf::RenderTexture instance;
-		return instance;
-	}
 	cToolbar toolbar;
 }
 sf::RenderTexture& cToolbar::cache()
 {
-	return UI::toolbar_gworld();
+	static sf::RenderTexture instance;
+	return instance;
 }
 
 // The location of each UI area

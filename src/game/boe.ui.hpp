@@ -39,8 +39,8 @@ class cToolbar {
 	void place_buttons(const std::vector<eToolbarButton>& src);
 	void draw_buttons();
 	void init();
+	static sf::RenderTexture& cache();
 public:
-	sf::RenderTexture& cache();
 	void draw(sf::RenderTarget& targ);
 	eToolbarButton button_hit(sf::RenderWindow& win, location click, cFramerateLimiter& fps_limiter);
 };
