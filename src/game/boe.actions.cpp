@@ -1119,7 +1119,7 @@ static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 	}
 	
 	for(int i = 0; i < 80 && !party_sees_a_monst(); i++){
-		increase_age();
+		increase_age(false);
 		do_monsters();
 		do_monster_turn();
 		int make_wand = get_ran(1,1,160 - univ.town->difficulty);
