@@ -3407,6 +3407,9 @@ void ifthen_spec(const runtime_state& ctx) {
 				int i = 0;
 				for(short j = spec.ex1b; j < min(spec.ex2b, univ.town->max_dim); j++)
 					for(short k = spec.ex1a; k < min(spec.ex2a, univ.town->max_dim); k++) {
+						// If pict non-zero, exclude rectangle interior
+						if(spec.pic > 0 && i > spec.ex1b && i < spec.ex2b && j > spec.ex1a && j < spec.ex2a)
+							continue;
 						switch(eFieldType(spec.m1)) {
 							// These values are not allowed
 							case SPECIAL_EXPLORED: case SPECIAL_SPOT: case SPECIAL_ROAD:
