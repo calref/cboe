@@ -5,24 +5,24 @@
 	<pict name='mainpic' type='dlog' num='16' top='6' left='6'/>
 	<text name='prompt' size='large' top='6' left='50' width='248' height='14'>Which spell pattern?</text>
 	<group name='group'>
-		<led name='led1' state='off' top='29' left='55'/>
-		<led name='led2' state='off' top='74' left='55'/>
-		<led name='led3' state='off' top='119' left='55'/>
-		<led name='led4' state='off' top='164' left='55'/>
-		<led name='led5' state='off' top='209' left='55'/>
-		<led name='led6' state='off' top='254' left='55'/>
-		<led name='led7' state='off' top='29' left='183'/>
-		<led name='led8' state='off' top='74' left='183'/>
-		<led name='led9' state='off' top='119' left='183'/>
-		<led name='led10' state='off' top='164' left='183'/>
-		<led name='led11' state='off' top='209' left='183'/>
-		<led name='led12' state='off' top='254' left='183'/>
-		<led name='led13' state='off' top='29' left='320'/>
-		<led name='led14' state='off' top='74' left='320'/>
-		<led name='led15' state='off' top='119' left='320'/>
-		<led name='led16' state='off' top='164' left='320'/>
-		<led name='led17' state='off' top='209' left='320'/>
-		<led name='led18' state='off' top='254' left='320'/>
+		<led name='led1' state='off' top='29' left='55' width='123' height='36'/>
+		<led name='led2' state='off' top='74' left='55' width='123' height='36'/>
+		<led name='led3' state='off' top='119' left='55' width='123' height='36'/>
+		<led name='led4' state='off' top='164' left='55' width='123' height='36'/>
+		<led name='led5' state='off' top='209' left='55' width='123' height='36'/>
+		<led name='led6' state='off' top='254' left='55' width='123' height='36'/>
+		<led name='led7' state='off' top='29' left='183' width='123' height='36'/>
+		<led name='led8' state='off' top='74' left='183' width='123' height='36'/>
+		<led name='led9' state='off' top='119' left='183' width='123' height='36'/>
+		<led name='led10' state='off' top='164' left='183' width='123' height='36'/>
+		<led name='led11' state='off' top='209' left='183' width='123' height='36'/>
+		<led name='led12' state='off' top='254' left='183' width='123' height='36'/>
+		<led name='led13' state='off' top='29' left='320' width='123' height='36'/>
+		<led name='led14' state='off' top='74' left='320' width='123' height='36'/>
+		<led name='led15' state='off' top='119' left='320' width='123' height='36'/>
+		<led name='led16' state='off' top='164' left='320' width='123' height='36'/>
+		<led name='led17' state='off' top='209' left='320' width='123' height='36'/>
+		<led name='led18' state='off' top='254' left='320' width='123' height='36'/>
 	</group>
 	<tilemap name='pic1' top='29' left='76' rows='9' cols='9'>
 		<pict type='blank' top='0' left='0' width='3' height='4' framed='false'/>
