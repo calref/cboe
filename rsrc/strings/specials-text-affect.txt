@@ -449,11 +449,11 @@ Unused
 Unused
 Unused
 Just store ID in SDF and leave PC in party?
-extra 1b
-extra 1c
-extra 2a
-extra 2b
-extra 2c
+Unused
+Unused
+Unused
+Unused
+Unused
 Special to Jump To
 
 --------------------
