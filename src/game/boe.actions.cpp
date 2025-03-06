@@ -897,6 +897,14 @@ void handle_switch_pc(short which_pc, bool& need_redraw, bool& need_reprint) {
 		add_string_to_buf("Set active: PC must be here & active.");
 	else {
 		univ.cur_pc = which_pc;
+
+		// The shop interface may have taken control of the active PC. If the player
+		// manually sets active PC before shopping ends, don't restore the active PC from before
+		// shopping switched it. Unless the player buys something again, forcing it to store again.
+		extern short store_cur_pc;
+		if(store_cur_pc != -1)
+			store_cur_pc = -1;
+
 		set_stat_window_for_pc(which_pc);
 		add_string_to_buf("Now " + std::string(overall_mode == MODE_SHOPPING ? "shopping" : "active") + ": " + pc.name);
 		adjust_spell_menus();

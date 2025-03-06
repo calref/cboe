@@ -102,8 +102,38 @@ std::vector<int> shop_array;
 
 cShop active_shop;
 short active_shop_num;
+short store_cur_pc = -1;
 
-bool start_shop_mode(short which,short cost_adj,std::string store_name, bool cancel_when_empty) {
+// For healing shops, other PCs might be able to buy something if
+// the active PC can't
+bool start_shop_mode_other_pc(bool allow_empty = false) {
+	// The shop might change the current PC multiple times, but we want to restore
+	// it to the original active PC when shopping ends, so only store if we're
+	// not yet storing
+	if(store_cur_pc == -1)
+		store_cur_pc = univ.cur_pc;
+
+	// But I actually want to store the PC that's active now, so if no one can buy anything but
+	// we want to leave an empty shop, we can leave the PC selection where it is.
+	short pc_buying = univ.cur_pc;
+
+	bool other_pc_can_buy = false;
+	for(int i = 0; i < 6; ++i){
+		if(univ.party[i].main_status != eMainStatus::ABSENT){
+			univ.cur_pc = i;
+			if(start_shop_mode(active_shop_num,active_shop.getCostAdjust(),save_talk_str1,true,true)){
+				other_pc_can_buy = true;
+				break;
+			}
+		}
+	}
+	if(!other_pc_can_buy && allow_empty){
+		start_shop_mode(active_shop_num,active_shop.getCostAdjust(),save_talk_str1,false,true);
+	}
+	return other_pc_can_buy;
+}
+
+bool start_shop_mode(short which,short cost_adj,std::string store_name, bool cancel_when_empty, bool already_started) {
 	rectangle area_rect;
 	if(which < 0 || which >= univ.scenario.shops.size()) {
 		showError("The scenario tried to place you in a nonexistent shop!");
@@ -142,7 +172,8 @@ bool start_shop_mode(short which,short cost_adj,std::string store_name, bool can
 	area_rect = talk_area_rect;
 	talk_gworld.create(area_rect.width(), area_rect.height());
 
-	store_pre_shop_mode = overall_mode;
+	if(!already_started)
+		store_pre_shop_mode = overall_mode;
 	overall_mode = MODE_SHOPPING;
 	stat_screen_mode = MODE_SHOP;
 	shop_sbar->setPosition(0);
@@ -169,6 +200,11 @@ static void update_last_talk(int new_node) {
 void end_shop_mode() {
 	if(recording){
 		record_action("end_shop_mode", "");
+	}
+
+	if(store_cur_pc >= 0){
+		univ.cur_pc = store_cur_pc;
+		store_cur_pc = -1;
 	}
 
 	rectangle dummy_rect = {0,0,0,0};
@@ -431,8 +467,12 @@ void handle_sale(int i) {
 	// This looks to be redundant, but I'm just preserving the previous behavior of the code.
 	set_up_shop_array();
 	draw_shop_graphics(false,false,{});
-}
 
+	// When buying from a healer, we want to select the next PC who needs healing
+	if(shop_array.empty()){
+		start_shop_mode_other_pc(true);
+	}
+}
 
 void handle_info_request(int what_picked) {
 	if(recording){
@@ -903,12 +943,16 @@ void handle_talk_node(int which_talk_entry) {
 			
 		case eTalkNode::SHOP:
 			if(!start_shop_mode(b,a,save_talk_str1,true)){
-				// Second string of shop talk node: Custom message for when shop is empty
-				if(!save_talk_str2.empty()){
-					save_talk_str1 = save_talk_str2;
-					save_talk_str2 = "";
-				}else{
-					save_talk_str1 = "There is nothing available to buy.";
+				if(!start_shop_mode_other_pc()){
+					univ.cur_pc = store_cur_pc;
+
+					// Second string of shop talk node: Custom message for when shop is empty
+					if(!save_talk_str2.empty()){
+						save_talk_str1 = save_talk_str2;
+						save_talk_str2 = "";
+					}else{
+						save_talk_str1 = "There is nothing available to buy.";
+					}
 				}
 			}else{
 				can_save_talk = false;
