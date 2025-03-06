@@ -85,7 +85,7 @@ bool cStack::setPage(size_t n) {
 	return !failed;
 }
 
-void cStack::doSelectPage(int dir, bool loop) {
+void cStack::changeSelectedPage(int dir, bool loop) {
 	curPage += dir;
 	if(loop){
 		if(curPage < 0) curPage += nPages;
