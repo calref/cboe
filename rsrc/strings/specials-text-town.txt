@@ -59,7 +59,7 @@ Unused
 Unused
 X coordinate of space
 Y coordinate of space
-extra 1c
+Unused
 Boom type
 Number to print (0 means print no number)
 Sound to play
