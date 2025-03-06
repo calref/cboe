@@ -6,6 +6,7 @@
 //
 
 #include "special.hpp"
+#include "special-conditions.hpp"
 
 // Note: If adding a new node type below, be sure to adjust the end point here too.
 node_category_info_t CAT_OUTD{eSpecType::OUT_MAKE_WANDER, eSpecType::OUT_MOVE_PARTY};

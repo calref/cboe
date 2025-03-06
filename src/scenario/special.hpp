@@ -167,6 +167,7 @@ enum class eLocType {
 };
 
 enum class eSpecField { NONE, SDF1, SDF2, MSG1, MSG2, MSG3, PICT, PTYP, EX1A, EX1B, EX1C, EX2A, EX2B, EX2C, JUMP };
+short operator->*(const cSpecial& spec, eSpecField fld);
 
 struct node_function_t {
 	eSpecPicker button = eSpecPicker::NONE;
@@ -194,9 +195,12 @@ private:
 	bool needs_split = false;
 	friend struct node_builder_t;
 	friend struct node_properties_t;
+	friend struct node_condition_builder_t;
 };
 
 node_function_t operator+(eSpecPicker);
+
+using node_condition_t = std::function<bool(const cSpecial&)>;
 
 struct node_properties_t {
 	eSpecType self;
@@ -211,15 +215,19 @@ struct node_properties_t {
 	node_properties_t() : node_properties_t(eSpecType::INVALID) {}
 private:
 	node_properties_t(eSpecType type);
-	node_function_t get(eSpecField fld) const;
+	node_function_t get(const cSpecial& spec, eSpecField fld) const;
 	void set(eSpecField fld, node_function_t fcn);
 	std::map<eSpecField, node_function_t> fields;
+	std::vector<std::pair<node_condition_t, node_properties_t>> conditions;
 	friend struct node_builder_t;
+	friend struct node_condition_builder_t;
 	friend struct field_map;
 };
 
 const node_properties_t& operator* (eSpecType t);
 const node_category_info_t& operator* (eSpecCat t);
+
+struct node_condition_builder_t;
 
 // Builds the information needed to display the correct buttons when editing a special node.
 struct node_builder_t {
@@ -259,9 +267,45 @@ struct node_builder_t {
 	node_builder_t& loc(eSpecField a, eSpecField b, eLocType type);
 	// As above, but also notes that the area the location is in will be specified by the indicated field.
 	node_builder_t& loc(eSpecField a, eSpecField b, eLocType type, eSpecField where);
+	node_condition_builder_t when(node_condition_t cond, int lbl_sub);
 	operator node_properties_t();
 private:
 	node_properties_t node;
+	friend struct node_condition_builder_t;
+};
+
+struct node_condition_builder_t {
+	node_builder_t& end();
+	node_condition_builder_t& field(eSpecField field, node_function_t picker = eSpecPicker::NONE);
+	node_condition_builder_t& field_pair(eSpecField main, eSpecField extra, node_function_t picker = eSpecPicker::NONE);
+	node_condition_builder_t& sdf1(node_function_t picker = eSpecPicker::NONE);
+	node_condition_builder_t& sdf2(node_function_t picker = eSpecPicker::NONE);
+	node_condition_builder_t& jump(node_function_t picker = eSpecPicker::NONE);
+	node_condition_builder_t& msg1(node_function_t picker = eSpecPicker::NONE);
+	node_condition_builder_t& msg2(node_function_t picker = eSpecPicker::NONE);
+	node_condition_builder_t& msg3(node_function_t picker = eSpecPicker::NONE);
+	node_condition_builder_t& pict(node_function_t picker = eSpecPicker::NONE);
+	node_condition_builder_t& ptyp(node_function_t picker = eSpecPicker::NONE);
+	node_condition_builder_t& ex1a(node_function_t picker = eSpecPicker::NONE);
+	node_condition_builder_t& ex1b(node_function_t picker = eSpecPicker::NONE);
+	node_condition_builder_t& ex1c(node_function_t picker = eSpecPicker::NONE);
+	node_condition_builder_t& ex2a(node_function_t picker = eSpecPicker::NONE);
+	node_condition_builder_t& ex2b(node_function_t picker = eSpecPicker::NONE);
+	node_condition_builder_t& ex2c(node_function_t picker = eSpecPicker::NONE);
+	node_condition_builder_t& sdf();
+	node_condition_builder_t& msg();
+	node_condition_builder_t& pic();
+	node_condition_builder_t& rect(eLocType type);
+	node_condition_builder_t& sdf(eSpecField a, eSpecField b);
+	node_condition_builder_t& loc(eSpecField a, eSpecField b, eLocType type);
+	node_condition_builder_t& loc(eSpecField a, eSpecField b, eLocType type, eSpecField where);
+private:
+	node_condition_builder_t(node_builder_t& parent, node_condition_t cond, int sub);
+	node_condition_t cond;
+	node_builder_t self;
+	node_builder_t& parent;
+	int sub;
+	friend class node_builder_t;
 };
 
 // An overview of how the builder works.

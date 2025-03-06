@@ -744,6 +744,7 @@
 		9170C5262D74237A009B6E7C /* scen.sdfpicker.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = scen.sdfpicker.hpp; sourceTree = "<group>"; };
 		9170C5962D75EE42009B6E7C /* pattern.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pattern.cpp; sourceTree = "<group>"; };
 		9170C5972D75EE42009B6E7C /* pattern.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = pattern.hpp; sourceTree = "<group>"; };
+		9170C5A32D79659A009B6E7C /* special-conditions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "special-conditions.hpp"; sourceTree = "<group>"; };
 		9176FEC01D550EFC006EF694 /* out_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = out_legacy.cpp; sourceTree = "<group>"; };
 		9176FEC11D550EFC006EF694 /* scen_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen_legacy.cpp; sourceTree = "<group>"; };
 		9176FEC41D550EFD006EF694 /* talk_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = talk_legacy.cpp; sourceTree = "<group>"; };
@@ -1301,6 +1302,7 @@
 				91279C570F9D1253007B0D52 /* scenario.hpp */,
 				91FDB5771A4E71A900DE5983 /* shop.hpp */,
 				91279CC50F9D1A02007B0D52 /* special.hpp */,
+				9170C5A32D79659A009B6E7C /* special-conditions.hpp */,
 				91E5C7B60F9F619D00C21460 /* talking.hpp */,
 				91279C650F9D12D6007B0D52 /* terrain.hpp */,
 				9185BD9C1EA02BA20027C346 /* terrain_abilities.hpp */,

@@ -6,6 +6,7 @@
 //
 
 #include "special.hpp"
+#include "special-conditions.hpp"
 
 // Note: If adding a new node type below, be sure to adjust the end point here too.
 node_category_info_t CAT_AFFECT{eSpecType::SELECT_TARGET, eSpecType::UNSTORE_PC};
@@ -15,7 +16,10 @@ namespace {
 		.msg()
 		.ex1a(STRT_TARG_TYPE)
 		.ex1b(eSpecPicker::NODE)
-		.ex2a(STRT_TARG_MODE);
+		.ex2a(STRT_TARG_MODE)
+		.when(eSpecField::EX2A == 2, 1)
+			.ex2b()
+		.end();
 	node_properties_t S_DAMAGE = node_builder_t(eSpecType::DAMAGE)
 		.msg()
 		.ex2b(eSpecPicker::DAMAGE_TYPE)

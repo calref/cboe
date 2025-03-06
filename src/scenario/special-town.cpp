@@ -6,6 +6,7 @@
 //
 
 #include "special.hpp"
+#include "special-conditions.hpp"
 
 // Note: If adding a new node type below, be sure to adjust the end point here too.
 node_category_info_t CAT_TOWN{eSpecType::MAKE_TOWN_HOSTILE, eSpecType::TOWN_PLACE_LABEL};

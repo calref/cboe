@@ -6,6 +6,7 @@
 //
 
 #include "special.hpp"
+#include "special-conditions.hpp"
 
 // Note: If adding a new node type below, be sure to adjust the end point here too.
 node_category_info_t CAT_ONCE{eSpecType::ONCE_GIVE_ITEM, eSpecType::ONCE_TRAP};
@@ -55,5 +56,7 @@ namespace {
 		.msg()
 		.pic()
 		.ex1a(STRT_TRAP)
-		.ex2b(+eSpecPicker::NODE);
+		.when(eSpecField::EX1A == 13, 1)
+			.ex2b(+eSpecPicker::NODE)
+		.end();
 }

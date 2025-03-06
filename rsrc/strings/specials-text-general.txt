@@ -196,7 +196,7 @@ Unused
 0 - allow, 1 - prevent
 Unused
 Unused
-Force allow if blocked?
+Unused|Force allow if blocked?
 Unused
 Unused
 Special to Jump To
@@ -509,16 +509,16 @@ Special to Jump To
 
 --------------------
 Debug Print Numbers
-Stuff Done Flag Part A
-Stuff Done Flag Part B
+Unused|Stuff Done Flag Part A
+Unused|Stuff Done Flag Part B
 Unused
 Unused
 Unused
 Specify what to print
 Unused
-Number of monster, or value to print
-Value to print (could be a pointer)
-Value to print (could be a pointer)
+Unused|Value to print (could be a pointer)|Number of monster
+Unused|Value to print (could be a pointer)
+Unused|Value to print (could be a pointer)
 Unused
 Unused
 Unused
@@ -774,7 +774,7 @@ Unused
 Which quest?
 New Quest Status
 Unused
-Job Board Source / Anger (see docs)
+Unused|Job Board Source|Job Board Anger
 Unused
 Unused
 Special to Jump To
