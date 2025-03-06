@@ -41,7 +41,7 @@ Unused
 Unused
 Unused
 X coordinate of monster (or monster ID)
-Y coordinate of monster (or -1 to use X as ID)
+Y coordinate of monster (or -1 for ID)
 Unused
 Unused
 Unused
@@ -95,7 +95,7 @@ X coordinate of space
 Y coordinate of space
 Unused
 Damage to inflict (0 .. 1000)
-Type of damage (0..8)
+Type of damage
 Unused
 Special to Jump To
 
@@ -112,7 +112,7 @@ X coordinate of space
 Y coordinate of space
 Unused
 Damage to inflict (0 .. 1000)
-Type of damage (0..8)
+Type of damage
 Unused
 Special to Jump To
 
@@ -314,10 +314,10 @@ Picture number
 Picture type
 Unused
 If Pulled, call this special ...
-Animation Loops (-2 for infinite)
+Picture animation loops (-2 for infinite)
 Unused
 Unused
-Animation FPS (-1 for default 2)
+Picture animation FPS (-1 for default 2)
 Special to Jump To
 
 --------------------
@@ -331,10 +331,10 @@ Picture number
 Picture type
 X coordinate to telep. to
 Y coordinate to telep. to
-Animation Loops (-2 for infinite)
+Picture animation loops (-2 for infinite)
 Unused
 Unused
-Animation FPS (-1 for default 2)
+Picture animation FPS (-1 for default 2)
 Special to Jump To
 
 --------------------
@@ -417,7 +417,7 @@ Unused
 Sound to play (10 = teleport)
 Unused
 Unused
-0 - return to split point, 1 - don't change location
+0 - return to split point, 1 - don't move
 Unused
 Unused
 Special to Jump To
@@ -448,7 +448,7 @@ Second part of message
 Unused
 Unused
 Unused
-New town lighting type (0 .. 3)
+New town lighting type (-1 = don't change)
 Unused
 Unused
 Party light level
@@ -482,7 +482,7 @@ Second part of message
 Unused
 Unused
 Unused
-X coordinate of space (if -1, center on party)
+X coordinate of space (-1 = center on party)
 Y coordinate of space
 Unused
 Unused
@@ -535,7 +535,7 @@ Unused
 Unused
 X Coordinate of pattern center
 Y Coordinate of pattern center
-Which spell pattern? (-1 for targeted pattern)
+Which spell pattern? (-1 = targeted pattern)
 Which field type?
 Unused
 Unused
@@ -552,8 +552,8 @@ Unused
 Unused
 X Coordinate of pattern center
 Y Coordinate of pattern center
-Which spell pattern? (-1 for targeted pattern)
-Which damage type? (0..8)
+Which spell pattern? (-1 = targeted pattern)
+Which damage type?
 How many dice? (calculated in d6's)
 Boom type
 Special to Jump To

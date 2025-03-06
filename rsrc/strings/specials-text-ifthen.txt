@@ -310,7 +310,7 @@ Maximum # of fields
 Field Type
 If enough fields, call this special ...
 Unused
-Unused
+0 - entire rectangle, 1 - just borders
 Unused
 Top of rectangle
 Left of rectangle
@@ -367,7 +367,7 @@ Required species
 If enough of species, call this special ...
 Unused
 Required number of species
-Comparison method (-2 .. 2)
+Comparison method
 Unused
 Otherwise call this special
 
@@ -384,7 +384,7 @@ Required trait
 If enough of trait present, call this special ...
 Unused
 Required number of trait
-Comparison method (-2 .. 2)
+Comparison method
 Unused
 Otherwise call this special
 
@@ -414,10 +414,10 @@ Unused
 Unused
 Number of letters to match
 Unused
-Number of a SCENARIO special message
+Number of a scenario string
 If answer matches, call this special ...
 Unused
-Number of a SCENARIO special message
+Number of a scenario string
 If answer matches, call this special ...
 Unused
 Otherwise call this special
@@ -448,7 +448,7 @@ Unused
 Unused
 Unused
 Unused
-Which context (0 .. 24)
+Which context
 Prevent entry?
 If context matches, call this special ...
 Unused
@@ -467,10 +467,10 @@ Comparison Mode
 If tests 1 and 2 both pass, call this special ...
 Range lower bound|Value to compare to
 Range upper bound|Comparison method
-If test 1 passes but test 2 fails, call this special ...
+If test 1 passes but test 2 fails, call ...
 Range lower bound|Value to compare to
 Range upper bound|Comparison method
-If test 2 passes but test 1 fails, call this special ...
+If test 2 passes but test 1 fails, call ...
 Otherwise call this special
 
 --------------------

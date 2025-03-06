@@ -170,7 +170,9 @@ namespace{
 	node_properties_t S_TALK = node_builder_t(eSpecType::START_TALK)
 		.pict(PIC_TALK)
 		.ex1a(STRT_TALK)
-		.ex1b(STRT_MONST)
+		.when(eSpecField::PICT == -1, 1)
+			.ex1b(STRT_MONST)
+		.end()
 		.jump(eSpecPicker::NONE);
 	node_properties_t S_QUEST = node_builder_t(eSpecType::UPDATE_QUEST)
 		.msg()
