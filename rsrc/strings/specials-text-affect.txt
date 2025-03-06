@@ -10,7 +10,7 @@ Restrictions
 Special if Cancel button pressed
 Unused
 Selection Mode
-0..6 - PC, 100+ - monster (if above = 2)
+Unused|0..6 - PC, 100+ - monster
 Unused
 Special to Jump To
 

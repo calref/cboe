@@ -465,11 +465,11 @@ Minimum allowed response
 Maximum allowed response
 Comparison Mode
 If tests 1 and 2 both pass, call this special ...
-Range lower bound (or value to compare to)
-Range upper bound (or comparison method -2 .. 2)
+Range lower bound|Value to compare to
+Range upper bound|Comparison method
 If test 1 passes but test 2 fails, call this special ...
-Range lower bound (or value to compare to)
-Range upper bound (or comparison method -2 .. 2)
+Range lower bound|Value to compare to
+Range upper bound|Comparison method
 If test 2 passes but test 1 fails, call this special ...
 Otherwise call this special
 

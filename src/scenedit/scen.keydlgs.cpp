@@ -1273,6 +1273,9 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case eSpecPicker::NONE: return false;
 	}
 	me[field].setTextToNum(store);
+	// Field labels might need to change, so refresh them
+	save_spec_enc(me, edit_stack);
+	put_spec_enc_in_dlog(me, edit_stack);
 	return true;
 }
 
@@ -1320,6 +1323,17 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 		"msg1-toggle", "msg2-toggle", "msg3-toggle", "pict-toggle", "pictype-toggle", "jump-toggle",
 		"x1a-toggle", "x1b-toggle", "x1c-toggle", "x2a-toggle", "x2b-toggle", "x2c-toggle",
 		"sdf1-toggle", "sdf2-toggle",
+	});
+	special.attachFocusHandlers([&edit_stack](cDialog& me, std::string, bool losing) {
+		if(losing) {
+			save_spec_enc(me, edit_stack);
+			put_spec_enc_in_dlog(me, edit_stack);
+		}
+		return true;
+	}, {
+		"msg1", "msg2", "msg3", "pict", "pictype", "jump",
+		"x1a", "x1b", "x1c", "x2a", "x2b", "x2c",
+		"sdf1", "sdf2",
 	});
 	special["cancel"].attachClickHandler(std::bind(discard_spec_enc, _1, std::ref(edit_stack)));
 	special["node-help"].attachClickHandler([&edit_stack](cDialog& me, std::string item_hit, eKeyMod mods) {

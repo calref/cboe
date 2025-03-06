@@ -6,6 +6,7 @@
 //
 
 #include "special.hpp"
+#include "special-conditions.hpp"
 
 // Note: If adding a new node type below, be sure to adjust the end point here too.
 node_category_info_t CAT_GENERAL{eSpecType::NONE, eSpecType::STR_BUF_TO_SIGN};
@@ -47,7 +48,9 @@ namespace{
 	node_properties_t S_PREVENT = node_builder_t(eSpecType::CANT_ENTER)
 		.msg()
 		.ex1a(eSpecPicker::TOGGLE)
-		.ex2a(eSpecPicker::TOGGLE);
+		.when(eSpecField::EX1A < 1, 1)
+			.ex2a(eSpecPicker::TOGGLE)
+		.end();
 	node_properties_t S_TIME = node_builder_t(eSpecType::CHANGE_TIME)
 		.msg();
 	node_properties_t S_TIMER = node_builder_t(eSpecType::SCEN_TIMER_START)
@@ -103,8 +106,18 @@ namespace{
 		.msg1(+eSpecPicker::MSG_SINGLE)
 		.ex2a(eSpecPicker::TOGGLE);
 	node_properties_t S_DEBUG = node_builder_t(eSpecType::PRINT_NUMS)
-		.sdf()
-		.pict(STRT_DEBUG_PRINT);
+		.pict(STRT_DEBUG_PRINT)
+		.when(eSpecField::PICT == 0, 1)
+			.sdf()
+		.end()
+		.when(eSpecField::PICT == 1, 1)
+			.ex1a()
+			.ex1b()
+			.ex1c()
+		.end()
+		.when(eSpecField::PICT == 2, 2)
+			.ex1a()
+		.end();
 	node_properties_t S_MULFLAG = node_builder_t(eSpecType::SDF_TIMES)
 		.sdf()
 		.msg();
@@ -151,7 +164,13 @@ namespace{
 	node_properties_t S_QUEST = node_builder_t(eSpecType::UPDATE_QUEST)
 		.msg()
 		.ex1a(STRT_QUEST)
-		.ex1b(STRT_QUEST_STATUS);
+		.ex1b(STRT_QUEST_STATUS)
+		.when(eSpecField::EX1B == 1, 1)
+			.ex2a(eSpecPicker::JOB_BOARD)
+		.end()
+		.when(eSpecField::EX1B == 3, 2)
+			.ex2a()
+		.end();
 	node_properties_t S_BUF_SWAP = node_builder_t(eSpecType::SWAP_STR_BUF)
 		.msg();
 	node_properties_t S_ALTER_SIGN = node_builder_t(eSpecType::STR_BUF_TO_SIGN)

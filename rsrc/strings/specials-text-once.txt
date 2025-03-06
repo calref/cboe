@@ -231,7 +231,7 @@ Type of trap
 Trap severity (0 .. 3)
 Animation Loops (-2 for infinite)
 Penalty (0 .. 100, higher is harder)
-(Custom only) Special node for effect
+Unused|Special node for effect
 Animation FPS (-1 for default 2)
 Special after trap finished
 

@@ -925,6 +925,9 @@
     <ClInclude Include="..\..\..\src\scenario\special.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\scenario\special-conditions.hpp">
+      <Filter>Scenario</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\scenario\talking.hpp">
       <Filter>Scenario</Filter>
     </ClInclude>

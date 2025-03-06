@@ -6,6 +6,7 @@
 //
 
 #include "special.hpp"
+#include "special-conditions.hpp"
 
 // Note: If adding a new node type below, be sure to adjust the end point here too.
 node_category_info_t CAT_COND{eSpecType::IF_SDF, eSpecType::IF_QUEST};
@@ -111,10 +112,14 @@ namespace {
 		.msg1(+eSpecPicker::MSG_SINGLE)
 		.pict(STRT_CMP_MODE)
 		.ptyp(eSpecPicker::NODE)
-		.ex1b(STRT_CMP)
 		.ex1c(eSpecPicker::NODE)
-		.ex2b(STRT_CMP)
-		.ex2c(eSpecPicker::NODE);
+		.ex2c(eSpecPicker::NODE)
+		.when(eSpecField::PICT == 2, 1)
+			.ex1a()
+			.ex1b(STRT_CMP)
+			.ex2a()
+			.ex2b(STRT_CMP)
+		.end();
 	node_properties_t S_BOAT = node_builder_t(eSpecType::IF_IN_BOAT)
 		.ex1b(STRT_BOAT)
 		.ex1c(eSpecPicker::NODE);

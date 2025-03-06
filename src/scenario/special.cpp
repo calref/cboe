@@ -584,37 +584,36 @@ std::string node_properties_t::opcode() const {
 	return get_str("specials-opcodes", int(self));
 }
 
-static std::string get_node_string(std::string base, eSpecType type, int which) {
+static std::string get_node_string(std::string base, eSpecType type, int which, int sect) {
 	eSpecCat cat = getNodeCategory(type);
 	int offset = int((*cat).first), i = int(type);
 	int strnum = (i - offset) * 17 + which + 1;
 	switch(cat) {
-		case eSpecCat::GENERAL:
-			return get_str(base + "-general", strnum);
-		case eSpecCat::ONCE:
-			return get_str(base + "-once", strnum);
-		case eSpecCat::AFFECT:
-			return get_str(base + "-affect", strnum);
-		case eSpecCat::IF_THEN:
-			return get_str(base + "-ifthen", strnum);
-		case eSpecCat::TOWN:
-			return get_str(base + "-town", strnum);
-		case eSpecCat::RECT:
-			return get_str(base + "-rect", strnum);
-		case eSpecCat::OUTDOOR:
-			return get_str(base + "-outdoor", strnum);
-		case eSpecCat::INVALID:
-			return "error";
+		case eSpecCat::GENERAL: base += "-general"; break;
+		case eSpecCat::ONCE: base += "-once"; break;
+		case eSpecCat::AFFECT: base += "-affect"; break;
+		case eSpecCat::IF_THEN: base += "-ifthen"; break;
+		case eSpecCat::TOWN: base += "-town"; break;
+		case eSpecCat::RECT: base += "-rect"; break;
+		case eSpecCat::OUTDOOR: base += "-outdoor"; break;
+		case eSpecCat::INVALID: return "error";
 	}
-	return "";
+	std::string str = get_str(base, strnum);
+	if(sect < 0) return str;
+	size_t start = 0, end = str.find_first_of('|');
+	while(sect --> 0 && end != std::string::npos) {
+		start = end + 1;
+		end = str.find_first_of('|', end + 1);
+	}
+	return str.substr(start, end - start);
 }
 
 std::string node_properties_t::name() const {
-	return get_node_string("specials-text", self, 0);
+	return get_node_string("specials-text", self, 0, -1);
 }
 
 std::string node_properties_t::descr() const {
-	return get_node_string("specials-text", self, 15);
+	return get_node_string("specials-text", self, 15, -1);
 }
 
 node_function_t::node_function_t() {}
@@ -670,10 +669,16 @@ node_function_t operator+(eSpecPicker picker) {
 }
 
 std::string node_function_t::label() const {
-	return get_node_string("specials-text", self, lbl_idx);
+	return get_node_string("specials-text", self, lbl_idx, sub_idx);
 }
 
-node_function_t node_properties_t::get(eSpecField fld) const {
+node_function_t node_properties_t::get(const cSpecial& spec, eSpecField fld) const {
+	for(const auto& cond : conditions) {
+		if(cond.first(spec)) {
+			auto iter = cond.second.fields.find(fld);
+			if(iter != cond.second.fields.end()) return iter->second;
+		}
+	}
 	auto iter = fields.find(fld);
 	if(iter != fields.end()) return iter->second;
 	static node_function_t nil_fcn;
@@ -688,60 +693,60 @@ void node_properties_t::set(eSpecField fld, node_function_t fcn) {
 	fields[fld] = fcn;
 }
 
-node_function_t node_properties_t::sdf1(const cSpecial&) const {
-	return get(eSpecField::SDF1);
+node_function_t node_properties_t::sdf1(const cSpecial& spec) const {
+	return get(spec, eSpecField::SDF1);
 }
 
-node_function_t node_properties_t::sdf2(const cSpecial&) const {
-	return get(eSpecField::SDF2);
+node_function_t node_properties_t::sdf2(const cSpecial& spec) const {
+	return get(spec, eSpecField::SDF2);
 }
 
-node_function_t node_properties_t::msg1(const cSpecial&) const {
-	return get(eSpecField::MSG1);
+node_function_t node_properties_t::msg1(const cSpecial& spec) const {
+	return get(spec, eSpecField::MSG1);
 }
 
-node_function_t node_properties_t::msg2(const cSpecial&) const {
-	return get(eSpecField::MSG2);
+node_function_t node_properties_t::msg2(const cSpecial& spec) const {
+	return get(spec, eSpecField::MSG2);
 }
 
-node_function_t node_properties_t::msg3(const cSpecial&) const {
-	return get(eSpecField::MSG3);
+node_function_t node_properties_t::msg3(const cSpecial& spec) const {
+	return get(spec, eSpecField::MSG3);
 }
 
-node_function_t node_properties_t::pic(const cSpecial&) const {
-	return get(eSpecField::PICT);
+node_function_t node_properties_t::pic(const cSpecial& spec) const {
+	return get(spec, eSpecField::PICT);
 }
 
-node_function_t node_properties_t::pictype(const cSpecial&) const {
-	return get(eSpecField::PTYP);
+node_function_t node_properties_t::pictype(const cSpecial& spec) const {
+	return get(spec, eSpecField::PTYP);
 }
 
-node_function_t node_properties_t::ex1a(const cSpecial&) const {
-	return get(eSpecField::EX1A);
+node_function_t node_properties_t::ex1a(const cSpecial& spec) const {
+	return get(spec, eSpecField::EX1A);
 }
 
-node_function_t node_properties_t::ex1b(const cSpecial&) const {
-	return get(eSpecField::EX1B);
+node_function_t node_properties_t::ex1b(const cSpecial& spec) const {
+	return get(spec, eSpecField::EX1B);
 }
 
-node_function_t node_properties_t::ex1c(const cSpecial&) const {
-	return get(eSpecField::EX1C);
+node_function_t node_properties_t::ex1c(const cSpecial& spec) const {
+	return get(spec, eSpecField::EX1C);
 }
 
-node_function_t node_properties_t::ex2a(const cSpecial&) const {
-	return get(eSpecField::EX2A);
+node_function_t node_properties_t::ex2a(const cSpecial& spec) const {
+	return get(spec, eSpecField::EX2A);
 }
 
-node_function_t node_properties_t::ex2b(const cSpecial&) const {
-	return get(eSpecField::EX2B);
+node_function_t node_properties_t::ex2b(const cSpecial& spec) const {
+	return get(spec, eSpecField::EX2B);
 }
 
-node_function_t node_properties_t::ex2c(const cSpecial&) const {
-	return get(eSpecField::EX2C);
+node_function_t node_properties_t::ex2c(const cSpecial& spec) const {
+	return get(spec, eSpecField::EX2C);
 }
 
-node_function_t node_properties_t::jump(const cSpecial&) const {
-	return get(eSpecField::JUMP);
+node_function_t node_properties_t::jump(const cSpecial& spec) const {
+	return get(spec, eSpecField::JUMP);
 }
 
 struct field_map {
@@ -763,9 +768,9 @@ struct field_map {
 	};
 };
 
-static field_map& fields() {
+short operator->*(const cSpecial& spec, eSpecField fld) {
 	static field_map map;
-	return map;
+	return spec.*map.map[fld];
 }
 
 node_builder_t& node_builder_t::sdf() {
@@ -871,4 +876,140 @@ node_builder_t::operator node_properties_t() {
 	std::map<eSpecType, node_properties_t>& allNodeProps = nodeProps();
 	allNodeProps.emplace(node.self, node);
 	return node;
+}
+
+node_condition_builder_t node_builder_t::when(node_condition_t cond, int lbl_sub) {
+	return node_condition_builder_t(*this, cond, lbl_sub);
+}
+
+node_condition_builder_t::node_condition_builder_t(node_builder_t& parent, node_condition_t cond, int sub)
+	: cond(cond)
+	, self(parent.node.self)
+	, parent(parent)
+	, sub(sub)
+{
+	self.node.fields.clear();
+}
+
+node_builder_t& node_condition_builder_t::end() {
+	for(auto& field : self.node.fields) {
+		field.second.sub_idx = sub;
+	}
+	parent.node.conditions.emplace_back(cond, self.node);
+	return parent;
+}
+
+node_condition_builder_t& node_condition_builder_t::field(eSpecField field, node_function_t picker) {
+	self.field(field, picker);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::field_pair(eSpecField main, eSpecField extra, node_function_t picker) {
+	self.field_pair(main, extra, picker);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::sdf1(node_function_t picker) {
+	self.sdf1(picker);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::sdf2(node_function_t picker) {
+	self.sdf2(picker);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::jump(node_function_t picker) {
+	self.jump(picker);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::msg1(node_function_t picker) {
+	self.msg1(picker);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::msg2(node_function_t picker) {
+	self.msg2(picker);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::msg3(node_function_t picker) {
+	self.msg3(picker);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::pict(node_function_t picker) {
+	self.pict(picker);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::ptyp(node_function_t picker) {
+	self.ptyp(picker);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::ex1a(node_function_t picker) {
+	self.ex1a(picker);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::ex1b(node_function_t picker) {
+	self.ex1b(picker);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::ex1c(node_function_t picker) {
+	self.ex1c(picker);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::ex2a(node_function_t picker) {
+	self.ex2a(picker);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::ex2b(node_function_t picker) {
+	self.ex2b(picker);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::ex2c(node_function_t picker) {
+	self.ex2c(picker);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::sdf() {
+	self.sdf();
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::msg() {
+	self.msg();
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::pic() {
+	self.pic();
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::rect(eLocType type) {
+	self.rect(type);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::sdf(eSpecField a, eSpecField b) {
+	self.sdf(a, b);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::loc(eSpecField a, eSpecField b, eLocType type) {
+	self.loc(a, b, type);
+	return *this;
+}
+
+node_condition_builder_t& node_condition_builder_t::loc(eSpecField a, eSpecField b, eLocType type, eSpecField where) {
+	self.loc(a, b, type, where);
+	return *this;
 }

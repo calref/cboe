@@ -346,6 +346,7 @@
     <ClInclude Include="..\..\..\src\scenario\scenario.hpp" />
     <ClInclude Include="..\..\..\src\scenario\shop.hpp" />
     <ClInclude Include="..\..\..\src\scenario\special.hpp" />
+    <ClInclude Include="..\..\..\src\scenario\special-conditions.hpp" />
     <ClInclude Include="..\..\..\src\scenario\talking.hpp" />
     <ClInclude Include="..\..\..\src\scenario\terrain.hpp" />
     <ClInclude Include="..\..\..\src\scenario\terrain_abilities.hpp" />
