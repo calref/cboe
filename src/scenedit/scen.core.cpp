@@ -15,6 +15,7 @@
 #include "scen.graphics.hpp"
 #include "scen.core.hpp"
 #include "scen.keydlgs.hpp"
+#include "scen.sdfpicker.hpp"
 #include "scen.townout.hpp"
 #include "scen.fileio.hpp"
 #include "scen.actions.hpp"
@@ -2617,27 +2618,30 @@ bool edit_vehicle(cVehicle& what, int num, bool is_boat) {
 }
 
 static bool save_add_town(cDialog& me) {
+	cTilemap& grid = dynamic_cast<cTilemap&>(me["varying"]);
 	for(short i = 0; i < scenario.town_mods.size(); i++) {
-		std::string id = std::to_string(i + 1);
-		scenario.town_mods[i].spec = me["town" + id].getTextAsNum();
-		if(cre(scenario.town_mods[i].spec,
-				-1,199,"Town number must be from 0 to 199 (or -1 for no effect).","",&me)) return false;
-		scenario.town_mods[i].x = me["flag" + id + "-x"].getTextAsNum();
-		if(cre(scenario.town_mods[i].x,
-				0,299,"First part of flag must be from 0 to 299.","",&me)) return false;
-		scenario.town_mods[i].y = me["flag" + id + "-y"].getTextAsNum();
-		if(cre(scenario.town_mods[i].y,
-				0,49,"Second part of flag must be from 0 to 49.","",&me)) return false;
+		int town = grid.getChild("town", 0, i).getTextAsNum();
+		if(cre(town,
+				-1,scenario.towns.size()-1,"Town number must be from 0 to " + std::to_string(scenario.towns.size() - 1) + " (or -1 for no effect).","",&me)) return false;
+		int sdf_row = grid.getChild("flag-row", 0, i).getTextAsNum();
+		if(cre(sdf_row,0,SDF_ROWS - 1,"First part of flag must be from 0 to " + std::to_string(SDF_ROWS - 1) + ".","",&me))
+			return false;
+		int sdf_col = grid.getChild("flag-col", 0, i).getTextAsNum();
+		if(cre(sdf_col,0,SDF_COLUMNS - 1,"Second part of flag must be from 0 to " + std::to_string(SDF_COLUMNS - 1) + ".","",&me))
+			return false;
+		scenario.town_mods[i].spec = town;
+		scenario.town_mods[i].x = sdf_col;
+		scenario.town_mods[i].y = sdf_row;
 	}
 	return true;
 }
 
 static void put_add_town_in_dlog(cDialog& me) {
+	cTilemap& grid = dynamic_cast<cTilemap&>(me["varying"]);
 	for(short i = 0; i < scenario.town_mods.size(); i++) {
-		std::string id = std::to_string(i + 1);
-		me["town" + id].setTextToNum(scenario.town_mods[i].spec);
-		me["flag" + id + "-x"].setTextToNum(scenario.town_mods[i].x);
-		me["flag" + id + "-y"].setTextToNum(scenario.town_mods[i].y);
+		grid.getChild("town", 0, i).setTextToNum(scenario.town_mods[i].spec);
+		grid.getChild("flag-col", 0, i).setTextToNum(scenario.town_mods[i].x);
+		grid.getChild("flag-row", 0, i).setTextToNum(scenario.town_mods[i].y);
 	}
 }
 
@@ -2645,6 +2649,8 @@ static bool edit_add_town_event_filter(cDialog& me, std::string hit) {
 	if(hit == "okay") {
 		if(save_add_town(me))
 			me.toast(true);
+	} else if(hit == "cancel") {
+		me.toast(false);
 	}
 	return true;
 }
@@ -2653,7 +2659,29 @@ void edit_add_town() {
 	using namespace std::placeholders;
 	
 	cDialog vary_dlg(*ResMgr::dialogs.get("edit-town-varying"));
-	vary_dlg.attachClickHandlers(std::bind(edit_add_town_event_filter, _1, _2), {"okay"});
+	vary_dlg.attachClickHandlers(std::bind(edit_add_town_event_filter, _1, _2), {"okay", "cancel"});
+	cTilemap& grid = dynamic_cast<cTilemap&>(vary_dlg["varying"]);
+	grid.attachClickHandlers([](cDialog& me, std::string hit, eKeyMod) {
+		cTilemap& grid = dynamic_cast<cTilemap&>(me["varying"]);
+		auto idx = grid.getCellIdx(me[hit]);
+		auto& field = grid.getChild("town", idx.x, idx.y);
+		int town = field.getTextAsNum();
+		town = choose_text(STRT_TOWN, town, &me, "Which town?");
+		field.setTextToNum(town);
+		return true;
+	}, "pick-town");
+	grid.attachClickHandlers([](cDialog& me, std::string hit, eKeyMod) {
+		cTilemap& grid = dynamic_cast<cTilemap&>(me["varying"]);
+		auto idx = grid.getCellIdx(me[hit]);
+		auto& fieldX = grid.getChild("flag-col", idx.x, idx.y);
+		auto& fieldY = grid.getChild("flag-row", idx.x, idx.y);
+		location sdf(fieldX.getTextAsNum(), fieldY.getTextAsNum());
+		cStuffDonePicker picker(sdf);
+		sdf = picker.run();
+		fieldX.setTextToNum(sdf.x);
+		fieldY.setTextToNum(sdf.y);
+		return true;
+	}, "pick-flag");
 	
 	put_add_town_in_dlog(vary_dlg);
 	

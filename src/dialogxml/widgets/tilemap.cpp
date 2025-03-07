@@ -196,7 +196,7 @@ void cTilemap::attachClickHandlers(std::function<bool(cDialog&,std::string,eKeyM
 				matches = true;
 			}
 		} else {
-			if(ctrl.first.compare(0, prefix.size(), prefix)) {
+			if(ctrl.first.compare(0, prefix.size(), prefix) == 0) {
 				matches = true;
 			}
 		}
