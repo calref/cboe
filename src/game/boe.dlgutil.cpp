@@ -1851,6 +1851,22 @@ class cFilePicker {
 		me["auto" + suffix + "-more-recent"].hide();
 	}
 
+	void corrupt_slot(int idx) {
+		std::string suffix = std::to_string(idx+1);
+		me["pc" + suffix + "a"].hide();
+		me["pc" + suffix + "b"].hide();
+		me["pc" + suffix + "c"].hide();
+		me["pc" + suffix + "d"].hide();
+		me["pc" + suffix + "e"].hide();
+		me["pc" + suffix + "f"].hide();
+		me["info" + suffix].setText("This file is corrupt and cannot be opened.");
+		me["save" + suffix].hide();
+		me["load" + suffix].hide();
+		me["info" + suffix].show();
+		me["auto" + suffix + "-more-recent"].hide();
+		me["auto" + suffix].hide();
+	}
+
 	void populate_slot(int idx, fs::path file, std::time_t mtime, cUniverse& party_univ) {
 		if(replaying){
 			dummy_slot(idx);
@@ -1858,6 +1874,10 @@ class cFilePicker {
 		}
 		std::string suffix = std::to_string(idx+1);
 		me["file" + suffix].setText(file.filename().string());
+		if(party_univ.party.load_failed){
+			corrupt_slot(idx);
+			return;
+		}
 
 		// Populate PC graphics
 		for(int i = 0; i < 6; ++i){
@@ -1946,7 +1966,7 @@ class cFilePicker {
 			fs::path next_file = save_file_mtimes[saves_loaded].first;
 			cUniverse party_univ;
 			if(!load_party(next_file, save_files[saves_loaded], false)){
-				// TODO show error, fatal? Show corrupted party?
+				// Below, we check the load_failed flag to display when a party is corrupt
 			}
 			saves_loaded++;
 		}
