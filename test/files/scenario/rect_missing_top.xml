@@ -28,6 +28,13 @@
         <version>2.5.3</version>
     </creator>
     <game>
+    	<num-towns>1</num-towns>
+    	<out-width>1</out-width>
+    	<out-height>1</out-height>
+    	<start-town>0</start-town>
+    	<town-start x='0' y='0'/>
+    	<outdoor-start x='0' y='0'/>
+    	<sector-start x='0' y='0'/>
         <store-items town='0' left='0' bottom='10' right='10'/>
     </game>
 </scenario>
