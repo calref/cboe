@@ -149,8 +149,8 @@ static void put_placed_monst_adv_in_dlog(cDialog& me, cTownperson& monst, const 
 	me["group"].setTextToNum(monst.spec_enc_code);
 	me["death"].setTextToNum(monst.special_on_kill);
 	me["hail"].setTextToNum(monst.special_on_talk);
-	me["sdfx"].setTextToNum(monst.spec1);
-	me["sdfy"].setTextToNum(monst.spec2);
+	me["sdfy"].setTextToNum(monst.spec1);
+	me["sdfx"].setTextToNum(monst.spec2);
 	if(need_event) {
 		me["choose-event"].show();
 	} else {
@@ -178,10 +178,10 @@ static bool get_placed_monst_adv_in_dlog(cDialog& me, cTownperson& monst) {
   	if(cre(monst.special_on_kill,-1,town->specials.size(),"Town special node number must be from 0 to 99 (or -1 for no special).","",&me)) return false;
 	monst.special_on_talk = me["hail"].getTextAsNum();
   	if(cre(monst.special_on_talk,-1,town->specials.size(),"Town special node number must be from 0 to 99 (or -1 for no special).","",&me)) return false;
-	monst.spec1 = me["sdfx"].getTextAsNum();
-  	if(cre(monst.spec1,-1,299,"First part of special flag must be -1 (if this is to be ignored) or from 0 to 299.","",&me)) return false;
-	monst.spec2 = me["sdfy"].getTextAsNum();
-  	if(cre(monst.spec2,-1,9,"Second part of special flag must be -1 (if this is to be ignored) or from 0 to 9.","",&me)) return false;
+	monst.spec1 = me["sdfy"].getTextAsNum();
+  	if(cre(monst.spec1,-1,SDF_ROWS - 1,"First part of special flag must be -1 (if this is to be ignored) or from 0 to 299.","",&me)) return false;
+	monst.spec2 = me["sdfx"].getTextAsNum();
+  	if(cre(monst.spec2,-1,SDF_ROWS - 1,"Second part of special flag must be -1 (if this is to be ignored) or from 0 to 9.","",&me)) return false;
 	
 	monst.spec_enc_code = me["group"].getTextAsNum();
 	return true;
@@ -244,6 +244,13 @@ cTownperson edit_placed_monst_adv(cTownperson initial, short which, cDialog& par
 		int value = me["extra2"].getTextAsNum();
 		value = choose_text_editable(scenario.evt_names, value, &me, "Select an event:");
 		me["extra2"].setTextToNum(value);
+		return true;
+	});
+	edit["editsdf"].attachClickHandler([](cDialog& me, std::string, eKeyMod) {
+		location sdf(me["sdfx"].getTextAsNum(), me["sdfy"].getTextAsNum());
+		sdf = cStuffDonePicker(sdf).run();
+		me["sdfx"].setTextToNum(sdf.x);
+		me["sdfy"].setTextToNum(sdf.y);
 		return true;
 	});
 	
@@ -553,16 +560,16 @@ static void put_out_wand_in_dlog(cDialog& me, short which, const cOutdoors::cWan
 	me["onmeet"].setTextToNum(wand.spec_on_meet);
 	me["onwin"].setTextToNum(wand.spec_on_win);
 	me["onflee"].setTextToNum(wand.spec_on_flee);
-	me["endx"].setTextToNum(wand.end_spec1);
-	me["endy"].setTextToNum(wand.end_spec2);
+	me["endy"].setTextToNum(wand.end_spec1);
+	me["endx"].setTextToNum(wand.end_spec2);
 }
 
 static void save_out_wand(cDialog& me, short which, cOutdoors::cWandering& wand, short mode) {
 	wand.spec_on_meet = me["onmeet"].getTextAsNum();
 	wand.spec_on_win = me["onwin"].getTextAsNum();
 	wand.spec_on_flee = me["onflee"].getTextAsNum();
-	wand.end_spec1 = me["endx"].getTextAsNum();
-	wand.end_spec2 = me["endy"].getTextAsNum();
+	wand.end_spec1 = me["endy"].getTextAsNum();
+	wand.end_spec2 = me["endx"].getTextAsNum();
 	
 	wand.forced = dynamic_cast<cLed&>(me["forced"]).getState() != led_off;
 	wand.cant_flee = dynamic_cast<cLed&>(me["no-flee"]).getState() != led_off;
@@ -637,12 +644,19 @@ void edit_out_wand(short mode) {
 	cDialog wand_dlg(*ResMgr::dialogs.get("edit-outdoor-encounter"));
 	wand_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &wand_dlg, false));
 	
-	wand_dlg["endx"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 299, "First part of Stuff Done flag", "-1 if not used"));
-	wand_dlg["endy"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 9, "Second part of Stuff Done flag", "-1 if not used"));
+	wand_dlg["endx"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, SDF_COLUMNS - 1, "First part of Stuff Done flag", "-1 if not used"));
+	wand_dlg["endy"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, SDF_ROWS - 1, "Second part of Stuff Done flag", "-1 if not used"));
 	wand_dlg.attachClickHandlers(std::bind(edit_out_wand_event_filter, _1, _2, std::ref(which), std::ref(wand), mode), {"okay", "left", "right"});
 	wand_dlg.attachClickHandlers(std::bind(edit_out_wand_spec, _1, _2, which, std::ref(wand)), {"edit-meet", "edit-win", "edit-flee"});
 	wand_dlg.attachClickHandlers(std::bind(edit_out_wand_monst, _1, _2, which, std::ref(wand)), {"choose-foe1", "choose-foe2", "choose-foe3", "choose-foe4", "choose-foe5", "choose-foe6", "choose-foe7", "choose-ally1", "choose-ally2", "choose-ally3"});
 	wand_dlg.attachFocusHandlers(std::bind(check_range_msg, _1, _2, _3, -1, 59, "Outdoor Special Node", "-1 if not used"), {"onmeet", "onwin", "onflee"});
+	wand_dlg["edit-end"].attachClickHandler([](cDialog& me, std::string, eKeyMod) {
+		location sdf(me["endx"].getTextAsNum(), me["endy"].getTextAsNum());
+		sdf = cStuffDonePicker(sdf).run();
+		me["endx"].setTextToNum(sdf.x);
+		me["endy"].setTextToNum(sdf.y);
+		return true;
+	});
 	
 	if(mode == 1)
 		wand_dlg["title"].setText("Outdoor Special Encounter:");

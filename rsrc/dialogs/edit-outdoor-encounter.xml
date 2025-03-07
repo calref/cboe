@@ -3,11 +3,11 @@
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay'>
 	<!-- OK button -->
-	<field name='onmeet' top='216' left='361' width='46' height='16'/>
-	<field name='onwin' top='259' left='361' width='46' height='16'/>
-	<field name='onflee' top='302' left='361' width='46' height='16'/>
-	<field name='endx' top='336' left='460' width='39' height='16'/>
-	<field name='endy' top='336' left='508' width='39' height='16'/>
+	<field name='onmeet' top='189' left='361' width='46' height='16'/>
+	<field name='onwin' top='231' left='361' width='46' height='16'/>
+	<field name='onflee' top='275' left='361' width='46' height='16'/>
+	<field name='endy' top='309' left='460' width='39' height='16'/>
+	<field name='endx' top='309' left='508' width='39' height='16'/>
 	<text name='foe1' framed='true' top='135' left='129' width='145' height='14'/>
 	<text name='foe2' framed='true' top='159' left='129' width='145' height='14'/>
 	<text name='foe3' framed='true' top='183' left='129' width='145' height='14'/>
@@ -32,9 +32,10 @@
 	<button name='choose-ally1' type='regular' top='298' left='280'>Choose</button>
 	<button name='choose-ally2' type='regular' top='322' left='280'>Choose</button>
 	<button name='choose-ally3' type='regular' top='346' left='280'>Choose</button>
-	<button name='edit-meet' type='large' top='213' left='412'>Create/Edit</button>
-	<button name='edit-win' type='large' top='256' left='412'>Create/Edit</button>
-	<button name='edit-flee' type='large' top='298' left='412'>Create/Edit</button>
+	<button name='edit-meet' type='large' top='186' left='412'>Create/Edit</button>
+	<button name='edit-win' type='large' top='229' left='412'>Create/Edit</button>
+	<button name='edit-flee' type='large' top='271' left='412'>Create/Edit</button>
+	<button name='edit-end' type='regular' top='330' left='458'>Choose</button>
 	<text top='135' left='11' width='113' height='14'>Hostile (15-30)</text>
 	<text top='159' left='11' width='113' height='14'>Hostile (7-10)</text>
 	<text top='183' left='11' width='113' height='14'>Hostile (4-6)</text>
@@ -64,9 +65,8 @@
 	<text top='132' left='368' width='170' height='27'>(Party fights it right away)</text>
 	<text size='large' top='114' left='11' width='191' height='17'>Monsters in encounter:</text>
 	<text size='large' top='152' left='350' width='191' height='17'>Advanced encounter traits:</text>
-	<text top='197' left='352' width='194' height='14'>Special called when enc. starts</text>
-	<text top='240' left='352' width='194' height='14'>Special called when party wins</text>
-	<text top='283' left='352' width='194' height='14'>Special called if party flees</text>
-	<text top='326' left='352' width='103' height='33'>Stuff done flag to eliminate encounter</text>
-	<text top='168' left='364' width='170' height='27'>Note: Ignore these if you aren't sure what they do.</text>
+	<text top='170' left='352' width='194' height='14'>Special called when enc. starts</text>
+	<text top='213' left='352' width='194' height='14'>Special called when party wins</text>
+	<text top='256' left='352' width='194' height='14'>Special called if party flees</text>
+	<text top='299' left='352' width='103' height='33'>Stuff done flag to eliminate encounter</text>
 </dialog>
