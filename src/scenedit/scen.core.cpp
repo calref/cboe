@@ -2831,13 +2831,13 @@ static void put_scen_details_in_dlog(cDialog& me) {
 		me["ver" + std::to_string(i + 1)].setTextToNum(scenario.format.ver[i]);
 	// Legacy meta text labels:
 	if(!scenario.has_feature_flag("scenario-meta-format")){
-		me["teaser1-text"].setText("Credits/Teaser Part 1:");
-		me["teaser2-text"].setText("Credits/Teaser Part 2:");
-		me["author-text"].setText("Author|(not displayed):");
-		me["contact-text"].setText("Contact info|(not displayed):");
+		me["teaser1-label"].setText("Credits/Teaser Part 1:");
+		me["teaser2-label"].setText("Credits/Teaser Part 2:");
+		me["author-label"].setText("Author|(not displayed):");
+		me["contact-label"].setText("Contact info|(not displayed):");
 	}else{
 		// Updated meta text labels:
-		me["teaser2-text"].hide();
+		me["teaser2-label"].hide();
 		me["teaser2"].hide();
 	}
 
