@@ -2456,7 +2456,7 @@ void debug_launch_scen(std::string scen_name) {
 }
 
 // Non-comprehensive list of unused keys:
-// chjklnoqvy -_+[]{},.'"`\|;:
+// chjklnoqvy -_+[]{},.'"`|;:
 // We want to keep lower-case for normal gameplay.
 void init_debug_actions() {
 	// optional `true` argument means you can use this action in the startup menu.
@@ -2507,6 +2507,7 @@ void init_debug_actions() {
 	add_debug_action({'^'}, "Fight special encounter from this section", []() {debug_fight_encounter(false);});
 	add_debug_action({'/', '?'}, "Bring up this window", show_debug_help, true);
 	add_debug_action({'Z'}, "Save the current action log for bug reporting", save_replay_log, true);
+	add_debug_action({'\\'}, "Crash the game", debug_crash, true);
 }
 
 // Later we might want to know whether the key is used or not
@@ -4064,6 +4065,18 @@ void save_replay_log(){
 	fs::path out_file = nav_put_rsrc({"xml"});
 
 	start_log_file(out_file.string());
+}
+
+void debug_crash() {
+	// If they don't confirm, the game can continue normally, and we'll need to replay
+	// that the confirmation opened and closed.
+	if(recording){
+		record_action("debug_crash", "");
+	}
+	std::string confirm = cChoiceDlog("debug-crash-confirm",{"yes","no"}).show();
+	if(confirm == "yes"){
+		throw std::string { "Be careful what you wish for!" };
+	}
 }
 
 void clear_trapped_monst() {
