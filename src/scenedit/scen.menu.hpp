@@ -13,7 +13,7 @@
 class OpenBoESceneditMenu : public iEventListener, public iDrawable  {
 public:
 
-	OpenBoESceneditMenu(sf::RenderWindow &);
+	OpenBoESceneditMenu();
 	
 	virtual bool handle_event(const sf::Event&) override;
 	virtual void draw() override;

@@ -10,7 +10,7 @@
 class OpenBoEPCEditMenu {
 public:
 
-	OpenBoEPCEditMenu(sf::RenderWindow&);
+	OpenBoEPCEditMenu();
 	bool handle_event(const sf::Event&);
 	void draw();
 	void update_for_editor_state(bool party_in_memory, bool party_in_scenario);
@@ -20,7 +20,6 @@ private:
 	using MenuHierarchy = std::vector<tgui::String>;
 	
 	tgui::Gui tgui;
-	sf::RenderWindow& mainPtr;
 	const tgui::String internal_menubar_widget_name { "openboe-pcedit-menu" };
 	
 	tgui::MenuBar::Ptr build_menubar() const;

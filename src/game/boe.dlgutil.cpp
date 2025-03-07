@@ -45,7 +45,6 @@
 extern eItemWinMode stat_window;
 extern eGameMode overall_mode;
 extern bool changed_display_mode;
-extern sf::RenderWindow mainPtr;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
 extern eStatMode stat_screen_mode;
@@ -55,9 +54,7 @@ extern location center;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
 extern bool map_visible;
-extern sf::RenderWindow mini_map;
 extern cUniverse univ;
-extern sf::Texture pc_gworld;
 extern std::map<eSkill,short> skill_max;
 extern void give_help_and_record(short help1, short help2, bool help_forced = false);
 
@@ -70,7 +67,6 @@ extern bool party_in_memory;
 eGameMode store_pre_talk_mode;
 short store_personality,store_personality_graphic,shop_identify_cost,shop_recharge_amount,shop_recharge_limit;
 std::string save_talk_str1, save_talk_str2;
-sf::RenderTexture talk_gworld;
 bool talk_end_forced;
 rectangle talk_area_rect = {7,19,422,298}, word_place_rect = {44,7,372,257},talk_help_rect = {7,268,23,286};
 std::string title_string;
@@ -140,7 +136,7 @@ bool start_shop_mode(short which,short cost_adj,std::string store_name, bool can
 	}
 
 	area_rect = talk_area_rect;
-	talk_gworld.create(area_rect.width(), area_rect.height());
+	talk_gworld().create(area_rect.width(), area_rect.height());
 
 	store_pre_shop_mode = overall_mode;
 	overall_mode = MODE_SHOPPING;
@@ -262,7 +258,7 @@ bool handle_shop_event(location p, cFramerateLimiter& fps_limiter) {
 			return true;
 		}
 	}
-	return p.in(rectangle(talk_gworld));
+	return p.in(rectangle(talk_gworld()));
 }
 
 void handle_sale(int i) {
@@ -637,7 +633,7 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	store_m_num = m_num;
 	store_talk_face_pic = store_face_pic; ////
 	area_rect = talk_area_rect;
-	talk_gworld.create(area_rect.width(), area_rect.height());
+	talk_gworld().create(area_rect.width(), area_rect.height());
 	help_btn->show();
 
 	// This would be the place to show the text box, if I add it.
@@ -1157,7 +1153,7 @@ bool handle_talk_event(location p, cFramerateLimiter& fps_limiter) {
 		break;
 	}
 	handle_talk_node(which_talk_entry);
-	return clicked_word || p.in(rectangle(talk_gworld));
+	return clicked_word || p.in(rectangle(talk_gworld()));
 }
 
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
