@@ -1297,7 +1297,7 @@ void autosave_preferences(cDialog* parent) {
 		cControl* ctrl = iter->second;
 		cLed* led = dynamic_cast<cLed*>(ctrl);
 		if(led != nullptr){
-			led->setState(get_bool_pref("Autosave_" + id, true) ? led_red : led_off);
+			led->setState(check_autosave_trigger(id) ? led_red : led_off);
 		}
 	}
 	prefsDlog.attachClickHandlers(&prefs_autosave_event_filter, {"okay", "cancel"});

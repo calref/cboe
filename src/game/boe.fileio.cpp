@@ -491,12 +491,16 @@ std::map<std::string, bool> autosave_trigger_defaults = {
 	{"Eat", false}
 };
 
-void try_auto_save(std::string reason) {
-	if(!get_bool_pref("Autosave", true)) return;
+bool check_autosave_trigger(std::string reason) {
 	bool reason_default_on = false;
 	if(autosave_trigger_defaults.find(reason) != autosave_trigger_defaults.end())
 		reason_default_on = autosave_trigger_defaults[reason];
-	if(!get_bool_pref("Autosave_" + reason, reason_default_on)) return;
+	return get_bool_pref("Autosave_" + reason, reason_default_on);
+}
+
+void try_auto_save(std::string reason) {
+	if(!get_bool_pref("Autosave", true)) return;
+	if(!check_autosave_trigger(reason)) return;
 	if(univ.file.empty()){
 		ASB("Autosave: Make a manual save first.");
 		print_buf();

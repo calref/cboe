@@ -32,6 +32,7 @@ void alter_rect(rectangle *r);
 
 // The player can configure autosaves on/off globally, or individually
 // for a variety of different trigger reasons
+bool check_autosave_trigger(std::string reason);
 void try_auto_save(std::string reason);
 
 #endif
