@@ -23,6 +23,7 @@ const int TEXT_BUF_LEN = 70;
 #include "fileio/resmgr/res_font.hpp"
 #include "spell.hpp"
 #include "tools/enum_map.hpp"
+#include "tools/winutil.hpp"
 #include "replay.hpp"
 #include <boost/lexical_cast.hpp>
 
@@ -1091,7 +1092,7 @@ void print_buf () {
 	location moveTo;
 	while((line_to_print!= buf_pointer) && (num_lines_printed < LINES_IN_TEXT_WIN)) {
 		moveTo = location(4, 1 + 12 * num_lines_printed);
-		sf::Text text(text_buffer[line_to_print].line, *ResMgr::fonts.get("plain"), 12);
+		sf::Text text(text_buffer[line_to_print].line, *ResMgr::fonts.get("plain"), 12 * get_ui_scale());
 		text.setColor(Colours::BLACK);
 		text.setPosition(moveTo);
 		draw_scale_aware_text(text_area_gworld, text);

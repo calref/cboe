@@ -36,7 +36,7 @@ struct TextStyle {
 	int pointSize = 10, lineHeight = 10;
 	sf::Color colour;
 	TextStyle() : colour(sf::Color::Black) {}
-	void applyTo(sf::Text& text);
+	void applyTo(sf::Text& text, double scale = 1.0);
 };
 
 // elements: std::make_tuple(last_line_break, last_word_break, line_width)
