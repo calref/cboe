@@ -50,7 +50,6 @@ using clara::ParserResult;
 using clara::ParseResultType;
 
 bool All_Done = false;
-sf::RenderWindow mainPtr;
 short had_text_freeze = 0,num_fonts;
 bool first_startup_update = true;
 bool first_sound_played = false,spell_forced = false;
@@ -101,7 +100,8 @@ std::map<std::string,std::vector<std::string>> feature_flags = {
 	// does not change the party's outdoors location
 	{"debug-enter-town", {"move-outdoors"}},
 	// New in-game save file picker
-	{"file-picker-dialog", {"V1"}}
+	{"file-picker-dialog", {"V1"}},
+	{"target-lock", {"V1"}}
 };
 
 struct cParseEntrance {
@@ -156,7 +156,6 @@ eItemWinMode stat_window = ITEM_WIN_PC1;
 bool monsters_going = false,boom_anim_active = false;
 bool finished_init = false;
 
-sf::RenderWindow mini_map;
 short which_item_page[6] = {0,0,0,0,0,0}; // Remembers which of the 2 item pages pc looked at
 short current_ground = 0;
 eStatMode stat_screen_mode;
@@ -203,6 +202,17 @@ eMenuChoice menuChoice=eMenuChoice::MENU_CHOICE_NONE;
 short menuChoiceId=-1;
 #endif
 
+static void handleFatalError(std::string what) {
+	showFatalError(what);
+	if(recording){
+		record_action("error", what);
+		extern fs::path log_file;
+		if(log_file.empty() && cChoiceDlog("ask-save-replay", {"yes", "no"}).show() == "yes") {
+			save_replay_log();
+		}
+	}
+}
+
 int main(int argc, char* argv[]) {
 #if 0
 	void debug_oldstructs();
@@ -235,19 +245,19 @@ int main(int argc, char* argv[]) {
 		close_program();
 		return 0;
 	} catch(std::exception& x) {
-		showFatalError(x.what());
+		handleFatalError(x.what());
 		throw;
 	} catch(std::string& x) {
-		showFatalError(x);
+		handleFatalError(x);
 		throw;
 	} catch(...) {
-		showFatalError("An unknown error occurred!");
+		handleFatalError("An unknown error occurred!");
 		throw;
 	}
 }
 
 static void init_sbar(std::shared_ptr<cScrollbar>& sbar, const std::string& name, rectangle rect, rectangle events_rect, int max, int pgSz, int start = 0) {
-	static cParentless mainWin(mainPtr);
+	static cParentless mainWin(mainPtr());
 	sbar.reset(new cScrollbar(mainWin));
 	sbar->setName(name);
 	sbar->setBounds(rect);
@@ -286,8 +296,9 @@ static void init_scrollbars() {
 }
 
 static void init_btn(std::shared_ptr<cButton>& btn, eBtnType type, location loc) {
-	static cParentless mainWin(mainPtr);
+	static cParentless mainWin(mainPtr());
 	btn.reset(new cButton(mainWin));
+
 	btn->setBtnType(type);
 	btn->relocate(loc);
 	btn->hide();
@@ -947,6 +958,10 @@ static void replay_action(Element& action) {
 		preview_every_dialog_xml();
 	}else if(t == "clear_trapped_monst"){
 		clear_trapped_monst();
+	}else if(t == "error"){
+		// The error is recorded for debugging only. It should be triggered by replaying the actions.
+	}else if(t == "debug_crash"){
+		debug_crash();
 	}else if(t == "advance_time"){
 		// This is bad regardless of strictness, because visual changes may have occurred which won't get redrawn/reprinted
 		throw std::string { "Replay system internal error! advance_time() was supposed to be called by the last action, but wasn't: " } + _last_action_type;
@@ -1025,8 +1040,8 @@ void init_boe(int argc, char* argv[]) {
 	adjust_window_mode();
 	init_ui();
 	// If we don't do this now it'll flash white to start with
-	mainPtr.clear(sf::Color::Black);
-	mainPtr.display();
+	mainPtr().clear(sf::Color::Black);
+	mainPtr().display();
 	
 	set_cursor(watch_curs);
 	init_buf();
@@ -1140,9 +1155,9 @@ static void fire_delayed_key(Key code) {
 		return;
 	}
 	if(diagonal){
-		mainPtr.setKeyRepeatEnabled(false);
+		mainPtr().setKeyRepeatEnabled(false);
 	}else{
-		mainPtr.setKeyRepeatEnabled(true);
+		mainPtr().setKeyRepeatEnabled(true);
 	}
 
 	if(dir != -1){
@@ -1153,7 +1168,7 @@ static void fire_delayed_key(Key code) {
 			}
 		}else{
 			sf::Event pass_event = {sf::Event::MouseButtonPressed};
-			location pass_point = mainPtr.mapCoordsToPixel(terrain_click[dir], mainView);
+			location pass_point = mainPtr().mapCoordsToPixel(terrain_click[dir], mainView);
 			pass_event.mouseButton.x = pass_point.x;
 			pass_event.mouseButton.y = pass_point.y;
 			queue_fake_event(pass_event);
@@ -1228,12 +1243,12 @@ void handle_events() {
 				fake_event_queue.pop_front();
 				handle_one_event(next_event, fps_limiter);
 			}
-			while(pollEvent(mainPtr, currentEvent)) handle_one_event(currentEvent, fps_limiter);
+			while(pollEvent(mainPtr(), currentEvent)) handle_one_event(currentEvent, fps_limiter);
 
 			// It would be nice to have minimap inside the main game window (we have lots of screen space in fullscreen mode).
 			// Alternatively, minimap could live on its own thread.
 			// But for now we just handle events from both windows on this thread.
-			while(map_visible && pollEvent(mini_map, currentEvent)) handle_one_minimap_event(currentEvent);
+			while(map_visible && pollEvent(mini_map(), currentEvent)) handle_one_minimap_event(currentEvent);
 		}
 
 		if(changed_display_mode) {
@@ -1303,7 +1318,7 @@ void handle_one_event(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 			if (!noDelayKeyModes.count(overall_mode) && delayed_keys.find(event.key.code) != delayed_keys.end()){
 				handle_delayed_key(event.key.code);
 			} else if(!(event.key.*systemKey)) {
-				mainPtr.setKeyRepeatEnabled(true);
+				mainPtr().setKeyRepeatEnabled(true);
 				handle_keystroke(event, fps_limiter);
 			}
 			break;
@@ -1319,7 +1334,7 @@ void handle_one_event(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 			break;
 			
 		case sf::Event::GainedFocus:
-			makeFrontWindow(mainPtr);
+			makeFrontWindow(mainPtr());
 			change_cursor({event.mouseMove.x, event.mouseMove.y});
 			return;
 
@@ -1349,7 +1364,7 @@ void handle_one_minimap_event(const sf::Event& event) {
 	if(event.type == sf::Event::Closed) {
 		close_map(true);
 	} else if(event.type == sf::Event::GainedFocus) {
-		makeFrontWindow(mainPtr);
+		makeFrontWindow(mainPtr());
 	} else if(event.type == sf::Event::KeyPressed) {
 		switch(event.key.code){
 			case sf::Keyboard::Escape:
@@ -1608,7 +1623,7 @@ void change_cursor(location where_curs) {
 	rectangle world_screen = win_to_rects[WINRECT_TERVIEW];
 	world_screen.inset(13, 13);
 	
-	where_curs = mainPtr.mapPixelToCoords(where_curs, mainView);
+	where_curs = mainPtr().mapPixelToCoords(where_curs, mainView);
 	
 	if(!world_screen.contains(where_curs))
 		cursor_needed = sword_curs;

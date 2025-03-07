@@ -36,9 +36,8 @@ namespace legacy {
 	struct setup_save_type;
 };
 
-// TODO: Duplicated in scenario.hpp
-template<typename T, size_t x, size_t y>
-using array2d = std::array<std::array<T, y>, x>;
+template<typename T, size_t rows, size_t cols>
+using array2d = std::array<std::array<T, cols>, rows>;
 
 struct campaign_flag_type{
 	array2d<unsigned char, 25, 25> idx{};
@@ -91,7 +90,7 @@ public:
 	unsigned long age;
 	unsigned short gold;
 	unsigned short food;
-	array2d<unsigned char, 350, 50> stuff_done;
+	array2d<unsigned char, SDF_ROWS, SDF_COLUMNS> stuff_done;
 	// These used to be stored as magic SDFs
 	unsigned char hostiles_present;
 	bool easy_mode = false, less_wm = false;

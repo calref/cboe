@@ -89,7 +89,6 @@ extern bool party_in_memory;
 extern sf::View mainView;
 
 // game info globals
-extern sf::RenderWindow mainPtr;
 extern short which_item_page[6];
 extern short store_spell_target,pc_casting;
 extern eSpell store_mage, store_priest;
@@ -107,7 +106,6 @@ extern short combat_active_pc;
 extern eStatMode stat_screen_mode;
 
 extern bool map_visible;
-extern sf::RenderWindow mini_map;
 
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern short shop_identify_cost, shop_recharge_amount;
@@ -476,7 +474,7 @@ void handle_rest(bool& need_redraw, bool& need_reprint) {
 				i = 200;
 				add_string_to_buf("  Monsters nearby.");
 			}
-			while(pollEvent(mainPtr, dummy_evt));
+			while(pollEvent(mainPtr(), dummy_evt));
 			redraw_screen(REFRESH_NONE);
 			i++;
 		}
@@ -898,6 +896,14 @@ void handle_switch_pc(short which_pc, bool& need_redraw, bool& need_reprint) {
 		add_string_to_buf("Set active: PC must be here & active.");
 	else {
 		univ.cur_pc = which_pc;
+
+		// The shop interface may have taken control of the active PC. If the player
+		// manually sets active PC before shopping ends, don't restore the active PC from before
+		// shopping switched it. Unless the player buys something again, forcing it to store again.
+		extern short store_cur_pc;
+		if(store_cur_pc != -1)
+			store_cur_pc = -1;
+
 		set_stat_window_for_pc(which_pc);
 		add_string_to_buf("Now " + std::string(overall_mode == MODE_SHOPPING ? "shopping" : "active") + ": " + pc.name);
 		adjust_spell_menus();
@@ -1129,7 +1135,7 @@ static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 			i = 200;
 			add_string_to_buf("  Monster sighted!");
 		}
-		while(pollEvent(mainPtr, dummy_evt));
+		while(pollEvent(mainPtr(), dummy_evt));
 		redraw_screen(REFRESH_NONE);
 	}
 	put_pc_screen();
@@ -1396,7 +1402,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	location point_in_area;
 	
 	location the_point(event.mouseButton.x, event.mouseButton.y);
-	the_point = mainPtr.mapPixelToCoords(the_point, mainView);
+	the_point = mainPtr().mapPixelToCoords(the_point, mainView);
 	end_scenario = false;
 	
 	// MARK: First, figure out where party is
@@ -1424,7 +1430,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 
 	// Otherwise they're in a terrain view mode
 	location cur_loc = is_out() ? univ.party.out_loc : center;
-	auto button_hit = UI::toolbar.button_hit(mainPtr, the_point, fps_limiter);
+	auto button_hit = UI::toolbar.button_hit(mainPtr(), the_point, fps_limiter);
 
 	// MARK: Then, handle a button being hit.
 		switch(button_hit) {
@@ -2336,9 +2342,9 @@ void close_map(bool record) {
 	if(record && recording){
 		record_action("close_map", "");
 	}
-	mini_map.setVisible(false);
+	mini_map().setVisible(false);
 	map_visible = false;
-	mainPtr.setActive();
+	mainPtr().setActive();
 }
 
 void cancel_item_target(bool& did_something, bool& need_redraw, bool& need_reprint) {
@@ -2462,7 +2468,7 @@ void debug_launch_scen(std::string scen_name) {
 }
 
 // Non-comprehensive list of unused keys:
-// chjklnoqvy -_+[]{},.'"`\|;:
+// chjklnoqvy -_+[]{},.'"`|;:
 // We want to keep lower-case for normal gameplay.
 void init_debug_actions() {
 	// optional `true` argument means you can use this action in the startup menu.
@@ -2513,6 +2519,7 @@ void init_debug_actions() {
 	add_debug_action({'^'}, "Fight special encounter from this section", []() {debug_fight_encounter(false);});
 	add_debug_action({'/', '?'}, "Bring up this window", show_debug_help, true);
 	add_debug_action({'Z'}, "Save the current action log for bug reporting", save_replay_log, true);
+	add_debug_action({'\\'}, "Crash the game", debug_crash, true);
 }
 
 // Later we might want to know whether the key is used or not
@@ -2651,7 +2658,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 				pass_point = talk_words[i].rect.topLeft();
 				pass_point.x += talk_area_rect.left+9;
 				pass_point.y += talk_area_rect.top+9;
-				pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
+				pass_point = mainPtr().mapCoordsToPixel(pass_point, mainView);
 				pass_event.mouseButton.x = pass_point.x;
 				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event, fps_limiter);
@@ -2668,7 +2675,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 				// related to talk_area_rect
 				pass_point.x += talk_area_rect.left+9;
 				pass_point.y += talk_area_rect.top+9;
-				pass_point = mainPtr.mapCoordsToPixel(pass_point, mainView);
+				pass_point = mainPtr().mapCoordsToPixel(pass_point, mainView);
 				pass_event.mouseButton.x = pass_point.x;
 				pass_event.mouseButton.y = pass_point.y;
 				are_done = handle_action(pass_event, fps_limiter);
@@ -2682,7 +2689,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 				else {
 					if(!handle_screen_shift(screen_shift_delta[i], need_redraw)){
 						// Directional keys simulate directional click
-						pass_point = mainPtr.mapCoordsToPixel(terrain_click[i], mainView);
+						pass_point = mainPtr().mapCoordsToPixel(terrain_click[i], mainView);
 						pass_event.mouseButton.x = pass_point.x;
 						pass_event.mouseButton.y = pass_point.y;
 						are_done = handle_action(pass_event, fps_limiter);
@@ -2888,11 +2895,11 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 bool handle_scroll(const sf::Event& event) {
 	rectangle world_screen = win_to_rects[WINRECT_TERVIEW];
 	world_screen.inset(13, 13);
-	fill_rect(mainPtr, world_screen, sf::Color::Magenta);
+	fill_rect(mainPtr(), world_screen, sf::Color::Magenta);
 	
 	// TODO: centralize this translation somewhere
 	location pos(event.mouseWheel.x, event.mouseWheel.y);
-	pos = mainPtr.mapPixelToCoords(pos, mainView);
+	pos = mainPtr().mapPixelToCoords(pos, mainView);
 	
 	int amount = event.mouseWheel.delta;
 	if(scrollableModes.count(overall_mode) && pos.in(world_screen)) {
@@ -2942,7 +2949,7 @@ void post_load() {
 	set_stat_window(ITEM_WIN_PC1);
 	put_pc_screen();
 	draw_terrain();
-	UI::toolbar.draw(mainPtr);
+	UI::toolbar.draw(mainPtr());
 	draw_text_bar();
 	
 	print_buf();
@@ -3987,7 +3994,7 @@ bool check_for_interrupt(std::string confirm_dialog){
 		pop_next_action();
 		interrupt = true;
 	}
-	else if(pollEvent(mainPtr, evt) && evt.type == sf::Event::KeyPressed) {
+	else if(pollEvent(mainPtr(), evt) && evt.type == sf::Event::KeyPressed) {
 		// TODO: I wonder if there are other events we should handle here? Resize maybe?
 #ifdef __APPLE__
 		if(evt.key.code == kb::Period && evt.key.system)
@@ -4072,6 +4079,18 @@ void save_replay_log(){
 	fs::path out_file = nav_put_rsrc({"xml"});
 
 	start_log_file(out_file.string());
+}
+
+void debug_crash() {
+	// If they don't confirm, the game can continue normally, and we'll need to replay
+	// that the confirmation opened and closed.
+	if(recording){
+		record_action("debug_crash", "");
+	}
+	std::string confirm = cChoiceDlog("debug-crash-confirm",{"yes","no"}).show();
+	if(confirm == "yes"){
+		throw std::string { "Be careful what you wish for!" };
+	}
 }
 
 void clear_trapped_monst() {

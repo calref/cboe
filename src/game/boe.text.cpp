@@ -6,6 +6,7 @@ const int TEXT_BUF_LEN = 70;
 #include <list>
 
 #include "boe.global.hpp"
+#include "boe.graphics.hpp"
 #include "boe.graphutil.hpp"
 #include "universe/universe.hpp"
 #include "boe.text.hpp"
@@ -23,6 +24,7 @@ const int TEXT_BUF_LEN = 70;
 #include "fileio/resmgr/res_font.hpp"
 #include "spell.hpp"
 #include "tools/enum_map.hpp"
+#include "tools/winutil.hpp"
 #include "replay.hpp"
 #include <boost/lexical_cast.hpp>
 
@@ -54,7 +56,6 @@ extern eStatMode stat_screen_mode;
 extern short which_combat_type;
 extern eGameMode overall_mode;
 extern eItemWinMode stat_window;
-extern sf::RenderWindow mainPtr;
 extern rectangle more_info_button;
 extern short which_item_page[6];
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar;
@@ -66,8 +67,6 @@ extern location dest_locs[40] ;
 extern location center;
 
 extern cCustomGraphics spec_scen_g;
-extern sf::RenderTexture pc_stats_gworld, item_stats_gworld, text_area_gworld;
-extern sf::RenderTexture terrain_screen_gworld;
 
 // game globals
 extern enum_map(eItemButton, rectangle) item_buttons[8];
@@ -96,32 +95,32 @@ void put_pc_screen() {
 	rectangle bottom_bar_rect = {99,0,116,271};
 	rectangle info_from = {0,1,12,13}, switch_from = {0, 13, 12, 25};
 	
-	pc_stats_gworld.setActive(false);
-	clear_scale_aware_text(pc_stats_gworld);
+	pc_stats_gworld().setActive(false);
+	clear_scale_aware_text(pc_stats_gworld());
 	
 	// First clean up gworld with pretty patterns
 	sf::Texture& orig = *ResMgr::graphics.get("statarea");
-	rect_draw_some_item(orig, rectangle(orig), pc_stats_gworld, rectangle(pc_stats_gworld));
-	tileImage(pc_stats_gworld, erase_rect,bg[6]);
+	rect_draw_some_item(orig, rectangle(orig), pc_stats_gworld(), rectangle(pc_stats_gworld()));
+	tileImage(pc_stats_gworld(), erase_rect,bg[6]);
 	
 	TextStyle style;
 	style.font = FONT_BOLD;
 	style.pointSize = 10;
 	style.colour = Colours::YELLOW;
 	style.lineHeight = 10;
-	win_draw_string(pc_stats_gworld,food_rect[1],"Food:",eTextMode::WRAP,style);
-	win_draw_string(pc_stats_gworld,gold_rect[1],"Gold:",eTextMode::WRAP,style);
-	win_draw_string(pc_stats_gworld,day_rect[1],"Day:",eTextMode::WRAP,style);
-	win_draw_string(pc_stats_gworld,title_rects[0],"Party stats:",eTextMode::WRAP,style);
-	win_draw_string(pc_stats_gworld,title_rects[1],"HP:",eTextMode::WRAP,style);
-	win_draw_string(pc_stats_gworld,title_rects[2],"SP:",eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld(),food_rect[1],"Food:",eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld(),gold_rect[1],"Gold:",eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld(),day_rect[1],"Day:",eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld(),title_rects[0],"Party stats:",eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld(),title_rects[1],"HP:",eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld(),title_rects[2],"SP:",eTextMode::WRAP,style);
 	
 	style.colour = Colours::WHITE;
 	style.pointSize = 12;
 	// Put food, gold, day
-	win_draw_string(pc_stats_gworld,food_rect[0],std::to_string(univ.party.food),eTextMode::WRAP,style);
-	win_draw_string(pc_stats_gworld,gold_rect[0],std::to_string(univ.party.gold),eTextMode::WRAP,style);
-	win_draw_string(pc_stats_gworld,day_rect[0],std::to_string(univ.party.calc_day()),eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld(),food_rect[0],std::to_string(univ.party.food),eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld(),gold_rect[0],std::to_string(univ.party.gold),eTextMode::WRAP,style);
+	win_draw_string(pc_stats_gworld(),day_rect[0],std::to_string(univ.party.calc_day()),eTextMode::WRAP,style);
 	style.colour = Colours::BLACK;
 	
 	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
@@ -136,7 +135,7 @@ void put_pc_screen() {
 			
 			std::ostringstream sout;
 			sout << i + 1 << ". " << univ.party[i].name;
-			win_draw_string(pc_stats_gworld,pc_buttons[i][PCBTN_NAME],sout.str(),eTextMode::WRAP,style);
+			win_draw_string(pc_stats_gworld(),pc_buttons[i][PCBTN_NAME],sout.str(),eTextMode::WRAP,style);
 			style.italic = false;
 			style.colour = Colours::BLACK;
 			
@@ -150,13 +149,13 @@ void put_pc_screen() {
 					else if(univ.party[i].cur_health > univ.party[i].max_health)
 						style.colour = Colours::ORANGE;
 					else style.colour = Colours::RED;
-					win_draw_string( pc_stats_gworld,pc_buttons[i][PCBTN_HP],std::to_string(univ.party[i].cur_health),eTextMode::WRAP,style);
+					win_draw_string( pc_stats_gworld(),pc_buttons[i][PCBTN_HP],std::to_string(univ.party[i].cur_health),eTextMode::WRAP,style);
 					if(univ.party[i].cur_sp == univ.party[i].max_sp)
 						style.colour = Colours::BLUE;
 					else if(univ.party[i].cur_sp > univ.party[i].max_sp)
 						style.colour = Colours::TEAL;
 					else style.colour = Colours::PINK;
-					win_draw_string( pc_stats_gworld,pc_buttons[i][PCBTN_SP],std::to_string(univ.party[i].cur_sp),eTextMode::WRAP,style);
+					win_draw_string( pc_stats_gworld(),pc_buttons[i][PCBTN_SP],std::to_string(univ.party[i].cur_sp),eTextMode::WRAP,style);
 					draw_pc_effects(i);
 					break;
 				case eMainStatus::DEAD:
@@ -182,12 +181,12 @@ void put_pc_screen() {
 					break;
 			}
 			if(univ.party[i].main_status != eMainStatus::ALIVE)
-				win_draw_string( pc_stats_gworld,to_draw_rect,sout.str(),eTextMode::WRAP,style);
+				win_draw_string( pc_stats_gworld(),to_draw_rect,sout.str(),eTextMode::WRAP,style);
 			style.colour = Colours::BLACK;
 			
 			// Now put trade and info buttons
-			rect_draw_some_item(invenbtn_gworld,info_from,pc_stats_gworld,pc_buttons[i][PCBTN_INFO],sf::BlendAlpha);
-			rect_draw_some_item(invenbtn_gworld,switch_from,pc_stats_gworld,pc_buttons[i][PCBTN_TRADE],sf::BlendAlpha);
+			rect_draw_some_item(invenbtn_gworld,info_from,pc_stats_gworld(),pc_buttons[i][PCBTN_INFO],sf::BlendAlpha);
+			rect_draw_some_item(invenbtn_gworld,switch_from,pc_stats_gworld(),pc_buttons[i][PCBTN_TRADE],sf::BlendAlpha);
 		}
 		else {
 			for(auto& flag : pc_area_button_active[i])
@@ -197,10 +196,10 @@ void put_pc_screen() {
 	
 	rectangle help_from_rect = {46,60,59,76};
 	to_draw_rect = {101,251,114,267};
-	rect_draw_some_item(invenbtn_gworld, help_from_rect, pc_stats_gworld, to_draw_rect, sf::BlendAlpha);
+	rect_draw_some_item(invenbtn_gworld, help_from_rect, pc_stats_gworld(), to_draw_rect, sf::BlendAlpha);
 	
-	pc_stats_gworld.setActive();
-	pc_stats_gworld.display();
+	pc_stats_gworld().setActive();
+	pc_stats_gworld().display();
 	
 	// Sometimes this gets called when character is slain. when that happens, if items for
 	// that PC are up, switch item page.
@@ -219,13 +218,13 @@ void put_item_screen(eItemWinMode screen_num) {
 	rectangle erase_rect = {17,2,122,255},dest_rect;
 	rectangle upper_frame_rect = {3,3,15,268};
 	
-	item_stats_gworld.setActive(false);
-	clear_scale_aware_text(item_stats_gworld);
+	item_stats_gworld().setActive(false);
+	clear_scale_aware_text(item_stats_gworld());
 	
 	// First clean up gworld with pretty patterns
 	sf::Texture& orig = *ResMgr::graphics.get("inventory");
-	rect_draw_some_item(orig, rectangle(orig), item_stats_gworld, rectangle(item_stats_gworld));
-	tileImage(item_stats_gworld, erase_rect,bg[6]);
+	rect_draw_some_item(orig, rectangle(orig), item_stats_gworld(), rectangle(item_stats_gworld()));
+	tileImage(item_stats_gworld(), erase_rect,bg[6]);
 	
 	// Draw buttons at bottom
 	item_offset = item_sbar->getPosition();
@@ -240,28 +239,28 @@ void put_item_screen(eItemWinMode screen_num) {
 	style.colour = Colours::YELLOW;
 	switch(screen_num) {
 		case ITEM_WIN_SPECIAL:
-			win_draw_string(item_stats_gworld,upper_frame_rect,"Special items:",eTextMode::WRAP,style);
+			win_draw_string(item_stats_gworld(),upper_frame_rect,"Special items:",eTextMode::WRAP,style);
 			break;
 		case ITEM_WIN_QUESTS:
-			win_draw_string(item_stats_gworld,upper_frame_rect,"Quests/Jobs:",eTextMode::WRAP,style);
+			win_draw_string(item_stats_gworld(),upper_frame_rect,"Quests/Jobs:",eTextMode::WRAP,style);
 			break;
 			
 		default: // on an items page
 			pc = screen_num;
 			sout.str("");
 			sout << univ.party[pc].name << " inventory:";
-			win_draw_string(item_stats_gworld,upper_frame_rect,sout.str(),eTextMode::WRAP,style);
+			win_draw_string(item_stats_gworld(),upper_frame_rect,sout.str(),eTextMode::WRAP,style);
 			break;
 	}
 
-	clip_rect(item_stats_gworld, erase_rect);
+	clip_rect(item_stats_gworld(), erase_rect);
 	switch(screen_num) {
 		case ITEM_WIN_SPECIAL:
 			style.colour = Colours::BLACK;
 			for(short i = 0; i < 8; i++) {
 				i_num = i + item_offset;
 				if(i_num < spec_item_array.size()) {
-					win_draw_string(item_stats_gworld,item_buttons[i][ITEMBTN_NAME],univ.scenario.special_items[spec_item_array[i_num]].name,eTextMode::WRAP,style);
+					win_draw_string(item_stats_gworld(),item_buttons[i][ITEMBTN_NAME],univ.scenario.special_items[spec_item_array[i_num]].name,eTextMode::WRAP,style);
 					
 					place_item_button(i,ITEMBTN_INFO);
 					if((univ.scenario.special_items[spec_item_array[i_num]].flags % 10 == 1)
@@ -282,14 +281,14 @@ void put_item_screen(eItemWinMode screen_num) {
 					if(spec_item_array[i_num] / 10000 == 2)
 						style.colour = Colours::RED;
 					
-					win_draw_string(item_stats_gworld,item_buttons[i][ITEMBTN_NAME],univ.scenario.quests[which_quest].name,eTextMode::WRAP,style);
+					win_draw_string(item_stats_gworld(),item_buttons[i][ITEMBTN_NAME],univ.scenario.quests[which_quest].name,eTextMode::WRAP,style);
 					
 					if(spec_item_array[i_num] / 10000 == 1) {
 						location from, to;
 						from = to = item_buttons[i][ITEMBTN_NAME].centre();
 						from.x = item_buttons[i][ITEMBTN_NAME].left;
 						to.x = from.x + string_length(univ.scenario.quests[which_quest].name, style);
-						draw_line(item_stats_gworld, from, to, 1, Colours::GREEN);
+						draw_line(item_stats_gworld(), from, to, 1, Colours::GREEN);
 					}
 					
 					place_item_button(i,ITEMBTN_INFO);
@@ -304,7 +303,7 @@ void put_item_screen(eItemWinMode screen_num) {
 				i_num = i + item_offset;
 				sout.str("");
 				sout << i_num + 1 << '.';
-				win_draw_string(item_stats_gworld,item_buttons[i][ITEMBTN_NAME],sout.str(),eTextMode::WRAP,style);
+				win_draw_string(item_stats_gworld(),item_buttons[i][ITEMBTN_NAME],sout.str(),eTextMode::WRAP,style);
 				
  				dest_rect = item_buttons[i][ITEMBTN_NAME];
 				dest_rect.left += 36;
@@ -333,7 +332,7 @@ void put_item_screen(eItemWinMode screen_num) {
 							sout << '(' << int(item.charges) << ')';
 					}
 					dest_rect.left -= 2;
-					win_draw_string(item_stats_gworld,dest_rect,sout.str(),eTextMode::WRAP,style);
+					win_draw_string(item_stats_gworld(),dest_rect,sout.str(),eTextMode::WRAP,style);
 					style.italic = false;
 					style.colour = Colours::BLACK;
 					
@@ -360,11 +359,11 @@ void put_item_screen(eItemWinMode screen_num) {
 			} // end of for(short i = 0; i < 8; i++)
 			break;
 	}
-	undo_clip(item_stats_gworld);
+	undo_clip(item_stats_gworld());
 	
 	place_item_bottom_buttons();
-	item_stats_gworld.setActive();
-	item_stats_gworld.display();
+	item_stats_gworld().setActive();
+	item_stats_gworld().display();
 }
 
 void place_buy_button(short position,short pc_num,short item_num) {
@@ -434,13 +433,13 @@ void place_buy_button(short position,short pc_num,short item_num) {
 		store_selling_values[position] = val_to_place;
 		dest_rect = item_buttons[position][ITEMBTN_SPEC];
 		dest_rect.right = dest_rect.left + 30;
-		rect_draw_some_item(invenbtn_gworld, source_rect, item_stats_gworld, dest_rect, sf::BlendAlpha);
+		rect_draw_some_item(invenbtn_gworld, source_rect, item_stats_gworld(), dest_rect, sf::BlendAlpha);
 		TextStyle style;
 		if(val_to_place >= 10000)
 			style.font = FONT_PLAIN;
 		style.lineHeight = 10;
 		dest_rect.offset(dest_rect.width() + 5,0);
-		win_draw_string(item_stats_gworld,dest_rect,std::to_string(val_to_place),eTextMode::LEFT_TOP,style);
+		win_draw_string(item_stats_gworld(),dest_rect,std::to_string(val_to_place),eTextMode::LEFT_TOP,style);
 	}
 }
 
@@ -453,12 +452,12 @@ void place_item_graphic(short which_slot,short graphic) {
 	std::shared_ptr<const sf::Texture> src_gw;
 	if(graphic >= 10000) {
 		graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(graphic - 10000, true);
-		rect_draw_some_item(*src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
+		rect_draw_some_item(*src_gw, from_rect, item_stats_gworld(), to_rect,sf::BlendAlpha);
 	} else if(graphic >= 1000) {
 		graf_pos_ref(src_gw, from_rect) = spec_scen_g.find_graphic(graphic - 1000);
-		rect_draw_some_item(*src_gw, from_rect, item_stats_gworld, to_rect,sf::BlendAlpha);
+		rect_draw_some_item(*src_gw, from_rect, item_stats_gworld(), to_rect,sf::BlendAlpha);
 	}
-	else rect_draw_some_item(*ResMgr::graphics.get("tinyobj"), from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+	else rect_draw_some_item(*ResMgr::graphics.get("tinyobj"), from_rect, item_stats_gworld(), to_rect, sf::BlendAlpha);
 }
 
 // name, use, give, drop, info, sell/id
@@ -471,7 +470,7 @@ void place_item_button(short which_slot,eItemButton button_type, eItemButton but
 
 	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
 	item_area_button_active[which_slot][button_type] = true;
-	rect_draw_some_item(invenbtn_gworld, item_buttons_from[button_type - 2], item_stats_gworld, item_buttons[which_slot][button_pos], sf::BlendAlpha);
+	rect_draw_some_item(invenbtn_gworld, item_buttons_from[button_type - 2], item_stats_gworld(), item_buttons[which_slot][button_pos], sf::BlendAlpha);
 }
 
 void place_item_bottom_buttons() {
@@ -489,7 +488,7 @@ void place_item_bottom_buttons() {
 		if(univ.party[i].main_status == eMainStatus::ALIVE) {
 		 	item_bottom_button_active[i] = true;
 		 	to_rect = item_screen_button_rects[i];
-			rect_draw_some_item(invenbtn_gworld, but_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+			rect_draw_some_item(invenbtn_gworld, but_from_rect, item_stats_gworld(), to_rect, sf::BlendAlpha);
 			pic_num_t pic = univ.party[i].which_graphic;
 			std::shared_ptr<const sf::Texture> from_gw;
 			if(pic >= 1000) {
@@ -509,22 +508,22 @@ void place_item_bottom_buttons() {
 				from_gw = &ResMgr::graphics.get("pcs");
 			}
 			to_rect.inset(2,2);
-			rect_draw_some_item(*from_gw, pc_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+			rect_draw_some_item(*from_gw, pc_from_rect, item_stats_gworld(), to_rect, sf::BlendAlpha);
 			std::string numeral = std::to_string(i + 1);
 			short width = string_length(numeral, style);
 			// Offset "6" down two pixels to make it line up, because it has an ascender in this font
 			// Offset "1" - "4" down as well because they're not shorter and it looks a bit better
 			to_rect.offset(-width - 5, i != 4 ? 2 : 0);
-			win_draw_string(item_stats_gworld, to_rect, numeral, eTextMode::LEFT_TOP, style);
+			win_draw_string(item_stats_gworld(), to_rect, numeral, eTextMode::LEFT_TOP, style);
 		}
 		else item_bottom_button_active[i] = false;
 	}
 	to_rect = item_screen_button_rects[6];
-	rect_draw_some_item(invenbtn_gworld, spec_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(invenbtn_gworld, spec_from_rect, item_stats_gworld(), to_rect, sf::BlendAlpha);
 	to_rect = item_screen_button_rects[7];
-	rect_draw_some_item(invenbtn_gworld, job_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(invenbtn_gworld, job_from_rect, item_stats_gworld(), to_rect, sf::BlendAlpha);
 	to_rect = item_screen_button_rects[8];
-	rect_draw_some_item(invenbtn_gworld, help_from_rect, item_stats_gworld, to_rect, sf::BlendAlpha);
+	rect_draw_some_item(invenbtn_gworld, help_from_rect, item_stats_gworld(), to_rect, sf::BlendAlpha);
 }
 
 void set_stat_window_for_pc(int pc, bool record) {
@@ -597,9 +596,9 @@ void refresh_stat_areas(short mode) {
 	
 	if(mode == 1) x = sf::BlendAdd;
 	else x = sf::BlendNone;
-	rect_draw_some_item(pc_stats_gworld, rectangle(pc_stats_gworld), mainPtr, win_to_rects[WINRECT_PCSTATS], x);
-	rect_draw_some_item(item_stats_gworld, rectangle(item_stats_gworld), mainPtr, win_to_rects[WINRECT_INVEN], x);
-	rect_draw_some_item(text_area_gworld, rectangle(text_area_gworld), mainPtr, win_to_rects[WINRECT_TRANSCRIPT], x);
+	rect_draw_some_item(pc_stats_gworld(), rectangle(pc_stats_gworld()), mainPtr(), win_to_rects[WINRECT_PCSTATS], x);
+	rect_draw_some_item(item_stats_gworld(), rectangle(item_stats_gworld()), mainPtr(), win_to_rects[WINRECT_INVEN], x);
+	rect_draw_some_item(text_area_gworld(), rectangle(text_area_gworld()), mainPtr(), win_to_rects[WINRECT_TRANSCRIPT], x);
 }
 
 rectangle get_stat_effect_rect(int code) {
@@ -635,7 +634,7 @@ void draw_pc_effects(short pc) {
 		else if(next.second > 0) placedIcon = statInfo.icon;
 		else if(next.second < 0) placedIcon = statInfo.negIcon;
 		if(placedIcon >= 0) {
-			rect_draw_some_item(status_gworld, get_stat_effect_rect(placedIcon), pc_stats_gworld, dest_rect, sf::BlendAlpha);
+			rect_draw_some_item(status_gworld, get_stat_effect_rect(placedIcon), pc_stats_gworld(), dest_rect, sf::BlendAlpha);
 			dest_rect.offset(13, 0);
 		}
 		if(dest_rect.right >= right_limit) break;
@@ -966,7 +965,7 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 		inited = true;
 		buf_style.font = FONT_PLAIN;
 		buf_style.pointSize = 12;
-		width = text_area_gworld.getSize().x - 5;
+		width = text_area_gworld().getSize().x - 5;
 	}
 	if(overall_mode == MODE_STARTUP)
 		return;
@@ -1076,11 +1075,11 @@ void print_buf () {
 	long start_print_point;
 	rectangle store_text_rect,dest_rect,erase_rect = {2,2,136,255};
 	
-	text_area_gworld.setActive(false);
-	clear_scale_aware_text(text_area_gworld);
+	text_area_gworld().setActive(false);
+	clear_scale_aware_text(text_area_gworld());
 	
 	// First clean up gworld with pretty patterns
-	tileImage(text_area_gworld, erase_rect,bg[6]);
+	tileImage(text_area_gworld(), erase_rect,bg[6]);
 	
 	ctrl_val = 58 - text_sbar->getPosition();
 	start_print_point = buf_pointer - LINES_IN_TEXT_WIN - ctrl_val;
@@ -1091,10 +1090,10 @@ void print_buf () {
 	location moveTo;
 	while((line_to_print!= buf_pointer) && (num_lines_printed < LINES_IN_TEXT_WIN)) {
 		moveTo = location(4, 1 + 12 * num_lines_printed);
-		sf::Text text(text_buffer[line_to_print].line, *ResMgr::fonts.get("plain"), 12);
+		sf::Text text(text_buffer[line_to_print].line, *ResMgr::fonts.get("plain"), 12 * get_ui_scale());
 		text.setColor(Colours::BLACK);
 		text.setPosition(moveTo);
-		draw_scale_aware_text(text_area_gworld, text);
+		draw_scale_aware_text(text_area_gworld(), text);
 		num_lines_printed++;
 		line_to_print++;
 		if(line_to_print== TEXT_BUF_LEN) {
@@ -1107,8 +1106,8 @@ void print_buf () {
 		
 	}
 	
-	text_area_gworld.setActive();
-	text_area_gworld.display();
+	text_area_gworld().setActive();
+	text_area_gworld().display();
 }
 
 void restart_printing() {
@@ -1186,13 +1185,13 @@ void draw_text_label(const text_label_t& label) {
 	back_rect.inset(-7,-7);
 	back_rect.offset(0,-2);
 	for(int i = 0; i <= 3; i++) {
-		fill_roundrect(terrain_screen_gworld, back_rect, 7, back_clr);
+		fill_roundrect(terrain_screen_gworld(), back_rect, 7, back_clr);
 		back_rect.inset(2,2);
 		back_clr.a *= 1.5;
 	}
 	//text_rect.offset(0, -text_rect.height() + 1);
 	text_rect.offset(0, -5);
-	win_draw_string(terrain_screen_gworld, text_rect, label.str, eTextMode::LEFT_TOP, style);
+	win_draw_string(terrain_screen_gworld(), text_rect, label.str, eTextMode::LEFT_TOP, style);
 }
 
 // TODO: Replace uses of this function with direct use of calc_rect

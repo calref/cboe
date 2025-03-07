@@ -4,6 +4,7 @@ Confirmed:
 - Amanda Klecker
 - Andrew Flicker
 - Anonymous
+- anya hope
 - Baste Nesse Buanes
 - Bret Rodabaugh
 - Dylan Nugent
@@ -13,6 +14,7 @@ Confirmed:
 - Jeff Potter
 - Jeff Vogel
 - Jeremy Bracegirdle
+- Joe Ardent
 - Joel Joslin
 - Joshua Murphy
 - Juan Dionicio Becerra
@@ -22,6 +24,7 @@ Confirmed:
 - Laura Nelson
 - Mariann Krizsan
 - Mike Lapinsky
+- Nathan Rickey
 - Nick Chaimov
 - Nick Fisher
 - Nicole Tietz-Sokolskaya
@@ -29,6 +32,8 @@ Confirmed:
 - Noah Nelson
 - Ruby Paterson
 - Samael
+- Sam M
+- Sareena Razak
 - Sean Hayden
 - Souren Papazian
 - Tony Martyn
@@ -36,3 +41,4 @@ Confirmed:
 - Trent Nelson
 - Vida Krevs
 - William Hensley
+- yomimono

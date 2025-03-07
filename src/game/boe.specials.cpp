@@ -35,7 +35,6 @@
 #include <boost/lexical_cast.hpp>
 #include "winutil.hpp"
 
-extern sf::RenderWindow mainPtr;
 extern eGameMode overall_mode;
 extern eItemWinMode stat_window;
 extern short which_combat_type;
@@ -47,7 +46,6 @@ extern cOutdoors::cWandering store_wandering_special;
 extern eSpell spell_being_cast, town_spell;
 extern eSpecCtxType spec_target_type;
 extern short spell_caster, spec_target_fail, spec_target_options;
-extern sf::RenderWindow mini_map;
 extern short fast_bang;
 extern bool end_scenario;
 extern cUniverse univ;
@@ -2030,7 +2028,7 @@ void run_special(eSpecCtx which_mode, eSpecCtxType which_type, spec_num_t start_
 				if(replaying && has_next_action("step_through_continue")){
 					pop_next_action();
 					break;
-				}else if(pollEvent(mainPtr, evt) && (evt.type == sf::Event::KeyPressed || evt.type == sf::Event::MouseButtonPressed)){
+				}else if(pollEvent(mainPtr(), evt) && (evt.type == sf::Event::KeyPressed || evt.type == sf::Event::MouseButtonPressed)){
 					if(recording){
 						record_action("step_through_continue", "");
 					}
@@ -2405,7 +2403,7 @@ void general_spec(const runtime_state& ctx) {
 			break;
 		case eSpecType::STORY_DIALOG:
 			get_str(str1,ctx.cur_spec_type,spec.m1);
-			story_dialog(str1, spec.m2, spec.m3, ctx.cur_spec_type, spec.pic, ePicType(spec.pictype));
+			story_dialog(str1, spec.m2, spec.m3, ctx.cur_spec_type, spec.pic, ePicType(spec.pictype), spec.ex1c, spec.ex2c);
 			break;
 		case eSpecType::CLEAR_BUF:
 			univ.get_buf().clear();
@@ -2582,7 +2580,7 @@ void oneshot_spec(const runtime_state& ctx) {
 				showError("Dialog box ended up with no buttons.");
 				break;
 			}
-			dlg_res = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
+			dlg_res = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c);
 			if(spec.m3 > 0) {
 				if(dlg_res == 1) {
 					if((spec.ex1a >= 0) || (spec.ex2a >= 0)) {
@@ -2602,7 +2600,7 @@ void oneshot_spec(const runtime_state& ctx) {
 				break;
 			get_strs(strs, ctx.cur_spec_type, spec.m1);
 			buttons[0] = 20; buttons[1] = 19;
-			dlg_res = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
+			dlg_res = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c);
 			if(dlg_res == 1) {set_sd = false; ctx.next_spec = -1;}
 			else {
 				store_i = univ.scenario.get_stored_item(spec.ex1a);
@@ -2642,7 +2640,7 @@ void oneshot_spec(const runtime_state& ctx) {
 			if((spec.m1 >= 0) || (spec.m2 >= 0)) {
 				get_strs(strs[0],strs[1], ctx.cur_spec_type, spec.m1, spec.m2);
 				buttons[0] = 3; buttons[1] = 2;
-				dlg_res = custom_choice_dialog(strs,spec.pic,ePicType(spec.pictype),buttons);
+				dlg_res = custom_choice_dialog(strs,spec.pic,ePicType(spec.pictype),buttons, true, spec.ex1c, spec.ex2c);
 				// TODO: Make custom_choice_dialog return string?
 			}
 			else dlg_res = cChoiceDlog("basic-trap",{"yes","no"}).show() == "no";
@@ -3968,7 +3966,7 @@ void townmode_spec(const runtime_state& ctx) {
 			else {
 				get_strs(strs,ctx.cur_spec_type, spec.m1);
 				buttons[0] = 9; buttons[1] = 35;
-				if(custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons) == 1)
+				if(custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c) == 1)
 					ctx.next_spec = -1;
 				else {
 					int x = univ.party.get_ptr(10), y = univ.party.get_ptr(11);
@@ -3999,7 +3997,7 @@ void townmode_spec(const runtime_state& ctx) {
 			else {
 				get_strs(strs, ctx.cur_spec_type,spec.m1);
 				buttons[0] = 9; buttons[1] = 8;
-				if(custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons) == 1) {
+				if(custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c) == 1) {
 					ctx.next_spec = -1;
 					if(ctx.which_mode == eSpecCtx::OUT_MOVE || ctx.which_mode == eSpecCtx::TOWN_MOVE || ctx.which_mode == eSpecCtx::COMBAT_MOVE)
 						*ctx.ret_a = 1;

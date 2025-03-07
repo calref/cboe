@@ -3,13 +3,14 @@
 #include "boe.menu.hpp"
 #include "boe.menus.hpp"
 #include "boe.party.hpp"
+#include "boe.graphics.hpp"
 
 #include <sstream>
 #include <stdexcept>
 #include <utility>
 
-OpenBoEMenu::OpenBoEMenu(sf::RenderWindow& window, cUniverse& universe)
-	: tgui { window }
+OpenBoEMenu::OpenBoEMenu(cUniverse& universe)
+	: tgui { mainPtr() }
 	, univ { universe } {
 
 	// Build a menubar and store it in tgui with a known name

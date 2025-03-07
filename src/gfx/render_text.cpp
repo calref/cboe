@@ -14,7 +14,7 @@
 #include <utility>
 #include "winutil.hpp"
 
-void TextStyle::applyTo(sf::Text& text) {
+void TextStyle::applyTo(sf::Text& text, double scale) {
 	switch(font) {
 		case FONT_PLAIN:
 			text.setFont(*ResMgr::fonts.get("plain"));
@@ -29,7 +29,7 @@ void TextStyle::applyTo(sf::Text& text) {
 			text.setFont(*ResMgr::fonts.get("maidenword"));
 			break;
 	}
-	text.setCharacterSize(pointSize);
+	text.setCharacterSize(pointSize * scale);
 	int style = sf::Text::Regular;
 	if(italic) style |= sf::Text::Italic;
 	if(underline) style |= sf::Text::Underlined;
@@ -153,8 +153,6 @@ sf::Vector2f scaled_view_top_left(sf::RenderTarget& dest_window, sf::View& scale
 }
 
 void draw_scale_aware_text(sf::RenderTarget& dest_window, sf::Text str_to_draw) {
-	str_to_draw.setCharacterSize(str_to_draw.getCharacterSize() * get_ui_scale());
-
 	if(dynamic_cast<sf::RenderWindow*>(&dest_window) != nullptr){
 		// Temporarily switch window to its unscaled view to draw scale-aware text
 		sf::View scaled_view = dest_window.getView();
@@ -197,6 +195,8 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	
 	str_to_draw.setString(str);
 	short total_width = str_to_draw.getLocalBounds().width;
+
+	options.style.applyTo(str_to_draw, get_ui_scale());
 	
 	eTextMode mode = options.mode;
 	if(mode == eTextMode::WRAP && total_width < dest_rect.width() && !options.right_align)

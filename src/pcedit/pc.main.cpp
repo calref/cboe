@@ -56,7 +56,6 @@ short current_active_pc = 0;
 /* Mac stuff globals */
 bool All_Done = false;
 bool changed_display_mode = false;
-sf::RenderWindow mainPtr;
 sf::View mainView;
 bool party_in_scen = false;
 bool scen_items_loaded = false;
@@ -118,7 +117,7 @@ int main(int argc, char* argv[]) {
 	try {
 		init_directories(argv[0]);
 		sync_prefs();
-		adjust_window(mainPtr, mainView);
+		adjust_window(mainPtr(), mainView);
 		//init_menubar();
 		init_fileio();
 		init_main_buttons();
@@ -207,7 +206,7 @@ void handle_events() {
 	while(!All_Done) {
 		if(changed_display_mode) {
 			changed_display_mode = false;
-			adjust_window(mainPtr, mainView);
+			adjust_window(mainPtr(), mainView);
 		}
 
 #ifdef __APPLE__
@@ -216,7 +215,7 @@ void handle_events() {
 			menuChoiceId=-1;
 		}
 #endif
-		while(pollEvent(mainPtr, currentEvent)) handle_one_event(currentEvent);
+		while(pollEvent(mainPtr(), currentEvent)) handle_one_event(currentEvent);
 
 		redraw_everything();
 

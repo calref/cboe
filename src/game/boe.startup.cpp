@@ -32,7 +32,6 @@ using std::vector;
 
 extern bool party_in_memory;
 extern long register_flag;
-extern sf::RenderWindow mainPtr;
 extern cUniverse univ;
 extern eGameMode overall_mode;
 extern sf::View mainView;
@@ -56,7 +55,7 @@ void handle_startup_button_click(eStartButton btn, eKeyMod mods) {
 		draw_startup(0);
 	}
 	draw_start_button(btn,5);
-	mainPtr.display();
+	mainPtr().display();
 	play_sound(37, time_in_ticks(5));
 	draw_start_button(btn,0);
 	switch(btn) {
@@ -120,7 +119,7 @@ void handle_startup_button_click(eStartButton btn, eKeyMod mods) {
 
 // TODO: Always returns false, so make it void
 bool handle_startup_press(location the_point) {
-	the_point = mainPtr.mapPixelToCoords(the_point, mainView);
+	the_point = mainPtr().mapPixelToCoords(the_point, mainView);
 	
 	for(auto btn : startup_button.keys()) {
 		if(btn == eStartButton::STARTBTN_SCROLL) continue;
@@ -133,7 +132,7 @@ bool handle_startup_press(location the_point) {
 
 static void handle_splash_events(cFramerateLimiter& fps_limiter) {
 	sf::Event event;
-	while(pollEvent(mainPtr, event)) {
+	while(pollEvent(mainPtr(), event)) {
 		if(event.type == sf::Event::GainedFocus || event.type == sf::Event::MouseMoved)
 			set_cursor(sword_curs);
 	}
@@ -141,7 +140,7 @@ static void handle_splash_events(cFramerateLimiter& fps_limiter) {
 }
 
 static rectangle view_rect() {
-	sf::Vector2f size = mainPtr.getView().getSize();
+	sf::Vector2f size = mainPtr().getView().getSize();
 	return rectangle(0, 0, size.y, size.x);
 }
 
@@ -164,7 +163,7 @@ void show_logo(cFramerateLimiter& fps_limiter) {
 	
 	play_sound(-95);
 	while(sound_going(95)) {
-		draw_splash(pict_to_draw, mainPtr, logo_from);
+		draw_splash(pict_to_draw, mainPtr(), logo_from);
 		handle_splash_events(fps_limiter);
 	}
 	if(!get_int_pref("ShowStartupSplash", true)) {
@@ -190,7 +189,7 @@ void plop_fancy_startup(cFramerateLimiter& fps_limiter) {
 	sf::Clock timer;
 	
 	while(timer.getElapsedTime() < delay) {
-		draw_splash(pict_to_draw, mainPtr, intro_from);
+		draw_splash(pict_to_draw, mainPtr(), intro_from);
 		handle_splash_events(fps_limiter);
 	}
 }

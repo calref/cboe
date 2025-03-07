@@ -93,10 +93,10 @@ Picture number
 Picture type
 Label of 2nd button (-1 - no button)
 Special if button 2 pressed
-Unused
+Animation Loops (-2 for infinite)
 Label of 3rd button (-1 - no button)
 Special if button 3 pressed
-Unused
+Animation FPS (-1 for default 2)
 Special if OK/Leave picked
 
 --------------------
@@ -144,10 +144,10 @@ Picture number
 Picture type
 Item to give
 Amount of gold to give
-Unused
+Animation Loops (-2 for infinite)
 Amount of food to give
 Special if item IS taken
-Unused
+Animation FPS (-1 for default 2)
 Special to Jump To
 
 --------------------
@@ -229,10 +229,10 @@ Picture number
 Picture type
 Type of trap
 Trap severity (0 .. 3)
-Unused
+Animation Loops (-2 for infinite)
 Penalty (0 .. 100, higher is harder)
 (Custom only) Special node for effect
-Unused
+Animation FPS (-1 for default 2)
 Special after trap finished
 
 --------------------

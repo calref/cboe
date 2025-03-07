@@ -37,14 +37,12 @@ extern short store_spell_target,which_combat_type,combat_active_pc;
 extern eGameMode overall_mode;
 extern eItemWinMode stat_window;
 extern location center;
-extern sf::RenderWindow mainPtr;
 extern short store_current_pc,current_ground;
 extern eGameMode store_pre_shop_mode,store_pre_talk_mode;
 extern std::queue<pending_special_type> special_queue;
 extern bool prime_time();
 
 extern bool map_visible;
-extern sf::RenderWindow mini_map;
 
 extern location hor_vert_place[14];
 extern location diag_place[14];
@@ -52,7 +50,6 @@ extern location golem_m_locs[16];
 extern cUniverse univ;
 extern cCustomGraphics spec_scen_g;
 bool need_map_full_refresh = true,forcing_map_button_redraw = false;
-extern sf::RenderTexture map_gworld;
 // In the 0..65535 range, this colour was {65535,65535,52428}
 sf::Color parchment = {255,255,205};
 
@@ -696,7 +693,7 @@ void start_town_combat(eDirection direction) {
 	set_pc_moves();
 	pick_next_pc();
 	center = univ.current_pc().combat_pos;
-	UI::toolbar.draw(mainPtr);
+	UI::toolbar.draw(mainPtr());
 	put_pc_screen();
 	set_stat_window_for_pc(univ.cur_pc);
 	give_help(48,49);
@@ -1281,14 +1278,14 @@ bool does_location_have_special(cOutdoors& sector, location loc, eTerSpec specia
 
 // TODO: I don't think we need this
 void clear_map() {
-	rectangle map_world_rect(map_gworld);
+	rectangle map_world_rect(map_gworld());
 	
 //	if(!map_visible) {
 //		return;
 //	}
-//	draw_map(mini_map,11);
+//	draw_map(mini_map(),11);
 	
-	fill_rect(map_gworld, map_world_rect, sf::Color::Black);
+	fill_rect(map_gworld(), map_world_rect, sf::Color::Black);
 	
 	draw_map(true);
 }
@@ -1377,14 +1374,14 @@ void draw_map(bool need_refresh) {
 		canMap = false;
 	}
 	else if(need_refresh) {
-		// CHECKME: unsure, but on osx, if mainPtr.setActive() is not called,
+		// CHECKME: unsure, but on osx, if mainPtr().setActive() is not called,
 		// the following code does not update the gworld texture if we are
 		// called just after closing a dialog
-		mainPtr.setActive();
+		mainPtr().setActive();
 
-		map_gworld.setActive();
+		map_gworld().setActive();
 		
-		fill_rect(map_gworld, map_world_rect, sf::Color::Black);
+		fill_rect(map_gworld(), map_world_rect, sf::Color::Black);
 		
 		// Now, if shopping or talking, just don't touch anything.
 		if((overall_mode == MODE_SHOPPING) || (overall_mode == MODE_TALKING))
@@ -1428,26 +1425,26 @@ void draw_map(bool need_refresh) {
 							if(drawLargeIcon) {
 								pic = pic % 1000;
 								graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic);
-								rect_draw_some_item(*src_gw,custom_from,map_gworld,draw_rect);
+								rect_draw_some_item(*src_gw,custom_from,map_gworld(),draw_rect);
 							} else {
 								graf_pos_ref(src_gw, custom_from) = spec_scen_g.find_graphic(pic % 1000);
 								custom_from.right = custom_from.left + 12;
 								custom_from.bottom = custom_from.top + 12;
 								pic /= 1000; pic--;
 								custom_from.offset((pic / 3) * 12, (pic % 3) * 12);
-								rect_draw_some_item(*src_gw, custom_from, map_gworld, draw_rect);
+								rect_draw_some_item(*src_gw, custom_from, map_gworld(), draw_rect);
 							}
 						}
 					} else if(drawLargeIcon) {
 						if(pic >= 960) {
 							custom_from = calc_rect(4 * ((pic - 960) / 5),(pic - 960) % 5);
-							rect_draw_some_item(*ResMgr::graphics.get("teranim"), custom_from, map_gworld, draw_rect);
+							rect_draw_some_item(*ResMgr::graphics.get("teranim"), custom_from, map_gworld(), draw_rect);
 						} else {
 							int which_sheet = pic / 50;
 							auto src_gw = &ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet));
 							pic %= 50;
 							custom_from = calc_rect(pic % 10, pic / 10);
-							rect_draw_some_item(*src_gw, custom_from, map_gworld, draw_rect);
+							rect_draw_some_item(*src_gw, custom_from, map_gworld(), draw_rect);
 						}
 					} else {
 						if(univ.scenario.ter_types[what_ter].picture < 960)
@@ -1455,43 +1452,44 @@ void draw_map(bool need_refresh) {
 												 12 * (univ.scenario.ter_types[what_ter].picture / 20));
 						else ter_temp_from.offset(12 * 20,
 												  12 * (univ.scenario.ter_types[what_ter].picture - 960));
-						rect_draw_some_item(small_ter_gworld,ter_temp_from,map_gworld,draw_rect);
+						rect_draw_some_item(small_ter_gworld,ter_temp_from,map_gworld(),draw_rect);
 					}
 					
 					if(is_out() ? univ.out->roads[where.x][where.y] : univ.town.is_road(where.x,where.y)) {
 						draw_rect.inset(1,1);
-						rect_draw_some_item(*ResMgr::graphics.get("trim"),{8,112,12,116},map_gworld,draw_rect);
+						rect_draw_some_item(*ResMgr::graphics.get("trim"),{8,112,12,116},map_gworld(),draw_rect);
 					}
 				}
 			}
 		
-		map_gworld.display();
+		map_gworld().display();
 		// this stops flickering if the display time is too long
 		glFlush();
 	}
 	
-	mini_map.setActive(false);
+	mini_map().setActive(false);
 	
 	// Now place terrain map gworld
 	TextStyle style;
 	style.font = FONT_BOLD;
 	style.pointSize = 10;;
 	
-	the_rect = rectangle(mini_map);
-	tileImage(mini_map, the_rect,bg[4]);
-	cParentless mapWin(mini_map);
+	the_rect = rectangle(mini_map());
+	tileImage(mini_map(), the_rect, bg[4]);
+	cParentless mapWin(mini_map());
 	cPict theGraphic(mapWin);
+
 	theGraphic.setBounds(dlogpicrect);
 	theGraphic.setPict(21, PIC_DLOG);
 	theGraphic.setFormat(TXT_FRAME, FRM_NONE);
 	theGraphic.draw();
 	style.colour = sf::Color::White;
 	style.lineHeight = 12;
-	win_draw_string(mini_map, map_title_rect,title_string,eTextMode::WRAP,style);
-	win_draw_string(mini_map, map_bar_rect,"(Hit Escape to close.)",eTextMode::WRAP,style);
+	win_draw_string(mini_map(), map_title_rect,title_string,eTextMode::WRAP,style);
+	win_draw_string(mini_map(), map_bar_rect,"(Hit Escape to close.)",eTextMode::WRAP,style);
 	
 	if(canMap) {
-		rect_draw_some_item(map_gworld.getTexture(),area_to_draw_from,mini_map,area_to_draw_on);
+		rect_draw_some_item(map_gworld().getTexture(),area_to_draw_from,mini_map(),area_to_draw_on);
 		
 		// Now place PCs and monsters
 		if(draw_pcs) {
@@ -1508,8 +1506,8 @@ void draw_map(bool need_refresh) {
 								draw_rect.right = draw_rect.left + 6;
 								draw_rect.bottom = draw_rect.top + 6;
 								
-								fill_rect(mini_map, draw_rect, Colours::GREEN);
-								frame_circle(mini_map, draw_rect, Colours::BLUE);
+								fill_rect(mini_map(), draw_rect, Colours::GREEN);
+								frame_circle(mini_map(), draw_rect, Colours::BLUE);
 							}
 					}
 			if((overall_mode != MODE_SHOPPING) && (overall_mode != MODE_TALKING)) {
@@ -1519,18 +1517,18 @@ void draw_map(bool need_refresh) {
 				draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
 				draw_rect.right = draw_rect.left + 6;
 				draw_rect.bottom = draw_rect.top + 6;
-				fill_rect(mini_map, draw_rect, Colours::RED);
-				frame_circle(mini_map, draw_rect, sf::Color::Black);
+				fill_rect(mini_map(), draw_rect, Colours::RED);
+				frame_circle(mini_map(), draw_rect, sf::Color::Black);
 				
 			}
 		}
 	}
 	
-	mini_map.setActive(false);
-	mini_map.display();
+	mini_map().setActive(false);
+	mini_map().display();
 	
 	// Now exit gracefully
-	mainPtr.setActive();
+	mainPtr().setActive();
 	
 }
 
@@ -1568,10 +1566,10 @@ void display_map() {
 	rectangle the_rect;
 	rectangle	dlogpicrect = {6,6,42,42};
 	
-	mini_map.setVisible(true);
+	mini_map().setVisible(true);
 	map_visible = true;
 	draw_map(true);
-	makeFrontWindow(mainPtr);
+	makeFrontWindow(mainPtr());
 	
 	set_cursor(sword_curs);
 }

@@ -31,7 +31,6 @@ class cToolbar {
 		rectangle bounds;
 	};
 	
-	sf::RenderTexture cache;
 	std::vector<cButton> toolbar;
 	rectangle total_rect;
 	enum eMode {UNKNOWN, OUTDOORS, TOWN, COMBAT};
@@ -40,6 +39,7 @@ class cToolbar {
 	void place_buttons(const std::vector<eToolbarButton>& src);
 	void draw_buttons();
 	void init();
+	static sf::RenderTexture& cache();
 public:
 	void draw(sf::RenderTarget& targ);
 	eToolbarButton button_hit(sf::RenderWindow& win, location click, cFramerateLimiter& fps_limiter);

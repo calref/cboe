@@ -70,7 +70,6 @@ extern eItemWinMode stat_window;
 extern eGameMode overall_mode;
 extern fs::path progDir;
 extern location center;
-extern sf::RenderWindow mainPtr;
 extern bool spell_forced,boom_anim_active;
 extern eSpell store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev;
@@ -86,7 +85,6 @@ extern std::map<eDamageType,int> boom_gr;
 extern short current_ground;
 extern location golem_m_locs[16];
 extern cUniverse univ;
-extern sf::Texture pc_gworld;
 extern std::queue<pending_special_type> special_queue;
 
 // Variables for spell selection

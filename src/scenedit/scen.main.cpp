@@ -52,7 +52,6 @@ short menuChoiceId=-1;
 /* Globals */
 bool  All_Done = false;
 bool changed_display_mode = false;
-sf::RenderWindow mainPtr;
 sf::View mainView;
 cTown* town = nullptr;
 bool mouse_button_held = false,editing_town = false;
@@ -215,7 +214,7 @@ int main(int argc, char* argv[]) {
 }
 
 static void init_sbar(std::shared_ptr<cScrollbar>& sbar, const std::string& name, rectangle rect, rectangle events_rect, int pgSz) {
-	static cParentless mainWin(mainPtr);
+	static cParentless mainWin(mainPtr());
 	sbar.reset(new cScrollbar(mainWin));
 	sbar->setBounds(rect);
 	sbar->set_wheel_event_rect(events_rect);
@@ -243,7 +242,7 @@ static void init_scrollbars() {
 	init_sbar(pal_sbar, "pal_sbar", pal_sbar_rect, pal_sbar_event_rect, 16);
 }
 
-sf::FloatRect compute_viewport(const sf::RenderWindow & mainPtr, float ui_scale) {
+sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, float ui_scale) {
 
 	// See compute_viewport() in boe.graphics.cpp
 	sf::FloatRect viewport;
@@ -256,7 +255,7 @@ sf::FloatRect compute_viewport(const sf::RenderWindow & mainPtr, float ui_scale)
 	return viewport;
 }
 
-void adjust_windows (sf::RenderWindow & mainPtr, sf::View & mainView) {
+void adjust_windows (sf::RenderWindow& mainPtr, sf::View & mainView) {
 
 	// TODO: things might still be broken when upscaled.
 	//   translate_mouse_coordinates has been applied in some places but more work might be needed.
@@ -320,7 +319,7 @@ static void process_args(int argc, char* argv[]) {
 void init_scened(int argc, char* argv[]) {
 	init_directories(argv[0]);
 	sync_prefs();
-	adjust_windows(mainPtr, mainView);
+	adjust_windows(mainPtr(), mainView);
 	//init_menubar();
 	init_shaders();
 	init_tiling();
@@ -328,8 +327,8 @@ void init_scened(int argc, char* argv[]) {
 #ifdef SFML_SYSTEM_MACOS
 	init_menubar(); // This is called twice because Windows and Mac have different ordering requirements
 #endif
-	mainPtr.clear(sf::Color::Black);
-	mainPtr.display();
+	mainPtr().clear(sf::Color::Black);
+	mainPtr().display();
 	
 	set_cursor(watch_curs);
 	game_rand.seed(time(nullptr));
@@ -350,7 +349,7 @@ void init_scened(int argc, char* argv[]) {
 	set_cursor(sword_curs);
 	
 	cDialog::defaultBackground = cDialog::BG_LIGHT;
-	cDialog::doAnimations = true;
+	cDialog::defaultDoAnimations = true;
 	set_up_apple_events();
 	process_args(argc, argv);
 	init_fileio();
@@ -363,7 +362,7 @@ void handle_events() {
 	while(!All_Done) {
 		if(changed_display_mode) {
 			changed_display_mode = false;
-			adjust_windows(mainPtr, mainView);
+			adjust_windows(mainPtr(), mainView);
 		}
 
 #ifdef __APPLE__
@@ -372,7 +371,7 @@ void handle_events() {
 			menuChoiceId=-1;
 		}
 #endif
-		while(pollEvent(mainPtr, currentEvent)) handle_one_event(currentEvent);
+		while(pollEvent(mainPtr(), currentEvent)) handle_one_event(currentEvent);
 
 		// Why do we have to set this to false after handling every event?
 		ae_loading = false;

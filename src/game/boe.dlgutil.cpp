@@ -50,7 +50,6 @@
 extern eItemWinMode stat_window;
 extern eGameMode overall_mode;
 extern bool changed_display_mode;
-extern sf::RenderWindow mainPtr;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
 extern eStatMode stat_screen_mode;
@@ -60,9 +59,7 @@ extern location center;
 extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
 extern bool map_visible;
-extern sf::RenderWindow mini_map;
 extern cUniverse univ;
-extern sf::Texture pc_gworld;
 extern std::map<eSkill,short> skill_max;
 extern void give_help_and_record(short help1, short help2, bool help_forced = false);
 
@@ -75,7 +72,6 @@ extern bool party_in_memory;
 eGameMode store_pre_talk_mode;
 short store_personality,store_personality_graphic,shop_identify_cost,shop_recharge_amount,shop_recharge_limit;
 std::string save_talk_str1, save_talk_str2;
-sf::RenderTexture talk_gworld;
 bool talk_end_forced;
 rectangle talk_area_rect = {7,19,422,298}, word_place_rect = {44,7,372,257},talk_help_rect = {7,268,23,286};
 std::string title_string;
@@ -107,8 +103,38 @@ std::vector<int> shop_array;
 
 cShop active_shop;
 short active_shop_num;
+short store_cur_pc = -1;
 
-bool start_shop_mode(short which,short cost_adj,std::string store_name, bool cancel_when_empty) {
+// For healing shops, other PCs might be able to buy something if
+// the active PC can't
+bool start_shop_mode_other_pc(bool allow_empty = false) {
+	// The shop might change the current PC multiple times, but we want to restore
+	// it to the original active PC when shopping ends, so only store if we're
+	// not yet storing
+	if(store_cur_pc == -1)
+		store_cur_pc = univ.cur_pc;
+
+	// But I actually want to store the PC that's active now, so if no one can buy anything but
+	// we want to leave an empty shop, we can leave the PC selection where it is.
+	short pc_buying = univ.cur_pc;
+
+	bool other_pc_can_buy = false;
+	for(int i = 0; i < 6; ++i){
+		if(univ.party[i].main_status != eMainStatus::ABSENT){
+			univ.cur_pc = i;
+			if(start_shop_mode(active_shop_num,active_shop.getCostAdjust(),save_talk_str1,true,true)){
+				other_pc_can_buy = true;
+				break;
+			}
+		}
+	}
+	if(!other_pc_can_buy && allow_empty){
+		start_shop_mode(active_shop_num,active_shop.getCostAdjust(),save_talk_str1,false,true);
+	}
+	return other_pc_can_buy;
+}
+
+bool start_shop_mode(short which,short cost_adj,std::string store_name, bool cancel_when_empty, bool already_started) {
 	rectangle area_rect;
 	if(which < 0 || which >= univ.scenario.shops.size()) {
 		showError("The scenario tried to place you in a nonexistent shop!");
@@ -145,9 +171,10 @@ bool start_shop_mode(short which,short cost_adj,std::string store_name, bool can
 	}
 
 	area_rect = talk_area_rect;
-	talk_gworld.create(area_rect.width(), area_rect.height());
+	talk_gworld().create(area_rect.width(), area_rect.height());
 
-	store_pre_shop_mode = overall_mode;
+	if(!already_started)
+		store_pre_shop_mode = overall_mode;
 	overall_mode = MODE_SHOPPING;
 	stat_screen_mode = MODE_SHOP;
 	shop_sbar->setPosition(0);
@@ -174,6 +201,11 @@ static void update_last_talk(int new_node) {
 void end_shop_mode() {
 	if(recording){
 		record_action("end_shop_mode", "");
+	}
+
+	if(store_cur_pc >= 0){
+		univ.cur_pc = store_cur_pc;
+		store_cur_pc = -1;
 	}
 
 	rectangle dummy_rect = {0,0,0,0};
@@ -267,7 +299,7 @@ bool handle_shop_event(location p, cFramerateLimiter& fps_limiter) {
 			return true;
 		}
 	}
-	return p.in(rectangle(talk_gworld));
+	return p.in(rectangle(talk_gworld()));
 }
 
 void handle_sale(int i) {
@@ -436,8 +468,12 @@ void handle_sale(int i) {
 	// This looks to be redundant, but I'm just preserving the previous behavior of the code.
 	set_up_shop_array();
 	draw_shop_graphics(false,false,{});
-}
 
+	// When buying from a healer, we want to select the next PC who needs healing
+	if(shop_array.empty()){
+		start_shop_mode_other_pc(true);
+	}
+}
 
 void handle_info_request(int what_picked) {
 	if(recording){
@@ -642,7 +678,7 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	store_m_num = m_num;
 	store_talk_face_pic = store_face_pic; ////
 	area_rect = talk_area_rect;
-	talk_gworld.create(area_rect.width(), area_rect.height());
+	talk_gworld().create(area_rect.width(), area_rect.height());
 	help_btn->show();
 
 	// This would be the place to show the text box, if I add it.
@@ -908,12 +944,16 @@ void handle_talk_node(int which_talk_entry) {
 			
 		case eTalkNode::SHOP:
 			if(!start_shop_mode(b,a,save_talk_str1,true)){
-				// Second string of shop talk node: Custom message for when shop is empty
-				if(!save_talk_str2.empty()){
-					save_talk_str1 = save_talk_str2;
-					save_talk_str2 = "";
-				}else{
-					save_talk_str1 = "There is nothing available to buy.";
+				if(!start_shop_mode_other_pc()){
+					univ.cur_pc = store_cur_pc;
+
+					// Second string of shop talk node: Custom message for when shop is empty
+					if(!save_talk_str2.empty()){
+						save_talk_str1 = save_talk_str2;
+						save_talk_str2 = "";
+					}else{
+						save_talk_str1 = "There is nothing available to buy.";
+					}
 				}
 			}else{
 				can_save_talk = false;
@@ -1162,7 +1202,7 @@ bool handle_talk_event(location p, cFramerateLimiter& fps_limiter) {
 		break;
 	}
 	handle_talk_node(which_talk_entry);
-	return clicked_word || p.in(rectangle(talk_gworld));
+	return clicked_word || p.in(rectangle(talk_gworld()));
 }
 
 //town_num; // Will be 0 - 200 for town, 200 - 290 for outdoors
@@ -1300,6 +1340,8 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 			univ.party.less_wm = dynamic_cast<cLed&>(me["lesswm"]).getState() != led_off;
 		}
 		set_pref("ShowStartupSplash", dynamic_cast<cLed&>(me["skipsplash"]).getState() == led_off);
+		set_pref("TargetLock", dynamic_cast<cLed&>(me["target-lock"]).getState() != led_off);
+
 		std::string speed = dynamic_cast<cLedGroup&>(me["speed"]).getSelected();
 		/* TODO: Should I add these additional preferences from Windows?
 		party.stuff_done[SDF_NO_TARGET_LINE] = cd_get_led(1099,50);
@@ -1413,7 +1455,9 @@ void pick_preferences(bool record) {
 			gameSpeed.setSelected("snail");
 			break;
 	}
-	
+
+	dynamic_cast<cLed&>(prefsDlog["target-lock"]).setState(get_bool_pref("TargetLock", true) ? led_red : led_off);	
+
 	cLedGroup& keyshiftOptions = dynamic_cast<cLedGroup&>(prefsDlog["keyshift-options"]);
 	if(get_bool_pref("DirectionalKeyScrolling", false)){
 		keyshiftOptions.setSelected("screen-shift");

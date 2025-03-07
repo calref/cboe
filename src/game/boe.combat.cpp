@@ -36,7 +36,6 @@ extern location center;
 extern short combat_active_pc;
 extern bool monsters_going,spell_forced;
 extern bool flushingInput;
-extern sf::RenderWindow mainPtr;
 extern eSpell store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev,store_item_spell_level;
 extern short store_spell_target,pc_casting,current_spell_range;
@@ -268,7 +267,7 @@ void start_outdoor_combat(cOutdoors::cWandering encounter,location where,short n
 	print_buf();
 	play_sound(23);
 	
-	mainPtr.setActive();
+	mainPtr().setActive();
 	which_combat_type = 0;
 	overall_mode = MODE_COMBAT;
 	
@@ -358,7 +357,7 @@ void start_outdoor_combat(cOutdoors::cWandering encounter,location where,short n
 	set_pc_moves();
 	pick_next_pc();
 	center = univ.current_pc().combat_pos;
-	UI::toolbar.draw(mainPtr);
+	UI::toolbar.draw(mainPtr());
 	put_pc_screen();
 	set_stat_window_for_pc(univ.cur_pc);
 	
@@ -1643,10 +1642,10 @@ void load_missile() {
 		ammo_inv_slot = thrown.slot;
 		add_string_to_buf("Throw: Select a target.");
 		add_string_to_buf("  (Hit 's' to cancel.)");
-		overall_mode = MODE_THROWING;
 		current_spell_range = 8;
 		if(thrown->ability == eItemAbil::DISTANCE_MISSILE)
 			current_spell_range += thrown->abil_strength;
+		handle_target_mode(MODE_THROWING, current_spell_range);
 		if(thrown->ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else current_pat = single;
@@ -1659,36 +1658,36 @@ void load_missile() {
 	} else if(bow && arrow) {
 		missile_inv_slot = bow.slot;
 		ammo_inv_slot = arrow.slot;
-		overall_mode = MODE_FIRING;
-		add_string_to_buf("Fire: Select a target.");
-		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
 		if(arrow->ability == eItemAbil::DISTANCE_MISSILE)
 			current_spell_range += arrow->abil_strength;
+		handle_target_mode(MODE_FIRING, current_spell_range);
+		add_string_to_buf("Fire: Select a target.");
+		add_string_to_buf("  (Hit 's' to cancel.)");
 		if(arrow->ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else current_pat = single;
 	} else if(crossbow && bolts) {
 		missile_inv_slot = crossbow.slot;
 		ammo_inv_slot = bolts.slot;
-		overall_mode = MODE_FIRING;
-		add_string_to_buf("Fire: Select a target.");
-		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
 		if(bolts->ability == eItemAbil::DISTANCE_MISSILE)
 			current_spell_range += bolts->abil_strength;
+		handle_target_mode(MODE_FIRING, current_spell_range);
+		add_string_to_buf("Fire: Select a target.");
+		add_string_to_buf("  (Hit 's' to cancel.)");
 		if(bolts->ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else current_pat = single;
 	} else if(no_ammo) {
 		missile_inv_slot = no_ammo.slot;
 		ammo_inv_slot = no_ammo.slot;
-		overall_mode = MODE_FIRING;
-		add_string_to_buf("Fire: Select a target.");
-		add_string_to_buf("  (Hit 's' to cancel.)");
 		current_spell_range = 12;
 		if(no_ammo->ability == eItemAbil::DISTANCE_MISSILE)
 			current_spell_range += no_ammo->abil_strength;
+		handle_target_mode(MODE_FIRING, current_spell_range);
+		add_string_to_buf("Fire: Select a target.");
+		add_string_to_buf("  (Hit 's' to cancel.)");
 		if(no_ammo->ability == eItemAbil::EXPLODING_WEAPON)
 			current_pat = radius2;
 		else current_pat = single;
@@ -4718,7 +4717,7 @@ void end_combat() {
 	if(univ.current_pc().main_status != eMainStatus::ALIVE)
 		univ.cur_pc = first_active_pc();
 	put_item_screen(stat_window);
-	UI::toolbar.draw(mainPtr);
+	UI::toolbar.draw(mainPtr());
 }
 
 
@@ -5158,8 +5157,8 @@ void start_spell_targeting(eSpell num, bool freebie, int spell_range, eSpellPat 
 	else if(isMage(num))
 		add_string_to_buf("  (Hit 'm' to cancel.)");
 	else add_string_to_buf("  (Hit 'p' to cancel.)");
-	overall_mode = MODE_SPELL_TARGET;
 	current_spell_range = num == eSpell::NONE ? spell_range : (*num).range;
+	handle_target_mode(MODE_SPELL_TARGET, current_spell_range);
 	current_pat = single;
 	
 	switch(num) {  // Different spells have different messages and diff. target shapes
@@ -5221,9 +5220,9 @@ void start_fancy_spell_targeting(eSpell num, bool freebie, int spell_range, eSpe
 		add_string_to_buf("  (Hit 'm' to cancel.)");
 	else add_string_to_buf("  (Hit 'p' to cancel.)");
 	add_string_to_buf("  (Hit space to cast.)");
-	overall_mode = MODE_FANCY_TARGET;
-	current_pat = single;
 	current_spell_range = num == eSpell::NONE ? spell_range : (*num).range;
+	handle_target_mode(MODE_FANCY_TARGET, current_spell_range);
+	current_pat = single;
 	short bonus = univ.current_pc().stat_adj(eSkill::INTELLIGENCE);
 	short level = freebie ? store_item_spell_level : univ.current_pc().level;
 	

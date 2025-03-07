@@ -605,3 +605,14 @@ std::string cScenario::get_feature_flag(std::string flag) {
 	if(iter == this->feature_flags.end()) return "";
 	return iter->second;
 }
+
+std::string cScenario::get_sdf_name(int row, int col) {
+	if(row < 0 || row >= SDF_ROWS || col < 0 || col >= SDF_COLUMNS){
+		throw "Tried to access SDF name for out-of-bounds flag (" + std::to_string(row) + ", " + std::to_string(col) + ")";
+	}
+	if(sdf_names.find(row) == sdf_names.end())
+		return "";
+	if(sdf_names[row].find(col) == sdf_names[row].end())
+		return "";
+	return sdf_names[row][col];
+}

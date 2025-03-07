@@ -5,7 +5,6 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "res_cursor.hpp"
 
-extern sf::RenderWindow mainPtr;
 
 // This function adapted from <http://www.codeproject.com/Articles/5220/Creating-a-color-cursor-from-a-bitmap>
 static void GetMaskBitmaps(const sf::Image& srcImage, HBITMAP& hAndMaskBitmap, HBITMAP& hXorMaskBitmap) {

@@ -2831,13 +2831,13 @@ static void put_scen_details_in_dlog(cDialog& me) {
 		me["ver" + std::to_string(i + 1)].setTextToNum(scenario.format.ver[i]);
 	// Legacy meta text labels:
 	if(!scenario.has_feature_flag("scenario-meta-format")){
-		me["teaser1-text"].setText("Credits/Teaser Part 1:");
-		me["teaser2-text"].setText("Credits/Teaser Part 2:");
-		me["author-text"].setText("Author|(not displayed):");
-		me["contact-text"].setText("Contact info|(not displayed):");
+		me["teaser1-label"].setText("Credits/Teaser Part 1:");
+		me["teaser2-label"].setText("Credits/Teaser Part 2:");
+		me["author-label"].setText("Author|(not displayed):");
+		me["contact-label"].setText("Contact info|(not displayed):");
 	}else{
 		// Updated meta text labels:
-		me["teaser2-text"].hide();
+		me["teaser2-label"].hide();
 		me["teaser2"].hide();
 	}
 
@@ -2995,6 +2995,7 @@ bool edit_make_scen_2(short& out_w, short& out_h, short& town_l, short& town_m, 
 
 extern fs::path progDir;
 extern eScenMode overall_mode;
+
 bool build_scenario() {
 	short width, height, lg, med, sm;
 	bool default_town, grass;
@@ -3092,7 +3093,6 @@ bool build_scenario() {
 	scenario.shops.push_back(cShop(SHOP_HEALING));
 	
 	overall_mode = MODE_MAIN_SCREEN;
-	
 	editing_town = false;
 	scenario.outdoors.resize(width, height);
 	for(int x = 0; x < width; x++) {

@@ -32,15 +32,11 @@
 extern short which_combat_type;
 extern eGameMode overall_mode;
 extern eItemWinMode stat_window;
-extern sf::RenderWindow mainPtr;
 extern bool boom_anim_active;
 extern rectangle d_rects[80];
 extern short d_rect_index[80];
 
 extern bool map_visible;
-extern sf::RenderWindow mini_map;
-extern sf::Texture pc_gworld;
-extern sf::RenderTexture map_gworld;
 extern cUniverse univ;
 
 extern void draw_map(bool need_refresh);
@@ -579,7 +575,7 @@ bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short 
 	
 }
 
-short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons) {
+short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons,bool anim_pict,short anim_loops, int anim_fps) {
 	set_cursor(sword_curs);
 	
 	std::vector<std::string> vec(strs.begin(), strs.end());
@@ -587,6 +583,9 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 	while(!vec.empty() && vec.back().empty())
 		vec.pop_back();
 	cThreeChoice customDialog(vec, buttons, pic_num, pic_type);
+	if(anim_pict)
+		setup_dialog_pict_anim(*(customDialog.operator->()), "pict", anim_loops, anim_fps);
+
 	std::string item_hit = customDialog.show();
 	
 	for(int i = 0; i < 3; i++) {
@@ -620,9 +619,17 @@ void custom_pic_dialog(std::string title, pic_num_t bigpic) {
 	pic_dlg.run();
 }
 
-void story_dialog(std::string title, str_num_t first, str_num_t last, eSpecCtxType which_str_type, pic_num_t pic, ePicType pt) {
+void setup_dialog_pict_anim(cDialog& dialog, std::string pict_id, short anim_loops, short anim_fps) {
+	cPict& pict = dynamic_cast<cPict&>(dialog[pict_id]);
+	pict.setAnimLoops(anim_loops);
+	dialog.setAnimPictFPS(anim_fps);
+	dialog.setDoAnimations(true);
+}
+
+void story_dialog(std::string title, str_num_t first, str_num_t last, eSpecCtxType which_str_type, pic_num_t pic, ePicType pt, short anim_loops, int anim_fps) {
 	cDialog story_dlg(*ResMgr::dialogs.get("many-str"));
 	dynamic_cast<cPict&>(story_dlg["pict"]).setPict(pic, pt);
+	setup_dialog_pict_anim(story_dlg, "pict", anim_loops, anim_fps);
 	str_num_t cur = first;
 	story_dlg.attachClickHandlers([&cur,first,last,which_str_type](cDialog& me, std::string clicked, eKeyMod) -> bool {
 		if(clicked == "left") {
@@ -667,20 +674,20 @@ short get_num_of_items(short max_num) {
 void init_mini_map() {
 	double map_scale = get_ui_scale_map();
 	if (map_scale < 0.1) map_scale = 1.0;
-	if (mini_map.isOpen()) mini_map.close();
-	mini_map.create(sf::VideoMode(map_scale*296,map_scale*277), "Map", sf::Style::Titlebar | sf::Style::Close);
-	mini_map.setPosition(sf::Vector2i(52,62));
+	if (mini_map().isOpen()) mini_map().close();
+	mini_map().create(sf::VideoMode(map_scale*296,map_scale*277), "Map", sf::Style::Titlebar | sf::Style::Close);
+	mini_map().setPosition(sf::Vector2i(52,62));
 	sf::View view;
 	view.reset(sf::FloatRect(0, 0, map_scale*296,map_scale*277));
 	view.setViewport(sf::FloatRect(0, 0, map_scale, map_scale));
-	mini_map.setView(view);
-	mini_map.setVisible(false);
+	mini_map().setView(view);
+	mini_map().setVisible(false);
 	map_visible=false;
-	setWindowFloating(mini_map, true);
-	makeFrontWindow(mainPtr);
+	setWindowFloating(mini_map(), true);
+	makeFrontWindow(mainPtr());
 	
 	// Create and initialize map gworld
-	if(!map_gworld.create(384, 384)) {
+	if(!map_gworld().create(384, 384)) {
 		play_sound(2);
 		throw std::string("Failed to initialized automap!");
 	} else {
