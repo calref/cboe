@@ -129,6 +129,7 @@ public:
 	std::set<int> spec_items;
 	long long total_m_killed, total_dam_done, total_xp_gained, total_dam_taken;
 	std::string scen_name;
+	bool load_failed = false;
 private:
 	std::array<std::unique_ptr<cPlayer>,6> adven;
 public:
