@@ -2081,9 +2081,11 @@ class cFilePicker {
 
 	bool changeSelectedPage(int dir) {
 		auto& stk = dynamic_cast<cStack&>(me["list"]);
+		cControl::storage_t field_storage = me["file1-field"].store();
 		// This stack doesn't loop. It's easier to implement loading the files one page at a time
 		// if I know we're not gonna jump from page 0 to the last page, leaving a gap in the vector.
 		stk.changeSelectedPage(dir);
+		me["file1-field"].restore(field_storage);
 		me["prev"].show();
 		me["next"].show();
 		if(stk.getPage() == 0){
