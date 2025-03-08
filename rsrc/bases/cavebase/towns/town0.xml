@@ -173,11 +173,11 @@
         <face>0</face>
     </creature>
     <creature id="10">
-        <type>16</type>
+        <type>14</type>
         <attitude>docile</attitude>
         <mobility>0</mobility>
         <personality>0</personality>
-        <face>33</face>
+        <face>11</face>
     </creature>
     <creature id="11">
         <type>6</type>
@@ -194,7 +194,7 @@
         <face>3</face>
     </creature>
     <creature id="13">
-        <type>110</type>
+        <type>108</type>
         <attitude>docile</attitude>
         <mobility>1</mobility>
         <personality>-1</personality>
