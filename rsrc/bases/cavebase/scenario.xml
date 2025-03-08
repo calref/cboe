@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<scenario boes="2.0.0">
+    <title>Scen name</title>
+    <icon>0</icon>
+    <id></id>
+    <version>1.0.0</version>
+    <language>en-US</language>
+    <author>
+        <name>Name not given</name>
+        <email>Contact info</email>
+    </author>
+    <text>
+        <teaser>Who wrote 1</teaser>
+        <teaser>Who wrote 2</teaser>
+    </text>
+    <ratings>
+        <content>G</content>
+        <difficulty>1</difficulty>
+    </ratings>
+    <flags>
+        <adjust-difficulty>true</adjust-difficulty>
+        <legacy>false</legacy>
+        <custom-graphics>false</custom-graphics>
+    </flags>
+    <creator>
+        <type>oboe</type>
+        <version>2.0.0</version>
+    </creator>
+    <game>
+        <num-towns>1</num-towns>
+        <out-width>1</out-width>
+        <out-height>1</out-height>
+        <start-town>0</start-town>
+        <town-start x="24" y="24" />
+        <outdoor-start x="0" y="0" />
+        <sector-start x="24" y="24" />
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[]]>
+            </description>
+        </special-item>
+        <special-item start-with="false" useable="false" special="-1">
+            <name>Unused Special Item</name>
+            <description>
+                <![CDATA[End special item descs]]>
+            </description>
+        </special-item>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Magic Shop</name>
+            <type>rand</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>1</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>2</treasure>
+                <treasure>3</treasure>
+                <treasure>3</treasure>
+                <treasure>4</treasure>
+            </entries>
+        </shop>
+        <shop>
+            <name>Healing</name>
+            <type>dead</type>
+            <prompt>heal</prompt>
+            <face>41</face>
+            <entries>
+                <heal>0</heal>
+                <heal>1</heal>
+                <heal>2</heal>
+                <heal>4</heal>
+                <heal>9</heal>
+                <heal>5</heal>
+                <heal>6</heal>
+                <heal>7</heal>
+                <heal>8</heal>
+            </entries>
+        </shop>
+        <shop>
+            <name>Rippel&apos;s Fletching</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">98</item>
+                <item quantity="infinite">99</item>
+                <item quantity="infinite">100</item>
+                <item quantity="infinite">101</item>
+                <item quantity="infinite">102</item>
+                <item quantity="infinite">103</item>
+                <item quantity="infinite">104</item>
+                <item quantity="infinite">105</item>
+                <item quantity="infinite">106</item>
+                <item quantity="infinite">107</item>
+                <item quantity="infinite">108</item>
+                <item quantity="infinite">109</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Walner&apos;s potions</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">260</item>
+                <item quantity="infinite">261</item>
+                <item quantity="infinite">262</item>
+                <item quantity="infinite">263</item>
+                <item quantity="infinite">264</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Fine Weapons</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">31</item>
+                <item quantity="infinite">32</item>
+                <item quantity="infinite">33</item>
+                <item quantity="infinite">34</item>
+                <item quantity="infinite">35</item>
+                <item quantity="infinite">36</item>
+                <item quantity="infinite">37</item>
+                <item quantity="infinite">38</item>
+                <item quantity="infinite">39</item>
+                <item quantity="infinite">40</item>
+                <item quantity="infinite">41</item>
+                <item quantity="infinite">42</item>
+                <item quantity="infinite">43</item>
+                <item quantity="infinite">44</item>
+                <item quantity="infinite">45</item>
+                <item quantity="infinite">46</item>
+                <item quantity="infinite">47</item>
+                <item quantity="infinite">48</item>
+                <item quantity="infinite">49</item>
+                <item quantity="infinite">50</item>
+                <item quantity="infinite">51</item>
+                <item quantity="infinite">52</item>
+                <item quantity="infinite">53</item>
+                <item quantity="infinite">54</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Fine Armor</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">120</item>
+                <item quantity="infinite">121</item>
+                <item quantity="infinite">122</item>
+                <item quantity="infinite">123</item>
+                <item quantity="infinite">124</item>
+                <item quantity="infinite">125</item>
+                <item quantity="infinite">126</item>
+                <item quantity="infinite">127</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Fine Shields</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>0</face>
+            <entries>
+                <item quantity="infinite">139</item>
+                <item quantity="infinite">140</item>
+                <item quantity="infinite">141</item>
+                <item quantity="infinite">142</item>
+                <item quantity="infinite">143</item>
+                <item quantity="infinite">144</item>
+                <item quantity="infinite">145</item>
+                <item quantity="infinite">146</item>
+            </entries>
+        </shop>
+        <shop>
+            <name>Fine Rations</name>
+            <type>live</type>
+            <prompt>shop</prompt>
+            <face>42</face>
+            <entries>
+                <item quantity="infinite">1</item>
+                <item quantity="infinite">2</item>
+                <item quantity="infinite">3</item>
+            </entries>
+        </shop>
+    </game>
+    <editor>
+        <default-ground>2</default-ground>
+        <last-out-section x="0" y="0" />
+        <last-town>0</last-town>
+        <item-typeflag id="1">Darts</item-typeflag>
+        <item-typeflag id="2">Iron Darts</item-typeflag>
+        <item-typeflag id="3">Magic Darts</item-typeflag>
+        <item-typeflag id="4">Throwing Knives</item-typeflag>
+        <item-typeflag id="5">Iron Throwing Knives</item-typeflag>
+        <item-typeflag id="6">Arrows</item-typeflag>
+        <item-typeflag id="7">Iron Arrows</item-typeflag>
+        <item-typeflag id="8">Magic Arrows</item-typeflag>
+        <item-typeflag id="9">Iron Razordisks</item-typeflag>
+        <item-typeflag id="10">Steel Razordisks</item-typeflag>
+        <item-typeflag id="11">Javelins</item-typeflag>
+        <item-typeflag id="12">Iron Javelins</item-typeflag>
+        <item-typeflag id="13">Torches</item-typeflag>
+        <item-typeflag id="14">Lockpicks</item-typeflag>
+        <item-typeflag id="15">Rocks</item-typeflag>
+        <item-typeflag id="16">Bolts</item-typeflag>
+        <item-typeflag id="17">Iron Bolts</item-typeflag>
+        <item-typeflag id="18">Magic Bolts</item-typeflag>
+        <item-typeflag id="19">Sapphires</item-typeflag>
+        <item-typeflag id="20">Rubies</item-typeflag>
+        <item-typeflag id="21">Holly</item-typeflag>
+        <item-typeflag id="22">Comfrey Root</item-typeflag>
+        <item-typeflag id="23">Glowing Nettle</item-typeflag>
+        <item-typeflag id="24">Wormgrass</item-typeflag>
+        <item-typeflag id="25">Graymold</item-typeflag>
+        <item-typeflag id="26">Ember Flowers</item-typeflag>
+        <item-typeflag id="27">Mandrake Root</item-typeflag>
+        <item-typeflag id="28">Smoky Crystals</item-typeflag>
+        <item-typeflag id="29">Fine Lockpicks</item-typeflag>
+        <item-typeflag id="30">Magic Lockpicks</item-typeflag>
+        <item-typeflag id="31">Weak Poison</item-typeflag>
+        <item-typeflag id="32">Medium Poison</item-typeflag>
+        <item-typeflag id="33">Strong Poison</item-typeflag>
+        <item-typeflag id="34">Killer Poison</item-typeflag>
+        <item-typeflag id="35">Lightning Rods</item-typeflag>
+        <item-typeflag id="36">Cleansing Powder</item-typeflag>
+        <item-typeflag id="37">Crystals</item-typeflag>
+        <item-typeflag id="38">Candles</item-typeflag>
+        <item-typeflag id="39">Diamonds</item-typeflag>
+        <item-typeflag id="40">Emeralds</item-typeflag>
+        <item-typeflag id="41">Basic Powder</item-typeflag>
+        <item-typeflag id="42">Power of Lethe</item-typeflag>
+        <item-typeflag id="43">Dust of Hiding</item-typeflag>
+        <item-typeflag id="44">Dust of Choking</item-typeflag>
+        <item-typeflag id="46">Silver Ore</item-typeflag>
+        <item-typeflag id="47">Gold Ore</item-typeflag>
+        <item-typeflag id="48">Asp Fangs</item-typeflag>
+        <item-typeflag id="49">Rough Diamonds</item-typeflag>
+        <item-typeflag id="50">Asptongue Mold</item-typeflag>
+        <item-typeflag id="51">Arrows of Light</item-typeflag>
+        <item-typeflag id="52">Arrows of Life</item-typeflag>
+        <item-typeflag id="53">Burning Arrows</item-typeflag>
+        <item-typeflag id="54">Exploding Arrows</item-typeflag>
+        <item-typeflag id="55">Poison Darts</item-typeflag>
+    </editor>
+</scenario>
