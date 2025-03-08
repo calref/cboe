@@ -1791,7 +1791,11 @@ public:
 };
 
 scen_header_type pick_a_scen() {
-	return cChooseScenario().run();
+	// build_scen_headers() can be slow.
+	set_cursor(watch_curs);
+	cChooseScenario dlg;
+	restore_cursor();
+	return dlg.run();
 }
 
 extern fs::path saveDir;
