@@ -729,6 +729,7 @@ static void setup_node_field(cDialog& me, std::string field, short value, const 
 			break;
 		case eSpecPicker::MSG_PAIR: case eSpecPicker::MSG_SINGLE:
 		case eSpecPicker::MSG_SEQUENCE: case eSpecPicker::NODE:
+		case eSpecPicker::QUEST:
 			me[button].show();
 			me[toggle].hide();
 			if(is_sdf) break;
@@ -1290,6 +1291,13 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			sdf = cStuffDonePicker(sdf).run();
 			store = sdf.y;
 			me[otherField].setTextToNum(sdf.x);
+		} break;
+		case eSpecPicker::QUEST: {
+			if(val < 0 || val >= scenario.quests.size()){
+				val = scenario.quests.size();
+			}
+			edit_quest(val);
+			store = val;
 		} break;
 		case eSpecPicker::SPELL_PATTERN: store = choose_pattern(val, &me, fcn.augmented); break;
 		case eSpecPicker::FIELD: store = choose_field_type(val, &me, fcn.augmented); break;
