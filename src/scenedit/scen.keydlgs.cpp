@@ -638,7 +638,7 @@ short choose_text_editable(std::vector<std::string>& list, short cur_choice, cDi
 	return cur_choice;
 }
 
-static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& which_str, eStrMode str_mode) {
+static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& which_str, eStrMode str_mode,bool loop,short min_str,short max_str) {
 	std::string newVal = me["text"].getText();
 	fetch_str(str_mode, which_str) = newVal;
 	if(item_hit == "okay") me.toast(true);
@@ -646,24 +646,35 @@ static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& whi
 		if(item_hit[0] == 'l')
 			which_str--;
 		else which_str++;
-		if(which_str < 0) which_str = num_strs(str_mode) - 1;
-		if(which_str >= num_strs(str_mode)) which_str = 0;
+		if(!loop) {
+			if(which_str == min_str) me["left"].hide();
+			else me["left"].show();
+			if(max_str == -1 && which_str >= num_strs(str_mode)) {
+				ensure_str(str_mode, which_str);
+			} else if(which_str == max_str) me["right"].hide();
+			else me["right"].show();
+		} else {
+			if(which_str < 0) which_str = num_strs(str_mode) - 1;
+			if(which_str >= num_strs(str_mode)) which_str = 0;
+		}
 	}
 	me["num"].setText(str_info(str_mode, which_str));
 	me["text"].setText(fetch_str(str_mode, which_str));
 	return true;
 }
 
-bool edit_text_str(short which_str,eStrMode mode) {
+bool edit_text_str(short which_str,eStrMode mode,bool loop,short min_str,short max_str) {
 	using namespace std::placeholders;
 	short first = which_str;
 	
 	cDialog dlog(*ResMgr::dialogs.get("edit-text"));
-	dlog.attachClickHandlers(std::bind(edit_text_event_filter, _1, _2, std::ref(which_str), mode), {"okay", "left", "right"});
+	dlog.attachClickHandlers(std::bind(edit_text_event_filter, _1, _2, std::ref(which_str), mode, loop, min_str, max_str), {"okay", "left", "right"});
 	dlog["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
 	
 	dlog["num"].setText(str_info(mode, which_str));
 	dlog["text"].setText(fetch_str(mode, which_str));
+	if(!loop && which_str == min_str) dlog["left"].hide();
+	if(!loop && max_str >= 0 && which_str == max_str) dlog["right"].hide();
 	
 	dlog.run();
 	return dlog.accepted() || which_str != first;
@@ -1055,6 +1066,23 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case eSpecPicker::MSG_SEQUENCE:
 			store = val;
 			edit_dialog_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.top().mode), &store, &me);
+			break;
+		case eSpecPicker::MSG_SEQUENCE_VAR:
+			if(val < 0) {
+				// If no string was specified, start appending strings to the end of the list.
+				auto mode = eStrMode(edit_stack.top().mode);
+				store = num_strs(mode);
+				ensure_str(mode, store);
+				if(edit_text_str(store, mode, false, store)) {
+					auto otherField = get_control_for_field(fcn.continuation);
+					me[otherField].setTextToNum(num_strs(mode) - 1);
+				} else store = val;
+			} else {
+				// Otherwise, edit only the sequence of strings specified. The values of the fields won't change.
+				store = val;
+				auto otherField = get_control_for_field(fcn.continuation);
+				edit_text_str(val, eStrMode(edit_stack.top().mode), false, val, me[otherField].getTextAsNum());
+			}
 			break;
 		case eSpecPicker::TOGGLE: {
 			// TODO: We should also add a focus handler so that manually changing the field value updates the toggle...
