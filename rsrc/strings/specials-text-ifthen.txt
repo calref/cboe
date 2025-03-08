@@ -13,7 +13,7 @@ If less than this ...
 Call this special ...
 Unused
 Otherwise call this special
-
+Calls new nodes depending on the value of a given Stuff Done flag. If the Stuff Done flag is greater than the value of Extra 1a, the special in Extra 1b is called. Otherwise, if the Stuff Done flag is less than the value in Extra 2a, the special in Extra 2b is called. If neither case applies, the Jump To special is called.
 --------------------
 Town Number?
 Unused
@@ -30,7 +30,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
-
+Result depends on the town the party is in.
 --------------------
 Random Number?
 Unused
@@ -47,7 +47,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
-
+Result depends on a randomly generated number. The game will pick a random number from 1 to 100.
 --------------------
 Have Special Item?
 Unused
@@ -64,7 +64,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
-
+Result depends on whether the party has a certain special item.
 --------------------
 Stuff Done Compare?
 Stuff Done Flag Part A
@@ -81,7 +81,7 @@ Unused
 Call this special if 2nd flag lower ...
 Unused
 Otherwise call this special
-
+Calls new nodes depending on whether one Stuff Done flag is greater than another or not. If the first Stuff Done flag is greater than or equal to the second, the special in Extra 2b is called. Otherwise, the Jump To special is called.
 --------------------
 Terrain this type?
 Unused
@@ -98,7 +98,7 @@ If space is this terrain type ...
 Call this special ...
 Unused
 Otherwise call this special
-
+Result depends on whether a specified spot is of a given terrain type.
 --------------------
 Is Alive?
 Unused
@@ -115,7 +115,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
-
+Result depends on whether the currently selected target is alive.
 --------------------
 Has gold?
 Unused
@@ -132,7 +132,7 @@ Take gold?
 Unused
 Unused
 Otherwise call this special
-
+Result depends on whether the party has enough gold.
 --------------------
 Has food?
 Unused
@@ -149,7 +149,7 @@ Take food?
 Unused
 Unused
 Otherwise call this special
-
+Result depends on whether the party has enough food.
 --------------------
 Item Class on Space?
 Unused
@@ -166,7 +166,7 @@ If item of this class on space ...
 Call this special ...
 Take item?
 Otherwise call this special
-
+Result depends on whether an item of a given special item class is sitting on a specified spot in town.
 --------------------
 Have Item With Class?
 Unused
@@ -183,7 +183,7 @@ Take item?
 Unused
 Unused
 Otherwise call this special
-
+Result depends on whether a PC owns an item with the specified Special Class.
 --------------------
 Equipped Item With Class?
 Unused
@@ -200,7 +200,7 @@ Take item?
 Unused
 Unused
 Otherwise call this special
-
+Result depends on whether a PC owns an item with the specified Special Class, which is currently equipped.
 --------------------
 Has Mage Spell?
 Unused
@@ -217,7 +217,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
-
+If the selected PC knows this mage spell, the special in Extra 1b is called.
 --------------------
 Has Priest Spell?
 Unused
@@ -234,7 +234,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
-
+If the selected PC knows this priest spell, the special in Extra 1b is called.
 --------------------
 Has Alchemy?
 Unused
@@ -251,7 +251,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
-
+Result depends on whether the party knows a particular alchemical recipe.
 --------------------
 Has Status Effect?
 Unused
@@ -268,7 +268,7 @@ Value to compare to
 Cumulation mode (if whole party selected)
 Comparison mode
 Otherwise call this special
-
+Result depends on whether the selected target is afflicted with a particular status effect.
 --------------------
 If Looking?
 Unused
@@ -285,7 +285,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
-
+Result depends on whether the special node was called while the party was looking at a space.
 --------------------
 Day Reached?
 Unused
@@ -302,7 +302,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
-
+Result depends on whether a certain day has been reached.
 --------------------
 If Fields?
 Minimum # of fields
@@ -319,7 +319,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Otherwise call this special
-
+Result depends on the presence of fields, barriers, or similar transient objects existing in the current town.
 --------------------
 If Party Size?
 Unused
@@ -336,7 +336,7 @@ Unused
 Required size
 Unused
 Otherwise call this special
-
+Result depends on how many PCs are in the party.
 --------------------
 Special Thing Happened?
 Unused
@@ -353,7 +353,7 @@ Unused
 Call this special ...
 Unused
 Otherwise call this special
-
+Result depends on whether a given day was reached before a given event happened.
 --------------------
 If Species Present?
 Unused
@@ -370,7 +370,7 @@ Required number of species
 Comparison method
 Unused
 Otherwise call this special
-
+Result depends on whether there is a living PC of a particular species.
 --------------------
 If Have Trait?
 Unused
@@ -387,7 +387,7 @@ Required number of trait
 Comparison method
 Unused
 Otherwise call this special
-
+Result depends on whether a living PC has a particular trait.
 --------------------
 Has Enough of Statistic?
 Unused
@@ -404,7 +404,7 @@ Which statistic
 Check mode
 Unused
 Otherwise call this special
-
+Result depends on whether a particular skill in the party is high enough.
 --------------------
 Text Response?
 Unused
@@ -421,7 +421,7 @@ Number of a scenario string
 If answer matches, call this special ...
 Unused
 Otherwise call this special
-
+This is one of the most complicated and powerful special nodes. It brings up a dialog box asking the party to type in some text (such as the answer to a riddle, or a password). If the response matches one of two given text messages, a specified special node is called.
 --------------------
 Stuff Done Equal?
 Stuff Done Flag Part A
@@ -438,7 +438,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
-
+If the specified Stuff Done flag is equal to the value given in Extra 1a, the special in Extra 1b is called. Otherwise, the Jump To special is called.
 --------------------
 If Context?
 Unused
@@ -455,7 +455,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
-
+Result depends on how the special node was called.
 --------------------
 If Numeric Response?
 Unused
@@ -472,7 +472,7 @@ Range lower bound|Value to compare to
 Range upper bound|Comparison method
 If test 2 passes but test 1 fails, call ...
 Otherwise call this special
-
+Result depends on a number entered by the player.
 --------------------
 If In Boat?
 Unused
@@ -489,7 +489,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
-
+Result depends whether the player is in a boat.
 --------------------
 If On Horse?
 Unused
@@ -506,7 +506,7 @@ Unused
 Unused
 Unused
 Otherwise call this special
-
+Result depends whether the player is on horseback.
 --------------------
 If Quest?
 Unused
@@ -523,5 +523,5 @@ Unused
 Unused
 Unused
 Otherwise call this special
-
+Result depends on the status of a quest.
 --------------------

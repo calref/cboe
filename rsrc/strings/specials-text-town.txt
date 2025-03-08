@@ -13,7 +13,7 @@ New Attitude
 Unused
 Unused
 Special to Jump To
-
+When called, all friendly people in the town immediately turn hostile. This node can also be used for other mass attitude changes. Extra 1a and Extra 1b indicate the endpoints of a range of monsters to affect (counting based on their internal location in the game), and Extra 2a is the target attitude.
 --------------------
 Do Missile Animation
 Unused
@@ -30,7 +30,7 @@ X coordinate of end space
 Y coordinate of end space
 Sound to play
 Special to Jump To
-
+This node animates a missile attack originating from one space and ending on another space.
 --------------------
 Animate Monster Attack
 Unused
@@ -47,7 +47,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This node causes a monster to enter its attack pose. The monster can be specified in one of two ways.
 --------------------
 Animate Fake Damage
 Unused
@@ -64,7 +64,7 @@ Boom type
 Number to print (0 means print no number)
 Sound to play
 Special to Jump To
-
+This node draws a splash effect on a space to indicate that it has been attacked, along with an optional number indicating the amount of damage supposedly dealt.
 --------------------
 Move Party
 Unused
@@ -81,7 +81,7 @@ Play teleport animation?
 Unused
 Unused
 Special to Jump To
-
+The party is moved to a new location. The party cannot be moved while in combat - if the party is in combat mode, they will not be allowed to enter the space, and the special encounter ends immediately.
 --------------------
 Hit Space
 Unused
@@ -98,7 +98,7 @@ Damage to inflict (0 .. 1000)
 Type of damage
 Unused
 Special to Jump To
-
+Everything within the specified space takes damage.
 --------------------
 Explosion on Space
 Unused
@@ -115,7 +115,7 @@ Damage to inflict (0 .. 1000)
 Type of damage
 Unused
 Special to Jump To
-
+Everything within a given radius of the specified space takes damage. Only creatures who can be seen from the exploding space are affected.
 --------------------
 Lock Space
 Unused
@@ -132,7 +132,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+If the terrain in a given space has Special Type lockable, it becomes locked (i.e. is changed to its locked terrain type).
 --------------------
 Unlock Space
 Unused
@@ -149,7 +149,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+If the terrain in a given space has Special Type unlockable, it becomes unlocked (i.e. is changed to its locked terrain type).
 --------------------
 Do sfx Burst
 Unused
@@ -166,7 +166,7 @@ Type of explosion
 0 - normal, 1 - huge
 Sound to play (-1 = default)
 Special to Jump To
-
+A flashy explosion appears on the specified space. This has no other affect.
 --------------------
 Make Wandering Monster
 Unused
@@ -183,7 +183,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+A group of wandering monsters appears (at one of the designated wandering monster sites).
 --------------------
 Place a Monster
 Unused
@@ -200,7 +200,7 @@ Number of creature to place
 Force placement?
 Unused
 Special to Jump To
-
+Places a creature of the selected type at the selected space.
 --------------------
 Destroy Monster
 Unused
@@ -217,7 +217,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Any creatures on the given space are removed.
 --------------------
 Destroy All Monsters
 Unused
@@ -234,7 +234,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Most or all of the creatures in the dungeon disappear.
 --------------------
 Generic Lever
 Unused
@@ -251,7 +251,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+A dialog box comes up saying the party has found a lever, and asking if they want to pull it. If the No button is pressed, the Jump To special is used. If the Yes button is pushed, the terrain in the special space is turned to its Transform To What type, and the special node specified in Extra 1b is called.
 --------------------
 Generic Portal
 Unused
@@ -268,7 +268,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+A dialog box comes up saying the party has found a portal, and asking if they want to enter it. The dialog buttons are Enter and Leave. If the Leave button is pressed, the Jump To special is called. Otherwise, the party is moved, and the special encounter ends.
 --------------------
 Generic Button
 Unused
@@ -285,7 +285,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+A dialog box comes up saying the party has found a button, and asking if they want to push it. The dialog buttons are Yes and No. If the No button is pressed, the Jump To special is used. If the Yes button is pushed, the special node specified in Extra 1b is called.
 --------------------
 Generic Stairway
 Unused
@@ -302,7 +302,7 @@ Number of town to place party in
 What text? (0 - up, 1 - down)
 Trigger Limitations
 Special to Call in New Town
-
+A dialog box comes up saying the party has found a stairway, and asking if they want to climb it. The dialog buttons are Climb and Leave. If the Leave button is pressed, the Jump To special is used, and the party is not allowed to enter the space. If the Climb button is pushed, the party is moved to another town.
 --------------------
 Lever
 Unused
@@ -319,7 +319,7 @@ Unused
 Unused
 Picture animation FPS (-1 for default 2)
 Special to Jump To
-
+A dialog box comes up with text you supply (saying, perhaps, they've found a lever). If the No button is pressed, the Jump To special is used. If the Yes button is pushed, the terrain in the special space is turned to its Transform To What type, and the special node specified in Extra 1b is called.
 --------------------
 Portal
 Unused
@@ -336,7 +336,7 @@ Unused
 Unused
 Picture animation FPS (-1 for default 2)
 Special to Jump To
-
+A dialog box comes up (saying, perhaps, they've found a teleporter). The dialog buttons are Enter and Leave.
 --------------------
 Stairway
 Unused
@@ -353,7 +353,7 @@ Number of town to place party in
 Skip dialog and always change level?
 Trigger Limitations
 Special to Call in New Town
-
+A dialog comes up text you supply (saying, perhaps, they've found a stairway). The dialog buttons are Climb and Leave. If the Leave button is pressed, the Jump To special is used, and the party is not allowed to enter the space. If the Climb button is pushed, the party is moved to another town.
 --------------------
 Relocate Outdoors
 Unused
@@ -366,11 +366,11 @@ Unused
 X coordinate of outdoor section
 Y coordinate of outdoor section
 Unused
-X coordinate inside section 
-Y coordinate inside section 
+X coordinate inside section
+Y coordinate inside section
 Unused
 Special to Jump To
-
+Changes the outdoors location of the party.
 --------------------
 Place Item
 Unused
@@ -387,7 +387,7 @@ Item to place
 Place in container, if present?
 Unused
 Special to Jump To
-
+Places an item on a specified space.
 --------------------
 Split Party
 Unused
@@ -404,7 +404,7 @@ Sound to play (10 = teleport)
 Unused
 Unused
 Special to Jump To
-
+This powerful and unique special node splits up the party. The player is asked to select a character. If the player hits Cancel, the node special encounter ends immediately and the party is not allowed to enter the space. Otherwise, the selected character is moved to a given spot and everyone else is left behind.
 --------------------
 Reunite Party
 Unused
@@ -421,7 +421,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+If the party is not split up, this node is ignored. If the party is split up, the lone character is moved back to where the party was when it was split up, the party is rejoined, and the special encounter ends.
 --------------------
 Start Town Timer
 Unused
@@ -438,7 +438,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+One of the party's town encounter timers is activated. Each move taken, the timer goes down by 1. When it runs out, a town special node is called. If the party leaves town (even to go to a different dungeon level), however, the timer cleared and no special happens.
 --------------------
 Change Lighting
 Unused
@@ -455,7 +455,7 @@ Party light level
 0 - increase, 1 - drain
 Unused
 Special to Jump To
-
+This node changes the current light level of the town and/or party.
 --------------------
 Set Monster Attitude
 Unused
@@ -472,7 +472,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Change the attitude of a single monster.
 --------------------
 Center View on Space
 Unused
@@ -489,7 +489,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Centres the terrain view on the specified space, as if the player had selected the Look command and scrolled the view there. Note that, if you want to show areas that would not be visible to the party from the current location, you must also use the Lift Fog node.
 --------------------
 Lift Fog
 Unused
@@ -506,7 +506,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Lift the fog of war so that spaces out of the party's line of sight become fully visible. The fog is automatically restored at the end of the current turn (after monsters make their move).
 --------------------
 Start Targeting
 Unused
@@ -523,7 +523,7 @@ Special Called if Targeting Fails
 Allow obstructed spaces?
 Allow targeting in antimagic fields?
 Special to Call for Each Target
-
+This advanced node hooks into the native Blades of Exile targeting engine to allow the player to select one or more targets.
 --------------------
 Place Fields in Spell Pattern
 Unused
@@ -540,7 +540,7 @@ Which field type?
 Unused
 Unused
 Special to Jump To
-
+Places fields according to a preset spell pattern relative to a specified space.
 --------------------
 Deal Damage in Spell Pattern
 Unused
@@ -557,7 +557,7 @@ Which damage type?
 How many dice? (calculated in d6's)
 Boom type
 Special to Jump To
-
+Deals damage according to a preset spell pattern relative to a specified space.
 --------------------
 Relocate Creature
 Unused
@@ -574,7 +574,7 @@ Which creature
 Positioning mode
 Delay
 Special to Jump To
-
+This node forces a single creature to relocate to a different space. Useful for cutscenes. It can handle either absolute or relative movement. However, it usually does not check that it is legal for the creature to be on that space. This can even split the party into its individual members temporarily, similar to combat mode.
 --------------------
 Place Label
 Unused
@@ -591,5 +591,5 @@ Vertical Alignment
 Delay
 Unused
 Special to Jump To
-
+This node places a text label on the terrain screen, for example to indicate someone speaking. The label lasts only until the screen is next updated, but you can optionally specify a delay to ensure there is time to read it.
 --------------------

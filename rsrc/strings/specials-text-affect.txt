@@ -13,7 +13,7 @@ Selection Mode
 Unused|0..6 - PC, 100+ - monster
 Unused
 Special to Jump To
-
+Brings up a window asking the player to select a character. Once this is called, any Affect nodes during this special encounter only affect the selected character. Also, instead of bringing up a window, there are several non-interactive options.
 --------------------
 Do Damage
 Unused
@@ -30,7 +30,7 @@ Amount of extra damage
 Type of damage
 Sound to play
 Special to Jump To
-
+This special node damages a character, or the whole party. It has no effect when called during a talking special. When called during combat, and a Select a PC node has not been called, it only affects the active character.
 --------------------
 Affect Health
 Unused
@@ -47,7 +47,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Increases/decreases health. Health can be changed to a maximum of 250 or a minimum of 0. This special cannot kill anybody, only reduce their health to 0.
 --------------------
 Affect Spell Points
 Unused
@@ -64,7 +64,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Increases/decreases spell points. Spell points can be changed to a maximum of 100 or a minimum of 0.
 --------------------
 Affect Experience
 Unused
@@ -81,7 +81,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Adds/drains experience. If the target is a monster, this has no effect.
 --------------------
 Affect Skill Points
 Unused
@@ -98,7 +98,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Adds/drains skill points. If the target is a monster, this has no effect.
 --------------------
 Kill/Raise Dead
 Unused
@@ -115,7 +115,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Affects a PC's main status, such as "dead", "alive", or "fled combat". If the target is a monster, "dead" and "dust" are the same, and "fled" and "absent" are ignored.
 --------------------
 Affect Status Effect
 Unused
@@ -132,7 +132,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Afflicts or cures a status effect on the party. Note, if harming the party, all resistances apply. You don't need to worry about whether the chosen status effect is inherently helpful or harmful - the game knows this, so just set Extra 1b to 0 if you want to help the party or 1 if you want to harm them.
 --------------------
 Affect Traits
 Unused
@@ -149,7 +149,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Adds or removes a special trait. If the target is a monster, this has no effect.
 --------------------
 Affect Action Points
 Unused
@@ -166,7 +166,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Adds or removes action points.
 --------------------
 Affect Name
 Unused
@@ -183,7 +183,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Alters a PC or monster name.
 --------------------
 Affect Level
 Unused
@@ -200,7 +200,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Alters the experience level of a monster or PC.
 --------------------
 Affect Morale
 Unused
@@ -217,7 +217,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Changes a monster's morale. If the target is not a monster, this has no effect. Decreasing morale is the same as a Fear spell.
 --------------------
 Affect Soul Crystal
 Unused
@@ -234,7 +234,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Records the currently targeted monster in the party's soul crystal, or erases it if there is already a monster of the same kind recorded. If the current target is not a monster, this has no effect. Only works on monsters currently on the map.
 --------------------
 Give Equipment
 Unused
@@ -251,7 +251,7 @@ Identified?
 Cursed?
 Equip?
 Special to Jump To
-
+Gives some equipment to the currently targeted PC. If the target is a monster, this has no effect. This is different from the Forced Give or One-Time Give nodes in that you can choose which PC receives it; it also provides additional options.
 --------------------
 Affect Monster Target
 Unused
@@ -268,7 +268,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Changes the monster's current target. If the target is not a monster, this has no effect.
 --------------------
 Affect Monster Attack
 Unused
@@ -285,7 +285,7 @@ Amount to change sides
 Unused
 Unused
 Special to Jump To
-
+Changes the strength of one of a monster's attacks. If the target is not a monster, this has no effect.
 --------------------
 Affect Monster Statistic
 Unused
@@ -302,7 +302,7 @@ Which stat
 Unused
 Unused
 Special to Jump To
-
+Changes one of a monster's inherent statistics. If the target is not a monster, this has no effect.
 --------------------
 Affect Statistic
 Unused
@@ -319,7 +319,7 @@ Statistic to adjust
 Unused
 Unused
 Special to Jump To
-
+Changes the character's statistics. If the target is a monster, this has no effect.
 --------------------
 Give Mage Spell
 Unused
@@ -336,7 +336,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Gives a mage spell. If the target is a monster, this has no effect.
 --------------------
 Give Priest Spell
 Unused
@@ -353,7 +353,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Gives a priest spell. If the target is a monster, this has no effect.
 --------------------
 Affect Gold
 Unused
@@ -370,7 +370,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Adds/removes gold.
 --------------------
 Affect Food
 Unused
@@ -387,7 +387,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Adds/removes food.
 --------------------
 Affect Alchemy
 Unused
@@ -404,7 +404,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Gives an alchemy recipe.
 --------------------
 Affect Party Status Effect
 Unused
@@ -421,7 +421,7 @@ Which effect
 Unused
 Unused
 Special to Jump To
-
+Adds or removes a status effect that affects the whole party, such as Stealth or Flight.
 --------------------
 Create New PC
 Stuff Done Flag Part A
@@ -438,7 +438,7 @@ PC strength
 PC dexterity
 PC intelligence
 Special to Jump To
-
+This special node adds an entirely new PC to the party. After this node is called, the new PC is considered to be the selected PC, and any subsequent Affect nodes will apply only to the new PC.
 --------------------
 Store PC
 Stuff Done Flag Part A
@@ -455,7 +455,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This special node removes a PC from the party and stores them away somewhere.
 --------------------
 Unstore PC
 Unused
@@ -472,5 +472,5 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This special node takes a PC previously stored with the above node and, if there's space, puts it back into the party.
 --------------------

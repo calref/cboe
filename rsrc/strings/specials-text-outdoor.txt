@@ -13,7 +13,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+A group of wandering monsters appears (at one of the designated wandering monster sites).
 --------------------
 Force Town Entry
 Unused
@@ -30,7 +30,7 @@ X coordinate to enter at (-1 default)
 Y coordinate to enter at (-1 default)
 Unused
 Special to Jump To
-
+The party is immediately placed in the specified town at the specified location.
 --------------------
 Place Outdoor Encounter
 Unused
@@ -47,7 +47,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Places a special outdoor wandering encounter in a random open space near the party. This can be accompanied by one or two messages, if you wish.
 --------------------
 Outdoor Move Party
 Unused
@@ -64,6 +64,6 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Moves the party to another location. This can be accompanied by one or two messages, if you wish.
 --------------------
 
