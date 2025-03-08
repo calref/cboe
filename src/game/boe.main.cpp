@@ -13,6 +13,7 @@
 #include <iostream>
 #include <ctime>
 #include <deque>
+#include <thread>
 #include "boe.graphics.hpp"
 #include "boe.newgraph.hpp"
 #include "boe.fileio.hpp"
@@ -1023,6 +1024,17 @@ static void replay_feature_flags() {
 	feature_flags = recorded_flags;
 }
 
+// Some dialogs are always the same, and very slow to put together.
+// We do this once, in a background thread, and keep them around.
+std::vector<std::string> dialogs_to_preload = {"about-boe", "welcome"};
+
+std::map<std::string,cChoiceDlog*> preloaded_dialogs;
+
+void do_preload() {
+	for(std::string name : dialogs_to_preload){
+		preloaded_dialogs[name] = new cChoiceDlog(name);
+	}
+}
 
 void init_boe(int argc, char* argv[]) {
 	set_up_apple_events();
@@ -1039,6 +1051,9 @@ void init_boe(int argc, char* argv[]) {
 	
 	adjust_window_mode();
 	init_ui();
+
+	std::thread preload_thread(do_preload);
+
 	// If we don't do this now it'll flash white to start with
 	mainPtr().clear(sf::Color::Black);
 	mainPtr().display();
@@ -1078,6 +1093,10 @@ void init_boe(int argc, char* argv[]) {
 	if(get_bool_pref("ShowStartupSplash", true))
 		plop_fancy_startup(fps_limiter);
 	
+	set_cursor(watch_curs);
+	preload_thread.join();
+	restore_cursor();
+
 	cUniverse::print_result = iLiving::print_result = add_string_to_buf;
 	cPlayer::give_help_enabled = true;
 	init_fileio();
