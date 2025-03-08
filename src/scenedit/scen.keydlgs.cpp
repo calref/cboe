@@ -1200,6 +1200,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			store = choose_graphic(val, type, &me, spec.type == eSpecType::TOWN_BOOM_SPACE);
 			if(store < 0) store = val;
 		} break;
+		case eSpecPicker::RECTANGLE: // Not currently implemented; fall back to LOCATION instead
 		case eSpecPicker::LOCATION: {
 			auto otherField = get_control_for_field(fcn.continuation);
 			location loc;
