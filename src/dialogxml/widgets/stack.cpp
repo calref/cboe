@@ -161,7 +161,9 @@ cStack::cStack(iComponent& parent)
 	: cContainer(CTRL_STACK, parent)
 	, curPage(0)
 	, nPages(0)
-{}
+{
+	frameStyle = FRM_NONE;
+}
 
 void cStack::forEach(std::function<void(std::string,cControl&)> callback) {
 	for(auto ctrl : controls)
