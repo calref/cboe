@@ -2716,12 +2716,12 @@
         <editor />
     </terrain>
     <terrain id="110">
-        <name>Boulder</name>
-        <pic>77</pic>
-        <map>77</map>
-        <blockage>move-and-shoot</blockage>
+        <name>Crops</name>
+        <pic>221</pic>
+        <map>221</map>
+        <blockage>none</blockage>
         <transform>0</transform>
-        <fly>true</fly>
+        <fly>false</fly>
         <boat>false</boat>
         <ride>true</ride>
         <archetype>false</archetype>
@@ -2730,7 +2730,7 @@
         <trim>none</trim>
         <ground>1</ground>
         <trim-for>-1</trim-for>
-        <arena>9</arena>
+        <arena>0</arena>
         <special>
             <type>none</type>
             <flag>-1</flag>
@@ -2866,12 +2866,12 @@
         <editor />
     </terrain>
     <terrain id="116">
-        <name>Huge Wall</name>
-        <pic>198</pic>
-        <map>198</map>
-        <blockage>move-and-sight</blockage>
+        <name>Boulder</name>
+        <pic>77</pic>
+        <map>77</map>
+        <blockage>move-and-shoot</blockage>
         <transform>0</transform>
-        <fly>false</fly>
+        <fly>true</fly>
         <boat>false</boat>
         <ride>true</ride>
         <archetype>false</archetype>
@@ -2880,7 +2880,7 @@
         <trim>none</trim>
         <ground>1</ground>
         <trim-for>-1</trim-for>
-        <arena>0</arena>
+        <arena>9</arena>
         <special>
             <type>none</type>
             <flag>-1</flag>
@@ -2890,21 +2890,21 @@
         <editor />
     </terrain>
     <terrain id="117">
-        <name>Huge Wall</name>
-        <pic>199</pic>
-        <map>199</map>
-        <blockage>move-and-sight</blockage>
+        <name>Small Pool</name>
+        <pic>556</pic>
+        <map>556</map>
+        <blockage>move-and-shoot</blockage>
         <transform>0</transform>
-        <fly>false</fly>
+        <fly>true</fly>
         <boat>false</boat>
         <ride>true</ride>
         <archetype>false</archetype>
         <light>0</light>
         <step-sound>step</step-sound>
         <trim>none</trim>
-        <ground>1</ground>
+        <ground>0</ground>
         <trim-for>-1</trim-for>
-        <arena>0</arena>
+        <arena>1</arena>
         <special>
             <type>none</type>
             <flag>-1</flag>
