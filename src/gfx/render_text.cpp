@@ -9,6 +9,7 @@
 #include "render_text.hpp"
 
 #include <iostream>
+#include <set>
 #include "fileio/resmgr/res_font.hpp"
 #include "gfx/render_shapes.hpp"
 #include <utility>
@@ -319,13 +320,26 @@ std::vector<snippet_t> draw_string_sel(sf::RenderTarget& dest_window,rectangle d
 	return params.snippets;
 }
 
-size_t string_length(std::string str, TextStyle style, short* height){
+std::set<std::string> strings_to_cache = {" "};
+
+size_t string_length(std::string str, TextStyle& style, short* height){
 	size_t total_width = 0;
+	if(style.measurementCache.find(str) != style.measurementCache.end()){
+		location measurement = style.measurementCache[str];
+		if(height) *height = measurement.y;
+		return measurement.x;
+	}
 	
 	sf::Text text;
 	style.applyTo(text);
 	text.setString(str);
 	total_width = text.getLocalBounds().width;
+	if(strings_to_cache.count(str)){
+		location measurement;
+		measurement.x = total_width;
+		measurement.y = text.getLocalBounds().height;
+		style.measurementCache[str] = measurement;
+	}
 	if(height) *height = text.getLocalBounds().height;
 	return total_width;
 }
