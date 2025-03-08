@@ -1000,7 +1000,9 @@ snd_num_t choose_sound(short cur, cDialog* parent, std::string title) {
 	snd_dlg.attachSelectHandler([](cStringChoice&, int n) {
 		play_sound(-n);
 	});
-	return snd_dlg.show(cur);
+	short sel = snd_dlg.show(cur);
+	if(snd_dlg->accepted()) return sel;
+	return cur;
 }
 
 static node_function_t get_field_function(const cSpecial& spec, const std::string& field) {
