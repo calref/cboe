@@ -1,0 +1,4606 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<monsters boes="2.0.0">
+    <monster id="1">
+        <name>Townsperson</name>
+        <pic w="1" h="1">0</pic>
+        <race>human</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>2</skill>
+        <hp>6</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">1d6</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="2">
+        <name>Townsperson</name>
+        <default-face>8</default-face>
+        <pic w="1" h="1">1</pic>
+        <race>human</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>2</skill>
+        <hp>6</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">1d6</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="3">
+        <name>Townsperson</name>
+        <default-face>2</default-face>
+        <pic w="1" h="1">2</pic>
+        <race>human</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>2</skill>
+        <hp>6</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">1d6</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="4">
+        <name>Townsperson</name>
+        <default-face>1</default-face>
+        <pic w="1" h="1">3</pic>
+        <race>human</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>2</skill>
+        <hp>6</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">1d6</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="5">
+        <name>Townsperson</name>
+        <default-face>4</default-face>
+        <pic w="1" h="1">4</pic>
+        <race>human</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>2</skill>
+        <hp>6</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">1d6</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="6">
+        <name>Townsperson</name>
+        <default-face>17</default-face>
+        <pic w="1" h="1">5</pic>
+        <race>human</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>2</skill>
+        <hp>6</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">1d6</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="7">
+        <name>Townsperson</name>
+        <default-face>6</default-face>
+        <pic w="1" h="1">6</pic>
+        <race>human</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>2</skill>
+        <hp>6</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">1d6</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="8">
+        <name>Townsperson</name>
+        <default-face>56</default-face>
+        <pic w="1" h="1">7</pic>
+        <race>human</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>2</skill>
+        <hp>6</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">1d6</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="9">
+        <name>Child</name>
+        <pic w="1" h="1">8</pic>
+        <race>human</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>1</skill>
+        <hp>6</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">1d1</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="10">
+        <name>Child</name>
+        <pic w="1" h="1">9</pic>
+        <race>human</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>1</skill>
+        <hp>3</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">1d1</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="11">
+        <name>Beggar</name>
+        <default-face>38</default-face>
+        <pic w="1" h="1">10</pic>
+        <race>human</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>2</skill>
+        <hp>3</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">1d2</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="12">
+        <name>Guard</name>
+        <default-face>10</default-face>
+        <pic w="1" h="1">11</pic>
+        <race>human</race>
+        <level>30</level>
+        <armor>30</armor>
+        <skill>30</skill>
+        <hp>140</hp>
+        <speed>6</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">3d10</attack>
+            <attack type="swing">3d10</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <poison>50</poison>
+            <magic>50</magic>
+            <cold>50</cold>
+        </immunity>
+        <abilities>
+            <guard />
+            <missile type="missile">
+                <type>spear</type>
+                <missile>5</missile>
+                <strength>3d7</strength>
+                <skill>6</skill>
+                <range>8</range>
+                <chance>62.5</chance>
+            </missile>
+        </abilities>
+    </monster>
+    <monster id="13">
+        <name>Soldier</name>
+        <default-face>10</default-face>
+        <pic w="1" h="1">12</pic>
+        <race>human</race>
+        <level>4</level>
+        <armor>8</armor>
+        <skill>8</skill>
+        <hp>20</hp>
+        <speed>4</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="swing">2d7</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="14">
+        <name>Captain</name>
+        <default-face>11</default-face>
+        <pic w="1" h="1">13</pic>
+        <race>human</race>
+        <level>8</level>
+        <armor>12</armor>
+        <skill>10</skill>
+        <hp>40</hp>
+        <speed>4</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="swing">2d9</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="15">
+        <name>Champion</name>
+        <default-face>12</default-face>
+        <pic w="1" h="1">14</pic>
+        <race>human</race>
+        <level>12</level>
+        <armor>18</armor>
+        <skill>14</skill>
+        <hp>75</hp>
+        <speed>5</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="swing">2d10</attack>
+            <attack type="swing">2d10</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="16">
+        <name>Bladesman</name>
+        <default-face>12</default-face>
+        <pic w="1" h="1">15</pic>
+        <race>human</race>
+        <level>20</level>
+        <armor>22</armor>
+        <skill>20</skill>
+        <hp>115</hp>
+        <speed>8</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="swing">3d8</attack>
+            <attack type="swing">3d8</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="17">
+        <name>Empire Dervish</name>
+        <default-face>12</default-face>
+        <pic w="1" h="1">16</pic>
+        <race>human</race>
+        <level>25</level>
+        <armor>25</armor>
+        <skill>23</skill>
+        <hp>140</hp>
+        <speed>8</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="swing">3d12</attack>
+            <attack type="swing">3d12</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="18">
+        <name>Brigand</name>
+        <default-face>31</default-face>
+        <pic w="1" h="1">17</pic>
+        <race>human</race>
+        <level>3</level>
+        <armor>6</armor>
+        <skill>5</skill>
+        <hp>14</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="swing">1d8</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="19">
+        <name>Archer</name>
+        <default-face>31</default-face>
+        <pic w="1" h="1">18</pic>
+        <race>human</race>
+        <level>5</level>
+        <armor>6</armor>
+        <skill>6</skill>
+        <hp>16</hp>
+        <speed>4</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="swing">1d6</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <missile type="missile">
+                <type>arrow</type>
+                <missile>3</missile>
+                <strength>2d7</strength>
+                <skill>4</skill>
+                <range>8</range>
+                <chance>75.0</chance>
+            </missile>
+        </abilities>
+    </monster>
+    <monster id="20">
+        <name>Empire Archer</name>
+        <default-face>19</default-face>
+        <pic w="1" h="1">19</pic>
+        <race>human</race>
+        <level>28</level>
+        <armor>20</armor>
+        <skill>28</skill>
+        <hp>90</hp>
+        <speed>4</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="swing">1d10</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <missile type="missile">
+                <type>arrow++</type>
+                <missile>3</missile>
+                <strength>8d7</strength>
+                <skill>16</skill>
+                <range>10</range>
+                <chance>87.5</chance>
+            </missile>
+        </abilities>
+    </monster>
+    <monster id="21">
+        <name>Acolyte</name>
+        <default-face>41</default-face>
+        <pic w="1" h="1">20</pic>
+        <race>priest</race>
+        <level>3</level>
+        <armor>8</armor>
+        <skill>2</skill>
+        <hp>18</hp>
+        <speed>4</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>1</treasure>
+        <priest>2</priest>
+        <attacks>
+            <attack type="swing">1d8</attack>
+        </attacks>
+        <immunity>
+            <magic>50</magic>
+        </immunity>
+    </monster>
+    <monster id="22">
+        <name>Priest</name>
+        <default-face>41</default-face>
+        <pic w="1" h="1">21</pic>
+        <race>priest</race>
+        <level>8</level>
+        <armor>14</armor>
+        <skill>4</skill>
+        <hp>40</hp>
+        <speed>4</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <priest>4</priest>
+        <attacks>
+            <attack type="swing">1d8</attack>
+        </attacks>
+        <immunity>
+            <magic>50</magic>
+        </immunity>
+    </monster>
+    <monster id="23">
+        <name>High Priest</name>
+        <default-face>14</default-face>
+        <pic w="1" h="1">21</pic>
+        <race>priest</race>
+        <level>20</level>
+        <armor>20</armor>
+        <skill>8</skill>
+        <hp>90</hp>
+        <speed>4</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <priest>6</priest>
+        <attacks>
+            <attack type="swing">3d8</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <magic>50</magic>
+            <cold>50</cold>
+        </immunity>
+    </monster>
+    <monster id="24">
+        <name>Evil Acolyte</name>
+        <default-face>13</default-face>
+        <pic w="1" h="1">22</pic>
+        <race>priest</race>
+        <level>4</level>
+        <armor>8</armor>
+        <skill>2</skill>
+        <hp>18</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>1</treasure>
+        <priest>2</priest>
+        <attacks>
+            <attack type="swing">1d8</attack>
+        </attacks>
+        <immunity>
+            <magic>50</magic>
+        </immunity>
+    </monster>
+    <monster id="25">
+        <name>Evil Priest</name>
+        <default-face>13</default-face>
+        <pic w="1" h="1">23</pic>
+        <race>priest</race>
+        <level>8</level>
+        <armor>14</armor>
+        <skill>4</skill>
+        <hp>40</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <priest>4</priest>
+        <attacks>
+            <attack type="swing">1d8</attack>
+        </attacks>
+        <immunity>
+            <magic>50</magic>
+        </immunity>
+    </monster>
+    <monster id="26">
+        <name>Evil High Priest</name>
+        <default-face>58</default-face>
+        <pic w="1" h="1">23</pic>
+        <race>priest</race>
+        <level>20</level>
+        <armor>20</armor>
+        <skill>8</skill>
+        <hp>90</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <priest>6</priest>
+        <attacks>
+            <attack type="swing">3d8</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <magic>50</magic>
+            <cold>50</cold>
+        </immunity>
+    </monster>
+    <monster id="27">
+        <name>Apprentice Mage</name>
+        <default-face>18</default-face>
+        <pic w="1" h="1">24</pic>
+        <race>mage</race>
+        <level>5</level>
+        <armor>5</armor>
+        <skill>2</skill>
+        <hp>16</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>1</treasure>
+        <mage>2</mage>
+        <attacks>
+            <attack type="swing">1d6</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <magic>50</magic>
+        </immunity>
+    </monster>
+    <monster id="28">
+        <name>Mage</name>
+        <default-face>16</default-face>
+        <pic w="1" h="1">25</pic>
+        <race>mage</race>
+        <level>10</level>
+        <armor>10</armor>
+        <skill>4</skill>
+        <hp>40</hp>
+        <speed>5</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <mage>4</mage>
+        <attacks>
+            <attack type="swing">1d8</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <magic>50</magic>
+            <cold>50</cold>
+        </immunity>
+    </monster>
+    <monster id="29">
+        <name>Wizard</name>
+        <default-face>15</default-face>
+        <pic w="1" h="1">26</pic>
+        <race>mage</race>
+        <level>25</level>
+        <armor>20</armor>
+        <skill>5</skill>
+        <hp>90</hp>
+        <speed>6</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <mage>7</mage>
+        <attacks>
+            <attack type="swing">1d10</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <magic>0</magic>
+            <cold>50</cold>
+        </immunity>
+    </monster>
+    <monster id="30">
+        <name>Order Mage</name>
+        <default-face>15</default-face>
+        <pic w="1" h="1">27</pic>
+        <race>mage</race>
+        <level>35</level>
+        <armor>30</armor>
+        <skill>5</skill>
+        <hp>160</hp>
+        <speed>7</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>4</treasure>
+        <mage>7</mage>
+        <attacks>
+            <attack type="swing">1d12</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <poison>50</poison>
+            <magic>0</magic>
+            <cold>0</cold>
+        </immunity>
+    </monster>
+    <monster id="31">
+        <name>Witch</name>
+        <default-face>26</default-face>
+        <pic w="1" h="1">28</pic>
+        <race>mage</race>
+        <level>8</level>
+        <armor>4</armor>
+        <skill>3</skill>
+        <hp>40</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <mage>5</mage>
+        <attacks>
+            <attack type="swing">1d6</attack>
+        </attacks>
+        <immunity>
+            <magic>50</magic>
+        </immunity>
+    </monster>
+    <monster id="32">
+        <name>Witch</name>
+        <default-face>54</default-face>
+        <pic w="1" h="1">29</pic>
+        <race>mage</race>
+        <level>6</level>
+        <armor>4</armor>
+        <skill>3</skill>
+        <hp>35</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>1</treasure>
+        <mage>3</mage>
+        <attacks>
+            <attack type="swing">1d6</attack>
+        </attacks>
+        <immunity>
+            <magic>50</magic>
+        </immunity>
+    </monster>
+    <monster id="33">
+        <name>Official</name>
+        <default-face>29</default-face>
+        <pic w="1" h="1">30</pic>
+        <race>human</race>
+        <level>2</level>
+        <armor>2</armor>
+        <skill>1</skill>
+        <hp>6</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="swing">1d3</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="34">
+        <name>Official</name>
+        <default-face>30</default-face>
+        <pic w="1" h="1">31</pic>
+        <race>human</race>
+        <level>2</level>
+        <armor>2</armor>
+        <skill>1</skill>
+        <hp>6</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="swing">1d3</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="35">
+        <name>Assassin</name>
+        <default-face>32</default-face>
+        <pic w="1" h="1">3</pic>
+        <race>human</race>
+        <level>7</level>
+        <armor>9</armor>
+        <skill>12</skill>
+        <hp>35</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="swing">1d12</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <general type="status2">
+                <type>touch</type>
+                <strength>4</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="36">
+        <name>Monk</name>
+        <default-face>18</default-face>
+        <pic w="1" h="1">32</pic>
+        <race>priest</race>
+        <level>6</level>
+        <armor>7</armor>
+        <skill>8</skill>
+        <hp>30</hp>
+        <speed>5</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="punch">2d6</attack>
+            <attack type="punch">2d6</attack>
+        </attacks>
+        <immunity>
+            <poison>50</poison>
+        </immunity>
+    </monster>
+    <monster id="37">
+        <name>Mad Monk</name>
+        <default-face>58</default-face>
+        <pic w="1" h="1">33</pic>
+        <race>priest</race>
+        <level>12</level>
+        <armor>15</armor>
+        <skill>25</skill>
+        <hp>80</hp>
+        <speed>8</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="punch">2d8</attack>
+            <attack type="punch">2d8</attack>
+            <attack type="punch">2d8</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <poison>50</poison>
+            <magic>50</magic>
+            <cold>50</cold>
+        </immunity>
+    </monster>
+    <monster id="38">
+        <name>Goblin</name>
+        <default-face>23</default-face>
+        <pic w="1" h="1">34</pic>
+        <race>goblin</race>
+        <level>2</level>
+        <armor>3</armor>
+        <skill>5</skill>
+        <hp>10</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>1</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="swing">1d7</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="39">
+        <name>Goblin Fighter</name>
+        <default-face>23</default-face>
+        <pic w="1" h="1">35</pic>
+        <race>goblin</race>
+        <level>5</level>
+        <armor>5</armor>
+        <skill>8</skill>
+        <hp>22</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="swing">1d9</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <general type="status2">
+                <type>touch</type>
+                <strength>2</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="40">
+        <name>Nephil</name>
+        <default-face>44</default-face>
+        <pic w="1" h="1">36</pic>
+        <race>humanoid</race>
+        <level>4</level>
+        <armor>4</armor>
+        <skill>3</skill>
+        <hp>15</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>1</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="swing">1d8</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="41">
+        <name>Nephil Warrior</name>
+        <default-face>44</default-face>
+        <pic w="1" h="1">37</pic>
+        <race>humanoid</race>
+        <level>6</level>
+        <armor>7</armor>
+        <skill>9</skill>
+        <hp>25</hp>
+        <speed>6</speed>
+        <attitude>hostile-a</attitude>
+        <summon>2</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="swing">2d7</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="42">
+        <name>Nephil Archer</name>
+        <default-face>44</default-face>
+        <pic w="1" h="1">38</pic>
+        <race>humanoid</race>
+        <level>5</level>
+        <armor>6</armor>
+        <skill>8</skill>
+        <hp>18</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>2</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="swing">1d8</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <missile type="missile">
+                <type>arrow</type>
+                <missile>3</missile>
+                <strength>2d7</strength>
+                <skill>4</skill>
+                <range>8</range>
+                <chance>75.0</chance>
+            </missile>
+        </abilities>
+    </monster>
+    <monster id="43">
+        <name>Nephil Shaman</name>
+        <default-face>44</default-face>
+        <pic w="1" h="1">39</pic>
+        <race>humanoid</race>
+        <level>6</level>
+        <armor>12</armor>
+        <skill>4</skill>
+        <hp>30</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <mage>3</mage>
+        <priest>3</priest>
+        <attacks>
+            <attack type="swing">1d8</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="44">
+        <name>Nephil Chief</name>
+        <default-face>44</default-face>
+        <pic w="1" h="1">40</pic>
+        <race>humanoid</race>
+        <level>8</level>
+        <armor>18</armor>
+        <skill>18</skill>
+        <hp>45</hp>
+        <speed>6</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <attacks>
+            <attack type="swing">2d10</attack>
+            <attack type="swing">2d10</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="45">
+        <name>Ogre</name>
+        <default-face>23</default-face>
+        <pic w="1" h="1">41</pic>
+        <race>humanoid</race>
+        <level>7</level>
+        <armor>9</armor>
+        <skill>10</skill>
+        <hp>35</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>2</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="swing">3d6</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="46">
+        <name>Ogre Mage</name>
+        <default-face>23</default-face>
+        <pic w="1" h="1">43</pic>
+        <race>humanoid</race>
+        <level>18</level>
+        <armor>15</armor>
+        <skill>10</skill>
+        <hp>70</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <mage>6</mage>
+        <attacks>
+            <attack type="swing">3d6</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <magic>50</magic>
+            <cold>50</cold>
+        </immunity>
+    </monster>
+    <monster id="47">
+        <name>Slith</name>
+        <default-face>52</default-face>
+        <pic w="1" h="1">44</pic>
+        <race>humanoid</race>
+        <level>7</level>
+        <armor>7</armor>
+        <skill>7</skill>
+        <hp>30</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>2</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="swing">1d10</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="48">
+        <name>Slith Warrior</name>
+        <default-face>52</default-face>
+        <pic w="1" h="1">45</pic>
+        <race>humanoid</race>
+        <level>10</level>
+        <armor>3</armor>
+        <skill>14</skill>
+        <hp>50</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>3</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="swing">3d8</attack>
+            <attack type="swing">3d8</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <missile type="missile">
+                <type>spear</type>
+                <missile>5</missile>
+                <strength>3d7</strength>
+                <skill>6</skill>
+                <range>8</range>
+                <chance>62.5</chance>
+            </missile>
+        </abilities>
+    </monster>
+    <monster id="49">
+        <name>Slith Priest</name>
+        <default-face>52</default-face>
+        <pic w="1" h="1">46</pic>
+        <race>humanoid</race>
+        <level>8</level>
+        <armor>5</armor>
+        <skill>6</skill>
+        <hp>40</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <priest>4</priest>
+        <attacks>
+            <attack type="swing">1d12</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="50">
+        <name>Slith Mage</name>
+        <default-face>52</default-face>
+        <pic w="1" h="1">47</pic>
+        <race>humanoid</race>
+        <level>8</level>
+        <armor>10</armor>
+        <skill>6</skill>
+        <hp>40</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <mage>4</mage>
+        <attacks>
+            <attack type="swing">1d10</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="51">
+        <name>Slith High Priest</name>
+        <default-face>52</default-face>
+        <pic w="1" h="1">46</pic>
+        <race>humanoid</race>
+        <level>12</level>
+        <armor>18</armor>
+        <skill>6</skill>
+        <hp>70</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <priest>7</priest>
+        <attacks>
+            <attack type="swing">1d10</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <magic>50</magic>
+            <cold>50</cold>
+        </immunity>
+    </monster>
+    <monster id="52">
+        <name>Slith Archmage</name>
+        <default-face>52</default-face>
+        <pic w="1" h="1">47</pic>
+        <race>humanoid</race>
+        <level>12</level>
+        <armor>18</armor>
+        <skill>6</skill>
+        <hp>70</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <mage>6</mage>
+        <attacks>
+            <attack type="swing">1d10</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <magic>50</magic>
+            <cold>50</cold>
+        </immunity>
+    </monster>
+    <monster id="53">
+        <name>Slith Chief</name>
+        <default-face>52</default-face>
+        <pic w="1" h="1">48</pic>
+        <race>humanoid</race>
+        <level>15</level>
+        <armor>24</armor>
+        <skill>28</skill>
+        <hp>100</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>4</treasure>
+        <attacks>
+            <attack type="swing">4d10</attack>
+            <attack type="swing">4d10</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="54">
+        <name>Cave Giant</name>
+        <default-face>53</default-face>
+        <pic w="1" h="2">49</pic>
+        <race>giant</race>
+        <level>18</level>
+        <armor>10</armor>
+        <skill>12</skill>
+        <hp>90</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="swing">5d8</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <missile type="missile">
+                <type>boulder</type>
+                <missile>12</missile>
+                <strength>4d7</strength>
+                <skill>8</skill>
+                <range>10</range>
+                <chance>62.5</chance>
+            </missile>
+        </abilities>
+    </monster>
+    <monster id="55">
+        <name>Giant Shaman</name>
+        <default-face>53</default-face>
+        <pic w="1" h="2">50</pic>
+        <race>giant</race>
+        <level>22</level>
+        <armor>14</armor>
+        <skill>10</skill>
+        <hp>110</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <mage>4</mage>
+        <priest>4</priest>
+        <attacks>
+            <attack type="swing">5d8</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <missile type="missile">
+                <type>boulder</type>
+                <missile>12</missile>
+                <strength>6d7</strength>
+                <skill>12</skill>
+                <range>10</range>
+                <chance>50.0</chance>
+            </missile>
+        </abilities>
+    </monster>
+    <monster id="56">
+        <name>Giant Chief</name>
+        <default-face>53</default-face>
+        <pic w="1" h="2">51</pic>
+        <race>giant</race>
+        <level>28</level>
+        <armor>24</armor>
+        <skill>28</skill>
+        <hp>140</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>4</treasure>
+        <attacks>
+            <attack type="swing">6d10</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <missile type="missile">
+                <type>boulder</type>
+                <missile>12</missile>
+                <strength>8d7</strength>
+                <skill>16</skill>
+                <range>10</range>
+                <chance>50.0</chance>
+            </missile>
+        </abilities>
+    </monster>
+    <monster id="57">
+        <name>Mutant Giant</name>
+        <default-face>53</default-face>
+        <pic w="1" h="2">52</pic>
+        <race>giant</race>
+        <level>26</level>
+        <armor>25</armor>
+        <skill>28</skill>
+        <hp>130</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="swing">5d10</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+        </immunity>
+        <abilities>
+            <missile type="missile">
+                <type>boulder</type>
+                <missile>12</missile>
+                <strength>6d7</strength>
+                <skill>12</skill>
+                <range>10</range>
+                <chance>50.0</chance>
+            </missile>
+        </abilities>
+    </monster>
+    <monster id="58">
+        <name>Skeleton</name>
+        <pic w="1" h="1">53</pic>
+        <race>skeletal</race>
+        <level>3</level>
+        <armor>2</armor>
+        <skill>4</skill>
+        <hp>15</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>1</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="claw">1d8</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+    </monster>
+    <monster id="59">
+        <name>Ruby Skeleton</name>
+        <pic w="1" h="1">54</pic>
+        <race>skeletal</race>
+        <level>10</level>
+        <armor>6</armor>
+        <skill>10</skill>
+        <hp>50</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>3</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="claw">2d8</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <special type="old-heat">
+                <param>6</param>
+                <param>625</param>
+                <param>7</param>
+            </special>
+        </abilities>
+    </monster>
+    <monster id="60">
+        <name>Zombie</name>
+        <pic w="1" h="1">55</pic>
+        <race>undead</race>
+        <level>4</level>
+        <armor>0</armor>
+        <skill>5</skill>
+        <hp>20</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>1</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="claw">2d4</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+    </monster>
+    <monster id="61">
+        <name>Ghost</name>
+        <pic w="1" h="1">42</pic>
+        <race>undead</race>
+        <level>3</level>
+        <armor>0</armor>
+        <skill>3</skill>
+        <hp>15</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="claw">1d8</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+    </monster>
+    <monster id="62">
+        <name>Ghoul</name>
+        <pic w="1" h="1">57</pic>
+        <race>undead</race>
+        <level>6</level>
+        <armor>2</armor>
+        <skill>9</skill>
+        <hp>30</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>2</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">2d8</attack>
+            <attack type="claw">1d10</attack>
+            <attack type="claw">1d10</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <general type="stun">
+                <type>touch</type>
+                <strength>2</strength>
+                <chance>66.7</chance>
+                <extra>haste-slow</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="63">
+        <name>Ghast</name>
+        <pic w="1" h="1">58</pic>
+        <race>undead</race>
+        <level>8</level>
+        <armor>2</armor>
+        <skill>13</skill>
+        <hp>40</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>3</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">3d8</attack>
+            <attack type="claw">1d13</attack>
+            <attack type="claw">1d13</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <general type="stun">
+                <type>touch</type>
+                <strength>2</strength>
+                <chance>66.7</chance>
+                <extra>haste-slow</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="64">
+        <name>Quickghast</name>
+        <pic w="1" h="1">58</pic>
+        <race>undead</race>
+        <level>12</level>
+        <armor>2</armor>
+        <skill>18</skill>
+        <hp>60</hp>
+        <speed>9</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">4d8</attack>
+            <attack type="claw">5d5</attack>
+            <attack type="claw">5d5</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <general type="stun">
+                <type>touch</type>
+                <strength>2</strength>
+                <chance>66.7</chance>
+                <extra>haste-slow</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="65">
+        <name>Spirit</name>
+        <pic w="1" h="1">56</pic>
+        <race>undead</race>
+        <level>11</level>
+        <armor>7</armor>
+        <skill>7</skill>
+        <hp>55</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>3</summon>
+        <treasure>0</treasure>
+        <mage>3</mage>
+        <attacks>
+            <attack type="claw">1d10</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+    </monster>
+    <monster id="66">
+        <name>Wight</name>
+        <pic w="1" h="1">59</pic>
+        <race>undead</race>
+        <level>10</level>
+        <armor>8</armor>
+        <skill>10</skill>
+        <hp>50</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="claw">2d8</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <general type="drain-xp">
+                <type>touch</type>
+                <strength>150</strength>
+                <chance>0.0</chance>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="67">
+        <name>Spectre</name>
+        <pic w="1" h="1">60</pic>
+        <race>undead</race>
+        <level>14</level>
+        <armor>10</armor>
+        <skill>17</skill>
+        <hp>70</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+            <attack type="claw">4d6</attack>
+            <attack type="claw">4d6</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <general type="dmg">
+                <type>touch</type>
+                <strength>3</strength>
+                <chance>66.7</chance>
+                <extra>cold</extra>
+            </general>
+            <general type="drain-xp">
+                <type>touch</type>
+                <strength>150</strength>
+                <chance>0.0</chance>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="68">
+        <name>Vampire</name>
+        <pic w="1" h="1">61</pic>
+        <race>undead</race>
+        <level>18</level>
+        <armor>5</armor>
+        <skill>20</skill>
+        <hp>90</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <mage>5</mage>
+        <attacks>
+            <attack type="claw">2d10</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <general type="dmg">
+                <type>touch</type>
+                <strength>3</strength>
+                <chance>66.7</chance>
+                <extra>cold</extra>
+            </general>
+            <general type="drain-xp">
+                <type>touch</type>
+                <strength>150</strength>
+                <chance>0.0</chance>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="69">
+        <name>Lich</name>
+        <default-face>20</default-face>
+        <pic w="1" h="1">62</pic>
+        <race>undead</race>
+        <level>35</level>
+        <armor>15</armor>
+        <skill>30</skill>
+        <hp>170</hp>
+        <speed>5</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>4</treasure>
+        <mage>7</mage>
+        <priest>7</priest>
+        <attacks>
+            <attack type="swing">0d0</attack>
+            <attack type="claw">4d8</attack>
+            <attack type="claw">4d8</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <general type="dmg">
+                <type>touch</type>
+                <strength>3</strength>
+                <chance>66.7</chance>
+                <extra>cold</extra>
+            </general>
+            <general type="drain-xp">
+                <type>touch</type>
+                <strength>150</strength>
+                <chance>0.0</chance>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="70">
+        <name>Hraithe</name>
+        <pic w="1" h="1">63</pic>
+        <race>undead</race>
+        <level>14</level>
+        <armor>7</armor>
+        <skill>8</skill>
+        <hp>70</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <mage>4</mage>
+        <attacks>
+            <attack type="claw">3d10</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <general type="status2">
+                <type>touch</type>
+                <strength>3</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="71">
+        <name>Vahnavoi</name>
+        <pic w="1" h="1">64</pic>
+        <race>undead</race>
+        <level>10</level>
+        <armor>10</armor>
+        <skill>16</skill>
+        <hp>50</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+            <attack type="claw">3d8</attack>
+            <attack type="claw">3d8</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+    </monster>
+    <monster id="72">
+        <name>Giant Lizard</name>
+        <pic w="1" h="1">65</pic>
+        <race>reptile</race>
+        <level>4</level>
+        <armor>4</armor>
+        <skill>7</skill>
+        <hp>20</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>2</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">2d6</attack>
+            <attack type="claw">1d8</attack>
+            <attack type="claw">1d8</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="73">
+        <name>Fire Lizard</name>
+        <pic w="1" h="1">66</pic>
+        <race>reptile</race>
+        <level>8</level>
+        <armor>7</armor>
+        <skill>12</skill>
+        <hp>40</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>3</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="bite">3d6</attack>
+            <attack type="claw">1d10</attack>
+            <attack type="claw">1d10</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+        </immunity>
+        <abilities>
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>13</missile>
+                <range>8</range>
+                <strength>4</strength>
+                <chance>37.5</chance>
+                <extra>fire</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="74">
+        <name>Ice Lizard</name>
+        <pic w="1" h="1">67</pic>
+        <race>reptile</race>
+        <level>8</level>
+        <armor>7</armor>
+        <skill>12</skill>
+        <hp>40</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="bite">3d6</attack>
+            <attack type="claw">1d10</attack>
+            <attack type="claw">1d10</attack>
+        </attacks>
+        <immunity>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>6</missile>
+                <range>8</range>
+                <strength>4</strength>
+                <chance>37.5</chance>
+                <extra>cold</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="75">
+        <name>Cave Slime</name>
+        <pic w="1" h="1">68</pic>
+        <race>slime</race>
+        <level>3</level>
+        <armor>0</armor>
+        <skill>4</skill>
+        <hp>15</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>1</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="slime">1d8</attack>
+            <attack type="slime">1d8</attack>
+            <attack type="slime">1d8</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+        </immunity>
+    </monster>
+    <monster id="76">
+        <name>Ice Slime</name>
+        <pic w="1" h="1">69</pic>
+        <race>slime</race>
+        <level>7</level>
+        <armor>0</armor>
+        <skill>7</skill>
+        <hp>35</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="slime">2d10</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <general type="dmg">
+                <type>touch</type>
+                <strength>3</strength>
+                <chance>66.7</chance>
+                <extra>cold</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="77">
+        <name>Viscous Goo</name>
+        <pic w="1" h="1">68</pic>
+        <race>slime</race>
+        <level>3</level>
+        <armor>0</armor>
+        <skill>7</skill>
+        <hp>30</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="slime">1d12</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <assassinate>true</assassinate>
+        </immunity>
+        <abilities>
+            <general type="status2">
+                <type>touch</type>
+                <strength>2</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+            <special type="splits">
+                <param>1000</param>
+            </special>
+        </abilities>
+    </monster>
+    <monster id="78">
+        <name>Giant Rat</name>
+        <pic w="1" h="1">70</pic>
+        <race>beast</race>
+        <level>2</level>
+        <armor>2</armor>
+        <skill>3</skill>
+        <hp>10</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>1</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">1d6</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="79">
+        <name>Vapor Rat</name>
+        <pic w="1" h="1">70</pic>
+        <race>beast</race>
+        <level>4</level>
+        <armor>2</armor>
+        <skill>5</skill>
+        <hp>20</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>2</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">1d10</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <general type="field">
+                <type>breath</type>
+                <missile>12</missile>
+                <range>6</range>
+                <strength>0</strength>
+                <chance>37.5</chance>
+                <extra>cloud-stink</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="80">
+        <name>Mung Rat</name>
+        <pic w="1" h="1">70</pic>
+        <race>beast</race>
+        <level>3</level>
+        <armor>2</armor>
+        <skill>5</skill>
+        <hp>15</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>2</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">1d8</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+        </immunity>
+        <abilities>
+            <general type="status2">
+                <type>touch</type>
+                <strength>2</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="81">
+        <name>Shambler</name>
+        <pic w="1" h="1">71</pic>
+        <race>beast</race>
+        <level>18</level>
+        <armor>1</armor>
+        <skill>15</skill>
+        <hp>100</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+            <attack type="claw">4d10</attack>
+            <attack type="claw">4d10</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>50</cold>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>5</strength>
+                <chance>100.0</chance>
+                <extra>web</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="82">
+        <name>Bat</name>
+        <pic w="1" h="1">72</pic>
+        <race>beast</race>
+        <level>2</level>
+        <armor>10</armor>
+        <skill>4</skill>
+        <hp>10</hp>
+        <speed>8</speed>
+        <attitude>hostile-a</attitude>
+        <summon>1</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">1d7</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="83">
+        <name>Drake</name>
+        <pic w="2" h="1">73</pic>
+        <race>reptile</race>
+        <level>18</level>
+        <armor>12</armor>
+        <skill>18</skill>
+        <hp>90</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <mage>4</mage>
+        <attacks>
+            <attack type="bite">3d15</attack>
+            <attack type="claw">2d10</attack>
+            <attack type="claw">2d10</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <magic>50</magic>
+        </immunity>
+        <abilities>
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>13</missile>
+                <range>8</range>
+                <strength>6</strength>
+                <chance>37.5</chance>
+                <extra>fire</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="84">
+        <name>Imp</name>
+        <pic w="1" h="1">74</pic>
+        <race>demon</race>
+        <level>7</level>
+        <armor>8</armor>
+        <skill>12</skill>
+        <hp>35</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>3</summon>
+        <treasure>2</treasure>
+        <mage>2</mage>
+        <priest>2</priest>
+        <attacks>
+            <attack type="swing">0d0</attack>
+            <attack type="claw">1d10</attack>
+            <attack type="claw">1d10</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <poison>0</poison>
+        </immunity>
+    </monster>
+    <monster id="85">
+        <name>Demon</name>
+        <pic w="1" h="1">75</pic>
+        <race>demon</race>
+        <level>20</level>
+        <armor>14</armor>
+        <skill>18</skill>
+        <hp>70</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <mage>5</mage>
+        <priest>3</priest>
+        <attacks>
+            <attack type="bite">3d8</attack>
+            <attack type="claw">1d15</attack>
+            <attack type="claw">1d15</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <poison>0</poison>
+        </immunity>
+    </monster>
+    <monster id="86">
+        <name>Mung Demon</name>
+        <pic w="1" h="2">76</pic>
+        <race>demon</race>
+        <level>30</level>
+        <armor>20</armor>
+        <skill>24</skill>
+        <hp>150</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+            <attack type="punch">4d10</attack>
+            <attack type="punch">4d10</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <poison>0</poison>
+            <magic>50</magic>
+            <cold>50</cold>
+        </immunity>
+        <abilities>
+            <general type="drain-sp">
+                <type>gaze</type>
+                <missile>8</missile>
+                <range>8</range>
+                <strength>50</strength>
+                <chance>62.5</chance>
+            </general>
+            <general type="status2">
+                <type>touch</type>
+                <strength>6</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="87">
+        <name>Haakai</name>
+        <pic w="1" h="2">76</pic>
+        <race>demon</race>
+        <level>35</level>
+        <armor>20</armor>
+        <skill>33</skill>
+        <hp>200</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>4</treasure>
+        <mage>7</mage>
+        <priest>7</priest>
+        <attacks>
+            <attack type="bite">6d10</attack>
+            <attack type="claw">4d10</attack>
+            <attack type="claw">4d10</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <poison>0</poison>
+            <magic>50</magic>
+            <cold>50</cold>
+        </immunity>
+        <abilities>
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>13</missile>
+                <range>8</range>
+                <strength>8</strength>
+                <chance>37.5</chance>
+                <extra>fire</extra>
+            </general>
+            <general type="status2">
+                <type>touch</type>
+                <strength>8</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="88">
+        <name>Hordling</name>
+        <pic w="1" h="1">77</pic>
+        <race>demon</race>
+        <level>5</level>
+        <armor>4</armor>
+        <skill>5</skill>
+        <hp>25</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>2</summon>
+        <treasure>2</treasure>
+        <mage>1</mage>
+        <priest>1</priest>
+        <attacks>
+            <attack type="bite">2d6</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <poison>0</poison>
+        </immunity>
+        <abilities>
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>13</missile>
+                <range>8</range>
+                <strength>1</strength>
+                <chance>37.5</chance>
+                <extra>fire</extra>
+            </general>
+            <general type="status2">
+                <type>touch</type>
+                <strength>1</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="89">
+        <name>Vahnatai</name>
+        <default-face>48</default-face>
+        <pic w="1" h="1">78</pic>
+        <race>humanoid</race>
+        <level>3</level>
+        <armor>2</armor>
+        <skill>5</skill>
+        <hp>20</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="swing">1d8</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="90">
+        <name>Vahnatai Child</name>
+        <default-face>48</default-face>
+        <pic w="1" h="1">79</pic>
+        <race>humanoid</race>
+        <level>1</level>
+        <armor>2</armor>
+        <skill>3</skill>
+        <hp>5</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">1d3</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="91">
+        <name>Vahnatai Warrior</name>
+        <default-face>48</default-face>
+        <pic w="1" h="1">80</pic>
+        <race>humanoid</race>
+        <level>9</level>
+        <armor>10</armor>
+        <skill>12</skill>
+        <hp>90</hp>
+        <speed>7</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="swing">3d12</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <guard />
+        </abilities>
+    </monster>
+    <monster id="92">
+        <name>Vahnatai Warrior</name>
+        <default-face>48</default-face>
+        <pic w="1" h="1">81</pic>
+        <race>humanoid</race>
+        <level>8</level>
+        <armor>10</armor>
+        <skill>12</skill>
+        <hp>75</hp>
+        <speed>6</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="swing">1d16</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <missile type="missile">
+                <type>star</type>
+                <missile>7</missile>
+                <strength>7d7</strength>
+                <skill>14</skill>
+                <range>8</range>
+                <chance>62.5</chance>
+            </missile>
+        </abilities>
+    </monster>
+    <monster id="93">
+        <name>Vahnatai Shaper</name>
+        <default-face>48</default-face>
+        <pic w="1" h="1">82</pic>
+        <race>humanoid</race>
+        <level>7</level>
+        <armor>14</armor>
+        <skill>8</skill>
+        <hp>70</hp>
+        <speed>4</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <mage>3</mage>
+        <attacks>
+            <attack type="swing">1d18</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="94">
+        <name>Vahnatai Shaper</name>
+        <default-face>48</default-face>
+        <pic w="1" h="1">83</pic>
+        <race>humanoid</race>
+        <level>7</level>
+        <armor>14</armor>
+        <skill>8</skill>
+        <hp>70</hp>
+        <speed>4</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <priest>3</priest>
+        <attacks>
+            <attack type="swing">1d18</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="95">
+        <name>Vahnatai Keeper</name>
+        <default-face>46</default-face>
+        <pic w="1" h="1">84</pic>
+        <race>humanoid</race>
+        <level>18</level>
+        <armor>14</armor>
+        <skill>8</skill>
+        <hp>120</hp>
+        <speed>4</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <mage>6</mage>
+        <attacks>
+            <attack type="swing">2d12</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <cold>50</cold>
+        </immunity>
+    </monster>
+    <monster id="96">
+        <name>Vahnatai Keeper</name>
+        <default-face>46</default-face>
+        <pic w="1" h="1">85</pic>
+        <race>humanoid</race>
+        <level>18</level>
+        <armor>14</armor>
+        <skill>8</skill>
+        <hp>120</hp>
+        <speed>4</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <priest>6</priest>
+        <attacks>
+            <attack type="swing">2d12</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <cold>50</cold>
+        </immunity>
+    </monster>
+    <monster id="97">
+        <name>Vahnatai Master</name>
+        <default-face>46</default-face>
+        <pic w="1" h="1">86</pic>
+        <race>humanoid</race>
+        <level>25</level>
+        <armor>18</armor>
+        <skill>23</skill>
+        <hp>190</hp>
+        <speed>6</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <attacks>
+            <attack type="swing">5d10</attack>
+            <attack type="swing">4d10</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <magic>50</magic>
+            <cold>50</cold>
+        </immunity>
+        <abilities>
+            <guard />
+        </abilities>
+    </monster>
+    <monster id="98">
+        <name>Vahnatai Lord</name>
+        <default-face>46</default-face>
+        <pic w="1" h="1">87</pic>
+        <race>humanoid</race>
+        <level>35</level>
+        <armor>25</armor>
+        <skill>35</skill>
+        <hp>400</hp>
+        <speed>8</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>4</treasure>
+        <mage>7</mage>
+        <priest>7</priest>
+        <attacks>
+            <attack type="swing">6d14</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <magic>50</magic>
+            <cold>50</cold>
+        </immunity>
+    </monster>
+    <monster id="99">
+        <name>Serpent</name>
+        <pic w="1" h="1">88</pic>
+        <race>reptile</race>
+        <level>3</level>
+        <armor>2</armor>
+        <skill>4</skill>
+        <hp>15</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>1</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">1d8</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="100">
+        <name>Asp</name>
+        <pic w="1" h="1">88</pic>
+        <race>reptile</race>
+        <level>5</level>
+        <armor>2</armor>
+        <skill>6</skill>
+        <hp>25</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>2</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">1d10</attack>
+        </attacks>
+        <immunity />
+        <loot>
+            <type>371</type>
+            <chance>60</chance>
+        </loot>
+        <abilities>
+            <general type="status2">
+                <type>touch</type>
+                <strength>5</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="101">
+        <name>Gazer</name>
+        <pic w="1" h="1">89</pic>
+        <race>beast</race>
+        <level>24</level>
+        <armor>8</armor>
+        <skill>7</skill>
+        <hp>120</hp>
+        <speed>5</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <mage>6</mage>
+        <priest>3</priest>
+        <attacks>
+            <attack type="bite">1d10</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <magic>0</magic>
+            <cold>50</cold>
+        </immunity>
+    </monster>
+    <monster id="102">
+        <name>Eyebeast</name>
+        <pic w="1" h="1">89</pic>
+        <race>beast</race>
+        <level>18</level>
+        <armor>8</armor>
+        <skill>7</skill>
+        <hp>90</hp>
+        <speed>6</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="bite">1d10</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <magic>0</magic>
+            <cold>50</cold>
+        </immunity>
+        <abilities>
+            <general type="drain-sp">
+                <type>gaze</type>
+                <missile>8</missile>
+                <range>8</range>
+                <strength>50</strength>
+                <chance>62.5</chance>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="103">
+        <name>Basilisk</name>
+        <pic w="1" h="1">90</pic>
+        <race>reptile</race>
+        <level>10</level>
+        <armor>5</armor>
+        <skill>5</skill>
+        <hp>50</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">2d6</attack>
+            <attack type="claw">1d8</attack>
+            <attack type="claw">1d8</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <general type="petrify">
+                <type>gaze</type>
+                <missile>-1</missile>
+                <range>6</range>
+                <strength>25</strength>
+                <chance>62.5</chance>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="104">
+        <name>Ur-Basilisk</name>
+        <pic w="1" h="1">90</pic>
+        <race>reptile</race>
+        <level>25</level>
+        <armor>9</armor>
+        <skill>12</skill>
+        <hp>120</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">3d6</attack>
+            <attack type="claw">1d10</attack>
+            <attack type="claw">1d10</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <general type="petrify">
+                <type>gaze</type>
+                <missile>-1</missile>
+                <range>6</range>
+                <strength>25</strength>
+                <chance>62.5</chance>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="105">
+        <name>Statue</name>
+        <pic w="1" h="1">91</pic>
+        <race>stone</race>
+        <level>7</level>
+        <armor>12</armor>
+        <skill>0</skill>
+        <hp>35</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <mage>1</mage>
+        <priest>1</priest>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <fear>true</fear>
+        </immunity>
+    </monster>
+    <monster id="106">
+        <name>Living Statue</name>
+        <pic w="1" h="1">91</pic>
+        <race>stone</race>
+        <level>2</level>
+        <armor>12</armor>
+        <skill>0</skill>
+        <hp>10</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <fear>true</fear>
+        </immunity>
+    </monster>
+    <monster id="107">
+        <name>Crystal Soul</name>
+        <default-face>25</default-face>
+        <pic w="1" h="1">92</pic>
+        <race>stone</race>
+        <level>28</level>
+        <armor>18</armor>
+        <skill>0</skill>
+        <hp>200</hp>
+        <speed>5</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <mage>7</mage>
+        <priest>7</priest>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <poison>0</poison>
+            <magic>0</magic>
+            <cold>0</cold>
+        </immunity>
+    </monster>
+    <monster id="108">
+        <name>Lizard</name>
+        <pic w="1" h="1">93</pic>
+        <race>reptile</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>1</skill>
+        <hp>3</hp>
+        <speed>2</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">1d2</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="109">
+        <name>Cat</name>
+        <pic w="1" h="1">94</pic>
+        <race>beast</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>1</skill>
+        <hp>3</hp>
+        <speed>3</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">1d2</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="110">
+        <name>Dog</name>
+        <pic w="1" h="1">95</pic>
+        <race>beast</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>1</skill>
+        <hp>3</hp>
+        <speed>3</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">1d2</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="111">
+        <name>Cave Cow</name>
+        <pic w="1" h="1">96</pic>
+        <race>beast</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>1</skill>
+        <hp>7</hp>
+        <speed>3</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">1d2</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="112">
+        <name>Cow</name>
+        <pic w="1" h="1">97</pic>
+        <race>beast</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>1</skill>
+        <hp>7</hp>
+        <speed>3</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">1d2</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="113">
+        <name>Chicken</name>
+        <pic w="1" h="1">98</pic>
+        <race>beast</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>1</skill>
+        <hp>1</hp>
+        <speed>2</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">1d2</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="114">
+        <name>Sheep</name>
+        <pic w="1" h="1">99</pic>
+        <race>beast</race>
+        <level>1</level>
+        <armor>1</armor>
+        <skill>1</skill>
+        <hp>5</hp>
+        <speed>2</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">1d2</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="115">
+        <name>Wolf</name>
+        <pic w="1" h="1">100</pic>
+        <race>beast</race>
+        <level>3</level>
+        <armor>1</armor>
+        <skill>5</skill>
+        <hp>15</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>1</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">2d6</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="116">
+        <name>Worg</name>
+        <pic w="1" h="1">106</pic>
+        <race>beast</race>
+        <level>7</level>
+        <armor>1</armor>
+        <skill>9</skill>
+        <hp>35</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>2</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">3d6</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="117">
+        <name>Bear</name>
+        <pic w="2" h="1">101</pic>
+        <race>beast</race>
+        <level>8</level>
+        <armor>3</armor>
+        <skill>12</skill>
+        <hp>40</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">4d6</attack>
+            <attack type="claw">1d12</attack>
+            <attack type="claw">1d12</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="118">
+        <name>Giant Spider</name>
+        <pic w="1" h="1">102</pic>
+        <race>bug</race>
+        <level>4</level>
+        <armor>1</armor>
+        <skill>3</skill>
+        <hp>14</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>2</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">1d8</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <general type="status2">
+                <type>touch</type>
+                <strength>3</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+            <special type="old-web">
+                <param>4</param>
+                <param>375</param>
+            </special>
+        </abilities>
+    </monster>
+    <monster id="119">
+        <name>Talking Spider</name>
+        <default-face>45</default-face>
+        <pic w="1" h="1">102</pic>
+        <race>bug</race>
+        <level>8</level>
+        <armor>1</armor>
+        <skill>25</skill>
+        <hp>40</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">3d6</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <general type="status2">
+                <type>touch</type>
+                <strength>9</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+            <special type="old-web">
+                <param>4</param>
+                <param>375</param>
+            </special>
+        </abilities>
+    </monster>
+    <monster id="120">
+        <name>Gremlin</name>
+        <pic w="1" h="1">103</pic>
+        <race>humanoid</race>
+        <level>3</level>
+        <armor>1</armor>
+        <skill>5</skill>
+        <hp>15</hp>
+        <speed>7</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="punch">1d8</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <general type="steal-food">
+                <type>touch</type>
+                <strength>10</strength>
+                <chance>66.7</chance>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="121">
+        <name>Black Shade</name>
+        <pic w="1" h="1">56</pic>
+        <race>beast</race>
+        <level>12</level>
+        <armor>6</armor>
+        <skill>9</skill>
+        <hp>50</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <mage>3</mage>
+        <priest>5</priest>
+        <attacks>
+            <attack type="claw">2d6</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <invisible />
+        </abilities>
+    </monster>
+    <monster id="122">
+        <name>Guardian</name>
+        <pic w="1" h="1">149</pic>
+        <race>beast</race>
+        <level>18</level>
+        <armor>6</armor>
+        <skill>20</skill>
+        <hp>90</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+            <attack type="swing">3d10</attack>
+            <attack type="swing">3d10</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <invisible />
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>13</missile>
+                <range>8</range>
+                <strength>5</strength>
+                <chance>37.5</chance>
+                <extra>fire</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="123">
+        <name>Doomguard</name>
+        <pic w="1" h="1">104</pic>
+        <race>important</race>
+        <level>4</level>
+        <armor>12</armor>
+        <skill>25</skill>
+        <hp>150</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+            <attack type="claw">5d9</attack>
+            <attack type="claw">5d9</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <poison>0</poison>
+            <magic>0</magic>
+            <cold>0</cold>
+            <assassinate>true</assassinate>
+        </immunity>
+        <abilities>
+            <special type="splits">
+                <param>1000</param>
+            </special>
+        </abilities>
+    </monster>
+    <monster id="124">
+        <name>Poison Fungi</name>
+        <pic w="1" h="1">71</pic>
+        <race>beast</race>
+        <level>7</level>
+        <armor>8</armor>
+        <skill>10</skill>
+        <hp>35</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">1d12</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+        </immunity>
+        <abilities>
+            <general type="status2">
+                <type>touch</type>
+                <strength>7</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="125">
+        <name>Shade</name>
+        <pic w="1" h="1">56</pic>
+        <race>undead</race>
+        <level>5</level>
+        <armor>5</armor>
+        <skill>5</skill>
+        <hp>25</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">1d8</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+    </monster>
+    <monster id="126">
+        <name>Deva</name>
+        <pic w="1" h="1">60</pic>
+        <race>undead</race>
+        <level>8</level>
+        <armor>5</armor>
+        <skill>12</skill>
+        <hp>40</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <priest>2</priest>
+        <attacks>
+            <attack type="swing">1d10</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+    </monster>
+    <monster id="127">
+        <name>Salamander</name>
+        <pic w="1" h="1">66</pic>
+        <race>reptile</race>
+        <level>18</level>
+        <armor>7</armor>
+        <skill>15</skill>
+        <hp>90</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="bite">3d6</attack>
+            <attack type="claw">1d8</attack>
+            <attack type="claw">1d8</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+        </immunity>
+        <abilities>
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>13</missile>
+                <range>8</range>
+                <strength>4</strength>
+                <chance>37.5</chance>
+                <extra>fire</extra>
+            </general>
+            <radiate type="radiate">
+                <type>wall-fire</type>
+                <pattern>square</pattern>
+                <chance>80</chance>
+            </radiate>
+        </abilities>
+    </monster>
+    <monster id="128">
+        <name>Ice Drake</name>
+        <pic w="2" h="1">105</pic>
+        <race>reptile</race>
+        <level>22</level>
+        <armor>10</armor>
+        <skill>24</skill>
+        <hp>110</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <mage>3</mage>
+        <priest>3</priest>
+        <attacks>
+            <attack type="bite">4d6</attack>
+            <attack type="claw">2d6</attack>
+            <attack type="claw">2d6</attack>
+        </attacks>
+        <immunity>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>6</missile>
+                <range>8</range>
+                <strength>7</strength>
+                <chance>37.5</chance>
+                <extra>cold</extra>
+            </general>
+            <radiate type="radiate">
+                <type>wall-ice</type>
+                <pattern>square</pattern>
+                <chance>90</chance>
+            </radiate>
+        </abilities>
+    </monster>
+    <monster id="129">
+        <name>Ice Pudding</name>
+        <pic w="1" h="1">69</pic>
+        <race>slime</race>
+        <level>10</level>
+        <armor>0</armor>
+        <skill>13</skill>
+        <hp>50</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="slime">5d9</attack>
+        </attacks>
+        <immunity>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <radiate type="radiate">
+                <type>wall-ice</type>
+                <pattern>square</pattern>
+                <chance>90</chance>
+            </radiate>
+        </abilities>
+    </monster>
+    <monster id="130">
+        <name>Chitrach</name>
+        <pic w="1" h="1">107</pic>
+        <race>bug</race>
+        <level>12</level>
+        <armor>7</armor>
+        <skill>8</skill>
+        <hp>60</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>3</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">4d6</attack>
+        </attacks>
+        <immunity>
+            <cold>50</cold>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>5</strength>
+                <chance>100.0</chance>
+                <extra>web</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="131">
+        <name>Chitrach Larva</name>
+        <pic w="1" h="1">108</pic>
+        <race>bug</race>
+        <level>6</level>
+        <armor>2</armor>
+        <skill>3</skill>
+        <hp>25</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>2</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">2d6</attack>
+        </attacks>
+        <immunity>
+            <cold>50</cold>
+        </immunity>
+    </monster>
+    <monster id="132">
+        <name>Null Bug</name>
+        <pic w="1" h="1">109</pic>
+        <race>bug</race>
+        <level>12</level>
+        <armor>5</armor>
+        <skill>12</skill>
+        <hp>50</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">5d7</attack>
+        </attacks>
+        <immunity>
+            <cold>50</cold>
+        </immunity>
+        <abilities>
+            <general type="status2">
+                <type>touch</type>
+                <strength>4</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+            <radiate type="radiate">
+                <type>field-antimagic</type>
+                <pattern>square</pattern>
+                <chance>90</chance>
+            </radiate>
+        </abilities>
+    </monster>
+    <monster id="133">
+        <name>Giant Slug</name>
+        <pic w="2" h="1">110</pic>
+        <race>bug</race>
+        <level>16</level>
+        <armor>13</armor>
+        <skill>18</skill>
+        <hp>80</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">5d10</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <general type="status">
+                <type>spit</type>
+                <missile>0</missile>
+                <range>6</range>
+                <strength>6</strength>
+                <chance>50.0</chance>
+                <extra>acid</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="134">
+        <name>Spore Beast</name>
+        <pic w="1" h="1">71</pic>
+        <race>beast</race>
+        <level>7</level>
+        <armor>6</armor>
+        <skill>10</skill>
+        <hp>35</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>3</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="punch">2d6</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>6</strength>
+                <chance>66.7</chance>
+                <extra>disease</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="135">
+        <name>Rakshasa</name>
+        <pic w="1" h="1">111</pic>
+        <race>humanoid</race>
+        <level>25</level>
+        <armor>20</armor>
+        <skill>4</skill>
+        <hp>125</hp>
+        <speed>5</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <mage>6</mage>
+        <attacks>
+            <attack type="punch">1d12</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <poison>50</poison>
+            <magic>0</magic>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <special type="absorb">
+                <param>1000</param>
+                <param>3</param>
+            </special>
+        </abilities>
+    </monster>
+    <monster id="136">
+        <name>Naga</name>
+        <pic w="1" h="2">112</pic>
+        <race>beast</race>
+        <level>28</level>
+        <armor>18</armor>
+        <skill>28</skill>
+        <hp>140</hp>
+        <speed>5</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <mage>5</mage>
+        <priest>4</priest>
+        <attacks>
+            <attack type="bite">4d10</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <poison>50</poison>
+            <magic>50</magic>
+            <cold>50</cold>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>500</strength>
+                <chance>0.0</chance>
+                <extra>paralysis</extra>
+            </general>
+            <general type="status2">
+                <type>touch</type>
+                <strength>7</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="137">
+        <name>Efreet</name>
+        <pic w="1" h="2">113</pic>
+        <race>beast</race>
+        <level>25</level>
+        <armor>25</armor>
+        <skill>33</skill>
+        <hp>150</hp>
+        <speed>5</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <mage>4</mage>
+        <attacks>
+            <attack type="swing">0d0</attack>
+            <attack type="claw">5d10</attack>
+            <attack type="claw">5d10</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <poison>0</poison>
+            <magic>50</magic>
+        </immunity>
+        <abilities>
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>13</missile>
+                <range>8</range>
+                <strength>7</strength>
+                <chance>37.5</chance>
+                <extra>fire</extra>
+            </general>
+            <radiate type="radiate">
+                <type>wall-fire</type>
+                <pattern>square</pattern>
+                <chance>90</chance>
+            </radiate>
+        </abilities>
+    </monster>
+    <monster id="138">
+        <name>Amber Slime</name>
+        <pic w="1" h="1">114</pic>
+        <race>slime</race>
+        <level>3</level>
+        <armor>0</armor>
+        <skill>3</skill>
+        <hp>8</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>1</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="slime">2d6</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>5</strength>
+                <chance>100.0</chance>
+                <extra>web</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="139">
+        <name>Ochre Slime</name>
+        <pic w="1" h="1">115</pic>
+        <race>slime</race>
+        <level>3</level>
+        <armor>0</armor>
+        <skill>3</skill>
+        <hp>8</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="slime">1d8</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>2</strength>
+                <chance>100.0</chance>
+                <extra>acid</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="140">
+        <name>Emerald Slime</name>
+        <pic w="1" h="1">116</pic>
+        <race>slime</race>
+        <level>3</level>
+        <armor>0</armor>
+        <skill>3</skill>
+        <hp>10</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="slime">1d8</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>6</strength>
+                <chance>100.0</chance>
+                <extra>sleep</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="141">
+        <name>Mauve Slime</name>
+        <pic w="1" h="1">117</pic>
+        <race>slime</race>
+        <level>4</level>
+        <armor>0</armor>
+        <skill>3</skill>
+        <hp>10</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>1</summon>
+        <treasure>0</treasure>
+        <mage>1</mage>
+        <priest>1</priest>
+        <attacks>
+            <attack type="slime">1d7</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+        </immunity>
+    </monster>
+    <monster id="142">
+        <name>Alien Slime</name>
+        <pic w="2" h="2">118</pic>
+        <race>slime</race>
+        <level>14</level>
+        <armor>10</armor>
+        <skill>12</skill>
+        <hp>140</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="slime">2d10</attack>
+            <attack type="slime">2d10</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>500</strength>
+                <chance>0.0</chance>
+                <extra>paralysis</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="143">
+        <name>Cockroach</name>
+        <default-face>47</default-face>
+        <pic w="1" h="1">119</pic>
+        <race>bug</race>
+        <level>2</level>
+        <armor>2</armor>
+        <skill>4</skill>
+        <hp>10</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>1</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">1d8</attack>
+        </attacks>
+        <immunity>
+            <poison>50</poison>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>6</strength>
+                <chance>66.7</chance>
+                <extra>disease</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="144">
+        <name>Large Roach</name>
+        <default-face>47</default-face>
+        <pic w="1" h="1">120</pic>
+        <race>bug</race>
+        <level>6</level>
+        <armor>3</armor>
+        <skill>6</skill>
+        <hp>30</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>2</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">2d8</attack>
+        </attacks>
+        <immunity>
+            <poison>50</poison>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>6</strength>
+                <chance>66.7</chance>
+                <extra>disease</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="145">
+        <name>Giant Roach</name>
+        <default-face>47</default-face>
+        <pic w="2" h="1">121</pic>
+        <race>bug</race>
+        <level>8</level>
+        <armor>4</armor>
+        <skill>7</skill>
+        <hp>40</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">3d8</attack>
+        </attacks>
+        <immunity>
+            <poison>50</poison>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>6</strength>
+                <chance>66.7</chance>
+                <extra>disease</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="146">
+        <name>Mung Roach</name>
+        <default-face>47</default-face>
+        <pic w="1" h="1">120</pic>
+        <race>bug</race>
+        <level>8</level>
+        <armor>5</armor>
+        <skill>7</skill>
+        <hp>40</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>3</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">2d8</attack>
+        </attacks>
+        <immunity>
+            <poison>50</poison>
+        </immunity>
+        <abilities>
+            <general type="status2">
+                <type>touch</type>
+                <strength>4</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="147">
+        <name>Guardian Roach</name>
+        <default-face>47</default-face>
+        <pic w="2" h="1">121</pic>
+        <race>bug</race>
+        <level>10</level>
+        <armor>6</armor>
+        <skill>13</skill>
+        <hp>60</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">4d8</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>6</strength>
+                <chance>66.7</chance>
+                <extra>disease</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="148">
+        <name>Big Roach</name>
+        <default-face>47</default-face>
+        <pic w="1" h="1">119</pic>
+        <race>bug</race>
+        <level>4</level>
+        <armor>0</armor>
+        <skill>30</skill>
+        <hp>30</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">2d8</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>6</strength>
+                <chance>66.7</chance>
+                <extra>disease</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="149">
+        <name>Troglodyte</name>
+        <default-face>50</default-face>
+        <pic w="1" h="1">123</pic>
+        <race>humanoid</race>
+        <level>5</level>
+        <armor>6</armor>
+        <skill>5</skill>
+        <hp>25</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>2</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="swing">1d10</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="150">
+        <name>Troglodyte Warrior</name>
+        <default-face>50</default-face>
+        <pic w="1" h="1">124</pic>
+        <race>humanoid</race>
+        <level>8</level>
+        <armor>10</armor>
+        <skill>8</skill>
+        <hp>40</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>3</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="swing">2d12</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="151">
+        <name>Troglodyte Shaman</name>
+        <default-face>50</default-face>
+        <pic w="1" h="1">125</pic>
+        <race>humanoid</race>
+        <level>7</level>
+        <armor>10</armor>
+        <skill>6</skill>
+        <hp>35</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <mage>4</mage>
+        <priest>5</priest>
+        <attacks>
+            <attack type="swing">1d8</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="152">
+        <name>Troglodyte Khazi</name>
+        <default-face>51</default-face>
+        <pic w="1" h="1">126</pic>
+        <race>humanoid</race>
+        <level>10</level>
+        <armor>12</armor>
+        <skill>8</skill>
+        <hp>50</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <mage>6</mage>
+        <priest>6</priest>
+        <attacks>
+            <attack type="swing">1d10</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="153">
+        <name>Troglodyte Defender</name>
+        <default-face>51</default-face>
+        <pic w="1" h="1">127</pic>
+        <race>humanoid</race>
+        <level>12</level>
+        <armor>20</armor>
+        <skill>14</skill>
+        <hp>60</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="swing">3d10</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="154">
+        <name>Troglodyte Lord</name>
+        <default-face>51</default-face>
+        <pic w="1" h="1">128</pic>
+        <race>humanoid</race>
+        <level>14</level>
+        <armor>30</armor>
+        <skill>22</skill>
+        <hp>70</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>4</treasure>
+        <attacks>
+            <attack type="swing">4d10</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="155">
+        <name>Hill Giant</name>
+        <default-face>53</default-face>
+        <pic w="1" h="2">49</pic>
+        <race>giant</race>
+        <level>10</level>
+        <armor>8</armor>
+        <skill>12</skill>
+        <hp>50</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="swing">3d8</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <missile type="missile">
+                <type>boulder</type>
+                <missile>12</missile>
+                <strength>4d7</strength>
+                <skill>8</skill>
+                <range>10</range>
+                <chance>62.5</chance>
+            </missile>
+        </abilities>
+    </monster>
+    <monster id="156">
+        <name>Hill Giant Fighter</name>
+        <default-face>53</default-face>
+        <pic w="1" h="2">51</pic>
+        <race>giant</race>
+        <level>12</level>
+        <armor>14</armor>
+        <skill>18</skill>
+        <hp>60</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="swing">4d8</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <missile type="missile">
+                <type>boulder</type>
+                <missile>12</missile>
+                <strength>6d7</strength>
+                <skill>12</skill>
+                <range>10</range>
+                <chance>50.0</chance>
+            </missile>
+        </abilities>
+    </monster>
+    <monster id="157">
+        <name>Hill Giant Shaman</name>
+        <default-face>53</default-face>
+        <pic w="1" h="2">50</pic>
+        <race>giant</race>
+        <level>14</level>
+        <armor>8</armor>
+        <skill>10</skill>
+        <hp>70</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <mage>3</mage>
+        <priest>3</priest>
+        <attacks>
+            <attack type="swing">3d8</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <missile type="missile">
+                <type>boulder</type>
+                <missile>12</missile>
+                <strength>6d7</strength>
+                <skill>12</skill>
+                <range>10</range>
+                <chance>50.0</chance>
+            </missile>
+        </abilities>
+    </monster>
+    <monster id="158">
+        <name>Hill Giant Chief</name>
+        <default-face>53</default-face>
+        <pic w="1" h="2">51</pic>
+        <race>giant</race>
+        <level>24</level>
+        <armor>18</armor>
+        <skill>30</skill>
+        <hp>200</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>4</treasure>
+        <attacks>
+            <attack type="swing">5d10</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <missile type="missile">
+                <type>boulder</type>
+                <missile>12</missile>
+                <strength>8d7</strength>
+                <skill>16</skill>
+                <range>10</range>
+                <chance>50.0</chance>
+            </missile>
+        </abilities>
+    </monster>
+    <monster id="159">
+        <name>Golem of Blades</name>
+        <pic w="1" h="1">129</pic>
+        <race>stone</race>
+        <level>13</level>
+        <armor>20</armor>
+        <skill>20</skill>
+        <hp>70</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+            <attack type="swing">3d12</attack>
+            <attack type="swing">3d12</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <magic>50</magic>
+        </immunity>
+    </monster>
+    <monster id="160">
+        <name>Fire Golem</name>
+        <pic w="1" h="1">130</pic>
+        <race>stone</race>
+        <level>18</level>
+        <armor>14</armor>
+        <skill>15</skill>
+        <hp>70</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">4d10</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <poison>0</poison>
+            <magic>50</magic>
+        </immunity>
+        <abilities>
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>13</missile>
+                <range>8</range>
+                <strength>7</strength>
+                <chance>37.5</chance>
+                <extra>fire</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="161">
+        <name>Ice Golem</name>
+        <pic w="1" h="1">131</pic>
+        <race>stone</race>
+        <level>18</level>
+        <armor>14</armor>
+        <skill>15</skill>
+        <hp>70</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">4d10</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <magic>50</magic>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>6</missile>
+                <range>8</range>
+                <strength>7</strength>
+                <chance>37.5</chance>
+                <extra>cold</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="162">
+        <name>Jeweled Golem</name>
+        <pic w="1" h="1">132</pic>
+        <race>stone</race>
+        <level>22</level>
+        <armor>18</armor>
+        <skill>13</skill>
+        <hp>90</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">1d10</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <magic>50</magic>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>spit</type>
+                <missile>0</missile>
+                <range>6</range>
+                <strength>6</strength>
+                <chance>50.0</chance>
+                <extra>acid</extra>
+            </general>
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>8</missile>
+                <range>8</range>
+                <strength>8</strength>
+                <chance>37.5</chance>
+                <extra>magic</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="163">
+        <name>Demon Golem</name>
+        <pic w="1" h="1">133</pic>
+        <race>stone</race>
+        <level>22</level>
+        <armor>25</armor>
+        <skill>26</skill>
+        <hp>120</hp>
+        <speed>7</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <priest>5</priest>
+        <attacks>
+            <attack type="swing">5d10</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <poison>50</poison>
+            <magic>50</magic>
+            <cold>50</cold>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>6</strength>
+                <chance>100.0</chance>
+                <extra>sleep</extra>
+            </general>
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>13</missile>
+                <range>8</range>
+                <strength>9</strength>
+                <chance>37.5</chance>
+                <extra>fire</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="164">
+        <name>Power Crystal</name>
+        <pic w="1" h="1">134</pic>
+        <race>stone</race>
+        <level>10</level>
+        <armor>25</armor>
+        <skill>0</skill>
+        <hp>100</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <poison>0</poison>
+            <magic>0</magic>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>2</strength>
+                <chance>100.0</chance>
+                <extra>dumb-smart</extra>
+            </general>
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>8</missile>
+                <range>8</range>
+                <strength>9</strength>
+                <chance>37.5</chance>
+                <extra>magic</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="165">
+        <name>Mind Crystal</name>
+        <pic w="1" h="1">135</pic>
+        <race>stone</race>
+        <level>30</level>
+        <armor>25</armor>
+        <skill>0</skill>
+        <hp>200</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <mage>7</mage>
+        <priest>7</priest>
+        <attacks>
+            <attack type="swing">0d0</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <poison>0</poison>
+            <magic>0</magic>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <general type="drain-sp">
+                <type>gaze</type>
+                <missile>8</missile>
+                <range>8</range>
+                <strength>50</strength>
+                <chance>62.5</chance>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="166">
+        <name>Alien Beast</name>
+        <pic w="1" h="1">136</pic>
+        <race>beast</race>
+        <level>20</level>
+        <armor>20</armor>
+        <skill>30</skill>
+        <hp>100</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">9d10</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="167">
+        <name>Pack Leader</name>
+        <pic w="1" h="1">137</pic>
+        <race>beast</race>
+        <level>27</level>
+        <armor>30</armor>
+        <skill>36</skill>
+        <hp>150</hp>
+        <speed>5</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">10d13</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <general type="status2">
+                <type>touch</type>
+                <strength>6</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="168">
+        <name>Dark Wyrm</name>
+        <pic w="2" h="2">138</pic>
+        <race>beast</race>
+        <level>30</level>
+        <armor>9</armor>
+        <skill>30</skill>
+        <hp>200</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <attacks>
+            <attack type="bite">10d13</attack>
+        </attacks>
+        <immunity>
+            <magic>50</magic>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>500</strength>
+                <chance>0.0</chance>
+                <extra>paralysis</extra>
+            </general>
+            <general type="status2">
+                <type>touch</type>
+                <strength>7</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="169">
+        <name>Dryad</name>
+        <default-face>49</default-face>
+        <pic w="1" h="1">139</pic>
+        <race>humanoid</race>
+        <level>7</level>
+        <armor>0</armor>
+        <skill>4</skill>
+        <hp>40</hp>
+        <speed>4</speed>
+        <attitude>docile</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="punch">1d8</attack>
+        </attacks>
+        <immunity>
+            <magic>0</magic>
+        </immunity>
+    </monster>
+    <monster id="170">
+        <name>Drake Lord</name>
+        <default-face>22</default-face>
+        <pic w="2" h="2">140</pic>
+        <race>reptile</race>
+        <level>30</level>
+        <armor>15</armor>
+        <skill>26</skill>
+        <hp>500</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <mage>5</mage>
+        <priest>7</priest>
+        <attacks>
+            <attack type="bite">8d10</attack>
+            <attack type="claw">4d10</attack>
+            <attack type="claw">4d10</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <poison>50</poison>
+            <magic>50</magic>
+        </immunity>
+        <abilities>
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>13</missile>
+                <range>8</range>
+                <strength>9</strength>
+                <chance>37.5</chance>
+                <extra>fire</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="171">
+        <name>Spiny Worm</name>
+        <pic w="2" h="1">141</pic>
+        <race>bug</race>
+        <level>15</level>
+        <armor>6</armor>
+        <skill>18</skill>
+        <hp>100</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="bite">6d12</attack>
+        </attacks>
+        <immunity>
+            <poison>50</poison>
+        </immunity>
+        <abilities>
+            <missile type="missile">
+                <type>spine</type>
+                <missile>5</missile>
+                <strength>6d7</strength>
+                <skill>12</skill>
+                <range>9</range>
+                <chance>62.5</chance>
+            </missile>
+        </abilities>
+    </monster>
+    <monster id="172">
+        <name>Ursag</name>
+        <pic w="2" h="1">142</pic>
+        <race>beast</race>
+        <level>12</level>
+        <armor>10</armor>
+        <skill>15</skill>
+        <hp>80</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="bite">3d10</attack>
+            <attack type="claw">2d8</attack>
+            <attack type="claw">2d8</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="173">
+        <name>Gorgon</name>
+        <pic w="1" h="2">143</pic>
+        <race>giant</race>
+        <level>18</level>
+        <armor>14</armor>
+        <skill>17</skill>
+        <hp>110</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="bite">3d12</attack>
+            <attack type="claw">1d12</attack>
+            <attack type="claw">1d12</attack>
+        </attacks>
+        <immunity>
+            <magic>50</magic>
+        </immunity>
+        <abilities>
+            <general type="field">
+                <type>breath</type>
+                <missile>0</missile>
+                <range>8</range>
+                <strength>4</strength>
+                <chance>75.0</chance>
+                <extra>cloud-sleep</extra>
+            </general>
+            <general type="status2">
+                <type>touch</type>
+                <strength>4</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="174">
+        <name>Unicorn</name>
+        <pic w="1" h="1">144</pic>
+        <race>magic</race>
+        <level>3</level>
+        <armor>3</armor>
+        <skill>6</skill>
+        <hp>17</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="stab">1d12</attack>
+        </attacks>
+        <immunity />
+        <abilities>
+            <general type="status2">
+                <type>touch</type>
+                <strength>1</strength>
+                <chance>100.0</chance>
+                <extra>poison</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="175">
+        <name>Slime Zombie</name>
+        <pic w="1" h="1">55</pic>
+        <race>undead</race>
+        <level>5</level>
+        <armor>1</armor>
+        <skill>5</skill>
+        <hp>30</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="swing">0d0</attack>
+            <attack type="claw">2d5</attack>
+            <attack type="claw">2d5</attack>
+        </attacks>
+        <immunity>
+            <poison>0</poison>
+            <cold>0</cold>
+        </immunity>
+    </monster>
+    <monster id="176">
+        <name>Mung Slime</name>
+        <pic w="1" h="1">68</pic>
+        <race>slime</race>
+        <level>7</level>
+        <armor>10</armor>
+        <skill>10</skill>
+        <hp>30</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="slime">3d8</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <poison>0</poison>
+            <magic>50</magic>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>2</strength>
+                <chance>100.0</chance>
+                <extra>acid</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="177">
+        <name>Dragon</name>
+        <default-face>22</default-face>
+        <pic w="2" h="2">140</pic>
+        <race>dragon</race>
+        <level>39</level>
+        <armor>40</armor>
+        <skill>35</skill>
+        <hp>2500</hp>
+        <speed>4</speed>
+        <attitude>friendly</attitude>
+        <summon>0</summon>
+        <treasure>4</treasure>
+        <mage>7</mage>
+        <priest>7</priest>
+        <attacks>
+            <attack type="bite">9d40</attack>
+            <attack type="claw">8d30</attack>
+            <attack type="claw">8d30</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <poison>50</poison>
+            <magic>0</magic>
+            <cold>50</cold>
+            <fear>true</fear>
+        </immunity>
+        <abilities>
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>13</missile>
+                <range>8</range>
+                <strength>35</strength>
+                <chance>37.5</chance>
+                <extra>fire</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="178">
+        <name>Hydra</name>
+        <pic w="1" h="1">157</pic>
+        <race>reptile</race>
+        <level>20</level>
+        <armor>14</armor>
+        <skill>20</skill>
+        <hp>100</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="bite">4d8</attack>
+            <attack type="bite">4d8</attack>
+            <attack type="bite">4d8</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="179">
+        <name>Pyrohydra</name>
+        <pic w="1" h="1">156</pic>
+        <race>reptile</race>
+        <level>24</level>
+        <armor>14</armor>
+        <skill>20</skill>
+        <hp>125</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <attacks>
+            <attack type="bite">4d8</attack>
+            <attack type="bite">4d8</attack>
+            <attack type="bite">4d8</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+        </immunity>
+        <abilities>
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>13</missile>
+                <range>8</range>
+                <strength>15</strength>
+                <chance>37.5</chance>
+                <extra>fire</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="180">
+        <name>Cryohydra</name>
+        <pic w="1" h="1">158</pic>
+        <race>reptile</race>
+        <level>24</level>
+        <armor>10</armor>
+        <skill>17</skill>
+        <hp>140</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <attacks>
+            <attack type="bite">4d8</attack>
+            <attack type="bite">4d8</attack>
+            <attack type="bite">4d8</attack>
+        </attacks>
+        <immunity>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <general type="dmg2">
+                <type>breath</type>
+                <missile>6</missile>
+                <range>8</range>
+                <strength>15</strength>
+                <chance>37.5</chance>
+                <extra>cold</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="181">
+        <name>Baby Hydra</name>
+        <pic w="1" h="1">159</pic>
+        <race>reptile</race>
+        <level>8</level>
+        <armor>6</armor>
+        <skill>7</skill>
+        <hp>40</hp>
+        <speed>4</speed>
+        <attitude>hostile-a</attitude>
+        <summon>2</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">3d9</attack>
+            <attack type="bite">3d9</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="182">
+        <name>Pixie</name>
+        <pic w="1" h="1">166</pic>
+        <race>magic</race>
+        <level>7</level>
+        <armor>30</armor>
+        <skill>2</skill>
+        <hp>10</hp>
+        <speed>9</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <mage>3</mage>
+        <attacks>
+            <attack type="burn">1d8</attack>
+        </attacks>
+        <immunity>
+            <fire>0</fire>
+            <poison>0</poison>
+            <magic>0</magic>
+            <cold>0</cold>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>6</strength>
+                <chance>100.0</chance>
+                <extra>sleep</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="183">
+        <name>Unicorn</name>
+        <pic w="1" h="1">165</pic>
+        <race>magic</race>
+        <level>25</level>
+        <armor>20</armor>
+        <skill>16</skill>
+        <hp>80</hp>
+        <speed>8</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <mage>2</mage>
+        <priest>2</priest>
+        <attacks>
+            <attack type="stab">10d12</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <poison>0</poison>
+            <magic>50</magic>
+            <cold>50</cold>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>touch</type>
+                <strength>500</strength>
+                <chance>0.0</chance>
+                <extra>paralysis</extra>
+            </general>
+        </abilities>
+    </monster>
+    <monster id="184">
+        <name>Kobold</name>
+        <pic w="1" h="1">170</pic>
+        <race>humanoid</race>
+        <level>2</level>
+        <armor>1</armor>
+        <skill>2</skill>
+        <hp>6</hp>
+        <speed>3</speed>
+        <attitude>hostile-a</attitude>
+        <summon>1</summon>
+        <treasure>1</treasure>
+        <attacks>
+            <attack type="swing">1d8</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="185">
+        <name>Centaur</name>
+        <pic w="1" h="1">155</pic>
+        <race>humanoid</race>
+        <level>10</level>
+        <armor>2</armor>
+        <skill>8</skill>
+        <hp>30</hp>
+        <speed>5</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>2</treasure>
+        <attacks>
+            <attack type="swing">2d8</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="186">
+        <name>Centaur Chief</name>
+        <pic w="1" h="1">155</pic>
+        <race>humanoid</race>
+        <level>18</level>
+        <armor>4</armor>
+        <skill>14</skill>
+        <hp>50</hp>
+        <speed>5</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>3</treasure>
+        <attacks>
+            <attack type="swing">3d10</attack>
+        </attacks>
+        <immunity />
+    </monster>
+    <monster id="187">
+        <name>Blood Beast</name>
+        <pic w="1" h="1">171</pic>
+        <race>demon</race>
+        <level>30</level>
+        <armor>12</armor>
+        <skill>18</skill>
+        <hp>150</hp>
+        <speed>6</speed>
+        <attitude>hostile-a</attitude>
+        <summon>0</summon>
+        <treasure>0</treasure>
+        <attacks>
+            <attack type="bite">4d12</attack>
+            <attack type="claw">3d12</attack>
+            <attack type="claw">3d12</attack>
+        </attacks>
+        <immunity>
+            <fire>50</fire>
+            <poison>0</poison>
+            <magic>0</magic>
+        </immunity>
+        <abilities>
+            <general type="status">
+                <type>spit</type>
+                <missile>0</missile>
+                <range>6</range>
+                <strength>6</strength>
+                <chance>50.0</chance>
+                <extra>acid</extra>
+            </general>
+        </abilities>
+    </monster>
+</monsters>
