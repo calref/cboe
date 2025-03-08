@@ -529,7 +529,7 @@ short party_can_see(location where) {
 	if(fog_lifted)
 		return point_onscreen(univ.party.town_loc,where) ? 1 : 6;
 	if(is_town()) {
-		if( ((point_onscreen(univ.party.town_loc,where)) || (overall_mode == MODE_LOOK_TOWN)) && (pt_in_light(univ.party.town_loc,where) )
+		if( ((point_onscreen(univ.party.town_loc,where)) || (center != univ.party.town_loc)) && (pt_in_light(univ.party.town_loc,where) )
 			&& (can_see_light(univ.party.town_loc,where,sight_obscurity) < 5))
 			return 1;
 		else return 6;
