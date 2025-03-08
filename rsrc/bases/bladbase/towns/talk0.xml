@@ -9,7 +9,7 @@
             <![CDATA["I am Vastro, head trainer for Warrior's Grove."]]>
         </name>
         <job>
-            <![CDATA["I am the trainer for the Grove. I trach people skills so they can survive in the surrounding lands."]]>
+            <![CDATA["I am the trainer for the Grove. I teach people skills so they can survive in the surrounding lands."]]>
         </job>
         <unknown>
             <![CDATA[He shakes his head.]]>
@@ -33,7 +33,7 @@
     <personality id="2">
         <title>Walner</title>
         <look>
-            <![CDATA[A heavy set man sits behind the counter, wearing the traidition blue robes of an apprentice mage. The robes show a bit of wear and tear, as if he's been travelling for some time.]]>
+            <![CDATA[A heavy set man sits behind the counter, wearing the traditional blue robes of an apprentice mage. The robes show a bit of wear and tear, as if he's been travelling for some time.]]>
         </look>
         <name>
             <![CDATA[He nods in greeting. "I am called Walner."]]>
@@ -87,7 +87,7 @@
             <![CDATA["We have all the things adventurers need. We can give you a room to rest in for the night, for only 5 gold. We have cheap rations available. And, of course, a tankard of beer is only a gold piece."]]>
         </job>
         <unknown>
-            <![CDATA[She smiles an shakes her head. "You'll have to make more sense than that."]]>
+            <![CDATA[She smiles and shakes her head. "You'll have to make more sense than that."]]>
         </unknown>
     </personality>
     <personality id="6">
@@ -302,7 +302,7 @@
         <param>0</param>
         <param>0</param>
         <text>
-            <![CDATA["There's plenty of monsters out there." He snorts. "Probably too much for the likes of you. But itf you want to have a chance, you want some of my weapons."]]>
+            <![CDATA["There's plenty of monsters out there." He snorts. "Probably too much for the likes of you. But if you want to have a chance, you want some of my weapons."]]>
         </text>
     </node>
     <node for="4">
