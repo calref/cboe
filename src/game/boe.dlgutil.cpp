@@ -1963,6 +1963,7 @@ class cFilePicker {
 
 	void populate_page(int page) {
 		int parties_needed = min(save_file_mtimes.size(), (page+1) * parties_per_page);
+		set_cursor(watch_curs);
 		while(saves_loaded < parties_needed){
 			fs::path next_file = save_file_mtimes[saves_loaded].first;
 			cUniverse party_univ;
@@ -1971,6 +1972,7 @@ class cFilePicker {
 			}
 			saves_loaded++;
 		}
+		restore_cursor();
 
 		if(saving){
 			time_t now;
