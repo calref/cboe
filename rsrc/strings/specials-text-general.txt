@@ -30,7 +30,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This node increases (or decreases) a Stuff Done flag by a specified amount.
 --------------------
 Increment Flag
 Stuff Done Flag Part A
@@ -47,7 +47,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This node displays a dialog window containing one (or two) text messages.
 --------------------
 Display Message
 Unused
@@ -64,7 +64,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This vitally important special displays a dialog window containing one (or two) text messages.
 --------------------
 Start Shopping
 Unused
@@ -81,7 +81,7 @@ Unused
 Unused
 Unused
 Unused
-
+You can place stores outside using this special node type. When called, the special encounter ends immediately (the Jumpto field is ignored), and the party is not allowed to enter the space they were moving into. The game immediately goes into shopping mode. Although normally used outdoors, this special node also works in town.
 --------------------
 Display Small Message
 Unused
@@ -98,7 +98,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+A text message is displayed in the text area (in the lower right hand corner). Don't make the displayed messages too long.
 --------------------
 Flip Flag
 Stuff Done Flag Part A
@@ -115,7 +115,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This node changes a Stuff Done flag from 0 to 1 (or back).
 --------------------
 Set SDF to Random
 Stuff Done Flag Part A
@@ -132,7 +132,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Generates a random value and stores it in a Stuff Done Flag.
 --------------------
 Addition
 Result Stuff Done Flag Part A
@@ -149,7 +149,7 @@ Second SDF part A, or second number
 Second SDF part B, or -1 for literal number
 Unused
 Special to Jump To
-
+Adds values and stores the result in a Stuff Done Flag.
 --------------------
 Subtraction
 Result Stuff Done Flag Part A
@@ -166,7 +166,7 @@ Second SDF part A, or second number
 Second SDF part B, or -1 for literal number
 Unused
 Special to Jump To
-
+Subtracts values and stores the result in a Stuff Done Flag.
 --------------------
 Story Dialog
 Unused
@@ -183,7 +183,7 @@ Unused
 Unused
 Picture animation FPS (-1 for default 2)
 Special to Jump To
-
+Shows a small dialog that displays a series of messages, one at a time.
 --------------------
 Prevent Action
 Unused
@@ -200,7 +200,7 @@ Unused|Force allow if blocked?
 Unused
 Unused
 Special to Jump To
-
+If the party is walking, they are not allowed to enter the space. This can be accompanied by one or two messages, if you wish. If called in other circumstances, this node prevents the action that called the node.
 --------------------
 Change Time
 Unused
@@ -217,7 +217,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This special node sets the adventure time forward.
 --------------------
 Start General Timer
 Unused
@@ -234,7 +234,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+One of the party's special encounter timers is activated. Each move taken, the timer goes down by 1. When it runs out, a scenario special node is called (even if the party enters or leaves town).
 --------------------
 Play a Sound
 Unused
@@ -251,7 +251,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Plays one of the game's sounds.
 --------------------
 Change Horse Possession
 Unused
@@ -268,7 +268,7 @@ Owned by party?
 Unused
 Unused
 Special to Jump To
-
+Makes a horse the party's property (or not).
 --------------------
 Change Boat Possession
 Unused
@@ -285,7 +285,7 @@ Owned by party?
 Unused
 Unused
 Special to Jump To
-
+Makes a boat the party's property (or not).
 --------------------
 Show/Hide Town
 Unused
@@ -302,7 +302,7 @@ Town visible?
 Unused
 Unused
 Special to Jump To
-
+This either makes a party know a town is there, or hide it so they can't enter it anymore. This can be accompanied by one or two messages, if you wish.
 --------------------
 Major Event Has Occurred
 Unused
@@ -319,7 +319,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+A major event is recorded as having occurred on the current day.
 --------------------
 Forced Give
 Unused
@@ -336,7 +336,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This places an item in the party's inventory, whether or not it's too heavy for them to carry. It only fails to give the item if there is absolutely no room in their inventory.
 --------------------
 Buy Items of Type
 Unused
@@ -353,7 +353,7 @@ Amount to pay for each item
 Unused
 Unused
 Special to Jump To
-
+All items that belong to the given special class are taken from the party. For each item taken, the party gets some gold. This can be accompanied by one or two messages, if you wish.
 --------------------
 Call Global Special
 Unused
@@ -370,7 +370,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This node does nothing itself. However, its Jump To node specifies a scenario special node, not a town or outdoors special node. This is how you call a scenario special node when in town or outdoors.
 --------------------
 Set Many Flags
 Stuff Done Flag Part A
@@ -387,7 +387,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This node sets 50 Stuff Done flags to a desired value.
 --------------------
 Copy Flag
 Stuff Done Flag Part A
@@ -404,7 +404,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This sets one Stuff Done flag equal to another.
 --------------------
 Display Picture
 Unused
@@ -421,7 +421,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Shows a dialog with a large picture and a title.
 --------------------
 Have a Rest
 Unused
@@ -438,7 +438,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+If the party is in combat or if the party is in town and there was just combat going on, nothing happens. Otherwise, the party gets rested. Some time passes, and their health and spell points are restored.
 --------------------
 Display Message with Title
 Unused
@@ -455,7 +455,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This is similar to a Display Message node, but lets you specify a title string and choose an icon.
 --------------------
 End Scenario
 Unused
@@ -472,7 +472,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Every scenario should call a node of this type at least once. When called, the scenario immediately ends, and the player will be returned to the starting screen, with the option of saving the game.
 --------------------
 Set Pointer
 Stuff Done Flag Part A
@@ -489,7 +489,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This sets a pointer to point to a Stuff Done Flag. Once pointer N points to a given Stuff Done Flag, the value -N placed in any special node field will be replaced by the value of that Stuff Done Flag.
 --------------------
 Set/Retrieve Campaign Flag
 Stuff Done Flag Part A
@@ -506,7 +506,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This allows you to set or retrieve information that persists between scenarios. Campaign flags are a lot like stuff done flags, except that each scenario only gets 25x25 flags. (If you need more, you can pretend to be multiple scenarios.)
 --------------------
 Debug Print Numbers
 Unused|Stuff Done Flag Part A
@@ -523,7 +523,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This is a utility node for debugging your scenario. If debug mode is not enabled, it does nothing. If debug mode is enabled, it prints out three numbers to the text area, much like Display Small Message.
 --------------------
 Multiplication
 Result Stuff Done Flag Part A
@@ -540,7 +540,7 @@ Second SDF part A, or second number
 Second SDF part B, or -1 for literal number
 Unused
 Special to Jump To
-
+Multiplies values and stores the result in a Stuff Done Flag.
 --------------------
 Division
 Result Stuff Done Flag Part A
@@ -557,7 +557,7 @@ Second SDF part A, or second number
 Second SDF part B, or -1 for literal number
 Remainder Stuff Done Flag Part B
 Special to Jump To
-
+Divides values and stores the results in Stuff Done Flags.
 --------------------
 Exponentiation
 Result Stuff Done Flag Part A
@@ -574,7 +574,7 @@ Second SDF part A, or second number
 Second SDF part B, or -1 for literal number
 Unused
 Special to Jump To
-
+Raises a number to a power and stores the result in a Stuff Done Flag. Note that the maximum value that can be stored in a Stuff Done Flag is 255, and this special node has no way to get around that.
 --------------------
 Change Terrain
 Unused
@@ -591,7 +591,7 @@ Terrain to change to
 Unused
 Unused
 Special to Jump To
-
+Changes a space to a given terrain type.
 --------------------
 Swap Terrain
 Unused
@@ -608,7 +608,7 @@ Swap this terrain ...
 With this terrain ...
 Unused
 Special to Jump To
-
+Changes a space from a given terrain type to another, or back.
 --------------------
 Transform Terrain
 Unused
@@ -625,7 +625,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+If the terrain in a given space has a terrain type given in the Transform To What field, it is changed to that terrain type.
 --------------------
 Clear String Buffer
 Unused
@@ -642,7 +642,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Clears the string buffer. It's best to always do this before you use the buffer. The buffer is never automatically cleared, but it is not saved, so if the user reloads from a saved game, anything that was in the buffer will be lost.
 --------------------
 Append String to Buffer
 Unused
@@ -659,7 +659,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Appends a literal string to the string buffer.
 --------------------
 Append Number to Buffer
 Unused
@@ -676,9 +676,9 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Appends a literal number to the string buffer.
 --------------------
-Append Monster/PC Name to Buffer
+Append Monster Name to Buffer
 Unused
 Unused
 Unused
@@ -693,7 +693,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Appends the name of a monster or PC to the string buffer.
 --------------------
 Append Item Name to Buffer
 Unused
@@ -710,7 +710,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Appends the name of an item type to the string buffer.
 --------------------
 Append Terrain Name to Buffer
 Unused
@@ -727,7 +727,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Appends the name of a terrain type to the string buffer.
 --------------------
 Pause
 Unused
@@ -744,7 +744,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Pause the action for some amount of time. This could be useful in a cutscene, for example.
 --------------------
 Start Conversation
 Unused
@@ -761,7 +761,7 @@ Unused
 Unused
 Unused
 Unused
-
+This special node allows you to force a conversation to start. You can use it if you want someone other than the party to initiate the conversation, or if you want a conversation outdoors. If you use this outdoors, you should avoid specifying a personality that can call a town special node.
 --------------------
 Update Quest
 Unused
@@ -778,7 +778,7 @@ Unused|Job Board Source|Job Board Anger
 Unused
 Unused
 Special to Jump To
-
+This special node allows you to set the status of one of the scenario's quests or jobs.
 --------------------
 Swap String Buffer
 Unused
@@ -795,7 +795,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This special node swaps the active string buffer with a secondary string buffer. Keep in mind that these changes are not saved with the saved game.
 --------------------
 Alter Sign Text
 Unused
@@ -812,7 +812,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This special node swaps contents of the active string buffer with the text of a sign on the map. Keep in mind that these changes are not saved with the saved game.
 --------------------
 Special Name
 sdf1

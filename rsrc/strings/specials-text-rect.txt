@@ -13,7 +13,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
-
+Fills the rectangle with some sort of field, barrier, object, or sfx. This only works in town.
 --------------------
 Set Explored
 0 - clear, 1 - explore
@@ -30,7 +30,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
-
+This node alters your map, marking spaces as having been explored or not.
 --------------------
 Move Items
 X of space to move to
@@ -47,7 +47,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
-
+Moves all of the items in the rectangle to a specified space. Items inside containers are not moved. This only works in town.
 --------------------
 Destroy Items
 Unused
@@ -64,7 +64,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
-
+Destroys all of the items in the rectangle. Be careful not to destroy something the party needs to finish the scenario. Only works in town.
 --------------------
 Change Rectange Terrain
 Terrain to change to
@@ -81,7 +81,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
-
+Changes the terrain in the rectangle to a given terrain type.
 --------------------
 Swap Rectangle Terrain
 Switch this ter. type
@@ -98,7 +98,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
-
+Changes the terrain in the rectangle from a given terrain type to another, or back.
 --------------------
 Transform Rectangle Terrain
 Unused
@@ -115,7 +115,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
-
+Every square of terrain in the rectangle given is changed to the terrain type given in its Transform To What field.
 --------------------
 Lock Rectangle
 Unused
@@ -132,7 +132,7 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
-
+If the terrain in the rectangle has Special Type lockable, it becomes locked (i.e. is changed to its locked terrain type).
 --------------------
 Unlock Rectangle
 Unused
@@ -149,5 +149,5 @@ Bottom of rectangle
 Right of rectangle
 Unused
 Special to Jump To
-
+If the terrain in the rectangle has Special Type unlockable, it becomes unlocked (i.e. is changed to its locked terrain type).
 --------------------

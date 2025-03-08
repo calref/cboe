@@ -13,7 +13,7 @@ Amount of food to give
 Special if item not given
 Unused
 Special to Jump To
-
+An item is given to the party (specifically, to the first character who can carry it). Gold and food can also be given. If the party cannot carry another item, the Stuff Done flag is not set to 250. This can be accompanied by one or two messages, if you wish.
 --------------------
 One-Time Give Special Item
 Stuff Done Flag Part A
@@ -30,7 +30,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Gives the party one of the scenario's special items. This can be accompanied by one or two messages, if you wish.
 --------------------
 One-Time Do Nothing
 Stuff Done Flag Part A
@@ -47,7 +47,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+If the Stuff Done flag is set to 250, this node ends the special encounter. Otherwise, it just calls the Jump To node.
 --------------------
 One-Time and Set
 Stuff Done Flag Part A
@@ -64,7 +64,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+If the Stuff Done flag is set to 250, this node ends the special encounter. Otherwise, it sets the Stuff Done flag to 250 and calls the Jump To node.
 --------------------
 One-Time Text Message
 Stuff Done Flag Part A
@@ -81,7 +81,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Displays one or two message strings and sets the Stuff Done Flag to 250.
 --------------------
 One-Time Display Dialog
 Stuff Done Flag Part A
@@ -98,7 +98,7 @@ Label of 3rd button (-1 - no button)
 Special if button 3 pressed
 Picture animation FPS (-1 for default 2)
 Special if OK/Leave picked
-
+This very important special node displays a dialog box with up to six text messages and a picture in the upper left. The lower right hand corner can have up to 3 buttons. The player must press a button, at which point another special node will be called. You choose a special node to call for each button.
 --------------------
 Unused Node
 Unused
@@ -149,7 +149,7 @@ Amount of food to give
 Special if item IS taken
 Picture animation FPS (-1 for default 2)
 Special to Jump To
-
+Displays a dialog box with up to six text  messages and a picture in the upper left. At the lower right hand corner are two buttons: Take and Leave. If take is pressed, the party is given an item. If the item is taken, the Stuff Done flag is set to 250, and a specified special node will then be called. Otherwise, the special encounter ends immediately and the Stuff Done flag is not set.
 --------------------
 Unused Node
 Unused
@@ -200,7 +200,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+This node only has an effect when called while walking outdoors. It places a special outdoor wandering encounter in a random open space near the party. This can be accompanied by one or two messages, if you wish.
 --------------------
 One-Time Place Town Enc.
 Stuff Done Flag Part A
@@ -217,7 +217,7 @@ Unused
 Unused
 Unused
 Special to Jump To
-
+Activates all monsters in town in the specified Special Encounter Group. If no monsters in that group are left, the encounter has no effect. This can be accompanied by one or two messages, if you wish.
 --------------------
 One-Time Trap
 Stuff Done Flag Part A
@@ -234,5 +234,5 @@ Penalty (0 .. 100, higher is harder)
 Unused|Special node for effect
 Picture animation FPS (-1 for default 2)
 Special after trap finished
-
+Brings up a dialog saying the party has found a trap, and asking if they want to disarm it. If they say no, the special ends immediately, and, if they're walking, they can't enter the space. Otherwise, they must select a character to disarm it. Once disarmed (or triggered) the Jump To special is called.
 --------------------
