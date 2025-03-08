@@ -36,7 +36,8 @@ struct TextStyle {
 	int pointSize = 10, lineHeight = 10;
 	sf::Color colour;
 	TextStyle() : colour(sf::Color::Black) {}
-	void applyTo(sf::Text& text, double scale = 1.0);
+	void applyTo(sf::Text& text, double scale = 1.0) const;
+	mutable std::map<std::string, location> measurementCache;
 };
 
 // elements: std::make_tuple(last_line_break, last_word_break, line_width)
@@ -63,6 +64,6 @@ void clear_scale_aware_text(sf::RenderTexture& texture);
 void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style,bool right_align = false);
 void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style, break_info_t break_info,bool right_align = false);
 break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextStyle style);
-size_t string_length(std::string str, TextStyle style, short* height = nullptr);
+size_t string_length(std::string str, const TextStyle& style, short* height = nullptr);
 
 #endif
