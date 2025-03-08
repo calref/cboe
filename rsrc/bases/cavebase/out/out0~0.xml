@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<sector boes="2.0.0">
+    <name>Area name</name>
+    <comment>Comment</comment>
+    <sign id="0">
+        <![CDATA[Warrior's Grove]]>
+    </sign>
+</sector>
