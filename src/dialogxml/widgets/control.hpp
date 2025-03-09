@@ -66,6 +66,7 @@ enum eControlType {
 	CTRL_SCROLL,///< A scrollbar
 	CTRL_PANE,	///< A scroll pane
 	CTRL_MAP,   ///< A 2-dimensional grid of identical controls
+	CTRL_LINE,  ///< Just a line connecting two points
 };
 
 enum ePosition {

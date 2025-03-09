@@ -11,6 +11,7 @@
 #include "dialogxml/widgets/button.hpp"
 #include "dialogxml/widgets/field.hpp"
 #include "dialogxml/widgets/ledgroup.hpp"
+#include "dialogxml/widgets/line.hpp"
 #include "dialogxml/widgets/message.hpp"
 #include "dialogxml/widgets/pict.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
@@ -48,6 +49,10 @@ bool cContainer::parseChildControl(ticpp::Element& elem, std::map<std::string,cC
 		auto led = getDialog()->parse<cLed>(elem, *this);
 		inserted = controls.insert(led).first;
 		id = led.first;
+	} else if(tag == "line") {
+		auto line = getDialog()->parse<cConnector>(elem, *this);
+		inserted = controls.insert(line).first;
+		id = line.first;
 	} else if(tag == "group") {
 		auto group = getDialog()->parse<cLedGroup>(elem, *this);
 		inserted = controls.insert(group).first;

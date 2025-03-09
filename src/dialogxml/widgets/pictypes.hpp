@@ -33,6 +33,7 @@ enum ePicType {
 	PIC_TER_MAP = 15,			///< 12x12 map graphic from the terrain map sheet, expanded to 24x24
 	PIC_STATUS = 16,			///< 12x12 status icon
 	PIC_TINY_ITEM = 17,			///< 18x18 item graphic from the small item sheet
+	PIC_BTN = 18,				///< Button graphic from the inventory buttons sheet (various sizes)
 	PIC_MONST_WIDE = 23,		///< 56x36 monster graphic from the preset sheets, resized to fit and centred in a 28x36 space
 	PIC_MONST_TALL = 43,		///< 28x72 monster graphic from the preset sheets, resized to fit and centred in a 28x36 space
 	PIC_MONST_LG = 63,			///< 56x72 monster graphic from the preset sheets, resized to fit in a 28x36 space
@@ -93,6 +94,7 @@ enum eSheetType {
 	SHEET_TER_MAP,	///< The terrain map icons sheet, termap.png
 	SHEET_FULL,		///< Any full sheet
 	SHEET_STATUS,	///< The status icons sheet, staticons.png
+	SHEET_INVENBTN,	///< Inventory buttons sheet, invenbtns.png
 	SHEET_CUSTOM,	///< Any custom graphics sheet
 	// TODO: Vehicle sheet is missing.
 	// TODO: Documentation of full, custom, header, and exported sheets is still lacking.

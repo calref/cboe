@@ -4,12 +4,31 @@
 <dialog defbtn='okay'>
 	<pict type='dlog' num='24' top='8' left='8'/>
 	<text top='10' left='52' width='292' height='16'>BLADES OF EXILE HELP: OUTDOOR COMMANDS</text>
-	<text top='31' left='65' width='456' height='34'>
+	<text top='31' left='65' width='420' height='34'>
 		To move, click on the terrain screen in the direction you want to move, or use the keypad.
 		To wait, click on your party.
 		The buttons on the bottom act as follows:
 	</text>
-	<pict type='full' num='1400' top='68' left='118' width='320' height='125'/>
+	<pict name='toolbar' type='blank' outline='solid' color='white' top='68' left='118' width='320' height='125'/>
+	<pict name='ztoolbar' anchor='toolbar' relative='pos-in' type='full' framed='false' num='1400' top='56' left='23' width='266' height='38'/>
+	<text name='zheader' anchor='toolbar' relative='pos-in' color='black' top='4' left='0'>Town Commands:</text>
+	<text name='zparen' anchor='toolbar' relative='pos-in' color='black' top='14' left='10' width='280' size='10' font='plain'>
+		(keyboard shortcut follows in parenthesis)
+	</text>
+	<text name='zlabel1' anchor='toolbar' relative='pos-in' color='black' top='30' left='27' size='9' font='plain'>Cast Priest (p)</text>
+	<line name='zline1' anchor='toolbar' relative='pos-in' top='44' left='79' width='0' height='12' color='black'/>
+	<text name='zlabel2' anchor='toolbar' relative='pos-in' color='black' top='30' left='130' size='9' font='plain'>Display AutoMap (a)</text>
+	<line name='zline2' anchor='toolbar' relative='pos-in' top='44' left='199' width='0' height='12' color='black'/>
+	<text name='zlabel3' anchor='toolbar' relative='pos-in' color='black' top='0' left='240' width='90' size='9' font='plain'>Load Game<br/>(PC: Ctrl-O)<br/>(Mac: Cmd-O)</text>
+	<line name='zline3' anchor='toolbar' relative='pos-in' top='44' left='274' width='0' height='12' color='black'/>
+	<text name='zlabel4' anchor='toolbar' relative='pos-in' color='black' top='105' left='-2' size='9' font='plain'>Cast Mage (m)</text>
+	<line name='zline4' anchor='toolbar' relative='pos-in' top='94' left='42' width='0' height='13' color='black'/>
+	<text name='zlabel5' anchor='toolbar' relative='pos-in' color='black' top='105' left='81' size='9' font='plain'>Look (l)</text>
+	<line name='zline5' anchor='toolbar' relative='pos-in' top='94' left='113' width='0' height='13' color='black'/>
+	<text name='zlabel6' anchor='toolbar' relative='pos-in' color='black' top='105' left='140' size='9' font='plain'>Rest (r)</text>
+	<line name='zline6' anchor='toolbar' relative='pos-in' top='94' left='162' width='0' height='13' color='black'/>
+	<text name='zlabel7' anchor='toolbar' relative='pos-in' color='black' top='90' left='196' width='134' size='9' font='plain'>Save Game<br/>(PC: Ctrl-S Mac: Cmd-S)</text>
+	<line name='zline7' anchor='toolbar' relative='pos-in' top='94' left='241' width='0' height='11' color='black'/>
 	<text top='209' left='69' width='417' height='33'>
 		To read a sign or search something, stand adjacent to it and look at it.
 		To enter a town/dungeon/tower/pit. etc., move onto it.
