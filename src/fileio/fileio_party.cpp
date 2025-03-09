@@ -458,7 +458,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, bool manual){
 	return true;
 }
 
-static bool save_party_const(const cUniverse& univ, bool save_as, fs::path dest_file = "") {
+static bool save_party_const(const cUniverse& univ, fs::path dest_file = "") {
 	// Make sure it has the proper file extension
 	if(dest_file.empty()){
 		dest_file = univ.file;
@@ -569,11 +569,11 @@ bool save_party(cUniverse& univ, bool save_as) {
 	}
 	// A file wasn't chosen
 	if(univ.file.empty()) return false;
-	return save_party_const(univ, save_as);
+	return save_party_const(univ);
 }
 
 bool save_party_force(cUniverse& univ, fs::path file) {
-	return save_party_const(univ, false, file);
+	return save_party_const(univ, file);
 }
 
 static bool compare_mtime(std::pair<fs::path, std::time_t> a, std::pair<fs::path, std::time_t> b) {

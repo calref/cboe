@@ -228,7 +228,7 @@ static bool load_prefs(fs::path fpath) {
 extern fs::path tempDir;
 bool sync_prefs() {
 	#ifdef SFML_SYSTEM_MACOS
-	bool sync_prefs_mac();
+	extern bool sync_prefs_mac();
 	if(!was_replaying){
 		return sync_prefs_mac();
 	}

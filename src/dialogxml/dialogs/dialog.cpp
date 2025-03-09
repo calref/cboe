@@ -1185,7 +1185,7 @@ void preview_dialog_xml(fs::path dialog_xml) {
 		// Make every clickable control's click event close the dialog
 		for (auto control : dialog){
 			try{
-				control.second->attachClickHandler([](cDialog& me, std::string item_hit, eKeyMod mod) -> bool {
+				control.second->attachClickHandler([](cDialog& me, std::string, eKeyMod) -> bool {
 					me.toast(false);
 					return true;
 				});

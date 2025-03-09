@@ -107,7 +107,7 @@ short store_cur_pc = -1;
 
 // For healing shops, other PCs might be able to buy something if
 // the active PC can't
-bool start_shop_mode_other_pc(bool allow_empty = false) {
+static bool start_shop_mode_other_pc(bool allow_empty = false) {
 	// The shop might change the current PC multiple times, but we want to restore
 	// it to the original active PC when shopping ends, so only store if we're
 	// not yet storing
@@ -129,6 +129,7 @@ bool start_shop_mode_other_pc(bool allow_empty = false) {
 		}
 	}
 	if(!other_pc_can_buy && allow_empty){
+		univ.cur_pc = pc_buying;
 		start_shop_mode(active_shop_num,active_shop.getCostAdjust(),save_talk_str1,false,true);
 	}
 	return other_pc_can_buy;

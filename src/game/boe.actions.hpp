@@ -39,6 +39,7 @@ void handle_death();
 void start_new_game(bool force = false);
 void start_tutorial();
 location get_cur_direction(location the_point);
+void outd_move_to_first_town_entrance(int town);
 bool outd_move_party(location destination,bool forced);
 bool town_move_party(location destination,short forced);
 bool someone_poisoned();

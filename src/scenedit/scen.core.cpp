@@ -257,13 +257,6 @@ bool pick_string(std::string from_file, cDialog& parent, std::string result_fld,
 	return true;
 }
 
-static bool show_help(std::string from_file, cDialog& parent, pic_num_t pic){
-	StringList strings = *ResMgr::strings.get(from_file);
-	cThreeChoice help(strings,basic_buttons[1],pic,PIC_DLOG,&parent);
-	help.show();
-	return true;
-}
-
 static bool pick_ter_flag(cDialog& me, std::string id, eKeyMod) {
 	if(id == "editspec") {
 		int which_type = me["flag2"].getTextAsNum();

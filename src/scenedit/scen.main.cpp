@@ -430,7 +430,7 @@ void redraw_everything() {
 	restore_cursor();
 }
 
-void show_outdated_warning() {
+static void show_outdated_warning() {
 	std::string outdated_help1 = "The information in the following help window is extremely outdated! The most up-to-date documentation for OpenBoE is here:";
 	std::string outdated_help2 = "https://openboe.com/docs";
 

@@ -1793,7 +1793,7 @@ void handle_keystroke(sf::Event event) {
 	mouse_button_held = false;
 }
 
-bool handle_outdoor_sec_shift(int dx, int dy){
+static bool handle_outdoor_sec_shift(int dx, int dy){
 	if(editing_town) return false;
 	int new_x = cur_out.x + dx;
 	int new_y = cur_out.y + dy;

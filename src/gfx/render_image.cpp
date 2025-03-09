@@ -126,6 +126,8 @@ void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,const 
 std::map<sf::RenderTexture*,std::vector<ScaleAwareText>> store_scale_aware_text;
 std::map<sf::RenderTexture*,rectangle> store_clip_rects;
 
+static const bool DEBUG_SCALE_AWARE_TEXT = false;
+
 static void draw_stored_scale_aware_text(sf::RenderTexture& texture, sf::RenderTarget& dest_window, rectangle targ_rect) {
 	// Temporarily switch target window to its unscaled view to draw scale-aware text
 	sf::View scaled_view = dest_window.getView();
@@ -143,7 +145,7 @@ static void draw_stored_scale_aware_text(sf::RenderTexture& texture, sf::RenderT
 			rect.right *= get_ui_scale();
 			rect.offset(scaled_top_left.x, scaled_top_left.y);
 			// For debugging:
-			if(false)
+			if(DEBUG_SCALE_AWARE_TEXT)
 				frame_rect(dest_window, rect, Colours::RED);
 			clip_rect(dest_window, rect);
 		}

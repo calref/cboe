@@ -60,6 +60,9 @@ static NSUserDefaults* getCurrentDefaults() {
 	return [NSUserDefaults standardUserDefaults];
 }
 
+// No push - ignore until end of file
+#pragma clang diagnostic ignored "-Wmissing-prototypes"
+
 void set_pref_mac(std::string keypath, bool value) {
 	[getCurrentDefaults() setBool: value forKey: convertKey(keypath)];
 }

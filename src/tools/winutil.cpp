@@ -7,6 +7,12 @@
 // BoE application windows (because they should probably default to match each other).
 double fallback_scale() {
 	static double scale = 0;
+	// Suppress the float comparison warning.
+	// We know it's safe here - we're just comparing static values.
+	#ifdef __GNUC__
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Wfloat-equal"
+	#endif
 	if(scale == 0){
 		sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 
@@ -29,6 +35,9 @@ double fallback_scale() {
 	if(scale == 0){
 		scale = 1.0;
 	}
+	#ifdef __GNUC__
+	#pragma GCC diagnostic pop
+	#endif
 
 	return scale;
 }

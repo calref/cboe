@@ -1311,6 +1311,7 @@ static void handle_party_death() {
 }
 
 void screen_shift(int dx, int dy, bool& need_redraw) {
+	(void) need_redraw; // Mark the variable unused
 	if(abs(dx) + abs(dy) == 0)
 		return;
 
@@ -2162,8 +2163,6 @@ void debug_magic_map() {
 	print_buf();
 }
 
-extern void outd_move_to_first_town_entrance(int town);
-
 void debug_enter_town() {
 	if(recording){
 		record_action("debug_enter_town", "");
@@ -2384,7 +2383,7 @@ std::map<char,key_action_t> debug_actions;
 std::map<char,key_action_t> startup_debug_actions;
 std::vector<std::vector<char>> debug_actions_help_order;
 
-void add_debug_action(std::vector<char> keys, std::string name, void (*action)(), bool startup_safe = false) {
+static void add_debug_action(std::vector<char> keys, std::string name, void (*action)(), bool startup_safe = false) {
 	key_action_t shortcut = {keys, name, action};
 	for(char ch: keys){
 		debug_actions[ch] = shortcut;
@@ -2523,7 +2522,7 @@ void init_debug_actions() {
 }
 
 // Later we might want to know whether the key is used or not
-bool handle_debug_key(char key) {
+static bool handle_debug_key(char key) {
 	if(!univ.debug_mode && key != 'D')
 		return false;
 	if(overall_mode == MODE_STARTUP){

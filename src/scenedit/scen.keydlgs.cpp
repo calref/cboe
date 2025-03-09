@@ -1310,6 +1310,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		case eSpecPicker::EVENT: store = choose_text_editable(scenario.evt_names, val, &me, "Select an event:"); break;
 		case eSpecPicker::ITEM_CLASS: store = choose_text_editable(scenario.ic_names, val, &me, "Select item class:"); break;
 		case eSpecPicker::JOB_BOARD: store = choose_text_editable(scenario.qb_names, val, &me, "Select a job board:"); break;
+		case eSpecPicker::POINTER: store = val; break; // TODO: Not implemented...
 		case eSpecPicker::NONE: return false;
 	}
 	me[field].setTextToNum(store);
@@ -1376,7 +1377,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 		"sdf1", "sdf2",
 	});
 	special["cancel"].attachClickHandler(std::bind(discard_spec_enc, _1, std::ref(edit_stack)));
-	special["node-help"].attachClickHandler([&edit_stack](cDialog& me, std::string item_hit, eKeyMod mods) {
+	special["node-help"].attachClickHandler([&edit_stack](cDialog& me, std::string, eKeyMod) {
 		eSpecType type = edit_stack.top().node.type;
 		const std::string& str = (*type).descr();
 		// TODO: This is the same dialog as give_help(), the only difference being that we don't have a string number!

@@ -324,5 +324,8 @@ void cButton::initPreset() {
 		case BTN_TRAIT:
 			setText("Race|& Traits");
 			break;
+		default:
+			// Other button types don't have prebaked text, so do nothing
+			break;
 	}
 }

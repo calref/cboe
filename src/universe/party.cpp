@@ -946,7 +946,7 @@ void cParty::readFrom(const cTagFile& file) {
 			for(size_t n = 0; n < page["SOULCRYSTAL"].size(); n++){
 				size_t slot;
 				mon_num_t monster;
-				auto tmp = page["SOULCRYSTAL"] >> slot >> monster;
+				page["SOULCRYSTAL"] >> slot >> monster;
 				imprisoned_monst[n] = monster;
 			}
 			
