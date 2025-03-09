@@ -1792,7 +1792,11 @@ public:
 };
 
 scen_header_type pick_a_scen() {
-	return cChooseScenario().run();
+	// build_scen_headers() can be slow.
+	set_cursor(watch_curs);
+	cChooseScenario dlg;
+	restore_cursor();
+	return dlg.run();
 }
 
 extern fs::path saveDir;
@@ -1822,6 +1826,47 @@ class cFilePicker {
 		cStack& stk = get_stack();
 		int num_pages = ceil((float)save_file_mtimes.size() / parties_per_page);
 		stk.setPageCount(num_pages);
+		// HACK: For some reason which should be fixed, the buttons and labels on subsequent pages
+		// aren't getting text on the static buttons and labels
+		std::string save_button_text = me["save1"].getText();
+		std::string ext_label_text = me["file1-extension-label"].getText();
+		std::string load_button_text = me["load1"].getText();
+		std::string auto_button_text = me["auto1"].getText();
+		std::string newer_label_text = me["auto1-more-recent"].getText();
+		for(int i = 0; i < stk.getPageCount(); ++i){
+			stk.setPage(i);
+			if(saving){
+				me["title-load"].hide();
+				me["title-auto"].hide();
+				me["file1"].setText(""); // Keep the frame
+					me["file1-extension-label"].setText(ext_label_text);
+				for(int i = 0; i < SLOTS_PER_PAGE; ++i){
+					me["save" + std::to_string(i+1)].setText(save_button_text);
+					me["load" + std::to_string(i+1)].hide();
+				}
+			}else{
+				if(picking_auto){
+					me["title-load"].hide();
+					std::string title = me["title-auto"].getText();
+					fs::path party_name = save_folder.filename();
+					party_name.replace_extension();
+					boost::replace_first(title, "{Folder}", party_name.string());
+					me["title-auto"].setText(title);
+				}else{
+					me["title-auto"].hide();
+				}
+				me["title-save"].hide();
+				me["file1-field"].hide();
+				me["file1-extension-label"].hide();
+				for(int i = 0; i < SLOTS_PER_PAGE; ++i){
+					me["save" + std::to_string(i+1)].hide();
+					me["load" + std::to_string(i+1)].setText(load_button_text);
+					me["auto" + std::to_string(i+1)].setText(auto_button_text);
+					me["auto" + std::to_string(i+1) + "-more-recent"].setText(newer_label_text);
+				}
+			}
+		}
+		stk.setPage(0);
 	}
 
 	void empty_slot(int idx) {
@@ -1963,6 +2008,7 @@ class cFilePicker {
 
 	void populate_page(int page) {
 		int parties_needed = min(save_file_mtimes.size(), (page+1) * parties_per_page);
+		set_cursor(watch_curs);
 		while(saves_loaded < parties_needed){
 			fs::path next_file = save_file_mtimes[saves_loaded].first;
 			cUniverse party_univ;
@@ -1971,6 +2017,7 @@ class cFilePicker {
 			}
 			saves_loaded++;
 		}
+		restore_cursor();
 
 		if(saving){
 			time_t now;
@@ -2034,9 +2081,11 @@ class cFilePicker {
 
 	bool changeSelectedPage(int dir) {
 		auto& stk = dynamic_cast<cStack&>(me["list"]);
+		cControl::storage_t field_storage = me["file1-field"].store();
 		// This stack doesn't loop. It's easier to implement loading the files one page at a time
 		// if I know we're not gonna jump from page 0 to the last page, leaving a gap in the vector.
 		stk.changeSelectedPage(dir);
+		me["file1-field"].restore(field_storage);
 		me["prev"].show();
 		me["next"].show();
 		if(stk.getPage() == 0){
@@ -2076,32 +2125,6 @@ public:
 
 	fs::path run() {
 		template_info_str = me["info1"].getText();
-
-		if(saving){
-			me["title-load"].hide();
-			me["title-auto"].hide();
-			me["file1"].setText(""); // Keep the frame
-			for(int i = 0; i < SLOTS_PER_PAGE; ++i){
-				me["load" + std::to_string(i+1)].hide();
-			}
-		}else{
-			if(picking_auto){
-				me["title-load"].hide();
-				std::string title = me["title-auto"].getText();
-				fs::path party_name = save_folder.filename();
-				party_name.replace_extension();
-				boost::replace_first(title, "{Folder}", party_name.string());
-				me["title-auto"].setText(title);
-			}else{
-				me["title-auto"].hide();
-			}
-			me["title-save"].hide();
-			me["file1-field"].hide();
-			me["file1-extension-label"].hide();
-			for(int i = 0; i < SLOTS_PER_PAGE; ++i){
-				me["save" + std::to_string(i+1)].hide();
-			}
-		}
 
 		me["cancel"].attachClickHandler(std::bind(&cFilePicker::doCancel, this));
 		me["find"].attachClickHandler(std::bind(&cFilePicker::doFileBrowser, this));

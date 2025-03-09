@@ -86,14 +86,14 @@ bool cStack::setPage(size_t n) {
 }
 
 void cStack::changeSelectedPage(int dir, bool loop) {
-	curPage += dir;
+	int newPage = curPage + dir;
 	if(loop){
-		if(curPage < 0) curPage += nPages;
-		else if(curPage >= nPages) curPage -= nPages;
+		if(newPage < 0) newPage += nPages;
+		else if(newPage >= nPages) newPage -= nPages;
 	}else{
-		curPage = minmax(0, nPages - 1, curPage);
+		newPage = minmax(0, nPages - 1, newPage);
 	}
-	setPage(curPage);
+	setPage(newPage);
 }
 
 size_t cStack::getPage() const {
@@ -161,7 +161,9 @@ cStack::cStack(iComponent& parent)
 	: cContainer(CTRL_STACK, parent)
 	, curPage(0)
 	, nPages(0)
-{}
+{
+	frameStyle = FRM_NONE;
+}
 
 void cStack::forEach(std::function<void(std::string,cControl&)> callback) {
 	for(auto ctrl : controls)
