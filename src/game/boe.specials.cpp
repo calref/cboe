@@ -3134,7 +3134,7 @@ void affect_spec(const runtime_state& ctx) {
 				showError("Alchemy is out of range.");
 				break;
 			}
-			univ.party.alchemy[spec.ex1a] = true;
+			univ.party.alchemy[spec.ex1a] = !spec.ex1b;
 			break;
 		case eSpecType::AFFECT_SOUL_CRYSTAL:
 			if(pc_num < 100) break;
