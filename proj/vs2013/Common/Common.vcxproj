@@ -206,6 +206,7 @@
     <ClCompile Include="..\..\..\src\dialogxml\widgets\field.cpp" />
     <ClCompile Include="..\..\..\src\dialogxml\widgets\led.cpp" />
     <ClCompile Include="..\..\..\src\dialogxml\widgets\ledgroup.cpp" />
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\line.cpp" />
     <ClCompile Include="..\..\..\src\dialogxml\widgets\message.cpp" />
     <ClCompile Include="..\..\..\src\dialogxml\widgets\pict.cpp" />
     <ClCompile Include="..\..\..\src\dialogxml\widgets\scrollbar.cpp" />
@@ -299,6 +300,7 @@
     <ClInclude Include="..\..\..\src\dialogxml\widgets\field.hpp" />
     <ClInclude Include="..\..\..\src\dialogxml\widgets\led.hpp" />
     <ClInclude Include="..\..\..\src\dialogxml\widgets\ledgroup.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\line.hpp" />
     <ClInclude Include="..\..\..\src\dialogxml\widgets\message.hpp" />
     <ClInclude Include="..\..\..\src\dialogxml\widgets\pict.hpp" />
     <ClInclude Include="..\..\..\src\dialogxml\widgets\pictypes.hpp" />

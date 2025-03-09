@@ -68,6 +68,7 @@ void cPict::init(){
 	drawPict()[PIC_PARTY_MONST_WIDE] = &cPict::drawPartyMonstWide;
 	drawPict()[PIC_PARTY_MONST_TALL] = &cPict::drawPartyMonstTall;
 	drawPict()[PIC_PARTY_MONST_LG] = &cPict::drawPartyMonstLg;
+	drawPict()[PIC_BTN] = &cPict::drawInvenBtn;
 }
 
 std::map<ePicType,void(cPict::*)(short,rectangle)>& cPict::drawPict(){
@@ -473,6 +474,8 @@ bool cPict::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::str
 			picType = PIC_TER_MAP;
 		else if(val == "status")
 			picType = PIC_STATUS;
+		else if(val == "btn")
+			picType = PIC_BTN;
 		else throw xBadVal(tagName, name, val, attr.Row(), attr.Column(), fname);
 		return true;
 	} else if(name == "num") {
@@ -593,6 +596,25 @@ void cPict::recalcRect() {
 			bounds.width() = 12;
 			bounds.height() = 12;
 			break;
+		case PIC_BTN:
+			switch(picNum) {
+				case 0: case 1:
+					bounds.width() = 12;
+					bounds.height() = 12;
+					break;
+				case 2: case 3: case 4: case 5:
+					bounds.width() = 14;
+					bounds.height() = 12;
+					break;
+				case 6: case 7: case 8: case 9:
+					bounds.width() = 30;
+					bounds.height() = 12;
+					break;
+				case 10: case 11:
+					bounds.width() = 35;
+					bounds.height() = 15;
+					break;
+			} break;
 		case PIC_FULL:
 		case PIC_CUSTOM_FULL:
 			if(drawScaled) break;
@@ -675,18 +697,12 @@ std::shared_ptr<const sf::Texture> cPict::getSheetInternal(eSheetType type, size
 		case SHEET_CUSTOM:
 			// TODO: Implement this
 			break;
+		case SHEET_INVENBTN:
+			sout << "invenbtns";
+			break;
 		case SHEET_FULL:
 			purgeable = true;
 			switch(n) {
-				case 1100:
-					sout << "invenhelp";
-					break;
-				case 1200:
-					sout << "stathelp";
-					break;
-				case 1300:
-					sout << "actionhelp";
-					break;
 				case 1400:
 					sout << "outhelp";
 					break;
@@ -697,7 +713,7 @@ std::shared_ptr<const sf::Texture> cPict::getSheetInternal(eSheetType type, size
 					sout << "townhelp";
 					break;
 				default:
-					// TODO: The scenario should be allowed to define a sheet1100.png without it being ignored in favour of invenhelp.png
+					// TODO: The scenario should be allowed to define a sheet1400.png without it being ignored in favour of outhelp.png
 					purgeable = false;
 					sout << "sheet" << n;
 			}
@@ -1349,6 +1365,29 @@ void cPict::drawPartyPc(short num, rectangle to_rect){
 	graf_pos_ref(from_gw, from_rect) = spec_scen_g.find_graphic(num, true);
 	if(filled) fill_rect(getWindow(), to_rect, fillClr);
 	rect_draw_some_item(*from_gw, from_rect, getWindow(), to_rect, sf::BlendAlpha);
+}
+
+void cPict::drawInvenBtn(short num, rectangle to_rect){
+	static rectangle from_rect[]{
+		{0, 1, 12, 13}, // pc info
+		{0, 13, 12, 25}, // pc switch
+		{12, 0, 24, 14}, // item use
+		{12, 14, 24, 28}, // item give
+		{12, 28, 24, 42}, // item drop
+		{12, 42, 24, 56}, // item info
+		{24, 0, 36, 30}, // ID
+		{36, 0, 48, 30}, // Sell
+		{48, 0, 60, 30}, // Enchant
+		{60, 0, 72, 30}, // Recharge
+		{0, 60, 15, 95}, // Special Items
+		{15, 60, 30, 95}, // Jobs
+	};
+	static const size_t n_pics = std::distance(std::begin(from_rect), std::end(from_rect));
+	if(num >= n_pics) return;
+	auto from_gw = getSheet(SHEET_INVENBTN);
+	if(!from_gw) return;
+	if(filled) fill_rect(getWindow(), to_rect, fillClr);
+	rect_draw_some_item(*from_gw, from_rect[num], getWindow(), to_rect, sf::BlendAlpha);
 }
 
 cPict::~cPict() {}

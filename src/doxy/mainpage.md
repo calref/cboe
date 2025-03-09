@@ -192,6 +192,7 @@ only if `size` is `large`. Can be either `true` or `false`, defaults to
 `false`.
 * `filled` - For transparent graphics, specifies whether to draw a solid
 black fill behind the icon
+* `color` - The colour of the solid fill. Defaults to black.
 * `def-key` - See **Common Attributes** above.
 
 The possible values for the `type` attribute are:

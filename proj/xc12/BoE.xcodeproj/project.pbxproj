@@ -276,6 +276,7 @@
 		91B3EF590F969F3000BF5B67 /* scen.townout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF40F969BA700BF5B67 /* scen.townout.cpp */; };
 		91B3EF5A0F969F3000BF5B67 /* scen.btnmg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF50F969BA700BF5B67 /* scen.btnmg.cpp */; };
 		91B3F1850F97894A00BF5B67 /* scen.graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B3EEF30F969BA700BF5B67 /* scen.graphics.cpp */; };
+		91B5BD1F2D7D3C2B00DF391F /* line.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91B5BD182D7D3A5400DF391F /* line.cpp */; };
 		91BC33821B4388E80008882C /* libz.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCA42011A8C467800E6A9A5 /* libz.1.tbd */; };
 		91BC33831B4388E80008882C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA118E7E500007B6799 /* Cocoa.framework */; };
 		91BC33841B4388E80008882C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 914B2AA218E7E500007B6799 /* OpenGL.framework */; };
@@ -859,6 +860,8 @@
 		91B3F10F0F9779D000BF5B67 /* sounds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sounds.cpp; sourceTree = "<group>"; };
 		91B3F11D0F97801F00BF5B67 /* mathutil.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mathutil.hpp; sourceTree = "<group>"; };
 		91B3F11E0F97801F00BF5B67 /* mathutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mathutil.cpp; sourceTree = "<group>"; };
+		91B5BD182D7D3A5400DF391F /* line.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = line.cpp; sourceTree = "<group>"; };
+		91B5BD192D7D3A5400DF391F /* line.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = line.hpp; sourceTree = "<group>"; };
 		91BC33971B439BEA0008882C /* files */ = {isa = PBXFileReference; lastKnownFileType = folder; path = files; sourceTree = "<group>"; };
 		91BFA3D61901B024001686E4 /* mask.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = mask.vert; sourceTree = "<group>"; };
 		91BFA3D81902AD78001686E4 /* tarball.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tarball.cpp; sourceTree = "<group>"; };
@@ -1106,6 +1109,7 @@
 				910BBAB50FB91A26001E34EA /* field.cpp */,
 				9149924725913E3F00B5BE97 /* led.cpp */,
 				9149924925913E3F00B5BE97 /* ledgroup.cpp */,
+				91B5BD182D7D3A5400DF391F /* line.cpp */,
 				910BBAB90FB91ADB001E34EA /* message.cpp */,
 				910BBAA90FB8F733001E34EA /* pict.cpp */,
 				9191460018E63D8E005CF3A4 /* scrollbar.cpp */,
@@ -1118,6 +1122,7 @@
 				910BBAB40FB91A26001E34EA /* field.hpp */,
 				9149924825913E3F00B5BE97 /* led.hpp */,
 				9149924A25913E3F00B5BE97 /* ledgroup.hpp */,
+				91B5BD192D7D3A5400DF391F /* line.hpp */,
 				910BBAB80FB91ADB001E34EA /* message.hpp */,
 				910BBAA80FB8F733001E34EA /* pict.hpp */,
 				913FB40A1A5C90840067B9D2 /* pictypes.hpp */,
@@ -2172,6 +2177,7 @@
 				919CC27E1B37743B00273FDA /* undo.cpp in Sources */,
 				919CC27F1B37744000273FDA /* winutil.mac.mm in Sources */,
 				D384F6A32C1B9D4000A806C3 /* replay.cpp in Sources */,
+				91B5BD1F2D7D3C2B00DF391F /* line.cpp in Sources */,
 				915473CF2C800AB000EB1C94 /* enchant.cpp in Sources */,
 				915AF9E81BBF8B5C008AEF49 /* scrollpane.cpp in Sources */,
 				91E128E71BC1E6DD00C8BE1D /* basicbtns.cpp in Sources */,
