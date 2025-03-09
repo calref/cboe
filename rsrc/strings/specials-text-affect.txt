@@ -398,7 +398,7 @@ Unused
 Unused
 Unused
 Which Recipe
-Unused
+1 - remove, 0 - give
 Unused
 Unused
 Unused
