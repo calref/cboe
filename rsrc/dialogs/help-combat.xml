@@ -2,10 +2,6 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay'>
-	<!--
-	 TODO: This dialog is very disorganized; clean it up
-	 TODO: Are full sheets referenced by number?
-	 -->
 	<pict type='dlog' num='24' top='9' left='9'/>
 	<text top='9' left='53' width='322' height='16'>BLADES OF EXILE HELP: COMBAT COMMANDS</text>
 	<text top='26' left='66' width='473' height='49'>
@@ -14,11 +10,7 @@
 		To have the PC stand ready, click on them.
 		The buttons on the bottom act as follows:
 	</text>
-	<text top='348' left='66' width='476' height='49'>
-		Outdoors, you can only end combat when all foes are dead.
-		In an outdoor combat, to flee, move everyone off the border of the battlefield.
-		To flee in town, leave combat mode and leave town.
-	</text>
+	<pict type='full' num='1401' top='66' left='147' width='320' height='125'/>
 	<text top='206' left='66' width='475' height='35'>
 		Make Active -
 		This either makes only current character active,
@@ -31,13 +23,11 @@
 		and being hasted increases it.
 		The cost of each action is ...
 	</text>
-	<!--
-	 TODO: Originally had top=79 width=100; if it doesn't work right in-game, try reverting to that.
-	 -->
-	<pict type='full' num='1401' top='66' left='147' width='320' height='125'/>
-	<!--
-	 TODO: Originally had top=242; if it doesn't work right in-game, try reverting to that.
-	 -->
 	<pict type='full' num='1300' top='232' left='284' width='275' height='100'/>
+	<text top='348' left='66' width='476' height='49'>
+		Outdoors, you can only end combat when all foes are dead.
+		In an outdoor combat, to flee, move everyone off the border of the battlefield.
+		To flee in town, leave combat mode and leave town.
+	</text>
 	<button name='okay' type='regular' top='403' left='500'>OK</button>
 </dialog>
