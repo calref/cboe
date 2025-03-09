@@ -7,7 +7,11 @@
 	<text top='29' left='61' width='394' height='33'>
 		This area lists the names of your party members, their health and magic points, and two buttons:
 	</text>
-	<pict type='full' num='1200' top='66' left='168' width='106' height='29'/>
+	<pict name='buttons' type='blank' outline='solid' color='white' top='66' left='168' width='106' height='29'/>
+	<pict name='zinfo1' anchor='buttons' relative='pos-in' filled='false' type='btn' num='0' top='3' left='6' framed='false'/>
+	<text name='zinfo2' anchor='buttons' relative='pos-in' top='0' left='17' color='black' size='9'>Character Info</text>
+	<pict name='zswitch1' anchor='buttons' relative='pos-in' filled='false' type='btn' num='1' top='16' left='6' framed='false'/>
+	<text name='zswitch2' anchor='buttons' relative='pos-in' top='14' left='17' color='black' size='9'>Switch Places</text>
 	<text top='102' left='61' width='401' height='46'>
 		To have two PCs switch places, click on their switch places buttons.
 		To get a full description of a character, click on the '?' button.

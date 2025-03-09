@@ -10,7 +10,30 @@
 		To have the PC stand ready, click on them.
 		The buttons on the bottom act as follows:
 	</text>
-	<pict type='full' num='1401' top='66' left='147' width='320' height='125'/>
+	<pict name='toolbar' type='blank' outline='solid' color='white' top='66' left='147' width='320' height='125'/>
+	<pict name='ztoolbar' anchor='toolbar' relative='pos-in' type='full' framed='false' num='1401' top='56' left='23' width='266' height='38'/>
+	<text name='zheader' anchor='toolbar' relative='pos-in' color='black' top='4' left='0'>Combat Commands:</text>
+	<text name='zparen' anchor='toolbar' relative='pos-in' color='black' top='14' left='10' width='280' size='10' font='plain'>
+		(keyboard shortcut follows in parenthesis)
+	</text>
+	<text name='zlabel1' anchor='toolbar' relative='pos-in' color='black' top='30' left='27' size='9' font='plain'>Cast Priest (p)</text>
+	<line name='zline1' anchor='toolbar' relative='pos-in' top='44' left='79' width='0' height='12' color='black'/>
+	<text name='zlabel2' anchor='toolbar' relative='pos-in' color='black' top='30' left='114' size='9' font='plain'>Parry (d)</text>
+	<line name='zline2' anchor='toolbar' relative='pos-in' top='44' left='146' width='0' height='12' color='black'/>
+	<text name='zlabel3' anchor='toolbar' relative='pos-in' color='black' top='30' left='189' size='9' font='plain'>Wait (w)</text>
+	<line name='zline3' anchor='toolbar' relative='pos-in' top='44' left='218' width='0' height='12' color='black'/>
+	<text name='zlabel4' anchor='toolbar' relative='pos-in' color='black' top='30' left='234' size='9' font='plain'>End Combat (e)</text>
+	<line name='zline4' anchor='toolbar' relative='pos-in' top='44' left='277' width='0' height='12' color='black'/>
+	<text name='zlabel5' anchor='toolbar' relative='pos-in' color='black' top='105' left='-2' size='9' font='plain'>Cast Mage (m)</text>
+	<line name='zline5' anchor='toolbar' relative='pos-in' top='94' left='42' width='0' height='13' color='black'/>
+	<text name='zlabel6' anchor='toolbar' relative='pos-in' color='black' top='105' left='81' size='9' font='plain'>Look (l)</text>
+	<line name='zline6' anchor='toolbar' relative='pos-in' top='94' left='113' width='0' height='13' color='black'/>
+	<text name='zlabel7' anchor='toolbar' relative='pos-in' color='black' top='105' left='151' size='9' font='plain'>Get (g)</text>
+	<line name='zline7' anchor='toolbar' relative='pos-in' top='94' left='188' width='0' height='13' color='black'/>
+	<text name='zlabel8' anchor='toolbar' relative='pos-in' color='black' top='105' left='189' size='9' font='plain'>Shoot (s)</text>
+	<line name='zline8' anchor='toolbar' relative='pos-in' top='94' left='223' width='0' height='13' color='black'/>
+	<text name='zlabel9' anchor='toolbar' relative='pos-in' color='black' top='105' left='235' size='9' font='plain'>Make Active (x)</text>
+	<line name='zline9' anchor='toolbar' relative='pos-in' top='94' left='276' width='0' height='13' color='black'/>
 	<text top='206' left='66' width='475' height='35'>
 		Make Active -
 		This either makes only current character active,
@@ -23,7 +46,32 @@
 		and being hasted increases it.
 		The cost of each action is ...
 	</text>
-	<pict type='full' num='1300' top='232' left='284' width='275' height='100'/>
+	<pict name='apcost' type='blank' outline='solid' color='white' top='232' left='284' width='275' height='100'/>
+	<text name='zheader2' anchor='apcost' relative='pos-in' color='black' size='11' underline='true' top='5' left='-2'>Action Point Cost:</text>
+	<text name='zaction1' anchor='apcost' relative='pos-in' color='black' size='10' font='plain' top='18' left='2'>Cast Mage Spell</text>
+	<text name='zpoints1' anchor='apcost' relative='pos-in' color='black' size='10' top='20' left='105'>6</text>
+	<text name='zaction2' anchor='apcost' relative='pos-in' color='black' size='10' font='plain' top='30' left='2'>Cast Priest Spell</text>
+	<text name='zpoints2' anchor='apcost' relative='pos-in' color='black' size='10' top='32' left='105'>5</text>
+	<text name='zaction3' anchor='apcost' relative='pos-in' color='black' size='10' font='plain' top='42' left='2'>Attack</text>
+	<text name='zpoints3' anchor='apcost' relative='pos-in' color='black' size='10' top='44' left='105'>4</text>
+	<text name='zaction4' anchor='apcost' relative='pos-in' color='black' size='10' font='plain' top='54' left='2'>Fire Arrow</text>
+	<text name='zpoints4' anchor='apcost' relative='pos-in' color='black' size='10' top='56' left='105'>3</text>
+	<text name='zaction5' anchor='apcost' relative='pos-in' color='black' size='10' font='plain' top='66' left='2'>Fire Thrown Missile</text>
+	<text name='zpoints5' anchor='apcost' relative='pos-in' color='black' size='10' top='68' left='105'>2</text>
+	<text name='zaction6' anchor='apcost' relative='pos-in' color='black' size='10' font='plain' top='78' left='2'>Get Items</text>
+	<text name='zpoints6' anchor='apcost' relative='pos-in' color='black' size='10' top='80' left='105'>4</text>
+	<text name='zaction7' anchor='apcost' relative='pos-in' color='black' size='10' font='plain' top='18' left='117' width='138'>Equip/Unequip Item</text>
+	<text name='zpoints7' anchor='apcost' relative='pos-in' color='black' size='10' top='20' left='230'>1</text>
+	<text name='zaction8' anchor='apcost' relative='pos-in' color='black' size='10' font='plain' top='30' left='117'>Drop Item</text>
+	<text name='zpoints8' anchor='apcost' relative='pos-in' color='black' size='10' top='32' left='230'>1</text>
+	<text name='zaction9' anchor='apcost' relative='pos-in' color='black' size='10' font='plain' top='42' left='117'>Give Item</text>
+	<text name='zpoints9' anchor='apcost' relative='pos-in' color='black' size='10' top='44' left='230'>1</text>
+	<text name='zaction10' anchor='apcost' relative='pos-in' color='black' size='10' font='plain' top='54' left='117'>Trade Places</text>
+	<text name='zpoints10' anchor='apcost' relative='pos-in' color='black' size='10' top='56' left='230'>1</text>
+	<text name='zaction11' anchor='apcost' relative='pos-in' color='black' size='10' font='plain' top='66' left='117'>Parry</text>
+	<text name='zpoints11' anchor='apcost' relative='pos-in' color='black' size='10' top='68' left='230' width='25'>All</text>
+	<text name='zaction12' anchor='apcost' relative='pos-in' color='black' size='10' font='plain' top='78' left='117'>Look</text>
+	<text name='zpoints12' anchor='apcost' relative='pos-in' color='black' size='10' top='80' left='230'>0</text>
 	<text top='348' left='66' width='476' height='49'>
 		Outdoors, you can only end combat when all foes are dead.
 		In an outdoor combat, to flee, move everyone off the border of the battlefield.

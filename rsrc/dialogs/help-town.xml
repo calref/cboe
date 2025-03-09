@@ -9,7 +9,28 @@
 		To wait, click on your party.
 		The action buttons (and the equivalent keys) are:
 	</text>
-	<pict type='full' num='1402' top='87' left='107' width='320' height='125'/>
+	<pict name='toolbar' type='blank' outline='solid' color='white' top='87' left='107' width='320' height='125'/>
+	<pict name='ztoolbar' anchor='toolbar' relative='pos-in' type='full' framed='false' num='1402' top='56' left='23' width='266' height='38'/>
+	<text name='zheader' anchor='toolbar' relative='pos-in' color='black' top='4' left='0'>Town Commands:</text>
+	<text name='zparen' anchor='toolbar' relative='pos-in' color='black' top='14' left='10' width='280' size='10' font='plain'>
+		(keyboard shortcut follows in parenthesis)
+	</text>
+	<text name='zlabel1' anchor='toolbar' relative='pos-in' color='black' top='30' left='27' size='9' font='plain'>Cast Priest (p)</text>
+	<line name='zline1' anchor='toolbar' relative='pos-in' top='44' left='79' width='0' height='12' color='black'/>
+	<text name='zlabel2' anchor='toolbar' relative='pos-in' color='black' top='30' left='155' size='9' font='plain'>Get (g)</text>
+	<line name='zline2' anchor='toolbar' relative='pos-in' top='44' left='185' width='0' height='12' color='black'/>
+	<text name='zlabel3' anchor='toolbar' relative='pos-in' color='black' top='30' left='211' size='9' font='plain'>Use (u)</text>
+	<line name='zline3' anchor='toolbar' relative='pos-in' top='44' left='225' width='0' height='12' color='black'/>
+	<text name='zlabel4' anchor='toolbar' relative='pos-in' color='black' top='105' left='-2' size='9' font='plain'>Cast Mage (m)</text>
+	<line name='zline4' anchor='toolbar' relative='pos-in' top='94' left='42' width='0' height='13' color='black'/>
+	<text name='zlabel5' anchor='toolbar' relative='pos-in' color='black' top='105' left='81' size='9' font='plain'>Look (l)</text>
+	<line name='zline5' anchor='toolbar' relative='pos-in' top='94' left='113' width='0' height='13' color='black'/>
+	<text name='zlabel6' anchor='toolbar' relative='pos-in' color='black' top='105' left='128' size='9' font='plain'>Talk (t)</text>
+	<line name='zline6' anchor='toolbar' relative='pos-in' top='94' left='151' width='0' height='13' color='black'/>
+	<text name='zlabel7' anchor='toolbar' relative='pos-in' color='black' top='105' left='185' size='9' font='plain'>Map (m)</text>
+	<line name='zline7' anchor='toolbar' relative='pos-in' top='94' left='225' width='0' height='13' color='black'/>
+	<text name='zlabel8' anchor='toolbar' relative='pos-in' color='black' top='105' left='226' width='94' size='9' font='plain'>Start Combat (f)</text>
+	<line name='zline8' anchor='toolbar' relative='pos-in' top='94' left='262' width='0' height='13' color='black'/>
 	<text top='227' left='61' width='428' height='49'>
 		When talking, looking, or using, first click on the appropriate button,
 		and then click on the space to act on.

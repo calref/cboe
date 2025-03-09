@@ -783,6 +783,9 @@
     <ClCompile Include="..\..\..\src\dialogxml\widgets\message.cpp">
       <Filter>DialogXML\Widgets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\dialogxml\widgets\line.cpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\dialogxml\widgets\ledgroup.cpp">
       <Filter>DialogXML\Widgets</Filter>
     </ClCompile>
@@ -1005,6 +1008,9 @@
       <Filter>DialogXML\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\dialogxml\widgets\message.hpp">
+      <Filter>DialogXML\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\dialogxml\widgets\line.hpp">
       <Filter>DialogXML\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\dialogxml\widgets\ledgroup.hpp">

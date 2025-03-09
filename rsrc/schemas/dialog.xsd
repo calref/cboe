@@ -18,6 +18,7 @@
 			<xs:enumeration value="full"/>
 			<xs:enumeration value="map"/>
 			<xs:enumeration value="status"/>
+			<xs:enumeration value="btn"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="btntype">
@@ -213,8 +214,8 @@
 		<xs:attribute name="num" type="xs:integer"/>
 		<xs:attributeGroup ref="rect-size"/>
 		<xs:attributeGroup ref="position"/>
-		<xs:attribute name="fill-color"/>
-		<xs:attribute name="fill-colour"/>
+		<xs:attribute name="color"/>
+		<xs:attribute name="colour"/>
 	</xs:complexType>
 	<xs:complexType mixed="true" name="button">
 		<xs:sequence>
@@ -252,6 +253,28 @@
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
+	<xs:complexType name="line">
+		<xs:attribute name="slope">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="positive"/>
+					<xs:enumeration value="negative"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="name" type="xs:token"/>
+		<xs:attribute name="size">
+			<xs:simpleType>
+				<xs:restriction base="xs:integer">
+					<xs:minInclusive value='2'/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="color"/>
+		<xs:attribute name="colour"/>
+		<xs:attributeGroup ref="rect-size"/>
+		<xs:attributeGroup ref="position"/>
+	</xs:complexType>
 	<xs:complexType name="slider">
 		<xs:attribute name="name" type="xs:token"/>
 		<xs:attribute name="max" type="xs:integer" use="required"/>
@@ -278,6 +301,7 @@
 			<xs:element name="pict" type="pict"/>
 			<xs:element name="button" type="button"/>
 			<xs:element name="led" type="led"/>
+			<xs:element name="line" type="line"/>
 			<xs:element name="group" type="ledGroup"/>
 			<xs:element name="slider" type="slider"/>
 			<xs:element name="page">
@@ -308,6 +332,7 @@
 			<xs:element name="pict" type="pict"/>
 			<xs:element name="button" type="button"/>
 			<xs:element name="led" type="led"/>
+			<xs:element name="line" type="line"/>
 			<xs:element name="group" type="ledGroup"/>
 			<xs:element name="mapgroup" type="ledGroup"/>
 			<xs:element name="slider" type="slider"/>
@@ -327,6 +352,7 @@
 			<xs:element name="pict" type="pict"/>
 			<xs:element name="button" type="button"/>
 			<xs:element name="led" type="led"/>
+			<xs:element name="line" type="line"/>
 			<xs:element name="group" type="ledGroup"/>
 			<xs:element name="slider" type="slider"/>
 		</xs:choice>
@@ -344,6 +370,7 @@
 				<xs:element name="pict" type="pict"/>
 				<xs:element name="button" type="button"/>
 				<xs:element name="led" type="led"/>
+			<xs:element name="line" type="line"/>
 				<xs:element name="group" type="ledGroup"/>
 				<xs:element name="slider" type="slider"/>
 				<xs:element name="stack" type="stack">
