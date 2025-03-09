@@ -35,6 +35,7 @@ def pack_scenario(target, source, env):
 env.Append(BUILDERS={"BuildScenario": Builder(action=pack_scenario, suffix=".boes", src_suffix="")})
 
 env.BuildScenario('#build/rsrc/bases/bladbase.boes', 'bases/bladbase/header.exs')
+env.BuildScenario('#build/rsrc/bases/cavebase.boes', 'bases/cavebase/header.exs')
 env.BuildScenario('#build/rsrc/scenarios/busywork.boes', 'scenarios/busywork/header.exs')
 env.BuildScenario('#build/rsrc/scenarios/valleydy.boes', 'scenarios/valleydy/header.exs')
 env.BuildScenario('#build/rsrc/scenarios/stealth.boes', 'scenarios/stealth/header.exs')

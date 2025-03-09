@@ -2058,6 +2058,7 @@
 				"$(SRCROOT)/../../rsrc/scenarios/valleydy",
 				"$(SRCROOT)/../../rsrc/scenarios/stealth",
 				"$(SRCROOT)/../../rsrc/scenarios/zakhazi",
+				"$(SRCROOT)/../../rsrc/bases/cavebase",
 			);
 			name = "Pack Scenarios";
 			outputPaths = (
@@ -2066,10 +2067,11 @@
 				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Scenarios/valleydy.boes",
 				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Scenarios/stealth.boes",
 				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Scenarios/zakhazi.boes",
+				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Base/cavebase.boes",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "test $SCRIPT_INPUT_FILE_COUNT -eq $SCRIPT_OUTPUT_FILE_COUNT || exit 1\nfor((i = 0; i < $SCRIPT_INPUT_FILE_COUNT; i++)); do\n\teval in=\\$SCRIPT_INPUT_FILE_$i\n\teval out=\\$SCRIPT_OUTPUT_FILE_$i\n\t../../pkg/pack-scenario.sh \"$in\" \"$out\"\ndone";
+			shellScript = "test $SCRIPT_INPUT_FILE_COUNT -eq $SCRIPT_OUTPUT_FILE_COUNT || exit 1\nfor((i = 0; i < $SCRIPT_INPUT_FILE_COUNT; i++)); do\n\teval in=\\$SCRIPT_INPUT_FILE_$i\n\teval out=\\$SCRIPT_OUTPUT_FILE_$i\n\t../../pkg/pack-scenario.sh \"$in\" \"$out\"\ndone\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
