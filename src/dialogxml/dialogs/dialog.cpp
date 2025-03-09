@@ -517,7 +517,7 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	}
 	// Make sure the requested size isn't insane.
 	auto desktop = sf::VideoMode::getDesktopMode();
-	if(winRect.width() > desktop.width || winRect.height() > desktop.height) {
+	if(winRect.width() > desktop.width * 1.5 || winRect.height() > desktop.height * 1.5) {
 		throw std::string("Dialog ") + fname + std::string(" requested a crazy window size of ") + std::to_string(winRect.width()) + "x" + std::to_string(winRect.height());
 	}
 	// Sometimes it seems like the Cocoa menu handling clobbers the active rendering context.
