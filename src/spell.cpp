@@ -392,12 +392,12 @@ cSpell S_DISPEL_FIELD = cSpell(eSpell::DISPEL_FIELD)
 	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).when(WHEN_TOWN).asPeaceful().finish();
 cSpell S_MOVE_MOUNTAINS_MASS = cSpell(eSpell::MOVE_MOUNTAINS_MASS)
 	.withRange(8).withRefer(REFER_TARGET).when(WHEN_TOWN).asPeaceful().finish();
-// TODO: These two have a range of 10 only because all monster spells do (monster spells ignore official spell range)
-// They should perhaps have better ranges assigned at some point.
+// I assigned Wrack a range of 6 because it's a weaker version of Wound
 cSpell S_WRACK = cSpell(eSpell::WRACK).asLevel(1)
-	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
+	.withRange(6).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
+// I assigned Unholy Ravaging a range of 12 because it seems like it makes sense to be the same as Ravage Enemies
 cSpell S_UNHOLY_RAVAGING = cSpell(eSpell::UNHOLY_RAVAGING).asLevel(6)
-	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
+	.withRange(12).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell S_ICY_RAIN = cSpell(eSpell::ICY_RAIN)
 	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell S_FLAME_AURA = cSpell(eSpell::FLAME_AURA)
