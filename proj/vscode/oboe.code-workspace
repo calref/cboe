@@ -1,0 +1,53 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		}
+	],
+	"extensions": {
+		"recommendations": [
+			"redhat.vscode-xml",
+			"ms-vscode.cpptools",
+		]
+	},
+	"settings": {
+		"xml.fileAssociations": [
+			{
+				"pattern": "scenario.xml",
+				"systemId": "${workspaceFolder}/rsrc/schemas/scenario.xsd"
+			},
+			{
+				"pattern": "items.xml",
+				"systemId": "${workspaceFolder}/rsrc/schemas/items.xsd"
+			},
+			{
+				"pattern": "monsters.xml",
+				"systemId": "${workspaceFolder}/rsrc/schemas/monsters.xsd"
+			},
+			{
+				"pattern": "terrain.xml",
+				"systemId": "${workspaceFolder}/rsrc/schemas/terrain.xsd"
+			},
+			{
+				"pattern": "town\\d+.xml",
+				"systemId": "${workspaceFolder}/rsrc/schemas/town.xsd"
+			},
+			{
+				"pattern": "talk\\d+.xml",
+				"systemId": "${workspaceFolder}/rsrc/schemas/dialogue.xsd"
+			},
+			{
+				"pattern": "out\\d+~\\d+.xml",
+				"systemId": "${workspaceFolder}/rsrc/schemas/outdoor.xsd"
+			},
+			{
+				"pattern": "rsrc/dialogs/*.xml",
+				"systemId": "${workspaceFolder}/rsrc/schemas/dialog.xsd"
+			},
+			{
+				"pattern": "rsrc/scenarios/*/dialogs/*.xml",
+				"systemId": "${workspaceFolder}/rsrc/schemas/dialog.xsd"
+			}
+		]
+	}
+}
