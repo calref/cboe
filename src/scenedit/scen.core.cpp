@@ -2988,7 +2988,7 @@ bool build_scenario() {
 		{"scenario-meta-format", "V2"}
 	};
 
-	fs::path basePath = progDir/"Blades of Exile Base"/"bladbase.boes";
+	fs::path basePath = progDir/"Blades of Exile Base"/(grass ? "bladbase.boes" : "cavebase.boes");
 	if(!fs::exists(basePath)) {
 		basePath = basePath.parent_path()/"bladbase.exs";
 		if(!fs::exists(basePath)) {
@@ -3007,56 +3007,6 @@ bool build_scenario() {
 		warriors_grove = base.towns[0];
 		std::swap(warriors_grove_shops, base.shops);
 		base.towns[0] = nullptr;
-		if(!grass) {
-			// Go through and replace all surface terrains with similar cave terrains
-			// Note that this assumes the default terrain set is unchanged.
-			for(int x = 0; x < warriors_grove->max_dim; x++) {
-				for(int y = 0; y < warriors_grove->max_dim; y++) {
-					ter_num_t ter_there = warriors_grove->terrain(x,y);
-					if(ter_there >= 36 && ter_there <= 49 && ter_there != 37) // Hills
-						ter_there = 0;
-					else if(ter_there >= 50 && ter_there <= 62) // Water
-						ter_there = 71;
-					else switch(ter_there) {
-						// Mountains
-						case 22: case 23: ter_there = 5; break;
-						case 24: ter_there = 6; break;
-						case 25: ter_there = 8; break;
-						case 26: ter_there = 9; break;
-						case 27: ter_there = 11; break;
-						case 28: ter_there = 12; break;
-						case 29: ter_there = 14; break;
-						case 30: ter_there = 15; break;
-						case 31: ter_there = 17; break;
-						case 32: ter_there = 18; break;
-						case 33: ter_there = 19; break;
-						case 34: ter_there = 20; break;
-						case 35: ter_there = 21; break;
-						// Water stuff
-						case 63: case 64: ter_there = 74; break;
-						case 65: case 66: case 67: ter_there = 73; break;
-						case 68: case 69: case 70: ter_there = 72; break;
-						// Rubble
-						case 87: case 88: case 89: ter_there -= 3; break;
-						// Vegetation and stuff
-						case 2: ter_there = 0; break;
-						case 3: case 4: ter_there = 1; break;
-						case 110: case 112: ter_there = 97; break;
-						case 111: ter_there = 96; break;
-						case 113: ter_there = 91; break;
-						case 114: case 37: ter_there = 98; break;
-						case 115: ter_there = 92; break;
-						case 118: ter_there = 94; break;
-						// Artificial stuff - walkways, fences, signs
-						case 83: ter_there = 82; break;
-						case 116: case 119: ter_there = 99; break;
-						case 117: case 120: ter_there = 100; break;
-						case 121: ter_there = 106; break;
-					}
-					warriors_grove->terrain(x,y) = ter_there;
-				}
-			}
-		}
 		if(med > 0) med--;
 		warriors_grove->reattach(scenario);
 	}
@@ -3066,85 +3016,76 @@ bool build_scenario() {
 	overall_mode = MODE_MAIN_SCREEN;
 	editing_town = false;
 	scenario.outdoors.resize(width, height);
+	ter_num_t sign_terrain = base.outdoors[0][0]->terrain[23][23];
+	ter_num_t town_terrain = base.outdoors[0][0]->terrain[24][24];
+	ter_num_t replace_terrain = scenario.ter_types[town_terrain].flag1;
+	base.outdoors[0][0]->terrain[23][23] = base.outdoors[0][0]->terrain[24][24] = replace_terrain;
 	for(int x = 0; x < width; x++) {
 		for(int y = 0; y < height; y++) {
 			scenario.outdoors[x][y] = new cOutdoors(scenario);
 			// Add borders
-			if(x == 0) {
-				for(int i = 0; i < 48; i++) {
-					scenario.outdoors[x][y]->terrain[0][i] = grass ? 23 : 5;
-					scenario.outdoors[x][y]->terrain[1][i] = grass ? 22 : 5;
-					scenario.outdoors[x][y]->terrain[2][i] = grass ? 22 : 5;
-					scenario.outdoors[x][y]->terrain[3][i] = grass ? 22 : 5;
-					if(grass)
-						scenario.outdoors[x][y]->terrain[4][i] = 36;
+			// We divide the base outdoors into 9 16x16 segments
+			// Top left segment goes at the top left of the top left sector.
+			// Bottom left segment goes at the bottom left of the bottom left sector.
+			// Top right segment goes at the top right of the top right sector.
+			// Bottom right segment goes at the bottom right of the bottom right sector.
+			// Top middle segment is duplicated along the top of each top sector.
+			// Bottom middle segment is duplicated along the bottom of each bottom sector.
+			// Left middle segment is duplicated along the left of each left sector.
+			// Right middle segment is duplicated along the right of each right sector.
+			// Central segment is duplicated everywhere else
+			// - EXCEPT FOR the tiles at 23,23 and 24,24 - these are both replaced by 24,24's hidden terrain
+			// - (The assumption being that 24,24 is a town terrain.)
+			for(int i = 0; i < 16; i++) {
+				// top left
+				for(int j = 0; j < 16; j++) {
+					scenario.outdoors[x][y]->terrain(i, j) = base.outdoors[0][0]->terrain(i + (x == 0 ? 0 : 16), j + (y == 0 ? 0 : 16));
+				}
+				// middle left
+				for(int j = 16; j < 32; j++) {
+					scenario.outdoors[x][y]->terrain(i, j) = base.outdoors[0][0]->terrain(i + (x == 0 ? 0 : 16), j);
+				}
+				// bottom left
+				for(int j = 32; j < 48; j++) {
+					scenario.outdoors[x][y]->terrain(i, j) = base.outdoors[0][0]->terrain(i + (x == 0 ? 0 : 16), j - (y == scenario.outdoors.height() - 1 ? 0 : 16));
 				}
 			}
-			if(x == width - 1) {
-				for(int i = 0; i < 48; i++) {
-					scenario.outdoors[x][y]->terrain[47][i] = grass ? 23 : 5;
-					scenario.outdoors[x][y]->terrain[46][i] = grass ? 22 : 5;
-					scenario.outdoors[x][y]->terrain[45][i] = grass ? 22 : 5;
-					scenario.outdoors[x][y]->terrain[44][i] = grass ? 22 : 5;
-					if(grass)
-						scenario.outdoors[x][y]->terrain[43][i] = 36;
+			for(int i = 16; i < 32; i++) {
+				// top middle
+				for(int j = 0; j < 16; j++) {
+					scenario.outdoors[x][y]->terrain(i, j) = base.outdoors[0][0]->terrain(i, j + (y == 0 ? 0 : 16));
+				}
+				// middle middle
+				for(int j = 16; j < 32; j++) {
+					scenario.outdoors[x][y]->terrain(i, j) = base.outdoors[0][0]->terrain(i, j);
+				}
+				// bottom middle
+				for(int j = 32; j < 48; j++) {
+					scenario.outdoors[x][y]->terrain(i, j) = base.outdoors[0][0]->terrain(i, j - (y == scenario.outdoors.height() - 1 ? 0 : 16));
 				}
 			}
-			if(y == 0) {
-				for(int i = 0; i < 48; i++) {
-					scenario.outdoors[x][y]->terrain[i][0] = grass ? 23 : 5;
-					scenario.outdoors[x][y]->terrain[i][1] = grass ? 22 : 5;
-					scenario.outdoors[x][y]->terrain[i][2] = grass ? 22 : 5;
-					scenario.outdoors[x][y]->terrain[i][3] = grass ? 22 : 5;
-					if(grass && scenario.outdoors[x][y]->terrain[i][4] == 2)
-						scenario.outdoors[x][y]->terrain[i][4] = 36;
+			for(int i = 32; i < 48; i++) {
+				// top right
+				for(int j = 0; j < 16; j++) {
+					scenario.outdoors[x][y]->terrain(i, j) = base.outdoors[0][0]->terrain(i - (x == scenario.outdoors.width() - 1 ? 0 : 16), j + (y == 0 ? 0 : 16));
+				}
+				// middle right
+				for(int j = 16; j < 32; j++) {
+					scenario.outdoors[x][y]->terrain(i, j) = base.outdoors[0][0]->terrain(i - (x == scenario.outdoors.width() - 1 ? 0 : 16), j);
+				}
+				// bottom right
+				for(int j = 32; j < 48; j++) {
+					scenario.outdoors[x][y]->terrain(i, j) = base.outdoors[0][0]->terrain(i - (x == scenario.outdoors.width() - 1 ? 0 : 16), j - (y == scenario.outdoors.height() - 1 ? 0 : 16));
 				}
 			}
-			if(y == height - 1) {
-				for(int i = 0; i < 48; i++) {
-					scenario.outdoors[x][y]->terrain[i][47] = grass ? 23 : 5;
-					scenario.outdoors[x][y]->terrain[i][46] = grass ? 22 : 5;
-					scenario.outdoors[x][y]->terrain[i][45] = grass ? 22 : 5;
-					scenario.outdoors[x][y]->terrain[i][44] = grass ? 22 : 5;
-					if(grass && scenario.outdoors[x][y]->terrain[i][43] == 2)
-						scenario.outdoors[x][y]->terrain[i][43] = 36;
-				}
-			}
-			// Minor fixup for mountain corners
-			if(grass) {
-				if(x == 0 && y == 0) {
-					scenario.outdoors[x][y]->terrain[0][1] = 23;
-					scenario.outdoors[x][y]->terrain[0][2] = 23;
-					scenario.outdoors[x][y]->terrain[0][3] = 23;
-				}
-				if(x == 0 && y == height - 1) {
-					scenario.outdoors[x][y]->terrain[0][46] = 23;
-					scenario.outdoors[x][y]->terrain[0][45] = 23;
-					scenario.outdoors[x][y]->terrain[0][44] = 23;
-				}
-				if(x == width - 1 && y == 0) {
-					scenario.outdoors[x][y]->terrain[47][1] = 23;
-					scenario.outdoors[x][y]->terrain[47][2] = 23;
-					scenario.outdoors[x][y]->terrain[47][3] = 23;
-				}
-				if(x == width - 1 && y == height - 1) {
-					scenario.outdoors[x][y]->terrain[47][46] = 23;
-					scenario.outdoors[x][y]->terrain[47][45] = 23;
-					scenario.outdoors[x][y]->terrain[47][44] = 23;
-				}
-			}
-			current_terrain = scenario.outdoors[x][y];
-			if(x == 0 || y == 0)
-				adjust_space(loc(3,3));
-			if(x == width - 1 || y == height - 1)
-				adjust_space(loc(44,44));
 		}
 	}
 	cur_out.x = 0;
 	cur_out.y = 0;
 	current_terrain = scenario.outdoors[0][0];
-	current_terrain->terrain[24][24] = grass ? 234 : 247;
-	current_terrain->terrain[23][23] = grass ? 121 : 106;
+	// Add starting town and sign
+	current_terrain->terrain[24][24] = town_terrain;
+	current_terrain->terrain[23][23] = sign_terrain;
 	current_terrain->city_locs.push_back({24, 24, 0});
 	
 	if(default_town && warriors_grove) {
