@@ -16,15 +16,10 @@
 		<led name='med' anchor='lg' relative='pos-in pos' top='6' left='0'>Medium (48x48)</led>
 		<led name='sm' anchor='med' relative='pos-in pos' top='6' left='0'>Small (32x32)</led>
 	</group>
-	<text anchor='preset' relative='abs pos-in' top='3' left='50' width='105' height='14'>Preset terrain:</text>
-	<!--
-	 TODO: Put a field and a Choose button so they can pick any base terrain they want.
-	 -->
-	<group name='preset'>
-		<led name='cave' anchor='size' relative='pos-in pos' top='2' left='26' state='red'>Just cave floor</led>
-		<led name='grass' anchor='cave' relative='pos-in pos' top='6' left='0'>Plain Grass</led>
-		<led name='flowers' anchor='grass' relative='pos-in pos' top='6' left='0'>Grass with flowers</led>
-	</group>
-	<button name='cancel' anchor='preset' relative='pos-in pos' type='regular' def-key='esc' top='4' left='38'>Cancel</button>
+	<text anchor='preset' relative='abs pos-in' top='0' left='50' width='105' height='14'>Preset terrain:</text>
+	<pict name='preset' anchor='size' relative='pos-in pos' type='ter' num='0' top='4' left='6'/>
+	<text name='preset-name' anchor='preset' relative='pos pos-in' top='0' left='6' width='120' height='13'/>
+	<button name='choose-preset' anchor='preset' relative='pos pos-in' type='regular' top='14' left='6'>Choose</button>
+	<button name='cancel' anchor='preset' relative='pos-in pos' type='regular' def-key='esc' top='4' left='58'>Cancel</button>
 	<button name='okay' anchor='cancel' relative='pos pos-in' type='regular' top='0' left='0'>OK</button>
 </dialog>
