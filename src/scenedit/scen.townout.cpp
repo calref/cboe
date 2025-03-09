@@ -1561,12 +1561,19 @@ aNewTown::~aNewTown() {
 }
 
 bool new_town() {
+	ter_num_t preset = 0;
 	cChoiceDlog new_dlg("new-town", {"okay", "cancel"});
 	new_dlg->getControl("num").setTextToNum(scenario.towns.size());
+	new_dlg->getControl("choose-preset").attachClickHandler([&preset](cDialog& me, std::string, eKeyMod) {
+		preset = choose_text(STRT_TER, preset, &me, "Select a preset terrain:");
+		dynamic_cast<cPict&>(me["preset"]).setPict(scenario.ter_types[preset].picture);
+		me["preset-name"].setText(scenario.ter_types[preset].name);
+		return true;
+	});
+	new_dlg->getControl("preset-name").setText(scenario.ter_types[preset].name);
 	if(new_dlg.show() == "cancel") return false;
 	
 	std::string size = dynamic_cast<cLedGroup&>(new_dlg->getControl("size")).getSelected();
-	std::string preset = dynamic_cast<cLedGroup&>(new_dlg->getControl("preset")).getSelected();
 	
 	if(size == "lg") scenario.addTown(AREA_LARGE);
 	else if(size == "med") scenario.addTown(AREA_MEDIUM);
@@ -1577,17 +1584,7 @@ bool new_town() {
 	
 	for(short i = 0; i < town->max_dim; i++)
 		for(short j = 0; j < town->max_dim; j++)
-			if(preset == "cave") {
-				town->terrain(i,j) = 0;
-			} else {
-				town->terrain(i,j) = 2;
-				if(preset == "flowers") {
-					if(get_ran(1,0,8) == 0)
-						town->terrain(i,j) = 3;
-					else if(get_ran(1,0,10) == 0)
-						town->terrain(i,j) = 4;
-				}
-			}
+			town->terrain(i,j) = preset;
 
 	undo_list.add(action_ptr(new aNewTown(scenario.towns.back())));
 	change_made = true;
