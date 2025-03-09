@@ -1,31 +1,30 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay'>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='256' height='17'>Create New Town</text>
-	<text top='28' left='50' width='147' height='14'>Creating town number:</text>
-	<text name='num' top='28' left='201' width='33' height='14'/>
-	<text top='49' left='66' width='260' height='28'>
+	<text name='create' top='28' left='50' width='147' height='14'>Creating town number:</text>
+	<text name='num' anchor='create' relative='pos pos-in' top='0' left='4' width='33' height='14'/>
+	<text anchor='create' relative='pos-in pos' name='note' top='7' left='16' width='260' height='28'>
 		Note: Your new town will be tacked onto the end of your current town list.
 	</text>
-	<text top='86' left='50' width='84' height='14'>Town name:</text>
-	<field name='name' top='85' left='140' width='152' height='16'>Town name</field>
-	<text top='111' left='50' width='77' height='14'>Town size:</text>
+	<text anchor='name' relative='abs pos-in' top='1' left='50' width='84' height='14'>Town name:</text>
+	<field name='name' anchor='note' relative='pos-in pos' top='8' left='74' width='152' height='16'>Town name</field>
+	<text anchor='size' relative='abs pos-in' top='3' left='50' width='77' height='14'>Town size:</text>
 	<group name='size'>
-		<led name='lg' top='114' left='145' state='red'>Large (64x64)</led>
-		<led name='med' top='131' left='145'>Medium (48x48)</led>
-		<led name='sm' top='148' left='145'>Small (32x32)</led>
+		<led name='lg' anchor='name' relative='pos-in pos' top='13' left='5' state='red'>Large (64x64)</led>
+		<led name='med' anchor='lg' relative='pos-in pos' top='6' left='0'>Medium (48x48)</led>
+		<led name='sm' anchor='med' relative='pos-in pos' top='6' left='0'>Small (32x32)</led>
 	</group>
-	<text top='164' left='51' width='105' height='14'>Preset terrain:</text>
+	<text anchor='preset' relative='abs pos-in' top='3' left='50' width='105' height='14'>Preset terrain:</text>
 	<!--
 	 TODO: Put a field and a Choose button so they can pick any base terrain they want.
 	 -->
 	<group name='preset'>
-		<led name='cave' top='167' left='168' state='red'>Just cave floor</led>
-		<led name='grass' top='184' left='168'>Plain Grass</led>
-		<led name='flowers' top='201' left='168'>Grass with flowers</led>
+		<led name='cave' anchor='size' relative='pos-in pos' top='2' left='26' state='red'>Just cave floor</led>
+		<led name='grass' anchor='cave' relative='pos-in pos' top='6' left='0'>Plain Grass</led>
+		<led name='flowers' anchor='grass' relative='pos-in pos' top='6' left='0'>Grass with flowers</led>
 	</group>
-	<button name='cancel' type='regular' def-key='esc' top='221' left='199'>Cancel</button>
-	<button name='okay' type='regular' top='221' left='264'>OK</button>
+	<button name='cancel' anchor='preset' relative='pos-in pos' type='regular' def-key='esc' top='4' left='38'>Cancel</button>
+	<button name='okay' anchor='cancel' relative='pos pos-in' type='regular' top='0' left='0'>OK</button>
 </dialog>
