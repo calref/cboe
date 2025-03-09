@@ -12,9 +12,11 @@
 	<field name='name' anchor='note' relative='pos-in pos' top='8' left='74' width='152' height='16'>Town name</field>
 	<text anchor='size' relative='abs pos-in' top='3' left='50' width='77' height='14'>Town size:</text>
 	<group name='size'>
-		<led name='lg' anchor='name' relative='pos-in pos' top='13' left='5' state='red'>Large (64x64)</led>
+		<led name='huge' anchor='name' relative='pos-in pos' top='13' left='5'>Huge (128x128)</led>
+		<led name='lg' anchor='huge' relative='pos-in pos' top='6' left='0' state='red'>Large (64x64)</led>
 		<led name='med' anchor='lg' relative='pos-in pos' top='6' left='0'>Medium (48x48)</led>
 		<led name='sm' anchor='med' relative='pos-in pos' top='6' left='0'>Small (32x32)</led>
+		<led name='tiny' anchor='sm' relative='pos-in pos' top='6' left='0'>Tiny (24x24)</led>
 	</group>
 	<text anchor='preset' relative='abs pos-in' top='0' left='50' width='105' height='14'>Preset terrain:</text>
 	<pict name='preset' anchor='size' relative='pos-in pos' type='ter' num='0' top='4' left='6'/>

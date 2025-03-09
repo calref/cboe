@@ -1578,6 +1578,8 @@ bool new_town() {
 	if(size == "lg") scenario.addTown(AREA_LARGE);
 	else if(size == "med") scenario.addTown(AREA_MEDIUM);
 	else if(size == "sm") scenario.addTown(AREA_SMALL);
+	else if(size == "huge") scenario.addTown(AREA_HUGE);
+	else if(size == "tiny") scenario.addTown(AREA_TINY);
 	
 	set_current_town(scenario.towns.size() - 1);
 	town->name = new_dlg->getControl("name").getText().substr(0,30);
