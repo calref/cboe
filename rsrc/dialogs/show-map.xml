@@ -5,5 +5,5 @@
 	<button name='okay' type='regular' top='276' left='232'>OK</button>
 	<pict type='dlog' num='21' top='6' left='6'/>
 	<text name='title' size='large' top='6' left='50' width='300' height='17'>Map of Somewhere:</text>
-	<pict name='map' type='full' num='1100' top='28' left='50'/>
+	<pict name='map' type='full' num='1400' top='28' left='50'/>
 </dialog>
