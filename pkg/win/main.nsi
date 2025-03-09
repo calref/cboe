@@ -107,6 +107,7 @@ Section "Scenario Editor" Section3
 	File "${RELEASE_DIR}\BoE Scenario Editor.exe"
 	SetOutPath "$INSTDIR\Blades of Exile Base\"
 	File "${RELEASE_DIR}\Blades of Exile Base\bladbase.boes"
+	File "${RELEASE_DIR}\Blades of Exile Base\cavebase.boes"
 	SetShellVarContext all
 	CreateShortCut "$SMPROGRAMS\Blades of Exile\Scenario Editor.lnk" "$INSTDIR\BoE Scenario Editor.exe"
 
@@ -259,6 +260,7 @@ Section Uninstall
 	; Clean up Scenario Editor
 	Delete "$INSTDIR\Scen Editor.exe"
 	Delete "$INSTDIR\Blades of Exile Base\bladbase.boes"
+	Delete "$INSTDIR\Blades of Exile Base\cavebase.boes"
 
 	; Remove remaining directories
 	RMDir "$INSTDIR\Blades of Exile Scenarios\"

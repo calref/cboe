@@ -494,6 +494,7 @@
   <!--BUILD SCENARIOS-->
   <Target Name="BuildBase" AfterTargets="AfterBuild">
     <Exec Command="$(SolutionDir)..\..\pkg\win\build-scen.bat $(SolutionDir)..\..\rsrc\bases\bladbase $(SolutionDir)..\..\rsrc\bases\bladbase.boes" />
+    <Exec Command="$(SolutionDir)..\..\pkg\win\build-scen.bat $(SolutionDir)..\..\rsrc\bases\cavebase $(SolutionDir)..\..\rsrc\bases\cavebase.boes" />
   </Target>
   <Target Name="BuildScenarios" AfterTargets="BuildBase">
     <Exec Command="$(SolutionDir)..\..\pkg\win\build-scen.bat $(SolutionDir)..\..\rsrc\scenarios\busywork $(SolutionDir)..\..\rsrc\scenarios\busywork.boes" />
