@@ -425,33 +425,6 @@ static void process_args(int argc, char* argv[]) {
 	}
 }
 
-void outd_move_to_first_town_entrance(int town) {
-	// Try to put the party in an outdoor section from which you can enter the town --
-	// so when you leave, you'll hopefully be in the right place.
-	auto town_entrances = univ.scenario.find_town_entrances(town);
-	if(!town_entrances.empty()){
-		// When there are multiple entrances, this part of the code shouldn't matter,
-		// but also won't hurt.
-		town_entrance_t first_entrance_found = town_entrances[0];
-		int x = first_entrance_found.out_sec.x;
-		int y = first_entrance_found.out_sec.y;
-		// Very janky but I don't know how else to make it properly load the right sections and set i_w_c
-		while(univ.party.outdoor_corner.x > x){
-			shift_universe_left();
-		}
-		while(univ.party.outdoor_corner.x < x){
-			shift_universe_right();
-		}
-		while(univ.party.outdoor_corner.y > y){
-			shift_universe_up();
-		}
-		while(univ.party.outdoor_corner.y < y){
-			shift_universe_down();
-		}
-		outd_move_party(local_to_global(first_entrance_found.loc), true);
-	}
-}
-
 static void handle_scenario_args() {
 	bool resetting = false;
 	if(scen_arg_path){
