@@ -21,7 +21,7 @@
 		The Sell, ID, and Enchant buttons only appear when talking to a person who can do these things.
 		Many shopkeepers will buy your items, and certain sages can identify and even enchant them.
 	</text>
-	<pict name='buttons' type='blank' outline='solid' color='white' top='136' left='350' width='138' height='112'/>
+	<pict name='buttons' type='blank' outline='solid' color='white' top='131' left='350' width='138' height='122'/>
 	<pict name='zuse1' anchor='buttons' relative='pos-in' filled='false' type='btn' num='2' top='9' left='20' framed='false'/>
 	<text name='zuse2' anchor='buttons' relative='pos-in' top='6' left='45' color='black' size='9'>Use Item</text>
 	<pict name='zgive1' anchor='buttons' relative='pos-in' filled='false' type='btn' num='3' top='22' left='20' framed='false'/>
@@ -36,6 +36,8 @@
 	<text name='zsell2' anchor='buttons' relative='pos-in' top='73' left='45' color='black' size='9'>Sell Item</text>
 	<pict name='zench1' anchor='buttons' relative='pos-in' filled='false' type='btn' num='8' top='88' left='11' framed='false'/>
 	<text name='zench2' anchor='buttons' relative='pos-in' top='85' left='45' color='black' size='9'>Pay to enchant</text>
+	<pict name='zinc1' anchor='buttons' relative='pos-in' filled='false' type='btn' num='9' top='101' left='11' framed='false'/>
+	<text name='zinc2' anchor='buttons' relative='pos-in' top='99' left='45' color='black' size='9'>Pay to recharge</text>
 	<text top='274' left='63' width='429' height='50'>
 		Items from slain monsters normally appear unidentified.
 		To identify them, take them to a sage.
