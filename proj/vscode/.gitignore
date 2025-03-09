@@ -1,0 +1,3 @@
+# Folder local settings are ignored.
+# Settings that should be checked in should go in the workspace file.
+.vscode/settings.json

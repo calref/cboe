@@ -143,6 +143,7 @@ private:
 	void drawPartyScen(short num, rectangle to_rect);
 	void drawPartyItem(short num, rectangle to_rect);
 	void drawPartyPc(short num, rectangle to_rect);
+	void drawInvenBtn(short num, rectangle to_rect);
 	static std::map<ePicType,void(cPict::*)(short,rectangle)>& drawPict();
 };
 

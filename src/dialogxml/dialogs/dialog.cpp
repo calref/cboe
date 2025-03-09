@@ -21,6 +21,7 @@
 #include "dialogxml/widgets/button.hpp"
 #include "dialogxml/widgets/field.hpp"
 #include "dialogxml/widgets/ledgroup.hpp"
+#include "dialogxml/widgets/line.hpp"
 #include "dialogxml/widgets/message.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
 #include "dialogxml/widgets/scrollpane.hpp"
@@ -212,6 +213,8 @@ void cDialog::loadFromFile(const DialogDefn& file){
 				inserted = controls.insert(parse<cButton>(*node, *this)).first;
 			else if(type == "led")
 				inserted = controls.insert(parse<cLed>(*node, *this)).first;
+			else if(type == "line")
+				inserted = controls.insert(parse<cConnector>(*node, *this)).first;
 			else if(type == "group")
 				inserted = controls.insert(parse<cLedGroup>(*node, *this)).first;
 			else if(type == "stack") {
@@ -256,6 +259,7 @@ void cDialog::loadFromFile(const DialogDefn& file){
 						case CTRL_UNKNOWN: ctrlType = "???"; break;
 						case CTRL_BTN: ctrlType = "button"; break;
 						case CTRL_LED: ctrlType = "led"; break;
+						case CTRL_LINE: ctrlType = "line"; break;
 						case CTRL_PICT: ctrlType = "pict"; break;
 						case CTRL_FIELD: ctrlType = "field"; break;
 						case CTRL_TEXT: ctrlType = "text"; break;
@@ -279,6 +283,7 @@ void cDialog::loadFromFile(const DialogDefn& file){
 								case CTRL_UNKNOWN: ctrlType = "???"; break;
 								case CTRL_BTN: ctrlType = "button"; break;
 								case CTRL_LED: ctrlType = "led"; break;
+								case CTRL_LINE: ctrlType = "line"; break;
 								case CTRL_PICT: ctrlType = "pict"; break;
 								case CTRL_FIELD: ctrlType = "field"; break;
 								case CTRL_TEXT: ctrlType = "text"; break;
@@ -512,7 +517,7 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	}
 	// Make sure the requested size isn't insane.
 	auto desktop = sf::VideoMode::getDesktopMode();
-	if(winRect.width() > desktop.width || winRect.height() > desktop.height) {
+	if(winRect.width() > desktop.width * 1.5 || winRect.height() > desktop.height * 1.5) {
 		throw std::string("Dialog ") + fname + std::string(" requested a crazy window size of ") + std::to_string(winRect.width()) + "x" + std::to_string(winRect.height());
 	}
 	// Sometimes it seems like the Cocoa menu handling clobbers the active rendering context.
