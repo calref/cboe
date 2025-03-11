@@ -55,7 +55,7 @@ public:
 	class cItem { // formerly preset_item_type
 	public:
 		location loc;
-		short code;
+		item_num_t code;
 		eEnchant ability;
 		int charges = -1;
 		bool always_there = false, property = false, contained = false;
