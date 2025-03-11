@@ -1367,7 +1367,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 		"sdf1-toggle", "sdf2-toggle",
 	});
 	special.attachFocusHandlers([&edit_stack](cDialog& me, std::string, bool losing) {
-		if(losing) {
+		if(losing && !edit_stack.empty()) {
 			save_spec_enc(me, edit_stack);
 			put_spec_enc_in_dlog(me, edit_stack);
 		}
