@@ -84,14 +84,14 @@ void init_menubar() {
 		eMenu::TOWN_DELETE, eMenu::SCEN_DATA_DUMP, eMenu::SCEN_TEXT_DUMP,
 	};
 	static const eMenu town_choices[] = {
-		eMenu::TOWN_DETAILS, eMenu::TOWN_WANDERING, eMenu::TOWN_BOUNDARIES, eMenu::FRILL, eMenu::UNFRILL, eMenu::TOWN_AREAS,
-		eMenu::NONE, eMenu::TOWN_START, eMenu::TOWN_ITEMS_RANDOM, eMenu::TOWN_ITEMS_NOT_PROPERTY, eMenu::TOWN_ITEMS_CLEAR,
+		eMenu::TOWN_DETAILS, eMenu::TOWN_WANDERING, eMenu::FRILL, eMenu::UNFRILL, eMenu::TOWN_AREAS,
+		eMenu::NONE, eMenu::TOWN_ITEMS_RANDOM, eMenu::TOWN_ITEMS_NOT_PROPERTY, eMenu::TOWN_ITEMS_CLEAR,
 		eMenu::NONE, eMenu::NONE,
 		eMenu::TOWN_SPECIALS, eMenu::TOWN_TEXT, eMenu::TOWN_SIGNS, eMenu::TOWN_ADVANCED, eMenu::TOWN_TIMERS,
 	};
 	static const eMenu out_choices[] = {
 		eMenu::OUT_DETAILS, eMenu::OUT_WANDERING, eMenu::OUT_ENCOUNTERS, eMenu::FRILL, eMenu::UNFRILL, eMenu::OUT_AREAS,
-		eMenu::NONE, eMenu::OUT_START, eMenu::NONE, eMenu::NONE,
+		eMenu::NONE, eMenu::NONE,
 		eMenu::OUT_SPECIALS, eMenu::OUT_TEXT, eMenu::OUT_SIGNS,
 	};
 	static const eMenu help_choices[] = {

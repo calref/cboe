@@ -11,12 +11,10 @@
 #define IDM_FILE_QUIT                   106
 #define IDM_SCEN_NEW_TOWN               107
 #define IDM_SCEN_DETAILS                108
-#define IDM_SCEN_START                  109
 #define IDM_SCEN_ADV_SPECIALS           110
 #define IDM_SCEN_ADV_TEXT               111
 #define IDM_SCEN_ADV_JOURNAL            112
 #define IDM_SCEN_ADV_IMPORT_TOWN        113
-#define IDM_SCEN_ADV_SAVE_RECTS         114
 #define IDM_SCEN_ADV_HORSES             115
 #define IDM_SCEN_ADV_BOATS              116
 #define IDM_SCEN_ADV_TOWN_VARY          117
@@ -29,7 +27,6 @@
 #define IDM_SCEN_PASSWORD               124
 #define IDM_TOWN_DETAILS                125
 #define IDM_TOWN_WANDER                 126
-#define IDM_TOWN_BOUNDS                 127
 #define IDM_TOWN_FRILL                  128
 #define IDM_TOWN_UNFRILL                129
 #define IDM_TOWN_AREAS                  130
@@ -48,7 +45,6 @@
 #define IDM_OUT_FRILL                   143
 #define IDM_OUT_UNFRILL                 144
 #define IDM_OUT_AREAS                   145
-#define IDM_OUT_START                   146
 #define IDM_OUT_ADV_SPECIALS            147
 #define IDM_OUT_ADV_TEXT                148
 #define IDM_OUT_ADV_SIGNS               149

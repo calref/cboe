@@ -96,11 +96,9 @@ void OpenBoESceneditMenu::add_persistent_menu_items(tgui::MenuBar::Ptr& menubar)
 		
 		{ { "Town", "Town Details"               }, eMenu::TOWN_DETAILS            },
 		{ { "Town", "Town Wandering Monsters"    }, eMenu::TOWN_WANDERING          },
-		{ { "Town", "Set Town Boundaries"        }, eMenu::TOWN_BOUNDARIES         },
 		{ { "Town", "Frill Up Terrain"           }, eMenu::FRILL                   },
 		{ { "Town", "Remove Terrain Frills"      }, eMenu::UNFRILL                 },
 		{ { "Town", "Edit Area Descriptions"     }, eMenu::TOWN_AREAS              },
-		{ { "Town", "Set Starting Location"      }, eMenu::TOWN_START              },
 		{ { "Town", "Add Random Items"           }, eMenu::TOWN_ITEMS_RANDOM       },
 		{ { "Town", "Set All Items Not Property" }, eMenu::TOWN_ITEMS_NOT_PROPERTY },
 		{ { "Town", "Clear All Items"            }, eMenu::TOWN_ITEMS_CLEAR        },
@@ -117,7 +115,6 @@ void OpenBoESceneditMenu::add_persistent_menu_items(tgui::MenuBar::Ptr& menubar)
 		{ { "Outdoors", "Frill Up Terrain"           }, eMenu::FRILL          },
 		{ { "Outdoors", "Remove Terrain Frills"      }, eMenu::UNFRILL        },
 		{ { "Outdoors", "Edit Area Descriptions"     }, eMenu::OUT_AREAS      },
-		{ { "Outdoors", "Set Starting Location"      }, eMenu::OUT_START      },
 		
 		{ { "Help", "Index F1"                       }, eMenu::HELP_TOC       },
 		{ { "Help", "About Blades Scenario Editor"   }, eMenu::ABOUT          },

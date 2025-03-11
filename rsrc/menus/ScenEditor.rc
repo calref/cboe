@@ -122,12 +122,10 @@ BEGIN
     BEGIN
         MENUITEM "Town &Details\tCtrl+D",       IDM_TOWN_DETAILS
         MENUITEM "Town &Wandering Monsters",    IDM_TOWN_WANDER
-        MENUITEM "Set Town &Boundaries",        IDM_TOWN_BOUNDS
         MENUITEM "&Frill Up Terrain",           IDM_TOWN_FRILL
         MENUITEM "&Remove Terrain Frills",      IDM_TOWN_UNFRILL
         MENUITEM "Edit &Area Descriptions",     IDM_TOWN_AREAS
         MENUITEM SEPARATOR
-        MENUITEM "Set Starting &Location",      IDM_SCEN_START
         MENUITEM "Add Rand&om Items",           IDM_TOWN_RANDOM_ITEMS
         MENUITEM "Set All Items Not Propert&y", IDM_TOWN_NOT_PROPERTY
         MENUITEM "Clear All &Items",            IDM_TOWN_CLEAR_ITEMS
@@ -148,8 +146,6 @@ BEGIN
         MENUITEM "&Frill Up Terrain",           IDM_OUT_FRILL
         MENUITEM "&Remove Terrain Frills",      IDM_OUT_UNFRILL
         MENUITEM "Edit &Area Descriptions",     IDM_OUT_AREAS
-        MENUITEM SEPARATOR
-        MENUITEM "Set Starting &Location",      IDM_OUT_START
         MENUITEM SEPARATOR
         MENUITEM "Advanced:",                   IDM_GRAYED_LABEL, GRAYED
         MENUITEM "  Edit Special &Nodes\tCtrl+7", IDM_OUT_ADV_SPECIALS

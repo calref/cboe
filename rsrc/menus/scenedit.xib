@@ -587,14 +587,6 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 								</object>
-								<object class="NSMenuItem" id="787350">
-									<reference key="NSMenu" ref="61689393"/>
-									<string key="NSTitle">Set Town Boundaries</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="229763992"/>
-									<reference key="NSMixedImage" ref="909111550"/>
-								</object>
 								<object class="NSMenuItem" id="562756354">
 									<reference key="NSMenu" ref="61689393"/>
 									<string key="NSTitle">Frill Up Terrain</string>
@@ -624,14 +616,6 @@
 									<bool key="NSIsDisabled">YES</bool>
 									<bool key="NSIsSeparator">YES</bool>
 									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="229763992"/>
-									<reference key="NSMixedImage" ref="909111550"/>
-								</object>
-								<object class="NSMenuItem" id="646438288">
-									<reference key="NSMenu" ref="61689393"/>
-									<string key="NSTitle">Set Starting Location</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="229763992"/>
@@ -778,24 +762,6 @@
 								<object class="NSMenuItem" id="809277305">
 									<reference key="NSMenu" ref="784697102"/>
 									<string key="NSTitle">Edit Area Descriptions</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="229763992"/>
-									<reference key="NSMixedImage" ref="909111550"/>
-								</object>
-								<object class="NSMenuItem" id="176104287">
-									<reference key="NSMenu" ref="784697102"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="229763992"/>
-									<reference key="NSMixedImage" ref="909111550"/>
-								</object>
-								<object class="NSMenuItem" id="739405725">
-									<reference key="NSMenu" ref="784697102"/>
-									<string key="NSTitle">Set Starting Location</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="229763992"/>
@@ -1326,7 +1292,6 @@
 							<reference ref="795424393"/>
 							<reference ref="562756354"/>
 							<reference ref="665547983"/>
-							<reference ref="787350"/>
 							<reference ref="1071553007"/>
 							<reference ref="861242611"/>
 							<reference ref="1038227897"/>
@@ -1338,7 +1303,6 @@
 							<reference ref="654574897"/>
 							<reference ref="156465632"/>
 							<reference ref="2020849"/>
-							<reference ref="646438288"/>
 						</array>
 						<reference key="parent" ref="12009264"/>
 					</object>
@@ -1365,8 +1329,6 @@
 							<reference ref="461847598"/>
 							<reference ref="102319515"/>
 							<reference ref="31942883"/>
-							<reference ref="176104287"/>
-							<reference ref="739405725"/>
 							<reference ref="910633781"/>
 							<reference ref="976110066"/>
 							<reference ref="913717399"/>
@@ -1476,11 +1438,6 @@
 						<reference key="parent" ref="61689393"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">828</int>
-						<reference key="object" ref="787350"/>
-						<reference key="parent" ref="61689393"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">829</int>
 						<reference key="object" ref="1071553007"/>
 						<reference key="parent" ref="61689393"/>
@@ -1553,16 +1510,6 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">843</int>
 						<reference key="object" ref="31942883"/>
-						<reference key="parent" ref="784697102"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">844</int>
-						<reference key="object" ref="176104287"/>
-						<reference key="parent" ref="784697102"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">845</int>
-						<reference key="object" ref="739405725"/>
 						<reference key="parent" ref="784697102"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -1664,11 +1611,6 @@
 						<int key="objectID">892</int>
 						<reference key="object" ref="327378958"/>
 						<reference key="parent" ref="399390342"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">805</int>
-						<reference key="object" ref="646438288"/>
-						<reference key="parent" ref="61689393"/>
 					</object>
 				</array>
 			</object>
