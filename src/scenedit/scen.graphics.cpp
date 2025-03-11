@@ -1522,6 +1522,7 @@ void place_location() {
 				rectangle tiny_from = {0,0,18,18};
 				tiny_from.offset((picture_wanted % 10) * 18,(picture_wanted / 10) * 18);
 				rect_draw_some_item(*ResMgr::graphics.get("tinyobj"),tiny_from,mainPtr(),draw_rect,sf::BlendAlpha);
+				draw_rect.inset(-5, -9);
 			}
 		} else if(overall_mode == MODE_TOGGLE_SPECIAL_DOT) {
 			draw_field = true;
