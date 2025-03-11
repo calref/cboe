@@ -1554,6 +1554,9 @@ void place_location() {
 		} else if(overall_mode == MODE_PLACE_SFX) {
 			draw_field = true;
 			source_rect = calc_rect(mode_count, 3);
+		} else if(overall_mode == MODE_TOGGLE_ROAD) {
+			draw_field = true;
+			source_rect = calc_rect(0, 2);
 		}
 		if(draw_field) {
 			const sf::Texture& fields_gworld = *ResMgr::graphics.get("fields");
