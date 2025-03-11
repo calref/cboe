@@ -17,6 +17,7 @@
 #include "tools/drawable_manager.hpp"
 #include "tools/cursors.hpp"
 #include "tools/winutil.hpp"
+#include <boost/variant.hpp>
 
 #include "dialogxml/dialogs/dialog.hpp"
 
@@ -53,6 +54,7 @@ extern sf::Texture bg_gworld;
 extern rectangle right_buttons[NRSONPAGE];
 extern rectangle right_scrollbar_rect;
 extern std::shared_ptr<cScrollbar> right_sbar, pal_sbar;
+extern boost::variant<boost::none_t, std::pair<long,bool>, cTownperson, cTown::cItem, vector2d<ter_num_t>> clipboard;
 
 extern bool left_buttons_active,right_buttons_active;
 extern std::array<lb_t,NLS> left_button_status;
@@ -884,7 +886,7 @@ void draw_terrain(){
 						large_hilite = true;
 					} else if(where_draw == mouse_spot)
 						need_hilite = true;
-					else if(overall_mode == MODE_PLACE_CREATURE || overall_mode == MODE_PLACE_SAME_CREATURE) {
+					else if(overall_mode == MODE_PLACE_CREATURE) {
 						extern short mode_count;
 						cMonster& monst = scenario.scen_monsters[mode_count];
 						for(int x = 0; x < monst.x_width; x++) {
@@ -905,6 +907,26 @@ void draw_terrain(){
 										need_hilite = true;
 								}
 							}
+						}
+					} else if(overall_mode == MODE_PASTE) {
+						if(auto who = boost::get<cTownperson>(&clipboard)) {
+							cMonster& monst = scenario.scen_monsters[who->number];
+							for(int x = 0; x < monst.x_width; x++) {
+								for(int y = 0; y < monst.y_width; y++) {
+									location this_spot = {where_draw.x - x, where_draw.y - y};
+									if(this_spot == mouse_spot)
+										need_hilite = true;
+								}
+							}
+						} else if(auto ter = boost::get<vector2d<ter_num_t>>(&clipboard)) {
+							for(int x = 0; x < ter->width(); x++) {
+								for(int y = 0; y < ter->height(); y++) {
+									location this_spot = {where_draw.x - x, where_draw.y - y};
+									if(this_spot == mouse_spot)
+										need_hilite = true;
+								}
+							}
+
 						}
 					}
 					if(need_hilite) {
@@ -1385,9 +1407,10 @@ void place_location() {
 		place_selected_terrain(current_terrain_type, draw_rect);
 		extern short mode_count;
 		bool draw_field = false;
-		if(overall_mode == MODE_PLACE_CREATURE || overall_mode == MODE_PLACE_SAME_CREATURE) {
+		if(overall_mode == MODE_PLACE_CREATURE || (overall_mode == MODE_PASTE && boost::get<cTownperson>(&clipboard))) {
 			rectangle to_rect = draw_rect;
-			picture_wanted = scenario.scen_monsters[mode_count].picture_num;
+			mon_num_t m_num = overall_mode == MODE_PLACE_CREATURE ? mode_count : boost::get<cTownperson>(&clipboard)->number;
+			picture_wanted = scenario.scen_monsters[m_num].picture_num;
 			if(picture_wanted >= 4000) {
 				picture_wanted %= 1000;
 				to_rect.width() = to_rect.width() / 2;
@@ -1484,8 +1507,9 @@ void place_location() {
 					rect_draw_some_item(monst_gworld(picture_wanted / 20), source_rect, mainPtr(), to_rect, sf::BlendAlpha);
 				}
 			}
-		} else if(overall_mode == MODE_PLACE_ITEM || overall_mode == MODE_PLACE_SAME_ITEM) {
-			picture_wanted = scenario.scen_items[mode_count].graphic_num;
+		} else if(overall_mode == MODE_PLACE_ITEM || (overall_mode == MODE_PASTE && boost::get<cTown::cItem>(&clipboard))) {
+			item_num_t i_num = overall_mode == MODE_PLACE_ITEM ? mode_count : boost::get<cTown::cItem>(&clipboard)->code;
+			picture_wanted = scenario.scen_items[i_num].graphic_num;
 			if(picture_wanted >= 1000) {
 				std::shared_ptr<const sf::Texture> source_gworld;
 				graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);

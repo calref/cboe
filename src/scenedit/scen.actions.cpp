@@ -7,6 +7,7 @@
 #include <stack>
 #include <vector>
 #include <boost/lexical_cast.hpp>
+#include <boost/variant.hpp>
 #include "scen.global.hpp"
 #include "scenario/scenario.hpp"
 #include "gfx/render_shapes.hpp"
@@ -43,10 +44,7 @@ short current_block_edited = 0;
 short current_terrain_type = 0;
 short safety = 0;
 location spot_hit,last_spot_hit(-1,-1),mouse_spot(-1,-1);
-short copied_spec = -1;
 cUndoList undo_list;
-
-cTown::cItem store_place_item;
 
 short flood_count = 0;
 
@@ -75,31 +73,36 @@ rectangle palette_buttons[10][6];
 short current_rs_top = 0;
 
 ePalBtn out_buttons[6][10] = {
-	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_DROPPER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET},
-	{PAL_EDIT_TOWN, PAL_ERASE_TOWN, PAL_BLANK, PAL_BLANK, PAL_EDIT_SIGN, PAL_TEXT_AREA, PAL_WANDER, PAL_CHANGE, PAL_ZOOM, PAL_BLANK},
-	{PAL_SPEC, PAL_COPY_SPEC, PAL_PASTE_SPEC, PAL_ERASE_SPEC, PAL_EDIT_SPEC, PAL_SPEC_SPOT, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
-	{PAL_BOAT, PAL_HORSE, PAL_ROAD, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
+	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET, PAL_DROPPER},
+	{PAL_EDIT_TOWN, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_EDIT_SIGN, PAL_TEXT_AREA, PAL_WANDER, PAL_START, PAL_ZOOM},
+	{PAL_SPEC, PAL_COPY_SPEC, PAL_ERASE_SPEC, PAL_EDIT_SPEC, PAL_SPEC_SPOT, PAL_BOAT, PAL_HORSE, PAL_COPY_TER, PAL_CHANGE, PAL_PASTE},
+	{PAL_ROAD, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
 	{PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
 	{PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
 };
 
 ePalBtn town_buttons[6][10] = {
-	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_DROPPER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET},
-	{PAL_ENTER_N, PAL_ENTER_W, PAL_ENTER_S, PAL_ENTER_E, PAL_EDIT_SIGN, PAL_TEXT_AREA, PAL_WANDER, PAL_CHANGE, PAL_ZOOM, PAL_TERRAIN},
-	{PAL_SPEC, PAL_COPY_SPEC, PAL_PASTE_SPEC, PAL_ERASE_SPEC, PAL_EDIT_SPEC, PAL_SPEC_SPOT, PAL_EDIT_ITEM, PAL_SAME_ITEM, PAL_ERASE_ITEM, PAL_ITEM},
-	{PAL_BOAT, PAL_HORSE, PAL_ROAD, PAL_BLANK, PAL_BLANK, PAL_EDIT_STORAGE, PAL_EDIT_MONST, PAL_SAME_MONST, PAL_ERASE_MONST, PAL_MONST},
-	{PAL_WEB, PAL_CRATE, PAL_BARREL, PAL_BLOCK, PAL_FIRE_BARR, PAL_FORCE_BARR, PAL_QUICKFIRE, PAL_FORCECAGE, PAL_ERASE_FIELD, PAL_BLANK},
-	{PAL_SFX_SB, PAL_SFX_MB, PAL_SFX_LB, PAL_SFX_SS, PAL_SFX_LS, PAL_SFX_ASH, PAL_SFX_BONE, PAL_SFX_ROCK, PAL_BLANK, PAL_BLANK},
+	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET, PAL_DROPPER},
+	{PAL_ENTER_N, PAL_ENTER_W, PAL_ENTER_S, PAL_ENTER_E, PAL_TOWN_BORDER, PAL_EDIT_SIGN, PAL_TEXT_AREA, PAL_WANDER, PAL_START, PAL_ZOOM},
+	{PAL_SPEC, PAL_COPY_SPEC, PAL_ERASE_SPEC, PAL_EDIT_SPEC, PAL_SPEC_SPOT, PAL_BOAT, PAL_HORSE, PAL_COPY_TER, PAL_CHANGE, PAL_TERRAIN},
+	{PAL_ROAD, PAL_WEB, PAL_CRATE, PAL_BARREL, PAL_BLOCK, PAL_EDIT_STORAGE, PAL_EDIT_ITEM, PAL_COPY_ITEM, PAL_ERASE_ITEM, PAL_ITEM},
+	{PAL_FIRE_BARR, PAL_FORCE_BARR, PAL_QUICKFIRE, PAL_FORCECAGE, PAL_BLANK, PAL_PASTE, PAL_EDIT_MONST, PAL_COPY_MONST, PAL_ERASE_MONST, PAL_MONST},
+	{PAL_SFX_SB, PAL_SFX_MB, PAL_SFX_LB, PAL_SFX_SS, PAL_SFX_LS, PAL_SFX_ASH, PAL_SFX_BONE, PAL_SFX_ROCK, PAL_ERASE_FIELD, PAL_BLANK},
 };
-
-cTownperson last_placed_monst;
 
 rectangle working_rect;
 location last_space_hit;
 bool erasing_mode;
 ter_num_t current_ground = 0;
+location last_placement{-1,-1};
 
-short special_to_paste = -1;
+boost::variant<
+	boost::none_t,
+	std::pair<long /* special */, bool /* town */>,
+	cTownperson /* monst */,
+	cTown::cItem /* item */,
+	vector2d<ter_num_t> /* terrain */
+> clipboard = boost::none;
 
 bool monst_on_space(location loc,short m_num);
 static bool terrain_matches(unsigned char x, unsigned char y, ter_num_t ter);
@@ -152,11 +155,11 @@ static cursor_type get_edit_cursor() {
 			
 		case MODE_ROOM_RECT: case MODE_SET_TOWN_RECT:
 		case MODE_HOLLOW_RECT: case MODE_FILLED_RECT:
-		case MODE_STORAGE_RECT:
+		case MODE_STORAGE_RECT: case MODE_COPY_TERRAIN:
 			return mode_count == 2 ? topleft_curs : bottomright_curs;
 			
 		case MODE_ERASE_CREATURE: case MODE_ERASE_ITEM:
-		case MODE_ERASE_SPECIAL: case MODE_ERASE_TOWN_ENTRANCE:
+		case MODE_ERASE_SPECIAL:
 			
 		case MODE_ERASER: case MODE_CLEAR_FIELDS:
 			return eraser_curs;
@@ -165,8 +168,8 @@ static cursor_type get_edit_cursor() {
 		case MODE_EDIT_SPECIAL: case MODE_EDIT_TOWN_ENTRANCE:
 		case MODE_EDIT_SIGN:
 			
-		case MODE_PLACE_SAME_CREATURE: case MODE_PLACE_SAME_ITEM:
-		case MODE_COPY_SPECIAL: case MODE_PASTE_SPECIAL:
+		case MODE_COPY_SPECIAL: case MODE_COPY_ITEM:
+		case MODE_COPY_CREATURE: case MODE_PASTE:
 			
 		case MODE_PLACE_EAST_ENTRANCE: case MODE_PLACE_NORTH_ENTRANCE:
 		case MODE_PLACE_SOUTH_ENTRANCE: case MODE_PLACE_WEST_ENTRANCE:
@@ -718,21 +721,27 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 		if(!cur_area->is_on_map(spot_hit)) ;
 		else switch(overall_mode) {
 			case MODE_DRAWING:
-				if((!mouse_button_held && terrain_matches(spot_hit.x,spot_hit.y,current_terrain_type)) ||
-				   (mouse_button_held && erasing_mode)) {
-					set_terrain(spot_hit,current_ground);
-					erasing_mode = true;
+				if(!mouse_button_held) {
+					erasing_mode = terrain_matches(spot_hit.x, spot_hit.y, current_terrain_type);
 					mouse_button_held = true;
 				}
-				else {
-					mouse_button_held = true;
-					set_terrain(spot_hit,current_terrain_type);
-					erasing_mode = false;
+				if(!editing_town) {
+					// Implicitly erase town entrances when a space is set from a town terrain to a non-town terrain
+					const cTerrain& paint_ter = scenario.ter_types[current_terrain_type];
+					const cTerrain& erase_ter = scenario.ter_types[current_ground];
+					const cTerrain& cur_ter = scenario.ter_types[cur_area->terrain(spot_hit.x, spot_hit.y)];
+					if(cur_ter.special == eTerSpec::TOWN_ENTRANCE && (erasing_mode ? erase_ter : paint_ter).special != eTerSpec::TOWN_ENTRANCE)
+						for(short i = current_terrain->city_locs.size() - 1; i >= 0; i--) {
+							if(current_terrain->city_locs[i] == spot_hit)
+								current_terrain->city_locs.erase(current_terrain->city_locs.begin() + i);
+						}
 				}
+				if(erasing_mode) set_terrain(spot_hit,current_ground);
+				else set_terrain(spot_hit,current_terrain_type);
 				break;
 				
 			case MODE_ROOM_RECT: case MODE_SET_TOWN_RECT: case MODE_HOLLOW_RECT: case MODE_FILLED_RECT:
-			case MODE_STORAGE_RECT:
+			case MODE_STORAGE_RECT: case MODE_COPY_TERRAIN:
 				if(mouse_button_held)
 					break;
 				if(mode_count == 2) {
@@ -776,6 +785,17 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				else if(overall_mode == MODE_STORAGE_RECT) {
 					scenario.store_item_rects[cur_town] = working_rect;
 					change_made = true;
+				}
+				else if(overall_mode == MODE_COPY_TERRAIN) {
+					vector2d<ter_num_t> copied;
+					copied.resize(working_rect.width() + 1, working_rect.height() + 1);
+					for(int i = 0; i <= working_rect.width(); i++) {
+						for(int j = 0; j <= working_rect.height(); j++) {
+							if(editing_town) copied[i][j] = town->terrain(i + working_rect.left, j + working_rect.top);
+							else copied[i][j] = current_terrain->terrain(i + working_rect.left, j + working_rect.top);
+						}
+					}
+					clipboard = copied;
 				}
 				overall_mode = MODE_DRAWING;
 				break;
@@ -834,7 +854,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				break;
 			case MODE_PLACE_ITEM:
 				// If we just placed this item there, forget it
-				if(!mouse_button_held || store_place_item.loc != spot_hit) {
+				if(!mouse_button_held || last_placement != spot_hit) {
 					mouse_button_held = true;
 					auto iter = std::find_if(town->preset_items.begin(), town->preset_items.end(), [](const cTown::cItem& item) {
 						return item.code < 0;
@@ -842,12 +862,11 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					if(iter != town->preset_items.end()) {
 						*iter = {spot_hit, mode_count, scenario.scen_items[mode_count]};
 						if(container_there(spot_hit)) iter->contained = true;
-						store_place_item = *iter;
 					} else {
 						town->preset_items.push_back({spot_hit, mode_count, scenario.scen_items[mode_count]});
 						if(container_there(spot_hit)) town->preset_items.back().contained = true;
-						store_place_item = town->preset_items.back();
 					}
+					last_placement = spot_hit;
 				}
 				break;
 			case MODE_EDIT_ITEM:
@@ -855,41 +874,80 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					if((spot_hit.x == town->preset_items[x].loc.x) &&
 					   (spot_hit.y == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
 						edit_placed_item(x);
-						store_place_item = town->preset_items[x];
 					}
 				overall_mode = MODE_DRAWING;
 				break;
-			case MODE_PLACE_SAME_CREATURE:
-				if(last_placed_monst.number == 0) {
-					showError("Either no monster has been placed, or the last time you tried to place a monster the operation failed.");
-				} else {
+			case MODE_PASTE:
+				if(auto spec = boost::get<std::pair<long,bool>>(&clipboard)) {
+					if(!editing_town && (spot_hit.x == 0 || spot_hit.x == 47 || spot_hit.y == 0 || spot_hit.y == 47)) {
+						cChoiceDlog("not-at-edge").show();
+						break;
+					} else {
+						auto& specials = cur_area->special_locs;
+						for(short x = 0; x <= specials.size(); x++) {
+							if(x == specials.size())
+								specials.emplace_back(-1,-1,-1);
+							if(specials[x].spec < 0) {
+								specials[x] = spot_hit;
+								specials[x].spec = spec->first;
+								break;
+							}
+						}
+					}
+				} else if(auto monst = boost::get<cTownperson>(&clipboard)) {
+					if(!editing_town) {
+						set_string("Paste monster","Not while outdoors.");
+						break;
+					}
 					auto iter = std::find_if(town->creatures.begin(), town->creatures.end(), [](const cTownperson& who) {
 						return who.number == 0;
 					});
 					if(iter != town->creatures.end()) {
-						*iter = last_placed_monst;
+						*iter = *monst;
 						iter->start_loc = spot_hit;
 					} else { // Placement failed
-						town->creatures.push_back(last_placed_monst);
+						town->creatures.push_back(*monst);
 						town->creatures.back().start_loc = spot_hit;
 					}
+				} else if(auto item = boost::get<cTown::cItem>(&clipboard)) {
+					if(!editing_town) {
+						set_string("Paste item","Not while outdoors.");
+						break;
+					}
+					auto iter = std::find_if(town->preset_items.begin(), town->preset_items.end(), [](const cTown::cItem& item) {
+						return item.code < 0;
+					});
+					if(iter != town->preset_items.end()) {
+						*iter = *item;
+						iter->loc = spot_hit;
+						iter->contained = container_there(spot_hit);
+					} else {
+						town->preset_items.push_back(*item);
+						town->preset_items.back().loc = spot_hit;
+						town->preset_items.back().contained = container_there(spot_hit);
+					}
+				} else if(auto patch = boost::get<vector2d<ter_num_t>>(&clipboard)) {
+					for(int x = 0; x < patch->width(); x++)
+						for(int y = 0; y < patch->height(); y++)
+							cur_area->terrain(spot_hit.x + x, spot_hit.y + y) = (*patch)[x][y];
+				} else {
+					showError("Nothing to paste. Try copying something first.");
 				}
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PLACE_CREATURE:
 				// If we just placed this same creature here, forget it
-				if(!mouse_button_held || last_placed_monst.start_loc != spot_hit) {
+				if(!mouse_button_held || last_placement != spot_hit) {
 					mouse_button_held = true;
 					auto iter = std::find_if(town->creatures.begin(), town->creatures.end(), [](const cTownperson& who) {
 						return who.number == 0;
 					});
 					if(iter != town->creatures.end()) {
 						*iter = {spot_hit, static_cast<mon_num_t>(mode_count), scenario.scen_monsters[mode_count]};
-						last_placed_monst = *iter;
 					} else { // Placement failed
 						town->creatures.push_back({spot_hit, static_cast<mon_num_t>(mode_count), scenario.scen_monsters[mode_count]});
-						last_placed_monst = town->creatures.back();
 					}
+					last_placement = spot_hit;
 				}
 				break;
 				
@@ -966,25 +1024,6 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				set_new_terrain(cur_area->terrain(spot_hit.x,spot_hit.y));
 				overall_mode = MODE_DRAWING;
 				break;
-			case MODE_PLACE_SAME_ITEM:
-				if(store_place_item.code < 0) {
-					showError("Either no item has been placed, or the last time you tried to place an item the operation failed.");
-				} else {
-					auto iter = std::find_if(town->preset_items.begin(), town->preset_items.end(), [](const cTown::cItem& item) {
-						return item.code < 0;
-					});
-					if(iter != town->preset_items.end()) {
-						*iter = store_place_item;
-						iter->loc = spot_hit;
-						iter->contained = container_there(spot_hit);
-					} else {
-						town->preset_items.push_back(store_place_item);
-						town->preset_items.back().loc = spot_hit;
-						town->preset_items.back().contained = container_there(spot_hit);
-					}
-				}
-				overall_mode = MODE_DRAWING;
-				break;
 			case MODE_EDIT_SIGN: //edit sign
 			{
 				auto& signs = cur_area->sign_locs;
@@ -1003,7 +1042,6 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				for(short x = 0; x < town->creatures.size(); x++)
 					if(monst_on_space(spot_hit,x)) {
 						edit_placed_monst(x);
-						last_placed_monst = town->creatures[x];
 					}
 				overall_mode = MODE_DRAWING;
 				break;
@@ -1018,31 +1056,11 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					return loc == spot_hit && loc.spec >= 0;
 				});
 				if(iter != specials.end())
-					copied_spec = iter->spec;
+					clipboard = std::pair<long,bool>{iter->spec, editing_town};
 				else showError("There wasn't a special on that spot.");
 				overall_mode = MODE_DRAWING;
 				break;
 			}
-			case MODE_PASTE_SPECIAL: //paste special
-				if(copied_spec < 0) {
-					showError("You need to select a special to copy first.");
-				} else if(!editing_town && (spot_hit.x == 0 || spot_hit.x == 47 || spot_hit.y == 0 || spot_hit.y == 47)) {
-					cChoiceDlog("not-at-edge").show();
-					break;
-				} else {
-					auto& specials = cur_area->special_locs;
-					for(short x = 0; x <= specials.size(); x++) {
-						if(x == specials.size())
-							specials.emplace_back(-1,-1,-1);
-						if(specials[x].spec < 0) {
-							specials[x] = spot_hit;
-							specials[x].spec = copied_spec;
-							break;
-						}
-					}
-				}
-				overall_mode = MODE_DRAWING;
-				break;
 			case MODE_ERASE_SPECIAL: //erase special
 			{
 				auto& specials = cur_area->special_locs;
@@ -1068,14 +1086,6 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 			case MODE_EDIT_TOWN_ENTRANCE: //edit town entry
 				town_entry(spot_hit);
 				overall_mode = MODE_DRAWING;
-				break;
-			case MODE_ERASE_TOWN_ENTRANCE:
-				for(short x = current_terrain->city_locs.size() - 1; x >= 0; x--) {
-					if(current_terrain->city_locs[x] == spot_hit)
-						current_terrain->city_locs.erase(current_terrain->city_locs.begin() + x);
-				}
-				overall_mode = MODE_DRAWING;
-				change_made = true;
 				break;
 			case MODE_SET_OUT_START:
 				if((spot_hit.x != minmax(4,43,spot_hit.x)) || (spot_hit.y != minmax(4,43,spot_hit.y))) {
@@ -1149,6 +1159,22 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 			case MODE_EDIT_TYPES:
 			case MODE_MAIN_SCREEN:
 				break; // Nothing to do here, of course.
+			case MODE_COPY_CREATURE:
+				for(short x = 0; x < town->creatures.size(); x++)
+					if(monst_on_space(spot_hit,x)) {
+						clipboard = town->creatures[x];
+						break;
+					}
+				overall_mode = MODE_DRAWING;
+				break;
+			case MODE_COPY_ITEM:
+				for(short x = 0; x < town->preset_items.size(); x++)
+					if((spot_hit.x == town->preset_items[x].loc.x) && (spot_hit.y == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
+						clipboard = town->preset_items[x];
+						break;
+					}
+				overall_mode = MODE_DRAWING;
+				break;
 		}
 		if((overall_mode == MODE_DRAWING) && (old_mode != MODE_DRAWING))
 			set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
@@ -1357,14 +1383,6 @@ static bool handle_toolpal_action(location cur_point2) {
 						set_string("Set town entrance","Select town to edit");
 						overall_mode = MODE_EDIT_TOWN_ENTRANCE;
 						break;
-					case PAL_ERASE_TOWN:
-						if(editing_town) {
-							set_string("Can only erase town entrances outdoors","");
-							break;
-						}
-						set_string("Erase town entrance","Select town to erase");
-						overall_mode = MODE_ERASE_TOWN_ENTRANCE;
-						break;
 					case PAL_EDIT_ITEM:
 						if(!editing_town) {
 							set_string("Edit placed item","Not while outdoors.");
@@ -1373,13 +1391,13 @@ static bool handle_toolpal_action(location cur_point2) {
 						set_string("Edit placed item","Select item to edit");
 						overall_mode = MODE_EDIT_ITEM;
 						break;
-					case PAL_SAME_ITEM:
+					case PAL_COPY_ITEM:
 						if(!editing_town) {
-							set_string("Edit placed item","Not while outdoors.");
+							set_string("Copy item","Not while outdoors.");
 							break;
 						}
-						set_string("Place same item","Select location");
-						overall_mode = MODE_PLACE_SAME_ITEM;
+						set_string("Copy item","Select item");
+						overall_mode = MODE_COPY_ITEM;
 						break;
 					case PAL_ERASE_ITEM:
 						set_string("Delete an item","Select item");
@@ -1393,12 +1411,30 @@ static bool handle_toolpal_action(location cur_point2) {
 						set_string("Copy special","Select special to copy");
 						overall_mode = MODE_COPY_SPECIAL;
 						break;
-					case PAL_PASTE_SPEC:
-						if(special_to_paste < 0) {
-							set_string("Can't paste special","No special to paste");
-						}
-						set_string("Paste special","Select location to paste");
-						overall_mode = MODE_PASTE_SPECIAL;
+					case PAL_PASTE:
+						if(auto spec = boost::get<std::pair<long,bool>>(&clipboard))
+							if(editing_town == spec->second) set_string("Paste special","Select location to paste");
+							else {
+								if(editing_town) set_string("Paste special","Not while in town");
+								else set_string("Paste special","Not while outdoors");
+								break;
+							}
+						else if(boost::get<cTownperson>(&clipboard))
+							if(editing_town) set_string("Paste monster","Select location to paste");
+							else {
+								set_string("Paste monster","Not while outdoors.");
+								break;
+							}
+						else if(boost::get<cTown::cItem>(&clipboard))
+							if(editing_town) set_string("Paste item","Select location to paste");
+							else {
+								set_string("Paste item","Not while outdoors.");
+								break;
+							}
+						else if(boost::get<vector2d<ter_num_t>>(&clipboard))
+							set_string("Paste terrain","Select location to paste");
+						else set_string("Can't paste","Nothing to paste");
+						overall_mode = MODE_PASTE;
 						break;
 					case PAL_ERASE_SPEC:
 						set_string("Erase special","Select special to erase");
@@ -1412,9 +1448,9 @@ static bool handle_toolpal_action(location cur_point2) {
 						set_string("Edit creature","Select creature to edit");
 						overall_mode = MODE_EDIT_CREATURE;
 						break;
-					case PAL_SAME_MONST:
-						set_string("Place same creature","Select creature location");
-						overall_mode = MODE_PLACE_SAME_CREATURE;
+					case PAL_COPY_MONST:
+						set_string("Copy creature","Select creature");
+						overall_mode = MODE_COPY_CREATURE;
 						break;
 					case PAL_ERASE_MONST:
 						set_string("Delete a creature","Select creature");
@@ -1539,6 +1575,29 @@ static bool handle_toolpal_action(location cur_point2) {
 					case PAL_HORSE:
 						set_string("Place/edit horse","Select horse location");
 						overall_mode = MODE_PLACE_HORSE;
+						break;
+					case PAL_TOWN_BORDER:
+						if(!editing_town) {
+							set_string("Place boundaries","Not while outdoors.");
+							break;
+						}
+						overall_mode = MODE_SET_TOWN_RECT;
+						mode_count = 2;
+						set_string("Set town boundary","Select upper left corner");
+						break;
+					case PAL_START:
+						if(editing_town) {
+							overall_mode = MODE_SET_TOWN_START;
+							set_string("Select party starting location.","");
+						} else {
+							overall_mode = MODE_SET_OUT_START;
+							set_string("Select party starting location.","");
+						}
+						break;
+					case PAL_COPY_TER:
+						set_string("Copy terrain", "Select upper left corner");
+						overall_mode = MODE_COPY_TERRAIN;
+						mode_count = 2;
 						break;
 				}
 				return true;
@@ -1707,10 +1766,6 @@ void handle_keystroke(sf::Event event) {
 			mode_count = 2;
 			set_string("Create info rect.");
 			break;*/
-		//case 'e':
-		//	set_string("Pick item to edit.");
-		//	overall_mode = 5;
-		//	break;
 		/*case 'q':
 			if(overall_mode != 7) {
 				set_string("Place monster.");
@@ -1721,9 +1776,6 @@ void handle_keystroke(sf::Event event) {
 				overall_mode = 8;
 			}
 			break;
-		case '`':
-			set_string("Place same monster.");
-			overall_mode = 8;
 			break;*/
 		case 'D':
 			pass_point.x = RIGHT_AREA_UL_X + 6 + palette_buttons[0][0].left;
@@ -1759,17 +1811,9 @@ void handle_keystroke(sf::Event event) {
 			set_string("Pick item to edit.","");
 			overall_mode = MODE_EDIT_ITEM;
 			break;
-		case '`':
-			set_string("Place same creature","Select creature location");
-			overall_mode = MODE_PLACE_SAME_CREATURE;
-			break;
 		case ',':
 			set_string("Edit creature","Select creature to edit");
 			overall_mode = MODE_EDIT_CREATURE;
-			break;
-		case '/':
-			set_string("Place same item","Select location");
-			overall_mode = MODE_PLACE_SAME_ITEM;
 			break;
 			
 		default:
@@ -2440,7 +2484,6 @@ void start_town_edit() {
 	pal_sbar->show();
 	set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
 	place_location();
-	copied_spec = -1;
 	for(short i = 0; i < town->max_dim; i++)
 		for(short j = 0; j < town->max_dim; j++)
 			if(town->terrain(i,j) == 0)
@@ -2471,7 +2514,6 @@ void start_out_edit() {
 	shut_down_menus(1);
 	set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
 	place_location();
-	copied_spec = -1;
 	for(short i = 0; i < 48; i++)
 		for(short j = 0; j < 48; j++)
 			if(current_terrain->terrain[i][j] == 0)

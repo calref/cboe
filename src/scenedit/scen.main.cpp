@@ -561,10 +561,6 @@ void handle_menu_choice(eMenu item_hit) {
 			edit_scen_intro();
 			change_made = true;
 			break;
-		case eMenu::TOWN_START:
-			overall_mode = MODE_SET_TOWN_START;
-			set_string("Select party starting location.","");
-			break;
 		case eMenu::SCEN_SHEETS:
 			edit_custom_sheets();
 			change_made = true;
@@ -652,11 +648,6 @@ void handle_menu_choice(eMenu item_hit) {
 			edit_town_wand();
 			change_made = true;
 			break;
-		case eMenu::TOWN_BOUNDARIES:
-			overall_mode = MODE_SET_TOWN_RECT;
-			mode_count = 2;
-			set_string("Set town boundary","Select upper left corner");
-			break;
 		case eMenu::FRILL:
 			frill_up_terrain();
 			change_made = true;
@@ -724,10 +715,6 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::OUT_AREAS:
 			right_sbar->setPosition(0);
 			start_string_editing(STRS_OUT_RECT,0);
-			break;
-		case eMenu::OUT_START:
-			overall_mode = MODE_SET_OUT_START;
-			set_string("Select party starting location.","");
 			break;
 		case eMenu::OUT_SPECIALS:
 			right_sbar->setPosition(0);
