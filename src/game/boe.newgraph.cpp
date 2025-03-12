@@ -212,12 +212,14 @@ void apply_light_mask(bool onWindow) {
 		return;
 	}
 	
+	#ifdef DEBUG
 	std::cout << "Current light mask:\n";
 	for(short i = 0; i < 13; i++) {
 		for(short j = 0; j < 13; j++)
 			std::cout << int(light_area[j][i]) << ' ';
 		std::cout << '\n';
 	}
+	#endif
 	
 	dark_mask_region.clear();
 	dark_mask_region.addRect(big_to);
