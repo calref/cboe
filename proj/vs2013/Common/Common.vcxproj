@@ -266,6 +266,7 @@
     <ClCompile Include="..\..\..\src\tools\drawable_manager.cpp" />
     <ClCompile Include="..\..\..\src\tools\menu_accel.win.cpp" />
     <ClCompile Include="..\..\..\src\tools\prefs.cpp" />
+    <ClCompile Include="..\..\..\src\tools\profile.cpp" />
     <ClCompile Include="..\..\..\src\tools\replay.cpp" />
     <ClCompile Include="..\..\..\src\tools\undo.cpp" />
     <ClCompile Include="..\..\..\src\tools\keymods.cpp" />
@@ -363,6 +364,7 @@
     <ClInclude Include="..\..\..\src\tools\gitrev.hpp" />
     <ClInclude Include="..\..\..\src\tools\menu_accel.win.hpp" />
     <ClInclude Include="..\..\..\src\tools\prefs.hpp" />
+    <ClInclude Include="..\..\..\src\tools\profile.hpp" />
     <ClInclude Include="..\..\..\src\tools\replay.hpp" />
     <ClInclude Include="..\..\..\src\tools\undo.hpp" />
     <ClInclude Include="..\..\..\src\tools\vector2d.hpp" />

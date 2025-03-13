@@ -815,6 +815,9 @@
     <ClCompile Include="..\..\..\src\tools\drawable_manager.cpp" />
     <ClCompile Include="..\..\..\src\tools\framerate_limiter.cpp" />
     <ClCompile Include="..\..\..\src\tools\replay.cpp" />
+    <ClCompile Include="..\..\..\src\tools\profile.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\scenario\town_import.tpp">
@@ -1064,5 +1067,8 @@
       <Filter>DialogXML\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tools\replay.hpp" />
+    <ClInclude Include="..\..\..\src\tools\profile.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
