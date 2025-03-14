@@ -28,8 +28,8 @@ extern fs::path progDir, tempDir;
 extern cCustomGraphics spec_scen_g;
 
 // Load saved games
-static bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there, bool must_port, bool manual);
-static bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool manual);
+static bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there, bool must_port, bool preview);
+static bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool preview);
 
 extern fs::path nav_get_party();
 extern fs::path nav_put_party(fs::path def);
@@ -61,7 +61,7 @@ fs::path os_file_picker(bool saving) {
 		return nav_get_or_decode_party();
 }
 
-bool load_party(fs::path file_to_load, cUniverse& univ, bool manual){
+bool load_party(fs::path file_to_load, cUniverse& univ, bool preview){
 	bool town_restore = false;
 	bool maps_there = false;
 	bool in_scen = false;
@@ -88,7 +88,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ, bool manual){
 	FILE* file_id = fopen(file_to_load.string().c_str(), "rb");
 	if(file_id == nullptr) {
 		univ.party.load_failed = true;
-		if(manual) showError("Loading Blades of Exile save file failed.");
+		if(!preview) showError("Loading Blades of Exile save file failed.");
 		return false;
 	}
 	
@@ -98,7 +98,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ, bool manual){
 	if(n < 1) {
 		fclose(file_id);
 		univ.party.load_failed = true;
-		if(manual) showError("This is not a Blades of Exile save file.");
+		if(!preview) showError("This is not a Blades of Exile save file.");
 		return false;
 	}
 	
@@ -155,28 +155,28 @@ bool load_party(fs::path file_to_load, cUniverse& univ, bool manual){
 	bool result = false;
 	switch(format){
 		case old_mac:
-			result = load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, mac_is_intel(), manual);
+			result = load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, mac_is_intel(), preview);
 			break;
 		case old_win:
-			result = load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, !mac_is_intel(), manual);
+			result = load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, !mac_is_intel(), preview);
 			break;
 		case new_oboe:
-			result = load_party_v2(file_to_load, univ, manual);
+			result = load_party_v2(file_to_load, univ, preview);
 			break;
 		case unknown:
-			if(manual) showError("This is not a Blades of Exile save file.");
+			if(!preview) showError("This is not a Blades of Exile save file.");
 			result = false;
 			break;
 	}
 	
-	if(recording && manual && result){
+	if(recording && !preview && result){
 		record_action("load_party", encode_file(file_to_load), true);
 	}
 	if(!result) univ.party.load_failed = true;
 	return result;
 }
 
-bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restore, bool in_scen, bool maps_there, bool must_port, bool manual){
+bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restore, bool in_scen, bool maps_there, bool must_port, bool preview){
 	std::ifstream fin(file_to_load.string().c_str(), std::ios_base::binary);
 	fin.seekg(3*sizeof(short),std::ios_base::beg); // skip the header, which is 6 bytes in the old format
 	
@@ -269,7 +269,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 	if(in_scen){
 		fs::path path = locate_scenario(store_party.scen_name);
 		if(path.empty()) {
-			if(manual){
+			if(!preview){
 				std::ostringstream msg;
 				msg << "The scenario that this party was in (\"" << store_party.scen_name;
 				msg << "\") could not be found. Most likely, it is not installed in the Scenarios directory.";
@@ -319,7 +319,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 	return true;
 }
 
-bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, bool manual){
+bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, bool preview){
 	igzstream zin(file_to_load.string().c_str());
 	tarball partyIn;
 	partyIn.readFrom(zin);
@@ -331,7 +331,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, bool manual){
 	{ // Load main party data first
 		std::istream& fin = partyIn.getFile("save/party.txt");
 		if(!fin) {
-			if(manual) showError("Loading Blades of Exile save file failed.");
+			if(!preview) showError("Loading Blades of Exile save file failed.");
 			return false;
 		}
 		file.readFrom(fin);
@@ -344,7 +344,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, bool manual){
 		fname[7] = i + '1';
 		std::istream& fin = partyIn.getFile(fname);
 		if(!fin) {
-			if(manual) showError("Loading Blades of Exile save file failed.");
+			if(!preview) showError("Loading Blades of Exile save file failed.");
 			return false;
 		}
 		file.readFrom(fin);
@@ -366,7 +366,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, bool manual){
 	if(!univ.party.scen_name.empty()) {
 		fs::path path = locate_scenario(univ.party.scen_name);
 		if(path.empty()) {
-			if(manual){
+			if(!preview){
 				std::ostringstream msg;
 				msg << "The scenario that this party was in (\"" << univ.party.scen_name;
 				msg << "\") could not be found. Most likely, it is not installed in the Scenarios directory.";
@@ -382,7 +382,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, bool manual){
 			// Load scenario data
 			std::istream& fin = partyIn.getFile("save/scenario.txt");
 			if(!fin) {
-				if(manual) showError("Loading Blades of Exile save file failed.");
+				if(!preview) showError("Loading Blades of Exile save file failed.");
 				return false;
 			}
 			file.readFrom(fin);
@@ -392,7 +392,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, bool manual){
 		{ // Then the "setup" array
 			std::istream& fin = partyIn.getFile("save/setup.dat");
 			if(!fin) {
-				if(manual) showError("Loading Blades of Exile save file failed.");
+				if(!preview) showError("Loading Blades of Exile save file failed.");
 				return false;
 			}
 			file.readFrom(fin);
@@ -406,7 +406,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, bool manual){
 			// Load town data
 			std::istream& fin = partyIn.getFile("save/town.txt");
 			if(!fin) {
-				if(manual) showError("Loading Blades of Exile save file failed.");
+				if(!preview) showError("Loading Blades of Exile save file failed.");
 				return false;
 			}
 			file.readFrom(fin);
@@ -425,7 +425,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, bool manual){
 		// Load outdoors data
 		std::istream& fin = partyIn.getFile("save/out.txt");
 		if(!fin) {
-			if(manual) showError("Loading Blades of Exile save file failed.");
+			if(!preview) showError("Loading Blades of Exile save file failed.");
 			return false;
 		}
 		univ.out.readFrom(fin);
