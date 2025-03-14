@@ -248,6 +248,7 @@ short choose_pattern(short cur_choice, cDialog* parent, bool expandRotatable) {
 		std::string id2 = id;
 		id2.replace(0, 3, "name");
 		pat_dlg[id2].setText(pat.name);
+		pat_dlg[id2].recalcRect();
 		if(pat.rotatable) {
 			if(!expandRotatable) {
 				choices.push_back(pat_id);

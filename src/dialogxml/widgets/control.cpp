@@ -39,7 +39,8 @@ std::string cControl::generateRandomString() {
 
 void cControl::setText(std::string l){
 	lbl = l;
-	recalcRect();
+	// TODO: calling recalcRect() here has major unwanted side effects
+	// recalcRect();
 }
 
 std::string cControl::getText() const {
