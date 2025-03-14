@@ -107,7 +107,7 @@ short store_cur_pc = -1;
 
 // For healing shops, other PCs might be able to buy something if
 // the active PC can't
-static bool start_shop_mode_other_pc(bool allow_empty = false) {
+static bool start_shop_mode_other_pc(bool allow_empty = false, bool already_started = false) {
 	// The shop might change the current PC multiple times, but we want to restore
 	// it to the original active PC when shopping ends, so only store if we're
 	// not yet storing
@@ -122,7 +122,7 @@ static bool start_shop_mode_other_pc(bool allow_empty = false) {
 	for(int i = 0; i < 6; ++i){
 		if(univ.party[i].main_status != eMainStatus::ABSENT){
 			univ.cur_pc = i;
-			if(start_shop_mode(active_shop_num,active_shop.getCostAdjust(),save_talk_str1,true,true)){
+			if(start_shop_mode(active_shop_num,active_shop.getCostAdjust(),save_talk_str1,true,already_started)){
 				other_pc_can_buy = true;
 				break;
 			}
@@ -130,7 +130,7 @@ static bool start_shop_mode_other_pc(bool allow_empty = false) {
 	}
 	if(!other_pc_can_buy && allow_empty){
 		univ.cur_pc = pc_buying;
-		start_shop_mode(active_shop_num,active_shop.getCostAdjust(),save_talk_str1,false,true);
+		start_shop_mode(active_shop_num,active_shop.getCostAdjust(),save_talk_str1,false,already_started);
 	}
 	return other_pc_can_buy;
 }
@@ -472,7 +472,7 @@ void handle_sale(int i) {
 
 	// When buying from a healer, we want to select the next PC who needs healing
 	if(shop_array.empty()){
-		start_shop_mode_other_pc(true);
+		start_shop_mode_other_pc(true, true);
 	}
 }
 
