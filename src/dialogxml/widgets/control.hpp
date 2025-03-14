@@ -373,15 +373,14 @@ public:
 		if(anchor_id) *anchor_id = anchor;
 		return {horz, vert};
 	}
+	/// If the control automatically determines its rect based on certain criteria, override this.
+	/// It will automatically be called during parsing.
+	virtual void recalcRect() {}
 protected:
 	/// Create a new control attached to a dialog.
 	/// @param t The type of the control.
 	/// @param p The parent container.
 	cControl(eControlType t, iComponent* p);
-	/// If the control automatically determines its rect based on certain criteria, override this.
-	/// It will automatically be called during parsing.
-	/// When overridden, it should normally be public.
-	virtual void recalcRect() {}
 	/// Returns a list of event handlers that this control supports.
 	/// @return The list of handlers as a std::set.
 	///
