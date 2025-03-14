@@ -106,8 +106,30 @@ break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextS
 	// Even if the text is only one line, break_info is required for calculating word boundaries.
 	// So we can't skip the rest of this.
 
-	auto text_len = [&str_to_draw](size_t i) -> int {
-		return str_to_draw.findCharacterPos(i).x;
+	short len = 0;
+	std::vector<short> lengths;
+	sf::Font& font = get_font_rsrc(style.font);
+
+	// getGlyph() requires Uint32 input, which I don't think char is guaranteed to be
+	const sf::String& sf_str = str_to_draw.getString();
+	// if i > 0, this lambda must be called with i-1 before calling it with i for the first time
+	auto text_len = [&sf_str, &str_len, &font, &style, &len, &lengths](size_t i) -> int {
+		if(i < lengths.size()){
+			return lengths[i];
+		}
+
+		short ret = len;
+
+		if(i < str_len){
+			if(i > 0){
+				len += font.getKerning(sf_str[i - 1], sf_str[i], style.pointSize);
+			}
+			len += font.getGlyph(sf_str[i], style.pointSize, false).advance;
+		}
+
+		// Memoize this function because it is destructive:
+		lengths.push_back(ret);
+		return ret;
 	};
 
 	short i;
