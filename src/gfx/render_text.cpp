@@ -15,21 +15,21 @@
 #include <utility>
 #include "winutil.hpp"
 
-void TextStyle::applyTo(sf::Text& text, double scale) const {
+sf::Font& get_font_rsrc(eFont font) {
 	switch(font) {
 		case FONT_PLAIN:
-			text.setFont(*ResMgr::fonts.get("plain"));
-			break;
+			return *ResMgr::fonts.get("plain");
 		case FONT_BOLD:
-			text.setFont(*ResMgr::fonts.get("bold"));
-			break;
+			return *ResMgr::fonts.get("bold");
 		case FONT_DUNGEON:
-			text.setFont(*ResMgr::fonts.get("dungeon"));
-			break;
+			return *ResMgr::fonts.get("dungeon");
 		case FONT_MAIDWORD:
-			text.setFont(*ResMgr::fonts.get("maidenword"));
-			break;
+			return *ResMgr::fonts.get("maidenword");
 	}
+}
+
+void TextStyle::applyTo(sf::Text& text, double scale) const {
+	text.setFont(get_font_rsrc(font));
 	text.setCharacterSize(pointSize * scale);
 	int style = sf::Text::Regular;
 	if(italic) style |= sf::Text::Italic;
