@@ -290,6 +290,10 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 		str_to_draw.setPosition(snippet.at);
 		if(snippet.hilited) {
 			rectangle bounds = str_to_draw.getGlobalBounds();
+			// Width and height are too large by ui_scale because scale-aware text exists in unscaled space:
+			bounds.width() /= get_ui_scale();
+			bounds.height() /= get_ui_scale();
+
 			// Adjust so that drawing the same text to
 			// the same rect is positioned exactly right
 			bounds.move_to(snippet.at);
