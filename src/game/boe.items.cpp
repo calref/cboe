@@ -463,7 +463,7 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 		item = *item_array[item_hit];
 		if(item.property) {
 			if(!me.getResult<bool>()) {
-				std::string choice = cChoiceDlog("steal-item",{"steal","leave"}).show();
+				std::string choice = cChoiceDlog("steal-item",{"steal","leave"}, &me).show();
 				if(choice == "leave") return true;
 				me.setResult(true);
 			}
