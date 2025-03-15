@@ -441,7 +441,7 @@ bool load_scenario_header(fs::path file,scen_header_type& scen_head){
 	
 	// So file is (probably) OK, so load in string data and close it.
 	cScenario temp_scenario;
-	if(!load_scenario(file, temp_scenario, true))
+	if(!load_scenario(file, temp_scenario, eLoadScenario::ONLY_HEADER))
 		return false;
 	
 	scen_head.name = temp_scenario.scen_name;

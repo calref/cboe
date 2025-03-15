@@ -442,7 +442,7 @@ static void handle_scenario_args() {
 		}
 
 		cScenario scenario;
-		if(load_scenario(path, scenario, false)){
+		if(load_scenario(path, scenario)){
 			if(!party_in_memory){
 				start_new_game(true);
 			}
