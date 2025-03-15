@@ -276,6 +276,7 @@ bool cControl::handleClick(location, cFramerateLimiter& fps_limiter){
 				clickPos = getWindow().mapPixelToCoords(clickPos);
 				clicked = frame.contains(clickPos);
 				depressed = false;
+				break;
 			} else if(e.type == sf::Event::MouseMoved){
 				restore_cursor();
 				location toPos(e.mouseMove.x, e.mouseMove.y);
