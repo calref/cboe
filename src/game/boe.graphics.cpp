@@ -171,7 +171,7 @@ void adjust_window_mode() {
 	hideMenuBar();
 	double ui_scale = get_ui_scale();
 	if(ui_scale < 0.1) ui_scale = 1.0;
-	float width = boe_width * ui_scale, height = boe_height * ui_scale;
+	int width = boe_width * ui_scale, height = boe_height * ui_scale;
 	
 	// TODO: Make display_mode an enum
 	// 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
