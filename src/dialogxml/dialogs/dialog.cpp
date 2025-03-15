@@ -914,17 +914,30 @@ void cDialog::process_keystroke(cKey keyHit){
 	ctrlIter iter = controls.begin();
 	bool enterKeyHit = keyHit.spec && keyHit.k == key_enter;
 	while(iter != controls.end()){
-		if((iter->second->isVisible() && iter->second->isClickable())
-			&& (iter->second->getAttachedKey() == keyHit || (iter->second->isDefault() && enterKeyHit))){
+		cControl* ctrl = iter->second;
+		if(ctrl->isVisible()){
+			if(ctrl->isClickable() &&
+				(ctrl->getAttachedKey() == keyHit || (ctrl->isDefault() && enterKeyHit))){
 
-			iter->second->setActive(true);
-			draw();
-			iter->second->playClickSound();
-			iter->second->setActive(false);
-			draw();
-			sf::sleep(sf::milliseconds(8));
-			iter->second->triggerClickHandler(*this,iter->first,mod_none);
-			return;
+				ctrl->handleKeyTriggered(*this);
+				return;
+			}
+			if(ctrl->isContainer()){
+				cContainer* container = dynamic_cast<cContainer*>(ctrl);
+				std::string child_hit;
+				container->forEach([&keyHit, &child_hit, enterKeyHit](std::string child_id, cControl& child_ctrl) {
+					if(child_ctrl.isClickable() &&
+						(child_ctrl.getAttachedKey() == keyHit || (child_ctrl.isDefault() && enterKeyHit))){
+						
+						if(child_hit.empty()) child_hit = child_id;
+					}
+				});
+				if(!child_hit.empty()) {
+					findControl(child_hit)->handleKeyTriggered(*this);
+					return;
+				}
+			}
+
 		}
 		iter++;
 	}

@@ -291,6 +291,16 @@ bool cControl::handleClick(location, cFramerateLimiter& fps_limiter){
 	return clicked;
 }
 
+void cControl::handleKeyTriggered(cDialog& parent) {
+	setActive(true);
+	parent.draw();
+	playClickSound();
+	setActive(false);
+	parent.draw();
+	sf::sleep(sf::milliseconds(8));
+	triggerClickHandler(parent,name,mod_none);
+}
+
 std::string cControl::getAttachedKeyDescription() const {
 	std::string s;
 	if(key.spec) {
