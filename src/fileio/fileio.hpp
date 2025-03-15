@@ -22,9 +22,14 @@ class cUniverse;
 
 extern std::vector<fs::path> extra_scen_dirs;
 
+enum class eLoadScenario {
+	ONLY_HEADER,
+	SAVE_PREVIEW,
+	FULL
+};
 std::vector<fs::path> all_scen_dirs();
 fs::path locate_scenario(std::string scen_name);
-bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header = false);
+bool load_scenario(fs::path file_to_load, cScenario& scenario, eLoadScenario load_type = eLoadScenario::FULL);
 
 fs::path nav_get_or_decode_party();
 fs::path nav_put_or_temp_party(fs::path def = "");

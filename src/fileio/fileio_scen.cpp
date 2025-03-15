@@ -41,11 +41,11 @@ extern std::string last_load_file;
 void load_spec_graphics_v1(fs::path scen_file);
 void load_spec_graphics_v2(int num_sheets);
 // Load old scenarios (town talk is handled by the town loading function)
-static bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_header);
+static bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, eLoadScenario load_type);
 static bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, legacy::scenario_data_type& scenario);
 static bool load_town_v1(fs::path scen_file,short which_town,cTown& the_town,legacy::scenario_data_type& scenario,std::vector<shop_info_t>& shops);
 // Load new scenarios
-static bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_header);
+static bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, eLoadScenario load_type);
 // Some of these are non-static so that the test cases can access them.
 ticpp::Document xmlDocFromStream(std::istream& stream, std::string name);
 void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario);
@@ -134,7 +134,7 @@ fs::path locate_scenario(std::string scen_name) {
 
 bool cur_scen_pushed_paths = false;
 
-bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header) {
+bool load_scenario(fs::path file_to_load, cScenario& scenario, eLoadScenario load_type) {
 
 	// Before loading a scenario, we may need to pop scenario resource paths.
 	if(cur_scen_pushed_paths){
@@ -163,13 +163,13 @@ bool load_scenario(fs::path file_to_load, cScenario& scenario, bool only_header)
 		return false;
 	}  else try {
 		if(fname.substr(dot) == ".boes"){
-			if(load_scenario_v2(file_to_load, scenario, only_header)){
+			if(load_scenario_v2(file_to_load, scenario, load_type)){
 				last_load_file = file_to_load.string();
 				return true;
 			}
 			return false;
 		}else if(fname.substr(dot) == ".exs"){
-			if(load_scenario_v1(file_to_load, scenario, only_header)){
+			if(load_scenario_v1(file_to_load, scenario, load_type)){
 				last_load_file = file_to_load.string();
 				return true;
 			}
@@ -204,7 +204,7 @@ template<typename Container> static void port_shop_spec_node(cSpecial& spec, std
 }
 
 static const std::string err_prefix = "Error loading Blades of Exile Scenario: ";
-bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_header){
+bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, eLoadScenario load_type){
 	bool file_ok = false;
 	long len;
 	char temp_str[256];
@@ -236,7 +236,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	  	file_ok = true;
 	} else if(scenario.format.flag1 == 'O' && scenario.format.flag2 == 'B' && scenario.format.flag3 == 'O' && scenario.format.flag4 == 'E') {
 		// This means we're looking at the scenario header file of an unpacked new-format scenario.
-		return load_scenario_v2(file_to_load.parent_path(), scenario, only_header);
+		return load_scenario_v2(file_to_load.parent_path(), scenario, load_type);
 	}
 	if(!file_ok) {
 		fclose(file_id);
@@ -290,7 +290,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	scenario.ter_types[23].fly_over = false;
 	
 	scenario.scen_file = file_to_load;
-	if(only_header) return true;
+	if(load_type == eLoadScenario::ONLY_HEADER) return true;
 	load_spec_graphics_v1(scenario.scen_file);
 	
 	// Now load all the outdoor sectors
@@ -317,6 +317,9 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, bool only_head
 	}
 	// Enable character creation in starting town
 	scenario.towns[scenario.which_town_start]->has_tavern = true;
+	
+	if(load_type == eLoadScenario::SAVE_PREVIEW)
+		return true;
 	
 	// Check special nodes in case there were outdoor shops
 	for(cSpecial& spec : scenario.scen_specials) {
@@ -2162,7 +2165,7 @@ static void readSpecialNodesFromStream(std::istream& stream, std::vector<cSpecia
 }
 
 extern std::string scenario_temp_dir_name;
-bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_header) {
+bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, eLoadScenario load_type) {
 	// First determine whether we're dealing with a packed or unpacked scenario.
 	bool is_packed = true;
 	tarball pack;
@@ -2209,23 +2212,24 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_head
 		std::istream& scen_data = getFile("scenario.xml");
 		readScenarioFromXml(xmlDocFromStream(scen_data, "scenario.xml"), scenario);
 		
-		if(only_header) return true;
-		
-		// Next, terrain types...
-		std::istream& terrain = getFile("terrain.xml");
-		readTerrainFromXml(xmlDocFromStream(terrain, "terrain.xml"), scenario);
-		
-		// ...items...
-		std::istream& items = getFile("items.xml");
-		readItemsFromXml(xmlDocFromStream(items, "items.xml"), scenario);
-		
-		// ...and monsters.
-		std::istream& monsters = getFile("monsters.xml");
-		readMonstersFromXml(xmlDocFromStream(monsters, "monsters.xml"), scenario);
-		
-		// Finally, the special nodes.
-		std::istream& nodes = getFile("scenario.spec");
-		readSpecialNodesFromStream(nodes, scenario.scen_specials, "scenario.spec");
+		if(load_type == eLoadScenario::ONLY_HEADER) return true;
+		if(load_type != eLoadScenario::SAVE_PREVIEW){
+			// Next, terrain types...
+			std::istream& terrain = getFile("terrain.xml");
+			readTerrainFromXml(xmlDocFromStream(terrain, "terrain.xml"), scenario);
+			
+			// ...items...
+			std::istream& items = getFile("items.xml");
+			readItemsFromXml(xmlDocFromStream(items, "items.xml"), scenario);
+			
+			// ...and monsters.
+			std::istream& monsters = getFile("monsters.xml");
+			readMonstersFromXml(xmlDocFromStream(monsters, "monsters.xml"), scenario);
+			
+			// Finally, the special nodes.
+			std::istream& nodes = getFile("scenario.spec");
+			readSpecialNodesFromStream(nodes, scenario.scen_specials, "scenario.spec");
+		}
 	}
 	
 	// Next, read the outdoors. Note that the space has already been reserved for them.
@@ -2237,13 +2241,15 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_head
 			std::istream& outdoors = getFile("out/" + file_basename + ".xml");
 			readOutdoorsFromXml(xmlDocFromStream(outdoors, file_basename + ".xml"), *scenario.outdoors[x][y]);
 			
-			// Then the map.
-			std::istream& out_map = getFile("out/" + file_basename + ".map");
-			loadOutMapData(load_map(out_map, false, file_basename + ".map"), loc(x,y), scenario);
-			
-			// And the special nodes.
-			std::istream& out_spec = getFile("out/" + file_basename + ".spec");
-			readSpecialNodesFromStream(out_spec, scenario.outdoors[x][y]->specials, file_basename + ".spec");
+			if(load_type != eLoadScenario::SAVE_PREVIEW){
+				// Then the map.
+				std::istream& out_map = getFile("out/" + file_basename + ".map");
+				loadOutMapData(load_map(out_map, false, file_basename + ".map"), loc(x,y), scenario);
+				
+				// And the special nodes.
+				std::istream& out_spec = getFile("out/" + file_basename + ".spec");
+				readSpecialNodesFromStream(out_spec, scenario.outdoors[x][y]->specials, file_basename + ".spec");
+			}
 		}
 	}
 	
@@ -2254,18 +2260,22 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, bool only_head
 		std::istream& town = getFile("towns/" + file_basename + ".xml");
 		readTownFromXml(xmlDocFromStream(town, file_basename + ".xml"), scenario.towns[i], scenario);
 		
-		// Then the map.
-		std::istream& town_map = getFile("towns/" + file_basename + ".map");
-		loadTownMapData(load_map(town_map, true, file_basename + ".map"), i, scenario);
-		
-		// And the special nodes.
-		std::istream& town_spec = getFile("towns/" + file_basename + ".spec");
-		readSpecialNodesFromStream(town_spec, scenario.towns[i]->specials, file_basename + ".spec");
-		
-		// Don't forget the dialogue nodes.
-		std::istream& town_talk = getFile("towns/talk" + std::to_string(i) + ".xml");
-		readDialogueFromXml(xmlDocFromStream(town_talk, "talk.xml"), scenario.towns[i]->talking, i);
+		if(load_type != eLoadScenario::SAVE_PREVIEW){
+			// Then the map.
+			std::istream& town_map = getFile("towns/" + file_basename + ".map");
+			loadTownMapData(load_map(town_map, true, file_basename + ".map"), i, scenario);
+			
+			// And the special nodes.
+			std::istream& town_spec = getFile("towns/" + file_basename + ".spec");
+			readSpecialNodesFromStream(town_spec, scenario.towns[i]->specials, file_basename + ".spec");
+			
+			// Don't forget the dialogue nodes.
+			std::istream& town_talk = getFile("towns/talk" + std::to_string(i) + ".xml");
+			readDialogueFromXml(xmlDocFromStream(town_talk, "talk.xml"), scenario.towns[i]->talking, i);
+		}
 	}
+	
+	if(load_type == eLoadScenario::SAVE_PREVIEW) return true;
 	
 	// One last thing - custom graphics and sounds.
 	// First figure out where they are in the filesystem. The implementation of this depends on whether the scenario is packed.

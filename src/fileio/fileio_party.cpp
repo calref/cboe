@@ -387,20 +387,9 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, bool preview){
 			return false;
 		}
 		
-		if(!load_scenario(path, univ.scenario))
+		if(!load_scenario(path, univ.scenario, preview ? eLoadScenario::SAVE_PREVIEW : eLoadScenario::FULL))
 			return false;
 
-		if(partyIn.hasFile("save/scenario.txt")) {
-			// Load scenario data
-			std::istream& fin = partyIn.getFile("save/scenario.txt");
-			if(!fin) {
-				if(!preview) showError("Loading Blades of Exile save file failed.");
-				return false;
-			}
-			file.readFrom(fin);
-			univ.scenario.readFrom(file);
-		}
-		
 		// We have all we need for the file picker preview.
 		if(preview){
 			univ.file = file_to_load;
@@ -409,6 +398,17 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, bool preview){
 		}
 
 		// Below here, if(!preview) does not need to be checked before showing errors and warnings.
+
+		if(partyIn.hasFile("save/scenario.txt")) {
+			// Load scenario data
+			std::istream& fin = partyIn.getFile("save/scenario.txt");
+			if(!fin) {
+				showError("Loading Blades of Exile save file failed.");
+				return false;
+			}
+			file.readFrom(fin);
+			univ.scenario.readFrom(file);
+		}
 
 		{ // Then the "setup" array
 			std::istream& fin = partyIn.getFile("save/setup.dat");
