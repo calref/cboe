@@ -2126,6 +2126,12 @@ public:
 	fs::path run() {
 		template_info_str = me["info1"].getText();
 
+		// When doing Save As, make Enter save in a new file, not cancel:
+		if(saving){
+			me["cancel"].setDefault(false);
+			me["save1"].setDefault(true);
+		}
+
 		me["cancel"].attachClickHandler(std::bind(&cFilePicker::doCancel, this));
 		me["find"].attachClickHandler(std::bind(&cFilePicker::doFileBrowser, this));
 		// Since it would be crazy to record and replay the metadata shown on a player's save picker
