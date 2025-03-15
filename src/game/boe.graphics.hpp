@@ -4,6 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "location.hpp"
+#include "tools/framerate_limiter.hpp"
 
 enum {
 	REFRESH_NONE = 0,
@@ -33,7 +34,7 @@ void draw_startup(short but_type);
 void draw_anim();
 void place_anim(); 
 void draw_start_button(eStartButton which_position,short which_button);
-void arrow_button_click(rectangle button_rect);
+bool arrow_button_click(rectangle button_rect, cFramerateLimiter* fps_limiter = nullptr);
 void end_startup();
 void load_main_screen();
 void redraw_screen(int refresh);

@@ -1612,8 +1612,8 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 		if(point_in_area.in(pc_help_button)) {
 			rectangle help_button = pc_help_button;
 			help_button.offset(pc_win_ul);
-			arrow_button_click(help_button);
-			show_dialog_action("help-party");
+			if(arrow_button_click(help_button, &fps_limiter))
+				show_dialog_action("help-party");
 		}
 		for(int i = 0; i < 6; i++)
 			for(auto j : pc_buttons[i].keys())
@@ -1623,27 +1623,27 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 						break;
 					rectangle button_rect = pc_buttons[i][j];
 					button_rect.offset(pc_win_ul);
-					arrow_button_click(button_rect);
-					switch(j) {
-						case PCBTN_NAME:
-							handle_switch_pc(i, need_redraw, need_reprint);
-							break;
-						case PCBTN_HP:
-							handle_print_pc_hp(i, need_reprint);
-							break;
-						case PCBTN_SP:
-							handle_print_pc_sp(i, need_reprint);
-							break;
-						case PCBTN_INFO:
-							give_pc_info(i);
-							// don't call advance_time
-							return false;
-						case PCBTN_TRADE:
-							handle_trade_places(i, need_reprint);
-							break;
-						case MAX_ePlayerButton:
-							break; // Not a button
-					}
+					if(arrow_button_click(button_rect, &fps_limiter))
+						switch(j) {
+							case PCBTN_NAME:
+								handle_switch_pc(i, need_redraw, need_reprint);
+								break;
+							case PCBTN_HP:
+								handle_print_pc_hp(i, need_reprint);
+								break;
+							case PCBTN_SP:
+								handle_print_pc_sp(i, need_reprint);
+								break;
+							case PCBTN_INFO:
+								give_pc_info(i);
+								// don't call advance_time
+								return false;
+							case PCBTN_TRADE:
+								handle_trade_places(i, need_reprint);
+								break;
+							case MAX_ePlayerButton:
+								break; // Not a button
+						}
 				}
 		put_pc_screen();
 		put_item_screen(stat_window);
@@ -1664,21 +1664,21 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 			if(item_bottom_button_active[i] > 0 && point_in_area.in(item_screen_button_rects[i])) {
 				rectangle button_rect = item_screen_button_rects[i];
 				button_rect.offset(item_win_ul);
-				arrow_button_click(button_rect);
-				switch(i) {
-					case 6: // special screen
-						set_stat_window(ITEM_WIN_SPECIAL, true);
-						break;
-					case 7:
-						set_stat_window(ITEM_WIN_QUESTS, true);
-						break;
-					case 8: // help
-						show_dialog_action("help-inventory");
-						break;
-					default:
-						handle_switch_pc_items(i, need_redraw);
-						break;
-				}
+				if(arrow_button_click(button_rect, &fps_limiter))
+					switch(i) {
+						case 6: // special screen
+							set_stat_window(ITEM_WIN_SPECIAL, true);
+							break;
+						case 7:
+							set_stat_window(ITEM_WIN_QUESTS, true);
+							break;
+						case 8: // help
+							show_dialog_action("help-inventory");
+							break;
+						default:
+							handle_switch_pc_items(i, need_redraw);
+							break;
+					}
 			}
 		if(stat_window <= ITEM_WIN_QUESTS) {
 			for(int i = 0; i < 8; i++)
@@ -1686,33 +1686,33 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 					if(item_area_button_active[i][j] && point_in_area.in(item_buttons[i][j])) {
 						rectangle button_rect = item_buttons[i][j];
 						button_rect.offset(item_win_ul);
-						arrow_button_click(button_rect);
-						
-						item_hit = item_sbar->getPosition() + i;
-						switch(j) {
-							case ITEMBTN_NAME: case ITEMBTN_ICON: // equip
-								handle_equip_item(item_hit, need_redraw);
-								break;
-							case ITEMBTN_USE:
-								handle_use_item(item_hit, did_something, need_redraw);
-								break;
-							case ITEMBTN_GIVE:
-								handle_give_item(item_hit, did_something, need_redraw);
-								break;
-							case ITEMBTN_DROP:
-								if(stat_window == ITEM_WIN_SPECIAL) {
-									use_spec_item(spec_item_array[item_hit], need_redraw);
-								} else handle_drop_item(item_hit, need_redraw);
-								break;
-							case ITEMBTN_INFO:
-								show_item_info(item_hit);
-								break;
-							case ITEMBTN_SPEC: // sell? That this code was reached indicates that the item was sellable
-								// (Based on item_area_button_active)
-								handle_item_shop_action(item_hit);
-								break;
-							case MAX_eItemButton:
-								break; // Not a button
+						if(arrow_button_click(button_rect, &fps_limiter)){
+							item_hit = item_sbar->getPosition() + i;
+							switch(j) {
+								case ITEMBTN_NAME: case ITEMBTN_ICON: // equip
+									handle_equip_item(item_hit, need_redraw);
+									break;
+								case ITEMBTN_USE:
+									handle_use_item(item_hit, did_something, need_redraw);
+									break;
+								case ITEMBTN_GIVE:
+									handle_give_item(item_hit, did_something, need_redraw);
+									break;
+								case ITEMBTN_DROP:
+									if(stat_window == ITEM_WIN_SPECIAL) {
+										use_spec_item(spec_item_array[item_hit], need_redraw);
+									} else handle_drop_item(item_hit, need_redraw);
+									break;
+								case ITEMBTN_INFO:
+									show_item_info(item_hit);
+									break;
+								case ITEMBTN_SPEC: // sell? That this code was reached indicates that the item was sellable
+									// (Based on item_area_button_active)
+									handle_item_shop_action(item_hit);
+									break;
+								case MAX_eItemButton:
+									break; // Not a button
+							}
 						}
 					}
 		}
