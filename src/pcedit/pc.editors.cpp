@@ -530,17 +530,37 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 	save.skills = univ.party[pc_num].skills;
 	
 	cDialog xpDlog(*ResMgr::dialogs.get("spend-xp"),parent);
-	xpDlog.addLabelFor("hp","Health (1/10)",LABEL_LEFT,75,true);
-	xpDlog.addLabelFor("sp","Spell Pts. (1/15)",LABEL_LEFT,75,true);
+
+	auto add_cost_to_label = [&xpDlog, mode](std::string skill, int skp, int gold) {
+		if(mode < 2){
+			cControl& label = xpDlog[skill + "-label"];
+			label.appendText(" (");
+			label.appendText(std::to_string(skp) + " pt");
+			if(skp != 1){
+				label.appendText("s");
+			}
+			label.appendText(".");
+			if(mode == 1){
+				label.appendText("/" + std::to_string(gold) + "gp");
+			}
+			label.appendText(")");
+		}
+	};
+
+	const int LABEL_OFFSET_COL1 = 85;
+	const int LABEL_OFFSET_COL2 = 74;
+	xpDlog.addLabelFor("hp","Health",LABEL_LEFT,LABEL_OFFSET_COL1,true);
+	add_cost_to_label("hp", 1, 10);
+	xpDlog.addLabelFor("sp","Spell Pts.",LABEL_LEFT,LABEL_OFFSET_COL1,true);
+	add_cost_to_label("sp", 1, 15);
 	auto spend_xp_filter = std::bind(spend_xp_event_filter,_1,_2,_3,std::ref(save));
 	static const std::string minus = "-m", plus = "-p";
 	for(int i = 54; i < 73; i++) {
 		std::ostringstream sout;
 		eSkill skill = eSkill(i - 54);
 		std::string id = boost::lexical_cast<std::string>(skill);
-		sout << get_str("skills",1 + 2 * (i - 54)) << ' ' << '(';
-		sout << skill_cost[skill] << '/' << skill_g_cost[skill] << ')';
-		xpDlog.addLabelFor(id,sout.str(),LABEL_LEFT,(i < 63) ? 75 : 69,true);
+		xpDlog.addLabelFor(id,get_str("skills",1 + 2 * (i - 54)),LABEL_LEFT,(i < 63) ? LABEL_OFFSET_COL1 : LABEL_OFFSET_COL2,true);
+		add_cost_to_label(id, skill_cost[skill], skill_g_cost[skill]);
 		xpDlog[id + minus].attachClickHandler(spend_xp_filter);
 		xpDlog[id + plus].attachClickHandler(spend_xp_filter);
 	}
@@ -549,6 +569,11 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 	xpDlog.attachClickHandlers(std::bind(spend_xp_navigate_filter,_1,_2,std::ref(save)),{"keep","cancel","left","right","help"});
 	xpDlog.attachClickHandlers(spend_xp_filter,{"sp-m","sp-p","hp-m","hp-p"});
 	
+	if(mode != 1){
+		xpDlog["gold-label"].hide();
+		xpDlog["gold"].hide();
+	}
+
 	xpDlog.runWithHelp(10,11);
 	
 	return xpDlog.getResult<bool>();
