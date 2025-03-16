@@ -20,6 +20,7 @@
 #include "tools/cursors.hpp"
 #include "replay.hpp"
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string/replace.hpp>
 #include "winutil.hpp"
 
 // Hyperlink forward declaration
@@ -39,8 +40,19 @@ std::string cControl::generateRandomString() {
 
 void cControl::setText(std::string l){
 	lbl = l;
-	// TODO: calling recalcRect() here has major unwanted side effects
-	// recalcRect();
+	// NOTE: calling recalcRect() here seems like a good idea but it has too many unwanted side-effects.
+	// It's better to call it manually when changing clickable text.
+}
+
+void cControl::replaceText(std::string find, std::string replace) {
+	std::string text = getText();
+	boost::replace_first(text, find, replace);
+	setText(text);
+}
+
+void cControl::appendText(std::string l) {
+	std::string text = getText();
+	setText(text + l);
 }
 
 std::string cControl::getText() const {

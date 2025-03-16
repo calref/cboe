@@ -1847,11 +1847,9 @@ class cFilePicker {
 			}else{
 				if(picking_auto){
 					me["title-load"].hide();
-					std::string title = me["title-auto"].getText();
 					fs::path party_name = save_folder.filename();
 					party_name.replace_extension();
-					boost::replace_first(title, "{Folder}", party_name.string());
-					me["title-auto"].setText(title);
+					me["title-auto"].replaceText("{Folder}", party_name.string());
 				}else{
 					me["title-auto"].hide();
 				}
