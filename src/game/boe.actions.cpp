@@ -2248,7 +2248,7 @@ void debug_ghost_mode() {
 		ASB("Debug: Ghost mode OFF.");
 	}else{
 		univ.ghost_mode = true;
-		ASB("Debug:Ghost mode ON.");
+		ASB("Debug: Ghost mode ON.");
 	}
 	print_buf();
 }
