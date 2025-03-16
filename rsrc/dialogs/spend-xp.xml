@@ -9,7 +9,7 @@
 
 	<!-- Left column -->
 	<text size='large' top='32' left='56' width='228' height='16'>Skill (Cost):</text>
-	<text size='large' top='32' left='190' width='228' height='16'>Level</text>
+	<text size='large' top='32' left='190' width='50' height='16'>Level</text>
 
 	<text name='hp' framed='true' top='56' left='194' width='28' height='16'/>
 	<button name='hp-m' type='small' top='53' left='231'>-</button>
@@ -51,7 +51,7 @@
 
 	<!-- Right column -->
 	<text size='large' top='32' left='291' width='228' height='16'>Skill (Cost):</text>
-	<text size='large' top='32' left='431' width='228' height='16'>Level</text>
+	<text size='large' top='32' left='431' width='50' height='16'>Level</text>
 
 	<text size='large' top='53' left='292' width='133' height='17'>Magic Skills:</text>
 	<text name='mage' framed='true' top='76' left='435' width='28' height='16'/>
