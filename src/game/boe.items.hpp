@@ -37,7 +37,9 @@ void reset_item_max();
 short item_val(cItem item);
 void place_treasure(location where,short level,short loot,short mode);
 std::string get_text_response(std::string prompt = "", pic_num_t pic = 16);
-short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names = {});
+// Prompt the player for a number, which might be an index in a given list of strings.
+// Specify cancel_value to show a cancel button, which will return the given value (for example, -1)
+short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names = {}, boost::optional<short> cancel_value = boost::none);
 
 short char_select_pc(short mode,const char *title);
 short select_pc(short mode);

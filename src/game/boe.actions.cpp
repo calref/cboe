@@ -2003,7 +2003,8 @@ void debug_fight_encounter(bool wandering) {
 		prompt += "special encounter?";
 	}
 
-	int i = get_num_response(0, 3, prompt);
+	int i = get_num_response(0, 3, prompt, {}, -1);
+	if(i == -1) return;
 
 	cOutdoors::cWandering encounter;
 	if(wandering){
@@ -2024,7 +2025,8 @@ void debug_give_item() {
 	for(cItem& item : univ.scenario.scen_items){
 		item_names.push_back(item.full_name);
 	}
-	int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?", item_names);
+	int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?", item_names, -1);
+	if(i == -1) return;
 	bool was_ident = univ.scenario.scen_items[i].ident;
 	univ.scenario.scen_items[i].ident = true;
 	bool given = univ.current_pc().give_item(univ.scenario.scen_items[i], true);
@@ -2176,7 +2178,8 @@ void debug_enter_town() {
 	for(cTown* town : univ.scenario.towns){
 		town_names.push_back(town->name);
 	}
-	int town = get_num_response(0, univ.scenario.towns.size() - 1, "Enter Town Number", town_names);
+	int town = get_num_response(0, univ.scenario.towns.size() - 1, "Enter Town Number", town_names, -1);
+	if(town == -1) return;
 
 	if(has_feature_flag("debug-enter-town", "move-outdoors")){
 		end_town_mode(false, {0,0}, true);

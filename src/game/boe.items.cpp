@@ -863,7 +863,7 @@ std::string get_text_response(std::string prompt, pic_num_t pic) {
 	return result;
 }
 
-short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names) {
+short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names, boost::optional<short> cancel_value) {
 	std::ostringstream sout;
 	sout << prompt;
 	
@@ -894,6 +894,17 @@ short get_num_response(short min, short max, std::string prompt, std::vector<std
 			}
 			return true;
 		});
+
+	if(cancel_value){
+		numPanel["cancel"].attachClickHandler([cancel_value](cDialog& me,std::string,eKeyMod) -> bool {
+			me.setResult<int>(*cancel_value);
+			me.toast(false);
+			return true;
+		});
+	}else{
+		numPanel["cancel"].hide();
+	}
+
 	numPanel.run();
 	
 	return numPanel.getResult<int>();
