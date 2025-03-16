@@ -1818,7 +1818,7 @@ bool combat_next_step() {
 	
 	if((combat_active_pc == 6) && (univ.cur_pc != store_pc)) {
 		std::ostringstream create_line;
-		create_line << "Active:  " << univ.current_pc().name;
+		create_line << "Active: " << univ.current_pc().name;
 		create_line << " (#" << univ.cur_pc + 1 << ", " << univ.current_pc().ap << " ap.)";
 		add_string_to_buf(create_line.str());
 		print_buf();
