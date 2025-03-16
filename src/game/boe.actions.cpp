@@ -2190,7 +2190,7 @@ void debug_enter_town() {
 	else if(univ.party.direction == 4) find_direction_from = 0;
 	else if(univ.party.direction < 4) find_direction_from = 3;
 	else find_direction_from = 1;
-	start_town_mode(town, find_direction_from);
+	start_town_mode(town, find_direction_from, true);
 }
 
 void debug_refresh_stores() {

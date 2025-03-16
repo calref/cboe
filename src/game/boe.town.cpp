@@ -69,7 +69,7 @@ void force_town_enter(short which_town,location where_start) {
 }
 
 //short entry_dir; // if 9, go to forced
-void start_town_mode(short which_town, short entry_dir) {
+void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
 	short town_number;
 	short former_town;
 	bool monsters_loaded = false,town_toast = false;
@@ -326,7 +326,8 @@ void start_town_mode(short which_town, short entry_dir) {
 			if(no_thrash.count(&monst) == 0)
 				monst.active = eCreatureStatus::DEAD;
 	}
-	handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc);
+	if(!debug_enter)
+		handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc);
 	
 	// Flush excess doomguards and viscous goos
 	for(short i = 0; i < univ.town.monst.size(); i++)
