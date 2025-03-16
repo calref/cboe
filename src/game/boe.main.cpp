@@ -549,6 +549,7 @@ static void replay_action(Element& action) {
 		try{
 			// Legacy replays use ints to encode startup buttons
 			btn_idx = std::stoi(info["btn"]);
+			btn_idx = startup_button_indices[startup_button_names_v1[btn_idx]];
 		}catch(std::invalid_argument& err){
 			// Newer replays use strings to encode startup buttons
 			btn_idx = startup_button_indices[info["btn"]];
