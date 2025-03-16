@@ -1055,7 +1055,7 @@ cPlayer::cPlayer(cParty& party,ePartyPreset key,short slot) : cPlayer(party) {
 				{eSkill::POISON,2},
 			}, {
 				{eSkill::STRENGTH,8}, {eSkill::DEXTERITY,6}, {eSkill::INTELLIGENCE,2},
-				{eSkill::EDGED_WEAPONS,3}, {eSkill::BASHING_WEAPONS,3}, {eSkill::ARCHERY,2},
+				{eSkill::EDGED_WEAPONS,2}, {eSkill::BASHING_WEAPONS,2}, {eSkill::ARCHERY,4},
 				{eSkill::DISARM_TRAPS,4}, {eSkill::LOCKPICKING,4}, {eSkill::POISON,2}, {eSkill::LUCK,1},
 			}, {
 				{eSkill::STRENGTH,3}, {eSkill::DEXTERITY,2}, {eSkill::INTELLIGENCE,6},
