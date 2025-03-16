@@ -2182,7 +2182,6 @@ void debug_enter_town() {
 	if(town == -1) return;
 
 	if(has_feature_flag("debug-enter-town", "move-outdoors")){
-		end_town_mode(false, {0,0}, true);
 		outd_move_to_first_town_entrance(town);
 	}
 
@@ -3629,23 +3628,8 @@ void outd_move_to_first_town_entrance(int town) {
 	if(!town_entrances.empty()){
 		// When there are multiple entrances, this part of the code shouldn't matter,
 		// but also won't hurt.
-		town_entrance_t first_entrance_found = town_entrances[0];
-		int x = first_entrance_found.out_sec.x;
-		int y = first_entrance_found.out_sec.y;
-		// Very janky but I don't know how else to make it properly load the right sections and set i_w_c
-		while(univ.party.outdoor_corner.x > x){
-			shift_universe_left();
-		}
-		while(univ.party.outdoor_corner.x < x){
-			shift_universe_right();
-		}
-		while(univ.party.outdoor_corner.y > y){
-			shift_universe_up();
-		}
-		while(univ.party.outdoor_corner.y < y){
-			shift_universe_down();
-		}
-		outd_move_party(local_to_global(first_entrance_found.loc), true);
+		town_entrance_t first_entrance = town_entrances[0];
+		position_party(first_entrance.out_sec.x, first_entrance.out_sec.y, first_entrance.loc.x, first_entrance.loc.y);
 	}
 }
 
