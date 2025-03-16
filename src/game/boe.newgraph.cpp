@@ -1048,7 +1048,7 @@ void handle_target_mode(eGameMode target_mode, int range) {
 		std::vector<location> enemy_locs_in_range;
 		for(short i = 0; i < univ.town.monst.size(); i++){
 			auto& monst = univ.town.monst[i];
-			if(monst.is_alive()) {
+			if(monst.is_alive() && party_can_see_monst(i)) {
 				eAttitude att = monst.attitude;
 				if((att == eAttitude::HOSTILE_A || att == eAttitude::HOSTILE_B)
 					&& dist(loc, monst.cur_loc) <= range){
