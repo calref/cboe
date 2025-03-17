@@ -2151,6 +2151,22 @@ void debug_kill_party() {
 	}
 }
 
+void debug_hurt_party() {
+	if(recording){
+		record_action("debug_hurt_party", "");
+	}
+
+	short pc = select_pc(0, "Hurt who?", true);
+	if(pc == 6) return;
+	for(int i = 0; i < 6; ++i){
+		if(i == pc || (univ.party[i].is_alive() && pc == 7)) {
+			// Hurt PCs so you can test healing
+			short wounded = univ.party[i].max_health / 2;
+			univ.party[i].cur_health = min(univ.party[i].cur_health, wounded);
+		}
+	}
+}
+
 void debug_magic_map() {
 	if(recording){
 		record_action("debug_magic_map", "");
@@ -2508,6 +2524,7 @@ void init_debug_actions() {
 	add_debug_action({'T'}, "Enter town", debug_enter_town);
 	add_debug_action({'W'}, "Refresh jobs/shops", debug_refresh_stores);
 	add_debug_action({'X'}, "Kill party", debug_kill_party);
+	add_debug_action({'-'}, "Hurt the party", debug_hurt_party);
 	add_debug_action({'~'}, "Clear captured souls", clear_trapped_monst);
 	add_debug_action({'='}, "Heal, increase magic skills", debug_heal_plus_extra);
 	add_debug_action({'<'}, "Make one day pass", debug_increase_age);
