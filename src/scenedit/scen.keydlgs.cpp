@@ -461,6 +461,14 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 				strings.push_back((*cSpell::fromNum(eSkill::PRIEST_SPELLS, i)).name());
 			}
 			break;
+		case STRT_ANY_SPELL:
+			for(int i = 0; i < 255; i++) {
+				eSpell spell = cSpell::fromNum(i);
+				if(spell != eSpell::NONE) {
+					strings.push_back((*spell).name());
+				}
+			}
+			break;
 		case STRT_ALCHEMY:
 			for(int i = 0; i < 20; i++) {
 				strings.push_back(get_str("magic-names", i + 200));
@@ -1131,6 +1139,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 				case STRT_ALCHEMY: title = "Which recipe?"; break;
 				case STRT_MAGE: title = "Which spell?"; break;
 				case STRT_PRIEST: title = "Which spell?"; break;
+				case STRT_ANY_SPELL: title = "Which spell?"; break;
 				case STRT_SKILL: title = "Which statistic?"; break;
 				case STRT_SKILL_CHECK: title = "Which statistic?"; break;
 				case STRT_TRAIT: title = "Which trait?"; break;
@@ -1175,10 +1184,21 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 				break;
 			}
 			auto otherField = get_control_for_field(fcn.continuation);
+			static int nMageSpells;
 			if(fcn.str_type == STRT_SECTOR) {
 				val = val * scenario.outdoors.height() + me[otherField].getTextAsNum();
 			} else if(fcn.str_type == STRT_SKILL_CHECK && val >= 100) {
 				val -= 79;
+			} else if(fcn.str_type == STRT_ANY_SPELL && val >= 100) {
+				if(nMageSpells == 0) {
+					for(int i = 0; i < 100; i++) {
+						if(cSpell::fromNum(i) == eSpell::NONE) {
+							nMageSpells = i;
+							break;
+						}
+					}
+				}
+				val -= 100 - nMageSpells;
 			}
 			store = choose_text(fcn.str_type, val + fcn.adjust, &me, title) - fcn.adjust;
 			if(fcn.str_type == STRT_SECTOR) {
@@ -1186,6 +1206,8 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 				store /= scenario.outdoors.height();
 			} else if(fcn.str_type == STRT_SKILL_CHECK && store > 20) {
 				store += 79;
+			} else if(fcn.str_type == STRT_ANY_SPELL && store >= nMageSpells) {
+				store += 100 - nMageSpells;
 			}
 		} break;
 		case eSpecPicker::PICTURE: {

@@ -449,7 +449,7 @@ Unused
 Unused
 Unused
 Which context
-Prevent entry?
+Unused|Prevent entry?|Spell being cast (-1 = any spell)
 If context matches, call this special ...
 Unused
 Unused

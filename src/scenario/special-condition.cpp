@@ -107,8 +107,13 @@ namespace {
 		.ex1b(eSpecPicker::NODE);
 	node_properties_t S_CONTEXT = node_builder_t(eSpecType::IF_CONTEXT)
 		.ex1a(STRT_CONTEXT)
-		.ex1b(eSpecPicker::TOGGLE)
-		.ex1c(eSpecPicker::NODE);
+		.ex1c(eSpecPicker::NODE)
+		.when(eSpecField::EX1A < 3, 1)
+			.ex1b(eSpecPicker::TOGGLE)
+		.end()
+		.when(eSpecField::EX1A == 16, 2)
+			.ex1b(STRT_ANY_SPELL)
+		.end();
 	node_properties_t S_NUM = node_builder_t(eSpecType::IF_NUM_RESPONSE)
 		.msg1(+eSpecPicker::MSG_SINGLE)
 		.pict(STRT_CMP_MODE)
