@@ -372,6 +372,26 @@ void draw_fields(location where){
 			Draw_Some_Item(fields_gworld,calc_rect(4,0),terrain_screen_gworld(),where_draw,1,0);
 		return;
 	}
+	// On floor/background:
+	if(univ.town.is_sm_blood(where.x,where.y))
+		Draw_Some_Item(fields_gworld,calc_rect(0,3),terrain_screen_gworld(),where_draw,1,0);
+	if(univ.town.is_med_blood(where.x,where.y))
+		Draw_Some_Item(fields_gworld,calc_rect(1,3),terrain_screen_gworld(),where_draw,1,0);
+	if(univ.town.is_lg_blood(where.x,where.y))
+		Draw_Some_Item(fields_gworld,calc_rect(2,3),terrain_screen_gworld(),where_draw,1,0);
+	if(univ.town.is_sm_slime(where.x,where.y))
+		Draw_Some_Item(fields_gworld,calc_rect(3,3),terrain_screen_gworld(),where_draw,1,0);
+	if(univ.town.is_lg_slime(where.x,where.y))
+		Draw_Some_Item(fields_gworld,calc_rect(4,3),terrain_screen_gworld(),where_draw,1,0);
+	if(univ.town.is_ash(where.x,where.y))
+		Draw_Some_Item(fields_gworld,calc_rect(5,3),terrain_screen_gworld(),where_draw,1,0);
+	if(univ.town.is_bones(where.x,where.y))
+		Draw_Some_Item(fields_gworld,calc_rect(6,3),terrain_screen_gworld(),where_draw,1,0);
+	if(univ.town.is_rubble(where.x,where.y))
+		Draw_Some_Item(fields_gworld,calc_rect(7,3),terrain_screen_gworld(),where_draw,1,0);
+
+	// In space/foreground:
+	// TODO some of these could still be reordered, maybe.
 	if(univ.town.is_force_wall(where.x,where.y))
 		Draw_Some_Item(fields_gworld,calc_rect(0,1),terrain_screen_gworld(),where_draw,1,0);
 	if(univ.town.is_fire_wall(where.x,where.y))
@@ -400,22 +420,6 @@ void draw_fields(location where){
 		Draw_Some_Item(*ResMgr::graphics.get("teranim"),calc_rect(8+(anim_ticks%4),4),terrain_screen_gworld(),where_draw,1,0);
 	if(univ.town.is_quickfire(where.x,where.y))
 		Draw_Some_Item(fields_gworld,calc_rect(7,1),terrain_screen_gworld(),where_draw,1,0);
-	if(univ.town.is_sm_blood(where.x,where.y))
-		Draw_Some_Item(fields_gworld,calc_rect(0,3),terrain_screen_gworld(),where_draw,1,0);
-	if(univ.town.is_med_blood(where.x,where.y))
-		Draw_Some_Item(fields_gworld,calc_rect(1,3),terrain_screen_gworld(),where_draw,1,0);
-	if(univ.town.is_lg_blood(where.x,where.y))
-		Draw_Some_Item(fields_gworld,calc_rect(2,3),terrain_screen_gworld(),where_draw,1,0);
-	if(univ.town.is_sm_slime(where.x,where.y))
-		Draw_Some_Item(fields_gworld,calc_rect(3,3),terrain_screen_gworld(),where_draw,1,0);
-	if(univ.town.is_lg_slime(where.x,where.y))
-		Draw_Some_Item(fields_gworld,calc_rect(4,3),terrain_screen_gworld(),where_draw,1,0);
-	if(univ.town.is_ash(where.x,where.y))
-		Draw_Some_Item(fields_gworld,calc_rect(5,3),terrain_screen_gworld(),where_draw,1,0);
-	if(univ.town.is_bones(where.x,where.y))
-		Draw_Some_Item(fields_gworld,calc_rect(6,3),terrain_screen_gworld(),where_draw,1,0);
-	if(univ.town.is_rubble(where.x,where.y))
-		Draw_Some_Item(fields_gworld,calc_rect(7,3),terrain_screen_gworld(),where_draw,1,0);
 	if(univ.town.is_force_cage(where.x,where.y)) {
 		Draw_Some_Item(fields_gworld,calc_rect(1,0),terrain_screen_gworld(),where_draw,1,0);
 		forcecage_locs.push_back(where_draw);
