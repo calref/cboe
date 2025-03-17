@@ -1102,7 +1102,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 					sout << " healed " << univ.party[target].cur_health - store_victim_health << '.';
 					add_string_to_buf(sout.str());
 					sout.str("");
-					sout << " takes " << store_caster_health - univ.party[pc_num].cur_health << '.';
+					sout << univ.party[pc_num].name << " takes " << store_caster_health - univ.party[pc_num].cur_health << '.';
 				} else if(spell_num == eSpell::REVIVE) {
 					sout << " healed.";
 					univ.party[target].heal(250);
