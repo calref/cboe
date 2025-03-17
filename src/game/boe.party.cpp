@@ -1466,18 +1466,18 @@ void do_mindduel(short pc_num,cCreature *monst) {
 		r2 = get_ran(1,1,6);
 		if(r1 < 30) {
 			sout << "  " << univ.party[pc_num].name << " is drained " << r2 << '.';
-			add_string_to_buf(sout.str());
+			add_string_to_buf(sout.str(), 4);
 			monst->mp += r2;
 			balance++;
 			if(univ.party[pc_num].cur_sp == 0) {
 				univ.party[pc_num].status[eStatus::DUMB] += 2;
 				sout.str("");
 				sout << "  " << univ.party[pc_num].name << " is dumbfounded.";
-				add_string_to_buf(sout.str());
+				add_string_to_buf(sout.str(), 4);
 				if(univ.party[pc_num].status[eStatus::DUMB] > 7) {
 					sout.str("");
 					sout << "  " << univ.party[pc_num].name << " is killed!";
-					add_string_to_buf(sout.str());
+					add_string_to_buf(sout.str(), 4);
 					kill_pc(univ.party[pc_num],eMainStatus::DEAD);
 				}
 				
@@ -1488,7 +1488,7 @@ void do_mindduel(short pc_num,cCreature *monst) {
 		}
 		if(r1 > 70) {
 			sout << "  " << univ.party[pc_num].name << " drains " << r2 << '.';
-			add_string_to_buf(sout.str());
+			add_string_to_buf(sout.str(), 4);
 			univ.party[pc_num].cur_sp += r2;
 			balance--;
 			if(monst->mp == 0) {
