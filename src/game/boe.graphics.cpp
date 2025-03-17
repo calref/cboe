@@ -713,8 +713,17 @@ void draw_text_bar() {
 
 void draw_text_bar(std::pair<std::string,std::string> text) {
 	static std::pair<std::string,std::string> store_text = std::make_pair("", "");
-	if(text.first != store_text.first || text.second != store_text.second){
+	static bool had_statuses = false;
+	bool has_statuses = false;
+	for(auto next : univ.party.status) {
+		const auto& statInfo = *next.first;
+		if(next.second > 0) {
+			has_statuses = true;
+		}
+	}
+	if(text.first != store_text.first || text.second != store_text.second || had_statuses != has_statuses){
 		store_text = text;
+		had_statuses = has_statuses;
 		put_text_bar(text.first, text.second);
 		refresh_text_bar();
 	}
