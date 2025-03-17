@@ -99,6 +99,9 @@ std::map<std::string,std::vector<std::string>> feature_flags = {
 	// Legacy behavior of the T debug action (used by some replays)
 	// does not change the party's outdoors location
 	{"debug-enter-town", {"move-outdoors"}},
+	// Legacy behavior of the X debug action (used by the OneOfEverything replay)
+	// kills the whole party with 'Absent' status
+	{"debug-kill-party", {"V2"}},
 	{"target-lock", {"V1"}},
 	// New in-game save file picker
 	{"file-picker-dialog", {"V1"}}

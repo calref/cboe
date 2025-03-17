@@ -33,6 +33,7 @@
 #include "dialogxml/dialogs/pictchoice.hpp"
 #include "dialogxml/dialogs/dialog.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/strchoice.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
 #include "boe.menus.hpp"
 #include "tools/keymods.hpp"
@@ -2142,15 +2143,32 @@ void debug_kill_party() {
 	if(recording){
 		record_action("debug_kill_party", "");
 	}
-	std::string confirm = cChoiceDlog("kill-party-confirm",{"yes","no"}).show();
-	if(confirm == "yes"){
-		for(short i = 0; i < 6; i++) {
-			if(univ.party[i].is_alive())
-				kill_pc(univ.party[i],eMainStatus::ABSENT);
+	// New behavior to match debug_hurt_party and debug_give_status: allow choosing a PC,
+	// and the type of death
+	if(has_feature_flag("debug-kill-party", "V2")){
+		size_t choice = cStringChoice({"Dead", "Dust", "Stone"}, "Kill how?").show(-1);
+		if(choice == -1) return;
+		eMainStatus death_type = static_cast<eMainStatus>(static_cast<size_t>(eMainStatus::DEAD) + choice);
+		short pc = select_pc(0, "Kill who?", true);
+		if(pc == 6) return;
+		for(int i = 0; i < 6; ++i){
+			if(i == pc || (univ.party[i].is_alive() && pc == 7)) {
+				// Kill PCs so you can test resurrection (or game over)
+				kill_pc(univ.party[i], death_type);
+			}
 		}
-		draw_terrain();
-		add_string_to_buf("Debug: Kill the party.");
 		advance_time(false, true, true);
+	}else{
+		std::string confirm = cChoiceDlog("kill-party-confirm",{"yes","no"}).show();
+		if(confirm == "yes"){
+			for(short i = 0; i < 6; i++) {
+				if(univ.party[i].is_alive())
+					kill_pc(univ.party[i],eMainStatus::ABSENT);
+			}
+			draw_terrain();
+			add_string_to_buf("Debug: Kill the party.");
+			advance_time(false, true, true);
+		}
 	}
 }
 
