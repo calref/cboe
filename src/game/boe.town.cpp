@@ -1128,7 +1128,14 @@ void dump_gold(short print_mes) {
 	}
 }
 
+bool is_unlockable(location where) {
+	ter_num_t terrain = univ.town->terrain(where.x,where.y);
 
+	if(univ.scenario.ter_types[terrain].special == eTerSpec::UNLOCKABLE) {
+		return true;
+	}
+	return false;
+}
 
 void pick_lock(location where,short pc_num) {
 	ter_num_t terrain;
@@ -1157,11 +1164,6 @@ void pick_lock(location where,short pc_num) {
 	
 	if(univ.party[pc_num].has_abil_equip(eItemAbil::THIEVING))
 		r1 = r1 - 12;
-	
-	if(univ.scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {
-		add_string_to_buf("  Wrong terrain type.");
-		return;
-	}
 	unlock_adjust = univ.scenario.ter_types[terrain].flag2;
 	if((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 30))) {
 		add_string_to_buf("  Didn't work.");

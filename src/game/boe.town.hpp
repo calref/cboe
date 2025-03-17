@@ -19,6 +19,7 @@ void buy_food(short cost,short per,const char* food_name);
 void healing_shop();
 void do_sell(short which);
 void dump_gold(short print_mes);
+bool is_unlockable(location where);
 void pick_lock(location where,short pc_num);
 void bash_door(location where,short pc_num);
 void erase_town_specials();

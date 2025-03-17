@@ -860,6 +860,8 @@ void handle_bash_pick(location destination, bool& did_something, bool& need_redr
 	}
 	if(!adjacent(destination,univ.party.town_loc))
 		add_string_to_buf("  Must be adjacent.");
+	else if(!is_unlockable(destination))
+		add_string_to_buf("  Wrong terrain type.");
 	else {
 		short pc = select_pc(0, isBash ? "Who will bash?" : "Who will pick the lock?");
 		if(pc == 6) {
