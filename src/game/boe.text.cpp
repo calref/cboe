@@ -1064,12 +1064,13 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 	
 }
 
-void add_pc_needs_to_buf(std::string needs_what, unsigned short pre_indent, unsigned short indent) {
+void add_caster_needs_to_buf(std::string needs_what, unsigned short pre_indent, unsigned short indent) {
 	std::ostringstream sout;
 	for(int i = 0; i < pre_indent; ++i){
 		sout << ' ';
 	}
-	sout << univ.party[univ.cur_pc].name << " needs " << needs_what << ".";
+	extern short pc_casting;
+	sout << univ.party[pc_casting].name << " needs " << needs_what << ".";
 	add_string_to_buf(sout.str(), indent);
 }
 

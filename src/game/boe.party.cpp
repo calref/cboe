@@ -748,7 +748,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 		{
 			cInvenSlot item = univ.party[pc_num].has_abil(eItemAbil::SAPPHIRE);
 			if(!item && !freebie)
-				add_pc_needs_to_buf("a sapphire");
+				add_caster_needs_to_buf("a sapphire");
 			else if(univ.town->defy_scrying || univ.town->defy_mapping)
 				add_string_to_buf("  The spell fails.");
 			else {
@@ -1131,7 +1131,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 						if(cInvenSlot item = univ.party[pc_num].has_abil(eItemAbil::RESURRECTION_BALM)) {
 							univ.party[pc_num].take_item(item.slot);
 						} else {
-							add_pc_needs_to_buf("resurrection balm");
+							add_caster_needs_to_buf("resurrection balm");
 							break;
 						}
 					}

@@ -1243,7 +1243,7 @@ void do_combat_cast(location target) {
 													if(stat_window == univ.cur_pc)
 														put_item_screen(stat_window);
 													do_mindduel(univ.cur_pc,cur_monst);
-												} else add_pc_needs_to_buf("a smoky crystal");
+												} else add_caster_needs_to_buf("a smoky crystal");
 											}
 											store_sound = 24;
 											break;
