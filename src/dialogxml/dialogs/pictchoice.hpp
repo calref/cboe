@@ -79,4 +79,6 @@ public:
 	void disableCancel();
 };
 
+pic_num_t choose_status_effect(short cur, bool party, cDialog* parent = nullptr);
+
 #endif

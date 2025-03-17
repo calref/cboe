@@ -27,6 +27,7 @@
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/3choice.hpp"
 #include "dialogxml/dialogs/strchoice.hpp"
+#include "dialogxml/dialogs/pictchoice.hpp"
 #include "fileio/fileio.hpp"
 #include "dialogxml/widgets/field.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
