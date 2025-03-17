@@ -31,6 +31,7 @@ void print_nums(short a,short b,short c);
 short print_terrain(location space);
 void add_string_to_buf(std::string str, unsigned short indent); // Set second parameter to nonzero to auto-split the line if it's too long
 void add_string_to_buf(std::string str);
+void add_pc_needs_to_buf(std::string needs_what, unsigned short pre_indent = 2, unsigned short indent = 4);
 void init_buf();
 void print_buf () ;
 void restart_printing();
