@@ -809,6 +809,9 @@ static void replay_action(Element& action) {
 	}else if(t == "debug_hurt_party"){
 		debug_hurt_party();
 		return;
+	}else if(t == "debug_give_status"){
+		debug_give_status();
+		return;
 	}else if(t == "debug_magic_map"){
 		debug_magic_map();
 		return;

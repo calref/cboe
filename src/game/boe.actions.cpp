@@ -30,6 +30,7 @@
 #include "fileio/fileio.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
+#include "dialogxml/dialogs/pictchoice.hpp"
 #include "dialogxml/dialogs/dialog.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
@@ -2167,6 +2168,45 @@ void debug_hurt_party() {
 	}
 }
 
+void debug_give_status() {
+	if(recording){
+		record_action("debug_give_status", "");
+	}
+
+	pic_num_t which = choose_status_effect(-1, false);
+	if(which == -1) return;
+	eStatus which_status = static_cast<eStatus>(which);
+	std::string choice = cChoiceDlog("help-or-harm",{"harm","help"}).show();
+	std::pair<int, int> bounds = status_bounds(which_status);
+	int lo = bounds.first;
+	int hi = bounds.second;
+	status_info_t info = *which_status;
+	int value = 0;
+	if(choice == "harm"){
+		if(info.isNegative){
+			value = hi;
+		}else{
+			value = lo;
+		}
+	}else{
+		if(info.isNegative){
+			value = lo;
+		}else{
+			value = hi;
+		}
+	}
+
+	short pc = select_pc(0, "Give status to who?", true);
+	if(pc == 6) return;
+	for(int i = 0; i < 6; ++i){
+		if(i == pc || (univ.party[i].is_alive() && pc == 7)) {
+			// Give PCs a status effect. Bypass apply_status because it blocks 'wrapping' for
+			// some opposite statuses
+			univ.party[i].status[which_status] = value;
+		}
+	}
+}
+
 void debug_magic_map() {
 	if(recording){
 		record_action("debug_magic_map", "");
@@ -2489,7 +2529,7 @@ void debug_launch_scen(std::string scen_name) {
 }
 
 // Non-comprehensive list of unused keys:
-// chjklnoqvy -_+[]{},.'"`|;:
+// chjklnoqvy +[]{},.'"`|;:
 // We want to keep lower-case for normal gameplay.
 void init_debug_actions() {
 	// optional `true` argument means you can use this action in the startup menu.
@@ -2525,6 +2565,7 @@ void init_debug_actions() {
 	add_debug_action({'W'}, "Refresh jobs/shops", debug_refresh_stores);
 	add_debug_action({'X'}, "Kill party", debug_kill_party);
 	add_debug_action({'-'}, "Hurt the party", debug_hurt_party);
+	add_debug_action({'_'}, "Give a status effect", debug_give_status);
 	add_debug_action({'~'}, "Clear captured souls", clear_trapped_monst);
 	add_debug_action({'='}, "Heal, increase magic skills", debug_heal_plus_extra);
 	add_debug_action({'<'}, "Make one day pass", debug_increase_age);

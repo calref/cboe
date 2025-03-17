@@ -94,6 +94,7 @@ void debug_leave_town();
 void debug_kill();
 void debug_kill_party();
 void debug_hurt_party();
+void debug_give_status();
 void debug_magic_map();
 void debug_enter_town();
 void debug_refresh_stores();
