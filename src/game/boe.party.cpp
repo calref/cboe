@@ -1131,7 +1131,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 						if(cInvenSlot item = univ.party[pc_num].has_abil(eItemAbil::RESURRECTION_BALM)) {
 							univ.party[pc_num].take_item(item.slot);
 						} else {
-							add_string_to_buf("  Need resurrection balm.");
+							add_pc_needs_to_buf("resurrection balm");
 							break;
 						}
 					}
