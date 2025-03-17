@@ -41,5 +41,5 @@ std::string get_text_response(std::string prompt = "", pic_num_t pic = 16);
 // Specify cancel_value to show a cancel button, which will return the given value (for example, -1)
 short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names = {}, boost::optional<short> cancel_value = boost::none);
 
-short char_select_pc(short mode,const char *title);
-short select_pc(short mode);
+// Prompt the player to choose a party member. Returns 0-5 for a pc, 6 for cancel, or 7 for all.
+short select_pc(short mode, std::string title="", bool allow_choose_all = false);

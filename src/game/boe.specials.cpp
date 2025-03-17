@@ -2649,7 +2649,7 @@ void oneshot_spec(const runtime_state& ctx) {
 				*ctx.ret_a = 1;
 			} else {
 				if(!is_combat()) {
-					dlg_res = char_select_pc(0,"Trap! Who will disarm?");
+					dlg_res = select_pc(0,"Trap! Who will disarm?");
 					if(dlg_res == 6){
 						*ctx.ret_a = 1;
 						set_sd = false;
@@ -4086,7 +4086,7 @@ void townmode_spec(const runtime_state& ctx) {
 				check_mess = false;
 				break;
 			}
-			r1 = char_select_pc(0,"Which character goes?");
+			r1 = select_pc(0,"Which character goes?");
 			if(ctx.which_mode == eSpecCtx::OUT_MOVE || ctx.which_mode == eSpecCtx::TOWN_MOVE || ctx.which_mode == eSpecCtx::COMBAT_MOVE)
 				*ctx.ret_a = 1;
 			if(r1 != 6) {

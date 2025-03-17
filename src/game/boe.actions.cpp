@@ -860,7 +860,7 @@ void handle_bash_pick(location destination, bool& did_something, bool& need_redr
 	if(!adjacent(destination,univ.party.town_loc))
 		add_string_to_buf("  Must be adjacent.");
 	else {
-		short pc = char_select_pc(0, isBash ? "Who will bash?" : "Who will pick the lock?");
+		short pc = select_pc(0, isBash ? "Who will bash?" : "Who will pick the lock?");
 		if(pc == 6) {
 			add_string_to_buf("  Cancelled.");
 			overall_mode = MODE_TOWN;
@@ -1900,12 +1900,12 @@ void handle_menu_spell(eSpell spell_picked) {
 		store_mage = spell_picked;
 	else store_priest = spell_picked;
 	if(spell_type == eSkill::MAGE_SPELLS && (*spell_picked).need_select != SELECT_NO) {
-		if((store_spell_target = char_select_pc((*spell_picked).need_select == SELECT_ANY ? 1 : 0,"Cast spell on who?")) == 6)
+		if((store_spell_target = select_pc((*spell_picked).need_select == SELECT_ANY ? 1 : 0,"Cast spell on who?")) == 6)
 			return;
 	}
 	else {
 		if(spell_type == eSkill::PRIEST_SPELLS && (*spell_picked).need_select != SELECT_NO)
-			if((store_spell_target = char_select_pc((*spell_picked).need_select == SELECT_ANY ? 1 : 0,"Cast spell on who?")) == 6)
+			if((store_spell_target = select_pc((*spell_picked).need_select == SELECT_ANY ? 1 : 0,"Cast spell on who?")) == 6)
 				return;
 	}
 	
@@ -3367,7 +3367,7 @@ void handle_drop_pc() {
 	}else if(is_combat()){
 		add_string_to_buf("Delete PC: Not in combat.");
 	}else{
-		int choice = char_select_pc(1,"Delete who?");
+		int choice = select_pc(1,"Delete who?");
 		if(choice < 6) {
 			std::string confirm = cChoiceDlog("delete-pc-confirm",{"yes","no"}).show();
 			if(confirm == "no"){
@@ -4044,7 +4044,7 @@ void handle_new_pc_graphic() {
 	if(recording){
 		record_action("handle_new_pc_graphic", "");
 	}
-	short choice = char_select_pc(1,"New graphic for who?");
+	short choice = select_pc(1,"New graphic for who?");
 	if(choice < 6)
 		pick_pc_graphic(choice,1,nullptr);
 	draw_terrain();
@@ -4054,7 +4054,7 @@ void handle_rename_pc() {
 	if(recording){
 		record_action("handle_rename_pc", "");
 	}
-	short choice = char_select_pc(1,"Rename who?");
+	short choice = select_pc(1,"Rename who?");
 	if(choice < 6)
 		pick_pc_name(choice,nullptr);
 	put_pc_screen();

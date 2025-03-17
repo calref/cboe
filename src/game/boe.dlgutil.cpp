@@ -936,7 +936,7 @@ void handle_talk_node(int which_talk_entry) {
 			save_talk_str2 = "";
 			break;
 		case eTalkNode::TRAINING:
-			if((get_pc = char_select_pc(0,"Train who?")) < 6) {
+			if((get_pc = select_pc(0,"Train who?")) < 6) {
 				can_save_talk = false;
 				spend_xp(get_pc,1, nullptr);
 			}

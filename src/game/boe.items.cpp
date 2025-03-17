@@ -190,7 +190,7 @@ void give_thing(short pc_num, short item_num) {
 		add_string_to_buf("Give: Item is cursed.");
 	else {
 		item_store = univ.party[pc_num].items[item_num];
-		who_to = char_select_pc(3,"Give item to who?");
+		who_to = select_pc(3,"Give item to who?");
 		if((overall_mode == MODE_COMBAT) && !adjacent(univ.party[pc_num].combat_pos,univ.party[who_to].combat_pos)) {
 			add_string_to_buf("Give: Must be adjacent.");
 			who_to = 6;
@@ -912,24 +912,28 @@ short get_num_response(short min, short max, std::string prompt, std::vector<std
 
 static bool select_pc_event_filter (cDialog& me, std::string item_hit, eKeyMod) {
 	me.toast(true);
-	if(item_hit != "cancel") {
+	if(item_hit == "pick-all"){
+		me.setResult<short>(7);
+	}else if(item_hit != "cancel"){
 		short which_pc = item_hit[item_hit.length() - 1] - '1';
 		me.setResult<short>(which_pc);
-	} else me.setResult<short>(6);
+	}else me.setResult<short>(6);
 	return true;
 }
 
 // mode determines which PCs can be picked
 // 0 - only living pcs, 1 - any pc, 2 - only dead pcs, 3 - only living pcs with inventory space
-short char_select_pc(short mode,const char *title) {
+short select_pc(short mode, std::string title, bool allow_choose_all) {
 	short item_hit;
 	
 	set_cursor(sword_curs);
 	
 	cDialog selectPc(*ResMgr::dialogs.get("select-pc"));
-	selectPc.attachClickHandlers(select_pc_event_filter, {"cancel", "pick1", "pick2", "pick3", "pick4", "pick5", "pick6"});
+	selectPc.attachClickHandlers(select_pc_event_filter, {"cancel", "pick1", "pick2", "pick3", "pick4", "pick5", "pick6", "pick-all"});
 	
-	selectPc["title"].setText(title);
+	// The default title is defined in select-pc.xml
+	if(!title.empty())
+		selectPc["title"].setText(title);
 	
 	for(short i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
@@ -957,13 +961,14 @@ short char_select_pc(short mode,const char *title) {
 			selectPc["pc" + n].setText(univ.party[i].name);
 		}
 	}
+
+	if(!allow_choose_all){
+		selectPc["pick-all"].hide();
+		selectPc["all"].hide();
+	}
 	
 	selectPc.run();
 	item_hit = selectPc.getResult<short>();
 	
 	return item_hit;
-}
-
-short select_pc(short mode) {
-	return char_select_pc(mode,"Select a character:");
 }
