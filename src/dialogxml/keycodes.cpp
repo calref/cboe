@@ -68,6 +68,10 @@ cKey charToKey(char ch) {
 			return {false, w('`'), mod_shift};
 		case '\\':
 			return {false, w('\\'), mod_none};
+		case '-':
+			return {false, w('-'), mod_none};
+		case '_':
+			return {false, w('-'), mod_shift};
 	}
 	throw std::string {"Tried to convert unsupported char '"} + ch + "' to cKey!";
 }
