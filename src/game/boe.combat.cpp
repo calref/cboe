@@ -4901,7 +4901,7 @@ void start_spell_targeting(eSpell num, bool freebie, int spell_range, eSpellPat 
 		add_string_to_buf("  (Hit 'm' to cancel.)");
 	else add_string_to_buf("  (Hit 'p' to cancel.)");
 	current_spell_range = num == eSpell::NONE ? spell_range : (*num).range;
-	handle_target_mode(MODE_SPELL_TARGET, current_spell_range);
+	handle_target_mode(MODE_SPELL_TARGET, current_spell_range, num);
 	
 	switch(num) {  // Different spells have different messages and diff. target shapes
 		case eSpell::CLOUD_SLEEP:
@@ -4956,7 +4956,7 @@ void start_fancy_spell_targeting(eSpell num, bool freebie, int spell_range, eSpe
 	else add_string_to_buf("  (Hit 'p' to cancel.)");
 	add_string_to_buf("  (Hit space to cast.)");
 	current_spell_range = num == eSpell::NONE ? spell_range : (*num).range;
-	handle_target_mode(MODE_FANCY_TARGET, current_spell_range);
+	handle_target_mode(MODE_FANCY_TARGET, current_spell_range, num);
 	short bonus = univ.current_pc().stat_adj(eSkill::INTELLIGENCE);
 	short level = freebie ? store_item_spell_level : univ.current_pc().level;
 	
