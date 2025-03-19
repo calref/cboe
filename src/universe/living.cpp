@@ -9,13 +9,14 @@
 #include "living.hpp"
 
 #include <algorithm>
+#include <tuple>
 #include "mathutil.hpp"
 
 void iLiving::apply_status(eStatus which, int how_much) {
 	if(!is_alive()) return;
 	
-	std::pair<int, int> bounds = status_bounds(which);
-	int lo = bounds.first, hi = bounds.second;
+	int lo, hi;
+	std::tie(lo, hi) = status_bounds(which);
 	
 	if(which == eStatus::ASLEEP || which == eStatus::DUMB) {
 		// No "wrapping" allowed for these effects.
