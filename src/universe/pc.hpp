@@ -28,6 +28,7 @@ namespace legacy { struct pc_record_type; };
 
 static struct no_party_t {} no_party;
 
+// This enum is now also used in the context of giving items
 enum class eBuyStatus {OK, NO_SPACE, NEED_GOLD, TOO_HEAVY, HAVE_LOTS};
 
 enum ePartyPreset {PARTY_BLANK, PARTY_DEFAULT, PARTY_DEBUG};
@@ -150,7 +151,9 @@ public:
 	
 	bool combine_things(bool check_only = false);
 	void sort_items();
-	bool give_item(cItem item, int flags);
+	// Possible results of give_item are a subset of eBuyStatus, and shop code calls this function,
+	// so reuse the enum
+	eBuyStatus give_item(cItem item, int flags);
 	bool equip_item(int which_item, bool do_print);
 	bool unequip_item(int which_item, bool do_print);
 	std::pair<cInvenSlot, cInvenSlot> get_weapons();

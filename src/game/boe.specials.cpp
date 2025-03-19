@@ -3275,7 +3275,7 @@ void affect_spec(const runtime_state& ctx) {
 				bool success = true;
 				for(short i = 0; i < 6; i++)
 					if(pc_num == 6 || pc_num == i)
-						success = success && univ.party[i].give_item(to_give, equip_type | GIVE_ALLOW_OVERLOAD);
+						success = success && univ.party[i].give_item(to_give, equip_type | GIVE_ALLOW_OVERLOAD) == eBuyStatus::OK;
 				if(!success)
 					ctx.next_spec = spec.pic;
 			}

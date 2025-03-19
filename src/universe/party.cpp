@@ -581,7 +581,7 @@ int cParty::calc_day() const {
 
 bool cParty::give_item(cItem item,int flags) {
 	for(int i = 0; i < 6; i++) {
-		if(adven[i]->give_item(item,flags))
+		if(adven[i]->give_item(item,flags) == eBuyStatus::OK)
 			return true;
 	}
 	return false;

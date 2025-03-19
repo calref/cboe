@@ -207,17 +207,24 @@ void give_thing(short pc_num, short item_num) {
 				univ.party[pc_num].items[item_num].charges -= how_many;
 				item_store.charges = how_many;
 			}
-			if(univ.party[who_to].give_item(item_store,0)) {
-				if(take_given_item)
-					univ.party[pc_num].take_item(item_num);
-			}
-			else {
-				if(!univ.party[who_to].has_space())
+			eBuyStatus give_status = univ.party[who_to].give_item(item_store,0);
+			switch(give_status){
+				case eBuyStatus::OK:
+					if(take_given_item){
+						univ.party[pc_num].take_item(item_num);
+					}
+					break;
+				case eBuyStatus::NO_SPACE:
 					ASB("Can't give: PC has max. # of items.");
-				else ASB("Can't give: PC carrying too much.");
-				// Can't give to the recipient. Put charges back in giver's inventory:
-				if(how_many > 0)
-					univ.party[pc_num].items[item_num].charges += how_many;
+					if(false) // Skip first line of fallthrough
+				case eBuyStatus::TOO_HEAVY:
+					ASB("Can't give: PC carrying too much.");
+					// Can't give to the recipient. Put charges back in giver's inventory:
+					if(how_many > 0)
+						univ.party[pc_num].items[item_num].charges += how_many;
+					break;
+				default:
+					break;
 			}
 		}
 	}

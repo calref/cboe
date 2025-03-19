@@ -419,7 +419,7 @@ void handle_menu_choice(eMenu item_hit) {
 				if(choice < all_items.size()) {
 					cItem store_i = all_items[choice];
 					store_i.ident = true;
-					if(!univ.party[current_active_pc].give_item(store_i,GIVE_ALLOW_OVERLOAD))
+					if(univ.party[current_active_pc].give_item(store_i,GIVE_ALLOW_OVERLOAD) != eBuyStatus::OK)
 						showError("Sorry, that PC has no free inventory slots left! You'll have to either drop something or give it to a different PC.");
 					else redraw_screen();
 				}

@@ -2166,7 +2166,7 @@ void do_alchemy() {
 			cItem store_i(potion);
 			store_i.charges = info.charges(skill);
 			store_i.graphic_num += get_ran(1,0,2);
-			if(!univ.party[pc_num].give_item(store_i,false)) {
+			if(univ.party[pc_num].give_item(store_i,false) != eBuyStatus::OK) {
 				add_string_to_buf("No room in inventory. Potion placed on floor.", 2);
 				place_item(store_i,univ.party.town_loc);
 			}

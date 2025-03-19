@@ -2033,7 +2033,7 @@ void debug_give_item() {
 	if(i == -1) return;
 	bool was_ident = univ.scenario.scen_items[i].ident;
 	univ.scenario.scen_items[i].ident = true;
-	bool given = univ.current_pc().give_item(univ.scenario.scen_items[i], GIVE_DO_PRINT | GIVE_ALLOW_OVERLOAD);
+	bool given = univ.current_pc().give_item(univ.scenario.scen_items[i], GIVE_DO_PRINT | GIVE_ALLOW_OVERLOAD) == eBuyStatus::OK;
 	if(!given){
 		ASB("Debug: can't give to " + univ.current_pc().name);
 		given = univ.party.give_item(univ.scenario.scen_items[i], GIVE_DO_PRINT | GIVE_ALLOW_OVERLOAD);
@@ -2055,7 +2055,7 @@ void debug_overburden() {
 	cPlayer& pc = univ.current_pc();
 	cItem item(ITEM_DEBUG_HEAVY);
 	// Give the PC very heavy objects that do nothing:
-	while(pc.give_item(item, GIVE_ALLOW_OVERLOAD)){}
+	while(pc.give_item(item, GIVE_ALLOW_OVERLOAD) == eBuyStatus::OK){}
 	if(pc.has_space()){
 		// I don't know why this would ever happen, since the weight is 0, but just in case:
 		ASB("Debug: failed to fill " + pc.name + "'s inventory.");

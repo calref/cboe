@@ -440,9 +440,9 @@ void cPlayer::sort_items() {
 	}
 }
 
-bool cPlayer::give_item(cItem item, int flags) {
+eBuyStatus cPlayer::give_item(cItem item, int flags) {
 	if(main_status != eMainStatus::ALIVE)
-		return false;
+		return eBuyStatus::NO_SPACE;
 	
 	bool do_print = flags & GIVE_DO_PRINT;
 	bool allow_overload = flags & GIVE_ALLOW_OVERLOAD;
@@ -454,49 +454,47 @@ bool cPlayer::give_item(cItem item, int flags) {
 	if(check_only) do_print = false;
 
 	if(item.variety == eItemType::NO_ITEM)
-		return true;
+		return eBuyStatus::OK;
 	if(item.variety == eItemType::GOLD) {
-		if(!party) return false;
+		if(!party) return eBuyStatus::NO_SPACE;
 		if(!check_only)
 			party->gold += item.item_level;
 		if(do_print && print_result)
 			print_result("You get some gold.");
-		return true;
+		return eBuyStatus::OK;
 	}
 	if(item.variety == eItemType::FOOD) {
-		if(!party) return false;
+		if(!party) return eBuyStatus::NO_SPACE;
 		if(!check_only)
 			party->food += item.item_level;
 		if(do_print && print_result)
 			print_result("You get some food.");
-		return true;
+		return eBuyStatus::OK;
 	}
 	if(item.variety == eItemType::SPECIAL) {
-		if(!party) return false;
+		if(!party) return eBuyStatus::NO_SPACE;
 		if(!check_only)
 			party->spec_items.insert(item.item_level);
 		if(do_print && print_result)
 			print_result("You get a special item.");
-		return true;
+		return eBuyStatus::OK;
 	}
 	if(item.variety == eItemType::QUEST) {
-		if(!party) return false;
+		if(!party) return eBuyStatus::NO_SPACE;
 		if(!check_only)
 			party->active_quests[item.item_level] = cJob(party->calc_day());
 		if(do_print && print_result)
 			print_result("You get a quest.");
-		return true;
+		return eBuyStatus::OK;
 	}
 	if(!allow_overload && item.item_weight() > free_weight()) {
 	  	if(do_print && print_result) {
 			play_sound(41);
 			print_result("Item too heavy to carry.");
 		}
-		return false;
+		return eBuyStatus::TOO_HEAVY;
 	}
 
-	if(main_status != eMainStatus::ALIVE) return false;
-	
 	cInvenSlot real_free_space = has_space();
 	cInvenSlot extra_space = cInvenSlot(*this, INVENTORY_SIZE);
 
@@ -513,7 +511,7 @@ bool cPlayer::give_item(cItem item, int flags) {
 
 	cInvenSlot free_space = *space_ptr;
 	if(free_space) {
-		if(check_only) return true;
+		if(check_only) return eBuyStatus::OK;
 
 		item.property = false;
 		item.contained = false;
@@ -576,9 +574,9 @@ bool cPlayer::give_item(cItem item, int flags) {
 		
 		combine_things();
 		sort_items();
-		return true;
+		return eBuyStatus::OK;
 	}
-	return false;
+	return eBuyStatus::NO_SPACE;
 }
 
 bool cPlayer::equip_item(int which_item, bool do_print) {
