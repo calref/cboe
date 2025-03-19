@@ -380,7 +380,7 @@ cSpell P_CLEANSE_MAJOR = cSpell(eSpell::CLEANSE_MAJOR).asType(eSkill::PRIEST_SPE
 
 // Special spells
 cSpell S_STRENGTHEN_TARGET = cSpell(eSpell::STRENGTHEN_TARGET)
-	.withRange(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).asPeaceful().finish();
+	.withRange(10).withTargetLock().withRefer(REFER_TARGET).when(WHEN_COMBAT).asPeaceful().finish();
 cSpell S_SUMMON_RAT = cSpell(eSpell::SUMMON_RAT)
 	.withRange(8).withRefer(REFER_TARGET).when(WHEN_COMBAT).when(WHEN_TOWN).finish();
 cSpell S_WALL_ICE_BALL = cSpell(eSpell::WALL_ICE_BALL)
