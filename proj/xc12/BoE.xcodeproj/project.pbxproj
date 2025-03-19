@@ -161,6 +161,8 @@
 		917823821B2F33F5007F3444 /* FLAC.framework in Copy Libraries and Frameworks */ = {isa = PBXBuildFile; fileRef = 9178237C1B2F33E9007F3444 /* FLAC.framework */; };
 		91870F84190C90980081C150 /* scenedit.xib in Resources */ = {isa = PBXBuildFile; fileRef = 914CA49F190C4E9200B6ADD1 /* scenedit.xib */; };
 		919145FC18E3AB1B005CF3A4 /* boe.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 919145FB18E3A32F005CF3A4 /* boe.appleevents.mm */; };
+		9191E3B12D8AFD5800AF6D01 /* os.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9191E3AE2D8AFD5800AF6D01 /* os.cc */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		9191E3B32D8AFD5800AF6D01 /* format.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9191E3B02D8AFD5800AF6D01 /* format.cc */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		9192C12018F2745C0088A580 /* game.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9192C11E18F271920088A580 /* game.xib */; };
 		919B13A21BBCDF14009905A4 /* monst_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A11BBCDE18009905A4 /* monst_legacy.cpp */; };
 		919B13A41BBD8854009905A4 /* item_legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 919B13A31BBD8849009905A4 /* item_legacy.cpp */; };
@@ -791,6 +793,8 @@
 		919145FF18E63B70005CF3A4 /* winutil.mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = winutil.mac.mm; sourceTree = "<group>"; };
 		9191460018E63D8E005CF3A4 /* scrollbar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scrollbar.cpp; sourceTree = "<group>"; };
 		9191460118E6591F005CF3A4 /* boe.menus.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = boe.menus.hpp; sourceTree = "<group>"; };
+		9191E3AE2D8AFD5800AF6D01 /* os.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = os.cc; sourceTree = "<group>"; };
+		9191E3B02D8AFD5800AF6D01 /* format.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = format.cc; sourceTree = "<group>"; };
 		9192C11E18F271920088A580 /* game.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = game.xib; path = ../rsrc/menus/game.xib; sourceTree = "<group>"; };
 		919B13A11BBCDE18009905A4 /* monst_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = monst_legacy.cpp; sourceTree = "<group>"; };
 		919B13A31BBD8849009905A4 /* item_legacy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = item_legacy.cpp; sourceTree = "<group>"; };
@@ -1400,6 +1404,7 @@
 				91F06E8F1A2EBEE70038E902 /* special_parse.hpp */,
 				919F2E72287E4E0500F47750 /* tagfile.hpp */,
 				91BFA3D91902ADD5001686E4 /* tarball.hpp */,
+				9191E3A82D8AFCF000AF6D01 /* fmtlib */,
 				91BFA3DC19033E00001686E4 /* gzstream */,
 				912DFE8718E24B0B00B00D75 /* resmgr */,
 				910BBA190FB8C43E001E34EA /* xml-parser */,
@@ -1442,6 +1447,16 @@
 			);
 			name = misc;
 			path = ../../src;
+			sourceTree = "<group>";
+		};
+		9191E3A82D8AFCF000AF6D01 /* fmtlib */ = {
+			isa = PBXGroup;
+			children = (
+				9191E3B02D8AFD5800AF6D01 /* format.cc */,
+				9191E3AE2D8AFD5800AF6D01 /* os.cc */,
+			);
+			name = fmtlib;
+			path = ../../deps/fmtlib/src;
 			sourceTree = "<group>";
 		};
 		91B3EECD0F969B7000BF5B67 /* ScenEd */ = {
@@ -2211,6 +2226,8 @@
 				91EC1F0523DDFF9D00271891 /* res_font.cpp in Sources */,
 				91EC1F0623DDFF9D00271891 /* res_image.cpp in Sources */,
 				91EC1F0723DDFF9D00271891 /* res_sound.cpp in Sources */,
+				9191E3B32D8AFD5800AF6D01 /* format.cc in Sources */,
+				9191E3B12D8AFD5800AF6D01 /* os.cc in Sources */,
 				91EC1F0823DDFF9D00271891 /* res_strings.cpp in Sources */,
 				91F3205023E65EA3009650AF /* framerate_limiter.cpp in Sources */,
 				91FE0E3823F084B70084CA6B /* drawable_manager.cpp in Sources */,
@@ -2461,6 +2478,7 @@
 					"$(PROJECT_DIR)/../../src/fileio/xml-parser",
 					"$(PROJECT_DIR)/../../src/tools",
 					"$(PROJECT_DIR)/../../deps/Catch2/include/external",
+					"$(PROJECT_DIR)/../../deps/fmtlib/include",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -2577,6 +2595,7 @@
 					"$(PROJECT_DIR)/../../src/tools",
 					"$(PROJECT_DIR)/../../deps/Catch2/include/external",
 					"/usr/local/opt/boost@1.85/include",
+					"$(PROJECT_DIR)/../../deps/fmtlib/include",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
