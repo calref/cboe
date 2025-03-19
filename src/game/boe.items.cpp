@@ -215,6 +215,7 @@ void give_thing(short pc_num, short item_num) {
 				if(!univ.party[who_to].has_space())
 					ASB("Can't give: PC has max. # of items.");
 				else ASB("Can't give: PC carrying too much.");
+				// Can't give to the recipient. Put charges back in giver's inventory:
 				if(how_many > 0)
 					univ.party[pc_num].items[item_num].charges += how_many;
 			}
