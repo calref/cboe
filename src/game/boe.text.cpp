@@ -576,7 +576,7 @@ void set_stat_window(eItemWinMode new_stat, bool record) {
 			item_sbar->setMaximum(array_pos);
 			break;
 		default:
-			item_sbar->setMaximum(INVENTORY_SIZE - LINES_IN_ITEM_WIN);
+			item_sbar->setMaximum(cPlayer::INVENTORY_SIZE - LINES_IN_ITEM_WIN);
 			break;
 	}
 	item_sbar->setPosition(0);

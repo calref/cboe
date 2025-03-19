@@ -77,8 +77,8 @@ class cPlayer : public iLiving {
 	// It only does this (and should ever do this) in remove_pc and replace_pc!
 	// Sadly there is no good way to friend just those two functions.
 	friend class cParty;
-	static const int INVENTORY_SIZE = 24;
 public:
+	static const int INVENTORY_SIZE = 24;
 	// A nice convenient bitset with just the low 30 bits set, for initializing spells
 	static const uint32_t basic_spells;
 	// This class is shared between the game and the editors, but it should only show help dialogs
