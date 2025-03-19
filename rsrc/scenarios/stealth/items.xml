@@ -1991,7 +1991,7 @@
     </item>
     <item id="103">
         <variety>arrow</variety>
-        <level>11</level>
+        <level>12</level>
         <awkward>0</awkward>
         <bonus>0</bonus>
         <protection>0</protection>
@@ -2011,7 +2011,7 @@
     </item>
     <item id="104">
         <variety>arrow</variety>
-        <level>11</level>
+        <level>12</level>
         <awkward>0</awkward>
         <bonus>2</bonus>
         <protection>0</protection>
@@ -2031,7 +2031,7 @@
     </item>
     <item id="105">
         <variety>arrow</variety>
-        <level>11</level>
+        <level>12</level>
         <awkward>0</awkward>
         <bonus>5</bonus>
         <protection>0</protection>
@@ -2225,7 +2225,7 @@
     </item>
     <item id="115">
         <variety>bolts</variety>
-        <level>14</level>
+        <level>17</level>
         <awkward>0</awkward>
         <bonus>0</bonus>
         <protection>0</protection>
@@ -2245,7 +2245,7 @@
     </item>
     <item id="116">
         <variety>bolts</variety>
-        <level>14</level>
+        <level>17</level>
         <awkward>0</awkward>
         <bonus>2</bonus>
         <protection>0</protection>
@@ -2265,7 +2265,7 @@
     </item>
     <item id="117">
         <variety>bolts</variety>
-        <level>14</level>
+        <level>17</level>
         <awkward>0</awkward>
         <bonus>5</bonus>
         <protection>0</protection>
