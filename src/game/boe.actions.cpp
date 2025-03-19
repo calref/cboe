@@ -864,7 +864,7 @@ void handle_bash_pick(location destination, bool& did_something, bool& need_redr
 	else if(!is_unlockable(destination))
 		add_string_to_buf("  Wrong terrain type.");
 	else {
-		short pc = select_pc(0, isBash ? "Who will bash?" : "Who will pick the lock?");
+		short pc = select_pc(eSelectPC::ONLY_LIVING, isBash ? "Who will bash?" : "Who will pick the lock?");
 		if(pc == 6) {
 			add_string_to_buf("  Cancelled.");
 			overall_mode = MODE_TOWN;
@@ -1904,12 +1904,12 @@ void handle_menu_spell(eSpell spell_picked) {
 		store_mage = spell_picked;
 	else store_priest = spell_picked;
 	if(spell_type == eSkill::MAGE_SPELLS && (*spell_picked).need_select != SELECT_NO) {
-		if((store_spell_target = select_pc((*spell_picked).need_select == SELECT_ANY ? 1 : 0,"Cast spell on who?")) == 6)
+		if((store_spell_target = select_pc((*spell_picked).need_select == SELECT_ANY ? eSelectPC::ANY : eSelectPC::ONLY_LIVING,"Cast spell on who?")) == 6)
 			return;
 	}
 	else {
 		if(spell_type == eSkill::PRIEST_SPELLS && (*spell_picked).need_select != SELECT_NO)
-			if((store_spell_target = select_pc((*spell_picked).need_select == SELECT_ANY ? 1 : 0,"Cast spell on who?")) == 6)
+			if((store_spell_target = select_pc((*spell_picked).need_select == SELECT_ANY ? eSelectPC::ANY : eSelectPC::ONLY_LIVING,"Cast spell on who?")) == 6)
 				return;
 	}
 	
@@ -2149,7 +2149,7 @@ void debug_kill_party() {
 		size_t choice = cStringChoice({"Dead", "Dust", "Stone"}, "Kill how?").show(-1);
 		if(choice == -1) return;
 		eMainStatus death_type = static_cast<eMainStatus>(static_cast<size_t>(eMainStatus::DEAD) + choice);
-		short pc = select_pc(0, "Kill who?", true);
+		short pc = select_pc(eSelectPC::ONLY_LIVING, "Kill who?", true);
 		if(pc == 6) return;
 		for(int i = 0; i < 6; ++i){
 			if(i == pc || (univ.party[i].is_alive() && pc == 7)) {
@@ -2177,7 +2177,7 @@ void debug_hurt_party() {
 		record_action("debug_hurt_party", "");
 	}
 
-	short pc = select_pc(0, "Hurt who?", true);
+	short pc = select_pc(eSelectPC::ONLY_LIVING, "Hurt who?", true);
 	if(pc == 6) return;
 	for(int i = 0; i < 6; ++i){
 		if(i == pc || (univ.party[i].is_alive() && pc == 7)) {
@@ -2216,7 +2216,7 @@ void debug_give_status() {
 		}
 	}
 
-	short pc = select_pc(0, "Give status to who?", true);
+	short pc = select_pc(eSelectPC::ONLY_LIVING, "Give status to who?", true);
 	if(pc == 6) return;
 	for(int i = 0; i < 6; ++i){
 		if(i == pc || (univ.party[i].is_alive() && pc == 7)) {
@@ -3445,7 +3445,7 @@ void handle_drop_pc() {
 	}else if(is_combat()){
 		add_string_to_buf("Delete PC: Not in combat.");
 	}else{
-		int choice = select_pc(1,"Delete who?");
+		int choice = select_pc(eSelectPC::ANY,"Delete who?");
 		if(choice < 6) {
 			std::string confirm = cChoiceDlog("delete-pc-confirm",{"yes","no"}).show();
 			if(confirm == "no"){
@@ -4122,7 +4122,7 @@ void handle_new_pc_graphic() {
 	if(recording){
 		record_action("handle_new_pc_graphic", "");
 	}
-	short choice = select_pc(1,"New graphic for who?");
+	short choice = select_pc(eSelectPC::ANY,"New graphic for who?");
 	if(choice < 6)
 		pick_pc_graphic(choice,1,nullptr);
 	draw_terrain();
@@ -4132,7 +4132,7 @@ void handle_rename_pc() {
 	if(recording){
 		record_action("handle_rename_pc", "");
 	}
-	short choice = select_pc(1,"Rename who?");
+	short choice = select_pc(eSelectPC::ANY,"Rename who?");
 	if(choice < 6)
 		pick_pc_name(choice,nullptr);
 	put_pc_screen();

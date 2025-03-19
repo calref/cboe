@@ -993,7 +993,6 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 		case eSpell::HEAL_MINOR: case eSpell::HEAL: case eSpell::HEAL_MAJOR:
 		case eSpell::POISON_WEAKEN: case eSpell::POISON_CURE: case eSpell::DISEASE_CURE:
 		case eSpell::RESTORE_MIND: case eSpell::CLEANSE: case eSpell::AWAKEN: case eSpell::PARALYSIS_CURE:
-//			target = select_pc(11,0);
 			target = store_spell_target;
 			if(target < 6) {
 				if(!freebie)
@@ -2120,7 +2119,7 @@ void do_alchemy() {
 	short r1;
 	short pc_num;
 	
-	pc_num = select_pc(0);
+	pc_num = select_pc(eSelectPC::ONLY_LIVING);
 	if(pc_num == 6)
 		return;
 	

@@ -190,7 +190,7 @@ void give_thing(short pc_num, short item_num) {
 		add_string_to_buf("Give: Item is cursed.");
 	else {
 		item_store = univ.party[pc_num].items[item_num];
-		who_to = select_pc(3,"Give item to who?");
+		who_to = select_pc(eSelectPC::ONLY_LIVING_WITH_ITEM_SLOT,"Give item to who?");
 		if((overall_mode == MODE_COMBAT) && !adjacent(univ.party[pc_num].combat_pos,univ.party[who_to].combat_pos)) {
 			add_string_to_buf("Give: Must be adjacent.");
 			who_to = 6;
@@ -921,9 +921,7 @@ static bool select_pc_event_filter (cDialog& me, std::string item_hit, eKeyMod) 
 	return true;
 }
 
-// mode determines which PCs can be picked
-// 0 - only living pcs, 1 - any pc, 2 - only dead pcs, 3 - only living pcs with inventory space
-short select_pc(short mode, std::string title, bool allow_choose_all) {
+short select_pc(eSelectPC mode, std::string title, bool allow_choose_all) {
 	short item_hit;
 	
 	set_cursor(sword_curs);
@@ -941,17 +939,20 @@ short select_pc(short mode, std::string title, bool allow_choose_all) {
 		if(univ.party[i].main_status == eMainStatus::ABSENT || univ.party[i].main_status == eMainStatus::FLED)
 			can_pick = false;
 		else switch(mode) {
-			case 3:
+			case eSelectPC::ONLY_LIVING_WITH_ITEM_SLOT:
 				if(!univ.party[i].has_space())
 					can_pick = false;
 				BOOST_FALLTHROUGH;
-			case 0:
+			case eSelectPC::ONLY_LIVING:
 				if(univ.party[i].main_status != eMainStatus::ALIVE)
 					can_pick = false;
 				break;
-			case 2:
+			case eSelectPC::ONLY_DEAD:
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					can_pick = false;
+				break;
+			// Suppress a compiler warning:
+			default:
 				break;
 		}
 		if(!can_pick) {

@@ -4585,7 +4585,6 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 			break;
 			
 		case eSpell::HASTE_MINOR: case eSpell::HASTE: case eSpell::STRENGTH: case eSpell::ENVENOM: case eSpell::RESIST_MAGIC:
-//			target = select_pc(11,0);
 			target = store_spell_target;
 			if(target < 6) {
 				cPlayer& target_pc = univ.party[target];
