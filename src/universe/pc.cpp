@@ -447,33 +447,42 @@ bool cPlayer::give_item(cItem item, int flags) {
 	bool do_print = flags & GIVE_DO_PRINT;
 	bool allow_overload = flags & GIVE_ALLOW_OVERLOAD;
 	int equip_type = flags & GIVE_EQUIP_FORCE;
-	
+	bool check_only = flags & GIVE_CHECK_ONLY;
+
+	// If you passed both GIVE_DO_PRINT and GIVE_CHECK_ONLY for some reason,
+	// the buffer would lie to you and sounds would play.
+	if(check_only) do_print = false;
+
 	if(item.variety == eItemType::NO_ITEM)
 		return true;
 	if(item.variety == eItemType::GOLD) {
 		if(!party) return false;
-		party->gold += item.item_level;
+		if(!check_only)
+			party->gold += item.item_level;
 		if(do_print && print_result)
 			print_result("You get some gold.");
 		return true;
 	}
 	if(item.variety == eItemType::FOOD) {
 		if(!party) return false;
-		party->food += item.item_level;
+		if(!check_only)
+			party->food += item.item_level;
 		if(do_print && print_result)
 			print_result("You get some food.");
 		return true;
 	}
 	if(item.variety == eItemType::SPECIAL) {
 		if(!party) return false;
-		party->spec_items.insert(item.item_level);
+		if(!check_only)
+			party->spec_items.insert(item.item_level);
 		if(do_print && print_result)
 			print_result("You get a special item.");
 		return true;
 	}
 	if(item.variety == eItemType::QUEST) {
 		if(!party) return false;
-		party->active_quests[item.item_level] = cJob(party->calc_day());
+		if(!check_only)
+			party->active_quests[item.item_level] = cJob(party->calc_day());
 		if(do_print && print_result)
 			print_result("You get a quest.");
 		return true;
@@ -489,6 +498,8 @@ bool cPlayer::give_item(cItem item, int flags) {
 	if(!free_space || main_status != eMainStatus::ALIVE)
 		return false;
 	else {
+		if(check_only) return true;
+
 		item.property = false;
 		item.contained = false;
 		item.held = false;

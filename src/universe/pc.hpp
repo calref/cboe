@@ -38,7 +38,9 @@ enum {
 	// These three are mutually exclusive:
 	GIVE_EQUIP_SOFT = 4,
 	GIVE_EQUIP_TRY = 8,
-	GIVE_EQUIP_FORCE = 12,
+	GIVE_EQUIP_FORCE = GIVE_EQUIP_SOFT | GIVE_EQUIP_TRY,
+	// Do a dry run to see if the PC can receive it.
+	GIVE_CHECK_ONLY = 16
 };
 
 class cParty;
