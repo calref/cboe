@@ -2033,10 +2033,10 @@ void debug_give_item() {
 	if(i == -1) return;
 	bool was_ident = univ.scenario.scen_items[i].ident;
 	univ.scenario.scen_items[i].ident = true;
-	bool given = univ.current_pc().give_item(univ.scenario.scen_items[i], true);
+	bool given = univ.current_pc().give_item(univ.scenario.scen_items[i], GIVE_DO_PRINT | GIVE_ALLOW_OVERLOAD);
 	if(!given){
 		ASB("Debug: can't give to " + univ.current_pc().name);
-		given = univ.party.give_item(univ.scenario.scen_items[i], true);
+		given = univ.party.give_item(univ.scenario.scen_items[i], GIVE_DO_PRINT | GIVE_ALLOW_OVERLOAD);
 	}
 	if(!given)
 		ASB("Debug: can't give anyone " + univ.scenario.scen_items[i].full_name);
