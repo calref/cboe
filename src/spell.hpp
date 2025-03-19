@@ -74,6 +74,7 @@ public:
 	cSpell& withRefer(eSpellRefer r);
 	cSpell& withCost(int c);
 	cSpell& withRange(int r);
+	cSpell& withTargetLock();
 	cSpell& asLevel(int lvl);
 	cSpell& asType(eSkill type);
 	cSpell& asPeaceful();
@@ -87,6 +88,7 @@ public:
 	eSkill type;
 	int when_cast;
 	bool peaceful = false;
+	bool target_lock = false;
 	std::string name() const;
 	bool is_priest() const;
 	static eSpell fromNum(eSkill type, int num);
