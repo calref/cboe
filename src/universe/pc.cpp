@@ -494,10 +494,25 @@ bool cPlayer::give_item(cItem item, int flags) {
 		}
 		return false;
 	}
-	cInvenSlot free_space = has_space();
-	if(!free_space || main_status != eMainStatus::ALIVE)
-		return false;
-	else {
+
+	if(main_status != eMainStatus::ALIVE) return false;
+	
+	cInvenSlot real_free_space = has_space();
+	cInvenSlot extra_space = cInvenSlot(*this, INVENTORY_SIZE);
+
+	cInvenSlot* space_ptr = &real_free_space;
+
+	if(!real_free_space){
+		// Check if using the extra slot for stacking items would result in everything fitting:
+		*extra_space = item;
+		if(combine_things(true)){
+			space_ptr = &extra_space;
+		}
+		*extra_space = cItem();
+	}
+
+	cInvenSlot free_space = *space_ptr;
+	if(free_space) {
 		if(check_only) return true;
 
 		item.property = false;
@@ -518,8 +533,8 @@ bool cPlayer::give_item(cItem item, int flags) {
 		if(equip_type != 0 && (*item.variety).equip_count) {
 			if(!equip_item(free_space.slot, false) && equip_type != GIVE_EQUIP_SOFT) {
 				eItemCat exclude = (*item.variety).exclusion;
-				int rem1 = items.size(), rem2 = items.size();
-				for(int i = 0; i < items.size(); i++) {
+				int rem1 = INVENTORY_SIZE, rem2 = INVENTORY_SIZE;
+				for(int i = 0; i < INVENTORY_SIZE; i++) {
 					if(i == free_space.slot) continue;
 					if(!equip[i]) continue;
 					eItemCat check_exclude = (*items[i].variety).exclusion;
@@ -527,20 +542,20 @@ bool cPlayer::give_item(cItem item, int flags) {
 					if(exclude == eItemCat::MISC && item.variety != items[i].variety)
 						continue;
 					if(exclude == eItemCat::HANDS) {
-						if(rem1 == items.size()) {
-							if(item.variety == eItemType::ONE_HANDED || item.variety == eItemType::TWO_HANDED || rem2 < items.size())
+						if(rem1 == INVENTORY_SIZE) {
+							if(item.variety == eItemType::ONE_HANDED || item.variety == eItemType::TWO_HANDED || rem2 < INVENTORY_SIZE)
 								rem1 = i;
-							if(rem1 < items.size()) continue;
+							if(rem1 < INVENTORY_SIZE) continue;
 						}
-						if(rem2 == items.size()) {
-							if(item.variety == eItemType::SHIELD || item.variety == eItemType::SHIELD_2 || rem1 < items.size())
+						if(rem2 == INVENTORY_SIZE) {
+							if(item.variety == eItemType::SHIELD || item.variety == eItemType::SHIELD_2 || rem1 < INVENTORY_SIZE)
 								rem2 = i;
 						}
-					} else if(rem1 < items.size())
+					} else if(rem1 < INVENTORY_SIZE)
 						rem1 = i;
 				}
-				bool can_rem1 = rem1 < items.size() && (!items[rem1].cursed || equip_type == GIVE_EQUIP_FORCE);
-				bool can_rem2 = rem2 < items.size() && (!items[rem2].cursed || equip_type == GIVE_EQUIP_FORCE);
+				bool can_rem1 = rem1 < INVENTORY_SIZE && (!items[rem1].cursed || equip_type == GIVE_EQUIP_FORCE);
+				bool can_rem2 = rem2 < INVENTORY_SIZE && (!items[rem2].cursed || equip_type == GIVE_EQUIP_FORCE);
 				if(exclude == eItemCat::HANDS) {
 					if((*item.variety).num_hands == 2 && can_rem1 && can_rem2) {
 						equip[rem1] = false;
@@ -574,7 +589,7 @@ bool cPlayer::equip_item(int which_item, bool do_print) {
 		return false;
 	}
 	unsigned short num_this_type = 0, hands_occupied = 0;
-	for(int i = 0; i < items.size(); i++)
+	for(int i = 0; i < INVENTORY_SIZE; i++)
 		if(equip[i]) {
 			if(items[i].variety == item.variety)
 				num_this_type++;
@@ -584,7 +599,7 @@ bool cPlayer::equip_item(int which_item, bool do_print) {
 	eItemCat equip_item_type = (*item.variety).exclusion;
 	// Now if missile is already equipped, no more missiles
 	if(equip_item_type == eItemCat::MISSILE_AMMO || equip_item_type == eItemCat::MISSILE_WEAPON) {
-		for(int i = 0; i < items.size(); i++)
+		for(int i = 0; i < INVENTORY_SIZE; i++)
 			if(equip[i] && (*items[i].variety).exclusion == equip_item_type) {
 				if(do_print && print_result) {
 					print_result("Equip: You have something of this type");
@@ -659,7 +674,7 @@ short cPlayer::cur_weight() const {
 	short weight = 0;
 	bool airy = false,heavy = false;
 	
-	for(int i = 0; i < items.size(); i++)
+	for(int i = 0; i < INVENTORY_SIZE; i++)
 		if(items[i].variety != eItemType::NO_ITEM) {
 			weight += items[i].item_weight();
 			if(items[i].ability == eItemAbil::LIGHTER_OBJECT)
@@ -682,7 +697,7 @@ short cPlayer::free_weight() const {
 
 short cPlayer::armor_encumbrance() const {
 	short total = 0;
-	for(short i = 0; i < items.size(); i++) {
+	for(short i = 0; i < INVENTORY_SIZE; i++) {
 		if(equip[i]) total += items[i].awkward;
 	}
 	return total;
@@ -694,7 +709,7 @@ short cPlayer::total_encumbrance(const std::array<short, 51>& reduce_chance) con
 	short burden = free_weight();
 	if(burden < 0) total += burden / -10;
 	
-	for(short i = 0; i < items.size(); i++)
+	for(short i = 0; i < INVENTORY_SIZE; i++)
 		if(equip[i]) {
 			short item_encumbrance = items[i].awkward;
 			if(items[i].ability == eItemAbil::ENCUMBERING)
@@ -709,7 +724,7 @@ short cPlayer::total_encumbrance(const std::array<short, 51>& reduce_chance) con
 }
 
 cInvenSlot cPlayer::has_space() {
-	for(int i = 0; i < items.size(); i++) {
+	for(int i = 0; i < INVENTORY_SIZE; i++) {
 		if(items[i].variety == eItemType::NO_ITEM)
 			return cInvenSlot(*this, i);
 	}
@@ -722,6 +737,7 @@ const cInvenSlot cPlayer::has_space() const {
 
 bool cPlayer::combine_things(bool check_only) {
 	bool can_combine = false;
+	// Here it is correct to check items.size() because the extra slot is *for* combining things.
 	for(int i = 0; i < items.size(); i++) {
 		if(items[i].variety != eItemType::NO_ITEM && items[i].type_flag > 0 && items[i].ident) {
 			for(int j = i + 1; j < items.size(); j++)
@@ -750,7 +766,7 @@ bool cPlayer::combine_things(bool check_only) {
 
 short cPlayer::get_prot_level(eItemAbil abil, short dat) const {
 	int sum = 0;
-	for(int i = 0; i < items.size(); i++) {
+	for(int i = 0; i < INVENTORY_SIZE; i++) {
 		if(items[i].variety == eItemType::NO_ITEM) continue;
 		if(items[i].ability != abil) continue;
 		if(!equip[i]) continue;
@@ -762,7 +778,7 @@ short cPlayer::get_prot_level(eItemAbil abil, short dat) const {
 
 template<typename Fcn>
 cInvenSlot cPlayer::find_item_matching(Fcn fcn) {
-	for(short i = 0; i < items.size(); i++)
+	for(short i = 0; i < INVENTORY_SIZE; i++)
 		if(items[i].variety != eItemType::NO_ITEM && fcn(i, items[i]))
 			return cInvenSlot(*this, i);
 	return cInvenSlot(*this);
@@ -878,7 +894,7 @@ eBuyStatus cPlayer::ok_to_buy(short cost,cItem item) const {
 		if(party->active_quests[item.item_level].status != eQuestStatus::AVAILABLE)
 			return eBuyStatus::HAVE_LOTS;
 	} else if(item.variety != eItemType::GOLD && item.variety != eItemType::FOOD) {
-		for(int i = 0; i < items.size(); i++)
+		for(int i = 0; i < INVENTORY_SIZE; i++)
 			if(items[i].variety != eItemType::NO_ITEM && items[i].type_flag == item.type_flag && items[i].charges > 123)
 				return eBuyStatus::HAVE_LOTS;
 		
@@ -894,6 +910,11 @@ eBuyStatus cPlayer::ok_to_buy(short cost,cItem item) const {
 }
 
 void cPlayer::take_item(int which_item) {
+	if(which_item == INVENTORY_SIZE){
+		// Taking the extra slot which is only for pre-stacking items
+		items[INVENTORY_SIZE] = cItem();
+		return;
+	}
 	if(weap_poisoned.slot == which_item && status[eStatus::POISONED_WEAPON] > 0) {
 		if(print_result) print_result("  Poison lost.");
 		status[eStatus::POISONED_WEAPON] = 0;
@@ -902,12 +923,12 @@ void cPlayer::take_item(int which_item) {
 	if(weap_poisoned.slot > which_item && status[eStatus::POISONED_WEAPON] > 0)
 		weap_poisoned.slot--;
 	
-	for(int i = which_item; i < 23; i++) {
+	for(int i = which_item; i < INVENTORY_SIZE-1; i++) {
 		items[i] = items[i + 1];
 		equip[i] = equip[i + 1];
 	}
-	items[23] = cItem();
-	equip[23] = false;
+	items[INVENTORY_SIZE-1] = cItem();
+	equip[INVENTORY_SIZE-1] = false;
 }
 
 void cPlayer::remove_charge(int which_item) {
@@ -1273,7 +1294,7 @@ void cPlayer::writeTo(cTagFile& file) const {
 	if(weap_poisoned) {
 		page["POISON"] << weap_poisoned.slot;
 	}
-	for(int i = 0; i < items.size(); i++) {
+	for(int i = 0; i < INVENTORY_SIZE; i++) {
 		if(items[i].variety != eItemType::NO_ITEM) {
 			auto& item_page = file.add();
 			item_page["ITEM"] << i;
@@ -1357,9 +1378,9 @@ void cPlayer::readFrom(const cTagFile& file) {
 				party->next_pc_id = max(unique_id + 1, party->next_pc_id);
 			}
 		} else if(page.getFirstKey() == "ITEM") {
-			size_t i = items.size();
+			size_t i = INVENTORY_SIZE;
 			page["ITEM"] >> i;
-			if(i >= items.size()) continue;
+			if(i >= INVENTORY_SIZE) continue;
 			items[i].readFrom(page);
 		}
 	}

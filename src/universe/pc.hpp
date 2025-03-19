@@ -98,7 +98,10 @@ public:
 	short skill_pts;
 	short level;
 	short exp_adj;
-	std::array<cItem,INVENTORY_SIZE> items;
+	// Keep an extra slot for stackable items to go into before combine_things() is called.
+	// This slot is not actually storage space and will always be eItemType::NO_ITEM unless
+	// give_item() is still in progress.
+	std::array<cItem,INVENTORY_SIZE+1> items;
 	std::bitset<INVENTORY_SIZE> equip;
 	std::bitset<62> priest_spells;
 	std::bitset<62> mage_spells;

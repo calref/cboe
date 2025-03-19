@@ -373,7 +373,7 @@ void handle_sale(int i) {
 						univ.current_pc().status[eStatus::PARALYZED] = 0;
 						break;
 					case eShopItemType::REMOVE_CURSE:
-						for(int i = 0; i < univ.current_pc().items.size(); i++)
+						for(int i = 0; i < cPlayer::INVENTORY_SIZE; i++)
 							if((univ.current_pc().equip[i]) &&
 								(univ.current_pc().items[i].cursed))
 								univ.current_pc().items[i].cursed = univ.current_pc().items[i].unsellable = false;
@@ -589,7 +589,7 @@ void set_up_shop_array() {
 					shop_array.push_back(j);
 				break;
 			case eShopItemType::REMOVE_CURSE:
-				for(int i = 0; i < univ.current_pc().items.size(); i++) {
+				for(int i = 0; i < cPlayer::INVENTORY_SIZE; i++) {
 					if((univ.current_pc().equip[i]) && (univ.current_pc().items[i].cursed)) {
 						shop_array.push_back(j);
 						break;

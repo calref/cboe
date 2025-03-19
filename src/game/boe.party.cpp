@@ -2342,7 +2342,7 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 	// armor
 	if(damage_type == eDamageType::WEAPON || damage_type == eDamageType::UNDEAD || damage_type == eDamageType::DEMON) {
 		how_much -= minmax(-5,5,which_pc.status[eStatus::BLESS_CURSE]);
-		for(short i = 0; i < which_pc.items.size(); i++) {
+		for(short i = 0; i < cPlayer::INVENTORY_SIZE; i++) {
 			const cItem& item = which_pc.items[i];
 			if(item.variety != eItemType::NO_ITEM && which_pc.equip[i]) {
 				if((*item.variety).is_armour) {
@@ -2534,7 +2534,7 @@ void kill_pc(cPlayer& which_pc,eMainStatus type) {
 		if(combat_active_pc < 6 && &which_pc == &univ.party[combat_active_pc])
 			combat_active_pc = 6;
 		
-		for(short i = 0; i < which_pc.items.size(); i++)
+		for(short i = 0; i < cPlayer::INVENTORY_SIZE; i++)
 			which_pc.equip[i] = false;
 		
 		item_loc = is_combat() ? which_pc.combat_pos : univ.party.town_loc;
