@@ -143,7 +143,7 @@ public:
 	void drain_sp(int how_much, bool allow_resist) override;
 	void restore_sp(int how_much) override;
 	
-	void combine_things();
+	bool combine_things(bool check_only = false);
 	void sort_items();
 	bool give_item(cItem item, int flags);
 	bool equip_item(int which_item, bool do_print);

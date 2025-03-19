@@ -709,16 +709,19 @@ const cInvenSlot cPlayer::has_space() const {
 	return const_cast<cPlayer*>(this)->has_space();
 }
 
-void cPlayer::combine_things() {
+bool cPlayer::combine_things(bool check_only) {
+	bool can_combine = false;
 	for(int i = 0; i < items.size(); i++) {
 		if(items[i].variety != eItemType::NO_ITEM && items[i].type_flag > 0 && items[i].ident) {
 			for(int j = i + 1; j < items.size(); j++)
 				if(items[j].variety != eItemType::NO_ITEM && items[j].type_flag == items[i].type_flag && items[j].ident) {
+					can_combine = true;	
+					if(check_only) continue;
 					if(print_result) print_result("(items combined)");
 					short test = items[i].charges + items[j].charges;
 					if(test > 125) {
 						items[i].charges = 125;
-						if(print_result) print_result("(Can have at most 125 of any item.");
+						if(print_result) print_result("(Can have at most 125 of any item.)");
 					}
 					else items[i].charges += items[j].charges;
 				 	if(equip[j]) {
@@ -731,6 +734,7 @@ void cPlayer::combine_things() {
 		if(items[i].variety != eItemType::NO_ITEM && items[i].charges < 0)
 			items[i].charges = 1;
 	}
+	return can_combine;
 }
 
 short cPlayer::get_prot_level(eItemAbil abil, short dat) const {
