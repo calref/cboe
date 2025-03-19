@@ -579,6 +579,10 @@ eBuyStatus cPlayer::give_item(cItem item, int flags) {
 	return eBuyStatus::NO_SPACE;
 }
 
+eBuyStatus cPlayer::can_give_item(cItem item) const {
+	return const_cast<cPlayer*>(this)->give_item(item, GIVE_CHECK_ONLY);
+}
+
 bool cPlayer::equip_item(int which_item, bool do_print) {
 	const cItem& item = items[which_item];
 	if((*item.variety).equip_count == 0) {
@@ -896,11 +900,9 @@ eBuyStatus cPlayer::ok_to_buy(short cost,cItem item) const {
 			if(items[i].variety != eItemType::NO_ITEM && items[i].type_flag == item.type_flag && items[i].charges > 123)
 				return eBuyStatus::HAVE_LOTS;
 		
-		if(!has_space())
-			return eBuyStatus::NO_SPACE;
-		if(item.item_weight() > free_weight()) {
-	  		return eBuyStatus::TOO_HEAVY;
-		}
+		eBuyStatus pc_can_fit = can_give_item(item);
+		if(pc_can_fit != eBuyStatus::OK)
+			return pc_can_fit;
 	}
 	if(cost > party->gold)
 		return eBuyStatus::NEED_GOLD;

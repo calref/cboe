@@ -154,6 +154,7 @@ public:
 	// Possible results of give_item are a subset of eBuyStatus, and shop code calls this function,
 	// so reuse the enum
 	eBuyStatus give_item(cItem item, int flags);
+	eBuyStatus can_give_item(cItem item) const;
 	bool equip_item(int which_item, bool do_print);
 	bool unequip_item(int which_item, bool do_print);
 	std::pair<cInvenSlot, cInvenSlot> get_weapons();
