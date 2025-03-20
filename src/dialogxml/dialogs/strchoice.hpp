@@ -27,12 +27,16 @@ class cStringChoice {
 	bool onOkay(cDialog& me);
 	bool onSelect(bool losing);
 	bool onFocus(std::string which, bool losing);
+	bool onSearch(cDialog& me);
+	void clearHighlights();
+	bool highlightSearch();
 	void attachHandlers();
 	void fillPage();
 	void savePage();
 	size_t lastPage() const;
 	std::vector<std::string> strings;
 	size_t page, cur;
+	std::string search_str;
 	cLedGroup* leds;
 	std::function<void(cStringChoice&,int)> select_handler;
 	cStringChoice(cDialog* parent, bool editable = false);

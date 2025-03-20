@@ -3,6 +3,10 @@
 <dialog defbtn='done'>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text name='title' size='large' top='6' left='50' width='256' height='14'>Select:</text>
+	<field name='search-field' relative='pos-in pos' rel-anchor='prev' top='0' left='2' width='200' height='16'/>
+	<button name='search' type='regular' def-key='ctrl f' relative='pos neg' rel-anchor='prev' left='5' top='4'>Search</button>
+	<led name='reverse' state='off' relative='pos pos-in' rel-anchor='prev' top='6' left='7'>Reverse</led>
+	<text name='search-label' size='9' framed='true' relative='pos-in pos' anchor='search-field' top='4' left='0' width='250' height='10'/>
 	<group name='strings'>
 		<!-- Column 1 -->
 		<led name='led1' state='off' top='54' left='8'/>

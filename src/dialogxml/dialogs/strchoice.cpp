@@ -12,10 +12,14 @@
 #include <algorithm>
 
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string/case_conv.hpp>
 
 #include "dialogxml/widgets/field.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
 #include "sounds.hpp"
+#include "gfx/render_shapes.hpp"
+
+const sf::Color HILITE_COLOUR = Colours::LIGHT_GREEN;
 
 cStringChoice::cStringChoice(cDialog* parent, bool editable)
 	: editable(editable)
@@ -41,6 +45,7 @@ void cStringChoice::attachHandlers() {
 	dlg["right"].attachClickHandler(std::bind(&cStringChoice::onRight,this));
 	dlg["done"].attachClickHandler(std::bind(&cStringChoice::onOkay,this,_1));
 	dlg["cancel"].attachClickHandler(std::bind(&cStringChoice::onCancel,this,_1));
+	dlg["search"].attachClickHandler(std::bind(&cStringChoice::onSearch,this,_1));
 	leds = &dynamic_cast<cLedGroup&>(dlg["strings"]);
 	leds->attachFocusHandler(std::bind(&cStringChoice::onSelect,this,_3));
 	if(editable) {
@@ -154,6 +159,88 @@ bool cStringChoice::onOkay(cDialog& me){
 	dlg.setResult(cur);
 	me.toast(true);
 	return true;
+}
+
+bool cStringChoice::onSearch(cDialog& me){
+	cLed& reverse_led = dynamic_cast<cLed&>(me["reverse"]);
+	bool reversed = reverse_led.getState() == led_red;
+	size_t page_delta = reversed ? -1 : 1;
+	size_t loop_from_page = reversed ? 0 : lastPage();
+	size_t loop_to_page = !reversed ? 0 : lastPage();
+	std::string loop_from_str = reversed ? "Reached the beginning." : "Reached the end.";
+	std::string loop_to_str = !reversed ? "Starting from the beginning" : "Starting from the end";
+	size_t start_page = page;
+	bool looped_once = false;
+	std::string new_search = me["search-field"].getText();
+	boost::to_lower(new_search);
+	bool repeat_search = new_search == search_str;
+	search_str = new_search;
+	cControl& output = me["search-label"];
+
+	clearHighlights();
+
+	if(search_str.empty()) {
+		output.setText("");
+		return true;
+	}
+
+	bool found_next = false;
+	if(!repeat_search){
+		// First-time search, check the current page before paging forward
+		if(highlightSearch()) found_next = true;
+	}
+
+	while(!found_next){
+		if(page == loop_from_page){
+			// Looped already, found nothing. Avoid infinite loop:
+			if(looped_once){
+				break;
+			}
+			output.setText(loop_from_str + " " + loop_to_str);
+			looped_once = true;
+			page = loop_to_page;
+		}else{
+			page += page_delta;
+		}
+
+		found_next = highlightSearch();
+	}
+	if(!looped_once){
+		output.setText("");
+	}
+	if(!found_next){
+		page = start_page;
+		output.setText("Not found");
+	}else{
+		fillPage();
+	}
+	return found_next;
+}
+
+void cStringChoice::clearHighlights() {
+	leds->forEach([this](std::string, cControl& led) {
+		led.setColour(dlg.getDefTextClr());
+	});
+}
+
+bool cStringChoice::highlightSearch() {
+	bool match_on_page = false;
+
+	for(int offset = 0; offset < per_page; ++offset){
+		std::string led_id = "led" + std::to_string(offset + 1);
+		int str_idx = page * per_page + offset;
+
+		// Copy the string
+		std::string str = strings[str_idx];
+		// Make case insensitive
+		boost::to_lower(str);
+
+		if(str.find(search_str) != std::string::npos){
+			match_on_page = true;
+			leds->getChild(led_id).setColour(HILITE_COLOUR);
+		}
+	}
+	return match_on_page;
 }
 
 bool cStringChoice::onSelect(bool losing) {
