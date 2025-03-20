@@ -1,53 +1,54 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='done'>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text name='title' size='large' top='6' left='50' width='256' height='14'>Select:</text>
 	<group name='strings'>
+		<!-- Column 1 -->
 		<led name='led1' state='off' top='54' left='8'/>
-		<led name='led2' state='off' top='69' left='8'/>
-		<led name='led3' state='off' top='84' left='8'/>
-		<led name='led4' state='off' top='99' left='8'/>
-		<led name='led5' state='off' top='114' left='8'/>
-		<led name='led6' state='off' top='129' left='8'/>
-		<led name='led7' state='off' top='144' left='8'/>
-		<led name='led8' state='off' top='159' left='8'/>
-		<led name='led9' state='off' top='174' left='8'/>
-		<led name='led10' state='off' top='189' left='8'/>
-		<led name='led11' state='off' top='204' left='8'/>
-		<led name='led12' state='off' top='219' left='8'/>
-		<led name='led13' state='off' top='234' left='8'/>
-		<led name='led14' state='off' top='249' left='8'/>
-		<led name='led15' state='off' top='264' left='8'/>
-		<led name='led16' state='off' top='279' left='8'/>
-		<led name='led17' state='off' top='294' left='8'/>
-		<led name='led18' state='off' top='309' left='8'/>
-		<led name='led19' state='off' top='324' left='8'/>
-		<led name='led20' state='off' top='339' left='8'/>
+		<led name='led2' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led3' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led4' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led5' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led6' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led7' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led8' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led9' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led10' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led11' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led12' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led13' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led14' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led15' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led16' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led17' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led18' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led19' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led20' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<!-- Column 2 -->
 		<led name='led21' state='off' top='54' left='216'/>
-		<led name='led22' state='off' top='69' left='216'/>
-		<led name='led23' state='off' top='84' left='216'/>
-		<led name='led24' state='off' top='99' left='216'/>
-		<led name='led25' state='off' top='114' left='216'/>
-		<led name='led26' state='off' top='129' left='216'/>
-		<led name='led27' state='off' top='144' left='216'/>
-		<led name='led28' state='off' top='159' left='216'/>
-		<led name='led29' state='off' top='174' left='216'/>
-		<led name='led30' state='off' top='189' left='216'/>
-		<led name='led31' state='off' top='204' left='216'/>
-		<led name='led32' state='off' top='219' left='216'/>
-		<led name='led33' state='off' top='234' left='216'/>
-		<led name='led34' state='off' top='249' left='216'/>
-		<led name='led35' state='off' top='264' left='216'/>
-		<led name='led36' state='off' top='279' left='216'/>
-		<led name='led37' state='off' top='294' left='216'/>
-		<led name='led38' state='off' top='309' left='216'/>
-		<led name='led39' state='off' top='324' left='216'/>
-		<led name='led40' state='off' top='339' left='216'/>
+		<led name='led22' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led23' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led24' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led25' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led26' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led27' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led28' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led29' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led30' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led31' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led32' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led33' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led34' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led35' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led36' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led37' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led38' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led39' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+		<led name='led40' state='off' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
 	</group>
-	<button name='left' type='left' def-key='left' top='358' left='8'/>
-	<button name='right' type='right' def-key='right' top='358' left='71'/>
-	<button name='done' type='regular' top='358' left='338'>OK</button>
-	<button name='cancel' type='regular' def-key='esc' top='358' left='272'>Cancel</button>
+	<button name='left' type='left' def-key='left' relative='pos-in pos-in' anchor='led20' top='19' left='0'/>
+	<button name='right' type='right' def-key='right' relative='pos-in pos-in' rel-anchor='prev' top='0' left='63'/>
+	<button name='cancel' type='regular' def-key='esc' relative='pos-in pos-in' rel-anchor='prev' top='0' left='201'>Cancel</button>
+	<button name='done' type='regular' relative='pos-in pos-in' rel-anchor='prev' top='0' left='66'>OK</button>
 </dialog>
