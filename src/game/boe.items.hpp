@@ -42,10 +42,17 @@ std::string get_text_response(std::string prompt = "", pic_num_t pic = 16);
 short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names = {}, boost::optional<short> cancel_value = boost::none);
 
 enum class eSelectPC {
-	ONLY_LIVING,
 	ANY,
+	ONLY_LIVING,
+	ONLY_LIVING_WITH_ITEM_SLOT,
+	// Slightly different from the previous: this now checks not just for a slot,
+	// but also for carrying capacity, and will stack charges even if all slots are full.
+	// When you use this, you have to set the global item_store to your item, first.
+	ONLY_CAN_GIVE,
+	// Same as the previous, but in combat, only show *adjacent* living PCs who can take the item.
+	ONLY_CAN_GIVE_FROM_ACTIVE,
 	ONLY_DEAD,
-	ONLY_LIVING_WITH_ITEM_SLOT
 };
-// Prompt the player to choose a party member. Returns 0-5 for a pc, 6 for cancel, or 7 for all.
+// Prompt the player to choose a party member. Returns 0-5 for a pc, 6 for cancel, 7 for all, or 8 if no PCs fit the mode's filter.
+// Pass a string poiner to no_choice_reason to get the reason why no choices were available, if none are.
 short select_pc(eSelectPC mode, std::string title="", bool allow_choose_all = false);

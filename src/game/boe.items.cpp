@@ -181,23 +181,27 @@ bool place_item(cItem item,location where,bool contained) {
 	return univ.town.items.back().contained;
 }
 
+cItem item_store;
+
 void give_thing(short pc_num, short item_num) {
 	short who_to,how_many = 0;
-	cItem item_store;
 	bool take_given_item = true;
 	
 	if(univ.party[pc_num].equip[item_num] && univ.party[pc_num].items[item_num].cursed)
 		add_string_to_buf("Give: Item is cursed.");
 	else {
 		item_store = univ.party[pc_num].items[item_num];
-		who_to = select_pc(eSelectPC::ONLY_LIVING_WITH_ITEM_SLOT,"Give item to who?");
-		if((overall_mode == MODE_COMBAT) && !adjacent(univ.party[pc_num].combat_pos,univ.party[who_to].combat_pos)) {
-			add_string_to_buf("Give: Must be adjacent.");
-			who_to = 6;
+		who_to = select_pc(eSelectPC::ONLY_CAN_GIVE_FROM_ACTIVE,"Give item to who?");
+		// No party members can receive the item:
+		if(who_to == 8){
+			if(overall_mode == MODE_COMBAT){
+				ASB("Can't give: must be adjacent with enough carrying capacity.", 2);
+			}else{
+				ASB("Can't give: no one has the carrying capacity.", 2);
+			}
 		}
 		
-		if((who_to < 6) && (who_to != pc_num)
-			&& ((overall_mode != MODE_COMBAT) || (adjacent(univ.party[pc_num].combat_pos,univ.party[who_to].combat_pos)))) {
+		if((who_to < 6) && (who_to != pc_num)) {
 			if((item_store.type_flag > 0) && (item_store.charges > 1)) {
 				how_many = get_num_of_items(item_store.charges);
 				if(how_many == 0)
@@ -208,23 +212,10 @@ void give_thing(short pc_num, short item_num) {
 				item_store.charges = how_many;
 			}
 			eBuyStatus give_status = univ.party[who_to].give_item(item_store,0);
-			switch(give_status){
-				case eBuyStatus::OK:
-					if(take_given_item){
-						univ.party[pc_num].take_item(item_num);
-					}
-					break;
-				case eBuyStatus::NO_SPACE:
-					ASB("Can't give: PC has max. # of items.");
-					if(false) // Skip first line of fallthrough
-				case eBuyStatus::TOO_HEAVY:
-					ASB("Can't give: PC carrying too much.");
-					// Can't give to the recipient. Put charges back in giver's inventory:
-					if(how_many > 0)
-						univ.party[pc_num].items[item_num].charges += how_many;
-					break;
-				default:
-					break;
+			if(give_status != eBuyStatus::OK){
+				// This should be impossible, because select_pc() already checked that the options
+				// were viable.
+				showFatalError("Unexpectedly failed to give item!");
 			}
 		}
 	}
@@ -941,15 +932,44 @@ short select_pc(eSelectPC mode, std::string title, bool allow_choose_all) {
 	if(!title.empty())
 		selectPc["title"].setText(title);
 	
+	bool any_options = false;
 	for(short i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		bool can_pick = true;
+		std::string disabled_reason = "";
 		if(univ.party[i].main_status == eMainStatus::ABSENT || univ.party[i].main_status == eMainStatus::FLED)
 			can_pick = false;
+
 		else switch(mode) {
-			case eSelectPC::ONLY_LIVING_WITH_ITEM_SLOT:
-				if(!univ.party[i].has_space())
+			case eSelectPC::ONLY_CAN_GIVE_FROM_ACTIVE:
+				if(i == univ.cur_pc){
 					can_pick = false;
+					break;
+				}
+				if((overall_mode == MODE_COMBAT) && !adjacent(univ.party[univ.cur_pc].combat_pos,univ.party[i].combat_pos)) {
+					can_pick = false;
+					disabled_reason = "too far away";
+					break;
+				}
+				BOOST_FALLTHROUGH;
+			case eSelectPC::ONLY_CAN_GIVE:
+				switch(univ.party[i].can_give_item(item_store)){
+					case eBuyStatus::TOO_HEAVY:
+						disabled_reason = "item too heavy";
+						if(false) // skip first line of fallthrough
+					case eBuyStatus::NO_SPACE:
+						disabled_reason = "no item slot";
+						can_pick = false;
+						break;
+					default:
+						break;
+				}
+				break;
+			case eSelectPC::ONLY_LIVING_WITH_ITEM_SLOT:
+				if(!univ.party[i].has_space()){
+					can_pick = false;
+					disabled_reason = "no item slot";
+				}
 				BOOST_FALLTHROUGH;
 			case eSelectPC::ONLY_LIVING:
 				if(univ.party[i].main_status != eMainStatus::ALIVE)
@@ -963,12 +983,20 @@ short select_pc(eSelectPC mode, std::string title, bool allow_choose_all) {
 			default:
 				break;
 		}
+		selectPc["pc" + n].setText(univ.party[i].name);
 		if(!can_pick) {
 			selectPc["pick" + n].hide();
-			selectPc["pc" + n].hide();
+			if(disabled_reason.empty())
+				selectPc["pc" + n].hide();
+			else
+				selectPc["pc" + n].appendText(": " + disabled_reason);
 		} else {
-			selectPc["pc" + n].setText(univ.party[i].name);
+			any_options = true;
 		}
+	}
+
+	if(!any_options){
+		return 8;
 	}
 
 	if(!allow_choose_all){
