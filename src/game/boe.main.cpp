@@ -442,7 +442,7 @@ static void handle_scenario_args() {
 			// Add the scenario's path to the search paths put_party_in_scen() uses
 			extra_scen_dirs.push_back(path.parent_path());
 		}else{
-			path = locate_scenario(*scen_arg_path);
+			path = locate_scenario(*scen_arg_path, true);
 		}
 
 		cScenario scenario;
@@ -467,7 +467,7 @@ static void handle_scenario_args() {
 				resetting = true;
 			}
 			if(!univ.party.is_in_scenario()){
-				put_party_in_scen(path.filename().string(), scen_arg_town || scen_arg_out_sec);
+				put_party_in_scen(path.filename().string(), scen_arg_town || scen_arg_out_sec, true);
 			}
 		}else{
 			std::cerr << "Failed to load scenario: " << *scen_arg_path << std::endl;

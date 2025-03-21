@@ -107,7 +107,7 @@ short store_pc_graphic;
 // When the party is placed into a scen from the starting screen, this is called to put the game into game
 // mode and load in the scen and init the party info
 // party record already contains scen name
-void put_party_in_scen(std::string scen_name, bool force) {
+void put_party_in_scen(std::string scen_name, bool force, bool allow_unpacked) {
 	bool item_took = false;
 	
 	// Drop debug mode
@@ -142,7 +142,7 @@ void put_party_in_scen(std::string scen_name, bool force) {
 	if(item_took)
 		cChoiceDlog("removed-special-items").show();
 	
-	fs::path path = locate_scenario(scen_name);
+	fs::path path = locate_scenario(scen_name, allow_unpacked);
 	if(path.empty()) {
 		showError("Could not find scenario!");
 		return;
