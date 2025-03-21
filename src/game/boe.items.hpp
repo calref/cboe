@@ -51,6 +51,8 @@ enum class eSelectPC {
 	ONLY_CAN_GIVE,
 	// Same as the previous, but in combat, only show *adjacent* living PCs who can take the item.
 	ONLY_CAN_GIVE_FROM_ACTIVE,
+	// Must have lockpicks equipped
+	ONLY_CAN_LOCKPICK,
 	ONLY_DEAD,
 };
 // Prompt the player to choose a party member. Returns 0-5 for a pc, 6 for cancel, 7 for all, or 8 if no PCs fit the mode's filter.

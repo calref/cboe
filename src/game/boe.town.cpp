@@ -1145,6 +1145,8 @@ void pick_lock(location where,short pc_num) {
 	
 	terrain = univ.town->terrain(where.x,where.y);
 	cInvenSlot which_item = univ.party[pc_num].has_abil_equip(eItemAbil::LOCKPICKS);
+
+	// This should no longer ever happen:
 	if(!which_item) {
 		add_string_to_buf("  Need lockpick equipped.");
 		return;

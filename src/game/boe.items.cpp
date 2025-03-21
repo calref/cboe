@@ -942,7 +942,7 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 	for(short i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		bool can_pick = true;
-		std::string disabled_reason = "";
+		std::string extra_info = "";
 		if(univ.party[i].main_status == eMainStatus::ABSENT || univ.party[i].main_status == eMainStatus::FLED)
 			can_pick = false;
 
@@ -954,17 +954,17 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 				}
 				if((overall_mode == MODE_COMBAT) && !adjacent(univ.party[univ.cur_pc].combat_pos,univ.party[i].combat_pos)) {
 					can_pick = false;
-					disabled_reason = "too far away";
+					extra_info = "too far away";
 					break;
 				}
 				BOOST_FALLTHROUGH;
 			case eSelectPC::ONLY_CAN_GIVE:
 				switch(univ.party[i].can_give_item(item_store)){
 					case eBuyStatus::TOO_HEAVY:
-						disabled_reason = "item too heavy";
+						extra_info = "item too heavy";
 						if(false) // skip first line of fallthrough
 					case eBuyStatus::NO_SPACE:
-						disabled_reason = "no item slot";
+						extra_info = "no item slot";
 						can_pick = false;
 						break;
 					default:
@@ -974,7 +974,7 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 			case eSelectPC::ONLY_LIVING_WITH_ITEM_SLOT:
 				if(!univ.party[i].has_space()){
 					can_pick = false;
-					disabled_reason = "no item slot";
+					extra_info = "no item slot";
 				}
 				BOOST_FALLTHROUGH;
 			case eSelectPC::ONLY_LIVING:
@@ -985,6 +985,28 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					can_pick = false;
 				break;
+			case eSelectPC::ONLY_CAN_LOCKPICK:{
+				if(univ.party[i].main_status != eMainStatus::ALIVE){
+					can_pick = false;
+					break;
+				}
+				if(!univ.party[i].has_abil(eItemAbil::LOCKPICKS)){
+					can_pick = false;
+					extra_info = "no picks";
+					break;
+				}
+				const cInvenSlot& pick_slot = univ.party[i].has_abil_equip(eItemAbil::LOCKPICKS);
+				if(!pick_slot){
+					can_pick = false;
+					extra_info = "picks not equipped";
+					break;
+				}else{
+					const cItem& picks = *pick_slot;
+					std::string pick_name = picks.name;
+					if(picks.ident) pick_name = picks.full_name;
+					extra_info = pick_name + " x " + std::to_string(picks.charges);
+				}
+			}break;
 			// Suppress a compiler warning:
 			default:
 				break;
@@ -993,25 +1015,30 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 		if(highlight_highest != eSkill::INVALID){
 			selectPc["pc" + n].appendText(" ({{skill}})");
 		}
+		if(!extra_info.empty()){
+			selectPc["pc" + n].appendText(": " + extra_info);
+		}
+		if(highlight_highest != eSkill::INVALID){
+			short skill = univ.party[i].skills[highlight_highest];
+			pc_skills[i] = skill;
+			if(skill > highest_skill) highest_skill = skill;
+			if(skill != last_skill) all_pcs_equal = false;
+			last_skill = skill;
+		}
 		if(!can_pick) {
 			selectPc["pick" + n].hide();
-			if(disabled_reason.empty())
+			if(extra_info.empty())
 				selectPc["pc" + n].hide();
-			else
-				selectPc["pc" + n].appendText(": " + disabled_reason);
 		} else {
-			if(highlight_highest != eSkill::INVALID){
-				short skill = univ.party[i].skills[highlight_highest];
-				pc_skills[i] = skill;
-				if(skill > highest_skill) highest_skill = skill;
-				if(skill != last_skill) all_pcs_equal = false;
-				last_skill = skill;
-			}
 			any_options = true;
 		}
 	}
 
 	if(!any_options){
+		if(mode == eSelectPC::ONLY_CAN_LOCKPICK){
+			ASB("  No one has lockpicks equipped.");
+			print_buf();
+		}
 		return 8;
 	}
 

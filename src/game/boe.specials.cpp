@@ -482,7 +482,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			if(choice == "leave")
 				break;
 			if(choice == "pick"){
-				if((door_pc = select_pc(eSelectPC::ONLY_LIVING, "Who will pick the lock?", eSkill::LOCKPICKING)) < 6)
+				if((door_pc = select_pc(eSelectPC::ONLY_CAN_LOCKPICK, "Who will pick the lock?", eSkill::LOCKPICKING)) < 6)
 					pick_lock(where_check,door_pc);
 			}else{
 				if((door_pc = select_pc(eSelectPC::ONLY_LIVING, "Who will bash?", eSkill::STRENGTH)) < 6)

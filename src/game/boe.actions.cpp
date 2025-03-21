@@ -864,7 +864,11 @@ void handle_bash_pick(location destination, bool& did_something, bool& need_redr
 	else if(!is_unlockable(destination))
 		add_string_to_buf("  Wrong terrain type.");
 	else {
-		short pc = select_pc(eSelectPC::ONLY_LIVING, isBash ? "Who will bash?" : "Who will pick the lock?", isBash ? eSkill::STRENGTH : eSkill::LOCKPICKING);
+		short pc = select_pc(isBash ? eSelectPC::ONLY_LIVING : eSelectPC::ONLY_CAN_LOCKPICK, isBash ? "Who will bash?" : "Who will pick the lock?", isBash ? eSkill::STRENGTH : eSkill::LOCKPICKING);
+		// No one can (select_pc prints the message):
+		if(pc == 8){
+			return;
+		}
 		if(pc == 6) {
 			add_string_to_buf("  Cancelled.");
 			overall_mode = MODE_TOWN;
