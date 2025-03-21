@@ -463,6 +463,8 @@ static void handle_scenario_args() {
 					// TODO maybe the player should be warned before they're removed from it?
 					handle_victory(true);
 				}
+			}else{
+				resetting = true;
 			}
 			if(!univ.party.is_in_scenario()){
 				put_party_in_scen(path.filename().string(), scen_arg_town || scen_arg_out_sec);
