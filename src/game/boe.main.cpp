@@ -104,7 +104,8 @@ std::map<std::string,std::vector<std::string>> feature_flags = {
 	{"debug-kill-party", {"V2"}},
 	{"target-lock", {"V1"}},
 	// New in-game save file picker
-	{"file-picker-dialog", {"V1"}}
+	{"file-picker-dialog", {"V1"}},
+	{"scenario-meta-format", {"V2"}}
 };
 
 struct cParseEntrance {
