@@ -12,14 +12,14 @@
 	<button name='pick5' type='regular' def-key='5' relative='pos-in pos-in' rel-anchor='prev' top='25' left='0'><key/></button>
 	<button name='pick6' type='regular' def-key='6' relative='pos-in pos-in' rel-anchor='prev' top='25' left='0'><key/></button>
 	<button name='pick-all' type='regular' def-key='shift 8' relative='pos-in pos-in' rel-anchor='prev' top='25' left='0'><key/></button>
-	<text name='pc1' framed='true' relative='pos-in pos-in' anchor='pick1' top='4' left='69' width='139' height='16'/>
-	<text name='pc2' framed='true' relative='pos-in pos-in' rel-anchor='prev' top='25' left='0' width='139' height='16'/>
-	<text name='pc3' framed='true' relative='pos-in pos-in' rel-anchor='prev' top='25' left='0' width='139' height='16'/>
-	<text name='pc4' framed='true' relative='pos-in pos-in' rel-anchor='prev' top='25' left='0' width='139' height='16'/>
-	<text name='pc5' framed='true' relative='pos-in pos-in' rel-anchor='prev' top='25' left='0' width='139' height='16'/>
-	<text name='pc6' framed='true' relative='pos-in pos-in' rel-anchor='prev' top='25' left='0' width='139' height='16'/>
-	<text name='all' framed='true' relative='pos-in pos-in' rel-anchor='prev' top='25' left='0' width='139' height='16'>Everyone</text>
+	<text name='pc1' framed='true' relative='pos-in pos-in' anchor='pick1' top='4' left='69' width='169' height='16'/>
+	<text name='pc2' framed='true' relative='pos-in pos-in' rel-anchor='prev' top='25' left='0' width='169' height='16'/>
+	<text name='pc3' framed='true' relative='pos-in pos-in' rel-anchor='prev' top='25' left='0' width='169' height='16'/>
+	<text name='pc4' framed='true' relative='pos-in pos-in' rel-anchor='prev' top='25' left='0' width='169' height='16'/>
+	<text name='pc5' framed='true' relative='pos-in pos-in' rel-anchor='prev' top='25' left='0' width='169' height='16'/>
+	<text name='pc6' framed='true' relative='pos-in pos-in' rel-anchor='prev' top='25' left='0' width='169' height='16'/>
+	<text name='all' framed='true' relative='pos-in pos-in' rel-anchor='prev' top='25' left='0' width='169' height='16'>Everyone</text>
 
 	<text top='220' left='11' width='184' height='18'>Hit a button or type '1'-'6'.</text>
-	<button name='cancel' type='regular' top='213' left='214'>Cancel</button>
+	<button name='cancel' type='regular' top='213' left='244'>Cancel</button>
 </dialog>
