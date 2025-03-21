@@ -169,6 +169,7 @@ bool cStringChoice::onOkay(cDialog& me){
 bool cStringChoice::onSearch(cDialog& me){
 	if(!search_open){
 		me["search-field"].show();
+		me.setFocus(&(dynamic_cast<cTextField&>(me.getControl("search-field"))));
 		me["search-label"].show();
 		me["reverse"].show();
 		me.setDefaultButton("search");

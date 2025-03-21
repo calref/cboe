@@ -1158,7 +1158,7 @@ bool cDialog::hasControl(std::string id) const {
 }
 
 void cDialog::setDefaultButton(std::string defbtn) {
-	if(!hasControl(defbtn)){
+	if(!defbtn.empty() && !hasControl(defbtn)){
 		// this is likely because the dialogxml is malformed. maybe the linter already checks this,
 		// but the engine might as well also.
 		throw std::string { "Requested default button does not exist: " } + defbtn;
@@ -1166,8 +1166,10 @@ void cDialog::setDefaultButton(std::string defbtn) {
 	if(!defaultButton.empty()){
 		getControl(defaultButton).setDefault(false);
 	}
-	defaultButton = defbtn;
-	getControl(defaultButton).setDefault(true);
+	if(!defbtn.empty()){
+		defaultButton = defbtn;
+		getControl(defaultButton).setDefault(true);
+	}
 }
 
 const char*const xBadVal::CONTENT = "$content$";
