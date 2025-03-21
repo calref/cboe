@@ -471,7 +471,7 @@ void place_item_button(short which_slot,eItemButton button_type, eItemButton but
 	rectangle from_rect = {0,0,18,18},to_rect;
 
 	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
-	item_area_button_active[which_slot][button_type] = true;
+	item_area_button_active[which_slot][button_pos] = true;
 	rect_draw_some_item(invenbtn_gworld, item_buttons_from[button_type - 2], item_stats_gworld(), item_buttons[which_slot][button_pos], sf::BlendAlpha);
 }
 
