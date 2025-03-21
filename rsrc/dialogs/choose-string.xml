@@ -54,5 +54,5 @@
 	<button name='left' type='left' def-key='left' relative='pos-in pos-in' anchor='led20' top='19' left='0'/>
 	<button name='right' type='right' def-key='right' relative='pos-in pos-in' rel-anchor='prev' top='0' left='63'/>
 	<button name='cancel' type='regular' def-key='esc' relative='pos-in pos-in' rel-anchor='prev' top='0' left='201'>Cancel</button>
-	<button name='done' type='regular' relative='pos-in pos-in' rel-anchor='prev' top='0' left='66'>OK</button>
+	<button name='done' type='regular' def-key='ctrl enter' relative='pos-in pos-in' rel-anchor='prev' top='0' left='66'>OK</button>
 </dialog>

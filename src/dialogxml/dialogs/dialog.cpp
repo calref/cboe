@@ -158,7 +158,7 @@ void cDialog::loadFromFile(const DialogDefn& file){
 		
 		Iterator<Attribute> attr;
 		Iterator<Element> node;
-		string type, name, val, defaultButton;
+		string type, name, val, defbtn;
 		
 		xml.FirstChildElement()->GetValue(&type);
 		if(type != "dialog") throw xBadNode(type,xml.FirstChildElement()->Row(),xml.FirstChildElement()->Column(),fname);
@@ -182,7 +182,7 @@ void cDialog::loadFromFile(const DialogDefn& file){
 				}
 				defTextClr = clr;
 			} else if(name == "defbtn") {
-				defaultButton = val;
+				defbtn = val;
 			}else if(name != "debug")
 				throw xBadAttr(type,name,attr->Row(),attr->Column(),fname);
 		}
@@ -336,8 +336,7 @@ void cDialog::loadFromFile(const DialogDefn& file){
 		} while(!all_resolved);
 		
 		// Set the default button.
-		if(hasControl(defaultButton))
-			getControl(defaultButton).setDefault(true);
+		setDefaultButton(defbtn);
 		
 		// Sort by tab order
 		// First, fill any gaps that might have been left, using ones that had no specific tab order
@@ -1156,6 +1155,19 @@ bool cDialog::hasControl(std::string id) const {
 		iter++;
 	}
 	return false;
+}
+
+void cDialog::setDefaultButton(std::string defbtn) {
+	if(!hasControl(defbtn)){
+		// this is likely because the dialogxml is malformed. maybe the linter already checks this,
+		// but the engine might as well also.
+		throw std::string { "Requested default button does not exist: " } + defbtn;
+	}
+	if(!defaultButton.empty()){
+		getControl(defaultButton).setDefault(false);
+	}
+	defaultButton = defbtn;
+	getControl(defaultButton).setDefault(true);
 }
 
 const char*const xBadVal::CONTENT = "$content$";

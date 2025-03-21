@@ -37,6 +37,7 @@ class cStringChoice {
 	std::vector<std::string> strings;
 	size_t page, cur;
 	std::string search_str;
+	bool search_open = false;
 	cLedGroup* leds;
 	std::function<void(cStringChoice&,int)> select_handler;
 	cStringChoice(cDialog* parent, bool editable = false);

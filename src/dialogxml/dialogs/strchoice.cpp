@@ -66,6 +66,11 @@ cDialog* cStringChoice::operator->() {
 }
 
 size_t cStringChoice::show(size_t selectedIndex) {
+	// Hide most of the search ui until Ctrl+f or clicking the search button
+	dlg["search-field"].hide();
+	dlg["search-label"].hide();
+	dlg["reverse"].hide();
+
 	cur = selectedIndex;
 	if(cur >= strings.size()) {
 		if(editable) {
@@ -162,6 +167,15 @@ bool cStringChoice::onOkay(cDialog& me){
 }
 
 bool cStringChoice::onSearch(cDialog& me){
+	if(!search_open){
+		me["search-field"].show();
+		me["search-label"].show();
+		me["reverse"].show();
+		me.setDefaultButton("search");
+		search_open = true;
+		return true;
+	}
+
 	cLed& reverse_led = dynamic_cast<cLed&>(me["reverse"]);
 	bool reversed = reverse_led.getState() == led_red;
 	size_t page_delta = reversed ? -1 : 1;
