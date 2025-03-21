@@ -481,10 +481,12 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			can_enter = false;
 			if(choice == "leave")
 				break;
-			if((door_pc = select_pc(eSelectPC::ONLY_LIVING)) < 6) {
-				if(choice == "pick")
+			if(choice == "pick"){
+				if((door_pc = select_pc(eSelectPC::ONLY_LIVING, "Who will pick the lock?", eSkill::LOCKPICKING)) < 6)
 					pick_lock(where_check,door_pc);
-				else bash_door(where_check,door_pc);
+			}else{
+				if((door_pc = select_pc(eSelectPC::ONLY_LIVING, "Who will bash?", eSkill::STRENGTH)) < 6)
+					bash_door(where_check,door_pc);
 			}
 			break;
 		case eTerSpec::WILDERNESS_CAVE:

@@ -864,7 +864,7 @@ void handle_bash_pick(location destination, bool& did_something, bool& need_redr
 	else if(!is_unlockable(destination))
 		add_string_to_buf("  Wrong terrain type.");
 	else {
-		short pc = select_pc(eSelectPC::ONLY_LIVING, isBash ? "Who will bash?" : "Who will pick the lock?");
+		short pc = select_pc(eSelectPC::ONLY_LIVING, isBash ? "Who will bash?" : "Who will pick the lock?", isBash ? eSkill::STRENGTH : eSkill::LOCKPICKING);
 		if(pc == 6) {
 			add_string_to_buf("  Cancelled.");
 			overall_mode = MODE_TOWN;
@@ -2149,7 +2149,7 @@ void debug_kill_party() {
 		size_t choice = cStringChoice({"Dead", "Dust", "Stone"}, "Kill how?").show(-1);
 		if(choice == -1) return;
 		eMainStatus death_type = static_cast<eMainStatus>(static_cast<size_t>(eMainStatus::DEAD) + choice);
-		short pc = select_pc(eSelectPC::ONLY_LIVING, "Kill who?", true);
+		short pc = select_pc(eSelectPC::ONLY_LIVING, "Kill who?", eSkill::INVALID, true);
 		if(pc == 6) return;
 		for(int i = 0; i < 6; ++i){
 			if(i == pc || (univ.party[i].is_alive() && pc == 7)) {
@@ -2177,7 +2177,7 @@ void debug_hurt_party() {
 		record_action("debug_hurt_party", "");
 	}
 
-	short pc = select_pc(eSelectPC::ONLY_LIVING, "Hurt who?", true);
+	short pc = select_pc(eSelectPC::ONLY_LIVING, "Hurt who?", eSkill::INVALID, true);
 	if(pc == 6) return;
 	for(int i = 0; i < 6; ++i){
 		if(i == pc || (univ.party[i].is_alive() && pc == 7)) {
@@ -2216,7 +2216,7 @@ void debug_give_status() {
 		}
 	}
 
-	short pc = select_pc(eSelectPC::ONLY_LIVING, "Give status to who?", true);
+	short pc = select_pc(eSelectPC::ONLY_LIVING, "Give status to who?", eSkill::INVALID, true);
 	if(pc == 6) return;
 	for(int i = 0; i < 6; ++i){
 		if(i == pc || (univ.party[i].is_alive() && pc == 7)) {

@@ -55,4 +55,4 @@ enum class eSelectPC {
 };
 // Prompt the player to choose a party member. Returns 0-5 for a pc, 6 for cancel, 7 for all, or 8 if no PCs fit the mode's filter.
 // Pass a string poiner to no_choice_reason to get the reason why no choices were available, if none are.
-short select_pc(eSelectPC mode, std::string title="", bool allow_choose_all = false);
+short select_pc(eSelectPC mode, std::string title="", eSkill highlight_highest = eSkill::INVALID, bool allow_choose_all = false);

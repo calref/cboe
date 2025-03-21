@@ -18,6 +18,7 @@
 #include "boe.monster.hpp"
 #include "boe.main.hpp"
 #include "mathutil.hpp"
+#include "utility.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/strchoice.hpp"
 #include "dialogxml/dialogs/3choice.hpp"
@@ -28,6 +29,7 @@
 #include "tools/winutil.hpp"
 #include "tools/cursors.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
+#include "gfx/render_shapes.hpp"
 
 extern short which_combat_type;
 extern eGameMode overall_mode;
@@ -920,7 +922,7 @@ static bool select_pc_event_filter (cDialog& me, std::string item_hit, eKeyMod) 
 	return true;
 }
 
-short select_pc(eSelectPC mode, std::string title, bool allow_choose_all) {
+short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, bool allow_choose_all) {
 	short item_hit;
 	
 	set_cursor(sword_curs);
@@ -933,6 +935,10 @@ short select_pc(eSelectPC mode, std::string title, bool allow_choose_all) {
 		selectPc["title"].setText(title);
 	
 	bool any_options = false;
+	std::array<short, 6> pc_skills = {0, 0, 0, 0, 0, 0};
+	short highest_skill = 0;
+	short last_skill = 0;
+	bool all_pcs_equal = true;
 	for(short i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		bool can_pick = true;
@@ -984,6 +990,9 @@ short select_pc(eSelectPC mode, std::string title, bool allow_choose_all) {
 				break;
 		}
 		selectPc["pc" + n].setText(univ.party[i].name);
+		if(highlight_highest != eSkill::INVALID){
+			selectPc["pc" + n].appendText(" ({{skill}})");
+		}
 		if(!can_pick) {
 			selectPc["pick" + n].hide();
 			if(disabled_reason.empty())
@@ -991,12 +1000,33 @@ short select_pc(eSelectPC mode, std::string title, bool allow_choose_all) {
 			else
 				selectPc["pc" + n].appendText(": " + disabled_reason);
 		} else {
+			if(highlight_highest != eSkill::INVALID){
+				short skill = univ.party[i].skills[highlight_highest];
+				pc_skills[i] = skill;
+				if(skill > highest_skill) highest_skill = skill;
+				if(skill != last_skill) all_pcs_equal = false;
+				last_skill = skill;
+			}
 			any_options = true;
 		}
 	}
 
 	if(!any_options){
 		return 8;
+	}
+
+	if(highlight_highest != eSkill::INVALID){
+		selectPc["hint"].replaceText("{{skill}}", get_str("skills", (int)highlight_highest * 2 + 1));
+
+		for(int i = 0; i < 6; i++){
+			std::string n = boost::lexical_cast<std::string>(i + 1);
+			selectPc["pc" + n].replaceText("{{skill}}", std::to_string(pc_skills[i]));
+			if(pc_skills[i] == highest_skill && !all_pcs_equal){
+				selectPc["pc" + n].setColour(Colours::LIGHT_GREEN);
+			}
+		}
+	}else{
+		selectPc["hint"].hide();
 	}
 
 	if(!allow_choose_all){

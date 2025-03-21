@@ -3,6 +3,7 @@
 <dialog defbtn='cancel'>
 	<pict type='dlog' num='6' top='8' left='8'/>
 	<text name='title' size='large' top='10' left='49' width='228' height='16'>Select a PC:</text>
+	<text name='hint' size='9' top='2' left='160' width='100' height='25'>The number in () is {{skill}}. Highest is highlighted.</text>
 
 	<button name='pick1' type='regular' def-key='1' top='31' left='69'><key/></button>
 	<button name='pick2' type='regular' def-key='2' relative='pos-in pos-in' rel-anchor='prev' top='25' left='0'><key/></button>
