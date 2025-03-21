@@ -481,10 +481,12 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 			can_enter = false;
 			if(choice == "leave")
 				break;
-			if((door_pc = select_pc(0)) < 6) {
-				if(choice == "pick")
+			if(choice == "pick"){
+				if((door_pc = select_pc(eSelectPC::ONLY_CAN_LOCKPICK, "Who will pick the lock?", eSkill::LOCKPICKING)) < 6)
 					pick_lock(where_check,door_pc);
-				else bash_door(where_check,door_pc);
+			}else{
+				if((door_pc = select_pc(eSelectPC::ONLY_LIVING, "Who will bash?", eSkill::STRENGTH)) < 6)
+					bash_door(where_check,door_pc);
 			}
 			break;
 		case eTerSpec::WILDERNESS_CAVE:
@@ -1115,8 +1117,8 @@ void use_item(short pc,short item) {
 				}
 				switch((*spell).need_select) {
 					case SELECT_NO: break;
-					case SELECT_ACTIVE: store_spell_target = select_pc(0); break;
-					case SELECT_ANY: store_spell_target = select_pc(1); break;
+					case SELECT_ACTIVE: store_spell_target = select_pc(eSelectPC::ONLY_LIVING); break;
+					case SELECT_ANY: store_spell_target = select_pc(eSelectPC::ANY); break;
 				}
 				if(overall_mode == MODE_COMBAT) {
 					bool priest = (*spell).is_priest();
@@ -2649,7 +2651,7 @@ void oneshot_spec(const runtime_state& ctx) {
 				*ctx.ret_a = 1;
 			} else {
 				if(!is_combat()) {
-					dlg_res = char_select_pc(0,"Trap! Who will disarm?");
+					dlg_res = select_pc(eSelectPC::ONLY_LIVING,"Trap! Who will disarm?", eSkill::DISARM_TRAPS);
 					if(dlg_res == 6){
 						*ctx.ret_a = 1;
 						set_sd = false;
@@ -2699,22 +2701,22 @@ void affect_spec(const runtime_state& ctx) {
 				if(spec.ex1a == 2)
 					ctx.cur_target = &univ.party;
 				else if(spec.ex1a == 1) {
-					i = select_pc(0);
+					i = select_pc(eSelectPC::ONLY_LIVING);
 					if(i != 6)
 						ctx.cur_target = &univ.party[i];
 				}
 				else if(spec.ex1a == 0) {
-					i = select_pc(1);
+					i = select_pc(eSelectPC::ANY);
 					if(i != 6)
 						ctx.cur_target = &univ.party[i];
 				}
 				else if(spec.ex1a == 3) {
-					i = select_pc(2);
+					i = select_pc(eSelectPC::ONLY_DEAD);
 					if(i != 6)
 						ctx.cur_target = &univ.party[i];
 				}
 				else if(spec.ex1a == 4) {
-					i = select_pc(3);
+					i = select_pc(eSelectPC::ONLY_LIVING_WITH_ITEM_SLOT);
 					if(i != 6)
 						ctx.cur_target = &univ.party[i];
 				}
@@ -3275,7 +3277,7 @@ void affect_spec(const runtime_state& ctx) {
 				bool success = true;
 				for(short i = 0; i < 6; i++)
 					if(pc_num == 6 || pc_num == i)
-						success = success && univ.party[i].give_item(to_give, equip_type | GIVE_ALLOW_OVERLOAD);
+						success = success && univ.party[i].give_item(to_give, equip_type | GIVE_ALLOW_OVERLOAD) == eBuyStatus::OK;
 				if(!success)
 					ctx.next_spec = spec.pic;
 			}
@@ -4086,7 +4088,7 @@ void townmode_spec(const runtime_state& ctx) {
 				check_mess = false;
 				break;
 			}
-			r1 = char_select_pc(0,"Which character goes?");
+			r1 = select_pc(eSelectPC::ONLY_LIVING,"Which character goes?");
 			if(ctx.which_mode == eSpecCtx::OUT_MOVE || ctx.which_mode == eSpecCtx::TOWN_MOVE || ctx.which_mode == eSpecCtx::COMBAT_MOVE)
 				*ctx.ret_a = 1;
 			if(r1 != 6) {

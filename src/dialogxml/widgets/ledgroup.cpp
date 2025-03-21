@@ -21,7 +21,7 @@ cLedGroup::cLedGroup(iComponent& parent)
 {}
 
 cLedGroup::~cLedGroup(){
-	ledIter iter = choices.begin();
+	ctrlIter iter = choices.begin();
 	while(iter != choices.end()){
 		delete iter->second;
 		iter++;
@@ -29,7 +29,7 @@ cLedGroup::~cLedGroup(){
 }
 
 void cLedGroup::recalcRect(){
-	ledIter iter = choices.begin();
+	ctrlIter iter = choices.begin();
 	frame = {INT_MAX, INT_MAX, 0, 0};
 	while(iter != choices.end()){
 		rectangle otherFrame = iter->second->getBounds();
@@ -47,14 +47,17 @@ void cLedGroup::recalcRect(){
 }
 
 void cLedGroup::addChoice(cLed* ctrl, std::string key) {
-	choices[key] = ctrl;
+	// normal ledgroups add their children through parseChildControl, but mapgroups still
+	// need to do it this way
+	if(!hasChild(key))
+		choices[key] = ctrl;
 	if(ctrl->getState() != led_off)
 		setSelected(key);
 }
 
 bool cLedGroup::handleClick(location where, cFramerateLimiter& fps_limiter) {
 	std::string which_clicked;
-	ledIter iter = choices.begin();
+	ctrlIter iter = choices.begin();
 	while(iter != choices.end()){
 		if(iter->second->isVisible() && where.in(iter->second->getBounds())){
 			if(iter->second->handleClick(where, fps_limiter)) {
@@ -84,17 +87,19 @@ void cLedGroup::callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std
 	if(choices[which_clicked]->triggerClickHandler(me,which_clicked,mods)){
 		if(onClick) onClick(me,id,mods);
 		if(!curSelect.empty()) {
-			choices[curSelect]->setState(led_off);
-			if(!choices[curSelect]->triggerFocusHandler(me,curSelect,true)){
-				choices[curSelect]->setState(led_red);
+			cLed& sel = getChild(curSelect);
+			sel.setState(led_off);
+			if(!sel.triggerFocusHandler(me,curSelect,true)){
+				sel.setState(led_red);
 				return;
 			}
 		}
-		choices[which_clicked]->setState(led_red);
-		if(!choices[which_clicked]->triggerFocusHandler(me,which_clicked,false)){
+		cLed& led = getChild(which_clicked);
+		led.setState(led_red);
+		if(!led.triggerFocusHandler(me,which_clicked,false)){
 			if(!curSelect.empty())
-				choices[curSelect]->setState(led_red);
-			choices[which_clicked]->setState(led_off);
+				getChild(curSelect).setState(led_red);
+			led.setState(led_off);
 			return;
 		}
 	}else return;
@@ -104,8 +109,8 @@ void cLedGroup::callHandler(event_fcn<EVT_CLICK>::type onClick, cDialog& me, std
 	curSelect = which_clicked;
 	if(!triggerFocusHandler(me,id,false)) {
 		if(!curSelect.empty())
-			choices[curSelect]->setState(led_red);
-		choices[which_clicked]->setState(led_off);
+			getChild(curSelect).setState(led_red);
+		getChild(which_clicked).setState(led_off);
 		curSelect = prevSelect;
 		prevSelect = savePrevSelect;
 		return;
@@ -157,48 +162,51 @@ bool cLedGroup::hasChild(std::string id) const {
 }
 
 cLed& cLedGroup::getChild(std::string id){
-	ledIter iter = choices.find(id);
+	ctrlIter iter = choices.find(id);
 	if(iter == choices.end()) throw std::invalid_argument(id + " does not exist in the ledgroup.");
-	return *(iter->second);
+	return dynamic_cast<cLed&>(*(iter->second));
 }
 
 void cLedGroup::setSelected(std::string id){
 	if(id == "") { // deselect all
 		if(curSelect == "") return;
-		eLedState was = choices[curSelect]->getState();
-		choices[curSelect]->setState(led_off);
-		if(choices[curSelect]->triggerFocusHandler(*getDialog(),curSelect,true))
+		cLed& sel = getChild(curSelect);
+		eLedState was = sel.getState();
+		sel.setState(led_off);
+		if(sel.triggerFocusHandler(*getDialog(),curSelect,true))
 			curSelect = "";
 		else
-			choices[curSelect]->setState(was);
+			sel.setState(was);
 		return;
 	}
 	
-	ledIter iter = choices.find(id);
+	ctrlIter iter = choices.find(id);
 	if(iter == choices.end()) throw std::invalid_argument(id + " does not exist in the ledgroup.");
-	
+
+	cLed& led = getChild(id);
 	if(curSelect == ""){
-		if(iter->second->triggerFocusHandler(*getDialog(),curSelect,false)){
-			iter->second->setState(led_red);
-			curSelect = iter->first;
+		if(led.triggerFocusHandler(*getDialog(),curSelect,false)){
+			led.setState(led_red);
+			curSelect = id;
 		}
 	}else{
+		cLed& sel = getChild(curSelect);
 		eLedState a, b;
-		a = choices[curSelect]->getState();
-		b = iter->second->getState();
-		choices[curSelect]->setState(led_off);
-		iter->second->setState(led_red);
-		if(!choices[curSelect]->triggerFocusHandler(*getDialog(),curSelect,true)){
-			choices[curSelect]->setState(a);
-			iter->second->setState(b);
+		a = sel.getState();
+		b = led.getState();
+		sel.setState(led_off);
+		led.setState(led_red);
+		if(!sel.triggerFocusHandler(*getDialog(),curSelect,true)){
+			sel.setState(a);
+			led.setState(b);
 			return;
 		}
-		if(!iter->second->triggerFocusHandler(*getDialog(),curSelect,false)){
-			choices[curSelect]->setState(a);
-			iter->second->setState(b);
+		if(!led.triggerFocusHandler(*getDialog(),curSelect,false)){
+			sel.setState(a);
+			led.setState(b);
 			return;
 		}
-		curSelect = iter->first;
+		curSelect = id;
 	}
 }
 
@@ -212,7 +220,7 @@ std::string cLedGroup::getPrevSelection() const {
 
 void cLedGroup::draw(){
 	if(!visible) return;
-	ledIter iter = choices.begin();
+	ctrlIter iter = choices.begin();
 	while(iter != choices.end()){
 		iter->second->draw();
 		iter++;
@@ -242,8 +250,11 @@ bool cLedGroup::parseContent(ticpp::Node& content, int n, std::string tagName, s
 	std::string val = content.Value();
 	int type = content.Type();
 	if(type == TiXmlNode::ELEMENT && val == "led"){
-		auto led = getDialog()->parse<cLed>(dynamic_cast<ticpp::Element&>(content), *this);
-		addChoice(led.second, led.first);
+		std::string id;
+		if(!parseChildControl(dynamic_cast<ticpp::Element&>(content), choices, id, fname))
+			return false;
+		cLed* led = dynamic_cast<cLed*>(choices[id]);
+		addChoice(led, id);
 		return true;
 	} else if(type == TiXmlNode::TEXT) {
 		return false;

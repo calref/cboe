@@ -40,7 +40,7 @@ enum eSpecKey {
 	key_esc, key_enter, key_tab, key_help, // key_help should bind to the help key on Mac and the F1 key on Windows
 	key_bsp, key_del, key_home, key_end, key_pgup, key_pgdn, key_top, key_bottom, key_insert,
 	key_copy, key_cut, key_paste, key_selectall, key_undo, key_redo,
-	key_word_left, key_word_right, key_word_bsp, key_word_del,
+	key_word_left, key_word_right, key_word_bsp, key_word_del, key_none
 };
 
 /// Represents a keypress.

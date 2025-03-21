@@ -171,7 +171,7 @@ void adjust_window_mode() {
 	hideMenuBar();
 	double ui_scale = get_ui_scale();
 	if(ui_scale < 0.1) ui_scale = 1.0;
-	float width = boe_width * ui_scale, height = boe_height * ui_scale;
+	int width = boe_width * ui_scale, height = boe_height * ui_scale;
 	
 	// TODO: Make display_mode an enum
 	// 0 - center 1- ul 2 - ur 3 - dl 4 - dr 5 - small win
@@ -482,21 +482,48 @@ void draw_start_button(eStartButton which_position,short which_button) {
 	win_draw_string(mainPtr(),to_rect,button_labels[which_position],eTextMode::CENTRE,style);
 }
 
-void arrow_button_click(rectangle button_rect) {
+bool arrow_button_click(rectangle button_rect, cFramerateLimiter* fps_limiter) {
 	if(recording){
-		// This action is purely cosmetic, for playing the animation and sound accompanying a click on a button whose real action
-		// is recorded afterward
+		// In a replay, this action is purely cosmetic, for playing the animation and sound
+		// accompanying a click on a button whose real action is recorded afterward
 		record_action("arrow_button_click", boost::lexical_cast<std::string>(button_rect));
 	}
+	
+	// Draw depressed:
 	mainPtr().setActive();
 	clip_rect(mainPtr(), button_rect);
-	// TODO: Mini-event loop so that the click doesn't happen until releasing the mouse button
-	
 	refresh_stat_areas(1);
 	mainPtr().display();
-	play_sound(37, time_in_ticks(5));
+
+	// Mini-event loop so that the click doesn't happen until releasing the mouse button:
+	bool done = false, clicked = false, depressed = true;
+	if(replaying) clicked = true;
+	else{
+		sf::Event e;
+		while(!done){
+			refresh_stat_areas(depressed ? 1 : 0);
+			while(pollEvent(mainPtr(), e)){
+				if(e.type == sf::Event::MouseButtonReleased){
+					done = true;
+					location clickPos(e.mouseButton.x, e.mouseButton.y);
+					clickPos = mainPtr().mapPixelToCoords(clickPos);
+					clicked = button_rect.contains(clickPos);
+					depressed = false;
+					break;
+				} else if(e.type == sf::Event::MouseMoved){
+					location toPos(e.mouseMove.x, e.mouseMove.y);
+					toPos = mainPtr().mapPixelToCoords(toPos);
+					depressed = button_rect.contains(toPos);
+				}
+			}
+			fps_limiter->frame_finished();
+		}
+	}
+	
 	undo_clip(mainPtr());
+	play_sound(37, time_in_ticks(5));
 	refresh_stat_areas(0);
+	return clicked;
 }
 
 
@@ -686,8 +713,17 @@ void draw_text_bar() {
 
 void draw_text_bar(std::pair<std::string,std::string> text) {
 	static std::pair<std::string,std::string> store_text = std::make_pair("", "");
-	if(text.first != store_text.first || text.second != store_text.second){
+	static bool had_statuses = false;
+	bool has_statuses = false;
+	for(auto next : univ.party.status) {
+		const auto& statInfo = *next.first;
+		if(next.second > 0) {
+			has_statuses = true;
+		}
+	}
+	if(text.first != store_text.first || text.second != store_text.second || had_statuses != has_statuses){
 		store_text = text;
+		had_statuses = has_statuses;
 		put_text_bar(text.first, text.second);
 		refresh_text_bar();
 	}

@@ -110,6 +110,8 @@ inline bool isDead(eMainStatus stat) {
 	return code > 1 && code < 5;
 }
 
+std::pair<int, int> status_bounds(eStatus which);
+
 std::ostream& operator << (std::ostream& out, eStatus e);
 std::istream& operator >> (std::istream& in, eStatus& e);
 std::istream& operator >> (std::istream& in, ePartyStatus& type);

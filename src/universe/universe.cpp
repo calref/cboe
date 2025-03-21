@@ -1220,7 +1220,7 @@ void cUniverse::exportGraphics() {
 				used_graphics.insert(party[i].which_graphic - 10000 + j);
 		} else if(party[i].which_graphic >= 1000)
 			update_pcs[party[i].which_graphic - 1000].insert(&party[i]);
-		for(size_t j = 0; j < party[i].items.size(); j++) {
+		for(size_t j = 0; j < cPlayer::INVENTORY_SIZE; j++) {
 			check_item(party[i].items[j]);
 		}
 	}
@@ -1277,7 +1277,7 @@ void cUniverse::exportSummons() {
 	for(int i = 0; i < 6; i++) {
 		if(party[i].main_status == eMainStatus::ABSENT)
 			continue;
-		for(size_t j = 0; j < party[i].items.size(); j++) {
+		for(size_t j = 0; j < cPlayer::INVENTORY_SIZE; j++) {
 			if(party[i].items[j].variety == eItemType::NO_ITEM) continue;
 			if(party[i].items[j].ability == eItemAbil::SUMMONING || party[i].items[j].ability == eItemAbil::MASS_SUMMONING) {
 				mon_num_t monst = party[i].items[j].abil_data.value;

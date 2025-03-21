@@ -259,6 +259,10 @@ public:
 	/// Set the control's text.
 	/// @param l The new text.
 	virtual void setText(std::string l);
+	/// Replace the first occurrence of the given string in this control's text
+	void replaceText(std::string find, std::string replace);
+	/// Append a string to this control's text
+	void appendText(std::string l);
 	/// Fetch the control's text.
 	/// @return The control's current text.
 	virtual std::string getText() const;
@@ -340,6 +344,8 @@ public:
 	/// should be hilited in some way while pressed and is cancelled by releasing the mouse
 	/// button outside the control's bounds.
 	virtual bool handleClick(location where, cFramerateLimiter& fps_limiter);
+	/// Animate and play the sound of the control being "clicked", and call its click event
+	void handleKeyTriggered(cDialog& parent);
 	/// Specifies that another control acts as a label for this one.
 	/// The practical effect of this is that hiding or showing this control automatically hides or shows the label as well.
 	/// @param label A pointer to the control that acts as a label.

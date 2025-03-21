@@ -158,7 +158,7 @@ void cDialog::loadFromFile(const DialogDefn& file){
 		
 		Iterator<Attribute> attr;
 		Iterator<Element> node;
-		string type, name, val, defaultButton;
+		string type, name, val, defbtn;
 		
 		xml.FirstChildElement()->GetValue(&type);
 		if(type != "dialog") throw xBadNode(type,xml.FirstChildElement()->Row(),xml.FirstChildElement()->Column(),fname);
@@ -182,7 +182,7 @@ void cDialog::loadFromFile(const DialogDefn& file){
 				}
 				defTextClr = clr;
 			} else if(name == "defbtn") {
-				defaultButton = val;
+				defbtn = val;
 			}else if(name != "debug")
 				throw xBadAttr(type,name,attr->Row(),attr->Column(),fname);
 		}
@@ -336,8 +336,7 @@ void cDialog::loadFromFile(const DialogDefn& file){
 		} while(!all_resolved);
 		
 		// Set the default button.
-		if(hasControl(defaultButton))
-			getControl(defaultButton).setDefault(true);
+		setDefaultButton(defbtn);
 		
 		// Sort by tab order
 		// First, fill any gaps that might have been left, using ones that had no specific tab order
@@ -914,17 +913,30 @@ void cDialog::process_keystroke(cKey keyHit){
 	ctrlIter iter = controls.begin();
 	bool enterKeyHit = keyHit.spec && keyHit.k == key_enter;
 	while(iter != controls.end()){
-		if((iter->second->isVisible() && iter->second->isClickable())
-			&& (iter->second->getAttachedKey() == keyHit || (iter->second->isDefault() && enterKeyHit))){
+		cControl* ctrl = iter->second;
+		if(ctrl->isVisible()){
+			if(ctrl->isClickable() &&
+				(ctrl->getAttachedKey() == keyHit || (ctrl->isDefault() && enterKeyHit))){
 
-			iter->second->setActive(true);
-			draw();
-			iter->second->playClickSound();
-			iter->second->setActive(false);
-			draw();
-			sf::sleep(sf::milliseconds(8));
-			iter->second->triggerClickHandler(*this,iter->first,mod_none);
-			return;
+				ctrl->handleKeyTriggered(*this);
+				return;
+			}
+			if(ctrl->isContainer()){
+				cContainer* container = dynamic_cast<cContainer*>(ctrl);
+				std::string child_hit;
+				container->forEach([&keyHit, &child_hit, enterKeyHit](std::string child_id, cControl& child_ctrl) {
+					if(child_ctrl.isClickable() &&
+						(child_ctrl.getAttachedKey() == keyHit || (child_ctrl.isDefault() && enterKeyHit))){
+						
+						if(child_hit.empty()) child_hit = child_id;
+					}
+				});
+				if(!child_hit.empty()) {
+					findControl(child_hit)->handleKeyTriggered(*this);
+					return;
+				}
+			}
+
 		}
 		iter++;
 	}
@@ -1143,6 +1155,21 @@ bool cDialog::hasControl(std::string id) const {
 		iter++;
 	}
 	return false;
+}
+
+void cDialog::setDefaultButton(std::string defbtn) {
+	if(!defbtn.empty() && !hasControl(defbtn)){
+		// this is likely because the dialogxml is malformed. maybe the linter already checks this,
+		// but the engine might as well also.
+		throw std::string { "Requested default button does not exist: " } + defbtn;
+	}
+	if(!defaultButton.empty()){
+		getControl(defaultButton).setDefault(false);
+	}
+	if(!defbtn.empty()){
+		defaultButton = defbtn;
+		getControl(defaultButton).setDefault(true);
+	}
 }
 
 const char*const xBadVal::CONTENT = "$content$";

@@ -1243,7 +1243,7 @@ void do_combat_cast(location target) {
 													if(stat_window == univ.cur_pc)
 														put_item_screen(stat_window);
 													do_mindduel(univ.cur_pc,cur_monst);
-												} else add_string_to_buf("  You need a smoky crystal.   ");
+												} else add_caster_needs_to_buf("a smoky crystal");
 											}
 											store_sound = 24;
 											break;
@@ -1818,7 +1818,7 @@ bool combat_next_step() {
 	
 	if((combat_active_pc == 6) && (univ.cur_pc != store_pc)) {
 		std::ostringstream create_line;
-		create_line << "Active:  " << univ.current_pc().name;
+		create_line << "Active: " << univ.current_pc().name;
 		create_line << " (#" << univ.cur_pc + 1 << ", " << univ.current_pc().ap << " ap.)";
 		add_string_to_buf(create_line.str());
 		print_buf();
@@ -4585,7 +4585,6 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 			break;
 			
 		case eSpell::HASTE_MINOR: case eSpell::HASTE: case eSpell::STRENGTH: case eSpell::ENVENOM: case eSpell::RESIST_MAGIC:
-//			target = select_pc(11,0);
 			target = store_spell_target;
 			if(target < 6) {
 				cPlayer& target_pc = univ.party[target];
@@ -4901,7 +4900,7 @@ void start_spell_targeting(eSpell num, bool freebie, int spell_range, eSpellPat 
 		add_string_to_buf("  (Hit 'm' to cancel.)");
 	else add_string_to_buf("  (Hit 'p' to cancel.)");
 	current_spell_range = num == eSpell::NONE ? spell_range : (*num).range;
-	handle_target_mode(MODE_SPELL_TARGET, current_spell_range);
+	handle_target_mode(MODE_SPELL_TARGET, current_spell_range, num);
 	
 	switch(num) {  // Different spells have different messages and diff. target shapes
 		case eSpell::CLOUD_SLEEP:
@@ -4956,7 +4955,7 @@ void start_fancy_spell_targeting(eSpell num, bool freebie, int spell_range, eSpe
 	else add_string_to_buf("  (Hit 'p' to cancel.)");
 	add_string_to_buf("  (Hit space to cast.)");
 	current_spell_range = num == eSpell::NONE ? spell_range : (*num).range;
-	handle_target_mode(MODE_FANCY_TARGET, current_spell_range);
+	handle_target_mode(MODE_FANCY_TARGET, current_spell_range, num);
 	short bonus = univ.current_pc().stat_adj(eSkill::INTELLIGENCE);
 	short level = freebie ? store_item_spell_level : univ.current_pc().level;
 	

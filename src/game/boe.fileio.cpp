@@ -371,6 +371,9 @@ std::vector<scen_header_type> build_scen_headers() {
 			while(iter != fs::recursive_directory_iterator()) {
 				fs::file_status stat = iter->status();
 				if(stat.type() == fs::regular_file) {
+					// Skip unlaunchable unpacked header.exs
+					if(iter->path().filename() == "header.exs"){ iter++; continue; }
+
 					scen_header_type scen_head;
 					if(load_scenario_header(iter->path(), scen_head))
 						scen_headers.push_back(scen_head);

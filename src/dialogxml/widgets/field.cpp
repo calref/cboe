@@ -376,6 +376,10 @@ static cKey divineFunction(cKey key) {
 			} else if(key.c == 'y') {
 				key.spec = true;
 				key.k = key_redo;
+			} else {
+				// Ctrl+random key: do nothing. Don't type the key.
+				key.spec = true;
+				key.k = key_none;
 			}
 		}
 		if(key.spec) key.mod -= mod_ctrl;

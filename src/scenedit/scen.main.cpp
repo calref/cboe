@@ -104,11 +104,6 @@ extern std::string last_load_file;
 enum class eLaunchType {LOC,START,ENTRANCE};
 
 static void launch_scenario(eLaunchType type) {
-	if(boost::ends_with(last_load_file, ".exs")){
-		showError("The scenario editor cannot launch an unpacked scenario directly. You'll need to re-open the scenario from its .boes archive.");
-		return;
-	}
-
 	// Make sure scenario is loaded and currently editing the terrain of a town or outdoor section
 	if(type == eLaunchType::LOC){
 		if(overall_mode >= MODE_MAIN_SCREEN){
