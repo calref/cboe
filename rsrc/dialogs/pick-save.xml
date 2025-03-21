@@ -17,9 +17,9 @@
 			<pict name='pc1e' relative='pos-in' rel-anchor='prev' type='pc' num='0' top='0' left='40'/>
 			<pict name='pc1f' relative='pos-in' rel-anchor='prev' type='pc' num='0' top='0' left='40'/>
 			<text name='info1' relative='pos-in pos-in' anchor='file1' framed='true' top='4' left='249' width='138' height='71'>Avg. Level: {Lv}<br/>{LastSaved}<br/><br/>{Scenario}<br/><br/>{Location}</text>
-			<button name='save1' relative='pos-in pos-in' anchor='file1' type='regular' top='55' left='9'>Save</button>
-			<button name='load1' relative='pos-in pos-in' rel-anchor='prev' type='regular' top='0' left='0'>Load</button>
-			<button name='auto1' relative='pos-in pos-in' rel-anchor='prev' type='large' top='0' left='70'>Autosaves</button>
+			<button name='save1' def-key='1' relative='pos-in pos-in' anchor='file1' type='regular' top='55' left='9'>Save</button>
+			<button name='load1' def-key='1' relative='pos-in pos-in' rel-anchor='prev' type='regular' top='0' left='0'>Load</button>
+			<button name='auto1' def-key='shift 1' relative='pos-in pos-in' rel-anchor='prev' type='large' top='0' left='70'>Autosaves</button>
 			<text name='auto1-more-recent' relative='pos pos-in' rel-anchor='prev' top='6' left='3'>&lt;- Newer!</text>
 
 			<text name='file2' relative='pos-in pos-in' anchor='file1' framed='true' top='90' left='0' width='400' height='80'>{File}</text>
@@ -30,9 +30,9 @@
 			<pict name='pc2e' relative='pos-in' rel-anchor='prev' type='pc' num='0' top='0' left='40'/>
 			<pict name='pc2f' relative='pos-in' rel-anchor='prev' type='pc' num='0' top='0' left='40'/>
 			<text name='info2' relative='pos-in pos-in' anchor='file2' framed='true' top='4' left='249' width='138' height='71'>Avg. Level: {Lv}<br/>{LastSaved}<br/><br/>{Scenario}<br/><br/>{Location}</text>
-			<button name='save2' relative='pos-in pos-in' anchor='file2' type='regular' top='55' left='9'>Save</button>
-			<button name='load2' relative='pos-in pos-in' rel-anchor='prev' type='regular' top='0' left='0'>Load</button>
-			<button name='auto2' relative='pos-in pos-in' rel-anchor='prev' type='large' top='0' left='70'>Autosaves</button>
+			<button name='save2' def-key='2' relative='pos-in pos-in' anchor='file2' type='regular' top='55' left='9'>Save</button>
+			<button name='load2' def-key='2' relative='pos-in pos-in' rel-anchor='prev' type='regular' top='0' left='0'>Load</button>
+			<button name='auto2' def-key='shift 2' relative='pos-in pos-in' rel-anchor='prev' type='large' top='0' left='70'>Autosaves</button>
 			<text name='auto2-more-recent' relative='pos pos-in' rel-anchor='prev' top='6' left='3'>&lt;- Newer!</text>
 
 			<text name='file3' relative='pos-in pos-in' anchor='file2' framed='true' top='90' left='0' width='400' height='80'>{File}</text>
@@ -43,9 +43,9 @@
 			<pict name='pc3e' relative='pos-in' rel-anchor='prev' type='pc' num='0' top='0' left='40'/>
 			<pict name='pc3f' relative='pos-in' rel-anchor='prev' type='pc' num='0' top='0' left='40'/>
 			<text name='info3' relative='pos-in pos-in' anchor='file3' framed='true' top='4' left='249' width='138' height='71'>Avg. Level: {Lv}<br/>{LastSaved}<br/><br/>{Scenario}<br/><br/>{Location}</text>
-			<button name='save3' relative='pos-in pos-in' anchor='file3' type='regular' top='55' left='9'>Save</button>
-			<button name='load3' relative='pos-in pos-in' rel-anchor='prev' type='regular' top='0' left='0'>Load</button>
-			<button name='auto3' relative='pos-in pos-in' rel-anchor='prev' type='large' top='0' left='70'>Autosaves</button>
+			<button name='save3' def-key='3' relative='pos-in pos-in' anchor='file3' type='regular' top='55' left='9'>Save</button>
+			<button name='load3' def-key='3' relative='pos-in pos-in' rel-anchor='prev' type='regular' top='0' left='0'>Load</button>
+			<button name='auto3' def-key='shift 3' relative='pos-in pos-in' rel-anchor='prev' type='large' top='0' left='70'>Autosaves</button>
 			<text name='auto3-more-recent' relative='pos pos-in' rel-anchor='prev' top='6' left='3'>&lt;- Newer!</text>
 
 			<text name='file4' relative='pos-in pos-in' anchor='file3' framed='true' top='90' left='0' width='400' height='80'>{File}</text>
@@ -56,9 +56,9 @@
 			<pict name='pc4e' relative='pos-in' rel-anchor='prev' type='pc' num='0' top='0' left='40'/>
 			<pict name='pc4f' relative='pos-in' rel-anchor='prev' type='pc' num='0' top='0' left='40'/>
 			<text name='info4' relative='pos-in pos-in' anchor='file4' framed='true' top='4' left='249' width='138' height='71'>Avg. Level: {Lv}<br/>{LastSaved}<br/><br/>{Scenario}<br/><br/>{Location}</text>
-			<button name='save4' relative='pos-in pos-in' anchor='file4' type='regular' top='55' left='9'>Save</button>
-			<button name='load4' relative='pos-in pos-in' rel-anchor='prev' type='regular' top='0' left='0'>Load</button>
-			<button name='auto4' relative='pos-in pos-in' rel-anchor='prev' type='large' top='0' left='70'>Autosaves</button>
+			<button name='save4' def-key='4' relative='pos-in pos-in' anchor='file4' type='regular' top='55' left='9'>Save</button>
+			<button name='load4' def-key='4' relative='pos-in pos-in' rel-anchor='prev' type='regular' top='0' left='0'>Load</button>
+			<button name='auto4' def-key='shift 4' relative='pos-in pos-in' rel-anchor='prev' type='large' top='0' left='70'>Autosaves</button>
 			<text name='auto4-more-recent' relative='pos pos-in' rel-anchor='prev' top='6' left='3'>&lt;- Newer!</text>
 		</page>
 	</stack>
