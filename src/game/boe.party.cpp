@@ -2119,7 +2119,7 @@ void do_alchemy() {
 	short r1;
 	short pc_num;
 	
-	pc_num = select_pc(eSelectPC::ONLY_LIVING);
+	pc_num = select_pc(eSelectPC::ONLY_LIVING, "Who will make a potion?", eSkill::ALCHEMY);
 	if(pc_num == 6)
 		return;
 	
