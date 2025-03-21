@@ -244,6 +244,7 @@ bool cStringChoice::highlightSearch() {
 	for(int offset = 0; offset < per_page; ++offset){
 		std::string led_id = "led" + std::to_string(offset + 1);
 		int str_idx = page * per_page + offset;
+		if(str_idx >= strings.size()) break;
 
 		// Copy the string
 		std::string str = strings[str_idx];
