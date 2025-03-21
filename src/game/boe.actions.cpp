@@ -2875,11 +2875,23 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 		case 'b': // Bash door
 			if(overall_mode == MODE_TOWN || overall_mode == MODE_BASH_TOWN)
 				handle_bash_pick_select(need_reprint, true);
+			else if(is_combat())
+				ASB("Bash Door: not in combat.");
+			else if(is_out())
+				ASB("Bash Door: not outdoors");
+			else
+				ASB("Bash Door: " + FINISH_FIRST);
 			break;
 			
 		case 'L': // Pick lock
 			if(overall_mode == MODE_TOWN || overall_mode == MODE_PICK_TOWN)
 				handle_bash_pick_select(need_reprint, false);
+			else if(is_combat())
+				ASB("Pick Lock: not in combat.");
+			else if(is_out())
+				ASB("Pick Lock: not outdoors");
+			else
+				ASB("Pick Lock: " + FINISH_FIRST);
 			break;
 			
 		case 'A': // Alchemy
