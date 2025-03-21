@@ -2651,7 +2651,7 @@ void oneshot_spec(const runtime_state& ctx) {
 				*ctx.ret_a = 1;
 			} else {
 				if(!is_combat()) {
-					dlg_res = select_pc(eSelectPC::ONLY_LIVING,"Trap! Who will disarm?");
+					dlg_res = select_pc(eSelectPC::ONLY_LIVING,"Trap! Who will disarm?", eSkill::DISARM_TRAPS);
 					if(dlg_res == 6){
 						*ctx.ret_a = 1;
 						set_sd = false;
