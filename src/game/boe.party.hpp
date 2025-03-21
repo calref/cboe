@@ -47,7 +47,7 @@ short trait_present(eTrait which_trait);
 short race_present(eRace which_race);
 short wilderness_lore_present(ter_num_t ter);
 void print_spell_cast(eSpell spell,eSkill which);
-void put_party_in_scen(std::string scen_name, bool force = false);
+void put_party_in_scen(std::string scen_name, bool force = false, bool allow_unpacked = false);
 short party_size(bool only_living);
 bool all_items_identified();
 

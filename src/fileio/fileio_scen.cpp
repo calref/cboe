@@ -88,7 +88,7 @@ std::vector<fs::path> all_scen_dirs() {
 	return scen_dirs;
 }
 
-fs::path locate_scenario(std::string scen_name) {
+fs::path locate_scenario(std::string scen_name, bool allow_unpacked) {
 	fs::create_directories(scenDir);
 	std::transform(scen_name.begin(), scen_name.end(), scen_name.begin(), tolower);
 	size_t dot = scen_name.find_first_of('.');
@@ -103,15 +103,18 @@ fs::path locate_scenario(std::string scen_name) {
 			std::string fname = iter->path().filename().string().c_str();
 			std::transform(fname.begin(), fname.end(), fname.begin(), tolower);
 			if(fname == "header.exs") {
-				if(scen_name != "header.exs") continue;
-				// We want to support a scenario whose main filename is header.exs, just in case.
-				// However, any unpacked scenarios would have a header.exs.
-				// So, skip them if they're in a .boes folder.
-				fname = iter->path().parent_path().filename().string().c_str();
-				std::transform(fname.begin(), fname.end(), fname.begin(), tolower);
-				size_t dot = fname.find_first_of('.');
-				if(dot != std::string::npos && fname.substr(dot) == ".boes")
+				if(scen_name != "header.exs"){
+					// We want to support a scenario whose main filename is header.exs, just in case.
+					// However, any unpacked scenarios would have a header.exs.
+					// So, skip them if they're in a .boes folder.
+					fname = iter->path().parent_path().filename().string().c_str();
+					std::transform(fname.begin(), fname.end(), fname.begin(), tolower);
+					size_t dot = fname.find_first_of('.');
+					if(dot != std::string::npos && fname.substr(dot) == ".boes")
+						continue;
+				}else if(!allow_unpacked){
 					continue;
+				}
 			}
 			if(fname != scen_name) continue;
 			size_t dot = fname.find_first_of('.');

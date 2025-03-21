@@ -28,7 +28,7 @@ enum class eLoadScenario {
 	FULL
 };
 std::vector<fs::path> all_scen_dirs();
-fs::path locate_scenario(std::string scen_name);
+fs::path locate_scenario(std::string scen_name, bool allow_unpacked = false);
 bool load_scenario(fs::path file_to_load, cScenario& scenario, eLoadScenario load_type = eLoadScenario::FULL);
 
 fs::path nav_get_or_decode_party();
