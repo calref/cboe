@@ -1884,6 +1884,7 @@
 				"$(SRCROOT)/../../rsrc/scenarios/valleydy",
 				"$(SRCROOT)/../../rsrc/scenarios/stealth",
 				"$(SRCROOT)/../../rsrc/scenarios/zakhazi",
+				"$(SRCROOT)/../../rsrc/scenarios/tutorial",
 			);
 			name = "Pack Scenarios";
 			outputPaths = (
@@ -1892,6 +1893,7 @@
 				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Scenarios/valleydy.boes",
 				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Scenarios/stealth.boes",
 				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Scenarios/zakhazi.boes",
+				"$(BUILT_PRODUCTS_DIR)/Blades of Exile Scenarios/tutorial.boes",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
