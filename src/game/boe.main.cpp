@@ -101,7 +101,8 @@ std::map<std::string,std::vector<std::string>> feature_flags = {
 	{"debug-enter-town", {"move-outdoors"}},
 	{"target-lock", {"V1"}},
 	// New in-game save file picker
-	{"file-picker-dialog", {"V1"}}
+	{"file-picker-dialog", {"V1"}},
+	{"scenario-meta-format", {"V2"}}
 };
 
 struct cParseEntrance {
@@ -438,7 +439,7 @@ static void handle_scenario_args() {
 			// Add the scenario's path to the search paths put_party_in_scen() uses
 			extra_scen_dirs.push_back(path.parent_path());
 		}else{
-			path = locate_scenario(*scen_arg_path);
+			path = locate_scenario(*scen_arg_path, true);
 		}
 
 		cScenario scenario;
@@ -459,9 +460,11 @@ static void handle_scenario_args() {
 					// TODO maybe the player should be warned before they're removed from it?
 					handle_victory(true);
 				}
+			}else{
+				resetting = true;
 			}
 			if(!univ.party.is_in_scenario()){
-				put_party_in_scen(path.filename().string(), scen_arg_town || scen_arg_out_sec);
+				put_party_in_scen(path.filename().string(), scen_arg_town || scen_arg_out_sec, true);
 			}
 		}else{
 			std::cerr << "Failed to load scenario: " << *scen_arg_path << std::endl;

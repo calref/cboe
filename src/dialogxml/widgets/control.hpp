@@ -259,6 +259,10 @@ public:
 	/// Set the control's text.
 	/// @param l The new text.
 	virtual void setText(std::string l);
+	/// Replace the first occurrence of the given string in this control's text
+	void replaceText(std::string find, std::string replace);
+	/// Append a string to this control's text
+	void appendText(std::string l);
 	/// Fetch the control's text.
 	/// @return The control's current text.
 	virtual std::string getText() const;
