@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='play'>
+	<pict type='scen' size='large' num='0' top='9' left='9'/>
+	<text name='prompt' top='5' left='80' width='250' height='32'>You've completed the tutorial! We recommend playing the first official scenario, The Valley of Dying Things, next.</text>
+	<button name='cancel' type='regular' top='46' left='178'>Cancel</button>
+	<button name='play' type='regular' def-key='esc' top='46' left='248'>Play</button>
+</dialog>
