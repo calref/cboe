@@ -1282,7 +1282,7 @@ void handle_victory(bool force, bool record) {
 		do_save();
 	}
 
-	if(tutorial_finished){
+	if(!force && tutorial_finished){
 		if(cChoiceDlog("start-valleydy",{"play","cancel"}).show() == "play"){
 			put_party_in_scen("valleydy.boes");
 		}
