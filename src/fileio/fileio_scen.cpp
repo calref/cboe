@@ -93,7 +93,7 @@ fs::path locate_scenario(std::string scen_name, bool allow_unpacked) {
 	std::transform(scen_name.begin(), scen_name.end(), scen_name.begin(), tolower);
 	size_t dot = scen_name.find_first_of('.');
 	std::string base_name = scen_name.substr(0,dot);
-	if(base_name == "valleydy" || base_name == "stealth" || base_name == "zakhazi"/* || base_name == "busywork" */)
+	if(base_name == "valleydy" || base_name == "stealth" || base_name == "zakhazi" || base_name == "tutorial" /* || base_name == "busywork" */)
 		return progDir/"Blades of Exile Scenarios"/scen_name;
 	fs::path scenPath;
 
