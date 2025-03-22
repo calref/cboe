@@ -3504,13 +3504,19 @@ void new_party() {
 	if(recording){
 		record_action("new_party", "");
 	}
-	if(overall_mode != MODE_STARTUP) {
-		std::string choice = cChoiceDlog("restart-game",{"okay","cancel"}).show();
+	if(party_in_memory) {
+		cChoiceDlog confirm("restart-game",{"okay","cancel"});
+		(confirm.operator->())->getControl("warning").replaceText("{{action}}", "Starting over");
+		std::string choice = confirm.show();
 		if(choice == "cancel")
 			return;
-		for(short i = 0; i < 6; i++)
-			univ.party[i].main_status = eMainStatus::ABSENT;
-		party_in_memory = false;
+	}
+
+	for(short i = 0; i < 6; i++)
+		univ.party[i].main_status = eMainStatus::ABSENT;
+	party_in_memory = false;
+
+	if(overall_mode != MODE_STARTUP){
 		reload_startup();
 		overall_mode = MODE_STARTUP;
 		draw_startup(0);
