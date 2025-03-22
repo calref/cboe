@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- NOTE: When you change this file, also update src/doxy/mainpage.md -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:include schemaLocation="common.xsd"/>
 	<xs:simpleType name="picttype">
