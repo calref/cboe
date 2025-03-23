@@ -76,6 +76,7 @@ Section "Blades of Exile" Section1
 	File "${RELEASE_DIR}\Blades of Exile Scenarios\stealth.boes"
 	File "${RELEASE_DIR}\Blades of Exile Scenarios\valleydy.boes"
 	File "${RELEASE_DIR}\Blades of Exile Scenarios\zakhazi.boes"
+	File "${RELEASE_DIR}\Blades of Exile Scenarios\tutorial.boes"
 	!include data.nsi
 	SetShellVarContext all
 	CreateShortCut "$DESKTOP\Blades of Exile.lnk" "$INSTDIR\Blades of Exile.exe"
@@ -243,6 +244,7 @@ Section Uninstall
 	Delete "$INSTDIR\Blades of Exile Scenarios\stealth.boes"
 	Delete "$INSTDIR\Blades of Exile Scenarios\valleydy.boes"
 	Delete "$INSTDIR\Blades of Exile Scenarios\zakhazi.boes"
+	Delete "$INSTDIR\Blades of Exile Scenarios\tutorial.boes"
 	Delete "$INSTDIR\VCRedistInstall.exe"
 	Delete "$INSTDIR\libsndfile-1.dll"
 	Delete "$INSTDIR\sfml-audio-2.dll"
