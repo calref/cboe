@@ -11,6 +11,6 @@
 	</text>
 	<text top='111' left='48' width='80' height='16'>Sheet number:</text>
 	<field name='num' top='110' left='138' width='80' height='16'/>
-	<button name='cancel' type='regular' top='141' left='234'>Cancel</button>
-	<button name='new' type='regular' top='141' left='169'>Create</button>
+	<button name='cancel' type='regular' top='141' left='169'>Cancel</button>
+	<button name='new' type='regular' top='141' left='234'>Create</button>
 </dialog>

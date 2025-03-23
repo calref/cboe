@@ -14,6 +14,6 @@
 	<text relative='pos-in pos' rel-anchor='prev' top='4' left='0' width='249'>
 		Save a replay log?
 	</text>
-	<button name='no' relative='abs pos' rel-anchor='prev' type='regular' def-key='n' top='4' left='239'>No</button>
-	<button name='yes' relative='abs pos-in' rel-anchor='prev' type='regular' def-key='y' top='0' left='172'>Yes</button>
+	<button name='no' relative='abs pos' rel-anchor='prev' type='regular' def-key='n' top='4' left='172'>No</button>
+	<button name='yes' relative='abs pos-in' rel-anchor='prev' type='regular' def-key='y' top='0' left='239'>Yes</button>
 </dialog>

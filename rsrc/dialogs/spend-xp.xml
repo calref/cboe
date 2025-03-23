@@ -97,6 +97,6 @@
 
 	<button name='left' type='left' def-key='left' top='329' left='403'/>
 	<button name='right' type='right' def-key='right' top='329' left='470'/>
-	<button name='keep' type='regular' def-key='k' top='355' left='403'>Keep</button>
-	<button name='cancel' type='regular' def-key='esc' top='355' left='470'>Cancel</button>
+	<button name='cancel' type='regular' def-key='esc' top='355' left='403'>Cancel</button>
+	<button name='keep' type='regular' def-key='k' top='355' left='470'>Keep</button>
 </dialog>

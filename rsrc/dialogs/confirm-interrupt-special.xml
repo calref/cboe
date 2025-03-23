@@ -7,6 +7,6 @@
 		Warning: If you terminate the special node sequence, the scenario may be left in an unexpected state.
 		It is recommended that you immediately reload from a saved game after doing this.
 		<br/>                     Are you sure you wish to proceed?</text>
-	<button name='quit' type='regular' top='86' left='178'>Kill it!</button>
-	<button name='cancel' type='regular' def-key='esc' top='86' left='248'>Not yet</button>
+	<button name='cancel' type='regular' def-key='esc' top='86' left='178'>Not yet</button>
+	<button name='quit' type='regular' top='86' left='248'>Kill it!</button>
 </dialog>

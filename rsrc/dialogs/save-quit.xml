@@ -2,9 +2,9 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='save'>
-	<button name='save' type='large' top='31' left='230'>Save First</button>
-	<button name='quit' type='large' def-key='ctrl q' top='31' left='122'>Just Quit</button>
-	<button name='cancel' type='regular' def-key='esc' top='31' left='54'>Cancel</button>
 	<pict top='9' left='9' type='dlog' num='23'/>
 	<text size='large' top='5' left='52' width='254' height='18'>Do you want to save before quitting?</text>
+	<button name='cancel' type='regular' def-key='esc' top='31' left='54'>Cancel</button>
+	<button name='quit' type='large' def-key='ctrl q' top='31' left='122'>Just Quit</button>
+	<button name='save' type='large' top='31' left='230'>Save First</button>
 </dialog>

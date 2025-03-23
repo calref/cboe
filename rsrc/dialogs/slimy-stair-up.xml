@@ -2,8 +2,8 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='leave'>
-	<button name='leave' type='regular' top='37' left='242'>Leave</button>
-	<button name='climb' type='regular' top='37' left='176'>Climb</button>
+	<button name='leave' type='regular' top='37' left='176'>Leave</button>
+	<button name='climb' type='regular' top='37' left='242'>Climb</button>
 	<pict type='dlog' num='19' top='8' left='8'/>
 	<text top='3' left='50' width='250' height='32'>
 		You find a stairway heading up.

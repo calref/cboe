@@ -8,7 +8,7 @@
 		You can delete the sheet anyway, or you can move the subsequent sheets back one, overwriting this sheet.
 		Note that, either way, anything referencing graphics on these sheets will have to be updated.
 	</text>
-	<button name='cancel' type='regular' top='101' left='234'>Cancel</button>
-	<button name='move' type='large' top='101' left='63'>Move Sheets</button>
-	<button name='del' type='regular' top='101' left='169'>Delete</button>
+	<button name='cancel' type='regular' top='101' left='63'>Cancel</button>
+	<button name='move' type='large' top='101' left='133'>Move Sheets</button>
+	<button name='del' type='regular' top='101' left='243'>Delete</button>
 </dialog>

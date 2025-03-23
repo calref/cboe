@@ -10,6 +10,6 @@
 		Be aware that the conversion converts white to transparency,
 		so it may create unwanted holes if you had terrain or dialog graphics that used pure white.
 	</text>
-	<button name='cancel' type='regular' top='131' left='234'>Cancel</button>
-	<button name='convert' type='large' top='131' left='128'>Convert Now</button>
+	<button name='cancel' type='regular' top='131' left='128'>Cancel</button>
+	<button name='convert' type='large' top='131' left='198'>Convert Now</button>
 </dialog>

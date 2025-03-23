@@ -2,9 +2,9 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='leave'>
-	<button name='leave' type='regular' top='36' left='271'>Leave</button>
-	<button name='pick' type='large' def-key='p' top='36' left='161'>Pick Lock</button>
-	<button name='bash' type='large' def-key='b' top='36' left='50'>Bash Door</button>
+	<button name='leave' type='regular' top='36' left='50'>Leave</button>
+	<button name='bash' type='large' def-key='b' top='36' left='120'>Bash Door</button>
+	<button name='pick' type='large' def-key='p' top='36' left='230'>Pick Lock</button>
 	<text top='8' left='50' width='252' height='19'>
 		This door is locked.
 		What do you do?

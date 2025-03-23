@@ -8,6 +8,6 @@
 		<br/>
 		Are you sure you want to do this?
 	</text>
-	<button name='no' type='regular' def-key='n' top='84' left='239'>No</button>
-	<button name='yes' type='regular' def-key='y' top='84' left='172'>Yes</button>
+	<button name='no' type='regular' def-key='n' top='84' left='172'>No</button>
+	<button name='yes' type='regular' def-key='y' top='84' left='239'>Yes</button>
 </dialog>

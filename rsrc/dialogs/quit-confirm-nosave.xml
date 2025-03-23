@@ -3,7 +3,7 @@
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='cancel'>
 	<pict type='dlog' num='23' top='9' left='9'/>
-	<text top='5' left='51' width='255' height='32'>Warning: If you quit now, your game will be lost.</text>
-	<button name='quit' type='regular' def-key='ctrl q' top='46' left='178'>Quit</button>
-	<button name='cancel' type='regular' def-key='esc' top='46' left='248'>Cancel</button>
+	<text top='5' left='51' width='255' height='32'>Warning: If you quit now, your unsaved progress will be lost.</text>
+	<button name='cancel' type='regular' def-key='esc' top='46' left='178'>Cancel</button>
+	<button name='quit' type='regular' def-key='ctrl q' top='46' left='248'>Quit</button>
 </dialog>

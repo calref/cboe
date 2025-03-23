@@ -6,6 +6,6 @@
 	<text size='large' top='8' left='48' width='248' height='33'>
 		This item will be gone forever. Still drop it?
 	</text>
-	<button name='cancel' type='regular' def-key='esc' top='42' left='238'>Cancel</button>
-	<button name='okay' type='regular' top='42' left='169'>OK</button>
+	<button name='cancel' type='regular' def-key='esc' top='42' left='169'>Cancel</button>
+	<button name='okay' type='regular' top='42' left='238'>OK</button>
 </dialog>

@@ -5,6 +5,6 @@
 	<pict type='dlog' num='23' top='9' left='9'/>
 	<text top='5' left='51' width='255' height='72'>
 		Are you sure you wish to stop this replay?</text>
-	<button name='quit' type='regular' top='86' left='178'>Stop</button>
-	<button name='cancel' type='regular' def-key='esc' top='86' left='248'>Cancel</button>
+	<button name='cancel' type='regular' def-key='esc' top='86' left='178'>Cancel</button>
+	<button name='quit' type='regular' top='86' left='248'>Stop</button>
 </dialog>

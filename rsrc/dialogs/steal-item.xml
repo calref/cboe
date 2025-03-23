@@ -8,6 +8,6 @@
 		This item is clearly someone's property.
 		Do you steal it?
 	</text>
-	<button name='leave' type='regular' top='48' left='236'>Leave</button>
-	<button name='steal' type='regular' top='48' left='168'>Steal</button>
+	<button name='leave' type='regular' top='48' left='168'>Leave</button>
+	<button name='steal' type='regular' top='48' left='236'>Steal</button>
 </dialog>

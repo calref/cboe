@@ -7,6 +7,6 @@
 		This creature isn't hostile.<br/>
 		Attack anyway?
 	</text>
-	<button name='cancel' type='regular' def-key='esc' top='53' left='182'>Cancel</button>
-	<button name='attack' type='regular' top='53' left='114'>Attack</button>
+	<button name='cancel' type='regular' def-key='esc' top='53' left='114'>Cancel</button>
+	<button name='attack' type='regular' top='53' left='182'>Attack</button>
 </dialog>

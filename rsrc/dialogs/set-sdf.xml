@@ -15,6 +15,6 @@
 	<text top='145' left='8' width='100' height='16'>Value:</text>
 	<field name='val' top='143' left='110' width='80' height='16'/>
 	<text name='feedback' top='165' left='8' width='230' height='16'/>
-	<button name='exit' def-key='esc' type='regular' top='185' left='187'>Exit</button>
-	<button name='set' type='regular' top='185' left='122'>Set</button>
+	<button name='exit' def-key='esc' type='regular' top='185' left='122'>Exit</button>
+	<button name='set' type='regular' top='185' left='187'>Set</button>
 </dialog>

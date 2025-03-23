@@ -7,7 +7,7 @@
 		If you exit the dialog now, you may lose changes to special nodes you were previously working on.
 		Do you want to exit so anyway, or just cancel editing the current node and return to the previous one?
 	</text>
-	<button name='save' type='large' top='54' left='240'>Forget It</button>
+	<button name='save' type='large' top='54' left='31'>Forget It</button>
 	<button name='cancel' type='large' def-key='esc' top='54' left='136'>Cancel All</button>
-	<button name='revert' type='large' top='54' left='31'>Just One</button>
+	<button name='revert' type='large' top='54' left='240'>Just One</button>
 </dialog>

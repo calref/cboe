@@ -7,6 +7,6 @@
 		{{action}} will discard any unsaved progress.
 		Are you sure you want to do this?
 	</text>
-	<button name='cancel' type='regular' def-key='esc' top='45' left='244'>Cancel</button>
-	<button name='okay' type='large' top='45' left='134'>New Game</button>
+	<button name='cancel' type='regular' def-key='esc' top='45' left='134'>Cancel</button>
+	<button name='okay' type='large' top='45' left='204'>New Game</button>
 </dialog>
