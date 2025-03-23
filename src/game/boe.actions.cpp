@@ -1276,9 +1276,16 @@ void handle_victory(bool force, bool record) {
 	overall_mode = MODE_STARTUP;
 	draw_startup(0);
 	menu_activate();
+	bool tutorial_finished = (univ.party.scen_name == "tutorial.boes");
 	univ.party.scen_name = ""; // should be harmless...
 	if(!force && cChoiceDlog("congrats-save",{"cancel","save"}).show() == "save"){
 		do_save();
+	}
+
+	if(!force && tutorial_finished){
+		if(cChoiceDlog("start-valleydy",{"play","cancel"}).show() == "play"){
+			put_party_in_scen("valleydy.boes");
+		}
 	}
 }
 
@@ -3406,13 +3413,19 @@ void new_party() {
 	if(recording){
 		record_action("new_party", "");
 	}
-	if(overall_mode != MODE_STARTUP) {
-		std::string choice = cChoiceDlog("restart-game",{"okay","cancel"}).show();
+	if(party_in_memory) {
+		cChoiceDlog confirm("restart-game",{"okay","cancel"});
+		confirm->getControl("warning").replaceText("{{action}}", "Starting over");
+		std::string choice = confirm.show();
 		if(choice == "cancel")
 			return;
-		for(short i = 0; i < 6; i++)
-			univ.party[i].main_status = eMainStatus::ABSENT;
-		party_in_memory = false;
+	}
+
+	for(short i = 0; i < 6; i++)
+		univ.party[i].main_status = eMainStatus::ABSENT;
+	party_in_memory = false;
+
+	if(overall_mode != MODE_STARTUP){
 		reload_startup();
 		overall_mode = MODE_STARTUP;
 		draw_startup(0);
@@ -3505,9 +3518,17 @@ void start_new_game(bool force) {
 }
 
 void start_tutorial() {
+	if(party_in_memory){
+		cChoiceDlog confirm("restart-game",{"okay","cancel"});
+		(confirm.operator->())->getControl("warning").replaceText("{{action}}", "Starting the tutorial");
+		std::string choice = confirm.show();
+		if(choice == "cancel")
+			return;
+	}
 	// Start by using the default party
 	start_new_game(true);
-	// TODO start the tutorial scenario, which we need to design.
+
+	put_party_in_scen("tutorial.boes");
 }
 
 location get_cur_direction(location the_point) {
