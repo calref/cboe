@@ -331,6 +331,8 @@ void start_data_dump() {
 	}
 }
 
+const std::set<std::string> scen_extensions = {".boes", ".exs"};
+
 extern fs::path scenDir;
 std::vector<scen_header_type> build_scen_headers() {
 	fs::create_directories(scenDir);
@@ -371,8 +373,11 @@ std::vector<scen_header_type> build_scen_headers() {
 			while(iter != fs::recursive_directory_iterator()) {
 				fs::file_status stat = iter->status();
 				if(stat.type() == fs::regular_file) {
-					// Skip unlaunchable unpacked header.exs
-					if(iter->path().filename() == "header.exs"){ iter++; continue; }
+					// Skip various data files of unpacked scenarios
+					if(!scen_extensions.count(iter->path().extension().string())){
+						++iter;
+						continue;
+					}
 
 					scen_header_type scen_head;
 					if(load_scenario_header(iter->path(), scen_head))
