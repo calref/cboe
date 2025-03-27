@@ -5,14 +5,14 @@
 	<text top='4' left='136' width='265' height='16'>WELCOME TO OPEN BLADES OF EXILE!</text>
 	<text top='22' left='50' width='413'>
 		Welcome to the evolving world of Open Blades of Exile!<br/>
-		Open Blades of Exile is the open-source variant of the
-		Blades of Exile game developed by Spiderweb Software in 
-		1997 and released as Free Open-Source Software in 2005.
+		OpenBoE is the open-source variant of Blades of Exile by
+		Spiderweb Software, created in 1997 and later released as
+		Free Open-Source Software.
 	</text>
-	<text name='spidweb' relative='pos-in pos' rel-anchor='prev' top='0' left='16' colour='link' underline='true'>
+	<text name='spidweb' relative='pos-in pos' rel-anchor='prev' top='3' left='16' colour='link' underline='true'>
 		http://www.spidweb.com/blades/opensource.html	
 	</text>
-	<text relative='neg pos' rel-anchor='prev' top='12' left='16' width='413'>
+	<text relative='neg pos' rel-anchor='prev' top='3' left='16' width='413'>
 		Three exciting original scenarios await you, filled 
 		with many hours of puzzles, fighting and adventure!
 		In addition to these, hundreds more written by 
@@ -21,7 +21,7 @@
 	<text name='scen' relative='pos-in pos' rel-anchor='prev' top='0' left='16' colour='link' underline='true'>
 		http://openboe.com/scenarios
 	</text>
-	<text relative='neg pos' rel-anchor='prev' top='12' left='16' width='413'>
+	<text relative='neg pos' rel-anchor='prev' top='3' left='16' width='413'>
 		Even better, when you are through with those adventures,
 		you can make your own using the Blades of Exile scenario
 		editor!
@@ -36,7 +36,7 @@
 	<text name='forum' relative='pos-in pos' rel-anchor='prev' top = '0' left='16' colour='link' underline='true'>
 		http://spiderwebforums.ipbhost.com/
 	</text>
-	<text relative='neg pos' rel-anchor='prev' top='12' left='16' width='413'>
+	<text relative='neg pos' rel-anchor='prev' top='3' left='16' width='413'>
 		Also be sure to look at the Preferences Window, where
 		you can change animation speed, game difficulty, display
 		options and special effects settings.
