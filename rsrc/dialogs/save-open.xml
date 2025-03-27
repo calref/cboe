@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='save'>
+<dialog defbtn='save' escbtn='cancel'>
 	<pict top='9' left='9' type='dlog' num='23'/>
 	<text size='large' top='5' left='52' width='262' height='33'>Do you want to save before opening a new file?</text>
-	<button name='cancel' type='regular' def-key='esc' top='41' left='57'>Cancel</button>
+	<button name='cancel' type='regular' top='41' left='57'>Cancel</button>
 	<button name='quit' type='large' top='41' left='125'>Open File</button>
 	<button name='save' type='large' top='41' left='233'>Save First</button>
 </dialog>

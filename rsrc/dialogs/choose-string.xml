@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='done'>
+<dialog defbtn='done' escbtn='cancel'>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text name='title' size='large' top='6' left='50' width='256' height='14'>Select:</text>
 	<field name='search-field' relative='pos-in pos' rel-anchor='prev' top='0' left='2' width='200' height='16'/>
@@ -53,6 +53,6 @@
 	</group>
 	<button name='left' type='left' def-key='left' relative='pos-in pos-in' anchor='led20' top='19' left='0'/>
 	<button name='right' type='right' def-key='right' relative='pos-in pos-in' rel-anchor='prev' top='0' left='63'/>
-	<button name='cancel' type='regular' def-key='esc' relative='pos-in pos-in' rel-anchor='prev' top='0' left='201'>Cancel</button>
+	<button name='cancel' type='regular' relative='pos-in pos-in' rel-anchor='prev' top='0' left='201'>Cancel</button>
 	<button name='done' type='regular' def-key='ctrl enter' relative='pos-in pos-in' rel-anchor='prev' top='0' left='66'>OK</button>
 </dialog>

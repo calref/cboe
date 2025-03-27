@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='done'>
+<dialog defbtn='done' escbtn='done'>
 	<pict name='pic' type='item' num='0' top='9' left='8'/>
 	<text size='large' top='6' left='45' width='102'>Item Info:</text>
 	<text top='33' left='47' width='52' height='16'>Name:</text>

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='no'>
+<dialog escbtn='no'>
 	<pict type='dlog' num='7' top='6' left='6'/>
 	<text top='6' left='48' width='249' height='67'>
 		You are about to kill your entire party.<br/>

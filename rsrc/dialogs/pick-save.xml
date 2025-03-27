@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='cancel'>
+<dialog escbtn='cancel'>
 	<text name='title-load' size='large' top='9' left='130' width='126' height='17'>Load a party:</text>
 	<text name='title-auto' relative='pos-in pos-in' rel-anchor='prev' size='large' top='0' left='0' width='126' height='17'>Load an autosave from {Folder}:</text>
 	<text name='title-save' relative='pos-in pos-in' rel-anchor='prev' size='large' top='0' left='0' width='126' height='17'>Save your party:</text>
@@ -65,5 +65,5 @@
 	<button name='prev' relative='pos-in pos-in' anchor='file4' type='left' def-key='left' top='100' left='10'/>
 	<button name='next' relative='pos pos-in' rel-anchor='prev' type='right' def-key='right' top='0' left='0'/>
 	<button name='find' relative='pos-in pos-in' rel-anchor='prev' type='large' def-key='f' top='0' left='80'>File Browser</button>
-	<button name='cancel' relative='pos pos-in' rel-anchor='prev' type='regular' def-key='esc' top='0' left='20'>Cancel</button>
+	<button name='cancel' relative='pos pos-in' rel-anchor='prev' type='regular' top='0' left='20'>Cancel</button>
 </dialog>

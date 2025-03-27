@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='cancel'>
-	<button name='cancel' type='regular' def-key='esc' top='145' left='238'>Cancel</button>
+<dialog escbtn='cancel'>
+	<button name='cancel' type='regular' top='145' left='238'>Cancel</button>
 	<!--
 	 TODO: What about showing the monster's graphic?
 	 -->

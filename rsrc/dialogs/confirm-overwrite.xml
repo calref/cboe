@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='cancel'>
+<dialog escbtn='cancel'>
 	<pict type='dlog' num='23' top='9' left='9'/>
 	<text name='prompt' top='5' left='51' width='255' height='32'>Are you sure you want to overwrite {File}?</text>
-	<button name='cancel' type='regular' def-key='esc' top='46' left='178'>Cancel</button>
+	<button name='cancel' type='regular' top='46' left='178'>Cancel</button>
 	<button name='save' type='regular' top='46' left='248'>Save</button>
 </dialog>

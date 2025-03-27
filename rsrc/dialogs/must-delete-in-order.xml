@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='cancel'>
+<dialog escbtn='cancel'>
 	<pict type='dlog' num='16' top='6' left='6'/>
 	<text top='6' left='48' width='252' height='91'>
 		Warning: By deleting this sheet, graphics on subsequent sheets will no longer be recognized by the game.

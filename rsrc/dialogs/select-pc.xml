@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='cancel'>
+<dialog escbtn='cancel'>
 	<pict type='dlog' num='6' top='8' left='8'/>
 	<text name='hint' size='9' relative='abs pos' rel-anchor='prev' top='2' left='1' width='67' height='25'>{{skill}} skill is shown in (). Highest in green</text>
 	<text name='title' size='large' top='10' left='49' width='228' height='16'>Select a PC:</text>

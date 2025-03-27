@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='update'>
+<dialog defbtn='update' escbtn='cancel'>
 	<pict type='dlog' num='16' top='6' left='6'/>
 	<text top='6' left='49' width='384' height='80'>
 		This scenario is currently set as a legacy scenario, meaning that certain mechanics are changed.
@@ -27,6 +27,6 @@
 		 ~ Timed events can now be called when the party is resting. If the scenario relied on this not
 		happening, it may need to be updated.<br/>
 	</text>
-	<button name='cancel' type='regular' def-key='esc' top='300' left='302'>Wait</button>
+	<button name='cancel' type='regular' top='300' left='302'>Wait</button>
 	<button name='update' type='regular' top='300' left='368'>Update</button>
 </dialog>

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='okay'>
 	<button name='okay' type='regular' top='25' left='246'>OK</button>
 	<pict top='8' left='8' type='dlog' num='8'/>
 	<text top='3' left='52' width='252' height='16'>Your party is not split up!</text>

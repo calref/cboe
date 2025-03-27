@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='cancel'>
+<dialog defbtn='quit' escbtn='cancel'>
 	<pict type='dlog' num='23' top='9' left='9'/>
 	<text top='5' left='51' width='255' height='72'>
 		Are you sure you wish to stop this replay?</text>
-	<button name='cancel' type='regular' def-key='esc' top='86' left='178'>Cancel</button>
+	<button name='cancel' type='regular' top='86' left='178'>Cancel</button>
 	<button name='quit' type='regular' top='86' left='248'>Stop</button>
 </dialog>

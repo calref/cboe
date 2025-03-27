@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='cancel'>
-	<button name='cancel' type='regular' def-key='esc' top='303' left='415'>Cancel</button>
+<dialog escbtn='cancel'>
+	<button name='cancel' type='regular' top='303' left='415'>Cancel</button>
 	<text size='large' top='8' left='53' width='71' height='16'>Alchemy:</text>
 	<text size='large' top='29' left='53' width='32' height='16'>For:</text>
 	<text name='mixer' framed='true' top='29' left='89' width='165' height='16'/>

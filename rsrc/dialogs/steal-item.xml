@@ -2,7 +2,7 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <!--DOCTYPE dialog SYSTEM	"dialog.dtd"-->
-<dialog defbtn='leave'>
+<dialog escbtn='leave'>
 	<pict type='monst' num='12' top='6' left='6'/>
 	<text top='6' left='48' width='246' height='35'>
 		This item is clearly someone's property.

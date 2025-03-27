@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='cancel'>
+<dialog escbtn='cancel'>
 	<text size='large' top='9' left='130' width='126' height='17'>Start a Scenario:</text>
 	<stack name='list'>
 		<page>
@@ -48,5 +48,5 @@
 	</stack>
 	<button name='prev' type='left' def-key='left' top='294' left='62'/>
 	<button name='next' type='right' def-key='right' top='294' left='125'/>
-	<button name='cancel' type='regular' def-key='esc' top='294' left='337'>Cancel</button>
+	<button name='cancel' type='regular' top='294' left='337'>Cancel</button>
 </dialog>

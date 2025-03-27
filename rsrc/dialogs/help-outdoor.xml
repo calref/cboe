@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='okay'>
 	<pict type='dlog' num='24' top='8' left='8'/>
 	<text top='10' left='52' width='292' height='16'>BLADES OF EXILE HELP: OUTDOOR COMMANDS</text>
 	<text top='31' left='65' width='420' height='34'>

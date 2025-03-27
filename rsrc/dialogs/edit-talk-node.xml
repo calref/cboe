@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<!-- OK button -->
 	<field name='who' top='26' left='186' width='64' height='16'/>
 	<field name='key1' top='54' left='165' width='52' height='16' max-chars='4'/>
@@ -15,7 +15,7 @@
 	<field name='str1' top='223' left='72' width='430' height='80'/>
 	<field name='str2' top='328' left='72' width='434' height='80'/>
 	<button name='okay' type='regular' top='415' left='445'>OK</button>
-	<button name='cancel' type='regular' def-key='esc' top='415' left='380'>Cancel</button>
+	<button name='cancel' type='regular' top='415' left='380'>Cancel</button>
 	<button name='back' type='large' top='415' left='49'>Go Back</button>
 	<button name='new' type='large' top='415' left='155'>Create New</button>
 	<text name='type' framed='true' top='79' left='135' width='160' height='14'/>

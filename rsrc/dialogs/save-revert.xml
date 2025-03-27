@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<pict top='9' left='9' type='dlog' num='23'/>
 	<text size='large' top='5' left='52' width='262' height='33'>Are you sure you want to discard any unsaved changes?</text>
-	<button name='cancel' type='regular' def-key='esc' top='41' left='203'>Cancel</button>
+	<button name='cancel' type='regular' top='41' left='203'>Cancel</button>
 	<button name='okay' type='regular' top='41' left='272'>Revert</button>
 </dialog>
