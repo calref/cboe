@@ -4195,8 +4195,7 @@ void save_replay_log(){
 	if(replaying) return;
 
 	fs::path out_file = nav_put_rsrc({"xml"});
-
-	start_log_file(out_file.string());
+	if(!out_file.empty()) start_log_file(out_file.string());
 }
 
 void debug_crash() {
