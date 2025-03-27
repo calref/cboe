@@ -398,6 +398,7 @@
 			<xs:attribute name="debug" default="false" type="bool"/>
 			<xs:attribute name="fore" default="black"/>
 			<xs:attribute name="defbtn" type="xs:token"/>
+			<xs:attribute name="escbtn" type="xs:token"/>
 		</xs:complexType>
 		<xs:unique name="FieldTabOrder">
 			<xs:selector xpath="*" />
@@ -410,6 +411,10 @@
 		<xs:keyref name="defaultButton" refer="uniqueID">
 			<xs:selector xpath="."/>
 			<xs:field xpath="@defbtn"/>
+		</xs:keyref>
+		<xs:keyref name="escapeButton" refer="uniqueID">
+			<xs:selector xpath="."/>
+			<xs:field xpath="@escbtn"/>
 		</xs:keyref>
 		<xs:keyref name="sliderLink" refer="uniqueID">
 			<xs:selector xpath="slider"/>

@@ -172,6 +172,8 @@ public:
 	std::string getAttachedKeyDescription() const;
 	inline void setDefault(bool value) { isDefaultControl = value; }
 	inline bool isDefault() { return isDefaultControl; }
+	inline void setEscape(bool value) { isEscapeControl = value; }
+	inline bool isEscape() { return isEscapeControl; }
 	/// Attach an event handler to this control.
 	/// @tparam t The type of event to attach.
 	/// @param handler The event handler function or functor. Its signature depends on the event type.
@@ -477,6 +479,8 @@ protected:
 	cKey key;
 	/// Whether the control is the default control of its dialog.
 	bool isDefaultControl = false;
+	/// Whether the control is the cancel control of its dialog.
+	bool isEscapeControl = false;
 
 	/// Draw a frame around the control.
 	/// @param amt How much to offset the frame from the control's bounding rect.

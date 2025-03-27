@@ -158,7 +158,7 @@ void cDialog::loadFromFile(const DialogDefn& file){
 		
 		Iterator<Attribute> attr;
 		Iterator<Element> node;
-		string type, name, val, defbtn;
+		string type, name, val, defbtn, escbtn;
 		
 		xml.FirstChildElement()->GetValue(&type);
 		if(type != "dialog") throw xBadNode(type,xml.FirstChildElement()->Row(),xml.FirstChildElement()->Column(),fname);
@@ -181,8 +181,10 @@ void cDialog::loadFromFile(const DialogDefn& file){
 					throw xBadVal("text",name,val,attr->Row(),attr->Column(),fname);
 				}
 				defTextClr = clr;
-			} else if(name == "defbtn") {
+			}else if(name == "defbtn"){
 				defbtn = val;
+			}else if(name == "escbtn"){
+				escbtn = val;
 			}else if(name != "debug")
 				throw xBadAttr(type,name,attr->Row(),attr->Column(),fname);
 		}
@@ -337,6 +339,8 @@ void cDialog::loadFromFile(const DialogDefn& file){
 		
 		// Set the default button.
 		setDefaultButton(defbtn);
+		// Set the escape button.
+		setEscapeButton(escbtn);
 		
 		// Sort by tab order
 		// First, fill any gaps that might have been left, using ones that had no specific tab order
@@ -912,11 +916,12 @@ bool cDialog::addLabelFor(std::string key, std::string label, eLabelPos where, s
 void cDialog::process_keystroke(cKey keyHit){
 	ctrlIter iter = controls.begin();
 	bool enterKeyHit = keyHit.spec && keyHit.k == key_enter;
+	bool escapeKeyHit = keyHit.spec && keyHit.k == key_esc;
 	while(iter != controls.end()){
 		cControl* ctrl = iter->second;
 		if(ctrl->isVisible()){
 			if(ctrl->isClickable() &&
-				(ctrl->getAttachedKey() == keyHit || (ctrl->isDefault() && enterKeyHit))){
+				(ctrl->getAttachedKey() == keyHit || (ctrl->isDefault() && enterKeyHit) || (ctrl->isEscape() && escapeKeyHit))){
 
 				ctrl->handleKeyTriggered(*this);
 				return;
@@ -939,11 +944,6 @@ void cDialog::process_keystroke(cKey keyHit){
 
 		}
 		iter++;
-	}
-	// If you get an escape and it isn't processed, make it an enter.
-	if(keyHit.spec && keyHit.k == key_esc){
-		keyHit.k = key_enter;
-		process_keystroke(keyHit);
 	}
 }
 
@@ -1157,19 +1157,36 @@ bool cDialog::hasControl(std::string id) const {
 	return false;
 }
 
-void cDialog::setDefaultButton(std::string defbtn) {
-	if(!defbtn.empty() && !hasControl(defbtn)){
+void cDialog::setSpecialButton(std::string& name_ref, std::string name, bool escape) {
+	if(!name.empty() && !hasControl(name)){
 		// this is likely because the dialogxml is malformed. maybe the linter already checks this,
 		// but the engine might as well also.
-		throw std::string { "Requested default button does not exist: " } + defbtn;
+		throw std::string { "Requested button does not exist: " } + name;
 	}
-	if(!defaultButton.empty()){
-		getControl(defaultButton).setDefault(false);
+	if(!name_ref.empty()){
+		if(escape){
+			getControl(name_ref).setEscape(false);
+		}else{
+			getControl(name_ref).setDefault(false);
+		}
+		name_ref = "";
 	}
-	if(!defbtn.empty()){
-		defaultButton = defbtn;
-		getControl(defaultButton).setDefault(true);
+	if(!name.empty()){
+		name_ref = name;
+		if(escape){
+			getControl(name).setEscape(true);
+		}else{
+			getControl(name).setDefault(true);
+		}
 	}
+}
+
+void cDialog::setDefaultButton(std::string defbtn) {
+	setSpecialButton(defaultButton, defbtn, false);
+}
+
+void cDialog::setEscapeButton(std::string escbtn) {
+	setSpecialButton(escapeButton, escbtn, true);
 }
 
 const char*const xBadVal::CONTENT = "$content$";
