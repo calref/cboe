@@ -4184,8 +4184,7 @@ void preview_every_dialog_xml() {
 	std::string confirm = dlog.show();
 	if(confirm == "yes"){
 		std::for_each(dialog_paths.begin(), dialog_paths.end(), [](fs::path path) {
-			ASB("Previewing dialog: " + path.stem().string());
-			print_buf();
+			LOG("Previewing dialog: " + path.stem().string());
 			preview_dialog_xml(path);
 		});
 	}
