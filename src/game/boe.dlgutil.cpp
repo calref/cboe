@@ -1991,12 +1991,13 @@ class cFilePicker {
 				auto_folder.replace_extension(".auto");
 				if(fs::is_directory(auto_folder)) auto_mtimes = sorted_file_mtimes(auto_folder);
 			}
+
+			me["auto" + suffix + "-more-recent"].hide();
 			if(auto_mtimes.empty()){
 				me["auto" + suffix].hide();
-				me["auto" + suffix + "-more-recent"].hide();
 			}else{
 				// If an autosave is newer than the main save, show an indicator
-				if(std::difftime(mtime, auto_mtimes.front().second) > 0)
+				if(std::difftime(mtime, auto_mtimes.front().second) < 0)
 					me["auto" + suffix + "-more-recent"].show();
 
 				me["auto" + suffix].attachClickHandler(std::bind(&cFilePicker::showAuto, this, auto_folder));
