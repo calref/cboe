@@ -207,9 +207,13 @@ short menuChoiceId=-1;
 #endif
 
 static void handleFatalError(std::string what) {
-	showFatalError(what);
+	bool was_recording = recording;
 	if(recording){
 		record_action("error", what);
+		recording = false; // Don't record click_control on the error message
+	}
+	showFatalError(what);
+	if(was_recording){
 		extern fs::path log_file;
 		if(log_file.empty() && cChoiceDlog("ask-save-replay", {"yes", "no"}).show() == "yes") {
 			save_replay_log();
