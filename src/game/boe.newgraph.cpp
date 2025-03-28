@@ -1046,8 +1046,10 @@ void handle_target_mode(eGameMode target_mode, int range, eSpell spell) {
 	// Lock on to enemies in range: 
 	if(has_feature_flag("target-lock", "V1") && get_bool_pref("TargetLock", true)){
 		// Skip this for spells that don't target enemies
-		cSpell spell_info = *spell;
-		if(!spell_info.target_lock) return;
+		if(spell != eSpell::NONE){
+			cSpell spell_info = *spell;
+			if(!spell_info.target_lock) return;
+		}
 
 		location loc = univ.current_pc().combat_pos;
 
