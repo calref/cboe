@@ -182,7 +182,7 @@ bool cStringChoice::onSearch(cDialog& me){
 	size_t page_delta = reversed ? -1 : 1;
 	size_t loop_from_page = reversed ? 0 : lastPage();
 	size_t loop_to_page = !reversed ? 0 : lastPage();
-	std::string loop_from_str = reversed ? "Reached the beginning." : "Reached the end";
+	std::string loop_from_str = reversed ? "Reached the beginning." : "Reached the end.";
 	std::string loop_to_str = !reversed ? "Starting from the beginning" : "Starting from the end";
 	size_t start_page = page;
 	bool looped_once = false;
