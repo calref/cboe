@@ -26,7 +26,6 @@ void end_data_dump();
 short onm(char x_sector,char y_sector);
 std::vector<scen_header_type> build_scen_headers();
 bool load_scenario_header(fs::path filename,scen_header_type& header_entry);
-fs::path locate_scenario(std::string scen_name);
 
 void alter_rect(rectangle *r);
 

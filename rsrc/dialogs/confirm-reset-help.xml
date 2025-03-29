@@ -2,8 +2,8 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='no'>
-	<button name='no' type='regular' def-key='n' top='39' left='244'>No</button>
-	<button name='yes' type='regular' def-key='y' top='39' left='178'>Yes</button>
+	<button name='no' type='regular' def-key='n' top='39' left='178'>No</button>
+	<button name='yes' type='regular' def-key='y' top='39' left='244'>Yes</button>
 	<pict type='dlog' num='11' top='9' left='9'/>
 	<text top='4' left='51' width='251' height='32'>
 		Really reset instant help messages?

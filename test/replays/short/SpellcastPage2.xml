@@ -19,7 +19,7 @@ UIScaleMap = 4
 </load_prefs>
     <srand>1733080030</srand>
     <startup_button_click>
-        <btn>1</btn>
+        <btn>0</btn>
         <mods>0</mods>
     </startup_button_click>
     <load_party>
@@ -59,7 +59,7 @@ kxmmn6z8C2bvRIkAPAAA
 ]]>
 </load_party>
     <startup_button_click>
-        <btn>4</btn>
+        <btn>3</btn>
         <mods>0</mods>
     </startup_button_click>
     <build_scen_headers>

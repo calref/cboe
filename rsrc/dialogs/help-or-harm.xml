@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog>
+	<pict type='dlog' num='2' top='8' left='8'/>
+	<text size='large' top='8' left='48' width='248' height='33'>
+		Apply helpful status or harmful status?
+	</text>
+	<button name='harm' type='regular' def-key='-' top='42' left='238'><key/> Harm</button>
+	<button name='help' type='regular' def-key='shift =' top='42' left='169'><key/> Help</button>
+</dialog>

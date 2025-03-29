@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='cancel'>
+<dialog escbtn='cancel'>
 	<text relative='pos pos-in' rel-anchor='next' top='8' left='8' size='large'>Create New Shop</text>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text relative='pos-in pos' rel-anchor='prev' top='10' left='0'>What kind of shop do you want to create?</text>
 	<button name='magic' relative='pos-in pos' rel-anchor='prev' top='3' left='68' type='large'>Magic Shop</button>
 	<button name='heal' relative='pos-in pos' rel-anchor='prev' top='3' left='0' type='large'>Healer</button>
 	<button name='custom' relative='pos-in pos' rel-anchor='prev' top='3' left='0' type='large'>Custom</button>
-	<button name='cancel' relative='pos' rel-anchor='prev' type='regular' def-key='esc' top='10' left='5'>Cancel</button>
+	<button name='cancel' relative='pos' rel-anchor='prev' type='regular' top='10' left='5'>Cancel</button>
 </dialog>

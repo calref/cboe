@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='yes'>
+<dialog defbtn='yes' escbtn='no'>
 	<button name='yes' type='regular' def-key='y' top='64' left='246'>Yes</button>
 	<button name='no' type='regular' def-key='n' top='64' left='180'>No</button>
 	<pict type='dlog' num='16' top='8' left='8'/>

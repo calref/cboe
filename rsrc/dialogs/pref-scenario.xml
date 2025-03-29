@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' relative='pos pos-in' rel-anchor='prev' top='0' left='4' width='218' height='16'>
 		BoE Scenario Editor Preferences
@@ -22,5 +22,5 @@
 	<led name='force-default-party' relative='pos-in pos' anchor='debug-party-head' top='2' left='0'>Force default party (ignore above)</led>
 
 	<button name='okay' relative='abs pos' anchor='scale-head' type='regular' top='7' left='354'>OK</button>
-	<button name='cancel' relative='neg pos-in' anchor='okay' type='regular' def-key='esc' top='0' left='73'>Cancel</button>
+	<button name='cancel' relative='neg pos-in' anchor='okay' type='regular' top='0' left='73'>Cancel</button>
 </dialog>

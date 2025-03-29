@@ -980,28 +980,6 @@ static pic_num_t choose_boom_type(short cur, cDialog* parent) {
 	return made_choice ? item_hit : prev;
 }
 
-pic_num_t choose_status_effect(short cur, bool party, cDialog* parent) {
-	static const char*const status[] = {
-		"Poisoned Weapon", "Bless/Curse", "Poison", "Haste/Slow", "Invulnerable",
-		"Magic Resist/Amplify", "Webs", "Disease", "Sanctuary", "Dumbfounding/Enlightening",
-		"Martyr's Shield", "Sleep/Hyperactivity", "Paralysis", "Acid", "Forcecage",
-	};
-	static const char*const pstatus[] = {"Stealth", "Flight", "Detect Life", "Firewalk"};
-	static const std::vector<pic_num_t> status_pics = {4,2,0,6,5,9,10,11,12,13,14,15,16,17,20};
-	static const std::vector<pic_num_t> pstatus_pics = {26,23,24,25};
-	short prev = cur;
-	if(cur < 0 || cur >= (party ? pstatus_pics : status_pics).size()) cur = 0;
-	cPictChoice pic_dlg(party ? pstatus_pics : status_pics, PIC_STATUS, parent);
-	pic_dlg->getControl("prompt").setText("Select a status effect:");
-	pic_dlg->getControl("help").setText((party ? pstatus : status)[cur]);
-	pic_dlg.attachSelectHandler([party](cPictChoice& me, int n) {
-		me->getControl("help").setText((party ? pstatus : status)[n]);
-	});
-	bool made_choice = pic_dlg.show(cur);
-	size_t item_hit = pic_dlg.getSelected();
-	return made_choice ? item_hit : prev;
-}
-
 snd_num_t choose_sound(short cur, cDialog* parent, std::string title) {
 	if(cur < 0) cur = 0;
 	StringList snd_names = *ResMgr::strings.get("sound-names");

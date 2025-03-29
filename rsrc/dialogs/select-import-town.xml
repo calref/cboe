@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<!-- OK Button -->
 	<field name='town' top='148' left='224' width='52' height='16'/>
 	<button name='okay' type='regular' top='181' left='278'>OK</button>
@@ -12,7 +12,7 @@
 		Enter a town number and hit OK, and you will be asked to select a scenario file.
 		The town with that number in the selected scenario will then be loaded in over the current town.
 	</text>
-	<button name='cancel' type='regular' def-key='esc' top='181' left='212'>Cancel</button>
+	<button name='cancel' type='regular' top='181' left='212'>Cancel</button>
 	<text top='83' left='50' width='301' height='54'>
 		Warning: This will write over the town currently in memory.
 		Also, the town you select must be the same size (large/medium/small) as the town currently in memory.

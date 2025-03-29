@@ -4,7 +4,7 @@
 	tpkg/credits/about-boe-template.xml. Do not modify it manually!
 -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='okay'>
 	<!--
 	 TODO: This dialog contains out-of-date information, such as pricing.
 	-->

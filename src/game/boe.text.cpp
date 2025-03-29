@@ -2,6 +2,8 @@
 const int LINES_IN_TEXT_WIN = 11;
 const int TEXT_BUF_LEN = 70;
 
+const int LINES_IN_ITEM_WIN = 8;
+
 #include <sstream>
 #include <list>
 
@@ -229,7 +231,7 @@ void put_item_screen(eItemWinMode screen_num) {
 	// Draw buttons at bottom
 	item_offset = item_sbar->getPosition();
 	
-	for(short i = 0; i < 8; i++)
+	for(short i = 0; i < LINES_IN_ITEM_WIN; i++)
 		for(auto& flag : item_area_button_active[i])
 			flag = false;
 	
@@ -257,7 +259,7 @@ void put_item_screen(eItemWinMode screen_num) {
 	switch(screen_num) {
 		case ITEM_WIN_SPECIAL:
 			style.colour = Colours::BLACK;
-			for(short i = 0; i < 8; i++) {
+			for(short i = 0; i < LINES_IN_ITEM_WIN; i++) {
 				i_num = i + item_offset;
 				if(i_num < spec_item_array.size()) {
 					win_draw_string(item_stats_gworld(),item_buttons[i][ITEMBTN_NAME],univ.scenario.special_items[spec_item_array[i_num]].name,eTextMode::WRAP,style);
@@ -274,7 +276,7 @@ void put_item_screen(eItemWinMode screen_num) {
 			break;
 		case ITEM_WIN_QUESTS:
 			style.colour = Colours::BLACK;
-			for(short i = 0; i < 8; i++) {
+			for(short i = 0; i < LINES_IN_ITEM_WIN; i++) {
 				i_num = i + item_offset;
 				if(i_num < spec_item_array.size()) {
 					int which_quest = spec_item_array[i_num] % 10000;
@@ -299,7 +301,7 @@ void put_item_screen(eItemWinMode screen_num) {
 		default: // on an items page
 			style.colour = Colours::BLACK;
 			
-			for(short i = 0; i < 8; i++) {
+			for(short i = 0; i < LINES_IN_ITEM_WIN; i++) {
 				i_num = i + item_offset;
 				sout.str("");
 				sout << i_num + 1 << '.';
@@ -356,7 +358,7 @@ void put_item_screen(eItemWinMode screen_num) {
 					}
 					
 				} // end of if item is there
-			} // end of for(short i = 0; i < 8; i++)
+			} // end of for(short i = 0; i < LINES_IN_ITEM_WIN; i++)
 			break;
 	}
 	undo_clip(item_stats_gworld());
@@ -469,7 +471,7 @@ void place_item_button(short which_slot,eItemButton button_type, eItemButton but
 	rectangle from_rect = {0,0,18,18},to_rect;
 
 	sf::Texture& invenbtn_gworld = *ResMgr::graphics.get("invenbtns");
-	item_area_button_active[which_slot][button_type] = true;
+	item_area_button_active[which_slot][button_pos] = true;
 	rect_draw_some_item(invenbtn_gworld, item_buttons_from[button_type - 2], item_stats_gworld(), item_buttons[which_slot][button_pos], sf::BlendAlpha);
 }
 
@@ -544,7 +546,7 @@ void set_stat_window(eItemWinMode new_stat, bool record) {
 	stat_window = new_stat;
 	if(stat_window < ITEM_WIN_SPECIAL && univ.party[stat_window].main_status != eMainStatus::ALIVE)
 		stat_window = eItemWinMode(first_active_pc());
-	item_sbar->setPageSize(8);
+	item_sbar->setPageSize(LINES_IN_ITEM_WIN);
 	spec_item_array.clear();
 	switch(stat_window) {
 		case ITEM_WIN_SPECIAL:
@@ -554,7 +556,7 @@ void set_stat_window(eItemWinMode new_stat, bool record) {
 					spec_item_array.push_back(i);
 					array_pos++;
 				}
-			array_pos = max(0,array_pos - 8);
+			array_pos = max(0,array_pos - LINES_IN_ITEM_WIN);
 			item_sbar->setMaximum(array_pos);
 			break;
 		case ITEM_WIN_QUESTS:
@@ -570,11 +572,11 @@ void set_stat_window(eItemWinMode new_stat, bool record) {
 					spec_item_array.push_back(i + 20000);
 					array_pos++;
 				}
-			array_pos = max(0,array_pos - 8);
+			array_pos = max(0,array_pos - LINES_IN_ITEM_WIN);
 			item_sbar->setMaximum(array_pos);
 			break;
 		default:
-			item_sbar->setMaximum(16);
+			item_sbar->setMaximum(cPlayer::INVENTORY_SIZE - LINES_IN_ITEM_WIN);
 			break;
 	}
 	item_sbar->setPosition(0);
@@ -598,7 +600,8 @@ void refresh_stat_areas(short mode) {
 	else x = sf::BlendNone;
 	rect_draw_some_item(pc_stats_gworld(), rectangle(pc_stats_gworld()), mainPtr(), win_to_rects[WINRECT_PCSTATS], x);
 	rect_draw_some_item(item_stats_gworld(), rectangle(item_stats_gworld()), mainPtr(), win_to_rects[WINRECT_INVEN], x);
-	rect_draw_some_item(text_area_gworld(), rectangle(text_area_gworld()), mainPtr(), win_to_rects[WINRECT_TRANSCRIPT], x);
+	if(mode != 1)
+		rect_draw_some_item(text_area_gworld(), rectangle(text_area_gworld()), mainPtr(), win_to_rects[WINRECT_TRANSCRIPT], x);
 }
 
 rectangle get_stat_effect_rect(int code) {
@@ -1061,6 +1064,16 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 		buf_pointer = 0;
 	else buf_pointer++;
 	
+}
+
+void add_caster_needs_to_buf(std::string needs_what, unsigned short pre_indent, unsigned short indent) {
+	std::ostringstream sout;
+	for(int i = 0; i < pre_indent; ++i){
+		sout << ' ';
+	}
+	extern short pc_casting;
+	sout << univ.party[pc_casting].name << " needs " << needs_what << ".";
+	add_string_to_buf(sout.str(), indent);
 }
 
 void init_buf() {

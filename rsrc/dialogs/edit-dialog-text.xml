@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<field name='str1' top='55' left='57' width='545' height='48'/>
 	<field name='str2' top='111' left='57' width='545' height='48'/>
 	<field name='str3' top='167' left='57' width='545' height='48'/>
@@ -9,7 +9,7 @@
 	<field name='str5' top='279' left='57' width='545' height='48'/>
 	<field name='str6' top='335' left='57' width='545' height='48'/>
 	<button name='okay' type='regular' top='388' left='544'>OK</button>
-	<button name='cancel' type='regular' def-key='esc' top='388' left='479'>Cancel</button>
+	<button name='cancel' type='regular' top='388' left='479'>Cancel</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='256' height='17'>Edit dialog box text:</text>
 	<text top='23' left='50' width='550' height='28'>

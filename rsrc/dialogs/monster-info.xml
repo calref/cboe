@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='done'>
+<dialog defbtn='done' escbtn='done'>
 	<text size='large' top='257' left='21' width='87' height='16'>Resistances:</text>
 	<text size='large' top='7' left='54' width='106' height='16'>Monster Info:</text>
 	<button name='done' type='done' top='319' left='249'/>

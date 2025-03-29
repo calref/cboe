@@ -10,6 +10,6 @@
 		Would you like to create a blank sheet #0?
 		You can then paste in your graphics or import from a file.
 	</text>
-	<button name='cancel' type='regular' top='101' left='234'>Cancel</button>
-	<button name='new' type='large' top='101' left='128'>Create New</button>
+	<button name='cancel' type='regular' top='101' left='128'>Cancel</button>
+	<button name='new' type='large' top='101' left='198'>Create New</button>
 </dialog>

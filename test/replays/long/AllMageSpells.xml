@@ -1,0 +1,2249 @@
+<actions SHA="b62d6d3" Tag="v0.0.11" Status="modified" Repo="git@github.com:NQNStudios/cboe.git">
+    <load_prefs>
+        <![CDATA[DisplayMode = 5
+EasyMode = false
+GameRunBefore = true
+GameSpeed = 0
+GiveIntroHint = false
+LessWanderingMonsters = false
+PlaySounds = true
+ReceivedHelp = [54 0 47 65 55 0 1 2 48 49 7 8 36 37 38 0 50 0 62 0 5 6 26 27 10 11 20 21 57 0 68 69 35 0 33 0 22 23 25 0]
+RepeatRoomDescriptions = false
+ShowInstantHelp = true
+ShowStartupSplash = false
+UIScale = 1.5
+UIScaleMap = 2
+]]>
+</load_prefs>
+    <feature_flags>
+        <debug-enter-town>
+            <version>move-outdoors</version>
+        </debug-enter-town>
+        <file-picker-dialog>
+            <version>V1</version>
+        </file-picker-dialog>
+        <target-lock>
+            <version>V1</version>
+        </target-lock>
+    </feature_flags>
+    <srand>1742163135</srand>
+    <startup_button_click>
+        <btn>Load Game</btn>
+        <mods>0</mods>
+    </startup_button_click>
+    <fancy_file_picker>false</fancy_file_picker>
+    <click_control>
+        <id>list</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>load4</id>
+        <mods>0</mods>
+    </click_control>
+    <load_party>
+        <![CDATA[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
+TZ/X+dH00fTR9HlC+vxl8Hav3wcvjoHGf5/fGn+Nv8Z/f98af42/xn9/3xp/jb/Gf3/fGn+Nv8Z/
+f98af42/xn9/3xp/jb/Gf3/fGn+Nv8Z/f98af42/xn9/3xp/jb/Gf3/fGn+Nv8Z/f98af42/xn9/
+3xp/jb/Gf3/fGn+Nv8Z/f98af42/xn9/3xp/jb/Gf3/fGn+Nv8Z/f98af42/xn9/3xp/jb/Gf3/f
+Gv8Xxv8vb/Rrf19Z8J39NVnli2CZHc2C/CnqGMDLGwxarw8GrukO7Dem47u+Z/q+Y77xPbhgGEYT
+4gleqywP0jfGc1T1Gl+DLV/G0wMcPH0VWwNonPoBaJz6AWic+gFonPoBaJz6AWic+gFonPoBaJz6
+AWic+gFonPoBaJz6AWic+gFonPoBaJz6AWic+gFonPoBaJz6AWic+gFonPoBaJz6AWic+gFonPoB
+aJz6ARy8SqSevoqtATRO/QA0Tv0ANE79ADRO/QA0Tv0ANE79ADRO/QA0Tv0ANE79ADRO/QA0Tv0A
+NE79ADRO/QA0Tv0ANE79ADRO/QA0Tv0ANE79ADRO/QA0Tv0ANE79ADRO/QA0Tv0A9ABeTwCNUz8A
+jVM/AI1TPwCNUz8AjVM/AI1TPwCNUz8AjVM/AI1TPwCNUz8AjVM/AI1TPwCNUz8AjVM/AI1TPwCN
+Uz8AjVM/AI1TPwCNUz8AjVM/AI1TPwCNUz8AjVM/gIODl07h+UOv/wX6ern5AEYDAA==
+]]>
+</load_party>
+    <arrow_button_click>{(308,67) - (485,76)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell7</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(308,28) - (485,37)}</arrow_button_click>
+    <handle_switch_pc>0</handle_switch_pc>
+    <arrow_button_click>{(308,93) - (485,102)}</arrow_button_click>
+    <handle_switch_pc>5</handle_switch_pc>
+    <cancel_item_target></cancel_item_target>
+    <arrow_button_click>{(308,80) - (485,89)}</arrow_button_click>
+    <handle_switch_pc>4</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell8</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(9,12)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell10</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell17</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell19</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell21</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <move>(11,11)</move>
+    <move>(12,11)</move>
+    <move>(12,12)</move>
+    <move>(12,13)</move>
+    <move>(12,14)</move>
+    <move>(13,14)</move>
+    <click_control>
+        <id>leave</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(13,14)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(13,14)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell24</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell27</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell30</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>target1</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell34</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <display_map></display_map>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <toggle_debug_mode></toggle_debug_mode>
+    <debug_give_item></debug_give_item>
+    <field_focus>number</field_focus>
+    <click_control>
+        <id>choose</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>right</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>right</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>right</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>right</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>strings</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>led18</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(515,176) - (529,187)}</arrow_button_click>
+    <handle_give_item>2</handle_give_item>
+    <click_control>
+        <id>pick4</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell35</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(12,12)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>other</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>other</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>other</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>spell1</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell1</id>
+        <mods>1</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <toggle_debug_mode></toggle_debug_mode>
+    <toggle_debug_mode></toggle_debug_mode>
+    <debug_stealth_detect_life_firewalk></debug_stealth_detect_life_firewalk>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell4</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(12,15)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell5</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(12,10)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>other</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>spell4</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(12,10)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>other</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <debug_heal></debug_heal>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(12,10)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell16</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(12,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>other</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>spell19</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(12,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(12,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(12,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(12,13)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(12,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(12,14)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>other</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>other</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>spell30</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>target1</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>other</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>spell6</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell15</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell16</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>spell24</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell24</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell24</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>target1</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell25</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell26</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(12,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_combat_switch></handle_combat_switch>
+    <arrow_button_click>{(308,67) - (485,76)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>other</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>spell6</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(9,12)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell19</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(9,12)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_pause></handle_pause>
+    <arrow_button_click>{(308,54) - (485,63)}</arrow_button_click>
+    <handle_switch_pc>2</handle_switch_pc>
+    <arrow_button_click>{(308,67) - (485,76)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell2</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(9,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell3</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>target1</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell4</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>target2</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell5</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(8,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell9</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(8,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell11</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(8,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell12</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(9,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell2</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(8,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <move>(12,12)</move>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell12</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <screen_shift>
+        <dx>1</dx>
+        <dy>0</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>1</dx>
+        <dy>0</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>1</dx>
+        <dy>0</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>1</dx>
+        <dy>0</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>1</dx>
+        <dy>0</dy>
+    </screen_shift>
+    <handle_target_space>
+        <destination>(12,12)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell13</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(9,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <debug_heal></debug_heal>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(9,10)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell14</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(9,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(9,10)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell15</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>target1</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell16</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(8,12)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell18</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(9,12)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell20</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(12,12)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell22</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell22</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>target2</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>3</handle_switch_pc>
+    <move>(12,12)</move>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_pause></handle_pause>
+    <handle_pause></handle_pause>
+    <handle_pause></handle_pause>
+    <handle_pause></handle_pause>
+    <handle_pause></handle_pause>
+    <handle_pause></handle_pause>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(12,10)</move>
+    <handle_combat_switch></handle_combat_switch>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell22</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>target4</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>target2</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>spell23</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(8,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <screen_shift>
+        <dx>1</dx>
+        <dy>0</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>1</dx>
+        <dy>0</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>1</dx>
+        <dy>0</dy>
+    </screen_shift>
+    <handle_target_space>
+        <destination>(11,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell26</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <spell_cast_hit_return></spell_cast_hit_return>
+    <handle_target_space>
+        <destination>(8,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell28</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(7,11)</destination>
+        <num_targets_left>3</num_targets_left>
+    </handle_target_space>
+    <handle_target_space>
+        <destination>(9,9)</destination>
+        <num_targets_left>2</num_targets_left>
+    </handle_target_space>
+    <handle_target_space>
+        <destination>(9,10)</destination>
+        <num_targets_left>2</num_targets_left>
+    </handle_target_space>
+    <handle_target_space>
+        <destination>(10,10)</destination>
+        <num_targets_left>1</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell29</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(10,12)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell31</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(10,12)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell32</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(8,12)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(10,12)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <debug_heal></debug_heal>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell33</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_combat_switch></handle_combat_switch>
+    <debug_ghost_mode></debug_ghost_mode>
+    <move>(10,11)</move>
+    <move>(10,10)</move>
+    <move>(10,9)</move>
+    <move>(10,8)</move>
+    <move>(10,7)</move>
+    <move>(10,6)</move>
+    <move>(9,6)</move>
+    <move>(8,6)</move>
+    <move>(7,6)</move>
+    <move>(6,6)</move>
+    <move>(5,6)</move>
+    <move>(4,6)</move>
+    <move>(3,6)</move>
+    <handle_combat_switch></handle_combat_switch>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell36</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pick4</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(2,7)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell37</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(2,5)</destination>
+        <num_targets_left>3</num_targets_left>
+    </handle_target_space>
+    <handle_target_space>
+        <destination>(2,6)</destination>
+        <num_targets_left>2</num_targets_left>
+    </handle_target_space>
+    <handle_target_space>
+        <destination>(2,7)</destination>
+        <num_targets_left>1</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell38</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <spell_cast_hit_return></spell_cast_hit_return>
+    <spell_cast_hit_return></spell_cast_hit_return>
+    <handle_target_space>
+        <destination>(3,8)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(3,5)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <spell_cast_hit_return></spell_cast_hit_return>
+    <handle_target_space>
+        <destination>(2,9)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <spell_cast_hit_return></spell_cast_hit_return>
+    <handle_target_space>
+        <destination>(2,8)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>other</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>spell2</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell3</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(3,9)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell5</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>spell6</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>spell7</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(3,9)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell8</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(2,6)</destination>
+        <num_targets_left>3</num_targets_left>
+    </handle_target_space>
+    <handle_target_space>
+        <destination>(5,5)</destination>
+        <num_targets_left>2</num_targets_left>
+    </handle_target_space>
+    <handle_target_space>
+        <destination>(5,4)</destination>
+        <num_targets_left>1</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell11</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(3,6)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell12</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell13</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>-1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>-1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>-1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>-1</dy>
+    </screen_shift>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <move>(2,6)</move>
+    <debug_heal></debug_heal>
+    <handle_pause></handle_pause>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(3,5)</move>
+    <handle_pause></handle_pause>
+    <handle_pause></handle_pause>
+    <handle_pause></handle_pause>
+    <handle_pause></handle_pause>
+    <debug_heal></debug_heal>
+    <handle_combat_switch></handle_combat_switch>
+    <handle_switch_pc>3</handle_switch_pc>
+    <move>(4,5)</move>
+    <move>(3,6)</move>
+    <move>(3,7)</move>
+    <move>(3,8)</move>
+    <move>(3,9)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <move>(3,10)</move>
+    <move>(3,11)</move>
+    <move>(3,12)</move>
+    <handle_switch_pc>3</handle_switch_pc>
+    <move>(3,13)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(5,16)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(3,15)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell14</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>-1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>-1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>-1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>-1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>-1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>-1</dy>
+    </screen_shift>
+    <handle_target_space>
+        <destination>(3,5)</destination>
+        <num_targets_left>2</num_targets_left>
+    </handle_target_space>
+    <handle_target_space>
+        <destination>(3,6)</destination>
+        <num_targets_left>1</num_targets_left>
+    </handle_target_space>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <debug_enter_town></debug_enter_town>
+    <field_focus>number</field_focus>
+    <field_input>
+        <c>9</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(58,32)</move>
+    <move>(57,32)</move>
+    <move>(56,32)</move>
+    <move>(55,33)</move>
+    <move>(54,34)</move>
+    <move>(53,35)</move>
+    <move>(52,36)</move>
+    <move>(51,37)</move>
+    <move>(50,36)</move>
+    <move>(49,35)</move>
+    <handle_combat_switch></handle_combat_switch>
+    <handle_switch_pc>3</handle_switch_pc>
+    <debug_give_item></debug_give_item>
+    <field_focus>number</field_focus>
+    <click_control>
+        <id>choose</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>right</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>right</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>right</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>right</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>strings</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>led22</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell17</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(50,35)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell21</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell22</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>3</handle_switch_pc>
+    <move>(49,36)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_switch_pc>3</handle_switch_pc>
+    <move>(48,35)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell23</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>3</handle_switch_pc>
+    <move>(47,35)</move>
+    <move>(46,35)</move>
+    <move>(45,35)</move>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell24</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>target1</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell25</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(46,33)</destination>
+        <num_targets_left>3</num_targets_left>
+    </handle_target_space>
+    <handle_target_space>
+        <destination>(46,34)</destination>
+        <num_targets_left>2</num_targets_left>
+    </handle_target_space>
+    <handle_target_space>
+        <destination>(43,34)</destination>
+        <num_targets_left>1</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell27</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(43,34)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <debug_heal></debug_heal>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>other</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>other</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>spell28</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(46,33)</destination>
+        <num_targets_left>2</num_targets_left>
+    </handle_target_space>
+    <handle_target_space>
+        <destination>(46,34)</destination>
+        <num_targets_left>1</num_targets_left>
+    </handle_target_space>
+    <handle_pause></handle_pause>
+    <handle_pause></handle_pause>
+    <handle_pause></handle_pause>
+    <handle_pause></handle_pause>
+    <handle_pause></handle_pause>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(50,35)</move>
+    <move>(49,35)</move>
+    <move>(50,35)</move>
+    <move>(51,35)</move>
+    <debug_leave_town></debug_leave_town>
+    <move>(12,4)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>other</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>spell18</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(12,53)</move>
+    <move>(12,54)</move>
+    <move>(13,55)</move>
+    <move>(13,56)</move>
+    <click_control>
+        <id>btn1</id>
+        <mods>0</mods>
+    </click_control>
+    <close_window></close_window>
+    <click_control>
+        <id>quit</id>
+        <mods>0</mods>
+    </click_control>
+</actions>

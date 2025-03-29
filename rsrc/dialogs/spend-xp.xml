@@ -1,91 +1,102 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog>
-	<!--
-	 TODO: The default button might be cancel?
-	 TODO: This dialog is very disorganized.
-	 -->
-	<text size='large' top='99' left='38' width='133' height='17'>Main statistics:</text>
+<dialog escbtn='cancel'>
+	<!-- Top -->
+	<pict type='dlog' num='7' top='7' left='6'/>
 	<text size='large' top='8' left='56' width='110' height='16'>Training For:</text>
+	<text name='recipient' framed='true' top='8' left='177' width='166' height='16'/>
+	<button name='help' type='help' def-key='help' top='6' left='506'/>
+
+	<!-- Left column -->
+	<text size='large' top='32' left='56' width='228' height='16'>Skill (Cost):</text>
+	<text size='large' top='32' left='190' width='50' height='16'>Level</text>
+
+	<text name='hp' framed='true' top='56' left='194' width='28' height='16'/>
 	<button name='hp-m' type='small' top='53' left='231'>-</button>
 	<button name='hp-p' type='small' top='53' left='256'>+</button>
+	<text name='sp' framed='true' top='77' left='194' width='28' height='16'/>
 	<button name='sp-m' type='small' top='75' left='231'>-</button>
 	<button name='sp-p' type='small' top='75' left='256'>+</button>
+
+	<text size='large' top='99' left='38' width='133' height='17'>Main statistics:</text>
+	<text name='str' framed='true' top='121' left='194' width='28' height='16'/>
 	<button name='str-m' type='small' top='119' left='231'>-</button>
 	<button name='str-p' type='small' top='119' left='256'>+</button>
+	<text name='dex' framed='true' top='143' left='194' width='28' height='16'/>
 	<button name='dex-m' type='small' top='141' left='231'>-</button>
 	<button name='dex-p' type='small' top='141' left='256'>+</button>
+	<text name='int' framed='true' top='165' left='194' width='28' height='16'/>
 	<button name='int-m' type='small' top='163' left='231'>-</button>
 	<button name='int-p' type='small' top='163' left='256'>+</button>
+
+	<text size='large' top='185' left='38' width='133' height='17'>Warrior Skills:</text>
+	<text name='edged' framed='true' top='207' left='194' width='28' height='16'/>
 	<button name='edged-m' type='small' top='204' left='231'>-</button>
 	<button name='edged-p' type='small' top='204' left='256'>+</button>
+	<text name='bashing' framed='true' top='229' left='194' width='28' height='16'/>
 	<button name='bashing-m' type='small' top='226' left='231'>-</button>
 	<button name='bashing-p' type='small' top='226' left='256'>+</button>
+	<text name='pole' framed='true' top='251' left='194' width='28' height='16'/>
 	<button name='pole-m' type='small' top='248' left='231'>-</button>
 	<button name='pole-p' type='small' top='248' left='256'>+</button>
+	<text name='thrown' framed='true' top='272' left='194' width='28' height='16'/>
 	<button name='thrown-m' type='small' top='270' left='231'>-</button>
 	<button name='thrown-p' type='small' top='270' left='256'>+</button>
+	<text name='archery' framed='true' top='294' left='194' width='28' height='16'/>
 	<button name='archery-m' type='small' top='292' left='231'>-</button>
 	<button name='archery-p' type='small' top='292' left='256'>+</button>
+	<text name='defense' framed='true' top='316' left='194' width='28' height='16'/>
 	<button name='defense-m' type='small' top='314' left='231'>-</button>
 	<button name='defense-p' type='small' top='314' left='256'>+</button>
+
+	<!-- Right column -->
+	<text size='large' top='32' left='291' width='228' height='16'>Skill (Cost):</text>
+	<text size='large' top='32' left='431' width='50' height='16'>Level</text>
+
+	<text size='large' top='53' left='292' width='133' height='17'>Magic Skills:</text>
+	<text name='mage' framed='true' top='76' left='435' width='28' height='16'/>
 	<button name='mage-m' type='small' top='74' left='472'>-</button>
 	<button name='mage-p' type='small' top='74' left='497'>+</button>
+	<text name='priest' framed='true' top='98' left='435' width='29' height='16'/>
 	<button name='priest-m' type='small' top='96' left='472'>-</button>
 	<button name='priest-p' type='small' top='96' left='497'>+</button>
+	<text name='mage-lore' framed='true' top='121' left='435' width='29' height='16'/>
 	<button name='mage-lore-m' type='small' top='118' left='472'>-</button>
 	<button name='mage-lore-p' type='small' top='118' left='497'>+</button>
+	<text name='alchemy' framed='true' top='142' left='435' width='29' height='16'/>
 	<button name='alchemy-m' type='small' top='140' left='472'>-</button>
 	<button name='alchemy-p' type='small' top='140' left='497'>+</button>
+	<text name='item-lore' framed='true' top='164' left='435' width='29' height='16'/>
 	<button name='item-lore-m' type='small' top='162' left='472'>-</button>
 	<button name='item-lore-p' type='small' top='162' left='497'>+</button>
+
+	<text size='large' top='185' left='292' width='133' height='17'>Other Skills:</text>
+	<text name='traps' framed='true' top='208' left='434' width='29' height='16'/>
 	<button name='traps-m' type='small' top='206' left='472'>-</button>
 	<button name='traps-p' type='small' top='206' left='497'>+</button>
+	<text name='lockpick' framed='true' top='230' left='434' width='29' height='16'/>
 	<button name='lockpick-m' type='small' top='228' left='472'>-</button>
 	<button name='lockpick-p' type='small' top='228' left='497'>+</button>
+	<text name='assassin' framed='true' top='252' left='434' width='29' height='16'/>
 	<button name='assassin-m' type='small' top='250' left='472'>-</button>
 	<button name='assassin-p' type='small' top='250' left='497'>+</button>
+	<text name='poison' framed='true' top='274' left='434' width='29' height='16'/>
 	<button name='poison-m' type='small' top='272' left='472'>-</button>
 	<button name='poison-p' type='small' top='272' left='497'>+</button>
+	<text name='luck' framed='true' top='296' left='434' width='29' height='16'/>
 	<button name='luck-m' type='small' top='294' left='472'>-</button>
 	<button name='luck-p' type='small' top='294' left='497'>+</button>
-	<pict type='dlog' num='7' top='7' left='6'/>
+
+	<!-- Bottom -->
+	<text top='365' left='6' width='382' height='16'>Alt-click +/- for skill description</text>
+
+	<text top='344' left='71' width='68' height='16'>Skill Pts.:</text>
 	<text name='skp' framed='true' top='344' left='148' width='75' height='16'/>
+	<text name='gold-label' top='344' left='252' width='42' height='16'>Gold:</text>
 	<text name='gold' framed='true' top='344' left='300' width='75' height='16'/>
-	<button name='keep' type='regular' def-key='k' top='355' left='403'>Keep</button>
+
 	<button name='left' type='left' def-key='left' top='329' left='403'/>
 	<button name='right' type='right' def-key='right' top='329' left='470'/>
-	<text name='recipient' framed='true' top='8' left='177' width='166' height='16'/>
-	<text name='hp' framed='true' top='56' left='194' width='28' height='16'/>
-	<text name='sp' framed='true' top='77' left='194' width='28' height='16'/>
-	<text name='str' framed='true' top='121' left='194' width='28' height='16'/>
-	<text name='dex' framed='true' top='143' left='194' width='28' height='16'/>
-	<text name='int' framed='true' top='165' left='194' width='28' height='16'/>
-	<text name='edged' framed='true' top='207' left='194' width='28' height='16'/>
-	<text name='bashing' framed='true' top='229' left='194' width='28' height='16'/>
-	<text name='pole' framed='true' top='251' left='194' width='28' height='16'/>
-	<text name='thrown' framed='true' top='272' left='194' width='28' height='16'/>
-	<text name='archery' framed='true' top='294' left='194' width='28' height='16'/>
-	<text name='defense' framed='true' top='316' left='194' width='28' height='16'/>
-	<text name='mage' framed='true' top='76' left='435' width='28' height='16'/>
-	<text name='priest' framed='true' top='98' left='435' width='29' height='16'/>
-	<text name='mage-lore' framed='true' top='121' left='435' width='29' height='16'/>
-	<text name='alchemy' framed='true' top='142' left='435' width='29' height='16'/>
-	<text name='item-lore' framed='true' top='164' left='435' width='29' height='16'/>
-	<text name='traps' framed='true' top='208' left='434' width='29' height='16'/>
-	<text name='lockpick' framed='true' top='230' left='434' width='29' height='16'/>
-	<text name='assassin' framed='true' top='252' left='434' width='29' height='16'/>
-	<text name='poison' framed='true' top='274' left='434' width='29' height='16'/>
-	<text name='luck' framed='true' top='296' left='434' width='29' height='16'/>
-	<button name='cancel' type='regular' def-key='esc' top='355' left='470'>Cancel</button>
-	<text size='large' top='32' left='56' width='228' height='16'>Skill:                Cost: Level:</text>
-	<text size='large' top='32' left='291' width='228' height='16'>Skill:                Cost: Level:</text>
-	<text size='large' top='185' left='38' width='133' height='17'>Warrior Skills:</text>
-	<text size='large' top='53' left='292' width='133' height='17'>Magic Skills:</text>
-	<text size='large' top='185' left='292' width='133' height='17'>Other Skills:</text>
-	<text top='365' left='6' width='382' height='16'>Cost: (Skill pts./Gold)    Alt-click for description</text>
-	<text top='344' left='71' width='68' height='16'>Skill Pts.:</text>
-	<text top='344' left='252' width='42' height='16'>Gold:</text>
-	<button name='help' type='help' def-key='help' top='6' left='506'/>
+	<button name='cancel' type='regular' top='355' left='403'>Cancel</button>
+	<button name='keep' type='regular' def-key='k' top='355' left='470'>Keep</button>
 </dialog>
