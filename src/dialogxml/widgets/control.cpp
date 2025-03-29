@@ -354,6 +354,7 @@ std::string cControl::getAttachedKeyDescription() const {
 			case key_word_bsp: keyName = "backspace"; mod += mod_ctrl; break;
 			case key_word_del: keyName = "delete"; mod += mod_ctrl; break;
 #endif
+			case key_find: keyName = "f"; mod += mod_ctrl; break;
 		}
 		if(mod_contains(mod, mod_ctrl)) s += '^';
 		if(mod_contains(mod, mod_alt)) s += '#';
