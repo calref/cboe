@@ -376,6 +376,9 @@ static cKey divineFunction(cKey key) {
 			} else if(key.c == 'y') {
 				key.spec = true;
 				key.k = key_redo;
+			} else if(key.c == 'f') {
+				key.spec = true;
+				key.k = key_find;
 			} else {
 				// Ctrl+random key: do nothing. Don't type the key.
 				key.spec = true;
@@ -661,6 +664,7 @@ void cTextField::handleInput(cKey key, bool record) {
 		case key_tab:
 		case key_help:
 		case key_insert:
+		case key_find:
 			break;
 	}
 	// Setting the text normally resets insertion/selection point, but we don't want that here.
