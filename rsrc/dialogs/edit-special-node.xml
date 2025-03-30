@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<!--
 	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
 	 -->
@@ -109,6 +109,6 @@
 	
 	
 	<button name='okay' type='regular' top='494' left='522'>OK</button>
-	<button name='cancel' type='regular' def-key='esc' top='494' left='456'>Cancel</button>
+	<button name='cancel' type='regular' top='494' left='456'>Cancel</button>
 	<button name='back' type='large' top='494' left='10'>Go Back</button>
 </dialog>

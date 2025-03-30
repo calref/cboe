@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<button name='okay' type='regular' top='84' left='251'>OK</button>
 	<pict top='8' left='8' type='dlog' num='16'/>
 	<text top='3' left='52' width='257' height='79'>
@@ -9,5 +9,5 @@
 		All of their progress in that adventure is forgotten ...
 		if you want to play it again, you will need to start over from the very beginning.
 	</text>
-	<button name='cancel' type='regular' def-key='esc' top='84' left='185'>Cancel</button>
+	<button name='cancel' type='regular' top='84' left='185'>Cancel</button>
 </dialog>

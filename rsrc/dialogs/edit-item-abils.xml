@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<pict type='dlog' num='16' top='8' left='11'/>
 	<text name='title' size='large' top='6' left='50' width='158' height='16'>Edit Item' Abilities</text>
 	<text anchor='title' relative='pos pos-in' top='0' left='14' width='111' height='14'>Item number:</text>
@@ -53,6 +53,6 @@
 		<led name='type5' anchor='type4' relative='pos-in pos' state='off' top='5' left='0'>Type 5: Unique/Rare, Not left</led>
 	</group>
 	
-	<button name='cancel' relative='neg' type='regular' top='28' left='134' def-key='esc'>Cancel</button>
+	<button name='cancel' relative='neg' type='regular' top='28' left='134'>Cancel</button>
 	<button name='okay' relative='neg' type='regular' top='28' left='68'>OK</button>
 </dialog>

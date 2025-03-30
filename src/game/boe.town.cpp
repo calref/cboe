@@ -69,7 +69,7 @@ void force_town_enter(short which_town,location where_start) {
 }
 
 //short entry_dir; // if 9, go to forced
-void start_town_mode(short which_town, short entry_dir) {
+void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
 	short town_number;
 	short former_town;
 	bool monsters_loaded = false,town_toast = false;
@@ -326,7 +326,8 @@ void start_town_mode(short which_town, short entry_dir) {
 			if(no_thrash.count(&monst) == 0)
 				monst.active = eCreatureStatus::DEAD;
 	}
-	handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc);
+	if(!debug_enter)
+		handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc);
 	
 	// Flush excess doomguards and viscous goos
 	for(short i = 0; i < univ.town.monst.size(); i++)
@@ -1127,7 +1128,14 @@ void dump_gold(short print_mes) {
 	}
 }
 
+bool is_unlockable(location where) {
+	ter_num_t terrain = univ.town->terrain(where.x,where.y);
 
+	if(univ.scenario.ter_types[terrain].special == eTerSpec::UNLOCKABLE) {
+		return true;
+	}
+	return false;
+}
 
 void pick_lock(location where,short pc_num) {
 	ter_num_t terrain;
@@ -1137,6 +1145,8 @@ void pick_lock(location where,short pc_num) {
 	
 	terrain = univ.town->terrain(where.x,where.y);
 	cInvenSlot which_item = univ.party[pc_num].has_abil_equip(eItemAbil::LOCKPICKS);
+
+	// This should no longer ever happen:
 	if(!which_item) {
 		add_string_to_buf("  Need lockpick equipped.");
 		return;
@@ -1156,11 +1166,6 @@ void pick_lock(location where,short pc_num) {
 	
 	if(univ.party[pc_num].has_abil_equip(eItemAbil::THIEVING))
 		r1 = r1 - 12;
-	
-	if(univ.scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {
-		add_string_to_buf("  Wrong terrain type.");
-		return;
-	}
 	unlock_adjust = univ.scenario.ter_types[terrain].flag2;
 	if((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 30))) {
 		add_string_to_buf("  Didn't work.");

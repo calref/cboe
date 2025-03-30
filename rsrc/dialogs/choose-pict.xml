@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='done'>
+<dialog defbtn='done' escbtn='cancel'>
 	<pict name='mainpic' type='dlog' num='16' top='6' left='6'/>
 	<text name='prompt' size='large' top='6' left='50' width='248' height='14'>Select a graphic:</text>
 	<group name='group'>
@@ -82,5 +82,5 @@
 	<button name='left' type='left' top='314' left='6' def-key='left'/>
 	<button name='right' type='right' top='314' left='69' def-key='right'/>
 	<button name='done' type='done' top='314' left='393'/>
-	<button name='cancel' type='regular' top='314' left='322' def-key='esc'>Cancel</button>
+	<button name='cancel' type='regular' top='314' left='322'>Cancel</button>
 </dialog>

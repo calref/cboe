@@ -99,9 +99,13 @@ std::map<std::string,std::vector<std::string>> feature_flags = {
 	// Legacy behavior of the T debug action (used by some replays)
 	// does not change the party's outdoors location
 	{"debug-enter-town", {"move-outdoors"}},
+	// Legacy behavior of the X debug action (used by the OneOfEverything replay)
+	// kills the whole party with 'Absent' status
+	{"debug-kill-party", {"V2"}},
 	{"target-lock", {"V1"}},
 	// New in-game save file picker
-	{"file-picker-dialog", {"V1"}}
+	{"file-picker-dialog", {"V1"}},
+	{"scenario-meta-format", {"V2"}}
 };
 
 struct cParseEntrance {
@@ -203,9 +207,13 @@ short menuChoiceId=-1;
 #endif
 
 static void handleFatalError(std::string what) {
-	showFatalError(what);
+	bool was_recording = recording;
 	if(recording){
 		record_action("error", what);
+		recording = false; // Don't record click_control on the error message
+	}
+	showFatalError(what);
+	if(was_recording){
 		extern fs::path log_file;
 		if(log_file.empty() && cChoiceDlog("ask-save-replay", {"yes", "no"}).show() == "yes") {
 			save_replay_log();
@@ -438,7 +446,7 @@ static void handle_scenario_args() {
 			// Add the scenario's path to the search paths put_party_in_scen() uses
 			extra_scen_dirs.push_back(path.parent_path());
 		}else{
-			path = locate_scenario(*scen_arg_path);
+			path = locate_scenario(*scen_arg_path, true);
 		}
 
 		cScenario scenario;
@@ -459,9 +467,11 @@ static void handle_scenario_args() {
 					// TODO maybe the player should be warned before they're removed from it?
 					handle_victory(true);
 				}
+			}else{
+				resetting = true;
 			}
 			if(!univ.party.is_in_scenario()){
-				put_party_in_scen(path.filename().string(), scen_arg_town || scen_arg_out_sec);
+				put_party_in_scen(path.filename().string(), scen_arg_town || scen_arg_out_sec, true);
 			}
 		}else{
 			std::cerr << "Failed to load scenario: " << *scen_arg_path << std::endl;
@@ -486,7 +496,7 @@ static void handle_scenario_args() {
 			town_location = *scen_arg_loc;
 		}
 		force_town_enter(*scen_arg_town, town_location);
-		start_town_mode(*scen_arg_town, town_entrance);
+		start_town_mode(*scen_arg_town, town_entrance, true);
 	}else if(scen_arg_out_sec){
 		if(!party_in_memory || !univ.party.is_in_scenario() ||
 				univ.scenario.outdoors.width() < (scen_arg_out_sec->x + 1) ||
@@ -549,6 +559,7 @@ static void replay_action(Element& action) {
 		try{
 			// Legacy replays use ints to encode startup buttons
 			btn_idx = std::stoi(info["btn"]);
+			btn_idx = startup_button_indices[startup_button_names_v1[btn_idx]];
 		}catch(std::invalid_argument& err){
 			// Newer replays use strings to encode startup buttons
 			btn_idx = startup_button_indices[info["btn"]];
@@ -804,6 +815,12 @@ static void replay_action(Element& action) {
 		return;
 	}else if(t == "debug_kill_party"){
 		debug_kill_party();
+		return;
+	}else if(t == "debug_hurt_party"){
+		debug_hurt_party();
+		return;
+	}else if(t == "debug_give_status"){
+		debug_give_status();
 		return;
 	}else if(t == "debug_magic_map"){
 		debug_magic_map();

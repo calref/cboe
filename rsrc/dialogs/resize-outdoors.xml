@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='8' left='50' width='200' height='17'>Resize/Shift Outdoors</text>
 	
@@ -42,5 +42,5 @@
 		<text name='delete' top='50' left='270' width='200'/>
 	</pane>
 	<button name='okay' type='regular' top='270' left='407'>OK</button>
-	<button name='cancel' type='regular' def-key='esc' top='270' left='342'>Cancel</button>
+	<button name='cancel' type='regular' top='270' left='342'>Cancel</button>
 </dialog>

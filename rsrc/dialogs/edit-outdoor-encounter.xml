@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<!-- OK button -->
 	<field name='onmeet' top='189' left='361' width='46' height='16'/>
 	<field name='onwin' top='231' left='361' width='46' height='16'/>
@@ -19,7 +19,7 @@
 	<text name='ally2' framed='true' top='327' left='129' width='145' height='14'/>
 	<text name='ally3' framed='true' top='351' left='129' width='145' height='14'/>
 	<button name='okay' type='regular' top='370' left='489'>OK</button>
-	<button name='cancel' type='regular' def-key='esc' top='370' left='423'>Cancel</button>
+	<button name='cancel' type='regular' top='370' left='423'>Cancel</button>
 	<button name='left' type='left' def-key='left' top='370' left='11'/>
 	<button name='right' type='right' def-key='right' top='370' left='74'/>
 	<button name='choose-foe1' type='regular' top='130' left='280'>Choose</button>

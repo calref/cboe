@@ -75,8 +75,10 @@ such, this attribute should be omitted for most dialogs.
 to `true`, the XSL stylesheet will draw the bounding rects of LEDs and
 other debug information.
 * `fore` - The default text colour. Generally this shouldn't be needed.
-* `defbtn` - The ID (`name` attribute) of the default button. This is an
-IDREF, so it must exist in the dialog.
+* `defbtn` - The ID (`name` attribute) of button triggered by Enter/Return.
+This is an IDREF, so it must exist in the dialog.
+* `escbtn` - The ID (`name` attribute) of button triggered by Escape.
+This is an IDREF, so it must exist in the dialog.
 
 The `<text>` tag
 ----------------

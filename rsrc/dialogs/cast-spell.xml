@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='cast'>
+<dialog defbtn='cast' escbtn='cancel'>
 	<pict name='pic' type='dlog' num='12' top='9' left='9'/>
 	<text size='large' top='6' left='54' width='139' height='18'>Select a Spell:</text>
 	<!-- To the left of PC names, buttons to select caster -->
@@ -225,6 +225,6 @@
 	<button name='help' type='help' def-key='help' top='6' left='596'/>
 
 	<!-- Main buttons -->
-	<button name='cancel' type='regular' def-key='esc' top='394' left='479'>Cancel</button>
+	<button name='cancel' type='regular' top='394' left='479'>Cancel</button>
 	<button name='cast' type='regular' top='394' left='549'>Cast</button>
 </dialog>

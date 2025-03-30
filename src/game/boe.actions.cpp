@@ -30,8 +30,10 @@
 #include "fileio/fileio.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
+#include "dialogxml/dialogs/pictchoice.hpp"
 #include "dialogxml/dialogs/dialog.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/strchoice.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
 #include "boe.menus.hpp"
 #include "tools/keymods.hpp"
@@ -859,8 +861,14 @@ void handle_bash_pick(location destination, bool& did_something, bool& need_redr
 	}
 	if(!adjacent(destination,univ.party.town_loc))
 		add_string_to_buf("  Must be adjacent.");
+	else if(!is_unlockable(destination))
+		add_string_to_buf("  Wrong terrain type.");
 	else {
-		short pc = char_select_pc(0, isBash ? "Who will bash?" : "Who will pick the lock?");
+		short pc = select_pc(isBash ? eSelectPC::ONLY_LIVING : eSelectPC::ONLY_CAN_LOCKPICK, isBash ? "Who will bash?" : "Who will pick the lock?", isBash ? eSkill::STRENGTH : eSkill::LOCKPICKING);
+		// No one can (select_pc prints the message):
+		if(pc == 8){
+			return;
+		}
 		if(pc == 6) {
 			add_string_to_buf("  Cancelled.");
 			overall_mode = MODE_TOWN;
@@ -1612,8 +1620,8 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 		if(point_in_area.in(pc_help_button)) {
 			rectangle help_button = pc_help_button;
 			help_button.offset(pc_win_ul);
-			arrow_button_click(help_button);
-			show_dialog_action("help-party");
+			if(arrow_button_click(help_button, &fps_limiter))
+				show_dialog_action("help-party");
 		}
 		for(int i = 0; i < 6; i++)
 			for(auto j : pc_buttons[i].keys())
@@ -1623,27 +1631,27 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 						break;
 					rectangle button_rect = pc_buttons[i][j];
 					button_rect.offset(pc_win_ul);
-					arrow_button_click(button_rect);
-					switch(j) {
-						case PCBTN_NAME:
-							handle_switch_pc(i, need_redraw, need_reprint);
-							break;
-						case PCBTN_HP:
-							handle_print_pc_hp(i, need_reprint);
-							break;
-						case PCBTN_SP:
-							handle_print_pc_sp(i, need_reprint);
-							break;
-						case PCBTN_INFO:
-							give_pc_info(i);
-							// don't call advance_time
-							return false;
-						case PCBTN_TRADE:
-							handle_trade_places(i, need_reprint);
-							break;
-						case MAX_ePlayerButton:
-							break; // Not a button
-					}
+					if(arrow_button_click(button_rect, &fps_limiter))
+						switch(j) {
+							case PCBTN_NAME:
+								handle_switch_pc(i, need_redraw, need_reprint);
+								break;
+							case PCBTN_HP:
+								handle_print_pc_hp(i, need_reprint);
+								break;
+							case PCBTN_SP:
+								handle_print_pc_sp(i, need_reprint);
+								break;
+							case PCBTN_INFO:
+								give_pc_info(i);
+								// don't call advance_time
+								return false;
+							case PCBTN_TRADE:
+								handle_trade_places(i, need_reprint);
+								break;
+							case MAX_ePlayerButton:
+								break; // Not a button
+						}
 				}
 		put_pc_screen();
 		put_item_screen(stat_window);
@@ -1664,21 +1672,21 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 			if(item_bottom_button_active[i] > 0 && point_in_area.in(item_screen_button_rects[i])) {
 				rectangle button_rect = item_screen_button_rects[i];
 				button_rect.offset(item_win_ul);
-				arrow_button_click(button_rect);
-				switch(i) {
-					case 6: // special screen
-						set_stat_window(ITEM_WIN_SPECIAL, true);
-						break;
-					case 7:
-						set_stat_window(ITEM_WIN_QUESTS, true);
-						break;
-					case 8: // help
-						show_dialog_action("help-inventory");
-						break;
-					default:
-						handle_switch_pc_items(i, need_redraw);
-						break;
-				}
+				if(arrow_button_click(button_rect, &fps_limiter))
+					switch(i) {
+						case 6: // special screen
+							set_stat_window(ITEM_WIN_SPECIAL, true);
+							break;
+						case 7:
+							set_stat_window(ITEM_WIN_QUESTS, true);
+							break;
+						case 8: // help
+							show_dialog_action("help-inventory");
+							break;
+						default:
+							handle_switch_pc_items(i, need_redraw);
+							break;
+					}
 			}
 		if(stat_window <= ITEM_WIN_QUESTS) {
 			for(int i = 0; i < 8; i++)
@@ -1686,33 +1694,33 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 					if(item_area_button_active[i][j] && point_in_area.in(item_buttons[i][j])) {
 						rectangle button_rect = item_buttons[i][j];
 						button_rect.offset(item_win_ul);
-						arrow_button_click(button_rect);
-						
-						item_hit = item_sbar->getPosition() + i;
-						switch(j) {
-							case ITEMBTN_NAME: case ITEMBTN_ICON: // equip
-								handle_equip_item(item_hit, need_redraw);
-								break;
-							case ITEMBTN_USE:
-								handle_use_item(item_hit, did_something, need_redraw);
-								break;
-							case ITEMBTN_GIVE:
-								handle_give_item(item_hit, did_something, need_redraw);
-								break;
-							case ITEMBTN_DROP:
-								if(stat_window == ITEM_WIN_SPECIAL) {
-									use_spec_item(spec_item_array[item_hit], need_redraw);
-								} else handle_drop_item(item_hit, need_redraw);
-								break;
-							case ITEMBTN_INFO:
-								show_item_info(item_hit);
-								break;
-							case ITEMBTN_SPEC: // sell? That this code was reached indicates that the item was sellable
-								// (Based on item_area_button_active)
-								handle_item_shop_action(item_hit);
-								break;
-							case MAX_eItemButton:
-								break; // Not a button
+						if(arrow_button_click(button_rect, &fps_limiter)){
+							item_hit = item_sbar->getPosition() + i;
+							switch(j) {
+								case ITEMBTN_NAME: case ITEMBTN_ICON: // equip
+									handle_equip_item(item_hit, need_redraw);
+									break;
+								case ITEMBTN_USE:
+									handle_use_item(item_hit, did_something, need_redraw);
+									break;
+								case ITEMBTN_GIVE:
+									handle_give_item(item_hit, did_something, need_redraw);
+									break;
+								case ITEMBTN_DROP:
+									if(stat_window == ITEM_WIN_SPECIAL) {
+										use_spec_item(spec_item_array[item_hit], need_redraw);
+									} else handle_drop_item(item_hit, need_redraw);
+									break;
+								case ITEMBTN_INFO:
+									show_item_info(item_hit);
+									break;
+								case ITEMBTN_SPEC: // sell? That this code was reached indicates that the item was sellable
+									// (Based on item_area_button_active)
+									handle_item_shop_action(item_hit);
+									break;
+								case MAX_eItemButton:
+									break; // Not a button
+							}
 						}
 					}
 		}
@@ -1900,12 +1908,12 @@ void handle_menu_spell(eSpell spell_picked) {
 		store_mage = spell_picked;
 	else store_priest = spell_picked;
 	if(spell_type == eSkill::MAGE_SPELLS && (*spell_picked).need_select != SELECT_NO) {
-		if((store_spell_target = char_select_pc((*spell_picked).need_select == SELECT_ANY ? 1 : 0,"Cast spell on who?")) == 6)
+		if((store_spell_target = select_pc((*spell_picked).need_select == SELECT_ANY ? eSelectPC::ANY : eSelectPC::ONLY_LIVING,"Cast spell on who?")) == 6)
 			return;
 	}
 	else {
 		if(spell_type == eSkill::PRIEST_SPELLS && (*spell_picked).need_select != SELECT_NO)
-			if((store_spell_target = char_select_pc((*spell_picked).need_select == SELECT_ANY ? 1 : 0,"Cast spell on who?")) == 6)
+			if((store_spell_target = select_pc((*spell_picked).need_select == SELECT_ANY ? eSelectPC::ANY : eSelectPC::ONLY_LIVING,"Cast spell on who?")) == 6)
 				return;
 	}
 	
@@ -2003,7 +2011,8 @@ void debug_fight_encounter(bool wandering) {
 		prompt += "special encounter?";
 	}
 
-	int i = get_num_response(0, 3, prompt);
+	int i = get_num_response(0, 3, prompt, {}, -1);
+	if(i == -1) return;
 
 	cOutdoors::cWandering encounter;
 	if(wandering){
@@ -2024,13 +2033,14 @@ void debug_give_item() {
 	for(cItem& item : univ.scenario.scen_items){
 		item_names.push_back(item.full_name);
 	}
-	int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?", item_names);
+	int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?", item_names, -1);
+	if(i == -1) return;
 	bool was_ident = univ.scenario.scen_items[i].ident;
 	univ.scenario.scen_items[i].ident = true;
-	bool given = univ.current_pc().give_item(univ.scenario.scen_items[i], true);
+	bool given = univ.current_pc().give_item(univ.scenario.scen_items[i], GIVE_DO_PRINT | GIVE_ALLOW_OVERLOAD) == eBuyStatus::OK;
 	if(!given){
 		ASB("Debug: can't give to " + univ.current_pc().name);
-		given = univ.party.give_item(univ.scenario.scen_items[i], true);
+		given = univ.party.give_item(univ.scenario.scen_items[i], GIVE_DO_PRINT | GIVE_ALLOW_OVERLOAD);
 	}
 	if(!given)
 		ASB("Debug: can't give anyone " + univ.scenario.scen_items[i].full_name);
@@ -2049,7 +2059,7 @@ void debug_overburden() {
 	cPlayer& pc = univ.current_pc();
 	cItem item(ITEM_DEBUG_HEAVY);
 	// Give the PC very heavy objects that do nothing:
-	while(pc.give_item(item, GIVE_ALLOW_OVERLOAD)){}
+	while(pc.give_item(item, GIVE_ALLOW_OVERLOAD) == eBuyStatus::OK){}
 	if(pc.has_space()){
 		// I don't know why this would ever happen, since the weight is 0, but just in case:
 		ASB("Debug: failed to fill " + pc.name + "'s inventory.");
@@ -2137,15 +2147,87 @@ void debug_kill_party() {
 	if(recording){
 		record_action("debug_kill_party", "");
 	}
-	std::string confirm = cChoiceDlog("kill-party-confirm",{"yes","no"}).show();
-	if(confirm == "yes"){
-		for(short i = 0; i < 6; i++) {
-			if(univ.party[i].is_alive())
-				kill_pc(univ.party[i],eMainStatus::ABSENT);
+	// New behavior to match debug_hurt_party and debug_give_status: allow choosing a PC,
+	// and the type of death
+	if(has_feature_flag("debug-kill-party", "V2")){
+		size_t choice = cStringChoice({"Dead", "Dust", "Stone"}, "Kill how?").show(-1);
+		if(choice == -1) return;
+		eMainStatus death_type = static_cast<eMainStatus>(static_cast<size_t>(eMainStatus::DEAD) + choice);
+		short pc = select_pc(eSelectPC::ONLY_LIVING, "Kill who?", eSkill::INVALID, true);
+		if(pc == 6) return;
+		for(int i = 0; i < 6; ++i){
+			if(i == pc || (univ.party[i].is_alive() && pc == 7)) {
+				// Kill PCs so you can test resurrection (or game over)
+				kill_pc(univ.party[i], death_type);
+			}
 		}
-		draw_terrain();
-		add_string_to_buf("Debug: Kill the party.");
 		advance_time(false, true, true);
+	}else{
+		std::string confirm = cChoiceDlog("kill-party-confirm",{"yes","no"}).show();
+		if(confirm == "yes"){
+			for(short i = 0; i < 6; i++) {
+				if(univ.party[i].is_alive())
+					kill_pc(univ.party[i],eMainStatus::ABSENT);
+			}
+			draw_terrain();
+			add_string_to_buf("Debug: Kill the party.");
+			advance_time(false, true, true);
+		}
+	}
+}
+
+void debug_hurt_party() {
+	if(recording){
+		record_action("debug_hurt_party", "");
+	}
+
+	short pc = select_pc(eSelectPC::ONLY_LIVING, "Hurt who?", eSkill::INVALID, true);
+	if(pc == 6) return;
+	for(int i = 0; i < 6; ++i){
+		if(i == pc || (univ.party[i].is_alive() && pc == 7)) {
+			// Hurt PCs so you can test healing
+			short wounded = univ.party[i].max_health / 2;
+			univ.party[i].cur_health = min(univ.party[i].cur_health, wounded);
+		}
+	}
+}
+
+void debug_give_status() {
+	if(recording){
+		record_action("debug_give_status", "");
+	}
+
+	pic_num_t which = choose_status_effect(-1, false);
+	if(which == -1) return;
+	eStatus which_status = static_cast<eStatus>(which);
+	std::string choice = cChoiceDlog("help-or-harm",{"harm","help"}).show();
+	std::pair<int, int> bounds = status_bounds(which_status);
+	int lo = bounds.first;
+	int hi = bounds.second;
+	status_info_t info = *which_status;
+	int value = 0;
+	if(choice == "harm"){
+		if(info.isNegative){
+			value = hi;
+		}else{
+			value = lo;
+		}
+	}else{
+		if(info.isNegative){
+			value = lo;
+		}else{
+			value = hi;
+		}
+	}
+
+	short pc = select_pc(eSelectPC::ONLY_LIVING, "Give status to who?", eSkill::INVALID, true);
+	if(pc == 6) return;
+	for(int i = 0; i < 6; ++i){
+		if(i == pc || (univ.party[i].is_alive() && pc == 7)) {
+			// Give PCs a status effect. Bypass apply_status because it blocks 'wrapping' for
+			// some opposite statuses
+			univ.party[i].status[which_status] = value;
+		}
 	}
 }
 
@@ -2176,10 +2258,10 @@ void debug_enter_town() {
 	for(cTown* town : univ.scenario.towns){
 		town_names.push_back(town->name);
 	}
-	int town = get_num_response(0, univ.scenario.towns.size() - 1, "Enter Town Number", town_names);
+	int town = get_num_response(0, univ.scenario.towns.size() - 1, "Enter Town Number", town_names, -1);
+	if(town == -1) return;
 
 	if(has_feature_flag("debug-enter-town", "move-outdoors")){
-		end_town_mode(false, {0,0}, true);
 		outd_move_to_first_town_entrance(town);
 	}
 
@@ -2188,7 +2270,7 @@ void debug_enter_town() {
 	else if(univ.party.direction == 4) find_direction_from = 0;
 	else if(univ.party.direction < 4) find_direction_from = 3;
 	else find_direction_from = 1;
-	start_town_mode(town, find_direction_from);
+	start_town_mode(town, find_direction_from, true);
 }
 
 void debug_refresh_stores() {
@@ -2246,7 +2328,7 @@ void debug_ghost_mode() {
 		ASB("Debug: Ghost mode OFF.");
 	}else{
 		univ.ghost_mode = true;
-		ASB("Debug:Ghost mode ON.");
+		ASB("Debug: Ghost mode ON.");
 	}
 	print_buf();
 }
@@ -2471,7 +2553,7 @@ void debug_launch_scen(std::string scen_name) {
 }
 
 // Non-comprehensive list of unused keys:
-// chjklnoqvy -_+[]{},.'"`|;:
+// chjklnoqvy +[]{},.'"`|;:
 // We want to keep lower-case for normal gameplay.
 void init_debug_actions() {
 	// optional `true` argument means you can use this action in the startup menu.
@@ -2506,6 +2588,8 @@ void init_debug_actions() {
 	add_debug_action({'T'}, "Enter town", debug_enter_town);
 	add_debug_action({'W'}, "Refresh jobs/shops", debug_refresh_stores);
 	add_debug_action({'X'}, "Kill party", debug_kill_party);
+	add_debug_action({'-'}, "Hurt the party", debug_hurt_party);
+	add_debug_action({'_'}, "Give a status effect", debug_give_status);
 	add_debug_action({'~'}, "Clear captured souls", clear_trapped_monst);
 	add_debug_action({'='}, "Heal, increase magic skills", debug_heal_plus_extra);
 	add_debug_action({'<'}, "Make one day pass", debug_increase_age);
@@ -2791,11 +2875,23 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 		case 'b': // Bash door
 			if(overall_mode == MODE_TOWN || overall_mode == MODE_BASH_TOWN)
 				handle_bash_pick_select(need_reprint, true);
+			else if(is_combat())
+				ASB("Bash Door: not in combat.");
+			else if(is_out())
+				ASB("Bash Door: not outdoors");
+			else
+				ASB("Bash Door: " + FINISH_FIRST);
 			break;
 			
 		case 'L': // Pick lock
 			if(overall_mode == MODE_TOWN || overall_mode == MODE_PICK_TOWN)
 				handle_bash_pick_select(need_reprint, false);
+			else if(is_combat())
+				ASB("Pick Lock: not in combat.");
+			else if(is_out())
+				ASB("Pick Lock: not outdoors");
+			else
+				ASB("Pick Lock: " + FINISH_FIRST);
 			break;
 			
 		case 'A': // Alchemy
@@ -2915,15 +3011,16 @@ bool handle_scroll(const sf::Event& event) {
 
 void do_load() {
 	// TODO this needs to be changed/moved because a picker dialog opens now!!!
+	// TODO wait, I thought I resolved that.^
 	// Edge case: Replay can be cut off before a file is chosen,
 	// or party selection can be canceled, and this will cause
 	// a crash trying to decode a party
 	if(replaying && !has_next_action("load_party")){
 		return;
 	}
-
 	fs::path file_to_load = run_file_picker(false);
 	if(file_to_load.empty()) return;
+	set_cursor(watch_curs);
 	if(!load_party(file_to_load, univ))
 		return;
 	finish_load_party();
@@ -2931,6 +3028,7 @@ void do_load() {
 		post_load();
 	univ.file = file_to_load;
 	menu_activate();
+	restore_cursor();
 }
 
 void post_load() {
@@ -3363,7 +3461,7 @@ void handle_drop_pc() {
 	}else if(is_combat()){
 		add_string_to_buf("Delete PC: Not in combat.");
 	}else{
-		int choice = char_select_pc(1,"Delete who?");
+		int choice = select_pc(eSelectPC::ANY,"Delete who?");
 		if(choice < 6) {
 			std::string confirm = cChoiceDlog("delete-pc-confirm",{"yes","no"}).show();
 			if(confirm == "no"){
@@ -3406,13 +3504,19 @@ void new_party() {
 	if(recording){
 		record_action("new_party", "");
 	}
-	if(overall_mode != MODE_STARTUP) {
-		std::string choice = cChoiceDlog("restart-game",{"okay","cancel"}).show();
+	if(party_in_memory) {
+		cChoiceDlog confirm("restart-game",{"okay","cancel"});
+		(confirm.operator->())->getControl("warning").replaceText("{{action}}", "Starting over");
+		std::string choice = confirm.show();
 		if(choice == "cancel")
 			return;
-		for(short i = 0; i < 6; i++)
-			univ.party[i].main_status = eMainStatus::ABSENT;
-		party_in_memory = false;
+	}
+
+	for(short i = 0; i < 6; i++)
+		univ.party[i].main_status = eMainStatus::ABSENT;
+	party_in_memory = false;
+
+	if(overall_mode != MODE_STARTUP){
 		reload_startup();
 		overall_mode = MODE_STARTUP;
 		draw_startup(0);
@@ -3624,23 +3728,8 @@ void outd_move_to_first_town_entrance(int town) {
 	if(!town_entrances.empty()){
 		// When there are multiple entrances, this part of the code shouldn't matter,
 		// but also won't hurt.
-		town_entrance_t first_entrance_found = town_entrances[0];
-		int x = first_entrance_found.out_sec.x;
-		int y = first_entrance_found.out_sec.y;
-		// Very janky but I don't know how else to make it properly load the right sections and set i_w_c
-		while(univ.party.outdoor_corner.x > x){
-			shift_universe_left();
-		}
-		while(univ.party.outdoor_corner.x < x){
-			shift_universe_right();
-		}
-		while(univ.party.outdoor_corner.y > y){
-			shift_universe_up();
-		}
-		while(univ.party.outdoor_corner.y < y){
-			shift_universe_down();
-		}
-		outd_move_party(local_to_global(first_entrance_found.loc), true);
+		town_entrance_t first_entrance = town_entrances[0];
+		position_party(first_entrance.out_sec.x, first_entrance.out_sec.y, first_entrance.loc.x, first_entrance.loc.y);
 	}
 }
 
@@ -4055,7 +4144,7 @@ void handle_new_pc_graphic() {
 	if(recording){
 		record_action("handle_new_pc_graphic", "");
 	}
-	short choice = char_select_pc(1,"New graphic for who?");
+	short choice = select_pc(eSelectPC::ANY,"New graphic for who?");
 	if(choice < 6)
 		pick_pc_graphic(choice,1,nullptr);
 	draw_terrain();
@@ -4065,7 +4154,7 @@ void handle_rename_pc() {
 	if(recording){
 		record_action("handle_rename_pc", "");
 	}
-	short choice = char_select_pc(1,"Rename who?");
+	short choice = select_pc(eSelectPC::ANY,"Rename who?");
 	if(choice < 6)
 		pick_pc_name(choice,nullptr);
 	put_pc_screen();
@@ -4095,8 +4184,7 @@ void preview_every_dialog_xml() {
 	std::string confirm = dlog.show();
 	if(confirm == "yes"){
 		std::for_each(dialog_paths.begin(), dialog_paths.end(), [](fs::path path) {
-			ASB("Previewing dialog: " + path.stem().string());
-			print_buf();
+			LOG("Previewing dialog: " + path.stem().string());
 			preview_dialog_xml(path);
 		});
 	}
@@ -4107,8 +4195,7 @@ void save_replay_log(){
 	if(replaying) return;
 
 	fs::path out_file = nav_put_rsrc({"xml"});
-
-	start_log_file(out_file.string());
+	if(!out_file.empty()) start_log_file(out_file.string());
 }
 
 void debug_crash() {

@@ -172,6 +172,8 @@ public:
 	std::string getAttachedKeyDescription() const;
 	inline void setDefault(bool value) { isDefaultControl = value; }
 	inline bool isDefault() { return isDefaultControl; }
+	inline void setEscape(bool value) { isEscapeControl = value; }
+	inline bool isEscape() { return isEscapeControl; }
 	/// Attach an event handler to this control.
 	/// @tparam t The type of event to attach.
 	/// @param handler The event handler function or functor. Its signature depends on the event type.
@@ -259,6 +261,10 @@ public:
 	/// Set the control's text.
 	/// @param l The new text.
 	virtual void setText(std::string l);
+	/// Replace the first occurrence of the given string in this control's text
+	void replaceText(std::string find, std::string replace);
+	/// Append a string to this control's text
+	void appendText(std::string l);
 	/// Fetch the control's text.
 	/// @return The control's current text.
 	virtual std::string getText() const;
@@ -340,6 +346,8 @@ public:
 	/// should be hilited in some way while pressed and is cancelled by releasing the mouse
 	/// button outside the control's bounds.
 	virtual bool handleClick(location where, cFramerateLimiter& fps_limiter);
+	/// Animate and play the sound of the control being "clicked", and call its click event
+	void handleKeyTriggered(cDialog& parent);
 	/// Specifies that another control acts as a label for this one.
 	/// The practical effect of this is that hiding or showing this control automatically hides or shows the label as well.
 	/// @param label A pointer to the control that acts as a label.
@@ -471,6 +479,8 @@ protected:
 	cKey key;
 	/// Whether the control is the default control of its dialog.
 	bool isDefaultControl = false;
+	/// Whether the control is the cancel control of its dialog.
+	bool isEscapeControl = false;
 
 	/// Draw a frame around the control.
 	/// @param amt How much to offset the frame from the control's bounding rect.

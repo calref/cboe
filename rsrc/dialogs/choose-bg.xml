@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='done'>
+<dialog defbtn='done' escbtn='cancel'>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text name='title' size='large' top='6' left='50' width='256' height='14'>Select background pattern:</text>
 	<group name='group'>
@@ -29,5 +29,5 @@
 		<led name='led21' top='189' left='216'>Sandstone</led>
 	</group>
 	<button name='done' type='regular' top='223' left='338'>OK</button>
-	<button name='cancel' type='regular' def-key='esc' top='223' left='272'>Cancel</button>
+	<button name='cancel' type='regular' top='223' left='272'>Cancel</button>
 </dialog>
