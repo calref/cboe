@@ -870,16 +870,28 @@ void cParty::writeTo(cTagFile& file) const {
 	}
 }
 
-void cParty::readFrom(const cTagFile& file) {
+void cParty::readFrom(const cTagFile& file, bool preview) {
 	size_t monst_i = 0;
 	for(const auto& page : file) {
 		if(page.index() == 0) {
 			as_hex<unsigned long long> version{0};
 			page["CREATEVERSION"] >> version;
+			// This warning shouldn't interrupt the player when loading previews for the fancy file picker.
 			if(version > OBOE_CURRENT_VERSION) {
-				showWarning("This game appears to have been created with a newer version of Blades of Exile than you are running. Exile will do its best to load the saved game anyway, but there may be loss of information.");
+				if(!preview){
+					showWarning("This game appears to have been created with a newer version of Blades of Exile than you are running. Exile will do its best to load the saved game anyway, but there may be loss of information.");
+				}else{
+					// TODO It could put a silent warning icon on the slot, though.
+				}
 			}
-			
+
+			page["SCENARIO"] >> scen_name;
+			page["OUTCORNER"] >> outdoor_corner.x >> outdoor_corner.y;
+			page["INWHICHCORNER"] >> i_w_c.x >> i_w_c.y;
+			page["SECTOR"] >> out_loc.x >> out_loc.y;
+			page["LOCINSECTOR"] >> loc_in_sec.x >> loc_in_sec.y;
+			if(preview) return;
+
 			page["AGE"] >> age;
 			page["GOLD"] >> gold;
 			page["FOOD"] >> food;
@@ -888,10 +900,6 @@ void cParty::readFrom(const cTagFile& file) {
 			page["EASY"] >> easy_mode;
 			page["LESSWM"] >> less_wm;
 			page["LIGHT"] >> light_level;
-			page["OUTCORNER"] >> outdoor_corner.x >> outdoor_corner.y;
-			page["INWHICHCORNER"] >> i_w_c.x >> i_w_c.y;
-			page["SECTOR"] >> out_loc.x >> out_loc.y;
-			page["LOCINSECTOR"] >> loc_in_sec.x >> loc_in_sec.y;
 			page["IN"] >> in_boat >> in_horse;
 			page["DIRECTION"] >> direction;
 			page["WHICHSLOT"] >> at_which_save_slot;
@@ -899,7 +907,6 @@ void cParty::readFrom(const cTagFile& file) {
 			page["DAMAGE"] >> total_dam_done;
 			page["WOUNDS"] >> total_dam_taken;
 			page["EXPERIENCE"] >> total_xp_gained;
-			page["SCENARIO"] >> scen_name;
 			page["WON"] >> scen_won;
 			page["PLAYED"] >> scen_played;
 			

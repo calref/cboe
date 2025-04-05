@@ -197,7 +197,7 @@ public:
 	cPlayer(cParty& party, const cPlayer& other);
 	short get_tnl() const;
 	void writeTo(cTagFile& file) const;
-	void readFrom(const cTagFile& file);
+	void readFrom(const cTagFile& file, bool preview = false);
 	virtual ~cPlayer() = default;
 	// Copy-and-swap
 	friend void swap(cPlayer& lhs, cPlayer& rhs);

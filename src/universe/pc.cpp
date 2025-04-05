@@ -1303,11 +1303,17 @@ void cPlayer::writeTo(cTagFile& file) const {
 	}
 }
 
-void cPlayer::readFrom(const cTagFile& file) {
+void cPlayer::readFrom(const cTagFile& file, bool preview) {
 	for(const auto& page : file) {
 		if(page.index() == 0) {
-			status.clear();
 			page["STATUS"] >> eStatus::MAIN >> main_status;
+			page["LEVEL"] >> level;
+			page["ICON"] >> which_graphic;
+
+			if(preview)
+				return;
+
+			status.clear();
 			page["STATUS"].extractSparse(status);
 			status.erase(eStatus::MAIN);
 			
@@ -1318,11 +1324,8 @@ void cPlayer::readFrom(const cTagFile& file) {
 			page["MANA"] >> cur_sp;
 			page["EXPERIENCE"] >> experience;
 			page["SKILLPTS"] >> skill_pts;
-			page["LEVEL"] >> level;
-			page["ICON"] >> which_graphic;
 			page["DIRECTION"] >> direction;
 			page["RACE"] >> race;
-			
 			skills.clear();
 			page["SKILL"].extractSparse(skills);
 			max_health = skills[eSkill::MAX_HP];

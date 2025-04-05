@@ -335,7 +335,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, bool preview){
 			return false;
 		}
 		file.readFrom(fin);
-		univ.party.readFrom(file);
+		univ.party.readFrom(file, preview);
 	}
 	
 	// Next load the PCs
@@ -348,7 +348,7 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, bool preview){
 			return false;
 		}
 		file.readFrom(fin);
-		univ.party[i].readFrom(file);
+		univ.party[i].readFrom(file, preview);
 	}
 	
 	// Including stored PCs
