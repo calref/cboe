@@ -1209,6 +1209,7 @@ void swap(cPlayer& lhs, cPlayer& rhs) {
 	using std::swap;
 	// Don't swap the party reference!
 	swap(lhs.main_status, rhs.main_status);
+	swap(lhs.status, rhs.status);
 	swap(lhs.name, rhs.name);
 	swap(lhs.skills, rhs.skills);
 	swap(lhs.max_health, rhs.max_health);
