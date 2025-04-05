@@ -54,6 +54,8 @@ public:
 	virtual int get_level() const = 0;
 	virtual location get_loc() const = 0;
 	
+	iLiving();
+	iLiving(const iLiving& other);
 	virtual ~iLiving() = default;
 	
 	static void(* print_result)(std::string);
