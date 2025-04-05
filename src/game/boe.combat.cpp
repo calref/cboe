@@ -3121,7 +3121,7 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 			univ.party.gold = std::max(0, univ.party.gold - get_ran(1,0,abil.second.gen.strength) - abil.second.gen.strength);
 			break;
 		case eMonstAbil::FIELD:
-			place_spell_pattern(eSpellPat(abil.second.gen.strength), m_target->direction + 6, targ_space, abil.second.gen.fld, 7);
+			place_spell_pattern(eSpellPat(abil.second.gen.strength), target->direction + 6, targ_space, abil.second.gen.fld, 7);
 			break;
 			// Non-basic abilities
 		case eMonstAbil::MISSILE: case eMonstAbil::MISSILE_WEB: case eMonstAbil::RAY_HEAT:
