@@ -64,6 +64,6 @@
 	</stack>
 	<button name='prev' relative='pos-in pos-in' anchor='file4' type='left' def-key='left' top='100' left='10'/>
 	<button name='next' relative='pos pos-in' rel-anchor='prev' type='right' def-key='right' top='0' left='0'/>
-	<button name='find' relative='pos-in pos-in' rel-anchor='prev' type='large' def-key='f' top='0' left='80'>File Browser</button>
+	<button name='find' relative='pos-in pos-in' rel-anchor='prev' type='large' top='0' left='80'>File Browser</button>
 	<button name='cancel' relative='pos pos-in' rel-anchor='prev' type='regular' top='0' left='20'>Cancel</button>
 </dialog>
