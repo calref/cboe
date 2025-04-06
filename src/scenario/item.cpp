@@ -179,7 +179,8 @@ std::string cItem::interesting_string() const {
 		if(got_string) sout << "; ";
 		sout << "Uses: " << charges;
 	}
-	sout << '.';
+	if(!sout.str().empty())
+		sout << '.';
 	return sout.str();
 }
 
