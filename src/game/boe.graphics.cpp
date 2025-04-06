@@ -1648,7 +1648,7 @@ void erase_spot(short i,short j) {
 
 void draw_targeting_line(location where_curs) {
 	location which_space,store_loc;
-	rectangle redraw_rect,redraw_rect2,target_rect;
+	rectangle target_rect;
 	location from_loc;
 	rectangle on_screen_terrain_area = win_to_rects[WINRECT_TERVIEW];
 	on_screen_terrain_area.inset(13, 13);
@@ -1675,11 +1675,6 @@ void draw_targeting_line(location where_curs) {
 				&& (dist(from_loc,which_space) <= current_spell_range)) {
 				mainPtr().setActive(false);
 				draw_line(mainPtr(), where_curs, location(xBound, yBound), 2, {128,128,128}, sf::BlendAdd);
-				redraw_rect.left = min(where_curs.x,xBound) - 4;
-				redraw_rect.right = max(where_curs.x,xBound) + 4;
-				redraw_rect.top = min(where_curs.y,yBound) - 4;
-				redraw_rect.bottom = max(where_curs.y,yBound) + 4;
-				redraw_rect2 = redraw_rect & on_screen_terrain_area;
 				
 				// Now place targeting pattern
 				for(short i = 0; i < 9; i++)
@@ -1695,7 +1690,6 @@ void draw_targeting_line(location where_curs) {
 							target_rect.bottom = target_rect.top + 36;
 							frame_rect(mainPtr(), target_rect, sf::Color::White);
 							target_rect.inset(-5,-5);
-							redraw_rect2 = rectunion(target_rect,redraw_rect2);
 							
 							// Now place number of shots left, if drawing center of target
 							if((overall_mode == MODE_FANCY_TARGET) && (store_loc.x - which_space.x + 4 == 4)
@@ -1712,7 +1706,6 @@ void draw_targeting_line(location where_curs) {
 						}
 					}
 				
-				redraw_rect2.inset(-5,-5);
 				mainPtr().setActive();
 			}
 		}
