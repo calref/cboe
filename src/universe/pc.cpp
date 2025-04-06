@@ -442,7 +442,7 @@ void cPlayer::sort_items() {
 
 eBuyStatus cPlayer::give_item(cItem item, int flags) {
 	if(main_status != eMainStatus::ALIVE)
-		return eBuyStatus::NO_SPACE;
+		return eBuyStatus::DEAD;
 	
 	bool do_print = flags & GIVE_DO_PRINT;
 	bool allow_overload = flags & GIVE_ALLOW_OVERLOAD;

@@ -967,6 +967,10 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 						extra_info = "no item slot";
 						can_pick = false;
 						break;
+					case eBuyStatus::DEAD:
+						// Extra info not really needed, and kind of silly to print
+						can_pick = false;
+						break;
 					default:
 						break;
 				}

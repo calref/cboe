@@ -29,7 +29,7 @@ namespace legacy { struct pc_record_type; };
 static struct no_party_t {} no_party;
 
 // This enum is now also used in the context of giving items
-enum class eBuyStatus {OK, NO_SPACE, NEED_GOLD, TOO_HEAVY, HAVE_LOTS};
+enum class eBuyStatus {OK, NO_SPACE, NEED_GOLD, TOO_HEAVY, HAVE_LOTS, DEAD};
 
 enum ePartyPreset {PARTY_BLANK, PARTY_DEFAULT, PARTY_DEBUG};
 

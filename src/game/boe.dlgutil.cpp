@@ -334,6 +334,9 @@ void handle_sale(int i) {
 					else if(base_item.variety == eItemType::QUEST) ASB("You already completed this.");
 					else ASB("You own too many of this.");
 					break;
+				// This should not happen:
+				case eBuyStatus::DEAD:
+					break;
 			}
 			break;
 		case eShopItemType::ALCHEMY:
