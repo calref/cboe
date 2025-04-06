@@ -9,6 +9,7 @@
         <name>Jeff Vogel</name>
         <email>Spiderweb Software, Inc. PO Box 85659, Seattle, WA 98145, (206) 789-4438.</email>
     </author>
+    <feature-flags />
     <text>
         <teaser>Save a small village from mysterious bandits.</teaser>
         <teaser>By Jeff Vogel, C. 1997, All Rights Reserved</teaser>
@@ -49,6 +50,7 @@
         <town-start x="16" y="16" />
         <outdoor-start x="0" y="2" />
         <sector-start x="29" y="29" />
+        <store-items top="0" left="0" bottom="0" right="0" town="-1" />
         <shop>
             <name>Magic Shop</name>
             <type>rand</type>
