@@ -390,10 +390,22 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, bool preview){
 		if(!load_scenario(path, univ.scenario, preview ? eLoadScenario::SAVE_PREVIEW : eLoadScenario::FULL))
 			return false;
 
-		// We have all we need for the file picker preview.
 		if(preview){
+			if(partyIn.hasFile("save/town.txt")) {
+				// Load town data
+				std::istream& fin = partyIn.getFile("save/town.txt");
+				if(!fin) {
+					return false;
+				}
+				file.readFrom(fin);
+				file[0]["TOWN"] >> univ.party.town_num;
+				file[0]["AT"] >> univ.party.town_loc.x >> univ.party.town_loc.y;
+			} else univ.party.town_num = 200;
+
 			univ.file = file_to_load;
 			real_univ = std::move(univ);
+
+			// We have all we need for the file picker preview.
 			return true;
 		}
 
