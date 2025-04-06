@@ -1021,9 +1021,11 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 		if(highlight_highest != eSkill::INVALID){
 			short skill = univ.party[i].skills[highlight_highest];
 			pc_skills[i] = skill;
-			if(skill > highest_skill) highest_skill = skill;
-			if(skill != last_skill) all_pcs_equal = false;
-			last_skill = skill;
+			if(univ.party[i].is_alive()){
+				if(skill > highest_skill) highest_skill = skill;
+				if(skill != last_skill) all_pcs_equal = false;
+				last_skill = skill;
+			}
 		}
 		if(!can_pick) {
 			selectPc["pick" + n].hide();
