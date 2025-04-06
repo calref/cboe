@@ -2576,8 +2576,8 @@ void oneshot_spec(const runtime_state& ctx) {
 					buttons[0] = 9;
 			}
 			if(spec.m3 <= 0) {
-				buttons[0] = spec.ex1a;
-				buttons[1] = spec.ex2a;
+				buttons[1] = spec.ex1a;
+				buttons[2] = spec.ex2a;
 			}
 			if((buttons[0] < 0) && (buttons[1] < 0)) {
 				showError("Dialog box ended up with no buttons.");
@@ -2593,8 +2593,8 @@ void oneshot_spec(const runtime_state& ctx) {
 				if(dlg_res == 2) ctx.next_spec = spec.ex1b;
 				if(dlg_res == 3) ctx.next_spec = spec.ex2b;
 			} else {
-				if(dlg_res == 1) ctx.next_spec = spec.ex1b;
-				if(dlg_res == 2) ctx.next_spec = spec.ex2b;
+				if(dlg_res == 2) ctx.next_spec = spec.ex1b;
+				if(dlg_res == 3) ctx.next_spec = spec.ex2b;
 			}
 			break;
 		case eSpecType::ONCE_GIVE_ITEM_DIALOG:
