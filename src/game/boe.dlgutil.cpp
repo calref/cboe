@@ -1330,7 +1330,6 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		set_pref("DirectionalKeyScrolling", dynamic_cast<cLed&>(me["screen-shift"]).getState() != led_off);
 		set_pref("FancyFilePicker", dynamic_cast<cLed&>(me["fancypicker"]).getState() != led_off);
 		set_pref("Autosave", dynamic_cast<cLed&>(me["autosave-toggle"]).getState() != led_off);
-		set_pref("RepeatRoomDescriptions", dynamic_cast<cLed&>(me["repeatdesc"]).getState() != led_off);
 		set_pref("ShowInstantHelp", dynamic_cast<cLed&>(me["nohelp"]).getState() == led_off);
 		
 		if(overall_mode == MODE_STARTUP && !party_in_memory) {
@@ -1431,7 +1430,6 @@ void pick_preferences(bool record) {
 	dynamic_cast<cLed&>(prefsDlog["autosave-toggle"]).setState(autosave_on ? led_red : led_off);
 	if(!autosave_on)
 		prefsDlog["autosave-details"].hide();
-	dynamic_cast<cLed&>(prefsDlog["repeatdesc"]).setState(get_bool_pref("RepeatRoomDescriptions") ? led_red : led_off);
 	dynamic_cast<cLed&>(prefsDlog["nohelp"]).setState(get_bool_pref("ShowInstantHelp", true) ? led_off : led_red);
 	if(overall_mode == MODE_STARTUP && !party_in_memory) {
 		dynamic_cast<cLed&>(prefsDlog["easier"]).setState(get_bool_pref("EasyMode") ? led_red : led_off);
