@@ -57,6 +57,7 @@ proj/vs*/.vs
 proj/vs*/.vs
 proj/vs*/packages/
 proj/vs*/vcpkg_installed/
+proj/vs*/enc_temp_folder/
 # Windows debugging symbols
 *.pdb
 
