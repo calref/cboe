@@ -578,7 +578,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 		add_string_to_buf("Cast: You're an Anama!");
 		return;
 	}
-	if(univ.party[pc_num].traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
+	if(univ.party[pc_num].traits[eTrait::PACIFIST] && spell_num != eSpell::NONE && !(*spell_num).peaceful) {
 		add_string_to_buf("Cast: You're a pacifist!");
 		return;
 	}
@@ -830,7 +830,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 	location loc;
 	location where;
 	
-	if(univ.party[pc_num].traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
+	if(univ.party[pc_num].traits[eTrait::PACIFIST] && spell_num != eSpell::NONE && !(*spell_num).peaceful) {
 		add_string_to_buf("Cast: You're a pacifist!");
 		return;
 	}

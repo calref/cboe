@@ -4511,7 +4511,7 @@ bool combat_cast_mage_spell() {
 			spell_num = univ.current_pc().last_cast[eSkill::MAGE_SPELLS];
 		}
 		
-		if(univ.current_pc().traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
+		if(univ.current_pc().traits[eTrait::PACIFIST] && spell_num != eSpell::NONE && !(*spell_num).peaceful) {
 			add_string_to_buf("Cast: You're a pacifist!");
 			return false;
 		}
@@ -4739,7 +4739,7 @@ bool combat_cast_priest_spell() {
 		return false;
 	}
 	
-	if(univ.current_pc().traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
+	if(univ.current_pc().traits[eTrait::PACIFIST] && spell_num != eSpell::NONE && !(*spell_num).peaceful) {
 		add_string_to_buf("Cast: You're a pacifist!");
 		return false;
 	}
