@@ -1571,8 +1571,9 @@ bool pc_can_cast_spell(const cPlayer& pc,eSpell spell_num) {
 	if(spell_num == eSpell::NONE) return false;
 	short level,store_w_cast;
 	eSkill type = (*spell_num).type;
+	cSpell spell = *spell_num;
 	
-	level = (*spell_num).level;
+	level = spell.level;
 	int effective_skill = pc.skill(type);
 	if(pc.status[eStatus::DUMB] < 0)
 		effective_skill -= pc.status[eStatus::DUMB];
@@ -1581,11 +1582,13 @@ bool pc_can_cast_spell(const cPlayer& pc,eSpell spell_num) {
 		return false; // From Windows version. It does kinda make sense, though this function shouldn't even be called in these modes.
 	if(!isMage(spell_num) && !isPriest(spell_num))
 		return false;
+	if(has_feature_flag("pacifist-spellcast-check", "V2") && pc.traits[eTrait::PACIFIST] && !spell.peaceful)
+		return false;
 	if(effective_skill < level)
 		return false;
 	if(pc.main_status != eMainStatus::ALIVE)
 		return false;
-	if(pc.cur_sp < (*spell_num).cost)
+	if(pc.cur_sp < spell.cost)
 		return false;
 	// TODO: Maybe get rid of the casts here?
 	if(type == eSkill::MAGE_SPELLS && !pc.mage_spells[int(spell_num)])
@@ -1599,7 +1602,7 @@ bool pc_can_cast_spell(const cPlayer& pc,eSpell spell_num) {
 	if(pc.status[eStatus::ASLEEP] > 0)
 		return false;
 	
-	store_w_cast = (*spell_num).when_cast;
+	store_w_cast = spell.when_cast;
 	if(is_out() && WHEN_OUTDOORS &~ store_w_cast)
 		return false;
 	if(is_town() && WHEN_TOWN &~ store_w_cast)

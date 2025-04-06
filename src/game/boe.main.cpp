@@ -102,6 +102,9 @@ std::map<std::string,std::vector<std::string>> feature_flags = {
 	// Legacy behavior of the X debug action (used by the OneOfEverything replay)
 	// kills the whole party with 'Absent' status
 	{"debug-kill-party", {"V2"}},
+	// Legacy behavior of pacifist spellcasting (used by some replays)
+	// lets the player select combat spells and click 'Cast' which will fail.
+	{"pacifist-spellcast-check", {"V2"}},
 	{"target-lock", {"V1"}},
 	// New in-game save file picker
 	{"file-picker-dialog", {"V1"}},
