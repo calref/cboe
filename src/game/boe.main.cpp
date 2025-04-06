@@ -221,12 +221,17 @@ static void handleFatalError(std::string what) {
 	}
 }
 
+// Comment this line out for exact exception callstacks:
+#define CATCH_ERRORS
+
 int main(int argc, char* argv[]) {
 #if 0
 	void debug_oldstructs();
 	debug_oldstructs();
 #endif
+#ifdef CATCH_ERRORS
 	try{
+#endif
 		cDialog::redraw_everything = &redraw_everything;
 
 		init_boe(argc, argv);
@@ -252,6 +257,7 @@ int main(int argc, char* argv[]) {
 
 		close_program();
 		return 0;
+#ifdef CATCH_ERRORS
 	} catch(std::exception& x) {
 		handleFatalError(x.what());
 		throw;
@@ -262,6 +268,7 @@ int main(int argc, char* argv[]) {
 		handleFatalError("An unknown error occurred!");
 		throw;
 	}
+#endif
 }
 
 static void init_sbar(std::shared_ptr<cScrollbar>& sbar, const std::string& name, rectangle rect, rectangle events_rect, int max, int pgSz, int start = 0) {
