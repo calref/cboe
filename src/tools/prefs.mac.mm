@@ -33,7 +33,6 @@ NSDictionary* prefsToRecord = @{
 	@"LessWanderingMonsters": @(kBool),
 	@"PlaySounds": @(kBool),
 	@"ReceivedHelp": @(kIArray),
-	@"RepeatRoomDescriptions": @(kBool),
 	@"ShowInstantHelp": @(kBool),
 	@"ShowStartupSplash": @(kBool),
 	@"UIScale": @(kFloat),
