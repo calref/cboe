@@ -1,0 +1,2244 @@
+<actions SHA="df32871" Tag="v0.0.12" Status="modified" Repo="git@github.com:NQNStudios/cboe.git">
+    <load_prefs>
+        <![CDATA[DisplayMode = 0
+EasyMode = false
+GameRunBefore = true
+GameSpeed = 0
+GiveIntroHint = false
+LessWanderingMonsters = false
+PlaySounds = true
+ReceivedHelp = [54 0 47 65 55 0 1 2 48 49 7 8 36 37 38 0 50 0 62 0 5 6 26 27 10 11 20 21 57 0 68 69 35 0 33 0 22 23 25 0 39 0 53 0 30 0 31 0 32 0 59 0 40 0 56 0 44 0]
+ShowInstantHelp = true
+ShowStartupSplash = false
+UIScale = 1.5
+UIScaleMap = 1.5
+]]>
+</load_prefs>
+    <feature_flags>
+        <debug-enter-town>
+            <version>move-outdoors</version>
+        </debug-enter-town>
+        <debug-kill-party>
+            <version>V2</version>
+        </debug-kill-party>
+        <file-picker-dialog>
+            <version>V1</version>
+        </file-picker-dialog>
+        <pacifist-spellcast-check>
+            <version>V2</version>
+        </pacifist-spellcast-check>
+        <scenario-meta-format>
+            <version>V2</version>
+        </scenario-meta-format>
+        <target-lock>
+            <version>V1</version>
+        </target-lock>
+    </feature_flags>
+    <srand>1743972997</srand>
+    <startup_button_click>
+        <btn>Load Game</btn>
+        <mods>0</mods>
+    </startup_button_click>
+    <fancy_file_picker>false</fancy_file_picker>
+    <click_control>
+        <id>list</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>load1</id>
+        <mods>0</mods>
+    </click_control>
+    <load_party>
+        <![CDATA[H4sIAAAAAAAAE+29y3bbSLIo6qm09kfg7Iknshtvkn0Ge6lsVZVu+1HHkrt2DyESktAmCW4AlEo9
+uv9w//B+yYnIZySQIEGKlMhqULIFgIjMyHhHZAJZJg/pXxZJUT29r/6o3uzl48Indl3rddfzvDDy
+3njhYBBGgR/E3ptB4HlvHMdpQuzhsyyrpHjjvERXh/j58O3i/Pri7xffri6/fnF85Mjp+S8XznA0
+8E9/+frpo+N5w9Ofv36Fg2B0+uXiv68v4dB1B6e/fr26vvx0ceX43unF+dU/nNtkWqancOXq98/i
+5Orjz44LP5448hw/csVxoI49ONPHHjn2yXGkjn1yj+9SaDzzyVlkfDcU3/329fLL9cU3GIYTDfUZ
+dBHrM+gk9vRp4BC4kJ5E9CSmJwN6MqQnI3Liu/TEoyc+PaEY+BQDn2LgUwx8ioFPMfApBgHFIKAY
+BBSDgGIQUAwCikFAMQgoBgHFIKAYhBSDkGIQUgxCikFIMQgpBiHFIKQYhBSDkGIQUQwiikFEMYgo
+BhHFIKIYRBSDiGIQUQwiikFMMYgpBjHFIKYYxBSDmGIQUwxiikFMMYgpBgOKwYBiMKAYDCgGA4rB
+gGIwoBgMKAYDisGAYjCkGAwpBkOKwZBiMKQYDCkGQ4rBkGIwpBgMKQYjisGIYjCiGIwoBiOKwYhi
+MKIYjCgGI4rBCDH4dPnLr9fw9+v36w9fv31BMwFnl19+//Xyw6/qCljSiw/XXxnnBgD09cPlF3EF
+bIfvA4DzzoNfuO/iiyP+RPxPzP8MxHeu+OuLv6H4K+72RvyvLxrxBZw/5H+DQPwVcIFoPhLfx6L9
+WLQ/ENcHot2he/rx8hvgjq4nPWXjvPr0FWlw/fX3L1fnf79A8+2SUxy/OvHN78CfnF5eX3wG8L9d
+fvp0BRQ6/Xj+Gb2ZNwiHp79//f7lI3ir4ej04r9/u/h2efHlwwW6N0D7w8WX82+XX52HZDpNnyZP
+72/ytASIL8ikT+f/uPgIB1e/fv3t6vrrh78xl2aee7Vzv3Ye1M5D5Aw5j2rnce18UDsf1s5HcP4f
+MNbLD3DlG9ItPv07DOni+h9OOS7y6RQc898vPgEa57//7ffzbzign75++X6FI/zGiP7h1/Nvv4A/
+RyL/fnH+G3JlcpdOTr9fXTj36XTxLp+np5cf4HocnJ7/dPnpElpflum7cpFCB3jl6pp5xADY9I/f
+LlB+r65+u/gAB38///T9gnHs9wsm6TAA/s1nuAcCCUTtmhH25++fPn05/3zhvL1iqP/VuRynzk/5
+tHp7yq7zy6cfL64+fHP+8/o+Kx34TcRInfzWWSSLtDhzHgCv5ezMyQunuk+dafYjPXOyOdyX3aQT
+5zGr7p1ZcpeNk6lTPs1u8mn53vmWJpNsfudklZNM8yXeBo0WabmcVgAM/UiQ9PY2HVdnTjKfsPZF
+/+z+m9SZpGVV5E/QEUDh94siH6cldHF9n5apkxSpc1ekSeXcMgRzuPZ4nzvjZP62gv/LymGULZ2c
+wWeFkz/O3ztfcucpTYoSB1pWy8kTQ+Aertw7yWJRpPMqg37us8X/dp7ypfNPCHKdeQp4VDniNc2q
+tEiq9P1/nl5D/Hf1HQQGdOfjxZfry58vLz6eMkGqydNAyROIwkxIU9gmTZ6SJmToGmkaxEqabgtA
+M58pWUK9sUvSIFKS5LsdROlXwBoJdj5Ni2oOXBCyhNeFJL09Z2NLKy5Nd3kOvE+ekGrAuQpYjeQs
+4KZkApjmM+DrP5fF05lTJT9QYu6zqmS8SG7KvLjBS5MEhCWVAlBWCApYsHZuiiQDdl4Cm9N0Vjpl
+PkuBKMDJ0knn4/tkXiHPULzhMrtxBugAB9OHdO7McpAfLoLZQwr3JXPQxmUyff92A74OFV8f02SR
+z9950M5E8Ndrmgu/bi66MFjxd47XJHPdVuYSM9GJuZcFaMjvkMs6P02TSSpY+5ZeESxWxmLupH+M
+00WV5XMw+k8w+un03bhIbpHm5WNeTM4Yy24QHFn2eJ+N7xEUlPWO6TTIReJMsrLK5pwFj9jfIqlA
+veZMyZ2/J/fzpEoysBHOIh0vp1lSOEUyZuyqQBMf0hIYOs0fWWd3Rb6cQ8doGUDklkxWKmYslnPG
+W45a6fz//+//hxrPVBpM8Jlzs6zARrGhLECsbpftYmAKwEgJQFKASAnODxTjfVOzo00Y78Wbct6L
+iYfoxPvPaIydn2DsZbWYglkT3CdXpKcgl0pGY9Ax0MxZkk354LlHmCbAYEfcBgwAiwCEH+cPaYEq
+jYwaA08qxuInuOM2Lbg2CjMBMsVMOtPyhwyhQWaSecmVtMxmiyntnHMP2n16C42Aab5PmZV5eOpm
+HcplVm1gHojZD1abB0iJlXTg2BtBRNAWRHSxCiMlHGysSjqiFXZho+ghmwLLnG/INGDj72l2dy9D
+CLwoxeL/SUH5iyfUbeRtMh9n4EJBIioESyZ5MZd8v8nB2zIhqYAeP9KqPHPA0c6fkBHzu5LHAuUM
+9BCcwjSDozmGFPidU6Vz6YJBiefCqzu38GVacMdRQdz53vmcl9X0SQkEitIkHecgGChZcFak0+wu
+y5fA+uxunt1CNDIfg4f4HYxKimMWN8y5fDwm9EYebmQlBhkoUBgiPOJljhoYKj7yMwgcJnc48huG
+i5OC/KcifGKGs3z/ngqT1xSmD9+/XcEJsPvDxfknOPoO2cqnT+c/fbqoCRqJV++zdKo8UFuE4W8k
+atGmdijcwgH9tBz/gOhC2h9+pmOLG35BhKooImfgAEAkxYjPTKkA9QWbRGNFsPNg1hn3bqb5mIUc
+cPBYsqj0LkObks9ukopafq/N8nskpCO67a9PEDbT7WQ8XoLH0+o9bCV6FG6k37/k04nS7nPRzZ9Y
+v6Wb4PGgcAu8P5GRbBDR+8S0z7KyBOkREjDcSAKSAnxh8WSRAX+4edinlC6q89/zmwLwKeWu8moK
+JJa54ZRwnqSGVZEskN1TAcPDObR9Y+YYU6TkLQIDo8Cp3/wT433zrtus4mEfpoYV88goMExHi/Qt
+9DOFfIG7aiYvzvSJNcjCOuygui/yxzPR7Cz5kZacn5P0AVI253/AkYM8TNM/sptpyiSGK32rmTVZ
+Gq8K5gcNvnpbaLa7KVMDrdMNplqU+iewpP9KnW/JIlOmlJ9Ipp5DhITnnLHTfH53xrRTRu0sb0Od
+AmqOf5wJy8i+hJjuSURtY1Rh4CO5flkBC+e5jqPhKrDvvfMzj+XOOK94cpjMwN/+I1+iAosb6eXC
+WeQABal2BZ0vsj9SCDEnEJdVy4KjDgiPwYVW6HknCZqIMxQqFjOCGQfDMnnv/AbiWvIOsAIBLC1B
+Mp46ioM1Z4/aIvvNDPzGOd1whXK3edRfCqat05kQBHXeVHCeuZ9h0QVMJq91yKwdrTAoBBAeGMyy
+d9Ss2wRDJrTFArjklRsKNQZ1nYskjEHypLDMoBvuCyDkvknZxXk6/oHCBejcSTxZtM7dOwrIrShE
+YdcOfINJ5xn3N+UUiweANJh11vANb4OZjOXdPbP9OZqux6xMedKBTTJpZ7lJcpd2lItGzu/TnL8Z
+AazK+Rc5OI6mfGxs+0neF3aPuCADBkuqUj5xqi3FjbjCZQSI9MQMBsMaoitO+kRkfCLVnzPvmqL6
+fZ9jyRCrcEkB/M5YZWiWyhh6DI08IBNEysazuyq5uWFm45LdzjqdZLfgxLGAyPN1LjpYl7tBuZqy
+EuENsNdBTpTCFjHeCgBWb+LlBhbrt3l6k9OjVQ6hQ6gXgbkQjMY61rspRKUWbo8isx68nM2gr1lS
+lorzseMFbTn/ZkXhX1lsBflcUhRZXqhCHlyuV3mY1orbE9AgLA5j/WV2BpenEDqnE6F+TNOyhTNG
+Lbu9ZWEVVmV4lYfp+Y+UuZslxH/ozt8758UsYw6cKWgOkNBtlQO777EQBJSYsN65WoNVSqasqYJ5
+F9ZjkeeLUhgNoOaZrA1krIAww6Iw6j4TvDMj4lMlADBhwgSJuJAZsWRawm0FD2ewuMHKmMy5JNnk
+v7pXCAMSJ1pkKNhJuhBsXCbaLD37sCyQGed/SEsBR9JIMAcgLHwKIcNixpID5atLpn5K71Ecsgn3
+3phroUAxswyJTpU9ZFWGnkEF6hDPcSeAQeZ8ge4cWynTecmjfREbigJOsmCmRhV7oHEdTC6g0QQk
+tCiZlUKQf5D4FYNS1hIrA7Ea0I1MGjlGWfUWRIMJ5zy9S1hdiFeIhDPDQBeBMQjCUgAGoehHGawz
+QV8IA8ggAOmY+Lek+0EzUqUuaLRRpNrigcLtU/6gi0yJQPUKGSZzDzzWzoe5DRqlYhLCEn5EWfqe
+RQ42RuSXMmVkzke7AFavmS0Slp0wHb5leeQViIZwTqxAcJNM0TdMRJwBsQsA/JVUEDDoha//CRIA
+bUnDk/GoN5HXmRjg7ekfySybE1/GZpIS3mWnWCMgMSjGR1MIfLrPRHawHMON2ezpiaOgexHxi0Be
+cFqevlyJgXEK0p6xaYtkrSG5yXkJWYShW5cQpSsCCzeeLiepFEToBVDmCSq40qwSvqlTIBKQkNNa
+R66JQLBlrWlzEegScMiUVFSafoP84H1fZuoaPoy2XojgQ+PrJpjckRF5/rHoMHXsa/YPO7D/Gq0s
+cPBv8/xxiojIbCPPf8iAk8RTYZsShKsjqWbZbZXTu0lQXu5ssZS3fYWmU2Yu1OHXZDZTFRp+0phk
+FYnVPfvW9DZMGouMpU/zJJuCzC/n07RkyvPE3A9P11gL7A4+Z4rfVAWrt4BQ/sBgF/xVp5J32DbL
+ELbVRDZax+BtHMZuGXIw1GXMwcfRqIfMssm7MvsXTmazO+rxRG0GgaWXnNZcNkssUmLpKv+hog5W
+K2MxKYtsaOh6K4tmuM4knaiS6X1WqWCWGbysUrGoCDtwmc2UTciryUqOAtjEHIJOnKdK/1iwkkyu
+Il2+JqJLDBKSGMTgeusc90buB+slm3F9oPPdqAvbr6o0nTqfGHNW8P5c8I+PkSWMCXdF8wQsGCaW
+LDdJqGJJ4dAxYvW0QBsPrGQJrMhEmc8QubIonoDXqDIhQ2n1mKbMD/EZK+ZwWA7aFDhI20HiRBlW
+6fly/oiY8LVMiyJ/yCZpY1KdFVhmmLBxvEtWMmWFOpLFAd5Y6EtusmlWsbw3qapk/EMLmFlBbQ1b
+Quq8qOTEDcnZZlkMkRwc47tFCtHArZ4oC1ekv+5mluND8VTiMoR1pkPIDktY1YKVM7C3EH9Ml2OM
+Z8aiKcgtJqxAIg0Aqvwkm6C6yunkKbhIuFYA1UGexJQJz3TYrHOKYQlmRJko4kNkyxIkJNS6dQoX
+Xz58/c7X05OFpL5cIIsEoMtjvRGuWP316+cL9tW7088XF9e4UPZ3tmT29OdPFxf87/kvV/z5BfIU
+A19TK555YA3IY48c++Q4IMch8DpUZxH5BhcI/4xrUT9yjvFDTx9ik//BHtP4/o13/Pnrlyv+iMLp
++aeLb9cCy/Pr68vr7x8vwJRD3DmZPp1eXZ9/u4bLtStAFCRGyMhzzojGTz9/FdIIYnf5+QIJIWa0
+Tq++f4ZucRmspAmKnFhoDIcfvn68EGDkEP+cf/ob3vQRBvArHsgLP59/YGWca1SXa9CoXy/OP8Et
+XujiP2Dyl3Mx3G/nSEIXTzSf/8ugircTqvi+QRV+esRU8XdCldBzAl9ThZ8eMVWCXcmKHxuyAqdH
+TJVwZxpkKtAx0yTaDU1ixw8IUUaIoKKKdwRUKR8NssS7IcvQMCtIlvC4yJIaVBloqkTbUwWIMtRE
+CQLD1u6aKG4LTfDxjRpNBhEuoqtTxPNNisxNkgwVSWI7RSb5GNcdKXrQcyYjoRMMiIyw070ZlFYR
+GTTIEaMS1ImxypSMFClahGMdKQKQSSoZQ9bkngTDb6FEuA0h5makpgNYf7AdKaB9j1gOj+venkgR
+tAlF0LQbMS54Z9SIXXz8TdAjajcbHonnh66dHPeQ2sL43yWaIrVLSJQowMeXFVH46cub03dN0+FF
+aBHrQhK0a4tHwvlnEiWEX0IUdnqsRPF3RZQIfglR2OmxEiXYIVEGJlH2aFT2TBQSy29nYaMY0jxC
+DXa6N2p4bXFIMzTr4G4eDVLoED4It3S8sRMQdeGn+4tB2iQj6EYMf5Vc6MB9e1qMCClCFuHtSyra
+gpCminSQCtPp6ljdb9GQLrF6hE+nEy1hp/uTjNZIZNi0GUO8ykiC8hp3shrDnRAFgiCawfDT/REl
+bItULYZ0G6LouB0fZ9hGZwZOSLJ/drY/nYnaZCRukAOSXJnjYhrn+UR1aum/GZuRCnSLy10bwEMw
+MzIqint1L3F3ZxtgQLHakpSmg/F0rDrajhrhgBpVdrY/fRl0p8WGOa6HFltJRgstOtWbQUd8gyDh
+HuvNYBI6F0FIgkdoEq2kCak2tzjdTlY1MKwIILJXMzJqoUk0WmVGCE2Gq7yvt5tac4gFBC0meHa0
+tWaPxfg7IUrgUaIE3lETZTel5mhkUIWfHjNZBrsiC9UgfnrMZBnuhCy+h3ZOF53Z6TGTZbQbsoQm
+WcIjJ4u/m5UUkAQHZk4cHDdZdrSUYmSkgfz0mMmym7UUUWBICz89ZrLsZjEF0iE0bctrTF48Z4rc
+JMtuIlyc8yNzOqHPU6zjJYuOcfENgttX62OjWB8fTK2+UzJU06B4RzQZGu55aHjnY6MJiW/dLasq
+kDF7pGwfRljAOwiCdKgx0XzZd3SgMmipQXaTkDA2igjhfosIG81x8XUB3ecyfDJF3GJgO6wiILbV
+8/c5l+G3zXANtpriKk350KHJtstsIoxvdFTCE8x90WK3y2zmjwYtdDwStFjTLmuOIiMW2ed8n982
+y+U3Z3U2nO/zyTzwtittPKNwAqQP9mgx/LYZrubkxYbzwD6dB95SSSAYMxb8tjqUqsDHqN/dPJca
+bVNbUdR0KS7OD9cJEq8iyG4qa6HpUQyHcmzZjO/sqKxm0CQ6cprspqYWGVM60V5ndPZPk90U1EJz
+muvIaUKnhZ+T8prT5cHgyNXH2005LRiaZBkeO1l29GgSYkRUiD5YcYRE2VExzSBKdOxE2U0pzRsY
+VOGnR0wWWjaSq3CqYrlxTcAf0izYj53XXQrsAbsFXXy+nK5BlRUxra8dc+w/hygjh2aAg8MhSqdA
+f26WBwJ3R1QZOAMj/3nd5ws2pUppEkX75Th6DlEix0wKtxAVX7yIqiNJog4UEYv62eK+AD2Lr7Jk
+z1uhQYG/M1kJDLNyXLJSI4q2tdHoGUQJcIsqTZThPh9b2owokYtvImkWVNqr0sGuC7CDfVJjn/XX
+YOf1V3+/j1vsuAD7aNCir78SYuy8/hocUf11bipJX29sykdfb2zSpK83NmnS1xubNOnrjXay9PVG
+K1n6eqOFKH290UKUvt5oIwtZ6PmsemMQ0RdEBaYKHVnBMdhTFTaIjo0qczMH3E/B8diKSGb+s6eC
+41Zlkz0UHEGT2wqObtRahw32VXA8oNraNrKyn4LjAVXsuxUcQVTYi3j5u1HX7A/qPWc3s433B/XX
+7D+DSRt9/e5ykq7eH5S8v9w13kesKOD921PAPzYKQDa2YxIEx0UCXFO3YwqEqzZRCHeyx2W0PR0G
+XSRBvMf/b/PsVm4mwY67EyHacB+Dzd5LvvE+BsM1LyNnuWZdDvptDGzbGPiEy2v3xD4sZfcGu9f2
+wRFqe40Oz9f2xn6dlAjxTvbR2nhb32jNrr41IlxVqDpX93lROVeof4ISb41Laq/0kl3lisq2Rxab
+urJ9CZjy4xasSTETW6g/pmzbANw7gu36iyo2KZJHvo8SboPGduyb5qXaI925nOMeB9l8fM+3nEE9
+vxHbNvL9D4pslhRPgujv1/OpZbeIw7XKzQitN8p2o/zmz/kpk4f0L4ux9776o9pXHy58Yte1Xndd
+LwgG8RsvHAzCKPCD2HsTx2H4xnGcJsQePsuySoo3zkt0dYif75cfMeuOsWZwDYYJsv1kCloi3FQ6
+r06v/nb56ZNzv8A3FfDjsipw4zR2PEn/AFfAj7N5hfvpsWNmxdQ3k/Q2nYNy6aLISCT/pxf//dsF
+7nTCXqns8vt/u77CBZhik+KL//P98jf1NxB/Q/E3En9xPcIvaNjYH4//8fmfgP8J+Z+I/xEAA/5n
+yP+MBLhsRrTjiYY80ZInmvJEW55ozBOteaI5T7Tni/Z8iZdozxft+aI9X7Tni/Z80Z4v2vNH4Dgu
+L66umQdhB5488OVBIA9CeRDJg1geDOTBUB6olj3dtGrbU417qnVPNe+p9j3Vgad68FQXnurDV334
+Gn/Vh6/68FUfvurDV334qg9f9QEUuv52fslQFgcx95/Q1jesR90vZ8ncrOhfXl98JgWmRY6bTXXf
+pxDfV73GeceusU3hvd6m0G9137HeJczqvtHxa/f9e5r8cH5N+R6xv7ERCC/OTxp780H0Mx3fpzPc
+7EsM+b1zzi+VVcm3CWabpZe4zyffZqtMx0XKfGVapQVuaD2FSBZ3pk6K8b3c4p5tE4u3Fywqg8tF
+OsHNMMXulOqbWfYH7rEs9vxKF4nYm5LvX5tmhUBM7hZ2u+TgJdsiN00e8qJ0bp6g+ykbN989W0Eh
+ntjZYnkzzcbvnY+42SbfgxM3U2U38e2y2WAxlhCBgtxUc8K25yxadxcUW1ExAfLsAtRhh+zNBajU
+AjRcIUAbSdBVVbx3LuZpcffUC9AeBcg3pMY/wtyuVs75M+d2jEctRdfDzes8t0/sulbbGId1Ufkm
+z6uyUWh7jvp5/sY78nprNig2FfAnhjI5FKrGTtgOmwnu6sk2Mb6Fa0Co4gxosmS0R74ifSZL3Jkb
+cE8enpzF/VPJ7HqCtGW7aOLeu7PkCe1mgjtN802nUzDm0EAy/zFVO9LzbThnrGe2g6fcdRqYxHbw
+BCvM9vNMpnTjUXL1bZNDuuINliEvBIei3Wzcu3EFcKBM5KhTxVvUAD/cJ2CqPifZVJpIekWoI780
+g0tsp/cElJcpGqRXaSEVsGBbgQOlZynfjLNIhbKy3VRvp+kf2c2UO0amvsC9CbjlIgM9Uhp8JnZ5
+r6k0U9lStIezylMhFnzLd747eSKupXO8xsBR1UDNmEPkYEVaLqfowMGgJBXgD1p+AyQuzZ17OYt1
+uftumj+kpcoAd1Hu9oKN7ayv/eAmTP4lWc6raVqVgsfqXOqlusA1hDGQj/hMe0Mgpdj4likaBgU8
++BH7vL93vs7HKfdud0W2AH5IA8iuzZIfzObdJ8UElRU3Yy3VLvFyj3e4cZIziyp3lQebAIxEowAx
+FwgNlyS+ky7bQP4P4CKcmCExZ+DAzsDgtRgYaQb6dgYOQLo0Ay+Bgf/G7BtaTexunKC/8S7ZgeJd
+aOXdAF8ZqXj3Lb9JhQ/kh8KYshO+rzW6Kwz4gTt3MEDcyxjtJ24cnUweEmDHBGOU6XSclBVjEZjl
+eQX/0DyCD0vn4ycR4NwVyZyZ0dsiRSf3kLL2kO6QxyRzzE8q8K8l20oZt7NO59wyPyTTZQKWGYzo
+lJtTveE9YySgmc/BL+cLnlHZd9N+vIcGMV66Qwe8VHtfQ/R7T22rJZptmaU41FlFvmnXRtOK56Ae
+7AKPassZaIVIJsSYzxxwcXOZpAFBMd+gwQhERLfLqS3oBV+W3KEMiFzjLd2lWlQCdC0pv/kn2ICd
+1pI8d108GcbtKYPdDsaGHbzKpiCrztdCzlfCUTNZmC5nCxS7AshzBhYQoouUqQrfJL5Ix1m+LLmB
+fO98yfm+3yITm5DYnu8hXjrjZVEILZqJ4AO4VN1DZFkyTqC8o+FjeUK+nE5Y3s5yiXPez3RZ3AEe
+AIffTjNmRM1Yg+jDa1ffX/8j5n/815v/cQee59Xmf4Kgn/95mY+Y//Hs8z+o62VCZoB8MgPkuWQK
+aECmgAJxvMjBSMbipLov8se5+k5OCOl7sxKMsa/mh3zb/FAYts8Pef28UD8v1GFeyBV/Izk95Nbm
+iUD02DxRCTHzfT9P1Jf59zdPJCr+Pqn4jzbKttDEWqQo3L7e2BKE12eKWMEf67myoIzHaxe0rZ/w
+GGy0ou8mKVGWbOnmxlmISkM8e8nVG4BNbNR6PidjGSPjoQySz+fOcgE5IiQqQrTG0+XNGVbY4S5U
+K0z1mPjLMlpZZRhGsyp3iWVXXp1NeNZYgvhPxE08bE6cm+zuTADD/6zChz2BwJ9hbiLmRZL5kzNf
+zm5A2iFWL++TBdZpPy/H97w2q+rn751/5EtMNHnlbjnH6BkwwJreDJSuRKV8ImG7rYSnZ0qAH7Od
+VhAG8aY8jddMY5lC/SmF1Bmo9CsgLliKh92EOjyu6rQXmlNEfXm6Q3k6ssn2borTm8u2764Rbtyr
+0G+yuEW6z9mYUm57OEcekydaxWRzeczOCG7/c1k8nTlVwvh9nwmfndyUeXHDCmbJLLlLkbYsIKgQ
+FASCtXNTgAzZSpAtUwB9BfnQK8ivncj2n60+ov4TvGL9Jw6jxvrfQV//eZmPqP/49vrPzwX7kAKQ
+27IEeEjqP76xBFieiVhdnWMeiKFAKAtERbIo1RnGEQuMdcN6gUh8v4TvPP2Ita1aFI/aq0VubVWx
+rhr11aK+WqSrRUHrauIRrxLN08V9Nq3tR1OrE1V5Pu1eJQqB4uuqRDpclIqiYplAxjJA2bZJIM8e
+MQ6NpOCTaFnMqupTkQeoC3zxDi7wWt5UkDDepVXFiycFC70RxZIljThPuSzxO/5/4vxIWVBRzoR1
+wHVDIrBnsz58qRFOI2HkgyFNyWZ/2Jc6QcVJ0HGC1Sce10wVbhVGQTPMdssfGPGLxWAq650+2UJ9
+jywHe+zOOhKDCvNmnb7buDoTbVSd+QA+/REj+J/yRzk/CqPYsDhzCAMP1pWlvKi21HHl0M9xUDzD
+GS+LB3BOfHZWr4VD2DNZX8FsFEUy48H4TQ5XIUaGwPt3nHzHuBhXk4JcFuk0TcoUQLOKTXDesioj
+lk6LQgTT/7PMKlE6xEQXlxswWNYZ/zJxFsv5+N6WF+m6yiwrS3xHKOfNcEe8AdO3dQLqNxJQfHEW
++Au2L2OzwHKFxJF1QzxuTi2XGA1gtjgVMI/3GaiwXB+KGgwckVR+Enys3XXLZpZ5zp/wBaU3+eSJ
+lYiLFCwMf+8J+4LPTU+fWIN8hSor3AH3zkSz3PiwivAkfciAfZxrRi2DLxuwmZTQvuriUNcQewNw
+8/0a4k3WENtXqLaWLjarAW5c0te2c7BRDfCqWk6Qjuc4BrWQ37xY4zmrMGDJQmorG7+woyWAkkqg
+4KqMDRgLkSGo8+nCWS5EiY9N0NQbTEpRS8ImWRlP1QxTIU5YFq/eOxI1vJ2t+0mx1I6t8AVfZVqI
+xSnTFGsieEch2nxM5ozhuEza1OTXztZ2/xH5f/iK+X/oBY31H/3zvy/0Efl/YM//zydFlsznZAWI
+r1aALDAF0sWAgBQDfFIMiK3FALEaRJ6yQnFATt5NcWpKXgEvO+NXVMbvi/UhkBaSlD/wfJ3y4+s3
+hQU2V4j4fY7f5/j0SWH5NxS+NrY/KGzJ7I9kBUgQI237NSAHvAbkCF5rZFYZtn6rUa3O0D9q8Kd8
+1OC1A5v+0+kj4v/oFeN/33UH9fg/6uP/l/mI+D9smf9L80leZGN7/B9EJP7318T/LMSPGiF+WA/o
+fTOgD8kbgbxI+Uc5idcH8n0grwP5UPyNxd9BLbCHTuyBfSOu/3cLyl7bDPWfV/oI/x+/qv8P6v4/
+9Hr//zIf4f8ju///nI3vk3RK3L9H3H+4gfuXz3tJ+EWRYUU+bK358XrDk34ijPlRCBCgWxIgDAer
+1vj04UEfHljrfOIgUpNrHd8M2McF/edP9WH+vxyn86TI8j0FAWv8vxuHruH/B4PI7/3/y3yuv/7+
+5e+XV5c/MbuBZ1efzr+DWbn4xt47j/bv+vxvF19w6sJzu35OabterV0PEzXyvV/73sdNjukN5pkJ
+HBlnsXE2MM6GxtnIRLGGsWee+uapiY9nIuSZGHkmSp6Jk2ci5ZlYgU/cN/+5/qfVcvF+kuwpA1it
+/1HoDgJT//2oj/9f6PP1p68Xp66z55++h4PqwYuDYQh//Shm//Y5lj21b/QhxyN63FMve/vpeziw
+HjzXD5/TUKdO9qh8qhezjyE+E7y/wejrw730sbefTj2EzjNEYk0Pii3762IHP30PO+xh35zep7ju
+4Kfv4Yh66GWp7+GYemiX1iGNgYbeyLdBHMw4+h76Hv49evD23UOPQY/BnwqDZ8VkO8Bgj/13wiDw
+94nAhoKwF0w2wGBPlOiMweuK4l5/doSBCDy3q7/9aajQY/ByGLymTXpd13AYGOzx58UxiEP83RcO
+JA9/XUJsh8iuPMTWVNgDJXoMegx6DHoMegx6DHoMegx6DHoMegx6DHoMegyOGQO9ULiZbh8cKcxV
+zfv5CfxBbFmteXC0eBlqHAMdegxeA4MdP1PQ99D5p6H3ll6GO15xfpyU6ntY/WO4fEOsdtQRbbPF
+Xe1wSLwH+v9uehs60J4dcNeD6uzPdy5r1pE8s5cOo3lWD52W3BydVvY9HFIP6zztMYyh76Hv4c/U
+w24f2nytLnb60/ew9x66rkc58GH0PTz/J/wTjOHP1EPQ9/BKPTSLUc1edl2MOk5K9T10/TErUbvp
+Zc1kyU7HsroCtU1PKypQ9qhk6/HYabRiRAcvZ11KRM/poVsR6tCp1PdwyD2s87DHMIa+h76HP1MP
+O64QvVIXO/3pe9h7D52LUIc9jH+HHsQbAPfYhyxDHTed/jw9vPari/vPDj7s/d9V/jjf4wZAK9//
+7UWBOwjN9397kdu///tlPvi6ecc7/Xj588+XH75/uv6Hw3YPiUZOFDd2P7lPpzO1p7bc9cR7xk6t
+g7jrriee2PUkVDsde/atjgdORHc6vizyufMr4C12PcFDuenJORtQWrEdjvl2p4/JE+4DvCjyCjf2
+fcqXBdyUTJzbIp852fyfy+LpzKkStjHwfSb2KE5uyry4YTu3Jmyfw4xvCFxWCJrf8nZuiiSbm5sD
+t+wF7JPtZUYbbS+zyKephc5hVzL7DTIHrpXMQxCR5v4yV4s0KQSl2bHcGvccd7tNCk5p3Cf6DHeN
+Sti+zoiz85hV9/DVIs/m1RNuuQzEFNsqp/PJe+eyelvqHWmz2YLvXc0Ie5un5XvnCjdkZr3wPXhv
+kinfZ5fvD13kjwDwV9zitkzZDeNkOoWv/wkWENpiu0bz3a5xa9xEXmcb3+Lt6R/JjG3Pi8jgbWzj
+6oR3SbfB9RpbHFd5PlV7U63d4Th24ha9AYTFHuEDY4/wKdJRcTWSXPUCydagvmdQYGVqbOjOdV6M
+7+VGx/JE8JMRe5EUoABiM2Ag9qREYr2dToFWC7aZF9KN7UQ8SYof752P8P88LUtnlvxIgdSVM8lu
+b7Pxcsp2CS/TFPcaBhik+WMy/XHm5Df/BEUsHc6IAvqs7s+Y0j3e5w7bnDipFI/Alt8wPWTixADK
+x7wA+RH4s7sYuR5T/P/MSZOSq3wy/sEbllfu8+mkdXtjzuJAsxgFbP5ulpVlBirImR132BAe3zYu
+2c0bse0ONVyjwJ7kdCg47SkzWee0JzhN1PcjMvKUHAou/zTNH++Wc+QesGCczJ2bFFW0BBwmjFbi
+2m1SAilx5PNKEJHtjJ49pM6PDNSs4JuyC81DBbuhbdMveWfIUUYOsZm7BNPtcltZOjdLtpE127f6
+Jq2qFLUd0IK7mRUByQG7ks3Hxl7VvuBgqDjIJU1wzt3JRuSeN+pqeCPBN2V34w7e7erHEiwCOZTa
+mUym4KYYvVD9oGumLndgKNGqAnWSyQPwaok6sywegJ4linyVgvKiNlfJNBUGcTkHA1ot50mFm94v
+p2eoo3APOLQnNObZbYo24D4pJuV9tnCYtUWRmN8x45AAV5h44O7kzNsCe9M5l59FWtwni/KMK+x0
+iTqI990hyoBQIlm6mCZjwOgcYOb5I7MzKCtZCWNgGo+tFuksYZb8V7iFb3he3S6nwgOv0eVov5LQ
+2QXHdUnw7B44CHB/ICULvyTFDYQep8aJCHS+z96/1+4NPMYUjDBzYzOId9hm7zdIzAJcL3LlLi1m
+T7gl/RNcLhlnkYY3Rf4jnTt306QEjkGIVKXzM2cGZvIJnGzOOQrmtkyxu9/vwexnE6bJi2z8A839
+cvFfbTvNcSbEe2VCZ20cNHhgDzaDAe5W+CfjwUDxYJFXWT7vzgOPuZ2VPIhdI3K5Xygu+A0uDAUX
+YsWGFi7EuI+WDkZ/T5MfEOjzCPE3NgYRk/ITyRLJDDSHbLfRDEJCMWgwNfxSCXblHkJBFrWiAcSQ
+lQX36bhIWdySgoGaAySaQvCCEA6OmefBwJMFiXh7wWJduFykkwxML88c9Dez7A9mjplVLFKIrRLE
+Q0SvaVYIxErhEG+XHLxkAXKaPADP0SKDYLFxlxAjT1MFxaw7dLZY3kyzMYRiRTZnSUyFROA3gREG
+888GW2J8x32tDMMnCJEWZgLz+fyXyw+nwNjr88svSoKGSoKSYpYXQoC8nSix73dV4pEQn0ApcWgV
+n2iAlkGJz7f8Rga9/FA4VXbC4hDu3oDgEATdwQiBm6iasxzzgckDzzogLZhOx+D4WOzzGfxSlbD0
+wZmk43Q+fgI3CvGSc1ck84pJSwHh7yx/SFl7yHaQo2SO8lEtwT4wvwiJKfhtHlM/JNNlcjMFkUum
+3NmxOEiFSohmPp8+OfmCS/S1iJKYsVG5FHhznuTcgTTny0oG9DcQabe6zDrHRwfBcc/tWf5iLPc2
+3BV3G9Z33xXX8+opbifOv72qMNJs2xf3P5mL+IFXZKoDXmvCklUwo5jcAgmRIyVnH3iJhxToX1Zg
+sG+LJxaKYgx+Bq73bckEBr6epGV2Nxe1CZW0LtJ8gWH3b1MImCFiT8p7dNg36S3m0tihKnnofrvz
+y9tnbDUadOaUrDF5yq37LREuVkJqpbyfVH3p7WegwJRfoNziDh0olXMVxbsgzsJzrstAzVkqKnoQ
+OEEAxW8CL7hE/Qa1zVlExcOzZAqZKmcvqwyUVV5gjY+5b9DkcgHp0Zkzzmfgs5lsQAyQQPo1Tori
+CTmWwDnEXoDMfHkHfCsxRxrnLFNhdS2mndB4hrlrjgIxhyx4kv2LGx5equCe+jF5YlotBoixI3PY
+CRwWP9BXZxhlTCCUqWRatFiCPeFRJUujEBOIXVh8QcUH99j++tvFt+t/SJHxD0Rkgs4iE+LNvcy8
+hsxog/PrxSdldYIDEaGwF6FjFaG91ug2EKGoswhFvQgdlgjttbi3gQjFvQgdqwjFq9Kd5iytv02B
+srMcyQKl72pBai+ONQWpyJMJmxkT8qQvqLkfdUVMp+I5n03D5JZlJIt0nN1i0QxnG9QcTHZ3hnPm
+D0/i7jM5uTsVQpljurucYSuQPvOsB9OrtxXcmU5ZWWsG3EzfIYXTyRmb41EzFnx+F++eaXhzbmcN
+KweHxMphd1YOelbWWTk8JFaOurNyiC7g35WVgne6aEgWFunCkf+chUWdXbIva4ZhB55Zlrz8gr7k
+Xi8wUucNvyxWG53p6g9ZacRdHVCwAJfIVhyhx7plk56MIRy45DV6CjXGNQOygoeQZ3x6IoNu+Fz8
+jM0h4cV5Ov4hJqHuJJ6syFjeI4vlpAWvdoKvhG8e0+lUyEo5RYcqFmpgwze8DTZRj7VIFIgcp4Yf
+sxId7W1aYJOs7jjOH1IMHcyVMjWR8ElNUatxhyht6AzXzjyFxswTK9YqufA8rI/VJMNrzD8NrYLh
+xY4x/YSkAX78PE1msqiI1/RaKBwbF4nbBMvCZYVzc0D4Ip/whUxVNsMZeaG8rOaIjBmnRTrL5xnG
+a8tikZcpm/MZT9Pi7ok38JRMqyfBYyxtZrja5g7NwXvA4oGHRVyKirTElTdsgYS4R835FLya7dyk
+CDFmE/iP99n4Hhi5BGMAAsXYCjfeJJP3701Nt08L+boCeQcRplxJuJsgPOq8lND367O79hDcZOsv
+iLE+ErzEY7bwhZV4x/ligX/v0hmoHsTHE04lXJ2WTMSKBBajlqIejPO6qFFYiFcrmeYpC8T50grU
+PCzRA9vTp87FXt8/iAkZP+g4IeMZtrWfj+kwHyMYHVgZvaMFE27QmdNhff7F7kRHaGf1Aqb7rKhO
+yaEykYw2JV5zfqTpohRLAouZXFs7ZpqH5oc7Ie6p5LfgByvmou6Xs2ySoUXkSxZZWHImVPFMzseg
+5+XxzU06TsDcOmU+zlLIG2eYjVZssSJyD1qdpIsUlzqKaXF5I2/xPViHG1xNCjZ7iRGYM8kxJoJ0
+GHplafQfyawWGa3WZF39WoCYljtlsN99YXBU5++gA39/YxiTQxUTgZKUuNYaKTrPgcxsldd9/siW
+hIKbAwV85AsCWa0iTcD1sNjijF3HIGjJ1iYwqnBWgL/FGsFfmeObpncOCoGDvlQsmuDMSMbgw4SC
+iziXxTdgHablmVxQCFHOHEHnbLHvPBtvwLP9riVzu7u6xmIyu/kdYXlDce3z8u5UHYi1Mh+yh2ya
+/QutqhR4pgW4/CVBg3WL5ZUKQ062UIRzbbzEtX04wckXJzEyA9l/8NUvP+a48PDMSavxe+ecZBIF
+8H0qijuojSIoLVO+MlyugamSH/D9AqIetjifreEVK/InE0eu8C1zbpQRT85ntpwGs5iSx8pgSt7d
+JmBt2LpWrDK1rZBqcHq/C9bc7mlMY8laq/0lnP4NWXZKDntur+T24FC4PezGbQirvEHP7o7sFkzW
+JSXy3MbwOasf1XMbnhcYSaj54MagyWdZURqui59HxkLUTxBjnOqjY31oQ4SBgCWusHRk1UJITIZB
+fTZnlac5j/aXuEIR14FjyM3is9l75yf6gMBy+oNPBrBa2Lrg2r6sbVfq3jn4Ctx68GV/OsD3jMVN
+fXTd9tiOLjPxp1m6P5zVYYnzMDJ0XPTQWOYcqGd2Allo8qLVz2ehOR/VFzr/xtpXC5xZZ8KuX7Ln
+HrilRWr+mOeP7yDGPmOXcUFbOUPecBSR5kz7eCW9YLN4y5IvEk6BM7e40JhN0gEfkd9Fwp4DwVqS
+SmHHXNtQ71LGGHwAg+XCvMrBZujgmPWElcvyCRL0meIwH4HDFiXjUb7k04/sgaA8N5cf1x10oCtM
+6JIEW6Od6Ougc9UjUE9Rri4wDY0HON7+VMiy72fQL8HQn3EYgp2/p7w0JNwyc7pogfkDPKzGJB/7
+wfwIbHzGn21dLNIq+xd7pLJAlyrWgsup1pKXTiZoY4XC8SyoVJVILUY5d8zKgqMUAV9bnWqtwhvs
+dUnZBiFUEHQLoYZOH0BtFkAFuiRVjot8Ot3tAyTBqjJ+hMXJGqPD5qxc46FIvjY4wnIaWRvMsP+r
+83NWpDegUfLBZj6oxvQOHyzq0iJhZeAHQG05O5NPxE2zH+ClwHuNi+wmFeyWdffyaXaTT4F138AI
+iCJ9Ms2Xk3Wl+jP1HInon92PjxKlZVXkT7yUzB79KPIxe+ZIP2tJw6m85A8J8ik/LJvyAqr0xRkz
+1++dL2C72UPWMNCyWk5EOAVX7tHSYOUmg37us8X/ZgaCPQEj7dYNkgGCOdCFlrlB+9RBQKpgO3ko
+CWId60NJEF6U5bsJqEzzeWotUqoYtsZ41CWKP3+ElPsIPfQPJe3noaRWWYKjDxfnn7RUbV+n6xIH
+6jJdCYoB0bbtwe2REipZq/OjdXbKMwKHK9k4n51KZw1RwgkptuyqgFgLJwIZs8QDDbWJjJStH2DB
+dXbLXQMj/m36iK9dSAv2/DUyj3kSfI8CRApMXEQWcIdq/pTj/DCbPATBqaqnMxXhifRDIAORRsrm
+qkFixvdiIkYkGYWaCeHsUa/SSG4lFmdyGOkfYxAyrNaSdmZgZwqcLc0qEMFbKiaN5QjBnos7nYu2
+QaO40/IoS+SEXl+17R6XDPfKYK/zOqFgVGewPd0Lh4izYvBPeVVNhZaLY/Uimxt23nyRDa7XRJf7
+P8uMh/kPSZFhSlXm7LULF+RdF+RdGKBjRv4mGeAs59PkJsXXpsAQy3UEH+2X4J3rJ6FbJ3jLM/XR
+AB85+5M9zx26+2XDuneTaDZ4dTbY5xCjAFdz/Nm4EO4zK/LcoZkWVUm1LElleVTnhQxhB6rmZF/c
+FDuhTyLYa/TwQLEP0wTXVcuFinn+Q7IEj/kiDZyFFf6bLcyQQQYY/Xn+kPAoQjomXFoxSSFlyhfp
+BGnM3zHCfMA4Zys3HGAz2DMWEGf4VpIZa+OMNgw5z3LMg+w5S2JY2CnyGJzuLRCOL0xnC3RYepbi
+ig4WFS/w2csEJ5+ZvwP0b7Mx7+WGDYx5t3SO3U2A1MzI3uNoWUXkkRfZuMFk09UgTxAA4VwyX9G3
+RGf5vwxZqcWrQl4i2zREhwU8naYh/BXTELpCOVTSop5bUGskW4olVFg+wIClwxLHxzoTwdEXqy8n
+PGv5Z37Dy2RYcMPyuF7eM8v5oxb8VVPsXXE5X9CXoFQ+rHhstxaVhrE98X2WIHR4G0cz6Q3lDLM3
+XDfrGGMwrW3GZ1To/n0c+09915ZRwkPJccKOOY5vhsB9jrMm5A43fB4iWMHmG+x3fmd74K0zm2Wm
+E+naa8sLJYPY4PTbqypNp7iGOpN1V3as5zBv8dQRq5yBCzP+8EP24wlf/Tgt1fNvQOdlibOK8rm3
+8T2+JQwXh1X89ZL8NWVsFTZ53RwEIlinnKAW80pG+bjEwKHIUdeXFYodWx2NJc8Fe4oOxGGcqpLs
+3CmnyWwmH6tDJQZk35Z8Xf+6x1wERw9kDjrqOAdd42M/B712VVGk8zPrWySDjVx96zskPXfdBKYX
+KWY3MrVGhQJDSLDaPvoUsnB7/ONUH6ll22j8ZmzaMMcpZCwpsEdG5+gK/5fzfY5zI6CCk5xNUY4T
+MI6gUFi+gIDPmeMbVCDYAwLzQ5xIniUTPetcVulCrvg449p7i8+2itexgPJNIXoHlcf87estPsRQ
+MJttW449zXkUmMjHmMQjOe1Bm2Ckt5qRzdeBRive/br9y0DVa18j9aqVqLWi7Im4nU5TfMYZJv4q
+0Lf/Bq8FxXIBJA+zUlpoloyKMnIqojrRIZYVsNqMCSPzOLpn1jwzCuYzTvZQLPJXeerNXp/U7qk9
+1+1s4BsT4vaCwADXoGn7jk7zlByqkiR/yzNXw+oR4vaUPy1UJEBYOF5kKX8a+xH0Diwnvo15jneg
+D81uQGvxWacH6bQxXU9TVrpR9YAbSAjPsPE78aQbJO+YW7GbmE7LO4ucO4ubJYZo/8B1C+wxpvus
+UkxnEViGAnvPvkNZu83m7KDA6QP1LI56Kynn3JqYLDqQRzSijo9oDI0lwr0Db0/RGzq961nqVcl6
+rcTnO/WFD5Es8YVrl7gY1p+tKvuwLPps/XXenhlFL+EZRt1fTd14iMTuGEa9Y9jQMcSHF/g36jIt
+gb/nYq2hD/w5I1e+UOTlNTZuzHe2PLjuGcuTepVdr7LDF1LZdYsJtMrGXXN14HY46lVWMHJ0YOlX
+3DH98nzjJUC9zq7V2fil6msb6GzYVWd9TCp6nf0Al6/xcnj6+euXq+uLb1i4+gRZGApuCcS+vr68
+/v7xAoY4RtZeXZ9/u4aLxvmnrxjN4joUODq/vmSvDcEp689fBeO80+vLzxc/fzr/BXB+TJ7K06vv
+n6HHCxAO0RPj0zsPftnhh68fEVkEI4f45/zT33Cd0UfA/Fe8m12Avz+ff+Dfg2hhFf3Xi/NPcAeW
+/j6ffzln8vL567dz1Hg4/Hj57eIDw7UkdIgUHYJwO0JgoT7ShOCnihDurgnhtRAi2IYS/0UoEStK
+bE+IEaEDvkpof/Lgt5DB24IKj4QKA0UFv0UxbgtInCfTJ00I8wpTDhdXFmvlYKf7k4mgjRjDBjXw
+0bchpwdKarxeLoY7oYjHprMURfjp/igStlAkbMrH5hQZaYoMt1OVAVaKFDFiPNufqkRt0hE3aBG6
+WORitPB8F/+tt6Ceq12Jux05MH8ipgM44o/2SJC4hSDvmsIRQECxxplQ6wHWWdJitB0pwgE1ouxs
+f1oy6E6IzXyJ52uZaCFEF6MBw4egglKDxhg7J8ewzbVajEaMYrQBQQJNkBb32smKBobhgKg2jPao
+KKMWgkDSt8JydIq7PBKA+s+QEHyXiBYQPNubfLxrC728ZujlAT28tQQxJCTaEUECjxIk8I6WIPFO
+CBKNDIrw02MlyWBXJKFaw0+PlSTDnZDE99CoKZLw02MlyWg3JAlNkoRHTBLf3QlJghCfxdIpLjs9
+VpJ4u5GSkZHX8dNjJYm/G/MaGFLCT4+VJMHOSBISkoR4ure4dfckmdMkz99N6Bq4GOLoUC3cZ71s
+9yQxKKJjV3ytiI0i93lZQaL7LtEkqV1CmsQ4BUzqItHgFUhiyX67ZDeG2sQ7IsjQ8MFDwwUfFUFI
+5OpuWRqB5NcjhXbfZygcAjW6VYl+vrz49JFNeL7mz2mPRo/GK6PhGT+NK5ug4bmQmLD/Xh2Z56Pi
+NlDZEpmhN/Kfi0qdMt72lDEodACYPIMyO8Vkh3Lb+HkdXd4rGr4bDvl/oTuK+X9bIPVyxvZA0FiJ
+yJ8QDaqdq5FooLRTm9a0Faswea4T3ITs6zBx94KJjfF7w2QTcjQReXU0LNIZB8NQ/v8cdOzd6mPf
+HQ28KFhFASucBRn7GDf9aSLU8Uci86pI7AOZZ/wcBhruIaDhHgIa7uujoUzD61NjZ0x5ru3ZCRq7
+MIHPQmOdt9ngZ1s0VvmeLdDbBxrea6GxWWjQo3FcaGwKeiBodEXlBdBYj8hq2J2h0ZU5ZruWnuyx
++kugsYYpL4NGrZ22zGUl0LPRaLTTnkC1EvDZaFh+XgaNtcztmk4eCBptjb0CGl0qLT0am8LFURQM
+DgEVjoisA5hnB4FaR4aF3igM3E3KdNsMZBgMh7E7OgTGbSDKq2nzwsgcCE16NPaJxjpE3NPri2/f
+zi+/4JuJxE8A/0Jybv8J2H3yfv4Tqv/b4PHV/S4u2LN0plAJSZO+tbH6FXm/57mWq/U7A3HEkYk9
+XDGI554Xqm9Dgs86UrSTaBUm9HqgSaOoY0A3cAktR80R1qkSrsSGsCl2YoZLDMeWG9aQpikZ+ic0
+7uKoBbV7g9qgBKMYLlQ4hgN+QtAJiWB6wFf6jzbJr42s31Ek623Q++VdGiEl3lyU8H8PdzsT53Xq
+SXYEtKPRgP8zECOdD1z+T5w3lSNQ3w2gazdyvKHnDLxai6aIEL30vPo/G+qEhRSxYcT/EQT9+j30
+Xw2lOudgAINI3T2wDMMis2IUkSB/yEahf4YDi/QayI0i/o8gqe4Z0fsGjXsM2WZtes1B1whgyn1N
+9UxORMbfdmW00lp1OST3BB3QCoUADlYMZ0TgAs6NKOKGlWqvLxCXgiWHI41u0DaYlcITdBQwYhJX
+DWbo1YigHUWkZQxRDxxzGKak2bSFKvoItJPKc9j4nv1rkXe4M+4uYFysAED4GJe6Pu78tKCBXZWc
+rzOk3ba220zTotaosAJv/Gd6RrcFfV+YWdIDwVu7o1WeT/n92tV1oiVwxNXTDQRDjaYkA/F1Vi9a
+D32axtGGbrub4r40YAh6FhxpONYecmis7U51/XfNsZmj4d8pVqO58OSvFaZGPVN5ULFM5arRaTSq
+MVFTPGjEI/Wzuo3GRuJRCwNII5YorovhatzTQD5wKBHWiYRvEJuMoY4HPrvp1scSWojP3R1xh7hA
+lGJLR9LBFdLgxMRMuOVRk7U69qoPZTjQ5GoBNgcUEv9tQVQMiN8zVNeZvKl7hm1Gu6Phqw8qHrXf
+ThGwDsqivoggrvUZxd2iNTEg7eG10jbvD+zHCp7Gapotw+bdDfkIeK/WtLWBB8G3Eaka4zENUdDs
+ezi0U1/h1dClNbyiWlH3V+vNrV3DbWaS9xk07m38E/eYqcA6TaoJTnMgq6y+rc6A+aARYrQRXYqt
+hQmRhdtMO6Tkd7FoMrrTyGo50j9bKXhTGyjapAEM72LPwuJV8QP9GQaWX51CN4hvwZxRzcJqIiUt
+vdQYbxGLYB2qZlNNOTKMWYsNpaamQyeiK2v0qDFf0dDQlJoWhNFt4L9Yhx8iQvdFxLOuC1scuRpm
+378xJEcwhsHWLRzIOJRoH/k4dsePsCbSHVuQWi4NvelzBq2GzSgSr++iaWJk/VB+3xVZ6hC0bRGO
+WhpCI3q01M9Wdhe2YGzSNzDJFJvkWoF4jca2KKoRYjLkdZ13LaHbnA8JmlfFP6xfa7N1ireij0lA
+08JjCcMjDVr7UGdW39kMitzmtdogGvDGYIf2EYx0ibReuNTkrAnNKuffocoqq0m1qpIchE2ChjUi
+DFqJgZSnETAJZGRejIEMDWhinUTJf/Y5F469Z45mjWisYU29JQttqD+Wtb3IMAsDswDM2hkYImNk
+5UYuRgvEFnxsIc2IjozGTgqjejZXG63ODskshVcfFovySRFfRf5mPZyaD7s28UGIMsDINwfXol+U
+bY1C4yqmiXuMtFKwrAFfr+5TfWTFVMtMicUTtjJvRbhvjs86QlJEofWrxqwAY5qsCUhZXCWTokLv
+uz4ZGkSejbyTDG1US/dsmi/IZdoRrP7LmnCrzSCyKEdliCMVxVUiOSTXgCLKybbOiwz0PzIyZW6b
+HBtKC4VFVMOBK5pR0VOMVfyJzH820Ru6Fv74Nf7IUdB2ww1GoQZCNUxN1kR6fkOLWVC3EDYfWTN8
+TTY306pWn9sYzIrwoWbk1TjoVIfKqLQR95VlMGt2I1PwqOtsGNFOcQQtG9nshaJNc0TGxMfKarjV
+7SvORGt7x5oLm4e3JL3W0dStMXF1jWFwltgWE/C5M2tHjUG0l510x55nW8xSa1lFI3RejcbQEvc6
+3kKCDHS9oKUbXmoa1CRp0Cimq1Cg43oKfS7QG+JvE88mjk1cLakClZWaj1dLSFoyFjoBp49qphGI
+Ho+IRPsG9/iCCY5qKBDW6A/V/21Gw2LYDGSHAz2vGSg0zfSAulmgBPy26Ryhpz7mCLJeJMaeEau1
+JazN73WTEstaCECVDDGgK05CNRGt57JCSYTAoKamqWa0oVMNsyCIqPszeW5ZPERjAwSQPNX/678S
+WRNHz4KprMm2lZ3FUEOnafkDi1kKGBXbM0YtoOt+tLGJiZlS0WQtERDSEpLVHZo2tNZqaHdQ47+U
+Aj2bb64MQuJh8R7+BPrEs6jUcGBxEs2cU7I9JITRoseDBjOxNYsxdW3QgtSsqVOtYLMzca34r6K/
+WEM15EGv05D/IuO4IbbSANWlIlDDpsmrlhRuaJCy/J9HjunSG1fSWpI89iziHBh91ofBj2uo06WZ
+zSApILR21f82kVdEkMLMcR0OGk7MsqZKkzd0AgNj23ogyeR6BNSMVbU8I2UFoS30FkOlTkLoI2mx
+EfFo2xnUqGsGL9JRtQv0qsUm9m8Ch7RiS8saC/NIKk+1R9aLZK2A6k47Um0/XSedSMBKvVEbd+tU
+qhcy1yGkfLkNI8uqAN5HKOy8X8PH5qItRU/rzyqnXofDUmso0ak7kxXlynWdGt+YIv6m/xz9p0we
+0r9U+eN8lizK95Ok2kMfLnxi17Ved71gMAjdN14If6LAD2LvzWAQh28cx2lC7OGzLKukeOO8RFeH
++HFbPp75UddPu92/e4D6/RrKDmC/n8HYANpv3zOAu7MeVt1vA1h9/14B3G162HgMRwjQbGENp41z
+/u1qWeoI4G4M4G4M4B4jgNfhQwG63L8RAEH2aAEI2EsBKKAGr7sDWCBeHKD+qcHLz2oAC0Q7QMun
+B9jm0zcADSjJpiL+Og24z2zAey4Gr96AdzANbAq/8wY2ht9hAw1B7NhgXRcM8C4tnKr77A2sbWFt
+A+taaGmgO10bNOAQmzfgmUjTBla31dCFjT7PbgA+z2+gY0y1ooFntnDqPrOFWlj1nAa2bIH6Rvsd
+axpenYuxBla3sMI7qwZWDq9jA+1NrAk9n9PAKrr0DRjk7diAtfMNGrBj372BluE/swHx3Ss0UPPb
+2zTgEvhXaKD+3YYNNL/brAHLd30DfQP/Tg3YAdobXQ2wDsQWNO0JwNsOgB92B5DHG/awEqJe/V2F
+zcsCdK+BnK6087sG6HD7cwBc191iDBtTqRMfvNbPxgD27FL83Q2ADcqmok0IctYBgGQqbjcAb/se
+vE4ZsLspgPlpA2jF8/UAWj+vAODWCd+hhx0CuBv34G486E3rNxsXfCTAGgV6HkAXFbUCkM/2AM0W
+DnJGpwfoAXqAHqAH6AF6gB7guAD6G/ob+hv6G7p+eoAeoAfoAXqAHqAH6AF6gB6gB+gBeoAeoAfo
+AXqAHqAH6AF6gB6gB+gBeoAeoAfoAXqAHqAH6AF6gB6gB+gBXgugb6BvoG+gb6BvoG+gb6BvoG+g
+b6BvoG+gb6BvoG+gb6AH6AF6gB6gB+gBeoAeoAfoAXqAHqAH6AF6gB6gB+gBeoAeoAfoAXqAHqAH
+6AF6gB6gB+gBeoAeoAfoAXqAHqAH6AF6gB6gB+gBeoAeoAfoAXqAHqAH6AF6gB6gB+gBeoAeoAfo
+AXqAHqAH6AF6gB6gB+gBeoAeoAfoAXqAHqAH6AF6gB6gB+gBeoAeoAfoAfob+hv6G/ob+hv6G/ob
++hs2ueHNmk+ZPKR/yZfV++qPat29234Qkdh1rdddzw/8QfDGCweDMAr8IPbexIM4fuM4ThNiD59l
+WSXFG+clujrEj++f9L/4G59Eg5PIZb/BSeDy66evj9hr/wbRiR+dRPFJzIgT+yeRv2v6BOxXHdR+
+mzevbmqHw7fiU/uN68TxRydBQOjTBtil/SZ9tsCwC1XXjr2d2ighofgNKBf4/1KzGsRh9GljcZeu
+W8ZVx0chE58MIvwV0ls7Xdu4VWLXsoB1FMDvgP3vNhqJpOUJasSR9LFS2PbLbnNb7qDtypHXBh9A
+B0P85UjUTjdWlc73i45aCMS1S0hPvf1TNaJA/dIRRZpk3JDVuyB9qZsVPnX6RHUe0Paf+VtrirJc
+XG+MjpqeuvSY9FGs5NzUjVOC2Aho8KL2bXwS+nV86lK+osFNiRPZWla/nrzBI2Q0TU9dtKj81H6J
+xnKqCgQGTRVtQMleOM3pzRaF2oQ+q6xArFFtclxo1sDQEeHX20yPok9o6bQmTpr1AzJ8U4C1sHnr
+DVmdpN5aqyfaD2EUw5OQ9KK7lrg1tVhRT9BqIMSJKledR5I+0B3/DVvwFN1Fkv5eHVsN3hTpcN1v
+ZNdZg/jyHuwOfk/CSHdbQ7+GaUCZ4ErOD07AybQEhA3zfBKeeJ6LfaoeApMulArGL/ADsT0JQ02U
+1puH7aSsWXDSYyj1HL0m9DYE/QZ04SbZdYNUis1UvUWzbkukU/eIp7xxyQlKeoHaiGHAsfAZTq44
+QmIMBIegQ9/6QykmpDk0xW5EG4v5+AMBzQkQsiP8fzg8GY7YtzUuGiwc4eDj0OaIaiENRTSq8VsP
+Gf/isMmtoTRi4RBdT/3Xa47fLi7YURgwmBopccB80PwsEFfwryREKNAymEc412o1LJSQAwzFgPnQ
+QQxDRYOQ0IR2bAg6Me1IG0/ChlrvQ0WdgHynaTQSww/JnTho/i8S8qC/iQjz2KCjqMUi2DXA/NGc
+DtX/WiLN+2pKGdZHjqzVUk3HHCjZkLZQMz0irA7EeUS+C4RgaJpwPPlf/N8wiV4z2WnKQY0MgRpy
+qAgSnGii+DWCaIsgva9QDH48kia0aRwGUuCFqAXGwCRZJMm1EdAC4Bu2jmuTPZHy6XBtAxB219da
+SVSaAgjxV/c0wxrK9kDRVIhURLwKle9QmXxp++jQtSTIRkVCwkxdKO1SW8xscpoJIBmBd0LJAZwR
+QQiLQyxWzhPQg7ri68AnVuYsqAlOeOLXyBkaNJCSL7/hd3PGc/1Wv4aiC9pag7QWWRcjZWIoJR2E
+IJCDM2NoHcLKwYVSihvDDgyzpKTFI9QIT3yDClLFAiX+mg5UFgJi2uWvVnVJ5HBlPQECRiL9eDN3
+Hk1Wk1TDyGJJrsyHGyqGC1FU7pwznJnM0JAKUzZ8cZvpIRCM/xMyb7Ddk79ajXkDfEh2SVA2QNKA
+WvIwJsJvzZLMzE6HAQNlzwxqaFYTzTc1gB6HSgI4hnjERs7NXCCjOkEQ+X9EbGKrKaBjN7UQ7S+X
+GGvZpJkORDotFVaiMfBQ9RKS6EHZWNMASDbra75id03R/RMVIWv1kBFSdMIjp1b5b9gAX5FbU0De
+Wi/FmAbAiOvjBgWUdAXKxnLPKpD3hHx7BimktIfkivbooanpMqAQRJWWNBBoNHNFSgDT/oQ2AYiN
+VNowhI28m4c9yiIOqe9s0CTQclB3xdroNwMZHYrrOBgakrGP9pAtJrAW+dHITouAV88Mm9UCS+5O
+clIakxNPERnZRdjgPSUH9XOK9ZEYl/KT0kNIsmB72ldIlbAqQ2sMHDRNSGz4PAQOtRlATJvN6yi4
+7gi5XeDjD6Uu06QPaQWXlKU3zPxIJDRSzmVOqFOkUFDBbSRR6+lgZhxKM8hohcWj8i1dIBroRn2G
+yERAgn+aSWuym/bPO/FJzdnT4S2QNRqKK1LyZZasG9eKEqkrkUUrAiMq0Pm2plwguRiSQA8rd2Hd
+GrZSISLBhRT5ZvRJaSO7RYRqxWUk6EAeEHCpETwXkhpCI2uZQ7YHSL6ig0/a8olsSaqomoUREnAH
+obJRkxjUoKiwU4drUpCoGGg7gVeVzayVk5ETCB5IeWO6x+4OSPAkxYKKucz7V8aLKmuQJNVW25IE
+S6NhOO9A1npJIVAEljRNIJGjIrSQBI6rzP+89ikHqnhD7n+4YHjC6TJSsnak1PFQZRUN6maShqmS
+TVKoVElbmy6elNKoYWAEDjIaM+LGoPG/sAptkwkWq6MpaIqvtkerAwUz77ePX6UPgiWBjqCDoB4y
+6HjBqKlxhakFh9RAtk9Omm7HVUz2BLmkyIQnpoltZHnm0E1zWKeA5Arx64LhLTyhUQMv0voiLhZ6
+SumsXZgchCDB6g7YAIa6iOiJAg6Nc5Tihra5FjJ2nWfbE1U48j0iCYr5QFVLgb052TAijQYWEQuF
+quqcj7e9YvCkgtx0sEJFmzz36wVRnVZ7fPQ6HCNSL8ZuBCp+ey29WVwm4Y++GJyE6hzdvIp40MaP
+2gUr4maEDpkV1Yzsw8L05uBJpIXjj3StgZ8Koz40IlQjLQnrBfUmc3372PU/Lu4BG7p1bYTiuCqh
+BrpVs/pqmDldxajnuadS3RTdtQE3TwcuiUlJNkaLWzaB1uZHKL2+Vat6wBRLGHkmgK0TepF2nVy+
+jaLkgJTcqWcSSWvr8ImxDajZqf/IINmsCkvJNpWQxx3yDh3haesWCIFnxLaOW8+ajVhbQb0Ga9oW
+Lgah6XlXjZuxfmAIeqyoQA1fnQCU+ZKrdfYTKy/pox2VEnjNcpcuozEnCsxaezCgQqBjOR2ee01p
+N8esxD3Qesydns4sJKOaYm1qsGnJ6ayRtGwynPMUy6WNM1ZPRKKuKIcVGfNMenpJU6S5fKTuzfmI
+A8ppJdnyuqxAhIrFgYXVdPj1PE4OVlsCSbw6r6PmLLicbVZ5OJ1dCqlPU7UKzel6/e5UFwlZ3VjF
+UAQTLY0hSSFp8BVaRq9Le2aEah5ZLQq/EJ7oirev4yCdatIJRF9P+RorkOqDDRUXacCokAlVvxJl
+Fcp4dGiyfmJWos2haXZKcvJuJatrtOYpKVUUtF1SgkX5tRaz6yIMLTSSActKsS6UMduh5U0bLWnC
+tFRrXlMlbfPUMlugJUr3JDyhdiQwuewbtCFSa4v8KaG1/RqSpQt+Q6SVtyCRmjlKGr1L6TAZqDVc
+a4I5bso3WWZzFYWpLYmkAaGz5ULayag1KTXB69MVNsHWponazHptQku2JoKsYUh1NTGk0t30cJrZ
++irvn5OcptWU49yyacbqnuWxfZpCj5mywiCw5oyZz1LrxY95I6ZM21KNugW32Gkt/rQhqTQBDWW1
+1LQXHE99ojxi3p4aLO2B7D86wjKnzygtbCOkV/VCmRMd47gGSDNzVGFGa9ngVOuWQUH/xKx412Wt
+Lnmh9b6msdLaFBjzg1GzAx2TcusVWpCwJ4i+Gpt0ptroExkxTZD0dBT7pnkxBVff2U4B9YgIjctN
+1mlL1bzCxq7TQpoUGqt/xYBbtDAwmMmLGbYJDUmOQMTszdpZc5Ba3YxaV01IJdNlNmGkuiLlCM0J
+WuuCYCK0YpzcvmpcKW7tHlJjuEq0wxPqAAz7EqpGzFxOM0qGCDKxqkXF1rWSmo/S1sgIh9enbTJW
+91Kmp9BWwTZQqZWhHqKevJINWFbPDJoT6Zq/xlLC2swUGaX0eRIv7FtEBlwhKZJ2+9DuDOtc1DBh
+00/4J6qaO2qUyM3pNAFjTBoOWodo4mFEXHrmQ9KBOsvAelS3LU07pH2cUXJXTq4RxZFFfQGtwUuq
+8m+1zakHemSIRqrmqQpcU1jXi679R5poHpoYz95ZyOWT4VpWgaqpLWuZza8PUCciOqBzVVhFx2G3
+OSYbm4wzWR/WemoyPjCg6ss7awvBGkvsjeBV81CiVg/WBSdVxd+MMO1DbftOqreKAmjI0SYHoQ5D
+m4qpn7YIjUX7anjUEOrpaDrIKFB2iMzdNflkH1r7XY3s1uZ2TT1W9ogO1ayWNB7aOdXZE5U/7hNr
+fkvOsLjkiPZe9xpNITWvqVja6MVsy5QuLebCWlnLQaaE0lhNhxIyh6fFODxXi03M6fXVg7GFrvyq
+GGK9p7Bms0MFWqeeHidZmxA0Z7PkOM0oU86PmQZBjFFzc8BX18i1JetiBPvg5Vpuo9JnxPGak9Sp
+EoMbGppZfxRQxTdNYhsTpp6exFHctCxDqgd7TQMckuljWWc+0ZXUmqOiU82eN2RYDWv9CG5Gevmh
+fcG2VEtTB8gUITVAWnxdopx6OLIBvZCmKbNtsm3UPWj5heZAeqyN6rcWXvuKKsOH6DxZGlr9TbMM
+FLX8mkNA3hMmNsdbV7ewzYVpMvL51qHiswp2pRRZV1XVYru6WGijpAs6NF6w/kprojGzDdIMYZvf
+G91QvPQg+f+0sK8CRjXhFsqn2RpRrEljOUKhk+yPoHnz18ArOKlno5RyzfiwaSxM42SO01djpSxt
+Fu7sgSwxY0Qc6BiNVQ/CYtGJsHYhNp2e7q3pHv2TODqJIX5X8ZZvrjsdnphehttosS6ptRjiNwiv
+u5djq88hyZTacPE12SXj1S65yTe2mpY4LTr2Rv1fsqBOIkmmWtRuzBObrORj1k+LWGSMyrP0DE3Z
+rQ25bnRq0/nEXAVaO0a09h2Y1UCLpAeN0F09f99QTO3zhY+zj9BWz7HoLVUvvVLZnF30dW/SLEkG
+NfhJF+UEdEKdwdVSMPqSBcO3mDJLB1Yfli4FNfNrX43GCAGozooEWgu1MnYBYa8xUlp1HhIs6cib
+5Urj8W7rWA2DE5z4jeedrL/eiaaSXmFMY1i7CtfqsXKKRNYDpVjX+BsavrSps6tybJ/EhM0oS5/V
+i0q1hxhlHYos+qyX5OpibnPK5jyJr22HZK9ZVtHKp72rnj8eqn/+iVmEt7wDwsp80xbIZL72BFNA
+1lOEcbPKYTwLLTMhbQ3ayNJQC1EbaDy1KWWASr+OqZSMhGbF05b9SNUz5Uc/dms+sxXqRRXqMZbQ
+kA1do4wliUYn9GE1PdmmF6UzLg8tQmJVFL3e+0Q7F0oDLQpy8lWKRD3CbKOIpq/QtYCsGDJWG9AH
+3NTDbM1FvwOLPEhq1J/o1Kazlq7UFcfnC1GGCirQU230siHUNOy0JYrGdExQL66LxUXkgZXao1zU
+khjV9+bj4J7ivunkzNUgrRGu5DLtU46bpK1aEIbCWviN6eSGUQhPQtOY6Zq7KuYGSviNunyj2klq
+EW1vkmBGVNYgdNmTxjdmAKdNIO3B/IYbSLWusy79tmH7J37D6A/0ellXi8Sg/hTgqsdhlRFVqzfM
+5Y9yOjYwRqOjK6rbzdpAW1BPF6VKXtUeNeC/eugNva0PZtBeffDN95M06WKr39bzdcpzOd723DQw
+uK1tHclM1exO2Jjc488nEpOnQi39gLM0W6tCCaspITQJzSUS5FF2WuLX9Ki7d2rbqTLbqKLpp82G
+FGpPvgtDviAIB2hYfGPSjRjJju/WsrxKJ7Q82LPqR7pIc9Tm2IIalahxM+kSnPiNRVK1+UCbcHd9
+lVht3C2viFG+UpRKN4il+ThlVGjaADpqmzVoJpzaBtS5yoWAPL9qeV5GLTa1c5mw2/DyIek4Np6K
+s9sJ02A0c2ZaQKRH9P+gdjVs8Xd82A0NtryUyFvDXR0Ru3p1uU2uOklXyxtzmhMterDNCb6m97at
+NDq1K2zL62hUYSoQKxLtr4Ewx2sdrOW1cWrsQ0MPzEdrQjUVW6dDTUQCsnDAOsUjCVDL7owXG1Gz
+bS4nN60kNZSrOVx/o10Dtdr70MgbEkgsavLX0/gZUkFzGB22196ZtYISWgaR2Y2hr5bpFVZCeyFz
+QnUV5WJjQbdhTHRwbg/DVfHO5K4R5jVyoFqq3/bei42U2l5EiPWq9rVaYwQcA02AkGQaZgZKHwuo
+/09WZYg3RoUEtWZaWHtNny3SM94iWHunZVi3v7V3JlBbQmnT/a2V6p0jcklJfcXMgLxTzFaQ5RZG
+ZhqW2XBKjsYwOglAc9HO6jsbZDJWebf9NkWFPkhMnJXMmHTU3cy5aF3Z8nR47d2UtaLCajz39Kt8
+SpMj5BkJa43KN9wNJYOuRQYrSLGCI69BCm3frKSQbyIjBtR4jsiuJqHx9yjogIqg6LBCKuqOpDl4
+eUVqRaDtqY0Q/+GeHPXP6atj0ON/zD89/j3+Pf7H+9Pj3+O/N/y9lp9Xx3ot/m2YH9wIrPivw/6A
+xlDDvxvmBzQCA//NsD+IkTyL/gcwgob8H9kICP5eK/5dx/Xa+LfjZf7FH55lHwP+5neuwN4z/h4e
+/uZ95nd+y/Eh4l/HXEuN2xjB4eJvv+MAOLBC/m1X+H0mxKvqwEb4N3Fs4v/CI+hkPzfD/0VHsFX8
+U8f/FUfwDPpT6X+1EXTE32058y1HLzqCjvJjx9+3nL3wCDrGz230b+PGi43Akj+2S3zbj/d6I+iI
+/2pcvNcbwQ7wr9/1oiPYCP82jF5xBFviX8ft1UawA/ztPy80gr3h/0IjaMV/F+N4gch0j/RvjuBl
+8N/tGPacnW1VP3+eFO10HGvnL/aB/w5H0HH+hfe5O/x3NoIt5o/s1YhN8d/RCJ45/9V1BHurNj57
+/m57SToM/LcfwaHgv+0IDgf/TUZwbPjXvz1G/O0Z8nHgX5+1OUT9XTeCHv/9499tBIeM//oR7CEX
+2PH6nx7/Y8H/EOV/3Qj2EEHvYf1bd/x3MIK9rN/bZATNn9fHf9UodjyCva6ffIER7Hn957YjOBT8
+20dQ/zlU/LeJ7A4L/73Gpi+4/rnbKA4X/+1WiBwS/t3H0+P/mvhv0EaP/87x36iNHv8e/z8Z/seu
+vz3+r43/sfvfY8F/BxLU47+XERwP/tusN+3x7/FfPYIe/x7/l8H/P970n+d/yuQh/Uu+rGbJonw/
+Sap99OHCJ3Zd63XXjbzIDd544WAQRoEfxN6bQTQI3ziO04TYw2dZVknxxnmJrg7x4274cfYPcLr/
+LjYG6HHqBtDj1A2gx6kbQI9TN4Aep24Au8LJI58DwcmrfV4fpzpGBlKvg5MFJYLWi+PUgg5F6qVx
+6oDSS+PUBaUXxsmGh3H8+ji54l+NVK+Ik9sg1OvjZAjR6+PUZNir4eTVceLXXhOnGmVcC91eGqea
+DDXF/eVxqsu1Rd5fGqdGz60ovRhOzc5fnU6W3muS9OI4tSNjcS0vg9MKAtnC8pfAycIe/bF88bo4
+2b/YFCfv2ThRpHaCk/d8nGzoPAcn7/k4tce/2+Hk7QCn9s9WOHmHh5O3R5xkGHVIOB0inbatYewR
+pxrAJvjsCacGwIYo7RYnt4lQV5xoM7vByZV5uBVgQ5R2gtM6gM1xej5SawE2R+q5OK0HeHGcOgC8
+NE5dAI4fp+cHvzvHyT1AnLxnB+SdADbD6dnydIA4dQN4UZw6AnS5aVc4dQXocdoZTruSp84AG6L0
+DJy6A2yI0vY4bQDQDZPn4rQZwIYobYfThgAborQVTpsCvABOuwE4Lpxeb3FIO0qHhhMHOCic3APC
+qQbQ49SCVI/TCoAepx6nHeJ0iDLe49QJ4BDt+KHjVAfocbLi1AB4fZyaAD1OR4KTBaDH6YhxOkik
+XgenFXrX49Tj1OPU43QYONkAXgenVWTqcepx6nHqcToInKwAPU4NpHqcVgIcIO9Wql2PU49Tj1OP
+U49TC06HE6scIk59TLcpTodIpx6nNTiJFwscEE74aZHwHqfa5xBxagfoceoG0OPUDeD09LVf4fms
+z/8FZyIJZADqAwA=
+]]>
+</load_party>
+    <move>(59,55)</move>
+    <move>(59,54)</move>
+    <move>(58,53)</move>
+    <move>(57,52)</move>
+    <display_map></display_map>
+    <pick_preferences></pick_preferences>
+    <click_control>
+        <id>display</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>win</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(56,52)</move>
+    <display_map></display_map>
+    <move>(55,52)</move>
+    <move>(54,52)</move>
+    <move>(53,52)</move>
+    <move>(52,52)</move>
+    <move>(51,52)</move>
+    <move>(50,52)</move>
+    <move>(49,51)</move>
+    <move>(48,50)</move>
+    <move>(47,49)</move>
+    <move>(46,48)</move>
+    <move>(45,47)</move>
+    <move>(44,46)</move>
+    <move>(43,45)</move>
+    <move>(42,44)</move>
+    <move>(41,44)</move>
+    <move>(40,45)</move>
+    <move>(39,46)</move>
+    <move>(40,46)</move>
+    <move>(40,47)</move>
+    <move>(39,48)</move>
+    <move>(39,49)</move>
+    <move>(39,48)</move>
+    <move>(40,47)</move>
+    <move>(41,46)</move>
+    <move>(41,45)</move>
+    <move>(41,44)</move>
+    <move>(41,43)</move>
+    <move>(42,42)</move>
+    <move>(43,41)</move>
+    <move>(44,40)</move>
+    <move>(43,40)</move>
+    <move>(43,39)</move>
+    <move>(43,38)</move>
+    <move>(44,37)</move>
+    <move>(45,36)</move>
+    <move>(46,35)</move>
+    <move>(46,34)</move>
+    <move>(46,33)</move>
+    <move>(46,32)</move>
+    <move>(46,31)</move>
+    <move>(46,30)</move>
+    <move>(45,29)</move>
+    <move>(44,28)</move>
+    <move>(43,28)</move>
+    <move>(42,28)</move>
+    <move>(41,28)</move>
+    <move>(40,28)</move>
+    <move>(39,28)</move>
+    <move>(38,28)</move>
+    <move>(37,28)</move>
+    <move>(36,28)</move>
+    <move>(35,28)</move>
+    <move>(34,28)</move>
+    <move>(33,28)</move>
+    <move>(32,28)</move>
+    <move>(31,28)</move>
+    <move>(30,28)</move>
+    <move>(29,28)</move>
+    <move>(28,28)</move>
+    <move>(27,28)</move>
+    <move>(26,28)</move>
+    <move>(25,28)</move>
+    <move>(25,27)</move>
+    <move>(25,26)</move>
+    <move>(25,25)</move>
+    <move>(25,24)</move>
+    <move>(25,23)</move>
+    <move>(24,23)</move>
+    <move>(23,23)</move>
+    <move>(22,23)</move>
+    <move>(21,23)</move>
+    <move>(20,23)</move>
+    <move>(19,23)</move>
+    <move>(18,23)</move>
+    <move>(17,23)</move>
+    <move>(16,23)</move>
+    <move>(15,23)</move>
+    <move>(15,22)</move>
+    <move>(15,21)</move>
+    <move>(14,21)</move>
+    <move>(14,20)</move>
+    <move>(13,20)</move>
+    <move>(13,19)</move>
+    <move>(13,18)</move>
+    <move>(14,18)</move>
+    <move>(14,19)</move>
+    <move>(15,19)</move>
+    <click_control>
+        <id>bash</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pick2</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(15,19)</move>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(16,19)</move>
+    <move>(15,19)</move>
+    <move>(16,19)</move>
+    <move>(17,19)</move>
+    <handle_begin_look>false</handle_begin_look>
+    <screen_shift>
+        <dx>1</dx>
+        <dy>0</dy>
+    </screen_shift>
+    <handle_look>
+        <destination>(19,19)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <move>(17,18)</move>
+    <move>(18,18)</move>
+    <move>(19,18)</move>
+    <move>(20,18)</move>
+    <handle_get_items></handle_get_items>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(19,18)</move>
+    <move>(18,18)</move>
+    <move>(17,18)</move>
+    <move>(16,18)</move>
+    <move>(15,19)</move>
+    <move>(14,20)</move>
+    <move>(13,21)</move>
+    <move>(12,22)</move>
+    <move>(11,22)</move>
+    <move>(10,23)</move>
+    <move>(9,23)</move>
+    <move>(8,23)</move>
+    <move>(7,23)</move>
+    <move>(6,22)</move>
+    <move>(5,21)</move>
+    <move>(4,20)</move>
+    <move>(4,19)</move>
+    <move>(4,18)</move>
+    <move>(5,18)</move>
+    <move>(5,18)</move>
+    <move>(6,18)</move>
+    <move>(7,18)</move>
+    <move>(8,19)</move>
+    <handle_combat_switch></handle_combat_switch>
+    <handle_get_items></handle_get_items>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(5,18)</move>
+    <move>(4,18)</move>
+    <move>(4,19)</move>
+    <move>(4,18)</move>
+    <move>(4,17)</move>
+    <move>(4,16)</move>
+    <move>(4,15)</move>
+    <move>(4,14)</move>
+    <move>(5,14)</move>
+    <move>(6,14)</move>
+    <move>(7,14)</move>
+    <move>(8,14)</move>
+    <move>(9,14)</move>
+    <move>(10,14)</move>
+    <move>(11,14)</move>
+    <move>(11,13)</move>
+    <move>(11,12)</move>
+    <move>(12,12)</move>
+    <move>(12,11)</move>
+    <move>(12,10)</move>
+    <move>(13,11)</move>
+    <move>(13,10)</move>
+    <move>(13,9)</move>
+    <move>(12,9)</move>
+    <click_control>
+        <id>bash</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pick2</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(12,9)</move>
+    <move>(11,9)</move>
+    <move>(10,9)</move>
+    <move>(9,9)</move>
+    <move>(8,9)</move>
+    <move>(8,10)</move>
+    <move>(9,10)</move>
+    <handle_begin_look>false</handle_begin_look>
+    <handle_look>
+        <destination>(9,11)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(9,9)</move>
+    <move>(10,9)</move>
+    <move>(11,9)</move>
+    <move>(12,9)</move>
+    <move>(13,9)</move>
+    <move>(14,10)</move>
+    <move>(15,11)</move>
+    <move>(16,12)</move>
+    <move>(17,13)</move>
+    <move>(18,13)</move>
+    <move>(19,13)</move>
+    <move>(20,13)</move>
+    <move>(21,12)</move>
+    <move>(22,11)</move>
+    <move>(23,10)</move>
+    <move>(23,9)</move>
+    <move>(23,8)</move>
+    <move>(23,7)</move>
+    <move>(22,6)</move>
+    <move>(21,5)</move>
+    <move>(20,5)</move>
+    <move>(20,5)</move>
+    <move>(20,4)</move>
+    <move>(19,4)</move>
+    <move>(18,4)</move>
+    <move>(18,5)</move>
+    <click_control>
+        <id>bash</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pick2</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(18,5)</move>
+    <click_control>
+        <id>bash</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pick2</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(18,5)</move>
+    <click_control>
+        <id>pick</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pick3</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(19,4)</move>
+    <move>(20,4)</move>
+    <move>(21,4)</move>
+    <move>(22,4)</move>
+    <move>(23,4)</move>
+    <move>(24,4)</move>
+    <move>(25,4)</move>
+    <move>(26,4)</move>
+    <move>(27,4)</move>
+    <move>(27,5)</move>
+    <move>(27,6)</move>
+    <move>(28,6)</move>
+    <move>(28,7)</move>
+    <move>(29,8)</move>
+    <move>(30,8)</move>
+    <move>(30,9)</move>
+    <move>(31,9)</move>
+    <move>(31,9)</move>
+    <move>(32,9)</move>
+    <move>(33,9)</move>
+    <move>(34,9)</move>
+    <move>(35,9)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(36,8)</handle_talk>
+    <click_talk_rect>
+        <node>-10</node>
+        <preset>true</preset>
+        <rect>{(4,366) - (50,384)}</rect>
+        <word>Look</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-11</node>
+        <preset>true</preset>
+        <rect>{(70,366) - (125,380)}</rect>
+        <word>Name</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>24</node>
+        <preset>false</preset>
+        <rect>{(142,92) - (207,116)}</rect>
+        <word>help</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-11</node>
+        <preset>true</preset>
+        <rect>{(70,366) - (125,380)}</rect>
+        <word>Name</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>21</node>
+        <preset>false</preset>
+        <rect>{(44,92) - (126,109)}</rect>
+        <word>curse</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>22</node>
+        <preset>false</preset>
+        <rect>{(102,108) - (232,132)}</rect>
+        <word>daughter</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>23</node>
+        <preset>false</preset>
+        <rect>{(51,60) - (133,84)}</rect>
+        <word>plays</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>24</node>
+        <preset>false</preset>
+        <rect>{(151,124) - (272,145)}</rect>
+        <word>thankful</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>20</node>
+        <preset>false</preset>
+        <rect>{(48,108) - (97,130)}</rect>
+        <word>sell</word>
+    </click_talk_rect>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(308,41) - (485,50)}</arrow_button_click>
+    <handle_switch_pc>1</handle_switch_pc>
+    <arrow_button_click>{(478,188) - (537,200)}</arrow_button_click>
+    <handle_item_shop_action>3</handle_item_shop_action>
+    <arrow_button_click>{(308,54) - (485,63)}</arrow_button_click>
+    <handle_switch_pc>2</handle_switch_pc>
+    <arrow_button_click>{(478,162) - (537,174)}</arrow_button_click>
+    <handle_item_shop_action>1</handle_item_shop_action>
+    <arrow_button_click>{(308,67) - (485,76)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <arrow_button_click>{(308,80) - (485,89)}</arrow_button_click>
+    <handle_switch_pc>4</handle_switch_pc>
+    <arrow_button_click>{(308,93) - (485,102)}</arrow_button_click>
+    <handle_switch_pc>5</handle_switch_pc>
+    <click_talk_rect>
+        <node>-2</node>
+        <preset>true</preset>
+        <rect>{(4,389) - (47,406)}</rect>
+        <word>Buy</word>
+    </click_talk_rect>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>10</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>11</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>12</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>13</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>14</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>15</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>16</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>17</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>18</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>19</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>20</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>21</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>22</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>23</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>24</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>25</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>26</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>27</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>28</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>29</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>30</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>29</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>29</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>29</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>29</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>28</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>27</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>26</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>25</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>24</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>23</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>23</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>22</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>22</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>21</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>20</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>19</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>19</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>18</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>17</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>17</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>15</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>14</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>14</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>13</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>13</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>13</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>13</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>13</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>13</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>13</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>13</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>13</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>12</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>12</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>12</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>11</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>11</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>11</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>11</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>11</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>11</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>11</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>10</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>10</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>10</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>0</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>0</newPos>
+    </scrollbar_setPosition>
+    <end_shop_mode></end_shop_mode>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(34,9)</move>
+    <move>(33,9)</move>
+    <move>(32,9)</move>
+    <move>(31,9)</move>
+    <move>(30,9)</move>
+    <move>(29,10)</move>
+    <move>(28,11)</move>
+    <move>(27,12)</move>
+    <move>(26,13)</move>
+    <move>(25,14)</move>
+    <move>(24,15)</move>
+    <move>(24,16)</move>
+    <move>(24,17)</move>
+    <move>(24,18)</move>
+    <move>(24,19)</move>
+    <move>(24,20)</move>
+    <move>(24,21)</move>
+    <move>(24,22)</move>
+    <move>(23,23)</move>
+    <move>(22,24)</move>
+    <move>(21,25)</move>
+    <move>(20,26)</move>
+    <move>(19,27)</move>
+    <move>(18,28)</move>
+    <move>(17,29)</move>
+    <move>(16,30)</move>
+    <move>(15,31)</move>
+    <move>(14,32)</move>
+    <move>(13,32)</move>
+    <move>(12,33)</move>
+    <move>(12,33)</move>
+    <move>(11,34)</move>
+    <move>(10,35)</move>
+    <move>(10,36)</move>
+    <move>(10,37)</move>
+    <move>(10,38)</move>
+    <move>(10,39)</move>
+    <move>(10,40)</move>
+    <move>(10,41)</move>
+    <move>(10,42)</move>
+    <move>(10,43)</move>
+    <move>(10,44)</move>
+    <move>(10,43)</move>
+    <move>(10,42)</move>
+    <move>(10,41)</move>
+    <move>(11,40)</move>
+    <move>(12,40)</move>
+    <move>(13,40)</move>
+    <move>(14,40)</move>
+    <move>(15,40)</move>
+    <move>(16,40)</move>
+    <move>(17,41)</move>
+    <move>(17,41)</move>
+    <move>(16,41)</move>
+    <move>(16,42)</move>
+    <move>(15,43)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(12,46)</handle_talk>
+    <click_talk_rect>
+        <node>-2</node>
+        <preset>true</preset>
+        <rect>{(4,389) - (47,406)}</rect>
+        <word>Buy</word>
+    </click_talk_rect>
+    <click_control>
+        <id>pick4</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <arrow_button_click>{(308,67) - (485,76)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell23</id>
+        <mods>1</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>1</mods>
+    </click_control>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(12,46)</handle_talk>
+    <click_talk_rect>
+        <node>-2</node>
+        <preset>true</preset>
+        <rect>{(4,389) - (47,406)}</rect>
+        <word>Buy</word>
+    </click_talk_rect>
+    <click_control>
+        <id>pick4</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>int-p</id>
+        <mods>1</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>1</mods>
+    </click_control>
+    <click_control>
+        <id>sp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>sp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>sp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>sp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>sp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>int-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>keep</id>
+        <mods>0</mods>
+    </click_control>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(16,42)</move>
+    <move>(16,41)</move>
+    <move>(15,40)</move>
+    <move>(14,40)</move>
+    <move>(13,40)</move>
+    <move>(12,40)</move>
+    <move>(11,40)</move>
+    <move>(10,39)</move>
+    <move>(10,38)</move>
+    <move>(10,37)</move>
+    <move>(10,36)</move>
+    <move>(10,35)</move>
+    <move>(10,34)</move>
+    <move>(10,33)</move>
+    <move>(10,33)</move>
+    <move>(10,32)</move>
+    <move>(11,32)</move>
+    <move>(10,32)</move>
+    <move>(9,32)</move>
+    <move>(8,32)</move>
+    <move>(7,32)</move>
+    <move>(6,32)</move>
+    <move>(5,32)</move>
+    <move>(4,32)</move>
+    <move>(3,32)</move>
+    <move>(67,69)</move>
+    <move>(66,68)</move>
+    <move>(65,68)</move>
+    <move>(64,68)</move>
+    <move>(63,68)</move>
+    <move>(62,68)</move>
+    <move>(61,68)</move>
+    <move>(60,69)</move>
+    <move>(59,70)</move>
+    <move>(58,71)</move>
+    <move>(57,72)</move>
+    <move>(56,72)</move>
+    <move>(55,72)</move>
+    <move>(54,72)</move>
+    <move>(53,72)</move>
+    <move>(52,71)</move>
+    <move>(51,71)</move>
+    <move>(50,71)</move>
+    <move>(49,70)</move>
+    <move>(48,70)</move>
+    <move>(47,70)</move>
+    <move>(46,70)</move>
+    <move>(45,70)</move>
+    <move>(44,70)</move>
+    <move>(43,70)</move>
+    <move>(42,70)</move>
+    <move>(41,70)</move>
+    <move>(40,69)</move>
+    <move>(39,68)</move>
+    <move>(38,67)</move>
+    <move>(37,66)</move>
+    <move>(36,65)</move>
+    <move>(35,64)</move>
+    <move>(34,63)</move>
+    <move>(33,63)</move>
+    <move>(32,63)</move>
+    <move>(31,63)</move>
+    <move>(30,63)</move>
+    <move>(29,63)</move>
+    <move>(28,63)</move>
+    <move>(27,63)</move>
+    <move>(26,63)</move>
+    <move>(25,63)</move>
+    <move>(24,63)</move>
+    <move>(23,63)</move>
+    <move>(22,63)</move>
+    <move>(21,62)</move>
+    <move>(20,61)</move>
+    <click_control>
+        <id>btn1</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(19,61)</move>
+    <move>(20,61)</move>
+    <click_control>
+        <id>btn1</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(19,61)</move>
+    <move>(18,61)</move>
+    <move>(17,60)</move>
+    <move>(17,59)</move>
+    <move>(16,58)</move>
+    <move>(15,57)</move>
+    <move>(14,56)</move>
+    <move>(13,55)</move>
+    <move>(12,54)</move>
+    <move>(12,53)</move>
+    <move>(12,52)</move>
+    <move>(12,51)</move>
+    <move>(12,50)</move>
+    <move>(12,49)</move>
+    <move>(12,48)</move>
+    <move>(12,47)</move>
+    <move>(12,46)</move>
+    <move>(13,45)</move>
+    <move>(14,44)</move>
+    <move>(15,43)</move>
+    <move>(16,42)</move>
+    <move>(20,22)</move>
+    <move>(19,21)</move>
+    <handle_pause></handle_pause>
+    <move>(19,23)</move>
+    <move>(18,22)</move>
+    <move>(17,21)</move>
+    <move>(21,23)</move>
+    <move>(21,22)</move>
+    <arrow_button_click>{(308,178) - (493,187)}</arrow_button_click>
+    <handle_equip_item>2</handle_equip_item>
+    <arrow_button_click>{(308,165) - (493,174)}</arrow_button_click>
+    <handle_equip_item>1</handle_equip_item>
+    <arrow_button_click>{(308,178) - (493,187)}</arrow_button_click>
+    <handle_equip_item>2</handle_equip_item>
+    <handle_pause></handle_pause>
+    <move>(18,24)</move>
+    <move>(18,23)</move>
+    <move>(17,22)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell23</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell12</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <move>(18,21)</move>
+    <move>(20,24)</move>
+    <move>(20,23)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell12</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(15,18)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_pause></handle_pause>
+    <move>(18,20)</move>
+    <move>(17,20)</move>
+    <move>(17,20)</move>
+    <handle_pause></handle_pause>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(17,20)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(17,20)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_pause></handle_pause>
+    <move>(19,19)</move>
+    <move>(17,20)</move>
+    <move>(18,19)</move>
+    <move>(19,19)</move>
+    <move>(20,21)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell23</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(20,20)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell23</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(20,20)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_pause></handle_pause>
+    <move>(19,19)</move>
+    <move>(19,19)</move>
+    <move>(20,21)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(20,20)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(15,41)</move>
+    <move>(14,41)</move>
+    <move>(13,41)</move>
+    <move>(12,41)</move>
+    <move>(11,42)</move>
+    <move>(10,43)</move>
+    <move>(11,43)</move>
+    <move>(12,42)</move>
+    <move>(13,41)</move>
+    <move>(14,40)</move>
+    <move>(14,39)</move>
+    <move>(13,38)</move>
+    <move>(13,37)</move>
+    <move>(13,36)</move>
+    <move>(13,35)</move>
+    <move>(12,34)</move>
+    <move>(11,33)</move>
+    <move>(10,32)</move>
+    <move>(9,32)</move>
+    <move>(8,32)</move>
+    <move>(7,32)</move>
+    <move>(6,32)</move>
+    <move>(5,32)</move>
+    <move>(52,32)</move>
+    <move>(51,31)</move>
+    <move>(50,31)</move>
+    <move>(49,31)</move>
+    <move>(48,31)</move>
+    <move>(47,31)</move>
+    <move>(46,30)</move>
+    <move>(45,29)</move>
+    <move>(44,29)</move>
+    <move>(43,29)</move>
+    <move>(42,29)</move>
+    <move>(41,29)</move>
+    <move>(40,29)</move>
+    <move>(39,28)</move>
+    <move>(38,28)</move>
+    <move>(37,28)</move>
+    <move>(36,28)</move>
+    <move>(35,28)</move>
+    <move>(34,29)</move>
+    <handle_begin_look>false</handle_begin_look>
+    <handle_look>
+        <destination>(33,30)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(34,30)</move>
+    <move>(34,31)</move>
+    <move>(34,32)</move>
+    <move>(34,33)</move>
+    <click_control>
+        <id>btn1</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(34,34)</move>
+    <move>(33,34)</move>
+    <move>(32,34)</move>
+    <move>(42,32)</move>
+    <move>(41,32)</move>
+    <move>(40,32)</move>
+    <move>(40,33)</move>
+    <move>(40,34)</move>
+    <handle_begin_look>false</handle_begin_look>
+    <handle_look>
+        <destination>(39,35)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(40,35)</move>
+    <move>(40,35)</move>
+    <move>(40,36)</move>
+    <move>(40,37)</move>
+    <move>(40,38)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(40,40)</handle_talk>
+    <click_talk_rect>
+        <node>34</node>
+        <preset>false</preset>
+        <rect>{(138,92) - (214,114)}</rect>
+        <word>stone</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>34</node>
+        <preset>false</preset>
+        <rect>{(107,76) - (203,97)}</rect>
+        <word>charm</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>30</node>
+        <preset>false</preset>
+        <rect>{(113,108) - (222,129)}</rect>
+        <word>vermin</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>33</node>
+        <preset>false</preset>
+        <rect>{(6,76) - (111,99)}</rect>
+        <word>bandits</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>35</node>
+        <preset>false</preset>
+        <rect>{(72,44) - (191,66)}</rect>
+        <word>missiles</word>
+    </click_talk_rect>
+    <end_shop_mode></end_shop_mode>
+    <click_talk_rect>
+        <node>-3</node>
+        <preset>true</preset>
+        <rect>{(70,389) - (105,405)}</rect>
+        <word>Sell</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(40,37)</move>
+    <move>(40,36)</move>
+    <move>(40,35)</move>
+    <move>(39,34)</move>
+    <move>(38,34)</move>
+    <move>(38,33)</move>
+    <move>(38,32)</move>
+    <move>(39,31)</move>
+    <move>(39,30)</move>
+    <click_control>
+        <id>bash</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pick2</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(39,30)</move>
+    <move>(39,29)</move>
+    <move>(39,28)</move>
+    <move>(39,27)</move>
+    <move>(40,26)</move>
+    <handle_get_items></handle_get_items>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_get_items></handle_get_items>
+    <click_control>
+        <id>item2-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>steal</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_begin_look>false</handle_begin_look>
+    <handle_look>
+        <destination>(41,26)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(39,26)</move>
+    <move>(38,26)</move>
+    <handle_begin_look>false</handle_begin_look>
+    <handle_look>
+        <destination>(37,26)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(38,27)</move>
+    <move>(38,28)</move>
+    <move>(39,29)</move>
+    <move>(39,30)</move>
+    <move>(38,30)</move>
+    <move>(39,31)</move>
+    <move>(38,31)</move>
+    <move>(37,31)</move>
+    <move>(36,31)</move>
+    <move>(35,31)</move>
+    <move>(34,31)</move>
+    <move>(33,31)</move>
+    <move>(32,31)</move>
+    <move>(31,31)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(30,31)</handle_talk>
+    <click_talk_rect>
+        <node>32</node>
+        <preset>false</preset>
+        <rect>{(119,124) - (214,140)}</rect>
+        <word>wares</word>
+    </click_talk_rect>
+    <end_shop_mode></end_shop_mode>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(31,32)</move>
+    <move>(30,31)</move>
+    <move>(29,30)</move>
+    <move>(29,30)</move>
+    <move>(29,29)</move>
+    <move>(30,28)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(28,29)</handle_talk>
+    <move>(29,27)</move>
+    <move>(29,26)</move>
+    <move>(29,25)</move>
+    <move>(30,24)</move>
+    <move>(31,25)</move>
+    <handle_begin_look>false</handle_begin_look>
+    <handle_look>
+        <destination>(32,25)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <move>(31,26)</move>
+    <handle_begin_look>false</handle_begin_look>
+    <handle_look>
+        <destination>(32,26)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <move>(31,27)</move>
+    <handle_begin_look>false</handle_begin_look>
+    <handle_look>
+        <destination>(32,27)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <move>(30,28)</move>
+    <move>(29,28)</move>
+    <move>(28,28)</move>
+    <handle_get_items></handle_get_items>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(29,28)</move>
+    <move>(29,27)</move>
+    <move>(29,26)</move>
+    <move>(29,25)</move>
+    <move>(29,24)</move>
+    <move>(29,23)</move>
+    <move>(29,22)</move>
+    <move>(29,22)</move>
+    <move>(29,21)</move>
+    <move>(29,20)</move>
+    <move>(29,19)</move>
+    <move>(29,18)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(26,22)</handle_talk>
+    <click_talk_rect>
+        <node>9</node>
+        <preset>false</preset>
+        <rect>{(61,92) - (143,113)}</rect>
+        <word>weak</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(26,22)</handle_talk>
+    <click_talk_rect>
+        <node>-11</node>
+        <preset>true</preset>
+        <rect>{(70,366) - (125,380)}</rect>
+        <word>Name</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>7</node>
+        <preset>false</preset>
+        <rect>{(37,124) - (140,146)}</rect>
+        <word>outside</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>8</node>
+        <preset>false</preset>
+        <rect>{(6,124) - (96,148)}</rect>
+        <word>daddy</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>8</node>
+        <preset>false</preset>
+        <rect>{(6,60) - (107,84)}</rect>
+        <word>Daddy</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>9</node>
+        <preset>false</preset>
+        <rect>{(120,76) - (185,100)}</rect>
+        <word>play</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(29,18)</move>
+    <move>(28,18)</move>
+    <move>(30,19)</move>
+    <move>(31,19)</move>
+    <move>(32,18)</move>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(31,17)</move>
+    <move>(30,17)</move>
+    <move>(29,17)</move>
+    <move>(28,17)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(26,13)</handle_talk>
+    <click_talk_rect>
+        <node>-11</node>
+        <preset>true</preset>
+        <rect>{(70,366) - (125,380)}</rect>
+        <word>Name</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>36</node>
+        <preset>false</preset>
+        <rect>{(72,44) - (174,64)}</rect>
+        <word>farmer</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>37</node>
+        <preset>false</preset>
+        <rect>{(182,124) - (264,148)}</rect>
+        <word>lucky</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>38</node>
+        <preset>false</preset>
+        <rect>{(99,172) - (178,186)}</rect>
+        <word>mean</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-3</node>
+        <preset>true</preset>
+        <rect>{(70,389) - (105,405)}</rect>
+        <word>Sell</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-2</node>
+        <preset>true</preset>
+        <rect>{(4,389) - (47,406)}</rect>
+        <word>Buy</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(26,13)</handle_talk>
+    <click_talk_rect>
+        <node>-10</node>
+        <preset>true</preset>
+        <rect>{(4,366) - (50,384)}</rect>
+        <word>Look</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>36</node>
+        <preset>false</preset>
+        <rect>{(72,44) - (174,64)}</rect>
+        <word>farmer</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(26,13)</handle_talk>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>36</node>
+        <preset>false</preset>
+        <rect>{(150,44) - (241,68)}</rect>
+        <word>Tough</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <close_window></close_window>
+    <click_control>
+        <id>quit</id>
+        <mods>0</mods>
+    </click_control>
+</actions>
