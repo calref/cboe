@@ -595,6 +595,9 @@ void cDialog::handle_events() {
 
 			cScrollPane& pane = dynamic_cast<cScrollPane&>(getControl(name));
 			pane.getScroll().setPosition(newPos);
+		}else if(replaying && has_next_action("error")){
+			// The error is recorded for debugging only. It should be triggered by replaying the actions.
+			pop_next_action();
 		}else if(replaying && has_next_action()){
 			throw std::string { "Replaying a dialog, have the wrong replay action: " + next_action_type() };
 		}else{
