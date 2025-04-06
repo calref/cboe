@@ -1842,7 +1842,7 @@ static bool pick_spell_caster(cDialog& me, std::string id, const eSkill store_si
 	return true;
 }
 
-static bool pick_spell_target(cDialog& me, std::string id, const eSkill store_situation, short& last_darkened, const short store_spell) {
+static bool pick_spell_target(cDialog& me, std::string id, const eSkill store_situation, short& last_darkened, const short& store_spell) {
 	static const char*const no_target = " No target needed.";
 	static const char*const bad_target = " Can't cast on them.";
 	static const char*const got_target = " Target selected.";
@@ -1862,7 +1862,7 @@ static bool pick_spell_target(cDialog& me, std::string id, const eSkill store_si
 	return true;
 }
 
-static bool pick_spell_event_filter(cDialog& me, std::string item_hit, const eSkill store_situation, const short store_spell) {
+static bool pick_spell_event_filter(cDialog& me, std::string item_hit, const eSkill store_situation, const short& store_spell) {
 	if(item_hit == "other") {
 		on_which_spell_page = 1 - on_which_spell_page;
 		put_spell_list(me, store_situation);
@@ -2060,8 +2060,8 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	cDialog castSpell(*ResMgr::dialogs.get("cast-spell"));
 	
 	castSpell.attachClickHandlers(std::bind(pick_spell_caster, _1, _2, type, std::ref(dark), std::ref(former_spell)), {"caster1","caster2","caster3","caster4","caster5","caster6"});
-	castSpell.attachClickHandlers(std::bind(pick_spell_target,_1,_2, type, std::ref(dark), former_spell), {"target1","target2","target3","target4","target5","target6"});
-	castSpell.attachClickHandlers(std::bind(pick_spell_event_filter, _1, _2, type, former_spell), {"other", "help"});
+	castSpell.attachClickHandlers(std::bind(pick_spell_target,_1,_2, type, std::ref(dark), std::ref(former_spell)), {"target1","target2","target3","target4","target5","target6"});
+	castSpell.attachClickHandlers(std::bind(pick_spell_event_filter, _1, _2, type,std::ref(former_spell)), {"other", "help"});
 	castSpell["cast"].attachClickHandler(std::bind(finish_pick_spell, _1, false, former_target, std::ref(former_spell), type));
 	castSpell["cancel"].attachClickHandler(std::bind(finish_pick_spell, _1, true, former_target, std::ref(former_spell), type));
 	
