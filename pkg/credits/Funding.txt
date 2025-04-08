@@ -17,6 +17,7 @@ Confirmed:
 - Jeremy Bracegirdle
 - Joe Ardent
 - Joel Joslin
+- Joshua Broad
 - Joshua Murphy
 - Juan Dionicio Becerra
 - Kelandon
