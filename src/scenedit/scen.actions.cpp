@@ -1710,6 +1710,8 @@ void handle_keystroke(sf::Event event) {
 	if(overall_mode >= MODE_MAIN_SCREEN)
 		return;
 	
+	// Shortcuts while terrain is visible:
+
 	for(short i = 0; i < 10; i++)
 		if(chr2 == keypad[i] || (i % 2 == 0 && i > 0 && chr2 == arrows[i / 2 - 1])) {
 			if(i == 0) {
@@ -1816,6 +1818,16 @@ void handle_keystroke(sf::Event event) {
 			overall_mode = MODE_EDIT_CREATURE;
 			break;
 			
+		case '+': case '=': // accept + with or without shift held for symmetry with -
+			cur_viewing_mode = std::max(cur_viewing_mode - 1, 0);
+			// Skip first line of fallthrough
+			if(false)
+		case '-':
+			cur_viewing_mode = std::min(cur_viewing_mode + 1, 3);
+			draw_main_screen();
+			draw_terrain();
+			break;
+
 		default:
 			if(chr >= 'a' && chr <= 'z') {
 				for(short i = 0; i < scenario.ter_types.size(); i++) {
