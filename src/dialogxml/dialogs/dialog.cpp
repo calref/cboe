@@ -933,7 +933,7 @@ void cDialog::process_keystroke(cKey keyHit){
 				cContainer* container = dynamic_cast<cContainer*>(ctrl);
 				std::string child_hit;
 				container->forEach([&keyHit, &child_hit, enterKeyHit](std::string child_id, cControl& child_ctrl) {
-					if(child_ctrl.isClickable() &&
+					if(child_ctrl.isVisible() && child_ctrl.isClickable() &&
 						(child_ctrl.getAttachedKey() == keyHit || (child_ctrl.isDefault() && enterKeyHit))){
 						
 						if(child_hit.empty()) child_hit = child_id;
