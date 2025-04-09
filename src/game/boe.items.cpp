@@ -108,7 +108,7 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 	std::string choice;
 	short how_many = 1;
 	cItem item_store;
-	bool take_given_item = true, need_redraw = false;
+	bool take_dropped_item = true, need_redraw = false;
 	location loc;
 	
 	item_store = univ.party[pc_num].items[item_num];
@@ -139,7 +139,7 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 				if(how_many <= 0)
 					return;
 				if(how_many < item_store.charges)
-					take_given_item = false;
+					take_dropped_item = false;
 				item_store.charges = how_many;
 			}
 			if(place_item(item_store,loc,true)) {
@@ -147,7 +147,7 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 				spec = -1; // Don't call drop specials if it was put away
 			} else add_string_to_buf("Drop: OK");
 			univ.party[pc_num].items[item_num].charges -= how_many;
-			if(take_given_item)
+			if(take_dropped_item)
 				univ.party[pc_num].take_item(item_num);
 			break;
 		default: //should never be reached
