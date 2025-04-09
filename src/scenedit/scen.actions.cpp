@@ -1710,6 +1710,8 @@ void handle_keystroke(sf::Event event) {
 	if(overall_mode >= MODE_MAIN_SCREEN)
 		return;
 	
+	// Shortcuts while terrain is visible:
+
 	for(short i = 0; i < 10; i++)
 		if(chr2 == keypad[i] || (i % 2 == 0 && i > 0 && chr2 == arrows[i / 2 - 1])) {
 			if(i == 0) {
@@ -1816,6 +1818,16 @@ void handle_keystroke(sf::Event event) {
 			overall_mode = MODE_EDIT_CREATURE;
 			break;
 			
+		case '+': case '=': // accept + with or without shift held for symmetry with -
+			cur_viewing_mode = std::max(cur_viewing_mode - 1, 0);
+			// Skip first line of fallthrough
+			if(false)
+		case '-':
+			cur_viewing_mode = std::min(cur_viewing_mode + 1, 3);
+			draw_main_screen();
+			draw_terrain();
+			break;
+
 		default:
 			if(chr >= 'a' && chr <= 'z') {
 				for(short i = 0; i < scenario.ter_types.size(); i++) {
@@ -1837,7 +1849,13 @@ void handle_keystroke(sf::Event event) {
 	mouse_button_held = false;
 }
 
+// Don't repeatedly prompt when the designer scrolls out of bounds and says no to shifting.
+// Unless it's in a new direction.
+bool did_out_of_bounds_prompt = false;
+int last_dx = 0, last_dy = 0;
+
 static bool handle_outdoor_sec_shift(int dx, int dy){
+	if(did_out_of_bounds_prompt) return false;
 	if(editing_town) return false;
 	int new_x = cur_out.x + dx;
 	int new_y = cur_out.y + dy;
@@ -1846,11 +1864,13 @@ static bool handle_outdoor_sec_shift(int dx, int dy){
 	if(new_y < 0) return true;
 	if(new_y >= scenario.outdoors.height()) return true;
 
+	did_out_of_bounds_prompt = true;
 	cChoiceDlog shift_prompt("shift-outdoor-section", {"yes", "no"});
 	location new_out_sec = { new_x, new_y };
 	shift_prompt->getControl("out-sec").setText(boost::lexical_cast<std::string>(new_out_sec));
 
 	if(shift_prompt.show() == "yes"){
+		did_out_of_bounds_prompt = false;
 		int last_cen_x = cen_x;
 		int last_cen_y = cen_y;
 		set_current_out(new_out_sec);
@@ -1876,29 +1896,41 @@ static bool handle_outdoor_sec_shift(int dx, int dy){
 }
 
 void handle_editor_screen_shift(int dx, int dy) {
-	int min = (editing_town ? 4 : 3);
-	int max = get_current_area()->max_dim - 5;
+	// Outdoors, you can see 1 tile across the border with neighboring sections:
+	int min = (editing_town ? 0 : -1);
+	int max = get_current_area()->max_dim - 1;
 	if(!editing_town) max++;
+	// When zoomed out, you can move your actual center beyond the zoomed-out camera limit,
+	// then zoom in and be centered on that place.
+	// The visible bounds, not the technical center, are what we care about
+	// when prompting whether to shift areas:
+	rectangle shift_bounds = visible_bounds();
 	bool out_of_bounds = false;
-	if(cen_x + dx < min){
+	if(dx != last_dx || dy != last_dy){
+		did_out_of_bounds_prompt = false;
+	}
+	last_dx = dx;
+	last_dy = dy;
+	if(dx < 0 && shift_bounds.left + dx < min){
 		// In outdoors, prompt whether to swap to the next section west
 		if(handle_outdoor_sec_shift(-1, 0)) return;
 		out_of_bounds = true;
-	}else if(cen_x + dx > max){
+	}else if(dx > 0 && shift_bounds.right + dx > max){
 		// In outdoors, prompt whether to swap to the next section east
 		if(handle_outdoor_sec_shift(1, 0)) return;
 		out_of_bounds = true;
-	}else if(cen_y + dy < min){
+	}else if(dy < 0 && shift_bounds.top + dy < min){
 		// In outdoors, prompt whether to swap to the next section north
 		if(handle_outdoor_sec_shift(0, -1)) return;
 		out_of_bounds = true;
-	}else if(cen_y + dy > max){
+	}else if(dy > 0 && shift_bounds.bottom + dy > max){
 		// In outdoors, prompt whether to swap to the next section south
 		if(handle_outdoor_sec_shift(0, 1)) return;
 		out_of_bounds = true;
 	}
 
-	if(out_of_bounds){
+	if(out_of_bounds && !did_out_of_bounds_prompt){
+		did_out_of_bounds_prompt = true;
 		// In town, prompt whether to go back to outdoor entrance location
 		std::vector<town_entrance_t> town_entrances = scenario.find_town_entrances(cur_town);
 		if(town_entrances.size() == 1){
@@ -1907,6 +1939,7 @@ void handle_editor_screen_shift(int dx, int dy) {
 			shift_prompt->getControl("out-sec").setText(boost::lexical_cast<std::string>(only_entrance.out_sec));
 
 			if(shift_prompt.show() == "yes"){
+				did_out_of_bounds_prompt = false;
 				set_current_out(only_entrance.out_sec);
 				start_out_edit();
 				cen_x = only_entrance.loc.x;
@@ -1925,6 +1958,7 @@ void handle_editor_screen_shift(int dx, int dy) {
 			cStringChoice dlog(entrance_strings, "Shift to one of this town's entrances in the outdoors?");
 			size_t choice = dlog.show(-1);
 			if(choice >= 0 && choice < town_entrances.size()){
+				did_out_of_bounds_prompt = false;
 				town_entrance_t entrance = town_entrances[choice];
 				set_current_out(entrance.out_sec);
 				start_out_edit();
@@ -1936,8 +1970,11 @@ void handle_editor_screen_shift(int dx, int dy) {
 		}
 	}
 
-	cen_x = minmax(min, max, cen_x + dx);
-	cen_y = minmax(min, max, cen_y + dy);
+	if(!out_of_bounds)
+		did_out_of_bounds_prompt = false;
+
+	cen_x = minmax(min+4, max-4, cen_x + dx);
+	cen_y = minmax(min+4, max-4, cen_y + dy);
 }
 
 void handle_scroll(const sf::Event& event) {

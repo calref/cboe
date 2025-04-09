@@ -13,6 +13,7 @@ void draw_lb_slot (short which,short mode) ;
 void draw_rb();
 void draw_rb_slot (short which,short mode) ;
 void set_up_terrain_buttons(bool reset);
+rectangle visible_bounds();
 void draw_terrain();
 void draw_monsts();
 void draw_items();
