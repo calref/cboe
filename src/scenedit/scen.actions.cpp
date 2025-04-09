@@ -1848,7 +1848,11 @@ void handle_keystroke(sf::Event event) {
 	mouse_button_held = false;
 }
 
+// Don't repeatedly prompt when the designer scrolls out of bounds and says no to shifting
+bool did_out_of_bounds_prompt = false;
+
 static bool handle_outdoor_sec_shift(int dx, int dy){
+	if(did_out_of_bounds_prompt) return false;
 	if(editing_town) return false;
 	int new_x = cur_out.x + dx;
 	int new_y = cur_out.y + dy;
@@ -1857,11 +1861,13 @@ static bool handle_outdoor_sec_shift(int dx, int dy){
 	if(new_y < 0) return true;
 	if(new_y >= scenario.outdoors.height()) return true;
 
+	did_out_of_bounds_prompt = true;
 	cChoiceDlog shift_prompt("shift-outdoor-section", {"yes", "no"});
 	location new_out_sec = { new_x, new_y };
 	shift_prompt->getControl("out-sec").setText(boost::lexical_cast<std::string>(new_out_sec));
 
 	if(shift_prompt.show() == "yes"){
+		did_out_of_bounds_prompt = false;
 		int last_cen_x = cen_x;
 		int last_cen_y = cen_y;
 		set_current_out(new_out_sec, true);
@@ -1909,7 +1915,8 @@ void handle_editor_screen_shift(int dx, int dy) {
 		out_of_bounds = true;
 	}
 
-	if(out_of_bounds){
+	if(out_of_bounds && !did_out_of_bounds_prompt){
+		did_out_of_bounds_prompt = true;
 		// In town, prompt whether to go back to outdoor entrance location
 		std::vector<town_entrance_t> town_entrances = scenario.find_town_entrances(cur_town);
 		if(town_entrances.size() == 1){
@@ -1919,6 +1926,7 @@ void handle_editor_screen_shift(int dx, int dy) {
 
 			if(shift_prompt.show() == "yes"){
 				set_current_out(only_entrance.out_sec, true);
+				did_out_of_bounds_prompt = false;
 				start_out_edit();
 				cen_x = only_entrance.loc.x;
 				cen_y = only_entrance.loc.y;
@@ -1936,6 +1944,7 @@ void handle_editor_screen_shift(int dx, int dy) {
 			cStringChoice dlog(entrance_strings, "Shift to one of this town's entrances in the outdoors?");
 			size_t choice = dlog.show(-1);
 			if(choice >= 0 && choice < town_entrances.size()){
+				did_out_of_bounds_prompt = false;
 				town_entrance_t entrance = town_entrances[choice];
 				set_current_out(entrance.out_sec, true);
 				start_out_edit();
@@ -1946,6 +1955,9 @@ void handle_editor_screen_shift(int dx, int dy) {
 			}
 		}
 	}
+
+	if(!out_of_bounds)
+		did_out_of_bounds_prompt = false;
 
 	cen_x = minmax(min, max, cen_x + dx);
 	cen_y = minmax(min, max, cen_y + dy);
