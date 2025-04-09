@@ -184,7 +184,9 @@ void adjust_window_mode() {
 		mainPtr().create(sf::VideoMode(width, winHeight, 32), "Blades of Exile", sf::Style::Titlebar | sf::Style::Close, winSettings);
 
 		// Center the small window on the desktop
-		mainPtr().setPosition({static_cast<int>((desktop.width - width) / 2), static_cast<int>((desktop.height - height) / 2)});
+		int win_x = get_int_pref("MainWindowX", static_cast<int>((desktop.width - width) / 2));
+		int win_y = get_int_pref("MainWindowY", static_cast<int>((desktop.height - height) / 2));
+		mainPtr().setPosition({win_x, win_y});
 	} else {
 		mainPtr().create(desktop, "Blades of Exile", sf::Style::None, winSettings);
 		mainPtr().setPosition({0,0});
