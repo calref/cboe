@@ -27,6 +27,7 @@
 #include "pattern.hpp"
 #include "spell.hpp"
 #include "tools/prefs.hpp"
+#include "tools/cursors.hpp"
 #include "utility.hpp"
 #include "replay.hpp"
 
@@ -94,6 +95,11 @@ void start_outdoor_combat(cOutdoors::cWandering encounter,location where,short n
 		nums[i] = get_ran(1,low[i],high[i]);
 	for(short i = 0; i < 3; i++)
 		nums[i + 7] = get_ran(1,low[i + 7],high[i + 7]);
+
+	// This takes some time, and with sound off the delay is confusing.
+	// So let the player know we're not frozen
+	set_cursor(watch_curs);
+
 	notify_out_combat_began(encounter,nums);
 	print_buf();
 	play_sound(23);
@@ -194,6 +200,8 @@ void start_outdoor_combat(cOutdoors::cWandering encounter,location where,short n
 	
 	adjust_spell_menus();
 	
+	restore_cursor();
+
 	//clear_map();
 	give_help(48,49);
 	
