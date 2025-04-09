@@ -102,6 +102,7 @@ void start_outdoor_combat(cOutdoors::cWandering encounter,location where,short n
 
 	notify_out_combat_began(encounter,nums);
 	print_buf();
+	redraw_screen(REFRESH_TEXT);
 	play_sound(23);
 	
 	mainPtr().setActive();
