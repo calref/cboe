@@ -40,7 +40,7 @@ std::string get_text_response(std::string prompt = "", pic_num_t pic = 16);
 // Prompt the player for a number, which might be an index in a given list of strings.
 // Specify cancel_value to show a cancel button, which will return the given value (for example, -1)
 // Specify extra_led and led_output to show a labeled LED which will assign led_output with its status unless the dialog is canceled
-short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names = {}, boost::optional<short> cancel_value = boost::none, std::string extra_led = "", bool* led_output = nullptr);
+short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names = {}, boost::optional<short> cancel_value = boost::none, short initial_value = 0, std::string extra_led = "", bool* led_output = nullptr);
 
 enum class eSelectPC {
 	ANY,

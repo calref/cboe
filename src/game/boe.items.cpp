@@ -868,7 +868,7 @@ std::string get_text_response(std::string prompt, pic_num_t pic) {
 	return result;
 }
 
-short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names, boost::optional<short> cancel_value, std::string extra_led, bool* led_output) {
+short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names, boost::optional<short> cancel_value, short initial_value, std::string extra_led, bool* led_output) {
 	std::ostringstream sout;
 	sout << prompt;
 	
@@ -887,7 +887,7 @@ short get_num_response(short min, short max, std::string prompt, std::vector<std
 
 	sout << " (" << min << '-' << max << ')';
 	numPanel["prompt"].setText(sout.str());
-	numPanel["number"].setTextToNum(0);
+	numPanel["number"].setTextToNum(initial_value);
 	if(!choice_names.empty()){
 		numPanel["choose"].attachClickHandler([&choice_names, &prompt](cDialog& me,std::string,eKeyMod) -> bool {
 			cStringChoice choose_dlg(choice_names, prompt, &me);
