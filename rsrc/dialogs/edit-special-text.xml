@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<field name='str1' top='60' left='53' width='293' height='96'/>
 	<field name='str2' top='164' left='53' width='293' height='96'/>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='169' height='16'>Editing Special Message:</text>
 	<button name='okay' type='regular' top='266' left='285'>OK</button>
-	<button name='cancel' type='regular' def-key='esc' top='266' left='219'>Cancel</button>
+	<button name='cancel' type='regular' top='266' left='219'>Cancel</button>
 	<text top='24' left='50' width='289' height='28'>
 		This encounter can have one or two pieces of text appear.
 		You can leave one or both blank.

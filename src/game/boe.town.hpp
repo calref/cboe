@@ -3,7 +3,7 @@
 #include "scenario/outdoors.hpp"
 
 void force_town_enter(short which_town,location where_start);
-void start_town_mode(short which_town, short entry_dir);
+void start_town_mode(short which_town, short entry_dir, bool debug_enter = false);
 location end_town_mode(bool switching_level,location destination,bool debug_leave=false);  // returns new party location
 void handle_leave_town_specials(short town_number, short which_spec,location start_loc) ;
 void handle_town_specials(short town_number, bool town_dead,location start_loc) ;
@@ -19,6 +19,7 @@ void buy_food(short cost,short per,const char* food_name);
 void healing_shop();
 void do_sell(short which);
 void dump_gold(short print_mes);
+bool is_unlockable(location where);
 void pick_lock(location where,short pc_num);
 void bash_door(location where,short pc_num);
 void erase_town_specials();

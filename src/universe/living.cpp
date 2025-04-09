@@ -8,34 +8,15 @@
 
 #include "living.hpp"
 
-#include <set>
 #include <algorithm>
+#include <tuple>
 #include "mathutil.hpp"
 
 void iLiving::apply_status(eStatus which, int how_much) {
 	if(!is_alive()) return;
 	
-	static const std::set<eStatus> allow_negative = {
-		// The obvious ones:
-		eStatus::BLESS_CURSE, eStatus::HASTE_SLOW,
-		// The ones that BoE previously allowed:
-		eStatus::POISONED_WEAPON, eStatus::POISON, eStatus::ASLEEP,
-		// (Note: Negative levels of sleep can be obtained from the Hyperactivity spell. The other two never go negative.)
-		// The additional ones that make sense in the negative:
-		eStatus::MAGIC_RESISTANCE, eStatus::DUMB,
-	};
-	
-	int lo = 0, hi = 8;
-	
-	if(which == eStatus::MARTYRS_SHIELD)
-		hi = 10;
-	else if(which == eStatus::PARALYZED)
-		hi = 5000;
-	else if(which == eStatus::FORCECAGE)
-		hi = 1000;
-	
-	if(allow_negative.count(which))
-		lo = -hi;
+	int lo, hi;
+	std::tie(lo, hi) = status_bounds(which);
 	
 	if(which == eStatus::ASLEEP || which == eStatus::DUMB) {
 		// No "wrapping" allowed for these effects.

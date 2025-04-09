@@ -34,7 +34,7 @@
 /// so getSelected() will return the new selection. (This is the reason for the getPreviousSelection() method.)
 class cLedGroup : public cContainer {
 	friend class cTilemap; // So it can call parseAttribute
-	std::map<std::string,cLed*> choices;
+	std::map<std::string,cControl*> choices;
 	std::string fromList;
 	std::string curSelect, prevSelect;
 	std::string clicking;
@@ -110,8 +110,6 @@ public:
 	/// If a choice is not within the bounding rect, it will not respond to clicks.
 	void recalcRect() override;
 	void forEach(std::function<void(std::string,cControl&)> callback) override;
-	/// A convenience type for making an iterator into the choice map.
-	typedef std::map<std::string,cLed*>::iterator ledIter;
 	void draw() override;
 };
 #endif

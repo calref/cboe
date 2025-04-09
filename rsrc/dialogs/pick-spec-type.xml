@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='cancel'>
+<dialog escbtn='cancel'>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text top='8' left='50' width='300' height='80'>
 		This terrain type is set to call a local special when used or stepped on.

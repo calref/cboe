@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='done'>
+<dialog defbtn='done' escbtn='done'>
 	<pict name='pict' type='dlog' num='8' top='9' left='9'/>
 	<text name='str1' framed='true' top='8' left='55' width='257' height='90'/>
 	<text name='str2' framed='true' top='107' left='55' width='257' height='98'/>

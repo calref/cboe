@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='done'>
+<dialog defbtn='done' escbtn='cancel'>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text name='title' size='large' top='6' left='50' width='256' height='14'>Select:</text>
 	<text top='24' left='50'>Note: Edits to the names will be saved even if you click Cancel.</text>
@@ -50,5 +50,5 @@
 	<button name='left' type='left' def-key='left' top='358' left='8'/>
 	<button name='right' type='right' def-key='right' top='358' left='71'/>
 	<button name='done' type='regular' top='358' left='338'>OK</button>
-	<button name='cancel' type='regular' def-key='esc' top='358' left='272'>Cancel</button>
+	<button name='cancel' type='regular' top='358' left='272'>Cancel</button>
 </dialog>

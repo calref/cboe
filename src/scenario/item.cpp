@@ -261,6 +261,7 @@ cItem::cItem(eItemPreset preset) : cItem() {
 			item_level = 12;
 			charges = 12;
 			graphic_num = 57;
+			type_flag = 6;
 			missile = 3;
 			value = 1;
 			weight = 1;
@@ -308,6 +309,7 @@ cItem::cItem(eItemPreset preset) : cItem() {
 			charges = 8;
 			weap_type = eSkill::THROWN_MISSILES;
 			graphic_num = 59;
+			type_flag = 9;
 			missile = 7;
 			value = 10;
 			weight = 1;

@@ -265,7 +265,10 @@ public:
 	cDialog(cDialog& other) = delete;
 	inline void setAnimPictFPS(int fps) { if(fps == -1) fps = 2; anim_pict_fps = fps; }
 	inline void setDoAnimations(bool value) { doAnimations = value; }
+	void setDefaultButton(std::string defbtn);
+	void setEscapeButton(std::string escbtn);
 private:
+	void setSpecialButton(std::string& name_ref, std::string name, bool escape);
 	void draw();
 	void handle_events();
 	void handle_one_event(const sf::Event&, cFramerateLimiter& fps_limiter);
@@ -275,6 +278,8 @@ private:
 	rectangle winRect;
 	boost::any result;
 	std::string fname;
+	std::string defaultButton;
+	std::string escapeButton;
 	sf::Clock animTimer, paintTimer;
 	friend class cControl;
 	friend class cContainer;

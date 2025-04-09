@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='done'>
+<dialog defbtn='done' escbtn='cancel'>
 	<pict name='mainpic' type='dlog' num='16' top='6' left='6'/>
 	<text name='prompt' anchor='mainpic' relative='pos pos-in' size='large' top='0' left='12' width='248' height='14'>Select a Stuff Done Flag:</text>
 	<tilemap name='cols' anchor='mainpic' relative='pos' top='8' left='0' rows='1' cols='5' cellspacing='10'>
@@ -19,7 +19,7 @@
 	<button name='left' anchor='map' relative='pos-in pos' type='left' top='10' left='0' def-key='left'/>
 	<button name='down' anchor='left' relative='pos pos-in' type='down' top='0' left='228' def-key='down'/>
 	<button name='right' anchor='down' relative='pos pos-in' type='right' top='0' left='228' def-key='right'/>
-	<button name='cancel' anchor='done' relative='neg pos-in' type='regular' top='0' left='67' def-key='esc'>Cancel</button>
+	<button name='cancel' anchor='done' relative='neg pos-in' type='regular' top='0' left='67'>Cancel</button>
 	<button name='done' anchor='right' relative='pos-in pos' type='done' top='4' left='0'/>
 	<button name='up' anchor='down' relative='pos-in neg' type='up' top='284' left='0' def-key='up'/>
 </dialog>

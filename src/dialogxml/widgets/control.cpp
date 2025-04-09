@@ -20,6 +20,7 @@
 #include "tools/cursors.hpp"
 #include "replay.hpp"
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string/replace.hpp>
 #include "winutil.hpp"
 
 // Hyperlink forward declaration
@@ -39,8 +40,19 @@ std::string cControl::generateRandomString() {
 
 void cControl::setText(std::string l){
 	lbl = l;
-	// TODO: calling recalcRect() here has major unwanted side effects
-	// recalcRect();
+	// NOTE: calling recalcRect() here seems like a good idea but it has too many unwanted side-effects.
+	// It's better to call it manually when changing clickable text.
+}
+
+void cControl::replaceText(std::string find, std::string replace) {
+	std::string text = getText();
+	boost::replace_first(text, find, replace);
+	setText(text);
+}
+
+void cControl::appendText(std::string l) {
+	std::string text = getText();
+	setText(text + l);
 }
 
 std::string cControl::getText() const {
@@ -276,6 +288,7 @@ bool cControl::handleClick(location, cFramerateLimiter& fps_limiter){
 				clickPos = getWindow().mapPixelToCoords(clickPos);
 				clicked = frame.contains(clickPos);
 				depressed = false;
+				break;
 			} else if(e.type == sf::Event::MouseMoved){
 				restore_cursor();
 				location toPos(e.mouseMove.x, e.mouseMove.y);
@@ -289,6 +302,16 @@ bool cControl::handleClick(location, cFramerateLimiter& fps_limiter){
 	
 	redraw();
 	return clicked;
+}
+
+void cControl::handleKeyTriggered(cDialog& parent) {
+	setActive(true);
+	parent.draw();
+	playClickSound();
+	setActive(false);
+	parent.draw();
+	sf::sleep(sf::milliseconds(8));
+	triggerClickHandler(parent,name,mod_none);
 }
 
 std::string cControl::getAttachedKeyDescription() const {
@@ -331,6 +354,7 @@ std::string cControl::getAttachedKeyDescription() const {
 			case key_word_bsp: keyName = "backspace"; mod += mod_ctrl; break;
 			case key_word_del: keyName = "delete"; mod += mod_ctrl; break;
 #endif
+			case key_find: keyName = "f"; mod += mod_ctrl; break;
 		}
 		if(mod_contains(mod, mod_ctrl)) s += '^';
 		if(mod_contains(mod, mod_alt)) s += '#';

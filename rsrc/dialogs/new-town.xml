@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='256' height='17'>Create New Town</text>
 	<text name='create' top='28' left='50' width='147' height='14'>Creating town number:</text>
@@ -22,6 +22,6 @@
 	<pict name='preset' anchor='size' relative='pos-in pos' type='ter' num='0' top='4' left='6'/>
 	<text name='preset-name' anchor='preset' relative='pos pos-in' top='0' left='6' width='120' height='13'/>
 	<button name='choose-preset' anchor='preset' relative='pos pos-in' type='regular' top='14' left='6'>Choose</button>
-	<button name='cancel' anchor='preset' relative='pos-in pos' type='regular' def-key='esc' top='4' left='58'>Cancel</button>
+	<button name='cancel' anchor='preset' relative='pos-in pos' type='regular' top='4' left='58'>Cancel</button>
 	<button name='okay' anchor='cancel' relative='pos pos-in' type='regular' top='0' left='0'>OK</button>
 </dialog>

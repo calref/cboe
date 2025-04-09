@@ -23,7 +23,7 @@ UIScaleMap = 4
         <mods>1</mods>
     </startup_button_click>
     <build_scen_headers>
-        <![CDATA[use-special-terrain.boes
+        <![CDATA[use-special-terrain
 ]]>
 </build_scen_headers>
     <click_control>

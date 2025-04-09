@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<!-- OK button -->
 	<field name='from' type='uint' top='99' left='205' width='64' height='17'>0</field>
 	<field name='to' type='uint' top='125' left='205' width='64' height='17'>0</field>
 	<field name='chance' type='uint' top='151' left='205' width='64' height='17'>100</field>
 	<button name='okay' type='regular' top='177' left='280'>OK</button>
-	<button name='cancel' type='regular' top='177' left='214' def-key='esc'>Cancel</button>
+	<button name='cancel' type='regular' top='177' left='214'>Cancel</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='167' height='17'>Change Terrain Randomly</text>
 	<text top='25' left='50' width='286' height='67'>

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<field name='item1' type='uint' top='188' left='73' width='39' height='16'/>
 	<field name='item2' type='uint' top='216' left='73' width='39' height='16'/>
 	<field name='item3' type='uint' top='244' left='73' width='39' height='16'/>
@@ -24,7 +24,7 @@
 	<field name='odds10' type='uint' top='300' left='428' width='39' height='16'/>
 	<field name='ter' type='int' top='113' left='410' width='42' height='17'/>
 	<button name='okay' type='regular' top='334' left='462'>OK</button>
-	<button name='cancel' type='regular' top='334' left='396' def-key='esc'>Cancel</button>
+	<button name='cancel' type='regular' top='334' left='396'>Cancel</button>
 	<button name='right' type='right' top='334' left='73' def-key='right'/>
 	<button name='left' type='left' top='334' left='10' def-key='left'/>
 	<text name='num' top='115' left='211' width=' 46' height='14'/>

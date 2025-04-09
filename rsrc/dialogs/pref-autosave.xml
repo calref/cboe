@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' relative='pos pos-in' rel-anchor='prev' top='0' left='4' width='218' height='16'>
 		Autosave Preferences
@@ -16,5 +16,5 @@
     <led name='EndOutdoorCombat' relative='pos-in pos' rel-anchor='prev' top='6' left='0'>The party finishes combat outdoors</led>
 	
 	<button name='okay' relative='abs pos' rel-anchor='prev' type='regular' top='7' left='354'>OK</button>
-	<button name='cancel' relative='neg pos-in' anchor='okay' type='regular' def-key='esc' top='0' left='73'>Cancel</button>
+	<button name='cancel' relative='neg pos-in' anchor='okay' type='regular' top='0' left='73'>Cancel</button>
 </dialog>

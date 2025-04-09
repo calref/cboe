@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<!-- OK Button -->
 	<field name='out-w' type='uint' top='99' left='309' width='75' height='16'>1</field>
 	<field name='out-h' type='uint' top='125' left='309' width='75' height='16'>1</field>
@@ -11,7 +11,7 @@
 	<text framed='true' outline='double' top='28' left='55' width='405' height='124'/>
 	<text framed='true' outline='double' top='159' left='55' width='405' height='157'/>
 	<text framed='true' outline='double' top='323' left='55' width='405' height='107'/>
-	<button name='cancel' type='regular' top='438' left='334' def-key='esc'>Cancel</button>
+	<button name='cancel' type='regular' top='438' left='334'>Cancel</button>
 	<button name='okay' type='regular' top='438' left='400'>OK</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='52' width='278' height='17'>How big is your scenario?</text>

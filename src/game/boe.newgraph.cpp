@@ -643,6 +643,8 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 				}
 			}
 		//if(((PSD[SDF_GAME_SPEED] == 1) && (t % 3 == 0)) || ((PSD[SDF_GAME_SPEED] == 2) && (t % 2 == 0)))
+		refresh_stat_areas(0);
+		refresh_text_bar();
 		mainPtr().setActive();
 		mainPtr().display();
 		sf::sleep(time_in_ticks(2 * (1 + get_int_pref("GameSpeed"))));
@@ -1039,16 +1041,22 @@ short scan_for_response(const char *str) {
 	return -1;
 }
 
-void handle_target_mode(eGameMode target_mode, int range) {
+void handle_target_mode(eGameMode target_mode, int range, eSpell spell) {
 	overall_mode = target_mode;
 	// Lock on to enemies in range: 
 	if(has_feature_flag("target-lock", "V1") && get_bool_pref("TargetLock", true)){
+		// Skip this for spells that don't target enemies
+		if(spell != eSpell::NONE){
+			cSpell spell_info = *spell;
+			if(!spell_info.target_lock) return;
+		}
+
 		location loc = univ.current_pc().combat_pos;
 
 		std::vector<location> enemy_locs_in_range;
 		for(short i = 0; i < univ.town.monst.size(); i++){
 			auto& monst = univ.town.monst[i];
-			if(monst.is_alive()) {
+			if(monst.is_alive() && party_can_see_monst(i)) {
 				eAttitude att = monst.attitude;
 				if((att == eAttitude::HOSTILE_A || att == eAttitude::HOSTILE_B)
 					&& dist(loc, monst.cur_loc) <= range){

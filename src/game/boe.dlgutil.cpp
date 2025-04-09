@@ -373,7 +373,7 @@ void handle_sale(int i) {
 						univ.current_pc().status[eStatus::PARALYZED] = 0;
 						break;
 					case eShopItemType::REMOVE_CURSE:
-						for(int i = 0; i < univ.current_pc().items.size(); i++)
+						for(int i = 0; i < cPlayer::INVENTORY_SIZE; i++)
 							if((univ.current_pc().equip[i]) &&
 								(univ.current_pc().items[i].cursed))
 								univ.current_pc().items[i].cursed = univ.current_pc().items[i].unsellable = false;
@@ -589,7 +589,7 @@ void set_up_shop_array() {
 					shop_array.push_back(j);
 				break;
 			case eShopItemType::REMOVE_CURSE:
-				for(int i = 0; i < univ.current_pc().items.size(); i++) {
+				for(int i = 0; i < cPlayer::INVENTORY_SIZE; i++) {
 					if((univ.current_pc().equip[i]) && (univ.current_pc().items[i].cursed)) {
 						shop_array.push_back(j);
 						break;
@@ -936,7 +936,7 @@ void handle_talk_node(int which_talk_entry) {
 			save_talk_str2 = "";
 			break;
 		case eTalkNode::TRAINING:
-			if((get_pc = char_select_pc(0,"Train who?")) < 6) {
+			if((get_pc = select_pc(eSelectPC::ONLY_LIVING,"Train who?")) < 6) {
 				can_save_talk = false;
 				spend_xp(get_pc,1, nullptr);
 			}
@@ -1847,11 +1847,9 @@ class cFilePicker {
 			}else{
 				if(picking_auto){
 					me["title-load"].hide();
-					std::string title = me["title-auto"].getText();
 					fs::path party_name = save_folder.filename();
 					party_name.replace_extension();
-					boost::replace_first(title, "{Folder}", party_name.string());
-					me["title-auto"].setText(title);
+					me["title-auto"].replaceText("{Folder}", party_name.string());
 				}else{
 					me["title-auto"].hide();
 				}
@@ -1993,12 +1991,13 @@ class cFilePicker {
 				auto_folder.replace_extension(".auto");
 				if(fs::is_directory(auto_folder)) auto_mtimes = sorted_file_mtimes(auto_folder);
 			}
+
+			me["auto" + suffix + "-more-recent"].hide();
 			if(auto_mtimes.empty()){
 				me["auto" + suffix].hide();
-				me["auto" + suffix + "-more-recent"].hide();
 			}else{
 				// If an autosave is newer than the main save, show an indicator
-				if(std::difftime(mtime, auto_mtimes.front().second) > 0)
+				if(std::difftime(mtime, auto_mtimes.front().second) < 0)
 					me["auto" + suffix + "-more-recent"].show();
 
 				me["auto" + suffix].attachClickHandler(std::bind(&cFilePicker::showAuto, this, auto_folder));
@@ -2125,6 +2124,12 @@ public:
 
 	fs::path run() {
 		template_info_str = me["info1"].getText();
+
+		// When doing Save As, make Enter save in a new file, not cancel:
+		if(saving){
+			me["cancel"].setDefault(false);
+			me["save1"].setDefault(true);
+		}
 
 		me["cancel"].attachClickHandler(std::bind(&cFilePicker::doCancel, this));
 		me["find"].attachClickHandler(std::bind(&cFilePicker::doFileBrowser, this));

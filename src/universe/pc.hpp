@@ -28,6 +28,7 @@ namespace legacy { struct pc_record_type; };
 
 static struct no_party_t {} no_party;
 
+// This enum is now also used in the context of giving items
 enum class eBuyStatus {OK, NO_SPACE, NEED_GOLD, TOO_HEAVY, HAVE_LOTS};
 
 enum ePartyPreset {PARTY_BLANK, PARTY_DEFAULT, PARTY_DEBUG};
@@ -38,7 +39,9 @@ enum {
 	// These three are mutually exclusive:
 	GIVE_EQUIP_SOFT = 4,
 	GIVE_EQUIP_TRY = 8,
-	GIVE_EQUIP_FORCE = 12,
+	GIVE_EQUIP_FORCE = GIVE_EQUIP_SOFT | GIVE_EQUIP_TRY,
+	// Do a dry run to see if the PC can receive it.
+	GIVE_CHECK_ONLY = 16
 };
 
 class cParty;
@@ -77,8 +80,8 @@ class cPlayer : public iLiving {
 	// It only does this (and should ever do this) in remove_pc and replace_pc!
 	// Sadly there is no good way to friend just those two functions.
 	friend class cParty;
-	static const int INVENTORY_SIZE = 24;
 public:
+	static const int INVENTORY_SIZE = 24;
 	// A nice convenient bitset with just the low 30 bits set, for initializing spells
 	static const uint32_t basic_spells;
 	// This class is shared between the game and the editors, but it should only show help dialogs
@@ -96,7 +99,10 @@ public:
 	short skill_pts;
 	short level;
 	short exp_adj;
-	std::array<cItem,INVENTORY_SIZE> items;
+	// Keep an extra slot for stackable items to go into before combine_things() is called.
+	// This slot is not actually storage space and will always be eItemType::NO_ITEM unless
+	// give_item() is still in progress.
+	std::array<cItem,INVENTORY_SIZE+1> items;
 	std::bitset<INVENTORY_SIZE> equip;
 	std::bitset<62> priest_spells;
 	std::bitset<62> mage_spells;
@@ -143,9 +149,12 @@ public:
 	void drain_sp(int how_much, bool allow_resist) override;
 	void restore_sp(int how_much) override;
 	
-	void combine_things();
+	bool combine_things(bool check_only = false);
 	void sort_items();
-	bool give_item(cItem item, int flags);
+	// Possible results of give_item are a subset of eBuyStatus, and shop code calls this function,
+	// so reuse the enum
+	eBuyStatus give_item(cItem item, int flags);
+	eBuyStatus can_give_item(cItem item) const;
 	bool equip_item(int which_item, bool do_print);
 	bool unequip_item(int which_item, bool do_print);
 	std::pair<cInvenSlot, cInvenSlot> get_weapons();

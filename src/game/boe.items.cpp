@@ -18,6 +18,7 @@
 #include "boe.monster.hpp"
 #include "boe.main.hpp"
 #include "mathutil.hpp"
+#include "utility.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/strchoice.hpp"
 #include "dialogxml/dialogs/3choice.hpp"
@@ -28,6 +29,7 @@
 #include "tools/winutil.hpp"
 #include "tools/cursors.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
+#include "gfx/render_shapes.hpp"
 
 extern short which_combat_type;
 extern eGameMode overall_mode;
@@ -181,23 +183,27 @@ bool place_item(cItem item,location where,bool contained) {
 	return univ.town.items.back().contained;
 }
 
+cItem item_store;
+
 void give_thing(short pc_num, short item_num) {
 	short who_to,how_many = 0;
-	cItem item_store;
 	bool take_given_item = true;
 	
 	if(univ.party[pc_num].equip[item_num] && univ.party[pc_num].items[item_num].cursed)
 		add_string_to_buf("Give: Item is cursed.");
 	else {
 		item_store = univ.party[pc_num].items[item_num];
-		who_to = char_select_pc(3,"Give item to who?");
-		if((overall_mode == MODE_COMBAT) && !adjacent(univ.party[pc_num].combat_pos,univ.party[who_to].combat_pos)) {
-			add_string_to_buf("Give: Must be adjacent.");
-			who_to = 6;
+		who_to = select_pc(eSelectPC::ONLY_CAN_GIVE_FROM_ACTIVE,"Give item to who?");
+		// No party members can receive the item:
+		if(who_to == 8){
+			if(overall_mode == MODE_COMBAT){
+				ASB("Can't give: must be adjacent with enough carrying capacity.", 2);
+			}else{
+				ASB("Can't give: no one has the carrying capacity.", 2);
+			}
 		}
 		
-		if((who_to < 6) && (who_to != pc_num)
-			&& ((overall_mode != MODE_COMBAT) || (adjacent(univ.party[pc_num].combat_pos,univ.party[who_to].combat_pos)))) {
+		if((who_to < 6) && (who_to != pc_num)) {
 			if((item_store.type_flag > 0) && (item_store.charges > 1)) {
 				how_many = get_num_of_items(item_store.charges);
 				if(how_many == 0)
@@ -207,16 +213,11 @@ void give_thing(short pc_num, short item_num) {
 				univ.party[pc_num].items[item_num].charges -= how_many;
 				item_store.charges = how_many;
 			}
-			if(univ.party[who_to].give_item(item_store,0)) {
-				if(take_given_item)
-					univ.party[pc_num].take_item(item_num);
-			}
-			else {
-				if(!univ.party[who_to].has_space())
-					ASB("Can't give: PC has max. # of items.");
-				else ASB("Can't give: PC carrying too much.");
-				if(how_many > 0)
-					univ.party[pc_num].items[item_num].charges += how_many;
+			eBuyStatus give_status = univ.party[who_to].give_item(item_store,0);
+			if(give_status != eBuyStatus::OK){
+				// This should be impossible, because select_pc() already checked that the options
+				// were viable.
+				showFatalError("Unexpectedly failed to give item!");
 			}
 		}
 	}
@@ -863,7 +864,7 @@ std::string get_text_response(std::string prompt, pic_num_t pic) {
 	return result;
 }
 
-short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names) {
+short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names, boost::optional<short> cancel_value) {
 	std::ostringstream sout;
 	sout << prompt;
 	
@@ -894,6 +895,17 @@ short get_num_response(short min, short max, std::string prompt, std::vector<std
 			}
 			return true;
 		});
+
+	if(cancel_value){
+		numPanel["cancel"].attachClickHandler([cancel_value](cDialog& me,std::string,eKeyMod) -> bool {
+			me.setResult<int>(*cancel_value);
+			me.toast(false);
+			return true;
+		});
+	}else{
+		numPanel["cancel"].hide();
+	}
+
 	numPanel.run();
 	
 	return numPanel.getResult<int>();
@@ -901,58 +913,156 @@ short get_num_response(short min, short max, std::string prompt, std::vector<std
 
 static bool select_pc_event_filter (cDialog& me, std::string item_hit, eKeyMod) {
 	me.toast(true);
-	if(item_hit != "cancel") {
+	if(item_hit == "pick-all"){
+		me.setResult<short>(7);
+	}else if(item_hit != "cancel"){
 		short which_pc = item_hit[item_hit.length() - 1] - '1';
 		me.setResult<short>(which_pc);
-	} else me.setResult<short>(6);
+	}else me.setResult<short>(6);
 	return true;
 }
 
-// mode determines which PCs can be picked
-// 0 - only living pcs, 1 - any pc, 2 - only dead pcs, 3 - only living pcs with inventory space
-short char_select_pc(short mode,const char *title) {
+short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, bool allow_choose_all) {
 	short item_hit;
 	
 	set_cursor(sword_curs);
 	
 	cDialog selectPc(*ResMgr::dialogs.get("select-pc"));
-	selectPc.attachClickHandlers(select_pc_event_filter, {"cancel", "pick1", "pick2", "pick3", "pick4", "pick5", "pick6"});
+	selectPc.attachClickHandlers(select_pc_event_filter, {"cancel", "pick1", "pick2", "pick3", "pick4", "pick5", "pick6", "pick-all"});
 	
-	selectPc["title"].setText(title);
+	// The default title is defined in select-pc.xml
+	if(!title.empty())
+		selectPc["title"].setText(title);
 	
+	bool any_options = false;
+	std::array<short, 6> pc_skills = {0, 0, 0, 0, 0, 0};
+	short highest_skill = 0;
+	short last_skill = 0;
+	bool all_pcs_equal = true;
 	for(short i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		bool can_pick = true;
+		std::string extra_info = "";
 		if(univ.party[i].main_status == eMainStatus::ABSENT || univ.party[i].main_status == eMainStatus::FLED)
 			can_pick = false;
+
 		else switch(mode) {
-			case 3:
-				if(!univ.party[i].has_space())
+			case eSelectPC::ONLY_CAN_GIVE_FROM_ACTIVE:
+				if(i == univ.cur_pc){
 					can_pick = false;
+					break;
+				}
+				if((overall_mode == MODE_COMBAT) && !adjacent(univ.party[univ.cur_pc].combat_pos,univ.party[i].combat_pos)) {
+					can_pick = false;
+					extra_info = "too far away";
+					break;
+				}
 				BOOST_FALLTHROUGH;
-			case 0:
+			case eSelectPC::ONLY_CAN_GIVE:
+				switch(univ.party[i].can_give_item(item_store)){
+					case eBuyStatus::TOO_HEAVY:
+						extra_info = "item too heavy";
+						if(false) // skip first line of fallthrough
+					case eBuyStatus::NO_SPACE:
+						extra_info = "no item slot";
+						can_pick = false;
+						break;
+					default:
+						break;
+				}
+				break;
+			case eSelectPC::ONLY_LIVING_WITH_ITEM_SLOT:
+				if(!univ.party[i].has_space()){
+					can_pick = false;
+					extra_info = "no item slot";
+				}
+				BOOST_FALLTHROUGH;
+			case eSelectPC::ONLY_LIVING:
 				if(univ.party[i].main_status != eMainStatus::ALIVE)
 					can_pick = false;
 				break;
-			case 2:
+			case eSelectPC::ONLY_DEAD:
 				if(univ.party[i].main_status == eMainStatus::ALIVE)
 					can_pick = false;
 				break;
+			case eSelectPC::ONLY_CAN_LOCKPICK:{
+				if(univ.party[i].main_status != eMainStatus::ALIVE){
+					can_pick = false;
+					break;
+				}
+				if(!univ.party[i].has_abil(eItemAbil::LOCKPICKS)){
+					can_pick = false;
+					extra_info = "no picks";
+					break;
+				}
+				const cInvenSlot& pick_slot = univ.party[i].has_abil_equip(eItemAbil::LOCKPICKS);
+				if(!pick_slot){
+					can_pick = false;
+					extra_info = "picks not equipped";
+					break;
+				}else{
+					const cItem& picks = *pick_slot;
+					std::string pick_name = picks.name;
+					if(picks.ident) pick_name = picks.full_name;
+					extra_info = pick_name + " x " + std::to_string(picks.charges);
+				}
+			}break;
+			// Suppress a compiler warning:
+			default:
+				break;
+		}
+		selectPc["pc" + n].setText(univ.party[i].name);
+		if(highlight_highest != eSkill::INVALID){
+			selectPc["pc" + n].appendText(" ({{skill}})");
+		}
+		if(!extra_info.empty()){
+			selectPc["pc" + n].appendText(": " + extra_info);
+		}
+		if(highlight_highest != eSkill::INVALID){
+			short skill = univ.party[i].skills[highlight_highest];
+			pc_skills[i] = skill;
+			if(skill > highest_skill) highest_skill = skill;
+			if(skill != last_skill) all_pcs_equal = false;
+			last_skill = skill;
 		}
 		if(!can_pick) {
 			selectPc["pick" + n].hide();
-			selectPc["pc" + n].hide();
+			if(extra_info.empty())
+				selectPc["pc" + n].hide();
 		} else {
-			selectPc["pc" + n].setText(univ.party[i].name);
+			any_options = true;
 		}
+	}
+
+	if(!any_options){
+		if(mode == eSelectPC::ONLY_CAN_LOCKPICK){
+			ASB("  No one has lockpicks equipped.");
+			print_buf();
+		}
+		return 8;
+	}
+
+	if(highlight_highest != eSkill::INVALID){
+		selectPc["hint"].replaceText("{{skill}}", get_str("skills", (int)highlight_highest * 2 + 1));
+
+		for(int i = 0; i < 6; i++){
+			std::string n = boost::lexical_cast<std::string>(i + 1);
+			selectPc["pc" + n].replaceText("{{skill}}", std::to_string(pc_skills[i]));
+			if(pc_skills[i] == highest_skill && !all_pcs_equal){
+				selectPc["pc" + n].setColour(Colours::LIGHT_GREEN);
+			}
+		}
+	}else{
+		selectPc["hint"].hide();
+	}
+
+	if(!allow_choose_all){
+		selectPc["pick-all"].hide();
+		selectPc["all"].hide();
 	}
 	
 	selectPc.run();
 	item_hit = selectPc.getResult<short>();
 	
 	return item_hit;
-}
-
-short select_pc(short mode) {
-	return char_select_pc(mode,"Select a character:");
 }

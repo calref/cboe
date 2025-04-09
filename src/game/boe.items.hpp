@@ -37,7 +37,24 @@ void reset_item_max();
 short item_val(cItem item);
 void place_treasure(location where,short level,short loot,short mode);
 std::string get_text_response(std::string prompt = "", pic_num_t pic = 16);
-short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names = {});
+// Prompt the player for a number, which might be an index in a given list of strings.
+// Specify cancel_value to show a cancel button, which will return the given value (for example, -1)
+short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names = {}, boost::optional<short> cancel_value = boost::none);
 
-short char_select_pc(short mode,const char *title);
-short select_pc(short mode);
+enum class eSelectPC {
+	ANY,
+	ONLY_LIVING,
+	ONLY_LIVING_WITH_ITEM_SLOT,
+	// Slightly different from the previous: this now checks not just for a slot,
+	// but also for carrying capacity, and will stack charges even if all slots are full.
+	// When you use this, you have to set the global item_store to your item, first.
+	ONLY_CAN_GIVE,
+	// Same as the previous, but in combat, only show *adjacent* living PCs who can take the item.
+	ONLY_CAN_GIVE_FROM_ACTIVE,
+	// Must have lockpicks equipped
+	ONLY_CAN_LOCKPICK,
+	ONLY_DEAD,
+};
+// Prompt the player to choose a party member. Returns 0-5 for a pc, 6 for cancel, 7 for all, or 8 if no PCs fit the mode's filter.
+// Pass a string poiner to no_choice_reason to get the reason why no choices were available, if none are.
+short select_pc(eSelectPC mode, std::string title="", eSkill highlight_highest = eSkill::INVALID, bool allow_choose_all = false);

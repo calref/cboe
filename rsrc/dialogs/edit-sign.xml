@@ -1,14 +1,13 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
-	<!-- OK button -->
+<dialog defbtn='okay' escbtn='cancel'>
 	<field name='text' top='34' left='55' width='293' height='98'/>
-	<button name='cancel' type='regular' top='141' left='222' def-key='esc'>Cancel</button>
 	<text top='142' left='7' width='198' height='15'>Use a '|' to indicate a line break.</text>
 	<text name='num' top='8' left='287' width='37' height='14'/>
 	<pict name='pic' type='dlog' num='16' top='8' left='12'/>
 	<text size='large' top='6' left='50' width='138' height='17'>Editing Sign</text>
 	<text top='8' left='197' width='89' height='14'>Sign number:</text>
+	<button name='cancel' type='regular' top='141' left='222'>Cancel</button>
 	<button name='okay' type='regular' top='141' left='288'>OK</button>
 </dialog>

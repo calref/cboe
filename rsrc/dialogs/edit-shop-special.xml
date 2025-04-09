@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='8' left='50' width='150' height='17'>Editing Shop Entry</text>
 	<text top='50' left='10' width='100' height='16'>Name:</text>
@@ -18,6 +18,6 @@
 	<button name='pickicon' top='96' left='247' type='regular'>Choose</button>
 	<text top='150' left='10' width='100' height='16'>Description:</text>
 	<field name='descr' top='148' left='110' width='200' height='100'/>
-	<button name='cancel' type='regular' def-key='esc' top='255' left='10'>Cancel</button>
+	<button name='cancel' type='regular' top='255' left='10'>Cancel</button>
 	<button name='okay' type='regular' top='255' left='247'>OK</button>
 </dialog>

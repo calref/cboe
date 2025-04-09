@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<!-- OK button -->
 	<field type='uint' name='town' top='58' left='102' width='62' height='16'/>
 	<button name='okay' type='regular' top='82' left='177'>OK</button>

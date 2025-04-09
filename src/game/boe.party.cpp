@@ -107,7 +107,7 @@ short store_pc_graphic;
 // When the party is placed into a scen from the starting screen, this is called to put the game into game
 // mode and load in the scen and init the party info
 // party record already contains scen name
-void put_party_in_scen(std::string scen_name, bool force) {
+void put_party_in_scen(std::string scen_name, bool force, bool allow_unpacked) {
 	bool item_took = false;
 	
 	// Drop debug mode
@@ -142,7 +142,7 @@ void put_party_in_scen(std::string scen_name, bool force) {
 	if(item_took)
 		cChoiceDlog("removed-special-items").show();
 	
-	fs::path path = locate_scenario(scen_name);
+	fs::path path = locate_scenario(scen_name, allow_unpacked);
 	if(path.empty()) {
 		showError("Could not find scenario!");
 		return;
@@ -748,7 +748,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 		{
 			cInvenSlot item = univ.party[pc_num].has_abil(eItemAbil::SAPPHIRE);
 			if(!item && !freebie)
-				add_string_to_buf("  You need a sapphire.");
+				add_caster_needs_to_buf("a sapphire");
 			else if(univ.town->defy_scrying || univ.town->defy_mapping)
 				add_string_to_buf("  The spell fails.");
 			else {
@@ -993,7 +993,6 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 		case eSpell::HEAL_MINOR: case eSpell::HEAL: case eSpell::HEAL_MAJOR:
 		case eSpell::POISON_WEAKEN: case eSpell::POISON_CURE: case eSpell::DISEASE_CURE:
 		case eSpell::RESTORE_MIND: case eSpell::CLEANSE: case eSpell::AWAKEN: case eSpell::PARALYSIS_CURE:
-//			target = select_pc(11,0);
 			target = store_spell_target;
 			if(target < 6) {
 				if(!freebie)
@@ -1102,7 +1101,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 					sout << " healed " << univ.party[target].cur_health - store_victim_health << '.';
 					add_string_to_buf(sout.str());
 					sout.str("");
-					sout << " takes " << store_caster_health - univ.party[pc_num].cur_health << '.';
+					sout << univ.party[pc_num].name << " takes " << store_caster_health - univ.party[pc_num].cur_health << '.';
 				} else if(spell_num == eSpell::REVIVE) {
 					sout << " healed.";
 					univ.party[target].heal(250);
@@ -1131,7 +1130,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 						if(cInvenSlot item = univ.party[pc_num].has_abil(eItemAbil::RESURRECTION_BALM)) {
 							univ.party[pc_num].take_item(item.slot);
 						} else {
-							add_string_to_buf("  Need resurrection balm.");
+							add_caster_needs_to_buf("resurrection balm");
 							break;
 						}
 					}
@@ -1466,18 +1465,18 @@ void do_mindduel(short pc_num,cCreature *monst) {
 		r2 = get_ran(1,1,6);
 		if(r1 < 30) {
 			sout << "  " << univ.party[pc_num].name << " is drained " << r2 << '.';
-			add_string_to_buf(sout.str());
+			add_string_to_buf(sout.str(), 4);
 			monst->mp += r2;
 			balance++;
 			if(univ.party[pc_num].cur_sp == 0) {
 				univ.party[pc_num].status[eStatus::DUMB] += 2;
 				sout.str("");
 				sout << "  " << univ.party[pc_num].name << " is dumbfounded.";
-				add_string_to_buf(sout.str());
+				add_string_to_buf(sout.str(), 4);
 				if(univ.party[pc_num].status[eStatus::DUMB] > 7) {
 					sout.str("");
 					sout << "  " << univ.party[pc_num].name << " is killed!";
-					add_string_to_buf(sout.str());
+					add_string_to_buf(sout.str(), 4);
 					kill_pc(univ.party[pc_num],eMainStatus::DEAD);
 				}
 				
@@ -1488,7 +1487,7 @@ void do_mindduel(short pc_num,cCreature *monst) {
 		}
 		if(r1 > 70) {
 			sout << "  " << univ.party[pc_num].name << " drains " << r2 << '.';
-			add_string_to_buf(sout.str());
+			add_string_to_buf(sout.str(), 4);
 			univ.party[pc_num].cur_sp += r2;
 			balance--;
 			if(monst->mp == 0) {
@@ -2120,7 +2119,7 @@ void do_alchemy() {
 	short r1;
 	short pc_num;
 	
-	pc_num = select_pc(0);
+	pc_num = select_pc(eSelectPC::ONLY_LIVING, "Who will make a potion?", eSkill::ALCHEMY);
 	if(pc_num == 6)
 		return;
 	
@@ -2167,7 +2166,7 @@ void do_alchemy() {
 			cItem store_i(potion);
 			store_i.charges = info.charges(skill);
 			store_i.graphic_num += get_ran(1,0,2);
-			if(!univ.party[pc_num].give_item(store_i,false)) {
+			if(univ.party[pc_num].give_item(store_i,false) != eBuyStatus::OK) {
 				add_string_to_buf("No room in inventory. Potion placed on floor.", 2);
 				place_item(store_i,univ.party.town_loc);
 			}
@@ -2343,7 +2342,7 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 	// armor
 	if(damage_type == eDamageType::WEAPON || damage_type == eDamageType::UNDEAD || damage_type == eDamageType::DEMON) {
 		how_much -= minmax(-5,5,which_pc.status[eStatus::BLESS_CURSE]);
-		for(short i = 0; i < which_pc.items.size(); i++) {
+		for(short i = 0; i < cPlayer::INVENTORY_SIZE; i++) {
 			const cItem& item = which_pc.items[i];
 			if(item.variety != eItemType::NO_ITEM && which_pc.equip[i]) {
 				if((*item.variety).is_armour) {
@@ -2535,7 +2534,7 @@ void kill_pc(cPlayer& which_pc,eMainStatus type) {
 		if(combat_active_pc < 6 && &which_pc == &univ.party[combat_active_pc])
 			combat_active_pc = 6;
 		
-		for(short i = 0; i < which_pc.items.size(); i++)
+		for(short i = 0; i < cPlayer::INVENTORY_SIZE; i++)
 			which_pc.equip[i] = false;
 		
 		item_loc = is_combat() ? which_pc.combat_pos : univ.party.town_loc;

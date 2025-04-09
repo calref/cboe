@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<field name='name' top='57' left='195' width='252' height='16'/>
 	<field name='descr' top='84' left='195' width='252' height='104'/>
 	<field name='spec' type='int' top='249' left='268' width='87' height='16'/>
@@ -11,7 +11,7 @@
 	<text top='58' left='50' width='132' height='14'>Name of Special Item:</text>
 	<text top='85' left='50' width='118' height='27'>Special Item Description:</text>
 	<text top='243' left='51' width='208' height='28'>Scenario special node to be called when item is used:</text>
-	<button name='cancel' type='regular' top='288' left='332' def-key='esc'>Cancel</button>
+	<button name='cancel' type='regular' top='288' left='332'>Cancel</button>
 	<button name='clear' type='large' top='15' left='329'>Clear Special</button>
 	<button name='edit-spec' type='large' top='246' left='363'>Create/Edit</button>
 	<led name='start-with' state='off' top='198' left='50'>Party starts scen. with item</led>

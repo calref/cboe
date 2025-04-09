@@ -39,7 +39,7 @@ This spell is similar to Wall of Force, except that it creates an ice wall. Ice 
 This powerful spell makes monsters less likely to see you for a time (duration depends on your level). Try casting it before walking through a room crowded with monsters.
 Gives the entire party double its actions (duration depends on the level of the caster). All haste spells take effect at the beginning of the next round.
 This spell is like fireball, but does more damage, and affects all creatures within two spaces of the space you target. Be careful not to fry your party!
-This spell has a chance (increasing with level) of destroying magical barriers. Some barriers are harder to dispel than others; some cannot be dispelled. Some barriers can be	walked through.
+This spell has a chance (increasing with level) of destroying magical barriers. Some barriers are harder to dispel than others; some cannot be dispelled. Some barriers can be walked through.
 This spell creates a single fire barrier at the target space. Fire barriers are damaging and permanent.
 This spell is like Minor Summoning, but summons more powerful monsters.
 This spell creates a large sphere of force walls.
@@ -52,8 +52,8 @@ This dangerous spell summons a beast from the netherworld to fight at your side.
 This spell creates a spherical field, from which no spells may be cast and in which no spells may be targeted. After creation, it slowly fades.
 When cast on a magic-using enemy, the two creatures get in a mental battle, absorbing spell points from each other. The loser may end up dumbfounded or killed. Requires a Smoky Crystal to cast.
 When cast outdoors, the party can fly for a short time.
-This spell sends a wave of force out from the caster, damaging 	everyone nearby. The farther someone is from the caster, the more damage is taken, out to a radius of 10. Don't cast in towns.
-When cast, the entire party is blessed and hasted, and has their weapons	mildly poisoned.
+This spell sends a wave of force out from the caster, damaging everyone nearby. The farther someone is from the caster, the more damage is taken, out to a radius of 10. Don't cast in towns.
+When cast, the entire party is blessed and hasted, and has their weapons mildly poisoned.
 When cast, every monsters within a small radius of the caster will become paralyzed for quite some time. There is a chance they might resist the spell.
 One of the most powerful spells in the mage's repertoire. It makes the whole party temporarily magic resistant, and makes one PC you select immune to ALL damage for a short time.
 This spell works like Summoning, but brings forth much more powerful creatures.

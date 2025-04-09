@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='done'>
+<dialog defbtn='done' escbtn='done'>
 	<pict type='dlog' num='3' top='9' left='9'/>
 	<text size='large' top='9' left='54' width='161' height='19'>THE JOB BOARD:</text>
 	<text top='9' left='230' width='92' height='19'>Current day:</text>

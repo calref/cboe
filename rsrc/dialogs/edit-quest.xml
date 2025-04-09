@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='8' left='50' width='100' height='17'>Editing Quests</text>
 	<text top='8' left='200' width='100' height='16'>Quest number:</text>
@@ -29,6 +29,6 @@
 	<button name='choose-bank2' type='regular' anchor='bank2' relative='pos pos-in' top='-4' left='8'>Choose</button>
 	<button name='left' type='left' def-key='left' top='358' left='50'/>
 	<button name='right' type='right' def-key='right' top='358' left='115'/>
-	<button name='cancel' type='regular' def-key='esc' top='358' left='322'>Cancel</button>
+	<button name='cancel' type='regular' top='358' left='322'>Cancel</button>
 	<button name='okay' type='regular' top='358' left='387'>OK</button>
 </dialog>
