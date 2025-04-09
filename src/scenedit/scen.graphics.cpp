@@ -717,6 +717,64 @@ void set_up_terrain_buttons(bool reset) {
 	}
 }
 
+rectangle visible_bounds() {
+	if(cur_viewing_mode == 0){
+		return {cen_y - 4, cen_x - 4, cen_y + 4, cen_x + 4};
+	}else{
+		// Width available:  64 4x4 tiles, 42 6x6 tiles, or 21 12x12 tiles -- 256 pixels
+		// Height available: 81 4x4 tiles, 54 6x6 tiles, or 27 12x12 tiles -- 324 pixels
+		short size = mini_map_scales[cur_viewing_mode - 1];
+		int max_dim = get_current_area()->max_dim;
+		int xMin = 0, yMin = 0, xMax = max_dim, yMax = max_dim;
+		if(!editing_town){
+			--xMin;
+			--yMin;
+			++xMax;
+			++yMax;
+		}
+		if(cen_x + 5 > 256 / size) {
+			xMin = cen_x + 5 - (256 / size);
+			xMax = cen_x + 5;
+		} else xMax = std::min(xMax, 256 / size);
+		if(cen_y + 5 > 324 / size) {
+			yMin = cen_y + 5 - (324 / size);
+			yMax = cen_y + 5;
+		} else yMax = std::min(yMax, 324 / size);
+		return {yMin, xMin, yMax, xMax};
+	}
+}
+
+static ter_num_t ter_at(int q, int r) {
+	ter_num_t t_to_draw;
+	rectangle bounds = visible_bounds();
+	if(editing_town) {
+		t_to_draw = town->terrain(bounds.left + q, bounds.top + r);
+	}
+	else {
+		short ter_x = bounds.left + q, ter_y = bounds.top + r;
+		if(ter_x == -1 && ter_y == -1 && cur_out.x > 0 && cur_out.y > 0)
+			t_to_draw = scenario.outdoors[cur_out.x - 1][cur_out.y - 1]->terrain[47][47];
+		else if(ter_x == -1 && ter_y == 48 && cur_out.x > 0 && cur_out.y < scenario.outdoors.height() - 1)
+			t_to_draw = scenario.outdoors[cur_out.x - 1][cur_out.y + 1]->terrain[47][0];
+		else if(ter_x == 48 && ter_y == -1 && cur_out.x < scenario.outdoors.width() - 1 && cur_out.y > 0)
+			t_to_draw = scenario.outdoors[cur_out.x + 1][cur_out.y - 1]->terrain[0][47];
+		else if(ter_x == 48 && ter_y == 48 && cur_out.x < scenario.outdoors.width() - 1 && cur_out.y < scenario.outdoors.height() - 1)
+			t_to_draw = scenario.outdoors[cur_out.x + 1][cur_out.y + 1]->terrain[0][0];
+		else if(ter_x == -1 && ter_y >= 0 && ter_y < 48 && cur_out.x > 0)
+			t_to_draw = scenario.outdoors[cur_out.x - 1][cur_out.y]->terrain[47][ter_y];
+		else if(ter_y == -1 && ter_x >= 0 && ter_x < 48 && cur_out.y > 0)
+			t_to_draw = scenario.outdoors[cur_out.x][cur_out.y - 1]->terrain[ter_x][47];
+		else if(ter_x == 48 && ter_y >= 0 && ter_y < 48 && cur_out.x < scenario.outdoors.width() - 1)
+			t_to_draw = scenario.outdoors[cur_out.x + 1][cur_out.y]->terrain[0][ter_y];
+		else if(ter_y == 48 && ter_x >= 0 && ter_x < 48 && cur_out.y < scenario.outdoors.height() - 1)
+			t_to_draw = scenario.outdoors[cur_out.x][cur_out.y + 1]->terrain[ter_x][0];
+		else if(ter_x == -1 || ter_x == 48 || ter_y == -1 || ter_y == 48)
+			t_to_draw = 90;
+		else t_to_draw = current_terrain->terrain[ter_x][ter_y];
+	}
+	return t_to_draw;
+}
+
 void draw_terrain(){
 	location which_pt,where_draw;
 	rectangle draw_rect,clipping_rect = {8,8,332,260};
@@ -736,31 +794,7 @@ void draw_terrain(){
 			for(short r = 0; r < 9; r++) {
 				where_draw.x = q;
 				where_draw.y = r;
-				if(editing_town) {
-					t_to_draw = town->terrain(cen_x + q - 4,cen_y + r - 4);
-				}
-				else {
-					short ter_x = cen_x + q - 4, ter_y = cen_y + r - 4;
-					if(ter_x == -1 && ter_y == -1 && cur_out.x > 0 && cur_out.y > 0)
-						t_to_draw = scenario.outdoors[cur_out.x - 1][cur_out.y - 1]->terrain[47][47];
-					else if(ter_x == -1 && ter_y == 48 && cur_out.x > 0 && cur_out.y < scenario.outdoors.height() - 1)
-						t_to_draw = scenario.outdoors[cur_out.x - 1][cur_out.y + 1]->terrain[47][0];
-					else if(ter_x == 48 && ter_y == -1 && cur_out.x < scenario.outdoors.width() - 1 && cur_out.y > 0)
-						t_to_draw = scenario.outdoors[cur_out.x + 1][cur_out.y - 1]->terrain[0][47];
-					else if(ter_x == 48 && ter_y == 48 && cur_out.x < scenario.outdoors.width() - 1 && cur_out.y < scenario.outdoors.height() - 1)
-						t_to_draw = scenario.outdoors[cur_out.x + 1][cur_out.y + 1]->terrain[0][0];
-					else if(ter_x == -1 && ter_y >= 0 && ter_y < 48 && cur_out.x > 0)
-						t_to_draw = scenario.outdoors[cur_out.x - 1][cur_out.y]->terrain[47][ter_y];
-					else if(ter_y == -1 && ter_x >= 0 && ter_x < 48 && cur_out.y > 0)
-						t_to_draw = scenario.outdoors[cur_out.x][cur_out.y - 1]->terrain[ter_x][47];
-					else if(ter_x == 48 && ter_y >= 0 && ter_y < 48 && cur_out.x < scenario.outdoors.width() - 1)
-						t_to_draw = scenario.outdoors[cur_out.x + 1][cur_out.y]->terrain[0][ter_y];
-					else if(ter_y == 48 && ter_x >= 0 && ter_x < 48 && cur_out.y < scenario.outdoors.height() - 1)
-						t_to_draw = scenario.outdoors[cur_out.x][cur_out.y + 1]->terrain[ter_x][0];
-					else if(ter_x == -1 || ter_x == 48 || ter_y == -1 || ter_y == 48)
-						t_to_draw = 90;
-					else t_to_draw = current_terrain->terrain[ter_x][ter_y];
-				}
+				t_to_draw = ter_at(q, r);
 				draw_one_terrain_spot(q,r,t_to_draw);
 				
 				rectangle destrec;
@@ -989,26 +1023,22 @@ void draw_terrain(){
 	else {
 		tileImage(mainPtr(), terrain_rect,bg[17]);
 		frame_rect(mainPtr(), terrain_rect, sf::Color::Black);
-		// Width available:  64 4x4 tiles, 42 6x6 tiles, or 21 12x12 tiles -- 256 pixels
-		// Height available: 81 4x4 tiles, 54 6x6 tiles, or 27 12x12 tiles -- 324 pixels
+
 		short size = mini_map_scales[cur_viewing_mode - 1];
-		int max_dim = get_current_area()->max_dim;
-		int xMin = 0, yMin = 0, xMax = max_dim, yMax = max_dim;
-		if(cen_x + 5 > 256 / size) {
-			xMin = cen_x + 5 - (256 / size);
-			xMax = cen_x + 5;
-		} else xMax = std::min(xMax, 256 / size);
-		if(cen_y + 5 > 324 / size) {
-			yMin = cen_y + 5 - (324 / size);
-			yMax = cen_y + 5;
-		} else yMax = std::min(yMax, 324 / size);
-		// std::cout << "Drawing map for x = " << xMin << "..." << xMax << " and y = " << yMin << "..." << yMax << std::endl;
-		for(short q = xMin; q < xMax; q++)
-			for(short r = yMin; r < yMax; r++) {
-				if(q - xMin < 0 || q - xMin >= max_dim || r - yMin < 0 || r - yMin >= max_dim)
-					t_to_draw = 90;
-				else t_to_draw = get_current_area()->terrain(q,r);
-				draw_one_tiny_terrain_spot(q-xMin,r-yMin,t_to_draw,size,is_road(q,r));
+		int max = get_current_area()->max_dim;
+		int min = 0;
+		if(!editing_town){
+			--min;
+			++max;
+		}
+		rectangle bounds = visible_bounds();
+		// std::cout << "Drawing map for " << bounds << std::endl;
+		for(short q = 0; q < bounds.width(); q++)
+			for(short r = 0; r < bounds.height(); r++) {
+				if(q + bounds.left > max) continue;
+				if(r + bounds.top > max) continue;
+				t_to_draw = ter_at(q, r);
+				draw_one_tiny_terrain_spot(q,r,t_to_draw,size,is_road(q+bounds.left,r+bounds.top));
 				small_what_drawn[q][r] = t_to_draw;
 			}
 		small_any_drawn = true;

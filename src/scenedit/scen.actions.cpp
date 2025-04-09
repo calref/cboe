@@ -1892,24 +1892,31 @@ static bool handle_outdoor_sec_shift(int dx, int dy){
 	return true;
 }
 
+// TODO account for zoom levels
 void handle_editor_screen_shift(int dx, int dy) {
-	int min = (editing_town ? 4 : 3);
-	int max = get_current_area()->max_dim - 5;
+	// Outdoors, you can see 1 tile across the border with neighboring sections:
+	int min = (editing_town ? 0 : -1);
+	int max = get_current_area()->max_dim - 1;
 	if(!editing_town) max++;
+	// When zoomed out, you can move your actual center beyond the zoomed-out camera limit,
+	// then zoom in and be centered on that place.
+	// The visible bounds, not the technical center, are what we care about
+	// when prompting whether to shift areas:
+	rectangle shift_bounds = visible_bounds();
 	bool out_of_bounds = false;
-	if(cen_x + dx < min){
+	if(dx < 0 && shift_bounds.left + dx < min){
 		// In outdoors, prompt whether to swap to the next section west
 		if(handle_outdoor_sec_shift(-1, 0)) return;
 		out_of_bounds = true;
-	}else if(cen_x + dx > max){
+	}else if(dx > 0 && shift_bounds.right + dx > max){
 		// In outdoors, prompt whether to swap to the next section east
 		if(handle_outdoor_sec_shift(1, 0)) return;
 		out_of_bounds = true;
-	}else if(cen_y + dy < min){
+	}else if(dy < 0 && shift_bounds.top + dy < min){
 		// In outdoors, prompt whether to swap to the next section north
 		if(handle_outdoor_sec_shift(0, -1)) return;
 		out_of_bounds = true;
-	}else if(cen_y + dy > max){
+	}else if(dy > 0 && shift_bounds.bottom + dy > max){
 		// In outdoors, prompt whether to swap to the next section south
 		if(handle_outdoor_sec_shift(0, 1)) return;
 		out_of_bounds = true;
@@ -1959,8 +1966,8 @@ void handle_editor_screen_shift(int dx, int dy) {
 	if(!out_of_bounds)
 		did_out_of_bounds_prompt = false;
 
-	cen_x = minmax(min, max, cen_x + dx);
-	cen_y = minmax(min, max, cen_y + dy);
+	cen_x = minmax(min+4, max-4, cen_x + dx);
+	cen_y = minmax(min+4, max-4, cen_y + dy);
 }
 
 void handle_scroll(const sf::Event& event) {
