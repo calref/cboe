@@ -326,13 +326,25 @@ void put_item_screen(eItemWinMode screen_num) {
 					} else style.colour = Colours::BLACK;
 					
 					sout.str("");
-					if(!item.ident)
-						sout << item.name << "  ";
-					else { /// Don't place # of charges when Sell button up and space tight
+
+					if(item.ident)
 						sout << item.full_name << ' ';
-						if(item.charges > 0 && item.ability != eItemAbil::MESSAGE && (stat_screen_mode == MODE_INVEN || stat_screen_mode == MODE_SHOP))
-							sout << '(' << int(item.charges) << ')';
+					else
+						sout << item.name << "  ";
+
+					// Charges:
+					bool show_charges = item.max_charges > 0;
+					// Show charges for unidentified ammunition, but not other items
+					if(item.missile <= 0)
+						show_charges &= item.ident;
+					// Don't show charges if it just shows a dialog
+					show_charges &= item.ability != eItemAbil::MESSAGE;
+					// Don't show charges when Sell button up and space tight
+					show_charges &=	(stat_screen_mode == MODE_INVEN || stat_screen_mode == MODE_SHOP);
+					if(show_charges){
+						sout << '(' << int(item.charges) << ')';
 					}
+
 					dest_rect.left -= 2;
 					win_draw_string(item_stats_gworld(),dest_rect,sout.str(),eTextMode::WRAP,style);
 					style.italic = false;
