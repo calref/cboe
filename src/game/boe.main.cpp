@@ -1199,6 +1199,13 @@ static void update_delayed_keys() {
 	}
 }
 
+bool game_has_focus = true;
+bool game_had_focus = true;
+bool main_window_lost_focus = false;
+bool main_window_gained_focus = false;
+bool map_window_lost_focus = false;
+bool map_window_gained_focus = false;
+
 void handle_events() {
 	sf::Event currentEvent;
 	cFramerateLimiter fps_limiter;
@@ -1243,6 +1250,7 @@ void handle_events() {
 				fake_event_queue.pop_front();
 				handle_one_event(next_event, fps_limiter);
 			}
+
 			while(pollEvent(mainPtr(), currentEvent)) handle_one_event(currentEvent, fps_limiter);
 
 			// It would be nice to have minimap inside the main game window (we have lots of screen space in fullscreen mode).
@@ -1266,6 +1274,30 @@ void handle_events() {
 
 		// Ideally, this should be the only draw call that is done in a cycle.
 		redraw_everything();
+
+		bool any_lost_focus = main_window_lost_focus || map_window_lost_focus;
+		bool any_gained_focus = main_window_gained_focus || map_window_gained_focus;
+
+		if(game_had_focus && any_lost_focus && !any_gained_focus){
+			game_has_focus = false;
+			// The game completely lost focus. The map floating is going to block
+			// other applications and be annoying.
+			setWindowFloating(mini_map(), false);
+		}else if(!game_had_focus && any_gained_focus){
+			game_has_focus = true;
+
+			// The game regained focus
+			setWindowFloating(mini_map(), true);
+			if(map_visible){
+				makeFrontWindow(mini_map());
+				makeFrontWindow(mainPtr());
+			}
+		}
+
+		main_window_lost_focus = main_window_gained_focus =
+		map_window_lost_focus = map_window_gained_focus = false;
+
+		game_had_focus = game_has_focus;
 
 		// Prevent the loop from executing too fast.
 		fps_limiter.frame_finished();
@@ -1338,8 +1370,13 @@ void handle_one_event(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 			
 		case sf::Event::GainedFocus:
 			check_window_moved(mainPtr(), last_window_x, last_window_y, "MainWindow");
+			main_window_gained_focus = true;
 			makeFrontWindow(mainPtr());
 			change_cursor({event.mouseMove.x, event.mouseMove.y});
+			return;
+
+		case sf::Event::LostFocus:
+			main_window_lost_focus = true;
 			return;
 
 		case sf::Event::MouseMoved:
@@ -1371,12 +1408,15 @@ int last_map_y = 0;
 void handle_one_minimap_event(const sf::Event& event) {
 	if(event.type == sf::Event::Closed) {
 		close_map(true);
-	} else if(event.type == sf::Event::GainedFocus) {
+	}else if(event.type == sf::Event::GainedFocus){
+		map_window_gained_focus = true;
 		check_window_moved(mini_map(), last_map_x, last_map_y, "MapWindow");
 		makeFrontWindow(mainPtr());
+	}else if(event.type == sf::Event::LostFocus){
+		map_window_lost_focus = true;
 	}else if(event.type == sf::Event::MouseMoved){
 		check_window_moved(mini_map(), last_map_x, last_map_y, "MapWindow");
-	}else if(event.type == sf::Event::KeyPressed) {
+	}else if(event.type == sf::Event::KeyPressed){
 		switch(event.key.code){
 			case sf::Keyboard::Escape:
 				close_map(true);
