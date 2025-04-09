@@ -77,6 +77,7 @@ class cDialog : public iComponent, public iNameGiver {
 	static bool initCalled;
 	int anim_pict_fps = 2;
 	bool doAnimations;
+	bool has_focus = false;
 public:
 	static void (*redraw_everything)();
 	/// Performs essential startup initialization. Generally should not be called directly.
