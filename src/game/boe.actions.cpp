@@ -2025,6 +2025,8 @@ void debug_fight_encounter(bool wandering) {
 	set_up_combat();
 }
 
+short last_debug_item = 0;
+
 void debug_give_item() {
 	if(recording){
 		record_action("debug_give_item", "");
@@ -2035,8 +2037,9 @@ void debug_give_item() {
 	}
 	// By default, pre-identify debug items
 	bool ident = true;
-	int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?", item_names, -1, "identified", &ident);
+	int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?", item_names, -1, last_debug_item, "identified", &ident);
 	if(i == -1) return;
+	last_debug_item = i;
 	bool was_ident = univ.scenario.scen_items[i].ident;
 	univ.scenario.scen_items[i].ident = ident;
 
