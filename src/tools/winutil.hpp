@@ -88,6 +88,8 @@ inline double get_ui_scale_map() {
 
 void adjust_window_for_menubar(int mode, unsigned int width, unsigned int height);
 
+bool check_window_moved(sf::RenderWindow& win, int& winLastX, int& winLastY, std::string position_pref = "");
+
 class ModalSession {
 	void* session;
 	sf::Window* parent;

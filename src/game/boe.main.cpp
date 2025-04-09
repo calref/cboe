@@ -1299,6 +1299,9 @@ void handle_quit_event() {
 	All_Done = true;
 }
 
+int last_window_x = 0;
+int last_window_y = 0;
+
 void handle_one_event(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 
 	// What does this do and should it be here?
@@ -1334,11 +1337,13 @@ void handle_one_event(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 			break;
 			
 		case sf::Event::GainedFocus:
+			check_window_moved(mainPtr(), last_window_x, last_window_y, "MainWindow");
 			makeFrontWindow(mainPtr());
 			change_cursor({event.mouseMove.x, event.mouseMove.y});
 			return;
 
 		case sf::Event::MouseMoved:
+			check_window_moved(mainPtr(), last_window_x, last_window_y, "MainWindow");
 			change_cursor({event.mouseMove.x, event.mouseMove.y});
 			return;
 
@@ -1360,12 +1365,18 @@ void queue_fake_event(const sf::Event& event) {
 	fake_event_queue.push_back(event);
 }
 
+int last_map_x = 0;
+int last_map_y = 0;
+
 void handle_one_minimap_event(const sf::Event& event) {
 	if(event.type == sf::Event::Closed) {
 		close_map(true);
 	} else if(event.type == sf::Event::GainedFocus) {
+		check_window_moved(mini_map(), last_map_x, last_map_y, "MapWindow");
 		makeFrontWindow(mainPtr());
-	} else if(event.type == sf::Event::KeyPressed) {
+	}else if(event.type == sf::Event::MouseMoved){
+		check_window_moved(mini_map(), last_map_x, last_map_y, "MapWindow");
+	}else if(event.type == sf::Event::KeyPressed) {
 		switch(event.key.code){
 			case sf::Keyboard::Escape:
 				close_map(true);

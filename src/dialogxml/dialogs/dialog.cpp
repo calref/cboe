@@ -742,13 +742,9 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter&
 		case sf::Event::GainedFocus:
 		case sf::Event::MouseMoved:
 			// Did the window move, potentially dirtying the canvas below it?
-			auto winPosition = win.getPosition();
-			if (winLastX != winPosition.x || winLastY != winPosition.y) {
+			if(check_window_moved(win, winLastX, winLastY))
 				if (redraw_everything != NULL)
 					redraw_everything();
-			}
-			winLastX = winPosition.x;
-			winLastY = winPosition.y;
 
 			bool inField = false;
 			for(auto& ctrl : controls) {
