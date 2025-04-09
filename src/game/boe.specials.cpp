@@ -2602,7 +2602,8 @@ void oneshot_spec(const runtime_state& ctx) {
 			if(spec.m1 < 0)
 				break;
 			get_strs(strs, ctx.cur_spec_type, spec.m1);
-			buttons[0] = 20; buttons[1] = 19;
+			// Leave / Take
+			buttons[0] = 9; buttons[1] = 19;
 			dlg_res = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c);
 			if(dlg_res == 1) {set_sd = false; ctx.next_spec = -1;}
 			else {
