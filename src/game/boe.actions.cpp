@@ -2033,10 +2033,13 @@ void debug_give_item() {
 	for(cItem& item : univ.scenario.scen_items){
 		item_names.push_back(item.full_name);
 	}
-	int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?", item_names, -1);
+	// By default, pre-identify debug items
+	bool ident = true;
+	int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?", item_names, -1, "identified", &ident);
 	if(i == -1) return;
 	bool was_ident = univ.scenario.scen_items[i].ident;
-	univ.scenario.scen_items[i].ident = true;
+	univ.scenario.scen_items[i].ident = ident;
+
 	bool given = univ.current_pc().give_item(univ.scenario.scen_items[i], GIVE_DO_PRINT | GIVE_ALLOW_OVERLOAD) == eBuyStatus::OK;
 	if(!given){
 		ASB("Debug: can't give to " + univ.current_pc().name);

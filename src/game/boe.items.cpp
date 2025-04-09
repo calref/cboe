@@ -666,6 +666,7 @@ short get_num_of_items(short max_num) {
 	set_cursor(sword_curs);
 	
 	cDialog numPanel(*ResMgr::dialogs.get("get-num"));
+	numPanel["extra-led"].hide();
 	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay"});
 	
 	numPanel["prompt"].setText("How many? (0-" + std::to_string(max_num) + ") ");
@@ -867,7 +868,7 @@ std::string get_text_response(std::string prompt, pic_num_t pic) {
 	return result;
 }
 
-short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names, boost::optional<short> cancel_value) {
+short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names, boost::optional<short> cancel_value, std::string extra_led, bool* led_output) {
 	std::ostringstream sout;
 	sout << prompt;
 	
@@ -876,6 +877,14 @@ short get_num_response(short min, short max, std::string prompt, std::vector<std
 	cDialog numPanel(*ResMgr::dialogs.get("get-num"));
 	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay"});
 	
+	if(extra_led.empty()){
+		numPanel["extra-led"].hide();
+	}else{
+		numPanel["extra-led"].setText(extra_led);
+		if(led_output != nullptr)
+			dynamic_cast<cLed&>(numPanel["extra-led"]).setState(*led_output ? led_red : led_off);
+	}
+
 	sout << " (" << min << '-' << max << ')';
 	numPanel["prompt"].setText(sout.str());
 	numPanel["number"].setTextToNum(0);
@@ -899,8 +908,10 @@ short get_num_response(short min, short max, std::string prompt, std::vector<std
 			return true;
 		});
 
+	bool cancel_clicked = false;
 	if(cancel_value){
-		numPanel["cancel"].attachClickHandler([cancel_value](cDialog& me,std::string,eKeyMod) -> bool {
+		numPanel["cancel"].attachClickHandler([cancel_value, &cancel_clicked](cDialog& me,std::string,eKeyMod) -> bool {
+			cancel_clicked = true;
 			me.setResult<int>(*cancel_value);
 			me.toast(false);
 			return true;
@@ -910,6 +921,9 @@ short get_num_response(short min, short max, std::string prompt, std::vector<std
 	}
 
 	numPanel.run();
+	if(!cancel_clicked && led_output != nullptr){
+		*led_output = dynamic_cast<cLed&>(numPanel["extra-led"]).getState() == led_red;
+	}
 	
 	return numPanel.getResult<int>();
 }
