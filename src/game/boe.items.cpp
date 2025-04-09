@@ -219,6 +219,9 @@ void give_thing(short pc_num, short item_num) {
 				// were viable.
 				showFatalError("Unexpectedly failed to give item!");
 			}
+			if(take_given_item){
+				univ.party[pc_num].take_item(item_num);
+			}
 		}
 	}
 }
