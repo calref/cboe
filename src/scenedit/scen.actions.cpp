@@ -1848,8 +1848,10 @@ void handle_keystroke(sf::Event event) {
 	mouse_button_held = false;
 }
 
-// Don't repeatedly prompt when the designer scrolls out of bounds and says no to shifting
+// Don't repeatedly prompt when the designer scrolls out of bounds and says no to shifting.
+// Unless it's in a new direction.
 bool did_out_of_bounds_prompt = false;
+int last_dx = 0, last_dy = 0;
 
 static bool handle_outdoor_sec_shift(int dx, int dy){
 	if(did_out_of_bounds_prompt) return false;
@@ -1892,7 +1894,6 @@ static bool handle_outdoor_sec_shift(int dx, int dy){
 	return true;
 }
 
-// TODO account for zoom levels
 void handle_editor_screen_shift(int dx, int dy) {
 	// Outdoors, you can see 1 tile across the border with neighboring sections:
 	int min = (editing_town ? 0 : -1);
@@ -1904,6 +1905,11 @@ void handle_editor_screen_shift(int dx, int dy) {
 	// when prompting whether to shift areas:
 	rectangle shift_bounds = visible_bounds();
 	bool out_of_bounds = false;
+	if(dx != last_dx || dy != last_dy){
+		did_out_of_bounds_prompt = false;
+	}
+	last_dx = dx;
+	last_dy = dy;
 	if(dx < 0 && shift_bounds.left + dx < min){
 		// In outdoors, prompt whether to swap to the next section west
 		if(handle_outdoor_sec_shift(-1, 0)) return;
