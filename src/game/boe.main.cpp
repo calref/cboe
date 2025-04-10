@@ -236,6 +236,8 @@ int main(int argc, char* argv[]) {
 	try{
 #endif
 		cDialog::redraw_everything = &redraw_everything;
+		cDialog::get_mini_map = &mini_map;
+		cDialog::map_visible_p = &map_visible;
 
 		init_boe(argc, argv);
 		
