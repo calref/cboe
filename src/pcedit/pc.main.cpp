@@ -83,8 +83,6 @@ char start_name[256];
 // This is just to make location.hpp compile, and represents nothing:
 location center;
 
-bool map_visible = false;
-
 static void process_args(int argc, char* argv[]) {
 	preprocess_args(argc, argv);
 	clara::Args args(argc, argv);

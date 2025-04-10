@@ -79,6 +79,8 @@ class cDialog : public iComponent, public iNameGiver {
 	bool doAnimations;
 	bool has_focus = false;
 public:
+	static std::function<sf::RenderWindow&()> get_mini_map;
+	static bool* map_visible_p;
 	static void (*redraw_everything)();
 	/// Performs essential startup initialization. Generally should not be called directly.
 	static void init();

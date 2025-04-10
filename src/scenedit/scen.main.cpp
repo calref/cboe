@@ -101,8 +101,6 @@ fs::path game_dir;
 fs::path game_binary;
 extern std::string last_load_file;
 
-bool map_visible = false;
-
 enum class eLaunchType {LOC,START,ENTRANCE};
 
 static void launch_scenario(eLaunchType type) {

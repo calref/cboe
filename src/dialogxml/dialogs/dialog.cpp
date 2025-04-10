@@ -43,6 +43,8 @@ const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
 short cDialog::defaultBackground = cDialog::BG_DARK;
 cDialog* cDialog::topWindow = nullptr;
 void (*cDialog::redraw_everything)() = nullptr;
+std::function<sf::RenderWindow&()> cDialog::get_mini_map;
+bool* cDialog::map_visible_p = nullptr;
 
 extern std::map<std::string,sf::Color> colour_map;
 
@@ -627,9 +629,6 @@ void cDialog::handleTab(bool reverse) {
 	}
 }
 
-extern sf::RenderWindow& mini_map();
-extern bool map_visible;
-
 // This method handles one event received by the dialog.
 void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter& fps_limiter) {
 	using Key = sf::Keyboard::Key;
@@ -744,15 +743,23 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter&
 			break;
 		case sf::Event::LostFocus:
 			has_focus = false;
-			setWindowFloating(mini_map(), false);
+			if(get_mini_map){
+				setWindowFloating(get_mini_map(), false);
+			}
 			break;
 		case sf::Event::GainedFocus:
 			if(!has_focus){
 				has_focus = true;
-				setWindowFloating(mini_map(), true);
+				if(get_mini_map){
+					setWindowFloating(get_mini_map(), true);
+				}
 				makeFrontWindow(mainPtr());
-				if(map_visible)
-					makeFrontWindow(mini_map());
+				if(get_mini_map){
+					if(*map_visible_p){
+						makeFrontWindow(get_mini_map());
+					}
+				}
+
 				std::vector<sf::RenderWindow*> dialog_stack;
 				cDialog* next = this;
 				while(next != nullptr){
