@@ -3680,6 +3680,7 @@ location get_cur_direction() {
 		case 8:
 			return {1, 0};
 	}
+	return {0, 0};
 }
 
 static eDirection find_waterfall(short x, short y, short mode){
