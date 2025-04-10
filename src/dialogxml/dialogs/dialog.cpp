@@ -766,6 +766,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter&
 				sf::Event evt;
 				while(pollEvent(win, evt));
 			}
+			BOOST_FALLTHROUGH;
 		case sf::Event::MouseMoved:{
 			// Did the window move, potentially dirtying the canvas below it?
 			if(check_window_moved(win, winLastX, winLastY))
