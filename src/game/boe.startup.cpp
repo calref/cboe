@@ -119,7 +119,7 @@ void handle_startup_button_click(eStartButton btn, eKeyMod mods) {
 
 // TODO: Always returns false, so make it void
 bool handle_startup_press(location the_point) {
-	the_point = mainPtr().mapPixelToCoords(the_point, mainView);
+	the_point = mouse_window_coords();
 	
 	for(auto btn : startup_button.keys()) {
 		if(btn == eStartButton::STARTBTN_SCROLL) continue;

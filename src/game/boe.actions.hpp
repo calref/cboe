@@ -15,6 +15,10 @@ struct key_action_t {
 };
 
 void init_screen_locs();
+location mouse_window_coords();
+// If the mouse is in the terrain window, set the given location to the hovered tile.
+// Return false if mouse is out of bounds.
+bool mouse_to_terrain_coords(location& location, bool relative);
 bool prime_time();
 bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter);
 void advance_time(bool did_something, bool need_redraw, bool need_reprint);
@@ -38,7 +42,7 @@ void new_party();
 void handle_death();
 void start_new_game(bool force = false);
 void start_tutorial();
-location get_cur_direction(location the_point);
+location get_cur_direction();
 void outd_move_to_first_town_entrance(int town);
 bool outd_move_party(location destination,bool forced);
 bool town_move_party(location destination,short forced);

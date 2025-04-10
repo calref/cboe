@@ -1372,7 +1372,7 @@ void handle_one_event(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 			check_window_moved(mainPtr(), last_window_x, last_window_y, "MainWindow");
 			main_window_gained_focus = true;
 			makeFrontWindow(mainPtr());
-			change_cursor({event.mouseMove.x, event.mouseMove.y});
+			change_cursor();
 			return;
 
 		case sf::Event::LostFocus:
@@ -1381,7 +1381,7 @@ void handle_one_event(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 
 		case sf::Event::MouseMoved:
 			check_window_moved(mainPtr(), last_window_x, last_window_y, "MainWindow");
-			change_cursor({event.mouseMove.x, event.mouseMove.y});
+			change_cursor();
 			return;
 
 		// TODO: EVENT TYPE DEPRECATED IN SFML 2.5.1
@@ -1667,22 +1667,28 @@ static cursor_type get_mode_cursor(){
 	return sword_curs; // this should never be reached, though
 }
 
-void change_cursor(location where_curs) {
+void change_cursor() {
 	cursor_type cursor_needed;
+	location where_curs = mouse_window_coords();
 	location cursor_direction;
 	extern enum_map(eGuiArea, rectangle) win_to_rects;
 	rectangle world_screen = win_to_rects[WINRECT_TERVIEW];
 	world_screen.inset(13, 13);
-	
-	where_curs = mainPtr().mapPixelToCoords(where_curs, mainView);
 	
 	if(!world_screen.contains(where_curs))
 		cursor_needed = sword_curs;
 	else cursor_needed = get_mode_cursor();
 	
 	if((overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) && world_screen.contains(where_curs)){
-		cursor_direction = get_cur_direction(where_curs);
-		cursor_needed = arrow_curs[cursor_direction.y + 1][cursor_direction.x + 1];
+		location tile;
+		mouse_to_terrain_coords(tile, true);
+		if(tile.x != 4 || tile.y != 4){
+			cursor_direction = get_cur_direction();
+			LOG_VALUE(get_cur_direction());
+			cursor_needed = arrow_curs[cursor_direction.y + 1][cursor_direction.x + 1];
+		}else{
+			cursor_needed = wait_curs;
+		}
 	}
 	
 	if(cursor_needed != Cursor::current)

@@ -11,7 +11,7 @@ void redraw_everything();
 eKeyMod current_key_mod();
 void Mouse_Pressed(const sf::Event&, cFramerateLimiter& fps_limiter);
 void close_program();
-void change_cursor(location where_curs);
+void change_cursor();
 void set_up_apple_events();
 void move_sound(ter_num_t ter,short step);
 void incidental_noises(bool on_surface);
