@@ -1402,6 +1402,30 @@ void update_item_stats_area(bool& need_reprint) {
 	need_reprint = true;
 }
 
+location mouse_window_coords() {
+	location where_curs = sf::Mouse::getPosition(mainPtr());
+	where_curs = mainPtr().mapPixelToCoords(where_curs, mainView);
+	return where_curs;
+}
+
+bool mouse_to_terrain_coords(location& out_loc, bool relative) {
+	rectangle on_screen_terrain_area = win_to_rects[WINRECT_TERVIEW];
+	on_screen_terrain_area.inset(13, 13);
+
+	location where_curs = mouse_window_coords();
+
+	if(where_curs.in(on_screen_terrain_area)) {
+		out_loc.x = (where_curs.x - on_screen_terrain_area.left) / 28;
+		out_loc.y = (where_curs.y - on_screen_terrain_area.top) / 36;
+		if(!relative){
+			out_loc.x += center.x - 4;
+			out_loc.y += center.y - 4;
+		}
+		return true;
+	}
+	return false;
+}
+
 bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	long item_hit;
 	bool are_done = false;
@@ -1414,8 +1438,8 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	
 	location point_in_area;
 	
-	location the_point(event.mouseButton.x, event.mouseButton.y);
-	the_point = mainPtr().mapPixelToCoords(the_point, mainView);
+	location the_point = mouse_window_coords();
+
 	end_scenario = false;
 	
 	// MARK: First, figure out where party is
@@ -1521,9 +1545,10 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 		}
 	
 	// MARK: Begin: click in terrain
-	if(the_point.in(world_screen) && (is_out() || is_town() || is_combat())){
-		int i = (the_point.x - 32) / 28;
-		int j = (the_point.y - 20) / 36;
+	location tile;
+	if(mouse_to_terrain_coords(tile, true) && (is_out() || is_town() || is_combat())){
+		int i = tile.x;
+		int j = tile.y;
 		location destination = cur_loc;
 		auto look_destination = [i, j, destination]() {
 			location look_dest = destination;
@@ -1543,7 +1568,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 		else if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
 			if((i == 4) & (j == 4)) handle_pause(did_something, need_redraw);
 			else {
-				cur_direction = get_cur_direction(the_point);
+				cur_direction = get_cur_direction();
 				destination.x += cur_direction.x;
 				destination.y += cur_direction.y;
 				handle_move(destination, did_something, need_redraw, need_reprint);
@@ -3620,28 +3645,41 @@ void start_tutorial() {
 	// TODO start the tutorial scenario, which we need to design.
 }
 
-location get_cur_direction(location the_point) {
-	location store_dir;
+location get_cur_direction() {
+	location mouse = mouse_window_coords();
+	sf::Vector2f mouseV(mouse.x, mouse.y);
+
+	rectangle on_screen_terrain_area = win_to_rects[WINRECT_TERVIEW];
+	on_screen_terrain_area.inset(13, 13);
+	location ter_screen_center = {(on_screen_terrain_area.left + on_screen_terrain_area.right) / 2, (on_screen_terrain_area.top + on_screen_terrain_area.bottom) / 2};
+	sf::Vector2f centerV(ter_screen_center.x, ter_screen_center.y);
+	sf::Vector2f offset = mouseV - centerV;
+
+	float angle = 22.5 + std::atan2(-offset.y, offset.x) * 180.0 / 3.14159;
+	if(angle < 0) angle += 360.0;
+	if(angle > 360) angle -= 360;
 	
-	// This is a kludgy adjustment to adjust for the screen shifting between Exile I & II
-	the_point.x += 5;
-	the_point.y += 5;
-	
-	if((the_point.x < 135) & (the_point.y >= ((the_point.x * 34) / 10) - 293)
-		& (the_point.y <= (-1 * ((the_point.x * 34) / 10) + 663)))
-		store_dir.x--;
-	if((the_point.x > 163) & (the_point.y <= ((the_point.x * 34) / 10) - 350)
-		& (the_point.y >= (-1 * ((the_point.x * 34) / 10) + 721)))
-		store_dir.x++;
-	
-	if((the_point.y < 167) & (the_point.y <= (the_point.x / 2) + 102)
-		& (the_point.y <= (-1 * (the_point.x / 2) + 249)))
-		store_dir.y--;
-	if((the_point.y > 203) & (the_point.y >= (the_point.x / 2) + 123)
-		& (the_point.y >= (-1 * (the_point.x / 2) + 268)))
-		store_dir.y++;
-	
-	return store_dir;
+	float unit = 45;
+	switch((int)(angle / unit)){
+		case 0:
+			return {1, 0};
+		case 1:
+			return {1, -1};
+		case 2:
+			return {0, -1};
+		case 3:
+			return {-1, -1};
+		case 4:
+			return {-1, 0};
+		case 5:
+			return {-1, 1};
+		case 6:
+			return {0, 1};
+		case 7:
+			return {1, 1};
+		case 8:
+			return {1, 0};
+	}
 }
 
 static eDirection find_waterfall(short x, short y, short mode){
