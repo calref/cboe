@@ -1098,22 +1098,9 @@ using Key = sf::Keyboard::Key;
 std::map<Key,int> delayed_keys;
 const int ARROW_SIMUL_FRAMES = 3;
 
-// Terrain map coordinates to simulate a click for 8-directional movement
-// ordered to correspond with eDirection
-// TODO terrain_click is duplicated (with different ordering) in boe.actions.cpp
-location terrain_click[8] = {
-	{150,155}, // north
-	{180,135}, // northeast
-	{180,185}, // east
-	{180,215}, // southeast
-	{150,215}, // south
-	{120,215}, // southwest
-	{120,185}, // west
-	{120,155}, // northwest
-};
-// Screen shift deltas ordered to correspond with eDirection
-// TODO screen_shift_delta is duplicated (with different ordering) in boe.actions.cpp
-location screen_shift_delta[8] = {
+// Directional deltas ordered to correspond with eDirection
+// TODO directional_delta is duplicated (with different ordering) in boe.actions.cpp
+location directional_delta[8] = {
 	{0,-1}, // north
 	{1,-1}, // northeast
 	{1,0}, // east
@@ -1163,18 +1150,15 @@ static void fire_delayed_key(Key code) {
 	}
 
 	if(dir != -1){
+		bool did_something = false;
 		bool need_redraw = false;
-		if(handle_screen_shift(screen_shift_delta[dir], need_redraw)){
-			if(need_redraw){
-				draw_terrain();
-			}
-		}else{
-			sf::Event pass_event = {sf::Event::MouseButtonPressed};
-			location pass_point = mainPtr().mapCoordsToPixel(terrain_click[dir], mainView);
-			pass_event.mouseButton.x = pass_point.x;
-			pass_event.mouseButton.y = pass_point.y;
-			queue_fake_event(pass_event);
+		bool need_reprint = false;
+		location delta = directional_delta[dir];
+		if(!handle_screen_shift(delta, need_redraw)){
+			// TODO this was deferred to the next frame before. Is that still necessary when not spoofing an event?
+			handle_terrain_screen_actions(delta, false, false, did_something, need_redraw, need_reprint);
 		}
+		advance_time(did_something, need_redraw, need_reprint);
 	}
 }
 
@@ -1686,7 +1670,6 @@ void change_cursor() {
 		mouse_to_terrain_coords(tile, true);
 		if(tile.x != 4 || tile.y != 4){
 			cursor_direction = get_cur_direction();
-			LOG_VALUE(get_cur_direction());
 			cursor_needed = arrow_curs[cursor_direction.y + 1][cursor_direction.x + 1];
 		}else{
 			cursor_needed = wait_curs;
