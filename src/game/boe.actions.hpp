@@ -43,6 +43,7 @@ void handle_death();
 void start_new_game(bool force = false);
 void start_tutorial();
 location get_cur_direction();
+bool handle_terrain_screen_actions(location offset, bool mouse, bool right_button, bool& did_something, bool& need_redraw, bool& need_reprint);
 void outd_move_to_first_town_entrance(int town);
 bool outd_move_party(location destination,bool forced);
 bool town_move_party(location destination,short forced);
