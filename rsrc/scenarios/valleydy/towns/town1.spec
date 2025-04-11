@@ -1,5 +1,5 @@
-@disp-msg = 0
-	sdf -1, -1
+@once-disp-msg = 0
+	sdf 349, 0
 	msg 0, -1, -1
 	pic 0, 4
 	ex1 -1, -1, -1

@@ -108,7 +108,7 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 	std::string choice;
 	short how_many = 1;
 	cItem item_store;
-	bool take_given_item = true, need_redraw = false;
+	bool take_dropped_item = true, need_redraw = false;
 	location loc;
 	
 	item_store = univ.party[pc_num].items[item_num];
@@ -139,7 +139,7 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 				if(how_many <= 0)
 					return;
 				if(how_many < item_store.charges)
-					take_given_item = false;
+					take_dropped_item = false;
 				item_store.charges = how_many;
 			}
 			if(place_item(item_store,loc,true)) {
@@ -147,7 +147,7 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 				spec = -1; // Don't call drop specials if it was put away
 			} else add_string_to_buf("Drop: OK");
 			univ.party[pc_num].items[item_num].charges -= how_many;
-			if(take_given_item)
+			if(take_dropped_item)
 				univ.party[pc_num].take_item(item_num);
 			break;
 		default: //should never be reached
@@ -218,6 +218,9 @@ void give_thing(short pc_num, short item_num) {
 				// This should be impossible, because select_pc() already checked that the options
 				// were viable.
 				showFatalError("Unexpectedly failed to give item!");
+			}
+			if(take_given_item){
+				univ.party[pc_num].take_item(item_num);
 			}
 		}
 	}
@@ -663,6 +666,7 @@ short get_num_of_items(short max_num) {
 	set_cursor(sword_curs);
 	
 	cDialog numPanel(*ResMgr::dialogs.get("get-num"));
+	numPanel["extra-led"].hide();
 	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay"});
 	
 	numPanel["prompt"].setText("How many? (0-" + std::to_string(max_num) + ") ");
@@ -677,7 +681,10 @@ void init_mini_map() {
 	if (map_scale < 0.1) map_scale = 1.0;
 	if (mini_map().isOpen()) mini_map().close();
 	mini_map().create(sf::VideoMode(map_scale*296,map_scale*277), "Map", sf::Style::Titlebar | sf::Style::Close);
-	mini_map().setPosition(sf::Vector2i(52,62));
+	// TODO why is 52,62 the default position, anyway?
+	int map_x = get_int_pref("MapWindowX", 52);
+	int map_y = get_int_pref("MapWindowY", 62);
+	mini_map().setPosition(sf::Vector2i(map_x,map_y));
 	sf::View view;
 	view.reset(sf::FloatRect(0, 0, map_scale*296,map_scale*277));
 	view.setViewport(sf::FloatRect(0, 0, map_scale, map_scale));
@@ -864,7 +871,7 @@ std::string get_text_response(std::string prompt, pic_num_t pic) {
 	return result;
 }
 
-short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names, boost::optional<short> cancel_value) {
+short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names, boost::optional<short> cancel_value, short initial_value, std::string extra_led, bool* led_output) {
 	std::ostringstream sout;
 	sout << prompt;
 	
@@ -873,9 +880,17 @@ short get_num_response(short min, short max, std::string prompt, std::vector<std
 	cDialog numPanel(*ResMgr::dialogs.get("get-num"));
 	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay"});
 	
+	if(extra_led.empty()){
+		numPanel["extra-led"].hide();
+	}else{
+		numPanel["extra-led"].setText(extra_led);
+		if(led_output != nullptr)
+			dynamic_cast<cLed&>(numPanel["extra-led"]).setState(*led_output ? led_red : led_off);
+	}
+
 	sout << " (" << min << '-' << max << ')';
 	numPanel["prompt"].setText(sout.str());
-	numPanel["number"].setTextToNum(0);
+	numPanel["number"].setTextToNum(initial_value);
 	if(!choice_names.empty()){
 		numPanel["choose"].attachClickHandler([&choice_names, &prompt](cDialog& me,std::string,eKeyMod) -> bool {
 			cStringChoice choose_dlg(choice_names, prompt, &me);
@@ -896,8 +911,10 @@ short get_num_response(short min, short max, std::string prompt, std::vector<std
 			return true;
 		});
 
+	bool cancel_clicked = false;
 	if(cancel_value){
-		numPanel["cancel"].attachClickHandler([cancel_value](cDialog& me,std::string,eKeyMod) -> bool {
+		numPanel["cancel"].attachClickHandler([cancel_value, &cancel_clicked](cDialog& me,std::string,eKeyMod) -> bool {
+			cancel_clicked = true;
 			me.setResult<int>(*cancel_value);
 			me.toast(false);
 			return true;
@@ -907,6 +924,9 @@ short get_num_response(short min, short max, std::string prompt, std::vector<std
 	}
 
 	numPanel.run();
+	if(!cancel_clicked && led_output != nullptr){
+		*led_output = dynamic_cast<cLed&>(numPanel["extra-led"]).getState() == led_red;
+	}
 	
 	return numPanel.getResult<int>();
 }
@@ -967,6 +987,10 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 						extra_info = "no item slot";
 						can_pick = false;
 						break;
+					case eBuyStatus::DEAD:
+						// Extra info not really needed, and kind of silly to print
+						can_pick = false;
+						break;
 					default:
 						break;
 				}
@@ -1021,9 +1045,11 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 		if(highlight_highest != eSkill::INVALID){
 			short skill = univ.party[i].skills[highlight_highest];
 			pc_skills[i] = skill;
-			if(skill > highest_skill) highest_skill = skill;
-			if(skill != last_skill) all_pcs_equal = false;
-			last_skill = skill;
+			if(univ.party[i].is_alive()){
+				if(skill > highest_skill) highest_skill = skill;
+				if(skill != last_skill) all_pcs_equal = false;
+				last_skill = skill;
+			}
 		}
 		if(!can_pick) {
 			selectPc["pick" + n].hide();

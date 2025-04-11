@@ -264,6 +264,77 @@ bool prime_time() {
 
 eSkill last_spellcast_type = eSkill::MAGE_SPELLS;
 
+bool handle_terrain_screen_actions(location offset, bool mouse, bool right_button, bool& did_something, bool& need_redraw, bool& need_reprint) {
+	location cur_loc = is_out() ? univ.party.out_loc : center;
+
+	location destination = cur_loc;
+	destination.x += offset.x;
+	destination.y += offset.y;
+
+	location move_destination = cur_loc;
+	if(mouse){
+		location cur_direction = get_cur_direction();
+		move_destination.x += cur_direction.x;
+		move_destination.y += cur_direction.y;
+	}else{
+		move_destination = destination;
+	}
+
+	// Check for quick look
+	if(right_button) {
+		handle_begin_look(true, need_redraw, need_reprint);
+		handle_look(destination, true, current_key_mod(), need_redraw, need_reprint);
+		return true;
+	}
+
+	if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
+		if(offset.x == 0 && offset.y == 0){
+			handle_pause(did_something, need_redraw);
+		}else{
+			handle_move(move_destination, did_something, need_redraw, need_reprint);
+		}
+		return true;
+	}
+
+	// Looking at something
+	else if(overall_mode == MODE_LOOK_OUTDOORS || overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_LOOK_COMBAT) {
+		handle_look(destination, false, current_key_mod(), need_redraw, need_reprint);
+		return true;
+	}
+
+	// Talking to someone
+	else if(overall_mode == MODE_TALK_TOWN) {
+		handle_talk(destination, did_something, need_redraw, need_reprint);
+		return true;
+	}
+
+	// Targeting a space
+	else if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FIRING || overall_mode == MODE_THROWING ||
+			overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET) {
+		handle_target_space(destination, did_something, need_redraw, need_reprint);
+		return true;
+	}
+
+	// Dropping an item
+	else if(overall_mode == MODE_DROP_TOWN || overall_mode == MODE_DROP_COMBAT) {
+		handle_drop_item(destination, need_redraw);
+		return true;
+	}
+
+	// Using a space
+	else if(overall_mode == MODE_USE_TOWN) {
+		handle_use_space(destination, did_something, need_redraw);
+		return true;
+	}
+
+	// Bashing/lockpicking
+	else if(overall_mode == MODE_BASH_TOWN || overall_mode == MODE_PICK_TOWN) {
+		handle_bash_pick(destination, did_something, need_redraw, overall_mode == MODE_BASH_TOWN);
+		return true;
+	}
+
+	return false;
+}
 void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw, bool& need_reprint, bool record) {
 	if(record && recording){
 		std::map<std::string,std::string> info;
@@ -1402,6 +1473,30 @@ void update_item_stats_area(bool& need_reprint) {
 	need_reprint = true;
 }
 
+location mouse_window_coords() {
+	location where_curs = sf::Mouse::getPosition(mainPtr());
+	where_curs = mainPtr().mapPixelToCoords(where_curs, mainView);
+	return where_curs;
+}
+
+bool mouse_to_terrain_coords(location& out_loc, bool relative) {
+	rectangle on_screen_terrain_area = win_to_rects[WINRECT_TERVIEW];
+	on_screen_terrain_area.inset(13, 13);
+
+	location where_curs = mouse_window_coords();
+
+	if(where_curs.in(on_screen_terrain_area)) {
+		out_loc.x = (where_curs.x - on_screen_terrain_area.left) / 28;
+		out_loc.y = (where_curs.y - on_screen_terrain_area.top) / 36;
+		if(!relative){
+			out_loc.x += center.x - 4;
+			out_loc.y += center.y - 4;
+		}
+		return true;
+	}
+	return false;
+}
+
 bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	long item_hit;
 	bool are_done = false;
@@ -1414,8 +1509,8 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	
 	location point_in_area;
 	
-	location the_point(event.mouseButton.x, event.mouseButton.y);
-	the_point = mainPtr().mapPixelToCoords(the_point, mainView);
+	location the_point = mouse_window_coords();
+
 	end_scenario = false;
 	
 	// MARK: First, figure out where party is
@@ -1521,76 +1616,14 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 		}
 	
 	// MARK: Begin: click in terrain
-	if(the_point.in(world_screen) && (is_out() || is_town() || is_combat())){
-		int i = (the_point.x - 32) / 28;
-		int j = (the_point.y - 20) / 36;
-		location destination = cur_loc;
-		auto look_destination = [i, j, destination]() {
-			location look_dest = destination;
-			if (overall_mode == MODE_LOOK_OUTDOORS) look_dest = univ.party.out_loc;
-			look_dest.x = look_dest.x + i - 4;
-			look_dest.y = look_dest.y + j - 4;
-			return look_dest;
-		};
+	location tile;
+	if(mouse_to_terrain_coords(tile, true) && (is_out() || is_town() || is_combat())){
+		int i = tile.x;
+		int j = tile.y;
 
-		// Check for quick look
-		if(right_button) {
-			handle_begin_look(true, need_redraw, need_reprint);
-			handle_look(look_destination(), true, current_key_mod(), need_redraw, need_reprint);
-		}
+		location offset = {i - 4, j - 4};
+		handle_terrain_screen_actions(offset, true, right_button, did_something, need_redraw, need_reprint);
 		
-		// Moving/pausing
-		else if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
-			if((i == 4) & (j == 4)) handle_pause(did_something, need_redraw);
-			else {
-				cur_direction = get_cur_direction(the_point);
-				destination.x += cur_direction.x;
-				destination.y += cur_direction.y;
-				handle_move(destination, did_something, need_redraw, need_reprint);
-			}
-		}
-		
-		// Looking at something
-		else if(overall_mode == MODE_LOOK_OUTDOORS || overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_LOOK_COMBAT) {
-			handle_look(look_destination(), false, current_key_mod(), need_redraw, need_reprint);
-		}
-		
-		// Talking to someone
-		else if(overall_mode == MODE_TALK_TOWN) {
-			destination.x = destination.x + i - 4;
-			destination.y = destination.y + j - 4;
-			handle_talk(destination, did_something, need_redraw, need_reprint);
-		}
-		
-		// Targeting a space
-		else if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FIRING || overall_mode == MODE_THROWING ||
-				overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET) {
-			destination = center;
-			destination.x += i - 4;
-			destination.y += j - 4;
-			handle_target_space(destination, did_something, need_redraw, need_reprint);
-		}
-		
-		// Dropping an item
-		else if(overall_mode == MODE_DROP_TOWN || overall_mode == MODE_DROP_COMBAT) {
-			destination.x += i - 4;
-			destination.y += j - 4;
-			handle_drop_item(destination, need_redraw);
-		}
-		
-		// Using a space
-		else if(overall_mode == MODE_USE_TOWN) {
-			destination.x += i - 4;
-			destination.y += j - 4;
-			handle_use_space(destination, did_something, need_redraw);
-		}
-		
-		// Bashing/lockpicking
-		else if(overall_mode == MODE_BASH_TOWN || overall_mode == MODE_PICK_TOWN) {
-			destination.x += i - 4;
-			destination.y += j - 4;
-			handle_bash_pick(destination, did_something, need_redraw, overall_mode == MODE_BASH_TOWN);
-		}
 	}
 	// MARK: End: click in terrain
 	
@@ -2025,6 +2058,8 @@ void debug_fight_encounter(bool wandering) {
 	set_up_combat();
 }
 
+short last_debug_item = 0;
+
 void debug_give_item() {
 	if(recording){
 		record_action("debug_give_item", "");
@@ -2033,10 +2068,14 @@ void debug_give_item() {
 	for(cItem& item : univ.scenario.scen_items){
 		item_names.push_back(item.full_name);
 	}
-	int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?", item_names, -1);
+	// By default, pre-identify debug items
+	bool ident = true;
+	int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?", item_names, -1, last_debug_item, "identified", &ident);
 	if(i == -1) return;
+	last_debug_item = i;
 	bool was_ident = univ.scenario.scen_items[i].ident;
-	univ.scenario.scen_items[i].ident = true;
+	univ.scenario.scen_items[i].ident = ident;
+
 	bool given = univ.current_pc().give_item(univ.scenario.scen_items[i], GIVE_DO_PRINT | GIVE_ALLOW_OVERLOAD) == eBuyStatus::OK;
 	if(!given){
 		ASB("Debug: can't give to " + univ.current_pc().name);
@@ -2635,15 +2674,9 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 		Key::Numpad4,Key::Numpad5,Key::Numpad6,
 		Key::Numpad7,Key::Numpad8,Key::Numpad9
 	};
-	// Terrain map coordinates to simulate a click for 8-directional movement/waiting
-	// ordered to correspond with keypad keys
-	location terrain_click[10] = {
-		{150,185},{120,215},{150,215},{180,215},
-		{120,185},{150,185},{180,185},
-		{120,155},{150,155},{180,135}
-	};
-	// Screen shift deltas ordered to correspond with keypad keys
-	location screen_shift_delta[10] = {
+
+	// Directional deltas ordered to correspond with keypad keys
+	location directional_delta[10] = {
 		{0,0},{-1,1},{0,1},{1,1},
 		{-1,0},{0,0},{1,0},
 		{-1,-1},{0,-1},{1,-1}
@@ -2774,13 +2807,14 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 					chr2 = Key::Z;
 				}
 				else {
-					if(!handle_screen_shift(screen_shift_delta[i], need_redraw)){
-						// Directional keys simulate directional click
-						pass_point = mainPtr().mapCoordsToPixel(terrain_click[i], mainView);
-						pass_event.mouseButton.x = pass_point.x;
-						pass_event.mouseButton.y = pass_point.y;
-						are_done = handle_action(pass_event, fps_limiter);
-						return are_done;
+					location cur_loc = is_out() ? univ.party.out_loc : center;
+					location delta = directional_delta[i];
+					if(!handle_screen_shift(delta, need_redraw)){
+						if(handle_terrain_screen_actions(delta, false, false, did_something, need_redraw, need_reprint)){
+							advance_time(did_something, need_redraw, need_reprint);
+							return true;
+						}
+						return false;
 					}
 				}
 			}
@@ -3614,28 +3648,42 @@ void start_tutorial() {
 	// TODO start the tutorial scenario, which we need to design.
 }
 
-location get_cur_direction(location the_point) {
-	location store_dir;
+location get_cur_direction() {
+	location mouse = mouse_window_coords();
+	sf::Vector2f mouseV(mouse.x, mouse.y);
+
+	rectangle on_screen_terrain_area = win_to_rects[WINRECT_TERVIEW];
+	on_screen_terrain_area.inset(13, 13);
+	location ter_screen_center = {(on_screen_terrain_area.left + on_screen_terrain_area.right) / 2, (on_screen_terrain_area.top + on_screen_terrain_area.bottom) / 2};
+	sf::Vector2f centerV(ter_screen_center.x, ter_screen_center.y);
+	sf::Vector2f offset = mouseV - centerV;
+
+	float angle = 22.5 + std::atan2(-offset.y, offset.x) * 180.0 / 3.14159;
+	if(angle < 0) angle += 360.0;
+	if(angle > 360) angle -= 360;
 	
-	// This is a kludgy adjustment to adjust for the screen shifting between Exile I & II
-	the_point.x += 5;
-	the_point.y += 5;
-	
-	if((the_point.x < 135) & (the_point.y >= ((the_point.x * 34) / 10) - 293)
-		& (the_point.y <= (-1 * ((the_point.x * 34) / 10) + 663)))
-		store_dir.x--;
-	if((the_point.x > 163) & (the_point.y <= ((the_point.x * 34) / 10) - 350)
-		& (the_point.y >= (-1 * ((the_point.x * 34) / 10) + 721)))
-		store_dir.x++;
-	
-	if((the_point.y < 167) & (the_point.y <= (the_point.x / 2) + 102)
-		& (the_point.y <= (-1 * (the_point.x / 2) + 249)))
-		store_dir.y--;
-	if((the_point.y > 203) & (the_point.y >= (the_point.x / 2) + 123)
-		& (the_point.y >= (-1 * (the_point.x / 2) + 268)))
-		store_dir.y++;
-	
-	return store_dir;
+	float unit = 45;
+	switch((int)(angle / unit)){
+		case 0:
+			return {1, 0};
+		case 1:
+			return {1, -1};
+		case 2:
+			return {0, -1};
+		case 3:
+			return {-1, -1};
+		case 4:
+			return {-1, 0};
+		case 5:
+			return {-1, 1};
+		case 6:
+			return {0, 1};
+		case 7:
+			return {1, 1};
+		case 8:
+			return {1, 0};
+	}
+	return {0, 0};
 }
 
 static eDirection find_waterfall(short x, short y, short mode){

@@ -77,6 +77,9 @@ extern std::string save_talk_str1, save_talk_str2;
 extern cDrawableManager drawable_mgr;
 extern void close_map(bool record = false);
 
+extern location mouse_window_coords();
+extern bool mouse_to_terrain_coords(location& out_loc, bool relative);
+
 rectangle		menuBarRect;
 Region originalGrayRgn, newGrayRgn, underBarRgn;
 sf::View mainView;
@@ -184,7 +187,9 @@ void adjust_window_mode() {
 		mainPtr().create(sf::VideoMode(width, winHeight, 32), "Blades of Exile", sf::Style::Titlebar | sf::Style::Close, winSettings);
 
 		// Center the small window on the desktop
-		mainPtr().setPosition({static_cast<int>((desktop.width - width) / 2), static_cast<int>((desktop.height - height) / 2)});
+		int win_x = get_int_pref("MainWindowX", static_cast<int>((desktop.width - width) / 2));
+		int win_y = get_int_pref("MainWindowY", static_cast<int>((desktop.height - height) / 2));
+		mainPtr().setPosition({win_x, win_y});
 	} else {
 		mainPtr().create(desktop, "Blades of Exile", sf::Style::None, winSettings);
 		mainPtr().setPosition({0,0});
@@ -505,14 +510,12 @@ bool arrow_button_click(rectangle button_rect, cFramerateLimiter* fps_limiter) {
 			while(pollEvent(mainPtr(), e)){
 				if(e.type == sf::Event::MouseButtonReleased){
 					done = true;
-					location clickPos(e.mouseButton.x, e.mouseButton.y);
-					clickPos = mainPtr().mapPixelToCoords(clickPos);
+					location clickPos = mouse_window_coords();
 					clicked = button_rect.contains(clickPos);
 					depressed = false;
 					break;
 				} else if(e.type == sf::Event::MouseMoved){
-					location toPos(e.mouseMove.x, e.mouseMove.y);
-					toPos = mainPtr().mapPixelToCoords(toPos);
+					location toPos = mouse_window_coords();
 					depressed = button_rect.contains(toPos);
 				}
 			}
@@ -606,7 +609,7 @@ void redraw_screen(int refresh) {
 		draw_targets(center);
 	if(overall_mode != MODE_STARTUP) {
 		if(!is_out())
-			draw_targeting_line(sf::Mouse::getPosition(mainPtr()));
+			draw_targeting_line();
 		refresh_stat_areas(0);
 	}
 	done_btn->draw();
@@ -614,6 +617,8 @@ void redraw_screen(int refresh) {
 
 	drawable_mgr.draw_all();
 
+	extern location get_cur_direction();
+	get_cur_direction();
 	mainPtr().display();
 }
 
@@ -1646,26 +1651,20 @@ void erase_spot(short i,short j) {
 	
 }
 
-void draw_targeting_line(location where_curs) {
+void draw_targeting_line() {
 	location which_space,store_loc;
-	rectangle redraw_rect,redraw_rect2,target_rect;
+	rectangle target_rect;
 	location from_loc;
-	rectangle on_screen_terrain_area = win_to_rects[WINRECT_TERVIEW];
-	on_screen_terrain_area.inset(13, 13);
 	
-	where_curs = mainPtr().mapPixelToCoords(where_curs, mainView);
-	
+	location where_curs = mouse_window_coords();
+
 	if(overall_mode >= MODE_COMBAT)
 		from_loc = univ.current_pc().combat_pos;
 	else from_loc = univ.party.town_loc;
 	if((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
 		|| ((overall_mode == MODE_TOWN_TARGET) && (current_pat[4][4] != 0))) {
 		
-		if(where_curs.in(on_screen_terrain_area)) {
-			// && (point_onscreen(center,univ.party[current_pc].combat_pos))){
-			which_space.x = center.x + (where_curs.x - 37) / 28 - 4;
-			which_space.y = center.y + (where_curs.y - 25) / 36 - 4;
-			
+		if(mouse_to_terrain_coords(which_space, false)) {
 			int xBound = (short) (from_loc.x - center.x + 4);
 			int yBound = (short) (from_loc.y - center.y + 4);
 			xBound = (xBound * 28) + 46;
@@ -1675,11 +1674,6 @@ void draw_targeting_line(location where_curs) {
 				&& (dist(from_loc,which_space) <= current_spell_range)) {
 				mainPtr().setActive(false);
 				draw_line(mainPtr(), where_curs, location(xBound, yBound), 2, {128,128,128}, sf::BlendAdd);
-				redraw_rect.left = min(where_curs.x,xBound) - 4;
-				redraw_rect.right = max(where_curs.x,xBound) + 4;
-				redraw_rect.top = min(where_curs.y,yBound) - 4;
-				redraw_rect.bottom = max(where_curs.y,yBound) + 4;
-				redraw_rect2 = redraw_rect & on_screen_terrain_area;
 				
 				// Now place targeting pattern
 				for(short i = 0; i < 9; i++)
@@ -1695,7 +1689,6 @@ void draw_targeting_line(location where_curs) {
 							target_rect.bottom = target_rect.top + 36;
 							frame_rect(mainPtr(), target_rect, sf::Color::White);
 							target_rect.inset(-5,-5);
-							redraw_rect2 = rectunion(target_rect,redraw_rect2);
 							
 							// Now place number of shots left, if drawing center of target
 							if((overall_mode == MODE_FANCY_TARGET) && (store_loc.x - which_space.x + 4 == 4)
@@ -1712,7 +1705,6 @@ void draw_targeting_line(location where_curs) {
 						}
 					}
 				
-				redraw_rect2.inset(-5,-5);
 				mainPtr().setActive();
 			}
 		}

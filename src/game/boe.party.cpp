@@ -578,7 +578,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 		add_string_to_buf("Cast: You're an Anama!");
 		return;
 	}
-	if(univ.party[pc_num].traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
+	if(univ.party[pc_num].traits[eTrait::PACIFIST] && spell_num != eSpell::NONE && !(*spell_num).peaceful) {
 		add_string_to_buf("Cast: You're a pacifist!");
 		return;
 	}
@@ -830,7 +830,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 	location loc;
 	location where;
 	
-	if(univ.party[pc_num].traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
+	if(univ.party[pc_num].traits[eTrait::PACIFIST] && spell_num != eSpell::NONE && !(*spell_num).peaceful) {
 		add_string_to_buf("Cast: You're a pacifist!");
 		return;
 	}
@@ -1571,8 +1571,9 @@ bool pc_can_cast_spell(const cPlayer& pc,eSpell spell_num) {
 	if(spell_num == eSpell::NONE) return false;
 	short level,store_w_cast;
 	eSkill type = (*spell_num).type;
+	cSpell spell = *spell_num;
 	
-	level = (*spell_num).level;
+	level = spell.level;
 	int effective_skill = pc.skill(type);
 	if(pc.status[eStatus::DUMB] < 0)
 		effective_skill -= pc.status[eStatus::DUMB];
@@ -1581,11 +1582,13 @@ bool pc_can_cast_spell(const cPlayer& pc,eSpell spell_num) {
 		return false; // From Windows version. It does kinda make sense, though this function shouldn't even be called in these modes.
 	if(!isMage(spell_num) && !isPriest(spell_num))
 		return false;
+	if(has_feature_flag("pacifist-spellcast-check", "V2") && pc.traits[eTrait::PACIFIST] && !spell.peaceful)
+		return false;
 	if(effective_skill < level)
 		return false;
 	if(pc.main_status != eMainStatus::ALIVE)
 		return false;
-	if(pc.cur_sp < (*spell_num).cost)
+	if(pc.cur_sp < spell.cost)
 		return false;
 	// TODO: Maybe get rid of the casts here?
 	if(type == eSkill::MAGE_SPELLS && !pc.mage_spells[int(spell_num)])
@@ -1599,7 +1602,7 @@ bool pc_can_cast_spell(const cPlayer& pc,eSpell spell_num) {
 	if(pc.status[eStatus::ASLEEP] > 0)
 		return false;
 	
-	store_w_cast = (*spell_num).when_cast;
+	store_w_cast = spell.when_cast;
 	if(is_out() && WHEN_OUTDOORS &~ store_w_cast)
 		return false;
 	if(is_town() && WHEN_TOWN &~ store_w_cast)
@@ -1842,7 +1845,7 @@ static bool pick_spell_caster(cDialog& me, std::string id, const eSkill store_si
 	return true;
 }
 
-static bool pick_spell_target(cDialog& me, std::string id, const eSkill store_situation, short& last_darkened, const short store_spell) {
+static bool pick_spell_target(cDialog& me, std::string id, const eSkill store_situation, short& last_darkened, const short& store_spell) {
 	static const char*const no_target = " No target needed.";
 	static const char*const bad_target = " Can't cast on them.";
 	static const char*const got_target = " Target selected.";
@@ -1862,7 +1865,7 @@ static bool pick_spell_target(cDialog& me, std::string id, const eSkill store_si
 	return true;
 }
 
-static bool pick_spell_event_filter(cDialog& me, std::string item_hit, const eSkill store_situation, const short store_spell) {
+static bool pick_spell_event_filter(cDialog& me, std::string item_hit, const eSkill store_situation, const short& store_spell) {
 	if(item_hit == "other") {
 		on_which_spell_page = 1 - on_which_spell_page;
 		put_spell_list(me, store_situation);
@@ -2060,8 +2063,8 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	cDialog castSpell(*ResMgr::dialogs.get("cast-spell"));
 	
 	castSpell.attachClickHandlers(std::bind(pick_spell_caster, _1, _2, type, std::ref(dark), std::ref(former_spell)), {"caster1","caster2","caster3","caster4","caster5","caster6"});
-	castSpell.attachClickHandlers(std::bind(pick_spell_target,_1,_2, type, std::ref(dark), former_spell), {"target1","target2","target3","target4","target5","target6"});
-	castSpell.attachClickHandlers(std::bind(pick_spell_event_filter, _1, _2, type, former_spell), {"other", "help"});
+	castSpell.attachClickHandlers(std::bind(pick_spell_target,_1,_2, type, std::ref(dark), std::ref(former_spell)), {"target1","target2","target3","target4","target5","target6"});
+	castSpell.attachClickHandlers(std::bind(pick_spell_event_filter, _1, _2, type,std::ref(former_spell)), {"other", "help"});
 	castSpell["cast"].attachClickHandler(std::bind(finish_pick_spell, _1, false, former_target, std::ref(former_spell), type));
 	castSpell["cancel"].attachClickHandler(std::bind(finish_pick_spell, _1, true, former_target, std::ref(former_spell), type));
 	

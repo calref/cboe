@@ -2567,15 +2567,17 @@ void oneshot_spec(const runtime_state& ctx) {
 				break;
 			get_strs(strs, ctx.cur_spec_type, spec.m1);
 			if(spec.m3 > 0) {
+				// The first button defaults to OK if toggle is on
 				buttons[0] = 1;
 				buttons[1] = spec.ex1a;
 				buttons[2] = spec.ex2a;
+				// If button 2 and/or button 3 are provided, the first button becomes a Leave button!
 				if((spec.ex1a >= 0) || (spec.ex2a >= 0))
 					buttons[0] = 9;
 			}
 			if(spec.m3 <= 0) {
-				buttons[0] = spec.ex1a;
-				buttons[1] = spec.ex2a;
+				buttons[1] = spec.ex1a;
+				buttons[2] = spec.ex2a;
 			}
 			if((buttons[0] < 0) && (buttons[1] < 0)) {
 				showError("Dialog box ended up with no buttons.");
@@ -2591,8 +2593,8 @@ void oneshot_spec(const runtime_state& ctx) {
 				if(dlg_res == 2) ctx.next_spec = spec.ex1b;
 				if(dlg_res == 3) ctx.next_spec = spec.ex2b;
 			} else {
-				if(dlg_res == 1) ctx.next_spec = spec.ex1b;
-				if(dlg_res == 2) ctx.next_spec = spec.ex2b;
+				if(dlg_res == 2) ctx.next_spec = spec.ex1b;
+				if(dlg_res == 3) ctx.next_spec = spec.ex2b;
 			}
 			break;
 		case eSpecType::ONCE_GIVE_ITEM_DIALOG:
@@ -2600,7 +2602,8 @@ void oneshot_spec(const runtime_state& ctx) {
 			if(spec.m1 < 0)
 				break;
 			get_strs(strs, ctx.cur_spec_type, spec.m1);
-			buttons[0] = 20; buttons[1] = 19;
+			// Leave / Take
+			buttons[0] = 9; buttons[1] = 19;
 			dlg_res = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c);
 			if(dlg_res == 1) {set_sd = false; ctx.next_spec = -1;}
 			else {

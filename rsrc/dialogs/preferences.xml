@@ -56,8 +56,7 @@
 	<button name='autosave-details' type='tiny' text-size='10' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>
 		Details
 	</button>
-	<led name='repeatdesc' relative='pos-in pos' anchor='autosave-toggle' top='10' left='0'>Show room descriptions more than once</led>
-	<led name='easier' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Make game easier (monsters much weaker)</led>
+	<led name='easier' relative='pos-in pos' anchor='autosave-toggle' top='10' left='0'>Make game easier (monsters much weaker)</led>
 	<led name='lesswm' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Fewer wandering monsters</led>
 	<led name='skipsplash' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Skip splash screen on startup</led>
 	<led name='nohelp' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Never show instant help</led>

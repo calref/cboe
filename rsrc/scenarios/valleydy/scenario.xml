@@ -490,5 +490,6 @@
             <item chance="8">14</item>
             <item chance="10">16</item>
         </storage>
+        <sdf row="349" col="0">sweetgrove rat silo</sdf>
     </editor>
 </scenario>

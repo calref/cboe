@@ -1,0 +1,2549 @@
+<actions SHA="877e6d2" Tag="v0.0.12" Status="modified" Repo="git@github.com:NQNStudios/cboe.git">
+    <load_prefs>
+        <![CDATA[DisplayMode = 5
+EasyMode = false
+GameRunBefore = true
+GameSpeed = 0
+GiveIntroHint = false
+LessWanderingMonsters = false
+PlaySounds = true
+ReceivedHelp = [54 0 47 65 55 0 1 2 48 49 7 8 36 37 38 0 50 0 62 0 5 6 26 27 10 11 20 21 57 0 68 69 35 0 33 0 22 23 25 0 39 0 53 0 30 0 31 0 32 0 59 0 40 0]
+RepeatRoomDescriptions = false
+ShowInstantHelp = true
+ShowStartupSplash = false
+UIScale = 1.5
+UIScaleMap = 2
+]]>
+</load_prefs>
+    <feature_flags>
+        <debug-enter-town>
+            <version>move-outdoors</version>
+        </debug-enter-town>
+        <debug-kill-party>
+            <version>V2</version>
+        </debug-kill-party>
+        <file-picker-dialog>
+            <version>V1</version>
+        </file-picker-dialog>
+        <scenario-meta-format>
+            <version>V2</version>
+        </scenario-meta-format>
+        <target-lock>
+            <version>V1</version>
+        </target-lock>
+    </feature_flags>
+    <srand>1743890594</srand>
+    <startup_button_click>
+        <btn>Load Game</btn>
+        <mods>0</mods>
+    </startup_button_click>
+    <fancy_file_picker>false</fancy_file_picker>
+    <click_control>
+        <id>list</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>load3</id>
+        <mods>0</mods>
+    </click_control>
+    <load_party>
+        <![CDATA[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
+n26rsF2Y9NmihVtVsGZDN/B1jGrGVerGxVMdL5swqlNNUs4uxM/SqLwFO4XgCGc1qVbrm+rzUJEr
+hc5uUS7qIbYgVX7akLL7I9Xma5R00im2K0rdbcCttQGvuF4lVcVLbCXVg/B6ErkvMWzDzH4YZmOz
+/PM1e2B5VWdp7BXXN/HRehp66TwcuzuJfNPK20aOrUPHoLrgn/8AlNCgP0Lxl8jU3xIhkFZs8zsw
+bySNeM4cvRHqjM3/GmSyG0Kv4eSqiGuDGeqik2s0m+CGKAnt/yYf4BF/T9NOu/5ss/04FxT8rv9V
+ojRFqNwr0/92Rl41T3KJN0nmNuQRqa4/HXmdy9ofucD9kJcOamtTqmjI8WbO6L4rItX1VxfJR1Le
+q2LShX0HeRr39v3bcP8OpK9rWmLouIpd0ZzHVVp1Yd8m7brEVyzx09C+o90+hPa9xd5/atoXJdRi
+2TYaddK+j9xb1adpkawdsR/51e8NXmAr7R+s+HONUOX/w2nf2mr1WHkT7enpLPqrXtcirnqdLecP
+wd5twX7ceLLeOqfv9afBviGboybtu+S+tXV2yPbTYv/Qv5d1cmRICdFu0XHg1HpGnA1JMukrkuOM
+MfOo8unps1qtvTblu737oJKk7uw46Ft7a79JtfpuAnT3GvSpXiYd6hi09Z7k7LAVk3L3vCMT3/fx
+u1DoQqBEpER0Gwe29l8pFIaGVQRl9pb6d2FB/947uxH1tNdfjZC2seChfZdYj6zf1uqtJiNKCnRX
+/6b/Kw3uxF+z+H4xD5bp4TTIdoDt+xrCyxsOW68PTdv3neEb04Eve+ianvfG9z33jWEYTYhneK3S
+LEjeGL+iqtf4Gu74GjAAAzAAAzAAAzAAAzAAF8AFcAFcABfABXABXAAXwAVwAVwAF8AFcAFcwKMK
+YAAGYAAGYAAGYAAGYAAGYAAGYAAGYAAGYAAG2AWAb+Ab+Aa+oe+LARiAARiAARiAARiAARiAARiA
+ARiAARiAARiAARiAARiAARiAARiAARiAARiAARiAARiAARjgpQC4AC6AC+ACuAAugAvgArgALoAL
+4AK4AC6AC+ACGIABGIABGIABGIABGIABGIABGIABGIABGIABGIABGIABGIABGIABGIABGIABGIAB
+GIABGIABGIABGIABGIABGIABGIABGIABGIABGIABGIABGIABGIABGIABGIABGIABGIABGIABGIAB
+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
+]]>
+</load_party>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(3,11)</move>
+    <move>(3,12)</move>
+    <move>(3,13)</move>
+    <move>(4,10)</move>
+    <move>(3,11)</move>
+    <move>(3,12)</move>
+    <move>(4,9)</move>
+    <move>(4,10)</move>
+    <handle_missile></handle_missile>
+    <handle_missile></handle_missile>
+    <handle_pause></handle_pause>
+    <move>(3,10)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <move>(3,9)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_pause></handle_pause>
+    <arrow_button_click>{(308,67) - (485,76)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <arrow_button_click>{(546,64) - (558,76)}</arrow_button_click>
+    <give_pc_info>3</give_pc_info>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(308,165) - (493,174)}</arrow_button_click>
+    <handle_equip_item>1</handle_equip_item>
+    <arrow_button_click>{(529,163) - (543,174)}</arrow_button_click>
+    <handle_drop_item_id>1</handle_drop_item_id>
+    <handle_drop_item_location>(3,10)</handle_drop_item_location>
+    <arrow_button_click>{(546,64) - (558,76)}</arrow_button_click>
+    <give_pc_info>3</give_pc_info>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell23</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(3,14)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <arrow_button_click>{(546,90) - (558,102)}</arrow_button_click>
+    <give_pc_info>5</give_pc_info>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(308,165) - (493,174)}</arrow_button_click>
+    <handle_equip_item>1</handle_equip_item>
+    <arrow_button_click>{(529,163) - (543,174)}</arrow_button_click>
+    <handle_drop_item_id>1</handle_drop_item_id>
+    <handle_drop_item_location>(2,7)</handle_drop_item_location>
+    <handle_pause></handle_pause>
+    <pick_preferences></pick_preferences>
+    <click_control>
+        <id>keyshift-options</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>screen-shift</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(3,14)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(3,14)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(3,14)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(3,11)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(3,14)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(3,13)</move>
+    <move>(3,14)</move>
+    <move>(3,12)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(3,14)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(3,11)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(3,15)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <arrow_button_click>{(308,165) - (493,174)}</arrow_button_click>
+    <handle_equip_item>1</handle_equip_item>
+    <arrow_button_click>{(529,163) - (543,174)}</arrow_button_click>
+    <handle_drop_item_id>1</handle_drop_item_id>
+    <handle_drop_item_location>(3,9)</handle_drop_item_location>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell23</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <handle_target_space>
+        <destination>(3,15)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_combat_switch></handle_combat_switch>
+    <arrow_button_click>{(308,28) - (485,37)}</arrow_button_click>
+    <handle_switch_pc>0</handle_switch_pc>
+    <handle_drop_pc></handle_drop_pc>
+    <click_control>
+        <id>pick1</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>yes</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_new_pc></handle_new_pc>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>bad7</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>bad3</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>bad4</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>bad4</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>assassin-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>assassin-p</id>
+        <mods>1</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>assassin-m</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>defense-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>defense-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>edged-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>edged-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>edged-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>edged-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>edged-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>dex-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>dex-p</id>
+        <mods>1</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>1</mods>
+    </click_control>
+    <click_control>
+        <id>dex-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>dex-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>dex-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>str-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>str-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>str-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>str-p</id>
+        <mods>1</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>str-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>str-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>str-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>str-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-m</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-m</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>defense-p</id>
+        <mods>1</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>defense-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>hp-m</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>defense-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>keep</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>group</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>led25</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <field_focus>name</field_focus>
+    <field_input>
+        <c>K</c>
+        <mod>2</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>e</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>n</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>t</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(3,11)</move>
+    <handle_get_items></handle_get_items>
+    <click_control>
+        <id>pc1</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item3-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item4-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item5-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item5-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item6-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(308,28) - (485,37)}</arrow_button_click>
+    <handle_switch_pc>0</handle_switch_pc>
+    <arrow_button_click>{(308,152) - (493,161)}</arrow_button_click>
+    <handle_equip_item>0</handle_equip_item>
+    <arrow_button_click>{(308,165) - (493,174)}</arrow_button_click>
+    <handle_equip_item>1</handle_equip_item>
+    <arrow_button_click>{(308,178) - (493,187)}</arrow_button_click>
+    <handle_equip_item>2</handle_equip_item>
+    <arrow_button_click>{(308,191) - (493,200)}</arrow_button_click>
+    <handle_equip_item>3</handle_equip_item>
+    <arrow_button_click>{(529,176) - (543,187)}</arrow_button_click>
+    <handle_drop_item_id>2</handle_drop_item_id>
+    <handle_drop_item_location>(3,11)</handle_drop_item_location>
+    <arrow_button_click>{(529,150) - (543,161)}</arrow_button_click>
+    <handle_drop_item_id>0</handle_drop_item_id>
+    <handle_drop_item_location>(3,11)</handle_drop_item_location>
+    <arrow_button_click>{(308,178) - (493,187)}</arrow_button_click>
+    <handle_equip_item>2</handle_equip_item>
+    <arrow_button_click>{(308,191) - (493,200)}</arrow_button_click>
+    <handle_equip_item>3</handle_equip_item>
+    <arrow_button_click>{(308,204) - (493,213)}</arrow_button_click>
+    <handle_equip_item>4</handle_equip_item>
+    <arrow_button_click>{(546,25) - (558,37)}</arrow_button_click>
+    <give_pc_info>0</give_pc_info>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(3,10)</move>
+    <move>(3,9)</move>
+    <move>(3,8)</move>
+    <move>(3,7)</move>
+    <move>(3,6)</move>
+    <move>(4,5)</move>
+    <move>(5,4)</move>
+    <move>(6,4)</move>
+    <move>(7,4)</move>
+    <move>(8,4)</move>
+    <move>(9,4)</move>
+    <move>(10,4)</move>
+    <move>(11,4)</move>
+    <move>(12,4)</move>
+    <move>(13,3)</move>
+    <move>(23,37)</move>
+    <move>(23,36)</move>
+    <handle_begin_look>false</handle_begin_look>
+    <handle_look>
+        <destination>(24,36)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(24,35)</move>
+    <click_control>
+        <id>btn1</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(24,34)</move>
+    <move>(24,33)</move>
+    <move>(24,32)</move>
+    <move>(24,31)</move>
+    <handle_begin_look>false</handle_begin_look>
+    <handle_look>
+        <destination>(25,31)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(24,30)</move>
+    <move>(25,29)</move>
+    <move>(25,28)</move>
+    <move>(25,27)</move>
+    <move>(25,26)</move>
+    <move>(25,25)</move>
+    <move>(25,24)</move>
+    <move>(24,23)</move>
+    <move>(24,22)</move>
+    <move>(24,21)</move>
+    <move>(24,20)</move>
+    <move>(24,19)</move>
+    <move>(24,18)</move>
+    <move>(24,17)</move>
+    <move>(24,16)</move>
+    <move>(24,15)</move>
+    <move>(24,14)</move>
+    <move>(23,13)</move>
+    <move>(23,12)</move>
+    <move>(23,11)</move>
+    <move>(23,10)</move>
+    <move>(23,9)</move>
+    <move>(23,8)</move>
+    <move>(23,7)</move>
+    <move>(23,6)</move>
+    <move>(23,5)</move>
+    <move>(22,52)</move>
+    <move>(22,51)</move>
+    <move>(22,50)</move>
+    <move>(22,49)</move>
+    <move>(22,48)</move>
+    <move>(22,47)</move>
+    <move>(22,46)</move>
+    <move>(22,45)</move>
+    <move>(22,44)</move>
+    <move>(22,43)</move>
+    <move>(22,42)</move>
+    <move>(22,41)</move>
+    <move>(22,40)</move>
+    <move>(21,39)</move>
+    <move>(21,38)</move>
+    <move>(21,37)</move>
+    <move>(20,36)</move>
+    <move>(19,35)</move>
+    <move>(19,34)</move>
+    <move>(18,33)</move>
+    <move>(18,32)</move>
+    <move>(18,31)</move>
+    <move>(18,30)</move>
+    <move>(18,29)</move>
+    <move>(19,28)</move>
+    <move>(20,27)</move>
+    <move>(20,26)</move>
+    <move>(20,25)</move>
+    <move>(21,24)</move>
+    <move>(21,23)</move>
+    <move>(21,22)</move>
+    <click_control>
+        <id>btn1</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(23,58)</move>
+    <move>(23,57)</move>
+    <move>(23,56)</move>
+    <move>(23,55)</move>
+    <move>(23,54)</move>
+    <move>(23,53)</move>
+    <move>(23,52)</move>
+    <move>(23,51)</move>
+    <move>(23,50)</move>
+    <move>(23,49)</move>
+    <move>(23,48)</move>
+    <move>(22,47)</move>
+    <move>(21,46)</move>
+    <move>(20,46)</move>
+    <move>(19,45)</move>
+    <move>(19,44)</move>
+    <move>(19,43)</move>
+    <move>(19,42)</move>
+    <move>(19,41)</move>
+    <move>(19,40)</move>
+    <move>(19,39)</move>
+    <move>(19,38)</move>
+    <move>(19,37)</move>
+    <move>(19,36)</move>
+    <move>(18,35)</move>
+    <move>(17,34)</move>
+    <move>(16,33)</move>
+    <move>(15,32)</move>
+    <move>(14,32)</move>
+    <move>(13,32)</move>
+    <move>(12,32)</move>
+    <handle_begin_look>false</handle_begin_look>
+    <handle_look>
+        <destination>(11,33)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(12,33)</move>
+    <move>(12,33)</move>
+    <move>(12,34)</move>
+    <move>(11,34)</move>
+    <move>(10,34)</move>
+    <move>(10,35)</move>
+    <move>(10,36)</move>
+    <move>(9,36)</move>
+    <move>(8,36)</move>
+    <move>(8,37)</move>
+    <move>(8,38)</move>
+    <move>(7,38)</move>
+    <move>(7,39)</move>
+    <move>(7,40)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(7,43)</handle_talk>
+    <click_talk_rect>
+        <node>40</node>
+        <preset>false</preset>
+        <rect>{(6,76) - (105,100)}</rect>
+        <word>mage&apos;s</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-10</node>
+        <preset>true</preset>
+        <rect>{(4,366) - (50,384)}</rect>
+        <word>Look</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-11</node>
+        <preset>true</preset>
+        <rect>{(70,366) - (125,380)}</rect>
+        <word>Name</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>39</node>
+        <preset>false</preset>
+        <rect>{(52,60) - (166,82)}</rect>
+        <word>seekers</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>39</node>
+        <preset>false</preset>
+        <rect>{(6,76) - (162,100)}</rect>
+        <word>knowledge</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>38</node>
+        <preset>false</preset>
+        <rect>{(6,108) - (105,123)}</rect>
+        <word>arcane</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>38</node>
+        <preset>false</preset>
+        <rect>{(79,108) - (245,130)}</rect>
+        <word>researches</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-2</node>
+        <preset>true</preset>
+        <rect>{(4,389) - (47,406)}</rect>
+        <word>Buy</word>
+    </click_talk_rect>
+    <arrow_button_click>{(308,67) - (485,76)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <click_shop_item_help>{(241,66) - (255,78)}</click_shop_item_help>
+    <handle_info_request>0</handle_info_request>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <click_shop_item>{(19,243) - (249,279)}</click_shop_item>
+    <handle_sale>9</handle_sale>
+    <arrow_button_click>{(308,80) - (485,89)}</arrow_button_click>
+    <handle_switch_pc>4</handle_switch_pc>
+    <click_shop_item>{(19,243) - (249,279)}</click_shop_item>
+    <handle_sale>9</handle_sale>
+    <arrow_button_click>{(308,28) - (485,37)}</arrow_button_click>
+    <handle_switch_pc>0</handle_switch_pc>
+    <click_shop_item>{(19,243) - (249,279)}</click_shop_item>
+    <handle_sale>9</handle_sale>
+    <arrow_button_click>{(308,41) - (485,50)}</arrow_button_click>
+    <handle_switch_pc>1</handle_switch_pc>
+    <click_shop_item>{(19,243) - (249,279)}</click_shop_item>
+    <handle_sale>9</handle_sale>
+    <arrow_button_click>{(308,67) - (485,76)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <click_shop_item>{(19,279) - (249,315)}</click_shop_item>
+    <handle_sale>10</handle_sale>
+    <end_shop_mode></end_shop_mode>
+    <click_talk_rect>
+        <node>-3</node>
+        <preset>true</preset>
+        <rect>{(70,389) - (105,405)}</rect>
+        <word>Sell</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(7,39)</move>
+    <move>(7,38)</move>
+    <move>(7,37)</move>
+    <move>(8,36)</move>
+    <move>(9,36)</move>
+    <move>(10,37)</move>
+    <move>(10,38)</move>
+    <move>(10,39)</move>
+    <move>(11,40)</move>
+    <move>(12,40)</move>
+    <move>(13,40)</move>
+    <move>(14,39)</move>
+    <move>(14,38)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(16,38)</handle_talk>
+    <click_talk_rect>
+        <node>31</node>
+        <preset>false</preset>
+        <rect>{(6,108) - (112,132)}</rect>
+        <word>healing</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-11</node>
+        <preset>true</preset>
+        <rect>{(70,366) - (125,380)}</rect>
+        <word>Name</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>31</node>
+        <preset>false</preset>
+        <rect>{(6,60) - (101,81)}</rect>
+        <word>healer</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>32</node>
+        <preset>false</preset>
+        <rect>{(6,76) - (117,101)}</rect>
+        <word>capable</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>33</node>
+        <preset>false</preset>
+        <rect>{(6,108) - (152,132)}</rect>
+        <word>daughters</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>35</node>
+        <preset>false</preset>
+        <rect>{(6,92) - (70,110)}</rect>
+        <word>poor</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>36</node>
+        <preset>false</preset>
+        <rect>{(130,172) - (237,196)}</rect>
+        <word>strange</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>33</node>
+        <preset>false</preset>
+        <rect>{(6,108) - (71,132)}</rect>
+        <word>help</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>34</node>
+        <preset>false</preset>
+        <rect>{(103,140) - (228,163)}</rect>
+        <word>husband</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>32</node>
+        <preset>false</preset>
+        <rect>{(114,76) - (199,100)}</rect>
+        <word>aiding</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(14,39)</move>
+    <move>(15,40)</move>
+    <move>(16,41)</move>
+    <move>(16,42)</move>
+    <move>(15,43)</move>
+    <move>(14,44)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(12,42)</handle_talk>
+    <click_talk_rect>
+        <node>-11</node>
+        <preset>true</preset>
+        <rect>{(70,366) - (125,380)}</rect>
+        <word>Name</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>55</node>
+        <preset>false</preset>
+        <rect>{(6,76) - (88,100)}</rect>
+        <word>guard</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>56</node>
+        <preset>false</preset>
+        <rect>{(6,140) - (95,161)}</rect>
+        <word>travel</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>53</node>
+        <preset>false</preset>
+        <rect>{(53,92) - (144,112)}</rect>
+        <word>forced</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>54</node>
+        <preset>false</preset>
+        <rect>{(6,124) - (117,148)}</rect>
+        <word>training</word>
+    </click_talk_rect>
+    <click_control>
+        <id>pick1</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>keep</id>
+        <mods>0</mods>
+    </click_control>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(15,43)</move>
+    <move>(16,42)</move>
+    <move>(16,41)</move>
+    <move>(15,40)</move>
+    <move>(14,39)</move>
+    <move>(13,40)</move>
+    <move>(12,40)</move>
+    <move>(11,40)</move>
+    <move>(10,41)</move>
+    <move>(10,42)</move>
+    <move>(10,43)</move>
+    <move>(10,44)</move>
+    <move>(10,45)</move>
+    <move>(10,44)</move>
+    <move>(10,43)</move>
+    <move>(10,42)</move>
+    <move>(10,41)</move>
+    <move>(10,40)</move>
+    <move>(10,39)</move>
+    <move>(10,38)</move>
+    <move>(10,37)</move>
+    <move>(10,36)</move>
+    <move>(10,35)</move>
+    <move>(10,34)</move>
+    <move>(10,33)</move>
+    <move>(10,33)</move>
+    <move>(9,32)</move>
+    <move>(8,32)</move>
+    <move>(7,32)</move>
+    <move>(6,33)</move>
+    <move>(5,34)</move>
+    <move>(4,35)</move>
+    <move>(3,36)</move>
+    <move>(21,22)</move>
+    <display_map></display_map>
+    <pick_preferences></pick_preferences>
+    <click_control>
+        <id>scalemap</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>1_5</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <display_map></display_map>
+    <move>(5,29)</move>
+    <move>(6,29)</move>
+    <move>(7,28)</move>
+    <move>(8,28)</move>
+    <move>(9,28)</move>
+    <move>(10,28)</move>
+    <move>(11,28)</move>
+    <move>(12,28)</move>
+    <move>(13,28)</move>
+    <move>(14,28)</move>
+    <move>(15,28)</move>
+    <move>(16,28)</move>
+    <move>(17,28)</move>
+    <move>(18,28)</move>
+    <move>(19,28)</move>
+    <move>(20,28)</move>
+    <move>(21,28)</move>
+    <move>(22,28)</move>
+    <move>(23,28)</move>
+    <move>(24,28)</move>
+    <move>(24,27)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(23,25)</handle_talk>
+    <click_talk_rect>
+        <node>-11</node>
+        <preset>true</preset>
+        <rect>{(70,366) - (125,380)}</rect>
+        <word>Name</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>43</node>
+        <preset>false</preset>
+        <rect>{(110,44) - (196,62)}</rect>
+        <word>away</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>44</node>
+        <preset>false</preset>
+        <rect>{(6,76) - (102,99)}</rect>
+        <word>Levitz</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(25,27)</move>
+    <move>(26,28)</move>
+    <move>(27,29)</move>
+    <move>(28,30)</move>
+    <move>(29,30)</move>
+    <move>(30,30)</move>
+    <move>(31,30)</move>
+    <move>(32,31)</move>
+    <move>(32,31)</move>
+    <move>(33,32)</move>
+    <move>(34,33)</move>
+    <move>(34,34)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(36,35)</handle_talk>
+    <click_talk_rect>
+        <node>7</node>
+        <preset>false</preset>
+        <rect>{(6,60) - (186,84)}</rect>
+        <word>Sweetgrove</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>8</node>
+        <preset>false</preset>
+        <rect>{(6,76) - (123,100)}</rect>
+        <word>Skylark</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>15</node>
+        <preset>false</preset>
+        <rect>{(6,156) - (131,178)}</rect>
+        <word>wizards</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>6</node>
+        <preset>false</preset>
+        <rect>{(111,140) - (208,162)}</rect>
+        <word>should</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>17</node>
+        <preset>false</preset>
+        <rect>{(6,92) - (130,116)}</rect>
+        <word>reported</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>12</node>
+        <preset>false</preset>
+        <rect>{(6,108) - (88,125)}</rect>
+        <word>curse</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>13</node>
+        <preset>false</preset>
+        <rect>{(49,140) - (173,162)}</rect>
+        <word>diseases</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>12</node>
+        <preset>true</preset>
+        <rect>{(190,366) - (272,383)}</rect>
+        <word>Go Back</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>14</node>
+        <preset>false</preset>
+        <rect>{(6,204) - (128,225)}</rect>
+        <word>children</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>10</node>
+        <preset>false</preset>
+        <rect>{(115,108) - (292,132)}</rect>
+        <word>unimportant</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>11</node>
+        <preset>false</preset>
+        <rect>{(139,140) - (285,157)}</rect>
+        <word>resources</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>5</node>
+        <preset>false</preset>
+        <rect>{(6,60) - (109,83)}</rect>
+        <word>Liaison</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>6</node>
+        <preset>false</preset>
+        <rect>{(6,156) - (82,176)}</rect>
+        <word>aided</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>12</node>
+        <preset>false</preset>
+        <rect>{(171,204) - (251,226)}</rect>
+        <word>crisis</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(33,33)</move>
+    <move>(32,32)</move>
+    <move>(32,31)</move>
+    <move>(32,30)</move>
+    <move>(33,29)</move>
+    <move>(34,28)</move>
+    <move>(35,27)</move>
+    <move>(35,28)</move>
+    <move>(36,27)</move>
+    <click_control>
+        <id>leave</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(36,28)</move>
+    <move>(37,28)</move>
+    <handle_begin_look>false</handle_begin_look>
+    <handle_look>
+        <destination>(38,27)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(37,27)</move>
+    <click_control>
+        <id>bash</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pick2</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(37,27)</move>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(37,26)</move>
+    <move>(36,25)</move>
+    <move>(35,24)</move>
+    <move>(34,23)</move>
+    <move>(33,23)</move>
+    <move>(32,23)</move>
+    <move>(32,22)</move>
+    <click_control>
+        <id>btn2</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pick3</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(33,21)</move>
+    <move>(34,20)</move>
+    <move>(35,19)</move>
+    <move>(36,19)</move>
+    <move>(37,19)</move>
+    <handle_begin_look>false</handle_begin_look>
+    <handle_look>
+        <destination>(38,18)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <handle_begin_look>false</handle_begin_look>
+    <handle_look>
+        <destination>(36,18)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(36,20)</move>
+    <handle_begin_look>false</handle_begin_look>
+    <handle_look>
+        <destination>(35,21)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <click_control>
+        <id>btn2</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(481,258) - (516,273)}</arrow_button_click>
+    <set_stat_window>6</set_stat_window>
+    <move>(35,19)</move>
+    <move>(34,20)</move>
+    <move>(33,21)</move>
+    <move>(32,22)</move>
+    <move>(33,23)</move>
+    <move>(34,24)</move>
+    <move>(35,25)</move>
+    <move>(36,26)</move>
+    <move>(37,27)</move>
+    <move>(38,28)</move>
+    <move>(39,29)</move>
+    <move>(40,28)</move>
+    <move>(41,28)</move>
+    <move>(42,28)</move>
+    <move>(43,28)</move>
+    <move>(44,28)</move>
+    <move>(45,28)</move>
+    <move>(46,28)</move>
+    <move>(47,28)</move>
+    <move>(48,28)</move>
+    <move>(49,27)</move>
+    <move>(50,26)</move>
+    <move>(51,25)</move>
+    <handle_begin_look>false</handle_begin_look>
+    <handle_look>
+        <destination>(52,24)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(52,25)</move>
+    <move>(53,25)</move>
+    <move>(53,24)</move>
+    <move>(53,24)</move>
+    <move>(53,23)</move>
+    <move>(53,22)</move>
+    <move>(53,21)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(50,20)</handle_talk>
+    <click_talk_rect>
+        <node>26</node>
+        <preset>false</preset>
+        <rect>{(128,60) - (240,84)}</rect>
+        <word>intently</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>27</node>
+        <preset>false</preset>
+        <rect>{(44,124) - (139,147)}</rect>
+        <word>School</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>27</node>
+        <preset>false</preset>
+        <rect>{(6,92) - (99,113)}</rect>
+        <word>mages</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>28</node>
+        <preset>false</preset>
+        <rect>{(6,220) - (142,245)}</rect>
+        <word>problems</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>29</node>
+        <preset>false</preset>
+        <rect>{(6,236) - (82,256)}</rect>
+        <word>enter</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>27</node>
+        <preset>false</preset>
+        <rect>{(157,188) - (249,210)}</rect>
+        <word>school</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>27</node>
+        <preset>false</preset>
+        <rect>{(6,92) - (99,113)}</rect>
+        <word>mages</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>28</node>
+        <preset>false</preset>
+        <rect>{(6,220) - (142,245)}</rect>
+        <word>problems</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>25</node>
+        <preset>false</preset>
+        <rect>{(76,92) - (262,112)}</rect>
+        <word>identification</word>
+    </click_talk_rect>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(308,28) - (485,37)}</arrow_button_click>
+    <handle_switch_pc>0</handle_switch_pc>
+    <arrow_button_click>{(308,67) - (485,76)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <arrow_button_click>{(308,165) - (493,174)}</arrow_button_click>
+    <handle_equip_item>1</handle_equip_item>
+    <arrow_button_click>{(478,162) - (537,174)}</arrow_button_click>
+    <handle_item_shop_action>1</handle_item_shop_action>
+    <arrow_button_click>{(308,54) - (485,63)}</arrow_button_click>
+    <handle_switch_pc>2</handle_switch_pc>
+    <arrow_button_click>{(308,80) - (485,89)}</arrow_button_click>
+    <handle_switch_pc>4</handle_switch_pc>
+    <arrow_button_click>{(308,93) - (485,102)}</arrow_button_click>
+    <handle_switch_pc>5</handle_switch_pc>
+    <arrow_button_click>{(308,28) - (485,37)}</arrow_button_click>
+    <handle_switch_pc>0</handle_switch_pc>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(53,22)</move>
+    <move>(53,23)</move>
+    <move>(53,24)</move>
+    <move>(53,25)</move>
+    <move>(54,25)</move>
+    <move>(55,25)</move>
+    <move>(56,25)</move>
+    <move>(57,24)</move>
+    <move>(58,23)</move>
+    <move>(59,22)</move>
+    <move>(59,21)</move>
+    <move>(59,20)</move>
+    <move>(59,19)</move>
+    <move>(59,18)</move>
+    <move>(59,17)</move>
+    <move>(58,16)</move>
+    <move>(57,15)</move>
+    <move>(56,15)</move>
+    <move>(55,15)</move>
+    <move>(55,14)</move>
+    <move>(55,13)</move>
+    <move>(54,12)</move>
+    <move>(54,11)</move>
+    <move>(53,10)</move>
+    <move>(52,9)</move>
+    <move>(53,10)</move>
+    <move>(54,11)</move>
+    <move>(55,12)</move>
+    <move>(56,12)</move>
+    <move>(57,12)</move>
+    <move>(58,11)</move>
+    <move>(59,10)</move>
+    <move>(60,9)</move>
+    <move>(21,21)</move>
+    <move>(20,20)</move>
+    <move>(19,20)</move>
+    <move>(18,20)</move>
+    <move>(17,20)</move>
+    <move>(16,20)</move>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(15,20)</move>
+    <move>(14,20)</move>
+    <move>(13,20)</move>
+    <handle_rest></handle_rest>
+    <move>(12,20)</move>
+    <move>(11,20)</move>
+    <move>(10,20)</move>
+    <move>(9,19)</move>
+    <move>(8,18)</move>
+    <move>(7,18)</move>
+    <move>(6,18)</move>
+    <move>(5,17)</move>
+    <move>(52,16)</move>
+    <move>(51,15)</move>
+    <move>(50,14)</move>
+    <move>(49,13)</move>
+    <move>(48,12)</move>
+    <move>(47,12)</move>
+    <move>(46,12)</move>
+    <move>(45,11)</move>
+    <move>(44,10)</move>
+    <move>(43,9)</move>
+    <move>(43,8)</move>
+    <move>(43,7)</move>
+    <move>(42,6)</move>
+    <move>(41,5)</move>
+    <move>(40,52)</move>
+    <move>(40,51)</move>
+    <move>(39,50)</move>
+    <move>(39,49)</move>
+    <move>(39,48)</move>
+    <move>(39,47)</move>
+    <move>(38,46)</move>
+    <move>(37,45)</move>
+    <move>(36,44)</move>
+    <move>(35,43)</move>
+    <move>(34,42)</move>
+    <move>(33,42)</move>
+    <move>(32,42)</move>
+    <move>(31,42)</move>
+    <move>(30,42)</move>
+    <move>(29,42)</move>
+    <move>(28,41)</move>
+    <move>(27,41)</move>
+    <move>(26,41)</move>
+    <move>(25,41)</move>
+    <move>(24,41)</move>
+    <move>(23,41)</move>
+    <move>(22,40)</move>
+    <move>(21,40)</move>
+    <move>(20,40)</move>
+    <move>(19,40)</move>
+    <move>(18,39)</move>
+    <move>(17,38)</move>
+    <move>(16,38)</move>
+    <move>(15,38)</move>
+    <move>(14,38)</move>
+    <move>(13,37)</move>
+    <move>(13,36)</move>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(13,35)</move>
+    <move>(13,34)</move>
+    <handle_begin_look>false</handle_begin_look>
+    <handle_look>
+        <destination>(14,34)</destination>
+        <mods>2</mods>
+        <right_button>false</right_button>
+    </handle_look>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(13,33)</move>
+    <move>(14,32)</move>
+    <move>(15,31)</move>
+    <move>(15,30)</move>
+    <move>(15,29)</move>
+    <move>(15,28)</move>
+    <move>(15,27)</move>
+    <move>(16,26)</move>
+    <move>(17,26)</move>
+    <move>(18,26)</move>
+    <move>(19,26)</move>
+    <move>(20,27)</move>
+    <move>(21,28)</move>
+    <move>(20,27)</move>
+    <move>(20,26)</move>
+    <move>(23,42)</move>
+    <move>(22,41)</move>
+    <move>(22,40)</move>
+    <move>(22,40)</move>
+    <move>(22,39)</move>
+    <move>(22,38)</move>
+    <move>(22,37)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(24,35)</handle_talk>
+    <click_talk_rect>
+        <node>21</node>
+        <preset>false</preset>
+        <rect>{(107,92) - (315,114)}</rect>
+        <word>administration</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>21</node>
+        <preset>false</preset>
+        <rect>{(61,44) - (148,66)}</rect>
+        <word>mines</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-10</node>
+        <preset>true</preset>
+        <rect>{(4,366) - (50,384)}</rect>
+        <word>Look</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>20</node>
+        <preset>false</preset>
+        <rect>{(104,76) - (174,97)}</rect>
+        <word>Vale</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>24</node>
+        <preset>false</preset>
+        <rect>{(185,156) - (266,177)}</rect>
+        <word>lethal</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>25</node>
+        <preset>false</preset>
+        <rect>{(96,156) - (183,177)}</rect>
+        <word>better</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>20</node>
+        <preset>false</preset>
+        <rect>{(103,108) - (222,128)}</rect>
+        <word>endured</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-11</node>
+        <preset>true</preset>
+        <rect>{(70,366) - (125,380)}</rect>
+        <word>Name</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-10</node>
+        <preset>true</preset>
+        <rect>{(4,366) - (50,384)}</rect>
+        <word>Look</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>21</node>
+        <preset>false</preset>
+        <rect>{(6,76) - (93,98)}</rect>
+        <word>mines</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>22</node>
+        <preset>false</preset>
+        <rect>{(81,76) - (185,96)}</rect>
+        <word>undead</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>23</node>
+        <preset>false</preset>
+        <rect>{(6,172) - (67,194)}</rect>
+        <word>task</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>23</node>
+        <preset>false</preset>
+        <rect>{(6,140) - (117,161)}</rect>
+        <word>reward</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(22,38)</move>
+    <move>(22,39)</move>
+    <move>(22,40)</move>
+    <move>(23,41)</move>
+    <move>(24,41)</move>
+    <move>(25,41)</move>
+    <move>(26,41)</move>
+    <move>(27,41)</move>
+    <move>(28,41)</move>
+    <move>(29,41)</move>
+    <move>(30,41)</move>
+    <move>(31,41)</move>
+    <move>(32,41)</move>
+    <move>(33,40)</move>
+    <move>(33,39)</move>
+    <move>(33,38)</move>
+    <move>(33,37)</move>
+    <move>(34,36)</move>
+    <move>(35,35)</move>
+    <move>(36,34)</move>
+    <move>(37,33)</move>
+    <move>(38,34)</move>
+    <move>(38,33)</move>
+    <move>(38,32)</move>
+    <move>(38,31)</move>
+    <move>(38,30)</move>
+    <move>(38,29)</move>
+    <move>(38,28)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(37,27)</handle_talk>
+    <click_talk_rect>
+        <node>-11</node>
+        <preset>true</preset>
+        <rect>{(70,366) - (125,380)}</rect>
+        <word>Name</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>7</node>
+        <preset>false</preset>
+        <rect>{(72,44) - (158,64)}</rect>
+        <word>miner</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>14</node>
+        <preset>false</preset>
+        <rect>{(6,60) - (94,82)}</rect>
+        <word>silver</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>15</node>
+        <preset>false</preset>
+        <rect>{(66,76) - (207,97)}</rect>
+        <word>damnable</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>16</node>
+        <preset>false</preset>
+        <rect>{(181,76) - (260,97)}</rect>
+        <word>work</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>7</node>
+        <preset>false</preset>
+        <rect>{(72,44) - (158,64)}</rect>
+        <word>miner</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>16</node>
+        <preset>false</preset>
+        <rect>{(125,76) - (177,96)}</rect>
+        <word>line</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>16</node>
+        <preset>false</preset>
+        <rect>{(6,60) - (132,82)}</rect>
+        <word>workers</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>7</node>
+        <preset>false</preset>
+        <rect>{(72,44) - (158,64)}</rect>
+        <word>miner</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>17</node>
+        <preset>false</preset>
+        <rect>{(66,108) - (279,130)}</rect>
+        <word>advancements</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>18</node>
+        <preset>false</preset>
+        <rect>{(105,124) - (217,148)}</rect>
+        <word>Magery</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>18</node>
+        <preset>false</preset>
+        <rect>{(181,108) - (274,129)}</rect>
+        <word>mages</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(38,27)</move>
+    <move>(38,26)</move>
+    <move>(38,25)</move>
+    <move>(38,24)</move>
+    <move>(38,23)</move>
+    <move>(38,22)</move>
+    <move>(39,21)</move>
+    <move>(40,20)</move>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(40,20)</move>
+    <move>(41,20)</move>
+    <move>(42,20)</move>
+    <move>(43,19)</move>
+    <move>(43,18)</move>
+    <move>(43,17)</move>
+    <move>(43,16)</move>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(42,16)</move>
+    <move>(41,16)</move>
+    <move>(40,15)</move>
+    <move>(43,16)</move>
+    <move>(42,15)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(39,14)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(39,14)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(39,14)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(44,17)</move>
+    <move>(43,16)</move>
+    <move>(42,16)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell12</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(36,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell12</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>-1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>-1</dx>
+        <dy>0</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>-1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>-1</dx>
+        <dy>0</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>-1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>-1</dx>
+        <dy>0</dy>
+    </screen_shift>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <move>(42,18)</move>
+    <move>(41,17)</move>
+    <move>(41,16)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(36,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(42,16)</move>
+    <move>(41,15)</move>
+    <move>(40,15)</move>
+    <move>(39,15)</move>
+    <move>(38,14)</move>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(39,13)</move>
+    <move>(38,12)</move>
+    <move>(38,14)</move>
+    <move>(38,13)</move>
+    <move>(38,12)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(38,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(38,14)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(38,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <move>(38,15)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(38,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(39,15)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_pause></handle_pause>
+    <handle_pause></handle_pause>
+    <move>(38,12)</move>
+    <move>(37,12)</move>
+    <move>(38,12)</move>
+    <move>(38,13)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(38,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(38,14)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(38,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(38,15)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(38,10)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(39,15)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell4</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_pause></handle_pause>
+    <move>(38,12)</move>
+    <move>(38,11)</move>
+    <move>(38,11)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(38,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell23</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(38,10)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell23</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(38,9)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_pause></handle_pause>
+    <move>(38,11)</move>
+    <move>(37,11)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(37,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell12</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(38,10)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell12</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(38,10)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_pause></handle_pause>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(38,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(38,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(38,11)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(38,11)</move>
+    <move>(38,11)</move>
+    <move>(37,11)</move>
+    <move>(36,11)</move>
+    <move>(35,10)</move>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(35,9)</move>
+    <move>(36,8)</move>
+    <move>(35,10)</move>
+    <move>(36,9)</move>
+    <move>(36,8)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(36,8)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(36,9)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(36,8)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_pause></handle_pause>
+    <move>(36,8)</move>
+    <move>(36,8)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(36,8)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(36,8)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_combat_switch></handle_combat_switch>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(36,9)</move>
+    <move>(37,9)</move>
+    <move>(37,9)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(37,9)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(37,9)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(37,9)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(36,8)</move>
+    <move>(36,7)</move>
+    <move>(36,6)</move>
+    <move>(35,5)</move>
+    <handle_wait></handle_wait>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(34,4)</move>
+    <move>(35,4)</move>
+    <move>(34,4)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(34,4)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_pause></handle_pause>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(34,4)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_pause></handle_pause>
+    <move>(34,4)</move>
+    <move>(34,4)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(34,4)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(34,4)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_combat_switch></handle_combat_switch>
+    <handle_wait></handle_wait>
+    <move>(36,6)</move>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(35,5)</move>
+    <move>(35,5)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(35,5)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(35,5)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_pause></handle_pause>
+    <move>(35,3)</move>
+    <move>(34,2)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(30,4)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(35,3)</move>
+    <move>(36,3)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell22</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(35,5)</move>
+    <move>(34,4)</move>
+    <move>(33,3)</move>
+    <move>(35,5)</move>
+    <move>(34,4)</move>
+    <move>(34,3)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(33,2)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(33,2)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_pause></handle_pause>
+    <arrow_button_click>{(501,150) - (515,161)}</arrow_button_click>
+    <handle_use_item>0</handle_use_item>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(33,2)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell11</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <error>map::at:  key not found</error>
+</actions>

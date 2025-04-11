@@ -53,4 +53,13 @@ void iLiving::void_sanctuary() {
 		status[eStatus::INVISIBLE] = 0;
 }
 
+iLiving::iLiving() {}
+
+iLiving::iLiving(const iLiving& other)
+	: status(other.status)
+	, ap(other.ap)
+	, direction(other.direction)
+	, marked_damage(other.marked_damage)
+{}
+
 void(* iLiving::print_result)(std::string) = nullptr;

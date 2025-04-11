@@ -69,3 +69,24 @@ void launchDocs(std::string relative_url) {
 		launchURL("http://openboe.com/docs/" + relative_url);
 	}
 }
+
+bool check_window_moved(sf::RenderWindow& win, int& winLastX, int& winLastY, std::string position_pref) {
+	auto winPosition = win.getPosition();
+	bool moved = false;
+	if(winLastX != winPosition.x || winLastY != winPosition.y){
+		// Save the positions of main window and map window as hidden preferences
+		// (clamped to keep them fully on-screen when they appear the first time)
+		if(!position_pref.empty()){
+			sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+
+			int pref_x = minmax(0, desktop.width - win.getSize().x, winPosition.x);
+			int pref_y = minmax(0, desktop.height - win.getSize().y, winPosition.y);
+			set_pref(position_pref + "X", pref_x);
+			set_pref(position_pref + "Y", pref_y);
+		}
+		moved = true;
+	}
+	winLastX = winPosition.x;
+	winLastY = winPosition.y;
+	return moved;
+}

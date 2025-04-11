@@ -101,7 +101,9 @@ void cThreeChoice::init_buttons(cBasicButtonType btn1, cBasicButtonType btn2, cB
 	if(btn2) btns[1] = btn2;
 	if(btn3) btns[2] = btn3;
 	cDialog* me = operator->();
-	for(int i = 0; i < 3; i++){
+	// NOTE: Buttons used to be added right-to-left, resulting in the Leave button on the right. I've
+	// reversed it.
+	for(int i : {1, 2, 0}){
 		if(!btns[i]) continue;
 		std::ostringstream sout;
 		sout << "btn" << i + 1;
