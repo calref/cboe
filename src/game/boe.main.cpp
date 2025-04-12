@@ -224,6 +224,21 @@ static void handleFatalError(std::string what) {
 	}
 }
 
+void dialog_lost_focus(sf::RenderWindow& win) {
+	setWindowFloating(mini_map(), false);
+}
+
+void dialog_gained_focus(sf::RenderWindow& win) {
+	setWindowFloating(mini_map(), true);
+	makeFrontWindow(mainPtr());
+	if(map_visible){
+		makeFrontWindow(mini_map());
+	}
+	// that generates more LostFocus and GainedFocus event(s)
+	sf::Event evt;
+	while(pollEvent(win, evt));
+}
+
 // Comment this line out for exact exception callstacks:
 #define CATCH_ERRORS
 
@@ -236,8 +251,8 @@ int main(int argc, char* argv[]) {
 	try{
 #endif
 		cDialog::redraw_everything = &redraw_everything;
-		cDialog::get_mini_map = &mini_map;
-		cDialog::map_visible_p = &map_visible;
+		cDialog::onLostFocus = &dialog_lost_focus;
+		cDialog::onGainedFocus = &dialog_gained_focus;
 
 		init_boe(argc, argv);
 		

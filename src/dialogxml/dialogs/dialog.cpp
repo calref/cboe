@@ -43,8 +43,8 @@ const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
 short cDialog::defaultBackground = cDialog::BG_DARK;
 cDialog* cDialog::topWindow = nullptr;
 void (*cDialog::redraw_everything)() = nullptr;
-std::function<sf::RenderWindow&()> cDialog::get_mini_map;
-bool* cDialog::map_visible_p = nullptr;
+std::function<void(sf::RenderWindow& win)> cDialog::onLostFocus;
+std::function<void(sf::RenderWindow& win)> cDialog::onGainedFocus;
 
 extern std::map<std::string,sf::Color> colour_map;
 
@@ -743,23 +743,18 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter&
 			break;
 		case sf::Event::LostFocus:
 			has_focus = false;
-			if(get_mini_map){
-				setWindowFloating(get_mini_map(), false);
+			if(onLostFocus){
+				onLostFocus(win);
 			}
 			break;
 		case sf::Event::GainedFocus:
 			if(!has_focus){
 				has_focus = true;
-				if(get_mini_map){
-					setWindowFloating(get_mini_map(), true);
-				}
-				makeFrontWindow(mainPtr());
-				if(get_mini_map){
-					if(*map_visible_p){
-						makeFrontWindow(get_mini_map());
-					}
+				if(onGainedFocus){
+					onGainedFocus(win);
 				}
 
+				// Put all dialogs in correct z order:
 				std::vector<sf::RenderWindow*> dialog_stack;
 				cDialog* next = this;
 				while(next != nullptr){
@@ -769,7 +764,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter&
 				for(int i = dialog_stack.size() - 1; i >= 0; --i){
 					makeFrontWindow(*(dialog_stack[i]));
 				}
-				// that generates a LostFocus and a GainedFocus event
+				// that generates more LostFocus and GainedFocus event(s)
 				sf::Event evt;
 				while(pollEvent(win, evt));
 			}
