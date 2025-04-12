@@ -132,12 +132,12 @@ rectangle_size_delegate& rectangle_size_delegate::operator-=(int val) {
 	return *this;
 }
 
-rectangle_size_delegate& rectangle_size_delegate::operator*=(float val) {
+rectangle_size_delegate& rectangle_size_delegate::operator*=(double val) {
 	*this = *this * val;
 	return *this;
 }
 
-rectangle_size_delegate& rectangle_size_delegate::operator/=(float val) {
+rectangle_size_delegate& rectangle_size_delegate::operator/=(double val) {
 	*this = *this / val;
 	return *this;
 }

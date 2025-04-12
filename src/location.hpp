@@ -56,8 +56,8 @@ public:
 	rectangle_size_delegate& operator=(int val);
 	rectangle_size_delegate& operator+=(int val);
 	rectangle_size_delegate& operator-=(int val);
-	rectangle_size_delegate& operator*=(float val);
-	rectangle_size_delegate& operator/=(float val);
+	rectangle_size_delegate& operator*=(double val);
+	rectangle_size_delegate& operator/=(double val);
 	rectangle_size_delegate& operator=(const rectangle_size_delegate& val);
 	rectangle_size_delegate& operator+=(const rectangle_size_delegate& val);
 	rectangle_size_delegate& operator-=(const rectangle_size_delegate& val);
