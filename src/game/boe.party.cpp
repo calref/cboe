@@ -1982,11 +1982,6 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	if(pc_casting == 6)
 		pc_casting = univ.cur_pc;
 	
-	if(type == eSkill::MAGE_SPELLS && univ.party[pc_casting].traits[eTrait::ANAMA]) {
-		add_string_to_buf("Cast: You're an Anama!");
-		return eSpell::NONE;
-	}
-	
 	if(pc_num == 6) { // See if can keep same caster
 		can_choose_caster = true;
 		if(!pc_can_cast_spell(univ.party[pc_casting],type)) {
@@ -2007,6 +2002,10 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	}
 	
 	if(!can_choose_caster) {
+		if(type == eSkill::MAGE_SPELLS && univ.party[pc_casting].traits[eTrait::ANAMA]) {
+			add_string_to_buf("Cast: You're an Anama!");
+			return eSpell::NONE;
+		}
 		if(univ.party[pc_num].skill(type) == 0) {
 			if(type == eSkill::MAGE_SPELLS) add_string_to_buf("Cast: No mage skill.");
 			else add_string_to_buf("Cast: No priest skill.");
