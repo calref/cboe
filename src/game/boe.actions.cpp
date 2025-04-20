@@ -1201,7 +1201,8 @@ static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 		}
 	}
 	
-	for(int i = 0; i < 80 && !party_sees_a_monst(); i++){
+	bool interrupted = false;
+	for(int i = 0; i < 80 && !party_sees_a_monst() && !interrupted; i++){
 		increase_age(false);
 		do_monsters();
 		do_monster_turn();
@@ -1210,19 +1211,19 @@ static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 			create_wand_monst();
 		for(int j = 0; j < 6; j++)
 			if(univ.party[j].cur_health < store_hp[j]) {
-				i = 200;
+				interrupted = true;
 				j = 6;
 				add_string_to_buf("  Waiting interrupted.");
 			}
 		if(party_sees_a_monst()) {
-			i = 200;
+			interrupted = true;
 			add_string_to_buf("  Monster sighted!");
 		}
 		while(pollEvent(mainPtr(), dummy_evt));
 		redraw_screen(REFRESH_NONE);
 	}
 	put_pc_screen();
-	if(!party_sees_a_monst()){
+	if(!party_sees_a_monst() && !interrupted){
 		try_auto_save("TownWaitComplete");
 	}
 }
