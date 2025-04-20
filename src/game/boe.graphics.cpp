@@ -1673,6 +1673,9 @@ void draw_targeting_line() {
 			if((can_see_light(from_loc,which_space,sight_obscurity) < 5)
 				&& (dist(from_loc,which_space) <= current_spell_range)) {
 				mainPtr().setActive(false);
+				rectangle on_screen_terrain_area = win_to_rects[WINRECT_TERVIEW];
+				on_screen_terrain_area.inset(13, 13);
+				clip_rect(mainPtr(), on_screen_terrain_area);
 				draw_line(mainPtr(), where_curs, location(xBound, yBound), 2, {128,128,128}, sf::BlendAdd);
 				
 				// Now place targeting pattern
@@ -1706,6 +1709,7 @@ void draw_targeting_line() {
 					}
 				
 				mainPtr().setActive();
+				undo_clip(mainPtr());
 			}
 		}
 	}
