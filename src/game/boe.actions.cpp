@@ -2765,7 +2765,6 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 		return handle_debug_key(chr);
 	}
 
-	sf::Event pass_event = {sf::Event::MouseButtonPressed};
 	extern rectangle talk_area_rect;
 	if(overall_mode == MODE_TALKING) {
 		if(chr2 == Key::Escape)
@@ -2778,11 +2777,9 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 				pass_point = talk_words[i].rect.topLeft();
 				pass_point.x += talk_area_rect.left+9;
 				pass_point.y += talk_area_rect.top+9;
-				pass_point = mainPtr().mapCoordsToPixel(pass_point, mainView);
-				pass_event.mouseButton.x = pass_point.x;
-				pass_event.mouseButton.y = pass_point.y;
-				are_done = handle_action(pass_event, fps_limiter);
+				are_done = handle_talk_event(pass_point, fps_limiter);
 			}
+		return are_done;
 	}
 	else if(overall_mode == MODE_SHOPPING) { // shopping keystrokes
 		if(chr2 == Key::Escape) {
@@ -2795,11 +2792,9 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 				// related to talk_area_rect
 				pass_point.x += talk_area_rect.left+9;
 				pass_point.y += talk_area_rect.top+9;
-				pass_point = mainPtr().mapCoordsToPixel(pass_point, mainView);
-				pass_event.mouseButton.x = pass_point.x;
-				pass_event.mouseButton.y = pass_point.y;
-				are_done = handle_action(pass_event, fps_limiter);
+				are_done = handle_shop_event(pass_point, fps_limiter);
 			}
+		return are_done;
 	} else {
 		for(short i = 0; i < 10; i++)
 			if(chr2 == keypad[i]) {
