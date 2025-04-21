@@ -345,14 +345,14 @@ static void display_pc_info(cDialog& me, const short pc_num) {
 	
 	to_draw << pc.name << " is carrying " << pc.cur_weight() << " stones out of " << pc.max_weight() << '.';
 	me["weight"].setText(to_draw.str());
-	to_draw.str("");
+	clear_sstr(to_draw);
 	
 	to_draw << pc.cur_health << " out of " << pc.max_health << '.';
 	me["hp"].setText(to_draw.str());
-	to_draw.str("");
+	clear_sstr(to_draw);
 	to_draw << pc.cur_sp << " out of " << pc.max_sp << '.';
 	me["sp"].setText(to_draw.str());
-	to_draw.str("");
+	clear_sstr(to_draw);
 	
 	for(short i = 0; i < 19; i++) {
 		eSkill skill = eSkill(i);
@@ -360,7 +360,7 @@ static void display_pc_info(cDialog& me, const short pc_num) {
 		to_draw << pc.skills[skill];
 		if(bonus > 0) to_draw << '+' << bonus;
 		me[boost::lexical_cast<std::string>(skill)].setText(to_draw.str());
-		to_draw.str("");
+		clear_sstr(to_draw);
 	}
 	me["encumb"].setTextToNum(pc.armor_encumbrance());
 	me["name"].setText(pc.name);
@@ -407,10 +407,10 @@ static void display_pc_info(cDialog& me, const short pc_num) {
 				to_draw << "Penalty to hit: %" << hit_adj + 5 * weap1->bonus;
 			else to_draw << "Bonus to hit: +%" << hit_adj + 5 * weap1->bonus;
 			me["weap1a"].setText(to_draw.str());
-			to_draw.str("");
+			clear_sstr(to_draw);
 			to_draw << "Damage: (1-" << weap1->item_level << ") + " << dam_adj + weap1->bonus;
 			me["weap1b"].setText(to_draw.str());
-			to_draw.str("");
+			clear_sstr(to_draw);
 		}
 	}
 	if(weap2) {
@@ -421,10 +421,10 @@ static void display_pc_info(cDialog& me, const short pc_num) {
 				to_draw << "Penalty to hit: %" << hit_adj + 5 * weap2->bonus;
 			else to_draw << "Bonus to hit: +%" << hit_adj + 5 * weap2->bonus;
 			me["weap2a"].setText(to_draw.str());
-			to_draw.str("");
+			clear_sstr(to_draw);
 			to_draw << "Damage: (1-" << weap2->item_level << ") + " << dam_adj + weap2->bonus;
 			me["weap2b"].setText(to_draw.str());
-			to_draw.str("");
+			clear_sstr(to_draw);
 		}
 	}
 }

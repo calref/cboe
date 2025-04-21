@@ -2122,8 +2122,7 @@ void debug_print_location() {
 		short y = univ.party.out_loc.y;
 		sout << "Debug:  You're outside in sec x " << univ.party.outdoor_corner.x << ", y " << univ.party.outdoor_corner.y << '\n';
 		add_string_to_buf(sout.str());
-		sout.str("");
-		sout.seekp(0);
+		clear_sstr(sout);
 		sout << "   local x " << x << ", y " << y;
 		x += 48 * univ.party.outdoor_corner.x;
 		y += 48 * univ.party.outdoor_corner.y;

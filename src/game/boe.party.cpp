@@ -1100,7 +1100,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 					add_string_to_buf("  You absorb damage.");
 					sout << " healed " << univ.party[target].cur_health - store_victim_health << '.';
 					add_string_to_buf(sout.str());
-					sout.str("");
+					clear_sstr(sout);
 					sout << univ.party[pc_num].name << " takes " << store_caster_health - univ.party[pc_num].cur_health << '.';
 				} else if(spell_num == eSpell::REVIVE) {
 					sout << " healed.";
@@ -1470,11 +1470,11 @@ void do_mindduel(short pc_num,cCreature *monst) {
 			balance++;
 			if(univ.party[pc_num].cur_sp == 0) {
 				univ.party[pc_num].status[eStatus::DUMB] += 2;
-				sout.str("");
+				clear_sstr(sout);
 				sout << "  " << univ.party[pc_num].name << " is dumbfounded.";
 				add_string_to_buf(sout.str(), 4);
 				if(univ.party[pc_num].status[eStatus::DUMB] > 7) {
-					sout.str("");
+					clear_sstr(sout);
 					sout << "  " << univ.party[pc_num].name << " is killed!";
 					add_string_to_buf(sout.str(), 4);
 					kill_pc(univ.party[pc_num],eMainStatus::DEAD);

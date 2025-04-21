@@ -2447,7 +2447,7 @@ void set_up_main_screen() {
 	set_lb(-1,LB_TEXT,LB_EDIT_OUT,"Edit Outdoor Terrain");
 	set_lb(-1,LB_TEXT,LB_NO_ACTION,"",0);
 	set_lb(-1,LB_TEXT,LB_NO_ACTION,"Town/Dungeon Options");
-	strb.str("");
+	clear_sstr(strb);
 	strb << "  Town " << cur_town << ": " << town->name;
 	set_lb(-1,LB_TEXT,LB_NO_ACTION, strb.str());
 	set_lb(-1,LB_TEXT,LB_LOAD_TOWN,"Load Another Town");

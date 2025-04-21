@@ -143,7 +143,7 @@ void put_pc_screen() {
 			
 			to_draw_rect = pc_buttons[i][PCBTN_HP];
 			to_draw_rect.right += 20;
-			sout.str("");
+			clear_sstr(sout);
 			switch(univ.party[i].main_status) {
 				case eMainStatus::ALIVE:
 					if(univ.party[i].cur_health == univ.party[i].max_health)
@@ -249,7 +249,7 @@ void put_item_screen(eItemWinMode screen_num) {
 			
 		default: // on an items page
 			pc = screen_num;
-			sout.str("");
+			clear_sstr(sout);
 			sout << univ.party[pc].name << " inventory:";
 			win_draw_string(item_stats_gworld(),upper_frame_rect,sout.str(),eTextMode::WRAP,style);
 			break;
@@ -303,7 +303,7 @@ void put_item_screen(eItemWinMode screen_num) {
 			
 			for(short i = 0; i < LINES_IN_ITEM_WIN; i++) {
 				i_num = i + item_offset;
-				sout.str("");
+				clear_sstr(sout);
 				sout << i_num + 1 << '.';
 				win_draw_string(item_stats_gworld(),item_buttons[i][ITEMBTN_NAME],sout.str(),eTextMode::WRAP,style);
 				
@@ -325,7 +325,7 @@ void put_item_screen(eItemWinMode screen_num) {
 						else style.colour = Colours::BLUE;
 					} else style.colour = Colours::BLACK;
 					
-					sout.str("");
+					clear_sstr(sout);
 
 					if(item.ident)
 						sout << item.full_name << ' ';

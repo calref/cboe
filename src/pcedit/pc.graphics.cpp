@@ -799,7 +799,7 @@ void display_party() {
 		win_draw_string(mainPtr(),dest_rect,to_draw.str(),eTextMode::WRAP,style);
 		dest_rect = pc_race_rect;
 		dest_rect.offset(0,-14);
-		to_draw.str("");
+		clear_sstr(to_draw);
 		to_draw << " Food: " << univ.party.food;
 		win_draw_string(mainPtr(),dest_rect,to_draw.str(),eTextMode::WRAP,style);
 	}

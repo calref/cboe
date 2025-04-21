@@ -855,7 +855,7 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 	}
 	
 	// Finally, cost info and help strs
-	title.str("");
+	clear_sstr(title);
 	title << "Prices here are " << cost_strs[active_shop.getCostAdjust()] << '.';
 	style.pointSize = 10;
 	style.lineHeight = 12;

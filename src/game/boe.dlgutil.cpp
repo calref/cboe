@@ -1689,14 +1689,13 @@ class cChooseScenario {
 			short page = n - 1;
 			stk.setPage(n);
 			for(short i = 0; i < 3; i++) {
-				sout.clear();
-				sout.str("");
+				clear_sstr(sout);
 				sout << i + 1;
 				std::string n = sout.str();
 				if(scen_headers.size() > (page * 3 + i)) {
 					me["pic" + n].show();
 					dynamic_cast<cPict&>(me["pic" + n]).setPict(scen_headers[page * 3 + i].intro_pic);
-					sout.str("");
+					clear_sstr(sout);
 					sout << scen_headers[page * 3 + i].name;
 					sout << " v" << int(scen_headers[page * 3 + i].ver[0]);
 					sout << '.' << int(scen_headers[page * 3 + i].ver[1]);

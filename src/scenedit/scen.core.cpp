@@ -646,7 +646,7 @@ static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which
 	me["pic"].setTextToNum(monst.picture_num);
 	strb << "Width = " << int(monst.x_width);
 	me["w"].setText(strb.str());
-	strb.str("");
+	clear_sstr(strb);
 	strb << "Height = " << int(monst.y_width);
 	me["h"].setText(strb.str());
 	me["level"].setTextToNum(monst.level);
@@ -704,7 +704,7 @@ static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which
 		case 122: summoned_by.push_back(eSpell::SUMMON_GUARDIAN); break;
 	}
 	
-	strb.str("");
+	clear_sstr(strb);
 	bool first = true;
 	if(summoned_by.empty())
 		strb << "None";
@@ -755,7 +755,7 @@ static bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& 
 		std::ostringstream strb;
 		strb << "Width = " << int(monst.x_width);
 		me["w"].setText(strb.str());
-		strb.str("");
+		clear_sstr(strb);
 		strb << "Height = " << int(monst.y_width);
 		me["h"].setText(strb.str());
 	}

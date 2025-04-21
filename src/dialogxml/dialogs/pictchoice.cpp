@@ -88,7 +88,7 @@ void cPictChoice::fillPage(){
 			dlg[sout.str()].show();
 		if(page * per_page + i == cur)
 			group.setSelected(sout.str());
-		sout.str("");
+		clear_sstr(sout);
 		sout << "pic" << i + 1;
 		cPict& pic = dynamic_cast<cPict&>(dlg[sout.str()]);
 		if(page * per_page + i < picts.size()){

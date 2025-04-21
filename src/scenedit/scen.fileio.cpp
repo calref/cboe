@@ -609,7 +609,7 @@ void writeMonstersToXml(ticpp::Printer&& data, cScenario& scenario) {
 			if(monst.guard) data.PushElement("guard");
 			for(auto& p : monst.abil) {
 				if(p.first == eMonstAbil::NO_ABIL || !p.second.active) continue;
-				str.str("");
+				clear_sstr(str);
 				eMonstAbil abil = p.first;
 				uAbility& param = p.second;
 				switch(getMonstAbilCategory(abil)) {

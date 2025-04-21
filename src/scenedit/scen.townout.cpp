@@ -1463,7 +1463,7 @@ static void put_out_loc_in_dlog(cDialog& me, location cur_loc, cScenario& scenar
 	std::ostringstream str;
 	str << "X = " << cur_loc.x;
 	me["x"].setText(str.str());
-	str.str("");
+	clear_sstr(str);
 	str << "Y = " << cur_loc.y;
 	me["y"].setText(str.str());
 	me["title"].setText(scenario.outdoors[cur_loc.x][cur_loc.y]->name);

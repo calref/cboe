@@ -1378,14 +1378,14 @@ void place_location() {
 	TextStyle style;
 	style.lineHeight = 12;
 	win_draw_string(mainPtr(), draw_rect, sout.str(), eTextMode::LEFT_TOP, style);
-	sout.str("");
+	clear_sstr(sout);
 	
 	moveTo = location(260 ,terrain_rects[255].top + 18);
 	draw_rect = text_rect;
 	draw_rect.offset(moveTo);
 	sout << current_terrain_type;
 	win_draw_string(mainPtr(), draw_rect, sout.str(), eTextMode::LEFT_TOP, style);
-	sout.str("");
+	clear_sstr(sout);
 	
 	if(overall_mode < MODE_MAIN_SCREEN) {
 		moveTo = location(5,terrain_rects[255].bottom + 121);
