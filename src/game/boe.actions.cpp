@@ -1514,6 +1514,13 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 
 	end_scenario = false;
 	
+	if(false){
+		handle_action_return:
+			advance_time(did_something, need_redraw, need_reprint);
+			are_done = All_Done;
+			return are_done;
+	}
+
 	// MARK: First, figure out where party is
 	if(overall_mode == MODE_STARTUP || overall_mode == MODE_RESTING) {
 		// If we get here during these modes, something is probably not right, so bail out
@@ -1524,16 +1531,12 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	// Now split off the extra stuff, like talking and shopping.
 	if(overall_mode == MODE_TALKING) {
 		if(handle_talk_event(the_point, fps_limiter)){
-			advance_time(did_something, need_redraw, need_reprint);
-			are_done = All_Done;
-			return are_done;
+			goto handle_action_return;
 		}
 	}
 	if(overall_mode == MODE_SHOPPING) {
 		if(handle_shop_event(the_point, fps_limiter)){
-			advance_time(did_something, need_redraw, need_reprint);
-			are_done = All_Done;
-			return are_done;
+			goto handle_action_return;
 		}
 	}
 
@@ -1616,6 +1619,9 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 				break;
 		}
 	
+	if(button_hit != TOOLBAR_NONE)
+		goto handle_action_return;
+
 	// MARK: Begin: click in terrain
 	location tile;
 	if(mouse_to_terrain_coords(tile, true) && (is_out() || is_town() || is_combat())){
@@ -1629,7 +1635,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	// MARK: End: click in terrain
 	
 	// MARK: Begin: Screen shift
-	if(scrollableModes.count(overall_mode) && the_point.in(terrain_viewport) && !the_point.in(world_screen)) {
+	else if(scrollableModes.count(overall_mode) && the_point.in(terrain_viewport) && !the_point.in(world_screen)) {
 		if(the_point.y < world_screen.top && center.y > univ.town->in_town_rect.top && center.y > 4) {
 			screen_shift(0, -1, need_redraw);
 		}
@@ -1646,7 +1652,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	// MARK: End: Screen shift
 	
 	// MARK: Process clicks in PC stats area
-	if(the_point.in(win_to_rects[WINRECT_PCSTATS])) {
+	else if(the_point.in(win_to_rects[WINRECT_PCSTATS])) {
 		location pc_win_ul = win_to_rects[WINRECT_PCSTATS].topLeft();
 		point_in_area = the_point;
 		point_in_area.x -= pc_win_ul.x;
@@ -1696,7 +1702,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	}
 	
 	// Process clicks in item stats area
-	if(the_point.in(win_to_rects[WINRECT_INVEN])) {
+	else if(the_point.in(win_to_rects[WINRECT_INVEN])) {
 		location item_win_ul = win_to_rects[WINRECT_INVEN].topLeft();
 		point_in_area = the_point;
 		point_in_area.x -= item_win_ul.x;
@@ -1761,10 +1767,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 		update_item_stats_area(need_reprint);
 	}
 	
-	advance_time(did_something, need_redraw, need_reprint);
-	
-	are_done = All_Done;
-	return are_done;
+	goto handle_action_return;
 }
 
 void advance_time(bool did_something, bool need_redraw, bool need_reprint) {
