@@ -645,21 +645,21 @@ bool seek_party(short i,location l1,location l2) {
 bool flee_party(short i,location l1,location l2) {
 	bool acted_yet = false;
 	
-	if((l1.x > l2.x) & (l1.y > l2.y))
+	if((l1.x > l2.x) && (l1.y > l2.y))
 		acted_yet = try_move(i,l1,1,1);
-	if((l1.x < l2.x) & (l1.y < l2.y) & !acted_yet)
+	if((l1.x < l2.x) && (l1.y < l2.y) && !acted_yet)
 		acted_yet = try_move(i,l1,-1,-1);
-	if((l1.x > l2.x) & (l1.y < l2.y) & !acted_yet)
+	if((l1.x > l2.x) && (l1.y < l2.y) && !acted_yet)
 		acted_yet = try_move(i,l1,1,-1);
-	if((l1.x < l2.x) & (l1.y > l2.y) & !acted_yet)
+	if((l1.x < l2.x) && (l1.y > l2.y) && !acted_yet)
 		acted_yet = try_move(i,l1,-1,+1);
-	if((l1.x > l2.x) & !acted_yet)
+	if((l1.x > l2.x) && !acted_yet)
 		acted_yet = try_move(i,l1,1,0);
-	if((l1.x < l2.x) & !acted_yet)
+	if((l1.x < l2.x) && !acted_yet)
 		acted_yet = try_move(i,l1,-1,0);
-	if( (l1.y < l2.y) & !acted_yet)
+	if( (l1.y < l2.y) && !acted_yet)
 		acted_yet = try_move(i,l1,0,-1);
-	if( (l1.y > l2.y) & !acted_yet)
+	if( (l1.y > l2.y) && !acted_yet)
 		acted_yet = try_move(i,l1,0,1);
 	if(!acted_yet) {
 		futzing++;
