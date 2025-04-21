@@ -3085,6 +3085,8 @@ void post_load() {
 	put_pc_screen();
 	draw_terrain();
 	UI::toolbar.draw(mainPtr());
+	// Fix showing blank, vertically flipped text bar on reloading with same text bar text:
+	draw_text_bar(std::make_pair("", ""));
 	draw_text_bar();
 	
 	print_buf();
