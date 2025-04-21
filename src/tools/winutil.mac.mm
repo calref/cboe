@@ -83,7 +83,7 @@ std::string get_os_version() {
 	return os.str();
 }
 
-void makeFrontWindow(sf::Window& win) {
+void _makeFrontWindow(sf::Window& win) {
 	sf::WindowHandle handle = win.getSystemHandle();
 	id nsHandle = id(handle);
 	if([nsHandle isKindOfClass: [NSWindow class]]) {
@@ -92,7 +92,7 @@ void makeFrontWindow(sf::Window& win) {
 	}
 }
 
-void setWindowFloating(sf::Window& win, bool floating) {
+void _setWindowFloating(sf::Window& win, bool floating) {
 	sf::WindowHandle handle = win.getSystemHandle();
 	id nsHandle = id(handle);
 	if([nsHandle isKindOfClass: [NSWindow class]]) {

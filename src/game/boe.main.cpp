@@ -233,13 +233,10 @@ void dialog_lost_focus(sf::RenderWindow& win) {
 
 void dialog_gained_focus(sf::RenderWindow& win) {
 	setWindowFloating(mini_map(), true);
-	makeFrontWindow(mainPtr());
 	if(map_visible){
 		makeFrontWindow(mini_map());
 	}
-	// that generates more LostFocus and GainedFocus event(s)
-	sf::Event evt;
-	while(pollEvent(win, evt));
+	makeFrontWindow(mainPtr(), mini_map());
 }
 
 // Comment this line out for exact exception callstacks:
@@ -1294,8 +1291,8 @@ void handle_events() {
 			setWindowFloating(mini_map(), true);
 			if(map_visible){
 				makeFrontWindow(mini_map());
-				makeFrontWindow(mainPtr());
 			}
+			makeFrontWindow(mainPtr(), mini_map());
 		}
 
 		main_window_lost_focus = main_window_gained_focus =
@@ -1375,7 +1372,7 @@ void handle_one_event(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 		case sf::Event::GainedFocus:
 			check_window_moved(mainPtr(), last_window_x, last_window_y, "MainWindow");
 			main_window_gained_focus = true;
-			makeFrontWindow(mainPtr());
+			makeFrontWindow(mainPtr(), mini_map());
 			change_cursor();
 			return;
 
@@ -1415,7 +1412,7 @@ void handle_one_minimap_event(const sf::Event& event) {
 	}else if(event.type == sf::Event::GainedFocus){
 		map_window_gained_focus = true;
 		check_window_moved(mini_map(), last_map_x, last_map_y, "MapWindow");
-		makeFrontWindow(mainPtr());
+		makeFrontWindow(mainPtr(), mini_map());
 	}else if(event.type == sf::Event::LostFocus){
 		map_window_lost_focus = true;
 	}else if(event.type == sf::Event::MouseMoved){

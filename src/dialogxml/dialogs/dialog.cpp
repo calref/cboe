@@ -764,9 +764,6 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter&
 				for(int i = dialog_stack.size() - 1; i >= 0; --i){
 					makeFrontWindow(*(dialog_stack[i]));
 				}
-				// that generates more LostFocus and GainedFocus event(s)
-				sf::Event evt;
-				while(pollEvent(win, evt));
 			}
 			BOOST_FALLTHROUGH;
 		case sf::Event::MouseMoved:{

@@ -1575,7 +1575,7 @@ void display_map() {
 	mini_map().setVisible(true);
 	map_visible = true;
 	draw_map(true);
-	makeFrontWindow(mainPtr());
+	makeFrontWindow(mainPtr(), mini_map());
 	
 	set_cursor(sword_curs);
 }

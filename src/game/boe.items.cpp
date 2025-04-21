@@ -692,7 +692,7 @@ void init_mini_map() {
 	mini_map().setVisible(false);
 	map_visible=false;
 	setWindowFloating(mini_map(), true);
-	makeFrontWindow(mainPtr());
+	makeFrontWindow(mainPtr(), mini_map());
 	
 	// Create and initialize map gworld
 	if(!map_gworld().create(384, 384)) {
