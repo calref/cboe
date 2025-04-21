@@ -2128,7 +2128,7 @@ cSpecial get_node(spec_num_t cur_spec, eSpecCtxType cur_spec_type) {
 	switch(cur_spec_type) {
 		case eSpecCtxType::SCEN:
 			if(cur_spec != minmax(0,univ.scenario.scen_specials.size() - 1,cur_spec)) {
-				showError("The scenario called a scenario special node out of range.");
+				showError("The scenario called a scenario special node out of range: " + std::to_string(cur_spec));
 				return dummy_node;
 			}
 			return univ.scenario.scen_specials[cur_spec];
@@ -2138,7 +2138,7 @@ cSpecial get_node(spec_num_t cur_spec, eSpecCtxType cur_spec_type) {
 				return dummy_node;
 			}
 			if(cur_spec != minmax(0,univ.out->specials.size() - 1,cur_spec)) {
-				showError("The scenario called an outdoor special node out of range.");
+				showError("The scenario called an outdoor special node out of range: " + std::to_string(cur_spec));
 				return dummy_node;
 			}
 			return univ.out->specials[cur_spec];
@@ -2148,7 +2148,7 @@ cSpecial get_node(spec_num_t cur_spec, eSpecCtxType cur_spec_type) {
 				return dummy_node;
 			}
 			if(cur_spec != minmax(0,univ.town->specials.size() - 1,cur_spec)) {
-				showError("The scenario called a town special node out of range.");
+				showError("The scenario called a town special node out of range: " + std::to_string(cur_spec));
 				return dummy_node;
 			}
 			return univ.town->specials[cur_spec];
