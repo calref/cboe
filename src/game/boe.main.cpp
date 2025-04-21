@@ -110,7 +110,8 @@ std::map<std::string,std::vector<std::string>> feature_flags = {
 	{"file-picker-dialog", {"V1"}},
 	{"scenario-meta-format", {"V2"}},
 	// Bugs required for several VoDT test replays to run faithfully
-	{"empty-wandering-monster-bug", {"fixed"}}
+	{"empty-wandering-monster-bug", {"fixed"}},
+	{"too-many-extra-wandering-monsters-bug", {"fixed"}}
 };
 
 struct cParseEntrance {

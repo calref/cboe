@@ -81,6 +81,14 @@ void create_wand_monst() {
 				if(!is_blocked(p_loc))
 					place_monster(univ.town->wandering[r1].monst[i],p_loc);
 			}
+			// Buggy behavior of this code, preserved so old replays will run correctly,
+			// would create more than 1-2 of the last monster type, contradicting the
+			// documentation.
+			if(!has_feature_flag("too-many-extra-wandering-monsters-bug", "fixed")){
+				try_place_extra_monster();
+			}
+		}
+		if(has_feature_flag("too-many-extra-wandering-monsters", "fixed")){
 			try_place_extra_monster();
 		}
 	}
