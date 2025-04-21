@@ -108,7 +108,9 @@ std::map<std::string,std::vector<std::string>> feature_flags = {
 	{"target-lock", {"V1"}},
 	// New in-game save file picker
 	{"file-picker-dialog", {"V1"}},
-	{"scenario-meta-format", {"V2"}}
+	{"scenario-meta-format", {"V2"}},
+	// Bugs required for several VoDT test replays to run faithfully
+	{"empty-wandering-monster-bug", {"fixed"}}
 };
 
 struct cParseEntrance {
