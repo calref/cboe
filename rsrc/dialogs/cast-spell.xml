@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='cast' escbtn='cancel'>
-	<pict name='pic' type='dlog' num='12' top='9' left='9'/>
+	<pict name='pic' type='dlog' num='12' top='8' left='8'/>
 	<text size='large' top='6' left='54' width='139' height='18'>Select a Spell:</text>
 	<!-- To the left of PC names, buttons to select caster -->
 	<text name='caster-head' size='large' top='60' left='22' width='75' height='16'>Caster:</text>
