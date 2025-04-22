@@ -1448,7 +1448,7 @@ void handle_trade_places(int which_pc, bool& need_reprint) {
 		record_action("handle_trade_places", boost::lexical_cast<std::string>(which_pc));
 	}
 	if(!prime_time())
-		add_string_to_buf("Trade places: " + FINISH_FIRST);
+		add_string_to_buf("Trade places: " + FINISH_FIRST, 2);
 	else if(is_combat())
 		add_string_to_buf("Trade places: Can't do this in combat.");
 	else {
