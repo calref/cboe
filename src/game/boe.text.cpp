@@ -31,16 +31,15 @@ const int LINES_IN_ITEM_WIN = 8;
 #include <boost/lexical_cast.hpp>
 
 typedef struct {
-	char line[50];
-} buf_line;
+	std::string message;
+	int line_count;
+	int duplicate_count;
+	bool duplicate_overflow;
+} buf_msg;
 
-buf_line text_buffer[TEXT_BUF_LEN];
-short buf_pointer = 30, lines_to_print= 0, num_added_since_stop = 0;
-short start_print_point= 0;
-short mark_where_printing_long;
-bool printing_long = false;
-char c_str[256] = "";
-bool save_mess_given = false;
+buf_msg text_buffer[TEXT_BUF_LEN];
+
+short buf_pointer = 30;
 
 rectangle status_panel_clip_rect = {11, 299, 175, 495},item_panel_clip_rect = {11,297,175,463};
 
@@ -51,7 +50,6 @@ rectangle item_buttons_from[7] = {
 
 eGameMode store_mode;
 
-extern short had_text_freeze;
 extern eStatMode stat_screen_mode;
 
 // graphics globals
@@ -65,7 +63,7 @@ extern location store_anim_ul;
 extern tessel_ref_t bg[];
 extern short dest_personalities[40];
 extern location source_locs[6];
-extern location dest_locs[40] ;
+extern location dest_locs[40];
 extern location center;
 
 extern cCustomGraphics spec_scen_g;
@@ -708,7 +706,7 @@ short do_look(location space) {
 				msg += get_m_name(univ.town.monst[i].number);
 				msg += univ.town.monst[i].is_friendly() ? " (F)" : " (H)";
 				
-				add_string_to_buf(msg.c_str());
+				add_string_to_buf(msg);
 				
 			}
 	}
@@ -720,7 +718,7 @@ short do_look(location space) {
 					if(univ.party.out_c[i].what_monst.monst[j] != 0) {
 						msg = get_m_name(univ.party.out_c[i].what_monst.monst[j]);
 						msg = "    " + msg;
-						add_string_to_buf(msg.c_str());
+						add_string_to_buf(msg);
 						j = 7;
 						
 					}
@@ -816,7 +814,7 @@ short do_look(location space) {
 				if(univ.town.items[i].ident)
 					msg = "    " + univ.town.items[i].full_name;
 				else msg = "    " + univ.town.items[i].name;
-				add_string_to_buf((char *) msg.c_str());
+				add_string_to_buf(msg);
 			}
 		}
 		if(univ.town.is_spot(space.x,space.y))
@@ -926,14 +924,14 @@ std::string get_ter_name(ter_num_t num) {
 
 void print_monst_name(mon_num_t m_type) {
 	std::string msg = get_m_name(m_type) + ':';
-	add_string_to_buf((char *) msg.c_str());
+	add_string_to_buf(msg);
 }
 
 void damaged_message(short damage,eMonstMelee type) {
 	std::ostringstream sout;
 	sout << "    " << get_str("monster-abilities",130 + int(type));
 	sout << " for " << damage;
-	add_string_to_buf(sout.str().c_str());
+	add_string_to_buf(sout.str());
 }
 
 // This prepares the monster's string for the text bar
@@ -947,7 +945,7 @@ std::string print_monster_going(mon_num_t m_num,short ap) {
 void print_nums(short a,short b,short c) {
 	std::ostringstream sout;
 	sout << "debug: " << a << ' ' << b << ' ' << c;
-	add_string_to_buf((char *) sout.str().c_str());
+	add_string_to_buf(sout.str());
 	
 }
 
@@ -969,10 +967,20 @@ short print_terrain(location space) {
 void add_string_to_buf(std::string str) {
 	// This is a separate overload instead of using a defaulted parameter so that
 	// it can be passed as an argument to various other functions
-	add_string_to_buf(str, 0);
+	size_t starting_indent = str.find_first_not_of(' ');
+	if(starting_indent != std::string::npos)
+		add_string_to_buf(str, starting_indent + 2);
 }
 
 void add_string_to_buf(std::string str, unsigned short indent) {
+	if(overall_mode == MODE_STARTUP)
+		return;
+	if(str == "") return;
+	if(str.find_last_not_of(' ') == std::string::npos)
+		return;
+
+	if(indent > 20) indent = 20;
+
 	static bool inited;
 	static size_t width;
 	static TextStyle buf_style;
@@ -982,100 +990,46 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 		buf_style.pointSize = 12;
 		width = text_area_gworld().getSize().x - 5;
 	}
-	if(overall_mode == MODE_STARTUP)
-		return;
-	
-	if(str == "") return;
-	if(str.find_last_not_of(' ') == std::string::npos)
-		return;
-	
-	if(indent && string_length(str.substr(0,str.find_last_not_of(' ')), buf_style) >= width) {
-		if(indent > 20) indent = 20;
-		size_t split = str.find_last_of(' ', 49);
-		while(string_length(str.substr(0,split), buf_style) >= width)
-			split = str.find_last_of(' ', split - 1);
-		add_string_to_buf(str.substr(0,split));
-		str = str.substr(split);
-		std::string space(indent, ' ');
-		size_t wrap_w = width - string_length(space, buf_style);
-		while(string_length(str.substr(0,str.find_last_not_of(' ')), buf_style) > wrap_w) {
-			std::string wrap = space;
-			split = str.find_last_of(' ', 49 - indent);
-			while(string_length(str.substr(0,split), buf_style) >= wrap_w)
-				split = str.find_last_of(' ', split - 1);
-			wrap += str.substr(0,split);
-			str = str.substr(split);
-			add_string_to_buf(wrap);
-		}
-		add_string_to_buf(space + str);
-		return;
+
+	std::string wrapped_str = str;
+	int line_count = 1;
+	int wrapped_idx = 0;
+	std::string space(indent, ' ');
+	while(string_length(wrapped_str.substr(wrapped_idx, wrapped_str.find_last_not_of(' ')), buf_style) >= width) {
+		size_t split = wrapped_str.find_last_of(' ');
+		while(string_length(wrapped_str.substr(wrapped_idx, split), buf_style) >= width)
+			split = wrapped_str.find_last_of(' ', split - 1);
+
+		wrapped_str[split] = '\n';
+		wrapped_str.insert(split + 1, space);
+
+		wrapped_idx = split + 1 + indent;
+		line_count += 1;
 	}
 	
-	// Now check if this is a duplicate message
+	// Check if this is a duplicate message
 	int prev_pointer = buf_pointer - 1;
 	if(prev_pointer < 0) prev_pointer = TEXT_BUF_LEN - 1;
-	size_t last = 0, new_last = str.find_last_not_of(' ');
-	// Find the last non-space character that matches
-	while(last < str.length() && str[last] == text_buffer[prev_pointer].line[last])
-		last++;
-	while(last > 0 && text_buffer[prev_pointer].line[--last] == ' ');
-	bool is_dup = false;
-	if(last == new_last) {
-		size_t num_pos = 0;
-		enum {begin, f_space, f_lparen, f_x, f_num, f_rparen, err} state = begin;
-		for(short i = last; i < 50 && text_buffer[prev_pointer].line[i]; i++) {
-			if(state == f_x) num_pos = i;
-			if(isdigit(text_buffer[prev_pointer].line[i]) && (state == f_x || state == f_num))
-				state = f_num;
-			else switch(text_buffer[prev_pointer].line[i]) {
-				case ' ':
-					if(state == begin || state == f_space)
-						state = f_space;
-					break;
-				case '(':
-					if(state == begin || state == f_space)
-						state = f_lparen;
-					break;
-				case 'x':
-					if(state == f_lparen)
-						state = f_x;
-					break;
-				case ')':
-					if(state == f_num)
-						state = f_rparen;
-					break;
-				default:
-					if(i > last)
-						state = err;
-					break;
-			}
-			if(state == f_rparen) break;
+
+	if(wrapped_str == text_buffer[prev_pointer].message){
+		text_buffer[prev_pointer].duplicate_count++;
+		std::string test_fit = wrapped_str + " (x" + std::to_string(text_buffer[prev_pointer].duplicate_count) + ")";
+		if(string_length(test_fit, buf_style) >= width){
+			text_buffer[prev_pointer].line_count = line_count + 1;
+			// The duplicate count in parenthesis is on its own line
+			text_buffer[prev_pointer].duplicate_overflow = true;
 		}
-		if(state == begin || state == f_space || state == f_rparen) {
-			is_dup = true;
-			last++;
-		}
-		if(is_dup) {
-			int lastCount = 1;
-			if(num_pos > 0)
-				sscanf(text_buffer[prev_pointer].line + num_pos, "%d", &lastCount);
-			
-			sprintf(text_buffer[prev_pointer].line + last, " (x%d)", lastCount + 1);
-			return;
-		}
+	}else{
+		text_buffer[buf_pointer].message = wrapped_str;
+		text_buffer[buf_pointer].line_count = line_count;
+		text_buffer[buf_pointer].duplicate_count = 1;
+		text_buffer[buf_pointer].duplicate_overflow = false;
+		if(buf_pointer == (TEXT_BUF_LEN - 1))
+			buf_pointer = 0;
+		else buf_pointer++;
 	}
 	
 	text_sbar->setPosition(58); // TODO: This seems oddly specific
-	if(buf_pointer == mark_where_printing_long) {
-		printing_long = true;
-		print_buf();
-		through_sending();
-	}
-	sprintf((char *)text_buffer[buf_pointer].line, "%-49.49s", str.c_str());
-	if(buf_pointer == (TEXT_BUF_LEN - 1))
-		buf_pointer = 0;
-	else buf_pointer++;
-	
 }
 
 void add_caster_needs_to_buf(std::string needs_what, unsigned short pre_indent, unsigned short indent) {
@@ -1089,15 +1043,17 @@ void add_caster_needs_to_buf(std::string needs_what, unsigned short pre_indent, 
 }
 
 void init_buf() {
-	for(short i = 0; i < TEXT_BUF_LEN; i++)
-		sprintf((char *) text_buffer[buf_pointer].line, " ");
+	for(short i = 0; i < TEXT_BUF_LEN; i++){
+		// Buffer messages are no longer forced down to 50 chars each. In an effort to keep memory usage predictable,
+		// I've set an expected capacity of 100 per message.
+		text_buffer[i].message.reserve(100);
+		text_buffer[i].line_count = 1;
+		text_buffer[i].duplicate_count = 1;
+		text_buffer[i].duplicate_overflow = false;
+	}
 }
 
 void print_buf () {
-	short num_lines_printed = 0;
-	long ctrl_val;
-	short line_to_print;
-	long start_print_point;
 	rectangle store_text_rect,dest_rect,erase_rect = {2,2,136,255};
 	
 	text_area_gworld().setActive(false);
@@ -1105,50 +1061,64 @@ void print_buf () {
 	
 	// First clean up gworld with pretty patterns
 	tileImage(text_area_gworld(), erase_rect,bg[6]);
+
+	// Don't draw wrapped scale-aware text outside of the viewport
+	clip_rect(text_area_gworld(), erase_rect);
 	
-	ctrl_val = 58 - text_sbar->getPosition();
-	start_print_point = buf_pointer - LINES_IN_TEXT_WIN - ctrl_val;
-	if(start_print_point< 0)
-		start_print_point= TEXT_BUF_LEN + start_print_point;
-	line_to_print= start_print_point;
+	// Handling scrolling is a lot more confusing now.
+	// Think of line 0 as the LAST line of the most recently printed message. We count up from that accounting for
+	// multiple lines being stored in each message, to find the BOTTOM-MOST message to print first.
+	long lines_clipped_below = 58 - text_sbar->getPosition();
+	int message_idx = buf_pointer - 1;
+	if(message_idx < 0)
+		message_idx = TEXT_BUF_LEN + message_idx;
+	int line = 0;
+	while(line + text_buffer[message_idx].line_count <= lines_clipped_below){
+		line += text_buffer[message_idx].line_count;
+		message_idx--;
+		if(message_idx < 0)
+			message_idx = TEXT_BUF_LEN + message_idx;
+	}
+	
+	// Shift the text down this many lines, counting on clip_rect to hide the overflow:
+	int line_offset = lines_clipped_below - line;
+	int num_lines_total = 0;
+	int num_lines_visible = -line_offset;
 	
 	location moveTo;
-	while((line_to_print!= buf_pointer) && (num_lines_printed < LINES_IN_TEXT_WIN)) {
-		moveTo = location(4, 1 + 12 * num_lines_printed);
-		sf::Text text(text_buffer[line_to_print].line, *ResMgr::fonts.get("plain"), 12 * get_ui_scale());
-		text.setColor(Colours::BLACK);
-		text.setPosition(moveTo);
-		draw_scale_aware_text(text_area_gworld(), text);
-		num_lines_printed++;
-		line_to_print++;
-		if(line_to_print== TEXT_BUF_LEN) {
-			line_to_print= 0;
+	while(num_lines_visible < LINES_IN_TEXT_WIN){
+		std::string message = text_buffer[message_idx].message;
+		int indent = message.find_first_not_of(' ');
+		if(indent != std::string::npos){
+			if(text_buffer[message_idx].duplicate_count > 1){
+				if(text_buffer[message_idx].duplicate_overflow){
+					message += "\n" + std::string(indent, ' ');
+				}else{
+					message += " ";
+				}
+				message += "(x" + std::to_string(text_buffer[message_idx].duplicate_count) + ")";
+			}
+
+			moveTo = location(4, 1 + 12 * (LINES_IN_TEXT_WIN + line_offset - num_lines_total - text_buffer[message_idx].line_count));
+			sf::Text text(message, *ResMgr::fonts.get("plain"), 12 * get_ui_scale());
+			text.setColor(Colours::BLACK);
+			text.setPosition(moveTo);
+			draw_scale_aware_text(text_area_gworld(), text);
 		}
 		
-		if((num_lines_printed == LINES_IN_TEXT_WIN - 1) && (printing_long)) {
-			line_to_print= buf_pointer;
-		}
-		
+		num_lines_visible += text_buffer[message_idx].line_count;
+		num_lines_total += text_buffer[message_idx].line_count;
+		message_idx--;
+		if(message_idx < 0)
+			message_idx = TEXT_BUF_LEN + message_idx;
 	}
 	
 	text_area_gworld().setActive();
 	text_area_gworld().display();
 }
 
-void restart_printing() {
-	lines_to_print = 0;
-	//clear_text_panel();
-}
-
 void restore_mode() {
 	overall_mode = store_mode;
-}
-
-void through_sending() {
-	mark_where_printing_long = buf_pointer + LINES_IN_TEXT_WIN - 1;
-	if(mark_where_printing_long > TEXT_BUF_LEN - 1)
-		mark_where_printing_long -= TEXT_BUF_LEN;
-	printing_long = false;
 }
 
 /* Draw a bitmap in the world window. hor in 0 .. 8, vert in 0 .. 8,

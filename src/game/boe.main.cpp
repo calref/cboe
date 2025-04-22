@@ -50,7 +50,7 @@ using clara::ParserResult;
 using clara::ParseResultType;
 
 bool All_Done = false;
-short had_text_freeze = 0,num_fonts;
+short num_fonts;
 bool first_startup_update = true;
 bool first_sound_played = false,spell_forced = false;
 bool party_in_memory = false;
@@ -1336,10 +1336,6 @@ int last_window_x = 0;
 int last_window_y = 0;
 
 void handle_one_event(const sf::Event& event, cFramerateLimiter& fps_limiter) {
-
-	// What does this do and should it be here?
-	through_sending();
-
 	// What does this do and should it be here?
 	clear_sound_memory();
 	
@@ -1468,13 +1464,6 @@ void redraw_everything() {
 }
 
 void Mouse_Pressed(const sf::Event& event, cFramerateLimiter& fps_limiter) {
-
-	// What is this stuff? Why is it here?
-	if(had_text_freeze > 0) {
-		had_text_freeze--;
-		return;
-	}
-	
 	if(overall_mode == MODE_STARTUP) {
 		All_Done = handle_startup_press({event.mouseButton.x, event.mouseButton.y});
 	} else {
