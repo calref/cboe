@@ -984,7 +984,7 @@ static void replay_action(Element& action) {
 		throw std::string { "Replay system internal error! advance_time() was supposed to be called by the last action, but wasn't: " } + _last_action_type;
 	}else{
 		std::ostringstream sstr;
-		sstr << "Couldn't replay action: " << action;
+		sstr << "Couldn't replay action: " << action << " on line " << action.Row();
 		replaying = false;
 		throw sstr.str();
 	}

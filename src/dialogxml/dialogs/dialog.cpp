@@ -603,7 +603,7 @@ void cDialog::handle_events() {
 			// The error is recorded for debugging only. It should be triggered by replaying the actions.
 			pop_next_action();
 		}else if(replaying && has_next_action()){
-			throw std::string { "Replaying a dialog, have the wrong replay action: " + next_action_type() };
+			throw std::string { "Replaying a dialog, have the wrong replay action: " + next_action_type() + " on line " + std::to_string(next_action_line()) };
 		}else{
 			while(pollEvent(win, currentEvent)){
 				handle_one_event(currentEvent, fps_limiter);
