@@ -979,6 +979,13 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 	if(str.find_last_not_of(' ') == std::string::npos)
 		return;
 
+	// A bug keeps resurfacing where the text buffer gets corrupted somehow. Most of the letters become
+	// invisible and it is impossible to read what it says, which in turn makes debugging other bugs very hard.
+	// This makes sure you can see what the buffer was supposed to say.
+	#ifdef DEBUG
+	LOG(str);
+	#endif
+
 	if(indent > 20) indent = 20;
 
 	static bool inited;
