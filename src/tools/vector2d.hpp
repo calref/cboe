@@ -40,10 +40,10 @@ public:
 		}
 	public:
 		Type& operator[](size_t x) {
-			return ref.data[ref.w * y + x];
+			return ref.data.at(ref.w * y + x);
 		}
 		const Type& operator[](size_t x) const {
-			return ref.data[ref.w * y + x];
+			return ref.data.at(ref.w * y + x);
 		}
 		row_ref operator=(row_ref&& other) {
 			row_ref& me = *this;
@@ -94,10 +94,10 @@ public:
 		}
 	public:
 		Type& operator[](size_t y) {
-			return ref.data[ref.w * y + x];
+			return ref.data.at(ref.w * y + x);
 		}
 		const Type& operator[](size_t y) const {
-			return ref.data[ref.w * y + x];
+			return ref.data.at(ref.w * y + x);
 		}
 		col_ref operator=(col_ref&& other) {
 			col_ref& me = *this;
@@ -139,7 +139,7 @@ public:
 		const_row_ref(const vector2d<Type, Alloc>& ref, size_t row) : ref(ref), y(row) {}
 	public:
 		const Type& operator[](size_t x) const {
-			return ref.data[ref.w * y + x];
+			return ref.data.at(ref.w * y + x);
 		}
 	};
 	class const_col_ref {
@@ -149,7 +149,7 @@ public:
 		const_col_ref(const vector2d<Type, Alloc>& ref, size_t col) : ref(ref), x(col) {}
 	public:
 		const Type& operator[](size_t y) const {
-			return ref.data[ref.w * y + x];
+			return ref.data.at(ref.w * y + x);
 		}
 	};
 	col_ref operator[](size_t x) {

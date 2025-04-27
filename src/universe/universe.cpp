@@ -821,19 +821,19 @@ bool cCurTown::is_on_map(short x, short y) const {
 }
 
 auto cCurOut::operator [] (size_t i) -> arr_96& {
-	return out[i];
+	return out.at(i);
 }
 
 auto cCurOut::operator [] (size_t i) const -> const arr_96& {
-	return out[i];
+	return out.at(i);
 }
 
 ter_num_t& cCurOut::operator [] (location loc) {
-	return out[loc.x][loc.y];
+	return out.at(loc.x).at(loc.y);
 }
 
 const ter_num_t& cCurOut::operator [] (location loc) const {
-	return out[loc.x][loc.y];
+	return out.at(loc.x).at(loc.y);
 }
 
 void cCurOut::writeTo(std::ostream& file) const {
