@@ -91,6 +91,7 @@ eToolbarButton cToolbar::button_hit(sf::RenderWindow& win, location click, cFram
 				play_sound(37, time_in_ticks(5));
 				redraw_screen(REFRESH_NONE);
 				if(clicked) return toolbar[i].btn;
+				return TOOLBAR_CANCEL;
 			}
 		}
 	}

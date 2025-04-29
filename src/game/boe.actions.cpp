@@ -1546,7 +1546,8 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 
 	// MARK: Then, handle a button being hit.
 		switch(button_hit) {
-			case TOOLBAR_NONE: break;
+			case TOOLBAR_NONE: case TOOLBAR_CANCEL:
+				break;
 			case TOOLBAR_MAGE: case TOOLBAR_PRIEST:
 				handle_spellcast(button_hit == TOOLBAR_MAGE ? eSkill::MAGE_SPELLS : eSkill::PRIEST_SPELLS, did_something, need_redraw, need_reprint);
 				break;
