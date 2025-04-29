@@ -77,6 +77,7 @@ eToolbarButton cToolbar::button_hit(sf::RenderWindow& win, location click, cFram
 							clickPos.y -= dest_rect.top;
 							clicked = toolbar[i].bounds.contains(clickPos);
 							active = -1;
+							break;
 						} else if(e.type == sf::Event::MouseMoved){
 							location toPos(e.mouseMove.x, e.mouseMove.y);
 							toPos = win.mapPixelToCoords(toPos);
