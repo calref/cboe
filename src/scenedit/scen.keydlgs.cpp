@@ -51,7 +51,7 @@ static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& s
 
 	switch(special.type){
 		case eSpecType::ONCE_DIALOG:
-			once_dialog(univ, special, cur_type);
+			once_dialog(univ, special, cur_type, &me);
 			break;
 		default:
 			break;

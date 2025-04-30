@@ -174,14 +174,14 @@ std::string cThreeChoice::show(){
 	return "**ERROR**"; // shouldn't be reached
 }
 
-short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons,bool anim_pict,short anim_loops, int anim_fps) {
+short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons,bool anim_pict,short anim_loops, int anim_fps, cDialog* parent) {
 	set_cursor(sword_curs);
 
 	std::vector<std::string> vec(strs.begin(), strs.end());
 	// Strip off trailing empty strings
 	while(!vec.empty() && vec.back().empty())
 		vec.pop_back();
-	cThreeChoice customDialog(vec, buttons, pic_num, pic_type);
+	cThreeChoice customDialog(vec, buttons, pic_num, pic_type, parent);
 	if(anim_pict)
 		setup_dialog_pict_anim(*(customDialog.operator->()), "pict", anim_loops, anim_fps);
 
@@ -195,7 +195,7 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 	return -1;
 }
 
-short once_dialog(cUniverse& univ, cSpecial& spec, eSpecCtxType cur_type) {
+short once_dialog(cUniverse& univ, cSpecial& spec, eSpecCtxType cur_type, cDialog* parent) {
 	std::array<std::string, 6> strs;
 	std::array<short, 3> buttons = {-1,-1,-1};
 
@@ -220,5 +220,5 @@ short once_dialog(cUniverse& univ, cSpecial& spec, eSpecCtxType cur_type) {
 		showError("Dialog box ended up with no buttons.");
 		return -1;
 	}
-	return custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c);
+	return custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c, parent);
 }
