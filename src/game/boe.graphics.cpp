@@ -597,8 +597,10 @@ void redraw_screen(int refresh) {
 			break;
 		default:
 			redraw_terrain();
-			if(refresh & REFRESH_BAR)
+			if(refresh & REFRESH_BAR){
+				draw_text_bar(std::make_pair("", ""));
 				draw_text_bar();
+			}
 			refresh_text_bar();
 			UI::toolbar.draw(mainPtr());
 			break;
