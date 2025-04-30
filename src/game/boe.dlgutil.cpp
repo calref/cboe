@@ -1162,7 +1162,7 @@ void handle_talk_node(int which_talk_entry) {
 				save_talk_str1 = s1 >= 0 ? univ.town->spec_strs[s1] : "";
 				save_talk_str2 = s2 >= 0 ? univ.town->spec_strs[s2] : "";
 			}
-			get_strs(save_talk_str1, save_talk_str2, eSpecCtxType::TOWN, s1, s2);
+			univ.get_strs(save_talk_str1, save_talk_str2, eSpecCtxType::TOWN, s1, s2);
 			put_pc_screen();
 			put_item_screen(stat_window);
 			break;
@@ -1173,7 +1173,7 @@ void handle_talk_node(int which_talk_entry) {
 				save_talk_str1 = s1 >= 0 ? univ.scenario.spec_strs[s1] : "";
 				save_talk_str2 = s2 >= 0 ? univ.scenario.spec_strs[s2] : "";
 			}
-			get_strs(save_talk_str1, save_talk_str2, eSpecCtxType::SCEN, s1, s2);
+			univ.get_strs(save_talk_str1, save_talk_str2, eSpecCtxType::SCEN, s1, s2);
 			put_pc_screen();
 			put_item_screen(stat_window);
 			break;

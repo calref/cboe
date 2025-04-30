@@ -617,7 +617,7 @@ void story_dialog(std::string title, str_num_t first, str_num_t last, eSpecCtxTy
 			cur++;
 		}
 		std::string text;
-		get_str(text, which_str_type, cur);
+		univ.get_str(text, which_str_type, cur);
 		me["str"].setText(text);
 		return true;
 	}, {"left", "right", "done"});
