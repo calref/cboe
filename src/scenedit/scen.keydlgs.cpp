@@ -37,6 +37,11 @@ extern cScenario scenario;
 extern cOutdoors* current_terrain;
 extern cCustomGraphics spec_scen_g;
 
+static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& special) {
+	LOG("Preview clicked!");
+	return true;
+}
+
 std::vector<pic_num_t> field_pics = {0,3,5,6,7,8,9,10,11,12,13,14,15,24,25,26,27,28,29,30,31,4};
 std::vector<pic_num_t> static_boom_pics = {0,1,2,3,4,5};
 std::vector<pic_num_t> boom_pics = {0,1,2,3,4,5,8,9,10,11,12,13};
@@ -795,6 +800,14 @@ static void put_spec_enc_in_dlog(cDialog& me, node_stack_t& edit_stack) {
 	setup_node_field(me, "x2c", spec.ex2c, info.ex2c(spec));
 	
 	setup_node_field(me, "jump", spec.jumpto, info.jump(spec));
+
+	if(info.can_preview){
+		using namespace std::placeholders;
+		me["preview-dialog"].attachClickHandler(std::bind(preview_spec_enc_dlog, _1, _2, std::ref(spec)));
+		me["preview-dialog"].show();
+	}else{
+		me["preview-dialog"].hide();
+	}
 }
 
 static void save_spec_enc(cDialog& me, node_stack_t& edit_stack) {

@@ -213,6 +213,7 @@ struct node_properties_t {
 	node_function_t ex1a(const cSpecial&) const, ex1b(const cSpecial&) const, ex1c(const cSpecial&) const;
 	node_function_t ex2a(const cSpecial&) const, ex2b(const cSpecial&) const, ex2c(const cSpecial&) const;
 	node_properties_t() : node_properties_t(eSpecType::INVALID) {}
+	bool can_preview;
 private:
 	node_properties_t(eSpecType type);
 	node_function_t get(const cSpecial& spec, eSpecField fld) const;
@@ -267,6 +268,8 @@ struct node_builder_t {
 	node_builder_t& loc(eSpecField a, eSpecField b, eLocType type);
 	// As above, but also notes that the area the location is in will be specified by the indicated field.
 	node_builder_t& loc(eSpecField a, eSpecField b, eLocType type, eSpecField where);
+	// Specifies that the node defines a dialog which can be previewed
+	node_builder_t& preview();
 	node_condition_builder_t when(node_condition_t cond, int lbl_sub);
 	operator node_properties_t();
 private:

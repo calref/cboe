@@ -575,6 +575,7 @@ bool node_category_info_t::contains(eSpecType spec) const {
 node_properties_t::node_properties_t(eSpecType type)
 	: self(type)
 	, cat(getNodeCategory(type))
+	, can_preview(false)
 {
 	set(eSpecField::JUMP, eSpecPicker::NODE);
 }
@@ -869,6 +870,11 @@ node_builder_t& node_builder_t::loc(eSpecField a, eSpecField b, eLocType type) {
 node_builder_t& node_builder_t::loc(eSpecField a, eSpecField b, eLocType type, eSpecField where) {
 	loc(a, b, type);
 	node.fields[b].continuation = where;
+	return *this;
+}
+
+node_builder_t& node_builder_t::preview() {
+	node.can_preview = true;
 	return *this;
 }
 
