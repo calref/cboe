@@ -3640,7 +3640,8 @@ void start_new_game(bool force) {
 	}
 	party_in_memory = true;
 	if(force) return;
-	do_save(true);
+	if(!replaying)
+		do_save(true);
 }
 
 void start_tutorial() {
