@@ -381,14 +381,7 @@ public:
 	const char* what() const throw();
 };
 
-//// This needs cControl to be complete.
-///// @note You need to include control.hpp to use this.
-//template<eDlogEvt t> void cDialog::attachEventHandlers(typename event_fcn<t>::type handler, const std::vector<std::string>& controls) {
-//	cDialog& me = *this;
-//	for(std::string control : controls) {
-//		me[control].attachEventHandler<t>(handler);
-//	}
-//}
+void setup_dialog_pict_anim(cDialog& dialog, std::string pict_id, short anim_loops, short anim_fps);
 
 // For development/debugging only.
 void preview_dialog_xml(fs::path dialog_xml);

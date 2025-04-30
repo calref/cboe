@@ -14,6 +14,7 @@
 #include "mathutil.hpp"
 #include "dialogxml/widgets/message.hpp"
 #include "dialogxml/widgets/pict.hpp"
+#include "tools/cursors.hpp"
 
 cThreeChoice::cThreeChoice
   (std::vector<std::string>& strings, cBasicButtonType button, pic_num_t pic, ePicType t, cDialog* parent)
@@ -170,4 +171,25 @@ std::string cThreeChoice::show(){
 	else if(result == "btn2") return btns[1]->label;
 	else if(result == "btn3") return btns[2]->label;
 	return "**ERROR**"; // shouldn't be reached
+}
+
+short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons,bool anim_pict,short anim_loops, int anim_fps) {
+	set_cursor(sword_curs);
+
+	std::vector<std::string> vec(strs.begin(), strs.end());
+	// Strip off trailing empty strings
+	while(!vec.empty() && vec.back().empty())
+		vec.pop_back();
+	cThreeChoice customDialog(vec, buttons, pic_num, pic_type);
+	if(anim_pict)
+		setup_dialog_pict_anim(*(customDialog.operator->()), "pict", anim_loops, anim_fps);
+
+	std::string item_hit = customDialog.show();
+
+	for(int i = 0; i < 3; i++) {
+		auto& btn = basic_buttons[buttons[i]];
+		if(item_hit == btn.label)
+			return i + 1;
+	}
+	return -1;
 }

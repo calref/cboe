@@ -1279,3 +1279,10 @@ void preview_dialog_xml(fs::path dialog_xml) {
 sf::Color cParentless::getDefTextClr() const {
 	return cDialog::defaultBackground == cDialog::BG_DARK ? sf::Color::White : sf::Color::Black;
 }
+
+void setup_dialog_pict_anim(cDialog& dialog, std::string pict_id, short anim_loops, short anim_fps) {
+	cPict& pict = dynamic_cast<cPict&>(dialog[pict_id]);
+	pict.setAnimLoops(anim_loops);
+	dialog.setAnimPictFPS(anim_fps);
+	dialog.setDoAnimations(true);
+}

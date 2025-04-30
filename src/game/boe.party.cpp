@@ -32,6 +32,7 @@
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "dialogxml/dialogs/pictchoice.hpp"
+#include "dialogxml/dialogs/3choice.hpp"
 #include "tools/winutil.hpp"
 #include "fileio/fileio.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
