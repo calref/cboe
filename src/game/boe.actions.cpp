@@ -47,6 +47,7 @@
 #include <string>
 #include <boost/lexical_cast.hpp>
 #include <sstream>
+#include "fileio/resmgr/res_font.hpp"
 
 rectangle item_screen_button_rects[9] = {
 	{125,10,141,28},{125,40,141,58},{125,68,141,86},{125,98,141,116},{125,126,141,144},{125,156,141,174},
@@ -2596,7 +2597,7 @@ void debug_launch_scen(std::string scen_name) {
 }
 
 // Non-comprehensive list of unused keys:
-// chjklnoqvy +[]{},.'"`|;:
+// chjklnoqvy []{},.'"`|;:
 // We want to keep lower-case for normal gameplay.
 void init_debug_actions() {
 	// optional `true` argument means you can use this action in the startup menu.
@@ -2650,6 +2651,7 @@ void init_debug_actions() {
 	add_debug_action({'/', '?'}, "Bring up this window", show_debug_help, true);
 	add_debug_action({'Z'}, "Save the current action log for bug reporting", save_replay_log, true);
 	add_debug_action({'\\'}, "Crash the game", debug_crash, true);
+	add_debug_action({'+'}, "Fix font corruption", debug_fix_fonts, true);
 }
 
 // Later we might want to know whether the key is used or not
@@ -4258,6 +4260,14 @@ void debug_crash() {
 	if(confirm == "yes"){
 		throw std::string { "Be careful what you wish for!" };
 	}
+}
+
+void debug_fix_fonts() {
+	extern std::map<sf::RenderTexture*,std::vector<ScaleAwareText>> store_scale_aware_text;
+	store_scale_aware_text.clear();
+
+	ResMgr::fonts.drain();
+	redraw_everything();
 }
 
 void clear_trapped_monst() {

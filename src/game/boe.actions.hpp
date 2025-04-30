@@ -129,6 +129,7 @@ void preview_dialog_xml();
 void preview_every_dialog_xml();
 void save_replay_log();
 void debug_crash();
+void debug_fix_fonts();
 void clear_trapped_monst();
 
 #endif
