@@ -18,6 +18,8 @@
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "dialogxml/widgets/button.hpp"
 #include "dialogxml/widgets/pictypes.hpp"
+#include "universe/universe.hpp"
+#include "scenario/special.hpp"
 
 /// Basic button type template
 struct bbtt {
@@ -74,5 +76,6 @@ public:
 };
 
 short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons, bool anim_pict = false, short anim_loops = -1, int anim_fps = -1);
+short once_dialog(cUniverse& univ, cSpecial& spec, eSpecCtxType cur_type);
 
 #endif

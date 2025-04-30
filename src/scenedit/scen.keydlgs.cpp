@@ -37,8 +37,18 @@ extern cScenario scenario;
 extern cOutdoors* current_terrain;
 extern cCustomGraphics spec_scen_g;
 
-static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& special) {
-	LOG("Preview clicked!");
+static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& special, short mode) {
+	eSpecCtxType cur_type = static_cast<eSpecCtxType>(mode);
+	cUniverse univ;
+	univ.scenario = scenario;
+
+	switch(special.type){
+		case eSpecType::ONCE_DIALOG:
+			once_dialog(univ, special, cur_type);
+			break;
+		default:
+			break;
+	}
 	return true;
 }
 
@@ -802,8 +812,6 @@ static void put_spec_enc_in_dlog(cDialog& me, node_stack_t& edit_stack) {
 	setup_node_field(me, "jump", spec.jumpto, info.jump(spec));
 
 	if(info.can_preview){
-		using namespace std::placeholders;
-		me["preview-dialog"].attachClickHandler(std::bind(preview_spec_enc_dlog, _1, _2, std::ref(spec)));
 		me["preview-dialog"].show();
 	}else{
 		me["preview-dialog"].hide();
@@ -1401,8 +1409,11 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 		return true;
 	});
 	
+
 	special["back"].hide();
 	edit_stack.push({which_node,mode,the_node});
+	special["preview-dialog"].attachClickHandler(std::bind(preview_spec_enc_dlog, _1, _2, std::ref(edit_stack.top().node), mode));
+
 	put_spec_enc_in_dlog(special, edit_stack);
 	
 	special.setResult(false);

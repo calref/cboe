@@ -2564,27 +2564,8 @@ void oneshot_spec(const runtime_state& ctx) {
 			break;
 		case eSpecType::ONCE_DIALOG:
 			check_mess = false;
-			if(spec.m1 < 0)
-				break;
-			univ.get_strs(strs, ctx.cur_spec_type, spec.m1);
-			if(spec.m3 > 0) {
-				// The first button defaults to OK if toggle is on
-				buttons[0] = 1;
-				buttons[1] = spec.ex1a;
-				buttons[2] = spec.ex2a;
-				// If button 2 and/or button 3 are provided, the first button becomes a Leave button!
-				if((spec.ex1a >= 0) || (spec.ex2a >= 0))
-					buttons[0] = 9;
-			}
-			if(spec.m3 <= 0) {
-				buttons[1] = spec.ex1a;
-				buttons[2] = spec.ex2a;
-			}
-			if((buttons[0] < 0) && (buttons[1] < 0)) {
-				showError("Dialog box ended up with no buttons.");
-				break;
-			}
-			dlg_res = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c);
+			dlg_res = once_dialog(univ, spec, ctx.cur_spec_type);
+			if(dlg_res < 0) break;
 			if(spec.m3 > 0) {
 				if(dlg_res == 1) {
 					if((spec.ex1a >= 0) || (spec.ex2a >= 0)) {

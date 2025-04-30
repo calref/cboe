@@ -14,6 +14,7 @@
 #include "mathutil.hpp"
 #include "dialogxml/widgets/message.hpp"
 #include "dialogxml/widgets/pict.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
 #include "tools/cursors.hpp"
 
 cThreeChoice::cThreeChoice
@@ -192,4 +193,32 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 			return i + 1;
 	}
 	return -1;
+}
+
+short once_dialog(cUniverse& univ, cSpecial& spec, eSpecCtxType cur_type) {
+	std::array<std::string, 6> strs;
+	std::array<short, 3> buttons = {-1,-1,-1};
+
+	if(spec.m1 < 0)
+		return -1;
+
+	univ.get_strs(strs, cur_type, spec.m1);
+	if(spec.m3 > 0) {
+		// The first button defaults to OK if toggle is on
+		buttons[0] = 1;
+		buttons[1] = spec.ex1a;
+		buttons[2] = spec.ex2a;
+		// If button 2 and/or button 3 are provided, the first button becomes a Leave button!
+		if((spec.ex1a >= 0) || (spec.ex2a >= 0))
+			buttons[0] = 9;
+	}
+	if(spec.m3 <= 0) {
+		buttons[1] = spec.ex1a;
+		buttons[2] = spec.ex2a;
+	}
+	if((buttons[0] < 0) && (buttons[1] < 0)) {
+		showError("Dialog box ended up with no buttons.");
+		return -1;
+	}
+	return custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c);
 }
