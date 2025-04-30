@@ -30,6 +30,8 @@
 extern short cen_x, cen_y;
 extern bool mouse_button_held;
 extern short cur_viewing_mode;
+extern short cur_town;
+extern location cur_out;
 extern cTown* town;
 extern short mode_count,to_create;
 extern ter_num_t template_terrain[64][64];
@@ -39,8 +41,13 @@ extern cCustomGraphics spec_scen_g;
 
 static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& special, short mode) {
 	eSpecCtxType cur_type = static_cast<eSpecCtxType>(mode);
+	
+	// Not pretty, but works:
 	cUniverse univ;
 	univ.scenario = scenario;
+	univ.party.town_num = cur_town;
+	univ.party.outdoor_corner = cur_out;
+	univ.party.i_w_c = {0, 0};
 
 	switch(special.type){
 		case eSpecType::ONCE_DIALOG:
