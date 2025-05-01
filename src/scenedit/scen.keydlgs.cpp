@@ -53,8 +53,16 @@ static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& s
 		case eSpecType::ONCE_DIALOG:
 			once_dialog(univ, special, cur_type, &me);
 			break;
-		default:
-			break;
+		default:{
+			std::string str1;
+			std::string str2;
+			univ.get_strs(str1, str2, cur_type, special.m1, special.m2);
+
+			short defaultBackground = cDialog::defaultBackground;
+			cDialog::defaultBackground = cDialog::BG_DARK;
+			cStrDlog(str1, str2, "", scenario.intro_pic, PIC_SCEN, &me).show();
+			cDialog::defaultBackground = defaultBackground;
+		}break;
 	}
 	return true;
 }
