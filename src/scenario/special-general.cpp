@@ -26,9 +26,11 @@ namespace{
 		.msg1(eSpecPicker::MSG_SINGLE)
 		.ex1a(STRT_SHOP)
 		.ex1b(STRT_COST_ADJ)
-		.jump(eSpecPicker::NONE);
+		.jump(eSpecPicker::NONE)
+		.no_preview();
 	node_properties_t S_MSG_SM = node_builder_t(eSpecType::DISPLAY_SM_MSG)
-		.msg();
+		.msg()
+		.no_preview();
 	node_properties_t S_FLIPFLAG = node_builder_t(eSpecType::FLIP_SDF)
 		.sdf()
 		.msg();
@@ -45,10 +47,12 @@ namespace{
 		.sdf(eSpecField::EX1A, eSpecField::EX1B)
 		.sdf(eSpecField::EX2A, eSpecField::EX2B)
 		.msg();
+	// TODO implement preview
 	node_properties_t S_STORY = node_builder_t(eSpecType::STORY_DIALOG)
 		.msg1(eSpecPicker::MSG_SINGLE)
 		.field_pair(eSpecField::MSG2, eSpecField::MSG3, eSpecPicker::MSG_SEQUENCE_VAR)
-		.pic();
+		.pic()
+		.no_preview();
 	node_properties_t S_PREVENT = node_builder_t(eSpecType::CANT_ENTER)
 		.msg()
 		.ex1a(eSpecPicker::TOGGLE)
@@ -62,7 +66,8 @@ namespace{
 		.ex1b(+eSpecPicker::NODE);
 	node_properties_t S_SND = node_builder_t(eSpecType::PLAY_SOUND)
 		.ex1a(eSpecPicker::SOUND)
-		.ex1b(eSpecPicker::TOGGLE);
+		.ex1b(eSpecPicker::TOGGLE)
+		.no_preview();
 	node_properties_t S_HORSE_OWN = node_builder_t(eSpecType::CHANGE_HORSE_OWNER)
 		.msg()
 		.ex1a(STRT_HORSE)
@@ -87,28 +92,38 @@ namespace{
 		.ex1a(eSpecPicker::ITEM_CLASS)
 		.ex1b(eSpecPicker::NODE);
 	node_properties_t S_GLOBAL = node_builder_t(eSpecType::CALL_GLOBAL)
-		.jump(+eSpecPicker::NODE);
-	node_properties_t S_SETROW = node_builder_t(eSpecType::SET_SDF_ROW);
+		.jump(+eSpecPicker::NODE)
+		.no_preview();
+	node_properties_t S_SETROW = node_builder_t(eSpecType::SET_SDF_ROW)
+		.no_preview();
 	node_properties_t S_COPYFLAG = node_builder_t(eSpecType::COPY_SDF)
 		.sdf()
-		.sdf(eSpecField::EX1A, eSpecField::EX1B);
+		.sdf(eSpecField::EX1A, eSpecField::EX1B)
+		.no_preview();
+	// TODO implement preview
 	node_properties_t S_PICTURE = node_builder_t(eSpecType::DISPLAY_PICTURE)
 		.msg1(eSpecPicker::MSG_SINGLE)
-		.ex1a(PIC_FULL);
+		.ex1a(PIC_FULL)
+		.no_preview();
 	node_properties_t S_REST = node_builder_t(eSpecType::REST)
 		.msg();
+	// TODO implement preview
 	node_properties_t S_MSG_TITLE = node_builder_t(eSpecType::TITLED_MSG)
 		.msg()
 		.msg3(eSpecPicker::MSG_SINGLE)
-		.pic();
-	node_properties_t S_END_SCEN = node_builder_t(eSpecType::END_SCENARIO);
+		.pic()
+		.no_preview();
+	node_properties_t S_END_SCEN = node_builder_t(eSpecType::END_SCENARIO)
+		.no_preview();
 	node_properties_t S_SETPTR = node_builder_t(eSpecType::SET_POINTER)
 		.sdf()
-		.ex1a(eSpecPicker::POINTER);
+		.ex1a(eSpecPicker::POINTER)
+		.no_preview();
 	node_properties_t S_CAMPFLAG = node_builder_t(eSpecType::SET_CAMP_FLAG)
 		.sdf()
 		.msg1(+eSpecPicker::MSG_SINGLE)
-		.ex2a(eSpecPicker::TOGGLE);
+		.ex2a(eSpecPicker::TOGGLE)
+		.no_preview();
 	node_properties_t S_DEBUG = node_builder_t(eSpecType::PRINT_NUMS)
 		.pict(STRT_DEBUG_PRINT)
 		.when(eSpecField::PICT == 0, 1)
@@ -121,7 +136,8 @@ namespace{
 		.end()
 		.when(eSpecField::PICT == 2, 2)
 			.ex1a()
-		.end();
+		.end()
+		.no_preview();
 	node_properties_t S_MULFLAG = node_builder_t(eSpecType::SDF_TIMES)
 		.sdf()
 		.sdf(eSpecField::EX1A, eSpecField::EX1B)
@@ -150,30 +166,38 @@ namespace{
 	node_properties_t S_TERTRANS = node_builder_t(eSpecType::TRANS_TER)
 		.msg()
 		.loc(eSpecField::EX1A, eSpecField::EX1B, eLocType::ACTIVE_AUTO);
-	node_properties_t S_BUF_CLEAR = node_builder_t(eSpecType::CLEAR_BUF);
+	node_properties_t S_BUF_CLEAR = node_builder_t(eSpecType::CLEAR_BUF)
+		.no_preview();
 	node_properties_t S_BUF_ADDSTR = node_builder_t(eSpecType::APPEND_STRING)
 		.ex1a(eSpecPicker::MSG_SINGLE)
-		.pict(eSpecPicker::TOGGLE);
+		.pict(eSpecPicker::TOGGLE)
+		.no_preview();
 	node_properties_t S_BUF_ADDNUM = node_builder_t(eSpecType::APPEND_NUM)
-		.pict(eSpecPicker::TOGGLE);
+		.pict(eSpecPicker::TOGGLE)
+		.no_preview();
 	node_properties_t S_BUF_ADDMONST = node_builder_t(eSpecType::APPEND_MONST)
 		.ex1a(STRT_MONST)
-		.pict(eSpecPicker::TOGGLE);
+		.pict(eSpecPicker::TOGGLE)
+		.no_preview();
 	node_properties_t S_BUF_ADDITEM = node_builder_t(eSpecType::APPEND_ITEM)
 		.ex1a(STRT_ITEM)
 		.pict(eSpecPicker::TOGGLE)
-		.ex1b(eSpecPicker::TOGGLE);
+		.ex1b(eSpecPicker::TOGGLE)
+		.no_preview();
 	node_properties_t S_BUF_ADDTER = node_builder_t(eSpecType::APPEND_TER)
 		.ex1a(STRT_TER)
-		.pict(eSpecPicker::TOGGLE);
-	node_properties_t S_PAUSE = node_builder_t(eSpecType::PAUSE);
+		.pict(eSpecPicker::TOGGLE)
+		.no_preview();
+	node_properties_t S_PAUSE = node_builder_t(eSpecType::PAUSE)
+		.no_preview();
 	node_properties_t S_TALK = node_builder_t(eSpecType::START_TALK)
 		.pict(PIC_TALK)
 		.ex1a(STRT_TALK)
 		.when(eSpecField::PICT == -1, 1)
 			.ex1b(STRT_MONST)
 		.end()
-		.jump(eSpecPicker::NONE);
+		.jump(eSpecPicker::NONE)
+		.no_preview();
 	node_properties_t S_QUEST = node_builder_t(eSpecType::UPDATE_QUEST)
 		.msg()
 		.ex1a(STRT_QUEST)
