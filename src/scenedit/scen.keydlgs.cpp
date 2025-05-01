@@ -58,6 +58,8 @@ static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& s
 			std::string str2;
 			univ.get_strs(str1, str2, cur_type, special.m1, special.m2);
 
+			if(str1.empty() && str2.empty()) break;
+
 			short defaultBackground = cDialog::defaultBackground;
 			cDialog::defaultBackground = cDialog::BG_DARK;
 			cStrDlog(str1, str2, "", scenario.intro_pic, PIC_SCEN, &me).show();
