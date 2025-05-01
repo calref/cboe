@@ -37,8 +37,7 @@ namespace {
 		.ex1a(STRT_BUTTON)
 		.ex2a(STRT_BUTTON)
 		.ex1b(eSpecPicker::NODE)
-		.ex2b(eSpecPicker::NODE)
-		.preview();
+		.ex2b(eSpecPicker::NODE);
 	node_properties_t S_ITEM_DIALOG = node_builder_t(eSpecType::ONCE_GIVE_ITEM_DIALOG)
 		.sdf()
 		.msg()

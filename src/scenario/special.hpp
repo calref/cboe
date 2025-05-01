@@ -268,8 +268,8 @@ struct node_builder_t {
 	node_builder_t& loc(eSpecField a, eSpecField b, eLocType type);
 	// As above, but also notes that the area the location is in will be specified by the indicated field.
 	node_builder_t& loc(eSpecField a, eSpecField b, eLocType type, eSpecField where);
-	// Specifies that the node defines a dialog which can be previewed
-	node_builder_t& preview();
+	// Specifies that the node does not display a dialog, or its dialog cannot be previewed
+	node_builder_t& no_preview();
 	node_condition_builder_t when(node_condition_t cond, int lbl_sub);
 	operator node_properties_t();
 private:
