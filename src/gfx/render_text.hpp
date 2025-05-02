@@ -65,5 +65,9 @@ void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::stri
 void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style, break_info_t break_info,bool right_align = false);
 break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextStyle style);
 size_t string_length(std::string str, const TextStyle& style, short* height = nullptr);
+inline void round_vec(sf::Vector2f& vec) {
+	vec.x = round(vec.x);
+	vec.y = round(vec.y);
+}
 
 #endif

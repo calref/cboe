@@ -182,7 +182,10 @@ void draw_scale_aware_text(sf::RenderTarget& dest_window, sf::Text str_to_draw) 
 		dest_window.setView(dest_window.getDefaultView());
 
 		sf::Vector2f text_position = str_to_draw.getPosition() * (float)get_ui_scale();
-		str_to_draw.setPosition(text_position + scaled_view_top_left(dest_window, scaled_view));
+		text_position += scaled_view_top_left(dest_window, scaled_view);
+		// Rounding to whole-number positions *might* avoid unpredictable graphics bugs:
+		round_vec(text_position);
+		str_to_draw.setPosition(text_position);
 
 		// Draw the text immediately
 		dest_window.draw(str_to_draw);
