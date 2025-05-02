@@ -40,6 +40,11 @@ struct TextStyle {
 	mutable std::map<std::string, location> measurementCache;
 };
 
+struct ScaleAwareText {
+	sf::Text text;
+	rectangle clip_rect;
+};
+
 // elements: std::make_tuple(last_line_break, last_word_break, line_width)
 typedef std::vector<std::tuple<unsigned short, unsigned short, unsigned short>> break_info_t;
 
