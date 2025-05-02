@@ -105,7 +105,10 @@ std::map<std::string,std::vector<std::string>> feature_flags = {
 	// Legacy behavior of pacifist spellcasting (used by some replays)
 	// lets the player select combat spells and click 'Cast' which will fail.
 	{"pacifist-spellcast-check", {"V2"}},
-	{"target-lock", {"V1"}},
+	// Target lock
+	// V1: Shift screen to show the maximum number of enemies in range
+	// V2: Like V1, but don't shift if it hides any enemies that are already visible
+	{"target-lock", {"V1", "V2"}},
 	// New in-game save file picker
 	{"file-picker-dialog", {"V1"}},
 	{"scenario-meta-format", {"V2"}},

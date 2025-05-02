@@ -1054,18 +1054,23 @@ void handle_target_mode(eGameMode target_mode, int range, eSpell spell) {
 		location loc = univ.current_pc().combat_pos;
 
 		std::vector<location> enemy_locs_in_range;
+		std::vector<location> enemy_locs_already_seen;
 		for(short i = 0; i < univ.town.monst.size(); i++){
 			auto& monst = univ.town.monst[i];
 			if(monst.is_alive() && party_can_see_monst(i)) {
 				eAttitude att = monst.attitude;
 				if((att == eAttitude::HOSTILE_A || att == eAttitude::HOSTILE_B)
 					&& dist(loc, monst.cur_loc) <= range){
+					// Target lock V2: Don't move the screen if it hides an enemy the player can already see
+					if(has_feature_flag("target-lock", "V2") && is_on_screen(monst.cur_loc))
+						enemy_locs_already_seen.push_back(monst.cur_loc);
+
 					enemy_locs_in_range.push_back(monst.cur_loc);
 				}
 			}
 		}
 		if(!enemy_locs_in_range.empty()){
-			std::vector<location> dest_candidates = points_containing_most(enemy_locs_in_range);
+			std::vector<location> dest_candidates = points_containing_most(enemy_locs_in_range, enemy_locs_already_seen);
 			center = closest_point(dest_candidates, loc);
 			draw_terrain();
 		}
