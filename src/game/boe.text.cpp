@@ -332,8 +332,8 @@ void put_item_screen(eItemWinMode screen_num) {
 
 					// Charges:
 					bool show_charges = item.max_charges > 0;
-					// Show charges for unidentified ammunition, but not other items
-					if(item.missile <= 0)
+					// Show charges for unidentified ammunition and lockpicks, but not other unidentified items
+					if(item.missile <= 0 && item.ability != eItemAbil::LOCKPICKS)
 						show_charges &= item.ident;
 					// Don't show charges if it just shows a dialog
 					show_charges &= item.ability != eItemAbil::MESSAGE;
