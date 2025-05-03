@@ -138,7 +138,9 @@ static void give_help(short help1,short help2,cDialog* parent,bool help_forced) 
 		return;
 	}
 	append_iarray_pref("ReceivedHelp", help1);
-	append_iarray_pref("ReceivedHelp", help2);
+	if(help2 != -1)
+		append_iarray_pref("ReceivedHelp", help2);
+	sync_prefs();
 	str1 = get_str(help_text_rsrc,help1);
 	if(help2 > 0)
 		str2 = get_str("help",help2);
