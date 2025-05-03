@@ -2096,8 +2096,10 @@ void debug_give_item() {
 
 	univ.scenario.scen_items[i].ident = was_ident;
 	print_buf();
+	stat_window = eItemWinMode(univ.cur_pc);
 	put_item_screen(stat_window);
 	put_pc_screen(); // In case the item was food or gold
+	refresh_stat_areas(0);
 }
 
 void debug_overburden() {
@@ -2110,12 +2112,14 @@ void debug_overburden() {
 	// Give the PC very heavy objects that do nothing:
 	while(pc.give_item(item, GIVE_ALLOW_OVERLOAD) == eBuyStatus::OK){}
 	if(pc.has_space()){
-		// I don't know why this would ever happen, since the weight is 0, but just in case:
 		ASB("Debug: failed to fill " + pc.name + "'s inventory.");
 	}else{
 		ASB("Debug: filled " + pc.name + "'s inventory.");
 	}
 	print_buf();
+	stat_window = eItemWinMode(univ.cur_pc);
+	put_item_screen(stat_window);
+	refresh_stat_areas(0);
 }
 
 void debug_print_location() {
