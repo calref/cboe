@@ -50,9 +50,13 @@
 #include "fileio/resmgr/res_font.hpp"
 
 rectangle item_screen_button_rects[9] = {
+	// PC 1-6
 	{125,10,141,28},{125,40,141,58},{125,68,141,86},{125,98,141,116},{125,126,141,144},{125,156,141,174},
+	// Special Items
 	{126,176,141,211},
+	// Quests
 	{126,213,141,248},
+	// Help
 	{127,251,140,267}
 };
 rectangle medium_buttons[4] = {

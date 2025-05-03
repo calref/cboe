@@ -532,8 +532,15 @@ void place_item_bottom_buttons() {
 	}
 	to_rect = item_screen_button_rects[6];
 	rect_draw_some_item(invenbtn_gworld, spec_from_rect, item_stats_gworld(), to_rect, sf::BlendAlpha);
-	to_rect = item_screen_button_rects[7];
-	rect_draw_some_item(invenbtn_gworld, job_from_rect, item_stats_gworld(), to_rect, sf::BlendAlpha);
+
+	// Don't draw the Jobs button if the scenario has none
+	item_bottom_button_active[7] = false;
+	if(!univ.scenario.quests.empty()){
+		item_bottom_button_active[7] = true;
+		to_rect = item_screen_button_rects[7];
+		rect_draw_some_item(invenbtn_gworld, job_from_rect, item_stats_gworld(), to_rect, sf::BlendAlpha);
+	}
+
 	to_rect = item_screen_button_rects[8];
 	rect_draw_some_item(invenbtn_gworld, help_from_rect, item_stats_gworld(), to_rect, sf::BlendAlpha);
 }
