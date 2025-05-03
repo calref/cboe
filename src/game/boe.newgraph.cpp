@@ -15,6 +15,7 @@
 #include "boe.locutils.hpp"
 #include "boe.text.hpp"
 #include "boe.consts.hpp"
+#include "boe.ui.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"
 #include "gfx/render_image.hpp"
@@ -74,6 +75,7 @@ extern cUniverse univ;
 extern cCustomGraphics spec_scen_g;
 extern bool fog_lifted;
 extern enum_map(eGuiArea, rectangle) win_to_rects;
+extern sf::View mainView;
 
 // Talk vars
 extern eGameMode store_pre_talk_mode;
@@ -434,7 +436,12 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	int offset_y = 0;
 	// Now, at last, launch missile
 	for(short t = 0; t < num_steps; t++) {
+		// Temporarily switch to the original view to fill in the background
+		mainPtr().setView(mainPtr().getDefaultView());
+		put_background();
+		mainPtr().setView(mainView);
 		draw_terrain();
+		UI::toolbar.draw(mainPtr());
 		for(short i = 0; i < 30; i++)
 			if(store_missiles[i].missile_type >= 0) {
 				// Where place?
@@ -498,6 +505,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 				}
 			}
 		refresh_text_bar();
+		refresh_stat_areas(0);
 		mainPtr().setActive();
 		mainPtr().display();
 		sf::sleep(sf::milliseconds(2 + 5 * get_int_pref("GameSpeed")));
@@ -607,7 +615,12 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	auto ter_rects = terrain_screen_rects();
 	// Now, at last, do explosion
 	for(short t = (special_draw == 2) ? 6 : 0; t < ((special_draw == 1) ? 6 : 11); t++) { // t goes up to 10 to make sure screen gets cleaned up
+		// Temporarily switch to the original view to fill in the background
+		mainPtr().setView(mainPtr().getDefaultView());
+		put_background();
+		mainPtr().setView(mainView);
 		draw_terrain();
+		UI::toolbar.draw(mainPtr());
 		
 		// Now put in explosions
 		for(short i = 0; i < 30; i++)

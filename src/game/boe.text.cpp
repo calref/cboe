@@ -625,8 +625,11 @@ void refresh_stat_areas(short mode) {
 	else x = sf::BlendNone;
 	rect_draw_some_item(pc_stats_gworld(), rectangle(pc_stats_gworld()), mainPtr(), win_to_rects[WINRECT_PCSTATS], x);
 	rect_draw_some_item(item_stats_gworld(), rectangle(item_stats_gworld()), mainPtr(), win_to_rects[WINRECT_INVEN], x);
-	if(mode != 1)
+	item_sbar->draw();
+	if(mode != 1){
 		rect_draw_some_item(text_area_gworld(), rectangle(text_area_gworld()), mainPtr(), win_to_rects[WINRECT_TRANSCRIPT], x);
+		text_sbar->draw();
+	}
 }
 
 rectangle get_stat_effect_rect(int code) {
