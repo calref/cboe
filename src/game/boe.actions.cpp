@@ -3063,7 +3063,13 @@ void do_load() {
 	finish_load_party();
 	if(overall_mode != MODE_STARTUP)
 		post_load();
-	univ.file = file_to_load;
+	extern fs::path store_chose_auto;
+	if(store_chose_auto.empty()){
+		univ.file = file_to_load;
+	}else{
+		// Make sure when you choose an autosave, your next manual save overwrites the main file, not the autosave.
+		univ.file = store_chose_auto;
+	}
 	menu_activate();
 	restore_cursor();
 }

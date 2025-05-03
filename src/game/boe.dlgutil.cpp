@@ -1801,6 +1801,10 @@ scen_header_type pick_a_scen() {
 
 extern fs::path saveDir;
 
+// When loading an autosave, store the main save filename because univ.file should be set to the
+// main save. That way, manual saves overwrite the main save, not the specific autosave you choose.
+fs::path store_chose_auto;
+
 class cFilePicker {
 	const int SLOTS_PER_PAGE = 4;
 	int parties_per_page;
@@ -2000,7 +2004,7 @@ class cFilePicker {
 				if(std::difftime(mtime, auto_mtimes.front().second) < 0)
 					me["auto" + suffix + "-more-recent"].show();
 
-				me["auto" + suffix].attachClickHandler(std::bind(&cFilePicker::showAuto, this, auto_folder));
+				me["auto" + suffix].attachClickHandler(std::bind(&cFilePicker::showAuto, this, auto_folder, file));
 			}
 		}
 	}
@@ -2038,10 +2042,12 @@ class cFilePicker {
 		++pages_populated;
 	}
 
-	bool showAuto(fs::path auto_folder) {
+	bool showAuto(fs::path auto_folder, fs::path file) {
 		fs::path autosave = run_autosave_picker(auto_folder, &me);
-		if(!autosave.empty())
+		if(!autosave.empty()){
+			store_chose_auto = file;
 			doLoad(autosave);
+		}
 		return true;
 	}
 
@@ -2148,7 +2154,7 @@ public:
 				me["load" + suffix].attachClickHandler(std::bind(&cFilePicker::doLoad, this, "DUMMY"));
 				me["save" + suffix].attachClickHandler(std::bind(&cFilePicker::doSave, this, "DUMMY"));
 				// A click on an autosave button means another dummy file picker should open:
-				me["auto" + suffix].attachClickHandler(std::bind(&cFilePicker::showAuto, this, ""));
+				me["auto" + suffix].attachClickHandler(std::bind(&cFilePicker::showAuto, this, "", ""));
 			}
 		}
 
@@ -2182,6 +2188,7 @@ fs::path fancy_file_picker(bool saving) {
 
 fs::path run_file_picker(bool saving){
 	if(has_feature_flag("file-picker-dialog", "V1") && get_bool_pref("FancyFilePicker", true)){
+		store_chose_auto = "";
 		return fancy_file_picker(saving);
 	}
 
