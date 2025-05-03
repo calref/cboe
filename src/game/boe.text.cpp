@@ -1141,6 +1141,7 @@ void print_buf () {
 			message_idx = TEXT_BUF_LEN + message_idx;
 	}
 	
+	undo_clip(text_area_gworld());
 	text_area_gworld().setActive();
 	text_area_gworld().display();
 }
