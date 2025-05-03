@@ -456,8 +456,6 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 
 					center = camera_dest;
 
-					// TODO why can't I make the text bar stay normal?
-
 					// Offset the missile trajectory for the new camera position
 					int dx = center.x - old_center.x;
 					int dy = center.y - old_center.y;
