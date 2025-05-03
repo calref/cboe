@@ -35,6 +35,7 @@
 #include "mathutil.hpp"
 #include "fileio/fileio.hpp"
 #include "fileio/resmgr/res_font.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
@@ -351,11 +352,16 @@ static void init_buttons() {
 	init_btn(help_btn, BTN_HELP, {273,12});
 }
 
+// Spell dialog is slow to open on Windows, so keep it prepared and reuse it.
+std::unique_ptr<cDialog> storeCastSpell;
+
 // NOTE: this should possibly be moved to boe.ui.cpp at some point
 static void init_ui() {
 	cDialog::init();
 	init_scrollbars();
 	init_buttons();
+
+	storeCastSpell.reset(new cDialog(*ResMgr::dialogs.get("cast-spell")));
 }
 
 extern bool record_verbose;
@@ -1270,6 +1276,7 @@ void handle_events() {
 			ResMgr::fonts.drain();
 
 			adjust_window_mode();
+			storeCastSpell.reset(new cDialog(*ResMgr::dialogs.get("cast-spell")));
 			init_mini_map();
 		}
 

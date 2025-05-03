@@ -2060,8 +2060,8 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	
 	set_cursor(sword_curs);
 	
-	cDialog castSpell(*ResMgr::dialogs.get("cast-spell"));
-	
+	extern std::unique_ptr<cDialog> storeCastSpell;
+	cDialog& castSpell = *storeCastSpell;
 	castSpell.attachClickHandlers(std::bind(pick_spell_caster, _1, _2, type, std::ref(dark), std::ref(former_spell)), {"caster1","caster2","caster3","caster4","caster5","caster6"});
 	castSpell.attachClickHandlers(std::bind(pick_spell_target,_1,_2, type, std::ref(dark), std::ref(former_spell)), {"target1","target2","target3","target4","target5","target6"});
 	castSpell.attachClickHandlers(std::bind(pick_spell_event_filter, _1, _2, type,std::ref(former_spell)), {"other", "help"});
