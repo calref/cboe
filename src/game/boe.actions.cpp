@@ -3049,8 +3049,6 @@ bool handle_scroll(const sf::Event& event) {
 }
 
 void do_load() {
-	// TODO this needs to be changed/moved because a picker dialog opens now!!!
-	// TODO wait, I thought I resolved that.^
 	// Edge case: Replay can be cut off before a file is chosen,
 	// or party selection can be canceled, and this will cause
 	// a crash trying to decode a party
