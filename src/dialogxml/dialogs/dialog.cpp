@@ -841,9 +841,9 @@ bool cDialog::toast(bool triggerFocus){
 	return true;
 }
 
-void cDialog::untoast() {
+void cDialog::untoast(bool triggerFocusHandler) {
 	dialogNotToast = true;
-	if(!currentFocus.empty())
+	if(!currentFocus.empty() && triggerFocusHandler)
 		this->getControl(currentFocus).triggerFocusHandler(*this, currentFocus, false);
 }
 

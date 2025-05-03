@@ -194,7 +194,7 @@ public:
 	/// Reopen the dialog after closing it.
 	/// This is meant to be called from within an event handler to reverse a previous call to toast();
 	/// if you're already out of the dialog's event loop, you should instead call run() to reopen it.
-	void untoast();
+	void untoast(bool triggerFocusHandler = true);
 	/// Determine how the dialog exited.
 	/// @return the argument passed to toast() when the dialog was closed
 	bool accepted() const;

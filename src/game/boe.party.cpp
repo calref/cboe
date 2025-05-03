@@ -1729,10 +1729,9 @@ static void draw_spell_pc_info(cDialog& me) {
 static void put_pc_caster_buttons(cDialog& me) {
 	for(short i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
-		if(me["caster" + n].isVisible()) {
-			if(i == pc_casting)
-				me["pc" + n].setColour(SELECTED_COLOUR);
-			else me["pc" + n].setColour(me.getDefTextClr());
+		me["pc" + n].setColour(me.getDefTextClr());
+		if(me["caster" + n].isVisible() && i == pc_casting){
+			me["pc" + n].setColour(SELECTED_COLOUR);
 		}
 	}
 }
@@ -2062,6 +2061,10 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	
 	extern std::unique_ptr<cDialog> storeCastSpell;
 	cDialog& castSpell = *storeCastSpell;
+	// untoast() is not usually called directly, but here it must be so that the reused dialog initializes
+	// correctly, because cControl::isVisible() returns false for toasted dialogs
+	castSpell.untoast(false);
+
 	castSpell.attachClickHandlers(std::bind(pick_spell_caster, _1, _2, type, std::ref(dark), std::ref(former_spell)), {"caster1","caster2","caster3","caster4","caster5","caster6"});
 	castSpell.attachClickHandlers(std::bind(pick_spell_target,_1,_2, type, std::ref(dark), std::ref(former_spell)), {"target1","target2","target3","target4","target5","target6"});
 	castSpell.attachClickHandlers(std::bind(pick_spell_event_filter, _1, _2, type,std::ref(former_spell)), {"other", "help"});
@@ -2086,9 +2089,9 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	
 	put_spell_list(castSpell, type);
 	draw_spell_info(castSpell, type, former_spell);
-	put_pc_caster_buttons(castSpell);
 	draw_spell_pc_info(castSpell);
 	draw_caster_buttons(castSpell, type);
+	put_pc_caster_buttons(castSpell);
 	put_spell_led_buttons(castSpell, type, former_spell);
 	
 	castSpell.runWithHelp(7, 8);
