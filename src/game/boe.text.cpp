@@ -1108,6 +1108,11 @@ void print_buf () {
 	int num_lines_visible = -line_offset;
 	
 	location moveTo;
+	TextStyle line_style;
+	line_style.font = FONT_PLAIN;
+	line_style.colour = Colours::BLACK;
+	line_style.pointSize = 12;
+
 	while(num_lines_visible < LINES_IN_TEXT_WIN){
 		std::string message = text_buffer[message_idx].message;
 		int indent = message.find_first_not_of(' ');
@@ -1122,8 +1127,9 @@ void print_buf () {
 			}
 
 			moveTo = location(4, 1 + 12 * (LINES_IN_TEXT_WIN + line_offset - num_lines_total - text_buffer[message_idx].line_count));
-			sf::Text text(message, *ResMgr::fonts.get("plain"), 12 * get_ui_scale());
-			text.setColor(Colours::BLACK);
+			sf::Text text;
+			line_style.applyTo(text, get_ui_scale());
+			text.setString(message);
 			text.setPosition(moveTo);
 			draw_scale_aware_text(text_area_gworld(), text);
 		}

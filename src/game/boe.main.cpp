@@ -34,6 +34,7 @@
 #include "gfx/tiling.hpp"
 #include "mathutil.hpp"
 #include "fileio/fileio.hpp"
+#include "fileio/resmgr/res_font.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
@@ -1265,6 +1266,9 @@ void handle_events() {
 
 		if(changed_display_mode) {
 			changed_display_mode = false;
+			// Force reload fonts for possible new UI scale
+			ResMgr::fonts.drain();
+
 			adjust_window_mode();
 			init_mini_map();
 		}

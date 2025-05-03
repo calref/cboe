@@ -29,8 +29,23 @@ sf::Font& get_font_rsrc(eFont font) {
 }
 
 void TextStyle::applyTo(sf::Text& text, double scale) const {
-	text.setFont(get_font_rsrc(font));
-	text.setCharacterSize(pointSize * scale);
+	// Guarantee the font texture for the needed text size won't need to be resized in the middle of rendering
+	sf::Font& font_obj = get_font_rsrc(font);
+	int size = pointSize * scale;
+	sf::Texture& font_texture = const_cast<sf::Texture&>(font_obj.getTexture(size));
+	int min_texture_size = 128 * scale;
+	if(font_texture.getSize().x < min_texture_size){
+		int texture_scale = 2;
+		while(128 * texture_scale < min_texture_size){
+			texture_scale << 1;
+		}
+		if(!font_texture.create(128 * texture_scale, 128 * texture_scale)){
+			throw std::string { "Failed to create large enough font texture!" };
+		}
+	}
+
+	text.setFont(font_obj);
+	text.setCharacterSize(size);
 	int style = sf::Text::Regular;
 	if(italic) style |= sf::Text::Italic;
 	if(underline) style |= sf::Text::Underlined;
