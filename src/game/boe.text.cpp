@@ -233,34 +233,45 @@ void put_item_screen(eItemWinMode screen_num) {
 		for(auto& flag : item_area_button_active[i])
 			flag = false;
 	
-	TextStyle style;
-	style.lineHeight = 10;
-	style.font = FONT_BOLD;
-	style.colour = Colours::YELLOW;
+	TextStyle title_style;
+	title_style.lineHeight = 10;
+	title_style.font = FONT_BOLD;
+	title_style.colour = Colours::YELLOW;
+	std::string title = "";
 	switch(screen_num) {
 		case ITEM_WIN_SPECIAL:
-			win_draw_string(item_stats_gworld(),upper_frame_rect,"Special items:",eTextMode::WRAP,style);
+			title = "Special items:";
 			break;
 		case ITEM_WIN_QUESTS:
-			win_draw_string(item_stats_gworld(),upper_frame_rect,"Quests/Jobs:",eTextMode::WRAP,style);
+			title = "Quests/Jobs:";
 			break;
 			
 		default: // on an items page
 			pc = screen_num;
 			clear_sstr(sout);
 			sout << univ.party[pc].name << " inventory:";
-			win_draw_string(item_stats_gworld(),upper_frame_rect,sout.str(),eTextMode::WRAP,style);
+			title = sout.str();
 			break;
 	}
+	win_draw_string(item_stats_gworld(),upper_frame_rect,title,eTextMode::WRAP,title_style);
+
+	TextStyle line_style;
+	auto draw_item_string = [&line_style](int i, std::string str, eFont font, sf::Color colour, bool italic = false, location offset = {0, 0}){
+		rectangle dest_rect = item_buttons[i][ITEMBTN_NAME];
+		dest_rect.offset(offset);
+		line_style.font = font;
+		line_style.colour = colour;
+		line_style.italic = italic;
+		win_draw_string(item_stats_gworld(), dest_rect, str, eTextMode::WRAP, line_style);
+	};
 
 	clip_rect(item_stats_gworld(), erase_rect);
 	switch(screen_num) {
 		case ITEM_WIN_SPECIAL:
-			style.colour = Colours::BLACK;
 			for(short i = 0; i < LINES_IN_ITEM_WIN; i++) {
 				i_num = i + item_offset;
 				if(i_num < spec_item_array.size()) {
-					win_draw_string(item_stats_gworld(),item_buttons[i][ITEMBTN_NAME],univ.scenario.special_items[spec_item_array[i_num]].name,eTextMode::WRAP,style);
+					draw_item_string(i, univ.scenario.special_items[spec_item_array[i_num]].name, FONT_BOLD, Colours::BLACK);
 					
 					place_item_button(i,ITEMBTN_INFO);
 					if((univ.scenario.special_items[spec_item_array[i_num]].flags % 10 == 1)
@@ -273,21 +284,21 @@ void put_item_screen(eItemWinMode screen_num) {
 			}
 			break;
 		case ITEM_WIN_QUESTS:
-			style.colour = Colours::BLACK;
 			for(short i = 0; i < LINES_IN_ITEM_WIN; i++) {
+				sf::Color colour = Colours::BLACK;
 				i_num = i + item_offset;
 				if(i_num < spec_item_array.size()) {
 					int which_quest = spec_item_array[i_num] % 10000;
 					if(spec_item_array[i_num] / 10000 == 2)
-						style.colour = Colours::RED;
+						colour = Colours::RED;
 					
-					win_draw_string(item_stats_gworld(),item_buttons[i][ITEMBTN_NAME],univ.scenario.quests[which_quest].name,eTextMode::WRAP,style);
+					draw_item_string(i, univ.scenario.quests[which_quest].name, FONT_BOLD, colour);
 					
 					if(spec_item_array[i_num] / 10000 == 1) {
 						location from, to;
 						from = to = item_buttons[i][ITEMBTN_NAME].centre();
 						from.x = item_buttons[i][ITEMBTN_NAME].left;
-						to.x = from.x + string_length(univ.scenario.quests[which_quest].name, style);
+						to.x = from.x + string_length(univ.scenario.quests[which_quest].name, line_style);
 						draw_line(item_stats_gworld(), from, to, 1, Colours::GREEN);
 					}
 					
@@ -296,32 +307,31 @@ void put_item_screen(eItemWinMode screen_num) {
 			}
 			break;
 			
-		default: // on an items page
-			style.colour = Colours::BLACK;
-			
+		default: // on an items page			
 			for(short i = 0; i < LINES_IN_ITEM_WIN; i++) {
 				i_num = i + item_offset;
 				clear_sstr(sout);
 				sout << i_num + 1 << '.';
-				win_draw_string(item_stats_gworld(),item_buttons[i][ITEMBTN_NAME],sout.str(),eTextMode::WRAP,style);
-				
+				draw_item_string(i, sout.str(), FONT_PLAIN, Colours::BLACK);
+
  				dest_rect = item_buttons[i][ITEMBTN_NAME];
 				dest_rect.left += 36;
 				dest_rect.top -= 2;
 				
 				const cPlayer& who = univ.party[pc];
 				const cItem& item = who.items[i_num];
-				
+
+				bool italic = false;
+				sf::Color colour = Colours::BLACK;
 				if(item.variety != eItemType::NO_ITEM) {
-					style.font = FONT_PLAIN;
 					if(who.equip[i_num]) {
-						style.italic = true;
+						italic = true;
 						if(item.variety == eItemType::ONE_HANDED || item.variety == eItemType::TWO_HANDED)
-							style.colour = Colours::PINK;
+							colour = Colours::PINK;
 						else if((*item.variety).is_armour)
-							style.colour = Colours::GREEN;
-						else style.colour = Colours::BLUE;
-					} else style.colour = Colours::BLACK;
+							colour = Colours::GREEN;
+						else colour = Colours::BLUE;
+					}
 					
 					clear_sstr(sout);
 
@@ -344,9 +354,7 @@ void put_item_screen(eItemWinMode screen_num) {
 					}
 
 					dest_rect.left -= 2;
-					win_draw_string(item_stats_gworld(),dest_rect,sout.str(),eTextMode::WRAP,style);
-					style.italic = false;
-					style.colour = Colours::BLACK;
+					draw_item_string(i, sout.str(), FONT_PLAIN, colour, italic, {34, -2});
 					
 					place_item_graphic(i,item.graphic_num); 
 					// The info button is harmless and can be useful while shopping, so always show it
