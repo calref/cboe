@@ -1188,6 +1188,7 @@ void handle_alchemy(bool& need_redraw, bool& need_reprint) {
 
 static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 	std::vector<short> store_hp;
+	std::vector<bool> store_alive;
 	sf::Event dummy_evt;
 	need_reprint = true;
 	need_redraw = true;
@@ -1202,6 +1203,7 @@ static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 		pause(10);
 		for(cPlayer& pc : univ.party) {
 			store_hp.push_back(pc.cur_health);
+			store_alive.push_back(pc.is_alive());
 			pc.status[eStatus::WEBS] = 0;
 		}
 	}
@@ -1212,14 +1214,19 @@ static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 		do_monsters();
 		do_monster_turn();
 		int make_wand = get_ran(1,1,160 - univ.town->difficulty);
-		if(make_wand == 10)
+		if(make_wand == 10){
 			create_wand_monst();
-		for(int j = 0; j < 6; j++)
-			if(univ.party[j].cur_health < store_hp[j]) {
+		}
+		for(int j = 0; j < 6; j++){
+			// Interrupt long wait if anyone takes damage or dies.
+			// NOTE: A hilarious bug used to exist where PCs starting at HP 0 could die without interrupting
+			// the wait, because their cur_health would still equal the store_hp value. This is now fixed.
+			if(univ.party[j].cur_health < store_hp[j] || univ.party[j].is_alive() != store_alive[j]) {
 				interrupted = true;
 				j = 6;
 				add_string_to_buf("  Waiting interrupted.");
 			}
+		}
 		if(party_sees_a_monst()) {
 			interrupted = true;
 			add_string_to_buf("  Monster sighted!");
