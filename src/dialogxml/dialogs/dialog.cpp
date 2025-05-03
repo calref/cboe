@@ -537,8 +537,7 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	winLastY = parentPos.y + (int(parentSz.y) - winRect.height()) / 2;
 	win.setPosition({winLastX, winLastY});
 	draw();
-	makeFrontWindow(parent ? parent-> win : mainPtr());
-	makeFrontWindow(win);
+	stackWindowsCorrectly();
 	// This is a loose modal session, as it doesn't prevent you from clicking away,
 	// but it does prevent editing other dialogs, and it also keeps this window on top
 	// even when it loses focus.
@@ -554,7 +553,7 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	while(pollEvent(parentWin, currentEvent));
 	set_cursor(former_curs);
 	topWindow = formerTop;
-	makeFrontWindow(*parentWin);
+	stackWindowsCorrectly();
 }
 
 void cDialog::runWithHelp(short help1, short help2, bool help_forced) {
@@ -627,6 +626,20 @@ void cDialog::handleTab(bool reverse) {
 		handleTabOrder(currentFocus, tabOrder.rbegin(), tabOrder.rend());
 	} else {
 		handleTabOrder(currentFocus, tabOrder.begin(), tabOrder.end());
+	}
+}
+
+void cDialog::stackWindowsCorrectly() {
+	// Put all dialogs in correct z order:
+	std::vector<sf::RenderWindow*> dialog_stack;
+	cDialog* next = this;
+	while(next != nullptr){
+		dialog_stack.push_back(&(next->win));
+		next = next->parent;
+	}
+	makeFrontWindow(mainPtr());
+	for(int i = dialog_stack.size() - 1; i >= 0; --i){
+		makeFrontWindow(*(dialog_stack[i]));
 	}
 }
 
@@ -754,17 +767,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter&
 				if(onGainedFocus){
 					onGainedFocus(win);
 				}
-
-				// Put all dialogs in correct z order:
-				std::vector<sf::RenderWindow*> dialog_stack;
-				cDialog* next = this;
-				while(next != nullptr){
-					dialog_stack.push_back(&(next->win));
-					next = next->parent;
-				}
-				for(int i = dialog_stack.size() - 1; i >= 0; --i){
-					makeFrontWindow(*(dialog_stack[i]));
-				}
+				stackWindowsCorrectly();
 			}
 			BOOST_FALLTHROUGH;
 		case sf::Event::MouseMoved:{

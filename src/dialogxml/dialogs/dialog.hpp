@@ -82,6 +82,7 @@ public:
 	static void (*redraw_everything)();
 	static std::function<void(sf::RenderWindow& win)> onLostFocus;
 	static std::function<void(sf::RenderWindow& win)> onGainedFocus;
+	void stackWindowsCorrectly();
 	/// Performs essential startup initialization. Generally should not be called directly.
 	static void init();
 	static bool wasInitCalled() { return initCalled; };
