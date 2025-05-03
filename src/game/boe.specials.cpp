@@ -4584,13 +4584,10 @@ void handle_message(const runtime_state& ctx, const std::string& title, pic_num_
 	univ.get_strs(str1, str2, ctx.cur_spec_type, ctx.cur_spec.m1, ctx.cur_spec.m2);
 	if(str1.empty() && str2.empty()) return;
 	
-	short where1 = -1,where2 = -1;
-	where1 = is_out() ? univ.party.outdoor_corner.x + univ.party.i_w_c.x : univ.party.town_num;
-	where2 = is_out() ? univ.party.outdoor_corner.y + univ.party.i_w_c.y : univ.party.town_num;
 	std::string placename = is_out() ? univ.out->name : univ.town->name;
 	cStrDlog display_strings(str1, str2, title, pic, pt, 0);
 	display_strings.setSound(57);
-	display_strings.setRecordHandler(cStringRecorder(note_type).string1(ctx.cur_spec.m1).string2(ctx.cur_spec.m2).from(where1,where2).at(placename));
+	display_strings.setRecordHandler(cStringRecorder(ctx.cur_spec_type, note_type).string1(ctx.cur_spec.m1).string2(ctx.cur_spec.m2).at(placename));
 	display_strings.show();
 }
 

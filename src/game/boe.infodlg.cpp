@@ -691,22 +691,11 @@ void put_spec_item_info (short which_i) {
 void cStringRecorder::operator()(cDialog& me) {
 	play_sound(0);
 	std::string str1, str2;
-	switch(type) {
-		case NOTE_SCEN:
-			str1 = univ.scenario.spec_strs[label1];
-			str2 = univ.scenario.spec_strs[label2];
-			break;
-		case NOTE_TOWN:
-			str1 = univ.town->spec_strs[label1];
-			str2 = univ.town->spec_strs[label2];
-			break;
-		case NOTE_OUT:
-			str1 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label1];
-			str2 = univ.scenario.outdoors[label1b][label2b]->spec_strs[label2];
-			break;
-	}
-	if(univ.party.record(type, str1, location))
+	univ.get_strs(str1, str2, spec_type, label1, label2);
+	if(univ.party.record(note_type, str1, location))
 		give_help(58,0,me);
-	univ.party.record(type, str2, location);
+
+	if(!str2.empty())
+		univ.party.record(note_type, str2, location);
 }
 
