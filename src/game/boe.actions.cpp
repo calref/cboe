@@ -3666,9 +3666,12 @@ void start_new_game(bool force) {
 }
 
 void start_tutorial() {
-	// Start by using the default party
-	start_new_game(true);
-	// TODO start the tutorial scenario, which we need to design.
+	std::string version_flag = get_feature_version("tutorial");
+	if(!version_flag.empty()){
+		// TODO implement the tutorial. If the behavior for launching the tutorial ever changes, update feature flags.
+	}else{
+		showWarning("Tutorial coming soon!");
+	}
 }
 
 location get_cur_direction() {
