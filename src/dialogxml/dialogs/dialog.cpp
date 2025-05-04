@@ -631,15 +631,17 @@ void cDialog::handleTab(bool reverse) {
 
 void cDialog::stackWindowsCorrectly() {
 	// Put all dialogs in correct z order:
-	std::vector<sf::RenderWindow*> dialog_stack;
+	std::vector<cDialog*> dialog_stack;
 	cDialog* next = this;
 	while(next != nullptr){
-		dialog_stack.push_back(&(next->win));
+		dialog_stack.push_back(next);
 		next = next->parent;
 	}
 	makeFrontWindow(mainPtr());
 	for(int i = dialog_stack.size() - 1; i >= 0; --i){
-		makeFrontWindow(*(dialog_stack[i]));
+		if(dialog_stack[i]->dialogNotToast){
+			makeFrontWindow(dialog_stack[i]->win);
+		}
 	}
 }
 
