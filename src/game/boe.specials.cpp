@@ -226,7 +226,9 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	}
 	if((mode == eSpecCtx::TOWN_MOVE || (mode == eSpecCtx::COMBAT_MOVE && which_combat_type == 1))
 		&& can_enter && univ.town.is_special(where_check.x,where_check.y)) {
-		for(short i = 0; i < univ.town->special_locs.size(); i++)
+		// Stop this loop if the current town changes.
+		short town_num = univ.party.town_num;
+		for(short i = 0; town_num == univ.party.town_num && i < univ.town->special_locs.size(); i++)
 			if(where_check == univ.town->special_locs[i]) {
 				spec_num = univ.town->special_locs[i].spec;
 				bool runSpecial = false;
