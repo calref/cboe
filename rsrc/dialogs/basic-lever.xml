@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='leave'>
+<dialog escbtn='leave' defbtn='pull'>
 	<pict type='dlog' num='9' top='9' left='8'/>
 	<button name='leave' type='regular' top='46' left='176'>Leave</button>
 	<button name='pull' type='regular' top='46' left='244'>Pull</button>
