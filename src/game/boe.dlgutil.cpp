@@ -2079,6 +2079,12 @@ class cFilePicker {
 		return true;
 	}
 
+	bool doCloseDummyPicker() {
+		me.setResult("");
+		me.toast(false);
+		return true;
+	}
+
 	bool doCancel() {
 		me.toast(false);
 		return true;
@@ -2151,8 +2157,8 @@ public:
 			for(int i = 0; i < SLOTS_PER_PAGE; ++i){
 				std::string suffix = std::to_string(i+1);
 				// When replaying, a click on a load or save button means the dummy file picker can go away:
-				me["load" + suffix].attachClickHandler(std::bind(&cFilePicker::doLoad, this, "DUMMY"));
-				me["save" + suffix].attachClickHandler(std::bind(&cFilePicker::doSave, this, "DUMMY"));
+				me["load" + suffix].attachClickHandler(std::bind(&cFilePicker::doCloseDummyPicker, this));
+				me["save" + suffix].attachClickHandler(std::bind(&cFilePicker::doCloseDummyPicker, this));
 				// A click on an autosave button means another dummy file picker should open:
 				me["auto" + suffix].attachClickHandler(std::bind(&cFilePicker::showAuto, this, "", ""));
 			}
