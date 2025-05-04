@@ -553,17 +553,17 @@ void cScenario::writeTo(cTagFile& file) const {
 }
 
 void cScenario::readFrom(const cTagFile& file){
-	std::deque<boost::dynamic_bitset<>> taken;
+	std::map<int, boost::dynamic_bitset<>> taken;
 	std::vector<size_t> visible, hidden, slaughter;
 	auto& page = file[0];
-	page["ITEMTAKEN"].extract(taken);
+	page["ITEMTAKEN"].extractSparse(taken);
 	page["TOWNVISIBLE"].extract(visible);
 	page["TOWNHIDDEN"].extract(hidden);
 	page["TOWNSLAUGHTER"].extractSparse(slaughter);
 	std::sort(visible.begin(), visible.end());
 	std::sort(hidden.begin(), hidden.end());
 	for(size_t i = 0; i < towns.size(); i++) {
-		if(i < taken.size()) towns[i]->item_taken = taken[i];
+		if(taken.find(i) != taken.end()) towns[i]->item_taken = taken[i];
 		else towns[i]->item_taken.clear();
 		if(i < slaughter.size()) towns[i]->m_killed = slaughter[i];
 		else towns[i]->m_killed = 0;
