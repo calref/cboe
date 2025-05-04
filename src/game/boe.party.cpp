@@ -1720,6 +1720,9 @@ static void draw_spell_pc_info(cDialog& me) {
 			if(univ.party[i].main_status == eMainStatus::ALIVE) {
 				me["hp" + n].setTextToNum(univ.party[i].cur_health);
 				me["sp" + n].setTextToNum(univ.party[i].cur_sp);
+			}else{
+				me["hp" + n].setText("");
+				me["sp" + n].setText("");
 			}
 			put_target_status_graphics(me, i);
 		}
