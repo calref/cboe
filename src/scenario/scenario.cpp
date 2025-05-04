@@ -544,6 +544,8 @@ void cScenario::writeTo(cTagFile& file) const {
 	for(int i = 0; i < towns.size(); i++) {
 		if(towns[i]->item_taken.any())
 			page["ITEMTAKEN"] << i << towns[i]->item_taken;
+		if(!towns[i]->door_unlocked.empty())
+			page["DOORUNLOCKED"] << i << towns[i]->door_unlocked;
 		if(towns[i]->can_find)
 			page["TOWNVISIBLE"] << i;
 		else page["TOWNHIDDEN"] << i;
@@ -554,9 +556,12 @@ void cScenario::writeTo(cTagFile& file) const {
 
 void cScenario::readFrom(const cTagFile& file){
 	std::map<int, boost::dynamic_bitset<>> taken;
+	std::map<int, std::vector<location>> unlocked;
 	std::vector<size_t> visible, hidden, slaughter;
 	auto& page = file[0];
 	page["ITEMTAKEN"].extractSparse(taken);
+	if(page.contains("DOORUNLOCKED"))
+		page["DOORUNLOCKED"].extractSparse(unlocked);
 	page["TOWNVISIBLE"].extract(visible);
 	page["TOWNHIDDEN"].extract(hidden);
 	page["TOWNSLAUGHTER"].extractSparse(slaughter);
@@ -565,6 +570,8 @@ void cScenario::readFrom(const cTagFile& file){
 	for(size_t i = 0; i < towns.size(); i++) {
 		if(taken.find(i) != taken.end()) towns[i]->item_taken = taken[i];
 		else towns[i]->item_taken.clear();
+		if(unlocked.find(i) != unlocked.end()) towns[i]->door_unlocked = unlocked[i];
+		else towns[i]->door_unlocked.clear();
 		if(i < slaughter.size()) towns[i]->m_killed = slaughter[i];
 		else towns[i]->m_killed = 0;
 		if(std::binary_search(visible.begin(), visible.end(), i)) {

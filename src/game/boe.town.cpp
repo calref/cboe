@@ -122,7 +122,14 @@ void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
 
 	// TODO: This means cleared webs reappear, for example. Is that right?
 	univ.town.place_preset_fields();
-	
+
+	for(location unlocked : univ.town->door_unlocked){
+		if(is_unlockable(unlocked)){
+			ter_num_t terrain = univ.town->terrain(unlocked.x,unlocked.y);
+			univ.town->terrain(unlocked.x,unlocked.y) = univ.scenario.ter_types[terrain].flag1;
+		}
+	}
+
 	univ.town.belt_present = false;
 	// Set up map, using stored map
 	for(short i = 0; i < univ.town->max_dim; i++)
@@ -1181,6 +1188,7 @@ void pick_lock(location where,short pc_num) {
 		add_string_to_buf("  Door unlocked.");
 		play_sound(9);
 		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[terrain].flag1;
+		univ.town->door_unlocked.push_back(where);
 	}
 }
 
@@ -1205,6 +1213,7 @@ void bash_door(location where,short pc_num) {
 		add_string_to_buf("  Lock breaks.");
 		play_sound(9);
 		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[terrain].flag1;
+		univ.town->door_unlocked.push_back(where);
 	}
 }
 

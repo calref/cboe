@@ -1368,6 +1368,7 @@ void cast_town_spell(location where) {
 					add_string_to_buf("  Door unlocked.");
 					play_sound(9);
 					univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[ter].flag1;
+					univ.town->door_unlocked.push_back(where);
 				}
 				else {
 					play_sound(41);

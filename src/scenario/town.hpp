@@ -101,6 +101,7 @@ private:
 	// Persistent data for saved games
 	boost::dynamic_bitset<> item_taken;
 public:
+	std::vector<location> door_unlocked;
 	bool can_find;
 	long m_killed = 0;
 	
