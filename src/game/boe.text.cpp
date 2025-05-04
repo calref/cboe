@@ -1017,7 +1017,7 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 	}
 
 	std::string wrapped_str = str;
-	int line_count = 1;
+	int line_count = 1 + std::count(str.begin(), str.end(), '\n');
 	int wrapped_idx = 0;
 	std::string space(indent, ' ');
 	while(string_length(wrapped_str.substr(wrapped_idx, wrapped_str.find_last_not_of(' ')), buf_style) >= width) {
