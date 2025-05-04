@@ -990,7 +990,7 @@ pic_num_t choose_damage_type(short cur, cDialog* parent, bool allow_spec) {
 	return made_choice ? item_hit : prev;
 }
 
-static pic_num_t choose_boom_type(short cur, cDialog* parent) {
+static short choose_boom_type(short cur, cDialog* parent) {
 	static const int preset_booms = 6;
 	static const char*const boomNames[preset_booms+1] = {
 		"Fire", "Teleport", "Magic/Electricity",
@@ -1014,7 +1014,7 @@ static pic_num_t choose_boom_type(short cur, cDialog* parent) {
 	});
 	bool made_choice = pic_dlg.show(cur);
 	size_t item_hit = pic_dlg.getPicChosen();
-	return made_choice ? item_hit : prev;
+	return made_choice ? item_hit - 8 : prev;
 }
 
 snd_num_t choose_sound(short cur, cDialog* parent, std::string title) {

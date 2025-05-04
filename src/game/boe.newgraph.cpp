@@ -302,8 +302,6 @@ void run_a_missile(location from,location fire_to,miss_num_t miss_type,short pat
 }
 
 void run_a_boom(location boom_where,short type,short x_adj,short y_adj,short snd) {
-	if((type < 0) || (type > 2))
-		return;
 	start_missile_anim();
 	add_explosion(boom_where,-1,0,type, x_adj, y_adj);
 	do_explosion_anim(5,0,snd);
@@ -570,7 +568,9 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	
 	if(std::all_of(store_booms, store_booms + 30, [](const store_boom_type& b) {
 		return b.boom_type == 0;
-	})) return;
+	})){
+		return;
+	}
 	
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
@@ -623,7 +623,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 		UI::toolbar.draw(mainPtr());
 		
 		// Now put in explosions
-		for(short i = 0; i < 30; i++)
+		for(short i = 0; i < 30; i++){
 			if(store_booms[i].boom_type >= 0) {
 				if((t + store_booms[i].offset >= 0) && (t + store_booms[i].offset <= 7)) {
 					if(cur_boom_type >= 1000) {
@@ -653,6 +653,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 					}
 				}
 			}
+		}
 		//if(((PSD[SDF_GAME_SPEED] == 1) && (t % 3 == 0)) || ((PSD[SDF_GAME_SPEED] == 2) && (t % 2 == 0)))
 		refresh_stat_areas(0);
 		refresh_text_bar();
