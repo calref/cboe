@@ -372,7 +372,6 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent, bool 
 		case PIC_MONST_TALL: case PIC_MONST_LG:
 			std::vector<std::pair<pic_num_t,ePicType>> pics;
 			for(m_pic_index_t m_pic : m_pic_index) {
-				// TODO: Put the added monster graphics in m_pic_index to allow picking them
 				ePicType type = PIC_MONST;
 				if(m_pic.x == 2) type += PIC_WIDE;
 				if(m_pic.y == 2) type += PIC_TALL;
