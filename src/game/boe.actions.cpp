@@ -552,6 +552,11 @@ void handle_rest(bool& need_redraw, bool& need_reprint) {
 				do_monsters();
 			if(get_ran(1,1,70) == 10)
 				create_wand_monst();
+			// Poison could set in from disease resulting in a PC death while resting.
+			if(someone_poisoned()){
+				i = 200;
+				add_string_to_buf("  Someone poisoned.");
+			}
 			if(nearest_monster() <= 3) {
 				i = 200;
 				add_string_to_buf("  Monsters nearby.");
