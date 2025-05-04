@@ -2,8 +2,8 @@
 	sdf -1, -1
 	msg 0, -1, 1
 	pic 229, 1
-	ex1 11, 1, -1
-	ex2 12, 2, -1
+	ex1 12, 2, -1
+	ex2 11, 1, -1
 	goto -1
 @once-give-spec-item = 1
 	sdf 13, 0
