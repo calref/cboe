@@ -1024,7 +1024,7 @@ void handle_talk_node(int which_talk_entry) {
 				can_save_talk = false;
 			}
 			else if(univ.party.gold < a) {
-				save_talk_str1 + save_talk_str2;
+				save_talk_str1 = save_talk_str2;
 			}
 			else {
 				univ.party.gold -= a;
