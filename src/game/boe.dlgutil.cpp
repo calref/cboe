@@ -1823,6 +1823,7 @@ class cFilePicker {
 	int pages_populated = 0;
 	int saves_loaded = 0;
 
+	bool dummy_picker_chose = false;
 	void init_pages() {
 		save_file_mtimes = sorted_file_mtimes(save_folder);
 		save_files.resize(save_file_mtimes.size());
@@ -2051,6 +2052,15 @@ class cFilePicker {
 		return true;
 	}
 
+	bool dummyShowAuto(fs::path auto_folder, fs::path file) {
+		cFilePicker dummyAuto(auto_folder, false, &me, true);
+		dummyAuto.run();
+		if(dummyAuto.dummy_picker_chose){
+			doCloseDummyPicker();
+		}
+		return true;
+	}
+
 	bool doLoad(fs::path selected_file) {
 		me.setResult(selected_file);
 		me.toast(false);
@@ -2082,6 +2092,7 @@ class cFilePicker {
 	bool doCloseDummyPicker() {
 		fs::path p {""};
 		me.setResult(p);
+		dummy_picker_chose = true;
 		me.toast(false);
 		return true;
 	}
@@ -2161,7 +2172,7 @@ public:
 				me["load" + suffix].attachClickHandler(std::bind(&cFilePicker::doCloseDummyPicker, this));
 				me["save" + suffix].attachClickHandler(std::bind(&cFilePicker::doCloseDummyPicker, this));
 				// A click on an autosave button means another dummy file picker should open:
-				me["auto" + suffix].attachClickHandler(std::bind(&cFilePicker::showAuto, this, "", ""));
+				me["auto" + suffix].attachClickHandler(std::bind(&cFilePicker::dummyShowAuto, this, "", ""));
 			}
 		}
 
