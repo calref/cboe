@@ -45,6 +45,8 @@ extern void draw_map(bool need_refresh);
 
 short selected;
 
+const int ITEMS_IN_WINDOW = 8;
+
 bool GTP(short item_num) {
 	cItem item = univ.scenario.get_stored_item(item_num);
 	return univ.party.give_item(item,true);
@@ -386,11 +388,11 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 	if(first_item_shown == 0)
 		me["up"].hide();
 	else me["up"].show();
-	if(item_array.size() <= 8 || first_item_shown > item_array.size() - 7)
+	if(item_array.size() <= ITEMS_IN_WINDOW || first_item_shown > item_array.size() - (ITEMS_IN_WINDOW-1))
 		me["down"].hide();
 	else me["down"].show();
 	
-	for(short i = 0; i < 8; i++) {
+	for(short i = 0; i < ITEMS_IN_WINDOW; i++) {
 		std::ostringstream sout;
 		sout << "item" << i + 1;
 		std::string pict = sout.str() + "-g", name = sout.str() + "-name";
@@ -447,12 +449,12 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 		me.toast(true);
 	} else if(id == "up") {
 		if(first_item_shown > 0) {
-			first_item_shown -= 8;
+			first_item_shown -= ITEMS_IN_WINDOW;
 			put_item_graphics(me, first_item_shown, current_getting_pc, item_array);
 		}
 	} else if(id ==  "down") {
-		if(first_item_shown + 8 < item_array.size()) {
-			first_item_shown += 8;
+		if(first_item_shown + ITEMS_IN_WINDOW < item_array.size()) {
+			first_item_shown += ITEMS_IN_WINDOW;
 			put_item_graphics(me, first_item_shown, current_getting_pc, item_array);
 		}
 	} else if(id.substr(0,2) == "pc") {
@@ -563,7 +565,7 @@ bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short 
 	
 	title.setText(titleText);
 	
-	for(int i = 1; i <= 8; i++) {
+	for(int i = 1; i <= ITEMS_IN_WINDOW; i++) {
 		std::ostringstream sout;
 		sout << "item" << i << "-key";
 		itemDialog[sout.str()].attachKey({false, static_cast<unsigned char>('`' + i), mod_none});
