@@ -648,6 +648,8 @@ static void reset_talk_words() {
 	
 	// Place buttons at bottom.
 	for(short i = 0; i < preset_words.size(); i++) {
+		if(talk_end_forced && i != 6 && i != 5) continue;
+
 		std::string word = preset_words[i];
 		location tl = preset_word_locs[i];
 		location br = tl;
@@ -1185,6 +1187,7 @@ void handle_talk_node(int which_talk_entry) {
 	}
 	
 	place_talk_str(save_talk_str1,save_talk_str2,0,dummy_rect);
+	reset_talk_words();
 }
 
 bool handle_talk_event(location p, cFramerateLimiter& fps_limiter) {

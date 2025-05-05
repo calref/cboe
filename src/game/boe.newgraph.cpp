@@ -991,16 +991,18 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	std::vector<hilite_t> hilites;
 	std::vector<int> nodes;
 	int wordStart = 0, wordEnd = 0;
-	for(size_t i = 0; i < str.length(); i++) {
-		char c = str[i];
-		if(isalpha(c) || c == '-' || c == '\'') {
-			if(wordStart <= wordEnd) wordStart = i;
-		} else if(wordEnd <= wordStart) {
-			wordEnd = i;
-			short node = scan_for_response(str.c_str() + wordStart);
-			if(node >= 0) {
-				nodes.push_back(node);
-				hilites.push_back({wordStart, wordEnd});
+	if(!talk_end_forced){
+		for(size_t i = 0; i < str.length(); i++) {
+			char c = str[i];
+			if(isalpha(c) || c == '-' || c == '\'') {
+				if(wordStart <= wordEnd) wordStart = i;
+			} else if(wordEnd <= wordStart) {
+				wordEnd = i;
+				short node = scan_for_response(str.c_str() + wordStart);
+				if(node >= 0) {
+					nodes.push_back(node);
+					hilites.push_back({wordStart, wordEnd});
+				}
 			}
 		}
 	}
