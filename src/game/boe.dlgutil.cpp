@@ -2080,7 +2080,8 @@ class cFilePicker {
 	}
 
 	bool doCloseDummyPicker() {
-		me.setResult("");
+		fs::path p {""};
+		me.setResult(p);
 		me.toast(false);
 		return true;
 	}
