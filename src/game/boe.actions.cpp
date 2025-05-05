@@ -3597,11 +3597,15 @@ void handle_death() {
 		// Use death (or leave Exile) dialog
 		choice = cChoiceDlog("party-death",{"load","new","quit"}).show();
 		
-		if(choice == "quit") {
+		if(choice == "quit"){
 			All_Done = true;
 			return;
 		}
-		else if(choice == "load") {
+		else if(choice == "load"){
+			// When replaying, the fancy file picker and/or load are recorded as actions next
+			if(replaying){
+				break;
+			}
 			fs::path file_to_load = run_file_picker(false);
 			if(!file_to_load.empty()){
 				if(load_party(file_to_load, univ)){
