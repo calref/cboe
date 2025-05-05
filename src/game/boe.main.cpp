@@ -223,6 +223,7 @@ static void handleFatalError(std::string what) {
 		record_action("error", what);
 		recording = false; // Don't record click_control on the error message
 	}
+	replaying = false; // Don't try to run replay actions in the fatal error dialog
 	showFatalError(what);
 	if(was_recording){
 		extern fs::path log_file;

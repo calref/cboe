@@ -603,7 +603,9 @@ void cDialog::handle_events() {
 			pop_next_action();
 		}else if(replaying && has_next_action()){
 			replaying = false;
-			throw std::string { "Replaying a dialog, have the wrong replay action: " + next_action_type() + " on line " + std::to_string(next_action_line()) };
+			std::string type =  next_action_type();
+			std::string line =  std::to_string(next_action_line());
+			throw std::string { "Replaying a dialog, have the wrong replay action: " + type + " on line " + line};
 		}else{
 			while(pollEvent(win, currentEvent)){
 				handle_one_event(currentEvent, fps_limiter);
