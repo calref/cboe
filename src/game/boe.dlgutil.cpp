@@ -806,29 +806,34 @@ void handle_talk_node(int which_talk_entry) {
 		case TALK_DUNNO:
 		SPECIAL_DUNNO:
 			save_talk_str1 = univ.town.cur_talk().people[store_personality % 10].dunno;
+			save_talk_str2 = "";
 			if(save_talk_str1.length() < 2) save_talk_str1 = "You get no response.";
 			place_talk_str(save_talk_str1, "", 0, dummy_rect);
 			update_last_talk(TALK_DUNNO);
 			return;
 		case TALK_BUSINESS: // This one only reachable via "go back".
 			place_talk_str("You conclude your business.", "", 0, dummy_rect);
+			save_talk_str2 = "";
 			update_last_talk(TALK_BUSINESS);
 			return;
 		case TALK_LOOK:
 		SPECIAL_LOOK:
 			save_talk_str1 = univ.town.cur_talk().people[store_personality % 10].look;
+			save_talk_str2 = "";
 			place_talk_str(save_talk_str1, "", 0, dummy_rect);
 			update_last_talk(TALK_LOOK);
 			return;
 		case TALK_NAME:
 		SPECIAL_NAME:
 			save_talk_str1 = univ.town.cur_talk().people[store_personality % 10].name;
+			save_talk_str2 = "";
 			place_talk_str(save_talk_str1, "", 0, dummy_rect);
 			update_last_talk(TALK_NAME);
 			return;
 		case TALK_JOB:
 		SPECIAL_JOB:
 			save_talk_str1 = univ.town.cur_talk().people[store_personality % 10].job;
+			save_talk_str2 = "";
 			place_talk_str(save_talk_str1, "", 0, dummy_rect);
 			update_last_talk(TALK_JOB);
 			return;
