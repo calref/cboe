@@ -857,6 +857,7 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 		rectangle cost_rect = shopping_rects[i][SHOPRECT_ITEM_COST];
 		cost_rect.left = cost_rect.right - string_length(cur_name, style) - 10;
 		win_draw_string(talk_gworld(),cost_rect,cur_name,eTextMode::WRAP,style);
+		// Draw the coin
 		cost_rect.left = cost_rect.right - 7;
 		cost_rect.top += 3;
 		cost_rect.height() = 7;

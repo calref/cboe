@@ -476,6 +476,7 @@ void handle_sale(int i) {
 
 	// This looks to be redundant, but I'm just preserving the previous behavior of the code.
 	set_up_shop_array();
+	init_shopping_rects(shop_sbar->getMaximum() > 0);
 	draw_shop_graphics(false,false,{});
 
 	// When buying from a healer, we want to select the next PC who needs healing

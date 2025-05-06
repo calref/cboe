@@ -157,6 +157,10 @@ void init_shopping_rects(bool scrollbar) {
 	shopping_rects[0][SHOPRECT_ITEM_HELP].bottom -= 21;
 	shopping_rects[0][SHOPRECT_ITEM_HELP].right -= 19;
 	shopping_rects[0][SHOPRECT_ITEM_HELP].left = shopping_rects[0][SHOPRECT_ITEM_HELP].right - 14;
+	// Utilize the extra space on the right side if no scrollbar is shown
+	int offset_right = scrollbar ? -4 : 12;
+	shopping_rects[0][SHOPRECT_ITEM_COST].offset(offset_right, 0);
+	shopping_rects[0][SHOPRECT_ITEM_HELP].offset(offset_right, 0);
 
 	// Define rectangles for the next 7 rows by copying and offsetting
 	for(short i = 1; i < 8; i++) {
