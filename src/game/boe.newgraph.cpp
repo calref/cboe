@@ -698,7 +698,7 @@ graf_pos calc_item_rect(int num,rectangle& to_rect) {
 
 // mode 1 - drawing dark for button press
 void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle clip_area_rect) {
-	rectangle area_rect,item_info_from = {11,42,24,56};
+	rectangle area_rect,item_info_from = {12,42,24,56};
 	
 	rectangle face_rect = {6,6,38,38};
 	rectangle title_rect = {15,48,42,260};
