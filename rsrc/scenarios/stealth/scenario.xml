@@ -760,5 +760,6 @@
             <item chance="8">18</item>
             <item chance="15">0</item>
         </storage>
+        <sdf row="349" col="0">icy tunnels voice</sdf>
     </editor>
 </scenario>
