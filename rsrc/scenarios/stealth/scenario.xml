@@ -415,7 +415,7 @@
             <name>Canizares&apos; Herbs</name>
             <type>live</type>
             <prompt>shop</prompt>
-            <face>0</face>
+            <face>43</face>
             <entries>
                 <item quantity="infinite">363</item>
                 <item quantity="infinite">364</item>
@@ -425,7 +425,7 @@
             <name>Canizares&apos; Potions</name>
             <type>live</type>
             <prompt>shop</prompt>
-            <face>0</face>
+            <face>43</face>
             <entries>
                 <item quantity="infinite">260</item>
                 <item quantity="infinite">261</item>
@@ -435,7 +435,7 @@
             </entries>
         </shop>
         <shop>
-            <name></name>
+            <name>Canizares&apos; Recipes</name>
             <type>dead</type>
             <prompt>alch</prompt>
             <face>43</face>
