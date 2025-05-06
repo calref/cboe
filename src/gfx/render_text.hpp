@@ -60,6 +60,7 @@ enum class eTextMode {
 	CENTRE,
 	LEFT_TOP,
 	LEFT_BOTTOM,
+	ELLIPSIS,
 };
 
 std::vector<rectangle> draw_string_hilite(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr);

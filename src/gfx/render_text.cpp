@@ -261,7 +261,23 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 		}
 	}
 
-	if(mode == eTextMode::WRAP) {
+	if(mode == eTextMode::ELLIPSIS){
+		size_t length = string_length(str, options.style);
+		if(length > dest_rect.width()){
+			size_t ellipsis_length = string_length("...", options.style);
+
+			size_t need_to_clip = length - dest_rect.width() + ellipsis_length;
+			int clip_idx = str.size() - 1;
+			// clip_idx should never reach 0
+			for(; clip_idx >= 0; --clip_idx){
+				size_t clip_length = string_length(str.substr(clip_idx), options.style);
+				if(clip_length >= need_to_clip) break;
+			}
+			str = str.substr(0, clip_idx) + "...";
+		}
+		mode = eTextMode::LEFT_TOP;
+	}
+	if(mode == eTextMode::WRAP){
 		break_info_t break_info = options.break_info;
 
 		// It is better to pre-calculate line-wrapping and pass it in the options,
@@ -364,7 +380,7 @@ std::vector<snippet_t> draw_string_sel(sf::RenderTarget& dest_window,rectangle d
 	return params.snippets;
 }
 
-std::set<std::string> strings_to_cache = {" "};
+std::set<std::string> strings_to_cache = {" ", "..."};
 
 size_t string_length(std::string str, const TextStyle& style, short* height){
 	size_t total_width = 0;
