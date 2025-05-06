@@ -76,6 +76,7 @@ bool map_visible = false;
 extern std::string save_talk_str1, save_talk_str2;
 extern cDrawableManager drawable_mgr;
 extern void close_map(bool record = false);
+extern sf::View mainView;
 
 extern location mouse_window_coords();
 extern bool mouse_to_terrain_coords(location& out_loc, bool relative);
@@ -1471,6 +1472,13 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	if(is_out())
 		return;
 	
+	mainPtr().setView(mainPtr().getDefaultView());
+	put_background();
+	mainPtr().setView(mainView);
+	draw_terrain();
+	refresh_text_bar();
+	UI::toolbar.draw(mainPtr());
+
 	// Redraw terrain in proper position
 	if(((!point_onscreen(center,where) && is_combat()) || (overall_mode == MODE_OUTDOORS))
 		) {
