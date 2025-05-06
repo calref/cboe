@@ -820,7 +820,7 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 				const cAlchemy& info = *(eAlchemy(base_item.item_level));
 				cur_info_str = get_str("item-abilities", int(info.ingred1) + 1);
 				if(info.ingred2 != eItemAbil::NONE) {
-					cur_info_str += " and " + get_str("item-abilities", int(info.ingred2) + 1);
+					cur_info_str += " & " + get_str("item-abilities", int(info.ingred2) + 1);
 				}
 			} break;
 			case eShopItemType::MAGE_SPELL:
@@ -862,7 +862,8 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 		cost_rect.height() = 7;
 		rect_draw_some_item(invenbtn_gworld, {0, 29, 7, 36}, talk_gworld(), cost_rect, sf::BlendAlpha);
 		style.pointSize = 10;
-		win_draw_string(talk_gworld(),shopping_rects[i][SHOPRECT_ITEM_EXTRA],cur_info_str,eTextMode::WRAP,style);
+		// Alchemy ingredients often don't fit
+		win_draw_string(talk_gworld(),shopping_rects[i][SHOPRECT_ITEM_EXTRA],cur_info_str,eTextMode::ELLIPSIS,style);
 		rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld(),shopping_rects[i][SHOPRECT_ITEM_HELP],item_help_pressed ? sf::BlendNone : sf::BlendAlpha);
 	}
 	

@@ -14,6 +14,7 @@ struct key_action_t {
     void (*action)();
 };
 
+void init_shopping_rects(bool scrollbar);
 void init_inven_rects();
 void init_screen_locs();
 location mouse_window_coords();

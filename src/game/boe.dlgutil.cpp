@@ -106,6 +106,7 @@ short active_shop_num;
 short store_cur_pc = -1;
 
 extern void init_inven_rects();
+extern void init_shopping_rects(bool scrollbar);
 
 // For healing shops, other PCs might be able to buy something if
 // the active PC can't
@@ -184,6 +185,7 @@ bool start_shop_mode(short which,short cost_adj,std::string store_name, bool can
 
 	put_background();
 	
+	init_shopping_rects(shop_sbar->getMaximum() > 0);
 	draw_shop_graphics(false,false,area_rect);
 	
 	put_item_screen(stat_window);

@@ -134,11 +134,14 @@ bool end_scenario = false;
 // This is defined in pc.editors.cpp since the PC editor also uses it
 extern void edit_stuff_done();
 
-static void init_shopping_rects() {
+extern std::vector<int> shop_array;
+
+void init_shopping_rects(bool scrollbar) {
 	rectangle shop_base = {63,19,99,274};
 	
 	std::fill(shopping_rects[0].begin(), shopping_rects[0].end(), shop_base);
 
+	// Define first row of rectangles for shop item UI
 	shopping_rects[0][SHOPRECT_ACTIVE_AREA].right -= 35;
 	shopping_rects[0][SHOPRECT_GRAPHIC].right = shopping_rects[0][SHOPRECT_GRAPHIC].left + 28;
 	shopping_rects[0][SHOPRECT_KEY].right = shopping_rects[0][SHOPRECT_GRAPHIC].left;
@@ -155,11 +158,25 @@ static void init_shopping_rects() {
 	shopping_rects[0][SHOPRECT_ITEM_HELP].right -= 19;
 	shopping_rects[0][SHOPRECT_ITEM_HELP].left = shopping_rects[0][SHOPRECT_ITEM_HELP].right - 14;
 
+	// Define rectangles for the next 7 rows by copying and offsetting
 	for(short i = 1; i < 8; i++) {
 		for(auto& j : shopping_rects[i].keys()) {
 			shopping_rects[i][j] = shopping_rects[0][j];
 			shopping_rects[i][j].offset(0,i * 36);
 		}
+	}
+	TextStyle style;
+	style.font = FONT_BOLD;
+	style.pointSize = 12;
+	style.lineHeight = 12;
+	for(short i = 0; i < 8; i++) {
+		// Truncate item descriptions so the text doesn't clash with the cost number
+		size_t current_pos = i + shop_sbar->getPosition();
+		if(current_pos >= shop_array.size() || shop_array[current_pos] < 0)
+			break; // theoretically, the second condition shouldn't happen
+		cShopItem item = active_shop.getItem(shop_array[current_pos]);
+		std::string cur_cost = std::to_string(item.getCost(active_shop.getCostAdjust()));
+		shopping_rects[i][SHOPRECT_ITEM_EXTRA].right = shopping_rects[i][SHOPRECT_ITEM_COST].right - string_length(cur_cost, style);
 	}
 }
 
