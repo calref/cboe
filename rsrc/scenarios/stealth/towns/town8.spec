@@ -27,7 +27,7 @@
 	ex2 -1, -1, -1
 	goto -1
 @once-dlog = 4
-	sdf -1, -1
+	sdf 349, 0
 	msg 11, -1, 1
 	pic 8, 4
 	ex1 -1, -1, -1
