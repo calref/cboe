@@ -1773,7 +1773,11 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 							item_hit = item_sbar->getPosition() + i;
 							switch(j) {
 								case ITEMBTN_NAME: case ITEMBTN_ICON: // equip
-									handle_equip_item(item_hit, need_redraw);
+									if(stat_window >= ITEM_WIN_SPECIAL){
+										show_item_info(item_hit);
+									}else{
+										handle_equip_item(item_hit, need_redraw);
+									}
 									break;
 								case ITEMBTN_USE:
 									handle_use_item(item_hit, did_something, need_redraw);

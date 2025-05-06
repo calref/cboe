@@ -273,6 +273,7 @@ void put_item_screen(eItemWinMode screen_num) {
 				if(i_num < spec_item_array.size()) {
 					draw_item_string(i, univ.scenario.special_items[spec_item_array[i_num]].name, FONT_BOLD, Colours::BLACK);
 					
+					item_area_button_active[i][ITEMBTN_NAME] = true;
 					place_item_button(i,ITEMBTN_INFO);
 					if((univ.scenario.special_items[spec_item_array[i_num]].flags % 10 == 1)
 						&& (!(is_combat()))){
@@ -302,6 +303,7 @@ void put_item_screen(eItemWinMode screen_num) {
 						draw_line(item_stats_gworld(), from, to, 1, Colours::GREEN);
 					}
 					
+					item_area_button_active[i][ITEMBTN_NAME] = true;
 					place_item_button(i,ITEMBTN_INFO);
 				}
 			}
