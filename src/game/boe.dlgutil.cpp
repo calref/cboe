@@ -105,6 +105,8 @@ cShop active_shop;
 short active_shop_num;
 short store_cur_pc = -1;
 
+extern void init_inven_rects();
+
 // For healing shops, other PCs might be able to buy something if
 // the active PC can't
 static bool start_shop_mode_other_pc(bool allow_empty = false, bool already_started = false) {
@@ -256,6 +258,7 @@ void end_shop_mode() {
 			univ.party.store_limited_stock[active_shop_num][i] = left;
 		}
 	}
+	init_inven_rects();
 }
 
 bool handle_shop_event(location p, cFramerateLimiter& fps_limiter) {
@@ -731,6 +734,7 @@ void end_talk_mode() {
 	put_pc_screen();
 	// TODO: I suspect REFRESH_NONE will suffice here
 	redraw_screen(REFRESH_TERRAIN | REFRESH_BAR);
+	init_inven_rects();
 }
 
 static void fill_job_bank(cDialog& me, job_bank_t& bank, std::string) {
@@ -1214,6 +1218,8 @@ bool handle_talk_event(location p, cFramerateLimiter& fps_limiter) {
 		break;
 	}
 	handle_talk_node(which_talk_entry);
+	// Update hitboxes of the inventory in case sell/identify/recharge mode started
+	init_inven_rects();
 	return clicked_word || p.in(rectangle(talk_gworld()));
 }
 

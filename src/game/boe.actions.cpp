@@ -163,21 +163,8 @@ static void init_shopping_rects() {
 	}
 }
 
-void init_screen_locs() {
-	init_shopping_rects();
-	
-	rectangle startup_base = {281,1,329,302};
-	
-	for(auto btn : startup_button.keys()) {
-		startup_button[btn] = startup_base;
-		startup_button[btn].offset(301 * (btn / 3), 48 * (btn % 3));
-	}
-	startup_top.top = 7;
-	startup_top.bottom = startup_button[STARTBTN_TUTORIAL].top;
-	startup_top.left = startup_base.left;
-	startup_top.right = startup_button[STARTBTN_NEW].right;
-	
-	// icon, name, use, give, drip, info, sell/id   each one 13 down
+void init_inven_rects() {
+	// icon, name, use, give, drop, info, sell/id   each one 13 down
 	item_buttons[0][ITEMBTN_ICON].top = 15;
 	item_buttons[0][ITEMBTN_ICON].bottom = item_buttons[0][ITEMBTN_ICON].top + 18;
 	item_buttons[0][ITEMBTN_ICON].left = 20;
@@ -205,25 +192,34 @@ void init_screen_locs() {
 	item_buttons[0][ITEMBTN_SPEC] = item_buttons[0][ITEMBTN_NAME];
 	item_buttons[0][ITEMBTN_SPEC].left = 173;
 	item_buttons[0][ITEMBTN_SPEC].right = 232;
+	// If extra buttons are visible on the item window, truncate the hitbox of the name, or else it will steal button clicks
+	if(stat_screen_mode >= MODE_IDENTIFY){
+		item_buttons[0][ITEMBTN_NAME].right = item_buttons[0][ITEMBTN_SPEC].left;
+	}
+
 	item_buttons[0][ITEMBTN_NAME].top += 3;
 	for(short i = 1; i < 8; i++)
 		for(auto j : item_buttons[i].keys()) {
 			item_buttons[i][j] = item_buttons[0][j];
 			item_buttons[i][j].offset(0,13 * i);
 		}
-	
-/*	for(short i = 0; i < 8; i++) {
-		item_screen_button_rects[i] = bottom_base;
-		OffsetRect(&item_screen_button_rects[i],10 + i * 29,126);
+}
+
+void init_screen_locs() {
+	init_shopping_rects(true);
+
+	rectangle startup_base = {281,1,329,302};
+
+	for(auto btn : startup_button.keys()) {
+		startup_button[btn] = startup_base;
+		startup_button[btn].offset(301 * (btn / 3), 48 * (btn % 3));
 	}
-	item_screen_button_rects[6].left = 176;
-	item_screen_button_rects[6].right = 211;
-	item_screen_button_rects[7].left = 213;
-	item_screen_button_rects[7].right = 248;
-	item_screen_button_rects[8].top = 127;
-	item_screen_button_rects[8].bottom = 140;
-	item_screen_button_rects[8].left = 251;
-	item_screen_button_rects[8].right = 267; */
+	startup_top.top = 7;
+	startup_top.bottom = startup_button[STARTBTN_TUTORIAL].top;
+	startup_top.left = startup_base.left;
+	startup_top.right = startup_button[STARTBTN_NEW].right;
+	
+	init_inven_rects();
 	
 	// name, hp, sp, info, trade
 	pc_buttons[0][PCBTN_NAME].top = 18;
