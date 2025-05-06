@@ -941,6 +941,8 @@ void click_talk_rect(word_rect_t word) {
 	place_talk_face();
 }
 
+extern std::vector<std::string> preset_words;
+
 // color 0 - regular  1 - darker
 void place_talk_str(std::string str_to_place,std::string str_to_place2,short color,rectangle c_rect) {
 	rectangle area_rect;
@@ -981,9 +983,12 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		style.colour = PRESET_WORD_OFF;
 	else 
 		style.colour = PRESET_WORD_ON;
-	for(short i = 0; i < 9; i++) {
-		if(!talk_end_forced || i == 6 || i == 5)
+	int i = 0;
+	for(std::string preset : preset_words) {
+		if(talk_words[i].word == preset){
 			win_draw_string(talk_gworld(),talk_words[i].rect,talk_words[i].word,eTextMode::LEFT_TOP,style);
+			i++;
+		}
 	}
 	
 	style.colour = Colours::NAVY; 
