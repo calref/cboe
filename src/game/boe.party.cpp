@@ -1713,10 +1713,10 @@ static void put_target_status_graphics(cDialog& me, short for_pc) {
 static void draw_spell_pc_info(cDialog& me) {
 	for(short i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
+		me["arrow" + n].hide();
+		put_target_status_graphics(me, i);
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			me["pc" + n].setText(univ.party[i].name);
-			
-			me["arrow" + n].hide();
 			if(univ.party[i].main_status == eMainStatus::ALIVE) {
 				me["hp" + n].setTextToNum(univ.party[i].cur_health);
 				me["sp" + n].setTextToNum(univ.party[i].cur_sp);
@@ -1724,7 +1724,6 @@ static void draw_spell_pc_info(cDialog& me) {
 				me["hp" + n].setText("");
 				me["sp" + n].setText("");
 			}
-			put_target_status_graphics(me, i);
 		}
 	}
 }
