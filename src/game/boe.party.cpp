@@ -2348,6 +2348,12 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 	// but -1 is the new value for "use default"
 	sound_type = get_sound_type(damage_type, sound_type);
 
+	int boom_type = boom_gr[damage_type];
+
+	// Acid doesn't actually have its own damage type in classic BoE
+	if(damage_type == eDamageType::ACID)
+		damage_type = eDamageType::MAGIC;
+
 	// armor
 	if(damage_type == eDamageType::WEAPON || damage_type == eDamageType::UNDEAD || damage_type == eDamageType::DEMON) {
 		how_much -= minmax(-5,5,which_pc.status[eStatus::BLESS_CURSE]);
@@ -2471,10 +2477,10 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 			add_string_to_buf("  " + which_pc.name + " takes " + std::to_string(how_much) + '.');
 		if(damage_type != eDamageType::MARKED) {
 			if(is_combat())
-				boom_space(which_pc.combat_pos,overall_mode,boom_gr[damage_type],how_much,sound_type);
+				boom_space(which_pc.combat_pos,overall_mode,boom_type,how_much,sound_type);
 			else if(is_town())
-				boom_space(univ.party.town_loc,overall_mode,boom_gr[damage_type],how_much,sound_type);
-			else boom_space(univ.party.town_loc,100,boom_gr[damage_type],how_much,sound_type);
+				boom_space(univ.party.town_loc,overall_mode,boom_type,how_much,sound_type);
+			else boom_space(univ.party.town_loc,100,boom_type,how_much,sound_type);
 		}
 		// TODO: When outdoors it flushed only key events, not mouse events. Why?
 		flushingInput = true;

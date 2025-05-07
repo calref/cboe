@@ -61,6 +61,7 @@ std::map<eDamageType,int> boom_gr = {
 	{eDamageType::FIRE, 0},
 	{eDamageType::POISON, 2},
 	{eDamageType::MAGIC, 1},
+	{eDamageType::ACID, 3}, // TODO add an acid graphic
 	{eDamageType::UNBLOCKABLE, 5},
 	{eDamageType::COLD, 4},
 	{eDamageType::UNDEAD, 3},
@@ -1430,6 +1431,8 @@ short get_sound_type(eDamageType dam_type, short forced_sound_type) {
 		sound_type = 0;
 		if(dam_type == eDamageType::FIRE || dam_type == eDamageType::UNBLOCKABLE)
 			sound_type = 5;
+		else if(dam_type == eDamageType::ACID)
+			sound_type = 8;
 		else if(dam_type == eDamageType::COLD)
 			sound_type = 7;
 		else if(dam_type == eDamageType::MAGIC)
@@ -1464,6 +1467,12 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 	// but -1 is the new value for "use default"
 	sound_type = get_sound_type(dam_type, sound_type);
 	
+	int boom_type = boom_gr[dam_type];
+
+	// Acid doesn't actually have its own damage type in classic BoE
+	if(dam_type == eDamageType::ACID)
+		dam_type = eDamageType::MAGIC;
+
 	if(dam_type < eDamageType::SPECIAL) {
 		how_much = percent(how_much, victim.resist[dam_type]);
 	}
@@ -1555,10 +1564,10 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 	
 	if(dam_type != eDamageType::MARKED) {
 		if(party_can_see_monst(univ.get_target_i(victim) - 100)) {
-			boom_space(victim.cur_loc,100,boom_gr[dam_type],how_much,sound_type);
+			boom_space(victim.cur_loc,100,boom_type,how_much,sound_type);
 		}
 		else {
-			boom_space(victim.cur_loc,overall_mode, boom_gr[dam_type],how_much,sound_type);
+			boom_space(victim.cur_loc,overall_mode, boom_type,how_much,sound_type);
 		}
 	}
 	

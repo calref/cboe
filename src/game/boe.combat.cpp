@@ -2512,7 +2512,7 @@ void do_monster_turn() {
 					printed_acid = true;
 				}
 				r1 = get_ran(cur_monst->status[eStatus::ACID],1,6);
-				damage_monst(*cur_monst, 6,r1, eDamageType::MAGIC);
+				damage_monst(*cur_monst, 6,r1, eDamageType::ACID);
 				cur_monst->status[eStatus::ACID]--;
 			}
 			
@@ -2728,6 +2728,7 @@ void monster_attack(short who_att,iLiving* target) {
 									case eDamageType::MARKED: break; // Invalid
 									case eDamageType::FIRE: add_string_to_buf("  Burning touch!"); break;
 									case eDamageType::COLD: add_string_to_buf("  Freezing touch!"); break;
+									case eDamageType::ACID: add_string_to_buf("  Acid touch!"); break;
 									case eDamageType::MAGIC: add_string_to_buf("  Shocking touch!"); break;
 									case eDamageType::SPECIAL:
 									case eDamageType::UNBLOCKABLE: add_string_to_buf("  Eerie touch!"); break;
@@ -4417,7 +4418,7 @@ void handle_acid() {
 			if(pc.main_status == eMainStatus::ALIVE)
 				if(pc.status[eStatus::ACID] > 0) {
 					r1 = get_ran(pc.status[eStatus::ACID],1,6);
-					damage_pc(pc,r1,eDamageType::MAGIC,eRace::UNKNOWN);
+					damage_pc(pc,r1,eDamageType::ACID,eRace::UNKNOWN);
 					move_to_zero(pc.status[eStatus::ACID]);
 				}
 		if(!is_combat())
