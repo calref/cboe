@@ -1396,11 +1396,12 @@ void draw_map(bool need_refresh) {
 
 		map_gworld().setActive();
 		
-		fill_rect(map_gworld(), map_world_rect, sf::Color::Black);
-		
 		// Now, if shopping or talking, just don't touch anything.
 		if((overall_mode == MODE_SHOPPING) || (overall_mode == MODE_TALKING))
 			redraw_rect.right = -1;
+		// Otherwise, clear to black first:
+		else
+			fill_rect(map_gworld(), map_world_rect, sf::Color::Black);
 		
 		if((is_out()) ||
 			((is_combat()) && (which_combat_type == 0)) ||
