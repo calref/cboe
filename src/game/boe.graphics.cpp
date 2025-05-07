@@ -1687,8 +1687,9 @@ void draw_targeting_line() {
 	if(overall_mode >= MODE_COMBAT)
 		from_loc = univ.current_pc().combat_pos;
 	else from_loc = univ.party.town_loc;
-	if((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
-		|| ((overall_mode == MODE_TOWN_TARGET) && (current_pat[4][4] != 0))) {
+	extern bool targeting_line_visible;
+	if(targeting_line_visible && ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
+		|| ((overall_mode == MODE_TOWN_TARGET) && (current_pat[4][4] != 0)))) {
 		
 		if(mouse_to_terrain_coords(which_space, false)) {
 			int xBound = (short) (from_loc.x - center.x + 4);

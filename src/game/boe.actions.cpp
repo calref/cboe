@@ -848,6 +848,12 @@ void handle_target_space(location destination, bool& did_something, bool& need_r
 		info["num_targets_left"] = boost::lexical_cast<std::string>(num_targets_left);
 		record_action("handle_target_space", info);
 	}
+	// Fix the targeting line drawing for one frame after the casting animation finishes:
+	if(overall_mode != MODE_FANCY_TARGET){
+		extern bool targeting_line_visible;
+		targeting_line_visible = false;
+	}
+
 	if(overall_mode == MODE_SPELL_TARGET)
 		do_combat_cast(destination);
 	else if(overall_mode == MODE_THROWING || overall_mode == MODE_FIRING)
@@ -2914,6 +2920,8 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case ' ':
 			if(overall_mode == MODE_FANCY_TARGET) {
+				extern bool targeting_line_visible;
+				targeting_line_visible = false;
 				// cast multi-target spell, set # targets to 0 so that space clicked doesn't matter
 				num_targets_left = 0;
 				handle_target_space(center, did_something, need_redraw, need_reprint);

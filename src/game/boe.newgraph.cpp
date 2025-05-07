@@ -1062,8 +1062,11 @@ short scan_for_response(const char *str) {
 	return -1;
 }
 
+bool targeting_line_visible = false;
+
 void handle_target_mode(eGameMode target_mode, int range, eSpell spell) {
 	overall_mode = target_mode;
+	targeting_line_visible = true;
 	// Lock on to enemies in range: 
 	if(has_feature_flag("target-lock", "V1") && get_bool_pref("TargetLock", true)){
 		// Skip this for spells that don't target enemies

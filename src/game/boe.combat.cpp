@@ -838,6 +838,8 @@ void place_target(location target) {
 	}
 	
 	if(num_targets_left == 0) {
+		extern bool targeting_line_visible;
+		targeting_line_visible = false;
 		do_combat_cast(spell_targets[0]);
 		overall_mode = MODE_COMBAT;
 	}
