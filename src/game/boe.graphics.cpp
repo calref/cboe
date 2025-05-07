@@ -753,26 +753,35 @@ void put_text_bar(std::string str, std::string right_str) {
 	to_rect.top += 7;
 	to_rect.left += 5;
 	to_rect.right -= 5;
-	win_draw_string(text_bar_gworld(), to_rect, str, eTextMode::LEFT_TOP, style);
+
+	size_t filled_on_right = 0;
+
 	// the recast hint will replace status icons:
 	if(!right_str.empty()){
+		filled_on_right = string_length(" " + right_str, style);
 		// Style has to be wrap to get right-alignment
 		win_draw_string(text_bar_gworld(), to_rect, right_str, eTextMode::WRAP, style, true);
-	}else if(!monsters_going) {
+	}else if(!monsters_going){
 		sf::Texture& status_gworld = *ResMgr::graphics.get("staticons");
-		to_rect.top -= 2;
-		to_rect.left = to_rect.right - 15;
-		to_rect.width() = 12;
-		to_rect.height() = 12;
+		rectangle icon_rect = to_rect;
+		icon_rect.top -= 2;
+		icon_rect.left = to_rect.right - 15;
+		icon_rect.width() = 12;
+		icon_rect.height() = 12;
 		for(auto next : univ.party.status) {
 			const auto& statInfo = *next.first;
 			if(next.second > 0) {
-				rect_draw_some_item(status_gworld, get_stat_effect_rect(statInfo.icon), text_bar_gworld(), to_rect, sf::BlendAlpha);
-				to_rect.offset(-15, 0);
+				rect_draw_some_item(status_gworld, get_stat_effect_rect(statInfo.icon), text_bar_gworld(), icon_rect, sf::BlendAlpha);
+				icon_rect.offset(-15, 0);
+				filled_on_right += 15;
 			}
 		}
 	}
 	
+	// The recast hint and status icons will never take more than half the text bar. Give the name/AP/location string the rest.
+	to_rect.right -= filled_on_right;
+	win_draw_string(text_bar_gworld(), to_rect, str, eTextMode::ELLIPSIS, style);
+
 	text_bar_gworld().setActive();
 	text_bar_gworld().display();
 }
