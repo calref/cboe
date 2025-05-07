@@ -13,12 +13,12 @@
 	<button name='caster6' type='regular' def-key='6' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0'><key/></button>
 	<!-- PC names -->
 	<text name='pc-head' size='large' relative='pos-in pos-in' anchor='caster-head' top='0' left='66' width='75' height='16'></text><!-- Just for positioning-->
-	<text name='pc1' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='122' height='16'/>
-	<text name='pc2' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='122' height='16'/>
-	<text name='pc3' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='122' height='16'/>
-	<text name='pc4' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='122' height='16'/>
-	<text name='pc5' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='122' height='16'/>
-	<text name='pc6' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='122' height='16'/>
+	<text name='pc1' ellipsis='true' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='122' height='16'/>
+	<text name='pc2' ellipsis='true' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='122' height='16'/>
+	<text name='pc3' ellipsis='true' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='122' height='16'/>
+	<text name='pc4' ellipsis='true' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='122' height='16'/>
+	<text name='pc5' ellipsis='true' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='122' height='16'/>
+	<text name='pc6' ellipsis='true' relative='pos-in pos-in' rel-anchor='prev' top='24' left='0' width='122' height='16'/>
 	<!-- To the right of PC name, buttons to select target -->
 	<text name='target-head' size='large' relative='pos-in pos-in' anchor='pc-head' top='0' left='112' width='223' height='16'>Target:</text>
 	<button name='target1' type='small' def-key='shift 1' relative='pos-in pos-in' rel-anchor='prev' top='19' left='6'><key/></button>

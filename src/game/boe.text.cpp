@@ -135,7 +135,7 @@ void put_pc_screen() {
 			
 			std::ostringstream sout;
 			sout << i + 1 << ". " << univ.party[i].name;
-			win_draw_string(pc_stats_gworld(),pc_buttons[i][PCBTN_NAME],sout.str(),eTextMode::WRAP,style);
+			win_draw_string(pc_stats_gworld(),pc_buttons[i][PCBTN_NAME],sout.str(),eTextMode::ELLIPSIS,style);
 			style.italic = false;
 			style.colour = Colours::BLACK;
 			
@@ -253,7 +253,7 @@ void put_item_screen(eItemWinMode screen_num) {
 			title = sout.str();
 			break;
 	}
-	win_draw_string(item_stats_gworld(),upper_frame_rect,title,eTextMode::WRAP,title_style);
+	win_draw_string(item_stats_gworld(),upper_frame_rect,title,eTextMode::ELLIPSIS,title_style);
 
 	TextStyle line_style;
 	auto draw_item_string = [&line_style](int i, std::string str, eFont font, sf::Color colour, bool italic = false, location offset = {0, 0}){
