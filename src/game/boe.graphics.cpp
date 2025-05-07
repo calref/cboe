@@ -369,7 +369,9 @@ void draw_startup_stats() {
 				
 				style.pointSize = 14;
 				pc_rect.offset(35,0);
-				win_draw_string(mainPtr(),pc_rect,univ.party[i].name,eTextMode::WRAP,style);
+				rectangle name_rect = pc_rect;
+				name_rect.width() = frame_rect.width() * 0.4;
+				win_draw_string(mainPtr(),name_rect,univ.party[i].name,eTextMode::ELLIPSIS,style);
 				to_rect.offset(pc_rect.left + 8,pc_rect.top + 8);
 				
 			}
