@@ -1454,11 +1454,16 @@ void draw_rest_screen() {
 	overall_mode = store_mode ;
 }
 
-// if mode is 100, force
-//short type; // 0 - flame 1 - magic 2 - poison 3 - blood 4 - cold
-// 10s digit indicates sound  0 - normal ouch  1 - small sword  2 - loud sword
-// 3 - pole  4 - club  5 - fireball hit  6 - squish  7 - cold
-// 8 - acid  9 - claw  10 - bite  11 - slime  12 - zap  13 - missile hit
+// mode
+//   if 100, force
+// type
+//   0 - flame 1 - magic 2 - poison 3 - blood 4 - cold
+// sound
+//   negative - pass sound explicitly
+//   0 or more: use lookup
+//      0 - normal ouch  1 - small sword  2 - loud sword
+//      3 - pole  4 - club  5 - fireball hit  6 - squish  7 - cold
+//      8 - acid  9 - claw  10 - bite  11 - slime  12 - zap  13 - missile hit
 void boom_space(location where,short mode,short type,short damage,short sound) {
 	location where_draw(4,4);
 	rectangle source_rect = {0,0,36,28},text_rect,dest_rect = {13,13,49,41},big_to = {13,13,337,265},store_rect;
