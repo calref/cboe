@@ -2519,9 +2519,9 @@ void petrify_pc(cPlayer& which_pc,int strength) {
 		r1 = 20;
 	
 	if(r1 > 14) {
-		create_line << "  " << which_pc.name << "resists.";
+		create_line << "  " << which_pc.name << " resists.";
 	} else {
-		create_line << "  " << which_pc.name << "is turned to stone.";
+		create_line << "  " << which_pc.name << " is turned to stone.";
 		kill_pc(which_pc,eMainStatus::STONE);
 	}
 	add_string_to_buf(create_line.str());
