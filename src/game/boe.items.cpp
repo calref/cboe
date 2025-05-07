@@ -858,6 +858,7 @@ short get_num_response(short min, short max, std::string prompt, std::vector<std
 		numPanel["extra-led"].hide();
 	}else{
 		numPanel["extra-led"].setText(extra_led);
+		numPanel["extra-led"].recalcRect();
 		if(led_output != nullptr)
 			dynamic_cast<cLed&>(numPanel["extra-led"]).setState(*led_output ? led_red : led_off);
 	}
