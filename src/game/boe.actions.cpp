@@ -243,7 +243,7 @@ void init_screen_locs() {
 	init_inven_rects();
 	
 	// name, hp, sp, info, trade
-	pc_buttons[0][PCBTN_NAME].top = 18;
+	pc_buttons[0][PCBTN_NAME].top = 21;
 	pc_buttons[0][PCBTN_NAME].bottom = pc_buttons[0][PCBTN_NAME].top + 12;
 	pc_buttons[0][PCBTN_NAME].left = 3;
 	pc_buttons[0][PCBTN_NAME].right = pc_buttons[0][PCBTN_NAME].left + 177;
@@ -259,7 +259,6 @@ void init_screen_locs() {
 	pc_buttons[0][PCBTN_TRADE] = pc_buttons[0][PCBTN_NAME];
 	pc_buttons[0][PCBTN_TRADE].left = 253;
 	pc_buttons[0][PCBTN_TRADE].right = 262;
-	pc_buttons[0][PCBTN_NAME].top += 3;
 	for(short i = 1; i < 6; i++)
 		for(auto j : pc_buttons[i].keys()) {
 			pc_buttons[i][j] = pc_buttons[0][j];
