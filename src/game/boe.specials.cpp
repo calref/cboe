@@ -235,8 +235,11 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 				if(!is_blocked(where_check)) runSpecial = true;
 				if(ter_special == eTerSpec::CHANGE_WHEN_STEP_ON) runSpecial = true;
 				if(ter_special == eTerSpec::CALL_SPECIAL) runSpecial = true;
-				if(univ.town->specials[spec_num].type == eSpecType::CANT_ENTER)
+				// Prevent Action 'allow even if blocked/force allow' case:
+				cSpecial& spec = univ.town->specials[spec_num];
+				if(spec.type == eSpecType::CANT_ENTER && spec.ex2a > 0){
 					runSpecial = true;
+				}
 				if(!univ.scenario.is_legacy && univ.party.in_boat >= 0 && univ.scenario.ter_types[ter].boat_over)
 					runSpecial = true;
 				if(runSpecial) {
