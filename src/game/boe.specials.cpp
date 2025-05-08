@@ -338,7 +338,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 				break;
 			if(mode == eSpecCtx::OUT_MOVE && out_boat_there(where_check))
 				break;
-			if(ter_flag3 > 0 && ter_flag3 < 8)
+			if(ter_flag3 > 0 && ter_flag3 < int(eDamageType::SPECIAL))
 				dam_type = (eDamageType) ter_flag3;
 			else dam_type = eDamageType::WEAPON;
 			r1 = get_ran(ter_flag2,1,ter_flag1);
@@ -355,6 +355,10 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 				case eDamageType::COLD:
 					add_string_to_buf("  You feel cold!");
 					pic_type = 4;
+					break;
+				case eDamageType::ACID:
+					add_string_to_buf("  It burns!");
+					pic_type = 6;
 					break;
 				case eDamageType::SPECIAL:
 					dam_type = eDamageType::UNBLOCKABLE;
@@ -1472,16 +1476,13 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 	
 	int boom_type = boom_gr[dam_type];
 
-	// Acid doesn't actually have its own damage type in classic BoE
-	if(dam_type == eDamageType::ACID)
-		dam_type = eDamageType::MAGIC;
-
 	if(dam_type < eDamageType::SPECIAL) {
 		how_much = percent(how_much, victim.resist[dam_type]);
 	}
 	
 	// Absorb damage?
-	if((dam_type == eDamageType::FIRE || dam_type == eDamageType::MAGIC || dam_type == eDamageType::COLD)
+	std::set<eDamageType> absorbable_damage = { eDamageType::FIRE, eDamageType::MAGIC, eDamageType::COLD, eDamageType::ACID };
+	if(absorbable_damage.count(dam_type)
 		&& victim.abil[eMonstAbil::ABSORB_SPELLS].active && get_ran(1,1,1000) <= victim.abil[eMonstAbil::ABSORB_SPELLS].special.extra1) {
 		add_check_overflow(victim.health, how_much);
 		ASB("  Magic absorbed.");
@@ -1491,7 +1492,7 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 	// Saving throw
 	if((dam_type == eDamageType::FIRE || dam_type == eDamageType::COLD) && get_ran(1,0,20) <= victim.level)
 		how_much /= 2;
-	if(dam_type == eDamageType::MAGIC && (get_ran(1,0,24) <= victim.level))
+	if((dam_type == eDamageType::MAGIC || dam_type == eDamageType::ACID) && (get_ran(1,0,24) <= victim.level))
 		how_much /= 2;
 	
 	// Invulnerable?
@@ -1501,8 +1502,13 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 		how_much /= 10;
 	
 	// Mag. res helps w. fire and cold
-	// TODO: Why doesn't this help with magic damage!?
-	if(dam_type == eDamageType::FIRE || dam_type == eDamageType::COLD) {
+	static std::set<eDamageType> magic_resist_damage = { eDamageType::FIRE, eDamageType::COLD };
+	// Now it also helps with MAGIC:
+	if(has_feature_flag("magic-resistance", "fixed")){
+		magic_resist_damage.insert(eDamageType::MAGIC);
+		magic_resist_damage.insert(eDamageType::ACID);
+	}
+	if(magic_resist_damage.count(dam_type)) {
 		int magic_res = victim.status[eStatus::MAGIC_RESISTANCE];
 		if(magic_res > 0)
 			how_much /= 2;

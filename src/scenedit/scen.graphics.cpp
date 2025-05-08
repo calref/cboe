@@ -88,6 +88,7 @@ extern rectangle terrain_rects[256];
 unsigned char small_what_drawn[64][64];
 extern bool small_any_drawn;
 
+// These are at the bottom of edbuttons.png:
 static short get_small_icon(ter_num_t ter){
 	short icon = -1;
 	switch(scenario.ter_types[ter].special){
@@ -107,6 +108,9 @@ static short get_small_icon(ter_num_t ter){
 					break;
 				case eDamageType::POISON:
 					icon = 17;
+					break;
+				case eDamageType::ACID:
+					icon = 24; // green with black spots, doesn't seem to be used elsewhere
 					break;
 				case eDamageType::MAGIC:
 					icon = 20;

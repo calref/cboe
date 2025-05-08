@@ -2363,12 +2363,9 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 
 	int boom_type = boom_gr[damage_type];
 
-	// Acid doesn't actually have its own damage type in classic BoE
-	if(damage_type == eDamageType::ACID)
-		damage_type = eDamageType::MAGIC;
-
 	// armor
-	if(damage_type == eDamageType::WEAPON || damage_type == eDamageType::UNDEAD || damage_type == eDamageType::DEMON) {
+	static std::set<eDamageType> armor_resist_damage = { eDamageType::WEAPON, eDamageType::UNDEAD, eDamageType::DEMON };
+	if(armor_resist_damage.count(damage_type)) {
 		how_much -= minmax(-5,5,which_pc.status[eStatus::BLESS_CURSE]);
 		for(short i = 0; i < cPlayer::INVENTORY_SIZE; i++) {
 			const cItem& item = which_pc.items[i];
@@ -2416,6 +2413,10 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 	}
 	
 	short prot_from_dmg = which_pc.get_prot_level(eItemAbil::DAMAGE_PROTECTION,int(damage_type));
+	// Acid damage used to be magic damage, so magic protection counts as acid protection:
+	if(damage_type == eDamageType::ACID){
+		prot_from_dmg += which_pc.get_prot_level(eItemAbil::DAMAGE_PROTECTION,int(eDamageType::MAGIC));
+	}
 	if(prot_from_dmg > 0) {
 		// TODO: Why does this not depend on the ability strength if it's not weapon damage?
 		if(damage_type == eDamageType::WEAPON) how_much -= prot_from_dmg;
@@ -2447,8 +2448,13 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 		how_much = 0;
 	
 	// Mag. res helps w. fire and cold
-	// TODO: Why doesn't this help with magic damage!?
-	if(damage_type == eDamageType::FIRE || damage_type == eDamageType::COLD) {
+	static std::set<eDamageType> magic_resist_damage = { eDamageType::FIRE, eDamageType::COLD };
+	// Now it also helps with MAGIC:
+	if(has_feature_flag("magic-resistance", "fixed")){
+		magic_resist_damage.insert(eDamageType::MAGIC);
+		magic_resist_damage.insert(eDamageType::ACID);
+	}
+	if(magic_resist_damage.count(damage_type)) {
 		int magic_res = which_pc.status[eStatus::MAGIC_RESISTANCE];
 		if(magic_res > 0)
 			how_much /= 2;
@@ -2458,7 +2464,8 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 	
 	// major resistance
 	short full_prot = which_pc.get_prot_level(eItemAbil::FULL_PROTECTION);
-	if((damage_type == eDamageType::FIRE || damage_type == eDamageType::POISON || damage_type == eDamageType::MAGIC || damage_type == eDamageType::COLD)
+	std::set<eDamageType> major_resist_damage = { eDamageType::FIRE, eDamageType::POISON, eDamageType::MAGIC, eDamageType::ACID, eDamageType::COLD};
+	if(major_resist_damage.count(damage_type)
 	   && (full_prot > 0))
 		how_much = how_much / ((full_prot >= 7) ? 4 : 2);
 	

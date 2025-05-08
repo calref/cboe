@@ -118,7 +118,9 @@ std::map<std::string,std::vector<std::string>> feature_flags = {
 	{"talk-go-back", {"StackV1"}},
 	// Bugs required for several VoDT test replays to run faithfully
 	{"empty-wandering-monster-bug", {"fixed"}},
-	{"too-many-extra-wandering-monsters-bug", {"fixed"}}
+	{"too-many-extra-wandering-monsters-bug", {"fixed"}},
+	// Game balance
+	{"magic-resistance", {"fixed"}} // Resist Magic used to not help with magic damage!
 };
 
 struct cParseEntrance {

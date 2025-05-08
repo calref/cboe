@@ -595,7 +595,7 @@ void writeMonstersToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.CloseElement("attacks");
 		
 		data.OpenElement("immunity");
-		for(int i = 0; i < 8; i++) {
+		for(int i = 0; i < int(eDamageType::SPECIAL); i++) {
 			eDamageType dmg = eDamageType(i);
 			if(monst.resist[dmg] != 100)
 				data.PushElement(boost::lexical_cast<std::string>(dmg), monst.resist[dmg]);

@@ -21,10 +21,9 @@ enum class eDamageType {
 	COLD = 5,
 	UNDEAD = 6,
 	DEMON = 7,
-	// Acid is treated as magic damage but needs a value to prevent it using a zap explosion
-	ACID = -1,
+	ACID = 8,
 	// Keep these two last
-	SPECIAL = 8, // Completely unblockable damage from assassination skill
+	SPECIAL = 9, // Completely unblockable damage from assassination skill
 	MARKED = 10,
 };
 

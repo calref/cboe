@@ -221,6 +221,7 @@ static void set_pattern(cTilemap& map, const effect_pat_type& pat) {
 					case eDamageType::WEAPON: clr = Colours::MAROON; break;
 					case eDamageType::FIRE: clr = Colours::RED; break;
 					case eDamageType::POISON: clr = Colours::GREEN; break;
+					case eDamageType::ACID: clr = Colours::LIGHT_GREEN; break; // Distinct enough from green?
 					case eDamageType::MAGIC: clr = Colours::PURPLE; break;
 					case eDamageType::UNBLOCKABLE: clr = Colours::LIGHT_BLUE; break;
 					case eDamageType::COLD: clr = Colours::BLUE; break;
@@ -975,8 +976,8 @@ short choose_field_type(short cur, cDialog* parent, bool includeSpec) {
 }
 
 pic_num_t choose_damage_type(short cur, cDialog* parent, bool allow_spec) {
-	static const char*const damageNames[] = {"Weapon", "Fire", "Poison", "Magic", "Weird", "Cold", "Undead", "Demon", "Unblockable"};
-	static const std::vector<pic_num_t> pics = {3,0,2,1,5,4,3,3,1};
+	static const char*const damageNames[] = {"Weapon", "Fire", "Poison", "Magic", "Weird", "Cold", "Undead", "Demon", "Acid", "Unblockable"};
+	static const std::vector<pic_num_t> pics = {3,0,2,1,5,4,3,3,6,1};
 	short prev = cur;
 	if(cur < 0 || cur >= pics.size()) cur = 0;
 	cPictChoice pic_dlg(pics.begin(), pics.end() - !allow_spec, PIC_BOOM, parent);

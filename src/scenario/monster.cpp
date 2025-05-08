@@ -395,7 +395,7 @@ std::map<eMonstAbil,uAbility>::iterator cMonster::addAbil(eMonstAbilTemplate wha
 }
 
 cMonster::cMonster(){
-	for(int i = 0; i <= 8; i++) {
+	for(int i = 0; i <= int(eDamageType::SPECIAL); i++) {
 		eDamageType dmg = eDamageType(i);
 		resist[dmg] = 100;
 	}
@@ -560,6 +560,7 @@ std::string uAbility::to_string(eMonstAbil key) const {
 						case eDamageType::FIRE: sout << "Fiery"; break;
 						case eDamageType::COLD: sout << "Icy"; break;
 						case eDamageType::MAGIC: sout << "Shock"; break;
+						case eDamageType::ACID: sout << "Acid"; break;
 						case eDamageType::SPECIAL:
 						case eDamageType::UNBLOCKABLE: sout << "Wounding"; break;
 						case eDamageType::POISON: sout << "Pain"; break;

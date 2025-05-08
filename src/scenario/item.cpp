@@ -1037,6 +1037,7 @@ std::string cItem::getAbilName() const {
 				case eDamageType::WEAPON: sout << "Enhanced"; break;
 				case eDamageType::UNDEAD: sout << "Necrotic"; break;
 				case eDamageType::DEMON: sout << "Unholy"; break;
+				case eDamageType::ACID: sout << "Acid"; break;
 				case eDamageType::SPECIAL:
 				case eDamageType::UNBLOCKABLE: sout << "Dark"; break;
 				case eDamageType::MARKED: break; // Invalid
@@ -1079,6 +1080,7 @@ std::string cItem::getAbilName() const {
 				case eDamageType::MAGIC: sout << "in sparks"; break;
 				case eDamageType::POISON: sout << "into slime"; break;
 				case eDamageType::WEAPON: sout << "in shrapnel"; break;
+				case eDamageType::ACID: sout << "with acid"; break;
 				case eDamageType::SPECIAL:
 				case eDamageType::UNBLOCKABLE: sout << "in darkness"; break;
 				case eDamageType::UNDEAD: sout.str("Implodes"); break;
@@ -1117,6 +1119,7 @@ std::string cItem::getAbilName() const {
 				case eDamageType::DEMON: sout << "Demon"; break;
 				case eDamageType::UNDEAD: sout << "Undead"; break;
 				case eDamageType::POISON: sout << "Poison"; break;
+				case eDamageType::ACID: sout << "Acid"; break;
 				case eDamageType::SPECIAL:
 				case eDamageType::UNBLOCKABLE: sout << "Darkness"; break;
 				case eDamageType::MARKED: break; // Invalid
