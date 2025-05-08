@@ -460,8 +460,6 @@
     </game>
     <editor>
         <default-ground>2</default-ground>
-        <last-out-section x="0" y="2" />
-        <last-town>9</last-town>
         <graphics>
             <pic index="0">terrain-anim</pic>
             <pic index="4">terrain</pic>
