@@ -563,8 +563,6 @@
     </game>
     <editor>
         <default-ground>2</default-ground>
-        <last-out-section x="0" y="0" />
-        <last-town>1</last-town>
         <graphics>
             <pic index="0">monster-tall</pic>
             <pic index="8">monster-large</pic>

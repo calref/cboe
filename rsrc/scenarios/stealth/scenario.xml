@@ -740,8 +740,6 @@
     </game>
     <editor>
         <default-ground>2</default-ground>
-        <last-out-section x="0" y="2" />
-        <last-town>5</last-town>
         <graphics>
             <pic index="0">monster-small</pic>
             <pic index="4">monster-small</pic>
