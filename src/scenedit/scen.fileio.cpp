@@ -133,11 +133,13 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 	data.PushElement("name", scenario.contact_info[0]);
 	data.PushElement("email", scenario.contact_info[1]);
 	data.CloseElement("author");
-	data.OpenElement("feature-flags");
-	for(auto& p : scenario.feature_flags){
-		data.PushElement(p.first, p.second);
+	if(!scenario.feature_flags.empty()){
+		data.OpenElement("feature-flags");
+		for(auto& p : scenario.feature_flags){
+			data.PushElement(p.first, p.second);
+		}
+		data.CloseElement("feature-flags");
 	}
-	data.CloseElement("feature-flags");
 	data.OpenElement("text");
 	data.PushElement("teaser", scenario.teaser_text[0]);
 	data.PushElement("teaser", scenario.teaser_text[1]);
