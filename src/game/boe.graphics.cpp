@@ -1555,9 +1555,11 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	mainPtr().display();
 	bool skip_boom_delay = get_bool_pref("SkipBoomDelay");
 	play_sound((skip_boom_delay?-1:1)*sound_to_play);
-	if((sound == 6) && (fast_bang == 0) && (!skip_boom_delay))
-		sf::sleep(time_in_ticks(12));
 	
+	// Fast sound effects need extra delay for the boom to show
+	std::set<int> fast_sounds = { 55, 42 }; // squish, acid, should there be others?
+	if((fast_sounds.count(sound_to_play)) && (fast_bang == 0) && (!skip_boom_delay))
+		sf::sleep(time_in_ticks(12));
 	
 	if(fast_bang == 0 && !skip_boom_delay) {
 		del_len = get_int_pref("GameSpeed") * 3 + 4;
