@@ -241,8 +241,7 @@ static bool handle_lb_action(location the_point) {
 					case LB_LOAD_SCEN:
 						file_to_load = nav_get_scenario();
 						if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
-							set_current_town(scenario.last_town_edited);
-							set_current_out(scenario.last_out_edited);
+							restore_editor_state();
 						} else if(!file_to_load.empty())
 							// If we tried to load but failed, the scenario record is messed up, so boot to start screen.
 							set_up_start_screen();
@@ -2880,4 +2879,9 @@ bool monst_on_space(location loc,short m_num) {
 		return true;
 	return false;
 	
+}
+
+void restore_editor_state() {
+	set_current_town(scenario.last_town_edited);
+	set_current_out(scenario.last_out_edited);
 }

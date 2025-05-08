@@ -43,6 +43,7 @@ void load_spec_graphics();
 
 // These aren't static solely so that the test cases can access them.
 void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario);
+void writeEditorStateToXml(ticpp::Printer&& data, cScenario& scenario);
 void writeTerrainToXml(ticpp::Printer&& data, cScenario& scenario);
 void writeItemsToXml(ticpp::Printer&& data, cScenario& scenario);
 void writeMonstersToXml(ticpp::Printer&& data, cScenario& scenario);
@@ -119,6 +120,14 @@ namespace ticpp {
 		PushText(rect.descr, cdata);
 		CloseElement(tagName);
 	}
+}
+
+void writeEditorStateToXml(ticpp::Printer&& data, cScenario& scenario) {
+	data.OpenElement("editor");
+	data.PushAttribute("boes", scenario.format_ed_version());
+	data.PushElement("last-out-section", cur_out);
+	data.PushElement("last-town", cur_town);
+	data.CloseElement("editor");
 }
 
 void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
@@ -357,8 +366,6 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 	data.CloseElement("game");
 	data.OpenElement("editor");
 	data.PushElement("default-ground", scenario.default_ground);
-	data.PushElement("last-out-section", cur_out);
-	data.PushElement("last-town", cur_town);
 	if(!scenario.custom_graphics.empty()) {
 		data.OpenElement("graphics");
 		for(size_t i = 0; i < scenario.custom_graphics.size(); i++) {
@@ -1075,6 +1082,10 @@ void save_scenario(bool rename) {
 		std::ostream& header = scen_file.newFile("scenario/header.exs");
 		header.write(reinterpret_cast<char*>(&scenario.format), sizeof(scenario_header_flags));
 		
+		// Write scenario's editor state to a file that can be added to .gitignore
+		std::ostream& editor_data = scen_file.newFile("scenario/editor.xml");
+		writeEditorStateToXml(ticpp::Printer("scenario.xml", editor_data), scenario);
+
 		// Next, the bulk scenario data.
 		std::ostream& scen_data = scen_file.newFile("scenario/scenario.xml");
 		writeScenarioToXml(ticpp::Printer("scenario.xml", scen_data), scenario);

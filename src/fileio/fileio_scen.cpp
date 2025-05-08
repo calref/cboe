@@ -49,6 +49,7 @@ static bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, eLoadSc
 // Some of these are non-static so that the test cases can access them.
 ticpp::Document xmlDocFromStream(std::istream& stream, std::string name);
 void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario);
+void readEditorStateFromXml(ticpp::Document&& data, cScenario& scenario);
 void readTerrainFromXml(ticpp::Document&& data, cScenario& scenario);
 void readItemsFromXml(ticpp::Document&& data, cScenario& scenario);
 void readMonstersFromXml(ticpp::Document&& data, cScenario& scenario);
@@ -932,7 +933,7 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 			if(!reqs.empty())
 				throw xMissingElem("game", *reqs.begin(), elem->Row(), elem->Column(), fname);
 		} else if(type == "editor") {
-			std::set<std::string> reqs = {"default-ground", "last-out-section", "last-town"};
+			std::set<std::string> reqs = {"default-ground"};
 			Iterator<Element> edit;
 			int num_storage = 0, num_pics = 0;
 			for(edit = edit.begin(elem.Get()); edit != edit.end(); edit++) {
@@ -940,11 +941,14 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 				reqs.erase(type);
 				if(type == "default-ground") {
 					edit->GetText(&scenario.default_ground);
-				} else if(type == "last-out-section") {
+				}
+				// Old scenario files may have last-out-section and last-town in scenario.xml
+				else if(type == "last-out-section") {
 					scenario.last_out_edited = readLocFromXml(*edit);
 				} else if(type == "last-town") {
 					edit->GetText(&scenario.last_town_edited);
-				} else if(type == "sound") {
+				}
+				else if(type == "sound") {
 					int sndnum = 0;
 					edit->GetAttribute("id", &sndnum);
 					if(sndnum < 100)
@@ -1064,6 +1068,23 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 	}
 	if(!reqs.empty())
 		throw xMissingElem("scenario", *reqs.begin(), data.FirstChildElement()->Row(), data.FirstChildElement()->Column(), fname);
+}
+
+void readEditorStateFromXml(ticpp::Document&& data, cScenario& scenario) {
+	using namespace ticpp;
+	int maj, min, rev;
+	std::string fname, type, name, val;
+	initialXmlRead(data, "editor", maj, min, rev, fname);
+	Iterator<Attribute> attr;
+	Iterator<Element> elem;
+	for(elem = elem.begin(data.FirstChildElement()); elem != elem.end(); elem++) {
+		elem->GetValue(&type);
+		if(type == "last-out-section") {
+			scenario.last_out_edited = readLocFromXml(*elem);
+		} else if(type == "last-town") {
+			elem->GetText(&scenario.last_town_edited);
+		}
+	}
 }
 
 void readTerrainFromXml(ticpp::Document&& data, cScenario& scenario) {
@@ -2187,6 +2208,10 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, eLoadScenario 
 			return false;
 		}
 	}
+	auto hasFile = [&](std::string relpath) -> bool {
+		if(is_packed) return pack.hasFile("scenario/" + relpath);
+		return fs::exists(file_to_load/relpath);
+	};
 	auto getFile = [&](std::string relpath) -> std::istream& {
 		if(is_packed) return pack.getFile("scenario/" + relpath);
 		if(fin.is_open()) fin.close();
@@ -2217,6 +2242,12 @@ bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, eLoadScenario 
 		
 		if(load_type == eLoadScenario::ONLY_HEADER) return true;
 		if(load_type != eLoadScenario::SAVE_PREVIEW){
+			// Editor state, even though the game won't need it
+			if(hasFile("editor.xml")){
+				std::istream& editor = getFile("editor.xml");
+				readEditorStateFromXml(xmlDocFromStream(editor, "editor.xml"), scenario);
+			}
+
 			// Next, terrain types...
 			std::istream& terrain = getFile("terrain.xml");
 			readTerrainFromXml(xmlDocFromStream(terrain, "terrain.xml"), scenario);

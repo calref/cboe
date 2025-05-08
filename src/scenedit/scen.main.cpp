@@ -301,10 +301,9 @@ static void process_args(int argc, char* argv[]) {
 	}
 	if(!file.empty()) {
 		if(load_scenario(file, scenario)) {
-			set_current_town(scenario.last_town_edited);
+			restore_editor_state();
 			change_made = false;
 			ae_loading = true;
-			set_current_out(scenario.last_out_edited);
 		} else {
 			std::cout << "Failed to load scenario: " << file << std::endl;
 		}
