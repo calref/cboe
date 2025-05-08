@@ -61,7 +61,7 @@ std::map<eDamageType,int> boom_gr = {
 	{eDamageType::FIRE, 0},
 	{eDamageType::POISON, 2},
 	{eDamageType::MAGIC, 1},
-	{eDamageType::ACID, 3}, // TODO add an acid graphic
+	{eDamageType::ACID, 6},
 	{eDamageType::UNBLOCKABLE, 5},
 	{eDamageType::COLD, 4},
 	{eDamageType::UNDEAD, 3},

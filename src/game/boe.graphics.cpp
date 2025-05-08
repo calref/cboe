@@ -1457,7 +1457,7 @@ void draw_rest_screen() {
 // mode
 //   if 100, force
 // type
-//   0 - flame 1 - magic 2 - poison 3 - blood 4 - cold
+//   0 - flame 1 - magic 2 - poison 3 - blood 4 - cold 5 - unblockable 6 - acid
 // sound
 //   negative - pass sound explicitly
 //   0 or more: use lookup
@@ -1481,7 +1481,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 //		return;
 	if((mode != 100) && (party_can_see(where) == 6))
 		return;
-	if(type < 0 || type > 5)
+	if(type < 0 || type > 6)
 		return;
 	if((boom_anim_active) && (type != 3))
 		return;
