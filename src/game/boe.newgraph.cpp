@@ -214,7 +214,7 @@ void apply_light_mask(bool onWindow) {
 		return;
 	}
 	
-	#ifdef DEBUG
+	#ifdef DEBUG_LIGHT_MASK
 	std::cout << "Current light mask:\n";
 	for(short i = 0; i < 13; i++) {
 		for(short j = 0; j < 13; j++)
