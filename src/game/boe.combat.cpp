@@ -4423,8 +4423,6 @@ void handle_acid() {
 					damage_pc(pc,r1,eDamageType::ACID,eRace::UNKNOWN);
 					move_to_zero(pc.status[eStatus::ACID]);
 				}
-		if(!is_combat())
-			boom_space(univ.party.out_loc,overall_mode,3,r1,8);
 	}
 }
 

@@ -381,14 +381,17 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 					break;
 			}
 			if(r1 < 0) break; // "It doesn't affect you."
-			if(mode != eSpecCtx::COMBAT_MOVE)
-				hit_party(r1,dam_type);
-			fast_bang = 1;
-			if(mode == eSpecCtx::COMBAT_MOVE)
+
+			// In combat, only hurt the active player
+			if(mode == eSpecCtx::COMBAT_MOVE){
+				fast_bang = 1;
 				damage_pc(which_pc,r1,dam_type,eRace::UNKNOWN);
-			else
-				boom_space(univ.party.out_loc,overall_mode,pic_type,r1,12);
-			fast_bang = 0;
+				fast_bang = 0;
+			}
+			// In peace mode, hurt everyone
+			else{
+				hit_party(r1,dam_type);
+			}
 			break;
 		case eTerSpec::DANGEROUS:
 			// if the party is flying, in a boat, or entering a boat, they cannot be harmed by terrain

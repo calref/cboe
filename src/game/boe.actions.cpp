@@ -3383,9 +3383,6 @@ void increase_age(bool eating_trigger_autosave) {
 			play_sound(66);
 			r1 = get_ran(3,1,6);
 			hit_party(r1,eDamageType::SPECIAL);
-			// Might seem redudant but maybe hit_party could change the mode if TPK?
-			if(!is_combat())
-				boom_space(univ.party.out_loc,overall_mode,0,r1,0);
 		}
 		else {
 			play_sound(6);

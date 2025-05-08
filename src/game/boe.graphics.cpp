@@ -1485,8 +1485,6 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 		return;
 	if((boom_anim_active) && (type != 3))
 		return;
-	if(is_out())
-		return;
 	
 	mainPtr().setView(mainPtr().getDefaultView());
 	put_background();
@@ -1496,7 +1494,7 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	UI::toolbar.draw(mainPtr());
 
 	// Redraw terrain in proper position
-	if(((!point_onscreen(center,where) && is_combat()) || (overall_mode == MODE_OUTDOORS))
+	if(((!point_onscreen(center,where) && is_combat()))
 		) {
 		play_sound(sound_to_play);
 		

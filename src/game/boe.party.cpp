@@ -2325,9 +2325,22 @@ bool flying() {
 }
 
 void hit_party(short how_much,eDamageType damage_type,short snd_type) {
-	for(short i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			damage_pc(univ.party[i],how_much,damage_type,eRace::UNKNOWN,snd_type);
+	short max_dam = 0;
+
+	for(short i = 0; i < 6; i++){
+		if(univ.party[i].main_status == eMainStatus::ALIVE){
+			short dam = damage_pc(univ.party[i],how_much,damage_type,eRace::UNKNOWN,snd_type, true, is_combat());
+			if(dam > max_dam) max_dam = dam;
+		}
+	}
+	// Peace mode: one boom for the whole party, use the highest damage actually taken
+	if(!is_combat() && max_dam > 0){
+		int boom_type = boom_gr[damage_type];
+		if(is_town())
+			boom_space(univ.party.town_loc,overall_mode,boom_type,max_dam,snd_type);
+		else
+			boom_space(univ.party.out_loc,100,boom_type,max_dam,snd_type);
+	}
 	put_pc_screen();
 }
 
@@ -2339,7 +2352,7 @@ void slay_party(eMainStatus mode) {
 	put_pc_screen();
 }
 
-short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace type_of_attacker, short sound_type,bool do_print) {
+short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace type_of_attacker, short sound_type,bool do_print, bool boom) {
 	
 	if(which_pc.main_status != eMainStatus::ALIVE)
 		return false;
@@ -2475,12 +2488,13 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 		
 		if(do_print)
 			add_string_to_buf("  " + which_pc.name + " takes " + std::to_string(how_much) + '.');
-		if(damage_type != eDamageType::MARKED) {
+		if(damage_type != eDamageType::MARKED && boom) {
 			if(is_combat())
 				boom_space(which_pc.combat_pos,overall_mode,boom_type,how_much,sound_type);
 			else if(is_town())
 				boom_space(univ.party.town_loc,overall_mode,boom_type,how_much,sound_type);
-			else boom_space(univ.party.town_loc,100,boom_type,how_much,sound_type);
+			else
+				boom_space(univ.party.out_loc,100,boom_type,how_much,sound_type);
 		}
 		// TODO: When outdoors it flushed only key events, not mouse events. Why?
 		flushingInput = true;
