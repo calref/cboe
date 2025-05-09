@@ -944,9 +944,9 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 				}
 				// Old scenario files may have last-out-section and last-town in scenario.xml
 				else if(type == "last-out-section") {
-					scenario.last_out_edited = readLocFromXml(*edit);
+					scenario.editor_state.last_out_edited = readLocFromXml(*edit);
 				} else if(type == "last-town") {
-					edit->GetText(&scenario.last_town_edited);
+					edit->GetText(&scenario.editor_state.last_town_edited);
 				}
 				else if(type == "sound") {
 					int sndnum = 0;
@@ -1080,9 +1080,9 @@ void readEditorStateFromXml(ticpp::Document&& data, cScenario& scenario) {
 	for(elem = elem.begin(data.FirstChildElement()); elem != elem.end(); elem++) {
 		elem->GetValue(&type);
 		if(type == "last-out-section") {
-			scenario.last_out_edited = readLocFromXml(*elem);
+			scenario.editor_state.last_out_edited = readLocFromXml(*elem);
 		} else if(type == "last-town") {
-			elem->GetText(&scenario.last_town_edited);
+			elem->GetText(&scenario.editor_state.last_town_edited);
 		}
 	}
 }

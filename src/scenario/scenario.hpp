@@ -46,6 +46,15 @@ struct town_entrance_t {
 	int town;
 };
 
+// This is completely unnecessary outside of the scenario editor, but harmless to load anyway,
+// and much easier to store in cScenario so readScenarioFromXML() doesn't need conditionally compiled
+// access to scenedit-specific global variables (which won't work unless we want to compile the common
+// sources 3 times), or globals redeclared for no reason in boe.main.cpp and pc.main.cpp
+struct editor_state_t {
+	short last_town_edited;
+	location last_out_edited;
+};
+
 class cScenario {
 public:
 	class cItemStorage {
@@ -84,9 +93,7 @@ public:
 	std::array<cTimer,20> scenario_timers;
 	std::vector<cSpecial> scen_specials;
 	std::array<cItemStorage,10> storage_shortcuts;
-	// These two \/ are populated at load time and then never used again
-	location last_out_edited;
-	short last_town_edited;
+	editor_state_t editor_state;
 	scenario_header_flags format;
 	std::string campaign_id; // A hopefully unique identifier to specify the campaign this scenario is a part of.
 	std::vector<cItem> scen_items;

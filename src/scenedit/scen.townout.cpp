@@ -1529,12 +1529,12 @@ void set_current_town(int to) {
 	if(to < 0 || to >= scenario.towns.size()) return;
 	cur_town = to;
 	town = scenario.towns[cur_town];
-	scenario.last_town_edited = cur_town;
+	scenario.editor_state.last_town_edited = cur_town;
 }
 
 void set_current_out(location out_sec) {
 	cur_out = out_sec;
-	scenario.last_out_edited = cur_out;
+	scenario.editor_state.last_out_edited = cur_out;
 	current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
 	set_up_main_screen();
 }

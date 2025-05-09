@@ -2882,6 +2882,6 @@ bool monst_on_space(location loc,short m_num) {
 }
 
 void restore_editor_state() {
-	set_current_town(scenario.last_town_edited);
-	set_current_out(scenario.last_out_edited);
+	set_current_town(scenario.editor_state.last_town_edited);
+	set_current_out(scenario.editor_state.last_out_edited);
 }

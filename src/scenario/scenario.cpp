@@ -110,8 +110,7 @@ cScenario::cScenario(const cScenario& other)
 	, scenario_timers(other.scenario_timers)
 	, scen_specials(other.scen_specials)
 	, storage_shortcuts(other.storage_shortcuts)
-	, last_out_edited(other.last_out_edited)
-	, last_town_edited(other.last_town_edited)
+	, editor_state(other.editor_state)
 	, format(other.format)
 	, campaign_id(other.campaign_id)
 	, scen_items(other.scen_items)
@@ -178,8 +177,7 @@ void swap(cScenario& lhs, cScenario& rhs) {
 	swap(lhs.scenario_timers, rhs.scenario_timers);
 	swap(lhs.scen_specials, rhs.scen_specials);
 	swap(lhs.storage_shortcuts, rhs.storage_shortcuts);
-	swap(lhs.last_out_edited, rhs.last_out_edited);
-	swap(lhs.last_town_edited, rhs.last_town_edited);
+	swap(lhs.editor_state, rhs.editor_state);
 	swap(lhs.format, rhs.format);
 	swap(lhs.campaign_id, rhs.campaign_id);
 	swap(lhs.scen_items, rhs.scen_items);
@@ -263,9 +261,9 @@ void cScenario::import_legacy(legacy::scenario_data_type& old){
 		scenario_timers[i].time = old.scenario_timer_times[i];
 		scenario_timers[i].node = old.scenario_timer_specs[i];
 	}
-	last_out_edited.x = old.last_out_edited.x;
-	last_out_edited.y = old.last_out_edited.y;
-	last_town_edited = old.last_town_edited;
+	editor_state.last_out_edited.x = old.last_out_edited.x;
+	editor_state.last_out_edited.y = old.last_out_edited.y;
+	editor_state.last_town_edited = old.last_town_edited;
 	adjust_diff = true;
 }
 

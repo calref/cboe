@@ -72,8 +72,8 @@ TEST_CASE("Converting legacy scenario data") {
 		CHECK(scen.intro_pic == 27);
 		CHECK(scen.is_legacy);
 		CHECK(scen.journal_strs.empty());
-		CHECK(scen.last_out_edited == loc(1,1));
-		CHECK(scen.last_town_edited == 2);
+		CHECK(scen.editor_state.last_out_edited == loc(1,1));
+		CHECK(scen.editor_state.last_town_edited == 2);
 		CHECK(scen.out_sec_start == loc(4,4));
 		CHECK(scen.out_start == loc(1,1));
 		CHECK(scen.rating == eContentRating::R);
