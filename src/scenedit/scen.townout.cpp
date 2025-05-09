@@ -44,6 +44,8 @@ extern cOutdoors* current_terrain;
 extern location cur_out;
 extern cUndoList undo_list;
 extern std::string help_text_rsrc;
+extern bool editing_town;
+extern bool last_shift_continuous;
 
 const char *day_str_1[] = {"Unused","Day creature appears","Day creature disappears",
 	"Unused","Unused","Unused","Unused","Unused","Unused"};
@@ -1525,17 +1527,47 @@ location pick_out(location default_loc,cScenario& scenario) {
 	return default_loc;
 }
 
-void set_current_town(int to) {
+static void store_current_town_state() {
+	scenario.editor_state.town_view_state[cur_town] = {
+		{cen_x, cen_y}, cur_viewing_mode
+	};
+}
+
+static void store_current_out_state() {
+	scenario.editor_state.out_view_state[cur_out] = {
+		{cen_x, cen_y}, cur_viewing_mode
+	};
+}
+
+void store_current_terrain_state() {
+	if(overall_mode < MODE_MAIN_SCREEN){
+		if(editing_town){
+			store_current_town_state();
+		}else{
+			store_current_out_state();
+		}
+	}
+}
+
+void set_current_town(int to, bool first_restore) {
+	if(!first_restore){
+		store_current_terrain_state();
+	}
+
 	if(to < 0 || to >= scenario.towns.size()) return;
 	cur_town = to;
 	town = scenario.towns[cur_town];
 	scenario.editor_state.last_town_edited = cur_town;
 }
 
-void set_current_out(location out_sec) {
+void set_current_out(location out_sec, bool continuous_shift, bool first_restore) {
+	if(!first_restore){
+		store_current_terrain_state();
+	}
 	cur_out = out_sec;
 	scenario.editor_state.last_out_edited = cur_out;
 	current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
+	last_shift_continuous = continuous_shift;
 	set_up_main_screen();
 }
 

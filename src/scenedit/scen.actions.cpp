@@ -241,7 +241,7 @@ static bool handle_lb_action(location the_point) {
 					case LB_LOAD_SCEN:
 						file_to_load = nav_get_scenario();
 						if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
-							restore_editor_state();
+							restore_editor_state(true);
 						} else if(!file_to_load.empty())
 							// If we tried to load but failed, the scenario record is messed up, so boot to start screen.
 							set_up_start_screen();
@@ -279,7 +279,7 @@ static bool handle_lb_action(location the_point) {
 					case LB_LOAD_OUT:
 						spot_hit = pick_out(cur_out, scenario);
 						if(spot_hit != cur_out) {
-							set_current_out(spot_hit);
+							set_current_out(spot_hit, false);
 						}
 						break;
 					case LB_EDIT_OUT:
@@ -305,6 +305,7 @@ static bool handle_lb_action(location the_point) {
 				}
 			}
 			if((overall_mode < MODE_MAIN_SCREEN) && left_button_status[i].action == LB_RETURN) {
+				store_current_terrain_state();
 				set_up_main_screen();
 			}
 			mouse_button_held = false;
@@ -1864,7 +1865,7 @@ static bool handle_outdoor_sec_shift(int dx, int dy){
 	if(shift_prompt.show() == "yes"){
 		int last_cen_x = cen_x;
 		int last_cen_y = cen_y;
-		set_current_out(new_out_sec);
+		set_current_out(new_out_sec, true);
 		// match the terrain view to where we were
 		start_out_edit();
 		if(dx < 0) {
@@ -1918,7 +1919,7 @@ void handle_editor_screen_shift(int dx, int dy) {
 			shift_prompt->getControl("out-sec").setText(boost::lexical_cast<std::string>(only_entrance.out_sec));
 
 			if(shift_prompt.show() == "yes"){
-				set_current_out(only_entrance.out_sec);
+				set_current_out(only_entrance.out_sec, true);
 				start_out_edit();
 				cen_x = only_entrance.loc.x;
 				cen_y = only_entrance.loc.y;
@@ -1937,7 +1938,7 @@ void handle_editor_screen_shift(int dx, int dy) {
 			size_t choice = dlog.show(-1);
 			if(choice >= 0 && choice < town_entrances.size()){
 				town_entrance_t entrance = town_entrances[choice];
-				set_current_out(entrance.out_sec);
+				set_current_out(entrance.out_sec, true);
 				start_out_edit();
 				cen_x = entrance.loc.x;
 				cen_y = entrance.loc.y;
@@ -2475,6 +2476,17 @@ void set_up_main_screen() {
 	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 }
 
+static void restore_current_town_state() {
+	if(scenario.editor_state.town_view_state.find(cur_town) != scenario.editor_state.town_view_state.end()){
+		location cen = scenario.editor_state.town_view_state[cur_town].center;
+		cen_x = cen.x;
+		cen_y = cen.y;
+		cur_viewing_mode = scenario.editor_state.town_view_state[cur_town].cur_viewing_mode;
+	}else{
+		cur_viewing_mode = 0;
+	}
+}
+
 void start_town_edit() {
 	std::ostringstream strb;
 	small_any_drawn = false;
@@ -2487,7 +2499,9 @@ void start_town_edit() {
 	set_lb(NLS - 2,LB_TEXT,LB_RETURN,"Back to Main Menu");
 	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,"(Click border to scroll view.)");
 	overall_mode = MODE_DRAWING;
-	editing_town = true;
+	scenario.editor_state.editing_town = editing_town = true;
+	scenario.editor_state.drawing = true;
+	restore_current_town_state();
 	set_up_terrain_buttons(true);
 	shut_down_menus(4);
 	shut_down_menus(2);
@@ -2504,6 +2518,20 @@ void start_town_edit() {
 	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 }
 
+bool last_shift_continuous = false;
+
+static void restore_current_out_state() {
+	// Restore the last view state of the new outdoor section UNLESS we shifted to it continuously
+	if(!last_shift_continuous && scenario.editor_state.out_view_state.find(cur_out) != scenario.editor_state.out_view_state.end()){
+		location cen = scenario.editor_state.out_view_state[cur_out].center;
+		cen_x = cen.x;
+		cen_y = cen.y;
+		cur_viewing_mode = scenario.editor_state.out_view_state[cur_out].cur_viewing_mode;
+	}else{
+		cur_viewing_mode = 0;
+	}
+}
+
 void start_out_edit() {
 	std::ostringstream strb;
 	small_any_drawn = false;
@@ -2517,7 +2545,9 @@ void start_out_edit() {
 	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,"(Click border to scroll view.)");
 	overall_mode = MODE_DRAWING;
 	draw_mode = DRAW_TERRAIN;
-	editing_town = false;
+	scenario.editor_state.editing_town = editing_town = false;
+	scenario.editor_state.drawing = true;
+	restore_current_out_state();
 	set_up_terrain_buttons(true);
 	right_sbar->hide();
 	pal_sbar->show();
@@ -2551,7 +2581,7 @@ void start_monster_editing(bool just_redo_text) {
 	int num_options = scenario.scen_monsters.size() + 1;
 	
 	if(!just_redo_text) {
-		overall_mode = MODE_MAIN_SCREEN;
+		handle_close_terrain_view(MODE_MAIN_SCREEN);
 		right_sbar->show();
 		pal_sbar->hide();
 		right_sbar->setPosition(0);
@@ -2576,9 +2606,7 @@ void start_item_editing(bool just_redo_text) {
 	int num_options = scenario.scen_items.size() + 1;
 	
 	if(!just_redo_text) {
-		if(overall_mode < MODE_MAIN_SCREEN)
-			set_up_main_screen();
-		overall_mode = MODE_MAIN_SCREEN;
+		handle_close_terrain_view(MODE_MAIN_SCREEN);
 		right_sbar->show();
 		pal_sbar->hide();
 		
@@ -2603,9 +2631,7 @@ void start_special_item_editing(bool just_redo_text) {
 	int num_options = scenario.special_items.size() + 1;
 	
 	if(!just_redo_text) {
-		if(overall_mode < MODE_MAIN_SCREEN)
-			set_up_main_screen();
-		overall_mode = MODE_MAIN_SCREEN;
+		handle_close_terrain_view(MODE_MAIN_SCREEN);
 		right_sbar->show();
 		pal_sbar->hide();
 		
@@ -2629,9 +2655,7 @@ void start_special_item_editing(bool just_redo_text) {
 void start_quest_editing(bool just_redo_text) {
 	int num_options = scenario.quests.size() + 1;
 	if(!just_redo_text) {
-		if(overall_mode < MODE_MAIN_SCREEN)
-			set_up_main_screen();
-		overall_mode = MODE_MAIN_SCREEN;
+		handle_close_terrain_view(MODE_MAIN_SCREEN);
 		right_sbar->show();
 		pal_sbar->hide();
 		right_sbar->setPosition(0);
@@ -2654,9 +2678,7 @@ void start_quest_editing(bool just_redo_text) {
 void start_shops_editing(bool just_redo_text) {
 	int num_options = scenario.shops.size() + 1;
 	if(!just_redo_text) {
-		if(overall_mode < MODE_MAIN_SCREEN)
-			set_up_main_screen();
-		overall_mode = MODE_MAIN_SCREEN;
+		handle_close_terrain_view(MODE_MAIN_SCREEN);
 		right_sbar->show();
 		pal_sbar->hide();
 		right_sbar->setPosition(0);
@@ -2682,9 +2704,7 @@ extern size_t num_strs(short mode); // defined in scen.keydlgs.cpp
 // if just_redo_text not 0, simply need to update text portions
 void start_string_editing(eStrMode mode,short just_redo_text) {
 	if(just_redo_text == 0) {
-		if(overall_mode < MODE_MAIN_SCREEN)
-			set_up_main_screen();
-		overall_mode = MODE_MAIN_SCREEN;
+		handle_close_terrain_view(MODE_MAIN_SCREEN);
 		right_sbar->show();
 		pal_sbar->hide();
 		
@@ -2760,9 +2780,7 @@ void start_special_editing(short mode,short just_redo_text) {
 	}
 	
 	if(just_redo_text == 0) {
-		if(overall_mode < MODE_MAIN_SCREEN)
-			set_up_main_screen();
-		overall_mode = MODE_MAIN_SCREEN;
+		handle_close_terrain_view(MODE_MAIN_SCREEN);
 		right_sbar->show();
 		pal_sbar->hide();
 		
@@ -2802,9 +2820,7 @@ void start_special_editing(short mode,short just_redo_text) {
 void start_dialogue_editing(short restoring) {
 	char s[15] = "    ,      ";
 	
-	if(overall_mode < MODE_MAIN_SCREEN)
-		set_up_main_screen();
-	overall_mode = MODE_MAIN_SCREEN;
+	handle_close_terrain_view(MODE_MAIN_SCREEN);
 	right_sbar->show();
 	pal_sbar->hide();
 	
@@ -2881,7 +2897,25 @@ bool monst_on_space(location loc,short m_num) {
 	
 }
 
-void restore_editor_state() {
-	set_current_town(scenario.editor_state.last_town_edited);
-	set_current_out(scenario.editor_state.last_out_edited);
+void restore_editor_state(bool first_time) {
+	set_current_town(scenario.editor_state.last_town_edited, first_time);
+	set_current_out(scenario.editor_state.last_out_edited, false, first_time);
+	if(first_time && scenario.editor_state.drawing){
+		if(scenario.editor_state.editing_town)
+			start_town_edit();
+		else
+			start_out_edit();
+	}
+}
+
+void handle_close_terrain_view(eScenMode new_mode) {
+	// When closing a terrain view, store its view state
+	store_current_terrain_state();
+	scenario.editor_state.drawing = false;
+
+	// set up the main screen if needed
+	if(new_mode == MODE_MAIN_SCREEN && overall_mode < MODE_MAIN_SCREEN)
+		set_up_main_screen();
+
+	overall_mode = new_mode;
 }

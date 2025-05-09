@@ -46,13 +46,29 @@ struct town_entrance_t {
 	int town;
 };
 
+struct terrain_view_t {
+	location center;
+	short cur_viewing_mode;
+};
+
 // This is completely unnecessary outside of the scenario editor, but harmless to load anyway,
 // and much easier to store in cScenario so readScenarioFromXML() doesn't need conditionally compiled
 // access to scenedit-specific global variables (which won't work unless we want to compile the common
 // sources 3 times), or globals redeclared for no reason in boe.main.cpp and pc.main.cpp
 struct editor_state_t {
+	bool drawing;
+	bool editing_town;
+
 	short last_town_edited;
+	// Remember last view and zoom for each town
+	std::map<short, terrain_view_t> town_view_state;
+
 	location last_out_edited;
+	// Remember last view and zoom for each outdoor section--
+	// but only for when the designer makes a discontinuous section change.
+	// When simply shifting over by 1 section we won't want to
+	// use this stored state, we want seamless transition.
+	std::map<location, terrain_view_t, loc_compare> out_view_state;
 };
 
 class cScenario {

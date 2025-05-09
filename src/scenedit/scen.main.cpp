@@ -301,7 +301,7 @@ static void process_args(int argc, char* argv[]) {
 	}
 	if(!file.empty()) {
 		if(load_scenario(file, scenario)) {
-			restore_editor_state();
+			restore_editor_state(true);
 			change_made = false;
 			ae_loading = true;
 		} else {
@@ -448,7 +448,7 @@ void handle_menu_choice(eMenu item_hit) {
 				break;
 			file_to_load = item_hit == eMenu::FILE_OPEN ? nav_get_scenario() : scenario.scen_file;
 			if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
-				restore_editor_state();
+				restore_editor_state(true);
 				change_made = false;
 			} else if(!file_to_load.empty())
 				set_up_start_screen(); // Failed to load file, dump to start
