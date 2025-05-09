@@ -311,12 +311,13 @@
 	<xs:complexType name="editorData">
 		<xs:sequence>
 			<xs:element name="default-ground" type="xs:integer"/>
-			<xs:element name="last-out-section">
+			<!-- The next two have moved to editor.xml: -->
+			<xs:element name="last-out-section" minOccurs="0" maxOccurs="1">
 				<xs:complexType>
 					<xs:attributeGroup ref="point"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="last-town" type="xs:integer"/>
+			<xs:element name="last-town" type="xs:integer" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="graphics" minOccurs="0">
 				<xs:complexType>
 					<xs:sequence>
