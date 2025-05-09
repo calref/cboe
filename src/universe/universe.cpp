@@ -1519,7 +1519,7 @@ cPlayer& cUniverse::current_pc() {
 
 void(* cUniverse::print_result)(std::string) = nullptr;
 
-bool cUniverse::get_str(std::string& str,eSpecCtxType cur_type,short which_str) {
+bool cUniverse::get_str(std::string& str,eSpecCtxType cur_type,short which_str, bool out_of_range_error) {
 	std::vector<std::string>* string_list = &scenario.spec_strs;
 	if(cur_type == eSpecCtxType::OUTDOOR)
 		string_list = &out->spec_strs;
@@ -1527,7 +1527,8 @@ bool cUniverse::get_str(std::string& str,eSpecCtxType cur_type,short which_str) 
 		string_list = &town->spec_strs;
 	
 	if((which_str >= 0 && which_str >= string_list->size()) || (which_str < -1 && which_str != BUFFER_STR)){
-		showError("The scenario attempted to access a message out of range.");
+		if(out_of_range_error)
+			showError("The scenario attempted to access a message out of range.");
 		return false;
 	}
 
@@ -1548,7 +1549,10 @@ void cUniverse::get_strs(std::string& str1,std::string& str2,eSpecCtxType cur_ty
 }
 
 void cUniverse::get_strs(std::array<std::string,6>& strs,eSpecCtxType cur_type,short which_str1) {
-	for(int i = 0; i < 6; ++i)
-		if (!get_str(strs[i],cur_type, which_str1 + i)) return;
+	// If the first string is out of range we are in trouble:
+	if(!get_str(strs[0],cur_type, which_str1)) return;
+	// The other ones may be out of range if the starting text is near the end and there are less than 6
+	for(int i = 1; i < 6; ++i)
+		if(!get_str(strs[i],cur_type, which_str1 + i, false)) return;
 }
 
