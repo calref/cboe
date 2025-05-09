@@ -2866,6 +2866,7 @@ bool save_check(std::string which_dlog, bool allow_no) {
 		return false;
 	change_made = false;
 	town->set_up_lights();
+	store_current_terrain_state();
 	save_scenario();
 	return true;
 }

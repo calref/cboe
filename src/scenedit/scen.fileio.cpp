@@ -1080,9 +1080,7 @@ struct overrides_sheet {
 
 extern std::string scenario_temp_dir_name;
 extern fs::path scenDir;
-extern void store_current_terrain_state();
 void save_scenario(bool rename) {
-	store_current_terrain_state();
 	fs::path toFile = scenario.scen_file;
 	if(rename || toFile.empty()) {
 		fs::path def = scenario.scen_file;

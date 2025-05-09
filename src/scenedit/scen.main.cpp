@@ -456,9 +456,11 @@ void handle_menu_choice(eMenu item_hit) {
 			update_edit_menu();
 			break;
 		case eMenu::FILE_SAVE:
+			store_current_terrain_state();
 			save_scenario();
 			break;
 		case eMenu::FILE_SAVE_AS:
+			store_current_terrain_state();
 			save_scenario(true);
 			break;
 		case eMenu::FILE_NEW:
