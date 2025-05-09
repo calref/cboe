@@ -101,7 +101,7 @@
 	msg -1, -1, -1
 	pic 0, 4
 	ex1 0, -1, -1
-	ex2 -1, -1, -1
+	ex2 1, -1, -1
 	goto 15
 @once-set-sdf = 15
 	sdf 15, 2
