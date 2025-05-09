@@ -123,10 +123,31 @@ namespace ticpp {
 }
 
 void writeEditorStateToXml(ticpp::Printer&& data, cScenario& scenario) {
+	editor_state_t editor_state = scenario.editor_state;
+
 	data.OpenElement("editor");
 	data.PushAttribute("boes", scenario.format_ed_version());
-	data.PushElement("last-out-section", cur_out);
+	data.PushElement("drawing", editor_state.drawing);
+	data.PushElement("editing-town", editor_state.editing_town);
+
 	data.PushElement("last-town", cur_town);
+	for(auto pair : scenario.editor_state.town_view_state){
+		data.OpenElement("town-view-state");
+		data.PushElement("num", pair.first);
+		data.PushElement("center", pair.second.center);
+		data.PushElement("viewing-mode", pair.second.cur_viewing_mode);
+		data.CloseElement("town-view-state");
+	}
+
+	data.PushElement("last-out-section", cur_out);
+	for(auto pair : scenario.editor_state.out_view_state){
+		data.OpenElement("out-view-state");
+		data.PushElement("section", pair.first);
+		data.PushElement("center", pair.second.center);
+		data.PushElement("viewing-mode", pair.second.cur_viewing_mode);
+		data.CloseElement("out-view-state");
+	}
+
 	data.CloseElement("editor");
 }
 
@@ -1059,7 +1080,9 @@ struct overrides_sheet {
 
 extern std::string scenario_temp_dir_name;
 extern fs::path scenDir;
+extern void store_current_terrain_state();
 void save_scenario(bool rename) {
+	store_current_terrain_state();
 	fs::path toFile = scenario.scen_file;
 	if(rename || toFile.empty()) {
 		fs::path def = scenario.scen_file;

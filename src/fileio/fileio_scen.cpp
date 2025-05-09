@@ -1074,15 +1074,55 @@ void readEditorStateFromXml(ticpp::Document&& data, cScenario& scenario) {
 	using namespace ticpp;
 	int maj, min, rev;
 	std::string fname, type, name, val;
+	editor_state_t& editor_state = scenario.editor_state;
 	initialXmlRead(data, "editor", maj, min, rev, fname);
 	Iterator<Attribute> attr;
 	Iterator<Element> elem;
+
+	std::string child_type;
+	short num;
+	location section;
+	location center;
+	short viewing_mode;
+
 	for(elem = elem.begin(data.FirstChildElement()); elem != elem.end(); elem++) {
 		elem->GetValue(&type);
 		if(type == "last-out-section") {
-			scenario.editor_state.last_out_edited = readLocFromXml(*elem);
-		} else if(type == "last-town") {
-			elem->GetText(&scenario.editor_state.last_town_edited);
+			editor_state.last_out_edited = readLocFromXml(*elem);
+		}else if(type == "last-town") {
+			elem->GetText(&editor_state.last_town_edited);
+		}else if(type == "drawing"){
+			editor_state.drawing = str_to_bool(elem->GetText());
+		}else if(type == "editing-town"){
+			editor_state.editing_town = str_to_bool(elem->GetText());
+		}else if(type == "town-view-state"){
+			Element* child = elem->FirstChildElement();
+			while(child != nullptr){
+				child->GetValue(&child_type);
+				if(child_type == "num"){
+					child->GetText(&num);
+				}else if(child_type == "center"){
+					center = readLocFromXml(*child);
+				}else if(child_type == "viewing-mode"){
+					child->GetText(&viewing_mode);
+				}
+				child = child->NextSiblingElement(false);
+			}
+			editor_state.town_view_state[num] = {center, viewing_mode};
+		}else if(type == "out-view-state"){
+			Element* child = elem->FirstChildElement();
+			while(child != nullptr){
+				child->GetValue(&child_type);
+				if(child_type == "section"){
+					section = readLocFromXml(*child);
+				}else if(child_type == "center"){
+					center = readLocFromXml(*child);
+				}else if(child_type == "viewing-mode"){
+					child->GetText(&viewing_mode);
+				}
+				child = child->NextSiblingElement(false);
+			}
+			editor_state.out_view_state[section] = {center, viewing_mode};
 		}
 	}
 }
