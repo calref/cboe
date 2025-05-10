@@ -238,7 +238,7 @@ bool pc_combat_move(location destination) {
 		
 		dir = set_direction(univ.current_pc().combat_pos, destination);
 		
-		if((loc_off_act_area(destination)) && (which_combat_type == 1)) {
+		if(loc_off_act_area(destination) && (which_combat_type == 1) && !impassable(univ.town->terrain(destination.x,destination.y))) {
 			add_string_to_buf("Move: Can't leave town during combat.");
 			print_buf();
 			return true;
