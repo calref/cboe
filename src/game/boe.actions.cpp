@@ -94,6 +94,7 @@ extern location	to_create;
 extern bool All_Done,spell_forced,monsters_going;
 extern bool party_in_memory;
 extern sf::View mainView;
+extern bool targeting_line_visible;
 
 // game info globals
 extern short which_item_page[6];
@@ -395,6 +396,7 @@ void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw,
 			if(store_sp[i] != univ.party[i].cur_sp)
 				did_something = true;
 	} else if(overall_mode == MODE_TOWN_TARGET) {
+		targeting_line_visible = false;
 		add_string_to_buf("  Cancelled.");
 		overall_mode = MODE_TOWN;
 		need_redraw = true;
@@ -414,6 +416,7 @@ void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw,
 		spell_forced = false;
 		redraw_terrain();
 	} else if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET) {
+		targeting_line_visible = false;
 		add_string_to_buf("  Cancelled.");
 		overall_mode = MODE_COMBAT;
 		center = univ.current_pc().combat_pos;
@@ -850,7 +853,6 @@ void handle_target_space(location destination, bool& did_something, bool& need_r
 	}
 	// Fix the targeting line drawing for one frame after the casting animation finishes:
 	if(overall_mode != MODE_FANCY_TARGET){
-		extern bool targeting_line_visible;
 		targeting_line_visible = false;
 	}
 
@@ -1351,6 +1353,7 @@ void handle_missile(bool& need_redraw, bool& need_reprint) {
 		need_reprint = true;
 		redraw_terrain();
 	} else if(overall_mode == MODE_FIRING || overall_mode == MODE_THROWING) {
+		targeting_line_visible = false;
 		add_string_to_buf("  Cancelled.");
 		center = univ.current_pc().combat_pos;
 		pause(10);
@@ -2920,7 +2923,6 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case ' ':
 			if(overall_mode == MODE_FANCY_TARGET) {
-				extern bool targeting_line_visible;
 				targeting_line_visible = false;
 				// cast multi-target spell, set # targets to 0 so that space clicked doesn't matter
 				num_targets_left = 0;
