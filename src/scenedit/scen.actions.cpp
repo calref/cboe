@@ -261,7 +261,7 @@ static bool handle_lb_action(location the_point) {
 							return true;
 						}
 						if(new_town())
-							set_up_main_screen();
+							handle_close_terrain_view(MODE_MAIN_SCREEN);
 						break;
 					case LB_EDIT_TEXT:
 						right_sbar->setPosition(0);
@@ -305,8 +305,7 @@ static bool handle_lb_action(location the_point) {
 				}
 			}
 			if((overall_mode < MODE_MAIN_SCREEN) && left_button_status[i].action == LB_RETURN) {
-				store_current_terrain_state();
-				set_up_main_screen();
+				handle_close_terrain_view(MODE_MAIN_SCREEN);
 			}
 			mouse_button_held = false;
 			update_edit_menu();
@@ -2915,7 +2914,7 @@ void handle_close_terrain_view(eScenMode new_mode) {
 	scenario.editor_state.drawing = false;
 
 	// set up the main screen if needed
-	if(new_mode == MODE_MAIN_SCREEN && overall_mode < MODE_MAIN_SCREEN)
+	if(new_mode == MODE_MAIN_SCREEN && overall_mode <= MODE_MAIN_SCREEN)
 		set_up_main_screen();
 
 	overall_mode = new_mode;
