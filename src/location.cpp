@@ -401,6 +401,8 @@ std::vector<location> points_containing_most(std::vector<location> points,  std:
 		}
 	}
 
+	if(points_seen_from.empty()) return {};
+
 	// Sort candidates by how many of the points they see
 	std::sort(points_seen_from.begin(), points_seen_from.end(), [](std::pair<location,int> pair1, std::pair<location,int> pair2) -> bool {
 		return pair1.second > pair2.second;

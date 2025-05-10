@@ -1095,7 +1095,10 @@ void handle_target_mode(eGameMode target_mode, int range, eSpell spell) {
 		}
 		if(!enemy_locs_in_range.empty()){
 			std::vector<location> dest_candidates = points_containing_most(enemy_locs_in_range, enemy_locs_already_seen);
-			center = closest_point(dest_candidates, loc);
+			// Center can stay the same if all points with the most monsters exclude any required (already seen) monsters
+			if(!dest_candidates.empty()){
+				center = closest_point(dest_candidates, loc);
+			}
 			draw_terrain();
 		}
 	}
