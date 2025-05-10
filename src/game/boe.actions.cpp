@@ -2955,6 +2955,12 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 		case 'u': // Use space
 			if(overall_mode == MODE_TOWN || overall_mode == MODE_USE_TOWN)
 				handle_use_space_select(need_reprint);
+			else if(is_combat())
+				ASB("Use: not in combat.");
+			else if(is_out())
+				ASB("Use: not outdoors");
+			else
+				ASB("Use: " + FINISH_FIRST);
 			break;
 			
 		case 'b': // Bash door
