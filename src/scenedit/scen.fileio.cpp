@@ -133,7 +133,7 @@ void writeEditorStateToXml(ticpp::Printer&& data, cScenario& scenario) {
 	data.PushElement("last-town", cur_town);
 	for(auto pair : scenario.editor_state.town_view_state){
 		data.OpenElement("town-view-state");
-		data.PushElement("num", pair.first);
+		data.PushAttribute("num", pair.first);
 		data.PushElement("center", pair.second.center);
 		data.PushElement("viewing-mode", pair.second.cur_viewing_mode);
 		data.CloseElement("town-view-state");
@@ -142,7 +142,8 @@ void writeEditorStateToXml(ticpp::Printer&& data, cScenario& scenario) {
 	data.PushElement("last-out-section", cur_out);
 	for(auto pair : scenario.editor_state.out_view_state){
 		data.OpenElement("out-view-state");
-		data.PushElement("section", pair.first);
+		data.PushAttribute("x", pair.first.x);
+		data.PushAttribute("y", pair.first.y);
 		data.PushElement("center", pair.second.center);
 		data.PushElement("viewing-mode", pair.second.cur_viewing_mode);
 		data.CloseElement("out-view-state");

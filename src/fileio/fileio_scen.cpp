@@ -1079,6 +1079,7 @@ void readEditorStateFromXml(ticpp::Document&& data, cScenario& scenario) {
 	Iterator<Attribute> attr;
 	Iterator<Element> elem;
 
+	Iterator<Element> child;
 	std::string child_type;
 	short num;
 	location section;
@@ -1096,31 +1097,25 @@ void readEditorStateFromXml(ticpp::Document&& data, cScenario& scenario) {
 		}else if(type == "editing-town"){
 			editor_state.editing_town = str_to_bool(elem->GetText());
 		}else if(type == "town-view-state"){
-			Element* child = elem->FirstChildElement();
-			while(child != nullptr){
+			num = std::stoi(elem->GetAttribute("num"));
+			for(child = child.begin(elem.Get()); child != child.end(); child++){
 				child->GetValue(&child_type);
-				if(child_type == "num"){
-					child->GetText(&num);
-				}else if(child_type == "center"){
+				if(child_type == "center"){
 					center = readLocFromXml(*child);
 				}else if(child_type == "viewing-mode"){
 					child->GetText(&viewing_mode);
 				}
-				child = child->NextSiblingElement(false);
 			}
 			editor_state.town_view_state[num] = {center, viewing_mode};
 		}else if(type == "out-view-state"){
-			Element* child = elem->FirstChildElement();
-			while(child != nullptr){
+			section = readLocFromXml(*elem);
+			for(child = child.begin(elem.Get()); child != child.end(); child++){
 				child->GetValue(&child_type);
-				if(child_type == "section"){
-					section = readLocFromXml(*child);
-				}else if(child_type == "center"){
+				if(child_type == "center"){
 					center = readLocFromXml(*child);
 				}else if(child_type == "viewing-mode"){
 					child->GetText(&viewing_mode);
 				}
-				child = child->NextSiblingElement(false);
 			}
 			editor_state.out_view_state[section] = {center, viewing_mode};
 		}
