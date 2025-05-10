@@ -152,8 +152,8 @@
 	ex1 -1, -1, -1
 	ex2 -1, -1, -1
 	goto -1
-@disp-msg = 22
-	sdf 15, 3
+@once-disp-msg = 22
+	sdf 349, 1
 	msg 30, 31, -1
 	pic 0, 4
 	ex1 -1, -1, -1
