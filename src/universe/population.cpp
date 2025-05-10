@@ -31,6 +31,15 @@ cCreature& cPopulation::operator[](size_t n){
 	return dudes[n];
 }
 
+const cCreature& cPopulation::at(size_t n) const {
+	return dudes.at(n);
+}
+
+cCreature& cPopulation::at(size_t n){
+	return dudes.at(n);
+}
+
+
 void cPopulation::init(size_t n) {
 	if(n >= dudes.size()) dudes.resize(n + 1);
 	dudes[n].active = eCreatureStatus::IDLE;

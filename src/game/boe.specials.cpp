@@ -4147,9 +4147,10 @@ void townmode_spec(const runtime_state& ctx) {
 				else increase_light(-spec.ex2a);
 			}
 			break;
-		case eSpecType::TOWN_SET_ATTITUDE:
-			if((spec.ex1a < 0) || (spec.ex1a > 59)){
-				showError("Tried to change the attitude of a nonexistent monster (should be 0...59).");
+		case eSpecType::TOWN_SET_ATTITUDE:{
+			int num_monst = univ.town.monst.size();
+			if((spec.ex1a < 0) || (spec.ex1a >= num_monst)){
+				showError("Tried to change the attitude of nonexistent monster " + std::to_string(spec.ex1a) + " of 0..." + std::to_string(num_monst));
 				break;
 			}
 			if(spec.ex1b < 0 || spec.ex1b > 3){
@@ -4157,7 +4158,7 @@ void townmode_spec(const runtime_state& ctx) {
 				break;
 			}
 			univ.town.monst[spec.ex1a].attitude = eAttitude(spec.ex1b);
-			break;
+		}break;
 		case eSpecType::TOWN_RUN_MISSILE:
 			if(ctx.which_mode != eSpecCtx::TALK) {
 				int i;

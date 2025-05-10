@@ -32,6 +32,8 @@ public:
 	void clear() {dudes.clear();}
 	cCreature& operator[](size_t n);
 	const cCreature& operator[](size_t n) const;
+	cCreature& at(size_t n);
+	const cCreature& at(size_t n) const;
 	cPopulation() : which_town(200), hostile(false) {}
 	std::deque<cCreature>::iterator begin() {return dudes.begin();}
 	std::deque<cCreature>::iterator end() {return dudes.end();}
