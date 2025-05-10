@@ -759,5 +759,6 @@
             <item chance="15">0</item>
         </storage>
         <sdf row="349" col="0">icy tunnels voice</sdf>
+        <sdf row="349" col="1">empire outpost library</sdf>
     </editor>
 </scenario>
