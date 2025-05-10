@@ -4066,8 +4066,10 @@ bool town_move_party(location destination,short forced) {
 				add_string_to_buf("You leave the boat.");
 				univ.party.in_boat = -1;
 			}
-			else if((destination.x != univ.party.town_loc.x) && (destination.y != univ.party.town_loc.y))
+			else if((destination.x != univ.party.town_loc.x) && (destination.y != univ.party.town_loc.y)){
+				add_string_to_buf("Move: Boat can't move diagonally.");
 				return false;
+			}
 			// Crossing bridge: land or go through
 			else if(!is_blocked(destination) && univ.scenario.ter_types[ter].boat_over && univ.scenario.ter_types[ter].special == eTerSpec::BRIDGE) {
 				if(cChoiceDlog("boat-bridge",{"under","land"}).show() == "under")
