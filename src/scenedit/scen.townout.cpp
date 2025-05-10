@@ -33,7 +33,8 @@
 using boost::algorithm::trim;
 using boost::algorithm::to_lower;
 
-extern short cen_x, cen_y, overall_mode;
+extern short cen_x, cen_y;
+extern eScenMode overall_mode;
 extern bool mouse_button_held,change_made;
 extern short cur_viewing_mode;
 extern cTown* town;
