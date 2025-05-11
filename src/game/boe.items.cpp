@@ -978,6 +978,16 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 					can_pick = false;
 					extra_info = "no item slot";
 				}
+				if(false) // Skip fallthrough past ONLY_CAN_TRAIN
+				BOOST_FALLTHROUGH;
+			case eSelectPC::ONLY_CAN_TRAIN:
+				if(univ.party[i].skill_pts){
+					extra_info = std::to_string(univ.party[i].skill_pts) + " skill point";
+					if(univ.party[i].skill_pts > 1) extra_info += "s";
+				}else{
+					extra_info = "no skill points";
+					can_pick = false;
+				}
 				BOOST_FALLTHROUGH;
 			case eSelectPC::ONLY_LIVING:
 				if(univ.party[i].main_status != eMainStatus::ALIVE)
@@ -1041,6 +1051,10 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 	if(!any_options){
 		if(mode == eSelectPC::ONLY_CAN_LOCKPICK){
 			ASB("  No one has lockpicks equipped.");
+			print_buf();
+		}
+		if(mode == eSelectPC::ONLY_CAN_TRAIN){
+			ASB("  No one has skill points.");
 			print_buf();
 		}
 		return 8;

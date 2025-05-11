@@ -52,6 +52,8 @@ enum class eSelectPC {
 	ONLY_CAN_GIVE_FROM_ACTIVE,
 	// Must have lockpicks equipped
 	ONLY_CAN_LOCKPICK,
+	// Must have skill points
+	ONLY_CAN_TRAIN,
 	ONLY_DEAD,
 };
 // Prompt the player to choose a party member. Returns 0-5 for a pc, 6 for cancel, 7 for all, or 8 if no PCs fit the mode's filter.

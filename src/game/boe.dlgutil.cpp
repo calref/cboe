@@ -989,7 +989,7 @@ void handle_talk_node(int which_talk_entry, bool is_redo) {
 			save_talk_str1 = "You conclude your training.";
 			save_talk_str2 = "";
 			can_save_talk = false;
-			if((get_pc = select_pc(eSelectPC::ONLY_LIVING,"Train who?")) < 6) {
+			if((get_pc = select_pc(eSelectPC::ONLY_CAN_TRAIN,"Train who?")) < 6) {
 				spend_xp(get_pc,1, nullptr);
 			}
 			goto RECORD_WHICH_NODE;
