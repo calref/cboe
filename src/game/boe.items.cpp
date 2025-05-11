@@ -45,6 +45,8 @@ extern void draw_map(bool need_refresh);
 
 short selected;
 
+const int ITEMS_IN_WINDOW = 8;
+
 bool GTP(short item_num) {
 	cItem item = univ.scenario.get_stored_item(item_num);
 	return univ.party.give_item(item,true);
@@ -108,7 +110,7 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 	std::string choice;
 	short how_many = 1;
 	cItem item_store;
-	bool take_given_item = true, need_redraw = false;
+	bool take_dropped_item = true, need_redraw = false;
 	location loc;
 	
 	item_store = univ.party[pc_num].items[item_num];
@@ -139,7 +141,7 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 				if(how_many <= 0)
 					return;
 				if(how_many < item_store.charges)
-					take_given_item = false;
+					take_dropped_item = false;
 				item_store.charges = how_many;
 			}
 			if(place_item(item_store,loc,true)) {
@@ -147,7 +149,7 @@ void drop_item(short pc_num,short item_num,location where_drop) {
 				spec = -1; // Don't call drop specials if it was put away
 			} else add_string_to_buf("Drop: OK");
 			univ.party[pc_num].items[item_num].charges -= how_many;
-			if(take_given_item)
+			if(take_dropped_item)
 				univ.party[pc_num].take_item(item_num);
 			break;
 		default: //should never be reached
@@ -218,6 +220,9 @@ void give_thing(short pc_num, short item_num) {
 				// This should be impossible, because select_pc() already checked that the options
 				// were viable.
 				showFatalError("Unexpectedly failed to give item!");
+			}
+			if(take_given_item){
+				univ.party[pc_num].take_item(item_num);
 			}
 		}
 	}
@@ -302,10 +307,14 @@ void make_town_hostile() {
 void set_town_attitude(short lo,short hi,eAttitude att) {
 	short num;
 	
-	if(which_combat_type == 0)
+	if(is_combat() && which_combat_type == 0)
 		return;
+
 	give_help(53,0);
-	univ.town.monst.hostile = true;
+
+	static std::set<eAttitude> hostile_attitudes = { eAttitude::HOSTILE_A, eAttitude::HOSTILE_B };
+	univ.town.monst.hostile = hostile_attitudes.count(att);
+
 	long long num_monst = univ.town.monst.size();
 	
 	// Nice smart indexing, like Python :D
@@ -326,7 +335,6 @@ void set_town_attitude(short lo,short hi,eAttitude att) {
 			num = univ.town.monst[i].number;
 			// If made hostile, make mobile
 			if(!univ.town.monst[i].is_friendly()) {
-				univ.town.monst.hostile = true;
 				univ.town.monst[i].mobility = 1;
 				// If a "guard", give a power boost
 				if(univ.scenario.scen_monsters[num].guard) {
@@ -383,11 +391,11 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 	if(first_item_shown == 0)
 		me["up"].hide();
 	else me["up"].show();
-	if(item_array.size() <= 8 || first_item_shown > item_array.size() - 7)
+	if(item_array.size() <= ITEMS_IN_WINDOW || first_item_shown > item_array.size() - (ITEMS_IN_WINDOW-1))
 		me["down"].hide();
 	else me["down"].show();
 	
-	for(short i = 0; i < 8; i++) {
+	for(short i = 0; i < ITEMS_IN_WINDOW; i++) {
 		std::ostringstream sout;
 		sout << "item" << i + 1;
 		std::string pict = sout.str() + "-g", name = sout.str() + "-name";
@@ -444,12 +452,12 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 		me.toast(true);
 	} else if(id == "up") {
 		if(first_item_shown > 0) {
-			first_item_shown -= 8;
+			first_item_shown -= ITEMS_IN_WINDOW;
 			put_item_graphics(me, first_item_shown, current_getting_pc, item_array);
 		}
 	} else if(id ==  "down") {
-		if(first_item_shown + 8 < item_array.size()) {
-			first_item_shown += 8;
+		if(first_item_shown + ITEMS_IN_WINDOW < item_array.size()) {
+			first_item_shown += ITEMS_IN_WINDOW;
 			put_item_graphics(me, first_item_shown, current_getting_pc, item_array);
 		}
 	} else if(id.substr(0,2) == "pc") {
@@ -560,7 +568,7 @@ bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short 
 	
 	title.setText(titleText);
 	
-	for(int i = 1; i <= 8; i++) {
+	for(int i = 1; i <= ITEMS_IN_WINDOW; i++) {
 		std::ostringstream sout;
 		sout << "item" << i << "-key";
 		itemDialog[sout.str()].attachKey({false, static_cast<unsigned char>('`' + i), mod_none});
@@ -574,27 +582,6 @@ bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short 
 	return itemDialog.getResult<bool>();
 	
 	
-}
-
-short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons,bool anim_pict,short anim_loops, int anim_fps) {
-	set_cursor(sword_curs);
-	
-	std::vector<std::string> vec(strs.begin(), strs.end());
-	// Strip off trailing empty strings
-	while(!vec.empty() && vec.back().empty())
-		vec.pop_back();
-	cThreeChoice customDialog(vec, buttons, pic_num, pic_type);
-	if(anim_pict)
-		setup_dialog_pict_anim(*(customDialog.operator->()), "pict", anim_loops, anim_fps);
-
-	std::string item_hit = customDialog.show();
-	
-	for(int i = 0; i < 3; i++) {
-		auto& btn = basic_buttons[buttons[i]];
-		if(item_hit == btn.label)
-			return i + 1;
-	}
-	return -1;
 }
 
 void custom_pic_dialog(std::string title, pic_num_t bigpic) {
@@ -620,13 +607,6 @@ void custom_pic_dialog(std::string title, pic_num_t bigpic) {
 	pic_dlg.run();
 }
 
-void setup_dialog_pict_anim(cDialog& dialog, std::string pict_id, short anim_loops, short anim_fps) {
-	cPict& pict = dynamic_cast<cPict&>(dialog[pict_id]);
-	pict.setAnimLoops(anim_loops);
-	dialog.setAnimPictFPS(anim_fps);
-	dialog.setDoAnimations(true);
-}
-
 void story_dialog(std::string title, str_num_t first, str_num_t last, eSpecCtxType which_str_type, pic_num_t pic, ePicType pt, short anim_loops, int anim_fps) {
 	cDialog story_dlg(*ResMgr::dialogs.get("many-str"));
 	dynamic_cast<cPict&>(story_dlg["pict"]).setPict(pic, pt);
@@ -642,7 +622,7 @@ void story_dialog(std::string title, str_num_t first, str_num_t last, eSpecCtxTy
 			cur++;
 		}
 		std::string text;
-		get_str(text, which_str_type, cur);
+		univ.get_str(text, which_str_type, cur);
 		me["str"].setText(text);
 		return true;
 	}, {"left", "right", "done"});
@@ -663,6 +643,7 @@ short get_num_of_items(short max_num) {
 	set_cursor(sword_curs);
 	
 	cDialog numPanel(*ResMgr::dialogs.get("get-num"));
+	numPanel["extra-led"].hide();
 	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay"});
 	
 	numPanel["prompt"].setText("How many? (0-" + std::to_string(max_num) + ") ");
@@ -677,7 +658,10 @@ void init_mini_map() {
 	if (map_scale < 0.1) map_scale = 1.0;
 	if (mini_map().isOpen()) mini_map().close();
 	mini_map().create(sf::VideoMode(map_scale*296,map_scale*277), "Map", sf::Style::Titlebar | sf::Style::Close);
-	mini_map().setPosition(sf::Vector2i(52,62));
+	// TODO why is 52,62 the default position, anyway?
+	int map_x = get_int_pref("MapWindowX", 52);
+	int map_y = get_int_pref("MapWindowY", 62);
+	mini_map().setPosition(sf::Vector2i(map_x,map_y));
 	sf::View view;
 	view.reset(sf::FloatRect(0, 0, map_scale*296,map_scale*277));
 	view.setViewport(sf::FloatRect(0, 0, map_scale, map_scale));
@@ -685,7 +669,7 @@ void init_mini_map() {
 	mini_map().setVisible(false);
 	map_visible=false;
 	setWindowFloating(mini_map(), true);
-	makeFrontWindow(mainPtr());
+	makeFrontWindow(mainPtr(), mini_map());
 	
 	// Create and initialize map gworld
 	if(!map_gworld().create(384, 384)) {
@@ -864,7 +848,7 @@ std::string get_text_response(std::string prompt, pic_num_t pic) {
 	return result;
 }
 
-short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names, boost::optional<short> cancel_value) {
+short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names, boost::optional<short> cancel_value, short initial_value, std::string extra_led, bool* led_output) {
 	std::ostringstream sout;
 	sout << prompt;
 	
@@ -873,9 +857,18 @@ short get_num_response(short min, short max, std::string prompt, std::vector<std
 	cDialog numPanel(*ResMgr::dialogs.get("get-num"));
 	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay"});
 	
+	if(extra_led.empty()){
+		numPanel["extra-led"].hide();
+	}else{
+		numPanel["extra-led"].setText(extra_led);
+		numPanel["extra-led"].recalcRect();
+		if(led_output != nullptr)
+			dynamic_cast<cLed&>(numPanel["extra-led"]).setState(*led_output ? led_red : led_off);
+	}
+
 	sout << " (" << min << '-' << max << ')';
 	numPanel["prompt"].setText(sout.str());
-	numPanel["number"].setTextToNum(0);
+	numPanel["number"].setTextToNum(initial_value);
 	if(!choice_names.empty()){
 		numPanel["choose"].attachClickHandler([&choice_names, &prompt](cDialog& me,std::string,eKeyMod) -> bool {
 			cStringChoice choose_dlg(choice_names, prompt, &me);
@@ -896,8 +889,10 @@ short get_num_response(short min, short max, std::string prompt, std::vector<std
 			return true;
 		});
 
+	bool cancel_clicked = false;
 	if(cancel_value){
-		numPanel["cancel"].attachClickHandler([cancel_value](cDialog& me,std::string,eKeyMod) -> bool {
+		numPanel["cancel"].attachClickHandler([cancel_value, &cancel_clicked](cDialog& me,std::string,eKeyMod) -> bool {
+			cancel_clicked = true;
 			me.setResult<int>(*cancel_value);
 			me.toast(false);
 			return true;
@@ -907,6 +902,9 @@ short get_num_response(short min, short max, std::string prompt, std::vector<std
 	}
 
 	numPanel.run();
+	if(!cancel_clicked && led_output != nullptr){
+		*led_output = dynamic_cast<cLed&>(numPanel["extra-led"]).getState() == led_red;
+	}
 	
 	return numPanel.getResult<int>();
 }
@@ -967,6 +965,10 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 						extra_info = "no item slot";
 						can_pick = false;
 						break;
+					case eBuyStatus::DEAD:
+						// Extra info not really needed, and kind of silly to print
+						can_pick = false;
+						break;
 					default:
 						break;
 				}
@@ -976,21 +978,34 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 					can_pick = false;
 					extra_info = "no item slot";
 				}
+				if(false) // Skip fallthrough past ONLY_CAN_TRAIN
+			case eSelectPC::ONLY_CAN_TRAIN:
+				if(univ.party[i].skill_pts){
+					extra_info = std::to_string(univ.party[i].skill_pts) + " skill point";
+					if(univ.party[i].skill_pts > 1) extra_info += "s";
+				}else{
+					extra_info = "no skill points";
+					can_pick = false;
+				}
 				BOOST_FALLTHROUGH;
 			case eSelectPC::ONLY_LIVING:
-				if(univ.party[i].main_status != eMainStatus::ALIVE)
+				if(univ.party[i].main_status != eMainStatus::ALIVE){
 					can_pick = false;
+					extra_info = "";
+				}
 				break;
 			case eSelectPC::ONLY_DEAD:
-				if(univ.party[i].main_status == eMainStatus::ALIVE)
+				if(univ.party[i].main_status == eMainStatus::ALIVE){
 					can_pick = false;
+					extra_info = "";
+				}
 				break;
 			case eSelectPC::ONLY_CAN_LOCKPICK:{
 				if(univ.party[i].main_status != eMainStatus::ALIVE){
 					can_pick = false;
 					break;
 				}
-				if(!univ.party[i].has_abil(eItemAbil::LOCKPICKS)){
+				else if(!univ.party[i].has_abil(eItemAbil::LOCKPICKS)){
 					can_pick = false;
 					extra_info = "no picks";
 					break;
@@ -1021,9 +1036,11 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 		if(highlight_highest != eSkill::INVALID){
 			short skill = univ.party[i].skills[highlight_highest];
 			pc_skills[i] = skill;
-			if(skill > highest_skill) highest_skill = skill;
-			if(skill != last_skill) all_pcs_equal = false;
-			last_skill = skill;
+			if(univ.party[i].is_alive()){
+				if(skill > highest_skill) highest_skill = skill;
+				if(skill != last_skill) all_pcs_equal = false;
+				last_skill = skill;
+			}
 		}
 		if(!can_pick) {
 			selectPc["pick" + n].hide();
@@ -1037,6 +1054,10 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 	if(!any_options){
 		if(mode == eSelectPC::ONLY_CAN_LOCKPICK){
 			ASB("  No one has lockpicks equipped.");
+			print_buf();
+		}
+		if(mode == eSelectPC::ONLY_CAN_TRAIN){
+			ASB("  No one has skill points.");
 			print_buf();
 		}
 		return 8;

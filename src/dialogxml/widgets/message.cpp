@@ -63,6 +63,10 @@ bool cTextMsg::parseAttribute(ticpp::Attribute& attr, std::string tagName, std::
 		else if(val == "left") right_align = false;
 		else throw xBadVal(tagName, attr.Name(), val, attr.Row(), attr.Column(), fname);
 		return true;
+	}else if(attr.Name() == "ellipsis"){
+		std::string val = attr.Value();
+		if(val == "true") text_mode = eTextMode::ELLIPSIS;
+		return true;
 	}
 	return cControl::parseAttribute(attr, tagName, fname);
 }
@@ -118,7 +122,8 @@ void cTextMsg::calculate_layout() {
 		cControl& ctrl = key ? getDialog()->getControl(*key) : *this;
 		msg.replace(pos, 1, ctrl.getAttachedKeyDescription());
 	}
-	if(to_rect.bottom - to_rect.top < 20 && msg.find("|") == std::string::npos){
+	if(text_mode == eTextMode::ELLIPSIS){}
+	else if(to_rect.bottom - to_rect.top < 20 && msg.find("|") == std::string::npos){
 		style.lineHeight = 12;
 		to_rect.left += 3;
 		text_mode = eTextMode::LEFT_BOTTOM;

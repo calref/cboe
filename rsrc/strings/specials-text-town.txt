@@ -6,8 +6,8 @@ Second part of message
 Unused
 Unused
 Unused
-First monster to affect (-1 for all)
-Last monster to affect (-1 for all)
+First monster to affect (negative counts back from last)
+Last monster to affect (negative counts back from last)
 Unused
 New Attitude
 Unused

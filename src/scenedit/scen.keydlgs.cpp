@@ -30,12 +30,44 @@
 extern short cen_x, cen_y;
 extern bool mouse_button_held;
 extern short cur_viewing_mode;
+extern short cur_town;
+extern location cur_out;
 extern cTown* town;
 extern short mode_count,to_create;
 extern ter_num_t template_terrain[64][64];
 extern cScenario scenario;
 extern cOutdoors* current_terrain;
 extern cCustomGraphics spec_scen_g;
+
+static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& special, short mode) {
+	eSpecCtxType cur_type = static_cast<eSpecCtxType>(mode);
+	
+	// Not pretty, but works:
+	cUniverse univ;
+	univ.scenario = scenario;
+	univ.party.town_num = cur_town;
+	univ.party.outdoor_corner = cur_out;
+	univ.party.i_w_c = {0, 0};
+
+	switch(special.type){
+		case eSpecType::ONCE_DIALOG:
+			once_dialog(univ, special, cur_type, &me);
+			break;
+		default:{
+			std::string str1;
+			std::string str2;
+			univ.get_strs(str1, str2, cur_type, special.m1, special.m2);
+
+			if(str1.empty() && str2.empty()) break;
+
+			short defaultBackground = cDialog::defaultBackground;
+			cDialog::defaultBackground = cDialog::BG_DARK;
+			cStrDlog(str1, str2, "", scenario.intro_pic, PIC_SCEN, &me).show();
+			cDialog::defaultBackground = defaultBackground;
+		}break;
+	}
+	return true;
+}
 
 std::vector<pic_num_t> field_pics = {0,3,5,6,7,8,9,10,11,12,13,14,15,24,25,26,27,28,29,30,31,4};
 std::vector<pic_num_t> static_boom_pics = {0,1,2,3,4,5};
@@ -189,6 +221,7 @@ static void set_pattern(cTilemap& map, const effect_pat_type& pat) {
 					case eDamageType::WEAPON: clr = Colours::MAROON; break;
 					case eDamageType::FIRE: clr = Colours::RED; break;
 					case eDamageType::POISON: clr = Colours::GREEN; break;
+					case eDamageType::ACID: clr = Colours::LIGHT_GREEN; break; // Distinct enough from green?
 					case eDamageType::MAGIC: clr = Colours::PURPLE; break;
 					case eDamageType::UNBLOCKABLE: clr = Colours::LIGHT_BLUE; break;
 					case eDamageType::COLD: clr = Colours::BLUE; break;
@@ -340,7 +373,6 @@ pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent, bool 
 		case PIC_MONST_TALL: case PIC_MONST_LG:
 			std::vector<std::pair<pic_num_t,ePicType>> pics;
 			for(m_pic_index_t m_pic : m_pic_index) {
-				// TODO: Put the added monster graphics in m_pic_index to allow picking them
 				ePicType type = PIC_MONST;
 				if(m_pic.x == 2) type += PIC_WIDE;
 				if(m_pic.y == 2) type += PIC_TALL;
@@ -795,6 +827,12 @@ static void put_spec_enc_in_dlog(cDialog& me, node_stack_t& edit_stack) {
 	setup_node_field(me, "x2c", spec.ex2c, info.ex2c(spec));
 	
 	setup_node_field(me, "jump", spec.jumpto, info.jump(spec));
+
+	if(info.can_preview){
+		me["preview-dialog"].show();
+	}else{
+		me["preview-dialog"].hide();
+	}
 }
 
 static void save_spec_enc(cDialog& me, node_stack_t& edit_stack) {
@@ -938,8 +976,8 @@ short choose_field_type(short cur, cDialog* parent, bool includeSpec) {
 }
 
 pic_num_t choose_damage_type(short cur, cDialog* parent, bool allow_spec) {
-	static const char*const damageNames[] = {"Weapon", "Fire", "Poison", "Magic", "Weird", "Cold", "Undead", "Demon", "Unblockable"};
-	static const std::vector<pic_num_t> pics = {3,0,2,1,5,4,3,3,1};
+	static const char*const damageNames[] = {"Weapon", "Fire", "Poison", "Magic", "Weird", "Cold", "Undead", "Demon", "Acid", "Unblockable"};
+	static const std::vector<pic_num_t> pics = {3,0,2,1,5,4,3,3,6,1};
 	short prev = cur;
 	if(cur < 0 || cur >= pics.size()) cur = 0;
 	cPictChoice pic_dlg(pics.begin(), pics.end() - !allow_spec, PIC_BOOM, parent);
@@ -953,7 +991,7 @@ pic_num_t choose_damage_type(short cur, cDialog* parent, bool allow_spec) {
 	return made_choice ? item_hit : prev;
 }
 
-static pic_num_t choose_boom_type(short cur, cDialog* parent) {
+static short choose_boom_type(short cur, cDialog* parent) {
 	static const int preset_booms = 6;
 	static const char*const boomNames[preset_booms+1] = {
 		"Fire", "Teleport", "Magic/Electricity",
@@ -977,7 +1015,7 @@ static pic_num_t choose_boom_type(short cur, cDialog* parent) {
 	});
 	bool made_choice = pic_dlg.show(cur);
 	size_t item_hit = pic_dlg.getPicChosen();
-	return made_choice ? item_hit : prev;
+	return made_choice ? item_hit - 8 : prev;
 }
 
 snd_num_t choose_sound(short cur, cDialog* parent, std::string title) {
@@ -1388,8 +1426,11 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 		return true;
 	});
 	
+
 	special["back"].hide();
 	edit_stack.push({which_node,mode,the_node});
+	special["preview-dialog"].attachClickHandler(std::bind(preview_spec_enc_dlog, _1, _2, std::ref(edit_stack.top().node), mode));
+
 	put_spec_enc_in_dlog(special, edit_stack);
 	
 	special.setResult(false);

@@ -29,11 +29,6 @@ public:
 	rectangle getEnclosingRect();
 };
 
-struct ScaleAwareText {
-	sf::Text text;
-	rectangle clip_rect;
-};
-
 void fill_rect(sf::RenderTarget& target, rectangle rect, sf::Color colour);
 void fill_circle(sf::RenderTarget& target, rectangle rect, sf::Color colour);
 void fill_roundrect(sf::RenderTarget& target, rectangle rect, int rad, sf::Color colour);

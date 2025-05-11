@@ -98,7 +98,7 @@ void cStringChoice::fillPage(){
 		sout << "led" << i + 1;
 		std::string led_id = sout.str(), text_id;
 		if(editable) {
-			sout.str("");
+			clear_sstr(sout);
 			sout << "edit" << i + 1;
 			text_id = sout.str();
 		} else text_id = led_id;

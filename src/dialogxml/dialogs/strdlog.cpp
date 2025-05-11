@@ -15,6 +15,7 @@
 #include "mathutil.hpp"
 #include "utility.hpp"
 
+// Pick a layout variant depending on number of strings, picture size, and whether a title is given
 DialogDefn& cStrDlog::getDefn(short n_strs, ePicType type, bool hasTitle){
 	std::ostringstream sout;
 	sout << minmax(1, 2, n_strs) << "str";
@@ -24,6 +25,7 @@ DialogDefn& cStrDlog::getDefn(short n_strs, ePicType type, bool hasTitle){
 	return *ResMgr::dialogs.get(sout.str());
 }
 
+// This uses a 1str- or 2str- layout variant depending on if one of the strings are empty
 cStrDlog::cStrDlog(std::string str1,std::string str2,std::string title,pic_num_t pic,ePicType t,cDialog* parent)
 	  : dlg(cStrDlog::getDefn((str1 != "") + (str2 != ""), t, title != ""), parent), type(t) {
 	using namespace std::placeholders;
@@ -136,7 +138,9 @@ static void give_help(short help1,short help2,cDialog* parent,bool help_forced) 
 		return;
 	}
 	append_iarray_pref("ReceivedHelp", help1);
-	append_iarray_pref("ReceivedHelp", help2);
+	if(help2 != -1)
+		append_iarray_pref("ReceivedHelp", help2);
+	sync_prefs();
 	str1 = get_str(help_text_rsrc,help1);
 	if(help2 > 0)
 		str2 = get_str("help",help2);

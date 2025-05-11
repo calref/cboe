@@ -254,14 +254,15 @@ void clip_rect(sf::RenderTarget& where, rectangle rect) {
 		store_clip_rects[p] = rect;
 	}
 
-	// TODO: Make sure this works for the scissor test...
 	setActiveRenderTarget(where);
 	auto viewport = where.getView().getViewport();
 	rectangle winRect(where);
 	location pivot = rect.bottomLeft();
 	pivot = where.mapCoordsToPixel(pivot);
+	location opposite = rect.topRight();
+	opposite = where.mapCoordsToPixel(opposite);
 	glEnable(GL_SCISSOR_TEST);
-	glScissor(pivot.x, rectangle(where).height() - pivot.y, rect.width() * viewport.width, rect.height() * viewport.height);
+	glScissor(pivot.x, rectangle(where).height() - pivot.y, abs(opposite.x - pivot.x), abs(opposite.y - pivot.y));
 }
 
 void clip_region(sf::RenderWindow& where, Region& region) {

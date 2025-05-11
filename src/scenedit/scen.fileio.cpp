@@ -43,6 +43,7 @@ void load_spec_graphics();
 
 // These aren't static solely so that the test cases can access them.
 void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario);
+void writeEditorStateToXml(ticpp::Printer&& data, cScenario& scenario);
 void writeTerrainToXml(ticpp::Printer&& data, cScenario& scenario);
 void writeItemsToXml(ticpp::Printer&& data, cScenario& scenario);
 void writeMonstersToXml(ticpp::Printer&& data, cScenario& scenario);
@@ -121,6 +122,36 @@ namespace ticpp {
 	}
 }
 
+void writeEditorStateToXml(ticpp::Printer&& data, cScenario& scenario) {
+	editor_state_t editor_state = scenario.editor_state;
+
+	data.OpenElement("editor");
+	data.PushAttribute("boes", scenario.format_ed_version());
+	data.PushElement("drawing", editor_state.drawing);
+	data.PushElement("editing-town", editor_state.editing_town);
+
+	data.PushElement("last-town", cur_town);
+	for(auto pair : scenario.editor_state.town_view_state){
+		data.OpenElement("town-view-state");
+		data.PushAttribute("num", pair.first);
+		data.PushElement("center", pair.second.center);
+		data.PushElement("viewing-mode", pair.second.cur_viewing_mode);
+		data.CloseElement("town-view-state");
+	}
+
+	data.PushElement("last-out-section", cur_out);
+	for(auto pair : scenario.editor_state.out_view_state){
+		data.OpenElement("out-view-state");
+		data.PushAttribute("x", pair.first.x);
+		data.PushAttribute("y", pair.first.y);
+		data.PushElement("center", pair.second.center);
+		data.PushElement("viewing-mode", pair.second.cur_viewing_mode);
+		data.CloseElement("out-view-state");
+	}
+
+	data.CloseElement("editor");
+}
+
 void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 	data.OpenElement("scenario");
 	data.PushAttribute("boes", scenario.format_ed_version());
@@ -133,11 +164,13 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 	data.PushElement("name", scenario.contact_info[0]);
 	data.PushElement("email", scenario.contact_info[1]);
 	data.CloseElement("author");
-	data.OpenElement("feature-flags");
-	for(auto& p : scenario.feature_flags){
-		data.PushElement(p.first, p.second);
+	if(!scenario.feature_flags.empty()){
+		data.OpenElement("feature-flags");
+		for(auto& p : scenario.feature_flags){
+			data.PushElement(p.first, p.second);
+		}
+		data.CloseElement("feature-flags");
 	}
-	data.CloseElement("feature-flags");
 	data.OpenElement("text");
 	data.PushElement("teaser", scenario.teaser_text[0]);
 	data.PushElement("teaser", scenario.teaser_text[1]);
@@ -355,8 +388,6 @@ void writeScenarioToXml(ticpp::Printer&& data, cScenario& scenario) {
 	data.CloseElement("game");
 	data.OpenElement("editor");
 	data.PushElement("default-ground", scenario.default_ground);
-	data.PushElement("last-out-section", cur_out);
-	data.PushElement("last-town", cur_town);
 	if(!scenario.custom_graphics.empty()) {
 		data.OpenElement("graphics");
 		for(size_t i = 0; i < scenario.custom_graphics.size(); i++) {
@@ -586,7 +617,7 @@ void writeMonstersToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.CloseElement("attacks");
 		
 		data.OpenElement("immunity");
-		for(int i = 0; i < 8; i++) {
+		for(int i = 0; i < int(eDamageType::SPECIAL); i++) {
 			eDamageType dmg = eDamageType(i);
 			if(monst.resist[dmg] != 100)
 				data.PushElement(boost::lexical_cast<std::string>(dmg), monst.resist[dmg]);
@@ -609,7 +640,7 @@ void writeMonstersToXml(ticpp::Printer&& data, cScenario& scenario) {
 			if(monst.guard) data.PushElement("guard");
 			for(auto& p : monst.abil) {
 				if(p.first == eMonstAbil::NO_ABIL || !p.second.active) continue;
-				str.str("");
+				clear_sstr(str);
 				eMonstAbil abil = p.first;
 				uAbility& param = p.second;
 				switch(getMonstAbilCategory(abil)) {
@@ -1073,6 +1104,10 @@ void save_scenario(bool rename) {
 		std::ostream& header = scen_file.newFile("scenario/header.exs");
 		header.write(reinterpret_cast<char*>(&scenario.format), sizeof(scenario_header_flags));
 		
+		// Write scenario's editor state to a file that can be added to .gitignore
+		std::ostream& editor_data = scen_file.newFile("scenario/editor.xml");
+		writeEditorStateToXml(ticpp::Printer("scenario.xml", editor_data), scenario);
+
 		// Next, the bulk scenario data.
 		std::ostream& scen_data = scen_file.newFile("scenario/scenario.xml");
 		writeScenarioToXml(ticpp::Printer("scenario.xml", scen_data), scenario);

@@ -91,10 +91,10 @@ std::string get_os_version() {
 	return version.str();
 }
 
-void makeFrontWindow(sf::Window& win) {
+void _makeFrontWindow(sf::Window& win) {
 }
 
-void setWindowFloating(sf::Window& win, bool floating) {
+void _setWindowFloating(sf::Window& win, bool floating) {
 	// Code adapted from <http://stackoverflow.com/a/16235920>
 	auto display = XOpenDisplay(NULL);
 	Atom wmStateAbove = XInternAtom(display, "_NET_WM_STATE_ABOVE", true);

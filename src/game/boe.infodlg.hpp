@@ -31,22 +31,18 @@ void display_alchemy(bool allowEdit,cDialog* parent);
 // Callback for recording encounter strings
 class cStringRecorder {
 private:
-	eEncNoteType type;
-	unsigned short label1, label2, label1b, label2b;
+	eSpecCtxType spec_type;
+	eEncNoteType note_type;
+	short label1, label2;
 	std::string location;
 public:
-	cStringRecorder(eEncNoteType type) : type(type) {}
-	cStringRecorder& string1(unsigned short which) {
+	cStringRecorder(eSpecCtxType spec_type, eEncNoteType note_type) : spec_type(spec_type), note_type(note_type) {}
+	cStringRecorder& string1(short which) {
 		label1 = which;
 		return *this;
 	}
-	cStringRecorder& string2(unsigned short which) {
+	cStringRecorder& string2(short which) {
 		label2 = which;
-		return *this;
-	}
-	cStringRecorder& from(unsigned short where1, unsigned short where2) {
-		label1b = where1;
-		label2b = where2;
 		return *this;
 	}
 	cStringRecorder& at(std::string where) {

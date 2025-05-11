@@ -32,6 +32,7 @@
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "dialogxml/dialogs/pictchoice.hpp"
+#include "dialogxml/dialogs/3choice.hpp"
 #include "tools/winutil.hpp"
 #include "fileio/fileio.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
@@ -578,7 +579,7 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 		add_string_to_buf("Cast: You're an Anama!");
 		return;
 	}
-	if(univ.party[pc_num].traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
+	if(univ.party[pc_num].traits[eTrait::PACIFIST] && spell_num != eSpell::NONE && !(*spell_num).peaceful) {
 		add_string_to_buf("Cast: You're a pacifist!");
 		return;
 	}
@@ -830,7 +831,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 	location loc;
 	location where;
 	
-	if(univ.party[pc_num].traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
+	if(univ.party[pc_num].traits[eTrait::PACIFIST] && spell_num != eSpell::NONE && !(*spell_num).peaceful) {
 		add_string_to_buf("Cast: You're a pacifist!");
 		return;
 	}
@@ -1100,7 +1101,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 					add_string_to_buf("  You absorb damage.");
 					sout << " healed " << univ.party[target].cur_health - store_victim_health << '.';
 					add_string_to_buf(sout.str());
-					sout.str("");
+					clear_sstr(sout);
 					sout << univ.party[pc_num].name << " takes " << store_caster_health - univ.party[pc_num].cur_health << '.';
 				} else if(spell_num == eSpell::REVIVE) {
 					sout << " healed.";
@@ -1367,6 +1368,7 @@ void cast_town_spell(location where) {
 					add_string_to_buf("  Door unlocked.");
 					play_sound(9);
 					univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[ter].flag1;
+					univ.town->door_unlocked.push_back(where);
 				}
 				else {
 					play_sound(41);
@@ -1470,11 +1472,11 @@ void do_mindduel(short pc_num,cCreature *monst) {
 			balance++;
 			if(univ.party[pc_num].cur_sp == 0) {
 				univ.party[pc_num].status[eStatus::DUMB] += 2;
-				sout.str("");
+				clear_sstr(sout);
 				sout << "  " << univ.party[pc_num].name << " is dumbfounded.";
 				add_string_to_buf(sout.str(), 4);
 				if(univ.party[pc_num].status[eStatus::DUMB] > 7) {
-					sout.str("");
+					clear_sstr(sout);
 					sout << "  " << univ.party[pc_num].name << " is killed!";
 					add_string_to_buf(sout.str(), 4);
 					kill_pc(univ.party[pc_num],eMainStatus::DEAD);
@@ -1571,8 +1573,9 @@ bool pc_can_cast_spell(const cPlayer& pc,eSpell spell_num) {
 	if(spell_num == eSpell::NONE) return false;
 	short level,store_w_cast;
 	eSkill type = (*spell_num).type;
+	cSpell spell = *spell_num;
 	
-	level = (*spell_num).level;
+	level = spell.level;
 	int effective_skill = pc.skill(type);
 	if(pc.status[eStatus::DUMB] < 0)
 		effective_skill -= pc.status[eStatus::DUMB];
@@ -1581,11 +1584,13 @@ bool pc_can_cast_spell(const cPlayer& pc,eSpell spell_num) {
 		return false; // From Windows version. It does kinda make sense, though this function shouldn't even be called in these modes.
 	if(!isMage(spell_num) && !isPriest(spell_num))
 		return false;
+	if(has_feature_flag("pacifist-spellcast-check", "V2") && pc.traits[eTrait::PACIFIST] && !spell.peaceful)
+		return false;
 	if(effective_skill < level)
 		return false;
 	if(pc.main_status != eMainStatus::ALIVE)
 		return false;
-	if(pc.cur_sp < (*spell_num).cost)
+	if(pc.cur_sp < spell.cost)
 		return false;
 	// TODO: Maybe get rid of the casts here?
 	if(type == eSkill::MAGE_SPELLS && !pc.mage_spells[int(spell_num)])
@@ -1599,7 +1604,7 @@ bool pc_can_cast_spell(const cPlayer& pc,eSpell spell_num) {
 	if(pc.status[eStatus::ASLEEP] > 0)
 		return false;
 	
-	store_w_cast = (*spell_num).when_cast;
+	store_w_cast = spell.when_cast;
 	if(is_out() && WHEN_OUTDOORS &~ store_w_cast)
 		return false;
 	if(is_town() && WHEN_TOWN &~ store_w_cast)
@@ -1708,15 +1713,17 @@ static void put_target_status_graphics(cDialog& me, short for_pc) {
 static void draw_spell_pc_info(cDialog& me) {
 	for(short i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
+		me["arrow" + n].hide();
+		put_target_status_graphics(me, i);
 		if(univ.party[i].main_status != eMainStatus::ABSENT) {
 			me["pc" + n].setText(univ.party[i].name);
-			
-			me["arrow" + n].hide();
 			if(univ.party[i].main_status == eMainStatus::ALIVE) {
 				me["hp" + n].setTextToNum(univ.party[i].cur_health);
 				me["sp" + n].setTextToNum(univ.party[i].cur_sp);
+			}else{
+				me["hp" + n].setText("");
+				me["sp" + n].setText("");
 			}
-			put_target_status_graphics(me, i);
 		}
 	}
 }
@@ -1725,10 +1732,9 @@ static void draw_spell_pc_info(cDialog& me) {
 static void put_pc_caster_buttons(cDialog& me) {
 	for(short i = 0; i < 6; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
-		if(me["caster" + n].isVisible()) {
-			if(i == pc_casting)
-				me["pc" + n].setColour(SELECTED_COLOUR);
-			else me["pc" + n].setColour(me.getDefTextClr());
+		me["pc" + n].setColour(me.getDefTextClr());
+		if(me["caster" + n].isVisible() && i == pc_casting){
+			me["pc" + n].setColour(SELECTED_COLOUR);
 		}
 	}
 }
@@ -1842,7 +1848,7 @@ static bool pick_spell_caster(cDialog& me, std::string id, const eSkill store_si
 	return true;
 }
 
-static bool pick_spell_target(cDialog& me, std::string id, const eSkill store_situation, short& last_darkened, const short store_spell) {
+static bool pick_spell_target(cDialog& me, std::string id, const eSkill store_situation, short& last_darkened, const short& store_spell) {
 	static const char*const no_target = " No target needed.";
 	static const char*const bad_target = " Can't cast on them.";
 	static const char*const got_target = " Target selected.";
@@ -1862,7 +1868,7 @@ static bool pick_spell_target(cDialog& me, std::string id, const eSkill store_si
 	return true;
 }
 
-static bool pick_spell_event_filter(cDialog& me, std::string item_hit, const eSkill store_situation, const short store_spell) {
+static bool pick_spell_event_filter(cDialog& me, std::string item_hit, const eSkill store_situation, const short& store_spell) {
 	if(item_hit == "other") {
 		on_which_spell_page = 1 - on_which_spell_page;
 		put_spell_list(me, store_situation);
@@ -1979,11 +1985,6 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	if(pc_casting == 6)
 		pc_casting = univ.cur_pc;
 	
-	if(type == eSkill::MAGE_SPELLS && univ.party[pc_casting].traits[eTrait::ANAMA]) {
-		add_string_to_buf("Cast: You're an Anama!");
-		return eSpell::NONE;
-	}
-	
 	if(pc_num == 6) { // See if can keep same caster
 		can_choose_caster = true;
 		if(!pc_can_cast_spell(univ.party[pc_casting],type)) {
@@ -2004,6 +2005,10 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	}
 	
 	if(!can_choose_caster) {
+		if(type == eSkill::MAGE_SPELLS && univ.party[pc_casting].traits[eTrait::ANAMA]) {
+			add_string_to_buf("Cast: You're an Anama!");
+			return eSpell::NONE;
+		}
 		if(univ.party[pc_num].skill(type) == 0) {
 			if(type == eSkill::MAGE_SPELLS) add_string_to_buf("Cast: No mage skill.");
 			else add_string_to_buf("Cast: No priest skill.");
@@ -2057,11 +2062,15 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	
 	set_cursor(sword_curs);
 	
-	cDialog castSpell(*ResMgr::dialogs.get("cast-spell"));
-	
+	extern std::unique_ptr<cDialog> storeCastSpell;
+	cDialog& castSpell = *storeCastSpell;
+	// untoast() is not usually called directly, but here it must be so that the reused dialog initializes
+	// correctly, because cControl::isVisible() returns false for toasted dialogs
+	castSpell.untoast(false);
+
 	castSpell.attachClickHandlers(std::bind(pick_spell_caster, _1, _2, type, std::ref(dark), std::ref(former_spell)), {"caster1","caster2","caster3","caster4","caster5","caster6"});
-	castSpell.attachClickHandlers(std::bind(pick_spell_target,_1,_2, type, std::ref(dark), former_spell), {"target1","target2","target3","target4","target5","target6"});
-	castSpell.attachClickHandlers(std::bind(pick_spell_event_filter, _1, _2, type, former_spell), {"other", "help"});
+	castSpell.attachClickHandlers(std::bind(pick_spell_target,_1,_2, type, std::ref(dark), std::ref(former_spell)), {"target1","target2","target3","target4","target5","target6"});
+	castSpell.attachClickHandlers(std::bind(pick_spell_event_filter, _1, _2, type,std::ref(former_spell)), {"other", "help"});
 	castSpell["cast"].attachClickHandler(std::bind(finish_pick_spell, _1, false, former_target, std::ref(former_spell), type));
 	castSpell["cancel"].attachClickHandler(std::bind(finish_pick_spell, _1, true, former_target, std::ref(former_spell), type));
 	
@@ -2083,9 +2092,9 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	
 	put_spell_list(castSpell, type);
 	draw_spell_info(castSpell, type, former_spell);
-	put_pc_caster_buttons(castSpell);
 	draw_spell_pc_info(castSpell);
 	draw_caster_buttons(castSpell, type);
+	put_pc_caster_buttons(castSpell);
 	put_spell_led_buttons(castSpell, type, former_spell);
 	
 	castSpell.runWithHelp(7, 8);
@@ -2316,9 +2325,22 @@ bool flying() {
 }
 
 void hit_party(short how_much,eDamageType damage_type,short snd_type) {
-	for(short i = 0; i < 6; i++)
-		if(univ.party[i].main_status == eMainStatus::ALIVE)
-			damage_pc(univ.party[i],how_much,damage_type,eRace::UNKNOWN,snd_type);
+	short max_dam = 0;
+
+	for(short i = 0; i < 6; i++){
+		if(univ.party[i].main_status == eMainStatus::ALIVE){
+			short dam = damage_pc(univ.party[i],how_much,damage_type,eRace::UNKNOWN,snd_type, true, is_combat());
+			if(dam > max_dam) max_dam = dam;
+		}
+	}
+	// Peace mode: one boom for the whole party, use the highest damage actually taken
+	if(!is_combat() && max_dam > 0){
+		int boom_type = boom_gr[damage_type];
+		if(is_town())
+			boom_space(univ.party.town_loc,overall_mode,boom_type,max_dam,snd_type);
+		else
+			boom_space(univ.party.out_loc,100,boom_type,max_dam,snd_type);
+	}
 	put_pc_screen();
 }
 
@@ -2330,7 +2352,7 @@ void slay_party(eMainStatus mode) {
 	put_pc_screen();
 }
 
-short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace type_of_attacker, short sound_type,bool do_print) {
+short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace type_of_attacker, short sound_type,bool do_print, bool boom) {
 	
 	if(which_pc.main_status != eMainStatus::ALIVE)
 		return false;
@@ -2339,8 +2361,11 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 	// but -1 is the new value for "use default"
 	sound_type = get_sound_type(damage_type, sound_type);
 
+	int boom_type = boom_gr[damage_type];
+
 	// armor
-	if(damage_type == eDamageType::WEAPON || damage_type == eDamageType::UNDEAD || damage_type == eDamageType::DEMON) {
+	static std::set<eDamageType> armor_resist_damage = { eDamageType::WEAPON, eDamageType::UNDEAD, eDamageType::DEMON };
+	if(armor_resist_damage.count(damage_type)) {
 		how_much -= minmax(-5,5,which_pc.status[eStatus::BLESS_CURSE]);
 		for(short i = 0; i < cPlayer::INVENTORY_SIZE; i++) {
 			const cItem& item = which_pc.items[i];
@@ -2388,6 +2413,10 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 	}
 	
 	short prot_from_dmg = which_pc.get_prot_level(eItemAbil::DAMAGE_PROTECTION,int(damage_type));
+	// Acid damage used to be magic damage, so magic protection counts as acid protection:
+	if(damage_type == eDamageType::ACID){
+		prot_from_dmg += which_pc.get_prot_level(eItemAbil::DAMAGE_PROTECTION,int(eDamageType::MAGIC));
+	}
 	if(prot_from_dmg > 0) {
 		// TODO: Why does this not depend on the ability strength if it's not weapon damage?
 		if(damage_type == eDamageType::WEAPON) how_much -= prot_from_dmg;
@@ -2419,8 +2448,13 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 		how_much = 0;
 	
 	// Mag. res helps w. fire and cold
-	// TODO: Why doesn't this help with magic damage!?
-	if(damage_type == eDamageType::FIRE || damage_type == eDamageType::COLD) {
+	static std::set<eDamageType> magic_resist_damage = { eDamageType::FIRE, eDamageType::COLD };
+	// Now it also helps with MAGIC:
+	if(has_feature_flag("magic-resistance", "fixed")){
+		magic_resist_damage.insert(eDamageType::MAGIC);
+		magic_resist_damage.insert(eDamageType::ACID);
+	}
+	if(magic_resist_damage.count(damage_type)) {
 		int magic_res = which_pc.status[eStatus::MAGIC_RESISTANCE];
 		if(magic_res > 0)
 			how_much /= 2;
@@ -2430,7 +2464,8 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 	
 	// major resistance
 	short full_prot = which_pc.get_prot_level(eItemAbil::FULL_PROTECTION);
-	if((damage_type == eDamageType::FIRE || damage_type == eDamageType::POISON || damage_type == eDamageType::MAGIC || damage_type == eDamageType::COLD)
+	std::set<eDamageType> major_resist_damage = { eDamageType::FIRE, eDamageType::POISON, eDamageType::MAGIC, eDamageType::ACID, eDamageType::COLD};
+	if(major_resist_damage.count(damage_type)
 	   && (full_prot > 0))
 		how_much = how_much / ((full_prot >= 7) ? 4 : 2);
 	
@@ -2460,12 +2495,13 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 		
 		if(do_print)
 			add_string_to_buf("  " + which_pc.name + " takes " + std::to_string(how_much) + '.');
-		if(damage_type != eDamageType::MARKED) {
+		if(damage_type != eDamageType::MARKED && boom) {
 			if(is_combat())
-				boom_space(which_pc.combat_pos,overall_mode,boom_gr[damage_type],how_much,sound_type);
+				boom_space(which_pc.combat_pos,overall_mode,boom_type,how_much,sound_type);
 			else if(is_town())
-				boom_space(univ.party.town_loc,overall_mode,boom_gr[damage_type],how_much,sound_type);
-			else boom_space(univ.party.town_loc,100,boom_gr[damage_type],how_much,sound_type);
+				boom_space(univ.party.town_loc,overall_mode,boom_type,how_much,sound_type);
+			else
+				boom_space(univ.party.out_loc,100,boom_type,how_much,sound_type);
 		}
 		// TODO: When outdoors it flushed only key events, not mouse events. Why?
 		flushingInput = true;
@@ -2504,9 +2540,9 @@ void petrify_pc(cPlayer& which_pc,int strength) {
 		r1 = 20;
 	
 	if(r1 > 14) {
-		create_line << "  " << which_pc.name << "resists.";
+		create_line << "  " << which_pc.name << " resists.";
 	} else {
-		create_line << "  " << which_pc.name << "is turned to stone.";
+		create_line << "  " << which_pc.name << " is turned to stone.";
 		kill_pc(which_pc,eMainStatus::STONE);
 	}
 	add_string_to_buf(create_line.str());

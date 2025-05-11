@@ -12,7 +12,9 @@
     <onenter condition="dead">41</onenter>
     <onexit dir="e">37</onexit>
     <timer freq="50">42</timer>
-    <flags />
+    <flags>
+        <hidden>true</hidden>
+    </flags>
     <wandering>
         <monster>13</monster>
         <monster>13</monster>

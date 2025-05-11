@@ -94,6 +94,7 @@ The `<text>` tag accepts the following attributes:
 * `outline` - See **Common Attributes** above.
 * `underline` - If true, the text will be underlined.
 * `align` - `right` or `left`. Defaults to `left`.
+* `ellipsis` - If true, instead of wrapping overflow, truncate to one line with '...'
 * `fromlist`, `font`, `size`, `color`, `colour`, `def-key` -
 See **Common Attributes** above.
 

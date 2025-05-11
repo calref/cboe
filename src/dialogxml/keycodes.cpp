@@ -46,6 +46,8 @@ cKey charToKey(char ch) {
 	switch(ch){
 		case '=': case '/':
 			return {false, w(ch)};
+		case '+':
+			return {false, w('='), mod_shift};
 		case '<':
 			return {false, w(','), mod_shift};
 		case '>':

@@ -132,12 +132,12 @@ rectangle_size_delegate& rectangle_size_delegate::operator-=(int val) {
 	return *this;
 }
 
-rectangle_size_delegate& rectangle_size_delegate::operator*=(int val) {
+rectangle_size_delegate& rectangle_size_delegate::operator*=(double val) {
 	*this = *this * val;
 	return *this;
 }
 
-rectangle_size_delegate& rectangle_size_delegate::operator/=(int val) {
+rectangle_size_delegate& rectangle_size_delegate::operator/=(double val) {
 	*this = *this / val;
 	return *this;
 }
@@ -354,6 +354,18 @@ location between_anchor_points(location anchor1, location anchor2, int padding){
 }
 
 std::vector<location> points_containing_most(std::vector<location> points, int padding) {
+	return points_containing_most(points, {}, padding);
+}
+
+static int points_can_see(location checking_point, std::vector<location> points_of_interest, int padded_radius) {
+	int can_see = 0;
+	for(location p : points_of_interest){
+		if(is_on_screen(p, checking_point, padded_radius)) ++can_see;
+	}
+	return can_see;
+}
+
+std::vector<location> points_containing_most(std::vector<location> points,  std::vector<location> required_points, int padding) {
 	// Find the bounding box of the given points:
 	int min_x = std::numeric_limits<int>::max();
 	int min_y = min_x;
@@ -379,13 +391,17 @@ std::vector<location> points_containing_most(std::vector<location> points, int p
 	location checking_point;
 	for(checking_point.x = min_x; checking_point.x <= max_x; ++checking_point.x){
 		for(checking_point.y = min_y; checking_point.y <= max_y; ++checking_point.y){
-			int can_see = 0;
-			for(location p : points){
-				if(is_on_screen(p, checking_point, padded_radius)) ++can_see;
-			}
+			// Eliminate points that don't see every required point:
+			int required_can_see = points_can_see(checking_point, required_points, padded_radius);
+			if(required_can_see < required_points.size()) continue;
+
+			// Count how many desired points can be seen:
+			int can_see = points_can_see(checking_point, points, padded_radius);
 			points_seen_from.push_back(std::make_pair(checking_point, can_see));
 		}
 	}
+
+	if(points_seen_from.empty()) return {};
 
 	// Sort candidates by how many of the points they see
 	std::sort(points_seen_from.begin(), points_seen_from.end(), [](std::pair<location,int> pair1, std::pair<location,int> pair2) -> bool {

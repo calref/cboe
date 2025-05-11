@@ -13,6 +13,7 @@
 #include <tuple>
 #include <vector>
 #include <string>
+#include <cmath>
 
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -40,6 +41,11 @@ struct TextStyle {
 	mutable std::map<std::string, location> measurementCache;
 };
 
+struct ScaleAwareText {
+	sf::Text text;
+	rectangle clip_rect;
+};
+
 // elements: std::make_tuple(last_line_break, last_word_break, line_width)
 typedef std::vector<std::tuple<unsigned short, unsigned short, unsigned short>> break_info_t;
 
@@ -54,6 +60,7 @@ enum class eTextMode {
 	CENTRE,
 	LEFT_TOP,
 	LEFT_BOTTOM,
+	ELLIPSIS,
 };
 
 std::vector<rectangle> draw_string_hilite(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,TextStyle style,std::vector<hilite_t> hilites,sf::Color hiliteClr);
@@ -65,5 +72,9 @@ void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::stri
 void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,eTextMode mode,TextStyle style, break_info_t break_info,bool right_align = false);
 break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextStyle style);
 size_t string_length(std::string str, const TextStyle& style, short* height = nullptr);
+inline void round_vec(sf::Vector2f& vec) {
+	vec.x = std::round(vec.x);
+	vec.y = std::round(vec.y);
+}
 
 #endif

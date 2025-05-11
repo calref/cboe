@@ -199,7 +199,5 @@
     </game>
     <editor>
         <default-ground>2</default-ground>
-        <last-out-section x="0" y="0" />
-        <last-town>0</last-town>
     </editor>
 </scenario>

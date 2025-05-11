@@ -68,7 +68,7 @@ TEST_CASE("Initialization sanity test for monster") {
 		CHECK(monst.abil.empty());
 		CHECK(monst.corpse_item == 0);
 		CHECK(monst.corpse_item_chance == 0);
-		CHECK(monst.resist.size() == 10);
+		CHECK(monst.resist.size() == 11);
 		CHECK(monst.resist[eDamageType::WEAPON] == 100);
 		CHECK(monst.resist[eDamageType::FIRE] == 100);
 		CHECK(monst.resist[eDamageType::POISON] == 100);
@@ -77,6 +77,7 @@ TEST_CASE("Initialization sanity test for monster") {
 		CHECK(monst.resist[eDamageType::UNBLOCKABLE] == 100);
 		CHECK(monst.resist[eDamageType::UNDEAD] == 100);
 		CHECK(monst.resist[eDamageType::DEMON] == 100);
+		CHECK(monst.resist[eDamageType::ACID] == 100);
 		CHECK(monst.resist[eDamageType::MARKED] == 100);
 		CHECK_FALSE(monst.mindless);
 		CHECK_FALSE(monst.invuln);

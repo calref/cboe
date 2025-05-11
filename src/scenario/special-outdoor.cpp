@@ -12,7 +12,8 @@
 node_category_info_t CAT_OUTD{eSpecType::OUT_MAKE_WANDER, eSpecType::OUT_MOVE_PARTY};
 
 namespace {
-	node_properties_t S_WANDER = node_builder_t(eSpecType::OUT_MAKE_WANDER);
+	node_properties_t S_WANDER = node_builder_t(eSpecType::OUT_MAKE_WANDER)
+		.no_preview();
 	node_properties_t S_TOWN = node_builder_t(eSpecType::OUT_FORCE_TOWN)
 		.msg()
 		.loc(eSpecField::EX2A, eSpecField::EX2B, eLocType::SPECIFIED_TOWN, eSpecField::EX1A)

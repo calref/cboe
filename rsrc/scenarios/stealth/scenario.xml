@@ -415,7 +415,7 @@
             <name>Canizares&apos; Herbs</name>
             <type>live</type>
             <prompt>shop</prompt>
-            <face>0</face>
+            <face>43</face>
             <entries>
                 <item quantity="infinite">363</item>
                 <item quantity="infinite">364</item>
@@ -425,7 +425,7 @@
             <name>Canizares&apos; Potions</name>
             <type>live</type>
             <prompt>shop</prompt>
-            <face>0</face>
+            <face>43</face>
             <entries>
                 <item quantity="infinite">260</item>
                 <item quantity="infinite">261</item>
@@ -435,7 +435,7 @@
             </entries>
         </shop>
         <shop>
-            <name></name>
+            <name>Canizares&apos; Recipes</name>
             <type>dead</type>
             <prompt>alch</prompt>
             <face>43</face>
@@ -738,8 +738,6 @@
     </game>
     <editor>
         <default-ground>2</default-ground>
-        <last-out-section x="0" y="2" />
-        <last-town>5</last-town>
         <graphics>
             <pic index="0">monster-small</pic>
             <pic index="4">monster-small</pic>
@@ -760,5 +758,8 @@
             <item chance="8">18</item>
             <item chance="15">0</item>
         </storage>
+        <sdf row="20" col="0">killed Jaen</sdf>
+        <sdf row="349" col="0">icy tunnels voice</sdf>
+        <sdf row="349" col="1">empire outpost library</sdf>
     </editor>
 </scenario>

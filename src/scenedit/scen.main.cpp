@@ -301,10 +301,9 @@ static void process_args(int argc, char* argv[]) {
 	}
 	if(!file.empty()) {
 		if(load_scenario(file, scenario)) {
-			set_current_town(scenario.last_town_edited);
+			restore_editor_state(true);
 			change_made = false;
 			ae_loading = true;
-			set_current_out(scenario.last_out_edited);
 		} else {
 			std::cout << "Failed to load scenario: " << file << std::endl;
 		}
@@ -449,19 +448,19 @@ void handle_menu_choice(eMenu item_hit) {
 				break;
 			file_to_load = item_hit == eMenu::FILE_OPEN ? nav_get_scenario() : scenario.scen_file;
 			if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
-				cur_town = scenario.last_town_edited;
-				town = scenario.towns[cur_town];
+				restore_editor_state(true);
 				change_made = false;
-				set_current_out(scenario.last_out_edited);
 			} else if(!file_to_load.empty())
 				set_up_start_screen(); // Failed to load file, dump to start
 			undo_list.clear();
 			update_edit_menu();
 			break;
 		case eMenu::FILE_SAVE:
+			store_current_terrain_state();
 			save_scenario();
 			break;
 		case eMenu::FILE_SAVE_AS:
+			store_current_terrain_state();
 			save_scenario(true);
 			break;
 		case eMenu::FILE_NEW:

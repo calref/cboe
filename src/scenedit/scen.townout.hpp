@@ -22,5 +22,6 @@ void edit_placed_item(short which_i);
 
 void delete_last_town();
 void edit_town_wand();
-void set_current_town(int to);
-void set_current_out(location out_sec);
+void set_current_town(int to, bool first_restore = false);
+void set_current_out(location out_sec, bool continuous_shift, bool first_restore = false);
+void store_current_terrain_state();

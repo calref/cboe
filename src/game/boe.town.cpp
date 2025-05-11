@@ -122,7 +122,14 @@ void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
 
 	// TODO: This means cleared webs reappear, for example. Is that right?
 	univ.town.place_preset_fields();
-	
+
+	for(location unlocked : univ.town->door_unlocked){
+		if(is_unlockable(unlocked)){
+			ter_num_t terrain = univ.town->terrain(unlocked.x,unlocked.y);
+			univ.town->terrain(unlocked.x,unlocked.y) = univ.scenario.ter_types[terrain].flag1;
+		}
+	}
+
 	univ.town.belt_present = false;
 	// Set up map, using stored map
 	for(short i = 0; i < univ.town->max_dim; i++)
@@ -1181,6 +1188,7 @@ void pick_lock(location where,short pc_num) {
 		add_string_to_buf("  Door unlocked.");
 		play_sound(9);
 		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[terrain].flag1;
+		univ.town->door_unlocked.push_back(where);
 	}
 }
 
@@ -1205,6 +1213,7 @@ void bash_door(location where,short pc_num) {
 		add_string_to_buf("  Lock breaks.");
 		play_sound(9);
 		univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[terrain].flag1;
+		univ.town->door_unlocked.push_back(where);
 	}
 }
 
@@ -1387,11 +1396,12 @@ void draw_map(bool need_refresh) {
 
 		map_gworld().setActive();
 		
-		fill_rect(map_gworld(), map_world_rect, sf::Color::Black);
-		
 		// Now, if shopping or talking, just don't touch anything.
 		if((overall_mode == MODE_SHOPPING) || (overall_mode == MODE_TALKING))
 			redraw_rect.right = -1;
+		// Otherwise, clear to black first:
+		else
+			fill_rect(map_gworld(), map_world_rect, sf::Color::Black);
 		
 		if((is_out()) ||
 			((is_combat()) && (which_combat_type == 0)) ||
@@ -1575,7 +1585,7 @@ void display_map() {
 	mini_map().setVisible(true);
 	map_visible = true;
 	draw_map(true);
-	makeFrontWindow(mainPtr());
+	makeFrontWindow(mainPtr(), mini_map());
 	
 	set_cursor(sword_curs);
 }

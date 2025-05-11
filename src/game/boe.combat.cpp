@@ -27,6 +27,7 @@
 #include "pattern.hpp"
 #include "spell.hpp"
 #include "tools/prefs.hpp"
+#include "tools/cursors.hpp"
 #include "utility.hpp"
 #include "replay.hpp"
 
@@ -94,8 +95,14 @@ void start_outdoor_combat(cOutdoors::cWandering encounter,location where,short n
 		nums[i] = get_ran(1,low[i],high[i]);
 	for(short i = 0; i < 3; i++)
 		nums[i + 7] = get_ran(1,low[i + 7],high[i + 7]);
+
+	// This takes some time, and with sound off the delay is confusing.
+	// So let the player know we're not frozen
+	set_cursor(watch_curs);
+
 	notify_out_combat_began(encounter,nums);
 	print_buf();
+	redraw_screen(REFRESH_TEXT);
 	play_sound(23);
 	
 	mainPtr().setActive();
@@ -194,6 +201,8 @@ void start_outdoor_combat(cOutdoors::cWandering encounter,location where,short n
 	
 	adjust_spell_menus();
 	
+	restore_cursor();
+
 	//clear_map();
 	give_help(48,49);
 	
@@ -229,7 +238,7 @@ bool pc_combat_move(location destination) {
 		
 		dir = set_direction(univ.current_pc().combat_pos, destination);
 		
-		if((loc_off_act_area(destination)) && (which_combat_type == 1)) {
+		if(loc_off_act_area(destination) && (which_combat_type == 1) && !impassable(univ.town->terrain(destination.x,destination.y))) {
 			add_string_to_buf("Move: Can't leave town during combat.");
 			print_buf();
 			return true;
@@ -829,6 +838,8 @@ void place_target(location target) {
 	}
 	
 	if(num_targets_left == 0) {
+		extern bool targeting_line_visible;
+		targeting_line_visible = false;
 		do_combat_cast(spell_targets[0]);
 		overall_mode = MODE_COMBAT;
 	}
@@ -2503,7 +2514,7 @@ void do_monster_turn() {
 					printed_acid = true;
 				}
 				r1 = get_ran(cur_monst->status[eStatus::ACID],1,6);
-				damage_monst(*cur_monst, 6,r1, eDamageType::MAGIC);
+				damage_monst(*cur_monst, 6,r1, eDamageType::ACID);
 				cur_monst->status[eStatus::ACID]--;
 			}
 			
@@ -2719,6 +2730,7 @@ void monster_attack(short who_att,iLiving* target) {
 									case eDamageType::MARKED: break; // Invalid
 									case eDamageType::FIRE: add_string_to_buf("  Burning touch!"); break;
 									case eDamageType::COLD: add_string_to_buf("  Freezing touch!"); break;
+									case eDamageType::ACID: add_string_to_buf("  Acid touch!"); break;
 									case eDamageType::MAGIC: add_string_to_buf("  Shocking touch!"); break;
 									case eDamageType::SPECIAL:
 									case eDamageType::UNBLOCKABLE: add_string_to_buf("  Eerie touch!"); break;
@@ -3121,7 +3133,7 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 			univ.party.gold = std::max(0, univ.party.gold - get_ran(1,0,abil.second.gen.strength) - abil.second.gen.strength);
 			break;
 		case eMonstAbil::FIELD:
-			place_spell_pattern(eSpellPat(abil.second.gen.strength), m_target->direction + 6, targ_space, abil.second.gen.fld, 7);
+			place_spell_pattern(eSpellPat(abil.second.gen.strength), target->direction + 6, targ_space, abil.second.gen.fld, 7);
 			break;
 			// Non-basic abilities
 		case eMonstAbil::MISSILE: case eMonstAbil::MISSILE_WEB: case eMonstAbil::RAY_HEAT:
@@ -4408,11 +4420,9 @@ void handle_acid() {
 			if(pc.main_status == eMainStatus::ALIVE)
 				if(pc.status[eStatus::ACID] > 0) {
 					r1 = get_ran(pc.status[eStatus::ACID],1,6);
-					damage_pc(pc,r1,eDamageType::MAGIC,eRace::UNKNOWN);
+					damage_pc(pc,r1,eDamageType::ACID,eRace::UNKNOWN);
 					move_to_zero(pc.status[eStatus::ACID]);
 				}
-		if(!is_combat())
-			boom_space(univ.party.out_loc,overall_mode,3,r1,8);
 	}
 }
 
@@ -4511,7 +4521,7 @@ bool combat_cast_mage_spell() {
 			spell_num = univ.current_pc().last_cast[eSkill::MAGE_SPELLS];
 		}
 		
-		if(univ.current_pc().traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
+		if(univ.current_pc().traits[eTrait::PACIFIST] && spell_num != eSpell::NONE && !(*spell_num).peaceful) {
 			add_string_to_buf("Cast: You're a pacifist!");
 			return false;
 		}
@@ -4739,7 +4749,7 @@ bool combat_cast_priest_spell() {
 		return false;
 	}
 	
-	if(univ.current_pc().traits[eTrait::PACIFIST] && !(*spell_num).peaceful) {
+	if(univ.current_pc().traits[eTrait::PACIFIST] && spell_num != eSpell::NONE && !(*spell_num).peaceful) {
 		add_string_to_buf("Cast: You're a pacifist!");
 		return false;
 	}

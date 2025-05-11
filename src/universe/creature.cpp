@@ -302,9 +302,7 @@ int cCreature::magic_adjust(int how_much) {
 	if(how_much <= 0) return how_much;
 	if(abil[eMonstAbil::ABSORB_SPELLS].active && get_ran(1,1,1000) <= abil[eMonstAbil::ABSORB_SPELLS].special.extra1) {
 		int gain = abil[eMonstAbil::ABSORB_SPELLS].special.extra2;
-		if(32767 - health > gain)
-			health = 32767;
-		else health += gain;
+		add_check_overflow(health, gain);
 		return 0;
 	}
 	// TODO: Magic resistance status effect?

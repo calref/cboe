@@ -88,6 +88,7 @@ extern rectangle terrain_rects[256];
 unsigned char small_what_drawn[64][64];
 extern bool small_any_drawn;
 
+// These are at the bottom of edbuttons.png:
 static short get_small_icon(ter_num_t ter){
 	short icon = -1;
 	switch(scenario.ter_types[ter].special){
@@ -107,6 +108,9 @@ static short get_small_icon(ter_num_t ter){
 					break;
 				case eDamageType::POISON:
 					icon = 17;
+					break;
+				case eDamageType::ACID:
+					icon = 24; // green with black spots, doesn't seem to be used elsewhere
 					break;
 				case eDamageType::MAGIC:
 					icon = 20;
@@ -1378,14 +1382,14 @@ void place_location() {
 	TextStyle style;
 	style.lineHeight = 12;
 	win_draw_string(mainPtr(), draw_rect, sout.str(), eTextMode::LEFT_TOP, style);
-	sout.str("");
+	clear_sstr(sout);
 	
 	moveTo = location(260 ,terrain_rects[255].top + 18);
 	draw_rect = text_rect;
 	draw_rect.offset(moveTo);
 	sout << current_terrain_type;
 	win_draw_string(mainPtr(), draw_rect, sout.str(), eTextMode::LEFT_TOP, style);
-	sout.str("");
+	clear_sstr(sout);
 	
 	if(overall_mode < MODE_MAIN_SCREEN) {
 		moveTo = location(5,terrain_rects[255].bottom + 121);

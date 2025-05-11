@@ -132,7 +132,8 @@ TEST_CASE("Saving monster types") {
 		scen.scen_monsters[1].resist[eDamageType::COLD] = 30;
 		scen.scen_monsters[1].resist[eDamageType::UNDEAD] = 35;
 		scen.scen_monsters[1].resist[eDamageType::DEMON] = 40;
-		scen.scen_monsters[1].resist[eDamageType::SPECIAL] = 45;
+		scen.scen_monsters[1].resist[eDamageType::ACID] = 45;
+		scen.scen_monsters[1].resist[eDamageType::SPECIAL] = 50;
 		in_and_out("resistance", scen);
 		CHECK(scen.scen_monsters[1].resist[eDamageType::WEAPON] == 5);
 		CHECK(scen.scen_monsters[1].resist[eDamageType::FIRE] == 10);
@@ -142,6 +143,7 @@ TEST_CASE("Saving monster types") {
 		CHECK(scen.scen_monsters[1].resist[eDamageType::COLD] == 30);
 		CHECK(scen.scen_monsters[1].resist[eDamageType::UNDEAD] == 35);
 		CHECK(scen.scen_monsters[1].resist[eDamageType::DEMON] == 40);
+		CHECK(scen.scen_monsters[1].resist[eDamageType::ACID] == 45);
 		// This one should not be saved, so we expect it to revert to default
 		CHECK(scen.scen_monsters[1].resist[eDamageType::SPECIAL] == 100);
 	}

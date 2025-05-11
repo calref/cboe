@@ -15,6 +15,7 @@
 #include "boe.locutils.hpp"
 #include "boe.text.hpp"
 #include "boe.consts.hpp"
+#include "boe.ui.hpp"
 #include "sounds.hpp"
 #include "mathutil.hpp"
 #include "gfx/render_image.hpp"
@@ -74,6 +75,7 @@ extern cUniverse univ;
 extern cCustomGraphics spec_scen_g;
 extern bool fog_lifted;
 extern enum_map(eGuiArea, rectangle) win_to_rects;
+extern sf::View mainView;
 
 // Talk vars
 extern eGameMode store_pre_talk_mode;
@@ -212,7 +214,7 @@ void apply_light_mask(bool onWindow) {
 		return;
 	}
 	
-	#ifdef DEBUG
+	#ifdef DEBUG_LIGHT_MASK
 	std::cout << "Current light mask:\n";
 	for(short i = 0; i < 13; i++) {
 		for(short j = 0; j < 13; j++)
@@ -300,8 +302,6 @@ void run_a_missile(location from,location fire_to,miss_num_t miss_type,short pat
 }
 
 void run_a_boom(location boom_where,short type,short x_adj,short y_adj,short snd) {
-	if((type < 0) || (type > 2))
-		return;
 	start_missile_anim();
 	add_explosion(boom_where,-1,0,type, x_adj, y_adj);
 	do_explosion_anim(5,0,snd);
@@ -434,7 +434,12 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 	int offset_y = 0;
 	// Now, at last, launch missile
 	for(short t = 0; t < num_steps; t++) {
+		// Temporarily switch to the original view to fill in the background
+		mainPtr().setView(mainPtr().getDefaultView());
+		put_background();
+		mainPtr().setView(mainView);
 		draw_terrain();
+		UI::toolbar.draw(mainPtr());
 		for(short i = 0; i < 30; i++)
 			if(store_missiles[i].missile_type >= 0) {
 				// Where place?
@@ -455,8 +460,6 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 					location old_center = center;
 
 					center = camera_dest;
-
-					// TODO why can't I make the text bar stay normal?
 
 					// Offset the missile trajectory for the new camera position
 					int dx = center.x - old_center.x;
@@ -500,6 +503,7 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 				}
 			}
 		refresh_text_bar();
+		refresh_stat_areas(0);
 		mainPtr().setActive();
 		mainPtr().display();
 		sf::sleep(sf::milliseconds(2 + 5 * get_int_pref("GameSpeed")));
@@ -564,7 +568,9 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	
 	if(std::all_of(store_booms, store_booms + 30, [](const store_boom_type& b) {
 		return b.boom_type == 0;
-	})) return;
+	})){
+		return;
+	}
 	
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
@@ -609,10 +615,15 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	auto ter_rects = terrain_screen_rects();
 	// Now, at last, do explosion
 	for(short t = (special_draw == 2) ? 6 : 0; t < ((special_draw == 1) ? 6 : 11); t++) { // t goes up to 10 to make sure screen gets cleaned up
+		// Temporarily switch to the original view to fill in the background
+		mainPtr().setView(mainPtr().getDefaultView());
+		put_background();
+		mainPtr().setView(mainView);
 		draw_terrain();
+		UI::toolbar.draw(mainPtr());
 		
 		// Now put in explosions
-		for(short i = 0; i < 30; i++)
+		for(short i = 0; i < 30; i++){
 			if(store_booms[i].boom_type >= 0) {
 				if((t + store_booms[i].offset >= 0) && (t + store_booms[i].offset <= 7)) {
 					if(cur_boom_type >= 1000) {
@@ -642,6 +653,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 					}
 				}
 			}
+		}
 		//if(((PSD[SDF_GAME_SPEED] == 1) && (t % 3 == 0)) || ((PSD[SDF_GAME_SPEED] == 2) && (t % 2 == 0)))
 		refresh_stat_areas(0);
 		refresh_text_bar();
@@ -686,7 +698,7 @@ graf_pos calc_item_rect(int num,rectangle& to_rect) {
 
 // mode 1 - drawing dark for button press
 void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle clip_area_rect) {
-	rectangle area_rect,item_info_from = {11,42,24,56};
+	rectangle area_rect,item_info_from = {12,42,24,56};
 	
 	rectangle face_rect = {6,6,38,38};
 	rectangle title_rect = {15,48,42,260};
@@ -808,7 +820,7 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 				const cAlchemy& info = *(eAlchemy(base_item.item_level));
 				cur_info_str = get_str("item-abilities", int(info.ingred1) + 1);
 				if(info.ingred2 != eItemAbil::NONE) {
-					cur_info_str += " and " + get_str("item-abilities", int(info.ingred2) + 1);
+					cur_info_str += " & " + get_str("item-abilities", int(info.ingred2) + 1);
 				}
 			} break;
 			case eShopItemType::MAGE_SPELL:
@@ -845,17 +857,19 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 		rectangle cost_rect = shopping_rects[i][SHOPRECT_ITEM_COST];
 		cost_rect.left = cost_rect.right - string_length(cur_name, style) - 10;
 		win_draw_string(talk_gworld(),cost_rect,cur_name,eTextMode::WRAP,style);
+		// Draw the coin
 		cost_rect.left = cost_rect.right - 7;
 		cost_rect.top += 3;
 		cost_rect.height() = 7;
 		rect_draw_some_item(invenbtn_gworld, {0, 29, 7, 36}, talk_gworld(), cost_rect, sf::BlendAlpha);
 		style.pointSize = 10;
-		win_draw_string(talk_gworld(),shopping_rects[i][SHOPRECT_ITEM_EXTRA],cur_info_str,eTextMode::WRAP,style);
+		// Alchemy ingredients often don't fit
+		win_draw_string(talk_gworld(),shopping_rects[i][SHOPRECT_ITEM_EXTRA],cur_info_str,eTextMode::ELLIPSIS,style);
 		rect_draw_some_item(invenbtn_gworld,item_info_from,talk_gworld(),shopping_rects[i][SHOPRECT_ITEM_HELP],item_help_pressed ? sf::BlendNone : sf::BlendAlpha);
 	}
 	
 	// Finally, cost info and help strs
-	title.str("");
+	clear_sstr(title);
 	title << "Prices here are " << cost_strs[active_shop.getCostAdjust()] << '.';
 	style.pointSize = 10;
 	style.lineHeight = 12;
@@ -927,6 +941,8 @@ void click_talk_rect(word_rect_t word) {
 	place_talk_face();
 }
 
+extern std::vector<std::string> preset_words;
+
 // color 0 - regular  1 - darker
 void place_talk_str(std::string str_to_place,std::string str_to_place2,short color,rectangle c_rect) {
 	rectangle area_rect;
@@ -967,9 +983,12 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		style.colour = PRESET_WORD_OFF;
 	else 
 		style.colour = PRESET_WORD_ON;
-	for(short i = 0; i < 9; i++) {
-		if(!talk_end_forced || i == 6 || i == 5)
+	int i = 0;
+	for(std::string preset : preset_words) {
+		if(talk_words[i].word == preset){
 			win_draw_string(talk_gworld(),talk_words[i].rect,talk_words[i].word,eTextMode::LEFT_TOP,style);
+			i++;
+		}
 	}
 	
 	style.colour = Colours::NAVY; 
@@ -979,16 +998,18 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	std::vector<hilite_t> hilites;
 	std::vector<int> nodes;
 	int wordStart = 0, wordEnd = 0;
-	for(size_t i = 0; i < str.length(); i++) {
-		char c = str[i];
-		if(isalpha(c) || c == '-' || c == '\'') {
-			if(wordStart <= wordEnd) wordStart = i;
-		} else if(wordEnd <= wordStart) {
-			wordEnd = i;
-			short node = scan_for_response(str.c_str() + wordStart);
-			if(node >= 0) {
-				nodes.push_back(node);
-				hilites.push_back({wordStart, wordEnd});
+	if(!talk_end_forced){
+		for(size_t i = 0; i < str.length(); i++) {
+			char c = str[i];
+			if(isalpha(c) || c == '-' || c == '\'') {
+				if(wordStart <= wordEnd) wordStart = i;
+			} else if(wordEnd <= wordStart) {
+				wordEnd = i;
+				short node = scan_for_response(str.c_str() + wordStart);
+				if(node >= 0) {
+					nodes.push_back(node);
+					hilites.push_back({wordStart, wordEnd});
+				}
 			}
 		}
 	}
@@ -1041,8 +1062,11 @@ short scan_for_response(const char *str) {
 	return -1;
 }
 
+bool targeting_line_visible = false;
+
 void handle_target_mode(eGameMode target_mode, int range, eSpell spell) {
 	overall_mode = target_mode;
+	targeting_line_visible = true;
 	// Lock on to enemies in range: 
 	if(has_feature_flag("target-lock", "V1") && get_bool_pref("TargetLock", true)){
 		// Skip this for spells that don't target enemies
@@ -1054,19 +1078,27 @@ void handle_target_mode(eGameMode target_mode, int range, eSpell spell) {
 		location loc = univ.current_pc().combat_pos;
 
 		std::vector<location> enemy_locs_in_range;
+		std::vector<location> enemy_locs_already_seen;
 		for(short i = 0; i < univ.town.monst.size(); i++){
 			auto& monst = univ.town.monst[i];
 			if(monst.is_alive() && party_can_see_monst(i)) {
 				eAttitude att = monst.attitude;
 				if((att == eAttitude::HOSTILE_A || att == eAttitude::HOSTILE_B)
 					&& dist(loc, monst.cur_loc) <= range){
+					// Target lock V2: Don't move the screen if it hides an enemy the player can already see
+					if(has_feature_flag("target-lock", "V2") && is_on_screen(monst.cur_loc))
+						enemy_locs_already_seen.push_back(monst.cur_loc);
+
 					enemy_locs_in_range.push_back(monst.cur_loc);
 				}
 			}
 		}
 		if(!enemy_locs_in_range.empty()){
-			std::vector<location> dest_candidates = points_containing_most(enemy_locs_in_range);
-			center = closest_point(dest_candidates, loc);
+			std::vector<location> dest_candidates = points_containing_most(enemy_locs_in_range, enemy_locs_already_seen);
+			// Center can stay the same if all points with the most monsters exclude any required (already seen) monsters
+			if(!dest_candidates.empty()){
+				center = closest_point(dest_candidates, loc);
+			}
 			draw_terrain();
 		}
 	}

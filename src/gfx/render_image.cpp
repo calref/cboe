@@ -152,7 +152,10 @@ static void draw_stored_scale_aware_text(sf::RenderTexture& texture, sf::RenderT
 		sf::Vector2f position = str_to_draw.getPosition();
 		position = position + sf::Vector2f {0.0f+targ_rect.left, 0.0f+targ_rect.top};
 		position *= (float)get_ui_scale();
-		str_to_draw.setPosition(position + scaled_top_left);
+		position += scaled_top_left;
+		// Rounding to whole-number positions *might* avoid unpredictable graphics bugs:
+		round_vec(position);
+		str_to_draw.setPosition(position);
 		dest_window.draw(str_to_draw);
 		if(!text.clip_rect.empty())
 			undo_clip(dest_window);

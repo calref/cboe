@@ -196,7 +196,7 @@ Unused
 0 - allow, 1 - prevent
 Unused
 Unused
-Unused|Force allow if blocked?
+Unused|Allow even if blocked?
 Unused
 Unused
 Special to Jump To

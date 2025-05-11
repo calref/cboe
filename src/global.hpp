@@ -11,6 +11,7 @@
 
 #include <string>
 #include <iostream>
+#include <sstream>
 
 typedef unsigned short mon_num_t;
 typedef signed short miss_num_t;
@@ -48,6 +49,12 @@ inline bool str_to_bool(std::string str) {
 
 inline std::string bool_to_str(bool b) {
 	return b ? "true" : "false";
+}
+
+inline void clear_sstr(std::ostringstream& sstr) {
+	sstr.clear();
+	sstr.str("");
+	sstr.seekp(0);
 }
 
 inline void LOG(std::string line) {

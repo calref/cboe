@@ -17,6 +17,7 @@ Confirmed:
 - Jeremy Bracegirdle
 - Joe Ardent
 - Joel Joslin
+- Joshua Broad
 - Joshua Murphy
 - Juan Dionicio Becerra
 - Kelandon
@@ -36,6 +37,7 @@ Confirmed:
 - Sam M
 - Sareena Razak
 - Sean Hayden
+- Seb Galvez
 - Souren Papazian
 - Tony Martyn
 - Tony Vazquez

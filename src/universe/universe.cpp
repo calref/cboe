@@ -20,6 +20,7 @@
 #include "fileio/fileio.hpp"
 #include "fileio/tagfile.hpp"
 #include "gfx/gfxsheets.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
 
 void cCurOut::import_legacy(legacy::out_info_type& old){
 	for(int i = 0; i < 96; i++)
@@ -1517,3 +1518,41 @@ cPlayer& cUniverse::current_pc() {
 }
 
 void(* cUniverse::print_result)(std::string) = nullptr;
+
+bool cUniverse::get_str(std::string& str,eSpecCtxType cur_type,short which_str, bool out_of_range_error) {
+	std::vector<std::string>* string_list = &scenario.spec_strs;
+	if(cur_type == eSpecCtxType::OUTDOOR)
+		string_list = &out->spec_strs;
+	else if (cur_type == eSpecCtxType::TOWN)
+		string_list = &town->spec_strs;
+	
+	if((which_str >= 0 && which_str >= string_list->size()) || (which_str < -1 && which_str != BUFFER_STR)){
+		if(out_of_range_error)
+			showError("The scenario attempted to access a message out of range.");
+		return false;
+	}
+
+	if(which_str == BUFFER_STR){
+		str = get_buf();
+		return true;
+	}else if(which_str != -1){
+		str = (*string_list)[which_str];
+		return true;
+	}
+
+	return false; // Didn't get a string
+}
+
+void cUniverse::get_strs(std::string& str1,std::string& str2,eSpecCtxType cur_type,short which_str1,short which_str2) {
+	get_str(str1, cur_type, which_str1);
+	get_str(str2, cur_type, which_str2);
+}
+
+void cUniverse::get_strs(std::array<std::string,6>& strs,eSpecCtxType cur_type,short which_str1) {
+	// If the first string is out of range we are in trouble:
+	if(!get_str(strs[0],cur_type, which_str1)) return;
+	// The other ones may be out of range if the starting text is near the end and there are less than 6
+	for(int i = 1; i < 6; ++i)
+		if(!get_str(strs[i],cur_type, which_str1 + i, false)) return;
+}
+

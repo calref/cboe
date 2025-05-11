@@ -144,15 +144,15 @@ std::string get_os_version() {
 	return version.str();
 }
 
-void makeFrontWindow(sf::Window& win) {
+void _makeFrontWindow(sf::Window& win) {
 	HWND win_handle = win.getSystemHandle();
 	BringWindowToTop(win_handle);
 }
 
-void setWindowFloating(sf::Window& win, bool floating) {
+void _setWindowFloating(sf::Window& win, bool floating) {
 	HWND win_handle = win.getSystemHandle();
-	UINT flags = SWP_NOMOVE | SWP_NOSIZE;
-	HWND newPos = floating ? HWND_TOPMOST : HWND_TOP;
+	UINT flags = SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE;
+	HWND newPos = floating ? HWND_TOPMOST : HWND_BOTTOM;
 	// The flags param specifies that these 0's are ignored.
 	SetWindowPos(win_handle, newPos, 0, 0, 0, 0, flags);
 }

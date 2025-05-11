@@ -47,11 +47,16 @@
 #include <string>
 #include <boost/lexical_cast.hpp>
 #include <sstream>
+#include "fileio/resmgr/res_font.hpp"
 
 rectangle item_screen_button_rects[9] = {
+	// PC 1-6
 	{125,10,141,28},{125,40,141,58},{125,68,141,86},{125,98,141,116},{125,126,141,144},{125,156,141,174},
+	// Special Items
 	{126,176,141,211},
+	// Quests
 	{126,213,141,248},
+	// Help
 	{127,251,140,267}
 };
 rectangle medium_buttons[4] = {
@@ -89,6 +94,7 @@ extern location	to_create;
 extern bool All_Done,spell_forced,monsters_going;
 extern bool party_in_memory;
 extern sf::View mainView;
+extern bool targeting_line_visible;
 
 // game info globals
 extern short which_item_page[6];
@@ -129,11 +135,14 @@ bool end_scenario = false;
 // This is defined in pc.editors.cpp since the PC editor also uses it
 extern void edit_stuff_done();
 
-static void init_shopping_rects() {
+extern std::vector<int> shop_array;
+
+void init_shopping_rects(bool scrollbar) {
 	rectangle shop_base = {63,19,99,274};
 	
 	std::fill(shopping_rects[0].begin(), shopping_rects[0].end(), shop_base);
 
+	// Define first row of rectangles for shop item UI
 	shopping_rects[0][SHOPRECT_ACTIVE_AREA].right -= 35;
 	shopping_rects[0][SHOPRECT_GRAPHIC].right = shopping_rects[0][SHOPRECT_GRAPHIC].left + 28;
 	shopping_rects[0][SHOPRECT_KEY].right = shopping_rects[0][SHOPRECT_GRAPHIC].left;
@@ -149,30 +158,35 @@ static void init_shopping_rects() {
 	shopping_rects[0][SHOPRECT_ITEM_HELP].bottom -= 21;
 	shopping_rects[0][SHOPRECT_ITEM_HELP].right -= 19;
 	shopping_rects[0][SHOPRECT_ITEM_HELP].left = shopping_rects[0][SHOPRECT_ITEM_HELP].right - 14;
+	// Utilize the extra space on the right side if no scrollbar is shown
+	int offset_right = scrollbar ? -4 : 12;
+	shopping_rects[0][SHOPRECT_ITEM_COST].offset(offset_right, 0);
+	shopping_rects[0][SHOPRECT_ITEM_HELP].offset(offset_right, 0);
 
+	// Define rectangles for the next 7 rows by copying and offsetting
 	for(short i = 1; i < 8; i++) {
 		for(auto& j : shopping_rects[i].keys()) {
 			shopping_rects[i][j] = shopping_rects[0][j];
 			shopping_rects[i][j].offset(0,i * 36);
 		}
 	}
+	TextStyle style;
+	style.font = FONT_BOLD;
+	style.pointSize = 12;
+	style.lineHeight = 12;
+	for(short i = 0; i < 8; i++) {
+		// Truncate item descriptions so the text doesn't clash with the cost number
+		size_t current_pos = i + shop_sbar->getPosition();
+		if(current_pos >= shop_array.size() || shop_array[current_pos] < 0)
+			break; // theoretically, the second condition shouldn't happen
+		cShopItem item = active_shop.getItem(shop_array[current_pos]);
+		std::string cur_cost = std::to_string(item.getCost(active_shop.getCostAdjust()));
+		shopping_rects[i][SHOPRECT_ITEM_EXTRA].right = shopping_rects[i][SHOPRECT_ITEM_COST].right - string_length(cur_cost, style);
+	}
 }
 
-void init_screen_locs() {
-	init_shopping_rects();
-	
-	rectangle startup_base = {281,1,329,302};
-	
-	for(auto btn : startup_button.keys()) {
-		startup_button[btn] = startup_base;
-		startup_button[btn].offset(301 * (btn / 3), 48 * (btn % 3));
-	}
-	startup_top.top = 7;
-	startup_top.bottom = startup_button[STARTBTN_TUTORIAL].top;
-	startup_top.left = startup_base.left;
-	startup_top.right = startup_button[STARTBTN_NEW].right;
-	
-	// icon, name, use, give, drip, info, sell/id   each one 13 down
+void init_inven_rects() {
+	// icon, name, use, give, drop, info, sell/id   each one 13 down
 	item_buttons[0][ITEMBTN_ICON].top = 15;
 	item_buttons[0][ITEMBTN_ICON].bottom = item_buttons[0][ITEMBTN_ICON].top + 18;
 	item_buttons[0][ITEMBTN_ICON].left = 20;
@@ -200,28 +214,37 @@ void init_screen_locs() {
 	item_buttons[0][ITEMBTN_SPEC] = item_buttons[0][ITEMBTN_NAME];
 	item_buttons[0][ITEMBTN_SPEC].left = 173;
 	item_buttons[0][ITEMBTN_SPEC].right = 232;
+	// If extra buttons are visible on the item window, truncate the hitbox of the name, or else it will steal button clicks
+	if(stat_screen_mode >= MODE_IDENTIFY){
+		item_buttons[0][ITEMBTN_NAME].right = item_buttons[0][ITEMBTN_SPEC].left;
+	}
+
 	item_buttons[0][ITEMBTN_NAME].top += 3;
 	for(short i = 1; i < 8; i++)
 		for(auto j : item_buttons[i].keys()) {
 			item_buttons[i][j] = item_buttons[0][j];
 			item_buttons[i][j].offset(0,13 * i);
 		}
-	
-/*	for(short i = 0; i < 8; i++) {
-		item_screen_button_rects[i] = bottom_base;
-		OffsetRect(&item_screen_button_rects[i],10 + i * 29,126);
+}
+
+void init_screen_locs() {
+	init_shopping_rects(true);
+
+	rectangle startup_base = {281,1,329,302};
+
+	for(auto btn : startup_button.keys()) {
+		startup_button[btn] = startup_base;
+		startup_button[btn].offset(301 * (btn / 3), 48 * (btn % 3));
 	}
-	item_screen_button_rects[6].left = 176;
-	item_screen_button_rects[6].right = 211;
-	item_screen_button_rects[7].left = 213;
-	item_screen_button_rects[7].right = 248;
-	item_screen_button_rects[8].top = 127;
-	item_screen_button_rects[8].bottom = 140;
-	item_screen_button_rects[8].left = 251;
-	item_screen_button_rects[8].right = 267; */
+	startup_top.top = 7;
+	startup_top.bottom = startup_button[STARTBTN_TUTORIAL].top;
+	startup_top.left = startup_base.left;
+	startup_top.right = startup_button[STARTBTN_NEW].right;
+	
+	init_inven_rects();
 	
 	// name, hp, sp, info, trade
-	pc_buttons[0][PCBTN_NAME].top = 18;
+	pc_buttons[0][PCBTN_NAME].top = 21;
 	pc_buttons[0][PCBTN_NAME].bottom = pc_buttons[0][PCBTN_NAME].top + 12;
 	pc_buttons[0][PCBTN_NAME].left = 3;
 	pc_buttons[0][PCBTN_NAME].right = pc_buttons[0][PCBTN_NAME].left + 177;
@@ -237,7 +260,6 @@ void init_screen_locs() {
 	pc_buttons[0][PCBTN_TRADE] = pc_buttons[0][PCBTN_NAME];
 	pc_buttons[0][PCBTN_TRADE].left = 253;
 	pc_buttons[0][PCBTN_TRADE].right = 262;
-	pc_buttons[0][PCBTN_NAME].top += 3;
 	for(short i = 1; i < 6; i++)
 		for(auto j : pc_buttons[i].keys()) {
 			pc_buttons[i][j] = pc_buttons[0][j];
@@ -264,6 +286,77 @@ bool prime_time() {
 
 eSkill last_spellcast_type = eSkill::MAGE_SPELLS;
 
+bool handle_terrain_screen_actions(location offset, bool mouse, bool right_button, bool& did_something, bool& need_redraw, bool& need_reprint) {
+	location cur_loc = is_out() ? univ.party.out_loc : center;
+
+	location destination = cur_loc;
+	destination.x += offset.x;
+	destination.y += offset.y;
+
+	location move_destination = cur_loc;
+	if(mouse){
+		location cur_direction = get_cur_direction();
+		move_destination.x += cur_direction.x;
+		move_destination.y += cur_direction.y;
+	}else{
+		move_destination = destination;
+	}
+
+	// Check for quick look
+	if(right_button) {
+		handle_begin_look(true, need_redraw, need_reprint);
+		handle_look(destination, true, current_key_mod(), need_redraw, need_reprint);
+		return true;
+	}
+
+	if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
+		if(offset.x == 0 && offset.y == 0){
+			handle_pause(did_something, need_redraw);
+		}else{
+			handle_move(move_destination, did_something, need_redraw, need_reprint);
+		}
+		return true;
+	}
+
+	// Looking at something
+	else if(overall_mode == MODE_LOOK_OUTDOORS || overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_LOOK_COMBAT) {
+		handle_look(destination, false, current_key_mod(), need_redraw, need_reprint);
+		return true;
+	}
+
+	// Talking to someone
+	else if(overall_mode == MODE_TALK_TOWN) {
+		handle_talk(destination, did_something, need_redraw, need_reprint);
+		return true;
+	}
+
+	// Targeting a space
+	else if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FIRING || overall_mode == MODE_THROWING ||
+			overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET) {
+		handle_target_space(destination, did_something, need_redraw, need_reprint);
+		return true;
+	}
+
+	// Dropping an item
+	else if(overall_mode == MODE_DROP_TOWN || overall_mode == MODE_DROP_COMBAT) {
+		handle_drop_item(destination, need_redraw);
+		return true;
+	}
+
+	// Using a space
+	else if(overall_mode == MODE_USE_TOWN) {
+		handle_use_space(destination, did_something, need_redraw);
+		return true;
+	}
+
+	// Bashing/lockpicking
+	else if(overall_mode == MODE_BASH_TOWN || overall_mode == MODE_PICK_TOWN) {
+		handle_bash_pick(destination, did_something, need_redraw, overall_mode == MODE_BASH_TOWN);
+		return true;
+	}
+
+	return false;
+}
 void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw, bool& need_reprint, bool record) {
 	if(record && recording){
 		std::map<std::string,std::string> info;
@@ -303,6 +396,7 @@ void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw,
 			if(store_sp[i] != univ.party[i].cur_sp)
 				did_something = true;
 	} else if(overall_mode == MODE_TOWN_TARGET) {
+		targeting_line_visible = false;
 		add_string_to_buf("  Cancelled.");
 		overall_mode = MODE_TOWN;
 		need_redraw = true;
@@ -322,6 +416,7 @@ void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw,
 		spell_forced = false;
 		redraw_terrain();
 	} else if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET) {
+		targeting_line_visible = false;
 		add_string_to_buf("  Cancelled.");
 		overall_mode = MODE_COMBAT;
 		center = univ.current_pc().combat_pos;
@@ -476,6 +571,11 @@ void handle_rest(bool& need_redraw, bool& need_reprint) {
 				do_monsters();
 			if(get_ran(1,1,70) == 10)
 				create_wand_monst();
+			// Poison could set in from disease resulting in a PC death while resting.
+			if(someone_poisoned()){
+				i = 200;
+				add_string_to_buf("  Someone poisoned.");
+			}
 			if(nearest_monster() <= 3) {
 				i = 200;
 				add_string_to_buf("  Monsters nearby.");
@@ -751,6 +851,11 @@ void handle_target_space(location destination, bool& did_something, bool& need_r
 		info["num_targets_left"] = boost::lexical_cast<std::string>(num_targets_left);
 		record_action("handle_target_space", info);
 	}
+	// Fix the targeting line drawing for one frame after the casting animation finishes:
+	if(overall_mode != MODE_FANCY_TARGET){
+		targeting_line_visible = false;
+	}
+
 	if(overall_mode == MODE_SPELL_TARGET)
 		do_combat_cast(destination);
 	else if(overall_mode == MODE_THROWING || overall_mode == MODE_FIRING)
@@ -1112,6 +1217,7 @@ void handle_alchemy(bool& need_redraw, bool& need_reprint) {
 
 static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 	std::vector<short> store_hp;
+	std::vector<bool> store_alive;
 	sf::Event dummy_evt;
 	need_reprint = true;
 	need_redraw = true;
@@ -1126,32 +1232,39 @@ static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
 		pause(10);
 		for(cPlayer& pc : univ.party) {
 			store_hp.push_back(pc.cur_health);
+			store_alive.push_back(pc.is_alive());
 			pc.status[eStatus::WEBS] = 0;
 		}
 	}
 	
-	for(int i = 0; i < 80 && !party_sees_a_monst(); i++){
+	bool interrupted = false;
+	for(int i = 0; i < 80 && !party_sees_a_monst() && !interrupted; i++){
 		increase_age(false);
 		do_monsters();
 		do_monster_turn();
 		int make_wand = get_ran(1,1,160 - univ.town->difficulty);
-		if(make_wand == 10)
+		if(make_wand == 10){
 			create_wand_monst();
-		for(int j = 0; j < 6; j++)
-			if(univ.party[j].cur_health < store_hp[j]) {
-				i = 200;
+		}
+		for(int j = 0; j < 6; j++){
+			// Interrupt long wait if anyone takes damage or dies.
+			// NOTE: A hilarious bug used to exist where PCs starting at HP 0 could die without interrupting
+			// the wait, because their cur_health would still equal the store_hp value. This is now fixed.
+			if(univ.party[j].cur_health < store_hp[j] || univ.party[j].is_alive() != store_alive[j]) {
+				interrupted = true;
 				j = 6;
 				add_string_to_buf("  Waiting interrupted.");
 			}
+		}
 		if(party_sees_a_monst()) {
-			i = 200;
+			interrupted = true;
 			add_string_to_buf("  Monster sighted!");
 		}
 		while(pollEvent(mainPtr(), dummy_evt));
 		redraw_screen(REFRESH_NONE);
 	}
 	put_pc_screen();
-	if(!party_sees_a_monst()){
+	if(!party_sees_a_monst() && !interrupted){
 		try_auto_save("TownWaitComplete");
 	}
 }
@@ -1240,6 +1353,7 @@ void handle_missile(bool& need_redraw, bool& need_reprint) {
 		need_reprint = true;
 		redraw_terrain();
 	} else if(overall_mode == MODE_FIRING || overall_mode == MODE_THROWING) {
+		targeting_line_visible = false;
 		add_string_to_buf("  Cancelled.");
 		center = univ.current_pc().combat_pos;
 		pause(10);
@@ -1376,7 +1490,7 @@ void handle_trade_places(int which_pc, bool& need_reprint) {
 		record_action("handle_trade_places", boost::lexical_cast<std::string>(which_pc));
 	}
 	if(!prime_time())
-		add_string_to_buf("Trade places: " + FINISH_FIRST);
+		add_string_to_buf("Trade places: " + FINISH_FIRST, 2);
 	else if(is_combat())
 		add_string_to_buf("Trade places: Can't do this in combat.");
 	else {
@@ -1402,6 +1516,30 @@ void update_item_stats_area(bool& need_reprint) {
 	need_reprint = true;
 }
 
+location mouse_window_coords() {
+	location where_curs = sf::Mouse::getPosition(mainPtr());
+	where_curs = mainPtr().mapPixelToCoords(where_curs, mainView);
+	return where_curs;
+}
+
+bool mouse_to_terrain_coords(location& out_loc, bool relative) {
+	rectangle on_screen_terrain_area = win_to_rects[WINRECT_TERVIEW];
+	on_screen_terrain_area.inset(13, 13);
+
+	location where_curs = mouse_window_coords();
+
+	if(where_curs.in(on_screen_terrain_area)) {
+		out_loc.x = (where_curs.x - on_screen_terrain_area.left) / 28;
+		out_loc.y = (where_curs.y - on_screen_terrain_area.top) / 36;
+		if(!relative){
+			out_loc.x += center.x - 4;
+			out_loc.y += center.y - 4;
+		}
+		return true;
+	}
+	return false;
+}
+
 bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	long item_hit;
 	bool are_done = false;
@@ -1414,10 +1552,17 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	
 	location point_in_area;
 	
-	location the_point(event.mouseButton.x, event.mouseButton.y);
-	the_point = mainPtr().mapPixelToCoords(the_point, mainView);
+	location the_point = mouse_window_coords();
+
 	end_scenario = false;
 	
+	if(false){
+		handle_action_return:
+			advance_time(did_something, need_redraw, need_reprint);
+			are_done = All_Done;
+			return are_done;
+	}
+
 	// MARK: First, figure out where party is
 	if(overall_mode == MODE_STARTUP || overall_mode == MODE_RESTING) {
 		// If we get here during these modes, something is probably not right, so bail out
@@ -1428,16 +1573,12 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	// Now split off the extra stuff, like talking and shopping.
 	if(overall_mode == MODE_TALKING) {
 		if(handle_talk_event(the_point, fps_limiter)){
-			advance_time(did_something, need_redraw, need_reprint);
-			are_done = All_Done;
-			return are_done;
+			goto handle_action_return;
 		}
 	}
 	if(overall_mode == MODE_SHOPPING) {
 		if(handle_shop_event(the_point, fps_limiter)){
-			advance_time(did_something, need_redraw, need_reprint);
-			are_done = All_Done;
-			return are_done;
+			goto handle_action_return;
 		}
 	}
 
@@ -1447,7 +1588,8 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 
 	// MARK: Then, handle a button being hit.
 		switch(button_hit) {
-			case TOOLBAR_NONE: break;
+			case TOOLBAR_NONE: case TOOLBAR_CANCEL:
+				break;
 			case TOOLBAR_MAGE: case TOOLBAR_PRIEST:
 				handle_spellcast(button_hit == TOOLBAR_MAGE ? eSkill::MAGE_SPELLS : eSkill::PRIEST_SPELLS, did_something, need_redraw, need_reprint);
 				break;
@@ -1520,82 +1662,23 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 				break;
 		}
 	
-	// MARK: Begin: click in terrain
-	if(the_point.in(world_screen) && (is_out() || is_town() || is_combat())){
-		int i = (the_point.x - 32) / 28;
-		int j = (the_point.y - 20) / 36;
-		location destination = cur_loc;
-		auto look_destination = [i, j, destination]() {
-			location look_dest = destination;
-			if (overall_mode == MODE_LOOK_OUTDOORS) look_dest = univ.party.out_loc;
-			look_dest.x = look_dest.x + i - 4;
-			look_dest.y = look_dest.y + j - 4;
-			return look_dest;
-		};
+	if(button_hit != TOOLBAR_NONE)
+		goto handle_action_return;
 
-		// Check for quick look
-		if(right_button) {
-			handle_begin_look(true, need_redraw, need_reprint);
-			handle_look(look_destination(), true, current_key_mod(), need_redraw, need_reprint);
-		}
+	// MARK: Begin: click in terrain
+	location tile;
+	if(mouse_to_terrain_coords(tile, true) && (is_out() || is_town() || is_combat())){
+		int i = tile.x;
+		int j = tile.y;
+
+		location offset = {i - 4, j - 4};
+		handle_terrain_screen_actions(offset, true, right_button, did_something, need_redraw, need_reprint);
 		
-		// Moving/pausing
-		else if(overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
-			if((i == 4) & (j == 4)) handle_pause(did_something, need_redraw);
-			else {
-				cur_direction = get_cur_direction(the_point);
-				destination.x += cur_direction.x;
-				destination.y += cur_direction.y;
-				handle_move(destination, did_something, need_redraw, need_reprint);
-			}
-		}
-		
-		// Looking at something
-		else if(overall_mode == MODE_LOOK_OUTDOORS || overall_mode == MODE_LOOK_TOWN || overall_mode == MODE_LOOK_COMBAT) {
-			handle_look(look_destination(), false, current_key_mod(), need_redraw, need_reprint);
-		}
-		
-		// Talking to someone
-		else if(overall_mode == MODE_TALK_TOWN) {
-			destination.x = destination.x + i - 4;
-			destination.y = destination.y + j - 4;
-			handle_talk(destination, did_something, need_redraw, need_reprint);
-		}
-		
-		// Targeting a space
-		else if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FIRING || overall_mode == MODE_THROWING ||
-				overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET) {
-			destination = center;
-			destination.x += i - 4;
-			destination.y += j - 4;
-			handle_target_space(destination, did_something, need_redraw, need_reprint);
-		}
-		
-		// Dropping an item
-		else if(overall_mode == MODE_DROP_TOWN || overall_mode == MODE_DROP_COMBAT) {
-			destination.x += i - 4;
-			destination.y += j - 4;
-			handle_drop_item(destination, need_redraw);
-		}
-		
-		// Using a space
-		else if(overall_mode == MODE_USE_TOWN) {
-			destination.x += i - 4;
-			destination.y += j - 4;
-			handle_use_space(destination, did_something, need_redraw);
-		}
-		
-		// Bashing/lockpicking
-		else if(overall_mode == MODE_BASH_TOWN || overall_mode == MODE_PICK_TOWN) {
-			destination.x += i - 4;
-			destination.y += j - 4;
-			handle_bash_pick(destination, did_something, need_redraw, overall_mode == MODE_BASH_TOWN);
-		}
 	}
 	// MARK: End: click in terrain
 	
 	// MARK: Begin: Screen shift
-	if(scrollableModes.count(overall_mode) && the_point.in(terrain_viewport) && !the_point.in(world_screen)) {
+	else if(scrollableModes.count(overall_mode) && the_point.in(terrain_viewport) && !the_point.in(world_screen)) {
 		if(the_point.y < world_screen.top && center.y > univ.town->in_town_rect.top && center.y > 4) {
 			screen_shift(0, -1, need_redraw);
 		}
@@ -1612,7 +1695,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	// MARK: End: Screen shift
 	
 	// MARK: Process clicks in PC stats area
-	if(the_point.in(win_to_rects[WINRECT_PCSTATS])) {
+	else if(the_point.in(win_to_rects[WINRECT_PCSTATS])) {
 		location pc_win_ul = win_to_rects[WINRECT_PCSTATS].topLeft();
 		point_in_area = the_point;
 		point_in_area.x -= pc_win_ul.x;
@@ -1662,7 +1745,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	}
 	
 	// Process clicks in item stats area
-	if(the_point.in(win_to_rects[WINRECT_INVEN])) {
+	else if(the_point.in(win_to_rects[WINRECT_INVEN])) {
 		location item_win_ul = win_to_rects[WINRECT_INVEN].topLeft();
 		point_in_area = the_point;
 		point_in_area.x -= item_win_ul.x;
@@ -1698,7 +1781,11 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 							item_hit = item_sbar->getPosition() + i;
 							switch(j) {
 								case ITEMBTN_NAME: case ITEMBTN_ICON: // equip
-									handle_equip_item(item_hit, need_redraw);
+									if(stat_window >= ITEM_WIN_SPECIAL){
+										show_item_info(item_hit);
+									}else{
+										handle_equip_item(item_hit, need_redraw);
+									}
 									break;
 								case ITEMBTN_USE:
 									handle_use_item(item_hit, did_something, need_redraw);
@@ -1727,10 +1814,7 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 		update_item_stats_area(need_reprint);
 	}
 	
-	advance_time(did_something, need_redraw, need_reprint);
-	
-	are_done = All_Done;
-	return are_done;
+	goto handle_action_return;
 }
 
 void advance_time(bool did_something, bool need_redraw, bool need_reprint) {
@@ -2025,6 +2109,8 @@ void debug_fight_encounter(bool wandering) {
 	set_up_combat();
 }
 
+short last_debug_item = 0;
+
 void debug_give_item() {
 	if(recording){
 		record_action("debug_give_item", "");
@@ -2033,10 +2119,14 @@ void debug_give_item() {
 	for(cItem& item : univ.scenario.scen_items){
 		item_names.push_back(item.full_name);
 	}
-	int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?", item_names, -1);
+	// By default, pre-identify debug items
+	bool ident = true;
+	int i = get_num_response(0, univ.scenario.scen_items.size()-1, "Which item?", item_names, -1, last_debug_item, "identified", &ident);
 	if(i == -1) return;
+	last_debug_item = i;
 	bool was_ident = univ.scenario.scen_items[i].ident;
-	univ.scenario.scen_items[i].ident = true;
+	univ.scenario.scen_items[i].ident = ident;
+
 	bool given = univ.current_pc().give_item(univ.scenario.scen_items[i], GIVE_DO_PRINT | GIVE_ALLOW_OVERLOAD) == eBuyStatus::OK;
 	if(!given){
 		ASB("Debug: can't give to " + univ.current_pc().name);
@@ -2047,8 +2137,10 @@ void debug_give_item() {
 
 	univ.scenario.scen_items[i].ident = was_ident;
 	print_buf();
+	stat_window = eItemWinMode(univ.cur_pc);
 	put_item_screen(stat_window);
 	put_pc_screen(); // In case the item was food or gold
+	refresh_stat_areas(0);
 }
 
 void debug_overburden() {
@@ -2061,12 +2153,14 @@ void debug_overburden() {
 	// Give the PC very heavy objects that do nothing:
 	while(pc.give_item(item, GIVE_ALLOW_OVERLOAD) == eBuyStatus::OK){}
 	if(pc.has_space()){
-		// I don't know why this would ever happen, since the weight is 0, but just in case:
 		ASB("Debug: failed to fill " + pc.name + "'s inventory.");
 	}else{
 		ASB("Debug: filled " + pc.name + "'s inventory.");
 	}
 	print_buf();
+	stat_window = eItemWinMode(univ.cur_pc);
+	put_item_screen(stat_window);
+	refresh_stat_areas(0);
 }
 
 void debug_print_location() {
@@ -2082,8 +2176,7 @@ void debug_print_location() {
 		short y = univ.party.out_loc.y;
 		sout << "Debug:  You're outside in sec x " << univ.party.outdoor_corner.x << ", y " << univ.party.outdoor_corner.y << '\n';
 		add_string_to_buf(sout.str());
-		sout.str("");
-		sout.seekp(0);
+		clear_sstr(sout);
 		sout << "   local x " << x << ", y " << y;
 		x += 48 * univ.party.outdoor_corner.x;
 		y += 48 * univ.party.outdoor_corner.y;
@@ -2553,7 +2646,7 @@ void debug_launch_scen(std::string scen_name) {
 }
 
 // Non-comprehensive list of unused keys:
-// chjklnoqvy +[]{},.'"`|;:
+// chjklnoqvy []{},.'"`|;:
 // We want to keep lower-case for normal gameplay.
 void init_debug_actions() {
 	// optional `true` argument means you can use this action in the startup menu.
@@ -2607,6 +2700,7 @@ void init_debug_actions() {
 	add_debug_action({'/', '?'}, "Bring up this window", show_debug_help, true);
 	add_debug_action({'Z'}, "Save the current action log for bug reporting", save_replay_log, true);
 	add_debug_action({'\\'}, "Crash the game", debug_crash, true);
+	add_debug_action({'+'}, "Fix font corruption", debug_fix_fonts, true);
 }
 
 // Later we might want to know whether the key is used or not
@@ -2635,15 +2729,9 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 		Key::Numpad4,Key::Numpad5,Key::Numpad6,
 		Key::Numpad7,Key::Numpad8,Key::Numpad9
 	};
-	// Terrain map coordinates to simulate a click for 8-directional movement/waiting
-	// ordered to correspond with keypad keys
-	location terrain_click[10] = {
-		{150,185},{120,215},{150,215},{180,215},
-		{120,185},{150,185},{180,185},
-		{120,155},{150,155},{180,135}
-	};
-	// Screen shift deltas ordered to correspond with keypad keys
-	location screen_shift_delta[10] = {
+
+	// Directional deltas ordered to correspond with keypad keys
+	location directional_delta[10] = {
 		{0,0},{-1,1},{0,1},{1,1},
 		{-1,0},{0,0},{1,0},
 		{-1,-1},{0,-1},{1,-1}
@@ -2732,7 +2820,6 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 		return handle_debug_key(chr);
 	}
 
-	sf::Event pass_event = {sf::Event::MouseButtonPressed};
 	extern rectangle talk_area_rect;
 	if(overall_mode == MODE_TALKING) {
 		if(chr2 == Key::Escape)
@@ -2745,11 +2832,9 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 				pass_point = talk_words[i].rect.topLeft();
 				pass_point.x += talk_area_rect.left+9;
 				pass_point.y += talk_area_rect.top+9;
-				pass_point = mainPtr().mapCoordsToPixel(pass_point, mainView);
-				pass_event.mouseButton.x = pass_point.x;
-				pass_event.mouseButton.y = pass_point.y;
-				are_done = handle_action(pass_event, fps_limiter);
+				are_done = handle_talk_event(pass_point, fps_limiter);
 			}
+		return are_done;
 	}
 	else if(overall_mode == MODE_SHOPPING) { // shopping keystrokes
 		if(chr2 == Key::Escape) {
@@ -2762,11 +2847,9 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 				// related to talk_area_rect
 				pass_point.x += talk_area_rect.left+9;
 				pass_point.y += talk_area_rect.top+9;
-				pass_point = mainPtr().mapCoordsToPixel(pass_point, mainView);
-				pass_event.mouseButton.x = pass_point.x;
-				pass_event.mouseButton.y = pass_point.y;
-				are_done = handle_action(pass_event, fps_limiter);
+				are_done = handle_shop_event(pass_point, fps_limiter);
 			}
+		return are_done;
 	} else {
 		for(short i = 0; i < 10; i++)
 			if(chr2 == keypad[i]) {
@@ -2774,13 +2857,14 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 					chr2 = Key::Z;
 				}
 				else {
-					if(!handle_screen_shift(screen_shift_delta[i], need_redraw)){
-						// Directional keys simulate directional click
-						pass_point = mainPtr().mapCoordsToPixel(terrain_click[i], mainView);
-						pass_event.mouseButton.x = pass_point.x;
-						pass_event.mouseButton.y = pass_point.y;
-						are_done = handle_action(pass_event, fps_limiter);
-						return are_done;
+					location cur_loc = is_out() ? univ.party.out_loc : center;
+					location delta = directional_delta[i];
+					if(!handle_screen_shift(delta, need_redraw)){
+						if(handle_terrain_screen_actions(delta, false, false, did_something, need_redraw, need_reprint)){
+							advance_time(did_something, need_redraw, need_reprint);
+							return true;
+						}
+						return false;
 					}
 				}
 			}
@@ -2839,6 +2923,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			
 		case ' ':
 			if(overall_mode == MODE_FANCY_TARGET) {
+				targeting_line_visible = false;
 				// cast multi-target spell, set # targets to 0 so that space clicked doesn't matter
 				num_targets_left = 0;
 				handle_target_space(center, did_something, need_redraw, need_reprint);
@@ -2870,6 +2955,12 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 		case 'u': // Use space
 			if(overall_mode == MODE_TOWN || overall_mode == MODE_USE_TOWN)
 				handle_use_space_select(need_reprint);
+			else if(is_combat())
+				ASB("Use: not in combat.");
+			else if(is_out())
+				ASB("Use: not outdoors");
+			else
+				ASB("Use: " + FINISH_FIRST);
 			break;
 			
 		case 'b': // Bash door
@@ -3010,8 +3101,6 @@ bool handle_scroll(const sf::Event& event) {
 }
 
 void do_load() {
-	// TODO this needs to be changed/moved because a picker dialog opens now!!!
-	// TODO wait, I thought I resolved that.^
 	// Edge case: Replay can be cut off before a file is chosen,
 	// or party selection can be canceled, and this will cause
 	// a crash trying to decode a party
@@ -3026,7 +3115,13 @@ void do_load() {
 	finish_load_party();
 	if(overall_mode != MODE_STARTUP)
 		post_load();
-	univ.file = file_to_load;
+	extern fs::path store_chose_auto;
+	if(store_chose_auto.empty()){
+		univ.file = file_to_load;
+	}else{
+		// Make sure when you choose an autosave, your next manual save overwrites the main file, not the autosave.
+		univ.file = store_chose_auto;
+	}
 	menu_activate();
 	restore_cursor();
 }
@@ -3051,6 +3146,8 @@ void post_load() {
 	put_pc_screen();
 	draw_terrain();
 	UI::toolbar.draw(mainPtr());
+	// Fix showing blank, vertically flipped text bar on reloading with same text bar text:
+	draw_text_bar(std::make_pair("", ""));
 	draw_text_bar();
 	
 	print_buf();
@@ -3294,9 +3391,6 @@ void increase_age(bool eating_trigger_autosave) {
 			play_sound(66);
 			r1 = get_ran(3,1,6);
 			hit_party(r1,eDamageType::SPECIAL);
-			// Might seem redudant but maybe hit_party could change the mode if TPK?
-			if(!is_combat())
-				boom_space(univ.party.out_loc,overall_mode,0,r1,0);
 		}
 		else {
 			play_sound(6);
@@ -3536,11 +3630,15 @@ void handle_death() {
 		// Use death (or leave Exile) dialog
 		choice = cChoiceDlog("party-death",{"load","new","quit"}).show();
 		
-		if(choice == "quit") {
+		if(choice == "quit"){
 			All_Done = true;
 			return;
 		}
-		else if(choice == "load") {
+		else if(choice == "load"){
+			// When replaying, the fancy file picker and/or load are recorded as actions next
+			if(replaying){
+				break;
+			}
 			fs::path file_to_load = run_file_picker(false);
 			if(!file_to_load.empty()){
 				if(load_party(file_to_load, univ)){
@@ -3605,37 +3703,55 @@ void start_new_game(bool force) {
 	}
 	party_in_memory = true;
 	if(force) return;
-	do_save(true);
+	if(!replaying)
+		do_save(true);
 }
 
 void start_tutorial() {
-	// Start by using the default party
-	start_new_game(true);
-	// TODO start the tutorial scenario, which we need to design.
+	std::string version_flag = get_feature_version("tutorial");
+	if(!version_flag.empty()){
+		// TODO implement the tutorial. If the behavior for launching the tutorial ever changes, update feature flags.
+	}else{
+		showWarning("Tutorial coming soon!");
+	}
 }
 
-location get_cur_direction(location the_point) {
-	location store_dir;
+location get_cur_direction() {
+	location mouse = mouse_window_coords();
+	sf::Vector2f mouseV(mouse.x, mouse.y);
+
+	rectangle on_screen_terrain_area = win_to_rects[WINRECT_TERVIEW];
+	on_screen_terrain_area.inset(13, 13);
+	location ter_screen_center = {(on_screen_terrain_area.left + on_screen_terrain_area.right) / 2, (on_screen_terrain_area.top + on_screen_terrain_area.bottom) / 2};
+	sf::Vector2f centerV(ter_screen_center.x, ter_screen_center.y);
+	sf::Vector2f offset = mouseV - centerV;
+
+	float angle = 22.5 + std::atan2(-offset.y, offset.x) * 180.0 / 3.14159;
+	if(angle < 0) angle += 360.0;
+	if(angle > 360) angle -= 360;
 	
-	// This is a kludgy adjustment to adjust for the screen shifting between Exile I & II
-	the_point.x += 5;
-	the_point.y += 5;
-	
-	if((the_point.x < 135) & (the_point.y >= ((the_point.x * 34) / 10) - 293)
-		& (the_point.y <= (-1 * ((the_point.x * 34) / 10) + 663)))
-		store_dir.x--;
-	if((the_point.x > 163) & (the_point.y <= ((the_point.x * 34) / 10) - 350)
-		& (the_point.y >= (-1 * ((the_point.x * 34) / 10) + 721)))
-		store_dir.x++;
-	
-	if((the_point.y < 167) & (the_point.y <= (the_point.x / 2) + 102)
-		& (the_point.y <= (-1 * (the_point.x / 2) + 249)))
-		store_dir.y--;
-	if((the_point.y > 203) & (the_point.y >= (the_point.x / 2) + 123)
-		& (the_point.y >= (-1 * (the_point.x / 2) + 268)))
-		store_dir.y++;
-	
-	return store_dir;
+	float unit = 45;
+	switch((int)(angle / unit)){
+		case 0:
+			return {1, 0};
+		case 1:
+			return {1, -1};
+		case 2:
+			return {0, -1};
+		case 3:
+			return {-1, -1};
+		case 4:
+			return {-1, 0};
+		case 5:
+			return {-1, 1};
+		case 6:
+			return {0, 1};
+		case 7:
+			return {1, 1};
+		case 8:
+			return {1, 0};
+	}
+	return {0, 0};
 }
 
 static eDirection find_waterfall(short x, short y, short mode){
@@ -3958,8 +4074,10 @@ bool town_move_party(location destination,short forced) {
 				add_string_to_buf("You leave the boat.");
 				univ.party.in_boat = -1;
 			}
-			else if((destination.x != univ.party.town_loc.x) && (destination.y != univ.party.town_loc.y))
+			else if((destination.x != univ.party.town_loc.x) && (destination.y != univ.party.town_loc.y)){
+				add_string_to_buf("Move: Boat can't move diagonally.");
 				return false;
+			}
 			// Crossing bridge: land or go through
 			else if(!is_blocked(destination) && univ.scenario.ter_types[ter].boat_over && univ.scenario.ter_types[ter].special == eTerSpec::BRIDGE) {
 				if(cChoiceDlog("boat-bridge",{"under","land"}).show() == "under")
@@ -4208,6 +4326,14 @@ void debug_crash() {
 	if(confirm == "yes"){
 		throw std::string { "Be careful what you wish for!" };
 	}
+}
+
+void debug_fix_fonts() {
+	extern std::map<sf::RenderTexture*,std::vector<ScaleAwareText>> store_scale_aware_text;
+	store_scale_aware_text.clear();
+
+	ResMgr::fonts.drain();
+	redraw_everything();
 }
 
 void clear_trapped_monst() {

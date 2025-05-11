@@ -42,7 +42,7 @@
 		<led name='snail' relative='pos pos-in' anchor='slow' top='0' left='15'>Quite Slow</led>
 	</group>
 	<text name='targeting-head' size='large' relative='pos-in pos' anchor='spd-head' top='30' left='0' width='182' height='17'>Targeting mode:</text>
-	<led name='target-lock' relative='pos-in pos' rel-anchor='prev' top='4' left='15'>Shift screen to show enemies in range</led>
+	<led name='target-lock' relative='pos-in pos' rel-anchor='prev' top='4' left='15'>Shift screen to show more enemies in range</led>
 	<text name="keyshift-head" relative='neg pos' rel-anchor='prev' top='8' left='3'>Directional keys:</text>
 	<group name='keyshift-options'>
 		<led name='target-adjacent' relative='pos pos-in' anchor='keyshift-head' top='0' left='15'>Select adjacent tiles</led>
@@ -56,8 +56,7 @@
 	<button name='autosave-details' type='tiny' text-size='10' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>
 		Details
 	</button>
-	<led name='repeatdesc' relative='pos-in pos' anchor='autosave-toggle' top='10' left='0'>Show room descriptions more than once</led>
-	<led name='easier' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Make game easier (monsters much weaker)</led>
+	<led name='easier' relative='pos-in pos' anchor='autosave-toggle' top='10' left='0'>Make game easier (monsters much weaker)</led>
 	<led name='lesswm' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Fewer wandering monsters</led>
 	<led name='skipsplash' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Skip splash screen on startup</led>
 	<led name='nohelp' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>Never show instant help</led>

@@ -29,8 +29,23 @@ sf::Font& get_font_rsrc(eFont font) {
 }
 
 void TextStyle::applyTo(sf::Text& text, double scale) const {
-	text.setFont(get_font_rsrc(font));
-	text.setCharacterSize(pointSize * scale);
+	// Guarantee the font texture for the needed text size won't need to be resized in the middle of rendering
+	sf::Font& font_obj = get_font_rsrc(font);
+	int size = pointSize * scale;
+	sf::Texture& font_texture = const_cast<sf::Texture&>(font_obj.getTexture(size));
+	int min_texture_size = 128 * scale;
+	if(font_texture.getSize().x < min_texture_size){
+		int texture_scale = 2;
+		while(128 * texture_scale < min_texture_size){
+			texture_scale << 1;
+		}
+		if(!font_texture.create(128 * texture_scale, 128 * texture_scale)){
+			throw std::string { "Failed to create large enough font texture!" };
+		}
+	}
+
+	text.setFont(font_obj);
+	text.setCharacterSize(size);
 	int style = sf::Text::Regular;
 	if(italic) style |= sf::Text::Italic;
 	if(underline) style |= sf::Text::Underlined;
@@ -182,7 +197,10 @@ void draw_scale_aware_text(sf::RenderTarget& dest_window, sf::Text str_to_draw) 
 		dest_window.setView(dest_window.getDefaultView());
 
 		sf::Vector2f text_position = str_to_draw.getPosition() * (float)get_ui_scale();
-		str_to_draw.setPosition(text_position + scaled_view_top_left(dest_window, scaled_view));
+		text_position += scaled_view_top_left(dest_window, scaled_view);
+		// Rounding to whole-number positions *might* avoid unpredictable graphics bugs:
+		round_vec(text_position);
+		str_to_draw.setPosition(text_position);
 
 		// Draw the text immediately
 		dest_window.draw(str_to_draw);
@@ -243,7 +261,23 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 		}
 	}
 
-	if(mode == eTextMode::WRAP) {
+	if(mode == eTextMode::ELLIPSIS){
+		size_t length = string_length(str, options.style);
+		if(length > dest_rect.width()){
+			size_t ellipsis_length = string_length("...", options.style);
+
+			size_t need_to_clip = length - dest_rect.width() + ellipsis_length;
+			int clip_idx = str.size() - 1;
+			// clip_idx should never reach 0
+			for(; clip_idx >= 0; --clip_idx){
+				size_t clip_length = string_length(str.substr(clip_idx), options.style);
+				if(clip_length >= need_to_clip) break;
+			}
+			str = str.substr(0, clip_idx) + "...";
+		}
+		mode = eTextMode::LEFT_TOP;
+	}
+	if(mode == eTextMode::WRAP){
 		break_info_t break_info = options.break_info;
 
 		// It is better to pre-calculate line-wrapping and pass it in the options,
@@ -346,7 +380,7 @@ std::vector<snippet_t> draw_string_sel(sf::RenderTarget& dest_window,rectangle d
 	return params.snippets;
 }
 
-std::set<std::string> strings_to_cache = {" "};
+std::set<std::string> strings_to_cache = {" ", "..."};
 
 size_t string_length(std::string str, const TextStyle& style, short* height){
 	size_t total_width = 0;

@@ -56,8 +56,8 @@ public:
 	rectangle_size_delegate& operator=(int val);
 	rectangle_size_delegate& operator+=(int val);
 	rectangle_size_delegate& operator-=(int val);
-	rectangle_size_delegate& operator*=(int val);
-	rectangle_size_delegate& operator/=(int val);
+	rectangle_size_delegate& operator*=(double val);
+	rectangle_size_delegate& operator/=(double val);
 	rectangle_size_delegate& operator=(const rectangle_size_delegate& val);
 	rectangle_size_delegate& operator+=(const rectangle_size_delegate& val);
 	rectangle_size_delegate& operator-=(const rectangle_size_delegate& val);
@@ -194,6 +194,10 @@ location between_anchor_points(location anchor1, location anchor2, int padding=1
 // Get all view center points which contain the greatest possible number of the given points
 // with the given amount of padding
 std::vector<location> points_containing_most(std::vector<location> points, int padding=1);
+
+// Get all view center points which contain the greatest possible number of the given points
+// with the given amount of padding, as long as they still contain all of the given required points
+std::vector<location> points_containing_most(std::vector<location> points, std::vector<location> required_points, int padding=1);
 
 // Find which of the given points is closest to the given anchor point.
 int closest_point_idx(std::vector<location> points, location anchor);

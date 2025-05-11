@@ -141,6 +141,7 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			type = eSpecType::MAKE_TOWN_HOSTILE;
 			ex1a = 0;
 			ex1b = -1;
+			ex2a = 1;
 			break;
 			// 171-173 were change/swap/transform terrain
 		case 174: type = eSpecType::TOWN_MOVE_PARTY; break;
@@ -575,6 +576,7 @@ bool node_category_info_t::contains(eSpecType spec) const {
 node_properties_t::node_properties_t(eSpecType type)
 	: self(type)
 	, cat(getNodeCategory(type))
+	, can_preview(true)
 {
 	set(eSpecField::JUMP, eSpecPicker::NODE);
 }
@@ -869,6 +871,11 @@ node_builder_t& node_builder_t::loc(eSpecField a, eSpecField b, eLocType type) {
 node_builder_t& node_builder_t::loc(eSpecField a, eSpecField b, eLocType type, eSpecField where) {
 	loc(a, b, type);
 	node.fields[b].continuation = where;
+	return *this;
+}
+
+node_builder_t& node_builder_t::no_preview() {
+	node.can_preview = false;
 	return *this;
 }
 

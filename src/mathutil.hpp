@@ -9,6 +9,7 @@
 #pragma once
 
 #include <cmath>
+#include <climits>
 #include <SFML/System/Time.hpp>
 #include <random>
 
@@ -45,4 +46,10 @@ inline void move_to_zero(T& val){
 template<typename T>
 inline T sgn(T val) {
 	return val == 0 ? 0 : std::copysign(1, val);
+}
+
+inline void add_check_overflow(short& val, int how_much) {
+	if(SHRT_MAX - val > how_much)
+		val = SHRT_MAX;
+	else val += how_much;
 }

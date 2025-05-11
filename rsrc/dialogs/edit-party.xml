@@ -7,7 +7,7 @@
 	
 	<pict name='pc1' type='pc' relative='abs pos' rel-anchor='prev' num='0' top='10' left='12'/>
 	<text size='large' relative='pos pos-in' rel-anchor='prev' top='11' left='2' width='40' height='16'>PC #1</text>
-	<text name='name1' size='title' font='dungeon' framed='true' relative='pos neg' rel-anchor='prev' top='3' left='11' width='152' height='20'/>
+	<text name='name1' size='title' font='dungeon' framed='true' ellipsis='true' relative='pos neg' rel-anchor='prev' top='3' left='11' width='152' height='20'/>
 	<button name='delete1' type='tall' relative='pos neg' rel-anchor='prev' top='10' left='13'>Delete</button>
 	<button name='trait1' type='trait' relative='pos pos-in' rel-anchor='prev' top='0' left='3'/>
 	<button name='train1' type='tall' relative='pos pos-in' rel-anchor='prev' top='0' left='3'>Train</button>
@@ -15,7 +15,7 @@
 	
 	<pict name='pc2' type='pc' relative='abs pos' anchor='pc1' num='0' top='9' left='12'/>
 	<text size='large' relative='pos pos-in' rel-anchor='prev' top='11' left='2' width='40' height='16'>PC #2</text>
-	<text name='name2' size='title' font='dungeon' framed='true' relative='pos neg' rel-anchor='prev' top='3' left='11' width='152' height='20'/>
+	<text name='name2' size='title' font='dungeon' framed='true' ellipsis='true' relative='pos neg' rel-anchor='prev' top='3' left='11' width='152' height='20'/>
 	<button name='delete2' type='tall' relative='pos neg' rel-anchor='prev' top='10' left='13'>Delete</button>
 	<button name='trait2' type='trait' relative='pos pos-in' rel-anchor='prev' top='0' left='3'/>
 	<button name='train2' type='tall' relative='pos pos-in' rel-anchor='prev' top='0' left='3'>Train</button>
@@ -23,7 +23,7 @@
 	
 	<pict name='pc3' type='pc' relative='abs pos' anchor='pc2' num='0' top='9' left='12'/>
 	<text size='large' relative='pos pos-in' rel-anchor='prev' top='11' left='2' width='40' height='16'>PC #3</text>
-	<text name='name3' size='title' font='dungeon' framed='true' relative='pos neg' rel-anchor='prev' top='3' left='11' width='152' height='20'/>
+	<text name='name3' size='title' font='dungeon' framed='true' ellipsis='true' relative='pos neg' rel-anchor='prev' top='3' left='11' width='152' height='20'/>
 	<button name='delete3' type='tall' relative='pos neg' rel-anchor='prev' top='10' left='13'>Delete</button>
 	<button name='trait3' type='trait' relative='pos pos-in' rel-anchor='prev' top='0' left='3'/>
 	<button name='train3' type='tall' relative='pos pos-in' rel-anchor='prev' top='0' left='3'>Train</button>
@@ -31,7 +31,7 @@
 	
 	<pict name='pc4' type='pc' relative='abs pos' anchor='pc3' num='0' top='9' left='12'/>
 	<text size='large' relative='pos pos-in' rel-anchor='prev' top='11' left='2' width='40' height='16'>PC #4</text>
-	<text name='name4' size='title' font='dungeon' framed='true' relative='pos neg' rel-anchor='prev' top='3' left='11' width='152' height='20'/>
+	<text name='name4' size='title' font='dungeon' framed='true' ellipsis='true' relative='pos neg' rel-anchor='prev' top='3' left='11' width='152' height='20'/>
 	<button name='delete4' type='tall' relative='pos neg' rel-anchor='prev' top='10' left='13'>Delete</button>
 	<button name='trait4' type='trait' relative='pos pos-in' rel-anchor='prev' top='0' left='3'/>
 	<button name='train4' type='tall' relative='pos pos-in' rel-anchor='prev' top='0' left='3'>Train</button>
@@ -39,7 +39,7 @@
 	
 	<pict name='pc5' type='pc' relative='abs pos' anchor='pc4' num='0' top='9' left='12'/>
 	<text size='large' relative='pos pos-in' rel-anchor='prev' top='11' left='2' width='40' height='16'>PC #5</text>
-	<text name='name5' size='title' font='dungeon' framed='true' relative='pos neg' rel-anchor='prev' top='3' left='11' width='152' height='20'/>
+	<text name='name5' size='title' font='dungeon' framed='true' ellipsis='true' relative='pos neg' rel-anchor='prev' top='3' left='11' width='152' height='20'/>
 	<button name='delete5' type='tall' relative='pos neg' rel-anchor='prev' top='10' left='13'>Delete</button>
 	<button name='trait5' type='trait' relative='pos pos-in' rel-anchor='prev' top='0' left='3'/>
 	<button name='train5' type='tall' relative='pos pos-in' rel-anchor='prev' top='0' left='3'>Train</button>
@@ -47,7 +47,7 @@
 	
 	<pict name='pc6' type='pc' relative='abs pos' anchor='pc5' num='0' top='9' left='12'/>
 	<text size='large' relative='pos pos-in' rel-anchor='prev' top='11' left='2' width='40' height='16'>PC #6</text>
-	<text name='name6' size='title' font='dungeon' framed='true' relative='pos neg' rel-anchor='prev' top='3' left='11' width='152' height='20'/>
+	<text name='name6' size='title' font='dungeon' framed='true' ellipsis='true' relative='pos neg' rel-anchor='prev' top='3' left='11' width='152' height='20'/>
 	<button name='delete6' type='tall' relative='pos neg' rel-anchor='prev' top='10' left='13'>Delete</button>
 	<button name='trait6' type='trait' relative='pos pos-in' rel-anchor='prev' top='0' left='3'/>
 	<button name='train6' type='tall' relative='pos pos-in' rel-anchor='prev' top='0' left='3'>Train</button>

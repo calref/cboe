@@ -43,6 +43,8 @@ const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
 short cDialog::defaultBackground = cDialog::BG_DARK;
 cDialog* cDialog::topWindow = nullptr;
 void (*cDialog::redraw_everything)() = nullptr;
+std::function<void(sf::RenderWindow& win)> cDialog::onLostFocus;
+std::function<void(sf::RenderWindow& win)> cDialog::onGainedFocus;
 
 extern std::map<std::string,sf::Color> colour_map;
 
@@ -535,8 +537,7 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	winLastY = parentPos.y + (int(parentSz.y) - winRect.height()) / 2;
 	win.setPosition({winLastX, winLastY});
 	draw();
-	makeFrontWindow(parent ? parent-> win : mainPtr());
-	makeFrontWindow(win);
+	stackWindowsCorrectly();
 	// This is a loose modal session, as it doesn't prevent you from clicking away,
 	// but it does prevent editing other dialogs, and it also keeps this window on top
 	// even when it loses focus.
@@ -544,13 +545,15 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	if(onopen) onopen(*this);
 	animTimer.restart();
 
+	has_focus = true;
 	handle_events();
 
 	win.setVisible(false);
+	// Flush events on parent window from while this one was running
 	while(pollEvent(parentWin, currentEvent));
 	set_cursor(former_curs);
 	topWindow = formerTop;
-	makeFrontWindow(*parentWin);
+	stackWindowsCorrectly();
 }
 
 void cDialog::runWithHelp(short help1, short help2, bool help_forced) {
@@ -595,8 +598,14 @@ void cDialog::handle_events() {
 
 			cScrollPane& pane = dynamic_cast<cScrollPane&>(getControl(name));
 			pane.getScroll().setPosition(newPos);
+		}else if(replaying && has_next_action("error")){
+			// The error is recorded for debugging only. It should be triggered by replaying the actions.
+			pop_next_action();
 		}else if(replaying && has_next_action()){
-			throw std::string { "Replaying a dialog, have the wrong replay action: " + next_action_type() };
+			replaying = false;
+			std::string type =  next_action_type();
+			std::string line =  std::to_string(next_action_line());
+			throw std::string { "Replaying a dialog, have the wrong replay action: " + type + " on line " + line};
 		}else{
 			while(pollEvent(win, currentEvent)){
 				handle_one_event(currentEvent, fps_limiter);
@@ -619,6 +628,22 @@ void cDialog::handleTab(bool reverse) {
 		handleTabOrder(currentFocus, tabOrder.rbegin(), tabOrder.rend());
 	} else {
 		handleTabOrder(currentFocus, tabOrder.begin(), tabOrder.end());
+	}
+}
+
+void cDialog::stackWindowsCorrectly() {
+	// Put all dialogs in correct z order:
+	std::vector<cDialog*> dialog_stack;
+	cDialog* next = this;
+	while(next != nullptr){
+		dialog_stack.push_back(next);
+		next = next->parent;
+	}
+	makeFrontWindow(mainPtr());
+	for(int i = dialog_stack.size() - 1; i >= 0; --i){
+		if(dialog_stack[i]->dialogNotToast){
+			makeFrontWindow(dialog_stack[i]->win);
+		}
 	}
 }
 
@@ -734,18 +759,26 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter&
 			where = {(int)(currentEvent.mouseButton.x / get_ui_scale()), (int)(currentEvent.mouseButton.y / get_ui_scale())};
 			process_click(where, key.mod, fps_limiter);
 			break;
-		default: // To silence warning of unhandled enum values
+		case sf::Event::LostFocus:
+			has_focus = false;
+			if(onLostFocus){
+				onLostFocus(win);
+			}
 			break;
 		case sf::Event::GainedFocus:
-		case sf::Event::MouseMoved:
+			if(!has_focus){
+				has_focus = true;
+				if(onGainedFocus){
+					onGainedFocus(win);
+				}
+				stackWindowsCorrectly();
+			}
+			BOOST_FALLTHROUGH;
+		case sf::Event::MouseMoved:{
 			// Did the window move, potentially dirtying the canvas below it?
-			auto winPosition = win.getPosition();
-			if (winLastX != winPosition.x || winLastY != winPosition.y) {
+			if(check_window_moved(win, winLastX, winLastY))
 				if (redraw_everything != NULL)
 					redraw_everything();
-			}
-			winLastX = winPosition.x;
-			winLastY = winPosition.y;
 
 			bool inField = false;
 			for(auto& ctrl : controls) {
@@ -756,6 +789,8 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter&
 				}
 			}
 			if(!inField) set_cursor(sword_curs);
+		}break;
+		default: // To silence warning of unhandled enum values
 			break;
 	}
 }
@@ -810,9 +845,9 @@ bool cDialog::toast(bool triggerFocus){
 	return true;
 }
 
-void cDialog::untoast() {
+void cDialog::untoast(bool triggerFocusHandler) {
 	dialogNotToast = true;
-	if(!currentFocus.empty())
+	if(!currentFocus.empty() && triggerFocusHandler)
 		this->getControl(currentFocus).triggerFocusHandler(*this, currentFocus, false);
 }
 
@@ -930,7 +965,7 @@ void cDialog::process_keystroke(cKey keyHit){
 				cContainer* container = dynamic_cast<cContainer*>(ctrl);
 				std::string child_hit;
 				container->forEach([&keyHit, &child_hit, enterKeyHit](std::string child_id, cControl& child_ctrl) {
-					if(child_ctrl.isClickable() &&
+					if(child_ctrl.isVisible() && child_ctrl.isClickable() &&
 						(child_ctrl.getAttachedKey() == keyHit || (child_ctrl.isDefault() && enterKeyHit))){
 						
 						if(child_hit.empty()) child_hit = child_id;
@@ -1250,4 +1285,11 @@ void preview_dialog_xml(fs::path dialog_xml) {
 
 sf::Color cParentless::getDefTextClr() const {
 	return cDialog::defaultBackground == cDialog::BG_DARK ? sf::Color::White : sf::Color::Black;
+}
+
+void setup_dialog_pict_anim(cDialog& dialog, std::string pict_id, short anim_loops, short anim_fps) {
+	cPict& pict = dynamic_cast<cPict&>(dialog[pict_id]);
+	pict.setAnimLoops(anim_loops);
+	dialog.setAnimPictFPS(anim_fps);
+	dialog.setDoAnimations(true);
 }

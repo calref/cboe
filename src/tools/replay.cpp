@@ -202,6 +202,13 @@ std::string next_action_type() {
 	return next_action->Value();
 }
 
+int next_action_line() {
+	if(next_action == nullptr){
+		throw std::string { "Replay error! No action left to check row" };
+	}
+	return next_action->Row();
+}
+
 Element& pop_next_action(std::string expected_action_type) {
 	if(next_action == nullptr){
 		throw std::string { "Replay error! No action left to pop" };

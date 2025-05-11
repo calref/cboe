@@ -34,6 +34,8 @@
 #include "gfx/tiling.hpp"
 #include "mathutil.hpp"
 #include "fileio/fileio.hpp"
+#include "fileio/resmgr/res_font.hpp"
+#include "fileio/resmgr/res_dialog.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
@@ -50,7 +52,7 @@ using clara::ParserResult;
 using clara::ParseResultType;
 
 bool All_Done = false;
-short had_text_freeze = 0,num_fonts;
+short num_fonts;
 bool first_startup_update = true;
 bool first_sound_played = false,spell_forced = false;
 bool party_in_memory = false;
@@ -102,10 +104,23 @@ std::map<std::string,std::vector<std::string>> feature_flags = {
 	// Legacy behavior of the X debug action (used by the OneOfEverything replay)
 	// kills the whole party with 'Absent' status
 	{"debug-kill-party", {"V2"}},
-	{"target-lock", {"V1"}},
+	// Legacy behavior of pacifist spellcasting (used by some replays)
+	// lets the player select combat spells and click 'Cast' which will fail.
+	{"pacifist-spellcast-check", {"V2"}},
+	// Target lock
+	// V1: Shift screen to show the maximum number of enemies in range
+	// V2: Like V1, but don't shift if it hides any enemies that are already visible
+	{"target-lock", {"V1", "V2"}},
 	// New in-game save file picker
 	{"file-picker-dialog", {"V1"}},
-	{"scenario-meta-format", {"V2"}}
+	{"scenario-meta-format", {"V2"}},
+	// Talk mode
+	{"talk-go-back", {"StackV1"}},
+	// Bugs required for several VoDT test replays to run faithfully
+	{"empty-wandering-monster-bug", {"fixed"}},
+	{"too-many-extra-wandering-monsters-bug", {"fixed"}},
+	// Game balance
+	{"magic-resistance", {"fixed"}} // Resist Magic used to not help with magic damage!
 };
 
 struct cParseEntrance {
@@ -212,6 +227,7 @@ static void handleFatalError(std::string what) {
 		record_action("error", what);
 		recording = false; // Don't record click_control on the error message
 	}
+	replaying = false; // Don't try to run replay actions in the fatal error dialog
 	showFatalError(what);
 	if(was_recording){
 		extern fs::path log_file;
@@ -221,13 +237,32 @@ static void handleFatalError(std::string what) {
 	}
 }
 
+void dialog_lost_focus(sf::RenderWindow& win) {
+	setWindowFloating(mini_map(), false);
+}
+
+void dialog_gained_focus(sf::RenderWindow& win) {
+	setWindowFloating(mini_map(), true);
+	if(map_visible){
+		makeFrontWindow(mini_map());
+	}
+	makeFrontWindow(mainPtr(), mini_map());
+}
+
+// Comment this line out for exact exception callstacks:
+#define CATCH_ERRORS
+
 int main(int argc, char* argv[]) {
 #if 0
 	void debug_oldstructs();
 	debug_oldstructs();
 #endif
+#ifdef CATCH_ERRORS
 	try{
+#endif
 		cDialog::redraw_everything = &redraw_everything;
+		cDialog::onLostFocus = &dialog_lost_focus;
+		cDialog::onGainedFocus = &dialog_gained_focus;
 
 		init_boe(argc, argv);
 		
@@ -252,6 +287,7 @@ int main(int argc, char* argv[]) {
 
 		close_program();
 		return 0;
+#ifdef CATCH_ERRORS
 	} catch(std::exception& x) {
 		handleFatalError(x.what());
 		throw;
@@ -262,6 +298,7 @@ int main(int argc, char* argv[]) {
 		handleFatalError("An unknown error occurred!");
 		throw;
 	}
+#endif
 }
 
 static void init_sbar(std::shared_ptr<cScrollbar>& sbar, const std::string& name, rectangle rect, rectangle events_rect, int max, int pgSz, int start = 0) {
@@ -320,11 +357,16 @@ static void init_buttons() {
 	init_btn(help_btn, BTN_HELP, {273,12});
 }
 
+// Spell dialog is slow to open on Windows, so keep it prepared and reuse it.
+std::unique_ptr<cDialog> storeCastSpell;
+
 // NOTE: this should possibly be moved to boe.ui.cpp at some point
 static void init_ui() {
 	cDialog::init();
 	init_scrollbars();
 	init_buttons();
+
+	storeCastSpell.reset(new cDialog(*ResMgr::dialogs.get("cast-spell")));
 }
 
 extern bool record_verbose;
@@ -957,7 +999,7 @@ static void replay_action(Element& action) {
 		throw std::string { "Replay system internal error! advance_time() was supposed to be called by the last action, but wasn't: " } + _last_action_type;
 	}else{
 		std::ostringstream sstr;
-		sstr << "Couldn't replay action: " << action;
+		sstr << "Couldn't replay action: " << action << " on line " << action.Row();
 		replaying = false;
 		throw sstr.str();
 	}
@@ -1086,22 +1128,9 @@ using Key = sf::Keyboard::Key;
 std::map<Key,int> delayed_keys;
 const int ARROW_SIMUL_FRAMES = 3;
 
-// Terrain map coordinates to simulate a click for 8-directional movement
-// ordered to correspond with eDirection
-// TODO terrain_click is duplicated (with different ordering) in boe.actions.cpp
-location terrain_click[8] = {
-	{150,155}, // north
-	{180,135}, // northeast
-	{180,185}, // east
-	{180,215}, // southeast
-	{150,215}, // south
-	{120,215}, // southwest
-	{120,185}, // west
-	{120,155}, // northwest
-};
-// Screen shift deltas ordered to correspond with eDirection
-// TODO screen_shift_delta is duplicated (with different ordering) in boe.actions.cpp
-location screen_shift_delta[8] = {
+// Directional deltas ordered to correspond with eDirection
+// TODO directional_delta is duplicated (with different ordering) in boe.actions.cpp
+location directional_delta[8] = {
 	{0,-1}, // north
 	{1,-1}, // northeast
 	{1,0}, // east
@@ -1151,18 +1180,15 @@ static void fire_delayed_key(Key code) {
 	}
 
 	if(dir != -1){
+		bool did_something = false;
 		bool need_redraw = false;
-		if(handle_screen_shift(screen_shift_delta[dir], need_redraw)){
-			if(need_redraw){
-				draw_terrain();
-			}
-		}else{
-			sf::Event pass_event = {sf::Event::MouseButtonPressed};
-			location pass_point = mainPtr().mapCoordsToPixel(terrain_click[dir], mainView);
-			pass_event.mouseButton.x = pass_point.x;
-			pass_event.mouseButton.y = pass_point.y;
-			queue_fake_event(pass_event);
+		bool need_reprint = false;
+		location delta = directional_delta[dir];
+		if(!handle_screen_shift(delta, need_redraw)){
+			// TODO this was deferred to the next frame before. Is that still necessary when not spoofing an event?
+			handle_terrain_screen_actions(delta, false, false, did_something, need_redraw, need_reprint);
 		}
+		advance_time(did_something, need_redraw, need_reprint);
 	}
 }
 
@@ -1188,6 +1214,13 @@ static void update_delayed_keys() {
 		}
 	}
 }
+
+bool game_has_focus = true;
+bool game_had_focus = true;
+bool main_window_lost_focus = false;
+bool main_window_gained_focus = false;
+bool map_window_lost_focus = false;
+bool map_window_gained_focus = false;
 
 void handle_events() {
 	sf::Event currentEvent;
@@ -1233,6 +1266,7 @@ void handle_events() {
 				fake_event_queue.pop_front();
 				handle_one_event(next_event, fps_limiter);
 			}
+
 			while(pollEvent(mainPtr(), currentEvent)) handle_one_event(currentEvent, fps_limiter);
 
 			// It would be nice to have minimap inside the main game window (we have lots of screen space in fullscreen mode).
@@ -1243,7 +1277,11 @@ void handle_events() {
 
 		if(changed_display_mode) {
 			changed_display_mode = false;
+			// Force reload fonts for possible new UI scale
+			ResMgr::fonts.drain();
+
 			adjust_window_mode();
+			storeCastSpell.reset(new cDialog(*ResMgr::dialogs.get("cast-spell")));
 			init_mini_map();
 		}
 
@@ -1256,6 +1294,30 @@ void handle_events() {
 
 		// Ideally, this should be the only draw call that is done in a cycle.
 		redraw_everything();
+
+		bool any_lost_focus = main_window_lost_focus || map_window_lost_focus;
+		bool any_gained_focus = main_window_gained_focus || map_window_gained_focus;
+
+		if(game_had_focus && any_lost_focus && !any_gained_focus){
+			game_has_focus = false;
+			// The game completely lost focus. The map floating is going to block
+			// other applications and be annoying.
+			setWindowFloating(mini_map(), false);
+		}else if(!game_had_focus && any_gained_focus){
+			game_has_focus = true;
+
+			// The game regained focus
+			setWindowFloating(mini_map(), true);
+			if(map_visible){
+				makeFrontWindow(mini_map());
+			}
+			makeFrontWindow(mainPtr(), mini_map());
+		}
+
+		main_window_lost_focus = main_window_gained_focus =
+		map_window_lost_focus = map_window_gained_focus = false;
+
+		game_had_focus = game_has_focus;
 
 		// Prevent the loop from executing too fast.
 		fps_limiter.frame_finished();
@@ -1289,11 +1351,10 @@ void handle_quit_event() {
 	All_Done = true;
 }
 
+int last_window_x = 0;
+int last_window_y = 0;
+
 void handle_one_event(const sf::Event& event, cFramerateLimiter& fps_limiter) {
-
-	// What does this do and should it be here?
-	through_sending();
-
 	// What does this do and should it be here?
 	clear_sound_memory();
 	
@@ -1324,12 +1385,19 @@ void handle_one_event(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 			break;
 			
 		case sf::Event::GainedFocus:
-			makeFrontWindow(mainPtr());
-			change_cursor({event.mouseMove.x, event.mouseMove.y});
+			check_window_moved(mainPtr(), last_window_x, last_window_y, "MainWindow");
+			main_window_gained_focus = true;
+			makeFrontWindow(mainPtr(), mini_map());
+			change_cursor();
+			return;
+
+		case sf::Event::LostFocus:
+			main_window_lost_focus = true;
 			return;
 
 		case sf::Event::MouseMoved:
-			change_cursor({event.mouseMove.x, event.mouseMove.y});
+			check_window_moved(mainPtr(), last_window_x, last_window_y, "MainWindow");
+			change_cursor();
 			return;
 
 		// TODO: EVENT TYPE DEPRECATED IN SFML 2.5.1
@@ -1350,12 +1418,21 @@ void queue_fake_event(const sf::Event& event) {
 	fake_event_queue.push_back(event);
 }
 
+int last_map_x = 0;
+int last_map_y = 0;
+
 void handle_one_minimap_event(const sf::Event& event) {
 	if(event.type == sf::Event::Closed) {
 		close_map(true);
-	} else if(event.type == sf::Event::GainedFocus) {
-		makeFrontWindow(mainPtr());
-	} else if(event.type == sf::Event::KeyPressed) {
+	}else if(event.type == sf::Event::GainedFocus){
+		map_window_gained_focus = true;
+		check_window_moved(mini_map(), last_map_x, last_map_y, "MapWindow");
+		makeFrontWindow(mainPtr(), mini_map());
+	}else if(event.type == sf::Event::LostFocus){
+		map_window_lost_focus = true;
+	}else if(event.type == sf::Event::MouseMoved){
+		check_window_moved(mini_map(), last_map_x, last_map_y, "MapWindow");
+	}else if(event.type == sf::Event::KeyPressed){
 		switch(event.key.code){
 			case sf::Keyboard::Escape:
 				close_map(true);
@@ -1406,13 +1483,6 @@ void redraw_everything() {
 }
 
 void Mouse_Pressed(const sf::Event& event, cFramerateLimiter& fps_limiter) {
-
-	// What is this stuff? Why is it here?
-	if(had_text_freeze > 0) {
-		had_text_freeze--;
-		return;
-	}
-	
 	if(overall_mode == MODE_STARTUP) {
 		All_Done = handle_startup_press({event.mouseButton.x, event.mouseButton.y});
 	} else {
@@ -1606,22 +1676,27 @@ static cursor_type get_mode_cursor(){
 	return sword_curs; // this should never be reached, though
 }
 
-void change_cursor(location where_curs) {
+void change_cursor() {
 	cursor_type cursor_needed;
+	location where_curs = mouse_window_coords();
 	location cursor_direction;
 	extern enum_map(eGuiArea, rectangle) win_to_rects;
 	rectangle world_screen = win_to_rects[WINRECT_TERVIEW];
 	world_screen.inset(13, 13);
-	
-	where_curs = mainPtr().mapPixelToCoords(where_curs, mainView);
 	
 	if(!world_screen.contains(where_curs))
 		cursor_needed = sword_curs;
 	else cursor_needed = get_mode_cursor();
 	
 	if((overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) && world_screen.contains(where_curs)){
-		cursor_direction = get_cur_direction(where_curs);
-		cursor_needed = arrow_curs[cursor_direction.y + 1][cursor_direction.x + 1];
+		location tile;
+		mouse_to_terrain_coords(tile, true);
+		if(tile.x != 4 || tile.y != 4){
+			cursor_direction = get_cur_direction();
+			cursor_needed = arrow_curs[cursor_direction.y + 1][cursor_direction.x + 1];
+		}else{
+			cursor_needed = wait_curs;
+		}
 	}
 	
 	if(cursor_needed != Cursor::current)

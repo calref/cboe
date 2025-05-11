@@ -184,8 +184,8 @@ TEST_CASE("Loading a new-format scenario record") {
 		CHECK(scen.out_sec_start == loc(1,3));
 		CHECK(scen.out_start == loc(12,21));
 		CHECK(scen.default_ground == 2);
-		CHECK(scen.last_out_edited == loc(0,0));
-		CHECK(scen.last_town_edited == 0);
+		CHECK(scen.editor_state.last_out_edited == loc(0,0));
+		CHECK(scen.editor_state.last_town_edited == 0);
 		CHECK(scen.init_spec == -1);
 	}
 	SECTION("With a different icon in the intro dialog") {

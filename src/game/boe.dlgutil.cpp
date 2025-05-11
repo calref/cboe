@@ -83,6 +83,22 @@ short store_talk_face_pic;
 int current_talk_node;
 extern std::vector<word_rect_t> talk_words;
 
+// "Go Back" stack: When pressing the "Go Back" button, we don't just want to reverse through
+// the nodes the player has seen, because they might change game state the first time, causing
+// you to go backwards to a node that would behave differently than it did before.
+// The "Go Back" stack allows you to reverse through exactly what the dialog engine has showed you,
+// in a read-only fashion as long as you only go backwards.
+struct dialog_history_t {
+	bool can_record;
+
+	bool special_node;
+	// Store node numbers for shop nodes.
+	int node;
+	// Store text for normal dialog nodes.
+	std::pair<std::string, std::string> text;
+};
+std::vector<dialog_history_t> dialog_history;
+
 // Shopping vars
 
 // 1 - 499 ... regular items
@@ -104,6 +120,9 @@ std::vector<int> shop_array;
 cShop active_shop;
 short active_shop_num;
 short store_cur_pc = -1;
+
+extern void init_inven_rects();
+extern void init_shopping_rects(bool scrollbar);
 
 // For healing shops, other PCs might be able to buy something if
 // the active PC can't
@@ -182,6 +201,7 @@ bool start_shop_mode(short which,short cost_adj,std::string store_name, bool can
 
 	put_background();
 	
+	init_shopping_rects(shop_sbar->getMaximum() > 0);
 	draw_shop_graphics(false,false,area_rect);
 	
 	put_item_screen(stat_window);
@@ -189,7 +209,9 @@ bool start_shop_mode(short which,short cost_adj,std::string store_name, bool can
 	return true;
 }
 
+// This is for the legacy "Go Back" button behavior, and for some reason doesn't always work:
 static void update_last_talk(int new_node) {
+	if(has_feature_flag("talk-go-back", "StackV1")) return;
 	// Store last node in the Go Back button
 	for(word_rect_t& word : talk_words) {
 		if(word.word != "Go Back") continue;
@@ -218,6 +240,7 @@ void end_shop_mode() {
 	if(store_pre_shop_mode == MODE_TALKING) {
 		save_talk_str1 = "You conclude your business.";
 		save_talk_str2 = "";
+		can_save_talk = false;
 		place_talk_str(save_talk_str1, save_talk_str2, 0, dummy_rect);
 		update_last_talk(TALK_BUSINESS);
 	}else{
@@ -256,6 +279,7 @@ void end_shop_mode() {
 			univ.party.store_limited_stock[active_shop_num][i] = left;
 		}
 	}
+	init_inven_rects();
 }
 
 bool handle_shop_event(location p, cFramerateLimiter& fps_limiter) {
@@ -333,6 +357,9 @@ void handle_sale(int i) {
 					if(base_item.variety == eItemType::SPECIAL) ASB("You already own this.");
 					else if(base_item.variety == eItemType::QUEST) ASB("You already completed this.");
 					else ASB("You own too many of this.");
+					break;
+				// This should not happen:
+				case eBuyStatus::DEAD:
 					break;
 			}
 			break;
@@ -468,6 +495,7 @@ void handle_sale(int i) {
 
 	// This looks to be redundant, but I'm just preserving the previous behavior of the code.
 	set_up_shop_array();
+	init_shopping_rects(shop_sbar->getMaximum() > 0);
 	draw_shop_graphics(false,false,{});
 
 	// When buying from a healer, we want to select the next PC who needs healing
@@ -624,6 +652,13 @@ void set_up_shop_array() {
 	}
 }
 
+std::vector<std::string> preset_words = {
+	"Look", "Name", "Job",
+	"Buy", "Sell", "Record",
+	"Done", "Go Back",
+	"Ask About...",
+};
+
 static void reset_talk_words() {
 	// first initialise talk_words here
 	talk_words.clear();
@@ -633,18 +668,16 @@ static void reset_talk_words() {
 		{210, 389}, {190, 366},
 		{4, 343}
 	};
-	static const std::vector<std::string> preset_words = {
-		"Look", "Name", "Job",
-		"Buy", "Sell", "Record",
-		"Done", "Go Back",
-		"Ask About...",
-	};
 	TextStyle style;
 	style.font = FONT_DUNGEON;
 	style.pointSize = TALK_WORD_SIZE;
 	
 	// Place buttons at bottom.
 	for(short i = 0; i < preset_words.size(); i++) {
+		if(talk_end_forced && i != 6 && i != 5) continue;
+		if(!can_save_talk && i == 5) continue;
+		if(has_feature_flag("talk-go-back", "StackV1") && dialog_history.size() < 2 && i == 7) continue;
+
 		std::string word = preset_words[i];
 		location tl = preset_word_locs[i];
 		location br = tl;
@@ -671,6 +704,7 @@ static void reset_talk_words() {
 }
 
 void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short store_face_pic) {
+	dialog_history.clear();
 	rectangle area_rect;
 
 	store_personality = personality;
@@ -694,6 +728,7 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	overall_mode = MODE_TALKING;
 	talk_end_forced = false;
 
+	can_save_talk = true;
 	reset_talk_words();
 	
 	stat_screen_mode = MODE_SHOP;
@@ -702,9 +737,9 @@ void start_talk_mode(short m_num,short personality,mon_num_t monst_type,short st
 	// Bring up and place first strings.
 	save_talk_str1 = univ.town.cur_talk().people[personality % 10].look;
 	save_talk_str2 = "";
-	can_save_talk = true;
 	
 	place_talk_str(save_talk_str1, "", 0, dummy_rect);
+	dialog_history.push_back({true, false, -1, {save_talk_str1, save_talk_str2}});
 	
 	put_item_screen(stat_window);
 	give_help(5,6);
@@ -726,6 +761,7 @@ void end_talk_mode() {
 	put_pc_screen();
 	// TODO: I suspect REFRESH_NONE will suffice here
 	redraw_screen(REFRESH_TERRAIN | REFRESH_BAR);
+	init_inven_rects();
 }
 
 static void fill_job_bank(cDialog& me, job_bank_t& bank, std::string) {
@@ -787,11 +823,9 @@ static void show_job_bank(int which_bank, std::string title) {
 	job_dlg.run();
 }
 
-void handle_talk_node(int which_talk_entry) {
+void handle_talk_node(int which_talk_entry, bool is_redo) {
 	if(which_talk_entry == TALK_DUNNO)
 		return;
-
-	reset_talk_words();
 
 	short get_pc,s1 = -1,s2 = -1;
 	char asked[4];
@@ -803,32 +837,34 @@ void handle_talk_node(int which_talk_entry) {
 		case TALK_DUNNO:
 		SPECIAL_DUNNO:
 			save_talk_str1 = univ.town.cur_talk().people[store_personality % 10].dunno;
+			save_talk_str2 = "";
 			if(save_talk_str1.length() < 2) save_talk_str1 = "You get no response.";
-			place_talk_str(save_talk_str1, "", 0, dummy_rect);
 			update_last_talk(TALK_DUNNO);
-			return;
+			goto FINISH_TALK_NODE;
 		case TALK_BUSINESS: // This one only reachable via "go back".
-			place_talk_str("You conclude your business.", "", 0, dummy_rect);
+			can_save_talk = false;
+			save_talk_str1 = "You conclude your business.";
+			save_talk_str2 = "";
 			update_last_talk(TALK_BUSINESS);
-			return;
+			goto FINISH_TALK_NODE;
 		case TALK_LOOK:
 		SPECIAL_LOOK:
 			save_talk_str1 = univ.town.cur_talk().people[store_personality % 10].look;
-			place_talk_str(save_talk_str1, "", 0, dummy_rect);
+			save_talk_str2 = "";
 			update_last_talk(TALK_LOOK);
-			return;
+			goto FINISH_TALK_NODE;
 		case TALK_NAME:
 		SPECIAL_NAME:
 			save_talk_str1 = univ.town.cur_talk().people[store_personality % 10].name;
-			place_talk_str(save_talk_str1, "", 0, dummy_rect);
+			save_talk_str2 = "";
 			update_last_talk(TALK_NAME);
-			return;
+			goto FINISH_TALK_NODE;
 		case TALK_JOB:
 		SPECIAL_JOB:
 			save_talk_str1 = univ.town.cur_talk().people[store_personality % 10].job;
-			place_talk_str(save_talk_str1, "", 0, dummy_rect);
+			save_talk_str2 = "";
 			update_last_talk(TALK_JOB);
-			return;
+			goto FINISH_TALK_NODE;
 		case TALK_BUY:
 		SPECIAL_BUY:
 			which_talk_entry = scan_for_response("purc");
@@ -845,11 +881,6 @@ void handle_talk_node(int which_talk_entry) {
 			if(which_talk_entry == -1) goto SPECIAL_DUNNO;
 			break;
 		case TALK_RECORD:
-			if(!can_save_talk) {
-				// TODO the button shouldn't be shown if it won't work, no?
-				play_sound(1);
-				return;
-			}
 			if(univ.party.save_talk(univ.town->talking.people[store_personality%10].title, univ.town->name, save_talk_str1, save_talk_str2)) {
 				give_help(57,0);
 				play_sound(0);
@@ -861,8 +892,27 @@ void handle_talk_node(int which_talk_entry) {
 		SPECIAL_DONE:
 			end_talk_mode();
 			return;
-		case TALK_BACK: // only if there's nothing to go back to
-			return; // so, there's nothing to do here
+		case TALK_BACK:
+			// In legacy behavior, this should only happen if there's nothing to go back to. In that case, do nothing.
+			if(has_feature_flag("talk-go-back", "StackV1")){
+				if(!dialog_history.empty()){
+					dialog_history_t last_state;
+					do{
+						last_state = dialog_history.back();
+						dialog_history.pop_back();
+						if(last_state.special_node){
+							handle_talk_node(last_state.node, true);
+							return;
+						}
+					// If they ended up in the same node, don't treat it as a step back until we get to different text.
+					}while(!dialog_history.empty() && save_talk_str1 == last_state.text.first && save_talk_str2 == last_state.text.second);
+					can_save_talk = last_state.can_record;
+					save_talk_str1 = last_state.text.first;
+					save_talk_str2 = last_state.text.second;
+					goto FINISH_TALK_NODE;
+				}
+			}
+			return;
 		case TALK_ASK: // ask about
 			save_talk_str1 = get_text_response("Ask about what?", 8);
 			strncpy(asked, save_talk_str1.c_str(), 4);
@@ -936,13 +986,13 @@ void handle_talk_node(int which_talk_entry) {
 			save_talk_str2 = "";
 			break;
 		case eTalkNode::TRAINING:
-			if((get_pc = select_pc(eSelectPC::ONLY_LIVING,"Train who?")) < 6) {
-				can_save_talk = false;
+			save_talk_str1 = "You conclude your training.";
+			save_talk_str2 = "";
+			can_save_talk = false;
+			if((get_pc = select_pc(eSelectPC::ONLY_CAN_TRAIN,"Train who?")) < 6) {
 				spend_xp(get_pc,1, nullptr);
 			}
-			save_talk_str1 = "You conclude your training.";
-			return;
-			
+			goto RECORD_WHICH_NODE;
 		case eTalkNode::SHOP:
 			if(!start_shop_mode(b,a,save_talk_str1,true)){
 				if(!start_shop_mode_other_pc()){
@@ -959,7 +1009,7 @@ void handle_talk_node(int which_talk_entry) {
 			}else{
 				can_save_talk = false;
 			}
-			return;
+			goto RECORD_WHICH_NODE;
 		case eTalkNode::JOB_BANK:
 			if(a < univ.party.job_banks.size() && univ.party.job_banks[a].anger >= 50) {
 				save_talk_str1 = save_talk_str2;
@@ -967,26 +1017,26 @@ void handle_talk_node(int which_talk_entry) {
 				break;
 			} else {
 				show_job_bank(a, save_talk_str1.c_str());
-				return;
+				goto RECORD_WHICH_NODE;
 			}
 		case eTalkNode::SELL_WEAPONS:
 			can_save_talk = false;
 			stat_screen_mode = MODE_SELL_WEAP;
 			put_item_screen(stat_window);
 			give_help(42,43);
-			break;
+			goto RECORD_WHICH_NODE;
 		case eTalkNode::SELL_ARMOR:
 			can_save_talk = false;
 			stat_screen_mode = MODE_SELL_ARMOR;
 			put_item_screen(stat_window);
 			give_help(42,43);
-			break;
+			goto RECORD_WHICH_NODE;
 		case eTalkNode::SELL_ITEMS:
 			can_save_talk = false;
 			stat_screen_mode = MODE_SELL_ANY;
 			put_item_screen(stat_window);
 			give_help(42,43);
-			break;
+			goto RECORD_WHICH_NODE;
 		case eTalkNode::IDENTIFY:
 			stat_screen_mode = MODE_IDENTIFY,
 			give_help(44, 0);
@@ -1003,7 +1053,7 @@ void handle_talk_node(int which_talk_entry) {
 			shop_recharge_limit = b;
 			shop_recharge_amount = c;
 			put_item_screen(stat_window);
-			break;
+			goto RECORD_WHICH_NODE;
 		case eTalkNode::BUY_INFO:
 			if(univ.party.gold < a) {
 				save_talk_str1 = save_talk_str2;
@@ -1021,7 +1071,7 @@ void handle_talk_node(int which_talk_entry) {
 				can_save_talk = false;
 			}
 			else if(univ.party.gold < a) {
-				save_talk_str1 + save_talk_str2;
+				save_talk_str1 = save_talk_str2;
 			}
 			else {
 				univ.party.gold -= a;
@@ -1070,12 +1120,11 @@ void handle_talk_node(int which_talk_entry) {
 					univ.party.gold -= a;
 					put_pc_screen();
 					iter->property = false;
-					save_talk_str2 = "";
 				} else {
 					save_talk_str1 = "There are no horses left.";
-					save_talk_str2 = "";
 					can_save_talk = false;
 				}
+				save_talk_str2 = "";
 			}
 			break;
 		case eTalkNode::BUY_SPEC_ITEM:
@@ -1115,7 +1164,7 @@ void handle_talk_node(int which_talk_entry) {
 			break;
 		case eTalkNode::BUY_TOWN_LOC:
 			if(univ.scenario.towns[b]->can_find) {
-				// TODO: Uh, is something supposed to happen here?
+				save_talk_str1 = "You've already learned that.";
 			}
 			else if(univ.party.gold < a) {
 				save_talk_str1 = save_talk_str2;
@@ -1159,7 +1208,7 @@ void handle_talk_node(int which_talk_entry) {
 				save_talk_str1 = s1 >= 0 ? univ.town->spec_strs[s1] : "";
 				save_talk_str2 = s2 >= 0 ? univ.town->spec_strs[s2] : "";
 			}
-			get_strs(save_talk_str1, save_talk_str2, eSpecCtxType::TOWN, s1, s2);
+			univ.get_strs(save_talk_str1, save_talk_str2, eSpecCtxType::TOWN, s1, s2);
 			put_pc_screen();
 			put_item_screen(stat_window);
 			break;
@@ -1170,13 +1219,25 @@ void handle_talk_node(int which_talk_entry) {
 				save_talk_str1 = s1 >= 0 ? univ.scenario.spec_strs[s1] : "";
 				save_talk_str2 = s2 >= 0 ? univ.scenario.spec_strs[s2] : "";
 			}
-			get_strs(save_talk_str1, save_talk_str2, eSpecCtxType::SCEN, s1, s2);
+			univ.get_strs(save_talk_str1, save_talk_str2, eSpecCtxType::SCEN, s1, s2);
 			put_pc_screen();
 			put_item_screen(stat_window);
 			break;
 	}
-	
+
+	if(false){
+	RECORD_WHICH_NODE:
+		if(!is_redo) dialog_history.push_back({false, true, which_talk_entry, {"", ""}});
+		place_talk_str(save_talk_str1,save_talk_str2,0,dummy_rect);
+		reset_talk_words();
+		return;
+	}
+
+FINISH_TALK_NODE:
+	dialog_history.push_back({can_save_talk, false, -1, {save_talk_str1, save_talk_str2}});
 	place_talk_str(save_talk_str1,save_talk_str2,0,dummy_rect);
+	reset_talk_words();
+	return;
 }
 
 bool handle_talk_event(location p, cFramerateLimiter& fps_limiter) {
@@ -1203,6 +1264,8 @@ bool handle_talk_event(location p, cFramerateLimiter& fps_limiter) {
 		break;
 	}
 	handle_talk_node(which_talk_entry);
+	// Update hitboxes of the inventory in case sell/identify/recharge mode started
+	init_inven_rects();
 	return clicked_word || p.in(rectangle(talk_gworld()));
 }
 
@@ -1330,7 +1393,6 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		set_pref("DirectionalKeyScrolling", dynamic_cast<cLed&>(me["screen-shift"]).getState() != led_off);
 		set_pref("FancyFilePicker", dynamic_cast<cLed&>(me["fancypicker"]).getState() != led_off);
 		set_pref("Autosave", dynamic_cast<cLed&>(me["autosave-toggle"]).getState() != led_off);
-		set_pref("RepeatRoomDescriptions", dynamic_cast<cLed&>(me["repeatdesc"]).getState() != led_off);
 		set_pref("ShowInstantHelp", dynamic_cast<cLed&>(me["nohelp"]).getState() == led_off);
 		
 		if(overall_mode == MODE_STARTUP && !party_in_memory) {
@@ -1431,7 +1493,6 @@ void pick_preferences(bool record) {
 	dynamic_cast<cLed&>(prefsDlog["autosave-toggle"]).setState(autosave_on ? led_red : led_off);
 	if(!autosave_on)
 		prefsDlog["autosave-details"].hide();
-	dynamic_cast<cLed&>(prefsDlog["repeatdesc"]).setState(get_bool_pref("RepeatRoomDescriptions") ? led_red : led_off);
 	dynamic_cast<cLed&>(prefsDlog["nohelp"]).setState(get_bool_pref("ShowInstantHelp", true) ? led_off : led_red);
 	if(overall_mode == MODE_STARTUP && !party_in_memory) {
 		dynamic_cast<cLed&>(prefsDlog["easier"]).setState(get_bool_pref("EasyMode") ? led_red : led_off);
@@ -1688,14 +1749,13 @@ class cChooseScenario {
 			short page = n - 1;
 			stk.setPage(n);
 			for(short i = 0; i < 3; i++) {
-				sout.clear();
-				sout.str("");
+				clear_sstr(sout);
 				sout << i + 1;
 				std::string n = sout.str();
 				if(scen_headers.size() > (page * 3 + i)) {
 					me["pic" + n].show();
 					dynamic_cast<cPict&>(me["pic" + n]).setPict(scen_headers[page * 3 + i].intro_pic);
-					sout.str("");
+					clear_sstr(sout);
 					sout << scen_headers[page * 3 + i].name;
 					sout << " v" << int(scen_headers[page * 3 + i].ver[0]);
 					sout << '.' << int(scen_headers[page * 3 + i].ver[1]);
@@ -1801,6 +1861,10 @@ scen_header_type pick_a_scen() {
 
 extern fs::path saveDir;
 
+// When loading an autosave, store the main save filename because univ.file should be set to the
+// main save. That way, manual saves overwrite the main save, not the specific autosave you choose.
+fs::path store_chose_auto;
+
 class cFilePicker {
 	const int SLOTS_PER_PAGE = 4;
 	int parties_per_page;
@@ -1819,6 +1883,7 @@ class cFilePicker {
 	int pages_populated = 0;
 	int saves_loaded = 0;
 
+	bool dummy_picker_chose = false;
 	void init_pages() {
 		save_file_mtimes = sorted_file_mtimes(save_folder);
 		save_files.resize(save_file_mtimes.size());
@@ -2000,7 +2065,7 @@ class cFilePicker {
 				if(std::difftime(mtime, auto_mtimes.front().second) < 0)
 					me["auto" + suffix + "-more-recent"].show();
 
-				me["auto" + suffix].attachClickHandler(std::bind(&cFilePicker::showAuto, this, auto_folder));
+				me["auto" + suffix].attachClickHandler(std::bind(&cFilePicker::showAuto, this, auto_folder, file));
 			}
 		}
 	}
@@ -2038,10 +2103,21 @@ class cFilePicker {
 		++pages_populated;
 	}
 
-	bool showAuto(fs::path auto_folder) {
+	bool showAuto(fs::path auto_folder, fs::path file) {
 		fs::path autosave = run_autosave_picker(auto_folder, &me);
-		if(!autosave.empty())
+		if(!autosave.empty()){
+			store_chose_auto = file;
 			doLoad(autosave);
+		}
+		return true;
+	}
+
+	bool dummyShowAuto(fs::path auto_folder, fs::path file) {
+		cFilePicker dummyAuto(auto_folder, false, &me, true);
+		dummyAuto.run();
+		if(dummyAuto.dummy_picker_chose){
+			doCloseDummyPicker();
+		}
 		return true;
 	}
 
@@ -2070,6 +2146,14 @@ class cFilePicker {
 			me.setResult(selected_file);
 			me.toast(false);
 		}
+		return true;
+	}
+
+	bool doCloseDummyPicker() {
+		fs::path p {""};
+		me.setResult(p);
+		dummy_picker_chose = true;
+		me.toast(false);
 		return true;
 	}
 
@@ -2145,10 +2229,10 @@ public:
 			for(int i = 0; i < SLOTS_PER_PAGE; ++i){
 				std::string suffix = std::to_string(i+1);
 				// When replaying, a click on a load or save button means the dummy file picker can go away:
-				me["load" + suffix].attachClickHandler(std::bind(&cFilePicker::doLoad, this, "DUMMY"));
-				me["save" + suffix].attachClickHandler(std::bind(&cFilePicker::doSave, this, "DUMMY"));
+				me["load" + suffix].attachClickHandler(std::bind(&cFilePicker::doCloseDummyPicker, this));
+				me["save" + suffix].attachClickHandler(std::bind(&cFilePicker::doCloseDummyPicker, this));
 				// A click on an autosave button means another dummy file picker should open:
-				me["auto" + suffix].attachClickHandler(std::bind(&cFilePicker::showAuto, this, ""));
+				me["auto" + suffix].attachClickHandler(std::bind(&cFilePicker::dummyShowAuto, this, "", ""));
 			}
 		}
 
@@ -2182,6 +2266,7 @@ fs::path fancy_file_picker(bool saving) {
 
 fs::path run_file_picker(bool saving){
 	if(has_feature_flag("file-picker-dialog", "V1") && get_bool_pref("FancyFilePicker", true)){
+		store_chose_auto = "";
 		return fancy_file_picker(saving);
 	}
 

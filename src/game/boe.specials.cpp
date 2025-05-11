@@ -27,6 +27,7 @@
 #include "boe.main.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
+#include "dialogxml/dialogs/3choice.hpp"
 #include "fileio/fileio.hpp"
 #include <array>
 #include "spell.hpp"
@@ -60,6 +61,7 @@ std::map<eDamageType,int> boom_gr = {
 	{eDamageType::FIRE, 0},
 	{eDamageType::POISON, 2},
 	{eDamageType::MAGIC, 1},
+	{eDamageType::ACID, 6},
 	{eDamageType::UNBLOCKABLE, 5},
 	{eDamageType::COLD, 4},
 	{eDamageType::UNDEAD, 3},
@@ -225,15 +227,20 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	}
 	if((mode == eSpecCtx::TOWN_MOVE || (mode == eSpecCtx::COMBAT_MOVE && which_combat_type == 1))
 		&& can_enter && univ.town.is_special(where_check.x,where_check.y)) {
-		for(short i = 0; i < univ.town->special_locs.size(); i++)
+		// Stop this loop if the current town changes.
+		short town_num = univ.party.town_num;
+		for(short i = 0; town_num == univ.party.town_num && i < univ.town->special_locs.size(); i++)
 			if(where_check == univ.town->special_locs[i]) {
 				spec_num = univ.town->special_locs[i].spec;
 				bool runSpecial = false;
 				if(!is_blocked(where_check)) runSpecial = true;
 				if(ter_special == eTerSpec::CHANGE_WHEN_STEP_ON) runSpecial = true;
 				if(ter_special == eTerSpec::CALL_SPECIAL) runSpecial = true;
-				if(univ.town->specials[spec_num].type == eSpecType::CANT_ENTER)
+				// Prevent Action 'allow even if blocked/force allow' case:
+				cSpecial& spec = univ.town->specials[spec_num];
+				if(spec.type == eSpecType::CANT_ENTER && spec.ex2a > 0){
 					runSpecial = true;
+				}
 				if(!univ.scenario.is_legacy && univ.party.in_boat >= 0 && univ.scenario.ter_types[ter].boat_over)
 					runSpecial = true;
 				if(runSpecial) {
@@ -331,7 +338,7 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 				break;
 			if(mode == eSpecCtx::OUT_MOVE && out_boat_there(where_check))
 				break;
-			if(ter_flag3 > 0 && ter_flag3 < 8)
+			if(ter_flag3 > 0 && ter_flag3 < int(eDamageType::SPECIAL))
 				dam_type = (eDamageType) ter_flag3;
 			else dam_type = eDamageType::WEAPON;
 			r1 = get_ran(ter_flag2,1,ter_flag1);
@@ -348,6 +355,10 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 				case eDamageType::COLD:
 					add_string_to_buf("  You feel cold!");
 					pic_type = 4;
+					break;
+				case eDamageType::ACID:
+					add_string_to_buf("  It burns!");
+					pic_type = 6;
 					break;
 				case eDamageType::SPECIAL:
 					dam_type = eDamageType::UNBLOCKABLE;
@@ -374,14 +385,17 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 					break;
 			}
 			if(r1 < 0) break; // "It doesn't affect you."
-			if(mode != eSpecCtx::COMBAT_MOVE)
-				hit_party(r1,dam_type);
-			fast_bang = 1;
-			if(mode == eSpecCtx::COMBAT_MOVE)
+
+			// In combat, only hurt the active player
+			if(mode == eSpecCtx::COMBAT_MOVE){
+				fast_bang = 1;
 				damage_pc(which_pc,r1,dam_type,eRace::UNKNOWN);
-			else
-				boom_space(univ.party.out_loc,overall_mode,pic_type,r1,12);
-			fast_bang = 0;
+				fast_bang = 0;
+			}
+			// In peace mode, hurt everyone
+			else{
+				hit_party(r1,dam_type);
+			}
 			break;
 		case eTerSpec::DANGEROUS:
 			// if the party is flying, in a boat, or entering a boat, they cannot be harmed by terrain
@@ -1424,6 +1438,8 @@ short get_sound_type(eDamageType dam_type, short forced_sound_type) {
 		sound_type = 0;
 		if(dam_type == eDamageType::FIRE || dam_type == eDamageType::UNBLOCKABLE)
 			sound_type = 5;
+		else if(dam_type == eDamageType::ACID)
+			sound_type = 8;
 		else if(dam_type == eDamageType::COLD)
 			sound_type = 7;
 		else if(dam_type == eDamageType::MAGIC)
@@ -1458,16 +1474,17 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 	// but -1 is the new value for "use default"
 	sound_type = get_sound_type(dam_type, sound_type);
 	
+	int boom_type = boom_gr[dam_type];
+
 	if(dam_type < eDamageType::SPECIAL) {
 		how_much = percent(how_much, victim.resist[dam_type]);
 	}
 	
 	// Absorb damage?
-	if((dam_type == eDamageType::FIRE || dam_type == eDamageType::MAGIC || dam_type == eDamageType::COLD)
+	std::set<eDamageType> absorbable_damage = { eDamageType::FIRE, eDamageType::MAGIC, eDamageType::COLD, eDamageType::ACID };
+	if(absorbable_damage.count(dam_type)
 		&& victim.abil[eMonstAbil::ABSORB_SPELLS].active && get_ran(1,1,1000) <= victim.abil[eMonstAbil::ABSORB_SPELLS].special.extra1) {
-		if(32767 - victim.health > how_much)
-			victim.health = 32767;
-		else victim.health += how_much;
+		add_check_overflow(victim.health, how_much);
 		ASB("  Magic absorbed.");
 		return false;
 	}
@@ -1475,7 +1492,7 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 	// Saving throw
 	if((dam_type == eDamageType::FIRE || dam_type == eDamageType::COLD) && get_ran(1,0,20) <= victim.level)
 		how_much /= 2;
-	if(dam_type == eDamageType::MAGIC && (get_ran(1,0,24) <= victim.level))
+	if((dam_type == eDamageType::MAGIC || dam_type == eDamageType::ACID) && (get_ran(1,0,24) <= victim.level))
 		how_much /= 2;
 	
 	// Invulnerable?
@@ -1485,8 +1502,13 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 		how_much /= 10;
 	
 	// Mag. res helps w. fire and cold
-	// TODO: Why doesn't this help with magic damage!?
-	if(dam_type == eDamageType::FIRE || dam_type == eDamageType::COLD) {
+	static std::set<eDamageType> magic_resist_damage = { eDamageType::FIRE, eDamageType::COLD };
+	// Now it also helps with MAGIC:
+	if(has_feature_flag("magic-resistance", "fixed")){
+		magic_resist_damage.insert(eDamageType::MAGIC);
+		magic_resist_damage.insert(eDamageType::ACID);
+	}
+	if(magic_resist_damage.count(dam_type)) {
 		int magic_res = victim.status[eStatus::MAGIC_RESISTANCE];
 		if(magic_res > 0)
 			how_much /= 2;
@@ -1549,10 +1571,10 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 	
 	if(dam_type != eDamageType::MARKED) {
 		if(party_can_see_monst(univ.get_target_i(victim) - 100)) {
-			boom_space(victim.cur_loc,100,boom_gr[dam_type],how_much,sound_type);
+			boom_space(victim.cur_loc,100,boom_type,how_much,sound_type);
 		}
 		else {
-			boom_space(victim.cur_loc,overall_mode, boom_gr[dam_type],how_much,sound_type);
+			boom_space(victim.cur_loc,overall_mode, boom_type,how_much,sound_type);
 		}
 	}
 	
@@ -2128,7 +2150,7 @@ cSpecial get_node(spec_num_t cur_spec, eSpecCtxType cur_spec_type) {
 	switch(cur_spec_type) {
 		case eSpecCtxType::SCEN:
 			if(cur_spec != minmax(0,univ.scenario.scen_specials.size() - 1,cur_spec)) {
-				showError("The scenario called a scenario special node out of range.");
+				showError("The scenario called a scenario special node out of range: " + std::to_string(cur_spec));
 				return dummy_node;
 			}
 			return univ.scenario.scen_specials[cur_spec];
@@ -2138,7 +2160,7 @@ cSpecial get_node(spec_num_t cur_spec, eSpecCtxType cur_spec_type) {
 				return dummy_node;
 			}
 			if(cur_spec != minmax(0,univ.out->specials.size() - 1,cur_spec)) {
-				showError("The scenario called an outdoor special node out of range.");
+				showError("The scenario called an outdoor special node out of range: " + std::to_string(cur_spec));
 				return dummy_node;
 			}
 			return univ.out->specials[cur_spec];
@@ -2148,7 +2170,7 @@ cSpecial get_node(spec_num_t cur_spec, eSpecCtxType cur_spec_type) {
 				return dummy_node;
 			}
 			if(cur_spec != minmax(0,univ.town->specials.size() - 1,cur_spec)) {
-				showError("The scenario called a town special node out of range.");
+				showError("The scenario called a town special node out of range: " + std::to_string(cur_spec));
 				return dummy_node;
 			}
 			return univ.town->specials[cur_spec];
@@ -2178,11 +2200,11 @@ void general_spec(const runtime_state& ctx) {
 			check_mess = true;
 			break;
 		case eSpecType::TITLED_MSG:
-			get_str(str1, ctx.cur_spec_type, cur_node.m3);
+			univ.get_str(str1, ctx.cur_spec_type, cur_node.m3);
 			handle_message(ctx, str1, cur_node.pic, ePicType(cur_node.pictype));
 			break;
 		case eSpecType::DISPLAY_SM_MSG:
-			get_strs(str1, str2, ctx.cur_spec_type, cur_node.m1,cur_node.m2);
+			univ.get_strs(str1, str2, ctx.cur_spec_type, cur_node.m1,cur_node.m2);
 			if(cur_node.m1 >= 0)
 				add_string_to_buf(str1, 4);
 			if(cur_node.m2 >= 0)
@@ -2305,7 +2327,7 @@ void general_spec(const runtime_state& ctx) {
 		case eSpecType::DISPLAY_PICTURE:
 			// TODO: In addition to the large picture, there's a small icon; should that be customizable?
 			check_mess = false;
-			get_str(str1, ctx.cur_spec_type, spec.m1);
+			univ.get_str(str1, ctx.cur_spec_type, spec.m1);
 			custom_pic_dialog(str1, spec.ex1a);
 			break;
 		case eSpecType::SDF_RANDOM:
@@ -2359,7 +2381,7 @@ void general_spec(const runtime_state& ctx) {
 		case eSpecType::PRINT_NUMS:
 			if(!univ.debug_mode) break;
 			check_mess = false;
-			get_strs(str1,str2, ctx.cur_spec_type,cur_node.m1, cur_node.m2);
+			univ.get_strs(str1,str2, ctx.cur_spec_type,cur_node.m1, cur_node.m2);
 			if(cur_node.m1 >= 0)
 				ASB("debug: " + str1, 7);
 			if(cur_node.m2 >= 0)
@@ -2397,20 +2419,20 @@ void general_spec(const runtime_state& ctx) {
 			check_mess = true;
 			break;
 		case eSpecType::ENTER_SHOP:
-			get_str(str1,ctx.cur_spec_type,spec.m1);
+			univ.get_str(str1,ctx.cur_spec_type,spec.m1);
 			spec.ex1b = minmax(0,6,spec.ex2b);
 			start_shop_mode(spec.ex1a, spec.ex1b, str1);
 			ctx.next_spec = -1;
 			break;
 		case eSpecType::STORY_DIALOG:
-			get_str(str1,ctx.cur_spec_type,spec.m1);
+			univ.get_str(str1,ctx.cur_spec_type,spec.m1);
 			story_dialog(str1, spec.m2, spec.m3, ctx.cur_spec_type, spec.pic, ePicType(spec.pictype), spec.ex1c, spec.ex2c);
 			break;
 		case eSpecType::CLEAR_BUF:
 			univ.get_buf().clear();
 			break;
 		case eSpecType::APPEND_STRING:
-			get_str(str1,ctx.cur_spec_type,spec.ex1a);
+			univ.get_str(str1,ctx.cur_spec_type,spec.ex1a);
 			if(spec.pic) univ.get_buf() += ' ';
 			univ.get_buf() += str1;
 			break;
@@ -2563,25 +2585,8 @@ void oneshot_spec(const runtime_state& ctx) {
 			break;
 		case eSpecType::ONCE_DIALOG:
 			check_mess = false;
-			if(spec.m1 < 0)
-				break;
-			get_strs(strs, ctx.cur_spec_type, spec.m1);
-			if(spec.m3 > 0) {
-				buttons[0] = 1;
-				buttons[1] = spec.ex1a;
-				buttons[2] = spec.ex2a;
-				if((spec.ex1a >= 0) || (spec.ex2a >= 0))
-					buttons[0] = 9;
-			}
-			if(spec.m3 <= 0) {
-				buttons[0] = spec.ex1a;
-				buttons[1] = spec.ex2a;
-			}
-			if((buttons[0] < 0) && (buttons[1] < 0)) {
-				showError("Dialog box ended up with no buttons.");
-				break;
-			}
-			dlg_res = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c);
+			dlg_res = once_dialog(univ, spec, ctx.cur_spec_type);
+			if(dlg_res < 0) break;
 			if(spec.m3 > 0) {
 				if(dlg_res == 1) {
 					if((spec.ex1a >= 0) || (spec.ex2a >= 0)) {
@@ -2591,16 +2596,17 @@ void oneshot_spec(const runtime_state& ctx) {
 				if(dlg_res == 2) ctx.next_spec = spec.ex1b;
 				if(dlg_res == 3) ctx.next_spec = spec.ex2b;
 			} else {
-				if(dlg_res == 1) ctx.next_spec = spec.ex1b;
-				if(dlg_res == 2) ctx.next_spec = spec.ex2b;
+				if(dlg_res == 2) ctx.next_spec = spec.ex1b;
+				if(dlg_res == 3) ctx.next_spec = spec.ex2b;
 			}
 			break;
 		case eSpecType::ONCE_GIVE_ITEM_DIALOG:
 			check_mess = false;
 			if(spec.m1 < 0)
 				break;
-			get_strs(strs, ctx.cur_spec_type, spec.m1);
-			buttons[0] = 20; buttons[1] = 19;
+			univ.get_strs(strs, ctx.cur_spec_type, spec.m1);
+			// Leave / Take
+			buttons[0] = 9; buttons[1] = 19;
 			dlg_res = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c);
 			if(dlg_res == 1) {set_sd = false; ctx.next_spec = -1;}
 			else {
@@ -2639,7 +2645,7 @@ void oneshot_spec(const runtime_state& ctx) {
 		case eSpecType::ONCE_TRAP:
 			check_mess = false;
 			if((spec.m1 >= 0) || (spec.m2 >= 0)) {
-				get_strs(strs[0],strs[1], ctx.cur_spec_type, spec.m1, spec.m2);
+				univ.get_strs(strs[0],strs[1], ctx.cur_spec_type, spec.m1, spec.m2);
 				buttons[0] = 3; buttons[1] = 2;
 				dlg_res = custom_choice_dialog(strs,spec.pic,ePicType(spec.pictype),buttons, true, spec.ex1c, spec.ex2c);
 				// TODO: Make custom_choice_dialog return string?
@@ -3188,7 +3194,7 @@ void affect_spec(const runtime_state& ctx) {
 			}
 			break;
 		case eSpecType::AFFECT_NAME:
-			get_str(str, ctx.cur_spec_type, spec.m3);
+			univ.get_str(str, ctx.cur_spec_type, spec.m3);
 			if(cPlayer* who = dynamic_cast<cPlayer*>(&pc))
 				who->name = str;
 			else if(cCreature* monst = dynamic_cast<cCreature*>(&pc))
@@ -3209,7 +3215,7 @@ void affect_spec(const runtime_state& ctx) {
 				check_mess = false;
 				break;
 			}
-			get_str(str, ctx.cur_spec_type, spec.m3);
+			univ.get_str(str, ctx.cur_spec_type, spec.m3);
 			univ.party.new_pc(pc_num);
 			univ.party[pc_num].name = str;
 			univ.party[pc_num].which_graphic = spec.pic;
@@ -3516,10 +3522,10 @@ void ifthen_spec(const runtime_state& ctx) {
 			break;
 		case eSpecType::IF_TEXT_RESPONSE:
 			check_mess = false;
-			get_str(str1,eSpecCtxType::SCEN,spec.m1);
+			univ.get_str(str1,eSpecCtxType::SCEN,spec.m1);
 			str3 = get_text_response(str1);
 			spec.pic = minmax(0,50,spec.pic);
-			get_strs(str1,str2,eSpecCtxType::SCEN,spec.ex1a,spec.ex2a);
+			univ.get_strs(str1,str2,eSpecCtxType::SCEN,spec.ex1a,spec.ex2a);
 			if(spec.ex1a >= 0 && str3.compare(0, spec.pic, str1, 0, spec.pic) == 0)
 				ctx.next_spec = spec.ex1b;
 			if(spec.ex2a >= 0 && str3.compare(0, spec.pic, str2, 0, spec.pic) == 0)
@@ -3546,7 +3552,7 @@ void ifthen_spec(const runtime_state& ctx) {
 		case eSpecType::IF_NUM_RESPONSE: {
 			check_mess = false;
 			if(spec.m2 > spec.m3) std::swap(spec.m2,spec.m3);
-			get_str(str1,eSpecCtxType::SCEN,spec.m1);
+			univ.get_str(str1,eSpecCtxType::SCEN,spec.m1);
 			int i = get_num_response(spec.m2,spec.m3,str1);
 			setsd(spec.sd1, spec.sd2, abs(i));
 			int j = 0;
@@ -3968,7 +3974,7 @@ void townmode_spec(const runtime_state& ctx) {
 				ctx.next_spec = -1;
 			}
 			else {
-				get_strs(strs,ctx.cur_spec_type, spec.m1);
+				univ.get_strs(strs,ctx.cur_spec_type, spec.m1);
 				buttons[0] = 9; buttons[1] = 35;
 				if(custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c) == 1)
 					ctx.next_spec = -1;
@@ -3999,7 +4005,7 @@ void townmode_spec(const runtime_state& ctx) {
 				check_mess = false;
 			}
 			else {
-				get_strs(strs, ctx.cur_spec_type,spec.m1);
+				univ.get_strs(strs, ctx.cur_spec_type,spec.m1);
 				buttons[0] = 9; buttons[1] = 8;
 				if(custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c) == 1) {
 					ctx.next_spec = -1;
@@ -4031,7 +4037,7 @@ void townmode_spec(const runtime_state& ctx) {
 				ctx.next_spec = -1;
 			}
 			else {
-				get_strs(strs,ctx.cur_spec_type, spec.m1);
+				univ.get_strs(strs,ctx.cur_spec_type, spec.m1);
 				buttons[0] = 20; buttons[1] = 24;
 				int i = spec.ex2b == 1 ? 2 : custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
 				*ctx.ret_a = 1;
@@ -4141,9 +4147,10 @@ void townmode_spec(const runtime_state& ctx) {
 				else increase_light(-spec.ex2a);
 			}
 			break;
-		case eSpecType::TOWN_SET_ATTITUDE:
-			if((spec.ex1a < 0) || (spec.ex1a > 59)){
-				showError("Tried to change the attitude of a nonexistent monster (should be 0...59).");
+		case eSpecType::TOWN_SET_ATTITUDE:{
+			int num_monst = univ.town.monst.size();
+			if((spec.ex1a < 0) || (spec.ex1a >= num_monst)){
+				showError("Tried to change the attitude of nonexistent monster " + std::to_string(spec.ex1a) + " of 0..." + std::to_string(num_monst));
 				break;
 			}
 			if(spec.ex1b < 0 || spec.ex1b > 3){
@@ -4151,7 +4158,7 @@ void townmode_spec(const runtime_state& ctx) {
 				break;
 			}
 			univ.town.monst[spec.ex1a].attitude = eAttitude(spec.ex1b);
-			break;
+		}break;
 		case eSpecType::TOWN_RUN_MISSILE:
 			if(ctx.which_mode != eSpecCtx::TALK) {
 				int i;
@@ -4352,7 +4359,7 @@ void townmode_spec(const runtime_state& ctx) {
 					break;
 				}
 			}
-			get_strs(strs[0], strs[1], ctx.cur_spec_type, spec.m1, spec.m1);
+			univ.get_strs(strs[0], strs[1], ctx.cur_spec_type, spec.m1, spec.m1);
 			place_text_label(strs[0], l, spec.ex2a);
 			redraw_screen(REFRESH_TERRAIN);
 			if(spec.ex2b > 0) // TODO: Add preferences setting to increase this delay, for slow readers
@@ -4596,50 +4603,14 @@ void handle_message(const runtime_state& ctx, const std::string& title, pic_num_
 		return;
 	}
 	std::string str1, str2;
-	get_strs(str1, str2, ctx.cur_spec_type, ctx.cur_spec.m1, ctx.cur_spec.m2);
+	univ.get_strs(str1, str2, ctx.cur_spec_type, ctx.cur_spec.m1, ctx.cur_spec.m2);
 	if(str1.empty() && str2.empty()) return;
 	
-	short where1 = -1,where2 = -1;
-	where1 = is_out() ? univ.party.outdoor_corner.x + univ.party.i_w_c.x : univ.party.town_num;
-	where2 = is_out() ? univ.party.outdoor_corner.y + univ.party.i_w_c.y : univ.party.town_num;
 	std::string placename = is_out() ? univ.out->name : univ.town->name;
 	cStrDlog display_strings(str1, str2, title, pic, pt, 0);
 	display_strings.setSound(57);
-	display_strings.setRecordHandler(cStringRecorder(note_type).string1(ctx.cur_spec.m1).string2(ctx.cur_spec.m2).from(where1,where2).at(placename));
+	display_strings.setRecordHandler(cStringRecorder(ctx.cur_spec_type, note_type).string1(ctx.cur_spec.m1).string2(ctx.cur_spec.m2).at(placename));
 	display_strings.show();
-}
-
-bool get_str(std::string& str,eSpecCtxType cur_type,short which_str) {
-	std::vector<std::string>* string_list = &univ.scenario.spec_strs;
-	if(cur_type == eSpecCtxType::OUTDOOR)
-		string_list = &univ.out->spec_strs;
-	else if (cur_type == eSpecCtxType::TOWN)
-		string_list = &univ.town->spec_strs;
-	
-	if((which_str >= 0 && which_str >= string_list->size()) || (which_str < -1 && which_str != BUFFER_STR)){
-		showError("The scenario attempted to access a message out of range.");
-		return false;
-	}
-
-	if(which_str == BUFFER_STR){
-		str = univ.get_buf();
-		return true;
-	}else if(which_str != -1){
-		str = (*string_list)[which_str];
-		return true;
-	}
-
-	return false; // Didn't get a string
-}
-
-void get_strs(std::string& str1,std::string& str2,eSpecCtxType cur_type,short which_str1,short which_str2) {
-	get_str(str1, cur_type, which_str1);
-	get_str(str2, cur_type, which_str2);
-}
-
-void get_strs(std::array<std::string,6>& strs,eSpecCtxType cur_type,short which_str1) {
-	for(int i = 0; i < 6; ++i)
-		if (!get_str(strs[i],cur_type, which_str1 + i)) return;
 }
 
 // This function sets/retrieves values to/from campaign flags

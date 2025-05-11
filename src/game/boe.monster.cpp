@@ -60,6 +60,19 @@ void create_wand_monst() {
 		while(point_onscreen(univ.town->wandering_locs[r2],univ.party.town_loc) &&
 			  !loc_off_act_area(univ.town->wandering_locs[r2]) && num_tries++ < 100)
 			r2 = get_ran(1,0,3);
+
+		auto try_place_extra_monster = [&p_loc, r1, r2, &r3](){
+			p_loc = univ.town->wandering_locs[r2];
+			p_loc.x += get_ran(1,0,4) - 2;
+			p_loc.y += get_ran(1,0,4) - 2;
+			r3 = get_ran(1,0,3);
+			// Buggy behavior of this code, preserved so old replays will run correctly,
+			// would spawn nameless monsters of type 0 with default stats.
+			if(r3 >= 2 && !is_blocked(p_loc) &&
+					(univ.town->wandering[r1].monst[3] != 0 || !has_feature_flag("empty-wandering-monster-bug", "fixed")))
+				// place extra monsters
+				place_monster(univ.town->wandering[r1].monst[3],p_loc);
+		};
 		for(short i = 0; i < 4; i++) {
 			if(univ.town->wandering[r1].monst[i] != 0) { // place a monster
 				p_loc = univ.town->wandering_locs[r2];
@@ -68,13 +81,15 @@ void create_wand_monst() {
 				if(!is_blocked(p_loc))
 					place_monster(univ.town->wandering[r1].monst[i],p_loc);
 			}
-			p_loc = univ.town->wandering_locs[r2];
-			p_loc.x += get_ran(1,0,4) - 2;
-			p_loc.y += get_ran(1,0,4) - 2;
-			// TODO: This contradicts the documentation which says only 1-2 are placed of the last monster
-			r3 = get_ran(1,0,3);
-			if(r3 >= 2 && !is_blocked(p_loc)) // place extra monsters?
-				place_monster(univ.town->wandering[r1].monst[3],p_loc);
+			// Buggy behavior of this code, preserved so old replays will run correctly,
+			// would create more than 1-2 of the last monster type, contradicting the
+			// documentation.
+			if(!has_feature_flag("too-many-extra-wandering-monsters-bug", "fixed")){
+				try_place_extra_monster();
+			}
+		}
+		if(has_feature_flag("too-many-extra-wandering-monsters", "fixed")){
+			try_place_extra_monster();
 		}
 	}
 }
@@ -645,21 +660,21 @@ bool seek_party(short i,location l1,location l2) {
 bool flee_party(short i,location l1,location l2) {
 	bool acted_yet = false;
 	
-	if((l1.x > l2.x) & (l1.y > l2.y))
+	if((l1.x > l2.x) && (l1.y > l2.y))
 		acted_yet = try_move(i,l1,1,1);
-	if((l1.x < l2.x) & (l1.y < l2.y) & !acted_yet)
+	if((l1.x < l2.x) && (l1.y < l2.y) && !acted_yet)
 		acted_yet = try_move(i,l1,-1,-1);
-	if((l1.x > l2.x) & (l1.y < l2.y) & !acted_yet)
+	if((l1.x > l2.x) && (l1.y < l2.y) && !acted_yet)
 		acted_yet = try_move(i,l1,1,-1);
-	if((l1.x < l2.x) & (l1.y > l2.y) & !acted_yet)
+	if((l1.x < l2.x) && (l1.y > l2.y) && !acted_yet)
 		acted_yet = try_move(i,l1,-1,+1);
-	if((l1.x > l2.x) & !acted_yet)
+	if((l1.x > l2.x) && !acted_yet)
 		acted_yet = try_move(i,l1,1,0);
-	if((l1.x < l2.x) & !acted_yet)
+	if((l1.x < l2.x) && !acted_yet)
 		acted_yet = try_move(i,l1,-1,0);
-	if( (l1.y < l2.y) & !acted_yet)
+	if( (l1.y < l2.y) && !acted_yet)
 		acted_yet = try_move(i,l1,0,-1);
-	if( (l1.y > l2.y) & !acted_yet)
+	if( (l1.y > l2.y) && !acted_yet)
 		acted_yet = try_move(i,l1,0,1);
 	if(!acted_yet) {
 		futzing++;

@@ -67,26 +67,39 @@ namespace {
 	node_properties_t S_NUKE = node_builder_t(eSpecType::TOWN_NUKE_MONSTS)
 		.msg()
 		.ex1a(STRT_MONST);
+	// TODO Implement preview
 	node_properties_t S_LEVER_G = node_builder_t(eSpecType::TOWN_GENERIC_LEVER)
-		.ex1b(eSpecPicker::NODE);
+		.ex1b(eSpecPicker::NODE)
+		.no_preview();
+	// TODO Implement preview
 	node_properties_t S_PORTAL_G = node_builder_t(eSpecType::TOWN_GENERIC_PORTAL)
-		.loc(eSpecField::EX1A, eSpecField::EX1B, eLocType::ACTIVE_TOWN);
+		.loc(eSpecField::EX1A, eSpecField::EX1B, eLocType::ACTIVE_TOWN)
+		.no_preview();
+	// TODO Implement preview
 	node_properties_t S_BUTTON_G = node_builder_t(eSpecType::TOWN_GENERIC_BUTTON)
-		.ex1b(eSpecPicker::NODE);
+		.ex1b(eSpecPicker::NODE)
+		.no_preview();
+	// TODO implement preview
 	node_properties_t S_STAIR_G = node_builder_t(eSpecType::TOWN_GENERIC_STAIR)
 		.loc(eSpecField::EX1A, eSpecField::EX1B, eLocType::SPECIFIED_TOWN, eSpecField::EX2A)
 		.ex2a(STRT_TOWN)
 		.ex2b(STRT_STAIR)
 		.ex2c(STRT_STAIR_MODE)
-		.jump(eSpecPicker::NONE);
+		.jump(eSpecPicker::NONE)
+		.no_preview();
+	// TODO implement preview
 	node_properties_t S_LEVER = node_builder_t(eSpecType::TOWN_LEVER)
 		.msg1(eSpecPicker::MSG_SEQUENCE)
 		.pic()
-		.ex1b(eSpecPicker::NODE);
+		.ex1b(eSpecPicker::NODE)
+		.no_preview();
+	// TODO implement preview
 	node_properties_t S_PORTAL = node_builder_t(eSpecType::TOWN_PORTAL)
 		.msg1(eSpecPicker::MSG_SEQUENCE)
 		.pic()
-		.loc(eSpecField::EX1A, eSpecField::EX1B, eLocType::ACTIVE_TOWN);
+		.loc(eSpecField::EX1A, eSpecField::EX1B, eLocType::ACTIVE_TOWN)
+		.no_preview();
+	// TODO implement preview
 	node_properties_t S_STAIR = node_builder_t(eSpecType::TOWN_STAIR)
 		.msg1(eSpecPicker::MSG_SEQUENCE)
 		.pic()
@@ -94,7 +107,8 @@ namespace {
 		.ex2a(STRT_TOWN)
 		.ex2b(eSpecPicker::TOGGLE)
 		.ex2c(STRT_STAIR_MODE)
-		.jump(eSpecPicker::NONE);
+		.jump(eSpecPicker::NONE)
+		.no_preview();
 	node_properties_t S_OUTDOOR = node_builder_t(eSpecType::TOWN_RELOCATE)
 		.msg()
 		.field_pair(eSpecField::EX1A, eSpecField::EX1B, STRT_SECTOR)
@@ -151,5 +165,6 @@ namespace {
 	node_properties_t S_LABEL = node_builder_t(eSpecType::TOWN_PLACE_LABEL)
 		.msg1(eSpecPicker::MSG_SINGLE)
 		.loc(eSpecField::EX1A, eSpecField::EX1B, eLocType::ACTIVE_TOWN)
-		.ex2a(STRT_LABEL_ALIGN);
+		.ex2a(STRT_LABEL_ALIGN)
+		.no_preview();
 }

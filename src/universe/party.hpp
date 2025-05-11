@@ -198,7 +198,7 @@ public:
 	cPlayer& operator[](unsigned short n);
 	const cPlayer& operator[](unsigned short n) const;
 	void writeTo(cTagFile& file) const;
-	void readFrom(const cTagFile& file);
+	void readFrom(const cTagFile& file, bool preview = false);
 	
 	bool give_item(cItem item,int flags);
 	bool forced_give(cItem item,eItemAbil abil,short dat = -1);

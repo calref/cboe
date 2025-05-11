@@ -4,7 +4,7 @@
 	tpkg/credits/about-boe-template.xml. Do not modify it manually!
 -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay' escbtn='okay'>
+<dialog defbtn='okay'>
 	<!--
 	 TODO: This dialog contains out-of-date information, such as pricing.
 	-->
@@ -18,11 +18,11 @@
 		<!-- The height of this text needs to be 10 times the number of lines. -->
 		<text top='52' left='50' width='400' height='240'>
 			ORIGINAL GAME: <br/><br/><br/><br/><br/><br/>
-			OPEN SOURCE CREDITS: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+			OPEN SOURCE CREDITS: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 			SCENARIO FIXES AND UPDATES: <br/><br/>
 		</text>
 		<!-- This text is right-aligned and fills out the above text with sub-headings -->
-		<text top='52' left='30' width='200' height='810' align='right'>
+		<text top='52' left='50' width='180' height='840' align='right'>
 			<br/>
 			Concept, Design, Programming: <br/>
 			Graphics: <br/>
@@ -31,14 +31,14 @@
 			<br/>
 			<br/>
 			Programming: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-			Graphics: <br/><br/><br/><br/><br/><br/>
+			Graphics: <br/><br/><br/><br/><br/><br/><br/>
 			Consulting: <br/><br/><br/><br/>
 			Testing and Troubleshooting: <br/><br/>
-			Funding: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+			Funding: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 			<br/><br/>
 			Bandit Busywork: <br/>
 		</text>
-		<text top='52' left='250' width='230' height='810'>
+		<text top='52' left='250' width='230' height='840'>
 			<!-- ORIGINAL GAME --><br/>
 			<!-- Concept, Design, Programming -->Jeff Vogel <br/>
 			<!-- Graphics -->Andrew Hunter <br/>
@@ -66,6 +66,7 @@
 							Celtic Minstrel <br/>
 							Kelyar-Ihrno <br/>
 							Jewels <br/>
+							Seb Galvez <br/>
 			<!-- Consulting -->The Almighty <br/>
 								    Doer of Stuff <br/>
 								Thuryl <br/>
@@ -90,6 +91,7 @@
 							Jeremy Bracegirdle <br/>
 							Joe Ardent <br/>
 							Joel Joslin <br/>
+							Joshua Broad <br/>
 							Joshua Murphy <br/>
 							Juan Dionicio Becerra <br/>
 							Kelandon <br/>
@@ -109,6 +111,7 @@
 							Sam M <br/>
 							Sareena Razak <br/>
 							Sean Hayden <br/>
+							Seb Galvez <br/>
 							Souren Papazian <br/>
 							Tony Martyn <br/>
 							Tony Vazquez <br/>

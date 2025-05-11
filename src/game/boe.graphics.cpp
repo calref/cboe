@@ -76,6 +76,10 @@ bool map_visible = false;
 extern std::string save_talk_str1, save_talk_str2;
 extern cDrawableManager drawable_mgr;
 extern void close_map(bool record = false);
+extern sf::View mainView;
+
+extern location mouse_window_coords();
+extern bool mouse_to_terrain_coords(location& out_loc, bool relative);
 
 rectangle		menuBarRect;
 Region originalGrayRgn, newGrayRgn, underBarRgn;
@@ -184,7 +188,9 @@ void adjust_window_mode() {
 		mainPtr().create(sf::VideoMode(width, winHeight, 32), "Blades of Exile", sf::Style::Titlebar | sf::Style::Close, winSettings);
 
 		// Center the small window on the desktop
-		mainPtr().setPosition({static_cast<int>((desktop.width - width) / 2), static_cast<int>((desktop.height - height) / 2)});
+		int win_x = get_int_pref("MainWindowX", static_cast<int>((desktop.width - width) / 2));
+		int win_y = get_int_pref("MainWindowY", static_cast<int>((desktop.height - height) / 2));
+		mainPtr().setPosition({win_x, win_y});
 	} else {
 		mainPtr().create(desktop, "Blades of Exile", sf::Style::None, winSettings);
 		mainPtr().setPosition({0,0});
@@ -363,7 +369,9 @@ void draw_startup_stats() {
 				
 				style.pointSize = 14;
 				pc_rect.offset(35,0);
-				win_draw_string(mainPtr(),pc_rect,univ.party[i].name,eTextMode::WRAP,style);
+				rectangle name_rect = pc_rect;
+				name_rect.width() = frame_rect.width() * 0.4;
+				win_draw_string(mainPtr(),name_rect,univ.party[i].name,eTextMode::ELLIPSIS,style);
 				to_rect.offset(pc_rect.left + 8,pc_rect.top + 8);
 				
 			}
@@ -505,14 +513,12 @@ bool arrow_button_click(rectangle button_rect, cFramerateLimiter* fps_limiter) {
 			while(pollEvent(mainPtr(), e)){
 				if(e.type == sf::Event::MouseButtonReleased){
 					done = true;
-					location clickPos(e.mouseButton.x, e.mouseButton.y);
-					clickPos = mainPtr().mapPixelToCoords(clickPos);
+					location clickPos = mouse_window_coords();
 					clicked = button_rect.contains(clickPos);
 					depressed = false;
 					break;
 				} else if(e.type == sf::Event::MouseMoved){
-					location toPos(e.mouseMove.x, e.mouseMove.y);
-					toPos = mainPtr().mapPixelToCoords(toPos);
+					location toPos = mouse_window_coords();
 					depressed = button_rect.contains(toPos);
 				}
 			}
@@ -594,8 +600,10 @@ void redraw_screen(int refresh) {
 			break;
 		default:
 			redraw_terrain();
-			if(refresh & REFRESH_BAR)
+			if(refresh & REFRESH_BAR){
+				draw_text_bar(std::make_pair("", ""));
 				draw_text_bar();
+			}
 			refresh_text_bar();
 			UI::toolbar.draw(mainPtr());
 			break;
@@ -606,7 +614,7 @@ void redraw_screen(int refresh) {
 		draw_targets(center);
 	if(overall_mode != MODE_STARTUP) {
 		if(!is_out())
-			draw_targeting_line(sf::Mouse::getPosition(mainPtr()));
+			draw_targeting_line();
 		refresh_stat_areas(0);
 	}
 	done_btn->draw();
@@ -614,6 +622,8 @@ void redraw_screen(int refresh) {
 
 	drawable_mgr.draw_all();
 
+	extern location get_cur_direction();
+	get_cur_direction();
 	mainPtr().display();
 }
 
@@ -743,26 +753,35 @@ void put_text_bar(std::string str, std::string right_str) {
 	to_rect.top += 7;
 	to_rect.left += 5;
 	to_rect.right -= 5;
-	win_draw_string(text_bar_gworld(), to_rect, str, eTextMode::LEFT_TOP, style);
+
+	size_t filled_on_right = 0;
+
 	// the recast hint will replace status icons:
 	if(!right_str.empty()){
+		filled_on_right = string_length(" " + right_str, style);
 		// Style has to be wrap to get right-alignment
 		win_draw_string(text_bar_gworld(), to_rect, right_str, eTextMode::WRAP, style, true);
-	}else if(!monsters_going) {
+	}else if(!monsters_going){
 		sf::Texture& status_gworld = *ResMgr::graphics.get("staticons");
-		to_rect.top -= 2;
-		to_rect.left = to_rect.right - 15;
-		to_rect.width() = 12;
-		to_rect.height() = 12;
+		rectangle icon_rect = to_rect;
+		icon_rect.top -= 2;
+		icon_rect.left = to_rect.right - 15;
+		icon_rect.width() = 12;
+		icon_rect.height() = 12;
 		for(auto next : univ.party.status) {
 			const auto& statInfo = *next.first;
 			if(next.second > 0) {
-				rect_draw_some_item(status_gworld, get_stat_effect_rect(statInfo.icon), text_bar_gworld(), to_rect, sf::BlendAlpha);
-				to_rect.offset(-15, 0);
+				rect_draw_some_item(status_gworld, get_stat_effect_rect(statInfo.icon), text_bar_gworld(), icon_rect, sf::BlendAlpha);
+				icon_rect.offset(-15, 0);
+				filled_on_right += 15;
 			}
 		}
 	}
 	
+	// The recast hint and status icons will never take more than half the text bar. Give the name/AP/location string the rest.
+	to_rect.right -= filled_on_right;
+	win_draw_string(text_bar_gworld(), to_rect, str, eTextMode::ELLIPSIS, style);
+
 	text_bar_gworld().setActive();
 	text_bar_gworld().display();
 }
@@ -1435,11 +1454,16 @@ void draw_rest_screen() {
 	overall_mode = store_mode ;
 }
 
-// if mode is 100, force
-//short type; // 0 - flame 1 - magic 2 - poison 3 - blood 4 - cold
-// 10s digit indicates sound  0 - normal ouch  1 - small sword  2 - loud sword
-// 3 - pole  4 - club  5 - fireball hit  6 - squish  7 - cold
-// 8 - acid  9 - claw  10 - bite  11 - slime  12 - zap  13 - missile hit
+// mode
+//   if 100, force
+// type
+//   0 - flame 1 - magic 2 - poison 3 - blood 4 - cold 5 - unblockable 6 - acid
+// sound
+//   negative - pass sound explicitly
+//   0 or more: use lookup
+//      0 - normal ouch  1 - small sword  2 - loud sword
+//      3 - pole  4 - club  5 - fireball hit  6 - squish  7 - cold
+//      8 - acid  9 - claw  10 - bite  11 - slime  12 - zap  13 - missile hit
 void boom_space(location where,short mode,short type,short damage,short sound) {
 	location where_draw(4,4);
 	rectangle source_rect = {0,0,36,28},text_rect,dest_rect = {13,13,49,41},big_to = {13,13,337,265},store_rect;
@@ -1457,15 +1481,20 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 //		return;
 	if((mode != 100) && (party_can_see(where) == 6))
 		return;
-	if(type < 0 || type > 5)
+	if(type < 0 || type > 6)
 		return;
 	if((boom_anim_active) && (type != 3))
 		return;
-	if(is_out())
-		return;
 	
+	mainPtr().setView(mainPtr().getDefaultView());
+	put_background();
+	mainPtr().setView(mainView);
+	draw_terrain();
+	refresh_text_bar();
+	UI::toolbar.draw(mainPtr());
+
 	// Redraw terrain in proper position
-	if(((!point_onscreen(center,where) && is_combat()) || (overall_mode == MODE_OUTDOORS))
+	if(((!point_onscreen(center,where) && is_combat()))
 		) {
 		play_sound(sound_to_play);
 		
@@ -1524,9 +1553,11 @@ void boom_space(location where,short mode,short type,short damage,short sound) {
 	mainPtr().display();
 	bool skip_boom_delay = get_bool_pref("SkipBoomDelay");
 	play_sound((skip_boom_delay?-1:1)*sound_to_play);
-	if((sound == 6) && (fast_bang == 0) && (!skip_boom_delay))
-		sf::sleep(time_in_ticks(12));
 	
+	// Fast sound effects need extra delay for the boom to show
+	std::set<int> fast_sounds = { 55, 42 }; // squish, acid, should there be others?
+	if((fast_sounds.count(sound_to_play)) && (fast_bang == 0) && (!skip_boom_delay))
+		sf::sleep(time_in_ticks(12));
 	
 	if(fast_bang == 0 && !skip_boom_delay) {
 		del_len = get_int_pref("GameSpeed") * 3 + 4;
@@ -1646,26 +1677,21 @@ void erase_spot(short i,short j) {
 	
 }
 
-void draw_targeting_line(location where_curs) {
+void draw_targeting_line() {
 	location which_space,store_loc;
-	rectangle redraw_rect,redraw_rect2,target_rect;
+	rectangle target_rect;
 	location from_loc;
-	rectangle on_screen_terrain_area = win_to_rects[WINRECT_TERVIEW];
-	on_screen_terrain_area.inset(13, 13);
 	
-	where_curs = mainPtr().mapPixelToCoords(where_curs, mainView);
-	
+	location where_curs = mouse_window_coords();
+
 	if(overall_mode >= MODE_COMBAT)
 		from_loc = univ.current_pc().combat_pos;
 	else from_loc = univ.party.town_loc;
-	if((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
-		|| ((overall_mode == MODE_TOWN_TARGET) && (current_pat[4][4] != 0))) {
+	extern bool targeting_line_visible;
+	if(targeting_line_visible && ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
+		|| ((overall_mode == MODE_TOWN_TARGET) && (current_pat[4][4] != 0)))) {
 		
-		if(where_curs.in(on_screen_terrain_area)) {
-			// && (point_onscreen(center,univ.party[current_pc].combat_pos))){
-			which_space.x = center.x + (where_curs.x - 37) / 28 - 4;
-			which_space.y = center.y + (where_curs.y - 25) / 36 - 4;
-			
+		if(mouse_to_terrain_coords(which_space, false)) {
 			int xBound = (short) (from_loc.x - center.x + 4);
 			int yBound = (short) (from_loc.y - center.y + 4);
 			xBound = (xBound * 28) + 46;
@@ -1674,12 +1700,10 @@ void draw_targeting_line(location where_curs) {
 			if((can_see_light(from_loc,which_space,sight_obscurity) < 5)
 				&& (dist(from_loc,which_space) <= current_spell_range)) {
 				mainPtr().setActive(false);
+				rectangle on_screen_terrain_area = win_to_rects[WINRECT_TERVIEW];
+				on_screen_terrain_area.inset(13, 13);
+				clip_rect(mainPtr(), on_screen_terrain_area);
 				draw_line(mainPtr(), where_curs, location(xBound, yBound), 2, {128,128,128}, sf::BlendAdd);
-				redraw_rect.left = min(where_curs.x,xBound) - 4;
-				redraw_rect.right = max(where_curs.x,xBound) + 4;
-				redraw_rect.top = min(where_curs.y,yBound) - 4;
-				redraw_rect.bottom = max(where_curs.y,yBound) + 4;
-				redraw_rect2 = redraw_rect & on_screen_terrain_area;
 				
 				// Now place targeting pattern
 				for(short i = 0; i < 9; i++)
@@ -1695,7 +1719,6 @@ void draw_targeting_line(location where_curs) {
 							target_rect.bottom = target_rect.top + 36;
 							frame_rect(mainPtr(), target_rect, sf::Color::White);
 							target_rect.inset(-5,-5);
-							redraw_rect2 = rectunion(target_rect,redraw_rect2);
 							
 							// Now place number of shots left, if drawing center of target
 							if((overall_mode == MODE_FANCY_TARGET) && (store_loc.x - which_space.x + 4 == 4)
@@ -1712,8 +1735,8 @@ void draw_targeting_line(location where_curs) {
 						}
 					}
 				
-				redraw_rect2.inset(-5,-5);
 				mainPtr().setActive();
+				undo_clip(mainPtr());
 			}
 		}
 	}

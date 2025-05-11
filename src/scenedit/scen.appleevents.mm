@@ -51,10 +51,9 @@ void set_up_apple_events() {
 	std::copy(msg.get(), msg.get() + len, std::inserter(fileName, fileName.begin()));
 	
 	if(load_scenario(fileName, scenario)) {
-		set_current_town(scenario.last_town_edited);
+		restore_editor_state(true);
 		change_made = false;
 		ae_loading = true;
-		set_current_out(scenario.last_out_edited);
 	}
 	return TRUE;
 }

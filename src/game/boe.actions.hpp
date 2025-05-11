@@ -14,7 +14,13 @@ struct key_action_t {
     void (*action)();
 };
 
+void init_shopping_rects(bool scrollbar);
+void init_inven_rects();
 void init_screen_locs();
+location mouse_window_coords();
+// If the mouse is in the terrain window, set the given location to the hovered tile.
+// Return false if mouse is out of bounds.
+bool mouse_to_terrain_coords(location& location, bool relative);
 bool prime_time();
 bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter);
 void advance_time(bool did_something, bool need_redraw, bool need_reprint);
@@ -38,7 +44,8 @@ void new_party();
 void handle_death();
 void start_new_game(bool force = false);
 void start_tutorial();
-location get_cur_direction(location the_point);
+location get_cur_direction();
+bool handle_terrain_screen_actions(location offset, bool mouse, bool right_button, bool& did_something, bool& need_redraw, bool& need_reprint);
 void outd_move_to_first_town_entrance(int town);
 bool outd_move_party(location destination,bool forced);
 bool town_move_party(location destination,short forced);
@@ -124,6 +131,7 @@ void preview_dialog_xml();
 void preview_every_dialog_xml();
 void save_replay_log();
 void debug_crash();
+void debug_fix_fonts();
 void clear_trapped_monst();
 
 #endif

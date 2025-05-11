@@ -460,8 +460,6 @@
     </game>
     <editor>
         <default-ground>2</default-ground>
-        <last-out-section x="0" y="2" />
-        <last-town>9</last-town>
         <graphics>
             <pic index="0">terrain-anim</pic>
             <pic index="4">terrain</pic>
@@ -490,5 +488,6 @@
             <item chance="8">14</item>
             <item chance="10">16</item>
         </storage>
+        <sdf row="349" col="0">sweetgrove rat silo</sdf>
     </editor>
 </scenario>

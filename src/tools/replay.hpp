@@ -38,6 +38,7 @@ extern void record_action(Element& action);
 extern void record_field_input(cKey key);
 extern bool has_next_action(std::string type = "");
 extern std::string next_action_type();
+extern int next_action_line();
 extern Element& pop_next_action(std::string expected_action_type="");
 extern std::map<std::string,std::string> info_from_action(Element& action);
 extern std::string encode_file(fs::path file);

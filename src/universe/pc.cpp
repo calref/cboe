@@ -442,7 +442,7 @@ void cPlayer::sort_items() {
 
 eBuyStatus cPlayer::give_item(cItem item, int flags) {
 	if(main_status != eMainStatus::ALIVE)
-		return eBuyStatus::NO_SPACE;
+		return eBuyStatus::DEAD;
 	
 	bool do_print = flags & GIVE_DO_PRINT;
 	bool allow_overload = flags & GIVE_ALLOW_OVERLOAD;
@@ -1209,6 +1209,7 @@ void swap(cPlayer& lhs, cPlayer& rhs) {
 	using std::swap;
 	// Don't swap the party reference!
 	swap(lhs.main_status, rhs.main_status);
+	swap(lhs.status, rhs.status);
 	swap(lhs.name, rhs.name);
 	swap(lhs.skills, rhs.skills);
 	swap(lhs.max_health, rhs.max_health);
@@ -1303,11 +1304,17 @@ void cPlayer::writeTo(cTagFile& file) const {
 	}
 }
 
-void cPlayer::readFrom(const cTagFile& file) {
+void cPlayer::readFrom(const cTagFile& file, bool preview) {
 	for(const auto& page : file) {
 		if(page.index() == 0) {
-			status.clear();
 			page["STATUS"] >> eStatus::MAIN >> main_status;
+			page["LEVEL"] >> level;
+			page["ICON"] >> which_graphic;
+
+			if(preview)
+				return;
+
+			status.clear();
 			page["STATUS"].extractSparse(status);
 			status.erase(eStatus::MAIN);
 			
@@ -1318,11 +1325,8 @@ void cPlayer::readFrom(const cTagFile& file) {
 			page["MANA"] >> cur_sp;
 			page["EXPERIENCE"] >> experience;
 			page["SKILLPTS"] >> skill_pts;
-			page["LEVEL"] >> level;
-			page["ICON"] >> which_graphic;
 			page["DIRECTION"] >> direction;
 			page["RACE"] >> race;
-			
 			skills.clear();
 			page["SKILL"].extractSparse(skills);
 			max_health = skills[eSkill::MAX_HP];

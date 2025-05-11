@@ -347,7 +347,7 @@
 								</object>
 								<object class="NSMenuItem" id="132244909">
 									<reference key="NSMenu" ref="871978126"/>
-									<string key="NSTitle">Wait 100 Moves</string>
+									<string key="NSTitle">Wait 80 Moves</string>
 									<string key="NSKeyEquiv">w</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>

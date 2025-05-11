@@ -77,8 +77,12 @@ class cDialog : public iComponent, public iNameGiver {
 	static bool initCalled;
 	int anim_pict_fps = 2;
 	bool doAnimations;
+	bool has_focus = false;
 public:
 	static void (*redraw_everything)();
+	static std::function<void(sf::RenderWindow& win)> onLostFocus;
+	static std::function<void(sf::RenderWindow& win)> onGainedFocus;
+	void stackWindowsCorrectly();
 	/// Performs essential startup initialization. Generally should not be called directly.
 	static void init();
 	static bool wasInitCalled() { return initCalled; };
@@ -190,7 +194,7 @@ public:
 	/// Reopen the dialog after closing it.
 	/// This is meant to be called from within an event handler to reverse a previous call to toast();
 	/// if you're already out of the dialog's event loop, you should instead call run() to reopen it.
-	void untoast();
+	void untoast(bool triggerFocusHandler = true);
 	/// Determine how the dialog exited.
 	/// @return the argument passed to toast() when the dialog was closed
 	bool accepted() const;
@@ -378,14 +382,7 @@ public:
 	const char* what() const throw();
 };
 
-//// This needs cControl to be complete.
-///// @note You need to include control.hpp to use this.
-//template<eDlogEvt t> void cDialog::attachEventHandlers(typename event_fcn<t>::type handler, const std::vector<std::string>& controls) {
-//	cDialog& me = *this;
-//	for(std::string control : controls) {
-//		me[control].attachEventHandler<t>(handler);
-//	}
-//}
+void setup_dialog_pict_anim(cDialog& dialog, std::string pict_id, short anim_loops, short anim_fps);
 
 // For development/debugging only.
 void preview_dialog_xml(fs::path dialog_xml);

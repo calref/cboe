@@ -57,6 +57,7 @@ proj/vs*/.vs
 proj/vs*/.vs
 proj/vs*/packages/
 proj/vs*/vcpkg_installed/
+proj/vs*/enc_temp_folder/
 # Windows debugging symbols
 *.pdb
 
@@ -97,6 +98,8 @@ test/junk/*.map
 oldstructs.txt
 src/tools/gitrev.hpp
 rsrc/**/scenario
+rsrc/scenarios/**/editor.xml
+rsrc/bases/**/editor.xml
 
 # Dependency-generated files
 deps/**/

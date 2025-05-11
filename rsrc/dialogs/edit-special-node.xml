@@ -107,6 +107,7 @@
 	<button name='jump-edit' type='large' top='468' left='349'>Create/Edit</button>
 	<led name='jump-toggle' top='474' left='349'/>
 	
+	<button name='preview-dialog' type='regular' top='470' left='522'>Preview</button>
 	
 	<button name='okay' type='regular' top='494' left='522'>OK</button>
 	<button name='cancel' type='regular' top='494' left='456'>Cancel</button>

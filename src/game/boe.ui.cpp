@@ -77,6 +77,7 @@ eToolbarButton cToolbar::button_hit(sf::RenderWindow& win, location click, cFram
 							clickPos.y -= dest_rect.top;
 							clicked = toolbar[i].bounds.contains(clickPos);
 							active = -1;
+							break;
 						} else if(e.type == sf::Event::MouseMoved){
 							location toPos(e.mouseMove.x, e.mouseMove.y);
 							toPos = win.mapPixelToCoords(toPos);
@@ -90,6 +91,7 @@ eToolbarButton cToolbar::button_hit(sf::RenderWindow& win, location click, cFram
 				play_sound(37, time_in_ticks(5));
 				redraw_screen(REFRESH_NONE);
 				if(clicked) return toolbar[i].btn;
+				return TOOLBAR_CANCEL;
 			}
 		}
 	}

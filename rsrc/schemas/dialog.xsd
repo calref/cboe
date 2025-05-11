@@ -188,6 +188,7 @@
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
+		<xs:attribute name="ellipsis" type="bool"/>
 		<xs:attribute ref="def-key"/>
 		<xs:attribute name="fromlist" default="none" type="xs:string"/>
 		<xs:attributeGroup ref="rect-size"/>
