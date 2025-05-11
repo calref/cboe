@@ -74,6 +74,8 @@ extern location center;
 extern bool spell_forced,boom_anim_active;
 extern eSpell store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev;
+extern short store_mage_target, store_priest_target;
+extern short store_mage_caster, store_priest_caster;
 extern short store_spell_target,pc_casting;
 extern short store_item_spell_level;
 extern eStatMode stat_screen_mode;
@@ -478,6 +480,7 @@ void cast_spell(eSkill type) {
 		if(!repeat_cast_ok(type))
 			return;
 		spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
+		pc_casting = type == eSkill::MAGE_SPELLS ? store_mage_caster : store_priest_caster;
 	}
 	if(spell != eSpell::NONE) {
 		print_spell_cast(spell,type);
@@ -498,11 +501,19 @@ bool repeat_cast_ok(eSkill type) {
 	if(!prime_time()) return false;
 	else if(overall_mode == MODE_COMBAT)
 		who_would_cast = univ.cur_pc;
-	else who_would_cast = pc_casting;
+	else{
+		if(has_feature_flag("store-spell-caster", "fixed")){
+			who_would_cast = type == eSkill::MAGE_SPELLS ? store_mage_caster : store_priest_caster;
+			if(who_would_cast == 6) who_would_cast = pc_casting;
+		}else{
+			who_would_cast = pc_casting;
+		}
+	}
 	
 	if(is_combat())
 		what_spell = univ.party[who_would_cast].last_cast[type];
-	else what_spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
+	else
+		what_spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
 	
 	if(what_spell == eSpell::NONE){
 		std::ostringstream sout;
@@ -516,6 +527,12 @@ bool repeat_cast_ok(eSkill type) {
 		return false;
 	}
 	store_select = (*what_spell).need_select;
+	if(has_feature_flag("store-spell-target", "fixed")){
+		if(is_combat())
+			store_spell_target = univ.party[who_would_cast].last_target[type];
+		else
+			store_spell_target = type == eSkill::MAGE_SPELLS ? store_mage_target : store_priest_target;
+	}
 	if(store_select != SELECT_NO && store_spell_target == 6) {
 		add_string_to_buf("Repeat cast: No target stored.");
 		return false;
@@ -588,6 +605,8 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 	play_sound(25);
 	current_spell_range = 8;
 	store_mage = spell_num;
+	store_mage_target = store_spell_target;
+	store_mage_caster = pc_casting;
 	
 	adj = freebie ? 1 : univ.party[pc_num].stat_adj(eSkill::INTELLIGENCE);
 	short level = freebie ? store_item_spell_level : univ.party[pc_num].level;
@@ -848,6 +867,8 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 	play_sound(24);
 	current_spell_range = 8;
 	store_priest = spell_num;
+	store_priest_target = store_spell_target;
+	store_priest_caster = pc_casting;
 	std::ostringstream loc_str;
 	
 	switch(spell_num) {
@@ -1941,6 +1962,7 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 	if(store_situation == eSkill::MAGE_SPELLS && (*picked_spell).need_select == SELECT_NO) {
 		store_last_cast_mage = pc_casting;
 		univ.party[pc_casting].last_cast[store_situation] = picked_spell;
+		univ.party[pc_casting].last_target[store_situation] = 6;
 		univ.party[pc_casting].last_cast_type = store_situation;
 		me.toast(false);
 		me.setResult<short>(store_spell);
@@ -1949,6 +1971,7 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 	if(store_situation == eSkill::PRIEST_SPELLS && (*picked_spell).need_select == SELECT_NO) {
 		store_last_cast_priest = pc_casting;
 		univ.party[pc_casting].last_cast[store_situation] = picked_spell;
+		univ.party[pc_casting].last_target[store_situation] = 6;
 		univ.party[pc_casting].last_cast_type = store_situation;
 		me.toast(false);
 		me.setResult<short>(store_spell);
@@ -1967,6 +1990,7 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 		store_last_cast_mage = pc_casting;
 	else store_last_cast_priest = pc_casting;
 	univ.party[pc_casting].last_cast[store_situation] = picked_spell;
+	univ.party[pc_casting].last_target[store_situation] = store_spell_target;
 	univ.party[pc_casting].last_cast_type = store_situation;
 	me.toast(true);
 	return true;

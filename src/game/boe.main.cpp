@@ -119,6 +119,8 @@ std::map<std::string,std::vector<std::string>> feature_flags = {
 	// Bugs required for several VoDT test replays to run faithfully
 	{"empty-wandering-monster-bug", {"fixed"}},
 	{"too-many-extra-wandering-monsters-bug", {"fixed"}},
+	{"store-spell-target", {"fixed"}},
+	{"store-spell-caster", {"fixed"}},
 	// Game balance
 	{"magic-resistance", {"fixed"}} // Resist Magic used to not help with magic damage!
 };
@@ -183,6 +185,8 @@ short anim_step = -1;
 // Spell casting globals
 eSpell store_mage = eSpell::NONE, store_priest = eSpell::NONE;
 short store_mage_lev = 0, store_priest_lev = 0;
+short store_mage_target = 6, store_priest_target = 6;
+short store_mage_caster = 6, store_priest_caster = 6;
 short store_spell_target = 6,pc_casting;
 short num_targets_left = 0;
 location spell_targets[8];
