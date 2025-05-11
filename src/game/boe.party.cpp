@@ -78,6 +78,7 @@ extern short store_mage_target, store_priest_target;
 extern short store_mage_caster, store_priest_caster;
 extern short store_spell_target,pc_casting;
 extern short store_item_spell_level;
+extern bool targeting_line_visible;
 extern eStatMode stat_screen_mode;
 extern effect_pat_type current_pat;
 extern short current_spell_range;
@@ -2137,6 +2138,7 @@ void print_spell_cast(eSpell spell,eSkill which) {
 void start_town_targeting(eSpell s_num,short who_c,bool freebie,eSpellPat pat) {
 	add_string_to_buf("  Target spell.");
 	overall_mode = MODE_TOWN_TARGET;
+	targeting_line_visible = true;
 	town_spell = s_num;
 	who_cast = who_c;
 	spell_freebie = freebie;
