@@ -468,13 +468,17 @@ cItem cScenario::return_treasure(int loot, bool allow_junk) const {
 		case FOOD:
 			// food doesn't always appear
 			if(get_ran(1,0,2) == 1) {
+				// preset food is bread and drumstick (small object 72)
 				treas = cItem(ITEM_FOOD);
+				// the next 2 graphics are also food
 				treas.graphic_num += get_ran(1,0,2);
 				treas.item_level = get_ran(1,5,10);
+
+				// meat of some kind:
 				if(get_ran(1,0,9) == 5)
-					treas.graphic_num = 113;
+					treas.graphic_num = 123;
 				if(get_ran(1,0,9) == 5)
-					treas.graphic_num = 114;
+					treas.graphic_num = 124;
 			}
 			break;
 		case WEAPON:
