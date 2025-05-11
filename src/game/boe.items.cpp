@@ -307,10 +307,14 @@ void make_town_hostile() {
 void set_town_attitude(short lo,short hi,eAttitude att) {
 	short num;
 	
-	if(which_combat_type == 0)
+	if(is_combat() && which_combat_type == 0)
 		return;
+
 	give_help(53,0);
-	univ.town.monst.hostile = true;
+
+	static std::set<eAttitude> hostile_attitudes = { eAttitude::HOSTILE_A, eAttitude::HOSTILE_B };
+	univ.town.monst.hostile = hostile_attitudes.count(att);
+
 	long long num_monst = univ.town.monst.size();
 	
 	// Nice smart indexing, like Python :D
@@ -331,7 +335,6 @@ void set_town_attitude(short lo,short hi,eAttitude att) {
 			num = univ.town.monst[i].number;
 			// If made hostile, make mobile
 			if(!univ.town.monst[i].is_friendly()) {
-				univ.town.monst.hostile = true;
 				univ.town.monst[i].mobility = 1;
 				// If a "guard", give a power boost
 				if(univ.scenario.scen_monsters[num].guard) {
