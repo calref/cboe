@@ -760,6 +760,7 @@
             <item chance="8">18</item>
             <item chance="15">0</item>
         </storage>
+        <sdf row="20" col="0">killed Jaen</sdf>
         <sdf row="349" col="0">icy tunnels voice</sdf>
         <sdf row="349" col="1">empire outpost library</sdf>
     </editor>
