@@ -989,19 +989,23 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 				}
 				BOOST_FALLTHROUGH;
 			case eSelectPC::ONLY_LIVING:
-				if(univ.party[i].main_status != eMainStatus::ALIVE)
+				if(univ.party[i].main_status != eMainStatus::ALIVE){
 					can_pick = false;
+					extra_info = "";
+				}
 				break;
 			case eSelectPC::ONLY_DEAD:
-				if(univ.party[i].main_status == eMainStatus::ALIVE)
+				if(univ.party[i].main_status == eMainStatus::ALIVE){
 					can_pick = false;
+					extra_info = "";
+				}
 				break;
 			case eSelectPC::ONLY_CAN_LOCKPICK:{
 				if(univ.party[i].main_status != eMainStatus::ALIVE){
 					can_pick = false;
 					break;
 				}
-				if(!univ.party[i].has_abil(eItemAbil::LOCKPICKS)){
+				else if(!univ.party[i].has_abil(eItemAbil::LOCKPICKS)){
 					can_pick = false;
 					extra_info = "no picks";
 					break;
