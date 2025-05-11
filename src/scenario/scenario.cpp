@@ -546,8 +546,9 @@ void cScenario::writeTo(cTagFile& file) const {
 	for(int i = 0; i < towns.size(); i++) {
 		if(towns[i]->item_taken.any())
 			page["ITEMTAKEN"] << i << towns[i]->item_taken;
-		if(!towns[i]->door_unlocked.empty())
-			page["DOORUNLOCKED"] << i << towns[i]->door_unlocked;
+		for(location door : towns[i]->door_unlocked){
+			page["DOORUNLOCKED"] << i << door.x << door.y;
+		}
 		if(towns[i]->can_find)
 			page["TOWNVISIBLE"] << i;
 		else page["TOWNHIDDEN"] << i;
@@ -562,8 +563,13 @@ void cScenario::readFrom(const cTagFile& file){
 	std::vector<size_t> visible, hidden, slaughter;
 	auto& page = file[0];
 	page["ITEMTAKEN"].extractSparse(taken);
-	if(page.contains("DOORUNLOCKED"))
-		page["DOORUNLOCKED"].extractSparse(unlocked);
+	if(page.contains("DOORUNLOCKED")){
+		short town;
+		location door;
+		while(page["DOORUNLOCKED"] >> town >> door.x >> door.y){
+			unlocked[town].push_back(door);
+		}
+	}
 	page["TOWNVISIBLE"].extract(visible);
 	page["TOWNHIDDEN"].extract(hidden);
 	page["TOWNSLAUGHTER"].extractSparse(slaughter);
