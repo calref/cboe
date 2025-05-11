@@ -979,7 +979,6 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 					extra_info = "no item slot";
 				}
 				if(false) // Skip fallthrough past ONLY_CAN_TRAIN
-				BOOST_FALLTHROUGH;
 			case eSelectPC::ONLY_CAN_TRAIN:
 				if(univ.party[i].skill_pts){
 					extra_info = std::to_string(univ.party[i].skill_pts) + " skill point";
