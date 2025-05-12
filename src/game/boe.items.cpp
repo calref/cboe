@@ -631,9 +631,14 @@ void story_dialog(std::string title, str_num_t first, str_num_t last, eSpecCtxTy
 	story_dlg.run();
 }
 
-static bool get_num_of_items_event_filter(cDialog& me, std::string, eKeyMod) {
-	if(me.toast(true))
+static bool get_num_of_items_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
+	if(item_hit == "cancel"){
+		me.setResult<int>(0);
+		me.toast(false);
+	}
+	else if(me.toast(true)){
 		me.setResult<int>(me["number"].getTextAsNum());
+	}
 	return true;
 }
 
@@ -644,7 +649,7 @@ short get_num_of_items(short max_num) {
 	
 	cDialog numPanel(*ResMgr::dialogs.get("get-num"));
 	numPanel["extra-led"].hide();
-	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay"});
+	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay", "cancel"});
 	
 	numPanel["prompt"].setText("How many? (0-" + std::to_string(max_num) + ") ");
 	numPanel["number"].setTextToNum(max_num);
