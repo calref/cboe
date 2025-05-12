@@ -4547,9 +4547,16 @@ void outdoor_spec(const runtime_state& ctx){
 			*ctx.ret_a = 1;
 			break;
 		case eSpecType::OUT_FORCE_TOWN: {
+			short town = spec.ex1a;
+			if(town < 0 || town >= univ.scenario.towns.size()){
+				showError("The scenario attempted to put the party in a nonexistent town: " + std::to_string(town));
+				break;
+			}
+			size_t town_dim = univ.scenario.towns[town]->max_dim;
 			l = {spec.ex2a, spec.ex2b};
+			// town entry direction. 9 means forced position
 			int i = 0;
-			if(l.x < 0 || l.y < 0 || l.x >= 64 || l.y >= 64)
+			if(l.x >= 0 && l.y >= 0 && l.x < town_dim && l.y < town_dim)
 				i = 9;
 			else if(spec.ex1b == 0) i = 2;
 			else if(spec.ex1b == 4) i = 0;
