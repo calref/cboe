@@ -343,7 +343,7 @@ void put_item_screen(eItemWinMode screen_num) {
 						sout << item.name << "  ";
 
 					// Charges:
-					bool show_charges = item.max_charges > 1;
+					bool show_charges = item.max_charges > 1 || item.charges > 1; // stacked gems have no max, but do have charges
 					// Show charges for unidentified ammunition and lockpicks, but not other unidentified items
 					if(item.missile < 0 && item.ability != eItemAbil::LOCKPICKS)
 						show_charges &= item.ident;
