@@ -5081,7 +5081,7 @@
         <bonus>0</bonus>
         <protection>0</protection>
         <charges>1</charges>
-        <pic>60</pic>
+        <pic>61</pic>
         <name>Potion</name>
         <full-name>Str. Curing Potion</full-name>
         <treasure>2</treasure>
@@ -5107,7 +5107,7 @@
         <bonus>0</bonus>
         <protection>0</protection>
         <charges>1</charges>
-        <pic>60</pic>
+        <pic>61</pic>
         <name>Potion</name>
         <full-name>Str. Healing Potion</full-name>
         <treasure>2</treasure>
@@ -5133,7 +5133,7 @@
         <bonus>0</bonus>
         <protection>0</protection>
         <charges>1</charges>
-        <pic>60</pic>
+        <pic>61</pic>
         <name>Potion</name>
         <full-name>Str. Energy Potion</full-name>
         <treasure>2</treasure>
@@ -5159,7 +5159,7 @@
         <bonus>0</bonus>
         <protection>0</protection>
         <charges>1</charges>
-        <pic>60</pic>
+        <pic>61</pic>
         <name>Potion</name>
         <full-name>Str. Strength Potion</full-name>
         <treasure>2</treasure>
@@ -5185,7 +5185,7 @@
         <bonus>0</bonus>
         <protection>0</protection>
         <charges>1</charges>
-        <pic>60</pic>
+        <pic>61</pic>
         <name>Potion</name>
         <full-name>Str. Speed Potion</full-name>
         <treasure>2</treasure>
@@ -5211,7 +5211,7 @@
         <bonus>0</bonus>
         <protection>0</protection>
         <charges>1</charges>
-        <pic>60</pic>
+        <pic>61</pic>
         <name>Potion</name>
         <full-name>Str. Invuln. Potion</full-name>
         <treasure>2</treasure>
@@ -5237,7 +5237,7 @@
         <bonus>0</bonus>
         <protection>0</protection>
         <charges>1</charges>
-        <pic>60</pic>
+        <pic>61</pic>
         <name>Potion</name>
         <full-name>Str. Skill Potion</full-name>
         <treasure>3</treasure>
