@@ -3354,7 +3354,9 @@
         <awkward>0</awkward>
         <bonus>0</bonus>
         <protection>0</protection>
+        <charges>1</charges>
         <pic>87</pic>
+        <flag>20</flag>
         <name>Gem</name>
         <full-name>Ruby</full-name>
         <treasure>2</treasure>
@@ -3686,6 +3688,7 @@
         <protection>0</protection>
         <charges>3</charges>
         <pic>93</pic>
+        <flag>43</flag>
         <name>Dust</name>
         <full-name>Dust of Hiding</full-name>
         <treasure>2</treasure>
@@ -3712,6 +3715,7 @@
         <protection>0</protection>
         <charges>6</charges>
         <pic>93</pic>
+        <flag>44</flag>
         <name>Dust</name>
         <full-name>Dust of Choking</full-name>
         <treasure>2</treasure>
@@ -3851,6 +3855,7 @@
         <weight>1</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-summon-mass</type>
@@ -4215,6 +4220,7 @@
         <weight>1</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -4241,6 +4247,7 @@
         <weight>1</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -4431,6 +4438,7 @@
         <weight>14</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -4457,6 +4465,7 @@
         <weight>14</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -4518,7 +4527,9 @@
         <awkward>0</awkward>
         <bonus>0</bonus>
         <protection>0</protection>
+        <charges>1</charges>
         <pic>87</pic>
+        <flag>37</flag>
         <name>Crystal</name>
         <full-name>Crystal</full-name>
         <treasure>3</treasure>
@@ -4788,6 +4799,7 @@
         <weight>8</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-status</type>
@@ -4910,6 +4922,7 @@
         <weight>30</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-hp</type>
@@ -4936,6 +4949,7 @@
         <weight>30</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-status</type>
@@ -4988,6 +5002,7 @@
         <weight>30</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>bliss-doom</type>
@@ -5014,6 +5029,7 @@
         <weight>30</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-status</type>
@@ -5862,6 +5878,7 @@
         <charges>5</charges>
         <missile-type>4</missile-type>
         <pic>57</pic>
+        <flag>51</flag>
         <name>Arrows</name>
         <full-name>Arrows of Light</full-name>
         <treasure>2</treasure>
@@ -5889,6 +5906,7 @@
         <charges>6</charges>
         <missile-type>4</missile-type>
         <pic>57</pic>
+        <flag>52</flag>
         <name>Arrows</name>
         <full-name>Arrows of Life</full-name>
         <treasure>2</treasure>
@@ -5916,6 +5934,7 @@
         <charges>6</charges>
         <missile-type>4</missile-type>
         <pic>57</pic>
+        <flag>53</flag>
         <name>Arrows</name>
         <full-name>Burning Arrows</full-name>
         <treasure>2</treasure>
@@ -5943,6 +5962,7 @@
         <charges>4</charges>
         <missile-type>4</missile-type>
         <pic>57</pic>
+        <flag>54</flag>
         <name>Arrows</name>
         <full-name>Exploding Arrows</full-name>
         <treasure>2</treasure>
@@ -6019,6 +6039,7 @@
         <weapon-type>thrown</weapon-type>
         <missile-type>1</missile-type>
         <pic>58</pic>
+        <flag>55</flag>
         <name>Darts</name>
         <full-name>Poison Darts</full-name>
         <treasure>2</treasure>
@@ -6052,6 +6073,7 @@
         <weight>8</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -6078,6 +6100,7 @@
         <weight>8</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -6104,6 +6127,7 @@
         <weight>8</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -6131,6 +6155,7 @@
         <properties>
             <magic>true</magic>
             <concealed>true</concealed>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -6157,6 +6182,7 @@
         <weight>8</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -6183,6 +6209,7 @@
         <weight>8</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -6209,6 +6236,7 @@
         <weight>8</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -6236,6 +6264,7 @@
         <properties>
             <magic>true</magic>
             <concealed>true</concealed>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -6263,6 +6292,7 @@
         <properties>
             <magic>true</magic>
             <concealed>true</concealed>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-hp</type>
@@ -6289,6 +6319,7 @@
         <weight>8</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-summon</type>
@@ -7342,7 +7373,9 @@
         <awkward>0</awkward>
         <bonus>0</bonus>
         <protection>0</protection>
+        <charges>1</charges>
         <pic>101</pic>
+        <flag>49</flag>
         <name>Rock</name>
         <full-name>Rough Diamond</full-name>
         <treasure>2</treasure>
@@ -7830,6 +7863,7 @@
         <weight>6</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -7856,6 +7890,7 @@
         <weight>7</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -7907,6 +7942,7 @@
         <weight>40</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -7915,7 +7951,7 @@
             <use-flag>help-one</use-flag>
         </ability>
         <description>
-            <![CDATA[This ring bears the name "Kron". Perhaps this Kron was an adventurer like you. You have to wonder why it's not still in Kron's possession though. It may be a good or neutral reason, or it may be unfortunate...]]>
+            <![CDATA[This shield bears the name "Kron". Perhaps this Kron was an adventurer like you. You have to wonder why it's not still in Kron's possession though. It may be a good or neutral reason, or it may be unfortunate...]]>
         </description>
     </item>
     <item id="360">
@@ -7934,6 +7970,7 @@
         <weight>20</weight>
         <properties>
             <magic>true</magic>
+            <rechargeable>true</rechargeable>
         </properties>
         <ability>
             <type>use-spell</type>
@@ -8215,6 +8252,7 @@
         <protection>0</protection>
         <charges>1</charges>
         <pic>126</pic>
+        <flag>48</flag>
         <name>Asp Fangs</name>
         <full-name>Asp Fangs</full-name>
         <treasure>1</treasure>
