@@ -3273,11 +3273,11 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 		spell = emer_spells[level][3];
 	
 	
-	// Anything preventing spell?
-	if(target.x > 64 && area_effects.count(spell) > 0) {
-		r1 = get_ran(1,0,9);
+	// If a target spot for area-of-effect spell couldn't be found, try re-rolling which spell.
+	if(target.x < 0 && area_effects.count(spell) > 0) {
+		r1 = get_ran(1,0,17);
 		spell = caster_array[level][r1];
-		if(target.x > 64 && area_effects.count(spell) > 0)
+		if(target.x < 0 && area_effects.count(spell) > 0)
 			return false;
 	}
 	if(area_effects.count(spell) > 0) {
@@ -3588,11 +3588,11 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 		spell = caster_array[level][r1];
 	}
 	
-	// Anything preventing spell?
-	if(target.x > 64 && area_effects.count(spell) > 0)  {
+	// If a target spot for area-of-effect spell couldn't be found, try re-rolling which spell.
+	if(target.x < 0 &&  area_effects.count(spell) > 0)  {
 		r1 = get_ran(1,0,9);
 		spell = caster_array[level][r1];
-		if(target.x > 64 && area_effects.count(spell) > 0)
+		if(target.x < 0 && area_effects.count(spell) > 0)
 			return false;
 	}
 	if(area_effects.count(spell) > 0)
