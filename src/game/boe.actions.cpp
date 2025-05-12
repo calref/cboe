@@ -3929,8 +3929,10 @@ bool outd_move_party(location destination,bool forced) {
 				univ.party.in_boat = -1;
 			}
 			else if(((real_dest.x != univ.party.out_loc.x) && (real_dest.y != univ.party.out_loc.y))
-					 || (!forced && out_boat_there(destination)))
+					 || (!forced && out_boat_there(destination))){
+				add_string_to_buf("Move: Boat can't move diagonally.");
 				return false;
+			}
 			else if(!outd_is_blocked(real_dest)
 					 && univ.scenario.ter_types[ter].boat_over
 					 && univ.scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {
