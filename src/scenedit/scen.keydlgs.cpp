@@ -823,10 +823,7 @@ static void save_spec_enc(cDialog& me, node_stack_t& edit_stack) {
 	the_node.jumpto = me["jump"].getTextAsNum();
 }
 
-static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, node_stack_t& edit_stack, short mode) {
-	save_spec_enc(me, edit_stack);
-	cSpecial& special = edit_stack.top().node;
-
+static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& special, short mode) {
 	eSpecCtxType cur_type = static_cast<eSpecCtxType>(mode);
 
 	// Not pretty, but works:
@@ -854,6 +851,12 @@ static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, node_stack_
 		}break;
 	}
 	return true;
+}
+
+static bool preview_spec_enc_dlog_stack(cDialog& me, std::string item_hit, node_stack_t& edit_stack, short mode) {
+	save_spec_enc(me, edit_stack);
+	cSpecial& special = edit_stack.top().node;
+	return preview_spec_enc_dlog(me, item_hit, special, mode);
 }
 
 static bool commit_spec_enc(cDialog& me, std::string item_hit, node_stack_t& edit_stack) {
@@ -1432,7 +1435,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 
 	special["back"].hide();
 	edit_stack.push({which_node,mode,the_node});
-	special["preview-dialog"].attachClickHandler(std::bind(preview_spec_enc_dlog, _1, _2, std::ref(edit_stack), mode));
+	special["preview-dialog"].attachClickHandler(std::bind(preview_spec_enc_dlog_stack, _1, _2, std::ref(edit_stack), mode));
 
 	put_spec_enc_in_dlog(special, edit_stack);
 	
