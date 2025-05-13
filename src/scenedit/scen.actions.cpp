@@ -2750,35 +2750,35 @@ void start_string_editing(eStrMode mode,short just_redo_text) {
 		std::ostringstream str;
 		switch(mode) {
 			case 0:
-				str << i << " - " << scenario.spec_strs[i].substr(0,30);
+				str << i << " - " << scenario.spec_strs[i];
 				set_rb(i,RB_SCEN_STR, i,str.str());
 				break;
 			case 1:
-				str << i << " - " << current_terrain->spec_strs[i].substr(0,30);
+				str << i << " - " << current_terrain->spec_strs[i];
 				set_rb(i,RB_OUT_STR, i,str.str());
 				break;
 			case 2:
-				str << i << " - " << town->spec_strs[i].substr(0,30);
+				str << i << " - " << town->spec_strs[i];
 				set_rb(i,RB_TOWN_STR, i,str.str());
 				break;
 			case 3:
-				str << i << " - " << scenario.journal_strs[i].substr(0,30);
+				str << i << " - " << scenario.journal_strs[i];
 				set_rb(i,RB_JOURNAL, i,str.str());
 				break;
 			case 4:
-				str << i << " - " << current_terrain->sign_locs[i].text.substr(0,30);
+				str << i << " - " << current_terrain->sign_locs[i];
 				set_rb(i,RB_OUT_SIGN, i,str.str());
 				break;
 			case 5:
-				str << i << " - " << town->sign_locs[i].text.substr(0,30);
+				str << i << " - " << town->sign_locs[i].text;
 				set_rb(i,RB_TOWN_SIGN, i,str.str());
 				break;
 			case 6:
-				str << i << " - " << current_terrain->area_desc[i].descr.substr(0,30);
+				str << i << " - " << current_terrain->area_desc[i];
 				set_rb(i,RB_OUT_RECT, i,str.str());
 				break;
 			case 7:
-				str << i << " - " << town->area_desc[i].descr.substr(0,30);
+				str << i << " - " << town->area_desc[i].descr;
 				set_rb(i,RB_TOWN_RECT, i,str.str());
 				break;
 		}
