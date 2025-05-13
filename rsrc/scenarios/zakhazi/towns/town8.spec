@@ -16,8 +16,8 @@
 	sdf -1, -1
 	msg 0, -1, 0
 	pic 62, 3
-	ex1 3, 4, -1
-	ex2 2, 3, -1
+	ex1 2, 3, -1
+	ex2 3, 4, -1
 	goto -1
 @disp-msg = 3
 	sdf -1, -1
@@ -30,8 +30,8 @@
 	sdf -1, -1
 	msg 8, -1, 0
 	pic 62, 3
-	ex1 3, -1, -1
-	ex2 2, 5, -1
+	ex1 2, 5, -1
+	ex2 3, -1, -1
 	goto -1
 @once-give-spec-item = 5
 	sdf -1, -1
@@ -72,8 +72,8 @@
 	sdf -1, -1
 	msg 17, -1, 0
 	pic 185, 1
-	ex1 3, 14, -1
-	ex2 2, 11, -1
+	ex1 2, 11, -1
+	ex2 3, 14, -1
 	goto -1
 @once-give-spec-item = 11
 	sdf -1, -1
