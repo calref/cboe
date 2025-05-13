@@ -64,6 +64,7 @@ short mini_map_scales[3] = {12, 6, 4};
 //extern btn_t buttons[];
 extern location cur_out, mouse_spot;
 extern ter_num_t current_ground;
+extern short right_button_hovered;
 
 short num_ir[3] = {12,10,4};
 
@@ -511,6 +512,9 @@ void draw_rb_slot (short which,short mode)  {
 	TextStyle style;
 	if(mode > 0)
 		style.colour = Colours::RED;
+	else if(right_button_hovered == which - pos)
+		style.colour = Colours::GREEN;
+
 	style.lineHeight = 12;
 	win_draw_string(mainPtr(),text_rect,right_button_status[which].label,eTextMode::WRAP,style);
 }

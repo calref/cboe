@@ -60,6 +60,8 @@ short cen_x, cen_y;
 eScenMode overall_mode = MODE_INTRO_SCREEN;
 std::shared_ptr<cScrollbar> right_sbar, pal_sbar;
 short mode_count = 0;
+short right_button_hovered = -1;
+
 cOutdoors* current_terrain;
 
 std::string scenario_temp_dir_name = "ed_scenario";

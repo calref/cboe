@@ -71,6 +71,7 @@ std::vector<rb_t> right_button_status;
 rectangle right_buttons[NRSONPAGE];
 rectangle palette_buttons[10][6];
 short current_rs_top = 0;
+extern short right_button_hovered;
 
 ePalBtn out_buttons[6][10] = {
 	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET, PAL_DROPPER},
@@ -186,8 +187,17 @@ void update_mouse_spot(location the_point) {
 	rectangle terrain_rect = ::terrain_rect;
 	terrain_rect.inset(8,8);
 	terrain_rect.right -= 4;
-	if(overall_mode >= MODE_MAIN_SCREEN)
+	if(overall_mode >= MODE_MAIN_SCREEN){
 		set_cursor(sword_curs);
+
+		// Mouse over right-side buttons: highlight which is selected, because accidental misclicks are common
+		right_button_hovered = -1;
+		for(int i = 0; i < NRSONPAGE; i++){
+			if(the_point.in(right_buttons[i])){
+				right_button_hovered = i;
+			}
+		}
+	}
 	else if(terrain_rect.contains(the_point)) {
 		set_cursor(get_edit_cursor());
 		if(cur_viewing_mode == 0) {
