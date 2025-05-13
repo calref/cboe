@@ -129,6 +129,7 @@ void init_screen_locs() {
 static cursor_type get_edit_cursor() {
 	switch(overall_mode) {
 		case MODE_INTRO_SCREEN: case MODE_MAIN_SCREEN: case MODE_EDIT_TYPES:
+		case MODE_EDIT_SPECIALS:
 			
 		case MODE_PLACE_CREATURE: case MODE_PLACE_ITEM: case MODE_PLACE_SPECIAL:
 			
@@ -235,7 +236,7 @@ static bool handle_lb_action(location the_point) {
 			sf::sleep(time_in_ticks(10));
 			draw_lb_slot(i,0);
 			mainPtr().display();
-			if(overall_mode == MODE_INTRO_SCREEN || overall_mode == MODE_MAIN_SCREEN || overall_mode == MODE_EDIT_TYPES) {
+			if(overall_mode >= MODE_MAIN_SCREEN) {
 				switch(left_button_status[i].action) {
 					case LB_NO_ACTION:
 						break;
@@ -290,6 +291,9 @@ static bool handle_lb_action(location the_point) {
 						spot_hit = pick_out(cur_out, scenario);
 						if(spot_hit != cur_out) {
 							set_current_out(spot_hit, false);
+							if(overall_mode == MODE_EDIT_SPECIALS){
+								start_special_editing(1, false);
+							}
 						}
 						break;
 					case LB_EDIT_OUT:
@@ -302,6 +306,9 @@ static bool handle_lb_action(location the_point) {
 							cur_town = x;
 							town = scenario.towns[cur_town];
 							set_up_main_screen();
+							if(overall_mode == MODE_EDIT_SPECIALS){
+								start_special_editing(2, false);
+							}
 						}
 						break;
 					case LB_EDIT_TOWN:
@@ -1167,6 +1174,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 			case MODE_INTRO_SCREEN:
 			case MODE_EDIT_TYPES:
 			case MODE_MAIN_SCREEN:
+			case MODE_EDIT_SPECIALS:
 				break; // Nothing to do here, of course.
 			case MODE_COPY_CREATURE:
 				for(short x = 0; x < town->creatures.size(); x++)
@@ -1630,7 +1638,7 @@ void handle_action(location the_point,sf::Event /*event*/) {
 	if(handle_lb_action(the_point))
 		return;
 	
-	if(overall_mode == MODE_MAIN_SCREEN && handle_rb_action(the_point, option_hit))
+	if(overall_mode >= MODE_MAIN_SCREEN && overall_mode != MODE_EDIT_TYPES && handle_rb_action(the_point, option_hit))
 		return;
 		
 	update_mouse_spot(the_point);
@@ -2501,7 +2509,8 @@ void set_up_main_screen() {
 	set_lb(-1,LB_TEXT,LB_EDIT_TALK,"Edit Town Dialogue");
 	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"Created 1997, Free Open Source");
 	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,version());
-	overall_mode = MODE_MAIN_SCREEN;
+	if(overall_mode < MODE_MAIN_SCREEN)
+		overall_mode = MODE_MAIN_SCREEN;
 	right_sbar->show();
 	pal_sbar->hide();
 	shut_down_menus(4);
@@ -2821,6 +2830,7 @@ void start_special_editing(short mode,short just_redo_text) {
 		reset_rb();
 		right_sbar->setMaximum(num_specs + 1 - NRSONPAGE);
 	}
+	overall_mode = MODE_EDIT_SPECIALS;
 	
 	for(size_t i = 0; i < num_specs; i++) {
 		std::ostringstream strb;
