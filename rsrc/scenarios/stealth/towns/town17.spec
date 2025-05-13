@@ -282,8 +282,8 @@
 	sdf -1, -1
 	msg 51, -1, 0
 	pic 1000, 3
-	ex1 3, 41, -1
-	ex2 2, 42, -1
+	ex1 2, 42, -1
+	ex2 3, 41, -1
 	goto -1
 @once-town-encounter = 41
 	sdf -1, -1
