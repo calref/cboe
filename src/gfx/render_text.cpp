@@ -223,6 +223,23 @@ void draw_scale_aware_text(sf::RenderTarget& dest_window, sf::Text str_to_draw) 
 	}
 }
 
+std::string truncate_with_ellipsis(std::string str, const TextStyle& style, int width) {
+	size_t length = string_length(str, style);
+	if(length > width){
+		size_t ellipsis_length = string_length("...", style);
+
+		size_t need_to_clip = length - width + ellipsis_length;
+		int clip_idx = str.size() - 1;
+		// clip_idx should never reach 0
+		for(; clip_idx >= 0; --clip_idx){
+			size_t clip_length = string_length(str.substr(clip_idx), style);
+			if(clip_length >= need_to_clip) break;
+		}
+		str = str.substr(0, clip_idx) + "...";
+	}
+	return str;
+}
+
 static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,text_params_t& options) {
 	if(str.empty()) return; // Nothing to do!
 	short line_height = options.style.lineHeight;
@@ -262,19 +279,7 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	}
 
 	if(mode == eTextMode::ELLIPSIS){
-		size_t length = string_length(str, options.style);
-		if(length > dest_rect.width()){
-			size_t ellipsis_length = string_length("...", options.style);
-
-			size_t need_to_clip = length - dest_rect.width() + ellipsis_length;
-			int clip_idx = str.size() - 1;
-			// clip_idx should never reach 0
-			for(; clip_idx >= 0; --clip_idx){
-				size_t clip_length = string_length(str.substr(clip_idx), options.style);
-				if(clip_length >= need_to_clip) break;
-			}
-			str = str.substr(0, clip_idx) + "...";
-		}
+		str = truncate_with_ellipsis(str, options.style, dest_rect.width());
 		mode = eTextMode::LEFT_TOP;
 	}
 	if(mode == eTextMode::WRAP){

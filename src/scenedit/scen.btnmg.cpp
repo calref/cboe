@@ -10,6 +10,7 @@
 #include <cmath>
 #include "scen.btnmg.hpp"
 #include "dialogxml/widgets/scrollbar.hpp"
+#include "gfx/render_text.hpp"
 
 extern rectangle right_sbar_rect;
 
@@ -84,7 +85,8 @@ void set_rb(short slot, eRBAction action, int n, std::string label, bool do_draw
 		right_button_status.resize(slot + 1);
 	right_button_status[slot].action = action;
 	right_button_status[slot].i = n;
-	right_button_status[slot].label = label;
+	static TextStyle style;
+	right_button_status[slot].label = truncate_with_ellipsis(label, style, right_buttons[0].width());
 	for(char& c : right_button_status[slot].label) {
 		if(c == '|')
 			c = ' ';

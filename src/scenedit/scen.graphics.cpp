@@ -516,7 +516,7 @@ void draw_rb_slot (short which,short mode)  {
 		style.colour = Colours::GREEN;
 
 	style.lineHeight = 12;
-	win_draw_string(mainPtr(),text_rect,right_button_status[which].label,eTextMode::ELLIPSIS,style);
+	win_draw_string(mainPtr(),text_rect,right_button_status[which].label,eTextMode::LEFT_TOP,style);
 }
 
 void set_up_terrain_buttons(bool reset) {
