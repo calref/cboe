@@ -43,6 +43,7 @@ TEST_CASE("Saving a town") {
 	town->in_town_rect = {2,3,30,29};
 	town->difficulty = 1;
 	town->lighting_type = LIGHT_NONE;
+	town->max_num_monst = 20;
 	SECTION("With the minimal required information") {
 		in_and_out("basic", town, scen);
 		CHECK(town->max_dim == 32);
@@ -50,6 +51,7 @@ TEST_CASE("Saving a town") {
 		CHECK(town->in_town_rect == rect(2,3,30,29));
 		CHECK(town->difficulty == 1);
 		CHECK(town->lighting_type == LIGHT_NONE);
+		CHECK(town->max_num_monst == 20);
 		CHECK_FALSE(town->has_tavern);
 		CHECK_FALSE(town->defy_scrying);
 	}
