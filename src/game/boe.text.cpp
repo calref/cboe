@@ -533,9 +533,8 @@ void place_item_bottom_buttons() {
 			rect_draw_some_item(*from_gw, pc_from_rect, item_stats_gworld(), to_rect, sf::BlendAlpha);
 			std::string numeral = std::to_string(i + 1);
 			short width = string_length(numeral, style);
-			// Offset "6" down two pixels to make it line up, because it has an ascender in this font
-			// Offset "1" - "4" down as well because they're not shorter and it looks a bit better
-			to_rect.offset(-width - 5, i != 4 ? 2 : 0);
+			// Offset "6" down an extra pixel to make it line up, because it has an ascender in this font
+			to_rect.offset(-width - 5, i == 5 ? 3 : 2);
 			win_draw_string(item_stats_gworld(), to_rect, numeral, eTextMode::LEFT_TOP, style);
 		}
 		else item_bottom_button_active[i] = false;
