@@ -12,7 +12,9 @@
     <onenter condition="dead">1</onenter>
     <exit dir="n" x="30" y="22" />
     <exit dir="s" x="30" y="26" />
-    <flags />
+    <flags>
+        <chop kills="10" />
+    </flags>
     <item id="0">
         <type>0</type>
         <charges>50</charges>
