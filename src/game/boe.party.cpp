@@ -1095,7 +1095,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 					return;
 				}
 				
-				if(!freebie)
+				if(!freebie && spell_num != eSpell::RAISE_DEAD && spell_num != eSpell::RESURRECT)
 					univ.party[pc_num].cur_sp -= (*spell_num).cost;
 				std::ostringstream sout;
 				sout << "  " << univ.party[target].name;
@@ -1157,6 +1157,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 							break;
 						}
 					}
+					univ.party[pc_num].cur_sp -= (*spell_num).cost;
 					if(spell_num == eSpell::RAISE_DEAD) {
 						if(univ.party[target].main_status == eMainStatus::DEAD)
 							if(get_ran(1,1,level / 2) == 1) {
