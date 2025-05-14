@@ -55,6 +55,7 @@ enum class eSelectPC {
 	// Must have skill points
 	ONLY_CAN_TRAIN,
 	ONLY_DEAD,
+	ONLY_STONE,
 };
 // Prompt the player to choose a party member. Returns 0-5 for a pc, 6 for cancel, 7 for all, or 8 if no PCs fit the mode's filter.
 // Pass a string poiner to no_choice_reason to get the reason why no choices were available, if none are.

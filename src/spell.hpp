@@ -16,7 +16,7 @@
 // This controls how a spell is cast in combat; YES means it's the same as in town, IMMED means it has a special implementation in town, and TARGET / FANCY both mean it requires target selection.
 enum eSpellRefer {REFER_YES, REFER_IMMED, REFER_TARGET, REFER_FANCY};
 // This specifies whether a spell targets a party member and whether dead PCs can be chosen.
-enum eSpellSelect {SELECT_NO, SELECT_ACTIVE, SELECT_ANY};
+enum eSpellSelect {SELECT_NO, SELECT_ACTIVE, SELECT_ANY, SELECT_DEAD, SELECT_STONE};
 // This one is meant for indexing a bit field
 enum eSpellWhen {WHEN_COMBAT = 1, WHEN_TOWN = 2, WHEN_OUTDOORS = 4};
 

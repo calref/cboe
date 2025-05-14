@@ -1598,6 +1598,20 @@ bool pc_can_cast_spell(const cPlayer& pc,eSpell spell_num) {
 	eSkill type = (*spell_num).type;
 	cSpell spell = *spell_num;
 	
+	if(spell.need_select == eSpellSelect::SELECT_DEAD){
+		bool any_dead = false;
+		for(int i = 0; i < 6; ++i){
+			if(dead_statuses.count(univ.party[i].main_status)) any_dead = true;
+		}
+		if(!any_dead) return false;
+	}else if(spell.need_select == eSpellSelect::SELECT_STONE){
+		bool any_stone = false;
+		for(int i = 0; i < 6; ++i){
+			if(univ.party[i].main_status == eMainStatus::STONE) any_stone = true;
+		}
+		if(!any_stone) return false;
+	}
+
 	level = spell.level;
 	int effective_skill = pc.skill(type);
 	if(pc.status[eStatus::DUMB] < 0)
@@ -1696,7 +1710,21 @@ static void draw_spell_info(cDialog& me, const eSkill store_situation, const sho
 						me[id].hide();
 					}
 					break;
-					
+				case SELECT_DEAD:
+					if(dead_statuses.count(univ.party[i].main_status)) {
+						me[id].show();
+					}else{
+						me[id].hide();
+					}
+					break;
+				case SELECT_STONE:
+					if(univ.party[i].main_status == eMainStatus::STONE) {
+						me[id].show();
+					}
+					else {
+						me[id].hide();
+					}
+					break;
 			}
 		}
 	}
@@ -1887,22 +1915,12 @@ static bool pick_spell_caster(cDialog& me, std::string id, const eSkill store_si
 }
 
 static bool pick_spell_target(cDialog& me, std::string id, const eSkill store_situation, short& last_darkened, const short& store_spell) {
-	static const char*const no_target = " No target needed.";
-	static const char*const bad_target = " Can't cast on them.";
 	static const char*const got_target = " Target selected.";
 	short item_hit = id[id.length() - 1] - '1';
-	std::string casting = id;
-	casting[casting.length() - 1] = pc_casting + '1';
-	if(!me[casting].isVisible()) {
-		me["feedback"].setText(no_target);
-	} else if(!me[id].isVisible()) {
-		me["feedback"].setText(bad_target);
-	} else {
-		me["feedback"].setText(got_target);
-		store_spell_target = item_hit;
-		draw_spell_info(me, store_situation, store_spell);
-		put_pc_target_buttons(me, last_darkened);
-	}
+	me["feedback"].setText(got_target);
+	store_spell_target = item_hit;
+	draw_spell_info(me, store_situation, store_spell);
+	put_pc_target_buttons(me, last_darkened);
 	return true;
 }
 
@@ -1941,14 +1959,21 @@ static bool pick_spell_select_led(cDialog& me, std::string id, eKeyMod mods, con
 				put_pc_target_buttons(me, last_darkened);
 			}
 		}
-		// Cute trick now... if a target is needed, caster can always be picked
-		std::string targ = "target" + boost::lexical_cast<std::string>(pc_casting + 1);
-		if((store_spell_target == 6) && me[targ].isVisible()) {
+		bool any_targets = false;
+		for(int i = 0; i < 6; ++i){
+			std::string targ = "target" + boost::lexical_cast<std::string>(i + 1);
+			if(me[targ].isVisible()){
+				any_targets = true;
+				break;
+			}
+		}
+		if((store_spell_target == 6) && any_targets) {
 			me["feedback"].setText(choose_target);
 			draw_spell_info(me, store_situation, store_spell);
 			play_sound(45); // formerly force_play_sound
 		}
-		else if(!me[targ].isVisible()) {
+		else{
+			me["feedback"].setText("");
 			store_spell_target = 6;
 			put_pc_target_buttons(me, last_darkened);
 		}

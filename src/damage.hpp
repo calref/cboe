@@ -11,6 +11,7 @@
 
 #include <limits>
 #include <boost/optional.hpp>
+#include <set>
 
 enum class eDamageType {
 	WEAPON = 0,
@@ -91,6 +92,8 @@ enum class eMainStatus {
 	SPLIT_SURFACE = SPLIT + SURFACE,
 	SPLIT_WON = SPLIT + WON,
 };
+
+const std::set<eMainStatus> dead_statuses = { eMainStatus::DEAD, eMainStatus::STONE, eMainStatus::DUST };
 
 inline eMainStatus exceptSplit(eMainStatus stat) {
 	if(int(stat) >= 10)

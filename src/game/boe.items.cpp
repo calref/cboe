@@ -1002,6 +1002,12 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 					extra_info = "";
 				}
 				break;
+			case eSelectPC::ONLY_STONE:
+				if(univ.party[i].main_status != eMainStatus::STONE){
+					can_pick = false;
+					extra_info = "";
+				}
+				break;
 			case eSelectPC::ONLY_DEAD:
 				if(univ.party[i].main_status == eMainStatus::ALIVE){
 					can_pick = false;

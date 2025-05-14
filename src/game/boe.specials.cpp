@@ -1133,6 +1133,8 @@ void use_item(short pc,short item) {
 					case SELECT_NO: break;
 					case SELECT_ACTIVE: store_spell_target = select_pc(eSelectPC::ONLY_LIVING); break;
 					case SELECT_ANY: store_spell_target = select_pc(eSelectPC::ANY); break;
+					case SELECT_DEAD: store_spell_target = select_pc(eSelectPC::ONLY_DEAD); break;
+					case SELECT_STONE: store_spell_target = select_pc(eSelectPC::ONLY_STONE); break;
 				}
 				if(overall_mode == MODE_COMBAT) {
 					bool priest = (*spell).is_priest();
