@@ -8,7 +8,10 @@
     <bounds top="0" left="0" bottom="47" right="44" />
     <difficulty>3</difficulty>
     <lighting>dark</lighting>
-    <flags />
+    <flags>
+        <chop kills="30000" />
+        <hidden>true</hidden>
+    </flags>
     <wandering>
         <monster>18</monster>
         <monster>18</monster>
