@@ -824,13 +824,17 @@ void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 		data.CloseElement("timer");
 	}
 	data.OpenElement("flags");
+
+	data.OpenElement("chop");
 	if(town.town_chop_time > 0) {
-		data.OpenElement("chop");
 		data.PushAttribute("day", town.town_chop_time);
-		data.PushAttribute("event", town.town_chop_key);
-		data.PushAttribute("kills", town.max_num_monst);
-		data.CloseElement("chop");
 	}
+	if(town.town_chop_key > 0) {
+		data.PushAttribute("event", town.town_chop_key);
+	}
+	data.PushAttribute("kills", town.max_num_monst);
+	data.CloseElement("chop");
+
 	if(town.strong_barriers)
 		data.PushElement("strong-barriers", true);
 	if(town.defy_mapping)
