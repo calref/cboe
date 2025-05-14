@@ -949,6 +949,9 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 		if(univ.party[i].main_status == eMainStatus::ABSENT || univ.party[i].main_status == eMainStatus::FLED)
 			can_pick = false;
 
+		if(mode != eSelectPC::ANY && univ.party[i].main_status >= eMainStatus::SPLIT)
+			can_pick = false;
+
 		else switch(mode) {
 			case eSelectPC::ONLY_CAN_GIVE_FROM_ACTIVE:
 				if(i == univ.cur_pc){
