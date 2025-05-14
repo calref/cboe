@@ -9,6 +9,7 @@
     <difficulty>3</difficulty>
     <lighting>dark</lighting>
     <flags>
+        <chop kills="30000" />
         <hidden>true</hidden>
     </flags>
     <wandering>
