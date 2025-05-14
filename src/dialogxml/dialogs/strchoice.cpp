@@ -45,7 +45,7 @@ void cStringChoice::attachHandlers() {
 	dlg["right"].attachClickHandler(std::bind(&cStringChoice::onRight,this));
 	dlg["done"].attachClickHandler(std::bind(&cStringChoice::onOkay,this,_1));
 	dlg["cancel"].attachClickHandler(std::bind(&cStringChoice::onCancel,this,_1));
-	dlg["search"].attachClickHandler(std::bind(&cStringChoice::onSearch,this,_1));
+	if(!editable) dlg["search"].attachClickHandler(std::bind(&cStringChoice::onSearch,this,_1));
 	leds = &dynamic_cast<cLedGroup&>(dlg["strings"]);
 	leds->attachFocusHandler(std::bind(&cStringChoice::onSelect,this,_3));
 	if(editable) {
@@ -66,10 +66,12 @@ cDialog* cStringChoice::operator->() {
 }
 
 size_t cStringChoice::show(size_t selectedIndex) {
-	// Hide most of the search ui until Ctrl+f or clicking the search button
-	dlg["search-field"].hide();
-	dlg["search-label"].hide();
-	dlg["reverse"].hide();
+	if(!editable){
+		// Hide most of the search ui until Ctrl+f or clicking the search button
+		dlg["search-field"].hide();
+		dlg["search-label"].hide();
+		dlg["reverse"].hide();
+	}
 
 	cur = selectedIndex;
 	if(cur >= strings.size()) {
