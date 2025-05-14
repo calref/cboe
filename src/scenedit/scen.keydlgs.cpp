@@ -1566,7 +1566,7 @@ void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent) {
 			short n = 0;
 			for(short j = i; j < i + 6; j++, n++) {
 				std::string str = fetch_str(mode, j);
-				if(!str.empty() && str[0] != '*')
+				if(str[0] != '*')
 					break;
 			}
 			if(n == 6) {
@@ -1592,6 +1592,9 @@ void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent) {
 		for(short i = 0; i < 6; i++) {
 			std::string id = "str" + std::to_string(i + 1);
 			edit[id].setText(fetch_str(mode, *str1 + i));
+			if(edit[id].getText() == "*"){
+				edit[id].setText("");
+			}
 		}
 	}
 	
