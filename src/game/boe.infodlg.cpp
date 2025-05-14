@@ -87,6 +87,21 @@ static void put_spell_info(cDialog& me, eSkill display_mode) {
 	else me["range"].setTextToNum(ran);
 	
 	me["desc"].setText(get_str(res, pos + 1));
+	// Spells that require resurrection balm need to adapt their description based on whether the scenario supports it.
+	if(spell == eSpell::RAISE_DEAD || spell == eSpell::RESURRECT){
+		if(!univ.party.scen_name.empty() && univ.scenario.has_feature_flag("resurrection-balm")){
+			// Balm supported, so remove the markup around the balm part of the description
+			me["desc"].replaceText("<", "");
+			me["desc"].replaceText(">", "");
+		}else{
+			// Scenario doesn't support balm, so erase it from the description.
+			size_t start_balm_message = me["desc"].getText().find("<");
+			size_t end_balm_message = me["desc"].getText().find(">") + 1;
+			std::string balm_message = me["desc"].getText().substr(start_balm_message, end_balm_message - start_balm_message);
+			me["desc"].replaceText(balm_message, "");
+		}
+	}
+
 	me["when"].setText(get_str("spell-times", (*spell).when_cast));
 }
 

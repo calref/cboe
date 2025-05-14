@@ -98,6 +98,8 @@ std::string help_text_rsrc = "help";
 }
 */
 std::map<std::string,std::vector<std::string>> feature_flags = {
+	// Legacy scenario flags
+	{"resurrection-balm", {"required"}}, // This means it CAN be supported, if the scenario has the flag.
 	// Legacy behavior of the T debug action (used by some replays)
 	// does not change the party's outdoors location
 	{"debug-enter-town", {"move-outdoors"}},

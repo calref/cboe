@@ -84,6 +84,7 @@ cScenario::cScenario() {
 cScenario::cScenario(const cScenario& other)
 	: difficulty(other.difficulty)
 	, intro_pic(other.intro_pic)
+	, feature_flags(other.feature_flags)
 	, default_ground(other.default_ground)
 	, bg_out(other.bg_out)
 	, bg_fight(other.bg_fight)
@@ -151,6 +152,7 @@ void swap(cScenario& lhs, cScenario& rhs) {
 	using std::swap;
 	swap(lhs.difficulty, rhs.difficulty);
 	swap(lhs.intro_pic, rhs.intro_pic);
+	swap(lhs.feature_flags, rhs.feature_flags);
 	swap(lhs.default_ground, rhs.default_ground);
 	swap(lhs.bg_out, rhs.bg_out);
 	swap(lhs.bg_fight, rhs.bg_fight);
@@ -210,6 +212,8 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 
 void cScenario::import_legacy(legacy::scenario_data_type& old){
 	is_legacy = true;
+	// TODO eventually the absence of feature flags here will replace is_legacy altogether
+	feature_flags = {};
 	difficulty = old.difficulty;
 	intro_pic = old.intro_pic;
 	default_ground = old.default_ground * 2;

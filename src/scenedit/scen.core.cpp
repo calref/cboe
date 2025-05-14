@@ -2986,7 +2986,8 @@ bool build_scenario() {
 	scenario.default_ground = grass ? 2 : 0;
 	
 	scenario.feature_flags = {
-		{"scenario-meta-format", "V2"}
+		{"scenario-meta-format", "V2"},
+		{"resurrection-balm", "required"},
 	};
 
 	fs::path basePath = progDir/"Blades of Exile Base"/(grass ? "bladbase.boes" : "cavebase.boes");

@@ -1148,8 +1148,8 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 					play_sound(52);
 					sout.str("  Your items glow.");
 				} else {
-					
-					if(!univ.scenario.is_legacy) {
+					// Scenario feature flag: requiring resurrection balm
+					if(univ.scenario.has_feature_flag("resurrection-balm")) {
 						if(cInvenSlot item = univ.party[pc_num].has_abil(eItemAbil::RESURRECTION_BALM)) {
 							univ.party[pc_num].take_item(item.slot);
 						} else {
