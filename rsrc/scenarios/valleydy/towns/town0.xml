@@ -17,6 +17,7 @@
     <timer freq="0">0</timer>
     <timer freq="0">0</timer>
     <flags>
+        <chop kills="30000" />
         <tavern>true</tavern>
     </flags>
     <item id="0">
