@@ -13,7 +13,9 @@
     <exit dir="n" x="33" y="30" />
     <exit dir="s" x="34" y="35" />
     <exit dir="e" x="33" y="30" />
-    <flags />
+    <flags>
+        <chop kills="30000" />
+    </flags>
     <item id="0">
         <type>385</type>
     </item>
