@@ -13,6 +13,7 @@
     <onexit dir="e">37</onexit>
     <timer freq="50">42</timer>
     <flags>
+        <chop kills="30000" />
         <hidden>true</hidden>
     </flags>
     <wandering>

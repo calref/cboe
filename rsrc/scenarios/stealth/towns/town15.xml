@@ -11,6 +11,7 @@
     <onenter condition="alive">1</onenter>
     <onenter condition="dead">2</onenter>
     <flags>
+        <chop kills="20" />
         <hidden>true</hidden>
     </flags>
     <item id="0">

@@ -10,7 +10,9 @@
     <lighting>lit</lighting>
     <exit dir="w" x="39" y="27" />
     <exit dir="e" x="43" y="27" />
-    <flags />
+    <flags>
+        <chop kills="30000" />
+    </flags>
     <wandering>
         <monster>0</monster>
         <monster>138</monster>
