@@ -857,9 +857,10 @@ cVehicle* town_boat_there(location where) {
 }
 cVehicle* out_boat_there(location where) {
 	where = global_to_local(where);
+	location sector = {univ.party.outdoor_corner.x + univ.party.i_w_c.x, univ.party.outdoor_corner.y + univ.party.i_w_c.y};
 	for(short i = 0; i < univ.party.boats.size(); i++)
 		if((univ.party.boats[i].exists) && (where == univ.party.boats[i].loc)
-			&& (univ.party.boats[i].which_town == 200))
+			&& (univ.party.boats[i].which_town == 200) && (sector == univ.party.boats[i].sector))
 			return &univ.party.boats[i];
 	return nullptr;
 }
