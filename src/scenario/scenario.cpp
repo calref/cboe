@@ -132,11 +132,16 @@ cScenario::cScenario(const cScenario& other)
 	contact_info[0] = other.contact_info[0];
 	contact_info[1] = other.contact_info[1];
 	// Copy towns and sectors
-	for(size_t i = 0; i < towns.size(); i++)
+	for(size_t i = 0; i < towns.size(); i++){
 		towns[i] = new cTown(*other.towns[i]);
-	for(size_t i = 0; i < outdoors.width(); i++)
-		for(size_t j = 0; j < outdoors.height(); j++)
+		towns[i]->reattach(*this);
+	}
+	for(size_t i = 0; i < outdoors.width(); i++){
+		for(size_t j = 0; j < outdoors.height(); j++){
 			outdoors[i][j] = new cOutdoors(*other.outdoors[i][j]);
+			outdoors[i][j]->reattach(*this);
+		}
+	}
 }
 
 cScenario::cScenario(cScenario&& other) {
@@ -196,7 +201,23 @@ void swap(cScenario& lhs, cScenario& rhs) {
 	swap(lhs.is_legacy, rhs.is_legacy);
 	swap(lhs.scen_file, rhs.scen_file);
 	swap(lhs.outdoors, rhs.outdoors);
+	for(size_t i = 0; i < lhs.outdoors.width(); i++){
+		for(size_t j = 0; j < lhs.outdoors.height(); j++){
+			lhs.outdoors[i][j]->reattach(lhs);
+		}
+	}
+	for(size_t i = 0; i < rhs.outdoors.width(); i++){
+		for(size_t j = 0; j < rhs.outdoors.height(); j++){
+			rhs.outdoors[i][j]->reattach(rhs);
+		}
+	}
 	swap(lhs.towns, rhs.towns);
+	for(size_t i = 0; i < lhs.towns.size(); ++i){
+		lhs.towns[i]->reattach(lhs);
+	}
+	for(size_t i = 0; i < rhs.towns.size(); ++i){
+		rhs.towns[i]->reattach(rhs);
+	}
 	swap(lhs.evt_names, rhs.evt_names);
 	swap(lhs.ic_names, rhs.ic_names);
 	swap(lhs.itf_names, rhs.itf_names);
