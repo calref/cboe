@@ -830,9 +830,10 @@ void place_treasure(location where,short level,short loot,short mode) {
 	}
 }
 
-static bool get_text_response_event_filter(cDialog& me, std::string, eKeyMod) {
+static bool get_text_response_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	me.toast(true);
-	me.setResult(me["response"].getText());
+	if(item_hit == "cancel") me.setResult(std::string {""});
+	else me.setResult(me["response"].getText());
 	return true;
 }
 
@@ -840,7 +841,7 @@ std::string get_text_response(std::string prompt, pic_num_t pic) {
 	set_cursor(sword_curs);
 	
 	cDialog strPanel(*ResMgr::dialogs.get("get-response"));
-	strPanel.attachClickHandlers(get_text_response_event_filter, {"okay"});
+	strPanel.attachClickHandlers(get_text_response_event_filter, {"okay", "cancel"});
 	if(!prompt.empty()) {
 		dynamic_cast<cPict&>(strPanel["pic"]).setPict(pic);
 		strPanel["prompt"].setText(prompt);
