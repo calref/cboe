@@ -1081,7 +1081,7 @@ void handle_target_mode(eGameMode target_mode, int range, eSpell spell) {
 		std::vector<location> enemy_locs_already_seen;
 		for(short i = 0; i < univ.town.monst.size(); i++){
 			auto& monst = univ.town.monst[i];
-			if(monst.is_alive() && party_can_see_monst(i)) {
+			if(monst.is_alive() && party_can_see_monst(i) && !monst.invisible) {
 				eAttitude att = monst.attitude;
 				if((att == eAttitude::HOSTILE_A || att == eAttitude::HOSTILE_B)
 					&& dist(loc, monst.cur_loc) <= range){
