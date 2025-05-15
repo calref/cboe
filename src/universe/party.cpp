@@ -1034,7 +1034,7 @@ void cParty::readFrom(const cTagFile& file, bool preview) {
 			cTimer timer;
 			while(page["TIMER"] >> i >> timer.time >> j >> timer.node) {
 				timer.node_type = eSpecCtxType(j);
-				if(i < party_event_timers.size()) party_event_timers.resize(i + 1);
+				if(i >= party_event_timers.size()) party_event_timers.resize(i + 1);
 				party_event_timers[i] = timer;
 			}
 		} else if(page.getFirstKey() == "CREATURE") {
