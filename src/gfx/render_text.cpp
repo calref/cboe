@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <set>
+#include <boost/algorithm/string/replace.hpp>
 #include "fileio/resmgr/res_font.hpp"
 #include "gfx/render_shapes.hpp"
 #include <utility>
@@ -240,6 +241,10 @@ std::string truncate_with_ellipsis(std::string str, const TextStyle& style, int 
 	return str;
 }
 
+std::map<std::string, std::string> substitutions = {
+	{"–", "--"}
+};
+
 static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,text_params_t& options) {
 	if(str.empty()) return; // Nothing to do!
 	short line_height = options.style.lineHeight;
@@ -251,6 +256,9 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	// TODO: Why the heck are we drawing a whole line higher than requested!?
 	adjust_y -= str_to_draw.getLocalBounds().height;
 	
+	for(auto it : substitutions){
+		boost::replace_all(str, it.first, it.second);
+	}
 	str_to_draw.setString(str);
 	short total_width = str_to_draw.getLocalBounds().width;
 
