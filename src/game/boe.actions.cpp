@@ -2719,6 +2719,8 @@ static bool handle_debug_key(char key) {
 	return false;
 }
 
+extern std::vector<std::string> preset_words;
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2828,11 +2830,26 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			chr2 = Key::G;
 		for(short i = 0; i < 9; i++)
 			if(chr2 == talk_chars[i] && (!talk_end_forced || i == 6 || i == 5)) {
-				// related to talk_area_rect, unsure why adding +9 is needed?
-				pass_point = talk_words[i].rect.topLeft();
-				pass_point.x += talk_area_rect.left+9;
-				pass_point.y += talk_area_rect.top+9;
-				are_done = handle_talk_event(pass_point, fps_limiter);
+				short j = 0;
+				bool word_shown = false;
+				for(std::string preset : preset_words){
+					if(preset == preset_words[i]) {
+						word_shown = talk_words[j].word == preset;
+						break;
+					}
+					else if(talk_words[j].word == preset){
+						j++;
+					}
+				}
+				if(word_shown){
+					pass_point = talk_words[j].rect.topLeft();
+					// related to talk_area_rect, unsure why adding +9 is needed?
+					pass_point.x += talk_area_rect.left+9;
+					pass_point.y += talk_area_rect.top+9;
+					are_done = handle_talk_event(pass_point, fps_limiter);
+				}else{
+					are_done = true;
+				}
 			}
 		return are_done;
 	}
