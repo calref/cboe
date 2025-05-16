@@ -471,7 +471,7 @@ void cast_spell(eSkill type) {
 	eSpell spell;
 	
 	if((is_town()) && (univ.town.is_antimagic(univ.party.town_loc.x,univ.party.town_loc.y))) {
-		add_string_to_buf("  Not in antimagic field.");
+		add_string_to_buf("Cast: Not in antimagic field.");
 		return;
 	}
 	
@@ -1570,26 +1570,58 @@ void dispel_fields(short i,short j,short mode) {
 		break_force_cage(loc(i,j));
 }
 
-bool pc_can_cast_spell(const cPlayer& pc,eSkill type) {
+extern std::array<short, 51> hit_chance;
+eCastStatus pc_can_cast_spell(const cPlayer& pc,const eSkill type) {
+	if(type == eSkill::MAGE_SPELLS && pc.traits[eTrait::ANAMA]) {
+		return NO_CAST_ANAMA;
+	}
+	if(pc.skill(type) == 0) {
+		return NO_CAST_SKILL;
+	}
+	if(pc.cur_sp == 0) {
+		return NO_CAST_SP;
+	}
+
+	if(is_combat() && univ.town.is_antimagic(pc.combat_pos.x,pc.combat_pos.y)) {
+		return NO_CAST_ANTIMAGIC;
+	}
+	if(is_combat() && type == eSkill::MAGE_SPELLS && pc.total_encumbrance(hit_chance) > 1) {
+		return NO_CAST_ENCUMBERED;
+	}
+	
 	if(type == eSkill::MAGE_SPELLS && pc_can_cast_spell(pc, eSpell::LIGHT))
-		return true;
+		return CAST_OK;
 	if(type == eSkill::PRIEST_SPELLS && pc_can_cast_spell(pc, eSpell::HEAL_MINOR))
-		return true;
+		return CAST_OK;
 	
 	// If they can't cast the most basic level 1 spell, let's just make sure they can't cast any spells.
 	// Find a spell they definitely know, and see if they can cast that.
-	if(type == eSkill::MAGE_SPELLS && pc.mage_spells.any()) {
-		for(int i = 0; i < 62; i++)
-			if(pc.mage_spells[i])
-				return pc_can_cast_spell(pc, eSpell(i));
+	if(type == eSkill::MAGE_SPELLS && pc.mage_spells.any()){
+		for(int i = 0; i < 62; i++){
+			if(pc.mage_spells[i]){
+				if(pc_can_cast_spell(pc, eSpell(i))) return CAST_OK;
+				break;
+			}
+		}
 	}
-	if(type == eSkill::PRIEST_SPELLS && pc.priest_spells.any()) {
-		for(int i = 0; i < 62; i++)
-			if(pc.priest_spells[i])
-				return pc_can_cast_spell(pc, eSpell(i + 100));
+	if(type == eSkill::PRIEST_SPELLS && pc.priest_spells.any()){
+		for(int i = 0; i < 62; i++){
+			if(pc.priest_spells[i]){
+				if(pc_can_cast_spell(pc, eSpell(i + 100))) return CAST_OK;
+			}
+		}
 	}
 	// If we get this far, either they don't know any spells (very unlikely) or they can't cast any of the spells they know.
-	return false;
+	if(pc.status[eStatus::DUMB] > 0){
+		return NO_CAST_DUMBFOUNDED;
+	}
+	if(pc.status[eStatus::PARALYZED] != 0){
+		return NO_CAST_PARALYZED;
+	}
+	if(pc.status[eStatus::ASLEEP] > 0){
+		return NO_CAST_ASLEEP;
+	}
+	return NO_CAST_UNKNOWN;
 }
 
 bool pc_can_cast_spell(const cPlayer& pc,eSpell spell_num) {
@@ -1665,7 +1697,7 @@ static void draw_caster_buttons(cDialog& me, const eSkill store_situation) {
 			}
 		}
 		else {
-			if(pc_can_cast_spell(univ.party[i],store_situation)) {
+			if(pc_can_cast_spell(univ.party[i],store_situation) == CAST_OK) {
 				me[id].show();
 			}
 			else {
@@ -2038,10 +2070,51 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 	return true;
 }
 
+eCastStatus check_can_cast(const cPlayer& pc, eSkill type) {
+	return CAST_OK;	
+}
+
+void print_cast_status(eCastStatus status, eSkill type, std::string pc_name) {
+	std::string prefix = "Cast";
+	// When multiple PCs are checked, explain why each one can't cast.
+	if(!pc_name.empty()) prefix += " (" + pc_name + ")";
+	prefix += ": ";
+	switch(status){
+		case NO_CAST_ANAMA:
+			add_string_to_buf(prefix + "You're an Anama!");
+			break;
+		case NO_CAST_SKILL:
+			if(type == eSkill::MAGE_SPELLS) add_string_to_buf(prefix + "No mage skill.");
+			else add_string_to_buf(prefix + "No priest skill.");
+			break;
+		case NO_CAST_ENCUMBERED:
+			add_string_to_buf(prefix + "Too encumbered.");
+			break;
+		case NO_CAST_SP:
+			add_string_to_buf(prefix + "No spell points.");
+			break;
+		case NO_CAST_ANTIMAGIC:
+			add_string_to_buf(prefix + "Not in antimagic field.");
+			break;
+		case NO_CAST_DUMBFOUNDED:
+			add_string_to_buf(prefix + "You're dumbfounded!");
+			break;
+		case NO_CAST_PARALYZED:
+			add_string_to_buf(prefix + "You're paralyzed!");
+			break;
+		case NO_CAST_ASLEEP:
+			add_string_to_buf(prefix + "You're asleep!");
+			break;
+		case NO_CAST_UNKNOWN:
+			add_string_to_buf(prefix + "You can't!");
+			break;
+	}
+}
+
 //short pc_num; // if 6, anyone
 //short type; // 0 - mage   1 - priest
 //short situation; // 0 - out  1 - town  2 - combat
-eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
+eSpell pick_spell(short pc_num,const eSkill type, bool check_done) { // 70 - no spell OW spell num
 	using namespace std::placeholders;
 	eSpell default_spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
 	short former_target = store_spell_target;
@@ -2053,11 +2126,21 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 	
 	if(pc_num == 6) { // See if can keep same caster
 		can_choose_caster = true;
-		if(!pc_can_cast_spell(univ.party[pc_casting],type)) {
-			using namespace std::placeholders;
+		eCastStatus same_caster_status = pc_can_cast_spell(univ.party[pc_casting],type);
+		// If the party is in an antimagic field, individual statuses won't matter
+		if(same_caster_status == NO_CAST_ANTIMAGIC){
+			print_cast_status(NO_CAST_ANTIMAGIC, type);
+		}
+		else if(same_caster_status != CAST_OK) {
+			
 			auto iter = std::find_if(univ.party.begin(), univ.party.end(), [type](const cPlayer& who) {
-				return pc_can_cast_spell(who, type);
+				eCastStatus status = pc_can_cast_spell(who, type);
+				if(status == CAST_OK) return true;
+				if(status >= NO_CAST_SP && status <= NO_CAST_ASLEEP)
+					print_cast_status(status, type, who.name);
+				return false;
 			});
+			
 			if(iter == univ.party.end()) {
 				add_string_to_buf("Cast: Nobody can.");
 				return eSpell::NONE;
@@ -2070,21 +2153,12 @@ eSpell pick_spell(short pc_num,eSkill type) { // 70 - no spell OW spell num
 		pc_casting = pc_num;
 	}
 	
-	if(!can_choose_caster) {
-		if(type == eSkill::MAGE_SPELLS && univ.party[pc_casting].traits[eTrait::ANAMA]) {
-			add_string_to_buf("Cast: You're an Anama!");
+	if(!can_choose_caster && !check_done) {
+		eCastStatus status = check_can_cast(univ.party[pc_casting], type);
+		if(status != CAST_OK){
+			print_cast_status(status, type);	
 			return eSpell::NONE;
 		}
-		if(univ.party[pc_num].skill(type) == 0) {
-			if(type == eSkill::MAGE_SPELLS) add_string_to_buf("Cast: No mage skill.");
-			else add_string_to_buf("Cast: No priest skill.");
-			return eSpell::NONE;
-		}
-		if(univ.party[pc_casting].cur_sp == 0) {
-			add_string_to_buf("Cast: No spell points.");
-			return eSpell::NONE;
-		}
-		
 	}
 	
 	// If in combat, make the spell being cast this PCs most recent spell
