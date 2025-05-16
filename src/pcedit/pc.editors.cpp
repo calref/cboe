@@ -249,6 +249,7 @@ struct xp_dlog_state {
 	std::map<eSkill,short> skills;
 	int who, mode;
 	int hp, sp, g, skp;
+	int start_skp;
 };
 
 static void do_xp_keep(xp_dlog_state& save) {
@@ -401,6 +402,20 @@ static void do_xp_draw(cDialog& me,xp_dlog_state& save) {
 	update_gold_skills(me, save);
 }
 
+static bool confirm_switch_pc(cDialog& me, xp_dlog_state& save) {
+	cChoiceDlog dlog("confirm-spend-xp", {"keep","revert","cancel"}, &me);
+	dlog->getControl("keep-msg").replaceText("{{PC}}", univ.party[save.who].name);
+	std::string choice = dlog.show();
+	if(choice == "keep"){
+		do_xp_keep(save);
+		return true;
+	}else if(choice == "revert"){
+		return true;
+	}else{
+		return false;
+	}
+}
+
 static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,xp_dlog_state& save) {
 	if(item_hit == "cancel") {
 		// TODO: Um, I'm pretty sure this can never happen.
@@ -415,25 +430,22 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,xp_dlog_s
 		me.setResult(true);
 		me.toast(true);
 	} else if(item_hit == "left") {
-		// TODO: Try not forcing a commit when using the arrows?
-		if(save.mode != 0) {
-			do_xp_keep(save);
+		if(save.skp == save.start_skp || confirm_switch_pc(me, save)){
 			do {
 				save.who = (save.who == 0) ? 5 : save.who - 1;
 			} while(univ.party[save.who].main_status != eMainStatus::ALIVE);
 			do_xp_draw(me,save);
-		} else
-			play_sound(1);
+			save.start_skp = save.skp;
+		}
 	} else if(item_hit == "right") {
 		// TODO: If they don't work in mode 0, why are they visible?
-		if(save.mode != 0) {
-			do_xp_keep(save);
+		if(save.skp == save.start_skp || confirm_switch_pc(me, save)){
 			do {
 				save.who = (save.who == 5) ? 0 : save.who + 1;
 			} while(univ.party[save.who].main_status != eMainStatus::ALIVE);
 			do_xp_draw(me,save);
-		} else
-			play_sound(1);
+			save.start_skp = save.skp;
+		}
 	}
 	return true;
 }
@@ -592,6 +604,7 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 		xpDlog[id + plus].attachClickHandler(spend_xp_filter);
 	}
 	do_xp_draw(xpDlog,save);
+	save.start_skp = save.skp;
 	
 	xpDlog.attachClickHandlers(std::bind(spend_xp_navigate_filter,_1,_2,std::ref(save)),{"keep","cancel","left","right","help"});
 	xpDlog.attachClickHandlers(spend_xp_filter,{"sp-m","sp-p","hp-m","hp-p"});
