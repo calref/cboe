@@ -1,0 +1,1748 @@
+<actions SHA="77600cb" Tag="v0.0.12" Status="modified" Repo="git@github.com:NQNStudios/cboe.git">
+    <load_prefs>
+        <![CDATA[DisplayMode = 5
+EasyMode = false
+GameRunBefore = true
+GameSpeed = 0
+GiveIntroHint = false
+LessWanderingMonsters = false
+PlaySounds = true
+ReceivedHelp = [54 0 47 65 55 0 1 2 48 49 7 8 36 37 38 0 50 0 62 0 5 6 26 27 10 11 20 21 57 0 68 69 35 0 33 0 22 23 25 0 39 0 53 0 30 0 31 0 32 0 59 0 40 0 56 0 44 0 42 43 29 0 28 0 24 0 58 0 60 0 12 0 10 11 61 0 41 0]
+ShowInstantHelp = true
+ShowStartupSplash = false
+UIScale = 1.5
+UIScaleMap = 1.5
+]]>
+</load_prefs>
+    <feature_flags>
+        <debug-enter-town>
+            <version>move-outdoors</version>
+        </debug-enter-town>
+        <debug-kill-party>
+            <version>V2</version>
+        </debug-kill-party>
+        <empty-wandering-monster-bug>
+            <version>fixed</version>
+        </empty-wandering-monster-bug>
+        <file-picker-dialog>
+            <version>V1</version>
+        </file-picker-dialog>
+        <magic-resistance>
+            <version>fixed</version>
+        </magic-resistance>
+        <pacifist-spellcast-check>
+            <version>V2</version>
+        </pacifist-spellcast-check>
+        <resurrection-balm>
+            <version>required</version>
+        </resurrection-balm>
+        <scenario-meta-format>
+            <version>V2</version>
+        </scenario-meta-format>
+        <store-spell-caster>
+            <version>fixed</version>
+        </store-spell-caster>
+        <store-spell-target>
+            <version>fixed</version>
+        </store-spell-target>
+        <talk-go-back>
+            <version>StackV1</version>
+        </talk-go-back>
+        <target-lock>
+            <version>V1</version>
+            <version>V2</version>
+        </target-lock>
+        <too-many-extra-wandering-monsters-bug>
+            <version>fixed</version>
+        </too-many-extra-wandering-monsters-bug>
+    </feature_flags>
+    <srand>1747257975</srand>
+    <startup_button_click>
+        <btn>Load Game</btn>
+        <mods>0</mods>
+    </startup_button_click>
+    <fancy_file_picker>false</fancy_file_picker>
+    <click_control>
+        <id>list</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>auto2</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>list</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>load1</id>
+        <mods>0</mods>
+    </click_control>
+    <load_party>
+        <![CDATA[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
+]]>
+</load_party>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>other</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>spell3</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>target5</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>5</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,80) - (485,92)}</arrow_button_click>
+    <handle_switch_pc>4</handle_switch_pc>
+    <arrow_button_click>{(308,67) - (485,79)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,28) - (485,40)}</arrow_button_click>
+    <handle_switch_pc>0</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>10</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>11</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>12</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>13</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>14</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>15</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>16</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,41) - (485,53)}</arrow_button_click>
+    <handle_switch_pc>1</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,54) - (485,66)}</arrow_button_click>
+    <handle_switch_pc>2</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>10</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>11</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>12</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>13</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>14</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>15</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>16</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>17</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,54) - (485,66)}</arrow_button_click>
+    <handle_switch_pc>2</handle_switch_pc>
+    <arrow_button_click>{(308,67) - (485,79)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,80) - (485,92)}</arrow_button_click>
+    <handle_switch_pc>4</handle_switch_pc>
+    <arrow_button_click>{(308,67) - (485,79)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,80) - (485,92)}</arrow_button_click>
+    <handle_switch_pc>4</handle_switch_pc>
+    <arrow_button_click>{(308,67) - (485,79)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell21</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>target5</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <move>(36,62)</move>
+    <move>(36,63)</move>
+    <move>(36,64)</move>
+    <move>(36,65)</move>
+    <move>(36,66)</move>
+    <move>(37,67)</move>
+    <move>(37,68)</move>
+    <move>(37,69)</move>
+    <move>(37,70)</move>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(37,71)</move>
+    <move>(37,72)</move>
+    <move>(37,73)</move>
+    <move>(38,73)</move>
+    <move>(39,73)</move>
+    <move>(39,74)</move>
+    <move>(40,74)</move>
+    <move>(40,75)</move>
+    <move>(40,76)</move>
+    <move>(41,76)</move>
+    <move>(42,76)</move>
+    <move>(43,76)</move>
+    <move>(44,75)</move>
+    <move>(44,74)</move>
+    <move>(44,73)</move>
+    <move>(43,73)</move>
+    <display_map></display_map>
+    <move>(58,32)</move>
+    <move>(57,31)</move>
+    <move>(56,31)</move>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(55,31)</move>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(54,31)</move>
+    <move>(53,31)</move>
+    <move>(52,31)</move>
+    <move>(54,31)</move>
+    <move>(53,32)</move>
+    <move>(52,32)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(52,31)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(52,31)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell23</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(51,31)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell23</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(51,31)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_parry></handle_parry>
+    <move>(53,30)</move>
+    <move>(53,29)</move>
+    <move>(53,28)</move>
+    <move>(53,27)</move>
+    <move>(53,31)</move>
+    <move>(53,30)</move>
+    <move>(53,29)</move>
+    <move>(54,30)</move>
+    <handle_missile></handle_missile>
+    <handle_missile></handle_missile>
+    <move>(53,30)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(53,27)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(54,31)</move>
+    <move>(53,31)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell32</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(53,27)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(54,32)</move>
+    <move>(53,32)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell32</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(53,26)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(52,32)</move>
+    <move>(51,32)</move>
+    <handle_get_items></handle_get_items>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(51,33)</move>
+    <move>(51,34)</move>
+    <move>(51,35)</move>
+    <move>(51,35)</move>
+    <move>(51,36)</move>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(51,37)</move>
+    <move>(51,38)</move>
+    <move>(50,38)</move>
+    <move>(50,35)</move>
+    <move>(50,35)</move>
+    <move>(50,36)</move>
+    <move>(50,37)</move>
+    <move>(50,38)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(50,39)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(50,39)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(50,38)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(51,34)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(49,40)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(51,33)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell22</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(50,39)</move>
+    <move>(50,38)</move>
+    <move>(50,39)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(50,39)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(50,39)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(50,39)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(50,35)</move>
+    <move>(49,36)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(46,42)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(51,34)</move>
+    <move>(50,35)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <move>(50,39)</move>
+    <move>(49,40)</move>
+    <move>(49,41)</move>
+    <move>(49,42)</move>
+    <move>(49,39)</move>
+    <move>(48,40)</move>
+    <move>(47,40)</move>
+    <move>(50,36)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(49,44)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(51,35)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(49,43)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <display_map></display_map>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>other</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>spell11</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(49,43)</move>
+    <move>(46,41)</move>
+    <handle_missile></handle_missile>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,243) - (493,252)}</arrow_button_click>
+    <handle_equip_item>11</handle_equip_item>
+    <handle_missile></handle_missile>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <handle_target_space>
+        <destination>(49,43)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>0</dx>
+        <dy>1</dy>
+    </screen_shift>
+    <screen_shift>
+        <dx>1</dx>
+        <dy>0</dy>
+    </screen_shift>
+    <handle_target_space>
+        <destination>(49,43)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <move>(48,41)</move>
+    <move>(48,40)</move>
+    <move>(47,39)</move>
+    <move>(46,39)</move>
+    <move>(46,40)</move>
+    <move>(45,39)</move>
+    <move>(45,38)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(46,41)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <move>(51,36)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(46,41)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(49,36)</move>
+    <move>(50,35)</move>
+    <move>(46,38)</move>
+    <move>(46,38)</move>
+    <move>(49,36)</move>
+    <move>(48,36)</move>
+    <move>(47,36)</move>
+    <move>(50,37)</move>
+    <move>(46,38)</move>
+    <move>(46,38)</move>
+    <move>(46,37)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell15</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <move>(49,36)</move>
+    <move>(46,38)</move>
+    <move>(46,38)</move>
+    <move>(46,37)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell23</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(45,37)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(46,37)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(45,38)</move>
+    <move>(45,38)</move>
+    <move>(46,36)</move>
+    <move>(45,37)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(44,37)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_parry></handle_parry>
+    <move>(45,38)</move>
+    <handle_combat_switch></handle_combat_switch>
+    <handle_get_items></handle_get_items>
+    <move>(46,40)</move>
+    <handle_get_items></handle_get_items>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(45,40)</move>
+    <move>(44,40)</move>
+    <move>(43,40)</move>
+    <move>(42,41)</move>
+    <move>(42,42)</move>
+    <move>(42,43)</move>
+    <handle_get_items></handle_get_items>
+    <click_control>
+        <id>item2-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(42,42)</move>
+    <move>(42,42)</move>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(42,41)</move>
+    <move>(41,41)</move>
+    <move>(40,41)</move>
+    <move>(40,42)</move>
+    <move>(40,43)</move>
+    <move>(39,44)</move>
+    <move>(38,44)</move>
+    <move>(37,44)</move>
+    <click_control>
+        <id>pick</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pick3</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(37,44)</move>
+    <move>(36,44)</move>
+    <move>(35,45)</move>
+    <move>(35,44)</move>
+    <move>(34,43)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(35,43)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(34,42)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(33,43)</move>
+    <move>(32,42)</move>
+    <move>(31,42)</move>
+    <handle_use_space_select></handle_use_space_select>
+    <handle_use_space>(30,41)</handle_use_space>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(30,41)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(30,42)</move>
+    <handle_use_space_select></handle_use_space_select>
+    <handle_use_space>(29,42)</handle_use_space>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(29,42)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(30,43)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(29,43)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(29,43)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(30,43)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(30,43)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(30,44)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(29,44)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(29,45)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(30,45)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(29,46)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(29,45)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(28,46)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(30,46)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(29,47)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(30,47)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(31,47)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(31,46)</move>
+    <move>(32,46)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(33,47)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(33,46)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(34,47)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(34,46)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(35,47)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(34,47)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(33,48)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(34,48)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(35,46)</move>
+    <move>(36,46)</move>
+    <move>(37,46)</move>
+    <click_control>
+        <id>leave</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(36,45)</move>
+    <move>(37,44)</move>
+    <move>(38,44)</move>
+    <move>(39,44)</move>
+    <move>(39,43)</move>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(40,42)</move>
+    <move>(41,41)</move>
+    <move>(42,40)</move>
+    <move>(41,43)</move>
+    <move>(40,43)</move>
+    <move>(40,42)</move>
+    <move>(40,41)</move>
+    <move>(41,40)</move>
+    <move>(39,43)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(42,39)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell32</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_target_space>
+        <destination>(42,39)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(42,40)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(39,44)</move>
+    <move>(39,43)</move>
+    <move>(40,42)</move>
+    <move>(41,41)</move>
+    <move>(42,40)</move>
+    <move>(43,40)</move>
+    <move>(44,40)</move>
+    <move>(44,39)</move>
+    <move>(44,38)</move>
+    <move>(45,37)</move>
+    <move>(46,36)</move>
+    <move>(47,36)</move>
+    <move>(48,36)</move>
+    <move>(49,36)</move>
+    <move>(50,36)</move>
+    <move>(51,35)</move>
+    <move>(51,34)</move>
+    <move>(51,33)</move>
+    <move>(52,32)</move>
+    <move>(53,32)</move>
+    <move>(54,32)</move>
+    <move>(55,31)</move>
+    <move>(56,31)</move>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(55,30)</move>
+    <move>(54,30)</move>
+    <move>(53,29)</move>
+    <move>(55,31)</move>
+    <move>(54,30)</move>
+    <move>(54,29)</move>
+    <move>(53,30)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(53,28)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(53,28)</move>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(54,30)</move>
+    <move>(55,30)</move>
+    <move>(56,30)</move>
+    <move>(57,31)</move>
+    <move>(58,31)</move>
+    <move>(59,31)</move>
+    <move>(60,31)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_rest></handle_rest>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell3</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>target5</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_rest></handle_rest>
+    <move>(43,73)</move>
+    <move>(58,32)</move>
+    <move>(57,31)</move>
+    <move>(56,31)</move>
+    <move>(55,31)</move>
+    <move>(54,30)</move>
+    <move>(53,29)</move>
+    <move>(53,28)</move>
+    <move>(53,27)</move>
+    <move>(53,26)</move>
+    <move>(53,25)</move>
+    <move>(52,24)</move>
+    <move>(52,23)</move>
+    <move>(52,22)</move>
+    <move>(51,21)</move>
+    <move>(50,20)</move>
+    <move>(49,20)</move>
+    <move>(48,20)</move>
+    <move>(47,20)</move>
+    <move>(46,20)</move>
+    <move>(45,19)</move>
+    <move>(44,19)</move>
+    <move>(43,19)</move>
+    <move>(43,19)</move>
+    <scrollbar_setPosition>
+        <name>transcript-scrollbar</name>
+        <newPos>57</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>transcript-scrollbar</name>
+        <newPos>56</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>transcript-scrollbar</name>
+        <newPos>55</newPos>
+    </scrollbar_setPosition>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(42,19)</move>
+    <move>(41,19)</move>
+    <move>(40,19)</move>
+    <move>(39,19)</move>
+    <move>(43,18)</move>
+    <move>(43,18)</move>
+    <move>(42,18)</move>
+    <move>(41,18)</move>
+    <move>(40,18)</move>
+    <move>(43,18)</move>
+    <move>(42,18)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(39,19)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(43,18)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(39,19)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(43,19)</move>
+    <move>(42,19)</move>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(39,19)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <move>(43,19)</move>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell15</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <handle_spellcast>
+        <spell_forced>false</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <click_control>
+        <id>spell21</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>target5</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cast</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(39,18)</move>
+    <move>(38,17)</move>
+    <move>(39,17)</move>
+    <move>(38,17)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(38,17)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(38,17)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(38,17)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(38,17)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>priest</which_type>
+    </handle_spellcast>
+    <move>(38,17)</move>
+    <move>(38,17)</move>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(38,17)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_missile></handle_missile>
+    <handle_target_space>
+        <destination>(38,17)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_spellcast>
+        <spell_forced>true</spell_forced>
+        <which_type>mage</which_type>
+    </handle_spellcast>
+    <handle_target_space>
+        <destination>(38,17)</destination>
+        <num_targets_left>0</num_targets_left>
+    </handle_target_space>
+    <handle_combat_switch></handle_combat_switch>
+    <move>(41,18)</move>
+    <move>(40,18)</move>
+    <move>(39,18)</move>
+    <handle_get_items></handle_get_items>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(38,19)</move>
+    <move>(37,19)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(36,20)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(38,19)</move>
+    <move>(39,19)</move>
+    <move>(40,20)</move>
+    <move>(41,21)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(42,22)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pc5</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>4</handle_switch_pc>
+    <arrow_button_click>{(308,165) - (493,174)}</arrow_button_click>
+    <handle_equip_item>1</handle_equip_item>
+    <move>(41,22)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(42,23)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(41,21)</move>
+    <move>(41,20)</move>
+    <move>(40,20)</move>
+    <move>(39,19)</move>
+    <move>(38,19)</move>
+    <move>(37,19)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(36,20)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(36,18)</move>
+    <move>(36,17)</move>
+    <move>(37,16)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(37,15)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(36,17)</move>
+    <move>(35,17)</move>
+    <move>(34,17)</move>
+    <move>(33,17)</move>
+    <move>(33,17)</move>
+    <move>(32,17)</move>
+    <move>(31,17)</move>
+    <close_window></close_window>
+    <click_control>
+        <id>quit</id>
+        <mods>0</mods>
+    </click_control>
+</actions>
