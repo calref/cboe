@@ -693,7 +693,7 @@ std::pair<std::string, std::string> text_bar_text() {
 			hint_out << hint_prefix << ": ";
 			if(current_pc.last_cast[type] != eSpell::NONE){
 				const cSpell& spell = (*current_pc.last_cast[type]);
-				if(pc_can_cast_spell(current_pc,type) && spell.cost <= current_pc.get_magic()) {
+				if(pc_can_cast_spell(current_pc,type) == CAST_OK && spell.cost <= current_pc.get_magic()) {
 					hint_out << "Recast " << spell.name();
 				}else{
 					hint_out << "Cannot recast";
