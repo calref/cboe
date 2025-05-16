@@ -408,7 +408,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 				}
 			} else play_sound(1);
 		} else if(item_hit[3] == 'p') {
-			if(can_change_skill(eSkill::MAX_SP, save, true)) {
+			if(can_change_skill(eSkill::MAX_HP, save, true)) {
 				save.hp += 2;
 				if(save.mode < 2) {
 					save.skp -= 1;
