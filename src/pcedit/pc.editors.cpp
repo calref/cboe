@@ -438,7 +438,6 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,xp_dlog_s
 			save.start_skp = save.skp;
 		}
 	} else if(item_hit == "right") {
-		// TODO: If they don't work in mode 0, why are they visible?
 		if(save.skp == save.start_skp || confirm_switch_pc(me, save)){
 			do {
 				save.who = (save.who == 5) ? 0 : save.who + 1;
@@ -588,6 +587,12 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 	save.skills = univ.party[pc_num].skills;
 	
 	cDialog xpDlog(*ResMgr::dialogs.get("spend-xp"),parent);
+
+	// Making new PC, you can't switch to train other PCs
+	if(mode == 0){
+		xpDlog["left"].hide();
+		xpDlog["right"].hide();
+	}
 
 	const int LABEL_OFFSET_COL1 = 85;
 	const int LABEL_OFFSET_COL2 = 74;
