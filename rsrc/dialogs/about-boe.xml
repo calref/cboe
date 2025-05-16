@@ -22,7 +22,7 @@
 			SCENARIO FIXES AND UPDATES: <br/><br/>
 		</text>
 		<!-- This text is right-aligned and fills out the above text with sub-headings -->
-		<text top='52' left='50' width='180' height='840' align='right'>
+		<text top='52' left='40' width='190' height='840' align='right'>
 			<br/>
 			Concept, Design, Programming: <br/>
 			Graphics: <br/>
