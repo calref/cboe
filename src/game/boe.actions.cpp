@@ -1413,12 +1413,13 @@ static void handle_party_death() {
 	for(cPlayer& pc : univ.party)
 		if(pc.main_status == eMainStatus::FLED)
 			pc.main_status = eMainStatus::ALIVE;
+	// The party didn't die, they fled outdoor combat:
 	if(is_combat() && univ.party.is_alive()) {
-		// TODO: Should this only happen in outdoor combat? Or should we allow fleeing town during combat?
 		end_town_mode(0,univ.party.town_loc);
 		add_string_to_buf("End combat.");
 		handle_wandering_specials(2);
 	}
+	// A split-off PC died, but the rest of the party may be alive.
 	if(!univ.party.is_alive() && univ.party.is_split()) {
 		univ.party.end_split(0);
 		if(univ.party.left_in == size_t(-1) || univ.party.town_num == univ.party.left_in) {
@@ -1435,6 +1436,7 @@ static void handle_party_death() {
 	draw_terrain();
 	put_pc_screen();
 	put_item_screen(stat_window);
+	// actual game over
 	if(!univ.party.is_alive()) {
 		play_sound(13);
 		handle_death();
