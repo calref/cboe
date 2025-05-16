@@ -732,6 +732,7 @@ void handle_move(location destination, bool& did_something, bool& need_redraw, b
 	}
 
 	bool town_move_done = false;
+	bool left_town = false;
 	if(overall_mode == MODE_COMBAT) {
 		if(pc_combat_move(destination)) {
 			center = univ.current_pc().combat_pos;
@@ -753,6 +754,7 @@ void handle_move(location destination, bool& did_something, bool& need_redraw, b
 				update_explored(destination);
 				if(loc_off_act_area(univ.party.town_loc)) {
 					destination = end_town_mode(0,destination);
+					left_town = true;
 					town_move_done = true;
 					flushingInput = true;
 				}
@@ -792,6 +794,9 @@ void handle_move(location destination, bool& did_something, bool& need_redraw, b
 							univ.party.horses[univ.party.in_horse].which_town = univ.party.town_num;
 					}
 				}
+		}
+		if(left_town){
+			try_auto_save("ExitTown");
 		}
 	}
 }
