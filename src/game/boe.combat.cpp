@@ -4724,7 +4724,7 @@ bool combat_cast_priest_spell() {
 		if(!spell_forced)
 			spell_num = pick_spell(univ.cur_pc,eSkill::PRIEST_SPELLS, true);
 		else {
-			if(!repeat_cast_ok(eSkill::MAGE_SPELLS))
+			if(!repeat_cast_ok(eSkill::PRIEST_SPELLS))
 				return false;
 			spell_num = univ.current_pc().last_cast[eSkill::PRIEST_SPELLS];
 		}
