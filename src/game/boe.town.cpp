@@ -640,10 +640,6 @@ location end_town_mode(bool switching_level,location destination, bool debug_lea
 	
 	univ.party.town_num = 200; // should be harmless...
 	
-	if(!switching_level){
-		try_auto_save("ExitTown");
-	}
-
 	return to_return;
 }
 
