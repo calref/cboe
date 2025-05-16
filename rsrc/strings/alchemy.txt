@@ -4,7 +4,7 @@ Alchemy can be incredibly useful. Potions can give you the added boost you may n
 You need three things to make a potion:|1. High alchemy skill. When a character tries to make a potion, their alchemy skill must be above a certain level. The higher above that level, the better the chance for success.
 2. The right ingredient. Ingredients are usually found at special encounters outdoors, and regenerate themselves after a time. Generally, the person who teaches a recipe tells you what plant it needs.
 3. The recipe. These are usually bought in towns. You only need to buy each recipe once for the entire party.
-When you have all these things, go into a town and click on the blue bottle button. Pick the PC with the highest alchemy skill to make the potion. Hope.
+When you have all these things, go into a town and click "Do Alchemy" in the Actions menu. Pick the PC with the highest alchemy skill to make the potion. Hope.
 Here is a list of the alchemical concoctions, with min. skill to make: |Weak Curing |  Min. Skill - 1 |Need holly. Cures poison somewhat.
 Weak Healing |  Min. Skill - 1 |Need comfrey root. Provides mild healing.|
 Weak Poison |  Min. Skill - 1 |Need holly or spider glands. The lowest level poison.
