@@ -3445,15 +3445,18 @@ void increase_age(bool eating_trigger_autosave) {
 	}
 	else {
 		if(univ.party.age % 50 == 0) {
-			for(cPlayer& pc : univ.party)
+			for(cPlayer& pc : univ.party){
+				// Bonus HP wears off
 				if(pc.main_status == eMainStatus::ALIVE && pc.cur_health > pc.max_health)
-					pc.cur_health--; // Bonus HP wears off
+					pc.cur_health--;
+			}
 			univ.party.heal(1);
 		}
 	}
 	if(is_out()) {
 		if(univ.party.age % 80 == 0) {
 			univ.party.restore_sp(2);
+			// Enlightenment wears off
 			for(cPlayer& pc : univ.party)
 				if(pc.status[eStatus::DUMB] < 0)
 					pc.status[eStatus::DUMB]++;
@@ -3462,8 +3465,10 @@ void increase_age(bool eating_trigger_autosave) {
 	else {
 		if(univ.party.age % 40 == 0) {
 			for(cPlayer& pc : univ.party) {
+				// Bonus SP wears off
 				if(pc.main_status == eMainStatus::ALIVE && pc.cur_sp > pc.max_sp)
-					pc.cur_sp--; // Bonus SP wears off
+					pc.cur_sp--;
+				// Enlightenment wears off
 				if(pc.status[eStatus::DUMB] < 0)
 					pc.status[eStatus::DUMB]++;
 			}

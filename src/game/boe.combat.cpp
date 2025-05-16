@@ -4486,35 +4486,24 @@ void end_combat() {
 
 
 bool combat_cast_mage_spell() {
-	short store_sp;
 	eSpell spell_num;
 	cMonster get_monst;
 	
-	if(univ.current_pc().traits[eTrait::ANAMA]) {
-		add_string_to_buf("Cast: You're an Anama!");
-		return false;
-	}
+	short store_sp = univ.current_pc().cur_sp;
 	
-	if(univ.town.is_antimagic(univ.current_pc().combat_pos.x,univ.current_pc().combat_pos.y)) {
-		add_string_to_buf("  Not in antimagic field.");
-		return false;
-	}
-	store_sp = univ.current_pc().cur_sp;
-	if(univ.current_pc().cur_sp == 0)
-		add_string_to_buf("Cast: No spell points.");
-	else if(univ.current_pc().skill(eSkill::MAGE_SPELLS) == 0)
-		add_string_to_buf("Cast: No mage skill.");
-	else if(univ.current_pc().total_encumbrance(hit_chance) > 1) {
-		add_string_to_buf("Cast: Too encumbered.");
-		take_ap(6);
-		give_help(40,0);
-		return true;
-	}
-	else {
+	eCastStatus status = pc_can_cast_spell(univ.current_pc(), eSkill::MAGE_SPELLS);
+	if(status != CAST_OK){
+		print_cast_status(status, eSkill::MAGE_SPELLS);
 		
-		
+		if(status == NO_CAST_ENCUMBERED){
+			// Oops, trying to cast a mage spell while encumbered takes your AP!
+			take_ap(6);
+			give_help(40,0);
+			return true;
+		}
+	}else{
 		if(!spell_forced)
-			spell_num = pick_spell(univ.cur_pc,eSkill::MAGE_SPELLS);
+			spell_num = pick_spell(univ.cur_pc,eSkill::MAGE_SPELLS, true);
 		else {
 			if(!repeat_cast_ok(eSkill::MAGE_SPELLS))
 				return false;
@@ -4566,8 +4555,8 @@ bool combat_cast_mage_spell() {
 			draw_terrain(2);
 			combat_immed_mage_cast(univ.cur_pc,spell_num);
 		}
-		put_pc_screen();
 	}
+	put_pc_screen();
 	combat_posing_monster = current_working_monster = -1;
 	// Did anything actually get cast?
 	if(store_sp == univ.current_pc().cur_sp)
@@ -4725,60 +4714,51 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 }
 
 bool combat_cast_priest_spell() {
-	short store_sp;
 	eSpell spell_num;
-	
-	if(univ.town.is_antimagic(univ.current_pc().combat_pos.x,univ.current_pc().combat_pos.y)) {
-		add_string_to_buf("  Not in antimagic field.");
-		return false;
-	}
-	if(!spell_forced)
-		spell_num = pick_spell(univ.cur_pc,eSkill::PRIEST_SPELLS);
-	else {
-		if(!repeat_cast_ok(eSkill::PRIEST_SPELLS))
-			return false;
-		spell_num = univ.current_pc().last_cast[eSkill::PRIEST_SPELLS];
-	}
-	
-	store_sp = univ.current_pc().cur_sp;
-	if(univ.current_pc().cur_sp == 0) {
-		add_string_to_buf("Cast: No spell points.");
-		return false;
-	} else if(univ.current_pc().skill(eSkill::PRIEST_SPELLS) == 0) {
-		add_string_to_buf("Cast: No priest skill.");
-		return false;
-	}
-	
-	if(univ.current_pc().traits[eTrait::PACIFIST] && spell_num != eSpell::NONE && !(*spell_num).peaceful) {
-		add_string_to_buf("Cast: You're a pacifist!");
-		return false;
-	}
-	
-	if(spell_num == eSpell::NONE) return false;
-	
-	combat_posing_monster = current_working_monster = univ.cur_pc;
-	
-	if(spell_num != eSpell::NONE) {
-		print_spell_cast(spell_num,eSkill::PRIEST_SPELLS);
-		if((*spell_num).refer == REFER_YES) {
-			take_ap(5);
-			draw_terrain(2);
-			do_priest_spell(univ.cur_pc,spell_num);
-		}
-		else if((*spell_num).refer == REFER_TARGET) {
-			start_spell_targeting(spell_num);
-		}
-		else if((*spell_num).refer == REFER_FANCY) {
-			start_fancy_spell_targeting(spell_num);
-		}
+	short store_sp = univ.current_pc().cur_sp;
+
+	eCastStatus status = pc_can_cast_spell(univ.current_pc(), eSkill::PRIEST_SPELLS);
+	if(status != CAST_OK){
+		print_cast_status(status, eSkill::PRIEST_SPELLS);
+	}else{
+		if(!spell_forced)
+			spell_num = pick_spell(univ.cur_pc,eSkill::PRIEST_SPELLS, true);
 		else {
-			take_ap(5);
-			draw_terrain(2);
-			combat_immed_priest_cast(univ.cur_pc, spell_num);
+			if(!repeat_cast_ok(eSkill::MAGE_SPELLS))
+				return false;
+			spell_num = univ.current_pc().last_cast[eSkill::PRIEST_SPELLS];
+		}
+		
+		if(univ.current_pc().traits[eTrait::PACIFIST] && spell_num != eSpell::NONE && !(*spell_num).peaceful) {
+			add_string_to_buf("Cast: You're a pacifist!");
+			return false;
+		}
+	
+		if(spell_num == eSpell::NONE) return false;
+	
+		combat_posing_monster = current_working_monster = univ.cur_pc;
+		
+		if(spell_num != eSpell::NONE) {
+			print_spell_cast(spell_num,eSkill::PRIEST_SPELLS);
+			if((*spell_num).refer == REFER_YES) {
+				take_ap(5);
+				draw_terrain(2);
+				do_priest_spell(univ.cur_pc,spell_num);
+			}
+			else if((*spell_num).refer == REFER_TARGET) {
+				start_spell_targeting(spell_num);
+			}
+			else if((*spell_num).refer == REFER_FANCY) {
+				start_fancy_spell_targeting(spell_num);
+			}
+			else {
+				take_ap(5);
+				draw_terrain(2);
+				combat_immed_priest_cast(univ.cur_pc, spell_num);
+			}
 		}
 		put_pc_screen();
 	}
-	
 	combat_posing_monster = current_working_monster = -1;
 	// Did anything actually get cast?
 	if(store_sp == univ.current_pc().cur_sp)
