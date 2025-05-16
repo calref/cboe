@@ -349,14 +349,24 @@ static void draw_xp_skills(cDialog& me,xp_dlog_state& save) {
 
 	add_cost_to_label("hp", 1, 10, univ.party[save.who].max_health == get_skill_max(eSkill::MAX_HP));
 	add_cost_to_label("sp", 1, 15, univ.party[save.who].max_sp == get_skill_max(eSkill::MAX_SP));
-	// TODO: Wouldn't it make more sense for it to be red when you can't buy the skill rather than red when you can?
 	for(short i = 0; i <= 20; i++) {
 		eSkill skill = eSkill(i);
 		std::string id = boost::lexical_cast<std::string>(skill);
 		cControl& cur = me[boost::lexical_cast<std::string>(skill)];
-		if(can_change_skill(skill, save, true))
+		// White means it can't change.
+		cur.setColour(me.getDefTextClr());
+		me[id + "-m"].hide();
+		// Red means it can be changed, but only down
+		if(can_change_skill(skill, save, false)){
+			me[id + "-m"].show();
 			cur.setColour(Colours::RED);
-		else cur.setColour(me.getDefTextClr());
+		}
+		// Green means it can still be bumped up!
+		me[id + "-p"].hide();
+		if(can_change_skill(skill, save, true)){
+			me[id + "-p"].show();
+			cur.setColour(Colours::LIGHT_GREEN);
+		}
 		if(i < 19){
 			cur.setTextToNum(save.skills[skill]);
 			add_cost_to_label(id, skill_cost[skill], skill_g_cost[skill], save.skills[skill] == get_skill_max(skill));
