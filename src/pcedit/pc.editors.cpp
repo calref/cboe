@@ -420,7 +420,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 					give_help(25,0,me);
 				else if(save.mode == 1 && save.g < 10)
 					give_help(24,0,me);
-				else beep();
+				else play_sound(1);
 			}
 		}
 		
@@ -455,7 +455,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 					give_help(25,0,me);
 				else if(save.mode == 1 && save.g < 15)
 					give_help(24,0,me);
-				else beep();
+				else play_sound(1);
 			}
 		}
 		
