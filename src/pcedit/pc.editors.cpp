@@ -272,18 +272,28 @@ static void do_xp_keep(xp_dlog_state& save) {
 	}
 }
 
+static int get_skill_max(eSkill skill) {
+	switch(skill){
+		case eSkill::MAX_HP:
+			return 250;
+		case eSkill::MAX_SP:
+			return 150;
+		default:
+			return skill_max[skill];
+	}
+}
+
 static bool can_change_skill(eSkill skill, xp_dlog_state& save, bool increase) {
 	unsigned int min_level, max_level, cur_level, orig_level, cost, g_cost;
+	max_level = get_skill_max(skill);
 	if(skill == eSkill::MAX_HP) {
 		min_level = 6;
-		max_level = 250;
 		cur_level = save.hp;
 		orig_level = univ.party[save.who].max_health;
 		cost = 1;
 		g_cost = 10;
 	} else if(skill == eSkill::MAX_SP) {
 		min_level = 0;
-		max_level = 150;
 		cur_level = save.sp;
 		orig_level = univ.party[save.who].max_sp;
 		cost = 1;
@@ -292,7 +302,6 @@ static bool can_change_skill(eSkill skill, xp_dlog_state& save, bool increase) {
 		if(skill == eSkill::STRENGTH || skill == eSkill::DEXTERITY || skill == eSkill::INTELLIGENCE)
 			min_level = 1;
 		else min_level = 0;
-		max_level = skill_max[skill];
 		cur_level = save.skills[skill];
 		orig_level = univ.party[save.who].skills[skill];
 		cost = skill_cost[skill];
@@ -316,15 +325,42 @@ static bool can_change_skill(eSkill skill, xp_dlog_state& save, bool increase) {
 }
 
 static void draw_xp_skills(cDialog& me,xp_dlog_state& save) {
+	auto add_cost_to_label = [&me, save](std::string skill, int skp, int gold, bool max) {
+		cControl& label = me[skill + "-label"];
+		// If cost is already there, start over
+		if(label.getText().find('(') != std::string::npos){
+			label.setText(label.getText().substr(0, label.getText().find('(') - 1));
+		}
+		if(max){
+			label.appendText (" (MAX)");
+		}else if(save.mode < 2){
+			label.appendText(" (");
+			label.appendText(std::to_string(skp) + " pt");
+			if(skp != 1){
+				label.appendText("s");
+			}
+			label.appendText(".");
+			if(save.mode == 1){
+				label.appendText("/" + std::to_string(gold) + "gp");
+			}
+			label.appendText(")");
+		}
+	};
+
+	add_cost_to_label("hp", 1, 10, univ.party[save.who].max_health == get_skill_max(eSkill::MAX_HP));
+	add_cost_to_label("sp", 1, 15, univ.party[save.who].max_sp == get_skill_max(eSkill::MAX_SP));
 	// TODO: Wouldn't it make more sense for it to be red when you can't buy the skill rather than red when you can?
 	for(short i = 0; i <= 20; i++) {
 		eSkill skill = eSkill(i);
+		std::string id = boost::lexical_cast<std::string>(skill);
 		cControl& cur = me[boost::lexical_cast<std::string>(skill)];
 		if(can_change_skill(skill, save, true))
 			cur.setColour(Colours::RED);
 		else cur.setColour(me.getDefTextClr());
-		if(i < 19)
+		if(i < 19){
 			cur.setTextToNum(save.skills[skill]);
+			add_cost_to_label(id, skill_cost[skill], skill_g_cost[skill], save.skills[skill] == get_skill_max(skill));
+		}
 		else cur.setTextToNum(skill == eSkill::MAX_HP ? save.hp : save.sp);
 	}
 }
@@ -531,28 +567,10 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 	
 	cDialog xpDlog(*ResMgr::dialogs.get("spend-xp"),parent);
 
-	auto add_cost_to_label = [&xpDlog, mode](std::string skill, int skp, int gold) {
-		if(mode < 2){
-			cControl& label = xpDlog[skill + "-label"];
-			label.appendText(" (");
-			label.appendText(std::to_string(skp) + " pt");
-			if(skp != 1){
-				label.appendText("s");
-			}
-			label.appendText(".");
-			if(mode == 1){
-				label.appendText("/" + std::to_string(gold) + "gp");
-			}
-			label.appendText(")");
-		}
-	};
-
 	const int LABEL_OFFSET_COL1 = 85;
 	const int LABEL_OFFSET_COL2 = 74;
 	xpDlog.addLabelFor("hp","Health",LABEL_LEFT,LABEL_OFFSET_COL1,true);
-	add_cost_to_label("hp", 1, 10);
 	xpDlog.addLabelFor("sp","Spell Pts.",LABEL_LEFT,LABEL_OFFSET_COL1,true);
-	add_cost_to_label("sp", 1, 15);
 	auto spend_xp_filter = std::bind(spend_xp_event_filter,_1,_2,_3,std::ref(save));
 	static const std::string minus = "-m", plus = "-p";
 	for(int i = 54; i < 73; i++) {
@@ -560,7 +578,6 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 		eSkill skill = eSkill(i - 54);
 		std::string id = boost::lexical_cast<std::string>(skill);
 		xpDlog.addLabelFor(id,get_str("skills",1 + 2 * (i - 54)),LABEL_LEFT,(i < 63) ? LABEL_OFFSET_COL1 : LABEL_OFFSET_COL2,true);
-		add_cost_to_label(id, skill_cost[skill], skill_g_cost[skill]);
 		xpDlog[id + minus].attachClickHandler(spend_xp_filter);
 		xpDlog[id + plus].attachClickHandler(spend_xp_filter);
 	}
