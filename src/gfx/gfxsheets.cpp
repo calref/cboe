@@ -62,6 +62,7 @@ size_t cCustomGraphics::count(bool party) {
 
 void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlots) {
 	if(numSlots < 1) return;
+	// If the party doesn't have an export sheet, create one.
 	if(!party_sheet) {
 		sf::Image empty;
 		empty.create(280, 180, sf::Color::Transparent);
@@ -88,16 +89,23 @@ void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlot
 	sf::RenderTexture temp;
 	rectangle from_rect, to_rect;
 	for(size_t i = 0; i < numSlots; i++) {
+		// Find the custom graphic sheet and source rectangle from the scenario
 		graf_pos_ref(from_sheet, from_rect) = find_graphic(src + i);
+		// Find an export sheet and destination rectangle in the party's stored graphics
 		graf_pos_ref(to_sheet, to_rect) = find_graphic(dest + i, true);
 		if(to_sheet != last_src) {
+			// Moved to the next sheet, commit the previous one
 			if(last_src) last_src.reset(new sf::Texture(temp.getTexture()));
 			last_src = to_sheet;
+			// Make a temporary render texture
 			temp.create(to_sheet->getSize().x, to_sheet->getSize().y);
+			// Draw the existing stored graphics onto the temporary texture
 			rect_draw_some_item(*to_sheet, rectangle(*to_sheet), temp, rectangle(*to_sheet));
 		}
+		// Draw the graphic that needs to be stored onto the temporary texture
 		rect_draw_some_item(*from_sheet, from_rect, temp, to_rect);
 	}
+	// Commit the temporary texture to the export sheet
 	last_src.reset(new sf::Texture(temp.getTexture()));
 }
 
