@@ -283,8 +283,12 @@ void cDialog::loadFromFile(const DialogDefn& file){
 					// Make sure it's not a loop!
 					std::vector<std::string> refs{ctrl.anchor};
 					while(!anchor->anchor.empty()) {
+						cControl* next_anchor = findControl(anchor->anchor);
+						if(next_anchor == nullptr){
+							throw xBadVal(ctrlTypeName(anchor->getType()), "anchor", anchor->anchor, 0, 0, fname);
+						}
 						refs.push_back(anchor->anchor);
-						anchor = findControl(anchor->anchor);
+						anchor = next_anchor;
 						if(std::find(refs.begin(), refs.end(), anchor->anchor) != refs.end()) {
 							throw xBadVal(ctrlTypeName(ctrl.getType()), "anchor", "<circular dependency>", 0, 0, fname);
 						}
