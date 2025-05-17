@@ -60,6 +60,8 @@ size_t cCustomGraphics::count(bool party) {
 	}
 }
 
+extern void debug_show_texture(const sf::Texture& texture, float seconds = 2, std::string label = "");
+
 void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlots) {
 	if(numSlots < 1) return;
 	// If the party doesn't have an export sheet, create one.

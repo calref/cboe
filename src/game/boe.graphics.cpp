@@ -1749,3 +1749,14 @@ void redraw_partial_terrain(rectangle redraw_rect) {
 	rect_draw_some_item(terrain_screen_gworld().getTexture(),from_rect,mainPtr(),redraw_rect);
 	
 }
+
+void debug_show_texture(const sf::Texture& texture, float seconds, std::string label) {
+	sf::RenderWindow debug_window;
+	debug_window.create(sf::VideoMode(texture.getSize().x, texture.getSize().y, 32), label);
+	debug_window.setVisible(true);
+	makeFrontWindow(debug_window);
+	rect_draw_some_item(texture, rectangle(texture), debug_window, rectangle(texture));
+	debug_window.display();
+	sf::sleep(sf::seconds(seconds));
+	debug_window.setVisible(false);
+}
