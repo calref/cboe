@@ -74,11 +74,14 @@ void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlot
 		party_sheet.reset(new sf::Texture(sheet));
 		numSheets = 1;
 	}
-	size_t havePics = count();
+	// Check if a texture exists to hold the needed slots
+	size_t havePics = count(true);
 	if(havePics < dest + numSlots) {
+		// Count how many rows need to be in the new texture
 		int addRows = 1;
 		while(havePics + 10 * addRows < dest + numSlots)
 			addRows++;
+		// Create the new texture
 		sf::RenderTexture temp;
 		temp.create(280, party_sheet->getSize().y + 36 * addRows);
 		temp.clear(sf::Color::Transparent);
