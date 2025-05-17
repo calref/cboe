@@ -85,8 +85,6 @@ rectangle		menuBarRect;
 Region originalGrayRgn, newGrayRgn, underBarRgn;
 sf::View mainView;
 
-long anim_ticks = 0;
-
 extern enum_map(eGuiArea, rectangle) win_to_rects;
 
 // 0 - title  1 - button  2 - credits  3 - base button
@@ -934,8 +932,6 @@ void draw_terrain(short mode) {
 			if(fog_lifted) can_draw = true;
 			
 			if((can_draw != 0) && (overall_mode != MODE_RESTING)) { // if can see, not a pit, and not resting
-				if(is_combat()) anim_ticks = 0;
-				
 				eTrimType trim = univ.scenario.ter_types[spec_terrain].trim_type;
 				
 				// Finally, draw this terrain spot

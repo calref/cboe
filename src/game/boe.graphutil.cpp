@@ -39,8 +39,6 @@ extern bool monsters_going;
 extern short num_targets_left;
 extern location spell_targets[8];
 
-extern long anim_ticks;
-
 extern char spot_seen[9][9];
 extern short monster_index[21];
 
@@ -51,6 +49,8 @@ extern cCustomGraphics spec_scen_g;
 
 rectangle boat_rects[4] = {{0,0,36,28}, {0,28,36,56},{0,56,36,84},{0,84,36,112}};
 bool gave_no_g_error = false;
+
+long ter_anim_ticks = 0;
 
 //short dest; // 0 - terrain gworld   1 - screen
 // if terrain_to_draw is -1, do black
@@ -80,7 +80,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 		source_rect = calc_rect(terrain_to_draw % 10, terrain_to_draw / 10);
 	}
 	else if(univ.scenario.ter_types[terrain_to_draw].picture >= 2000) { // custom
-		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(univ.scenario.ter_types[terrain_to_draw].picture - 2000 + (anim_ticks % 4));
+		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(univ.scenario.ter_types[terrain_to_draw].picture - 2000 + (ter_anim_ticks % 4));
 	}
 	else if(univ.scenario.ter_types[terrain_to_draw].picture >= 1000) { // custom
 		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(univ.scenario.ter_types[terrain_to_draw].picture - 1000);
@@ -88,7 +88,7 @@ void draw_one_terrain_spot (short i,short j,short terrain_to_draw) {
 	else if(univ.scenario.ter_types[terrain_to_draw].picture >= 960) { // animated
 		source_gworld = &ResMgr::graphics.get("teranim");
 		terrain_to_draw = univ.scenario.ter_types[terrain_to_draw].picture;
-		source_rect = calc_rect(4 * ((terrain_to_draw - 960) / 5) + (anim_ticks % 4),(terrain_to_draw - 960) % 5);
+		source_rect = calc_rect(4 * ((terrain_to_draw - 960) / 5) + (ter_anim_ticks % 4),(terrain_to_draw - 960) % 5);
 	}
 	else {
 		terrain_to_draw = univ.scenario.ter_types[terrain_to_draw].picture;
@@ -410,7 +410,7 @@ void draw_fields(location where){
 	if(univ.town.is_web(where.x,where.y))
 		Draw_Some_Item(fields_gworld,calc_rect(5,0),terrain_screen_gworld(),where_draw,1,0);
 	if(univ.town.is_fire_barr(where.x,where.y) || univ.town.is_force_barr(where.x,where.y))
-		Draw_Some_Item(*ResMgr::graphics.get("teranim"),calc_rect(8+(anim_ticks%4),4),terrain_screen_gworld(),where_draw,1,0);
+		Draw_Some_Item(*ResMgr::graphics.get("teranim"),calc_rect(8+(ter_anim_ticks%4),4),terrain_screen_gworld(),where_draw,1,0);
 	if(univ.town.is_quickfire(where.x,where.y))
 		Draw_Some_Item(fields_gworld,calc_rect(7,1),terrain_screen_gworld(),where_draw,1,0);
 	if(univ.town.is_force_cage(where.x,where.y)) {

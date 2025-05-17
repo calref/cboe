@@ -56,7 +56,6 @@ short monsters_faces[190] = {
 	23,0,0,0,0,0,0,0,23,23,
 	0,0,0,55,23,36,31,0,0,0};
 extern rectangle	windRect;
-extern long anim_ticks;
 extern tessel_ref_t bg[];
 extern short which_combat_type;
 extern eGameMode overall_mode;

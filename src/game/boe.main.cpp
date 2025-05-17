@@ -208,7 +208,7 @@ std::unordered_map <std::string, std::shared_ptr <iEventListener>> event_listene
 cDrawableManager drawable_mgr;
 
 sf::Clock animTimer;
-extern long anim_ticks;
+extern long ter_anim_ticks;
 
 static void init_boe(int, char*[]);
 static void handle_scenario_args();
@@ -1464,7 +1464,7 @@ void update_terrain_animation() {
 	if(overall_mode == MODE_STARTUP) return;
 	if(animTimer.getElapsedTime().asMilliseconds() < fortyTicks) return;
 
-	anim_ticks++;
+	ter_anim_ticks++;
 	animTimer.restart();
 }
 
