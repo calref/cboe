@@ -1749,31 +1749,3 @@ void redraw_partial_terrain(rectangle redraw_rect) {
 	rect_draw_some_item(terrain_screen_gworld().getTexture(),from_rect,mainPtr(),redraw_rect);
 	
 }
-
-/*
-void HideShowMenuBar( ) {
-	GDHandle	mainScreen;
-	
-	// store current gray region that displays
-	// menu bar and the current height of the menu bar
-	originalGrayRgn 	= LMGetGrayRgn();
-	menuBarHeight	= LMGetMBarHeight();
-	
-	// calculate the rect of the menu bar to test
-	// if mouse down is in if desired
-	mainScreen 			= GetMainDevice();
-	menuBarRect 			= (**mainScreen).gdRect;
-	menuBarRect.bottom 	= menuBarHeight;
-	
-	HideMenuBar();
-	
-	while( !Button() );
-	
-	ShowMenuBar();
-	
-	// restore the original gray region to
-	// make the menu bar visible
-	LMSetGrayRgn( originalGrayRgn );
-}
-
-*/
