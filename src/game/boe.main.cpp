@@ -503,6 +503,8 @@ static void handle_scenario_args() {
 				start_new_game(true);
 			}
 			if(univ.party.is_in_scenario()){
+				// This check is correct, because the scen_name field of cScenario is the actual title,
+				// not header.exs or *.boes as univ.party.scen_name would be
 				if(univ.scenario.scen_name == scenario.scen_name){
 					// The party is already in the correct scenario.
 					// Ask whether to clear SDFs or not
@@ -519,7 +521,7 @@ static void handle_scenario_args() {
 				resetting = true;
 			}
 			if(!univ.party.is_in_scenario()){
-				put_party_in_scen(path.filename().string(), scen_arg_town || scen_arg_out_sec, true);
+				put_party_in_scen(path.string(), scen_arg_town || scen_arg_out_sec, true);
 			}
 		}else{
 			std::cerr << "Failed to load scenario: " << *scen_arg_path << std::endl;

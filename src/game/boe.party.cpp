@@ -146,10 +146,13 @@ void put_party_in_scen(std::string scen_name, bool force, bool allow_unpacked) {
 	if(item_took)
 		cChoiceDlog("removed-special-items").show();
 	
-	fs::path path = locate_scenario(scen_name, allow_unpacked);
-	if(path.empty()) {
-		showError("Could not find scenario!");
-		return;
+	fs::path path = scen_name;
+	if(!path.is_absolute()){
+		path = locate_scenario(scen_name, allow_unpacked);
+		if(path.empty()) {
+			showError("Could not find scenario!");
+			return;
+		}
 	}
 	set_cursor(watch_curs);
 	if(!load_scenario(path, univ.scenario))
