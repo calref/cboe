@@ -1214,8 +1214,12 @@ void handle_alchemy(bool& need_redraw, bool& need_reprint) {
 
 	need_reprint = true;
 	need_redraw = true;
-	if(overall_mode == MODE_TOWN)
-		do_alchemy();
+	if(overall_mode == MODE_TOWN){
+		if(univ.party.alchemy.any())
+			do_alchemy();
+		else
+			add_string_to_buf("Alchemy: No recipes known.");
+	}
 	else if(!is_town()) add_string_to_buf("Alchemy: Only in town.");
 	else add_string_to_buf("Alchemy: " + FINISH_FIRST);
 }
