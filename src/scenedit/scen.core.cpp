@@ -2819,20 +2819,10 @@ static void put_scen_details_in_dlog(cDialog& me) {
 	me["contact"].setText(scenario.contact_info[1]);
 }
 
-static bool save_scen_adv_details(cDialog& me, std::string, eKeyMod) {
-	if(!me.toast(true)) return true;
-
-	scenario.adjust_diff = dynamic_cast<cLed&>(me["adjust"]).getState() != led_red;
-
-	scenario.campaign_id = me["cpnid"].getText();
-	scenario.bg_out = boost::lexical_cast<int>(me["bg-out"].getText().substr(10));
-	scenario.bg_town = boost::lexical_cast<int>(me["bg-town"].getText().substr(10));
-	scenario.bg_dungeon = boost::lexical_cast<int>(me["bg-dungeon"].getText().substr(13));
-	scenario.bg_fight = boost::lexical_cast<int>(me["bg-fight"].getText().substr(11));
-	scenario.init_spec = me["oninit"].getTextAsNum();
+static bool save_scen_adv_details(cDialog& me, std::string item_hit, eKeyMod) {
+	me.toast(item_hit == "okay");
 	return true;
 }
-
 
 static void put_scen_adv_details_in_dlog(cDialog& me) {
 	dynamic_cast<cLed&>(me["adjust"]).setState(scenario.adjust_diff ? led_red : led_off);
@@ -2887,12 +2877,23 @@ void edit_scen_details() {
 
 void edit_scen_adv_details() {
 	cDialog info_dlg(*ResMgr::dialogs.get("edit-scenario-advanced"));
-	info_dlg["okay"].attachClickHandler(save_scen_adv_details);
+	info_dlg.attachClickHandlers(save_scen_adv_details, {"okay", "cancel"});
 	info_dlg.attachClickHandlers(edit_scen_default_bgs, {"bg-out", "bg-town", "bg-dungeon", "bg-fight"});
 	info_dlg["pickinit"].attachClickHandler(edit_scen_init_spec);
 
 	put_scen_adv_details_in_dlog(info_dlg);
 	info_dlg.run();
+
+	if(info_dlg.accepted()){
+		scenario.adjust_diff = dynamic_cast<cLed&>(info_dlg["adjust"]).getState() != led_red;
+
+		scenario.campaign_id = info_dlg["cpnid"].getText();
+		scenario.bg_out = boost::lexical_cast<int>(info_dlg["bg-out"].getText().substr(10));
+		scenario.bg_town = boost::lexical_cast<int>(info_dlg["bg-town"].getText().substr(10));
+		scenario.bg_dungeon = boost::lexical_cast<int>(info_dlg["bg-dungeon"].getText().substr(13));
+		scenario.bg_fight = boost::lexical_cast<int>(info_dlg["bg-fight"].getText().substr(11));
+		scenario.init_spec = info_dlg["oninit"].getTextAsNum();
+	}
 }
 
 bool edit_make_scen_1(std::string& author,std::string& title,bool& grass) {
