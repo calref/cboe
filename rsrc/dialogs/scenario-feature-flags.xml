@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='okay' escbtn='cancel'>
+	<pict type='dlog' num='16' top='8' left='8'/>
+	<text size='large' relative='pos pos-in' rel-anchor='prev' top='0' left='4' width='218' height='16'>
+		Scenario Features
+	</text>
+	<text relative='pos-in pos-in' rel-anchor='prev' top='17' left='0' width='450'>
+		Your scenario can behave differently than the classic version of Blades of Exile.<br/>
+		These flags configure various behaviors and bugfixes you can opt into.
+	</text>
+
+    <led name='resurrection-balm' relative='pos-in pos' rel-anchor='prev' top='4' left='4'>Require Resurrection Balm for Raise Dead/Resurrection</led>
+
+	<button name='okay' relative='abs pos' rel-anchor='prev' type='regular' top='7' left='354'>OK</button>
+	<button name='cancel' relative='neg pos-in' anchor='okay' type='regular' top='0' left='73'>Cancel</button>
+</dialog>

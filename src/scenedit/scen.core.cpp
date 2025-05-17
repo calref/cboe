@@ -2875,9 +2875,36 @@ void edit_scen_details() {
 	info_dlg.run();
 }
 
+bool save_scen_feature_flags(cDialog& me, std::string item_hit, eKeyMod) {
+	me.toast(item_hit == "okay");
+	return true;
+}
+
+bool edit_scen_feature_flags(cDialog& me, std::string, eKeyMod) {
+	cDialog dlg(*ResMgr::dialogs.get("scenario-feature-flags"), &me);
+
+	// Initialize flags in the dialog
+	dynamic_cast<cLed&>(dlg["resurrection-balm"]).setState(scenario.get_feature_flag("resurrection-balm") == "required" ? led_red : led_off);
+
+	dlg.attachClickHandlers(save_scen_feature_flags, {"okay", "cancel"});
+	dlg.run();
+
+	// Save flags out of the dialog's state
+	if(dlg.accepted()){
+		if(dynamic_cast<cLed&>(dlg["resurrection-balm"]).getState() == led_red){
+			scenario.feature_flags["resurrection-balm"] = "required";
+		}else{
+			scenario.feature_flags.erase("resurrection-balm");
+		}
+	}
+
+	return true;
+}
+
 void edit_scen_adv_details() {
 	cDialog info_dlg(*ResMgr::dialogs.get("edit-scenario-advanced"));
 	info_dlg.attachClickHandlers(save_scen_adv_details, {"okay", "cancel"});
+	info_dlg["feature-flags"].attachClickHandler(edit_scen_feature_flags);
 	info_dlg.attachClickHandlers(edit_scen_default_bgs, {"bg-out", "bg-town", "bg-dungeon", "bg-fight"});
 	info_dlg["pickinit"].attachClickHandler(edit_scen_init_spec);
 

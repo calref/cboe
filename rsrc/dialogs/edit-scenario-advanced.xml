@@ -31,6 +31,8 @@
 	<button name='bg-dungeon' type='tiny' top='218' left='180'>In dungeons:</button>
 	<button name='bg-fight' type='tiny' top='235' left='180'>In combat:</button>
 
+	<button name='feature-flags' type='large' top='270' left='50'>Feature Flags</button>
+
 	<button name='okay' type='regular' top='304' left='395'>OK</button>
 	<button name='cancel' type='regular' relative='neg pos-in' rel-anchor='prev' top='0' left='73'>Cancel</button>
 </dialog>
