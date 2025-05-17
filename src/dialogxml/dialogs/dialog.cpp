@@ -151,6 +151,25 @@ cDialog::cDialog(const DialogDefn& file, cDialog* p) : parent(p), doAnimations(d
 	loadFromFile(file);
 }
 
+static std::string ctrlTypeName(eControlType type) {
+	std::string ctrlType;
+	switch(type) {
+		case CTRL_UNKNOWN: ctrlType = "???"; break;
+		case CTRL_BTN: ctrlType = "button"; break;
+		case CTRL_LED: ctrlType = "led"; break;
+		case CTRL_LINE: ctrlType = "line"; break;
+		case CTRL_PICT: ctrlType = "pict"; break;
+		case CTRL_FIELD: ctrlType = "field"; break;
+		case CTRL_TEXT: ctrlType = "text"; break;
+		case CTRL_GROUP: ctrlType = "group"; break;
+		case CTRL_STACK: ctrlType = "stack"; break;
+		case CTRL_SCROLL: ctrlType = "slider"; break;
+		case CTRL_PANE: ctrlType = "pane"; break;
+		case CTRL_MAP: ctrlType = "tilemap"; break;
+	}
+	return ctrlType;
+}
+
 extern fs::path progDir;
 void cDialog::loadFromFile(const DialogDefn& file){
 	bg = defaultBackground;
@@ -258,22 +277,7 @@ void cDialog::loadFromFile(const DialogDefn& file){
 			if(!ctrl.anchor.empty()) {
 				cControl* anchor = findControl(ctrl.anchor);
 				if(anchor == nullptr) {
-					std::string ctrlType;
-					switch(ctrl.getType()) {
-						case CTRL_UNKNOWN: ctrlType = "???"; break;
-						case CTRL_BTN: ctrlType = "button"; break;
-						case CTRL_LED: ctrlType = "led"; break;
-						case CTRL_LINE: ctrlType = "line"; break;
-						case CTRL_PICT: ctrlType = "pict"; break;
-						case CTRL_FIELD: ctrlType = "field"; break;
-						case CTRL_TEXT: ctrlType = "text"; break;
-						case CTRL_GROUP: ctrlType = "group"; break;
-						case CTRL_STACK: ctrlType = "stack"; break;
-						case CTRL_SCROLL: ctrlType = "slider"; break;
-						case CTRL_PANE: ctrlType = "pane"; break;
-						case CTRL_MAP: ctrlType = "tilemap"; break;
-					}
-					throw xBadVal(ctrlType, "anchor", ctrl.anchor, 0, 0, fname);
+					throw xBadVal(ctrlTypeName(ctrl.getType()), "anchor", ctrl.anchor, 0, 0, fname);
 				}
 				if(!anchor->anchor.empty()) {
 					// Make sure it's not a loop!
@@ -282,22 +286,7 @@ void cDialog::loadFromFile(const DialogDefn& file){
 						refs.push_back(anchor->anchor);
 						anchor = findControl(anchor->anchor);
 						if(std::find(refs.begin(), refs.end(), anchor->anchor) != refs.end()) {
-							std::string ctrlType;
-							switch(ctrl.getType()) {
-								case CTRL_UNKNOWN: ctrlType = "???"; break;
-								case CTRL_BTN: ctrlType = "button"; break;
-								case CTRL_LED: ctrlType = "led"; break;
-								case CTRL_LINE: ctrlType = "line"; break;
-								case CTRL_PICT: ctrlType = "pict"; break;
-								case CTRL_FIELD: ctrlType = "field"; break;
-								case CTRL_TEXT: ctrlType = "text"; break;
-								case CTRL_GROUP: ctrlType = "group"; break;
-								case CTRL_STACK: ctrlType = "stack"; break;
-								case CTRL_SCROLL: ctrlType = "slider"; break;
-								case CTRL_PANE: ctrlType = "pane"; break;
-								case CTRL_MAP: ctrlType = "tilemap"; break;
-							}
-							throw xBadVal(ctrlType, "anchor", "<circular dependency>", 0, 0, fname);
+							throw xBadVal(ctrlTypeName(ctrl.getType()), "anchor", "<circular dependency>", 0, 0, fname);
 						}
 					}
 					all_resolved = false;
