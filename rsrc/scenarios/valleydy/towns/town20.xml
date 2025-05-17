@@ -9,6 +9,7 @@
     <difficulty>3</difficulty>
     <lighting>dark</lighting>
     <flags>
+        <chop kills="2" />
         <hidden>true</hidden>
     </flags>
     <item id="0">

@@ -58,8 +58,8 @@
 	sdf -1, -1
 	msg 19, -1, 0
 	pic 41, 3
-	ex1 3, 10, -1
-	ex2 2, 9, -1
+	ex1 2, 9, -1
+	ex2 3, 10, -1
 	goto -1
 @once-out-encounter = 9
 	sdf -1, -1

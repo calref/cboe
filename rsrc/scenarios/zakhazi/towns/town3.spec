@@ -166,7 +166,7 @@
 	ex1 29, 55, -1
 	ex2 163, -1, -1
 	goto 24
-@nop = 24
+@change-ter = 24
 	sdf -1, -1
 	msg -1, -1, -1
 	pic 0, 4

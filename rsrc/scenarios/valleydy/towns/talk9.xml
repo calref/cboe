@@ -357,7 +357,7 @@
         <param>0</param>
         <param>0</param>
         <text>
-            <![CDATA["Yeah! The password! Did you forget it? It's ... " It stops. "Wait! You were trying to trick me! I'm not going to tell you what it is, silly!"]]>
+            <![CDATA["Yeah! The password! Did you forget it? It's ..." It stops. "Wait! You were trying to trick me! I'm not going to tell you what it is, silly!"]]>
         </text>
     </node>
     <node for="-2">

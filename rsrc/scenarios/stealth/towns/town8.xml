@@ -13,7 +13,9 @@
     <exit dir="n" x="7" y="27" />
     <onexit dir="n">23</onexit>
     <timer freq="100">2</timer>
-    <flags />
+    <flags>
+        <chop kills="30000" />
+    </flags>
     <item id="0">
         <type>24</type>
     </item>

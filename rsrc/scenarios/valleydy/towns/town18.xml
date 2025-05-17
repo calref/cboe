@@ -9,7 +9,9 @@
     <difficulty>5</difficulty>
     <lighting>dark</lighting>
     <timer freq="250">8</timer>
-    <flags />
+    <flags>
+        <chop kills="90" />
+    </flags>
     <wandering>
         <monster>82</monster>
         <monster>82</monster>
