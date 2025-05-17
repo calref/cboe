@@ -2350,10 +2350,14 @@ eAlchemy alch_choice(short pc_num) {
 	chooseAlchemy.attachClickHandlers(alch_choice_event_filter, {"cancel", "help"});
 	for(short i = 0; i < 20; i++) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
+		chooseAlchemy["potion" + n].hide();
+		if(!univ.party.alchemy[i]){
+			continue;
+		}
 		chooseAlchemy["label" + n].setText(get_str("magic-names", i + 200) + " (" + std::to_string((*eAlchemy(i)).difficulty)+ ")");
 		chooseAlchemy["potion" + n].attachClickHandler(alch_choice_event_filter);
-		if(!univ.party.alchemy[i] || !(*eAlchemy(i)).can_make(univ.party[pc_num].skill(eSkill::ALCHEMY))){
-			chooseAlchemy["potion" + n].hide();
+		if((*eAlchemy(i)).can_make(univ.party[pc_num].skill(eSkill::ALCHEMY))){
+			chooseAlchemy["potion" + n].show();
 		}
 	}
 	std::ostringstream sout;
