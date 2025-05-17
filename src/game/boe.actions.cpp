@@ -1220,6 +1220,7 @@ void handle_alchemy(bool& need_redraw, bool& need_reprint) {
 		else
 			add_string_to_buf("Alchemy: No recipes known.");
 	}
+	else if(is_combat()) add_string_to_buf("Alchemy: Not in combat.");
 	else if(!is_town()) add_string_to_buf("Alchemy: Only in town.");
 	else add_string_to_buf("Alchemy: " + FINISH_FIRST);
 }
