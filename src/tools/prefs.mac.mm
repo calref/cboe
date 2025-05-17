@@ -174,3 +174,8 @@ bool sync_prefs_mac() {
 	return [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+// Used in scen.main.cpp to find BoE app bundle, but uses a static function (convertValue()) in this file.
+fs::path bundlePath() {
+	NSBundle *main = [NSBundle mainBundle];
+	return convertValue(main.bundlePath);
+}

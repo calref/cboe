@@ -122,16 +122,22 @@ static void launch_scenario(eLaunchType type) {
 	// Prompt to save first
 	if(!save_check("save-before-launch", false)) return;
 
+	fs::path app_folder = fs::current_path();
 	fs::path game_binary;
 #ifdef SFML_SYSTEM_MACOS
 	game_binary = "Blades of Exile.app/Contents/MacOS/Blades of Exile";
+	// Run by double-click on app bundle
+	if(app_folder == "/"){
+		extern fs::path bundlePath();
+		app_folder = bundlePath().parent_path();
+	}
 #elif defined(SFML_SYSTEM_WINDOWS)
 	game_binary = "Blades of Exile.exe";
 #elif defined(SFML_SYSTEM_LINUX)
 	game_binary = "Blades of Exile";
 #endif
 
-	game_binary = bp::search_path(game_binary, {fs::current_path()});
+	game_binary = bp::search_path(game_binary, {app_folder});
 	if(game_binary.empty()){
 		showError("The current working directory does not contain Blades of Exile.");
 		return;
