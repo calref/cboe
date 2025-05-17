@@ -958,11 +958,9 @@ void cParty::readFrom(const cTagFile& file, bool preview) {
 			}
 			
 			alchemy.reset();
-			std::deque<bool> alch; // deque instead of vector to avoid the bitwise specialization
-			page["ALCHEMY"].extract(alch);
-			alch.resize(alchemy.size());
-			for(size_t i = 0; i < alchemy.size(); i++) {
-				alchemy[i] = alch[i];
+			size_t alch;
+			while(page["ALCHEMY"] >> alch) {
+				alchemy[alch] = true;
 			}
 			
 			for(size_t n = 0; n < page["TOWNSAVE"].size(); n++) {
