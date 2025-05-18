@@ -1745,7 +1745,19 @@ void handle_keystroke(sf::Event event) {
 				return;
 			}
 		}
-	
+
+	if(event.key.code == Key::Escape){
+		if(overall_mode == MODE_DRAWING){
+			// Not doing anything special. back to menu
+			handle_lb_action(NLS - 2);
+		}else{
+			// Using a tool. Turn it off
+			set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
+			overall_mode = MODE_DRAWING;
+		}
+		return;
+	}
+
 	store_ter = current_terrain_type;
 	chr = keyToChar(chr2, event.key.shift);
 	
