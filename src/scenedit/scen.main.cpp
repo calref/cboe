@@ -869,7 +869,8 @@ void pick_preferences() {
 		// Validate the debug party
 		if(!debug_party.empty()){
 			cUniverse univ;
-			if(!load_party(debug_party, univ)){
+			cCustomGraphics graphics;
+			if(!load_party(debug_party, univ, graphics)){
 				showError("Your chosen debug party could not be loaded.", "", &me);
 				me[id].setText(get_string_pref("DefaultPartyPath"));
 				return false;
