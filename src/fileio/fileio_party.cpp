@@ -363,16 +363,20 @@ bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, cCustomGraphics&
 		}
 	}
 	
-	if(partyIn.hasFile("save/export.png")) {
-		std::istream& fin = partyIn.getFile("save/export.png");
-		sf::Image party_sheet;
-		StdInputStream stream(fin);
-		if(party_sheet.loadFromStream(stream)) {
-			sf::Texture sheet;
-			sheet.create(party_sheet.getSize().x, party_sheet.getSize().y);
-			sheet.update(party_sheet);
-			spec_scen_g.party_sheet.reset(new sf::Texture(sheet));
-		} else if(!preview) showWarning("There was an error loading the party custom graphics.");
+	// Note: if we make custom graphics allowed on PCs, the file picker preview will have to load each party's
+	// export.png and we will need to pass the cCustomGraphics object on the cPict
+	if(!preview){
+		if(partyIn.hasFile("save/export.png")) {
+			std::istream& fin = partyIn.getFile("save/export.png");
+			sf::Image party_sheet;
+			StdInputStream stream(fin);
+			if(party_sheet.loadFromStream(stream)) {
+				sf::Texture sheet;
+				sheet.create(party_sheet.getSize().x, party_sheet.getSize().y);
+				sheet.update(party_sheet);
+				graphics.party_sheet.reset(new sf::Texture(sheet));
+			} else if(!preview) showWarning("There was an error loading the party custom graphics.");
+		}
 	}
 	
 	if(!univ.party.scen_name.empty()) {
