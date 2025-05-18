@@ -102,6 +102,7 @@ extern short store_spell_target,pc_casting;
 extern eSpell store_mage, store_priest;
 extern std::vector<int> spec_item_array;
 extern cUniverse univ;
+extern cCustomGraphics spec_scen_g;
 extern std::vector<word_rect_t> talk_words;
 extern bool talk_end_forced;
 
@@ -3139,7 +3140,7 @@ void do_load() {
 	fs::path file_to_load = run_file_picker(false);
 	if(file_to_load.empty()) return;
 	set_cursor(watch_curs);
-	if(!load_party(file_to_load, univ))
+	if(!load_party(file_to_load, univ, spec_scen_g))
 		return;
 	finish_load_party();
 	if(overall_mode != MODE_STARTUP)
@@ -3675,7 +3676,7 @@ void handle_death() {
 			}
 			fs::path file_to_load = run_file_picker(false);
 			if(!file_to_load.empty()){
-				if(load_party(file_to_load, univ)){
+				if(load_party(file_to_load, univ, spec_scen_g)){
 					finish_load_party();
 					if(overall_mode != MODE_STARTUP)
 						post_load();

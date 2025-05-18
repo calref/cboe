@@ -2076,7 +2076,8 @@ class cFilePicker {
 		while(saves_loaded < parties_needed){
 			fs::path next_file = save_file_mtimes[saves_loaded].first;
 			cUniverse party_univ;
-			if(!load_party(next_file, save_files[saves_loaded], true)){
+			cCustomGraphics graphics;
+			if(!load_party(next_file, save_files[saves_loaded], graphics, true)){
 				// Below, we check the load_failed flag to display when a party is corrupt
 			}
 			saves_loaded++;

@@ -29,7 +29,7 @@ extern cCustomGraphics spec_scen_g;
 
 // Load saved games
 static bool load_party_v1(fs::path file_to_load, cUniverse& univ, bool town_restore, bool in_scen, bool maps_there, bool must_port, bool preview);
-static bool load_party_v2(fs::path file_to_load, cUniverse& univ, bool preview);
+static bool load_party_v2(fs::path file_to_load, cUniverse& univ, cCustomGraphics& graphics, bool preview);
 
 extern fs::path nav_get_party();
 extern fs::path nav_put_party(fs::path def);
@@ -61,7 +61,7 @@ fs::path os_file_picker(bool saving) {
 		return nav_get_or_decode_party();
 }
 
-bool load_party(fs::path file_to_load, cUniverse& univ, bool preview){
+bool load_party(fs::path file_to_load, cUniverse& univ, cCustomGraphics& graphics, bool preview){
 	bool town_restore = false;
 	bool maps_there = false;
 	bool in_scen = false;
@@ -161,7 +161,7 @@ bool load_party(fs::path file_to_load, cUniverse& univ, bool preview){
 			result = load_party_v1(file_to_load, univ, town_restore, in_scen, maps_there, !mac_is_intel(), preview);
 			break;
 		case new_oboe:
-			result = load_party_v2(file_to_load, univ, preview);
+			result = load_party_v2(file_to_load, univ, graphics, preview);
 			break;
 		case unknown:
 			if(!preview) showError("This is not a Blades of Exile save file.");
@@ -319,7 +319,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 	return true;
 }
 
-bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, bool preview){
+bool load_party_v2(fs::path file_to_load, cUniverse& real_univ, cCustomGraphics& graphics, bool preview){
 	igzstream zin(file_to_load.string().c_str());
 	tarball partyIn;
 	partyIn.readFrom(zin);
