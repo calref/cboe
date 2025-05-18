@@ -16,6 +16,7 @@
 #include <sstream>
 #include <SFML/System/InputStream.hpp>
 #include <boost/filesystem/path.hpp>
+#include "gfx/gfxsheets.hpp"
 
 class cScenario;
 class cUniverse;
@@ -42,7 +43,7 @@ const std::set<fs::path> save_extensions = {".exg", ".boe", ".SAV", ".mac"};
 // Return a directory's files sorted by last modified time
 std::vector<std::pair<fs::path, std::time_t>> sorted_file_mtimes(fs::path dir, std::set<fs::path> valid_extensions = save_extensions);
 
-bool load_party(fs::path file_to_load, cUniverse& univ, bool preview = false);
+bool load_party(fs::path file_to_load, cUniverse& univ, cCustomGraphics& graphics, bool preview = false);
 bool save_party(cUniverse& univ, bool save_as = false);
 bool save_party_force(cUniverse& univ, fs::path file);
 

@@ -47,6 +47,7 @@
 #include "tools/enum_map.hpp"
 #include "tools/event_listener.hpp"
 #include "tools/drawable_manager.hpp"
+#include "gfx/gfxsheets.hpp"
 
 using clara::ParserResult;
 using clara::ParseResultType;
@@ -65,6 +66,7 @@ extern const rectangle item_sbar_rect = {148,560,255,576};
 bool bgm_on = false,bgm_init = false;
 location store_anim_ul;
 cUniverse univ;
+extern cCustomGraphics spec_scen_g;
 
 bool flushingInput = false, ae_loading = false;
 long start_time;
@@ -458,7 +460,7 @@ static void process_args(int argc, char* argv[]) {
 	}
 
 	if(saved_game){
-		if(!load_party(*saved_game, univ)) {
+		if(!load_party(*saved_game, univ, spec_scen_g)) {
 			std::cout << "Failed to load save file: " << *saved_game << std::endl;
 			return;
 		}
@@ -635,7 +637,7 @@ static void replay_action(Element& action) {
 		fancy_file_picker(saving);
 	}else if(t == "load_party"){
 		decode_file(action.GetText(), tempDir / "temp.exg");
-		load_party(tempDir / "temp.exg", univ);
+		load_party(tempDir / "temp.exg", univ, spec_scen_g);
 
 		finish_load_party();
 
