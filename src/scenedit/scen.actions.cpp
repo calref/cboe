@@ -223,110 +223,112 @@ void update_mouse_spot(location the_point) {
 	if(overall_mode < MODE_MAIN_SCREEN) place_location();
 }
 
-static bool handle_lb_action(location the_point) {
+static bool handle_lb_action(int i){
 	fs::path file_to_load;
 	int x;
+	draw_lb_slot(i,1);
+	play_sound(37);
+	mainPtr().display();
+	// TODO: Proper button handling
+	sf::sleep(time_in_ticks(10));
+	draw_lb_slot(i,0);
+	mainPtr().display();
+	if(overall_mode >= MODE_MAIN_SCREEN) {
+		switch(left_button_status[i].action) {
+			case LB_NO_ACTION:
+				break;
+			case LB_RETURN: // Handled separately, below
+				break;
+			case LB_NEW_SCEN:
+				if(build_scenario()){
+					overall_mode = MODE_MAIN_SCREEN;
+					set_up_main_screen();
+				}
+				break;
+			case LB_LOAD_SCEN:
+				file_to_load = nav_get_scenario();
+				if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
+					restore_editor_state(true);
+				} else if(!file_to_load.empty())
+					// If we tried to load but failed, the scenario record is messed up, so boot to start screen.
+					set_up_start_screen();
+				break;
+			case LB_EDIT_TER:
+				start_terrain_editing();
+				break;
+			case LB_EDIT_MONST:
+				start_monster_editing(0);
+				break;
+			case LB_EDIT_ITEM:
+				start_item_editing(0);
+				break;
+			case LB_NEW_TOWN:
+				if(scenario.towns.size() >= 200) {
+					showError("You have reached the limit of 200 towns you can have in one scenario.");
+					return true;
+				}
+				if(new_town())
+					handle_close_terrain_view(MODE_MAIN_SCREEN);
+				break;
+			case LB_EDIT_TEXT:
+				right_sbar->setPosition(0);
+				start_string_editing(STRS_SCEN,0);
+				break;
+			case LB_EDIT_SPECITEM:
+				start_special_item_editing(false);
+				break;
+			case LB_EDIT_QUEST:
+				start_quest_editing(false);
+				break;
+			case LB_EDIT_SHOPS:
+				start_shops_editing(false);
+				break;
+			case LB_LOAD_OUT:
+				spot_hit = pick_out(cur_out, scenario);
+				if(spot_hit != cur_out) {
+					set_current_out(spot_hit, false);
+					if(overall_mode == MODE_EDIT_SPECIALS){
+						start_special_editing(1, false);
+					}
+				}
+				break;
+			case LB_EDIT_OUT:
+				start_out_edit();
+				mouse_button_held = false;
+				break;
+			case LB_LOAD_TOWN:
+				x = pick_town_num("select-town-edit",cur_town,scenario);
+				if(x >= 0){
+					cur_town = x;
+					town = scenario.towns[cur_town];
+					set_up_main_screen();
+					if(overall_mode == MODE_EDIT_SPECIALS){
+						start_special_editing(2, false);
+					}
+				}
+				break;
+			case LB_EDIT_TOWN:
+				start_town_edit();
+				mouse_button_held = false;
+				break;
+			case LB_EDIT_TALK:
+				start_dialogue_editing(0);
+				break;
+		}
+	}
+	if((overall_mode < MODE_MAIN_SCREEN) && left_button_status[i].action == LB_RETURN) {
+		handle_close_terrain_view(MODE_MAIN_SCREEN);
+	}
+	mouse_button_held = false;
+	update_edit_menu();
+	return true;
+}
+
+static bool handle_lb_click(location the_point) {
 	for(int i = 0; i < NLS; i++)
 		if(!mouse_button_held && the_point.in(left_buttons[i][0])
 		   && (left_button_status[i].action != LB_NO_ACTION))  {
-			draw_lb_slot(i,1);
-			play_sound(37);
-			mainPtr().display();
-			// TODO: Proper button handling
-			sf::sleep(time_in_ticks(10));
-			draw_lb_slot(i,0);
-			mainPtr().display();
-			if(overall_mode >= MODE_MAIN_SCREEN) {
-				switch(left_button_status[i].action) {
-					case LB_NO_ACTION:
-						break;
-					case LB_RETURN: // Handled separately, below
-						break;
-					case LB_NEW_SCEN:
-						if(build_scenario()){
-							overall_mode = MODE_MAIN_SCREEN;
-							set_up_main_screen();
-						}
-						break;
-						
-					case LB_LOAD_SCEN:
-						file_to_load = nav_get_scenario();
-						if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
-							restore_editor_state(true);
-						} else if(!file_to_load.empty())
-							// If we tried to load but failed, the scenario record is messed up, so boot to start screen.
-							set_up_start_screen();
-						break;
-					case LB_EDIT_TER:
-						start_terrain_editing();
-						break;
-					case LB_EDIT_MONST:
-						start_monster_editing(0);
-						break;
-					case LB_EDIT_ITEM:
-						start_item_editing(0);
-						break;
-					case LB_NEW_TOWN:
-						if(scenario.towns.size() >= 200) {
-							showError("You have reached the limit of 200 towns you can have in one scenario.");
-							return true;
-						}
-						if(new_town())
-							handle_close_terrain_view(MODE_MAIN_SCREEN);
-						break;
-					case LB_EDIT_TEXT:
-						right_sbar->setPosition(0);
-						start_string_editing(STRS_SCEN,0);
-						break;
-					case LB_EDIT_SPECITEM:
-						start_special_item_editing(false);
-						break;
-					case LB_EDIT_QUEST:
-						start_quest_editing(false);
-						break;
-					case LB_EDIT_SHOPS:
-						start_shops_editing(false);
-						break;
-					case LB_LOAD_OUT:
-						spot_hit = pick_out(cur_out, scenario);
-						if(spot_hit != cur_out) {
-							set_current_out(spot_hit, false);
-							if(overall_mode == MODE_EDIT_SPECIALS){
-								start_special_editing(1, false);
-							}
-						}
-						break;
-					case LB_EDIT_OUT:
-						start_out_edit();
-						mouse_button_held = false;
-						break;
-					case LB_LOAD_TOWN:
-						x = pick_town_num("select-town-edit",cur_town,scenario);
-						if(x >= 0){
-							cur_town = x;
-							town = scenario.towns[cur_town];
-							set_up_main_screen();
-							if(overall_mode == MODE_EDIT_SPECIALS){
-								start_special_editing(2, false);
-							}
-						}
-						break;
-					case LB_EDIT_TOWN:
-						start_town_edit();
-						mouse_button_held = false;
-						break;
-					case LB_EDIT_TALK:
-						start_dialogue_editing(0);
-						break;
-						
-				}
-			}
-			if((overall_mode < MODE_MAIN_SCREEN) && left_button_status[i].action == LB_RETURN) {
-				handle_close_terrain_view(MODE_MAIN_SCREEN);
-			}
-			mouse_button_held = false;
-			update_edit_menu();
-			return true;
+			return handle_lb_action(i);
 		}
 	return false;
 }
@@ -1635,7 +1637,7 @@ void handle_action(location the_point,sf::Event /*event*/) {
 	if(kb.isCtrlPressed())
 		ctrl_hit = true;
 	
-	if(handle_lb_action(the_point))
+	if(handle_lb_click(the_point))
 		return;
 	
 	if(overall_mode >= MODE_MAIN_SCREEN && overall_mode != MODE_EDIT_TYPES && handle_rb_action(the_point, option_hit))
