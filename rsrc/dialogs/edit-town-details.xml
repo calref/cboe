@@ -2,19 +2,32 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay'>
-	<!-- OK button -->
-	<field name='name' top='29' left='186' width='151' height='16'/>
-	<field name='chop' top='77' left='327' width='43' height='16'/>
-	<field name='key' top='101' left='327' width='43' height='16'/>
-	<field name='population' top='219' left='294' width='54' height='16'/>
-	<field name='difficulty' top='265' left='294' width='54' height='16'/>
-	<button name='okay' type='regular' top='410' left='349'>OK</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='256' height='17'>Town Details</text>
+
 	<text top='30' left='50' width='130' height='14'>Town name:</text>
+	<field name='name' top='29' left='186' width='151' height='16'/>
+
 	<text top='58' left='50' width='130' height='14'>Town timing:</text>
+
 	<text top='78' left='59' width='242' height='14'>Day when town dies: (if -1, it doesn't)</text>
+	<field name='chop' top='77' left='327' width='43' height='16'/>
+
 	<text top='98' left='59' width='261' height='41'>Number of event which prevents town death (if -1 or 0, none) - see chapter in documentation on time for more details.</text>
+	<field name='key' top='101' left='327' width='43' height='16'/>
+
+	<text top='216' left='50' width='234' height='42'>
+		Maximum number of monsters:
+		(When this many monsters are killed, the dungeon will be abandoned)
+	</text>
+	<field name='population' top='219' left='294' width='54' height='16'/>
+
+	<text top='262' left='50' width='235' height='53'>
+		Town difficulty (0-10):
+		(Determines how fast wandering monsters appear, how nasty traps are, and how hard it is to unlock doors.)
+	</text>
+	<field name='difficulty' top='265' left='294' width='54' height='16'/>
+
 	<text top='143' left='50' width='63' height='14'>Lighting:</text>
 	<group name='lighting'>
 		<led name='lit' top='143' left='122'>Fully Lit</led>
@@ -22,14 +35,7 @@
 		<led name='drains' top='177' left='122'>Very dark (light used 10x as fast)</led>
 		<led name='no-light' top='194' left='122'>Totally dark (no light)</led>
 	</group>
-	<text top='216' left='50' width='234' height='42'>
-		Maximum number of monsters:
-		(When this many monsters are killed, the dungeon will be abandoned)
-	</text>
-	<text top='262' left='50' width='235' height='53'>
-		Town difficulty (0-10):
-		(Determines how fast wandering monsters appear, how nasty traps are, and how hard it is to unlock doors.)
-	</text>
+
 	<text top='317' left='50' width='101' height='110'>Comments:<br/>
 		You can add up to three comments for yourself.
 		These are not used by the game.
@@ -43,4 +49,7 @@
 	<stack name='cmt' pages='3'>
 		<field name='comment' top='317' left='162' width='251' height='80'/>
 	</stack>
+
+	<!-- OK button -->
+	<button name='okay' type='regular' top='410' left='349'>OK</button>
 </dialog>
